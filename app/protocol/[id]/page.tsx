@@ -341,14 +341,14 @@ export default function ProtocolPage() {
         {/* ===== TIMELINE ===== */}
         {timelineSection}
 
+        {/* ===== TESTIMONIALS ===== */}
+        {testimonialSection}
+
         {/* ===== WHY CONKA WORKS ===== */}
         {whyConkaWorksSection}
 
         {/* ===== WHAT CONKA DOES ===== */}
         {whatItDoesSection}
-
-        {/* ===== EXPLORE ===== */}
-        {exploreSection}
 
         {/* ===== CALENDAR (hidden for Balance) ===== */}
         {selectedProtocolId !== "3" && (
@@ -369,14 +369,14 @@ export default function ProtocolPage() {
           </section>
         )}
 
-        {/* ===== TESTIMONIALS ===== */}
-        {testimonialSection}
-
         {/* ===== GUARANTEE ===== */}
         {guaranteeSection}
 
         {/* ===== FAQ ===== */}
         {faqSection}
+
+        {/* ===== EXPLORE ===== */}
+        {exploreSection}
 
         <Footer />
 
@@ -436,11 +436,11 @@ export default function ProtocolPage() {
       {/* ===== TIMELINE ===== */}
       {timelineSection}
 
+      {/* ===== TESTIMONIALS ===== */}
+      {testimonialSection}
+
       {/* ===== WHY CONKA WORKS ===== */}
       {whyConkaWorksSection}
-
-      {/* ===== EXPLORE ===== */}
-      {exploreSection}
 
       {/* ===== WHAT CONKA DOES ===== */}
       {whatItDoesSection}
@@ -464,14 +464,14 @@ export default function ProtocolPage() {
         </section>
       )}
 
-      {/* ===== TESTIMONIALS ===== */}
-      {testimonialSection}
-
       {/* ===== GUARANTEE ===== */}
       {guaranteeSection}
 
       {/* ===== FAQ ===== */}
       {faqSection}
+
+      {/* ===== EXPLORE ===== */}
+      {exploreSection}
 
       <Footer />
 
