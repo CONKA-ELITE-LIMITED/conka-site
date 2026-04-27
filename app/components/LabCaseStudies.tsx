@@ -179,17 +179,20 @@ export default function LabCaseStudies({
     <div>
       {/* Eyebrow */}
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        Clinical Outcomes · Cognitive Function Score
+        {"// Clinical outcomes · PROOF-01"}
       </p>
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="brand-h1 mb-0">
+        <h2 className="brand-h1 mb-2">
           Athletes, Founders, Execs.
           <br />
           They all take CONKA.
           <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
         </h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+          N=150+ participants · 5,000+ tests · +28.96% avg lift
+        </p>
       </div>
 
       {/* Dataset summary strip — value on top, label below, centered */}

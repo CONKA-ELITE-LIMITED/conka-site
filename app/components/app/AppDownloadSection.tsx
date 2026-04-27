@@ -42,7 +42,7 @@ export function AppDownloadSection() {
 
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-            Download · Free · iOS &amp; Android
+            {"// Download · APP-01"}
           </p>
           <h2
             className="brand-h2 text-black mb-3 max-w-[20ch]"

@@ -109,7 +109,7 @@ export default function CaseStudiesPageMobile() {
     <div className="pb-8 min-h-screen">
       <div className="mb-6">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Research & Results · Peer-Validated
+          {"// Research & results · PROOF-01"}
         </p>
         <h1
           className="brand-h1 text-black mb-2"

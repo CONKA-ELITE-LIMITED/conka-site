@@ -112,14 +112,17 @@ export default function LandingDailyBenefits() {
 
         <div className="lg:flex-[3]">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            Daily Benefits
+            {"// Daily benefits · SCI-01"}
           </p>
           <h2
-            className="brand-h1 mb-6"
+            className="brand-h1 mb-2"
             style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
           >
             Daily habit. Lifelong benefits.
           </h2>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
+            Mental performance · Sustained energy · Brain health
+          </p>
 
           <div className="grid grid-cols-1 gap-4">
             {PILLARS.map((pillar) => {

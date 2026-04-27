@@ -93,7 +93,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 pb-10 md:pb-14 border-b border-white/12">
           <div className="flex flex-col items-start">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 tabular-nums mb-3">
-              // Newsletter · Dispatch-00
+              {"// Newsletter · CONKA-00"}
             </p>
             <h2
               className="brand-h3 text-white mb-3"

@@ -312,7 +312,7 @@ export default function LandingTestimonials({
     <div>
       {/* Eyebrow */}
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        Field Observations
+        {"// Field observations · PROOF-03"}
       </p>
 
       {/* Header */}

@@ -28,7 +28,7 @@ export default function EvidenceSummary({
       {/* Header */}
       <div className="mb-8 lg:mb-10">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-          The Evidence · Research-Backed · Patented
+          {"// The evidence · SCI-02"}
         </p>
         <h2
           className="brand-h2 text-black mb-2"

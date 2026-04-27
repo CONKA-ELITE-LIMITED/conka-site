@@ -46,7 +46,7 @@ export default function CaseStudiesPageDesktop() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
           <header>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-              Research & Results · Peer-Validated · Measured
+              {"// Research & results · PROOF-01"}
             </p>
             <h1
               className="brand-h1 text-black mb-2"

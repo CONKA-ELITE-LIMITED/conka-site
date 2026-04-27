@@ -30,7 +30,7 @@ export default function WhatToExpectDesktop({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            Protocol Timeline · Day 1 → Day 90
+            {"// Protocol timeline · SCI-01"}
           </p>
           <h2
             className="brand-h1 mb-2"

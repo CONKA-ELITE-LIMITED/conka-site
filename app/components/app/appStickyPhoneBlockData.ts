@@ -5,7 +5,6 @@
 export type SectionData = {
   eyebrow?: string;
   heading: string;
-  headingAccent?: string;
   body: string;
   footnote?: string;
   stats?: { value: string; label: string; source?: string }[];
@@ -21,8 +20,7 @@ export const PHONE_SOURCES = [
 export const SECTIONS_DATA: SectionData[] = [
   {
     eyebrow: "Not an intelligence test. A processing speed test.",
-    heading: "Most cognitive tests get easier with practice.",
-    headingAccent: "This one can't.",
+    heading: "Most cognitive tests get easier with practice. This one can't.",
     body:
       "The test measures how quickly your brain processes visual information — the same mechanism " +
       "that's first affected by cognitive decline. It uses natural images rather than words, " +

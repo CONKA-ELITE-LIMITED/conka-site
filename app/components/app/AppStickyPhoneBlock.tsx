@@ -126,12 +126,6 @@ function SectionContent({
             {i < headingParts.length - 1 && <br />}
           </span>
         ))}
-        {data.headingAccent && (
-          <>
-            {" "}
-            <span className="text-[#1B2757]">{data.headingAccent}</span>
-          </>
-        )}
       </h2>
       <p className="text-sm md:text-base text-black/75 leading-relaxed max-w-xl mb-3">
         {data.body}
@@ -275,14 +269,17 @@ export function AppStickyPhoneBlock() {
         <div className="relative z-[2] w-full px-[5vw] pt-[clamp(3rem,6vw,5rem)] pb-4">
           <div className="mx-auto" style={{ maxWidth: "1280px" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-              The App · 04 Features · Measurable
+              {"// Four features · APP-01"}
             </p>
             <h3
-              className="brand-h3 text-black"
+              className="brand-h3 text-black mb-2"
               style={{ letterSpacing: "-0.02em" }}
             >
               Four features. One outcome: measurable brain performance.
             </h3>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+              Test · Track · Trend · Compete
+            </p>
           </div>
         </div>
 

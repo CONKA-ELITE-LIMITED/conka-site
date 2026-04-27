@@ -21,16 +21,19 @@ export default function LabGuarantee({
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        Trial Terms · Protocol 100
+        {"// Trial terms · PROOF-02"}
       </p>
 
       <div className="mb-8">
         <h2
-          className="brand-h1 mb-0"
+          className="brand-h1 mb-2"
           style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
         >
           {GUARANTEE_DAYS}-Day Risk Free Trial
         </h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+          100 days · Refund guaranteed · Install the app
+        </p>
       </div>
 
       <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">

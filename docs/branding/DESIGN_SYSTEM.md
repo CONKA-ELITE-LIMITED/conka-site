@@ -4,6 +4,22 @@
 >
 > **Migration note:** This system replaces the legacy "Soft-Tech Luxury" system (`premium-base.css`). Existing pages continue to use `premium-base.css` until migrated. New pages and refactored pages should use `brand-base.css`. See [Migration from legacy](#migration-from-legacy) below.
 
+> ### Acquisition and content pages use the Clinical Aesthetic
+>
+> **Active spec for every acquisition / content surface:** [`CLINICAL_AESTHETIC.md`](./CLINICAL_AESTHETIC.md). All pages listed below opt into it via `.brand-clinical` on the page root, which overrides tokens to zero radius and navy `#1B2757`, and layers on spec-sheet grammar (hairline frames, mono eyebrows, topic codes, figure plates).
+>
+> `/` · `/start` · `/funnel` · `/science` · `/our-story` · `/case-studies` · `/ingredients` · `/app` · `/why-conka` · `/conka-flow` · `/conka-clarity` · `/protocol/[id]` · Navigation · Footer
+>
+> **Key overrides the base system below does NOT describe:**
+> - Zero radius everywhere (tokens become `0`)
+> - Navy `#1B2757` is **interactive-only** (never used on headings, data points, or decoration — differs from base accent rules)
+> - No gradients (base allows subtle accent gradient; clinical forbids it)
+> - Single black headings; no accent spans
+> - Section eyebrows open with `// <concept> · <TOPIC-0X>` and follow the global topic-code catalog
+> - Left-aligned only (matches base, but enforced strictly)
+>
+> The base system documented below still governs **non-clinical surfaces** only: the B2B portal, account portal, and any legacy pages not yet migrated. For every new acquisition or content page, read `CLINICAL_AESTHETIC.md` first.
+
 ---
 
 ## 1. Principles

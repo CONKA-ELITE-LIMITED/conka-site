@@ -4,7 +4,7 @@ export function OurStoryCTA() {
   return (
     <div className="max-w-3xl">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        Join the Journey · Balance Protocol · Start here
+        {"// Join the journey · CONKA-03"}
       </p>
       <h2
         className="brand-h1 text-black mb-3"

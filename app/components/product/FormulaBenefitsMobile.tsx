@@ -229,7 +229,7 @@ export default function FormulaBenefitsMobile({
       {/* Trio header */}
       <div className="mb-8">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Outcome Profile · Peer-Reviewed Evidence
+          {"// Outcome profile · SCI-02"}
         </p>
         <h2
           className="brand-h1 mb-2 text-black"

@@ -25,7 +25,7 @@ export function WhyConkaHero() {
       </div>
       <div className="flex-1 w-full flex flex-col items-start text-left justify-center">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
-          // The CONKA framework · 07 reasons
+          {"// The CONKA framework · CONKA-00"}
         </p>
         <h1
           id="why-conka-hero-heading"

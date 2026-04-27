@@ -34,19 +34,14 @@ const AthleteCredibilityCarousel = dynamic(
   { loading: () => <div className="h-[350px]" /> },
 );
 
-const FoundersSection = dynamic(
-  () => import("./components/home/FoundersSection"),
-  { loading: () => <div className="h-[350px]" /> },
+const AppUSPSection = dynamic(
+  () => import("./components/home/AppUSPSection"),
+  { loading: () => <div className="h-[1100px] lg:h-[700px]" /> },
 );
 
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
 });
-
-const LabGuarantee = dynamic(
-  () => import("./components/landing/LabGuarantee"),
-  { loading: () => <div className="h-[500px]" /> },
-);
 
 const LabTimeline = dynamic(
   () => import("./components/landing/LabTimeline"),
@@ -114,9 +109,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 6: DAILY BENEFITS — LIFELONG PILLARS ===== */}
+      {/* ===== SECTION 6: APP USP (prove it yourself) ===== */}
       <section
         className="brand-section brand-bg-tint"
+        aria-label="Prove it yourself with the CONKA app"
+      >
+        <div className="brand-track">
+          <AppUSPSection />
+        </div>
+      </section>
+
+      {/* ===== SECTION 7: DAILY BENEFITS — LIFELONG PILLARS ===== */}
+      <section
+        className="brand-section brand-bg-white"
         aria-label="Daily habit, lifelong benefits"
       >
         <div className="brand-track">
@@ -124,9 +129,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 7: WHY CONKA WORKS ===== */}
+      {/* ===== SECTION 8: WHY CONKA WORKS ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Why CONKA Works"
       >
         <div className="brand-track">
@@ -134,9 +139,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 8: WHAT TO EXPECT (LabTimeline) ===== */}
+      {/* ===== SECTION 9: WHAT TO EXPECT (LabTimeline) ===== */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="What to Expect with CONKA"
       >
         <div className="brand-track">
@@ -144,9 +149,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 9: TESTIMONIALS (real voices after data proof) ===== */}
+      {/* ===== SECTION 10: TESTIMONIALS (real voices after data proof) ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Customer reviews"
       >
         <div className="brand-track">
@@ -154,29 +159,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 10: OUR STORY / FOUNDERS ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Our Story"
-      >
-        <div className="brand-track">
-          <FoundersSection />
-        </div>
-      </section>
-
-      {/* ===== SECTION 11: 100-DAY GUARANTEE ===== */}
+      {/* ===== SECTION 11: FAQ ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="100-day risk-free guarantee"
-      >
-        <div className="brand-track">
-          <LabGuarantee ctaHref="/protocol/3" />
-        </div>
-      </section>
-
-      {/* ===== SECTION 12: FAQ ===== */}
-      <section
-        className="brand-section brand-bg-tint"
         aria-label="FAQ"
       >
         <div className="brand-track">

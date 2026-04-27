@@ -51,7 +51,7 @@ export default function FormulaFAQ({ formulaId, hideCTA = false }: FormulaFAQPro
         {/* Content column */}
         <div className="lg:w-3/5">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            Common Questions
+            {"// Common questions · FAQ-01"}
           </p>
           <div className="mb-6">
             <h2 className="brand-h1 mb-0">Frequently asked questions</h2>

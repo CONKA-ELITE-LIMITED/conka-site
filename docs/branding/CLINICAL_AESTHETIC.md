@@ -50,17 +50,28 @@ For badge overlays inside images (`MORNING`, `AFTERNOON`, `MOST POPULAR`). Inlin
 ## Standard patterns
 
 ### Trio header (every section opens with one)
+
+Three elements, three distinct roles:
+
+| Element | Role | Format | CSS class |
+|---------|------|--------|-----------|
+| **Eyebrow** | Identifies the topic the section belongs to | `// <short concept> · <TOPIC-0X>`. Topic code mandatory; concept optional flavor. | `.brand-eyebrow` |
+| **Heading** | The bold positioning statement | Single black. No accent spans. No gradients. No navy fills. `letterSpacing: "-0.02em"` inline. | `brand-h1` / `brand-h2` / `brand-h3` |
+| **Sub-line** | What the heading cannot fit: clarifier, proof, or scale | Mono, middle-dot separated, ≤10 words. | `.brand-mono-sub` |
+
 ```tsx
-<p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-  Eyebrow · Sub-context
+<p className="brand-eyebrow mb-3">
+  {"// Short concept · TOPIC-0X"}
 </p>
-<h2 className="brand-h1 mb-2 text-black" style={{ letterSpacing: "-0.02em" }}>
-  Section heading.
+<h2 className="brand-h2 mb-2 text-black" style={{ letterSpacing: "-0.02em" }}>
+  Section heading, single black.
 </h2>
-<p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-  Mono sub · Proof · Scale
+<p className="brand-mono-sub">
+  Clarifier · Proof · Scale
 </p>
 ```
+
+**JSX note:** wrap `// ...` as `{"// ..."}` to avoid `react/jsx-no-comment-textnodes`. Topic codes are always UPPERCASE with two-digit padding (`APP-01`, not `app-1`). See [Topic codes](#topic-codes) for the catalog.
 
 ### Data card
 ```
@@ -108,22 +119,27 @@ Zero-radius 2-col grid. Active = `bg-black text-white`. Inactive = `bg-white`. `
 44×44 navy square with `lab-clip-tr`. Paired; navigation only. See `AthleteCredibilityCarousel#ChamferNav`.
 
 ### Figure plates (imagery overlay)
-Any lifestyle, product, or portrait image inside a hairline frame gets at least one plate. Plates turn decorative imagery into spec-sheet imagery. Two-corner pattern: top-left = figure number + subject, bottom-right = metadata (location, score, partner, reading).
+
+**Scope: lifestyle and portrait imagery only.** Product renders (bottle shots, packshots) are excluded — a plate on a product render reads as a specimen label, not a clinical document. Apply plates to: lifestyle photography, athlete portraits, clinical/lab settings, case study imagery.
+
+Use the canonical `FigurePlate` component (`app/components/FigurePlate.tsx`). Do not hand-roll plates.
 
 ```tsx
-<div className="relative aspect-[4/5] border border-black/12 bg-white overflow-hidden">
-  <Image {...props} />
-  {/* Optional gradient for overlay legibility when plates sit over busy areas */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" aria-hidden />
-  <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-    Fig. 01 · Research Context
+<FigurePlate n={1} subject="Research context" meta="Durham · Cambridge">
+  <div className="relative aspect-[4/5] border border-black/12 bg-white overflow-hidden">
+    <Image {...props} />
   </div>
-  <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-    Durham · Cambridge
-  </div>
-</div>
+</FigurePlate>
 ```
-Rules: `bg-black/55` (never fully opaque, never fully transparent). `px-2 py-1` only — plates are tight. Number plates sequentially across a page (`Fig. 01` … `Fig. 05`) so the page reads like a document. Omit the gradient when the plate sits over a naturally dark region.
+
+Props: `n` (sequential figure number for this page), `subject` (top-left label after "Fig. 0N ·"), `meta` (optional bottom-right), `gradient` (optional — adds `bg-gradient-to-t from-black/70 via-black/25 to-transparent` for legibility over busy imagery).
+
+Plate labels use `.fig-plate` from `brand-base.css` — do not duplicate the styling inline.
+
+Rules:
+- Number plates sequentially across the page (`Fig. 01` … `Fig. 05`) so the page reads as one document. The page author controls the sequence via the `n` prop.
+- Omit `gradient` when the image has a naturally dark region beneath the plate.
+- One plate minimum (top-left). Bottom-right meta is optional but adds richness — use it when there is a meaningful data point (location, study, score, partner).
 
 ### Hairline data table (numbered rows)
 Use instead of chip/tag clouds when items have a consistent two-part shape (name + role, stat + label, partner + focus). Reads as catalogue, not card.
@@ -242,17 +258,18 @@ Final section pattern across `/science`, `/case-studies`, `/our-story`: a hairli
 
 ## Typography rules
 
-- **Eyebrow:** `font-mono text-[10px] uppercase tracking-[0.2em] text-black/40`
-- **Mono sub:** `font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums`
+- **Eyebrow:** `.brand-eyebrow` (defined in `brand-base.css`) — do not write the Tailwind string by hand
+- **Mono sub:** `.brand-mono-sub` (defined in `brand-base.css`) — do not write the Tailwind string by hand
+- **Figure plate label:** `.fig-plate` (defined in `brand-base.css`) — use via `FigurePlate` component, not directly
 - **Row counter / spec label:** `font-mono text-[9px]–[11px] uppercase tracking-[0.18em] tabular-nums`, opacity `text-black/35–60`
-- **Figure plate:** `font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums`
 - **PMID / citation:** `font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] tabular-nums`, trailing `↗`
 - **Body paragraph inside a clinical card:** `text-sm md:text-base text-black/70–/75 leading-relaxed`. Never use `brand-body` at full opacity in clinical surfaces — the type is too dense against the hairline frames.
 - Any number that can change → `tabular-nums`
 - Units, labels, percentages, PMIDs → `font-mono`
 - Canonical separator is the middle-dot `·` (U+00B7). Not `|`, not `—`.
-- Use `//` as a prefix for "document code" eyebrows (philosophy, lab notes, meta lines). Reserved — not for section eyebrows.
+- Every section eyebrow opens with `//`. Format: `// <short concept> · <TOPIC-0X>`. Topic code mandatory; short concept optional. Wrap as `{"// ..."}` in JSX to avoid `react/jsx-no-comment-textnodes`. Longer-form "document code" eyebrows (`// Research Philosophy · Doc-RP-001`) remain valid where the context is a named document rather than a section.
 - Headings get `letterSpacing: "-0.02em"` inline. The stock `brand-h1`/`brand-h2` classes don't tighten enough for clinical.
+- Headings are single `text-black`. No accent spans, no navy fills, no gradient text. Navy `#1B2757` is interactive-only; headings are not interactive.
 
 ## Counter conventions
 
@@ -270,6 +287,34 @@ Counter format signals what you're counting. Keep zero-padded to 2 digits unless
 | `Fig. 01` | Figure plate on imagery | Any hairline-framed asset |
 
 Numbering is sequential across a page — `Fig. 01` through `Fig. 05` should read as one continuous document.
+
+---
+
+## Topic codes
+
+Every section eyebrow ends with a topic code identifying its subject. Codes are **global**, not per-page — one canonical code per topic so the same subject reads the same wherever it appears across the site.
+
+| Code | Topic |
+|------|-------|
+| `CONKA-00` | Core brand philosophy — purpose, mission, the fundamental "why CONKA exists" |
+| `CONKA-01` | CONKA Flow (product) |
+| `CONKA-02` | CONKA Clear (product) |
+| `CONKA-03` | Both / Bundle / commercial conversion |
+| `APP-01` | The companion app |
+| `SCI-01` | How it works / mechanism |
+| `SCI-02` | Deep science / research / clinical trials |
+| `ING-01` | Ingredients / formula breakdown |
+| `STORY-01` | Our story / founders |
+| `PROOF-01` | First-party objective evidence — clinical data, case studies, credentials, certifications, manufacturing standards |
+| `PROOF-02` | Self-verification — 100-day guarantee, risk reversal, prove it yourself |
+| `PROOF-03` | Third-party social proof — testimonials, customer reviews |
+| `FAQ-01` | FAQ |
+
+**Rules:**
+- UPPERCASE stem, hyphen, two-digit padding. Example: `APP-01`, not `app-1`.
+- Global scope: one canonical code per topic. If a section doesn't fit an existing code, add a new row to this catalog before using it.
+- Topic codes are distinct from element counters (`P-01`, `F-01`, `U-01`, `R-01`, `Fig. 01`). Element counters live inside a section body; topic codes live in the section eyebrow.
+- New topics: pick a meaningful 3–6 char stem + `-01`. Expand to `-02` if a second surface covers the same topic from a different angle (e.g. `SCI-01` mechanism, `SCI-02` deep research).
 
 ---
 
@@ -340,6 +385,8 @@ Requires `relative overflow-hidden` parent. Use `border-white` on dark images. N
 
 - Add `border-radius` — tokens handle it
 - Use gradients — solid navy `#1B2757` only. Exception: `bg-gradient-to-t from-black/70 via-black/25 to-transparent` is allowed *over imagery* for figure-plate legibility, never on UI surfaces.
+- Colour headings — single black only. No accent spans, no navy spans, no gradient text. Headings are not interactive; navy `#1B2757` is reserved for interactive elements (CTAs, selected state, citation links).
+- Omit the topic code in a section eyebrow — every section eyebrow ends with `· TOPIC-0X`. See [Topic codes](#topic-codes).
 - Apply `lab-clip-tr` (or any chamfer) to non-interactive elements (cards, icon tiles, figure plates)
 - Hand-roll a primary CTA — always `ConkaCTAButton`
 - Add shadows to cards — hairline border only
@@ -350,4 +397,6 @@ Requires `relative overflow-hidden` parent. Use `border-white` on dark images. N
 - Use rounded SVG strokes in icon tiles (`strokeLinecap="round"`) — square caps, miter joins
 - Use oversized quotation marks or blockquote styling — 2px navy left rule instead
 - Use `•` bullets anywhere — em-dash (`—`) only
-- Leave imagery un-plated in a clinical layout — every framed asset gets at least one `Fig. 0X` corner plate
+- Leave lifestyle or portrait imagery un-plated — every framed lifestyle/portrait asset gets at least one `Fig. 0X` corner plate via `FigurePlate`
+- Apply figure plates to product renders (bottle shots, packshots) — plates are for documentary imagery only
+- Hand-roll figure plate labels — use `.fig-plate` from `brand-base.css` or the `FigurePlate` component

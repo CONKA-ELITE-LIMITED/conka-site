@@ -12,7 +12,7 @@ export default function ScienceHero({ isMobile = false }: ScienceHeroProps) {
       {/* Copy */}
       <div className="order-2 lg:order-1 lg:flex-1 mt-10 lg:mt-0">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          The Science · Peer-Reviewed · Measured
+          {"// The science · SCI-02"}
         </p>
         <h1
           className="brand-h1 text-black mb-3"

@@ -44,7 +44,7 @@ export function AppHero() {
 
         <header>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            Brain Performance Technology
+            {"// Brain performance technology · APP-01"}
           </p>
           <h1
             className="brand-h1 text-black mb-3"

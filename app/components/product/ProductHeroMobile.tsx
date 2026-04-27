@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   FormulaId,
   PackSize,
@@ -39,38 +39,49 @@ export default function ProductHeroMobile({
 
   return (
     <>
-      {/* Header */}
+      {/* Product Image + thumbnails */}
+      <div className="relative w-screen left-1/2 -translate-x-1/2 bg-[#FAFAFA]">
+        <ProductImageSlideshow
+          images={
+            formulaId === "01" ? formulaImages.flow : formulaImages.clear
+          }
+          alt={`${formula.name} bottle`}
+          fullBleedThumbnails
+        />
+      </div>
+
+      {/* Header — title + assurance, below the asset */}
       <div
-        className="w-full min-w-0 pt-3 pb-2"
+        className="w-full min-w-0 pt-2 pb-0"
         style={{
           paddingLeft: "var(--brand-space-xs)",
           paddingRight: "var(--brand-space-xs)",
         }}
       >
-        <div className="flex items-center gap-2 flex-wrap mb-2">
+        <div className="flex items-center gap-2 flex-wrap mb-1">
           <div className="flex" aria-hidden>
             {[1, 2, 3, 4, 5].map((i) => (
               <svg
                 key={i}
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="text-amber-500"
+                className="text-[#1B2757]"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}
           </div>
-          <span className="brand-data text-black/60">
+          <span className="brand-data text-black/60 text-xs">
             {formulaId === "01"
               ? "Over 90,000 bottles sold"
               : "Over 60,000 bottles sold"}
           </span>
         </div>
         <h1
-          className="brand-h1-bold leading-tight"
+          className="brand-h2 leading-tight"
           style={{ letterSpacing: "-0.02em" }}
         >
           {formulaId === "01" ? (
@@ -83,20 +94,9 @@ export default function ProductHeroMobile({
         </h1>
       </div>
 
-      {/* Product Image + thumbnails */}
-      <div className="relative w-screen left-1/2 -translate-x-1/2 bg-[#FAFAFA]">
-        <ProductImageSlideshow
-          images={
-            formulaId === "01" ? formulaImages.flow : formulaImages.clear
-          }
-          alt={`${formula.name} bottle`}
-          fullBleedThumbnails
-        />
-      </div>
-
       {/* Content */}
       <div
-        className="pt-3 pb-4 space-y-3"
+        className="pt-1 pb-4 space-y-2"
         style={{
           paddingLeft: "var(--brand-space-xs)",
           paddingRight: "var(--brand-space-xs)",
@@ -105,11 +105,10 @@ export default function ProductHeroMobile({
         {/* Meta pill */}
         <div>
           <span
-            className="inline-block py-1 brand-data text-black/60 text-sm"
+            className="inline-block py-1 rounded-none brand-data text-black/60 text-sm"
             style={{
               paddingLeft: "var(--brand-space-m)",
               paddingRight: "var(--brand-space-m)",
-              borderRadius: "var(--brand-radius-interactive)",
               background: "rgba(0,0,0,0.04)",
             }}
           >
@@ -117,7 +116,7 @@ export default function ProductHeroMobile({
           </span>
         </div>
 
-        <p className="brand-body text-black/80 text-base leading-snug mb-1.5">
+        <p className="text-sm md:text-base text-black/75 leading-relaxed mb-1.5">
           {formula.headline}
         </p>
 
@@ -240,53 +239,9 @@ export default function ProductHeroMobile({
           </button>
         </div>
 
-        {/* CTA — FunnelCTA replica (handler-based, clinical) */}
-        <button
-          type="button"
-          onClick={onAddToCart}
-          className="w-full inline-flex flex-row items-center gap-4 py-3.5 pl-5 pr-8 text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)]"
-        >
-          <span className="relative w-7 h-7 shrink-0" aria-hidden>
-            <Image
-              src="/logos/ConkaO.png"
-              alt=""
-              fill
-              sizes="28px"
-              className="object-contain"
-              style={{ filter: "brightness(0) invert(1)" }}
-            />
-          </span>
-          <span className="flex flex-col items-start flex-1 min-w-0 text-left">
-            <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] flex items-center gap-0.5">
-              <span>Add to Cart</span>
-              <span
-                className="inline-block ml-0.5"
-                style={{ animation: "lab-blink 1s step-end infinite" }}
-                aria-hidden
-              >
-                _
-              </span>
-            </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/70 mt-1 leading-none tabular-nums">
-              {formatPrice(pricing.price)}
-            </span>
-          </span>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-            className="shrink-0"
-            aria-hidden
-          >
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="13 6 19 12 13 18" />
-          </svg>
-        </button>
+        <ConkaCTAButton onClick={onAddToCart} meta={formatPrice(pricing.price)} className="w-full max-w-none">
+          Add to Cart
+        </ConkaCTAButton>
 
         {/* Trust badges */}
         <LandingTrustBadges />

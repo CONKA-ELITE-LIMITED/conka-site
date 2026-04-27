@@ -105,7 +105,7 @@ export default function CognitiveTestSectionMobile({
       {/* Trio header */}
       <div className="mb-6">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-          Test Your Brain · Cognetivity SDK · 2-Min
+          {"// Test your brain · APP-01"}
         </p>
         <h2
           id="cognitive-test-heading"

@@ -108,12 +108,6 @@ function MobileSectionContent({
             {i < headingParts.length - 1 && <br />}
           </span>
         ))}
-        {data.headingAccent && (
-          <>
-            {" "}
-            <span className="text-[#1B2757]">{data.headingAccent}</span>
-          </>
-        )}
       </h3>
       <p className="text-sm text-black/75 leading-relaxed mb-3">{data.body}</p>
       {data.footnote && (
@@ -189,7 +183,7 @@ export function AppStickyPhoneBlockMobile() {
         {/* Trio header */}
         <div className="mb-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-            The App · 04 Features · Measurable
+            {"// Four features · APP-01"}
           </p>
           <h2
             className="brand-h2 text-black mb-2"

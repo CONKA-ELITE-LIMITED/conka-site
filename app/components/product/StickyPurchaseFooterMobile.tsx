@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   PackSize,
   PurchaseType,
@@ -240,14 +241,9 @@ export default function StickyPurchaseFooterMobile({
                 </>
               )}
             </div>
-            <button
-              onClick={onAddToCart}
-              className="px-5 py-2.5 font-mono uppercase tracking-[0.14em] tabular-nums font-bold text-sm whitespace-nowrap shrink-0 text-white border-0 bg-[#1B2757] lab-clip-tr transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 inline-flex items-center justify-center gap-1.5"
-            >
-              <span>Add</span>
-              <span className="opacity-90">·</span>
-              <span>{formatPrice(price)}</span>
-            </button>
+            <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto shrink-0">
+              Add · {formatPrice(price)}
+            </ConkaCTAButton>
           </div>
         </div>
       </div>

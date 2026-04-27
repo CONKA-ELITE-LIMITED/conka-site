@@ -193,7 +193,7 @@ export default function LabTimeline({
 
       {/* Trio header */}
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        Expected Outcomes · Timeline
+        {"// Expected outcomes · SCI-01"}
       </p>
       <h2
         className="brand-h1 mb-2"

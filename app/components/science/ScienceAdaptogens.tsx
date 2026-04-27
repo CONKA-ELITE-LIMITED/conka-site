@@ -25,7 +25,7 @@ export default function ScienceAdaptogens({
     <div>
       <div className="mb-8 lg:mb-10">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          The Foundation · Mechanism · Pre-Stimulant
+          {"// The foundation · SCI-01"}
         </p>
         <h2
           className="brand-h2 text-black mb-2"

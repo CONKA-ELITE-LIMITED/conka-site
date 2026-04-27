@@ -68,7 +68,7 @@ export default function LandingValueComparison() {
     <div ref={ref}>
       {/* Eyebrow */}
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        // Get More For Less
+        {"// Get more for less · SCI-01"}
       </p>
 
       {/* Heading */}

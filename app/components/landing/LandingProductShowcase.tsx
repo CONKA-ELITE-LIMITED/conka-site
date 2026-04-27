@@ -7,7 +7,7 @@ export default function LandingProductShowcase() {
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        // The Formulation
+        {"// The formulation · CONKA-03"}
       </p>
       <h2
         className="brand-h1 mb-4"

@@ -17,7 +17,7 @@ export function WhyConkaSection({
 }: WhyConkaSectionProps) {
   const formattedId = String(point.id).padStart(2, "0");
   const formattedTotal = String(totalPoints).padStart(2, "0");
-  const counterLabel = `R-${formattedId} · Reason ${formattedId} / ${formattedTotal}`;
+  const counterLabel = `// Reason ${formattedId}/${formattedTotal} · CONKA-00`;
 
   const imageBlock = (
     <div className="relative w-full aspect-[4/5] border border-black/12 overflow-hidden bg-[#f5f5f5]">
@@ -61,7 +61,7 @@ export function WhyConkaSection({
       <p
         className={`${
           variant === "mobile" ? "text-base" : "text-lg md:text-xl"
-        } text-[#1B2757] leading-snug mb-5`}
+        } text-black/80 leading-snug mb-5`}
         style={{ letterSpacing: "-0.01em" }}
       >
         {point.subheading}.

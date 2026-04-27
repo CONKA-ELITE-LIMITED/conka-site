@@ -14,7 +14,7 @@ export function AppSubscribersSection() {
       {/* Copy */}
       <div className="order-2 lg:order-1 lg:flex-1 mt-10 lg:mt-0">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-          For Subscribers · Loyalty Programme · Earn &amp; Redeem
+          {"// Subscriber rewards · APP-01"}
         </p>
         <h2
           className="brand-h2 text-black mb-3"
