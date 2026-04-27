@@ -19,6 +19,7 @@ import {
 } from "@/app/lib/productData";
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
 import { getProtocolImage } from "@/app/lib/productImageConfig";
+import { CadenceType, FUNNEL_CADENCES } from "@/app/lib/cadenceData";
 
 interface StickyPurchaseFooterProps {
   // For formula pages
@@ -30,8 +31,15 @@ interface StickyPurchaseFooterProps {
   selectedTier?: ProtocolTier;
   onTierSelect?: (tier: ProtocolTier) => void;
   // Shared
-  purchaseType: PurchaseType;
-  onPurchaseTypeChange: (type: PurchaseType) => void;
+  // NOTE: purchaseType/onPurchaseTypeChange are the old pack-size model.
+  // They drive the subscribe toggle below. Pass selectedCadence instead to enter
+  // cadence mode, which hides the old selectors. These props may be removed once
+  // all formula/balance pages have fully migrated to the cadence model.
+  purchaseType?: PurchaseType;
+  onPurchaseTypeChange?: (type: PurchaseType) => void;
+  // Cadence mode -- replaces purchaseType + pack/tier selector for formula/balance pages
+  selectedCadence?: CadenceType;
+  cadencePrice?: number;
   onAddToCart: () => void;
 }
 
@@ -50,8 +58,10 @@ export default function StickyPurchaseFooter({
   protocolId,
   selectedTier,
   onTierSelect,
-  purchaseType,
+  purchaseType = "subscription",
   onPurchaseTypeChange,
+  selectedCadence,
+  cadencePrice,
   onAddToCart,
 }: StickyPurchaseFooterProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -154,6 +164,36 @@ export default function StickyPurchaseFooter({
   }
 
   if (!isVisible) return null;
+
+  // Cadence mode: simplified strip for formula + balance pages.
+  // Cadence selection lives in the hero widget; footer just confirms what's being bought.
+  if (selectedCadence !== undefined && cadencePrice !== undefined) {
+    const cadenceDisplay = FUNNEL_CADENCES[selectedCadence];
+    return (
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/12">
+        <div className="max-w-6xl mx-auto lg:ml-auto lg:mr-0 lg:max-w-[90%] xl:max-w-[85%] px-4 md:px-6 lg:pl-0 lg:pr-16 py-3">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 w-fit p-2 md:p-2.5 shrink-0 border border-black/8">
+              {thumbnailSrc && (
+                <div className="relative w-12 h-12 md:w-14 md:h-14 overflow-hidden flex-shrink-0 bg-black/5">
+                  <Image src={thumbnailSrc} alt="" fill className="object-cover" sizes="56px" />
+                </div>
+              )}
+              <div className="min-w-0">
+                <p className="font-mono text-sm font-bold truncate">{productName}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] opacity-70 truncate">
+                  {cadenceDisplay.label} · {formatPrice(cadencePrice)}
+                </p>
+              </div>
+            </div>
+            <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto">
+              Add to Cart · {formatPrice(cadencePrice)}
+            </ConkaCTAButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -317,7 +357,7 @@ export default function StickyPurchaseFooter({
                 {/* Subscribe Toggle */}
                 <button
                   onClick={() =>
-                    onPurchaseTypeChange(
+                    onPurchaseTypeChange?.(
                       purchaseType === "subscription"
                         ? "one-time"
                         : "subscription",

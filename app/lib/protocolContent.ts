@@ -127,9 +127,9 @@ export const protocolContent: Record<ProtocolId, ProtocolContent> = {
   "3": {
     id: "3",
     name: "Balance Protocol",
-    subtitle: "Alternate daily between Flow and Clarity",
+    subtitle: "Flow in the morning. Clear in the afternoon.",
     description:
-      "The best of both worlds. Alternate between CONKA Flow and CONKA Clarity for comprehensive cognitive support. Perfect for those who want the full spectrum of benefits without committing to one dominant formula.",
+      "Take CONKA Flow with your morning routine for sustained energy and focus through the first half of your day. Switch to CONKA Clear after lunch to maintain precision and clarity through the afternoon. Full-day cognitive coverage without stimulant cycling.",
     icon: "balance",
     image: "/protocols/BalanceGreen.jpg", // Navigation/thumbnail image
     bestFor: ["Balanced Approach", "All-Rounders", "Hybrid Athletes"],

@@ -20,6 +20,11 @@ import {
   PurchaseType,
   protocolContent,
 } from "@/app/lib/productData";
+import {
+  CadenceType,
+  getBalanceCadenceVariant,
+  getBalanceCadencePricing,
+} from "@/app/lib/cadenceData";
 import LandingProductShowcase from "@/app/components/landing/LandingProductShowcase";
 import WhyConkaWorks from "@/app/components/WhyConkaWorks";
 import FormulaCaseStudies, {
@@ -57,6 +62,8 @@ export default function ProtocolPage() {
   const [selectedTier, setSelectedTier] = useState<ProtocolTier>("pro");
   const [purchaseType, setPurchaseType] =
     useState<PurchaseType>("subscription");
+  // Cadence state for Balance (protocol 3) -- used instead of tier/purchaseType
+  const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
 
   // Validate protocol ID from URL and redirect invalid to Balance
   useEffect(() => {
@@ -84,17 +91,25 @@ export default function ProtocolPage() {
   // Meta ViewContent on initial load and when selected protocol changes
   useEffect(() => {
     if (!protocol) return;
-    const variantData = getProtocolVariantId(
-      selectedProtocolId,
-      "pro",
-      "subscription",
-    );
-    if (variantData?.variantId) {
-      trackMetaViewContent({
-        content_ids: [toContentId(variantData.variantId)],
-        content_name: protocol.name,
-        content_type: "product",
-      });
+    // Balance uses cadence variant IDs (funnel products); other protocols use legacy variant IDs
+    if (selectedProtocolId === "3") {
+      const variantData = getBalanceCadenceVariant("monthly-sub");
+      if (variantData?.variantId) {
+        trackMetaViewContent({
+          content_ids: [toContentId(variantData.variantId)],
+          content_name: protocol.name,
+          content_type: "product",
+        });
+      }
+    } else {
+      const variantData = getProtocolVariantId(selectedProtocolId, "pro", "subscription");
+      if (variantData?.variantId) {
+        trackMetaViewContent({
+          content_ids: [toContentId(variantData.variantId)],
+          content_name: protocol.name,
+          content_type: "product",
+        });
+      }
     }
   }, [selectedProtocolId, protocol]);
 
@@ -104,45 +119,55 @@ export default function ProtocolPage() {
 
   // Hero section handler
   const handleAddToCartFromHero = async () => {
-    const variantData = getProtocolVariantId(
-      selectedProtocolId,
-      selectedTier,
-      purchaseType,
-    );
-    if (variantData?.variantId) {
-      await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
-        location: "hero",
-        source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page",
-        sessionId: getQuizSessionId(),
-      });
+    if (selectedProtocolId === "3") {
+      const variantData = getBalanceCadenceVariant(selectedCadence);
+      if (variantData?.variantId) {
+        await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
+          location: "hero",
+          source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page",
+          sessionId: getQuizSessionId(),
+        });
+      } else {
+        console.warn("Variant not configured for:", { protocol: "3", cadence: selectedCadence });
+      }
     } else {
-      console.warn("Variant ID not configured for:", {
-        protocol: selectedProtocolId,
-        tier: selectedTier,
-        type: purchaseType,
-      });
+      const variantData = getProtocolVariantId(selectedProtocolId, selectedTier, purchaseType);
+      if (variantData?.variantId) {
+        await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
+          location: "hero",
+          source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page",
+          sessionId: getQuizSessionId(),
+        });
+      } else {
+        console.warn("Variant ID not configured for:", { protocol: selectedProtocolId, tier: selectedTier, type: purchaseType });
+      }
     }
   };
 
   // Sticky footer handler
   const handleAddToCartFromFooter = async () => {
-    const variantData = getProtocolVariantId(
-      selectedProtocolId,
-      selectedTier,
-      purchaseType,
-    );
-    if (variantData?.variantId) {
-      await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
-        location: "sticky_footer",
-        source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page",
-        sessionId: getQuizSessionId(),
-      });
+    if (selectedProtocolId === "3") {
+      const variantData = getBalanceCadenceVariant(selectedCadence);
+      if (variantData?.variantId) {
+        await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
+          location: "sticky_footer",
+          source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page",
+          sessionId: getQuizSessionId(),
+        });
+      } else {
+        console.warn("Variant not configured for:", { protocol: "3", cadence: selectedCadence });
+      }
     } else {
-      console.warn("Variant ID not configured for:", {
-        protocol: selectedProtocolId,
-        tier: selectedTier,
-        type: purchaseType,
-      });
+      const variantData = getProtocolVariantId(selectedProtocolId, selectedTier, purchaseType);
+      if (variantData?.variantId) {
+        await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
+          location: "sticky_footer",
+          source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page",
+          sessionId: getQuizSessionId(),
+        });
+      } else {
+        console.warn("Variant ID not configured for:", { protocol: selectedProtocolId, tier: selectedTier, type: purchaseType });
+      }
     }
   };
 
@@ -273,6 +298,8 @@ export default function ProtocolPage() {
               onPurchaseTypeChange={setPurchaseType}
               onAddToCart={handleAddToCartFromHero}
               onProtocolChange={selectedProtocolId !== "3" ? handleProtocolChange : undefined}
+              selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
+              onCadenceChange={selectedProtocolId === "3" ? setSelectedCadence : undefined}
             />
           </div>
         </section>
@@ -327,6 +354,8 @@ export default function ProtocolPage() {
           selectedTier={selectedTier}
           onTierSelect={setSelectedTier}
           purchaseType={purchaseType}
+          selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
+          cadencePrice={selectedProtocolId === "3" ? getBalanceCadencePricing(selectedCadence).price : undefined}
           onAddToCart={handleAddToCartFromFooter}
         />
       </div>
@@ -352,6 +381,8 @@ export default function ProtocolPage() {
             onPurchaseTypeChange={setPurchaseType}
             onAddToCart={handleAddToCartFromHero}
             onProtocolChange={selectedProtocolId !== "3" ? handleProtocolChange : undefined}
+            selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
+            onCadenceChange={selectedProtocolId === "3" ? setSelectedCadence : undefined}
           />
         </div>
       </section>
@@ -407,6 +438,8 @@ export default function ProtocolPage() {
         onTierSelect={setSelectedTier}
         purchaseType={purchaseType}
         onPurchaseTypeChange={setPurchaseType}
+        selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
+        cadencePrice={selectedProtocolId === "3" ? getBalanceCadencePricing(selectedCadence).price : undefined}
         onAddToCart={handleAddToCartFromFooter}
       />
     </div>

@@ -15,6 +15,7 @@ import {
   FormulaId,
   ProtocolId,
 } from "@/app/lib/productData";
+import { CadenceType } from "@/app/lib/cadenceData";
 
 const packSizes: PackSize[] = ["4", "8", "12", "28"];
 const packLabels: Record<PackSize, string> = {
@@ -30,7 +31,14 @@ interface StickyPurchaseFooterMobileProps {
   protocolId?: ProtocolId;
   selectedTier?: ProtocolTier;
   onTierSelect?: (tier: ProtocolTier) => void;
-  purchaseType: PurchaseType;
+  // NOTE: purchaseType drives the old subscribe/one-time toggle display.
+  // Pass selectedCadence instead to enter cadence mode, which replaces all
+  // selection UI with a single price-confirmed CTA. May be removed once all
+  // formula/balance pages have fully migrated to the cadence model.
+  purchaseType?: PurchaseType;
+  // Cadence mode -- price-only CTA, no picker on mobile
+  selectedCadence?: CadenceType;
+  cadencePrice?: number;
   onAddToCart: () => void;
 }
 
@@ -41,7 +49,9 @@ export default function StickyPurchaseFooterMobile({
   protocolId,
   selectedTier,
   onTierSelect,
-  purchaseType,
+  purchaseType = "subscription",
+  selectedCadence,
+  cadencePrice,
   onAddToCart,
 }: StickyPurchaseFooterMobileProps) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -92,6 +102,20 @@ export default function StickyPurchaseFooterMobile({
   const hasSelector =
     (showPackSelector && selectedPack) ||
     (showTierSelector && selectedTier && availableTiers.length > 0);
+
+  // Cadence mode: no picker on mobile -- cadence selection lives in the hero widget.
+  // Show a single full-width CTA confirming the price.
+  if (selectedCadence !== undefined && cadencePrice !== undefined) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/12">
+        <div className="px-5 py-3">
+          <ConkaCTAButton compact onClick={onAddToCart}>
+            Add to Cart · {formatPrice(cadencePrice)}
+          </ConkaCTAButton>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

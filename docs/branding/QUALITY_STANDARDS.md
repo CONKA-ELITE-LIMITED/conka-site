@@ -63,7 +63,21 @@ From Ovrload: information must be simple, easily understood, AND fast to digest.
 - Illustrations and friendly visuals make complex science feel non-threatening.
 - Social proof woven into the narrative, not dumped in a review wall.
 - Outstanding breathability/whitespace — sections feel spacious, never cramped.
-- **Learn from:** Their science-to-consumer translation and whitespace discipline.
+- **Learn from:** Their science-to-consumer translation and whitespace discipline. Most similar product category to CONKA — closest reference for messaging, research communication, and product narrative.
+
+### Suri — Premium subscription hardware
+
+- Large-format lifestyle photography and high-quality gifs/video used as primary content — not supporting decoration.
+- Purchase widget is a strong reference for stepped selection UI: 1. Choose colour → 2. Bundle → 3. Plan. Clear, low-friction, no ambiguity about what you're configuring at each step.
+- Subscription framing is baked into the product decision, not appended at checkout.
+- **Learn from:** Their lifestyle asset scale and the stepped purchase widget structure — directly applicable to CONKA's funnel page cadence × product selector.
+
+### Nothing — Technical consumer branding
+
+- Futuristic aesthetic that avoids bland lifestyle clichés — their photography and art direction feels editorial and considered.
+- Heavily stylised site shows that clinical/technical can feel exciting rather than sterile.
+- Dotted wordmark is a strong brand signature — demonstrates how a single typographic choice carries the whole identity.
+- **Learn from:** How they make a spec-sheet aesthetic feel desirable, not cold. Good counter-reference for keeping CONKA's clinical direction energised.
 
 ---
 
