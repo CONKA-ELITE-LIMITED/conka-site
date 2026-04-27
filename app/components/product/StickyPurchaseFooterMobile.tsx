@@ -109,7 +109,7 @@ export default function StickyPurchaseFooterMobile({
     return (
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/12">
         <div className="px-5 py-3">
-          <ConkaCTAButton compact onClick={onAddToCart} className="w-full max-w-none !w-auto">
+          <ConkaCTAButton compact onClick={onAddToCart}>
             Add to Cart · {formatPrice(cadencePrice)}
           </ConkaCTAButton>
         </div>

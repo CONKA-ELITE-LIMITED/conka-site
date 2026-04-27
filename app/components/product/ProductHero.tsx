@@ -76,7 +76,7 @@ export default function ProductHero({
   return (
     <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-[var(--brand-space-m)]">
       {/* Left: Product Image — cadence drives which image is primary */}
-      <div className="relative z-0 lg:w-[44%] lg:flex-shrink-0 order-1 lg:order-1 lg:sticky lg:top-24 lg:self-start">
+      <div className="relative z-0 lg:w-[58%] lg:flex-shrink-0 order-1 lg:order-1 lg:sticky lg:top-24 lg:self-start">
         <div className="relative w-full group">
           <ProductImageSlideshow
             key={selectedCadence}
@@ -87,7 +87,7 @@ export default function ProductHero({
       </div>
 
       {/* Right: Product Info */}
-      <div className="flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-l)] flex-1 lg:w-[48%] lg:flex-shrink-0 min-w-0 order-2 lg:order-2 relative z-10">
+      <div className="flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-l)] flex-1 lg:w-[40%] lg:flex-shrink-0 min-w-0 order-2 lg:order-2 relative z-10">
         <div
           className="brand-card flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-m)] !border-0 relative z-10"
           style={{
