@@ -30,6 +30,27 @@ export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType)
   ];
 }
 
+// Mobile variants: slot 0 replaced with square box assets, rest identical to desktop
+export function getFormulaHeroImagesMobile(formulaId: FormulaId, cadence: CadenceType): string[] {
+  const slot1 =
+    formulaId === "01"
+      ? cadence === "quarterly-sub"
+        ? "/formulas/box/FlowQuarterlyMobile.jpg"
+        : "/formulas/box/FlowBoxMobile.jpg"
+      : cadence === "quarterly-sub"
+        ? "/formulas/box/ClearQuarterlyMobile.jpg"
+        : "/formulas/box/ClearBoxMobile.jpg";
+  return [slot1, ...getFormulaHeroImages(formulaId, cadence).slice(1)];
+}
+
+export function getBalanceHeroImagesMobile(cadence: CadenceType): string[] {
+  const slot1 =
+    cadence === "quarterly-sub"
+      ? "/formulas/box/BothQuarterlyMobile.jpg"
+      : "/formulas/box/BothBoxMobile.jpg";
+  return [slot1, ...getBalanceHeroImages(cadence).slice(1)];
+}
+
 // 5 images for Balance: [0] cadence-driven box, [1-4] lifestyle placeholders
 export function getBalanceHeroImages(cadence: CadenceType): string[] {
   const slot1 =
@@ -40,7 +61,7 @@ export function getBalanceHeroImages(cadence: CadenceType): string[] {
     slot1,
     "/formulas/both/BothHold.jpg",
     "/lifestyle/flow/FlowBoxOpen.jpg",
-    "/lifestyle/both/BothJeans.jpg",
     "/lifestyle/clear/ClearBoxOpen.jpg",
+    "/lifestyle/both/BothJeans.jpg",
   ];
 }

@@ -1,4 +1,3 @@
-// TODO: layout upgrade pending (Phase 3 - product-page-cadence-widget) -- do not add new layout logic here
 "use client";
 
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
@@ -13,8 +12,8 @@ import {
   getCadencePricingByFormula,
   FUNNEL_CADENCES,
   getSavingsPercent,
-  getFunnelProductSlideshow,
 } from "@/app/lib/cadenceData";
+import { getFormulaHeroImagesMobile } from "@/app/lib/heroImageConfig";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import HeroAccordions from "./HeroAccordions";
 
@@ -71,8 +70,7 @@ export default function ProductHeroMobile({
 }: ProductHeroMobileProps) {
   const formula = formulaContent[formulaId];
   const pricing = getCadencePricingByFormula(formulaId, selectedCadence);
-  const productKey = formulaId === "01" ? "flow" : "clear";
-  const images = getFunnelProductSlideshow(productKey, selectedCadence);
+  const images = getFormulaHeroImagesMobile(formulaId, selectedCadence).map((src) => ({ src }));
 
   return (
     <>
