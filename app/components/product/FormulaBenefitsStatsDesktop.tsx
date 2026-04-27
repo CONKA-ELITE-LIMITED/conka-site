@@ -17,14 +17,14 @@ const PRODUCT_IMAGE: Record<FormulaId, { src: string; alt: string }> = {
 /** Per-formula lifestyle assets for the 3 supporting thumbnails */
 const SUPPORTING_ASSETS: Record<FormulaId, { src: string; alt: string }[]> = {
   "01": [
-    { src: "/lifestyle/FlowBoxOpen.jpg", alt: "Unboxing CONKA Flow" },
-    { src: "/lifestyle/FlowDrink.jpg", alt: "Drinking CONKA Flow" },
-    { src: "/lifestyle/FlowLeaf.jpg", alt: "Holding CONKA Flow bottle" },
+    { src: "/lifestyle/flow/FlowBoxOpen.jpg", alt: "Unboxing CONKA Flow" },
+    { src: "/lifestyle/flow/FlowDrink.jpg", alt: "Drinking CONKA Flow" },
+    { src: "/lifestyle/flow/FlowLeaf.jpg", alt: "Holding CONKA Flow bottle" },
   ],
   "02": [
     { src: "/lifestyle/ConkaJeansHold.jpg", alt: "Holding CONKA Clear casually" },
-    { src: "/lifestyle/ClearTable.jpg", alt: "CONKA Clear on a desk" },
-    { src: "/lifestyle/ClearBag.jpg", alt: "CONKA Clear in a bag" },
+    { src: "/lifestyle/clear/ClearTable.jpg", alt: "CONKA Clear on a desk" },
+    { src: "/lifestyle/clear/ClearBag.jpg", alt: "CONKA Clear in a bag" },
   ],
 };
 

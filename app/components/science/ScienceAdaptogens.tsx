@@ -108,7 +108,7 @@ export default function ScienceAdaptogens({
           className={`${isMobile ? "order-1" : ""} relative aspect-[4/3] lg:aspect-[5/6] border border-black/12 bg-white overflow-hidden`}
         >
           <Image
-            src="/lifestyle/FlowLeaf.jpg"
+            src="/lifestyle/flow/FlowLeaf.jpg"
             alt="CONKA Flow bottle held among leaves, showing natural ingredient origin"
             fill
             sizes={isMobile ? "95vw" : "50vw"}

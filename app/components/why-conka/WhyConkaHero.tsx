@@ -8,7 +8,7 @@ export function WhyConkaHero() {
       <div className="flex-1 w-full">
         <div className="relative w-full aspect-[4/5] border border-black/12 overflow-hidden bg-[#f5f5f5]">
           <Image
-            src="/lifestyle/ClearJeansTwo.jpg"
+            src="/lifestyle/clear/ClearJeansTwo.jpg"
             alt="CONKA Clear shot held at the hip"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"

@@ -6,8 +6,8 @@ import { FormulaId, formulaContent } from "@/app/lib/productData";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
 
 const FAQ_ASSETS: Record<FormulaId, { src: string; alt: string }> = {
-  "01": { src: "/lifestyle/FlowDrink.jpg", alt: "Drinking CONKA Flow" },
-  "02": { src: "/lifestyle/ClearDrink.jpg", alt: "Drinking CONKA Clear" },
+  "01": { src: "/lifestyle/flow/FlowDrink.jpg", alt: "Drinking CONKA Flow" },
+  "02": { src: "/lifestyle/clear/ClearDrink.jpg", alt: "Drinking CONKA Clear" },
 };
 
 const UPDATED_LABEL = "2026-04";
