@@ -133,7 +133,7 @@ export default function ProtocolHeroMobile({
         <ProductImageSlideshow
           key={isCadenceMode ? selectedCadence : protocolId}
           images={slideImages}
-          alt={`${protocol.name} - Both formulas`}
+          alt={isCadenceMode ? `${protocol.name} - Flow + Clear` : protocol.name}
           fullBleedThumbnails
         />
       </div>

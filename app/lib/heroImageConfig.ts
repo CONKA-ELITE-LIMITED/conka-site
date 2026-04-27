@@ -51,7 +51,7 @@ export function getBalanceHeroImagesMobile(cadence: CadenceType): string[] {
   return [slot1, ...getBalanceHeroImages(cadence).slice(1)];
 }
 
-// 5 images for Balance: [0] cadence-driven box, [1-4] lifestyle placeholders
+// 5 images for Balance: [0] cadence-driven box, [1-4] lifestyle
 export function getBalanceHeroImages(cadence: CadenceType): string[] {
   const slot1 =
     cadence === "quarterly-sub"
@@ -62,6 +62,6 @@ export function getBalanceHeroImages(cadence: CadenceType): string[] {
     "/formulas/both/BothHold.jpg",
     "/lifestyle/flow/FlowBoxOpen.jpg",
     "/lifestyle/clear/ClearBoxOpen.jpg",
-    "/lifestyle/both/BothJeans.jpg",
+    "/formulas/both/BothJeans.jpg",
   ];
 }
