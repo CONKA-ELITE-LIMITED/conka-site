@@ -23,6 +23,7 @@ import {
 import {
   CadenceType,
   getBalanceCadenceVariant,
+  getBalanceCadencePricing,
 } from "@/app/lib/cadenceData";
 import LandingProductShowcase from "@/app/components/landing/LandingProductShowcase";
 import WhyConkaWorks from "@/app/components/WhyConkaWorks";
@@ -353,6 +354,8 @@ export default function ProtocolPage() {
           selectedTier={selectedTier}
           onTierSelect={setSelectedTier}
           purchaseType={purchaseType}
+          selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
+          cadencePrice={selectedProtocolId === "3" ? getBalanceCadencePricing(selectedCadence).price : undefined}
           onAddToCart={handleAddToCartFromFooter}
         />
       </div>
@@ -435,6 +438,8 @@ export default function ProtocolPage() {
         onTierSelect={setSelectedTier}
         purchaseType={purchaseType}
         onPurchaseTypeChange={setPurchaseType}
+        selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
+        cadencePrice={selectedProtocolId === "3" ? getBalanceCadencePricing(selectedCadence).price : undefined}
         onAddToCart={handleAddToCartFromFooter}
       />
     </div>

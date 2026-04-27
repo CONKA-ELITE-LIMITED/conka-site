@@ -27,16 +27,15 @@ import ProductGrid from "@/app/components/home/ProductGrid";
 import {
   CadenceType,
   getCadenceVariantByFormula,
+  getCadencePricingByFormula,
 } from "@/app/lib/cadenceData";
-import { PurchaseType } from "@/app/lib/productData";
 
 export default function ConkaFlowPage() {
   const isMobile = useIsMobile();
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
 
-  // Derive PurchaseType for StickyPurchaseFooter UI compat (interim -- Phase 3 will remove this)
-  const purchaseType: PurchaseType = selectedCadence === "monthly-otp" ? "one-time" : "subscription";
+  const cadencePrice = getCadencePricingByFormula("01", selectedCadence).price;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta)
   useEffect(() => {
@@ -146,9 +145,8 @@ export default function ConkaFlowPage() {
 
         <StickyPurchaseFooterMobile
           formulaId="01"
-          selectedPack="28"
-          onPackSelect={() => {}}
-          purchaseType={purchaseType}
+          selectedCadence={selectedCadence}
+          cadencePrice={cadencePrice}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
 
@@ -239,10 +237,8 @@ export default function ConkaFlowPage() {
 
       <StickyPurchaseFooter
         formulaId="01"
-        selectedPack="28"
-        onPackSelect={() => {}}
-        purchaseType={purchaseType}
-        onPurchaseTypeChange={() => {}}
+        selectedCadence={selectedCadence}
+        cadencePrice={cadencePrice}
         onAddToCart={() => handleAddToCart("sticky_footer")}
       />
 
