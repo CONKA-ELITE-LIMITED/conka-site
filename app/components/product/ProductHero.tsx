@@ -104,7 +104,7 @@ export default function ProductHero({
             <div className="flex items-center gap-2 flex-wrap mb-2">
               <div className="flex" aria-hidden>
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <svg key={i} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-[#1B2757]">
+                  <svg key={i} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-[#1B2757] lg:w-[14px] lg:h-[14px]">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 ))}
@@ -113,7 +113,7 @@ export default function ProductHero({
                 {formulaId === "01" ? "Over 90,000 bottles sold" : "Over 60,000 bottles sold"}
               </span>
             </div>
-            <h1 className="brand-h1 leading-tight" style={{ letterSpacing: "-0.02em" }}>
+            <h1 className="brand-h1 leading-tight lg:!text-[2.5rem]" style={{ letterSpacing: "-0.02em" }}>
               {formulaId === "01" ? "CONKA FL0W" : formula.name}
             </h1>
             <div className="mt-2">
