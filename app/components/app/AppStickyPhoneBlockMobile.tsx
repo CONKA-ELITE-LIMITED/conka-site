@@ -108,12 +108,6 @@ function MobileSectionContent({
             {i < headingParts.length - 1 && <br />}
           </span>
         ))}
-        {data.headingAccent && (
-          <>
-            {" "}
-            <span className="text-[#1B2757]">{data.headingAccent}</span>
-          </>
-        )}
       </h3>
       <p className="text-sm text-black/75 leading-relaxed mb-3">{data.body}</p>
       {data.footnote && (

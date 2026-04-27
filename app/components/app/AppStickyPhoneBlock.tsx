@@ -126,12 +126,6 @@ function SectionContent({
             {i < headingParts.length - 1 && <br />}
           </span>
         ))}
-        {data.headingAccent && (
-          <>
-            {" "}
-            <span className="text-[#1B2757]">{data.headingAccent}</span>
-          </>
-        )}
       </h2>
       <p className="text-sm md:text-base text-black/75 leading-relaxed max-w-xl mb-3">
         {data.body}
