@@ -45,7 +45,7 @@ export default function FormulaBenefitsStatsMobile({
       {/* Trio header */}
       <div className="pt-6">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Measured Outcomes · Clinical Validation
+          {"// Measured outcomes · PROOF-01"}
         </p>
         <h2
           id="benefits-stats-heading"

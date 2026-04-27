@@ -56,7 +56,7 @@ export default function IngredientsPageMobile({
     <div className="pt-4 pb-8">
       <div className="mb-6">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Formula Inputs · Sourced · Tested
+          {"// Formula inputs · ING-01"}
         </p>
         <h1
           className="brand-h1 text-black mb-2"

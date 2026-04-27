@@ -26,7 +26,7 @@ export default function WhatToExpectMobile({ productId }: WhatToExpectMobileProp
       {/* 1. Section header */}
       <div className="mb-10">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Protocol Timeline · Day 1 → Day 90
+          {"// Protocol timeline · SCI-01"}
         </p>
         <h2
           className="brand-h1 mb-2"

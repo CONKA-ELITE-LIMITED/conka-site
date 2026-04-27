@@ -55,7 +55,7 @@ export default function IngredientsPageDesktop({
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
           <header>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-              Formula Inputs · Sourced · Tested
+              {"// Formula inputs · ING-01"}
             </p>
             <h1
               className="brand-h1 mb-2 text-black"

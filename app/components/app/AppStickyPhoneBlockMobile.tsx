@@ -189,7 +189,7 @@ export function AppStickyPhoneBlockMobile() {
         {/* Trio header */}
         <div className="mb-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-            The App · 04 Features · Measurable
+            {"// Four features · APP-01"}
           </p>
           <h2
             className="brand-h2 text-black mb-2"

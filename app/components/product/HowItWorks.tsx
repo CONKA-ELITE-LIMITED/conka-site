@@ -80,7 +80,7 @@ export default function HowItWorks({ formulaId }: HowItWorksProps) {
     <>
       <header className="mb-12">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Protocol · Three Steps · Proven
+          {"// Protocol · SCI-01"}
         </p>
         <h2
           id="how-it-works-heading"

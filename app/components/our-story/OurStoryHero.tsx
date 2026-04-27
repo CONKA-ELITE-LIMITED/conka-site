@@ -23,7 +23,7 @@ export function OurStoryHero() {
 
       <header>
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Our Story · Founders · Research · Mission
+          {"// Our story · STORY-01"}
         </p>
         <h1
           className="brand-h1 text-black mb-3"

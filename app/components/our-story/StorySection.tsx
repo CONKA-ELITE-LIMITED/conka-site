@@ -25,7 +25,7 @@ export function StorySection({
         }`}
       >
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4 lg:mb-6">
-          {formattedId} / {formattedTotal} · Chapter
+          {`// Chapter ${formattedId}/${formattedTotal} · STORY-01`}
         </p>
 
         <div className="mb-6 lg:mb-8">

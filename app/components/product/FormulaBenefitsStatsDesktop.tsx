@@ -44,7 +44,7 @@ export default function FormulaBenefitsStatsDesktop({
       <div className="flex flex-col justify-center pt-6 md:pt-8">
         {/* Trio header */}
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Measured Outcomes · Clinical Validation
+          {"// Measured outcomes · PROOF-01"}
         </p>
         <h2
           id="benefits-stats-heading"
