@@ -150,14 +150,14 @@ export default function HeroAccordions({ productType }: HeroAccordionsProps) {
                   onClick={() => openIngredients("flow")}
                   className="flex-1 py-2.5 border border-black/12 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60 hover:bg-black/4 hover:text-black/80 transition-colors"
                 >
-                  FL0W Ingredients
+                  Flow
                 </button>
                 <button
                   type="button"
                   onClick={() => openIngredients("clear")}
                   className="flex-1 py-2.5 border border-black/12 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60 hover:bg-black/4 hover:text-black/80 transition-colors"
                 >
-                  CLARITY Ingredients
+                  Clear
                 </button>
               </div>
             )}
