@@ -61,7 +61,7 @@ export function WhyConkaSection({
       <p
         className={`${
           variant === "mobile" ? "text-base" : "text-lg md:text-xl"
-        } text-[#1B2757] leading-snug mb-5`}
+        } text-black/80 leading-snug mb-5`}
         style={{ letterSpacing: "-0.01em" }}
       >
         {point.subheading}.

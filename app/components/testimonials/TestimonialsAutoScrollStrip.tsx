@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import TestimonialCard from "./TestimonialCard";
-import TestimonialsSubtitle from "./TestimonialsSubtitle";
 import useIsMobile from "../../hooks/useIsMobile";
 import type { TestimonialsProps } from "./types";
 
@@ -38,15 +37,19 @@ export default function TestimonialsAutoScrollStrip({
   return (
     <>
       {/* Header: will be wrapped in .premium-track by page wrapper */}
-      <div className="text-center mb-8 md:mb-10">
+      <div className="mb-8 md:mb-10">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+          {"// Real people, real results · PROOF-03"}
+        </p>
         <h2
           className="brand-h2 mb-2"
+          style={{ letterSpacing: "-0.02em" }}
         >
           Real People. Real Results
         </h2>
-        <div className="flex justify-center">
-          <TestimonialsSubtitle />
-        </div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+          N=500+ · Verified reviews
+        </p>
       </div>
 
       {/* Full-bleed strip: edge to edge, interactable, pauses on hover or when a card is expanded */}
