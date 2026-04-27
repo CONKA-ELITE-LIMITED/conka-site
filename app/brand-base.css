@@ -250,6 +250,45 @@
   line-height: normal;
 }
 
+/* ---- Clinical patterns ---- */
+
+/* Section eyebrow — opens every trio header: "// Short concept · TOPIC-0X" */
+.brand-eyebrow {
+  font-family: var(--font-brand-data);
+  font-size: 0.625rem; /* 10px */
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgb(0 0 0 / 0.4);
+  line-height: normal;
+}
+
+/* Mono sub-line — clarifier/proof below the heading: "Stat · Stat · Scale" */
+.brand-mono-sub {
+  font-family: var(--font-brand-data);
+  font-size: 0.625rem; /* 10px */
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgb(0 0 0 / 0.5);
+  font-variant-numeric: tabular-nums;
+  line-height: normal;
+}
+
+/* Figure plate label — overlay on lifestyle/portrait imagery */
+.fig-plate {
+  font-family: var(--font-brand-data);
+  font-size: 0.5625rem; /* 9px */
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: white;
+  background-color: rgb(0 0 0 / 0.55);
+  padding: 0.25rem 0.5rem; /* py-1 px-2 */
+  font-variant-numeric: tabular-nums;
+  line-height: normal;
+}
+
 /* ---- Layout utility ---- */
 
 /* Prevent horizontal overflow from full-bleed content */

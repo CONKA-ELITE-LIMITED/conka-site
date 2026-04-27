@@ -53,20 +53,20 @@ For badge overlays inside images (`MORNING`, `AFTERNOON`, `MOST POPULAR`). Inlin
 
 Three elements, three distinct roles:
 
-| Element | Role | Format |
-|---------|------|--------|
-| **Eyebrow** | Identifies the topic the section belongs to | `// <short concept> · <TOPIC-0X>`. Topic code mandatory; concept optional flavor. |
-| **Heading** | The bold positioning statement | Single black. No accent spans. No gradients. No navy fills. `letterSpacing: "-0.02em"` inline. |
-| **Sub-line** | What the heading cannot fit: clarifier, proof, or scale | Mono, middle-dot separated, ≤10 words. |
+| Element | Role | Format | CSS class |
+|---------|------|--------|-----------|
+| **Eyebrow** | Identifies the topic the section belongs to | `// <short concept> · <TOPIC-0X>`. Topic code mandatory; concept optional flavor. | `.brand-eyebrow` |
+| **Heading** | The bold positioning statement | Single black. No accent spans. No gradients. No navy fills. `letterSpacing: "-0.02em"` inline. | `brand-h1` / `brand-h2` / `brand-h3` |
+| **Sub-line** | What the heading cannot fit: clarifier, proof, or scale | Mono, middle-dot separated, ≤10 words. | `.brand-mono-sub` |
 
 ```tsx
-<p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+<p className="brand-eyebrow mb-3">
   {"// Short concept · TOPIC-0X"}
 </p>
-<h2 className="brand-h1 mb-2 text-black" style={{ letterSpacing: "-0.02em" }}>
+<h2 className="brand-h2 mb-2 text-black" style={{ letterSpacing: "-0.02em" }}>
   Section heading, single black.
 </h2>
-<p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+<p className="brand-mono-sub">
   Clarifier · Proof · Scale
 </p>
 ```
