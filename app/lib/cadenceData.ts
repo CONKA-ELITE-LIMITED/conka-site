@@ -10,10 +10,15 @@ import {
   FunnelCadence,
   FunnelPricing,
   FunnelVariantConfig,
+  FUNNEL_CADENCES,
+  getSavingsPercent,
+  getFunnelProductSlideshow,
   getOfferPricing,
   getOfferVariant,
 } from "./funnelData";
 import { FormulaId } from "./productData";
+
+export { FUNNEL_CADENCES, getSavingsPercent, getFunnelProductSlideshow };
 
 // Re-export the cadence union so product pages don't import from funnelData directly
 export type CadenceType = FunnelCadence;
@@ -24,6 +29,13 @@ const FORMULA_TO_PRODUCT = {
   "01": "flow",
   "02": "clear",
 } as const satisfies Record<FormulaId, "flow" | "clear">;
+
+// Per-product accent colors (bottom bar on selected cadence tile)
+export const FORMULA_ACCENT: Record<FormulaId, string> = {
+  "01": "#378ADD",
+  "02": "#F59E0B",
+};
+export const BALANCE_ACCENT = "#0369a1";
 
 // ============================================
 // FORMULA HELPERS (Flow / Clear product pages)

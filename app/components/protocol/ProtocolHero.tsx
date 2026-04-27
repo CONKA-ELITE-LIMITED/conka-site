@@ -12,11 +12,16 @@ import {
 } from "@/app/lib/productData";
 import { getProtocolHeroImages } from "@/app/components/navigation/protocolHeroConfig";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
-import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
+import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import ProtocolRatioSelector from "./ProtocolRatioSelector";
 import {
   CadenceType,
   getBalanceCadencePricing,
+  FUNNEL_CADENCES,
+  getSavingsPercent,
+  getFunnelProductSlideshow,
+  BALANCE_ACCENT,
 } from "@/app/lib/cadenceData";
 
 interface ProtocolHeroProps {
@@ -32,25 +37,39 @@ interface ProtocolHeroProps {
   onCadenceChange?: (cadence: CadenceType) => void;
 }
 
-const BALANCE_CADENCE_OPTIONS: {
-  cadence: CadenceType;
-  label: string;
-  badge?: string;
-  badgeStyle?: "accent" | "muted";
-}[] = [
-  { cadence: "monthly-sub", label: "Monthly subscription", badge: "Most Popular", badgeStyle: "accent" },
-  { cadence: "quarterly-sub", label: "Quarterly subscription", badge: "Best Value", badgeStyle: "muted" },
-  { cadence: "monthly-otp", label: "Buy once" },
-];
+const CADENCE_ORDER: CadenceType[] = ["quarterly-sub", "monthly-sub", "monthly-otp"];
 
-const BALANCE_DELIVERY_LABEL: Record<CadenceType, string> = {
-  "monthly-sub": "56 shots delivered monthly (28 Flow + 28 Clear)",
-  "quarterly-sub": "168 shots delivered every 3 months",
-  "monthly-otp": "56 shots, single delivery",
-};
+function getDeliveryLabel(cadence: CadenceType): string {
+  switch (cadence) {
+    case "monthly-sub": return "Delivered Monthly";
+    case "monthly-otp": return "One-Time Delivery";
+    case "quarterly-sub": return "Delivered Quarterly";
+  }
+}
 
-const BALANCE_SUB_FEATURES = ["Free UK shipping", "Pause, skip, or cancel anytime", "100-day money-back guarantee"];
-const BALANCE_OTP_FEATURES = ["100-day money-back guarantee", "Subscribe later and save 25%"];
+function getPriceFrequency(cadence: CadenceType): string {
+  switch (cadence) {
+    case "monthly-sub": return "/mo";
+    case "monthly-otp": return "";
+    case "quarterly-sub": return "/quarter";
+  }
+}
+
+function getBalanceWhatShips(cadence: CadenceType, shotCount: number): string {
+  switch (cadence) {
+    case "monthly-sub": return `2 boxes (${shotCount} shots) delivered every month`;
+    case "monthly-otp": return `2 boxes (${shotCount} shots), one-time delivery`;
+    case "quarterly-sub": return `6 boxes (${shotCount} shots total) delivered every 3 months`;
+  }
+}
+
+function getBalanceCTAMeta(cadence: CadenceType, price: number): string {
+  switch (cadence) {
+    case "monthly-sub": return `${formatPrice(price)}/mo · save 25%`;
+    case "quarterly-sub": return `${formatPrice(price)}/quarter · best value`;
+    case "monthly-otp": return `${formatPrice(price)} · one-time`;
+  }
+}
 
 const TIER_OPTIONS: ProtocolTier[] = ["starter", "pro", "max"];
 
@@ -107,15 +126,10 @@ export default function ProtocolHero({
     protocol.availableTiers.includes(tier),
   );
 
-  // Cadence pricing helpers for Balance mode
-  const balanceOtpPricing = isCadenceMode ? getBalanceCadencePricing("monthly-otp") : null;
-  const balanceMonthlySubPricing = isCadenceMode ? getBalanceCadencePricing("monthly-sub") : null;
-
-  function getBalanceCompareAt(cadence: CadenceType): number | null {
-    if (cadence === "monthly-sub") return balanceOtpPricing?.price ?? null;
-    if (cadence === "quarterly-sub") return (balanceMonthlySubPricing?.price ?? 0) * 3;
-    return null;
-  }
+  // Cadence mode: cadence-aware images for Balance
+  const balanceImages = isCadenceMode
+    ? getFunnelProductSlideshow("both", selectedCadence!)
+    : getProtocolHeroImages(protocolId);
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-[var(--brand-space-m)]">
@@ -123,7 +137,8 @@ export default function ProtocolHero({
       <div className="relative z-0 lg:w-[44%] lg:flex-shrink-0 order-1 lg:order-1 lg:sticky lg:top-24 lg:self-start">
         <div className="relative w-full group">
           <ProductImageSlideshow
-            images={getProtocolHeroImages(protocolId)}
+            key={isCadenceMode ? selectedCadence : protocolId}
+            images={balanceImages}
             alt={`${protocol.name} - Both formulas`}
           />
         </div>
@@ -201,84 +216,103 @@ export default function ProtocolHero({
 
           {/* Tier selector (non-Balance protocols) or Cadence selector (Balance) */}
           {isCadenceMode ? (
-            <div className="space-y-2">
-              {BALANCE_CADENCE_OPTIONS.map(({ cadence, label, badge, badgeStyle }) => {
+            <div className="flex flex-col gap-3">
+              {CADENCE_ORDER.map((cadence, i) => {
+                const display = FUNNEL_CADENCES[cadence];
                 const isSelected = selectedCadence === cadence;
                 const cadencePricing = getBalanceCadencePricing(cadence);
-                const compareAt = getBalanceCompareAt(cadence);
-                const isSubscription = cadence !== "monthly-otp";
-                const features = isSubscription ? BALANCE_SUB_FEATURES : BALANCE_OTP_FEATURES;
+                const frequency = getPriceFrequency(cadence);
+                const bannerLabel = display.badge ?? display.savingsLabel;
 
                 return (
                   <button
-                    key={cadence}
+                    key={isSelected ? `active-${cadence}` : cadence}
+                    type="button"
                     onClick={() => onCadenceChange!(cadence)}
-                    className={`w-full text-left transition-colors cursor-pointer bg-white overflow-hidden ${
-                      isSelected ? "border-2 border-[#1B2757]" : "border border-black/10"
+                    className={`relative w-full text-left border-2 bg-white transition-all duration-200 select-none overflow-hidden ${
+                      isSelected
+                        ? "card-pulse border-[#1B2757] shadow-md"
+                        : "border-black/10 hover:border-black/25 shadow-sm"
                     }`}
                   >
-                    {isSelected && badge && (
-                      <div
-                        className="py-1.5 pl-4 font-mono text-[10px] uppercase tracking-[0.18em] text-white tabular-nums"
-                        style={{ backgroundColor: badgeStyle === "accent" ? "var(--brand-accent)" : "#1B2757" }}
-                      >
-                        {badge}
+                    {bannerLabel && (
+                      <div className="py-1.5 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] leading-none text-white bg-[#1B2757] text-center">
+                        {bannerLabel}
                       </div>
                     )}
-                    <div className="p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                          <span
-                            className={`flex-shrink-0 w-5 h-5 border-2 mt-0.5 flex items-center justify-center ${
-                              isSelected ? "border-[var(--brand-accent)] bg-[var(--brand-accent)]" : "border-black/30"
-                            }`}
-                          >
-                            {isSelected && (
-                              <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
-                                <path d="M2.5 8.5L6.5 12L13.5 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            )}
-                          </span>
-                          <div className="flex-1 min-w-0">
-                            <span className="font-bold text-[var(--brand-black)]">{label}</span>
-                            {!isSelected && badge && (
-                              <span className="ml-2 inline-block px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums bg-[var(--brand-accent)]/10 text-[var(--brand-accent)]">
-                                {badge}
-                              </span>
+                    <div className={isSelected ? "p-4" : "px-4 py-3"}>
+                      <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-black/35 leading-none mb-3 tabular-nums">
+                        {String(i + 1).padStart(2, "0")} · {getDeliveryLabel(cadence)}
+                      </p>
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 transition-all duration-200 ${isSelected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"}`}>
+                            <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className={`transition-all duration-200 ${isSelected ? "opacity-100 scale-100" : "opacity-0 scale-50"}`}>
+                              <path d="M2.5 8.5L6.5 12L13.5 4" stroke="white" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className={`font-semibold ${isSelected ? "text-base text-[var(--brand-black)]" : "text-sm text-black/60"}`}>
+                              {display.label}
+                            </p>
+                            {!isSelected && (
+                              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-black/40 mt-0.5 tabular-nums">
+                                {cadencePricing.shotCount} shots
+                              </p>
                             )}
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          {compareAt && (
-                            <p className="font-mono text-sm tabular-nums line-through text-black/50">
-                              {formatPrice(compareAt)}
+                          <p className={`font-semibold tabular-nums ${isSelected ? "text-base text-[var(--brand-black)]" : "text-sm text-black/60"}`}>
+                            {formatPrice(cadencePricing.perShot)}
+                            <span className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-black/40">/shot</span>
+                          </p>
+                          {!isSelected && (
+                            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-black/40 mt-0.5 tabular-nums">
+                              {formatPrice(cadencePricing.price)}{frequency}
                             </p>
                           )}
-                          <p className="text-2xl font-bold tabular-nums text-[var(--brand-black)]">
-                            {formatPrice(cadencePricing.price)}
-                          </p>
-                          <p className="font-mono text-xs tabular-nums text-black">
-                            {formatPrice(cadencePricing.perShot)}/shot
-                          </p>
                         </div>
                       </div>
                       {isSelected && (
-                        <>
-                          <p className="text-sm text-black/80 mt-3 ml-8">
-                            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60 mr-1.5">Ships ·</span>
-                            {BALANCE_DELIVERY_LABEL[cadence]}
-                          </p>
-                          <ul className="mt-2 ml-8 space-y-1">
-                            {features.map((feature) => (
-                              <li key={feature} className="flex items-start gap-2 text-sm text-black/80">
-                                <span className="font-mono text-black/30 shrink-0" aria-hidden>—</span>
+                        <div className="mt-4 pt-4 ml-8 border-t border-black/10 space-y-3">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-bold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.perShot)}</span>
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot</span>
+                          </div>
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            <span className="text-base font-semibold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.price)}{frequency}</span>
+                            {cadencePricing.compareAtPrice && (
+                              <>
+                                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40 line-through tabular-nums">{formatPrice(cadencePricing.compareAtPrice)}</span>
+                                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1B2757] tabular-nums">{getSavingsPercent(cadencePricing.price, cadencePricing.compareAtPrice)}% off</span>
+                              </>
+                            )}
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55 mt-0.5 shrink-0">Ships</span>
+                            <p className="text-sm text-black/60">{getBalanceWhatShips(cadence, cadencePricing.shotCount)}</p>
+                          </div>
+                          {display.shippingCallout && (
+                            <div className="flex items-start gap-2">
+                              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55 mt-0.5 shrink-0">Note</span>
+                              <p className="text-sm text-black/60">{display.shippingCallout}</p>
+                            </div>
+                          )}
+                          <div className="space-y-1.5">
+                            {display.features.map((feature) => (
+                              <div key={feature} className="flex items-center gap-2 text-sm text-black/70">
+                                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 text-[#1B2757]">
+                                  <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" />
+                                </svg>
                                 <span>{feature}</span>
-                              </li>
+                              </div>
                             ))}
-                          </ul>
-                        </>
+                          </div>
+                        </div>
                       )}
                     </div>
+                    {isSelected && <div className="h-1 w-full" style={{ backgroundColor: BALANCE_ACCENT }} aria-hidden />}
                   </button>
                 );
               })}
@@ -383,56 +417,45 @@ export default function ProtocolHero({
             </>
           )}
 
-          {/* CTA — FunnelCTA replica (handler-based, clinical) */}
-          <button
-            type="button"
-            onClick={onAddToCart}
-            className="w-full inline-flex flex-row items-center gap-4 py-3.5 pl-5 pr-8 text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)]"
-          >
-            <span className="relative w-7 h-7 shrink-0" aria-hidden>
-              <Image
-                src="/logos/ConkaO.png"
-                alt=""
-                fill
-                sizes="28px"
-                className="object-contain"
-                style={{ filter: "brightness(0) invert(1)" }}
-              />
-            </span>
-            <span className="flex flex-col items-start flex-1 min-w-0 text-left">
-              <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] flex items-center gap-0.5">
-                <span>Add to Cart</span>
-                <span
-                  className="inline-block ml-0.5"
-                  style={{ animation: "lab-blink 1s step-end infinite" }}
-                  aria-hidden
-                >
-                  _
+          {/* CTA */}
+          {isCadenceMode ? (
+            <ConkaCTAButton onClick={onAddToCart} meta={getBalanceCTAMeta(selectedCadence!, currentPrice)} className="w-full max-w-none">
+              Add to Cart
+            </ConkaCTAButton>
+          ) : (
+            <button
+              type="button"
+              onClick={onAddToCart}
+              className="w-full inline-flex flex-row items-center gap-4 py-3.5 pl-5 pr-8 text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)]"
+            >
+              <span className="relative w-7 h-7 shrink-0" aria-hidden>
+                <Image
+                  src="/logos/ConkaO.png"
+                  alt=""
+                  fill
+                  sizes="28px"
+                  className="object-contain"
+                  style={{ filter: "brightness(0) invert(1)" }}
+                />
+              </span>
+              <span className="flex flex-col items-start flex-1 min-w-0 text-left">
+                <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] flex items-center gap-0.5">
+                  <span>Add to Cart</span>
+                  <span className="inline-block ml-0.5" style={{ animation: "lab-blink 1s step-end infinite" }} aria-hidden>_</span>
+                </span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/70 mt-1 leading-none tabular-nums">
+                  {formatPrice(currentPrice)}
                 </span>
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/70 mt-1 leading-none tabular-nums">
-                {formatPrice(currentPrice)}
-              </span>
-            </span>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
-              className="shrink-0"
-              aria-hidden
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="13 6 19 12 13 18" />
-            </svg>
-          </button>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter" className="shrink-0" aria-hidden>
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="13 6 19 12 13 18" />
+              </svg>
+            </button>
+          )}
 
-          {/* Trust badges */}
-          <LandingTrustBadges />
+          {/* Assurance / trust badges */}
+          <FunnelAssurance />
         </div>
       </div>
     </div>
