@@ -181,7 +181,7 @@ export default function ProtocolHero({
               className="brand-h1 leading-tight"
               style={{ letterSpacing: "-0.02em" }}
             >
-              {protocol.name}
+              {protocolId === "3" ? "CONKA Flow + Clear" : protocol.name}
             </h1>
             {protocolId !== "3" && (
               <div className="mt-2">

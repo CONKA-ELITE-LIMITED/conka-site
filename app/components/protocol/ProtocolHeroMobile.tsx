@@ -161,7 +161,7 @@ export default function ProtocolHeroMobile({
           className="brand-h1 leading-tight"
           style={{ letterSpacing: "-0.02em" }}
         >
-          {protocol.name}
+          {protocolId === "3" ? "CONKA Flow + Clear" : protocol.name}
         </h1>
       </div>
 
