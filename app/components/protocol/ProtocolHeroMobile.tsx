@@ -263,7 +263,7 @@ export default function ProtocolHeroMobile({
                       <div className="mt-3.5 pt-3.5 ml-8 border-t border-black/10 space-y-2.5">
                         <div className="flex items-baseline gap-2">
                           <span className="text-xl font-bold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.perShot)}</span>
-                          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot</span>
+                          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot · 2/day</span>
                         </div>
                         <div className="flex items-baseline gap-2 flex-wrap">
                           <span className="text-base font-semibold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.price)}{frequency}</span>

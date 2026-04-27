@@ -210,7 +210,7 @@ export default function ProductHeroMobile({
                           {formatPrice(cadencePricing.perShot)}
                         </span>
                         <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
-                          per shot
+                          per shot · 1/day
                         </span>
                       </div>
 
