@@ -299,9 +299,9 @@ Every section eyebrow ends with a topic code identifying its subject. Codes are 
 | `SCI-02` | Deep science / research / clinical trials |
 | `ING-01` | Ingredients / formula breakdown |
 | `STORY-01` | Our story / founders |
-| `PROOF-01` | Case studies / athlete improvements |
-| `PROOF-02` | 100-day guarantee / risk reversal |
-| `PROOF-03` | Testimonials / customer reviews |
+| `PROOF-01` | First-party objective evidence — clinical data, case studies, credentials, certifications, manufacturing standards |
+| `PROOF-02` | Self-verification — 100-day guarantee, risk reversal, prove it yourself |
+| `PROOF-03` | Third-party social proof — testimonials, customer reviews |
 | `FAQ-01` | FAQ |
 
 **Rules:**
