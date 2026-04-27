@@ -12,22 +12,16 @@ interface HeroAccordionsProps {
 
 const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
   flow: [
-    "You want sustained energy and focus without the caffeine crash. FL0W delivers through cellular energy production -- not stimulant dependency.",
-    "You drink coffee and want to keep it. FL0W stacks alongside caffeine to extend the effect, reduce how much you need, and cut the mid-morning drop.",
-    "Your work demands long cognitive sessions: back-to-back calls, deep focus, decision-heavy days. FL0W is built for hours of clean output, not just a morning spike.",
-    "Physical performance matters as much as mental performance. The same mitochondrial pathways that drive cognitive output drive physical endurance. FL0W addresses both.",
+    "You want sustained energy and sharp focus across a full cognitive day, without the crash. FL0W stacks alongside your coffee to extend its effect and reduce how much you need, or replaces it entirely through cellular energy production rather than stimulant dependency.",
+    "Your work demands hours of clean output: deep focus, back-to-back calls, physical training. FL0W supports both cognitive and physical performance through the same mitochondrial pathways.",
   ],
   clear: [
-    "Your second half of the day consistently underperforms the first -- slower decisions, reduced concentration, mentally checked out by 3pm. CLARITY is designed for this window.",
-    "You carry background stress that quietly degrades your focus. You don't feel anxious, you just feel slower than you should. CLARITY works at the cortisol level.",
-    "You want to maintain output through the afternoon without another coffee. CLARITY extends your productive window before cognitive fatigue sets in.",
-    "You train or compete and want cognitive recovery to match your physical recovery. CLARITY's adaptogens support both stress regulation and physical restoration.",
+    "Your second half of the day consistently underperforms the first. Slower decisions, reduced concentration, mentally checked out by 3pm. CLEAR is designed specifically for this window, extending afternoon output without relying on more caffeine.",
+    "You carry background stress that quietly degrades your focus and physical recovery. CLEAR works at the cortisol level, supporting both cognitive clarity and the adaptogenic recovery that athletes and high performers need.",
   ],
   both: [
-    "You need 10+ hours of consistent cognitive performance. FL0W delivers morning sharpness. CLARITY sustains afternoon precision. Together they eliminate the valleys between them.",
-    "You want to reduce caffeine dependence without reducing output. The system achieves the same intensity through different mechanisms -- no withdrawal, no compromise in performance.",
-    "You're optimising cognitive and physical performance across a full day. Both formulas target the same energy and recovery pathways from complementary angles.",
-    "You've tried standalone nootropics but hit diminishing returns. A timed, sequenced system -- one formula per window -- is the more reliable approach to sustained performance.",
+    "You need 10+ hours of consistent cognitive performance. FL0W in the morning for sharpness and energy. CLEAR after lunch for afternoon precision and focus. Together they cover the full day without stimulant cycling or a mid-afternoon drop.",
+    "You're optimising cognitive and physical performance across a full day, and want to reduce caffeine dependence without reducing output. A timed, sequenced system achieves more than either formula alone.",
   ],
 };
 
@@ -150,14 +144,14 @@ export default function HeroAccordions({ productType }: HeroAccordionsProps) {
                   onClick={() => openIngredients("flow")}
                   className="flex-1 py-2.5 border border-black/12 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60 hover:bg-black/4 hover:text-black/80 transition-colors"
                 >
-                  Flow
+                  Flow Ingredients
                 </button>
                 <button
                   type="button"
                   onClick={() => openIngredients("clear")}
                   className="flex-1 py-2.5 border border-black/12 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60 hover:bg-black/4 hover:text-black/80 transition-colors"
                 >
-                  Clear
+                  Clear Ingredients
                 </button>
               </div>
             )}
