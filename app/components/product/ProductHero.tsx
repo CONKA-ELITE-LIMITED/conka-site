@@ -1,4 +1,3 @@
-// TODO: layout upgrade pending (Phase 3 - product-page-cadence-widget) -- do not add new layout logic here
 "use client";
 
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
@@ -13,9 +12,9 @@ import {
   getCadencePricingByFormula,
   FUNNEL_CADENCES,
   getSavingsPercent,
-  getFunnelProductSlideshow,
 } from "@/app/lib/cadenceData";
-import ProductImageSlideshow from "./ProductImageSlideshow";
+import { getFormulaHeroImages } from "@/app/lib/heroImageConfig";
+import HeroImageStack from "./HeroImageStack";
 import HeroAccordions from "./HeroAccordions";
 
 interface ProductHeroProps {
@@ -71,24 +70,17 @@ export default function ProductHero({
 }: ProductHeroProps) {
   const formula = formulaContent[formulaId];
   const pricing = getCadencePricingByFormula(formulaId, selectedCadence);
-  const productKey = formulaId === "01" ? "flow" : "clear";
-  const images = getFunnelProductSlideshow(productKey, selectedCadence);
+  const images = getFormulaHeroImages(formulaId, selectedCadence);
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-[var(--brand-space-m)]">
-      {/* Left: Product Image — cadence drives which image is primary */}
-      <div className="relative z-0 lg:w-[58%] lg:flex-shrink-0 order-1 lg:order-1 lg:sticky lg:top-24 lg:self-start">
-        <div className="relative w-full group">
-          <ProductImageSlideshow
-            key={selectedCadence}
-            images={images}
-            alt={`${formula.name} bottle`}
-          />
-        </div>
+      {/* Left: Image stack — scrolls while right widget stays pinned */}
+      <div className="relative z-0 lg:w-[58%] lg:flex-shrink-0 order-1 lg:order-1">
+        <HeroImageStack images={images} alt={`${formula.name} bottle`} />
       </div>
 
-      {/* Right: Product Info */}
-      <div className="flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-l)] flex-1 lg:w-[40%] lg:flex-shrink-0 min-w-0 order-2 lg:order-2 relative z-10">
+      {/* Right: Product Info — sticky so widget floats as image column scrolls */}
+      <div className="flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-l)] flex-1 lg:w-[40%] lg:flex-shrink-0 min-w-0 order-2 lg:order-2 relative z-10 lg:sticky lg:top-8 lg:self-start">
         <div
           className="brand-card flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-m)] !border-0 relative z-10"
           style={{
