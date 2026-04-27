@@ -5,7 +5,7 @@ export function OurStoryHero() {
     <div className="flex flex-col gap-8 lg:gap-16 lg:grid lg:grid-cols-[1fr_1fr] lg:items-center">
       <div className="relative w-full aspect-[4/5] border border-black/12 overflow-hidden bg-[#f5f5f5]">
         <Image
-          src="/lifestyle/FlowShadow.jpg"
+          src="/lifestyle/flow/FlowShadow.jpg"
           alt="CONKA Flow bottle resting on its side casting a long shadow"
           fill
           priority

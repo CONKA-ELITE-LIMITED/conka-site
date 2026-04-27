@@ -1,4 +1,3 @@
-// TODO: layout upgrade pending (Phase 3 - product-page-cadence-widget) -- do not add new layout logic here
 "use client";
 
 import Image from "next/image";
@@ -22,8 +21,8 @@ import {
   getBalanceCadencePricing,
   FUNNEL_CADENCES,
   getSavingsPercent,
-  getFunnelProductSlideshow,
 } from "@/app/lib/cadenceData";
+import { getBalanceHeroImagesMobile } from "@/app/lib/heroImageConfig";
 
 interface ProtocolHeroMobileProps {
   protocolId: ProtocolId;
@@ -123,57 +122,45 @@ export default function ProtocolHeroMobile({
     protocol.availableTiers.includes(tier),
   );
 
-  // Cadence mode: cadence-aware images for Balance
   const slideImages = isCadenceMode
-    ? getFunnelProductSlideshow("both", selectedCadence!)
+    ? getBalanceHeroImagesMobile(selectedCadence!).map((src) => ({ src }))
     : getProtocolHeroImages(protocolId);
 
   return (
     <>
-      {/* Header */}
+      {/* Product Image — cadence drives primary image for Balance */}
+      <div className="relative w-screen left-1/2 -translate-x-1/2 bg-[#FAFAFA]">
+        <ProductImageSlideshow
+          key={isCadenceMode ? selectedCadence : protocolId}
+          images={slideImages}
+          alt={isCadenceMode ? `${protocol.name} - Flow + Clear` : protocol.name}
+          fullBleedThumbnails
+        />
+      </div>
+
+      {/* Header — below image, matching ProductHeroMobile layout */}
       <div
-        className="w-full min-w-0 pt-3 pb-2"
+        className="w-full min-w-0 pt-2 pb-0"
         style={{
           paddingLeft: "var(--brand-space-xs)",
           paddingRight: "var(--brand-space-xs)",
         }}
       >
-        <div className="flex items-center gap-2 flex-wrap mb-2">
+        <div className="flex items-center gap-2 flex-wrap mb-1">
           <div className="flex" aria-hidden>
             {[1, 2, 3, 4, 5].map((i) => (
-              <svg
-                key={i}
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="text-[#1B2757]"
-              >
+              <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-[#1B2757]">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}
           </div>
-          <span className="brand-data text-black/60">
+          <span className="brand-data text-black/60 text-xs">
             Over 150,000 bottles sold
           </span>
         </div>
-        <h1
-          className="brand-h1 leading-tight"
-          style={{ letterSpacing: "-0.02em" }}
-        >
+        <h1 className="brand-h2 leading-tight" style={{ letterSpacing: "-0.02em" }}>
           {protocolId === "3" ? "CONKA Flow + Clear" : protocol.name}
         </h1>
-      </div>
-
-      {/* Product Image + thumbnails — cadence drives primary image for Balance */}
-      <div className="relative w-screen left-1/2 -translate-x-1/2 bg-[#FAFAFA]">
-        <ProductImageSlideshow
-          key={isCadenceMode ? selectedCadence : protocolId}
-          images={slideImages}
-          alt={`${protocol.name} - Both formulas`}
-          fullBleedThumbnails
-        />
       </div>
 
       {/* Content */}
@@ -276,7 +263,7 @@ export default function ProtocolHeroMobile({
                       <div className="mt-3.5 pt-3.5 ml-8 border-t border-black/10 space-y-2.5">
                         <div className="flex items-baseline gap-2">
                           <span className="text-xl font-bold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.perShot)}</span>
-                          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot</span>
+                          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot · 2 shots per day</span>
                         </div>
                         <div className="flex items-baseline gap-2 flex-wrap">
                           <span className="text-base font-semibold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.price)}{frequency}</span>

@@ -12,6 +12,7 @@ import {
 } from "@/app/lib/productData";
 import { getProtocolHeroImages } from "@/app/components/navigation/protocolHeroConfig";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
+import HeroImageStack from "@/app/components/product/HeroImageStack";
 import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import ProtocolRatioSelector from "./ProtocolRatioSelector";
@@ -21,8 +22,8 @@ import {
   getBalanceCadencePricing,
   FUNNEL_CADENCES,
   getSavingsPercent,
-  getFunnelProductSlideshow,
 } from "@/app/lib/cadenceData";
+import { getBalanceHeroImages } from "@/app/lib/heroImageConfig";
 
 interface ProtocolHeroProps {
   protocolId: ProtocolId;
@@ -126,26 +127,28 @@ export default function ProtocolHero({
     protocol.availableTiers.includes(tier),
   );
 
-  // Cadence mode: cadence-aware images for Balance
-  const balanceImages = isCadenceMode
-    ? getFunnelProductSlideshow("both", selectedCadence!)
-    : getProtocolHeroImages(protocolId);
+  const legacyImages = isCadenceMode ? [] : getProtocolHeroImages(protocolId);
+  const stackImages = isCadenceMode ? getBalanceHeroImages(selectedCadence!) : [];
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-[var(--brand-space-m)]">
-      {/* Left: Product Image */}
-      <div className="relative z-0 lg:w-[58%] lg:flex-shrink-0 order-1 lg:order-1 lg:sticky lg:top-24 lg:self-start">
-        <div className="relative w-full group">
-          <ProductImageSlideshow
-            key={isCadenceMode ? selectedCadence : protocolId}
-            images={balanceImages}
-            alt={`${protocol.name} - Both formulas`}
-          />
-        </div>
+      {/* Left: Image — stack for Balance (scrolls), slideshow for other protocols (sticky) */}
+      <div className={`relative z-0 lg:w-[58%] lg:flex-shrink-0 order-1 lg:order-1${isCadenceMode ? "" : " lg:sticky lg:top-24 lg:self-start"}`}>
+        {isCadenceMode ? (
+          <HeroImageStack images={stackImages} alt={`${protocol.name} - Flow + Clear`} />
+        ) : (
+          <div className="relative w-full group">
+            <ProductImageSlideshow
+              key={protocolId}
+              images={legacyImages}
+              alt={`${protocol.name}`}
+            />
+          </div>
+        )}
       </div>
 
-      {/* Right: Product Info */}
-      <div className="flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-l)] flex-1 lg:w-[40%] lg:flex-shrink-0 min-w-0 order-2 lg:order-2 relative z-10">
+      {/* Right: Product Info — sticky for Balance (floats alongside stack), scrolls for others */}
+      <div className={`flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-l)] flex-1 lg:w-[40%] lg:flex-shrink-0 min-w-0 order-2 lg:order-2 relative z-10${isCadenceMode ? " lg:sticky lg:top-8 lg:self-start" : ""}`}>
         <div
           className="brand-card flex flex-col gap-[var(--brand-space-s)] lg:gap-[var(--brand-space-m)] !border-0 relative z-10"
           style={{
@@ -278,7 +281,7 @@ export default function ProtocolHero({
                         <div className="mt-4 pt-4 ml-8 border-t border-black/10 space-y-3">
                           <div className="flex items-baseline gap-2">
                             <span className="text-2xl font-bold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.perShot)}</span>
-                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot</span>
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">per shot · 2 shots per day</span>
                           </div>
                           <div className="flex items-baseline gap-2 flex-wrap">
                             <span className="text-base font-semibold text-[var(--brand-black)] tabular-nums">{formatPrice(cadencePricing.price)}{frequency}</span>

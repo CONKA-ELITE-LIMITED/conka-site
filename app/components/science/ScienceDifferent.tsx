@@ -118,7 +118,7 @@ export default function ScienceDifferent({
         <div className="mt-6 lg:mt-0 lg:w-[380px] lg:flex-shrink-0 lg:sticky lg:top-24">
           <div className="relative aspect-[4/5] lg:aspect-square border border-black/12 bg-white overflow-hidden">
             <Image
-              src="/lifestyle/FlowConkaRing.jpg"
+              src="/lifestyle/flow/FlowConkaRing.jpg"
               alt="CONKA bottle with cognitive testing app showing a score of 92, alongside headphones and water bottle"
               fill
               sizes={isMobile ? "95vw" : "380px"}

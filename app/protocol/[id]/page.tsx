@@ -35,7 +35,6 @@ import LabTimeline from "@/app/components/landing/LabTimeline";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import ProductGrid from "@/app/components/home/ProductGrid";
 import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
-import { getSiteTestimonialsProtocol } from "@/app/lib/testimonialsFilter";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import { getProtocolVariantId } from "@/app/lib/shopifyProductMapping";
@@ -54,16 +53,18 @@ export default function ProtocolPage() {
   const isMobile = useIsMobile();
   const { addToCart } = useCart();
 
-  const [selectedProtocolId, setSelectedProtocolId] = useState<ProtocolId>(() =>
-    validProtocolIds.includes(idFromParams as ProtocolId)
-      ? (idFromParams as ProtocolId)
-      : DEFAULT_PROTOCOL_ID,
+  const [selectedProtocolId, setSelectedProtocolId] = useState<ProtocolId>(
+    () =>
+      validProtocolIds.includes(idFromParams as ProtocolId)
+        ? (idFromParams as ProtocolId)
+        : DEFAULT_PROTOCOL_ID,
   );
   const [selectedTier, setSelectedTier] = useState<ProtocolTier>("pro");
   const [purchaseType, setPurchaseType] =
     useState<PurchaseType>("subscription");
   // Cadence state for Balance (protocol 3) -- used instead of tier/purchaseType
-  const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
+  const [selectedCadence, setSelectedCadence] =
+    useState<CadenceType>("monthly-sub");
 
   // Validate protocol ID from URL and redirect invalid to Balance
   useEffect(() => {
@@ -102,7 +103,11 @@ export default function ProtocolPage() {
         });
       }
     } else {
-      const variantData = getProtocolVariantId(selectedProtocolId, "pro", "subscription");
+      const variantData = getProtocolVariantId(
+        selectedProtocolId,
+        "pro",
+        "subscription",
+      );
       if (variantData?.variantId) {
         trackMetaViewContent({
           content_ids: [toContentId(variantData.variantId)],
@@ -128,10 +133,17 @@ export default function ProtocolPage() {
           sessionId: getQuizSessionId(),
         });
       } else {
-        console.warn("Variant not configured for:", { protocol: "3", cadence: selectedCadence });
+        console.warn("Variant not configured for:", {
+          protocol: "3",
+          cadence: selectedCadence,
+        });
       }
     } else {
-      const variantData = getProtocolVariantId(selectedProtocolId, selectedTier, purchaseType);
+      const variantData = getProtocolVariantId(
+        selectedProtocolId,
+        selectedTier,
+        purchaseType,
+      );
       if (variantData?.variantId) {
         await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
           location: "hero",
@@ -139,7 +151,11 @@ export default function ProtocolPage() {
           sessionId: getQuizSessionId(),
         });
       } else {
-        console.warn("Variant ID not configured for:", { protocol: selectedProtocolId, tier: selectedTier, type: purchaseType });
+        console.warn("Variant ID not configured for:", {
+          protocol: selectedProtocolId,
+          tier: selectedTier,
+          type: purchaseType,
+        });
       }
     }
   };
@@ -155,10 +171,17 @@ export default function ProtocolPage() {
           sessionId: getQuizSessionId(),
         });
       } else {
-        console.warn("Variant not configured for:", { protocol: "3", cadence: selectedCadence });
+        console.warn("Variant not configured for:", {
+          protocol: "3",
+          cadence: selectedCadence,
+        });
       }
     } else {
-      const variantData = getProtocolVariantId(selectedProtocolId, selectedTier, purchaseType);
+      const variantData = getProtocolVariantId(
+        selectedProtocolId,
+        selectedTier,
+        purchaseType,
+      );
       if (variantData?.variantId) {
         await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
           location: "sticky_footer",
@@ -166,7 +189,11 @@ export default function ProtocolPage() {
           sessionId: getQuizSessionId(),
         });
       } else {
-        console.warn("Variant ID not configured for:", { protocol: selectedProtocolId, tier: selectedTier, type: purchaseType });
+        console.warn("Variant ID not configured for:", {
+          protocol: selectedProtocolId,
+          tier: selectedTier,
+          type: purchaseType,
+        });
       }
     }
   };
@@ -176,16 +203,14 @@ export default function ProtocolPage() {
     router.push(`/protocol/${id}`);
   };
 
-  const protocolTestimonials = getSiteTestimonialsProtocol();
-
   // Shared sections used by both mobile and desktop
-  const testimonialSection = protocolTestimonials.length > 0 && (
+  const testimonialSection = (
     <section
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       aria-label="Customer reviews"
     >
       <div className="brand-track">
-        <LandingTestimonials testimonials={protocolTestimonials} hideCTA />
+        <LandingTestimonials hideCTA />
       </div>
     </section>
   );
@@ -240,7 +265,10 @@ export default function ProtocolPage() {
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
-        <LabGuarantee ctaLabel="Learn more about the CONKA app" ctaHref="/app" />
+        <LabGuarantee
+          ctaLabel="Learn more about the CONKA app"
+          ctaHref="/app"
+        />
       </div>
     </section>
   );
@@ -257,10 +285,7 @@ export default function ProtocolPage() {
   );
 
   const faqSection = (
-    <section
-      className="brand-section brand-bg-tint"
-      aria-label="FAQ"
-    >
+    <section className="brand-section brand-bg-tint" aria-label="FAQ">
       <div className="brand-track">
         <LabFAQ hideCTA />
       </div>
@@ -297,9 +322,15 @@ export default function ProtocolPage() {
               purchaseType={purchaseType}
               onPurchaseTypeChange={setPurchaseType}
               onAddToCart={handleAddToCartFromHero}
-              onProtocolChange={selectedProtocolId !== "3" ? handleProtocolChange : undefined}
-              selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
-              onCadenceChange={selectedProtocolId === "3" ? setSelectedCadence : undefined}
+              onProtocolChange={
+                selectedProtocolId !== "3" ? handleProtocolChange : undefined
+              }
+              selectedCadence={
+                selectedProtocolId === "3" ? selectedCadence : undefined
+              }
+              onCadenceChange={
+                selectedProtocolId === "3" ? setSelectedCadence : undefined
+              }
             />
           </div>
         </section>
@@ -307,11 +338,17 @@ export default function ProtocolPage() {
         {/* ===== CASE STUDIES ===== */}
         {caseStudiesSectionMobile}
 
-        {/* ===== WHAT CONKA DOES ===== */}
-        {whatItDoesSection}
+        {/* ===== TIMELINE ===== */}
+        {timelineSection}
 
         {/* ===== WHY CONKA WORKS ===== */}
         {whyConkaWorksSection}
+
+        {/* ===== WHAT CONKA DOES ===== */}
+        {whatItDoesSection}
+
+        {/* ===== EXPLORE ===== */}
+        {exploreSection}
 
         {/* ===== CALENDAR (hidden for Balance) ===== */}
         {selectedProtocolId !== "3" && (
@@ -332,9 +369,6 @@ export default function ProtocolPage() {
           </section>
         )}
 
-        {/* ===== TIMELINE ===== */}
-        {timelineSection}
-
         {/* ===== TESTIMONIALS ===== */}
         {testimonialSection}
 
@@ -344,9 +378,6 @@ export default function ProtocolPage() {
         {/* ===== FAQ ===== */}
         {faqSection}
 
-        {/* ===== EXPLORE ===== */}
-        {exploreSection}
-
         <Footer />
 
         <StickyPurchaseFooterMobile
@@ -354,8 +385,14 @@ export default function ProtocolPage() {
           selectedTier={selectedTier}
           onTierSelect={setSelectedTier}
           purchaseType={purchaseType}
-          selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
-          cadencePrice={selectedProtocolId === "3" ? getBalanceCadencePricing(selectedCadence).price : undefined}
+          selectedCadence={
+            selectedProtocolId === "3" ? selectedCadence : undefined
+          }
+          cadencePrice={
+            selectedProtocolId === "3"
+              ? getBalanceCadencePricing(selectedCadence).price
+              : undefined
+          }
           onAddToCart={handleAddToCartFromFooter}
         />
       </div>
@@ -380,9 +417,15 @@ export default function ProtocolPage() {
             purchaseType={purchaseType}
             onPurchaseTypeChange={setPurchaseType}
             onAddToCart={handleAddToCartFromHero}
-            onProtocolChange={selectedProtocolId !== "3" ? handleProtocolChange : undefined}
-            selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
-            onCadenceChange={selectedProtocolId === "3" ? setSelectedCadence : undefined}
+            onProtocolChange={
+              selectedProtocolId !== "3" ? handleProtocolChange : undefined
+            }
+            selectedCadence={
+              selectedProtocolId === "3" ? selectedCadence : undefined
+            }
+            onCadenceChange={
+              selectedProtocolId === "3" ? setSelectedCadence : undefined
+            }
           />
         </div>
       </section>
@@ -390,11 +433,17 @@ export default function ProtocolPage() {
       {/* ===== CASE STUDIES ===== */}
       {caseStudiesSectionDesktop}
 
-      {/* ===== WHAT CONKA DOES ===== */}
-      {whatItDoesSection}
+      {/* ===== TIMELINE ===== */}
+      {timelineSection}
 
       {/* ===== WHY CONKA WORKS ===== */}
       {whyConkaWorksSection}
+
+      {/* ===== EXPLORE ===== */}
+      {exploreSection}
+
+      {/* ===== WHAT CONKA DOES ===== */}
+      {whatItDoesSection}
 
       {/* ===== CALENDAR (hidden for Balance) ===== */}
       {selectedProtocolId !== "3" && (
@@ -415,9 +464,6 @@ export default function ProtocolPage() {
         </section>
       )}
 
-      {/* ===== TIMELINE ===== */}
-      {timelineSection}
-
       {/* ===== TESTIMONIALS ===== */}
       {testimonialSection}
 
@@ -427,9 +473,6 @@ export default function ProtocolPage() {
       {/* ===== FAQ ===== */}
       {faqSection}
 
-      {/* ===== EXPLORE ===== */}
-      {exploreSection}
-
       <Footer />
 
       <StickyPurchaseFooter
@@ -438,8 +481,14 @@ export default function ProtocolPage() {
         onTierSelect={setSelectedTier}
         purchaseType={purchaseType}
         onPurchaseTypeChange={setPurchaseType}
-        selectedCadence={selectedProtocolId === "3" ? selectedCadence : undefined}
-        cadencePrice={selectedProtocolId === "3" ? getBalanceCadencePricing(selectedCadence).price : undefined}
+        selectedCadence={
+          selectedProtocolId === "3" ? selectedCadence : undefined
+        }
+        cadencePrice={
+          selectedProtocolId === "3"
+            ? getBalanceCadencePricing(selectedCadence).price
+            : undefined
+        }
         onAddToCart={handleAddToCartFromFooter}
       />
     </div>

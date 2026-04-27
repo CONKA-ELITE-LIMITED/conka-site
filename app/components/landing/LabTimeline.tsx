@@ -182,7 +182,7 @@ export default function LabTimeline({
       {/* Mobile/tablet banner — full-bleed lifestyle asset */}
       <div className="relative -mt-20 md:mt-0 -mx-5 w-[calc(100%+2.5rem)] mb-6 overflow-hidden aspect-[4/3] md:mb-8 md:aspect-[16/9] lg:hidden">
         <Image
-          src="/lifestyle/FlowConkaRing.jpg"
+          src="/lifestyle/flow/FlowConkaRing.jpg"
           alt="CONKA Flow bottle beside a phone showing a CONKA cognitive score of 92"
           fill
           sizes="(max-width: 1024px) 100vw, 0px"
@@ -306,7 +306,7 @@ export default function LabTimeline({
         <div className="hidden lg:block lg:w-[600px] lg:flex-shrink-0 lg:sticky lg:top-24">
           <div className="relative aspect-square border border-black/12 overflow-hidden bg-[#f5f5f5]">
             <Image
-              src="/lifestyle/FlowConkaRing.jpg"
+              src="/lifestyle/flow/FlowConkaRing.jpg"
               alt="CONKA Flow bottle beside a phone showing a CONKA cognitive score of 92"
               fill
               sizes="450px"

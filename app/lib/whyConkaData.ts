@@ -63,7 +63,7 @@ export const whyConkaPoints: WhyConkaPoint[] = [
     subheading: "Clinical studies meet real-world performance",
     description:
       "Our research shows +22% cognitive speed in men, +33% in women, and +16% overall cognitive efficiency. Individual case studies show improvements up to +36.72% in total cognitive scores. Ingredients are clinically proven: -56% stress scores, +63% memory improvement, +40% glutathione levels. These aren't marketing claims. They're verified statistics from peer-reviewed research.",
-    image: "/lifestyle/FlowConkaRing.jpg",
+    image: "/lifestyle/flow/FlowConkaRing.jpg",
   },
   {
     id: 7,

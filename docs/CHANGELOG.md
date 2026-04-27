@@ -6,6 +6,35 @@
 
 ## April 2026
 
+### 2026-04-27 -- Seed/Suri-style image stack on product and protocol hero, mobile layout alignment, shots-per-day label
+
+Upgraded the desktop product and protocol hero image layout to match the editorial pattern used by Seed and Suri: a full-width portrait box shot (cadence-driven) above a 2x2 square grid of lifestyle images. The right-hand purchase widget is now sticky while the image column scrolls, which is the opposite of the previous layout. Mobile heroes were realigned so the image comes first, then the title and stars, matching the existing `ProductHeroMobile` structure throughout.
+
+**Image stack (desktop):**
+- New `HeroImageStack` server component: slot 0 renders at natural aspect ratio (no crop), slots 1-4 form a `grid-cols-2` square grid with `object-cover`. No `"use client"` directive needed.
+- New `app/lib/heroImageConfig.ts` data layer: all image-path selection (formula/protocol + cadence) centralised here, out of components.
+- Flow: box shot + FlowClose, FlowWork, FlowBoxOpen, FlowNutrition. Clear: box shot + ClearPassed, ClearHoldJeans, ClearBoxOpen, ClearNutrition. Balance: box shot + BothHold, FlowBoxOpen, BothJeans, ClearBoxOpen.
+- Cadence-driven slot 0: quarterly-sub uses the quarterly box asset, all others use the standard box asset.
+- `ProductImageSlideshow` left untouched -- remains the image component for the funnel.
+
+**Mobile:**
+- `ProtocolHeroMobile` reordered to image-first (was header-first), matching `ProductHeroMobile`. Stars reduced from 18px to 16px, title from `brand-h1` to `brand-h2`.
+- Square mobile box assets added for all six Balance cadence variants (`BothBoxMobile.jpg`, `BothQuarterlyMobile.jpg`, etc.).
+
+**Protocol page (`/protocol/[id]`):**
+- Testimonial section updated to use the shared `LandingTestimonials` component (was a protocol-filtered variant).
+- Section order updated: Hero > Case Studies > Timeline > Why CONKA Works > Explore > What It Does > Calendar > Testimonials > Guarantee > FAQ.
+
+**Widget copy:**
+- Per-shot price label now reads "per shot · 1 shot per day" (Flow/Clear) and "per shot · 2 shots per day" (Balance) in the expanded cadence card, on both desktop and mobile.
+
+**Assets added:** `public/formulas/box/` (12 box shots -- 6 desktop portrait, 6 mobile square), `public/lifestyle/flow/FlowClose.jpg`, `public/lifestyle/flow/FlowWork.jpg`, `public/lifestyle/clear/ClearPassed.jpg`, `public/lifestyle/clear/ClearHoldJeans.jpg`, `public/formulas/both/BothJeans.jpg`.
+
+**Why:** The previous hero used a funnel-style image slideshow on the product PDP, which felt lightweight compared to Seed and Suri's editorial stacked-image treatment. The image stack signals product quality and gives customers more visual context before committing. The sticky widget pattern keeps the purchase action visible as the customer browses the images. The shots-per-day label removes ambiguity on Balance, where two shots daily is a non-obvious usage pattern for new customers.
+
+**Branch:** `seed-style-product-hero`
+**Commits:** `be06658`, `ddbec57`, `5213b17`, `a6e9167`, `bf83e59`, `ab4c2be`, `c67dc0b`
+
 ### 2026-04-27 -- Product page offering aligned to funnel: cadence model, hero widget upgrade, purchase accordion
 
 Aligned the product pages (Flow, Clear, Balance) to the offering already live on the funnel page. The core change: the old pack-size selector (4/8/12/28 shots) is replaced by a cadence selector (quarterly subscription / monthly subscription / one-time), with a fixed 28-shot box. This brings the product pages into parity with the funnel and eliminates a point of confusion for customers who arrive via ads and then navigate to the product page directly.
