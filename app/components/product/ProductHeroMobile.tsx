@@ -52,13 +52,13 @@ export default function ProductHeroMobile({
 
       {/* Header — title + assurance, below the asset */}
       <div
-        className="w-full min-w-0 pt-3 pb-2"
+        className="w-full min-w-0 pt-2 pb-0"
         style={{
           paddingLeft: "var(--brand-space-xs)",
           paddingRight: "var(--brand-space-xs)",
         }}
       >
-        <div className="flex items-center gap-2 flex-wrap mb-2">
+        <div className="flex items-center gap-2 flex-wrap mb-1">
           <div className="flex" aria-hidden>
             {[1, 2, 3, 4, 5].map((i) => (
               <svg
@@ -96,7 +96,7 @@ export default function ProductHeroMobile({
 
       {/* Content */}
       <div
-        className="pt-3 pb-4 space-y-3"
+        className="pt-1 pb-4 space-y-2"
         style={{
           paddingLeft: "var(--brand-space-xs)",
           paddingRight: "var(--brand-space-xs)",
