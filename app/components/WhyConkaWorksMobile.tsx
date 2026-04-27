@@ -66,7 +66,7 @@ export default function WhyConkaWorksMobile() {
       {/* Heading trio */}
       <div className="mb-8">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          Credentials · Testing · Manufacturing
+          {"// Credentials · PROOF-01"}
         </p>
         <h2
           className="brand-h1 mb-2 text-black"
