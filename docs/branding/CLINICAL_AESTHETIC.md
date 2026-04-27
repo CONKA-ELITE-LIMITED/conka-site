@@ -119,22 +119,27 @@ Zero-radius 2-col grid. Active = `bg-black text-white`. Inactive = `bg-white`. `
 44×44 navy square with `lab-clip-tr`. Paired; navigation only. See `AthleteCredibilityCarousel#ChamferNav`.
 
 ### Figure plates (imagery overlay)
-Any lifestyle, product, or portrait image inside a hairline frame gets at least one plate. Plates turn decorative imagery into spec-sheet imagery. Two-corner pattern: top-left = figure number + subject, bottom-right = metadata (location, score, partner, reading).
+
+**Scope: lifestyle and portrait imagery only.** Product renders (bottle shots, packshots) are excluded — a plate on a product render reads as a specimen label, not a clinical document. Apply plates to: lifestyle photography, athlete portraits, clinical/lab settings, case study imagery.
+
+Use the canonical `FigurePlate` component (`app/components/FigurePlate.tsx`). Do not hand-roll plates.
 
 ```tsx
-<div className="relative aspect-[4/5] border border-black/12 bg-white overflow-hidden">
-  <Image {...props} />
-  {/* Optional gradient for overlay legibility when plates sit over busy areas */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" aria-hidden />
-  <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-    Fig. 01 · Research Context
+<FigurePlate n={1} subject="Research context" meta="Durham · Cambridge">
+  <div className="relative aspect-[4/5] border border-black/12 bg-white overflow-hidden">
+    <Image {...props} />
   </div>
-  <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-    Durham · Cambridge
-  </div>
-</div>
+</FigurePlate>
 ```
-Rules: `bg-black/55` (never fully opaque, never fully transparent). `px-2 py-1` only — plates are tight. Number plates sequentially across a page (`Fig. 01` … `Fig. 05`) so the page reads like a document. Omit the gradient when the plate sits over a naturally dark region.
+
+Props: `n` (sequential figure number for this page), `subject` (top-left label after "Fig. 0N ·"), `meta` (optional bottom-right), `gradient` (optional — adds `bg-gradient-to-t from-black/70 via-black/25 to-transparent` for legibility over busy imagery).
+
+Plate labels use `.fig-plate` from `brand-base.css` — do not duplicate the styling inline.
+
+Rules:
+- Number plates sequentially across the page (`Fig. 01` … `Fig. 05`) so the page reads as one document. The page author controls the sequence via the `n` prop.
+- Omit `gradient` when the image has a naturally dark region beneath the plate.
+- One plate minimum (top-left). Bottom-right meta is optional but adds richness — use it when there is a meaningful data point (location, study, score, partner).
 
 ### Hairline data table (numbered rows)
 Use instead of chip/tag clouds when items have a consistent two-part shape (name + role, stat + label, partner + focus). Reads as catalogue, not card.
@@ -253,10 +258,10 @@ Final section pattern across `/science`, `/case-studies`, `/our-story`: a hairli
 
 ## Typography rules
 
-- **Eyebrow:** `font-mono text-[10px] uppercase tracking-[0.2em] text-black/40`
-- **Mono sub:** `font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums`
+- **Eyebrow:** `.brand-eyebrow` (defined in `brand-base.css`) — do not write the Tailwind string by hand
+- **Mono sub:** `.brand-mono-sub` (defined in `brand-base.css`) — do not write the Tailwind string by hand
+- **Figure plate label:** `.fig-plate` (defined in `brand-base.css`) — use via `FigurePlate` component, not directly
 - **Row counter / spec label:** `font-mono text-[9px]–[11px] uppercase tracking-[0.18em] tabular-nums`, opacity `text-black/35–60`
-- **Figure plate:** `font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums`
 - **PMID / citation:** `font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] tabular-nums`, trailing `↗`
 - **Body paragraph inside a clinical card:** `text-sm md:text-base text-black/70–/75 leading-relaxed`. Never use `brand-body` at full opacity in clinical surfaces — the type is too dense against the hairline frames.
 - Any number that can change → `tabular-nums`
@@ -392,4 +397,6 @@ Requires `relative overflow-hidden` parent. Use `border-white` on dark images. N
 - Use rounded SVG strokes in icon tiles (`strokeLinecap="round"`) — square caps, miter joins
 - Use oversized quotation marks or blockquote styling — 2px navy left rule instead
 - Use `•` bullets anywhere — em-dash (`—`) only
-- Leave imagery un-plated in a clinical layout — every framed asset gets at least one `Fig. 0X` corner plate
+- Leave lifestyle or portrait imagery un-plated — every framed lifestyle/portrait asset gets at least one `Fig. 0X` corner plate via `FigurePlate`
+- Apply figure plates to product renders (bottle shots, packshots) — plates are for documentary imagery only
+- Hand-roll figure plate labels — use `.fig-plate` from `brand-base.css` or the `FigurePlate` component
