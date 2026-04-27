@@ -60,4 +60,13 @@ export const CURATED_TESTIMONIALS: Testimonial[] = [
     photo: "/testimonials/dtc/SamT.jpg",
     productLabel: "Flow + Clear",
   },
+  {
+    name: "Sam J.",
+    rating: 5,
+    date: "2026-04-24",
+    headline: "Keeping up with both",
+    body: "Full-time accountant and building a side business on evenings and weekends. The mental fatigue was catching up fast. What I didn't expect was being able to take something after work, lock back in for the hustle, and still sleep well. I am sharper on client work during the day and have proper capacity left for the evenings. Wish I had started sooner.",
+    photo: "/testimonials/dtc/SamJ.jpg",
+    productLabel: "Flow + Clear",
+  },
 ];
