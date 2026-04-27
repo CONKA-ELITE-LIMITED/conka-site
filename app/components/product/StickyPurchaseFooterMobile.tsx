@@ -241,8 +241,8 @@ export default function StickyPurchaseFooterMobile({
                 </>
               )}
             </div>
-            <ConkaCTAButton onClick={onAddToCart} meta={formatPrice(price)} className="shrink-0">
-              Add
+            <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto shrink-0">
+              Add · {formatPrice(price)}
             </ConkaCTAButton>
           </div>
         </div>
