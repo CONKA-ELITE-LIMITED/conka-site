@@ -16,6 +16,7 @@ import {
   getFunnelProductSlideshow,
 } from "@/app/lib/cadenceData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
+import HeroAccordions from "./HeroAccordions";
 
 interface ProductHeroProps {
   formulaId: FormulaId;
@@ -281,6 +282,8 @@ export default function ProductHero({
           </ConkaCTAButton>
 
           <FunnelAssurance />
+
+          <HeroAccordions productType={formulaId === "01" ? "flow" : "clear"} />
         </div>
       </div>
     </div>

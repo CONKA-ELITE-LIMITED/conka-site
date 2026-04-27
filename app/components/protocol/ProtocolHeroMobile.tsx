@@ -16,6 +16,7 @@ import ProductImageSlideshow from "@/app/components/product/ProductImageSlidesho
 import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import ProtocolRatioSelector from "./ProtocolRatioSelector";
+import HeroAccordions from "@/app/components/product/HeroAccordions";
 import {
   CadenceType,
   getBalanceCadencePricing,
@@ -456,6 +457,8 @@ export default function ProtocolHeroMobile({
 
         {/* Assurance / trust badges */}
         <FunnelAssurance />
+
+        {isCadenceMode && <HeroAccordions productType="both" />}
       </div>
     </>
   );
