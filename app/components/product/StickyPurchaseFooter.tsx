@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   PackSize,
   PurchaseType,
@@ -341,14 +342,9 @@ export default function StickyPurchaseFooter({
                 </button>
 
                 {/* Add to Cart Button */}
-                <button
-                  onClick={onAddToCart}
-                  className="min-w-[10rem] px-6 py-2.5 font-mono uppercase tracking-[0.14em] tabular-nums font-bold text-sm whitespace-nowrap text-white border-0 bg-[#1B2757] lab-clip-tr transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 inline-flex items-center justify-center gap-2"
-                >
-                  <span>Add to Cart</span>
-                  <span className="opacity-90">·</span>
-                  <span>{formatPrice(price)}</span>
-                </button>
+                <ConkaCTAButton onClick={onAddToCart} meta={formatPrice(price)}>
+                  Add to Cart
+                </ConkaCTAButton>
               </div>
             </div>
           </div>

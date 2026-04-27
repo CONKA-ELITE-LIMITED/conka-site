@@ -1,6 +1,6 @@
 # Clinical trio-header sweep audit
 
-Status: audit complete. Edits not started.
+Status: Complete.
 Authoritative spec: `docs/branding/CLINICAL_AESTHETIC.md` (sections: Trio header, Topic codes, Typography rules, Do not).
 Branch: `product-page-and-home-page-improvement`.
 

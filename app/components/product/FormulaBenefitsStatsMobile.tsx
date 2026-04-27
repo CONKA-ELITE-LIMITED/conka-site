@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import { FormulaId, formulaContent } from "@/app/lib/productData";
 import { CURATED_STATS } from "./formulaStatsData";
 
@@ -85,16 +86,9 @@ export default function FormulaBenefitsStatsMobile({
 
       {/* CTA */}
       <div className="pt-6 pb-8">
-        <a
-          href="#proof-and-science"
-          className="w-full inline-flex items-center gap-4 py-3 pl-5 pr-7 text-white bg-[#1B2757] font-mono text-xs uppercase tracking-[0.12em] font-bold hover:opacity-85 active:opacity-70 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)]"
-        >
-          <span className="flex-1 text-left">See the science</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter" aria-hidden>
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="13 6 19 12 13 18" />
-          </svg>
-        </a>
+        <ConkaCTAButton href="#proof-and-science" meta={null} className="w-full max-w-none">
+          See the science
+        </ConkaCTAButton>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   FormulaId,
   PackSize,
@@ -240,53 +240,9 @@ export default function ProductHeroMobile({
           </button>
         </div>
 
-        {/* CTA — FunnelCTA replica (handler-based, clinical) */}
-        <button
-          type="button"
-          onClick={onAddToCart}
-          className="w-full inline-flex flex-row items-center gap-4 py-3.5 pl-5 pr-8 text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)]"
-        >
-          <span className="relative w-7 h-7 shrink-0" aria-hidden>
-            <Image
-              src="/logos/ConkaO.png"
-              alt=""
-              fill
-              sizes="28px"
-              className="object-contain"
-              style={{ filter: "brightness(0) invert(1)" }}
-            />
-          </span>
-          <span className="flex flex-col items-start flex-1 min-w-0 text-left">
-            <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] flex items-center gap-0.5">
-              <span>Add to Cart</span>
-              <span
-                className="inline-block ml-0.5"
-                style={{ animation: "lab-blink 1s step-end infinite" }}
-                aria-hidden
-              >
-                _
-              </span>
-            </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/70 mt-1 leading-none tabular-nums">
-              {formatPrice(pricing.price)}
-            </span>
-          </span>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-            className="shrink-0"
-            aria-hidden
-          >
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="13 6 19 12 13 18" />
-          </svg>
-        </button>
+        <ConkaCTAButton onClick={onAddToCart} meta={formatPrice(pricing.price)} className="w-full max-w-none">
+          Add to Cart
+        </ConkaCTAButton>
 
         {/* Trust badges */}
         <LandingTrustBadges />
