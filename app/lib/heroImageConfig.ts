@@ -11,7 +11,7 @@ export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType)
     return [
       slot1,
       "/lifestyle/flow/FlowClose.jpg",
-      "/lifestyle/flow/FLowWork.jpg",
+      "/lifestyle/flow/FlowWork.jpg",
       "/lifestyle/flow/FlowBoxOpen.jpg",
       "/formulas/conkaFlow/FlowNutrition.jpg",
     ];
@@ -39,8 +39,8 @@ export function getBalanceHeroImages(cadence: CadenceType): string[] {
   return [
     slot1,
     "/formulas/both/BothHold.jpg",
+    "/lifestyle/flow/FlowBoxOpen.jpg",
     "/lifestyle/both/BothJeans.jpg",
-    "/formulas/both/BothShots.jpg",
-    "/formulas/both/BothDailyUse.jpg",
+    "/lifestyle/clear/ClearBoxOpen.jpg",
   ];
 }

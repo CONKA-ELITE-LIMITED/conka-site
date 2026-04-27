@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 
 interface HeroImageStackProps {
@@ -8,6 +6,8 @@ interface HeroImageStackProps {
 }
 
 export default function HeroImageStack({ images, alt }: HeroImageStackProps) {
+  if (!images.length) return null;
+
   return (
     <div className="flex flex-col gap-2">
       {/* Row 1: full-width hero — natural aspect ratio, no crop */}
