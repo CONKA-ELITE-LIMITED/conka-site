@@ -6,6 +6,37 @@
 
 ## April 2026
 
+### 2026-04-27 -- Product page offering aligned to funnel: cadence model, hero widget upgrade, purchase accordion
+
+Aligned the product pages (Flow, Clear, Balance) to the offering already live on the funnel page. The core change: the old pack-size selector (4/8/12/28 shots) is replaced by a cadence selector (quarterly subscription / monthly subscription / one-time), with a fixed 28-shot box. This brings the product pages into parity with the funnel and eliminates a point of confusion for customers who arrive via ads and then navigate to the product page directly.
+
+**Offering change (cadence model):**
+- `ProductHero` and `ProductHeroMobile` now render a 3-option cadence selector (Quarterly Sub, Monthly Sub, One-Time) instead of a pack-size picker. Cadence drives pricing, badge, and feature bullets via `FUNNEL_CADENCES` -- the same data source as the funnel page.
+- `ProtocolHero` and `ProtocolHeroMobile` updated identically for the Balance page (protocol 3). Non-Balance protocols are gated behind `isCadenceMode` and unchanged.
+- `cadenceData.ts` adapter layer isolates product/protocol pages from `funnelData.ts` internals.
+
+**Sticky purchase footer:**
+- `StickyPurchaseFooter` (desktop): cadence mode shows a product thumbnail + cadence label + price strip alongside the CTA. Old pack-size / subscribe toggle preserved with NOTE comments flagging it for future removal once all pages have migrated.
+- `StickyPurchaseFooterMobile`: cadence mode collapses to a single full-width "Add to Cart · £X.XX" CTA -- no picker on mobile since cadence selection happens in the hero widget above.
+
+**Hero widget polish:**
+- Desktop image/widget split changed to 60:40 (was roughly 44:48) for a more image-led layout on both `ProductHero` and `ProtocolHero`.
+- Desktop H1 capped at `2.5rem` (down from `3.5rem` clamp max) and stars reduced from 18px to 14px -- both desktop-only via `lg:` overrides, mobile unchanged.
+- `ProductImageSlideshow` keyed on `selectedCadence` so the slide index resets when cadence changes.
+
+**Balance page:**
+- H1 conditionally renders "CONKA Flow + Clear" (was "Balance Protocol") on both desktop and mobile heroes.
+- Protocol subtitle updated to "Flow in the morning. Clear in the afternoon." Description rewritten to make the morning/afternoon sequencing explicit, with "CONKA Clarity" corrected to "CONKA Clear" throughout.
+
+**Hero accordions (new -- Seed / Magic Mind pattern):**
+- New `HeroAccordions` component added below `FunnelAssurance` on all four hero components.
+- Three items: "Who it's for" (expand inline, 2 formula-specific bullets per product), "100-Day Risk-Free Trial" (expand inline using `GUARANTEE_DAYS`), and "Ingredients" (opens existing `IngredientsPanel` modal; Balance shows "Flow Ingredients" and "Clear Ingredients" as two separate triggers).
+
+**Why:** Customers arriving from paid Meta ads were landing on a funnel page offering 28-shot cadence options, then navigating to the product page and seeing a pack-size selector with a different set of choices. The two surfaces described the same products with different models, creating friction and eroding trust. Aligning them removes that gap. The accordion section below the CTA matches the pattern used by Magic Mind and Seed -- two of the strongest PDPs in the functional supplement category -- and gives customers ingredient transparency and guarantee detail without leaving the purchase widget.
+
+**Branch:** `product-page-cadence-widget`
+**Commits:** `3da47f8`, `cd189b0`, `02e2125`, `0b4328f`, `d63735d`, `62fcda4`
+
 ### 2026-04-23 -- Acquisition surface pass: landing hero, value comparison, timeline, product showcase + CTA system
 
 Multi-component tune-up across the `/start` and `/` acquisition flow. Reframed the landing hero's copy + asset, rebuilt `LandingValueComparison` around the 2pm-crash framing, replaced the protocol-style "What it does" section with a Seed-style two-product showcase, rebuilt `LabTimeline` as a scroll-driven progress rail with study-protocol bullets, reshaped the primary CTA, and removed engineering-flavoured detail from the ingredients sheet. Single working branch (`Component-Improvements`); one logical commit per surface.
