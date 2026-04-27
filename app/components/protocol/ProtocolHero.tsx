@@ -21,7 +21,6 @@ import {
   FUNNEL_CADENCES,
   getSavingsPercent,
   getFunnelProductSlideshow,
-  BALANCE_ACCENT,
 } from "@/app/lib/cadenceData";
 
 interface ProtocolHeroProps {
@@ -168,7 +167,7 @@ export default function ProtocolHero({
                     height="18"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="text-amber-500"
+                    className="text-[#1B2757]"
                   >
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
@@ -179,7 +178,7 @@ export default function ProtocolHero({
               </span>
             </div>
             <h1
-              className="brand-h1-bold leading-tight"
+              className="brand-h1 leading-tight"
               style={{ letterSpacing: "-0.02em" }}
             >
               {protocol.name}
@@ -202,7 +201,7 @@ export default function ProtocolHero({
           </div>
 
           {/* Headline description */}
-          <p className="brand-body text-black/80 text-base md:text-lg leading-snug mb-1.5">
+          <p className="text-sm md:text-base text-black/75 leading-relaxed">
             {protocol.description}
           </p>
 
@@ -222,7 +221,7 @@ export default function ProtocolHero({
                 const isSelected = selectedCadence === cadence;
                 const cadencePricing = getBalanceCadencePricing(cadence);
                 const frequency = getPriceFrequency(cadence);
-                const bannerLabel = display.badge ?? display.savingsLabel;
+                const bannerLabel = display.badge;
 
                 return (
                   <button
@@ -312,7 +311,6 @@ export default function ProtocolHero({
                         </div>
                       )}
                     </div>
-                    {isSelected && <div className="h-1 w-full" style={{ backgroundColor: BALANCE_ACCENT }} aria-hidden />}
                   </button>
                 );
               })}

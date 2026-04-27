@@ -22,7 +22,7 @@ import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
-import Testimonials from "@/app/components/testimonials/Testimonials";
+import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
 import { getSiteTestimonialsClarity } from "@/app/lib/testimonialsFilter";
 import ProductGrid from "@/app/components/home/ProductGrid";
 import {
@@ -92,7 +92,7 @@ export default function ConkaClarityPage() {
         {/* ===== SECTION 3: TESTIMONIALS ===== */}
         <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
           <div className="brand-track">
-            <Testimonials testimonials={getSiteTestimonialsClarity()} autoScrollOnly />
+            <LandingTestimonials testimonials={getSiteTestimonialsClarity()} hideCTA />
           </div>
         </section>
 
@@ -185,7 +185,7 @@ export default function ConkaClarityPage() {
       {/* ===== SECTION 3: TESTIMONIALS ===== */}
       <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
         <div className="brand-track">
-          <Testimonials testimonials={getSiteTestimonialsClarity()} autoScrollOnly />
+          <LandingTestimonials testimonials={getSiteTestimonialsClarity()} hideCTA />
         </div>
       </section>
 

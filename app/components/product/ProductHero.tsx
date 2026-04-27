@@ -14,7 +14,6 @@ import {
   FUNNEL_CADENCES,
   getSavingsPercent,
   getFunnelProductSlideshow,
-  FORMULA_ACCENT,
 } from "@/app/lib/cadenceData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 
@@ -71,7 +70,6 @@ export default function ProductHero({
 }: ProductHeroProps) {
   const formula = formulaContent[formulaId];
   const pricing = getCadencePricingByFormula(formulaId, selectedCadence);
-  const productAccent = FORMULA_ACCENT[formulaId];
   const productKey = formulaId === "01" ? "flow" : "clear";
   const images = getFunnelProductSlideshow(productKey, selectedCadence);
 
@@ -139,7 +137,7 @@ export default function ProductHero({
               const isSelected = selectedCadence === cadence;
               const cadencePricing = getCadencePricingByFormula(formulaId, cadence);
               const frequency = getPriceFrequency(cadence);
-              const bannerLabel = display.badge ?? display.savingsLabel;
+              const bannerLabel = display.badge;
 
               return (
                 <button
@@ -273,10 +271,6 @@ export default function ProductHero({
                     )}
                   </div>
 
-                  {/* Bottom accent bar on selected */}
-                  {isSelected && (
-                    <div className="h-1 w-full" style={{ backgroundColor: productAccent }} aria-hidden />
-                  )}
                 </button>
               );
             })}
