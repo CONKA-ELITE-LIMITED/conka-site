@@ -9,13 +9,13 @@ export interface ProductGridCopy {
 }
 
 const LANDING = {
-  eyebrow: "Find Your Formula · Build Your Routine",
+  eyebrow: "// Build your routine · CONKA-03",
   title: "Find Your Formula",
   monoSub: "2 Formulas · 1 Daily System · Morning + Afternoon",
 } as const;
 
 const CROSS_SELL = {
-  eyebrow: "More From CONKA · Complete Your Stack",
+  eyebrow: "// Complete your stack · CONKA-03",
   title: "Explore Other Products",
   monoSub: "Handpicked additions · Same standards",
 } as const;
