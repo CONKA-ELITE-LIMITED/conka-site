@@ -57,7 +57,7 @@ export default function LandingHero() {
 
         <header className="mt-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/55 tabular-nums mb-3">
-            // A New State Of Mind
+            {"// A new state of mind · CONKA-03"}
           </p>
           <h1
             className="text-black font-semibold text-3xl leading-[1.08]"
@@ -88,7 +88,7 @@ export default function LandingHero() {
         {/* Left — eyebrow, title, CTA, stats */}
         <div className="flex flex-col items-start">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/55 tabular-nums mb-5">
-            // A New State Of Mind
+            {"// A new state of mind · CONKA-03"}
           </p>
 
           <h1
