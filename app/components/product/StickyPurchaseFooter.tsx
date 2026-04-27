@@ -342,8 +342,8 @@ export default function StickyPurchaseFooter({
                 </button>
 
                 {/* Add to Cart Button */}
-                <ConkaCTAButton onClick={onAddToCart} meta={formatPrice(price)}>
-                  Add to Cart
+                <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto">
+                  Add to Cart · {formatPrice(price)}
                 </ConkaCTAButton>
               </div>
             </div>

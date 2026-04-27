@@ -75,7 +75,7 @@ export default function ProductHero({
                     height="18"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="text-amber-500"
+                    className="text-[#1B2757]"
                   >
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
@@ -88,7 +88,7 @@ export default function ProductHero({
               </span>
             </div>
             <h1
-              className="brand-h1-bold leading-tight"
+              className="brand-h1 leading-tight"
               style={{ letterSpacing: "-0.02em" }}
             >
               {formulaId === "01" ? (
@@ -101,11 +101,10 @@ export default function ProductHero({
             </h1>
             <div className="mt-2">
               <span
-                className="inline-block py-1 brand-data text-black/60 text-sm"
+                className="inline-block py-1 rounded-none brand-data text-black/60 text-sm"
                 style={{
                   paddingLeft: "var(--brand-space-m)",
                   paddingRight: "var(--brand-space-m)",
-                  borderRadius: "var(--brand-radius-interactive)",
                   background: "rgba(0,0,0,0.04)",
                 }}
               >
@@ -115,7 +114,7 @@ export default function ProductHero({
           </div>
 
           {/* Headline description */}
-          <p className="brand-body text-black/80 text-base md:text-lg leading-snug mb-1.5">
+          <p className="text-sm md:text-base text-black/75 leading-relaxed mb-1.5">
             {formula.headline}
           </p>
 

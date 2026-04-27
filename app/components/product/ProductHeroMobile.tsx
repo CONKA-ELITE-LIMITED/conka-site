@@ -39,7 +39,18 @@ export default function ProductHeroMobile({
 
   return (
     <>
-      {/* Header */}
+      {/* Product Image + thumbnails */}
+      <div className="relative w-screen left-1/2 -translate-x-1/2 bg-[#FAFAFA]">
+        <ProductImageSlideshow
+          images={
+            formulaId === "01" ? formulaImages.flow : formulaImages.clear
+          }
+          alt={`${formula.name} bottle`}
+          fullBleedThumbnails
+        />
+      </div>
+
+      {/* Header — title + assurance, below the asset */}
       <div
         className="w-full min-w-0 pt-3 pb-2"
         style={{
@@ -53,24 +64,24 @@ export default function ProductHeroMobile({
               <svg
                 key={i}
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="text-amber-500"
+                className="text-[#1B2757]"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}
           </div>
-          <span className="brand-data text-black/60">
+          <span className="brand-data text-black/60 text-xs">
             {formulaId === "01"
               ? "Over 90,000 bottles sold"
               : "Over 60,000 bottles sold"}
           </span>
         </div>
         <h1
-          className="brand-h1-bold leading-tight"
+          className="brand-h2 leading-tight"
           style={{ letterSpacing: "-0.02em" }}
         >
           {formulaId === "01" ? (
@@ -81,17 +92,6 @@ export default function ProductHeroMobile({
             formula.name
           )}
         </h1>
-      </div>
-
-      {/* Product Image + thumbnails */}
-      <div className="relative w-screen left-1/2 -translate-x-1/2 bg-[#FAFAFA]">
-        <ProductImageSlideshow
-          images={
-            formulaId === "01" ? formulaImages.flow : formulaImages.clear
-          }
-          alt={`${formula.name} bottle`}
-          fullBleedThumbnails
-        />
       </div>
 
       {/* Content */}
@@ -105,11 +105,10 @@ export default function ProductHeroMobile({
         {/* Meta pill */}
         <div>
           <span
-            className="inline-block py-1 brand-data text-black/60 text-sm"
+            className="inline-block py-1 rounded-none brand-data text-black/60 text-sm"
             style={{
               paddingLeft: "var(--brand-space-m)",
               paddingRight: "var(--brand-space-m)",
-              borderRadius: "var(--brand-radius-interactive)",
               background: "rgba(0,0,0,0.04)",
             }}
           >
@@ -117,7 +116,7 @@ export default function ProductHeroMobile({
           </span>
         </div>
 
-        <p className="brand-body text-black/80 text-base leading-snug mb-1.5">
+        <p className="text-sm md:text-base text-black/75 leading-relaxed mb-1.5">
           {formula.headline}
         </p>
 
