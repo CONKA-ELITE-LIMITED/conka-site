@@ -291,9 +291,10 @@ Every section eyebrow ends with a topic code identifying its subject. Codes are 
 
 | Code | Topic |
 |------|-------|
+| `CONKA-00` | Core brand philosophy — purpose, mission, the fundamental "why CONKA exists" |
 | `CONKA-01` | CONKA Flow (product) |
 | `CONKA-02` | CONKA Clear (product) |
-| `CONKA-03` | Both / Protocol / combined bundle |
+| `CONKA-03` | Both / Bundle / commercial conversion |
 | `APP-01` | The companion app |
 | `SCI-01` | How it works / mechanism |
 | `SCI-02` | Deep science / research / clinical trials |

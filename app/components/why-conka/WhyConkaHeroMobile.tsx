@@ -23,7 +23,7 @@ export function WhyConkaHeroMobile() {
       </div>
       <div className="flex flex-col items-start text-left">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-3">
-          // The CONKA framework · 07 reasons
+          {"// The CONKA framework · CONKA-00"}
         </p>
         <h1
           id="why-conka-hero-heading"
