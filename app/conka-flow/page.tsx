@@ -35,7 +35,9 @@ export default function ConkaFlowPage() {
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
 
-  const cadencePrice = getCadencePricingByFormula("01", selectedCadence).price;
+  const cadencePricing = getCadencePricingByFormula("01", selectedCadence);
+  const cadencePrice = cadencePricing.price;
+  const cadenceCompareAtPrice = cadencePricing.compareAtPrice;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta)
   useEffect(() => {
@@ -153,6 +155,7 @@ export default function ConkaFlowPage() {
           formulaId="01"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
+          cadenceCompareAtPrice={cadenceCompareAtPrice}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
 
