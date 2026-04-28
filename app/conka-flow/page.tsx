@@ -7,9 +7,7 @@ import {
   ProductHero,
   ProductHeroMobile,
   FormulaIngredients,
-  FormulaBenefits,
-  FormulaBenefitsStats,
-  FormulaBenefitsMobile,
+  FormulaBenefitsPillars,
   FormulaFAQ,
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
@@ -82,12 +80,10 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* TODO Phase 2: replace the legacy benefits block below with FormulaBenefitsPillars */}
-        {/* ===== SECTION 2: BENEFITS (legacy, will be replaced) ===== */}
-        <section id="benefits" className="brand-section brand-bg-tint" aria-label="Benefits">
+        {/* ===== SECTION 2: BENEFITS PILLARS ===== */}
+        <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
           <div className="brand-track">
-            <FormulaBenefitsStats formulaId="01" />
-            <FormulaBenefitsMobile formulaId="01" />
+            <FormulaBenefitsPillars formulaId="01" />
           </div>
         </section>
 
@@ -96,7 +92,7 @@ export default function ConkaFlowPage() {
         {/* ===== SECTION 4: INGREDIENTS ===== */}
         <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
           <div className="brand-track">
-            <FormulaIngredients formulaId="01" />
+            <FormulaIngredients formulaId="01" hideCTA />
           </div>
         </section>
 
@@ -181,12 +177,10 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* TODO Phase 2: replace the legacy benefits block below with FormulaBenefitsPillars */}
-      {/* ===== SECTION 2: BENEFITS (legacy, will be replaced) ===== */}
-      <section id="benefits" className="brand-section brand-bg-tint" aria-label="Benefits">
+      {/* ===== SECTION 2: BENEFITS PILLARS ===== */}
+      <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
         <div className="brand-track">
-          <FormulaBenefitsStats formulaId="01" />
-          <FormulaBenefits formulaId="01" />
+          <FormulaBenefitsPillars formulaId="01" />
         </div>
       </section>
 
@@ -195,7 +189,7 @@ export default function ConkaFlowPage() {
       {/* ===== SECTION 4: INGREDIENTS ===== */}
       <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
         <div className="brand-track">
-          <FormulaIngredients formulaId="01" />
+          <FormulaIngredients formulaId="01" hideCTA />
         </div>
       </section>
 

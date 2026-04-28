@@ -1,5 +1,7 @@
 "use client";
 
+// TODO: no longer used on /conka-flow PDP. Check if can be deleted once /conka-clarity and /protocol/3 are swept.
+
 import { useState } from "react";
 import { FormulaId, StruggleId } from "@/app/lib/productData";
 import BenefitList from "./BenefitList";
@@ -23,7 +25,7 @@ export default function FormulaBenefits({ formulaId }: FormulaBenefitsProps) {
           className="brand-h1 mb-2 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
-          What you'll actually feel.
+          What you&apos;ll actually feel.
         </h2>
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
           Select a benefit · See the evidence
