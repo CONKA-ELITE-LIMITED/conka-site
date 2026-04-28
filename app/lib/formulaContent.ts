@@ -643,11 +643,11 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
   "02": {
     id: "02",
     name: "CONKA Clear",
-    tagline: "Peak Performance Boost",
+    tagline: "Sharper recall. Faster thinking.",
     theme: "light",
     accentColor: "amber",
     headline:
-      "When you need your brain at its best, CONKA Clear boosts cerebral blood flow and key neurotransmitters, so you think clearly under pressure.",
+      "Cut through brain fog and think clearly under pressure. Powered by 10 clinically-dosed nootropics in a 30ml liquid shot, including Alpha GPC and Ginkgo Biloba for cerebral blood flow. Informed Sport certified, and trackable in the CONKA app.",
     subheadline: "Strategic enhancement for high-stakes moments",
     annotation: "your competitive edge",
     positioning: "CLARITY",

@@ -69,16 +69,29 @@ export const CURATED_STATS: Record<
       stat: "+63%",
       label: "improvement in memory performance",
       anchor: "¶",
+      pillarName: "Sharper recall",
+      oneLine: "Sharpen memory and recall when the details matter.",
+      feltTranslation:
+        "Hold names. Hold numbers. Pull the exact phrase from yesterday's email.",
     },
     {
       stat: "+30%",
       label: "improvement in fatigue resistance",
       anchor: "¶",
+      pillarName: "Sustained performance",
+      oneLine: "Stay precise through long meetings and demanding work.",
+      feltTranslation:
+        "Hour three feels like hour one. No drop-off, no fade.",
     },
     {
       stat: "+57%",
       label: "increase in cerebral blood flow",
       anchor: "¶",
+      pillarName: "Mental clarity",
+      oneLine:
+        "Lift cognitive performance through enhanced blood flow to the brain.",
+      feltTranslation:
+        "Faster connections. Cleaner thinking. Noticeable lift.",
     },
   ],
 };
