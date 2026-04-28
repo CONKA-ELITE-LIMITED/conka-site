@@ -11,19 +11,19 @@ import {
   FormulaBenefitsStats,
   FormulaBenefitsMobile,
   FormulaFAQ,
-  HowItWorks,
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
 } from "@/app/components/product";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
-import { FormulaCaseStudiesMobile } from "@/app/components/FormulaCaseStudies";
-import FormulaCaseStudies from "@/app/components/FormulaCaseStudies";
+import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
+import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
+import LabGuarantee from "@/app/components/landing/LabGuarantee";
+import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
+import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
-import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
-import ProductGrid from "@/app/components/home/ProductGrid";
 import {
   CadenceType,
   getCadenceVariantByFormula,
@@ -80,33 +80,25 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 2: BENEFITS STATS ===== */}
-        <section id="benefits-stats" className="brand-section brand-bg-tint" aria-labelledby="benefits-stats-heading">
+        {/* TODO Phase 2: replace the legacy benefits block below with FormulaBenefitsPillars */}
+        {/* ===== SECTION 2: BENEFITS (legacy, will be replaced) ===== */}
+        <section id="benefits" className="brand-section brand-bg-tint" aria-label="Benefits">
           <div className="brand-track">
             <FormulaBenefitsStats formulaId="01" />
+            <FormulaBenefitsMobile formulaId="01" />
           </div>
         </section>
 
-        {/* ===== SECTION 3: TESTIMONIALS ===== */}
-        <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
-          <div className="brand-track">
-            <LandingTestimonials hideCTA />
-          </div>
-        </section>
+        {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
 
         {/* ===== SECTION 4: INGREDIENTS ===== */}
-        <section id="ingredients" className="brand-section brand-bg-tint" aria-label="Formula ingredients">
+        <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
           <div className="brand-track">
             <FormulaIngredients formulaId="01" />
           </div>
         </section>
 
-        {/* ===== SECTION 5: FORMULA BENEFITS ===== */}
-        <section id="proof-and-science" className="brand-section brand-bg-white" aria-labelledby="proof-and-science-heading">
-          <div className="brand-track">
-            <FormulaBenefitsMobile formulaId="01" />
-          </div>
-        </section>
+        {/* TODO Phase 3: ProductWhatYouGet section goes here (Seed-style "what ships, how it ships"). */}
 
         {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
         <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
@@ -115,28 +107,42 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 7: HOW IT WORKS ===== */}
-        <section id="how-it-works" className="brand-section brand-bg-white" aria-labelledby="how-it-works-heading">
+        {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
+        <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
           <div className="brand-track">
-            <HowItWorks formulaId="01" />
+            <AthleteCredibilityCarousel />
           </div>
         </section>
 
-        {/* ===== SECTION 8: CASE STUDIES ===== */}
-        <section id="case-studies" className="brand-section brand-bg-tint" aria-label="CONKA Case Studies">
+        {/* ===== SECTION 8: COMPARISON (Balance upsell to /protocol/3) ===== */}
+        <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
           <div className="brand-track">
-            <FormulaCaseStudiesMobile formulaId="01" />
+            <LandingValueComparison ctaHref="/protocol/3" ctaLabel="Try the full system" />
           </div>
         </section>
 
-        {/* ===== SECTION 9: FAQ ===== */}
-        <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
+        {/* ===== SECTION 9: GUARANTEE ===== */}
+        <section id="guarantee" className="brand-section brand-bg-white" aria-label="Risk-free guarantee">
+          <div className="brand-track">
+            <LabGuarantee />
+          </div>
+        </section>
+
+        {/* ===== SECTION 10: FAQ ===== */}
+        <section id="faq" className="brand-section brand-bg-tint" aria-label="FAQ">
           <div className="brand-track">
             <FormulaFAQ formulaId="01" />
           </div>
         </section>
 
-        {/* ===== SECTION 10: EXPLORE ===== */}
+        {/* ===== SECTION 11: REVIEWS CHORUS ===== */}
+        <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
+          <div className="brand-track">
+            <LandingTestimonials hideCTA />
+          </div>
+        </section>
+
+        {/* ===== SECTION 12: EXPLORE ===== */}
         <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
           <div className="brand-track">
             <ProductGrid exclude={["flow"]} />
@@ -172,33 +178,25 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 2: BENEFITS STATS ===== */}
-      <section id="benefits-stats" className="brand-section brand-bg-tint" aria-labelledby="benefits-stats-heading">
+      {/* TODO Phase 2: replace the legacy benefits block below with FormulaBenefitsPillars */}
+      {/* ===== SECTION 2: BENEFITS (legacy, will be replaced) ===== */}
+      <section id="benefits" className="brand-section brand-bg-tint" aria-label="Benefits">
         <div className="brand-track">
           <FormulaBenefitsStats formulaId="01" />
+          <FormulaBenefits formulaId="01" />
         </div>
       </section>
 
-      {/* ===== SECTION 3: TESTIMONIALS ===== */}
-      <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
-        <div className="brand-track">
-          <LandingTestimonials hideCTA />
-        </div>
-      </section>
+      {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
 
       {/* ===== SECTION 4: INGREDIENTS ===== */}
-      <section id="ingredients" className="brand-section brand-bg-tint" aria-label="Formula ingredients">
+      <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
         <div className="brand-track">
           <FormulaIngredients formulaId="01" />
         </div>
       </section>
 
-      {/* ===== SECTION 5: FORMULA BENEFITS ===== */}
-      <section id="proof-and-science" className="brand-section brand-bg-white" aria-labelledby="proof-and-science-heading">
-        <div className="brand-track">
-          <FormulaBenefits formulaId="01" />
-        </div>
-      </section>
+      {/* TODO Phase 3: ProductWhatYouGet section goes here (Seed-style "what ships, how it ships"). */}
 
       {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
       <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
@@ -207,28 +205,42 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 7: HOW IT WORKS ===== */}
-      <section id="how-it-works" className="brand-section brand-bg-white" aria-labelledby="how-it-works-heading">
+      {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
+      <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
         <div className="brand-track">
-          <HowItWorks formulaId="01" />
+          <AthleteCredibilityCarousel />
         </div>
       </section>
 
-      {/* ===== SECTION 8: CASE STUDIES ===== */}
-      <section id="case-studies" className="brand-section brand-bg-tint" aria-label="CONKA Case Studies">
+      {/* ===== SECTION 8: COMPARISON (Balance upsell to /protocol/3) ===== */}
+      <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
         <div className="brand-track">
-          <FormulaCaseStudies formulaId="01" />
+          <LandingValueComparison ctaHref="/protocol/3" ctaLabel="Try the full system" />
         </div>
       </section>
 
-      {/* ===== SECTION 9: FAQ ===== */}
-      <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
+      {/* ===== SECTION 9: GUARANTEE ===== */}
+      <section id="guarantee" className="brand-section brand-bg-white" aria-label="Risk-free guarantee">
+        <div className="brand-track">
+          <LabGuarantee />
+        </div>
+      </section>
+
+      {/* ===== SECTION 10: FAQ ===== */}
+      <section id="faq" className="brand-section brand-bg-tint" aria-label="FAQ">
         <div className="brand-track">
           <FormulaFAQ formulaId="01" />
         </div>
       </section>
 
-      {/* ===== SECTION 10: EXPLORE ===== */}
+      {/* ===== SECTION 11: REVIEWS CHORUS ===== */}
+      <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
+        <div className="brand-track">
+          <LandingTestimonials hideCTA />
+        </div>
+      </section>
+
+      {/* ===== SECTION 12: EXPLORE ===== */}
       <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
         <div className="brand-track">
           <ProductGrid exclude={["flow"]} />
