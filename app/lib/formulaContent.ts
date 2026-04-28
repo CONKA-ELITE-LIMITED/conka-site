@@ -108,12 +108,12 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
   "01": {
     id: "01",
     name: "CONKA Flow",
-    tagline: "Caffeine-Free Focus",
+    tagline: "Sharper focus. Calmer energy.",
     theme: "light",
     accentColor: "teal",
     patent: "Patented: GB2629279",
     headline:
-      "Daily support for your nervous system and focus, so you can stay sharp without the jitters or the crash.",
+      "Sharpen focus and sustain mental clarity through the day. Powered by 6 clinically-dosed adaptogens in a fast-absorbing liquid shot, with zero caffeine and zero crash. Informed Sport certified, and trackable in the CONKA app so you can see it working.",
     subheadline: "Designed for daily cognitive enhancement",
     annotation: "your daily foundation",
     positioning: "ENERGY",
@@ -643,11 +643,11 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
   "02": {
     id: "02",
     name: "CONKA Clear",
-    tagline: "Peak Performance Boost",
+    tagline: "Sharper recall. Faster thinking.",
     theme: "light",
     accentColor: "amber",
     headline:
-      "When you need your brain at its best, CONKA Clear boosts cerebral blood flow and key neurotransmitters, so you think clearly under pressure.",
+      "Cut through brain fog and think clearly under pressure. Powered by 10 clinically-dosed actives in a 30ml liquid shot, including Alpha GPC and Ginkgo Biloba for cerebral blood flow. Informed Sport certified, and trackable in the CONKA app.",
     subheadline: "Strategic enhancement for high-stakes moments",
     annotation: "your competitive edge",
     positioning: "CLARITY",

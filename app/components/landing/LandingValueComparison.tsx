@@ -61,7 +61,13 @@ const CLEAR_BANDS: Band[] = [
   { start: 12, end: 18, kind: "conka", delayIndex: 3 },
 ];
 
-export default function LandingValueComparison() {
+export default function LandingValueComparison({
+  ctaHref,
+  ctaLabel,
+}: {
+  ctaHref?: string;
+  ctaLabel?: string;
+} = {}) {
   const [ref, isInView] = useInView();
 
   return (
@@ -187,7 +193,9 @@ export default function LandingValueComparison() {
       </div>
 
       <div className="flex justify-start">
-        <ConkaCTAButton meta={null}>Get Both from £{PRICE_PER_SHOT_BOTH}/shot</ConkaCTAButton>
+        <ConkaCTAButton href={ctaHref} meta={null}>
+          {ctaLabel ?? `Get Both from £${PRICE_PER_SHOT_BOTH}/shot`}
+        </ConkaCTAButton>
       </div>
       <div className="mt-6">
         <LabTrustBadges />

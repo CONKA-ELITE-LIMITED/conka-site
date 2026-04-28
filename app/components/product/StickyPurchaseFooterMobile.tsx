@@ -16,6 +16,7 @@ import {
   ProtocolId,
 } from "@/app/lib/productData";
 import { CadenceType } from "@/app/lib/cadenceData";
+import { GUARANTEE_LABEL } from "@/app/lib/offerConstants";
 
 const packSizes: PackSize[] = ["4", "8", "12", "28"];
 const packLabels: Record<PackSize, string> = {
@@ -39,6 +40,7 @@ interface StickyPurchaseFooterMobileProps {
   // Cadence mode -- price-only CTA, no picker on mobile
   selectedCadence?: CadenceType;
   cadencePrice?: number;
+  cadenceCompareAtPrice?: number;
   onAddToCart: () => void;
 }
 
@@ -52,6 +54,7 @@ export default function StickyPurchaseFooterMobile({
   purchaseType = "subscription",
   selectedCadence,
   cadencePrice,
+  cadenceCompareAtPrice,
   onAddToCart,
 }: StickyPurchaseFooterMobileProps) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -104,13 +107,35 @@ export default function StickyPurchaseFooterMobile({
     (showTierSelector && selectedTier && availableTiers.length > 0);
 
   // Cadence mode: no picker on mobile -- cadence selection lives in the hero widget.
-  // Show a single full-width CTA confirming the price.
+  // Mirrors the funnel pattern: trust strip on top, full CTA with price + savings meta.
   if (selectedCadence !== undefined && cadencePrice !== undefined) {
+    const savings = cadenceCompareAtPrice
+      ? cadenceCompareAtPrice - cadencePrice
+      : 0;
+    const frequency =
+      selectedCadence === "monthly-sub"
+        ? "/mo"
+        : selectedCadence === "quarterly-sub"
+          ? "/quarter"
+          : "";
+    const savingsSegment =
+      savings > 0 ? ` · Save ${formatPrice(savings)}` : "";
+    const oneTimeSegment =
+      selectedCadence === "monthly-otp" ? " · one-time" : "";
+    const meta = `${formatPrice(cadencePrice)}${frequency}${savingsSegment}${oneTimeSegment}`;
+
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/12">
-        <div className="px-5 py-3">
-          <ConkaCTAButton compact onClick={onAddToCart}>
-            Add to Cart · {formatPrice(cadencePrice)}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-black/8">
+        <div className="flex items-center justify-center gap-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.12em] text-black/70">
+          <span>{GUARANTEE_LABEL}</span>
+          <span className="text-black/20" aria-hidden>·</span>
+          <span>Free Shipping</span>
+          <span className="text-black/20" aria-hidden>·</span>
+          <span>Cancel Anytime</span>
+        </div>
+        <div className="px-4 pb-3">
+          <ConkaCTAButton onClick={onAddToCart} meta={meta} className="w-full max-w-none">
+            Add to Cart
           </ConkaCTAButton>
         </div>
       </div>

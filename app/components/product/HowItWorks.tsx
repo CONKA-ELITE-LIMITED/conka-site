@@ -1,3 +1,5 @@
+// TODO: no longer used on /conka-flow PDP. Check if can be deleted once /conka-clarity and /protocol/3 are swept.
+
 import Image from "next/image";
 import {
   FormulaId,

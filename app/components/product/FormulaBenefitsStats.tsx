@@ -1,5 +1,7 @@
 "use client";
 
+// TODO: no longer used on /conka-flow PDP. Check if can be deleted once /conka-clarity and /protocol/3 are swept.
+
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { FormulaId } from "@/app/lib/productData";
 import FormulaBenefitsStatsDesktop from "./FormulaBenefitsStatsDesktop";

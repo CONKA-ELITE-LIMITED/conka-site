@@ -11,7 +11,6 @@ import {
   CadenceType,
   getCadencePricingByFormula,
   FUNNEL_CADENCES,
-  getSavingsPercent,
 } from "@/app/lib/cadenceData";
 import { getFormulaHeroImages } from "@/app/lib/heroImageConfig";
 import HeroImageStack from "./HeroImageStack";
@@ -54,11 +53,22 @@ function getWhatShips(cadence: CadenceType, shotCount: number): string {
   }
 }
 
-function getCTAMeta(cadence: CadenceType, price: number): string {
+function getCTAMeta(
+  cadence: CadenceType,
+  pricing: { price: number; compareAtPrice?: number },
+): string {
+  const savings = pricing.compareAtPrice
+    ? pricing.compareAtPrice - pricing.price
+    : 0;
+  const savingsSegment = savings > 0 ? ` · Save ${formatPrice(savings)}` : "";
+
   switch (cadence) {
-    case "monthly-sub": return `${formatPrice(price)}/mo · save 25%`;
-    case "quarterly-sub": return `${formatPrice(price)}/quarter · best value`;
-    case "monthly-otp": return `${formatPrice(price)} · one-time`;
+    case "monthly-sub":
+      return `${formatPrice(pricing.price)}/mo${savingsSegment}`;
+    case "quarterly-sub":
+      return `${formatPrice(pricing.price)}/quarter${savingsSegment}`;
+    case "monthly-otp":
+      return `${formatPrice(pricing.price)} · one-time`;
   }
 }
 
@@ -108,14 +118,9 @@ export default function ProductHero({
             <h1 className="brand-h1 leading-tight lg:!text-[2.5rem]" style={{ letterSpacing: "-0.02em" }}>
               {formulaId === "01" ? "CONKA FL0W" : formula.name}
             </h1>
-            <div className="mt-2">
-              <span
-                className="inline-block py-1 rounded-none brand-data text-black/60 text-sm"
-                style={{ paddingLeft: "var(--brand-space-m)", paddingRight: "var(--brand-space-m)", background: "rgba(0,0,0,0.04)" }}
-              >
-                Liquid · 1 shot (30ml) daily · 28-pack
-              </span>
-            </div>
+            <p className="text-lg lg:text-xl text-black/65 leading-snug mt-0 mb-3 lg:mb-4" style={{ letterSpacing: "-0.01em" }}>
+              {formula.tagline}
+            </p>
           </div>
 
           {/* Headline */}
@@ -175,14 +180,18 @@ export default function ProductHero({
                           </svg>
                         </div>
                         <div>
-                          <p className={`font-semibold ${isSelected ? "text-base text-[var(--brand-black)]" : "text-sm text-black/60"}`}>
+                          <p className={`font-semibold ${isSelected ? "text-lg text-[var(--brand-black)]" : "text-base text-black/65"}`}>
                             {display.label}
                           </p>
-                          {!isSelected && (
-                            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-black/40 mt-0.5 tabular-nums">
-                              {cadencePricing.shotCount} shots
-                            </p>
-                          )}
+                          <span
+                            className={`inline-flex items-center mt-1 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] tabular-nums ${
+                              isSelected
+                                ? "bg-[#1B2757]/10 text-[#1B2757]"
+                                : "bg-black/[0.05] text-black/55"
+                            }`}
+                          >
+                            {cadencePricing.shotCount} shots · 1/day
+                          </span>
                         </div>
                       </div>
 
@@ -209,7 +218,7 @@ export default function ProductHero({
                             {formatPrice(cadencePricing.perShot)}
                           </span>
                           <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
-                            per shot · 1 shot per day
+                            per shot
                           </span>
                         </div>
 
@@ -224,7 +233,7 @@ export default function ProductHero({
                                 {formatPrice(cadencePricing.compareAtPrice)}
                               </span>
                               <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1B2757] tabular-nums">
-                                {getSavingsPercent(cadencePricing.price, cadencePricing.compareAtPrice)}% off
+                                Save {formatPrice(cadencePricing.compareAtPrice - cadencePricing.price)}
                               </span>
                             </>
                           )}
@@ -269,7 +278,7 @@ export default function ProductHero({
             })}
           </div>
 
-          <ConkaCTAButton onClick={onAddToCart} meta={getCTAMeta(selectedCadence, pricing.price)} className="w-full max-w-none">
+          <ConkaCTAButton onClick={onAddToCart} meta={getCTAMeta(selectedCadence, pricing)} className="w-full max-w-none">
             Add to Cart
           </ConkaCTAButton>
 

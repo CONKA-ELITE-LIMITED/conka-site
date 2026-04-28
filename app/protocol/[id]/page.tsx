@@ -306,7 +306,7 @@ export default function ProtocolPage() {
   // Mobile version
   if (isMobile) {
     return (
-      <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+      <div className="brand-clinical brand-page min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
         <Navigation />
 
         {/* ===== SECTION 1: HERO ===== */}

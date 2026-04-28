@@ -143,12 +143,16 @@ function IngredientAccordionCard({
 
 interface FormulaIngredientsProps {
   formulaId: FormulaId;
+  hideCTA?: boolean;
 }
 
 const CARD_WIDTH = 300;
 const GAP = 12;
 
-export default function FormulaIngredients({ formulaId }: FormulaIngredientsProps) {
+export default function FormulaIngredients({
+  formulaId,
+  hideCTA = false,
+}: FormulaIngredientsProps) {
   const ingredients = getIngredientsByFormula(formulaId);
   const headingWord = HEADING_WORD[formulaId];
   const scrollRef = useRef<HTMLUListElement>(null);
@@ -217,11 +221,13 @@ export default function FormulaIngredients({ formulaId }: FormulaIngredientsProp
           <p className="text-sm md:text-base text-black/70 max-w-lg">
             {SUBHEADING}
           </p>
-          <div className="hidden lg:flex items-center gap-3">
-            <ConkaCTAButton href="/ingredients" meta="// all formula inputs">
-              See all ingredients
-            </ConkaCTAButton>
-          </div>
+          {!hideCTA && (
+            <div className="hidden lg:flex items-center gap-3">
+              <ConkaCTAButton href="/ingredients" meta="// all formula inputs">
+                See all ingredients
+              </ConkaCTAButton>
+            </div>
+          )}
         </div>
       </div>
 
@@ -322,9 +328,11 @@ export default function FormulaIngredients({ formulaId }: FormulaIngredientsProp
           </button>
         </div>
 
-        <ConkaCTAButton href="/ingredients" meta="// all formula inputs">
-          See all ingredients
-        </ConkaCTAButton>
+        {!hideCTA && (
+          <ConkaCTAButton href="/ingredients" meta="// all formula inputs">
+            See all ingredients
+          </ConkaCTAButton>
+        )}
       </div>
     </>
   );
