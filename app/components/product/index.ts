@@ -12,6 +12,7 @@ export { default as FormulaBenefits } from "./FormulaBenefits";
 export { default as FormulaBenefitsStats } from "./FormulaBenefitsStats";
 export { default as FormulaBenefitsMobile } from "./FormulaBenefitsMobile";
 export { default as FormulaBenefitsPillars } from "./FormulaBenefitsPillars";
+export { default as ProductWhatYouGet } from "./ProductWhatYouGet";
 export { default as ProtocolBenefitsMobile } from "./ProtocolBenefitsMobile";
 export { default as FormulaFAQ } from "./FormulaFAQ";
 export { default as HowItWorks } from "./HowItWorks";

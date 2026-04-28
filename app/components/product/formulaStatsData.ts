@@ -30,6 +30,8 @@ export const CURATED_STATS: Record<
     pillarName?: string;
     oneLine?: string;
     feltTranslation?: string;
+    sourceRef?: string;
+    ingredients?: { name: string; imageSrc: string }[];
   }>
 > = {
   "01": [
@@ -42,6 +44,12 @@ export const CURATED_STATS: Record<
         "Sharpen focus and recall, powered by clinically-dosed adaptogens.",
       feltTranslation:
         "Remember names. Hold the thread. Stop second-guessing.",
+      sourceRef: "PMID 12888775 · Kennedy et al. 2003",
+      ingredients: [
+        { name: "Lemon Balm", imageSrc: "/ingredients/flow/lemon-balm.webp" },
+        { name: "Bilberry", imageSrc: "/ingredients/flow/bilberry.webp" },
+        { name: "Rhodiola", imageSrc: "/ingredients/flow/rhodiola.webp" },
+      ],
     },
     {
       stat: "Reduces",
@@ -52,6 +60,12 @@ export const CURATED_STATS: Record<
         "Stay productive through the afternoon without a stimulant crash.",
       feltTranslation:
         "No 3pm slump. No caffeine cliff. Morning clarity carries through.",
+      sourceRef: "EFSA Reg. No 432/2012 · Authorised claim",
+      ingredients: [
+        { name: "Ashwagandha", imageSrc: "/ingredients/flow/ashwagandha.webp" },
+        { name: "Rhodiola", imageSrc: "/ingredients/flow/rhodiola.webp" },
+        { name: "Turmeric", imageSrc: "/ingredients/flow/turmeric.jpg" },
+      ],
     },
     {
       stat: "+42%",
@@ -62,6 +76,12 @@ export const CURATED_STATS: Record<
         "Calm your nervous system so the day ends as sharply as it started.",
       feltTranslation:
         "Wind down without effort. Wake up clear, not foggy.",
+      sourceRef: "PMID 32021735 · Salve et al. 2019",
+      ingredients: [
+        { name: "Ashwagandha", imageSrc: "/ingredients/flow/ashwagandha.webp" },
+        { name: "Lemon Balm", imageSrc: "/ingredients/flow/lemon-balm.webp" },
+        { name: "Bilberry", imageSrc: "/ingredients/flow/bilberry.webp" },
+      ],
     },
   ],
   "02": [
@@ -73,6 +93,12 @@ export const CURATED_STATS: Record<
       oneLine: "Sharpen memory and recall when the details matter.",
       feltTranslation:
         "Hold names. Hold numbers. Pull the exact phrase from yesterday's email.",
+      sourceRef: "PMID 29246725 · Small et al. 2018",
+      ingredients: [
+        { name: "Alpha GPC", imageSrc: "/ingredients/clear/alpha-gpc.webp" },
+        { name: "Ginkgo Biloba", imageSrc: "/ingredients/clear/ginkgo.webp" },
+        { name: "Acetyl-L-Carnitine", imageSrc: "/ingredients/clear/alcar.webp" },
+      ],
     },
     {
       stat: "+30%",
@@ -82,6 +108,12 @@ export const CURATED_STATS: Record<
       oneLine: "Stay precise through long meetings and demanding work.",
       feltTranslation:
         "Hour three feels like hour one. No drop-off, no fade.",
+      sourceRef: "PMID 18937015 · Malaguarnera et al. 2008",
+      ingredients: [
+        { name: "Acetyl-L-Carnitine", imageSrc: "/ingredients/clear/alcar.webp" },
+        { name: "Vitamin B12", imageSrc: "/ingredients/clear/vitamin-b12.webp" },
+        { name: "N-Acetyl Cysteine", imageSrc: "/ingredients/clear/nac.webp" },
+      ],
     },
     {
       stat: "+57%",
@@ -92,6 +124,12 @@ export const CURATED_STATS: Record<
         "Lift cognitive performance through enhanced blood flow to the brain.",
       feltTranslation:
         "Faster connections. Cleaner thinking. Noticeable lift.",
+      sourceRef: "PMID 22628390 · Laws et al. 2012",
+      ingredients: [
+        { name: "Ginkgo Biloba", imageSrc: "/ingredients/clear/ginkgo.webp" },
+        { name: "Vitamin C", imageSrc: "/ingredients/clear/vitamin-c.webp" },
+        { name: "Glutathione", imageSrc: "/ingredients/clear/glutathione.webp" },
+      ],
     },
   ],
 };
