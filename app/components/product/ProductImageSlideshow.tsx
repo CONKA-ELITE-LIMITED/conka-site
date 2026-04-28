@@ -12,12 +12,15 @@ interface ProductImageSlideshowProps {
   alt: string;
   /** When true, thumbnail strip has no horizontal padding (for full-bleed mobile hero) */
   fullBleedThumbnails?: boolean;
+  /** When true, the thumbnail strip is hidden entirely (rely on prev/next nav buttons) */
+  hideThumbnails?: boolean;
 }
 
 export default function ProductImageSlideshow({
   images,
   alt,
   fullBleedThumbnails = false,
+  hideThumbnails = false,
 }: ProductImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -114,7 +117,7 @@ export default function ProductImageSlideshow({
       </div>
 
       {/* Horizontal thumbnail strip */}
-      {images.length > 1 && (
+      {images.length > 1 && !hideThumbnails && (
         <div
           className={`mt-3 min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleedThumbnails ? "px-2" : ""}`}
           style={
