@@ -108,6 +108,9 @@ export default function ProductHero({
             <h1 className="brand-h1 leading-tight lg:!text-[2.5rem]" style={{ letterSpacing: "-0.02em" }}>
               {formulaId === "01" ? "CONKA FL0W" : formula.name}
             </h1>
+            <p className="text-base lg:text-lg text-black/65 leading-snug mt-1" style={{ letterSpacing: "-0.01em" }}>
+              {formula.tagline}
+            </p>
             <div className="mt-2">
               <span
                 className="inline-block py-1 rounded-none brand-data text-black/60 text-sm"

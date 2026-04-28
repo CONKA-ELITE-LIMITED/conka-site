@@ -104,6 +104,9 @@ export default function ProductHeroMobile({
         <h1 className="brand-h2 leading-tight" style={{ letterSpacing: "-0.02em" }}>
           {formulaId === "01" ? "CONKA FL0W" : formula.name}
         </h1>
+        <p className="text-sm text-black/65 leading-snug mt-0.5" style={{ letterSpacing: "-0.01em" }}>
+          {formula.tagline}
+        </p>
       </div>
 
       {/* Content */}
