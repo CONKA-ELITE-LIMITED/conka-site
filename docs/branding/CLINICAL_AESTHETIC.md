@@ -370,17 +370,6 @@ Pages pass these when retargeting a shared component (e.g. home's `LabGuarantee`
 
 ---
 
-## Corner brackets (lifestyle assets only)
-
-```tsx
-<span aria-hidden className="pointer-events-none absolute top-3 left-3 w-[20%] h-[20%] border-t-[6px] border-l-[6px] border-black" />
-<span aria-hidden className="pointer-events-none absolute bottom-3 right-3 w-[20%] h-[20%] border-b-[6px] border-r-[6px] border-black" />
-```
-
-Requires `relative overflow-hidden` parent. Use `border-white` on dark images. Not for product renders.
-
----
-
 ## Do not
 
 - Add `border-radius` — tokens handle it
@@ -397,6 +386,6 @@ Requires `relative overflow-hidden` parent. Use `border-white` on dark images. N
 - Use rounded SVG strokes in icon tiles (`strokeLinecap="round"`) — square caps, miter joins
 - Use oversized quotation marks or blockquote styling — 2px navy left rule instead
 - Use `•` bullets anywhere — em-dash (`—`) only
-- Leave lifestyle or portrait imagery un-plated — every framed lifestyle/portrait asset gets at least one `Fig. 0X` corner plate via `FigurePlate`
+- Leave lifestyle or portrait imagery un-plated — every framed lifestyle/portrait asset gets a `FigurePlate` with at least a top-left `Fig. 0X` label
 - Apply figure plates to product renders (bottle shots, packshots) — plates are for documentary imagery only
-- Hand-roll figure plate labels — use `.fig-plate` from `brand-base.css` or the `FigurePlate` component
+- Hand-roll figure plate labels — use the `FigurePlate` component (`app/components/FigurePlate.tsx`); `.fig-plate` from `brand-base.css` is its internal style only

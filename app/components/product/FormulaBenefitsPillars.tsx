@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { FormulaId, formulaContent } from "@/app/lib/productData";
 import { CURATED_STATS } from "./formulaStatsData";
 
@@ -105,12 +106,43 @@ export default function FormulaBenefitsPillars({
                     <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/55 mt-3 leading-snug">
                       {item.label}
                     </p>
+                    {item.sourceRef && (
+                      <p className="font-mono text-[10px] text-black/35 mt-1.5 leading-snug tabular-nums">
+                        {item.sourceRef}
+                      </p>
+                    )}
                   </div>
 
                   {item.feltTranslation && (
                     <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1B2757] leading-snug mt-5 pt-5 border-t border-black/8">
                       {item.feltTranslation}
                     </p>
+                  )}
+
+                  {item.ingredients && item.ingredients.length > 0 && (
+                    <div className="mt-5 pt-5 border-t border-black/8 grid grid-cols-3 gap-2">
+                      {item.ingredients.map((ing) => (
+                        <div
+                          key={ing.name}
+                          className="bg-[var(--brand-tint)] border border-black/6 overflow-hidden"
+                        >
+                          <div className="relative w-full aspect-square bg-white">
+                            <Image
+                              src={ing.imageSrc}
+                              alt={ing.name}
+                              fill
+                              sizes="(max-width: 1024px) 30vw, 90px"
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="px-2 py-1.5 flex items-center justify-center">
+                            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-black/80 text-center leading-tight">
+                              {ing.name}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
               )}

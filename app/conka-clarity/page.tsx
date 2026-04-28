@@ -8,6 +8,7 @@ import {
   ProductHeroMobile,
   FormulaIngredients,
   FormulaBenefitsPillars,
+  ProductWhatYouGet,
   FormulaFAQ,
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
@@ -98,7 +99,12 @@ export default function ConkaClarityPage() {
           </div>
         </section>
 
-        {/* TODO Phase 3: ProductWhatYouGet section goes here (Seed-style "what ships, how it ships"). */}
+        {/* ===== SECTION 5: WHAT YOU GET ===== */}
+        <section id="what-you-get" className="brand-section brand-bg-tint" aria-label="What ships with your order">
+          <div className="brand-track">
+            <ProductWhatYouGet formulaId="02" />
+          </div>
+        </section>
 
         {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
         <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
@@ -195,7 +201,12 @@ export default function ConkaClarityPage() {
         </div>
       </section>
 
-      {/* TODO Phase 3: ProductWhatYouGet section goes here (Seed-style "what ships, how it ships"). */}
+      {/* ===== SECTION 5: WHAT YOU GET ===== */}
+      <section id="what-you-get" className="brand-section brand-bg-tint" aria-label="What ships with your order">
+        <div className="brand-track">
+          <ProductWhatYouGet formulaId="02" />
+        </div>
+      </section>
 
       {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
       <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">

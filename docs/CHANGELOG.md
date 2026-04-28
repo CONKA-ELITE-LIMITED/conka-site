@@ -6,6 +6,37 @@
 
 ## April 2026
 
+### 2026-04-28 -- PDP Phase B+C: ingredient images on benefit pillars, ProductWhatYouGet section, scroll-driven WhatToExpect timeline
+
+Three feature additions to `/conka-flow` and `/conka-clarity` as part of the ongoing PDP upgrade pass.
+
+**`FormulaBenefitsPillars` -- ingredient images + PMID references:**
+- Each expanded pillar now shows a 3-up ingredient grid below the "felt translation" copy. Images are pulled from `/ingredients/{flow,clear}/` and rendered at `aspect-square` with `object-cover`. Grid uses `bg-[var(--brand-tint)]` tiles with an ingredient name label underneath.
+- A `sourceRef` field added to each curated stat surfaces the peer-reviewed citation (PMID or regulatory reference) directly below the stat label in the expanded state. Flow pillars cite PMID 12888775, EFSA Reg. No 432/2012, and PMID 32021735. Clarity pillars cite PMID 29246725, PMID 18937015, and PMID 22628390.
+- `formulaStatsData.ts` type extended with `ingredients?: { name: string; imageSrc: string }[]` and `sourceRef?: string`.
+
+**`ProductWhatYouGet` (new component):**
+- New section on both PDPs between Ingredients and What to Expect: `id="what-you-get"`, `brand-bg-tint`.
+- Editorial split layout: `FigurePlate`-wrapped lifestyle image (formula box open) on the left/top, content card on the right/below.
+- Content card: "In every box" em-dash bullet list (28 shots, Informed Sport certified, recyclable packaging) + "How it ships" delivery rows with solid navy savings badges (`bg-[#1B2757]`) and `href="#hero"` links scrolling the user back to the cadence widget.
+- Heading: "From the lab to your door." Box images: Flow uses `FlowBoxOpen.jpg`, Clarity uses `ClearBoxOpen.jpg`.
+- Exported from `app/components/product/index.ts`.
+
+**`WhatToExpect` -- scroll-driven stage activation (desktop + mobile):**
+- Ported the LabTimeline scroll pattern to both `WhatToExpectDesktop.tsx` and `WhatToExpectMobile.tsx`.
+- IntersectionObserver gates the scroll listener (300px root margin). rAF-throttled scroll compute reads dot positions relative to the list container. As the viewport centre passes each checkpoint, that stage becomes "active".
+- Active and passed stages: full opacity, brand accent dot, accent pill. Future stages: `opacity-50`, dimmed dot (`bg-black/20`), dimmed pill (`bg-black/8 text-black/50`).
+- Vertical rail: absolute `w-px` base (full height, `bg-black/10`) and fill (`bg-[var(--brand-accent)]`) driven by `railFillPx` state. Both positioned at `left-[5px]` (half of 10px dot width).
+- Formula-change reset: on `selectedFormula` change, a `requestAnimationFrame` callback resets all rail state to zero before the next compute fires.
+- `motion-safe:transition-opacity` and `motion-safe:transition-colors` on stage rows, dots, and subheading pills for reduced-motion compliance.
+- Vibe asset grid (NeuronsConnection, water, sky images) removed. Each formula now shows a single lifestyle image wrapped in `FigurePlate`. Flow uses `FlowShadow.jpg`, Clarity uses `ClearLaugh.jpg`.
+
+**Why:** Ingredient images give users visual confirmation of what they are taking at the moment they are most curious (post-claim read). The "What You Get" section removes uncertainty about what arrives and how, reducing pre-purchase friction. The scroll-driven timeline makes the progression feel earned rather than decorative -- matching the premium feel of LabTimeline already present on the landing page.
+
+**Branch:** `PDP-what-you-get-and-badge-section`
+
+---
+
 ### 2026-04-27 -- PDP upgrade pass: Magic Mind pillar pattern, hero copy rewrite, section reorder, Clarity alignment
 
 Full upgrade of `/conka-flow` and `/conka-clarity` product pages benchmarked against Magic Mind, Seed, and Suri. Work split across three areas: (1) hero copy tightened to the Magic Mind 3-part shape (tagline + promise + mechanism + differentiator), (2) page sections reordered to a conversion-optimised 12-step structure, and (3) a new `FormulaBenefitsPillars` component replaces four legacy benefit components with an expand-on-tap accordion. Changes to `ProductHero`, `ProductHeroMobile`, `StickyPurchaseFooterMobile`, and `FormulaIngredients` applied at the component level so both pages benefit automatically.
