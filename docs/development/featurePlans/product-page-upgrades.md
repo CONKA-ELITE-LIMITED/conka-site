@@ -1,10 +1,10 @@
-# Product Page Upgrades — /conka-flow
+# Product Page Upgrades — /conka-flow + /conka-clarity
 
-> **Status:** Draft. Not yet ticketed.
+> **Status:** Phases 1 + 2 shipped to both PDPs on branch `flow-pdp-hero-copy`.
 > **Created:** 2026-04-27
 > **Last updated:** 2026-04-28
 > **Appetite:** 5-6 days across 4 phases. Phases 1-3 carry the bulk of conversion lift.
-> **Page in scope:** `/conka-flow` only. `/conka-clarity` and `/protocol/3` follow once Flow is validated.
+> **Pages in scope:** `/conka-flow` and `/conka-clarity`. `/protocol/3` is a separate sweep.
 
 ---
 
@@ -72,10 +72,15 @@ Apply the upgrades to `/conka-flow` as the prototype, with every shared componen
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Hero + section reorder + reuse existing components | Not Started |
-| 2 | `FormulaBenefitsPillars` build | Not Started |
+| 1 | Hero + section reorder + reuse existing components | Done on Flow + Clarity |
+| 1.5 | Hero widget polish + funnel-style sticky footer with savings | Done on Flow + Clarity (component-level, both inherit) |
+| 2 | `FormulaBenefitsPillars` build | Done on Flow + Clarity |
 | 3 | `ProductWhatYouGet` build + quality badges | Not Started |
-| 4 | Polish: ingredient flip, FAQ, sticky trust, eyebrow, mobile QA | Not Started |
+| 4 | Polish: FAQ trust column, eyebrow variation, mobile QA | Deferred (needs reshaping conversation) |
+
+### Clarity alignment note (2026-04-28)
+
+`/conka-clarity` was brought up to parity with `/conka-flow` after Phases 1 + 2 landed. The work was just hero copy (tagline + headline) plus pillar copy in `formulaStatsData.ts` plus a one-shot page rewrite mirroring `app/conka-flow/page.tsx` with `formulaId="02"` and `exclude={["clear"]}`. All Phase 1 + Phase 1.5 + Phase 2 component-level changes (cadence widget polish, sticky footer redesign, savings highlighting, mobile thumbnails, tagline slot, FormulaBenefitsPillars expand pattern, FormulaIngredients `hideCTA`) were inherited automatically since they live on shared components. The site-specific testimonials filter (`getSiteTestimonialsClarity`) was dropped on Clarity for symmetry with Flow.
 
 ---
 
