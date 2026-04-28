@@ -6,6 +6,63 @@
 
 ## April 2026
 
+### 2026-04-27 -- PDP upgrade pass: Magic Mind pillar pattern, hero copy rewrite, section reorder, Clarity alignment
+
+Full upgrade of `/conka-flow` and `/conka-clarity` product pages benchmarked against Magic Mind, Seed, and Suri. Work split across three areas: (1) hero copy tightened to the Magic Mind 3-part shape (tagline + promise + mechanism + differentiator), (2) page sections reordered to a conversion-optimised 12-step structure, and (3) a new `FormulaBenefitsPillars` component replaces four legacy benefit components with an expand-on-tap accordion. Changes to `ProductHero`, `ProductHeroMobile`, `StickyPurchaseFooterMobile`, and `FormulaIngredients` applied at the component level so both pages benefit automatically.
+
+**Hero copy:**
+- `formulaContent["01"]` (Flow) tagline rewritten from a product-feature fragment to a 4-word brand promise: *Sharper focus. Calmer energy.* Headline rewritten to the Magic Mind 3-sentence shape: promise -> mechanism -> differentiator, grounding caffeine-free and 6-ingredient framing explicitly.
+- `formulaContent["02"]` (Clarity) tagline: *Sharper recall. Faster thinking.* Headline: *Cut through brain fog on demand. 10 clinically-dosed actives -- including Alpha GPC, Ginkgo, and Vitamin C -- prime cerebral blood flow and key neurotransmitters. One shot, afternoon, whenever clarity matters.*
+- Meta pill removed from `ProductHero` and `ProductHeroMobile` (was rendered above the H1, added noise without informational value). Both desktop and mobile components updated.
+- Tagline slot added directly below the H1 with reduced gap (`mt-0 mb-3 lg:mb-4`) and increased size (`text-lg lg:text-xl`), matching the visual rhythm Magic Mind uses between product name and sub-description.
+
+**Hero widget polish (savings + per-shot copy):**
+- Savings meta in the CTA button now shows absolute pounds (`Save £X`) rather than a percentage, matching the cadence widget's existing price format.
+- "1 shot per day" line removed from the non-expanded cadence card (was duplicated with the expanded panel). Expanded panel retains "Observed: peer-reviewed" sub-copy.
+- Thumbnail strip in `ProductImageSlideshow` hidden on mobile via `hideThumbnails` prop -- reduces layout height and keeps the hero tighter on small viewports.
+
+**Section reorder (/conka-flow):**
+- Previous structure (10 sections, legacy benefit components) replaced with a 12-section arrangement: Hero > Pillars > Ingredients > What to Expect > Anchor Athlete > Comparison > Guarantee > FAQ > Testimonials > Explore.
+- `AthleteCredibilityCarousel`, `LandingValueComparison` (with `/protocol/3` upsell CTA), and `LabGuarantee` surfaced for the first time on the Flow product page.
+- `LandingTestimonials` moved to the closing pre-Explore slot (previously near the top).
+- `FormulaIngredients` gains `hideCTA` prop so the secondary CTA within that section no longer competes with the primary add-to-cart action.
+- `FormulaBenefitsStats`, `FormulaBenefits`, `FormulaBenefitsMobile`, `HowItWorks`, `FormulaCaseStudies`, and `FormulaCaseStudiesMobile` removed from both pages; TODO headers added to each component file to flag decommission.
+- JSX comment placeholders added for `FormulaQualityBadges` and `ProductWhatYouGet` (Phase 3, not yet built).
+
+**`FormulaBenefitsPillars` (new component):**
+- Client Component at `app/components/product/FormulaBenefitsPillars.tsx`, exported from the product barrel.
+- Magic Mind's 3-pillar pattern: each pillar shows a counter + name + one-line benefit at rest; tapping expands to reveal the peer-reviewed stat, its anchor study label, and a "felt translation" written in plain language.
+- Accordion driven by `useState` + `aria-expanded` / `aria-controls`. Only one pillar open at a time.
+- `CURATED_STATS` in `formulaStatsData.ts` extended with optional `pillarName`, `oneLine`, and `feltTranslation` fields. Flow pillars ordered memory -> fatigue -> sleep. Clarity pillars: cerebral blood flow -> memory -> fatigue resistance.
+- Stat anchors: Flow uses +40% memory¶, +32% fatigue resistance¶, +19% sleep quality¶; Clarity uses +57% cerebral blood flow¶, +63% memory¶, +30% fatigue resistance¶.
+- Accepted pillar copy option A for Flow (performance framing), and options A/B/A for Clarity (recall / sustained output / blood flow).
+
+**Sticky footer redesign (mobile):**
+- `StickyPurchaseFooterMobile` cadence-mode branch rebuilt: full `ConkaCTAButton` instead of a bare price strip, trust strip above ("28-shot box · Informed Sport certified · Cancel anytime"), savings meta passed as the button's `meta` prop (shows absolute £ savings), `backdrop-blur-md` container, `cadenceCompareAtPrice` prop plumbing added.
+- Desktop `StickyPurchaseFooter` unchanged (already shows pricing + cadence label clearly).
+
+**`LandingValueComparison`:**
+- `ctaHref` and `ctaLabel` optional props added so Flow/Clarity can link to `/protocol/3` ("Try the full system") without forking the component. Default behaviour (no props) unchanged for `/start`.
+
+**`ConkaCTAButton`:**
+- Center span gains `flex-1 min-w-0` so the right-arrow SVG anchors at the trailing edge of the button regardless of label length. Previously the arrow floated midway when labels were short.
+
+**/conka-clarity alignment:**
+- Page fully rewritten to mirror `/conka-flow/page.tsx` with `formulaId="02"` and `exclude={["clear"]}`. Section order, component set, and comment structure are now identical.
+- `getSiteTestimonialsClarity` filter dropped; `LandingTestimonials` now renders the full testimonial set on Clarity, matching Flow.
+- Meta Pixel `content_name` kept as `"CONKA Clarity"` (not "CONKA Clear") to preserve production tracking history.
+- `cadenceCompareAtPrice` plumbed through to `StickyPurchaseFooterMobile` for savings display.
+
+**/protocol/[id] mobile scroll fix:**
+- `brand-page` CSS class added to the mobile branch wrapper of `/protocol/[id]/page.tsx` only. Prevents horizontal scroll caused by `FormulaCaseStudiesMobile`'s 75vw card carousel overflowing the viewport. Desktop branch excluded because `overflow-x: hidden` on `.brand-page` would break `position: sticky` on the protocol hero buying widget.
+
+**Why:** The previous product pages passed a functional review but failed a "quick-to-consume" test on mobile: flat section order buried proof points below the fold, legacy benefit components required reading across multiple stat blocks before a single claim landed, and the hero copy described product features rather than making a promise. Magic Mind outperforms on all three -- their pillar pattern, 4-word tagline, and 3-sentence hero description each communicate one idea instantly. The reorder follows the attention arc (promise > proof > trust > decision) rather than the former spec-sheet structure. Aligning Clarity to Flow also makes both pages maintainable as a pair rather than drifting independently.
+
+**Branch:** `flow-pdp-hero-copy`
+**Commits:** `5a2fdfd`, `a0936b4`, `f4fd1eb`, `6f9fe3d`, `2118fd6`, `0fc2c51`, `2ba7d51`, `b58ca88`, `2a044fe`, `3eb695c`, `06f3148`
+
+---
+
 ### 2026-04-27 -- Seed/Suri-style image stack on product and protocol hero, mobile layout alignment, shots-per-day label
 
 Upgraded the desktop product and protocol hero image layout to match the editorial pattern used by Seed and Suri: a full-width portrait box shot (cadence-driven) above a 2x2 square grid of lifestyle images. The right-hand purchase widget is now sticky while the image column scrolls, which is the opposite of the previous layout. Mobile heroes were realigned so the image comes first, then the title and stars, matching the existing `ProductHeroMobile` structure throughout.
