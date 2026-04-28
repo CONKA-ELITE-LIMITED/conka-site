@@ -77,7 +77,7 @@ export default function ConkaCTAButton({
       </span>
 
       {/* CENTER — title + blinking cursor, with optional meta line */}
-      <span className="flex flex-col items-start">
+      <span className="flex flex-col items-start flex-1 min-w-0">
         <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] flex items-center gap-0.5 whitespace-nowrap">
           {children}
           <span
