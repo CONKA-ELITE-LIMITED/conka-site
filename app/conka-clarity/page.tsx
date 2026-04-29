@@ -141,17 +141,17 @@ export default function ConkaClarityPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 11: EXPLORE ===== */}
-        <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
-          <div className="brand-track">
-            <ProductGrid exclude={["clear"]} />
-          </div>
-        </section>
-
-        {/* ===== SECTION 12: FAQ ===== */}
+        {/* ===== SECTION 11: FAQ ===== */}
         <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
           <div className="brand-track">
             <FormulaFAQ formulaId="02" />
+          </div>
+        </section>
+
+        {/* ===== SECTION 12: EXPLORE ===== */}
+        <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
+          <div className="brand-track">
+            <ProductGrid exclude={["clear"]} />
           </div>
         </section>
 
@@ -243,17 +243,17 @@ export default function ConkaClarityPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 11: EXPLORE ===== */}
-      <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
-        <div className="brand-track">
-          <ProductGrid exclude={["clear"]} />
-        </div>
-      </section>
-
-      {/* ===== SECTION 12: FAQ ===== */}
+      {/* ===== SECTION 11: FAQ ===== */}
       <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
         <div className="brand-track">
           <FormulaFAQ formulaId="02" />
+        </div>
+      </section>
+
+      {/* ===== SECTION 12: EXPLORE ===== */}
+      <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
+        <div className="brand-track">
+          <ProductGrid exclude={["clear"]} />
         </div>
       </section>
 
