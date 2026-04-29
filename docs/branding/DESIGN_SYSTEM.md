@@ -256,11 +256,15 @@ White (breathing room)
   ↓
 Tint (detail/depth content)
   ↓
-White (social proof / testimonials)
+White (social proof)
   ↓
-Tint (explore / product grid)
+Tint (risk reversal / guarantee)
+  ↓
+White (content)
   ↓
 White (FAQ)
+  ↓
+Tint (quiet sign-off / disclaimer)
 ```
 
 **Rules:**

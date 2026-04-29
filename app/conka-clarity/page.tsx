@@ -135,7 +135,7 @@ export default function ConkaClarityPage() {
         </section>
 
         {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
-        <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
+        <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
           <div className="brand-track">
             <LandingTestimonials hideCTA />
           </div>
