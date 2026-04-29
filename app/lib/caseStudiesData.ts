@@ -113,6 +113,7 @@ export const CASE_STUDY_PHOTO_PATHS: Record<string, string> = {
   "alex-lowe": "/caseStudies/AlexLowe.jpg",
   "ben-cox": "/caseStudies/BenCox.jpg",
   "liz-glover": "/caseStudies/LizGlover.jpg",
+  "doris-regazi": "/caseStudies/DorisRegazi.jpg",
 };
 
 /** New square assets in /public/caseStudies/ (2000×2000). Returns "" for unknown IDs so callers use athlete.photo. */
@@ -1124,6 +1125,8 @@ export const athletes: AthleteData[] = [
   {
     id: "doris-regazi",
     name: "Doris Regazi",
+    photo: "/caseStudies/DorisRegazi.jpg",
+    focalPoint: { x: 50, y: 30 },
     sport: "business",
     profession: "Account Executive",
     organization: "Revolut",
