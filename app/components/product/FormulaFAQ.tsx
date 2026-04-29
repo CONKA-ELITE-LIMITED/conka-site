@@ -24,7 +24,7 @@ interface FormulaFAQProps {
   figN?: number;
 }
 
-export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 1 }: FormulaFAQProps) {
+export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 3 }: FormulaFAQProps) {
   const formula = formulaContent[formulaId];
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const faqs = formula.faq;
@@ -36,7 +36,7 @@ export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 1 }: For
         {/* Lifestyle image with corner accents */}
         <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
           <div className="-mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
-            <FigurePlate n={figN} subject={FAQ_PLATE_SUBJECT[formulaId]} meta="F-03">
+            <FigurePlate n={figN} subject="FAQ" meta={FAQ_PLATE_SUBJECT[formulaId]}>
               <Image
                 src={asset.src}
                 alt={asset.alt}
