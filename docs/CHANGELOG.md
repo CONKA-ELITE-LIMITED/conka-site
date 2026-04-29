@@ -6,6 +6,25 @@
 
 ## April 2026
 
+### 2026-04-29 -- Case studies: three new Revolut athlete entries (Doris Regazi live, two pending assets)
+
+Added three new business professional entries to `app/lib/caseStudiesData.ts` from the March 2026 Revolut cohort. All three used the Balance Protocol (`productVersion: "both"`, `protocolUsed: "Balance Protocol"`, protocol ID 4).
+
+**New entries:**
+- **Doris Regazi** (`doris-regazi`) — Account Executive, Revolut. +30.78% total score (61.33 → 80.21), +22.62% accuracy, +8.23% speed. 17 tests (3 baseline + 14 post). Tier 3.
+- **Fred Windsor-Lewis** (`fred-windsor-lewis`) — Account Executive, Revolut. +7.64% total score (72.33 → 77.86), +2.89% accuracy, +4.17% speed. 10 tests (3 baseline + 7 post). Tier 3. Commented out pending photo asset.
+- **Alessandro Ventura** (`alessandro-ventura`) — Account Executive, Revolut. +2.33% total score (86.0 → 88.0), +1.14% accuracy, +1.57% speed. 8 tests (3 baseline + 5 post). Tier 3. Commented out pending photo asset.
+
+**Photo wiring (Doris only):**
+- `DorisRegazi.jpg` added to `/public/caseStudies/`.
+- `"doris-regazi"` entry added to `CASE_STUDY_PHOTO_PATHS`.
+- `photo` and `focalPoint: { x: 50, y: 30 }` set on her athlete object (face centred in upper third of the square shot).
+- Fred and Alessandro wrapped in a `/* ... */` block comment with an "Uncomment when photo assets are available" note. Uncomment and add their `CASE_STUDY_PHOTO_PATHS` entries once images land in `/public/caseStudies/`.
+
+**Why:** Adds the first non-athlete business cohort case studies from a named employer (Revolut), strengthening the professional-user proof story on the case studies page. Doris's result (+30.78%) is among the strongest in the dataset for a business professional and gives the page a high-impact new card immediately.
+
+---
+
 ### 2026-04-28 -- PDP Phase B+C: ingredient images on benefit pillars, ProductWhatYouGet section, scroll-driven WhatToExpect timeline
 
 Three feature additions to `/conka-flow` and `/conka-clarity` as part of the ongoing PDP upgrade pass.
