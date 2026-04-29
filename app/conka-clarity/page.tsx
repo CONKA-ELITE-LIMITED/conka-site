@@ -134,24 +134,24 @@ export default function ConkaClarityPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 10: FAQ ===== */}
-        <section id="faq" className="brand-section brand-bg-tint" aria-label="FAQ">
-          <div className="brand-track">
-            <FormulaFAQ formulaId="02" />
-          </div>
-        </section>
-
-        {/* ===== SECTION 11: REVIEWS CHORUS ===== */}
+        {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
         <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
           <div className="brand-track">
             <LandingTestimonials hideCTA />
           </div>
         </section>
 
-        {/* ===== SECTION 12: EXPLORE ===== */}
+        {/* ===== SECTION 11: EXPLORE ===== */}
         <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
           <div className="brand-track">
             <ProductGrid exclude={["clear"]} />
+          </div>
+        </section>
+
+        {/* ===== SECTION 12: FAQ ===== */}
+        <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
+          <div className="brand-track">
+            <FormulaFAQ formulaId="02" />
           </div>
         </section>
 
@@ -236,24 +236,24 @@ export default function ConkaClarityPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 10: FAQ ===== */}
-      <section id="faq" className="brand-section brand-bg-tint" aria-label="FAQ">
-        <div className="brand-track">
-          <FormulaFAQ formulaId="02" />
-        </div>
-      </section>
-
-      {/* ===== SECTION 11: REVIEWS CHORUS ===== */}
+      {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
       <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
         <div className="brand-track">
           <LandingTestimonials hideCTA />
         </div>
       </section>
 
-      {/* ===== SECTION 12: EXPLORE ===== */}
+      {/* ===== SECTION 11: EXPLORE ===== */}
       <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
         <div className="brand-track">
           <ProductGrid exclude={["clear"]} />
+        </div>
+      </section>
+
+      {/* ===== SECTION 12: FAQ ===== */}
+      <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
+        <div className="brand-track">
+          <FormulaFAQ formulaId="02" />
         </div>
       </section>
 

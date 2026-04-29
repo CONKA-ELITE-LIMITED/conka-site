@@ -4,10 +4,16 @@ import { useState } from "react";
 import Image from "next/image";
 import { FormulaId, formulaContent } from "@/app/lib/productData";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
+import FigurePlate from "@/app/components/FigurePlate";
 
 const FAQ_ASSETS: Record<FormulaId, { src: string; alt: string }> = {
   "01": { src: "/lifestyle/flow/FlowDrink.jpg", alt: "Drinking CONKA Flow" },
   "02": { src: "/lifestyle/clear/ClearDrink.jpg", alt: "Drinking CONKA Clear" },
+};
+
+const FAQ_PLATE_SUBJECT: Record<FormulaId, string> = {
+  "01": "Calm Focus",
+  "02": "Unmatched Clarity",
 };
 
 const UPDATED_LABEL = "2026-04";
@@ -15,9 +21,10 @@ const UPDATED_LABEL = "2026-04";
 interface FormulaFAQProps {
   formulaId: FormulaId;
   hideCTA?: boolean;
+  figN?: number;
 }
 
-export default function FormulaFAQ({ formulaId, hideCTA = false }: FormulaFAQProps) {
+export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 1 }: FormulaFAQProps) {
   const formula = formulaContent[formulaId];
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const faqs = formula.faq;
@@ -28,23 +35,17 @@ export default function FormulaFAQ({ formulaId, hideCTA = false }: FormulaFAQPro
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
         {/* Lifestyle image with corner accents */}
         <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
-          <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
-            <Image
-              src={asset.src}
-              alt={asset.alt}
-              width={1500}
-              height={1000}
-              loading="lazy"
-              className="w-full h-auto"
-            />
-            <span
-              aria-hidden
-              className="hidden lg:block pointer-events-none absolute top-3 left-3 w-[20%] h-[20%] border-t-[6px] border-l-[6px] border-black"
-            />
-            <span
-              aria-hidden
-              className="hidden lg:block pointer-events-none absolute bottom-3 right-3 w-[20%] h-[20%] border-b-[6px] border-r-[6px] border-black"
-            />
+          <div className="-mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
+            <FigurePlate n={figN} subject={FAQ_PLATE_SUBJECT[formulaId]} meta="F-03">
+              <Image
+                src={asset.src}
+                alt={asset.alt}
+                width={1500}
+                height={1000}
+                loading="lazy"
+                className="w-full h-auto"
+              />
+            </FigurePlate>
           </div>
         </div>
 
