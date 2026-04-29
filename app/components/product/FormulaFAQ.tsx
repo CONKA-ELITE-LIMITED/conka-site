@@ -33,7 +33,7 @@ export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 3 }: For
   return (
     <div>
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
-        {/* Lifestyle image with corner accents */}
+        {/* Lifestyle image */}
         <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
           <div className="-mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
             <FigurePlate n={figN} subject="FAQ" meta={FAQ_PLATE_SUBJECT[formulaId]}>
