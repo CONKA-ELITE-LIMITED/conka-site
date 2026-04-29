@@ -132,17 +132,17 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 10: FAQ ===== */}
-        <section id="faq" className="brand-section brand-bg-tint" aria-label="FAQ">
+        {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
+        <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
           <div className="brand-track">
-            <FormulaFAQ formulaId="01" />
+            <LandingTestimonials hideCTA />
           </div>
         </section>
 
-        {/* ===== SECTION 11: REVIEWS CHORUS ===== */}
-        <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
+        {/* ===== SECTION 11: FAQ ===== */}
+        <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
           <div className="brand-track">
-            <LandingTestimonials hideCTA />
+            <FormulaFAQ formulaId="01" />
           </div>
         </section>
 
@@ -234,17 +234,17 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 10: FAQ ===== */}
-      <section id="faq" className="brand-section brand-bg-tint" aria-label="FAQ">
+      {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
+      <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
         <div className="brand-track">
-          <FormulaFAQ formulaId="01" />
+          <LandingTestimonials hideCTA />
         </div>
       </section>
 
-      {/* ===== SECTION 11: REVIEWS CHORUS ===== */}
-      <section id="testimonials" className="brand-section brand-bg-white" aria-label="Customer reviews">
+      {/* ===== SECTION 11: FAQ ===== */}
+      <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
         <div className="brand-track">
-          <LandingTestimonials hideCTA />
+          <FormulaFAQ formulaId="01" />
         </div>
       </section>
 
