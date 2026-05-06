@@ -164,7 +164,7 @@ export default function QuizRecommendedSection({
           <h2 className="text-3xl md:text-4xl font-bold mb-2">
             {matchInfo.name}
           </h2>
-          <p className="font-commentary text-xl">{matchInfo.subtitle}</p>
+          <p className="font-mono text-xl">{matchInfo.subtitle}</p>
         </div>
 
         {/* Protocol Description */}
@@ -265,7 +265,7 @@ export default function QuizRecommendedSection({
 
             {/* Tier Description */}
             {tierConfig && (
-              <p className="font-commentary text-sm opacity-70">
+              <p className="font-mono text-sm opacity-70">
                 {tierConfig.description}
               </p>
             )}

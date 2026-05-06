@@ -288,7 +288,7 @@
 }
 
 .premium-annotation {
-  font-family: var(--font-commentary), cursive;
+  font-family: var(--font-brand-data);
   font-size: var(--premium-font-annotation-size);
   font-weight: var(--premium-font-annotation-weight);
   line-height: 1.4;

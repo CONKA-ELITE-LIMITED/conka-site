@@ -173,7 +173,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
           <div className="space-y-6">
             <div>
               <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-3">{formula.headline}</h3>
-              <p className="font-commentary text-xl opacity-80">{formula.subheadline}</p>
+              <p className="font-mono text-xl opacity-80">{formula.subheadline}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {formula.keyPoints.map((point, idx) => (
@@ -263,7 +263,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
             <h3 className="text-lg font-bold mb-4">Taste Profile</h3>
             <div className="flex items-center justify-between p-4 bg-current/5 rounded-lg">
               <p className="font-mono text-sm opacity-70">Tastes Like:</p>
-              <p className="font-commentary text-2xl">{formula.taste}</p>
+              <p className="font-mono text-2xl">{formula.taste}</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               <div className="flex flex-col items-center text-center">

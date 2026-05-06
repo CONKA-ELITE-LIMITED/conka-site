@@ -157,7 +157,7 @@ export default function QuizQuestion({
       <div className="text-center max-w-lg mb-6">
         <h2 className="text-xl md:text-2xl font-bold mb-2">{question.question}</h2>
         {question.subtitle && (
-          <p className="font-commentary text-sm md:text-base opacity-60">{question.subtitle}</p>
+          <p className="font-mono text-sm md:text-base opacity-60">{question.subtitle}</p>
         )}
       </div>
 

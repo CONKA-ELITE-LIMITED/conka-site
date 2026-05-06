@@ -106,7 +106,7 @@ export default function ProtocolTabs({ protocolId }: ProtocolTabsProps) {
           <div className="space-y-6">
             <div>
               <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-3">{protocol.name}</h3>
-              <p className="font-commentary text-xl opacity-80">{protocol.subtitle}</p>
+              <p className="font-mono text-xl opacity-80">{protocol.subtitle}</p>
             </div>
             <p className="font-primary text-sm leading-relaxed opacity-90">{protocol.description}</p>
             

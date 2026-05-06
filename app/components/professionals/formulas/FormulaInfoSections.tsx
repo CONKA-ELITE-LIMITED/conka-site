@@ -102,7 +102,7 @@ export function InfoSection({
               <h3 className="text-xl font-bold mb-2">
                 {currentFormula.headline}
               </h3>
-              <p className="font-commentary text-lg opacity-80">
+              <p className="font-mono text-lg opacity-80">
                 {currentFormula.subheadline}
               </p>
             </div>
@@ -139,7 +139,7 @@ export function InfoSection({
           <div className="hidden md:block space-y-4">
             <div className="mb-4">
               <h3 className="text-xl font-bold mb-2">{flowFormula.headline}</h3>
-              <p className="font-commentary text-lg opacity-80">
+              <p className="font-mono text-lg opacity-80">
                 {flowFormula.subheadline}
               </p>
             </div>
@@ -181,7 +181,7 @@ export function InfoSection({
               <h3 className="text-xl font-bold mb-2">
                 {clearFormula.headline}
               </h3>
-              <p className="font-commentary text-lg opacity-80">
+              <p className="font-mono text-lg opacity-80">
                 {clearFormula.subheadline}
               </p>
             </div>
@@ -550,7 +550,7 @@ export function TasteSection({
             <div className="neo-box p-4 md:p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="font-mono text-sm opacity-70">Tastes Like:</p>
-                <p className="font-commentary text-xl md:text-2xl">
+                <p className="font-mono text-xl md:text-2xl">
                   {currentFormula.taste}
                 </p>
               </div>
@@ -578,7 +578,7 @@ export function TasteSection({
             <div className="neo-box p-4 md:p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="font-mono text-sm opacity-70">Tastes Like:</p>
-                <p className="font-commentary text-xl md:text-2xl">
+                <p className="font-mono text-xl md:text-2xl">
                   {flowFormula.taste}
                 </p>
               </div>
@@ -608,7 +608,7 @@ export function TasteSection({
             <div className="neo-box p-4 md:p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="font-mono text-sm opacity-70">Tastes Like:</p>
-                <p className="font-commentary text-xl md:text-2xl">
+                <p className="font-mono text-xl md:text-2xl">
                   {clearFormula.taste}
                 </p>
               </div>

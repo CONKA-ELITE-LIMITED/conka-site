@@ -6,6 +6,22 @@
 
 ## May 2026
 
+### 2026-05-06 -- Font system completed: Neue Haas + JetBrains Mono only, all Google fonts removed
+
+Completed the font system unification. The site now ships exactly two fonts, both self-hosted local fonts with no external network dependency.
+
+**Neue Haas Grotesk is now the true primary across all text.** `--font-primary` and `font-sans` previously pointed to Poppins (a legacy Google Font). Remapped both to `var(--font-brand-primary)` (Neue Haas). Poppins removed from `layout.tsx` -- import, declaration, and body className variable all deleted. All typography on all pages (body default, `premium-*` classes, `font-primary` utility, Tailwind `font-sans` utility) now resolves to Neue Haas.
+
+**IBM Plex Mono deleted (Phases 3+4).** `.premium-data` in `premium-base.css` migrated from `var(--font-clinical)` to `var(--font-brand-data)`. Four chart components (`RadarChart`, `SynergyChart`, `BenefitDetail`, `StudyBarChart`) had inline `fontFamily: "var(--font-ibm-plex-mono)"` -- all updated to `var(--font-jetbrains-mono)`. `--font-clinical` and `.font-clinical` removed from `globals.css`. `.story-counter` updated. `IBM_Plex_Mono` import and `ibmPlexMono` declaration removed from `layout.tsx`. Zero IBM Plex Mono references remain.
+
+**Caveat (handwriting font) removed entirely.** Was only referenced via `font-commentary` class on legacy pages (quiz, win, professionals, protocol). Not in the brand spec (spec defines Neue Haas + JetBrains Mono only). All 28 `font-commentary` occurrences across 13 files replaced with `font-mono`. `.font-commentary` class and `--font-commentary` / `--font-handwriting` variables removed from CSS. Caveat import and declaration removed from `layout.tsx`. This eliminates the `fonts.googleapis.com` critical CSS chain (was showing at 2,023ms in production Lighthouse, blocking LCP).
+
+**Docs updated (Phase 5).** `PERFORMANCE_OPTIMISATION.md` updated: removed IBM Plex Mono from the active font list, documented both removal events. `MOBILE_OPTIMIZATION.md`: `font-clinical` reference updated to `font-mono`.
+
+**Result:** Zero Google Font requests on any page. Both fonts are local. No external font network dependency in the critical render path.
+
+---
+
 ### 2026-05-06 -- Mono font unification (Phase 1+2): font-clinical → font-mono on JetBrains Mono; /shop deleted
 
 Closed the practice/preach gap on monospace usage. Brand spec said `JetBrains Mono` (local) for all data/eyebrow/mono text, but Tailwind's `font-mono` utility was mapped to IBM Plex Mono via `--font-clinical`, so the 50+ `font-mono` usages on home, CRO, landing, and PDP components were silently rendering in the wrong (Google) font. Two visually similar mono fonts were shipping side-by-side on every page.

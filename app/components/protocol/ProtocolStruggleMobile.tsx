@@ -215,7 +215,7 @@ export default function ProtocolStruggleMobile({
       {/* Header */}
       <div className="mb-5 text-center">
         <h2 className="text-2xl font-bold mb-1">What do you struggle with?</h2>
-        <p className="font-commentary text-base opacity-70">
+        <p className="font-mono text-base opacity-70">
           see how {protocol.name} helps
         </p>
       </div>

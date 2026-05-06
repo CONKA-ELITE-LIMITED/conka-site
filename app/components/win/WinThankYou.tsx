@@ -28,7 +28,7 @@ export default function WinThankYou({ email }: WinThankYouProps) {
             </svg>
             <h2 className="text-2xl md:text-3xl font-bold">You&apos;re in</h2>
           </div>
-          <p className="font-commentary text-xl mb-3">
+          <p className="font-mono text-xl mb-3">
             good luck — we&apos;ll be in touch soon
           </p>
           <p className="font-mono text-xs opacity-70">

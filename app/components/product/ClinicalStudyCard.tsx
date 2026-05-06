@@ -153,7 +153,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
             <DocumentIcon className="w-4 h-4 opacity-60" />
             <span className="font-mono text-xs uppercase opacity-60">Abstract</span>
           </div>
-          <p className="text-sm leading-relaxed opacity-80 font-commentary">
+          <p className="text-sm leading-relaxed opacity-80 font-mono">
             {study.abstract}
           </p>
         </div>

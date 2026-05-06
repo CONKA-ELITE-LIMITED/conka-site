@@ -187,7 +187,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
               Alone
             </p>
             <p className="font-bold text-lg">Effective</p>
-            <p className="font-commentary text-sm opacity-70">
+            <p className="font-mono text-sm opacity-70">
               targeted support
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
               Combined
             </p>
             <p className="font-bold text-lg">Powerful</p>
-            <p className="font-commentary text-sm opacity-70">
+            <p className="font-mono text-sm opacity-70">
               synergistic effects
             </p>
           </div>
@@ -259,7 +259,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
                   </p>
                 </div>
               </div>
-              <p className="font-commentary text-xs opacity-70 line-clamp-2">
+              <p className="font-mono text-xs opacity-70 line-clamp-2">
                 {protocol.description}
               </p>
             </a>
@@ -275,7 +275,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
         >
           <div>
             <p className="font-bold text-sm">Explore Formula {otherFormula}</p>
-            <p className="font-commentary text-xs opacity-70">
+            <p className="font-mono text-xs opacity-70">
               see the other half of the equation
             </p>
           </div>
