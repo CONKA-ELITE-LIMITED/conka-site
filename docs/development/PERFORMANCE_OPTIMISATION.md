@@ -108,18 +108,29 @@ The skeleton `h-[Xpx]` value should approximate the section height to prevent CL
 
 ## Rule 5 — Font loading
 
-`next/font/google` self-hosts all Google Fonts at build time — no external request to `fonts.googleapis.com` in production. Lighthouse scores from the dev server will show this request (because Next.js fetches from Google during development). Do not optimise against dev-server Lighthouse results.
+`next/font/google` self-hosts font files at build time. However, it can still generate CSS that creates a dependency on `fonts.googleapis.com` in the critical render path — confirmed in production Lighthouse audits (May 2026: `fonts.googleapis.com/css2?family=` appearing at 1,999ms in the critical chain).
+
+**All Google fonts in `layout.tsx` must have `preload: false`:**
+```ts
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  preload: false,   // prevents this font from entering the critical CSS chain
+  display: "swap",
+});
+```
+
+Without `preload: false`, Next.js includes the font CSS in the preload chain on every page — even pages that never use the font (e.g., `/start` never uses Poppins, Syne, or DM Sans). `preload: false` means the font still loads and is available for pages that need it — it just does not block initial render.
 
 **Current font load on every page** (declared in `app/layout.tsx`):
-- Neue Haas Grotesk — local, brand primary
-- JetBrains Mono — local, data/mono
-- Poppins — Google, legacy pages
-- Syne — Google, legacy pages
-- DM Sans — Google, legacy pages
-- Caveat — Google, handwriting accent
-- IBM Plex Mono — Google, legacy mono
-
-The CRO/Clinical pages (`/start`) use only Neue Haas + JetBrains Mono. The five Google fonts are preloaded even though they're unused on these pages. Long-term fix: dedicated layout for `/start` that only loads the two local fonts. This has not been implemented because it requires restructuring the Next.js layout hierarchy.
+- Neue Haas Grotesk — local, brand primary, preloads normally (local fonts have no external chain)
+- JetBrains Mono — local, data/mono, preloads normally
+- Poppins — Google, `preload: false`
+- Syne — Google, `preload: false`
+- DM Sans — Google, `preload: false`
+- Caveat — Google, `preload: false`
+- IBM Plex Mono — Google, `preload: false`
 
 Font weights were already trimmed in April 2026 to only the weights actually used. Do not add new weight variants without checking actual usage.
 
@@ -133,10 +144,11 @@ Font weights were already trimmed in April 2026 to only the weights actually use
 | 2026-04-08 | 65 | — | — | After server component conversion + dynamic imports |
 | 2026-04-08 | 69 | — | — | After CookieYes interaction-trigger fix |
 | 2026-04-08 | 71 | — | — | After `fetchPriority="high"` on hero |
-| 2026-05-06 | 38 | 8.3s | 1,140ms | After CRO rebuild (before investigation) |
+| 2026-05-06 | 38 | 8.3s | 1,140ms | CRO rebuild — test run against dev server, not comparable |
 | 2026-05-06 | 60 | 9.9s | 270ms | After animation + script strategy review |
+| 2026-05-06 | 76 | — | — | Production after animation fix. Previous baseline was 80. |
 
-The drop from 71 to 38 on the CRO rebuild is explained by: (a) the non-composited `width` animation on testimonial dot indicators (resolved), and (b) the test being run against a dev server rather than a production deployment, which shows the Google Fonts external request (not present in production).
+The 76 vs. 80 gap is caused by: (a) the Google Fonts critical CSS chain (`fonts.googleapis.com` appearing at 1,999ms in the dependency tree), addressed by `preload: false` on all Google fonts; (b) legacy JS polyfills (13.8 KiB) from missing browserslist config, addressed by adding modern browserslist to `package.json`.
 
 **Always run Lighthouse against the production Vercel deployment, not `localhost`.** Dev server results are not representative: Google Fonts makes external requests in dev, hot-reload scripts add weight, and server-rendering differences affect FCP.
 

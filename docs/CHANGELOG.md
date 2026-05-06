@@ -6,15 +6,19 @@
 
 ## May 2026
 
-### 2026-05-06 -- Performance doc + CRO animation fix
+### 2026-05-06 -- Performance: browserslist, font preload, animation fix, performance doc
 
-Created `docs/development/PERFORMANCE_OPTIMISATION.md` — a forward-looking performance standard consolidating all Lighthouse learnings from March–May 2026. Addresses the root cause of repeat performance regressions: rules existed only in CHANGELOG history, not in a living document consulted when writing new components.
+Production Lighthouse score was 76 vs. a previous baseline of 80. Three root causes identified and fixed.
 
-**Animation fix (`CROTestimonials`):** Testimonial dot indicators used `transition-all` with `w-1.5` ↔ `w-4` classes, which animates `width` — a non-composited property that Lighthouse flags as a paint-blocking animation. Fixed by making all indicators a fixed `w-4 h-1.5` and transitioning `background-color` only via `transition-colors`. Active/inactive states now distinguished by color alone.
+**1. Legacy JS polyfills eliminated (`package.json`):** No `browserslist` config existed, so Next.js defaulted to targeting browsers from ~2018 (Chrome 64, Safari 12). This caused 13.8 KiB of polyfills for `Array.at`, `flat`, `flatMap`, `Object.fromEntries`, `Object.hasOwn`, `trimStart`, `trimEnd` -- all Baseline features natively supported in 2024 browsers. Fixed by adding a modern `browserslist` to `package.json` targeting the last 2 versions of Chrome, Firefox, Safari, and Edge.
 
-**Doc added to `CLAUDE.md` docs index** so it is consulted at the start of any implementation work.
+**2. Google Fonts critical CSS chain fixed (`app/layout.tsx`):** Production Lighthouse showed `fonts.googleapis.com/css2?family=` at 1,999ms in the critical dependency chain, blocking the hero image (LCP). Caused by `next/font/google` including font CSS in the preload chain for all 5 Google fonts on every page -- including pages like `/start` that never use those fonts. Fixed by adding `preload: false` + `display: "swap"` to all five: Poppins, Caveat, IBM Plex Mono, Syne, DM_Sans. Local fonts (Neue Haas, JetBrains Mono) unaffected.
 
-**Why:** The same class of animation bug (non-composited CSS property in a transition) was first caught in April 2026 (Round 1, `will-change` removal) and re-introduced in May with the carousel dot indicators. The fix was quick; the systemic risk is slow accumulation of the same bugs. The doc converts retrospective knowledge into a pre-commit checklist.
+**3. Non-composited animation fixed (`CROTestimonials`):** Dot indicators used `transition-all` with `w-1.5` / `w-4` toggling, animating `width` (non-composited, layout-triggering). Fixed by fixing all dots at `w-4 h-1.5` and using `transition-colors duration-300` only.
+
+**4. `docs/development/PERFORMANCE_OPTIMISATION.md` created:** Forward-looking performance standard consolidating all Lighthouse learnings. Added to `CLAUDE.md` docs index.
+
+**Why the regression happened:** `browserslist` and `preload: false` are configuration-level concerns invisible to the component author. Without a standing document, each new session starts from zero on these rules.
 
 ---
 
