@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { protocolContent } from "@/app/lib/productData";
-import { protocolSelectorData } from "@/app/components/shop/protocolSelectorData";
+import { protocolSelectorData } from "@/app/lib/protocolSelectorData";
 import { getProtocolImage } from "@/app/lib/productImageConfig";
 import type { ProtocolCardProps } from "./types";
 
