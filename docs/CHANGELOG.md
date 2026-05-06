@@ -4,6 +4,27 @@
 
 ---
 
+## May 2026
+
+### 2026-05-06 -- ProductCard simplified to browse-only; Aaron H testimonial added
+
+**ProductCard quick-buy removal (`app/components/home/ProductCard.tsx`):**
+- Removed subscribe/one-time toggle, pricing display, billing note, and Add to Cart button from all product grid cards.
+- Replaced with a single "Shop Now" link (same navy chamfer style) pointing to the product PDP.
+- Removed spec row ("Liquid · 1 shot (30ml) daily · 4-pack") from all cards.
+- Cleaned up all now-dead code: `id` field from `ProductCardData` interface and data objects, `BALANCE_PROTOCOL_ID` constant, `FormulaId`/`ProtocolId` type imports, cart/pricing/variant imports, `'use client'` directive. Component is now a Server Component.
+- `ProductGridMobile` and `ProductGridTablet` unchanged -- they inherit the simplified card automatically.
+- **Why:** Aligns the product grid with the new simplified offering direction (Flow / Clear / Both). Quick-buy on a browse grid adds complexity without conversion value; the PDP is the right place for purchase decisions.
+
+**Aaron H testimonial added (`app/lib/customerTestimonials.ts`):**
+- New entry: Aaron H., 5 stars, "Performance without the burnout", `productLabel: "Flow + Clear"`, photo `/testimonials/dtc/AaronH.jpg`.
+- Copy edited to remove em dashes per site style rules.
+- Appears automatically in `LandingTestimonials` carousel as the 8th card.
+
+**Branch:** `landing-page-review-refactor`
+
+---
+
 ## April 2026
 
 ### 2026-04-29 -- Case studies: three new Revolut athlete entries (Doris Regazi live, two pending assets)
