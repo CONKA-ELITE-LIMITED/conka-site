@@ -6,6 +6,33 @@
 
 ## May 2026
 
+### 2026-05-06 -- /conka-both PDP, ProductHero extended to "03", image lightbox on all PDPs, sticky footer fix
+
+**`/conka-both` PDP (`app/conka-both/page.tsx`):**
+- Replaced `ProtocolHero`/`ProtocolHeroMobile` with `ProductHero`/`ProductHeroMobile` using `productHeroId="03"`.
+- Removed all legacy `selectedTier`, `purchaseType` state -- page now uses the same cadence model as Flow and Clarity.
+
+**Type system (`app/lib/productTypes.ts`, `cadenceData.ts`, `heroImageConfig.ts`, `productHeroHelpers.ts`):**
+- Added `BothProductId = "03"` and `ProductHeroId = FormulaId | BothProductId`.
+- `BOTH_HERO_CONTENT` added to `cadenceData.ts` (name, tagline, headline, soldCount).
+- `getCadencePricingByProductHeroId` / `getCadenceVariantByProductHeroId` route "03" to the existing balance funnel data.
+- `getProductHeroImages` / `getProductHeroImagesMobile` in `heroImageConfig.ts` unified for all three products.
+- `productHeroHelpers.ts` (new) -- single source of truth for `getHeroContent` and `getHeroProductType`, eliminating duplication between desktop and mobile hero components.
+
+**Image lightbox (`app/components/product/ImageLightbox.tsx`, `HeroImageStack.tsx`, `ProductImageSlideshow.tsx`):**
+- New `ImageLightbox` component renders via `createPortal` to `document.body`, escaping all ancestor stacking contexts.
+- Clicking the main hero image on any PDP opens the lightbox. Thumbnails in the slideshow continue to navigate the inline carousel as before.
+- Supports keyboard nav (Escape, ArrowLeft, ArrowRight), body scroll lock, backdrop-click to close, and a thumbnail strip.
+- `HeroImageStack` (desktop) and `ProductImageSlideshow` (mobile) both wired up.
+
+**Sticky footer (`StickyPurchaseFooter.tsx`, `StickyPurchaseFooterMobile.tsx`):**
+- Added `productHeroId?: ProductHeroId` prop. When `"03"` is passed, footer shows "CONKA Flow + Clear" with the correct product thumbnail instead of the legacy "Balance Protocol" fallback.
+- `/conka-both` updated to pass `productHeroId="03"` on both footer components.
+
+**Branch:** `landing-page-review-refactor`
+
+---
+
 ### 2026-05-06 -- ProductCard simplified to browse-only; Aaron H testimonial added
 
 **ProductCard quick-buy removal (`app/components/home/ProductCard.tsx`):**
