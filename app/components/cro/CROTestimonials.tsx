@@ -379,10 +379,10 @@ export default function CROTestimonials({
             className="flex items-center justify-center w-6 h-6"
           >
             <span
-              className={`block transition-all ${
+              className={`block w-4 h-1.5 transition-colors duration-300 ${
                 i === realIndex
-                  ? "bg-black w-4 h-1.5"
-                  : "bg-black/20 hover:bg-black/40 w-1.5 h-1.5"
+                  ? "bg-black"
+                  : "bg-black/20 hover:bg-black/40"
               }`}
             />
           </button>
