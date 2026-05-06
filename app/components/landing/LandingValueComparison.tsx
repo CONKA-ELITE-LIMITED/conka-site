@@ -81,7 +81,7 @@ export default function LandingValueComparison({
       <div className="mb-10">
         <h2
           className="brand-h1 mb-2"
-          style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+          style={{ letterSpacing: "var(--tracking-tight)" }}
         >
           The 2pm crash isn&apos;t you.
         </h2>

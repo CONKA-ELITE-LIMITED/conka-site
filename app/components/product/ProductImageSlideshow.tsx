@@ -139,8 +139,8 @@ export default function ProductImageSlideshow({
           style={
             fullBleedThumbnails
               ? {
-                  paddingLeft: "var(--premium-gutter-mobile-tight)",
-                  paddingRight: "var(--premium-gutter-mobile-tight)",
+                  paddingLeft: "0.25rem",
+                  paddingRight: "0.25rem",
                 }
               : undefined
           }

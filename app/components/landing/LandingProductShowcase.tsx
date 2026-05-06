@@ -11,7 +11,7 @@ export default function LandingProductShowcase() {
       </p>
       <h2
         className="brand-h1 mb-4"
-        style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+        style={{ letterSpacing: "var(--tracking-tight)" }}
       >
         Two shots. Built around your day.
       </h2>

@@ -23,9 +23,9 @@ export default function FormulaCardCompact({
       onClick={onNavigate}
       className="group block"
     >
-      <div className="flex flex-col border border-[var(--color-premium-stroke)] rounded-[var(--premium-radius-card)] overflow-hidden bg-white p-3 h-full">
+      <div className="flex flex-col border border-[var(--brand-stroke)] rounded-[var(--brand-radius-card)] overflow-hidden bg-white p-3 h-full">
         {/* Image Container */}
-        <div className="relative aspect-[3/2] mb-4 rounded-[var(--premium-radius-nested)] overflow-hidden">
+        <div className="relative aspect-[3/2] mb-4 rounded-[var(--brand-radius-container)] overflow-hidden">
           <Image
             src={imageSrc}
             alt={formula.image.alt}

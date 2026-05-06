@@ -13,7 +13,7 @@ interface SciencePageContentProps {
 }
 
 /**
- * Renders the science sections: each section is wrapped in premium-section-luxury + premium-track here
+ * Renders the science sections: each section is wrapped in brand-section + brand-track here
  * so the parent (Professionals page) can drop this in without duplicating section structure.
  * The Science page itself renders sections on the page and does not use this component.
  */
@@ -21,67 +21,67 @@ export default function SciencePageContent({ isMobile }: SciencePageContentProps
   return (
     <>
       <section
-        className="premium-section-luxury premium-hero-first premium-hero-with-top-air premium-section-reduced-bottom premium-bg-bone"
+        className="brand-section brand-hero-first brand-bg-white"
         aria-label="Science hero"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <ScienceHero isMobile={isMobile} />
         </div>
       </section>
 
       <section
-        className="premium-section-luxury"
+        className="brand-section"
         style={{ backgroundColor: "var(--color-neuro-blue-light)" }}
         aria-label="Research philosophy"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <ScienceQuote isMobile={isMobile} />
         </div>
       </section>
 
       <section
-        className="premium-section-luxury premium-bg-bone"
+        className="brand-section brand-bg-white"
         aria-label="What are adaptogens"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <ScienceAdaptogens isMobile={isMobile} />
         </div>
       </section>
 
       <section
-        className="premium-section-luxury"
+        className="brand-section"
         style={{ backgroundColor: "var(--color-neuro-blue-light)" }}
         aria-label="The five pillars"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <SciencePillars isMobile={isMobile} />
         </div>
       </section>
 
       <section
-        className="premium-section-luxury premium-bg-bone"
+        className="brand-section brand-bg-white"
         aria-label="Flow vs Clear comparison"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <FlowVsClear isMobile={isMobile} />
         </div>
       </section>
 
       <section
-        className="premium-section-luxury"
+        className="brand-section"
         style={{ backgroundColor: "var(--color-neuro-blue-light)" }}
         aria-label="What makes CONKA different"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <ScienceDifferent isMobile={isMobile} />
         </div>
       </section>
 
       <section
-        className="premium-section-luxury premium-bg-bone"
+        className="brand-section brand-bg-white"
         aria-label="Evidence and research"
       >
-        <div className="premium-track">
+        <div className="brand-track">
           <EvidenceSummary isMobile={isMobile} />
         </div>
       </section>
