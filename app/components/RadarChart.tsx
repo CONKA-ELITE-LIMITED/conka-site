@@ -41,7 +41,7 @@ export default function RadarChart({ data, mainValue, accentColor }: RadarChartP
               tick={{
                 fill: labelColor,
                 fontSize: 11,
-                fontFamily: "var(--font-ibm-plex-mono)",
+                fontFamily: "var(--font-jetbrains-mono)",
               }}
               className="font-mono"
               tickLine={false}
