@@ -14,18 +14,24 @@ const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  preload: false,
+  display: "swap",
 });
 
 const caveat = Caveat({
   variable: "--font-handwriting",
   subsets: ["latin"],
   weight: ["400"],
+  preload: false,
+  display: "swap",
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400"],
+  preload: false,
+  display: "swap",
 });
 
 /* Brand design system: Neue Haas Grotesk Display (primary) + JetBrains Mono (data) */
@@ -73,12 +79,16 @@ const syne = Syne({
   variable: "--font-premium-display",
   subsets: ["latin"],
   weight: ["700"],
+  preload: false,
+  display: "swap",
 });
 
 const dmSans = DM_Sans({
   variable: "--font-premium-body",
   subsets: ["latin"],
   weight: ["400"],
+  preload: false,
+  display: "swap",
 });
 
 export const viewport: Viewport = {

@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
-import { AppResearchModal } from "./AppResearchModal";
 
 type Feature = {
   id: string;
@@ -158,7 +157,7 @@ function ContentReveal({
 
 // ─── Desktop layout ───────────────────────────────────────────────────────────
 
-function AppFeaturePanelDesktop({ openModal }: { openModal: () => void }) {
+function AppFeaturePanelDesktop() {
   const { activeId, contentVisible, handleSelect, activeFeature } =
     useFeatureState();
 
@@ -169,19 +168,11 @@ function AppFeaturePanelDesktop({ openModal }: { openModal: () => void }) {
         style={{ maxWidth: "1280px" }}
       >
         <h1
-          className="brand-h1 text-white text-center mb-4"
+          className="brand-h1 text-white text-center mb-10"
           style={{ letterSpacing: "-0.02em" }}
         >
           The Gold Standard of Cognitive Testing
         </h1>
-
-        <button
-          type="button"
-          onClick={openModal}
-          className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-10 border border-white/20 px-4 py-2.5 hover:border-white/40 hover:text-white/75 transition-colors"
-        >
-          93% sensitivity · 14 NHS Trusts · View research
-        </button>
 
         <div
           className="flex flex-col items-center"
@@ -222,26 +213,18 @@ function AppFeaturePanelDesktop({ openModal }: { openModal: () => void }) {
 
 // ─── Mobile layout ────────────────────────────────────────────────────────────
 
-function AppFeaturePanelMobile({ openModal }: { openModal: () => void }) {
+function AppFeaturePanelMobile() {
   const { activeId, contentVisible, handleSelect, activeFeature } =
     useFeatureState();
 
   return (
     <div className="pt-8">
       <h1
-        className="brand-h1 text-white mb-3"
+        className="brand-h1 text-white mb-8"
         style={{ letterSpacing: "-0.02em" }}
       >
         The Gold Standard of Cognitive Testing
       </h1>
-
-      <button
-        type="button"
-        onClick={openModal}
-        className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-7 border border-white/20 px-4 py-2.5 hover:border-white/40 hover:text-white/75 transition-colors"
-      >
-        93% sensitivity · 14 NHS Trusts · View research
-      </button>
 
       <div className="flex justify-center mb-8">
         <PhoneDisplay activeId={activeId} size="mobile" />
@@ -278,19 +261,8 @@ function AppFeaturePanelMobile({ openModal }: { openModal: () => void }) {
 
 export function AppFeaturePanel() {
   const isMobile = useIsMobile(1024);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = useCallback(() => setIsModalOpen(true), []);
-  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
-  return (
-    <>
-      {isMobile === true
-        ? <AppFeaturePanelMobile openModal={openModal} />
-        : <AppFeaturePanelDesktop openModal={openModal} />
-      }
-      <AppResearchModal isOpen={isModalOpen} onClose={closeModal} />
-    </>
-  );
+  return isMobile === true ? <AppFeaturePanelMobile /> : <AppFeaturePanelDesktop />;
 }
 
 export default AppFeaturePanel;

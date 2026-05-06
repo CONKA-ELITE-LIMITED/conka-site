@@ -10,6 +10,13 @@
     "lint": "eslint",
     "build:reviews": "node scripts/build-loox-testimonials.mjs"
   },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions",
+    "not dead"
+  ],
   "dependencies": {
     "@shopify/storefront-api-client": "^1.0.9",
     "@vercel/analytics": "^1.6.1",

@@ -113,7 +113,7 @@ export function PhoneFrame({
   return (
     <div className="relative flex justify-center items-center">
       <div
-        className="relative border border-white/10 overflow-hidden"
+        className="relative border border-white/10 overflow-hidden bg-white/[0.06]"
         style={{
           width: frameWidth,
           aspectRatio: "4/5",
@@ -255,10 +255,11 @@ export function AppStickyPhoneBlock() {
                     key={i}
                     type="button"
                     onClick={() => scrollToSection(i)}
-                    className="text-left font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 whitespace-nowrap overflow-hidden text-ellipsis"
-                    style={{
-                      color: isActive ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
-                    }}
+                    className={`text-left font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 whitespace-nowrap overflow-hidden text-ellipsis ${
+                      isActive
+                        ? "bg-white text-black"
+                        : "bg-white/[0.07] text-white/55 hover:bg-white/[0.12] hover:text-white/80"
+                    }`}
                   >
                     {label}
                   </button>

@@ -24,19 +24,19 @@ const BENEFIT_SPECS_MOBILE: { label: string; value: string; note: string }[] = [
 
 function BenefitsSpecStripMobile() {
   return (
-    <div className="grid grid-cols-3 gap-0 border border-black/12 bg-white mt-6">
+    <div className="grid grid-cols-3 gap-0 border border-white/12 bg-white/10 mt-6">
       {BENEFIT_SPECS_MOBILE.map((b, i) => (
         <div
           key={b.label}
-          className={`p-3 ${i < BENEFIT_SPECS_MOBILE.length - 1 ? "border-r border-black/8" : ""}`}
+          className={`p-3 ${i < BENEFIT_SPECS_MOBILE.length - 1 ? "border-r border-white/10" : ""}`}
         >
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
             {b.label}
           </p>
-          <p className="font-mono text-base font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+          <p className="font-mono text-base font-bold tabular-nums text-white mt-2 leading-none">
             {b.value}
           </p>
-          <p className="font-mono text-[8px] text-black/50 mt-2 leading-tight tabular-nums">
+          <p className="font-mono text-[8px] text-white/50 mt-2 leading-tight tabular-nums">
             {b.note}
           </p>
         </div>
@@ -71,13 +71,11 @@ export default function CognitiveTestSectionMobile({
   const handleEmailSubmit = useCallback((submission: EmailSubmission) => {
     setEmailSubmission(submission);
     setTestState("testing");
-    console.log("Email submitted:", submission.email);
   }, []);
 
   const handleTestComplete = useCallback((result: TestResult) => {
     setTestResult(result);
     setTestState("processing");
-    console.log("Test completed:", result);
   }, []);
 
   const handleProcessingComplete = useCallback(() => {
@@ -102,26 +100,19 @@ export default function CognitiveTestSectionMobile({
 
   return (
     <div className={className}>
-      {/* Trio header */}
+      {/* Header */}
       <div className="mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-          {"// Test your brain · APP-01"}
-        </p>
         <h2
           id="cognitive-test-heading"
-          className="brand-h2 text-black mb-2"
-          style={{ letterSpacing: "-0.02em" }}
+          className="brand-h2 max-w-[24ch]"
+          style={{ letterSpacing: "-0.02em", color: "#ffffff" }}
         >
           Measure your cognitive performance.
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          Short version · Clinically derived
-        </p>
       </div>
 
-      {/* Content Area - Changes based on state */}
+      {/* Content Area */}
       <div className="flex flex-col">
-        {/* IDLE STATE */}
         {testState === "idle" && (
           <div className="w-full">
             <CognitiveTestIdleCard onStart={handleStartTest} />
@@ -129,10 +120,9 @@ export default function CognitiveTestSectionMobile({
           </div>
         )}
 
-        {/* EMAIL STATE */}
         {testState === "email" && (
           <div className="w-full">
-            <div className="bg-white border border-black/12 p-5">
+            <div className="bg-white/10 border border-white/12 p-5">
               <EmailCaptureForm
                 onSubmit={handleEmailSubmit}
                 onBack={handleBackToIdle}
@@ -142,51 +132,47 @@ export default function CognitiveTestSectionMobile({
           </div>
         )}
 
-        {/* TESTING STATE */}
         {testState === "testing" && (
           <div className="w-full">
-            {/* Top spec bar */}
-            <div className="flex items-center justify-between border border-black/12 border-b-0 bg-white px-3 py-2">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/50 tabular-nums">
+            <div className="flex items-center justify-between border border-white/12 border-b-0 bg-white/10 px-3 py-2">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums">
                 Fig. 07 · SDK
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] tabular-nums flex items-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 bg-[#1B2757] animate-pulse" />
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white tabular-nums flex items-center gap-1.5">
+                <span className="inline-block w-1.5 h-1.5 bg-white animate-pulse" />
                 Live
               </p>
             </div>
 
-            {/* SDK frame */}
-            <div className="min-h-[500px] overflow-hidden border border-black/12 bg-[#f5f5f5]">
+            <div className="min-h-[500px] overflow-hidden border border-white/12 bg-[#111111]">
               <CognicaSDK
                 onComplete={handleTestComplete}
                 subjectId={subjectId}
               />
             </div>
 
-            {/* Bottom spec strip */}
-            <div className="grid grid-cols-3 gap-0 border border-black/12 border-t-0 bg-white">
-              <div className="p-3 border-r border-black/8">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+            <div className="grid grid-cols-3 gap-0 border border-white/12 border-t-0 bg-white/10">
+              <div className="p-3 border-r border-white/10">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
                   Animals
                 </p>
-                <p className="font-mono text-xs font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+                <p className="font-mono text-xs font-bold tabular-nums text-white mt-2 leading-none">
                   Tap right
                 </p>
               </div>
-              <div className="p-3 border-r border-black/8">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+              <div className="p-3 border-r border-white/10">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
                   Else
                 </p>
-                <p className="font-mono text-xs font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+                <p className="font-mono text-xs font-bold tabular-nums text-white mt-2 leading-none">
                   Tap left
                 </p>
               </div>
               <div className="p-3">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
                   Scored
                 </p>
-                <p className="font-mono text-xs font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+                <p className="font-mono text-xs font-bold tabular-nums text-white mt-2 leading-none">
                   Speed + Acc.
                 </p>
               </div>
@@ -194,14 +180,12 @@ export default function CognitiveTestSectionMobile({
           </div>
         )}
 
-        {/* PROCESSING STATE */}
         {testState === "processing" && (
           <div className="w-full">
             <CognitiveTestLoader onComplete={handleProcessingComplete} />
           </div>
         )}
 
-        {/* RESULTS STATE */}
         {testState === "results" && testResult && (
           <div className="w-full space-y-4">
             <CognitiveTestScores
@@ -213,7 +197,7 @@ export default function CognitiveTestSectionMobile({
             <div className="flex justify-start">
               <button
                 onClick={handleRetakeTest}
-                className="inline-flex items-center gap-3 bg-white border border-black/25 text-[#1B2757] font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:border-[#1B2757] hover:bg-[#1B2757] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
               >
                 <span>Play again</span>
                 <span aria-hidden>↻</span>
