@@ -8,7 +8,7 @@ const BULLETS = [
 
 export default function CognitiveTestAppPromo() {
   return (
-    <div className="bg-white/[0.04] border border-white/12 p-5 lg:p-6">
+    <div className="bg-white/10 border border-white/12 p-5 lg:p-6">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
         Get the full experience · CONKA App · iOS & Android
       </p>

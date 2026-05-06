@@ -193,7 +193,7 @@ export function AppStickyPhoneBlockMobile() {
                 className={`text-center font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-3 py-2.5 transition-colors ${
                   isActive
                     ? "bg-white text-black"
-                    : "border border-white/15 text-white/45 hover:border-white/30"
+                    : "bg-white/[0.07] border border-white/20 text-white/60 hover:bg-white/[0.12] hover:text-white/80"
                 }`}
               >
                 {label}

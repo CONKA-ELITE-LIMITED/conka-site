@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
   AppFeaturePanel,
   AppStickyPhoneBlock,
   AppDownloadSection,
+  AppResearchModal,
 } from "@/app/components/app";
 import LabCaseStudies from "@/app/components/LabCaseStudies";
 import {
@@ -16,6 +18,9 @@ import useIsMobile from "@/app/hooks/useIsMobile";
 
 export default function AppPage() {
   const isMobile = useIsMobile();
+  const [isResearchOpen, setIsResearchOpen] = useState(false);
+  const openResearch = useCallback(() => setIsResearchOpen(true), []);
+  const closeResearch = useCallback(() => setIsResearchOpen(false), []);
 
   return (
     <div
@@ -36,6 +41,18 @@ export default function AppPage() {
       >
         <AppFeaturePanel />
       </section>
+
+      {/* Research tile */}
+      <div className="flex justify-center py-6">
+        <button
+          type="button"
+          onClick={openResearch}
+          className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 tabular-nums bg-white/[0.07] border border-white/15 px-5 py-2.5 hover:bg-white/[0.12] hover:text-white/80 transition-colors"
+        >
+          Research
+        </button>
+      </div>
+      <AppResearchModal isOpen={isResearchOpen} onClose={closeResearch} />
 
       {/* 2. HOW IT WORKS — the mechanism */}
       <AppStickyPhoneBlock />

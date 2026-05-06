@@ -104,8 +104,8 @@ export default function CognitiveTestSection({
       <div className="mb-10">
         <h2
           id="cognitive-test-heading"
-          className="brand-h2 text-white mb-0 max-w-[24ch]"
-          style={{ letterSpacing: "-0.02em" }}
+          className="brand-h2 max-w-[24ch]"
+          style={{ letterSpacing: "-0.02em", color: "#ffffff" }}
         >
           Measure your cognitive performance.
         </h2>
@@ -124,7 +124,7 @@ export default function CognitiveTestSection({
         {/* EMAIL STATE */}
         {testState === "email" && (
           <div className="w-full max-w-2xl">
-            <div className="bg-white/[0.04] border border-white/12 p-6 lg:p-10">
+            <div className="bg-white/10 border border-white/12 p-6 lg:p-10">
               <EmailCaptureForm
                 onSubmit={handleEmailSubmit}
                 onBack={handleBackToIdle}
@@ -138,7 +138,7 @@ export default function CognitiveTestSection({
         {testState === "testing" && (
           <div className="w-full">
             {/* Top spec bar */}
-            <div className="flex items-center justify-between border border-white/12 border-b-0 bg-white/[0.04] px-4 py-2.5">
+            <div className="flex items-center justify-between border border-white/12 border-b-0 bg-white/10 px-4 py-2.5">
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums">
                 Fig. 07 · Cognetivity SDK
               </p>
@@ -167,7 +167,7 @@ export default function CognitiveTestSection({
             </div>
 
             {/* Bottom spec strip */}
-            <div className="grid grid-cols-3 gap-0 border border-white/12 border-t-0 bg-white/[0.04]">
+            <div className="grid grid-cols-3 gap-0 border border-white/12 border-t-0 bg-white/10">
               <div className="p-4 border-r border-white/10">
                 <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
                   Animals

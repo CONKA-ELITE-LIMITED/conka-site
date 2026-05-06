@@ -6,7 +6,7 @@ export default function CognitiveTestIdleCard({
   onStart,
 }: CognitiveTestIdleCardProps) {
   return (
-    <div className="bg-white/[0.04] border border-white/12 p-6 lg:p-10 flex flex-col items-start text-left">
+    <div className="bg-white/10 border border-white/12 p-6 lg:p-10 flex flex-col items-start text-left">
       {/* Brain icon */}
       <div className="w-11 h-11 flex items-center justify-center bg-white/10 text-white mb-6 lab-clip-tr">
         <svg
