@@ -6,6 +6,18 @@
 
 ## May 2026
 
+### 2026-05-06 -- Performance doc + CRO animation fix
+
+Created `docs/development/PERFORMANCE_OPTIMISATION.md` — a forward-looking performance standard consolidating all Lighthouse learnings from March–May 2026. Addresses the root cause of repeat performance regressions: rules existed only in CHANGELOG history, not in a living document consulted when writing new components.
+
+**Animation fix (`CROTestimonials`):** Testimonial dot indicators used `transition-all` with `w-1.5` ↔ `w-4` classes, which animates `width` — a non-composited property that Lighthouse flags as a paint-blocking animation. Fixed by making all indicators a fixed `w-4 h-1.5` and transitioning `background-color` only via `transition-colors`. Active/inactive states now distinguished by color alone.
+
+**Doc added to `CLAUDE.md` docs index** so it is consulted at the start of any implementation work.
+
+**Why:** The same class of animation bug (non-composited CSS property in a transition) was first caught in April 2026 (Round 1, `will-change` removal) and re-introduced in May with the carousel dot indicators. The fix was quick; the systemic risk is slow accumulation of the same bugs. The doc converts retrospective knowledge into a pre-commit checklist.
+
+---
+
 ### 2026-05-06 -- /start CRO landing page rebuild
 
 Rebuilt `/start` as a fully isolated CRO surface. All components live in `app/components/cro/` so the page can be iterated on independently without risk to shared components used across PDPs, home, and protocol pages.
