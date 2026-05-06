@@ -67,20 +67,15 @@ function useFeatureState() {
 
 function PhoneDisplay({
   activeId,
-  size = "desktop",
+  className = "",
 }: {
   activeId: string;
-  size?: "desktop" | "mobile";
+  className?: string;
 }) {
-  const width =
-    size === "mobile"
-      ? "clamp(220px, 72vw, 320px)"
-      : "clamp(300px, 32vw, 460px)";
-
   return (
     <div
-      className="relative flex-shrink-0"
-      style={{ width, aspectRatio: "4/5" }}
+      className={`relative w-full ${className}`}
+      style={{ aspectRatio: "4/5" }}
     >
       {FEATURES.map((f) => (
         <img
@@ -104,16 +99,22 @@ function FeatureTab({
   feature,
   isActive,
   onClick,
+  size = "default",
 }: {
   feature: Feature;
   isActive: boolean;
   onClick: () => void;
+  size?: "default" | "compact";
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`w-full px-5 py-3 border font-mono text-[11px] uppercase tracking-[0.14em] leading-none transition-all duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 min-h-[44px] ${
+      className={`w-full border font-mono uppercase leading-none transition-all duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 min-h-[44px] ${
+        size === "compact"
+          ? "px-2 py-3 text-[9px] tracking-[0.1em]"
+          : "px-5 py-3 text-[11px] tracking-[0.14em]"
+      } ${
         isActive
           ? "bg-white text-black border-white"
           : "bg-white/[0.07] border-white/30 text-white/70 hover:bg-white/[0.12] hover:border-white/50 hover:text-white/90"
@@ -129,15 +130,12 @@ function FeatureTab({
 function ContentReveal({
   feature,
   visible,
-  align = "center",
 }: {
   feature: Feature;
   visible: boolean;
-  align?: "center" | "left";
 }) {
   return (
     <div
-      className={`max-w-[36ch] ${align === "center" ? "text-center mx-auto" : "text-left"}`}
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -163,10 +161,7 @@ function AppFeaturePanelDesktop() {
 
   return (
     <div className="w-full pt-10 lg:pt-16">
-      <div
-        className="mx-auto flex flex-col items-center"
-        style={{ maxWidth: "1280px" }}
-      >
+      <div className="mx-auto flex flex-col items-center" style={{ maxWidth: "1280px" }}>
         <h1
           className="brand-h2 text-white text-center mb-10"
           style={{ letterSpacing: "-0.02em" }}
@@ -174,39 +169,27 @@ function AppFeaturePanelDesktop() {
           The Gold Standard of Cognitive Testing
         </h1>
 
-        {/* Phone flanked by 2 tabs on each side */}
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col gap-2 w-36">
-            {FEATURES.slice(0, 2).map((f) => (
+        <div className="flex items-start gap-12 lg:gap-20">
+          {/* Left column — button stack */}
+          <div className="flex flex-col gap-2 w-44 lg:w-56 flex-shrink-0 pt-4">
+            {FEATURES.map((f) => (
               <FeatureTab
                 key={f.id}
                 feature={f}
                 isActive={activeId === f.id}
                 onClick={() => handleSelect(f.id)}
+                size="default"
               />
             ))}
           </div>
 
-          <PhoneDisplay activeId={activeId} size="desktop" />
-
-          <div className="flex flex-col gap-2 w-36">
-            {FEATURES.slice(2, 4).map((f) => (
-              <FeatureTab
-                key={f.id}
-                feature={f}
-                isActive={activeId === f.id}
-                onClick={() => handleSelect(f.id)}
-              />
-            ))}
+          {/* Right column — phone + description */}
+          <div className="flex-shrink-0" style={{ width: "clamp(280px, 28vw, 420px)" }}>
+            <PhoneDisplay activeId={activeId} />
+            <div className="mt-6 max-w-[38ch]">
+              <ContentReveal feature={activeFeature} visible={contentVisible} />
+            </div>
           </div>
-        </div>
-
-        <div className="mt-8" style={{ width: "clamp(320px, 34vw, 500px)" }}>
-          <ContentReveal
-            feature={activeFeature}
-            visible={contentVisible}
-            align="center"
-          />
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-3">
@@ -235,26 +218,29 @@ function AppFeaturePanelMobile() {
         The Gold Standard of Cognitive Testing
       </h1>
 
-      <div className="flex justify-center mb-8">
-        <PhoneDisplay activeId={activeId} size="mobile" />
+      {/* Two-column: compact buttons left, phone right */}
+      <div className="flex items-start gap-3">
+        <div className="flex flex-col gap-2 w-28 flex-shrink-0">
+          {FEATURES.map((f) => (
+            <FeatureTab
+              key={f.id}
+              feature={f}
+              isActive={activeId === f.id}
+              onClick={() => handleSelect(f.id)}
+              size="compact"
+            />
+          ))}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <PhoneDisplay activeId={activeId} />
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-6">
-        {FEATURES.map((f) => (
-          <FeatureTab
-            key={f.id}
-            feature={f}
-            isActive={activeId === f.id}
-            onClick={() => handleSelect(f.id)}
-          />
-        ))}
+      {/* Description below the two-column block */}
+      <div className="mt-6">
+        <ContentReveal feature={activeFeature} visible={contentVisible} />
       </div>
-
-      <ContentReveal
-        feature={activeFeature}
-        visible={contentVisible}
-        align="left"
-      />
 
       <div className="mt-8">
         <AppInstallButtons variant="clinical-dark" />
