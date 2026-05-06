@@ -4,7 +4,7 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 export default function CROFinalCTA() {
   return (
     <div className="flex flex-col items-start gap-6">
-      <p className="brand-eyebrow">
+      <p className="brand-eyebrow mb-3">
         {"// Start today · CONKA-03"}
       </p>
       <h2

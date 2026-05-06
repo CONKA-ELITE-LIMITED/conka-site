@@ -9,6 +9,10 @@ const CROFormulaSplit = dynamic(
   () => import("../components/cro/CROFormulaSplit"),
   { loading: () => <div className="h-[500px]" /> },
 );
+const LandingValueComparison = dynamic(
+  () => import("../components/landing/LandingValueComparison"),
+  { loading: () => <div className="h-[600px]" /> },
+);
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
   { loading: () => <div className="h-[500px]" /> },
@@ -56,7 +60,7 @@ export default function StartPage() {
         </div>
       </section>
 
-      {/* ===== 2. FORMULA SPLIT — FLOW + CLEAR ===== */}
+      {/* ===== 2. FORMULA SPLIT — WHAT ===== */}
       <section
         className="brand-section brand-bg-tint"
         aria-label="Flow and Clear formulas"
@@ -76,9 +80,19 @@ export default function StartPage() {
         </div>
       </section>
 
-      {/* ===== 4. GUARANTEE ===== */}
+      {/* ===== 4. VALUE COMPARISON — 2PM CRASH + PRICE ===== */}
       <section
         className="brand-section brand-bg-tint"
+        aria-label="Why CONKA outperforms caffeine"
+      >
+        <div className="brand-track">
+          <LandingValueComparison />
+        </div>
+      </section>
+
+      {/* ===== 5. GUARANTEE ===== */}
+      <section
+        className="brand-section brand-bg-white"
         aria-label="100-day risk-free guarantee"
       >
         <div className="brand-track">
@@ -86,9 +100,9 @@ export default function StartPage() {
         </div>
       </section>
 
-      {/* ===== 5. FAQ ===== */}
+      {/* ===== 6. FAQ ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="FAQ"
       >
         <div className="brand-track">
@@ -96,9 +110,9 @@ export default function StartPage() {
         </div>
       </section>
 
-      {/* ===== 6. FINAL CTA ===== */}
+      {/* ===== 7. FINAL CTA ===== */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Get started with CONKA"
       >
         <div className="brand-track">
@@ -108,7 +122,7 @@ export default function StartPage() {
 
       {/* ===== DISCLAIMER ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Important information and disclaimers"
       >
         <div className="brand-track">

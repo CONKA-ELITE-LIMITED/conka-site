@@ -48,7 +48,7 @@ export default function CROFormulaSplit() {
         {"// The formulation · ING-01"}
       </p>
       <h2
-        className="brand-h1 mb-2"
+        className="brand-h2 mb-2"
         style={{ letterSpacing: "-0.02em" }}
       >
         Two shots. Built around your day.

@@ -301,9 +301,18 @@ export default function CROTestimonials({
         >
           Real people. Real results.
         </h2>
-        <p className="brand-mono-sub">
-          N=500+ · Verified reviews
-        </p>
+
+        {/* Star aggregate — visible signal before carousel loads */}
+        <div className="mt-2 inline-flex items-center gap-2 border border-black/8 bg-white px-3 py-1.5">
+          <span className="text-black leading-none" style={{ fontSize: "11px", letterSpacing: "0.05em" }}>
+            ★★★★★
+          </span>
+          <span className="font-mono text-[10px] font-bold tabular-nums text-black">4.7 / 5</span>
+          <span className="text-black/15 text-[10px]" aria-hidden>·</span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/50 tabular-nums">
+            500+ verified reviews
+          </span>
+        </div>
       </div>
 
       <div className="relative group">

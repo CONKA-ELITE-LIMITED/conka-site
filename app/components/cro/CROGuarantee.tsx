@@ -3,10 +3,10 @@ import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
 
 const BULLETS = [
-  "Free UK shipping",
-  "Money back guarantee",
+  "Free UK shipping on every order",
+  "Full refund if your score doesn't improve",
   "No return required",
-  "Nothing to lose (other than brain fog and burnout)",
+  "No forms, no questions, no conditions",
 ];
 
 export default function CROGuarantee({
@@ -26,7 +26,7 @@ export default function CROGuarantee({
 
       <div className="mb-8">
         <h2
-          className="brand-h1 mb-2"
+          className="brand-h2 mb-2"
           style={{ letterSpacing: "-0.02em" }}
         >
           {GUARANTEE_DAYS}-Day Risk Free Trial
@@ -39,11 +39,23 @@ export default function CROGuarantee({
       <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">
         <div className="flex-1 order-2 lg:order-1 w-full">
           <p className="brand-body text-black/70">
-            Install the app, take your baseline, track your improvement. If
-            your cognitive score doesn&apos;t move after {GUARANTEE_DAYS} days,
-            we&apos;ll refund you completely. No return necessary.
+            Most brands offer 30 days. We offer {GUARANTEE_DAYS}. Not generosity. Confidence.
+          </p>
+          <p className="brand-body text-black/70 mt-4">
+            We built an app that measures your cognitive score objectively. Take your baseline on day one, test twice a week. If your numbers do not move in {GUARANTEE_DAYS} days, contact us for a full refund. No returns. No forms.
             <sup className="text-[0.5em] text-black/40 align-super">*</sup>
           </p>
+          <p className="brand-body text-black/70 mt-4">
+            We can only make this offer because we already know it works.
+          </p>
+
+          {!hideCTA && (
+            <div className="mt-8">
+              <ConkaCTAButton href={ctaHref} meta={null}>
+                {ctaLabel ?? "Try it 100% Risk Free Now"}
+              </ConkaCTAButton>
+            </div>
+          )}
 
           <ul className="mt-6 border-t border-black/10">
             {BULLETS.map((bullet, i) => (
@@ -60,14 +72,6 @@ export default function CROGuarantee({
               </li>
             ))}
           </ul>
-
-          {!hideCTA && (
-            <div className="mt-8">
-              <ConkaCTAButton href={ctaHref} meta={null}>
-                {ctaLabel ?? "Try it 100% Risk Free Now"}
-              </ConkaCTAButton>
-            </div>
-          )}
 
           <p className="mt-4 text-xs text-black/40">
             *First-time customers only. Contact info@conka.io within{" "}

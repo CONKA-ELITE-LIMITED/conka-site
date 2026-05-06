@@ -6,6 +6,30 @@
 
 ## May 2026
 
+### 2026-05-06 -- /start CRO landing page rebuild
+
+Rebuilt `/start` as a fully isolated CRO surface. All components live in `app/components/cro/` so the page can be iterated on independently without risk to shared components used across PDPs, home, and protocol pages.
+
+**Isolated CRO component tree (`app/components/cro/`):**
+- `CROHero` -- no eyebrow, no FigurePlate. Mobile-first layout: stat → H1 → subline → plain contained image → CTA → TrustBand (avatar stack + stars + Informed Sport). Subline updated to "Transform your focus, memory, and mental endurance..." (Seed-style benefit framing). CTA copy: "Get Both from £X/shot".
+- `CROFormulaSplit` -- two product cards (Flow / Clear) as full-card buttons opening `IngredientsPanel`. Bottom affordance row "See what's inside ↗". No hand-rolled CTA inside each card.
+- `CROTestimonials` -- infinite scroll carousel with a compact star aggregate badge (4.7/5 · 500+ verified reviews) directly under the heading.
+- `CROGuarantee` -- Sutherland-inspired copy reframe ("Most brands offer 30 days. We offer 100. Not generosity. Confidence."). CTA moved above the bullet list so it sits at peak persuasion. Bullets: Free UK shipping, Full refund if score doesn't improve, No return required, No forms no questions no conditions.
+- `CROFAQ` -- data table widget removed (was adding scroll length before answers). Image moved below the accordion and flush with the section bottom (FAQ section `paddingBottom: 0`). `FigurePlate` retained on the image.
+- `CROFinalCTA` -- left-aligned, `brand-h1` for closing weight, `brand-eyebrow` with `CONKA-03`.
+
+**`app/start/page.tsx` -- rebuilt section order:**
+All sections dynamic-imported (zero initial bundle impact). Section sequence: Hero → Formula Split → Testimonials → Value Comparison → Guarantee → FAQ → Final CTA. Also incorporates `LandingValueComparison` (2pm crash chart + price comparison) dynamic-imported from the shared landing component tree.
+
+**Clinical Aesthetic alignment pass (`CLINICAL_AESTHETIC.md`):**
+- All interior section headings normalised to `brand-h2` (was a mix of `brand-h1` and `brand-h2`). `CROFinalCTA` kept at `brand-h1` intentionally for closing weight.
+- Eyebrows using `.brand-eyebrow` class everywhere (no hand-rolled mono strings).
+- Topic codes corrected: `ING-01` formula split, `PROOF-02` guarantee, `PROOF-03` testimonials, `FAQ-01` FAQ, `CONKA-03` final CTA.
+- `CROFinalCTA` eyebrow `mb-3` added. `CROFAQ` heading `mb-2` + `letterSpacing` added.
+- Figure plate in `CROFAQ` renumbered to `n={1}` (only plate on the page).
+
+**Why:** `/start` was a 10-section page pulling from shared components that also serve the home page and PDPs. A single conversion-focused change risked regressions across the site. The isolated `cro/` tree lets us iterate aggressively on the acquisition funnel without that constraint.
+
 ### 2026-05-06 -- /conka-both PDP, ProductHero extended to "03", image lightbox on all PDPs, sticky footer fix
 
 **`/conka-both` PDP (`app/conka-both/page.tsx`):**
