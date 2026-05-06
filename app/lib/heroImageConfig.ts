@@ -6,7 +6,7 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 // FORMULA HERO IMAGES (Flow / Clear)
 // ============================================
 
-// 5 images per product: [0] cadence-driven box hero, [1-3] lifestyle, [4] nutrition/closing
+// 5 images per product: [0] cadence-driven box hero, [1-4] lifestyle / nutrition
 export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType): string[] {
   if (formulaId === "01") {
     const slot1 =
@@ -35,10 +35,6 @@ export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType)
   ];
 }
 
-// ============================================
-// BOTH HERO IMAGES ("03")
-// ============================================
-
 // Mobile variants: slot 0 replaced with square box assets, rest identical to desktop
 export function getFormulaHeroImagesMobile(formulaId: FormulaId, cadence: CadenceType): string[] {
   const slot1 =
@@ -52,16 +48,12 @@ export function getFormulaHeroImagesMobile(formulaId: FormulaId, cadence: Cadenc
   return [slot1, ...getFormulaHeroImages(formulaId, cadence).slice(1)];
 }
 
-export function getBalanceHeroImagesMobile(cadence: CadenceType): string[] {
-  const slot1 =
-    cadence === "quarterly-sub"
-      ? "/formulas/box/BothQuarterlyMobile.jpg"
-      : "/formulas/box/BothBoxMobile.jpg";
-  return [slot1, ...getBalanceHeroImages(cadence).slice(1)];
-}
+// ============================================
+// BOTH HERO IMAGES ("03" — Flow + Clear)
+// ============================================
 
-// 5 images for Balance: [0] cadence-driven box, [1-4] lifestyle
-export function getBalanceHeroImages(cadence: CadenceType): string[] {
+// 5 images: [0] cadence-driven box hero, [1-4] lifestyle
+export function getBothHeroImages(cadence: CadenceType): string[] {
   const slot1 =
     cadence === "quarterly-sub"
       ? "/formulas/box/BothQuarterlyBox.jpg"
@@ -75,18 +67,27 @@ export function getBalanceHeroImages(cadence: CadenceType): string[] {
   ];
 }
 
+// Mobile variant: slot 0 replaced with square box asset
+export function getBothHeroImagesMobile(cadence: CadenceType): string[] {
+  const slot1 =
+    cadence === "quarterly-sub"
+      ? "/formulas/box/BothQuarterlyMobile.jpg"
+      : "/formulas/box/BothBoxMobile.jpg";
+  return [slot1, ...getBothHeroImages(cadence).slice(1)];
+}
+
 // ============================================
 // UNIFIED HELPERS (Flow / Clear / Both via ProductHeroId)
 // ============================================
 
-/** Desktop images for ProductHero — routes "03" to Both/balance assets */
+/** Desktop images for ProductHero */
 export function getProductHeroImages(productHeroId: ProductHeroId, cadence: CadenceType): string[] {
-  if (productHeroId === "03") return getBalanceHeroImages(cadence);
+  if (productHeroId === "03") return getBothHeroImages(cadence);
   return getFormulaHeroImages(productHeroId, cadence);
 }
 
-/** Mobile images for ProductHero — routes "03" to Both/balance assets */
+/** Mobile images for ProductHero */
 export function getProductHeroImagesMobile(productHeroId: ProductHeroId, cadence: CadenceType): string[] {
-  if (productHeroId === "03") return getBalanceHeroImagesMobile(cadence);
+  if (productHeroId === "03") return getBothHeroImagesMobile(cadence);
   return getFormulaHeroImagesMobile(productHeroId, cadence);
 }

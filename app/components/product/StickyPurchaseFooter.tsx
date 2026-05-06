@@ -20,7 +20,7 @@ import {
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
 import { getProtocolImage } from "@/app/lib/productImageConfig";
 import { CadenceType, FUNNEL_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
-import { getProductHeroImages as getProductHeroImagesByHeroId } from "@/app/lib/heroImageConfig";
+import { getBothHeroImages } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 
 interface StickyPurchaseFooterProps {
@@ -149,7 +149,7 @@ export default function StickyPurchaseFooter({
   let thumbnailSrc = "";
   if (productHeroId === "03") {
     productName = BOTH_HERO_CONTENT.name;
-    thumbnailSrc = getProductHeroImagesByHeroId("03", selectedCadence ?? "quarterly-sub")[0] ?? "";
+    thumbnailSrc = getBothHeroImages(selectedCadence ?? "quarterly-sub")[0] ?? "";
   } else if (formulaId) {
     productName = formulaContent[formulaId].name;
     thumbnailSrc = getProductHeroImages(formulaId)[0]?.src ?? "";
