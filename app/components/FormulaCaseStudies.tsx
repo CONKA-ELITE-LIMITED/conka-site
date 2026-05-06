@@ -208,7 +208,7 @@ export default function FormulaCaseStudies({
           CONKA Case Studies
         </h2>
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          {athletes.length} Athletes · Real data · Measured improvement
+          {athletes.length} Real People · Real data · Measured improvement
         </p>
       </header>
 
@@ -269,7 +269,7 @@ export function FormulaCaseStudiesMobile({
           CONKA Case Studies
         </h2>
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          {athletes.length} Athletes · Real data · Measured improvement
+          {athletes.length} Real People · Real data · Measured improvement
         </p>
       </header>
 
