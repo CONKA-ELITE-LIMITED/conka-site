@@ -139,6 +139,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/branding/QUALITY_STANDARDS.md` | **Quality bar** — what premium looks like, reference sites, mobile-first mandate, consumability principle |
 | `docs/branding/BRAND_VOICE.md` | **Brand voice, proof assets, copy rules, claims compliance** |
 | `docs/branding/MOBILE_OPTIMIZATION.md` | Mobile component patterns, split component architecture |
+| `docs/development/PERFORMANCE_OPTIMISATION.md` | **Performance rules** — animation, images, scripts, fonts, Lighthouse benchmarks |
 | `docs/analytics/` | Analytics implementation + verification guides |
 | `docs/CONVEX_DEPLOYMENT.md` | Convex setup |
 
