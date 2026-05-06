@@ -2,39 +2,39 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
-import LandingHero from "../components/landing/LandingHero";
+import CROHero from "../components/cro/CROHero";
 import LandingDisclaimer from "../components/landing/LandingDisclaimer";
-import LandingProductShowcase from "../components/landing/LandingProductShowcase";
-import LandingDailyBenefits from "../components/landing/LandingDailyBenefits";
-import LandingTestimonials from "../components/landing/LandingTestimonials";
-import Reveal from "../components/landing/Reveal";
 
-/* Below-fold sections: dynamic import to reduce initial JS bundle */
-const LabCaseStudies = dynamic(
-  () => import("../components/LabCaseStudies"),
-  { loading: () => <div className="h-[600px]" /> },
+const CROFormulaSplit = dynamic(
+  () => import("../components/cro/CROFormulaSplit"),
+  { loading: () => <div className="h-[500px]" /> },
 );
 const LandingValueComparison = dynamic(
   () => import("../components/landing/LandingValueComparison"),
-  { loading: () => <div className="h-[300px]" /> },
+  { loading: () => <div className="h-[600px]" /> },
 );
-const LabTimeline = dynamic(
-  () => import("../components/landing/LabTimeline"),
+const CROTestimonials = dynamic(
+  () => import("../components/cro/CROTestimonials"),
   { loading: () => <div className="h-[500px]" /> },
 );
-const LabGuarantee = dynamic(
-  () => import("../components/landing/LabGuarantee"),
-  { loading: () => <div className="h-[500px]" /> },
-);
-const LabFAQ = dynamic(
-  () => import("../components/landing/LabFAQ"),
+const CROGuarantee = dynamic(
+  () => import("../components/cro/CROGuarantee"),
   { loading: () => <div className="h-[400px]" /> },
+);
+const CROFAQ = dynamic(
+  () => import("../components/cro/CROFAQ"),
+  { loading: () => <div className="h-[500px]" /> },
+);
+const CROFinalCTA = dynamic(
+  () => import("../components/cro/CROFinalCTA"),
+  { loading: () => <div className="h-[200px]" /> },
 );
 
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
   description:
     "Two shots a day. 16 active ingredients. Informed Sport certified. Try CONKA Flow and Clear with a 100-day money-back guarantee.",
+  robots: { index: false, follow: false },
   alternates: {
     canonical: "https://www.conka.io/start",
   },
@@ -56,98 +56,71 @@ export default function StartPage() {
         aria-label="Landing page hero"
       >
         <div className="brand-track">
-          <LandingHero />
+          <CROHero />
         </div>
       </section>
 
-      {/* ===== 2. FORMULATION — TWO SHOTS, 16 ACTIVES ===== */}
+      {/* ===== 2. FORMULA SPLIT — WHAT ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="Formulation and dosing windows"
+        aria-label="Flow and Clear formulas"
       >
         <div className="brand-track">
-          <Reveal>
-            <LandingProductShowcase />
-          </Reveal>
+          <CROFormulaSplit />
         </div>
       </section>
 
-      {/* ===== 3. ATHLETE PROOF / CASE STUDIES ===== */}
+      {/* ===== 3. TESTIMONIALS ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="Clinically validated test scores"
+        aria-label="Customer reviews"
       >
         <div className="brand-track">
-          <Reveal>
-            <LabCaseStudies />
-          </Reveal>
+          <CROTestimonials />
         </div>
       </section>
 
-      {/* ===== 4. DAILY BENEFITS — LIFELONG PILLARS ===== */}
+      {/* ===== 4. VALUE COMPARISON — 2PM CRASH + PRICE ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="Daily habit, lifelong benefits"
-      >
-        <div className="brand-track">
-          <Reveal>
-            <LandingDailyBenefits />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ===== 5. CONKA vs COFFEE — VALUE COMPARISON ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="CONKA vs coffee cost comparison"
+        aria-label="Why CONKA outperforms caffeine"
       >
         <div className="brand-track">
           <LandingValueComparison />
         </div>
       </section>
 
-      {/* ===== 6. TESTIMONIALS ===== */}
-      <section className="brand-section brand-bg-tint" aria-label="Customer reviews">
-        <div className="brand-track">
-          <LandingTestimonials />
-        </div>
-      </section>
-
-      {/* ===== 7. WHAT TO EXPECT TIMELINE ===== */}
+      {/* ===== 5. GUARANTEE ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="What to expect timeline"
-      >
-        <div className="brand-track">
-          <Reveal>
-            <LabTimeline />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ===== 8. 100-DAY GUARANTEE ===== */}
-      <section
-        className="brand-section brand-bg-tint"
         aria-label="100-day risk-free guarantee"
       >
         <div className="brand-track">
-          <Reveal>
-            <LabGuarantee />
-          </Reveal>
+          <CROGuarantee />
         </div>
       </section>
 
-      {/* ===== 9. FAQ ===== */}
+      {/* ===== 6. FAQ ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="FAQ"
       >
         <div className="brand-track">
-          <LabFAQ />
+          <CROFAQ />
         </div>
       </section>
 
-      {/* ===== 10. DISCLAIMER ===== */}
+      {/* ===== 7. FINAL CTA ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Get started with CONKA"
+      >
+        <div className="brand-track">
+          <CROFinalCTA />
+        </div>
+      </section>
+
+      {/* ===== DISCLAIMER ===== */}
       <section
         className="brand-section brand-bg-tint"
         aria-label="Important information and disclaimers"
