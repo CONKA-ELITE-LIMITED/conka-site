@@ -30,7 +30,7 @@ function resolveProduct(version: ProductVersion): ProductCfg {
   }
   return {
     label: "Flow + Clear",
-    href: "/protocol/3",
+    href: "/conka-both",
     bottles: [FLOW, CLEAR],
   };
 }

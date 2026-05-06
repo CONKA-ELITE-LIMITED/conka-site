@@ -23,7 +23,7 @@ export function WhyConkaCTA() {
         100-day money-back guarantee · Free UK shipping · Cancel anytime
       </p>
       <div>
-        <ConkaCTAButton href="/protocol/3" meta="// balance protocol · flow + clear">
+        <ConkaCTAButton href="/conka-both" meta="// balance protocol · flow + clear">
           Try CONKA now
         </ConkaCTAButton>
       </div>

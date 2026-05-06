@@ -94,7 +94,7 @@ const getProductData = (
       { value: "+42%", label: "SLEEP" },
     ],
     image: getProtocolImage("3"),
-    link: "/protocol/3",
+    link: "/conka-both",
   };
 };
 

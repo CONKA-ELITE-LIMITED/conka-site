@@ -13,7 +13,7 @@ const PRODUCTS = [
     shortLabel: "Flow + Clear",
     description: "The full daily system. Morning focus meets afternoon clarity.",
     ctaMeta: "// the full daily system",
-    href: "/protocol/3",
+    href: "/conka-both",
     image: getProtocolImage("3"),
     alt: "CONKA Flow and Clear",
   },

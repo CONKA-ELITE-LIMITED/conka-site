@@ -105,7 +105,7 @@ export default function BalanceProtocolInfo() {
         {/* CTA */}
         <div className="text-center mb-8 md:mb-12">
           <Link
-            href="/protocol/3"
+            href="/conka-both"
             className="neo-button px-8 py-4 font-bold text-base md:text-lg w-full md:w-auto flex md:inline-flex items-center justify-center gap-2"
           >
             View Product

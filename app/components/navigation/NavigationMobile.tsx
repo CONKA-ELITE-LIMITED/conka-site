@@ -12,7 +12,7 @@ const PRODUCTS = [
     name: "Both (Flow + Clear)",
     shortLabel: "Flow + Clear",
     description: "The full daily system.",
-    href: "/protocol/3",
+    href: "/conka-both",
     image: getProtocolImage("3"),
     alt: "CONKA Flow and Clear",
   },
