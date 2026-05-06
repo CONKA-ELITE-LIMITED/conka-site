@@ -1,7 +1,7 @@
 /**
  * Cadence data adapter for product pages (SCRUM-916).
  *
- * Wraps funnelData.ts so Flow, Clear, and Balance product pages share
+ * Wraps funnelData.ts so Flow, Clear, and Both product pages share
  * the same Shopify variant IDs and pricing as the funnel without
  * duplicating data. funnelData.ts is the single source of truth.
  */
@@ -17,6 +17,7 @@ import {
   getOfferVariant,
 } from "./funnelData";
 import { FormulaId } from "./productData";
+import type { ProductHeroId } from "./productTypes";
 
 export { FUNNEL_CADENCES, getSavingsPercent, getFunnelProductSlideshow };
 
@@ -66,3 +67,47 @@ export function getBalanceCadencePricing(cadence: CadenceType): FunnelPricing {
 export function getBalanceCadenceVariant(cadence: CadenceType): FunnelVariantConfig | null {
   return getOfferVariant("both", cadence);
 }
+
+// ============================================
+// PRODUCT HERO HELPERS (Flow / Clear / Both via ProductHeroId)
+// ============================================
+
+/** Unified pricing lookup for ProductHero — routes "03" to the Both/balance data */
+export function getCadencePricingByProductHeroId(
+  productHeroId: ProductHeroId,
+  cadence: CadenceType,
+): FunnelPricing {
+  if (productHeroId === "03") return getBalanceCadencePricing(cadence);
+  return getCadencePricingByFormula(productHeroId, cadence);
+}
+
+/** Unified variant lookup for ProductHero — routes "03" to the Both/balance data */
+export function getCadenceVariantByProductHeroId(
+  productHeroId: ProductHeroId,
+  cadence: CadenceType,
+): FunnelVariantConfig | null {
+  if (productHeroId === "03") return getBalanceCadenceVariant(cadence);
+  return getCadenceVariantByFormula(productHeroId, cadence);
+}
+
+// ============================================
+// BOTH HERO CONTENT ("03")
+// Mirrors funnelData FUNNEL_PRODUCTS.both, structured here so product
+// pages have a single import path (cadenceData) rather than reaching
+// into funnelData directly.
+// ============================================
+
+export interface BothHeroContent {
+  name: string;
+  tagline: string;
+  headline: string;
+  soldCount: string;
+}
+
+export const BOTH_HERO_CONTENT: BothHeroContent = {
+  name: "CONKA Flow + Clear",
+  tagline: "The complete daily performance system.",
+  headline:
+    "Flow in the morning for calm, sustained focus. Clear in the afternoon for precision and output. Two clinically-dosed liquid shots covering the full cognitive day, without stimulants or a crash.",
+  soldCount: "Over 150,000 shots delivered",
+};

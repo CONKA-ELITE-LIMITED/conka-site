@@ -1,5 +1,10 @@
 import { CadenceType } from "@/app/lib/cadenceData";
 import { FormulaId } from "@/app/lib/productData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
+
+// ============================================
+// FORMULA HERO IMAGES (Flow / Clear)
+// ============================================
 
 // 5 images per product: [0] cadence-driven box hero, [1-3] lifestyle, [4] nutrition/closing
 export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType): string[] {
@@ -29,6 +34,10 @@ export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType)
     "/formulas/conkaClear/ClearNutrition.jpg",
   ];
 }
+
+// ============================================
+// BOTH HERO IMAGES ("03")
+// ============================================
 
 // Mobile variants: slot 0 replaced with square box assets, rest identical to desktop
 export function getFormulaHeroImagesMobile(formulaId: FormulaId, cadence: CadenceType): string[] {
@@ -64,4 +73,20 @@ export function getBalanceHeroImages(cadence: CadenceType): string[] {
     "/lifestyle/clear/ClearBoxOpen.jpg",
     "/formulas/both/BothJeans.jpg",
   ];
+}
+
+// ============================================
+// UNIFIED HELPERS (Flow / Clear / Both via ProductHeroId)
+// ============================================
+
+/** Desktop images for ProductHero — routes "03" to Both/balance assets */
+export function getProductHeroImages(productHeroId: ProductHeroId, cadence: CadenceType): string[] {
+  if (productHeroId === "03") return getBalanceHeroImages(cadence);
+  return getFormulaHeroImages(productHeroId, cadence);
+}
+
+/** Mobile images for ProductHero — routes "03" to Both/balance assets */
+export function getProductHeroImagesMobile(productHeroId: ProductHeroId, cadence: CadenceType): string[] {
+  if (productHeroId === "03") return getBalanceHeroImagesMobile(cadence);
+  return getFormulaHeroImagesMobile(productHeroId, cadence);
 }
