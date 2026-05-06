@@ -23,7 +23,7 @@ import {
   FUNNEL_CADENCES,
   getSavingsPercent,
 } from "@/app/lib/cadenceData";
-import { getBalanceHeroImages } from "@/app/lib/heroImageConfig";
+import { getBothHeroImages } from "@/app/lib/heroImageConfig";
 
 interface ProtocolHeroProps {
   protocolId: ProtocolId;
@@ -128,7 +128,7 @@ export default function ProtocolHero({
   );
 
   const legacyImages = isCadenceMode ? [] : getProtocolHeroImages(protocolId);
-  const stackImages = isCadenceMode ? getBalanceHeroImages(selectedCadence!) : [];
+  const stackImages = isCadenceMode ? getBothHeroImages(selectedCadence!) : [];
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-[var(--brand-space-m)]">

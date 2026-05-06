@@ -14,7 +14,7 @@ const DISCOVER: FooterLink[] = [
 const SHOP: FooterLink[] = [
   { label: "CONKA Flow", href: "/conka-flow" },
   { label: "CONKA Clear", href: "/conka-clarity" },
-  { label: "Flow + Clear", href: "/protocol/3" },
+  { label: "Flow + Clear", href: "/conka-both" },
 ];
 
 const COMPANY: FooterLink[] = [

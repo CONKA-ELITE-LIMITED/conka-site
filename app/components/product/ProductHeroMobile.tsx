@@ -2,22 +2,20 @@
 
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
-import {
-  FormulaId,
-  formulaContent,
-  formatPrice,
-} from "@/app/lib/productData";
+import { formatPrice } from "@/app/lib/productData";
 import {
   CadenceType,
-  getCadencePricingByFormula,
+  getCadencePricingByProductHeroId,
   FUNNEL_CADENCES,
 } from "@/app/lib/cadenceData";
-import { getFormulaHeroImagesMobile } from "@/app/lib/heroImageConfig";
+import { getProductHeroImagesMobile } from "@/app/lib/heroImageConfig";
+import type { ProductHeroId } from "@/app/lib/productTypes";
+import { getHeroContent, getHeroProductType } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import HeroAccordions from "./HeroAccordions";
 
 interface ProductHeroMobileProps {
-  formulaId: FormulaId;
+  formulaId: ProductHeroId;
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
@@ -78,9 +76,9 @@ export default function ProductHeroMobile({
   onCadenceChange,
   onAddToCart,
 }: ProductHeroMobileProps) {
-  const formula = formulaContent[formulaId];
-  const pricing = getCadencePricingByFormula(formulaId, selectedCadence);
-  const images = getFormulaHeroImagesMobile(formulaId, selectedCadence).map((src) => ({ src }));
+  const content = getHeroContent(formulaId);
+  const pricing = getCadencePricingByProductHeroId(formulaId, selectedCadence);
+  const images = getProductHeroImagesMobile(formulaId, selectedCadence).map((src) => ({ src }));
 
   return (
     <>
@@ -89,7 +87,7 @@ export default function ProductHeroMobile({
         <ProductImageSlideshow
           key={selectedCadence}
           images={images}
-          alt={`${formula.name} bottle`}
+          alt={`${content.name} bottle`}
           fullBleedThumbnails
           hideThumbnails
         />
@@ -109,14 +107,14 @@ export default function ProductHeroMobile({
             ))}
           </div>
           <span className="brand-data text-black/60 text-xs">
-            {formulaId === "01" ? "Over 90,000 bottles sold" : "Over 60,000 bottles sold"}
+            {content.soldCount}
           </span>
         </div>
         <h1 className="brand-h2 leading-tight" style={{ letterSpacing: "-0.02em" }}>
-          {formulaId === "01" ? "CONKA FL0W" : formula.name}
+          {content.name}
         </h1>
         <p className="text-base text-black/65 leading-snug mt-0 mb-3" style={{ letterSpacing: "-0.01em" }}>
-          {formula.tagline}
+          {content.tagline}
         </p>
       </div>
 
@@ -126,7 +124,7 @@ export default function ProductHeroMobile({
         style={{ paddingLeft: "var(--brand-space-xs)", paddingRight: "var(--brand-space-xs)" }}
       >
         <p className="text-sm text-black/75 leading-relaxed">
-          {formula.headline}
+          {content.headline}
         </p>
 
         {/* Cadence selector */}
@@ -134,7 +132,7 @@ export default function ProductHeroMobile({
           {CADENCE_ORDER.map((cadence, i) => {
             const display = FUNNEL_CADENCES[cadence];
             const isSelected = selectedCadence === cadence;
-            const cadencePricing = getCadencePricingByFormula(formulaId, cadence);
+            const cadencePricing = getCadencePricingByProductHeroId(formulaId, cadence);
             const frequency = getPriceFrequency(cadence);
             const bannerLabel = display.badge;
 
@@ -285,7 +283,7 @@ export default function ProductHeroMobile({
 
         <FunnelAssurance />
 
-        <HeroAccordions productType={formulaId === "01" ? "flow" : "clear"} />
+        <HeroAccordions productType={getHeroProductType(formulaId)} />
       </div>
     </>
   );

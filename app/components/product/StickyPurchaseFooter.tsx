@@ -19,7 +19,9 @@ import {
 } from "@/app/lib/productData";
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
 import { getProtocolImage } from "@/app/lib/productImageConfig";
-import { CadenceType, FUNNEL_CADENCES } from "@/app/lib/cadenceData";
+import { CadenceType, FUNNEL_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
+import { getBothHeroImages } from "@/app/lib/heroImageConfig";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 
 interface StickyPurchaseFooterProps {
   // For formula pages
@@ -28,6 +30,8 @@ interface StickyPurchaseFooterProps {
   onPackSelect?: (pack: PackSize) => void;
   // For protocol pages
   protocolId?: ProtocolId;
+  // For the "Both" product (productHeroId="03") -- bypasses formula/protocol lookups
+  productHeroId?: ProductHeroId;
   selectedTier?: ProtocolTier;
   onTierSelect?: (tier: ProtocolTier) => void;
   // Shared
@@ -63,6 +67,7 @@ export default function StickyPurchaseFooter({
   selectedCadence,
   cadencePrice,
   onAddToCart,
+  productHeroId,
 }: StickyPurchaseFooterProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [showPackDropdown, setShowPackDropdown] = useState(false);
@@ -142,7 +147,10 @@ export default function StickyPurchaseFooter({
   // Formula: hero product image from productHeroConfig; Protocol: navigation image from productImageConfig
   let productName = "";
   let thumbnailSrc = "";
-  if (formulaId) {
+  if (productHeroId === "03") {
+    productName = BOTH_HERO_CONTENT.name;
+    thumbnailSrc = getBothHeroImages(selectedCadence ?? "quarterly-sub")[0] ?? "";
+  } else if (formulaId) {
     productName = formulaContent[formulaId].name;
     thumbnailSrc = getProductHeroImages(formulaId)[0]?.src ?? "";
   } else if (protocolId) {

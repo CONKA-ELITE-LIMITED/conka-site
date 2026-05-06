@@ -120,10 +120,10 @@ export default function ConkaClarityPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 8: COMPARISON (Balance upsell to /protocol/3) ===== */}
+        {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
         <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
           <div className="brand-track">
-            <LandingValueComparison ctaHref="/protocol/3" ctaLabel="Try the full system" />
+            <LandingValueComparison ctaHref="/conka-both" ctaLabel="Try the full system" />
           </div>
         </section>
 
@@ -222,10 +222,10 @@ export default function ConkaClarityPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 8: COMPARISON (Balance upsell to /protocol/3) ===== */}
+      {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
       <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
         <div className="brand-track">
-          <LandingValueComparison ctaHref="/protocol/3" ctaLabel="Try the full system" />
+          <LandingValueComparison ctaHref="/conka-both" ctaLabel="Try the full system" />
         </div>
       </section>
 

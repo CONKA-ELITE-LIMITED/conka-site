@@ -22,7 +22,7 @@ function getProductPageUrl(title: string): string | null {
   if (t.includes("clear") || t.includes("clarity")) return "/conka-clarity";
   if (t.includes("resilience")) return "/protocol/1";
   if (t.includes("precision")) return "/protocol/2";
-  if (t.includes("balance")) return "/protocol/3";
+  if (t.includes("balance")) return "/conka-both";
   if (t.includes("ultimate")) return "/protocol/4";
   return null;
 }

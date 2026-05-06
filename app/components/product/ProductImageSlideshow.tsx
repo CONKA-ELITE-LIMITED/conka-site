@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Image from "next/image";
+import ImageLightbox from "./ImageLightbox";
 
 export interface SlideshowImage {
   src: string;
@@ -23,6 +24,7 @@ export default function ProductImageSlideshow({
   hideThumbnails = false,
 }: ProductImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -38,7 +40,12 @@ export default function ProductImageSlideshow({
     <div className="flex flex-col w-full">
       {/* Main image area */}
       <div className="relative w-full aspect-square">
-        <div className="relative w-full h-full overflow-hidden rounded-none shadow-none md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]">
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          className="relative w-full h-full overflow-hidden rounded-none shadow-none md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)] cursor-zoom-in block"
+          aria-label={`View ${alt} full size`}
+        >
           {images.map((image, index) => (
             <div
               key={image.src}
@@ -56,7 +63,7 @@ export default function ProductImageSlideshow({
               />
             </div>
           ))}
-        </div>
+        </button>
 
         {/* Navigation arrows */}
         {images.length > 1 && (
@@ -115,6 +122,15 @@ export default function ProductImageSlideshow({
           </>
         )}
       </div>
+
+      {lightboxOpen && (
+        <ImageLightbox
+          images={images.map((img) => img.src)}
+          alt={alt}
+          initialIndex={currentIndex}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
 
       {/* Horizontal thumbnail strip */}
       {images.length > 1 && !hideThumbnails && (

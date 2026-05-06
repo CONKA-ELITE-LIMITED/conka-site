@@ -145,7 +145,7 @@ export default function Home() {
         aria-label="What to Expect with CONKA"
       >
         <div className="brand-track">
-          <LabTimeline ctaHref="/protocol/3" />
+          <LabTimeline ctaHref="/conka-both" />
         </div>
       </section>
 

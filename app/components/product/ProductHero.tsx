@@ -2,22 +2,20 @@
 
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
-import {
-  FormulaId,
-  formulaContent,
-  formatPrice,
-} from "@/app/lib/productData";
+import { formatPrice } from "@/app/lib/productData";
 import {
   CadenceType,
-  getCadencePricingByFormula,
+  getCadencePricingByProductHeroId,
   FUNNEL_CADENCES,
 } from "@/app/lib/cadenceData";
-import { getFormulaHeroImages } from "@/app/lib/heroImageConfig";
+import { getProductHeroImages } from "@/app/lib/heroImageConfig";
+import type { ProductHeroId } from "@/app/lib/productTypes";
+import { getHeroContent, getHeroProductType } from "@/app/lib/productHeroHelpers";
 import HeroImageStack from "./HeroImageStack";
 import HeroAccordions from "./HeroAccordions";
 
 interface ProductHeroProps {
-  formulaId: FormulaId;
+  formulaId: ProductHeroId;
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
@@ -78,15 +76,15 @@ export default function ProductHero({
   onCadenceChange,
   onAddToCart,
 }: ProductHeroProps) {
-  const formula = formulaContent[formulaId];
-  const pricing = getCadencePricingByFormula(formulaId, selectedCadence);
-  const images = getFormulaHeroImages(formulaId, selectedCadence);
+  const content = getHeroContent(formulaId);
+  const pricing = getCadencePricingByProductHeroId(formulaId, selectedCadence);
+  const images = getProductHeroImages(formulaId, selectedCadence);
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-[var(--brand-space-m)]">
       {/* Left: Image stack — scrolls while right widget stays pinned */}
       <div className="relative z-0 lg:w-[58%] lg:flex-shrink-0 order-1 lg:order-1">
-        <HeroImageStack images={images} alt={`${formula.name} bottle`} />
+        <HeroImageStack images={images} alt={`${content.name} bottle`} />
       </div>
 
       {/* Right: Product Info — sticky so widget floats as image column scrolls */}
@@ -112,20 +110,20 @@ export default function ProductHero({
                 ))}
               </div>
               <span className="brand-data text-black/60">
-                {formulaId === "01" ? "Over 90,000 bottles sold" : "Over 60,000 bottles sold"}
+                {content.soldCount}
               </span>
             </div>
             <h1 className="brand-h1 leading-tight lg:!text-[2.5rem]" style={{ letterSpacing: "-0.02em" }}>
-              {formulaId === "01" ? "CONKA FL0W" : formula.name}
+              {content.name}
             </h1>
             <p className="text-lg lg:text-xl text-black/65 leading-snug mt-0 mb-3 lg:mb-4" style={{ letterSpacing: "-0.01em" }}>
-              {formula.tagline}
+              {content.tagline}
             </p>
           </div>
 
           {/* Headline */}
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
-            {formula.headline}
+            {content.headline}
           </p>
 
           {/* Cadence selector */}
@@ -133,7 +131,7 @@ export default function ProductHero({
             {CADENCE_ORDER.map((cadence, i) => {
               const display = FUNNEL_CADENCES[cadence];
               const isSelected = selectedCadence === cadence;
-              const cadencePricing = getCadencePricingByFormula(formulaId, cadence);
+              const cadencePricing = getCadencePricingByProductHeroId(formulaId, cadence);
               const frequency = getPriceFrequency(cadence);
               const bannerLabel = display.badge;
 
@@ -284,7 +282,7 @@ export default function ProductHero({
 
           <FunnelAssurance />
 
-          <HeroAccordions productType={formulaId === "01" ? "flow" : "clear"} />
+          <HeroAccordions productType={getHeroProductType(formulaId)} />
         </div>
       </div>
     </div>

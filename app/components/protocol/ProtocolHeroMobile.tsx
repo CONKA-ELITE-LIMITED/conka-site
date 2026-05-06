@@ -22,7 +22,7 @@ import {
   FUNNEL_CADENCES,
   getSavingsPercent,
 } from "@/app/lib/cadenceData";
-import { getBalanceHeroImagesMobile } from "@/app/lib/heroImageConfig";
+import { getBothHeroImagesMobile } from "@/app/lib/heroImageConfig";
 
 interface ProtocolHeroMobileProps {
   protocolId: ProtocolId;
@@ -123,7 +123,7 @@ export default function ProtocolHeroMobile({
   );
 
   const slideImages = isCadenceMode
-    ? getBalanceHeroImagesMobile(selectedCadence!).map((src) => ({ src }))
+    ? getBothHeroImagesMobile(selectedCadence!).map((src) => ({ src }))
     : getProtocolHeroImages(protocolId);
 
   return (

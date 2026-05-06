@@ -12,7 +12,7 @@ export default function CognitiveTestRecommendation({
         description:
           "Your scores suggest both accuracy and speed could benefit from support. The Balance Protocol alternates CONKA Flow and CONKA Clear daily for comprehensive cognitive coverage.",
         buttonText: "Try Balance Protocol",
-        href: "/protocol/3",
+        href: "/conka-both",
         eyebrow: "Recommendation · Balance",
       };
     }

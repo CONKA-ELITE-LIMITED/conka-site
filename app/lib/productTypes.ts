@@ -14,3 +14,13 @@ export type B2BTier = "starter" | "squad" | "elite";
 
 /** Product gradients: unified system for formulas and protocols */
 export type ProductId = FormulaId | ProtocolId;
+
+// ============================================
+// BOTH PRODUCT
+// ============================================
+
+/** "03" = Flow + Clear daily system (Both). Distinct from FormulaId intentionally. */
+export type BothProductId = "03";
+
+/** Union accepted by ProductHero / ProductHeroMobile */
+export type ProductHeroId = FormulaId | BothProductId;

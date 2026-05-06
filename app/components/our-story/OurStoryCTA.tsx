@@ -54,7 +54,7 @@ export function OurStoryCTA() {
             </p>
           </div>
           <ConkaCTAButton
-            href="/protocol/3"
+            href="/conka-both"
             meta="// balance protocol · 14 shots · 7-day cadence"
           >
             Try CONKA now
