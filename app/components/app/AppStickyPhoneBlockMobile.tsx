@@ -6,24 +6,12 @@ import {
   SECTIONS_DATA,
   SECTION_TAB_LABELS,
   PHONE_SOURCES,
+  PHONE_ALT_LABELS,
+  FIG_LABELS,
   type SectionData,
 } from "./appStickyPhoneBlockData";
 
 const SWIPE_THRESHOLD_PX = 50;
-
-const PHONE_ALT_LABELS = [
-  "Cognitive test screen",
-  "Wellness and metrics",
-  "Progress graph",
-  "Leaderboard",
-];
-
-const FIG_LABELS = [
-  "Fig. 02 · Cognitive test",
-  "Fig. 03 · Wellness log",
-  "Fig. 04 · Progress graph",
-  "Fig. 05 · Leaderboard",
-];
 
 function ChamferNav({
   direction,
@@ -40,7 +28,7 @@ function ChamferNav({
       aria-label={direction === "prev" ? "Previous section" : "Next section"}
       onClick={onClick}
       disabled={disabled}
-      className="w-11 h-11 flex items-center justify-center bg-[#1B2757] text-white transition-opacity hover:opacity-85 active:opacity-70 disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] lab-clip-tr"
+      className="w-11 h-11 flex items-center justify-center bg-white/10 border border-white/15 text-white transition-opacity hover:opacity-85 active:opacity-70 disabled:opacity-25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/30 lab-clip-tr"
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
         <polyline
@@ -65,15 +53,15 @@ function StatCard({
   source?: string;
 }) {
   return (
-    <div className="bg-white border border-black/12 p-3">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+    <div className="border border-white/12 bg-white/[0.04] p-3">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
         {label}
       </p>
-      <p className="font-mono text-xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+      <p className="font-mono text-xl font-bold tabular-nums text-white mt-2 leading-none">
         {value}
       </p>
       {source && (
-        <p className="font-mono text-[8px] text-black/45 mt-2 leading-tight tabular-nums">
+        <p className="font-mono text-[8px] text-white/38 mt-2 leading-tight tabular-nums">
           {source}
         </p>
       )}
@@ -99,7 +87,7 @@ function MobileSectionContent({
       }}
     >
       <h3
-        className="text-[1.35rem] font-medium text-black leading-tight max-w-[22ch] mb-3"
+        className="text-[1.35rem] font-medium text-white leading-tight max-w-[22ch] mb-3"
         style={{ letterSpacing: "-0.02em" }}
       >
         {headingParts.map((line, i) => (
@@ -109,9 +97,9 @@ function MobileSectionContent({
           </span>
         ))}
       </h3>
-      <p className="text-sm text-black/75 leading-relaxed mb-3">{data.body}</p>
+      <p className="text-sm text-white/60 leading-relaxed mb-3">{data.body}</p>
       {data.footnote && (
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
           {data.footnote}
         </p>
       )}
@@ -122,7 +110,7 @@ function MobileSectionContent({
               <StatCard key={i} value={s.value} label={s.label} source={s.source} />
             ))}
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45 tabular-nums mt-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mt-4">
             NHS Memory Clinics · Cambridge-derived · FDA cleared
           </p>
         </>
@@ -170,7 +158,7 @@ export function AppStickyPhoneBlockMobile() {
 
   return (
     <section
-      className="w-full bg-white"
+      className="w-full"
       style={{
         paddingTop: "5rem",
         paddingBottom: "5rem",
@@ -180,36 +168,30 @@ export function AppStickyPhoneBlockMobile() {
       aria-label="CONKA app feature walkthrough"
     >
       <div className="mx-auto w-full max-w-[var(--brand-max-width)]">
-        {/* Trio header */}
+        {/* Header */}
         <div className="mb-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-            {"// Four features · APP-01"}
-          </p>
           <h2
-            className="brand-h2 text-black mb-2"
+            className="brand-h2 text-white"
             style={{ letterSpacing: "-0.02em" }}
           >
             Four features. One outcome.
           </h2>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-            Swipe · Tap arrows · Tap dots
-          </p>
         </div>
 
         {/* Section label + counter */}
         <div className="flex items-baseline justify-between mb-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1B2757] tabular-nums">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/75 tabular-nums">
             {SECTION_TAB_LABELS[activeIndex]}
           </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35 tabular-nums">
             {counter}
           </p>
         </div>
 
         {/* Progress bar */}
-        <div className="h-px w-full bg-black/10 mb-6 relative overflow-hidden">
+        <div className="h-px w-full bg-white/12 mb-6 relative overflow-hidden">
           <div
-            className="h-full bg-[#1B2757] transition-[width] duration-300 ease-out"
+            className="h-full bg-white transition-[width] duration-300 ease-out"
             style={{ width: `${((activeIndex + 1) / numSections) * 100}%` }}
           />
         </div>
@@ -250,7 +232,7 @@ export function AppStickyPhoneBlockMobile() {
         />
 
         {/* Tab roster */}
-        <div className="mt-8 grid grid-cols-2 gap-2">
+        <div className="mt-8 grid grid-cols-3 gap-2">
           {SECTION_TAB_LABELS.map((label, i) => {
             const isActive = i === activeIndex;
             return (
@@ -258,10 +240,10 @@ export function AppStickyPhoneBlockMobile() {
                 key={i}
                 type="button"
                 onClick={() => setActiveIndex(i)}
-                className={`text-left font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-3 py-2.5 transition-colors ${
+                className={`text-center font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-3 py-2.5 transition-colors ${
                   isActive
-                    ? "bg-[#1B2757] text-white"
-                    : "bg-white border border-black/12 text-black/55 hover:border-black/25"
+                    ? "bg-white text-black"
+                    : "border border-white/15 text-white/45 hover:border-white/30"
                 }`}
               >
                 {label}

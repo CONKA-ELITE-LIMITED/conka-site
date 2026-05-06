@@ -1,5 +1,7 @@
 /**
  * Shared data for AppStickyPhoneBlock (desktop) and AppStickyPhoneBlockMobile.
+ * 3 sections — mechanism story: how the test works → daily tracking → improvement over time.
+ * Assets: AppTestDistractor, AppWellness, AppTestBreakdown (no overlap with AppFeaturePanel).
  */
 
 export type SectionData = {
@@ -11,10 +13,9 @@ export type SectionData = {
 };
 
 export const PHONE_SOURCES = [
-  "/app/AppConkaRing.png",
+  "/app/AppTestDistractor.png",
   "/app/AppWellness.png",
   "/app/AppTestBreakdown.png",
-  "/app/AppLeaderboard.png",
 ] as const;
 
 export const SECTIONS_DATA: SectionData[] = [
@@ -30,7 +31,7 @@ export const SECTIONS_DATA: SectionData[] = [
     stats: [
       { value: "93%", label: "Sensitivity detecting cognitive impairment", source: "ADePT Study, PMC10533908" },
       { value: "87.5%", label: "Test-retest reliability", source: "ADePT Study, PMC10533908" },
-      { value: "14", label: "NHS Trusts in clinical validation trials", source: "HRA validation study, ISRCTN95636074" },
+      { value: "14", label: "NHS Trusts in clinical validation trials", source: "HRA ISRCTN95636074" },
       { value: "2 min", label: "That's all it takes" },
     ],
   },
@@ -45,13 +46,22 @@ export const SECTIONS_DATA: SectionData[] = [
     body:
       "Clinical data supports up to 16% improvement in cognitive performance following the " +
       "recommended plan. The graph can't lie — you're either improving or you're not. Pairs with CONKA formulas to show what's working.",
-  },
-  {
-    heading: "See where you rank against thousands of athletes. Globally.",
-    body:
-      "Football, F1, rugby, ultra running — the same leaderboard. Press and hold any user to send a challenge. " +
-      "Add friends, track trends, and prove it.",
+    stats: [
+      { value: "16%", label: "Cognitive improvement in 30 days", source: "Clinical data" },
+    ],
   },
 ];
 
-export const SECTION_TAB_LABELS = ["01 The Test", "02 What You Track", "03 Your Progress", "04 Compete"];
+export const SECTION_TAB_LABELS = ["01 The Test", "02 Track & Log", "03 Your Progress"];
+
+export const PHONE_ALT_LABELS = [
+  "Distractor test screen showing visual recognition",
+  "Wellness log screen showing daily tracking",
+  "Test breakdown screen showing progress over time",
+];
+
+export const FIG_LABELS = [
+  "Fig. 02 · The Test",
+  "Fig. 03 · Wellness log",
+  "Fig. 04 · Your progress",
+];

@@ -2,7 +2,11 @@
 
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import { AppHero, AppStickyPhoneBlock, AppSubscribersSection, AppDownloadSection, AppComparisonTable } from "@/app/components/app";
+import {
+  AppFeaturePanel,
+  AppStickyPhoneBlock,
+  AppDownloadSection,
+} from "@/app/components/app";
 import LabCaseStudies from "@/app/components/LabCaseStudies";
 import {
   CognitiveTestSection,
@@ -14,46 +18,32 @@ export default function AppPage() {
   const isMobile = useIsMobile();
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black flex flex-col">
+    <div
+      className="brand-clinical min-h-screen text-white flex flex-col"
+      style={{
+        backgroundColor: "#0a0a0a",
+        backgroundImage:
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E\")",
+        backgroundSize: "24px 24px",
+      }}
+    >
       <Navigation />
 
-      {/* ===== HERO ===== */}
+      {/* 1. HERO — what it is, instant desire */}
       <section
-        className="brand-section brand-hero-first brand-bg-white"
+        className="brand-section brand-hero-first"
         aria-labelledby="app-hero-heading"
       >
-        <div className="brand-track">
-          <AppHero />
-        </div>
+        <AppFeaturePanel />
       </section>
 
-      {/* ===== STICKY PHONE BLOCK ===== */}
+      {/* 2. HOW IT WORKS — the mechanism */}
       <AppStickyPhoneBlock />
 
-      {/* ===== SUBSCRIBERS ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="CONKA app rewards for subscribers"
-      >
-        <div className="brand-track">
-          <AppSubscribersSection />
-        </div>
-      </section>
-
-      {/* ===== DOWNLOAD CTA ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Download the CONKA app"
-      >
-        <div className="brand-track">
-          <AppDownloadSection />
-        </div>
-      </section>
-
-      {/* ===== COGNITIVE TEST ===== */}
+      {/* 4. TRY IT — live product demo */}
       {isMobile !== undefined && (
         <section
-          className="brand-section brand-bg-tint"
+          className="brand-section"
           aria-labelledby="cognitive-test-heading"
         >
           <div className="brand-track">
@@ -62,23 +52,23 @@ export default function AppPage() {
         </section>
       )}
 
-      {/* ===== CASE STUDIES ===== */}
+      {/* 5. ATHLETE PROOF — social credibility */}
       <section
-        className="brand-section brand-bg-white"
-        aria-label="Clinically validated test scores"
+        className="brand-section"
+        aria-label="Athletes using CONKA"
       >
         <div className="brand-track">
           <LabCaseStudies />
         </div>
       </section>
 
-      {/* ===== COMPARISON TABLE ===== */}
+      {/* 6. DOWNLOAD — final CTA */}
       <section
-        className="brand-section brand-bg-white"
-        aria-label="App feature comparison"
+        className="brand-section"
+        aria-label="Download the CONKA app"
       >
         <div className="brand-track">
-          <AppComparisonTable />
+          <AppDownloadSection />
         </div>
       </section>
 

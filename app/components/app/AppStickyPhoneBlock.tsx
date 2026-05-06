@@ -3,23 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { AppStickyPhoneBlockMobile } from "./AppStickyPhoneBlockMobile";
-import { SECTIONS_DATA, PHONE_SOURCES, SECTION_TAB_LABELS, type SectionData } from "./appStickyPhoneBlockData";
+import { SECTIONS_DATA, PHONE_SOURCES, SECTION_TAB_LABELS, PHONE_ALT_LABELS, FIG_LABELS, type SectionData } from "./appStickyPhoneBlockData";
 
 const SCROLL_MULTIPLIER = 0.85;
-
-const PHONE_ALT_LABELS = [
-  "Cognitive test screen",
-  "Wellness and metrics",
-  "Progress graph",
-  "Leaderboard",
-];
-
-const FIG_LABELS = [
-  "Fig. 02 · Cognitive test",
-  "Fig. 03 · Wellness log",
-  "Fig. 04 · Progress graph",
-  "Fig. 05 · Leaderboard",
-];
 
 // ─── useScrollTrack hook ──────────────────────────────────────────────────────
 
@@ -81,15 +67,15 @@ function StatCard({
   source?: string;
 }) {
   return (
-    <div className="bg-white border border-black/12 p-4">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+    <div className="border border-white/12 bg-white/[0.04] p-4">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
         {label}
       </p>
-      <p className="font-mono text-2xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+      <p className="font-mono text-2xl font-bold tabular-nums text-white mt-2 leading-none">
         {value}
       </p>
       {source && (
-        <p className="font-mono text-[9px] text-black/45 mt-3 leading-tight tabular-nums">
+        <p className="font-mono text-[9px] text-white/38 mt-3 leading-tight tabular-nums">
           {source}
         </p>
       )}
@@ -113,11 +99,11 @@ function SectionContent({
 
   return (
     <div className="flex flex-col items-start text-left">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
         {counter} · {data.eyebrow ? data.eyebrow : "App Feature · Measurable"}
       </p>
       <h2
-        className="brand-h2 text-black mb-3 max-w-[22ch]"
+        className="brand-h2 text-white mb-3 max-w-[22ch]"
         style={{ letterSpacing: "-0.02em" }}
       >
         {headingParts.map((line, i) => (
@@ -127,11 +113,11 @@ function SectionContent({
           </span>
         ))}
       </h2>
-      <p className="text-sm md:text-base text-black/75 leading-relaxed max-w-xl mb-3">
+      <p className="text-sm md:text-base text-white/65 leading-relaxed max-w-xl mb-3">
         {data.body}
       </p>
       {data.footnote && (
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums max-w-xl">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45 tabular-nums max-w-xl">
           {data.footnote}
         </p>
       )}
@@ -142,7 +128,7 @@ function SectionContent({
               <StatCard key={i} value={s.value} label={s.label} source={s.source} />
             ))}
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45 tabular-nums mt-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mt-4">
             NHS Memory Clinics · Cambridge-derived · FDA cleared
           </p>
         </>
@@ -177,20 +163,20 @@ export function PhoneFrame({
   return (
     <div className="relative flex justify-center items-center">
       <div
-        className="relative bg-[#f5f5f5] border border-black/12 overflow-hidden"
+        className="relative border border-white/10 overflow-hidden"
         style={{
           width: frameWidth,
           aspectRatio: "4/5",
         }}
       >
-        {/* Fig plate — sits in the empty left zone, clear of the phone */}
+        {/* Fig plate */}
         {figLabel && (
-          <div className="absolute top-4 left-4 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/65 px-3 py-1.5 tabular-nums z-10">
+          <div className="absolute top-4 left-4 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/55 px-3 py-1.5 tabular-nums z-10">
             {figLabel}
           </div>
         )}
 
-        {/* Phone images, inset from frame edges */}
+        {/* Phone images */}
         {sources.map((src, i) => {
           const isActive = i === activeIndex;
           return (
@@ -249,37 +235,29 @@ export function AppStickyPhoneBlock() {
     [numSections]
   );
 
-  // ─── Mobile: separate component ──────────────────────────────────────────────
   if (isMobile === true || isMobile === undefined) {
     return <AppStickyPhoneBlockMobile />;
   }
 
-  // ─── Desktop: scroll track + sticky panel (clinical) ─────────────────────────
   return (
     <div
       ref={scrollTrackRef}
-      className="relative w-full bg-white"
+      className="relative w-full"
       style={{ height: `${trackHeightVh}vh` }}
     >
       <div
-        className="sticky top-0 w-full overflow-hidden bg-white flex flex-col"
+        className="sticky top-0 w-full overflow-hidden flex flex-col"
         style={{ height: "100vh" }}
       >
         {/* Trio header strip */}
         <div className="relative z-[2] w-full px-[5vw] pt-[clamp(3rem,6vw,5rem)] pb-4">
           <div className="mx-auto" style={{ maxWidth: "1280px" }}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-              {"// Four features · APP-01"}
-            </p>
             <h3
-              className="brand-h3 text-black mb-2"
+              className="brand-h3 text-white"
               style={{ letterSpacing: "-0.02em" }}
             >
               Four features. One outcome: measurable brain performance.
             </h3>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-              Test · Track · Trend · Compete
-            </p>
           </div>
         </div>
 
@@ -313,7 +291,7 @@ export function AppStickyPhoneBlock() {
           </div>
         </div>
 
-        {/* Bottom tabs + progress bar — evenly distributed, aligned with scroll */}
+        {/* Bottom tabs + progress bar */}
         <div className="relative z-[2] w-full px-[5vw] pb-[clamp(2rem,4vw,3rem)]">
           <div className="mx-auto flex flex-col gap-3" style={{ maxWidth: "1280px" }}>
             <div
@@ -327,9 +305,9 @@ export function AppStickyPhoneBlock() {
                     key={i}
                     type="button"
                     onClick={() => scrollToSection(i)}
-                    className="text-left font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]/60 focus-visible:ring-offset-2 whitespace-nowrap overflow-hidden text-ellipsis"
+                    className="text-left font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 whitespace-nowrap overflow-hidden text-ellipsis"
                     style={{
-                      color: isActive ? "#1B2757" : "rgba(0,0,0,0.35)",
+                      color: isActive ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
                     }}
                   >
                     {label}
@@ -338,13 +316,13 @@ export function AppStickyPhoneBlock() {
               })}
             </div>
             <div className="relative">
-              <div className="h-px w-full bg-black/10 relative overflow-hidden">
+              <div className="h-px w-full bg-white/12 relative overflow-hidden">
                 <div
-                  className="h-full transition-[width] duration-150 ease-out bg-[#1B2757]"
+                  className="h-full transition-[width] duration-150 ease-out bg-white"
                   style={{ width: `${overallProgress}%` }}
                 />
               </div>
-              {/* Section boundary ticks above the bar */}
+              {/* Section boundary ticks */}
               {Array.from({ length: numSections + 1 }).map((_, i) => {
                 const isActiveOrPast = i <= activeIndex;
                 return (
@@ -353,7 +331,9 @@ export function AppStickyPhoneBlock() {
                     className="absolute -top-[3px] w-px h-[7px] transition-colors"
                     style={{
                       left: `calc(${(i / numSections) * 100}% - 0.5px)`,
-                      backgroundColor: isActiveOrPast ? "#1B2757" : "rgba(0,0,0,0.25)",
+                      backgroundColor: isActiveOrPast
+                        ? "rgba(255,255,255,0.85)"
+                        : "rgba(255,255,255,0.2)",
                     }}
                   />
                 );
