@@ -14,7 +14,7 @@
   --foreground: var(--color-black);
 
   /* Typography */
-  --font-primary: var(--font-poppins);
+  --font-primary: var(--font-brand-primary);
   --font-commentary: var(--font-handwriting);
 }
 
@@ -24,7 +24,7 @@
   --color-teal: var(--color-teal);
   --color-brand-accent: #4058bb;
   --color-brand-tint: #f4f5f8;
-  --font-sans: var(--font-primary);
+  --font-sans: var(--font-brand-primary);
   --font-mono: var(--font-jetbrains-mono);
 }
 
@@ -59,7 +59,7 @@ body {
 
 /* Typography Utility Classes */
 .font-primary {
-  font-family: var(--font-poppins), sans-serif;
+  font-family: var(--font-brand-primary), sans-serif;
 }
 
 .font-commentary {
