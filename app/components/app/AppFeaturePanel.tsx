@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
+import { AppResearchModal } from "./AppResearchModal";
 
 type Feature = {
   id: string;
@@ -157,7 +158,7 @@ function ContentReveal({
 
 // ─── Desktop layout ───────────────────────────────────────────────────────────
 
-function AppFeaturePanelDesktop() {
+function AppFeaturePanelDesktop({ openModal }: { openModal: () => void }) {
   const { activeId, contentVisible, handleSelect, activeFeature } =
     useFeatureState();
 
@@ -168,11 +169,19 @@ function AppFeaturePanelDesktop() {
         style={{ maxWidth: "1280px" }}
       >
         <h1
-          className="brand-h1 text-white text-center mb-12"
+          className="brand-h1 text-white text-center mb-4"
           style={{ letterSpacing: "-0.02em" }}
         >
           The Gold Standard of Cognitive Testing
         </h1>
+
+        <button
+          type="button"
+          onClick={openModal}
+          className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mb-10 hover:text-white/65 transition-colors"
+        >
+          93% sensitivity · 14 NHS Trusts · <span className="underline underline-offset-2">View research</span>
+        </button>
 
         <PhoneDisplay activeId={activeId} size="desktop" />
 
@@ -208,18 +217,26 @@ function AppFeaturePanelDesktop() {
 
 // ─── Mobile layout ────────────────────────────────────────────────────────────
 
-function AppFeaturePanelMobile() {
+function AppFeaturePanelMobile({ openModal }: { openModal: () => void }) {
   const { activeId, contentVisible, handleSelect, activeFeature } =
     useFeatureState();
 
   return (
     <div>
       <h1
-        className="brand-h1 text-white mb-8"
+        className="brand-h1 text-white mb-3"
         style={{ letterSpacing: "-0.02em" }}
       >
         The Gold Standard of Cognitive Testing
       </h1>
+
+      <button
+        type="button"
+        onClick={openModal}
+        className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mb-7 hover:text-white/65 transition-colors"
+      >
+        93% sensitivity · 14 NHS Trusts · <span className="underline underline-offset-2">View research</span>
+      </button>
 
       <div className="flex justify-center mb-8">
         <PhoneDisplay activeId={activeId} size="mobile" />
@@ -256,8 +273,19 @@ function AppFeaturePanelMobile() {
 
 export function AppFeaturePanel() {
   const isMobile = useIsMobile(1024);
-  // Default to desktop during SSR so the H1 is always rendered on first paint
-  return isMobile === true ? <AppFeaturePanelMobile /> : <AppFeaturePanelDesktop />;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  return (
+    <>
+      {isMobile === true
+        ? <AppFeaturePanelMobile openModal={openModal} />
+        : <AppFeaturePanelDesktop openModal={openModal} />
+      }
+      <AppResearchModal isOpen={isModalOpen} onClose={closeModal} />
+    </>
+  );
 }
 
 export default AppFeaturePanel;

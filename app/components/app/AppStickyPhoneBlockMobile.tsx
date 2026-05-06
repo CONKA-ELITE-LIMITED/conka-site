@@ -8,7 +8,6 @@ import {
   PHONE_SOURCES,
   PHONE_ALT_LABELS,
   FIG_LABELS,
-  type SectionData,
 } from "./appStickyPhoneBlockData";
 
 const SWIPE_THRESHOLD_PX = 50;
@@ -43,40 +42,13 @@ function ChamferNav({
   );
 }
 
-function StatCard({
-  value,
-  label,
-  source,
-}: {
-  value: string;
-  label: string;
-  source?: string;
-}) {
-  return (
-    <div className="border border-white/12 bg-white/[0.04] p-3">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-        {label}
-      </p>
-      <p className="font-mono text-xl font-bold tabular-nums text-white mt-2 leading-none">
-        {value}
-      </p>
-      {source && (
-        <p className="font-mono text-[8px] text-white/38 mt-2 leading-tight tabular-nums">
-          {source}
-        </p>
-      )}
-    </div>
-  );
-}
-
 function MobileSectionContent({
   data,
   contentVisible,
 }: {
-  data: SectionData;
+  data: { heading: string; body: string };
   contentVisible: boolean;
 }) {
-  const headingParts = data.heading.split("<br/>").filter(Boolean);
   return (
     <div
       className="flex flex-col items-start text-left"
@@ -90,31 +62,9 @@ function MobileSectionContent({
         className="text-[1.35rem] font-medium text-white leading-tight max-w-[22ch] mb-3"
         style={{ letterSpacing: "-0.02em" }}
       >
-        {headingParts.map((line, i) => (
-          <span key={i}>
-            {line}
-            {i < headingParts.length - 1 && <br />}
-          </span>
-        ))}
+        {data.heading}
       </h3>
-      <p className="text-sm text-white/60 leading-relaxed mb-3">{data.body}</p>
-      {data.footnote && (
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
-          {data.footnote}
-        </p>
-      )}
-      {data.stats && data.stats.length > 0 && (
-        <>
-          <div className="w-full grid grid-cols-2 gap-2 mt-5">
-            {data.stats.map((s, i) => (
-              <StatCard key={i} value={s.value} label={s.label} source={s.source} />
-            ))}
-          </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mt-4">
-            NHS Memory Clinics · Cambridge-derived · FDA cleared
-          </p>
-        </>
-      )}
+      <p className="text-sm text-white/60 leading-relaxed">{data.body}</p>
     </div>
   );
 }
