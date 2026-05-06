@@ -33,7 +33,7 @@ const FEATURES: Feature[] = [
     label: "Compete",
     screen: "/app/AppLeaderboard.png",
     heading: "Rank against professional athletes. Globally.",
-    body: "Football, F1, rugby, ultra running — one leaderboard. Challenge anyone, track trends, prove it.",
+    body: "Football, F1, rugby, ultra running: one leaderboard. Challenge anyone, track trends, prove it.",
   },
   {
     id: "rewards",
@@ -117,7 +117,7 @@ function FeatureTab({
       className={`px-5 py-3 border font-mono text-[11px] uppercase tracking-[0.14em] leading-none transition-all duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 min-h-[44px] ${
         isActive
           ? "bg-white text-black border-white"
-          : "border-white/25 text-white/60 hover:border-white/50 hover:text-white/85"
+          : "bg-white/[0.07] border-white/30 text-white/70 hover:bg-white/[0.12] hover:border-white/50 hover:text-white/90"
       }`}
     >
       {feature.label}
@@ -163,7 +163,7 @@ function AppFeaturePanelDesktop({ openModal }: { openModal: () => void }) {
     useFeatureState();
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-10 lg:pt-16">
       <div
         className="mx-auto flex flex-col items-center"
         style={{ maxWidth: "1280px" }}
@@ -178,30 +178,35 @@ function AppFeaturePanelDesktop({ openModal }: { openModal: () => void }) {
         <button
           type="button"
           onClick={openModal}
-          className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mb-10 hover:text-white/65 transition-colors"
+          className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-10 border border-white/20 px-4 py-2.5 hover:border-white/40 hover:text-white/75 transition-colors"
         >
-          93% sensitivity · 14 NHS Trusts · <span className="underline underline-offset-2">View research</span>
+          93% sensitivity · 14 NHS Trusts · View research
         </button>
 
-        <PhoneDisplay activeId={activeId} size="desktop" />
+        <div
+          className="flex flex-col items-center"
+          style={{ width: "clamp(320px, 34vw, 500px)" }}
+        >
+          <PhoneDisplay activeId={activeId} size="desktop" />
 
-        <div className="flex flex-wrap gap-2 justify-center mt-8">
-          {FEATURES.map((f) => (
-            <FeatureTab
-              key={f.id}
-              feature={f}
-              isActive={activeId === f.id}
-              onClick={() => handleSelect(f.id)}
+          <div className="flex flex-wrap gap-2 justify-center mt-6 w-full">
+            {FEATURES.map((f) => (
+              <FeatureTab
+                key={f.id}
+                feature={f}
+                isActive={activeId === f.id}
+                onClick={() => handleSelect(f.id)}
+              />
+            ))}
+          </div>
+
+          <div className="mt-6 w-full">
+            <ContentReveal
+              feature={activeFeature}
+              visible={contentVisible}
+              align="center"
             />
-          ))}
-        </div>
-
-        <div className="mt-8">
-          <ContentReveal
-            feature={activeFeature}
-            visible={contentVisible}
-            align="center"
-          />
+          </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-3">
@@ -222,7 +227,7 @@ function AppFeaturePanelMobile({ openModal }: { openModal: () => void }) {
     useFeatureState();
 
   return (
-    <div>
+    <div className="pt-8">
       <h1
         className="brand-h1 text-white mb-3"
         style={{ letterSpacing: "-0.02em" }}
@@ -233,9 +238,9 @@ function AppFeaturePanelMobile({ openModal }: { openModal: () => void }) {
       <button
         type="button"
         onClick={openModal}
-        className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mb-7 hover:text-white/65 transition-colors"
+        className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-7 border border-white/20 px-4 py-2.5 hover:border-white/40 hover:text-white/75 transition-colors"
       >
-        93% sensitivity · 14 NHS Trusts · <span className="underline underline-offset-2">View research</span>
+        93% sensitivity · 14 NHS Trusts · View research
       </button>
 
       <div className="flex justify-center mb-8">

@@ -18,15 +18,15 @@ export const PHONE_SOURCES = [
 export const SECTIONS_DATA: SectionData[] = [
   {
     heading: "Most cognitive tests get easier with practice. This one can't.",
-    body: "The test measures how quickly your brain processes visual information — the same mechanism first affected by cognitive decline. Natural images mean there is no way to game it. Your score only improves if your brain actually improves.",
+    body: "The test measures how quickly your brain processes visual information: the same mechanism first affected by cognitive decline. Natural images mean there is no way to game it. Your score only improves if your brain actually improves.",
   },
   {
     heading: "Your score changes every day. Now you'll know why.",
-    body: "Log sleep, stress, caffeine, training — and see how each one shifts your cognitive score. The app connects cause and effect so you can adjust what is actually moving the needle.",
+    body: "Log sleep, stress, caffeine, training, and see how each one shifts your cognitive score. The app connects cause and effect so you can adjust what is actually moving the needle.",
   },
   {
     heading: "See your brain improve over 30 days.",
-    body: "Clinical data supports up to 16% improvement in cognitive performance on the recommended plan. The graph does not lie — you are either improving or you are not.",
+    body: "Clinical data supports up to 16% improvement in cognitive performance on the recommended plan. The graph does not lie: you are either improving or you are not.",
   },
 ];
 

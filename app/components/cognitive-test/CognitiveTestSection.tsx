@@ -24,19 +24,19 @@ const BENEFIT_SPECS: { label: string; value: string; note: string }[] = [
 
 function BenefitsSpecStrip() {
   return (
-    <div className="grid grid-cols-3 gap-0 border border-black/12 bg-white mt-8">
+    <div className="grid grid-cols-3 gap-0 border border-white/12 bg-white/[0.03] mt-8">
       {BENEFIT_SPECS.map((b, i) => (
         <div
           key={b.label}
-          className={`p-4 ${i < BENEFIT_SPECS.length - 1 ? "border-r border-black/8" : ""}`}
+          className={`p-4 ${i < BENEFIT_SPECS.length - 1 ? "border-r border-white/10" : ""}`}
         >
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
             {b.label}
           </p>
-          <p className="font-mono text-xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+          <p className="font-mono text-xl font-bold tabular-nums text-white mt-2 leading-none">
             {b.value}
           </p>
-          <p className="font-mono text-[9px] text-black/50 mt-2 leading-tight tabular-nums">
+          <p className="font-mono text-[9px] text-white/50 mt-2 leading-tight tabular-nums">
             {b.note}
           </p>
         </div>
@@ -71,13 +71,11 @@ export default function CognitiveTestSection({
   const handleEmailSubmit = useCallback((submission: EmailSubmission) => {
     setEmailSubmission(submission);
     setTestState("testing");
-    console.log("Email submitted:", submission.email);
   }, []);
 
   const handleTestComplete = useCallback((result: TestResult) => {
     setTestResult(result);
     setTestState("processing");
-    console.log("Test completed:", result);
   }, []);
 
   const handleProcessingComplete = useCallback(() => {
@@ -102,21 +100,15 @@ export default function CognitiveTestSection({
 
   return (
     <div className={className}>
-      {/* Trio header */}
+      {/* Header */}
       <div className="mb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-          {"// Test your brain · APP-01"}
-        </p>
         <h2
           id="cognitive-test-heading"
-          className="brand-h2 text-black mb-3 max-w-[24ch]"
+          className="brand-h2 text-white mb-0 max-w-[24ch]"
           style={{ letterSpacing: "-0.02em" }}
         >
           Measure your cognitive performance.
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          Short version · In-app full test · Clinically derived
-        </p>
       </div>
 
       {/* Content Area - Changes based on state */}
@@ -132,7 +124,7 @@ export default function CognitiveTestSection({
         {/* EMAIL STATE */}
         {testState === "email" && (
           <div className="w-full max-w-2xl">
-            <div className="bg-white border border-black/12 p-6 lg:p-10">
+            <div className="bg-white/[0.04] border border-white/12 p-6 lg:p-10">
               <EmailCaptureForm
                 onSubmit={handleEmailSubmit}
                 onBack={handleBackToIdle}
