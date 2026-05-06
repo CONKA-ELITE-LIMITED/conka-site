@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Caveat } from "next/font/google";
+import { Caveat } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
@@ -9,14 +9,6 @@ import { AuthProvider } from "@/app/context/AuthContext";
 import CartDrawer from "@/app/components/CartDrawer";
 import ConvexClientProvider from "@/app/components/ConvexClientProvider";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  preload: false,
-  display: "swap",
-});
 
 const caveat = Caveat({
   variable: "--font-handwriting",
@@ -166,7 +158,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${poppins.variable} ${caveat.variable} ${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${caveat.variable} ${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <MetaPageViewTracker />
         <ConvexClientProvider>
