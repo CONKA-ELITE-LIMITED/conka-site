@@ -39,10 +39,10 @@ export default function FormulaCardCompact({
           {/* Hover Overlay */}
           <div className="absolute inset-0 bg-[var(--background)] opacity-0 group-hover:opacity-95 transition-opacity duration-300 flex flex-col justify-center items-center p-4 text-black">
             <h4 className="font-bold text-lg mb-3 text-center">{formula.subtitle}</h4>
-            <p className="text-sm font-clinical opacity-90 mb-4 text-center leading-relaxed">
+            <p className="text-sm font-mono opacity-90 mb-4 text-center leading-relaxed">
               {formula.description}
             </p>
-            <ul className="space-y-2 text-sm font-clinical">
+            <ul className="space-y-2 text-sm font-mono">
               {formula.keyPoints.map((point, idx) => (
                 <li key={idx} className="flex items-center gap-2">
                   <svg

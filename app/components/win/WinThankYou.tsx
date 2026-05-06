@@ -31,7 +31,7 @@ export default function WinThankYou({ email }: WinThankYouProps) {
           <p className="font-commentary text-xl mb-3">
             good luck — we&apos;ll be in touch soon
           </p>
-          <p className="font-clinical text-xs opacity-70">
+          <p className="font-mono text-xs opacity-70">
             entries close soon • winner contacted by email
           </p>
         </div>
@@ -47,7 +47,7 @@ export default function WinThankYou({ email }: WinThankYouProps) {
             perform better — using clinically grounded ingredients, not hype.
           </p>
 
-          <p className="font-clinical text-sm opacity-70">
+          <p className="font-mono text-sm opacity-70">
             If you&apos;re curious, our 2-minute quiz helps you understand which
             protocol fits your goals.
           </p>

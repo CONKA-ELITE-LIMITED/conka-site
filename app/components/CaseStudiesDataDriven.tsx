@@ -104,7 +104,7 @@ function AthletePhotoTile({ athlete }: { athlete: AthleteData }) {
       {/* Text overlay */}
       <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
         <p className="text-sm font-semibold mb-1">{athlete.name}</p>
-        <p className="text-3xl font-bold font-clinical mb-0.5">
+        <p className="text-3xl font-bold font-mono mb-0.5">
           {totalImprovement?.value || "+0%"}
         </p>
         <p className="text-[10px] uppercase tracking-wide opacity-80 mb-1">
@@ -150,7 +150,7 @@ export default function CaseStudiesDataDriven({
       {/* Hero Stats Block -- desktop/tablet only */}
         <div className="hidden md:grid grid-cols-2 gap-1 sm:gap-2 md:gap-6 mb-6 max-w-2xl">
           <div className="brand-card px-2 py-3 sm:px-3 sm:py-4 md:px-6 md:py-8 text-center min-w-0">
-            <p className="text-base sm:text-2xl md:text-5xl lg:text-6xl font-bold font-clinical text-black leading-tight">
+            <p className="text-base sm:text-2xl md:text-5xl lg:text-6xl font-bold font-mono text-black leading-tight">
               5,000+
             </p>
             <p className="text-[10px] sm:text-xs brand-caption text-black/60 uppercase mt-1 sm:mt-2">
@@ -158,7 +158,7 @@ export default function CaseStudiesDataDriven({
             </p>
           </div>
           <div className="brand-card px-2 py-3 sm:px-3 sm:py-4 md:px-6 md:py-8 text-center min-w-0">
-            <p className="text-base sm:text-2xl md:text-5xl lg:text-6xl font-bold font-clinical text-black leading-tight">
+            <p className="text-base sm:text-2xl md:text-5xl lg:text-6xl font-bold font-mono text-black leading-tight">
               150+
             </p>
             <p className="text-[10px] sm:text-xs brand-caption text-black/60 uppercase mt-1 sm:mt-2">

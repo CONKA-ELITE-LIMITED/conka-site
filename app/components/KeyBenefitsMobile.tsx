@@ -124,7 +124,7 @@ function AccordionRow({ benefit, isOpen, isLast, onTap }: AccordionRowProps) {
 
           {/* 2. Hero stat — large, immediate */}
           <div
-            className="font-bold font-clinical mb-4"
+            className="font-bold font-mono mb-4"
             style={{
               fontSize: "clamp(2.8rem, 14vw, 3.8rem)",
               lineHeight: 1,

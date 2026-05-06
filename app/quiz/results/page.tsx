@@ -217,7 +217,7 @@ export default function QuizResultsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-current/20 border-t-current rounded-full animate-spin mx-auto mb-4" />
-          <p className="font-clinical text-sm opacity-60">Loading results...</p>
+          <p className="font-mono text-sm opacity-60">Loading results...</p>
         </div>
       </div>
     );

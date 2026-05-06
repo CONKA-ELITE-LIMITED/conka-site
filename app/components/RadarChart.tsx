@@ -43,7 +43,7 @@ export default function RadarChart({ data, mainValue, accentColor }: RadarChartP
                 fontSize: 11,
                 fontFamily: "var(--font-ibm-plex-mono)",
               }}
-              className="font-clinical"
+              className="font-mono"
               tickLine={false}
             />
             <PolarRadiusAxis

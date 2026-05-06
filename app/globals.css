@@ -26,7 +26,7 @@
   --color-brand-accent: #4058bb;
   --color-brand-tint: #f4f5f8;
   --font-sans: var(--font-primary);
-  --font-mono: var(--font-clinical);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 /* CONKA Flow Theme (Light Mode) */

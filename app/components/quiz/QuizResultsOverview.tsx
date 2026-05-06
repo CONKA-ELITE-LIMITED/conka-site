@@ -58,7 +58,7 @@ export default function QuizResultsOverview({
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <p className="font-clinical text-sm uppercase tracking-wide opacity-60 mb-2">
+          <p className="font-mono text-sm uppercase tracking-wide opacity-60 mb-2">
             Quiz Complete
           </p>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">Your Results</h1>
@@ -104,12 +104,12 @@ export default function QuizResultsOverview({
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <h3 className="font-bold text-lg">{matchInfo.name}</h3>
                         {isRecommended && (
-                          <span className="px-2 py-0.5 bg-amber-500 text-white font-clinical text-xs font-bold rounded-full">
+                          <span className="px-2 py-0.5 bg-amber-500 text-white font-mono text-xs font-bold rounded-full">
                             RECOMMENDED
                           </span>
                         )}
                       </div>
-                      <p className="font-clinical text-sm opacity-70 mb-3">
+                      <p className="font-mono text-sm opacity-70 mb-3">
                         {matchInfo.subtitle}
                       </p>
 
@@ -138,7 +138,7 @@ export default function QuizResultsOverview({
                       e.stopPropagation();
                       setExpandedProtocol(isExpanded ? null : result.protocolId);
                     }}
-                    className="w-full px-4 md:px-6 py-3 flex items-center justify-center gap-2 font-clinical text-sm hover:bg-current/5 transition-colors"
+                    className="w-full px-4 md:px-6 py-3 flex items-center justify-center gap-2 font-mono text-sm hover:bg-current/5 transition-colors"
                   >
                     <span>{isExpanded ? "Hide" : "View"} Score Breakdown</span>
                     <svg

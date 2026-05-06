@@ -18,7 +18,7 @@ export default function CognitiveTestAppPromo() {
       >
         The full speed-of-processing game in the CONKA app.
       </h4>
-      <p className="text-sm text-white/70 leading-relaxed mb-5 max-w-xl">
+      <p className="text-sm text-white/55 leading-relaxed mb-5 max-w-xl">
         This was a 30-second snapshot. The full game gives you detailed insights
         and tracks how your performance changes with lifestyle factors.
       </p>

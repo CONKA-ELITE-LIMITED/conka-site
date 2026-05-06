@@ -77,7 +77,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
               <DocumentIcon className="w-5 h-5" />
             </div>
             <div>
-              <p className="font-clinical text-xs uppercase opacity-50 mb-1">
+              <p className="font-mono text-xs uppercase opacity-50 mb-1">
                 Clinical Study
               </p>
               <h3 className="text-lg md:text-xl font-bold leading-tight">
@@ -85,7 +85,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
               </h3>
             </div>
           </div>
-          <span className="font-clinical text-sm opacity-50">{study.year}</span>
+          <span className="font-mono text-sm opacity-50">{study.year}</span>
         </div>
       </div>
 
@@ -97,22 +97,22 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
           <div className="p-4 rounded-lg bg-black/5">
             <div className="flex items-center gap-2 mb-3">
               <ProfessorIcon className="w-4 h-4 opacity-60" />
-              <span className="font-clinical text-xs uppercase opacity-60">Lead Researcher</span>
+              <span className="font-mono text-xs uppercase opacity-60">Lead Researcher</span>
             </div>
             <p className="font-semibold">{study.professor}</p>
             <div className="flex items-center gap-2 mt-2">
               <UniversityIcon className="w-4 h-4 opacity-60" />
-              <p className="font-clinical text-sm opacity-70">{study.university}</p>
+              <p className="font-mono text-sm opacity-70">{study.university}</p>
             </div>
           </div>
 
           <div className="p-4 rounded-lg bg-black/5">
             <div className="flex items-center gap-2 mb-3">
               <CalendarIcon className="w-4 h-4 opacity-60" />
-              <span className="font-clinical text-xs uppercase opacity-60">Study Duration</span>
+              <span className="font-mono text-xs uppercase opacity-60">Study Duration</span>
             </div>
             <p className="font-semibold text-2xl">{study.duration}</p>
-            <p className="font-clinical text-sm opacity-70 mt-1">
+            <p className="font-mono text-sm opacity-70 mt-1">
               Randomized, double-blind, placebo-controlled
             </p>
           </div>
@@ -121,27 +121,27 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
         <div className="p-4 rounded-lg bg-black/5">
           <div className="flex items-center gap-2 mb-4">
             <ParticipantsIcon className="w-4 h-4 opacity-60" />
-            <span className="font-clinical text-xs uppercase opacity-60">Participant Demographics</span>
+            <span className="font-mono text-xs uppercase opacity-60">Participant Demographics</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className={`font-clinical text-2xl font-bold ${accentColor.text}`}>
+              <p className={`font-mono text-2xl font-bold ${accentColor.text}`}>
                 {study.participants.total}
               </p>
-              <p className="font-clinical text-xs opacity-60">Total Participants</p>
+              <p className="font-mono text-xs opacity-60">Total Participants</p>
             </div>
             <div>
               <p className="font-semibold">{study.participants.ageRange}</p>
-              <p className="font-clinical text-xs opacity-60">Age Range</p>
+              <p className="font-mono text-xs opacity-60">Age Range</p>
             </div>
             <div>
               <p className="font-semibold">{study.participants.genderSplit}</p>
-              <p className="font-clinical text-xs opacity-60">Gender Split</p>
+              <p className="font-mono text-xs opacity-60">Gender Split</p>
             </div>
             {study.participants.conditions && (
               <div className="col-span-2 md:col-span-1">
                 <p className="font-semibold text-sm">{study.participants.conditions}</p>
-                <p className="font-clinical text-xs opacity-60">Selection Criteria</p>
+                <p className="font-mono text-xs opacity-60">Selection Criteria</p>
               </div>
             )}
           </div>
@@ -151,7 +151,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
         <div>
           <div className="flex items-center gap-2 mb-3">
             <DocumentIcon className="w-4 h-4 opacity-60" />
-            <span className="font-clinical text-xs uppercase opacity-60">Abstract</span>
+            <span className="font-mono text-xs uppercase opacity-60">Abstract</span>
           </div>
           <p className="text-sm leading-relaxed opacity-80 font-commentary">
             {study.abstract}
@@ -162,7 +162,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
         <div>
           <div className="flex items-center gap-2 mb-4">
             <ChartIcon className="w-4 h-4 opacity-60" />
-            <span className="font-clinical text-xs uppercase opacity-60">Key Results</span>
+            <span className="font-mono text-xs uppercase opacity-60">Key Results</span>
           </div>
           <div className="grid gap-3">
             {study.results.map((result, idx) => (
@@ -175,7 +175,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
                   <div className="flex items-center gap-2 mb-1">
                     <p className="font-semibold">{result.metric}</p>
                     <span
-                      className={`px-2 py-0.5 rounded font-clinical text-xs ${
+                      className={`px-2 py-0.5 rounded font-mono text-xs ${
                         result.pValue.includes("0.001") || result.pValue.includes("0.01")
                           ? "bg-green-500/20 text-green-700"
                           : "bg-yellow-500/20 text-yellow-700"
@@ -184,10 +184,10 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
                       {result.pValue}
                     </span>
                   </div>
-                  <p className="font-clinical text-xs opacity-60">{result.description}</p>
+                  <p className="font-mono text-xs opacity-60">{result.description}</p>
                 </div>
                 <div className="text-right">
-                  <p className={`font-clinical text-2xl font-bold ${accentColor.text}`}>
+                  <p className={`font-mono text-2xl font-bold ${accentColor.text}`}>
                     {result.value}
                   </p>
                 </div>
@@ -199,7 +199,7 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
         <div className="p-4 rounded-lg border-2 border-black/20 bg-black/5">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircleIcon className={`w-5 h-5 ${accentColor.text}`} />
-            <span className="font-clinical text-xs uppercase opacity-60">Conclusion</span>
+            <span className="font-mono text-xs uppercase opacity-60">Conclusion</span>
           </div>
           <p className="text-sm leading-relaxed font-medium">
             {study.conclusion}
@@ -208,10 +208,10 @@ export default function ClinicalStudyCard({ study, formulaId }: ClinicalStudyCar
 
         {/* Study ID Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-current border-opacity-10">
-          <p className="font-clinical text-xs opacity-40">
+          <p className="font-mono text-xs opacity-40">
             Study ID: {study.id}
           </p>
-          <p className="font-clinical text-xs opacity-40">
+          <p className="font-mono text-xs opacity-40">
             Peer Reviewed • Published {study.year}
           </p>
         </div>

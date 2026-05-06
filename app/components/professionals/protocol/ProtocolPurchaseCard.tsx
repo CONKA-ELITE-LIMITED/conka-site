@@ -132,7 +132,7 @@ export default function ProtocolPurchaseCard({
         <div className="space-y-2 mb-3">
           {/* Purchase Type Toggle */}
           <div>
-            <p className="font-clinical text-[10px] uppercase opacity-70 mb-1">
+            <p className="font-mono text-[10px] uppercase opacity-70 mb-1">
               Purchase Type
             </p>
             <div className="flex gap-2 flex-wrap">
@@ -144,11 +144,11 @@ export default function ProtocolPurchaseCard({
                     : "bg-transparent border-[var(--foreground)]/30 text-[var(--foreground)] hover:border-[var(--foreground)]/50"
                 }`}
               >
-                <span className="font-clinical text-sm font-medium">
+                <span className="font-mono text-sm font-medium">
                   Subscribe
                 </span>
                 <span
-                  className="px-2 py-0.5 rounded-full text-white font-clinical text-xs"
+                  className="px-2 py-0.5 rounded-full text-white font-mono text-xs"
                   style={{ backgroundColor: protocolAccentColor }}
                 >
                   SAVE {subscriptionSavePercentage}%
@@ -162,7 +162,7 @@ export default function ProtocolPurchaseCard({
                     : "bg-transparent border-[var(--foreground)]/30 text-[var(--foreground)] hover:border-[var(--foreground)]/50"
                 }`}
               >
-                <span className="font-clinical text-sm font-medium">
+                <span className="font-mono text-sm font-medium">
                   One-off
                 </span>
               </button>
@@ -171,11 +171,11 @@ export default function ProtocolPurchaseCard({
 
           {useB2BPricing && tier !== undefined && (
             <div className="flex flex-col gap-1">
-              <p className="font-clinical text-[10px] uppercase opacity-70">
+              <p className="font-mono text-[10px] uppercase opacity-70">
                 Tier: <span className="font-semibold opacity-100 capitalize">{tier}</span>
               </p>
               {nextTier && (
-                <p className="font-clinical text-xs text-[var(--foreground)] opacity-90">
+                <p className="font-mono text-xs text-[var(--foreground)] opacity-90">
                   Add {nextTier.boxesToNext} more for {nextTier.tierName}: {formatPrice(nextTier.pricePerBoxExVat)}/box ex. VAT
                 </p>
               )}
@@ -184,7 +184,7 @@ export default function ProtocolPurchaseCard({
 
           {/* Quantity Selector */}
           <div>
-            <p className="font-clinical text-[10px] uppercase opacity-70 mb-1">
+            <p className="font-mono text-[10px] uppercase opacity-70 mb-1">
               Quantity
             </p>
             <div className="flex items-center gap-2">
@@ -197,7 +197,7 @@ export default function ProtocolPurchaseCard({
               </button>
               <div className="flex-1 text-center">
                 <p className="text-xl md:text-2xl font-bold">{quantity}</p>
-                <p className="font-clinical text-[10px] opacity-70">
+                <p className="font-mono text-[10px] opacity-70">
                   {quantity === 1 ? "box" : "boxes"} ({shotsPerBox} shots per box)
                 </p>
               </div>
@@ -213,18 +213,18 @@ export default function ProtocolPurchaseCard({
           {/* Price Display */}
           <div className="pt-2 border-t border-black/5">
             <div className="flex justify-between items-baseline mb-0.5">
-              <span className="font-clinical text-xs opacity-70">
+              <span className="font-mono text-xs opacity-70">
                 Per box ({billingText}
                 {selectedPurchaseType === "subscription" && ", delivered monthly"}
                 ):
               </span>
               <span className="text-base font-bold">
                 {formatPrice(pricePerUnit)}
-                {useB2BPricing && <span className="font-clinical text-[10px] font-normal opacity-70 ml-1">ex. VAT</span>}
+                {useB2BPricing && <span className="font-mono text-[10px] font-normal opacity-70 ml-1">ex. VAT</span>}
               </span>
             </div>
             <div className="flex justify-between items-baseline">
-              <span className="font-clinical text-sm font-semibold">
+              <span className="font-mono text-sm font-semibold">
                 Total:
               </span>
               <div className="flex flex-col items-end">

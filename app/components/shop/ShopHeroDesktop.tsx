@@ -10,7 +10,7 @@ export default function ShopHeroDesktop() {
         </h1>
 
         {/* ===== Subhead ===== */}
-        <p className="font-clinical text-base md:text-lg lg:text-xl mb-12 md:mb-16 opacity-70">
+        <p className="font-mono text-base md:text-lg lg:text-xl mb-12 md:mb-16 opacity-70">
           Start with CONKA Flow or CONKA Clear, try a small pack, or explore a
           protocol when you're ready.
         </p>

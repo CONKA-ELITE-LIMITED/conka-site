@@ -61,7 +61,7 @@ export default function WinCountdown({ deadline }: WinCountdownProps) {
       <div className="px-0 md:px-16 pt-4 md:pt-6 pb-6 md:pb-8">
         <div className="max-w-full md:max-w-6xl mx-auto">
           <div className="neo-box-inverted p-6 md:p-8">
-            <p className="font-clinical text-sm opacity-80 text-center">
+            <p className="font-mono text-sm opacity-80 text-center">
               Loading...
             </p>
           </div>
@@ -79,28 +79,28 @@ export default function WinCountdown({ deadline }: WinCountdownProps) {
           </p>
           <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8">
             <div className="text-center">
-              <p className="font-clinical text-3xl sm:text-4xl md:text-5xl font-bold">
+              <p className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold">
                 {timeRemaining.days}
               </p>
-              <p className="font-clinical text-xs opacity-80 mt-1">days</p>
+              <p className="font-mono text-xs opacity-80 mt-1">days</p>
             </div>
-            <span className="font-clinical text-2xl sm:text-3xl opacity-60">
+            <span className="font-mono text-2xl sm:text-3xl opacity-60">
               :
             </span>
             <div className="text-center">
-              <p className="font-clinical text-3xl sm:text-4xl md:text-5xl font-bold">
+              <p className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold">
                 {timeRemaining.hours}
               </p>
-              <p className="font-clinical text-xs opacity-80 mt-1">hours</p>
+              <p className="font-mono text-xs opacity-80 mt-1">hours</p>
             </div>
-            <span className="font-clinical text-2xl sm:text-3xl opacity-60">
+            <span className="font-mono text-2xl sm:text-3xl opacity-60">
               :
             </span>
             <div className="text-center">
-              <p className="font-clinical text-3xl sm:text-4xl md:text-5xl font-bold">
+              <p className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold">
                 {timeRemaining.minutes}
               </p>
-              <p className="font-clinical text-xs opacity-80 mt-1">minutes</p>
+              <p className="font-mono text-xs opacity-80 mt-1">minutes</p>
             </div>
           </div>
         </div>

@@ -100,7 +100,7 @@ export default function ProfessionalsFormulasPage() {
       <nav aria-label="Back to portal" className="px-6 md:px-16 pt-4 pb-2">
         <Link
           href="/professionals"
-          className="font-clinical text-sm opacity-70 hover:opacity-100 transition-opacity underline"
+          className="font-mono text-sm opacity-70 hover:opacity-100 transition-opacity underline"
         >
           Back to portal
         </Link>
@@ -152,7 +152,7 @@ export default function ProfessionalsFormulasPage() {
                   : "bg-transparent border-[var(--foreground)]/30 text-[var(--foreground)] hover:border-[var(--foreground)]/50"
               }`}
             >
-              <span className="font-clinical text-sm font-medium">
+              <span className="font-mono text-sm font-medium">
                 CONKA Flow
               </span>
             </button>
@@ -164,7 +164,7 @@ export default function ProfessionalsFormulasPage() {
                   : "bg-transparent border-[var(--foreground)]/30 text-[var(--foreground)] hover:border-[var(--foreground)]/50"
               }`}
             >
-              <span className="font-clinical text-sm font-medium">
+              <span className="font-mono text-sm font-medium">
                 CONKA Clear
               </span>
             </button>

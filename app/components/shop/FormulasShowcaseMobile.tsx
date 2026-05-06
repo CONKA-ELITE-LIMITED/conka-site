@@ -53,7 +53,7 @@ function FormulaCard({ formula }: { formula: FormulaShowcaseData }) {
         </div>
 
         {/* Microcopy */}
-        <p className="font-clinical text-sm opacity-70">
+        <p className="font-mono text-sm opacity-70">
           {microcopy[formula.id]}
         </p>
 
@@ -67,7 +67,7 @@ function FormulaCard({ formula }: { formula: FormulaShowcaseData }) {
               >
                 {stat.value}
               </span>
-              <span className="font-clinical text-xs opacity-70">
+              <span className="font-mono text-xs opacity-70">
                 {stat.label}
               </span>
             </div>
@@ -98,7 +98,7 @@ function FormulaCard({ formula }: { formula: FormulaShowcaseData }) {
 
         {/* Key Points (collapsible) */}
         <button
-          className="text-sm font-clinical opacity-70 mb-2 text-left"
+          className="text-sm font-mono opacity-70 mb-2 text-left"
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? "Hide details ▲" : "Show key benefits ▼"}
@@ -151,7 +151,7 @@ export default function FormulasShowcaseMobile({ excludeFormulaId }: FormulasSho
         {/* Section Header */}
         <div className="text-left mb-6">
           <h2 className="text-3xl font-bold mb-2">Individual Formulas</h2>
-          <p className="font-clinical text-base opacity-70">
+          <p className="font-mono text-base opacity-70">
             Start simple. Feel the difference.
           </p>
         </div>

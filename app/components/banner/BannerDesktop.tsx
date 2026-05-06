@@ -75,7 +75,7 @@ export default function BannerDesktop({ config }: BannerDesktopProps) {
                       text: ` ${seg.text}`,
                     })),
                   ],
-                  "font-clinical text-xs md:text-sm whitespace-nowrap text-white",
+                  "font-mono text-xs md:text-sm whitespace-nowrap text-white",
                 )}
                 {renderTextSegments(
                   [
@@ -85,7 +85,7 @@ export default function BannerDesktop({ config }: BannerDesktopProps) {
                       text: ` ${seg.text}`,
                     })),
                   ],
-                  "font-clinical text-xs md:text-sm whitespace-nowrap text-white",
+                  "font-mono text-xs md:text-sm whitespace-nowrap text-white",
                 )}
               </div>
             </div>
@@ -161,7 +161,7 @@ export default function BannerDesktop({ config }: BannerDesktopProps) {
                     text: ` ${seg.text}`,
                   })),
                 ],
-                "font-clinical text-xs md:text-sm leading-none",
+                "font-mono text-xs md:text-sm leading-none",
               )}
             </div>
             {config.content.button &&

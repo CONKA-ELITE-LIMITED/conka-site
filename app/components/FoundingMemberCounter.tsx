@@ -39,7 +39,7 @@ export default function FoundingMemberCounter({
   if (variant === "number-only") {
     return (
       <span
-        className={`font-clinical font-bold ${sizeClasses[size]} ${urgencyColor}`}
+        className={`font-mono font-bold ${sizeClasses[size]} ${urgencyColor}`}
       >
         {spotsRemaining.toLocaleString()}
       </span>
@@ -49,11 +49,11 @@ export default function FoundingMemberCounter({
   return (
     <div className="flex flex-col items-center md:items-start">
       <span
-        className={`font-clinical font-bold ${sizeClasses[size]} ${urgencyColor}`}
+        className={`font-mono font-bold ${sizeClasses[size]} ${urgencyColor}`}
       >
         {spotsRemaining.toLocaleString()}
       </span>
-      <span className="font-clinical text-xs md:text-sm opacity-70 mt-0.5">
+      <span className="font-mono text-xs md:text-sm opacity-70 mt-0.5">
         spots remaining
       </span>
     </div>

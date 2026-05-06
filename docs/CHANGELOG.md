@@ -6,6 +6,22 @@
 
 ## May 2026
 
+### 2026-05-06 -- Mono font unification (Phase 1+2): font-clinical → font-mono on JetBrains Mono; /shop deleted
+
+Closed the practice/preach gap on monospace usage. Brand spec said `JetBrains Mono` (local) for all data/eyebrow/mono text, but Tailwind's `font-mono` utility was mapped to IBM Plex Mono via `--font-clinical`, so the 50+ `font-mono` usages on home, CRO, landing, and PDP components were silently rendering in the wrong (Google) font. Two visually similar mono fonts were shipping side-by-side on every page.
+
+**Phase 1 -- One-line CSS remap (`globals.css`):** `@theme inline { --font-mono: var(--font-jetbrains-mono); }` (was `var(--font-clinical)`). Every existing `font-mono` Tailwind utility now resolves to JetBrains Mono. Zero JSX edits required for this phase.
+
+**Phase 2 -- Bulk migration of `.font-clinical` → `font-mono`:** 260 occurrences across 52 .tsx files (B2B portal, win, protocol, quiz, product, shop, barrys, navigation, banner, plus several home/landing components). Mechanical find/replace via sed. After migration: zero `font-clinical` references in any .tsx file, all mono text now resolves to JetBrains Mono via the Tailwind utility.
+
+**`/shop` deleted:** `/shop/page.tsx` removed. `/shop` and `/shop/:path*` redirect to `/conka-both` via `next.config.ts`. The shop component tree (`ShopHero`, `FormulasShowcase`, `FormulaPanel`, etc.) was only consumed by the deleted page -- now orphaned. Logged as deferred cleanup task #7 in `docs/TODO.md` (one-release safety-net pattern, matching protocol cleanup).
+
+**Phases 3-6 deferred:** `.premium-data` migration, deleting IBM Plex Mono from `layout.tsx`, removing `--font-clinical` / `--font-ibm-plex-mono` variables from CSS, doc updates, and Tailwind theme simplification. Plan documented in conversation; tackle in a follow-up.
+
+**Why:** Two near-identical monospace fonts loaded on every page is a performance and consistency cost with no design benefit. The `--font-mono` indirection was a leftover from the brand-base migration that never got finished.
+
+---
+
 ### 2026-05-06 -- Performance: browserslist, font preload, animation fix, performance doc
 
 Production Lighthouse score was 76 vs. a previous baseline of 80. Three root causes identified and fixed.
@@ -16,7 +32,9 @@ Production Lighthouse score was 76 vs. a previous baseline of 80. Three root cau
 
 **3. Non-composited animation fixed (`CROTestimonials`):** Dot indicators used `transition-all` with `w-1.5` / `w-4` toggling, animating `width` (non-composited, layout-triggering). Fixed by fixing all dots at `w-4 h-1.5` and using `transition-colors duration-300` only.
 
-**4. `docs/development/PERFORMANCE_OPTIMISATION.md` created:** Forward-looking performance standard consolidating all Lighthouse learnings. Added to `CLAUDE.md` docs index.
+**4. Removed unused Google fonts (`layout.tsx`, `premium-base.css`):** Syne and DM_Sans were imported on every page but only referenced by `.premium-pdp .premium-display-hero` and `.premium-pdp .premium-body-hero` CSS rules — `.premium-pdp` had zero JSX consumers (scope was deleted during brand-base migration). Removed both `next/font/google` imports, the CSS rules, and the `${syne.variable}` / `${dmSans.variable}` body className entries.
+
+**5. `docs/development/PERFORMANCE_OPTIMISATION.md` created:** Forward-looking performance standard consolidating all Lighthouse learnings. Added to `CLAUDE.md` docs index.
 
 **Why the regression happened:** `browserslist` and `preload: false` are configuration-level concerns invisible to the component author. Without a standing document, each new session starts from zero on these rules.
 

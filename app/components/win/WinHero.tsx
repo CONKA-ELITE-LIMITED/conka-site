@@ -32,10 +32,10 @@ export default function WinHero() {
           <p className="font-commentary text-xl md:text-2xl mt-2">
             a clinically designed nootropic protocol — on us
           </p>
-          <p className="font-clinical text-sm opacity-70 mt-4">
+          <p className="font-mono text-sm opacity-70 mt-4">
             backed by 250+ clinical studies • tailored to your goals
           </p>
-          <p className="font-clinical text-xs opacity-50 mt-1">
+          <p className="font-mono text-xs opacity-50 mt-1">
             worth £79.99 • delivered free • no subscription required
           </p>
         </div>

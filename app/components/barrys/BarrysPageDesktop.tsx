@@ -41,7 +41,7 @@ export default function BarrysPageDesktop({
                 <p className="text-2xl md:text-3xl font-semibold text-teal-600">
                   40% off anything over £25
                 </p>
-                <p className="font-clinical text-sm uppercase tracking-widest opacity-70">
+                <p className="font-mono text-sm uppercase tracking-widest opacity-70">
                   Get your discount code delivered to your inbox
                 </p>
               </div>

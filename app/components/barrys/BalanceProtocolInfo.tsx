@@ -56,14 +56,14 @@ export default function BalanceProtocolInfo() {
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3">
             What to Expect with the Balance Protocol
           </h2>
-          <p className="font-clinical text-sm md:text-base opacity-70 max-w-2xl mx-auto">
+          <p className="font-mono text-sm md:text-base opacity-70 max-w-2xl mx-auto">
             For those who want clarity and focus in equal measure
           </p>
         </div>
 
         {/* Situational Context */}
         <div className="mb-8 md:mb-10 text-center">
-          <p className="font-clinical text-xs uppercase tracking-widest opacity-50 md:opacity-100 mb-2">
+          <p className="font-mono text-xs uppercase tracking-widest opacity-50 md:opacity-100 mb-2">
             <span className="md:hidden">Commonly chosen when</span>
             <span className="hidden md:inline">Perfect For:</span>
           </p>
@@ -81,10 +81,10 @@ export default function BalanceProtocolInfo() {
             >
               {/* Large Stat */}
               <div className="mb-2 md:mb-3">
-                <div className="font-clinical text-4xl md:text-5xl lg:text-6xl font-bold text-teal-600 mb-1">
+                <div className="font-mono text-4xl md:text-5xl lg:text-6xl font-bold text-teal-600 mb-1">
                   {benefit.stat}
                 </div>
-                <div className="font-clinical text-xs uppercase tracking-widest opacity-70">
+                <div className="font-mono text-xs uppercase tracking-widest opacity-70">
                   {benefit.statLabel}
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function BalanceProtocolInfo() {
               </h3>
 
               {/* PMID */}
-              <p className="font-clinical text-xs opacity-60 mt-auto">
+              <p className="font-mono text-xs opacity-60 mt-auto">
                 {benefit.pmid}
               </p>
             </div>

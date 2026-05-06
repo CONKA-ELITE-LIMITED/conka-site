@@ -148,7 +148,7 @@ export default function QuizQuestion({
     <div className="flex flex-col items-center justify-center min-h-[50vh] px-4 py-6">
       {/* Question Counter */}
       <div className="mb-4">
-        <span className="font-clinical text-xs opacity-50">
+        <span className="font-mono text-xs opacity-50">
           {questionNumber} / {totalQuestions}
         </span>
       </div>

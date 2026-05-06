@@ -237,7 +237,7 @@ export default function ProtocolStruggleMobile({
               }`}
             >
               <StruggleIcon icon={struggle.icon} />
-              <span className="font-clinical text-xs">{struggle.label}</span>
+              <span className="font-mono text-xs">{struggle.label}</span>
             </button>
           );
         })}
@@ -250,7 +250,7 @@ export default function ProtocolStruggleMobile({
           <div className="p-4 bg-amber-500 text-white">
             <div className="flex items-center gap-2 mb-2">
               <StruggleIcon icon={currentSolution.icon} />
-              <span className="font-clinical text-xs uppercase opacity-80">
+              <span className="font-mono text-xs uppercase opacity-80">
                 {protocol.name} Solution
               </span>
             </div>
@@ -264,7 +264,7 @@ export default function ProtocolStruggleMobile({
               <span className="text-3xl font-bold text-amber-500">
                 {currentSolution.stat}
               </span>
-              <span className="font-clinical text-sm opacity-70">
+              <span className="font-mono text-sm opacity-70">
                 {currentSolution.statLabel}
               </span>
             </div>
@@ -274,14 +274,14 @@ export default function ProtocolStruggleMobile({
 
             {/* Key Benefits */}
             <div>
-              <p className="font-clinical text-xs uppercase opacity-50 mb-2">
+              <p className="font-mono text-xs uppercase opacity-50 mb-2">
                 Key Benefits
               </p>
               <div className="flex flex-wrap gap-2">
                 {currentSolution.keyBenefits.map((benefit, idx) => (
                   <span
                     key={idx}
-                    className="px-2 py-1 bg-amber-500/10 rounded-full font-clinical text-xs"
+                    className="px-2 py-1 bg-amber-500/10 rounded-full font-mono text-xs"
                   >
                     {benefit}
                   </span>
@@ -291,7 +291,7 @@ export default function ProtocolStruggleMobile({
 
             {/* Protocol Benefits from data */}
             <div className="border-t border-current/10 pt-4">
-              <p className="font-clinical text-xs uppercase opacity-50 mb-2">
+              <p className="font-mono text-xs uppercase opacity-50 mb-2">
                 {protocol.name} Benefits
               </p>
               <ul className="space-y-1">
@@ -322,7 +322,7 @@ export default function ProtocolStruggleMobile({
 
       {/* Helper text when nothing selected */}
       {!selectedStruggle && (
-        <p className="text-center font-clinical text-sm opacity-50 mt-4">
+        <p className="text-center font-mono text-sm opacity-50 mt-4">
           Tap a challenge above to see how we can help
         </p>
       )}

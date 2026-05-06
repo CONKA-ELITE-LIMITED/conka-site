@@ -83,7 +83,7 @@ export default function ProfessionalsProtocolPage() {
       <nav aria-label="Back to portal" className="px-6 md:px-16 pt-4 pb-2">
         <Link
           href="/professionals"
-          className="font-clinical text-sm opacity-70 hover:opacity-100 transition-opacity underline"
+          className="font-mono text-sm opacity-70 hover:opacity-100 transition-opacity underline"
         >
           Back to portal
         </Link>
@@ -96,7 +96,7 @@ export default function ProfessionalsProtocolPage() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-4 md:mb-6">
             <h2 className="text-xl md:text-2xl font-bold mb-1">Protocols</h2>
-            <p className="font-clinical text-xs md:text-sm opacity-70">
+            <p className="font-mono text-xs md:text-sm opacity-70">
               Mixed plans combining CONKA Flow and CONKA Clear for maximum performance
             </p>
           </div>

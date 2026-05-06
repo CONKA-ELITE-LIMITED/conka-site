@@ -21,7 +21,7 @@ export default function FormulasShowcaseDesktop({ excludeFormulaId }: FormulasSh
           <h2 className="text-4xl lg:text-5xl font-bold mb-3">
             Individual Formulas
           </h2>
-          <p className="font-clinical text-lg md:text-xl opacity-70">
+          <p className="font-mono text-lg md:text-xl opacity-70">
             Start simple. Feel the difference.
           </p>
         </div>

@@ -99,7 +99,7 @@ export default function FormulaCard({
           <div
             className={`w-10 h-10 flex-shrink-0 ${formula.bgColor} text-white rounded-md flex items-center justify-center`}
           >
-            <span className="font-clinical text-sm font-bold">{formula.id}</span>
+            <span className="font-mono text-sm font-bold">{formula.id}</span>
           </div>
           <div className="min-w-0">
             <h3 className="text-xl font-bold font-primary opacity-100 leading-tight">
@@ -112,7 +112,7 @@ export default function FormulaCard({
         {/* Purchase controls */}
         <div className="space-y-4 mb-4">
           <div>
-            <p className="font-clinical text-xs uppercase opacity-70 mb-2">
+            <p className="font-mono text-xs uppercase opacity-70 mb-2">
               Purchase Type
             </p>
             <div className="flex gap-2">
@@ -124,9 +124,9 @@ export default function FormulaCard({
                     : "bg-transparent border-[var(--foreground)]/30 text-[var(--foreground)] hover:border-[var(--foreground)]/50"
                 }`}
               >
-                <span className="font-clinical text-sm font-medium">Subscribe</span>
+                <span className="font-mono text-sm font-medium">Subscribe</span>
                 <span
-                  className="px-2 py-0.5 rounded-full text-white font-clinical text-xs"
+                  className="px-2 py-0.5 rounded-full text-white font-mono text-xs"
                   style={{ backgroundColor: formula.accentColor }}
                 >
                   SAVE {subscriptionSavePercentage}%
@@ -140,13 +140,13 @@ export default function FormulaCard({
                     : "bg-transparent border-[var(--foreground)]/30 text-[var(--foreground)] hover:border-[var(--foreground)]/50"
                 }`}
               >
-                <span className="font-clinical text-sm font-medium">One-off</span>
+                <span className="font-mono text-sm font-medium">One-off</span>
               </button>
             </div>
           </div>
 
           <div>
-            <p className="font-clinical text-xs uppercase opacity-70 mb-2">
+            <p className="font-mono text-xs uppercase opacity-70 mb-2">
               Quantity
             </p>
             <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@ export default function FormulaCard({
               </button>
               <div className="flex-1 text-center">
                 <p className="text-2xl md:text-3xl font-bold">{quantity}</p>
-                <p className="font-clinical text-xs opacity-70">
+                <p className="font-mono text-xs opacity-70">
                   {quantity === 1 ? "box" : "boxes"} · {quantity * 28} shots
                 </p>
               </div>
@@ -174,11 +174,11 @@ export default function FormulaCard({
 
           {useTeamPricing && tier !== undefined && (
             <div className="flex flex-col gap-1">
-              <p className="font-clinical text-xs uppercase opacity-70">
+              <p className="font-mono text-xs uppercase opacity-70">
                 Tier: <span className="font-semibold opacity-100 capitalize">{tier}</span>
               </p>
               {nextTier && (
-                <p className="font-clinical text-sm text-[var(--foreground)] opacity-90">
+                <p className="font-mono text-sm text-[var(--foreground)] opacity-90">
                   Add {nextTier.boxesToNext} more for {nextTier.tierName}: {formatPrice(nextTier.pricePerBoxExVat)}/box ex. VAT
                 </p>
               )}
@@ -187,23 +187,23 @@ export default function FormulaCard({
 
           <div className="pt-5 border-t border-black/5">
             {useTeamPricing && (
-              <p className="font-clinical text-xs opacity-70 mb-2">
+              <p className="font-mono text-xs opacity-70 mb-2">
                 28-shot RRP {formatPrice(rrp28)}
               </p>
             )}
             <div className="flex justify-between items-baseline mb-2">
-              <span className="font-clinical text-sm opacity-70">
+              <span className="font-mono text-sm opacity-70">
                 Per box ({billingText}
                 {selectedPurchaseType === "subscription" && ", delivered monthly"}
                 ):
               </span>
               <span className="text-lg font-bold">
                 {formatPrice(pricePerBox)}
-                {useTeamPricing && <span className="font-clinical text-xs font-normal opacity-70 ml-1">ex. VAT</span>}
+                {useTeamPricing && <span className="font-mono text-xs font-normal opacity-70 ml-1">ex. VAT</span>}
               </span>
             </div>
             <div className="flex justify-between items-baseline">
-              <span className="font-clinical text-base font-semibold">Total:</span>
+              <span className="font-mono text-base font-semibold">Total:</span>
               <div className="flex flex-col items-end">
                 {selectedPurchaseType === "subscription" && (
                   <span className="text-base font-bold line-through opacity-50 mb-1">

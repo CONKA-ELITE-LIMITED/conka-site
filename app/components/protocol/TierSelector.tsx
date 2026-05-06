@@ -40,7 +40,7 @@ export default function TierSelector({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <p className="font-clinical text-xs uppercase opacity-70">Select Your Plan</p>
+      <p className="font-mono text-xs uppercase opacity-70">Select Your Plan</p>
       <div className="grid grid-cols-3 gap-3">
         {availableTiers.map((tier) => {
           const pricing = tierPricing[tier as keyof typeof tierPricing];
@@ -80,7 +80,7 @@ export default function TierSelector({
                     : undefined
                 }
               >
-                <p className="text-base font-bold font-clinical">{tierLabels[tier]}</p>
+                <p className="text-base font-bold font-mono">{tierLabels[tier]}</p>
               </div>
               
               {/* Price & Billing Body */}
@@ -101,7 +101,7 @@ export default function TierSelector({
                 }
               >
                 {purchaseType === "subscription" && (
-                  <p className={`font-clinical text-xs line-through ${isSelected ? "opacity-60" : "opacity-40"}`}>
+                  <p className={`font-mono text-xs line-through ${isSelected ? "opacity-60" : "opacity-40"}`}>
                     {formatPrice(
                       tier in protocolPricing[pricingType]["one-time"]
                         ? (protocolPricing[pricingType]["one-time"] as Record<string, { price: number }>)[tier]?.price || 0
@@ -112,7 +112,7 @@ export default function TierSelector({
                 <p className={`text-xl font-bold mb-0.5 ${purchaseType === "subscription" && !isSelected ? "text-green-600" : ""}`}>
                   {formatPrice(pricing.price)}
                 </p>
-                <p className={`font-clinical text-xs ${isSelected ? "opacity-90" : "opacity-70"}`}>{billingText}</p>
+                <p className={`font-mono text-xs ${isSelected ? "opacity-90" : "opacity-70"}`}>{billingText}</p>
               </div>
             </button>
           );

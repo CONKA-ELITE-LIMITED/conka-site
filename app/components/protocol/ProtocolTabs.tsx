@@ -115,7 +115,7 @@ export default function ProtocolTabs({ protocolId }: ProtocolTabsProps) {
               {protocol.bestFor.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 border border-current rounded-full font-clinical text-xs"
+                  className="px-3 py-1 border border-current rounded-full font-mono text-xs"
                 >
                   {tag}
                 </span>
@@ -135,7 +135,7 @@ export default function ProtocolTabs({ protocolId }: ProtocolTabsProps) {
         return (
           <div className="space-y-4">
             <h3 className="text-lg font-bold mb-4">Dosage Schedule</h3>
-            <p className="font-clinical text-sm opacity-70">
+            <p className="font-mono text-sm opacity-70">
               View the calendar visualization below to see when to take each formula.
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function ProtocolTabs({ protocolId }: ProtocolTabsProps) {
             <div className="space-y-4">
               {protocol.benefits.map((benefit, idx) => (
                 <div key={idx} className="flex items-start gap-4">
-                  <div className="text-[#AAB9BC] text-2xl font-bold font-clinical flex-shrink-0">
+                  <div className="text-[#AAB9BC] text-2xl font-bold font-mono flex-shrink-0">
                     {idx + 1}
                   </div>
                   <div>
@@ -164,7 +164,7 @@ export default function ProtocolTabs({ protocolId }: ProtocolTabsProps) {
         return (
           <div className="space-y-4">
             <h3 className="text-lg font-bold mb-4">Frequently Asked Questions</h3>
-            <p className="font-clinical text-sm opacity-70">
+            <p className="font-mono text-sm opacity-70">
               See the FAQ section below for detailed answers.
             </p>
           </div>
@@ -185,7 +185,7 @@ export default function ProtocolTabs({ protocolId }: ProtocolTabsProps) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-full transition-all font-clinical text-xs ${
+              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-full transition-all font-mono text-xs ${
                 isActive
                   ? "bg-[var(--foreground)] text-[var(--background)]"
                   : "hover:bg-current/10"
