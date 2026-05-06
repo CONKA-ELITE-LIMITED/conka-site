@@ -62,7 +62,7 @@ export default function SynergyChart({ isMobile = false }: SynergyChartProps) {
                 tick={{
                   fill: "currentColor",
                   fontSize: isMobile ? 10 : 12,
-                  fontFamily: "var(--font-ibm-plex-mono)",
+                  fontFamily: "var(--font-jetbrains-mono)",
                 }}
               />
               <PolarRadiusAxis
@@ -71,7 +71,7 @@ export default function SynergyChart({ isMobile = false }: SynergyChartProps) {
                 tick={{
                   fill: "currentColor",
                   fontSize: 10,
-                  fontFamily: "var(--font-ibm-plex-mono)",
+                  fontFamily: "var(--font-jetbrains-mono)",
                 }}
                 tickCount={5}
               />
@@ -102,7 +102,7 @@ export default function SynergyChart({ isMobile = false }: SynergyChartProps) {
               />
               <Legend
                 wrapperStyle={{
-                  fontFamily: "var(--font-ibm-plex-mono)",
+                  fontFamily: "var(--font-jetbrains-mono)",
                   fontSize: isMobile ? 10 : 12,
                 }}
               />
@@ -111,7 +111,7 @@ export default function SynergyChart({ isMobile = false }: SynergyChartProps) {
                   backgroundColor: "var(--brand-tint)",
                   border: "1px solid var(--brand-stroke)",
                   borderRadius: "var(--brand-radius-container)",
-                  fontFamily: "var(--font-ibm-plex-mono)",
+                  fontFamily: "var(--font-jetbrains-mono)",
                   fontSize: 12,
                 }}
                 formatter={(value: number) => [`${value}%`, ""]}
