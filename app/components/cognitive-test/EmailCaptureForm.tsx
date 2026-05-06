@@ -62,11 +62,11 @@ export default function EmailCaptureForm({
   const isFormValid = email.trim() !== "" && validateEmail(email) && consent;
 
   return (
-    <div className="flex flex-col h-full text-black">
+    <div className="flex flex-col h-full text-white">
       {/* Back link */}
       <button
         onClick={onBack}
-        className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/55 hover:text-[#1B2757] transition-colors mb-6 self-start tabular-nums"
+        className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 hover:text-white transition-colors mb-6 self-start tabular-nums"
         type="button"
       >
         <svg
@@ -88,16 +88,16 @@ export default function EmailCaptureForm({
 
       {/* Header */}
       <div className="mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
           Step 01 · Email · Before You Begin
         </p>
         <h3
-          className="brand-h3 text-black mb-2"
+          className="brand-h3 text-white mb-2"
           style={{ letterSpacing: "-0.02em" }}
         >
           We&apos;ll send you the full breakdown.
         </h3>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/50 tabular-nums">
           Detailed results · Personal benchmarks · In-app follow-up
         </p>
       </div>
@@ -108,7 +108,7 @@ export default function EmailCaptureForm({
         <div>
           <label
             htmlFor="email-capture"
-            className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/55 block mb-2 tabular-nums"
+            className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 block mb-2 tabular-nums"
           >
             Email address
           </label>
@@ -121,14 +121,14 @@ export default function EmailCaptureForm({
               setEmail(e.target.value);
               if (emailError) setEmailError("");
             }}
-            className={`w-full border bg-white p-3 text-base text-black focus:outline-none focus:ring-2 focus:ring-[#1B2757]/40 transition-colors ${
-              emailError ? "border-red-500" : "border-black/25 focus:border-[#1B2757]"
+            className={`w-full border bg-white/[0.08] p-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition-colors ${
+              emailError ? "border-red-400" : "border-white/20 focus:border-white/50"
             }`}
             placeholder="you@example.com"
             autoComplete="email"
           />
           {emailError && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-600 mt-2 tabular-nums">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-400 mt-2 tabular-nums">
               {emailError}
             </p>
           )}
@@ -150,9 +150,9 @@ export default function EmailCaptureForm({
               <div
                 className={`w-5 h-5 border flex items-center justify-center transition-colors ${
                   consentError
-                    ? "border-red-500"
-                    : "border-black/25"
-                } ${consent ? "bg-[#1B2757] border-[#1B2757]" : "bg-white"}`}
+                    ? "border-red-400"
+                    : "border-white/30"
+                } ${consent ? "bg-white border-white" : "bg-transparent"}`}
               >
                 {consent && (
                   <svg
@@ -161,7 +161,7 @@ export default function EmailCaptureForm({
                     height="14"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="white"
+                    stroke="black"
                     strokeWidth="3"
                     strokeLinecap="square"
                     strokeLinejoin="miter"
@@ -171,12 +171,12 @@ export default function EmailCaptureForm({
                 )}
               </div>
             </div>
-            <span className="text-sm text-black/75 leading-relaxed">
+            <span className="text-sm text-white/75 leading-relaxed">
               I agree to receive my cognitive test results via email
             </span>
           </label>
           {consentError && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-600 mt-2 ml-8 tabular-nums">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-400 mt-2 ml-8 tabular-nums">
               {consentError}
             </p>
           )}
@@ -189,7 +189,7 @@ export default function EmailCaptureForm({
         <button
           type="submit"
           disabled={!isFormValid}
-          className={`inline-flex items-center justify-center gap-3 w-full bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-6 py-4 lab-clip-tr transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2 ${
+          className={`inline-flex items-center justify-center gap-3 w-full bg-white text-black font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-6 py-4 lab-clip-tr transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 ${
             !isFormValid ? "opacity-40 cursor-not-allowed" : "hover:opacity-85 active:opacity-70"
           }`}
         >

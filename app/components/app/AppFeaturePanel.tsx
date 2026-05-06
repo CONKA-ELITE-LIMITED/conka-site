@@ -168,7 +168,7 @@ function AppFeaturePanelDesktop() {
         style={{ maxWidth: "1280px" }}
       >
         <h1
-          className="brand-h1 text-white text-center mb-10"
+          className="brand-h2 text-white text-center mb-10"
           style={{ letterSpacing: "-0.02em" }}
         >
           The Gold Standard of Cognitive Testing
@@ -229,7 +229,7 @@ function AppFeaturePanelMobile() {
   return (
     <div className="pt-8">
       <h1
-        className="brand-h1 text-white mb-8"
+        className="brand-h2 text-white mb-8"
         style={{ letterSpacing: "-0.02em" }}
       >
         The Gold Standard of Cognitive Testing
