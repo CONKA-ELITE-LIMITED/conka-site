@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
@@ -9,14 +8,6 @@ import { AuthProvider } from "@/app/context/AuthContext";
 import CartDrawer from "@/app/components/CartDrawer";
 import ConvexClientProvider from "@/app/components/ConvexClientProvider";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
-
-const caveat = Caveat({
-  variable: "--font-handwriting",
-  subsets: ["latin"],
-  weight: ["400"],
-  preload: false,
-  display: "swap",
-});
 
 /* Brand design system: Neue Haas Grotesk Display (primary) + JetBrains Mono (data) */
 const neueHaas = localFont({
@@ -158,7 +149,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${caveat.variable} ${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <MetaPageViewTracker />
         <ConvexClientProvider>

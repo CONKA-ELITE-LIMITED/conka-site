@@ -72,7 +72,7 @@ export default function NavigationMobile({
       {!hideBanner && bannerConfig && <Banner config={bannerConfig} />}
 
       <header className="relative w-full bg-white border-b border-black/12">
-        <div className="px-[var(--premium-gutter-mobile-tight)] md:px-16 py-1 flex items-center justify-between min-h-[4.5rem]">
+        <div className="px-[0.25rem] md:px-16 py-1 flex items-center justify-between min-h-[4.5rem]">
           <div className="xl:hidden w-10 flex-shrink-0 flex items-center justify-start">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

@@ -319,7 +319,7 @@ export default function LandingTestimonials({
       <div className="mb-8">
         <h2
           className="brand-h2 mb-2"
-          style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+          style={{ letterSpacing: "var(--tracking-tight)" }}
         >
           Real people. Real results.
         </h2>

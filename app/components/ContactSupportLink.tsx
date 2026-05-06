@@ -59,20 +59,20 @@ const HelpIcon = () => (
 
 const variantStyles = {
   "button-primary":
-    "inline-flex items-center gap-2 rounded-[var(--premium-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-6 py-2.5 premium-body-sm font-semibold text-white hover:opacity-90 transition-opacity",
+    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-6 py-2.5 brand-caption font-semibold text-white hover:opacity-90 transition-opacity",
   "button-secondary":
-    "inline-flex items-center gap-2 rounded-[var(--premium-radius-interactive)] border-2 border-[var(--color-bone)] px-6 py-2.5 premium-body-sm font-semibold text-[var(--color-bone)] hover:bg-[var(--color-bone)]/10 transition-colors",
+    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-bone)] px-6 py-2.5 brand-caption font-semibold text-[var(--color-bone)] hover:bg-[var(--color-bone)]/10 transition-colors",
   "button-primary-small":
-    "inline-flex items-center gap-2 rounded-[var(--premium-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-5 py-2.5 premium-body-sm font-semibold text-white hover:opacity-90 transition-opacity",
+    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-5 py-2.5 brand-caption font-semibold text-white hover:opacity-90 transition-opacity",
   "button-outline":
-    "inline-flex items-center gap-2 rounded-[var(--premium-radius-interactive)] border-2 border-[var(--color-ink)]/40 bg-[var(--color-bone)] px-6 py-2.5 premium-body-sm font-semibold text-[var(--color-ink)] hover:bg-[var(--color-premium-stroke)] transition-colors",
+    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-ink)]/40 bg-[var(--color-bone)] px-6 py-2.5 brand-caption font-semibold text-[var(--color-ink)] hover:bg-[var(--brand-stroke)] transition-colors",
   inline: "underline font-medium",
   "link-blue":
-    "premium-body-sm text-[var(--color-neuro-blue-dark)] font-medium hover:underline inline-flex items-center gap-1.5",
+    "brand-caption text-[var(--color-neuro-blue-dark)] font-medium hover:underline inline-flex items-center gap-1.5",
   "button-outline-subtle":
-    "inline-flex items-center justify-center gap-2 rounded-[var(--premium-radius-interactive)] border border-[var(--color-premium-stroke)] py-2.5 premium-body-sm font-semibold text-[var(--color-ink)] hover:bg-[var(--color-premium-stroke)] transition-colors",
+    "inline-flex items-center justify-center gap-2 rounded-[var(--brand-radius-interactive)] border border-[var(--brand-stroke)] py-2.5 brand-caption font-semibold text-[var(--color-ink)] hover:bg-[var(--brand-stroke)] transition-colors",
   "button-primary-small-full":
-    "inline-flex items-center justify-center gap-2 rounded-[var(--premium-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-4 py-2.5 premium-body-sm font-semibold text-white hover:opacity-90 transition-opacity w-full",
+    "inline-flex items-center justify-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-4 py-2.5 brand-caption font-semibold text-white hover:opacity-90 transition-opacity w-full",
 } as const;
 
 export type ContactSupportVariant = keyof typeof variantStyles;

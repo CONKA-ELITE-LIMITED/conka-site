@@ -30,10 +30,10 @@ export default function ProtocolCard({
       className="group block"
       onClick={onClick}
     >
-      <div className="flex flex-col border border-[var(--color-premium-stroke)] rounded-[var(--premium-radius-card)] overflow-hidden bg-white p-3 h-full">
+      <div className="flex flex-col border border-[var(--brand-stroke)] rounded-[var(--brand-radius-card)] overflow-hidden bg-white p-3 h-full">
         {/* Image Container with Hover Overlay */}
         <div
-          className="relative aspect-square mb-4 rounded-[var(--premium-radius-nested)] overflow-hidden"
+          className="relative aspect-square mb-4 rounded-[var(--brand-radius-container)] overflow-hidden"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

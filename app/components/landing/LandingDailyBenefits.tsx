@@ -116,7 +116,7 @@ export default function LandingDailyBenefits() {
           </p>
           <h2
             className="brand-h1 mb-2"
-            style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+            style={{ letterSpacing: "var(--tracking-tight)" }}
           >
             Daily habit. Lifelong benefits.
           </h2>

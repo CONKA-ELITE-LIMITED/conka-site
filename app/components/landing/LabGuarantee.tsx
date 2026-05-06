@@ -27,7 +27,7 @@ export default function LabGuarantee({
       <div className="mb-8">
         <h2
           className="brand-h1 mb-2"
-          style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+          style={{ letterSpacing: "var(--tracking-tight)" }}
         >
           {GUARANTEE_DAYS}-Day Risk Free Trial
         </h2>

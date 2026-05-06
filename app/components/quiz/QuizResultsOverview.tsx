@@ -62,7 +62,7 @@ export default function QuizResultsOverview({
             Quiz Complete
           </p>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">Your Results</h1>
-          <p className="font-commentary text-lg opacity-70">
+          <p className="font-mono text-lg opacity-70">
             Here&apos;s how each protocol matches your needs
           </p>
         </div>
@@ -172,7 +172,7 @@ export default function QuizResultsOverview({
 
         {/* Scroll Prompt */}
         <div className="text-center mt-8 animate-bounce-slow">
-          <p className="font-commentary text-sm opacity-60 mb-2">
+          <p className="font-mono text-sm opacity-60 mb-2">
             scroll down for your personalized recommendation
           </p>
           <svg

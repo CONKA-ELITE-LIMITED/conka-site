@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./premium-base.css";
 @import "./brand-base.css";
 
 :root {
@@ -15,7 +14,6 @@
 
   /* Typography */
   --font-primary: var(--font-brand-primary);
-  --font-commentary: var(--font-handwriting);
 }
 
 @theme inline {
@@ -62,9 +60,6 @@ body {
   font-family: var(--font-brand-primary), sans-serif;
 }
 
-.font-commentary {
-  font-family: var(--font-handwriting), cursive;
-}
 
 
 /* Smooth Theme Transitions */
@@ -319,7 +314,7 @@ body {
   left: 0;
   top: -0.5rem;
   font-size: 3rem;
-  font-family: var(--font-handwriting), cursive;
+  font-family: var(--font-jetbrains-mono), monospace;
   opacity: 0.3;
   line-height: 1;
 }

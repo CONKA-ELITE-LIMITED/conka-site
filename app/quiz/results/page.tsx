@@ -255,7 +255,7 @@ export default function QuizResultsPage() {
 
         {/* Retake Quiz CTA */}
         <section className="px-4 md:px-8 py-12 text-center">
-          <p className="font-commentary text-base opacity-60 mb-4">
+          <p className="font-mono text-base opacity-60 mb-4">
             Not sure about your results?
           </p>
           <button

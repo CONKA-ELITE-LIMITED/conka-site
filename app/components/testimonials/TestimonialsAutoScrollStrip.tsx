@@ -36,7 +36,7 @@ export default function TestimonialsAutoScrollStrip({
 
   return (
     <>
-      {/* Header: will be wrapped in .premium-track by page wrapper */}
+      {/* Header: will be wrapped in .brand-track by page wrapper */}
       <div className="mb-8 md:mb-10">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
           {"// Real people, real results · PROOF-03"}

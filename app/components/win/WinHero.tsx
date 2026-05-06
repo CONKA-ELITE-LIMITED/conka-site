@@ -29,7 +29,7 @@ export default function WinHero() {
               Win a free month of CONKA
             </h1>
           </div>
-          <p className="font-commentary text-xl md:text-2xl mt-2">
+          <p className="font-mono text-xl md:text-2xl mt-2">
             a clinically designed nootropic protocol — on us
           </p>
           <p className="font-mono text-sm opacity-70 mt-4">

@@ -18,12 +18,11 @@
  *   3. LEGACY COMPAT + DEPRECATION CANDIDATES — tokens that exist only
  *      for components mid-migration. Marked with `@deprecated` headers.
  *
- * Companion file: `app/premium-base.css` (legacy `premium-*` classes).
  * All new work goes here and adds the `.brand-clinical` scope.
  *
  * Typography:
- *   Primary: Neue Haas Grotesk (commercial — next/font/local)
- *   Data:    JetBrains Mono (next/font/google, var `--font-jetbrains-mono`)
+ *   Primary: Neue Haas Grotesk (local, next/font/local)
+ *   Data:    JetBrains Mono (local, next/font/local)
  */
 
 /* ================================================================
@@ -222,6 +221,15 @@
   margin-bottom: var(--brand-text-gap);
 }
 
+.brand-h4 {
+  font-family: var(--font-brand-primary);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--brand-text-gap);
+}
+
 .brand-body {
   font-family: var(--font-brand-primary);
   font-size: var(--brand-body-size);
@@ -378,6 +386,45 @@
 }
 
 /* ================================================================
+ * LAYER 2.5 — APP DARK SCOPE
+ * ================================================================
+ * The /app page aesthetic. Background: #0a0a0a (slightly softer
+ * than pure black). All surfaces use white/opacity utilities
+ * applied directly in components — no separate CSS classes needed.
+ *
+ * Active pages: /app
+ *
+ * Palette (Tailwind utility reference):
+ *   bg-white/10       card/tile surface
+ *   border-white/12   card border (hairline)
+ *   bg-white/[0.07]   inactive tab / ghost surface
+ *   text-white/55     body copy
+ *   text-white/40     eyebrow / label
+ *   text-white/35     very muted (footnotes, tags)
+ *   text-white        primary text, active state
+ *   bg-white          primary CTA fill (pair with text-black)
+ *
+ * Full spec: docs/branding/DESIGN_SYSTEM.md section 10
+ * ================================================================ */
+
+.brand-app-dark {
+  --app-bg: #0a0a0a;
+  --app-surface: rgba(255, 255, 255, 0.10);
+  --app-border: rgba(255, 255, 255, 0.12);
+  --app-surface-inactive: rgba(255, 255, 255, 0.07);
+  --app-text-body: rgba(255, 255, 255, 0.55);
+  --app-text-label: rgba(255, 255, 255, 0.40);
+  --app-text-muted: rgba(255, 255, 255, 0.35);
+}
+
+/* SVG dot grid overlay for .brand-app-dark pages. Set background-color
+   separately (bg-[#0a0a0a]). 1px white dots at 20px pitch. */
+.app-dot-grid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255%2C255%2C255%2C0.07)'/%3E%3C/svg%3E");
+  background-size: 20px 20px;
+}
+
+/* ================================================================
  * LAYER 3 — LEGACY COMPAT + DEPRECATION CANDIDATES
  * ================================================================
  * Tokens and components kept only to unblock migration. Each block
@@ -473,3 +520,4 @@
   from { stroke-dashoffset: 20; }
   to   { stroke-dashoffset: 0; }
 }
+

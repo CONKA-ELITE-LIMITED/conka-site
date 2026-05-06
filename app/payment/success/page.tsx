@@ -17,12 +17,12 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
   const { order_id } = await searchParams;
 
   return (
-    <main className="premium-section-luxury premium-bg-bone min-h-screen flex items-center justify-center">
-      <div className="premium-track text-center">
-        <h1 className="premium-section-heading text-[var(--color-ink)] mb-4">
+    <main className="brand-section brand-bg-white min-h-screen flex items-center justify-center">
+      <div className="brand-track text-center">
+        <h1 className="brand-h2 text-[var(--color-ink)] mb-4">
           Payment successful
         </h1>
-        <p className="premium-body mx-auto mb-2">
+        <p className="brand-body mx-auto mb-2">
           Thank you for your purchase. Your Conka points will be added to your account shortly.
         </p>
         {order_id && (
