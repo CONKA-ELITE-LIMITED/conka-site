@@ -45,13 +45,13 @@ export default function CognitiveTestLoader({
   const isComplete = progress >= 100;
 
   return (
-    <div className="bg-white border border-black/12 p-10 flex flex-col items-start">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6 tabular-nums">
+    <div className="bg-white/10 border border-white/12 p-10 flex flex-col items-start">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-6 tabular-nums">
         Processing · Cognetivity SDK · {progress.toString().padStart(3, "0")}%
       </p>
 
-      {/* Navy tile icon */}
-      <div className="w-11 h-11 flex items-center justify-center bg-[#1B2757] text-white mb-6 lab-clip-tr">
+      {/* Icon tile */}
+      <div className="w-11 h-11 flex items-center justify-center bg-white/10 text-white mb-6 lab-clip-tr">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="22"
@@ -78,16 +78,16 @@ export default function CognitiveTestLoader({
 
       {/* Stage text */}
       <p
-        className="brand-h4 text-black mb-6"
+        className="brand-h4 text-white mb-6"
         style={{ letterSpacing: "-0.02em" }}
       >
         {stages[stage]}.
       </p>
 
       {/* Progress bar */}
-      <div className="h-px w-full bg-black/10 relative overflow-hidden mb-4">
+      <div className="h-px w-full bg-white/15 relative overflow-hidden mb-4">
         <div
-          className="absolute inset-y-0 left-0 bg-[#1B2757] transition-[width] duration-100 ease-out"
+          className="absolute inset-y-0 left-0 bg-white transition-[width] duration-100 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -98,7 +98,7 @@ export default function CognitiveTestLoader({
           <span
             key={dot}
             style={{
-              color: stage >= dot ? "#1B2757" : "rgba(0,0,0,0.3)",
+              color: stage >= dot ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.3)",
             }}
           >
             0{dot + 1}

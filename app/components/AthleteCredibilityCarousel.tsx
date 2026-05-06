@@ -212,31 +212,21 @@ export default function AthleteCredibilityCarousel() {
       {/* Feature slot */}
       <div className="bg-white border border-black/12 overflow-hidden mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch">
-          {/* Portrait — crossfades */}
+          {/* Portrait — single active image, swaps on selection */}
           <div
             className="relative aspect-square lg:aspect-auto lg:min-h-[480px] bg-[var(--brand-tint)] border-b lg:border-b-0 lg:border-r border-black/8 overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {ATHLETES.map((a, i) => (
-              <div
-                key={a.name}
-                className={`absolute inset-0 transition-opacity duration-300 ${
-                  i === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-                }`}
-                aria-hidden={i !== activeIndex}
-              >
-                <Image
-                  src={a.image}
-                  alt={`${a.name} — ${a.role}`}
-                  fill
-                  loading={i === 0 ? "eager" : "lazy"}
-                  priority={i === 0}
-                  className="object-contain"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                />
-              </div>
-            ))}
+            <Image
+              key={active.name}
+              src={active.image}
+              alt={`${active.name} — ${active.role}`}
+              fill
+              loading="lazy"
+              className="object-contain"
+              sizes="(max-width: 1024px) 100vw, 45vw"
+            />
           </div>
 
           {/* Text column */}

@@ -247,15 +247,23 @@ export default function LabCaseStudies({
         </div>
         {/* Dot indicators */}
         <div className="flex justify-center gap-2 mt-4">
-          {teaserAthletes.map((_, idx) => (
-            <div
-              key={idx}
-              className={`h-1.5 transition-all ${
-                currentIndex === idx ? "bg-black w-6" : "bg-black/25 w-1.5"
-              }`}
-              aria-hidden
-            />
-          ))}
+          {teaserAthletes.map((_, idx) => {
+            const isActive = currentIndex === idx;
+            return (
+              <div
+                key={idx}
+                className={`h-1.5 w-6 transition-colors duration-300 ${
+                  isActive ? "bg-black" : "bg-black/25"
+                }`}
+                style={{
+                  transform: isActive ? "scaleX(1)" : "scaleX(0.25)",
+                  transformOrigin: "left",
+                  transition: "transform 300ms ease, background-color 300ms ease",
+                }}
+                aria-hidden
+              />
+            );
+          })}
         </div>
       </div>
 

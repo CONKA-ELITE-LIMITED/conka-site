@@ -1,11 +1,8 @@
-"use client";
-
 import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHero from "./components/landing/LandingHero";
 
-// Dynamically import heavy components to reduce initial bundle size
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
   { loading: () => <div className="h-[1400px] lg:h-[1000px]" /> },
