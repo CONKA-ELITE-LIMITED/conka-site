@@ -5,8 +5,8 @@ interface AppInstallButtonsProps {
   buttonClassName?: string;
   iconSize?: number;
   inverted?: boolean;
-  /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) */
-  variant?: "gradient" | "clinical";
+  /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) | 'clinical-dark' (white on black) */
+  variant?: "gradient" | "clinical" | "clinical-dark";
 }
 
 const APP_STORE_URL = "https://apps.apple.com/gb/app/conka-app/id6450399391";
@@ -43,6 +43,39 @@ export function AppInstallButtons({
   inverted = false,
   variant = "gradient",
 }: AppInstallButtonsProps) {
+  if (variant === "clinical-dark") {
+    return (
+      <div className={`flex flex-row flex-wrap gap-3 items-center ${className}`}>
+        <a
+          href={APP_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download CONKA app from the App Store"
+          className={`group relative inline-flex items-center gap-2.5 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black bg-white hover:bg-white/90 transition-colors lab-clip-tr ${buttonClassName}`}
+        >
+          <AppStoreIcon size={iconSize} />
+          <span>App Store</span>
+          <span aria-hidden className="text-black/50">
+            ↗
+          </span>
+        </a>
+        <a
+          href={PLAY_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download CONKA app from Google Play"
+          className={`group relative inline-flex items-center gap-2.5 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-white bg-transparent border border-white/40 hover:border-white/70 hover:bg-white/5 transition-colors lab-clip-tr ${buttonClassName}`}
+        >
+          <PlayStoreIcon size={iconSize} />
+          <span>Play Store</span>
+          <span aria-hidden className="text-white/50">
+            ↗
+          </span>
+        </a>
+      </div>
+    );
+  }
+
   if (variant === "clinical") {
     return (
       <div className={`flex flex-row flex-wrap gap-3 items-center ${className}`}>

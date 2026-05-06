@@ -8,17 +8,17 @@ const BULLETS = [
 
 export default function CognitiveTestAppPromo() {
   return (
-    <div className="bg-white border border-black/12 p-5 lg:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
+    <div className="bg-white/[0.04] border border-white/12 p-5 lg:p-6">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
         Get the full experience · CONKA App · iOS & Android
       </p>
       <h4
-        className="brand-h4 text-black mb-3 max-w-[24ch]"
+        className="brand-h4 text-white mb-3 max-w-[24ch]"
         style={{ letterSpacing: "-0.02em" }}
       >
         The full speed-of-processing game in the CONKA app.
       </h4>
-      <p className="text-sm text-black/75 leading-relaxed mb-5 max-w-xl">
+      <p className="text-sm text-white/70 leading-relaxed mb-5 max-w-xl">
         This was a 30-second snapshot. The full game gives you detailed insights
         and tracks how your performance changes with lifestyle factors.
       </p>
@@ -27,8 +27,8 @@ export default function CognitiveTestAppPromo() {
       <ul className="flex flex-wrap gap-x-6 gap-y-2 mb-6">
         {BULLETS.map((b) => (
           <li key={b} className="flex items-center gap-2">
-            <span className="inline-block w-1.5 h-1.5 bg-[#1B2757]" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60 tabular-nums">
+            <span className="inline-block w-1.5 h-1.5 bg-white/50" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
               {b}
             </span>
           </li>
@@ -41,7 +41,7 @@ export default function CognitiveTestAppPromo() {
           href="https://apps.apple.com/gb/app/conka-app/id6450399391"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-3 bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-opacity hover:opacity-85 active:opacity-70"
+          className="inline-flex items-center justify-center gap-3 bg-white text-black font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-opacity hover:opacity-85 active:opacity-70"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@ export default function CognitiveTestAppPromo() {
           href="https://play.google.com/store/apps/details?id=com.conka.conkaApp"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-3 bg-white border border-[#1B2757] text-[#1B2757] font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-[#1B2757] hover:text-white"
+          className="inline-flex items-center justify-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
