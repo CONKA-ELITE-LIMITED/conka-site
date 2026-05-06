@@ -6,6 +6,20 @@
 
 ## May 2026
 
+### 2026-05-06 -- CSS system consolidated: premium-base.css deleted, component graveyard cleared
+
+**`premium-base.css` fully deprecated and deleted.** Migration completed in three buckets:
+
+- **Bucket 1 -- orphaned components deleted:** Entire `app/components/shop/` directory (ShopHero, FormulasShowcase, FormulaPanel and all variants -- TODO #7 complete). `protocol/ProtocolBenefits`, `ProtocolSectionPlaceholder`. `protocol/why/CycleBreak`, `CycleRecognition`, `CycleTransformation`, `CycleTrap` (CycleBreakDesktop + Mobile retained, still have consumers). 10 product components confirmed zero-consumer and deleted: `ClinicalStudyCard`, `ProductTabs`, `ProtocolBenefitsMobile`, `FormulaBenefitsMobile`, `FormulaIngredientsWithToggle`, `HowItWorks`, `PackSelectorPremium`, `PurchaseToggle`.
+
+- **Bucket 2 -- active files migrated:** 14 files with `premium-*` class usages updated to `brand-*` equivalents. Payment pages (`cancel`, `success`, `error`): `premium-section-luxury` → `brand-section`, `premium-bg-bone` → `brand-bg-white`, `premium-track` → `brand-track`, `premium-section-heading` → `brand-h2`, `premium-body` → `brand-body`. Science page: same swaps, dead modifier classes removed. Landing components (5): `--letter-spacing-premium-title` → `--tracking-tight`. Navigation (`FormulaCardCompact`, `ProtocolCard`): CSS vars swapped to `--brand-radius-*` and `--brand-stroke`. `NavigationMobile` + `ProductImageSlideshow`: `--premium-gutter-mobile-tight` hardcoded to `0.25rem`. `ContactSupportLink`: `premium-body-sm` → `brand-caption`, radius and stroke vars updated.
+
+- **Bucket 3 -- CSS layer deleted:** Layer 4 (Soft-Tech Luxury legacy block, ~330 lines) removed from `brand-base.css`. `@import "./premium-base.css"` removed from `globals.css`. `premium-base.css` stub deleted.
+
+**Result:** Zero `premium-*` references anywhere in the codebase. `globals.css` now imports only `tailwindcss` and `brand-base.css`. `brand-base.css` is the single CSS source.
+
+---
+
 ### 2026-05-06 -- Font system completed: Neue Haas + JetBrains Mono only, all Google fonts removed
 
 Completed the font system unification. The site now ships exactly two fonts, both self-hosted local fonts with no external network dependency.
