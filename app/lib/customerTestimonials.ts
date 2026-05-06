@@ -69,4 +69,13 @@ export const CURATED_TESTIMONIALS: Testimonial[] = [
     photo: "/testimonials/dtc/SamJ.jpg",
     productLabel: "Flow + Clear",
   },
+  {
+    name: "Aaron H.",
+    rating: 5,
+    date: "2026-04-28",
+    headline: "Performance without the burnout",
+    body: "I work in a high-performance environment with long hours, and I'm also someone who tries to fit a lot into life outside of work. Staying focused all day isn't a nice-to-have. It's essential.\n\nI used to rely on coffee to get through it, but that third cup always came with a trade-off, especially when it came to sleep. Swapping that for Conka in the afternoon has made a real difference. My energy feels more consistent, and I can stay sharp later in the day without the downside.\n\nThe app was an unexpected bonus. I used it as a way to understand how things like sleep, stress, and training were actually impacting my cognitive performance, almost like a mental equivalent of a wearable. That feedback made it much easier to dial things in.\n\nFor me, it's about being able to perform at a high level across everything: work, social life, and training, without burning out.",
+    photo: "/testimonials/dtc/AaronH.jpg",
+    productLabel: "Flow + Clear",
+  },
 ];
