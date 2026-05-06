@@ -74,6 +74,27 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Shop System Cleanup
+
+### 7. Delete orphaned shop components
+
+**Status:** Deferred
+**Files (all in `app/components/shop/`):**
+- `ShopHero.tsx`, `ShopHeroDesktop.tsx`, `ShopHeroMobile.tsx` (if exists)
+- `FormulasShowcase.tsx`, `FormulasShowcaseDesktop.tsx`, `FormulasShowcaseMobile.tsx`
+- `FormulaPanel.tsx`
+- `index.ts` (barrel export)
+
+**Context:** `/shop/page.tsx` was deleted in May 2026 and `/shop` + `/shop/:path*` now redirect to `/conka-both` via `next.config.ts`. The components above were only consumed by `/shop/page.tsx` (verified at deletion time) and are now orphaned.
+
+**What unblocks it:**
+- Verify nothing else has started importing them since deletion (`grep -rn "from.*shop/" app/`)
+- Once confirmed orphaned, delete the entire `app/components/shop/` directory
+
+**Why deferred:** Same safety-net principle as the protocol cleanup — leave the components in place for one release cycle in case anything was missed.
+
+---
+
 ## B2B / Professionals Portal
 
 ### 6. Replace protocol options in `/professionals` with Flow / Clear / Both

@@ -35,7 +35,7 @@ export default function ProtocolBenefits({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
             {benefitStats.map((item, idx) => (
               <div key={idx} className="premium-box p-4 text-center">
-                <p className="font-clinical text-2xl md:text-3xl font-bold text-current leading-tight">
+                <p className="font-mono text-2xl md:text-3xl font-bold text-current leading-tight">
                   {item.stat}
                 </p>
                 <p className="premium-data text-sm opacity-70 mt-0.5">
@@ -84,7 +84,7 @@ export default function ProtocolBenefits({
           <div className="premium-box overflow-hidden">
             <div className={`${FORMULA_COLORS["01"].bg} p-4 text-white`}>
               <h3 className="text-xl font-bold">CONKA Flow Benefits</h3>
-              <p className="font-clinical text-sm opacity-80">
+              <p className="font-mono text-sm opacity-80">
                 Energy & Resilience
               </p>
             </div>
@@ -92,13 +92,13 @@ export default function ProtocolBenefits({
               {formula01.benefits.slice(0, 3).map((benefit, idx) => (
                 <div key={idx} className="flex items-start gap-3">
                   <span
-                    className={`text-2xl font-bold font-clinical ${FORMULA_COLORS["01"].text}`}
+                    className={`text-2xl font-bold font-mono ${FORMULA_COLORS["01"].text}`}
                   >
                     {benefit.stat}
                   </span>
                   <div>
                     <p className="font-bold">{benefit.title}</p>
-                    <p className="font-clinical text-xs opacity-70">
+                    <p className="font-mono text-xs opacity-70">
                       {benefit.annotation}
                     </p>
                   </div>
@@ -106,7 +106,7 @@ export default function ProtocolBenefits({
               ))}
               <a
                 href="/conka-flow"
-                className="inline-flex items-center gap-2 font-clinical text-sm hover:opacity-70 transition-all mt-4"
+                className="inline-flex items-center gap-2 font-mono text-sm hover:opacity-70 transition-all mt-4"
               >
                 Learn more about CONKA Flow
                 <svg
@@ -130,7 +130,7 @@ export default function ProtocolBenefits({
           <div className="premium-box overflow-hidden">
             <div className={`${FORMULA_COLORS["02"].bg} p-4 text-white`}>
               <h3 className="text-xl font-bold">CONKA Clear Benefits</h3>
-              <p className="font-clinical text-sm opacity-80">
+              <p className="font-mono text-sm opacity-80">
                 Clarity & Performance
               </p>
             </div>
@@ -138,13 +138,13 @@ export default function ProtocolBenefits({
               {formula02.benefits.slice(0, 3).map((benefit, idx) => (
                 <div key={idx} className="flex items-start gap-3">
                   <span
-                    className={`text-2xl font-bold font-clinical ${FORMULA_COLORS["02"].text}`}
+                    className={`text-2xl font-bold font-mono ${FORMULA_COLORS["02"].text}`}
                   >
                     {benefit.stat}
                   </span>
                   <div>
                     <p className="font-bold">{benefit.title}</p>
-                    <p className="font-clinical text-xs opacity-70">
+                    <p className="font-mono text-xs opacity-70">
                       {benefit.annotation}
                     </p>
                   </div>
@@ -152,7 +152,7 @@ export default function ProtocolBenefits({
               ))}
               <a
                 href="/conka-clarity"
-                className="inline-flex items-center gap-2 font-clinical text-sm hover:opacity-70 transition-all mt-4"
+                className="inline-flex items-center gap-2 font-mono text-sm hover:opacity-70 transition-all mt-4"
               >
                 Learn more about CONKA Clear
                 <svg

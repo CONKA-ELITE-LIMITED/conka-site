@@ -78,7 +78,7 @@ export default function BannerMobile({ config }: BannerMobileProps) {
                       text: ` • ${seg.text}`,
                     })),
                   ],
-                  "font-clinical text-xs whitespace-nowrap text-white",
+                  "font-mono text-xs whitespace-nowrap text-white",
                 )}
                 {renderTextSegments(
                   [
@@ -88,7 +88,7 @@ export default function BannerMobile({ config }: BannerMobileProps) {
                       text: ` • ${seg.text}`,
                     })),
                   ],
-                  "font-clinical text-xs whitespace-nowrap text-white",
+                  "font-mono text-xs whitespace-nowrap text-white",
                 )}
               </div>
             </div>
@@ -159,14 +159,14 @@ export default function BannerMobile({ config }: BannerMobileProps) {
               <div className="flex items-center gap-2 flex-wrap">
                 {renderTextSegments(
                   mobileContent.text,
-                  "font-clinical text-xs text-white",
+                  "font-mono text-xs text-white",
                 )}
               </div>
               {mobileSecondaryText && (
                 <div className="flex items-center gap-2 mt-0.5">
                   {renderTextSegments(
                     mobileSecondaryText,
-                    "font-clinical text-xs text-white opacity-80",
+                    "font-mono text-xs text-white opacity-80",
                   )}
                 </div>
               )}

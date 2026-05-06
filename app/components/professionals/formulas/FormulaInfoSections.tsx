@@ -249,13 +249,13 @@ export function BenefitsSection({
               <div key={idx} className="neo-box p-4 md:p-5">
                 <div className="flex items-start gap-4">
                   <div
-                    className={`${currentColor.text} text-3xl font-bold font-clinical flex-shrink-0`}
+                    className={`${currentColor.text} text-3xl font-bold font-mono flex-shrink-0`}
                   >
                     {benefit.stat}
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-base mb-1">{benefit.title}</p>
-                    <p className="font-clinical text-xs opacity-70 mb-2">
+                    <p className="font-mono text-xs opacity-70 mb-2">
                       {benefit.annotation}
                     </p>
                     <p className="text-sm opacity-80">{benefit.description}</p>
@@ -271,13 +271,13 @@ export function BenefitsSection({
               <div key={idx} className="neo-box p-4 md:p-5">
                 <div className="flex items-start gap-4">
                   <div
-                    className={`${flowColor.text} text-3xl font-bold font-clinical flex-shrink-0`}
+                    className={`${flowColor.text} text-3xl font-bold font-mono flex-shrink-0`}
                   >
                     {benefit.stat}
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-base mb-1">{benefit.title}</p>
-                    <p className="font-clinical text-xs opacity-70 mb-2">
+                    <p className="font-mono text-xs opacity-70 mb-2">
                       {benefit.annotation}
                     </p>
                     <p className="text-sm opacity-80">{benefit.description}</p>
@@ -296,13 +296,13 @@ export function BenefitsSection({
               <div key={idx} className="neo-box p-4 md:p-5">
                 <div className="flex items-start gap-4">
                   <div
-                    className={`${clearColor.text} text-3xl font-bold font-clinical flex-shrink-0`}
+                    className={`${clearColor.text} text-3xl font-bold font-mono flex-shrink-0`}
                   >
                     {benefit.stat}
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-base mb-1">{benefit.title}</p>
-                    <p className="font-clinical text-xs opacity-70 mb-2">
+                    <p className="font-mono text-xs opacity-70 mb-2">
                       {benefit.annotation}
                     </p>
                     <p className="text-sm opacity-80">{benefit.description}</p>
@@ -339,7 +339,7 @@ export function IngredientsSection({
             </h2>
             <Link
               href="/ingredients"
-              className="text-sm md:text-base font-clinical underline opacity-90 hover:opacity-100 transition-opacity"
+              className="text-sm md:text-base font-mono underline opacity-90 hover:opacity-100 transition-opacity"
             >
               View full ingredients breakdown →
             </Link>
@@ -362,12 +362,12 @@ export function IngredientsSection({
                     <div>
                       <span className="font-medium text-sm">{ing.name}</span>
                       {ing.part && (
-                        <span className="font-clinical text-xs opacity-70 ml-2">
+                        <span className="font-mono text-xs opacity-70 ml-2">
                           – {ing.part}
                         </span>
                       )}
                     </div>
-                    <span className="font-clinical font-medium text-sm">
+                    <span className="font-mono font-medium text-sm">
                       {ing.percentage}
                     </span>
                   </div>
@@ -392,12 +392,12 @@ export function IngredientsSection({
                     <div>
                       <span className="font-medium text-sm">{ing.name}</span>
                       {ing.part && (
-                        <span className="font-clinical text-xs opacity-70 ml-2">
+                        <span className="font-mono text-xs opacity-70 ml-2">
                           – {ing.part}
                         </span>
                       )}
                     </div>
-                    <span className="font-clinical font-medium text-sm">
+                    <span className="font-mono font-medium text-sm">
                       {ing.percentage}
                     </span>
                   </div>
@@ -425,12 +425,12 @@ export function IngredientsSection({
                     <div>
                       <span className="font-medium text-sm">{ing.name}</span>
                       {ing.part && (
-                        <span className="font-clinical text-xs opacity-70 ml-2">
+                        <span className="font-mono text-xs opacity-70 ml-2">
                           – {ing.part}
                         </span>
                       )}
                     </div>
-                    <span className="font-clinical font-medium text-sm">
+                    <span className="font-mono font-medium text-sm">
                       {ing.percentage}
                     </span>
                   </div>
@@ -549,7 +549,7 @@ export function TasteSection({
           <div className="md:hidden space-y-4">
             <div className="neo-box p-4 md:p-5">
               <div className="flex items-center justify-between mb-4">
-                <p className="font-clinical text-sm opacity-70">Tastes Like:</p>
+                <p className="font-mono text-sm opacity-70">Tastes Like:</p>
                 <p className="font-commentary text-xl md:text-2xl">
                   {currentFormula.taste}
                 </p>
@@ -564,7 +564,7 @@ export function TasteSection({
                   <div className="w-10 h-10 mb-2 flex items-center justify-center opacity-60">
                     {char.icon}
                   </div>
-                  <p className="font-clinical text-xs font-medium">
+                  <p className="font-mono text-xs font-medium">
                     {char.label}
                   </p>
                 </div>
@@ -577,7 +577,7 @@ export function TasteSection({
           <div className="hidden md:block space-y-4">
             <div className="neo-box p-4 md:p-5">
               <div className="flex items-center justify-between mb-4">
-                <p className="font-clinical text-sm opacity-70">Tastes Like:</p>
+                <p className="font-mono text-sm opacity-70">Tastes Like:</p>
                 <p className="font-commentary text-xl md:text-2xl">
                   {flowFormula.taste}
                 </p>
@@ -592,7 +592,7 @@ export function TasteSection({
                   <div className="w-10 h-10 mb-2 flex items-center justify-center opacity-60">
                     {char.icon}
                   </div>
-                  <p className="font-clinical text-xs font-medium">
+                  <p className="font-mono text-xs font-medium">
                     {char.label}
                   </p>
                 </div>
@@ -607,7 +607,7 @@ export function TasteSection({
           <div className="hidden md:block space-y-4">
             <div className="neo-box p-4 md:p-5">
               <div className="flex items-center justify-between mb-4">
-                <p className="font-clinical text-sm opacity-70">Tastes Like:</p>
+                <p className="font-mono text-sm opacity-70">Tastes Like:</p>
                 <p className="font-commentary text-xl md:text-2xl">
                   {clearFormula.taste}
                 </p>
@@ -622,7 +622,7 @@ export function TasteSection({
                   <div className="w-10 h-10 mb-2 flex items-center justify-center opacity-60">
                     {char.icon}
                   </div>
-                  <p className="font-clinical text-xs font-medium">
+                  <p className="font-mono text-xs font-medium">
                     {char.label}
                   </p>
                 </div>

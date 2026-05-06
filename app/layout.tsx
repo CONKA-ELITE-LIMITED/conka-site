@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Caveat, IBM_Plex_Mono, Syne, DM_Sans } from "next/font/google";
+import { Poppins, Caveat } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
@@ -20,14 +20,6 @@ const poppins = Poppins({
 
 const caveat = Caveat({
   variable: "--font-handwriting",
-  subsets: ["latin"],
-  weight: ["400"],
-  preload: false,
-  display: "swap",
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400"],
   preload: false,
@@ -71,23 +63,6 @@ const jetBrainsMono = localFont({
       style: "normal",
     },
   ],
-  display: "swap",
-});
-
-/* Legacy fonts (still used by premium-base.css pages) */
-const syne = Syne({
-  variable: "--font-premium-display",
-  subsets: ["latin"],
-  weight: ["700"],
-  preload: false,
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-premium-body",
-  subsets: ["latin"],
-  weight: ["400"],
-  preload: false,
   display: "swap",
 });
 
@@ -191,7 +166,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${poppins.variable} ${caveat.variable} ${ibmPlexMono.variable} ${syne.variable} ${dmSans.variable} ${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${poppins.variable} ${caveat.variable} ${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <MetaPageViewTracker />
         <ConvexClientProvider>

@@ -36,7 +36,7 @@ export default function ModeSelectionCard({
         </div>
 
         {/* Description */}
-        <p className="font-clinical text-sm opacity-70 mb-3 md:mb-4 flex-1">
+        <p className="font-mono text-sm opacity-70 mb-3 md:mb-4 flex-1">
           {description}
         </p>
 

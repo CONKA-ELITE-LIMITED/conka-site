@@ -22,10 +22,10 @@ export default function WinPrize() {
         {/* Text box - Aligned with image width on desktop */}
         <div className="max-w-md md:max-w-2xl mx-auto">
           <div className="neo-box p-6 md:p-8">
-            <p className="font-clinical text-xs uppercase opacity-70 mb-4">
+            <p className="font-mono text-xs uppercase opacity-70 mb-4">
               what you&apos;ll receive
             </p>
-            <ul className="space-y-3 font-clinical text-sm">
+            <ul className="space-y-3 font-mono text-sm">
               <li className="flex items-start gap-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

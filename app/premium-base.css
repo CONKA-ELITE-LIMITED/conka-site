@@ -280,23 +280,8 @@
   font-weight: var(--premium-font-body-weight);
 }
 
-/* Premium PDP hero: display (Syne / New Haus) + body (DM Sans) from style guide */
-.premium-pdp .premium-hero-panel .premium-display-hero {
-  font-family: var(--font-premium-display), var(--font-primary), sans-serif;
-  font-size: var(--premium-font-display-size);
-  font-weight: var(--premium-font-display-weight);
-  line-height: 1.15;
-}
-
-.premium-pdp .premium-hero-panel .premium-body-hero {
-  font-family: var(--font-premium-body), sans-serif;
-  font-size: var(--premium-font-body-size);
-  font-weight: var(--premium-font-body-weight);
-  line-height: var(--premium-font-body-leading);
-}
-
 .premium-data {
-  font-family: var(--font-clinical), monospace;
+  font-family: var(--font-brand-data);
   font-size: var(--premium-font-data-size);
   font-weight: var(--premium-font-data-weight);
   line-height: 1.4;

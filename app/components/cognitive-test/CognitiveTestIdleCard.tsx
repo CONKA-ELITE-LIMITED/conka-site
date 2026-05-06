@@ -35,7 +35,7 @@ export default function CognitiveTestIdleCard({
       >
         Give it a go. See how your brain is performing.
       </h3>
-      <p className="text-sm lg:text-base text-white/70 leading-relaxed mb-8 max-w-xl">
+      <p className="text-sm lg:text-base text-white/55 leading-relaxed mb-8 max-w-xl">
         A short version of the full cognitive test in the CONKA app. About 30
         seconds to get a snapshot of your processing speed. The full test
         tracks how you improve over time.

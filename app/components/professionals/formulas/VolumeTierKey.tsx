@@ -63,10 +63,10 @@ export default function VolumeTierKey({ totalBoxes = 0, className }: VolumeTierK
       <div className="max-w-6xl mx-auto">
         {/* Bar first: boxes-in-cart brick strip */}
         <div>
-          <h2 className="font-clinical text-xs uppercase tracking-wide opacity-70 mb-1.5 md:mb-2">
+          <h2 className="font-mono text-xs uppercase tracking-wide opacity-70 mb-1.5 md:mb-2">
             Boxes in cart
           </h2>
-          <p className="font-clinical text-sm text-[var(--foreground)] mb-1.5 md:mb-2">
+          <p className="font-mono text-sm text-[var(--foreground)] mb-1.5 md:mb-2">
             {caption}
           </p>
           <div
@@ -84,7 +84,7 @@ export default function VolumeTierKey({ totalBoxes = 0, className }: VolumeTierK
             ))}
           </div>
           <div
-            className="grid mt-1 font-clinical text-[10px] opacity-60"
+            className="grid mt-1 font-mono text-[10px] opacity-60"
             style={{ gridTemplateColumns: `${STARTER_BRICKS}fr ${SQUAD_BRICKS}fr ${ELITE_BRICKS}fr` }}
           >
             <span>Starter</span>
@@ -95,10 +95,10 @@ export default function VolumeTierKey({ totalBoxes = 0, className }: VolumeTierK
 
         {/* Tier key below: price per box and tier cards */}
         <div className="mt-4 md:mt-6">
-          <h2 className="font-clinical text-xs uppercase tracking-wide opacity-70 mb-1 md:mb-2">
+          <h2 className="font-mono text-xs uppercase tracking-wide opacity-70 mb-1 md:mb-2">
             Price per box by quantity
           </h2>
-          <p className="font-clinical text-[10px] md:text-xs opacity-60 mb-3 md:mb-4">
+          <p className="font-mono text-[10px] md:text-xs opacity-60 mb-3 md:mb-4">
             per box ex. VAT · vs RRP {formatPrice(RRP_28)}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6">
@@ -110,7 +110,7 @@ export default function VolumeTierKey({ totalBoxes = 0, className }: VolumeTierK
                   key={tier}
                   className="rounded-lg border border-black/10 bg-black/[0.02] p-2.5 md:p-4 flex flex-col items-center justify-center text-center min-h-0"
                 >
-                  <p className="font-clinical text-[11px] md:text-xs uppercase tracking-wide opacity-70">
+                  <p className="font-mono text-[11px] md:text-xs uppercase tracking-wide opacity-70">
                     Tier: {tierLabel(tier)} ({quantityRange(tier)})
                   </p>
                   <div className="flex flex-wrap items-baseline justify-center gap-1.5 md:gap-2 mt-1.5 md:mt-3">
@@ -118,7 +118,7 @@ export default function VolumeTierKey({ totalBoxes = 0, className }: VolumeTierK
                       {formatPrice(price)}
                     </span>
                     <span
-                      className="font-clinical text-lg md:text-2xl font-bold tabular-nums"
+                      className="font-mono text-lg md:text-2xl font-bold tabular-nums"
                       style={{ color: "#059669" }}
                     >
                       Save {save}%

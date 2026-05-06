@@ -216,12 +216,12 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
             <div className="space-y-4">
               {formula.benefits.map((benefit, idx) => (
                 <div key={idx} className="flex items-start gap-4">
-                  <div className={`${accentColor.text} text-2xl font-bold font-clinical flex-shrink-0`}>
+                  <div className={`${accentColor.text} text-2xl font-bold font-mono flex-shrink-0`}>
                     {benefit.stat}
                   </div>
                   <div>
                     <p className="font-bold">{benefit.title}</p>
-                    <p className="font-clinical text-xs opacity-70 mt-1">
+                    <p className="font-mono text-xs opacity-70 mt-1">
                       {benefit.annotation}
                     </p>
                     <p className="text-sm opacity-80 mt-1">{benefit.description}</p>
@@ -245,12 +245,12 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
                   <div>
                     <span className="font-medium">{ing.name}</span>
                     {ing.part && (
-                      <span className="font-clinical text-sm opacity-70 ml-2">
+                      <span className="font-mono text-sm opacity-70 ml-2">
                         – {ing.part}
                       </span>
                     )}
                   </div>
-                  <span className="font-clinical font-medium">{ing.percentage}</span>
+                  <span className="font-mono font-medium">{ing.percentage}</span>
                 </div>
               ))}
             </div>
@@ -262,7 +262,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
           <div className="space-y-4">
             <h3 className="text-lg font-bold mb-4">Taste Profile</h3>
             <div className="flex items-center justify-between p-4 bg-current/5 rounded-lg">
-              <p className="font-clinical text-sm opacity-70">Tastes Like:</p>
+              <p className="font-mono text-sm opacity-70">Tastes Like:</p>
               <p className="font-commentary text-2xl">{formula.taste}</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
@@ -282,7 +282,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
-                <p className="font-clinical text-xs font-medium">Antioxidant Heavy</p>
+                <p className="font-mono text-xs font-medium">Antioxidant Heavy</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-10 h-10 mb-2 flex items-center justify-center">
@@ -301,7 +301,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
                     <path d="M9 12l2 2 4-4" />
                   </svg>
                 </div>
-                <p className="font-clinical text-xs font-medium">Zero Calories</p>
+                <p className="font-mono text-xs font-medium">Zero Calories</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-10 h-10 mb-2 flex items-center justify-center">
@@ -324,7 +324,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
                     <line x1="2" y1="8" x2="22" y2="8" />
                   </svg>
                 </div>
-                <p className="font-clinical text-xs font-medium">No Caffeine</p>
+                <p className="font-mono text-xs font-medium">No Caffeine</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-10 h-10 mb-2 flex items-center justify-center">
@@ -343,7 +343,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
                     <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
                   </svg>
                 </div>
-                <p className="font-clinical text-xs font-medium">Vegan Friendly</p>
+                <p className="font-mono text-xs font-medium">Vegan Friendly</p>
               </div>
             </div>
           </div>
@@ -364,7 +364,7 @@ export default function ProductTabs({ formulaId }: ProductTabsProps) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-full transition-all font-clinical text-xs ${
+              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-full transition-all font-mono text-xs ${
                 isActive
                   ? "bg-[var(--foreground)] text-[var(--background)]"
                   : "hover:bg-current/10"

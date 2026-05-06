@@ -126,11 +126,14 @@ Without `preload: false`, Next.js includes the font CSS in the preload chain on 
 **Current font load on every page** (declared in `app/layout.tsx`):
 - Neue Haas Grotesk — local, brand primary, preloads normally (local fonts have no external chain)
 - JetBrains Mono — local, data/mono, preloads normally
-- Poppins — Google, `preload: false`
-- Syne — Google, `preload: false`
-- DM Sans — Google, `preload: false`
-- Caveat — Google, `preload: false`
-- IBM Plex Mono — Google, `preload: false`
+- Poppins — Google, `preload: false` — site-wide default body font (`globals.css`), used by all legacy pages
+- Caveat — Google, `preload: false` — handwriting accent on professionals/quiz/win
+
+**Removed (May 2026):**
+- Syne and DM_Sans — declared in `layout.tsx` but the CSS rules using them (`.premium-pdp .premium-display-hero`, `.premium-pdp .premium-body-hero`) had zero JSX consumers. Both removed.
+- IBM Plex Mono — was the `--font-clinical` / `font-clinical` class font. All 260 usages migrated to `font-mono` (now pointing to JetBrains Mono). One monospace font serves the whole site — no Google font request for mono on any page.
+
+**Audit fonts before adding:** every Google font in the root layout adds bytes to every page even with `preload: false`. Before declaring a new `next/font/google` import, search the codebase for an existing variable that fits.
 
 Font weights were already trimmed in April 2026 to only the weights actually used. Do not add new weight variants without checking actual usage.
 

@@ -68,7 +68,7 @@ function VerifiedBadge({ compact = false }: { compact?: boolean }) {
         <path d="M20 6L9 17l-5-5" />
       </svg>
       <span
-        className={`font-clinical text-blue-600 font-medium ${compact ? "text-[9px]" : "text-[10px]"}`}
+        className={`font-mono text-blue-600 font-medium ${compact ? "text-[9px]" : "text-[10px]"}`}
       >
         Verified Customer
       </span>
@@ -103,7 +103,7 @@ function ProductBadge({
   const border = `${accentHex}${borderAlpha}`;
   return (
     <span
-      className="inline-flex items-center font-clinical text-[10px] font-medium px-1.5 py-0.5 rounded border"
+      className="inline-flex items-center font-mono text-[10px] font-medium px-1.5 py-0.5 rounded border"
       style={{
         backgroundColor: bg,
         color: accentHex,
@@ -210,7 +210,7 @@ export default function TestimonialCard({
                 e.stopPropagation();
                 setExpanded();
               }}
-              className="font-clinical text-xs opacity-70 hover:opacity-100 transition-opacity underline mt-1"
+              className="font-mono text-xs opacity-70 hover:opacity-100 transition-opacity underline mt-1"
             >
               {isExpanded ? "Read less" : "Read more"}
             </button>
@@ -223,13 +223,13 @@ export default function TestimonialCard({
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-sm">{name}</span>
               {country ? (
-                <span className="font-clinical text-xs opacity-70">
+                <span className="font-mono text-xs opacity-70">
                   {country}
                 </span>
               ) : null}
               <VerifiedBadge compact />
             </div>
-            <p className="font-clinical text-[10px] opacity-60 mt-0.5">
+            <p className="font-mono text-[10px] opacity-60 mt-0.5">
               {formatDate(date)}
             </p>
           </div>
@@ -262,7 +262,7 @@ export default function TestimonialCard({
             </div>
             {country ? (
               <span
-                className={`font-clinical ${isMobile ? "text-[10px]" : "text-xs"} opacity-70`}
+                className={`font-mono ${isMobile ? "text-[10px]" : "text-xs"} opacity-70`}
               >
                 {country}
               </span>
@@ -294,7 +294,7 @@ export default function TestimonialCard({
           <button
             type="button"
             onClick={() => setExpanded()}
-            className={`font-clinical ${isMobile ? "text-[10px]" : "text-xs"} opacity-70 hover:opacity-100 transition-opacity underline`}
+            className={`font-mono ${isMobile ? "text-[10px]" : "text-xs"} opacity-70 hover:opacity-100 transition-opacity underline`}
           >
             {isExpanded ? "Read less" : "Read more"}
           </button>
@@ -304,7 +304,7 @@ export default function TestimonialCard({
       {/* Date */}
       <div className="mt-auto">
         <p
-          className={`font-clinical ${isMobile ? "text-[10px]" : "text-xs"} opacity-60`}
+          className={`font-mono ${isMobile ? "text-[10px]" : "text-xs"} opacity-60`}
         >
           {formatDate(date)}
         </p>

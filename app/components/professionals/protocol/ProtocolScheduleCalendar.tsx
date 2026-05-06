@@ -33,11 +33,11 @@ export default function ProtocolScheduleCalendar({
         <h2 className="text-lg md:text-xl font-bold mb-1">
           Recommended weekly schedule (max tier)
         </h2>
-        <p className={`font-clinical text-xs opacity-70 ${isUltimate ? "mb-1" : "mb-3"}`}>
+        <p className={`font-mono text-xs opacity-70 ${isUltimate ? "mb-1" : "mb-3"}`}>
           Repeat for the month
         </p>
         {isUltimate && (
-          <p className="font-clinical text-xs opacity-70 mb-3">
+          <p className="font-mono text-xs opacity-70 mb-3">
             CONKA Flow first thing in the morning, CONKA Clear at the end of the day/training.
           </p>
         )}
@@ -48,7 +48,7 @@ export default function ProtocolScheduleCalendar({
             {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
               <div
                 key={day}
-                className="text-center font-clinical text-[10px] opacity-50"
+                className="text-center font-mono text-[10px] opacity-50"
               >
                 {day}
               </div>
@@ -56,7 +56,7 @@ export default function ProtocolScheduleCalendar({
             {weekDays.map((day, idx) => (
               <div
                 key={idx}
-                className={`aspect-square rounded-sm flex items-center justify-center text-[10px] font-clinical ${getCellClassName(day.formula)}`}
+                className={`aspect-square rounded-sm flex items-center justify-center text-[10px] font-mono ${getCellClassName(day.formula)}`}
               >
                 {idx + 1}
               </div>
@@ -67,16 +67,16 @@ export default function ProtocolScheduleCalendar({
           <div className="flex flex-wrap gap-4 mt-3 pt-3 border-t border-black/10">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 bg-amber-500 rounded-sm" />
-              <span className="font-clinical text-[10px]">CONKA Flow</span>
+              <span className="font-mono text-[10px]">CONKA Flow</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 bg-[#AAB9BC] rounded-sm" />
-              <span className="font-clinical text-[10px]">CONKA Clear</span>
+              <span className="font-mono text-[10px]">CONKA Clear</span>
             </div>
             {isUltimate && (
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 bg-gradient-to-br from-amber-500 to-[#AAB9BC] rounded-sm" />
-                <span className="font-clinical text-[10px]">Both</span>
+                <span className="font-mono text-[10px]">Both</span>
               </div>
             )}
           </div>

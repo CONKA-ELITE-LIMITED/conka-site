@@ -21,7 +21,7 @@ export default function BarrysPage() {
         {isMobile === undefined ? (
           <div className="min-h-screen pt-32 pb-16 flex items-center justify-center">
             <div className="animate-pulse text-center">
-              <p className="font-clinical text-sm opacity-50">Loading...</p>
+              <p className="font-mono text-sm opacity-50">Loading...</p>
             </div>
           </div>
         ) : isMobile ? (

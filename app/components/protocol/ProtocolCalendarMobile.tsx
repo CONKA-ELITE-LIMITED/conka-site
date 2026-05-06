@@ -65,7 +65,7 @@ export default function ProtocolCalendarMobile({
             <button
               key={tier}
               onClick={() => onTierSelect(tier)}
-              className={`px-4 py-2 font-clinical text-sm font-semibold transition-all ${
+              className={`px-4 py-2 font-mono text-sm font-semibold transition-all ${
                 isSelected
                   ? "text-white shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
                   : "bg-white border border-black/10 hover:border-black/20 text-current"
@@ -91,7 +91,7 @@ export default function ProtocolCalendarMobile({
         <div className="w-full bg-white rounded-lg p-4 md:p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold">Weekly View</h3>
-            <span className="font-clinical text-sm opacity-70">
+            <span className="font-mono text-sm opacity-70">
               {tierConfig.conkaFlowCount}x F01 + {tierConfig.conkaClarityCount}x F02
             </span>
           </div>
@@ -102,13 +102,13 @@ export default function ProtocolCalendarMobile({
               <div
                 className={`w-3 h-3 rounded-sm ${FORMULA_COLORS["01"].bg}`}
               ></div>
-              <span className="font-clinical text-xs">CONKA Flow</span>
+              <span className="font-mono text-xs">CONKA Flow</span>
             </div>
             <div className="flex items-center gap-1">
               <div
                 className={`w-3 h-3 rounded-sm ${FORMULA_COLORS["02"].bg}`}
               ></div>
-              <span className="font-clinical text-xs">CONKA Clear</span>
+              <span className="font-mono text-xs">CONKA Clear</span>
             </div>
             {protocolId === "4" && (
               <div className="flex items-center gap-1">
@@ -118,12 +118,12 @@ export default function ProtocolCalendarMobile({
                     background: `linear-gradient(135deg, ${FORMULA_COLORS["01"].hex} 50%, ${FORMULA_COLORS["02"].hex} 50%)`,
                   }}
                 ></div>
-                <span className="font-clinical text-xs">Both Daily</span>
+                <span className="font-mono text-xs">Both Daily</span>
               </div>
             )}
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-sm border-2 border-current opacity-30"></div>
-              <span className="font-clinical text-xs">Rest Day</span>
+              <span className="font-mono text-xs">Rest Day</span>
             </div>
           </div>
 
@@ -132,7 +132,7 @@ export default function ProtocolCalendarMobile({
             {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
               <div
                 key={day}
-                className="text-center font-clinical text-xs opacity-70 py-1"
+                className="text-center font-mono text-xs opacity-70 py-1"
               >
                 {day}
               </div>
@@ -146,7 +146,7 @@ export default function ProtocolCalendarMobile({
                 return (
                   <div
                     key={dayIdx}
-                    className="aspect-square flex items-center justify-center font-clinical text-sm rounded-md transition-all text-white"
+                    className="aspect-square flex items-center justify-center font-mono text-sm rounded-md transition-all text-white"
                     style={{
                       background: `linear-gradient(135deg, ${FORMULA_COLORS["01"].hex} 50%, ${FORMULA_COLORS["02"].hex} 50%)`,
                     }}
@@ -167,7 +167,7 @@ export default function ProtocolCalendarMobile({
               return (
                 <div
                   key={dayIdx}
-                  className={`aspect-square flex items-center justify-center font-clinical text-sm rounded-md transition-all ${bgColor} ${textColor}`}
+                  className={`aspect-square flex items-center justify-center font-mono text-sm rounded-md transition-all ${bgColor} ${textColor}`}
                 >
                   {day.day}
                 </div>
@@ -191,17 +191,17 @@ export default function ProtocolCalendarMobile({
 
             <div className="space-y-2">
               <div className="flex justify-between items-center py-2 border-b border-current border-opacity-10">
-                <span className="font-clinical text-sm">Shots per Week</span>
+                <span className="font-mono text-sm">Shots per Week</span>
                 <span className="font-bold">{tierConfig.shotsPerWeek}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-current border-opacity-10">
-                <span className="font-clinical text-sm">CONKA Flow</span>
+                <span className="font-mono text-sm">CONKA Flow</span>
                 <span className="font-bold">
                   {tierConfig.conkaFlowCount}x weekly
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="font-clinical text-sm">CONKA Clear</span>
+                <span className="font-mono text-sm">CONKA Clear</span>
                 <span className="font-bold">
                   {tierConfig.conkaClarityCount}x weekly
                 </span>

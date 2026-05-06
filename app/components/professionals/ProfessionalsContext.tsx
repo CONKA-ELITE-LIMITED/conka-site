@@ -20,7 +20,7 @@ export default function ProfessionalsContext() {
         </div>
 
         {/* Scroll hint – subtle, smaller, greyer */}
-        <p className="mt-4 md:mt-5 font-clinical text-sm opacity-60">
+        <p className="mt-4 md:mt-5 font-mono text-sm opacity-60">
           Scroll to learn more about CONKA
         </p>
         <div className="flex justify-center mt-2" aria-hidden>

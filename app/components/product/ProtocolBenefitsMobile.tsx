@@ -169,7 +169,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
 
       {/* Header */}
       <div className="text-center mb-6 px-4">
-        <p className="font-clinical text-xs uppercase tracking-wider opacity-60 mb-1">
+        <p className="font-mono text-xs uppercase tracking-wider opacity-60 mb-1">
           Maximize Your Results
         </p>
         <h2 className="premium-section-heading mb-2">Double Your Benefits</h2>
@@ -183,7 +183,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
       <div className="mb-6 px-4">
         <div className="flex gap-2 mb-4">
           <div className="flex-1 p-3 rounded-lg border-2 border-black/10 bg-black/5">
-            <p className="font-clinical text-xs uppercase opacity-50 mb-1">
+            <p className="font-mono text-xs uppercase opacity-50 mb-1">
               Alone
             </p>
             <p className="font-bold text-lg">Effective</p>
@@ -209,7 +209,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
             </svg>
           </div>
           <div className="flex-1 p-3 rounded-lg border-2 border-black bg-black text-white">
-            <p className="font-clinical text-xs uppercase opacity-70 mb-1">
+            <p className="font-mono text-xs uppercase opacity-70 mb-1">
               Combined
             </p>
             <p className="font-bold text-lg">Powerful</p>
@@ -222,7 +222,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
 
       {/* Combined Results Stats */}
       <div className="mb-6 px-4">
-        <p className="font-clinical text-xs uppercase tracking-wider opacity-50 mb-3 text-center">
+        <p className="font-mono text-xs uppercase tracking-wider opacity-50 mb-3 text-center">
           Combined Results
         </p>
         <div className="grid grid-cols-3 gap-2">
@@ -232,7 +232,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
               className="text-center p-3 rounded-lg border border-black/10"
             >
               <p className="text-xl font-bold">{stat.value}</p>
-              <p className="font-clinical text-xs opacity-60">{stat.label}</p>
+              <p className="font-mono text-xs opacity-60">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -240,7 +240,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
 
       {/* Protocol Grid */}
       <div className="mb-4 px-4">
-        <p className="font-clinical text-xs uppercase tracking-wider opacity-50 mb-3 text-center">
+        <p className="font-mono text-xs uppercase tracking-wider opacity-50 mb-3 text-center">
           Choose Your Protocol
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -254,7 +254,7 @@ export default function ProtocolBenefitsMobile({ formulaId }: ProtocolBenefitsMo
                 <div className="opacity-70">{protocol.icon}</div>
                 <div>
                   <p className="font-bold text-sm">{protocol.name}</p>
-                  <p className="font-clinical text-xs opacity-60">
+                  <p className="font-mono text-xs opacity-60">
                     {protocol.tagline}
                   </p>
                 </div>

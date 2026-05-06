@@ -97,7 +97,7 @@ export default function QuizLoader({ onComplete, duration = 2500 }: QuizLoaderPr
       <p className="font-bold text-xl md:text-2xl mb-2 text-center">{stages[stage]}</p>
       
       {/* Progress Percentage */}
-      <p className="font-clinical text-sm opacity-60">{progress}%</p>
+      <p className="font-mono text-sm opacity-60">{progress}%</p>
 
       {/* Decorative dots */}
       <div className="flex gap-1.5 mt-6">

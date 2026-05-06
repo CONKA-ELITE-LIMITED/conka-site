@@ -61,7 +61,7 @@ export default function ProtocolCard({
               {visibleBenefits.map((benefit, idx) => (
                 <li
                   key={idx}
-                  className="flex items-start gap-2 font-clinical text-sm"
+                  className="flex items-start gap-2 font-mono text-sm"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

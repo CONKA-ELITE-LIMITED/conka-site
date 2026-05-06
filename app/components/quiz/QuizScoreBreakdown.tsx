@@ -18,7 +18,7 @@ export default function QuizScoreBreakdown({
         <h4 className="font-bold text-sm mb-1">
           How you scored for {protocolName}
         </h4>
-        <p className="font-clinical text-xs opacity-60">
+        <p className="font-mono text-xs opacity-60">
           {result.totalPoints}/{result.maxPossiblePoints} points ({result.percentage}% match)
         </p>
       </div>
@@ -30,7 +30,7 @@ export default function QuizScoreBreakdown({
             <div className="flex items-start gap-3">
               {/* Question Number */}
               <div className="w-6 h-6 rounded-full bg-current/10 flex items-center justify-center flex-shrink-0">
-                <span className="font-clinical text-xs font-bold">{idx + 1}</span>
+                <span className="font-mono text-xs font-bold">{idx + 1}</span>
               </div>
 
               {/* Question Details */}
@@ -39,19 +39,19 @@ export default function QuizScoreBreakdown({
                   &ldquo;{item.questionText}&rdquo;
                 </p>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                  <span className="font-clinical text-xs">
+                  <span className="font-mono text-xs">
                     Your answer:{" "}
                     <span className="font-bold">{item.userAnswer}</span>
                   </span>
                   <span
-                    className={`font-clinical text-xs ${
+                    className={`font-mono text-xs ${
                       item.pointsAwarded > 0 ? "text-green-600" : "opacity-50"
                     }`}
                   >
                     {item.pointsAwarded > 0 ? "+" : ""}
                     {item.pointsAwarded}/{item.maxPoints} pts
                   </span>
-                  <span className="font-clinical text-xs opacity-50">
+                  <span className="font-mono text-xs opacity-50">
                     (measures: {item.measures})
                   </span>
                 </div>
@@ -63,7 +63,7 @@ export default function QuizScoreBreakdown({
 
       {/* Total Summary */}
       <div className="pt-4 mt-2 border-t-2 border-current/20 flex justify-between items-center">
-        <span className="font-clinical text-sm">Total Score</span>
+        <span className="font-mono text-sm">Total Score</span>
         <span className="font-bold text-lg">
           {result.totalPoints}/{result.maxPossiblePoints} ({result.percentage}%)
         </span>

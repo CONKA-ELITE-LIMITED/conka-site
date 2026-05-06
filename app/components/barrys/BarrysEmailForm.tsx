@@ -105,7 +105,7 @@ export default function BarrysEmailForm({
         <div>
           <label
             htmlFor="barrys-email"
-            className="block font-clinical text-xs uppercase tracking-widest opacity-50 mb-2"
+            className="block font-mono text-xs uppercase tracking-widest opacity-50 mb-2"
           >
             Email Address
           </label>
@@ -119,7 +119,7 @@ export default function BarrysEmailForm({
               setShowSuccess(false);
             }}
             placeholder="your@email.com"
-            className="w-full px-4 py-3 border-2 border-current rounded-lg bg-transparent font-clinical text-base focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+            className="w-full px-4 py-3 border-2 border-current rounded-lg bg-transparent font-mono text-base focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
             disabled={isSubmitting}
             required
           />
@@ -127,13 +127,13 @@ export default function BarrysEmailForm({
 
         {error && (
           <div className="p-3 border-2 border-current bg-current/5 rounded-lg">
-            <p className="font-clinical text-sm opacity-90">{error}</p>
+            <p className="font-mono text-sm opacity-90">{error}</p>
           </div>
         )}
 
         {showSuccess && (
           <div className="p-3 border-2 border-teal-500 bg-teal-500/10 rounded-lg">
-            <p className="font-clinical text-sm text-[var(--foreground)]">
+            <p className="font-mono text-sm text-[var(--foreground)]">
               Success! Your email has been submitted.
             </p>
           </div>

@@ -48,9 +48,9 @@ export default function PurchaseToggle({
             : "bg-transparent border-white/50 text-white hover:bg-white/20"
         }`}
       >
-        <span className={`font-clinical ${textSize} font-medium whitespace-nowrap`}>Subscribe</span>
+        <span className={`font-mono ${textSize} font-medium whitespace-nowrap`}>Subscribe</span>
         <span
-          className={`${badgeSize} text-white font-clinical rounded-full whitespace-nowrap flex-shrink-0`}
+          className={`${badgeSize} text-white font-mono rounded-full whitespace-nowrap flex-shrink-0`}
           style={{
             backgroundColor:
               purchaseType === "one-time"
@@ -75,7 +75,7 @@ export default function PurchaseToggle({
             : "bg-transparent border-white/50 text-white hover:bg-white/20"
         }`}
       >
-        <span className={`font-clinical ${textSize} font-medium whitespace-nowrap`}>One-Time</span>
+        <span className={`font-mono ${textSize} font-medium whitespace-nowrap`}>One-Time</span>
       </button>
     </div>
   );

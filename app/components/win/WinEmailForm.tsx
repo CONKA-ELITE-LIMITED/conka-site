@@ -123,7 +123,7 @@ export default function WinEmailForm({
               Enter Your Email to Enter the Draw
             </p>
           </div>
-          <p className="font-clinical text-xs opacity-70 mb-4">
+          <p className="font-mono text-xs opacity-70 mb-4">
             winner notified by email when entries close
           </p>
         </div>
@@ -136,7 +136,7 @@ export default function WinEmailForm({
               <div>
                 <label
                   htmlFor="email"
-                  className="block font-clinical text-xs uppercase tracking-widest opacity-50 mb-2"
+                  className="block font-mono text-xs uppercase tracking-widest opacity-50 mb-2"
                 >
                   Email Address
                 </label>
@@ -149,7 +149,7 @@ export default function WinEmailForm({
                     setError(null);
                   }}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3 border-2 border-current rounded-lg bg-transparent font-clinical text-base focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                  className="w-full px-4 py-3 border-2 border-current rounded-lg bg-transparent font-mono text-base focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                   disabled={isSubmitting}
                   required
                 />
@@ -157,7 +157,7 @@ export default function WinEmailForm({
 
               {error && (
                 <div className="p-3 border-2 border-current bg-current/5 rounded-lg">
-                  <p className="font-clinical text-sm opacity-90">{error}</p>
+                  <p className="font-mono text-sm opacity-90">{error}</p>
                 </div>
               )}
 

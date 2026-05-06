@@ -39,12 +39,12 @@ export default function StudyBarChart({ data }: StudyBarChartProps) {
         <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.1} />
         <XAxis
           dataKey="name"
-          tick={{ fill: "currentColor", fontSize: 11, fontFamily: "var(--font-ibm-plex-mono)" }}
+          tick={{ fill: "currentColor", fontSize: 11, fontFamily: "var(--font-jetbrains-mono)" }}
           tickLine={false}
           axisLine={{ stroke: "currentColor", strokeOpacity: 0.2 }}
         />
         <YAxis
-          tick={{ fill: "currentColor", fontSize: 11, fontFamily: "var(--font-ibm-plex-mono)" }}
+          tick={{ fill: "currentColor", fontSize: 11, fontFamily: "var(--font-jetbrains-mono)" }}
           tickLine={false}
           axisLine={{ stroke: "currentColor", strokeOpacity: 0.2 }}
         />
@@ -53,7 +53,7 @@ export default function StudyBarChart({ data }: StudyBarChartProps) {
             backgroundColor: "var(--background)",
             border: "2px solid var(--foreground)",
             borderRadius: 0,
-            fontFamily: "var(--font-ibm-plex-mono)",
+            fontFamily: "var(--font-jetbrains-mono)",
             fontSize: 12,
           }}
           labelStyle={{

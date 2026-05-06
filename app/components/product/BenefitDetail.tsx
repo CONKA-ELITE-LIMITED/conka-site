@@ -80,7 +80,7 @@ const CustomTick = ({
       textAnchor="middle"
       fill={isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)"}
       fontSize={10}
-      fontFamily="var(--font-ibm-plex-mono)"
+      fontFamily="var(--font-jetbrains-mono)"
       letterSpacing="0.06em"
     >
       {shortLabel.toUpperCase()}

@@ -51,6 +51,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/shop',
+        destination: '/conka-both',
+        permanent: true,
+      },
+      {
+        source: '/shop/:path*',
+        destination: '/conka-both',
+        permanent: true,
+      },
+      {
         source: '/protocol/:path*',
         destination: '/conka-both',
         permanent: true,

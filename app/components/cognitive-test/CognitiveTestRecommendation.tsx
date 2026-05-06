@@ -49,30 +49,30 @@ export default function CognitiveTestRecommendation({
   const recommendation = getRecommendation();
 
   return (
-    <div className="bg-white border border-black/12 p-5 lg:p-6 border-l-[3px] border-l-[#1B2757]">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
+    <div className="bg-white/10 border border-white/12 border-l-[3px] border-l-white/40 p-5 lg:p-6">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
         {recommendation.eyebrow} · Based on your performance
       </p>
       <h4
-        className="brand-h4 text-black mb-3 max-w-[24ch]"
-        style={{ letterSpacing: "-0.02em" }}
+        className="brand-h4 mb-3 max-w-[24ch]"
+        style={{ letterSpacing: "-0.02em", color: "#ffffff" }}
       >
         {recommendation.headline}
       </h4>
-      <p className="text-sm text-black/75 leading-relaxed mb-5 max-w-xl">
+      <p className="text-sm text-white/55 leading-relaxed mb-5 max-w-xl">
         {recommendation.description}
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
         <a
           href={recommendation.href}
-          className="inline-flex items-center justify-center gap-3 bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-opacity hover:opacity-85 active:opacity-70"
+          className="inline-flex items-center justify-center gap-3 bg-white text-black font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-opacity hover:opacity-85 active:opacity-70"
         >
           <span>{recommendation.buttonText}</span>
           <span aria-hidden>↗</span>
         </a>
         <a
           href="/quiz"
-          className="inline-flex items-center justify-center gap-3 bg-white border border-black/25 text-[#1B2757] font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:border-[#1B2757] hover:bg-[#1B2757] hover:text-white"
+          className="inline-flex items-center justify-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50"
         >
           <span>Take the quiz</span>
           <span aria-hidden>→</span>

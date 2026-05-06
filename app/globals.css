@@ -16,7 +16,6 @@
   /* Typography */
   --font-primary: var(--font-poppins);
   --font-commentary: var(--font-handwriting);
-  --font-clinical: var(--font-ibm-plex-mono);
 }
 
 @theme inline {
@@ -26,7 +25,7 @@
   --color-brand-accent: #4058bb;
   --color-brand-tint: #f4f5f8;
   --font-sans: var(--font-primary);
-  --font-mono: var(--font-clinical);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 /* CONKA Flow Theme (Light Mode) */
@@ -67,9 +66,6 @@ body {
   font-family: var(--font-handwriting), cursive;
 }
 
-.font-clinical {
-  font-family: var(--font-ibm-plex-mono), monospace;
-}
 
 /* Smooth Theme Transitions */
 .theme-transition {
@@ -229,7 +225,7 @@ body {
 
 /* Story section counter styling */
 .story-counter {
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-jetbrains-mono), monospace;
   letter-spacing: 0.1em;
 }
 

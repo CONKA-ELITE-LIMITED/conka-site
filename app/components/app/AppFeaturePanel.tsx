@@ -113,7 +113,7 @@ function FeatureTab({
     <button
       type="button"
       onClick={onClick}
-      className={`px-5 py-3 border font-mono text-[11px] uppercase tracking-[0.14em] leading-none transition-all duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 min-h-[44px] ${
+      className={`w-full px-5 py-3 border font-mono text-[11px] uppercase tracking-[0.14em] leading-none transition-all duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 min-h-[44px] ${
         isActive
           ? "bg-white text-black border-white"
           : "bg-white/[0.07] border-white/30 text-white/70 hover:bg-white/[0.12] hover:border-white/50 hover:text-white/90"
@@ -174,14 +174,10 @@ function AppFeaturePanelDesktop() {
           The Gold Standard of Cognitive Testing
         </h1>
 
-        <div
-          className="flex flex-col items-center"
-          style={{ width: "clamp(320px, 34vw, 500px)" }}
-        >
-          <PhoneDisplay activeId={activeId} size="desktop" />
-
-          <div className="flex flex-wrap gap-2 justify-center mt-6 w-full">
-            {FEATURES.map((f) => (
+        {/* Phone flanked by 2 tabs on each side */}
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-2 w-36">
+            {FEATURES.slice(0, 2).map((f) => (
               <FeatureTab
                 key={f.id}
                 feature={f}
@@ -191,13 +187,26 @@ function AppFeaturePanelDesktop() {
             ))}
           </div>
 
-          <div className="mt-6 w-full">
-            <ContentReveal
-              feature={activeFeature}
-              visible={contentVisible}
-              align="center"
-            />
+          <PhoneDisplay activeId={activeId} size="desktop" />
+
+          <div className="flex flex-col gap-2 w-36">
+            {FEATURES.slice(2, 4).map((f) => (
+              <FeatureTab
+                key={f.id}
+                feature={f}
+                isActive={activeId === f.id}
+                onClick={() => handleSelect(f.id)}
+              />
+            ))}
           </div>
+        </div>
+
+        <div className="mt-8" style={{ width: "clamp(320px, 34vw, 500px)" }}>
+          <ContentReveal
+            feature={activeFeature}
+            visible={contentVisible}
+            align="center"
+          />
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-3">

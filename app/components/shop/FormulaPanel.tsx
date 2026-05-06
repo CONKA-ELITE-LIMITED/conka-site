@@ -54,7 +54,7 @@ export default function FormulaPanel({ formula }: FormulaPanelProps) {
             isHovered ? "opacity-0" : "opacity-80"
           }`}
         >
-          <span className="font-clinical text-xs">
+          <span className="font-mono text-xs">
             {hoverMicrocopy[formula.id]}
           </span>
           <svg
@@ -95,10 +95,10 @@ export default function FormulaPanel({ formula }: FormulaPanelProps) {
                 >
                   {stat.value}
                 </p>
-                <p className="font-clinical text-xs font-semibold mb-1">
+                <p className="font-mono text-xs font-semibold mb-1">
                   {stat.label}
                 </p>
-                <p className="font-clinical text-[10px] opacity-60 leading-tight">
+                <p className="font-mono text-[10px] opacity-60 leading-tight">
                   {stat.description}
                 </p>
               </div>
@@ -110,7 +110,7 @@ export default function FormulaPanel({ formula }: FormulaPanelProps) {
             {formula.keyPoints.map((point, idx) => (
               <li
                 key={idx}
-                className="flex items-start gap-2 font-clinical text-sm"
+                className="flex items-start gap-2 font-mono text-sm"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +142,7 @@ export default function FormulaPanel({ formula }: FormulaPanelProps) {
           <div
             className={`w-10 h-10 ${formula.bgColor} text-white rounded-md flex items-center justify-center flex-shrink-0`}
           >
-            <span className="font-clinical text-sm font-bold">
+            <span className="font-mono text-sm font-bold">
               {formula.id}
             </span>
           </div>
@@ -153,7 +153,7 @@ export default function FormulaPanel({ formula }: FormulaPanelProps) {
             <p className="font-primary text-lg opacity-80 mt-1">
               {formula.name}
             </p>
-            <p className="font-clinical text-sm opacity-70 mt-1">
+            <p className="font-mono text-sm opacity-70 mt-1">
               {outcomeMicrocopy[formula.id]}
             </p>
           </div>
@@ -169,7 +169,7 @@ export default function FormulaPanel({ formula }: FormulaPanelProps) {
               >
                 {stat.value}
               </span>
-              <span className="font-clinical text-xs opacity-70">
+              <span className="font-mono text-xs opacity-70">
                 {stat.label}
               </span>
             </div>

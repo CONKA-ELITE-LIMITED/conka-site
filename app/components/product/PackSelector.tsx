@@ -40,7 +40,7 @@ export default function PackSelector({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <p className="font-clinical text-xs uppercase opacity-70">Select Pack Size</p>
+      <p className="font-mono text-xs uppercase opacity-70">Select Pack Size</p>
       <div className="grid grid-cols-4 gap-2">
         {packSizes.map((size) => {
           const pricing = formulaPricing[purchaseType][size];
@@ -81,7 +81,7 @@ export default function PackSelector({
                       : "white",
                 }}
               >
-                <p className="text-sm font-bold font-clinical">{packLabels[size]}</p>
+                <p className="text-sm font-bold font-mono">{packLabels[size]}</p>
               </div>
 
               {/* Price & Billing Body */}
@@ -97,7 +97,7 @@ export default function PackSelector({
                 }}
               >
                 <p className="text-lg font-bold mb-0.5">{formatPrice(pricing.price)}</p>
-                <p className={`font-clinical text-[11px] ${isSelected ? "opacity-90" : "opacity-70"}`}>
+                <p className={`font-mono text-[11px] ${isSelected ? "opacity-90" : "opacity-70"}`}>
                   {billingText}
                 </p>
               </div>

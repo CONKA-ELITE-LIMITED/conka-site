@@ -157,7 +157,7 @@ export default function QuizRecommendedSection({
             >
               <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
             </svg>
-            <span className="font-clinical text-xs font-bold">
+            <span className="font-mono text-xs font-bold">
               YOUR TOP MATCH
             </span>
           </div>
@@ -203,7 +203,7 @@ export default function QuizRecommendedSection({
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
-                <span className="font-clinical text-sm">{benefit}</span>
+                <span className="font-mono text-sm">{benefit}</span>
               </div>
             ))}
           </div>
@@ -224,7 +224,7 @@ export default function QuizRecommendedSection({
                       key={tier}
                       onClick={() => isAvailable && onTierSelect(tier)}
                       disabled={!isAvailable}
-                      className={`px-3 py-1.5 rounded-full font-clinical text-xs transition-all ${
+                      className={`px-3 py-1.5 rounded-full font-mono text-xs transition-all ${
                         isSelected
                           ? "bg-amber-500 text-white"
                           : isAvailable
@@ -242,7 +242,7 @@ export default function QuizRecommendedSection({
               <div className="flex gap-1">
                 <button
                   onClick={() => onPurchaseTypeChange("subscription")}
-                  className={`px-2 py-1 rounded font-clinical text-xs transition-all ${
+                  className={`px-2 py-1 rounded font-mono text-xs transition-all ${
                     purchaseType === "subscription"
                       ? "bg-black text-white"
                       : "border border-black/10 hover:border-black/30"
@@ -252,7 +252,7 @@ export default function QuizRecommendedSection({
                 </button>
                 <button
                   onClick={() => onPurchaseTypeChange("one-time")}
-                  className={`px-2 py-1 rounded font-clinical text-xs transition-all ${
+                  className={`px-2 py-1 rounded font-mono text-xs transition-all ${
                     purchaseType === "one-time"
                       ? "bg-black text-white"
                       : "border border-black/10 hover:border-black/30"
@@ -281,13 +281,13 @@ export default function QuizRecommendedSection({
                 <div
                   className={`w-3 h-3 rounded-sm ${FORMULA_COLORS["01"].bg}`}
                 ></div>
-                <span className="font-clinical text-xs">CONKA Flow</span>
+                <span className="font-mono text-xs">CONKA Flow</span>
               </div>
               <div className="flex items-center gap-1">
                 <div
                   className={`w-3 h-3 rounded-sm ${FORMULA_COLORS["02"].bg}`}
                 ></div>
-                <span className="font-clinical text-xs">CONKA Clear</span>
+                <span className="font-mono text-xs">CONKA Clear</span>
               </div>
               {protocolId === "4" ? (
                 <div className="flex items-center gap-1">
@@ -297,12 +297,12 @@ export default function QuizRecommendedSection({
                       background: `linear-gradient(135deg, #f59e0b 50%, #AAB9BC 50%)`,
                     }}
                   ></div>
-                  <span className="font-clinical text-xs">Both Daily</span>
+                  <span className="font-mono text-xs">Both Daily</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded-sm bg-gray-200"></div>
-                  <span className="font-clinical text-xs">Rest</span>
+                  <span className="font-mono text-xs">Rest</span>
                 </div>
               )}
             </div>
@@ -312,7 +312,7 @@ export default function QuizRecommendedSection({
               {dayNames.map((day, idx) => (
                 <div
                   key={idx}
-                  className="text-center font-clinical text-xs opacity-50"
+                  className="text-center font-mono text-xs opacity-50"
                 >
                   {day}
                 </div>
@@ -328,7 +328,7 @@ export default function QuizRecommendedSection({
                   return (
                     <div
                       key={dayIdx}
-                      className="aspect-square rounded overflow-hidden relative flex items-center justify-center text-xs font-clinical text-white"
+                      className="aspect-square rounded overflow-hidden relative flex items-center justify-center text-xs font-mono text-white"
                       style={{
                         background: `linear-gradient(135deg, #f59e0b 50%, #AAB9BC 50%)`,
                       }}
@@ -351,7 +351,7 @@ export default function QuizRecommendedSection({
                 return (
                   <div
                     key={dayIdx}
-                    className={`aspect-square rounded flex items-center justify-center text-xs font-clinical ${bgColor} ${textColor}`}
+                    className={`aspect-square rounded flex items-center justify-center text-xs font-mono ${bgColor} ${textColor}`}
                   >
                     {day.day}
                   </div>
@@ -360,7 +360,7 @@ export default function QuizRecommendedSection({
             </div>
 
             {/* Week label */}
-            <p className="font-clinical text-xs text-center mt-2 opacity-40">
+            <p className="font-mono text-xs text-center mt-2 opacity-40">
               Week 1 Preview
             </p>
           </div>
@@ -372,7 +372,7 @@ export default function QuizRecommendedSection({
                 <p className="text-2xl md:text-3xl font-bold">
                   {pricing ? formatPrice(pricing.price) : "—"}
                 </p>
-                <p className="font-clinical text-xs opacity-60">
+                <p className="font-mono text-xs opacity-60">
                   {billingText}
                 </p>
               </div>
@@ -381,7 +381,7 @@ export default function QuizRecommendedSection({
                   <p className="font-bold text-sm">
                     {tierConfig.shotsPerWeek} shots/week
                   </p>
-                  <p className="font-clinical text-xs opacity-60">
+                  <p className="font-mono text-xs opacity-60">
                     {tierConfig.conkaFlowCount}x Flow +{" "}
                     {tierConfig.conkaClarityCount}x Clear
                   </p>
@@ -433,7 +433,7 @@ export default function QuizRecommendedSection({
               </a>
             </div>
 
-            <p className="font-clinical text-xs text-center mt-3 opacity-50 flex items-center justify-center gap-1">
+            <p className="font-mono text-xs text-center mt-3 opacity-50 flex items-center justify-center gap-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"
