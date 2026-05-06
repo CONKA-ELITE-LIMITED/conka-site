@@ -16,6 +16,7 @@ import {
   ProtocolId,
 } from "@/app/lib/productData";
 import { CadenceType } from "@/app/lib/cadenceData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import { GUARANTEE_LABEL } from "@/app/lib/offerConstants";
 
 const packSizes: PackSize[] = ["4", "8", "12", "28"];
@@ -32,6 +33,8 @@ interface StickyPurchaseFooterMobileProps {
   protocolId?: ProtocolId;
   selectedTier?: ProtocolTier;
   onTierSelect?: (tier: ProtocolTier) => void;
+  // For the "Both" product -- replaces protocolId="3" lookup
+  productHeroId?: ProductHeroId;
   // NOTE: purchaseType drives the old subscribe/one-time toggle display.
   // Pass selectedCadence instead to enter cadence mode, which replaces all
   // selection UI with a single price-confirmed CTA. May be removed once all
