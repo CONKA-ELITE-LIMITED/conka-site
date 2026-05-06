@@ -39,7 +39,7 @@ export default function CognitiveTestRecommendation({
     return {
       headline: "Great baseline.",
       description:
-        "Your scores show strong cognitive function. The Ultimate Protocol — CONKA Flow and CONKA Clear daily — helps maintain and further enhance peak performance.",
+        "Your scores show strong cognitive function. The Ultimate Protocol (CONKA Flow and CONKA Clear daily) helps maintain and further enhance peak performance.",
       buttonText: "Try Ultimate Protocol",
       href: "/protocol/4",
       eyebrow: "Recommendation · Ultimate",
