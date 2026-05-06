@@ -209,7 +209,7 @@ export default function ConkaBothPage() {
         <Footer />
 
         <StickyPurchaseFooterMobile
-          protocolId="3"
+          productHeroId="03"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
           onAddToCart={() => handleAddToCart("sticky_footer")}
@@ -265,7 +265,7 @@ export default function ConkaBothPage() {
       <Footer />
 
       <StickyPurchaseFooter
-        protocolId="3"
+        productHeroId="03"
         selectedCadence={selectedCadence}
         cadencePrice={cadencePrice}
         onAddToCart={() => handleAddToCart("sticky_footer")}
