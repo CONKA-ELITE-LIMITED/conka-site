@@ -5,10 +5,8 @@ export { default as ProtocolRatioSelector } from "./ProtocolRatioSelector";
 export { default as ProtocolCalendar } from "./ProtocolCalendar";
 export { default as ProtocolBenefits } from "./ProtocolBenefits";
 export { default as ProtocolFAQ } from "./ProtocolFAQ";
-export { default as ProtocolTabs } from "./ProtocolTabs";
 export { default as TierSelector } from "./TierSelector";
 export { default as TierSelectorPremium } from "./TierSelectorPremium";
-export { default as ProtocolStruggleMobile } from "./ProtocolStruggleMobile";
 export { default as ProtocolCalendarMobile } from "./ProtocolCalendarMobile";
 export { default as ProtocolSectionPlaceholder } from "./ProtocolSectionPlaceholder";
 
