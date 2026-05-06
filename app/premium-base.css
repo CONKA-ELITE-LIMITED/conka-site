@@ -281,7 +281,7 @@
 }
 
 .premium-data {
-  font-family: var(--font-clinical), monospace;
+  font-family: var(--font-brand-data);
   font-size: var(--premium-font-data-size);
   font-weight: var(--premium-font-data-weight);
   line-height: 1.4;
