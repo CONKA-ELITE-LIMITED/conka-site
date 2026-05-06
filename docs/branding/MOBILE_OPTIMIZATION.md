@@ -207,7 +207,7 @@ className = "bg-black text-white border-current";
 
 ### Subtext
 
-- Use `font-clinical text-xs` for labels
+- Use `font-mono text-xs` for labels
 - Use `font-commentary` for descriptive text
 - Opacity: `opacity-60` to `opacity-70` for secondary text
 
