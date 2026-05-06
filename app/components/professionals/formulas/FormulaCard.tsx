@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { formulas } from "@/app/components/shop/formulasShowcaseData";
+import { formulas } from "@/app/lib/formulasShowcaseData";
 import {
   formulaPricing,
   getB2BFormulaPricing,
