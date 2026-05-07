@@ -7,6 +7,7 @@ import {
   AppStickyPhoneBlock,
   AppDownloadSection,
   AppWidgetGrid,
+  AppDataInsights,
 } from "@/app/components/app";
 import {
   CognitiveTestSection,
@@ -62,7 +63,17 @@ export default function AppPage() {
         </section>
       )}
 
-      {/* 5. DOWNLOAD — final CTA */}
+      {/* 5. APP DATA — proof from real users */}
+      <section
+        className="brand-section"
+        aria-label="App data insights"
+      >
+        <div className="brand-track">
+          <AppDataInsights />
+        </div>
+      </section>
+
+      {/* 6. DOWNLOAD — final CTA */}
       <section
         className="brand-section"
         aria-label="Download the CONKA app"

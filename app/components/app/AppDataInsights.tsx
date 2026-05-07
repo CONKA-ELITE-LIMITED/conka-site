@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { trackAppDataInsightsViewed } from "@/app/lib/analytics";
+
 // ─── Stat cards ────────────────────────────────────────────────────────────────
 
 type StatCard = {
@@ -62,8 +65,34 @@ const FACTORS: Factor[] = [
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export default function AppDataInsights() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const node = rootRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            trackAppDataInsightsViewed();
+            observer.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <div>
+    <div ref={rootRef}>
       {/* ── Section header ─────────────────────────────────────────── */}
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-3">
         {"// Live data · APP-01"}
