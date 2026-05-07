@@ -95,10 +95,6 @@ export default function AppInsightsPage() {
             <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
               Wellness factors (alcohol, fatigue, stress, readiness) are self-reported in the CONKA app on an opt-in basis at the moment of testing. Cognitive scores come from the same test session.
             </p>
-            <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-6">
-              This is observational data. Patterns show association, not causation. Where we cite peer-reviewed studies on the ingredients in Conka, we cite the findings of those studies as published; we do not extrapolate them to product-level claims.
-            </p>
-
             <div className="border-t border-white/10 pt-5 flex flex-col gap-3">
               <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
                 ^^ Cognitive test scores measured using the CONKA app, which uses the FDA-cleared Cognetivity CognICA assessment developed from Cambridge University research. Test sensitivity 93%, test-retest reliability 87.5%. Individual results vary; many factors influence test performance.

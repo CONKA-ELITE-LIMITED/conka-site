@@ -38,7 +38,17 @@ export default function AppPage() {
         <AppFeaturePanel />
       </section>
 
-      {/* 2. CREDIBILITY — research, install, proof, asset */}
+      {/* 2. APP INSIGHTS — callout linking to /app-insights */}
+      <section
+        className="brand-section"
+        aria-label="App data insights callout"
+      >
+        <div className="brand-track">
+          <AppInsightsCallout />
+        </div>
+      </section>
+
+      {/* 3. CREDIBILITY — research, install, proof, asset */}
       <section
         className="brand-section"
         aria-label="Research, install, and athlete proof"
@@ -48,10 +58,10 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 3. HOW IT WORKS — the mechanism */}
+      {/* 4. HOW IT WORKS — the mechanism */}
       <AppStickyPhoneBlock />
 
-      {/* 4. TRY IT — live product demo */}
+      {/* 5. TRY IT — live product demo */}
       {isMobile !== undefined && (
         <section
           className="brand-section"
@@ -62,16 +72,6 @@ export default function AppPage() {
           </div>
         </section>
       )}
-
-      {/* 5. APP INSIGHTS — callout linking to /app-insights */}
-      <section
-        className="brand-section"
-        aria-label="App data insights callout"
-      >
-        <div className="brand-track">
-          <AppInsightsCallout />
-        </div>
-      </section>
 
       {/* 6. DOWNLOAD — final CTA */}
       <section
