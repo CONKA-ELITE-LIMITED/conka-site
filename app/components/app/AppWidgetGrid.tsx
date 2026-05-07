@@ -52,6 +52,21 @@ const RESEARCH_STATS: {
 
 // ─── Athlete data ──────────────────────────────────────────────────────────────
 
+const ASSET_IMAGES = [
+  {
+    src: "/app/NothingAppRing.jpg",
+    alt: "CONKA app user with cognitive score 92",
+  },
+  {
+    src: "/lifestyle/flow/FlowConkaRing.jpg",
+    alt: "CONKA Flow product alongside the app on a gym mat",
+  },
+  {
+    src: "/app/NothingAppRing2.jpg",
+    alt: "CONKA app cognitive score display",
+  },
+];
+
 const ATHLETE_IDS = [
   "jack-willis",
   "nimisha-kurup",
@@ -263,6 +278,7 @@ export default function AppWidgetGrid() {
   const [installOpen, setInstallOpen] = useState(false);
   const [caseStudyModalOpen, setCaseStudyModalOpen] = useState(false);
   const [athleteIndex, setAthleteIndex] = useState(0);
+  const [assetIndex, setAssetIndex] = useState(0);
 
   const athletes = ATHLETE_IDS.map((id) => getAthleteById(id)).filter(
     (a): a is AthleteData => a !== undefined,
@@ -370,16 +386,45 @@ export default function AppWidgetGrid() {
 
         </div>{/* end Research + Install wrapper */}
 
-        {/* ── Asset tile ────────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden col-span-2 lg:col-span-1 min-h-[220px] border border-white/15 lg:self-stretch">
-          <Image
-            src="/app/NothingAppRing.jpg"
-            alt="CONKA app user checking their cognitive score"
-            fill
-            loading="lazy"
-            sizes="(max-width: 1024px) 100vw, 33vw"
-            className="object-cover"
-          />
+        {/* ── Asset tile — card stack ───────────────────────────────────── */}
+        <div
+          className="col-span-2 lg:col-span-1 pr-3 pb-3 cursor-pointer select-none"
+          onClick={() => setAssetIndex((i) => (i + 1) % ASSET_IMAGES.length)}
+          role="button"
+          tabIndex={0}
+          aria-label="View next image"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setAssetIndex((i) => (i + 1) % ASSET_IMAGES.length);
+            }
+          }}
+        >
+          <div className="relative w-full aspect-[4/3]">
+            {ASSET_IMAGES.map((img, i) => {
+              const pos = (i - assetIndex + ASSET_IMAGES.length) % ASSET_IMAGES.length;
+              return (
+                <div
+                  key={img.src}
+                  className="absolute inset-0 overflow-hidden border border-white/15 transition-[transform,opacity] duration-300 ease-in-out"
+                  style={{
+                    transform: `translate(${pos * 6}px, ${pos * 6}px)`,
+                    zIndex: ASSET_IMAGES.length - pos,
+                    opacity: pos === 0 ? 1 : pos === 1 ? 0.7 : 0.45,
+                  }}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── Case study tile ───────────────────────────────────────────── */}
