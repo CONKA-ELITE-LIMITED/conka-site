@@ -94,9 +94,21 @@ export default function AppInsightsPage() {
             <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-3">
               Wellness factors (alcohol, fatigue, stress, readiness) are self-reported in the CONKA app on an opt-in basis at the moment of testing. Cognitive scores come from the same test session.
             </p>
-            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch]">
+            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-6">
               This is observational data, not a controlled trial. Patterns show association, not causation. Where we cite peer-reviewed studies on the ingredients in Conka, we cite the findings of those studies as published; we do not extrapolate them to product-level claims.
             </p>
+
+            <div className="border-t border-white/10 pt-5 flex flex-col gap-3">
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
+                ^^ Cognitive test scores measured using the CONKA app, which uses the FDA-cleared Cognetivity CognICA assessment developed from Cambridge University research. Test sensitivity 93%, test-retest reliability 87.5%. Individual results vary; many factors influence test performance.
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
+                ¶ Ingredient-level peer-reviewed studies. Findings as published; not extrapolated to product-level effect.
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
+                Food supplements are not a substitute for a varied and balanced diet and a healthy lifestyle.
+              </p>
+            </div>
           </div>
         </div>
       </section>

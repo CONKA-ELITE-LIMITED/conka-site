@@ -47,19 +47,19 @@ const timeOfDay: ReportData = {
     },
     {
       counter: "03.",
-      topic: "DIP UPLIFT",
+      topic: "DIP GAP",
       value: "+1.09",
-      context: "Conka users score above their daily average exactly where the curve dips.",
+      context: "Conka-tagged tests sit above the user's daily average where the curve dips.^^",
       caveat: "n=74 Conka tests · 18-21",
     },
   ],
   interpretation:
-    "The brain does not run flat. Performance peaks from late morning through early afternoon and dips through the evening to a low around 9pm. Where caffeine sharpens the morning peak and steepens the crash, Conka users hold higher through the dip windows.",
+    "Test scores do not run flat across the day. They peak from late morning through early afternoon and decline through the evening to a low around 9pm.^^",
   conkaSubSection: {
-    headline: "A flatter curve, not a higher spike.",
-    body: "Conka users show their largest performance gap exactly where the natural curve dips most: late afternoon and evening. Mid-morning, when most people peak, the gap shrinks to nothing because everyone scores well there. The signal is sustained baseline, not stronger morning hit.",
+    headline: "A flatter curve in the data.",
+    body: "In our dataset, tests logged on days when Conka was taken sit above the user's daily average exactly where the curve dips most: late afternoon and evening. Mid-morning, when scores naturally peak, the gap shrinks to almost nothing. This is an observation about the dataset, not a controlled comparison.",
     caveat:
-      "247 Conka tests across the dip windows · directional consistency across all four windows · users may differ in unmeasured ways",
+      "247 Conka-tagged tests across the dip windows · directional consistency across all four windows · users may differ in unmeasured ways",
   },
   methodology:
     "Per-user deviation from personal mean. Each test compared to that user's daily average across all hours. 7,593 tests across 712 users between November 2023 and May 2026. Timestamps treated as UK local time (timezone not stored).",
@@ -71,7 +71,7 @@ const mentalFatigue: ReportData = {
   id: "mental-fatigue",
   topicCode: "APP-01",
   eyebrowConcept: "Mental fatigue",
-  hook: "When your brain feels off, it really is.",
+  hook: "When you feel foggy, the test scores agree.",
   subline: "501 users · 6,282 entries · 18 months",
   chart: {
     variant: "bar",
@@ -106,21 +106,21 @@ const mentalFatigue: ReportData = {
     },
   ],
   interpretation:
-    "Self-reported fatigue and low readiness are not just feelings. On their own worst fatigue days, users reliably underperform their own baseline by 1-3 points and react around 6% slower. The effect is real, modest, and consistent across hundreds of users.",
+    "Self-reported fatigue and low readiness line up with the test data. On users' own worst fatigue days, scores sit 1-3 points below their personal baseline and reaction times run around 6% slower.^^ The signal is modest and consistent across hundreds of users.",
   conkaSubSection: {
-    headline: "On fatigued days, Conka users react 41ms faster.",
-    body: "Per-user delta on the same users' fatigued-with-Conka vs fatigued-without-Conka tests. Speed is the most consistent KPI signal across this analysis and the alcohol report.",
+    headline: "Faster reaction times in the Conka-tagged subset.",
+    body: "When the same users' fatigued tests are split by whether Conka was logged, the Conka-tagged tests show 41ms faster reaction times than the non-Conka tests.^^ This is an observational signal at a small sample size, not a controlled comparison.",
     caveat:
       "n=15 users with both conditions · directional, not statistically conclusive · accuracy delta is mixed at this sample size",
   },
   ingredientBridge: {
     intro:
-      "App data on Conka effect for fatigue is directional. Independent peer-reviewed studies on the relevant ingredients show:",
+      "App data on Conka's effect for fatigue is directional. Independent peer-reviewed studies on the relevant ingredients show:",
     citations: [
       {
         ingredient: "Acetyl-L-Carnitine (ALCAR)",
         finding:
-          "Significantly improved cognitive function, attention, psychomotor speed, and reduced mental fatigue (P<0.001).",
+          "In one study, participants taking acetyl-L-carnitine showed improvements in psychomotor speed and attention, and reductions in mental fatigue (Malaguarnera et al. 2008).¶",
         pmid: "18937015",
         studyDesign: "Randomised controlled clinical trial",
         participants: "125 subjects",
@@ -129,7 +129,7 @@ const mentalFatigue: ReportData = {
       {
         ingredient: "Rhodiola rosea",
         finding:
-          "Anti-fatigue effect that increased mental performance and decreased the cortisol response to awakening stress.",
+          "In one study, participants with fatigue syndrome taking Rhodiola rosea showed an anti-fatigue effect and improvements in mental performance (Olsson et al. 2009).¶",
         pmid: "19016404",
         studyDesign: "Phase III randomised, double-blind, placebo-controlled",
         participants: "60 individuals with fatigue syndrome",
@@ -147,7 +147,7 @@ const stress: ReportData = {
   id: "stress",
   topicCode: "APP-01",
   eyebrowConcept: "Stress",
-  hook: "Stress is a 5-point cognitive tax.",
+  hook: "Stress shows up in the test data.",
   subline: "12 users · 44 stressed tests · Per-user delta",
   chart: {
     variant: "bar",
@@ -181,17 +181,17 @@ const stress: ReportData = {
       caveat: "n=891 stress entries",
     },
   ],
-  interpretation:
-    "The largest single effect across all four reports. Moderate stress costs over 5 points of personal score and 41ms of reaction time. Stress also degrades consistency and accuracy, not only speed. Mild stress shows up in over half of all test sessions: a persistent background cost, not a rare event.",
+    interpretation:
+    "The largest single signal across all four reports. On moderate-stress days, scores sit over 5 points below the personal no-stress baseline and reaction times run 41ms slower.^^ Stress also shows up in lower consistency and more errors, not just slower speed. Mild stress is the more practically important finding: it appears in over half of all test sessions, a persistent background pattern rather than a rare event.",
   // No Conka sub-section: only 3 users had both conditions, below the threshold for a defensible per-user delta.
   ingredientBridge: {
     intro:
-      "Only 3 users have stressed test days both with and without Conka. Per-user app data is below the threshold for a Conka-effect claim. Independent peer-reviewed studies on the stress-targeting ingredients in Conka show:",
+      "Only 3 users have stressed test days both with and without Conka. Per-user app data is below the threshold for a Conka-effect observation. Independent peer-reviewed studies on the stress-targeting ingredients in Conka show:",
     citations: [
       {
         ingredient: "Ashwagandha (Withania somnifera)",
         finding:
-          "Significant reduction in stress scores (P<0.0001) and serum cortisol levels (P=0.0006).",
+          "In one study, participants with chronic stress taking KSM-66 ashwagandha showed a reduction in perceived stress and serum cortisol levels (Chandrasekhar et al. 2012).¶",
         pmid: "23439798",
         studyDesign: "Prospective, randomised, double-blind, placebo-controlled",
         participants: "64 subjects with chronic stress",
@@ -200,7 +200,7 @@ const stress: ReportData = {
       {
         ingredient: "Lemon Balm (Melissa officinalis)",
         finding:
-          "Ameliorated negative effects of laboratory-induced stress on anxiety ratings.",
+          "In one study, participants taking Lemon Balm showed reduced effects of laboratory-induced stress on anxiety ratings (Kennedy et al. 2006).¶",
         pmid: "16444660",
         studyDesign: "Randomised, double-blind, placebo-controlled, crossover",
         participants: "24 healthy volunteers",
@@ -209,7 +209,7 @@ const stress: ReportData = {
       {
         ingredient: "Rhodiola rosea",
         finding:
-          "Decreased cortisol response to awakening stress alongside an anti-fatigue effect.",
+          "In one study, participants taking Rhodiola rosea showed a reduced cortisol response to awakening stress and an anti-fatigue effect (Olsson et al. 2009).¶",
         pmid: "19016404",
         studyDesign: "Phase III randomised, double-blind, placebo-controlled",
         participants: "60 individuals",
@@ -261,10 +261,10 @@ const alcohol: ReportData = {
     },
   ],
   interpretation:
-    "Below 6 drinks the data is noisy: small samples per cell, individual variation dominates. The reliable signal emerges at 6 or more drinks the night before, where users score nearly 5 points below their personal baseline and accuracy drops by over 4 points.",
+    "Below 6 drinks the data is noisy: small samples per cell, individual variation dominates. The reliable signal emerges at 6 or more drinks the night before, where scores sit nearly 5 points below the personal sober baseline and accuracy drops by over 4 points.^^",
   conkaSubSection: {
-    headline: "On hangover days, Conka users react 56ms faster.",
-    body: "Per-user delta on the same users' hangover-with-Conka vs hangover-without-Conka tests. Speed is the most objective signal in this comparison.",
+    headline: "Faster reaction times in the Conka-tagged subset.",
+    body: "When the same users' hangover tests are split by whether Conka was logged, the Conka-tagged tests show 56ms faster reaction times than the non-Conka tests.^^ This is an observational signal at a small sample size, not a controlled comparison.",
     caveat:
       "n=11 users with both conditions · directional, not statistically conclusive · sample may have followed lighter drinking nights",
   },
