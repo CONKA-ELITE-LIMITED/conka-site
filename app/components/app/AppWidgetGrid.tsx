@@ -54,16 +54,16 @@ const RESEARCH_STATS: {
 
 const ASSET_IMAGES = [
   {
-    src: "/app/NothingAppRing.jpg",
-    alt: "CONKA app user with cognitive score 92",
+    src: "/app/NothingAppRing2.jpg",
+    alt: "CONKA app cognitive score display",
   },
   {
     src: "/lifestyle/flow/FlowConkaRing.jpg",
     alt: "CONKA Flow product alongside the app on a gym mat",
   },
   {
-    src: "/app/NothingAppRing2.jpg",
-    alt: "CONKA app cognitive score display",
+    src: "/app/NothingAppRing.jpg",
+    alt: "CONKA app user with cognitive score 92",
   },
 ];
 
