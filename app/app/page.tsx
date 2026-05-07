@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
   AppFeaturePanel,
   AppStickyPhoneBlock,
   AppDownloadSection,
-  AppResearchModal,
+  AppWidgetGrid,
 } from "@/app/components/app";
-import LabCaseStudies from "@/app/components/LabCaseStudies";
 import {
   CognitiveTestSection,
   CognitiveTestSectionMobile,
@@ -18,9 +16,6 @@ import useIsMobile from "@/app/hooks/useIsMobile";
 
 export default function AppPage() {
   const isMobile = useIsMobile();
-  const [isResearchOpen, setIsResearchOpen] = useState(false);
-  const openResearch = useCallback(() => setIsResearchOpen(true), []);
-  const closeResearch = useCallback(() => setIsResearchOpen(false), []);
 
   return (
     <div
@@ -42,37 +37,17 @@ export default function AppPage() {
         <AppFeaturePanel />
       </section>
 
-      {/* Quick-links strip */}
-      <div className="flex justify-center py-6 px-4">
-        <div className="flex flex-wrap justify-center gap-3">
-          <button
-            type="button"
-            onClick={openResearch}
-            className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 tabular-nums bg-white/[0.07] border border-white/15 px-5 py-2.5 hover:bg-white/[0.12] hover:text-white/80 transition-colors"
-          >
-            Research + Clinical Data
-          </button>
-          <a
-            href="https://apps.apple.com/gb/app/conka-app/id6450399391"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 tabular-nums bg-white/[0.07] border border-white/15 px-5 py-2.5 hover:bg-white/[0.12] hover:text-white/80 transition-colors"
-          >
-            iOS App ↗
-          </a>
-          <a
-            href="https://play.google.com/store/apps/details?id=com.conka.conkaApp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 tabular-nums bg-white/[0.07] border border-white/15 px-5 py-2.5 hover:bg-white/[0.12] hover:text-white/80 transition-colors"
-          >
-            Android App ↗
-          </a>
+      {/* 2. CREDIBILITY — research, install, proof, asset */}
+      <section
+        className="brand-section"
+        aria-label="Research, install, and athlete proof"
+      >
+        <div className="brand-track">
+          <AppWidgetGrid />
         </div>
-      </div>
-      <AppResearchModal isOpen={isResearchOpen} onClose={closeResearch} />
+      </section>
 
-      {/* 2. HOW IT WORKS — the mechanism */}
+      {/* 3. HOW IT WORKS — the mechanism */}
       <AppStickyPhoneBlock />
 
       {/* 4. TRY IT — live product demo */}
@@ -87,17 +62,7 @@ export default function AppPage() {
         </section>
       )}
 
-      {/* 5. ATHLETE PROOF — social credibility */}
-      <section
-        className="brand-section"
-        aria-label="Athletes using CONKA"
-      >
-        <div className="brand-track">
-          <LabCaseStudies />
-        </div>
-      </section>
-
-      {/* 6. DOWNLOAD — final CTA */}
+      {/* 5. DOWNLOAD — final CTA */}
       <section
         className="brand-section"
         aria-label="Download the CONKA app"

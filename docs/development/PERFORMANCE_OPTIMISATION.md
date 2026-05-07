@@ -42,6 +42,13 @@ Lighthouse learnings were previously recorded only in CHANGELOG entries (retrosp
 
 **Accordion pattern:** `max-height` transitions (0 → fixed px) are also non-composited. For accordions triggered by user interaction (click), Lighthouse typically does not flag them because the animation is not paint-blocking on load. Automatic / looping / scroll-triggered animations must use `transform` exclusively.
 
+**JS-driven animation timers.** `setInterval`/`setTimeout` that update React state (e.g. autoplay carousels) trigger re-renders during the entire mobile Lighthouse window (~10s). Each tick is a render + reconcile + paint that blocks main thread, contributing to TBT and indirectly inflating LCP element render delay. Two acceptable patterns:
+
+1. Remove the autoplay entirely (manual nav only) — preferred for performance-critical pages.
+2. If autoplay is essential for engagement, defer the component mount via `<VisibilityGate>` (see Rule 4) so the interval doesn't start until the user scrolls to it.
+
+May 2026: stripping the 3.5s autoplay from `CROTestimonials` plus viewport-gating its mount eliminated continuous re-renders during the audit window.
+
 ---
 
 ## Rule 2 — Images
@@ -96,13 +103,33 @@ All below-fold sections on `/start` must be dynamically imported with a skeleton
 ```tsx
 const HeavySection = dynamic(
   () => import("../components/cro/HeavySection"),
-  { loading: () => <div className="h-[400px]" /> },
+  { ssr: false, loading: () => <div className="h-[400px]" /> },
 );
 ```
 
 The skeleton `h-[Xpx]` value should approximate the section height to prevent CLS when the component loads.
 
+**App Router gotcha — `dynamic()` SSRs by default.** In Next.js App Router, `dynamic()` only defers the *client bundle download*. The component is still server-rendered into the initial HTML. This means hydration still walks the full tree, which dominates LCP on heavy pages. May 2026: /start was shipping 1,217 SSR'd DOM elements with all 7 sections "dynamic-imported" — the dynamic config was only saving on JS download, not on hydration cost.
+
+**For `noindex` paid traffic pages, pass `ssr: false`.** Pages with `robots: { index: false }` (ad landing pages, funnel pages) gain nothing from SSR'd content — Google won't index it. Adding `{ ssr: false, loading: ... }` drops the component from the initial HTML entirely; only the skeleton ships. After this change /start's pre-hydration DOM dropped from 1,217 to ~50 elements.
+
+**Important constraint (Next.js 16+):** `dynamic({ ssr: false })` cannot be called from a Server Component — Next.js throws a build error. The page itself must remain a Server Component (it owns the `metadata` export, which client components cannot have). Solution: put the `dynamic({ ssr: false })` calls in a thin `"use client"` wrapper component, then render that wrapper from the page. /start uses `app/start/CROBelowFold.tsx` for this. The wrapper imports each below-fold section dynamically and renders the section markup; the page imports the wrapper as a normal child component.
+
+**For SEO-indexed pages**, `ssr: false` removes content from the initial HTML and harms ranking. Keep SSR enabled and reduce hydration cost a different way: extract heavy interactivity into smaller leaf client components, keep most of the section as server components.
+
+**Viewport-gated mount for the heaviest below-fold components.** Even with `ssr: false`, the dynamic chunk still downloads and the component still mounts on initial client render. For sections with their own continuous effects (autoplay carousels rendering 20+ cards, `IntersectionObserver`-driven animations, large card grids), wrap the dynamic component in `<VisibilityGate minHeight="...">` (`app/components/VisibilityGate.tsx`). The chunk doesn't download or execute until the user scrolls within ~200px of the section. May 2026: applied to `CROTestimonials` on /start.
+
+```tsx
+import VisibilityGate from "@/app/components/VisibilityGate";
+
+<VisibilityGate minHeight="500px">
+  <CROTestimonials />
+</VisibilityGate>
+```
+
 **`"use client"` minimisation:** Keep page-level components as server components. Only add `"use client"` at the leaf component that actually needs interactivity (carousel state, accordion state, etc.). A `"use client"` at a page level pulls the entire component tree into the client bundle.
+
+**DOM size budget for paid traffic pages.** Initial SSR'd HTML should target <500 DOM elements. Reference: `/our-story` ships 375 elements (no client interactivity, all static). /start before May 2026 fix shipped 1,217. After `ssr: false`, /start ships ~50 pre-hydration. If your section count and DOM count are growing, audit which sections need to be SSR'd at all on a `noindex` page.
 
 ---
 
@@ -124,18 +151,20 @@ const poppins = Poppins({
 Without `preload: false`, Next.js includes the font CSS in the preload chain on every page — even pages that never use the font (e.g., `/start` never uses Poppins, Syne, or DM Sans). `preload: false` means the font still loads and is available for pages that need it — it just does not block initial render.
 
 **Current font load on every page** (declared in `app/layout.tsx`):
-- Neue Haas Grotesk — local, brand primary, preloads normally (local fonts have no external chain)
-- JetBrains Mono — local, data/mono, preloads normally
-- Poppins — Google, `preload: false` — site-wide default body font (`globals.css`), used by all legacy pages
-- Caveat — Google, `preload: false` — handwriting accent on professionals/quiz/win
+- Neue Haas Grotesk — local, brand primary
+- JetBrains Mono — local, data/mono
 
-**Removed (May 2026):**
-- Syne and DM_Sans — declared in `layout.tsx` but the CSS rules using them (`.premium-pdp .premium-display-hero`, `.premium-pdp .premium-body-hero`) had zero JSX consumers. Both removed.
-- IBM Plex Mono — was the `--font-clinical` / `font-clinical` class font. All 260 usages migrated to `font-mono` (now pointing to JetBrains Mono). One monospace font serves the whole site — no Google font request for mono on any page.
+No Google fonts are declared in `layout.tsx` as of May 2026 — Poppins, Caveat, Syne, DM_Sans, and IBM Plex Mono have all been removed. One monospace (JetBrains Mono, local) serves the whole site.
 
-**Audit fonts before adding:** every Google font in the root layout adds bytes to every page even with `preload: false`. Before declaring a new `next/font/google` import, search the codebase for an existing variable that fits.
+**Audit fonts before adding:** every Google font in the root layout adds bytes to every page even with `preload: false`. Before declaring a new `next/font/google` import, search the codebase for an existing variable that fits. Local fonts via `next/font/local` are preferable — they have no external dependency chain.
 
 Font weights were already trimmed in April 2026 to only the weights actually used. Do not add new weight variants without checking actual usage.
+
+**Third-party scripts that auto-load Google Fonts.** Even with a clean `layout.tsx`, `fonts.googleapis.com` can still appear in the critical chain via third-party stylesheet injection. Klaviyo's Brand Library auto-loads every font configured in the Klaviyo dashboard, on every page, regardless of whether a signup form is rendered. If any of those fonts are Google Fonts, they enter the critical chain via Klaviyo's stylesheet injection — bypassing the Next.js font config entirely.
+
+May 2026 audit found Poppins (7 variants), Albert Sans, Cormorant Garamond, and IBM Plex Sans all loaded site-wide via Klaviyo Brand Library, costing 28 KiB and a 2,520ms critical-chain dependency on /start (Lighthouse mobile, prod). Fix: in **Klaviyo dashboard → Brand Library → Fonts**, replace Google Fonts with Klaviyo-hosted equivalents (suffix: `-Klaviyo-Hosted`) or web-safe (Helvetica). Any live signup form referencing a deleted font must be updated to use a remaining font before deletion. This is a marketing-team task, not engineering.
+
+Whenever a new third-party marketing tool is added (review platforms, popup builders, chat widgets), check whether it has its own font-loading mechanism that could re-introduce a Google Fonts dependency.
 
 ---
 
@@ -150,8 +179,13 @@ Font weights were already trimmed in April 2026 to only the weights actually use
 | 2026-05-06 | 38 | 8.3s | 1,140ms | CRO rebuild — test run against dev server, not comparable |
 | 2026-05-06 | 60 | 9.9s | 270ms | After animation + script strategy review |
 | 2026-05-06 | 76 | — | — | Production after animation fix. Previous baseline was 80. |
+| 2026-05-07 | 40 | 8.5s | 1,200ms | Mobile prod /start regression discovered. LCP element render delay 2,100ms — main thread blocked by SSR'd hydration of 1,217 DOM elements. |
+| 2026-05-07 | TBD | TBD | TBD | After Track 1: `ssr: false` on dynamic imports + `CROTestimonials` autoplay strip + `VisibilityGate`. Pending re-measurement. |
+| 2026-05-07 | TBD | TBD | TBD | After Track 2: removed Google Fonts (Poppins, Albert Sans, Cormorant Garamond, IBM Plex Sans) from Klaviyo Brand Library. Pending re-measurement. |
 
-The 76 vs. 80 gap is caused by: (a) the Google Fonts critical CSS chain (`fonts.googleapis.com` appearing at 1,999ms in the dependency tree), addressed by `preload: false` on all Google fonts; (b) legacy JS polyfills (13.8 KiB) from missing browserslist config, addressed by adding modern browserslist to `package.json`.
+The 76 vs. 80 gap (May 2026) was originally attributed to: (a) the Google Fonts critical CSS chain — but later traced to Klaviyo Brand Library auto-loading Google Fonts, not Next.js's font config; (b) legacy JS polyfills (13.8 KiB) from missing browserslist — `package.json` browserslist is present but not always honored by Next.js 16's SWC compiler (under investigation; consider a separate `.browserslistrc`).
+
+The 80 → 40 regression discovered May 7 was driven by structural issues that the original docs missed: App Router `dynamic()` not actually deferring SSR, autoplay carousel re-rendering during the audit window, and 1,217 SSR'd DOM elements. Track 1 + Track 2 fixes target these directly.
 
 **Always run Lighthouse against the production Vercel deployment, not `localhost`.** Dev server results are not representative: Google Fonts makes external requests in dev, hot-reload scripts add weight, and server-rendering differences affect FCP.
 
@@ -163,9 +197,14 @@ Before committing new components to `/start` or any paid traffic page:
 
 - [ ] No `transition-all` — replaced with specific property (`transition-colors`, `transition-transform`, `transition-opacity`)
 - [ ] No `width` / `height` / `max-height` in transitions
+- [ ] No `setInterval`/`setTimeout` autoplay on below-fold components without a `<VisibilityGate>` wrapper
 - [ ] Hero image has `priority` + `fetchPriority="high"` + accurate `sizes`
 - [ ] All below-fold images have `loading="lazy"` + accurate `sizes`
 - [ ] New below-fold sections are `dynamic()`-imported with skeleton fallback
+- [ ] For pages with `robots: { index: false }`: dynamic imports also pass `ssr: false`
+- [ ] Heaviest below-fold section (carousels, animation-heavy components) wrapped in `<VisibilityGate>`
+- [ ] Initial SSR DOM element count under 500 (use DevTools → Elements, count root descendants)
 - [ ] Page-level component is a server component (no `"use client"` at page root)
 - [ ] No new third-party scripts added without a Lighthouse before/after test
-- [ ] Lighthouse test run against Vercel preview deployment, not localhost
+- [ ] No new third-party marketing tool that auto-loads Google Fonts (Klaviyo, Yotpo, etc.) — verify font loading behaviour before integrating
+- [ ] Lighthouse test run against Vercel preview deployment, not localhost (run 3× and take median; mobile Slow 4G swings ±15-20 points)

@@ -11,9 +11,7 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 const CARD_WIDTH_MOBILE = 300;
 const CARD_WIDTH_DESKTOP = 340;
 const GAP = 16;
-const AUTO_ADVANCE_MS = 3500;
 const TRANSITION_MS = 600;
-const RESUME_DELAY_MS = 5000;
 const CHAR_LIMIT = 200;
 const SWIPE_THRESHOLD = 50;
 
@@ -210,8 +208,6 @@ export default function CROTestimonials({
 
   const [pos, setPos] = useState(totalCards);
   const [smooth, setSmooth] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartRef = useRef<number>(0);
 
   const realIndex = ((pos % totalCards) + totalCards) % totalCards;
@@ -237,47 +233,20 @@ export default function CROTestimonials({
     }
   }, [smooth]);
 
-  useEffect(() => {
-    if (isPaused || expandedIndex !== null || totalCards <= 1) return;
-    const interval = setInterval(() => {
-      setSmooth(true);
-      setPos((p) => p + 1);
-    }, AUTO_ADVANCE_MS);
-    return () => clearInterval(interval);
-  }, [isPaused, expandedIndex, totalCards]);
-
-  const pauseAndScheduleResume = useCallback(() => {
-    setIsPaused(true);
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(
-      () => setIsPaused(false),
-      RESUME_DELAY_MS,
-    );
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    };
-  }, []);
-
   const goToSlide = (targetReal: number) => {
     const currentReal = ((pos % totalCards) + totalCards) % totalCards;
     const diff = targetReal - currentReal;
     setSmooth(true);
     setPos((p) => p + diff);
-    pauseAndScheduleResume();
   };
 
   const navigate = (direction: 1 | -1) => {
     setSmooth(true);
     setPos((p) => p + direction);
-    pauseAndScheduleResume();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartRef.current = e.touches[0].clientX;
-    pauseAndScheduleResume();
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -329,8 +298,6 @@ export default function CROTestimonials({
 
         <div
           className="overflow-hidden -mx-5 px-5 lg:mx-0 lg:px-0"
-          onMouseEnter={pauseAndScheduleResume}
-          onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
