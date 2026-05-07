@@ -114,7 +114,7 @@ function DarkAthleteCard({
               loading="lazy"
               sizes="(max-width: 1024px) 90vw, 480px"
               className="object-cover brightness-75"
-              style={{ objectPosition: `${focal.x}% ${focal.y}%` }}
+              style={{ objectPosition: `${focal.x}% 0%` }}
             />
           </div>
         )}
@@ -277,7 +277,10 @@ export default function AppWidgetGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 items-start">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 items-start">
+
+        {/* ── Research + Install: stacked in col 1 on desktop ───────────── */}
+        <div className="contents lg:flex lg:flex-col lg:gap-3">
 
         {/* ── Research tile ─────────────────────────────────────────────── */}
         <div className="border border-white/15 bg-white/[0.07] flex flex-col">
@@ -365,8 +368,10 @@ export default function AppWidgetGrid() {
           </div>
         </div>
 
+        </div>{/* end Research + Install wrapper */}
+
         {/* ── Asset tile ────────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden col-span-2 lg:col-span-1 min-h-[220px] border border-white/15">
+        <div className="relative overflow-hidden col-span-2 lg:col-span-1 min-h-[220px] border border-white/15 lg:self-stretch">
           <Image
             src="/app/NothingAppRing.jpg"
             alt="CONKA app user checking their cognitive score"

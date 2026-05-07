@@ -80,45 +80,37 @@ export default function AppWidgetGridModal({
 
         {/* Pagination */}
         {hasPagination && (
-          <div className="flex items-center justify-between border-t border-white/10 px-5 py-3">
+          <div className="flex items-center justify-between border-t border-white/10 px-5 py-4">
             <button
               type="button"
               onClick={onPrev}
-              className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors min-h-[44px] pr-4"
+              aria-label="Previous athlete"
+              className="w-11 h-11 flex items-center justify-center bg-white text-[#0a0a0a] hover:bg-white/85 active:bg-white/70 transition-colors focus:outline-none"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="square"
-              >
-                <line x1="19" y1="12" x2="5" y2="12" />
-                <polyline points="12 19 5 12 12 5" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <polyline
+                  points="15 6 9 12 15 18"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                />
               </svg>
-              Prev
             </button>
             <button
               type="button"
               onClick={onNext}
-              className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors min-h-[44px] pl-4"
+              aria-label="Next athlete"
+              className="w-11 h-11 flex items-center justify-center bg-white text-[#0a0a0a] hover:bg-white/85 active:bg-white/70 transition-colors focus:outline-none"
             >
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="square"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <polyline
+                  points="9 6 15 12 9 18"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                />
               </svg>
             </button>
           </div>
