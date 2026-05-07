@@ -56,7 +56,8 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
   }));
 
   return (
-    <div className="w-full h-[280px] lg:h-[360px]">
+    <div className="w-full">
+      <div className="w-full h-[280px] lg:h-[360px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
@@ -136,6 +137,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           />
         </LineChart>
       </ResponsiveContainer>
+      </div>
 
       {/* Performance legend */}
       <div className="flex items-center justify-center gap-6 mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums">
