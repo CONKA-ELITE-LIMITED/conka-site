@@ -7,7 +7,7 @@ export default function IngredientBridge({
 }) {
   return (
     <div className="border border-white/20 bg-white/[0.12] p-5 lg:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-3">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-3">
         {"// Ingredient evidence · APP-01"}
       </p>
       <p className="text-sm text-white/90 leading-relaxed max-w-[68ch]">
@@ -32,7 +32,7 @@ export default function IngredientBridge({
                   href={`https://pubmed.ncbi.nlm.nih.gov/${citation.pmid}/`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 hover:text-white tabular-nums flex-shrink-0 transition-colors"
+                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/75 hover:text-white tabular-nums flex-shrink-0 transition-colors"
                 >
                   PMID {citation.pmid} ↗
                 </a>
@@ -40,7 +40,7 @@ export default function IngredientBridge({
               <p className="text-sm text-white/90 leading-snug max-w-[60ch]">
                 {citation.finding}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/60 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/70 tabular-nums">
                 {citation.studyDesign} · {citation.participants} · {citation.duration}
               </p>
             </li>

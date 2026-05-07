@@ -12,7 +12,7 @@ export function AppDownloadSection() {
         Start measuring your brain today.
       </h2>
       <AppInstallButtons variant="clinical-dark" className="justify-center" />
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 tabular-nums mt-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/65 tabular-nums mt-4">
         Free to use · No subscription required · Core features included
       </p>
     </div>

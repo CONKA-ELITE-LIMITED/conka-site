@@ -14,7 +14,7 @@ export default function DataReportSection({
     <div className="flex flex-col gap-10 lg:gap-14">
       {/* ── Trio header ──────────────────────────────────────────── */}
       <header>
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-3">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-3">
           {`// ${report.eyebrowConcept} · ${report.topicCode}`}
         </p>
         <h2
@@ -23,7 +23,7 @@ export default function DataReportSection({
         >
           {report.hook}
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70 tabular-nums">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/80 tabular-nums">
           {report.subline}
         </p>
       </header>
@@ -48,7 +48,7 @@ export default function DataReportSection({
       {/* ── Conka sub-section (optional) ─────────────────────────── */}
       {report.conkaSubSection ? (
         <div className="border border-white/20 bg-white/[0.12] p-5 lg:p-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-3">
             {"// Conka observation · APP-01"}
           </p>
           <h3
@@ -60,7 +60,7 @@ export default function DataReportSection({
           <p className="text-sm text-white/90 leading-relaxed max-w-[64ch]">
             {report.conkaSubSection.body}
           </p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/60 tabular-nums mt-4">
+          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/65 tabular-nums mt-4">
             {report.conkaSubSection.caveat}
           </p>
         </div>
@@ -73,10 +73,10 @@ export default function DataReportSection({
 
       {/* ── Methodology footnote ─────────────────────────────────── */}
       <div className="border-t border-white/10 pt-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-2">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-2">
           {"// Methodology · APP-01"}
         </p>
-        <p className="text-sm text-white/75 leading-relaxed max-w-[68ch]">
+        <p className="text-sm text-white/85 leading-relaxed max-w-[68ch]">
           {report.methodology}
         </p>
       </div>

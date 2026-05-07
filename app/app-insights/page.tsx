@@ -21,11 +21,12 @@ export default function AppInsightsPage() {
 
       {/* 1. HERO ─ what this page is and why we made it */}
       <section
-        className="brand-section brand-hero-first pt-16 lg:pt-20"
+        className="brand-section brand-hero-first"
+        style={{ paddingTop: "5rem" }}
         aria-labelledby="app-insights-hero"
       >
         <div className="brand-track">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-4">
             {"// Real cognitive data · APP-01"}
           </p>
           <h1
@@ -35,7 +36,7 @@ export default function AppInsightsPage() {
           >
             Real cognitive data. Real users. No spin.
           </h1>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/75 tabular-nums mb-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/80 tabular-nums mb-10">
             {APP_INSIGHTS_TOTALS.users} users · {APP_INSIGHTS_TOTALS.tests.toLocaleString()} tests · {APP_INSIGHTS_TOTALS.monthsSpan} months · {APP_INSIGHTS_TOTALS.reportCount} reports
           </p>
           <p className="text-base lg:text-lg text-white/90 leading-relaxed max-w-[68ch]">

@@ -148,7 +148,7 @@ function ContentReveal({
       >
         {feature.heading}
       </h3>
-      <p className="text-sm text-white/55 leading-relaxed">{feature.body}</p>
+      <p className="text-sm text-white/85 leading-relaxed">{feature.body}</p>
     </div>
   );
 }
@@ -194,7 +194,7 @@ function AppFeaturePanelDesktop() {
 
         <div className="mt-10 flex flex-col items-center gap-3">
           <AppInstallButtons variant="clinical-dark" className="justify-center" />
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35 tabular-nums">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/65 tabular-nums">
             Free to use
           </p>
         </div>
@@ -244,7 +244,7 @@ function AppFeaturePanelMobile() {
 
       <div className="mt-8">
         <AppInstallButtons variant="clinical-dark" />
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35 tabular-nums mt-3">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/65 tabular-nums mt-3">
           Free to use
         </p>
       </div>
