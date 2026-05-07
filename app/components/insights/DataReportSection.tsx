@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { ReportData } from "@/app/lib/appInsightsTypes";
 import InsightStatCard from "./InsightStatCard";
 import IngredientBridge from "./IngredientBridge";
+import ReportHeadlineCallout from "./ReportHeadlineCallout";
 
 export default function DataReportSection({
   report,
@@ -27,6 +28,9 @@ export default function DataReportSection({
           {report.subline}
         </p>
       </header>
+
+      {/* ── Headline-finding callout (layman framing + rigor signal) */}
+      <ReportHeadlineCallout report={report} />
 
       {/* ── Hero chart ───────────────────────────────────────────── */}
       <div className="border border-white/20 bg-white/[0.08] p-4 lg:p-6">

@@ -6,6 +6,71 @@
 
 ## May 2026
 
+### 2026-05-07 -- Design system: dark-page documentation and CSS truthing (no visual change)
+
+Audit pass to make `DESIGN_SYSTEM.md` and `brand-base.css` accurately describe what `/app` and `/app-insights` actually do. No visual change to either page; both still render via the same inline `backgroundColor: "#0a0a0a"` + inline SVG dot pattern as before.
+
+**`app/brand-base.css` Layer 2.5:**
+- Removed the `.brand-app-dark` class (dead code: defined CSS variables that no component consumed).
+- Replaced the `.app-dot-grid` definition with the actually-used pattern (2x2px white squares at 24px pitch, 18% opacity) so the class matches the inline SVG used on both pages. Class is still optional; pages continue to inline the pattern.
+- Header comment rewritten to describe the real shell pattern (`brand-clinical` + inline dark bg) and to note that there is no separate `brand-app-dark` scope class.
+
+**`docs/branding/DESIGN_SYSTEM.md`:**
+- Section 4 (Radius): radius note corrected — the dark pages inherit zero radius from `.brand-clinical`, not from a separate App Dark rule.
+- Section 8 (Clinical Aesthetic): `/app-insights` added to the active-pages list. New preface clarifies that the clinical grammar (zero radii, hairlines, mono labels, no shadows, no gradients, navy interactive-only) applies in both light and dark themes; section 10 documents the dark-theme palette specifically.
+- Section 10 (App Dark Aesthetic): rewritten to reflect reality.
+  - Active pages updated to `/app` and `/app-insights`.
+  - Scope description updated: `brand-clinical` + inline dark bg, no `brand-app-dark` class. Page-shell snippet shown verbatim.
+  - "Fixed palette" table replaced with a "ramp" table showing the most-used stops (start here), interactive surfaces, and the full ramp actually in use. Discipline note added: stay on multiples of 5 for opacity, reach for arbitrary `[0.0X]` only when an intermediate hairline tier is needed.
+  - SVG dot grid section corrected to the 2x2px / 24px / 18% pattern and notes that pages inline it.
+  - "Do not" list updated: invent new opacity stops outside multiples of 5 without reason; add a third dot-grid variant.
+
+**Why:** the previous docs said the dark pages used `.brand-app-dark` and `.app-dot-grid` and a fixed white-opacity palette. None of those were accurate against the codebase. The truthing pass aligns the docs with what reviewers will see when they open the page.
+
+---
+
+### 2026-05-07 -- /app-insights: credibility and readability upgrade
+
+Two-phase upgrade making the page land its differentiation message ("CONKA is not just a supplement; testing is part of the experience") and turning every report into a layman-readable artefact without losing rigour for educated readers. Filter UX preserved.
+
+**Phase 1 -- Premise upgrade**
+
+New components:
+- `app/components/insights/InsightHeroDifferentiator.tsx` -- replacement hero. Headline rewritten to "We don't ask if Conka works. We measure it." Stats ribbon (712 users / 7,593 tests / 30 months / 4 reports) promoted from a mono caption to a designed 4-cell strip with hairline dividers, 2-col mobile / 4-col desktop.
+- `app/components/insights/HowThisIsPossibleModule.tsx` -- new section between hero and the report stack. Three-step flow (Take Conka -> Test in app -> See your data) explains the measurement loop, embeds the validated-test credentials grid, and renders the verbatim CognICA credential paragraph. Fires `insights_credibility_view` once on viewport entry.
+- `app/components/insights/CredentialsBadgeBlock.tsx` -- 4-stat credentials grid (93% sensitivity / 87.5% reliability / 14 NHS Trusts / 510(k) FDA-cleared). Mirrors `AppResearchModal`'s stat layout so the same proof points stay consistent across surfaces.
+
+Page changes:
+- `app/app-insights/page.tsx` -- swapped inline hero for `<InsightHeroDifferentiator />`, inserted "How this is possible" section after the hero, slimmed the methodology footer (credential paragraph removed; legal anchors only). The `^^` footnote now points readers back to the lifted credentials section.
+- `app/app-insights/layout.tsx` -- metadata refreshed: title "Real cognitive data from real users | CONKA", description re-anchored on the differentiation framing, OG copy aligned.
+
+**Phase 2 -- Readability upgrade**
+
+Data layer (additive, no restructure):
+- `app/lib/appInsightsTypes.ts` -- new types `LaymanAnchor` and `EvidenceStrength`; `ReportData` extended with `headlineFinding`, `sampleSize`, `evidenceStrength`, `laymanAnchors[]`.
+- `app/lib/appInsightsData.ts` -- all four reports populated from the source `docs/conkaAppData/*.md` Summary tables. Time-of-day and Mental Fatigue marked Strong; Stress and Alcohol marked Moderate. Two layman anchors per report pairing a measured stat with a relatable comparison.
+
+New components:
+- `app/components/insights/EvidenceStrengthBadge.tsx` -- small mono pill, monochrome with a dot indicator that ramps from filled (Strong) to half-filled (Moderate) to outlined (Early signal). Borders track the same ramp.
+- `app/components/insights/InsightTldrStrip.tsx` -- 4 cards above the existing filter, one per report. Each card shows headline finding + sample size + evidence badge. Click clears any active filter, scrolls to the matching section, and fires `insights_tldr_card_click` with the report id.
+- `app/components/insights/MethodologyInThirtySeconds.tsx` -- expandable panel above the filter. Closed by default on mobile, opens after mount on desktop. Two-card visual contrasts "the simple way (misleading)" with "what we do (per-user delta)"; rigor caveats listed below. Fires `insights_methodology_open` once per session.
+- `app/components/insights/ReportHeadlineCallout.tsx` -- per-report client island that DataReportSection now renders between the trio header and the chart card. Shows headline finding (large), evidence badge, sample size, and the layman anchors as a 2-up grid. Fires `insights_report_callout_view` once per report on viewport entry.
+
+Modified:
+- `app/components/insights/DataReportSection.tsx` -- prepends each report with `<ReportHeadlineCallout />`. Existing trio header, chart card, stat cards, Conka sub-section, ingredient bridge, and methodology footnote unchanged.
+- `app/components/insights/InsightFilteredSections.tsx` -- now mounts `InsightTldrStrip` and `MethodologyInThirtySeconds` above the filter bar. Owns a `focusReport(id)` helper that clears the filter (so the target section is in the DOM) and scrolls on the next animation frame.
+
+**Constraints honoured:**
+- Locked CognICA credential language from `LandingDisclaimer.tsx` footnote ^^ copied verbatim, not rewritten.
+- Existing chart components (`DataLineChart`, `DataBarChart`), stat cards (`InsightStatCard`), Conka sub-sections, and ingredient bridges untouched.
+- No theme migration: page stays on the `#0a0a0a` aesthetic with the SVG dot pattern.
+- No em dashes in any new copy; commas, periods, and the middle-dot `·` used as separators.
+- Build remains static (`/app-insights` still pre-renders); new client islands are scoped to interactive bits only.
+
+Phase 3 ("what we do with this data" closing module connecting findings to product decisions) deferred until product-decision narratives are locked.
+
+---
+
 ### 2026-05-07 -- Homepage: real-data callouts on benefit components, section reorder, credentials strip simplified
 
 Wired the real `/app-insights` data into two homepage components and reorganised the middle of the page so trust and proof land in the right order.

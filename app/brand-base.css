@@ -388,40 +388,42 @@
 /* ================================================================
  * LAYER 2.5 — APP DARK SCOPE
  * ================================================================
- * The /app page aesthetic. Background: #0a0a0a (slightly softer
- * than pure black). All surfaces use white/opacity utilities
- * applied directly in components — no separate CSS classes needed.
+ * The dark-canvas pages: /app and /app-insights. Both apply
+ * .brand-clinical for zero radii and navy CTAs, then layer dark
+ * surfaces using white-opacity Tailwind utilities applied directly
+ * in components.
  *
- * Active pages: /app
+ * Active pages: /app, /app-insights
  *
- * Palette (Tailwind utility reference):
- *   bg-white/10       card/tile surface
- *   border-white/12   card border (hairline)
- *   bg-white/[0.07]   inactive tab / ghost surface
- *   text-white/55     body copy
- *   text-white/40     eyebrow / label
- *   text-white/35     very muted (footnotes, tags)
- *   text-white        primary text, active state
- *   bg-white          primary CTA fill (pair with text-black)
+ * Page-shell pattern (verbatim from /app/page.tsx and
+ * /app-insights/page.tsx):
+ *
+ *   <div className="brand-clinical min-h-screen text-white" style={{
+ *     backgroundColor: "#0a0a0a",
+ *     backgroundImage: "url(...dot-grid SVG...)",
+ *     backgroundSize: "24px 24px",
+ *   }}>
+ *
+ * The dot grid is currently applied via inline style. The
+ * `.app-dot-grid` helper below mirrors the inline pattern exactly so
+ * either page can be refactored to use the class without a visual
+ * change. There is no `.brand-app-dark` scope class — the `/app`
+ * dark theme is `brand-clinical` + a dark background, not a separate
+ * scope.
+ *
+ * Surface, border, and text opacity values used on these pages span
+ * a continuous ramp rather than a fixed palette. See section 10 of
+ * DESIGN_SYSTEM.md for the full ramp table and recommended stops.
  *
  * Full spec: docs/branding/DESIGN_SYSTEM.md section 10
  * ================================================================ */
 
-.brand-app-dark {
-  --app-bg: #0a0a0a;
-  --app-surface: rgba(255, 255, 255, 0.10);
-  --app-border: rgba(255, 255, 255, 0.12);
-  --app-surface-inactive: rgba(255, 255, 255, 0.07);
-  --app-text-body: rgba(255, 255, 255, 0.55);
-  --app-text-label: rgba(255, 255, 255, 0.40);
-  --app-text-muted: rgba(255, 255, 255, 0.35);
-}
-
-/* SVG dot grid overlay for .brand-app-dark pages. Set background-color
-   separately (bg-[#0a0a0a]). 1px white dots at 20px pitch. */
+/* SVG dot grid overlay matching the inline pattern used on /app and
+   /app-insights: 2x2px white squares at 24px pitch, 18% opacity. Set
+   background-color separately (e.g. `bg-[#0a0a0a]` or inline style). */
 .app-dot-grid {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255%2C255%2C255%2C0.07)'/%3E%3C/svg%3E");
-  background-size: 20px 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
 }
 
 /* ================================================================

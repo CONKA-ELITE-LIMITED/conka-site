@@ -1,8 +1,9 @@
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import InsightFilteredSections from "@/app/components/insights/InsightFilteredSections";
+import InsightHeroDifferentiator from "@/app/components/insights/InsightHeroDifferentiator";
+import HowThisIsPossibleModule from "@/app/components/insights/HowThisIsPossibleModule";
 import AppDownloadSection from "@/app/components/app/AppDownloadSection";
-import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 
 export default function AppInsightsPage() {
   return (
@@ -17,43 +18,38 @@ export default function AppInsightsPage() {
     >
       <Navigation />
 
-      {/* 1. HERO ─ what this page is and why we made it */}
+      {/* 1. HERO ─ what this page is and why we have this data */}
       <section
         className="brand-section brand-hero-first"
         style={{ paddingTop: "5rem" }}
         aria-labelledby="app-insights-hero"
       >
         <div className="brand-track">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-4">
-            {"// Real cognitive data · APP-01"}
-          </p>
-          <h1
-            id="app-insights-hero"
-            className="brand-h1 text-white mb-6 max-w-[22ch]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            Real cognitive data. Real users. No spin.
-          </h1>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/80 tabular-nums mb-10">
-            {APP_INSIGHTS_TOTALS.users} users · {APP_INSIGHTS_TOTALS.tests.toLocaleString()} tests · {APP_INSIGHTS_TOTALS.monthsSpan} months · {APP_INSIGHTS_TOTALS.reportCount} reports
-          </p>
-          <p className="text-base lg:text-lg text-white/90 leading-relaxed max-w-[68ch]">
-            This is what the CONKA app actually sees. Real users, tracking their cognition every day. Where the data is thin, we say so. Where we can&apos;t draw a conclusion from app data alone, we cite the peer-reviewed studies on the ingredients instead.
-          </p>
+          <InsightHeroDifferentiator />
         </div>
       </section>
 
-      {/* 2–5. FILTERED REPORT SECTIONS */}
+      {/* 2. HOW THIS IS POSSIBLE — three-step flow + validated-test credentials */}
+      <section
+        className="brand-section"
+        aria-label="How CONKA captures this data"
+      >
+        <div className="brand-track">
+          <HowThisIsPossibleModule />
+        </div>
+      </section>
+
+      {/* 3–6. FILTERED REPORT SECTIONS */}
       <InsightFilteredSections />
 
-      {/* 6. DOWNLOAD — final CTA */}
+      {/* 7. DOWNLOAD — final CTA */}
       <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
           <AppDownloadSection />
         </div>
       </section>
 
-      {/* 7. METHODOLOGY FOOTER */}
+      {/* 8. METHODOLOGY FOOTER — slimmed to legal anchors only */}
       <section
         className="brand-section"
         aria-label="Overall methodology and ethics"
@@ -70,14 +66,20 @@ export default function AppInsightsPage() {
               How we look at the numbers.
             </h2>
             <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
-              Every analysis on this page uses a per-user delta method. We compute each user&apos;s personal baseline from their own clean-state tests, then compare their impaired-state tests against that baseline. This removes the confound of natural ability differences between users.
+              Every analysis on this page uses a per-user delta method. We
+              compute each user&apos;s personal baseline from their own clean-state
+              tests, then compare their impaired-state tests against that
+              baseline. This removes the confound of natural ability differences
+              between users.
             </p>
             <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
-              Wellness factors (alcohol, fatigue, stress, readiness) are self-reported in the CONKA app on an opt-in basis at the moment of testing. Cognitive scores come from the same test session.
+              Wellness factors (alcohol, fatigue, stress, readiness) are
+              self-reported in the CONKA app on an opt-in basis at the moment
+              of testing. Cognitive scores come from the same test session.
             </p>
             <div className="border-t border-white/10 pt-5 flex flex-col gap-3">
               <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
-                ^^ Cognitive test scores measured using the CONKA app, which uses the FDA-cleared Cognetivity CognICA assessment developed from Cambridge University research. Test sensitivity 93%, test-retest reliability 87.5%. Individual results vary; many factors influence test performance.
+                ^^ Cognitive test details and validation are documented above in &quot;How this is possible&quot;.
               </p>
               <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
                 ¶ Ingredient-level peer-reviewed studies. Findings as published; not extrapolated to product-level effect.

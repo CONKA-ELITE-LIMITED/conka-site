@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Real Cognitive Data | CONKA",
+  title: "Real cognitive data from real users | CONKA",
   description:
-    "What 712 CONKA app users and 7,593 cognitive tests across 30 months actually show: the daily curve, mental fatigue, stress, and hangover effects.",
+    "What 712 CONKA app users and 7,593 cognitive tests show, measured daily with an FDA-cleared assessment. The honest patterns and the data limits.",
   openGraph: {
-    title: "Real Cognitive Data | CONKA",
+    title: "Real cognitive data from real users | CONKA",
     description:
-      "What 712 CONKA app users and 7,593 cognitive tests actually show. Honest patterns from real users -- including where the data is too thin to draw conclusions.",
+      "We don't ask if Conka works. We measure it. 712 users, 7,593 tests, 30 months of data from inside the CONKA app.",
   },
 };
 
