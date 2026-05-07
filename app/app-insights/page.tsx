@@ -21,11 +21,11 @@ export default function AppInsightsPage() {
 
       {/* 1. HERO ─ what this page is and why we made it */}
       <section
-        className="brand-section brand-hero-first"
+        className="brand-section brand-hero-first pt-16 lg:pt-20"
         aria-labelledby="app-insights-hero"
       >
         <div className="brand-track">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-4">
             {"// Real cognitive data · APP-01"}
           </p>
           <h1
@@ -35,11 +35,11 @@ export default function AppInsightsPage() {
           >
             Real cognitive data. Real users. No spin.
           </h1>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/75 tabular-nums mb-10">
             {APP_INSIGHTS_TOTALS.users} users · {APP_INSIGHTS_TOTALS.tests.toLocaleString()} tests · {APP_INSIGHTS_TOTALS.monthsSpan} months · {APP_INSIGHTS_TOTALS.reportCount} reports
           </p>
-          <p className="text-base lg:text-lg text-white/75 leading-relaxed max-w-[68ch]">
-            This is what the CONKA app actually sees. Not a clinical trial. Not marketing data. The honest patterns from real users tracking their cognition every day, including the places where the data is too thin to draw a conclusion. Where Conka&apos;s effect on the data is unclear, we cite the peer-reviewed studies on the ingredients themselves.
+          <p className="text-base lg:text-lg text-white/90 leading-relaxed max-w-[68ch]">
+            This is what the CONKA app actually sees. Real users, tracking their cognition every day. Where the data is thin, we say so. Where we can&apos;t draw a conclusion from app data alone, we cite the peer-reviewed studies on the ingredients instead.
           </p>
         </div>
       </section>
@@ -79,33 +79,33 @@ export default function AppInsightsPage() {
       >
         <div className="brand-track">
           <div className="border-t border-white/10 pt-10">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-4">
               {"// About this data · APP-01"}
             </p>
             <h2
               className="brand-h3 text-white mb-4 max-w-[28ch]"
               style={{ letterSpacing: "-0.02em" }}
             >
-              How we read our own data.
+              How we look at the numbers.
             </h2>
-            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-3">
+            <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
               Every analysis on this page uses a per-user delta method. We compute each user&apos;s personal baseline from their own clean-state tests, then compare their impaired-state tests against that baseline. This removes the confound of natural ability differences between users.
             </p>
-            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-3">
+            <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
               Wellness factors (alcohol, fatigue, stress, readiness) are self-reported in the CONKA app on an opt-in basis at the moment of testing. Cognitive scores come from the same test session.
             </p>
-            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-6">
-              This is observational data, not a controlled trial. Patterns show association, not causation. Where we cite peer-reviewed studies on the ingredients in Conka, we cite the findings of those studies as published; we do not extrapolate them to product-level claims.
+            <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-6">
+              This is observational data. Patterns show association, not causation. Where we cite peer-reviewed studies on the ingredients in Conka, we cite the findings of those studies as published; we do not extrapolate them to product-level claims.
             </p>
 
             <div className="border-t border-white/10 pt-5 flex flex-col gap-3">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
                 ^^ Cognitive test scores measured using the CONKA app, which uses the FDA-cleared Cognetivity CognICA assessment developed from Cambridge University research. Test sensitivity 93%, test-retest reliability 87.5%. Individual results vary; many factors influence test performance.
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
                 ¶ Ingredient-level peer-reviewed studies. Findings as published; not extrapolated to product-level effect.
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
                 Food supplements are not a substitute for a varied and balanced diet and a healthy lifestyle.
               </p>
             </div>

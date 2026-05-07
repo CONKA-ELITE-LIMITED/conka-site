@@ -2,12 +2,12 @@ import type { StatCard as StatCardData } from "@/app/lib/appInsightsTypes";
 
 export default function InsightStatCard({ stat }: { stat: StatCardData }) {
   return (
-    <div className="border border-white/15 bg-white/[0.07] flex flex-col">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <span className="font-mono text-[11px] font-bold tabular-nums text-white/40">
+    <div className="border border-white/20 bg-white/[0.12] flex flex-col">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/15">
+        <span className="font-mono text-[11px] font-bold tabular-nums text-white/60">
           {stat.counter}
         </span>
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-white/55">
+        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-white/80">
           {stat.topic}
         </span>
       </div>
@@ -15,10 +15,10 @@ export default function InsightStatCard({ stat }: { stat: StatCardData }) {
         <p className="font-mono text-3xl lg:text-4xl font-bold tabular-nums text-white leading-none">
           {stat.value}
         </p>
-        <p className="text-sm text-white/75 leading-snug mt-3">
+        <p className="text-sm text-white/90 leading-snug mt-3">
           {stat.context}
         </p>
-        <p className="font-mono text-[9px] uppercase tracking-[0.14em] tabular-nums text-white/35 mt-auto pt-4">
+        <p className="font-mono text-[9px] uppercase tracking-[0.14em] tabular-nums text-white/55 mt-auto pt-4">
           {stat.caveat}
         </p>
       </div>

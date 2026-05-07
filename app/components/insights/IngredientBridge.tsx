@@ -6,11 +6,11 @@ export default function IngredientBridge({
   bridge: IngredientBridgeData;
 }) {
   return (
-    <div className="border border-white/15 bg-white/[0.07] p-5 lg:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-3">
+    <div className="border border-white/20 bg-white/[0.12] p-5 lg:p-6">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-3">
         {"// Ingredient evidence · APP-01"}
       </p>
-      <p className="text-sm text-white/75 leading-relaxed max-w-[68ch]">
+      <p className="text-sm text-white/90 leading-relaxed max-w-[68ch]">
         {bridge.intro}
       </p>
 
@@ -21,7 +21,7 @@ export default function IngredientBridge({
             <li
               key={citation.pmid}
               className={`flex flex-col gap-2 py-4 ${
-                isLast ? "" : "border-b border-white/10"
+                isLast ? "" : "border-b border-white/15"
               }`}
             >
               <div className="flex items-baseline justify-between gap-3">
@@ -32,15 +32,15 @@ export default function IngredientBridge({
                   href={`https://pubmed.ncbi.nlm.nih.gov/${citation.pmid}/`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-white tabular-nums flex-shrink-0 transition-colors"
+                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 hover:text-white tabular-nums flex-shrink-0 transition-colors"
                 >
                   PMID {citation.pmid} ↗
                 </a>
               </div>
-              <p className="text-sm text-white/70 leading-snug max-w-[60ch]">
+              <p className="text-sm text-white/90 leading-snug max-w-[60ch]">
                 {citation.finding}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/35 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/60 tabular-nums">
                 {citation.studyDesign} · {citation.participants} · {citation.duration}
               </p>
             </li>
