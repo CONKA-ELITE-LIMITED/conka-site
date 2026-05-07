@@ -13,9 +13,8 @@ import {
 } from "recharts";
 import type { BarChartData } from "@/app/lib/appInsightsTypes";
 
-const POSITIVE_COLOR = "rgba(255, 255, 255, 0.85)";
-const NEGATIVE_COLOR = "rgba(255, 255, 255, 0.55)";
-const NEUTRAL_COLOR = "rgba(255, 255, 255, 0.25)";
+const BAR_COLOR = "rgba(255, 255, 255, 0.9)";
+const BAR_COLOR_NOISE = "rgba(255, 255, 255, 0.18)";
 
 const TICK_STYLE = {
   fill: "rgba(255, 255, 255, 0.4)",
@@ -41,9 +40,18 @@ const TOOLTIP_LABEL_STYLE = {
   marginBottom: 4,
 };
 
+const ZERO_LINE_LABEL_STYLE = {
+  fontSize: 9,
+  fill: "rgba(255, 255, 255, 0.4)",
+  fontFamily: "var(--font-jetbrains-mono)",
+  letterSpacing: "0.16em",
+  textTransform: "uppercase" as const,
+};
+
 function colorForValue(value: number): string {
-  if (Math.abs(value) < 0.5) return NEUTRAL_COLOR;
-  return value < 0 ? NEGATIVE_COLOR : POSITIVE_COLOR;
+  // Near-zero / noise bars rendered very dim so they don't compete with real signal
+  if (Math.abs(value) < 0.5) return BAR_COLOR_NOISE;
+  return BAR_COLOR;
 }
 
 export default function DataBarChart({ data }: { data: BarChartData }) {
@@ -76,7 +84,7 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
             tick={TICK_STYLE}
             tickLine={false}
             axisLine={false}
-            domain={["auto", "auto"]}
+            domain={["auto", 0]}
             label={{
               value: data.yLabel,
               angle: -90,
@@ -90,7 +98,15 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
               offset: 24,
             }}
           />
-          <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.3)" />
+          <ReferenceLine
+            y={0}
+            stroke="rgba(255, 255, 255, 0.3)"
+            label={{
+              value: "YOUR TYPICAL DAY",
+              position: "insideBottomRight",
+              style: ZERO_LINE_LABEL_STYLE,
+            }}
+          />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
             labelStyle={TOOLTIP_LABEL_STYLE}

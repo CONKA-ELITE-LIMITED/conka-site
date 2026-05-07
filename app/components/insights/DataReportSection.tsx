@@ -30,6 +30,16 @@ export default function DataReportSection({
 
       {/* ── Hero chart ───────────────────────────────────────────── */}
       <div className="border border-white/20 bg-white/[0.08] p-4 lg:p-6">
+        {report.chart.insightNote ? (
+          <div className="mb-4 pb-4 border-b border-white/10">
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums mb-1.5">
+              {"// Key finding"}
+            </p>
+            <p className="text-sm lg:text-base text-white font-medium leading-snug">
+              {report.chart.insightNote}
+            </p>
+          </div>
+        ) : null}
         {chartSlot}
       </div>
 

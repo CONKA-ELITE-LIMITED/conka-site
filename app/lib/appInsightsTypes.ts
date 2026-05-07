@@ -35,12 +35,14 @@ export type LineChartData = {
   variant: "line";
   points: LinePoint[];
   yLabel: string;
+  insightNote?: string;
 };
 
 export type BarChartData = {
   variant: "bar";
   points: BarPoint[];
   yLabel: string;
+  insightNote?: string;
 };
 
 export type ChartData = LineChartData | BarChartData;

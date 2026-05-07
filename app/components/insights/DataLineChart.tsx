@@ -12,8 +12,8 @@ import {
 } from "recharts";
 import type { LineChartData } from "@/app/lib/appInsightsTypes";
 
-const NO_CONKA_COLOR = "rgba(255, 255, 255, 0.35)";
-const CONKA_COLOR = "rgba(255, 255, 255, 0.95)";
+const WITHOUT_CONKA_COLOR = "rgba(255, 255, 255, 0.35)";
+const WITH_CONKA_COLOR = "rgba(255, 255, 255, 0.95)";
 
 const TICK_STYLE = {
   fill: "rgba(255, 255, 255, 0.4)",
@@ -39,11 +39,19 @@ const TOOLTIP_LABEL_STYLE = {
   marginBottom: 4,
 };
 
+const ZERO_LINE_LABEL_STYLE = {
+  fontSize: 9,
+  fill: "rgba(255, 255, 255, 0.4)",
+  fontFamily: "var(--font-jetbrains-mono)",
+  letterSpacing: "0.16em",
+  textTransform: "uppercase" as const,
+};
+
 export default function DataLineChart({ data }: { data: LineChartData }) {
   const chartData = data.points.map((p) => ({
     hour: p.hourLabel,
-    "No Conka": p.noConka,
-    Conka: p.conka,
+    "Without Conka": p.noConka,
+    "With Conka": p.conka,
   }));
 
   return (
@@ -82,7 +90,15 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
               offset: 24,
             }}
           />
-          <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.3)" />
+          <ReferenceLine
+            y={0}
+            stroke="rgba(255, 255, 255, 0.3)"
+            label={{
+              value: "YOUR TYPICAL DAY",
+              position: "insideTopRight",
+              style: ZERO_LINE_LABEL_STYLE,
+            }}
+          />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
             labelStyle={TOOLTIP_LABEL_STYLE}
@@ -90,18 +106,18 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           />
           <Line
             type="monotone"
-            dataKey="No Conka"
-            stroke={NO_CONKA_COLOR}
+            dataKey="Without Conka"
+            stroke={WITHOUT_CONKA_COLOR}
             strokeWidth={1.5}
-            dot={{ fill: NO_CONKA_COLOR, r: 3, strokeWidth: 0 }}
+            dot={{ fill: WITHOUT_CONKA_COLOR, r: 3, strokeWidth: 0 }}
             activeDot={{ r: 5 }}
           />
           <Line
             type="monotone"
-            dataKey="Conka"
-            stroke={CONKA_COLOR}
+            dataKey="With Conka"
+            stroke={WITH_CONKA_COLOR}
             strokeWidth={2}
-            dot={{ fill: CONKA_COLOR, r: 4, strokeWidth: 0 }}
+            dot={{ fill: WITH_CONKA_COLOR, r: 4, strokeWidth: 0 }}
             activeDot={{ r: 6 }}
           />
         </LineChart>
@@ -112,16 +128,16 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
         <span className="flex items-center gap-2">
           <span
             className="inline-block w-4 h-px"
-            style={{ backgroundColor: NO_CONKA_COLOR }}
+            style={{ backgroundColor: WITHOUT_CONKA_COLOR }}
           />
-          No Conka
+          Without Conka
         </span>
         <span className="flex items-center gap-2">
           <span
             className="inline-block w-4 h-0.5"
-            style={{ backgroundColor: CONKA_COLOR }}
+            style={{ backgroundColor: WITH_CONKA_COLOR }}
           />
-          Conka
+          With Conka
         </span>
       </div>
     </div>
