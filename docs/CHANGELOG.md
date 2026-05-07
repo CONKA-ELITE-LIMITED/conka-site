@@ -6,6 +6,31 @@
 
 ## May 2026
 
+### 2026-05-07 -- /start performance: deferred SSR for below-fold sections, autoplay carousel removed, Klaviyo fonts identified
+
+Production Lighthouse on /start dropped from 80 (May baseline) to 40 on mobile -- LCP 8.5s, TBT 1,200ms. Investigation traced three root causes that the original `PERFORMANCE_OPTIMISATION.md` did not catch.
+
+**1. App Router `dynamic()` was still SSR'ing all sections (`app/start/page.tsx`).** The doc implied dynamic imports cut SSR weight, but in App Router `dynamic()` only defers the *client bundle download* -- the component is still server-rendered into initial HTML by default. /start was shipping 1,217 DOM elements on initial paint, all of which had to hydrate before LCP could land. LCP element render delay was 2,100ms while the hero image was already in memory by 330ms. Fixed by passing `ssr: false` to all 7 below-fold dynamic imports. Safe because /start has `robots: { index: false }`. Pre-hydration DOM dropped from 1,217 to ~50.
+
+**2. Autoplay carousel was re-rendering during the Lighthouse window (`CROTestimonials`).** `setInterval` ticking every 3.5s with React state updates triggered a render + reconcile + paint on every tick during the 10s mobile audit window. Removed the autoplay entirely. Manual nav (prev/next buttons, dot tabs, swipe) preserved. Wrap-around still works.
+
+**3. Klaviyo Brand Library was auto-loading Google Fonts site-wide.** Even with `layout.tsx` having no `next/font/google` imports, `fonts.googleapis.com/css2` was still in the critical chain at 2,520ms. Traced to `klaviyo.js` injecting a stylesheet that pulls every font from the Klaviyo Brand Library -- Poppins (7 variants), Albert Sans, Cormorant Garamond, IBM Plex Sans were all Google Fonts. Fix is dashboard-only: removed Google Fonts from Klaviyo Brand Library, swapped to Helvetica / Klaviyo-hosted in active signup forms.
+
+**New components / patterns:**
+- `app/components/VisibilityGate.tsx` -- `IntersectionObserver`-based wrapper that defers mounting children until the user scrolls within 200px of the section. Wrapped around `CROTestimonials` on /start.
+- `ssr: false` + `loading` skeleton pattern for noindex landing pages, documented in Rule 4.
+
+**Doc updates (`docs/development/PERFORMANCE_OPTIMISATION.md`):**
+- Rule 1: new "JS-driven animation timers" subsection
+- Rule 4: App Router gotcha, `ssr: false` rule, `<VisibilityGate>` pattern, DOM size budget
+- Rule 5: corrected `layout.tsx` font list (Poppins/Caveat/Syne/DM_Sans/IBM Plex Mono all gone), new "Third-party scripts that auto-load Google Fonts" subsection
+- Benchmarks table extended with May 7 rows (regression + Track 1 + Track 2 pending re-measurement)
+- Pre-commit checklist gains 5 items
+
+**Pending:** re-measure Lighthouse against prod /start after deploy and after Klaviyo signup forms have been updated. Targets recorded as TBD in the benchmark table.
+
+---
+
 ### 2026-05-06 -- CSS system consolidated: premium-base.css deleted, component graveyard cleared
 
 **`premium-base.css` fully deprecated and deleted.** Migration completed in three buckets:
