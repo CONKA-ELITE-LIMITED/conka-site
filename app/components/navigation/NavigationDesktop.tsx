@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: "Ingredients", href: "/ingredients" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "CONKA App", href: "/app" },
+  { label: "App Insights", href: "/app-insights" },
   { label: "Our Story", href: "/our-story" },
 ];
 

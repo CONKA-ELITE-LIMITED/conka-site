@@ -41,6 +41,7 @@ const MENU_GROUPS: { title: string; links: { label: string; href: string }[] }[]
     title: "Learn more",
     links: [
       { label: "Ingredients", href: "/ingredients" },
+      { label: "App Insights", href: "/app-insights" },
       { label: "Our Story", href: "/our-story" },
       { label: "Why CONKA", href: "/why-conka" },
     ],

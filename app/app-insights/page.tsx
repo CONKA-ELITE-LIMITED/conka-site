@@ -1,0 +1,107 @@
+import Navigation from "@/app/components/navigation";
+import Footer from "@/app/components/footer";
+import TimeOfDaySection from "./sections/TimeOfDaySection";
+import MentalFatigueSection from "./sections/MentalFatigueSection";
+import StressSection from "./sections/StressSection";
+import AlcoholSection from "./sections/AlcoholSection";
+import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
+
+export default function AppInsightsPage() {
+  return (
+    <div
+      className="brand-clinical min-h-screen text-white flex flex-col"
+      style={{
+        backgroundColor: "#0a0a0a",
+        backgroundImage:
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E\")",
+        backgroundSize: "24px 24px",
+      }}
+    >
+      <Navigation />
+
+      {/* 1. HERO ─ what this page is and why we made it */}
+      <section
+        className="brand-section brand-hero-first"
+        aria-labelledby="app-insights-hero"
+      >
+        <div className="brand-track">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-4">
+            {"// Real cognitive data · APP-01"}
+          </p>
+          <h1
+            id="app-insights-hero"
+            className="brand-h1 text-white mb-6 max-w-[22ch]"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            Real cognitive data. Real users. No spin.
+          </h1>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-10">
+            {APP_INSIGHTS_TOTALS.users} users · {APP_INSIGHTS_TOTALS.tests.toLocaleString()} tests · {APP_INSIGHTS_TOTALS.monthsSpan} months · {APP_INSIGHTS_TOTALS.reportCount} reports
+          </p>
+          <p className="text-base lg:text-lg text-white/75 leading-relaxed max-w-[68ch]">
+            This is what the CONKA app actually sees. Not a clinical trial. Not marketing data. The honest patterns from real users tracking their cognition every day, including the places where the data is too thin to draw a conclusion. Where Conka&apos;s effect on the data is unclear, we cite the peer-reviewed studies on the ingredients themselves.
+          </p>
+        </div>
+      </section>
+
+      {/* 2. TIME OF DAY */}
+      <section className="brand-section" aria-label="Time of day report">
+        <div className="brand-track">
+          <TimeOfDaySection />
+        </div>
+      </section>
+
+      {/* 3. MENTAL FATIGUE */}
+      <section className="brand-section" aria-label="Mental fatigue and readiness report">
+        <div className="brand-track">
+          <MentalFatigueSection />
+        </div>
+      </section>
+
+      {/* 4. STRESS */}
+      <section className="brand-section" aria-label="Stress report">
+        <div className="brand-track">
+          <StressSection />
+        </div>
+      </section>
+
+      {/* 5. ALCOHOL */}
+      <section className="brand-section" aria-label="Alcohol and hangover report">
+        <div className="brand-track">
+          <AlcoholSection />
+        </div>
+      </section>
+
+      {/* 6. METHODOLOGY FOOTER */}
+      <section
+        className="brand-section"
+        aria-label="Overall methodology and ethics"
+      >
+        <div className="brand-track">
+          <div className="border-t border-white/10 pt-10">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-4">
+              {"// About this data · APP-01"}
+            </p>
+            <h2
+              className="brand-h3 text-white mb-4 max-w-[28ch]"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              How we read our own data.
+            </h2>
+            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-3">
+              Every analysis on this page uses a per-user delta method. We compute each user&apos;s personal baseline from their own clean-state tests, then compare their impaired-state tests against that baseline. This removes the confound of natural ability differences between users.
+            </p>
+            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch] mb-3">
+              Wellness factors (alcohol, fatigue, stress, readiness) are self-reported in the CONKA app on an opt-in basis at the moment of testing. Cognitive scores come from the same test session.
+            </p>
+            <p className="text-sm text-white/65 leading-relaxed max-w-[68ch]">
+              This is observational data, not a controlled trial. Patterns show association, not causation. Where we cite peer-reviewed studies on the ingredients in Conka, we cite the findings of those studies as published; we do not extrapolate them to product-level claims.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}

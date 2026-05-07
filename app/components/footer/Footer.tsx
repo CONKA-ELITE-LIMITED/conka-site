@@ -9,6 +9,7 @@ const DISCOVER: FooterLink[] = [
   { label: "Ingredients", href: "/ingredients" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "The CONKA App", href: "/app" },
+  { label: "App Insights", href: "/app-insights" },
 ];
 
 const SHOP: FooterLink[] = [

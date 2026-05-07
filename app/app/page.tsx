@@ -7,7 +7,7 @@ import {
   AppStickyPhoneBlock,
   AppDownloadSection,
   AppWidgetGrid,
-  AppDataInsights,
+  AppInsightsCallout,
 } from "@/app/components/app";
 import {
   CognitiveTestSection,
@@ -63,13 +63,13 @@ export default function AppPage() {
         </section>
       )}
 
-      {/* 5. APP DATA — proof from real users */}
+      {/* 5. APP INSIGHTS — callout linking to /app-insights */}
       <section
         className="brand-section"
-        aria-label="App data insights"
+        aria-label="App data insights callout"
       >
         <div className="brand-track">
-          <AppDataInsights />
+          <AppInsightsCallout />
         </div>
       </section>
 

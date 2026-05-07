@@ -3,3 +3,4 @@ export { default as AppStickyPhoneBlock, PhoneFrame } from "./AppStickyPhoneBloc
 export { default as AppDownloadSection } from "./AppDownloadSection";
 export { default as AppWidgetGrid } from "./AppWidgetGrid";
 export { default as AppDataInsights } from "./AppDataInsights";
+export { default as AppInsightsCallout } from "./AppInsightsCallout";
