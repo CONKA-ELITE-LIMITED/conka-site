@@ -277,7 +277,7 @@ export default function AppWidgetGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 items-start">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 items-start">
 
         {/* ── Research tile ─────────────────────────────────────────────── */}
         <div className="border border-white/15 bg-white/[0.07] flex flex-col">
@@ -366,7 +366,7 @@ export default function AppWidgetGrid() {
         </div>
 
         {/* ── Asset tile ────────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden col-span-2 lg:col-span-1 lg:row-span-2 min-h-[220px] border border-white/15 self-stretch">
+        <div className="relative overflow-hidden col-span-2 lg:col-span-1 min-h-[220px] border border-white/15">
           <Image
             src="/app/NothingAppRing.jpg"
             alt="CONKA app user checking their cognitive score"
@@ -378,7 +378,7 @@ export default function AppWidgetGrid() {
         </div>
 
         {/* ── Case study tile ───────────────────────────────────────────── */}
-        <div className="col-span-2 border border-white/15 bg-white/[0.07] flex flex-col">
+        <div className="col-span-2 lg:col-span-1 border border-white/15 bg-white/[0.07] flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
             <div>
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 mb-1 tabular-nums">
@@ -394,7 +394,7 @@ export default function AppWidgetGrid() {
                 setAthleteIndex(0);
                 setCaseStudyModalOpen(true);
               }}
-              className="flex-shrink-0 ml-3 font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 hover:text-white border border-white/20 hover:border-white/50 px-3 min-h-[44px] transition-colors tabular-nums"
+              className="flex-shrink-0 ml-3 font-mono text-[9px] uppercase tracking-[0.18em] text-white border border-white/40 hover:border-white px-3 min-h-[44px] transition-colors tabular-nums"
             >
               View all ↗
             </button>
