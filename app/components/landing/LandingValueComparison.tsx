@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import ConkaCTAButton from "./ConkaCTAButton";
 import LabTrustBadges from "./LabTrustBadges";
 import { useInView } from "@/app/hooks/useInView";
@@ -159,6 +160,19 @@ export default function LandingValueComparison({
           <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/35 tabular-nums">
             Caffeine half-life ~5h
           </span>
+        </div>
+
+        {/* Data source link */}
+        <div className="mt-4 pt-4 border-t border-black/8 flex items-center justify-between gap-4 flex-wrap">
+          <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/35 tabular-nums">
+            Based on 7,593 cognitive tests · 712 CONKA app users · 30 months
+          </p>
+          <Link
+            href="/app-insights#time-of-day"
+            className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 hover:text-[#1B2757] transition-colors flex items-center gap-1 shrink-0"
+          >
+            See the full data ↗
+          </Link>
         </div>
       </div>
 

@@ -42,6 +42,7 @@ const PRODUCTS = [
 const LEARN_MORE = [
   { label: "Why CONKA works", href: "/why-conka" },
   { label: "The CONKA App", href: "/app" },
+  { label: "App Insights", href: "/app-insights" },
 ];
 
 export default function ShopMegaMenu({
