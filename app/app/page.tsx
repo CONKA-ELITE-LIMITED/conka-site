@@ -8,7 +8,6 @@ import {
   AppDownloadSection,
   AppWidgetGrid,
 } from "@/app/components/app";
-import LabCaseStudies from "@/app/components/LabCaseStudies";
 import {
   CognitiveTestSection,
   CognitiveTestSectionMobile,
@@ -63,17 +62,7 @@ export default function AppPage() {
         </section>
       )}
 
-      {/* 5. ATHLETE PROOF — social credibility */}
-      <section
-        className="brand-section"
-        aria-label="Athletes using CONKA"
-      >
-        <div className="brand-track">
-          <LabCaseStudies />
-        </div>
-      </section>
-
-      {/* 6. DOWNLOAD — final CTA */}
+      {/* 5. DOWNLOAD — final CTA */}
       <section
         className="brand-section"
         aria-label="Download the CONKA app"

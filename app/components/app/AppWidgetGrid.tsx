@@ -92,9 +92,81 @@ function getStat(athlete: AthleteData, key: (typeof STAT_KEYS)[number]) {
 
 // ─── Dark athlete card ─────────────────────────────────────────────────────────
 
-function DarkAthleteCard({ athlete }: { athlete: AthleteData }) {
+function DarkAthleteCard({
+  athlete,
+  compact = false,
+}: {
+  athlete: AthleteData;
+  compact?: boolean;
+}) {
   const photo = CASE_STUDY_PHOTO_PATHS[athlete.id] ?? "";
   const focal = athlete.focalPoint ?? { x: 50, y: 50 };
+
+  if (compact) {
+    return (
+      <div className="flex flex-row">
+        {photo && (
+          <div className="relative w-2/5 flex-shrink-0 overflow-hidden min-h-[220px]">
+            <Image
+              src={photo}
+              alt={athlete.name}
+              fill
+              loading="lazy"
+              sizes="200px"
+              className="object-cover brightness-75"
+              style={{ objectPosition: `${focal.x}% ${focal.y}%` }}
+            />
+          </div>
+        )}
+        <div className="flex flex-col flex-1 p-5">
+          <div className="mb-4">
+            <p className="text-lg font-semibold text-white leading-tight">
+              {athlete.name}
+            </p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/50 mt-1 leading-tight">
+              {SPORT_LABELS[athlete.sport]}
+              {athlete.position ? ` · ${athlete.position.toUpperCase()}` : ""}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 py-4 border-y border-white/10">
+            {STAT_KEYS.map((key) => {
+              const stat = getStat(athlete, key);
+              return (
+                <div key={key} className="flex flex-col items-start gap-1.5">
+                  <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+                    {STAT_ABBR[key]}
+                  </span>
+                  <span className="font-mono text-2xl font-bold tabular-nums text-white leading-none">
+                    {stat?.value ?? "—"}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-auto flex items-start justify-between gap-3 pt-4">
+            <div className="min-w-0">
+              <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+                Product
+              </p>
+              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-white mt-1 leading-none truncate">
+                {productLabel(athlete.productVersion)}
+              </p>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+                Tests
+              </p>
+              <p className="font-mono text-[11px] font-bold tabular-nums text-white mt-1 leading-none">
+                N={athlete.testsCompleted}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col bg-white/[0.04] overflow-hidden h-full">
@@ -189,7 +261,6 @@ export default function AppWidgetGrid() {
   const [researchOpen, setResearchOpen] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
   const [caseStudyModalOpen, setCaseStudyModalOpen] = useState(false);
-  const [assetModalOpen, setAssetModalOpen] = useState(false);
   const [athleteIndex, setAthleteIndex] = useState(0);
 
   const athletes = ATHLETE_IDS.map((id) => getAthleteById(id)).filter(
@@ -205,7 +276,7 @@ export default function AppWidgetGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 items-start">
 
         {/* ── Research tile ─────────────────────────────────────────────── */}
         <div className="border border-white/15 bg-white/[0.07] flex flex-col">
@@ -294,25 +365,16 @@ export default function AppWidgetGrid() {
         </div>
 
         {/* ── Asset tile ────────────────────────────────────────────────── */}
-        <button
-          type="button"
-          onClick={() => setAssetModalOpen(true)}
-          aria-label="View image full size"
-          className="relative overflow-hidden col-span-2 lg:col-span-1 lg:row-span-2 min-h-[200px] border border-white/15 group"
-        >
+        <div className="relative overflow-hidden col-span-2 lg:col-span-1 lg:row-span-2 min-h-[220px] border border-white/15 self-stretch">
           <Image
             src="/app/NothingAppRing.jpg"
             alt="CONKA app user checking their cognitive score"
             fill
             loading="lazy"
             sizes="(max-width: 1024px) 100vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
-          <span className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 bg-black/40 px-2 py-1 tabular-nums">
-            Expand ↗
-          </span>
-        </button>
+        </div>
 
         {/* ── Case study tile ───────────────────────────────────────────── */}
         <div className="col-span-2 border border-white/15 bg-white/[0.07] flex flex-col">
@@ -351,25 +413,10 @@ export default function AppWidgetGrid() {
         total={total}
       >
         {athletes[athleteIndex] && (
-          <DarkAthleteCard athlete={athletes[athleteIndex]} />
+          <DarkAthleteCard athlete={athletes[athleteIndex]} compact />
         )}
       </AppWidgetGridModal>
 
-      {/* Asset lightbox */}
-      <AppWidgetGridModal
-        isOpen={assetModalOpen}
-        onClose={() => setAssetModalOpen(false)}
-      >
-        <div className="relative w-full aspect-video">
-          <Image
-            src="/app/NothingAppRing.jpg"
-            alt="CONKA app user checking their cognitive score"
-            fill
-            sizes="100vw"
-            className="object-contain"
-          />
-        </div>
-      </AppWidgetGridModal>
     </>
   );
 }
