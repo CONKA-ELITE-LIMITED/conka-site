@@ -65,14 +65,16 @@ export default function InsightFilteredSections() {
 
   return (
     <>
-      {/* Filter bar */}
-      <section className="pt-2 pb-8 lg:pb-10" aria-label="Filter reports by question">
+      {/* Filter bar — uses brand gutters so it never sits flush on mobile */}
+      <section
+        className="pt-2 pb-8 lg:pb-10 px-5 lg:px-[5vw]"
+        aria-label="Filter reports by question"
+      >
         <div className="brand-track flex flex-col gap-3">
           <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 tabular-nums">
             {"// Filter by question"}
           </p>
 
-          {/* 4-col equal-width grid — short labels on mobile, full labels on sm+ */}
           <div className="grid grid-cols-4 gap-2">
             {FILTERS.map((f) => {
               const isActive = active === f.id;
@@ -82,11 +84,11 @@ export default function InsightFilteredSections() {
                   onClick={() => select(f.id)}
                   aria-pressed={isActive}
                   className={[
-                    "px-2 sm:px-4 py-3 font-mono tracking-wide border text-left transition-colors min-h-[44px]",
+                    "px-2 sm:px-4 py-3 font-mono tracking-wide border-0 text-left transition-colors min-h-[44px]",
                     "text-[10px] sm:text-[12px]",
                     isActive
-                      ? "border-white bg-white/[0.12] text-white"
-                      : "border-white/[0.12] text-white/25 hover:border-white/30 hover:text-white/55",
+                      ? "bg-white/90 text-[#0a0a0a]"
+                      : "bg-white/[0.10] text-white/65 hover:bg-white/[0.15] hover:text-white/85",
                   ].join(" ")}
                 >
                   <span className="block sm:hidden">{f.shortLabel}</span>
@@ -96,7 +98,6 @@ export default function InsightFilteredSections() {
             })}
           </div>
 
-          {/* Clear filter — only visible when a filter is active */}
           {active !== null && (
             <button
               onClick={() => setActive(null)}
