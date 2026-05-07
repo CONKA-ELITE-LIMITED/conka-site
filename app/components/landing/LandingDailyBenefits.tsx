@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   BenefitIconFocus,
   BenefitIconSleep,
@@ -17,12 +18,20 @@ interface Ingredient {
   efsaAnchor?: boolean;
 }
 
+interface AppInsight {
+  stat: string;
+  label: string;
+  caveat: string;
+  anchor: string;
+}
+
 interface Pillar {
   id: string;
   icon: React.ReactNode;
   heading: string;
   description: React.ReactNode;
   ingredients: Ingredient[];
+  appInsight: AppInsight;
   studyObservation: React.ReactNode;
   pmid: string;
 }
@@ -39,6 +48,12 @@ const PILLARS: Pillar[] = [
       { name: "Alpha GPC", imageSrc: "/ingredients/clear/alpha-gpc.webp" },
       { name: "Rhodiola", imageSrc: "/ingredients/flow/rhodiola.webp" },
     ],
+    appInsight: {
+      stat: "−1.8 pts",
+      label: "lost on fatigued days, vs each person's own fresh-day score",
+      caveat: "n=260 users · 1,248 fatigued tests ^^",
+      anchor: "/app-insights#mental-fatigue",
+    },
     studyObservation:
       "In one study, participants taking Lemon Balm showed improvements in calmness and alertness (Kennedy et al. 2003)¶",
     pmid: "PMID: 12888775",
@@ -54,6 +69,12 @@ const PILLARS: Pillar[] = [
       { name: "Turmeric", imageSrc: "/ingredients/flow/turmeric.jpg" },
       { name: "Vitamin B12", imageSrc: "/ingredients/clear/vitamin-b12.webp", efsaAnchor: true },
     ],
+    appInsight: {
+      stat: "+1.09 pts",
+      label: "above daily average after 6pm on Conka days, when most users' scores naturally fall",
+      caveat: "n=74 Conka tests · 18–21 window ^^",
+      anchor: "/app-insights#time-of-day",
+    },
     studyObservation:
       "In one study, participants taking Ashwagandha showed a significant reduction in perceived stress (Chandrasekhar et al. 2012)¶",
     pmid: "PMID: 23439798",
@@ -75,6 +96,12 @@ const PILLARS: Pillar[] = [
       { name: "NAC", imageSrc: "/ingredients/clear/nac.webp" },
       { name: "Vitamin C", imageSrc: "/ingredients/clear/vitamin-c.webp", efsaAnchor: true },
     ],
+    appInsight: {
+      stat: "−5.4 pts",
+      label: "lost under moderate stress, the largest single-cause drop in the dataset",
+      caveat: "n=18 users · 58 tests ^^",
+      anchor: "/app-insights#stress",
+    },
     studyObservation: (
       <>
         Vitamin C contributes to the protection of cells from oxidative stress
@@ -204,6 +231,29 @@ export default function LandingDailyBenefits() {
                             </div>
                           </div>
                         ))}
+                      </div>
+
+                      <div className="mb-4 p-3 bg-black/[0.03] border border-black/8 flex items-end justify-between gap-4">
+                        <div>
+                          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
+                            App data · real users
+                          </p>
+                          <p className="text-2xl font-semibold tabular-nums leading-none mb-1">
+                            {pillar.appInsight.stat}
+                          </p>
+                          <p className="text-xs text-black/60 leading-snug mb-1">
+                            {pillar.appInsight.label}
+                          </p>
+                          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/35">
+                            {pillar.appInsight.caveat}
+                          </p>
+                        </div>
+                        <Link
+                          href={pillar.appInsight.anchor}
+                          className="shrink-0 font-mono text-[9px] uppercase tracking-[0.15em] text-black/50 hover:text-black underline underline-offset-2 whitespace-nowrap"
+                        >
+                          See data →
+                        </Link>
                       </div>
 
                       <p className="text-xs leading-relaxed text-black/60">

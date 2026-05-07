@@ -6,6 +6,27 @@
 
 ## May 2026
 
+### 2026-05-07 -- Homepage: real-data callouts on benefit components, section reorder, credentials strip simplified
+
+Wired the real `/app-insights` data into two homepage components and reorganised the middle of the page so trust and proof land in the right order.
+
+**Real-data callouts (`LandingDailyBenefits.tsx`, `LabTimeline.tsx`):**
+- Each pillar in `LandingDailyBenefits` (Mental Performance / Sustained Energy / Brain Health) gained an `appInsight` block in the expanded section: a real stat from `/app-insights` (`−1.8 pts` fatigue cost, `+1.09 pts` Conka evening hold, `−5.4 pts` moderate stress cost), an `n=` hedge with `^^` anchor, and a "See data →" link to the relevant page anchor (`#mental-fatigue`, `#time-of-day`, `#stress`).
+- `LabTimeline` 24h step gained the same callout pattern using the time-of-day data. Subtitle moved from the placeholder "N=150+ participants · 5,000+ cognitive tests" to live values pulled from `APP_INSIGHTS_TOTALS` (712 users · 7,593 tests · 30 months).
+- Copy framed for intuition rather than jargon: stats read as losses ("lost on fatigued days, vs each person's own fresh-day score") or holds ("above daily average after 6pm on Conka days, when scores naturally fall") instead of clinical "cognitive cost" phrasing.
+
+**Homepage section reorder (`app/page.tsx`):**
+- New middle order: Daily Benefits (5) → Credentials (6) → Timeline (7) → App USP (8) → Testimonials (9) → Case Studies (10) → FAQ (11). The ingredient argument now precedes the trust seal which precedes the timeline; the App USP is no longer last; deep proof (Case Studies) sits below the persuasion arc for the convinced sceptic.
+- Background alternation maintained throughout.
+
+**Credentials section restructured (`WhyConkaWorks*.tsx`):**
+- Spec strip removed (the 280+ / 2 / 100% counters) on both desktop and mobile.
+- Desktop: tiles now compact — logo, category, heading, and tags always visible; body text collapsed behind a `[+] Details` / `[−] Less` toggle per tile.
+- Mobile: rewritten from accordion cards to a 4-column logo strip (Informed Sport, Durham, Exeter, Made in Britain) under the eyebrow/heading/subline. Heading + subline carry the credibility narrative; logos do the proof.
+- Durham and Exeter logos zoomed `scale-125` inside their containers on both layouts to compensate for source whitespace.
+
+---
+
 ### 2026-05-07 -- /app-insights page: readability upgrade, filter, dosing guide, homepage integration
 
 Major upgrade to the `/app-insights` page making it readable for a non-technical audience, plus integration back into the homepage value story.

@@ -96,27 +96,7 @@ export default function Home() {
         </section>
       </div>
 
-      {/* ===== SECTION 5: CASE STUDIES (measurable outcomes first) ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Clinically validated test scores"
-      >
-        <div className="brand-track">
-          <LabCaseStudies />
-        </div>
-      </section>
-
-      {/* ===== SECTION 6: APP USP (prove it yourself) ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Prove it yourself with the CONKA app"
-      >
-        <div className="brand-track">
-          <AppUSPSection />
-        </div>
-      </section>
-
-      {/* ===== SECTION 7: DAILY BENEFITS — LIFELONG PILLARS ===== */}
+      {/* ===== SECTION 5: DAILY BENEFITS — ingredient argument before trust seals ===== */}
       <section
         className="brand-section brand-bg-white"
         aria-label="Daily habit, lifelong benefits"
@@ -126,17 +106,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 8: WHY CONKA WORKS ===== */}
+      {/* ===== SECTION 6: CREDENTIALS — trust strip immediately after the ingredient argument ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="Why CONKA Works"
+        aria-label="CONKA certifications and credentials"
       >
         <div className="brand-track">
           <WhyConkaWorks />
         </div>
       </section>
 
-      {/* ===== SECTION 9: WHAT TO EXPECT (LabTimeline) ===== */}
+      {/* ===== SECTION 7: WHAT TO EXPECT (LabTimeline) ===== */}
       <section
         className="brand-section brand-bg-white"
         aria-label="What to Expect with CONKA"
@@ -146,13 +126,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 10: TESTIMONIALS (real voices after data proof) ===== */}
+      {/* ===== SECTION 8: APP USP — key differentiator, measure it yourself ===== */}
       <section
         className="brand-section brand-bg-tint"
+        aria-label="Prove it yourself with the CONKA app"
+      >
+        <div className="brand-track">
+          <AppUSPSection />
+        </div>
+      </section>
+
+      {/* ===== SECTION 9: TESTIMONIALS (real voices after data proof) ===== */}
+      <section
+        className="brand-section brand-bg-white"
         aria-label="Customer reviews"
       >
         <div className="brand-track">
           <LandingTestimonials />
+        </div>
+      </section>
+
+      {/* ===== SECTION 10: CASE STUDIES — deep proof for the convinced sceptic ===== */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Clinically validated test scores"
+      >
+        <div className="brand-track">
+          <LabCaseStudies />
         </div>
       </section>
 
