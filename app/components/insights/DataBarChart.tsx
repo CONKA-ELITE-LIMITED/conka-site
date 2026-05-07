@@ -17,7 +17,7 @@ const BAR_COLOR = "rgba(255, 255, 255, 0.9)";
 const BAR_COLOR_NOISE = "rgba(255, 255, 255, 0.18)";
 
 const TICK_STYLE = {
-  fill: "rgba(255, 255, 255, 0.4)",
+  fill: "rgba(255, 255, 255, 0.85)",
   fontSize: 10,
   fontFamily: "var(--font-jetbrains-mono)",
   letterSpacing: "0.18em",
@@ -29,11 +29,11 @@ const TOOLTIP_STYLE = {
   borderRadius: 0,
   fontFamily: "var(--font-jetbrains-mono)",
   fontSize: 11,
-  color: "white",
+  color: "rgba(255, 255, 255, 0.9)",
 };
 
 const TOOLTIP_LABEL_STYLE = {
-  color: "rgba(255, 255, 255, 0.55)",
+  color: "rgba(255, 255, 255, 0.6)",
   fontSize: 10,
   textTransform: "uppercase" as const,
   letterSpacing: "0.18em",
@@ -42,7 +42,7 @@ const TOOLTIP_LABEL_STYLE = {
 
 const ZERO_LINE_LABEL_STYLE = {
   fontSize: 9,
-  fill: "rgba(255, 255, 255, 0.4)",
+  fill: "rgba(255, 255, 255, 0.55)",
   fontFamily: "var(--font-jetbrains-mono)",
   letterSpacing: "0.16em",
   textTransform: "uppercase" as const,
