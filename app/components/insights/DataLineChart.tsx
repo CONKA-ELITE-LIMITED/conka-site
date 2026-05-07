@@ -155,19 +155,33 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
         </span>
       </div>
 
-      {/* Dosing guide row — only when dosing bands are present */}
+      {/* Dosing key card — only when dosing bands are present */}
       {data.dosingBands && data.dosingBands.length > 0 && (
-        <div className="flex items-center justify-center gap-6 mt-2 font-mono text-[9px] uppercase tracking-[0.16em] text-white/35 tabular-nums">
-          <span className="shrink-0">Dosing guide</span>
-          {data.dosingBands.map((band) => (
-            <span key={band.label} className="flex items-center gap-1.5">
-              <span
-                className="inline-block w-4 h-1.5"
-                style={{ backgroundColor: band.swatchColor }}
-              />
-              {band.label}
-            </span>
-          ))}
+        <div className="mt-4 border border-white/15 bg-white/[0.05] p-4 lg:p-5">
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45 tabular-nums mb-4">
+            {"// When to take each shot"}
+          </p>
+          <div className="grid grid-cols-2 gap-3 lg:gap-5">
+            {data.dosingBands.map((band) => (
+              <div key={band.label} className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <span
+                    className="inline-block w-8 h-2 shrink-0"
+                    style={{ backgroundColor: band.swatchColor }}
+                  />
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+                    {band.label}
+                  </span>
+                </div>
+                <p className="font-mono text-[11px] tabular-nums text-white/80">
+                  {band.window}
+                </p>
+                <p className="text-xs text-white/55 leading-snug">
+                  {band.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

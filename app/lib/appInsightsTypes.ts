@@ -35,6 +35,8 @@ export type DosingBand = {
   x1: string;
   x2: string;
   label: string;
+  window: string;
+  description: string;
   fillColor: string;
   swatchColor: string;
 };
