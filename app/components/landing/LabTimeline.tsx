@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import ConkaCTAButton from "./ConkaCTAButton";
 import LabTrustBadges from "./LabTrustBadges";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
+import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 
 /* ============================================================================
  * LabTimeline
@@ -27,11 +29,19 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
  * Tailwind motion-safe:*.
  * ========================================================================== */
 
+interface DataCallout {
+  stat: string;
+  label: string;
+  caveat: string;
+  anchor: string;
+}
+
 interface TimelineStep {
   timeframe: string;
   title: string;
   outcome: string;
   bullets: string[];
+  dataCallout?: DataCallout;
 }
 
 const TIMELINE_STEPS: TimelineStep[] = [
@@ -44,6 +54,12 @@ const TIMELINE_STEPS: TimelineStep[] = [
       "No jitters. No crash. No 2pm dip.",
       "Deep work feels effortless",
     ],
+    dataCallout: {
+      stat: "+1.09 pts",
+      label: "above daily average after 6pm on Conka days, when scores naturally fall",
+      caveat: "n=74 Conka tests · 18–21 window ^^",
+      anchor: "/app-insights#time-of-day",
+    },
   },
   {
     timeframe: "14 days",
@@ -203,7 +219,7 @@ export default function LabTimeline({
         <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
       </h2>
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-8">
-        Based on N=150+ participants · 5,000+ cognitive tests
+        {APP_INSIGHTS_TOTALS.users} users · {APP_INSIGHTS_TOTALS.tests.toLocaleString()} cognitive tests · {APP_INSIGHTS_TOTALS.monthsSpan} months
       </p>
 
       <div className="lg:flex lg:gap-10 lg:items-start">
@@ -286,6 +302,31 @@ export default function LabTimeline({
                           </li>
                         ))}
                       </ul>
+
+                      {step.dataCallout && (
+                        <div className="mt-4 pt-3 border-t border-black/8 flex items-end justify-between gap-4">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
+                              App data · real users
+                            </p>
+                            <p className="text-xl font-semibold tabular-nums leading-none mb-1">
+                              {step.dataCallout.stat}
+                            </p>
+                            <p className="text-xs text-black/60 leading-snug mb-1">
+                              {step.dataCallout.label}
+                            </p>
+                            <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/35">
+                              {step.dataCallout.caveat}
+                            </p>
+                          </div>
+                          <Link
+                            href={step.dataCallout.anchor}
+                            className="shrink-0 font-mono text-[9px] uppercase tracking-[0.15em] text-black/50 hover:text-black underline underline-offset-2 whitespace-nowrap"
+                          >
+                            See data →
+                          </Link>
+                        </div>
+                      )}
                     </div>
 
                     {/* Footer — phase identity */}
