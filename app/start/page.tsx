@@ -3,31 +3,39 @@ import dynamic from "next/dynamic";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import CROHero from "../components/cro/CROHero";
-import LandingDisclaimer from "../components/landing/LandingDisclaimer";
+import VisibilityGate from "../components/VisibilityGate";
 
+// /start is `noindex` (paid traffic only), so SSR for the below-fold sections
+// is dead weight — it bloats the hydration tree and stalls LCP. ssr: false
+// drops them from the initial HTML; the IntersectionObserver gate around the
+// heaviest section (CROTestimonials, 21 cards) defers its mount until scroll.
 const CROFormulaSplit = dynamic(
   () => import("../components/cro/CROFormulaSplit"),
-  { loading: () => <div className="h-[500px]" /> },
+  { ssr: false, loading: () => <div className="h-[500px]" /> },
 );
 const LandingValueComparison = dynamic(
   () => import("../components/landing/LandingValueComparison"),
-  { loading: () => <div className="h-[600px]" /> },
+  { ssr: false, loading: () => <div className="h-[600px]" /> },
 );
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
-  { loading: () => <div className="h-[500px]" /> },
+  { ssr: false, loading: () => <div className="h-[500px]" /> },
 );
 const CROGuarantee = dynamic(
   () => import("../components/cro/CROGuarantee"),
-  { loading: () => <div className="h-[400px]" /> },
+  { ssr: false, loading: () => <div className="h-[400px]" /> },
 );
 const CROFAQ = dynamic(
   () => import("../components/cro/CROFAQ"),
-  { loading: () => <div className="h-[500px]" /> },
+  { ssr: false, loading: () => <div className="h-[500px]" /> },
 );
 const CROFinalCTA = dynamic(
   () => import("../components/cro/CROFinalCTA"),
-  { loading: () => <div className="h-[200px]" /> },
+  { ssr: false, loading: () => <div className="h-[200px]" /> },
+);
+const LandingDisclaimer = dynamic(
+  () => import("../components/landing/LandingDisclaimer"),
+  { ssr: false, loading: () => <div className="h-[150px]" /> },
 );
 
 export const metadata: Metadata = {
@@ -76,7 +84,9 @@ export default function StartPage() {
         aria-label="Customer reviews"
       >
         <div className="brand-track">
-          <CROTestimonials />
+          <VisibilityGate minHeight="500px">
+            <CROTestimonials />
+          </VisibilityGate>
         </div>
       </section>
 
