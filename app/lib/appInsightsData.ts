@@ -22,6 +22,22 @@ const timeOfDay: ReportData = {
     variant: "line",
     yLabel: "vs. your daily average",
     insightNote: "Most people peak 9am–3pm. The evening dip is real and measurable.",
+    dosingBands: [
+      {
+        x1: "07",
+        x2: "13",
+        label: "Flow · AM",
+        fillColor: "rgba(255, 255, 255, 0.09)",
+        swatchColor: "rgba(255, 255, 255, 0.60)",
+      },
+      {
+        x1: "13",
+        x2: "22",
+        label: "Clear · PM",
+        fillColor: "rgba(255, 255, 255, 0.04)",
+        swatchColor: "rgba(255, 255, 255, 0.35)",
+      },
+    ],
     points: [
       { hour: 7, hourLabel: "07", noConka: -0.09, conka: 1.71 },
       { hour: 10, hourLabel: "10", noConka: 0.47, conka: 0.55 },

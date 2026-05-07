@@ -112,7 +112,7 @@ export default function InsightFilteredSections() {
 
       {/* Report sections — unmount hidden ones so charts don't render offscreen */}
       {show("time-of-day") && (
-        <section className="brand-section" aria-label="Time of day report">
+        <section id="time-of-day" className="brand-section scroll-mt-24" aria-label="Time of day report">
           <div className="brand-track">
             <TimeOfDaySection />
           </div>
@@ -120,7 +120,7 @@ export default function InsightFilteredSections() {
       )}
 
       {show("mental-fatigue") && (
-        <section className="brand-section" aria-label="Mental fatigue and readiness report">
+        <section id="mental-fatigue" className="brand-section scroll-mt-24" aria-label="Mental fatigue and readiness report">
           <div className="brand-track">
             <MentalFatigueSection />
           </div>
@@ -128,7 +128,7 @@ export default function InsightFilteredSections() {
       )}
 
       {show("stress") && (
-        <section className="brand-section" aria-label="Stress report">
+        <section id="stress" className="brand-section scroll-mt-24" aria-label="Stress report">
           <div className="brand-track">
             <StressSection />
           </div>
@@ -136,7 +136,7 @@ export default function InsightFilteredSections() {
       )}
 
       {show("alcohol") && (
-        <section className="brand-section" aria-label="Alcohol and hangover report">
+        <section id="alcohol" className="brand-section scroll-mt-24" aria-label="Alcohol and hangover report">
           <div className="brand-track">
             <AlcoholSection />
           </div>

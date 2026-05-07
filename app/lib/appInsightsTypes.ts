@@ -31,11 +31,20 @@ export type LinePoint = {
   conka: number;
 };
 
+export type DosingBand = {
+  x1: string;
+  x2: string;
+  label: string;
+  fillColor: string;
+  swatchColor: string;
+};
+
 export type LineChartData = {
   variant: "line";
   points: LinePoint[];
   yLabel: string;
   insightNote?: string;
+  dosingBands?: DosingBand[];
 };
 
 export type BarChartData = {

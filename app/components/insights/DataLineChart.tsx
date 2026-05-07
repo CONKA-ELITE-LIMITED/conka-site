@@ -4,6 +4,7 @@ import {
   CartesianGrid,
   Line,
   LineChart,
+  ReferenceArea,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -61,6 +62,18 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           data={chartData}
           margin={{ top: 16, right: 16, left: -8, bottom: 0 }}
         >
+          {/* Dosing band fills — rendered before grid so they sit behind everything */}
+          {data.dosingBands?.map((band) => (
+            <ReferenceArea
+              key={band.label}
+              x1={band.x1}
+              x2={band.x2}
+              fill={band.fillColor}
+              fillOpacity={1}
+              stroke="none"
+            />
+          ))}
+
           <CartesianGrid
             stroke="rgba(255, 255, 255, 0.08)"
             strokeDasharray="2 4"
@@ -124,7 +137,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
         </LineChart>
       </ResponsiveContainer>
 
-      {/* Inline legend (Recharts default Legend looks dated) */}
+      {/* Performance legend */}
       <div className="flex items-center justify-center gap-6 mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums">
         <span className="flex items-center gap-2">
           <span
@@ -141,6 +154,22 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           With Conka
         </span>
       </div>
+
+      {/* Dosing guide row — only when dosing bands are present */}
+      {data.dosingBands && data.dosingBands.length > 0 && (
+        <div className="flex items-center justify-center gap-6 mt-2 font-mono text-[9px] uppercase tracking-[0.16em] text-white/35 tabular-nums">
+          <span className="shrink-0">Dosing guide</span>
+          {data.dosingBands.map((band) => (
+            <span key={band.label} className="flex items-center gap-1.5">
+              <span
+                className="inline-block w-4 h-1.5"
+                style={{ backgroundColor: band.swatchColor }}
+              />
+              {band.label}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
