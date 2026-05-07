@@ -6,6 +6,35 @@
 
 ## May 2026
 
+### 2026-05-07 -- /app-insights page: full data report page with charts, stat cards, ingredient evidence
+
+Built the `/app-insights` page presenting four CONKA app data reports (Time of Day, Mental Fatigue, Stress, Alcohol) covering 712 users, 7,593 tests, and 30 months of data.
+
+**New pages and components:**
+- `app/app-insights/page.tsx` + `app/app-insights/layout.tsx` -- dark clinical page matching /app aesthetic, SEO metadata
+- `app/app-insights/sections/` -- four thin section wrappers (TimeOfDay, MentalFatigue, Stress, Alcohol)
+- `app/components/insights/DataReportSection.tsx` -- shared wrapper: eyebrow + H2 + subline + chart slot + stat cards + interpretation + optional Conka sub-section + optional ingredient bridge + methodology footnote
+- `app/components/insights/DataLineChart.tsx` -- Recharts `LineChart` wrapper, two lines (no-Conka vs Conka), dark-styled tooltip
+- `app/components/insights/DataBarChart.tsx` -- Recharts `BarChart` wrapper, value-keyed bar colours, zero reference line
+- `app/components/insights/InsightStatCard.tsx` -- stat card: counter + topic + large value + context + caveat
+- `app/components/insights/IngredientBridge.tsx` -- ingredient evidence block with PMID links to PubMed
+- `app/components/app/AppInsightsCallout.tsx` -- curiosity callout on /app linking to /app-insights
+
+**New data layer:**
+- `app/lib/appInsightsTypes.ts` -- TypeScript types for all report data shapes
+- `app/lib/appInsightsData.ts` -- four typed report objects with all chart data, stat cards, interpretations, Conka sub-sections (where data supports it), ingredient bridges, and methodology notes
+
+**Compliance:** All copy reviewed against EFSA / UK food supplement rules. Ingredient bridge findings use the "In one study, participants taking [X] showed..." observational pattern with `¶` anchors. Conka sub-sections describe the dataset, not product effects. No health claims. Stress section ships without a Conka observation (n=3, below defensible threshold).
+
+**Updated:**
+- `/app` page: replaced `AppDataInsights` section with `AppInsightsCallout`; callout moved above `AppWidgetGrid`
+- Desktop nav: removed App Insights link (accessible via /app callout and footer)
+- Mobile nav: added App Insights to "Learn more" group
+- Footer: added App Insights to Discover column
+- `AppWidgetGrid`, `AppFeaturePanel`, `AppDownloadSection`: raised all text opacity values for readability on dark surfaces
+
+---
+
 ### 2026-05-07 -- /start performance: deferred SSR for below-fold sections, autoplay carousel removed, Klaviyo fonts identified
 
 Production Lighthouse on /start dropped from 80 (May baseline) to 40 on mobile -- LCP 8.5s, TBT 1,200ms. Investigation traced three root causes that the original `PERFORMANCE_OPTIMISATION.md` did not catch.
