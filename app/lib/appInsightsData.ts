@@ -18,6 +18,22 @@ const timeOfDay: ReportData = {
   eyebrowConcept: "Time of day",
   hook: "Your brain runs on a curve.",
   subline: "Sharpest 9am–3pm · Dips from 6pm · 712 users · 30 months",
+  headlineFinding:
+    "Your sharpest hours are 9am to 3pm. By 9pm, scores drop nearly a full point below your daily average.",
+  sampleSize: "712 users · 7,593 tests · 30 months",
+  evidenceStrength: "Strong",
+  laymanAnchors: [
+    {
+      stat: "Peak to trough: ~1.5 points",
+      anchor:
+        "Roughly the difference between catching the small typo and missing it.",
+    },
+    {
+      stat: "9pm: -0.82 vs your own average",
+      anchor:
+        "The same brain that nailed it at 11am is now operating below its own baseline.",
+    },
+  ],
   chart: {
     variant: "line",
     yLabel: "vs. your daily average",
@@ -94,6 +110,22 @@ const mentalFatigue: ReportData = {
   eyebrowConcept: "Mental fatigue",
   hook: "When you feel foggy, the test scores agree.",
   subline: "501 users · 6,282 entries · 18 months",
+  headlineFinding:
+    "When you feel foggy, the data agrees. Fatigued days cost about 1.8 points off your personal best.",
+  sampleSize: "260 users · 1,248 fatigued tests · 18 months",
+  evidenceStrength: "Strong",
+  laymanAnchors: [
+    {
+      stat: "+24ms slower reaction",
+      anchor:
+        "About 6% slower than your fresh-day baseline. Noticeable on anything that needs a quick decision.",
+    },
+    {
+      stat: "-2.7 pts when 'not feeling best'",
+      anchor:
+        "Your gut sense of readiness reliably tracks how you actually score.",
+    },
+  ],
   chart: {
     variant: "bar",
     yLabel: "points lost vs. your best days",
@@ -171,6 +203,22 @@ const stress: ReportData = {
   eyebrowConcept: "Stress",
   hook: "Stress costs more than most people realise.",
   subline: "12 users · 44 stress-day tests",
+  headlineFinding:
+    "Moderate stress costs more than a heavy night's drinking. About 5 points off your calm-day baseline.",
+  sampleSize: "12 users · 44 stress-day tests · 891 stress entries",
+  evidenceStrength: "Moderate",
+  laymanAnchors: [
+    {
+      stat: "+41ms slower under stress",
+      anchor:
+        "Roughly 10% slower reaction time, plus about one extra error per session.",
+    },
+    {
+      stat: "53% of all sessions logged under mild stress",
+      anchor:
+        "Mild stress isn't an edge case. It's the default state most users test in.",
+    },
+  ],
   chart: {
     variant: "bar",
     yLabel: "points lost vs. your calm days",
@@ -252,6 +300,22 @@ const alcohol: ReportData = {
   eyebrowConcept: "Alcohol",
   hook: "What a hangover actually does to your brain.",
   subline: "65 users · 638 entries · 6 months",
+  headlineFinding:
+    "Under 6 drinks: no clear signal. Six or more: nearly 5 points off your sober baseline the next morning.",
+  sampleSize: "27 users · 113 hangover tests · 638 entries",
+  evidenceStrength: "Moderate",
+  laymanAnchors: [
+    {
+      stat: "+29ms slower the morning after",
+      anchor:
+        "About 7% slower reaction time. The next-day fog is real and measurable.",
+    },
+    {
+      stat: "-16% reported readiness on hangover days",
+      anchor:
+        "Users feel less prepared, and the test scores agree.",
+    },
+  ],
   chart: {
     variant: "bar",
     yLabel: "points lost vs. your sober days",

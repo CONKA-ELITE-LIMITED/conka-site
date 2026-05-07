@@ -5,6 +5,8 @@ import TimeOfDaySection from "@/app/app-insights/sections/TimeOfDaySection";
 import MentalFatigueSection from "@/app/app-insights/sections/MentalFatigueSection";
 import StressSection from "@/app/app-insights/sections/StressSection";
 import AlcoholSection from "@/app/app-insights/sections/AlcoholSection";
+import InsightTldrStrip from "./InsightTldrStrip";
+import MethodologyInThirtySeconds from "./MethodologyInThirtySeconds";
 
 const FILTERS = [
   {
@@ -61,10 +63,34 @@ export default function InsightFilteredSections() {
     setActive((prev) => (prev === id ? null : id));
   }
 
+  function focusReport(id: FilterId) {
+    // Clear any active filter so all sections render, then scroll to the
+    // requested section once the DOM has updated.
+    setActive(null);
+    if (typeof window === "undefined") return;
+    requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
   const show = (id: FilterId) => active === null || active === id;
 
   return (
     <>
+      {/* TL;DR strip + methodology — sits above the filter */}
+      <section
+        className="pt-2 pb-6 lg:pb-8 px-5 lg:px-[5vw]"
+        aria-label="Report summary and methodology"
+      >
+        <div className="brand-track flex flex-col gap-6">
+          <InsightTldrStrip onSelect={focusReport} />
+          <MethodologyInThirtySeconds />
+        </div>
+      </section>
+
       {/* Filter bar — uses brand gutters so it never sits flush on mobile */}
       <section
         className="pt-2 pb-8 lg:pb-10 px-5 lg:px-[5vw]"

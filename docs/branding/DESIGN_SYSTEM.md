@@ -101,7 +101,7 @@
 | `--brand-radius-container` | `24px` | Image containers, nested surfaces |
 | `--brand-radius-card` | `32px` | Cards, major surfaces, bento cells |
 
-The Clinical scope (`.brand-clinical`) overrides all three to `0px`. App Dark (`/app`) also uses zero radius.
+The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-canvas pages (`/app`, `/app-insights`) inherit zero radius because they apply `.brand-clinical` themselves; there is no separate "App Dark" radius rule.
 
 ---
 
@@ -176,7 +176,9 @@ Mobile-first is non-negotiable. Full mobile guide: `MOBILE_OPTIMIZATION.md`.
 
 > Active spec for every acquisition and content surface. Opt-in via `.brand-clinical` on the page root.
 >
-> Active pages: `/` `/start` `/funnel` `/science` `/our-story` `/case-studies` `/ingredients` `/app` `/why-conka` `/conka-flow` `/conka-clarity` `/protocol/[id]` + Navigation + Footer
+> Active pages: `/` `/start` `/funnel` `/science` `/our-story` `/case-studies` `/ingredients` `/app` `/app-insights` `/why-conka` `/conka-flow` `/conka-clarity` `/protocol/[id]` + Navigation + Footer
+>
+> **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
 
 ### Token overrides (`.brand-clinical`)
 
@@ -457,35 +459,67 @@ Same 4-tier system as section 3 above: Primary 100% / Secondary 80% / Tertiary 6
 
 ## 10. App Dark Aesthetic
 
-> The `/app` page aesthetic. Only applies to the `/app` route. Components used only on `/app` can apply these styles directly without design-system justification.
+> The dark-canvas pages: `/app` and `/app-insights`. Both apply the clinical grammar from section 8 (zero radii, hairline borders, mono labels, no shadows, no gradients) over a near-black background with a sparse SVG dot grid. Components used only on these pages can apply these styles directly without further design-system justification.
 
 ### Scope
 
-The page root uses `bg-[#0a0a0a]` (slightly softer than pure black) with the `.app-dot-grid` utility from `brand-base.css` for the SVG dot grid background.
+Both pages apply `.brand-clinical` for zero radii and navy CTAs, then layer dark surfaces using white-opacity Tailwind utilities applied directly in components. There is no `.brand-app-dark` scope class; the dark theme is `brand-clinical` + a dark background.
+
+The page-shell pattern, verbatim from `app/page.tsx` and `app-insights/page.tsx`:
 
 ```tsx
-<div className="brand-app-dark bg-[#0a0a0a] app-dot-grid min-h-screen">
+<div
+  className="brand-clinical min-h-screen text-white flex flex-col"
+  style={{
+    backgroundColor: "#0a0a0a",
+    backgroundImage:
+      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E\")",
+    backgroundSize: "24px 24px",
+  }}
+>
   {/* page sections */}
 </div>
 ```
 
-No `brand-clinical` override needed on `/app` — the white-opacity palette is applied directly via Tailwind utilities.
+The dot grid is currently inlined per page. The `.app-dot-grid` utility in `brand-base.css` Layer 2.5 mirrors the inline pattern exactly so either page can be refactored to a class drop-in without a visual change.
 
-### White/opacity palette
+### White/opacity ramp
 
-All surfaces and text use white at fixed opacity levels. These are Tailwind utilities applied directly in components.
+Surfaces, borders, and text on the dark canvas span a continuous ramp rather than a fixed palette. Reach for the most-used stops first; fall back to other levels only when an intermediate hierarchy step is genuinely needed.
+
+**Most-used stops (start here):**
 
 | Utility | Use |
 |---------|-----|
-| `bg-white/10` | Card/tile surface |
-| `border-white/12` | Card border (hairline) |
-| `bg-white/[0.07]` | Inactive tab / ghost surface |
-| `text-white/55` | Body copy |
+| `bg-white/10` | Default card / tile surface |
+| `bg-white/[0.06]` | Quieter card surface (sub-cards, ghost surfaces) |
+| `bg-white/[0.04]` | Faintest surface (background panels under cards) |
+| `border-white/12` | Default hairline border |
+| `border-white/15` | Slightly stronger hairline (callouts, primary cards) |
+| `border-white/10` | Sub-divider inside a card (header-row underline, footer-row top) |
+| `text-white` | Primary text, active state, large stat values |
+| `text-white/85` | Body copy inside cards (slightly lifted) |
+| `text-white/70` | Counter labels, secondary headings |
+| `text-white/55` | Standard body copy on the page canvas |
 | `text-white/40` | Eyebrow / label text |
-| `text-white/35` | Very muted (footnotes, tags) |
-| `text-white` | Primary text, active state |
-| `bg-white text-black` | Primary CTA fill |
+| `text-white/35` | Very muted (footnotes, tags, sources) |
+
+**Interactive surfaces:**
+
+| Utility | Use |
+|---------|-----|
+| `bg-white text-black` | Primary CTA fill (and active filter pill) |
 | `bg-transparent border-white/30 text-white` | Secondary CTA (outline) |
+| `bg-white/[0.07]` | Inactive tab / ghost surface |
+| `bg-white/[0.10]` hover from `[0.06]` | Card-as-button hover state |
+
+**Full ramp in use across `/app` and `/app-insights`:**
+
+Surfaces: `0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.10, 0.12, 0.15`.
+Borders: `10, 12, 15, 20, 22, 25, 30, 35, 40, 50, 55, 60`.
+Text: `25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100`.
+
+**Discipline:** stay on multiples of 5 for opacity values (`text-white/40`, `text-white/55`, etc.) so the ramp stays predictable. Reach for arbitrary `[0.0X]` only when a hairline-thin surface tier is genuinely needed (e.g. layered ghost panels). Don't introduce new stops without a visual reason — pick the nearest existing tier first.
 
 ### Card pattern
 
@@ -528,15 +562,18 @@ Same active/inactive pattern as hero tabs. Phone asset frame gets `bg-white/[0.0
 
 ### SVG dot grid
 
-Defined as `.app-dot-grid` in `brand-base.css` (Layer 2.5). 1px white dots at 20px pitch, `rgba(255,255,255,0.07)` fill. Apply to the page root div alongside `bg-[#0a0a0a]`.
+`/app` and `/app-insights` both use the same dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see the page-shell snippet above).
+
+`.app-dot-grid` in `brand-base.css` (Layer 2.5) mirrors this pattern exactly and is available as a class drop-in. It is currently unused; both pages inline the SVG. Either pattern is fine. Do not introduce a third variant.
 
 ### App Dark "Do not" list
 
 - Use pure `#000000` as the background — use `#0a0a0a` (softer on the eye)
-- Hardcode white hex values — use white/opacity utilities
-- Use opacity values between the fixed palette levels — pick the nearest tier
+- Hardcode white hex values — use white/opacity utilities (`text-white/55`, `border-white/12`, etc.)
+- Invent new opacity stops outside multiples of 5 without a visual reason — pick the nearest existing tier first
 - Apply `lab-clip-tr` chamfer to cards — reserved for interactive CTAs only
 - Centre-align body copy — left-align everything
+- Add a third dot-grid variant — both pages already use the same 2×2px / 24px / 18% pattern; reuse it
 
 ---
 

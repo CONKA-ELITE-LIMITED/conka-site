@@ -1,0 +1,85 @@
+"use client";
+
+import { track } from "@vercel/analytics/react";
+import { APP_INSIGHTS_REPORTS } from "@/app/lib/appInsightsData";
+import type { ReportData } from "@/app/lib/appInsightsTypes";
+import EvidenceStrengthBadge from "./EvidenceStrengthBadge";
+
+/**
+ * Sits above the existing filter on /app-insights. Four cards, one per
+ * report, surfacing the headline finding, sample size, and evidence
+ * strength so a visitor reads the punchline before drilling in.
+ *
+ * On click, calls onSelect(reportId). Parent (InsightFilteredSections)
+ * clears any active filter and scrolls to the matching section.
+ *
+ * Component is content-only.
+ */
+
+const COUNTERS = ["01.", "02.", "03.", "04."] as const;
+
+export default function InsightTldrStrip({
+  onSelect,
+}: {
+  onSelect: (id: ReportData["id"]) => void;
+}) {
+  function handleClick(reportId: ReportData["id"]) {
+    try {
+      track("insights_tldr_card_click", {
+        location: "app-insights-readability",
+        report: reportId,
+      });
+    } catch {
+      // analytics fail silently
+    }
+    onSelect(reportId);
+  }
+
+  return (
+    <div>
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 tabular-nums mb-3">
+        {"// What the data shows"}
+      </p>
+
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+        role="list"
+        aria-label="Report headlines"
+      >
+        {APP_INSIGHTS_REPORTS.map((report, i) => {
+          const counter = COUNTERS[i] ?? `0${i + 1}.`;
+          return (
+            <button
+              key={report.id}
+              type="button"
+              role="listitem"
+              onClick={() => handleClick(report.id)}
+              aria-label={`Jump to ${report.eyebrowConcept} report`}
+              className="text-left border border-white/15 bg-white/[0.06] hover:bg-white/[0.10] hover:border-white/25 transition-colors flex flex-col min-h-[44px] focus:outline-none focus-visible:border-white/60"
+            >
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+                <span className="font-mono text-[11px] font-bold tabular-nums text-white/70">
+                  {counter}
+                </span>
+                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-white/55">
+                  {report.eyebrowConcept}
+                </span>
+              </div>
+              <div className="flex flex-col flex-1 p-4 lg:p-5">
+                <p className="text-sm lg:text-[15px] text-white leading-snug font-medium mb-3">
+                  {report.headlineFinding}
+                </p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] tabular-nums text-white/55 mb-4">
+                  {report.sampleSize}
+                </p>
+                <div className="mt-auto pt-2">
+                  <EvidenceStrengthBadge strength={report.evidenceStrength} />
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
