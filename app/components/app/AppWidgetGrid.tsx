@@ -104,21 +104,22 @@ function DarkAthleteCard({
 
   if (compact) {
     return (
-      <div className="flex flex-row">
+      <div className="flex flex-col">
         {photo && (
-          <div className="relative w-2/5 flex-shrink-0 overflow-hidden min-h-[220px]">
+          <div className="relative w-full aspect-[4/3] overflow-hidden">
             <Image
               src={photo}
               alt={athlete.name}
               fill
               loading="lazy"
-              sizes="200px"
+              sizes="(max-width: 1024px) 90vw, 480px"
               className="object-cover brightness-75"
               style={{ objectPosition: `${focal.x}% ${focal.y}%` }}
             />
           </div>
         )}
-        <div className="flex flex-col flex-1 p-5">
+
+        <div className="flex flex-col p-5">
           <div className="mb-4">
             <p className="text-lg font-semibold text-white leading-tight">
               {athlete.name}
@@ -145,7 +146,7 @@ function DarkAthleteCard({
             })}
           </div>
 
-          <div className="mt-auto flex items-start justify-between gap-3 pt-4">
+          <div className="flex items-start justify-between gap-3 pt-4">
             <div className="min-w-0">
               <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
                 Product
