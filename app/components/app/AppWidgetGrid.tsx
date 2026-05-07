@@ -139,7 +139,7 @@ function DarkAthleteCard({
             <p className="text-lg font-semibold text-white leading-tight">
               {athlete.name}
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/50 mt-1 leading-tight">
+            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/75 mt-1 leading-tight">
               {SPORT_LABELS[athlete.sport]}
               {athlete.position ? ` · ${athlete.position.toUpperCase()}` : ""}
             </p>
@@ -150,7 +150,7 @@ function DarkAthleteCard({
               const stat = getStat(athlete, key);
               return (
                 <div key={key} className="flex flex-col items-start gap-1.5">
-                  <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+                  <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 leading-none">
                     {STAT_ABBR[key]}
                   </span>
                   <span className="font-mono text-2xl font-bold tabular-nums text-white leading-none">
@@ -163,7 +163,7 @@ function DarkAthleteCard({
 
           <div className="flex items-start justify-between gap-3 pt-4">
             <div className="min-w-0">
-              <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+              <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 leading-none">
                 Product
               </p>
               <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-white mt-1 leading-none truncate">
@@ -171,7 +171,7 @@ function DarkAthleteCard({
               </p>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+              <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 leading-none">
                 Tests
               </p>
               <p className="font-mono text-[11px] font-bold tabular-nums text-white mt-1 leading-none">
@@ -185,7 +185,7 @@ function DarkAthleteCard({
   }
 
   return (
-    <div className="flex flex-col bg-white/[0.04] overflow-hidden h-full">
+    <div className="flex flex-col bg-white/[0.08] overflow-hidden h-full">
       {photo && (
         <div className="relative w-full aspect-[3/4] overflow-hidden">
           <Image
@@ -205,7 +205,7 @@ function DarkAthleteCard({
           <p className="text-base font-semibold text-white leading-tight">
             {athlete.name}
           </p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/50 mt-1 leading-tight">
+          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/75 mt-1 leading-tight">
             {SPORT_LABELS[athlete.sport]}
             {athlete.position ? ` · ${athlete.position.toUpperCase()}` : ""}
           </p>
@@ -216,7 +216,7 @@ function DarkAthleteCard({
             const stat = getStat(athlete, key);
             return (
               <div key={key} className="flex flex-col items-start gap-1">
-                <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+                <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 leading-none">
                   {STAT_ABBR[key]}
                 </span>
                 <span className="font-mono text-sm font-bold tabular-nums text-white leading-none">
@@ -229,7 +229,7 @@ function DarkAthleteCard({
 
         <div className="mt-auto flex items-start justify-between gap-3 pt-3">
           <div className="min-w-0">
-            <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+            <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 leading-none">
               Product
             </p>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white mt-1 leading-none truncate">
@@ -237,7 +237,7 @@ function DarkAthleteCard({
             </p>
           </div>
           <div className="text-right flex-shrink-0">
-            <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/35 leading-none">
+            <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 leading-none">
               Tests
             </p>
             <p className="font-mono text-[10px] font-bold tabular-nums text-white mt-1 leading-none">
@@ -299,7 +299,7 @@ export default function AppWidgetGrid() {
         <div className="contents lg:flex lg:flex-col lg:gap-3">
 
         {/* ── Research tile ─────────────────────────────────────────────── */}
-        <div className="border border-white/15 bg-white/[0.07] flex flex-col">
+        <div className="border border-white/20 bg-white/[0.10] flex flex-col">
           <button
             type="button"
             onClick={() => setResearchOpen((v) => !v)}
@@ -307,7 +307,7 @@ export default function AppWidgetGrid() {
             className="flex items-start justify-between gap-3 p-4 min-h-[44px] text-left w-full"
           >
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 mb-2 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 mb-2 tabular-nums">
                 Research
               </p>
               <p className="text-sm font-medium text-white leading-snug">
@@ -328,7 +328,7 @@ export default function AppWidgetGrid() {
                   <p className="font-mono text-2xl font-bold text-white tabular-nums leading-none">
                     {stat.value}
                   </p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/55 leading-snug">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/80 leading-snug">
                     {stat.label}
                   </p>
                   {stat.href ? (
@@ -336,18 +336,18 @@ export default function AppWidgetGrid() {
                       href={stat.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-[9px] text-white/30 hover:text-white/60 transition-colors tabular-nums"
+                      className="font-mono text-[9px] text-white/65 hover:text-white transition-colors tabular-nums"
                     >
                       {stat.source} · {stat.ref} ↗
                     </a>
                   ) : (
-                    <p className="font-mono text-[9px] text-white/30 tabular-nums">
+                    <p className="font-mono text-[9px] text-white/65 tabular-nums">
                       {stat.source}
                     </p>
                   )}
                 </div>
               ))}
-              <p className="font-mono text-[9px] text-white/20 tabular-nums pt-2 border-t border-white/8 leading-relaxed">
+              <p className="font-mono text-[9px] text-white/55 tabular-nums pt-2 border-t border-white/15 leading-relaxed">
                 FDA 510(k) cleared · Cambridge Cognition · ISRCTN95636074
               </p>
             </div>
@@ -355,7 +355,7 @@ export default function AppWidgetGrid() {
         </div>
 
         {/* ── Install tile ──────────────────────────────────────────────── */}
-        <div className="border border-white/15 bg-white/[0.07] flex flex-col">
+        <div className="border border-white/20 bg-white/[0.10] flex flex-col">
           <button
             type="button"
             onClick={() => setInstallOpen((v) => !v)}
@@ -363,7 +363,7 @@ export default function AppWidgetGrid() {
             className="flex items-start justify-between gap-3 p-4 min-h-[44px] text-left w-full"
           >
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 mb-2 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 mb-2 tabular-nums">
                 Get the App
               </p>
               <p className="text-sm font-medium text-white leading-snug">
@@ -428,10 +428,10 @@ export default function AppWidgetGrid() {
         </div>
 
         {/* ── Case study tile ───────────────────────────────────────────── */}
-        <div className="col-span-2 lg:col-span-1 border border-white/15 bg-white/[0.07] flex flex-col">
+        <div className="col-span-2 lg:col-span-1 border border-white/20 bg-white/[0.10] flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 mb-1 tabular-nums">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 mb-1 tabular-nums">
                 Athlete data · N={total}
               </p>
               <p className="text-sm font-medium text-white leading-snug">
