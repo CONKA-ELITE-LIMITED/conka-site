@@ -6,6 +6,48 @@
 
 ## May 2026
 
+### 2026-05-07 -- /app-insights page: readability upgrade, filter, dosing guide, homepage integration
+
+Major upgrade to the `/app-insights` page making it readable for a non-technical audience, plus integration back into the homepage value story.
+
+**Copy and chart readability (`app/lib/appInsightsData.ts`):**
+- All four reports rewritten for plain English: hooks, stat card topics/contexts, interpretations, and Conka sub-section copy. Technical phrases ("score deviation from personal mean", "Conka-tagged subset", "DIP GAP") replaced with layperson language.
+- `insightNote` field added to each chart — renders as a plain-English "key finding" title above the chart plot before the reader looks at the data.
+- Bar chart data fixes: `meta: "noise"` on the 1-5 drinks bar changed to `"no clear effect"`.
+
+**Chart improvements:**
+- `DataBarChart`: `domain: ["auto", 0]` so negative bars clearly grow downward from zero; bars now solid white (`rgba(255,255,255,0.9)`) with a dim fill for noise-level values; `"YOUR TYPICAL DAY"` label on the zero reference line.
+- `DataLineChart`: `"Without Conka"` / `"With Conka"` legend labels; zero line labelled; axis ticks and tooltip text corrected to white (Recharts `itemStyle` required for tooltip row colour, `contentStyle` alone does not cascade).
+- `DataReportSection`: `insightNote` rendered as a bordered "// Key finding" block above the chart slot.
+
+**Dosing guide on time-of-day chart (`app/lib/appInsightsTypes.ts`, `DataLineChart.tsx`):**
+- `DosingBand` type added with `x1`, `x2`, `label`, `window`, `description`, `fillColor`, `swatchColor`.
+- Time-of-day chart ships two `ReferenceArea` fills: Flow (07–13, amber tint) and Clear (13–19, blue tint). Clear's band ends at 19:00 — not 22:00 — accurately representing an afternoon shot.
+- Explicit key card rendered below the chart showing product name, time window, and dosing instruction for each shot. Fixed-height scoping: `h-[280px]` now wraps only the `ResponsiveContainer`, so the key card sits in normal flow rather than overflowing into the stat cards.
+
+**Question-based filter (`app/components/insights/InsightFilteredSections.tsx`):**
+- New `InsightFilteredSections` client component replaces the four static section imports on the page. Renders a filter bar with four conversational question buttons above the reports.
+- Selecting a filter unmounts the other three sections (not just hides them, so charts do not render offscreen). Selecting again or clicking Clear resets to show all.
+- Mobile: short labels (Time of day / Fatigue / Stress / Alcohol) in a 4-col grid. Desktop: full question text wraps inside equal-width columns.
+- Clear button: full-width, white border + text + X icon, only visible when a filter is active.
+- Each section has an `id` anchor (`#time-of-day`, `#mental-fatigue`, `#stress`, `#alcohol`) with `scroll-mt-24` for nav clearance.
+
+**App download CTA (`app/app-insights/page.tsx`):**
+- `AppDownloadSection` added above the methodology footnote, consistent with `/app` page.
+
+**Nav integration (`app/components/navigation/ShopMegaMenu.tsx`):**
+- "App Insights" added to the Learn More sidebar in the desktop mega menu.
+
+**Homepage integration (`app/components/landing/LandingValueComparison.tsx`):**
+- "See the full data ↗" link added to the Fig. 01 card footer, linking to `/app-insights#time-of-day`.
+- Source attribution shown: 7,593 tests, 712 users, 30 months.
+- Performance: `next/link` is part of the Next.js core bundle (no extra bytes); new elements use `transition-colors` only (Rule 1 compliant); `/start` consumption unaffected (`ssr: false` dynamic import in `CROBelowFold.tsx`).
+
+**LandingProductShowcase refactor (`app/components/landing/LandingProductShowcase.tsx`):**
+- Replaced `LabWhatsInsideMini` with the same clickable 2-col card grid used in `CROFormulaSplit`. Cards open `IngredientsPanel` on click. Analytics tracked via `showcase:ingredients_viewed`.
+
+---
+
 ### 2026-05-07 -- /app-insights page: full data report page with charts, stat cards, ingredient evidence
 
 Built the `/app-insights` page presenting four CONKA app data reports (Time of Day, Mental Fatigue, Stress, Alcohol) covering 712 users, 7,593 tests, and 30 months of data.
