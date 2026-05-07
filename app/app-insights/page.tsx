@@ -1,9 +1,6 @@
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import TimeOfDaySection from "./sections/TimeOfDaySection";
-import MentalFatigueSection from "./sections/MentalFatigueSection";
-import StressSection from "./sections/StressSection";
-import AlcoholSection from "./sections/AlcoholSection";
+import InsightFilteredSections from "@/app/components/insights/InsightFilteredSections";
 import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 
 export default function AppInsightsPage() {
@@ -45,33 +42,8 @@ export default function AppInsightsPage() {
         </div>
       </section>
 
-      {/* 2. TIME OF DAY */}
-      <section className="brand-section" aria-label="Time of day report">
-        <div className="brand-track">
-          <TimeOfDaySection />
-        </div>
-      </section>
-
-      {/* 3. MENTAL FATIGUE */}
-      <section className="brand-section" aria-label="Mental fatigue and readiness report">
-        <div className="brand-track">
-          <MentalFatigueSection />
-        </div>
-      </section>
-
-      {/* 4. STRESS */}
-      <section className="brand-section" aria-label="Stress report">
-        <div className="brand-track">
-          <StressSection />
-        </div>
-      </section>
-
-      {/* 5. ALCOHOL */}
-      <section className="brand-section" aria-label="Alcohol and hangover report">
-        <div className="brand-track">
-          <AlcoholSection />
-        </div>
-      </section>
+      {/* 2–5. FILTERED REPORT SECTIONS */}
+      <InsightFilteredSections />
 
       {/* 6. METHODOLOGY FOOTER */}
       <section
