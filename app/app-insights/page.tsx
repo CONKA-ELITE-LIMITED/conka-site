@@ -1,7 +1,7 @@
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import InsightFilteredSections from "@/app/components/insights/InsightFilteredSections";
-import { AppInstallButtons } from "@/app/components/AppInstallButtons";
+import AppDownloadSection from "@/app/components/app/AppDownloadSection";
 import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 
 export default function AppInsightsPage() {
@@ -46,26 +46,10 @@ export default function AppInsightsPage() {
       {/* 2–5. FILTERED REPORT SECTIONS */}
       <InsightFilteredSections />
 
-      {/* 6. APP DOWNLOAD CTA */}
+      {/* 6. DOWNLOAD — final CTA */}
       <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
-          <div className="border border-white/10 p-8 lg:p-12 flex flex-col gap-6">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 tabular-nums mb-4">
-                {"// Track your own cognition · CONKA App"}
-              </p>
-              <h2
-                className="brand-h2 text-white mb-3 max-w-[20ch]"
-                style={{ letterSpacing: "-0.02em" }}
-              >
-                See what your own data shows.
-              </h2>
-              <p className="text-base text-white/75 leading-relaxed max-w-[52ch]">
-                Every insight on this page came from people tracking their cognition daily with the CONKA app. Download it and start building your own picture.
-              </p>
-            </div>
-            <AppInstallButtons variant="clinical-dark" />
-          </div>
+          <AppDownloadSection />
         </div>
       </section>
 
