@@ -102,6 +102,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
             labelStyle={TOOLTIP_LABEL_STYLE}
+            itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
             cursor={{ stroke: "rgba(255, 255, 255, 0.2)", strokeDasharray: "2 4" }}
           />
           <Line

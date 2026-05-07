@@ -110,6 +110,7 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
             labelStyle={TOOLTIP_LABEL_STYLE}
+            itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
             cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
             formatter={(value: number, _name, item) => {
               const meta = item?.payload?.meta;
