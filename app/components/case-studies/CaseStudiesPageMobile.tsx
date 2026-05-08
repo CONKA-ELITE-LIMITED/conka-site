@@ -7,7 +7,6 @@ import {
   athletes,
   getCaseStudyPhotoPath,
   getAllSports,
-  getAverageImprovementAcrossAll,
 } from "@/app/lib/caseStudiesData";
 import SportIcon from "./SportIcon";
 import WhatTheyTook from "./WhatTheyTook";
@@ -86,9 +85,6 @@ export default function CaseStudiesPageMobile() {
       : athletes.filter((a) => a.sport === selectedSport)
   ).toSorted((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1));
   const activeAthlete = filteredAthletes[activeAthleteIndex];
-  const totalTests = athletes.reduce((sum, a) => sum + a.testsCompleted, 0);
-  const avgImprovement = getAverageImprovementAcrossAll().toFixed(1);
-
   useEffect(() => {
     setActiveAthleteIndex(0);
   }, [selectedSport]);
@@ -107,21 +103,6 @@ export default function CaseStudiesPageMobile() {
 
   return (
     <div className="pb-8 min-h-screen">
-      <div className="mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          {"// Research & results · PROOF-01"}
-        </p>
-        <h1
-          className="brand-h1 text-black mb-2"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          Case studies
-        </h1>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          {String(athletes.length).padStart(2, "0")} Athletes · {totalTests.toLocaleString()} Tests · +{avgImprovement}% Avg
-        </p>
-      </div>
-
       <div className="sticky top-0 z-10 -mx-[var(--brand-gutter-mobile,1.25rem)] px-[var(--brand-gutter-mobile,1.25rem)] py-3 mb-5 bg-white border-y border-black/12 overflow-x-auto scrollbar-hide">
         <div className="flex gap-1.5 pb-0.5">
           <button

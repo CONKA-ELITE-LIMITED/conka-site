@@ -6,8 +6,6 @@ import {
   athletes,
   getCaseStudyPhotoPath,
   getFeaturedAthletes,
-  getTotalTestsCompleted,
-  getAverageImprovementAcrossAll,
 } from "@/app/lib/caseStudiesData";
 import AthleteSidebar from "./AthleteSidebar";
 import { ComparisonChart } from "./AthleteStats";
@@ -43,53 +41,6 @@ export default function CaseStudiesPageDesktop() {
   return (
     <div className="pb-8 md:pb-6">
       <div className="mb-10">
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
-          <header>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-              {"// Research & results · PROOF-01"}
-            </p>
-            <h1
-              className="brand-h1 text-black mb-2"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              Case studies
-            </h1>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-              {String(athletes.length).padStart(2, "0")} Athletes · {getTotalTestsCompleted().toLocaleString()} Cognitive tests · +{getAverageImprovementAcrossAll().toFixed(1)}% Avg. improvement
-            </p>
-            <p className="text-sm md:text-base text-black/70 mt-4 max-w-xl leading-relaxed">
-              Every case is tracked with the same 5-minute cognitive assessment, compared against baseline, and reported without adjustment.
-            </p>
-          </header>
-
-          <div className="grid grid-cols-3 gap-0 border border-black/12 bg-white">
-            <div className="p-4 border-r border-black/8">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
-                Athletes
-              </p>
-              <p className="font-mono text-2xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
-                {athletes.length}
-              </p>
-            </div>
-            <div className="p-4 border-r border-black/8">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
-                Tests
-              </p>
-              <p className="font-mono text-2xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
-                {getTotalTestsCompleted().toLocaleString()}
-              </p>
-            </div>
-            <div className="p-4">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
-                Avg. lift
-              </p>
-              <p className="font-mono text-2xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
-                +{getAverageImprovementAcrossAll().toFixed(1)}%
-              </p>
-            </div>
-          </div>
-        </div>
-
         <div className="mb-2">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
             Featured · {String(featuredAthletes.length).padStart(2, "0")} Studies
