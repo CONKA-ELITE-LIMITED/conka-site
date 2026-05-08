@@ -97,6 +97,9 @@ export default function InsightFilteredSections() {
         aria-label="Filter reports by question"
       >
         <div className="brand-track flex flex-col gap-3">
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30 tabular-nums mb-3">
+            {"// Ongoing app data · APP-01"}
+          </p>
           <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 tabular-nums">
             {"// Filter by question"}
           </p>

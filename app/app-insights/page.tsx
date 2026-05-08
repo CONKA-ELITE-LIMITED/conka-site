@@ -4,6 +4,7 @@ import InsightFilteredSections from "@/app/components/insights/InsightFilteredSe
 import InsightHeroDifferentiator from "@/app/components/insights/InsightHeroDifferentiator";
 import HowThisIsPossibleModule from "@/app/components/insights/HowThisIsPossibleModule";
 import AppDownloadSection from "@/app/components/app/AppDownloadSection";
+import ProfessionalTrialsBlock from "@/app/components/insights/ProfessionalTrialsBlock";
 
 export default function AppInsightsPage() {
   return (
@@ -39,7 +40,7 @@ export default function AppInsightsPage() {
         </div>
       </section>
 
-      {/* 3–6. FILTERED REPORT SECTIONS */}
+      {/* 3–6. FILTERED APP DATA SECTIONS */}
       <InsightFilteredSections />
 
       {/* 7. DOWNLOAD — final CTA */}
@@ -49,7 +50,17 @@ export default function AppInsightsPage() {
         </div>
       </section>
 
-      {/* 8. METHODOLOGY FOOTER — slimmed to legal anchors only */}
+      {/* 8. PROFESSIONAL TRIALS — B2B exit ramp */}
+      <section
+        className="brand-section"
+        aria-label="Professional trials with sports clubs"
+      >
+        <div className="brand-track">
+          <ProfessionalTrialsBlock />
+        </div>
+      </section>
+
+      {/* 9. METHODOLOGY FOOTER — slimmed to legal anchors only */}
       <section
         className="brand-section"
         aria-label="Overall methodology and ethics"
