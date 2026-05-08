@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "The Science | CONKA",
   description:
-    "32 peer-reviewed studies. 6,000+ participants. Every ingredient in CONKA is clinically dosed and backed by research from Durham and Cambridge universities.",
+    "How CONKA actually works: every active ingredient clinically dosed from 32 peer-reviewed studies across 6,000+ participants. Developed with Durham and Cambridge universities, patented.",
   openGraph: {
     title: "The Science | CONKA",
     description:
-      "32 peer-reviewed studies. 6,000+ participants. Every ingredient in CONKA is clinically dosed and backed by research from Durham and Cambridge universities.",
+      "How CONKA actually works: every active ingredient clinically dosed from 32 peer-reviewed studies across 6,000+ participants. Developed with Durham and Cambridge universities, patented.",
   },
 };
 

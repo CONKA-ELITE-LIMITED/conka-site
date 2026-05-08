@@ -18,21 +18,34 @@ export default function ScienceHero({ isMobile = false }: ScienceHeroProps) {
           className="brand-h1 text-black mb-3"
           style={{ letterSpacing: "-0.02em" }}
         >
-          Every ingredient. Clinically dosed. Peer-reviewed.
+          The brain you need every day. The science to match.
         </h1>
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
           32 Studies · 6,000+ Participants · 16 Actives · £500K+ Research
         </p>
         <div className="space-y-4 max-w-xl">
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
-            CONKA&apos;s formulas are built on 32 peer-reviewed studies across
-            6,000+ participants. Every ingredient is dosed at the levels proven
-            effective in clinical trials — not marketing doses, not pixie dust.
+            Your brain is under more demand than it was designed for: sustained
+            focus, work pressure, poor sleep, and the physical cost of daily
+            life. Most supplements don&apos;t help because they use marketing
+            doses, not the ones proven effective in clinical trials.
           </p>
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
-            We partnered with Durham and Cambridge universities to develop, test,
-            and patent our approach to cognitive performance nutrition.
+            We worked with Durham and Cambridge universities to build formulas
+            where every active ingredient matches clinical trial dosing exactly.
+            32 peer-reviewed studies, 6,000+ participants, and a patented
+            approach to cognitive performance nutrition.
           </p>
+        </div>
+
+        {/* University partner chips */}
+        <div className="flex flex-wrap gap-2 mt-5">
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums px-3 py-1.5 border border-black/12 text-black/65">
+            Durham University
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums px-3 py-1.5 border border-black/12 text-black/65">
+            Cambridge University
+          </span>
         </div>
 
         {/* Spec strip */}
@@ -75,7 +88,6 @@ export default function ScienceHero({ isMobile = false }: ScienceHeroProps) {
             sizes={isMobile ? "95vw" : "50vw"}
             className="object-cover object-center"
           />
-          {/* Corner plate + spec ticks */}
           <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
             Fig. 01 · Research Context
           </div>
