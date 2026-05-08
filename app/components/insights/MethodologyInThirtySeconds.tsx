@@ -110,7 +110,7 @@ export default function MethodologyInThirtySeconds() {
               count.
             </li>
             <li>
-              · Where the per-condition sample is too thin to defend a Conka
+              · Where the per-condition sample is too thin to defend a CONKA
               effect, we mark it Early signal or skip the claim entirely.
             </li>
             <li>

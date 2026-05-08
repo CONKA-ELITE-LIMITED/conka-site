@@ -51,8 +51,8 @@ const ZERO_LINE_LABEL_STYLE = {
 export default function DataLineChart({ data }: { data: LineChartData }) {
   const chartData = data.points.map((p) => ({
     hour: p.hourLabel,
-    "Without Conka": p.noConka,
-    "With Conka": p.conka,
+    "Without CONKA": p.noConka,
+    "With CONKA": p.conka,
   }));
 
   return (
@@ -121,7 +121,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           />
           <Line
             type="monotone"
-            dataKey="Without Conka"
+            dataKey="Without CONKA"
             stroke={WITHOUT_CONKA_COLOR}
             strokeWidth={1.5}
             dot={{ fill: WITHOUT_CONKA_COLOR, r: 3, strokeWidth: 0 }}
@@ -129,7 +129,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
           />
           <Line
             type="monotone"
-            dataKey="With Conka"
+            dataKey="With CONKA"
             stroke={WITH_CONKA_COLOR}
             strokeWidth={2}
             dot={{ fill: WITH_CONKA_COLOR, r: 4, strokeWidth: 0 }}
@@ -146,14 +146,14 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
             className="inline-block w-4 h-px"
             style={{ backgroundColor: WITHOUT_CONKA_COLOR }}
           />
-          Without Conka
+          Without CONKA
         </span>
         <span className="flex items-center gap-2">
           <span
             className="inline-block w-4 h-0.5"
             style={{ backgroundColor: WITH_CONKA_COLOR }}
           />
-          With Conka
+          With CONKA
         </span>
       </div>
 

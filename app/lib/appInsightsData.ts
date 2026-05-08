@@ -5,7 +5,7 @@ import type { ReportData } from "./appInsightsTypes";
  * for ingredient PMID citations. All numbers traceable to the source reports.
  *
  * Filtered out for being noise / not meaningful:
- * - "Conka intake +10% on hangover days" (behaviour, not effect)
+ * - "CONKA intake +10% on hangover days" (behaviour, not effect)
  * - Sleep -0.2% (negligible)
  * - Severe stress +3.1 (statistical artefact from n=2)
  */
@@ -86,17 +86,17 @@ const timeOfDay: ReportData = {
       counter: "03.",
       topic: "CONKA EFFECT",
       value: "+1.09",
-      context: "On days Conka was taken, scores held above the daily average even during the evening dip — 1.09 points above the non-Conka curve.^^",
-      caveat: "n=74 Conka tests · 18-21",
+      context: "On days CONKA was taken, scores held above the daily average even during the evening dip — 1.09 points above the non-CONKA curve.^^",
+      caveat: "n=74 CONKA tests · 18-21",
     },
   ],
   interpretation:
     "Your cognitive performance naturally rises and falls throughout the day. Most people hit their sharpest point between 9am and 3pm, then slide into a noticeable dip by evening — lowest around 9pm.^^",
   conkaSubSection: {
-    headline: "Conka users hold their level when others drop.",
-    body: "When we look at tests logged on Conka days, scores stay above the daily average exactly where the curve normally drops most: late afternoon and evening. Mid-morning — when scores naturally peak anyway — the gap nearly disappears. We can't control for every variable, but the pattern is consistent across all four dip windows.",
+    headline: "CONKA users hold their level when others drop.",
+    body: "When we look at tests logged on CONKA days, scores stay above the daily average exactly where the curve normally drops most: late afternoon and evening. Mid-morning — when scores naturally peak anyway — the gap nearly disappears. We can't control for every variable, but the pattern is consistent across all four dip windows.",
     caveat:
-      "247 Conka-tagged tests across the dip windows · directional consistency across all four windows · users may differ in unmeasured ways",
+      "247 CONKA-tagged tests across the dip windows · directional consistency across all four windows · users may differ in unmeasured ways",
   },
   methodology:
     "Per-user deviation from personal mean. Each test compared to that user's daily average across all hours. 7,593 tests across 712 users between November 2023 and May 2026. Timestamps treated as UK local time (timezone not stored).",
@@ -162,14 +162,14 @@ const mentalFatigue: ReportData = {
   interpretation:
     "The data backs up what you already sense: feeling foggy actually costs you. Fatigued days show a real and consistent dip in both score and reaction time — and the worse the fatigue, the bigger the drop.^^",
   conkaSubSection: {
-    headline: "Faster reaction times on Conka days.",
-    body: "When fatigued-day tests are split by whether Conka was logged, the Conka days show 41ms faster reaction times on average.^^ At 15 users this is an early signal, not a controlled trial — but the direction is consistent.",
+    headline: "Faster reaction times on CONKA days.",
+    body: "When fatigued-day tests are split by whether CONKA was logged, the CONKA days show 41ms faster reaction times on average.^^ At 15 users this is an early signal, not a controlled trial — but the direction is consistent.",
     caveat:
       "n=15 users with both conditions · directional, not statistically conclusive · accuracy delta is mixed at this sample size",
   },
   ingredientBridge: {
     intro:
-      "App data on Conka's effect for fatigue is directional. Independent peer-reviewed studies on the relevant ingredients show:",
+      "App data on CONKA's effect for fatigue is directional. Independent peer-reviewed studies on the relevant ingredients show:",
     citations: [
       {
         ingredient: "Acetyl-L-Carnitine (ALCAR)",
@@ -254,10 +254,10 @@ const stress: ReportData = {
   ],
   interpretation:
     "Stress is the single largest performance signal in the app data. Mild stress appears in more than half of all sessions — it's the background state, not an edge case. Under moderate stress, scores fall over 5 points and reaction times slow by 10%. The effect under moderate stress is comparable to a heavy night's drinking.",
-  // No Conka sub-section: only 3 users had both conditions, below the threshold for a defensible per-user delta.
+  // No CONKA sub-section: only 3 users had both conditions, below the threshold for a defensible per-user delta.
   ingredientBridge: {
     intro:
-      "Only 3 users have stressed test days both with and without Conka. Per-user app data is below the threshold for a Conka-effect observation. Independent peer-reviewed studies on the stress-targeting ingredients in Conka show:",
+      "Only 3 users have stressed test days both with and without CONKA. Per-user app data is below the threshold for a CONKA-effect observation. Independent peer-reviewed studies on the stress-targeting ingredients in CONKA show:",
     citations: [
       {
         ingredient: "Ashwagandha (Withania somnifera)",
@@ -351,8 +351,8 @@ const alcohol: ReportData = {
   interpretation:
     "Light drinking (under 6 drinks) doesn't produce a consistent signal in this data. The effect appears clearly at 6 or more drinks: scores drop nearly 5 points, accuracy falls, and reaction time slows by 7%. If you've ever felt the next-day fog was real, this data suggests you were right.^^",
   conkaSubSection: {
-    headline: "Faster on Conka hangover days.",
-    body: "When hangover-day tests are split by whether Conka was logged, the Conka days show 56ms faster reaction times.^^ At 11 users this is directional — worth noting, not concluding from.",
+    headline: "Faster on CONKA hangover days.",
+    body: "When hangover-day tests are split by whether CONKA was logged, the CONKA days show 56ms faster reaction times.^^ At 11 users this is directional — worth noting, not concluding from.",
     caveat:
       "n=11 users with both conditions · directional, not statistically conclusive · sample may have followed lighter drinking nights",
   },
