@@ -9,6 +9,7 @@ import SciencePillars from "@/app/components/science/SciencePillars";
 import FlowVsClear from "@/app/components/science/FlowVsClear";
 import ScienceDifferent from "@/app/components/science/ScienceDifferent";
 import EvidenceSummary from "@/app/components/science/EvidenceSummary";
+import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
 import Reveal from "@/app/components/landing/Reveal";
 import useIsMobile from "@/app/hooks/useIsMobile";
 
@@ -37,9 +38,21 @@ export default function SciencePage() {
             </div>
           </section>
 
-          {/* ===== SECTION 2: QUOTE ===== */}
+          {/* ===== SECTION 2: WHAT MAKES US DIFFERENT ===== */}
           <section
             className="brand-section brand-bg-tint"
+            aria-label="What makes CONKA different"
+          >
+            <div className="brand-track">
+              <Reveal>
+                <ScienceDifferent isMobile={!!isMobile} />
+              </Reveal>
+            </div>
+          </section>
+
+          {/* ===== SECTION 3: QUOTE ===== */}
+          <section
+            className="brand-section brand-bg-white"
             aria-label="Research philosophy"
           >
             <div className="brand-track">
@@ -49,9 +62,9 @@ export default function SciencePage() {
             </div>
           </section>
 
-          {/* ===== SECTION 3: ADAPTOGENS ===== */}
+          {/* ===== SECTION 4: ADAPTOGENS ===== */}
           <section
-            className="brand-section brand-bg-white"
+            className="brand-section brand-bg-tint"
             aria-label="What are adaptogens"
           >
             <div className="brand-track">
@@ -61,9 +74,9 @@ export default function SciencePage() {
             </div>
           </section>
 
-          {/* ===== SECTION 4: FIVE PILLARS ===== */}
+          {/* ===== SECTION 5: FIVE PILLARS ===== */}
           <section
-            className="brand-section brand-bg-tint"
+            className="brand-section brand-bg-white"
             aria-label="The five pillars"
           >
             <div className="brand-track">
@@ -73,26 +86,14 @@ export default function SciencePage() {
             </div>
           </section>
 
-          {/* ===== SECTION 5: FLOW VS CLEAR ===== */}
+          {/* ===== SECTION 6: FLOW VS CLEAR ===== */}
           <section
-            className="brand-section brand-bg-white"
+            className="brand-section brand-bg-tint"
             aria-label="Flow vs Clear comparison"
           >
             <div className="brand-track">
               <Reveal>
                 <FlowVsClear isMobile={!!isMobile} />
-              </Reveal>
-            </div>
-          </section>
-
-          {/* ===== SECTION 6: WHAT MAKES US DIFFERENT ===== */}
-          <section
-            className="brand-section brand-bg-tint"
-            aria-label="What makes CONKA different"
-          >
-            <div className="brand-track">
-              <Reveal>
-                <ScienceDifferent isMobile={!!isMobile} />
               </Reveal>
             </div>
           </section>
@@ -105,6 +106,18 @@ export default function SciencePage() {
             <div className="brand-track">
               <Reveal>
                 <EvidenceSummary isMobile={!!isMobile} />
+              </Reveal>
+            </div>
+          </section>
+
+          {/* ===== SECTION 8: REAL-WORLD DATA BRIDGE ===== */}
+          <section
+            className="brand-section brand-bg-black"
+            aria-label="Real user cognitive data"
+          >
+            <div className="brand-track">
+              <Reveal>
+                <AppInsightsCallout />
               </Reveal>
             </div>
           </section>
