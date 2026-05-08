@@ -25,13 +25,13 @@ export default function InsightHeroDifferentiator() {
         className="brand-h1 text-white mb-6 max-w-[22ch]"
         style={{ letterSpacing: "-0.02em" }}
       >
-        We don&apos;t ask if Conka works. We measure it.
+        We don&apos;t ask if CONKA works. We measure it.
       </h1>
 
       <p className="text-base lg:text-lg text-white/90 leading-relaxed max-w-[68ch] mb-10">
         Every chart on this page came from real CONKA app users running an
         FDA-cleared cognitive test on themselves, every day, alongside the days
-        they take Conka and the days they don&apos;t. Where the signal is strong,
+        they take CONKA and the days they don&apos;t. Where the signal is strong,
         we say so. Where the data is too thin to draw a conclusion, we say that too.
       </p>
 

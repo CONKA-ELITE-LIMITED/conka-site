@@ -63,7 +63,7 @@ export default function DataReportSection({
       {report.conkaSubSection ? (
         <div className="border border-white/20 bg-white/[0.12] p-5 lg:p-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-3">
-            {"// Conka observation · APP-01"}
+            {"// CONKA observation · APP-01"}
           </p>
           <h3
             className="brand-h3 text-white mb-3 max-w-[28ch]"

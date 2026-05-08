@@ -19,7 +19,7 @@ import CredentialsBadgeBlock from "./CredentialsBadgeBlock";
 const STEPS = [
   {
     counter: "01.",
-    title: "Take Conka.",
+    title: "Take CONKA.",
     body: "Flow in the morning, Clear in the afternoon, or both. Whatever your day asks for.",
   },
   {
@@ -30,7 +30,7 @@ const STEPS = [
   {
     counter: "03.",
     title: "See your data.",
-    body: "Every test plots against your own personal baseline. Conka days, non-Conka days, sober mornings, hangovers, peak hours, and dips. Your curve, against itself.",
+    body: "Every test plots against your own personal baseline. CONKA days, non-CONKA days, sober mornings, hangovers, peak hours, and dips. Your curve, against itself.",
   },
 ] as const;
 
