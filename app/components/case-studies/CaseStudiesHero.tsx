@@ -27,14 +27,12 @@ export default function CaseStudiesHero() {
         className="brand-h1 text-black mb-6 max-w-[22ch]"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Not claimed. Tracked.
+        What real athletes measured on CONKA.
       </h1>
 
       <p className="text-base lg:text-lg text-black/70 leading-relaxed max-w-[64ch] mb-10">
         Each person here voluntarily tracked their cognitive performance daily
-        using the same 5-minute FDA-cleared assessment used in the CONKA app.
-        Results are published without adjustment — where the data shows
-        improvement, we give the number; where it is mixed or thin, we say so.
+        using the same 2-minute FDA-cleared assessment used in the CONKA app.
         At the end of each study you will find the exact formula they used.
       </p>
 

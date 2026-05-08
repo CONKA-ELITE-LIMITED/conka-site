@@ -17,6 +17,7 @@ export default function CaseStudiesPage() {
       <main className="flex-1 flex flex-col">
         <section
           className="brand-section brand-hero-first brand-bg-white"
+          style={{ paddingTop: "5rem" }}
           aria-label="Case studies overview"
         >
           <div className="brand-track">
