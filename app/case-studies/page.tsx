@@ -5,6 +5,8 @@ import Footer from "@/app/components/footer";
 import CaseStudiesHero from "@/app/components/case-studies/CaseStudiesHero";
 import CaseStudiesPageDesktop from "@/app/components/case-studies/CaseStudiesPageDesktop";
 import CaseStudiesPageMobile from "@/app/components/case-studies/CaseStudiesPageMobile";
+import LabGuarantee from "@/app/components/landing/LabGuarantee";
+import { FUNNEL_URL } from "@/app/lib/landingConstants";
 import useIsMobile from "@/app/hooks/useIsMobile";
 
 export default function CaseStudiesPage() {
@@ -45,6 +47,14 @@ export default function CaseStudiesPage() {
             </div>
           </section>
         )}
+        <section
+          className="brand-section brand-bg-white"
+          aria-label="100-day guarantee"
+        >
+          <div className="brand-track">
+            <LabGuarantee ctaHref={FUNNEL_URL} />
+          </div>
+        </section>
       </main>
 
       <Footer />
