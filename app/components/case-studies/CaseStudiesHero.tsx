@@ -1,5 +1,4 @@
 import {
-  athletes,
   getTotalTestsCompleted,
   getAverageImprovementAcrossAll,
 } from "@/app/lib/caseStudiesData";
@@ -12,7 +11,6 @@ import {
  */
 export default function CaseStudiesHero() {
   const stats = [
-    { value: String(athletes.length), label: "Case studies" },
     { value: getTotalTestsCompleted().toLocaleString(), label: "Cognitive tests" },
     { value: `+${getAverageImprovementAcrossAll().toFixed(1)}%`, label: "Avg. improvement" },
   ];
@@ -29,15 +27,15 @@ export default function CaseStudiesHero() {
       </h1>
 
       <p className="text-base lg:text-lg text-black/70 leading-relaxed max-w-[64ch] mb-10">
-        Most people take a supplement and wonder if it is working. These 38
-        decided to find out. Each ran the same 2-minute FDA-cleared cognitive
-        test on themselves daily, comparing their performance on CONKA days
-        against off days. No paid study. No coached testimonials. At the end of
-        each case you will find the exact formula they used.
+        Most people take a supplement and wonder if it is working. These high
+        performers decided to find out. Each ran the same 2-minute FDA-cleared
+        cognitive test on themselves daily, comparing their performance on CONKA
+        days against off days. No paid study. No coached testimonials. At the
+        end of each case you will find the exact formula they used.
       </p>
 
       <div
-        className="grid grid-cols-3 gap-px bg-black/12 border border-black/12"
+        className="grid grid-cols-2 gap-px bg-black/12 border border-black/12"
         role="list"
         aria-label="Dataset totals"
       >
