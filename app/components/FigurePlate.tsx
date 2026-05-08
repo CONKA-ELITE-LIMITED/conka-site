@@ -1,7 +1,7 @@
 /**
  * FigurePlate — wraps any framed asset with clinical spec-sheet overlays.
  *
- * Anatomy (two-corner pattern per CLINICAL_AESTHETIC.md):
+ * Anatomy (two-corner pattern per DESIGN_SYSTEM.md §8 Clinical Aesthetic):
  *   top-left  → "Fig. 0N · Subject"
  *   bottom-right → optional meta (location, score, partner, reading)
  *
