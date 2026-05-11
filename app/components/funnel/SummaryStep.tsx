@@ -42,13 +42,40 @@ const APP_BULLETS = [
   `${GUARANTEE_DAYS}-day money-back guarantee, no questions asked`,
 ];
 
+function computeSavings(product: FunnelProduct, cadence: FunnelCadence, price: number) {
+  // Cadence saving: what you save vs buying the same product one-off
+  let cadenceSaving = 0;
+  let cadenceLabel = "";
+  if (cadence === "monthly-sub") {
+    cadenceSaving = getOfferPricing(product, "monthly-otp").price - price;
+    cadenceLabel = `${formatPrice(cadenceSaving)}/mo vs one-off`;
+  } else if (cadence === "quarterly-sub") {
+    cadenceSaving = getOfferPricing(product, "monthly-sub").price * 3 - price;
+    cadenceLabel = `${formatPrice(cadenceSaving)} vs 3 monthly payments`;
+  }
+
+  // Bundle saving: Both vs buying Flow + Clear separately at the same cadence
+  let bundleSaving = 0;
+  let bundleLabel = "";
+  if (product === "both") {
+    const flowPrice = getOfferPricing("flow", cadence).price;
+    const clearPrice = getOfferPricing("clear", cadence).price;
+    bundleSaving = flowPrice + clearPrice - price;
+    if (bundleSaving > 0) {
+      bundleLabel = `${formatPrice(bundleSaving)} vs buying separately`;
+    }
+  }
+
+  return { cadenceSaving, cadenceLabel, bundleSaving, bundleLabel };
+}
+
 export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const display = FUNNEL_PRODUCTS[product];
   const cadenceDisplay = FUNNEL_CADENCES[cadence];
   const pricing = getOfferPricing(product, cadence);
   const heroImage = FUNNEL_HERO_IMAGES[product];
-  const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
   const isSub = cadence !== "monthly-otp";
+  const { cadenceSaving, cadenceLabel, bundleSaving, bundleLabel } = computeSavings(product, cadence, pricing.price);
 
   return (
     <div>
@@ -107,9 +134,14 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
               </span>
             )}
           </div>
-          {savings > 0 && (
-            <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#1B2757] font-semibold mt-1">
-              Save {formatPrice(savings)} vs trial pack price
+          {cadenceSaving > 0 && (
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#1B2757] font-bold mt-1.5">
+              Save {cadenceLabel}
+            </p>
+          )}
+          {bundleSaving > 0 && (
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#1B2757] font-bold mt-1">
+              Save {bundleLabel}
             </p>
           )}
           <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/40 mt-0.5">
@@ -124,19 +156,20 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55">
             Also included — the CONKA app
           </p>
+          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/35 mt-0.5">
+            iOS and Google Play
+          </p>
         </div>
 
         <div className="flex gap-4 p-4">
           {/* App screenshot — scaled down */}
-          <div className="shrink-0 w-16 overflow-hidden rounded-[6px] shadow-sm border border-black/8">
-            <Image
-              src="/app/AppConkaRing.png"
-              alt="CONKA app showing daily brain performance score"
-              width={64}
-              height={138}
-              className="w-full h-auto"
-            />
-          </div>
+          <Image
+            src="/app/AppConkaRing.png"
+            alt="CONKA app showing daily brain performance score"
+            width={64}
+            height={138}
+            className="shrink-0 w-16 h-auto"
+          />
 
           {/* Bullets */}
           <div className="flex-1 min-w-0 space-y-2.5 pt-1">
