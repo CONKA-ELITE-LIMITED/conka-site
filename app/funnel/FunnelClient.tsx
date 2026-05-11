@@ -208,7 +208,6 @@ export default function FunnelClient() {
   const priceSuffix = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
   const formattedPrice = `£${selectedPrice.toFixed(2)}${priceSuffix}`;
   const reviewSubLabel = `${formattedPrice} · ${FUNNEL_PRODUCTS[product].label}`;
-  const checkoutSubLabel = `${formattedPrice} · ${FUNNEL_CADENCES[cadence].subtitle}`;
 
   return (
     <div className="brand-clinical min-h-screen bg-white text-[var(--brand-black)]">
@@ -377,8 +376,8 @@ export default function FunnelClient() {
                 <FunnelAssurance />
                 <FunnelCTA
                   label="Proceed to checkout"
-                  subLabel={checkoutSubLabel}
-                  highlightSubLabel={true}
+                  subLabel=""
+                  highlightSubLabel={false}
                   onClick={handleCheckout}
                   loading={isCheckingOut}
                   error={error}
