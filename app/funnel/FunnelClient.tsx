@@ -423,7 +423,7 @@ export default function FunnelClient() {
         {currentStep === 4 && (
           <FunnelCTA
             label="Proceed to checkout"
-            subLabel={checkoutSubLabel}
+            subLabel=""
             highlightSubLabel={true}
             onClick={handleCheckout}
             loading={isCheckingOut}
