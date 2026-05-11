@@ -6,6 +6,13 @@
 
 ## May 2026
 
+### 2026-05-11 -- Home page hero CTA: "Buy CONKA" + route to /conka-both
+
+- Changed CTA label from "Try CONKA Today" to "Buy CONKA Today" in `LandingHero` (mobile + desktop layouts).
+- Routed the button to `/conka-both` instead of the ad funnel URL, giving organic home page visitors the full product page experience.
+
+---
+
 ### 2026-05-07 -- Design system: dark-page documentation and CSS truthing (no visual change)
 
 Audit pass to make `DESIGN_SYSTEM.md` and `brand-base.css` accurately describe what `/app` and `/app-insights` actually do. No visual change to either page; both still render via the same inline `backgroundColor: "#0a0a0a"` + inline SVG dot pattern as before.
