@@ -18,9 +18,9 @@ import {
   type FunnelProduct,
   type UpsellOffer,
   FUNNEL_PRODUCTS,
+  FUNNEL_CADENCES,
   getOfferPricing,
   getUpsellOffer,
-  getFunnelCTALabels,
 } from "../lib/funnelData";
 import {
   funnelCheckout,
@@ -203,7 +203,12 @@ export default function FunnelClient() {
   // CTA labels per step
   const productCTALabel = `Get ${product === "both" ? "Flow + Clear" : FUNNEL_PRODUCTS[product].name}`;
   const productCTASubLabel = FUNNEL_PRODUCTS[product].tagline;
-  const cadenceCTA = getFunnelCTALabels(2, product, cadence);
+
+  const { price: selectedPrice } = getOfferPricing(product, cadence);
+  const priceSuffix = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
+  const formattedPrice = `£${selectedPrice.toFixed(2)}${priceSuffix}`;
+  const reviewSubLabel = `${formattedPrice} · ${FUNNEL_PRODUCTS[product].label}`;
+  const checkoutSubLabel = `${formattedPrice} · ${FUNNEL_CADENCES[cadence].subtitle}`;
 
   return (
     <div className="brand-clinical min-h-screen bg-white text-[var(--brand-black)]">
@@ -241,7 +246,7 @@ export default function FunnelClient() {
               <div className="hidden lg:block mt-6">
                 <FunnelAssurance />
                 <FunnelCTA
-                  label="Continue"
+                  label="Choose my formula"
                   subLabel=""
                   highlightSubLabel={false}
                   onClick={handleEducationNext}
@@ -348,9 +353,9 @@ export default function FunnelClient() {
               <div className="hidden lg:block px-10 pb-8">
                 <FunnelAssurance />
                 <FunnelCTA
-                  label={cadenceCTA.label}
-                  subLabel={cadenceCTA.subLabel}
-                  highlightSubLabel={!!cadenceCTA.subLabel}
+                  label="Review my order"
+                  subLabel={reviewSubLabel}
+                  highlightSubLabel={true}
                   onClick={handleCadenceNext}
                   loading={false}
                   error={error}
@@ -371,8 +376,8 @@ export default function FunnelClient() {
               <div className="hidden lg:block px-10 pb-8">
                 <FunnelAssurance />
                 <FunnelCTA
-                  label="Buy CONKA"
-                  subLabel={cadenceCTA.label}
+                  label="Proceed to checkout"
+                  subLabel={checkoutSubLabel}
                   highlightSubLabel={true}
                   onClick={handleCheckout}
                   loading={isCheckingOut}
@@ -388,7 +393,7 @@ export default function FunnelClient() {
       <div className="lg:hidden">
         {currentStep === 1 && (
           <FunnelCTA
-            label="Continue"
+            label="Choose my formula"
             subLabel=""
             highlightSubLabel={false}
             onClick={handleEducationNext}
@@ -408,9 +413,9 @@ export default function FunnelClient() {
         )}
         {currentStep === 3 && (
           <FunnelCTA
-            label={cadenceCTA.label}
-            subLabel={cadenceCTA.subLabel}
-            highlightSubLabel={!!cadenceCTA.subLabel}
+            label="Review my order"
+            subLabel={reviewSubLabel}
+            highlightSubLabel={true}
             onClick={handleCadenceNext}
             loading={false}
             error={error}
@@ -418,8 +423,8 @@ export default function FunnelClient() {
         )}
         {currentStep === 4 && (
           <FunnelCTA
-            label="Buy CONKA"
-            subLabel={cadenceCTA.label}
+            label="Proceed to checkout"
+            subLabel={checkoutSubLabel}
             highlightSubLabel={true}
             onClick={handleCheckout}
             loading={isCheckingOut}
