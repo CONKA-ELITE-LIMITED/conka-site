@@ -80,7 +80,7 @@ export default function CadenceSelector({
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-        Step 02 · Plan
+        Step 03 · Plan
       </p>
       <h2
         className="text-2xl lg:text-3xl font-semibold tracking-[var(--brand-h2-tracking)] mb-5"

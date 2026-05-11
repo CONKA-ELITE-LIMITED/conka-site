@@ -51,7 +51,7 @@ export default function ProductSelector({
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-        Step 01 · Product
+        Step 02 · Product
       </p>
       <h2
         className="text-2xl lg:text-3xl font-semibold tracking-[var(--brand-h2-tracking)] mb-5"

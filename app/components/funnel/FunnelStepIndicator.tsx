@@ -2,14 +2,18 @@
 
 import Image from "next/image";
 
+type FunnelStep = 1 | 2 | 3 | 4;
+
 interface FunnelStepIndicatorProps {
-  currentStep: 1 | 2;
-  onStepClick?: (step: 1 | 2) => void;
+  currentStep: FunnelStep;
+  onStepClick?: (step: FunnelStep) => void;
 }
 
 const STEPS = [
-  { number: 1 as const, label: "Product" },
-  { number: 2 as const, label: "Plan" },
+  { number: 1 as FunnelStep, label: "Learn" },
+  { number: 2 as FunnelStep, label: "Product" },
+  { number: 3 as FunnelStep, label: "Plan" },
+  { number: 4 as FunnelStep, label: "Review" },
 ];
 
 export default function FunnelStepIndicator({
@@ -44,23 +48,10 @@ export default function FunnelStepIndicator({
                         : "text-black/30 cursor-default"
                   }`}
                 >
-                  {/* Mono step number with optional check */}
                   <span className="inline-flex items-center justify-center leading-none">
                     {isCompleted ? (
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        aria-hidden
-                      >
-                        <path
-                          d="M3 8.5L6.5 12L13 4.5"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="square"
-                          strokeLinejoin="miter"
-                        />
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" />
                       </svg>
                     ) : (
                       <span className="tabular-nums">
@@ -68,8 +59,7 @@ export default function FunnelStepIndicator({
                       </span>
                     )}
                   </span>
-
-                  <span>{step.label}</span>
+                  <span className="hidden lg:inline">{step.label}</span>
                 </button>
               </div>
             );
@@ -78,8 +68,8 @@ export default function FunnelStepIndicator({
           {/* Checkout — always shown as upcoming */}
           <span className="text-black/25" aria-hidden>·</span>
           <span className="flex items-center gap-1.5 text-black/30">
-            <span className="tabular-nums">03</span>
-            <span>Checkout</span>
+            <span className="tabular-nums">05</span>
+            <span className="hidden lg:inline">Checkout</span>
           </span>
         </div>
 
