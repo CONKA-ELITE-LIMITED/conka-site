@@ -201,7 +201,8 @@ export default function FunnelClient() {
   }, [product, cadence]);
 
   // CTA labels per step
-  const productCTA = getFunnelCTALabels(1, product, cadence);
+  const productCTALabel = `Get ${product === "both" ? "Flow + Clear" : FUNNEL_PRODUCTS[product].name}`;
+  const productCTASubLabel = FUNNEL_PRODUCTS[product].tagline;
   const cadenceCTA = getFunnelCTALabels(2, product, cadence);
 
   return (
@@ -261,7 +262,6 @@ export default function FunnelClient() {
               <div className="px-5 pt-5 pb-6 lg:px-10 lg:pt-8">
                 <ProductSelector
                   product={product}
-                  cadence={cadence}
                   onChange={handleProductChange}
                 />
               </div>
@@ -271,8 +271,8 @@ export default function FunnelClient() {
               <div className="hidden lg:block px-10 pb-8">
                 <FunnelAssurance />
                 <FunnelCTA
-                  label={productCTA.label}
-                  subLabel={productCTA.subLabel}
+                  label={productCTALabel}
+                  subLabel={productCTASubLabel}
                   highlightSubLabel={product === "both"}
                   onClick={handleProductNext}
                   loading={false}
@@ -398,8 +398,8 @@ export default function FunnelClient() {
         )}
         {currentStep === 2 && (
           <FunnelCTA
-            label={productCTA.label}
-            subLabel={productCTA.subLabel}
+            label={productCTALabel}
+            subLabel={productCTASubLabel}
             highlightSubLabel={product === "both"}
             onClick={handleProductNext}
             loading={false}
