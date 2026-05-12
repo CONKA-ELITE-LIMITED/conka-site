@@ -1,9 +1,11 @@
 import { CartLine } from "@/app/lib/shopify";
-import { getOfferPricing, getOfferVariant } from "./funnelData";
+import {
+  getOfferPricing,
+  getOfferVariant,
+  detectFunnelProduct,
+  detectFunnelCadence,
+} from "./funnelData";
 import { formatPrice } from "./productData";
-
-type CartProductType = "flow" | "clear" | "both";
-type CartCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
 
 export interface CartUpsellOffer {
   type: "add-both" | "upgrade-to-sub";
@@ -22,38 +24,6 @@ export interface CartUpsellOffer {
   sellingPlanId?: string;
 }
 
-// Variant GIDs sourced from funnelData.ts FUNNEL_VARIANTS (confirmed consistent across site and funnel).
-const FLOW_VARIANT_IDS = new Set([
-  "gid://shopify/ProductVariant/57568795918710", // monthly
-  "gid://shopify/ProductVariant/57568795951478", // quarterly
-]);
-const CLEAR_VARIANT_IDS = new Set([
-  "gid://shopify/ProductVariant/57568517489014", // monthly
-  "gid://shopify/ProductVariant/57568746930550", // quarterly
-]);
-const BOTH_VARIANT_IDS = new Set([
-  "gid://shopify/ProductVariant/57568809976182", // monthly
-  "gid://shopify/ProductVariant/57568810008950", // quarterly
-]);
-// Quarterly variants have unique GIDs — used to distinguish cadence from monthly.
-const QUARTERLY_VARIANT_IDS = new Set([
-  "gid://shopify/ProductVariant/57568795951478",
-  "gid://shopify/ProductVariant/57568746930550",
-  "gid://shopify/ProductVariant/57568810008950",
-]);
-
-function detectProduct(merchandiseId: string): CartProductType | null {
-  if (FLOW_VARIANT_IDS.has(merchandiseId)) return "flow";
-  if (CLEAR_VARIANT_IDS.has(merchandiseId)) return "clear";
-  if (BOTH_VARIANT_IDS.has(merchandiseId)) return "both";
-  return null;
-}
-
-function detectCadence(line: CartLine): CartCadence {
-  if (QUARTERLY_VARIANT_IDS.has(line.merchandise.id)) return "quarterly-sub";
-  return line.sellingPlanAllocation ? "monthly-sub" : "monthly-otp";
-}
-
 /**
  * Returns an upsell offer for a single-product cart, or null if no upsell applies.
  *
@@ -67,10 +37,10 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
   if (lines.length !== 1) return null;
 
   const line = lines[0];
-  const product = detectProduct(line.merchandise.id);
+  const product = detectFunnelProduct(line.merchandise.id);
   if (!product) return null;
 
-  const cadence = detectCadence(line);
+  const cadence = detectFunnelCadence(line.merchandise.id, !!line.sellingPlanAllocation);
 
   // Rule 1: Flow or Clear → offer Both at same cadence
   if (product === "flow" || product === "clear") {
