@@ -94,7 +94,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
       label: `Upgrade to Both — includes ${addedName}`,
       badge: savingsPercent > 0 ? `Save ${savingsPercent}%` : "Bundle",
       heroLabel: `+${formatPrice(extraCost)}${priceSuffix}`,
-      heroSub: "extra vs buying separately",
+      heroSub: "more than you pay now",
       price: bothPricing.price,
       variantId: variant.variantId,
       sellingPlanId: variant.sellingPlanId,
