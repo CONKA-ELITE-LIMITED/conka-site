@@ -96,7 +96,7 @@ export default function CartUpsellStrip({
           height={80}
           className="shrink-0 w-12 h-auto object-contain"
         />
-        <div className="flex-1 min-w-0 flex flex-col justify-between gap-2.5">
+        <div className="flex-1 min-w-0 flex flex-col gap-2.5">
           <div>
             <p className="font-mono text-xl font-bold tabular-nums text-[#1B2757] leading-none">
               {offer.heroLabel}
@@ -104,6 +104,29 @@ export default function CartUpsellStrip({
             <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/40 mt-1">
               {offer.heroSub}
             </p>
+          </div>
+          <div className="space-y-1">
+            {offer.benefits.map((benefit) => (
+              <div key={benefit} className="flex gap-1.5 items-start">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className="shrink-0 mt-0.5 text-[#1B2757]"
+                  aria-hidden
+                >
+                  <path
+                    d="M3 8.5L6.5 12L13 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
+                  />
+                </svg>
+                <p className="text-xs text-black leading-snug">{benefit}</p>
+              </div>
+            ))}
           </div>
           <button
             onClick={handleAccept}

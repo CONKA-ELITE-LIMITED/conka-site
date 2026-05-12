@@ -17,6 +17,8 @@ export interface CartUpsellOffer {
   heroLabel: string;
   /** Supporting line under the hero number */
   heroSub: string;
+  /** Benefit bullets rendered below the hero number */
+  benefits: string[];
   /** Product image to display in the tile */
   image: string;
   price: number;
@@ -57,9 +59,12 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
     const extraCost = bothPricing.price - currentPricing.price;
     const savingVsSeparate = separatePrice - bothPricing.price;
     const savingsPercent = Math.round((savingVsSeparate / separatePrice) * 100);
+    const addedShotCount = getOfferPricing(otherProduct, cadence).shotCount;
 
     const priceSuffix =
       cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/qtr" : "";
+    const shotsFrequency =
+      cadence === "monthly-sub" ? " every month" : cadence === "quarterly-sub" ? " per quarter" : "";
 
     return {
       type: "add-both",
@@ -67,8 +72,11 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
       badge: savingsPercent > 0 ? `Save ${savingsPercent}%` : "Bundle",
       heroLabel: `+${formatPrice(extraCost)}${priceSuffix}`,
       heroSub: "more than you pay now",
-      // Show the bottle they're gaining — the visual hook for completing the system
-      image: product === "flow" ? "/CONKA_02x.jpg" : "/CONKA_01x.jpg",
+      benefits: [
+        `${addedShotCount} shots of Conka ${addedName}${shotsFrequency}`,
+        "The complete cognitive performance system",
+      ],
+      image: "/formulas/both/BothShots.jpg",
       price: bothPricing.price,
       variantId: variant.variantId,
       sellingPlanId: variant.sellingPlanId,
@@ -90,7 +98,11 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
       badge: "Most popular",
       heroLabel: `Save ${formatPrice(saving)}/mo`,
       heroSub: `vs ${formatPrice(currentPrice)} one-time`,
-      image: "/CONKA_01x.jpg",
+      benefits: [
+        "Delivered fresh every month",
+        "Cancel anytime, no lock-in",
+      ],
+      image: "/formulas/both/BothShots.jpg",
       price: upgradePrice,
       variantId: variant.variantId,
       sellingPlanId: variant.sellingPlanId,
