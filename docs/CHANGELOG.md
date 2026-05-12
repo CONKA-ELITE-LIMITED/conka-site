@@ -6,6 +6,12 @@
 
 ## May 2026
 
+### 2026-05-12 -- Code review: B2B cleanup (SCRUM-971)
+
+Post-implementation review of the B2B removal. No regressions found. All lint warnings in the changed files were pre-existing (unused vars in the protocol calendar generator, `FormulaVariantConfig` type in `shopifyProductMapping.ts`). No fixes required.
+
+---
+
 ### 2026-05-12 -- B2B/Professionals feature removed (SCRUM-971)
 
 Full dead code removal. The B2B professional portal was built in Jan 2026 but never launched -- no live traffic, no active users.
