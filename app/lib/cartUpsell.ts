@@ -15,6 +15,8 @@ export interface CartUpsellOffer {
   heroLabel: string;
   /** Supporting line under the hero number */
   heroSub: string;
+  /** Product image to display in the tile */
+  image: string;
   price: number;
   variantId: string;
   sellingPlanId?: string;
@@ -95,6 +97,8 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
       badge: savingsPercent > 0 ? `Save ${savingsPercent}%` : "Bundle",
       heroLabel: `+${formatPrice(extraCost)}${priceSuffix}`,
       heroSub: "more than you pay now",
+      // Show the bottle they're gaining — the visual hook for completing the system
+      image: product === "flow" ? "/CONKA_02x.jpg" : "/CONKA_01x.jpg",
       price: bothPricing.price,
       variantId: variant.variantId,
       sellingPlanId: variant.sellingPlanId,
@@ -116,6 +120,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
       badge: "Most popular",
       heroLabel: `Save ${formatPrice(saving)}/mo`,
       heroSub: `vs ${formatPrice(currentPrice)} one-time`,
+      image: "/CONKA_01x.jpg",
       price: upgradePrice,
       variantId: variant.variantId,
       sellingPlanId: variant.sellingPlanId,
