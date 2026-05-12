@@ -22,14 +22,8 @@ Concise overview of how the cart works in the app.
 | **Add** | User adds a product; we have a cart ID | `action: 'add'`, `cartId`, `variantId`, `quantity`, `sellingPlanId` |
 | **Update** | User changes quantity of a line | `action: 'update'`, `cartId`, `lineId`, `quantity` |
 | **Remove** | User removes a line (or quantity goes to 0) | `action: 'remove'`, `cartId`, `lineId` |
-| **Update multiple** | B2B tier normalization (see below) | `action: 'updateMultiple'`, `cartId`, `lines[]` |
 
 On successful create, we write `data.cart.id` to `localStorage`. All cart data (lines, cost, `checkoutUrl`) comes from the Shopify response.
-
-## B2B tier normalization
-
-- After fetch, add, update, or remove, we may run **B2B tier normalization** (`getB2BCartTierUpdates` from `app/lib/b2bCartTier`) so the cart has a single B2B tier (e.g. all lines subscription or all one-time).
-- If changes are needed, we call the API with `action: 'updateMultiple'` and then set the cart from the result. We show a short-lived message (`b2bTierUpdatedTo`) or an error (`b2bNormalizeError`) if the update fails.
 
 ## Checkout
 

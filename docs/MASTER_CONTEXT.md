@@ -57,7 +57,6 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Vercel hosting. Shopify Sto
 ### Cart/checkout
 - No custom checkout. Redirect to `cart.checkoutUrl`.
 - `clearCart()` removes localStorage ref only; Shopify cart persists until expiry.
-- B2B tier normalization fires after every cart mutation (`app/lib/b2bCartTier.ts`).
 - Funnel uses isolated cart creation (fresh cart per checkout, no drawer).
 
 ### Analytics (fires from CartContext after mutations)

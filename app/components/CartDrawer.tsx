@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import { useCart } from "@/app/context/CartContext";
 import { CartLine } from "@/app/lib/shopify";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
-import { cartHasB2BLines, getB2BLinesTotalIncVat } from "@/app/lib/b2bCartTier";
-import { incVatToExVat, getVatFromIncVat } from "@/app/lib/productData";
 import Image from "next/image";
 import CartAppGift from "./CartAppGift";
 
@@ -17,7 +14,6 @@ const PRODUCT_FALLBACK_IMAGES: Record<string, string> = {
   clarity: "/CONKA_02x.jpg",
 };
 
-// Get fallback image based on product title
 function getProductFallbackImage(productTitle: string): string {
   const lowerTitle = productTitle.toLowerCase();
   for (const [key, image] of Object.entries(PRODUCT_FALLBACK_IMAGES)) {
@@ -25,10 +21,9 @@ function getProductFallbackImage(productTitle: string): string {
       return image;
     }
   }
-  return "/bottle2.png"; // Default fallback
+  return "/bottle2.png";
 }
 
-const B2B_TIER_MESSAGE_MS = 8000;
 const SUBSCRIPTION_DISCOUNT = 0.2;
 
 /** Price to display for one line (matches what the customer pays and what subtotal uses). */
@@ -57,7 +52,7 @@ function getLineDisplayPrice(
   };
 }
 
-/** Compare-at / original price for strikethrough. Uses currentDisplayAmount when deriving for subscriptions. */
+/** Compare-at / original price for strikethrough. */
 function getCompareAtPrice(
   item: CartLine,
   currentDisplayAmount?: string,
@@ -81,7 +76,6 @@ function getCompareAtPrice(
   return null;
 }
 
-/** Everything needed to render a line item's price (subscription or one-time). */
 function getLinePriceInfo(item: CartLine) {
   const display = getLineDisplayPrice(item);
   const compareAt = getCompareAtPrice(item, display.amount);
@@ -127,33 +121,9 @@ export default function CartDrawer() {
     updateQuantity,
     removeItem,
     getCartItems,
-    b2bTierUpdatedTo,
-    b2bNormalizeError,
-    clearB2BTierMessage,
-    clearB2BNormalizeError,
   } = useCart();
 
   const cartItems = getCartItems();
-
-  const b2bTotalIncVat =
-    cart && cartItems.length > 0 && cartHasB2BLines(cartItems)
-      ? getB2BLinesTotalIncVat(cartItems)
-      : null;
-  const b2bVatBreakdown =
-    b2bTotalIncVat !== null && cart
-      ? {
-          currencyCode: cart.cost.subtotalAmount.currencyCode ?? "GBP",
-          net: incVatToExVat(b2bTotalIncVat),
-          vat: getVatFromIncVat(b2bTotalIncVat),
-          total: b2bTotalIncVat,
-        }
-      : null;
-
-  useEffect(() => {
-    if (!b2bTierUpdatedTo) return;
-    const t = setTimeout(clearB2BTierMessage, B2B_TIER_MESSAGE_MS);
-    return () => clearTimeout(t);
-  }, [b2bTierUpdatedTo, clearB2BTierMessage]);
 
   const formatPrice = (amount: string, currencyCode: string = "GBP") => {
     return new Intl.NumberFormat("en-GB", {
@@ -210,30 +180,6 @@ export default function CartDrawer() {
             </svg>
           </button>
         </div>
-
-        {/* B2B tier message */}
-        {b2bTierUpdatedTo && (
-          <div className="px-4 py-2.5 bg-[#f5f5f5] border-b border-black/8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60 tabular-nums">
-              Pricing tier updated to {b2bTierUpdatedTo.charAt(0).toUpperCase() + b2bTierUpdatedTo.slice(1)}.
-            </p>
-          </div>
-        )}
-        {b2bNormalizeError && (
-          <div className="px-4 py-2.5 bg-[#f5f5f5] border-b border-black/8 flex items-center justify-between gap-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60 tabular-nums">
-              {b2bNormalizeError}
-            </p>
-            <button
-              type="button"
-              onClick={clearB2BNormalizeError}
-              className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-black/40 hover:text-black transition-colors underline tabular-nums"
-              aria-label="Dismiss"
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
 
         {/* Cart content */}
         <div className="flex-1 overflow-y-auto">
@@ -393,20 +339,6 @@ export default function CartDrawer() {
                   )}
                 </span>
               </div>
-
-              {/* B2B VAT breakdown */}
-              {b2bVatBreakdown && (
-                <div className="border border-black/12 bg-[#f5f5f5] px-3 py-2.5">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/55 tabular-nums mb-1.5">
-                    Prices include VAT at 20%. Please email sales@conka.io for an invoice after purchase.
-                  </p>
-                  <p className="font-mono text-[9px] text-black/40 tabular-nums">
-                    {formatPrice(b2bVatBreakdown.net.toFixed(2), b2bVatBreakdown.currencyCode)} net
-                    {" · "}{formatPrice(b2bVatBreakdown.vat.toFixed(2), b2bVatBreakdown.currencyCode)} VAT (20%)
-                    {" · "}{formatPrice(b2bVatBreakdown.total.toFixed(2), b2bVatBreakdown.currencyCode)} total
-                  </p>
-                </div>
-              )}
 
               <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/30 tabular-nums text-center">
                 Shipping &amp; taxes calculated at checkout

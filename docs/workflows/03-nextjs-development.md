@@ -26,7 +26,6 @@
 │   ├── quiz/                   # Quiz + results
 │   ├── shop/                   # Shop page
 │   ├── account/                # Account portal (login, subscriptions, orders)
-│   ├── professionals/          # B2B professional portal
 │   ├── api/                    # API route handlers
 │   │   ├── cart/               # Cart proxy to Shopify
 │   │   ├── auth/               # Auth + subscription actions (Loop)

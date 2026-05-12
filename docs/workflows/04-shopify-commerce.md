@@ -69,7 +69,7 @@ The codebase has **two independent product data systems** — see `docs/PRODUCT_
 
 | System | Import from | Shopify mapping | Used by |
 |--------|-------------|-----------------|---------|
-| **Main site** | `@/app/lib/productData` | `shopifyProductMapping.ts` | PDP pages, cart, B2B |
+| **Main site** | `@/app/lib/productData` | `shopifyProductMapping.ts` | PDP pages, cart |
 | **Funnel** | `@/app/lib/funnelData` | Built into `funnelData.ts` | `/funnel` page only |
 
 **Key rule:** These systems are intentionally separate. The funnel has its own Shopify products (tagged `funnel`), its own selling plans, its own variant GIDs, and its own checkout flow (bypasses CartContext). Do not merge them.
@@ -388,8 +388,6 @@ sellingPlanGroups(first: 5) {
 ### Shopify
 - Cart checkout URLs expire — always use `cart.checkoutUrl` from the latest cart fetch
 - Metafield values are always strings — parse JSON metafields carefully
-- B2B tier normalization: after any cart mutation, `getB2BCartTierUpdates` may fire to keep cart on a consistent B2B tier
-
 ### Loop
 - **ID format mismatch:** Some Loop endpoints accept `shopify-{id}`, others require Loop's internal numeric ID. If you get a 404, check the ID format first. See the ID formats table above.
 - **Frequency endpoint uses Loop internal ID:** `PUT /subscription/{id}/frequency` returns 404 if you pass `shopify-{id}`. Always GET the subscription first and use `response.data.data.id`.

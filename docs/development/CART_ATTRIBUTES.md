@@ -10,7 +10,7 @@ See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation 
 
 | Key | Values | When set | Notes |
 |-----|--------|----------|--------|
-| **source** | `quiz` \| `product_page` \| `protocol_page` \| `product_grid` \| `professional_portal` | Every add-to-cart | Where the add came from. Set by call site via `metadata.source`. |
+| **source** | `quiz` \| `product_page` \| `protocol_page` \| `product_grid` | Every add-to-cart | Where the add came from. Set by call site via `metadata.source`. |
 | **plan_frequency** | `weekly` \| `biweekly` \| `monthly` | Only when the line has a selling plan (subscription) | Derived from `sellingPlanId` via Loop plan IDs. Omitted for one-time purchases. |
 
 ---
@@ -23,7 +23,6 @@ See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation 
 | `product_page` | Add from a formula PDP (Conka Flow or Conka Clarity page). |
 | `protocol_page` | Add from a protocol PDP (`/protocol/[id]`). |
 | `product_grid` | Add from the main app product grid (homepage/shop grid). |
-| `professional_portal` | Add from the professionals formulas or protocol page. |
 
 ---
 
@@ -37,8 +36,6 @@ We do **not** infer the page from the URL at add-to-cart time. We use two pieces
    - Protocol page (`/protocol/[id]`) → `source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page"`.
    - Formula pages (Conka Flow, Conka Clarity) → same pattern with fallback `"product_page"`.
    - Product grid (ProductCard) → always `source: "product_grid"`.
-   - Professionals pages → always `source: "professional_portal"`.
-
 2. **Quiz awareness (`getAddToCartSource()`)**  
    Used only on protocol and formula pages to decide: “Is this add-to-cart still in a quiz flow?” It returns:
    - `"quiz"` if `sessionStorage.quizSessionId` is set (user started the quiz and hasn’t cleared it), or if `document.referrer` contains `"/quiz"`.

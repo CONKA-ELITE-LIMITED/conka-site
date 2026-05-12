@@ -84,25 +84,13 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ## B2B / Professionals Portal
 
-### 6. Delete B2B/Professionals feature entirely
+### ~~6. Delete B2B/Professionals feature entirely~~
 
-**Status:** Deferred -- ready to execute
-**Files to delete:**
-- `app/professionals/` -- entire route directory
-- `app/components/professionals/` -- all professional portal components
-- `app/lib/b2bCartTier.ts` -- B2B tier normalisation logic
-- `app/lib/productHelpers.ts` -- any B2B-specific helpers (verify before deleting)
-- B2B variant maps in `app/lib/shopifyProductMapping.ts`
-- B2B imports in `app/components/CartDrawer.tsx` (`cartHasB2BLines`, `getB2BLinesTotalIncVat`, B2B state from `useCart`)
-- B2B state in `app/context/CartContext.tsx` (`b2bTierUpdatedTo`, `b2bNormalizeError`, `clearB2BTierMessage`, `clearB2BNormalizeError`, `updateMultiple` cart action)
-- `app/api/cart/route.ts` -- remove `updateMultiple` action handler
-- Any redirects added for `/professionals/*` in `next.config.ts`
-
-**What unblocks it:** Nothing -- B2B was a feature attempt that never launched. No live traffic, no active users. Safe to delete.
-
-**Why deferred:** Needs careful cross-file audit before deletion to avoid leaving broken imports. Run TypeScript after each file group removed.
-
-**Risk:** `CartContext` and `CartDrawer` are used across the whole site -- B2B state removal needs to be done cleanly so no other consumers break.
+**Status:** Done (May 2026) -- Full B2B removal complete. TypeScript clean.
+- Deleted: `app/professionals/`, `app/components/professionals/`, `app/lib/b2bCartTier.ts`, `docs/features/b2b/`
+- Removed: B2B variant maps from `shopifyProductMapping.ts`, B2B helpers from `productHelpers.ts`, B2B constants from `productPricing.ts`, `B2BTier` from `productTypes.ts`
+- Removed: B2B state from `CartContext` and `CartDrawer`, `updateMultiple` action from `app/api/cart/route.ts`
+- Added: `/professionals/:path*` redirect to `/` in `next.config.ts`
 
 ---
 

@@ -90,6 +90,11 @@ const nextConfig: NextConfig = {
         destination: '/account/login',
         permanent: true,
       },
+      {
+        source: '/professionals/:path*',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 

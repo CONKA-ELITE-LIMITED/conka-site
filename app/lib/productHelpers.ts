@@ -2,13 +2,10 @@
  * Product helper functions and calendar generator.
  */
 
-import type { PackSize, PurchaseType, ProtocolId, ProtocolTier, B2BTier, FormulaId } from "./productTypes";
+import type { PackSize, PurchaseType, ProtocolId, ProtocolTier } from "./productTypes";
 import {
   formulaPricing,
   protocolPricing,
-  b2bFormulaPricing,
-  B2B_TIER_BANDS,
-  VAT_RATE,
 } from "./productPricing";
 import { protocolContent } from "./protocolContent";
 
@@ -90,47 +87,6 @@ export function getProtocolTierTotalShots(
     max: 28,
   };
   return standard[tier];
-}
-
-/** B2B: tier from quantity. Starter 1–10, Squad 11–25, Elite 26+. */
-export function getB2BTier(quantity: number): B2BTier {
-  if (quantity >= B2B_TIER_BANDS.elite.min) return "elite";
-  if (quantity >= B2B_TIER_BANDS.squad.min) return "squad";
-  return "starter";
-}
-
-/** B2B: pricing for a tier and purchase type. Same price for both formulas. */
-export function getB2BFormulaPricing(
-  _formulaId: FormulaId,
-  tier: B2BTier,
-  purchaseType: PurchaseType,
-) {
-  return b2bFormulaPricing[purchaseType][tier];
-}
-
-/** B2B: protocol pricing uses same tier grid as formulas (Starter/Squad/Elite). */
-export function getB2BProtocolPricing(
-  _protocolId: ProtocolId,
-  tier: B2BTier,
-  purchaseType: PurchaseType,
-) {
-  return b2bFormulaPricing[purchaseType][tier];
-}
-
-/** Format price including VAT for B2B display. */
-export function formatPriceWithVAT(priceExVAT: number): string {
-  return `£${(priceExVAT * VAT_RATE).toFixed(2)}`;
-}
-
-/** B2B: info for "next tier" message (boxes needed, tier name, and that tier's per-box price ex VAT), or null if at max tier. Uses subscription (best) price for display. */
-export function getB2BNextTierInfo(quantity: number): { boxesToNext: number; tierName: string; pricePerBoxExVat: number } | null {
-  if (quantity >= B2B_TIER_BANDS.elite.min) return null;
-  if (quantity >= B2B_TIER_BANDS.squad.min) {
-    const boxesToNext = B2B_TIER_BANDS.elite.min - quantity;
-    return { boxesToNext, tierName: "Elite", pricePerBoxExVat: b2bFormulaPricing.subscription.elite.price };
-  }
-  const boxesToNext = B2B_TIER_BANDS.squad.min - quantity;
-  return { boxesToNext, tierName: "Squad", pricePerBoxExVat: b2bFormulaPricing.subscription.squad.price };
 }
 
 // Generate calendar days for protocol visualization

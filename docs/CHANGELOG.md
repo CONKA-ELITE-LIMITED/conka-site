@@ -6,6 +6,28 @@
 
 ## May 2026
 
+### 2026-05-12 -- Code review: B2B cleanup (SCRUM-971)
+
+Post-implementation review of the B2B removal. No regressions found. All lint warnings in the changed files were pre-existing (unused vars in the protocol calendar generator, `FormulaVariantConfig` type in `shopifyProductMapping.ts`). No fixes required.
+
+---
+
+### 2026-05-12 -- B2B/Professionals feature removed (SCRUM-971)
+
+Full dead code removal. The B2B professional portal was built in Jan 2026 but never launched -- no live traffic, no active users.
+
+**Deleted:** `app/professionals/` (3 pages), `app/components/professionals/` (18 components), `app/lib/b2bCartTier.ts`, `docs/features/b2b/B2B_PORTAL.md`.
+
+**Removed from lib:** `B2BTier` type, B2B variant maps from `shopifyProductMapping.ts`, B2B helper functions (`getB2BTier`, `getB2BFormulaPricing`, etc.), B2B pricing constants and VAT helpers from `productPricing.ts`.
+
+**Removed from cart:** `updateMultiple` API action, B2B tier normalisation from `CartContext` (was running on every cart mutation for all users), B2B VAT breakdown and tier/error banners from `CartDrawer`.
+
+**Added:** `/professionals/:path*` redirect to `/` in `next.config.ts`.
+
+3,134 lines deleted. TypeScript clean throughout.
+
+---
+
 ### 2026-05-12 -- Code review fixes: funnel + cart cleanup
 
 Post-review cleanup across the funnel and cart work:

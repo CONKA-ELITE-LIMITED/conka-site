@@ -7,15 +7,12 @@ import { trackPurchaseAddToCart } from '@/app/lib/analytics';
 import { trackMetaAddToCart, toContentId } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
 import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
-import { getB2BCartTierUpdates } from '@/app/lib/b2bCartTier';
-import type { B2BTier } from '@/app/lib/productData';
 
 const CART_ID_KEY = 'shopify_cart_id';
-const B2B_NORMALIZE_ERROR_MSG = "Couldn't update pricing tier. Please try again.";
 
 interface AddToCartMetadata {
   location?: string;  // "hero", "sticky_footer", "results_page", "calendar", "product_grid"
-  source?: string;   // Canonical: "quiz" | "product_page" | "protocol_page" | "product_grid" | "professional_portal"
+  source?: string;   // Canonical: "quiz" | "product_page" | "protocol_page" | "product_grid"
   sessionId?: string; // Quiz session ID
 }
 
@@ -51,10 +48,6 @@ interface CartContextType {
   removeItem: (lineId: string) => Promise<void>;
   clearCart: () => void;
   getCartItems: () => CartLine[];
-  b2bTierUpdatedTo: B2BTier | null;
-  b2bNormalizeError: string | null;
-  clearB2BTierMessage: () => void;
-  clearB2BNormalizeError: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -64,53 +57,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [b2bTierUpdatedTo, setB2bTierUpdatedTo] = useState<B2BTier | null>(null);
-  const [b2bNormalizeError, setB2bNormalizeError] = useState<string | null>(null);
-
-  const clearB2BTierMessage = useCallback(() => setB2bTierUpdatedTo(null), []);
-  const clearB2BNormalizeError = useCallback(() => setB2bNormalizeError(null), []);
-
-  // B2B: normalize cart to one tier; returns updated cart or null on API failure
-  const normalizeB2BTier = useCallback(async (c: Cart): Promise<Cart | null> => {
-    const lines = c.lines?.edges?.map((e) => e.node) ?? [];
-    const { updates, tier } = getB2BCartTierUpdates(lines);
-    if (updates.length === 0) return c;
-    try {
-      const response = await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'updateMultiple',
-          cartId: c.id,
-          lines: updates.map((u) => ({
-            id: u.lineId,
-            merchandiseId: u.merchandiseId,
-            ...(u.sellingPlanId != null && { sellingPlanId: u.sellingPlanId }),
-          })),
-        }),
-      });
-      const data = await response.json();
-      if (response.ok && data.cart) {
-        setB2bTierUpdatedTo(tier);
-        setB2bNormalizeError(null);
-        return data.cart;
-      }
-    } catch {
-      // ignore
-    }
-    setB2bNormalizeError(B2B_NORMALIZE_ERROR_MSG);
-    return null;
-  }, []);
 
   // Calculate item count
   const itemCount = cart?.totalQuantity || 0;
 
-  // Cart drawer controls (clear B2B message when closing)
+  // Cart drawer controls
   const openCart = useCallback(() => setIsOpen(true), []);
-  const closeCart = useCallback(() => {
-    setIsOpen(false);
-    setB2bTierUpdatedTo(null);
-  }, []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
   const toggleCart = useCallback(() => setIsOpen((prev) => !prev), []);
 
   // Get cart items as flat array
@@ -126,9 +79,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (response.ok && data.cart) {
-        const next = await normalizeB2BTier(data.cart);
-        setCart(next ?? data.cart);
-        return next ?? data.cart;
+        setCart(data.cart);
+        return data.cart;
       } else {
         localStorage.removeItem(CART_ID_KEY);
         setCart(null);
@@ -140,12 +92,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(null);
       return null;
     }
-  }, [normalizeB2BTier]);
+  }, []);
 
   // Load cart from localStorage on mount - deferred to not block initial render
   useEffect(() => {
-    // Use requestIdleCallback to defer cart fetch until browser is idle
-    // This prevents blocking the main thread during initial page load
     const loadCart = () => {
       const savedCartId = localStorage.getItem(CART_ID_KEY);
       if (savedCartId) {
@@ -157,7 +107,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(loadCart, { timeout: 2000 });
     } else {
-      // Fallback for Safari - defer by 100ms
+      // Fallback for Safari
       setTimeout(loadCart, 100);
     }
   }, [fetchCart]);
@@ -198,8 +148,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Add item to cart
-  // sellingPlanId is optional - used for subscription products (e.g., Loop Subscriptions)
-  // metadata is optional - used for analytics and LTV attributes (source, plan_frequency)
   const addToCart = useCallback(async (
     variantId: string,
     quantity: number = 1,
@@ -215,7 +163,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     setLoading(true);
     setError(null);
-    setB2bNormalizeError(null);
 
     try {
       const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
@@ -255,27 +202,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      if (updatedCart) {
-        const next = await normalizeB2BTier(updatedCart);
-        if (next) setCart(next);
-      }
-      
-      // Show warning if subscription wasn't available (as console log for now)
       if (warning) {
         console.warn('Cart warning:', warning);
-        // Could display this in UI via a toast notification in the future
       }
-      
+
       // Track analytics events after successful cart update
       if (updatedCart) {
-        // Get the newly added line item (first item in cart or last added)
         const lineItems = updatedCart.lines?.edges || [];
         const newLineItem = lineItems[lineItems.length - 1]?.node;
 
         if (newLineItem?.merchandise) {
           const merchandise = newLineItem.merchandise;
-          
-          // Track Triple Whale AddToCart (e-commerce)
+
           if (merchandise.product?.id && merchandise.id) {
             trackAddToCart({
               productId: merchandise.product.id,
@@ -285,7 +223,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             });
           }
 
-          // Track Vercel Analytics purchase:add_to_cart (funnel)
           const productMetadata = extractProductMetadata(variantId);
           if (productMetadata) {
             trackPurchaseAddToCart({
@@ -302,7 +239,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             });
           }
 
-          // Meta Pixel + CAPI AddToCart (deduplicated)
           const price = parseFloat(merchandise.price.amount);
           const currency = merchandise.price.currencyCode ?? "GBP";
           trackMetaAddToCart({
@@ -313,7 +249,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           });
         }
       }
-      
+
       setIsOpen(true);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to add item to cart';
@@ -322,26 +258,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [cart?.id, normalizeB2BTier]);
+  }, [cart?.id]);
 
   // Update item quantity
   const updateQuantity = useCallback(async (lineId: string, quantity: number): Promise<void> => {
     const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
-    
+
     if (!cartId) {
       setError('No cart found');
       return;
     }
 
     if (quantity < 1) {
-      // If quantity is 0 or less, remove the item
       await removeItem(lineId);
       return;
     }
 
     setLoading(true);
     setError(null);
-    setB2bNormalizeError(null);
 
     try {
       const response = await fetch('/api/cart', {
@@ -358,8 +292,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (response.ok && data.cart) {
-        const next = await normalizeB2BTier(data.cart);
-        setCart(next ?? data.cart);
+        setCart(data.cart);
       } else {
         throw new Error(data.error || 'Failed to update quantity');
       }
@@ -370,12 +303,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [cart?.id, normalizeB2BTier]);
+  }, [cart?.id]);
 
   // Remove item from cart
   const removeItem = useCallback(async (lineId: string): Promise<void> => {
     const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
-    
+
     if (!cartId) {
       setError('No cart found');
       return;
@@ -383,7 +316,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     setLoading(true);
     setError(null);
-    setB2bNormalizeError(null);
 
     try {
       const response = await fetch('/api/cart', {
@@ -399,8 +331,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (response.ok && data.cart) {
-        const next = await normalizeB2BTier(data.cart);
-        setCart(next ?? data.cart);
+        setCart(data.cart);
       } else {
         throw new Error(data.error || 'Failed to remove item');
       }
@@ -411,7 +342,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [cart?.id, normalizeB2BTier]);
+  }, [cart?.id]);
 
   // Clear cart (local only - for after checkout)
   const clearCart = useCallback((): void => {
@@ -435,10 +366,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeItem,
         clearCart,
         getCartItems,
-        b2bTierUpdatedTo,
-        b2bNormalizeError,
-        clearB2BTierMessage,
-        clearB2BNormalizeError,
       }}
     >
       {children}
@@ -453,4 +380,3 @@ export function useCart(): CartContextType {
   }
   return context;
 }
-
