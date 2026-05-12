@@ -5,6 +5,8 @@ import { CartLine } from "@/app/lib/shopify";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 import Image from "next/image";
 import CartAppGift from "./CartAppGift";
+import CartUpsellStrip from "./CartUpsellStrip";
+import { getCartUpsell } from "@/app/lib/cartUpsell";
 
 // Fallback product images when Shopify doesn't provide one
 const PRODUCT_FALLBACK_IMAGES: Record<string, string> = {
@@ -124,6 +126,9 @@ export default function CartDrawer() {
   } = useCart();
 
   const cartItems = getCartItems();
+
+  // Hide upsell while any cart mutation is in flight to prevent stale flashes.
+  const upsellOffer = !loading ? getCartUpsell(cartItems) : null;
 
   const formatPrice = (amount: string, currencyCode: string = "GBP") => {
     return new Intl.NumberFormat("en-GB", {
@@ -318,6 +323,12 @@ export default function CartDrawer() {
                   </div>
                 </div>
               ))}
+              {upsellOffer && (
+                <CartUpsellStrip
+                  offer={upsellOffer}
+                  currentLineId={cartItems[0].id}
+                />
+              )}
               <CartAppGift />
             </div>
           )}
