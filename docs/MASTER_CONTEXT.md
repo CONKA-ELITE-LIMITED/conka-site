@@ -21,10 +21,7 @@ CONKA is a UK-based D2C brand selling liquid nootropic brain shots (30ml daily d
 - **Phase 1 foundations** -- quiz hidden, protocols removed from nav, redirects in place, shop page deleted.
 
 ### What's blocked
-- **"Both" product** -- doesn't exist in Shopify yet. Blocks 5 of 9 funnel combos.
-- **Quarterly selling plan** -- not created in Shopify. Blocks all quarterly combos.
-- **Final pricing** -- waiting on COGS analysis. Mock values in funnelData.ts.
-- **Assets** -- hero lifestyle photography, "Both" product photography, customer avatar photos.
+- **Assets** -- hero lifestyle photography, customer avatar photos.
 - **Landing page copy** -- final headline/offer direction from January Brands.
 - **Skio vs Loop** -- subscription management migration decision pending.
 

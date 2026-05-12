@@ -4,9 +4,8 @@
  * Types, pricing, variant mapping, display data, and upsell logic
  * for the product funnel page (/funnel).
  *
- * Pricing is mock until COGS analysis is finalised. Variant IDs for
- * Flow/Clear monthly reuse existing Shopify products; "Both" and
- * quarterly combos are empty until created in Shopify Admin.
+ * All 9 product/cadence combos (Flow, Clear, Both x Monthly Sub, OTP, Quarterly)
+ * are live in Shopify. Variant IDs and selling plans are mapped below.
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "./productData";

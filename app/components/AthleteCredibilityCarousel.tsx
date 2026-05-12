@@ -223,7 +223,7 @@ export default function AthleteCredibilityCarousel() {
               src={active.image}
               alt={`${active.name} — ${active.role}`}
               fill
-              loading="lazy"
+              loading="eager"
               className="object-contain"
               sizes="(max-width: 1024px) 100vw, 45vw"
             />

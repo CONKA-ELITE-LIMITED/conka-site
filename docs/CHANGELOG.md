@@ -6,6 +6,28 @@
 
 ## May 2026
 
+### 2026-05-12 -- Funnel redesign: education-first 4-step flow
+
+**Design update** to the paid traffic funnel (`/funnel`). The previous single-page product selector is replaced with a 4-step flow designed to warm up cold paid traffic before showing prices.
+
+**Steps:**
+1. **Learn** -- two formula cards (Flow / Clear) with always-visible tagline and progressive disclosure tabs: Ingredients, What it does, What you'll notice.
+2. **Choose your formula** -- product selector (Flow, Clear, Both) with no prices shown. "Both" is recommended/most popular. Description expands on selection.
+3. **Choose your plan** -- cadence selector (monthly sub, quarterly sub, one-off). CTA: "Review my order" with price + product as sub-label.
+4. **Review** -- order summary showing product image, What / When / How much, plus an app section (AppConkaRing screenshot, 3 bullets, iOS and Google Play label). CTA: "Proceed to checkout" with no sub-label (summary page does that job).
+
+**Savings logic on summary:** two honest signals -- cadence saving (subscription vs one-off, or quarterly vs 3x monthly) and bundle saving (Both vs buying Flow + Clear separately at the same cadence).
+
+**Step indicator** extended from 2 to 4 steps (Learn, Product, Plan, Review + Checkout).
+
+---
+
+### 2026-05-12 -- Bug fix: AthleteCredibilityCarousel mobile selection
+
+Feature portrait image in `AthleteCredibilityCarousel` was `loading="lazy"`. When a user scrolled down to the roster strip and tapped a different athlete, the newly selected image (above the viewport) would not load. Fixed by switching the feature portrait to `loading="eager"` -- roster strip thumbnails remain lazy.
+
+---
+
 ### 2026-05-11 -- Home page hero CTA: "Buy CONKA" + route to /conka-both
 
 - Changed CTA label from "Try CONKA Today" to "Buy CONKA Today" in `LandingHero` (mobile + desktop layouts).

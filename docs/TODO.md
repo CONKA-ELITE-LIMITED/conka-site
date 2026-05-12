@@ -90,3 +90,20 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 **Files:** `app/professionals/protocol/page.tsx`, `app/components/professionals/protocol/`
 **What unblocks it:** Decision on B2B pricing strategy (separate conversation needed per simplification plan)
 **Why deferred:** B2B portal is a separate product conversation.
+
+---
+
+## Claude Skills Audit
+
+### 8. Review and tighten `.claude/skills/` to reduce token waste
+
+**Status:** Deferred
+**Files:** `.claude/skills/scope/` (all sub-docs), `.claude/skills/implement/` (if exists)
+
+**What to fix:**
+- `/scope` fires a research subagent for every B/C task even on familiar codebases -- make it opt-in or skip when context is already loaded
+- challenge + shape steps load separate sub-docs sequentially -- collapse into one inline response for known-codebase B-scale tasks
+- plan doc + Jira creation add ~3K tokens for tasks that don't need them -- gate behind explicit user request or C-scale only
+- Add a `--quick` flag that skips research, skips plan doc, creates one ticket, returns compact scope
+
+**Why deferred:** Not urgent, but a `/scope` on a simple funnel refactor consumed 35K tokens before any code was written. Fix before the next large feature.
