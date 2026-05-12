@@ -37,16 +37,6 @@ const cartActionSchema = z.discriminatedUnion('action', [
     quantity: z.number().int().positive().optional(),
   }),
   z.object({
-    action: z.literal('updateMultiple'),
-    cartId: z.string().min(1, 'Cart ID is required'),
-    lines: z.array(z.object({
-      id: z.string(),
-      quantity: z.number().int().positive().optional(),
-      merchandiseId: z.string().optional(),
-      sellingPlanId: z.string().optional(),
-    })).min(1, 'Lines are required'),
-  }),
-  z.object({
     action: z.literal('remove'),
     cartId: z.string().min(1, 'Cart ID is required'),
     lineId: z.string().min(1, 'Line ID is required'),
@@ -309,25 +299,6 @@ export async function POST(request: NextRequest) {
               quantity: quantity || 1,
             },
           ],
-        });
-
-        if (response.data?.cartLinesUpdate?.userErrors?.length > 0) {
-          return NextResponse.json(
-            { error: response.data.cartLinesUpdate.userErrors[0].message },
-            { status: 400 }
-          );
-        }
-
-        return NextResponse.json({ cart: response.data?.cartLinesUpdate?.cart });
-      }
-
-      case 'updateMultiple': {
-        // Update multiple line items at once
-        const { cartId, lines } = validatedData;
-
-        const response = await shopifyFetch<CartLinesUpdateResponse>(UPDATE_CART_LINES, {
-          cartId,
-          lines,
         });
 
         if (response.data?.cartLinesUpdate?.userErrors?.length > 0) {

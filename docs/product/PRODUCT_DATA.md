@@ -45,7 +45,7 @@ b2bCartTier.ts            → B2B tier logic (box count → tier → variant upd
 #### `productTypes.ts`
 **Purpose:** Shared type definitions
 **Dependencies:** None
-**Exports:** `FormulaId`, `PackSize`, `PurchaseType`, `ProtocolId`, `ProtocolTier`, `B2BTier`, `ProductId`
+**Exports:** `FormulaId`, `PackSize`, `PurchaseType`, `ProtocolId`, `ProtocolTier`, `ProductId`
 
 #### `productColors.ts`
 **Purpose:** Colors, gradients, and color utilities
@@ -53,9 +53,9 @@ b2bCartTier.ts            → B2B tier logic (box count → tier → variant upd
 **Exports:** `FORMULA_COLORS`, `PRODUCT_GRADIENTS`, `getProductGradient`, `getProductAccent`, `PROTOCOL_COLORS`, `getProtocolGradient`, `getProtocolAccent`, `interpolateHex`
 
 #### `productPricing.ts`
-**Purpose:** All pricing data, VAT rates, and B2B constants
-**Dependencies:** `productTypes` (types only)
-**Exports:** `formulaPricing`, `protocolPricing`, `VAT_RATE`, `incVatToExVat`, `getVatFromIncVat`, `B2B_TIER_BANDS`, `B2B_SUBSCRIPTION_PRICE_EX_VAT`, `B2B_ONE_TIME_PRICE_EX_VAT`, `b2bFormulaPricing`, `B2B_PRICE_DISPLAY_INC_VAT`
+**Purpose:** All pricing data for formulas and protocols
+**Dependencies:** None
+**Exports:** `formulaPricing`, `protocolPricing`
 
 #### `formulaContent.ts`
 **Purpose:** Formula content, struggle types, and clinical data
@@ -68,16 +68,16 @@ b2bCartTier.ts            → B2B tier logic (box count → tier → variant upd
 **Exports:** `ProtocolTierConfig`, `ProtocolBenefitStat`, `ProtocolContent`, `protocolContent`
 
 #### `productHelpers.ts`
-**Purpose:** Pure helper functions — pricing lookups, formatting, B2B tier calculation, calendar generation
+**Purpose:** Pure helper functions — pricing lookups, formatting, calendar generation
 **Dependencies:** `productTypes`, `productPricing`, `protocolContent`
-**Exports:** `formatPrice`, `getFormulaPricing`, `getProtocolPricing`, `getBillingLabel`, `getB2BTier`, `getB2BFormulaPricing`, `getB2BProtocolPricing`, `formatPriceWithVAT`, `getB2BNextTierInfo`, `generateProtocolCalendarDays`
+**Exports:** `formatPrice`, `getFormulaPricing`, `getProtocolPricing`, `getBillingLabel`, `generateProtocolCalendarDays`
 
 ### Shopify Integration Layer
 
 #### `shopifyProductMapping.ts`
 **Purpose:** Forward mapping — internal product IDs to Shopify variant GIDs and selling plan IDs
 **Dependencies:** `productData` (types)
-**Exports:** `FORMULA_VARIANTS`, `FORMULA_SELLING_PLANS`, `TRIAL_PACK_VARIANTS`, `PROTOCOL_VARIANTS`, `B2B_FORMULA_VARIANTS`, `B2B_PROTOCOL_VARIANTS`, `getPlanFrequency`, `getFormulaVariantId`, `getProtocolVariantId`
+**Exports:** `FORMULA_VARIANTS`, `FORMULA_SELLING_PLANS`, `TRIAL_PACK_VARIANTS`, `PROTOCOL_VARIANTS`, `getPlanFrequency`, `getFormulaVariantId`, `getProtocolVariantId`
 
 **Selling plans (main site):**
 | Plan GID suffix | Frequency | Pack sizes |
@@ -90,11 +90,6 @@ b2bCartTier.ts            → B2B tier logic (box count → tier → variant upd
 **Purpose:** Reverse mapping — Shopify variant GID to internal product info (used to hydrate cart lines with display data)
 **Dependencies:** `shopifyProductMapping`, `productData` (types)
 **Exports:** `ProductMetadata`, `extractProductMetadata()`
-
-#### `b2bCartTier.ts`
-**Purpose:** B2B tier calculation and cart normalization. After cart mutations, recalculates tier from total box count and updates variant IDs if tier changed.
-**Dependencies:** `productData` (types), `shopifyProductMapping` (B2B variants)
-**Exports:** `isB2BLine`, `cartHasB2BLines`, `getB2BCartTierUpdates`, `B2BLineUpdate`, `B2BCartTierResult`
 
 ### Supplementary Modules
 
@@ -209,15 +204,6 @@ const variant = getOfferVariant("flow", "quarterly-sub");
 const ready = isVariantReady("both", "quarterly-sub"); // true
 ```
 
-### B2B Helpers
-
-```typescript
-import { getB2BTier, getB2BFormulaPricing } from "@/app/lib/productData";
-
-const tier = getB2BTier(50); // "starter" | "squad" | "elite"
-const b2bPricing = getB2BFormulaPricing("01", "squad", "subscription");
-```
-
 ---
 
 ## Import Patterns
@@ -251,8 +237,7 @@ productTypes (foundation — no deps)
         └→ productData (BARREL: re-exports all above)
             │
             ├→ shopifyProductMapping (variant GIDs)
-            ├→ productMetadata (reverse variant lookup)
-            └→ b2bCartTier (tier logic)
+            └→ productMetadata (reverse variant lookup)
 
 funnelData (INDEPENDENT — only imports formatPrice from productData)
     └→ funnelCheckout (cart creation + analytics)
