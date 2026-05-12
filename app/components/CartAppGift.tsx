@@ -1,3 +1,4 @@
+// No "use client" needed — pure render, no hooks. Rendered inside the client CartDrawer.
 import Image from "next/image";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 

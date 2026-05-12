@@ -164,16 +164,6 @@ export default function CartDrawer() {
 
   const isSubscription = (item: CartLine) => !!item.sellingPlanAllocation;
 
-  const getSavingsPercentage = (item: CartLine) => {
-    if (isSubscription(item)) return 20;
-    const compareAt = getCompareAtPrice(item);
-    if (!compareAt) return 0;
-    const original = parseFloat(compareAt.amount);
-    const current = parseFloat(getLineDisplayPrice(item).amount);
-    if (original <= 0) return 0;
-    return Math.round(((original - current) / original) * 100);
-  };
-
   if (!isOpen) return null;
 
   return (
