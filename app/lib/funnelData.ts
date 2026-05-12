@@ -360,6 +360,35 @@ export function getFunnelProductSlideshow(
 }
 
 // ============================================
+// VARIANT REVERSE-LOOKUP (single source of truth for GID detection)
+// ============================================
+
+const VARIANT_TO_PRODUCT = new Map<string, FunnelProduct>();
+const QUARTERLY_VARIANT_SET = new Set<string>();
+
+for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
+  for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
+    if (config.variantId) {
+      VARIANT_TO_PRODUCT.set(config.variantId, product);
+      if (cadence === "quarterly-sub") {
+        QUARTERLY_VARIANT_SET.add(config.variantId);
+      }
+    }
+  }
+}
+
+/** Given a Shopify variant GID, return the CONKA product or null if not a known variant. */
+export function detectFunnelProduct(variantId: string): FunnelProduct | null {
+  return VARIANT_TO_PRODUCT.get(variantId) ?? null;
+}
+
+/** Given a variant GID and whether a sellingPlan is active, return the cadence. */
+export function detectFunnelCadence(variantId: string, hasSellingPlan: boolean): FunnelCadence {
+  if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
+  return hasSellingPlan ? "monthly-sub" : "monthly-otp";
+}
+
+// ============================================
 // HELPERS
 // ============================================
 

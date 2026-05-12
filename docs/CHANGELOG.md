@@ -6,6 +6,30 @@
 
 ## May 2026
 
+### 2026-05-12 -- Cart upsell tile
+
+Dynamic upsell block rendered below line items in the cart drawer. Two rules:
+
+- **Flow or Clear in cart** — offer Both at the same cadence (monthly-sub, OTP, or quarterly). Replaces the current item.
+- **Both OTP in cart** — offer Both monthly subscription. Replaces the current item.
+- **Both monthly-sub or quarterly-sub** — no upsell (handled by email flows).
+- **2+ lines in cart** — no upsell.
+
+**Tile design:** Header bar with savings badge, `BothShots.jpg` (both bottles together), hero number, benefit bullets, CTA. Matches `CartAppGift` visual pattern.
+
+**Messaging:** Shows the incremental extra cost vs what the customer currently pays (`+£30/mo more than you pay now`) and savings percentage vs buying separately (`Save 25%`). Benefit bullets explain what the extra cost buys: shot count and product name (e.g. "28 shots of Conka Clear every month") plus "The complete cognitive performance system". Subscription upgrades show `Save £40/mo` vs one-time anchor, with delivery and cancellation reassurance.
+
+**Behaviour:** The upsell replaces the current cart item -- it does not stack on top of it. Error recovery: if the add-to-cart fails after the existing item is removed, the original variant/plan/quantity is restored and an inline error is shown.
+
+**Analytics:** `cart:upsell_shown` and `cart:upsell_accepted` events via Vercel Analytics.
+
+**Architecture:** Variant GID detection uses a single source of truth -- reverse-lookup Maps built from `FUNNEL_VARIANTS` in `funnelData.ts` via two new exported helpers (`detectFunnelProduct`, `detectFunnelCadence`). No GIDs duplicated in `cartUpsell.ts`.
+
+**New files:** `app/lib/cartUpsell.ts`, `app/components/CartUpsellStrip.tsx`.
+**Modified:** `app/components/CartDrawer.tsx`, `app/lib/funnelData.ts`.
+
+---
+
 ### 2026-05-12 -- Code review: B2B cleanup (SCRUM-971)
 
 Post-implementation review of the B2B removal. No regressions found. All lint warnings in the changed files were pre-existing (unused vars in the protocol calendar generator, `FormulaVariantConfig` type in `shopifyProductMapping.ts`). No fixes required.
