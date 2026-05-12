@@ -15,12 +15,18 @@ Dynamic upsell block rendered below line items in the cart drawer. Two rules:
 - **Both monthly-sub or quarterly-sub** — no upsell (handled by email flows).
 - **2+ lines in cart** — no upsell.
 
-Messaging shows the incremental extra cost vs what the customer already pays (`+£30/mo`) and the savings percentage vs buying separately (`Save 25%`). Subscription upgrades show `Save £40/mo` vs the one-time anchor.
+**Tile design:** Header bar with savings badge, `BothShots.jpg` (both bottles together), hero number, benefit bullets, CTA. Matches `CartAppGift` visual pattern.
 
-Tile matches `CartAppGift` pattern: header bar with savings badge, product bottle image, hero number, CTA. Error recovery: if the upsell add-to-cart fails after the existing item is removed, the original item is restored and an inline error is shown.
+**Messaging:** Shows the incremental extra cost vs what the customer currently pays (`+£30/mo more than you pay now`) and savings percentage vs buying separately (`Save 25%`). Benefit bullets explain what the extra cost buys: shot count and product name (e.g. "28 shots of Conka Clear every month") plus "The complete cognitive performance system". Subscription upgrades show `Save £40/mo` vs one-time anchor, with delivery and cancellation reassurance.
+
+**Behaviour:** The upsell replaces the current cart item -- it does not stack on top of it. Error recovery: if the add-to-cart fails after the existing item is removed, the original variant/plan/quantity is restored and an inline error is shown.
+
+**Analytics:** `cart:upsell_shown` and `cart:upsell_accepted` events via Vercel Analytics.
+
+**Architecture:** Variant GID detection uses a single source of truth -- reverse-lookup Maps built from `FUNNEL_VARIANTS` in `funnelData.ts` via two new exported helpers (`detectFunnelProduct`, `detectFunnelCadence`). No GIDs duplicated in `cartUpsell.ts`.
 
 **New files:** `app/lib/cartUpsell.ts`, `app/components/CartUpsellStrip.tsx`.
-**Modified:** `app/components/CartDrawer.tsx`.
+**Modified:** `app/components/CartDrawer.tsx`, `app/lib/funnelData.ts`.
 
 ---
 
