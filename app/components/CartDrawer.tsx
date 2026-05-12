@@ -7,6 +7,7 @@ import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 import { cartHasB2BLines, getB2BLinesTotalIncVat } from "@/app/lib/b2bCartTier";
 import { incVatToExVat, getVatFromIncVat } from "@/app/lib/productData";
 import Image from "next/image";
+import CartAppGift from "./CartAppGift";
 
 // Fallback product images when Shopify doesn't provide one
 const PRODUCT_FALLBACK_IMAGES: Record<string, string> = {
@@ -381,6 +382,7 @@ export default function CartDrawer() {
                   </div>
                 </div>
               ))}
+              <CartAppGift />
             </div>
           )}
         </div>
