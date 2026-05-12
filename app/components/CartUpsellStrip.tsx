@@ -34,11 +34,9 @@ export default function CartUpsellStrip({ offer, currentLineId }: CartUpsellStri
 
     setIsActing(true);
     try {
-      // For subscription upgrades: remove the OTP line before adding the sub variant.
-      // For add-both: just add alongside the existing line.
-      if (offer.type === "upgrade-to-sub") {
-        await removeItem(currentLineId);
-      }
+      // Always remove the existing line before adding the upsell variant —
+      // the upsell replaces the current product, it doesn't stack on top of it.
+      await removeItem(currentLineId);
       await addToCart(offer.variantId, 1, offer.sellingPlanId, {
         source: "cart_upsell",
         location: "cart_drawer",
@@ -49,7 +47,7 @@ export default function CartUpsellStrip({ offer, currentLineId }: CartUpsellStri
   };
 
   const busy = isActing || loading;
-  const buttonLabel = offer.type === "upgrade-to-sub" ? "Switch plan" : "Add to cart";
+  const buttonLabel = offer.type === "upgrade-to-sub" ? "Switch plan" : "Upgrade";
 
   return (
     <div className="border border-[#1B2757]/25 overflow-hidden">
