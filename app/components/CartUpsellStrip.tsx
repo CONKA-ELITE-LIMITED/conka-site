@@ -8,13 +8,24 @@ import type { CartUpsellOffer } from "@/app/lib/cartUpsell";
 
 interface CartUpsellStripProps {
   offer: CartUpsellOffer;
-  /** Line ID of the current cart item — needed to remove it before adding when upgrading to subscription. */
+  /** Line ID to remove before adding the upsell variant. */
   currentLineId: string;
+  /** Original variant/plan/quantity — used to restore the cart if the upsell add fails. */
+  originalVariantId: string;
+  originalSellingPlanId?: string;
+  originalQuantity: number;
 }
 
-export default function CartUpsellStrip({ offer, currentLineId }: CartUpsellStripProps) {
+export default function CartUpsellStrip({
+  offer,
+  currentLineId,
+  originalVariantId,
+  originalSellingPlanId,
+  originalQuantity,
+}: CartUpsellStripProps) {
   const { addToCart, removeItem, loading } = useCart();
   const [isActing, setIsActing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -34,14 +45,26 @@ export default function CartUpsellStrip({ offer, currentLineId }: CartUpsellStri
     }
 
     setIsActing(true);
+    setError(null);
     try {
-      // Always remove the existing line before adding the upsell variant —
-      // the upsell replaces the current product, it doesn't stack on top of it.
       await removeItem(currentLineId);
-      await addToCart(offer.variantId, 1, offer.sellingPlanId, {
-        source: "cart_upsell",
-        location: "cart_drawer",
-      });
+      try {
+        await addToCart(offer.variantId, 1, offer.sellingPlanId, {
+          source: "cart_upsell",
+          location: "cart_drawer",
+        });
+      } catch {
+        // Add failed — restore the original item so the cart isn't left empty.
+        try {
+          await addToCart(originalVariantId, originalQuantity, originalSellingPlanId, {
+            source: "cart_upsell_restore",
+            location: "cart_drawer",
+          });
+        } catch {
+          // Restoration also failed — nothing more we can do.
+        }
+        setError("Something went wrong. Your cart has been restored.");
+      }
     } finally {
       setIsActing(false);
     }
@@ -68,7 +91,7 @@ export default function CartUpsellStrip({ offer, currentLineId }: CartUpsellStri
       <div className="flex gap-3 px-4 py-3.5">
         <Image
           src={offer.image}
-          alt="CONKA product"
+          alt={offer.label}
           width={48}
           height={80}
           className="shrink-0 w-12 h-auto object-contain"
@@ -111,6 +134,12 @@ export default function CartUpsellStrip({ offer, currentLineId }: CartUpsellStri
           </button>
         </div>
       </div>
+
+      {error && (
+        <p className="px-4 pb-3 font-mono text-[9px] uppercase tracking-[0.12em] text-red-600/70">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

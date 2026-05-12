@@ -327,6 +327,9 @@ export default function CartDrawer() {
                 <CartUpsellStrip
                   offer={upsellOffer}
                   currentLineId={cartItems[0].id}
+                  originalVariantId={cartItems[0].merchandise.id}
+                  originalSellingPlanId={cartItems[0].sellingPlanAllocation?.sellingPlan.id}
+                  originalQuantity={cartItems[0].quantity}
                 />
               )}
               <CartAppGift />
