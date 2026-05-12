@@ -6,6 +6,24 @@
 
 ## May 2026
 
+### 2026-05-12 -- Cart upsell tile
+
+Dynamic upsell block rendered below line items in the cart drawer. Two rules:
+
+- **Flow or Clear in cart** — offer Both at the same cadence (monthly-sub, OTP, or quarterly). Replaces the current item.
+- **Both OTP in cart** — offer Both monthly subscription. Replaces the current item.
+- **Both monthly-sub or quarterly-sub** — no upsell (handled by email flows).
+- **2+ lines in cart** — no upsell.
+
+Messaging shows the incremental extra cost vs what the customer already pays (`+£30/mo`) and the savings percentage vs buying separately (`Save 25%`). Subscription upgrades show `Save £40/mo` vs the one-time anchor.
+
+Tile matches `CartAppGift` pattern: header bar with savings badge, product bottle image, hero number, CTA. Error recovery: if the upsell add-to-cart fails after the existing item is removed, the original item is restored and an inline error is shown.
+
+**New files:** `app/lib/cartUpsell.ts`, `app/components/CartUpsellStrip.tsx`.
+**Modified:** `app/components/CartDrawer.tsx`.
+
+---
+
 ### 2026-05-12 -- Code review: B2B cleanup (SCRUM-971)
 
 Post-implementation review of the B2B removal. No regressions found. All lint warnings in the changed files were pre-existing (unused vars in the protocol calendar generator, `FormulaVariantConfig` type in `shopifyProductMapping.ts`). No fixes required.
