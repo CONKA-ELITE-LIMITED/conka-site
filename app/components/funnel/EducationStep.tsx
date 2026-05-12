@@ -121,6 +121,7 @@ function FormulaCard({ data }: { data: FormulaData }) {
       </div>
 
       {/* Expanded panel — one section at a time */}
+      {/* maxHeight transition hack: "none" can't animate, so cap at 600px (well above any ingredient list) */}
       <div
         className="overflow-hidden transition-all duration-300"
         style={{ maxHeight: active ? "600px" : "0px" }}

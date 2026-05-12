@@ -6,6 +6,16 @@
 
 ## May 2026
 
+### 2026-05-12 -- Code review fixes: funnel + cart cleanup
+
+Post-review cleanup across the funnel and cart work:
+- Removed unused `FUNNEL_CADENCES` import from `FunnelClient.tsx` (stale after `checkoutSubLabel` was removed).
+- Removed dead `getSavingsPercentage` function from `CartDrawer.tsx` (defined but never called).
+- Added comment to `EducationStep.tsx` explaining the `maxHeight: 600px` CSS transition pattern so it is not silently changed.
+- Added comment to `CartAppGift.tsx` clarifying why `"use client"` is intentionally omitted (pure render, no hooks).
+
+---
+
 ### 2026-05-12 -- Funnel redesign: education-first 4-step flow
 
 **Design update** to the paid traffic funnel (`/funnel`). The previous single-page product selector is replaced with a 4-step flow designed to warm up cold paid traffic before showing prices.

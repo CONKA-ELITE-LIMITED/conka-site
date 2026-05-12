@@ -18,7 +18,6 @@ import {
   type FunnelProduct,
   type UpsellOffer,
   FUNNEL_PRODUCTS,
-  FUNNEL_CADENCES,
   getOfferPricing,
   getUpsellOffer,
 } from "../lib/funnelData";
