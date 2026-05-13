@@ -31,7 +31,7 @@ const PRODUCTS = [
   },
 ];
 
-export default function LandingProductShowcase() {
+export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
   const [openProduct, setOpenProduct] = useState<ProductId | null>(null);
 
   const openIngredients = (product: ProductId) => {
@@ -112,11 +112,13 @@ export default function LandingProductShowcase() {
         onClose={() => setOpenProduct(null)}
       />
 
-      <div className="mb-3 flex justify-start">
-        <ConkaCTAButton meta={null}>
-          Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
-        </ConkaCTAButton>
-      </div>
+      {!hideCTA && (
+        <div className="mb-3 flex justify-start">
+          <ConkaCTAButton href={ctaHref} meta={null}>
+            Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
+          </ConkaCTAButton>
+        </div>
+      )}
       <div>
         <LabTrustBadges />
       </div>

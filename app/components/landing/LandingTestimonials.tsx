@@ -207,9 +207,11 @@ function NavButton({
 export default function LandingTestimonials({
   testimonials = CURATED_TESTIMONIALS,
   hideCTA = false,
+  ctaHref = "/funnel",
 }: {
   testimonials?: Testimonial[];
   hideCTA?: boolean;
+  ctaHref?: string;
 } = {}) {
   const totalCards = testimonials.length;
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -408,7 +410,7 @@ export default function LandingTestimonials({
       {!hideCTA && (
         <>
           <div className="mt-10 flex justify-start">
-            <ConkaCTAButton meta={null}>
+            <ConkaCTAButton href={ctaHref} meta={null}>
               Get Both from £{PRICE_PER_SHOT_BOTH}/shot
             </ConkaCTAButton>
           </div>

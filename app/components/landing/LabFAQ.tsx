@@ -45,7 +45,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-export default function LabFAQ({ hideCTA = false }: { hideCTA?: boolean } = {}) {
+export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -185,7 +185,7 @@ export default function LabFAQ({ hideCTA = false }: { hideCTA?: boolean } = {}) 
 
           {!hideCTA && (
             <div className="mt-8 flex justify-center lg:justify-start">
-              <ConkaCTAButton meta={null}>Get Both from £{PRICE_PER_SHOT_BOTH}/shot</ConkaCTAButton>
+              <ConkaCTAButton href={ctaHref} meta={null}>Get Both from £{PRICE_PER_SHOT_BOTH}/shot</ConkaCTAButton>
             </div>
           )}
         </div>

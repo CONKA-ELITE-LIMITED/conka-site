@@ -1,7 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Claude Code
-.claude/
+# Claude Code -- ignore local/generated dirs, track skills and rules
+.claude/settings.local.json
+.claude/worktrees/
+.claude/projects/
 
 # dependencies
 /node_modules

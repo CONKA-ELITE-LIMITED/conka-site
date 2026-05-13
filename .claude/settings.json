@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "WorktreeCreate": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cp \"$CLAUDE_PROJECT_ROOT/.env.local\" \"$CLAUDE_WORKTREE_ROOT/.env.local\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

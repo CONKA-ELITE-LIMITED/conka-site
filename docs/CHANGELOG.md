@@ -6,6 +6,35 @@
 
 ## May 2026
 
+### 2026-05-13 -- New Claude skills: /bug, /commit, /review-analytics (SCRUM-983)
+
+Three new Claude Code skills added to `.claude/skills/`:
+
+- `/bug` -- Detective-first bug investigation. James Whittaker mindset + Five Whys. Enforces reproduce-before-fix and root-cause-before-patch discipline. Includes a web-specific failure patterns table (hydration mismatches, cart URL issues, CAPI deduplication failures, CLS jumps, and more).
+- `/commit` -- Safe commit gate. Refuses to run on main, always updates `docs/CHANGELOG.md` before committing, stages specific files (no `git add -A`), and enforces the project commit message format with co-author line.
+- `/review-analytics` -- Verify all 4 analytics systems (Vercel Analytics, Triple Whale, Meta Pixel, Meta CAPI). Checklist-driven, with a common failure patterns table. CAPI deduplication check is flagged as the highest-stakes item.
+
+All three skills follow the architecture guide skeleton (frontmatter, Step 0 continuity check, silent gather step, response template, Key Principles footer).
+
+**New files:** `.claude/skills/bug/SKILL.md`, `.claude/skills/commit/SKILL.md`, `.claude/skills/review-analytics/SKILL.md`.
+
+---
+
+### 2026-05-13 -- Funnel back button fix + home page CTA routing
+
+**Back button:** The funnel step indicator was purely React state with no URL changes, so pressing browser back at any step exited the funnel entirely (to the previous page in browser history). Fixed by seeding a history entry for step 1 on mount (`replaceState`) and pushing a new entry on each `goToStep` call (`pushState`). A `popstate` listener detects back/forward navigation and replays the step transition animation.
+
+**Home page CTA routing:** Several shared landing components defaulted their CTA to `/funnel` (via `ConkaCTAButton` with no `href`). None of those CTAs should reach the funnel from the home page.
+
+- `LandingDailyBenefits` — home page only, CTA now hardcoded to `/conka-both`.
+- `LandingTestimonials` — added `ctaHref` prop (default `/funnel` preserves behaviour on other pages where `hideCTA` is already passed); home page passes `/conka-both`.
+- `LabFAQ` — same pattern.
+- `LandingProductShowcase` — added `hideCTA` + `ctaHref` props. Home page passes `ctaHref="/conka-both"`. Product pages (`conka-both`, `protocol/[id]`) pass `hideCTA` — the "Get Both" button made no sense when the user was already on a product page.
+
+**Modified:** `app/funnel/FunnelClient.tsx`, `app/page.tsx`, `app/conka-both/page.tsx`, `app/protocol/[id]/page.tsx`, `app/components/landing/LandingProductShowcase.tsx`, `app/components/landing/LandingTestimonials.tsx`, `app/components/landing/LabFAQ.tsx`, `app/components/landing/LandingDailyBenefits.tsx`.
+
+---
+
 ### 2026-05-12 -- Cart upsell tile
 
 Dynamic upsell block rendered below line items in the cart drawer. Two rules:

@@ -70,7 +70,7 @@ export default function Home() {
         aria-label="What CONKA does"
       >
         <div className="brand-track">
-          <LandingProductShowcase />
+          <LandingProductShowcase ctaHref="/conka-both" />
         </div>
       </section>
 
@@ -142,7 +142,7 @@ export default function Home() {
         aria-label="Customer reviews"
       >
         <div className="brand-track">
-          <LandingTestimonials />
+          <LandingTestimonials ctaHref="/conka-both" />
         </div>
       </section>
 
@@ -162,7 +162,7 @@ export default function Home() {
         aria-label="FAQ"
       >
         <div className="brand-track">
-          <LabFAQ />
+          <LabFAQ ctaHref="/conka-both" />
         </div>
       </section>
 

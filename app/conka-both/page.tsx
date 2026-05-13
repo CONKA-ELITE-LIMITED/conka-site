@@ -126,7 +126,7 @@ export default function ConkaBothPage() {
       aria-label="What CONKA does"
     >
       <div className="brand-track">
-        <LandingProductShowcase />
+        <LandingProductShowcase hideCTA />
       </div>
     </section>
   );
