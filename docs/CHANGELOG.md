@@ -6,6 +6,21 @@
 
 ## May 2026
 
+### 2026-05-13 -- Funnel back button fix + home page CTA routing
+
+**Back button:** The funnel step indicator was purely React state with no URL changes, so pressing browser back at any step exited the funnel entirely (to the previous page in browser history). Fixed by seeding a history entry for step 1 on mount (`replaceState`) and pushing a new entry on each `goToStep` call (`pushState`). A `popstate` listener detects back/forward navigation and replays the step transition animation.
+
+**Home page CTA routing:** Several shared landing components defaulted their CTA to `/funnel` (via `ConkaCTAButton` with no `href`). None of those CTAs should reach the funnel from the home page.
+
+- `LandingDailyBenefits` — home page only, CTA now hardcoded to `/conka-both`.
+- `LandingTestimonials` — added `ctaHref` prop (default `/funnel` preserves behaviour on other pages where `hideCTA` is already passed); home page passes `/conka-both`.
+- `LabFAQ` — same pattern.
+- `LandingProductShowcase` — added `hideCTA` + `ctaHref` props. Home page passes `ctaHref="/conka-both"`. Product pages (`conka-both`, `protocol/[id]`) pass `hideCTA` — the "Get Both" button made no sense when the user was already on a product page.
+
+**Modified:** `app/funnel/FunnelClient.tsx`, `app/page.tsx`, `app/conka-both/page.tsx`, `app/protocol/[id]/page.tsx`, `app/components/landing/LandingProductShowcase.tsx`, `app/components/landing/LandingTestimonials.tsx`, `app/components/landing/LabFAQ.tsx`, `app/components/landing/LandingDailyBenefits.tsx`.
+
+---
+
 ### 2026-05-12 -- Cart upsell tile
 
 Dynamic upsell block rendered below line items in the cart drawer. Two rules:

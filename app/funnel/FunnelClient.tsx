@@ -57,6 +57,29 @@ export default function FunnelClient() {
     });
   }, []);
 
+  // Seed browser history so back button navigates within the funnel (not away from it)
+  useEffect(() => {
+    window.history.replaceState({ funnelStep: 1 }, "");
+  }, []);
+
+  // Handle browser back/forward within the funnel
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const step = event.state?.funnelStep as FunnelStep | undefined;
+      if (step && ([1, 2, 3, 4] as FunnelStep[]).includes(step)) {
+        setStepVisible(false);
+        setTimeout(() => {
+          setCurrentStep(step);
+          setError(null);
+          window.scrollTo({ top: 0, behavior: "instant" });
+          requestAnimationFrame(() => setStepVisible(true));
+        }, 150);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   // Reset checkout state when restored from bfcache (browser back from Shopify)
   useEffect(() => {
     const handlePageShow = (event: PageTransitionEvent) => {
@@ -96,6 +119,7 @@ export default function FunnelClient() {
     if (transitionTimeout.current) clearTimeout(transitionTimeout.current);
     transitionTimeout.current = setTimeout(() => {
       setCurrentStep(step);
+      window.history.pushState({ funnelStep: step }, "");
       setError(null);
       window.scrollTo({ top: 0, behavior: "instant" });
       requestAnimationFrame(() => setStepVisible(true));
