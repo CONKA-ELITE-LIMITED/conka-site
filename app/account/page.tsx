@@ -18,10 +18,18 @@ import {
 } from "@/app/account/subscriptions/utils";
 import { RescheduleModal } from "@/app/components/subscriptions/RescheduleModal";
 import { PlaceOrderModal } from "@/app/components/subscriptions/PlaceOrderModal";
+import { ActiveOrderCard } from "@/app/components/account/ActiveOrderCard";
+import { isActiveOrder } from "@/app/account/orders/utils";
 
 interface OrderSummary {
   id: string;
+  orderNumber: string;
+  orderName?: string;
   processedAt: string;
+  cancelledAt?: string;
+  financialStatus: string;
+  fulfillmentStatus: string;
+  lineItems: Array<{ title: string }>;
 }
 
 function safeFormatDate(
@@ -128,10 +136,13 @@ export default function AccountPage() {
   const headerSub = [
     orderCountLabel,
     activeLabel,
-    nextDeliveryLong ? `next delivery ${nextDeliveryLong}` : null,
+    nextDeliveryLong ? `next renewal ${nextDeliveryLong}` : null,
   ]
     .filter(Boolean)
     .join(" · ") || "Your account at a glance";
+
+  const activeOrder =
+    orders.length > 0 && isActiveOrder(orders[0]) ? orders[0] : null;
 
   const handleSkipNext = async () => {
     if (!nextSub) return;
@@ -214,7 +225,7 @@ export default function AccountPage() {
               <HairlineSpecStrip
                 items={[
                   { label: "Active subs", value: activeSubscriptions.length },
-                  { label: "Next delivery", value: nextDeliveryShort },
+                  { label: "Next renewal", value: nextDeliveryShort },
                   { label: "Orders placed", value: ordersLoading ? "—" : orders.length },
                   { label: "Member since", value: memberSince },
                 ]}
@@ -236,6 +247,18 @@ export default function AccountPage() {
                 Skip · Reschedule · Get now
               </p>
             </div>
+
+            {ordersLoading && nextSub ? (
+              <div className="mb-4 bg-white border border-black/12 h-[72px]" />
+            ) : activeOrder ? (
+              <div className="mb-4">
+                <ActiveOrderCard
+                  orderName={activeOrder.orderName || `#${activeOrder.orderNumber}`}
+                  productTitle={activeOrder.lineItems[0]?.title || "Your order"}
+                  fulfillmentStatus={activeOrder.fulfillmentStatus}
+                />
+              </div>
+            ) : null}
 
             <div className="mb-12">
               {subsLoading && subscriptions.length === 0 ? (
@@ -319,7 +342,7 @@ export default function AccountPage() {
                             </span>
                           </div>
                           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/55 tabular-nums mt-0.5">
-                            Next · {date}
+                            Renews · {date}
                           </p>
                         </div>
                         <span
