@@ -42,7 +42,7 @@ export function NextDeliveryHero({
   const type = getSubscriptionType(subscription);
   const formulaLabel = getFormulaLabel(type);
   const title = subscription.product.title || "Your subscription";
-  const dateLabel = formatNextDelivery(subscription.nextBillingDate);
+  const renewalDateLabel = formatNextDelivery(subscription.nextBillingDate);
 
   return (
     <article
@@ -107,13 +107,13 @@ export function NextDeliveryHero({
 
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-            Next delivery
+            Next renewal
           </p>
           <p
             className="text-3xl lg:text-4xl font-semibold tabular-nums text-black"
             style={{ letterSpacing: "-0.02em" }}
           >
-            {dateLabel}
+            {renewalDateLabel}
           </p>
         </div>
 

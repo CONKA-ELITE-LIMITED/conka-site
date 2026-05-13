@@ -373,7 +373,7 @@ export function SubscriptionCard({
               <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
             <p className="text-sm text-black">
-              <span className="text-black/60">Next delivery:</span>{" "}
+              <span className="text-black/60">Next renewal:</span>{" "}
               <span className="font-semibold tabular-nums">
                 {formatDate(subscription.nextBillingDate)}
               </span>

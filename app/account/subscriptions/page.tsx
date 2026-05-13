@@ -296,7 +296,7 @@ export default function SubscriptionsPage() {
     : [
         `${activeOnly.length} active`,
         pausedOnly.length > 0 ? `${pausedOnly.length} paused` : null,
-        nextDeliveryFormatted ? `next delivery ${nextDeliveryFormatted}` : null,
+        nextDeliveryFormatted ? `next renewal ${nextDeliveryFormatted}` : null,
       ].filter(Boolean).join(" · ");
 
   return (

@@ -115,6 +115,21 @@ export function getOrderProgress(order: Order): {
   return { current, completed, cancelled: false };
 }
 
+export function isActiveOrder(
+  order: Pick<Order, "financialStatus" | "fulfillmentStatus" | "cancelledAt">
+): boolean {
+  if (order.cancelledAt) return false;
+  const financial = order.financialStatus?.toLowerCase();
+  const fulfillment = order.fulfillmentStatus?.toLowerCase() || "unfulfilled";
+  if (financial !== "paid") return false;
+  return (
+    fulfillment === "unfulfilled" ||
+    fulfillment === "in_progress" ||
+    fulfillment === "partially_fulfilled" ||
+    fulfillment === "in_transit"
+  );
+}
+
 export function getStatusColor(status: string): string {
   switch (status?.toLowerCase()) {
     case "fulfilled":
