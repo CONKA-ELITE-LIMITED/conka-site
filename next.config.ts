@@ -71,6 +71,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/welcome-to-conka',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/pages/:path*',
         destination: '/',
         permanent: true,

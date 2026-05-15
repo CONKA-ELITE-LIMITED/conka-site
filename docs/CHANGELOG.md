@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-15 -- Permanent redirect for /welcome-to-conka
+
+Added a 301 redirect from `/welcome-to-conka` to the home page. The legacy URL is no longer needed and should consolidate to the canonical root for SEO.
+
+**Modified:** `next.config.ts`
+
+---
+
 ### 2026-05-13 -- New Claude skills: /bug, /commit, /review-analytics (SCRUM-983)
 
 Three new Claude Code skills added to `.claude/skills/`:
