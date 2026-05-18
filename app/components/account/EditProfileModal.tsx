@@ -34,6 +34,12 @@ const countryToCode: Record<string, string> = {
 };
 
 function initialForm(customer: CustomerInfo): ProfileFormData {
+  // Clamp country to one of the known dropdown options so the select always
+  // reflects state. Stored values outside this list (e.g. legacy "France")
+  // would otherwise leave the form in a state where countryToCode lookup at
+  // submit time returns undefined.
+  const storedCountry = customer.defaultAddress?.country ?? "United Kingdom";
+  const country = storedCountry in countryToCode ? storedCountry : "United Kingdom";
   return {
     firstName: customer.firstName ?? "",
     lastName: customer.lastName ?? "",
@@ -45,8 +51,8 @@ function initialForm(customer: CustomerInfo): ProfileFormData {
       province: customer.defaultAddress?.province ?? "",
       zoneCode: customer.defaultAddress?.zoneCode ?? "",
       zip: customer.defaultAddress?.zip ?? "",
-      country: customer.defaultAddress?.country ?? "United Kingdom",
-      territoryCode: customer.defaultAddress?.territoryCode ?? "GB",
+      country,
+      territoryCode: countryToCode[country],
     },
   };
 }
@@ -79,7 +85,11 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
         address: {
           ...prev.address,
           [key]: value,
-          ...(key === "country" ? { territoryCode: countryToCode[value] || value } : {}),
+          // Country drives territoryCode; province/zoneCode are country-specific
+          // and must be reset to avoid sending e.g. a US zoneCode with country=UK.
+          ...(key === "country"
+            ? { territoryCode: countryToCode[value] || value, province: "", zoneCode: "" }
+            : {}),
         },
       }));
     } else {
@@ -91,11 +101,31 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
     setSaving(true);
     setError(null);
     setSuccess(false);
+
+    // Phone, when present, must be E.164 (Shopify's requirement). Validate
+    // client-side to avoid a confusing Shopify userError and to keep silent
+    // legacy non-E.164 values from silently round-tripping back unchanged.
+    if (form.phone && !/^\+[1-9]\d{1,14}$/.test(form.phone)) {
+      setError("Use international format for your phone, e.g. +447123456789.");
+      setSaving(false);
+      return;
+    }
+
+    // Always derive territoryCode from the current country selection. initialForm
+    // clamps country to a known dropdown value, so the lookup is guaranteed.
+    const payload = {
+      ...form,
+      address: {
+        ...form.address,
+        territoryCode: countryToCode[form.address.country],
+      },
+    };
+
     try {
       const res = await fetch("/api/auth/customer/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         setSuccess(true);
@@ -201,7 +231,9 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
                 value={form.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
-                placeholder="Optional"
+                placeholder="+447123456789"
+                inputMode="tel"
+                autoComplete="tel"
               />
             </div>
             <div className="sm:col-span-2">

@@ -372,9 +372,13 @@
     0 0 0 7px rgba(0, 0, 0, 0.75);
 }
 
-/* Top-right 12px chamfer — interactive signifier. Apply to primary CTAs,
-   nav buttons, tags. Never apply to cards, asset frames, or any
-   non-interactive surface. Matches ConkaCTAButton. */
+/* Top-right 12px chamfer — interactive signifier. Apply to secondary CTAs,
+   tags, icon buttons. Never apply to cards, asset frames, or any
+   non-interactive surface.
+
+   Note: this is NOT the same shape as ConkaCTAButton — that uses an inline
+   two-corner notch (top-left + bottom-right). Primary CTAs follow that
+   pattern; do not "refactor" them to use lab-clip-tr. */
 .lab-clip-tr {
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
 }

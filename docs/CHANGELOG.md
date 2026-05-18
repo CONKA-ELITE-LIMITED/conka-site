@@ -6,6 +6,32 @@
 
 ## May 2026
 
+### 2026-05-18 -- Desktop nav Shop button: permanent accent + matched clip-path
+
+The desktop Shop button in the header was a white-bordered button that only filled with the accent navy on hover. It read as a low-priority chip even though Shop is the highest-intent destination in the nav. Switched it to permanent `#1B2757` fill with white text at all times, and aligned the clipped shape with `ConkaCTAButton` (12px notches on top-left and bottom-right) so the brand's primary-CTA shape is consistent everywhere it appears. Replaced the colour-swap hover with a subtle opacity fade matching the rest of the site's primary CTAs, plus an explicit focus ring for keyboard users.
+
+Also corrected the comment on `.lab-clip-tr` in `brand-base.css`, which incorrectly claimed it matched `ConkaCTAButton`. It is a different (single top-right) clip-path, and the misleading comment was how the Shop button ended up with the wrong shape in the first place. The corrected comment now states that primary CTAs use a different two-corner notch and warns against "refactoring" them onto the utility class.
+
+**Modified:** `app/components/navigation/NavigationDesktop.tsx`, `app/brand-base.css`.
+
+---
+
+### 2026-05-18 -- Customer portal profile update hardening (SCRUM-1004, SCRUM-1006)
+
+Three fixes to `/account/details` Edit Profile flow that were silently mis-saving data for paying customers.
+
+- **Phone-only no-op:** A phone-only update from a customer with no default address used to return a silent 200. Now returns a clear 400 telling the customer to add a delivery address first.
+- **territoryCode overwrite to GB:** Migrated accounts with a null stored `territoryCode` were being silently moved to GB on save, even when the country dropdown showed US/CA/AU. The form now clamps country to a known dropdown value on open and derives `territoryCode` from country at submit.
+- **Phone E.164 validation:** The phone field now validates as E.164 client-side with placeholder `+447123456789`, preventing confusing Shopify userErrors and stopping legacy non-E.164 values from round-tripping back unchanged. Soft breaking change for customers with legacy phone values, acceptable since Shopify already rejects them.
+- **Stale province/zoneCode on country change:** Changing country in the modal now clears province and zoneCode (e.g. switching from US to UK no longer ships California + the US zoneCode to Shopify).
+- **Partial-success in route response:** The route runs two Shopify mutations (name, address) with no transactional wrapper available. Previously a name-update-ok + address-update-fail returned a generic 400, leaving the customer record with a half-saved name the user could not see. The route now runs both mutations independently, collects per-op results, and returns an error string that names both what saved and what failed ("Your name was saved, but the address change failed: ...").
+
+Phase 1 of SCRUM-1004 (sync the address to Loop subscription contracts) was descoped to **SCRUM-1005** after the spike confirmed the assumed admin endpoint is not publicly documented on `developer.loopwork.co`. The only update-shipping endpoint Loop documents is the storefront subscriber-portal one (session-token auth, 24h expiry), which SCRUM-1004 ruled out. SCRUM-1005 lists four options for the team to pick from before resuming engineering.
+
+**Modified:** `app/api/auth/customer/update/route.ts`, `app/components/account/EditProfileModal.tsx`.
+
+---
+
 ### 2026-05-15 -- Permanent redirect for /welcome-to-conka
 
 Added a 301 redirect from `/welcome-to-conka` to the home page. The legacy URL is no longer needed and should consolidate to the canonical root for SEO.
