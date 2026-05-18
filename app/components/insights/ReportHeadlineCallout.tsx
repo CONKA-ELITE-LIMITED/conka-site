@@ -55,28 +55,28 @@ export default function ReportHeadlineCallout({
   return (
     <div
       ref={sentinelRef}
-      className="border border-white/20 bg-white/[0.10] p-5 lg:p-6"
+      className="bg-white/85 p-5 lg:p-6"
     >
-      <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 tabular-nums mb-3">
+      <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#0a0a0a]/60 tabular-nums mb-3">
         {"// Headline finding"}
       </p>
-      <p className="text-lg lg:text-xl text-white leading-snug font-medium max-w-[58ch] mb-5">
+      <p className="text-lg lg:text-xl text-[#0a0a0a] leading-snug font-medium max-w-[58ch] mb-5">
         {report.headlineFinding}
       </p>
       <div className="flex flex-wrap items-center gap-3 mb-5">
-        <EvidenceStrengthBadge strength={report.evidenceStrength} />
-        <span className="font-mono text-[9px] uppercase tracking-[0.16em] tabular-nums text-white/55">
+        <EvidenceStrengthBadge strength={report.evidenceStrength} tone="light" />
+        <span className="font-mono text-[9px] uppercase tracking-[0.16em] tabular-nums text-[#0a0a0a]/60">
           {report.sampleSize}
         </span>
       </div>
       {report.laymanAnchors.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-5 border-t border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-5 border-t border-[#0a0a0a]/10">
           {report.laymanAnchors.map((a) => (
             <div key={a.stat}>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-white/65 mb-1.5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-[#0a0a0a]/70 mb-1.5">
                 {a.stat}
               </p>
-              <p className="text-sm text-white/85 leading-snug">{a.anchor}</p>
+              <p className="text-sm text-[#0a0a0a]/85 leading-snug">{a.anchor}</p>
             </div>
           ))}
         </div>

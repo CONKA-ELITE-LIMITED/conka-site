@@ -6,6 +6,16 @@
 
 ## May 2026
 
+### 2026-05-18 -- App Insights: lighten filter tiles, TLDR cards, and headline callouts
+
+The four filter buttons ("How does performance change through the day?", etc.), the four "What the data shows" TLDR cards, and the per-report headline callouts inside each report all used a near-invisible white-on-dark treatment (`bg-white/[0.06]` to `bg-white/[0.10]` with light text), which made them read as decorative panels rather than interactive controls. Flipped all three surfaces to a light grey treatment (`bg-white/75` to `bg-white/85`, hover to solid white) with dark `#0a0a0a` text, so the affordance is unmistakable on the dark page background. The active filter state keeps the solid-white fill but now gains a `ring-2` outline to differentiate it from the other (now also light) tiles.
+
+To support reusing `EvidenceStrengthBadge` on the new light surfaces, added a `tone="light" | "dark"` prop (default `"dark"`, so the badge's other consumer is unchanged). The light variant inverts dot, ring, and text colour to read against a light background.
+
+**Modified:** `app/components/insights/InsightFilteredSections.tsx`, `app/components/insights/InsightTldrStrip.tsx`, `app/components/insights/ReportHeadlineCallout.tsx`, `app/components/insights/EvidenceStrengthBadge.tsx`.
+
+---
+
 ### 2026-05-18 -- Desktop nav Shop button: permanent accent + matched clip-path
 
 The desktop Shop button in the header was a white-bordered button that only filled with the accent navy on hover. It read as a low-priority chip even though Shop is the highest-intent destination in the nav. Switched it to permanent `#1B2757` fill with white text at all times, and aligned the clipped shape with `ConkaCTAButton` (12px notches on top-left and bottom-right) so the brand's primary-CTA shape is consistent everywhere it appears. Replaced the colour-swap hover with a subtle opacity fade matching the rest of the site's primary CTAs, plus an explicit focus ring for keyboard users.

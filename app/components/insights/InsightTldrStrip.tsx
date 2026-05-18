@@ -55,25 +55,25 @@ export default function InsightTldrStrip({
               role="listitem"
               onClick={() => handleClick(report.id)}
               aria-label={`Jump to ${report.eyebrowConcept} report`}
-              className="text-left border border-white/15 bg-white/[0.06] hover:bg-white/[0.10] hover:border-white/25 transition-colors flex flex-col min-h-[44px] focus:outline-none focus-visible:border-white/60"
+              className="text-left bg-white/85 hover:bg-white transition-colors flex flex-col min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
             >
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-                <span className="font-mono text-[11px] font-bold tabular-nums text-white/70">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#0a0a0a]/10">
+                <span className="font-mono text-[11px] font-bold tabular-nums text-[#0a0a0a]/70">
                   {counter}
                 </span>
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-white/55">
+                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#0a0a0a]/60">
                   {report.eyebrowConcept}
                 </span>
               </div>
               <div className="flex flex-col flex-1 p-4 lg:p-5">
-                <p className="text-sm lg:text-[15px] text-white leading-snug font-medium mb-3">
+                <p className="text-sm lg:text-[15px] text-[#0a0a0a] leading-snug font-medium mb-3">
                   {report.headlineFinding}
                 </p>
-                <p className="font-mono text-[9px] uppercase tracking-[0.14em] tabular-nums text-white/55 mb-4">
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] tabular-nums text-[#0a0a0a]/60 mb-4">
                   {report.sampleSize}
                 </p>
                 <div className="mt-auto pt-2">
-                  <EvidenceStrengthBadge strength={report.evidenceStrength} />
+                  <EvidenceStrengthBadge strength={report.evidenceStrength} tone="light" />
                 </div>
               </div>
             </button>
