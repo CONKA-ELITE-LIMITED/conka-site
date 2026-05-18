@@ -116,8 +116,8 @@ export default function InsightFilteredSections() {
                     "px-2 sm:px-4 py-3 font-mono tracking-wide border-0 text-left transition-colors min-h-[44px]",
                     "text-[10px] sm:text-[12px]",
                     isActive
-                      ? "bg-white/90 text-[#0a0a0a]"
-                      : "bg-white/[0.10] text-white/65 hover:bg-white/[0.15] hover:text-white/85",
+                      ? "bg-white text-[#0a0a0a] ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]"
+                      : "bg-white/75 text-[#0a0a0a]/85 hover:bg-white hover:text-[#0a0a0a]",
                   ].join(" ")}
                 >
                   <span className="block sm:hidden">{f.shortLabel}</span>
