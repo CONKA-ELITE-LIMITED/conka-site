@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-18 -- Desktop nav Shop button: permanent accent + matched clip-path
+
+The desktop Shop button in the header was a white-bordered button that only filled with the accent navy on hover. It read as a low-priority chip even though Shop is the highest-intent destination in the nav. Switched it to permanent `#1B2757` fill with white text at all times, and aligned the clipped shape with `ConkaCTAButton` (12px notches on top-left and bottom-right) so the brand's primary-CTA shape is consistent everywhere it appears. Replaced the colour-swap hover with a subtle opacity fade matching the rest of the site's primary CTAs, plus an explicit focus ring for keyboard users.
+
+**Modified:** `app/components/navigation/NavigationDesktop.tsx`.
+
+---
+
 ### 2026-05-18 -- Customer portal profile update hardening (SCRUM-1004, SCRUM-1006)
 
 Three fixes to `/account/details` Edit Profile flow that were silently mis-saving data for paying customers.

@@ -58,7 +58,7 @@ export default function NavigationDesktop({
                 onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
                 aria-expanded={shopDropdownOpen}
                 aria-haspopup="true"
-                className="flex items-center gap-2 bg-white text-black border border-black/15 px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums lab-clip-tr transition-colors hover:bg-[#1B2757] hover:text-white hover:border-[#1B2757]"
+                className="flex items-center gap-2 bg-[#1B2757] text-white px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(12px_0,100%_0,100%_calc(100%-12px),calc(100%-12px)_100%,0_100%,0_12px)]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
