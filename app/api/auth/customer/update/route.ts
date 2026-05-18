@@ -211,7 +211,10 @@ export async function POST(request: NextRequest) {
     // Create or update address if provided (also triggers on phone-only change,
     // since phone lives on CustomerAddressInput, not CustomerUpdateInput)
     const hasAddressFields = address && (address.address1 || address.city || address.zip);
-    const hasPhoneChange = phone !== undefined;
+    // Only treat phone as a write when there's a non-empty value. The modal
+    // always posts a phone field (defaulting to ""), so a looser check would
+    // make every firstName-only edit enter the address branch.
+    const hasPhoneChange = typeof phone === 'string' && phone.length > 0;
     if (hasAddressFields || hasPhoneChange) {
       // CustomerAddressInput uses territoryCode (ISO country code) and zoneCode (ISO subdivision code)
       // These are round-tripped from the session query, not mapped from display names

@@ -34,6 +34,12 @@ const countryToCode: Record<string, string> = {
 };
 
 function initialForm(customer: CustomerInfo): ProfileFormData {
+  // Clamp country to one of the known dropdown options so the select always
+  // reflects state. Stored values outside this list (e.g. legacy "France")
+  // would otherwise leave the form in a state where countryToCode lookup at
+  // submit time returns undefined.
+  const storedCountry = customer.defaultAddress?.country ?? "United Kingdom";
+  const country = storedCountry in countryToCode ? storedCountry : "United Kingdom";
   return {
     firstName: customer.firstName ?? "",
     lastName: customer.lastName ?? "",
@@ -45,8 +51,8 @@ function initialForm(customer: CustomerInfo): ProfileFormData {
       province: customer.defaultAddress?.province ?? "",
       zoneCode: customer.defaultAddress?.zoneCode ?? "",
       zip: customer.defaultAddress?.zip ?? "",
-      country: customer.defaultAddress?.country ?? "United Kingdom",
-      territoryCode: customer.defaultAddress?.territoryCode ?? "GB",
+      country,
+      territoryCode: countryToCode[country],
     },
   };
 }
@@ -100,20 +106,18 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
     // client-side to avoid a confusing Shopify userError and to keep silent
     // legacy non-E.164 values from silently round-tripping back unchanged.
     if (form.phone && !/^\+[1-9]\d{1,14}$/.test(form.phone)) {
-      setError("Phone must be in international format, e.g. +447123456789.");
+      setError("Use international format for your phone, e.g. +447123456789.");
       setSaving(false);
       return;
     }
 
-    // Always derive territoryCode from the current country selection. Migrated
-    // accounts can have a null territoryCode that the form defaults to "GB",
-    // which would otherwise silently move a US/CA/AU customer's country code
-    // to GB on save.
+    // Always derive territoryCode from the current country selection. initialForm
+    // clamps country to a known dropdown value, so the lookup is guaranteed.
     const payload = {
       ...form,
       address: {
         ...form.address,
-        territoryCode: countryToCode[form.address.country] || form.address.territoryCode,
+        territoryCode: countryToCode[form.address.country],
       },
     };
 
