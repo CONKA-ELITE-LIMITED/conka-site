@@ -118,6 +118,13 @@ interface AddressMutationData {
   };
 }
 
+// Per-operation outcome. The route runs two independent Shopify mutations
+// (name, address) with no transactional wrapper available; we record what
+// each attempt did so partial failures surface honestly rather than masking
+// a successful write under a generic 400.
+type OpResult = { ok: true } | { ok: false; error: string };
+type ResultMap = { name?: OpResult; address?: OpResult };
+
 async function customerAccountFetch<T>(
   accessToken: string,
   query: string,
@@ -186,102 +193,139 @@ export async function POST(request: NextRequest) {
 
     const { firstName, lastName, phone, address } = validationResult.data;
 
-    // Update customer profile (CustomerUpdateInput only supports firstName/lastName)
+    const results: ResultMap = {};
+
+    // === Name mutation (CustomerUpdateInput only supports firstName/lastName) ===
     const customerInput: Record<string, string> = {};
     if (firstName !== undefined) customerInput.firstName = firstName;
     if (lastName !== undefined) customerInput.lastName = lastName;
 
     if (Object.keys(customerInput).length > 0) {
-      const result = await customerAccountFetch<CustomerUpdateData>(
-        accessToken,
-        CUSTOMER_UPDATE,
-        { input: customerInput },
-      );
-
-      if (result.customerUpdate.userErrors.length > 0) {
-        const error = result.customerUpdate.userErrors[0];
-        console.error('Customer update userError:', error);
-        return NextResponse.json(
-          { error: error.message },
-          { status: 400 }
+      try {
+        const result = await customerAccountFetch<CustomerUpdateData>(
+          accessToken,
+          CUSTOMER_UPDATE,
+          { input: customerInput },
         );
+        if (result.customerUpdate.userErrors.length > 0) {
+          const userError = result.customerUpdate.userErrors[0];
+          console.error('Customer update userError:', userError);
+          results.name = { ok: false, error: userError.message };
+        } else {
+          results.name = { ok: true };
+        }
+      } catch (e) {
+        console.error('Customer update threw:', e);
+        results.name = { ok: false, error: 'Unable to save your name. Please try again.' };
       }
     }
 
-    // Create or update address if provided (also triggers on phone-only change,
-    // since phone lives on CustomerAddressInput, not CustomerUpdateInput)
+    // === Address mutation (also covers phone, which lives on CustomerAddressInput) ===
     const hasAddressFields = address && (address.address1 || address.city || address.zip);
     // Only treat phone as a write when there's a non-empty value. The modal
     // always posts a phone field (defaulting to ""), so a looser check would
     // make every firstName-only edit enter the address branch.
     const hasPhoneChange = typeof phone === 'string' && phone.length > 0;
+
     if (hasAddressFields || hasPhoneChange) {
-      // CustomerAddressInput uses territoryCode (ISO country code) and zoneCode (ISO subdivision code)
-      // These are round-tripped from the session query, not mapped from display names
-      const addressInput: Record<string, string> = {};
-      if (address?.address1) addressInput.address1 = address.address1;
-      if (address?.address2) addressInput.address2 = address.address2;
-      if (address?.city) addressInput.city = address.city;
-      if (address?.zoneCode) addressInput.zoneCode = address.zoneCode;
-      if (address?.zip) addressInput.zip = address.zip;
-      if (address?.territoryCode) addressInput.territoryCode = address.territoryCode;
-      // Phone goes on address (CustomerUpdateInput does not support phone)
-      if (phone) addressInput.phoneNumber = phone;
+      try {
+        // CustomerAddressInput uses territoryCode (ISO country code) and zoneCode (ISO subdivision code)
+        // These are round-tripped from the session query, not mapped from display names
+        const addressInput: Record<string, string> = {};
+        if (address?.address1) addressInput.address1 = address.address1;
+        if (address?.address2) addressInput.address2 = address.address2;
+        if (address?.city) addressInput.city = address.city;
+        if (address?.zoneCode) addressInput.zoneCode = address.zoneCode;
+        if (address?.zip) addressInput.zip = address.zip;
+        if (address?.territoryCode) addressInput.territoryCode = address.territoryCode;
+        if (phone) addressInput.phoneNumber = phone;
 
-      // Check if customer already has a default address
-      const customerData = await customerAccountFetch<CustomerAddressesData>(
-        accessToken,
-        CUSTOMER_ADDRESSES_QUERY,
-      );
-      const existingAddressId = customerData.customer?.defaultAddress?.id;
-
-      if (existingAddressId) {
-        // Update existing default address
-        const updateResult = await customerAccountFetch<AddressMutationData>(
+        const customerData = await customerAccountFetch<CustomerAddressesData>(
           accessToken,
-          CUSTOMER_ADDRESS_UPDATE,
-          { addressId: existingAddressId, address: addressInput, defaultAddress: true },
+          CUSTOMER_ADDRESSES_QUERY,
         );
+        const existingAddressId = customerData.customer?.defaultAddress?.id;
 
-        const errors = updateResult.customerAddressUpdate?.userErrors || [];
-        if (errors.length > 0) {
-          console.error('Address update userError:', errors[0]);
-          return NextResponse.json(
-            { error: errors[0].message },
-            { status: 400 }
+        if (existingAddressId) {
+          const updateResult = await customerAccountFetch<AddressMutationData>(
+            accessToken,
+            CUSTOMER_ADDRESS_UPDATE,
+            { addressId: existingAddressId, address: addressInput, defaultAddress: true },
           );
-        }
-      } else if (hasAddressFields) {
-        // Create new address and set as default in one call
-        const createResult = await customerAccountFetch<AddressMutationData>(
-          accessToken,
-          CUSTOMER_ADDRESS_CREATE,
-          { address: addressInput, defaultAddress: true },
-        );
-
-        const errors = createResult.customerAddressCreate?.userErrors || [];
-        if (errors.length > 0) {
-          console.error('Address create userError:', errors[0]);
-          return NextResponse.json(
-            { error: errors[0].message },
-            { status: 400 }
+          const errors = updateResult.customerAddressUpdate?.userErrors || [];
+          if (errors.length > 0) {
+            console.error('Address update userError:', errors[0]);
+            results.address = { ok: false, error: errors[0].message };
+          } else {
+            results.address = { ok: true };
+          }
+        } else if (hasAddressFields) {
+          const createResult = await customerAccountFetch<AddressMutationData>(
+            accessToken,
+            CUSTOMER_ADDRESS_CREATE,
+            { address: addressInput, defaultAddress: true },
           );
+          const errors = createResult.customerAddressCreate?.userErrors || [];
+          if (errors.length > 0) {
+            console.error('Address create userError:', errors[0]);
+            results.address = { ok: false, error: errors[0].message };
+          } else {
+            results.address = { ok: true };
+          }
+        } else {
+          // Phone-only with no existing default address. Shopify requires
+          // address1/city/country on CustomerAddressInput, so a phone-only
+          // record cannot be persisted. Record as an address failure so the
+          // user sees a precise message.
+          results.address = {
+            ok: false,
+            error: 'Please add a delivery address before saving a phone number.',
+          };
         }
-      } else {
-        // Phone-only update with no existing default address. Shopify requires
-        // address1/city/country on CustomerAddressInput, so we cannot persist a
-        // phone-only record. Surface a clear error instead of a silent success.
-        return NextResponse.json(
-          { error: 'Please add a delivery address before saving a phone number.' },
-          { status: 400 }
-        );
+      } catch (e) {
+        console.error('Address mutation threw:', e);
+        results.address = { ok: false, error: 'Unable to save your address. Please try again.' };
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Profile updated successfully',
-    });
+    // === Compose response from per-operation results ===
+    const attempted = Object.entries(results) as Array<[keyof ResultMap, OpResult]>;
+
+    if (attempted.length === 0) {
+      // Nothing was actually submitted (e.g. an empty body). Treat as a no-op
+      // success rather than reporting a confusing error.
+      return NextResponse.json({ success: true, message: 'No changes to save.' });
+    }
+
+    const succeeded = attempted.filter(([, r]) => r.ok);
+    const failed = attempted.filter((entry): entry is [keyof ResultMap, { ok: false; error: string }] => !entry[1].ok);
+
+    if (failed.length === 0) {
+      return NextResponse.json({
+        success: true,
+        message: 'Profile updated successfully',
+        results,
+      });
+    }
+
+    const LABELS: Record<keyof ResultMap, string> = { name: 'name', address: 'address' };
+
+    let errorString: string;
+    if (succeeded.length === 0) {
+      // Every attempted op failed. Surface the first error verbatim; no need
+      // to flag partial state.
+      errorString = failed[0][1].error;
+    } else {
+      const okPart = succeeded.map(([k]) => LABELS[k]).join(' and ');
+      const failedPart = failed.map(([k]) => LABELS[k]).join(' and ');
+      const failedReasons = failed.map(([, r]) => r.error).join(' ');
+      errorString = `Your ${okPart} was saved, but the ${failedPart} change failed: ${failedReasons}`;
+    }
+
+    return NextResponse.json(
+      { error: errorString, results },
+      { status: 400 }
+    );
   } catch (error) {
     console.error('Profile update error:', error);
     return NextResponse.json(
