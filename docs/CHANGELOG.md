@@ -10,7 +10,9 @@
 
 The desktop Shop button in the header was a white-bordered button that only filled with the accent navy on hover. It read as a low-priority chip even though Shop is the highest-intent destination in the nav. Switched it to permanent `#1B2757` fill with white text at all times, and aligned the clipped shape with `ConkaCTAButton` (12px notches on top-left and bottom-right) so the brand's primary-CTA shape is consistent everywhere it appears. Replaced the colour-swap hover with a subtle opacity fade matching the rest of the site's primary CTAs, plus an explicit focus ring for keyboard users.
 
-**Modified:** `app/components/navigation/NavigationDesktop.tsx`.
+Also corrected the comment on `.lab-clip-tr` in `brand-base.css`, which incorrectly claimed it matched `ConkaCTAButton`. It is a different (single top-right) clip-path, and the misleading comment was how the Shop button ended up with the wrong shape in the first place. The corrected comment now states that primary CTAs use a different two-corner notch and warns against "refactoring" them onto the utility class.
+
+**Modified:** `app/components/navigation/NavigationDesktop.tsx`, `app/brand-base.css`.
 
 ---
 
