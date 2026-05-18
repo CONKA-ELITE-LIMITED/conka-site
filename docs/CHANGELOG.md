@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-18 -- Home ProductCard CTA uses shared ConkaCTAButton
+
+The "Shop Now" CTA on each product card on the home page was a hand-rolled `<Link>` with the wrong clip-path: a single top-right notch (the legacy `lab-clip-tr` utility shape), not the two-corner notch (top-left + bottom-right) that defines the brand's primary CTA. This is exactly the regression the recent `lab-clip-tr` comment fix warned about. Replaced the inline button with `ConkaCTAButton` (with `meta={null}` and a `w-full max-w-none` className override so it stretches edge-to-edge inside the card), bringing the home page product cards in line with the desktop nav Shop button and the rest of the site's primary CTAs. Fix applies to desktop, tablet, and mobile grids since all three render the same `ProductCard`.
+
+**Modified:** `app/components/home/ProductCard.tsx`.
+
+---
+
 ### 2026-05-18 -- App Insights: lighten filter tiles, TLDR cards, and headline callouts
 
 The four filter buttons ("How does performance change through the day?", etc.), the four "What the data shows" TLDR cards, and the per-report headline callouts inside each report all used a near-invisible white-on-dark treatment (`bg-white/[0.06]` to `bg-white/[0.10]` with light text), which made them read as decorative panels rather than interactive controls. Flipped all three surfaces to a light grey treatment (`bg-white/75` to `bg-white/85`, hover to solid white) with dark `#0a0a0a` text, so the affordance is unmistakable on the dark page background. The active filter state keeps the solid-white fill but now gains a `ring-2` outline to differentiate it from the other (now also light) tiles.

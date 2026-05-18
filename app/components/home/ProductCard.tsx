@@ -5,6 +5,7 @@ import {
   getFormulaImage,
   getProtocolImage,
 } from "@/app/lib/productImageConfig";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 
 interface ProductCardProps {
   productType: "flow" | "clear" | "protocol";
@@ -184,41 +185,16 @@ export default function ProductCard({
           ))}
         </ul>
 
-        {/* CTA — pinned to bottom */}
+        {/* CTA — pinned to bottom; primary CTA uses the shared ConkaCTAButton
+            so the two-corner notch shape stays consistent everywhere. */}
         <div className="mt-auto">
-          <Link
+          <ConkaCTAButton
             href={product.link}
-            className="w-full inline-flex items-center gap-3 py-3.5 pl-4 pr-5 bg-[#1B2757] text-white transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)]"
+            meta={null}
+            className="w-full max-w-none"
           >
-            <span className="relative w-6 h-6 shrink-0" aria-hidden>
-              <Image
-                src="/logos/ConkaO.png"
-                alt=""
-                fill
-                sizes="24px"
-                className="object-contain"
-                style={{ filter: "brightness(0) invert(1)" }}
-              />
-            </span>
-            <span className="flex-1 font-mono font-bold text-sm uppercase tracking-[0.12em] leading-none">
-              Shop Now
-            </span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
-              className="shrink-0"
-              aria-hidden
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="13 6 19 12 13 18" />
-            </svg>
-          </Link>
+            Shop Now
+          </ConkaCTAButton>
         </div>
       </div>
     </div>
