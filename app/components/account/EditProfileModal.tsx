@@ -79,7 +79,11 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
         address: {
           ...prev.address,
           [key]: value,
-          ...(key === "country" ? { territoryCode: countryToCode[value] || value } : {}),
+          // Country drives territoryCode; province/zoneCode are country-specific
+          // and must be reset to avoid sending e.g. a US zoneCode with country=UK.
+          ...(key === "country"
+            ? { territoryCode: countryToCode[value] || value, province: "", zoneCode: "" }
+            : {}),
         },
       }));
     } else {
@@ -91,11 +95,33 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
     setSaving(true);
     setError(null);
     setSuccess(false);
+
+    // Phone, when present, must be E.164 (Shopify's requirement). Validate
+    // client-side to avoid a confusing Shopify userError and to keep silent
+    // legacy non-E.164 values from silently round-tripping back unchanged.
+    if (form.phone && !/^\+[1-9]\d{1,14}$/.test(form.phone)) {
+      setError("Phone must be in international format, e.g. +447123456789.");
+      setSaving(false);
+      return;
+    }
+
+    // Always derive territoryCode from the current country selection. Migrated
+    // accounts can have a null territoryCode that the form defaults to "GB",
+    // which would otherwise silently move a US/CA/AU customer's country code
+    // to GB on save.
+    const payload = {
+      ...form,
+      address: {
+        ...form.address,
+        territoryCode: countryToCode[form.address.country] || form.address.territoryCode,
+      },
+    };
+
     try {
       const res = await fetch("/api/auth/customer/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         setSuccess(true);
@@ -201,7 +227,9 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
                 value={form.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
-                placeholder="Optional"
+                placeholder="+447123456789"
+                inputMode="tel"
+                autoComplete="tel"
               />
             </div>
             <div className="sm:col-span-2">

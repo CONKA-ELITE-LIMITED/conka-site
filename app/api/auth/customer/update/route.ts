@@ -250,7 +250,6 @@ export async function POST(request: NextRequest) {
         }
       } else if (hasAddressFields) {
         // Create new address and set as default in one call
-        // (only when there are actual address fields -- phone-only with no existing address is skipped)
         const createResult = await customerAccountFetch<AddressMutationData>(
           accessToken,
           CUSTOMER_ADDRESS_CREATE,
@@ -265,6 +264,14 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
+      } else {
+        // Phone-only update with no existing default address. Shopify requires
+        // address1/city/country on CustomerAddressInput, so we cannot persist a
+        // phone-only record. Surface a clear error instead of a silent success.
+        return NextResponse.json(
+          { error: 'Please add a delivery address before saving a phone number.' },
+          { status: 400 }
+        );
       }
     }
 
