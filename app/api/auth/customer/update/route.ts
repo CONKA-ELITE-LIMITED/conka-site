@@ -205,6 +205,54 @@ interface LoopAddressInput {
   countryCode?: string;
 }
 
+// Outcome of pushing the address to a single Loop subscription.
+type LoopContractOutcome = 'updated' | 'skipped' | 'failed';
+
+// Update one subscription's Loop shipping address. The address endpoint needs
+// Loop's internal numeric ID, so resolve it via GET first (the shopify-{id}
+// alias works for the lookup). A 404 means the contract is not Loop-managed,
+// so there is nothing to update — that is 'skipped', not a failure.
+async function pushAddressToLoopSubscription(
+  numericId: string,
+  body: string,
+  loopToken: string,
+): Promise<LoopContractOutcome> {
+  const getRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/shopify-${numericId}`, {
+    headers: { 'X-Loop-Token': loopToken },
+  });
+  if (getRes.status === 404) {
+    console.log(`[CUSTOMER-UPDATE][loop] shopify-${numericId} not in Loop, skipping`);
+    return 'skipped';
+  }
+  if (!getRes.ok) {
+    console.error(`[CUSTOMER-UPDATE][loop] GET shopify-${numericId} failed: ${getRes.status}`);
+    return 'failed';
+  }
+
+  const getJson = await getRes.json();
+  const loopInternalId = getJson?.data?.id ?? getJson?.id;
+  if (!loopInternalId) {
+    console.error(`[CUSTOMER-UPDATE][loop] No internal id for shopify-${numericId}`);
+    return 'failed';
+  }
+
+  const putRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/${loopInternalId}/address`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Loop-Token': loopToken },
+    body,
+  });
+  if (!putRes.ok) {
+    const text = await putRes.text();
+    console.error(
+      `[CUSTOMER-UPDATE][loop] PUT address for ${loopInternalId} failed: ${putRes.status} ${text}`,
+    );
+    return 'failed';
+  }
+
+  console.log(`[CUSTOMER-UPDATE][loop] Address updated on subscription ${loopInternalId}`);
+  return 'updated';
+}
+
 // Push the customer's new address onto their Loop subscription contracts.
 //
 // Why this is needed: Shopify's customerAddressUpdate only changes the
@@ -277,6 +325,8 @@ async function syncLoopSubscriptionAddresses(
   let updated = 0;
   let failed = 0;
 
+  // Sequential, not parallel: Loop's address endpoint is rate limited (5/s)
+  // and a typical customer has only one or two subscriptions.
   for (const contract of updatable) {
     const numericId = contract.id.split('/').pop();
     if (!numericId) {
@@ -284,44 +334,10 @@ async function syncLoopSubscriptionAddresses(
       continue;
     }
     try {
-      // The address endpoint takes Loop's internal numeric ID. Resolve it via
-      // GET first (the shopify-{id} alias works for the lookup).
-      const getRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/shopify-${numericId}`, {
-        headers: { 'X-Loop-Token': loopToken },
-      });
-      if (getRes.status === 404) {
-        // Contract is not managed by Loop (e.g. a legacy contract). Nothing to do.
-        console.log(`[CUSTOMER-UPDATE][loop] shopify-${numericId} not in Loop, skipping`);
-        continue;
-      }
-      if (!getRes.ok) {
-        console.error(`[CUSTOMER-UPDATE][loop] GET shopify-${numericId} failed: ${getRes.status}`);
-        failed++;
-        continue;
-      }
-      const getJson = await getRes.json();
-      const loopInternalId = getJson?.data?.id ?? getJson?.id;
-      if (!loopInternalId) {
-        console.error(`[CUSTOMER-UPDATE][loop] No internal id for shopify-${numericId}`);
-        failed++;
-        continue;
-      }
-
-      const putRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/${loopInternalId}/address`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Loop-Token': loopToken },
-        body,
-      });
-      if (!putRes.ok) {
-        const text = await putRes.text();
-        console.error(
-          `[CUSTOMER-UPDATE][loop] PUT address for ${loopInternalId} failed: ${putRes.status} ${text}`,
-        );
-        failed++;
-        continue;
-      }
-      updated++;
-      console.log(`[CUSTOMER-UPDATE][loop] Address updated on subscription ${loopInternalId}`);
+      const outcome = await pushAddressToLoopSubscription(numericId, body, loopToken);
+      if (outcome === 'updated') updated++;
+      else if (outcome === 'failed') failed++;
+      // 'skipped' (not a Loop-managed contract) counts as neither.
     } catch (e) {
       console.error(`[CUSTOMER-UPDATE][loop] Error updating shopify-${numericId}:`, e);
       failed++;
@@ -514,7 +530,9 @@ export async function POST(request: NextRequest) {
       const okPart = succeeded.map(([k]) => LABELS[k]).join(' and ');
       const failedPart = failed.map(([k]) => LABELS[k]).join(' and ');
       const failedReasons = failed.map(([, r]) => r.error).join(' ');
-      errorString = `Your ${okPart} was saved, but the ${failedPart} change failed: ${failedReasons}`;
+      const okVerb = succeeded.length > 1 ? 'were' : 'was';
+      const changeNoun = failed.length > 1 ? 'changes' : 'change';
+      errorString = `Your ${okPart} ${okVerb} saved, but the ${failedPart} ${changeNoun} failed: ${failedReasons}`;
     }
 
     return NextResponse.json(
