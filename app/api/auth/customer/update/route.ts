@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { env } from '@/app/lib/env';
 
 // Zod schema for profile update validation
 // Frontend sends both display values (country, province) and API codes (territoryCode, zoneCode)
@@ -180,14 +181,10 @@ async function customerAccountFetch<T>(
   query: string,
   variables: Record<string, unknown> = {},
 ): Promise<T> {
-  const shopId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
-  if (!shopId) {
-    throw new Error('SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID not configured');
-  }
-
-  const apiUrl = `https://shopify.com/${shopId}/account/customer/api/2024-10/graphql`;
-
-  const response = await fetch(apiUrl, {
+  // Use the app-wide Customer Account API URL (env.customerAccountApiUrl) so
+  // this route tracks the same, supported API version as the rest of the app
+  // rather than pinning its own.
+  const response = await fetch(env.customerAccountApiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
