@@ -31,6 +31,25 @@ const CUSTOMER_ADDRESSES_QUERY = `
   }
 `;
 
+// Customer Account API: list the customer's subscription contracts (id + status).
+// Used to resolve which Loop subscriptions need the new shipping address.
+const CUSTOMER_SUBSCRIPTIONS_QUERY = `
+  query CustomerSubscriptionContracts {
+    customer {
+      subscriptionContracts(first: 50) {
+        nodes {
+          id
+          status
+        }
+      }
+    }
+  }
+`;
+
+// Loop Admin API base. Loop keeps a shipping address per subscription contract,
+// independent of Shopify's customer default address — see syncLoopSubscriptionAddresses.
+const LOOP_ADMIN_BASE = 'https://api.loopsubscriptions.com/admin/2023-10';
+
 // Customer Account API mutation to update customer profile
 // CustomerUpdateInput only supports firstName and lastName
 const CUSTOMER_UPDATE = `
@@ -118,12 +137,20 @@ interface AddressMutationData {
   };
 }
 
+interface SubscriptionContractsData {
+  customer: {
+    subscriptionContracts: {
+      nodes: Array<{ id: string; status: string }>;
+    };
+  } | null;
+}
+
 // Per-operation outcome. The route runs two independent Shopify mutations
 // (name, address) with no transactional wrapper available; we record what
 // each attempt did so partial failures surface honestly rather than masking
 // a successful write under a generic 400.
 type OpResult = { ok: true } | { ok: false; error: string };
-type ResultMap = { name?: OpResult; address?: OpResult };
+type ResultMap = { name?: OpResult; address?: OpResult; subscriptions?: OpResult };
 
 async function customerAccountFetch<T>(
   accessToken: string,
@@ -164,6 +191,150 @@ async function customerAccountFetch<T>(
   }
 
   return result.data;
+}
+
+interface LoopAddressInput {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  address1?: string;
+  address2?: string;
+  city?: string;
+  provinceCode?: string;
+  zip?: string;
+  countryCode?: string;
+}
+
+// Push the customer's new address onto their Loop subscription contracts.
+//
+// Why this is needed: Shopify's customerAddressUpdate only changes the
+// customer's default-address record. Loop stores the shipping address
+// separately on each subscription contract (captured when the subscription
+// was created) and never re-reads Shopify's default address. Without this
+// call, a customer who updates their address in the portal still has every
+// future subscription delivery shipped to the OLD address.
+//
+// Best-effort: the Shopify write is the source of truth for identity, so a
+// Loop failure here is reported as a partial success rather than failing the
+// whole request. Returns undefined when there is nothing to sync.
+async function syncLoopSubscriptionAddresses(
+  accessToken: string,
+  addr: LoopAddressInput,
+): Promise<OpResult | undefined> {
+  const loopToken = process.env.LOOP_API_KEY;
+  if (!loopToken) {
+    console.error('[CUSTOMER-UPDATE][loop] LOOP_API_KEY not configured');
+    return { ok: false, error: 'the subscription service is not configured' };
+  }
+
+  // Loop rejects a subscription address missing any of these four fields.
+  if (!addr.lastName || !addr.address1 || !addr.city || !addr.countryCode) {
+    console.error('[CUSTOMER-UPDATE][loop] Missing required address field, skipping Loop sync', {
+      hasLastName: !!addr.lastName,
+      hasAddress1: !!addr.address1,
+      hasCity: !!addr.city,
+      hasCountryCode: !!addr.countryCode,
+    });
+    return { ok: false, error: 'a required address field was missing' };
+  }
+
+  // 1. List the customer's subscription contracts from Shopify.
+  let contracts: Array<{ id: string; status: string }>;
+  try {
+    const data = await customerAccountFetch<SubscriptionContractsData>(
+      accessToken,
+      CUSTOMER_SUBSCRIPTIONS_QUERY,
+    );
+    contracts = data.customer?.subscriptionContracts?.nodes ?? [];
+  } catch (e) {
+    console.error('[CUSTOMER-UPDATE][loop] Failed to list subscription contracts:', e);
+    return { ok: false, error: 'we could not load your subscriptions' };
+  }
+
+  // Only ACTIVE and PAUSED contracts have future deliveries to redirect.
+  const updatable = contracts.filter((c) => {
+    const s = (c.status || '').toUpperCase();
+    return s === 'ACTIVE' || s === 'PAUSED';
+  });
+
+  if (updatable.length === 0) {
+    console.log('[CUSTOMER-UPDATE][loop] No active/paused subscriptions to update');
+    return undefined;
+  }
+
+  const body = JSON.stringify({
+    firstName: addr.firstName || '',
+    lastName: addr.lastName,
+    phone: addr.phone || '',
+    address1: addr.address1,
+    address2: addr.address2 || '',
+    city: addr.city,
+    countryCode: addr.countryCode,
+    provinceCode: addr.provinceCode || '',
+    zip: addr.zip || '',
+  });
+
+  let updated = 0;
+  let failed = 0;
+
+  for (const contract of updatable) {
+    const numericId = contract.id.split('/').pop();
+    if (!numericId) {
+      failed++;
+      continue;
+    }
+    try {
+      // The address endpoint takes Loop's internal numeric ID. Resolve it via
+      // GET first (the shopify-{id} alias works for the lookup).
+      const getRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/shopify-${numericId}`, {
+        headers: { 'X-Loop-Token': loopToken },
+      });
+      if (getRes.status === 404) {
+        // Contract is not managed by Loop (e.g. a legacy contract). Nothing to do.
+        console.log(`[CUSTOMER-UPDATE][loop] shopify-${numericId} not in Loop, skipping`);
+        continue;
+      }
+      if (!getRes.ok) {
+        console.error(`[CUSTOMER-UPDATE][loop] GET shopify-${numericId} failed: ${getRes.status}`);
+        failed++;
+        continue;
+      }
+      const getJson = await getRes.json();
+      const loopInternalId = getJson?.data?.id ?? getJson?.id;
+      if (!loopInternalId) {
+        console.error(`[CUSTOMER-UPDATE][loop] No internal id for shopify-${numericId}`);
+        failed++;
+        continue;
+      }
+
+      const putRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/${loopInternalId}/address`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Loop-Token': loopToken },
+        body,
+      });
+      if (!putRes.ok) {
+        const text = await putRes.text();
+        console.error(
+          `[CUSTOMER-UPDATE][loop] PUT address for ${loopInternalId} failed: ${putRes.status} ${text}`,
+        );
+        failed++;
+        continue;
+      }
+      updated++;
+      console.log(`[CUSTOMER-UPDATE][loop] Address updated on subscription ${loopInternalId}`);
+    } catch (e) {
+      console.error(`[CUSTOMER-UPDATE][loop] Error updating shopify-${numericId}:`, e);
+      failed++;
+    }
+  }
+
+  if (updated === 0 && failed === 0) return undefined; // none Loop-managed
+  if (failed === 0) return { ok: true };
+  if (updated === 0) return { ok: false, error: 'we could not reach your subscription provider' };
+  return {
+    ok: false,
+    error: `${failed} of ${updated + failed} subscriptions could not be updated`,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -288,6 +459,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // === Loop subscription address sync ===
+    // Shopify only writes the customer's default-address record; Loop keeps a
+    // separate shipping address on each subscription contract. Only sync once
+    // the Shopify address write has succeeded, so Loop never gets data Shopify
+    // itself rejected.
+    if (hasAddressFields && results.address?.ok) {
+      const loopResult = await syncLoopSubscriptionAddresses(accessToken, {
+        firstName,
+        lastName,
+        phone,
+        address1: address?.address1,
+        address2: address?.address2,
+        city: address?.city,
+        provinceCode: address?.zoneCode,
+        zip: address?.zip,
+        countryCode: address?.territoryCode,
+      });
+      if (loopResult) results.subscriptions = loopResult;
+    }
+
     // === Compose response from per-operation results ===
     const attempted = Object.entries(results) as Array<[keyof ResultMap, OpResult]>;
 
@@ -308,7 +499,11 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const LABELS: Record<keyof ResultMap, string> = { name: 'name', address: 'address' };
+    const LABELS: Record<keyof ResultMap, string> = {
+      name: 'name',
+      address: 'address',
+      subscriptions: 'subscription delivery address',
+    };
 
     let errorString: string;
     if (succeeded.length === 0) {

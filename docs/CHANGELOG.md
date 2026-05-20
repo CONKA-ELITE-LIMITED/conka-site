@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-20 -- Customer portal address update now syncs to Loop
+
+Updating a delivery address in the account portal changed the address in Shopify but never reached Loop, so every future subscription delivery still shipped to the old address. The root cause: the update route only ever called the Shopify Customer Account API. Loop stores the shipping address separately on each subscription contract and does not re-read Shopify's default address, so the sync was never happening (the Loop write had never been implemented). After the Shopify write succeeds, the route now pushes the new address to every active or paused Loop subscription via the Loop Admin API. The Loop sync is best-effort: if it fails, the Shopify save still stands and the response reports a partial success so the customer is told the subscription delivery address needs support rather than getting a silent miss.
+
+**Modified:** `app/api/auth/customer/update/route.ts`, `docs/features/CUSTOMER_PORTAL.md`.
+
+---
+
 ### 2026-05-18 -- Home ProductCard CTA uses shared ConkaCTAButton
 
 The "Shop Now" CTA on each product card on the home page was a hand-rolled `<Link>` with the wrong clip-path: a single top-right notch (the legacy `lab-clip-tr` utility shape), not the two-corner notch (top-left + bottom-right) that defines the brand's primary CTA. This is exactly the regression the recent `lab-clip-tr` comment fix warned about. Replaced the inline button with `ConkaCTAButton` (with `meta={null}` and a `w-full max-w-none` className override so it stretches edge-to-edge inside the card), bringing the home page product cards in line with the desktop nav Shop button and the rest of the site's primary CTAs. Fix applies to desktop, tablet, and mobile grids since all three render the same `ProductCard`.
