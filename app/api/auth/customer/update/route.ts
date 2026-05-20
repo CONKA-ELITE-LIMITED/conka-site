@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { env } from '@/app/lib/env';
 
 // Zod schema for profile update validation
 // Frontend sends both display values (country, province) and API codes (territoryCode, zoneCode)
@@ -30,6 +31,37 @@ const CUSTOMER_ADDRESSES_QUERY = `
     }
   }
 `;
+
+// Customer Account API: the canonical state the Loop sync mirrors — the
+// customer's name, default address, and subscription contracts in one round
+// trip. Read after the Shopify writes so Loop reflects what Shopify now holds.
+const CANONICAL_SYNC_QUERY = `
+  query CanonicalCustomerForLoopSync {
+    customer {
+      firstName
+      lastName
+      defaultAddress {
+        address1
+        address2
+        city
+        zoneCode
+        zip
+        territoryCode
+        phoneNumber
+      }
+      subscriptionContracts(first: 50) {
+        nodes {
+          id
+          status
+        }
+      }
+    }
+  }
+`;
+
+// Loop Admin API base. Loop keeps a shipping address per subscription contract,
+// independent of Shopify's customer default address — see syncLoopSubscriptionAddresses.
+const LOOP_ADMIN_BASE = 'https://api.loopsubscriptions.com/admin/2023-10';
 
 // Customer Account API mutation to update customer profile
 // CustomerUpdateInput only supports firstName and lastName
@@ -118,26 +150,41 @@ interface AddressMutationData {
   };
 }
 
+interface CanonicalSyncData {
+  customer: {
+    firstName: string | null;
+    lastName: string | null;
+    defaultAddress: {
+      address1: string | null;
+      address2: string | null;
+      city: string | null;
+      zoneCode: string | null;
+      zip: string | null;
+      territoryCode: string | null;
+      phoneNumber: string | null;
+    } | null;
+    subscriptionContracts: {
+      nodes: Array<{ id: string; status: string }>;
+    };
+  } | null;
+}
+
 // Per-operation outcome. The route runs two independent Shopify mutations
 // (name, address) with no transactional wrapper available; we record what
 // each attempt did so partial failures surface honestly rather than masking
 // a successful write under a generic 400.
 type OpResult = { ok: true } | { ok: false; error: string };
-type ResultMap = { name?: OpResult; address?: OpResult };
+type ResultMap = { name?: OpResult; address?: OpResult; subscriptions?: OpResult };
 
 async function customerAccountFetch<T>(
   accessToken: string,
   query: string,
   variables: Record<string, unknown> = {},
 ): Promise<T> {
-  const shopId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
-  if (!shopId) {
-    throw new Error('SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID not configured');
-  }
-
-  const apiUrl = `https://shopify.com/${shopId}/account/customer/api/2024-10/graphql`;
-
-  const response = await fetch(apiUrl, {
+  // Use the app-wide Customer Account API URL (env.customerAccountApiUrl) so
+  // this route tracks the same, supported API version as the rest of the app
+  // rather than pinning its own.
+  const response = await fetch(env.customerAccountApiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -164,6 +211,166 @@ async function customerAccountFetch<T>(
   }
 
   return result.data;
+}
+
+// Outcome of pushing the address to a single Loop subscription.
+type LoopContractOutcome = 'updated' | 'skipped' | 'failed';
+
+// Update one subscription's Loop shipping address. The address endpoint needs
+// Loop's internal numeric ID, so resolve it via GET first (the shopify-{id}
+// alias works for the lookup). A 404 means the contract is not Loop-managed,
+// so there is nothing to update — that is 'skipped', not a failure.
+async function pushAddressToLoopSubscription(
+  numericId: string,
+  body: string,
+  loopToken: string,
+): Promise<LoopContractOutcome> {
+  const getRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/shopify-${numericId}`, {
+    headers: { 'X-Loop-Token': loopToken },
+  });
+  if (getRes.status === 404) {
+    console.log(`[CUSTOMER-UPDATE][loop] shopify-${numericId} not in Loop, skipping`);
+    return 'skipped';
+  }
+  if (!getRes.ok) {
+    console.error(`[CUSTOMER-UPDATE][loop] GET shopify-${numericId} failed: ${getRes.status}`);
+    return 'failed';
+  }
+
+  const getJson = await getRes.json();
+  const loopInternalId = getJson?.data?.id ?? getJson?.id;
+  if (!loopInternalId) {
+    console.error(`[CUSTOMER-UPDATE][loop] No internal id for shopify-${numericId}`);
+    return 'failed';
+  }
+
+  const putRes = await fetch(`${LOOP_ADMIN_BASE}/subscription/${loopInternalId}/address`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Loop-Token': loopToken },
+    body,
+  });
+  if (!putRes.ok) {
+    const text = await putRes.text();
+    console.error(
+      `[CUSTOMER-UPDATE][loop] PUT address for ${loopInternalId} failed: ${putRes.status} ${text}`,
+    );
+    return 'failed';
+  }
+
+  console.log(`[CUSTOMER-UPDATE][loop] Address updated on subscription ${loopInternalId}`);
+  return 'updated';
+}
+
+// Mirror the customer's current address onto their Loop subscription contracts.
+//
+// Why this is needed: Shopify's customerAddressUpdate only changes the
+// customer's default-address record. Loop stores the shipping address
+// separately on each subscription contract (captured when the subscription
+// was created) and never re-reads Shopify's default address. Without this
+// call, a customer who updates their address in the portal still has every
+// future subscription delivery shipped to the OLD address.
+//
+// The address pushed to Loop is read straight from Shopify's canonical
+// post-write state, not from the request body, so a name-only or phone-only
+// edit syncs just as reliably as a full address edit.
+//
+// Best-effort: the Shopify write is the source of truth for identity, so a
+// Loop failure here is reported as a partial success rather than failing the
+// whole request. Returns undefined when there is nothing to sync.
+async function syncLoopSubscriptionAddresses(
+  accessToken: string,
+): Promise<OpResult | undefined> {
+  const loopToken = process.env.LOOP_API_KEY;
+  if (!loopToken) {
+    console.error('[CUSTOMER-UPDATE][loop] LOOP_API_KEY not configured');
+    return { ok: false, error: 'the subscription service is not configured' };
+  }
+
+  // Read the canonical post-write state — name, address, and contracts — in one
+  // round trip. The recipient name lives on the customer; the delivery address
+  // on defaultAddress.
+  let data: CanonicalSyncData;
+  try {
+    data = await customerAccountFetch<CanonicalSyncData>(accessToken, CANONICAL_SYNC_QUERY);
+  } catch (e) {
+    console.error('[CUSTOMER-UPDATE][loop] Failed to read canonical account state:', e);
+    return { ok: false, error: 'we could not load your account details' };
+  }
+
+  const addr = data.customer?.defaultAddress;
+  if (!addr) {
+    // No default address on file — there is nothing to mirror to Loop.
+    console.log('[CUSTOMER-UPDATE][loop] No default address, nothing to sync');
+    return undefined;
+  }
+
+  const firstName = data.customer?.firstName ?? '';
+  const lastName = data.customer?.lastName ?? '';
+
+  // Loop rejects a subscription address missing any of these four fields.
+  if (!lastName || !addr.address1 || !addr.city || !addr.territoryCode) {
+    console.error('[CUSTOMER-UPDATE][loop] Missing required address field, skipping Loop sync', {
+      hasLastName: !!lastName,
+      hasAddress1: !!addr.address1,
+      hasCity: !!addr.city,
+      hasCountryCode: !!addr.territoryCode,
+    });
+    return { ok: false, error: 'a required address field was missing' };
+  }
+
+  // Only ACTIVE and PAUSED contracts have future deliveries to redirect.
+  const contracts = data.customer?.subscriptionContracts?.nodes ?? [];
+  const updatable = contracts.filter((c) => {
+    const s = (c.status || '').toUpperCase();
+    return s === 'ACTIVE' || s === 'PAUSED';
+  });
+
+  if (updatable.length === 0) {
+    console.log('[CUSTOMER-UPDATE][loop] No active/paused subscriptions to update');
+    return undefined;
+  }
+
+  const body = JSON.stringify({
+    firstName,
+    lastName,
+    phone: addr.phoneNumber ?? '',
+    address1: addr.address1,
+    address2: addr.address2 ?? '',
+    city: addr.city,
+    countryCode: addr.territoryCode,
+    provinceCode: addr.zoneCode ?? '',
+    zip: addr.zip ?? '',
+  });
+
+  let updated = 0;
+  let failed = 0;
+
+  // Sequential, not parallel: Loop's address endpoint is rate limited (5/s)
+  // and a typical customer has only one or two subscriptions.
+  for (const contract of updatable) {
+    const numericId = contract.id.split('/').pop();
+    if (!numericId) {
+      failed++;
+      continue;
+    }
+    try {
+      const outcome = await pushAddressToLoopSubscription(numericId, body, loopToken);
+      if (outcome === 'updated') updated++;
+      else if (outcome === 'failed') failed++;
+      // 'skipped' (not a Loop-managed contract) counts as neither.
+    } catch (e) {
+      console.error(`[CUSTOMER-UPDATE][loop] Error updating shopify-${numericId}:`, e);
+      failed++;
+    }
+  }
+
+  if (updated === 0 && failed === 0) return undefined; // none Loop-managed
+  if (failed === 0) return { ok: true };
+  if (updated === 0) return { ok: false, error: 'we could not reach your subscription provider' };
+  return {
+    ok: false,
+    error: `${failed} of ${updated + failed} subscriptions could not be updated`,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -288,6 +495,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // === Loop subscription address sync ===
+    // Loop keeps a shipping address per subscription contract, separate from
+    // Shopify's customer record, and never re-reads it. Re-mirror it whenever a
+    // Shopify write landed: name, phone, and address all feed the Loop delivery
+    // address. Skip it when the address write itself failed — Shopify still
+    // holds the old address, so a sync would push stale data and the
+    // partial-success message would be misleading. The helper reads canonical
+    // state from Shopify, so the request's field shape does not matter.
+    const nameSaved = results.name?.ok === true;
+    const addressSaved = results.address?.ok === true;
+    const addressFailed = results.address?.ok === false;
+    if ((nameSaved || addressSaved) && !addressFailed) {
+      const loopResult = await syncLoopSubscriptionAddresses(accessToken);
+      if (loopResult) results.subscriptions = loopResult;
+    }
+
     // === Compose response from per-operation results ===
     const attempted = Object.entries(results) as Array<[keyof ResultMap, OpResult]>;
 
@@ -308,7 +531,11 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const LABELS: Record<keyof ResultMap, string> = { name: 'name', address: 'address' };
+    const LABELS: Record<keyof ResultMap, string> = {
+      name: 'name',
+      address: 'address',
+      subscriptions: 'subscription delivery address',
+    };
 
     let errorString: string;
     if (succeeded.length === 0) {
@@ -319,7 +546,9 @@ export async function POST(request: NextRequest) {
       const okPart = succeeded.map(([k]) => LABELS[k]).join(' and ');
       const failedPart = failed.map(([k]) => LABELS[k]).join(' and ');
       const failedReasons = failed.map(([, r]) => r.error).join(' ');
-      errorString = `Your ${okPart} was saved, but the ${failedPart} change failed: ${failedReasons}`;
+      const okVerb = succeeded.length > 1 ? 'were' : 'was';
+      const changeNoun = failed.length > 1 ? 'changes' : 'change';
+      errorString = `Your ${okPart} ${okVerb} saved, but the ${failedPart} ${changeNoun} failed: ${failedReasons}`;
     }
 
     return NextResponse.json(
