@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-22 -- conka-both PDP: lead with athletes, add the value comparison
+
+Restructured the section order on the /conka-both bundle product page so it leads with athlete credibility before asking for proof and price. The athlete credibility carousel and the value comparison band, both already live on /conka-flow and /conka-clarity, were added to /conka-both, and the comparison CTA now scrolls to the in-page hero purchase module rather than self-linking. The Why CONKA Works and Explore (Flow/Clear product grid) sections were removed, FAQ moved directly above the footer, and section backgrounds re-alternated white/tint so no two same-coloured sections sit adjacent. Cosmetic only: no component internals, data-layer, or analytics changes. SCRUM-1030.
+
+**Modified:** `app/conka-both/page.tsx`.
+
+---
+
 ### 2026-05-20 -- Customer portal address update now syncs to Loop
 
 Updating a delivery address in the account portal changed the address in Shopify but never reached Loop, so every future subscription delivery still shipped to the old address. The root cause: the update route only ever called the Shopify Customer Account API. Loop stores the shipping address separately on each subscription contract and does not re-read Shopify's default address, so the sync was never happening (the Loop write had never been implemented). After the Shopify write succeeds, the route now pushes the new address to every active or paused Loop subscription via the Loop Admin API. The Loop sync is best-effort: if it fails, the Shopify save still stands and the response reports a partial success so the customer is told the subscription delivery address needs support rather than getting a silent miss.

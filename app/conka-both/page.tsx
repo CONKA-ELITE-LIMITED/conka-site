@@ -10,14 +10,14 @@ import {
   StickyPurchaseFooterMobile,
 } from "@/app/components/product";
 import LandingProductShowcase from "@/app/components/landing/LandingProductShowcase";
-import WhyConkaWorks from "@/app/components/WhyConkaWorks";
+import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
+import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import FormulaCaseStudies, {
   FormulaCaseStudiesMobile,
 } from "@/app/components/FormulaCaseStudies";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import LabTimeline from "@/app/components/landing/LabTimeline";
 import LabFAQ from "@/app/components/landing/LabFAQ";
-import ProductGrid from "@/app/components/home/ProductGrid";
 import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
@@ -67,7 +67,7 @@ export default function ConkaBothPage() {
   // Shared sections
   const caseStudiesMobile = (
     <section
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
@@ -78,7 +78,7 @@ export default function ConkaBothPage() {
 
   const caseStudiesDesktop = (
     <section
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
@@ -109,20 +109,33 @@ export default function ConkaBothPage() {
     </section>
   );
 
-  const whyConkaWorksSection = (
+  const athleteSection = (
     <section
-      className="brand-section brand-bg-white"
-      aria-label="Why CONKA works"
+      id="athletes"
+      className="brand-section brand-bg-tint"
+      aria-label="Athletes who use CONKA"
     >
       <div className="brand-track">
-        <WhyConkaWorks />
+        <AthleteCredibilityCarousel />
+      </div>
+    </section>
+  );
+
+  const comparisonSection = (
+    <section
+      id="comparison"
+      className="brand-section brand-bg-tint"
+      aria-label="CONKA vs coffee comparison"
+    >
+      <div className="brand-track">
+        <LandingValueComparison ctaHref="#hero" ctaLabel="Try the full system" />
       </div>
     </section>
   );
 
   const whatItDoesSection = (
     <section
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       aria-label="What CONKA does"
     >
       <div className="brand-track">
@@ -133,7 +146,7 @@ export default function ConkaBothPage() {
 
   const guaranteeSection = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-tint"
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
@@ -143,20 +156,9 @@ export default function ConkaBothPage() {
   );
 
   const faqSection = (
-    <section className="brand-section brand-bg-tint" aria-label="FAQ">
+    <section className="brand-section brand-bg-white" aria-label="FAQ">
       <div className="brand-track">
         <LabFAQ hideCTA />
-      </div>
-    </section>
-  );
-
-  const exploreSection = (
-    <section
-      className="brand-section brand-bg-white"
-      aria-label="Explore Flow and Clear individually"
-    >
-      <div className="brand-track">
-        <ProductGrid exclude={["protocol"]} />
       </div>
     </section>
   );
@@ -169,6 +171,7 @@ export default function ConkaBothPage() {
 
         {/* ===== SECTION 1: HERO ===== */}
         <section
+          id="hero"
           className="brand-section brand-hero-first brand-bg-white"
           aria-label="Product hero"
         >
@@ -182,8 +185,8 @@ export default function ConkaBothPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 2: CASE STUDIES ===== */}
-        {caseStudiesMobile}
+        {/* ===== SECTION 2: ATHLETE CREDIBILITY ===== */}
+        {athleteSection}
 
         {/* ===== SECTION 3: TIMELINE ===== */}
         {timelineSection}
@@ -191,20 +194,20 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 4: TESTIMONIALS ===== */}
         {testimonialsSection}
 
-        {/* ===== SECTION 5: WHY CONKA WORKS ===== */}
-        {whyConkaWorksSection}
-
-        {/* ===== SECTION 6: WHAT CONKA DOES ===== */}
+        {/* ===== SECTION 5: WHAT CONKA DOES ===== */}
         {whatItDoesSection}
 
-        {/* ===== SECTION 7: GUARANTEE ===== */}
+        {/* ===== SECTION 6: COMPARISON ===== */}
+        {comparisonSection}
+
+        {/* ===== SECTION 7: CASE STUDIES ===== */}
+        {caseStudiesMobile}
+
+        {/* ===== SECTION 8: GUARANTEE ===== */}
         {guaranteeSection}
 
-        {/* ===== SECTION 8: FAQ ===== */}
+        {/* ===== SECTION 9: FAQ ===== */}
         {faqSection}
-
-        {/* ===== SECTION 9: EXPLORE ===== */}
-        {exploreSection}
 
         <Footer />
 
@@ -225,6 +228,7 @@ export default function ConkaBothPage() {
 
       {/* ===== SECTION 1: HERO ===== */}
       <section
+        id="hero"
         className="brand-section brand-hero-first brand-bg-white"
         aria-label="Product hero"
       >
@@ -238,8 +242,8 @@ export default function ConkaBothPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 2: CASE STUDIES ===== */}
-      {caseStudiesDesktop}
+      {/* ===== SECTION 2: ATHLETE CREDIBILITY ===== */}
+      {athleteSection}
 
       {/* ===== SECTION 3: TIMELINE ===== */}
       {timelineSection}
@@ -247,20 +251,20 @@ export default function ConkaBothPage() {
       {/* ===== SECTION 4: TESTIMONIALS ===== */}
       {testimonialsSection}
 
-      {/* ===== SECTION 5: WHY CONKA WORKS ===== */}
-      {whyConkaWorksSection}
-
-      {/* ===== SECTION 6: WHAT CONKA DOES ===== */}
+      {/* ===== SECTION 5: WHAT CONKA DOES ===== */}
       {whatItDoesSection}
 
-      {/* ===== SECTION 7: GUARANTEE ===== */}
+      {/* ===== SECTION 6: COMPARISON ===== */}
+      {comparisonSection}
+
+      {/* ===== SECTION 7: CASE STUDIES ===== */}
+      {caseStudiesDesktop}
+
+      {/* ===== SECTION 8: GUARANTEE ===== */}
       {guaranteeSection}
 
-      {/* ===== SECTION 8: FAQ ===== */}
+      {/* ===== SECTION 9: FAQ ===== */}
       {faqSection}
-
-      {/* ===== SECTION 9: EXPLORE ===== */}
-      {exploreSection}
 
       <Footer />
 
