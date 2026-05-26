@@ -39,12 +39,12 @@ const TILES: BenefitTile[] = [
   },
   {
     id: "focus",
-    headline: "Hold focus later",
+    headline: "Focus into the night",
     metric: "+1.09 pts",
   },
   {
     id: "speed",
-    headline: "React faster",
+    headline: "Think faster",
     metric: "−41 ms",
   },
 ];
