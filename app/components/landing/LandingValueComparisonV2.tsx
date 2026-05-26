@@ -178,40 +178,42 @@ export default function LandingValueComparisonV2() {
         Coffee gets you started. CONKA gets you through.
       </p>
 
-      <div className="space-y-8 mb-8">
-        <BarRow
-          label="Coffee"
-          markers={[
-            { pct: 0, text: "9am" },
-            { pct: COFFEE_PEAK_END, text: "12pm" },
-            { pct: COFFEE_CRASH_END, text: "2pm" },
-          ]}
-          crashLabel={{
-            pct: (COFFEE_PEAK_END + COFFEE_CRASH_END) / 2,
-            text: "↑ Crash",
-          }}
-          ariaLabel="Coffee provides focus from 9am to noon, then crashes through to 2pm."
-        >
-          <CoffeeBar
-            isInView={isInView}
-            prefersReducedMotion={prefersReducedMotion}
-          />
-        </BarRow>
+      <div className="border border-black/12 rounded-[var(--brand-radius-container)] p-5 sm:p-6 mb-8">
+        <div className="space-y-8">
+          <BarRow
+            label="Coffee"
+            markers={[
+              { pct: 0, text: "9am" },
+              { pct: COFFEE_PEAK_END, text: "12pm" },
+              { pct: COFFEE_CRASH_END, text: "2pm" },
+            ]}
+            crashLabel={{
+              pct: (COFFEE_PEAK_END + COFFEE_CRASH_END) / 2,
+              text: "↑ Crash",
+            }}
+            ariaLabel="Coffee provides focus from 9am to noon, then crashes through to 2pm."
+          >
+            <CoffeeBar
+              isInView={isInView}
+              prefersReducedMotion={prefersReducedMotion}
+            />
+          </BarRow>
 
-        <BarRow
-          label="CONKA Flow + Clear"
-          markers={[
-            { pct: 0, text: "9am" },
-            { pct: 44, text: "1pm" },
-            { pct: CONKA_END, text: "6pm" },
-          ]}
-          ariaLabel="CONKA Flow and Clear provide steady focus across the whole day, from 9am through to 6pm."
-        >
-          <ConkaBar
-            isInView={isInView}
-            prefersReducedMotion={prefersReducedMotion}
-          />
-        </BarRow>
+          <BarRow
+            label="CONKA Flow + Clear"
+            markers={[
+              { pct: 0, text: "9am" },
+              { pct: 44, text: "1pm" },
+              { pct: CONKA_END, text: "6pm" },
+            ]}
+            ariaLabel="CONKA Flow and Clear provide steady focus across the whole day, from 9am through to 6pm."
+          >
+            <ConkaBar
+              isInView={isInView}
+              prefersReducedMotion={prefersReducedMotion}
+            />
+          </BarRow>
+        </div>
       </div>
 
       <CROPillCTA className="w-full">Try from £1.62 per day</CROPillCTA>
