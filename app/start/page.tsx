@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
-import CROHero from "../components/cro/CROHero";
+import CROHeroV2 from "../components/cro/CROHeroV2";
 import CROBelowFold from "./CROBelowFold";
 
 export const metadata: Metadata = {
@@ -21,16 +21,17 @@ export const metadata: Metadata = {
 
 export default function StartPage() {
   return (
-    <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+    <div className="brand-clinical brand-v2 min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
       <Navigation />
 
       {/* ===== 1. HERO ===== */}
       <section
         className="brand-section brand-hero-first brand-bg-white"
+        style={{ paddingBottom: "4rem" }}
         aria-label="Landing page hero"
       >
         <div className="brand-track">
-          <CROHero />
+          <CROHeroV2 />
         </div>
       </section>
 
