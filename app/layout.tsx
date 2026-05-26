@@ -141,12 +141,23 @@ export default function RootLayout({
           }}
         />
 
-        {/* Klaviyo Sign-up Forms */}
+        {/* Klaviyo Sign-up Forms — disabled 2026-05-26
+            All signup forms set to draft in the Klaviyo dashboard, so this
+            script was loading klaviyo.js + Brand Library on every page and
+            rendering nothing (pure perf overhead: ~17.7 KiB legacy-JS
+            polyfills, 16 KiB unused CSS, ~360ms main-thread time on /start).
+            Server-side subscribe paths (/api/klaviyo/subscribe,
+            /api/klaviyo/track-test) are unaffected and keep powering
+            Footer email signup + WinEmailForm.
+            To restore: publish a form in the Klaviyo dashboard, then
+            uncomment the Script tag below. */}
+        {/*
         <Script
           src={`https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=${process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY}`}
           strategy="afterInteractive"
           async
         />
+        */}
       </head>
       <body
         className={`${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}

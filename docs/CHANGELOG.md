@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Disable Klaviyo onsite signup-form script (perf)
+
+Mobile Lighthouse audit on `/start` flagged the Klaviyo onsite bundle as one of the largest third-party drags: ~17.7 KiB of legacy-JS polyfills in `sharedUtils`, 16 KiB of unused CSS, and four long main-thread tasks (123ms, 93ms, 87ms, 58ms) spread across the audit window. Marketing then set all signup forms to draft state in the Klaviyo dashboard, which means `klaviyo.js` was loading, pinging Klaviyo, pulling Brand Library, and rendering nothing on every page. The Script tag in `app/layout.tsx` is now commented out to remove that pure-overhead load. The server-side subscribe paths are untouched: `/api/klaviyo/subscribe` and `/api/klaviyo/track-test` continue to power the Footer email signup and the `WinEmailForm`. To restore signup forms later, publish a form in the Klaviyo dashboard and uncomment the Script tag.
+
+**Modified:** `app/layout.tsx`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Deferred-mount perf pass on the heaviest sections
 
 Performance audit follow-up after all 11 V2 sections shipped. The four heaviest sections below the fold (Section 4 formula split with stateful AM/PM toggle plus 13 ingredient row images, Section 7 athletes with touch-swipe carousel plus 7 portraits plus the Informed Sport block, Section 8 Cambridge research with the full-bleed photo plus 3 partner logos, Section 10 app callout with the full-bleed lifestyle photo) are now wrapped in VisibilityGate so their dynamic JS bundles and image requests only fire when the user is within ~200px of seeing the section. Section sizes inside each gate match the existing dynamic-loading placeholder heights so cumulative layout shift stays at zero. Sections deliberately not gated: Section 2 and Section 3 (near-fold, would flash a placeholder during scroll-start); Section 5 buy box (the conversion moment, eager mount is intentional so fast scrollers always have it ready); Section 6 and Section 11 (text only, gating saves nothing meaningful); Section 9 (already inherited a gate from the V1 testimonials fork). Page composition unchanged: Server Component shell, statically imported Hero with priority LCP image, dynamic ssr:false on every below-fold section, four sections now additionally gated.
