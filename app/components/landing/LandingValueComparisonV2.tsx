@@ -28,11 +28,11 @@ const COFFEE_CRASH_BG = "rgba(220, 38, 38, 0.18)";
 const COFFEE_CRASH_PATTERN =
   "repeating-linear-gradient(45deg, rgba(220, 38, 38, 0.65) 0 3px, transparent 3px 7px)";
 
-// CONKA bar is split halfway: Flow (amber, matches the Section 4 AM toggle)
-// covers 0-50% (morning), Clear (navy, matches the Section 4 PM toggle and
-// the broader V2 brand) covers 50-100% (afternoon).
+// CONKA bar is split halfway: Flow (amber) covers 0-50% (morning), Clear
+// (soft blue) covers 50-100% (afternoon). Both pulled from the brand
+// product-colour palette (productColors.ts FORMULA_COLORS hex values).
 const FLOW_COLOR = "#F59E0B";
-const CLEAR_COLOR = "#1B2757";
+const CLEAR_COLOR = "#94B9FF";
 
 // Track represents 9am-6pm (9 hours). CONKA fills the whole day.
 // Coffee: peak 9am-12pm = 33%, crash 12pm-2pm = 56%

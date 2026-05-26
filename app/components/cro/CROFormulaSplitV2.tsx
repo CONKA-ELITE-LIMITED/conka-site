@@ -220,7 +220,7 @@ function FormulaToggle({
         onClick={() => onChange("clear")}
         className={`${baseBtn} ${
           pmActive
-            ? "bg-[#1B2757] text-white shadow-sm"
+            ? "bg-[#94B9FF] text-black shadow-sm"
             : "text-black/55 hover:text-black/75"
         }`}
       >
