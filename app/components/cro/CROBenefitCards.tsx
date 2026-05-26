@@ -1,127 +1,82 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 
 /* ============================================================================
  * CROBenefitCards
  *
- * V2 Section 6 on /start. First "proof density" moment after the soft V2
- * storytelling in Sections 1-5. Four big metrics, hybrid sources: two from
- * in-app CONKA data (^^), two from PMID-backed ingredient studies (¶).
+ * V2 Section 6 on /start. First "proof density" moment after Sections 1-5.
+ * 2x2 grid of square tiles, one per dimension of cognitive performance:
+ * Focus / Speed / Memory / Calm. Two tiles from in-app CONKA data (^^),
+ * two from PMID-backed ingredient studies (¶).
  *
- * The four metrics here are the section's load-bearing claims. They are
- * hardcoded so the surface is predictable; the full reports + chart
- * methodology live at /app-insights for visitors who want the deep dive.
+ * The four metrics here are load-bearing claims. They are hardcoded so the
+ * surface is predictable; the full reports + methodology live at
+ * /app-insights for visitors who want the deep dive.
  * ========================================================================== */
 
-type Anchor = "^^" | "¶"; // ¶
+type Anchor = "^^" | "¶";
 
-interface BenefitCard {
+interface BenefitTile {
   id: string;
+  dimension: string;
   metric: string;
-  label: string;
+  context: string;
   anchor: Anchor;
-  detail: string;
 }
 
-const CARDS: BenefitCard[] = [
+const TILES: BenefitTile[] = [
   {
-    id: "evening-focus",
+    id: "focus",
+    dimension: "Focus",
     metric: "+1.09 pts",
-    label: "Evening focus held",
+    context: "Steadier focus into the evening, where most people drop.",
     anchor: "^^",
-    detail:
-      "On days users took CONKA, scores held above their daily average even during the 6 to 9pm dip where others drop nearly a full point. Per-user delta methodology, n=74 evening tests.",
   },
   {
-    id: "faster-tired",
-    metric: "−41 ms", // −41 ms
-    label: "Faster reaction when tired",
+    id: "speed",
+    dimension: "Speed",
+    metric: "−41 ms",
+    context: "Sharper reactions on the days your brain is running low.",
     anchor: "^^",
-    detail:
-      "When users tested on fatigued days, CONKA-tagged tests showed reaction times 41 ms faster than the same users on fatigued days without. Directional signal at n=15, consistent across the sample.",
   },
   {
     id: "memory",
+    dimension: "Memory",
     metric: "+63%",
-    label: "Memory",
+    context: "Stronger recall under load, from the actives in Clear.",
     anchor: "¶",
-    detail:
-      "From a 12-week clinical trial on Bacopa monnieri, one of the active compounds in CONKA Clear. Findings as published; not extrapolated to product-level effect.",
   },
   {
-    id: "fatigue-resistance",
-    metric: "+30%",
-    label: "Fatigue resistance",
+    id: "calm",
+    dimension: "Calm",
+    metric: "−28%",
+    context: "Lower felt stress, from the actives in Flow.",
     anchor: "¶",
-    detail:
-      "From a 90-day clinical trial on Acetyl-L-Carnitine, an amino acid in CONKA Clear that helps your cells turn fats into the energy your brain runs on.",
   },
 ];
 
-function BenefitRow({
-  card,
-  isOpen,
-  onToggle,
-}: {
-  card: BenefitCard;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  const panelId = `benefit-panel-${card.id}`;
-  const buttonId = `benefit-button-${card.id}`;
+function BenefitTileCard({ tile }: { tile: BenefitTile }) {
   return (
-    <div className="bg-black/[0.04] rounded-[16px] overflow-hidden">
-      <button
-        id={buttonId}
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="flex items-center w-full p-4 text-left hover:bg-black/[0.02] transition-colors gap-4"
+    <div className="relative aspect-square bg-black/[0.04] rounded-[16px] p-4 flex flex-col">
+      <p className="text-[24px] sm:text-[28px] font-bold text-[#1B2757] tabular-nums leading-none mb-3">
+        {tile.metric}
+      </p>
+      <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-black/55 mb-2">
+        {tile.dimension}
+      </p>
+      <p className="text-[12px] text-black/75 leading-snug">{tile.context}</p>
+      <span
+        className="absolute bottom-3 right-3 text-[10px] text-black/40 tabular-nums"
+        aria-hidden
       >
-        <div className="flex-shrink-0 min-w-[88px]">
-          <p className="text-[26px] font-bold text-[#1B2757] tabular-nums leading-none">
-            {card.metric}
-          </p>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[14px] font-semibold text-black leading-tight">
-            {card.label}
-            <span
-              className="ml-1 text-[10px] font-normal text-black/40 align-super tabular-nums"
-              aria-hidden
-            >
-              {card.anchor}
-            </span>
-          </p>
-        </div>
-        <span
-          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center"
-          aria-hidden
-        >
-          {isOpen ? "−" : "+"}
-        </span>
-      </button>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className="overflow-hidden transition-[max-height] duration-200 ease-out"
-        style={{ maxHeight: isOpen ? "320px" : "0px" }}
-      >
-        <p className="px-4 pb-4 pt-1 text-[13px] text-black/75 leading-relaxed">
-          {card.detail}
-        </p>
-      </div>
+        {tile.anchor}
+      </span>
     </div>
   );
 }
 
 export default function CROBenefitCards() {
-  const [openId, setOpenId] = useState<string | null>(null);
-
   return (
     <div className="mx-auto max-w-[560px]">
       <h2
@@ -131,21 +86,14 @@ export default function CROBenefitCards() {
         Measured, not marketed.
       </h2>
 
-      <p className="text-[15px] leading-snug text-black/70 mb-8">
-        Two sources behind every number: real CONKA app data, plus
-        peer-reviewed studies on the active ingredients.
+      <p className="text-[15px] leading-snug text-black/75 mb-8">
+        Sharper focus, faster recall, stronger memory, calmer days, all
+        anchored in real data.
       </p>
 
-      <div className="space-y-2 mb-6">
-        {CARDS.map((card) => (
-          <BenefitRow
-            key={card.id}
-            card={card}
-            isOpen={openId === card.id}
-            onToggle={() =>
-              setOpenId(openId === card.id ? null : card.id)
-            }
-          />
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        {TILES.map((tile) => (
+          <BenefitTileCard key={tile.id} tile={tile} />
         ))}
       </div>
 
