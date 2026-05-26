@@ -140,9 +140,9 @@ Marketing has not produced and will not produce Figma mockups for Sections 3 onw
 - **Flags carried into launch:**
   - New copy across the buy-box benefits, FAQ panels, and the timing answer — `/review-claims` pass needed before merge.
 
-### Sections 6–11 ⏳ NOT STARTED
+### Sections 6–11 ✅ DONE (on `section-3`)
 
-See `## Section plan` below for briefs.
+All eleven V2 sections shipped on the `section-3` branch (not yet merged). The legacy `CROFinalCTA` block between Section 11 and the disclaimer was also removed on 2026-05-26. See individual section briefs below.
 
 ---
 
@@ -278,28 +278,31 @@ V2 introduces 11 sections (up from 8 on the current `/start`). Reordered and par
 Shipped. See `## Implementation log` above.
 
 ### Section 2 — Brand Story ✅
-Shipped. See `## Implementation log` above. Animation (spinning bottle) deferred.
+Shipped. See `## Implementation log` above. Animation (spinning bottle) deferred. Later copy refinements (2026-05-26): H2 expanded to "We Created Drinkable Focus and Clarity." (so both formulas get visible billing), and the subline second sentence reframed from "where focus isn't optional" to "where cognitive performance isn't optional" to match the broader V2 vocabulary.
 
-### Section 3 — `LandingValueComparisonV2` (Coffee vs CONKA, visual bar comparison) ← NEXT
+### Section 3 — `LandingValueComparisonV2` (Coffee vs CONKA + price comparison) ✅
 
-- **Header:** "Two shots, built around your day."
-- **Approach:** LMNT-inspired horizontal animated bar comparison. The current `LandingValueComparison` chart is directionally right but loses on attention budget. V2 replaces the chart with two stacked horizontal bars that animate fill on scroll-in.
-  - Coffee bar: shorter fill, slower animation, abrupt jaggy end, muted colour. Visually communicates the crash.
-  - CONKA bar: longer fill, slightly faster animation, smooth tapered end, brand-forward colour. Extends visibly past coffee's wear-off.
-  - No hour-by-hour ticks. Each bar carries three labelled time markers: Start, Crash (or Drop-off / Wear-off, pending `/review-claims`), End.
-  - Footnote anchor underneath both bars (carry over the V1 data-source footnote so we keep a defensible "researched" anchor).
+- **Header:** "The 2pm crash isn't you." Subline: "Coffee gets you started. CONKA gets you through."
+- **Layout:** the two animated bars + the price comparison sit together inside ONE bordered card (`border-black/12 rounded-[var(--brand-radius-container)] p-5 sm:p-6`) so the card holds both halves of the Coffee-vs-CONKA argument: time-of-day coverage AND cost.
+- **Bars:**
+  - Coffee bar: peak 9am-12pm (33%, solid black), red hatched crash from 12pm-2pm (56%). Small red `↑ Crash` callout under the bar at the crash midpoint.
+  - CONKA bar: SPLIT halfway. Flow (amber `#F59E0B`) covers 0-50% (morning), Clear (soft blue `#94B9FF`, from `productColors.ts` FORMULA_COLORS) covers 50-100% (afternoon). Sequential reveal — Flow animates from 220ms over 600ms, then Clear from 820ms over 600ms.
+  - Three labelled time markers per bar (Start / Crash or 1pm / End). No hour-by-hour ticks.
+- **Price comparison** (inside the same bordered card, separated by a hairline `border-t border-black/10`):
+  - H3: "£{MONTHLY_SAVINGS_VS_COFFEE}/month less than a daily coffee."
+  - Two rows: "Daily coffee · £{COFFEE_PRICE_PER_DAY}/day" (muted) and "Both shots · £{PRICE_PER_DAY_BOTH}/day" (navy bold)
+  - All three numbers pull from `app/lib/landingPricing.ts` constants.
 - **Files:**
-  - New: `app/components/cro/LandingValueComparisonV2.tsx` (do NOT modify the shared `LandingValueComparison.tsx`)
+  - New: `app/components/landing/LandingValueComparisonV2.tsx` (do NOT modify the shared V1 `LandingValueComparison.tsx`)
   - Modified: `app/start/CROBelowFold.tsx` — swap the slot
-- **CTA:** "Try from £1.62 per day" via shared `CROPillCTA`
-- **Animation:** prefer CSS keyframes on `transform: scaleX(...)` triggered by IntersectionObserver / existing `useInView` hook. Reach for framer-motion only if reuse is messy. Respect `prefers-reduced-motion` (skip animation, render bars at final state).
-- **A11y:** `role="img"` + `aria-label` carrying the comparison in prose; markers `aria-hidden` (duplicated in label).
-- **Compliance:** the word "Crash" and the duration framing need `/review-claims` before launch. Design with the marker label as a plain `<span>` so a compliance-driven swap to "Drop-off" / "Wear-off" doesn't require layout changes.
-- **Mobile-first:** must look great at 390px; stack marker labels vertically below the bar if they collide.
+- **CTA:** "Try from £1.62 per day" via shared `CROPillCTA` (outside the card)
+- **Footnote outside the card:** "Based on 7,593 cognitive tests across 712 CONKA app users over 30 months." with link to `/app-insights#time-of-day`.
+- **Animation:** CSS `transform: scaleX(...)` triggered by the existing `useInView` hook. `prefers-reduced-motion` skips animation (lazy `useState` initializer).
+- **A11y:** `role="img"` + `aria-label` carrying the comparison in prose; markers `aria-hidden`.
 
-### Section 4 — `CROFormulaSplitV2` (AM/PM toggle + 8 Hours-style ingredient list)
+### Section 4 — `CROFormulaSplitV2` (AM/PM toggle + 8 Hours-style ingredient list) ✅
 
-Scoped 2026-05-26. No separate Jira ticket per current direction; rolls under SCRUM-1035.
+Scoped + shipped 2026-05-26. No separate Jira ticket per current direction; rolls under SCRUM-1035. Toggle PM/Afternoon active colour updated 2026-05-26 from the brand navy (`#1B2757`) to the canonical Clear hex from `productColors.ts` (`#94B9FF` soft blue, with black text per the `PRODUCT_GRADIENT_TEXT_COLOR` lookup which says "black" for Clear). AM/Morning toggle keeps amber + white.
 
 - **H2:** "Flow for your mornings. Clear for your afternoons." (static)
 - **Layout:**
@@ -350,25 +353,25 @@ Scoped + shipped 2026-05-26. No separate Jira ticket per current direction; roll
 - Quantity stepper (visitor still adjusts in the cart drawer)
 - `/review-claims` pass on the new benefit list copy
 
-### Section 6 — `CROBenefitCards` (Ketone-IQ pdp-stat-cards style, "Measured, not marketed.")
+### Section 6 — `CROBenefitCards` (Ketone-IQ pdp-stat-cards style, "Measured, not marketed.") ✅
 
-Scoped + shipped 2026-05-26 across `6fdb05a`, `6c79a47`, `9b8d513`, `1a7e93d`. Rolls under SCRUM-1035; no separate sub-ticket.
+Scoped + shipped 2026-05-26, with copy + layout revisions across `6fdb05a`, `6c79a47`, `9b8d513`, `1a7e93d`, `876ed74`, `3fa7ea4`. Rolls under SCRUM-1035; no separate sub-ticket.
 
 - **H2:** "Measured, not marketed."
 - **Subline:** "Sharper focus, faster recall, stronger memory, calmer days, all anchored in real data."
-- **Title bar** (between subline and tile grid): `Taking **CONKA** can:` — uppercase, centered, "CONKA" in navy + extrabold. Mirrors Ketone's `pdp-stat-cards-block__title-bar` pattern; reads continuously into each tile.
-- **Layout:** 2x2 grid of square tiles (`grid-cols-2 gap-3 aspect-square`). Soft `bg-black/[0.04] rounded-[16px]` cards, centered content. Each tile carries an `(01)..(04)` mono index in the top-left corner, an uppercase headline, a big navy `tabular-nums` stat, and a one-line caption underneath. No inline expand — tiles are glanceable, the indexes cross-link directly to the numbered references in the footer.
-- **Four-dimension framework** (one card per dimension, no overlap):
-  - **(01) Focus** | "HOLD EVENING FOCUS" | `+1.09 pts` | "When most people drop." | CONKA in-app data, n=74 evening-dip tests, per-user delta from `appInsightsData.timeOfDay`
-  - **(02) Speed** | "SHARPEN REACTION" | `−41 ms` | "On fatigued days." | CONKA in-app data, n=15 users with both conditions, from `appInsightsData.mentalFatigue` CONKA sub-section
-  - **(03) Memory** | "STRENGTHEN MEMORY" | `+63%` | "Recall under load." | Bacopa monnieri / Small 2018 / PMID 29246725 (active in Clear)
-  - **(04) Calm** | "LOWER FELT STRESS" | `−28%` | "In healthy adults." | Lemon Balm / Kennedy 2006 / PMID 16444660 (active in Flow)
-- **Tile headlines use base-form verbs** so the title bar reads continuously: "Taking CONKA can hold evening focus / sharpen reaction / strengthen memory / lower felt stress."
-- **References footer** (Ketone-IQ pdp-stat-cards-block__footer style): a single flowing paragraph with numbered references keyed to the tile indexes:
-  - `01.` CONKA in-app cognitive tests, evening-dip window, n=74 / 712 users / 30 months. Per-user delta methodology.
-  - `02.` CONKA in-app cognitive tests, fatigued-day window, n=15. Per-user delta methodology.
-  - `03.` Small et al. (2018). Bacopa monnieri, 12-week clinical trial on memory performance. PMID 29246725.
-  - `04.` Kennedy et al. (2006). Melissa officinalis (Lemon Balm), randomised double-blind placebo-controlled crossover on stress and anxiety. PMID 16444660.
+- **Title-bar tile** (its own grey rectangular tile spanning the grid width, between subline and stat tiles): `Taking **CONKA** can help you:` — uppercase, centered, "CONKA" in navy + extrabold. Same `bg-black/[0.04] rounded-[16px]` aesthetic as the stat tiles so it feels like part of the grid system. Mirrors Ketone's `pdp-stat-cards-block__title-bar` pattern.
+- **Layout:** 2x2 grid of square stat tiles (`grid-cols-2 gap-3 aspect-square`). Soft `bg-black/[0.04] rounded-[16px]` cards, centered content. Each tile carries an `(01)..(04)` mono index in the top-left corner, an uppercase verb-infinitive headline, and a big navy `tabular-nums` stat. **No captions** — the headline is the only line of copy on each tile so it has to read cleanly on its own.
+- **Four-dimension framework** (one tile per dimension, no overlap), ordered to lead with the strongest claims:
+  - **(01) Memory** | "REMEMBER MORE" | `+63%` | Bacopa monnieri / Small 2018 / PMID 29246725 (active in Clear)
+  - **(02) Calm** | "STAY CALMER" | `−28%` | Lemon Balm / Kennedy 2006 / PMID 16444660 (active in Flow)
+  - **(03) Focus** | "FOCUS INTO THE NIGHT" | `+1.09 pts` | CONKA in-app data, n=74 evening-dip tests, per-user delta from `appInsightsData.timeOfDay`
+  - **(04) Speed** | "THINK FASTER" | `−41 ms` | CONKA in-app data, n=15 users with both conditions, from `appInsightsData.mentalFatigue` CONKA sub-section
+- **Tile headlines use verb-infinitive form** ("Remember more" / "Stay calmer" / "Focus into the night" / "Think faster") so the title-bar tile reads continuously into each one: "Taking CONKA can help you: remember more / stay calmer / focus into the night / think faster."
+- **References footer** (Ketone-IQ pdp-stat-cards-block__footer style), pushed up in prominence (text size 10px → 11px, opacity black/45 → black/60) to compensate for the captions being removed. A single flowing paragraph with numbered references keyed to the tile indexes:
+  - `01.` Small et al. (2018). Bacopa monnieri, 12-week clinical trial on memory performance. PMID 29246725.
+  - `02.` Kennedy et al. (2006). Melissa officinalis (Lemon Balm), randomised double-blind placebo-controlled crossover on stress and anxiety. PMID 16444660.
+  - `03.` CONKA in-app cognitive tests, evening-dip window, n=74 / 712 users / 30 months. Per-user delta methodology.
+  - `04.` CONKA in-app cognitive tests, fatigued-day window, n=15. Per-user delta methodology.
 - **Disclaimer line** below the references: "Ingredient findings as published, not extrapolated to product-level effect. Full per-user app data and methodology at /app-insights."
 - **No CTA in Section 6.** Conversion already happened at Section 5; this is the proof beat.
 - **Files:**
@@ -379,7 +382,7 @@ Scoped + shipped 2026-05-26 across `6fdb05a`, `6c79a47`, `9b8d513`, `1a7e93d`. R
 **Future enhancement (deferred):** if we want "see the data" detail per tile, the natural path is a modal sheet keyed off the tile id. The `(01)..(04)` index in the corner is the obvious tap affordance. Footer link to `/app-insights` already covers the full report for visitors who want the deep dive.
 
 **Flags carried into launch:**
-- All four metric/headline/caption strings are claims-load-bearing. `/review-claims` pass needed before merge. Tile structure makes per-tile copy swaps trivial if compliance flags any individual line.
+- All four metric and headline strings are claims-load-bearing. `/review-claims` pass needed before merge. Tile structure makes per-tile copy swaps trivial if compliance flags any individual line.
 
 ### Section 7 — `CROAthletes` (athlete carousel + Informed Sport block)
 
