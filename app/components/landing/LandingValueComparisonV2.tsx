@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useInView } from "@/app/hooks/useInView";
 import CROPillCTA from "@/app/components/cro/CROPillCTA";
+import {
+  COFFEE_PRICE_PER_DAY,
+  PRICE_PER_DAY_BOTH,
+  MONTHLY_SAVINGS_VS_COFFEE,
+} from "@/app/lib/landingPricing";
 
 /* ============================================================================
  * LandingValueComparisonV2
@@ -213,6 +218,34 @@ export default function LandingValueComparisonV2() {
               prefersReducedMotion={prefersReducedMotion}
             />
           </BarRow>
+        </div>
+
+        {/* ===== Price comparison (same card, divider between sub-blocks) ===== */}
+        <div className="mt-8 pt-6 border-t border-black/10">
+          <h3
+            className="text-[20px] sm:text-[22px] font-semibold text-black leading-tight mb-5"
+            style={{ letterSpacing: "-0.01em" }}
+          >
+            £{MONTHLY_SAVINGS_VS_COFFEE}/month less than a daily coffee.
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-baseline justify-between">
+              <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-black/55">
+                Daily coffee
+              </span>
+              <span className="text-[18px] font-bold text-black/55 tabular-nums">
+                £{COFFEE_PRICE_PER_DAY}/day
+              </span>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#1B2757]">
+                Both shots
+              </span>
+              <span className="text-[18px] font-bold text-[#1B2757] tabular-nums">
+                £{PRICE_PER_DAY_BOTH}/day
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
