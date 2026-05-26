@@ -36,6 +36,10 @@ const CROAthletes = dynamic(
   () => import("../components/cro/CROAthletes"),
   { ssr: false, loading: () => <div className="h-[900px]" /> },
 );
+const CROResearch = dynamic(
+  () => import("../components/cro/CROResearch"),
+  { ssr: false, loading: () => <div className="h-[760px]" /> },
+);
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
@@ -123,6 +127,17 @@ export default function CROBelowFold() {
       >
         <div className="brand-track">
           <CROAthletes />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 8 — CAMBRIDGE + RESEARCH CREDENTIALS ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Built on Cambridge research"
+      >
+        <div className="brand-track">
+          <CROResearch />
         </div>
       </section>
 

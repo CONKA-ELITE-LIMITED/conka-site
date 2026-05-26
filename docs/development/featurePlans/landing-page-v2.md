@@ -417,10 +417,32 @@ Scoped + shipped 2026-05-26 across `bcfc18f`, `9dec480`, `137c317`, `8bf99bc`, `
 - All seven athlete quotes are already live on the clinical PDPs so no fresh claims work needed there.
 - Main Informed Sport body sentence is verbatim from existing site content; only the surrounding structure changed.
 
-### Section 8 — University research / Cambridge
-- Reference: Ketone-IQ university research section
-- Cambridge University imagery + logos of partner institutions
-- Tie back to the cognitive test credentials currently in `LandingDisclaimer` footnote `^^`
+### Section 8 — `CROResearch` (Cambridge cognitive test + supporting credentials)
+
+Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+
+- **H2:** "Built on Cambridge research."
+- **Subline:** "The cognitive test behind every in-app metric on this page comes from Cambridge University research. FDA-cleared. Used in NHS Memory Clinics."
+- **Hero card** (Cambridge cognitive test story):
+  - Cambridge photograph (`/public/UniversityOfCambridge.png`) at the top, `aspect-[4/3]`, full-bleed inside the bordered card
+  - Inside the card content area: eyebrow `RESEARCH BACKING` (navy uppercase) -> card title "The Cambridge cognitive test." -> body sentence -> credential chips line "Cambridge-derived · FDA cleared · NHS validated"
+  - Body sentence lifted from `HowThisIsPossibleModule.tsx` + `AppResearchModal.tsx` with key facts bolded inline: "A five-minute cognitive test built into the CONKA app, derived from **Cambridge University research** via Cognetivity Neurosciences. The same assessment used in **NHS Memory Clinics**, and **FDA-cleared** as a medical device."
+  - Border: `border border-black/12 rounded-[var(--brand-radius-container)]` (matches Section 7 athlete-slide pattern)
+- **Supporting credentials block** below the hero:
+  - Soft grey card (`bg-black/[0.04]`)
+  - Single-line copy: "Formulated in partnership with **Durham and Exeter universities**. Made in Britain." (verbatim from `WhyConkaWorksDesktop.tsx`)
+  - Logo row: Durham, Exeter, Made in Britain (`/logos/UniversityOfDurham.png`, `/logos/UniversityOfExeter.png`, `/logos/MadeInBritain.png`)
+  - Logos at 72-88px height, `object-contain`, centered with `gap-8 flex-wrap`
+- **Three credibility tiers in one section:** the test is Cambridge, the formulation is Durham + Exeter, the manufacturing is UK-made. Each anchors a different proof angle without diluting the others.
+- **No CTA in Section 8.** Trust beat after the Section 5 buy box and the Section 6 / Section 7 proof moments.
+- **Files:**
+  - New: `app/components/cro/CROResearch.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (inserted between `CROAthletes` and the legacy `CROTestimonials`)
+  - Read-only: existing site components for verbatim copy lifts
+- **Section background:** `brand-bg-white`. Standard `paddingTop: 0, paddingBottom: 4rem`.
+
+**Flags carried into launch:**
+- All section copy lifted verbatim from existing site components (`HowThisIsPossibleModule`, `AppResearchModal`, `WhyConkaWorksDesktop`). No new claims introduced; `/review-claims` pass should be quick.
 
 ### Section 9 — Customer social proof
 - Same source data as current `CROTestimonials` (`app/lib/customerTestimonials.ts`)

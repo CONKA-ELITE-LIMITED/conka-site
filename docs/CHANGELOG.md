@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 8 Cambridge research + credentials
+
+Eighth section of the V2 rebuild for `/start` (under parent SCRUM-1035). The academic-proof beat after the human-proof of Section 7. A hero card features the Cambridge college photograph above a bordered content area that carries the "RESEARCH BACKING" eyebrow, the card title "The Cambridge cognitive test.", and the verbatim site-vetted body explaining how the five-minute test built into the CONKA app comes from Cambridge University research via Cognetivity Neurosciences, is the same assessment used in NHS Memory Clinics, and is FDA-cleared. A credential chips line below the body reads "Cambridge-derived · FDA cleared · NHS validated". Underneath the hero card sits a supporting credentials block: a soft grey card with the line "Formulated in partnership with Durham and Exeter universities. Made in Britain." followed by the three logos centred and equally weighted (Durham, Exeter, Made in Britain). Three credibility tiers in one section: the test is Cambridge, the formulation is Durham + Exeter, the manufacturing is UK-made. All copy lifted verbatim from existing site components so no new claims are introduced.
+
+**Modified:** `app/components/cro/CROResearch.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 7 athletes + Informed Sport
 
 Seventh section of the V2 rebuild for `/start` (under parent SCRUM-1035). Forks the clinical `AthleteCredibilityCarousel` (still serving the three Conka PDPs untouched) into a softer V2 component focused on the athlete quote as the visual hero. Each slide stacks a large square portrait, the athlete name and sport, and the quote rendered very large. Seven circular athlete portraits sit below the active slide as a swipeable roster strip with the active one outlined navy. Touch swipe and keyboard arrows port the V1 mechanics. All V1 clinical noise removed: no mono eyebrows, no chamfered nav buttons, no "RUGBY 7s · OLYMPIC" chips, no "01." prefix on roster tiles. Below the carousel sits an Informed Sport certification card with the large logo and the legally-vetted copy lifted verbatim from WhyConkaWorksDesktop: every batch tested for 280-plus banned substances, trusted by WADA, Olympic committees, and professional sports leagues worldwide. No CTA in the section: this is the trust beat after Section 5 conversion and Section 6 numerical proof.
