@@ -44,6 +44,10 @@ const CROCustomerReviews = dynamic(
   () => import("../components/cro/CROCustomerReviews"),
   { ssr: false, loading: () => <div className="h-[680px]" /> },
 );
+const CROAppCallout = dynamic(
+  () => import("../components/cro/CROAppCallout"),
+  { ssr: false, loading: () => <div className="h-[820px]" /> },
+);
 const CROGuarantee = dynamic(
   () => import("../components/cro/CROGuarantee"),
   { ssr: false, loading: () => <div className="h-[400px]" /> },
@@ -151,6 +155,17 @@ export default function CROBelowFold() {
           <VisibilityGate minHeight="680px">
             <CROCustomerReviews />
           </VisibilityGate>
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 10 — APP CALLOUT ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="We don't ask if CONKA works, we measure it"
+      >
+        <div className="brand-track">
+          <CROAppCallout />
         </div>
       </section>
 

@@ -472,11 +472,32 @@ Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
 **Flags carried into launch:**
 - One new copy string: the subline "Eight stories from the people who use CONKA every day." — quick `/review-claims` pass before merge, but low risk (it's just a count + neutral framing).
 
-### Section 10 — App callout
-- Why we have an app + photo of someone using it
-- "Data / science behind it" sub-block — granular detail for the buyers who want to understand the measurement methodology
-- This block is allowed to be denser / more technical — it serves the analytical buyer, not the cold ad-click
-- Link to download (App Store + Play Store)
+### Section 10 — `CROAppCallout` ("We don't ask if CONKA works. We measure it.")
+
+Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+
+- **Thesis:** "Don't trust us, test yourself." By Section 10 the visitor has seen all the proof; the remaining objection is "what if it doesn't work for me." The section answers: the CONKA app gives you the same cognitive test we use for every in-app metric on the page. Take it before, take it after. If your data doesn't move, the 100-day money-back guarantee means you don't lose money. Literally no risk.
+- **Layout:** mirrors the Section 8 hero pattern. Lifestyle image at the top (full-bleed mobile via `-mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[var(--brand-radius-container)]`), then H2, opener, body, risk-close card, CTA, small `/app` text link.
+- **Hero image:** `/public/lifestyle/ConkaAppYoga.jpg` — phone displaying the CONKA app's "Your Brain Over Time" graph next to a CONKA bottle on a textured floor. Strong single asset for the section.
+- **H2 (verbatim from `InsightHeroDifferentiator.tsx`):** "We don't ask if CONKA works. We measure it." Two lines via `<br />`.
+- **Opener (verbatim from `AppUSPSection.tsx`):** "Other brands tell you it works. CONKA gives you a cognitive test and a daily log so you can watch it happen."
+- **Body 1 (verbatim from `AppFeaturePanel.tsx`):** "This isn't an IQ test. It measures how efficiently your brain processes information, tracked over time."
+- **Body 2 (verbatim from `AppFeaturePanel.tsx`):** "Built on Cambridge-derived visual recognition. Because it uses natural images, your brain can't learn or memorise the answers. Your score only improves if your brain actually improves."
+- **Risk-close card** (soft grey, `bg-black/[0.04] rounded-[var(--brand-radius-container)]`):
+  - Eyebrow: `NO RISK. REAL NUMBERS.` (navy uppercase tracked)
+  - Body: "Take the test. Try CONKA. Take the test again. If your data doesn't move, we'll refund you within 100 days." (pulls `GUARANTEE_DAYS` from `offerConstants.ts` so the number stays in sync if marketing changes the policy)
+- **CTA:** full-width `CROPillCTA` "Try CONKA risk-free" pointing at `FUNNEL_URL`. The page is closing toward conversion at this point; the section's job is the final argument before Section 11.
+- **/app link** below the CTA as a small navy text link "Learn more about the app →". Sized so it does not compete with the funnel CTA.
+- **No App Store / Play Store download badges in this section** (per user direction — Section 10 pushes for the sale, not app downloads).
+- **Files:**
+  - New: `app/components/cro/CROAppCallout.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (inserted between `CROCustomerReviews` and the legacy `CROGuarantee`)
+  - Untouched: `app/components/home/AppUSPSection.tsx` — still serves the home page `/`
+- **Section background:** `brand-bg-white`. Standard `paddingTop: 0, paddingBottom: 4rem`.
+
+**Flags carried into launch:**
+- The risk-close card body is new copy ("Take the test. Try CONKA. Take the test again. If your data doesn't move, we'll refund you within 100 days.") — `/review-claims` pass before launch but low risk; it's just a paraphrase of the guarantee terms.
+- Every other load-bearing sentence is lifted verbatim from existing site components.
 
 ### Section 11 — FAQ
 - Same 5 questions as current `CROFAQ`
