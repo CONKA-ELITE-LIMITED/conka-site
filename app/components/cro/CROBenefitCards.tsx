@@ -9,53 +9,59 @@ import Link from "next/link";
  * 2x2 grid of square tiles in the Ketone-IQ pdp-stat-cards style: small
  * uppercase headline at the top, big centered stat below. One tile per
  * dimension of cognitive performance (Focus / Speed / Memory / Calm), no
- * overlap. Two tiles from in-app CONKA data (^^), two from PMID-backed
- * ingredient studies (¶).
+ * overlap. Two tiles from in-app CONKA data, two from PMID-backed
+ * ingredient studies. The (01)..(04) tile indexes map to the numbered
+ * references in the footer block.
  *
  * Tiles are intentionally glanceable, no inline expand. If we add "see the
  * data" detail later, the easiest path is a modal sheet keyed off tile id;
- * the footnote link to /app-insights already covers the full report.
+ * the footer link to /app-insights already covers the full report.
  * ========================================================================== */
-
-type Anchor = "^^" | "¶";
 
 interface BenefitTile {
   id: string;
   headline: string;
   metric: string;
   caption: string;
-  anchor: Anchor;
 }
 
+// Headlines use base-form verbs so the title bar above the grid reads
+// continuously into each tile: "Taking CONKA can hold evening focus" /
+// "sharpen reaction" / "strengthen memory" / "lower felt stress".
 const TILES: BenefitTile[] = [
   {
     id: "focus",
-    headline: "Holds evening focus",
+    headline: "Hold evening focus",
     metric: "+1.09 pts",
     caption: "When most people drop.",
-    anchor: "^^",
   },
   {
     id: "speed",
-    headline: "Sharpens reaction",
+    headline: "Sharpen reaction",
     metric: "−41 ms",
     caption: "On fatigued days.",
-    anchor: "^^",
   },
   {
     id: "memory",
-    headline: "Strengthens memory",
+    headline: "Strengthen memory",
     metric: "+63%",
     caption: "Recall under load.",
-    anchor: "¶",
   },
   {
     id: "calm",
-    headline: "Lowers felt stress",
+    headline: "Lower felt stress",
     metric: "−28%",
     caption: "In healthy adults.",
-    anchor: "¶",
   },
+];
+
+// References mapped by tile index. 01-02 are in-app CONKA data; 03-04 are
+// PMID-backed ingredient studies.
+const REFERENCES: string[] = [
+  "01. CONKA in-app cognitive tests, evening-dip window. n=74 across 712 users, 30 months. Per-user delta methodology.",
+  "02. CONKA in-app cognitive tests, fatigued-day window. n=15 users with both conditions. Per-user delta methodology.",
+  "03. Small et al. (2018). Bacopa monnieri, 12-week clinical trial on memory performance. PMID 29246725.",
+  "04. Kennedy et al. (2006). Melissa officinalis (Lemon Balm), randomised double-blind placebo-controlled crossover on stress and anxiety. PMID 16444660.",
 ];
 
 function BenefitTileCard({
@@ -72,12 +78,6 @@ function BenefitTileCard({
         aria-hidden
       >
         ({String(index + 1).padStart(2, "0")})
-      </span>
-      <span
-        className="absolute bottom-3 right-3 text-[10px] tabular-nums text-black/35"
-        aria-hidden
-      >
-        {tile.anchor}
       </span>
 
       <p className="text-[11px] uppercase tracking-[0.14em] font-bold text-black/65 leading-tight mb-3 max-w-[16ch]">
@@ -108,17 +108,24 @@ export default function CROBenefitCards() {
         anchored in real data.
       </p>
 
+      <p className="text-center text-[13px] uppercase tracking-[0.18em] font-bold text-black/70 mb-4">
+        Taking{" "}
+        <strong className="text-[#1B2757] font-extrabold">CONKA</strong> can:
+      </p>
+
       <div className="grid grid-cols-2 gap-3 mb-6">
         {TILES.map((tile, i) => (
           <BenefitTileCard key={tile.id} tile={tile} index={i} />
         ))}
       </div>
 
-      <div className="border-t border-black/8 pt-4 space-y-2">
-        <p className="text-[11px] text-black/50 leading-snug">
-          <span className="font-semibold text-black/65">^^</span> From in-app
-          cognitive tests across 712 CONKA users, 7,593 tests, 30 months.
-          Per-user delta methodology. Full breakdown at{" "}
+      <div className="border-t border-black/8 pt-4 space-y-3">
+        <p className="text-[10px] text-black/45 leading-relaxed">
+          {REFERENCES.join(" ")}
+        </p>
+        <p className="text-[10px] text-black/45 leading-relaxed">
+          Ingredient findings as published, not extrapolated to product-level
+          effect. Full per-user app data and methodology at{" "}
           <Link
             href="/app-insights"
             className="underline underline-offset-2 hover:text-[#1B2757] transition-colors"
@@ -126,11 +133,6 @@ export default function CROBenefitCards() {
             /app-insights
           </Link>
           .
-        </p>
-        <p className="text-[11px] text-black/50 leading-snug">
-          <span className="font-semibold text-black/65">&para;</span>{" "}
-          Peer-reviewed studies on individual active ingredients. Findings as
-          published, not extrapolated to product-level effect.
         </p>
       </div>
     </div>
