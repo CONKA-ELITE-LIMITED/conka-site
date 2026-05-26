@@ -380,10 +380,31 @@ Scoped + shipped 2026-05-26 across `6fdb05a`, `6c79a47`, `9b8d513`, `1a7e93d`. R
 **Flags carried into launch:**
 - All four metric/headline/caption strings are claims-load-bearing. `/review-claims` pass needed before merge. Tile structure makes per-tile copy swaps trivial if compliance flags any individual line.
 
-### Section 7 — Athlete + Informed Sport
-- Athlete imagery — high-volume, lifestyle/action shots
-- Inline explanation of Informed Sport certification: what it means, why CONKA has it
-- Visual style: matches the new V2 grammar (warmer, more lifestyle)
+### Section 7 — `CROAthletes` (athlete carousel + Informed Sport)
+
+Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+
+- **H2:** "Trusted where focus can't fail." (connective tissue with the Section 2 brand-story line "Trusted where focus isn't optional")
+- **Subline:** "Olympic medallists, world champions, and international competitors use CONKA on the days that matter most."
+- **Layout (per slide):** square portrait at top, then athlete name + sport · role on one line, then the quote rendered very large (`text-[22px] sm:text-[24px]`) as the visual hero. Big readable quote was the explicit instruction.
+- **Roster strip below the active slide:** 7 circular athlete portraits (60px), swipeable on mobile (`overflow-x-auto snap-x`), active one outlined in `ring-2 ring-[#1B2757] ring-offset-2`, inactive ones at `opacity-65`. First name under each portrait, capped at 64px width. Strips all V1 clinical noise: no `01.` prefix, no chamfered `lab-clip-tr` nav buttons, no mono `RUGBY 7s · OLYMPIC` chips, no border-everything aesthetic.
+- **Mechanics:** `useState` active index, touch swipe (50px threshold, ported from V1), keyboard arrow keys, tap roster to set active. `aria-live="polite"` on the active slide wrapper for screen readers.
+- **Informed Sport block** below the carousel (inside the same section):
+  - `/public/logos/InformedSportLogo.png` rendered at 128x128 centered
+  - Heading: "Tested clean. Every batch."
+  - Body copy lifted verbatim from `WhyConkaWorksDesktop.tsx` (legally vetted, already live): "Every batch of CONKA Flow and CONKA Clear is tested by Informed Sport for over 280 banned substances. Trusted by WADA, Olympic committees, and professional sports leagues worldwide."
+  - Container: `bg-black/[0.04] rounded-[var(--brand-radius-container)]` so it feels like a soft inset card after the carousel
+- **No CTA in Section 7.** Trust beat after Section 5 conversion.
+- **Files:**
+  - New: `app/components/cro/CROAthletes.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (inserted between `CROBenefitCards` and the legacy `CROTestimonials`)
+  - Untouched: `app/components/AthleteCredibilityCarousel.tsx` — still imported by `/conka-flow`, `/conka-clarity`, `/conka-both` PDPs. The V1 file stays so those pages don't regress.
+- **Section background:** `brand-bg-white`. Standard `paddingTop: 0, paddingBottom: 4rem`.
+
+**Flags carried into launch:**
+- The subline is new copy ("on the days that matter most") — needs `/review-claims` pass before launch.
+- All seven athlete quotes are already live on the clinical PDPs so no fresh claims work needed for those.
+- Informed Sport copy is lifted verbatim from existing site content; no new claims work needed.
 
 ### Section 8 — University research / Cambridge
 - Reference: Ketone-IQ university research section

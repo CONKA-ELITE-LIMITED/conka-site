@@ -32,6 +32,10 @@ const CROBenefitCards = dynamic(
   () => import("../components/cro/CROBenefitCards"),
   { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
+const CROAthletes = dynamic(
+  () => import("../components/cro/CROAthletes"),
+  { ssr: false, loading: () => <div className="h-[900px]" /> },
+);
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
@@ -108,6 +112,17 @@ export default function CROBelowFold() {
       >
         <div className="brand-track">
           <CROBenefitCards />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 7 — ATHLETES + INFORMED SPORT ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Trusted where focus can't fail"
+      >
+        <div className="brand-track">
+          <CROAthletes />
         </div>
       </section>
 
