@@ -27,13 +27,19 @@ const COFFEE_COLOR = "#000";
 const COFFEE_CRASH_BG = "rgba(220, 38, 38, 0.18)";
 const COFFEE_CRASH_PATTERN =
   "repeating-linear-gradient(45deg, rgba(220, 38, 38, 0.65) 0 3px, transparent 3px 7px)";
-const CONKA_COLOR = "#1B2757";
+
+// CONKA bar is split halfway: Flow (amber, matches the Section 4 AM toggle)
+// covers 0-50% (morning), Clear (navy, matches the Section 4 PM toggle and
+// the broader V2 brand) covers 50-100% (afternoon).
+const FLOW_COLOR = "#F59E0B";
+const CLEAR_COLOR = "#1B2757";
 
 // Track represents 9am-6pm (9 hours). CONKA fills the whole day.
 // Coffee: peak 9am-12pm = 33%, crash 12pm-2pm = 56%
 const COFFEE_PEAK_END = 33;
 const COFFEE_CRASH_END = 56;
 const CONKA_END = 100;
+const CONKA_SPLIT = 50; // Halfway point between Flow and Clear.
 
 interface BarProps {
   isInView: boolean;
@@ -78,19 +84,40 @@ function CoffeeBar({ isInView, prefersReducedMotion }: BarProps) {
 
 function ConkaBar({ isInView, prefersReducedMotion }: BarProps) {
   const visible = prefersReducedMotion || isInView;
+  const transformVisible = "scaleX(1)";
+  const transformHidden = "scaleX(0)";
 
-  const style: React.CSSProperties = {
+  // Flow fills the left half first (0-50%), then Clear takes over and fills
+  // the right half (50-100%). Sequential reveal narrates "morning, then
+  // afternoon" while keeping the overall animation snappy.
+  const flowStyle: React.CSSProperties = {
     left: "0%",
-    width: `${CONKA_END}%`,
-    backgroundColor: CONKA_COLOR,
-    transform: visible ? "scaleX(1)" : "scaleX(0)",
+    width: `${CONKA_SPLIT}%`,
+    backgroundColor: FLOW_COLOR,
+    transform: visible ? transformVisible : transformHidden,
     transformOrigin: "left",
     transition: prefersReducedMotion
       ? "none"
-      : "transform 1200ms cubic-bezier(0.65, 0, 0.35, 1) 220ms",
+      : "transform 600ms cubic-bezier(0.65, 0, 0.35, 1) 220ms",
   };
 
-  return <div className="absolute inset-y-0" style={style} aria-hidden />;
+  const clearStyle: React.CSSProperties = {
+    left: `${CONKA_SPLIT}%`,
+    width: `${CONKA_END - CONKA_SPLIT}%`,
+    backgroundColor: CLEAR_COLOR,
+    transform: visible ? transformVisible : transformHidden,
+    transformOrigin: "left",
+    transition: prefersReducedMotion
+      ? "none"
+      : "transform 600ms cubic-bezier(0.65, 0, 0.35, 1) 820ms",
+  };
+
+  return (
+    <>
+      <div className="absolute inset-y-0" style={flowStyle} aria-hidden />
+      <div className="absolute inset-y-0" style={clearStyle} aria-hidden />
+    </>
+  );
 }
 
 interface Marker {
