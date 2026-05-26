@@ -78,8 +78,9 @@ export default function CROAppCallout() {
           {GUARANTEE_LABEL}
         </p>
         <p className="text-[14px] text-black/80 leading-relaxed">
-          Try CONKA. If you&apos;re not happy, email us within{" "}
-          {GUARANTEE_DAYS} days for a full refund.
+          Install the app. Test before. Take CONKA. Test after. If
+          you&apos;re not happy, email us within {GUARANTEE_DAYS} days for a
+          full refund.
         </p>
       </div>
 
