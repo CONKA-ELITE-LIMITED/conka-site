@@ -385,11 +385,16 @@ export default function CROFormulaSplitV2() {
         Built for every part of your day.
       </h2>
 
+      {/* ===== Centered, larger, coloured AM/PM toggle ===== */}
+      <div className="flex justify-center mb-6">
+        <FormulaToggle formula={formula} onChange={handleFormulaChange} />
+      </div>
+
       {/* ===== Card: bottle with bottom-left product label overlay ===== */}
       <div
         id="formula-panel"
         role="tabpanel"
-        className="relative bg-black/[0.03] rounded-[var(--brand-radius-container)] overflow-hidden mb-6"
+        className="relative bg-black/[0.03] rounded-[var(--brand-radius-container)] overflow-hidden mb-12"
         style={{ aspectRatio: "1 / 1" }}
       >
         <div className="absolute inset-0 flex justify-center items-center">
@@ -411,11 +416,6 @@ export default function CROFormulaSplitV2() {
             {content.cardCopy}
           </p>
         </div>
-      </div>
-
-      {/* ===== Centered, larger, coloured AM/PM toggle ===== */}
-      <div className="flex justify-center mb-12">
-        <FormulaToggle formula={formula} onChange={handleFormulaChange} />
       </div>
 
       {/* ===== Ingredients ===== */}
