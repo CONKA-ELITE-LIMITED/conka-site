@@ -9,6 +9,11 @@ import {
   getCadencePricingByProductHeroId,
   type CadenceType,
 } from "@/app/lib/cadenceData";
+import {
+  flowIngredients,
+  clarityIngredients,
+  type IngredientData,
+} from "@/app/lib/ingredientsData";
 import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 import CROPillCTA from "./CROPillCTA";
 
@@ -46,6 +51,170 @@ function CheckIcon({ className }: { className?: string }) {
     >
       <path d="M3 8.5L6.5 12L13 4.5" />
     </svg>
+  );
+}
+
+function IngredientChip({ ingredient }: { ingredient: IngredientData }) {
+  const initials = ingredient.name
+    .replace(/[^a-zA-Z]/g, "")
+    .slice(0, 2)
+    .toUpperCase();
+  return (
+    <span className="inline-flex items-center gap-2 bg-white border border-black/8 rounded-full pl-1 pr-3 py-1">
+      <span className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 bg-white relative">
+        {ingredient.image ? (
+          <Image
+            src={ingredient.image}
+            alt=""
+            fill
+            sizes="28px"
+            className="object-cover"
+          />
+        ) : (
+          <span className="w-full h-full flex items-center justify-center bg-[#1B2757] text-white text-[9px] font-bold">
+            {initials}
+          </span>
+        )}
+      </span>
+      <span className="text-[12px] text-black/85 font-medium leading-none">
+        {ingredient.name}
+      </span>
+    </span>
+  );
+}
+
+function IngredientsGroup({
+  title,
+  ingredients,
+}: {
+  title: string;
+  ingredients: IngredientData[];
+}) {
+  return (
+    <div>
+      <p className="text-[10px] uppercase tracking-[0.12em] font-bold text-[#1B2757] mb-2">
+        {title}
+      </p>
+      <div className="flex flex-wrap gap-2 mb-4 last:mb-0">
+        {ingredients.map((i) => (
+          <IngredientChip key={i.id} ingredient={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface FaqItem {
+  id: string;
+  question: string;
+  content: React.ReactNode;
+}
+
+function FAQRow({
+  item,
+  isOpen,
+  onToggle,
+}: {
+  item: FaqItem;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  const panelId = `buybox-faq-panel-${item.id}`;
+  const buttonId = `buybox-faq-button-${item.id}`;
+  return (
+    <div className="bg-black/[0.04] rounded-[16px] overflow-hidden">
+      <button
+        id={buttonId}
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={onToggle}
+        className="flex items-center w-full p-4 text-left hover:bg-black/[0.02] transition-colors"
+      >
+        <span className="flex-1 text-[14px] font-semibold text-black leading-tight">
+          {item.question}
+        </span>
+        <span
+          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center"
+          aria-hidden
+        >
+          {isOpen ? "−" : "+"}
+        </span>
+      </button>
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={buttonId}
+        className="overflow-hidden transition-[max-height] duration-200 ease-out"
+        style={{ maxHeight: isOpen ? "1200px" : "0px" }}
+      >
+        <div className="px-4 pb-4 pt-1 text-[13.5px] text-black/80 leading-relaxed">
+          {item.content}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BuyBoxFAQ() {
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const items: FaqItem[] = [
+    {
+      id: "ingredients",
+      question: "What's in it?",
+      content: (
+        <div className="space-y-1">
+          <IngredientsGroup title="Morning · Flow" ingredients={flowIngredients} />
+          <IngredientsGroup
+            title="Afternoon · Clear"
+            ingredients={clarityIngredients}
+          />
+        </div>
+      ),
+    },
+    {
+      id: "timing",
+      question: "When do I take it?",
+      content: (
+        <div className="space-y-3">
+          <p>
+            Take <strong>CONKA Flow</strong> in the morning, with or without
+            coffee, with or without food. It supports calm, focused thinking
+            through the first half of your day.
+          </p>
+          <p>
+            Take <strong>CONKA Clear</strong> in the afternoon, after
+            you&apos;ve already done a sustained stretch of work. Your brain
+            has built up oxidative stress by then; Clear helps reset you for a
+            strong second half of focus.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "shipping",
+      question: "Need international shipping?",
+      content: (
+        <p>
+          Yes, CONKA ships internationally. Rates and timelines vary by
+          destination and are shown at checkout.
+        </p>
+      ),
+    },
+  ];
+
+  return (
+    <div className="mt-6 space-y-2">
+      {items.map((item) => (
+        <FAQRow
+          key={item.id}
+          item={item}
+          isOpen={openId === item.id}
+          onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -182,6 +351,9 @@ export default function CROBuyBox() {
           </p>
         </div>
       </div>
+
+      {/* ===== FAQ accordion (sits below the card) ===== */}
+      <BuyBoxFAQ />
     </div>
   );
 }
