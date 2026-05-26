@@ -40,9 +40,9 @@ const CROResearch = dynamic(
   () => import("../components/cro/CROResearch"),
   { ssr: false, loading: () => <div className="h-[760px]" /> },
 );
-const CROTestimonials = dynamic(
-  () => import("../components/cro/CROTestimonials"),
-  { ssr: false, loading: () => <div className="h-[500px]" /> },
+const CROCustomerReviews = dynamic(
+  () => import("../components/cro/CROCustomerReviews"),
+  { ssr: false, loading: () => <div className="h-[680px]" /> },
 );
 const CROGuarantee = dynamic(
   () => import("../components/cro/CROGuarantee"),
@@ -141,14 +141,15 @@ export default function CROBelowFold() {
         </div>
       </section>
 
-      {/* ===== 3. TESTIMONIALS ===== */}
+      {/* ===== V2 SECTION 9 — CUSTOMER REVIEWS ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="Customer reviews"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Real people. Real results."
       >
         <div className="brand-track">
-          <VisibilityGate minHeight="500px">
-            <CROTestimonials />
+          <VisibilityGate minHeight="680px">
+            <CROCustomerReviews />
           </VisibilityGate>
         </div>
       </section>

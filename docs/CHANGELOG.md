@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 9 customer reviews (V2 reskin)
+
+Ninth section of the V2 rebuild for `/start` (under parent SCRUM-1035). Pure visual reskin of the existing `LandingTestimonials.tsx` carousel into V2 grammar. Same eight curated testimonials, same data fields, same carousel mechanics ported verbatim (3x render for infinite loop, auto-advance every 3.5s, pause on hover or touch or expanded card, 50px swipe threshold, 200-char body truncation with Read more toggle). Every visual decision is the cleaner V2 equivalent: photo moves to the top of each card, the V1 SpecHeader block with its tick badge, mono Verified-and-date line, mono 4.5/5 rating, hairline character stars and product label divider is gone, replaced by a single row of gold SVG stars (same gold as the hero trust micro-row) and a small product label. Cards get a soft brand-radius outer border with no internal dividers. The hanging mono open-quote is gone. The "Read more" toggle becomes a bold navy underlined sans link. Chamfered lab-clip nav buttons become circular white-on-navy arrow pills like the Section 7 athlete carousel. Aggressive black-pixel dot indicators become a soft navy active pill on muted circles. Date renders as "Mar 2026" via Intl rather than the V1 ISO string. The V1 LandingTestimonials.tsx is untouched because it still serves the three Conka PDPs plus protocol pages and the home route.
+
+**Modified:** `app/components/cro/CROCustomerReviews.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 8 Cambridge research + credentials
 
 Eighth section of the V2 rebuild for `/start` (under parent SCRUM-1035). The academic-proof beat after the human-proof of Section 7. A hero card features the Cambridge college photograph above a bordered content area that carries the "RESEARCH BACKING" eyebrow, the card title "The Cambridge cognitive test.", and the verbatim site-vetted body explaining how the five-minute test built into the CONKA app comes from Cambridge University research via Cognetivity Neurosciences, is the same assessment used in NHS Memory Clinics, and is FDA-cleared. A credential chips line below the body reads "Cambridge-derived · FDA cleared · NHS validated". Underneath the hero card sits a supporting credentials block: a soft grey card with the line "Formulated in partnership with Durham and Exeter universities. Made in Britain." followed by the three logos centred and equally weighted (Durham, Exeter, Made in Britain). Three credibility tiers in one section: the test is Cambridge, the formulation is Durham + Exeter, the manufacturing is UK-made. All copy lifted verbatim from existing site components so no new claims are introduced.

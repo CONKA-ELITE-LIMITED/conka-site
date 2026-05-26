@@ -437,10 +437,40 @@ Scoped + shipped 2026-05-26 across `58a5f4d`, `9410e6d`, `df47951`. Rolls under 
 **Flags carried into launch:**
 - Description copy is new (loosely adapted from Ketone). Specifically the phrase "leading UK universities and research labs" and "elite-level focus" should be reviewed by `/review-claims` before merge. "Leading UK universities" is defensible; "elite-level focus" is aspirational marketing language that could be tightened if compliance wants more conservative phrasing.
 
-### Section 9 — Customer social proof
-- Same source data as current `CROTestimonials` (`app/lib/customerTestimonials.ts`)
-- Restyle to match V2 grammar — softer cards, more visual weight per review
-- Source as many photos as possible of customers holding the product (action item for marketing)
+### Section 9 — `CROCustomerReviews` (V2 reskin of LandingTestimonials)
+
+Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+
+- **Pure visual reskin.** Same data (`CURATED_TESTIMONIALS` from `app/lib/customerTestimonials.ts`, 8 testimonials all with photos). Same carousel mechanics ported verbatim from `LandingTestimonials.tsx`. No new copy, no claims work.
+- **H2:** "Real people. Real results." (kept from V1)
+- **Subline:** "Eight stories from the people who use CONKA every day." (replaces V1's mono `N=500+ · Verified reviews`)
+- **Card structure (V2):**
+  - Photo at the top of each card, `aspect-[4/3]`, `object-cover` (was bottom in V1)
+  - One bordered card per slide (`border border-black/12 rounded-[var(--brand-radius-container)]`), no internal dividers
+  - Rating row: gold filled SVG stars (`#F59E0B`, matches hero trust micro-row) + product label on the right
+  - Headline (semibold sans), body (truncated at 200 chars with bold navy "Read more" / "Show less"), name + month/year attribution
+  - Date formatted as "Mar 2026" via `Intl.DateTimeFormat`, not the V1 mono ISO string
+- **Removed V1 clinical noise:**
+  - Mono `// Field observations · PROOF-03` eyebrow
+  - Mono `N=500+ · Verified reviews` subline
+  - Per-card `SpecHeader` (black tick badge + mono `Verified · YYYY-MM-DD` + mono `4.5/5` + hairline-character stars + mono product label + hard dividing border)
+  - Hanging mono open-quote
+  - Chamfered `lab-clip-tr` navy nav buttons
+  - Hard-pixel dot indicators (`bg-black w-4 h-1.5` active, `bg-black/20 w-1.5 h-1.5` inactive)
+- **Mechanics preserved verbatim:** `CARD_WIDTH_MOBILE = 300`, `CARD_WIDTH_DESKTOP = 340`, `GAP = 16`, `AUTO_ADVANCE_MS = 3500`, `TRANSITION_MS = 600`, `RESUME_DELAY_MS = 5000`, `CHAR_LIMIT = 200`, `SWIPE_THRESHOLD = 50`. 3x render for infinite loop, `pos` + `smooth` + `isPaused` + `expandedIndex` state machine, pause-on-hover, pause-on-touch, pause-on-expand. Auto-advance kept — testimonials are passive proof; auto-advance shows breadth without requiring engagement.
+- **Navigation:**
+  - Desktop: circular white-background arrow buttons overlaid on the carousel sides (Section 7 pattern), `focus-visible` ring only.
+  - Mobile: dot indicators below the carousel. Active dot is navy `w-5 h-2` pill; inactive are `bg-black/15` circles.
+- **No CTA in Section 9.** Conversion already happened at Section 5.
+- **Files:**
+  - New: `app/components/cro/CROCustomerReviews.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` — swapped the existing dynamic-imported `CROTestimonials` slot for the new V2 component. Kept the `VisibilityGate` wrapper (raised `minHeight` to `680px` to match the new card-with-photo height). Standardised V2 section spacing applied (`paddingTop: 0, paddingBottom: 4rem`).
+  - Untouched: `app/components/landing/LandingTestimonials.tsx` — still serves `/conka-flow`, `/conka-clarity`, `/conka-both`, `/protocol/[id]`, `/`.
+  - Untouched: `app/lib/customerTestimonials.ts` — shared catalogue.
+- **Section background:** `brand-bg-white`.
+
+**Flags carried into launch:**
+- One new copy string: the subline "Eight stories from the people who use CONKA every day." — quick `/review-claims` pass before merge, but low risk (it's just a count + neutral framing).
 
 ### Section 10 — App callout
 - Why we have an app + photo of someone using it
