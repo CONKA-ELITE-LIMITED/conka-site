@@ -72,9 +72,9 @@ export default function CROBelowFold() {
 
       {/* ===== V2 SECTION 4 — FORMULA SPLIT (AM/PM toggle + ingredients) ===== */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         style={{ paddingTop: 0, paddingBottom: "4rem" }}
-        aria-label="Flow for your mornings, Clear for your afternoons"
+        aria-label="Built for every part of your day"
       >
         <div className="brand-track">
           <CROFormulaSplitV2 />

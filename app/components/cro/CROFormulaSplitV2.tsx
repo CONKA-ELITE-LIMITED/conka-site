@@ -5,15 +5,17 @@ import Image from "next/image";
 import {
   flowIngredients,
   clarityIngredients,
+  type IngredientCategory,
   type IngredientData,
 } from "@/app/lib/ingredientsData";
 
 /* ============================================================================
  * CROFormulaSplitV2
  *
- * V2 of Section 4 on /start. Replaces the V1 CROFormulaSplit (side-by-side
- * cards + drawer). One focused product at a time via an AM/PM toggle, with
- * an inline 8 Hours-style ingredient list underneath.
+ * V2 Section 4 on /start. Replaces the V1 CROFormulaSplit (side-by-side
+ * cards + drawer). One product at a time via AM/PM toggle, with a Magic
+ * Mind-style ingredient list underneath that opens to a friendly
+ * description rather than a clinical wall.
  * ========================================================================== */
 
 type Formula = "flow" | "clear";
@@ -48,6 +50,16 @@ const PRODUCT_CONTENT: Record<Formula, ProductContent> = {
 const INGREDIENTS_BY_FORMULA: Record<Formula, IngredientData[]> = {
   flow: flowIngredients,
   clear: clarityIngredients,
+};
+
+const CATEGORY_LABEL: Record<IngredientCategory, string> = {
+  adaptogen: "Adaptogen",
+  nootropic: "Nootropic",
+  vitamin: "Vitamin",
+  "amino-acid": "Amino acid",
+  antioxidant: "Antioxidant",
+  mineral: "Mineral",
+  "essential-oil": "Essential oil",
 };
 
 function SunIcon({ className }: { className?: string }) {
@@ -150,8 +162,10 @@ function IngredientRow({
   isOpen: boolean;
   onToggle: () => void;
 }) {
+  const [showScience, setShowScience] = useState(false);
   const panelId = `ingredient-panel-${ingredient.id}`;
   const buttonId = `ingredient-button-${ingredient.id}`;
+  const sciencePanelId = `ingredient-science-${ingredient.id}`;
   const topStats = ingredient.keyStats.slice(0, 2);
   const study = ingredient.clinicalStudies[0];
 
@@ -195,34 +209,52 @@ function IngredientRow({
         role="region"
         aria-labelledby={buttonId}
         className="overflow-hidden transition-[max-height] duration-200 ease-out"
-        style={{ maxHeight: isOpen ? "400px" : "0px" }}
+        style={{ maxHeight: isOpen ? "640px" : "0px" }}
       >
         <div className="px-4 pb-4 pt-1">
-          <p className="text-[12px] text-black/45 mb-3 tabular-nums">
-            {ingredient.percentage} of formula
+          <p className="text-[10px] uppercase tracking-[0.12em] font-bold text-[#1B2757] mb-2">
+            {CATEGORY_LABEL[ingredient.category]}
           </p>
-          <p className="text-[13.5px] text-black/85 leading-snug mb-4">
-            {ingredient.oneLineClaim}
+          <p className="text-[13.5px] text-black/85 leading-relaxed mb-3">
+            {ingredient.description}
           </p>
-          {topStats.length > 0 && (
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              {topStats.map((stat) => (
-                <div key={stat.label}>
-                  <p className="text-[20px] font-bold text-[#1B2757] tabular-nums leading-none">
-                    {stat.value}
-                  </p>
-                  <p className="text-[10px] uppercase tracking-[0.1em] text-black/55 mt-1">
-                    {stat.label}
-                  </p>
+          <button
+            type="button"
+            aria-expanded={showScience}
+            aria-controls={sciencePanelId}
+            onClick={() => setShowScience((v) => !v)}
+            className="text-[12px] font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
+          >
+            {showScience ? "Hide the science" : "Learn more"}
+          </button>
+          <div
+            id={sciencePanelId}
+            role="region"
+            className="overflow-hidden transition-[max-height] duration-200 ease-out"
+            style={{ maxHeight: showScience ? "360px" : "0px" }}
+          >
+            <div className="pt-4">
+              {topStats.length > 0 && (
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {topStats.map((stat) => (
+                    <div key={stat.label}>
+                      <p className="text-[20px] font-bold text-[#1B2757] tabular-nums leading-none">
+                        {stat.value}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-[0.1em] text-black/55 mt-1">
+                        {stat.label}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+              {study && (
+                <p className="text-[11px] text-black/45 leading-snug">
+                  Source: {study.authors} ({study.year}), {study.journal}.
+                </p>
+              )}
             </div>
-          )}
-          {study && (
-            <p className="text-[11px] text-black/45 leading-snug">
-              Source: {study.authors} ({study.year}), {study.journal}.
-            </p>
-          )}
+          </div>
         </div>
       </div>
     </div>
@@ -247,36 +279,38 @@ export default function CROFormulaSplitV2() {
         className="text-black font-semibold text-[34px] leading-[1.08] mb-8"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Flow for your mornings.
-        <br />
-        Clear for your afternoons.
+        Built for every part of your day.
       </h2>
 
-      {/* ===== Product card ===== */}
-      <div
-        id="formula-panel"
-        role="tabpanel"
-        className="bg-white rounded-[var(--brand-radius-container)] p-6 mb-6 flex flex-col items-center"
-      >
-        <div className="relative w-24 h-52 mb-4">
-          <Image
-            src={content.bottleImage}
-            alt={content.bottleAlt}
-            fill
-            sizes="96px"
-            className="object-contain scale-150"
-          />
-        </div>
-        <h3 className="text-[20px] font-semibold text-black mb-2">
+      {/* ===== Product header (name + subline + toggle, outside the card) ===== */}
+      <div className="mb-6">
+        <h3 className="text-[22px] font-semibold text-black mb-1">
           {content.name}
         </h3>
-        <p className="text-[14px] text-black/70 text-center leading-snug mb-5 max-w-[320px]">
+        <p className="text-[14px] text-black/70 leading-snug mb-4">
           {content.cardCopy}
         </p>
         <FormulaToggle formula={formula} onChange={handleFormulaChange} />
       </div>
 
-      {/* ===== Ingredient list ===== */}
+      {/* ===== Card: just the bottle, larger render ===== */}
+      <div
+        id="formula-panel"
+        role="tabpanel"
+        className="bg-black/[0.03] rounded-[var(--brand-radius-container)] flex justify-center items-center mb-10"
+      >
+        <div className="relative w-44 h-96">
+          <Image
+            src={content.bottleImage}
+            alt={content.bottleAlt}
+            fill
+            sizes="176px"
+            className="object-contain scale-150"
+          />
+        </div>
+      </div>
+
+      {/* ===== Ingredients ===== */}
       <p className="text-[18px] text-black font-medium leading-snug mb-4">
         {content.ingredientsIntro}
       </p>
