@@ -19,16 +19,16 @@ import CROPillCTA from "@/app/components/cro/CROPillCTA";
  * ========================================================================== */
 
 const COFFEE_COLOR = "#000";
-const COFFEE_HATCH_BG = "rgba(0,0,0,0.04)";
-const COFFEE_HATCH_PATTERN =
-  "repeating-linear-gradient(45deg, rgba(0,0,0,0.22) 0 3px, transparent 3px 7px)";
+const COFFEE_CRASH_BG = "rgba(220, 38, 38, 0.18)";
+const COFFEE_CRASH_PATTERN =
+  "repeating-linear-gradient(45deg, rgba(220, 38, 38, 0.65) 0 3px, transparent 3px 7px)";
 const CONKA_COLOR = "#1B2757";
 
-// Coffee: peak 9am-12pm = 30%, crash 12pm-2pm = 50%
-const COFFEE_PEAK_END = 30;
-const COFFEE_CRASH_END = 50;
-// CONKA Flow + Clear: 9am-6pm = 90%
-const CONKA_END = 90;
+// Track represents 9am-6pm (9 hours). CONKA fills the whole day.
+// Coffee: peak 9am-12pm = 33%, crash 12pm-2pm = 56%
+const COFFEE_PEAK_END = 33;
+const COFFEE_CRASH_END = 56;
+const CONKA_END = 100;
 
 interface BarProps {
   isInView: boolean;
@@ -54,8 +54,8 @@ function CoffeeBar({ isInView, prefersReducedMotion }: BarProps) {
   const crashStyle: React.CSSProperties = {
     left: `${COFFEE_PEAK_END}%`,
     width: `${COFFEE_CRASH_END - COFFEE_PEAK_END}%`,
-    backgroundColor: COFFEE_HATCH_BG,
-    backgroundImage: COFFEE_HATCH_PATTERN,
+    backgroundColor: COFFEE_CRASH_BG,
+    backgroundImage: COFFEE_CRASH_PATTERN,
     transform: visible ? transformVisible : transformHidden,
     transformOrigin: "left",
     transition: prefersReducedMotion
@@ -120,7 +120,12 @@ function BarRow({ label, markers, ariaLabel, children }: BarRowProps) {
             className="absolute top-0 text-[12px] text-black/55 tabular-nums"
             style={{
               left: `${m.pct}%`,
-              transform: m.pct === 0 ? "translateX(0)" : "translateX(-50%)",
+              transform:
+                m.pct === 0
+                  ? "translateX(0)"
+                  : m.pct >= 100
+                    ? "translateX(-100%)"
+                    : "translateX(-50%)",
             }}
           >
             {m.text}
@@ -173,10 +178,10 @@ export default function LandingValueComparisonV2() {
           label="CONKA Flow + Clear"
           markers={[
             { pct: 0, text: "9am" },
-            { pct: 40, text: "1pm" },
+            { pct: 44, text: "1pm" },
             { pct: CONKA_END, text: "6pm" },
           ]}
-          ariaLabel="CONKA Flow and Clear provide steady focus from 9am through to 6pm."
+          ariaLabel="CONKA Flow and Clear provide steady focus across the whole day, from 9am through to 6pm."
         >
           <ConkaBar
             isInView={isInView}

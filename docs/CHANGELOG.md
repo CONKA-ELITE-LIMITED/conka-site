@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 3 Coffee vs CONKA (animated bars)
+
+Third section of the V2 rebuild for `/start` (SCRUM-1038, parent SCRUM-1035). Replaces the dense clinical Coffee vs CONKA chart with a single-glance LMNT-style horizontal bar comparison: Coffee fills 0 to 56% of the day (solid black peak from 9am to 12pm, red hatched crash from 12pm to 2pm) and CONKA Flow + Clear fills the entire bar in navy from 9am to 6pm. Three labelled time markers per bar replace the hour-by-hour ticks. Bars animate fill left-to-right on scroll-in using the existing `useInView` hook; `prefers-reduced-motion` skips the animation via a lazy `useState` initializer (no setState-in-effect). The shared `LandingValueComparison` is untouched and still serves `/conka-flow`, `/conka-clarity`, and `/conka-both`; the V1 chart slot was removed from `/start` so the page doesn't carry two coffee-vs-CONKA visualisations. The parent plan picked up "The CRO bet" principle and the no-Figma-for-Sections-3-to-11 decision in the same pass, and Section 2's subline was finalised to lead with the £500k/3-years line and append the trusted-by-athletes endorsement.
+
+**Modified:** `app/components/landing/LandingValueComparisonV2.tsx` (new), `app/start/CROBelowFold.tsx`, `app/components/cro/CROBrandStory.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 2 brand story ("We Created Drinkable Focus")
 
 Second section of the V2 rebuild for `/start` (SCRUM-1037, parent SCRUM-1035). Editorial dev-story block sitting directly below the lifestyle hero: H2 "We Created Drinkable Focus", investment subline, ShotsHero.jpg product asset (cropped 10:9 with object-cover scale-150 zoom so the bottles fill the frame), two stacked stats (150,000+ shots sold to date / £500,000 invested into clinical research), and a centered navy pill CTA "Order Now".
