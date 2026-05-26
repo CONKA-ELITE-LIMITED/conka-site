@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import CROPillCTA from "./CROPillCTA";
 
 const AVATAR_COUNT = 5;
 
@@ -39,17 +38,6 @@ function TrustMicroRow() {
   );
 }
 
-function HeroCTA({ children }: { children: React.ReactNode }) {
-  return (
-    <Link
-      href={FUNNEL_URL}
-      className="block w-full text-center bg-[#1B2757] text-white font-semibold text-base py-4 px-6 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
-    >
-      {children}
-    </Link>
-  );
-}
-
 export default function CROHeroV2() {
   return (
     <div className="mx-auto max-w-[560px]">
@@ -81,7 +69,7 @@ export default function CROHeroV2() {
         <sup className="ml-0.5 text-[0.6em] text-black/40 align-super">†</sup>
       </p>
 
-      <HeroCTA>Save £120 + Free Shipping</HeroCTA>
+      <CROPillCTA className="w-full">Save £120 + Free Shipping</CROPillCTA>
     </div>
   );
 }
