@@ -29,6 +29,7 @@ const BENEFITS = [
   "56 shots: 28 Flow + 28 Clear",
   "2 shots a day, every day of the month",
   "Free UK shipping",
+  "16 clinical ingredients, UK patented",
 ];
 
 function CheckIcon({ className }: { className?: string }) {
