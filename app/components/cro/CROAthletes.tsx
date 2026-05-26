@@ -99,10 +99,53 @@ const ATHLETES: Athlete[] = [
 
 const SWIPE_THRESHOLD = 50;
 
-function AthleteSlide({ athlete }: { athlete: Athlete }) {
+function ArrowButton({
+  direction,
+  onClick,
+}: {
+  direction: "prev" | "next";
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={direction === "prev" ? "Previous athlete" : "Next athlete"}
+      onClick={onClick}
+      className={`absolute top-1/2 -translate-y-1/2 ${direction === "prev" ? "left-3" : "right-3"} w-10 h-10 flex items-center justify-center bg-white/95 hover:bg-white rounded-full shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2`}
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#1B2757"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        {direction === "prev" ? (
+          <polyline points="15 6 9 12 15 18" />
+        ) : (
+          <polyline points="9 6 15 12 9 18" />
+        )}
+      </svg>
+    </button>
+  );
+}
+
+function AthleteSlide({
+  athlete,
+  onPrev,
+  onNext,
+}: {
+  athlete: Athlete;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
   return (
     <div className="border border-black/12 rounded-[var(--brand-radius-container)] overflow-hidden bg-white">
-      <div className="relative aspect-square bg-black/[0.04]">
+      <div className="relative aspect-[4/3] bg-black/[0.04]">
         <Image
           key={athlete.name}
           src={athlete.image}
@@ -112,6 +155,8 @@ function AthleteSlide({ athlete }: { athlete: Athlete }) {
           className="object-cover"
           priority={false}
         />
+        <ArrowButton direction="prev" onClick={onPrev} />
+        <ArrowButton direction="next" onClick={onNext} />
       </div>
       <div className="p-5">
         <h3 className="text-[24px] font-semibold text-black leading-tight">
@@ -269,7 +314,7 @@ export default function CROAthletes() {
         aria-live="polite"
         aria-atomic="true"
       >
-        <AthleteSlide athlete={active} />
+        <AthleteSlide athlete={active} onPrev={goPrev} onNext={goNext} />
       </div>
 
       <RosterStrip activeIndex={activeIndex} onSelect={goTo} />
