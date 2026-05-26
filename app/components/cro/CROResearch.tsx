@@ -24,8 +24,8 @@ const RESEARCH_PARTNERS = [
 export default function CROResearch() {
   return (
     <div className="mx-auto max-w-[560px]">
-      {/* ===== Hero Cambridge image ===== */}
-      <div className="relative aspect-[4/3] rounded-[var(--brand-radius-container)] overflow-hidden bg-black/[0.04] mb-8">
+      {/* ===== Hero Cambridge image (full-bleed on mobile, contained on md+) ===== */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-black/[0.04] mb-8 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[var(--brand-radius-container)]">
         <Image
           src="/UniversityOfCambridge.png"
           alt="The University of Cambridge"
@@ -50,13 +50,13 @@ export default function CROResearch() {
         {RESEARCH_PARTNERS.map((partner) => (
           <div
             key={partner.src}
-            className="relative w-[80px] h-[60px] sm:w-[96px] sm:h-[72px]"
+            className="relative w-[110px] h-[80px] sm:w-[140px] sm:h-[100px]"
           >
             <Image
               src={partner.src}
               alt={partner.alt}
               fill
-              sizes="96px"
+              sizes="140px"
               className="object-contain"
             />
           </div>
@@ -64,7 +64,7 @@ export default function CROResearch() {
       </div>
 
       {/* ===== Description ===== */}
-      <p className="text-center text-[15px] text-black/75 leading-relaxed max-w-[52ch] mx-auto">
+      <p className="text-[15px] text-black/75 leading-relaxed">
         Our research is led by experts in cognitive science and brain
         performance. We work with leading UK universities and research labs,
         pioneering new ways for anyone to access elite-level focus.
