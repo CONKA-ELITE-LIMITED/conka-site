@@ -323,7 +323,7 @@ function IngredientRow({
             onClick={() => setShowScience((v) => !v)}
             className="text-[12px] font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
           >
-            {showScience ? "Hide the science" : "Learn more"}
+            {showScience ? "Hide the science" : "See the science"}
           </button>
           <div
             id={sciencePanelId}
