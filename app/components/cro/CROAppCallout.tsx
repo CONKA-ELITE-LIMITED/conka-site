@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import CROPillCTA from "./CROPillCTA";
-import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
+import {
+  GUARANTEE_DAYS,
+  GUARANTEE_LABEL,
+} from "@/app/lib/offerConstants";
 
 /* ============================================================================
  * CROAppCallout
@@ -66,23 +69,22 @@ export default function CROAppCallout() {
         score only improves if your brain actually improves.
       </p>
 
-      {/* ===== Risk-close card ===== */}
-      <div className="bg-black/[0.04] rounded-[var(--brand-radius-container)] p-6 sm:p-7 mb-6">
-        <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-[#1B2757] mb-2">
-          No risk. Real numbers.
-        </p>
-        <p className="text-[15px] text-black/85 leading-relaxed">
-          Take the test. Try CONKA. Take the test again. If your data
-          doesn&apos;t move, we&apos;ll refund you within {GUARANTEE_DAYS}{" "}
-          days.
-        </p>
-      </div>
-
       {/* ===== CTA ===== */}
       <CROPillCTA className="w-full">Try CONKA risk-free</CROPillCTA>
 
+      {/* ===== Guarantee tile (under CTA, above /app link) ===== */}
+      <div className="bg-black/[0.04] rounded-[var(--brand-radius-container)] p-5 mt-5">
+        <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-[#1B2757] mb-2">
+          {GUARANTEE_LABEL}
+        </p>
+        <p className="text-[14px] text-black/80 leading-relaxed">
+          Try CONKA. If you&apos;re not happy, email us within{" "}
+          {GUARANTEE_DAYS} days for a full refund.
+        </p>
+      </div>
+
       {/* ===== /app link ===== */}
-      <p className="text-center mt-4">
+      <p className="text-center mt-5">
         <Link
           href="/app"
           className="text-[13px] font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
