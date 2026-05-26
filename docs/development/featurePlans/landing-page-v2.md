@@ -38,9 +38,7 @@ Marketing has not produced and will not produce Figma mockups for Sections 3 onw
 
 ## What's next
 
-**Section 3 — `LandingValueComparisonV2` (Coffee vs CONKA, visual bar comparison).** New component inspired by LMNT's homepage: two horizontal animated bars that fill left-to-right when in view. Coffee bar fills a short distance then stops abruptly with a visually unpleasant tail; CONKA bar fills further and tapers smoothly past coffee's wear-off. No hour-by-hour ticks; three labelled time markers per bar (Start / Crash or Drop-off / End). Replaces the `LandingValueComparison` slot in `app/start/CROBelowFold.tsx`. Do not modify the shared `LandingValueComparison.tsx` (used by `/conka-flow`, `/conka-clarity`, `/conka-both`).
-
-Scoped via `/scope` on 2026-05-26. Sub-ticket under SCRUM-1035. Branch already exists: `section-3`.
+**Section 6 — `% increase benefit cards`.** New component on `/start` between the inline buy box (Section 5) and the legacy testimonials block. Lead with quantified cognitive metrics (e.g. "+28.96% focus", "+18.41% memory") in scannable cards; each card expandable into a "how this helps someone" detail line. Reference style: 8 Hours benefit cards + Ketone-IQ "benefits of daily use". Sources for the %s need alignment with `docs/branding/BRAND_VOICE.md` proof points and the app-insights data before launch. See the brief in `## Section plan` below.
 
 ---
 
@@ -101,7 +99,48 @@ Scoped via `/scope` on 2026-05-26. Sub-ticket under SCRUM-1035. Branch already e
 - Subline finalised (2026-05-26): "Trusted where focus isn't optional, by athletes, physicians, biohackers, and the world's hardest-thinking professionals." — endorsement-style audience claim, run `/review-claims` to confirm it's safe under EFSA rules before launch
 - Spinning/floating bottle animation deferred per parent plan (static asset for now)
 
-### Sections 3–11 ⏳ NOT STARTED
+### Section 3 — `LandingValueComparisonV2` ✅ DONE (on `section-3`)
+
+- **Ticket:** SCRUM-1038 (last separate sub-ticket; subsequent sections roll under SCRUM-1035 directly)
+- **Branch:** `section-3` (NOT yet merged)
+- **Key commits:** `73705f6` initial ship; `b354783` red crash callout + standardised section spacing; `d822db2` CONKA bar fills 100% + red accent on coffee crash
+- **What shipped:**
+  - New `app/components/landing/LandingValueComparisonV2.tsx` — two horizontal bars that animate fill on scroll-in via the existing `useInView` hook. Coffee fills 0 to 56% of the day (solid black peak 9am-12pm, red hatched crash 12pm-2pm with a red "↑ Crash" callout below the bar). CONKA Flow + Clear fills 100% smoothly in navy from 9am to 6pm. Three labelled time markers per bar; no hour-by-hour ticks.
+  - H2: "The 2pm crash isn't you."
+  - Subline: "Coffee gets you started. CONKA gets you through."
+  - Footnote below the CTA carries the V1 data anchor ("Based on 7,593 cognitive tests across 712 CONKA app users over 30 months") with a link to `/app-insights#time-of-day`.
+  - `prefers-reduced-motion` respected via a lazy `useState` initializer; bars render at final state with no transition when reduced.
+  - Wired into `CROBelowFold` immediately after Brand Story. The original `LandingValueComparison` (still used by the three clinical PDPs) is untouched.
+
+### Section 4 — `CROFormulaSplitV2` ✅ DONE (on `section-3`)
+
+- **Branch:** `section-3`
+- **Key commits:** `d1415a8` initial AM/PM toggle + ingredient accordion; `811b2e1` layout rework (toggle outside the card, bigger bottle, white background); `07f2311` Magic Mind-style ingredient overrides + coloured toggle; `61cf777` toggle moved above the card; `ded2b33` "See the science" label; `b92a40c` Morning / Afternoon labels
+- **What shipped:**
+  - New `app/components/cro/CROFormulaSplitV2.tsx` replacing the V1 `CROFormulaSplit` slot.
+  - H2: "Built for every part of your day."
+  - Coloured pill toggle ABOVE the product card (Morning amber `#F59E0B` + sun icon, Afternoon navy + custom sun-horizon SVG icon; the moon was rejected because afternoon is not night).
+  - Bottle card: square aspect, large bottle render via `scale-150`, product name + one-line copy overlaid in the bottom-left corner.
+  - Below the card: a dynamic editorial intro headline, then a vertical stack of pill-shaped ingredient rows.
+  - Each row: circular ingredient image + name + `+`/`−` indicator. Click expands to category pill, plain-language "what is it" (per-ingredient override), plain-language "why it helps" (per-ingredient override), then a nested "See the science" reveal with study key-finding, the top two key stats, and the source citation.
+  - Em-dashes from the shared `ingredientsData.ts` are stripped at render so the V2 surface stays on brand voice. The shared catalogue itself is not modified.
+- **Flags carried into launch:**
+  - 13 new ingredient `whatIs` + `whyGood` overrides plus the per-formula intro copy — `/review-claims` pass needed before merge.
+
+### Section 5 — `CROBuyBox` (inline conka-both quick purchase) ✅ DONE (on `section-3`)
+
+- **Branch:** `section-3`
+- **Key commits:** `a5dc421` initial ship; `abf1c33` `/formulas/both/BothBox.jpg` asset swap; `30eed0b` bullet tightening + remove duplicated guarantee subline; `f591f3f` re-add "16 clinical ingredients" bullet; `093cd1d` FAQ accordion under the card; `44fc2de` "When do I take it?" rewrite with mini bottle assets
+- **What shipped:**
+  - New `app/components/cro/CROBuyBox.tsx`. Ketone-IQ-inspired single conka-both card, V2 palette (no red anywhere): product photo (`/formulas/both/BothBox.jpg`, the two boxes + bottles shot), navy price row with grey strike-through OTP and a navy "Save X%" pill, per-shot micro-line, 4-item benefits checklist (56 shots split / 2 a day / Free UK shipping / 16 clinical ingredients, UK patented), bordered Subscribe & Save toggle auto-checked, full-width CTA whose label flips between "Start subscription · £X.XX/mo" and "Order once · £X.XX", 100-day guarantee footer.
+  - Real cart wiring through `useCart().addToCart(variant.variantId, 1, variant.sellingPlanId, { location: "buy_box", source: "v2_quick_purchase" })`. `AddToCartMetadata.location`/`source` are typed as plain `string` so no `CartContext.tsx` changes were required. Drawer auto-opens on add.
+  - Variant + pricing resolved at render via `getCadenceVariantByProductHeroId("03", cadence)` and `getCadencePricingByProductHeroId("03", cadence)`. Savings derived from the monthly-sub `compareAtPrice`, falling back to the monthly-otp price.
+  - `CROPillCTA` extended with optional `onClick` / `disabled` / `type` props so it can render as a `<button>` for cart actions. Link mode is unchanged for existing callers.
+  - FAQ accordion below the card (same accordion mechanics as Section 4): "What's in it?" expands to a chip grid of all 13 ingredients grouped by formula; "When do I take it?" expands to two authoritative Flow + Clear paragraphs each anchored by a small bottle render; "Need international shipping?" expands to a one-line yes.
+- **Flags carried into launch:**
+  - New copy across the buy-box benefits, FAQ panels, and the timing answer — `/review-claims` pass needed before merge.
+
+### Sections 6–11 ⏳ NOT STARTED
 
 See `## Section plan` below for briefs.
 
@@ -113,16 +152,17 @@ These were introduced or discovered during Sections 1 + 2. Anyone picking up Sec
 
 ### `CROPillCTA` (shared component)
 
-Lives at `app/components/cro/CROPillCTA.tsx`. The V2 pill button. Used by Hero and Brand Story; will be used by every future V2 CTA unless specified otherwise.
+Lives at `app/components/cro/CROPillCTA.tsx`. The V2 pill button. Used everywhere a V2 CTA appears (Hero, Brand Story, Section 3 chart, Section 5 buy box).
 
 API:
 ```tsx
 <CROPillCTA>Order Now</CROPillCTA>                       // content-width, defaults to FUNNEL_URL
 <CROPillCTA className="w-full">Save £120</CROPillCTA>    // full-width variant
 <CROPillCTA href="/some-other-route">Click</CROPillCTA>  // custom href
+<CROPillCTA onClick={fn} disabled={loading}>...          // button mode (added for Section 5 cart action)
 ```
 
-Defaults: `inline-flex`, `py-4 px-10`, `rounded-full`, `bg-[#1B2757]` (navy), `text-white`, `font-semibold`. Centering when content-width is done by the parent (wrap in `flex justify-center`), not by the component.
+Defaults: `inline-flex`, `py-4 px-10`, `rounded-full`, `bg-[#1B2757]` (navy), `text-white`, `font-semibold`. Providing `onClick` switches the component from a `<Link>` to a `<button>`. Centering when content-width is done by the parent (wrap in `flex justify-center`), not by the component.
 
 ### `.brand-v2` CSS scope
 
@@ -139,23 +179,37 @@ Applied on `/start` page root in `app/start/page.tsx` (`className="brand-clinica
 
 **Symptom:** you add `pb-0` to a section and nothing changes. Same for `pt-*`.
 
-**Fix:** use inline style. The pattern already exists on `/app-insights/page.tsx`. Examples from V2:
-- Hero `<section>`: `style={{ paddingBottom: "4rem" }}` — overrides the default 80px (mobile) bottom padding
-- Brand Story `<section>`: `style={{ paddingTop: 0 }}` — zeros out the default 80px (mobile) top padding
+**Fix:** use inline style. The pattern already exists on `/app-insights/page.tsx`.
+
+**Standardised V2 spacing (established during Section 3, applied to every V2 section since):**
+
+```tsx
+<section
+  className="brand-section brand-bg-white"
+  style={{ paddingTop: 0, paddingBottom: "4rem" }}
+  aria-label="..."
+>
+```
+
+`paddingTop: 0` on every V2 section + `paddingBottom: "4rem"` on every V2 section gives a clean 4rem gap between any two V2 sections without re-introducing the 80px default. The Hero on `/start` keeps `paddingBottom: "4rem"` (set in `page.tsx`) for symmetry. Every new V2 section should follow this pattern.
 
 Do not waste time with `!pb-4` or `pb-4!` — just use inline style.
 
 ### Section background rhythm
 
-Currently broken from the alternating tint convention. Hero is `brand-bg-white`, Brand Story is also `brand-bg-white` (matches Figma). The next existing section (`CROFormulaSplit`) stays `brand-bg-tint`. Don't try to "fix" the rhythm — match what each Figma section calls for.
+Current state of `/start`: the V2 sections (Hero, Brand Story, Section 3 chart, Section 4 formula split, Section 5 buy box) are all `brand-bg-white` per user direction. The legacy V1 sections below (Testimonials onwards) keep their original tint/white alternation. Don't try to "fix" the white run — it's intentional. The visual rhythm comes from the cards inside each section (soft grey backgrounds on the buy box and ingredient rows), not from section-level alternation.
 
 ### Old components kept on disk
 
-`app/components/cro/CROHero.tsx` is the V1 hero. Untouched, but no longer imported anywhere on `/start`. Kept for easy revert if V2 needs to be rolled back. Same logic will apply for any other CRO* component the V2 sections replace.
+The V1 components that V2 sections replace are left on disk for easy revert. None of them are imported on `/start` anymore, but they still serve `/conka-flow`, `/conka-clarity`, `/conka-both` (the shared ones) or are kept as historical reference (the CRO* ones).
 
-### CROFormulaSplit ⚠️ not yet refactored for V2
+- `app/components/cro/CROHero.tsx` — replaced by `CROHeroV2.tsx` (kept; no longer imported)
+- `app/components/cro/CROFormulaSplit.tsx` — replaced by `CROFormulaSplitV2.tsx` (kept; no longer imported)
+- `app/components/landing/LandingValueComparison.tsx` — Section 3 forks to `LandingValueComparisonV2`; the V1 file stays as-is because three other clinical pages still render it. Do NOT modify the V1 file.
 
-A prior session refactored `CROFormulaSplit.tsx` to a tabbed AM/PM layout with inline benefit clusters. That refactor was **reverted** and the file is back to the original side-by-side cards + drawer pattern. Section 4 (which targets a deeper AM/PM-toggle restyle) still needs to be built from scratch when picked up. Don't assume the tab toggle is shipped.
+### Accordion pattern (Sections 4 + 5)
+
+Both Section 4 (ingredient rows) and Section 5 (FAQ rows) use the same accordion mechanic: a soft `bg-black/[0.04] rounded-[16px]` pill containing a button (`aria-expanded` + `aria-controls`) and a content region (`role="region"`, `transition-[max-height]`) with `+` / `−` indicators. Single-open behaviour managed with `useState<string | null>(openId)`. When you add another accordion-style surface to `/start`, mirror this pattern verbatim. Nested accordions are fine (Section 4's "See the science" toggle is a second `useState` per row).
 
 ---
 
