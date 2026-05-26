@@ -20,9 +20,9 @@ const LandingValueComparisonV2 = dynamic(
   () => import("../components/landing/LandingValueComparisonV2"),
   { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
-const CROFormulaSplit = dynamic(
-  () => import("../components/cro/CROFormulaSplit"),
-  { ssr: false, loading: () => <div className="h-[500px]" /> },
+const CROFormulaSplitV2 = dynamic(
+  () => import("../components/cro/CROFormulaSplitV2"),
+  { ssr: false, loading: () => <div className="h-[700px]" /> },
 );
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
@@ -70,13 +70,14 @@ export default function CROBelowFold() {
         </div>
       </section>
 
-      {/* ===== 2. FORMULA SPLIT — WHAT ===== */}
+      {/* ===== V2 SECTION 4 — FORMULA SPLIT (AM/PM toggle + ingredients) ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="Flow and Clear formulas"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Flow for your mornings, Clear for your afternoons"
       >
         <div className="brand-track">
-          <CROFormulaSplit />
+          <CROFormulaSplitV2 />
         </div>
       </section>
 

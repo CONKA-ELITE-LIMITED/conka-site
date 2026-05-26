@@ -242,15 +242,29 @@ Shipped. See `## Implementation log` above. Animation (spinning bottle) deferred
 - **Compliance:** the word "Crash" and the duration framing need `/review-claims` before launch. Design with the marker label as a plain `<span>` so a compliance-driven swap to "Drop-off" / "Wear-off" doesn't require layout changes.
 - **Mobile-first:** must look great at 390px; stack marker labels vertically below the bar if they collide.
 
-### Section 4 — AM/PM toggle + ingredient close-ups
-- Header: **"Why your afternoons feel longer than your mornings."**
-- AM/PM toggle (sun + moon icons)
-- When selected, swap to bold close-up bottle image of Flow or Clear
-- Replace the current ingredients drawer with a concise **inline** ingredients panel underneath the bottle:
-  - Lead with benefit, not dose
-  - "Wacky / unclinical" ingredient imagery — should not feel like a supplement facts panel
-  - Reference: 8 Hours ingredients section, replaced with CONKA ingredients
-- Note: a prior attempt at a tabbed AM/PM `CROFormulaSplit` was reverted. Building this section means starting from the original `CROFormulaSplit` (side-by-side + drawer) and either editing in place or forking to `CROFormulaSplitV2`
+### Section 4 — `CROFormulaSplitV2` (AM/PM toggle + 8 Hours-style ingredient list)
+
+Scoped 2026-05-26. No separate Jira ticket per current direction; rolls under SCRUM-1035.
+
+- **H2:** "Flow for your mornings. Clear for your afternoons." (static)
+- **Layout:**
+  - Product card with a close-up bottle image (uses the existing `/formulas/conkaFlow/FlowNoBackground.png` and `/formulas/conkaClear/ClearNoBackground.png` assets from `LandingProductSplit`), product name, and one-line benefit copy.
+  - AM / PM toggle pill below the card. Sun icon = AM (Flow), moon icon = PM (Clear). Inline SVG icons, no emoji.
+  - Below the toggle: a dynamic 2-line editorial headline tied to the chosen product, followed by a vertical stack of pill-shaped ingredient rows.
+- **Ingredient rows:**
+  - Circular ingredient image (left) using `/ingredients/{formula}/*.webp` from `ingredientsData.ts`, ingredient name (middle), "+" / "−" toggle (right). Dose hidden in the closed state.
+  - Click expands an accordion below the row: `oneLineClaim`, the top two `keyStats`, the first `clinicalStudies` citation, and the per-formula `percentage` as the dose surrogate.
+  - Single-open behaviour (clicking a new row closes the previously open one). All closed on first paint.
+  - Image fallback for ingredients without an `image`: navy circle with the first two letters in white.
+- **Files:**
+  - New: `app/components/cro/CROFormulaSplitV2.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (swap the existing `CROFormulaSplit` slot; new section uses `brand-bg-tint` to break the V2 white trio)
+  - DO NOT touch: `app/components/cro/CROFormulaSplit.tsx` (kept on disk for revert; V1 reference)
+  - DO NOT modify: `app/lib/ingredientsData.ts` (shared catalogue)
+- **A11y:** toggle is `role="tablist"` + `role="tab"` + `aria-selected`; ingredient panel uses `aria-expanded` + `aria-controls`. Accordion content region has `role="region"`.
+- **Animation:** instant swap on toggle (no cross-fade to start); accordion uses CSS `max-height` transition (~220ms ease-out) to a generous fixed max.
+- **Carry-overs:** uses shared `CROPillCTA` if a CTA gets added later; honours the standardised V2 section spacing (`paddingTop: 0, paddingBottom: "4rem"`); mobile-first at 390px.
+- **Flag for /review-claims after build:** new copy strings on the product card and ingredient intros (e.g. "without the coffee", "steady morning focus"). Same family as Section 3 claims.
 
 ### Section 5 — First buy box
 - Header copy: **"Try your first shot today."**
