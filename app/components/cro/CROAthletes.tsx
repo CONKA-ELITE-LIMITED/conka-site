@@ -139,7 +139,7 @@ function RosterStrip({
     <div
       role="tablist"
       aria-label="Athlete roster"
-      className="flex gap-3 overflow-x-auto -mx-5 px-5 mt-8 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex gap-3 overflow-x-auto px-1 mt-8 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {ATHLETES.map((athlete, i) => {
         const isActive = i === activeIndex;
@@ -151,7 +151,7 @@ function RosterStrip({
             aria-selected={isActive}
             aria-label={`${athlete.name}, ${athlete.role}`}
             onClick={() => onSelect(i)}
-            className={`snap-start flex-shrink-0 w-[88px] aspect-square rounded-[14px] overflow-hidden border-2 flex flex-col bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#1B2757] focus:ring-offset-2 ${
+            className={`snap-start flex-shrink-0 w-[88px] aspect-square rounded-[14px] overflow-hidden border-2 flex flex-col bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] ${
               isActive
                 ? "border-[#1B2757]"
                 : "border-black/12 hover:border-black/30 opacity-75 hover:opacity-100"
