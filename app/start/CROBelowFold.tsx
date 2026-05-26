@@ -48,9 +48,9 @@ const CROAppCallout = dynamic(
   () => import("../components/cro/CROAppCallout"),
   { ssr: false, loading: () => <div className="h-[820px]" /> },
 );
-const CROFAQ = dynamic(
-  () => import("../components/cro/CROFAQ"),
-  { ssr: false, loading: () => <div className="h-[500px]" /> },
+const CROFAQv2 = dynamic(
+  () => import("../components/cro/CROFAQv2"),
+  { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
 const CROFinalCTA = dynamic(
   () => import("../components/cro/CROFinalCTA"),
@@ -165,13 +165,14 @@ export default function CROBelowFold() {
         </div>
       </section>
 
-      {/* ===== 6. FAQ ===== */}
+      {/* ===== V2 SECTION 11 — FAQ ===== */}
       <section
-        className="brand-section brand-bg-tint"
-        aria-label="FAQ"
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Still wondering?"
       >
         <div className="brand-track">
-          <CROFAQ />
+          <CROFAQv2 />
         </div>
       </section>
 
