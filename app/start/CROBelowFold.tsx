@@ -24,6 +24,10 @@ const CROFormulaSplitV2 = dynamic(
   () => import("../components/cro/CROFormulaSplitV2"),
   { ssr: false, loading: () => <div className="h-[700px]" /> },
 );
+const CROBuyBox = dynamic(
+  () => import("../components/cro/CROBuyBox"),
+  { ssr: false, loading: () => <div className="h-[800px]" /> },
+);
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
@@ -78,6 +82,17 @@ export default function CROBelowFold() {
       >
         <div className="brand-track">
           <CROFormulaSplitV2 />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 5 — BUY BOX (conka-both quick purchase) ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Try your first shot today"
+      >
+        <div className="brand-track">
+          <CROBuyBox />
         </div>
       </section>
 

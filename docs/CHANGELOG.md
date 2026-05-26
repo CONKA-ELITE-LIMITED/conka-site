@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 5 inline buy box (conka-both quick purchase)
+
+Fifth section of the V2 rebuild for `/start` (under parent SCRUM-1035, no separate sub-ticket). First inline purchase moment on the landing page: a Ketone-IQ-inspired single product card for the conka-both bundle with an auto-checked Subscribe & Save toggle. The card carries the primary product photo, "CONKA Both" + tagline, a navy price row with the monthly-otp price grey and struck-through plus a "Save X%" pill, the per-shot micro-line, a four-item benefits checklist, and a full-width CTA whose label flips between "Start subscription · £X.XX/mo" and "Order once · £X.XX" depending on the toggle. Real cart wiring via `useCart().addToCart(variant.variantId, 1, variant.sellingPlanId, { location: "buy_box", source: "v2_quick_purchase" })` so Vercel + Triple Whale + Meta Pixel attribution lights up automatically; cart drawer opens itself. Variant and pricing resolved at render via `getCadenceVariantByProductHeroId("03", cadence)` and `getCadencePricingByProductHeroId("03", cadence)`, savings derived from the monthly-sub `compareAtPrice`. `CROPillCTA` gained optional `onClick`/`disabled`/`type` props so it can render as a `<button>` for cart actions; existing link callers are untouched. Section sits between Section 4 and the legacy testimonials block, `brand-bg-white` and standardised V2 spacing. FAQ dropdowns, quarterly cadence, and quantity stepper deferred to a follow-up.
+
+**Modified:** `app/components/cro/CROBuyBox.tsx` (new), `app/components/cro/CROPillCTA.tsx`, `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 4 AM/PM toggle + ingredient accordion
 
 Fourth section of the V2 rebuild for `/start` (under parent SCRUM-1035; no separate sub-ticket per current sectioning approach). Replaces the dense V1 `CROFormulaSplit` (side-by-side cards + drawer) with a single focused product card carrying a bottle close-up, dynamic one-line copy, and an AM/PM pill toggle (sun and moon icons inline as SVG). Below the card, a dynamic editorial intro line followed by a vertical stack of clickable pill-shaped ingredient rows in the 8 Hours homepage style: circular ingredient image, name, and a plus icon, expanding to a curated accordion containing the percentage of formula, the one-line claim, the top two key stats, and the first study citation. Single-open behaviour, all rows closed on first paint, accordion content reveals via `max-height` transition. The V1 `CROFormulaSplit.tsx` is left on disk untouched for revert; the shared `ingredientsData.ts` catalogue is read-only. Section background is `brand-bg-tint` to break the V2 white trio (Hero / Brand Story / Coffee vs CONKA). Standardised V2 section spacing maintained.

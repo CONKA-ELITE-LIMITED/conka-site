@@ -266,14 +266,34 @@ Scoped 2026-05-26. No separate Jira ticket per current direction; rolls under SC
 - **Carry-overs:** uses shared `CROPillCTA` if a CTA gets added later; honours the standardised V2 section spacing (`paddingTop: 0, paddingBottom: "4rem"`); mobile-first at 390px.
 - **Flag for /review-claims after build:** new copy strings on the product card and ingredient intros (e.g. "without the coffee", "steady morning focus"). Same family as Section 3 claims.
 
-### Section 5 — First buy box
-- Header copy: **"Try your first shot today."**
-- Quick-purchase widget — sends straight to Shopify checkout via `CartContext.addToCart` (NEVER hit `/api/cart` directly)
-- Reference: Ketone-IQ "quick purchase" section
-- Two FAQ-style dropdowns below the buy box:
-  - "What's in it?"
-  - "Where do we ship?"
-- Pass `location: "buy_box"`, `source: "v2_quick_purchase"` to `addToCart` for funnel attribution
+### Section 5 — `CROBuyBox` (conka-both quick purchase)
+
+Scoped + shipped 2026-05-26. No separate Jira ticket per current direction; rolls under SCRUM-1035.
+
+- **H2:** "Try your first shot today."
+- **Card structure** (Ketone-IQ inspired, V2 palette):
+  - Primary product photo (`/formulas/both/BothShots.jpg`) at the top of the card, 5:4 aspect, full-bleed
+  - Title "CONKA Both" + tagline "Flow for the morning, Clear for the afternoon."
+  - Price row: big navy sub price `/mo`, OTP price greyed and struck through, navy "Save X%" pill (no red anywhere)
+  - "£X.XX per shot" micro-line below the price
+  - Benefits checklist (4 navy ticks)
+  - Subscribe & Save toggle row: bordered, auto-checked, expands explanatory copy. Native `<input type="checkbox">` styled with `accent-[#1B2757]`.
+  - Full-width navy pill CTA whose label flips on the toggle:
+    - Sub on: "Start subscription · £X.XX/mo"
+    - Sub off: "Order once · £X.XX"
+  - Footer: 100-day money-back guarantee + "Pause, adjust, or cancel anytime."
+- **Cart wiring:** uses `useCart()` and `addToCart(variant.variantId, 1, variant.sellingPlanId, { location: "buy_box", source: "v2_quick_purchase" })`. The cart drawer opens automatically (`setIsOpen(true)` is fired inside `addToCart`). `AddToCartMetadata.location` and `.source` are typed as plain `string` so no type changes were needed.
+- **Pricing source:** `getCadenceVariantByProductHeroId("03", cadence)` for variant + selling plan IDs, `getCadencePricingByProductHeroId("03", cadence)` for the display numbers. Savings derived from the monthly-sub `compareAtPrice` (falls back to the monthly-otp price).
+- **Files:**
+  - New: `app/components/cro/CROBuyBox.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (new section after `CROFormulaSplitV2`, before testimonials), `app/components/cro/CROPillCTA.tsx` (added optional `onClick`, `disabled`, `type` props so it can render as a `<button>` for cart actions; link mode unchanged for existing callers)
+- **Carry-overs:** standardised V2 section spacing (`paddingTop: 0, paddingBottom: 4rem`), `.brand-v2` scope, `brand-bg-white` background to keep the V2 white run.
+
+**Deferred to a follow-up (Section 5b):**
+- Two FAQ-style dropdowns below the buy box: "What's in it?" and "Where do we ship?"
+- Quarterly cadence option
+- Quantity stepper (visitor still adjusts in the cart drawer)
+- `/review-claims` pass on the new benefit list copy
 
 ### Section 6 — % increase benefit cards
 - Lead with % increases in specific cognitive metrics
