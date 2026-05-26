@@ -25,14 +25,10 @@ const PRODUCT_HERO_ID = "03";
 const PRODUCT_IMAGE = "/formulas/both/BothBox.jpg";
 const PRODUCT_IMAGE_ALT =
   "CONKA Flow and Clear boxes side by side with both bottles in front";
-const PRODUCT_NAME = "CONKA Both";
-const PRODUCT_TAGLINE = "Flow for the morning, Clear for the afternoon.";
-
 const BENEFITS = [
-  "Two formulas built around your full day",
-  "16 clinical ingredients, UK patented",
-  "Calm focus, no caffeine in the morning",
-  "Pause, skip, or cancel anytime",
+  "56 shots: 28 Flow + 28 Clear",
+  "2 shots a day, every day of the month",
+  "Free UK shipping",
 ];
 
 function CheckIcon({ className }: { className?: string }) {
@@ -109,14 +105,6 @@ export default function CROBuyBox() {
         </div>
 
         <div className="p-5">
-          {/* ===== Title + tagline ===== */}
-          <h3 className="text-[22px] font-semibold text-black leading-tight">
-            {PRODUCT_NAME}
-          </h3>
-          <p className="text-[14px] text-black/60 leading-snug mt-1 mb-4">
-            {PRODUCT_TAGLINE}
-          </p>
-
           {/* ===== Price row ===== */}
           <div className="flex items-baseline gap-3 flex-wrap mb-1">
             <span className="text-[28px] font-bold text-[#1B2757] tabular-nums leading-none">
@@ -188,14 +176,9 @@ export default function CROBuyBox() {
           </CROPillCTA>
 
           {/* ===== Guarantee footer ===== */}
-          <div className="mt-4 text-center">
-            <p className="text-[12px] font-semibold text-black/70">
-              {GUARANTEE_LABEL_FULL}
-            </p>
-            <p className="text-[11px] text-black/45 mt-1">
-              Pause, adjust, or cancel anytime.
-            </p>
-          </div>
+          <p className="mt-4 text-center text-[12px] font-semibold text-black/70">
+            {GUARANTEE_LABEL_FULL}
+          </p>
         </div>
       </div>
     </div>
