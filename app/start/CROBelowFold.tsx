@@ -51,7 +51,7 @@ export default function CROBelowFold() {
       {/* ===== V2 SECTION 2 — BRAND STORY ===== */}
       <section
         className="brand-section brand-bg-white"
-        style={{ paddingTop: 0 }}
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
         aria-label="We created drinkable focus"
       >
         <div className="brand-track">
@@ -62,7 +62,8 @@ export default function CROBelowFold() {
       {/* ===== V2 SECTION 3 — COFFEE VS CONKA (animated bars) ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="Two shots, built around your day"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="The 2pm crash isn't you"
       >
         <div className="brand-track">
           <LandingValueComparisonV2 />

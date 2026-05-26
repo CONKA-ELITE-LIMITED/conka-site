@@ -97,10 +97,17 @@ interface BarRowProps {
   label: string;
   markers: Marker[];
   ariaLabel: string;
+  crashLabel?: { pct: number; text: string };
   children: React.ReactNode;
 }
 
-function BarRow({ label, markers, ariaLabel, children }: BarRowProps) {
+function BarRow({
+  label,
+  markers,
+  ariaLabel,
+  crashLabel,
+  children,
+}: BarRowProps) {
   return (
     <div>
       <p className="text-[13px] font-bold text-black/85 mb-2 uppercase tracking-wide">
@@ -113,6 +120,19 @@ function BarRow({ label, markers, ariaLabel, children }: BarRowProps) {
       >
         {children}
       </div>
+      {crashLabel && (
+        <div className="relative h-4 mt-1.5" aria-hidden>
+          <span
+            className="absolute top-0 text-[10px] font-bold uppercase tracking-[0.1em] text-[#dc2626]"
+            style={{
+              left: `${crashLabel.pct}%`,
+              transform: "translateX(-50%)",
+            }}
+          >
+            {crashLabel.text}
+          </span>
+        </div>
+      )}
       <div className="relative h-5 mt-2" aria-hidden>
         {markers.map((m) => (
           <span
@@ -151,7 +171,7 @@ export default function LandingValueComparisonV2() {
         className="text-black font-semibold text-[34px] leading-[1.08] mb-3"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Two shots, built around your day.
+        The 2pm crash isn&apos;t you.
       </h2>
 
       <p className="text-[15px] leading-snug text-black mb-10">
@@ -166,7 +186,11 @@ export default function LandingValueComparisonV2() {
             { pct: COFFEE_PEAK_END, text: "12pm" },
             { pct: COFFEE_CRASH_END, text: "2pm" },
           ]}
-          ariaLabel="Coffee provides focus from 9am to noon, then drops off through to 2pm."
+          crashLabel={{
+            pct: (COFFEE_PEAK_END + COFFEE_CRASH_END) / 2,
+            text: "↑ Crash",
+          }}
+          ariaLabel="Coffee provides focus from 9am to noon, then crashes through to 2pm."
         >
           <CoffeeBar
             isInView={isInView}
@@ -190,7 +214,9 @@ export default function LandingValueComparisonV2() {
         </BarRow>
       </div>
 
-      <p className="text-[12px] text-black/55 leading-snug mb-8">
+      <CROPillCTA className="w-full">Try from £1.62 per day</CROPillCTA>
+
+      <p className="text-[12px] text-black/55 leading-snug mt-6">
         Based on 7,593 cognitive tests across 712 CONKA app users over 30
         months.{" "}
         <Link
@@ -200,8 +226,6 @@ export default function LandingValueComparisonV2() {
           See the full data
         </Link>
       </p>
-
-      <CROPillCTA className="w-full">Try from £1.62 per day</CROPillCTA>
     </div>
   );
 }
