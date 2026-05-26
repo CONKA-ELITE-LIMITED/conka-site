@@ -12,6 +12,10 @@ import VisibilityGate from "../components/VisibilityGate";
 // Router, so the dynamic imports live in this client wrapper. The page stays
 // a Server Component (so the `metadata` export is honoured) and just renders
 // this wrapper for the below-fold tree.
+const CROBrandStory = dynamic(
+  () => import("../components/cro/CROBrandStory"),
+  { ssr: false, loading: () => <div className="h-[800px]" /> },
+);
 const CROFormulaSplit = dynamic(
   () => import("../components/cro/CROFormulaSplit"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
@@ -44,6 +48,17 @@ const LandingDisclaimer = dynamic(
 export default function CROBelowFold() {
   return (
     <>
+      {/* ===== V2 SECTION 2 — BRAND STORY ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0 }}
+        aria-label="We created drinkable focus"
+      >
+        <div className="brand-track">
+          <CROBrandStory />
+        </div>
+      </section>
+
       {/* ===== 2. FORMULA SPLIT — WHAT ===== */}
       <section
         className="brand-section brand-bg-tint"

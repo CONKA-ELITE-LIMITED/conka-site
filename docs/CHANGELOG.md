@@ -6,6 +6,16 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 2 brand story ("We Created Drinkable Focus")
+
+Second section of the V2 rebuild for `/start` (SCRUM-1037, parent SCRUM-1035). Editorial dev-story block sitting directly below the lifestyle hero: H2 "We Created Drinkable Focus", investment subline, ShotsHero.jpg product asset (cropped 10:9 with object-cover scale-150 zoom so the bottles fill the frame), two stacked stats (150,000+ shots sold to date / £500,000 invested into clinical research), and a centered navy pill CTA "Order Now".
+
+Also extracted the navy pill CTA out of the Hero's inline implementation into a shared `CROPillCTA` component now used by both sections. The Hero pill keeps its full-width treatment by passing `className="w-full"`; Section 2 uses the content-width default with `px-10` for breathing room. Hero and Section 2 section paddings are reduced via inline styles since `globals.css` imports `brand-base.css` after Tailwind, so `pb-*` / `pt-*` utilities lose the cascade against `.brand-section` (matches the existing inline-style pattern on `/app-insights/page.tsx`).
+
+**Modified:** `app/components/cro/CROBrandStory.tsx` (new), `app/components/cro/CROPillCTA.tsx` (new), `app/components/cro/CROHeroV2.tsx`, `app/start/CROBelowFold.tsx`, `app/start/page.tsx`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 1 hero (lifestyle, single column)
 
 First section of the Landing Page V2 rebuild for `/start` (SCRUM-1036, parent SCRUM-1035). Replaced the clinical-grammar CRO hero with a softer, DTC-style lifestyle hero matching the Figma render: mobile full-bleed lifestyle photo on top (CONKA Clear bottle held by a customer), 5-avatar trust micro-row with gold stars and bold review microcopy, italic-Daily headline, solid-black subline, and a navy pill CTA. Introduces the foundational `.brand-v2` scope class on the `/start` page root so subsequent V2 sections inherit a softer token set (rounded radii) without affecting any other clinical page. Old `CROHero.tsx` kept on disk untouched for revert.

@@ -27,6 +27,7 @@ export default function StartPage() {
       {/* ===== 1. HERO ===== */}
       <section
         className="brand-section brand-hero-first brand-bg-white"
+        style={{ paddingBottom: "4rem" }}
         aria-label="Landing page hero"
       >
         <div className="brand-track">
