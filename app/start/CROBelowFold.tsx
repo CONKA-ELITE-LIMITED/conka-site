@@ -48,10 +48,6 @@ const CROAppCallout = dynamic(
   () => import("../components/cro/CROAppCallout"),
   { ssr: false, loading: () => <div className="h-[820px]" /> },
 );
-const CROGuarantee = dynamic(
-  () => import("../components/cro/CROGuarantee"),
-  { ssr: false, loading: () => <div className="h-[400px]" /> },
-);
 const CROFAQ = dynamic(
   () => import("../components/cro/CROFAQ"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
@@ -166,16 +162,6 @@ export default function CROBelowFold() {
       >
         <div className="brand-track">
           <CROAppCallout />
-        </div>
-      </section>
-
-      {/* ===== 5. GUARANTEE ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="100-day risk-free guarantee"
-      >
-        <div className="brand-track">
-          <CROGuarantee />
         </div>
       </section>
 

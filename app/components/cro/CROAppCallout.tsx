@@ -26,18 +26,7 @@ import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 export default function CROAppCallout() {
   return (
     <div className="mx-auto max-w-[560px]">
-      {/* ===== Hero image (full-bleed on mobile, contained on md+) ===== */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-black/[0.04] mb-8 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[var(--brand-radius-container)]">
-        <Image
-          src="/lifestyle/ConkaAppYoga.jpg"
-          alt="The CONKA app showing a 'Your Brain Over Time' graph next to a CONKA bottle"
-          fill
-          sizes="(max-width: 768px) 100vw, 560px"
-          className="object-cover"
-        />
-      </div>
-
-      {/* ===== Title ===== */}
+      {/* ===== Title leads ===== */}
       <h2
         className="text-black font-semibold text-[34px] leading-[1.08] mb-4"
         style={{ letterSpacing: "-0.02em" }}
@@ -47,11 +36,22 @@ export default function CROAppCallout() {
         We measure it.
       </h2>
 
-      {/* ===== Opener ===== */}
-      <p className="text-[16px] text-black/85 leading-relaxed mb-6">
+      {/* ===== Subline ===== */}
+      <p className="text-[16px] text-black/85 leading-relaxed mb-7">
         Other brands tell you it works. CONKA gives you a cognitive test and a
         daily log so you can watch it happen.
       </p>
+
+      {/* ===== Image tile (contained, bordered) ===== */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-black/[0.04] border border-black/12 rounded-[var(--brand-radius-container)] mb-7">
+        <Image
+          src="/lifestyle/ConkaAppYoga.jpg"
+          alt="The CONKA app showing a 'Your Brain Over Time' graph next to a CONKA bottle"
+          fill
+          sizes="(max-width: 768px) 100vw, 560px"
+          className="object-cover"
+        />
+      </div>
 
       {/* ===== Body 1: not an IQ test ===== */}
       <p className="text-[14.5px] text-black/75 leading-relaxed mb-4">
