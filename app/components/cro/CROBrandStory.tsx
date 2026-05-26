@@ -17,8 +17,9 @@ export default function CROBrandStory() {
       </h2>
 
       <p className="text-[15px] leading-snug text-black mb-8">
-        We spent over £500,000 and 3 years developing the first nootropic shot
-        etc etc.
+        We spent over £500,000 and 3 years developing the first nootropic shot.
+        Trusted where focus isn&apos;t optional, by athletes, physicians,
+        biohackers, and the world&apos;s hardest-thinking professionals.
       </p>
 
       <div className="relative aspect-[10/9] w-full overflow-hidden rounded-[var(--brand-radius-container)] mb-8 bg-white">

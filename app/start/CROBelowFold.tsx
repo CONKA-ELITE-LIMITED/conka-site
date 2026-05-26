@@ -16,13 +16,13 @@ const CROBrandStory = dynamic(
   () => import("../components/cro/CROBrandStory"),
   { ssr: false, loading: () => <div className="h-[800px]" /> },
 );
+const LandingValueComparisonV2 = dynamic(
+  () => import("../components/landing/LandingValueComparisonV2"),
+  { ssr: false, loading: () => <div className="h-[520px]" /> },
+);
 const CROFormulaSplit = dynamic(
   () => import("../components/cro/CROFormulaSplit"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
-);
-const LandingValueComparison = dynamic(
-  () => import("../components/landing/LandingValueComparison"),
-  { ssr: false, loading: () => <div className="h-[600px]" /> },
 );
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
@@ -59,6 +59,16 @@ export default function CROBelowFold() {
         </div>
       </section>
 
+      {/* ===== V2 SECTION 3 — COFFEE VS CONKA (animated bars) ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Two shots, built around your day"
+      >
+        <div className="brand-track">
+          <LandingValueComparisonV2 />
+        </div>
+      </section>
+
       {/* ===== 2. FORMULA SPLIT — WHAT ===== */}
       <section
         className="brand-section brand-bg-tint"
@@ -78,16 +88,6 @@ export default function CROBelowFold() {
           <VisibilityGate minHeight="500px">
             <CROTestimonials />
           </VisibilityGate>
-        </div>
-      </section>
-
-      {/* ===== 4. VALUE COMPARISON — 2PM CRASH + PRICE ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Why CONKA outperforms caffeine"
-      >
-        <div className="brand-track">
-          <LandingValueComparison />
         </div>
       </section>
 
