@@ -499,10 +499,38 @@ Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
 - The risk-close card body is new copy ("Take the test. Try CONKA. Take the test again. If your data doesn't move, we'll refund you within 100 days.") — `/review-claims` pass before launch but low risk; it's just a paraphrase of the guarantee terms.
 - Every other load-bearing sentence is lifted verbatim from existing site components.
 
-### Section 11 — FAQ
-- Same 5 questions as current `CROFAQ`
-- Restyle to match V2 grammar
-- Confirm question set during section scoping
+### Section 11 — `CROFAQv2` ("Still wondering?")
+
+Scoped + shipped 2026-05-26 in `bb05a6d`. Rolls under SCRUM-1035; no separate sub-ticket.
+
+- **H2:** "Still wondering?" (replaces V1's generic "Frequently asked questions")
+- **Question set — curated and reordered** to remove overlap with Section 5's buy-box FAQ and to flow broadest-product to narrowest-practical:
+  1. **Why two formulas instead of one?** (NEW, lifted verbatim from `storyData.ts`) — reinforces Section 4's AM/PM system
+  2. **Can I take just one shot?** (V1 Q3, verbatim) — product flexibility
+  3. **How quickly will it arrive?** (V1 Q4, verbatim) — logistics
+  4. **What if my score doesn't improve?** (V1 Q1, verbatim — already pulls `GUARANTEE_LABEL_FULL` and `GUARANTEE_COPY_TRIAL` from `offerConstants`)
+  5. **How do I cancel?** (V1 Q5, verbatim — same constants approach)
+- **Dropped from V1:** "What's the difference between Flow and Clear?" — duplicates Section 5's "What's in it?" panel.
+- **Accordion mechanic** ported verbatim from Sections 4 / 5 / 9: soft `bg-black/[0.04] rounded-[16px]` pill rows, `aria-expanded` + `aria-controls`, `max-height` transition (200ms ease-out), single-open behaviour via `useState<string | null>(openId)`, plain `+` / `−` indicator on the right edge. All collapsed on first paint.
+- **V1 clinical chrome stripped:**
+  - Mono `// Common questions · FAQ-01` eyebrow
+  - Numbered `01.` prefix on each row
+  - Category eyebrow chips (TRIAL / PRODUCT / SHIPPING / SUBSCRIPTION)
+  - Hard bordered outer FAQ container with hairline divider between rows
+  - Mono `[+]` / `[−]` toggle
+  - Black left-border "Response" answer treatment
+  - Mono "Avg response 4h" footer
+- **Contact footer kept** in V2 style: "Still stuck? info@conka.io" as a soft centred line with a navy underlined email link.
+- **No CTA inside the section.** `CROFinalCTA` (legacy) sits after the FAQ in `CROBelowFold` as the page-closing CTA moment.
+- **Files:**
+  - New: `app/components/cro/CROFAQv2.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (swapped the dynamic-imported `CROFAQ` slot for `CROFAQv2`; applied standard V2 spacing; background switched from `brand-bg-tint` to `brand-bg-white` to continue the V2 white run)
+  - Untouched: `app/components/cro/CROFAQ.tsx` (no other consumers, kept on disk for revert per the V2 pattern)
+- **Section background:** `brand-bg-white`. Standard `paddingTop: 0, paddingBottom: 4rem`.
+
+**Flags carried into launch:**
+- One new Q+A pair ("Why two formulas instead of one?") lifted verbatim from `storyData.ts` — already-vetted copy, low risk for `/review-claims`.
+- The other four Q+A pairs are verbatim from V1.
 
 ### Disclaimer footer
 - Keep `LandingDisclaimer` as-is unless visual change is needed
