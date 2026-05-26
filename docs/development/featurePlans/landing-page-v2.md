@@ -349,28 +349,36 @@ Scoped + shipped 2026-05-26. No separate Jira ticket per current direction; roll
 - Quantity stepper (visitor still adjusts in the cart drawer)
 - `/review-claims` pass on the new benefit list copy
 
-### Section 6 — `CROBenefitCards` (hybrid % proof, "Measured, not marketed.")
+### Section 6 — `CROBenefitCards` (Ketone-IQ pdp-stat-cards style, "Measured, not marketed.")
 
-Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+Scoped + shipped 2026-05-26 across `6fdb05a`, `6c79a47`, `9b8d513`, `1a7e93d`. Rolls under SCRUM-1035; no separate sub-ticket.
 
 - **H2:** "Measured, not marketed."
-- **Subline:** "Two sources behind every number: real CONKA app data, plus peer-reviewed studies on the active ingredients."
-- **Layout:** single-column stack of 4 expandable rows (not a 2x2 grid — keeps independent accordion expansion clean on mobile). Each row shows the big tabular-nums metric on the left, the label + source anchor on the right, and a `+` / `−` affordance. Same accordion mechanic as Sections 4 + 5 (soft `bg-black/[0.04] rounded-[16px]`, `aria-expanded`/`aria-controls`, max-height transition, single-open behaviour).
-- **Cards (hybrid, 2 in-app `^^` + 2 PMID `¶`):**
-  - `+1.09 pts` Evening focus held (`^^`, n=74 CONKA evening-dip tests from `appInsightsData.timeOfDay`)
-  - `−41 ms` Faster reaction when tired (`^^`, n=15 from `appInsightsData.mentalFatigue` CONKA sub-section)
-  - `+63%` Memory (`¶`, Bacopa monnieri, Small 2018, PMID 29246725, ingredient in Clear)
-  - `+30%` Fatigue resistance (`¶`, Acetyl-L-Carnitine, Malaguarnera 2008, PMID 18937015, ingredient in Clear)
-- **Footnote block** at the section bottom explains the two anchor symbols and links to `/app-insights` for the full data. `^^` covers the per-user delta methodology on 712 users / 7,593 tests / 30 months; `¶` covers the ingredient-level findings disclaimer ("not extrapolated to product-level effect").
-- **No CTA in Section 6.** Conversion already happened at Section 5; Section 6 is a proof beat.
+- **Subline:** "Sharper focus, faster recall, stronger memory, calmer days, all anchored in real data."
+- **Title bar** (between subline and tile grid): `Taking **CONKA** can:` — uppercase, centered, "CONKA" in navy + extrabold. Mirrors Ketone's `pdp-stat-cards-block__title-bar` pattern; reads continuously into each tile.
+- **Layout:** 2x2 grid of square tiles (`grid-cols-2 gap-3 aspect-square`). Soft `bg-black/[0.04] rounded-[16px]` cards, centered content. Each tile carries an `(01)..(04)` mono index in the top-left corner, an uppercase headline, a big navy `tabular-nums` stat, and a one-line caption underneath. No inline expand — tiles are glanceable, the indexes cross-link directly to the numbered references in the footer.
+- **Four-dimension framework** (one card per dimension, no overlap):
+  - **(01) Focus** | "HOLD EVENING FOCUS" | `+1.09 pts` | "When most people drop." | CONKA in-app data, n=74 evening-dip tests, per-user delta from `appInsightsData.timeOfDay`
+  - **(02) Speed** | "SHARPEN REACTION" | `−41 ms` | "On fatigued days." | CONKA in-app data, n=15 users with both conditions, from `appInsightsData.mentalFatigue` CONKA sub-section
+  - **(03) Memory** | "STRENGTHEN MEMORY" | `+63%` | "Recall under load." | Bacopa monnieri / Small 2018 / PMID 29246725 (active in Clear)
+  - **(04) Calm** | "LOWER FELT STRESS" | `−28%` | "In healthy adults." | Lemon Balm / Kennedy 2006 / PMID 16444660 (active in Flow)
+- **Tile headlines use base-form verbs** so the title bar reads continuously: "Taking CONKA can hold evening focus / sharpen reaction / strengthen memory / lower felt stress."
+- **References footer** (Ketone-IQ pdp-stat-cards-block__footer style): a single flowing paragraph with numbered references keyed to the tile indexes:
+  - `01.` CONKA in-app cognitive tests, evening-dip window, n=74 / 712 users / 30 months. Per-user delta methodology.
+  - `02.` CONKA in-app cognitive tests, fatigued-day window, n=15. Per-user delta methodology.
+  - `03.` Small et al. (2018). Bacopa monnieri, 12-week clinical trial on memory performance. PMID 29246725.
+  - `04.` Kennedy et al. (2006). Melissa officinalis (Lemon Balm), randomised double-blind placebo-controlled crossover on stress and anxiety. PMID 16444660.
+- **Disclaimer line** below the references: "Ingredient findings as published, not extrapolated to product-level effect. Full per-user app data and methodology at /app-insights."
+- **No CTA in Section 6.** Conversion already happened at Section 5; this is the proof beat.
 - **Files:**
   - New: `app/components/cro/CROBenefitCards.tsx`
   - Modified: `app/start/CROBelowFold.tsx` (inserted between Section 5 buy box and the legacy testimonials)
 - **Section background:** `brand-bg-white` (V2 white run continues). Standard `paddingTop: 0, paddingBottom: 4rem`.
-- **Carry-overs:** accordion pattern from Sections 4 + 5; soft V2 palette; no red; mobile-first 390px.
+
+**Future enhancement (deferred):** if we want "see the data" detail per tile, the natural path is a modal sheet keyed off the tile id. The `(01)..(04)` index in the corner is the obvious tap affordance. Footer link to `/app-insights` already covers the full report for visitors who want the deep dive.
 
 **Flags carried into launch:**
-- All 4 metrics and their expand copy are claims-load-bearing. `/review-claims` pass needed before merge. Card content is structurally easy to swap if compliance flags any individual metric.
+- All four metric/headline/caption strings are claims-load-bearing. `/review-claims` pass needed before merge. Tile structure makes per-tile copy swaps trivial if compliance flags any individual line.
 
 ### Section 7 — Athlete + Informed Sport
 - Athlete imagery — high-volume, lifestyle/action shots
