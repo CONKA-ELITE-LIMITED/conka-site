@@ -101,8 +101,8 @@ const SWIPE_THRESHOLD = 50;
 
 function AthleteSlide({ athlete }: { athlete: Athlete }) {
   return (
-    <div>
-      <div className="relative aspect-square rounded-[var(--brand-radius-container)] overflow-hidden bg-black/[0.04] mb-5">
+    <div className="border border-black/12 rounded-[var(--brand-radius-container)] overflow-hidden bg-white">
+      <div className="relative aspect-square bg-black/[0.04]">
         <Image
           key={athlete.name}
           src={athlete.image}
@@ -113,15 +113,17 @@ function AthleteSlide({ athlete }: { athlete: Athlete }) {
           priority={false}
         />
       </div>
-      <h3 className="text-[24px] font-semibold text-black leading-tight">
-        {athlete.name}
-      </h3>
-      <p className="text-[13px] text-black/55 leading-snug mb-5">
-        {athlete.sport} &middot; {athlete.role}
-      </p>
-      <blockquote className="text-[22px] sm:text-[24px] font-medium text-black leading-snug">
-        &ldquo;{athlete.quote}&rdquo;
-      </blockquote>
+      <div className="p-5">
+        <h3 className="text-[24px] font-semibold text-black leading-tight">
+          {athlete.name}
+        </h3>
+        <p className="text-[13px] text-black/55 leading-snug mb-5">
+          {athlete.sport} &middot; {athlete.role}
+        </p>
+        <blockquote className="text-[22px] sm:text-[24px] font-medium text-black leading-snug">
+          &ldquo;{athlete.quote}&rdquo;
+        </blockquote>
+      </div>
     </div>
   );
 }
@@ -149,31 +151,31 @@ function RosterStrip({
             aria-selected={isActive}
             aria-label={`${athlete.name}, ${athlete.role}`}
             onClick={() => onSelect(i)}
-            className="snap-start flex flex-col items-center gap-2 flex-shrink-0 w-[64px] focus:outline-none focus:ring-2 focus:ring-[#1B2757] focus:ring-offset-2 rounded-full"
+            className={`snap-start flex-shrink-0 w-[88px] aspect-square rounded-[14px] overflow-hidden border-2 flex flex-col bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#1B2757] focus:ring-offset-2 ${
+              isActive
+                ? "border-[#1B2757]"
+                : "border-black/12 hover:border-black/30 opacity-75 hover:opacity-100"
+            }`}
           >
-            <span
-              className={`relative w-[60px] h-[60px] rounded-full overflow-hidden transition-all bg-black/[0.04] ${
-                isActive
-                  ? "ring-2 ring-[#1B2757] ring-offset-2"
-                  : "ring-0 opacity-65 hover:opacity-100"
-              }`}
-            >
+            <div className="relative flex-1 bg-black/[0.04]">
               <Image
                 src={athlete.image}
                 alt=""
                 fill
-                sizes="60px"
+                sizes="88px"
                 loading="lazy"
                 className="object-cover"
               />
-            </span>
-            <span
-              className={`text-[11px] leading-tight text-center max-w-[64px] truncate ${
-                isActive ? "text-black font-semibold" : "text-black/55"
-              }`}
-            >
-              {athlete.name.split(" ")[0]}
-            </span>
+            </div>
+            <div className="px-1.5 py-1.5 flex items-center justify-center">
+              <span
+                className={`text-[11px] leading-none text-center truncate w-full ${
+                  isActive ? "text-black font-semibold" : "text-black/65"
+                }`}
+              >
+                {athlete.name.split(" ")[0]}
+              </span>
+            </div>
           </button>
         );
       })}
