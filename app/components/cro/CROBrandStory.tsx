@@ -13,12 +13,14 @@ export default function CROBrandStory() {
         className="text-black font-semibold text-[34px] leading-[1.08] mb-3"
         style={{ letterSpacing: "-0.02em" }}
       >
-        We Created Drinkable Focus.
+        We Created Drinkable Focus and Clarity.
       </h2>
 
       <p className="text-[15px] leading-snug text-black mb-8">
-        We spent over £500,000 and 3 years developing the first nootropic shot
-        etc etc.
+        We spent over £500,000 and 3 years developing the first nootropic shot.
+        Trusted where cognitive performance isn&apos;t optional, by athletes,
+        physicians, biohackers, and the world&apos;s hardest-thinking
+        professionals.
       </p>
 
       <div className="relative aspect-[10/9] w-full overflow-hidden rounded-[var(--brand-radius-container)] mb-8 bg-white">

@@ -16,29 +16,41 @@ const CROBrandStory = dynamic(
   () => import("../components/cro/CROBrandStory"),
   { ssr: false, loading: () => <div className="h-[800px]" /> },
 );
-const CROFormulaSplit = dynamic(
-  () => import("../components/cro/CROFormulaSplit"),
-  { ssr: false, loading: () => <div className="h-[500px]" /> },
+const LandingValueComparisonV2 = dynamic(
+  () => import("../components/landing/LandingValueComparisonV2"),
+  { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
-const LandingValueComparison = dynamic(
-  () => import("../components/landing/LandingValueComparison"),
-  { ssr: false, loading: () => <div className="h-[600px]" /> },
+const CROFormulaSplitV2 = dynamic(
+  () => import("../components/cro/CROFormulaSplitV2"),
+  { ssr: false, loading: () => <div className="h-[700px]" /> },
 );
-const CROTestimonials = dynamic(
-  () => import("../components/cro/CROTestimonials"),
-  { ssr: false, loading: () => <div className="h-[500px]" /> },
+const CROBuyBox = dynamic(
+  () => import("../components/cro/CROBuyBox"),
+  { ssr: false, loading: () => <div className="h-[800px]" /> },
 );
-const CROGuarantee = dynamic(
-  () => import("../components/cro/CROGuarantee"),
-  { ssr: false, loading: () => <div className="h-[400px]" /> },
+const CROBenefitCards = dynamic(
+  () => import("../components/cro/CROBenefitCards"),
+  { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
-const CROFAQ = dynamic(
-  () => import("../components/cro/CROFAQ"),
-  { ssr: false, loading: () => <div className="h-[500px]" /> },
+const CROAthletes = dynamic(
+  () => import("../components/cro/CROAthletes"),
+  { ssr: false, loading: () => <div className="h-[900px]" /> },
 );
-const CROFinalCTA = dynamic(
-  () => import("../components/cro/CROFinalCTA"),
-  { ssr: false, loading: () => <div className="h-[200px]" /> },
+const CROResearch = dynamic(
+  () => import("../components/cro/CROResearch"),
+  { ssr: false, loading: () => <div className="h-[760px]" /> },
+);
+const CROCustomerReviews = dynamic(
+  () => import("../components/cro/CROCustomerReviews"),
+  { ssr: false, loading: () => <div className="h-[680px]" /> },
+);
+const CROAppCallout = dynamic(
+  () => import("../components/cro/CROAppCallout"),
+  { ssr: false, loading: () => <div className="h-[820px]" /> },
+);
+const CROFAQv2 = dynamic(
+  () => import("../components/cro/CROFAQv2"),
+  { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
 const LandingDisclaimer = dynamic(
   () => import("../components/landing/LandingDisclaimer"),
@@ -51,7 +63,7 @@ export default function CROBelowFold() {
       {/* ===== V2 SECTION 2 — BRAND STORY ===== */}
       <section
         className="brand-section brand-bg-white"
-        style={{ paddingTop: 0 }}
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
         aria-label="We created drinkable focus"
       >
         <div className="brand-track">
@@ -59,65 +71,104 @@ export default function CROBelowFold() {
         </div>
       </section>
 
-      {/* ===== 2. FORMULA SPLIT — WHAT ===== */}
+      {/* ===== V2 SECTION 3 — COFFEE VS CONKA (animated bars) ===== */}
       <section
-        className="brand-section brand-bg-tint"
-        aria-label="Flow and Clear formulas"
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="The 2pm crash isn't you"
       >
         <div className="brand-track">
-          <CROFormulaSplit />
+          <LandingValueComparisonV2 />
         </div>
       </section>
 
-      {/* ===== 3. TESTIMONIALS ===== */}
+      {/* ===== V2 SECTION 4 — FORMULA SPLIT (AM/PM toggle + ingredients) ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="Customer reviews"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Built for every part of your day"
       >
         <div className="brand-track">
-          <VisibilityGate minHeight="500px">
-            <CROTestimonials />
+          <CROFormulaSplitV2 />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 5 — BUY BOX (conka-both quick purchase) ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Try your first shot today"
+      >
+        <div className="brand-track">
+          <CROBuyBox />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 6 — BENEFIT CARDS (% increase proof) ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Measured, not marketed"
+      >
+        <div className="brand-track">
+          <CROBenefitCards />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 7 — ATHLETES + INFORMED SPORT ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Trusted where focus can't fail"
+      >
+        <div className="brand-track">
+          <CROAthletes />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 8 — CAMBRIDGE + RESEARCH CREDENTIALS ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Built on Cambridge research"
+      >
+        <div className="brand-track">
+          <CROResearch />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 9 — CUSTOMER REVIEWS ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Real people. Real results."
+      >
+        <div className="brand-track">
+          <VisibilityGate minHeight="680px">
+            <CROCustomerReviews />
           </VisibilityGate>
         </div>
       </section>
 
-      {/* ===== 4. VALUE COMPARISON — 2PM CRASH + PRICE ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Why CONKA outperforms caffeine"
-      >
-        <div className="brand-track">
-          <LandingValueComparison />
-        </div>
-      </section>
-
-      {/* ===== 5. GUARANTEE ===== */}
+      {/* ===== V2 SECTION 10 — APP CALLOUT ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="100-day risk-free guarantee"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="We don't ask if CONKA works, we measure it"
       >
         <div className="brand-track">
-          <CROGuarantee />
+          <CROAppCallout />
         </div>
       </section>
 
-      {/* ===== 6. FAQ ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="FAQ"
-      >
-        <div className="brand-track">
-          <CROFAQ />
-        </div>
-      </section>
-
-      {/* ===== 7. FINAL CTA ===== */}
+      {/* ===== V2 SECTION 11 — FAQ ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="Get started with CONKA"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Still wondering?"
       >
         <div className="brand-track">
-          <CROFinalCTA />
+          <CROFAQv2 />
         </div>
       </section>
 

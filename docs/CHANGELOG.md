@@ -6,6 +6,78 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 11 FAQ ("Still wondering?")
+
+Eleventh section of the V2 rebuild for `/start` (under parent SCRUM-1035). The last section before the legal disclaimer footer. Visual reskin of CROFAQ.tsx into V2 grammar plus one question curation pass to remove the overlap with Section 5's buy-box FAQ. Drops the V1 "What's the difference between Flow and Clear?" question because Section 5 already answers it under "What's in it?". Adds a new lead question "Why two formulas instead of one?" lifted verbatim from storyData.ts to reinforce Section 4's AM/PM system and front-load the strongest product-strategy narrative. Reorders the remaining four V1 questions broadest-product to narrowest-practical (can I take just one, how quickly will it arrive, what if my score doesn't improve, how do I cancel). H2 changes from the generic "Frequently asked questions" to the conversational "Still wondering?". The accordion mechanic mirrors Sections 4, 5, and 9: soft grey pill rows, aria-expanded, max-height transition, single-open behaviour, plain plus/minus indicators. V1 clinical chrome stripped: mono "// Common questions" eyebrow, numbered "01." prefixes, category eyebrow chips (TRIAL / PRODUCT / SHIPPING / SUBSCRIPTION), hard bordered outer container, mono bracketed toggle, black left-border answer panels, mono "Avg response 4h" footer. Contact footer kept: "Still stuck? info@conka.io" rendered as a soft centred line with a navy underlined email link. No CTA inside the section. CROFAQ.tsx is left untouched on disk (it has no other consumers but kept for revert per the V2 pattern).
+
+**Modified:** `app/components/cro/CROFAQv2.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 10 app callout ("Don't trust us. Test yourself.")
+
+Tenth section of the V2 rebuild for `/start` (under parent SCRUM-1035). The "don't trust us, test yourself" beat. The lifestyle image at the top shows the CONKA app's "Your Brain Over Time" graph on a phone next to a CONKA bottle. Below that the H2 lifts the strongest existing thesis line on the site verbatim: "We don't ask if CONKA works. We measure it." The body assembles three more verbatim quotes from existing site components in a tight narrative: the opener from AppUSPSection ("Other brands tell you it works. CONKA gives you a cognitive test and a daily log so you can watch it happen."), the not-an-IQ-test framing from AppFeaturePanel ("This isn't an IQ test. It measures how efficiently your brain processes information, tracked over time."), and the mechanism explanation also from AppFeaturePanel ("Built on Cambridge-derived visual recognition. Because it uses natural images, your brain can't learn or memorise the answers. Your score only improves if your brain actually improves."). A soft-grey risk-close card under the body delivers the no-risk close: "Take the test. Try CONKA. Take the test again. If your data doesn't move, we'll refund you within 100 days." A full-width navy pill CTA "Try CONKA risk-free" sends visitors to the funnel; a small text link below offers "Learn more about the app" for those who want the app deep dive. No App Store / Play Store badges in this section by design: Section 10 closes the conversion argument, not drives app downloads.
+
+**Modified:** `app/components/cro/CROAppCallout.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 9 customer reviews (V2 reskin)
+
+Ninth section of the V2 rebuild for `/start` (under parent SCRUM-1035). Pure visual reskin of the existing `LandingTestimonials.tsx` carousel into V2 grammar. Same eight curated testimonials, same data fields, same carousel mechanics ported verbatim (3x render for infinite loop, auto-advance every 3.5s, pause on hover or touch or expanded card, 50px swipe threshold, 200-char body truncation with Read more toggle). Every visual decision is the cleaner V2 equivalent: photo moves to the top of each card, the V1 SpecHeader block with its tick badge, mono Verified-and-date line, mono 4.5/5 rating, hairline character stars and product label divider is gone, replaced by a single row of gold SVG stars (same gold as the hero trust micro-row) and a small product label. Cards get a soft brand-radius outer border with no internal dividers. The hanging mono open-quote is gone. The "Read more" toggle becomes a bold navy underlined sans link. Chamfered lab-clip nav buttons become circular white-on-navy arrow pills like the Section 7 athlete carousel. Aggressive black-pixel dot indicators become a soft navy active pill on muted circles. Date renders as "Mar 2026" via Intl rather than the V1 ISO string. The V1 LandingTestimonials.tsx is untouched because it still serves the three Conka PDPs plus protocol pages and the home route.
+
+**Modified:** `app/components/cro/CROCustomerReviews.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 8 Cambridge research + credentials
+
+Eighth section of the V2 rebuild for `/start` (under parent SCRUM-1035). The academic-proof beat after the human-proof of Section 7. A hero card features the Cambridge college photograph above a bordered content area that carries the "RESEARCH BACKING" eyebrow, the card title "The Cambridge cognitive test.", and the verbatim site-vetted body explaining how the five-minute test built into the CONKA app comes from Cambridge University research via Cognetivity Neurosciences, is the same assessment used in NHS Memory Clinics, and is FDA-cleared. A credential chips line below the body reads "Cambridge-derived · FDA cleared · NHS validated". Underneath the hero card sits a supporting credentials block: a soft grey card with the line "Formulated in partnership with Durham and Exeter universities. Made in Britain." followed by the three logos centred and equally weighted (Durham, Exeter, Made in Britain). Three credibility tiers in one section: the test is Cambridge, the formulation is Durham + Exeter, the manufacturing is UK-made. All copy lifted verbatim from existing site components so no new claims are introduced.
+
+**Modified:** `app/components/cro/CROResearch.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 7 athletes + Informed Sport
+
+Seventh section of the V2 rebuild for `/start` (under parent SCRUM-1035). Forks the clinical `AthleteCredibilityCarousel` (still serving the three Conka PDPs untouched) into a softer V2 component focused on the athlete quote as the visual hero. Each slide stacks a large square portrait, the athlete name and sport, and the quote rendered very large. Seven circular athlete portraits sit below the active slide as a swipeable roster strip with the active one outlined navy. Touch swipe and keyboard arrows port the V1 mechanics. All V1 clinical noise removed: no mono eyebrows, no chamfered nav buttons, no "RUGBY 7s · OLYMPIC" chips, no "01." prefix on roster tiles. Below the carousel sits an Informed Sport certification card with the large logo and the legally-vetted copy lifted verbatim from WhyConkaWorksDesktop: every batch tested for 280-plus banned substances, trusted by WADA, Olympic committees, and professional sports leagues worldwide. No CTA in the section: this is the trust beat after Section 5 conversion and Section 6 numerical proof.
+
+**Modified:** `app/components/cro/CROAthletes.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 6 % benefit cards ("Measured, not marketed.")
+
+Sixth section of the V2 rebuild for `/start` (under parent SCRUM-1035). First "proof density" moment after the soft V2 storytelling in Sections 1-5. A single-column stack of four expandable benefit rows that surface the numbers behind the experience without resorting to a wall of statistics. Two of the four are in-app CONKA data (per-user delta methodology, 712 users / 7,593 tests / 30 months): "+1.09 pts" evening focus held during the 6-9pm dip, and "-41 ms" faster reaction time on fatigued days. The other two are PMID-backed ingredient studies: "+63%" memory (Bacopa monnieri, Small 2018) and "+30%" fatigue resistance (Acetyl-L-Carnitine, Malaguarnera 2008). Each row shows the metric on the left, label and source anchor on the right, plus a + or - affordance. Single-open accordion mechanic shared with Sections 4 and 5. The section footer explains the two anchor symbols (^^ for in-app cognitive tests, paragraph mark for peer-reviewed ingredient findings) and links to /app-insights for the full reports and methodology. No CTA in the section; conversion already happened at the Section 5 buy box, this beat earns trust.
+
+**Modified:** `app/components/cro/CROBenefitCards.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 5 inline buy box (conka-both quick purchase)
+
+Fifth section of the V2 rebuild for `/start` (under parent SCRUM-1035, no separate sub-ticket). First inline purchase moment on the landing page: a Ketone-IQ-inspired single product card for the conka-both bundle with an auto-checked Subscribe & Save toggle. The card carries the primary product photo, "CONKA Both" + tagline, a navy price row with the monthly-otp price grey and struck-through plus a "Save X%" pill, the per-shot micro-line, a four-item benefits checklist, and a full-width CTA whose label flips between "Start subscription · £X.XX/mo" and "Order once · £X.XX" depending on the toggle. Real cart wiring via `useCart().addToCart(variant.variantId, 1, variant.sellingPlanId, { location: "buy_box", source: "v2_quick_purchase" })` so Vercel + Triple Whale + Meta Pixel attribution lights up automatically; cart drawer opens itself. Variant and pricing resolved at render via `getCadenceVariantByProductHeroId("03", cadence)` and `getCadencePricingByProductHeroId("03", cadence)`, savings derived from the monthly-sub `compareAtPrice`. `CROPillCTA` gained optional `onClick`/`disabled`/`type` props so it can render as a `<button>` for cart actions; existing link callers are untouched. Section sits between Section 4 and the legacy testimonials block, `brand-bg-white` and standardised V2 spacing. FAQ dropdowns, quarterly cadence, and quantity stepper deferred to a follow-up.
+
+**Modified:** `app/components/cro/CROBuyBox.tsx` (new), `app/components/cro/CROPillCTA.tsx`, `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 4 AM/PM toggle + ingredient accordion
+
+Fourth section of the V2 rebuild for `/start` (under parent SCRUM-1035; no separate sub-ticket per current sectioning approach). Replaces the dense V1 `CROFormulaSplit` (side-by-side cards + drawer) with a single focused product card carrying a bottle close-up, dynamic one-line copy, and an AM/PM pill toggle (sun and moon icons inline as SVG). Below the card, a dynamic editorial intro line followed by a vertical stack of clickable pill-shaped ingredient rows in the 8 Hours homepage style: circular ingredient image, name, and a plus icon, expanding to a curated accordion containing the percentage of formula, the one-line claim, the top two key stats, and the first study citation. Single-open behaviour, all rows closed on first paint, accordion content reveals via `max-height` transition. The V1 `CROFormulaSplit.tsx` is left on disk untouched for revert; the shared `ingredientsData.ts` catalogue is read-only. Section background is `brand-bg-tint` to break the V2 white trio (Hero / Brand Story / Coffee vs CONKA). Standardised V2 section spacing maintained.
+
+**Modified:** `app/components/cro/CROFormulaSplitV2.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
+### 2026-05-26 -- Landing Page V2: Section 3 Coffee vs CONKA (animated bars)
+
+Third section of the V2 rebuild for `/start` (SCRUM-1038, parent SCRUM-1035). Replaces the dense clinical Coffee vs CONKA chart with a single-glance LMNT-style horizontal bar comparison: Coffee fills 0 to 56% of the day (solid black peak from 9am to 12pm, red hatched crash from 12pm to 2pm) and CONKA Flow + Clear fills the entire bar in navy from 9am to 6pm. Three labelled time markers per bar replace the hour-by-hour ticks. Bars animate fill left-to-right on scroll-in using the existing `useInView` hook; `prefers-reduced-motion` skips the animation via a lazy `useState` initializer (no setState-in-effect). The shared `LandingValueComparison` is untouched and still serves `/conka-flow`, `/conka-clarity`, and `/conka-both`; the V1 chart slot was removed from `/start` so the page doesn't carry two coffee-vs-CONKA visualisations. The parent plan picked up "The CRO bet" principle and the no-Figma-for-Sections-3-to-11 decision in the same pass, and Section 2's subline was finalised to lead with the £500k/3-years line and append the trusted-by-athletes endorsement.
+
+**Modified:** `app/components/landing/LandingValueComparisonV2.tsx` (new), `app/start/CROBelowFold.tsx`, `app/components/cro/CROBrandStory.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 2 brand story ("We Created Drinkable Focus")
 
 Second section of the V2 rebuild for `/start` (SCRUM-1037, parent SCRUM-1035). Editorial dev-story block sitting directly below the lifestyle hero: H2 "We Created Drinkable Focus", investment subline, ShotsHero.jpg product asset (cropped 10:9 with object-cover scale-150 zoom so the bottles fill the frame), two stacked stats (150,000+ shots sold to date / £500,000 invested into clinical research), and a centered navy pill CTA "Order Now".
