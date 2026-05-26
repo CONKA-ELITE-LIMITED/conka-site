@@ -210,7 +210,7 @@ function FormulaToggle({
         }`}
       >
         <SunIcon className="w-5 h-5" />
-        AM
+        Morning
       </button>
       <button
         type="button"
@@ -225,7 +225,7 @@ function FormulaToggle({
         }`}
       >
         <SunHorizonIcon className="w-5 h-5" />
-        PM
+        Afternoon
       </button>
     </div>
   );
