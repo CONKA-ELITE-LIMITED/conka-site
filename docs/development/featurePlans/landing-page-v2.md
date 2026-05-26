@@ -380,21 +380,32 @@ Scoped + shipped 2026-05-26 across `6fdb05a`, `6c79a47`, `9b8d513`, `1a7e93d`. R
 **Flags carried into launch:**
 - All four metric/headline/caption strings are claims-load-bearing. `/review-claims` pass needed before merge. Tile structure makes per-tile copy swaps trivial if compliance flags any individual line.
 
-### Section 7 — `CROAthletes` (athlete carousel + Informed Sport)
+### Section 7 — `CROAthletes` (athlete carousel + Informed Sport block)
 
-Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+Scoped + shipped 2026-05-26 across `bcfc18f`, `9dec480`, `137c317`, `8bf99bc`, `8b76695`. Rolls under SCRUM-1035; no separate sub-ticket.
 
 - **H2:** "Trusted where focus can't fail." (connective tissue with the Section 2 brand-story line "Trusted where focus isn't optional")
 - **Subline:** "Olympic medallists, world champions, and international competitors use CONKA on the days that matter most."
-- **Layout (per slide):** square portrait at top, then athlete name + sport · role on one line, then the quote rendered very large (`text-[22px] sm:text-[24px]`) as the visual hero. Big readable quote was the explicit instruction.
-- **Roster strip below the active slide:** 7 circular athlete portraits (60px), swipeable on mobile (`overflow-x-auto snap-x`), active one outlined in `ring-2 ring-[#1B2757] ring-offset-2`, inactive ones at `opacity-65`. First name under each portrait, capped at 64px width. Strips all V1 clinical noise: no `01.` prefix, no chamfered `lab-clip-tr` nav buttons, no mono `RUGBY 7s · OLYMPIC` chips, no border-everything aesthetic.
-- **Mechanics:** `useState` active index, touch swipe (50px threshold, ported from V1), keyboard arrow keys, tap roster to set active. `aria-live="polite"` on the active slide wrapper for screen readers.
+- **Active slide layout** (one bordered card containing image + text):
+  - `border border-black/12 rounded-[var(--brand-radius-container)] overflow-hidden bg-white` container
+  - Portrait at `aspect-[4/3]` (shorter than square so the card is less tall and the quote dominates)
+  - Prev/next circular arrow buttons overlaid on the portrait, vertically centered, white-on-navy chevron with `focus-visible` ring only (no click-focus visual)
+  - Below the portrait, padded content: athlete name (`text-[24px] semibold`), then `sport · role` line, then the quote rendered very large (`text-[22px] sm:text-[24px] font-medium`) as the visual hero. Big readable quote was the explicit upgrade brief.
+- **Roster strip below the active slide:**
+  - 7 square 88px tiles with `rounded-[14px]` outer border. Image takes the upper portion (flex-1), first name sits in a small label area at the bottom of the same card. No inner divider between asset and name.
+  - Active tile: `border-[#1B2757]`. Inactive: `border-black/12 opacity-75`. Focus ring uses `focus-visible` only (keyboard) so click-and-active state is a single navy border, not the previous border + offset-ring double line.
+  - Strip lives inside the brand-track padding (no `-mx-5 px-5` edge-bleed) so first and last tiles have natural breathing room.
+  - All V1 clinical noise removed: no `01.` prefix, no chamfered `lab-clip-tr` nav, no mono `RUGBY 7s · OLYMPIC` chips.
+- **Roster sits BELOW the active slide.** Considered above; below wins because the H2 + subline already deliver the breadth claim, and the visitor's first emotional hit should be a face + quote, not a row of thumbnails. Strip becomes "want more?" navigation rather than a blocker.
+- **Mechanics:** `useState` active index, touch swipe (50px threshold, ported from V1), keyboard arrow keys, tap roster to set active, tap on-slide arrows. `aria-live="polite"` on the active slide wrapper for screen readers.
 - **Informed Sport block** below the carousel (inside the same section):
-  - `/public/logos/InformedSportLogo.png` rendered at 128x128 centered
-  - Heading: "Tested clean. Every batch."
-  - Body copy lifted verbatim from `WhyConkaWorksDesktop.tsx` (legally vetted, already live): "Every batch of CONKA Flow and CONKA Clear is tested by Informed Sport for over 280 banned substances. Trusted by WADA, Olympic committees, and professional sports leagues worldwide."
-  - Container: `bg-black/[0.04] rounded-[var(--brand-radius-container)]` so it feels like a soft inset card after the carousel
-- **No CTA in Section 7.** Trust beat after Section 5 conversion.
+  - Container: `bg-black/[0.04] rounded-[var(--brand-radius-container)] p-6 sm:p-8`, centered content
+  - Eyebrow: `QUALITY & TESTING` (navy uppercase, tracked)
+  - Title: "Independently tested. Every batch." (`text-[26-28px] semibold`)
+  - `/public/logos/InformedSportLogo.png` rendered at 160x160 (bumped from initial 128px for more presence)
+  - Body copy lifted verbatim from `WhyConkaWorksDesktop.tsx` (legally vetted, already live), with key facts bolded inline: `**Informed Sport**`, `**280 banned substances**`, `**WADA**`, `**Olympic committees**`. First-scan eye-catching.
+  - Closing line: "No exceptions. No shortcuts." (navy uppercase, tracked) — short confident close.
+- **No CTA in Section 7.** Trust beat after Section 5 conversion and Section 6 numerical proof.
 - **Files:**
   - New: `app/components/cro/CROAthletes.tsx`
   - Modified: `app/start/CROBelowFold.tsx` (inserted between `CROBenefitCards` and the legacy `CROTestimonials`)
@@ -402,9 +413,9 @@ Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
 - **Section background:** `brand-bg-white`. Standard `paddingTop: 0, paddingBottom: 4rem`.
 
 **Flags carried into launch:**
-- The subline is new copy ("on the days that matter most") — needs `/review-claims` pass before launch.
-- All seven athlete quotes are already live on the clinical PDPs so no fresh claims work needed for those.
-- Informed Sport copy is lifted verbatim from existing site content; no new claims work needed.
+- The subline is new copy ("on the days that matter most") and the Informed Sport block closing line ("No exceptions. No shortcuts.") are new — `/review-claims` pass needed before launch.
+- All seven athlete quotes are already live on the clinical PDPs so no fresh claims work needed there.
+- Main Informed Sport body sentence is verbatim from existing site content; only the surrounding structure changed.
 
 ### Section 8 — University research / Cambridge
 - Reference: Ketone-IQ university research section
