@@ -272,6 +272,7 @@ V2 introduces 11 sections (up from 8 on the current `/start`). Reordered and par
 | 10 | App callout + data/science | Not started | New `CROAppCallout` |
 | 11 | FAQ | Not started | Restyle `CROFAQ` (or fork to V2) |
 | — | Disclaimer footer | Keep | `LandingDisclaimer` (no change planned) |
+| — | Legacy `CROFinalCTA` | **Removed** 2026-05-26 — Sections 5 + 10 already carry conversion CTAs; the extra final CTA was redundant |
 
 ### Section 1 — Hero ✅
 Shipped. See `## Implementation log` above.
@@ -505,7 +506,7 @@ Scoped + shipped 2026-05-26 in `bb05a6d`. Rolls under SCRUM-1035; no separate su
 
 - **H2:** "Still wondering?" (replaces V1's generic "Frequently asked questions")
 - **Question set — curated and reordered** to remove overlap with Section 5's buy-box FAQ and to flow broadest-product to narrowest-practical:
-  1. **Why two formulas instead of one?** (NEW, lifted verbatim from `storyData.ts`) — reinforces Section 4's AM/PM system
+  1. **Why two formulas instead of one?** (NEW; first half of the answer lifted from `storyData.ts`, last sentence rewritten to frame both Flow and Clear as DAILY rituals rather than the V1's "daily / for recovery" split: "...So we developed two formulas designed to work together, taken daily: Flow in the morning for consistent focus, Clear in the afternoon for consistent clarity.") — reinforces Section 4's AM/PM system
   2. **Can I take just one shot?** (V1 Q3, verbatim) — product flexibility
   3. **How quickly will it arrive?** (V1 Q4, verbatim) — logistics
   4. **What if my score doesn't improve?** (V1 Q1, verbatim — already pulls `GUARANTEE_LABEL_FULL` and `GUARANTEE_COPY_TRIAL` from `offerConstants`)
@@ -521,7 +522,7 @@ Scoped + shipped 2026-05-26 in `bb05a6d`. Rolls under SCRUM-1035; no separate su
   - Black left-border "Response" answer treatment
   - Mono "Avg response 4h" footer
 - **Contact footer kept** in V2 style: "Still stuck? info@conka.io" as a soft centred line with a navy underlined email link.
-- **No CTA inside the section.** `CROFinalCTA` (legacy) sits after the FAQ in `CROBelowFold` as the page-closing CTA moment.
+- **No CTA inside the section.** The legacy `CROFinalCTA` block that previously sat after the FAQ has been removed (per user direction on 2026-05-26); the conversion CTAs in Sections 5 and 10 close the page. `LandingDisclaimer` is now the section immediately after the FAQ.
 - **Files:**
   - New: `app/components/cro/CROFAQv2.tsx`
   - Modified: `app/start/CROBelowFold.tsx` (swapped the dynamic-imported `CROFAQ` slot for `CROFAQv2`; applied standard V2 spacing; background switched from `brand-bg-tint` to `brand-bg-white` to continue the V2 white run)

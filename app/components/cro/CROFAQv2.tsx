@@ -45,7 +45,7 @@ const FAQ_ITEMS: FaqItem[] = [
     id: "two-formulas",
     question: "Why two formulas instead of one?",
     answer:
-      "Armed with data from professional sports teams, a pattern emerged. There were two days each week where cognitive performance dipped, always around periods of high intensity training. The technology revealed what athletes couldn't feel themselves. So we developed a second formula specifically designed to complement the first: CONKA Flow for daily cognitive enhancement, CONKA Clear for recovery periods.",
+      "Armed with data from professional sports teams, a pattern emerged. There were two days each week where cognitive performance dipped, always around periods of high intensity training. The technology revealed what athletes couldn't feel themselves. So we developed two formulas designed to work together, taken daily: Flow in the morning for consistent focus, Clear in the afternoon for consistent clarity.",
   },
   {
     id: "just-one",

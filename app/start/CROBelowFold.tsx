@@ -52,10 +52,6 @@ const CROFAQv2 = dynamic(
   () => import("../components/cro/CROFAQv2"),
   { ssr: false, loading: () => <div className="h-[520px]" /> },
 );
-const CROFinalCTA = dynamic(
-  () => import("../components/cro/CROFinalCTA"),
-  { ssr: false, loading: () => <div className="h-[200px]" /> },
-);
 const LandingDisclaimer = dynamic(
   () => import("../components/landing/LandingDisclaimer"),
   { ssr: false, loading: () => <div className="h-[150px]" /> },
@@ -173,16 +169,6 @@ export default function CROBelowFold() {
       >
         <div className="brand-track">
           <CROFAQv2 />
-        </div>
-      </section>
-
-      {/* ===== 7. FINAL CTA ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Get started with CONKA"
-      >
-        <div className="brand-track">
-          <CROFinalCTA />
         </div>
       </section>
 
