@@ -89,7 +89,9 @@ export default function CROBelowFold() {
         aria-label="Built for every part of your day"
       >
         <div className="brand-track">
-          <CROFormulaSplitV2 />
+          <VisibilityGate minHeight="700px">
+            <CROFormulaSplitV2 />
+          </VisibilityGate>
         </div>
       </section>
 
@@ -122,7 +124,9 @@ export default function CROBelowFold() {
         aria-label="Trusted where focus can't fail"
       >
         <div className="brand-track">
-          <CROAthletes />
+          <VisibilityGate minHeight="900px">
+            <CROAthletes />
+          </VisibilityGate>
         </div>
       </section>
 
@@ -133,7 +137,9 @@ export default function CROBelowFold() {
         aria-label="Built on Cambridge research"
       >
         <div className="brand-track">
-          <CROResearch />
+          <VisibilityGate minHeight="760px">
+            <CROResearch />
+          </VisibilityGate>
         </div>
       </section>
 
@@ -157,7 +163,9 @@ export default function CROBelowFold() {
         aria-label="We don't ask if CONKA works, we measure it"
       >
         <div className="brand-track">
-          <CROAppCallout />
+          <VisibilityGate minHeight="820px">
+            <CROAppCallout />
+          </VisibilityGate>
         </div>
       </section>
 
