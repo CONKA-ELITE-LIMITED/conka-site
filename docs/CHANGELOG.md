@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- /start perf rebuild Phase 1: convert no-interactivity sections to Server Components
+
+DevTools Performance trace of /start (Slow 4G, 4x CPU throttle) revealed the page sits dark for 2.85 seconds while Chrome downloads 10 dynamically-imported JS chunks in parallel. Those chunks compete with the render-blocking critical CSS for the 180 Kbps Slow 4G bandwidth; the CSS that should download in ~1s instead takes 2.6s, so FCP fires at 3.6s. Main thread is essentially idle during that window, so the original "hydration blocks LCP paint" hypothesis was wrong. Phase 1 of the perf rebuild starts removing unnecessary client components. Three V2 sections were marked `"use client"` with zero hooks, event handlers, or browser APIs — pure shadow JavaScript shipped for static content (CROBenefitCards 137 LOC, CROResearch 74 LOC, CROAppCallout 98 LOC). Drops the `"use client"` directive from all three. No behavioural change; they continue to render identically because their imports (next/link, next/image, CROPillCTA) all work fine in Server Components. The point is to reduce the modulepreload count Chrome injects into the HTML head, which is the root cause of the bandwidth starvation. Full plan and ongoing learnings live in `docs/development/featurePlans/landing-page-v2-perf-rebuild.md`. Baseline before this commit: Perf 95, FCP 2.6s, LCP 5.8s, TBT 290ms (median of 3 runs).
+
+**Modified:** `app/components/cro/CROBenefitCards.tsx`, `app/components/cro/CROResearch.tsx`, `app/components/cro/CROAppCallout.tsx`, `docs/development/featurePlans/landing-page-v2-perf-rebuild.md`.
+
+---
+
 ### 2026-05-26 -- Disable Klaviyo onsite signup-form script (perf)
 
 Mobile Lighthouse audit on `/start` flagged the Klaviyo onsite bundle as one of the largest third-party drags: ~17.7 KiB of legacy-JS polyfills in `sharedUtils`, 16 KiB of unused CSS, and four long main-thread tasks (123ms, 93ms, 87ms, 58ms) spread across the audit window. Marketing then set all signup forms to draft state in the Klaviyo dashboard, which means `klaviyo.js` was loading, pinging Klaviyo, pulling Brand Library, and rendering nothing on every page. The Script tag in `app/layout.tsx` is now commented out to remove that pure-overhead load. The server-side subscribe paths are untouched: `/api/klaviyo/subscribe` and `/api/klaviyo/track-test` continue to power the Footer email signup and the `WinEmailForm`. To restore signup forms later, publish a form in the Klaviyo dashboard and uncomment the Script tag.
