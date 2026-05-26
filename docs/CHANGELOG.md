@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 1 hero (lifestyle, single column)
+
+First section of the Landing Page V2 rebuild for `/start` (SCRUM-1036, parent SCRUM-1035). Replaced the clinical-grammar CRO hero with a softer, DTC-style lifestyle hero matching the Figma render: mobile full-bleed lifestyle photo on top (CONKA Clear bottle held by a customer), 5-avatar trust micro-row with gold stars and bold review microcopy, italic-Daily headline, solid-black subline, and a navy pill CTA. Introduces the foundational `.brand-v2` scope class on the `/start` page root so subsequent V2 sections inherit a softer token set (rounded radii) without affecting any other clinical page. Old `CROHero.tsx` kept on disk untouched for revert.
+
+**Modified:** `app/components/cro/CROHeroV2.tsx` (new), `app/brand-base.css`, `app/start/page.tsx`.
+
+---
+
 ### 2026-05-22 -- conka-both PDP: lead with athletes, add the value comparison
 
 Restructured the section order on the /conka-both bundle product page so it leads with athlete credibility before asking for proof and price. The athlete credibility carousel and the value comparison band, both already live on /conka-flow and /conka-clarity, were added to /conka-both, and the comparison CTA now scrolls to the in-page hero purchase module rather than self-linking. The Why CONKA Works and Explore (Flow/Clear product grid) sections were removed, FAQ moved directly above the footer, and section backgrounds re-alternated white/tint so no two same-coloured sections sit adjacent. Cosmetic only: no component internals, data-layer, or analytics changes. SCRUM-1030.

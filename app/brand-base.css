@@ -361,6 +361,24 @@
   }
 }
 
+/* ================================================================
+ * LAYER 2.6 — LANDING V2 SCOPE (opt-in, /start only)
+ * ================================================================
+ * Softens the clinical grammar for the V2 landing page rebuild
+ * (SCRUM-1035). Opt-in via `.brand-v2` on the page root. Other
+ * clinical pages are unaffected.
+ *
+ * Minimal overrides for now — additional softening lives in
+ * individual V2 components until the system stabilises. Expand here
+ * once 4–5 sections have shipped and the language is consistent.
+ * ================================================================ */
+
+.brand-v2 {
+  --brand-radius-interactive: 10px;
+  --brand-radius-container: 12px;
+  --brand-radius-card: 12px;
+}
+
 /* ---- Clinical utilities (unscoped, opt-in) ---- */
 
 /* Double-line border for contained assets — 2px inner, 4px white gap,
