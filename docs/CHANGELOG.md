@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-26 -- Landing Page V2: Section 6 % benefit cards ("Measured, not marketed.")
+
+Sixth section of the V2 rebuild for `/start` (under parent SCRUM-1035). First "proof density" moment after the soft V2 storytelling in Sections 1-5. A single-column stack of four expandable benefit rows that surface the numbers behind the experience without resorting to a wall of statistics. Two of the four are in-app CONKA data (per-user delta methodology, 712 users / 7,593 tests / 30 months): "+1.09 pts" evening focus held during the 6-9pm dip, and "-41 ms" faster reaction time on fatigued days. The other two are PMID-backed ingredient studies: "+63%" memory (Bacopa monnieri, Small 2018) and "+30%" fatigue resistance (Acetyl-L-Carnitine, Malaguarnera 2008). Each row shows the metric on the left, label and source anchor on the right, plus a + or - affordance. Single-open accordion mechanic shared with Sections 4 and 5. The section footer explains the two anchor symbols (^^ for in-app cognitive tests, paragraph mark for peer-reviewed ingredient findings) and links to /app-insights for the full reports and methodology. No CTA in the section; conversion already happened at the Section 5 buy box, this beat earns trust.
+
+**Modified:** `app/components/cro/CROBenefitCards.tsx` (new), `app/start/CROBelowFold.tsx`, `docs/development/featurePlans/landing-page-v2.md`.
+
+---
+
 ### 2026-05-26 -- Landing Page V2: Section 5 inline buy box (conka-both quick purchase)
 
 Fifth section of the V2 rebuild for `/start` (under parent SCRUM-1035, no separate sub-ticket). First inline purchase moment on the landing page: a Ketone-IQ-inspired single product card for the conka-both bundle with an auto-checked Subscribe & Save toggle. The card carries the primary product photo, "CONKA Both" + tagline, a navy price row with the monthly-otp price grey and struck-through plus a "Save X%" pill, the per-shot micro-line, a four-item benefits checklist, and a full-width CTA whose label flips between "Start subscription · £X.XX/mo" and "Order once · £X.XX" depending on the toggle. Real cart wiring via `useCart().addToCart(variant.variantId, 1, variant.sellingPlanId, { location: "buy_box", source: "v2_quick_purchase" })` so Vercel + Triple Whale + Meta Pixel attribution lights up automatically; cart drawer opens itself. Variant and pricing resolved at render via `getCadenceVariantByProductHeroId("03", cadence)` and `getCadencePricingByProductHeroId("03", cadence)`, savings derived from the monthly-sub `compareAtPrice`. `CROPillCTA` gained optional `onClick`/`disabled`/`type` props so it can render as a `<button>` for cart actions; existing link callers are untouched. Section sits between Section 4 and the legacy testimonials block, `brand-bg-white` and standardised V2 spacing. FAQ dropdowns, quarterly cadence, and quantity stepper deferred to a follow-up.

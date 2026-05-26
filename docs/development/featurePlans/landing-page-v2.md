@@ -349,11 +349,28 @@ Scoped + shipped 2026-05-26. No separate Jira ticket per current direction; roll
 - Quantity stepper (visitor still adjusts in the cart drawer)
 - `/review-claims` pass on the new benefit list copy
 
-### Section 6 — % increase benefit cards
-- Lead with % increases in specific cognitive metrics
-- Each card expandable into "how this helps someone" detail
-- References: 8 Hours benefits cards, Ketone-IQ "benefits of daily use"
-- Source of %s: needs alignment with `docs/branding/BRAND_VOICE.md` proof points and the app-insights data
+### Section 6 — `CROBenefitCards` (hybrid % proof, "Measured, not marketed.")
+
+Scoped + shipped 2026-05-26. Rolls under SCRUM-1035; no separate sub-ticket.
+
+- **H2:** "Measured, not marketed."
+- **Subline:** "Two sources behind every number: real CONKA app data, plus peer-reviewed studies on the active ingredients."
+- **Layout:** single-column stack of 4 expandable rows (not a 2x2 grid — keeps independent accordion expansion clean on mobile). Each row shows the big tabular-nums metric on the left, the label + source anchor on the right, and a `+` / `−` affordance. Same accordion mechanic as Sections 4 + 5 (soft `bg-black/[0.04] rounded-[16px]`, `aria-expanded`/`aria-controls`, max-height transition, single-open behaviour).
+- **Cards (hybrid, 2 in-app `^^` + 2 PMID `¶`):**
+  - `+1.09 pts` Evening focus held (`^^`, n=74 CONKA evening-dip tests from `appInsightsData.timeOfDay`)
+  - `−41 ms` Faster reaction when tired (`^^`, n=15 from `appInsightsData.mentalFatigue` CONKA sub-section)
+  - `+63%` Memory (`¶`, Bacopa monnieri, Small 2018, PMID 29246725, ingredient in Clear)
+  - `+30%` Fatigue resistance (`¶`, Acetyl-L-Carnitine, Malaguarnera 2008, PMID 18937015, ingredient in Clear)
+- **Footnote block** at the section bottom explains the two anchor symbols and links to `/app-insights` for the full data. `^^` covers the per-user delta methodology on 712 users / 7,593 tests / 30 months; `¶` covers the ingredient-level findings disclaimer ("not extrapolated to product-level effect").
+- **No CTA in Section 6.** Conversion already happened at Section 5; Section 6 is a proof beat.
+- **Files:**
+  - New: `app/components/cro/CROBenefitCards.tsx`
+  - Modified: `app/start/CROBelowFold.tsx` (inserted between Section 5 buy box and the legacy testimonials)
+- **Section background:** `brand-bg-white` (V2 white run continues). Standard `paddingTop: 0, paddingBottom: 4rem`.
+- **Carry-overs:** accordion pattern from Sections 4 + 5; soft V2 palette; no red; mobile-first 390px.
+
+**Flags carried into launch:**
+- All 4 metrics and their expand copy are claims-load-bearing. `/review-claims` pass needed before merge. Card content is structurally easy to swap if compliance flags any individual metric.
 
 ### Section 7 — Athlete + Informed Sport
 - Athlete imagery — high-volume, lifestyle/action shots

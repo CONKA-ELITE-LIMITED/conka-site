@@ -28,6 +28,10 @@ const CROBuyBox = dynamic(
   () => import("../components/cro/CROBuyBox"),
   { ssr: false, loading: () => <div className="h-[800px]" /> },
 );
+const CROBenefitCards = dynamic(
+  () => import("../components/cro/CROBenefitCards"),
+  { ssr: false, loading: () => <div className="h-[520px]" /> },
+);
 const CROTestimonials = dynamic(
   () => import("../components/cro/CROTestimonials"),
   { ssr: false, loading: () => <div className="h-[500px]" /> },
@@ -93,6 +97,17 @@ export default function CROBelowFold() {
       >
         <div className="brand-track">
           <CROBuyBox />
+        </div>
+      </section>
+
+      {/* ===== V2 SECTION 6 — BENEFIT CARDS (% increase proof) ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+        aria-label="Measured, not marketed"
+      >
+        <div className="brand-track">
+          <CROBenefitCards />
         </div>
       </section>
 
