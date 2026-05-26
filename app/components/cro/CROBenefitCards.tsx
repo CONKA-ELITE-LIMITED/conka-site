@@ -6,73 +6,90 @@ import Link from "next/link";
  * CROBenefitCards
  *
  * V2 Section 6 on /start. First "proof density" moment after Sections 1-5.
- * 2x2 grid of square tiles, one per dimension of cognitive performance:
- * Focus / Speed / Memory / Calm. Two tiles from in-app CONKA data (^^),
- * two from PMID-backed ingredient studies (¶).
+ * 2x2 grid of square tiles in the Ketone-IQ pdp-stat-cards style: small
+ * uppercase headline at the top, big centered stat below. One tile per
+ * dimension of cognitive performance (Focus / Speed / Memory / Calm), no
+ * overlap. Two tiles from in-app CONKA data (^^), two from PMID-backed
+ * ingredient studies (¶).
  *
- * The four metrics here are load-bearing claims. They are hardcoded so the
- * surface is predictable; the full reports + methodology live at
- * /app-insights for visitors who want the deep dive.
+ * Tiles are intentionally glanceable, no inline expand. If we add "see the
+ * data" detail later, the easiest path is a modal sheet keyed off tile id;
+ * the footnote link to /app-insights already covers the full report.
  * ========================================================================== */
 
 type Anchor = "^^" | "¶";
 
 interface BenefitTile {
   id: string;
-  dimension: string;
+  headline: string;
   metric: string;
-  context: string;
+  caption: string;
   anchor: Anchor;
 }
 
 const TILES: BenefitTile[] = [
   {
     id: "focus",
-    dimension: "Focus",
+    headline: "Holds evening focus",
     metric: "+1.09 pts",
-    context: "Steadier focus into the evening, where most people drop.",
+    caption: "When most people drop.",
     anchor: "^^",
   },
   {
     id: "speed",
-    dimension: "Speed",
+    headline: "Sharpens reaction",
     metric: "−41 ms",
-    context: "Sharper reactions on the days your brain is running low.",
+    caption: "On fatigued days.",
     anchor: "^^",
   },
   {
     id: "memory",
-    dimension: "Memory",
+    headline: "Strengthens memory",
     metric: "+63%",
-    context: "Stronger recall under load, from the actives in Clear.",
+    caption: "Recall under load.",
     anchor: "¶",
   },
   {
     id: "calm",
-    dimension: "Calm",
+    headline: "Lowers felt stress",
     metric: "−28%",
-    context: "Lower felt stress, from the actives in Flow.",
+    caption: "In healthy adults.",
     anchor: "¶",
   },
 ];
 
-function BenefitTileCard({ tile }: { tile: BenefitTile }) {
+function BenefitTileCard({
+  tile,
+  index,
+}: {
+  tile: BenefitTile;
+  index: number;
+}) {
   return (
-    <div className="relative aspect-square bg-black/[0.04] rounded-[16px] p-4 flex flex-col">
-      <p className="text-[24px] sm:text-[28px] font-bold text-[#1B2757] tabular-nums leading-none mb-3">
-        {tile.metric}
-      </p>
-      <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-black/55 mb-2">
-        {tile.dimension}
-      </p>
-      <p className="text-[12px] text-black/75 leading-snug">{tile.context}</p>
+    <article className="relative aspect-square bg-black/[0.04] rounded-[16px] p-4 flex flex-col items-center justify-center text-center">
       <span
-        className="absolute bottom-3 right-3 text-[10px] text-black/40 tabular-nums"
+        className="absolute top-3 left-3 font-mono text-[10px] tabular-nums text-black/35"
+        aria-hidden
+      >
+        ({String(index + 1).padStart(2, "0")})
+      </span>
+      <span
+        className="absolute bottom-3 right-3 text-[10px] tabular-nums text-black/35"
         aria-hidden
       >
         {tile.anchor}
       </span>
-    </div>
+
+      <p className="text-[11px] uppercase tracking-[0.14em] font-bold text-black/65 leading-tight mb-3 max-w-[16ch]">
+        {tile.headline}
+      </p>
+      <p className="text-[28px] sm:text-[30px] font-bold text-[#1B2757] tabular-nums leading-none mb-2">
+        {tile.metric}
+      </p>
+      <p className="text-[11px] text-black/55 leading-tight max-w-[18ch]">
+        {tile.caption}
+      </p>
+    </article>
   );
 }
 
@@ -92,8 +109,8 @@ export default function CROBenefitCards() {
       </p>
 
       <div className="grid grid-cols-2 gap-3 mb-6">
-        {TILES.map((tile) => (
-          <BenefitTileCard key={tile.id} tile={tile} />
+        {TILES.map((tile, i) => (
+          <BenefitTileCard key={tile.id} tile={tile} index={i} />
         ))}
       </div>
 
