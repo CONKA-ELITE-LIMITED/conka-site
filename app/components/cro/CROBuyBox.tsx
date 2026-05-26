@@ -22,8 +22,9 @@ import CROPillCTA from "./CROPillCTA";
  * ========================================================================== */
 
 const PRODUCT_HERO_ID = "03";
-const PRODUCT_IMAGE = "/formulas/both/BothShots.jpg";
-const PRODUCT_IMAGE_ALT = "CONKA Flow and Clear bottles together";
+const PRODUCT_IMAGE = "/formulas/both/BothBox.jpg";
+const PRODUCT_IMAGE_ALT =
+  "CONKA Flow and Clear boxes side by side with both bottles in front";
 const PRODUCT_NAME = "CONKA Both";
 const PRODUCT_TAGLINE = "Flow for the morning, Clear for the afternoon.";
 
