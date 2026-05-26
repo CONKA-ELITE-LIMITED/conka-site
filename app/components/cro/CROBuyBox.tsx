@@ -177,18 +177,42 @@ function BuyBoxFAQ() {
       id: "timing",
       question: "When do I take it?",
       content: (
-        <div className="space-y-3">
-          <p>
-            Take <strong>CONKA Flow</strong> in the morning, with or without
-            coffee, with or without food. It supports calm, focused thinking
-            through the first half of your day.
-          </p>
-          <p>
-            Take <strong>CONKA Clear</strong> in the afternoon, after
-            you&apos;ve already done a sustained stretch of work. Your brain
-            has built up oxidative stress by then; Clear helps reset you for a
-            strong second half of focus.
-          </p>
+        <div className="space-y-5">
+          <div className="flex gap-4">
+            <div className="relative w-12 h-24 flex-shrink-0">
+              <Image
+                src="/formulas/conkaFlow/FlowNoBackground.png"
+                alt="CONKA Flow bottle"
+                fill
+                sizes="48px"
+                className="object-contain scale-150"
+              />
+            </div>
+            <p className="flex-1">
+              <strong className="text-black">CONKA Flow.</strong> Drink it
+              first thing in the morning, before the day pulls on you. Flow
+              supports calm, sustained focus through the first half of your
+              day. Take it with coffee or without. Food optional.
+            </p>
+          </div>
+          <div className="flex gap-4">
+            <div className="relative w-12 h-24 flex-shrink-0">
+              <Image
+                src="/formulas/conkaClear/ClearNoBackground.png"
+                alt="CONKA Clear bottle"
+                fill
+                sizes="48px"
+                className="object-contain scale-150"
+              />
+            </div>
+            <p className="flex-1">
+              <strong className="text-black">CONKA Clear.</strong> Drink it in
+              the early afternoon, after a real stretch of focused work. By
+              then your brain has been firing for hours and oxidative stress
+              has built up. Clear helps reset you, so the second half of your
+              day stays as sharp as the first.
+            </p>
+          </div>
         </div>
       ),
     },
