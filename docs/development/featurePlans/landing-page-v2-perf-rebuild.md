@@ -289,7 +289,7 @@ Phase 5:
 | 0     | Baseline (Lighthouse + DevTools trace) | Done 2026-05-26 |
 | 1     | Drop `"use client"` from no-interactivity sections | Done 2026-05-26 (commit `f4e5e51`) |
 | 2     | Strip accordion state, promote CROFAQv2 to server | Done 2026-05-27 |
-| 3     | Inline section list into page.tsx, delete CROBelowFold | Not started |
+| 3     | Inline section list into page.tsx, delete CROBelowFold | Done 2026-05-27 |
 | 4     | Remove VisibilityGate usage on /start | Not started |
 | 5     | Re-measure and document | Not started |
 | 6     | Modulepreload audit + critical CSS inline (contingency) | Future |
