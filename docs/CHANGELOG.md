@@ -6,6 +6,22 @@
 
 ## May 2026
 
+### 2026-05-27 -- Landing page v2.1: Hero section ported inline to /startv2
+
+First section of the v2.1 design pass. Ports the existing /start hero content inline into `app/startv2/page.tsx` rather than importing `CROHeroV2`, so spacing, typography, copy, and layout decisions are visible and tunable in one file as the design pass progresses. Applied a round of mobile tweaks against the original: top padding zeroed so the lifestyle asset butts directly under the nav; asset cropped 8% top, 12% bottom via CSS transform (GPU-only, no layout cost); H1 split onto two lines and bumped from 34px to 38px; trust micro-row shows a 4.5-star visual with "Excellent 4.7" label, bolded 622+ and 5,000+ counts, and 35px borderless avatars; CTA copy bumped to 18px with an inline right arrow; 100-day money back guarantee tick added under the CTA. No new fonts, no new dependencies, no client-side JavaScript beyond what `next/image` already needs.
+
+**Modified:** `app/startv2/page.tsx`.
+
+---
+
+### 2026-05-27 -- Landing page v2.1: framework doc + empty /startv2 baseline
+
+Kicks off the v2.1 design pass on /start. v2.0 shipped 11 sections without locking a visual system first, which Johnny (Ovrload) flagged as reading like a pitch deck rather than a landing page. v2.1 corrects this by locking the system (Magic Mind aesthetic baseline, Ketone-IQ proof-beat treatment, white/cream/navy surfaces, copy voice, Lighthouse mobile 85+ aim with 80 floor, deploy-and-measure-per-section protocol) in `docs/development/featurePlans/landing-page-v2.1.md` before any section is built. A fresh `/startv2` page is added as an empty `<main>` between Nav and Footer with noindex/nofollow metadata, so each section can be added inline once finished and measured against the perf budget. /start stays live serving paid traffic the whole build; cutover to /startv2 only happens once all 11 sections are complete.
+
+**Modified:** `docs/development/featurePlans/landing-page-v2.1.md` (new), `app/startv2/page.tsx` (new).
+
+---
+
 ### 2026-05-27 -- /start perf: mirror app/page.tsx import pattern
 
 Rewrites `app/start/page.tsx` to one-for-one match the home page's import pattern in `app/page.tsx`. Only `Navigation`, `Footer`, and `CROHeroV2` remain static imports; every other below-fold section becomes `dynamic(() => import("..."), { loading: () => <div className="h-[Xpx]" /> })`. Reverses the Phase 3 decision to static-import the server components, which had left the `/start` page structurally different from the home page despite their shared underlying architecture. Skeleton heights match the prior CROBelowFold values so CLS stays at 0. Metadata export (noindex robots), V2 visual styling (`brand-v2` class, all-white section backgrounds, V2 paddings) and the disclaimer section preserved untouched. The architectural difference between `/start` and `/` is now zero; any remaining Lighthouse gap is component weight (CROBuyBox cart hooks, CROAthletes carousel portraits, CROCustomerReviews testimonials rendered 3x for infinite loop, CROFormulaSplitV2 ingredient rows), not page-level wiring. Build clean, `/start` still `○ (Static)`.
