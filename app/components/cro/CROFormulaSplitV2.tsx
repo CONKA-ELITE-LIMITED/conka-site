@@ -13,9 +13,14 @@ import {
  * CROFormulaSplitV2
  *
  * V2 Section 4 on /start. One product at a time via a coloured AM/PM
- * toggle, with a Magic Mind-style ingredient list underneath. Accordion
- * opens to a friendly "what it is / why it's good" pair; "Learn more"
- * reveals the data-driven study finding + stats + citation.
+ * toggle, with a Magic Mind-style ingredient list underneath. Each
+ * ingredient is a native <details name="ingredient-row"> (single-open
+ * via the HTML name attribute) that opens to a friendly "what it is /
+ * why it's good" pair; a nested <details> ("See the science") reveals
+ * the data-driven study finding + stats + citation.
+ *
+ * Component stays "use client" because the AM/PM toggle is genuine
+ * state. All accordion state is held by the DOM, not React.
  * ========================================================================== */
 
 type Formula = "flow" | "clear";
