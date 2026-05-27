@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import AnimatedStat from "./AnimatedStat";
 
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
@@ -166,6 +167,148 @@ export default function StartV2Page() {
                 <span className="text-[13px] text-black">
                   100-day money back guarantee
                 </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== 2. BRAND STORY ===== */}
+        <section
+          className="brand-section brand-bg-white"
+          style={{ paddingTop: 0, paddingBottom: "4rem" }}
+          aria-label="We created drinkable focus and clarity"
+        >
+          <div className="brand-track">
+            <div className="mx-auto max-w-[560px]">
+              <h2
+                className="text-black font-semibold text-[34px] leading-[1.05] mb-4"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                We Created Drinkable
+                <br />
+                Focus and Clarity.
+              </h2>
+
+              <p className="text-[15px] leading-snug text-black mb-6">
+                Over 6 years and £500,000+ of our own capital invested into
+                clinical development and research with leading UK universities.
+              </p>
+
+              {/* Bottle hero shot. Transform crops most of the top white space
+                  and aligns the bottles at the bottom of the visible frame. */}
+              <div className="relative aspect-[5/4] overflow-hidden mb-6 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[12px]">
+                <Image
+                  src="/formulas/both/BothHero.jpg"
+                  alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 560px"
+                  className="object-cover object-center"
+                  style={{
+                    transform: "scale(1.5) translateY(-15%)",
+                    transformOrigin: "center center",
+                  }}
+                />
+              </div>
+
+              {/* Two big stats — count up on scroll-in */}
+              <div className="grid grid-cols-2 gap-4 mb-6 border-t border-black/10 pt-5">
+                <div>
+                  <AnimatedStat
+                    target={150000}
+                    suffix="+"
+                    className="block text-black font-bold text-[28px] leading-tight tabular-nums"
+                    style={{ letterSpacing: "-0.02em" }}
+                  />
+                  <div className="text-[12px] text-[#1B2757] mt-1 leading-tight font-medium">
+                    shots sold to date
+                  </div>
+                </div>
+                <div>
+                  <AnimatedStat
+                    target={100000}
+                    suffix="+"
+                    className="block text-black font-bold text-[28px] leading-tight tabular-nums"
+                    style={{ letterSpacing: "-0.02em" }}
+                  />
+                  <div className="text-[12px] text-[#1B2757] mt-1 leading-tight font-medium">
+                    cognitive tests done
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <Link
+                  href={FUNNEL_URL}
+                  className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+                >
+                  Order Now
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12H19M19 12L12 5M19 12L12 19"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+              </div>
+
+              {/* Brain-research credibility badge — laurel-flanked award style.
+                  The same /LaurelWreath.png renders on each side; container
+                  width clips to roughly half so left container shows the left
+                  branch, right container shows the right branch. */}
+              <div className="mt-5 flex items-center gap-3 p-4 rounded-[12px] bg-black/[0.04]">
+                <div
+                  className="relative flex-shrink-0 overflow-hidden"
+                  style={{ width: "30px", height: "64px" }}
+                  aria-hidden="true"
+                >
+                  <Image
+                    src="/LaurelWreath.png"
+                    alt=""
+                    fill
+                    sizes="80px"
+                    style={{
+                      objectFit: "cover",
+                      objectPosition: "left center",
+                    }}
+                  />
+                </div>
+
+                <div className="flex-1 text-center leading-snug">
+                  <div className="text-[10px] uppercase tracking-[0.12em] text-[#1B2757] font-bold mb-1">
+                    One of the World&apos;s Largest
+                  </div>
+                  <div className="text-[13px] text-black font-semibold">
+                    Consumer brain research project. 1,000+ brains tested
+                    regularly through our app, unlocking a new level of
+                    cognitive performance.
+                  </div>
+                </div>
+
+                <div
+                  className="relative flex-shrink-0 overflow-hidden"
+                  style={{ width: "30px", height: "64px" }}
+                  aria-hidden="true"
+                >
+                  <Image
+                    src="/LaurelWreath.png"
+                    alt=""
+                    fill
+                    sizes="80px"
+                    style={{
+                      objectFit: "cover",
+                      objectPosition: "right center",
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
