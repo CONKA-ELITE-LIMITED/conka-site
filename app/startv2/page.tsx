@@ -5,6 +5,7 @@ import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
 import AnimatedStat from "./AnimatedStat";
+import CaffeineCurves from "./CaffeineCurves";
 
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
@@ -309,6 +310,119 @@ export default function StartV2Page() {
                       objectPosition: "right center",
                     }}
                   />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== 3. CAFFEINE vs CONKA ===== */}
+        {/* Cream surface — first non-white section on the page. Hex #F7F4ED
+            from the doc; promote to a CSS variable once we lock it. */}
+        <section
+          className="brand-section"
+          style={{
+            paddingTop: "4rem",
+            paddingBottom: "4rem",
+            background: "#F7F4ED",
+          }}
+          aria-label="Caffeine borrows your energy. CONKA builds it."
+        >
+          <div className="brand-track">
+            <div className="mx-auto max-w-[560px]">
+              <h2
+                className="text-black font-semibold text-[34px] leading-[1.05] mb-4"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                Caffeine doesn&apos;t give you energy.
+                <br />
+                It <em className="italic">borrows</em> it.
+              </h2>
+
+              <p className="text-[15px] leading-snug text-black mb-6">
+                Caffeine blocks the receptors that tell your brain it&apos;s
+                tired. It hides the fatigue for a few hours, spikes cortisol,
+                and hands both back to you at 11am. The second cup isn&apos;t
+                a habit. It&apos;s the system working as designed.
+              </p>
+
+              {/* Stacked animated charts: coffee on top, CONKA below.
+                  Each chart reveals left-to-right at the same horizontal
+                  velocity so the eye reads them as the same day moving in
+                  parallel — comparison is shape, not peak height. */}
+              <div className="mb-6">
+                <CaffeineCurves />
+              </div>
+
+              <p className="text-[15px] leading-snug text-black mb-6">
+                CONKA works the other way. Sixteen nootropics and
+                adaptogens do the heavy lifting: brain-boosting nutrients
+                build the focus, stress-mitigating compounds keep cortisol
+                in check. Energy that doesn&apos;t have to be paid back.
+              </p>
+
+              <div className="flex justify-center">
+                <Link
+                  href={FUNNEL_URL}
+                  className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+                >
+                  Try CONKA
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12H19M19 12L12 5M19 12L12 19"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+              </div>
+
+              {/* Ingredient-class trust strip — mirrors Magic Mind's
+                  under-CTA pattern and pays off the "nootropics and
+                  adaptogens" line in the paragraph above. */}
+              <div className="flex items-center justify-center gap-6 mt-6">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="/icons/NootropicsIcon.avif"
+                    width={42}
+                    height={42}
+                    alt=""
+                    aria-hidden
+                  />
+                  <div className="leading-tight">
+                    <div className="text-[16px] font-bold text-black">
+                      Nootropics
+                    </div>
+                    <div className="text-[13px] text-black/60">
+                      brain-boosting
+                    </div>
+                  </div>
+                </div>
+                <div className="w-px h-12 bg-black/15" aria-hidden />
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="/icons/AdaptogensIcon.avif"
+                    width={42}
+                    height={42}
+                    alt=""
+                    aria-hidden
+                  />
+                  <div className="leading-tight">
+                    <div className="text-[16px] font-bold text-black">
+                      Adaptogens
+                    </div>
+                    <div className="text-[13px] text-black/60">
+                      stress-mitigating
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
