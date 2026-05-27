@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-27 -- Landing page v2.1: Section 2 (Brand Story) ported to /startv2
+
+Second section of the v2.1 design pass. Adds the brand-story beat ("We Created Drinkable Focus and Clarity") inline in `app/startv2/page.tsx`, following the Ketone-IQ-inspired structural shape: H2, single "made it possible" sentence emphasising self-funded development (6+ years, £500,000+ of our own capital, leading UK universities), the BothHero.jpg bottle asset cropped via CSS transform, two animated stats (150,000+ shots sold and 100,000+ cognitive tests done) that count up from zero on scroll into view via a small client island (`AnimatedStat.tsx`, IntersectionObserver, respects prefers-reduced-motion), a content-width Order Now CTA, and a laurel-flanked credibility badge ("One of the World's Largest consumer brain research project, 1,000+ brains tested regularly, unlocking a new level of cognitive performance"). The laurel renders by clipping a single Canva `/LaurelWreath.png` asset into left and right halves via overflow-hidden containers with `object-position: left|right center`. No new dependencies, page stays a Server Component aside from the small AnimatedStat island.
+
+**Modified:** `app/startv2/page.tsx`, `app/startv2/AnimatedStat.tsx` (new), `public/LaurelWreath.png` (new).
+
+---
+
 ### 2026-05-27 -- Landing page v2.1: Hero section ported inline to /startv2
 
 First section of the v2.1 design pass. Ports the existing /start hero content inline into `app/startv2/page.tsx` rather than importing `CROHeroV2`, so spacing, typography, copy, and layout decisions are visible and tunable in one file as the design pass progresses. Applied a round of mobile tweaks against the original: top padding zeroed so the lifestyle asset butts directly under the nav; asset cropped 8% top, 12% bottom via CSS transform (GPU-only, no layout cost); H1 split onto two lines and bumped from 34px to 38px; trust micro-row shows a 4.5-star visual with "Excellent 4.7" label, bolded 622+ and 5,000+ counts, and 35px borderless avatars; CTA copy bumped to 18px with an inline right arrow; 100-day money back guarantee tick added under the CTA. No new fonts, no new dependencies, no client-side JavaScript beyond what `next/image` already needs.
