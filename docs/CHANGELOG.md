@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-27 -- Landing page v2.1: doc handoff with perf log + Section 1/2 briefs
+
+Sets the v2.1 design pass up for a clean handoff into a fresh chat for Section 3. Adds a Performance log to `landing-page-v2.1.md`: a table tracking Lighthouse mobile scores per section (Section 2 result captured at perf 88, LCP 3.8s), plus per-run notes on what the report flagged (render-blocking CSS as the biggest LCP lever, third-party JS as the global ceiling, 26 KiB of legacy polyfills in the 1st-party chunk that build-target tuning would strip). Fills out the Section 1 (Hero) and Section 2 (Brand Story) briefs with full shipped state (job, reference, layout, image treatment, copy, claims-review flags, perf delta) so a new chat picks up with complete context instead of stale `TBD` placeholders. Also tightens the Section 2 made-it-possible line to credit the broader collaborator set: "leading UK universities, professional sports clubs, and the military". The two new collaborator categories need `/review-claims` substantiation before launch.
+
+**Modified:** `docs/development/featurePlans/landing-page-v2.1.md`, `app/startv2/page.tsx`.
+
+---
+
 ### 2026-05-27 -- Landing page v2.1: Section 2 (Brand Story) ported to /startv2
 
 Second section of the v2.1 design pass. Adds the brand-story beat ("We Created Drinkable Focus and Clarity") inline in `app/startv2/page.tsx`, following the Ketone-IQ-inspired structural shape: H2, single "made it possible" sentence emphasising self-funded development (6+ years, £500,000+ of our own capital, leading UK universities), the BothHero.jpg bottle asset cropped via CSS transform, two animated stats (150,000+ shots sold and 100,000+ cognitive tests done) that count up from zero on scroll into view via a small client island (`AnimatedStat.tsx`, IntersectionObserver, respects prefers-reduced-motion), a content-width Order Now CTA, and a laurel-flanked credibility badge ("One of the World's Largest consumer brain research project, 1,000+ brains tested regularly, unlocking a new level of cognitive performance"). The laurel renders by clipping a single Canva `/LaurelWreath.png` asset into left and right halves via overflow-hidden containers with `object-position: left|right center`. No new dependencies, page stays a Server Component aside from the small AnimatedStat island.

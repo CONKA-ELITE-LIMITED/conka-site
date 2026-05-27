@@ -191,7 +191,8 @@ export default function StartV2Page() {
 
               <p className="text-[15px] leading-snug text-black mb-6">
                 Over 6 years and £500,000+ of our own capital invested into
-                clinical development and research with leading UK universities.
+                clinical development and research with leading UK universities,
+                professional sports clubs, and the military.
               </p>
 
               {/* Bottle hero shot. Transform crops most of the top white space
