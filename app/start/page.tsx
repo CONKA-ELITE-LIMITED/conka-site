@@ -2,38 +2,57 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
-
-// Above-fold hero -- static import, owns the LCP image.
 import CROHeroV2 from "../components/cro/CROHeroV2";
 
-// Server components (no client JS) -- static imports.
-// Their rendered HTML ships as part of the initial response; no
-// per-component chunk fetch is required for first paint. Phase 3
-// moved them here from dynamic({ ssr: false }) inside CROBelowFold,
-// which had been hiding them from SSR while still costing a chunk
-// to render.
-import CROBrandStory from "../components/cro/CROBrandStory";
-import CROBenefitCards from "../components/cro/CROBenefitCards";
-import CROResearch from "../components/cro/CROResearch";
-import CROAppCallout from "../components/cro/CROAppCallout";
-import CROFAQv2 from "../components/cro/CROFAQv2";
-import LandingDisclaimer from "../components/landing/LandingDisclaimer";
+const CROBrandStory = dynamic(
+  () => import("../components/cro/CROBrandStory"),
+  { loading: () => <div className="h-[800px]" /> },
+);
 
-// Client islands -- dynamic() without ssr: false.
-// These SSR + hydrate normally; dynamic only defers the client chunk
-// download. We accept the SSR DOM cost in exchange for not needing a
-// "use client" wrapper file (Next.js 16 forbids dynamic({ ssr: false })
-// from a Server Component, which is why CROBelowFold used to exist).
 const LandingValueComparisonV2 = dynamic(
   () => import("../components/landing/LandingValueComparisonV2"),
+  { loading: () => <div className="h-[520px]" /> },
 );
+
 const CROFormulaSplitV2 = dynamic(
   () => import("../components/cro/CROFormulaSplitV2"),
+  { loading: () => <div className="h-[700px]" /> },
 );
-const CROBuyBox = dynamic(() => import("../components/cro/CROBuyBox"));
-const CROAthletes = dynamic(() => import("../components/cro/CROAthletes"));
+
+const CROBuyBox = dynamic(() => import("../components/cro/CROBuyBox"), {
+  loading: () => <div className="h-[800px]" />,
+});
+
+const CROBenefitCards = dynamic(
+  () => import("../components/cro/CROBenefitCards"),
+  { loading: () => <div className="h-[520px]" /> },
+);
+
+const CROAthletes = dynamic(() => import("../components/cro/CROAthletes"), {
+  loading: () => <div className="h-[900px]" />,
+});
+
+const CROResearch = dynamic(() => import("../components/cro/CROResearch"), {
+  loading: () => <div className="h-[760px]" />,
+});
+
 const CROCustomerReviews = dynamic(
   () => import("../components/cro/CROCustomerReviews"),
+  { loading: () => <div className="h-[680px]" /> },
+);
+
+const CROAppCallout = dynamic(
+  () => import("../components/cro/CROAppCallout"),
+  { loading: () => <div className="h-[820px]" /> },
+);
+
+const CROFAQv2 = dynamic(() => import("../components/cro/CROFAQv2"), {
+  loading: () => <div className="h-[520px]" />,
+});
+
+const LandingDisclaimer = dynamic(
+  () => import("../components/landing/LandingDisclaimer"),
+  { loading: () => <div className="h-[150px]" /> },
 );
 
 export const metadata: Metadata = {
