@@ -8,8 +8,11 @@ import VisibilityGate from "../components/VisibilityGate";
 import CROHeroV2 from "../components/cro/CROHeroV2";
 
 // Server components (no client JS) -- static imports.
-// These are SSR'd into the initial HTML and ship NO modulepreload chunk,
-// which is the entire point of /start's Phase 3 perf rebuild.
+// Their rendered HTML ships as part of the initial response; no
+// per-component chunk fetch is required for first paint. Phase 3
+// moved them here from dynamic({ ssr: false }) inside CROBelowFold,
+// which had been hiding them from SSR while still costing a chunk
+// to render.
 import CROBrandStory from "../components/cro/CROBrandStory";
 import CROBenefitCards from "../components/cro/CROBenefitCards";
 import CROResearch from "../components/cro/CROResearch";
