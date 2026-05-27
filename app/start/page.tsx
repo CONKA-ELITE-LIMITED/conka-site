@@ -134,10 +134,6 @@ export default function StartPage() {
       </section>
 
       {/* ===== 8. CAMBRIDGE + RESEARCH CREDENTIALS ===== */}
-      {/* Server component (Phase 1). VisibilityGate removed here in Phase 3
-          because wrapping a Server Component in a client gate prevents it
-          from being SSR'd into the initial HTML, which negates the whole
-          modulepreload-reduction benefit of static-importing it. */}
       <section
         className="brand-section brand-bg-white"
         style={{ paddingTop: 0, paddingBottom: "4rem" }}
@@ -160,8 +156,6 @@ export default function StartPage() {
       </section>
 
       {/* ===== 10. APP CALLOUT ===== */}
-      {/* Server component (Phase 1). VisibilityGate removed here in Phase 3
-          for the same reason as Section 8. */}
       <section
         className="brand-section brand-bg-white"
         style={{ paddingTop: 0, paddingBottom: "4rem" }}
