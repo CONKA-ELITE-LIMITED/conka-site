@@ -141,37 +141,63 @@ Verify: `npm run build` succeeds, `/start` renders identically in dev. Commit pe
 
 Expected impact: removes ~309 LOC × Babel/JSX overhead from client bundle. Three fewer hydration trees. Three fewer dynamic chunks needed.
 
-### Phase 2 — Convert accordions to native `<details>` / `<summary>`
+### Phase 2 — Strip accordion state, promote CROFAQv2 to server
 
-Accordions don't need React state. `<details>` is native HTML with `[open]` selector for CSS, animates fine with `transition: max-height` or `grid-template-rows: 0fr → 1fr`.
+**Correction to the original plan after reading the source files.** CROFormulaSplitV2 cannot become a server component: its ingredient list re-renders based on the AM/PM toggle state, and the toggle is genuine client state. Best Phase 2 can do for that file is replace the two nested accordions (`openIngredient`, `showScience`) with native `<details>`, which trims state but does not change the component's client status. CROBuyBox is the same story: cart logic requires it to stay client, so the `BuyBoxFAQ` sub-component converts to `<details>` in-place. Only CROFAQv2 actually moves from client to server in this phase. The full modulepreload-count reduction only materialises in Phase 3, when these server components get statically imported from `page.tsx`.
 
-Targets:
-- `CROFAQv2.tsx` — entire component is one accordion. Drops to a Server Component. ~80 LOC saved.
-- `CROFormulaSplitV2.tsx` — the ingredient rows + nested "See the science" reveal are accordions. Keep the AM/PM toggle as client (genuine state); convert the accordion section to `<details>`. Split into `CROFormulaSplitV2.tsx` (server shell) + `CROFormulaToggle.tsx` (small client island for the toggle). Ingredient list renders server-side from the existing data module.
-- `CROBuyBox.tsx` — the FAQ accordion below the card is independent of cart state. Extract to its own `<details>`-based Server Component. The buy card itself stays client.
+**Three targets, single phase (decisions baked in):**
 
-Verify: every accordion opens/closes, single-open behaviour (where it existed) is preserved or intentionally dropped. `<details>` defaults to multi-open; we either accept that or use a tiny `name` attribute trick (HTML spec) to enforce single-open.
+1. **CROFAQv2** → Server Component. Replace `useState<string | null>` + button + `aria-expanded` with `<details>` / `<summary>`. Use `name="faq-still-wondering"` for native single-open (Chromium 120+, Safari 17+; older browsers fall back to multi-open, no broken UX). Drop `"use client"`. ~80 LOC of client state removed.
 
-Expected impact: another ~200 LOC of client JS removed. The biggest "use client" tree on the page (CROFormulaSplitV2 at 441 LOC) gets cut in half.
+2. **CROBuyBox** (BuyBoxFAQ section only) → `<details>` swap in place. The parent CROBuyBox keeps `"use client"` for cart logic and the subscription toggle. The internal `FAQRow` component and its `openId` state go away. ~30 LOC of state removed. True server extraction via children-prop is deferred to a Phase 3 follow-up only if measurement justifies it.
 
-### Phase 3 — Delete CROBelowFold
+3. **CROFormulaSplitV2** (nested accordions only) → `<details>` swap. Keep `formula` useState (AM/PM toggle is genuine state). Replace `openIngredient` with `<details name="ingredient-row">` on each ingredient row. Replace nested `showScience` with a nested `<details>` inside each row's panel. Component stays `"use client"` because of the toggle, but its useState count drops from 3 to 1. ~30 LOC of state removed.
 
-After Phases 1 + 2, the section list is mostly Server Components with a few genuine client islands (LandingValueComparisonV2, CROFormulaToggle, CROBuyBox, CROAthletes, CROCustomerReviews).
+**Research-first note for target 3.** This is the riskiest part of Phase 2 because of (a) the nested `<details>` animation matching the current 200ms `max-height` transition, and (b) `<details name="">` browser-support nuances combined with the toggle re-rendering the list. Before implementing target 3, spend a research pass: build a small isolated prototype of a nested `<details>` row, verify the open/close animation looks acceptable under `interpolate-size: allow-keywords` + a CSS transition, and confirm `name=""` single-open behaviour when the parent re-keys on the formula switch. If the animation is visibly worse than the current `max-height` transition, fall back to keeping the inner state in a small shared `<AccordionRow>` client component used inside the otherwise-cleaner shell.
 
-Move the section list directly into `app/start/page.tsx`. Page stays a Server Component (keeps `metadata` export). Server Components render statically. Client islands use `next/dynamic` *with default `ssr: false`* at the page level — Next.js 16 allows `dynamic({ ssr: false })` calls inside a Server Component as long as the *imported module itself* is a client component, which it is.
+#### Research findings (2026-05-27, before implementing Target 3)
 
-Wait — Next.js 16 actually does *not* allow `ssr: false` from a Server Component. The historical reason CROBelowFold exists. So we have two options:
+**Browser support check (early 2026 baseline):**
+- `<details name="">` single-open grouping: Chrome 120+ (Dec 2023), Safari 17.2+ (Dec 2023), Firefox 130+ (Sep 2024). All major browsers covered for the /start audience.
+- `interpolate-size: allow-keywords`: Chrome 129+ (Sep 2024) only. Safari and Firefox do not support it yet. Without it, `<details>` open/close is instant ("snap").
 
-- **Option A:** Use `next/dynamic` without `ssr: false`. Client islands SSR (small DOM cost) then hydrate. We measure whether the hydration cost of just the genuine-client islands is acceptable. Likely fine now that ~half the bundle is gone.
-- **Option B:** Keep a thin `"use client"` wrapper but make it tiny — just the dynamic imports for the 4–5 genuine client islands. ~30 LOC vs the current 194.
+**Parent re-key behaviour:** ingredient rows are keyed by `ingredient.id`. Flow and Clear have distinct ingredient sets (no shared IDs), so when the AM/PM toggle flips `formula`, React fully unmounts the old `<details>` rows and mounts fresh closed ones. No state preservation problem. The current code's `setOpenIngredient(null)` reset becomes unnecessary.
 
-Pick whichever measures better in Phase 5. Default to Option A — it's simpler and SSR'ing 4 carousel/cart components is not the same problem as SSR'ing 11 sections.
+**Nested `<details>` ("See the science") behaviour:** the current code keeps a per-row `useState` that persists across the parent row's collapse. Native nested `<details>` matches this: the inner `<details>` element stays in DOM with its `[open]` attribute intact when the outer collapses visually. Re-opening the outer reveals the inner in its prior state. UX parity confirmed.
 
-### Phase 4 — Delete VisibilityGate usage on /start
+**Animation verdict:** snap-open in Safari and Firefox. Smooth-open in Chrome only with `interpolate-size`. Decision: **skip `interpolate-size` for Phase 2**. The bulk of paid /start traffic is iOS Safari, which would not benefit from the rule anyway, and adding it introduces CSS complexity (block-size transition setup, `::details-content` pseudo-element targeting) for a Chrome-only win. Native snap-open is a familiar pattern across the web and adequate for an ingredient accordion. If marketing flags the snap as too abrupt post-ship, we can revisit by adding the `interpolate-size` rule in a follow-up.
 
-VisibilityGate was added to defer mount of the heaviest below-fold sections. After Phases 1–3, those sections are either Server (no client mount to defer) or small enough that gating is overkill. The buy box gating is unjustified anyway (no real user scrolls fast enough for chunk-download latency to matter).
+**Implementation path chosen:** the primary `<details>` swap. No fallback to a shared `<AccordionRow>` client component needed.
 
-Remove the `<VisibilityGate>` wrappers from /start. Keep the component on disk in case other pages start using it.
+**Verify after each target:** every accordion opens/closes correctly, single-open behaviour preserved where it existed, no console errors, `npm run build` clean.
+
+**Expected impact:** ~140 LOC of client state code removed total. One component (CROFAQv2) moves to Server. Real modulepreload reduction lands in Phase 3.
+
+### Phase 3 — Inline section list into page.tsx, delete CROBelowFold (the actual win)
+
+**Decision: Option A.** Use plain `next/dynamic()` without `ssr: false` for the remaining client islands. Accept the SSR DOM cost in exchange for deleting the wrapper file entirely. Rationale: the Phase 0 trace showed bandwidth starvation, not hydration, is the bottleneck. SSR'ing 4-5 carousel/cart islands trades a modest DOM increase for cleaner architecture and one fewer file to maintain. Falls back to Option B (tiny client wrapper) only if measurement in Phase 5 shows DOM count blowing past ~700 elements.
+
+**Why this phase delivers the modulepreload reduction:** server components imported statically from a Server Component page do not generate modulepreload links. After Phase 2, five components are Server Components (CROBrandStory already, CROBenefitCards / CROResearch / CROAppCallout from Phase 1, CROFAQv2 from Phase 2). Static-importing all five in `page.tsx` removes their modulepreloads. The 4-5 remaining client islands (LandingValueComparisonV2, CROFormulaSplitV2, CROBuyBox, CROAthletes, CROCustomerReviews) keep their `dynamic()` modulepreloads. Expected count: 10 → ~5.
+
+**Tasks:**
+
+1. **Audit LandingDisclaimer** — check whether it's safe as a Server Component. If yes, static-import. If no, dynamic.
+2. **Move the section list** from `CROBelowFold.tsx` into `app/start/page.tsx`. Page stays a Server Component (owns `metadata` export). Static imports for the server components. `next/dynamic()` calls (no `ssr: false`) for the client islands.
+3. **Delete `app/start/CROBelowFold.tsx`** once the page renders correctly.
+4. **Verify** `npm run build` passes and `/start` still lists as `○ (Static)`. The page-level prerender should still work because all dynamic imports default to SSR.
+
+**Risk and fallback:** if Option A SSRs the client islands and DOM count rebounds above ~700 elements, revert to Option B — extract just the `dynamic()` import block (4-5 imports, ~30 LOC) into a thin `"use client"` wrapper. The rest of the section list stays in `page.tsx` with static server imports. This is materially better than the current 194-LOC CROBelowFold because all the server components are no longer routed through it.
+
+### Phase 4 — Remove VisibilityGate usage on /start (cleanup)
+
+**Important context:** `VisibilityGate` does not suppress modulepreloads. Those are injected into the HTML head by `next/dynamic()` regardless of whether the gate ever mounts the component. The gate only defers the React mount itself. After Phase 3, most of the previously-gated sections are server components (CROResearch, CROAppCallout) where gating is meaningless, and the remaining client islands (CROAthletes, CROCustomerReviews, CROFormulaSplitV2) are small enough that the gate overhead exceeds its benefit.
+
+**Tasks:**
+
+1. **Remove `<VisibilityGate>` wrappers** from the section list in `page.tsx` (5 instances currently in CROBelowFold: CROFormulaSplitV2, CROAthletes, CROResearch, CROCustomerReviews, CROAppCallout). After Phase 3 these wrappers will have been carried over to page.tsx; this phase strips them.
+2. **Keep `app/components/VisibilityGate.tsx`** on disk. Other pages may still use it. Quick grep before keeping/deleting: `grep -r "VisibilityGate" app/` to confirm.
+
+**Risk:** none. The gate adds JS for no perf benefit on /start after Phase 3.
 
 ### Phase 5 — Re-measure
 
@@ -230,23 +256,50 @@ Bundled into a single commit rather than three because the change mechanism is i
 
 **Learning to bank:** the original Phase 1 plan called for one commit per file to support bisect. That was over-cautious for a 1-line directive removal. Future phases: bundle by logical unit, not by file, unless the mechanism actually differs between files.
 
-Phase 2:
-- [ ] CROFAQv2 — convert to `<details>` Server Component, drop useState, commit
-- [ ] CROBuyBox — extract FAQ into `CROBuyBoxFAQ.tsx` Server Component using `<details>`, commit
-- [ ] CROFormulaSplitV2 — split into server shell + tiny `CROFormulaToggle` client island; ingredient accordion → `<details>`, commit
+Phase 2 (re-scoped 2026-05-27):
+- [ ] CROFAQv2 — convert to `<details>` Server Component (use `name="faq-still-wondering"` for single-open), drop `"use client"` + useState, commit
+- [ ] CROBuyBox — convert internal `BuyBoxFAQ` to `<details>` in-place; parent stays client for cart logic, commit
+- [ ] **Research first:** prototype nested `<details>` animation behaviour under `interpolate-size`, confirm `<details name="">` works across the formula re-key. Document findings, decide whether to proceed or fall back to a tiny shared `<AccordionRow>` client component.
+- [ ] CROFormulaSplitV2 — replace `openIngredient` + `showScience` with `<details>` (or fall back per research); keep AM/PM toggle as client, commit
 
-Phase 3:
-- [ ] Inline section list into `app/start/page.tsx`
+Phase 3 (Option A committed):
+- [ ] Audit LandingDisclaimer for Server Component safety
+- [ ] Inline section list into `app/start/page.tsx`: static imports for server components, `next/dynamic()` (no `ssr: false`) for client islands
 - [ ] Delete `app/start/CROBelowFold.tsx`
-- [ ] Choose Option A vs Option B based on what measures cleaner, commit
+- [ ] `npm run build` clean, `/start` still `○ (Static)`, commit
+- [ ] DOM-count sanity check on prod preview: if >700 elements, fall back to Option B
 
 Phase 4:
-- [ ] Remove `<VisibilityGate>` wrappers from /start
-- [ ] Leave `app/components/VisibilityGate.tsx` on disk for other pages, commit
+- [ ] Remove `<VisibilityGate>` wrappers from /start sections in `page.tsx`
+- [ ] `grep -r "VisibilityGate" app/` to confirm no other consumers before deciding to keep the component on disk, commit
 
 Phase 5:
 - [ ] Lighthouse × 3, record median
-- [ ] DevTools trace, compare to Phase 0
+- [ ] DevTools trace, compare to Phase 0 (focus: modulepreload count, FCP, LCP render delay)
 - [ ] Update CHANGELOG with before/after numbers
 - [ ] Update PERFORMANCE_OPTIMISATION.md
 - [ ] Open PR
+
+---
+
+## Phase status
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 0     | Baseline (Lighthouse + DevTools trace) | Done 2026-05-26 |
+| 1     | Drop `"use client"` from no-interactivity sections | Done 2026-05-26 (commit `f4e5e51`) |
+| 2     | Strip accordion state, promote CROFAQv2 to server | Done 2026-05-27 |
+| 3     | Inline section list into page.tsx, delete CROBelowFold | Not started |
+| 4     | Remove VisibilityGate usage on /start | Not started |
+| 5     | Re-measure and document | Not started |
+| 6     | Modulepreload audit + critical CSS inline (contingency) | Future |
+
+## Jira tickets
+
+| Ticket | Title | Phase | Status |
+|--------|-------|-------|--------|
+| [SCRUM-1039](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1039) | [Website & CRO] /start perf Phase 2: accordion `<details>` swap + CROFAQv2 to server | 2 | To Do |
+| [SCRUM-1040](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1040) | [Website & CRO] /start perf Phase 3: inline section list, delete CROBelowFold | 3 | To Do |
+| [SCRUM-1041](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1041) | [Website & CRO] /start perf Phase 4: remove VisibilityGate from /start | 4 | To Do |
+
+Dependencies: SCRUM-1039 blocks SCRUM-1040, SCRUM-1040 blocks SCRUM-1041.

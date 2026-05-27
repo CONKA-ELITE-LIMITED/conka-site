@@ -240,20 +240,7 @@ function IngredientImageFallback({ name }: { name: string }) {
   );
 }
 
-function IngredientRow({
-  ingredient,
-  isOpen,
-  onToggle,
-}: {
-  ingredient: IngredientData;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  const [showScience, setShowScience] = useState(false);
-  const panelId = `ingredient-panel-${ingredient.id}`;
-  const buttonId = `ingredient-button-${ingredient.id}`;
-  const sciencePanelId = `ingredient-science-${ingredient.id}`;
-
+function IngredientRow({ ingredient }: { ingredient: IngredientData }) {
   const overview = INGREDIENT_OVERVIEW[ingredient.id];
   const whatIs = overview?.whatIs ?? stripEmDashes(ingredient.description);
   const whyGood = overview?.whyGood ?? "";
@@ -263,15 +250,11 @@ function IngredientRow({
   const studyFinding = study ? stripEmDashes(study.keyFinding) : "";
 
   return (
-    <div className="bg-black/[0.04] rounded-[16px] overflow-hidden">
-      <button
-        id={buttonId}
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="flex items-center w-full p-3 text-left hover:bg-black/[0.02] transition-colors"
-      >
+    <details
+      name="ingredient-row"
+      className="group bg-black/[0.04] rounded-[16px] overflow-hidden"
+    >
+      <summary className="flex items-center w-full p-3 text-left cursor-pointer list-none hover:bg-black/[0.02] transition-colors [&::-webkit-details-marker]:hidden">
         <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-white">
           {ingredient.image ? (
             <Image
@@ -291,90 +274,69 @@ function IngredientRow({
           </p>
         </div>
         <span
-          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center"
+          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center select-none"
           aria-hidden
         >
-          {isOpen ? "−" : "+"}
+          <span className="group-open:hidden">+</span>
+          <span className="hidden group-open:inline">−</span>
         </span>
-      </button>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className="overflow-hidden transition-[max-height] duration-200 ease-out"
-        style={{ maxHeight: isOpen ? "720px" : "0px" }}
-      >
-        <div className="px-4 pb-4 pt-1">
-          <p className="text-[10px] uppercase tracking-[0.12em] font-bold text-[#1B2757] mb-2">
-            {CATEGORY_LABEL[ingredient.category]}
+      </summary>
+      <div className="px-4 pb-4 pt-1">
+        <p className="text-[10px] uppercase tracking-[0.12em] font-bold text-[#1B2757] mb-2">
+          {CATEGORY_LABEL[ingredient.category]}
+        </p>
+        <p className="text-[13.5px] text-black/85 leading-relaxed mb-2">
+          {whatIs}
+        </p>
+        {whyGood && (
+          <p className="text-[13.5px] text-black/65 leading-relaxed mb-4">
+            {whyGood}
           </p>
-          <p className="text-[13.5px] text-black/85 leading-relaxed mb-2">
-            {whatIs}
-          </p>
-          {whyGood && (
-            <p className="text-[13.5px] text-black/65 leading-relaxed mb-4">
-              {whyGood}
-            </p>
-          )}
-          <button
-            type="button"
-            aria-expanded={showScience}
-            aria-controls={sciencePanelId}
-            onClick={() => setShowScience((v) => !v)}
-            className="text-[12px] font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
-          >
-            {showScience ? "Hide the science" : "See the science"}
-          </button>
-          <div
-            id={sciencePanelId}
-            role="region"
-            className="overflow-hidden transition-[max-height] duration-200 ease-out"
-            style={{ maxHeight: showScience ? "420px" : "0px" }}
-          >
-            <div className="pt-4 border-t border-black/8 mt-4">
-              {studyFinding && (
-                <p className="text-[13px] text-black/80 leading-relaxed mb-4">
-                  {studyFinding}
-                </p>
-              )}
-              {topStats.length > 0 && (
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  {topStats.map((stat) => (
-                    <div key={stat.label}>
-                      <p className="text-[22px] font-bold text-[#1B2757] tabular-nums leading-none">
-                        {stat.value}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-[0.1em] text-black/55 mt-1">
-                        {stat.label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {study && (
-                <p className="text-[11px] text-black/45 leading-snug">
-                  Source: {study.authors} ({study.year}), {study.journal}.
-                </p>
-              )}
-            </div>
+        )}
+        <details className="group/science">
+          <summary className="inline-block text-[12px] font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <span className="group-open/science:hidden">See the science</span>
+            <span className="hidden group-open/science:inline">
+              Hide the science
+            </span>
+          </summary>
+          <div className="pt-4 border-t border-black/8 mt-4">
+            {studyFinding && (
+              <p className="text-[13px] text-black/80 leading-relaxed mb-4">
+                {studyFinding}
+              </p>
+            )}
+            {topStats.length > 0 && (
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                {topStats.map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-[22px] font-bold text-[#1B2757] tabular-nums leading-none">
+                      {stat.value}
+                    </p>
+                    <p className="text-[10px] uppercase tracking-[0.1em] text-black/55 mt-1">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {study && (
+              <p className="text-[11px] text-black/45 leading-snug">
+                Source: {study.authors} ({study.year}), {study.journal}.
+              </p>
+            )}
           </div>
-        </div>
+        </details>
       </div>
-    </div>
+    </details>
   );
 }
 
 export default function CROFormulaSplitV2() {
   const [formula, setFormula] = useState<Formula>("flow");
-  const [openIngredient, setOpenIngredient] = useState<string | null>(null);
 
   const content = PRODUCT_CONTENT[formula];
   const ingredients = INGREDIENTS_BY_FORMULA[formula];
-
-  const handleFormulaChange = (next: Formula) => {
-    setFormula(next);
-    setOpenIngredient(null);
-  };
 
   return (
     <div className="mx-auto max-w-[560px]">
@@ -387,7 +349,7 @@ export default function CROFormulaSplitV2() {
 
       {/* ===== Centered, larger, coloured AM/PM toggle ===== */}
       <div className="flex justify-center mb-6">
-        <FormulaToggle formula={formula} onChange={handleFormulaChange} />
+        <FormulaToggle formula={formula} onChange={setFormula} />
       </div>
 
       {/* ===== Card: bottle with bottom-left product label overlay ===== */}
@@ -424,16 +386,7 @@ export default function CROFormulaSplitV2() {
       </p>
       <div className="space-y-2">
         {ingredients.map((ingredient) => (
-          <IngredientRow
-            key={ingredient.id}
-            ingredient={ingredient}
-            isOpen={openIngredient === ingredient.id}
-            onToggle={() =>
-              setOpenIngredient(
-                openIngredient === ingredient.id ? null : ingredient.id,
-              )
-            }
-          />
+          <IngredientRow key={ingredient.id} ingredient={ingredient} />
         ))}
       </div>
     </div>
