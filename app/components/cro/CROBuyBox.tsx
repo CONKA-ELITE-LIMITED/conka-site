@@ -110,133 +110,100 @@ interface FaqItem {
   content: React.ReactNode;
 }
 
-function FAQRow({
-  item,
-  isOpen,
-  onToggle,
-}: {
-  item: FaqItem;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  const panelId = `buybox-faq-panel-${item.id}`;
-  const buttonId = `buybox-faq-button-${item.id}`;
-  return (
-    <div className="bg-black/[0.04] rounded-[16px] overflow-hidden">
-      <button
-        id={buttonId}
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="flex items-center w-full p-4 text-left hover:bg-black/[0.02] transition-colors"
-      >
-        <span className="flex-1 text-[14px] font-semibold text-black leading-tight">
-          {item.question}
-        </span>
-        <span
-          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center"
-          aria-hidden
-        >
-          {isOpen ? "−" : "+"}
-        </span>
-      </button>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className="overflow-hidden transition-[max-height] duration-200 ease-out"
-        style={{ maxHeight: isOpen ? "1200px" : "0px" }}
-      >
-        <div className="px-4 pb-4 pt-1 text-[13.5px] text-black/80 leading-relaxed">
-          {item.content}
+const BUYBOX_FAQ_ITEMS: FaqItem[] = [
+  {
+    id: "ingredients",
+    question: "What's in it?",
+    content: (
+      <div className="space-y-1">
+        <IngredientsGroup title="Morning · Flow" ingredients={flowIngredients} />
+        <IngredientsGroup
+          title="Afternoon · Clear"
+          ingredients={clarityIngredients}
+        />
+      </div>
+    ),
+  },
+  {
+    id: "timing",
+    question: "When do I take it?",
+    content: (
+      <div className="space-y-5">
+        <div className="flex gap-4">
+          <div className="relative w-12 h-24 flex-shrink-0">
+            <Image
+              src="/formulas/conkaFlow/FlowNoBackground.png"
+              alt="CONKA Flow bottle"
+              fill
+              sizes="48px"
+              className="object-contain scale-150"
+            />
+          </div>
+          <p className="flex-1">
+            <strong className="text-black">CONKA Flow.</strong> Drink it
+            first thing in the morning, before the day pulls on you. Flow
+            supports calm, sustained focus through the first half of your
+            day. Take it with coffee or without. Food optional.
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <div className="relative w-12 h-24 flex-shrink-0">
+            <Image
+              src="/formulas/conkaClear/ClearNoBackground.png"
+              alt="CONKA Clear bottle"
+              fill
+              sizes="48px"
+              className="object-contain scale-150"
+            />
+          </div>
+          <p className="flex-1">
+            <strong className="text-black">CONKA Clear.</strong> Drink it in
+            the early afternoon, after a real stretch of focused work. By
+            then your brain has been firing for hours and oxidative stress
+            has built up. Clear helps reset you, so the second half of your
+            day stays as sharp as the first.
+          </p>
         </div>
       </div>
-    </div>
-  );
-}
+    ),
+  },
+  {
+    id: "shipping",
+    question: "Need international shipping?",
+    content: (
+      <p>
+        Yes, CONKA ships internationally. Rates and timelines vary by
+        destination and are shown at checkout.
+      </p>
+    ),
+  },
+];
 
 function BuyBoxFAQ() {
-  const [openId, setOpenId] = useState<string | null>(null);
-
-  const items: FaqItem[] = [
-    {
-      id: "ingredients",
-      question: "What's in it?",
-      content: (
-        <div className="space-y-1">
-          <IngredientsGroup title="Morning · Flow" ingredients={flowIngredients} />
-          <IngredientsGroup
-            title="Afternoon · Clear"
-            ingredients={clarityIngredients}
-          />
-        </div>
-      ),
-    },
-    {
-      id: "timing",
-      question: "When do I take it?",
-      content: (
-        <div className="space-y-5">
-          <div className="flex gap-4">
-            <div className="relative w-12 h-24 flex-shrink-0">
-              <Image
-                src="/formulas/conkaFlow/FlowNoBackground.png"
-                alt="CONKA Flow bottle"
-                fill
-                sizes="48px"
-                className="object-contain scale-150"
-              />
-            </div>
-            <p className="flex-1">
-              <strong className="text-black">CONKA Flow.</strong> Drink it
-              first thing in the morning, before the day pulls on you. Flow
-              supports calm, sustained focus through the first half of your
-              day. Take it with coffee or without. Food optional.
-            </p>
-          </div>
-          <div className="flex gap-4">
-            <div className="relative w-12 h-24 flex-shrink-0">
-              <Image
-                src="/formulas/conkaClear/ClearNoBackground.png"
-                alt="CONKA Clear bottle"
-                fill
-                sizes="48px"
-                className="object-contain scale-150"
-              />
-            </div>
-            <p className="flex-1">
-              <strong className="text-black">CONKA Clear.</strong> Drink it in
-              the early afternoon, after a real stretch of focused work. By
-              then your brain has been firing for hours and oxidative stress
-              has built up. Clear helps reset you, so the second half of your
-              day stays as sharp as the first.
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "shipping",
-      question: "Need international shipping?",
-      content: (
-        <p>
-          Yes, CONKA ships internationally. Rates and timelines vary by
-          destination and are shown at checkout.
-        </p>
-      ),
-    },
-  ];
-
   return (
     <div className="mt-6 space-y-2">
-      {items.map((item) => (
-        <FAQRow
+      {BUYBOX_FAQ_ITEMS.map((item) => (
+        <details
           key={item.id}
-          item={item}
-          isOpen={openId === item.id}
-          onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-        />
+          name="buybox-faq"
+          className="group bg-black/[0.04] rounded-[16px] overflow-hidden"
+        >
+          <summary className="flex items-center w-full p-4 text-left cursor-pointer list-none hover:bg-black/[0.02] transition-colors [&::-webkit-details-marker]:hidden">
+            <span className="flex-1 text-[14px] font-semibold text-black leading-tight">
+              {item.question}
+            </span>
+            <span
+              className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center select-none"
+              aria-hidden
+            >
+              <span className="group-open:hidden">+</span>
+              <span className="hidden group-open:inline">−</span>
+            </span>
+          </summary>
+          <div className="px-4 pb-4 pt-1 text-[13.5px] text-black/80 leading-relaxed">
+            {item.content}
+          </div>
+        </details>
       ))}
     </div>
   );

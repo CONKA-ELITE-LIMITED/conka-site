@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import {
   GUARANTEE_LABEL_FULL,
@@ -11,27 +8,10 @@ import {
  * CROFAQv2
  *
  * V2 Section 11 on /start. Last section before the legal disclaimer footer.
- * Visual reskin of CROFAQ.tsx with one question swap to remove the overlap
- * with Section 5's buy-box FAQ panels.
  *
- * V1 CROFAQ.tsx is left untouched (it has no other consumers but keeping the
- * fork keeps the V2 pattern consistent and easy to revert).
- *
- * Question changes vs V1:
- *  - DROPPED: "What's the difference between Flow and Clear?" — duplicates
- *    Section 5's "What's in it?" panel.
- *  - ADDED: "Why two formulas instead of one?" — answer lifted from
- *    storyData.ts; reinforces Section 4's AM/PM system.
- *  - REORDERED to broadest-product to narrowest-practical:
- *    1. Why two formulas (product strategy)
- *    2. Can I take just one (product flexibility)
- *    3. How quickly will it arrive (logistics)
- *    4. What if my score doesn't improve (safety net)
- *    5. How do I cancel (commitment-free close)
- *
- * Accordion mechanic mirrors Sections 4 / 5 / 9 (soft bg-black/[0.04]
- * rounded-[16px] pill rows, aria-expanded + aria-controls, max-height
- * transition, single-open behaviour).
+ * Server Component. Single-open accordion via native <details name="...">
+ * (Chromium 120+, Safari 17+; older browsers gracefully fall back to
+ * multi-open with no broken UX). No client JS.
  * ========================================================================== */
 
 interface FaqItem {
@@ -71,55 +51,32 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function FAQRow({
-  item,
-  isOpen,
-  onToggle,
-}: {
-  item: FaqItem;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  const panelId = `faq-panel-${item.id}`;
-  const buttonId = `faq-button-${item.id}`;
+function FAQRow({ item }: { item: FaqItem }) {
   return (
-    <div className="bg-black/[0.04] rounded-[16px] overflow-hidden">
-      <button
-        id={buttonId}
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="flex items-center w-full p-4 text-left hover:bg-black/[0.02] transition-colors"
-      >
+    <details
+      name="faq-still-wondering"
+      className="group bg-black/[0.04] rounded-[16px] overflow-hidden"
+    >
+      <summary className="flex items-center w-full p-4 text-left cursor-pointer list-none hover:bg-black/[0.02] transition-colors [&::-webkit-details-marker]:hidden">
         <span className="flex-1 text-[15px] font-semibold text-black leading-snug pr-3">
           {item.question}
         </span>
         <span
-          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center"
+          className="text-[22px] text-black/40 leading-none w-6 flex-shrink-0 text-center select-none"
           aria-hidden
         >
-          {isOpen ? "−" : "+"}
+          <span className="group-open:hidden">+</span>
+          <span className="hidden group-open:inline">−</span>
         </span>
-      </button>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className="overflow-hidden transition-[max-height] duration-200 ease-out"
-        style={{ maxHeight: isOpen ? "640px" : "0px" }}
-      >
-        <p className="px-4 pb-4 pt-1 text-[14px] text-black/75 leading-relaxed">
-          {item.answer}
-        </p>
-      </div>
-    </div>
+      </summary>
+      <p className="px-4 pb-4 pt-1 text-[14px] text-black/75 leading-relaxed">
+        {item.answer}
+      </p>
+    </details>
   );
 }
 
 export default function CROFAQv2() {
-  const [openId, setOpenId] = useState<string | null>(null);
-
   return (
     <div className="mx-auto max-w-[560px]">
       <h2
@@ -131,12 +88,7 @@ export default function CROFAQv2() {
 
       <div className="space-y-2">
         {FAQ_ITEMS.map((item) => (
-          <FAQRow
-            key={item.id}
-            item={item}
-            isOpen={openId === item.id}
-            onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-          />
+          <FAQRow key={item.id} item={item} />
         ))}
       </div>
 
