@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
-import VisibilityGate from "../components/VisibilityGate";
 
 // Above-fold hero -- static import, owns the LCP image.
 import CROHeroV2 from "../components/cro/CROHeroV2";
@@ -97,9 +96,7 @@ export default function StartPage() {
         aria-label="Built for every part of your day"
       >
         <div className="brand-track">
-          <VisibilityGate minHeight="700px">
-            <CROFormulaSplitV2 />
-          </VisibilityGate>
+          <CROFormulaSplitV2 />
         </div>
       </section>
 
@@ -132,9 +129,7 @@ export default function StartPage() {
         aria-label="Trusted where focus can't fail"
       >
         <div className="brand-track">
-          <VisibilityGate minHeight="900px">
-            <CROAthletes />
-          </VisibilityGate>
+          <CROAthletes />
         </div>
       </section>
 
@@ -160,9 +155,7 @@ export default function StartPage() {
         aria-label="Real people. Real results."
       >
         <div className="brand-track">
-          <VisibilityGate minHeight="680px">
-            <CROCustomerReviews />
-          </VisibilityGate>
+          <CROCustomerReviews />
         </div>
       </section>
 
