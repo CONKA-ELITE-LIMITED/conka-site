@@ -63,11 +63,13 @@ If a section breaches the floor, fix before adding the next. Don't ship Section 
 
 Mobile Lighthouse on each section as it lands. Run after every deploy, write the row, write the notes. Compare against the previous row to see what the new section actually cost.
 
-| Date       | After      | Perf | A11y | BP | SEO | FCP   | LCP   | TBT    | CLS | SI    |
-| ---------- | ---------- | ---- | ---- | -- | --- | ----- | ----- | ------ | --- | ----- |
-| 2026-05-27 | Empty page | n/c  | n/c  | n/c| n/c | n/c   | n/c   | n/c    | n/c | n/c   |
-| 2026-05-27 | Hero       | n/c  | n/c  | n/c| n/c | n/c   | n/c   | n/c    | n/c | n/c   |
-| 2026-05-27 | Section 2  | 88   | 92   | 96 | 66  | 0.9 s | 3.8 s | 120 ms | 0   | 1.8 s |
+| Date       | After                | Perf | A11y | BP | SEO | FCP   | LCP   | TBT    | CLS | SI    |
+| ---------- | -------------------- | ---- | ---- | -- | --- | ----- | ----- | ------ | --- | ----- |
+| 2026-05-27 | Empty page           | n/c  | n/c  | n/c| n/c | n/c   | n/c   | n/c    | n/c | n/c   |
+| 2026-05-27 | Hero                 | n/c  | n/c  | n/c| n/c | n/c   | n/c   | n/c    | n/c | n/c   |
+| 2026-05-27 | Section 2            | 88   | 92   | 96 | 66  | 0.9 s | 3.8 s | 120 ms | 0   | 1.8 s |
+| 2026-05-28 | Section 3            | 80   | 92   | 96 | 80  | 0.9 s | 3.7 s | 400 ms | 0   | 2.2 s |
+| 2026-05-28 | Section 3 perf fix   | 83   | 92   | 96 | 83  | 0.9 s | 3.9 s | 240 ms | 0   | 2.2 s |
 
 `n/c` = not captured (we deployed but did not record the run). Future deploys, capture every time.
 
@@ -83,6 +85,12 @@ Mobile Lighthouse on each section as it lands. Run after every deploy, write the
 - **SEO 66 — low but expected.** The noindex/nofollow directive is intentional (paid-traffic-only page). Score drop is fine.
 
 Top lever for Section 3: address render-blocking CSS to claw back ~600 ms on LCP. Polyfill prune is the secondary lever (26 KiB JS, helps FCP).
+
+**Section 3 (2026-05-28, perf 80):** TBT regression. Section 3 dropped perf from 88 to 80 and pushed TBT from 120 ms to 400 ms (over the 200 ms budget). Long-tasks report points at a 210 ms task in `chunks/258a54fb1b90cb22.js` starting at 6.7 s into the load: React hydrating ~60 SVG elements per chart across two stacked charts inside the `"use client"` `CaffeineCurves` component. LCP unchanged at 3.7 s (still starved by render-blocking CSS, same as Section 2). Render-blocking CSS and polyfill levers also unchanged.
+
+**Section 3 perf fix (2026-05-28, perf 83):** Recovery. Split `CaffeineCurves` into a Server Component holding the SVG markup plus a thin client wrapper (`CaffeineCurvesReveal`, around 50 lines) that owns the IntersectionObserver and toggles a `.revealed` class. The cover-rect transform moved from inline `style={coverStyle}` to a CSS module rule keyed off that class. Long task in our 1st-party chunk dropped from 210 ms to 150 ms; TBT dropped from 400 ms to 240 ms (still 40 ms over budget but moving the right way). LCP fluctuated to 3.9 s, within Lighthouse mobile's normal ±15-20 swing per the perf doc, not a real regression. Refactor recovered most of the Section 3 cost without changing the visual or behaviour.
+
+Top levers for Section 4: (a) hero image resize for the LCP element (`/lifestyle/clear/ClearDrink.jpg` is 909×683 source but displayed at 463×309, 15.3 KiB savings flagged); (b) `.browserslistrc` polyfill prune (still 13.7 KiB of `Array.at` / `Array.flat` / `Object.fromEntries` etc. in our 1st-party chunk, sitewide JS win). Render-blocking CSS (~700 ms LCP, biggest single lever) deferred to a dedicated effort because the fix requires auditing or splitting the shared `brand-base.css`.
 
 ## Constraints carried forward from v2.0
 
