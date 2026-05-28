@@ -5,7 +5,10 @@ import Link from "next/link";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
-import { getCadencePricingByProductHeroId } from "@/app/lib/cadenceData";
+import {
+  getCadencePricingByProductHeroId,
+  getCadenceVariantByProductHeroId,
+} from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
 
@@ -48,6 +51,14 @@ const S5_SUB_PRICING = getCadencePricingByProductHeroId(
   "monthly-sub",
 );
 const S5_OTP_PRICING = getCadencePricingByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "monthly-otp",
+);
+const S5_SUB_VARIANT = getCadenceVariantByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "monthly-sub",
+);
+const S5_OTP_VARIANT = getCadenceVariantByProductHeroId(
   BOTH_PRODUCT_HERO_ID,
   "monthly-otp",
 );
@@ -641,10 +652,11 @@ export default function StartV2Page() {
               <BuyBoxCard
                 subPricing={S5_SUB_PRICING}
                 otpPricing={S5_OTP_PRICING}
+                subVariant={S5_SUB_VARIANT}
+                otpVariant={S5_OTP_VARIANT}
                 compareAt={S5_COMPARE_AT}
                 monthlySavings={S5_MONTHLY_SAVINGS}
                 savingsPercent={S5_SAVINGS_PERCENT}
-                funnelUrl={FUNNEL_URL}
                 productImage="/formulas/box/BothBox.jpg"
                 productImageAlt="Two CONKA shipping boxes side by side with a Flow and a Clear bottle in the foreground"
               />

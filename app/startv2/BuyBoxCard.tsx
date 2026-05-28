@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useCart } from "@/app/context/CartContext";
 import { formatPrice } from "@/app/lib/productData";
-import type { CadencePricing } from "@/app/lib/cadenceData";
+import type {
+  CadencePricing,
+  CadenceVariantConfig,
+} from "@/app/lib/cadenceData";
 import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 
 interface BuyBoxCardProps {
   subPricing: CadencePricing;
   otpPricing: CadencePricing;
+  subVariant: CadenceVariantConfig | null;
+  otpVariant: CadenceVariantConfig | null;
   compareAt: number;
   monthlySavings: number;
   savingsPercent: number;
-  funnelUrl: string;
   productImage: string;
   productImageAlt: string;
 }
@@ -49,24 +53,32 @@ function CheckIcon({
 export default function BuyBoxCard({
   subPricing,
   otpPricing,
+  subVariant,
+  otpVariant,
   compareAt,
   monthlySavings,
   savingsPercent,
-  funnelUrl,
   productImage,
   productImageAlt,
 }: BuyBoxCardProps) {
+  const { addToCart, loading } = useCart();
   const [isSubscription, setIsSubscription] = useState(true);
 
   const pricing = isSubscription ? subPricing : otpPricing;
+  const variant = isSubscription ? subVariant : otpVariant;
   const showSavings = isSubscription && monthlySavings > 0;
+
+  const handleAddToCart = async () => {
+    if (!variant?.variantId) return;
+    await addToCart(variant.variantId, 1, variant.sellingPlanId, {
+      location: "buy_box",
+      source: "startv2_section_5",
+    });
+  };
 
   return (
     <div className="bg-white border border-black/10 rounded-[16px] overflow-hidden">
-      {/* Image area with title + price overlaid at the top-left. The new
-          BothBox.jpg has a clean white photographic background in its upper
-          region, so dark text reads cleanly without a scrim. */}
-      <div className="relative aspect-[5/4] bg-white">
+      <div className="relative aspect-[5/4]">
         <Image
           src={productImage}
           alt={productImageAlt}
@@ -74,41 +86,40 @@ export default function BuyBoxCard({
           sizes="(max-width: 768px) 100vw, 560px"
           className="object-cover"
         />
-        <div className="absolute top-0 left-0 right-0 p-5">
-          <h3 className="text-[18px] font-semibold text-black leading-tight">
-            CONKA Flow + Clear
-          </h3>
-
-          <div className="flex items-baseline gap-3 flex-wrap mt-3 mb-1">
-            <span className="text-[28px] font-bold text-[#1B2757] tabular-nums leading-none">
-              {formatPrice(pricing.price)}
-              {isSubscription && (
-                <span className="text-[14px] font-semibold text-black/55 ml-1">
-                  /mo
-                </span>
-              )}
-            </span>
-            {showSavings && (
-              <>
-                <span className="text-[15px] text-black/40 line-through tabular-nums">
-                  {formatPrice(compareAt)}
-                </span>
-                <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-[0.1em] text-white bg-[#1B2757] px-2 py-1 rounded-full tabular-nums">
-                  Save {savingsPercent}%
-                </span>
-              </>
-            )}
-          </div>
-          <p className="text-[12px] text-black/55 tabular-nums">
-            {formatPrice(pricing.perShot)} per shot
-          </p>
-        </div>
       </div>
 
       <div className="p-5">
+        <h3 className="text-[18px] font-semibold text-black leading-tight">
+          CONKA Flow + Clear
+        </h3>
+
+        <div className="flex items-baseline gap-3 flex-wrap mt-3 mb-1">
+          <span className="text-[28px] font-bold text-[#1B2757] tabular-nums leading-none">
+            {formatPrice(pricing.price)}
+            {isSubscription && (
+              <span className="text-[14px] font-semibold text-black/55 ml-1">
+                /mo
+              </span>
+            )}
+          </span>
+          {showSavings && (
+            <>
+              <span className="text-[15px] text-black/40 line-through tabular-nums">
+                {formatPrice(compareAt)}
+              </span>
+              <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-[0.1em] text-white bg-[#1B2757] px-2 py-1 rounded-full tabular-nums">
+                Save {savingsPercent}%
+              </span>
+            </>
+          )}
+        </div>
+        <p className="text-[12px] text-black/55 tabular-nums">
+          {formatPrice(pricing.perShot)} per shot
+        </p>
+
         {/* Shot-count description, Ketone-IQ pattern. Lives above the bullets
             as a plain line, not as a check item. */}
-        <p className="text-[14px] text-black/70 font-medium mb-3">
+        <p className="text-[14px] text-black/70 font-medium mt-4 mb-3">
           56 shots = 28 servings
         </p>
 
@@ -167,9 +178,11 @@ export default function BuyBoxCard({
           </div>
         </label>
 
-        <Link
-          href={funnelUrl}
-          className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          disabled={loading || !variant?.variantId}
+          className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
         >
           Start My Routine
           <svg
@@ -187,9 +200,9 @@ export default function BuyBoxCard({
               strokeLinejoin="round"
             />
           </svg>
-        </Link>
+        </button>
 
-        <p className="mt-4 text-center text-[12px] text-black/65 leading-snug">
+        <p className="mt-4 text-center text-[12px] text-black leading-snug">
           {GUARANTEE_LABEL_FULL}
           <br />
           Pause, adjust, or cancel anytime.

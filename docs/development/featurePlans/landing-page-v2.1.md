@@ -245,7 +245,7 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 
 ### Section 5 — Buy Box ✅
 
-**Job.** Land the offer. First place on the page where price, savings, trust badges, and CTA share one composition. Following S1-S4's warm-Magic-Mind register but with the conversion intensity Ketone-IQ uses on its buy beat. The CTA routes to `FUNNEL_URL` where formula + cadence get chosen — this section's job is to anchor price perception and ladder trust, not to be the purchase point itself.
+**Job.** Land the offer. First place on the page where price, savings, trust badges, and CTA share one composition. Following S1-S4's warm-Magic-Mind register but with the conversion intensity Ketone-IQ uses on its buy beat. CTA adds directly to the cart drawer using the current cadence's variant and selling-plan IDs, mirroring the `CROBuyBox` quick-buy pattern on `/start`. This is a real purchase point, not a routing nudge into the funnel.
 
 **Reference.** Ketone-IQ buy beat (auto-discount eyebrow + bold headline + trust-badge row + rich product card with strikethrough pricing, "SAVE X%" pill, spec checklist, CTA, and guarantee footer). Dropped Ketone-IQ's subscription-upsell row because CONKA's headline price already IS the subscription price — double-stamping the same offer adds no work. Replaced it with a "Full CONKA app access included" line in the spec checklist that does new work.
 
@@ -254,11 +254,11 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — zero top padding because Section 4 closes with a guarantee row and Section 5 should land tight under it.
 - Order: auto-discount eyebrow pill → H2 with italic accent → subhead → 4-badge trust row → buy-box card → 100-day guarantee row.
 - Trust badges are a 4-column grid at `gap-3`, each cell `aspect-square rounded-full border-2 border-black/85` with a two-line uppercase label centred inside. Plain divs, no image assets — the row adds zero asset weight.
-- Buy-box card uses `rounded-[16px] border border-black/10` matching the same card grammar as the Section 4 ingredient detail panel and tile grid. Internal order (top to bottom): product title + price row + per-shot price → product image (`aspect-[5/4]`, edge-to-edge horizontally) → spec checklist → sub/OTP toggle → navy CTA. Title and price sit above the image (Ketone-IQ pattern) so the offer reads in the first viewport line of the card, not buried under the asset.
+- Buy-box card uses `rounded-[16px] border border-black/10` matching the same card grammar as the Section 4 ingredient detail panel and tile grid. Internal order (top to bottom): product image (`aspect-[5/4]`, full-width edge-to-edge) → product title + price row + per-shot price → "56 shots = 28 servings" description → 3-item bullet checklist → sub/OTP toggle → navy CTA → guarantee + cancel-anytime copy. Image leads so the asset gets the first visual beat, copy follows in the lower half.
 
 **Image.**
 - Asset: `/formulas/box/BothBox.jpg` — clean studio shot of two CONKA shipping boxes with a Flow and a Clear bottle in the foreground on a white background. First fetch on `/startv2` (no earlier section uses this asset).
-- Container: `aspect-[5/4]` sitting in the middle of the card, between the title/price block and the spec checklist. Edge-to-edge horizontally because the wrapping card has `overflow-hidden` so the rounded corners clip the image cleanly.
+- Container: `aspect-[5/4]` sitting at the top of the card, full-width edge-to-edge (the wrapping card has `overflow-hidden` so the rounded corners clip the image cleanly). No overlay copy — title, price row, and per-shot price sit in their own block immediately below the image, above the shot-count description and bullets.
 - `sizes="(max-width: 768px) 100vw, 560px"` matches the other section assets.
 
 **Copy.**
@@ -269,7 +269,7 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - Buy-box card: product title "CONKA Flow + Clear", live monthly sub price (£{N}/mo with `/mo` suffix in sub mode, no suffix in OTP), strikethrough compare-at price + "Save {N}%" pill in navy (sub mode only), per-shot price under the row.
 - Spec checklist (4 items, green-circle check icon). Three are always visible: "56 shots: 28 Flow + 28 Clear" · "2 shots a day, every day of the month" · "Free UK shipping". The fourth, "Full CONKA app: daily cognitive tests + personalised insights", is the sub-only differentiator: in OTP mode it stays in the list but renders strikethrough with a dimmed grey check and a "Sub only" tag, so the user sees what they forgo by going OTP rather than the line disappearing silently.
 - Sub/OTP toggle: checkbox-as-pill at the bottom of the card (above the CTA), same pattern as `CROBuyBox` on `/start`. Label "Subscribe and save {N}%" + caption "Pause, skip, or cancel anytime." Default state: subscription on.
-- CTA: "Start My Routine" with right-arrow SVG, full-width navy pill (text-lg, py-4 px-10), linking to `FUNNEL_URL`. Same label in both sub and OTP modes — final cadence selection happens at the funnel.
+- CTA: "Start My Routine" with right-arrow SVG, full-width navy pill (text-lg, py-4 px-10). Same label in both sub and OTP modes. The button calls `CartContext.addToCart` directly with the current cadence's variant and selling-plan IDs (lifted from `getCadenceVariantByProductHeroId("03", cadence)`) and metadata `{ location: "buy_box", source: "startv2_section_5" }`, so the cart drawer opens on click. Mirrors the `CROBuyBox` pattern on `/start` — this is the quick-buy beat, not a routing nudge into the funnel.
 - Guarantee row below: same green-check + `GUARANTEE_LABEL_FULL` from `offerConstants.ts` as the hero and S4.
 
 **Claims to revisit before launch.**
