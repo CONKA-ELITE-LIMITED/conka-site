@@ -317,14 +317,15 @@ export default function StartV2Page() {
         </section>
 
         {/* ===== 3. CAFFEINE vs CONKA ===== */}
-        {/* Cream surface — first non-white section on the page. Hex #F7F4ED
-            from the doc; promote to a CSS variable once we lock it. */}
+        {/* Soft-blue tint surface — pulled from `--brand-tint` (#f4f5f8),
+            the same alternating background used by other clinical surfaces
+            (FormulaCaseStudies, KeyBenefits, AthleteCredibility, etc). */}
         <section
           className="brand-section"
           style={{
             paddingTop: "4rem",
             paddingBottom: "4rem",
-            background: "#F7F4ED",
+            background: "var(--brand-tint)",
           }}
           aria-label="Caffeine borrows your energy. CONKA builds it."
         >
