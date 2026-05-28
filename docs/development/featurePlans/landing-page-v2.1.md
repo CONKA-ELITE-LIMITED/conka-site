@@ -252,23 +252,24 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 **Layout.**
 - Mobile-first single column, `max-w-[560px]` centred on desktop.
 - `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — zero top padding because Section 4 closes with a guarantee row and Section 5 should land tight under it.
-- Order: auto-discount eyebrow pill → H2 with italic accent → subhead → 4-badge trust row → buy-box card (image, title, price row, spec checklist, navy CTA) → 100-day guarantee row.
+- Order: auto-discount eyebrow pill → H2 with italic accent → subhead → 4-badge trust row → buy-box card → 100-day guarantee row.
 - Trust badges are a 4-column grid at `gap-3`, each cell `aspect-square rounded-full border-2 border-black/85` with a two-line uppercase label centred inside. Plain divs, no image assets — the row adds zero asset weight.
-- Buy-box card uses `rounded-[16px] border border-black/10` matching the same card grammar as the Section 4 ingredient detail panel and tile grid.
+- Buy-box card uses `rounded-[16px] border border-black/10` matching the same card grammar as the Section 4 ingredient detail panel and tile grid. Internal order (top to bottom): product title + price row + per-shot price → product image (`aspect-[5/4]`, edge-to-edge horizontally) → spec checklist → sub/OTP toggle → navy CTA. Title and price sit above the image (Ketone-IQ pattern) so the offer reads in the first viewport line of the card, not buried under the asset.
 
 **Image.**
-- Asset: `/formulas/both/BothBox.jpg` — the "boxes side by side with both bottles in front" composition. Not currently cached from earlier on `/startv2` (first fetch on this section).
-- Container: `aspect-[5/4]` (tight, leaves vertical room for the spec checklist + CTA below).
+- Asset: `/formulas/box/BothBox.jpg` — clean studio shot of two CONKA shipping boxes with a Flow and a Clear bottle in the foreground on a white background. First fetch on `/startv2` (no earlier section uses this asset).
+- Container: `aspect-[5/4]` sitting in the middle of the card, between the title/price block and the spec checklist. Edge-to-edge horizontally because the wrapping card has `overflow-hidden` so the rounded corners clip the image cleanly.
 - `sizes="(max-width: 768px) 100vw, 560px"` matches the other section assets.
 
 **Copy.**
-- Eyebrow: "**Discount auto-applied.** Save {N}% with your subscription. Free UK shipping included." The percentage is dynamic, computed from the live cadence pricing (`compareAtPrice` vs `monthly-sub.price`).
+- Eyebrow: "**Subscription auto-applied.** You will get {N}% off, free UK shipping, and full access to the CONKA brain performance app." Declarative "You will get" framing (lifted from Ketone-IQ's "You will get 30% off and 6-Shots next month") so the eyebrow tells, not asks. The percentage is dynamic, computed from the live cadence pricing (`compareAtPrice` vs `monthly-sub.price`). The eyebrow stays static when the user toggles to OTP in the card; it serves as the upgrade-path reminder, not a real-time selection summary.
 - H2 (34px, letter-spacing -0.02em): "Your *Complete* / Daily Routine." Two lines via `<br />`, italic on "Complete" (the differentiator for Both vs single-formula purchases).
 - Subhead: "Flow in the morning. Clear in the afternoon. Two shots a day, every day of the month." Three short sentences, no em-dashes per copy rules.
 - Trust badges: Informed Sport · University Research · No Caffeine · 100-Day Guarantee. Each two lines of uppercase text inside a circular outline stamp.
-- Buy-box card: product title "CONKA Flow + Clear", live monthly sub price (£{N}/mo), strikethrough compare-at price, "Save {N}%" pill in navy, per-shot price under the row.
-- Spec checklist (4 items, green-circle check icon): "56 shots: 28 Flow + 28 Clear" · "2 shots a day, every day of the month" · "Full CONKA app access included" · "Free UK shipping".
-- CTA: "Start My Routine" with right-arrow SVG, full-width navy pill (text-lg, py-4 px-10), linking to `FUNNEL_URL`.
+- Buy-box card: product title "CONKA Flow + Clear", live monthly sub price (£{N}/mo with `/mo` suffix in sub mode, no suffix in OTP), strikethrough compare-at price + "Save {N}%" pill in navy (sub mode only), per-shot price under the row.
+- Spec checklist (4 items, green-circle check icon). Three are always visible: "56 shots: 28 Flow + 28 Clear" · "2 shots a day, every day of the month" · "Free UK shipping". The fourth, "Full CONKA app: daily cognitive tests + personalised insights", is the sub-only differentiator: in OTP mode it stays in the list but renders strikethrough with a dimmed grey check and a "Sub only" tag, so the user sees what they forgo by going OTP rather than the line disappearing silently.
+- Sub/OTP toggle: checkbox-as-pill at the bottom of the card (above the CTA), same pattern as `CROBuyBox` on `/start`. Label "Subscribe and save {N}%" + caption "Pause, skip, or cancel anytime." Default state: subscription on.
+- CTA: "Start My Routine" with right-arrow SVG, full-width navy pill (text-lg, py-4 px-10), linking to `FUNNEL_URL`. Same label in both sub and OTP modes — final cadence selection happens at the funnel.
 - Guarantee row below: same green-check + `GUARANTEE_LABEL_FULL` from `offerConstants.ts` as the hero and S4.
 
 **Claims to revisit before launch.**
@@ -279,8 +280,10 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - All sub-pricing numbers come from `getCadencePricingByProductHeroId("03", ...)` via the shared funnel data, so they stay in lockstep with `/funnel` and `/start`.
 
 **Architecture notes.**
-- All Server-Component, all inline JSX in `page.tsx`. No new client island — the CTA is a `Link` to `FUNNEL_URL`, no `addToCart` wiring lives here.
-- Pricing math (`S5_SUB_PRICING`, `S5_COMPARE_AT`, `S5_MONTHLY_SAVINGS`, `S5_SAVINGS_PERCENT`) and content constants (`S5_SPECS`, `S5_TRUST_BADGES`) lifted to module scope above the page component to keep the JSX readable. They will need to move into the component or a per-section helper if the page later becomes a `generateMetadata` / dynamic route.
+- Section wrapper, eyebrow, headline, subhead, trust-badge row, and guarantee row are inline server-rendered JSX in `page.tsx`. Only the card itself is a client island: `app/startv2/BuyBoxCard.tsx` (~170 lines) owns the `isSubscription` toggle state and the conditional price/spec/savings-pill rendering.
+- The card is dynamic-imported from `page.tsx` (same pattern as `IngredientsGrid`) with a `min-h-[700px]` placeholder. Default SSR keeps the rendered HTML in the initial response (no SEO loss, no paint flash on the price); the JS chunk is code-split so the card's hydration cost stays out of the initial TBT window.
+- Pricing math (`S5_SUB_PRICING`, `S5_OTP_PRICING`, `S5_COMPARE_AT`, `S5_MONTHLY_SAVINGS`, `S5_SAVINGS_PERCENT`) and the `S5_TRUST_BADGES` content array stay at module scope above the page component, and the pricing constants get passed into `BuyBoxCard` as props. `BOTH_PRODUCT_HERO_ID = "03"` is a named constant alongside the pricing helpers so the call sites do not read as magic numbers.
 - Trust badges rendered as styled divs (no `<Image>`) so the row adds nothing to the image budget. Easy to swap to real AVIF stamps later by replacing the inner content of each cell.
+- Eyebrow copy gates on `S5_SAVINGS_PERCENT > 0` so a malformed pricing payload (compare-at missing AND OTP price 0) still produces coherent copy (drops the percentage, keeps the rest).
 
-**Perf delta.** Not captured yet. Section 5 ships zero new client JS and adds one new image asset (`BothBox.jpg`, fresh fetch). Should be the cheapest section since Section 1 perf-wise. Re-measure with median-of-5 or PSI per the protocol established after Section 3 hygiene.
+**Perf delta.** Not captured yet. Section 5 adds one new image asset (`BothBox.jpg`, fresh fetch) and a small dynamic-imported client chunk for `BuyBoxCard` (toggle plus conditional render of price/specs). The chunk loads lazily after the main bundle, so hydration should land outside the TBT window the same way `IngredientsGrid` does post-S4 fix. Re-measure with median-of-5 or PSI per the protocol established after Section 3 hygiene.

@@ -5,15 +5,20 @@ import Link from "next/link";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
-import { formatPrice } from "@/app/lib/productData";
 import { getCadencePricingByProductHeroId } from "@/app/lib/cadenceData";
-import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
   loading: () => <div className="min-h-[1100px]" />,
+});
+
+// Section 5 buy-box card. Same dynamic-import pattern as IngredientsGrid: SSR
+// preserved so the price + spec list render in the initial HTML; the toggle's
+// JS hydration is deferred so its long task lands outside the TBT window.
+const BuyBoxCard = dynamic(() => import("./BuyBoxCard"), {
+  loading: () => <div className="min-h-[700px]" />,
 });
 
 export const metadata: Metadata = {
@@ -52,13 +57,6 @@ const S5_SAVINGS_PERCENT =
   S5_COMPARE_AT > 0
     ? Math.round((S5_MONTHLY_SAVINGS / S5_COMPARE_AT) * 100)
     : 0;
-
-const S5_SPECS = [
-  "56 shots: 28 Flow + 28 Clear",
-  "2 shots a day, every day of the month",
-  "Full CONKA app access included",
-  "Free UK shipping",
-];
 
 const S5_TRUST_BADGES = [
   { line1: "Informed", line2: "Sport" },
@@ -581,7 +579,7 @@ export default function StartV2Page() {
             <div className="mx-auto max-w-[560px]">
               {/* Auto-discount eyebrow. Static copy mirroring the savings math
                   rendered in the buy-box card below. */}
-              <div className="flex items-start gap-3 p-4 mb-6 bg-white border border-black/15 rounded-[16px]">
+              <div className="flex items-start gap-3 p-4 mb-6 bg-white border-2 border-black/85 rounded-[16px]">
                 <svg
                   width="18"
                   height="18"
@@ -601,11 +599,11 @@ export default function StartV2Page() {
                 </svg>
                 <p className="text-[13px] text-black leading-snug">
                   <strong className="font-semibold">
-                    Discount auto-applied.
+                    Subscription auto-applied.
                   </strong>{" "}
                   {S5_SAVINGS_PERCENT > 0
-                    ? `Save ${S5_SAVINGS_PERCENT}% with your subscription. Free UK shipping included.`
-                    : "Free UK shipping included on your subscription."}
+                    ? `You will get ${S5_SAVINGS_PERCENT}% off, free UK shipping, and full access to the CONKA brain performance app.`
+                    : "You will get free UK shipping and full access to the CONKA brain performance app."}
                 </p>
               </div>
 
@@ -640,120 +638,16 @@ export default function StartV2Page() {
                 ))}
               </div>
 
-              {/* Buy-box card. Server-rendered. CTA routes to FUNNEL_URL where
-                  formula + cadence selection happens; this card anchors price,
-                  trust, and the spec checklist. */}
-              <div className="bg-white border border-black/10 rounded-[16px] overflow-hidden">
-                <div className="relative aspect-[5/4]">
-                  <Image
-                    src="/formulas/both/BothBox.jpg"
-                    alt="CONKA Flow and Clear boxes side by side with both bottles in front"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 560px"
-                    className="object-cover"
-                  />
-                </div>
-
-                <div className="p-5">
-                  <h3 className="text-[18px] font-semibold text-black leading-tight">
-                    CONKA Flow + Clear
-                  </h3>
-
-                  <div className="flex items-baseline gap-3 flex-wrap mt-3 mb-1">
-                    <span className="text-[28px] font-bold text-[#1B2757] tabular-nums leading-none">
-                      {formatPrice(S5_SUB_PRICING.price)}
-                      <span className="text-[14px] font-semibold text-black/55 ml-1">
-                        /mo
-                      </span>
-                    </span>
-                    {S5_MONTHLY_SAVINGS > 0 && (
-                      <>
-                        <span className="text-[15px] text-black/40 line-through tabular-nums">
-                          {formatPrice(S5_COMPARE_AT)}
-                        </span>
-                        <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-[0.1em] text-white bg-[#1B2757] px-2 py-1 rounded-full tabular-nums">
-                          Save {S5_SAVINGS_PERCENT}%
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  <p className="text-[12px] text-black/55 tabular-nums mb-5">
-                    {formatPrice(S5_SUB_PRICING.perShot)} per shot
-                  </p>
-
-                  <ul className="space-y-2.5 mb-6">
-                    {S5_SPECS.map((spec) => (
-                      <li
-                        key={spec}
-                        className="flex items-start gap-2.5 text-[14px] text-black leading-snug"
-                      >
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          aria-hidden="true"
-                          className="flex-shrink-0 mt-0.5"
-                        >
-                          <circle cx="12" cy="12" r="10" fill="#10B981" />
-                          <path
-                            d="M8 12.5L10.5 15L16 9.5"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        <span>{spec}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={FUNNEL_URL}
-                    className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
-                  >
-                    Start My Routine
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M5 12H19M19 12L12 5M19 12L12 19"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-center gap-2 mt-3">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="10" fill="#10B981" />
-                  <path
-                    d="M8 12.5L10.5 15L16 9.5"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="text-[13px] text-black">
-                  {GUARANTEE_LABEL_FULL}
-                </span>
-              </div>
+              <BuyBoxCard
+                subPricing={S5_SUB_PRICING}
+                otpPricing={S5_OTP_PRICING}
+                compareAt={S5_COMPARE_AT}
+                monthlySavings={S5_MONTHLY_SAVINGS}
+                savingsPercent={S5_SAVINGS_PERCENT}
+                funnelUrl={FUNNEL_URL}
+                productImage="/formulas/box/BothBox.jpg"
+                productImageAlt="Two CONKA shipping boxes side by side with a Flow and a Clear bottle in the foreground"
+              />
             </div>
           </div>
         </section>
