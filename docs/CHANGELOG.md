@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-28 -- Landing page v2.1: Section 3 perf fix (server-side SVG, thin client reveal)
+
+Recovers the TBT regression Section 3 introduced. Section 3's Lighthouse run came in at perf 80 (down from Section 2's 88) with TBT 400ms (up from 120ms, over the 200ms budget). The long-tasks report pointed at a 210ms task in the Section 3 chunk starting at 6.7s into the load: React hydrating roughly 60 SVG elements per chart across two stacked charts inside the `"use client"` `CaffeineCurves` component. The animation itself was not the cost. The static SVG markup was, because it was riding inside a client component. Fix splits `CaffeineCurves` into a Server Component holding all the SVG markup and a new thin client wrapper `CaffeineCurvesReveal` (around 50 lines) that owns the IntersectionObserver and toggles a `.revealed` class on its root div. The cover-rect transform and transition move from inline `style={coverStyle}` to a CSS module rule keyed off that class. Same visual, same behaviour, same reveal timing (2.8s cubic-bezier), same `prefers-reduced-motion` fallback (transition disabled via media query, snaps to revealed state). The two SVG chart blocks now ship as server-rendered HTML and pay zero React hydration cost. Expected outcome: the 210ms long-task disappears, TBT drops back toward the Section 2 baseline of 120ms.
+
+**Modified:** `app/startv2/CaffeineCurves.tsx` (now a Server Component), `app/startv2/CaffeineCurvesReveal.tsx` (new), `app/startv2/CaffeineCurves.module.css` (new).
+
+---
+
 ### 2026-05-28 -- Landing page v2.1: Section 3 polish (surface swap + curve revisions)
 
 First-review pass on Section 3 of /startv2 after seeing it on the page. Surface swapped from cream `#F7F4ED` to the brand's existing soft-blue tint `var(--brand-tint)` (#f4f5f8), the same alternating background already used by FormulaCaseStudies, KeyBenefits, AthleteCredibility, and WhyConkaWorks. Avoids introducing a new palette token mid-build and keeps the section consistent with the rest of the clinical surfaces. Coffee curve in `CaffeineCurves.tsx` gains a third spike at ~6PM peaking lower than the first two (diminishing returns), tapering back to baseline by 11PM, with a third drink dot at the 5PM recovery point between the deep crash and the third spike. "wrecks sleep" annotation repositioned from the late-evening tail to sit above the third peak (the late-afternoon cup is what keeps you up, not the residual elevation). CONKA chart now distinguishes the two products: amber Flow dot at 8AM with a bold "Flow" label below, soft-blue Clear dot at 2PM on the plateau with a bold "Clear" label above. Brand colours match CLAUDE.md (Flow `#F59E0B` AM accent, Clear `#94B9FF` PM accent). "all day" annotation removed because the two product dots plus the visible plateau between them carry that story without needing a label.

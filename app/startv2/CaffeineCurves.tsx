@@ -1,53 +1,18 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import CaffeineCurvesReveal from "./CaffeineCurvesReveal";
+import styles from "./CaffeineCurves.module.css";
 
 /**
  * Two stacked charts comparing coffee's volatile energy curve with
- * CONKA's sustained one. Animation: a white <rect> covers each plot
- * area and translates left-to-right when the section scrolls into
- * view. Both charts share the same width + duration, so the horizontal
- * velocity is identical — the eye reads them as moving through the
- * same day at the same pace.
+ * CONKA's sustained one. All SVG markup is server-rendered — only a
+ * tiny client wrapper (CaffeineCurvesReveal) hydrates to trigger the
+ * left-to-right reveal animation via a CSS class change.
  *
- * Respects prefers-reduced-motion (renders end state immediately).
+ * The reveal works by sliding a white `<rect>` off the right side of
+ * each plot area. Both charts share the same cover width + transition,
+ * so the horizontal velocity is identical — the eye reads them as
+ * moving through the same day at the same pace.
  */
 export default function CaffeineCurves() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [shouldAnimate, setShouldAnimate] = useState(false);
-
-  useEffect(() => {
-    const reducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reducedMotion) {
-      setShouldAnimate(true);
-      return;
-    }
-
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldAnimate(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  const coverStyle = {
-    transform: shouldAnimate ? "translateX(605px)" : "translateX(0)",
-    transition: "transform 2.8s cubic-bezier(0.4, 0, 0.2, 1)",
-  };
-
   const xTicks = [
     { x: 30, label: "8AM" },
     { x: 146, label: "11AM" },
@@ -61,259 +26,262 @@ export default function CaffeineCurves() {
   const baselineY = 115;
 
   return (
-    <div ref={ref} className="bg-white rounded-[12px] p-5 md:p-6">
-      <h3 className="text-[15px] font-semibold text-black text-center mb-5 leading-snug">
-        Cognitive Energy levels on coffee vs CONKA
-      </h3>
+    <CaffeineCurvesReveal>
+      <div className="bg-white rounded-[12px] p-5 md:p-6">
+        <h3 className="text-[15px] font-semibold text-black text-center mb-5 leading-snug">
+          Cognitive Energy levels on coffee vs CONKA
+        </h3>
 
-      {/* COFFEE CHART */}
-      <svg
-        viewBox="0 0 640 200"
-        className="block w-full h-auto"
-        role="img"
-        aria-label="Coffee energy: peaks, mild crash, second peak, deep crash below baseline, then lingers elevated through bedtime."
-      >
-        {/* grid */}
-        <g stroke="#1B2757" strokeWidth="1" opacity="0.05">
-          {xTicks.map((t) => (
-            <line key={t.x} x1={t.x} y1="20" x2={t.x} y2="170" />
-          ))}
-        </g>
-
-        {/* dashed baseline reference */}
-        <line
-          x1="30"
-          y1={baselineY}
-          x2="610"
-          y2={baselineY}
-          stroke="#1B2757"
-          strokeWidth="1.25"
-          opacity="0.35"
-          strokeDasharray="5 4"
-        />
-
-        {/* Coffee curve — halo + stroke. Three spikes through the day:
-            first peak high, mild dip; second peak slightly lower, then a
-            deep crash below baseline; third peak smaller (diminishing
-            returns) tapering back to baseline by bedtime. */}
-        <path
-          d="M 30 115 C 60 110, 85 65, 110 50 C 145 45, 175 120, 200 125 C 225 130, 245 132, 260 128 C 285 115, 295 70, 320 65 C 350 65, 380 150, 400 160 C 420 158, 440 150, 460 145 C 480 130, 505 95, 530 85 C 560 90, 590 105, 610 115"
-          fill="none"
-          stroke="#F59E0B"
-          strokeWidth="10"
-          strokeOpacity="0.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M 30 115 C 60 110, 85 65, 110 50 C 145 45, 175 120, 200 125 C 225 130, 245 132, 260 128 C 285 115, 295 70, 320 65 C 350 65, 380 150, 400 160 C 420 158, 440 150, 460 145 C 480 130, 505 95, 530 85 C 560 90, 590 105, 610 115"
-          fill="none"
-          stroke="#F59E0B"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* annotations */}
-        <text
-          x="400"
-          y="178"
-          fontSize="13"
-          fill="#1B2757"
-          opacity="0.75"
-          textAnchor="middle"
-          fontStyle="italic"
-          fontWeight="600"
+        {/* COFFEE CHART */}
+        <svg
+          viewBox="0 0 640 200"
+          className="block w-full h-auto"
+          role="img"
+          aria-label="Coffee energy: peaks, mild crash, second peak, deep crash below baseline, third spike tapering back to baseline by bedtime."
         >
-          crash
-        </text>
-        <text
-          x="530"
-          y="70"
-          fontSize="13"
-          fill="#1B2757"
-          opacity="0.75"
-          textAnchor="middle"
-          fontStyle="italic"
-          fontWeight="600"
+          {/* grid */}
+          <g stroke="#1B2757" strokeWidth="1" opacity="0.05">
+            {xTicks.map((t) => (
+              <line key={t.x} x1={t.x} y1="20" x2={t.x} y2="170" />
+            ))}
+          </g>
+
+          {/* dashed baseline reference */}
+          <line
+            x1="30"
+            y1={baselineY}
+            x2="610"
+            y2={baselineY}
+            stroke="#1B2757"
+            strokeWidth="1.25"
+            opacity="0.35"
+            strokeDasharray="5 4"
+          />
+
+          {/* Coffee curve — halo + stroke. Three spikes through the day:
+              first peak high, mild dip; second peak slightly lower, then
+              a deep crash below baseline; third peak smaller (diminishing
+              returns) tapering back to baseline by bedtime. */}
+          <path
+            d="M 30 115 C 60 110, 85 65, 110 50 C 145 45, 175 120, 200 125 C 225 130, 245 132, 260 128 C 285 115, 295 70, 320 65 C 350 65, 380 150, 400 160 C 420 158, 440 150, 460 145 C 480 130, 505 95, 530 85 C 560 90, 590 105, 610 115"
+            fill="none"
+            stroke="#F59E0B"
+            strokeWidth="10"
+            strokeOpacity="0.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M 30 115 C 60 110, 85 65, 110 50 C 145 45, 175 120, 200 125 C 225 130, 245 132, 260 128 C 285 115, 295 70, 320 65 C 350 65, 380 150, 400 160 C 420 158, 440 150, 460 145 C 480 130, 505 95, 530 85 C 560 90, 590 105, 610 115"
+            fill="none"
+            stroke="#F59E0B"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* annotations */}
+          <text
+            x="400"
+            y="178"
+            fontSize="13"
+            fill="#1B2757"
+            opacity="0.75"
+            textAnchor="middle"
+            fontStyle="italic"
+            fontWeight="600"
+          >
+            crash
+          </text>
+          <text
+            x="530"
+            y="70"
+            fontSize="13"
+            fill="#1B2757"
+            opacity="0.75"
+            textAnchor="middle"
+            fontStyle="italic"
+            fontWeight="600"
+          >
+            wrecks sleep
+          </text>
+
+          {/* drink markers — three cups: morning, lunchtime, late afternoon */}
+          <circle
+            cx="30"
+            cy="115"
+            r="7"
+            fill="#F59E0B"
+            stroke="white"
+            strokeWidth="2"
+          />
+          <circle
+            cx="260"
+            cy="128"
+            r="7"
+            fill="#F59E0B"
+            stroke="white"
+            strokeWidth="2"
+          />
+          <circle
+            cx="460"
+            cy="145"
+            r="7"
+            fill="#F59E0B"
+            stroke="white"
+            strokeWidth="2"
+          />
+
+          {/* cover rect — slides right to reveal the curve and annotations.
+              Animation handled by CSS module (see CaffeineCurves.module.css). */}
+          <rect
+            x="20"
+            y="15"
+            width="605"
+            height="165"
+            fill="white"
+            className={styles.cover}
+          />
+
+          {/* x-axis labels (outside the cover, always visible) */}
+          <g
+            fill="#1B2757"
+            fontSize="10"
+            fontWeight="700"
+            textAnchor="middle"
+            style={{ letterSpacing: "0.08em" }}
+          >
+            {xTicks.map((t) => (
+              <text key={t.x} x={t.x} y="195">
+                {t.label}
+              </text>
+            ))}
+          </g>
+        </svg>
+
+        <div className="h-4" />
+
+        {/* CONKA CHART */}
+        <svg
+          viewBox="0 0 640 200"
+          className="block w-full h-auto"
+          role="img"
+          aria-label="CONKA energy: rises into a sustained plateau, holds all day, gentle taper to just above baseline by bedtime."
         >
-          wrecks sleep
-        </text>
+          {/* grid */}
+          <g stroke="#1B2757" strokeWidth="1" opacity="0.05">
+            {xTicks.map((t) => (
+              <line key={t.x} x1={t.x} y1="20" x2={t.x} y2="170" />
+            ))}
+          </g>
 
-        {/* drink markers — three cups: morning, lunchtime, late afternoon */}
-        <circle
-          cx="30"
-          cy="115"
-          r="7"
-          fill="#F59E0B"
-          stroke="white"
-          strokeWidth="2"
-        />
-        <circle
-          cx="260"
-          cy="128"
-          r="7"
-          fill="#F59E0B"
-          stroke="white"
-          strokeWidth="2"
-        />
-        <circle
-          cx="460"
-          cy="145"
-          r="7"
-          fill="#F59E0B"
-          stroke="white"
-          strokeWidth="2"
-        />
+          {/* dashed baseline reference */}
+          <line
+            x1="30"
+            y1={baselineY}
+            x2="610"
+            y2={baselineY}
+            stroke="#1B2757"
+            strokeWidth="1.25"
+            opacity="0.35"
+            strokeDasharray="5 4"
+          />
 
-        {/* cover rect — slides right to reveal the curve and annotations */}
-        <rect
-          x="20"
-          y="15"
-          width="605"
-          height="165"
-          fill="white"
-          style={coverStyle}
-        />
+          {/* CONKA curve — smooth climb, plateau through afternoon,
+              graceful taper landing just above baseline at bedtime. */}
+          <path
+            d="M 30 115 C 70 110, 105 60, 145 40 C 200 32, 235 32, 260 35 C 310 35, 350 35, 378 38 C 420 43, 460 58, 495 70 C 540 83, 580 95, 610 105"
+            fill="none"
+            stroke="#1B2757"
+            strokeWidth="10"
+            strokeOpacity="0.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M 30 115 C 70 110, 105 60, 145 40 C 200 32, 235 32, 260 35 C 310 35, 350 35, 378 38 C 420 43, 460 58, 495 70 C 540 83, 580 95, 610 105"
+            fill="none"
+            stroke="#1B2757"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
 
-        {/* x-axis labels (outside the cover, always visible) */}
-        <g
-          fill="#1B2757"
-          fontSize="10"
-          fontWeight="700"
-          textAnchor="middle"
-          style={{ letterSpacing: "0.08em" }}
-        >
-          {xTicks.map((t) => (
-            <text key={t.x} x={t.x} y="195">
-              {t.label}
-            </text>
-          ))}
-        </g>
-      </svg>
+          {/* drink markers — Flow (amber) in the morning, Clear (soft
+              blue) in the afternoon. Brand colours per CLAUDE.md design
+              system: Flow #F59E0B, Clear #94B9FF. The product labels
+              carry the "all day" story without needing a separate
+              annotation. */}
+          <circle
+            cx="30"
+            cy="115"
+            r="7"
+            fill="#F59E0B"
+            stroke="white"
+            strokeWidth="2"
+          />
+          <text
+            x="30"
+            y="134"
+            fontSize="12"
+            fill="#1B2757"
+            opacity="0.85"
+            textAnchor="middle"
+            fontWeight="700"
+          >
+            Flow
+          </text>
 
-      <div className="h-4" />
+          <circle
+            cx="262"
+            cy="35"
+            r="7"
+            fill="#94B9FF"
+            stroke="white"
+            strokeWidth="2"
+          />
+          <text
+            x="262"
+            y="22"
+            fontSize="12"
+            fill="#1B2757"
+            opacity="0.85"
+            textAnchor="middle"
+            fontWeight="700"
+          >
+            Clear
+          </text>
 
-      {/* CONKA CHART */}
-      <svg
-        viewBox="0 0 640 200"
-        className="block w-full h-auto"
-        role="img"
-        aria-label="CONKA energy: rises into a sustained plateau, holds all day, gentle taper to just above baseline by bedtime."
-      >
-        {/* grid */}
-        <g stroke="#1B2757" strokeWidth="1" opacity="0.05">
-          {xTicks.map((t) => (
-            <line key={t.x} x1={t.x} y1="20" x2={t.x} y2="170" />
-          ))}
-        </g>
+          {/* cover rect */}
+          <rect
+            x="20"
+            y="15"
+            width="605"
+            height="165"
+            fill="white"
+            className={styles.cover}
+          />
 
-        {/* dashed baseline reference */}
-        <line
-          x1="30"
-          y1={baselineY}
-          x2="610"
-          y2={baselineY}
-          stroke="#1B2757"
-          strokeWidth="1.25"
-          opacity="0.35"
-          strokeDasharray="5 4"
-        />
+          {/* x-axis labels */}
+          <g
+            fill="#1B2757"
+            fontSize="10"
+            fontWeight="700"
+            textAnchor="middle"
+            style={{ letterSpacing: "0.08em" }}
+          >
+            {xTicks.map((t) => (
+              <text key={t.x} x={t.x} y="195">
+                {t.label}
+              </text>
+            ))}
+          </g>
+        </svg>
 
-        {/* CONKA curve — smooth climb, plateau through afternoon,
-            graceful taper landing just above baseline at bedtime. */}
-        <path
-          d="M 30 115 C 70 110, 105 60, 145 40 C 200 32, 235 32, 260 35 C 310 35, 350 35, 378 38 C 420 43, 460 58, 495 70 C 540 83, 580 95, 610 105"
-          fill="none"
-          stroke="#1B2757"
-          strokeWidth="10"
-          strokeOpacity="0.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M 30 115 C 70 110, 105 60, 145 40 C 200 32, 235 32, 260 35 C 310 35, 350 35, 378 38 C 420 43, 460 58, 495 70 C 540 83, 580 95, 610 105"
-          fill="none"
-          stroke="#1B2757"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* drink markers — Flow (amber) in the morning, Clear (soft
-            blue) in the afternoon. Brand colours per CLAUDE.md design
-            system: Flow #F59E0B, Clear #94B9FF. The product labels
-            replace the "all day" annotation — the two drink moments
-            plus the visible plateau between them carry that story. */}
-        <circle
-          cx="30"
-          cy="115"
-          r="7"
-          fill="#F59E0B"
-          stroke="white"
-          strokeWidth="2"
-        />
-        <text
-          x="30"
-          y="134"
-          fontSize="12"
-          fill="#1B2757"
-          opacity="0.85"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          Flow
-        </text>
-
-        <circle
-          cx="262"
-          cy="35"
-          r="7"
-          fill="#94B9FF"
-          stroke="white"
-          strokeWidth="2"
-        />
-        <text
-          x="262"
-          y="22"
-          fontSize="12"
-          fill="#1B2757"
-          opacity="0.85"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          Clear
-        </text>
-
-        {/* cover rect */}
-        <rect
-          x="20"
-          y="15"
-          width="605"
-          height="165"
-          fill="white"
-          style={coverStyle}
-        />
-
-        {/* x-axis labels */}
-        <g
-          fill="#1B2757"
-          fontSize="10"
-          fontWeight="700"
-          textAnchor="middle"
-          style={{ letterSpacing: "0.08em" }}
-        >
-          {xTicks.map((t) => (
-            <text key={t.x} x={t.x} y="195">
-              {t.label}
-            </text>
-          ))}
-        </g>
-      </svg>
-
-      <p className="text-[12px] text-black/60 italic text-center mt-4 leading-snug">
-        All day focus. Into the evening. Without the crash.
-      </p>
-    </div>
+        <p className="text-[12px] text-black/60 italic text-center mt-4 leading-snug">
+          All day focus. Into the evening. Without the crash.
+        </p>
+      </div>
+    </CaffeineCurvesReveal>
   );
 }
