@@ -106,7 +106,7 @@ const FORMULAS: Record<Formula, FormulaContent> = {
     bottleImage: "/formulas/conkaClear/ClearNoBackground.png",
     bottleAlt: "CONKA Clear bottle",
     introLine:
-      "Seven active ingredients for the afternoon reset.",
+      "Nine active ingredients for the afternoon reset.",
     ingredients: [
       {
         id: "vitamin-c",
@@ -156,6 +156,20 @@ const FORMULAS: Record<Formula, FormulaContent> = {
         tags: "Phospholipid | Nootropic",
         benefit:
           "Supplies phosphatidylcholine to keep neuronal membranes fluid and active.",
+      },
+      {
+        id: "ala",
+        name: "Alpha Lipoic Acid",
+        tags: "Antioxidant | Neuroprotection",
+        benefit:
+          "Universal antioxidant that recycles vitamin C, vitamin E, and glutathione across the body.",
+      },
+      {
+        id: "vitamin-b12",
+        name: "Vitamin B12",
+        tags: "Vitamin | Brain Health",
+        benefit:
+          "Methylcobalamin supports myelin synthesis and slowed brain atrophy in Oxford trials.",
       },
     ],
   },

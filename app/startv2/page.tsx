@@ -435,7 +435,7 @@ export default function StartV2Page() {
         <section
           className="brand-section brand-bg-white"
           style={{ paddingTop: "4rem", paddingBottom: "4rem" }}
-          aria-label="Sixteen active ingredients across Flow and Clear"
+          aria-label="Fifteen active ingredients across Flow and Clear"
         >
           <div className="brand-track">
             <div className="mx-auto max-w-[560px]">
@@ -443,7 +443,7 @@ export default function StartV2Page() {
                 className="text-black font-semibold text-[34px] leading-[1.05] mb-4"
                 style={{ letterSpacing: "-0.02em" }}
               >
-                16 Science-Backed
+                15 Science-Backed
                 <br />
                 Ingredients.
               </h2>
