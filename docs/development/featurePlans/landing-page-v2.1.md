@@ -55,9 +55,34 @@ If a section breaches the floor, fix before adding the next. Don't ship Section 
 
 1. Empty `/startv2/page.tsx` ships first. Noindex + minimal `<main>`. Deploy. Run mobile Lighthouse. **That number is the baseline.**
 2. Build the next section inline in `page.tsx`. Reuse the data layer (`CartContext`, `productData`, `ingredientsData`, pricing helpers, `FORMULA_COLORS`, `offerConstants`) — inline the JSX, don't fork the data.
-3. Deploy. Run mobile Lighthouse. Compare to previous number. Capture both in the section brief below.
+3. Deploy. Run mobile Lighthouse. Compare to previous number. Capture both in the performance log below.
 4. If perf passes the floor, the section is done. Add the next section's brief to this doc, then build it.
 5. `/start` stays live. `/startv2` only becomes the new `/start` when all 11 sections are finished and a deliberate cutover happens.
+
+## Performance log
+
+Mobile Lighthouse on each section as it lands. Run after every deploy, write the row, write the notes. Compare against the previous row to see what the new section actually cost.
+
+| Date       | After      | Perf | A11y | BP | SEO | FCP   | LCP   | TBT    | CLS | SI    |
+| ---------- | ---------- | ---- | ---- | -- | --- | ----- | ----- | ------ | --- | ----- |
+| 2026-05-27 | Empty page | n/c  | n/c  | n/c| n/c | n/c   | n/c   | n/c    | n/c | n/c   |
+| 2026-05-27 | Hero       | n/c  | n/c  | n/c| n/c | n/c   | n/c   | n/c    | n/c | n/c   |
+| 2026-05-27 | Section 2  | 88   | 92   | 96 | 66  | 0.9 s | 3.8 s | 120 ms | 0   | 1.8 s |
+
+`n/c` = not captured (we deployed but did not record the run). Future deploys, capture every time.
+
+### Notes per run
+
+**Section 2 (2026-05-27, perf 88)** — First real measurement. Within budget on overall perf score (80 floor, 85 aim). LCP 3.8s is **over the 2.5s budget**, which is the biggest lever to investigate before the next section ships. Specific findings from the report:
+
+- **LCP image starved by render-blocking CSS.** LCP breakdown: resource load delay 550 ms, element render delay 330 ms, resource load duration 80 ms. Two CSS chunks (23 KiB combined, 610 ms savings flagged) sit in the critical path ahead of the hero image fetch. The image itself is small and fast, but it can't start downloading until the CSS resolves. Likely lever: inline critical CSS, or strip `brand-base.css` further so only the styles that hit /startv2 are shipped.
+- **Third parties dominate JS budget.** GTM 154 KiB (106 ms main thread) + Facebook Pixel 160 KiB (101 ms) account for ~50% of total bytes. Global from `layout.tsx`, not /startv2-specific. ~146 KiB of unused JS overall, ~120 KiB of that is third party. Out of scope for the section work but worth flagging as a project-wide ceiling on what /startv2 can achieve.
+- **Legacy polyfills in 1st-party chunk.** 26 KiB of unnecessary ES6 polyfills (`Array.at`, `Array.flat`, `Array.flatMap`, `Object.fromEntries`, `String.prototype.trimStart/End`) in `chunks/a4579d2a26014a3f.js`. Browserslist or Next.js compiler target may be set too conservatively. Cheap win available.
+- **TBT 120 ms.** Main-thread time mostly belongs to GTM + Facebook + the 1st-party chunk. Acceptable for now (200 ms budget).
+- **CLS 0.** Animated stats and clipped laurel halves are not shifting layout. Inline-style approach + tabular-nums on the counter are working.
+- **SEO 66 — low but expected.** The noindex/nofollow directive is intentional (paid-traffic-only page). Score drop is fine.
+
+Top lever for Section 3: address render-blocking CSS to claw back ~600 ms on LCP. Polyfill prune is the secondary lever (26 KiB JS, helps FCP).
 
 ## Constraints carried forward from v2.0
 
@@ -75,9 +100,73 @@ Briefs get added here as each section gets picked up. Each brief captures: job, 
 
 ### Baseline (empty page)
 
-- **Lighthouse mobile:** TBD on first deploy
-- **What's on the page:** `<main>` + Navigation + Footer. Nothing else.
+`<main>` + Navigation + Footer between them, noindex metadata. Lighthouse not captured at this stage (see `## Performance log`).
 
-### Section 1 — Hero
+### Section 1 — Hero ✅
 
-_TBD — design conversation pending._
+**Job.** Land the value prop in 3 seconds. Trust signal, emotional hook, conversion CTA to funnel.
+
+**Reference.** Magic Mind hero pattern — italic accent word in the headline, trust micro-row with stars + review count, full-width pill CTA.
+
+**Layout.**
+- Mobile-first single column, `max-w-[560px]` centered on desktop.
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — zero top padding so the asset butts directly under the nav.
+- No `brand-clinical` / `brand-v2` scope class on the page root. Fresh slate.
+
+**Image.**
+- Asset: `/lifestyle/clear/ClearDrink.jpg`.
+- Container: `aspect-[4/3]`, full-bleed mobile (`-mx-5 w-[calc(100%+2.5rem)]`), contained at `md:rounded-[12px]`.
+- Cropped 8% top + 12% bottom via `transform: scale(1.2) translateY(1.67%)` on the `<Image>` — GPU-only, no layout cost.
+- `priority` + `fetchPriority="high"` for LCP.
+
+**Copy.**
+- H1 (38px, letter-spacing -0.02em): "Brain Performance / in One *Daily* Shot." Two lines via `<br />`, italic on "Daily".
+- Trust micro-row: 5 stacked 35px borderless avatars (negative margin -10px), 4.5-star visual via grey-base + gold-clipped overlay at 90% width (20px font, gold #F59E0B), "Excellent 4.7" next to the stars, then "**622+** reviews · **5,000+** daily users" with bolded numbers.
+- Subline: "With a daily dose of CONKA, you'll experience a noticeable boost in focus, memory, stress resilience & neuroplasticity through our patented formula.†"
+- CTA (text-lg, full-width navy pill): "Save £120 + Free Shipping" with inline right-arrow SVG.
+- Below CTA: green-check-in-circle SVG + "100-day money back guarantee" centered.
+
+**Claims to revisit before launch.** "Stress resilience" and "neuroplasticity" in the subline; "Save £120" in the CTA. Run `/review-claims`.
+
+**Perf delta.** Not captured at this section. First measurement was after Section 2 (see `## Performance log`).
+
+### Section 2 — Brand Story ✅
+
+**Job.** Founding story + credibility for the "we created this" claim. Self-funded R&D as the proof beat, scale stats, aspirational outcome at the close.
+
+**Reference.** Ketone-IQ "We Created Drinkable Ketones" — H2 + single made-it-possible sentence + stats + CTA + credibility badge. Magic Mind contributes the conversational sentence rhythm.
+
+**Layout.**
+- Mobile-first single column, `max-w-[560px]` centered on desktop.
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>`.
+- Order: H2 → made-it-possible line → asset → animated stats (2-col grid) → content-width CTA → laurel-flanked credibility badge.
+- Trust line ("Trusted where cognitive performance isn't optional…") deliberately cut — audience claim belongs in Section 7 (athletes).
+
+**Image.**
+- Asset: `/formulas/both/BothHero.jpg` (two CONKA bottles, white + dark cap, white background). Stand-in for a future 3D render.
+- Container: `aspect-[5/4]`, full-bleed mobile.
+- Cropped via `transform: scale(1.5) translateY(-15%)` to remove most of the top white space and bottom-align the bottles in the visible window.
+
+**Copy.**
+- H2 (34px, letter-spacing -0.02em): "We Created Drinkable / Focus and Clarity." Two lines via `<br />`.
+- Made-it-possible line: "Over 6 years and £500,000+ of our own capital invested into clinical development and research with leading UK universities, professional sports clubs, and the military."
+- Animated stats (count up from 0 on scroll into view, ease-out cubic over 1500ms, respects `prefers-reduced-motion`, single use):
+  - **150,000+** / shots sold to date
+  - **100,000+** / cognitive tests done
+- Stat captions: `text-[#1B2757] font-medium` (navy, slightly heavier than default).
+- CTA: "Order Now" + right-arrow, content-width navy pill (text-lg, py-4 px-10), centered via `<div className="flex justify-center">`.
+- Credibility badge (`bg-black/[0.04] rounded-[12px]`, laurel-flanked):
+  - Eyebrow: "ONE OF THE WORLD'S LARGEST" (10px uppercase, tracking-[0.12em], navy, bold).
+  - Body (13px, semibold, black): "Consumer brain research project. 1,000+ brains tested regularly through our app, unlocking a new level of cognitive performance."
+- Laurels: `/public/LaurelWreath.png` (Canva asset, transparent background). One `<Image fill>` rendered on each side inside a `30px × 64px overflow-hidden` container with `objectFit: "cover"` and `objectPosition: "left center"` (left side) / `"right center"` (right side). One asset, two halves shown by clipping.
+
+**Claims to revisit before launch.**
+- "Professional sports clubs, and the military" as collaborators alongside universities — load-bearing comparative claim.
+- "One of the world's largest consumer brain research project" — comparative claim, needs substantiation.
+- "1,000+ brains tested regularly" — verify the number against current app data.
+
+**Architecture notes.**
+- Inline JSX (no separate component). Single client island: `app/startv2/AnimatedStat.tsx` (~60 lines, `useState` + `IntersectionObserver`). Page stays a Server Component.
+- Only new dependency outside Section 2's own JSX: the AnimatedStat import in `page.tsx` and the laurel asset in `/public`.
+
+**Perf delta.** First captured Lighthouse run on /startv2. Mobile perf **88** (above 80 floor, below 85 aim). **LCP 3.8s — over the 2.5s budget.** See `## Performance log` for the full breakdown. Top lever for Section 3: address render-blocking CSS (~600 ms LCP savings available) before adding more weight.

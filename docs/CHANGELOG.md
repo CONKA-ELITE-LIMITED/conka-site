@@ -6,6 +6,30 @@
 
 ## May 2026
 
+### 2026-05-28 -- Landing page v2.1: Section 3 polish (surface swap + curve revisions)
+
+First-review pass on Section 3 of /startv2 after seeing it on the page. Surface swapped from cream `#F7F4ED` to the brand's existing soft-blue tint `var(--brand-tint)` (#f4f5f8), the same alternating background already used by FormulaCaseStudies, KeyBenefits, AthleteCredibility, and WhyConkaWorks. Avoids introducing a new palette token mid-build and keeps the section consistent with the rest of the clinical surfaces. Coffee curve in `CaffeineCurves.tsx` gains a third spike at ~6PM peaking lower than the first two (diminishing returns), tapering back to baseline by 11PM, with a third drink dot at the 5PM recovery point between the deep crash and the third spike. "wrecks sleep" annotation repositioned from the late-evening tail to sit above the third peak (the late-afternoon cup is what keeps you up, not the residual elevation). CONKA chart now distinguishes the two products: amber Flow dot at 8AM with a bold "Flow" label below, soft-blue Clear dot at 2PM on the plateau with a bold "Clear" label above. Brand colours match CLAUDE.md (Flow `#F59E0B` AM accent, Clear `#94B9FF` PM accent). "all day" annotation removed because the two product dots plus the visible plateau between them carry that story without needing a label.
+
+**Modified:** `app/startv2/page.tsx`, `app/startv2/CaffeineCurves.tsx`.
+
+---
+
+### 2026-05-27 -- Landing page v2.1: Section 3 (Caffeine vs CONKA) ported to /startv2
+
+Third section of the v2.1 design pass. Adds the "caffeine villain" beat inline in `app/startv2/page.tsx`: the only section on the page that is about caffeine rather than CONKA, naming the mechanism (adenosine block, cortisol spike, the 11am handback) and reframing nootropics and adaptogens as the heavy lifters that build the focus coffee borrows. First non-white section on the page, using cream `#F7F4ED` inline as the alternating surface (hex to be promoted into `app/brand-base.css` as `--brand-cream` in a follow-up now that it is locked). Centerpiece is a new client island `CaffeineCurves.tsx` rendering two stacked SVG charts (coffee on top, CONKA below) that share an x-axis from 8AM to 11PM and reveal left-to-right via a translating white cover rect, identical width and duration across both so the horizontal velocity is locked. A dashed baseline reference makes coffee's deep second crash drop visibly below where you started, and CONKA's evening taper land just above. Three annotations only ("crash", "wrecks sleep", "all day") at 13px italic semibold; drink dots mark the moments coffee or CONKA is taken (two for coffee, one for CONKA). Chart title: "Cognitive Energy levels on coffee vs CONKA". The closing paragraph integrates Magic Mind copy DNA ("nootropics and adaptogens do the heavy lifting: brain-boosting nutrients build the focus, stress-mitigating compounds keep cortisol in check"). Under the CTA, an ingredient trust strip pairs the two ingredient classes with new `NootropicsIcon.avif` and `AdaptogensIcon.avif`. IntersectionObserver triggers the animation at 30% in-view and respects `prefers-reduced-motion`. Four further trust icons (BpaFree, KosherCertified, ThirdPartyTested, VeganFriendly) are also added to `public/icons/` as the Canva batch for upcoming sections. Perf measurement pending after deploy; render-blocking CSS flagged in the prior Section 2 run is still the top LCP lever.
+
+**Modified:** `app/startv2/page.tsx`, `app/startv2/CaffeineCurves.tsx` (new), `public/icons/` (new: NootropicsIcon.avif, AdaptogensIcon.avif, BpaFreeIcon.avif, KosherCertifiedIcon.avif, ThirdPartyTestedIcon.avif, VeganFriendlyIcon.avif).
+
+---
+
+### 2026-05-27 -- Landing page v2.1: doc handoff with perf log + Section 1/2 briefs
+
+Sets the v2.1 design pass up for a clean handoff into a fresh chat for Section 3. Adds a Performance log to `landing-page-v2.1.md`: a table tracking Lighthouse mobile scores per section (Section 2 result captured at perf 88, LCP 3.8s), plus per-run notes on what the report flagged (render-blocking CSS as the biggest LCP lever, third-party JS as the global ceiling, 26 KiB of legacy polyfills in the 1st-party chunk that build-target tuning would strip). Fills out the Section 1 (Hero) and Section 2 (Brand Story) briefs with full shipped state (job, reference, layout, image treatment, copy, claims-review flags, perf delta) so a new chat picks up with complete context instead of stale `TBD` placeholders. Also tightens the Section 2 made-it-possible line to credit the broader collaborator set: "leading UK universities, professional sports clubs, and the military". The two new collaborator categories need `/review-claims` substantiation before launch.
+
+**Modified:** `docs/development/featurePlans/landing-page-v2.1.md`, `app/startv2/page.tsx`.
+
+---
+
 ### 2026-05-27 -- Landing page v2.1: Section 2 (Brand Story) ported to /startv2
 
 Second section of the v2.1 design pass. Adds the brand-story beat ("We Created Drinkable Focus and Clarity") inline in `app/startv2/page.tsx`, following the Ketone-IQ-inspired structural shape: H2, single "made it possible" sentence emphasising self-funded development (6+ years, £500,000+ of our own capital, leading UK universities), the BothHero.jpg bottle asset cropped via CSS transform, two animated stats (150,000+ shots sold and 100,000+ cognitive tests done) that count up from zero on scroll into view via a small client island (`AnimatedStat.tsx`, IntersectionObserver, respects prefers-reduced-motion), a content-width Order Now CTA, and a laurel-flanked credibility badge ("One of the World's Largest consumer brain research project, 1,000+ brains tested regularly, unlocking a new level of cognitive performance"). The laurel renders by clipping a single Canva `/LaurelWreath.png` asset into left and right halves via overflow-hidden containers with `object-position: left|right center`. No new dependencies, page stays a Server Component aside from the small AnimatedStat island.
