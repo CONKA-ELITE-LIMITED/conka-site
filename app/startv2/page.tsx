@@ -459,7 +459,7 @@ export default function StartV2Page() {
 
               {/* Certification strip — Magic Mind-style trust badges above
                   the CTA. Icons live in /public/icons/ as AVIF. */}
-              <div className="flex items-center justify-center gap-2 mt-10 mb-6">
+              <div className="flex items-center justify-center gap-2 mt-10 mb-6 py-2">
                 {[
                   { src: "/icons/VeganFriendlyIcon.avif", label: "Vegan" },
                   { src: "/icons/KosherCertifiedIcon.avif", label: "Kosher" },
@@ -472,8 +472,8 @@ export default function StartV2Page() {
                   <Image
                     key={cert.label}
                     src={cert.src}
-                    width={68}
-                    height={68}
+                    width={80}
+                    height={80}
                     alt={cert.label}
                   />
                 ))}
