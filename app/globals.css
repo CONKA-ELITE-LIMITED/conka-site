@@ -167,82 +167,6 @@ body {
   animation: fade-in-scale 0.3s ease-out forwards;
 }
 
-/* ===== OUR STORY PAGE - Scroll Snap Experience ===== */
-
-/* Main scroll container */
-.story-scroll-container {
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: 100vh;
-  scroll-behavior: smooth;
-}
-
-/* Hide scrollbar for story container while allowing scroll */
-.story-scroll-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.story-scroll-container::-webkit-scrollbar {
-  display: none;
-}
-
-/* Individual story sections */
-.story-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Story theme variants */
-.story-light {
-  --background: var(--color-white);
-  --foreground: var(--color-black);
-  background: var(--color-white);
-  color: var(--color-black);
-}
-
-.story-dark {
-  --background: var(--color-black);
-  --foreground: var(--color-white);
-  background: var(--color-black);
-  color: var(--color-white);
-}
-
-/* Parallax text effect */
-.parallax-text {
-  will-change: transform;
-  transition: transform 0.1s ease-out;
-}
-
-/* Story section counter styling */
-.story-counter {
-  font-family: var(--font-jetbrains-mono), monospace;
-  letter-spacing: 0.1em;
-}
-
-/* Progress dots for desktop navigation */
-.story-progress-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid currentColor;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.story-progress-dot.active {
-  background: currentColor;
-  transform: scale(1.2);
-}
-
-.story-progress-dot:hover {
-  transform: scale(1.1);
-}
-
 /* Scroll indicator animation */
 @keyframes bounce-slow {
   0%,
@@ -300,23 +224,6 @@ body {
 }
 .stagger-4 {
   animation-delay: 0.4s;
-}
-
-/* Quote styling */
-.story-quote {
-  position: relative;
-  padding-left: 1.5rem;
-}
-
-.story-quote::before {
-  content: '"';
-  position: absolute;
-  left: 0;
-  top: -0.5rem;
-  font-size: 3rem;
-  font-family: var(--font-jetbrains-mono), monospace;
-  opacity: 0.3;
-  line-height: 1;
 }
 
 /* Marquee animation for Founding Member banner */

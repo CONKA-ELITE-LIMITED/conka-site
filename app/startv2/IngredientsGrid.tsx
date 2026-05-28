@@ -295,45 +295,35 @@ export default function IngredientsGrid() {
         </div>
       </div>
 
-      {/* Bottle card — square to match the source JPG's 1:1 aspect ratio.
-          Image fills the card edge-to-edge so the JPG's off-white background
-          IS the card surface (no visible square edge where the image meets a
-          differently coloured card background). Product name + tagline move
-          below the card so copy never collides with the centred bottle. */}
-      <div className="mb-6">
-        <div className="relative aspect-square rounded-[16px] overflow-hidden border border-black/10">
-          <Image
-            src={content.bottleImage}
-            alt={content.bottleAlt}
-            fill
-            sizes="(max-width: 768px) 90vw, 560px"
-            className="object-cover"
-          />
-        </div>
-        <div className="mt-4">
+      <div className="relative aspect-square rounded-[16px] overflow-hidden mb-6">
+        <Image
+          src={content.bottleImage}
+          alt={content.bottleAlt}
+          fill
+          sizes="(max-width: 768px) 90vw, 560px"
+          className="object-cover"
+        />
+        <div className="absolute bottom-5 left-5 right-5">
           <h3 className="text-[18px] font-semibold text-black leading-tight">
             {content.name}
           </h3>
-          <p className="text-[13px] text-black/65 leading-snug mt-0.5">
+          <p className="text-[13px] text-black/70 leading-snug mt-0.5">
             {content.tagline}
           </p>
         </div>
       </div>
 
-      {/* Detail panel — always rendered above the grid, content swaps on
-          selection. Hierarchy: name (large), tags (small caps), benefit (body).
-          Defaults to the first ingredient when nothing is tapped. */}
-      <div className="mb-6 p-5 bg-black/[0.04] rounded-[16px]">
+      <div className="mb-6 p-6 bg-white border border-black/10 rounded-[16px]">
         <h4
           className="text-[24px] font-semibold text-black leading-tight mb-2"
           style={{ letterSpacing: "-0.02em" }}
         >
           {selected.name}
         </h4>
-        <p className="text-[11px] uppercase tracking-[0.14em] font-semibold text-black/55 mb-4">
+        <p className="text-[11px] uppercase tracking-[0.14em] font-semibold text-black/55">
           {selected.tags}
         </p>
-        <p className="text-[15px] text-black leading-relaxed">
+        <p className="mt-4 pt-4 border-t border-black/10 text-[15px] text-black leading-relaxed">
           {selected.benefit}
         </p>
       </div>

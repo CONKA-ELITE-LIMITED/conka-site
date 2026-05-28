@@ -227,4 +227,16 @@ Briefs get added here as each section gets picked up. Each brief captures: job, 
 - Selection ring uses `outline` (not `border`) with `outline-offset: 0` so the 2px selected-state line stacks immediately outside the permanent 1px border without causing layout shift.
 - Bottle card overlay copy moved out of the card and into its own row below; the previous absolute-positioned overlay collided with the centred bottle once the card became square.
 
-**Perf delta.** Not captured yet. Top levers carried from Section 3 still apply (render-blocking CSS for LCP, polyfill prune for FCP) but were not addressed in this round. Measurement should follow the Section 3 perf hygiene findings: median-of-5 single-run Lighthouse on Vercel preview, or move to PageSpeed Insights / Vercel Web Vitals for a controlled signal.
+**Perf delta.** Single Lighthouse run after Section 4 dropped to **perf 65, LCP 5.9 s, TBT 280 ms** (one sample, so don't over-index per the Section 3 hygiene finding). Report highlighted: (a) **render-blocking CSS is now three chunks (24.8 KiB, critical path 619 ms)** — the same lever the doc has been deferring, and `element-render-delay` blew out to 1,660 ms; (b) **new 148 ms long task at 6,912 ms in a 1st-party chunk** — IngredientsGrid hydration; (c) image regression — `ClearDrink.jpg` source reverted to 909×683 because the 720×540 resize was blurry on 2×/3× DPR displays.
+
+**Section 4 perf fixes (2026-05-28):** three changes shipped together to address the regression.
+
+1. **`experimental.optimizeCss: true` in `next.config.ts`** — enables Next 16's built-in critical-CSS inlining. Previously three CSS chunks (24.8 KiB total) blocked render on the critical path; with inlining, only the above-the-fold CSS is rendered synchronously and the rest is async-loaded. Build passed clean; no `critters` / `beasties` install needed on Next 16 (bundled internally). Expected impact: dent the 1,660 ms element-render-delay on LCP.
+
+2. **Dead CSS removed from `app/globals.css`** — `.story-*` rules (`.story-scroll-container`, `.story-section`, `.story-light`, `.story-dark`, `.story-counter`, `.story-progress-dot`, `.story-quote`) and `.parallax-text`, ~80 lines total, confirmed zero consumers across `app/`. Was leftover from a previous `/our-story` implementation. Animation helpers (`.animate-fade-in-up`, `.animate-bounce-slow`, `.stagger-1..4`, `.animate-sticky-phone-fade`) were kept because `QuizResultsOverview` still uses them. Sitewide CSS bundle should shrink ~3–5 KiB.
+
+3. **`IngredientsGrid` converted to `dynamic()` import in `app/startv2/page.tsx`** — mirrors the `CROFormulaSplitV2` pattern in `/start/page.tsx`. Same SSR'd HTML (no SEO loss, no paint flash), but the client JS is code-split and hydrated when the chunk loads rather than as part of the initial bundle. Placeholder reserves `min-h-[1100px]` to prevent CLS during client-side navigation. Expected impact: the 148 ms long task drops out of the TBT window (TBT measures within ~5 s of FCP).
+
+Outstanding levers still not addressed: polyfill prune (13.7 KiB, deferred — needs different mechanism than `.browserslistrc`), `ClearDrink.jpg` resize redo at higher resolution (1200×900 to satisfy 2× DPR mobile while still beating the original's bytes — to be re-exported from Canva and dropped in).
+
+Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel preview, or PSI for a controlled signal. A single 65 is not signal.
