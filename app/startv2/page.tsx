@@ -6,6 +6,7 @@ import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
+import IngredientsGrid from "./IngredientsGrid";
 
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
@@ -227,13 +228,14 @@ export default function StartV2Page() {
                 </div>
                 <div>
                   <AnimatedStat
-                    target={100000}
+                    target={500000}
+                    prefix="£"
                     suffix="+"
                     className="block text-black font-bold text-[28px] leading-tight tabular-nums"
                     style={{ letterSpacing: "-0.02em" }}
                   />
                   <div className="text-[12px] text-[#1B2757] mt-1 leading-tight font-medium">
-                    cognitive tests done
+                    invested into research
                   </div>
                 </div>
               </div>
@@ -425,6 +427,103 @@ export default function StartV2Page() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== 4. INGREDIENTS ===== */}
+        <section
+          className="brand-section brand-bg-white"
+          style={{ paddingTop: "4rem", paddingBottom: "4rem" }}
+          aria-label="Fifteen active ingredients across Flow and Clear"
+        >
+          <div className="brand-track">
+            <div className="mx-auto max-w-[560px]">
+              <h2
+                className="text-black font-semibold text-[34px] leading-[1.05] mb-4"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                15 Science-Backed
+                <br />
+                Ingredients.
+              </h2>
+
+              <p className="text-[15px] leading-snug text-black/75 mb-8">
+                Every ingredient is dosed to match the peer-reviewed clinical
+                research. Six years of development with leading UK
+                universities and the military.
+              </p>
+
+              <IngredientsGrid />
+
+              {/* Certification strip — Magic Mind-style trust badges above
+                  the CTA. Icons live in /public/icons/ as AVIF. */}
+              <div className="flex items-center justify-center gap-2 mt-10 mb-6">
+                {[
+                  { src: "/icons/VeganFriendlyIcon.avif", label: "Vegan" },
+                  { src: "/icons/KosherCertifiedIcon.avif", label: "Kosher" },
+                  { src: "/icons/BpaFreeIcon.avif", label: "BPA Free" },
+                  {
+                    src: "/icons/ThirdPartyTestedIcon.avif",
+                    label: "Third party tested",
+                  },
+                ].map((cert) => (
+                  <Image
+                    key={cert.label}
+                    src={cert.src}
+                    width={68}
+                    height={68}
+                    alt={cert.label}
+                  />
+                ))}
+              </div>
+
+              <div className="flex justify-center">
+                <Link
+                  href={FUNNEL_URL}
+                  className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+                >
+                  Order Now
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12H19M19 12L12 5M19 12L12 19"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+              </div>
+
+              {/* 100-day guarantee — mirrors the hero CTA's reassurance row. */}
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" fill="#10B981" />
+                  <path
+                    d="M8 12.5L10.5 15L16 9.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-[13px] text-black">
+                  100-day money back guarantee
+                </span>
               </div>
             </div>
           </div>
