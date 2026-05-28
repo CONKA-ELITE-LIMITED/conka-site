@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import Navigation from "../components/navigation";
@@ -6,7 +7,11 @@ import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
-import IngredientsGrid from "./IngredientsGrid";
+
+// Code-split below-the-fold island: hydration drops out of initial TBT window.
+const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
+  loading: () => <div className="min-h-[1100px]" />,
+});
 
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
