@@ -71,6 +71,8 @@ Mobile Lighthouse on each section as it lands. Run after every deploy, write the
 | 2026-05-28 | Section 3            | 80   | 92   | 96 | 80  | 0.9 s | 3.7 s | 400 ms | 0   | 2.2 s |
 | 2026-05-28 | Section 3 perf fix   | 83   | 92   | 96 | 83  | 0.9 s | 3.9 s | 240 ms | 0   | 2.2 s |
 | 2026-05-28 | Section 3 perf hygiene (5-run median) | 70 | 92 | 96 | 66 | 1.0 s | 3.3 s | 480 ms | 0 | 3.0 s |
+| 2026-05-28 | Section 4 (single, run 1)     | 65 | 93 | 96 | 65 | 2.8 s | 5.9 s | 280 ms | 0 | 5.0 s |
+| 2026-05-28 | Section 4 (single, run 2)     | 78 | 93 | 96 | 66 | 1.0 s | 3.8 s | 370 ms | 0 | 4.0 s |
 
 `n/c` = not captured (we deployed but did not record the run). Future deploys, capture every time. The "Section 3 perf hygiene" row uses the median of 5 runs (40, 61, 70, 80, 83) on the same deploy after we discovered that single Lighthouse mobile runs against a Vercel preview swing far beyond the ±15-20 band the perf doc cites. Non-perf metrics in that row are from the run closest to the median, not aggregated.
 
@@ -227,7 +229,7 @@ Briefs get added here as each section gets picked up. Each brief captures: job, 
 - Selection ring uses `outline` (not `border`) with `outline-offset: 0` so the 2px selected-state line stacks immediately outside the permanent 1px border without causing layout shift.
 - Bottle card overlay copy moved out of the card and into its own row below; the previous absolute-positioned overlay collided with the centred bottle once the card became square.
 
-**Perf delta.** Single Lighthouse run after Section 4 dropped to **perf 65, LCP 5.9 s, TBT 280 ms** (one sample, so don't over-index per the Section 3 hygiene finding). Report highlighted: (a) **render-blocking CSS is now three chunks (24.8 KiB, critical path 619 ms)** — the same lever the doc has been deferring, and `element-render-delay` blew out to 1,660 ms; (b) **new 148 ms long task at 6,912 ms in a 1st-party chunk** — IngredientsGrid hydration; (c) image regression — `ClearDrink.jpg` source reverted to 909×683 because the 720×540 resize was blurry on 2×/3× DPR displays.
+**Perf delta.** Two single-run samples on the same Section 4 deploy gave **perf 65 (LCP 5.9 s, TBT 280 ms)** and **perf 78 (LCP 3.8 s, TBT 370 ms)** — a 13-point swing on identical bytes, fresh confirmation of the Section 3 hygiene finding that single runs are not signal on this bundle. Across both samples the **diagnostic was identical**: render-blocking CSS chain (three chunks, 24.8 KiB, critical path 619–920 ms) drives an `element-render-delay` of 1,660–1,750 ms on the LCP image, and a 148–161 ms long task at ~6.9 s in `chunks/0d6a4e182e7d1edf.js` (IngredientsGrid hydration) shows up in every run. FCP was the most volatile metric (2.8 s → 1.0 s, same deploy); TBT stayed over the 200 ms budget in both. The image regression (`ClearDrink.jpg` reverted to 909×683 because 720×540 was blurry on 2×/3× DPR mobile) is consistent across runs.
 
 **Section 4 perf fixes (2026-05-28):** three changes shipped together to address the regression.
 
@@ -240,3 +242,48 @@ Briefs get added here as each section gets picked up. Each brief captures: job, 
 Outstanding levers still not addressed: polyfill prune (13.7 KiB, deferred — needs different mechanism than `.browserslistrc`), `ClearDrink.jpg` resize redo at higher resolution (1200×900 to satisfy 2× DPR mobile while still beating the original's bytes — to be re-exported from Canva and dropped in).
 
 Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel preview, or PSI for a controlled signal. A single 65 is not signal.
+
+### Section 5 — Buy Box ✅
+
+**Job.** Land the offer. First place on the page where price, savings, trust badges, and CTA share one composition. Following S1-S4's warm-Magic-Mind register but with the conversion intensity Ketone-IQ uses on its buy beat. CTA adds directly to the cart drawer using the current cadence's variant and selling-plan IDs, mirroring the `CROBuyBox` quick-buy pattern on `/start`. This is a real purchase point, not a routing nudge into the funnel.
+
+**Reference.** Ketone-IQ buy beat (auto-discount eyebrow + bold headline + trust-badge row + rich product card with strikethrough pricing, "SAVE X%" pill, spec checklist, CTA, and guarantee footer). Dropped Ketone-IQ's subscription-upsell row because CONKA's headline price already IS the subscription price — double-stamping the same offer adds no work. Replaced it with a "Full CONKA app access included" line in the spec checklist that does new work.
+
+**Layout.**
+- Mobile-first single column, `max-w-[560px]` centred on desktop.
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — zero top padding because Section 4 closes with a guarantee row and Section 5 should land tight under it.
+- Order: auto-discount eyebrow pill → H2 with italic accent → subhead → 4-badge trust row → buy-box card → 100-day guarantee row.
+- Trust badges are a 4-column grid at `gap-3`, each cell `aspect-square rounded-full border-2 border-black/85` with a two-line uppercase label centred inside. Plain divs, no image assets — the row adds zero asset weight.
+- Buy-box card uses `rounded-[16px] border border-black/10` matching the same card grammar as the Section 4 ingredient detail panel and tile grid. Internal order (top to bottom): product image (`aspect-[5/4]`, full-width edge-to-edge) → product title + price row + per-shot price → "56 shots = 28 servings" description → 3-item bullet checklist → sub/OTP toggle → navy CTA → guarantee + cancel-anytime copy. Image leads so the asset gets the first visual beat, copy follows in the lower half.
+
+**Image.**
+- Asset: `/formulas/box/BothBox.jpg` — clean studio shot of two CONKA shipping boxes with a Flow and a Clear bottle in the foreground on a white background. First fetch on `/startv2` (no earlier section uses this asset).
+- Container: `aspect-[5/4]` sitting at the top of the card, full-width edge-to-edge (the wrapping card has `overflow-hidden` so the rounded corners clip the image cleanly). No overlay copy — title, price row, and per-shot price sit in their own block immediately below the image, above the shot-count description and bullets.
+- `sizes="(max-width: 768px) 100vw, 560px"` matches the other section assets.
+
+**Copy.**
+- Eyebrow: "**Subscription auto-applied.** You will get {N}% off, free UK shipping, and full access to the CONKA brain performance app." Declarative "You will get" framing (lifted from Ketone-IQ's "You will get 30% off and 6-Shots next month") so the eyebrow tells, not asks. The percentage is dynamic, computed from the live cadence pricing (`compareAtPrice` vs `monthly-sub.price`). The eyebrow stays static when the user toggles to OTP in the card; it serves as the upgrade-path reminder, not a real-time selection summary.
+- H2 (34px, letter-spacing -0.02em): "Your *Complete* / Daily Routine." Two lines via `<br />`, italic on "Complete" (the differentiator for Both vs single-formula purchases).
+- Subhead: "Flow in the morning. Clear in the afternoon. Two shots a day, every day of the month." Three short sentences, no em-dashes per copy rules.
+- Trust badges: Informed Sport · University Research · No Caffeine · 100-Day Guarantee. Each two lines of uppercase text inside a circular outline stamp.
+- Buy-box card: product title "CONKA Flow + Clear", live monthly sub price (£{N}/mo with `/mo` suffix in sub mode, no suffix in OTP), strikethrough compare-at price + "Save {N}%" pill in navy (sub mode only), per-shot price under the row.
+- Spec checklist (4 items, green-circle check icon). Three are always visible: "56 shots: 28 Flow + 28 Clear" · "2 shots a day, every day of the month" · "Free UK shipping". The fourth, "Full CONKA app: daily cognitive tests + personalised insights", is the sub-only differentiator: in OTP mode it stays in the list but renders strikethrough with a dimmed grey check and a "Sub only" tag, so the user sees what they forgo by going OTP rather than the line disappearing silently.
+- Sub/OTP toggle: checkbox-as-pill at the bottom of the card (above the CTA), same pattern as `CROBuyBox` on `/start`. Label "Subscribe and save {N}%" + caption "Pause, skip, or cancel anytime." Default state: subscription on.
+- CTA: "Start My Routine" with right-arrow SVG, full-width navy pill (text-lg, py-4 px-10). Same label in both sub and OTP modes. The button calls `CartContext.addToCart` directly with the current cadence's variant and selling-plan IDs (lifted from `getCadenceVariantByProductHeroId("03", cadence)`) and metadata `{ location: "buy_box", source: "startv2_section_5" }`, so the cart drawer opens on click. Mirrors the `CROBuyBox` pattern on `/start` — this is the quick-buy beat, not a routing nudge into the funnel.
+- Guarantee row below: same green-check + `GUARANTEE_LABEL_FULL` from `offerConstants.ts` as the hero and S4.
+
+**Claims to revisit before launch.**
+- "Informed Sport" badge — verify the claim is current and the badge artwork matches the official certification mark before this row is replaced with real stamps.
+- "University Research" badge — anchors to the S2 "leading UK universities and the military" line; both need substantiation before any of these go live.
+- "No Caffeine" badge — true for both Flow and Clear today, worth confirming for future formula tweaks.
+- "Full CONKA app access included" — verify what the app actually delivers for subscribers vs OTP buyers.
+- All sub-pricing numbers come from `getCadencePricingByProductHeroId("03", ...)` via the shared funnel data, so they stay in lockstep with `/funnel` and `/start`.
+
+**Architecture notes.**
+- Section wrapper, eyebrow, headline, subhead, trust-badge row, and guarantee row are inline server-rendered JSX in `page.tsx`. Only the card itself is a client island: `app/startv2/BuyBoxCard.tsx` (~170 lines) owns the `isSubscription` toggle state and the conditional price/spec/savings-pill rendering.
+- The card is dynamic-imported from `page.tsx` (same pattern as `IngredientsGrid`) with a `min-h-[700px]` placeholder. Default SSR keeps the rendered HTML in the initial response (no SEO loss, no paint flash on the price); the JS chunk is code-split so the card's hydration cost stays out of the initial TBT window.
+- Pricing math (`S5_SUB_PRICING`, `S5_OTP_PRICING`, `S5_COMPARE_AT`, `S5_MONTHLY_SAVINGS`, `S5_SAVINGS_PERCENT`) and the `S5_TRUST_BADGES` content array stay at module scope above the page component, and the pricing constants get passed into `BuyBoxCard` as props. `BOTH_PRODUCT_HERO_ID = "03"` is a named constant alongside the pricing helpers so the call sites do not read as magic numbers.
+- Trust badges rendered as styled divs (no `<Image>`) so the row adds nothing to the image budget. Easy to swap to real AVIF stamps later by replacing the inner content of each cell.
+- Eyebrow copy gates on `S5_SAVINGS_PERCENT > 0` so a malformed pricing payload (compare-at missing AND OTP price 0) still produces coherent copy (drops the percentage, keeps the rest).
+
+**Perf delta.** Not captured yet. Section 5 adds one new image asset (`BothBox.jpg`, fresh fetch) and a small dynamic-imported client chunk for `BuyBoxCard` (toggle plus conditional render of price/specs). The chunk loads lazily after the main bundle, so hydration should land outside the TBT window the same way `IngredientsGrid` does post-S4 fix. Re-measure with median-of-5 or PSI per the protocol established after Section 3 hygiene.

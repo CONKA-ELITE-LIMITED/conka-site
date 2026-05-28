@@ -5,12 +5,23 @@ import Link from "next/link";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import {
+  getCadencePricingByProductHeroId,
+  getCadenceVariantByProductHeroId,
+} from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
   loading: () => <div className="min-h-[1100px]" />,
+});
+
+// Section 5 buy-box card. Same dynamic-import pattern as IngredientsGrid: SSR
+// preserved so the price + spec list render in the initial HTML; the toggle's
+// JS hydration is deferred so its long task lands outside the TBT window.
+const BuyBoxCard = dynamic(() => import("./BuyBoxCard"), {
+  loading: () => <div className="min-h-[700px]" />,
 });
 
 export const metadata: Metadata = {
@@ -29,6 +40,41 @@ export const metadata: Metadata = {
 };
 
 const AVATAR_COUNT = 5;
+
+const BOTH_PRODUCT_HERO_ID = "03";
+
+// Section 5 buy-box pricing math. Pulled at render-time from the shared
+// cadence/funnel data so the savings figure stays in lockstep with the
+// /funnel and /start CROBuyBox.
+const S5_SUB_PRICING = getCadencePricingByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "monthly-sub",
+);
+const S5_OTP_PRICING = getCadencePricingByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "monthly-otp",
+);
+const S5_SUB_VARIANT = getCadenceVariantByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "monthly-sub",
+);
+const S5_OTP_VARIANT = getCadenceVariantByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "monthly-otp",
+);
+const S5_COMPARE_AT = S5_SUB_PRICING.compareAtPrice ?? S5_OTP_PRICING.price;
+const S5_MONTHLY_SAVINGS = Math.max(0, S5_COMPARE_AT - S5_SUB_PRICING.price);
+const S5_SAVINGS_PERCENT =
+  S5_COMPARE_AT > 0
+    ? Math.round((S5_MONTHLY_SAVINGS / S5_COMPARE_AT) * 100)
+    : 0;
+
+const S5_TRUST_BADGES = [
+  { line1: "Informed", line2: "Sport" },
+  { line1: "University", line2: "Research" },
+  { line1: "No", line2: "Caffeine" },
+  { line1: "100-Day", line2: "Guarantee" },
+];
 
 export default function StartV2Page() {
   return (
@@ -530,6 +576,90 @@ export default function StartV2Page() {
                   100-day money back guarantee
                 </span>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== 5. BUY BOX ===== */}
+        <section
+          className="brand-section brand-bg-white"
+          style={{ paddingTop: 0, paddingBottom: "4rem" }}
+          aria-label="Your complete daily routine"
+        >
+          <div className="brand-track">
+            <div className="mx-auto max-w-[560px]">
+              {/* Auto-discount eyebrow. Static copy mirroring the savings math
+                  rendered in the buy-box card below. */}
+              <div className="flex items-start gap-3 p-4 mb-6 bg-white border-2 border-black/85 rounded-[16px]">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                  className="flex-shrink-0 mt-0.5"
+                >
+                  <circle cx="12" cy="12" r="10" fill="#10B981" />
+                  <path
+                    d="M8 12.5L10.5 15L16 9.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <p className="text-[13px] text-black leading-snug">
+                  <strong className="font-semibold">
+                    Subscription auto-applied.
+                  </strong>{" "}
+                  {S5_SAVINGS_PERCENT > 0
+                    ? `You will get ${S5_SAVINGS_PERCENT}% off, free UK shipping, and full access to the CONKA brain performance app.`
+                    : "You will get free UK shipping and full access to the CONKA brain performance app."}
+                </p>
+              </div>
+
+              <h2
+                className="text-black font-semibold text-[34px] leading-[1.05] mb-4"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                Your <em className="italic">Complete</em>
+                <br />
+                Daily Routine.
+              </h2>
+
+              <p className="text-[15px] leading-snug text-black mb-8">
+                Flow in the morning. Clear in the afternoon. Two shots a day,
+                every day of the month.
+              </p>
+
+              {/* Trust badges — circular stamps, differentiated from Section 4's
+                  cert strip (Vegan / Kosher / BPA / 3rd party). Plain inline
+                  divs (no images) so this row adds zero asset weight. */}
+              <div className="grid grid-cols-4 gap-3 mb-8">
+                {S5_TRUST_BADGES.map((badge) => (
+                  <div
+                    key={badge.line1 + badge.line2}
+                    className="aspect-square rounded-full border-2 border-black/85 flex items-center justify-center px-1"
+                  >
+                    <div className="text-[10px] font-bold uppercase tracking-tight leading-[1.15] text-center text-black/85">
+                      <div>{badge.line1}</div>
+                      <div>{badge.line2}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <BuyBoxCard
+                subPricing={S5_SUB_PRICING}
+                otpPricing={S5_OTP_PRICING}
+                subVariant={S5_SUB_VARIANT}
+                otpVariant={S5_OTP_VARIANT}
+                compareAt={S5_COMPARE_AT}
+                monthlySavings={S5_MONTHLY_SAVINGS}
+                savingsPercent={S5_SAVINGS_PERCENT}
+                productImage="/formulas/box/BothBox.jpg"
+                productImageAlt="Two CONKA shipping boxes side by side with a Flow and a Clear bottle in the foreground"
+              />
             </div>
           </div>
         </section>
