@@ -228,13 +228,14 @@ export default function StartV2Page() {
                 </div>
                 <div>
                   <AnimatedStat
-                    target={100000}
+                    target={500000}
+                    prefix="£"
                     suffix="+"
                     className="block text-black font-bold text-[28px] leading-tight tabular-nums"
                     style={{ letterSpacing: "-0.02em" }}
                   />
                   <div className="text-[12px] text-[#1B2757] mt-1 leading-tight font-medium">
-                    cognitive tests done
+                    invested into research
                   </div>
                 </div>
               </div>

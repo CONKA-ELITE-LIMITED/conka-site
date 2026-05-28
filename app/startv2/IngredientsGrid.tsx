@@ -33,28 +33,45 @@ interface FormulaContent {
   tagline: string;
   bottleImage: string;
   bottleAlt: string;
-  introLine: string;
   ingredients: GridIngredient[];
 }
 
-// Map ingredient id → render filename for Flow only. Delete once renders
-// migrate to /public/ingredients/flow/{id}.jpg matching ingredientsData.ts.
-const FLOW_ASSET_FILENAME: Record<string, string> = {
-  "lemon-balm": "LemonBalm",
-  turmeric: "Turmeric",
-  ashwagandha: "Ashwagandha",
-  rhodiola: "RhodiolaRosea",
-  bilberry: "Bilberry",
-  "black-pepper": "BlackPepper",
+// Map ingredient id → render filename per formula. Renders live in
+// /public/ingredients/renders/ with PascalCase filenames. Delete this map
+// once renders migrate to /public/ingredients/{flow|clear}/{id}.jpg matching
+// ingredientsData.ts. Missing entries fall through to the initial-letter
+// fallback tile.
+const ASSET_FILENAME: Record<"flow" | "clear", Record<string, string>> = {
+  flow: {
+    "lemon-balm": "LemonBalm",
+    turmeric: "Turmeric",
+    ashwagandha: "Ashwagandha",
+    rhodiola: "RhodiolaRosea",
+    bilberry: "Bilberry",
+    "black-pepper": "BlackPepper",
+  },
+  clear: {
+    "vitamin-c": "VitaminC",
+    ginkgo: "GinkgoBiloba",
+    lecithin: "Lecithin",
+    ala: "AlphaLipoicAcid",
+    "vitamin-b12": "VitaminB12",
+    // 11.jpg is a generic white-powder render used as a stand-in for
+    // ingredients whose typical form is a white powder, until bespoke
+    // renders ship.
+    "alpha-gpc": "AlphaGPC",
+    glutathione: "11",
+    alcar: "11",
+    nac: "NAcetylCysteine",
+  },
 };
 
 const FORMULAS: Record<Formula, FormulaContent> = {
   flow: {
     name: "CONKA Flow",
     tagline: "Calm focus for your mornings.",
-    bottleImage: "/formulas/conkaFlow/FlowNoBackground.png",
+    bottleImage: "/formulas/conkaFlow/FlowNew.jpg",
     bottleAlt: "CONKA Flow bottle",
-    introLine: "Six active ingredients, tuned for steady morning focus.",
     ingredients: [
       {
         id: "lemon-balm",
@@ -103,17 +120,15 @@ const FORMULAS: Record<Formula, FormulaContent> = {
   clear: {
     name: "CONKA Clear",
     tagline: "Afternoon clarity, without the coffee.",
-    bottleImage: "/formulas/conkaClear/ClearNoBackground.png",
+    bottleImage: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
-    introLine:
-      "Nine active ingredients for the afternoon reset.",
     ingredients: [
       {
-        id: "vitamin-c",
-        name: "Vitamin C",
-        tags: "Vitamin | Neuroprotection",
+        id: "glutathione",
+        name: "Glutathione",
+        tags: "Antioxidant | Neuroprotection",
         benefit:
-          "Cofactor for dopamine synthesis and the brain's primary water-soluble antioxidant.",
+          "The body's master antioxidant, protecting cells from everyday oxidative stress.",
       },
       {
         id: "alpha-gpc",
@@ -121,13 +136,6 @@ const FORMULAS: Record<Formula, FormulaContent> = {
         tags: "Nootropic | Mental Energy",
         benefit:
           "Raises acetylcholine, the brain's focus and memory messenger.",
-      },
-      {
-        id: "glutathione",
-        name: "Glutathione",
-        tags: "Antioxidant | Neuroprotection",
-        benefit:
-          "The body's master antioxidant, protecting cells from everyday oxidative stress.",
       },
       {
         id: "nac",
@@ -156,6 +164,13 @@ const FORMULAS: Record<Formula, FormulaContent> = {
         tags: "Phospholipid | Nootropic",
         benefit:
           "Supplies phosphatidylcholine to keep neuronal membranes fluid and active.",
+      },
+      {
+        id: "vitamin-c",
+        name: "Vitamin C",
+        tags: "Vitamin | Neuroprotection",
+        benefit:
+          "Cofactor for dopamine synthesis and the brain's primary water-soluble antioxidant.",
       },
       {
         id: "ala",
@@ -280,33 +295,30 @@ export default function IngredientsGrid() {
         </div>
       </div>
 
-      {/* Bottle card */}
-      <div className="relative bg-white rounded-[16px] overflow-hidden mb-6 aspect-[5/4] border border-black/10">
-        <div className="absolute inset-0 flex justify-center items-center">
-          <div className="relative w-44 h-[88%] -translate-y-2">
-            <Image
-              src={content.bottleImage}
-              alt={content.bottleAlt}
-              fill
-              sizes="176px"
-              className="object-contain scale-150"
-            />
-          </div>
+      {/* Bottle card — square to match the source JPG's 1:1 aspect ratio.
+          Image fills the card edge-to-edge so the JPG's off-white background
+          IS the card surface (no visible square edge where the image meets a
+          differently coloured card background). Product name + tagline move
+          below the card so copy never collides with the centred bottle. */}
+      <div className="mb-6">
+        <div className="relative aspect-square rounded-[16px] overflow-hidden border border-black/10">
+          <Image
+            src={content.bottleImage}
+            alt={content.bottleAlt}
+            fill
+            sizes="(max-width: 768px) 90vw, 560px"
+            className="object-cover"
+          />
         </div>
-        <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
+        <div className="mt-4">
           <h3 className="text-[18px] font-semibold text-black leading-tight">
             {content.name}
           </h3>
-          <p className="text-[13px] text-black/65 leading-snug mt-0.5 max-w-[78%]">
+          <p className="text-[13px] text-black/65 leading-snug mt-0.5">
             {content.tagline}
           </p>
         </div>
       </div>
-
-      {/* Per-formula intro */}
-      <p className="text-[15px] leading-snug text-black/75 mb-4">
-        {content.introLine}
-      </p>
 
       {/* Detail panel — always rendered above the grid, content swaps on
           selection. Hierarchy: name (large), tags (small caps), benefit (body).
@@ -334,9 +346,7 @@ export default function IngredientsGrid() {
       >
         {content.ingredients.map((ing) => {
           const isSelected = selected.id === ing.id;
-          const assetFilename = isFlow
-            ? FLOW_ASSET_FILENAME[ing.id]
-            : undefined;
+          const assetFilename = ASSET_FILENAME[formula][ing.id];
           return (
             <button
               key={ing.id}
