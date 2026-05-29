@@ -230,44 +230,42 @@ function RosterStrip({
 
 function InformedSportBlock() {
   return (
-    <div className="mt-12 bg-black/[0.04] rounded-[var(--brand-radius-container)] p-6 sm:p-8 flex flex-col items-center text-center">
-      <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#1B2757] mb-4">
-        Quality &amp; Testing
-      </p>
-
-      <h3
-        className="text-[26px] sm:text-[28px] font-semibold text-black leading-[1.1] mb-6 max-w-[18ch]"
-        style={{ letterSpacing: "-0.01em" }}
-      >
-        Independently tested. Every batch.
-      </h3>
-
-      <div className="relative w-40 h-40 mb-6">
+    <div className="mt-8 bg-black/[0.04] rounded-[var(--brand-radius-container)] p-5 flex items-center gap-4 text-left">
+      <div className="relative w-20 h-20 flex-shrink-0">
         <Image
           src="/logos/InformedSportLogo.png"
           alt="Informed Sport certification"
           fill
-          sizes="160px"
+          sizes="80px"
           className="object-contain"
         />
       </div>
 
-      <p className="text-[15px] text-black/80 leading-relaxed max-w-[46ch] mb-4">
-        Every batch of CONKA Flow and CONKA Clear is independently tested by{" "}
-        <strong className="text-black font-semibold">Informed Sport</strong>{" "}
-        for over{" "}
-        <strong className="text-black font-semibold">
-          280 banned substances
-        </strong>
-        . Trusted by{" "}
-        <strong className="text-black font-semibold">WADA</strong>,{" "}
-        <strong className="text-black font-semibold">Olympic committees</strong>
-        , and professional sports leagues worldwide.
-      </p>
-
-      <p className="text-[12px] uppercase tracking-[0.14em] font-bold text-[#1B2757]">
-        No exceptions. No shortcuts.
-      </p>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#1B2757] mb-1">
+          Quality &amp; Testing
+        </p>
+        <h3
+          className="text-[16px] sm:text-[17px] font-semibold text-black leading-tight mb-1.5"
+          style={{ letterSpacing: "-0.01em" }}
+        >
+          Independently tested. Every batch.
+        </h3>
+        <p className="text-[13px] text-black/75 leading-snug">
+          Every batch of CONKA Flow and CONKA Clear is independently tested by{" "}
+          <strong className="text-black font-semibold">Informed Sport</strong>{" "}
+          for over{" "}
+          <strong className="text-black font-semibold">
+            280 banned substances
+          </strong>
+          . Trusted by{" "}
+          <strong className="text-black font-semibold">WADA</strong>,{" "}
+          <strong className="text-black font-semibold">
+            Olympic committees
+          </strong>
+          , and professional sports leagues worldwide.
+        </p>
+      </div>
     </div>
   );
 }
