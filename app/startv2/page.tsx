@@ -5,6 +5,8 @@ import Link from "next/link";
 import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import CROResearch from "../components/cro/CROResearch";
+import CROAppCallout from "../components/cro/CROAppCallout";
+import CROFAQv2 from "../components/cro/CROFAQv2";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
 import {
   getCadencePricingByProductHeroId,
@@ -32,6 +34,14 @@ const BuyBoxCard = dynamic(() => import("./BuyBoxCard"), {
 const CROAthletes = dynamic(
   () => import("../components/cro/CROAthletes"),
   { loading: () => <div className="min-h-[1100px]" /> },
+);
+
+// Section 8 customer reviews. Reused from `/start`. Dynamic-imported so the
+// 3x-render carousel, auto-advance interval, and touch-swipe handlers stay
+// off the initial bundle.
+const CROCustomerReviews = dynamic(
+  () => import("../components/cro/CROCustomerReviews"),
+  { loading: () => <div className="min-h-[680px]" /> },
 );
 
 export const metadata: Metadata = {
@@ -681,8 +691,8 @@ export default function StartV2Page() {
                 compareAt={S5_COMPARE_AT}
                 monthlySavings={S5_MONTHLY_SAVINGS}
                 savingsPercent={S5_SAVINGS_PERCENT}
-                productImage="/formulas/box/BothBox.jpg"
-                productImageAlt="Two CONKA shipping boxes side by side with a Flow and a Clear bottle in the foreground"
+                productImage="/formulas/both/BothHero.jpg"
+                productImageAlt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
               />
             </div>
           </div>
@@ -832,6 +842,46 @@ export default function StartV2Page() {
                 </span>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ===== 8. CUSTOMER REVIEWS ===== */}
+        <section
+          className="brand-section brand-bg-white"
+          style={{ paddingTop: 0, paddingBottom: "4rem" }}
+          aria-label="Real people. Real results."
+        >
+          <div className="brand-track">
+            <CROCustomerReviews />
+          </div>
+        </section>
+
+        {/* ===== 9. APP CALLOUT ===== */}
+        {/* Soft-blue tint surface — same `var(--brand-tint)` used by S3. Gives
+            the page a second register-break after the long white run from
+            S4 onwards. */}
+        <section
+          className="brand-section"
+          style={{
+            paddingTop: "4rem",
+            paddingBottom: "4rem",
+            background: "var(--brand-tint)",
+          }}
+          aria-label="We don't ask if CONKA works, we measure it"
+        >
+          <div className="brand-track">
+            <CROAppCallout />
+          </div>
+        </section>
+
+        {/* ===== 10. FAQ ===== */}
+        <section
+          className="brand-section brand-bg-white"
+          style={{ paddingTop: 0, paddingBottom: "4rem" }}
+          aria-label="Still wondering?"
+        >
+          <div className="brand-track">
+            <CROFAQv2 />
           </div>
         </section>
       </main>

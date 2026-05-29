@@ -259,7 +259,7 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - Buy-box card uses `rounded-[16px] border border-black/10` matching the same card grammar as the Section 4 ingredient detail panel and tile grid. Internal order (top to bottom): product image (`aspect-[5/4]`, full-width edge-to-edge) → product title + price row + per-shot price → "56 shots = 28 servings" description → 3-item bullet checklist → sub/OTP toggle → navy CTA → guarantee + cancel-anytime copy. Image leads so the asset gets the first visual beat, copy follows in the lower half.
 
 **Image.**
-- Asset: `/formulas/box/BothBox.jpg` — clean studio shot of two CONKA shipping boxes with a Flow and a Clear bottle in the foreground on a white background. First fetch on `/startv2` (no earlier section uses this asset).
+- Asset: `/formulas/both/BothHero.jpg` — two CONKA bottles (Flow with a white cap and Clear with a black cap) on a white background. Reuses the original S2 hero shot, which freed up after S2 swapped to the rotating Flow video. The earlier `BothBox.jpg` shipping-box studio shot was replaced because the buy box benefits from leading with the product itself, not the fulfillment packaging.
 - Container: `aspect-[5/4]` sitting at the top of the card, full-width edge-to-edge (the wrapping card has `overflow-hidden` so the rounded corners clip the image cleanly). No overlay copy — title, price row, and per-shot price sit in their own block immediately below the image, above the shot-count description and bullets.
 - `sizes="(max-width: 768px) 100vw, 560px"` matches the other section assets.
 
@@ -355,3 +355,92 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - Section wrapper, CTA, and guarantee row are inline server-rendered JSX in `page.tsx`. No new client islands. No new files.
 
 **Perf delta.** Not captured yet. Section 7 adds zero JavaScript (pure server component plus inline JSX) and one new image fetch (`/UniversityOfCambridge.png`, lazy-loaded). The grey-card grid is Tailwind utilities only. Bytes should be the cheapest section since S5 / S6. Re-measure with median-of-5 Lighthouse mobile or PSI per the protocol established after the Section 3 hygiene run.
+
+### Section 8 — Customer Reviews ✅
+
+**Job.** Social proof beat. After named athletes (S6) and named institutions (S7), this is the long-tail proof: dozens of unnamed customers reporting in their own words, dated and rated. Closes the credibility stack before the App callout and FAQ utility beats land.
+
+**Reference.** Existing `/start` Section 9 (`CROCustomerReviews`), reused verbatim. Ships as a 3x-rendered infinite-loop carousel with auto-advance (3.5s), pause-on-interact, dot nav, touch swipe, and expand-on-card-tap for long reviews. The component is already built in the v2.1 visual register — navy `#1B2757` accents, gold `#F59E0B` stars, white cards with `black/12` borders, `var(--brand-radius-container)` corners.
+
+**Layout.**
+- Mobile-first single column. The carousel handles its own card widths (300px mobile, 340px desktop) and gap (16px).
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — same rhythm as S5 / S6 / S7.
+- Order: `<CROCustomerReviews />` (component owns H2, carousel, dot nav, expand affordance, and a new section closer: full-width navy "Order Now" pill plus a 3-bullet trust strip).
+- The carousel is now followed by a navy "Order Now" CTA and a trust-anchor row (🔒 Secure Checkout · ✅ 100-Day Guarantee · 📦 Free Shipping). Pattern adapted from Magic Mind's checkout reassurance block. Earlier scope deliberately omitted a CTA here ("Reviews IS the proof beat"), but the social-proof beat without a closing nudge left the section feeling unfinished — the trust-anchored CTA at the close converts the proof into intent without reading pushy because the trust strip frontloads the friction-reduction.
+
+**Image.** All assets owned by `CROCustomerReviews` (gold star SVGs inline, no portrait photos in this component since the reviews are anonymous text-and-name only). No new assets at section level.
+
+**Copy.** All review text lives in `CURATED_TESTIMONIALS` (`app/lib/customerTestimonials.ts`). User-generated and quoted as written.
+
+**Claims to revisit before launch.**
+- Individual review copy is user-generated. Run `/review-claims` on the curated testimonials array to confirm no individual quote makes a regulated claim that would need EFSA hedging or removal.
+- `CURATED_TESTIMONIALS` is currently a hardcoded array. If a Loox sync process exists, no automation has been wired — refresh is manual.
+
+**Architecture notes.**
+- `CROCustomerReviews` reused via **dynamic import** in `page.tsx` (same pattern as S6 `CROAthletes`). Client island with carousel state (3x render + auto-advance interval + pause flag + touch-swipe handlers); dynamic import keeps its hydration cost outside the initial TBT window. `min-h-[680px]` placeholder on the loading fallback prevents CLS during client-side navigation.
+- One in-place edit to `CROCustomerReviews`: the subtitle below the H2 was rewritten from "Eight stories from the people who use CONKA every day." to "A few favourites from our 622+ verified reviews." The original framed the curation as a small total (reads scarce); the new version frames it as a deliberate selection from the larger verified base already referenced in the S1 hero ("622+ reviews"), turning the 8 cards from "all we have" into "the highlights". Affects `/start` too — same improvement on both pages.
+
+**Perf delta.** Not captured yet. Heaviest client island added to `/startv2` since S6 (`CROAthletes`). Measure with median-of-5 Lighthouse mobile or PSI; if TBT regresses past the 200ms budget, the lever is the same one used for `IngredientsGrid` post-S4.
+
+### Section 9 — App Callout ✅
+
+**Job.** "Don't trust us, test yourself" beat. After eight sections of credibility, the remaining objection is "what if it doesn't work for me specifically?". S9 answers: the CONKA app gives the same Cambridge-derived cognitive test that generates every in-app metric on the page. Install it, test before, test after, watch your data move. Ties back to S2's "1,000+ brains tested through our app" and S7's "100,000+ cognitive tests" — the consistent measurement thread through the page. Section's primary action stays product trial (`FUNNEL_URL`) — S9 sits inside the page's conversion stack and the app install is positioned as the optional measurement layer, not the load-bearing CTA.
+
+**Reference.** Started from `/start`'s Section 10 (`CROAppCallout`) and restructured. The original two-paragraph explanation of the cognitive test mechanism was collapsed into a tighter subline plus a 3-step visual grid. The "Try CONKA risk-free" pill stays as the primary CTA; the App Store + Play Store install buttons sit underneath as a small icon-only row with an inline caption, representing the optional measurement layer. The 4-line guarantee tile compressed to a one-line statement. Same information shape as the original, significantly less wall-of-text.
+
+**Layout.**
+- Mobile-first single column, `max-w-[560px]` centred inside the component.
+- **Soft-blue tinted section** (`var(--brand-tint)`, the same `#f4f5f8` surface S3 uses). Both top and bottom padding are `4rem` — the tint band needs the air around it so it reads as a deliberate register-break, not a floating colour patch. Creates a second tint beat on the page (S3 caffeine + S9 app) inside the otherwise-white S1-to-S10 run.
+- Order: `<CROAppCallout />` (component owns H2 → subline → 4:3 image tile → 3-step grid → install buttons → guarantee line → /app link).
+
+**Image.** Asset `/lifestyle/ConkaAppYoga.jpg` owned by the component (4:3 contained tile, `black/[0.04]` backdrop reading slightly darker than the tinted section, `border-black/12`, `var(--brand-radius-container)` corners). No new assets at section level.
+
+**Copy.**
+- H2 kept verbatim: "We don't ask if CONKA works. We measure it."
+- Subline: "Take CONKA daily. Run the cognitive test in the app whenever you want. After a month, the numbers tell you whether it worked. Not us." Reframes the measurement as periodic testing across a month of daily use rather than a one-off before/after, which matches how customers actually use the product. Ties back to the H2 with "Not us" as the closing punchline.
+- 3-step grid: 01 Install + test → 02 Take CONKA daily → 03 Track over time. Each cell is a `bg-white border border-black/10 rounded-[12px]` tile with a `#1B2757` step number eyebrow. **Step 01 carries two small inline App Store + Play Store icon links** (16px SVGs in 28x28 hit areas, navy stroke, soft navy hover). The icons are embedded here rather than promoted to a standalone install row because S9 is part of the page's conversion stack — product trial is the load-bearing action and app install is the optional measurement layer. People who want the app find it; people who don't aren't pushed.
+- **Guarantee card** sits above the primary CTA, matching the step-tile grammar (`bg-white border border-black/10 rounded-[12px] p-5 text-center`). H3 in 18px navy semibold: `{GUARANTEE_DAYS} days to feel the difference, or your money back.` Body in 13px grey: "No returns. No hassles. No questions. The only thing you have to lose is the fog." Voice adapted from Magic Mind's "100 Days to Feel the Difference" guarantee pattern: emotional promise lead, friction-free body, "fog" as the cost of inaction (maps to CONKA's clarity positioning since "the inverse of fog" is the product's core benefit). Above-CTA placement frames the guarantee as the trust anchor that justifies clicking.
+- Primary CTA: `CROPillCTA` rendering "Try CONKA risk-free" as a full-width navy pill defaulting to `FUNNEL_URL`.
+- `/app` link as a small grey-on-navy underlined closer below the CTA ("Learn more about the app →"), low emphasis.
+
+**Claims to revisit before launch.**
+- "Cambridge-derived cognitive test" — load-bearing trust claim, needs substantiation alongside the S7 Cambridge framing. Run `/review-claims`.
+- Guarantee anchors via shared `offerConstants`; stays in lockstep with S1 / S4 / S5 / S6 / S7.
+- App store URLs hardcoded in the component (`APP_STORE_URL`, `PLAY_STORE_URL`). Verify the IDs against the live App Store / Play Store listings before paid traffic.
+
+**Architecture notes.**
+- `CROAppCallout` reused via **direct import** in `page.tsx`, NOT `dynamic()`. Pure server component (no `"use client"`, no hooks, no client-side state). Same call as S7 `CROResearch`.
+- Component was **edited in place**: full content restructure as described above. Affects `/start`'s S10 too — acceptable, since `/start` is heading for deprecation and the new layout is an improvement.
+- Install-button SVG icons inlined as local `AppStoreIcon` / `PlayStoreIcon` components rather than reusing `app/components/AppInstallButtons.tsx`. The shared component's existing variants don't match the v2.1 pill grammar; a new variant would be the proper refactor, but the inline path was the right call for shipping speed.
+
+**Perf delta.** Not captured yet. Component still adds zero JavaScript and one image fetch (`/lifestyle/ConkaAppYoga.jpg`, lazy-loaded). Install buttons are static `<a>` anchors. Should be a cheap section.
+
+### Section 10 — FAQ ✅
+
+**Job.** Last objection-handling beat before the page footer. Native single-open accordion answering the most common pre-purchase questions (two formulas, just one shot, delivery, ingredient transparency, side effects, refund mechanics). Closes the conversion narrative with implicit reassurance rather than a hard CTA.
+
+**Reference.** Existing `/start` Section 11 (`CROFAQv2`), reused verbatim. Native `<details name="...">` accordion (Chromium 120+, Safari 17+) with graceful multi-open fallback on older browsers. Zero client JS. All guarantee anchors via `GUARANTEE_LABEL_FULL` and `GUARANTEE_COPY_TRIAL` from `offerConstants` so the language stays in lockstep with the rest of the page.
+
+**Layout.**
+- Mobile-first single column.
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>`.
+- Order: `<CROFAQv2 />` (component owns H2, accordion list, any internal CTAs / links).
+- No section-level CTA below; FAQ closes with implicit reassurance and hands off to the page footer.
+
+**Image.** None. FAQ is text-only.
+
+**Copy.** All Q&A content lives inside the `FAQ_ITEMS` array in `CROFAQv2.tsx`. Touches on EFSA-adjacent territory (focus, clarity, energy, brain health) plus operational claims (delivery times, refund mechanics, ingredient transparency).
+
+**Claims to revisit before launch.**
+- The full FAQ array carries the highest concentration of efficacy-adjacent copy on the page. Run `/review-claims` over every Q&A pair before paid traffic.
+- Guarantee anchors via shared constants; updates to `offerConstants.ts` propagate automatically.
+
+**Architecture notes.**
+- `CROFAQv2` reused via **direct import** in `page.tsx`, NOT `dynamic()`. Pure server component, no client JS (native `<details>` handles open / close). Same call as S7 / S9.
+- Zero edits to `CROFAQv2` itself.
+
+**Perf delta.** Not captured yet. Pure HTML + native `<details>`, zero JavaScript cost. Should be the cheapest section on `/startv2`.
+
+---
+
+**Cutover readiness.** With S8 / S9 / S10 landed, `/startv2` now mirrors every numbered section on `/start` (S6 Benefit Cards excepted, deliberately skipped). The legal `LandingDisclaimer` footer block from `/start` is still pending — when wired, `/startv2` becomes a structural superset of `/start` and the cutover (redirect + paid-traffic switch + legacy sunset) can be planned.
