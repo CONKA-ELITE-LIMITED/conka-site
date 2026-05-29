@@ -6,6 +6,14 @@
 
 ## May 2026
 
+### 2026-05-29 -- Meta attribution diagnosis and headless tracking fix
+
+Diagnosed why Meta ads were spending without learning. Root cause was not the tracking code (which is sound) but the headless infrastructure: checkout ran on `conka-6770.myshopify.com` while the storefront is `www.conka.io`, so the Meta `_fbp`/`_fbc` cookies could not follow a shopper from ad click through to purchase, and Meta could not attribute conversions. The single pixel (`1138202151698404`) was confirmed correctly aligned across ads, site, and CAPI. Fixed the cookie split outside the codebase by moving checkout to the `shop.conka.io` subdomain (Vercel DNS + Shopify primary domain) and repairing the legacy theme's redirect (it was already present but broken by a stale myshopify-only hostname check plus a syntax error). This commit captures the full diagnosis and the remaining scoped work; no application code changed yet. Remaining tracking refinements (pixel load timing, InitiateCheckout de-dup, and a gated server-side Purchase webhook) are scoped in the plan doc and ticketed as SCRUM-1043 and SCRUM-1044.
+
+**Modified:** `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md` (new), `docs/development/featurePlans/meta-tracking-hardening.md` (new).
+
+---
+
 ### 2026-05-28 -- Landing page v2.1: Section 5 buy-box wired to cart drawer, layout polish
 
 CTA on the Section 5 buy box now adds to the cart drawer directly rather than routing into the funnel page, mirroring the `CROBuyBox` quick-buy pattern that already ships on `/start`. The button calls `CartContext.addToCart(variantId, 1, sellingPlanId, { location: "buy_box", source: "startv2_section_5" })` with the current cadence's variant and selling-plan IDs (pulled at module scope via `getCadenceVariantByProductHeroId("03", ...)` and passed into `BuyBoxCard` as new `subVariant` and `otpVariant` props), so toggling between sub and OTP now switches both the displayed price AND the variant added to cart. Button gains a disabled state while the cart mutation is in flight or if the variant is missing, with `disabled:opacity-50 disabled:cursor-not-allowed` styling. The `funnelUrl` prop, `Link` import, and the previously-mentioned "routing to FUNNEL_URL where final cadence is chosen" model all come out. This is a quick-buy moment now, not a trust-anchor preview. Two smaller polish items shipped in the same commit: the guarantee copy under the CTA bumped from `text-black/65` to `text-black` so both the guarantee and the cancel-anytime line read at full weight, and the title + price + per-shot block reverted from its absolute overlay on the image back to a normal flow position below the image and above the "56 shots = 28 servings" description (image now leads as the first visual beat, copy follows in the lower half). Doc brief updated to match.
