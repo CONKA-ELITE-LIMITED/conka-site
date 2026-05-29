@@ -79,11 +79,11 @@ export default function CROAppCallout() {
         We measure it.
       </h2>
 
-      {/* ===== Subline (concrete, ties back to the H2: "not us, the
-                 numbers tell you") ===== */}
+      {/* ===== Subline (periodic testing across a month of daily CONKA,
+                 not a one-off before/after) ===== */}
       <p className="text-[16px] text-black/85 leading-relaxed mb-7">
-        Run a quick cognitive test before CONKA. Run it again in 30 days.
-        The numbers tell you whether it worked. Not us.
+        Take CONKA daily. Run the cognitive test in the app whenever you
+        want. After a month, the numbers tell you whether it worked. Not us.
       </p>
 
       {/* ===== Image tile ===== */}
