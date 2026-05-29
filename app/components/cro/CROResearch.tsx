@@ -13,7 +13,10 @@ import Image from "next/image";
  * strip as supporting credibility tiers.
  * ========================================================================== */
 
+// Note: /public/UniversityOfCambridge.png (hero photograph) and
+// /public/logos/UniversityOfCambridge.png (logo mark) are distinct assets.
 const RESEARCH_PARTNERS = [
+  { src: "/logos/UniversityOfCambridge.png", alt: "University of Cambridge" },
   { src: "/logos/UniversityOfDurham.png", alt: "Durham University" },
   { src: "/logos/UniversityOfExeter.png", alt: "Exeter University" },
   { src: "/logos/MadeInBritain.png", alt: "Made in Britain" },
@@ -43,20 +46,28 @@ export default function CROResearch() {
         World-Class Results.
       </h2>
 
-      {/* ===== Partner logo strip ===== */}
-      <div className="flex justify-center items-center gap-6 sm:gap-10 mb-7 flex-wrap">
+      {/* ===== Partner logos — 4 equal-sized grey rectangles in a 2x2 grid =====
+           Each cell is its own soft grey card with the logo centred inside,
+           rather than one large grey container holding all four. Grid is
+           capped to `max-w-[420px]` so the tiles stay compact on desktop;
+           internal padding is light so each logo reads as zoomed-in within
+           its cell rather than floating in margin. */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8 mx-auto max-w-[420px]">
         {RESEARCH_PARTNERS.map((partner) => (
           <div
             key={partner.src}
-            className="relative w-[110px] h-[80px] sm:w-[140px] sm:h-[100px]"
+            className="bg-black/[0.04] rounded-[12px] overflow-hidden flex items-center justify-center aspect-[2/1]"
           >
-            <Image
-              src={partner.src}
-              alt={partner.alt}
-              fill
-              sizes="140px"
-              className="object-contain"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={partner.src}
+                alt={partner.alt}
+                fill
+                sizes="(max-width: 768px) 38vw, 200px"
+                className="object-contain"
+                style={{ transform: "scale(1.5)" }}
+              />
+            </div>
           </div>
         ))}
       </div>

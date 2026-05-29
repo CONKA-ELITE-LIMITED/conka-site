@@ -196,31 +196,20 @@ function RosterStrip({
             aria-selected={isActive}
             aria-label={`${athlete.name}, ${athlete.role}`}
             onClick={() => onSelect(i)}
-            className={`snap-start flex-shrink-0 w-[88px] aspect-square rounded-[14px] overflow-hidden border-2 flex flex-col bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] ${
+            className={`relative snap-start flex-shrink-0 w-[88px] aspect-square rounded-[14px] overflow-hidden border-2 bg-black/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] ${
               isActive
                 ? "border-[#1B2757]"
                 : "border-black/12 hover:border-black/30 opacity-75 hover:opacity-100"
             }`}
           >
-            <div className="relative flex-1 bg-black/[0.04]">
-              <Image
-                src={athlete.image}
-                alt=""
-                fill
-                sizes="88px"
-                loading="lazy"
-                className="object-cover"
-              />
-            </div>
-            <div className="px-1.5 py-1.5 flex items-center justify-center">
-              <span
-                className={`text-[11px] leading-none text-center truncate w-full ${
-                  isActive ? "text-black font-semibold" : "text-black/65"
-                }`}
-              >
-                {athlete.name.split(" ")[0]}
-              </span>
-            </div>
+            <Image
+              src={athlete.image}
+              alt=""
+              fill
+              sizes="88px"
+              loading="lazy"
+              className="object-cover"
+            />
           </button>
         );
       })}
