@@ -24,6 +24,14 @@ const BuyBoxCard = dynamic(() => import("./BuyBoxCard"), {
   loading: () => <div className="min-h-[700px]" />,
 });
 
+// Section 6 athlete credibility carousel. Reused from `/start` via import
+// (same component, no edits). Dynamic-imported so its carousel hydration
+// stays off the initial bundle.
+const CROAthletes = dynamic(
+  () => import("../components/cro/CROAthletes"),
+  { loading: () => <div className="min-h-[1100px]" /> },
+);
+
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
   description:
@@ -74,6 +82,28 @@ const S5_TRUST_BADGES = [
   { line1: "University", line2: "Research" },
   { line1: "No", line2: "Caffeine" },
   { line1: "100-Day", line2: "Guarantee" },
+];
+
+// Section 6 sport-breadth marquee. Broader than the 7-athlete roster on
+// purpose — captures the full range of sports CONKA athletes compete in
+// rather than only the sports we have signed quotes for. Verify each
+// entry against the actual roster before launch.
+const S6_SPORTS = [
+  "Premiership Rugby",
+  "WBO Boxing",
+  "NFL",
+  "Showjumping",
+  "Motorsport",
+  "Rugby Sevens",
+  "MMA",
+  "Mountain Biking",
+  "Football",
+  "Olympic Track",
+  "NHL",
+  "Triathlon",
+  "British GT",
+  "Athletics",
+  "Ultramarathon",
 ];
 
 export default function StartV2Page() {
@@ -660,6 +690,91 @@ export default function StartV2Page() {
                 productImage="/formulas/box/BothBox.jpg"
                 productImageAlt="Two CONKA shipping boxes side by side with a Flow and a Clear bottle in the foreground"
               />
+            </div>
+          </div>
+        </section>
+
+        {/* ===== 6. ATHLETE CREDIBILITY ===== */}
+        <section
+          className="brand-section brand-bg-white"
+          style={{ paddingTop: 0, paddingBottom: "4rem" }}
+          aria-label="Trusted at the highest level"
+        >
+          <div className="brand-track">
+            <div className="mx-auto max-w-[560px]">
+              {/* Sport-breadth marquee. Reuses the `marquee` keyframe from
+                  globals.css. Renders the sport list twice and translates -50%
+                  so the loop is seamless. Pushed to full viewport bleed with
+                  the `50% - 50vw` margin trick so the dark strip overrides
+                  the section gutter on every breakpoint. `motion-safe:`
+                  variant guards against `prefers-reduced-motion`. Screen
+                  readers get a single comma-joined list via sr-only. */}
+              <div className="relative overflow-hidden bg-[#1B2757] py-3 mb-8 w-screen ml-[calc(50%-50vw)]">
+                <span className="sr-only">
+                  CONKA athletes compete in: {S6_SPORTS.join(", ")}.
+                </span>
+                <div
+                  className="inline-flex whitespace-nowrap [will-change:transform] motion-safe:animate-[marquee_60s_linear_infinite]"
+                  aria-hidden="true"
+                >
+                  {[...S6_SPORTS, ...S6_SPORTS].map((sport, i) => (
+                    <span
+                      key={`${sport}-${i}`}
+                      className="text-[12px] uppercase tracking-[0.18em] font-semibold text-white mx-5"
+                    >
+                      {sport}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <CROAthletes />
+
+              <div className="mt-10 flex justify-center">
+                <Link
+                  href={FUNNEL_URL}
+                  className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+                >
+                  Join the Elite
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12H19M19 12L12 5M19 12L12 19"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" fill="#10B981" />
+                  <path
+                    d="M8 12.5L10.5 15L16 9.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-[13px] text-black">
+                  100-day money back guarantee
+                </span>
+              </div>
             </div>
           </div>
         </section>

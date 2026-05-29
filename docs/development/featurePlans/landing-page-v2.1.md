@@ -287,3 +287,35 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - Eyebrow copy gates on `S5_SAVINGS_PERCENT > 0` so a malformed pricing payload (compare-at missing AND OTP price 0) still produces coherent copy (drops the percentage, keeps the rest).
 
 **Perf delta.** Not captured yet. Section 5 adds one new image asset (`BothBox.jpg`, fresh fetch) and a small dynamic-imported client chunk for `BuyBoxCard` (toggle plus conditional render of price/specs). The chunk loads lazily after the main bundle, so hydration should land outside the TBT window the same way `IngredientsGrid` does post-S4 fix. Re-measure with median-of-5 or PSI per the protocol established after Section 3 hygiene.
+
+### Section 6 — Athlete Credibility ✅
+
+**Job.** Land the social-proof beat: who actually uses CONKA and why a paid-traffic visitor should care. First section after the buy box. The earlier doc call (athletes as Section 7 in a dark Ketone-IQ register, "page reads warm → warm → warm → DARK → warm") has been scrapped. The warm Magic Mind register kept working through S1-S5 and the user wants to ride it through the rest of the page rather than introduce a register break. The `CROAthletes` component already lives at `app/components/cro/CROAthletes.tsx` and renders an Olympic / world-champion carousel plus an Informed Sport block. We reuse it import-only, wrap with a credibility eyebrow, and ship.
+
+**Reference.** Continues the v2.1 pattern of eyebrow + body + (sometimes) trust badge / guarantee row. The Informed Sport block at the bottom of `CROAthletes` already acts as the rational closing anchor, so this section deliberately does not add a navy CTA or guarantee row after it (closing rhythm would feel triple-stacked: athletes carousel + Informed Sport block + CTA + guarantee).
+
+**Layout.**
+- Mobile-first single column, `max-w-[560px]` centred on desktop.
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — same rhythm as S5.
+- Order: credibility eyebrow pill → `<CROAthletes />` (the component does its own H2 "Trusted where focus can't fail.", subhead, 7-athlete carousel with arrow nav and touch swipe, 7-portrait roster strip, Informed Sport block with 160px logo + "280 banned substances" copy).
+- No bottom CTA or guarantee row. The page's next conversion CTA lands in the next section.
+
+**Image.**
+- All athlete assets and the Informed Sport logo are owned by `CROAthletes`. Section 5 does not introduce any new image assets in `page.tsx`. Athletes carousel uses `/testimonials/athlete/*.jpg` (7 portraits, lazy-loaded for the roster, eager for the active slide) and `/logos/InformedSportLogo.png`.
+
+**Copy.**
+- Eyebrow: "**Trusted at the highest level.** Olympic medallists, world champions, and 5,000+ daily users." Bold lead frames the credibility tier, the clarifier delivers the proof. Same pill shape as the S5 eyebrow (`border-2 border-black/85 rounded-[16px]` with a navy 5-point star marker instead of a green check, to differentiate athlete-register from sub-confirmation register).
+- All other copy lives inside `CROAthletes` (athlete names, sports, roles, quotes, the Informed Sport body line about 280 banned substances and WADA / Olympic committee trust).
+- No em-dashes, no new claims authored at this section level.
+
+**Claims to revisit before launch.**
+- "5,000+ daily users" in the eyebrow — same number used in Hero and elsewhere. Verify still accurate at launch.
+- "Olympic medallists, world champions" — already used by S2's credibility badge ("professional sports clubs, and the military") and by `CROAthletes` internally. The seven athletes featured (Dan Norton, Josh Stanton, Chris Billam-Smith, Sienna Charles, Fraser Dingwall, Adam Azim, Jack Willis) need verified relationships and consent for testimonial quotes before this section can ship to paid traffic.
+- "Informed Sport certified for 280 banned substances" — already in `CROAthletes`, verified by the legacy `/start` page. Should pass `/review-claims` without changes.
+
+**Architecture notes.**
+- `CROAthletes` reused via `dynamic()` import in `page.tsx` (same pattern as `IngredientsGrid` and `BuyBoxCard`) with a `min-h-[1100px]` placeholder. Default SSR keeps the carousel HTML in the initial response; the JS chunk for carousel state, swipe handlers, and keyboard nav is code-split so the hydration cost stays out of the initial TBT window.
+- Zero edits to `CROAthletes` itself. The component already uses the v2.1 grammar (rounded corners, navy `#1B2757` accents, soft `black/[0.04]` backgrounds) so no adapter or wrapper component is needed.
+- Section 6 in the /startv2 numbering is the legacy `/start` Section 7 — the Benefit Cards beat (`/start` Section 6, "+28.96% measured" stat cards) is deliberately skipped per founder's call that the athletes section absorbs the "measured, not marketed" proof more powerfully. The Benefit Cards component may return as a future section or get retired entirely.
+
+**Perf delta.** Not captured yet. Section 6 reuses an existing client component (`CROAthletes`, ~345 lines). Dynamic-imported so its bundle stays code-split. Image weight: 7 portrait JPGs (one priority-eager for the active carousel slide, six lazy-loaded for the roster strip) plus the Informed Sport PNG logo. Measure with median-of-5 or PSI.
