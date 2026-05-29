@@ -292,7 +292,7 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 
 **Job.** Land the social-proof beat: who actually uses CONKA and why a paid-traffic visitor should care. First section after the buy box. The earlier doc call (athletes as Section 7 in a dark Ketone-IQ register, "page reads warm → warm → warm → DARK → warm") has been scrapped. The warm Magic Mind register kept working through S1-S5 and the user wants to ride it through the rest of the page rather than introduce a register break. The `CROAthletes` component already lives at `app/components/cro/CROAthletes.tsx` and renders an Olympic / world-champion carousel plus an Informed Sport block. We reuse it import-only, wrap with a credibility eyebrow, and ship.
 
-**Reference.** Continues the v2.1 pattern of eyebrow + body + (sometimes) trust badge / guarantee row. The Informed Sport block at the bottom of `CROAthletes` already acts as the rational closing anchor, so this section deliberately does not add a navy CTA or guarantee row after it (closing rhythm would feel triple-stacked: athletes carousel + Informed Sport block + CTA + guarantee).
+**Reference.** Mirrors what S5 established at the bottom of the section (CTA + 100-day guarantee row) but leads with a full-bleed dark-navy sport-breadth marquee instead of a bordered callout. The Informed Sport block inside `CROAthletes` carries the rational anchor; the marquee carries the visual punctuation. Section-level callouts (pill, marquee, or none) are chosen per section based on what the credibility lead actually needs, not as a fixed scaffolding element.
 
 **Layout.**
 - Mobile-first single column, `max-w-[560px]` centred on desktop.
@@ -319,3 +319,37 @@ Measurement protocol going forward: median-of-5 Lighthouse runs on Vercel previe
 - Section 6 in the /startv2 numbering is the legacy `/start` Section 7 — the Benefit Cards beat (`/start` Section 6, "+28.96% measured" stat cards) is deliberately skipped per founder's call that the athletes section absorbs the "measured, not marketed" proof more powerfully. The Benefit Cards component may return as a future section or get retired entirely.
 
 **Perf delta.** Not captured yet. Section 6 reuses an existing client component (`CROAthletes`, ~345 lines). Dynamic-imported so its bundle stays code-split. Image weight: 7 portrait JPGs (one priority-eager for the active carousel slide, six lazy-loaded for the roster strip) plus the Informed Sport PNG logo. Measure with median-of-5 or PSI.
+
+### Section 7 — Research / Cambridge ✅
+
+**Job.** Land the scientific-credibility beat after the athlete proof. S2 mentioned "leading UK universities" generically; S7 names Cambridge, Durham, Exeter, and Made in Britain specifically through a 2x2 partner-logo grid inside `CROResearch`, and the section's hero is a photograph of Cambridge itself. Converts research-trusting buyers who want the academic anchor before the next CTA.
+
+**Reference.** Ketone-IQ's research-partners block: a 2x2 grid of partner marks where the structure comes from tinted backgrounds rather than letting logos float on white. CONKA's version puts each logo in its own small grey-tinted rectangle (four equal-sized cells) so the credibility tier reads as a deliberate roster of named institutions, not a logo strip.
+
+**Layout.**
+- Mobile-first single column, `max-w-[560px]` centred on desktop.
+- `<section className="brand-section brand-bg-white" style={{ paddingTop: 0, paddingBottom: "4rem" }}>` — zero top padding so S7 lands tight under S6's guarantee row.
+- Order: `<CROResearch />` (Cambridge hero image full-bleed → centred H2 → 2x2 partner-logo grid → description) → navy CTA → 100-day guarantee row.
+- No section-level callout. The Cambridge hero photograph and the named-partner grid carry the credibility lead on their own; a bordered pill or marquee on top of them would double-stamp the same claim.
+- The inner H2 of `CROResearch` is centred (`text-center` in the component) while S1-S6 v2.1 H2s are left-aligned. Deliberate break: the centred H2 reads as a "framed credential" appropriate to the academic register.
+
+**Image.**
+- Hero: `/UniversityOfCambridge.png` — photograph of the university (not a logo mark), sitting at the /public root. Full-bleed on mobile, contained at `md+` with `rounded-[var(--brand-radius-container)]`. Same asset already used on /start's research beat.
+- Partner-logo grid (inside `CROResearch`): 2x2 layout (`grid grid-cols-2 gap-3 sm:gap-4 mx-auto max-w-[420px]`) where each cell is its own small `bg-black/[0.04] rounded-[12px] aspect-[2/1] overflow-hidden` rectangle. No internal padding; the logo fills via `object-contain` and is scaled to `transform: scale(1.5)` so the logo content reads zoomed-in while the surrounding whitespace in each source asset gets clipped at the cell edge. Four cells, four partners: Cambridge (`/logos/UniversityOfCambridge.png`), Durham (`/logos/UniversityOfDurham.png`), Exeter (`/logos/UniversityOfExeter.png`), Made in Britain (`/logos/MadeInBritain.png`).
+- All assets lazy-loaded by default. If `/UniversityOfCambridge.png` (the hero photo) costs FCP / LCP in a future Lighthouse run, resize and convert to AVIF as a follow-up.
+
+**Copy.**
+- No section-level body copy authored in `page.tsx`. The H2 ("World-Class Research. World-Class Results."), partner-grid alt text, and description ("Our research is led by experts in cognitive science and brain performance...") all live inside `CROResearch` and ship from the component.
+- CTA: "Try CONKA Today" + right-arrow SVG, content-width navy pill (text-lg, py-4 px-10), centred via `<div className="mt-10 flex justify-center">`. `<Link>` to `FUNNEL_URL`, mirroring S2 / S3 / S4 / S6.
+- Guarantee row: hard-coded "100-day money back guarantee" with the green-check SVG, identical to S1 / S4 / S6.
+
+**Claims to revisit before launch.**
+- `CROResearch`'s existing description ("leading UK universities and research labs, pioneering new ways for anyone to access elite-level focus") — already shipped on /start, but should pass `/review-claims` for the /startv2 voice and audience.
+- Each named partner (Cambridge, Durham, Exeter, Made in Britain) — verify the relationship is current and the logo usage is permitted under each institution's / certification's brand guidelines before paid traffic sees this.
+
+**Architecture notes.**
+- `CROResearch` is **edited in place** for this section. Two edits: (1) Cambridge added to `RESEARCH_PARTNERS` (Made in Britain retained). (2) Partner-strip rebuilt from a single flex row into a 2x2 grid where each cell is its own equal-sized grey-tinted rectangle. Both edits propagate to /start's S8 (the only other consumer of this component), which is acceptable — same credibility surface, same audience tier, same intent on both pages.
+- Reused via **direct import** in `page.tsx`, NOT `dynamic()`. `CROResearch` is a pure server component (no `"use client"`, no hooks, no client-side state), so `dynamic()` would add bundle-splitting ceremony with zero perf benefit. The S6 dynamic-import was real value because `CROAthletes` carries carousel state, swipe handlers, and keyboard nav.
+- Section wrapper, CTA, and guarantee row are inline server-rendered JSX in `page.tsx`. No new client islands. No new files.
+
+**Perf delta.** Not captured yet. Section 7 adds zero JavaScript (pure server component plus inline JSX) and one new image fetch (`/UniversityOfCambridge.png`, lazy-loaded). The grey-card grid is Tailwind utilities only. Bytes should be the cheapest section since S5 / S6. Re-measure with median-of-5 Lighthouse mobile or PSI per the protocol established after the Section 3 hygiene run.
