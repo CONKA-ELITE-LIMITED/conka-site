@@ -12,6 +12,7 @@ import {
 } from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
+import FlowVideo from "./FlowVideo";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
@@ -279,20 +280,12 @@ export default function StartV2Page() {
                 professional sports clubs, and the military.
               </p>
 
-              {/* Bottle hero shot. Transform crops most of the top white space
-                  and aligns the bottles at the bottom of the visible frame. */}
-              <div className="relative aspect-[5/4] overflow-hidden mb-6 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[12px]">
-                <Image
-                  src="/formulas/both/BothHero.jpg"
-                  alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 560px"
-                  className="object-cover object-center"
-                  style={{
-                    transform: "scale(1.5) translateY(-15%)",
-                    transformOrigin: "center center",
-                  }}
-                />
+              {/* Bottle hero — rotating Flow render. 4:5 portrait, plays once
+                  on scroll-into-view and freezes on the last frame. See
+                  `app/startv2/FlowVideo.tsx` for the IntersectionObserver
+                  trigger and source ordering. */}
+              <div className="relative aspect-[4/5] overflow-hidden mb-6 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[12px] bg-black/[0.04]">
+                <FlowVideo />
               </div>
 
               {/* Two big stats — count up on scroll-in */}

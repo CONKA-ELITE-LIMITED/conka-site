@@ -47,3 +47,7 @@ next-env.d.ts
 
 # Loox review CSV (regenerate with npm run build:reviews when updated)
 app/lib/reviews.ly_*.csv
+
+# Raw video / image masters from marketing. Optimized exports live in
+# /public/; raw masters stay local for re-encoding and never ship to Vercel.
+/raw-assets/
