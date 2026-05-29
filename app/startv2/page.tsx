@@ -109,7 +109,7 @@ const S6_SPORTS = [
 
 export default function StartV2Page() {
   return (
-    <div className="min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+    <div className="min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)] overflow-x-hidden">
       <Navigation />
       <main>
         {/* ===== 1. HERO ===== */}
@@ -721,9 +721,12 @@ export default function StartV2Page() {
                   {[...S6_SPORTS, ...S6_SPORTS].map((sport, i) => (
                     <span
                       key={`${sport}-${i}`}
-                      className="text-[12px] uppercase tracking-[0.18em] font-semibold text-white mx-5"
+                      className="inline-flex items-center text-[12px] uppercase tracking-[0.18em] font-semibold text-white"
                     >
-                      {sport}
+                      <span>{sport}</span>
+                      <span className="mx-5 text-white" aria-hidden="true">
+                        ★
+                      </span>
                     </span>
                   ))}
                 </div>
