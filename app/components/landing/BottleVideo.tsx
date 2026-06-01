@@ -42,15 +42,13 @@ const FORMULA_VIDEOS = {
   },
 } as const;
 
-export type BottleVideoFormula = keyof typeof FORMULA_VIDEOS;
-
 interface BottleVideoProps {
-  formula: BottleVideoFormula;
+  formula: keyof typeof FORMULA_VIDEOS;
 }
 
 export default function BottleVideo({ formula }: BottleVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const video = FORMULA_VIDEOS[formula];
+  const sources = FORMULA_VIDEOS[formula];
 
   useEffect(() => {
     const el = videoRef.current;
@@ -71,21 +69,26 @@ export default function BottleVideo({ formula }: BottleVideoProps) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+    // `formula` re-runs the effect after the keyed <video> remounts, so the
+    // observer attaches to the new element rather than the unmounted one.
+  }, [formula]);
 
   return (
+    // key forces a remount if `formula` ever changes on a mounted instance —
+    // browsers do not re-read <source> children after the initial load.
     <video
+      key={formula}
       ref={videoRef}
       muted
       playsInline
       loop
       preload="metadata"
-      poster={video.poster}
+      poster={sources.poster}
       className="w-full h-full object-cover"
-      aria-label={video.label}
+      aria-label={sources.label}
     >
-      <source src={video.webm} type="video/webm" />
-      <source src={video.mp4} type="video/mp4" />
+      <source src={sources.webm} type="video/webm" />
+      <source src={sources.mp4} type="video/mp4" />
     </video>
   );
 }
