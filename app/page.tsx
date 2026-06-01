@@ -85,10 +85,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 4: PRODUCT GRID (scroll target for hero CTA) ===== */}
+      {/* ===== SECTION 4: DAILY BENEFITS — ingredient argument before the formula picker ===== */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Daily habit, lifelong benefits"
+      >
+        <div className="brand-track">
+          <LandingDailyBenefits />
+        </div>
+      </section>
+
+      {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}
       <div id="product-grid" className="scroll-mt-20">
         <section
-          className="brand-section brand-bg-tint"
+          className="brand-section brand-bg-white"
           aria-label="Find Your Formula"
         >
           <div className="brand-track">
@@ -96,16 +106,6 @@ export default function Home() {
           </div>
         </section>
       </div>
-
-      {/* ===== SECTION 5: DAILY BENEFITS — ingredient argument before trust seals ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Daily habit, lifelong benefits"
-      >
-        <div className="brand-track">
-          <LandingDailyBenefits />
-        </div>
-      </section>
 
       {/* ===== SECTION 6: RESEARCH — university credibility after the ingredient argument ===== */}
       <section

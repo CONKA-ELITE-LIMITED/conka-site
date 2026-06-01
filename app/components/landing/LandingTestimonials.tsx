@@ -105,6 +105,21 @@ function TestimonialCard({
       className="flex-shrink-0 self-start bg-white border border-black/12 flex flex-col overflow-hidden"
       style={{ width: cardWidth }}
     >
+      {/* Lifestyle photo — leads the card so the person registers before
+          the words. */}
+      {testimonial.photo && (
+        <div className="relative w-full aspect-[4/3] border-b border-black/12">
+          <Image
+            src={testimonial.photo}
+            alt={`${testimonial.name} using CONKA`}
+            fill
+            loading="lazy"
+            className="object-cover"
+            sizes="(max-width: 1024px) 300px, 340px"
+          />
+        </div>
+      )}
+
       <div className="p-5 flex flex-col gap-3">
         <SpecHeader testimonial={testimonial} />
 
@@ -143,20 +158,6 @@ function TestimonialCard({
           </p>
         </div>
       </div>
-
-      {/* Lifestyle photo */}
-      {testimonial.photo && (
-        <div className="relative w-full aspect-[4/3] border-t border-black/12">
-          <Image
-            src={testimonial.photo}
-            alt={`${testimonial.name} using CONKA`}
-            fill
-            loading="lazy"
-            className="object-cover"
-            sizes="(max-width: 1024px) 300px, 340px"
-          />
-        </div>
-      )}
     </div>
   );
 }
