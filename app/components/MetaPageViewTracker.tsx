@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { trackMetaPageView } from "@/app/lib/metaPixel";
+import { trackMetaPageView, isProductionHost } from "@/app/lib/metaPixel";
 
 /**
  * Fires a single Meta PageView with event_id and sends the same event to CAPI
@@ -14,6 +14,8 @@ export default function MetaPageViewTracker() {
   useEffect(() => {
     if (fired.current) return;
     if (!process.env.NEXT_PUBLIC_META_PIXEL_ID) return;
+    // Production storefront only — never fire on preview deploys or localhost.
+    if (!isProductionHost()) return;
 
     const tryFire = () => {
       if (typeof window === "undefined" || !window.fbq) return false;

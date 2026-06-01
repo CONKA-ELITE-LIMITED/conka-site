@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-01 -- Gate Meta pixel and CAPI to the production host
+
+The Meta pixel and Conversions API now fire only on `www.conka.io`. Previously every Vercel preview and branch deploy ran the same code with the same pixel ID, so dev and preview traffic was mixing into the production dataset the ads optimise on, dragging down data quality (Meta flagged it under "Confirm domains that belong to you"). A strict host gate is applied at four layers: the pixel base snippet no longer loads fbevents.js off-prod, the client event helper short-circuits, the page-view tracker bails early, and the CAPI route rejects non-production hosts. Pixel does not fire in local dev by design (use Meta Test Events). SCRUM-1048.
+
+**Modified:** `app/lib/metaPixel.ts`, `app/components/MetaPageViewTracker.tsx`, `app/api/meta/events/route.ts`, `app/layout.tsx`
+
 ### 2026-06-01 -- Meta attribution: config-pass findings and Phase 3 un-gated
 
 Documented the 2026-06-01 Meta Events Manager and Ads Manager review for the headless attribution fix. The entire Meta configuration layer is now ruled out as the cause: the apex domain `conka.io` was verified (it had never been, only the legacy myshopify domain was), the ads point at the correct single pixel with a 7-day-click window, and the stray third pixel is dead. Meta's own diagnostics confirmed the remaining problem is server-side, low `fbc` coverage through CAPI, malformed Purchase price data, and preview-deploy traffic polluting the dataset. On that evidence the Phase 2 gate was resolved to GO, so the server-side Purchase work was un-gated and ticketed (SCRUM-1046, SCRUM-1047), plus a new production-host-gating item (SCRUM-1048).

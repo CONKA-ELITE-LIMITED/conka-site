@@ -66,12 +66,27 @@ function hasPixelId(): boolean {
   );
 }
 
+/**
+ * Production storefront host. The pixel and CAPI fire only here — never on
+ * Vercel preview deploys (*.vercel.app) or localhost — so dev/preview traffic
+ * does not pollute the production dataset that ads optimise on.
+ */
+export const PRODUCTION_HOST = "www.conka.io";
+
+/** True only on the production storefront. Strict host match (no apex, no preview). */
+export function isProductionHost(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.location.hostname === PRODUCTION_HOST
+  );
+}
+
 /** Safe wrapper: fire fbq with eventID and send same event to CAPI. No-op if pixel unavailable or no ID. */
 function trackWithDedup(
   eventName: string,
   customData?: Record<string, unknown>
 ): void {
-  if (!hasPixelId() || !isPixelAvailable()) return;
+  if (!isProductionHost() || !hasPixelId() || !isPixelAvailable()) return;
   const eventId = generateEventId();
   const eventTime = Math.floor(Date.now() / 1000);
   try {
