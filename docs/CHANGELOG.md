@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Ingredient renders rolled out to ingredientsData and the formula picker
+
+The bespoke 3D ingredient renders (already used on /start and the recently upgraded benefit sections) are now the canonical ingredient imagery sitewide. All 16 image fields in ingredientsData.ts swapped from the old webp photos to /public/ingredients/renders/, which propagates to the /ingredients page (mobile carousel, desktop selector grid, and detail cards) and the PDP FormulaIngredients accordions on /conka-flow and /conka-clarity. Glutathione and ALCAR use the generic white-powder render until bespoke ones ship; Lemon Oil uses the Vitamin C render (citrus). The shared FormulaToggle product picker (used on /ingredients and the home What to Expect section) swapped its transparent PNG bottles with inner scaling hacks for the square FlowNew/ClearNew photographic tiles filling the buttons.
+
+**Modified:** `app/lib/ingredientsData.ts`, `app/components/FormulaToggle.tsx`
+
+---
+
 ### 2026-06-01 -- Home Daily Benefits expanded panels follow the PDP story-led structure
 
 After the PDP benefits pillars proved the story-led expanded panel reads better, the home page Daily Benefits component was brought in line. Expanded panels now run: app-data stat box first (the headline number from real users), then a prose story that weaves all three bolded ingredient names into the claim, then the renders the story just referenced, then the PMID as small print. Previously the panels led with unexplained ingredient tiles and each study sentence only mentioned one of the three ingredients. The internal field was renamed from studyObservation to story to match the PDP data shape.
