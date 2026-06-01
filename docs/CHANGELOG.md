@@ -6,6 +6,18 @@
 
 ## June 2026
 
+### 2026-06-01 -- Clean up cart infrastructure
+
+Removed a dead, unused duplicate cart hook (app/hooks/useCart.ts) that had its own checkout logic and did not carry the Meta attribution attributes. Nothing imported it, but it was a footgun: importing the wrong useCart would have silently broken attribution again (the live useCart is the one in CartContext). Also fixed the long-standing lint warning in CartContext by defining removeItem before updateQuantity (which calls it) and adding it to the dependency array. Cart context and hooks are now warning-free.
+
+**Modified:** `app/context/CartContext.tsx` · **Deleted:** `app/hooks/useCart.ts`
+
+### 2026-06-01 -- Fix: carry _fbp/_fbc through the funnel checkout
+
+The funnel page (/funnel) has its own checkout that bypasses the shared cart, so it was not attaching the Meta ad-click identifiers (_fbp/_fbc) to orders. Since the funnel is the primary paid-traffic destination, funnel orders were reaching Meta without the ad-click signal, weakening attribution. Extracted a single shared helper (buildMetaCartAttributes) used by both the global cart and the funnel checkout so they cannot drift again, and wired it into the funnel. Caught during the first live funnel test order, which showed the funnel line attributes but no _fbp/_fbc.
+
+**Modified:** `app/lib/funnelCheckout.ts`, `app/lib/metaPixel.ts`, `app/context/CartContext.tsx`
+
 ### 2026-06-01 -- /why-conka rebuilt as seven proof cards (SCRUM-1049 Phase 2)
 
 The why-conka page rebuilt from seven dense prose sections into seven expandable proof cards using the same card grammar as the PDP benefits pillars. Collapsed, each card shows a number, an outcome-led headline, one sentence, and an asset thumbnail; the whole page reads in about a minute. Expanded panels carry the asset large, a headline stat, and story prose, with app install buttons on the measurement card. The weak mission-statement reason was replaced by a 100-day risk-reversal card that routes into the CTA. All named clubs, athletes, and companies were removed (no standing permission to name partners), along with the unauthorised stress-score claim and the deprecated Balance protocol reference. The page converted from a client component with no metadata to a server component with full SEO metadata; the hero collapsed to an eyebrow plus a single-line headline; the closing CTA card now leads with the two-bottle product shot and is followed by the shared ExploreMoreRow (whose first link now points to CONKA Flow & Clear at /conka-both). Four orphaned legacy components deleted.

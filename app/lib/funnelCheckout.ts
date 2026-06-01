@@ -13,7 +13,7 @@ import {
   getOfferPricing,
   getCadenceFrequency,
 } from "./funnelData";
-import { trackMetaAddToCart, toContentId } from "./metaPixel";
+import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from "./metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "./tripleWhale";
 import { trackPurchaseAddToCart } from "./analytics";
 
@@ -55,7 +55,11 @@ export async function funnelCheckout(
   // 2. Get pricing for analytics
   const pricing = getOfferPricing(product, cadence);
 
-  // 3. Create cart via existing API
+  // 3. Create cart via existing API. Cart-level _fbp/_fbc (the ad-click
+  // identifiers) ride along so the order carries them for the server-side
+  // Purchase webhook — the funnel checkout is isolated from CartContext, so it
+  // must attach them itself via the same shared helper.
+  const cartAttributes = buildMetaCartAttributes();
   try {
     const response = await fetch("/api/cart", {
       method: "POST",
@@ -71,6 +75,7 @@ export async function funnelCheckout(
           { key: "_upsell_accepted", value: String(upsellAccepted) },
           { key: "_selected_product", value: product },
         ],
+        ...(cartAttributes.length > 0 && { cartAttributes }),
       }),
     });
 

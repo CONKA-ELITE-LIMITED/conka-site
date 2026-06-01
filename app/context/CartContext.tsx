@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { Cart, CartLine } from '@/app/lib/shopify';
 import { trackAddToCart } from '@/app/lib/tripleWhale';
 import { trackPurchaseAddToCart } from '@/app/lib/analytics';
-import { trackMetaAddToCart, toContentId, getFbp, getFbc } from '@/app/lib/metaPixel';
+import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
 import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
 
@@ -26,20 +26,6 @@ function buildCartAttributes(
   attrs.push({ key: "source", value: source });
   const frequency = getPlanFrequency(sellingPlanId);
   if (frequency) attrs.push({ key: "plan_frequency", value: frequency });
-  return attrs;
-}
-
-/**
- * Build cart-level attributes for Meta attribution. These are session-wide
- * (not per line item), so they go on the cart and flow to the order as
- * note attributes, where the server-side Purchase webhook reads them.
- */
-function buildCartLevelAttributes(): Array<{ key: string; value: string }> {
-  const attrs: Array<{ key: string; value: string }> = [];
-  const fbp = getFbp();
-  const fbc = getFbc();
-  if (fbp) attrs.push({ key: "_fbp", value: fbp });
-  if (fbc) attrs.push({ key: "_fbc", value: fbc });
   return attrs;
 }
 
@@ -176,7 +162,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     const attributes = buildCartAttributes(metadata, sellingPlanId);
-    const cartAttributes = buildCartLevelAttributes();
+    const cartAttributes = buildMetaCartAttributes();
 
     setLoading(true);
     setError(null);
@@ -278,6 +264,45 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart?.id]);
 
+  // Remove item from cart (defined before updateQuantity, which calls it)
+  const removeItem = useCallback(async (lineId: string): Promise<void> => {
+    const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
+
+    if (!cartId) {
+      setError('No cart found');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'remove',
+          cartId,
+          lineId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.cart) {
+        setCart(data.cart);
+      } else {
+        throw new Error(data.error || 'Failed to remove item');
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to remove item';
+      setError(message);
+      console.error('Remove item error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [cart?.id]);
+
   // Update item quantity
   const updateQuantity = useCallback(async (lineId: string, quantity: number): Promise<void> => {
     const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
@@ -321,46 +346,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [cart?.id]);
-
-  // Remove item from cart
-  const removeItem = useCallback(async (lineId: string): Promise<void> => {
-    const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
-
-    if (!cartId) {
-      setError('No cart found');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'remove',
-          cartId,
-          lineId,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.cart) {
-        setCart(data.cart);
-      } else {
-        throw new Error(data.error || 'Failed to remove item');
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to remove item';
-      setError(message);
-      console.error('Remove item error:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [cart?.id]);
+  }, [cart?.id, removeItem]);
 
   // Clear cart (local only - for after checkout)
   const clearCart = useCallback((): void => {
