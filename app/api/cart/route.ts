@@ -5,6 +5,7 @@ import {
   CREATE_CART,
   ADD_TO_CART,
   UPDATE_CART_LINES,
+  UPDATE_CART_ATTRIBUTES,
   REMOVE_FROM_CART,
   GET_CART,
 } from '@/app/lib/shopifyQueries';
@@ -12,6 +13,9 @@ import {
 const cartLineAttributesSchema = z
   .array(z.object({ key: z.string(), value: z.string() }))
   .optional();
+
+// Cart-level attributes (e.g. Meta _fbp / _fbc) — distinct from per-line attributes.
+const cartAttributesSchema = cartLineAttributesSchema;
 
 // Zod schemas for cart operations
 const cartActionSchema = z.discriminatedUnion('action', [
@@ -21,6 +25,7 @@ const cartActionSchema = z.discriminatedUnion('action', [
     quantity: z.number().int().positive().optional(),
     sellingPlanId: z.string().optional(),
     attributes: cartLineAttributesSchema,
+    cartAttributes: cartAttributesSchema,
   }),
   z.object({
     action: z.literal('add'),
@@ -29,6 +34,7 @@ const cartActionSchema = z.discriminatedUnion('action', [
     quantity: z.number().int().positive().optional(),
     sellingPlanId: z.string().optional(),
     attributes: cartLineAttributesSchema,
+    cartAttributes: cartAttributesSchema,
   }),
   z.object({
     action: z.literal('update'),
@@ -72,8 +78,38 @@ interface CartLinesRemoveResponse {
   };
 }
 
+interface CartAttributesUpdateResponse {
+  cartAttributesUpdate: {
+    cart: Cart | null;
+    userErrors: Array<{ field: string[]; message: string }>;
+  };
+}
+
 interface GetCartResponse {
   cart: Cart | null;
+}
+
+/**
+ * Apply cart-level attributes (e.g. Meta _fbp / _fbc) to an existing cart.
+ * Best-effort: attribution must never fail the add-to-cart, so on any error or
+ * when there are no attributes we return the cart we already have.
+ */
+async function applyCartAttributes(
+  cartId: string,
+  cartAttrs: Array<{ key: string; value: string }> | undefined,
+  fallbackCart: Cart | null
+): Promise<Cart | null> {
+  if (!cartAttrs || cartAttrs.length === 0) return fallbackCart;
+  try {
+    const res = await shopifyFetch<CartAttributesUpdateResponse>(UPDATE_CART_ATTRIBUTES, {
+      cartId,
+      attributes: cartAttrs,
+    });
+    return res.data?.cartAttributesUpdate?.cart ?? fallbackCart;
+  } catch (err) {
+    console.error('Cart attributes update error:', err);
+    return fallbackCart;
+  }
 }
 
 // GET - Fetch cart by ID
@@ -131,30 +167,36 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'create': {
         // Create a new cart, optionally with initial items
-        const { variantId, quantity, sellingPlanId, attributes } = validatedData;
-        
+        const { variantId, quantity, sellingPlanId, attributes, cartAttributes } = validatedData;
+
         interface CartLineInput {
           merchandiseId: string;
           quantity: number;
           sellingPlanId?: string;
           attributes?: Array<{ key: string; value: string }>;
         }
-        
-        const input: { lines?: CartLineInput[] } = {};
+
+        const cartAttrs = cartAttributes && cartAttributes.length > 0 ? cartAttributes : undefined;
+        const input: {
+          lines?: CartLineInput[];
+          attributes?: Array<{ key: string; value: string }>;
+        } = {
+          ...(cartAttrs && { attributes: cartAttrs }),
+        };
         const lineAttrs = attributes && attributes.length > 0 ? attributes : undefined;
-        
+
         if (variantId) {
           const line: CartLineInput = {
             merchandiseId: variantId,
             quantity: quantity || 1,
             ...(lineAttrs && { attributes: lineAttrs }),
           };
-          
+
           // Add selling plan for subscription
           if (sellingPlanId) {
             line.sellingPlanId = sellingPlanId;
           }
-          
+
           input.lines = [line];
         }
 
@@ -171,8 +213,13 @@ export async function POST(request: NextRequest) {
           if (sellingPlanId && userError.message.toLowerCase().includes('selling plan')) {
             console.log('Selling plan not applicable, retrying without subscription...');
             
-            // Retry without selling plan (keep same attributes)
-            const retryInput: { lines?: CartLineInput[] } = {};
+            // Retry without selling plan (keep same line + cart attributes)
+            const retryInput: {
+              lines?: CartLineInput[];
+              attributes?: Array<{ key: string; value: string }>;
+            } = {
+              ...(cartAttrs && { attributes: cartAttrs }),
+            };
             if (variantId) {
               retryInput.lines = [{
                 merchandiseId: variantId,
@@ -219,7 +266,7 @@ export async function POST(request: NextRequest) {
 
       case 'add': {
         // Add item to existing cart
-        const { cartId, variantId, quantity, sellingPlanId, attributes } = validatedData;
+        const { cartId, variantId, quantity, sellingPlanId, attributes, cartAttributes } = validatedData;
 
         interface CartLineInput {
           merchandiseId: string;
@@ -229,6 +276,7 @@ export async function POST(request: NextRequest) {
         }
 
         const lineAttrs = attributes && attributes.length > 0 ? attributes : undefined;
+        const cartAttrs = cartAttributes && cartAttributes.length > 0 ? cartAttributes : undefined;
         const line: CartLineInput = {
           merchandiseId: variantId,
           quantity: quantity || 1,
@@ -271,20 +319,30 @@ export async function POST(request: NextRequest) {
             }
             
             if (retryResponse.data?.cartLinesAdd?.cart) {
-              return NextResponse.json({ 
-                cart: retryResponse.data.cartLinesAdd.cart,
+              const retriedCart = await applyCartAttributes(
+                cartId,
+                cartAttrs,
+                retryResponse.data.cartLinesAdd.cart
+              );
+              return NextResponse.json({
+                cart: retriedCart,
                 warning: 'Subscription not available for this product. Added as one-time purchase.'
               });
             }
           }
-          
+
           return NextResponse.json(
             { error: userError.message },
             { status: 400 }
           );
         }
 
-        return NextResponse.json({ cart: response.data?.cartLinesAdd?.cart });
+        const addedCart = await applyCartAttributes(
+          cartId,
+          cartAttrs,
+          response.data?.cartLinesAdd?.cart ?? null
+        );
+        return NextResponse.json({ cart: addedCart });
       }
 
       case 'update': {

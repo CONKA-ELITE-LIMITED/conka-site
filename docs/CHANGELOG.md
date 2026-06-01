@@ -6,7 +6,11 @@
 
 ## June 2026
 
-### 2026-06-01 -- Meta pixel hygiene: earlier load + single-owner InitiateCheckout
+### 2026-06-01 -- Carry the Meta ad-click id (fbclid) into Shopify orders
+
+The ad-click identifier is now captured on landing and carried through to the order, so the server-side Purchase event (built next) can attribute sales to the ad that drove them. Meta had flagged low fbc coverage as the core reason purchases were not attributing. On landing we read fbclid from the URL and write the _fbc cookie in Meta's format; _fbp and _fbc are then attached as cart-level attributes that flow to the order note attributes. Attributes are set when the cart is created and refreshed on subsequent adds, so returning visitors who click a new ad (retargeting audiences) are also captured. Attribution writes are best-effort and never block or fail add-to-cart. SCRUM-1047.
+
+**Modified:** `app/lib/metaPixel.ts`, `app/components/MetaPageViewTracker.tsx`, `app/context/CartContext.tsx`, `app/api/cart/route.ts`, `app/lib/shopifyQueries.ts`
 
 Two safe tracking fixes from the attribution diagnosis. The Meta Pixel script now loads with afterInteractive instead of lazyOnload, so the early PageView and the _fbc ad-click cookie are captured promptly rather than after a delay (improving match quality). InitiateCheckout is now fired only by the Shopify Facebook channel on the real checkout page; the two frontend fires (cart drawer and funnel) were removed, eliminating the double and triple counting that had no shared event_id to dedupe on. The unused trackMetaInitiateCheckout helper was deleted. SCRUM-1043.
 

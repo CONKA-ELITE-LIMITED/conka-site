@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { trackMetaPageView, isProductionHost } from "@/app/lib/metaPixel";
+import { trackMetaPageView, isProductionHost, captureFbcFromUrl } from "@/app/lib/metaPixel";
 
 /**
  * Fires a single Meta PageView with event_id and sends the same event to CAPI
@@ -16,6 +16,10 @@ export default function MetaPageViewTracker() {
     if (!process.env.NEXT_PUBLIC_META_PIXEL_ID) return;
     // Production storefront only — never fire on preview deploys or localhost.
     if (!isProductionHost()) return;
+
+    // Capture the ad-click id (fbclid -> _fbc) immediately on landing, before the
+    // first cart action and independent of pixel load, so it reaches the order.
+    captureFbcFromUrl();
 
     const tryFire = () => {
       if (typeof window === "undefined" || !window.fbq) return false;

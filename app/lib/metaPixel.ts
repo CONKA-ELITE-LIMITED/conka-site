@@ -33,6 +33,30 @@ export function getFbp(): string | null {
   return match ? match[1].trim() : null;
 }
 
+/** Read _fbc cookie (the ad-click identifier) for CAPI user_data */
+export function getFbc(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(/_fbc=([^;]+)/);
+  return match ? match[1].trim() : null;
+}
+
+/**
+ * Capture the ad-click id from the landing URL (`?fbclid=`) into the `_fbc`
+ * cookie in Meta's format (`fb.1.<timestamp>.<fbclid>`). Mirrors what the pixel
+ * does, but runs immediately on landing and independently of pixel load, so the
+ * id is available before the first cart action and even if the pixel is blocked.
+ * Newest click wins. Cookie is scoped to `.conka.io` so checkout (shop.conka.io)
+ * shares it. No-op when no `fbclid` is present.
+ */
+export function captureFbcFromUrl(): void {
+  if (typeof window === "undefined") return;
+  const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+  if (!fbclid) return;
+  const fbc = `fb.1.${Date.now()}.${fbclid}`;
+  const maxAge = 90 * 24 * 60 * 60; // 90 days, matching Meta's _fbc lifetime
+  document.cookie = `_fbc=${fbc}; path=/; max-age=${maxAge}; domain=.conka.io; SameSite=Lax; Secure`;
+}
+
 /** Send event to Conversions API (fire-and-forget, no await). Does not throw. */
 function sendToCAPI(payload: {
   event_name: string;
