@@ -5,7 +5,7 @@ import { OurStoryHero } from "@/app/components/our-story/OurStoryHero";
 import { StorySection } from "@/app/components/our-story/StorySection";
 import { OurStoryCTA } from "@/app/components/our-story/OurStoryCTA";
 import Reveal from "@/app/components/landing/Reveal";
-import { storySections } from "@/app/lib/storyData";
+import { storyChapters } from "@/app/lib/storyData";
 
 export const metadata: Metadata = {
   title: "Our Story | CONKA",
@@ -23,8 +23,12 @@ export default function OurStoryPage() {
     <div className="brand-clinical min-h-screen bg-white text-black">
       <Navigation />
 
+      {/* paddingTop: .brand-clinical zeros brand-hero-first padding on
+          mobile, leaving the hero flush against the nav. Explicit padding
+          restores the breathing room (see /app-insights for the same fix). */}
       <section
         className="brand-section brand-hero-first brand-bg-white"
+        style={{ paddingTop: "5rem" }}
         aria-label="Our Story hero"
       >
         <div className="brand-track">
@@ -32,17 +36,17 @@ export default function OurStoryPage() {
         </div>
       </section>
 
-      {storySections.map((section, index) => (
+      {storyChapters.map((chapter, index) => (
         <section
-          key={section.id}
+          key={chapter.id}
           className={`brand-section ${index % 2 === 0 ? "brand-bg-tint" : "brand-bg-white"}`}
-          aria-label={`Story: ${section.headline}`}
+          aria-label={`Chapter ${chapter.id}: ${chapter.label}`}
         >
           <div className="brand-track">
             <Reveal>
               <StorySection
-                section={section}
-                totalSections={storySections.length}
+                chapter={chapter}
+                totalChapters={storyChapters.length}
               />
             </Reveal>
           </div>
@@ -50,8 +54,8 @@ export default function OurStoryPage() {
       ))}
 
       <section
-        className={`brand-section ${storySections.length % 2 === 0 ? "brand-bg-tint" : "brand-bg-white"}`}
-        aria-label="Join the Journey"
+        className={`brand-section ${storyChapters.length % 2 === 0 ? "brand-bg-tint" : "brand-bg-white"}`}
+        aria-label="The next chapter is yours"
       >
         <div className="brand-track">
           <Reveal>

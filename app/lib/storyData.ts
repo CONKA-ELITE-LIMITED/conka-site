@@ -1,4 +1,10 @@
-// Our Story - Data for the immersive scrolling experience
+// Our Story — six chapter beats.
+//
+// Source of truth for the narrative: docs/branding/BRAND_STORY_FOUNDATION.pdf
+// (founder facts, arc) merged with the strongest specifics from the previous
+// 10-section version (Durham professors, extraction method, trial results,
+// team list). Each chapter carries at most 2 sentences of prose; a pull
+// quote or a stat block does the rest of the work.
 
 export interface StoryQuote {
   text: string;
@@ -6,138 +12,134 @@ export interface StoryQuote {
   role: string;
 }
 
-export interface StorySection {
-  id: number;
-  theme: "light" | "dark";
-  headline: string;
-  subtitle?: string;
-  body: string;
-  quote?: StoryQuote;
-  imagePlaceholder: string;
-  image?: string;
+export interface StoryStat {
+  value: string;
+  caption: string;
 }
 
-// The 10 story sections
-export const storySections: StorySection[] = [
+export interface StoryChapter {
+  id: number;
+  /** Short chapter name for the mono label, e.g. "The Injury". */
+  label: string;
+  headline: string;
+  /** 1-2 sentences max. The quote/stat carries the rest of the beat. */
+  prose: string;
+  image: string;
+  imageAlt: string;
+  /**
+   * CSS object-position for the image crop. Defaults to "center center".
+   */
+  imagePosition?: string;
+  /**
+   * "contain" shows the whole asset instead of cropping to fill. Used for
+   * the Chapter 5 phone mockup, which has no background so it can float
+   * inside the frame without filling it.
+   */
+  imageFit?: "cover" | "contain";
+  /** Each chapter carries either a quote or a stat (or both, sparingly). */
+  quote?: StoryQuote;
+  stat?: StoryStat;
+  /** Chapter 5: render the scrolling team-name marquee under the content. */
+  teamMarquee?: boolean;
+}
+
+export const storyChapters: StoryChapter[] = [
   {
     id: 1,
-    theme: "light",
-    headline: "Where It All Began",
-    subtitle: "two athletes, one shared obsession",
-    body: "Humphrey Bodington and Harry Glover met at university as teammates. United by a relentless drive for performance, they pushed each other on and off the field. What started as camaraderie between athletes would soon evolve into a mission that neither could have predicted.",
-    imagePlaceholder: "[FOUNDERS AT UNIVERSITY]",
+    label: "The Injury",
+    headline: "Two athletes. One career cut short.",
+    prose:
+      "Harry Glover and Humphrey Bodington met as university teammates. Harry went on to play England Sevens; Humphrey's career was ended by repeated concussions.",
     image: "/TwoFounders.jpg",
-  },
-  {
-    id: 2,
-    theme: "dark",
-    headline: "The Spark",
-    subtitle: "when everything changed",
-    body: "After years in competitive contact sports, we'd mastered physical rehabilitation. But there was one thing missing from the conversation: recovery for the brain. Harry played over a decade of professional rugby for his country. Humphrey's career, however, was cut short. A concussion injury led to what neurologists called permanent post-concussion syndrome. Eight months of cognitive fog, fatigue, and uncertainty followed.",
+    imageAlt: "CONKA founders Harry Glover and Humphrey Bodington",
     quote: {
       text: "Lingering concussion symptoms pushed us to explore what the brain is truly capable of.",
       author: "Humphrey Bodington",
       role: "Co-Founder",
     },
-    imagePlaceholder: "[CONCUSSION RECOVERY JOURNEY]",
+  },
+  {
+    id: 2,
+    label: "The Search",
+    headline: "Sport had an answer for every injury except this one.",
+    prose:
+      "Months of headaches, light sensitivity, and cognitive fog with no clear solution. Elite sport had invested everything in the body and almost nothing in the brain.",
     image: "/story/GettyImages-1330621508.webp",
+    imageAlt: "Rugby players in a contact tackle",
+    stat: {
+      value: "0",
+      caption: "proven options offered to a professional athlete with post-concussion syndrome",
+    },
   },
   {
     id: 3,
-    theme: "light",
-    headline: "Breakthrough Discovery",
-    subtitle: "the science that changed everything",
-    body: "Working with neuroscientists at Durham University, Prof. Paul Chazot and Prof. Karen Hind, Humphrey discovered how brain-enhancing nutrition could improve not just cognition after contact sport, but physical recovery, workplace motivation, and the ambition to take on bigger goals. The research revealed something remarkable: the complete CONKA formula extended lifespan equivalent to 15 human years in validated models, reduced oxidative stress, and reversed concussion-induced deficits.",
-    imagePlaceholder: "[DURHAM UNIVERSITY RESEARCH LAB]",
+    label: "The Research",
+    headline: "So they built the research themselves.",
+    prose:
+      "Working with neuroscientists at Durham University, the focus turned to nootropics: botanical compounds that cross the blood-brain barrier. The key discovery was synergy. The compounds worked better together than alone.",
     image: "/story/Screenshot_2025-11-10_143714.webp",
+    imageAlt: "Neuroscience research at Durham University",
+    stat: {
+      value: "£500K+",
+      caption: "of their own capital invested into clinical development and research",
+    },
   },
   {
     id: 4,
-    theme: "dark",
-    headline: "Parallel Paths",
-    subtitle: "the Olympic revelation",
-    body: "At the same time, Harry's journey with Team GB at the 2021 Olympics revealed something critical: cognitive performance was completely untapped, even among the world's elite athletes. Physical training had reached its peak. The next frontier was the mind.",
-    imagePlaceholder: "[HARRY AT OLYMPICS]",
-    image: "/story/o0cs6ij6wfkafteqloee.jpg",
+    label: "The Formula",
+    headline: "From 14 capsules a day to one shot.",
+    prose:
+      "Early versions required up to 14 capsules a day. A new alcohol-free extraction method, invented by Dr. Shankar Katekhaye, collapsed the system into a single daily liquid shot.",
+    image: "/formulas/conkaFlow/FlowNew.jpg",
+    imageAlt: "The CONKA Flow daily shot bottle",
+    quote: {
+      text: "When any single component was removed, the benefits significantly decreased. The formula is the system.",
+      author: "Dr. Shankar Katekhaye",
+      role: "Head of Formulation",
+    },
   },
   {
     id: 5,
-    theme: "light",
-    headline: "Half a Million in Research",
-    subtitle: "no shortcuts, only science",
-    body: "We invested over £500,000 into understanding how botanical ingredients could enhance brain performance. Working alongside Durham's neuroscience department, we tested, refined, and tested again. The goal was simple: create something that actually works, backed by real data, not marketing claims. Every ingredient was chosen for its synergistic effect. When any single component was removed, the benefits significantly decreased.",
-    imagePlaceholder: "[RESEARCH & DEVELOPMENT]",
-    image: "/story/Screenshot_2025-11-10_171922.webp",
+    label: "The Proof",
+    headline: "Tested where performance can't be faked.",
+    prose:
+      "Cognitive testing technology built with Cambridge University made the results measurable. Over 25 trials with professional teams followed.",
+    image: "/app/AppConkaRing.png",
+    imageAlt: "The CONKA app cognition test showing a score of 92",
+    imageFit: "contain",
+    stat: {
+      value: "+16%",
+      caption: "brain performance vs placebo in the first professional sport trial",
+    },
+    teamMarquee: true,
   },
   {
     id: 6,
-    theme: "dark",
-    headline: "Building the Technology",
-    subtitle: "if you can't measure it, you can't improve it",
-    body: "Tackling brain performance meant measuring it accurately. CONKA's cognitive testing technology was developed in partnership with Cambridge University. The Integrated Cognitive Assessment (ICA) is a 5-minute, language-independent digital test that measures brain processing speed with high precision. It's unlearnable, objective, and sensitive enough to detect changes that traditional tests miss.",
-    imagePlaceholder: "[COGNITIVE TESTING APP]",
-    image: "/story/Tech_Update_1.webp",
-  },
-  {
-    id: 7,
-    theme: "light",
-    headline: "Reinventing Extraction",
-    subtitle: "alcohol-free, performance-first",
-    body: "Typical herbal tinctures use alcohol as a solvent. For professional athletes, that's a compromise we weren't willing to make. Dr. Shankar Katekhaye Ph.D invented an entirely new method of extracting active ingredients from herbs without using alcohol. A liquid formula that delivers faster absorption without any performance-compromising ingredients.",
-    imagePlaceholder: "[DR. KATEKHAYE IN LAB]",
-    image: "/story/lab-extraction.jpg",
-  },
-  {
-    id: 8,
-    theme: "dark",
-    headline: "Pro Sport Validation",
-    subtitle: "the first real-world test",
-    body: "Less than 16% of supplements are ever tested in clinical trials. CONKA has now completed over 25 trials with high-performing organisations. The first trial showed a 16% increase in brain performance compared to the placebo group. We had proof that this worked. Not in a lab, but on the field.",
-    imagePlaceholder: "[CLINICAL TRIAL RESULTS]",
-    image: "/story/clinical-trial.jpg",
-  },
-  {
-    id: 9,
-    theme: "light",
-    headline: "The Second Formula",
-    subtitle: "precision-tuned for recovery",
-    body: "Armed with data from professional sports teams, a pattern emerged. There were two days each week where cognitive performance dipped, always around periods of high intensity training. The technology revealed what athletes couldn't feel themselves. So we developed a second formula specifically designed to complement the first: CONKA Flow for daily cognitive enhancement, CONKA Clarity for recovery periods.",
-    imagePlaceholder: "[TWO FORMULA SYSTEM]",
-    image: "/story/Conka_Images_3_11c686b7-33cd-48e9-8d22-c44ed5406dd2.webp",
-  },
-  {
-    id: 10,
-    theme: "dark",
-    headline: "The Journey Continues",
-    subtitle: "from two athletes to thousands",
-    body: "What began as a personal mission has grown into something bigger. Tested by Bristol Rugby, McGuigan Boxing Gym, Blackburn Rovers, Sale Sharks, Team GB 7s, Toulouse Rugby, Wigan Athletic, Southampton Saints, Birmingham FC, Bath Rugby, Leeds United, and countless individual athletes seeking an edge. The results speak for themselves: +22% cognitive speed in men, +33% in women. +16% overall cognitive efficiency. This is just the beginning.",
-    imagePlaceholder: "[TEAM LOGOS & ATHLETES]",
-    image: "/story/19347-jmp-harlequins-v-bath-jg-158.webp",
+    label: "Beyond Sport",
+    headline: "Everyone has a brain. Everyone can choose to perform.",
+    prose:
+      "What started as one athlete's recovery is now a daily system used in professional sport, military settings, and offices. Not limited to athletes. Not limited to recovery.",
+    image: "/lifestyle/GirlsLaughing.jpg",
+    imageAlt: "Friends sharing CONKA shots and laughing",
+    stat: {
+      value: "150,000+",
+      caption: "shots taken by 5,000+ daily users",
+    },
   },
 ];
 
-// Teams that have tested CONKA
-export const testedByTeams = [
-  "Bristol Rugby",
-  "McGuigan Boxing Gym",
-  "Blackburn Rovers F.C",
-  "Sale Sharks",
-  "Team GB 7s",
-  "Toulouse Rugby",
-  "WRU/RGC Rugby",
-  "Wigan Athletic F.C",
-  "Southampton Saints F.C",
-  "Birmingham F.C",
-  "Bath Rugby",
-  "Leeds United F.C",
+// Environments where CONKA has been tested — rendered as a scrolling marquee
+// in Chapter 5. Deliberately generic categories, not named clubs: we do not
+// have standing permission to name partner organisations publicly.
+export const testedEnvironments = [
+  "Premiership Rugby Clubs",
+  "Championship Football Clubs",
+  "Professional Boxing Camps",
+  "Olympic Training Programmes",
+  "International Rugby Squads",
+  "Military Units",
+  "Corporate Performance Teams",
+  "University Research Labs",
+  "Professional Motorsport",
 ];
 
-// Key research stats for the final section
-export const researchStats = {
-  speedMen: "+22%",
-  speedWomen: "+33%",
-  accuracyMen: "+11%",
-  accuracyWomen: "+13%",
-  efficiencyMen: "+16%",
-  efficiencyWomen: "+23%",
-};

@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- /our-story rebuilt as six chapter beats (SCRUM-1049 Phase 1)
+
+The our-story page compressed from ten prose sections (~1,000 words) to six chapter beats (~250 words), built from BRAND_STORY_FOUNDATION.pdf merged with the strongest specifics of the old copy. Each chapter: mono label and counter chip, punchy headline, at most two sentences of prose, a full-bleed image on mobile, and either a founder pull quote or a stat block (0 proven options, 500K+ research, +16% vs placebo, 150,000+ shots). Chapter 4 shows the Flow bottle; Chapter 5 shows the CONKA app cognition-test screen (contained, not cropped) plus a scrolling marquee of generic testing environments (Premiership rugby clubs, military units, corporate teams; deliberately no named organisations). The hero collapsed to a compact credibility-led opening: H1, readable stat pair, and the laurel-flanked brain-research badge, with explicit hero padding so it clears the nav on mobile. The closing CTA drops the deprecated Protocol 03 reference and adds a new shared ExploreMoreRow component (Flow / Ingredients / App / Science links) so visitors who are not ready to buy keep exploring instead of bouncing.
+
+**Modified:** `app/lib/storyData.ts`, `app/components/our-story/StorySection.tsx`, `app/components/our-story/OurStoryHero.tsx`, `app/components/our-story/OurStoryCTA.tsx`, `app/our-story/page.tsx`, `app/components/landing/ExploreMoreRow.tsx` (new)
+
+---
+
 ### 2026-06-01 -- Home section reorder and image-first testimonials
 
 Two conversion-focused changes. On the home page, the Daily Benefits section now comes before the Find Your Formula product grid, so the ingredient/benefit argument lands before the purchase decision; the white/tint section alternation is preserved and the #product-grid scroll anchor moved with the grid. Testimonial cards in LandingTestimonials are now image-first: the customer photo leads the card (4:3, full width) with the verified header, name, headline, and quote below, instead of the photo sitting at the bottom after the text. All 8 curated testimonials have photos so every card gets the treatment. Propagates to home, the three formula pages, and protocol pages.
