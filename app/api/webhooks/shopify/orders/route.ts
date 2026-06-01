@@ -5,12 +5,19 @@
  * as the Meta event_id so it deduplicates against the Shopify Facebook channel's
  * Purchase on the same pixel (1138202151698404). Includes hashed email/phone +
  * the _fbp/_fbc carried on the order's note attributes (see SCRUM-1047) for
- * attribution. Subscription rebills are filtered so they are not counted as new
- * acquisitions.
+ * attribution. Only web-checkout orders are sent (see isWebCheckoutOrder), which
+ * keeps us in scope with the channel and excludes subscription rebills.
  *
  * Setup required to go live:
  *  - env SHOPIFY_WEBHOOK_SECRET (the webhook's signing secret)
  *  - register an orders/paid webhook in Shopify admin pointing here
+ *
+ * DEDUP — VERIFY AT GO-LIVE (highest risk): Meta merges our event with the
+ * channel's Purchase only if event_name + event_id match. The exact event_id the
+ * Shopify Facebook channel uses is not publicly documented. Before trusting this,
+ * place a test order and inspect the channel's Purchase in Events Manager; if its
+ * event_id is not the numeric order id, change the `eventId` value below to match.
+ * If they do not match, web purchases will be double-counted.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
@@ -77,6 +84,13 @@ interface ShopifyOrder {
  * server events stay in scope with the channel's, deduped by order id.
  *
  * The first/initial subscription order IS a real checkout, so it is correctly kept.
+ *
+ * Trade-off: a rare accelerated checkout (e.g. some Shop Pay flows) could arrive
+ * with sparse client_details and be skipped. That is acceptable — the Shopify
+ * channel still counts that order, so we only lose the server-side enrichment on
+ * it, never the conversion itself. We err this way deliberately: missing a little
+ * enrichment is far better than sending a rebill the channel never sent (which
+ * would be a net-new, double-counted Purchase).
  *
  * Verify once live: confirm a real rebill is skipped and a first subscription
  * order is kept (check the Shopify order's `client_details` if unsure).
