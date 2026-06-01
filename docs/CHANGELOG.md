@@ -6,6 +6,62 @@
 
 ## June 2026
 
+### 2026-06-01 -- Meta attribution: config-pass findings and Phase 3 un-gated
+
+Documented the 2026-06-01 Meta Events Manager and Ads Manager review for the headless attribution fix. The entire Meta configuration layer is now ruled out as the cause: the apex domain `conka.io` was verified (it had never been, only the legacy myshopify domain was), the ads point at the correct single pixel with a 7-day-click window, and the stray third pixel is dead. Meta's own diagnostics confirmed the remaining problem is server-side, low `fbc` coverage through CAPI, malformed Purchase price data, and preview-deploy traffic polluting the dataset. On that evidence the Phase 2 gate was resolved to GO, so the server-side Purchase work was un-gated and ticketed (SCRUM-1046, SCRUM-1047), plus a new production-host-gating item (SCRUM-1048).
+
+**Modified:** `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md`, `docs/development/featurePlans/meta-tracking-hardening.md`
+
+---
+
+### 2026-06-01 -- Code review fixes across the home page upgrade branch
+
+Five fixes from the self-review of the home-page-upgrades branch. The hero stat strip's "4.7/5 verified customer rating" cell was replaced with "280+ banned substances tested per batch" because the trust micro-row above the H1 already states the 4.7 rating (same fact twice in one viewport). The hero's gold star fill was corrected from 90% to 94% with a matching aria-label so the visual, label, and "Excellent 4.7" text agree. The product showcase guarantee row now renders even when the CTA is hidden, so /conka-both and the protocol pages close with reassurance instead of ending abruptly on the cert icons. The unused athlete bio field was removed from the carousel type and data. The marquee and thumbnail roster now reset their edge-bleed margins at the 768px breakpoint where the section gutter actually changes, fixing a partial-bleed gap on tablet widths.
+
+**Modified:** `app/components/landing/LandingHero.tsx`, `app/components/landing/LandingProductShowcase.tsx`, `app/components/AthleteCredibilityCarousel.tsx`
+
+---
+
+### 2026-06-01 -- Athlete carousel polish: thumbnail snap padding and readable subheading
+
+Two follow-ups to the carousel rework. The mobile thumbnail strip was snapping its first tile flush against the screen edge because scroll-snap aligns to the scrollport edge and ignores visual padding; a matching scroll-padding inset (scroll-pl-5) fixes the alignment. The mono "N=7 · Olympic · WBO · IBO" subline was replaced with the readable sentence from the /start athletes section ("Olympic medallists, world champions, and international competitors use CONKA on the days that matter most"), which says the same thing without spec-sheet decoding effort.
+
+**Modified:** `app/components/AthleteCredibilityCarousel.tsx`
+
+---
+
+### 2026-06-01 -- Athlete credibility carousel reworked as compact quote-led proof beat
+
+Third section of the home page upgrade effort, porting the structure that works on /start (CROAthletes) into the clinical AthleteCredibilityCarousel while keeping its visual register. A scrolling navy sport-breadth marquee (15 sports, star separators) now opens the section, edge-to-edge on mobile and spanning the content track on desktop. The feature card is now compact and quote-led: nav arrows overlay directly on the portrait (the separate mobile nav strip and desktop bottom nav row are gone), the counter and achievement tag sit as small mono chips on the portrait corners, and the text column reduces to name, sport plus role, and the quote rendered large as the visual hero (the bio sentence no longer renders). The thumbnail roster is now image-only tiles with no names, sports, or number prefixes: 72px scrollable strip on mobile, full-width 7-column grid on desktop. An Informed Sport block (logo, "Independently tested. Every batch.", 280 banned substances and WADA copy lifted verbatim from WhyConkaWorksDesktop) closes the section as the rational anchor, styled clinically with sharp corners and a mono category label. Changes propagate to /conka-flow, /conka-clarity, and /conka-both, which render the same component.
+
+**Modified:** `app/components/AthleteCredibilityCarousel.tsx`
+
+---
+
+### 2026-06-01 -- LabTrustBadges rebuilt as classic icon trust badges sitewide
+
+The LabTrustBadges grid (Free UK Shipping, Informed Sport, Batch Tested, Cancel Anytime) was rebuilt from its mono spec-sheet treatment (uppercase 10px labels in a divided grid) into classic trust badges: a centred line-art icon, a readable semibold title, and a quiet subtitle per cell, with soft cell backgrounds and sharp corners so the row still sits comfortably on the clinical pages. The icons reuse the existing TrustIcon set that previously only served the underused LandingTrustBadges component. This change propagates to all 12 call sites, including the home page (Product Grid, Daily Benefits, Testimonials, Case Studies), the funnel assurance block, the three formula pages, and /why-conka.
+
+**Modified:** `app/components/landing/LabTrustBadges.tsx`
+
+---
+
+### 2026-06-01 -- Home page product showcase upgraded with photographic bottle tiles and cert proof strip
+
+Second section of the home page upgrade effort. The two formula cards in the "Two shots. Built around your day." section swapped their transparent PNG bottles (which needed scale-150 positioning hacks) for the square photographic FlowNew.jpg / ClearNew.jpg tiles used by the /start ingredients grid, where the asset's off-white background becomes the tile surface. The section close was restructured into a single centred proof-and-conversion group: four certification icons (Vegan, Kosher, BPA Free, Third Party Tested at 56px), then the CTA, then the 100-day guarantee row. The text-only LabTrustBadges grid that previously closed the section was removed to avoid stacking two badge rows. The guarantee row was extracted from LandingHero into a shared GuaranteeRow component so the hero and showcase stay in lockstep. This component also renders on /conka-both and the protocol pages, which inherit the same upgrade.
+
+**Modified:** `app/components/landing/LandingProductShowcase.tsx`, `app/components/landing/LandingHero.tsx`, `app/components/landing/GuaranteeRow.tsx` (new)
+
+---
+
+### 2026-06-01 -- Home page hero upgraded with /start trust signals and two-bottle hero asset
+
+First section of the home page upgrade effort, porting the highest-performing trust patterns from the /start landing page into the home hero while keeping the clinical register. The mono eyebrow ("// A new state of mind") was removed and replaced by the /start trust micro-row (5 stacked customer avatars, gold 4.5-star overlay, "Excellent 4.7", 622+ reviews and 5,000+ daily users) sitting above the H1 on both mobile and desktop. The H1 now matches the /start title format: "Brain Performance" locked on its own line with an italic emphasis on "Daily" in the second line. A 100-day money-back guarantee row was added directly under the CTA, restyled for the clinical aesthetic with a square check mark in a darker green (#047857) instead of /start's rounded consumer green; copy anchors to GUARANTEE_LABEL_FULL from offerConstants. The hero asset swapped from the lifestyle hand-off photo to the two-bottle product shot (/formulas/both/BothHero.jpg) with a GPU-only scale/translate crop to remove the source's white space. On mobile the CTA and guarantee row are centred; desktop keeps them left-aligned.
+
+**Modified:** `app/components/landing/LandingHero.tsx`
+
+---
+
 ### 2026-06-01 -- Collapsed /startv2 into /start and removed orphaned components
 
 The finished landing-page v2.1 build (Sections 1-10) now lives at the canonical `/start` URL. The legacy `/start` body was replaced wholesale with the v2.1 build, the seven co-located client islands moved from `app/startv2/` into `app/start/`, the old `app/startv2/` page was deleted, and a 301 redirect `/startv2 -> /start` was added so any shared preview links resolve. `/start` keeps its noindex,nofollow stance (paid-traffic-only page); the metadata canonical was repointed to `/start`. The `LandingDisclaimer` footer was removed from the page at the founder's direction (messaging-first; legality handled separately), along with the now-unused footnote marker in the hero. With the old page body gone, seven components had no remaining consumers and were deleted: `CROHeroV2`, `CROBrandStory`, `LandingValueComparisonV2`, `CROFormulaSplitV2`, `CROBuyBox`, `CROBenefitCards`, `LandingDisclaimer`. Net reduction of roughly 1,600 lines. Shared dependencies (`CROPillCTA`, `useInView`) were verified to survive via other consumers.

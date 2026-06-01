@@ -5,7 +5,7 @@ import Image from "next/image";
 import { track } from "@vercel/analytics/react";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
-import LabTrustBadges from "./LabTrustBadges";
+import GuaranteeRow from "./GuaranteeRow";
 import IngredientsPanel from "./IngredientsPanel";
 
 type ProductId = "flow" | "clear";
@@ -17,7 +17,7 @@ const PRODUCTS = [
     dose: "AM",
     window: "06:00–10:00",
     tagline: "Calm morning focus.",
-    bottleSrc: "/formulas/conkaFlow/FlowNoBackground.png",
+    bottleSrc: "/formulas/conkaFlow/FlowNew.jpg",
     bottleAlt: "CONKA Flow bottle",
   },
   {
@@ -26,9 +26,18 @@ const PRODUCTS = [
     dose: "PM",
     window: "12:00–16:00",
     tagline: "Afternoon reset.",
-    bottleSrc: "/formulas/conkaClear/ClearNoBackground.png",
+    bottleSrc: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
   },
+];
+
+// Certification strip — Magic Mind-style proof icons above the CTA.
+// Same assets /start renders above its ingredients CTA.
+const CERTS = [
+  { src: "/icons/VeganFriendlyIcon.avif", label: "Vegan" },
+  { src: "/icons/KosherCertifiedIcon.avif", label: "Kosher" },
+  { src: "/icons/BpaFreeIcon.avif", label: "BPA Free" },
+  { src: "/icons/ThirdPartyTestedIcon.avif", label: "Third party tested" },
 ];
 
 export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
@@ -74,13 +83,16 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
               </span>
             </div>
 
-            <div className="relative w-24 h-48 lg:w-44 lg:h-80 mb-4 lg:mb-6">
+            {/* Square photographic bottle card — the asset's off-white
+                background is the tile surface (same treatment as the /start
+                ingredients grid), so no inner scaling hacks are needed. */}
+            <div className="relative w-full aspect-square mb-4 lg:mb-6 overflow-hidden border border-black/8">
               <Image
                 src={product.bottleSrc}
                 alt={product.bottleAlt}
                 fill
-                sizes="(max-width: 1024px) 96px, 176px"
-                className="object-contain scale-150"
+                sizes="(max-width: 1024px) 45vw, 420px"
+                className="object-cover"
               />
             </div>
 
@@ -112,15 +124,31 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         onClose={() => setOpenProduct(null)}
       />
 
-      {!hideCTA && (
-        <div className="mb-3 flex justify-start">
+      {/* Proof + conversion group: cert icons → CTA → guarantee, stacked and
+          centred as one block on every breakpoint. Replaces the text-only
+          trust badge grid that previously closed this section. */}
+      <div className="flex flex-col items-center">
+        <div className="flex items-center justify-center gap-2 mb-5">
+          {CERTS.map((cert) => (
+            <Image
+              key={cert.label}
+              src={cert.src}
+              width={56}
+              height={56}
+              alt={cert.label}
+            />
+          ))}
+        </div>
+
+        {!hideCTA && (
           <ConkaCTAButton href={ctaHref} meta={null}>
             Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
           </ConkaCTAButton>
-        </div>
-      )}
-      <div>
-        <LabTrustBadges />
+        )}
+        {/* Guarantee renders even when the CTA is hidden (/conka-both,
+            protocol pages) so the section still closes with reassurance
+            rather than ending abruptly on the cert icons. */}
+        <GuaranteeRow />
       </div>
     </div>
   );
