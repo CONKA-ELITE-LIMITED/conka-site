@@ -152,8 +152,8 @@ export default function BuyBoxCard({
           </li>
         </ul>
 
-        {/* Sub/OTP toggle. Same checkbox-as-pill pattern as CROBuyBox so the
-            mental model stays consistent across the two buy-box variants. */}
+        {/* Sub/OTP toggle. Checkbox-as-pill pattern so the sub/OTP mental
+            model stays consistent with the rest of the site's buy flows. */}
         <label
           className={`flex items-start gap-3 p-3 rounded-[14px] border-2 transition-colors cursor-pointer mb-5 ${
             isSubscription

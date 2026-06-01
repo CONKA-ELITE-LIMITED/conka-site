@@ -65,7 +65,7 @@ const BOTH_PRODUCT_HERO_ID = "03";
 
 // Section 5 buy-box pricing math. Pulled at render-time from the shared
 // cadence/funnel data so the savings figure stays in lockstep with the
-// /funnel and /conka-both CROBuyBox.
+// /funnel and /conka-both buy boxes.
 const S5_SUB_PRICING = getCadencePricingByProductHeroId(
   BOTH_PRODUCT_HERO_ID,
   "monthly-sub",
