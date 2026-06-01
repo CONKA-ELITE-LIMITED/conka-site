@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Home page product showcase upgraded with photographic bottle tiles and cert proof strip
+
+Second section of the home page upgrade effort. The two formula cards in the "Two shots. Built around your day." section swapped their transparent PNG bottles (which needed scale-150 positioning hacks) for the square photographic FlowNew.jpg / ClearNew.jpg tiles used by the /start ingredients grid, where the asset's off-white background becomes the tile surface. The section close was restructured into a single centred proof-and-conversion group: four certification icons (Vegan, Kosher, BPA Free, Third Party Tested at 56px), then the CTA, then the 100-day guarantee row. The text-only LabTrustBadges grid that previously closed the section was removed to avoid stacking two badge rows. The guarantee row was extracted from LandingHero into a shared GuaranteeRow component so the hero and showcase stay in lockstep. This component also renders on /conka-both and the protocol pages, which inherit the same upgrade.
+
+**Modified:** `app/components/landing/LandingProductShowcase.tsx`, `app/components/landing/LandingHero.tsx`, `app/components/landing/GuaranteeRow.tsx` (new)
+
+---
+
 ### 2026-06-01 -- Home page hero upgraded with /start trust signals and two-bottle hero asset
 
 First section of the home page upgrade effort, porting the highest-performing trust patterns from the /start landing page into the home hero while keeping the clinical register. The mono eyebrow ("// A new state of mind") was removed and replaced by the /start trust micro-row (5 stacked customer avatars, gold 4.5-star overlay, "Excellent 4.7", 622+ reviews and 5,000+ daily users) sitting above the H1 on both mobile and desktop. The H1 now matches the /start title format: "Brain Performance" locked on its own line with an italic emphasis on "Daily" in the second line. A 100-day money-back guarantee row was added directly under the CTA, restyled for the clinical aesthetic with a square check mark in a darker green (#047857) instead of /start's rounded consumer green; copy anchors to GUARANTEE_LABEL_FULL from offerConstants. The hero asset swapped from the lifestyle hand-off photo to the two-bottle product shot (/formulas/both/BothHero.jpg) with a GPU-only scale/translate crop to remove the source's white space. On mobile the CTA and guarantee row are centred; desktop keeps them left-aligned.
