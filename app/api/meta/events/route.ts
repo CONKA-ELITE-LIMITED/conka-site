@@ -12,6 +12,13 @@ import { NextRequest, NextResponse } from "next/server";
 const META_GRAPH_VERSION = "v21.0";
 const META_GRAPH_URL = `https://graph.facebook.com/${META_GRAPH_VERSION}`;
 
+/**
+ * Production storefront host. CAPI forwards events only when the request comes
+ * from here, so Vercel preview deploys (*.vercel.app) and localhost cannot push
+ * events into the production dataset. Mirrors the client gate in metaPixel.ts.
+ */
+const PRODUCTION_HOST = "www.conka.io";
+
 interface CAPIRequestBody {
   event_name: string;
   event_id: string;
@@ -38,6 +45,11 @@ export async function POST(request: NextRequest) {
     const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
     if (!pixelId || !accessToken) {
       return NextResponse.json({ ok: true, skipped: "no_config" }, { status: 200 });
+    }
+
+    // Production host only — never forward events from preview deploys or localhost.
+    if (request.headers.get("host") !== PRODUCTION_HOST) {
+      return NextResponse.json({ ok: true, skipped: "non_production_host" }, { status: 200 });
     }
 
     const body = (await request.json()) as CAPIRequestBody;

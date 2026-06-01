@@ -2,6 +2,8 @@
 
 This doc describes how Meta tracking is implemented and how to get **Purchase** and **AddPaymentInfo** coverage (they occur on Shopify checkout, not in this repo).
 
+> **Production host only (2026-06-01, SCRUM-1048).** The pixel and CAPI fire **only on `www.conka.io`**. On Vercel preview deploys (`*.vercel.app`) and localhost the pixel does not initialise and CAPI sends nothing, so dev/preview traffic never pollutes the production dataset. Gate: `isProductionHost()` in `app/lib/metaPixel.ts`, the host check in `MetaPageViewTracker`, the `host`-header check in the CAPI route, and the inline guard around the pixel snippet in `app/layout.tsx`.
+
 ## What This Repo Sends
 
 | Event              | When / Where                                      | Deduplication      |
@@ -9,15 +11,23 @@ This doc describes how Meta tracking is implemented and how to get **Purchase** 
 | **PageView**       | Every page load (client component after pixel)    | `event_id` + CAPI  |
 | **ViewContent**    | Product/protocol pages (conka-flow, conka-clarity, protocol/[id]) | `event_id` + CAPI  |
 | **AddToCart**      | After successful add in `CartContext`              | `event_id` + CAPI  |
-| **InitiateCheckout** | When user clicks “Checkout” in `CartDrawer`      | `event_id` + CAPI  |
+| **Purchase**       | Server-side, `orders/paid` webhook (see below)     | order ID as `event_id` |
 
-**AddPaymentInfo** and **Purchase** do **not** run in this frontend. Checkout happens on **Shopify hosted pages** (`cart.checkoutUrl`). To get those events and improve event coverage:
+**InitiateCheckout is no longer fired by this frontend (2026-06-01, SCRUM-1043).** It is owned solely by the Shopify **Facebook & Instagram channel**, which fires it on the real checkout page. Firing it from both places caused double/triple counting with no shared `event_id`, so the two frontend fires (`CartDrawer`, `funnelCheckout`) were removed.
 
-1. **Shopify’s Meta channel** – In Shopify Admin, install/use the **Facebook & Instagram** channel (or Meta’s official app). Configure it to send **Purchase** (and optionally **AddPaymentInfo**) from Shopify checkout. Use the **same Pixel ID** as this site and, if the channel supports it, send a stable **order ID** as `event_id` for deduplication with any pixel event you send on a thank-you page.
-2. **Thank-you page on this domain** – If Shopify redirects to a thank-you URL on this site, you can fire Pixel + CAPI **Purchase** (and optionally **AddPaymentInfo**) there with the order ID as `event_id`.
-3. **Server-side (webhook)** – Use Shopify order webhooks to send **Purchase** (and optionally **AddPaymentInfo**) to Meta CAPI from your backend, with order ID as `event_id`.
+**Purchase** is sent **server-side** from this repo via a Shopify `orders/paid` webhook (see "Server-side Purchase" below). **AddPaymentInfo** is not sent by this repo (it occurs on Shopify checkout; rely on the channel if needed). The Shopify Facebook channel also sends its own Purchase from checkout — our server event uses the **Shopify order ID as `event_id`** so Meta deduplicates the two rather than double-counting.
 
-Until one of the above is in place, Ads Manager may show low coverage for **Purchase** and **AddPaymentInfo**; the events implemented in this repo (PageView, ViewContent, AddToCart, InitiateCheckout) are fully covered with CAPI and deduplication.
+## Server-side Purchase (Shopify orders/paid webhook)
+
+Added 2026-06-01 (SCRUM-1046/1047) as the core of the headless attribution fix (see `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md`).
+
+- **Route:** `app/api/webhooks/shopify/orders/route.ts` (`runtime = "nodejs"`). Verifies the Shopify HMAC (`X-Shopify-Hmac-Sha256`), filters subscription rebills, maps the order to a Purchase, and sends it to CAPI.
+- **Send + hashing:** `app/lib/metaCapi.ts` — SHA-256 hashes `em`/`ph`/`fn`/`ln`/`ct`/`st`/`zp`/`country`/`external_id`, and sends raw `fbp`/`fbc` + `client_ip_address`/`client_user_agent` for match quality.
+- **Ad-click identity:** `fbclid` is captured into the `_fbc` cookie on landing (`captureFbcFromUrl` in `metaPixel.ts`), and `_fbp`/`_fbc` are attached as **cart-level attributes** (`CartContext` → `app/api/cart/route.ts`) so they reach the order's note attributes, where the webhook reads them.
+- **Dedup + idempotency:** the Shopify order ID is the `event_id`, shared with the channel's Purchase, so Meta merges them; a Shopify retry re-sends the same `event_id` and is deduped Meta-side (no local store needed).
+- **Verifying dedup (important):** the numeric order id is the de-facto-standard `event_id` the channel uses, so this is very likely already correct. But the channel's exact `event_id` is undocumented and its checkout pixel is **sandboxed** — Meta Pixel Helper and Test Events cannot read it (Pixel Helper shows "No Pixels found" on the Shopify order-status page; that is expected, not a fault). So verify by **effect, not by reading the id**: after deploy, place one test order and watch the Purchase in Events Manager. If the Purchase count roughly **doubles**, the browser/server events are not merging → the `event_id` does not match the channel's → change the `eventId` in `app/api/webhooks/shopify/orders/route.ts` and redeploy (one-line fix).
+- **Webhook URL:** `https://hooks.conka.io/api/webhooks/shopify/orders` — a dedicated Vercel subdomain, because Shopify blocks webhook URLs that match the store's own domains (`www.conka.io`, `shop.conka.io`, etc.).
+- **Renewals / scope:** `isWebCheckoutOrder()` only sends Purchase for orders that came through the web checkout (have `client_details`). Subscription rebills (Loop/Skio/native), POS, and API/manual orders have no browser context and are skipped automatically — no app-specific markers hardcoded. This matches the Shopify Facebook channel's scope. The first subscription order is a real checkout, so it is kept. Verify once live: a real rebill is skipped, a first subscription order is kept.
 
 ## Implementation Details
 
@@ -28,9 +38,9 @@ Until one of the above is in place, Ads Manager may show low coverage for **Purc
 ## Environment Variables
 
 - **`NEXT_PUBLIC_META_PIXEL_ID`** – Meta Pixel ID (required for pixel and CAPI).
-- **`META_CAPI_ACCESS_TOKEN`** – Server-only; used by the CAPI route. Without it, CAPI is skipped but the site still works.
-
-See `.env.example` for a template.
+- **`META_CAPI_ACCESS_TOKEN`** – Server-only; used by the CAPI route and the order webhook. Without it, CAPI is skipped but the site still works.
+- **`SHOPIFY_WEBHOOK_SECRET`** – Server-only; the signing secret shown in Shopify Admin → Settings → Notifications → Webhooks. Used to verify the `orders/paid` webhook HMAC. Without it the webhook returns 200 and sends nothing.
+- **`META_TEST_EVENT_CODE`** – Optional, server-only. When set, the server-side Purchase is routed to the Events Manager **Test Events** tab for verification. Set it temporarily while testing, then unset it for production.
 
 ---
 

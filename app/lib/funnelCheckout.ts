@@ -13,7 +13,7 @@ import {
   getOfferPricing,
   getCadenceFrequency,
 } from "./funnelData";
-import { trackMetaAddToCart, trackMetaInitiateCheckout, toContentId } from "./metaPixel";
+import { trackMetaAddToCart, toContentId } from "./metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "./tripleWhale";
 import { trackPurchaseAddToCart } from "./analytics";
 
@@ -114,14 +114,9 @@ function fireAnalytics(params: {
   const purchaseType = cadence === "monthly-otp" ? "one-time" : "subscription";
 
   try {
-    // Meta Pixel — AddToCart + InitiateCheckout
+    // Meta Pixel — AddToCart only. InitiateCheckout is owned by the Shopify
+    // Facebook channel (fires on the real checkout page), so we do not fire it here.
     trackMetaAddToCart({
-      content_ids: [contentId],
-      value: price,
-      currency: "GBP",
-      num_items: 1,
-    });
-    trackMetaInitiateCheckout({
       content_ids: [contentId],
       value: price,
       currency: "GBP",

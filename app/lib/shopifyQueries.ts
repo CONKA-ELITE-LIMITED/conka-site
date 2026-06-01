@@ -8,6 +8,10 @@ const CART_FRAGMENT = `
     id
     checkoutUrl
     totalQuantity
+    attributes {
+      key
+      value
+    }
     cost {
       totalAmount {
         amount
@@ -136,6 +140,23 @@ export const REMOVE_FROM_CART = `
   ${CART_FRAGMENT}
   mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        ...CartFragment
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+// Update cart-level attributes (e.g. Meta _fbp / _fbc for attribution).
+// Replaces the cart's attribute set, so callers must send the full intended set.
+export const UPDATE_CART_ATTRIBUTES = `
+  ${CART_FRAGMENT}
+  mutation cartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
+    cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
       cart {
         ...CartFragment
       }

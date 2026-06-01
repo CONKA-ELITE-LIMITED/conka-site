@@ -32,10 +32,10 @@ Ship the safe, evidence-free fixes now (Phase 1), verify the post-fix state in M
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Safe pixel hygiene (load timing + InitiateCheckout de-dup) | To Do (SCRUM-1043) |
+| 1 | Safe pixel hygiene (load timing + InitiateCheckout de-dup) | Built in branch, commit 53a1d2bc (SCRUM-1043) |
 | 2 | Verify post-fix attribution (gates Phase 3) | Gate satisfied 2026-06-01 = GO (SCRUM-1044) |
-| 3 | Server-side Purchase webhook + ad-click propagation | Ticketed (SCRUM-1046, SCRUM-1047) |
-| 4 | Gate pixel + CAPI to production host only (new) | To Do (SCRUM-1048) |
+| 3 | Server-side Purchase webhook + ad-click propagation | Built in branch (3a SCRUM-1046, 3b SCRUM-1047). Go-live needs SHOPIFY_WEBHOOK_SECRET + webhook registration |
+| 4 | Gate pixel + CAPI to production host only (new) | Built in branch, commit a8492028 (SCRUM-1048) |
 
 ### Phase 2 gate decision (2026-06-01): GO
 
@@ -73,6 +73,8 @@ Gate resolved to GO (see Phase 2 gate decision above): Phase 2 evidence showed t
 - **#5 server-side Purchase webhook:** new `app/api/webhooks/shopify/orders/route.ts` subscribed to `orders/paid` (or `orders/create`), sending Purchase to Meta CAPI with the Shopify `order_id` as `event_id` (for dedup against the channel), plus hashed email/phone and `fbp`/`fbc` in `user_data`. Filter Loop subscription renewals so rebills are not counted as new acquisitions.
 - Model HMAC verification on `app/api/webhooks/revolut/route.ts`; model the CAPI send on `app/api/meta/events/route.ts`.
 - New env var: `SHOPIFY_WEBHOOK_SECRET`. Reuse existing `META_CAPI_ACCESS_TOKEN`.
+
+**Webhook registered (2026-06-01):** Shopify admin -> Settings -> Notifications -> Webhooks: Order payment (`orders/paid`), JSON. URL = `https://hooks.conka.io/api/webhooks/shopify/orders`. Note: `www.conka.io` cannot be used (Shopify blocks webhook URLs matching the store's own domains), so a dedicated `hooks.conka.io` subdomain was added in Vercel (conka-shopify project, Production) pointing at the same app. `SHOPIFY_WEBHOOK_SECRET` = the shared signing secret shown in the Shopify Webhooks section. Go-live still needs: merge+deploy the branch, set the secret in Vercel, then verify (1) **dedup by effect** — place a test order and watch the Purchase count in Events Manager; if it roughly doubles, the `event_id` does not match the channel's, so change the `eventId` in the webhook and redeploy (the numeric order id is the de-facto standard, so likely already correct); (2) the rebill allowlist — a real Loop rebill is skipped (`skipped: non_checkout`) and a first subscription order is kept. Note: Shopify's checkout pixel is sandboxed, so Pixel Helper / Test Events cannot read the channel's `event_id` directly — verify by the dedup count, not by reading the id.
 
 ## Phase 4 — Production-host gating (ACTIVE, new; found 2026-06-01)
 

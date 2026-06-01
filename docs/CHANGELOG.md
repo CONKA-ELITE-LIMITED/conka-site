@@ -6,6 +6,30 @@
 
 ## June 2026
 
+### 2026-06-01 -- Document the Meta Purchase dedup verification method
+
+Captured how to verify the server-side Purchase deduplicates against the Shopify Facebook channel, after finding that Shopify's checkout pixel is sandboxed (Meta Pixel Helper and Test Events cannot read the channel's event_id). The recommended check is by effect: after deploy, place one test order and watch the Purchase count in Events Manager; if it roughly doubles, the event_id does not match the channel's and the one-line eventId in the webhook needs changing. The numeric order id is the de-facto standard, so it is most likely already correct.
+
+**Modified:** `app/api/webhooks/shopify/orders/route.ts` (comment), `docs/analytics/META_PIXEL_AND_CAPI.md`, `docs/development/featurePlans/meta-tracking-hardening.md`
+
+### 2026-06-01 -- Server-side Meta Purchase via Shopify orders/paid webhook
+
+Adds a first-party Purchase event we control, sent from a new Shopify orders/paid webhook to the Meta Conversions API. This is the core of the attribution fix: it sends the Shopify order id as the Meta event_id (so it deduplicates against the Shopify Facebook channel's Purchase rather than double-counting), a clean value and currency, hashed customer email/phone/name/address, the browser IP and user agent from the order, and the _fbp/_fbc ad-click identifiers carried on the order note attributes. Subscription rebills are filtered so recurring charges are not counted as new acquisitions. The webhook verifies the Shopify HMAC and is idempotent via Meta's event_id deduplication. Dormant until SHOPIFY_WEBHOOK_SECRET is set and the orders/paid webhook is registered in Shopify admin. SCRUM-1046.
+
+**Added:** `app/lib/metaCapi.ts`, `app/api/webhooks/shopify/orders/route.ts`
+
+The ad-click identifier is now captured on landing and carried through to the order, so the server-side Purchase event (built next) can attribute sales to the ad that drove them. Meta had flagged low fbc coverage as the core reason purchases were not attributing. On landing we read fbclid from the URL and write the _fbc cookie in Meta's format; _fbp and _fbc are then attached as cart-level attributes that flow to the order note attributes. Attributes are set when the cart is created and refreshed on subsequent adds, so returning visitors who click a new ad (retargeting audiences) are also captured. Attribution writes are best-effort and never block or fail add-to-cart. SCRUM-1047.
+
+**Modified:** `app/lib/metaPixel.ts`, `app/components/MetaPageViewTracker.tsx`, `app/context/CartContext.tsx`, `app/api/cart/route.ts`, `app/lib/shopifyQueries.ts`
+
+Two safe tracking fixes from the attribution diagnosis. The Meta Pixel script now loads with afterInteractive instead of lazyOnload, so the early PageView and the _fbc ad-click cookie are captured promptly rather than after a delay (improving match quality). InitiateCheckout is now fired only by the Shopify Facebook channel on the real checkout page; the two frontend fires (cart drawer and funnel) were removed, eliminating the double and triple counting that had no shared event_id to dedupe on. The unused trackMetaInitiateCheckout helper was deleted. SCRUM-1043.
+
+**Modified:** `app/layout.tsx`, `app/components/CartDrawer.tsx`, `app/lib/funnelCheckout.ts`, `app/lib/metaPixel.ts`
+
+The Meta pixel and Conversions API now fire only on `www.conka.io`. Previously every Vercel preview and branch deploy ran the same code with the same pixel ID, so dev and preview traffic was mixing into the production dataset the ads optimise on, dragging down data quality (Meta flagged it under "Confirm domains that belong to you"). A strict host gate is applied at four layers: the pixel base snippet no longer loads fbevents.js off-prod, the client event helper short-circuits, the page-view tracker bails early, and the CAPI route rejects non-production hosts. Pixel does not fire in local dev by design (use Meta Test Events). SCRUM-1048.
+
+**Modified:** `app/lib/metaPixel.ts`, `app/components/MetaPageViewTracker.tsx`, `app/api/meta/events/route.ts`, `app/layout.tsx`
+
 ### 2026-06-01 -- Meta attribution: config-pass findings and Phase 3 un-gated
 
 Documented the 2026-06-01 Meta Events Manager and Ads Manager review for the headless attribution fix. The entire Meta configuration layer is now ruled out as the cause: the apex domain `conka.io` was verified (it had never been, only the legacy myshopify domain was), the ads point at the correct single pixel with a 7-day-click window, and the stray third pixel is dead. Meta's own diagnostics confirmed the remaining problem is server-side, low `fbc` coverage through CAPI, malformed Purchase price data, and preview-deploy traffic polluting the dataset. On that evidence the Phase 2 gate was resolved to GO, so the server-side Purchase work was un-gated and ticketed (SCRUM-1046, SCRUM-1047), plus a new production-host-gating item (SCRUM-1048).

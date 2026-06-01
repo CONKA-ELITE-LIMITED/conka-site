@@ -29,8 +29,32 @@ function generateEventId(): string {
 /** Read _fbp cookie for CAPI user_data (improves matching) */
 export function getFbp(): string | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/_fbp=([^;]+)/);
+  const match = document.cookie.match(/(?:^|;\s*)_fbp=([^;]+)/);
   return match ? match[1].trim() : null;
+}
+
+/** Read _fbc cookie (the ad-click identifier) for CAPI user_data */
+export function getFbc(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(/(?:^|;\s*)_fbc=([^;]+)/);
+  return match ? match[1].trim() : null;
+}
+
+/**
+ * Capture the ad-click id from the landing URL (`?fbclid=`) into the `_fbc`
+ * cookie in Meta's format (`fb.1.<timestamp>.<fbclid>`). Mirrors what the pixel
+ * does, but runs immediately on landing and independently of pixel load, so the
+ * id is available before the first cart action and even if the pixel is blocked.
+ * Newest click wins. Cookie is scoped to `.conka.io` so checkout (shop.conka.io)
+ * shares it. No-op when no `fbclid` is present.
+ */
+export function captureFbcFromUrl(): void {
+  if (typeof window === "undefined") return;
+  const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+  if (!fbclid) return;
+  const fbc = `fb.1.${Date.now()}.${fbclid}`;
+  const maxAge = 90 * 24 * 60 * 60; // 90 days, matching Meta's _fbc lifetime
+  document.cookie = `_fbc=${fbc}; path=/; max-age=${maxAge}; domain=.conka.io; SameSite=Lax; Secure`;
 }
 
 /** Send event to Conversions API (fire-and-forget, no await). Does not throw. */
@@ -66,12 +90,27 @@ function hasPixelId(): boolean {
   );
 }
 
+/**
+ * Production storefront host. The pixel and CAPI fire only here — never on
+ * Vercel preview deploys (*.vercel.app) or localhost — so dev/preview traffic
+ * does not pollute the production dataset that ads optimise on.
+ */
+export const PRODUCTION_HOST = "www.conka.io";
+
+/** True only on the production storefront. Strict host match (no apex, no preview). */
+export function isProductionHost(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.location.hostname === PRODUCTION_HOST
+  );
+}
+
 /** Safe wrapper: fire fbq with eventID and send same event to CAPI. No-op if pixel unavailable or no ID. */
 function trackWithDedup(
   eventName: string,
   customData?: Record<string, unknown>
 ): void {
-  if (!hasPixelId() || !isPixelAvailable()) return;
+  if (!isProductionHost() || !hasPixelId() || !isPixelAvailable()) return;
   const eventId = generateEventId();
   const eventTime = Math.floor(Date.now() / 1000);
   try {
@@ -143,24 +182,6 @@ export function trackMetaAddToCart(params: {
   };
   if (params.num_items != null) customData.num_items = params.num_items;
   trackWithDedup("AddToCart", customData);
-}
-
-/**
- * Track InitiateCheckout with deduplication. Call when user clicks through to checkout.
- */
-export function trackMetaInitiateCheckout(params: {
-  content_ids: string[];
-  value: number;
-  currency: string;
-  num_items: number;
-}): void {
-  trackWithDedup("InitiateCheckout", {
-    content_ids: params.content_ids,
-    content_type: "product",
-    value: params.value,
-    currency: params.currency,
-    num_items: params.num_items,
-  });
 }
 
 export { toContentId };

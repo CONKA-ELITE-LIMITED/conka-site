@@ -2,7 +2,6 @@
 
 import { useCart } from "@/app/context/CartContext";
 import { CartLine } from "@/app/lib/shopify";
-import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 import Image from "next/image";
 import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
@@ -365,18 +364,12 @@ export default function CartDrawer() {
             <a
               href={cart?.checkoutUrl || "#"}
               onClick={(e) => {
+                // InitiateCheckout is owned by the Shopify Facebook channel
+                // (fires on the real checkout page); we no longer fire it here.
                 if (!cart?.checkoutUrl || cartItems.length === 0) {
                   e.preventDefault();
                   return;
                 }
-                trackMetaInitiateCheckout({
-                  content_ids: cartItems.map((line) =>
-                    toContentId(line.merchandise.id)
-                  ),
-                  value: parseFloat(cart.cost.subtotalAmount.amount),
-                  currency: cart.cost.subtotalAmount.currencyCode ?? "GBP",
-                  num_items: cart.totalQuantity ?? 0,
-                });
               }}
               className={`relative block w-full bg-[#1B2757] text-white px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-center [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] transition-opacity ${
                 cartItems.length === 0 ? "opacity-40 cursor-not-allowed" : "hover:opacity-90"
