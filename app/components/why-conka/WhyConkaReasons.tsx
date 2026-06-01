@@ -32,15 +32,10 @@ export default function WhyConkaReasons() {
             key={reason.id}
             className="bg-white border border-black/12"
           >
-            <button
-              type="button"
-              onClick={() =>
-                setExpandedId(isExpanded ? null : reason.id)
-              }
-              aria-expanded={isExpanded}
-              aria-controls={panelId}
-              className="w-full text-left px-5 py-5 lg:px-6 lg:py-6 flex gap-4 lg:gap-5 transition-colors hover:bg-black/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]/40 focus-visible:ring-offset-2"
-            >
+            {/* Card body — heading lives OUTSIDE the toggle button (valid
+                HTML: buttons can't contain headings). The [+] Learn more
+                row below is the interactive element. */}
+            <div className="px-5 pt-5 lg:px-6 lg:pt-6 flex gap-4 lg:gap-5">
               {/* Asset thumbnail — collapsed state */}
               {!isExpanded && (
                 <span className="relative w-20 h-20 lg:w-24 lg:h-24 shrink-0 border border-black/8 overflow-hidden bg-white block">
@@ -59,7 +54,7 @@ export default function WhyConkaReasons() {
                 </span>
               )}
 
-              <span className="flex-1 min-w-0 flex flex-col gap-1.5">
+              <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
                   {number} / {totalPadded}
                 </span>
@@ -69,17 +64,26 @@ export default function WhyConkaReasons() {
                 >
                   {reason.headline}
                 </h2>
-                <span className="text-sm lg:text-base text-black/70 leading-snug">
+                <p className="text-sm lg:text-base text-black/70 leading-snug">
                   {reason.oneLine}
-                </span>
+                </p>
+              </div>
+            </div>
 
-                <span className="inline-flex items-center gap-1.5 mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
-                  <span className="tabular-nums">
-                    {isExpanded ? "[−]" : "[+]"}
-                  </span>
-                  <span>{isExpanded ? "Show less" : "Learn more"}</span>
-                </span>
+            {/* Toggle — full-width row, 44px tap target */}
+            <button
+              type="button"
+              onClick={() =>
+                setExpandedId(isExpanded ? null : reason.id)
+              }
+              aria-expanded={isExpanded}
+              aria-controls={panelId}
+              className="w-full text-left px-5 lg:px-6 pb-4 pt-2 inline-flex items-center gap-1.5 min-h-[44px] font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50 hover:text-black transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]/40 focus-visible:ring-offset-2"
+            >
+              <span className="tabular-nums">
+                {isExpanded ? "[−]" : "[+]"}
               </span>
+              <span>{isExpanded ? "Show less" : "Learn more"}</span>
             </button>
 
             {/* Expanded: asset large → stat → story */}
