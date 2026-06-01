@@ -52,8 +52,6 @@ interface ShopifyOrder {
   total_price?: string | null;
   currency?: string | null;
   created_at?: string | null;
-  source_name?: string | null;
-  tags?: string | null;
   note_attributes?: NoteAttribute[];
   line_items?: Array<{ variant_id?: number | null; quantity?: number | null }>;
   customer?: {
@@ -69,19 +67,23 @@ interface ShopifyOrder {
 }
 
 /**
- * Subscription renewal detection. Recurring rebills must NOT be counted as new
- * acquisitions; the first/initial subscription order DOES count.
+ * Only orders that came through the web checkout are sent as Purchase events.
  *
- * TODO(verify): confirm these signals against a real Loop rebill order before
- * relying on them. They are the standard Shopify/Loop markers, but the exact
- * source_name / tag should be checked against an actual recurring order in the
- * Shopify admin (and in Meta Test Events) once the webhook is live.
+ * Real storefront checkouts carry browser context (`client_details`). Subscription
+ * rebills (Loop/Skio/native), POS, and API/manual orders are created server-side
+ * and have no `client_details`, so they are excluded automatically without
+ * hardcoding any app-specific tag/source markers. This mirrors the Shopify
+ * Facebook channel, which also only fires Purchase on web checkouts — so our
+ * server events stay in scope with the channel's, deduped by order id.
+ *
+ * The first/initial subscription order IS a real checkout, so it is correctly kept.
+ *
+ * Verify once live: confirm a real rebill is skipped and a first subscription
+ * order is kept (check the Shopify order's `client_details` if unsure).
  */
-function isSubscriptionRenewal(order: ShopifyOrder): boolean {
-  if ((order.source_name ?? "").toLowerCase() === "subscription_contract") return true;
-  const tags = (order.tags ?? "").toLowerCase();
-  if (tags.includes("recurring")) return true;
-  return false;
+function isWebCheckoutOrder(order: ShopifyOrder): boolean {
+  const cd = order.client_details;
+  return Boolean(cd && (cd.browser_ip || cd.user_agent));
 }
 
 function noteAttr(order: ShopifyOrder, name: string): string | undefined {
@@ -117,10 +119,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Skip subscription rebills — only new/first orders are acquisitions.
-    if (isSubscriptionRenewal(order)) {
-      console.log("[Shopify webhook] Skipping subscription renewal", { orderId: order.id });
-      return NextResponse.json({ ok: true, skipped: "renewal" }, { status: 200 });
+    // Only web-checkout orders are acquisitions. Rebills, POS, and API/manual
+    // orders have no browser context and are skipped (the channel ignores them too).
+    if (!isWebCheckoutOrder(order)) {
+      console.log("[Shopify webhook] Skipping non-checkout order (rebill/POS/manual)", {
+        orderId: order.id,
+      });
+      return NextResponse.json({ ok: true, skipped: "non_checkout" }, { status: 200 });
     }
 
     const value = parseFloat(order.total_price ?? "");

@@ -26,7 +26,7 @@ Added 2026-06-01 (SCRUM-1046/1047) as the core of the headless attribution fix (
 - **Ad-click identity:** `fbclid` is captured into the `_fbc` cookie on landing (`captureFbcFromUrl` in `metaPixel.ts`), and `_fbp`/`_fbc` are attached as **cart-level attributes** (`CartContext` → `app/api/cart/route.ts`) so they reach the order's note attributes, where the webhook reads them.
 - **Dedup + idempotency:** the Shopify order ID is the `event_id`, shared with the channel's Purchase, so Meta merges them; a Shopify retry re-sends the same `event_id` and is deduped Meta-side (no local store needed).
 - **Webhook URL:** `https://hooks.conka.io/api/webhooks/shopify/orders` — a dedicated Vercel subdomain, because Shopify blocks webhook URLs that match the store's own domains (`www.conka.io`, `shop.conka.io`, etc.).
-- **Renewals:** `isSubscriptionRenewal()` skips Loop rebills (marked `TODO(verify)` — confirm the exact signal against a real recurring order).
+- **Renewals / scope:** `isWebCheckoutOrder()` only sends Purchase for orders that came through the web checkout (have `client_details`). Subscription rebills (Loop/Skio/native), POS, and API/manual orders have no browser context and are skipped automatically — no app-specific markers hardcoded. This matches the Shopify Facebook channel's scope. The first subscription order is a real checkout, so it is kept. Verify once live: a real rebill is skipped, a first subscription order is kept.
 
 ## Implementation Details
 
