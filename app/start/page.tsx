@@ -44,14 +44,6 @@ const CROCustomerReviews = dynamic(
   { loading: () => <div className="min-h-[680px]" /> },
 );
 
-// Legal footer: anchored footnotes + UK food-supplement disclaimers. Carried
-// over from the previous /start build; content-only, no scope-class
-// dependency, so it renders cleanly inside this page root.
-const LandingDisclaimer = dynamic(
-  () => import("../components/landing/LandingDisclaimer"),
-  { loading: () => <div className="min-h-[150px]" /> },
-);
-
 export const metadata: Metadata = {
   title: "Try CONKA | Daily Nootropic Brain Shots",
   description:
@@ -222,9 +214,6 @@ export default function StartPage() {
                 With a daily dose of CONKA, you&apos;ll experience a noticeable
                 boost in focus, memory, stress resilience &amp; neuroplasticity
                 through our patented formula.
-                <sup className="ml-0.5 text-[0.6em] text-black/40 align-super">
-                  †
-                </sup>
               </p>
 
               <Link
@@ -890,17 +879,6 @@ export default function StartPage() {
         >
           <div className="brand-track">
             <CROFAQv2 />
-          </div>
-        </section>
-
-        {/* ===== DISCLAIMER ===== */}
-        <section
-          className="brand-section"
-          style={{ background: "var(--brand-tint)" }}
-          aria-label="Important information and disclaimers"
-        >
-          <div className="brand-track">
-            <LandingDisclaimer />
           </div>
         </section>
       </main>
