@@ -17,7 +17,11 @@ interface ExploreLink {
 }
 
 const DEFAULT_LINKS: ExploreLink[] = [
-  { href: "/conka-flow", label: "CONKA Flow", sub: "The morning shot" },
+  {
+    href: "/conka-both",
+    label: "CONKA Flow & Clear",
+    sub: "The full system",
+  },
   { href: "/ingredients", label: "Ingredients", sub: "What's inside" },
   { href: "/app", label: "The App", sub: "Measure your brain" },
   { href: "/science", label: "The Science", sub: "Research & trials" },

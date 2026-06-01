@@ -1,72 +1,59 @@
-"use client";
-
-import { useIsMobile } from "@/app/hooks/useIsMobile";
+import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import { WhyConkaHero } from "@/app/components/why-conka/WhyConkaHero";
-import { WhyConkaHeroMobile } from "@/app/components/why-conka/WhyConkaHeroMobile";
-import { WhyConkaSection } from "@/app/components/why-conka/WhyConkaSection";
+import WhyConkaReasons from "@/app/components/why-conka/WhyConkaReasons";
 import { WhyConkaCTA } from "@/app/components/why-conka/WhyConkaCTA";
-import { whyConkaPoints } from "@/app/lib/whyConkaData";
+
+export const metadata: Metadata = {
+  title: "Why CONKA | Seven Reasons in Sixty Seconds",
+  description:
+    "Seven reasons high performers choose CONKA: 25+ clinical trials, Cambridge-built cognitive testing, natural UK-made ingredients, and a 100-day guarantee.",
+  openGraph: {
+    title: "Why CONKA | Seven Reasons in Sixty Seconds",
+    description:
+      "Seven reasons high performers choose CONKA: 25+ clinical trials, Cambridge-built cognitive testing, natural UK-made ingredients, and a 100-day guarantee.",
+  },
+};
 
 export default function WhyConkaPage() {
-  const isMobile = useIsMobile();
-
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black flex flex-col">
+    <div className="brand-clinical min-h-screen bg-white text-black">
       <Navigation />
 
-      {isMobile === undefined ? (
-        <div className="min-h-screen flex items-center justify-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
-            // loading
-          </p>
+      {/* Hero — paddingTop: .brand-clinical zeros brand-hero-first padding on
+          mobile, leaving the hero flush against the nav. */}
+      <section
+        className="brand-section brand-hero-first brand-bg-white"
+        style={{ paddingTop: "5rem", paddingBottom: "2rem" }}
+        aria-labelledby="why-conka-hero-heading"
+      >
+        <div className="brand-track">
+          <WhyConkaHero />
         </div>
-      ) : (
-        <>
-          {/* Hero */}
-          <section
-            className="brand-section brand-hero-first brand-bg-white"
-            aria-labelledby="why-conka-hero-heading"
-          >
-            <div className="brand-track">
-              {isMobile ? <WhyConkaHeroMobile /> : <WhyConkaHero />}
-            </div>
-          </section>
+      </section>
 
-          {/* Why CONKA points — alternating white/tint for rhythm */}
-          {whyConkaPoints.map((point) => {
-            const isLight = point.theme === "light";
-            return (
-              <section
-                key={point.id}
-                className={`brand-section ${isLight ? "brand-bg-white" : "brand-bg-tint"}`}
-                aria-label={point.headline}
-              >
-                <div className="brand-track">
-                  <WhyConkaSection
-                    point={point}
-                    totalPoints={whyConkaPoints.length}
-                    variant={isMobile ? "mobile" : "desktop"}
-                  />
-                </div>
-              </section>
-            );
-          })}
+      {/* The 7 proof cards */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Seven reasons to choose CONKA"
+      >
+        <div className="brand-track">
+          <WhyConkaReasons />
+        </div>
+      </section>
 
-          {/* Final CTA */}
-          <section
-            className="brand-section brand-bg-white"
-            aria-label="Explore CONKA"
-          >
-            <div className="brand-track">
-              <WhyConkaCTA />
-            </div>
-          </section>
+      {/* Final CTA + explore routing */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Try CONKA"
+      >
+        <div className="brand-track">
+          <WhyConkaCTA />
+        </div>
+      </section>
 
-          <Footer />
-        </>
-      )}
+      <Footer />
     </div>
   );
 }
