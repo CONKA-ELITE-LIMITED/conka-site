@@ -6,6 +6,46 @@
 
 ## June 2026
 
+### 2026-06-01 -- Home Daily Benefits expanded panels follow the PDP story-led structure
+
+After the PDP benefits pillars proved the story-led expanded panel reads better, the home page Daily Benefits component was brought in line. Expanded panels now run: app-data stat box first (the headline number from real users), then a prose story that weaves all three bolded ingredient names into the claim, then the renders the story just referenced, then the PMID as small print. Previously the panels led with unexplained ingredient tiles and each study sentence only mentioned one of the three ingredients. The internal field was renamed from studyObservation to story to match the PDP data shape.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`
+
+---
+
+### 2026-06-01 -- PDP benefits pillars upgraded: Flow video, outcome titles, render thumbnails, story-led expanded panels
+
+The Section 2 benefits pillars on /conka-flow and /conka-clarity (shared FormulaBenefitsPillars component) received the same treatment as the home page Daily Benefits section. Flow gets the rotating 3D bottle render in a sticky media column with the cards stacked beside it; Clear keeps the full-width 3-column grid until its render arrives (the component branches on formulaId). Pillar titles are now outcome-led (Improves Memory and Recall, Reduces Tiredness and Fatigue, Improves Sleep Quality on Flow; Improves Memory and Recall, Reduces Mental Fatigue, Improves Mental Clarity on Clear). Collapsed cards show their three ingredient renders as 44px thumbnails in a footer row with a mono Learn-more affordance, replacing the corner plus/minus icon. The expanded panels were restructured from stacked mono-caps fragments into a narrative: stat with a readable label, then a new prose story sentence that weaves the bolded ingredient names into the claim, then the renders the story just referenced, then the felt-translation punchline, then the source citation as small print. The story copy attributes each stat to the ingredient its cited study tested; founder to verify attributions. formulaStatsData renamed from .ts to .tsx so story fields can carry JSX. Old webp ingredient photos replaced with the bespoke 3D renders throughout (ALCAR and Glutathione use the generic white-powder render until bespoke ones ship).
+
+**Modified:** `app/components/product/FormulaBenefitsPillars.tsx`, `app/components/product/formulaStatsData.tsx` (renamed from .ts)
+
+---
+
+### 2026-06-01 -- Daily Benefits collapsed thumbnails and round 2 review fixes
+
+Three follow-ups on the round 2 home page work. The Daily Benefits cards now show their three ingredient renders as 44px thumbnails in the collapsed state, sharing one footer row with the Learn-more expander (thumbnails left, toggle right), so visitors see what is inside each pillar without tapping and the cards stay short. From the code review: the LabResearch partner grid cells switched from tint to white fill so they read as defined cards against the tint section background, and the Daily Benefits dynamic-import placeholder height was raised from 600px to approximate the real section height (1500px mobile, 900px desktop) to limit CLS during client-side navigation.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/landing/LabResearch.tsx`, `app/page.tsx`
+
+---
+
+### 2026-06-01 -- Daily Benefits section rebuilt around the rotating Flow render and outcome-led cards
+
+The home page Daily Benefits section ("Daily habit. Lifelong benefits.") was rebuilt for faster consumption. The static lifestyle photo was replaced with the rotating 3D Flow bottle render (FlowVideo, the same asset /start uses), 4:5 portrait, sticky on desktop and full-bleed on mobile, with a Fig. 02 chip overlay. The three benefit cards now lead with outcome verbs (Improves Focus and Memory, Reduces Fatigue and Crashes, Protects Long-Term Brain Health) instead of category nouns, descriptions were cut to one line each, and the full-width "See ingredients and research" expander was shrunk to a compact mono "[+] Learn more" toggle. The expanded view swaps the old webp ingredient photos for the bespoke 3D renders from /public/ingredients/renders/. App-data stat boxes, study observations, and PMID citations are unchanged. FlowVideo moved from app/start/ to app/components/landing/ so a shared component no longer lives in a page folder; /start's import was updated with no behaviour change.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/landing/FlowVideo.tsx` (moved from `app/start/`), `app/start/page.tsx`
+
+---
+
+### 2026-06-01 -- Home page Certified-for-Performance section replaced with clinical research section
+
+Round 2 of the home page upgrade effort. The "Certified for Performance" credentials section (WhyConkaWorks, a 3-pillar grid of Certification / Research / Manufacturing) was replaced with a new LabResearch component: the World-Class Research beat from /start rebuilt in the clinical grammar. Mono eyebrow, left-aligned two-line title, Cambridge photograph with a Fig. 03 chip overlay (desktop right column, mobile full-bleed), a 2x2 partner logo grid (Cambridge, Durham, Exeter, Made in Britain) in tint cells with sharp corners, and a closing mono spec line carrying the Made in England / GMP claim forward. No credibility content is lost: the Informed Sport pillar moved to the athlete carousel in round 1, the universities live in the partner grid, and manufacturing lives in the spec line. WhyConkaWorks itself is untouched since /protocol/[id] still renders it. LabResearch is a direct server-component import, removing one dynamic chunk from the home page.
+
+**Modified:** `app/page.tsx`, `app/components/landing/LabResearch.tsx` (new)
+
+---
+
 ### 2026-06-01 -- Document the Meta Purchase dedup verification method
 
 Captured how to verify the server-side Purchase deduplicates against the Shopify Facebook channel, after finding that Shopify's checkout pixel is sandboxed (Meta Pixel Helper and Test Events cannot read the channel's event_id). The recommended check is by effect: after deploy, place one test order and watch the Purchase count in Events Manager; if it roughly doubles, the event_id does not match the channel's and the one-line eventId in the webhook needs changing. The numeric order id is the de-facto standard, so it is most likely already correct.

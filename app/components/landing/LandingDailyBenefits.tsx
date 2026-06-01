@@ -11,11 +11,21 @@ import {
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
 import LabTrustBadges from "./LabTrustBadges";
+import FlowVideo from "./FlowVideo";
+
+/* ============================================================================
+ * LandingDailyBenefits
+ *
+ * Quick-to-consume benefit pillars next to the rotating Flow render.
+ * Collapsed cards carry an outcome-led title + one line; the [+] Learn more
+ * expander reveals 3D ingredient renders, real app data, and the study
+ * citation for people who want the depth.
+ * ========================================================================== */
 
 interface Ingredient {
   name: string;
+  // 3D renders live in /public/ingredients/renders/ as PascalCase JPGs.
   imageSrc: string;
-  efsaAnchor?: boolean;
 }
 
 interface AppInsight {
@@ -29,10 +39,13 @@ interface Pillar {
   id: string;
   icon: React.ReactNode;
   heading: string;
-  description: React.ReactNode;
+  description: string;
   ingredients: Ingredient[];
   appInsight: AppInsight;
-  studyObservation: React.ReactNode;
+  // Prose that weaves the bolded ingredient names into the claim, so the
+  // stat, the story, and the renders below read as one narrative. Same
+  // pattern as the PDP FormulaBenefitsPillars story field.
+  story: React.ReactNode;
   pmid: string;
 }
 
@@ -40,13 +53,13 @@ const PILLARS: Pillar[] = [
   {
     id: "mental",
     icon: <BenefitIconFocus />,
-    heading: "Mental Performance",
+    heading: "Improves Focus & Memory",
     description:
-      "Clinically-studied ingredients for your daily focus and clarity routine. Stay locked in past 2pm instead of reaching for another coffee.",
+      "Stay locked in past 2pm instead of reaching for another coffee.",
     ingredients: [
-      { name: "Lemon Balm", imageSrc: "/ingredients/flow/lemon-balm.webp" },
-      { name: "Alpha GPC", imageSrc: "/ingredients/clear/alpha-gpc.webp" },
-      { name: "Rhodiola", imageSrc: "/ingredients/flow/rhodiola.webp" },
+      { name: "Lemon Balm", imageSrc: "/ingredients/renders/LemonBalm.jpg" },
+      { name: "Alpha GPC", imageSrc: "/ingredients/renders/AlphaGPC.jpg" },
+      { name: "Rhodiola", imageSrc: "/ingredients/renders/RhodiolaRosea.jpg" },
     ],
     appInsight: {
       stat: "−1.8 pts",
@@ -54,20 +67,35 @@ const PILLARS: Pillar[] = [
       caveat: "n=260 users · 1,248 fatigued tests ^^",
       anchor: "/app-insights#mental-fatigue",
     },
-    studyObservation:
-      "In one study, participants taking Lemon Balm showed improvements in calmness and alertness (Kennedy et al. 2003)¶",
+    story: (
+      <>
+        In one study, participants taking{" "}
+        <strong className="font-semibold text-black">Lemon Balm</strong>{" "}
+        showed improvements in calmness and alertness (Kennedy et al. 2003)¶.{" "}
+        <strong className="font-semibold text-black">Alpha GPC</strong> raises
+        acetylcholine, the brain&apos;s memory messenger, and{" "}
+        <strong className="font-semibold text-black">Rhodiola</strong> keeps
+        stress from stealing your focus.
+      </>
+    ),
     pmid: "PMID: 12888775",
   },
   {
     id: "energy",
     icon: <BenefitIconSleep />,
-    heading: "Sustained Energy",
+    heading: "Reduces Fatigue & Crashes",
     description:
-      "All-day mental energy without caffeine, jitters, or crashes. Adaptogens help your body manage the demands of a full day, not just the first few hours.",
+      "All-day mental energy without caffeine, jitters, or the 3pm slump.",
     ingredients: [
-      { name: "Ashwagandha", imageSrc: "/ingredients/flow/ashwagandha.webp" },
-      { name: "Turmeric", imageSrc: "/ingredients/flow/turmeric.jpg" },
-      { name: "Vitamin B12", imageSrc: "/ingredients/clear/vitamin-b12.webp", efsaAnchor: true },
+      {
+        name: "Ashwagandha",
+        imageSrc: "/ingredients/renders/Ashwagandha.jpg",
+      },
+      { name: "Turmeric", imageSrc: "/ingredients/renders/Turmeric.jpg" },
+      {
+        name: "Vitamin B12",
+        imageSrc: "/ingredients/renders/VitaminB12.jpg",
+      },
     ],
     appInsight: {
       stat: "+1.09 pts",
@@ -75,26 +103,30 @@ const PILLARS: Pillar[] = [
       caveat: "n=74 Conka tests · 18–21 window ^^",
       anchor: "/app-insights#time-of-day",
     },
-    studyObservation:
-      "In one study, participants taking Ashwagandha showed a significant reduction in perceived stress (Chandrasekhar et al. 2012)¶",
+    story: (
+      <>
+        In one study, participants taking{" "}
+        <strong className="font-semibold text-black">Ashwagandha</strong>{" "}
+        showed a significant reduction in perceived stress (Chandrasekhar et
+        al. 2012)¶.{" "}
+        <strong className="font-semibold text-black">Turmeric</strong> keeps
+        inflammation in check while{" "}
+        <strong className="font-semibold text-black">Vitamin B12</strong>{" "}
+        supports your body&apos;s own energy release.
+      </>
+    ),
     pmid: "PMID: 23439798",
   },
   {
     id: "brain",
     icon: <BenefitIconStress />,
-    heading: "Brain Health",
-    description: (
-      <>
-        Long-term investment in your brain, not just a quick fix. Vitamin C
-        contributes to the protection of cells from oxidative stress.
-        <sup className="text-[0.5em] text-black/40 align-super">††</sup> A
-        daily routine built for the years ahead.
-      </>
-    ),
+    heading: "Protects Long-Term Brain Health",
+    description:
+      "A daily routine that invests in your brain for the years ahead.",
     ingredients: [
-      { name: "Glutathione", imageSrc: "/ingredients/clear/glutathione.webp" },
-      { name: "NAC", imageSrc: "/ingredients/clear/nac.webp" },
-      { name: "Vitamin C", imageSrc: "/ingredients/clear/vitamin-c.webp", efsaAnchor: true },
+      { name: "Glutathione", imageSrc: "/ingredients/renders/11.jpg" },
+      { name: "NAC", imageSrc: "/ingredients/renders/NAcetylCysteine.jpg" },
+      { name: "Vitamin C", imageSrc: "/ingredients/renders/VitaminC.jpg" },
     ],
     appInsight: {
       stat: "−5.4 pts",
@@ -102,12 +134,16 @@ const PILLARS: Pillar[] = [
       caveat: "n=18 users · 58 tests ^^",
       anchor: "/app-insights#stress",
     },
-    studyObservation: (
+    story: (
       <>
-        Vitamin C contributes to the protection of cells from oxidative stress
-        <sup className="text-[0.5em] text-black/40 align-super">††</sup>. In
-        one study, participants showed improvements in antioxidant capacity
-        (Sinha et al. 2018)¶
+        <strong className="font-semibold text-black">Vitamin C</strong>{" "}
+        contributes to the protection of cells from oxidative stress
+        <sup className="text-[0.5em] text-black/40 align-super">††</sup>.{" "}
+        <strong className="font-semibold text-black">Glutathione</strong> is
+        the body&apos;s master antioxidant, and{" "}
+        <strong className="font-semibold text-black">NAC</strong> is what
+        your body uses to rebuild it. In one study, participants showed
+        improvements in antioxidant capacity (Sinha et al. 2018)¶.
       </>
     ),
     pmid: "PMID: 29559699",
@@ -120,20 +156,13 @@ export default function LandingDailyBenefits() {
   return (
     <div>
       <div className="flex flex-col lg:flex-row lg:gap-10">
-        <div className="relative overflow-hidden -mt-20 lg:mt-0 -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-auto aspect-[5/3] lg:aspect-auto mb-8 lg:mb-0 lg:flex-[2] lg:min-h-[500px] lg:sticky lg:top-24 lg:self-start">
-          <Image
-            src="/lifestyle/clear/ClearCloseTwoHands.jpg"
-            alt="Two hands passing a CONKA bottle"
-            fill
-            sizes="(max-width: 1024px) 95vw, 500px"
-            className="object-cover scale-[1.35]"
-            style={{ objectPosition: "center 38%" }}
-          />
+        {/* Rotating Flow render — replaces the static lifestyle photo.
+            4:5 portrait, full-bleed on mobile, sticky on desktop so it
+            tracks the cards. Fig. chip keeps the clinical texture. */}
+        <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[4/5] mb-8 md:mx-0 md:w-full lg:mb-0 lg:flex-[2] lg:sticky lg:top-24 lg:self-start bg-black/[0.04] border-y md:border border-black/12">
+          <FlowVideo />
           <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-            Fig. 02 · Daily Ritual
-          </span>
-          <span className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-            Hand-Off · Flow + Clear
+            Fig. 02 · CONKA Flow · 3D Render
           </span>
         </div>
 
@@ -148,7 +177,7 @@ export default function LandingDailyBenefits() {
             Daily habit. Lifelong benefits.
           </h2>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
-            Mental performance · Sustained energy · Brain health
+            Focus · Energy · Long-term brain health
           </p>
 
           <div className="grid grid-cols-1 gap-4">
@@ -164,7 +193,7 @@ export default function LandingDailyBenefits() {
                       : "border border-black/8"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-2">
                     <h3 className="text-2xl lg:text-3xl font-semibold text-black">
                       {pillar.heading}
                     </h3>
@@ -173,66 +202,54 @@ export default function LandingDailyBenefits() {
                     </div>
                   </div>
 
-                  <p className="text-sm text-black/60 leading-relaxed mb-4">
+                  <p className="text-sm text-black/60 leading-snug mb-4">
                     {pillar.description}
                   </p>
 
-                  <button
-                    type="button"
-                    onClick={() => setOpenId(isOpen ? null : pillar.id)}
-                    aria-expanded={isOpen}
-                    aria-controls={`pillar-evidence-${pillar.id}`}
-                    className="mt-auto inline-flex items-center justify-between gap-2 min-h-[44px] text-sm font-mono font-semibold text-black text-left cursor-pointer uppercase tracking-[0.08em]"
-                  >
-                    <span>{isOpen ? "Hide details" : "See ingredients & research"}</span>
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`shrink-0 ${isOpen ? "rotate-180" : ""}`}
-                      aria-hidden
+                  {/* Footer row — ingredient render thumbnails (collapsed only)
+                      on the left, compact mono expander on the right. One row
+                      keeps the card short while still showing what's inside
+                      without a tap. */}
+                  <div className="mt-auto flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5">
+                      {!isOpen &&
+                        pillar.ingredients.map((ingredient) => (
+                          <div
+                            key={ingredient.name}
+                            className="relative w-11 h-11 border border-black/8 overflow-hidden bg-white"
+                          >
+                            <Image
+                              src={ingredient.imageSrc}
+                              alt={ingredient.name}
+                              fill
+                              loading="lazy"
+                              sizes="44px"
+                              className="object-cover"
+                            />
+                          </div>
+                        ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setOpenId(isOpen ? null : pillar.id)}
+                      aria-expanded={isOpen}
+                      aria-controls={`pillar-evidence-${pillar.id}`}
+                      className="inline-flex items-center gap-1.5 min-h-[44px] font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50 hover:text-black text-left cursor-pointer transition-colors shrink-0"
                     >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </button>
+                      <span className="tabular-nums">
+                        {isOpen ? "[−]" : "[+]"}
+                      </span>
+                      <span>{isOpen ? "Show less" : "Learn more"}</span>
+                    </button>
+                  </div>
 
                   {isOpen && (
                     <div
                       id={`pillar-evidence-${pillar.id}`}
-                      className="mt-4 pt-4 border-t border-black/8"
+                      className="mt-2 pt-4 border-t border-black/8"
                     >
-                      <div className="grid grid-cols-3 gap-2 mb-4 lg:justify-items-center">
-                        {pillar.ingredients.map((ingredient) => (
-                          <div
-                            key={ingredient.name}
-                            className="w-full lg:w-[70%] bg-[var(--brand-tint)] border border-black/6 overflow-hidden"
-                          >
-                            <div className="relative w-full aspect-square bg-white">
-                              <Image
-                                src={ingredient.imageSrc}
-                                alt={ingredient.name}
-                                fill
-                                sizes="(max-width: 1024px) 30vw, 90px"
-                                className="object-cover"
-                              />
-                            </div>
-                            <div className="px-2 py-2 flex items-center justify-center gap-1">
-                              <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-black/80 text-center leading-tight">
-                                {ingredient.name}
-                              </p>
-                              {ingredient.efsaAnchor && (
-                                <span className="text-black/30 text-[9px]">††</span>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
+                      {/* App data — the headline stat from real users */}
                       <div className="mb-4 p-3 bg-black/[0.03] border border-black/8 flex items-end justify-between gap-4">
                         <div>
                           <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
@@ -256,10 +273,39 @@ export default function LandingDailyBenefits() {
                         </Link>
                       </div>
 
-                      <p className="text-xs leading-relaxed text-black/60">
-                        {pillar.studyObservation}
+                      {/* Story — prose weaving the ingredient names into the claim */}
+                      <p className="text-sm leading-relaxed text-black/75 mb-4">
+                        {pillar.story}
                       </p>
-                      <p className="text-xs brand-data-label mt-2 text-black/40">
+
+                      {/* Ingredient tiles — the renders the story just referenced */}
+                      <div className="grid grid-cols-3 gap-2 mb-4 lg:justify-items-center">
+                        {pillar.ingredients.map((ingredient) => (
+                          <div
+                            key={ingredient.name}
+                            className="w-full lg:w-[70%] bg-white border border-black/8 overflow-hidden"
+                          >
+                            <div className="relative w-full aspect-square bg-white">
+                              <Image
+                                src={ingredient.imageSrc}
+                                alt={ingredient.name}
+                                fill
+                                loading="lazy"
+                                sizes="(max-width: 1024px) 30vw, 90px"
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="px-2 py-2 flex items-center justify-center">
+                              <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-black/80 text-center leading-tight">
+                                {ingredient.name}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Source — small print at the very bottom */}
+                      <p className="text-xs brand-data-label text-black/40">
                         {pillar.pmid}
                       </p>
                     </div>

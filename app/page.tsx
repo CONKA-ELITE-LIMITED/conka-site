@@ -2,6 +2,8 @@ import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHero from "./components/landing/LandingHero";
+// Pure server component (no client state) — direct import, no dynamic() needed.
+import LabResearch from "./components/landing/LabResearch";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -10,10 +12,6 @@ const LandingProductShowcase = dynamic(
 
 const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
   loading: () => <div className="h-[900px]" />,
-});
-
-const WhyConkaWorks = dynamic(() => import("./components/WhyConkaWorks"), {
-  loading: () => <div className="h-[600px]" />,
 });
 
 const LabCaseStudies = dynamic(
@@ -47,7 +45,10 @@ const LabTimeline = dynamic(
 
 const LandingDailyBenefits = dynamic(
   () => import("./components/landing/LandingDailyBenefits"),
-  { loading: () => <div className="h-[600px]" /> },
+  // Placeholder approximates the rendered height (4:5 video + header +
+  // 3 cards on mobile; sticky split on desktop) to limit CLS during
+  // client-side navigation.
+  { loading: () => <div className="h-[1500px] lg:h-[900px]" /> },
 );
 
 export default function Home() {
@@ -106,13 +107,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 6: CREDENTIALS — trust strip immediately after the ingredient argument ===== */}
+      {/* ===== SECTION 6: RESEARCH — university credibility after the ingredient argument ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="CONKA certifications and credentials"
+        aria-label="World-class research and university partners"
       >
         <div className="brand-track">
-          <WhyConkaWorks />
+          <LabResearch />
         </div>
       </section>
 
