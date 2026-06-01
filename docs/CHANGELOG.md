@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Meta attribution: config-pass findings and Phase 3 un-gated
+
+Documented the 2026-06-01 Meta Events Manager and Ads Manager review for the headless attribution fix. The entire Meta configuration layer is now ruled out as the cause: the apex domain `conka.io` was verified (it had never been, only the legacy myshopify domain was), the ads point at the correct single pixel with a 7-day-click window, and the stray third pixel is dead. Meta's own diagnostics confirmed the remaining problem is server-side, low `fbc` coverage through CAPI, malformed Purchase price data, and preview-deploy traffic polluting the dataset. On that evidence the Phase 2 gate was resolved to GO, so the server-side Purchase work was un-gated and ticketed (SCRUM-1046, SCRUM-1047), plus a new production-host-gating item (SCRUM-1048).
+
+**Modified:** `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md`, `docs/development/featurePlans/meta-tracking-hardening.md`
+
+---
+
 ### 2026-06-01 -- Code review fixes across the home page upgrade branch
 
 Five fixes from the self-review of the home-page-upgrades branch. The hero stat strip's "4.7/5 verified customer rating" cell was replaced with "280+ banned substances tested per batch" because the trust micro-row above the H1 already states the 4.7 rating (same fact twice in one viewport). The hero's gold star fill was corrected from 90% to 94% with a matching aria-label so the visual, label, and "Excellent 4.7" text agree. The product showcase guarantee row now renders even when the CTA is hidden, so /conka-both and the protocol pages close with reassurance instead of ending abruptly on the cert icons. The unused athlete bio field was removed from the carousel type and data. The marquee and thumbnail roster now reset their edge-bleed margins at the 768px breakpoint where the section gutter actually changes, fixing a partial-bleed gap on tablet widths.

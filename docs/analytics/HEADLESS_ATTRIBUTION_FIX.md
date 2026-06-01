@@ -1,12 +1,53 @@
 # Headless Shopify + Meta Attribution — Diagnosis & Fix
 
-**Status:** Diagnosis complete (2026-05-29). **Phases 1 + 2 done** (config). Phases 3 + 4 (code) pending.
+**Status:** Diagnosis complete (2026-05-29). **Phases 1 + 2 done** (domain + theme). Now verifying attribution in Meta + completing the headless-specific setup Shopify normally does for you. Phases 3 + 4 (code) pending.
 
 ## Progress log
 - **2026-05-29 — Phase 1 done.** Added `shop` CNAME → `shops.myshopify.com` in **Vercel DNS** (conka.io's DNS is hosted by Vercel, not GoDaddy — registrar is GoDaddy but nameservers are Vercel). Set `shop.conka.io` as the **primary domain** in Shopify, so checkout now serves from `shop.conka.io`. Cookie split resolved.
   - *Gotcha:* a first attempt 404'd (`DEPLOYMENT_NOT_FOUND`) because the tester's network (Tailscale → upstream resolver) had a stale cached answer pointing `shop.conka.io` at Vercel's edge. Authoritative DNS (Google/Cloudflare) was already correct → Shopify. Verify from a clean network (phone on cellular), not a Tailscale/VPN path.
 - **2026-05-29 — Phase 2 done.** A redirect script already existed in the theme's `layout/theme.liquid` but was broken two ways: (1) it only fired when `hostname.includes('myshopify.com')` — false now that the primary is `shop.conka.io`, so it never ran; (2) a stray `}` made it a syntax error. Replaced with a wrap-safe array-based version that bounces all storefront pages to `www.conka.io` while keeping `/a/` (Loop portal), `/apps/`, `/account`, `/policies/`, `/checkout`, and Shopify internals on Shopify. The store uses **classic customer accounts** (theme renders `customers` templates with a "← Back to CONKA" header), so `/account` must stay on Shopify.
+- **2026-06-01 — Meta config pass complete; root cause isolated to code.** Worked through the Events Manager / Ads Manager checks (section "Action checklist" below). Outcome: the entire Meta *configuration* layer is now ruled out. **(A1)** The apex domain `conka.io` was NOT verified (only the legacy `conka-6770.myshopify.com` was) — verified it via a DNS TXT record in Vercel; cascades to `www.` + `shop.`. **(A2)** AEM is auto-managed post-verification and was not flagged. **(A5)** Ads point at the correct single pixel `1138202151698404` with a 7-day-click window; Purchase ROAS reads "—" everywhere (zero attributed sales = the symptom). The stray `Conka's pixel` `964605425225904` is a dead/empty legacy pixel, not a second split. **Meta's own "9 actions" panel independently confirmed the cause: the server sends low `fbc` coverage through CAPI, 50% of Purchase price data is malformed, and Pixel↔CAPI dedup is weak.** Also found Vercel preview deploys (`*.vercel.app`) firing the prod pixel and polluting data quality. **Net: the remaining fix is code — Phases B1 (server Purchase webhook → CAPI) + B2 (capture/propagate `fbclid`/`_fbc`) + new B3 (gate pixel to prod host).**
 **Owner context:** Meta ads were spending without learning. This doc captures what was actually wrong, why, and the fix plan. Read this before touching anything in the Meta / Shopify / pixel stack.
+
+---
+
+## Action checklist (post-domain-fix) — work through top to bottom
+
+The domain fix (Phases 1 + 2) was the prerequisite. These are the remaining things a native Shopify storefront does for you automatically that we now own manually. Ordered by leverage. **Tick each as we confirm it.**
+
+### A. Meta setup checks (config — do these in the browser, no code)
+- [x] **A1. Domain verification** — `conka.io` verified in Business Settings → Brand Safety → Domains. *(Covers `www.` + `shop.` — registrable-domain level.)* ✅ 2026-06-01
+- [x] **A2. Aggregated Event Measurement (AEM)** — auto-managed once `conka.io` verified; not flagged by Meta. Recheck in 24h once domain events flow. ✅ 2026-06-01
+- [ ] **A3. Test Events** — run one real end-to-end purchase; confirm Purchase arrives with good Event Match Quality and `fbc`/`fbp`/email present.
+- [ ] **A4. Deduplication** — browser + server Purchase events dedupe (shared `event_id`); no doubled Purchases.
+- [x] **A5. Ad Manager sanity** — campaign optimises for `Purchase` against `1138202151698404`; attribution window confirmed (7-day click / 1-day view). ✅ 2026-06-01 (clean)
+- [ ] **A6. Source check** — confirm the weekend orders actually came from ad clicks (UTMs / Triple Whale), not organic/direct. If organic, "no attribution" is correct, not a bug.
+
+### B. Headless code work still pending (Phases 3 + 4 below)
+> Ticketed 2026-06-01 under the `meta-tracking-hardening.md` plan. Build push = SCRUM-1043 (Phase 1 hygiene) + B1 + B2 + B3, one branch off `main`.
+- [ ] **B1. Server-side order webhook → CAPI** (Phase 3a) — robust, iOS-proof Purchase. Replaces what Shopify's channel does server-side. **→ SCRUM-1046**
+- [ ] **B2. Capture + propagate `fbclid`/`_fbc`** (Phase 3b) — feeds B1's matching. **→ SCRUM-1047**
+- [ ] **B3. Gate pixel + CAPI to production host only** — Vercel preview/branch deploys (`*.vercel.app`) currently fire the prod pixel `1138202151698404`, polluting the dataset and dragging down data quality. Only fire Meta pixel/CAPI when host is `www.conka.io` (prod). *(Found 2026-06-01 via Events Manager → Actions → "Confirm domains that belong to you": `conka-shopify-git-cant-change-frequency-conka.vercel.app`, `conka-shopify-irg8tbf1-conka.vercel.app`. Do NOT allowlist these in Meta.)* **→ SCRUM-1048**
+
+### C. Verify
+- [ ] **C1.** Full purchase shows attributed in Ads Manager after fix has been live a few days.
+
+> **Findings log** (fill in as we go):
+> - A1: **PROBLEM FOUND (2026-06-01).** Apex `conka.io` is NOT verified and not even listed. Domains list only contains `conka-6770.myshopify.com` (the legacy/redirect domain — appears multiple times, one verified, rest junk duplicates) and `shop.conka.io`. Events fire from `www.conka.io` + `shop.conka.io`, so nothing relevant is verified. **Action: add + verify apex `conka.io` via DNS TXT in Vercel DNS (cascades to www + shop). Then clean up duplicate myshopify entries.** ✅ **DONE 2026-06-01** — added TXT `facebook-domain-verification=8wexm78q225osczne6g2sarlh984j8` in Vercel DNS (apex), confirmed live on 8.8.8.8 + 1.1.1.1, `conka.io` now shows Verified. (Duplicate `conka-6770.myshopify.com` entries still in list — low-priority cleanup later.)
+> - A2: **AUTO-HANDLED (2026-06-01), recheck in 24h.** AEM web-event config is not exposed in the dataset Settings (current Meta UI auto-manages it once the domain is verified) and Meta's actions list did NOT flag AEM/domain — so default events incl. Purchase are enrolled. Dataset Settings → Conversions API panel confirms direct CAPI integration is set up with a Dataset Quality API token (the existing `app/api/meta/events/route.ts` token can be reused for B1's server webhook — no new Meta setup needed). Events Manager shows **"£1,093 ad spend affected by low data quality"** on the CONKA Web Traffic dataset, plus a **"Top actions to improve quality score — View all actions (9)"** panel (Meta's own prioritised fix list — using it to drive A2–A4). **NEW finding (RESOLVED 2026-06-01):** a third dataset **`Conka's pixel` = `964605425225904`** exists alongside CONKA Web Traffic (`1138202151698404`) and the known decoy CONKA Dashboard (`1430628298839184`). Checked its Overview: **No integrations, no websites, no catalogs, no activity in 300 days.** It's a dead legacy pixel — NOT a second split. Treat like the decoy and ignore. (Will still confirm no campaign names it as its conversion dataset during A5.)
+> - A3: _pending (Test Events) — defer until B1/B2 code is in._
+> - A4: _confirmed as a gap (2026-06-01)._ Meta Actions list: "64.1% lower cost per result by improving Pixel→CAPI coverage for InitiateCheckout" + "improve deduplication keys for pixel/CAPI" → browser+server events not pairing/deduping well. Fix lands with B1/B2.
+>
+> **Meta's own "9 actions" diagnosis (Events Manager → Actions, 2026-06-01) — strongly validates the code phases:**
+> - 🔴 **Low `fbc` coverage through CAPI** (server not sending the ad-click ID). Meta: similar advertisers sending `fbc` saw ~+100% reported conversions. → **This is the core attribution gap. = B2 (Phase 4).**
+> - 🔴 **50% of Purchase price data has formatting issues / missing values** → hurts ROAS calc (~7% ROAS upside). NEW. Purchase events ARE arriving but half have malformed value/currency. Check source (Shopify FB channel vs our events) + fix in B1.
+> - 🟠 **Pixel↔CAPI coverage/dedup low** for InitiateCheckout + ViewContent → ~64% lower CPA at 75% coverage. = A4 / B1.
+> - ⚪ AEM / "verify domain" NOT flagged → A1 likely auto-configured default events incl. Purchase (good). A2 = quick confirm only.
+> - ⚪ "Connect business-chat activity" — not relevant (no click-to-message ads), ignore.
+> - A5: **CONFIRMED CLEAN (2026-06-01).** Ad sets use **7-day click / 1-day view** (default — not a too-narrow window). Ad-level Tracking points at the correct dataset **CONKA Web Traffic `1138202151698404`** (not the dead pixel, not the decoy). Bid: Highest volume → Conversions/Purchase. **Purchase ROAS column = "—" on all rows = zero attributed purchases** (the symptom). Edits dated ~May 29 (post domain-fix). Ad URL params are Triple Whale only (`tw_source`/`tw_adid`); Meta auto-appends `fbclid` to click URLs, so B2 can read it from the landing URL with no ad change.
+> - A6: _pending — cross-check weekend orders vs ad clicks (Triple Whale / UTMs) to confirm they weren't organic._
+>
+> **Milestone (2026-06-01):** Entire Meta *config* layer ruled out as the cause — domain verified (A1), correct single pixel (A5), attribution window fine (A5), no rogue pixels (3rd-pixel dead). Root cause = **server-side `fbc`/CAPI gap → code Phases B1 + B2.**
 
 ---
 
