@@ -31,23 +31,23 @@ export default function FormulaToggle({
         <button
           type="button"
           onClick={() => onChange("01")}
-          className={`flex items-center justify-center w-24 h-24 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
+          className={`relative w-24 h-24 overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
             value === "01"
               ? "border-2 border-[#1B2757]"
               : "border border-black/12 hover:border-black/40"
           }`}
           aria-pressed={value === "01"}
         >
-          <span className="relative w-14 h-16 flex-shrink-0">
-            <Image
-              src="/formulas/conkaFlow/FlowNoBackground.png"
-              alt=""
-              fill
-              className="object-contain object-center scale-110"
-              sizes="56px"
-              aria-hidden
-            />
-          </span>
+          {/* Square photographic tile — the asset's off-white background is
+              the button surface, no inner scaling needed. */}
+          <Image
+            src="/formulas/conkaFlow/FlowNew.jpg"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="96px"
+            aria-hidden
+          />
         </button>
         <span
           className={`mt-2 font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums ${
@@ -61,23 +61,21 @@ export default function FormulaToggle({
         <button
           type="button"
           onClick={() => onChange("02")}
-          className={`flex items-center justify-center w-24 h-24 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
+          className={`relative w-24 h-24 overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
             value === "02"
               ? "border-2 border-[#1B2757]"
               : "border border-black/12 hover:border-black/40"
           }`}
           aria-pressed={value === "02"}
         >
-          <span className="relative w-14 h-16 flex-shrink-0">
-            <Image
-              src="/formulas/conkaClear/ClearNoBackground.png"
-              alt=""
-              fill
-              className="object-contain object-center scale-110"
-              sizes="56px"
-              aria-hidden
-            />
-          </span>
+          <Image
+            src="/formulas/conkaClear/ClearNew.jpg"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="96px"
+            aria-hidden
+          />
         </button>
         <span
           className={`mt-2 font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums ${
