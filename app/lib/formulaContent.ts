@@ -76,7 +76,7 @@ export interface StruggleSolution {
   radarData: RadarDataPoint[];
   keyIngredients: string[];
   ingredientAsset: {
-    image: string; // path e.g. "/ingredients/flow/lemon-balm.webp"
+    image: string; // path e.g. "/ingredients/renders/LemonBalm.jpg"
     name: string; // e.g. "Lemon Balm Extract" or "Ashwagandha"
     dosage: string; // e.g. "300mg per serving"
   };
@@ -237,7 +237,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Ashwagandha", "Lemon Balm", "Rhodiola rosea"],
         ingredientAsset: {
-          image: "/ingredients/flow/ashwagandha.webp",
+          image: "/ingredients/renders/Ashwagandha.jpg",
           name: "Ashwagandha",
           dosage: "600mg per serving",
         },
@@ -307,7 +307,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Rhodiola rosea", "Ashwagandha", "Turmeric"],
         ingredientAsset: {
-          image: "/ingredients/flow/rhodiola.webp",
+          image: "/ingredients/renders/RhodiolaRosea.jpg",
           name: "Rhodiola rosea",
           dosage: "576mg per serving",
         },
@@ -378,7 +378,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Ashwagandha", "Turmeric", "Rhodiola rosea"],
         ingredientAsset: {
-          image: "/ingredients/flow/ashwagandha.webp",
+          image: "/ingredients/renders/Ashwagandha.jpg",
           name: "Ashwagandha",
           dosage: "600mg per serving",
         },
@@ -448,7 +448,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Ashwagandha", "Rhodiola rosea", "Lemon Balm"],
         ingredientAsset: {
-          image: "/ingredients/flow/ashwagandha.webp",
+          image: "/ingredients/renders/Ashwagandha.jpg",
           name: "Ashwagandha",
           dosage: "600mg per serving",
         },
@@ -518,7 +518,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Lemon Balm", "Ashwagandha", "Rhodiola rosea"],
         ingredientAsset: {
-          image: "/ingredients/flow/lemon-balm.webp",
+          image: "/ingredients/renders/LemonBalm.jpg",
           name: "Lemon Balm Extract",
           dosage: "300mg per serving",
         },
@@ -588,7 +588,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Lemon Balm", "Turmeric", "Bilberry"],
         ingredientAsset: {
-          image: "/ingredients/flow/lemon-balm.webp",
+          image: "/ingredients/renders/LemonBalm.jpg",
           name: "Lemon Balm Extract",
           dosage: "300mg per serving",
         },
@@ -792,7 +792,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Glutathione", "N-Acetyl Cysteine", "Alpha GPC"],
         ingredientAsset: {
-          image: "/ingredients/clear/glutathione.webp",
+          image: "/ingredients/renders/11.jpg",
           name: "Reduced Glutathione",
           dosage: "250mg per serving",
         },
@@ -872,7 +872,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
           "Alpha Lipoic Acid",
         ],
         ingredientAsset: {
-          image: "/ingredients/clear/ginkgo.webp",
+          image: "/ingredients/renders/GinkgoBiloba.jpg",
           name: "Ginkgo Biloba",
           dosage: "120mg per serving",
         },
@@ -963,7 +963,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Alpha GPC", "Glutathione", "Vitamin C"],
         ingredientAsset: {
-          image: "/ingredients/clear/alpha-gpc.webp",
+          image: "/ingredients/renders/AlphaGPC.jpg",
           name: "Alpha GPC",
           dosage: "300mg per serving",
         },
@@ -1038,7 +1038,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Acetyl-L-Carnitine", "Alpha GPC", "Glutathione"],
         ingredientAsset: {
-          image: "/ingredients/clear/alcar.webp",
+          image: "/ingredients/renders/11.jpg",
           name: "Acetyl-L-Carnitine",
           dosage: "500mg per serving",
         },
@@ -1124,7 +1124,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Vitamin C", "Glutathione", "Alpha GPC"],
         ingredientAsset: {
-          image: "/ingredients/clear/vitamin-c.webp",
+          image: "/ingredients/renders/VitaminC.jpg",
           name: "Vitamin C",
           dosage: "1000mg per serving",
         },
@@ -1194,7 +1194,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Turmeric (Curcumin)", "Ginkgo Biloba", "Alpha GPC"],
         ingredientAsset: {
-          image: "/ingredients/flow/turmeric.jpg",
+          image: "/ingredients/renders/Turmeric.jpg",
           name: "Longvida® Curcumin",
           dosage: "400mg per serving",
         },

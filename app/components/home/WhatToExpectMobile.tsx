@@ -138,23 +138,22 @@ export default function WhatToExpectMobile({ productId }: WhatToExpectMobileProp
             <button
               type="button"
               onClick={() => setToggleFormula("01")}
-              className={`flex items-center justify-center w-20 h-20 bg-white border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${
+              className={`relative w-20 h-20 overflow-hidden bg-white border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${
                 selectedFormula === "01"
                   ? "border-black opacity-100"
                   : "border-black/8 opacity-60"
               }`}
               aria-pressed={selectedFormula === "01"}
             >
-              <span className="relative w-12 h-14 flex-shrink-0 block">
-                <Image
-                  src="/formulas/conkaFlow/FlowNoBackground.png"
-                  alt=""
-                  fill
-                  className="object-contain scale-110"
-                  sizes="48px"
-                  aria-hidden
-                />
-              </span>
+              {/* Square photographic tile — matches the desktop FormulaToggle. */}
+              <Image
+                src="/formulas/conkaFlow/FlowNew.jpg"
+                alt=""
+                fill
+                className="object-cover"
+                sizes="80px"
+                aria-hidden
+              />
             </button>
             <span className="mt-1.5 text-xs font-semibold text-center text-black">
               Flow
@@ -165,23 +164,21 @@ export default function WhatToExpectMobile({ productId }: WhatToExpectMobileProp
             <button
               type="button"
               onClick={() => setToggleFormula("02")}
-              className={`flex items-center justify-center w-20 h-20 bg-white border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${
+              className={`relative w-20 h-20 overflow-hidden bg-white border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${
                 selectedFormula === "02"
                   ? "border-black opacity-100"
                   : "border-black/8 opacity-60"
               }`}
               aria-pressed={selectedFormula === "02"}
             >
-              <span className="relative w-12 h-14 flex-shrink-0 block">
-                <Image
-                  src="/formulas/conkaClear/ClearNoBackground.png"
-                  alt=""
-                  fill
-                  className="object-contain scale-110"
-                  sizes="48px"
-                  aria-hidden
-                />
-              </span>
+              <Image
+                src="/formulas/conkaClear/ClearNew.jpg"
+                alt=""
+                fill
+                className="object-cover"
+                sizes="80px"
+                aria-hidden
+              />
             </button>
             <span className="mt-1.5 text-xs font-semibold text-center text-black">
               Clear
@@ -279,16 +276,16 @@ export default function WhatToExpectMobile({ productId }: WhatToExpectMobileProp
       {/* 5. How to use card */}
       <div className="mb-8 bg-white border border-black/8 p-6">
         <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-16 h-16 relative bg-[var(--brand-tint)] border border-black/8 overflow-hidden flex items-center justify-center p-1">
+          <div className="flex-shrink-0 w-16 h-16 relative border border-black/8 overflow-hidden">
             <Image
               src={
                 selectedFormula === "01"
-                  ? "/formulas/conkaFlow/FlowNoBackground.png"
-                  : "/formulas/conkaClear/ClearNoBackground.png"
+                  ? "/formulas/conkaFlow/FlowNew.jpg"
+                  : "/formulas/conkaClear/ClearNew.jpg"
               }
               alt=""
               fill
-              className="object-contain object-center"
+              className="object-cover"
               sizes="64px"
               aria-hidden
             />
