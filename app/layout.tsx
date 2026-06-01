@@ -117,8 +117,9 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Meta Pixel — production host only; never loads on preview deploys or localhost */}
-        <Script id="meta-pixel" strategy="lazyOnload">
+        {/* Meta Pixel — production host only; never loads on preview deploys or localhost.
+            afterInteractive so PageView + _fbc (ad-click) capture are not delayed. */}
+        <Script id="meta-pixel" strategy="afterInteractive">
           {`
             if (window.location.hostname === 'www.conka.io') {
               !function(f,b,e,v,n,t,s)

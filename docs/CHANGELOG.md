@@ -6,7 +6,11 @@
 
 ## June 2026
 
-### 2026-06-01 -- Gate Meta pixel and CAPI to the production host
+### 2026-06-01 -- Meta pixel hygiene: earlier load + single-owner InitiateCheckout
+
+Two safe tracking fixes from the attribution diagnosis. The Meta Pixel script now loads with afterInteractive instead of lazyOnload, so the early PageView and the _fbc ad-click cookie are captured promptly rather than after a delay (improving match quality). InitiateCheckout is now fired only by the Shopify Facebook channel on the real checkout page; the two frontend fires (cart drawer and funnel) were removed, eliminating the double and triple counting that had no shared event_id to dedupe on. The unused trackMetaInitiateCheckout helper was deleted. SCRUM-1043.
+
+**Modified:** `app/layout.tsx`, `app/components/CartDrawer.tsx`, `app/lib/funnelCheckout.ts`, `app/lib/metaPixel.ts`
 
 The Meta pixel and Conversions API now fire only on `www.conka.io`. Previously every Vercel preview and branch deploy ran the same code with the same pixel ID, so dev and preview traffic was mixing into the production dataset the ads optimise on, dragging down data quality (Meta flagged it under "Confirm domains that belong to you"). A strict host gate is applied at four layers: the pixel base snippet no longer loads fbevents.js off-prod, the client event helper short-circuits, the page-view tracker bails early, and the CAPI route rejects non-production hosts. Pixel does not fire in local dev by design (use Meta Test Events). SCRUM-1048.
 

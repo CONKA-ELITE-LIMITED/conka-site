@@ -160,22 +160,4 @@ export function trackMetaAddToCart(params: {
   trackWithDedup("AddToCart", customData);
 }
 
-/**
- * Track InitiateCheckout with deduplication. Call when user clicks through to checkout.
- */
-export function trackMetaInitiateCheckout(params: {
-  content_ids: string[];
-  value: number;
-  currency: string;
-  num_items: number;
-}): void {
-  trackWithDedup("InitiateCheckout", {
-    content_ids: params.content_ids,
-    content_type: "product",
-    value: params.value,
-    currency: params.currency,
-    num_items: params.num_items,
-  });
-}
-
 export { toContentId };
