@@ -74,6 +74,8 @@ Gate resolved to GO (see Phase 2 gate decision above): Phase 2 evidence showed t
 - Model HMAC verification on `app/api/webhooks/revolut/route.ts`; model the CAPI send on `app/api/meta/events/route.ts`.
 - New env var: `SHOPIFY_WEBHOOK_SECRET`. Reuse existing `META_CAPI_ACCESS_TOKEN`.
 
+**Webhook registered (2026-06-01):** Shopify admin -> Settings -> Notifications -> Webhooks: Order payment (`orders/paid`), JSON. URL = `https://hooks.conka.io/api/webhooks/shopify/orders`. Note: `www.conka.io` cannot be used (Shopify blocks webhook URLs matching the store's own domains), so a dedicated `hooks.conka.io` subdomain was added in Vercel (conka-shopify project, Production) pointing at the same app. `SHOPIFY_WEBHOOK_SECRET` = the shared signing secret shown in the Shopify Webhooks section. Go-live still needs: merge+deploy the branch, set the secret in Vercel, test order in Meta Test Events, verify the Loop renewal filter against a real rebill.
+
 ## Phase 4 — Production-host gating (ACTIVE, new; found 2026-06-01)
 
 Vercel preview/branch deploys (`*.vercel.app`) fire the production pixel `1138202151698404`, mixing dev/preview traffic into the dataset the ads optimise on and dragging down data quality. Gate the pixel + CAPI to fire only on `www.conka.io`. Reuse the gating pattern already commented in `app/lib/tripleWhale.ts`. Do NOT allowlist the preview domains in Meta. Ticket: SCRUM-1048.
