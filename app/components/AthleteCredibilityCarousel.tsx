@@ -315,8 +315,9 @@ export default function AthleteCredibilityCarousel() {
         >
           Why High Performers Trust CONKA
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          N=7 · Olympic · WBO · IBO · Team GB · England
+        <p className="text-[15px] leading-snug text-black/70 max-w-[52ch]">
+          Olympic medallists, world champions, and international competitors
+          use CONKA on the days that matter most.
         </p>
       </div>
 
@@ -386,7 +387,7 @@ export default function AthleteCredibilityCarousel() {
         role="tablist"
         aria-label="Athlete roster"
         onKeyDown={handleKeyDown}
-        className="flex gap-2 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-2 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 scroll-pl-5 lg:mx-0 lg:px-0 lg:scroll-pl-0 lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {ATHLETES.map((a, i) => {
           const isActive = i === activeIndex;

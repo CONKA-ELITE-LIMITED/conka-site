@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Athlete carousel polish: thumbnail snap padding and readable subheading
+
+Two follow-ups to the carousel rework. The mobile thumbnail strip was snapping its first tile flush against the screen edge because scroll-snap aligns to the scrollport edge and ignores visual padding; a matching scroll-padding inset (scroll-pl-5) fixes the alignment. The mono "N=7 · Olympic · WBO · IBO" subline was replaced with the readable sentence from the /start athletes section ("Olympic medallists, world champions, and international competitors use CONKA on the days that matter most"), which says the same thing without spec-sheet decoding effort.
+
+**Modified:** `app/components/AthleteCredibilityCarousel.tsx`
+
+---
+
 ### 2026-06-01 -- Athlete credibility carousel reworked as compact quote-led proof beat
 
 Third section of the home page upgrade effort, porting the structure that works on /start (CROAthletes) into the clinical AthleteCredibilityCarousel while keeping its visual register. A scrolling navy sport-breadth marquee (15 sports, star separators) now opens the section, edge-to-edge on mobile and spanning the content track on desktop. The feature card is now compact and quote-led: nav arrows overlay directly on the portrait (the separate mobile nav strip and desktop bottom nav row are gone), the counter and achievement tag sit as small mono chips on the portrait corners, and the text column reduces to name, sport plus role, and the quote rendered large as the visual hero (the bio sentence no longer renders). The thumbnail roster is now image-only tiles with no names, sports, or number prefixes: 72px scrollable strip on mobile, full-width 7-column grid on desktop. An Informed Sport block (logo, "Independently tested. Every batch.", 280 banned substances and WADA copy lifted verbatim from WhyConkaWorksDesktop) closes the section as the rational anchor, styled clinically with sharp corners and a mono category label. Changes propagate to /conka-flow, /conka-clarity, and /conka-both, which render the same component.
