@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Home page Certified-for-Performance section replaced with clinical research section
+
+Round 2 of the home page upgrade effort. The "Certified for Performance" credentials section (WhyConkaWorks, a 3-pillar grid of Certification / Research / Manufacturing) was replaced with a new LabResearch component: the World-Class Research beat from /start rebuilt in the clinical grammar. Mono eyebrow, left-aligned two-line title, Cambridge photograph with a Fig. 03 chip overlay (desktop right column, mobile full-bleed), a 2x2 partner logo grid (Cambridge, Durham, Exeter, Made in Britain) in tint cells with sharp corners, and a closing mono spec line carrying the Made in England / GMP claim forward. No credibility content is lost: the Informed Sport pillar moved to the athlete carousel in round 1, the universities live in the partner grid, and manufacturing lives in the spec line. WhyConkaWorks itself is untouched since /protocol/[id] still renders it. LabResearch is a direct server-component import, removing one dynamic chunk from the home page.
+
+**Modified:** `app/page.tsx`, `app/components/landing/LabResearch.tsx` (new)
+
+---
+
 ### 2026-06-01 -- Document the Meta Purchase dedup verification method
 
 Captured how to verify the server-side Purchase deduplicates against the Shopify Facebook channel, after finding that Shopify's checkout pixel is sandboxed (Meta Pixel Helper and Test Events cannot read the channel's event_id). The recommended check is by effect: after deploy, place one test order and watch the Purchase count in Events Manager; if it roughly doubles, the event_id does not match the channel's and the one-line eventId in the webhook needs changing. The numeric order id is the de-facto standard, so it is most likely already correct.
