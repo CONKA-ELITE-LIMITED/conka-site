@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { FormulaId, formulaContent } from "@/app/lib/productData";
 import { CURATED_STATS } from "./formulaStatsData";
-import FlowVideo from "../landing/FlowVideo";
+import BottleVideo from "../landing/BottleVideo";
 
 interface FormulaBenefitsPillarsProps {
   formulaId: FormulaId;
@@ -16,9 +16,8 @@ interface FormulaBenefitsPillarsProps {
 // without a tap. The clinical detail (stat, anchor, felt translation, full
 // ingredient tiles) appears on expand.
 //
-// Flow (formulaId "01") additionally gets the rotating 3D bottle render in
-// a sticky media column. Clear's render is still pending from marketing, so
-// "02" keeps the full-width 3-column card grid.
+// Both formulas get their rotating 3D bottle render in a sticky media
+// column, with the cards stacked beside it.
 //
 // Pillar copy lives on CURATED_STATS so the legacy renderers still compiling
 // against the same array shape are unaffected.
@@ -31,8 +30,6 @@ export default function FormulaBenefitsPillars({
   const total = stats.length;
   const totalPadded = String(total).padStart(2, "0");
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
-  const hasVideo = formulaId === "01";
 
   const header = (
     <div className="mb-8 lg:mb-10">
@@ -185,31 +182,19 @@ export default function FormulaBenefitsPillars({
     );
   });
 
-  // Flow: rotating 3D render in a sticky media column, cards stacked beside it.
-  if (hasVideo) {
-    return (
-      <div className="flex flex-col lg:flex-row lg:gap-10">
-        <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[4/5] mb-8 md:mx-0 md:w-full lg:mb-0 lg:flex-[2] lg:sticky lg:top-24 lg:self-start bg-black/[0.04] border-y md:border border-black/12">
-          <FlowVideo />
-          <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-            Fig. 01 · CONKA Flow · 3D Render
-          </span>
-        </div>
-
-        <div className="lg:flex-[3]">
-          {header}
-          <div className="grid grid-cols-1 gap-4 items-start">{cards}</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Clear: no render yet — full-width 3-column card grid.
+  // Rotating 3D render in a sticky media column, cards stacked beside it.
   return (
-    <div>
-      {header}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 items-start">
-        {cards}
+    <div className="flex flex-col lg:flex-row lg:gap-10">
+      <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[4/5] mb-8 md:mx-0 md:w-full lg:mb-0 lg:flex-[2] lg:sticky lg:top-24 lg:self-start bg-black/[0.04] border-y md:border border-black/12">
+        <BottleVideo formula={formulaId === "01" ? "flow" : "clear"} />
+        <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
+          Fig. 01 · {formula.name} · 3D Render
+        </span>
+      </div>
+
+      <div className="lg:flex-[3]">
+        {header}
+        <div className="grid grid-cols-1 gap-4 items-start">{cards}</div>
       </div>
     </div>
   );

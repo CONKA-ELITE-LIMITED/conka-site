@@ -1,102 +1,146 @@
 import Image from "next/image";
-import { StorySection as StorySectionType } from "@/app/lib/storyData";
+import {
+  StoryChapter,
+  testedEnvironments,
+} from "@/app/lib/storyData";
+
+/* ============================================================================
+ * StorySection — one chapter beat of /our-story.
+ *
+ * Each beat: mono chapter label + counter, punchy headline, 1-2 sentences of
+ * prose, full-bleed image (mobile), and either a founder pull quote or a stat
+ * block. Chapter 5 adds a scrolling marquee of the teams that tested CONKA.
+ *
+ * Mobile-first single component: image leads on mobile, alternates left/right
+ * on desktop.
+ * ========================================================================== */
 
 interface StorySectionProps {
-  section: StorySectionType;
-  totalSections: number;
+  chapter: StoryChapter;
+  totalChapters: number;
 }
 
-export function StorySection({
-  section,
-  totalSections,
-}: StorySectionProps) {
-  const formattedId = section.id.toString().padStart(2, "0");
-  const formattedTotal = totalSections.toString().padStart(2, "0");
-  const isEven = section.id % 2 === 0;
+/* Scrolling navy team strip — same marquee grammar as the athlete carousel's
+   sport strip. Renders the list twice and translates -50% for a seamless loop. */
+function TeamMarquee() {
+  return (
+    <div className="relative overflow-hidden bg-[#1B2757] py-3 mt-8 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full">
+      <span className="sr-only">
+        CONKA has been tested across: {testedEnvironments.join(", ")}.
+      </span>
+      <div
+        className="inline-flex whitespace-nowrap [will-change:transform] motion-safe:animate-[marquee_60s_linear_infinite]"
+        aria-hidden="true"
+      >
+        {[...testedEnvironments, ...testedEnvironments].map((team, i) => (
+          <span
+            key={`${team}-${i}`}
+            className="inline-flex items-center text-[12px] uppercase tracking-[0.18em] font-semibold text-white"
+          >
+            <span>{team}</span>
+            <span className="mx-5 text-white" aria-hidden="true">
+              ★
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function StorySection({ chapter, totalChapters }: StorySectionProps) {
+  const formattedId = chapter.id.toString().padStart(2, "0");
+  const formattedTotal = totalChapters.toString().padStart(2, "0");
+  const isEven = chapter.id % 2 === 0;
 
   return (
-    <div
-      className="flex flex-col lg:flex-row items-center gap-8 lg:gap-20"
-      data-section-id={section.id}
-    >
-      <div
-        className={`flex-1 flex flex-col justify-center ${
-          isEven ? "lg:order-2" : "lg:order-1"
-        }`}
-      >
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4 lg:mb-6">
-          {`// Chapter ${formattedId}/${formattedTotal} · STORY-01`}
-        </p>
-
-        <div className="mb-6 lg:mb-8">
-          <h2
-            className="brand-h2 text-black mb-2"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            {section.headline}
-          </h2>
-          {section.subtitle && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-              {section.subtitle}
-            </p>
-          )}
-        </div>
-
-        <p
-          className="brand-body text-base lg:text-lg text-black/80"
-          style={{
-            maxWidth: "var(--brand-body-max-width)",
-            lineHeight: "var(--brand-body-leading)",
-          }}
+    <div data-section-id={chapter.id}>
+      <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-20">
+        {/* Image — full-bleed on mobile, alternating side on desktop */}
+        <div
+          className={`w-full lg:flex-1 order-1 ${
+            isEven ? "lg:order-2" : "lg:order-1"
+          }`}
         >
-          {section.body}
-        </p>
-
-        {section.quote && (
-          <div className="mt-8 lg:mt-10 border-l-2 border-[#1B2757] pl-5 lg:pl-6">
-            <blockquote className="brand-body text-lg lg:text-xl italic text-black mb-3">
-              &ldquo;{section.quote.text}&rdquo;
-            </blockquote>
-            <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/55">
-              <span className="text-[#1B2757]">
-                {section.quote.author}
-              </span>
-              <span className="text-black/30">·</span>
-              <span>{section.quote.role}</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div
-        className={`flex-1 w-full ${
-          isEven ? "lg:order-1" : "lg:order-2"
-        }`}
-      >
-        {section.image ? (
-          <div className="relative w-full h-56 lg:h-[500px] overflow-hidden border border-black/12 bg-white">
+          <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[480px] overflow-hidden -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full border-y md:border border-black/12 bg-white">
             <Image
-              src={section.image}
-              alt={section.headline}
+              src={chapter.image}
+              alt={chapter.imageAlt}
               fill
+              loading="lazy"
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover object-center"
+              className={
+                chapter.imageFit === "contain"
+                  ? "object-contain p-6"
+                  : "object-cover"
+              }
+              style={{
+                objectPosition: chapter.imagePosition ?? "center center",
+              }}
             />
             <span className="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/65 px-2 py-1 tabular-nums">
-              Fig. {formattedId}
+              Ch. {formattedId} / {formattedTotal}
             </span>
             <span className="absolute bottom-3 right-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/65 px-2 py-1 tabular-nums">
-              Ch-{formattedId} / {formattedTotal}
+              {chapter.label}
             </span>
           </div>
-        ) : (
-          <div className="w-full h-56 lg:h-[500px] border border-black/12 bg-black/[0.03] flex items-center justify-center">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 text-center px-4">
-              {section.imagePlaceholder}
-            </span>
-          </div>
-        )}
+        </div>
+
+        {/* Content */}
+        <div
+          className={`flex-1 flex flex-col justify-center order-2 ${
+            isEven ? "lg:order-1" : "lg:order-2"
+          }`}
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
+            {`// Chapter ${formattedId} · ${chapter.label}`}
+          </p>
+
+          <h2
+            className="brand-h2 text-black mb-4"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            {chapter.headline}
+          </h2>
+
+          <p
+            className="text-base lg:text-lg text-black/75 leading-relaxed"
+            style={{ maxWidth: "var(--brand-body-max-width)" }}
+          >
+            {chapter.prose}
+          </p>
+
+          {/* Pull quote — founder voice */}
+          {chapter.quote && (
+            <blockquote className="mt-6 lg:mt-8 border-l-2 border-[#1B2757] pl-5 lg:pl-6">
+              <p className="text-lg lg:text-xl font-medium text-black leading-snug mb-3">
+                &ldquo;{chapter.quote.text}&rdquo;
+              </p>
+              <footer className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/55">
+                <span className="text-[#1B2757]">{chapter.quote.author}</span>
+                <span className="text-black/30">·</span>
+                <span>{chapter.quote.role}</span>
+              </footer>
+            </blockquote>
+          )}
+
+          {/* Stat block — clinical proof */}
+          {chapter.stat && (
+            <div className="mt-6 lg:mt-8 flex items-baseline gap-4 border-t border-black/10 pt-5">
+              <p className="font-mono text-4xl lg:text-5xl font-bold tabular-nums text-[#1B2757] leading-none shrink-0">
+                {chapter.stat.value}
+              </p>
+              <p className="text-sm text-black/65 leading-snug max-w-[36ch]">
+                {chapter.stat.caption}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Chapter 5: team marquee under the full beat */}
+      {chapter.teamMarquee && <TeamMarquee />}
     </div>
   );
 }

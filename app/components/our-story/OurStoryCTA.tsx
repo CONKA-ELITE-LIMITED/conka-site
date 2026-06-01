@@ -1,22 +1,24 @@
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
+import ExploreMoreRow from "@/app/components/landing/ExploreMoreRow";
+import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 
 export function OurStoryCTA() {
   return (
     <div className="max-w-3xl">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// Join the journey · CONKA-03"}
+        {"// Chapter 07 · You"}
       </p>
       <h2
         className="brand-h1 text-black mb-3"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Ready to experience it yourself?
+        The next chapter is yours to test.
       </h2>
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-8">
-        100-Day money-back guarantee · Free UK shipping · Cancel anytime
+        {GUARANTEE_LABEL_FULL} · Free UK shipping · Cancel anytime
       </p>
 
-      <div className="bg-white border border-black/12">
+      <div className="bg-white border border-black/12 mb-10">
         <div className="grid grid-cols-3 border-b border-black/8">
           <div className="p-4 lg:p-5 border-r border-black/8">
             <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
@@ -44,23 +46,15 @@ export function OurStoryCTA() {
           </div>
         </div>
 
-        <div className="p-5 lg:p-6 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50">
-              Recommended start
-            </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40 tabular-nums">
-              Protocol 03 · Balance
-            </p>
-          </div>
-          <ConkaCTAButton
-            href="/conka-both"
-            meta="// balance protocol · 14 shots · 7-day cadence"
-          >
+        <div className="p-5 lg:p-6">
+          <ConkaCTAButton href="/conka-both" meta={null}>
             Try CONKA now
           </ConkaCTAButton>
         </div>
       </div>
+
+      {/* Routing for visitors who want to keep learning instead of buying */}
+      <ExploreMoreRow />
     </div>
   );
 }

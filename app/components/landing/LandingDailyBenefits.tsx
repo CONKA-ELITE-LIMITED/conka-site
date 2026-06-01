@@ -11,7 +11,7 @@ import {
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
 import LabTrustBadges from "./LabTrustBadges";
-import FlowVideo from "./FlowVideo";
+import BottleVideo from "./BottleVideo";
 
 /* ============================================================================
  * LandingDailyBenefits
@@ -160,7 +160,7 @@ export default function LandingDailyBenefits() {
             4:5 portrait, full-bleed on mobile, sticky on desktop so it
             tracks the cards. Fig. chip keeps the clinical texture. */}
         <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[4/5] mb-8 md:mx-0 md:w-full lg:mb-0 lg:flex-[2] lg:sticky lg:top-24 lg:self-start bg-black/[0.04] border-y md:border border-black/12">
-          <FlowVideo />
+          <BottleVideo formula="flow" />
           <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
             Fig. 02 · CONKA Flow · 3D Render
           </span>

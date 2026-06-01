@@ -6,6 +6,30 @@
 
 ## June 2026
 
+### 2026-06-01 -- /why-conka rebuilt as seven proof cards (SCRUM-1049 Phase 2)
+
+The why-conka page rebuilt from seven dense prose sections into seven expandable proof cards using the same card grammar as the PDP benefits pillars. Collapsed, each card shows a number, an outcome-led headline, one sentence, and an asset thumbnail; the whole page reads in about a minute. Expanded panels carry the asset large, a headline stat, and story prose, with app install buttons on the measurement card. The weak mission-statement reason was replaced by a 100-day risk-reversal card that routes into the CTA. All named clubs, athletes, and companies were removed (no standing permission to name partners), along with the unauthorised stress-score claim and the deprecated Balance protocol reference. The page converted from a client component with no metadata to a server component with full SEO metadata; the hero collapsed to an eyebrow plus a single-line headline; the closing CTA card now leads with the two-bottle product shot and is followed by the shared ExploreMoreRow (whose first link now points to CONKA Flow & Clear at /conka-both). Four orphaned legacy components deleted.
+
+**Modified:** `app/lib/whyConkaData.ts`, `app/components/why-conka/WhyConkaReasons.tsx` (new), `app/components/why-conka/WhyConkaHero.tsx`, `app/components/why-conka/WhyConkaCTA.tsx`, `app/why-conka/page.tsx`, `app/components/landing/ExploreMoreRow.tsx`; **Deleted:** `WhyConkaSection.tsx`, `WhyConkaHeroMobile.tsx`, `WhyConkaMobile.tsx`, `WhyConkaDesktop.tsx`
+
+---
+
+### 2026-06-01 -- Clear 3D bottle render rolled out to /conka-clarity benefits pillars
+
+The Clear bottle render arrived from marketing and /conka-clarity now gets the same rotating 3D bottle treatment /conka-flow has. Only the first 2 seconds of the 5s source are usable (the back label text in the render is garbled from 2.2s onward), so the encode trims to 2.0s before running the established Flow pipeline: centred crop 1080x1920 to 1080x1350 (4:5), lanczos scale to 720x900, audio stripped, forward+reverse concatenation baked in for a seamless 4s ping-pong loop via the native loop attribute. A 0.7x slowed variant was tried and reverted: stretching 24fps footage drops the effective frame rate and the rotation loses its smoothness, which matters more than the loop length. Output weight is light: Clear.mp4 200 KB (H.264, CRF 24, faststart), Clear.webm 197 KB (VP9), Clear-poster.jpg 26 KB; per-visitor cost roughly 225 KB. The FlowVideo client island was generalised into a formula-aware BottleVideo component (formula prop selects sources, poster, and aria-label); the three consumers (/start Section 2, home Daily Benefits, FormulaBenefitsPillars) updated with zero behaviour change for Flow. FormulaBenefitsPillars now renders the sticky media column for both formulas, the Fig. chip reads the formula name from formulaContent, and the Clear-only 3-column card grid fallback was removed. Raw master kept at raw-assets/Clear V1.mp4 (gitignored). SCRUM-1050.
+
+**Modified:** `app/components/landing/BottleVideo.tsx` (renamed from `FlowVideo.tsx`), `app/components/landing/LandingDailyBenefits.tsx`, `app/components/product/FormulaBenefitsPillars.tsx`, `app/start/page.tsx`; **Added:** `public/videos/Clear.mp4`, `public/videos/Clear.webm`, `public/videos/Clear-poster.jpg`
+
+---
+
+### 2026-06-01 -- /our-story rebuilt as six chapter beats (SCRUM-1049 Phase 1)
+
+The our-story page compressed from ten prose sections (~1,000 words) to six chapter beats (~250 words), built from BRAND_STORY_FOUNDATION.pdf merged with the strongest specifics of the old copy. Each chapter: mono label and counter chip, punchy headline, at most two sentences of prose, a full-bleed image on mobile, and either a founder pull quote or a stat block (0 proven options, 500K+ research, +16% vs placebo, 150,000+ shots). Chapter 4 shows the Flow bottle; Chapter 5 shows the CONKA app cognition-test screen (contained, not cropped) plus a scrolling marquee of generic testing environments (Premiership rugby clubs, military units, corporate teams; deliberately no named organisations). The hero collapsed to a compact credibility-led opening: H1, readable stat pair, and the laurel-flanked brain-research badge, with explicit hero padding so it clears the nav on mobile. The closing CTA drops the deprecated Protocol 03 reference and adds a new shared ExploreMoreRow component (Flow / Ingredients / App / Science links) so visitors who are not ready to buy keep exploring instead of bouncing.
+
+**Modified:** `app/lib/storyData.ts`, `app/components/our-story/StorySection.tsx`, `app/components/our-story/OurStoryHero.tsx`, `app/components/our-story/OurStoryCTA.tsx`, `app/our-story/page.tsx`, `app/components/landing/ExploreMoreRow.tsx` (new)
+
+---
+
 ### 2026-06-01 -- Home section reorder and image-first testimonials
 
 Two conversion-focused changes. On the home page, the Daily Benefits section now comes before the Find Your Formula product grid, so the ingredient/benefit argument lands before the purchase decision; the white/tint section alternation is preserved and the #product-grid scroll anchor moved with the grid. Testimonial cards in LandingTestimonials are now image-first: the customer photo leads the card (4:3, full width) with the verified header, name, headline, and quote below, instead of the photo sitting at the bottom after the text. All 8 curated testimonials have photos so every card gets the treatment. Propagates to home, the three formula pages, and protocol pages.

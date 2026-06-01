@@ -14,7 +14,7 @@ import {
 } from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CaffeineCurves from "./CaffeineCurves";
-import FlowVideo from "../components/landing/FlowVideo";
+import BottleVideo from "../components/landing/BottleVideo";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
@@ -289,10 +289,10 @@ export default function StartPage() {
 
               {/* Bottle hero — rotating Flow render. 4:5 portrait, plays on
                   scroll-into-view and ping-pong loops. See
-                  `app/components/landing/FlowVideo.tsx` for the
+                  `app/components/landing/BottleVideo.tsx` for the
                   IntersectionObserver trigger and source ordering. */}
               <div className="relative aspect-[4/5] overflow-hidden mb-6 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[12px] bg-black/[0.04]">
-                <FlowVideo />
+                <BottleVideo formula="flow" />
               </div>
 
               {/* Two big stats — count up on scroll-in */}
