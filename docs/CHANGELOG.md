@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- PDP benefits pillars upgraded: Flow video, outcome titles, render thumbnails, story-led expanded panels
+
+The Section 2 benefits pillars on /conka-flow and /conka-clarity (shared FormulaBenefitsPillars component) received the same treatment as the home page Daily Benefits section. Flow gets the rotating 3D bottle render in a sticky media column with the cards stacked beside it; Clear keeps the full-width 3-column grid until its render arrives (the component branches on formulaId). Pillar titles are now outcome-led (Improves Memory and Recall, Reduces Tiredness and Fatigue, Improves Sleep Quality on Flow; Improves Memory and Recall, Reduces Mental Fatigue, Improves Mental Clarity on Clear). Collapsed cards show their three ingredient renders as 44px thumbnails in a footer row with a mono Learn-more affordance, replacing the corner plus/minus icon. The expanded panels were restructured from stacked mono-caps fragments into a narrative: stat with a readable label, then a new prose story sentence that weaves the bolded ingredient names into the claim, then the renders the story just referenced, then the felt-translation punchline, then the source citation as small print. The story copy attributes each stat to the ingredient its cited study tested; founder to verify attributions. formulaStatsData renamed from .ts to .tsx so story fields can carry JSX. Old webp ingredient photos replaced with the bespoke 3D renders throughout (ALCAR and Glutathione use the generic white-powder render until bespoke ones ship).
+
+**Modified:** `app/components/product/FormulaBenefitsPillars.tsx`, `app/components/product/formulaStatsData.tsx` (renamed from .ts)
+
+---
+
 ### 2026-06-01 -- Daily Benefits collapsed thumbnails and round 2 review fixes
 
 Three follow-ups on the round 2 home page work. The Daily Benefits cards now show their three ingredient renders as 44px thumbnails in the collapsed state, sharing one footer row with the Learn-more expander (thumbnails left, toggle right), so visitors see what is inside each pillar without tapping and the cards stay short. From the code review: the LabResearch partner grid cells switched from tint to white fill so they read as defined cards against the tint section background, and the Daily Benefits dynamic-import placeholder height was raised from 600px to approximate the real section height (1500px mobile, 900px desktop) to limit CLS during client-side navigation.
