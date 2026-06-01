@@ -42,7 +42,10 @@ interface Pillar {
   description: string;
   ingredients: Ingredient[];
   appInsight: AppInsight;
-  studyObservation: React.ReactNode;
+  // Prose that weaves the bolded ingredient names into the claim, so the
+  // stat, the story, and the renders below read as one narrative. Same
+  // pattern as the PDP FormulaBenefitsPillars story field.
+  story: React.ReactNode;
   pmid: string;
 }
 
@@ -64,8 +67,17 @@ const PILLARS: Pillar[] = [
       caveat: "n=260 users · 1,248 fatigued tests ^^",
       anchor: "/app-insights#mental-fatigue",
     },
-    studyObservation:
-      "In one study, participants taking Lemon Balm showed improvements in calmness and alertness (Kennedy et al. 2003)¶",
+    story: (
+      <>
+        In one study, participants taking{" "}
+        <strong className="font-semibold text-black">Lemon Balm</strong>{" "}
+        showed improvements in calmness and alertness (Kennedy et al. 2003)¶.{" "}
+        <strong className="font-semibold text-black">Alpha GPC</strong> raises
+        acetylcholine, the brain&apos;s memory messenger, and{" "}
+        <strong className="font-semibold text-black">Rhodiola</strong> keeps
+        stress from stealing your focus.
+      </>
+    ),
     pmid: "PMID: 12888775",
   },
   {
@@ -91,8 +103,18 @@ const PILLARS: Pillar[] = [
       caveat: "n=74 Conka tests · 18–21 window ^^",
       anchor: "/app-insights#time-of-day",
     },
-    studyObservation:
-      "In one study, participants taking Ashwagandha showed a significant reduction in perceived stress (Chandrasekhar et al. 2012)¶",
+    story: (
+      <>
+        In one study, participants taking{" "}
+        <strong className="font-semibold text-black">Ashwagandha</strong>{" "}
+        showed a significant reduction in perceived stress (Chandrasekhar et
+        al. 2012)¶.{" "}
+        <strong className="font-semibold text-black">Turmeric</strong> keeps
+        inflammation in check while{" "}
+        <strong className="font-semibold text-black">Vitamin B12</strong>{" "}
+        supports your body&apos;s own energy release.
+      </>
+    ),
     pmid: "PMID: 23439798",
   },
   {
@@ -112,12 +134,16 @@ const PILLARS: Pillar[] = [
       caveat: "n=18 users · 58 tests ^^",
       anchor: "/app-insights#stress",
     },
-    studyObservation: (
+    story: (
       <>
-        Vitamin C contributes to the protection of cells from oxidative stress
-        <sup className="text-[0.5em] text-black/40 align-super">††</sup>. In
-        one study, participants showed improvements in antioxidant capacity
-        (Sinha et al. 2018)¶
+        <strong className="font-semibold text-black">Vitamin C</strong>{" "}
+        contributes to the protection of cells from oxidative stress
+        <sup className="text-[0.5em] text-black/40 align-super">††</sup>.{" "}
+        <strong className="font-semibold text-black">Glutathione</strong> is
+        the body&apos;s master antioxidant, and{" "}
+        <strong className="font-semibold text-black">NAC</strong> is what
+        your body uses to rebuild it. In one study, participants showed
+        improvements in antioxidant capacity (Sinha et al. 2018)¶.
       </>
     ),
     pmid: "PMID: 29559699",
@@ -223,7 +249,36 @@ export default function LandingDailyBenefits() {
                       id={`pillar-evidence-${pillar.id}`}
                       className="mt-2 pt-4 border-t border-black/8"
                     >
-                      {/* Ingredient tiles — bespoke 3D renders */}
+                      {/* App data — the headline stat from real users */}
+                      <div className="mb-4 p-3 bg-black/[0.03] border border-black/8 flex items-end justify-between gap-4">
+                        <div>
+                          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
+                            App data · real users
+                          </p>
+                          <p className="text-2xl font-semibold tabular-nums leading-none mb-1">
+                            {pillar.appInsight.stat}
+                          </p>
+                          <p className="text-xs text-black/60 leading-snug mb-1">
+                            {pillar.appInsight.label}
+                          </p>
+                          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/35">
+                            {pillar.appInsight.caveat}
+                          </p>
+                        </div>
+                        <Link
+                          href={pillar.appInsight.anchor}
+                          className="shrink-0 font-mono text-[9px] uppercase tracking-[0.15em] text-black/50 hover:text-black underline underline-offset-2 whitespace-nowrap"
+                        >
+                          See data →
+                        </Link>
+                      </div>
+
+                      {/* Story — prose weaving the ingredient names into the claim */}
+                      <p className="text-sm leading-relaxed text-black/75 mb-4">
+                        {pillar.story}
+                      </p>
+
+                      {/* Ingredient tiles — the renders the story just referenced */}
                       <div className="grid grid-cols-3 gap-2 mb-4 lg:justify-items-center">
                         {pillar.ingredients.map((ingredient) => (
                           <div
@@ -249,33 +304,8 @@ export default function LandingDailyBenefits() {
                         ))}
                       </div>
 
-                      <div className="mb-4 p-3 bg-black/[0.03] border border-black/8 flex items-end justify-between gap-4">
-                        <div>
-                          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
-                            App data · real users
-                          </p>
-                          <p className="text-2xl font-semibold tabular-nums leading-none mb-1">
-                            {pillar.appInsight.stat}
-                          </p>
-                          <p className="text-xs text-black/60 leading-snug mb-1">
-                            {pillar.appInsight.label}
-                          </p>
-                          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/35">
-                            {pillar.appInsight.caveat}
-                          </p>
-                        </div>
-                        <Link
-                          href={pillar.appInsight.anchor}
-                          className="shrink-0 font-mono text-[9px] uppercase tracking-[0.15em] text-black/50 hover:text-black underline underline-offset-2 whitespace-nowrap"
-                        >
-                          See data →
-                        </Link>
-                      </div>
-
-                      <p className="text-xs leading-relaxed text-black/60">
-                        {pillar.studyObservation}
-                      </p>
-                      <p className="text-xs brand-data-label mt-2 text-black/40">
+                      {/* Source — small print at the very bottom */}
+                      <p className="text-xs brand-data-label text-black/40">
                         {pillar.pmid}
                       </p>
                     </div>

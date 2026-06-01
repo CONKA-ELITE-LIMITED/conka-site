@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Home Daily Benefits expanded panels follow the PDP story-led structure
+
+After the PDP benefits pillars proved the story-led expanded panel reads better, the home page Daily Benefits component was brought in line. Expanded panels now run: app-data stat box first (the headline number from real users), then a prose story that weaves all three bolded ingredient names into the claim, then the renders the story just referenced, then the PMID as small print. Previously the panels led with unexplained ingredient tiles and each study sentence only mentioned one of the three ingredients. The internal field was renamed from studyObservation to story to match the PDP data shape.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`
+
+---
+
 ### 2026-06-01 -- PDP benefits pillars upgraded: Flow video, outcome titles, render thumbnails, story-led expanded panels
 
 The Section 2 benefits pillars on /conka-flow and /conka-clarity (shared FormulaBenefitsPillars component) received the same treatment as the home page Daily Benefits section. Flow gets the rotating 3D bottle render in a sticky media column with the cards stacked beside it; Clear keeps the full-width 3-column grid until its render arrives (the component branches on formulaId). Pillar titles are now outcome-led (Improves Memory and Recall, Reduces Tiredness and Fatigue, Improves Sleep Quality on Flow; Improves Memory and Recall, Reduces Mental Fatigue, Improves Mental Clarity on Clear). Collapsed cards show their three ingredient renders as 44px thumbnails in a footer row with a mono Learn-more affordance, replacing the corner plus/minus icon. The expanded panels were restructured from stacked mono-caps fragments into a narrative: stat with a readable label, then a new prose story sentence that weaves the bolded ingredient names into the claim, then the renders the story just referenced, then the felt-translation punchline, then the source citation as small print. The story copy attributes each stat to the ingredient its cited study tested; founder to verify attributions. formulaStatsData renamed from .ts to .tsx so story fields can carry JSX. Old webp ingredient photos replaced with the bespoke 3D renders throughout (ALCAR and Glutathione use the generic white-powder render until bespoke ones ship).
