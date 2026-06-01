@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 /* ============================================================================
- * IngredientsGrid — S4 client island for /startv2
+ * IngredientsGrid — S4 client island for /start
  *
  * Owns: AM/PM toggle, bottle card, 2-col tile grid, and the always-visible
  * detail panel. Selected ingredient defaults to the first in the active

@@ -4,8 +4,8 @@
  *
  * Mirrors the stat grid pattern used in AppResearchModal so the same
  * proof points remain consistent across surfaces. Component is
- * content-only (no section/track/bg). Locked source language matches
- * LandingDisclaimer.tsx footnote ^^.
+ * content-only (no section/track/bg). Keep the cited study references
+ * (ADePT Study, PMC10533908, etc.) verbatim.
  */
 
 const CREDENTIAL_STATS = [

@@ -4,6 +4,16 @@
 
 ---
 
+## June 2026
+
+### 2026-06-01 -- Collapsed /startv2 into /start and removed orphaned components
+
+The finished landing-page v2.1 build (Sections 1-10) now lives at the canonical `/start` URL. The legacy `/start` body was replaced wholesale with the v2.1 build, the seven co-located client islands moved from `app/startv2/` into `app/start/`, the old `app/startv2/` page was deleted, and a 301 redirect `/startv2 -> /start` was added so any shared preview links resolve. `/start` keeps its noindex,nofollow stance (paid-traffic-only page); the metadata canonical was repointed to `/start`. The `LandingDisclaimer` footer was removed from the page at the founder's direction (messaging-first; legality handled separately), along with the now-unused footnote marker in the hero. With the old page body gone, seven components had no remaining consumers and were deleted: `CROHeroV2`, `CROBrandStory`, `LandingValueComparisonV2`, `CROFormulaSplitV2`, `CROBuyBox`, `CROBenefitCards`, `LandingDisclaimer`. Net reduction of roughly 1,600 lines. Shared dependencies (`CROPillCTA`, `useInView`) were verified to survive via other consumers.
+
+**Modified:** `app/start/page.tsx`, `app/start/*` (7 islands moved in), `next.config.ts`, `app/components/cro/CROAppCallout.tsx`; **Deleted:** `app/startv2/`, the 7 orphaned components.
+
+---
+
 ## May 2026
 
 ### 2026-05-29 -- Landing page v2.1: S9 subline reframed for periodic testing

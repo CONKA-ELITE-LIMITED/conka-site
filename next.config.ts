@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/startv2',
+        destination: '/start',
+        permanent: true,
+      },
+      {
         source: '/blogs/:path*',
         destination: 'https://www.conka.io/why-conka',
         permanent: true,

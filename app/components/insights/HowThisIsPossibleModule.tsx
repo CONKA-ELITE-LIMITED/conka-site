@@ -8,8 +8,8 @@ import CredentialsBadgeBlock from "./CredentialsBadgeBlock";
  * Sits between the hero and the report sections on /app-insights. Answers
  * the question a cold visitor lands with: how does a supplement brand
  * have cognitive performance data on its own users? Three-step flow,
- * the validated test credentials grid, and the verbatim credential note
- * from LandingDisclaimer footnote ^^.
+ * the validated test credentials grid, and a verbatim credential note
+ * (cited study references kept exact).
  *
  * Client component because it fires a Vercel Analytics event when the
  * module enters the viewport. Page wraps it in brand-section + brand-track.
@@ -128,7 +128,7 @@ export default function HowThisIsPossibleModule() {
       </p>
       <CredentialsBadgeBlock />
 
-      {/* Verbatim credential note (from LandingDisclaimer footnote ^^). */}
+      {/* Verbatim credential note — cited study references kept exact. */}
       <p className="font-mono text-[11px] leading-relaxed text-white/65 tabular-nums mt-6 max-w-[78ch]">
         The CONKA app uses a clinically validated cognitive assessment developed
         by Cognetivity Neurosciences from Cambridge University research. The
