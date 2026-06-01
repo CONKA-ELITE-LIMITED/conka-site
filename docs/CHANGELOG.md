@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- LabTrustBadges rebuilt as classic icon trust badges sitewide
+
+The LabTrustBadges grid (Free UK Shipping, Informed Sport, Batch Tested, Cancel Anytime) was rebuilt from its mono spec-sheet treatment (uppercase 10px labels in a divided grid) into classic trust badges: a centred line-art icon, a readable semibold title, and a quiet subtitle per cell, with soft cell backgrounds and sharp corners so the row still sits comfortably on the clinical pages. The icons reuse the existing TrustIcon set that previously only served the underused LandingTrustBadges component. This change propagates to all 12 call sites, including the home page (Product Grid, Daily Benefits, Testimonials, Case Studies), the funnel assurance block, the three formula pages, and /why-conka.
+
+**Modified:** `app/components/landing/LabTrustBadges.tsx`
+
+---
+
 ### 2026-06-01 -- Home page product showcase upgraded with photographic bottle tiles and cert proof strip
 
 Second section of the home page upgrade effort. The two formula cards in the "Two shots. Built around your day." section swapped their transparent PNG bottles (which needed scale-150 positioning hacks) for the square photographic FlowNew.jpg / ClearNew.jpg tiles used by the /start ingredients grid, where the asset's off-white background becomes the tile surface. The section close was restructured into a single centred proof-and-conversion group: four certification icons (Vegan, Kosher, BPA Free, Third Party Tested at 56px), then the CTA, then the 100-day guarantee row. The text-only LabTrustBadges grid that previously closed the section was removed to avoid stacking two badge rows. The guarantee row was extracted from LandingHero into a shared GuaranteeRow component so the hero and showcase stay in lockstep. This component also renders on /conka-both and the protocol pages, which inherit the same upgrade.
