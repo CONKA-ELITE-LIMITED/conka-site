@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-01 -- Clean up cart infrastructure
+
+Removed a dead, unused duplicate cart hook (app/hooks/useCart.ts) that had its own checkout logic and did not carry the Meta attribution attributes. Nothing imported it, but it was a footgun: importing the wrong useCart would have silently broken attribution again (the live useCart is the one in CartContext). Also fixed the long-standing lint warning in CartContext by defining removeItem before updateQuantity (which calls it) and adding it to the dependency array. Cart context and hooks are now warning-free.
+
+**Modified:** `app/context/CartContext.tsx` · **Deleted:** `app/hooks/useCart.ts`
+
 ### 2026-06-01 -- Fix: carry _fbp/_fbc through the funnel checkout
 
 The funnel page (/funnel) has its own checkout that bypasses the shared cart, so it was not attaching the Meta ad-click identifiers (_fbp/_fbc) to orders. Since the funnel is the primary paid-traffic destination, funnel orders were reaching Meta without the ad-click signal, weakening attribution. Extracted a single shared helper (buildMetaCartAttributes) used by both the global cart and the funnel checkout so they cannot drift again, and wired it into the funnel. Caught during the first live funnel test order, which showed the funnel line attributes but no _fbp/_fbc.

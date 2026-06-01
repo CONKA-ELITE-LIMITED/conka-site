@@ -29,7 +29,6 @@ function buildCartAttributes(
   return attrs;
 }
 
-
 interface CartContextType {
   cart: Cart | null;
   loading: boolean;
@@ -265,6 +264,45 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart?.id]);
 
+  // Remove item from cart (defined before updateQuantity, which calls it)
+  const removeItem = useCallback(async (lineId: string): Promise<void> => {
+    const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
+
+    if (!cartId) {
+      setError('No cart found');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'remove',
+          cartId,
+          lineId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.cart) {
+        setCart(data.cart);
+      } else {
+        throw new Error(data.error || 'Failed to remove item');
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to remove item';
+      setError(message);
+      console.error('Remove item error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [cart?.id]);
+
   // Update item quantity
   const updateQuantity = useCallback(async (lineId: string, quantity: number): Promise<void> => {
     const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
@@ -308,46 +346,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [cart?.id]);
-
-  // Remove item from cart
-  const removeItem = useCallback(async (lineId: string): Promise<void> => {
-    const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
-
-    if (!cartId) {
-      setError('No cart found');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'remove',
-          cartId,
-          lineId,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.cart) {
-        setCart(data.cart);
-      } else {
-        throw new Error(data.error || 'Failed to remove item');
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to remove item';
-      setError(message);
-      console.error('Remove item error:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [cart?.id]);
+  }, [cart?.id, removeItem]);
 
   // Clear cart (local only - for after checkout)
   const clearCart = useCallback((): void => {
