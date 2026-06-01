@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Daily Benefits section rebuilt around the rotating Flow render and outcome-led cards
+
+The home page Daily Benefits section ("Daily habit. Lifelong benefits.") was rebuilt for faster consumption. The static lifestyle photo was replaced with the rotating 3D Flow bottle render (FlowVideo, the same asset /start uses), 4:5 portrait, sticky on desktop and full-bleed on mobile, with a Fig. 02 chip overlay. The three benefit cards now lead with outcome verbs (Improves Focus and Memory, Reduces Fatigue and Crashes, Protects Long-Term Brain Health) instead of category nouns, descriptions were cut to one line each, and the full-width "See ingredients and research" expander was shrunk to a compact mono "[+] Learn more" toggle. The expanded view swaps the old webp ingredient photos for the bespoke 3D renders from /public/ingredients/renders/. App-data stat boxes, study observations, and PMID citations are unchanged. FlowVideo moved from app/start/ to app/components/landing/ so a shared component no longer lives in a page folder; /start's import was updated with no behaviour change.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/landing/FlowVideo.tsx` (moved from `app/start/`), `app/start/page.tsx`
+
+---
+
 ### 2026-06-01 -- Home page Certified-for-Performance section replaced with clinical research section
 
 Round 2 of the home page upgrade effort. The "Certified for Performance" credentials section (WhyConkaWorks, a 3-pillar grid of Certification / Research / Manufacturing) was replaced with a new LabResearch component: the World-Class Research beat from /start rebuilt in the clinical grammar. Mono eyebrow, left-aligned two-line title, Cambridge photograph with a Fig. 03 chip overlay (desktop right column, mobile full-bleed), a 2x2 partner logo grid (Cambridge, Durham, Exeter, Made in Britain) in tint cells with sharp corners, and a closing mono spec line carrying the Made in England / GMP claim forward. No credibility content is lost: the Informed Sport pillar moved to the athlete carousel in round 1, the universities live in the partner grid, and manufacturing lives in the spec line. WhyConkaWorks itself is untouched since /protocol/[id] still renders it. LabResearch is a direct server-component import, removing one dynamic chunk from the home page.
