@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Athlete credibility carousel reworked as compact quote-led proof beat
+
+Third section of the home page upgrade effort, porting the structure that works on /start (CROAthletes) into the clinical AthleteCredibilityCarousel while keeping its visual register. A scrolling navy sport-breadth marquee (15 sports, star separators) now opens the section, edge-to-edge on mobile and spanning the content track on desktop. The feature card is now compact and quote-led: nav arrows overlay directly on the portrait (the separate mobile nav strip and desktop bottom nav row are gone), the counter and achievement tag sit as small mono chips on the portrait corners, and the text column reduces to name, sport plus role, and the quote rendered large as the visual hero (the bio sentence no longer renders). The thumbnail roster is now image-only tiles with no names, sports, or number prefixes: 72px scrollable strip on mobile, full-width 7-column grid on desktop. An Informed Sport block (logo, "Independently tested. Every batch.", 280 banned substances and WADA copy lifted verbatim from WhyConkaWorksDesktop) closes the section as the rational anchor, styled clinically with sharp corners and a mono category label. Changes propagate to /conka-flow, /conka-clarity, and /conka-both, which render the same component.
+
+**Modified:** `app/components/AthleteCredibilityCarousel.tsx`
+
+---
+
 ### 2026-06-01 -- LabTrustBadges rebuilt as classic icon trust badges sitewide
 
 The LabTrustBadges grid (Free UK Shipping, Informed Sport, Batch Tested, Cancel Anytime) was rebuilt from its mono spec-sheet treatment (uppercase 10px labels in a divided grid) into classic trust badges: a centred line-art icon, a readable semibold title, and a quiet subtitle per cell, with soft cell backgrounds and sharp corners so the row still sits comfortably on the clinical pages. The icons reuse the existing TrustIcon set that previously only served the underused LandingTrustBadges component. This change propagates to all 12 call sites, including the home page (Product Grid, Daily Benefits, Testimonials, Case Studies), the funnel assurance block, the three formula pages, and /why-conka.
