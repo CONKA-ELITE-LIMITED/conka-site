@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-01 -- Document the Meta Purchase dedup verification method
+
+Captured how to verify the server-side Purchase deduplicates against the Shopify Facebook channel, after finding that Shopify's checkout pixel is sandboxed (Meta Pixel Helper and Test Events cannot read the channel's event_id). The recommended check is by effect: after deploy, place one test order and watch the Purchase count in Events Manager; if it roughly doubles, the event_id does not match the channel's and the one-line eventId in the webhook needs changing. The numeric order id is the de-facto standard, so it is most likely already correct.
+
+**Modified:** `app/api/webhooks/shopify/orders/route.ts` (comment), `docs/analytics/META_PIXEL_AND_CAPI.md`, `docs/development/featurePlans/meta-tracking-hardening.md`
+
 ### 2026-06-01 -- Server-side Meta Purchase via Shopify orders/paid webhook
 
 Adds a first-party Purchase event we control, sent from a new Shopify orders/paid webhook to the Meta Conversions API. This is the core of the attribution fix: it sends the Shopify order id as the Meta event_id (so it deduplicates against the Shopify Facebook channel's Purchase rather than double-counting), a clean value and currency, hashed customer email/phone/name/address, the browser IP and user agent from the order, and the _fbp/_fbc ad-click identifiers carried on the order note attributes. Subscription rebills are filtered so recurring charges are not counted as new acquisitions. The webhook verifies the Shopify HMAC and is idempotent via Meta's event_id deduplication. Dormant until SHOPIFY_WEBHOOK_SECRET is set and the orders/paid webhook is registered in Shopify admin. SCRUM-1046.

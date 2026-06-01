@@ -13,11 +13,14 @@
  *  - register an orders/paid webhook in Shopify admin pointing here
  *
  * DEDUP — VERIFY AT GO-LIVE (highest risk): Meta merges our event with the
- * channel's Purchase only if event_name + event_id match. The exact event_id the
- * Shopify Facebook channel uses is not publicly documented. Before trusting this,
- * place a test order and inspect the channel's Purchase in Events Manager; if its
- * event_id is not the numeric order id, change the `eventId` value below to match.
- * If they do not match, web purchases will be double-counted.
+ * channel's Purchase only if event_name + event_id match. The numeric Shopify
+ * order id is the de-facto standard the channel uses, so this is most likely
+ * already correct — but the channel's event_id is not publicly documented and
+ * its checkout pixel is sandboxed (Pixel Helper / Test Events cannot read it).
+ * So verify by EFFECT, not by reading the id: after deploy, place one test order
+ * and watch the Purchase in Events Manager. If the Purchase count roughly doubles
+ * (browser/server events not deduplicating), the event_id does not match the
+ * channel's — change the `eventId` value below and redeploy. One-line fix.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
