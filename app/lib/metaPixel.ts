@@ -57,6 +57,22 @@ export function captureFbcFromUrl(): void {
   document.cookie = `_fbc=${fbc}; path=/; max-age=${maxAge}; domain=.conka.io; SameSite=Lax; Secure`;
 }
 
+/**
+ * Build cart-level Meta attributes (_fbp / _fbc) to attach to a Shopify cart so
+ * they flow to the order's note attributes, where the server-side Purchase
+ * webhook reads them for attribution. Shared by every checkout path (the global
+ * CartContext AND the funnel's isolated checkout) so they cannot drift apart.
+ * Returns [] when neither cookie is present (organic visitor) — safe to spread.
+ */
+export function buildMetaCartAttributes(): Array<{ key: string; value: string }> {
+  const attrs: Array<{ key: string; value: string }> = [];
+  const fbp = getFbp();
+  const fbc = getFbc();
+  if (fbp) attrs.push({ key: "_fbp", value: fbp });
+  if (fbc) attrs.push({ key: "_fbc", value: fbc });
+  return attrs;
+}
+
 /** Send event to Conversions API (fire-and-forget, no await). Does not throw. */
 function sendToCAPI(payload: {
   event_name: string;

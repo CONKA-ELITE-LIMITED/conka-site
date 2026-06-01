@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { Cart, CartLine } from '@/app/lib/shopify';
 import { trackAddToCart } from '@/app/lib/tripleWhale';
 import { trackPurchaseAddToCart } from '@/app/lib/analytics';
-import { trackMetaAddToCart, toContentId, getFbp, getFbc } from '@/app/lib/metaPixel';
+import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
 import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
 
@@ -29,19 +29,6 @@ function buildCartAttributes(
   return attrs;
 }
 
-/**
- * Build cart-level attributes for Meta attribution. These are session-wide
- * (not per line item), so they go on the cart and flow to the order as
- * note attributes, where the server-side Purchase webhook reads them.
- */
-function buildCartLevelAttributes(): Array<{ key: string; value: string }> {
-  const attrs: Array<{ key: string; value: string }> = [];
-  const fbp = getFbp();
-  const fbc = getFbc();
-  if (fbp) attrs.push({ key: "_fbp", value: fbp });
-  if (fbc) attrs.push({ key: "_fbc", value: fbc });
-  return attrs;
-}
 
 interface CartContextType {
   cart: Cart | null;
@@ -176,7 +163,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     const attributes = buildCartAttributes(metadata, sellingPlanId);
-    const cartAttributes = buildCartLevelAttributes();
+    const cartAttributes = buildMetaCartAttributes();
 
     setLoading(true);
     setError(null);
