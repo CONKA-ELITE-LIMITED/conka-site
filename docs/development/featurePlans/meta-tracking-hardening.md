@@ -34,7 +34,7 @@ Ship the safe, evidence-free fixes now (Phase 1), verify the post-fix state in M
 |-------|-------------|--------|
 | 1 | Safe pixel hygiene (load timing + InitiateCheckout de-dup) | Built in branch, commit 53a1d2bc (SCRUM-1043) |
 | 2 | Verify post-fix attribution (gates Phase 3) | Gate satisfied 2026-06-01 = GO (SCRUM-1044) |
-| 3 | Server-side Purchase webhook + ad-click propagation | 3b done in branch (SCRUM-1047, commit pending); 3a to build (SCRUM-1046) |
+| 3 | Server-side Purchase webhook + ad-click propagation | Built in branch (3a SCRUM-1046, 3b SCRUM-1047). Go-live needs SHOPIFY_WEBHOOK_SECRET + webhook registration |
 | 4 | Gate pixel + CAPI to production host only (new) | Built in branch, commit a8492028 (SCRUM-1048) |
 
 ### Phase 2 gate decision (2026-06-01): GO

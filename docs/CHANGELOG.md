@@ -6,7 +6,11 @@
 
 ## June 2026
 
-### 2026-06-01 -- Carry the Meta ad-click id (fbclid) into Shopify orders
+### 2026-06-01 -- Server-side Meta Purchase via Shopify orders/paid webhook
+
+Adds a first-party Purchase event we control, sent from a new Shopify orders/paid webhook to the Meta Conversions API. This is the core of the attribution fix: it sends the Shopify order id as the Meta event_id (so it deduplicates against the Shopify Facebook channel's Purchase rather than double-counting), a clean value and currency, hashed customer email/phone/name/address, the browser IP and user agent from the order, and the _fbp/_fbc ad-click identifiers carried on the order note attributes. Subscription rebills are filtered so recurring charges are not counted as new acquisitions. The webhook verifies the Shopify HMAC and is idempotent via Meta's event_id deduplication. Dormant until SHOPIFY_WEBHOOK_SECRET is set and the orders/paid webhook is registered in Shopify admin. SCRUM-1046.
+
+**Added:** `app/lib/metaCapi.ts`, `app/api/webhooks/shopify/orders/route.ts`
 
 The ad-click identifier is now captured on landing and carried through to the order, so the server-side Purchase event (built next) can attribute sales to the ad that drove them. Meta had flagged low fbc coverage as the core reason purchases were not attributing. On landing we read fbclid from the URL and write the _fbc cookie in Meta's format; _fbp and _fbc are then attached as cart-level attributes that flow to the order note attributes. Attributes are set when the cart is created and refreshed on subsequent adds, so returning visitors who click a new ad (retargeting audiences) are also captured. Attribution writes are best-effort and never block or fail add-to-cart. SCRUM-1047.
 
