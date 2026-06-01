@@ -102,6 +102,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
+  // Defense-in-depth: only process orders/paid, even though that is the only
+  // topic registered for this endpoint.
+  const topic = request.headers.get("x-shopify-topic");
+  if (topic && topic !== "orders/paid") {
+    return NextResponse.json({ ok: true, skipped: "wrong_topic" }, { status: 200 });
+  }
+
   let order: ShopifyOrder;
   try {
     order = JSON.parse(rawBody);
@@ -109,48 +116,54 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  // Skip subscription rebills — only new/first orders are acquisitions.
-  if (isSubscriptionRenewal(order)) {
-    console.log("[Shopify webhook] Skipping subscription renewal", { orderId: order.id });
-    return NextResponse.json({ ok: true, skipped: "renewal" }, { status: 200 });
+  try {
+    // Skip subscription rebills — only new/first orders are acquisitions.
+    if (isSubscriptionRenewal(order)) {
+      console.log("[Shopify webhook] Skipping subscription renewal", { orderId: order.id });
+      return NextResponse.json({ ok: true, skipped: "renewal" }, { status: 200 });
+    }
+
+    const value = parseFloat(order.total_price ?? "");
+    if (!order.id || isNaN(value)) {
+      // Malformed/incomplete order — acknowledge to avoid retries, send nothing.
+      return NextResponse.json({ ok: true, skipped: "invalid_order" }, { status: 200 });
+    }
+
+    const addr = order.shipping_address ?? order.billing_address ?? null;
+    const parsedTime = order.created_at ? Math.floor(Date.parse(order.created_at) / 1000) : NaN;
+    const eventTime = isNaN(parsedTime) ? Math.floor(Date.now() / 1000) : parsedTime;
+
+    await sendPurchaseToCapi({
+      eventId: String(order.id), // dedupes against the Shopify FB channel Purchase
+      eventTime,
+      value,
+      currency: order.currency ?? "GBP",
+      contentIds: order.line_items
+        ?.map((li) => (li.variant_id != null ? String(li.variant_id) : ""))
+        .filter(Boolean),
+      numItems: order.line_items?.reduce((n, li) => n + (li.quantity ?? 0), 0),
+      eventSourceUrl: "https://www.conka.io",
+      user: {
+        email: order.email ?? order.contact_email ?? order.customer?.email,
+        phone: order.phone ?? order.customer?.phone ?? addr?.phone,
+        firstName: order.customer?.first_name,
+        lastName: order.customer?.last_name,
+        city: addr?.city,
+        state: addr?.province_code,
+        zip: addr?.zip,
+        country: addr?.country_code,
+        externalId: order.customer?.id != null ? String(order.customer.id) : undefined,
+        fbp: noteAttr(order, "_fbp"),
+        fbc: noteAttr(order, "_fbc"),
+        clientIpAddress: order.client_details?.browser_ip,
+        clientUserAgent: order.client_details?.user_agent,
+      },
+    });
+  } catch (err) {
+    // Acknowledge so Shopify does not retry our own bug; Meta event_id dedup
+    // makes a future re-send safe if the issue is fixed.
+    console.error("[Shopify webhook] Failed to process order", order?.id, err);
   }
-
-  const value = parseFloat(order.total_price ?? "");
-  if (!order.id || isNaN(value)) {
-    // Malformed/incomplete order — acknowledge to avoid retries, send nothing.
-    return NextResponse.json({ ok: true, skipped: "invalid_order" }, { status: 200 });
-  }
-
-  const addr = order.shipping_address ?? order.billing_address ?? null;
-  const parsedTime = order.created_at ? Math.floor(Date.parse(order.created_at) / 1000) : NaN;
-  const eventTime = isNaN(parsedTime) ? Math.floor(Date.now() / 1000) : parsedTime;
-
-  await sendPurchaseToCapi({
-    eventId: String(order.id), // dedupes against the Shopify FB channel Purchase
-    eventTime,
-    value,
-    currency: order.currency ?? "GBP",
-    contentIds: order.line_items
-      ?.map((li) => (li.variant_id != null ? String(li.variant_id) : ""))
-      .filter(Boolean),
-    numItems: order.line_items?.reduce((n, li) => n + (li.quantity ?? 0), 0),
-    eventSourceUrl: "https://www.conka.io",
-    user: {
-      email: order.email ?? order.contact_email ?? order.customer?.email,
-      phone: order.phone ?? order.customer?.phone ?? addr?.phone,
-      firstName: order.customer?.first_name,
-      lastName: order.customer?.last_name,
-      city: addr?.city,
-      state: addr?.province_code,
-      zip: addr?.zip,
-      country: addr?.country_code,
-      externalId: order.customer?.id != null ? String(order.customer.id) : undefined,
-      fbp: noteAttr(order, "_fbp"),
-      fbc: noteAttr(order, "_fbc"),
-      clientIpAddress: order.client_details?.browser_ip,
-      clientUserAgent: order.client_details?.user_agent,
-    },
-  });
 
   // Always 200. Idempotency is Meta-side via the shared event_id (order id), so a
   // Shopify retry that re-sends the same event is deduplicated by Meta.

@@ -29,14 +29,14 @@ function generateEventId(): string {
 /** Read _fbp cookie for CAPI user_data (improves matching) */
 export function getFbp(): string | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/_fbp=([^;]+)/);
+  const match = document.cookie.match(/(?:^|;\s*)_fbp=([^;]+)/);
   return match ? match[1].trim() : null;
 }
 
 /** Read _fbc cookie (the ad-click identifier) for CAPI user_data */
 export function getFbc(): string | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/_fbc=([^;]+)/);
+  const match = document.cookie.match(/(?:^|;\s*)_fbc=([^;]+)/);
   return match ? match[1].trim() : null;
 }
 

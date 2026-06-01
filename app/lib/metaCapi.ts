@@ -121,11 +121,17 @@ export async function sendPurchaseToCapi(event: PurchaseEvent): Promise<boolean>
     accessToken
   )}`;
 
+  // When set, route events to the Events Manager "Test Events" tab for
+  // verification. Set META_TEST_EVENT_CODE while testing, then unset it.
+  const testEventCode = process.env.META_TEST_EVENT_CODE;
+  const payload: Record<string, unknown> = { data: [serverEvent] };
+  if (testEventCode) payload.test_event_code = testEventCode;
+
   try {
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: [serverEvent] }),
+      body: JSON.stringify(payload),
     });
     if (!res.ok && process.env.NODE_ENV === "development") {
       const data = await res.json().catch(() => ({}));

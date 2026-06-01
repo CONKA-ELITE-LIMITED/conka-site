@@ -10,12 +10,11 @@ import {
   GET_CART,
 } from '@/app/lib/shopifyQueries';
 
-const cartLineAttributesSchema = z
+// Shared shape for both per-line attributes and cart-level attributes
+// (e.g. Meta _fbp / _fbc). Same schema, different placement on the cart.
+const attributesSchema = z
   .array(z.object({ key: z.string(), value: z.string() }))
   .optional();
-
-// Cart-level attributes (e.g. Meta _fbp / _fbc) — distinct from per-line attributes.
-const cartAttributesSchema = cartLineAttributesSchema;
 
 // Zod schemas for cart operations
 const cartActionSchema = z.discriminatedUnion('action', [
@@ -24,8 +23,8 @@ const cartActionSchema = z.discriminatedUnion('action', [
     variantId: z.string().optional(),
     quantity: z.number().int().positive().optional(),
     sellingPlanId: z.string().optional(),
-    attributes: cartLineAttributesSchema,
-    cartAttributes: cartAttributesSchema,
+    attributes: attributesSchema,
+    cartAttributes: attributesSchema,
   }),
   z.object({
     action: z.literal('add'),
@@ -33,8 +32,8 @@ const cartActionSchema = z.discriminatedUnion('action', [
     variantId: z.string().min(1, 'Variant ID is required'),
     quantity: z.number().int().positive().optional(),
     sellingPlanId: z.string().optional(),
-    attributes: cartLineAttributesSchema,
-    cartAttributes: cartAttributesSchema,
+    attributes: attributesSchema,
+    cartAttributes: attributesSchema,
   }),
   z.object({
     action: z.literal('update'),

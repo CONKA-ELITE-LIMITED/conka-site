@@ -39,6 +39,7 @@ Added 2026-06-01 (SCRUM-1046/1047) as the core of the headless attribution fix (
 - **`NEXT_PUBLIC_META_PIXEL_ID`** – Meta Pixel ID (required for pixel and CAPI).
 - **`META_CAPI_ACCESS_TOKEN`** – Server-only; used by the CAPI route and the order webhook. Without it, CAPI is skipped but the site still works.
 - **`SHOPIFY_WEBHOOK_SECRET`** – Server-only; the signing secret shown in Shopify Admin → Settings → Notifications → Webhooks. Used to verify the `orders/paid` webhook HMAC. Without it the webhook returns 200 and sends nothing.
+- **`META_TEST_EVENT_CODE`** – Optional, server-only. When set, the server-side Purchase is routed to the Events Manager **Test Events** tab for verification. Set it temporarily while testing, then unset it for production.
 
 ---
 
