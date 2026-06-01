@@ -6,7 +6,7 @@ import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 /* ============================================================================
  * CROAppCallout
  *
- * V2 Section 10 on /start, Section 9 on /startv2. The "don't trust us, test
+ * Section 9 on /start. The "don't trust us, test
  * yourself" beat. Visitor has seen the proof; the remaining objection is
  * "what if it doesn't work for me specifically?". This section answers by
  * pitching the CONKA app: install it, take the cognitive test before and
