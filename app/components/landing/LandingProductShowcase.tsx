@@ -141,13 +141,14 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         </div>
 
         {!hideCTA && (
-          <>
-            <ConkaCTAButton href={ctaHref} meta={null}>
-              Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
-            </ConkaCTAButton>
-            <GuaranteeRow />
-          </>
+          <ConkaCTAButton href={ctaHref} meta={null}>
+            Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
+          </ConkaCTAButton>
         )}
+        {/* Guarantee renders even when the CTA is hidden (/conka-both,
+            protocol pages) so the section still closes with reassurance
+            rather than ending abruptly on the cert icons. */}
+        <GuaranteeRow />
       </div>
     </div>
   );

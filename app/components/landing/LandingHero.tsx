@@ -4,10 +4,13 @@ import GuaranteeRow from "./GuaranteeRow";
 
 const AVATAR_COUNT = 5;
 
+// Note: customer rating deliberately NOT in this strip — the trust micro-row
+// above the H1 already carries "Excellent 4.7", so the third cell does new
+// work (Informed Sport testing breadth) instead of repeating it.
 const STATS = [
   { value: "32", label: "PEER-REVIEWED\nSTUDIES CITED" },
   { value: "150,000+", label: "DOSES\nDELIVERED" },
-  { value: "4.7/5", label: "VERIFIED\nCUSTOMER RATING" },
+  { value: "280+", label: "BANNED SUBSTANCES\nTESTED PER BATCH" },
 ];
 
 function StatStrip() {
@@ -60,18 +63,18 @@ function TrustMicroRow() {
       </div>
       <div className="flex flex-col leading-tight">
         <div className="flex items-center gap-2">
-          {/* 4.5 stars via overlay: grey base + gold clipped to 90% width */}
+          {/* 4.7 stars via overlay: grey base + gold clipped to 94% width */}
           <div
             className="relative inline-block leading-none"
             style={{ fontSize: "20px", letterSpacing: "0.05em" }}
-            aria-label="4.5 out of 5 stars"
+            aria-label="4.7 out of 5 stars"
           >
             <span className="text-black/15" aria-hidden="true">
               ★★★★★
             </span>
             <span
               className="absolute top-0 left-0 overflow-hidden whitespace-nowrap"
-              style={{ color: "#F59E0B", width: "90%" }}
+              style={{ color: "#F59E0B", width: "94%" }}
               aria-hidden="true"
             >
               ★★★★★

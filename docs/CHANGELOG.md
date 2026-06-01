@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Code review fixes across the home page upgrade branch
+
+Five fixes from the self-review of the home-page-upgrades branch. The hero stat strip's "4.7/5 verified customer rating" cell was replaced with "280+ banned substances tested per batch" because the trust micro-row above the H1 already states the 4.7 rating (same fact twice in one viewport). The hero's gold star fill was corrected from 90% to 94% with a matching aria-label so the visual, label, and "Excellent 4.7" text agree. The product showcase guarantee row now renders even when the CTA is hidden, so /conka-both and the protocol pages close with reassurance instead of ending abruptly on the cert icons. The unused athlete bio field was removed from the carousel type and data. The marquee and thumbnail roster now reset their edge-bleed margins at the 768px breakpoint where the section gutter actually changes, fixing a partial-bleed gap on tablet widths.
+
+**Modified:** `app/components/landing/LandingHero.tsx`, `app/components/landing/LandingProductShowcase.tsx`, `app/components/AthleteCredibilityCarousel.tsx`
+
+---
+
 ### 2026-06-01 -- Athlete carousel polish: thumbnail snap padding and readable subheading
 
 Two follow-ups to the carousel rework. The mobile thumbnail strip was snapping its first tile flush against the screen edge because scroll-snap aligns to the scrollport edge and ignores visual padding; a matching scroll-padding inset (scroll-pl-5) fixes the alignment. The mono "N=7 · Olympic · WBO · IBO" subline was replaced with the readable sentence from the /start athletes section ("Olympic medallists, world champions, and international competitors use CONKA on the days that matter most"), which says the same thing without spec-sheet decoding effort.

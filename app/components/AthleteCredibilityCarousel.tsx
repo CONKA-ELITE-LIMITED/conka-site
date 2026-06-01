@@ -20,7 +20,6 @@ export type Athlete = {
   name: string;
   sport: string;
   role: string;
-  bio: string;
   achievementMono: string;
   quote: string;
   image: string;
@@ -31,7 +30,6 @@ const ATHLETES: Athlete[] = [
     name: "Dan Norton",
     sport: "Rugby Sevens",
     role: "Olympic Silver Medallist",
-    bio: "Holds the all-time try-scoring record in the World Rugby Sevens Series. Olympic silver, Rio 2016.",
     achievementMono: "RUGBY 7s · OLYMPIC",
     quote:
       "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
@@ -41,7 +39,6 @@ const ATHLETES: Athlete[] = [
     name: "Josh Stanton",
     sport: "Motorsport",
     role: "Professional Racing Driver",
-    bio: "British GT racing driver competing on the professional international circuit.",
     achievementMono: "BRITISH GT · PRO",
     quote:
       "When you are sat in a car you need to be in a calm state, but also you need to be aggressive. Really important to have this clarity of thought. The benefits CONKA gives me and knowing I have this edge is fantastic.",
@@ -51,7 +48,6 @@ const ATHLETES: Athlete[] = [
     name: "Chris Billam-Smith",
     sport: "Boxing",
     role: "WBO Cruiserweight World Champion",
-    bio: "Defeated Lawrence Okolie in 2023 to claim the WBO Cruiserweight world title.",
     achievementMono: "WBO · 2023",
     quote:
       "Helps with concentration and mental focus. It was a massive benefit for my last fight which needed a lot of focus against a big puncher.",
@@ -61,7 +57,6 @@ const ATHLETES: Athlete[] = [
     name: "Sienna Charles",
     sport: "Showjumping",
     role: "GB Senior Team, European Medallist",
-    bio: "Great Britain senior team rider and European Championships medallist.",
     achievementMono: "TEAM GB · EUROPEAN",
     quote:
       "Within a few weeks of taking it I saw huge improvements in energy, my ability to focus and my memory which got me back to competitions.",
@@ -71,7 +66,6 @@ const ATHLETES: Athlete[] = [
     name: "Fraser Dingwall",
     sport: "Rugby Union",
     role: "England International",
-    bio: "England international centre and Northampton Saints captain.",
     achievementMono: "ENGLAND · SAINTS",
     quote:
       "I have loved using CONKA in my daily routine, especially tailoring which shot I take dependent on my training load, and being able to track progress using the app. Brain health is extremely important in rugby and I am enjoying feeling more focused and energised.",
@@ -81,7 +75,6 @@ const ATHLETES: Athlete[] = [
     name: "Adam Azim",
     sport: "Boxing",
     role: "IBO Super Lightweight World Champion",
-    bio: "Undefeated IBO Super Lightweight World Champion and European title holder.",
     achievementMono: "IBO · UNDEFEATED",
     quote:
       "My reflexes were on point for my fights. CONKA is a daily thing I take especially in camp before fights.",
@@ -91,7 +84,6 @@ const ATHLETES: Athlete[] = [
     name: "Jack Willis",
     sport: "Rugby Union",
     role: "England International, Stade Toulousain",
-    bio: "England international flanker and Top 14 champion with Stade Toulousain.",
     achievementMono: "ENGLAND · TOP 14",
     quote:
       "For me it was about trying to find the small margins and trying to maximise my brain as well as my body was so important.",
@@ -128,7 +120,7 @@ const SWIPE_THRESHOLD = 50;
    -50% so the loop is seamless. `motion-safe:` guards reduced motion. */
 function SportMarquee() {
   return (
-    <div className="relative overflow-hidden bg-[#1B2757] py-3 mb-8 -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full">
+    <div className="relative overflow-hidden bg-[#1B2757] py-3 mb-8 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full">
       <span className="sr-only">
         CONKA athletes compete in: {SPORTS.join(", ")}.
       </span>
@@ -387,7 +379,7 @@ export default function AthleteCredibilityCarousel() {
         role="tablist"
         aria-label="Athlete roster"
         onKeyDown={handleKeyDown}
-        className="flex gap-2 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 scroll-pl-5 lg:mx-0 lg:px-0 lg:scroll-pl-0 lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-2 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 scroll-pl-5 md:mx-0 md:px-0 md:scroll-pl-0 lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {ATHLETES.map((a, i) => {
           const isActive = i === activeIndex;
