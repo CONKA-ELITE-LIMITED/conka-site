@@ -6,6 +6,22 @@
 
 ## June 2026
 
+### 2026-06-01 -- Home section reorder and image-first testimonials
+
+Two conversion-focused changes. On the home page, the Daily Benefits section now comes before the Find Your Formula product grid, so the ingredient/benefit argument lands before the purchase decision; the white/tint section alternation is preserved and the #product-grid scroll anchor moved with the grid. Testimonial cards in LandingTestimonials are now image-first: the customer photo leads the card (4:3, full width) with the verified header, name, headline, and quote below, instead of the photo sitting at the bottom after the text. All 8 curated testimonials have photos so every card gets the treatment. Propagates to home, the three formula pages, and protocol pages.
+
+**Modified:** `app/page.tsx`, `app/components/landing/LandingTestimonials.tsx`
+
+---
+
+### 2026-06-01 -- Render rollout completeness fixes from code review
+
+The post-merge code review of the render rollout (PR #270) found two coverage gaps, both fixed. WhatToExpectMobile has its own inline formula picker (it does not use the shared FormulaToggle), so mobile visitors, 74 percent of traffic, still saw the old transparent PNG bottles in the same section where desktop showed the new photo tiles; the mobile picker buttons and the How to Use card bottle now use the FlowNew/ClearNew photo tiles, as does the matching How to Use card in WhatToExpectDesktop. Second, formulaContent.ts carried 12 more old ingredient image paths in its ingredientAsset fields (rendered by the PDP benefit detail components and What to Expect timeline); all swapped to the renders with the same fallback rules. Remaining known dead code: KeyBenefits.tsx and its Desktop/Mobile siblings are orphaned (no page renders them) and still reference old paths; left for a cleanup pass.
+
+**Modified:** `app/components/home/WhatToExpectMobile.tsx`, `app/components/home/WhatToExpectDesktop.tsx`, `app/lib/formulaContent.ts`
+
+---
+
 ### 2026-06-01 -- Ingredient renders rolled out to ingredientsData and the formula picker
 
 The bespoke 3D ingredient renders (already used on /start and the recently upgraded benefit sections) are now the canonical ingredient imagery sitewide. All 16 image fields in ingredientsData.ts swapped from the old webp photos to /public/ingredients/renders/, which propagates to the /ingredients page (mobile carousel, desktop selector grid, and detail cards) and the PDP FormulaIngredients accordions on /conka-flow and /conka-clarity. Glutathione and ALCAR use the generic white-powder render until bespoke ones ship; Lemon Oil uses the Vitamin C render (citrus). The shared FormulaToggle product picker (used on /ingredients and the home What to Expect section) swapped its transparent PNG bottles with inner scaling hacks for the square FlowNew/ClearNew photographic tiles filling the buttons.

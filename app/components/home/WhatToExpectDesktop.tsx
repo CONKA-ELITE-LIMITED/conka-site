@@ -207,17 +207,17 @@ export default function WhatToExpectDesktop({
           {/* How to Use — under last step, left column */}
           <div className="mt-8 bg-white border border-black/8 p-6">
             <div className="flex items-start gap-4 lg:gap-6">
-              <div className="flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 relative bg-[var(--brand-tint)] border border-black/8 overflow-hidden flex items-center justify-center p-1">
+              <div className="flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 relative border border-black/8 overflow-hidden">
                 <Image
                   src={
                     selectedFormula === "01"
-                      ? "/formulas/conkaFlow/FlowNoBackground.png"
-                      : "/formulas/conkaClear/ClearNoBackground.png"
+                      ? "/formulas/conkaFlow/FlowNew.jpg"
+                      : "/formulas/conkaClear/ClearNew.jpg"
                   }
                   alt=""
                   fill
                   loading="lazy"
-                  className="object-contain object-center"
+                  className="object-cover"
                   sizes="80px"
                   aria-hidden
                 />
