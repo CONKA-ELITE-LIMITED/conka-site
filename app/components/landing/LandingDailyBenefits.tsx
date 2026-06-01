@@ -180,20 +180,43 @@ export default function LandingDailyBenefits() {
                     {pillar.description}
                   </p>
 
-                  {/* Compact mono expander — [+] Learn more. Small visual
-                      footprint, full 44px tap target preserved. */}
-                  <button
-                    type="button"
-                    onClick={() => setOpenId(isOpen ? null : pillar.id)}
-                    aria-expanded={isOpen}
-                    aria-controls={`pillar-evidence-${pillar.id}`}
-                    className="mt-auto inline-flex items-center gap-1.5 min-h-[44px] font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50 hover:text-black text-left cursor-pointer transition-colors"
-                  >
-                    <span className="tabular-nums">
-                      {isOpen ? "[−]" : "[+]"}
-                    </span>
-                    <span>{isOpen ? "Show less" : "Learn more"}</span>
-                  </button>
+                  {/* Footer row — ingredient render thumbnails (collapsed only)
+                      on the left, compact mono expander on the right. One row
+                      keeps the card short while still showing what's inside
+                      without a tap. */}
+                  <div className="mt-auto flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5">
+                      {!isOpen &&
+                        pillar.ingredients.map((ingredient) => (
+                          <div
+                            key={ingredient.name}
+                            className="relative w-11 h-11 border border-black/8 overflow-hidden bg-white"
+                          >
+                            <Image
+                              src={ingredient.imageSrc}
+                              alt={ingredient.name}
+                              fill
+                              loading="lazy"
+                              sizes="44px"
+                              className="object-cover"
+                            />
+                          </div>
+                        ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setOpenId(isOpen ? null : pillar.id)}
+                      aria-expanded={isOpen}
+                      aria-controls={`pillar-evidence-${pillar.id}`}
+                      className="inline-flex items-center gap-1.5 min-h-[44px] font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50 hover:text-black text-left cursor-pointer transition-colors shrink-0"
+                    >
+                      <span className="tabular-nums">
+                        {isOpen ? "[−]" : "[+]"}
+                      </span>
+                      <span>{isOpen ? "Show less" : "Learn more"}</span>
+                    </button>
+                  </div>
 
                   {isOpen && (
                     <div

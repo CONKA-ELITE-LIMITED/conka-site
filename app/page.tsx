@@ -45,7 +45,10 @@ const LabTimeline = dynamic(
 
 const LandingDailyBenefits = dynamic(
   () => import("./components/landing/LandingDailyBenefits"),
-  { loading: () => <div className="h-[600px]" /> },
+  // Placeholder approximates the rendered height (4:5 video + header +
+  // 3 cards on mobile; sticky split on desktop) to limit CLS during
+  // client-side navigation.
+  { loading: () => <div className="h-[1500px] lg:h-[900px]" /> },
 );
 
 export default function Home() {

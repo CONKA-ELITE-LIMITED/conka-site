@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Daily Benefits collapsed thumbnails and round 2 review fixes
+
+Three follow-ups on the round 2 home page work. The Daily Benefits cards now show their three ingredient renders as 44px thumbnails in the collapsed state, sharing one footer row with the Learn-more expander (thumbnails left, toggle right), so visitors see what is inside each pillar without tapping and the cards stay short. From the code review: the LabResearch partner grid cells switched from tint to white fill so they read as defined cards against the tint section background, and the Daily Benefits dynamic-import placeholder height was raised from 600px to approximate the real section height (1500px mobile, 900px desktop) to limit CLS during client-side navigation.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/landing/LabResearch.tsx`, `app/page.tsx`
+
+---
+
 ### 2026-06-01 -- Daily Benefits section rebuilt around the rotating Flow render and outcome-led cards
 
 The home page Daily Benefits section ("Daily habit. Lifelong benefits.") was rebuilt for faster consumption. The static lifestyle photo was replaced with the rotating 3D Flow bottle render (FlowVideo, the same asset /start uses), 4:5 portrait, sticky on desktop and full-bleed on mobile, with a Fig. 02 chip overlay. The three benefit cards now lead with outcome verbs (Improves Focus and Memory, Reduces Fatigue and Crashes, Protects Long-Term Brain Health) instead of category nouns, descriptions were cut to one line each, and the full-width "See ingredients and research" expander was shrunk to a compact mono "[+] Learn more" toggle. The expanded view swaps the old webp ingredient photos for the bespoke 3D renders from /public/ingredients/renders/. App-data stat boxes, study observations, and PMID citations are unchanged. FlowVideo moved from app/start/ to app/components/landing/ so a shared component no longer lives in a page folder; /start's import was updated with no behaviour change.

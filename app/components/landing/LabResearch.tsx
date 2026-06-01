@@ -69,7 +69,7 @@ export default function LabResearch() {
             {RESEARCH_PARTNERS.map((partner) => (
               <div
                 key={partner.src}
-                className="relative bg-[var(--brand-tint)] border border-black/8 overflow-hidden aspect-[2/1]"
+                className="relative bg-white border border-black/8 overflow-hidden aspect-[2/1]"
               >
                 <Image
                   src={partner.src}
