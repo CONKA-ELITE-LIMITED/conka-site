@@ -6,6 +6,14 @@
 
 ## June 2026
 
+### 2026-06-01 -- Home page hero upgraded with /start trust signals and two-bottle hero asset
+
+First section of the home page upgrade effort, porting the highest-performing trust patterns from the /start landing page into the home hero while keeping the clinical register. The mono eyebrow ("// A new state of mind") was removed and replaced by the /start trust micro-row (5 stacked customer avatars, gold 4.5-star overlay, "Excellent 4.7", 622+ reviews and 5,000+ daily users) sitting above the H1 on both mobile and desktop. The H1 now matches the /start title format: "Brain Performance" locked on its own line with an italic emphasis on "Daily" in the second line. A 100-day money-back guarantee row was added directly under the CTA, restyled for the clinical aesthetic with a square check mark in a darker green (#047857) instead of /start's rounded consumer green; copy anchors to GUARANTEE_LABEL_FULL from offerConstants. The hero asset swapped from the lifestyle hand-off photo to the two-bottle product shot (/formulas/both/BothHero.jpg) with a GPU-only scale/translate crop to remove the source's white space. On mobile the CTA and guarantee row are centred; desktop keeps them left-aligned.
+
+**Modified:** `app/components/landing/LandingHero.tsx`
+
+---
+
 ### 2026-06-01 -- Collapsed /startv2 into /start and removed orphaned components
 
 The finished landing-page v2.1 build (Sections 1-10) now lives at the canonical `/start` URL. The legacy `/start` body was replaced wholesale with the v2.1 build, the seven co-located client islands moved from `app/startv2/` into `app/start/`, the old `app/startv2/` page was deleted, and a 301 redirect `/startv2 -> /start` was added so any shared preview links resolve. `/start` keeps its noindex,nofollow stance (paid-traffic-only page); the metadata canonical was repointed to `/start`. The `LandingDisclaimer` footer was removed from the page at the founder's direction (messaging-first; legality handled separately), along with the now-unused footnote marker in the hero. With the old page body gone, seven components had no remaining consumers and were deleted: `CROHeroV2`, `CROBrandStory`, `LandingValueComparisonV2`, `CROFormulaSplitV2`, `CROBuyBox`, `CROBenefitCards`, `LandingDisclaimer`. Net reduction of roughly 1,600 lines. Shared dependencies (`CROPillCTA`, `useInView`) were verified to survive via other consumers.

@@ -1,5 +1,8 @@
 import Image from "next/image";
 import ConkaCTAButton from "./ConkaCTAButton";
+import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
+
+const AVATAR_COUNT = 5;
 
 const STATS = [
   { value: "32", label: "PEER-REVIEWED\nSTUDIES CITED" },
@@ -31,20 +34,108 @@ function StatStrip() {
   );
 }
 
+/* Trust micro-row: stacked avatars + (4.5 stars + Excellent 4.7) + review count */
+function TrustMicroRow() {
+  return (
+    <div className="flex items-center gap-3 mb-5">
+      <div className="flex items-center">
+        {Array.from({ length: AVATAR_COUNT }, (_, i) => (
+          <div
+            key={i}
+            className="relative w-[35px] h-[35px] rounded-full overflow-hidden"
+            style={{
+              marginLeft: i === 0 ? 0 : "-10px",
+              zIndex: AVATAR_COUNT - i,
+            }}
+          >
+            <Image
+              src={`/avatars/${i + 1}.jpg`}
+              alt="CONKA customer"
+              fill
+              className="object-cover"
+              sizes="35px"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col leading-tight">
+        <div className="flex items-center gap-2">
+          {/* 4.5 stars via overlay: grey base + gold clipped to 90% width */}
+          <div
+            className="relative inline-block leading-none"
+            style={{ fontSize: "20px", letterSpacing: "0.05em" }}
+            aria-label="4.5 out of 5 stars"
+          >
+            <span className="text-black/15" aria-hidden="true">
+              ★★★★★
+            </span>
+            <span
+              className="absolute top-0 left-0 overflow-hidden whitespace-nowrap"
+              style={{ color: "#F59E0B", width: "90%" }}
+              aria-hidden="true"
+            >
+              ★★★★★
+            </span>
+          </div>
+          <span className="text-[14px] font-bold text-black">
+            Excellent 4.7
+          </span>
+        </div>
+        <span className="text-[12px] text-black mt-1">
+          <strong className="font-bold">622+</strong> reviews ·{" "}
+          <strong className="font-bold">5,000+</strong> daily users
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* 100-day guarantee row — square check + darker green so the mark reads
+   clinical/sharp rather than the rounded consumer green used on /start. */
+function GuaranteeRow() {
+  return (
+    <div className="flex items-center gap-2 mt-3">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect x="2" y="2" width="20" height="20" fill="#047857" />
+        <path
+          d="M8 12.5L10.5 15L16 9.5"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+        />
+      </svg>
+      <span className="text-[13px] text-black">{GUARANTEE_LABEL_FULL}</span>
+    </div>
+  );
+}
+
 export default function LandingHero() {
   return (
     <div>
-      {/* Mobile — full-bleed image (clean, soft fade at bottom), title + CTA below */}
+      {/* Mobile — full-bleed image (clean, soft fade at bottom), trust row + title + CTA below */}
       <div className="lg:hidden">
         <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[4/3]">
           <Image
-            src="/lifestyle/CreationOfConkaBlack.jpg"
-            alt="Two hands exchanging a CONKA brain performance shot"
+            src="/formulas/both/BothHero.jpg"
+            alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
             fill
             priority
             fetchPriority="high"
             sizes="100vw"
             className="object-cover object-center"
+            style={{
+              // Crop the source's white space so the bottles fill the frame.
+              // GPU-only transform, no layout cost.
+              transform: "scale(1.4) translateY(-10%)",
+              transformOrigin: "center center",
+            }}
           />
           <div
             className="absolute inset-x-0 bottom-0 h-10 pointer-events-none"
@@ -56,14 +147,14 @@ export default function LandingHero() {
         </div>
 
         <header className="mt-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/55 tabular-nums mb-3">
-            {"// A new state of mind · CONKA-00"}
-          </p>
+          <TrustMicroRow />
           <h1
-            className="text-black font-semibold text-3xl leading-[1.08]"
+            className="text-black font-semibold text-[38px] leading-[1.08]"
             style={{ letterSpacing: "-0.02em" }}
           >
-            Brain Performance in One Daily Shot.
+            Brain Performance
+            <br />
+            in One <em className="italic">Daily</em> Shot.
           </h1>
           <p className="mt-4 text-[15px] leading-snug text-black/70">
             For minds that demand more. A patented nootropic shot, clinically
@@ -74,8 +165,9 @@ export default function LandingHero() {
           </p>
         </header>
 
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col items-center">
           <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
+          <GuaranteeRow />
         </div>
 
         <div className="mt-10">
@@ -85,17 +177,17 @@ export default function LandingHero() {
 
       {/* Desktop — content left, asset right */}
       <div className="hidden lg:grid lg:grid-cols-[1fr_2fr] lg:gap-12 xl:gap-16 lg:items-center">
-        {/* Left — eyebrow, title, CTA, stats */}
+        {/* Left — trust row, title, CTA, stats */}
         <div className="flex flex-col items-start">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/55 tabular-nums mb-5">
-            {"// A new state of mind · CONKA-00"}
-          </p>
+          <TrustMicroRow />
 
           <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-5 max-w-[18ch]"
+            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-5"
             style={{ letterSpacing: "-0.02em" }}
           >
-            Brain Performance in One Daily Shot.
+            Brain Performance
+            <br />
+            in One <em className="italic">Daily</em> Shot.
           </h1>
 
           <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[42ch]">
@@ -108,6 +200,7 @@ export default function LandingHero() {
 
           <div className="mb-10">
             <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
+            <GuaranteeRow />
           </div>
 
           <StatStrip />
@@ -117,13 +210,18 @@ export default function LandingHero() {
             so the source crop reads less zoomed. */}
         <div className="relative w-full aspect-[3/2] overflow-hidden border border-black/12 bg-[#f5f5f5]">
           <Image
-            src="/lifestyle/CreationOfConkaBlack.jpg"
-            alt="Two hands exchanging a CONKA brain performance shot"
+            src="/formulas/both/BothHero.jpg"
+            alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
             fill
             priority
             fetchPriority="high"
             sizes="(max-width: 1024px) 100vw, 60vw"
             className="object-cover object-center"
+            style={{
+              // Crop the source's white space so the bottles fill the frame.
+              transform: "scale(1.4) translateY(-10%)",
+              transformOrigin: "center center",
+            }}
           />
         </div>
       </div>
