@@ -86,7 +86,9 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         and mental endurance.
       </p>
 
-      <div className="grid grid-cols-2 gap-3 lg:gap-6 mb-8">
+      {/* Constrained on desktop so the cards read as product tiles rather
+          than spanning the full 1280px track. */}
+      <div className="grid grid-cols-2 gap-3 lg:gap-6 mb-8 lg:max-w-[960px] lg:mx-auto">
         {PRODUCTS.map((product) => (
           <button
             key={product.id}
