@@ -6,11 +6,19 @@
 
 ## June 2026
 
+### 2026-06-02 -- Home page showcase: time-of-day bands + render-led ingredients panel
+
+The home page What CONKA Does section (LandingProductShowcase) now leads each product card with a navy time-of-day band (sun icon, MORNING or AFTERNOON, time window) so the AM/PM ritual is unmissable, replacing the easy-to-miss corner text. Sub-copy opens with the ritual (Flow for the morning, Clear for the afternoon). On mobile the bottle asset spans the full card width and the See What's Inside footer is styled as a navy CTA block. The shared IngredientsPanel (used by the showcase and the PDP hero accordions) is now render-led: every active ingredient and the Vitamin C/B12 nutrients show their 3D render thumbnail, laid out as compact 2-up cards on desktop and full-width cards with larger assets on mobile. Interactive showcase variants (Morning/Afternoon toggle with a video stage, then a spotlight layout) were prototyped and deliberately rejected: any layout that enlarges one product demotes the other, contradicting the two-shots-one-system message. The decision is recorded in the component header.
+
+**Modified:** `app/components/landing/LandingProductShowcase.tsx`, `app/components/landing/IngredientsPanel.tsx`, `app/components/landing/icons.tsx`
+
 ### 2026-06-02 -- Pricing strikethroughs re-anchored to the one-time price
 
 Every compare-at price across the funnel and PDPs was anchored to the 4-shot trial pack rate (3.75 per shot), producing strikethroughs like "210.00, save 120.01 (57% off)" that a buyer cannot verify anywhere on the page, while the bullet below claimed "Save 25% vs one-time price". The numbers contradicted each other on the same screen and read as a fake discount. All subscription entries now anchor against the one-time price for the same product (quarterly anchors against 3 one-time boxes), one-time entries carry no strikethrough since they are the reference price, and one-time prices are defined once (OTP_PRICE) so the anchors can never drift. The hard-coded "Save 25%" badge in the funnel summary is now computed per product (Both saves 31%, Flow/Clear 25%). Also removed a dangling asterisk on the guarantee bullet that pointed to no footnote.
 
 **Modified:** `app/lib/funnelData.ts`, `app/components/funnel/SummaryStep.tsx`
+
+### 2026-06-02 -- /conka-both reordered as a proper PDP narrative, What CONKA Does section removed
 
 The page was assembled from home page components and the order showed it: athletes before the product story, and a What CONKA Does section (LandingProductShowcase) whose two bottle cards open an ingredients slide-out, sitting directly before the new ClinicalIngredients section, two competing ingredients experiences back to back. Removed the redundant section and reordered the page to read as a PDP: hero, timeline (what to expect), ingredients (what is inside), then the proof stack (athletes, testimonials), then objection handling (comparison, case studies, guarantee, FAQ). Backgrounds re-alternated white/tint from the hero down. The ingredients section also gets id="ingredients" to match the single-formula PDPs.
 

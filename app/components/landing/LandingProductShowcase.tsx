@@ -7,6 +7,23 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
 import GuaranteeRow from "./GuaranteeRow";
 import IngredientsPanel from "./IngredientsPanel";
+import { SunIcon, SunHorizonIcon } from "./icons";
+
+/* ============================================================================
+ * LandingProductShowcase
+ *
+ * "Two shots. Built around your day." — the home page's product-system
+ * teaching beat. Two equal cards, Flow (morning) and Clear (afternoon),
+ * each led by a navy time-of-day band so the AM/PM ritual is unmissable.
+ * Neither product is ever emphasised over the other: the system IS the
+ * product. Clicking a card opens the shared IngredientsPanel for that
+ * formula.
+ *
+ * Interactive variants (Morning/Afternoon toggle with a video stage, and a
+ * spotlight layout) were prototyped 2026-06 and deliberately rejected: any
+ * layout that enlarges one product implicitly demotes the other, which
+ * contradicts the two-shots-one-system message.
+ * ========================================================================== */
 
 type ProductId = "flow" | "clear";
 
@@ -14,20 +31,22 @@ const PRODUCTS = [
   {
     id: "flow" as ProductId,
     name: "CONKA Flow",
-    dose: "AM",
+    timeOfDay: "Morning",
     window: "06:00–10:00",
     tagline: "Calm morning focus.",
     bottleSrc: "/formulas/conkaFlow/FlowNew.jpg",
     bottleAlt: "CONKA Flow bottle",
+    TimeIcon: SunIcon,
   },
   {
     id: "clear" as ProductId,
     name: "CONKA Clear",
-    dose: "PM",
+    timeOfDay: "Afternoon",
     window: "12:00–16:00",
     tagline: "Afternoon reset.",
     bottleSrc: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
+    TimeIcon: SunHorizonIcon,
   },
 ];
 
@@ -62,8 +81,9 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         Two shots. Built around your day.
       </h2>
       <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[60ch]">
-        Two nootropic shots, each formulated with scientifically-studied
-        ingredients to support sustained focus, memory, and mental endurance.
+        Flow for the morning. Clear for the afternoon. Each formulated with
+        scientifically-studied ingredients to support sustained focus, memory,
+        and mental endurance.
       </p>
 
       <div className="grid grid-cols-2 gap-3 lg:gap-6 mb-8">
@@ -72,47 +92,55 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             key={product.id}
             type="button"
             onClick={() => openIngredients(product.id)}
-            className="group flex flex-col items-center text-center bg-white border border-black/8 p-5 lg:p-8 w-full hover:border-black/20 transition-colors focus:outline-none focus:ring-2 focus:ring-black/20"
+            className="group flex flex-col items-center text-center bg-white border border-black/8 w-full hover:border-black/20 transition-colors focus:outline-none focus:ring-2 focus:ring-black/20 overflow-hidden"
           >
-            <div className="self-start mb-4 flex items-baseline gap-2">
-              <span className="font-mono text-xs lg:text-sm font-bold uppercase tracking-[0.18em] text-black">
-                {product.dose}
+            {/* Time-of-day band — the AM/PM ritual is the card's lead message */}
+            <div className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-[#1B2757] text-white">
+              <product.TimeIcon className="w-4 h-4 shrink-0" />
+              <span className="font-mono text-[11px] lg:text-xs font-bold uppercase tracking-[0.16em] leading-none">
+                {product.timeOfDay}
               </span>
-              <span className="font-mono text-[9px] lg:text-[10px] uppercase tracking-[0.14em] text-black/35 tabular-nums">
+              <span className="hidden sm:inline font-mono text-[9px] lg:text-[10px] uppercase tracking-[0.14em] text-white/60 tabular-nums leading-none">
                 {product.window}
               </span>
             </div>
 
-            {/* Square photographic bottle card — the asset's off-white
-                background is the tile surface (same treatment as the /start
-                ingredients grid), so no inner scaling hacks are needed. */}
-            <div className="relative w-full aspect-square mb-4 lg:mb-6 overflow-hidden border border-black/8">
-              <Image
-                src={product.bottleSrc}
-                alt={product.bottleAlt}
-                fill
-                sizes="(max-width: 1024px) 45vw, 420px"
-                className="object-cover"
-              />
-            </div>
+            <div className="flex flex-col items-center w-full flex-1 p-5 lg:p-8">
+              {/* Square photographic bottle card — the asset's off-white
+                  background is the tile surface (same treatment as the /start
+                  ingredients grid), so no inner scaling hacks are needed.
+                  Mobile: negative margins pull the asset to the card edges so
+                  it spans the full card width, butting against the time band. */}
+              <div className="relative w-[calc(100%+2.5rem)] -mx-5 -mt-5 lg:w-full lg:mx-0 lg:mt-0 aspect-square mb-4 lg:mb-6 overflow-hidden border-b lg:border border-black/8">
+                <Image
+                  src={product.bottleSrc}
+                  alt={product.bottleAlt}
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 420px"
+                  className="object-cover"
+                />
+              </div>
 
-            <p className="text-base lg:text-2xl font-semibold text-black mb-1">
-              {product.name}
-            </p>
-            <p className="text-xs lg:text-base text-black/55 mb-4 lg:mb-6">
-              {product.tagline}
-            </p>
+              <p className="text-base lg:text-2xl font-semibold text-black mb-1">
+                {product.name}
+              </p>
+              <p className="text-xs lg:text-base text-black/55 mb-4 lg:mb-6">
+                {product.tagline}
+              </p>
 
-            <div className="mt-auto w-full flex items-center justify-between border-t border-black/8 pt-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/50">
-                See what&apos;s inside
-              </span>
-              <span
-                aria-hidden
-                className="font-mono text-sm text-black/30 group-hover:text-black/70 transition-colors"
-              >
-                ↗
-              </span>
+              {/* CTA-styled footer — the whole card is the real button; this
+                  block just reads as the action. */}
+              <div className="mt-auto w-full flex items-center justify-between gap-2 bg-[#1B2757] text-white px-3 lg:px-4 py-3 min-h-[44px]">
+                <span className="font-mono text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.14em] lg:tracking-[0.16em]">
+                  See what&apos;s inside
+                </span>
+                <span
+                  aria-hidden
+                  className="font-mono text-sm text-white/60 group-hover:text-white transition-colors"
+                >
+                  ↗
+                </span>
+              </div>
             </div>
           </button>
         ))}
@@ -125,8 +153,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
       />
 
       {/* Proof + conversion group: cert icons → CTA → guarantee, stacked and
-          centred as one block on every breakpoint. Replaces the text-only
-          trust badge grid that previously closed this section. */}
+          centred as one block on every breakpoint. */}
       <div className="flex flex-col items-center">
         <div className="flex items-center justify-center gap-2 mb-5">
           {CERTS.map((cert) => (
