@@ -32,7 +32,7 @@ brand-base, clinical grammar: `brand-section` + `brand-bg-*` wrappers owned by t
 |-------|-------------|--------|
 | 1 | LabTimeline benefits-first rebuild (home page Section 7) | Complete |
 | 2 | Clinical ingredients section on /conka-both | Complete |
-| 3 | Roll ingredients component into /conka-flow + /conka-clarity (replace `FormulaIngredients`) | Future |
+| 3 | Roll ingredients component into /conka-flow + /conka-clarity (replace `FormulaIngredients`) | Complete |
 
 ---
 
@@ -86,9 +86,9 @@ brand-base, clinical grammar: `brand-section` + `brand-bg-*` wrappers owned by t
 
 ---
 
-## Phase 3 (Future): Flow / Clarity rollout
+## Phase 3: Flow / Clarity rollout (Complete)
 
-Replace `FormulaIngredients` carousels on /conka-flow and /conka-clarity with `ClinicalIngredients` in single-formula mode. Not ticketed, not started. Only pick up once the component is proven on /conka-both.
+Replace `FormulaIngredients` carousels on /conka-flow and /conka-clarity with `ClinicalIngredients` in single-formula mode. Shipped 2026-06-02, see implementation log.
 
 ---
 
@@ -158,3 +158,12 @@ Shipped with three iterations of user feedback. Final shape differs from the ori
 - Clear order is product-led (Glutathione first), lemon-oil excluded as flavouring. Both carried over from the /start grid per the v2.1 doc.
 - Placement on /conka-both: Section 6, after What CONKA Does, before Comparison. Downstream backgrounds flipped to preserve white/tint alternation.
 - Single-formula mode (formulaIds prop) built and ready for Phase 3.
+
+### Phase 3 (2026-06-02): Flow / Clarity rollout + toggle redesign
+
+Shipped same day as Phase 2, immediately after it was approved:
+
+- **Toggle redesigned around time of day.** The two asset-dominant formula buttons became a Morning/Afternoon segmented control (mono, navy active) with a single bottle render of the active formula next to an identity block: CONKA Flow · AM, the mg load as a large stat, "Active nootropics" label, and the tagline. Desktop puts the toggle + asset to the right of the section title; mobile stacks them below it.
+- **Both PDPs swapped to ClinicalIngredients in single-formula mode.** /conka-flow uses formulaIds={["01"]}, /conka-clarity uses ["02"]. Single mode shows no toggle but keeps the asset + grammage block. Section ids (id="ingredients") and aria-labels preserved.
+- **Legacy FormulaIngredients deleted.** 339-line accordion carousel removed from the codebase and the product barrel; ClinicalIngredients took its barrel slot. Zero remaining references. Net diff for the phase: minus 334 lines.
+- All three product pages now share one ingredients implementation reading from one data source.

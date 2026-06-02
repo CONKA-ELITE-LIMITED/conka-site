@@ -6,6 +6,7 @@ import Footer from "@/app/components/footer";
 import ProductHero from "@/app/components/product/ProductHero";
 import ProductHeroMobile from "@/app/components/product/ProductHeroMobile";
 import {
+  ClinicalIngredients,
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
 } from "@/app/components/product";
@@ -17,7 +18,6 @@ import FormulaCaseStudies, {
 } from "@/app/components/FormulaCaseStudies";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import LabTimeline from "@/app/components/landing/LabTimeline";
-import ClinicalIngredients from "@/app/components/product/ClinicalIngredients";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
 import useIsMobile from "@/app/hooks/useIsMobile";

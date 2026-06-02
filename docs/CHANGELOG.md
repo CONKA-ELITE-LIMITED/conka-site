@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-02 -- ClinicalIngredients rolled out to Flow/Clarity PDPs, legacy carousel deleted (Phase 3)
+
+The clinical ingredients section now serves all three product pages. The toggle on /conka-both was redesigned around the time-of-day framing: a Morning/Afternoon segmented control with a single bottle render of the active formula beside an identity block (formula name, mg of active nootropics as a stat, tagline). On desktop the toggle and asset sit to the right of the section title. Both single-formula PDPs (/conka-flow, /conka-clarity) swapped their legacy FormulaIngredients accordion carousel for ClinicalIngredients in single-formula mode, and the legacy component (339 lines) was deleted with zero remaining references. Net change is minus 334 lines while gaining the grammage messaging and Magic Mind card consumability on every product page.
+
+**Modified:** `app/components/product/ClinicalIngredients.tsx`, `app/components/product/index.ts`, `app/conka-flow/page.tsx`, `app/conka-clarity/page.tsx`, `app/conka-both/page.tsx`; **Deleted:** `app/components/product/FormulaIngredients.tsx`
+
 ### 2026-06-02 -- Clinical ingredients section added to /conka-both (clinical component upgrades Phase 2)
 
 /conka-both, the flagship product page, had no ingredients section at all, so a buyer evaluating the purchase could not see what is inside. New ClinicalIngredients component added as Section 6 (after What CONKA Does): a grammage-led header (6,842mg of Active Nootropics), an asset-dominant Flow/Clear toggle (full-width bottle image with name and per-formula nootropic load below), and Magic Mind style ingredient cards in the clinical skin. Each card shows name, class tags, render thumbnail, and a one-line benefit at a glance; expanding (native details, one open at a time) reveals the longer description, formula share, and the key study finding. All content reads from the shared ingredientsData.ts (no copy duplication), Clear keeps the product-led order (Glutathione first), and lemon oil is excluded as a flavouring. The component supports single-formula mode so the Flow/Clarity PDP rollout (Phase 3) is a one-line change per page. Downstream section backgrounds on /conka-both flipped to preserve white/tint alternation. Also cleaned 7 em-dash one-liners in the shared ingredient data (improves the /ingredients page and PDP carousels that share the field). Grammage numbers are founder-supplied constants pending verification against the formulation spec.

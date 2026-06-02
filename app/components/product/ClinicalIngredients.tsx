@@ -22,10 +22,10 @@ import { FormulaId } from "@/app/lib/productData";
  * ingredient content).
  *
  * Modes:
- *   - Dual (default, formulaIds={["01","02"]}): Flow/Clear bottle toggle.
- *     Used on /conka-both.
- *   - Single (formulaIds={["01"]} or ["02"]): no toggle, one formula's cards.
- *     Ready for the Flow/Clarity PDP rollout (Phase 3 of the plan).
+ *   - Dual (default, formulaIds={["01","02"]}): Morning/Afternoon toggle +
+ *     single asset of the active formula. Used on /conka-both.
+ *   - Single (formulaIds={["01"]} or ["02"]): no toggle, asset block + one
+ *     formula's cards. Used on /conka-flow and /conka-clarity.
  *
  * Plan: docs/development/featurePlans/clinical-component-upgrades.md
  * ========================================================================== */
@@ -42,6 +42,7 @@ const FORMULA_GRAMMAGE: Record<FormulaId, number> = {
 interface FormulaMeta {
   shortName: string;
   time: string;
+  timeOfDay: string;
   tagline: string;
   bottleImage: string;
   bottleAlt: string;
@@ -51,6 +52,7 @@ const FORMULA_META: Record<FormulaId, FormulaMeta> = {
   "01": {
     shortName: "Flow",
     time: "AM",
+    timeOfDay: "Morning",
     tagline: "Calm focus for your mornings.",
     bottleImage: "/formulas/conkaFlow/FlowNew.jpg",
     bottleAlt: "CONKA Flow bottle",
@@ -58,6 +60,7 @@ const FORMULA_META: Record<FormulaId, FormulaMeta> = {
   "02": {
     shortName: "Clear",
     time: "PM",
+    timeOfDay: "Afternoon",
     tagline: "Afternoon clarity, without the coffee.",
     bottleImage: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
@@ -101,7 +104,9 @@ export default function ClinicalIngredients({
 }: {
   formulaIds?: FormulaId[];
 } = {}) {
-  const [activeFormula, setActiveFormula] = useState<FormulaId>(formulaIds[0]);
+  const [activeFormula, setActiveFormula] = useState<FormulaId>(
+    formulaIds[0] ?? "01",
+  );
 
   const ingredients = getOrderedIngredients(activeFormula);
   const meta = FORMULA_META[activeFormula];
@@ -118,87 +123,89 @@ export default function ClinicalIngredients({
 
   return (
     <div>
-      {/* Trio header — grammage-led */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// What's inside · ING-01"}
-      </p>
-      <h2 className="brand-h1 mb-2" style={{ letterSpacing: "-0.02em" }}>
-        {totalGrammage.toLocaleString()}mg of Active
-        <br />
-        Nootropics.
-      </h2>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-8">
-        {totalActives} science-backed ingredients · 0 caffeine · 0 filler
-      </p>
+      {/* Header row — trio header left, toggle + asset right on desktop */}
+      <div className="lg:flex lg:items-start lg:justify-between lg:gap-10 mb-8">
+        {/* Trio header — grammage-led */}
+        <div className="mb-8 lg:mb-0">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+            {"// What's inside · ING-01"}
+          </p>
+          <h2 className="brand-h1 mb-2" style={{ letterSpacing: "-0.02em" }}>
+            {totalGrammage.toLocaleString()}mg of Active
+            <br />
+            Nootropics.
+          </h2>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+            {totalActives} science-backed ingredients · 0 caffeine · 0 filler
+          </p>
+        </div>
 
-      {/* Formula toggle — bottle assets + per-formula nootropic load */}
-      {isDual && (
-        <div className="mb-8">
-          <div
-            role="tablist"
-            aria-label="Choose a formula"
-            className="grid grid-cols-2 gap-3 max-w-[520px]"
-          >
-            {formulaIds.map((id) => {
-              const isActive = id === activeFormula;
-              const m = FORMULA_META[id];
-              return (
-                <button
-                  key={id}
-                  id={`clinical-ingredients-tab-${id}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls="clinical-ingredients-panel"
-                  onClick={() => setActiveFormula(id)}
-                  className="text-left bg-white cursor-pointer transition-[outline-color] focus:outline-none border border-black/10 overflow-hidden"
-                  style={{
-                    outline: isActive
-                      ? `2px solid ${NAVY}`
-                      : "2px solid transparent",
-                    outlineOffset: "0",
-                  }}
-                >
-                  {/* Asset-dominant face — bottle fills the button width */}
-                  <div className="relative w-full aspect-square bg-white">
-                    <Image
-                      src={m.bottleImage}
-                      alt={m.bottleAlt}
-                      fill
-                      sizes="(max-width: 768px) 45vw, 260px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div
-                    className={`px-3 py-2.5 border-t transition-colors ${
-                      isActive ? "border-transparent" : "border-black/8"
+        {/* Toggle + active formula asset */}
+        <div className="lg:shrink-0">
+          {/* Time-of-day toggle — dual mode only */}
+          {isDual && (
+            <div
+              role="tablist"
+              aria-label="Choose a time of day"
+              className="inline-flex border border-black/12 bg-white mb-5"
+            >
+              {formulaIds.map((id) => {
+                const isActive = id === activeFormula;
+                const m = FORMULA_META[id];
+                return (
+                  <button
+                    key={id}
+                    id={`clinical-ingredients-tab-${id}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="clinical-ingredients-panel"
+                    onClick={() => setActiveFormula(id)}
+                    className={`min-h-[44px] px-6 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] transition-colors cursor-pointer ${
+                      isActive ? "text-white" : "text-black/55 hover:text-black"
                     }`}
                     style={isActive ? { backgroundColor: NAVY } : undefined}
                   >
-                    <p
-                      className={`font-mono text-[11px] font-bold uppercase tracking-[0.16em] leading-none mb-1.5 ${
-                        isActive ? "text-white" : "text-black/55"
-                      }`}
-                    >
-                      {m.shortName} · {m.time}
-                    </p>
-                    <p
-                      className={`font-mono text-[10px] uppercase tracking-[0.12em] tabular-nums leading-none ${
-                        isActive ? "text-white/70" : "text-black/45"
-                      }`}
-                    >
-                      {FORMULA_GRAMMAGE[id].toLocaleString()}mg actives
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+                    {m.timeOfDay}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Active formula — single asset + identity block */}
+          <div className="flex items-center gap-4 lg:gap-6">
+            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 border border-black/10 bg-white overflow-hidden lab-clip-tr">
+              <Image
+                key={meta.bottleImage}
+                src={meta.bottleImage}
+                alt={meta.bottleAlt}
+                fill
+                sizes="(max-width: 1024px) 280px, 360px"
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <p
+                className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] leading-none mb-2"
+                style={{ color: NAVY }}
+              >
+                CONKA {meta.shortName} · {meta.time}
+              </p>
+              <p className="text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black mb-1.5">
+                {FORMULA_GRAMMAGE[activeFormula].toLocaleString()}
+                <span className="text-base lg:text-lg font-semibold">mg</span>
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-black/45 leading-none mb-3">
+                Active nootropics
+              </p>
+              <p className="text-sm text-black/60 leading-snug">
+                {meta.tagline}
+              </p>
+            </div>
           </div>
-          <p className="mt-3 text-sm text-black/60 leading-snug">
-            {meta.tagline}
-          </p>
         </div>
-      )}
+      </div>
 
       {/* Ingredient cards — Magic Mind pattern, clinical skin */}
       <div
