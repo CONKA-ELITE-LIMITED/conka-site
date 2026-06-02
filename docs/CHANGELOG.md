@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-02 -- Guarantee row only under PDP CTAs, FunnelAssurance deleted
+
+Follow-up to the tile simplification: the three trust rows under the PDP CTA were still too much, and the funnel rendered them as a floating block above its CTA on desktop only, invisible on mobile. PDP heroes now show just the GuaranteeRow (green tick, 100-day money-back guarantee) tucked directly under the Add to Cart button, identical to the landing page. The funnel drops the floating block entirely; instead FunnelCTA's existing compact trust strip (guarantee, free shipping, cancel anytime) now renders on every breakpoint rather than mobile only, so desktop and mobile funnel users see the same thing. Protocol heroes (deprecated pages) swapped to GuaranteeRow as well, and the FunnelAssurance component was deleted with no remaining references.
+
+**Deleted:** `app/components/funnel/FunnelAssurance.tsx`; **Modified:** `app/components/product/ProductHero.tsx`, `app/components/product/ProductHeroMobile.tsx`, `app/components/funnel/FunnelCTA.tsx`, `app/funnel/FunnelClient.tsx`, `app/components/protocol/ProtocolHero.tsx`, `app/components/protocol/ProtocolHeroMobile.tsx`, `app/components/GreenCheckSquare.tsx`, `app/lib/productHeroHelpers.ts`
+
 ### 2026-06-02 -- PDP cadence tiles simplified, trust rows rebuilt in GuaranteeRow register
 
 The selected cadence tile on the product heroes showed the per-shot price twice (header row and a large anchor in the expanded section), used seven different mono-label treatments, and buried delivery details behind SHIPS and NOTE label rows. The expanded section now reads in buyer order: what you pay (total price with verifiable strikethrough and saving), then a single checklist of what ships, shipping terms, and cadence terms. Row numbers (01/02/03) removed. Checklist marks are now the site-wide green square tick (extracted to GreenCheckSquare, also used by GuaranteeRow) with a box emoji on shipment lines. FunnelAssurance was rebuilt from a 4-cell mono grid into three plain trust rows (guarantee, free UK shipping, certifications) sitting directly under the CTA, the same register as the landing page GuaranteeRow. The guarantee now appears exactly once per surface: tiles carry only what differs between options, the rows under the CTA carry what is always true. Tile helper functions (frequency, what-ships, CTA meta, checklist) moved from both hero components into productHeroHelpers so desktop and mobile wording cannot drift; this also fixed the "2 box" pluralisation bug.

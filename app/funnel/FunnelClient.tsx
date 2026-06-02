@@ -11,7 +11,6 @@ import EducationStep from "../components/funnel/EducationStep";
 import SummaryStep from "../components/funnel/SummaryStep";
 import FunnelCTA from "../components/funnel/FunnelCTA";
 import UpsellBottomSheet from "../components/funnel/UpsellBottomSheet";
-import FunnelAssurance from "../components/funnel/FunnelAssurance";
 import NutritionInfoModal from "../components/funnel/NutritionInfoModal";
 import {
   type FunnelCadence,
@@ -266,7 +265,6 @@ export default function FunnelClient() {
               <EducationStep />
               <div className="h-36 lg:hidden" />
               <div className="hidden lg:block mt-6">
-                <FunnelAssurance />
                 <FunnelCTA
                   label="Choose my formula"
                   subLabel=""
@@ -296,7 +294,6 @@ export default function FunnelClient() {
               <div className="h-36 lg:hidden" />
 
               <div className="hidden lg:block px-10 pb-8">
-                <FunnelAssurance />
                 <FunnelCTA
                   label={productCTALabel}
                   subLabel={productCTASubLabel}
@@ -373,7 +370,6 @@ export default function FunnelClient() {
               <div className="h-36 lg:hidden" />
 
               <div className="hidden lg:block px-10 pb-8">
-                <FunnelAssurance />
                 <FunnelCTA
                   label="Review my order"
                   subLabel={reviewSubLabel}
@@ -396,7 +392,6 @@ export default function FunnelClient() {
               <div className="h-36 lg:hidden" />
 
               <div className="hidden lg:block px-10 pb-8">
-                <FunnelAssurance />
                 <FunnelCTA
                   label="Proceed to checkout"
                   subLabel=""

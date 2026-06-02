@@ -64,7 +64,7 @@ export interface TileChecklistItem {
 /**
  * The selected tile's checklist: what ships, shipping terms, then the
  * cadence's reassurance bullets (cancel anytime, savings). One list,
- * one visual register. Guarantee lives in FunnelAssurance under the CTA,
+ * one visual register. The guarantee lives in GuaranteeRow under the CTA,
  * not here, because it applies regardless of which tile is selected.
  */
 export function getTileChecklist(cadence: CadenceType, shotCount: number): TileChecklistItem[] {

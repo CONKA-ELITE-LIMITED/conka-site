@@ -1,7 +1,7 @@
 "use client";
 
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
-import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
+import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
 import { formatPrice } from "@/app/lib/productData";
 import {
   CadenceType,
@@ -195,11 +195,13 @@ export default function ProductHeroMobile({
           })}
         </div>
 
-        <ConkaCTAButton onClick={onAddToCart} meta={getCTAMeta(selectedCadence, pricing)} className="w-full max-w-none">
-          Add to Cart
-        </ConkaCTAButton>
-
-        <FunnelAssurance />
+        {/* CTA + guarantee as one block so the row tucks under the button */}
+        <div>
+          <ConkaCTAButton onClick={onAddToCart} meta={getCTAMeta(selectedCadence, pricing)} className="w-full max-w-none">
+            Add to Cart
+          </ConkaCTAButton>
+          <GuaranteeRow />
+        </div>
 
         <HeroAccordions productType={getHeroProductType(formulaId)} />
       </div>

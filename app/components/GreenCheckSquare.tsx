@@ -1,7 +1,7 @@
 /* The site-wide reassurance mark: dark green square + white tick, square
    corners so it reads clinical/sharp rather than rounded consumer green.
-   Used by GuaranteeRow, FunnelAssurance, and the PDP tile checklist so
-   trust signals look identical everywhere. */
+   Used by GuaranteeRow and the PDP tile checklist so trust signals look
+   identical everywhere. */
 export default function GreenCheckSquare({
   size = 18,
   className,
