@@ -16,25 +16,31 @@ This serves operations and fulfilment reliability, and indirectly retention (acc
 
 Only the 3 funnel products go to Synergy: CONKA Flow AM, CONKA Clear PM, CONKA Flow + Clear (6 variants total). Everything else is legacy and stays with Burnside, already excluded via the `SYNERGYIGNORE` tag.
 
-The 6 funnel variants:
+**Key physical fact:** there is only ONE physical unit, a box of 28 shots, either Flow or Clear. Everything else is a count of those boxes. So only 2 variants are real physical SKUs; the other 4 are virtual bundles built from them.
 
-| Product | Variant | SKU | Role |
-|---------|---------|-----|------|
-| CONKA Flow AM | Flow - 28 Shots | `FLOW-FUNNEL-28` | Standalone |
-| CONKA Flow AM | Flow - 84 Shots | `FLOW-FUNNEL-84` | Standalone |
-| CONKA Clear PM | Clear - 28 Shots | `CLEAR-FUNNEL-28` | Standalone |
-| CONKA Clear PM | Clear - 84 Shots | `CLEAR-FUNNEL-84` | Standalone |
-| CONKA Flow + Clear | Both - 56 Shots | `BOTH-FUNNEL-56` | Virtual bundle |
-| CONKA Flow + Clear | Both - 168 Shots | `BOTH-FUNNEL-168` | Virtual bundle |
+| Variant | SKU | Role | Physical contents |
+|---------|-----|------|-------------------|
+| Flow - 28 Shots | `FLOW-FUNNEL-28` | **Physical** | 1 Flow box |
+| Clear - 28 Shots | `CLEAR-FUNNEL-28` | **Physical** | 1 Clear box |
+| Flow - 84 Shots | `FLOW-FUNNEL-84` | Virtual bundle | 3 Flow boxes |
+| Clear - 84 Shots | `CLEAR-FUNNEL-84` | Virtual bundle | 3 Clear boxes |
+| Both - 56 Shots | `BOTH-FUNNEL-56` | Virtual bundle | 1 Flow + 1 Clear box |
+| Both - 168 Shots | `BOTH-FUNNEL-168` | Virtual bundle | 3 Flow + 3 Clear boxes |
 
 Base URL for Synergy: `https://conka-6770.myshopify.com`
 
 ## Already done (SCRUM-1051)
 
 - 3 variant metafield definitions: `custom.batchexpiry`, `custom.bundlecomposition`, `custom.disableinvsync`
-- `BATCHEXPIRY` on the 4 standalone variants (bottles carry printed batch + expiry)
-- `BundleComposition` on the 2 bundles: `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28` and `1xFLOW-FUNNEL-84+1xCLEAR-FUNNEL-84`
+- `BATCHEXPIRY` on the 2 physical box variants (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`); blank on the 4 bundles
+- `BundleComposition` on the 4 virtual bundles:
+  - `FLOW-FUNNEL-84` -> `3xFLOW-FUNNEL-28`
+  - `CLEAR-FUNNEL-84` -> `3xCLEAR-FUNNEL-28`
+  - `BOTH-FUNNEL-56` -> `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28`
+  - `BOTH-FUNNEL-168` -> `3xFLOW-FUNNEL-28+3xCLEAR-FUNNEL-28`
 - `SYNERGYIGNORE` tag on all legacy / non-funnel products (Active + Archived)
+
+> Correction (2026-06-02): the 84-shot variants were initially set as standalone with `BATCHEXPIRY`. They are actually 3 boxes of 28, so they were switched to virtual bundles of `3x` the 28-box, and `Both 168` was repointed from the (non-physical) 84-boxes to `3x` the 28-boxes. Only the two 28-boxes are physical.
 
 ## Approach
 
@@ -74,8 +80,8 @@ read_shipping, write_shipping
 
 ### Phase 2: SKU readiness (gated on Humphrey's data)
 
-4. **Request SKU attributes from Humphrey** - per variant: unique EAN/barcode (must be unique across ALL SKUs), HS code, country of origin, item weight, plain-English description. Complexity: Small (request); gated on reply.
-5. **Enter attributes on the 6 variants** and set inventory tracking to "Shopify" (only Shopify-managed SKUs are extracted by the Connector). Complexity: Medium; depends on task 4.
+4. **Request SKU attributes from Humphrey** - only for the 2 physical boxes (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`): unique EAN/barcode (must be unique across ALL SKUs), HS code, country of origin, box weight. The 4 virtual bundles need none of these (never physically held). Complexity: Small (request); gated on reply.
+5. **Enter attributes on the 2 physical box variants** (barcode in Inventory, weight in Shipping, HS code + country in Shipping > Customs info) and set inventory tracking to "Shopify" on them (only Shopify-managed SKUs are extracted by the Connector). Plain-English descriptions can go on all 6 for clarity. Complexity: Medium; depends on task 4.
 
 ### Phase 3: Couriers (uses Humphrey's courier data)
 
