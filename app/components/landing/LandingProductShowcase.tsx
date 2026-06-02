@@ -130,13 +130,13 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
 
               {/* CTA-styled footer — the whole card is the real button; this
                   block just reads as the action. */}
-              <div className="mt-auto w-full flex items-center justify-between gap-2 bg-[#1B2757] text-white px-3 lg:px-4 py-3 min-h-[44px]">
+              <div className="mt-auto w-full flex items-center justify-between gap-2 bg-white border border-black/12 group-hover:border-black/30 text-black px-3 lg:px-4 py-3 min-h-[44px] transition-colors">
                 <span className="font-mono text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.14em] lg:tracking-[0.16em]">
                   See what&apos;s inside
                 </span>
                 <span
                   aria-hidden
-                  className="font-mono text-sm text-white/60 group-hover:text-white transition-colors"
+                  className="font-mono text-sm text-black/40 group-hover:text-black transition-colors"
                 >
                   ↗
                 </span>
