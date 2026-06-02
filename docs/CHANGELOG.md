@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-02 -- LabTimeline rebuilt benefits-first (clinical component upgrades Phase 1)
+
+The home page "What to Expect" section (Section 7) was a scroll-driven timeline: IntersectionObserver rail fill, pill states, and header transitions that forced visitors to scroll through choreography to extract the benefits. Rebuilt benefits-first: three compact white milestone cards (24h / 14d / 30d), each showing a navy timeframe badge, phase label, outcome headline, and a one-line benefit at a glance. The depth (felt problem, felt outcome in plain English, a compact app-data stat, and the ingredient mechanism) sits behind a native details expander written in the KeyBenefits narrative style. Each milestone now carries a real measured stat (+1.09 pts evening focus, -5.4 pts stress cost, +28.96% average improvement); previously only the 24h step had data. The component went from a client island to a pure server component (zero JS, native details expanders), so the home page dynamic() import became a direct import. Also serves /conka-both and /protocol timeline sections via the unchanged props API. Plan doc added for the wider clinical component upgrade work (LabTimeline plus the upcoming /conka-both ingredients section).
+
+**Modified:** `app/components/landing/LabTimeline.tsx`, `app/page.tsx`; **Added:** `docs/development/featurePlans/clinical-component-upgrades.md`
+
 ### 2026-06-01 -- Clean up cart infrastructure
 
 Removed a dead, unused duplicate cart hook (app/hooks/useCart.ts) that had its own checkout logic and did not carry the Meta attribution attributes. Nothing imported it, but it was a footgun: importing the wrong useCart would have silently broken attribution again (the live useCart is the one in CartContext). Also fixed the long-standing lint warning in CartContext by defining removeItem before updateQuantity (which calls it) and adding it to the dependency array. Cart context and hooks are now warning-free.
