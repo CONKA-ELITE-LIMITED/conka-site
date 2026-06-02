@@ -30,8 +30,8 @@ brand-base, clinical grammar: `brand-section` + `brand-bg-*` wrappers owned by t
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | LabTimeline benefits-first rebuild (home page Section 7) | Not Started |
-| 2 | Clinical ingredients section on /conka-both | Not Started |
+| 1 | LabTimeline benefits-first rebuild (home page Section 7) | Complete |
+| 2 | Clinical ingredients section on /conka-both | Complete |
 | 3 | Roll ingredients component into /conka-flow + /conka-clarity (replace `FormulaIngredients`) | Future |
 
 ---
@@ -136,4 +136,25 @@ None. Per scoping decision this work runs from this plan doc only.
 
 ## Implementation log
 
-Section gets filled in as phases land.
+### Phase 1 (2026-06-02): LabTimeline rebuild
+
+Shipped as planned with two iterations of user feedback:
+
+- Collapsed card face = timeframe badge (navy), phase label, outcome headline, one-line benefit. White cards with navy accents (a navy-face variant was tried and reverted).
+- Single expander per card ("[+] App data and clinical detail") written in the KeyBenefits narrative style: struggle (italic) → felt outcome (bold) → compact app data tile → "How it works" mechanism with bolded ingredient names.
+- Each milestone carries a real measured stat: +1.09 pts (app data, evening focus), -5.4 pts (app data, stress cost), +28.96% (case studies average). Previously only 24h had data.
+- Lifestyle asset kept (mobile full-bleed banner + desktop sticky square), per user call.
+- Component went from client island (scroll machinery) to pure server component, zero JS. Home page switched from dynamic() to direct import.
+- Decision: native details with name attribute for exclusive-open, [+]/[-] mono affordance via group-open variants.
+
+### Phase 2 (2026-06-02): Clinical ingredients on /conka-both
+
+Shipped with three iterations of user feedback. Final shape differs from the original brief in two ways worth recording:
+
+- **No data changes were needed for the core build.** ingredientsData.ts already had oneLineClaim, category, functionalCategory, keyStats, percentage, scientificName, and image (render paths). The only data edit was cleaning em dashes from 7 oneLineClaim entries (propagates to /ingredients and PDP carousels, an improvement there too).
+- **The tile grid + detail panel structure was replaced by Magic Mind style cards** after user feedback that the detail panel read as noisy. Every ingredient is a self-contained native details card: collapsed face = name, class tags, 64px render, one-liner; expanded = description, formula share, key study finding. One card open at a time (details name attribute).
+- Header is grammage-led: "6,842mg of Active Nootropics." (Flow 3,700mg + Clear 3,142mg, founder-supplied constants in FORMULA_GRAMMAGE pending verification against the formulation spec).
+- Formula toggle is asset-dominant: full-width bottle image with a name + grammage strip below, navy active state.
+- Clear order is product-led (Glutathione first), lemon-oil excluded as flavouring. Both carried over from the /start grid per the v2.1 doc.
+- Placement on /conka-both: Section 6, after What CONKA Does, before Comparison. Downstream backgrounds flipped to preserve white/tint alternation.
+- Single-formula mode (formulaIds prop) built and ready for Phase 3.

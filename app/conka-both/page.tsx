@@ -17,6 +17,7 @@ import FormulaCaseStudies, {
 } from "@/app/components/FormulaCaseStudies";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import LabTimeline from "@/app/components/landing/LabTimeline";
+import ClinicalIngredients from "@/app/components/product/ClinicalIngredients";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -67,7 +68,7 @@ export default function ConkaBothPage() {
   // Shared sections
   const caseStudiesMobile = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-tint"
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
@@ -78,7 +79,7 @@ export default function ConkaBothPage() {
 
   const caseStudiesDesktop = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-tint"
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
@@ -121,10 +122,21 @@ export default function ConkaBothPage() {
     </section>
   );
 
+  const ingredientsSection = (
+    <section
+      className="brand-section brand-bg-tint"
+      aria-label="What's inside CONKA"
+    >
+      <div className="brand-track">
+        <ClinicalIngredients />
+      </div>
+    </section>
+  );
+
   const comparisonSection = (
     <section
       id="comparison"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       aria-label="CONKA vs coffee comparison"
     >
       <div className="brand-track">
@@ -146,7 +158,7 @@ export default function ConkaBothPage() {
 
   const guaranteeSection = (
     <section
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
@@ -156,7 +168,7 @@ export default function ConkaBothPage() {
   );
 
   const faqSection = (
-    <section className="brand-section brand-bg-white" aria-label="FAQ">
+    <section className="brand-section brand-bg-tint" aria-label="FAQ">
       <div className="brand-track">
         <LabFAQ hideCTA />
       </div>
@@ -197,16 +209,19 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 5: WHAT CONKA DOES ===== */}
         {whatItDoesSection}
 
-        {/* ===== SECTION 6: COMPARISON ===== */}
+        {/* ===== SECTION 6: INGREDIENTS ===== */}
+        {ingredientsSection}
+
+        {/* ===== SECTION 7: COMPARISON ===== */}
         {comparisonSection}
 
-        {/* ===== SECTION 7: CASE STUDIES ===== */}
+        {/* ===== SECTION 8: CASE STUDIES ===== */}
         {caseStudiesMobile}
 
-        {/* ===== SECTION 8: GUARANTEE ===== */}
+        {/* ===== SECTION 9: GUARANTEE ===== */}
         {guaranteeSection}
 
-        {/* ===== SECTION 9: FAQ ===== */}
+        {/* ===== SECTION 10: FAQ ===== */}
         {faqSection}
 
         <Footer />
@@ -254,16 +269,19 @@ export default function ConkaBothPage() {
       {/* ===== SECTION 5: WHAT CONKA DOES ===== */}
       {whatItDoesSection}
 
-      {/* ===== SECTION 6: COMPARISON ===== */}
+      {/* ===== SECTION 6: INGREDIENTS ===== */}
+      {ingredientsSection}
+
+      {/* ===== SECTION 7: COMPARISON ===== */}
       {comparisonSection}
 
-      {/* ===== SECTION 7: CASE STUDIES ===== */}
+      {/* ===== SECTION 8: CASE STUDIES ===== */}
       {caseStudiesDesktop}
 
-      {/* ===== SECTION 8: GUARANTEE ===== */}
+      {/* ===== SECTION 9: GUARANTEE ===== */}
       {guaranteeSection}
 
-      {/* ===== SECTION 9: FAQ ===== */}
+      {/* ===== SECTION 10: FAQ ===== */}
       {faqSection}
 
       <Footer />
