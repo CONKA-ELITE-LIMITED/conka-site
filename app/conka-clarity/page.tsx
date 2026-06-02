@@ -6,7 +6,7 @@ import Footer from "@/app/components/footer";
 import {
   ProductHero,
   ProductHeroMobile,
-  FormulaIngredients,
+  ClinicalIngredients,
   FormulaBenefitsPillars,
   ProductWhatYouGet,
   FormulaFAQ,
@@ -95,7 +95,7 @@ export default function ConkaClarityPage() {
         {/* ===== SECTION 4: INGREDIENTS ===== */}
         <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
           <div className="brand-track">
-            <FormulaIngredients formulaId="02" hideCTA />
+            <ClinicalIngredients formulaIds={["02"]} />
           </div>
         </section>
 
@@ -197,7 +197,7 @@ export default function ConkaClarityPage() {
       {/* ===== SECTION 4: INGREDIENTS ===== */}
       <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
         <div className="brand-track">
-          <FormulaIngredients formulaId="02" hideCTA />
+          <ClinicalIngredients formulaIds={["02"]} />
         </div>
       </section>
 

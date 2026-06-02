@@ -1,5 +1,6 @@
 /**
- * SVG icons for the LandingBenefits section.
+ * Shared SVG icons for the landing components: benefit cards, time-of-day
+ * (morning/afternoon), and trust badges.
  * Extracted from inline JSX for cleaner component code.
  */
 
@@ -35,6 +36,33 @@ export function BenefitIconThinking({ className }: { className?: string }) {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 1 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+    </svg>
+  );
+}
+
+// ===== Time-of-day icons =====
+// Sun (morning) and sun-on-horizon (afternoon). Used by the product showcase
+// to make the AM/PM ritual unmissable.
+
+export function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  );
+}
+
+export function SunHorizonIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M17 18a5 5 0 0 0 -10 0" />
+      <line x1="2" y1="18" x2="22" y2="18" />
+      <line x1="12" y1="9" x2="12" y2="6" />
+      <line x1="4.93" y1="10.93" x2="6.34" y2="12.34" />
+      <line x1="19.07" y1="10.93" x2="17.66" y2="12.34" />
+      <line x1="2" y1="13" x2="4" y2="13" />
+      <line x1="20" y1="13" x2="22" y2="13" />
     </svg>
   );
 }

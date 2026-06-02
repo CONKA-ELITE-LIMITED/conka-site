@@ -2,7 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { getSupplementFacts } from "@/app/lib/supplementFacts";
+import { getIngredientAsset } from "@/app/lib/ingredientsData";
+import { FormulaId } from "@/app/lib/productData";
 
 interface IngredientsPanelProps {
   isOpen: boolean;
@@ -19,6 +22,46 @@ const PRODUCT_NAME: Record<"flow" | "clear", string> = {
   flow: "Flow",
   clear: "Clear",
 };
+
+const FORMULA_ID: Record<"flow" | "clear", FormulaId> = {
+  flow: "01",
+  clear: "02",
+};
+
+// supplementFacts names that differ from ingredientsData names. Disclosure
+// names follow the label spec; the alias bridges to the render lookup.
+const RENDER_NAME_ALIASES: Record<string, string> = {
+  "L-Alpha-GPC": "Alpha GPC",
+};
+
+/**
+ * Resolve a supplement-facts ingredient name to its 3D render image.
+ * Strips EFSA anchors (††) and parenthetical botanical names before lookup.
+ */
+function renderImageFor(name: string, formulaId: FormulaId): string | null {
+  const clean = name.replace(/†/g, "").split("(")[0].trim();
+  const resolved = RENDER_NAME_ALIASES[clean] ?? clean;
+  return getIngredientAsset(resolved, formulaId)?.image ?? null;
+}
+
+/** Render thumbnail — larger on mobile (visual anchor), compact on desktop.
+ *  Empty alt: the ingredient name renders as text directly beside the image,
+ *  so announcing it twice would be noise for screen readers. */
+function IngredientThumb({ image }: { image: string | null }) {
+  if (!image) return null;
+  return (
+    <div className="relative w-14 h-14 lg:w-10 lg:h-10 shrink-0 border border-black/8 overflow-hidden bg-white">
+      <Image
+        src={image}
+        alt=""
+        fill
+        loading="lazy"
+        sizes="(max-width: 1024px) 56px, 40px"
+        className="object-cover"
+      />
+    </div>
+  );
+}
 
 export default function IngredientsPanel({
   isOpen,
@@ -54,6 +97,7 @@ export default function IngredientsPanel({
   const hasNutrients = facts.nutrients.length > 0;
   const formulaCode = FORMULA_CODE[product];
   const productName = PRODUCT_NAME[product];
+  const formulaId = FORMULA_ID[product];
 
   return createPortal(
     <>
@@ -75,7 +119,7 @@ export default function IngredientsPanel({
         <div className="flex items-start justify-between gap-4 px-5 pt-5 pb-4 lg:px-6 lg:pt-6 border-b border-black/12">
           <div className="min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-2">
-              // Spec · Formulation · Doc-IP-001
+              {"// Spec · Formulation · Doc-IP-001"}
             </p>
             <h2
               id="ingredients-panel-title"
@@ -124,7 +168,7 @@ export default function IngredientsPanel({
           {/* Nutrients (Clear only) */}
           {hasNutrients && (
             <div className="mt-5 flex flex-col">
-              <div className="flex items-center justify-between px-4 py-2.5 border border-black/12 border-b-0 bg-white">
+              <div className="flex items-center justify-between px-4 py-2.5 border border-black/12 bg-white">
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
                   {formulaCode} · Vitamins & nutrients
                 </span>
@@ -132,21 +176,20 @@ export default function IngredientsPanel({
                   %NRV
                 </span>
               </div>
-              <div className="border border-black/12">
-                {facts.nutrients.map((n, idx) => (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
+                {facts.nutrients.map((n) => (
                   <div
                     key={n.name}
-                    className={`grid grid-cols-[1fr_auto] gap-3 px-4 py-3 ${
-                      idx < facts.nutrients.length - 1 ? "border-b border-black/8" : ""
-                    }`}
+                    className="flex items-center gap-3 p-3 lg:p-2.5 border border-black/12 bg-white"
                   >
-                    <div className="min-w-0">
+                    <IngredientThumb image={renderImageFor(n.name, formulaId)} />
+                    <div className="min-w-0 flex-1">
                       <div className="text-sm text-black font-medium">{n.name}</div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45 tabular-nums mt-1">
                         {n.source}
                       </div>
                     </div>
-                    <div className="font-mono text-sm text-[#1B2757] tabular-nums self-center">
+                    <div className="font-mono text-sm text-[#1B2757] tabular-nums shrink-0">
                       {n.nrv}
                     </div>
                   </div>
@@ -155,9 +198,9 @@ export default function IngredientsPanel({
             </div>
           )}
 
-          {/* Actives */}
+          {/* Actives — render-led cards, 2-up on desktop, full-width on mobile */}
           <div className="mt-5 flex flex-col">
-            <div className="flex items-center justify-between px-4 py-2.5 border border-black/12 border-b-0 bg-white">
+            <div className="flex items-center justify-between px-4 py-2.5 border border-black/12 bg-white">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
                 {formulaCode} · Active ingredients
               </span>
@@ -165,25 +208,30 @@ export default function IngredientsPanel({
                 {String(facts.actives.length).padStart(2, "0")} actives
               </span>
             </div>
-            <div className="border border-black/12">
-              {facts.actives.map((a, idx) => (
-                <div
-                  key={a.name}
-                  className={`flex items-baseline gap-3 px-4 py-3 ${
-                    idx < facts.actives.length - 1 ? "border-b border-black/8" : ""
-                  }`}
-                >
-                  <span className="font-mono text-[10px] text-black/35 tabular-nums shrink-0 w-6">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm text-black font-medium">{a.name}</div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45 tabular-nums mt-1">
-                      {a.source}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
+              {facts.actives.map((a, idx) => {
+                const image = renderImageFor(a.name, formulaId);
+                return (
+                  <div
+                    key={a.name}
+                    className="flex items-center gap-3 p-3 lg:p-2.5 border border-black/12 bg-white"
+                  >
+                    {image ? (
+                      <IngredientThumb image={image} />
+                    ) : (
+                      <span className="font-mono text-[10px] text-black/35 tabular-nums shrink-0 w-6 text-center">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm text-black font-medium">{a.name}</div>
+                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45 tabular-nums mt-1">
+                        {a.source}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

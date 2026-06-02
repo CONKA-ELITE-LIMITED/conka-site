@@ -9,7 +9,6 @@
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "./productData";
-import { GUARANTEE_DAYS } from "./offerConstants";
 
 // ============================================
 // TYPES
@@ -27,7 +26,7 @@ export interface FunnelPricing {
   perDay: number;
   /** Total shots included */
   shotCount: number;
-  /** Crossed-out compare-at price (trial pack anchor at £3.75/shot) */
+  /** Crossed-out compare-at price (the one-time price for the same product; absent on one-time entries) */
   compareAtPrice?: number;
 }
 
@@ -75,15 +74,22 @@ export interface UpsellOffer {
 // ============================================
 // PRICING MATRIX (3 products × 3 cadences)
 // ============================================
-// Pricing from COGS analysis (2026-03-27). Variant IDs still pending for Both + quarterly.
+// Pricing from COGS analysis (2026-03-27). All 9 product × cadence variants are live in Shopify.
 
-/** Per-shot price of the 4-shot trial pack, used as the crossed-out anchor on all cards */
-export const TRIAL_PACK_PER_SHOT = 3.75;
-
-/** Savings percentage vs trial pack price */
+/** Savings percentage vs the compare-at (one-time) price */
 export function getSavingsPercent(price: number, compareAtPrice: number): number {
   return Math.round(((compareAtPrice - price) / compareAtPrice) * 100);
 }
+
+// One-time prices double as the compare-at anchor on subscription entries —
+// a price the buyer can see and verify on the same page. One-time entries
+// carry no compareAtPrice (they ARE the reference price). Quarterly anchors
+// against 3 one-time boxes.
+const OTP_PRICE: Record<FunnelProduct, number> = {
+  both: 129.99,
+  flow: 79.99,
+  clear: 79.99,
+};
 
 const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>> = {
   both: {
@@ -92,21 +98,20 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perShot: 1.61,
       perDay: 3.22,
       shotCount: 56,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 56,
+      compareAtPrice: OTP_PRICE.both,
     },
     "monthly-otp": {
-      price: 129.99,
+      price: OTP_PRICE.both,
       perShot: 2.32,
       perDay: 4.64,
       shotCount: 56,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 56,
     },
     "quarterly-sub": {
       price: 229.99,
       perShot: 1.37,
       perDay: 2.74,
       shotCount: 168,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 168,
+      compareAtPrice: OTP_PRICE.both * 3,
     },
   },
   flow: {
@@ -115,21 +120,20 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perShot: 2.14,
       perDay: 2.14,
       shotCount: 28,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 28,
+      compareAtPrice: OTP_PRICE.flow,
     },
     "monthly-otp": {
-      price: 79.99,
+      price: OTP_PRICE.flow,
       perShot: 2.86,
       perDay: 2.86,
       shotCount: 28,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 28,
     },
     "quarterly-sub": {
       price: 149.99,
       perShot: 1.79,
       perDay: 1.79,
       shotCount: 84,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 84,
+      compareAtPrice: OTP_PRICE.flow * 3,
     },
   },
   clear: {
@@ -138,21 +142,20 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perShot: 2.14,
       perDay: 2.14,
       shotCount: 28,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 28,
+      compareAtPrice: OTP_PRICE.clear,
     },
     "monthly-otp": {
-      price: 79.99,
+      price: OTP_PRICE.clear,
       perShot: 2.86,
       perDay: 2.86,
       shotCount: 28,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 28,
     },
     "quarterly-sub": {
       price: 149.99,
       perShot: 1.79,
       perDay: 1.79,
       shotCount: 84,
-      compareAtPrice: TRIAL_PACK_PER_SHOT * 84,
+      compareAtPrice: OTP_PRICE.clear * 3,
     },
   },
 };
@@ -298,15 +301,13 @@ export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
     shippingCallout: "Free shipping on every delivery",
     features: [
       "Cancel or pause anytime, no lock-in",
-      "Save 25% vs one-time price",
     ],
   },
   "monthly-otp": {
     label: "Try once",
     subtitle: "Single order, no subscription",
     features: [
-      `${GUARANTEE_DAYS}-day money-back guarantee*`,
-      "Subscribe later and save 25%",
+      "Subscribe later and save 25% or more",
     ],
   },
   "quarterly-sub": {

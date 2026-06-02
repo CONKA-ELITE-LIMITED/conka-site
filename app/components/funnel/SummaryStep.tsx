@@ -8,6 +8,7 @@ import {
   FUNNEL_CADENCES,
   FUNNEL_HERO_IMAGES,
   getOfferPricing,
+  getSavingsPercent,
 } from "@/app/lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
@@ -130,7 +131,9 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
             </p>
             {isSub && (
               <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-white bg-[#1B2757] px-2 py-1 shrink-0">
-                {cadence === "quarterly-sub" ? "Best Value" : "Save 25%"}
+                {cadence === "quarterly-sub"
+                  ? "Best Value"
+                  : `Save ${getSavingsPercent(pricing.price, getOfferPricing(product, "monthly-otp").price)}%`}
               </span>
             )}
           </div>

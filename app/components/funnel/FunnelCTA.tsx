@@ -26,8 +26,8 @@ export default function FunnelCTA({
 }: FunnelCTAProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-black/8 px-4 pb-4 pt-2 lg:static lg:border-0 lg:p-0 lg:bg-transparent">
-      {/* Mobile trust strip — compact mono register, above the button */}
-      <div className="flex items-center justify-center gap-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.12em] text-black/70 lg:hidden">
+      {/* Trust strip — compact mono register, above the button on every breakpoint */}
+      <div className="flex items-center justify-center gap-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.12em] text-black/70">
         <span>{GUARANTEE_LABEL}</span>
         <span className="text-black/20" aria-hidden>·</span>
         <span>Free Shipping</span>

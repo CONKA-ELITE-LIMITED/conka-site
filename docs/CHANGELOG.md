@@ -6,6 +6,54 @@
 
 ## June 2026
 
+### 2026-06-02 -- Guarantee row only under PDP CTAs, FunnelAssurance deleted
+
+Follow-up to the tile simplification: the three trust rows under the PDP CTA were still too much, and the funnel rendered them as a floating block above its CTA on desktop only, invisible on mobile. PDP heroes now show just the GuaranteeRow (green tick, 100-day money-back guarantee) tucked directly under the Add to Cart button, identical to the landing page. The funnel drops the floating block entirely; instead FunnelCTA's existing compact trust strip (guarantee, free shipping, cancel anytime) now renders on every breakpoint rather than mobile only, so desktop and mobile funnel users see the same thing. Protocol heroes (deprecated pages) swapped to GuaranteeRow as well, and the FunnelAssurance component was deleted with no remaining references.
+
+**Deleted:** `app/components/funnel/FunnelAssurance.tsx`; **Modified:** `app/components/product/ProductHero.tsx`, `app/components/product/ProductHeroMobile.tsx`, `app/components/funnel/FunnelCTA.tsx`, `app/funnel/FunnelClient.tsx`, `app/components/protocol/ProtocolHero.tsx`, `app/components/protocol/ProtocolHeroMobile.tsx`, `app/components/GreenCheckSquare.tsx`, `app/lib/productHeroHelpers.ts`
+
+### 2026-06-02 -- PDP cadence tiles simplified, trust rows rebuilt in GuaranteeRow register
+
+The selected cadence tile on the product heroes showed the per-shot price twice (header row and a large anchor in the expanded section), used seven different mono-label treatments, and buried delivery details behind SHIPS and NOTE label rows. The expanded section now reads in buyer order: what you pay (total price with verifiable strikethrough and saving), then a single checklist of what ships, shipping terms, and cadence terms. Row numbers (01/02/03) removed. Checklist marks are now the site-wide green square tick (extracted to GreenCheckSquare, also used by GuaranteeRow) with a box emoji on shipment lines. FunnelAssurance was rebuilt from a 4-cell mono grid into three plain trust rows (guarantee, free UK shipping, certifications) sitting directly under the CTA, the same register as the landing page GuaranteeRow. The guarantee now appears exactly once per surface: tiles carry only what differs between options, the rows under the CTA carry what is always true. Tile helper functions (frequency, what-ships, CTA meta, checklist) moved from both hero components into productHeroHelpers so desktop and mobile wording cannot drift; this also fixed the "2 box" pluralisation bug.
+
+**Added:** `app/components/GreenCheckSquare.tsx`, `app/components/product/TileChecklist.tsx`; **Modified:** `app/components/product/ProductHero.tsx`, `app/components/product/ProductHeroMobile.tsx`, `app/components/funnel/FunnelAssurance.tsx`, `app/components/landing/GuaranteeRow.tsx`, `app/lib/productHeroHelpers.ts`, `app/lib/funnelData.ts`
+
+### 2026-06-02 -- Home page showcase: time-of-day bands + render-led ingredients panel
+
+The home page What CONKA Does section (LandingProductShowcase) now leads each product card with a navy time-of-day band (sun icon, MORNING or AFTERNOON, time window) so the AM/PM ritual is unmissable, replacing the easy-to-miss corner text. Sub-copy opens with the ritual (Flow for the morning, Clear for the afternoon). On mobile the bottle asset spans the full card width and the See What's Inside footer is styled as a navy CTA block. The shared IngredientsPanel (used by the showcase and the PDP hero accordions) is now render-led: every active ingredient and the Vitamin C/B12 nutrients show their 3D render thumbnail, laid out as compact 2-up cards on desktop and full-width cards with larger assets on mobile. Interactive showcase variants (Morning/Afternoon toggle with a video stage, then a spotlight layout) were prototyped and deliberately rejected: any layout that enlarges one product demotes the other, contradicting the two-shots-one-system message. The decision is recorded in the component header.
+
+**Modified:** `app/components/landing/LandingProductShowcase.tsx`, `app/components/landing/IngredientsPanel.tsx`, `app/components/landing/icons.tsx`
+
+### 2026-06-02 -- Pricing strikethroughs re-anchored to the one-time price
+
+Every compare-at price across the funnel and PDPs was anchored to the 4-shot trial pack rate (3.75 per shot), producing strikethroughs like "210.00, save 120.01 (57% off)" that a buyer cannot verify anywhere on the page, while the bullet below claimed "Save 25% vs one-time price". The numbers contradicted each other on the same screen and read as a fake discount. All subscription entries now anchor against the one-time price for the same product (quarterly anchors against 3 one-time boxes), one-time entries carry no strikethrough since they are the reference price, and one-time prices are defined once (OTP_PRICE) so the anchors can never drift. The hard-coded "Save 25%" badge in the funnel summary is now computed per product (Both saves 31%, Flow/Clear 25%). Also removed a dangling asterisk on the guarantee bullet that pointed to no footnote.
+
+**Modified:** `app/lib/funnelData.ts`, `app/components/funnel/SummaryStep.tsx`
+
+### 2026-06-02 -- /conka-both reordered as a proper PDP narrative, What CONKA Does section removed
+
+The page was assembled from home page components and the order showed it: athletes before the product story, and a What CONKA Does section (LandingProductShowcase) whose two bottle cards open an ingredients slide-out, sitting directly before the new ClinicalIngredients section, two competing ingredients experiences back to back. Removed the redundant section and reordered the page to read as a PDP: hero, timeline (what to expect), ingredients (what is inside), then the proof stack (athletes, testimonials), then objection handling (comparison, case studies, guarantee, FAQ). Backgrounds re-alternated white/tint from the hero down. The ingredients section also gets id="ingredients" to match the single-formula PDPs.
+
+**Modified:** `app/conka-both/page.tsx`
+
+### 2026-06-02 -- ClinicalIngredients rolled out to Flow/Clarity PDPs, legacy carousel deleted (Phase 3)
+
+The clinical ingredients section now serves all three product pages. The toggle on /conka-both was redesigned around the time-of-day framing: a Morning/Afternoon segmented control with a single bottle render of the active formula beside an identity block (formula name, mg of active nootropics as a stat, tagline). On desktop the toggle and asset sit to the right of the section title. Both single-formula PDPs (/conka-flow, /conka-clarity) swapped their legacy FormulaIngredients accordion carousel for ClinicalIngredients in single-formula mode, and the legacy component (339 lines) was deleted with zero remaining references. Net change is minus 334 lines while gaining the grammage messaging and Magic Mind card consumability on every product page.
+
+**Modified:** `app/components/product/ClinicalIngredients.tsx`, `app/components/product/index.ts`, `app/conka-flow/page.tsx`, `app/conka-clarity/page.tsx`, `app/conka-both/page.tsx`; **Deleted:** `app/components/product/FormulaIngredients.tsx`
+
+### 2026-06-02 -- Clinical ingredients section added to /conka-both (clinical component upgrades Phase 2)
+
+/conka-both, the flagship product page, had no ingredients section at all, so a buyer evaluating the purchase could not see what is inside. New ClinicalIngredients component added as Section 6 (after What CONKA Does): a grammage-led header (6,842mg of Active Nootropics), an asset-dominant Flow/Clear toggle (full-width bottle image with name and per-formula nootropic load below), and Magic Mind style ingredient cards in the clinical skin. Each card shows name, class tags, render thumbnail, and a one-line benefit at a glance; expanding (native details, one open at a time) reveals the longer description, formula share, and the key study finding. All content reads from the shared ingredientsData.ts (no copy duplication), Clear keeps the product-led order (Glutathione first), and lemon oil is excluded as a flavouring. The component supports single-formula mode so the Flow/Clarity PDP rollout (Phase 3) is a one-line change per page. Downstream section backgrounds on /conka-both flipped to preserve white/tint alternation. Also cleaned 7 em-dash one-liners in the shared ingredient data (improves the /ingredients page and PDP carousels that share the field). Grammage numbers are founder-supplied constants pending verification against the formulation spec.
+
+**Added:** `app/components/product/ClinicalIngredients.tsx`; **Modified:** `app/conka-both/page.tsx`, `app/lib/ingredientsData.ts`
+
+### 2026-06-02 -- LabTimeline rebuilt benefits-first (clinical component upgrades Phase 1)
+
+The home page "What to Expect" section (Section 7) was a scroll-driven timeline: IntersectionObserver rail fill, pill states, and header transitions that forced visitors to scroll through choreography to extract the benefits. Rebuilt benefits-first: three compact white milestone cards (24h / 14d / 30d), each showing a navy timeframe badge, phase label, outcome headline, and a one-line benefit at a glance. The depth (felt problem, felt outcome in plain English, a compact app-data stat, and the ingredient mechanism) sits behind a native details expander written in the KeyBenefits narrative style. Each milestone now carries a real measured stat (+1.09 pts evening focus, -5.4 pts stress cost, +28.96% average improvement); previously only the 24h step had data. The component went from a client island to a pure server component (zero JS, native details expanders), so the home page dynamic() import became a direct import. Also serves /conka-both and /protocol timeline sections via the unchanged props API. Plan doc added for the wider clinical component upgrade work (LabTimeline plus the upcoming /conka-both ingredients section).
+
+**Modified:** `app/components/landing/LabTimeline.tsx`, `app/page.tsx`; **Added:** `docs/development/featurePlans/clinical-component-upgrades.md`
+
 ### 2026-06-01 -- Clean up cart infrastructure
 
 Removed a dead, unused duplicate cart hook (app/hooks/useCart.ts) that had its own checkout logic and did not carry the Meta attribution attributes. Nothing imported it, but it was a footgun: importing the wrong useCart would have silently broken attribution again (the live useCart is the one in CartContext). Also fixed the long-standing lint warning in CartContext by defining removeItem before updateQuantity (which calls it) and adding it to the dependency array. Cart context and hooks are now warning-free.

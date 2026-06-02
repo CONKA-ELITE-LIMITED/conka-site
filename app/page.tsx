@@ -2,8 +2,9 @@ import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHero from "./components/landing/LandingHero";
-// Pure server component (no client state) — direct import, no dynamic() needed.
+// Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
+import LabTimeline from "./components/landing/LabTimeline";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -37,11 +38,6 @@ const AppUSPSection = dynamic(
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
 });
-
-const LabTimeline = dynamic(
-  () => import("./components/landing/LabTimeline"),
-  { loading: () => <div className="h-[600px]" /> },
-);
 
 const LandingDailyBenefits = dynamic(
   () => import("./components/landing/LandingDailyBenefits"),

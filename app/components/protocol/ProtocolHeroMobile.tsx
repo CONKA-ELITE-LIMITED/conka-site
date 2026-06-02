@@ -12,7 +12,7 @@ import {
 } from "@/app/lib/productData";
 import { getProtocolHeroImages } from "@/app/components/navigation/protocolHeroConfig";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
-import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
+import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import ProtocolRatioSelector from "./ProtocolRatioSelector";
 import HeroAccordions from "@/app/components/product/HeroAccordions";
@@ -442,8 +442,8 @@ export default function ProtocolHeroMobile({
           </button>
         )}
 
-        {/* Assurance / trust badges */}
-        <FunnelAssurance />
+        {/* Guarantee */}
+        <GuaranteeRow />
 
         {isCadenceMode && <HeroAccordions productType="both" />}
       </div>

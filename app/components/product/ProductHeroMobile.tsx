@@ -1,7 +1,7 @@
 "use client";
 
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
-import FunnelAssurance from "@/app/components/funnel/FunnelAssurance";
+import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
 import { formatPrice } from "@/app/lib/productData";
 import {
   CadenceType,
@@ -10,9 +10,16 @@ import {
 } from "@/app/lib/cadenceData";
 import { getProductHeroImagesMobile } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { getHeroContent, getHeroProductType } from "@/app/lib/productHeroHelpers";
+import {
+  getHeroContent,
+  getHeroProductType,
+  getPriceFrequency,
+  getTileChecklist,
+  getCTAMeta,
+} from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import HeroAccordions from "./HeroAccordions";
+import TileChecklist from "./TileChecklist";
 
 interface ProductHeroMobileProps {
   formulaId: ProductHeroId;
@@ -22,53 +29,6 @@ interface ProductHeroMobileProps {
 }
 
 const CADENCE_ORDER: CadenceType[] = ["quarterly-sub", "monthly-sub", "monthly-otp"];
-
-function getDeliveryLabel(cadence: CadenceType): string {
-  switch (cadence) {
-    case "monthly-sub": return "Delivered Monthly";
-    case "monthly-otp": return "One-Time Delivery";
-    case "quarterly-sub": return "Delivered Quarterly";
-  }
-}
-
-function getPriceFrequency(cadence: CadenceType): string {
-  switch (cadence) {
-    case "monthly-sub": return "/mo";
-    case "monthly-otp": return "";
-    case "quarterly-sub": return "/quarter";
-  }
-}
-
-function getWhatShips(cadence: CadenceType, shotCount: number): string {
-  const boxes = shotCount / 28;
-  switch (cadence) {
-    case "monthly-sub":
-      return `${boxes} box (${shotCount} shots) delivered every month`;
-    case "monthly-otp":
-      return `${boxes} box (${shotCount} shots), one-time delivery`;
-    case "quarterly-sub":
-      return `${boxes} boxes (${shotCount} shots total) delivered every 3 months`;
-  }
-}
-
-function getCTAMeta(
-  cadence: CadenceType,
-  pricing: { price: number; compareAtPrice?: number },
-): string {
-  const savings = pricing.compareAtPrice
-    ? pricing.compareAtPrice - pricing.price
-    : 0;
-  const savingsSegment = savings > 0 ? ` · Save ${formatPrice(savings)}` : "";
-
-  switch (cadence) {
-    case "monthly-sub":
-      return `${formatPrice(pricing.price)}/mo${savingsSegment}`;
-    case "quarterly-sub":
-      return `${formatPrice(pricing.price)}/quarter${savingsSegment}`;
-    case "monthly-otp":
-      return `${formatPrice(pricing.price)} · one-time`;
-  }
-}
 
 export default function ProductHeroMobile({
   formulaId,
@@ -129,7 +89,7 @@ export default function ProductHeroMobile({
 
         {/* Cadence selector */}
         <div className="flex flex-col gap-2.5">
-          {CADENCE_ORDER.map((cadence, i) => {
+          {CADENCE_ORDER.map((cadence) => {
             const display = FUNNEL_CADENCES[cadence];
             const isSelected = selectedCadence === cadence;
             const cadencePricing = getCadencePricingByProductHeroId(formulaId, cadence);
@@ -155,11 +115,6 @@ export default function ProductHeroMobile({
                 )}
 
                 <div className={isSelected ? "p-3.5" : "px-3.5 py-3"}>
-                  {/* Row number + delivery label */}
-                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-black/35 leading-none mb-2.5 tabular-nums">
-                    {String(i + 1).padStart(2, "0")} · {getDeliveryLabel(cadence)}
-                  </p>
-
                   {/* Header row: radio + name + per-shot */}
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -208,23 +163,14 @@ export default function ProductHeroMobile({
                     </div>
                   </div>
 
-                  {/* Expanded details */}
+                  {/* Expanded details — what you pay, then what you get */}
                   {isSelected && (
                     <div className="mt-3.5 pt-3.5 ml-8 border-t border-black/10 space-y-2.5">
-                      {/* Big per-shot anchor */}
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-xl font-bold text-[var(--brand-black)] tabular-nums">
-                          {formatPrice(cadencePricing.perShot)}
-                        </span>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
-                          per shot
-                        </span>
-                      </div>
-
-                      {/* Total with compare-at + savings % */}
+                      {/* What you pay */}
                       <div className="flex items-baseline gap-2 flex-wrap">
-                        <span className="text-base font-semibold text-[var(--brand-black)] tabular-nums">
-                          {formatPrice(cadencePricing.price)}{frequency}
+                        <span className="text-xl font-bold text-[var(--brand-black)] tabular-nums">
+                          {formatPrice(cadencePricing.price)}
+                          <span className="text-sm font-semibold">{frequency}</span>
                         </span>
                         {cadencePricing.compareAtPrice && (
                           <>
@@ -238,36 +184,8 @@ export default function ProductHeroMobile({
                         )}
                       </div>
 
-                      {/* What ships */}
-                      <div className="flex items-start gap-2">
-                        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55 mt-0.5 shrink-0">
-                          Ships
-                        </span>
-                        <p className="text-sm text-black/60">
-                          {getWhatShips(cadence, cadencePricing.shotCount)}
-                        </p>
-                      </div>
-
-                      {display.shippingCallout && (
-                        <div className="flex items-start gap-2">
-                          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55 mt-0.5 shrink-0">
-                            Note
-                          </span>
-                          <p className="text-sm text-black/60">{display.shippingCallout}</p>
-                        </div>
-                      )}
-
-                      {/* Feature bullets */}
-                      <div className="space-y-1.5">
-                        {display.features.map((feature) => (
-                          <div key={feature} className="flex items-center gap-2 text-sm text-black/70">
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 text-[#1B2757]">
-                              <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" />
-                            </svg>
-                            <span>{feature}</span>
-                          </div>
-                        ))}
-                      </div>
+                      {/* What ships, when, and the cadence's terms — one checklist */}
+                      <TileChecklist items={getTileChecklist(cadence, cadencePricing.shotCount)} />
                     </div>
                   )}
                 </div>
@@ -277,11 +195,13 @@ export default function ProductHeroMobile({
           })}
         </div>
 
-        <ConkaCTAButton onClick={onAddToCart} meta={getCTAMeta(selectedCadence, pricing)} className="w-full max-w-none">
-          Add to Cart
-        </ConkaCTAButton>
-
-        <FunnelAssurance />
+        {/* CTA + guarantee as one block so the row tucks under the button */}
+        <div>
+          <ConkaCTAButton onClick={onAddToCart} meta={getCTAMeta(selectedCadence, pricing)} className="w-full max-w-none">
+            Add to Cart
+          </ConkaCTAButton>
+          <GuaranteeRow />
+        </div>
 
         <HeroAccordions productType={getHeroProductType(formulaId)} />
       </div>
