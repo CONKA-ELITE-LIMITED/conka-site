@@ -10,7 +10,6 @@ import {
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
 } from "@/app/components/product";
-import LandingProductShowcase from "@/app/components/landing/LandingProductShowcase";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import FormulaCaseStudies, {
@@ -65,32 +64,11 @@ export default function ConkaBothPage() {
 
   const cadencePrice = getBalanceCadencePricing(selectedCadence).price;
 
-  // Shared sections
-  const caseStudiesMobile = (
-    <section
-      className="brand-section brand-bg-tint"
-      aria-label="Clinically validated results"
-    >
-      <div className="brand-track">
-        <FormulaCaseStudiesMobile productId={"3"} />
-      </div>
-    </section>
-  );
-
-  const caseStudiesDesktop = (
-    <section
-      className="brand-section brand-bg-tint"
-      aria-label="Clinically validated results"
-    >
-      <div className="brand-track">
-        <FormulaCaseStudies productId={"3"} />
-      </div>
-    </section>
-  );
-
+  // Shared sections — ordered as they appear on the page. Backgrounds
+  // alternate white/tint starting from the white hero.
   const timelineSection = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-tint"
       aria-label="What to expect"
     >
       <div className="brand-track">
@@ -99,13 +77,14 @@ export default function ConkaBothPage() {
     </section>
   );
 
-  const testimonialsSection = (
+  const ingredientsSection = (
     <section
-      className="brand-section brand-bg-tint"
-      aria-label="Customer reviews"
+      id="ingredients"
+      className="brand-section brand-bg-white"
+      aria-label="What's inside CONKA"
     >
       <div className="brand-track">
-        <LandingTestimonials hideCTA />
+        <ClinicalIngredients />
       </div>
     </section>
   );
@@ -122,13 +101,13 @@ export default function ConkaBothPage() {
     </section>
   );
 
-  const ingredientsSection = (
+  const testimonialsSection = (
     <section
-      className="brand-section brand-bg-tint"
-      aria-label="What's inside CONKA"
+      className="brand-section brand-bg-white"
+      aria-label="Customer reviews"
     >
       <div className="brand-track">
-        <ClinicalIngredients />
+        <LandingTestimonials hideCTA />
       </div>
     </section>
   );
@@ -136,7 +115,7 @@ export default function ConkaBothPage() {
   const comparisonSection = (
     <section
       id="comparison"
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-tint"
       aria-label="CONKA vs coffee comparison"
     >
       <div className="brand-track">
@@ -145,20 +124,31 @@ export default function ConkaBothPage() {
     </section>
   );
 
-  const whatItDoesSection = (
+  const caseStudiesMobile = (
     <section
       className="brand-section brand-bg-white"
-      aria-label="What CONKA does"
+      aria-label="Clinically validated results"
     >
       <div className="brand-track">
-        <LandingProductShowcase hideCTA />
+        <FormulaCaseStudiesMobile productId={"3"} />
+      </div>
+    </section>
+  );
+
+  const caseStudiesDesktop = (
+    <section
+      className="brand-section brand-bg-white"
+      aria-label="Clinically validated results"
+    >
+      <div className="brand-track">
+        <FormulaCaseStudies productId={"3"} />
       </div>
     </section>
   );
 
   const guaranteeSection = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-tint"
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
@@ -168,7 +158,7 @@ export default function ConkaBothPage() {
   );
 
   const faqSection = (
-    <section className="brand-section brand-bg-tint" aria-label="FAQ">
+    <section className="brand-section brand-bg-white" aria-label="FAQ">
       <div className="brand-track">
         <LabFAQ hideCTA />
       </div>
@@ -197,31 +187,28 @@ export default function ConkaBothPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 2: ATHLETE CREDIBILITY ===== */}
-        {athleteSection}
-
-        {/* ===== SECTION 3: TIMELINE ===== */}
+        {/* ===== SECTION 2: TIMELINE ===== */}
         {timelineSection}
 
-        {/* ===== SECTION 4: TESTIMONIALS ===== */}
-        {testimonialsSection}
-
-        {/* ===== SECTION 5: WHAT CONKA DOES ===== */}
-        {whatItDoesSection}
-
-        {/* ===== SECTION 6: INGREDIENTS ===== */}
+        {/* ===== SECTION 3: INGREDIENTS ===== */}
         {ingredientsSection}
 
-        {/* ===== SECTION 7: COMPARISON ===== */}
+        {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
+        {athleteSection}
+
+        {/* ===== SECTION 5: TESTIMONIALS ===== */}
+        {testimonialsSection}
+
+        {/* ===== SECTION 6: COMPARISON ===== */}
         {comparisonSection}
 
-        {/* ===== SECTION 8: CASE STUDIES ===== */}
+        {/* ===== SECTION 7: CASE STUDIES ===== */}
         {caseStudiesMobile}
 
-        {/* ===== SECTION 9: GUARANTEE ===== */}
+        {/* ===== SECTION 8: GUARANTEE ===== */}
         {guaranteeSection}
 
-        {/* ===== SECTION 10: FAQ ===== */}
+        {/* ===== SECTION 9: FAQ ===== */}
         {faqSection}
 
         <Footer />
@@ -257,31 +244,28 @@ export default function ConkaBothPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 2: ATHLETE CREDIBILITY ===== */}
-      {athleteSection}
-
-      {/* ===== SECTION 3: TIMELINE ===== */}
+      {/* ===== SECTION 2: TIMELINE ===== */}
       {timelineSection}
 
-      {/* ===== SECTION 4: TESTIMONIALS ===== */}
-      {testimonialsSection}
-
-      {/* ===== SECTION 5: WHAT CONKA DOES ===== */}
-      {whatItDoesSection}
-
-      {/* ===== SECTION 6: INGREDIENTS ===== */}
+      {/* ===== SECTION 3: INGREDIENTS ===== */}
       {ingredientsSection}
 
-      {/* ===== SECTION 7: COMPARISON ===== */}
+      {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
+      {athleteSection}
+
+      {/* ===== SECTION 5: TESTIMONIALS ===== */}
+      {testimonialsSection}
+
+      {/* ===== SECTION 6: COMPARISON ===== */}
       {comparisonSection}
 
-      {/* ===== SECTION 8: CASE STUDIES ===== */}
+      {/* ===== SECTION 7: CASE STUDIES ===== */}
       {caseStudiesDesktop}
 
-      {/* ===== SECTION 9: GUARANTEE ===== */}
+      {/* ===== SECTION 8: GUARANTEE ===== */}
       {guaranteeSection}
 
-      {/* ===== SECTION 10: FAQ ===== */}
+      {/* ===== SECTION 9: FAQ ===== */}
       {faqSection}
 
       <Footer />

@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-02 -- /conka-both reordered as a proper PDP narrative, What CONKA Does section removed
+
+The page was assembled from home page components and the order showed it: athletes before the product story, and a What CONKA Does section (LandingProductShowcase) whose two bottle cards open an ingredients slide-out, sitting directly before the new ClinicalIngredients section, two competing ingredients experiences back to back. Removed the redundant section and reordered the page to read as a PDP: hero, timeline (what to expect), ingredients (what is inside), then the proof stack (athletes, testimonials), then objection handling (comparison, case studies, guarantee, FAQ). Backgrounds re-alternated white/tint from the hero down. The ingredients section also gets id="ingredients" to match the single-formula PDPs.
+
+**Modified:** `app/conka-both/page.tsx`
+
 ### 2026-06-02 -- ClinicalIngredients rolled out to Flow/Clarity PDPs, legacy carousel deleted (Phase 3)
 
 The clinical ingredients section now serves all three product pages. The toggle on /conka-both was redesigned around the time-of-day framing: a Morning/Afternoon segmented control with a single bottle render of the active formula beside an identity block (formula name, mg of active nootropics as a stat, tagline). On desktop the toggle and asset sit to the right of the section title. Both single-formula PDPs (/conka-flow, /conka-clarity) swapped their legacy FormulaIngredients accordion carousel for ClinicalIngredients in single-formula mode, and the legacy component (339 lines) was deleted with zero remaining references. Net change is minus 334 lines while gaining the grammage messaging and Magic Mind card consumability on every product page.
