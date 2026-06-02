@@ -9,7 +9,6 @@
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "./productData";
-import { GUARANTEE_DAYS } from "./offerConstants";
 
 // ============================================
 // TYPES
@@ -302,14 +301,12 @@ export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
     shippingCallout: "Free shipping on every delivery",
     features: [
       "Cancel or pause anytime, no lock-in",
-      `${GUARANTEE_DAYS}-day money-back guarantee`,
     ],
   },
   "monthly-otp": {
     label: "Try once",
     subtitle: "Single order, no subscription",
     features: [
-      `${GUARANTEE_DAYS}-day money-back guarantee`,
       "Subscribe later and save 25% or more",
     ],
   },

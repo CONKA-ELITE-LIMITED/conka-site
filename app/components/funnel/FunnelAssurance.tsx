@@ -1,31 +1,37 @@
-"use client";
-
-import { GUARANTEE_LABEL } from "@/app/lib/offerConstants";
+import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
+import GreenCheckSquare from "@/app/components/GreenCheckSquare";
 
 /**
- * Funnel trust strip — compact mono grid, mirrors LabTrustBadges register.
- * Sits directly above the CTA.
+ * Trust rows under the CTA — same register as the landing page GuaranteeRow
+ * (simple mark + plain sentence) instead of the old 4-cell mono grid.
+ * Carries what is true regardless of the cadence selected: the guarantee,
+ * shipping, and certification. Cadence-specific terms (cancel anytime,
+ * savings) live in the tile checklist.
  */
-const BADGES = [
-  { label: "Free UK Shipping", sub: "On subscriptions" },
-  { label: "Informed Sport", sub: "Certified" },
-  { label: "Batch Tested", sub: "UK lab verified" },
-  { label: "Cancel Anytime", sub: GUARANTEE_LABEL },
-];
-
 export default function FunnelAssurance() {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 divide-y divide-x divide-black/8 border border-black/8 overflow-hidden">
-      {BADGES.map((badge) => (
-        <div key={badge.label} className="px-4 py-3 lg:px-5">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-black/70 leading-tight">
-            {badge.label}
-          </p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-black/35 mt-0.5 leading-tight">
-            {badge.sub}
-          </p>
-        </div>
-      ))}
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-2">
+        <GreenCheckSquare className="shrink-0" />
+        <span className="text-[13px] text-black">{GUARANTEE_LABEL_FULL}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span
+          className="shrink-0 w-[18px] text-[15px] leading-none text-center"
+          aria-hidden="true"
+        >
+          📦
+        </span>
+        <span className="text-[13px] text-black">
+          Free UK shipping on subscriptions
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <GreenCheckSquare className="shrink-0" />
+        <span className="text-[13px] text-black">
+          Informed Sport certified · batch tested in UK labs
+        </span>
+      </div>
     </div>
   );
 }
