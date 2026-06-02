@@ -6,7 +6,11 @@
 
 ## June 2026
 
-### 2026-06-02 -- /conka-both reordered as a proper PDP narrative, What CONKA Does section removed
+### 2026-06-02 -- Pricing strikethroughs re-anchored to the one-time price
+
+Every compare-at price across the funnel and PDPs was anchored to the 4-shot trial pack rate (3.75 per shot), producing strikethroughs like "210.00, save 120.01 (57% off)" that a buyer cannot verify anywhere on the page, while the bullet below claimed "Save 25% vs one-time price". The numbers contradicted each other on the same screen and read as a fake discount. All subscription entries now anchor against the one-time price for the same product (quarterly anchors against 3 one-time boxes), one-time entries carry no strikethrough since they are the reference price, and one-time prices are defined once (OTP_PRICE) so the anchors can never drift. The hard-coded "Save 25%" badge in the funnel summary is now computed per product (Both saves 31%, Flow/Clear 25%). Also removed a dangling asterisk on the guarantee bullet that pointed to no footnote.
+
+**Modified:** `app/lib/funnelData.ts`, `app/components/funnel/SummaryStep.tsx`
 
 The page was assembled from home page components and the order showed it: athletes before the product story, and a What CONKA Does section (LandingProductShowcase) whose two bottle cards open an ingredients slide-out, sitting directly before the new ClinicalIngredients section, two competing ingredients experiences back to back. Removed the redundant section and reordered the page to read as a PDP: hero, timeline (what to expect), ingredients (what is inside), then the proof stack (athletes, testimonials), then objection handling (comparison, case studies, guarantee, FAQ). Backgrounds re-alternated white/tint from the hero down. The ingredients section also gets id="ingredients" to match the single-formula PDPs.
 
