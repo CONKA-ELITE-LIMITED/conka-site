@@ -16,7 +16,7 @@ import { FormulaId } from "@/app/lib/productData";
  * pattern in the clinical skin: every ingredient is a self-contained card
  * whose collapsed face shows name, class tags, render thumbnail, and a
  * one-line benefit. Expanding (native <details>) reveals the longer
- * description, the formula share, and the key study finding.
+ * description and the key study finding.
  *
  * Reads everything from the shared ingredientsData.ts (no local copy of
  * ingredient content).
@@ -68,8 +68,8 @@ const FORMULA_META: Record<FormulaId, FormulaMeta> = {
 };
 
 // Product-led display order (founder's call: Glutathione leads Clear, not
-// alphabetical or by percentage). Also acts as the actives filter: lemon-oil
-// is a flavouring, not an active, so it is deliberately absent.
+// alphabetical). Also acts as the actives filter: lemon-oil is a
+// flavouring, not an active, so it is deliberately absent.
 const DISPLAY_ORDER: Record<FormulaId, string[]> = {
   "01": [
     "lemon-balm",
@@ -267,7 +267,7 @@ export default function ClinicalIngredients({
               </div>
             </summary>
 
-            {/* Expanded — description, formula share, key finding */}
+            {/* Expanded — description, key finding */}
             <div className="px-4 pb-4">
               <div className="border-t border-black/8 pt-3">
                 <p className="text-sm text-black/75 leading-relaxed mb-4">
@@ -277,7 +277,7 @@ export default function ClinicalIngredients({
                 {ing.keyStats[0] && (
                   <>
                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
-                      Key finding · {ing.percentage} of formula
+                      Key finding
                     </p>
                     <p className="text-sm text-black/75 leading-snug mb-1.5">
                       <span

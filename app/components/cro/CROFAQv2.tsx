@@ -1,55 +1,17 @@
 import Link from "next/link";
-import {
-  GUARANTEE_LABEL_FULL,
-  GUARANTEE_COPY_TRIAL,
-} from "@/app/lib/offerConstants";
+import { FAQ_ITEMS, type FaqItem } from "@/app/lib/faqContent";
 
 /* ============================================================================
  * CROFAQv2
  *
  * V2 Section 11 on /start. Last section before the legal disclaimer footer.
  *
+ * Q&A content is shared with LabFAQ via app/lib/faqContent.ts.
+ *
  * Server Component. Single-open accordion via native <details name="...">
  * (Chromium 120+, Safari 17+; older browsers gracefully fall back to
  * multi-open with no broken UX). No client JS.
  * ========================================================================== */
-
-interface FaqItem {
-  id: string;
-  question: string;
-  answer: string;
-}
-
-const FAQ_ITEMS: FaqItem[] = [
-  {
-    id: "two-formulas",
-    question: "Why two formulas instead of one?",
-    answer:
-      "Armed with data from professional sports teams, a pattern emerged. There were two days each week where cognitive performance dipped, always around periods of high intensity training. The technology revealed what athletes couldn't feel themselves. So we developed two formulas designed to work together, taken daily: Flow in the morning for consistent focus, Clear in the afternoon for consistent clarity.",
-  },
-  {
-    id: "just-one",
-    question: "Can I take just one shot?",
-    answer:
-      "Yes. You can subscribe to Flow or Clear individually. However, the two formulas are designed to work as a daily pair. Flow supports your daytime focus and energy, Clear supports your afternoon recovery. Together they cover the full 24-hour cycle, and the combined subscription is better value per shot.",
-  },
-  {
-    id: "delivery",
-    question: "How quickly will it arrive?",
-    answer:
-      "Orders placed before 2pm ship same day. Most UK customers receive their order within 1 to 2 working days. Subscriptions ship free. You'll receive tracking information by email as soon as your order dispatches.",
-  },
-  {
-    id: "score-improve",
-    question: "What if my score doesn't improve?",
-    answer: `We offer a ${GUARANTEE_LABEL_FULL}. ${GUARANTEE_COPY_TRIAL}, and if you're not satisfied, contact us for a full refund. No returns needed. We're confident enough in the product to take the risk for you.`,
-  },
-  {
-    id: "cancel",
-    question: "How do I cancel?",
-    answer: `Cancel, pause, or modify anytime from your account. No contracts, no commitments, no questions asked. We also offer a ${GUARANTEE_LABEL_FULL}, so if you're not satisfied, you get a full refund.`,
-  },
-];
 
 function FAQRow({ item }: { item: FaqItem }) {
   return (

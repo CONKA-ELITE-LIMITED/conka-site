@@ -6,7 +6,6 @@ import type { FormulaId } from "./productTypes";
 export interface Ingredient {
   name: string;
   part: string;
-  percentage: string;
 }
 
 export interface ClinicalResult {
@@ -120,12 +119,12 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
     whenToTake:
       "Best taken in the morning with or without food. Perfect as a coffee replacement for sustained energy throughout the day.",
     ingredients: [
-      { name: "Lemon Balm", part: "Leaves", percentage: "26.7%" },
-      { name: "Turmeric", part: "Root", percentage: "25.4%" },
-      { name: "Ashwagandha", part: "Plant", percentage: "26.7%" },
-      { name: "Rhodiola rosea", part: "Root", percentage: "9.4%" },
-      { name: "Bilberry", part: "Berries", percentage: "9.4%" },
-      { name: "Black Pepper", part: "Root", percentage: "0.5%" },
+      { name: "Lemon Balm", part: "Leaves" },
+      { name: "Turmeric", part: "Root" },
+      { name: "Ashwagandha", part: "Plant" },
+      { name: "Rhodiola rosea", part: "Root" },
+      { name: "Bilberry", part: "Berries" },
+      { name: "Black Pepper", part: "Root" },
     ],
     taste: "Honey + Citrus with a hint of turmeric",
     benefits: [
@@ -654,27 +653,24 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
     whenToTake:
       "Best taken 30-60 minutes before you need peak performance, or in the afternoon to support decision-making and recovery.",
     ingredients: [
-      { name: "Vitamin C", part: "", percentage: "50.46%" },
-      { name: "Alpha GPC", part: "Seeds", percentage: "16.11%" },
-      { name: "Glutathione", part: "Amino acid", percentage: "10.07%" },
-      { name: "N-Acetyl Cysteine", part: "Amino acid", percentage: "10.07%" },
-      { name: "Acetyl-L-Carnitine", part: "Amino acid", percentage: "5.04%" },
-      { name: "Ginkgo Biloba", part: "Leaves", percentage: "3.02%" },
-      { name: "Lecithin", part: "Seeds", percentage: "1.51%" },
+      { name: "Vitamin C", part: "" },
+      { name: "Alpha GPC", part: "Seeds" },
+      { name: "Glutathione", part: "Amino acid" },
+      { name: "N-Acetyl Cysteine", part: "Amino acid" },
+      { name: "Acetyl-L-Carnitine", part: "Amino acid" },
+      { name: "Ginkgo Biloba", part: "Leaves" },
+      { name: "Lecithin", part: "Seeds" },
       {
         name: "Lemon essential oil",
         part: "natural flavouring",
-        percentage: "0.60%",
       },
       {
         name: "Alpha Lipoic Acid (ALA)",
         part: "Fatty acid",
-        percentage: "0.20%",
       },
       {
         name: "Vitamin B12",
         part: "(bacterial fermentation)",
-        percentage: "0.03%",
       },
     ],
     taste: "Lemons",

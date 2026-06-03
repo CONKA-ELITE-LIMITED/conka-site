@@ -1,14 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import ConkaCTAButton from "./ConkaCTAButton";
-import LabTrustBadges from "./LabTrustBadges";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 
 /* ============================================================================
  * LabTimeline
  *
- * "Expected outcomes" — 3 milestones (24h / 14d / 30d), benefits-first.
+ * "Expected outcomes" — 3 milestones (Day 1 / Day 14 / Day 30), benefits-first.
  *
  * Each milestone is a compact white card with navy accents: timeframe badge
  * (navy fill), outcome headline, and a one-line benefit. That's the whole
@@ -48,12 +47,12 @@ interface Milestone {
 
 const MILESTONES: Milestone[] = [
   {
-    timeframe: "24 hours",
+    timeframe: "Day 1",
     phase: "01",
-    outcome: "Focus stabilisation",
+    outcome: "Focus & Clarity",
     title: "Focus without the noise.",
     description:
-      "Sharper focus from the first shot. No jitters, no crash, no 2pm dip.",
+      "Laser-sharp focus and steady, jitter-free energy from the first shot. Deep concentration that holds for hours, no crash, no 2pm dip.",
     struggle:
       "Most focus aids spike you up, then drop you. The 2pm dip is the receipt.",
     feltOutcome:
@@ -74,12 +73,12 @@ const MILESTONES: Milestone[] = [
     ),
   },
   {
-    timeframe: "14 days",
+    timeframe: "Day 14",
     phase: "02",
-    outcome: "Cognitive momentum",
+    outcome: "Resilience",
     title: "Your sharpest weeks yet.",
     description:
-      "Adaptogens reach full strength. Mornings start sharp, afternoons hold the line.",
+      "Adaptogens reach full strength and your response to stress shifts. Mental fatigue fades, and consistent motivation becomes the new normal.",
     struggle:
       "One bad email can still ruin a whole morning. Stress is the single biggest drag on a cognitive score.",
     feltOutcome:
@@ -99,12 +98,12 @@ const MILESTONES: Milestone[] = [
     ),
   },
   {
-    timeframe: "30 days",
+    timeframe: "Day 30",
     phase: "03",
-    outcome: "Baseline shift",
+    outcome: "Better Brain",
     title: "A measurably sharper baseline.",
     description:
-      "Decisions come faster. Your everyday performance, not just a good day.",
+      "Your cognitive baseline sits permanently higher. Problems feel simpler, thinking flows faster, and decisions come naturally, in work and everywhere else.",
     struggle:
       "Good days shouldn't be a coin flip. The goal is a higher floor, not a lucky ceiling.",
     feltOutcome:
@@ -161,10 +160,22 @@ export default function LabTimeline({
         Measure it in 30 days.
         <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
       </h2>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-8">
-        {APP_INSIGHTS_TOTALS.users} users ·{" "}
-        {APP_INSIGHTS_TOTALS.tests.toLocaleString()} cognitive tests ·{" "}
-        {APP_INSIGHTS_TOTALS.monthsSpan} months
+      {/* Provenance — readable sentence, not mono notation. The app dataset
+          is a differentiator worth pointing at, so it gets body copy. */}
+      <p className="text-base text-black/70 leading-snug mb-8 max-w-[58ch]">
+        Every milestone below is measured from real CONKA app users:{" "}
+        <strong className="font-semibold text-black">
+          {APP_INSIGHTS_TOTALS.users} people
+        </strong>
+        ,{" "}
+        <strong className="font-semibold text-black">
+          {APP_INSIGHTS_TOTALS.tests.toLocaleString()} cognitive tests
+        </strong>
+        , tracked over{" "}
+        <strong className="font-semibold text-black">
+          {APP_INSIGHTS_TOTALS.monthsSpan} months
+        </strong>
+        .
       </p>
 
       <div className="lg:flex lg:gap-10 lg:items-start">
@@ -284,16 +295,11 @@ export default function LabTimeline({
       </div>
 
       {!hideCTA && (
-        <>
-          <div className="mt-10 flex flex-col items-start gap-2">
-            <ConkaCTAButton href={ctaHref} meta={null}>
-              {ctaLabel ?? `Try Both from £${PRICE_PER_SHOT_BOTH}/shot`}
-            </ConkaCTAButton>
-          </div>
-          <div className="mt-6">
-            <LabTrustBadges />
-          </div>
-        </>
+        <div className="mt-10 flex flex-col items-center lg:items-start gap-2">
+          <ConkaCTAButton href={ctaHref} meta={null}>
+            {ctaLabel ?? `Try Both from £${PRICE_PER_SHOT_BOTH}/shot`}
+          </ConkaCTAButton>
+        </div>
       )}
     </div>
   );

@@ -4,39 +4,6 @@ import GuaranteeRow from "./GuaranteeRow";
 
 const AVATAR_COUNT = 5;
 
-// Note: customer rating deliberately NOT in this strip — the trust micro-row
-// above the H1 already carries "Excellent 4.7", so the third cell does new
-// work (Informed Sport testing breadth) instead of repeating it.
-const STATS = [
-  { value: "32", label: "PEER-REVIEWED\nSTUDIES CITED" },
-  { value: "150,000+", label: "DOSES\nDELIVERED" },
-  { value: "280+", label: "BANNED SUBSTANCES\nTESTED PER BATCH" },
-];
-
-function StatStrip() {
-  // 3-col row on every breakpoint. Text scales up on desktop; kept
-  // deliberately understated so the CTA above stays the primary anchor.
-  return (
-    <div className="w-full grid grid-cols-3 border border-black/12 overflow-hidden">
-      {STATS.map((stat, idx) => (
-        <div
-          key={stat.value}
-          className={`flex flex-col items-center justify-center gap-1.5 lg:gap-2 px-2 py-3 lg:px-4 lg:py-5 text-center ${
-            idx < STATS.length - 1 ? "border-r border-black/10" : ""
-          }`}
-        >
-          <p className="font-mono text-base lg:text-2xl font-bold text-black tracking-tight leading-none tabular-nums">
-            {stat.value}
-          </p>
-          <p className="font-mono text-[8px] lg:text-[10px] uppercase tracking-[0.14em] text-black/45 leading-snug whitespace-pre-line">
-            {stat.label}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 /* Trust micro-row: stacked avatars + (4.5 stars + Excellent 4.7) + review count */
 function TrustMicroRow() {
   return (
@@ -129,9 +96,9 @@ export default function LandingHero() {
             className="text-black font-semibold text-[38px] leading-[1.08]"
             style={{ letterSpacing: "-0.02em" }}
           >
-            Brain Performance
+            A Sharper Mind.
             <br />
-            in One <em className="italic">Daily</em> Shot.
+            Morning to Evening.
           </h1>
           <p className="mt-4 text-[15px] leading-snug text-black/70">
             For minds that demand more. A patented nootropic shot, clinically
@@ -146,25 +113,26 @@ export default function LandingHero() {
           <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
           <GuaranteeRow />
         </div>
-
-        <div className="mt-10">
-          <StatStrip />
-        </div>
       </div>
 
-      {/* Desktop — content left, asset right */}
-      <div className="hidden lg:grid lg:grid-cols-[1fr_2fr] lg:gap-12 xl:gap-16 lg:items-center">
-        {/* Left — trust row, title, CTA, stats */}
+      {/* Desktop — content left, asset right. Even split (was 1fr_2fr) so the
+          asset reads as a complement to the message rather than dominating it.
+          [1fr_1fr] (not grid-cols-2) so the columns respect the nowrap title's
+          min width instead of letting it overflow at narrow desktop widths. */}
+      <div className="hidden lg:grid lg:grid-cols-[1fr_1fr] lg:gap-12 xl:gap-16 lg:items-center">
+        {/* Left — trust row, title, CTA */}
         <div className="flex flex-col items-start">
           <TrustMicroRow />
 
+          {/* whitespace-nowrap keeps both lines intact; the grid's text column
+              sizes to fit them, which is what holds the image column down */}
           <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-5"
+            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-5 whitespace-nowrap"
             style={{ letterSpacing: "-0.02em" }}
           >
-            Brain Performance
+            A Sharper Mind.
             <br />
-            in One <em className="italic">Daily</em> Shot.
+            Morning to Evening.
           </h1>
 
           <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[42ch]">
@@ -175,12 +143,10 @@ export default function LandingHero() {
             </sup>
           </p>
 
-          <div className="mb-10">
+          <div>
             <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
             <GuaranteeRow />
           </div>
-
-          <StatStrip />
         </div>
 
         {/* Right — clean asset, no overlays. Wider/shorter aspect on desktop

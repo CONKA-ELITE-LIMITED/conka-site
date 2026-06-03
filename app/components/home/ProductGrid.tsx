@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import LabTrustBadges from "../landing/LabTrustBadges";
 import ProductCard from "./ProductCard";
 import ProductGridMobile from "./ProductGridMobile";
 import ProductGridTablet from "./ProductGridTablet";
@@ -43,17 +42,14 @@ export default function ProductGrid(props?: ProductGridProps) {
             {copy.eyebrow}
           </p>
           <h2
-            className="brand-h1 mb-2 text-black"
+            className="brand-h1 text-black"
             style={{ letterSpacing: "-0.02em" }}
           >
             {copy.title}
           </h2>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-            {copy.monoSub}
-          </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 items-stretch mb-8">
+        <div className="grid grid-cols-3 gap-6 items-stretch">
           {showProtocol ? (
             <ProductCard productType="protocol" />
           ) : (
@@ -72,8 +68,6 @@ export default function ProductGrid(props?: ProductGridProps) {
             <div aria-hidden="true" />
           )}
         </div>
-
-        <LabTrustBadges />
       </>
     );
   }

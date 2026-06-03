@@ -67,7 +67,9 @@ export default function CROHero() {
           className="text-black font-semibold text-3xl leading-[1.08] mb-3"
           style={{ letterSpacing: "-0.02em" }}
         >
-          Brain Performance in One Daily Shot.
+          A Sharper Mind.
+          <br />
+          Morning to Evening.
         </h1>
 
         <p className="text-sm text-black/65 leading-relaxed mb-5">
@@ -101,10 +103,12 @@ export default function CROHero() {
           </p>
 
           <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-4 max-w-[18ch]"
+            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-4"
             style={{ letterSpacing: "-0.02em" }}
           >
-            Brain Performance in One Daily Shot.
+            A Sharper Mind.
+            <br />
+            Morning to Evening.
           </h1>
 
           <p className="text-base leading-relaxed text-black/65 mb-8 max-w-[42ch]">

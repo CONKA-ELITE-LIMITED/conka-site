@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import ShopMegaMenu from "./ShopMegaMenu";
@@ -37,7 +38,7 @@ export default function NavigationDesktop({
 
       <header className="w-full bg-white border-b border-black/12">
         <div className="px-6 md:px-16 py-1 md:py-4 flex items-center relative">
-          <a href="/" className="flex items-center" aria-label="CONKA home">
+          <Link href="/" className="flex items-center" aria-label="CONKA home">
             <Image
               src="/conka-logo.webp"
               alt="CONKA logo"
@@ -46,7 +47,7 @@ export default function NavigationDesktop({
               className="h-7 md:h-9 w-auto"
               priority
             />
-          </a>
+          </Link>
 
           <div className="hidden xl:flex items-center gap-6 ml-10">
             <div
@@ -107,7 +108,7 @@ export default function NavigationDesktop({
                 <a
                   key={link.href}
                   href={link.href}
-                  className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black/65 hover:text-[#1B2757] transition-colors"
+                  className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
                 >
                   {link.label}
                 </a>
@@ -120,7 +121,7 @@ export default function NavigationDesktop({
           <div className="hidden xl:flex items-center gap-2">
             <a
               href="/account/login"
-              className="p-2 text-black/70 hover:text-[#1B2757] transition-colors"
+              className="p-2 text-black hover:text-[#1B2757] transition-colors"
               aria-label="Account"
             >
               <svg
@@ -140,7 +141,7 @@ export default function NavigationDesktop({
             </a>
             <button
               onClick={openCart}
-              className="p-2 text-black/70 hover:text-[#1B2757] transition-colors relative"
+              className="p-2 text-black hover:text-[#1B2757] transition-colors relative"
               aria-label="Open cart"
             >
               <svg

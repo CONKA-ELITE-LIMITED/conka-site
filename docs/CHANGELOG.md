@@ -6,6 +6,61 @@
 
 ## June 2026
 
+### 2026-06-03 -- Navigation contrast raised, logo links use Next Link, guarantee CTA shortened
+
+Navigation text (nav links, account and cart icons, mobile menu items) raised from 65-75% black to full black for stronger contrast and readability. The logo home links in both desktop and mobile navigation now use Next.js Link instead of raw anchors, enabling client-side navigation instead of a full page reload. The /conka-both guarantee section CTA label shortened from "Learn more about the CONKA app" to "Learn more".
+
+**Modified:** `app/components/navigation/NavigationDesktop.tsx`, `app/components/navigation/NavigationMobile.tsx`, `app/conka-both/page.tsx`
+
+### 2026-06-03 -- FAQ content centralised, /start FAQ updated, dead FAQ components deleted
+
+The upgraded 7-question FAQ copy now lives in a single shared module (app/lib/faqContent.ts) consumed by both LabFAQ (home, /conka-both) and CROFAQv2 (/start), so the two surfaces can no longer drift apart. CROFAQv2 keeps its native details accordion and Still wondering heading but drops its old 5-question set for the shared content. Two dead components deleted: CROFAQ.tsx (imported by nothing) and ProtocolFAQ.tsx (only referenced by the protocol barrel export, never rendered). FormulaFAQ on the PDPs is live and untouched.
+
+**Modified:** `app/lib/faqContent.ts` (new), `app/components/landing/LabFAQ.tsx`, `app/components/cro/CROFAQv2.tsx`, `app/components/protocol/index.ts`
+**Deleted:** `app/components/cro/CROFAQ.tsx`, `app/components/protocol/ProtocolFAQ.tsx`
+
+### 2026-06-03 -- Home page FAQ rebuilt: Magic Mind question arc, lab styling stripped
+
+LabFAQ (home, /conka-both, protocol pages) carried heavy lab decoration: a Section/Entries/Updated spec header bar, per-question category labels, a Response label with black border inside every answer, mono eyebrow, bracket toggles, and an Avg response 4h footer. All removed in favour of clean hairline-divider rows with a rotating plus toggle. The question set grew from 5 to 7 and now follows Magic Mind's funnel order: differentiation, daily safety, how to take, results timeline (Day 1/14/30, matching LabTimeline), Flow vs Clear vs Both positioning, guarantee, shipping. Answers rewritten punchier, leading with the payoff sentence, keeping every proof point (patent, Informed Sport, 280+ substances, +28.96%, 100-day guarantee from offerConstants). Lifestyle image column unchanged.
+
+**Modified:** `app/components/landing/LabFAQ.tsx`
+
+### 2026-06-03 -- Formula composition percentages removed site-wide (trade secret)
+
+The exact percentage each ingredient makes up of the Flow and Clear formulas was rendered on the PDP ingredient cards (ClinicalIngredients expanded view) and twice on the /ingredients page, and the raw numbers also lived in ingredientsData.ts and formulaContent.ts, which ship to the browser inside the client bundle. The composition is proprietary. All renders removed, and the percentage and percentageValue fields deleted from both data files entirely so the numbers no longer exist anywhere client-side. Doses per serving (public, on the label) are unaffected.
+
+**Modified:** `app/components/product/ClinicalIngredients.tsx`, `app/components/ingredients/IngredientsPageDesktop.tsx`, `app/components/ingredients/IngredientsPageMobile.tsx`, `app/lib/ingredientsData.ts`, `app/lib/formulaContent.ts`
+
+### 2026-06-03 -- Case studies section: trust grid replaced with guarantee row, CTA centred on mobile
+
+The home page case studies section was the last one carrying the 4-cell trust badge grid alongside its CTA. Replaced with the single GuaranteeRow tucked under the View All Case Studies button, centred on mobile and left-aligned on desktop, matching the testimonials section treatment.
+
+**Modified:** `app/components/LabCaseStudies.tsx`
+
+### 2026-06-03 -- LandingValueComparison rebuilt around the borrowed-energy narrative
+
+The caffeine comparison on all three PDPs was two dense data cards: an hour-band time-in-effect chart and a price table, accurate but slow to consume. Rebuilt around the /start caffeine section's narrative in the clinical skin: "Caffeine doesn't give you energy. It borrows it." headline, a mechanism paragraph (receptors blocked, cortisol spiked, fatigue handed back at 11am), a Fig. 01 chart card with two stacked energy curves that sweep left-to-right on scroll (coffee: spike/crash cycles in black; CONKA: sustained navy plateau with Flow/Clear shot markers), a counter-mechanism paragraph (fifteen nootropics and adaptogens), a one-line price closer (53 pounds a month less than daily coffee), the CTA, and a Nootropics/Adaptogens ingredient-class strip replacing the trust badges. Desktop puts copy left and chart right; mobile reads in narrative order. The Flow-morning/Clear-afternoon coverage teaching the old chart carried now lives in the product showcase time bands and the ingredients toggle. The /start CaffeineCurves original is untouched. Props API unchanged so the three PDP call sites needed no edits.
+
+**Modified:** `app/components/landing/LandingValueComparison.tsx`
+
+### 2026-06-03 -- Home page CTAs centred on mobile
+
+ConkaCTAButtons on the home page were inconsistently aligned on mobile: hero, showcase, and FAQ centred theirs while Daily Benefits, LabTimeline, App USP, and Testimonials left-aligned. All home page CTAs now centre on mobile and left-align on desktop, using the same responsive pattern (justify-center lg:justify-start). Where a GuaranteeRow accompanies the CTA (testimonials), it centres with the button.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/landing/LabTimeline.tsx`, `app/components/home/AppUSPSection.tsx`, `app/components/landing/LandingTestimonials.tsx`
+
+### 2026-06-03 -- Home page noise reduction: sublines removed, trust grids consolidated, LabTimeline rebuilt around Day 1/14/30
+
+Every home page section header carried three text registers (eyebrow, H2, mono subline) and the same 4-cell trust grid repeated up to five times down the page, so the clinical styling read as decoration rather than clarity. Mono sublines removed from Daily Benefits, Product Grid (all 3 breakpoint variants, plus the dead monoSub copy field), App USP, and Case Studies. Trust grids removed from Product Grid, LabTimeline, and Testimonials (Daily Benefits and Case Studies keep theirs deliberately). Testimonials gained the CRO-style star aggregate badge (4.7/5, 500+ verified reviews) in place of its mono subline and a GuaranteeRow tucked under its CTA. LabTimeline milestones reframed in the Magic Mind register: Day 1/Day 14/Day 30 badges (was 24 hours/14 days/30 days), benefit-led phase names (Focus & Clarity, Resilience, Better Brain), felt second-person descriptions, and the mono data subline replaced with a readable provenance sentence (141 people, 6,042 cognitive tests, 7 months) since the app dataset is a differentiator worth pointing at. Side effect: the PDP cross-sell grids (Explore Other Products) also lose their subline and trust grid via the shared component.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/home/ProductGrid.tsx`, `app/components/home/ProductGridMobile.tsx`, `app/components/home/ProductGridTablet.tsx`, `app/components/home/productGridCopy.tsx`, `app/components/landing/LabTimeline.tsx`, `app/components/home/AppUSPSection.tsx`, `app/components/landing/LandingTestimonials.tsx`, `app/components/LabCaseStudies.tsx`
+
+### 2026-06-03 -- Hero headline corrected to the two-shot story, StatStrip removed
+
+The home and CRO heroes claimed "Brain Performance in One Daily Shot" but CONKA is a two-shot system (Flow in the morning, Clear in the afternoon); the hero was the only surface on the site telling the wrong story, contradicting the showcase and PDP two scrolls later. New headline on both heroes: "A Sharper Mind. Morning to Evening." (outcome-led, Magic Mind register, the time span carries the two-shot story without explaining it). Forced onto two lines on every breakpoint. The home hero's 3-cell StatStrip (studies cited, doses delivered, substances tested) was removed as low-value, and the desktop layout moved from a 33/66 to a 50/50 text/asset split, with the nowrap title guaranteeing the text column never collapses. Descriptions intentionally unchanged. CROFinalCTA and the /start hero still carry the old headline; deferred to a follow-up.
+
+**Modified:** `app/components/landing/LandingHero.tsx`, `app/components/cro/CROHero.tsx`
+
 ### 2026-06-02 -- Guarantee row only under PDP CTAs, FunnelAssurance deleted
 
 Follow-up to the tile simplification: the three trust rows under the PDP CTA were still too much, and the funnel rendered them as a floating block above its CTA on desktop only, invisible on mobile. PDP heroes now show just the GuaranteeRow (green tick, 100-day money-back guarantee) tucked directly under the Add to Cart button, identical to the landing page. The funnel drops the floating block entirely; instead FunnelCTA's existing compact trust strip (guarantee, free shipping, cancel anytime) now renders on every breakpoint rather than mobile only, so desktop and mobile funnel users see the same thing. Protocol heroes (deprecated pages) swapped to GuaranteeRow as well, and the FunnelAssurance component was deleted with no remaining references.

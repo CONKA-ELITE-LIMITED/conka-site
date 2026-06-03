@@ -171,14 +171,11 @@ export default function LandingDailyBenefits() {
             {"// Daily benefits · SCI-01"}
           </p>
           <h2
-            className="brand-h1 mb-2"
+            className="brand-h1 mb-6"
             style={{ letterSpacing: "var(--tracking-tight)" }}
           >
             Daily habit. Lifelong benefits.
           </h2>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
-            Focus · Energy · Long-term brain health
-          </p>
 
           <div className="grid grid-cols-1 gap-4">
             {PILLARS.map((pillar) => {
@@ -317,7 +314,7 @@ export default function LandingDailyBenefits() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-start">
+      <div className="mt-8 flex justify-center lg:justify-start">
         <ConkaCTAButton href="/conka-both" meta={null}>
           Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
         </ConkaCTAButton>

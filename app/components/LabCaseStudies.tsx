@@ -8,7 +8,7 @@ import {
   getAthleteById,
 } from "@/app/lib/caseStudiesData";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
-import LabTrustBadges from "./landing/LabTrustBadges";
+import GuaranteeRow from "./landing/GuaranteeRow";
 
 /* ============================================================================
  * LabCaseStudies
@@ -21,7 +21,7 @@ import LabTrustBadges from "./landing/LabTrustBadges";
  *   - Stats strip: lab-asset-frame (double-border, data surface)
  *   - Tiles: zero-radius, thin black border, photo + spec band
  *   - Mono labels (tabular-nums) for all numerics
- *   - CTA: ConkaCTAButton, trust: LabTrustBadges
+ *   - CTA: ConkaCTAButton, trust: GuaranteeRow
  * ========================================================================== */
 
 const SPORT_LABELS: Record<SportCategory, string> = {
@@ -184,15 +184,12 @@ export default function LabCaseStudies({
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="brand-h1 mb-2">
+        <h2 className="brand-h1">
           Athletes, Founders, Execs.
           <br />
           They all take CONKA.
           <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          N=150+ participants · 5,000+ tests · +28.96% avg lift
-        </p>
       </div>
 
       {/* Dataset summary strip — value on top, label below, centered */}
@@ -267,18 +264,15 @@ export default function LabCaseStudies({
         </div>
       </div>
 
-      {/* CTA + trust badges */}
+      {/* CTA + guarantee as one block so the row tucks under the button.
+          Centred on mobile, left-aligned on desktop. */}
       {!hideCTA && (
-        <>
-          <div className="mt-8 flex justify-start">
-            <ConkaCTAButton href={ctaHref ?? "/case-studies"} meta={null}>
-              {ctaLabel ?? "View All Case Studies"}
-            </ConkaCTAButton>
-          </div>
-          <div className="mt-6">
-            <LabTrustBadges />
-          </div>
-        </>
+        <div className="mt-8 flex flex-col items-center lg:items-start">
+          <ConkaCTAButton href={ctaHref ?? "/case-studies"} meta={null}>
+            {ctaLabel ?? "View All Case Studies"}
+          </ConkaCTAButton>
+          <GuaranteeRow />
+        </div>
       )}
     </div>
   );

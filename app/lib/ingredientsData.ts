@@ -49,8 +49,6 @@ export interface IngredientData {
   scientificName: string;
   category: IngredientCategory;
   formula: FormulaId;
-  percentage: string;
-  percentageValue: number;
   oneLineClaim: string;
   functionalCategory: FunctionalCategory;
   qualityTags: string[];
@@ -78,8 +76,6 @@ export const flowIngredients: IngredientData[] = [
     scientificName: "Melissa officinalis",
     category: "adaptogen",
     formula: "01",
-    percentage: "26.7%",
-    percentageValue: 26.7,
     oneLineClaim: "Calms anxiety without sedation. 28% drop in stress response.",
     functionalCategory: "Calm Focus",
     qualityTags: [],
@@ -165,8 +161,6 @@ export const flowIngredients: IngredientData[] = [
     scientificName: "Curcuma longa",
     category: "antioxidant",
     formula: "01",
-    percentage: "25.4%",
-    percentageValue: 25.4,
     oneLineClaim: "Protects neurons and improves memory by 63% over 18 months.",
     functionalCategory: "Neuroprotection",
     qualityTags: ["Branded Extract", "Patented"],
@@ -252,8 +246,6 @@ export const flowIngredients: IngredientData[] = [
     scientificName: "Withania somnifera",
     category: "adaptogen",
     formula: "01",
-    percentage: "26.7%",
-    percentageValue: 26.7,
     oneLineClaim: "Cuts cortisol 28% and perceived stress by more than half.",
     functionalCategory: "Calm Focus",
     qualityTags: [],
@@ -339,8 +331,6 @@ export const flowIngredients: IngredientData[] = [
     scientificName: "Rhodiola rosea",
     category: "adaptogen",
     formula: "01",
-    percentage: "9.4%",
-    percentageValue: 9.4,
     oneLineClaim: "Fights burnout and mental fatigue under prolonged stress.",
     functionalCategory: "Mental Energy",
     qualityTags: [],
@@ -426,8 +416,6 @@ export const flowIngredients: IngredientData[] = [
     scientificName: "Vaccinium myrtillus",
     category: "antioxidant",
     formula: "01",
-    percentage: "9.4%",
-    percentageValue: 9.4,
     oneLineClaim: "Anthocyanins cross the blood-brain barrier to improve recall 18%.",
     functionalCategory: "Neuroprotection",
     qualityTags: [],
@@ -513,8 +501,6 @@ export const flowIngredients: IngredientData[] = [
     scientificName: "Piper nigrum",
     category: "mineral",
     formula: "01",
-    percentage: "0.5%",
-    percentageValue: 0.5,
     oneLineClaim: "Multiplies curcumin absorption 2,000% so the rest of the formula works.",
     functionalCategory: "Bioavailability",
     qualityTags: [],
@@ -604,8 +590,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Ascorbic Acid",
     category: "vitamin",
     formula: "02",
-    percentage: "50.46%",
-    percentageValue: 50.46,
     oneLineClaim: "Neuroprotective antioxidant concentrated 15x in the brain vs plasma.",
     functionalCategory: "Neuroprotection",
     qualityTags: [],
@@ -691,8 +675,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "L-Alpha Glycerylphosphorylcholine",
     category: "nootropic",
     formula: "02",
-    percentage: "16.11%",
-    percentageValue: 16.11,
     oneLineClaim: "The most bioavailable choline form. Raises acetylcholine for sharper recall.",
     functionalCategory: "Mental Energy",
     qualityTags: [],
@@ -778,8 +760,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "L-Glutathione (Reduced)",
     category: "antioxidant",
     formula: "02",
-    percentage: "10.07%",
-    percentageValue: 10.07,
     oneLineClaim: "The body's master antioxidant. 40% rise in blood stores.",
     functionalCategory: "Neuroprotection",
     qualityTags: [],
@@ -865,8 +845,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "N-Acetyl-L-Cysteine",
     category: "amino-acid",
     formula: "02",
-    percentage: "10.07%",
-    percentageValue: 10.07,
     oneLineClaim: "Replenishes cysteine to rebuild glutathione and calm brain glutamate.",
     functionalCategory: "Neuroprotection",
     qualityTags: [],
@@ -952,8 +930,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Acetyl-L-Carnitine HCl",
     category: "amino-acid",
     formula: "02",
-    percentage: "5.04%",
-    percentageValue: 5.04,
     oneLineClaim: "Fuels neurons with fatty-acid energy. 35% less mental fatigue.",
     functionalCategory: "Mental Energy",
     qualityTags: [],
@@ -1039,8 +1015,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Ginkgo biloba",
     category: "nootropic",
     formula: "02",
-    percentage: "3.02%",
-    percentageValue: 3.02,
     oneLineClaim: "Improves cerebral circulation. 16% gain in cognition and attention.",
     functionalCategory: "Brain Health",
     qualityTags: [],
@@ -1126,8 +1100,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Phosphatidylcholine",
     category: "nootropic",
     formula: "02",
-    percentage: "1.51%",
-    percentageValue: 1.51,
     oneLineClaim: "Phosphatidylcholine rebuilds neuronal membranes and feeds acetylcholine synthesis.",
     functionalCategory: "Brain Health",
     qualityTags: [],
@@ -1213,8 +1185,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Citrus limon",
     category: "essential-oil",
     formula: "02",
-    percentage: "0.60%",
-    percentageValue: 0.6,
     oneLineClaim: "Lifts mood and alertness via limonene. 23% positive-mood gain.",
     functionalCategory: "Calm Focus",
     qualityTags: [],
@@ -1300,8 +1270,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Alpha Lipoic Acid",
     category: "antioxidant",
     formula: "02",
-    percentage: "0.20%",
-    percentageValue: 0.2,
     oneLineClaim: "Universal antioxidant that regenerates vitamin C, E, and glutathione.",
     functionalCategory: "Neuroprotection",
     qualityTags: [],
@@ -1387,8 +1355,6 @@ export const clarityIngredients: IngredientData[] = [
     scientificName: "Methylcobalamin",
     category: "vitamin",
     formula: "02",
-    percentage: "0.03%",
-    percentageValue: 0.03,
     oneLineClaim: "Methylcobalamin slows brain atrophy by up to 86% in trials.",
     functionalCategory: "Brain Health",
     qualityTags: [],
@@ -1528,11 +1494,6 @@ function extractDosage(ingredient: IngredientData): string {
   
   if (doseStat) {
     return `${doseStat.value} per serving`;
-  }
-  
-  // Fallback: use percentage if available
-  if (ingredient.percentage) {
-    return `${ingredient.percentage} of formula`;
   }
   
   return "Per serving";

@@ -130,14 +130,6 @@ export default function IngredientsPageMobile({
                   {activeIngredient.scientificName}
                 </p>
               </div>
-              <div className="shrink-0 text-right">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/50 leading-none">
-                  Share
-                </p>
-                <p className="font-mono text-2xl font-bold tabular-nums mt-1.5 leading-none">
-                  {activeIngredient.percentage}
-                </p>
-              </div>
             </div>
           </div>
 

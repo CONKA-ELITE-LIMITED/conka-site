@@ -119,15 +119,7 @@ export default function IngredientsPageDesktop({
               )}
             </div>
 
-            <div className="grid grid-cols-2 border-t border-black/8">
-              <div className="p-4 border-r border-black/8">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
-                  Formula share
-                </p>
-                <p className="font-mono text-2xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
-                  {activeIngredient.percentage}
-                </p>
-              </div>
+            <div className="border-t border-black/8">
               <div className="p-4">
                 <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
                   Category
@@ -163,14 +155,6 @@ export default function IngredientsPageDesktop({
                   </h2>
                   <p className="font-mono text-[12px] italic text-white/65 mt-1 tabular-nums">
                     {activeIngredient.scientificName}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/50 leading-none">
-                    Share
-                  </p>
-                  <p className="font-mono text-3xl font-bold tabular-nums mt-2 leading-none">
-                    {activeIngredient.percentage}
                   </p>
                 </div>
               </div>

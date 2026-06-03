@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import { getFormulaImage, getProtocolImage } from "@/app/lib/productImageConfig";
@@ -77,7 +78,7 @@ export default function NavigationMobile({
           <div className="xl:hidden w-10 flex-shrink-0 flex items-center justify-start">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-black/70 hover:text-[#1B2757] transition-colors"
+              className="p-2 text-black hover:text-[#1B2757] transition-colors"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -108,7 +109,7 @@ export default function NavigationMobile({
             </button>
           </div>
 
-          <a
+          <Link
             href="/"
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center pointer-events-auto"
             aria-label="CONKA home"
@@ -121,12 +122,12 @@ export default function NavigationMobile({
               className="h-7 md:h-9 w-auto"
               priority
             />
-          </a>
+          </Link>
 
           <div className="xl:hidden min-w-[5.5rem] flex-shrink-0 flex items-center justify-end gap-1">
             <a
               href="/account/login"
-              className="p-2 text-black/70 hover:text-[#1B2757] transition-colors"
+              className="p-2 text-black hover:text-[#1B2757] transition-colors"
               aria-label="Account"
             >
               <svg
@@ -149,7 +150,7 @@ export default function NavigationMobile({
                 openCart();
                 setMobileMenuOpen(false);
               }}
-              className="p-2 text-black/70 hover:text-[#1B2757] transition-colors relative"
+              className="p-2 text-black hover:text-[#1B2757] transition-colors relative"
               aria-label="Open cart"
             >
               <svg
@@ -183,7 +184,7 @@ export default function NavigationMobile({
           <div className="flex-1 overflow-y-auto pb-16">
             {/* Header bar */}
             <div className="flex justify-between items-center px-5 py-4 border-b border-black/12">
-              <a
+              <Link
                 href="/"
                 className="flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
@@ -197,10 +198,10 @@ export default function NavigationMobile({
                   className="h-7 w-auto"
                   priority
                 />
-              </a>
+              </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-black/70"
+                className="p-2 text-black"
                 aria-label="Close menu"
               >
                 <svg
@@ -285,7 +286,7 @@ export default function NavigationMobile({
                         idx < group.links.length - 1 ? "border-b border-black/8" : ""
                       } hover:bg-[#f5f5f5] transition-colors`}
                     >
-                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-black/75">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-black">
                         {link.label}
                       </span>
                       <span
