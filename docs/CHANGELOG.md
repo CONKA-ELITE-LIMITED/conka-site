@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-03 -- Hero headline corrected to the two-shot story, StatStrip removed
+
+The home and CRO heroes claimed "Brain Performance in One Daily Shot" but CONKA is a two-shot system (Flow in the morning, Clear in the afternoon); the hero was the only surface on the site telling the wrong story, contradicting the showcase and PDP two scrolls later. New headline on both heroes: "A Sharper Mind. Morning to Evening." (outcome-led, Magic Mind register, the time span carries the two-shot story without explaining it). Forced onto two lines on every breakpoint. The home hero's 3-cell StatStrip (studies cited, doses delivered, substances tested) was removed as low-value, and the desktop layout moved from a 33/66 to a 50/50 text/asset split, with the nowrap title guaranteeing the text column never collapses. Descriptions intentionally unchanged. CROFinalCTA and the /start hero still carry the old headline; deferred to a follow-up.
+
+**Modified:** `app/components/landing/LandingHero.tsx`, `app/components/cro/CROHero.tsx`
+
 ### 2026-06-02 -- Guarantee row only under PDP CTAs, FunnelAssurance deleted
 
 Follow-up to the tile simplification: the three trust rows under the PDP CTA were still too much, and the funnel rendered them as a floating block above its CTA on desktop only, invisible on mobile. PDP heroes now show just the GuaranteeRow (green tick, 100-day money-back guarantee) tucked directly under the Add to Cart button, identical to the landing page. The funnel drops the floating block entirely; instead FunnelCTA's existing compact trust strip (guarantee, free shipping, cancel anytime) now renders on every breakpoint rather than mobile only, so desktop and mobile funnel users see the same thing. Protocol heroes (deprecated pages) swapped to GuaranteeRow as well, and the FunnelAssurance component was deleted with no remaining references.
