@@ -298,6 +298,22 @@ export function trackAppDataInsightsViewed(): void {
   });
 }
 
+// ===== B2B PORTAL TRACKING =====
+
+/**
+ * Track a B2B teams enquiry submission.
+ * Fires once on successful submit of the /professionals application form.
+ */
+export function trackB2BApplicationSubmitted(params: {
+  sport: string;
+  squadSize: string;
+}): void {
+  safeTrack("b2b_application_submitted", {
+    sport: params.sport,
+    squadSize: params.squadSize,
+  });
+}
+
 // ===== PURCHASE INTENT TRACKING =====
 
 /**
