@@ -70,152 +70,49 @@ export default function LandingValueComparison({
 
   return (
     <div ref={ref}>
-      {/* Trio header */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// Caffeine vs CONKA · SCI-03"}
-      </p>
-      <h2
-        className="brand-h1 mb-10"
-        style={{ letterSpacing: "var(--tracking-tight)" }}
-      >
-        Caffeine doesn&apos;t give you energy.
-        <br />
-        It <em className="italic">borrows</em> it.
-      </h2>
+      {/* Desktop: copy column (incl. header) left, chart right, vertically
+          centred against each other so neither column floats in dead space.
+          Mobile: single column in narrative order, chart between the two
+          paragraphs. */}
+      <div className="lg:flex lg:gap-12 lg:items-center">
+        {/* Copy column */}
+        <div className="lg:flex-1">
+          {/* Trio header */}
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+            {"// Caffeine vs CONKA · SCI-03"}
+          </p>
+          <h2
+            className="brand-h1 mb-6"
+            style={{ letterSpacing: "var(--tracking-tight)" }}
+          >
+            Caffeine doesn&apos;t give you energy.
+            <br />
+            It borrows it.
+          </h2>
 
-      {/* Narrative + chart. Mobile: stacked in reading order (mechanism →
-          chart → CONKA → closer). Desktop: copy column left, chart right. */}
-      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-6 lg:items-start mb-10">
-        {/* 1. Mechanism — why coffee hands the fatigue back */}
-        <p className="text-base text-black/75 leading-relaxed max-w-prose lg:col-start-1">
-          Caffeine blocks the receptors that tell your brain it&apos;s tired.
-          It hides the fatigue for a few hours, spikes cortisol, and hands
-          both back to you at 11am. The second cup isn&apos;t a habit.
-          It&apos;s the system working as designed.
-        </p>
+          {/* 1. Mechanism — why coffee hands the fatigue back */}
+          <p className="text-base text-black/75 leading-relaxed max-w-prose mb-6">
+            Caffeine blocks the receptors that tell your brain it&apos;s tired.
+            It hides the fatigue for a few hours, spikes cortisol, and hands
+            both back to you at 11am. The second cup isn&apos;t a habit.
+            It&apos;s the system working as designed.
+          </p>
 
-        {/* 2. Fig. 01 — energy curves */}
-        <div className="border border-black/12 bg-white p-5 lg:p-6 lg:col-start-2 lg:row-start-1 lg:row-span-3">
-          <div className="mb-5 pb-4 border-b border-black/8">
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 mb-1.5 tabular-nums">
-              Fig. 01 · Cognitive energy · 8am to 11pm
-            </p>
-            <h3 className="text-lg lg:text-xl font-semibold text-black leading-snug">
-              One borrows. One builds.
-            </h3>
+          {/* 2. Fig. 01 — mobile position, between the two paragraphs */}
+          <div className="mb-6 lg:hidden">
+            <ChartCard isInView={isInView} />
           </div>
 
-          {/* Coffee chart */}
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/75 mb-1.5">
-            Coffee
-          </p>
-          <svg
-            viewBox="0 0 640 200"
-            className="block w-full h-auto"
-            role="img"
-            aria-label="Coffee energy: peaks, mild crash, second peak, deep crash below baseline, third spike tapering back to baseline by bedtime."
-          >
-            <ChartGrid />
-            <CurveWithHalo path={COFFEE_PATH} color={COFFEE} />
-
-            {/* annotations */}
-            <text
-              x="400"
-              y="178"
-              fontSize="13"
-              fill={NAVY}
-              opacity="0.75"
-              textAnchor="middle"
-              fontStyle="italic"
-              fontWeight="600"
-            >
-              crash
-            </text>
-            <text
-              x="530"
-              y="70"
-              fontSize="13"
-              fill={NAVY}
-              opacity="0.75"
-              textAnchor="middle"
-              fontStyle="italic"
-              fontWeight="600"
-            >
-              wrecks sleep
-            </text>
-
-            {/* drink markers — three cups: morning, lunchtime, late afternoon */}
-            <DrinkMarker cx={30} cy={115} fill={COFFEE} />
-            <DrinkMarker cx={260} cy={128} fill={COFFEE} />
-            <DrinkMarker cx={460} cy={145} fill={COFFEE} />
-
-            <RevealCover isInView={isInView} />
-            <AxisLabels />
-          </svg>
-
-          <div className="h-5" />
-
-          {/* CONKA chart */}
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] mb-1.5" style={{ color: NAVY }}>
-            CONKA · Flow + Clear
-          </p>
-          <svg
-            viewBox="0 0 640 200"
-            className="block w-full h-auto"
-            role="img"
-            aria-label="CONKA energy: rises into a sustained plateau, holds all day, gentle taper to just above baseline by bedtime."
-          >
-            <ChartGrid />
-            <CurveWithHalo path={CONKA_PATH} color={NAVY} />
-
-            {/* shot markers — Flow (amber) in the morning, Clear (soft blue)
-                in the afternoon. Brand accent colours, dots only. */}
-            <DrinkMarker cx={30} cy={115} fill={FLOW_ACCENT} />
-            <text
-              x="30"
-              y="134"
-              fontSize="12"
-              fill={NAVY}
-              opacity="0.85"
-              textAnchor="middle"
-              fontWeight="700"
-            >
-              Flow
-            </text>
-            <DrinkMarker cx={262} cy={35} fill={CLEAR_ACCENT} />
-            <text
-              x="262"
-              y="22"
-              fontSize="12"
-              fill={NAVY}
-              opacity="0.85"
-              textAnchor="middle"
-              fontWeight="700"
-            >
-              Clear
-            </text>
-
-            <RevealCover isInView={isInView} />
-            <AxisLabels />
-          </svg>
-
-          {/* Chart footer */}
-          <p className="mt-4 pt-4 border-t border-black/8 font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 tabular-nums">
-            All day focus · Into the evening · Without the crash
-          </p>
-        </div>
-
-        {/* 3. CONKA — the counter-mechanism */}
-        <p className="text-base text-black/75 leading-relaxed max-w-prose lg:col-start-1">
-          CONKA works the other way. Fifteen nootropics and adaptogens do the
-          heavy lifting: brain-boosting nutrients build the focus,
-          stress-mitigating compounds keep cortisol in check. Energy that
-          doesn&apos;t have to be paid back.
-        </p>
-
-        {/* 4. Price closer + CTA + ingredient-class strip */}
-        <div className="lg:col-start-1">
+          {/* 3. CONKA — the counter-mechanism */}
           <p className="text-base text-black/75 leading-relaxed max-w-prose mb-6">
+            CONKA works the other way. Fifteen nootropics and adaptogens do
+            the heavy lifting: brain-boosting nutrients build the focus,
+            stress-mitigating compounds keep cortisol in check. Energy that
+            doesn&apos;t have to be paid back.
+          </p>
+
+          {/* 4. Price closer */}
+          <p className="text-base text-black/75 leading-relaxed max-w-prose mb-8">
             It&apos;s also{" "}
             <strong className="font-semibold text-black">
               £{MONTHLY_SAVINGS_VS_COFFEE} a month less
@@ -243,12 +140,137 @@ export default function LandingValueComparison({
             />
           </div>
         </div>
+
+        {/* Chart column — desktop position */}
+        <div className="hidden lg:block lg:flex-1">
+          <ChartCard isInView={isInView} />
+        </div>
       </div>
     </div>
   );
 }
 
 /* ============================ sub-components ============================== */
+
+/** Fig. 01 — the stacked coffee/CONKA energy curves in a clinical card.
+ *  Rendered twice (mobile + desktop positions); only one is ever displayed,
+ *  the other is display:none so it stays out of the accessibility tree. */
+function ChartCard({ isInView }: { isInView: boolean }) {
+  return (
+    <div className="border border-black/12 bg-white p-5 lg:p-6">
+      <div className="mb-5 pb-4 border-b border-black/8">
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 mb-1.5 tabular-nums">
+          Fig. 01 · Cognitive energy · 8am to 11pm
+        </p>
+        <h3 className="text-lg lg:text-xl font-semibold text-black leading-snug">
+          One borrows. One builds.
+        </h3>
+      </div>
+
+      {/* Coffee chart */}
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/75 mb-1.5">
+        Coffee
+      </p>
+      <svg
+        viewBox="0 0 640 200"
+        className="block w-full h-auto"
+        role="img"
+        aria-label="Coffee energy: peaks, mild crash, second peak, deep crash below baseline, third spike tapering back to baseline by bedtime."
+      >
+        <ChartGrid />
+        <CurveWithHalo path={COFFEE_PATH} color={COFFEE} />
+
+        {/* annotations */}
+        <text
+          x="400"
+          y="178"
+          fontSize="13"
+          fill={NAVY}
+          opacity="0.75"
+          textAnchor="middle"
+          fontStyle="italic"
+          fontWeight="600"
+        >
+          crash
+        </text>
+        <text
+          x="530"
+          y="70"
+          fontSize="13"
+          fill={NAVY}
+          opacity="0.75"
+          textAnchor="middle"
+          fontStyle="italic"
+          fontWeight="600"
+        >
+          wrecks sleep
+        </text>
+
+        {/* drink markers — three cups: morning, lunchtime, late afternoon */}
+        <DrinkMarker cx={30} cy={115} fill={COFFEE} />
+        <DrinkMarker cx={260} cy={128} fill={COFFEE} />
+        <DrinkMarker cx={460} cy={145} fill={COFFEE} />
+
+        <RevealCover isInView={isInView} />
+        <AxisLabels />
+      </svg>
+
+      <div className="h-5" />
+
+      {/* CONKA chart */}
+      <p
+        className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] mb-1.5"
+        style={{ color: NAVY }}
+      >
+        CONKA · Flow + Clear
+      </p>
+      <svg
+        viewBox="0 0 640 200"
+        className="block w-full h-auto"
+        role="img"
+        aria-label="CONKA energy: rises into a sustained plateau, holds all day, gentle taper to just above baseline by bedtime."
+      >
+        <ChartGrid />
+        <CurveWithHalo path={CONKA_PATH} color={NAVY} />
+
+        {/* shot markers — Flow (amber) in the morning, Clear (soft blue)
+            in the afternoon. Brand accent colours, dots only. */}
+        <DrinkMarker cx={30} cy={115} fill={FLOW_ACCENT} />
+        <text
+          x="30"
+          y="134"
+          fontSize="12"
+          fill={NAVY}
+          opacity="0.85"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          Flow
+        </text>
+        <DrinkMarker cx={262} cy={35} fill={CLEAR_ACCENT} />
+        <text
+          x="262"
+          y="22"
+          fontSize="12"
+          fill={NAVY}
+          opacity="0.85"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          Clear
+        </text>
+
+        <RevealCover isInView={isInView} />
+        <AxisLabels />
+      </svg>
+
+      {/* Chart footer */}
+      <p className="mt-4 pt-4 border-t border-black/8 font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 tabular-nums">
+        All day focus · Into the evening · Without the crash
+      </p>
+    </div>
+  );
+}
 
 function ChartGrid() {
   return (
