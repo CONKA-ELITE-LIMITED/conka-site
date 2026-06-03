@@ -77,7 +77,7 @@ read_shipping, write_shipping
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Connect: Dev Dashboard app + credentials + base URL + Synergy Location | DONE (connection confirmed working) |
-| 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | In progress (unblocked, ready to enter) |
+| 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | DONE (data entered; pending Synergy SKU file sync) |
 | 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (principles set; numbers pending) |
 | 4 | Testing: test SKUs + multi-line test orders against Synergy TEST WMS; end-to-end checklist | Future |
 | 5 | Go-live (9 June): live SKU-name sync, single live sanity order | Future |
@@ -88,9 +88,11 @@ read_shipping, write_shipping
 2. Synergy Warehouse location created; Burnside retained as Default location for legacy SKUs.
 3. Synergy confirmed the connection works.
 
-### Phase 2: SKU readiness - UNBLOCKED, ready to enter
+### Phase 2: SKU readiness - DONE (data entered 2026-06-03)
 
-Enter on the **2 physical boxes only** (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`):
+Entered on both physical boxes (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`): weight 2.1kg, HS code base `2106.90` + UK-specific `2106.90.99`, country of origin United Kingdom, barcode left blank, inventory tracked by Shopify (currently stocked at the Burnside location). The 4 bundles were left untouched. Remaining: notify Bethany so Synergy syncs the SKU file (the gate to them receiving stock).
+
+Original spec - enter on the **2 physical boxes only** (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`):
 - **Barcode:** leave BLANK (Synergy identifies by SKU; no barcode for the next ~20,000 boxes).
 - **Weight:** 2.1 kg (Shipping section).
 - **HS code:** `21069099` (Shipping > Customs information).
