@@ -39,7 +39,10 @@ export default function ConkaBothPage() {
 
   // Meta ViewContent on page load
   useEffect(() => {
-    const variantData = getCadenceVariantByProductHeroId(PRODUCT_HERO_ID, "monthly-sub");
+    const variantData = getCadenceVariantByProductHeroId(
+      PRODUCT_HERO_ID,
+      "monthly-sub",
+    );
     if (variantData?.variantId) {
       trackMetaViewContent({
         content_ids: [toContentId(variantData.variantId)],
@@ -50,7 +53,10 @@ export default function ConkaBothPage() {
   }, []);
 
   const handleAddToCart = async (location: "hero" | "sticky_footer") => {
-    const variantData = getCadenceVariantByProductHeroId(PRODUCT_HERO_ID, selectedCadence);
+    const variantData = getCadenceVariantByProductHeroId(
+      PRODUCT_HERO_ID,
+      selectedCadence,
+    );
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location,
@@ -119,7 +125,10 @@ export default function ConkaBothPage() {
       aria-label="CONKA vs coffee comparison"
     >
       <div className="brand-track">
-        <LandingValueComparison ctaHref="#hero" ctaLabel="Try the full system" />
+        <LandingValueComparison
+          ctaHref="#hero"
+          ctaLabel="Try the full system"
+        />
       </div>
     </section>
   );
@@ -152,7 +161,7 @@ export default function ConkaBothPage() {
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
-        <LabGuarantee ctaLabel="Learn more about the CONKA app" ctaHref="/app" />
+        <LabGuarantee ctaLabel="Learn more" ctaHref="/app" />
       </div>
     </section>
   );

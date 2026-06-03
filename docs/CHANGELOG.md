@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-03 -- Navigation contrast raised, logo links use Next Link, guarantee CTA shortened
+
+Navigation text (nav links, account and cart icons, mobile menu items) raised from 65-75% black to full black for stronger contrast and readability. The logo home links in both desktop and mobile navigation now use Next.js Link instead of raw anchors, enabling client-side navigation instead of a full page reload. The /conka-both guarantee section CTA label shortened from "Learn more about the CONKA app" to "Learn more".
+
+**Modified:** `app/components/navigation/NavigationDesktop.tsx`, `app/components/navigation/NavigationMobile.tsx`, `app/conka-both/page.tsx`
+
 ### 2026-06-03 -- FAQ content centralised, /start FAQ updated, dead FAQ components deleted
 
 The upgraded 7-question FAQ copy now lives in a single shared module (app/lib/faqContent.ts) consumed by both LabFAQ (home, /conka-both) and CROFAQv2 (/start), so the two surfaces can no longer drift apart. CROFAQv2 keeps its native details accordion and Still wondering heading but drops its old 5-question set for the shared content. Two dead components deleted: CROFAQ.tsx (imported by nothing) and ProtocolFAQ.tsx (only referenced by the protocol barrel export, never rendered). FormulaFAQ on the PDPs is live and untouched.
