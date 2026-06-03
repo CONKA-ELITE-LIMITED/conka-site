@@ -6,6 +6,18 @@
 
 ## June 2026
 
+### 2026-06-03 -- Formula composition percentages removed site-wide (trade secret)
+
+The exact percentage each ingredient makes up of the Flow and Clear formulas was rendered on the PDP ingredient cards (ClinicalIngredients expanded view) and twice on the /ingredients page, and the raw numbers also lived in ingredientsData.ts and formulaContent.ts, which ship to the browser inside the client bundle. The composition is proprietary. All renders removed, and the percentage and percentageValue fields deleted from both data files entirely so the numbers no longer exist anywhere client-side. Doses per serving (public, on the label) are unaffected.
+
+**Modified:** `app/components/product/ClinicalIngredients.tsx`, `app/components/ingredients/IngredientsPageDesktop.tsx`, `app/components/ingredients/IngredientsPageMobile.tsx`, `app/lib/ingredientsData.ts`, `app/lib/formulaContent.ts`
+
+### 2026-06-03 -- Case studies section: trust grid replaced with guarantee row, CTA centred on mobile
+
+The home page case studies section was the last one carrying the 4-cell trust badge grid alongside its CTA. Replaced with the single GuaranteeRow tucked under the View All Case Studies button, centred on mobile and left-aligned on desktop, matching the testimonials section treatment.
+
+**Modified:** `app/components/LabCaseStudies.tsx`
+
 ### 2026-06-03 -- LandingValueComparison rebuilt around the borrowed-energy narrative
 
 The caffeine comparison on all three PDPs was two dense data cards: an hour-band time-in-effect chart and a price table, accurate but slow to consume. Rebuilt around the /start caffeine section's narrative in the clinical skin: "Caffeine doesn't give you energy. It borrows it." headline, a mechanism paragraph (receptors blocked, cortisol spiked, fatigue handed back at 11am), a Fig. 01 chart card with two stacked energy curves that sweep left-to-right on scroll (coffee: spike/crash cycles in black; CONKA: sustained navy plateau with Flow/Clear shot markers), a counter-mechanism paragraph (fifteen nootropics and adaptogens), a one-line price closer (53 pounds a month less than daily coffee), the CTA, and a Nootropics/Adaptogens ingredient-class strip replacing the trust badges. Desktop puts copy left and chart right; mobile reads in narrative order. The Flow-morning/Clear-afternoon coverage teaching the old chart carried now lives in the product showcase time bands and the ingredients toggle. The /start CaffeineCurves original is untouched. Props API unchanged so the three PDP call sites needed no edits.
