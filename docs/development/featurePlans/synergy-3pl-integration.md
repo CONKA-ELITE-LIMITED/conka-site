@@ -62,30 +62,51 @@ read_assigned_fulfillment_orders, write_assigned_fulfillment_orders
 read_shipping, write_shipping
 ```
 
+## Key confirmed facts (2026-06-03)
+
+- **Go-live date: 9 June 2026** (per signed contract; conditional on testing passing). The 4 June was the kickoff call only.
+- **Connection is live** - Synergy confirmed the Shopify API connection works (initial connection established; not all parameters checked yet).
+- **Box weight = 2.1 kg** per 28-shot box (Humphrey confirmed; 2.5kg was the DHL rounding band).
+- **HS code = `21069099`** (food preparations; same for both Flow and Clear; CONKA already uses this).
+- **Country of origin = UK.**
+- **No printed barcode** on the boxes. Synergy has agreed to receive the next ~20,000 boxes WITHOUT barcodes and will identify products by the **unique SKU** instead. So the Shopify Barcode field stays **blank**; the SKU (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`) is the identifier. (Contract clause 6.1(d) requires a per-SKU barcode, so printing barcodes on a future production run remains an outstanding obligation, but it is waived for now.)
+- **US shipping decisions (Humphrey):** customers pay in **USD** (per Shopify), price **scaled by box count** and ideally **inclusive of tax/tariffs**, **all products** offered to the US to start. Actual price numbers still to be set (need DHL cost by US zone + tariff estimate).
+
 ## Phases
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Connect: Dev Dashboard app + credentials + base URL + Synergy Location | Active |
-| 2 | SKU readiness: EAN, HS code, COO, weight, plain-English description on 6 variants; inventory tracked by Shopify | Active |
-| 3 | Couriers: UK Evri/DPD (free), USA Evri/DHL (priced), visible to Synergy | Active |
+| 1 | Connect: Dev Dashboard app + credentials + base URL + Synergy Location | DONE (connection confirmed working) |
+| 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | DONE (data entered; pending Synergy SKU file sync) |
+| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (principles set; numbers pending) |
 | 4 | Testing: test SKUs + multi-line test orders against Synergy TEST WMS; end-to-end checklist | Future |
-| 5 | Go-live: agree date, live SKU-name sync, single live sanity order | Future |
+| 5 | Go-live (9 June): live SKU-name sync, single live sanity order | Future |
 
-### Phase 1: Connect (deadline-critical, by 4 June)
+### Phase 1: Connect - DONE
 
-1. **Create the Dev Dashboard app** - follow Synergy's linked doc (shopify.dev/docs/apps/build/dev-dashboard/create-apps-using-dev-dashboard), configure the scope set above, install into `conka-6770`. Output: App Client ID + App Client Secret. Complexity: Medium.
-2. **Hand over credentials** - Client ID, Client Secret, base URL via a secure channel (never the email thread, never plain email). Complexity: Small.
-3. **Create the Synergy warehouse Location** - Settings > Locations > add Synergy; confirm Burnside remains the location for all legacy SKUs. This is where Synergy updates inventory. Complexity: Small.
+1. Dev Dashboard app `Synergy WMS` created with the 18 scopes, installed on `conka-6770`. Client ID + Secret + base URL sent to Synergy (secret via one-time secret link).
+2. Synergy Warehouse location created; Burnside retained as Default location for legacy SKUs.
+3. Synergy confirmed the connection works.
 
-### Phase 2: SKU readiness (gated on Humphrey's data)
+### Phase 2: SKU readiness - DONE (data entered 2026-06-03)
 
-4. **Request SKU attributes from Humphrey** - only for the 2 physical boxes (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`): unique EAN/barcode (must be unique across ALL SKUs), HS code, country of origin, box weight. The 4 virtual bundles need none of these (never physically held). Complexity: Small (request); gated on reply.
-5. **Enter attributes on the 2 physical box variants** (barcode in Inventory, weight in Shipping, HS code + country in Shipping > Customs info) and set inventory tracking to "Shopify" on them (only Shopify-managed SKUs are extracted by the Connector). Plain-English descriptions can go on all 6 for clarity. Complexity: Medium; depends on task 4.
+Entered on both physical boxes (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`): weight 2.1kg, HS code base `2106.90` + UK-specific `2106.90.99`, country of origin United Kingdom, barcode left blank, inventory tracked by Shopify (currently stocked at the Burnside location). The 4 bundles were left untouched. Remaining: notify Bethany so Synergy syncs the SKU file (the gate to them receiving stock).
 
-### Phase 3: Couriers (uses Humphrey's courier data)
+Original spec - enter on the **2 physical boxes only** (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`):
+- **Barcode:** leave BLANK (Synergy identifies by SKU; no barcode for the next ~20,000 boxes).
+- **Weight:** 2.1 kg (Shipping section).
+- **HS code:** `21069099` (Shipping > Customs information).
+- **Country of origin:** United Kingdom (same place).
+- **Inventory tracking = Shopify** on the funnel variants so the Connector extracts them (verify it is not managed by a Burnside fulfilment app; if it is, coordinate the switch as part of cutover).
 
-6. **Configure courier services** - Settings > Shipping: UK Evri or DPD (free), USA Evri or DHL (with corresponding prices). Must be visible to Synergy via `read_shipping`. Complexity: Medium.
+The 4 virtual bundles (`FLOW-FUNNEL-84`, `CLEAR-FUNNEL-84`, `BOTH-FUNNEL-56`, `BOTH-FUNNEL-168`) need none of these attributes; they are built from the 2 boxes via `BundleComposition`.
+
+Then notify Bethany the SKU attributes are done so Synergy can sync the SKU file (the gate to them receiving stock).
+
+### Phase 3: Couriers / US shipping
+
+- **UK:** free to customer; Synergy picks the carrier (clause 4.1) unless CONKA names a preferred one. Likely just a "Free UK shipping" rate (probably already exists).
+- **US:** customers pay USD, price scaled by box count, inclusive of tax/tariffs, all products available. Still need: the DHL cost for the US (which DHL zone is the USA, Air vs Road) plus a tariff estimate, then set the scaled USD rates in Settings > Shipping. Visible to Synergy via `read_shipping`.
 
 ### Phase 4: Testing (Future, needs 1 to 3)
 
@@ -120,12 +141,15 @@ read_shipping, write_shipping
 
 ## Open questions
 
-- Which Shopify field does Synergy map to "item description in plain English"?
-- Do the 6 funnel variants already have unique EANs assigned, or does Humphrey need to issue them?
+- **US shipping numbers:** which DHL zone is the USA, Air vs Road for US, and the tariff/tax estimate to bake into the scaled USD price. (Resolved: currency USD, scaled by box count, tax-inclusive, all products available.)
+- **Barcode obligation:** printing a per-SKU barcode on the boxes is still required by contract clause 6.1(d) for the long term; waived by Synergy for the next ~20,000 boxes. Pick up on a future production run.
+- Resolved: HS code `21069099`, weight 2.1kg, country UK, no barcode now (SKU is the identifier).
 
 ## References
 
+- Signed contract: `Fulfil_with_Synergy_x_Conka_Elite_Limited.pdf` (commencement 6 May 2026, go-live 9 June 2026, fee schedule, carrier rate cards, SLA, logistic profile)
 - Synergy "Shopify Integration" PDF (Connector overview, scopes, SKU attributes, order processing, testing, go-live)
+- DHL WPX (Air) rate sheet: zone x weight; 28 box ~2.5kg band, 56 box ~5kg, quarterly ~13kg+
 - SCRUM-1051 (metafields + tags, done; full progress log in comments)
 - Customer portal audit: `app/account/`, `app/api/webhooks/shopify/orders/route.ts`, `docs/features/CUSTOMER_PORTAL.md`
 - Funnel product data: `app/lib/funnelData.ts`
