@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-03 -- Home page FAQ rebuilt: Magic Mind question arc, lab styling stripped
+
+LabFAQ (home, /conka-both, protocol pages) carried heavy lab decoration: a Section/Entries/Updated spec header bar, per-question category labels, a Response label with black border inside every answer, mono eyebrow, bracket toggles, and an Avg response 4h footer. All removed in favour of clean hairline-divider rows with a rotating plus toggle. The question set grew from 5 to 7 and now follows Magic Mind's funnel order: differentiation, daily safety, how to take, results timeline (Day 1/14/30, matching LabTimeline), Flow vs Clear vs Both positioning, guarantee, shipping. Answers rewritten punchier, leading with the payoff sentence, keeping every proof point (patent, Informed Sport, 280+ substances, +28.96%, 100-day guarantee from offerConstants). Lifestyle image column unchanged.
+
+**Modified:** `app/components/landing/LabFAQ.tsx`
+
 ### 2026-06-03 -- Formula composition percentages removed site-wide (trade secret)
 
 The exact percentage each ingredient makes up of the Flow and Clear formulas was rendered on the PDP ingredient cards (ClinicalIngredients expanded view) and twice on the /ingredients page, and the raw numbers also lived in ingredientsData.ts and formulaContent.ts, which ship to the browser inside the client bundle. The composition is proprietary. All renders removed, and the percentage and percentageValue fields deleted from both data files entirely so the numbers no longer exist anywhere client-side. Doses per serving (public, on the label) are unaffected.
