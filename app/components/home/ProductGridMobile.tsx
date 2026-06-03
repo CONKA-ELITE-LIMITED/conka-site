@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import LabTrustBadges from "../landing/LabTrustBadges";
 import ProductCard from "./ProductCard";
 import type { ProductGridProps } from "./ProductGrid";
 import { getProductGridCopy } from "./productGridCopy";
@@ -74,11 +73,7 @@ export default function ProductGridMobile(props?: ProductGridProps) {
   const currentCard = visibleCards[currentIndex] ?? visibleCards[0];
 
   if (visibleCards.length === 0) {
-    return (
-      <div className="px-4">
-        <LabTrustBadges />
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -88,14 +83,11 @@ export default function ProductGridMobile(props?: ProductGridProps) {
           {copy.eyebrow}
         </p>
         <h2
-          className="brand-h1 mb-2 text-black"
+          className="brand-h1 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           {copy.title}
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          {copy.monoSub}
-        </p>
       </div>
 
       {visibleCards.length > 1 && (
@@ -172,10 +164,6 @@ export default function ProductGridMobile(props?: ProductGridProps) {
             />
           </div>
         ))}
-      </div>
-
-      <div className="mt-8 px-4">
-        <LabTrustBadges />
       </div>
     </>
   );

@@ -73,14 +73,11 @@ export default function AppUSPSection() {
         {"// Proof, not promises · APP-01"}
       </p>
       <h2
-        className="brand-h1 text-black"
+        className="brand-h1 text-black mb-8 lg:mb-12"
         style={{ letterSpacing: "-0.02em" }}
       >
         Most brands claim results. We let you measure yours.
       </h2>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mt-3 mb-8 lg:mb-12">
-        Your score · Your data · Your proof
-      </p>
 
       {/* Mobile stacks naturally (asset, tabs, panel). Desktop switches
           to a 2-col grid: tabs span both cols on row 1, panel on row 2

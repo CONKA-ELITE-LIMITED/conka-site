@@ -184,15 +184,12 @@ export default function LabCaseStudies({
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="brand-h1 mb-2">
+        <h2 className="brand-h1">
           Athletes, Founders, Execs.
           <br />
           They all take CONKA.
           <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
         </h2>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-          N=150+ participants · 5,000+ tests · +28.96% avg lift
-        </p>
       </div>
 
       {/* Dataset summary strip — value on top, label below, centered */}
