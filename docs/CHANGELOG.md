@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-03 -- LandingValueComparison rebuilt around the borrowed-energy narrative
+
+The caffeine comparison on all three PDPs was two dense data cards: an hour-band time-in-effect chart and a price table, accurate but slow to consume. Rebuilt around the /start caffeine section's narrative in the clinical skin: "Caffeine doesn't give you energy. It borrows it." headline, a mechanism paragraph (receptors blocked, cortisol spiked, fatigue handed back at 11am), a Fig. 01 chart card with two stacked energy curves that sweep left-to-right on scroll (coffee: spike/crash cycles in black; CONKA: sustained navy plateau with Flow/Clear shot markers), a counter-mechanism paragraph (fifteen nootropics and adaptogens), a one-line price closer (53 pounds a month less than daily coffee), the CTA, and a Nootropics/Adaptogens ingredient-class strip replacing the trust badges. Desktop puts copy left and chart right; mobile reads in narrative order. The Flow-morning/Clear-afternoon coverage teaching the old chart carried now lives in the product showcase time bands and the ingredients toggle. The /start CaffeineCurves original is untouched. Props API unchanged so the three PDP call sites needed no edits.
+
+**Modified:** `app/components/landing/LandingValueComparison.tsx`
+
 ### 2026-06-03 -- Home page CTAs centred on mobile
 
 ConkaCTAButtons on the home page were inconsistently aligned on mobile: hero, showcase, and FAQ centred theirs while Daily Benefits, LabTimeline, App USP, and Testimonials left-aligned. All home page CTAs now centre on mobile and left-align on desktop, using the same responsive pattern (justify-center lg:justify-start). Where a GuaranteeRow accompanies the CTA (testimonials), it centres with the button.
