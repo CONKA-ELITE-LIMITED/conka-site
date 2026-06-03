@@ -314,7 +314,7 @@ export default function LandingDailyBenefits() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-start">
+      <div className="mt-8 flex justify-center lg:justify-start">
         <ConkaCTAButton href="/conka-both" meta={null}>
           Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
         </ConkaCTAButton>

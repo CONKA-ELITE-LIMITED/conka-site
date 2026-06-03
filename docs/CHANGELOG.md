@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-03 -- Home page CTAs centred on mobile
+
+ConkaCTAButtons on the home page were inconsistently aligned on mobile: hero, showcase, and FAQ centred theirs while Daily Benefits, LabTimeline, App USP, and Testimonials left-aligned. All home page CTAs now centre on mobile and left-align on desktop, using the same responsive pattern (justify-center lg:justify-start). Where a GuaranteeRow accompanies the CTA (testimonials), it centres with the button.
+
+**Modified:** `app/components/landing/LandingDailyBenefits.tsx`, `app/components/landing/LabTimeline.tsx`, `app/components/home/AppUSPSection.tsx`, `app/components/landing/LandingTestimonials.tsx`
+
 ### 2026-06-03 -- Home page noise reduction: sublines removed, trust grids consolidated, LabTimeline rebuilt around Day 1/14/30
 
 Every home page section header carried three text registers (eyebrow, H2, mono subline) and the same 4-cell trust grid repeated up to five times down the page, so the clinical styling read as decoration rather than clarity. Mono sublines removed from Daily Benefits, Product Grid (all 3 breakpoint variants, plus the dead monoSub copy field), App USP, and Case Studies. Trust grids removed from Product Grid, LabTimeline, and Testimonials (Daily Benefits and Case Studies keep theirs deliberately). Testimonials gained the CRO-style star aggregate badge (4.7/5, 500+ verified reviews) in place of its mono subline and a GuaranteeRow tucked under its CTA. LabTimeline milestones reframed in the Magic Mind register: Day 1/Day 14/Day 30 badges (was 24 hours/14 days/30 days), benefit-led phase names (Focus & Clarity, Resilience, Better Brain), felt second-person descriptions, and the mono data subline replaced with a readable provenance sentence (141 people, 6,042 cognitive tests, 7 months) since the app dataset is a differentiator worth pointing at. Side effect: the PDP cross-sell grids (Explore Other Products) also lose their subline and trust grid via the shared component.

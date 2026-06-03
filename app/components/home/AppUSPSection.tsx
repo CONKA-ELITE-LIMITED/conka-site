@@ -178,7 +178,7 @@ export default function AppUSPSection() {
       </div>
 
       {/* CTA */}
-      <div className="mt-8 lg:mt-12">
+      <div className="mt-8 lg:mt-12 flex justify-center lg:justify-start">
         <ConkaCTAButton href="/app" meta="// track your own results">
           See the app
         </ConkaCTAButton>

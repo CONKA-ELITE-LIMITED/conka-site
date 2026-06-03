@@ -423,9 +423,10 @@ export default function LandingTestimonials({
         ))}
       </div>
 
-      {/* CTA + guarantee as one block so the row tucks under the button */}
+      {/* CTA + guarantee as one block so the row tucks under the button.
+          Centred on mobile, left-aligned on desktop. */}
       {!hideCTA && (
-        <div className="mt-10">
+        <div className="mt-10 flex flex-col items-center lg:items-start">
           <ConkaCTAButton href={ctaHref} meta={null}>
             Get Both from £{PRICE_PER_SHOT_BOTH}/shot
           </ConkaCTAButton>
