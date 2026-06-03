@@ -6,6 +6,13 @@
 
 ## June 2026
 
+### 2026-06-03 -- FAQ content centralised, /start FAQ updated, dead FAQ components deleted
+
+The upgraded 7-question FAQ copy now lives in a single shared module (app/lib/faqContent.ts) consumed by both LabFAQ (home, /conka-both) and CROFAQv2 (/start), so the two surfaces can no longer drift apart. CROFAQv2 keeps its native details accordion and Still wondering heading but drops its old 5-question set for the shared content. Two dead components deleted: CROFAQ.tsx (imported by nothing) and ProtocolFAQ.tsx (only referenced by the protocol barrel export, never rendered). FormulaFAQ on the PDPs is live and untouched.
+
+**Modified:** `app/lib/faqContent.ts` (new), `app/components/landing/LabFAQ.tsx`, `app/components/cro/CROFAQv2.tsx`, `app/components/protocol/index.ts`
+**Deleted:** `app/components/cro/CROFAQ.tsx`, `app/components/protocol/ProtocolFAQ.tsx`
+
 ### 2026-06-03 -- Home page FAQ rebuilt: Magic Mind question arc, lab styling stripped
 
 LabFAQ (home, /conka-both, protocol pages) carried heavy lab decoration: a Section/Entries/Updated spec header bar, per-question category labels, a Response label with black border inside every answer, mono eyebrow, bracket toggles, and an Avg response 4h footer. All removed in favour of clean hairline-divider rows with a rotating plus toggle. The question set grew from 5 to 7 and now follows Magic Mind's funnel order: differentiation, daily safety, how to take, results timeline (Day 1/14/30, matching LabTimeline), Flow vs Clear vs Both positioning, guarantee, shipping. Answers rewritten punchier, leading with the payoff sentence, keeping every proof point (patent, Informed Sport, 280+ substances, +28.96%, 100-day guarantee from offerConstants). Lifestyle image column unchanged.
