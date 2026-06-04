@@ -330,6 +330,23 @@ export function trackB2BCheckoutStarted(params: {
   });
 }
 
+/**
+ * Track a B2B pay-by-invoice request.
+ * Fires when "Pay by invoice" successfully creates a Shopify draft order and
+ * sends the invoice on the order page.
+ */
+export function trackB2BInvoiceRequested(params: {
+  totalBoxes: number;
+  subtotalExVat: number;
+  hasPO: boolean;
+}): void {
+  safeTrack("b2b_invoice_requested", {
+    totalBoxes: params.totalBoxes,
+    subtotalExVat: params.subtotalExVat,
+    hasPO: params.hasPO,
+  });
+}
+
 // ===== PURCHASE INTENT TRACKING =====
 
 /**

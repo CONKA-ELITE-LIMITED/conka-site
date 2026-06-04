@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-04 -- B2B pay-by-invoice path on the team order page
+
+Sports clubs can now pay by invoice on /professionals/order, not just by card. A new "Pay by invoice" option creates a Shopify draft order at the correct volume-tier price and emails a VAT invoice to the club's finance team; the buyer pays the hosted invoice (card or bank transfer) and we ship once Harry marks it paid. Lean by design: it reuses the existing PO field and adds only a finance-email field, no second form and no delivery address (captured on Shopify's pay-link). This is CONKA's first use of the Shopify Admin API (draft orders live there, not in the Storefront API), behind a server-only token. The invoice endpoint is rate-limited as an abuse guard, and that limiter was extracted into a shared util now used by the enquiry route too.
+
+**Modified:** `app/lib/shopifyAdmin.ts` (new), `app/api/b2b/invoice-order/route.ts` (new), `app/lib/rateLimit.ts` (new), `app/components/b2b/B2BOrderBuilder.tsx`, `app/lib/analytics.ts`, `app/api/b2b/apply/route.ts`
+
 ### 2026-06-03 -- Navigation contrast raised, logo links use Next Link, guarantee CTA shortened
 
 Navigation text (nav links, account and cart icons, mobile menu items) raised from 65-75% black to full black for stronger contrast and readability. The logo home links in both desktop and mobile navigation now use Next.js Link instead of raw anchors, enabling client-side navigation instead of a full page reload. The /conka-both guarantee section CTA label shortened from "Learn more about the CONKA app" to "Learn more".

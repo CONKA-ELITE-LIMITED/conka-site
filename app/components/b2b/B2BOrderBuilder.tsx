@@ -11,7 +11,7 @@ import {
   getB2BTier,
   type B2BProductKey,
 } from "@/app/lib/b2bPricing";
-import { trackB2BCheckoutStarted } from "@/app/lib/analytics";
+import { trackB2BCheckoutStarted, trackB2BInvoiceRequested } from "@/app/lib/analytics";
 
 /**
  * B2B order builder. Two compact Flow/Clear cards plus an order summary, laid
@@ -23,14 +23,21 @@ import { trackB2BCheckoutStarted } from "@/app/lib/analytics";
  */
 
 const ACCENT = "var(--brand-accent)"; // navy #1B2757 under brand-clinical
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const INPUT_CLASS =
+  "w-full min-h-[52px] bg-white border border-black/20 rounded-none px-4 py-3 text-base text-black placeholder-black/35 focus:outline-none focus:border-black/50 transition-colors";
 
 type Quantities = Record<B2BProductKey, number>;
 
 export default function B2BOrderBuilder() {
   const [quantities, setQuantities] = useState<Quantities>({ flow: 0, clear: 0 });
   const [poNumber, setPoNumber] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [financeEmail, setFinanceEmail] = useState("");
+  // Which action is in flight (if any); a single error string serves both paths.
+  const [status, setStatus] = useState<"idle" | "checkout" | "invoice">("idle");
   const [error, setError] = useState("");
+  // Finance email the invoice was sent to; set on success to show confirmation.
+  const [sentTo, setSentTo] = useState<string | null>(null);
 
   const totalBoxes = quantities.flow + quantities.clear;
   const tier = getB2BTier(totalBoxes);
@@ -57,12 +64,12 @@ export default function B2BOrderBuilder() {
 
   function setQty(key: B2BProductKey, next: number) {
     setQuantities((prev) => ({ ...prev, [key]: Math.max(0, Math.floor(next) || 0) }));
-    if (status === "error") setStatus("idle");
+    if (error) setError("");
   }
 
   async function handleCheckout() {
-    if (totalBoxes === 0) return;
-    setStatus("loading");
+    if (totalBoxes === 0 || status !== "idle") return;
+    setStatus("checkout");
     setError("");
     try {
       const res = await fetch("/api/b2b/cart", {
@@ -76,7 +83,7 @@ export default function B2BOrderBuilder() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data?.checkoutUrl) {
-        setStatus("error");
+        setStatus("idle");
         setError(data?.error ?? "Could not start checkout. Please try again.");
         return;
       }
@@ -88,9 +95,51 @@ export default function B2BOrderBuilder() {
       });
       window.location.assign(data.checkoutUrl);
     } catch {
-      setStatus("error");
+      setStatus("idle");
       setError("Network error. Please try again.");
     }
+  }
+
+  async function handleInvoice() {
+    if (totalBoxes === 0 || status !== "idle") return;
+    if (!EMAIL_RE.test(financeEmail.trim())) {
+      setError("Enter a valid finance email so we can send the invoice.");
+      return;
+    }
+    setStatus("invoice");
+    setError("");
+    try {
+      const res = await fetch("/api/b2b/invoice-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lines: lines.map((l) => ({ product: l.key, quantity: l.qty })),
+          financeEmail: financeEmail.trim(),
+          poNumber,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data?.ok) {
+        setStatus("idle");
+        setError(data?.error ?? "Could not send the invoice. Please try again.");
+        return;
+      }
+
+      trackB2BInvoiceRequested({
+        totalBoxes,
+        subtotalExVat: subtotal,
+        hasPO: poNumber.trim().length > 0,
+      });
+      setSentTo(financeEmail.trim());
+    } catch {
+      setStatus("idle");
+      setError("Network error. Please try again.");
+    }
+  }
+
+  if (sentTo) {
+    return <InvoiceSentCard financeEmail={sentTo} />;
   }
 
   return (
@@ -175,17 +224,39 @@ export default function B2BOrderBuilder() {
           )}
         </div>
 
-        {/* PO number */}
-        <div className="mt-6">
+        {/* PO number + finance email. The PO carries through to the order and
+            invoice; the finance email is where the Shopify invoice is sent. */}
+        <div className="mt-6 flex flex-col gap-4">
           <label className="block">
             <span className="block text-sm font-medium mb-2">
               PO number <span className="text-black/40 font-normal">(optional)</span>
             </span>
             <input
-              className="w-full min-h-[52px] bg-white border border-black/20 rounded-none px-4 py-3 text-base text-black placeholder-black/35 focus:outline-none focus:border-black/50 transition-colors"
+              className={INPUT_CLASS}
               value={poNumber}
-              onChange={(e) => setPoNumber(e.target.value)}
+              onChange={(e) => {
+                setPoNumber(e.target.value);
+                if (error) setError("");
+              }}
               placeholder="Appears on your order and invoice"
+            />
+          </label>
+          <label className="block">
+            <span className="block text-sm font-medium mb-2">
+              Finance email{" "}
+              <span className="text-black/40 font-normal">(for pay by invoice)</span>
+            </span>
+            <input
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              className={INPUT_CLASS}
+              value={financeEmail}
+              onChange={(e) => {
+                setFinanceEmail(e.target.value);
+                if (error) setError("");
+              }}
+              placeholder="accounts@yourclub.com"
             />
           </label>
         </div>
@@ -199,27 +270,63 @@ export default function B2BOrderBuilder() {
         <button
           type="button"
           onClick={handleCheckout}
-          disabled={totalBoxes === 0 || status === "loading"}
+          disabled={totalBoxes === 0 || status !== "idle"}
           style={{ backgroundColor: ACCENT }}
           className="w-full min-h-[56px] mt-6 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {status === "loading"
+          {status === "checkout"
             ? "Starting checkout..."
             : totalBoxes === 0
               ? "Add boxes to continue"
               : `Buy now · ${formatPrice(total)} inc VAT`}
         </button>
 
+        <button
+          type="button"
+          onClick={handleInvoice}
+          disabled={totalBoxes === 0 || status !== "idle"}
+          style={{ borderColor: ACCENT, color: ACCENT }}
+          className="w-full min-h-[56px] mt-3 text-base font-medium bg-white border transition-colors hover:bg-black/[0.03] disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {status === "invoice" ? "Sending invoice..." : "Pay by invoice"}
+        </button>
+
         <p className="text-sm text-black/55 mt-4">
-          Prefer to pay by invoice or on account?{" "}
+          Pay by invoice sends a VAT invoice to your finance team. We ship once it
+          is paid. Prefer to talk first?{" "}
           <a
-            href="mailto:harry@conka.io?subject=CONKA%20team%20order%20by%20invoice"
+            href="mailto:harry@conka.io?subject=CONKA%20team%20order"
             className="underline"
           >
             Email harry@conka.io
           </a>
         </p>
       </div>
+    </div>
+  );
+}
+
+function InvoiceSentCard({ financeEmail }: { financeEmail: string }) {
+  return (
+    <div className="border border-black/15 bg-white p-8 lg:p-12 max-w-[640px]">
+      <p className="text-sm font-medium mb-3" style={{ color: ACCENT }}>
+        Pay by invoice
+      </p>
+      <h2 className="text-3xl lg:text-4xl font-semibold tracking-[-0.02em] mb-5">
+        Invoice on its way.
+      </h2>
+      <p className="text-lg text-black/70 leading-relaxed max-w-[52ch]">
+        We&apos;ve emailed your VAT invoice to{" "}
+        <span className="font-medium text-black">{financeEmail}</span>. Your order
+        is reserved. Once payment reaches us, we&apos;ll ship your team&apos;s CONKA
+        straight to you.
+      </p>
+      <p className="text-base text-black/55 mt-6">
+        Questions?{" "}
+        <a href="mailto:harry@conka.io" className="underline">
+          harry@conka.io
+        </a>
+      </p>
     </div>
   );
 }
