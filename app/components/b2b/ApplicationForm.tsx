@@ -236,11 +236,15 @@ function Field({
 }) {
   return (
     <div>
-      <span className={labelClass}>
-        {label}
-        {optional && <span className="text-black/30"> · optional</span>}
-      </span>
-      {children}
+      {/* Wrapping label implicitly associates the control, so clicking the
+          label focuses it and screen readers pair them without explicit ids. */}
+      <label className="block">
+        <span className={labelClass}>
+          {label}
+          {optional && <span className="text-black/30"> · optional</span>}
+        </span>
+        {children}
+      </label>
       {error && (
         <p className="brand-mono-sub text-red-600 mt-1.5" role="alert">
           {error}

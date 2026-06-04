@@ -29,8 +29,10 @@ const applicationSchema = z.object({
   vatNumber: z.string().trim().max(40).optional().or(z.literal("")),
   postcode: z.string().trim().max(20).optional().or(z.literal("")),
   hearAbout: z.string().trim().max(300).optional().or(z.literal("")),
-  // Honeypot: must stay empty. Real users never see or fill it.
-  company: z.string().max(0).optional(),
+  // Honeypot: real users never see or fill it. Validated permissively so a
+  // tripped honeypot is handled below (silent success) rather than leaking a
+  // validation error that reveals the trap.
+  company: z.string().max(200).optional(),
 });
 
 // Light in-memory rate limit. Adequate as a spam speed-bump alongside the
@@ -43,6 +45,12 @@ function isRateLimited(ip: string): boolean {
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT.windowMs);
   recent.push(now);
   hits.set(ip, recent);
+  // Opportunistic cleanup so the map cannot grow unbounded across many IPs.
+  if (hits.size > 5000) {
+    for (const [key, times] of hits) {
+      if (times.every((t) => now - t >= RATE_LIMIT.windowMs)) hits.delete(key);
+    }
+  }
   return recent.length > RATE_LIMIT.max;
 }
 
