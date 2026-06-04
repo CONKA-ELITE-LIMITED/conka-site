@@ -13,9 +13,6 @@ const NAV_LINKS = [
   { label: "Case Studies", href: "/case-studies" },
   { label: "CONKA App", href: "/app" },
   { label: "Our Story", href: "/our-story" },
-  // TEMP (SCRUM-1057): dev access to the unlisted B2B order page.
-  // Remove before launch - the order page must not be linked from nav.
-  { label: "Teams (TEMP)", href: "/professionals/order" },
 ];
 
 export default function NavigationDesktop({
