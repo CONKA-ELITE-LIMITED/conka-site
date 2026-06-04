@@ -15,13 +15,13 @@ Roughly 1 to 1.5 weeks. Lean in the sense that we build almost no commerce plumb
 
 ## Design system
 
-brand-base (new tokens). These are net-new pages.
+brand-base, scoped under `.brand-clinical` (zero-radius tokens plus the navy `#1B2757` interactive accent). Net-new pages built in the clinical aesthetic, deliberately low on micro-typography noise (larger, plainly readable type) per the lessons in `landing-page-v2.1.md`.
 
 ## Confirmed flow
 
 1. Public `/professionals` page (sport positioning, social proof, no pricing). One CTA: apply for team pricing.
 2. Enquiry form. On submit: applicant is emailed the link to the order page, Harry is notified, applicant is added to a Klaviyo B2B list. No database.
-3. Unlisted `/professionals/order` page (noindex, not in nav, permanent shared link). Two equal Flow and Clear cards, quantity steppers, per-box price auto-tiers across GBP 59 / 52 / 45 ex VAT.
+3. Unlisted `/professionals/order` page (noindex, not in nav, permanent shared link). Two equal Flow and Clear cards, quantity steppers, per-box price auto-tiers across GBP 59 / 52 / 45 ex VAT based on the COMBINED Flow + Clear box total (see Implementation log).
 4. Two payment paths, both available, both ship only after payment:
    - **Buy now:** Shopify checkout (card). PO captured as an order note. Compliant VAT invoice produced automatically via Shopify plus the Xero connector.
    - **Pay by invoice:** capture billing address, accounts-payable email, VAT number, PO. Auto-create a Shopify draft order. Shopify emails the invoice. Buyer's finance pays by bank transfer. Harry clicks "mark as paid", which converts it to a real order, ships via Synergy, and books into Xero.
@@ -33,7 +33,7 @@ brand-base (new tokens). These are net-new pages.
 | Shopify hosted checkout, no custom checkout | CONKA already uses Shopify checkout for DTC. It handles card, VAT, shipping, refunds, and receipts. No reason to build or add a processor. |
 | No Stripe | The original brief assumed Stripe was already in use for DTC. It is not. Adding it would mean a second payment stack for no benefit. |
 | Unlisted URL, no tokenised access | The only real reason to hide pricing is channel conflict. An unlisted, noindex link solves that. Per-applicant expiring tokens added build and run cost for no gain. Link is permanent and shared. |
-| Quantity-break pricing via Shopify automatic discounts | Base variant priced at the GBP 59 entry rate, tax-exclusive. Two automatic quantity-break discounts apply 25+ and 50+ tiers at checkout. Works without Shopify Plus. The order page mirrors the maths for display only. |
+| Quantity-break pricing via Shopify automatic discounts | Base variant priced at the GBP 59 entry rate, tax-exclusive. Two automatic quantity-break discounts apply 25+ and 50+ tiers at checkout. Works without Shopify Plus. The order page mirrors the maths for display only. **Tiers are based on the COMBINED Flow + Clear box total, so the Shopify discounts must trigger on total cart quantity, not per variant.** |
 | Pay-by-invoice via Shopify draft orders | A draft order produces a payable invoice and emails it natively. On payment, "mark as paid" converts it to a normal order, which fulfils and books like any other. One Admin API call to create it. |
 | Invoicing via off-the-shelf Shopify-to-Xero connector | The connector turns every Shopify order into a compliant Xero invoice automatically. A bespoke Xero API integration would be a more fragile hand-rolled version with no added value at this volume. |
 | Ship only after confirmed payment, both paths | Zero credit risk. Card pays instantly; terms ships once the bank transfer clears. |
@@ -44,9 +44,9 @@ brand-base (new tokens). These are net-new pages.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Public landing + enquiry form | In Review (built, SCRUM-1055) |
+| 1 | Public landing + enquiry form | Done (SCRUM-1055, merged PR #279) |
 | 2a | Shopify B2B product + discount setup (reuse legacy products) | Not Started |
-| 2b | Unlisted order page + card checkout (Buy now) | In Review (built, SCRUM-1057) |
+| 2b | Unlisted order page + card checkout (Buy now) | In Review (SCRUM-1057) |
 | 3 | Pay-by-invoice path | Not Started |
 
 All phases are active. Phase 3 (pay by invoice) is the business priority but builds on the Phase 2b order page, so it sequences after it.
@@ -119,9 +119,54 @@ Created in Sprint 26, assigned to Rudh.
 
 | Ticket | Title | Phase | Type | Status |
 |--------|-------|-------|------|--------|
-| SCRUM-1055 | B2B portal Phase 1: public /professionals landing + enquiry form | 1 | Story | To Do |
+| SCRUM-1055 | B2B portal Phase 1: public /professionals landing + enquiry form | 1 | Story | Done (merged) |
 | SCRUM-1056 | B2B portal Phase 2a: Shopify B2B products + quantity-break discounts | 2a | Task | To Do |
-| SCRUM-1057 | B2B portal Phase 2b: unlisted /professionals/order page + card checkout | 2b | Story | To Do |
+| SCRUM-1057 | B2B portal Phase 2b: unlisted /professionals/order page + card checkout | 2b | Story | For review |
 | SCRUM-1058 | B2B portal Phase 3: pay-by-invoice path (Shopify draft order + Xero) | 3 | Story | To Do |
 
 Dependencies: SCRUM-1056 blocks SCRUM-1057, which blocks SCRUM-1058. SCRUM-1055 is independent and can ship first.
+
+## Implementation log
+
+What actually shipped, and where it diverged from the plan above. Read this before picking up SCRUM-1056 or 1058.
+
+### Phase 1 (SCRUM-1055) - Done, merged
+
+- **Public `/professionals` landing + `ApplicationForm`** (`app/professionals/page.tsx`, `app/components/b2b/ApplicationForm.tsx`). Sport positioning, no pricing.
+- **`POST /api/b2b/apply`** - zod validation, honeypot field (named `company`), light per-IP in-memory rate limit.
+- **`app/lib/b2bEmail.ts`** - fires a Klaviyo `B2B Application Submitted` event and adds the applicant to a Klaviyo B2B Leads list. No database. **`app/lib/b2bData.ts`** holds the sport list, squad-size bands, and the Klaviyo contract.
+- **Analytics:** `b2b_application_submitted` (sport, squad size).
+- **Deviations / notes:**
+  - **Squad size is a band select** (Under 10 / 10-25 / 26-50 / 51-100 / Over 100), not free text.
+  - **Emails are Klaviyo flows, not sent from code.** The route fires the event and subscribes the profile; the two emails (applicant welcome with the order link, Harry notification) are flows configured in the Klaviyo dashboard, keyed off the event. Setup still required to go live: create the B2B Leads list, set `KLAVIYO_B2B_LIST_ID`, build the two flows. `NEXT_PUBLIC_SITE_URL` is used to build the absolute order-page link.
+  - **Removed a legacy redirect:** `next.config.ts` had a permanent `/professionals/:path* -> /` redirect from when the route was deprecated. Removed so the new pages resolve.
+
+### Phase 2b (SCRUM-1057) - In review
+
+- **Unlisted `/professionals/order`** (noindex), **`B2BOrderBuilder`**, **`app/lib/b2bPricing.ts`** (display tiers + helpers).
+- **`POST /api/b2b/cart`** - creates a fresh multi-line Shopify cart and returns `checkoutUrl`.
+- **Analytics:** `b2b_checkout_started` (total boxes, ex-VAT subtotal, has-PO).
+- **Key deviations from the plan:**
+  - **Tiers are COMBINED-total based, not per product.** The combined Flow + Clear box count selects the tier, and that per-box price applies to every box. The original brief implied per-product bands. Consequence: **the Phase 2a Shopify automatic discounts must trigger on total cart quantity (minimum quantity of items across both B2B products), not per variant.**
+  - **Dedicated `/api/b2b/cart` route** rather than reusing `/api/cart` or going through `CartContext`. Reasons: needs multiple lines (Flow + Clear in one order), keeps the B2B variant GIDs server-side, and isolates the B2B order from a shopper's persisted DTC cart.
+  - **Variant GIDs are server-side env vars** (`B2B_FLOW_VARIANT_ID`, `B2B_CLEAR_VARIANT_ID`), resolved in the cart route - NOT in `productPricing.ts` / `shopifyProductMapping.ts` as the plan task listed. Until they are set (after SCRUM-1056) Buy now returns a clear 503 "checkout not available yet" and the page is otherwise fully usable.
+  - **PO carried as a cart attribute** `PO Number`, plus an `Order Type: B2B Professionals` attribute for identifying B2B orders downstream.
+  - **UI:** box imagery (`/formulas/box/FlowBox.jpg`, `ClearBox.jpg`) on each tile; desktop **3-column layout** (two product cards + summary in one eyeline), two cards side by side with full-width summary on mobile; summary line items read `qty x Product` with shot counts and a combined boxes/shots total.
+  - **Pay-by-invoice** is not on this page yet (Phase 3 / SCRUM-1058). An interim "pay by invoice or on account -> email Harry" mailto link sits under Buy now.
+  - Temporary nav links were added during dev for access and then removed before review (AC1: the order page is not linked from nav).
+
+### Environment variables introduced
+
+| Var | Phase | Purpose |
+|-----|-------|---------|
+| `KLAVIYO_B2B_LIST_ID` | 1 | The Klaviyo B2B Leads list the applicant is added to. |
+| `B2B_FLOW_VARIANT_ID` | 2b | Shopify variant GID for the Flow B2B box. Set after SCRUM-1056. |
+| `B2B_CLEAR_VARIANT_ID` | 2b | Shopify variant GID for the Clear B2B box. Set after SCRUM-1056. |
+
+(Reuses existing `NEXT_PUBLIC_SITE_URL`, `KLAVIYO_PRIVATE_KEY`, `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY`.)
+
+### Outstanding for a fully live portal
+
+- **SCRUM-1056:** create/rename the B2B products + the total-quantity automatic discounts, then set `B2B_FLOW_VARIANT_ID` / `B2B_CLEAR_VARIANT_ID`. Lights up Buy now.
+- **Phase 1 emails:** create the Klaviyo B2B Leads list + the two flows, set `KLAVIYO_B2B_LIST_ID`.
+- **SCRUM-1058:** pay-by-invoice path.
