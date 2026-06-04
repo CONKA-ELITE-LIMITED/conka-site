@@ -46,7 +46,7 @@ brand-base (new tokens). These are net-new pages.
 |-------|-------------|--------|
 | 1 | Public landing + enquiry form | In Review (built, SCRUM-1055) |
 | 2a | Shopify B2B product + discount setup (reuse legacy products) | Not Started |
-| 2b | Unlisted order page + card checkout (Buy now) | Not Started |
+| 2b | Unlisted order page + card checkout (Buy now) | In Review (built, SCRUM-1057) |
 | 3 | Pay-by-invoice path | Not Started |
 
 All phases are active. Phase 3 (pay by invoice) is the business priority but builds on the Phase 2b order page, so it sequences after it.
