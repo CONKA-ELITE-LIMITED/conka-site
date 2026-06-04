@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import ApplicationForm from "@/app/components/b2b/ApplicationForm";
-import { B2B_SPORTS } from "@/app/lib/b2bData";
 
 export const metadata: Metadata = {
   title: "Team & Club Pricing | CONKA",
@@ -32,29 +31,32 @@ const VALUE_POINTS = [
 
 export default function ProfessionalsPage() {
   return (
-    <div className="brand-page min-h-screen flex flex-col">
+    <div className="brand-clinical brand-page min-h-screen flex flex-col">
       <Navigation />
 
       {/* HERO — sport positioning, no pricing */}
       <section
         className="brand-section brand-hero-first brand-bg-white"
+        style={{ paddingTop: "5rem" }}
         aria-label="CONKA for teams and clubs"
       >
         <div className="brand-track">
-          <p className="brand-eyebrow mb-4">{"// For teams & performance staff"}</p>
+          <p className="brand-eyebrow mb-4">
+            {"// For teams & performance staff"}
+          </p>
           <h1 className="brand-h1 max-w-[18ch]">
             The daily brain performance shot, for your whole squad.
           </h1>
           <p className="brand-body mt-6">
-            CONKA is built for sport, not general wellness. Trusted by professional
-            athletes and developed around clinically studied ingredients. Now
-            available to clubs and performance organisations at team pricing, with
-            the procurement support your finance team expects.
+            CONKA is built for sport. Trusted by professional athletes and
+            developed around clinically studied ingredients. Now available to
+            clubs and performance organisations at team pricing, with the
+            procurement support your finance team expects.
           </p>
           <div className="mt-8">
             <a
               href="#apply"
-              className="brand-btn brand-btn-primary inline-flex items-center justify-center min-h-[52px] text-sm uppercase tracking-[0.15em]"
+              className="brand-btn brand-btn-accent inline-flex items-center justify-center min-h-[52px] text-sm uppercase tracking-[0.15em]"
             >
               Get team pricing
             </a>
@@ -62,25 +64,12 @@ export default function ProfessionalsPage() {
         </div>
       </section>
 
-      {/* BUILT FOR SPORT — signal, not wellness */}
-      <section className="brand-section brand-bg-tint" aria-label="Built for sport">
-        <div className="brand-track">
-          <p className="brand-eyebrow mb-5">{"// Built for sport"}</p>
-          <div className="flex flex-wrap gap-2">
-            {B2B_SPORTS.filter((s) => s !== "Other").map((sport) => (
-              <span
-                key={sport}
-                className="brand-mono-sub rounded-full border border-black/12 bg-white px-3.5 py-2"
-              >
-                {sport}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* APPLY — value points + enquiry form */}
-      <section id="apply" className="brand-section brand-bg-white" aria-label="Apply for team pricing">
+      <section
+        id="apply"
+        className="brand-section brand-bg-tint"
+        aria-label="Apply for team pricing"
+      >
         <div className="brand-track">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16">
             {/* Intro / value */}
@@ -112,9 +101,12 @@ export default function ProfessionalsPage() {
       </section>
 
       {/* SUBSCRIPTION ENQUIRY — recurring supply exit ramp */}
-      <section className="brand-section brand-bg-tint" aria-label="Regular supply enquiry">
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Regular supply enquiry"
+      >
         <div className="brand-track">
-          <div className="rounded-[2rem] border border-black/12 bg-white p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="rounded-none border border-black/12 bg-white p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <p className="brand-eyebrow mb-2">{"// Ongoing supply"}</p>
               <h3 className="brand-h3 max-w-[22ch]">

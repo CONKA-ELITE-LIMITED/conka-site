@@ -46,7 +46,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const labelClass = "brand-eyebrow block mb-2";
 const fieldClass =
-  "w-full min-h-[48px] bg-white border border-black/12 rounded-2xl px-4 py-3 text-base text-black placeholder-black/30 focus:outline-none focus:border-black/40 focus:ring-2 focus:ring-black/10 transition-colors";
+  "w-full min-h-[48px] bg-white border border-black/12 rounded-none px-4 py-3 text-base text-black placeholder-black/30 focus:outline-none focus:border-black/40 focus:ring-2 focus:ring-black/10 transition-colors";
 
 export default function ApplicationForm() {
   const [form, setForm] = useState<FormState>(EMPTY);
@@ -109,7 +109,7 @@ export default function ApplicationForm() {
 
   if (status === "success") {
     return (
-      <div className="rounded-[2rem] border border-black/12 bg-white p-8 lg:p-10 text-center">
+      <div className="rounded-none border border-black/12 bg-white p-8 lg:p-10 text-center">
         <p className="brand-eyebrow mb-4">Application received</p>
         <h3 className="brand-h3 mb-3">Check your inbox.</h3>
         <p className="brand-body mx-auto">
@@ -211,7 +211,7 @@ export default function ApplicationForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="brand-btn brand-btn-primary w-full min-h-[52px] text-sm uppercase tracking-[0.15em] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="brand-btn brand-btn-accent w-full min-h-[52px] text-sm uppercase tracking-[0.15em] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "submitting" ? "Submitting..." : "Get team pricing"}
       </button>
