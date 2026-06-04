@@ -48,7 +48,11 @@ export interface B2BTier {
   pricePerBox: number; // ex VAT, GBP
 }
 
-/** Quantity bands apply per product line. Must match the Shopify discounts. */
+/**
+ * Quantity bands apply to the COMBINED box total (Flow + Clear), and the chosen
+ * tier price applies to every box in the order. The Shopify automatic discounts
+ * (SCRUM-1056) must therefore trigger on total cart quantity, not per variant.
+ */
 export const B2B_TIERS: B2BTier[] = [
   { label: "Entry", minBoxes: 1, maxBoxes: 24, pricePerBox: 59 },
   { label: "Squad", minBoxes: 25, maxBoxes: 49, pricePerBox: 52 },

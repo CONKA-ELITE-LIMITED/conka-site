@@ -14,10 +14,12 @@ import {
 import { trackB2BCheckoutStarted } from "@/app/lib/analytics";
 
 /**
- * B2B order builder. Two equal Flow/Clear cards (box image + volume pricing +
- * quantity), and an order summary that hands off to Shopify checkout via
- * /api/b2b/cart. Clinical and sharp, but large and obvious: minimal micro-type.
- * Content-only: the page owns the section wrapper.
+ * B2B order builder. Two compact Flow/Clear cards plus an order summary, laid
+ * out as three columns on desktop so the whole order sits in one eyeline.
+ *
+ * Pricing is driven by the COMBINED box total (Flow + Clear): the tier the total
+ * lands in sets the per-box price for every box. Clinical and sharp, but large
+ * and obvious. Content-only: the page owns the section wrapper.
  */
 
 const ACCENT = "var(--brand-accent)"; // navy #1B2757 under brand-clinical
@@ -30,18 +32,26 @@ export default function B2BOrderBuilder() {
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
+  const totalBoxes = quantities.flow + quantities.clear;
+  const tier = getB2BTier(totalBoxes);
+  const unitPrice = tier.pricePerBox;
+
   const lines = useMemo(
     () =>
       B2B_PRODUCT_ORDER.map((key) => {
         const qty = quantities[key];
-        const tier = getB2BTier(qty);
-        return { key, qty, tier, lineTotal: tier.pricePerBox * qty };
+        return {
+          key,
+          qty,
+          shots: qty * B2B_PRODUCTS[key].shotsPerBox,
+          lineTotal: unitPrice * qty,
+        };
       }).filter((l) => l.qty > 0),
-    [quantities],
+    [quantities, unitPrice],
   );
 
-  const totalBoxes = lines.reduce((sum, l) => sum + l.qty, 0);
-  const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
+  const totalShots = lines.reduce((sum, l) => sum + l.shots, 0);
+  const subtotal = unitPrice * totalBoxes;
   const vat = subtotal * B2B_VAT_RATE;
   const total = subtotal + vat;
 
@@ -84,61 +94,92 @@ export default function B2BOrderBuilder() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Two equal product cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {B2B_PRODUCT_ORDER.map((key) => (
-          <ProductCard
-            key={key}
-            productKey={key}
-            qty={quantities[key]}
-            onQty={(n) => setQty(key, n)}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 items-start">
+      {B2B_PRODUCT_ORDER.map((key) => (
+        <ProductCard
+          key={key}
+          productKey={key}
+          qty={quantities[key]}
+          onQty={(n) => setQty(key, n)}
+        />
+      ))}
 
-      {/* Order summary */}
-      <div className="border border-black/15 bg-white p-6 lg:p-8">
-        <h2 className="text-xl font-semibold tracking-[-0.01em] mb-5">Your order</h2>
+      {/* Summary spans both columns on mobile, sits as the third column on desktop */}
+      <div className="col-span-2 lg:col-span-1 border border-black/15 bg-white p-6">
+        <h2 className="text-xl font-semibold tracking-[-0.01em] mb-4">Your order</h2>
 
-        {lines.length === 0 ? (
-          <p className="text-base text-black/50">
-            Choose your boxes above to build your order.
-          </p>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {lines.map((l) => (
-              <div key={l.key} className="flex items-baseline justify-between gap-4">
-                <span className="text-base">
-                  <span className="font-medium">{B2B_PRODUCTS[l.key].name}</span>
-                  <span className="text-black/50">
-                    {" "}
-                    {l.qty} {l.qty === 1 ? "box" : "boxes"} at {formatPrice(l.tier.pricePerBox)}
-                  </span>
-                </span>
-                <span className="text-base font-medium tabular-nums whitespace-nowrap">
-                  {formatPrice(l.lineTotal)}
+        {/* Volume pricing (combined total) */}
+        <div className="border border-black/12">
+          {B2B_TIERS.map((t, i) => {
+            const isActive = totalBoxes > 0 && t.label === tier.label;
+            const range =
+              t.maxBoxes === null
+                ? `${t.minBoxes}+ boxes`
+                : `${t.minBoxes}-${t.maxBoxes} boxes`;
+            return (
+              <div
+                key={t.label}
+                style={isActive ? { backgroundColor: ACCENT, color: "#fff" } : undefined}
+                className={`flex items-baseline justify-between px-3.5 py-2.5 text-sm ${
+                  i > 0 ? "border-t border-black/12" : ""
+                } ${isActive ? "" : "text-black/70"}`}
+              >
+                <span>{range}</span>
+                <span className="font-semibold tabular-nums">
+                  {formatPrice(t.pricePerBox)}
+                  <span className="font-normal opacity-60"> / box</span>
                 </span>
               </div>
-            ))}
+            );
+          })}
+        </div>
 
-            <div className="border-t border-black/10 mt-1 pt-4 flex flex-col gap-2.5">
-              <SummaryRow label="Subtotal (ex VAT)" value={formatPrice(subtotal)} />
-              <SummaryRow label="VAT (20%)" value={formatPrice(vat)} />
-              <SummaryRow label="Total (inc VAT)" value={formatPrice(total)} strong />
-            </div>
-            <p className="text-sm text-black/55 mt-1">
-              Shipping is calculated at checkout by your delivery address.
+        {/* Line items */}
+        <div className="mt-5">
+          {lines.length === 0 ? (
+            <p className="text-base text-black/50">
+              Choose your boxes to build your order.
             </p>
-          </div>
-        )}
+          ) : (
+            <div className="flex flex-col gap-4">
+              {lines.map((l) => (
+                <div key={l.key} className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-lg font-medium text-black">
+                      {l.qty} &times; {B2B_PRODUCTS[l.key].name}
+                    </p>
+                    <p className="text-sm text-black/50">
+                      {l.shots.toLocaleString()} shots at {formatPrice(unitPrice)}/box
+                    </p>
+                  </div>
+                  <p className="text-lg font-medium tabular-nums whitespace-nowrap">
+                    {formatPrice(l.lineTotal)}
+                  </p>
+                </div>
+              ))}
+
+              <div className="border-t border-black/10 pt-4 flex flex-col gap-2.5">
+                <SummaryRow
+                  label={`${totalBoxes} boxes · ${totalShots.toLocaleString()} shots`}
+                  value=""
+                  muted
+                />
+                <SummaryRow label="Subtotal (ex VAT)" value={formatPrice(subtotal)} />
+                <SummaryRow label="VAT (20%)" value={formatPrice(vat)} />
+                <SummaryRow label="Total (inc VAT)" value={formatPrice(total)} strong />
+              </div>
+              <p className="text-sm text-black/55">
+                Shipping is calculated at checkout by your delivery address.
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* PO number */}
         <div className="mt-6">
           <label className="block">
             <span className="block text-sm font-medium mb-2">
-              PO number{" "}
-              <span className="text-black/40 font-normal">(optional)</span>
+              PO number <span className="text-black/40 font-normal">(optional)</span>
             </span>
             <input
               className="w-full min-h-[52px] bg-white border border-black/20 rounded-none px-4 py-3 text-base text-black placeholder-black/35 focus:outline-none focus:border-black/50 transition-colors"
@@ -193,59 +234,27 @@ function ProductCard({
   onQty: (next: number) => void;
 }) {
   const product = B2B_PRODUCTS[productKey];
-  const activeTier = getB2BTier(qty);
 
   return (
     <div className="border border-black/15 bg-white flex flex-col">
-      {/* Box image */}
       <div className="relative aspect-[3/2] border-b border-black/10">
         <Image
           src={product.image}
           alt={product.imageAlt}
           fill
-          sizes="(max-width: 768px) 100vw, 600px"
+          sizes="(max-width: 1024px) 50vw, 400px"
           className="object-cover"
         />
       </div>
 
-      <div className="p-6 flex flex-col gap-5">
+      <div className="p-4 lg:p-5 flex flex-col gap-3">
         <div>
-          <h3 className="text-2xl font-semibold tracking-[-0.02em]">{product.name}</h3>
-          <p className="text-base text-black/60 mt-1.5">{product.blurb}</p>
-          <p className="text-sm text-black/45 mt-1">{product.shotsPerBox} shots per box</p>
+          <h3 className="text-lg font-semibold tracking-[-0.01em]">{product.name}</h3>
+          <p className="text-sm text-black/50 mt-0.5">
+            {product.blurb}
+          </p>
         </div>
-
-        {/* Volume pricing */}
-        <div className="border border-black/12">
-          {B2B_TIERS.map((tier, i) => {
-            const isActive = qty > 0 && tier.label === activeTier.label;
-            const range =
-              tier.maxBoxes === null
-                ? `${tier.minBoxes}+ boxes`
-                : `${tier.minBoxes}-${tier.maxBoxes} boxes`;
-            return (
-              <div
-                key={tier.label}
-                style={isActive ? { backgroundColor: ACCENT, color: "#fff" } : undefined}
-                className={`flex items-baseline justify-between px-4 py-3 text-base ${
-                  i > 0 ? "border-t border-black/12" : ""
-                } ${isActive ? "" : "text-black/75"}`}
-              >
-                <span>{range}</span>
-                <span className="font-semibold tabular-nums">
-                  {formatPrice(tier.pricePerBox)}
-                  <span className="font-normal opacity-60"> / box</span>
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Quantity */}
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-base font-medium">Boxes</span>
-          <QtyStepper qty={qty} onQty={onQty} label={product.name} />
-        </div>
+        <QtyStepper qty={qty} onQty={onQty} label={product.name} />
       </div>
     </div>
   );
@@ -261,10 +270,10 @@ function QtyStepper({
   label: string;
 }) {
   const btn =
-    "h-12 w-12 flex items-center justify-center border border-black/25 bg-white text-xl leading-none hover:bg-black hover:text-white transition-colors disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black";
+    "h-12 w-12 shrink-0 flex items-center justify-center border border-black/25 bg-white text-xl leading-none hover:bg-black hover:text-white transition-colors disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black";
 
   return (
-    <div className="flex items-stretch">
+    <div className="flex">
       <button
         type="button"
         className={btn}
@@ -282,7 +291,7 @@ function QtyStepper({
         placeholder="0"
         onChange={(e) => onQty(parseInt(e.target.value, 10) || 0)}
         aria-label={`${label} boxes`}
-        className="h-12 w-16 border-y border-black/25 bg-white text-center text-lg tabular-nums focus:outline-none focus:ring-2 focus:ring-black/10"
+        className="h-12 flex-1 min-w-0 border-y border-black/25 bg-white text-center text-lg tabular-nums focus:outline-none focus:ring-2 focus:ring-black/10"
       />
       <button
         type="button"
@@ -300,23 +309,22 @@ function SummaryRow({
   label,
   value,
   strong,
+  muted,
 }: {
   label: string;
   value: string;
   strong?: boolean;
+  muted?: boolean;
 }) {
+  const base = strong
+    ? "text-lg font-semibold"
+    : muted
+      ? "text-sm text-black/50"
+      : "text-base text-black/60";
   return (
     <div className="flex items-baseline justify-between gap-4">
-      <span className={strong ? "text-lg font-semibold" : "text-base text-black/60"}>
-        {label}
-      </span>
-      <span
-        className={`tabular-nums whitespace-nowrap ${
-          strong ? "text-lg font-semibold" : "text-base text-black/60"
-        }`}
-      >
-        {value}
-      </span>
+      <span className={base}>{label}</span>
+      {value && <span className={`tabular-nums whitespace-nowrap ${base}`}>{value}</span>}
     </div>
   );
 }
