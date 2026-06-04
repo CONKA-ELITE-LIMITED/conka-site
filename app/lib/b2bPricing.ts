@@ -71,7 +71,3 @@ export function getB2BTier(boxes: number): B2BTier {
   }
   return B2B_TIERS[0];
 }
-
-export function perShotPrice(pricePerBox: number, shotsPerBox: number): number {
-  return pricePerBox / shotsPerBox;
-}
