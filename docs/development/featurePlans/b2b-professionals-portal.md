@@ -44,7 +44,7 @@ brand-base (new tokens). These are net-new pages.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Public landing + enquiry form | Not Started |
+| 1 | Public landing + enquiry form | In Review (built, SCRUM-1055) |
 | 2a | Shopify B2B product + discount setup (reuse legacy products) | Not Started |
 | 2b | Unlisted order page + card checkout (Buy now) | Not Started |
 | 3 | Pay-by-invoice path | Not Started |
