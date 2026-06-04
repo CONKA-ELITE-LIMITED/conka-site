@@ -16,6 +16,8 @@ export interface B2BProductDisplay {
   name: string;
   shotsPerBox: number;
   blurb: string;
+  image: string;
+  imageAlt: string;
 }
 
 export const B2B_PRODUCTS: Record<B2BProductKey, B2BProductDisplay> = {
@@ -24,12 +26,16 @@ export const B2B_PRODUCTS: Record<B2BProductKey, B2BProductDisplay> = {
     name: "CONKA Flow",
     shotsPerBox: 28,
     blurb: "Morning focus and drive for the whole squad.",
+    image: "/formulas/box/FlowBox.jpg",
+    imageAlt: "A box of CONKA Flow next to a single shot bottle",
   },
   clear: {
     key: "clear",
     name: "CONKA Clear",
     shotsPerBox: 28,
     blurb: "Afternoon clarity and calm under load.",
+    image: "/formulas/box/ClearBox.jpg",
+    imageAlt: "A box of CONKA Clear next to a single shot bottle",
   },
 };
 

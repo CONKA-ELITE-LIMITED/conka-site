@@ -24,12 +24,17 @@ export default function ProfessionalsOrderPage() {
         aria-label="Team order"
       >
         <div className="brand-track">
-          <p className="brand-eyebrow mb-4">{"// Team pricing"}</p>
+          <p
+            className="text-sm font-medium mb-3"
+            style={{ color: "var(--brand-accent)" }}
+          >
+            Team &amp; club pricing
+          </p>
           <h1 className="brand-h1 max-w-[20ch]">Build your team order.</h1>
-          <p className="brand-body mt-6">
+          <p className="text-lg text-black/70 leading-relaxed max-w-[58ch] mt-6">
             Choose Flow, Clear, or both. Your per-box price drops automatically as
-            the quantity grows. Prices shown exclude VAT, which is added with
-            shipping at checkout. Add a PO number if your finance team needs one.
+            the quantity grows. Prices exclude VAT, which is added with shipping at
+            checkout. Add a PO number if your finance team needs one.
           </p>
         </div>
       </section>
