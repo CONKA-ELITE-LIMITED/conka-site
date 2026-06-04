@@ -314,6 +314,22 @@ export function trackB2BApplicationSubmitted(params: {
   });
 }
 
+/**
+ * Track a B2B order heading to Shopify checkout.
+ * Fires when "Buy now" successfully creates a cart on the order page.
+ */
+export function trackB2BCheckoutStarted(params: {
+  totalBoxes: number;
+  subtotalExVat: number;
+  hasPO: boolean;
+}): void {
+  safeTrack("b2b_checkout_started", {
+    totalBoxes: params.totalBoxes,
+    subtotalExVat: params.subtotalExVat,
+    hasPO: params.hasPO,
+  });
+}
+
 // ===== PURCHASE INTENT TRACKING =====
 
 /**
