@@ -59,6 +59,12 @@ const MENU_GROUPS: { title: string; links: { label: string; href: string }[] }[]
     title: "Technology",
     links: [{ label: "CONKA App", href: "/app" }],
   },
+  // TEMP (SCRUM-1057): dev access to the unlisted B2B order page.
+  // Remove before launch - the order page must not be linked from nav.
+  {
+    title: "Teams (TEMP)",
+    links: [{ label: "Team order page", href: "/professionals/order" }],
+  },
 ];
 
 export default function NavigationMobile({
