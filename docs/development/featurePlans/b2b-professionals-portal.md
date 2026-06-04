@@ -47,7 +47,7 @@ brand-base, scoped under `.brand-clinical` (zero-radius tokens plus the navy `#1
 | 1 | Public landing + enquiry form | Done (SCRUM-1055, merged PR #279) |
 | 2a | Shopify B2B product + discount setup (reuse legacy products) | Not Started |
 | 2b | Unlisted order page + card checkout (Buy now) | In Review (SCRUM-1057) |
-| 3 | Pay-by-invoice path | Not Started |
+| 3 | Pay-by-invoice path | In Review (SCRUM-1058) |
 
 All phases are active. Phase 3 (pay by invoice) is the business priority but builds on the Phase 2b order page, so it sequences after it.
 
@@ -122,7 +122,7 @@ Created in Sprint 26, assigned to Rudh.
 | SCRUM-1055 | B2B portal Phase 1: public /professionals landing + enquiry form | 1 | Story | Done (merged) |
 | SCRUM-1056 | B2B portal Phase 2a: Shopify B2B products + quantity-break discounts | 2a | Task | To Do |
 | SCRUM-1057 | B2B portal Phase 2b: unlisted /professionals/order page + card checkout | 2b | Story | For review |
-| SCRUM-1058 | B2B portal Phase 3: pay-by-invoice path (Shopify draft order + Xero) | 3 | Story | To Do |
+| SCRUM-1058 | B2B portal Phase 3: pay-by-invoice path (Shopify draft order + Xero) | 3 | Story | For review |
 
 Dependencies: SCRUM-1056 blocks SCRUM-1057, which blocks SCRUM-1058. SCRUM-1055 is independent and can ship first.
 
@@ -155,6 +155,22 @@ What actually shipped, and where it diverged from the plan above. Read this befo
   - **Pay-by-invoice** is not on this page yet (Phase 3 / SCRUM-1058). An interim "pay by invoice or on account -> email Harry" mailto link sits under Buy now.
   - Temporary nav links were added during dev for access and then removed before review (AC1: the order page is not linked from nav).
 
+### Phase 3 (SCRUM-1058) - In review
+
+- **Pay-by-invoice path on `/professionals/order`**. The order page now offers two equal CTAs: **Buy now** (card, unchanged) and **Pay by invoice**. Reuses the existing PO field and adds one **Finance email** field. No second form.
+- **`app/lib/shopifyAdmin.ts`** - first **Admin API** helper for CONKA (the existing `app/lib/shopify.ts` is Storefront-only). `adminGraphql()` POSTs to `/admin/api/2025-10/graphql.json` with the `X-Shopify-Access-Token` header; `isAdminApiConfigured()` guards on the token.
+- **`POST /api/b2b/invoice-order`** - `draftOrderCreate` (Flow/Clear variant line items + an order-level FIXED_AMOUNT discount) then `draftOrderInvoiceSend`. Shopify emails the invoice to the finance address. Code stops there; Harry marks paid manually and the Xero connector books it. No Xero API integration built.
+- **Analytics:** `b2b_invoice_requested` (total boxes, ex-VAT subtotal, has-PO).
+- **Confirmed decisions (Rudh, this build):**
+  - **Invoice available on all orders**, not gated to 25+ boxes.
+  - **Card allowed on the invoice** (not bank-transfer-only), so the buyer enters their delivery address in Shopify's hosted pay-link and we do **not** collect an address in our form. Keeps the form lean (PO + finance email only).
+  - **Confirmation copy:** "Invoice on its way." naming the finance email, reserved-then-ship-on-payment framing.
+- **Key implementation notes / deviations:**
+  - **Price is set on the draft order, not via Shopify discounts.** Line items carry the B2B variant at its base entry rate (GBP 59 ex VAT); an order-level FIXED_AMOUNT discount of `(59 - tierPrice) x totalBoxes` brings the ex-VAT subtotal to the exact combined-total tier price. So this path needs **no** Shopify automatic-discount config (unlike the card path). Depends on the B2B variants being priced at GBP 59 ex VAT.
+  - **Verified live:** a 50-box draft (30 Flow + 20 Clear) created via the exact mutation totalled GBP 2,250.00 ex VAT (= 45 x 50), confirming both the discount math and the GBP 59 base-price assumption. Test draft was deleted; no invoice email sent.
+  - **Token via a new Dev Dashboard custom-distribution app** ("CONKA B2B Invoicing"), legacy install flow, offline (non-expiring) token. Shopify retired one-click legacy custom-app creation on 1 Jan 2026, so the token was minted via a one-time OAuth authorization-code handshake. Scopes granted: `write_draft_orders` (includes read), `write_customers`.
+  - Reuses the same server-side `B2B_FLOW_VARIANT_ID` / `B2B_CLEAR_VARIANT_ID` env vars as the card path. Returns a 503 "not available yet" if the Admin token or variant GIDs are unset, same graceful-degradation pattern as `/api/b2b/cart`.
+
 ### Environment variables introduced
 
 | Var | Phase | Purpose |
@@ -162,6 +178,7 @@ What actually shipped, and where it diverged from the plan above. Read this befo
 | `KLAVIYO_B2B_LIST_ID` | 1 | The Klaviyo B2B Leads list the applicant is added to. |
 | `B2B_FLOW_VARIANT_ID` | 2b | Shopify variant GID for the Flow B2B box. Set after SCRUM-1056. |
 | `B2B_CLEAR_VARIANT_ID` | 2b | Shopify variant GID for the Clear B2B box. Set after SCRUM-1056. |
+| `SHOPIFY_ADMIN_API_TOKEN` | 3 | Secret. Static offline Admin API token used by `/api/b2b/invoice-order` to create draft orders + send invoices. Server-only, never `NEXT_PUBLIC_`. In `.env.local` + Vercel (Production + Preview). |
 
 (Reuses existing `NEXT_PUBLIC_SITE_URL`, `KLAVIYO_PRIVATE_KEY`, `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY`.)
 
@@ -169,4 +186,4 @@ What actually shipped, and where it diverged from the plan above. Read this befo
 
 - **SCRUM-1056:** create/rename the B2B products + the total-quantity automatic discounts, then set `B2B_FLOW_VARIANT_ID` / `B2B_CLEAR_VARIANT_ID`. Lights up Buy now.
 - **Phase 1 emails:** create the Klaviyo B2B Leads list + the two flows, set `KLAVIYO_B2B_LIST_ID`.
-- **SCRUM-1058:** pay-by-invoice path.
+- **SCRUM-1058:** pay-by-invoice path - built and live-tested (in review). Remaining external setup: confirm the Shopify-to-Xero connector books a marked-paid B2B order into a compliant Xero invoice (manual verify, no code).
