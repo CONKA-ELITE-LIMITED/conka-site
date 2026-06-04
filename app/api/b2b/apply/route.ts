@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { submitB2BApplication } from "@/app/lib/b2bEmail";
 import { B2B_SPORTS, B2B_SQUAD_SIZES } from "@/app/lib/b2bData";
+import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 
 export const runtime = "nodejs";
 
@@ -37,26 +38,10 @@ const applicationSchema = z.object({
 
 // Light in-memory rate limit. Adequate as a spam speed-bump alongside the
 // honeypot; not a hard guarantee across serverless instances.
-const RATE_LIMIT = { max: 5, windowMs: 10 * 60 * 1000 };
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT.windowMs);
-  recent.push(now);
-  hits.set(ip, recent);
-  // Opportunistic cleanup so the map cannot grow unbounded across many IPs.
-  if (hits.size > 5000) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= RATE_LIMIT.windowMs)) hits.delete(key);
-    }
-  }
-  return recent.length > RATE_LIMIT.max;
-}
+const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
 
 export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const ip = getClientIp(request);
 
   if (isRateLimited(ip)) {
     return NextResponse.json(

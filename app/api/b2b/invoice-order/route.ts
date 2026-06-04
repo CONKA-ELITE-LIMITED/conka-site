@@ -24,8 +24,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { adminGraphql, isAdminApiConfigured } from "@/app/lib/shopifyAdmin";
 import { B2B_TIERS, getB2BTier } from "@/app/lib/b2bPricing";
+import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 
 export const runtime = "nodejs";
+
+// This route creates persistent draft orders and emails an invoice to a
+// caller-supplied address, so it is a heavier abuse target than the cart route.
+// Light per-IP limit as a speed-bump against draft-order spam / email misuse.
+const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
 
 // Server-side B2B variant GIDs, shared with the card path (app/api/b2b/cart).
 // Populated once the B2B products exist (SCRUM-1056). Not exposed to the client.
@@ -100,6 +106,13 @@ const DRAFT_ORDER_INVOICE_SEND = `
 `;
 
 export async function POST(request: NextRequest) {
+  if (isRateLimited(getClientIp(request))) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 },
+    );
+  }
+
   let parsed: z.infer<typeof schema>;
   try {
     const body = await request.json();

@@ -159,7 +159,8 @@ What actually shipped, and where it diverged from the plan above. Read this befo
 
 - **Pay-by-invoice path on `/professionals/order`**. The order page now offers two equal CTAs: **Buy now** (card, unchanged) and **Pay by invoice**. Reuses the existing PO field and adds one **Finance email** field. No second form.
 - **`app/lib/shopifyAdmin.ts`** - first **Admin API** helper for CONKA (the existing `app/lib/shopify.ts` is Storefront-only). `adminGraphql()` POSTs to `/admin/api/2025-10/graphql.json` with the `X-Shopify-Access-Token` header; `isAdminApiConfigured()` guards on the token.
-- **`POST /api/b2b/invoice-order`** - `draftOrderCreate` (Flow/Clear variant line items + an order-level FIXED_AMOUNT discount) then `draftOrderInvoiceSend`. Shopify emails the invoice to the finance address. Code stops there; Harry marks paid manually and the Xero connector books it. No Xero API integration built.
+- **`POST /api/b2b/invoice-order`** - `draftOrderCreate` (Flow/Clear variant line items + an order-level FIXED_AMOUNT discount) then `draftOrderInvoiceSend`. Shopify emails the invoice to the finance address. Code stops there; Harry marks paid manually and the Xero connector books it. No Xero API integration built. Light per-IP rate limit (5 / 10 min) because the route creates persistent draft orders and emails a caller-supplied address (abuse guard).
+- **`app/lib/rateLimit.ts`** - shared in-memory per-IP limiter (`createRateLimiter` + `getClientIp`), extracted from the Phase 1 apply route during the SCRUM-1058 code review so both routes share one implementation.
 - **Analytics:** `b2b_invoice_requested` (total boxes, ex-VAT subtotal, has-PO).
 - **Confirmed decisions (Rudh, this build):**
   - **Invoice available on all orders**, not gated to 25+ boxes.
