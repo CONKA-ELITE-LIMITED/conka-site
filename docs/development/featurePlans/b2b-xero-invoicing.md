@@ -77,10 +77,12 @@ Not code. Whoever owns the Xero books (Harry has access; the chart of accounts /
 
 ## Phase 3 (pilot + verify, the de-risk gate)
 
-Run one real paid B2B order end to end and confirm:
-- Exactly one Xero invoice is created (no duplicate from the draft-order conversion).
-- The invoice carries the correct line items, GBP amounts, and 20% VAT.
-- The PO appears in the Xero invoice Reference.
+Run one real order through **each path** (one pay-by-invoice, one card "Buy now") end to end and confirm:
+- Exactly one Xero invoice per order (no duplicate from the draft-order conversion).
+- The invoice carries the correct line items, GBP amounts, and 20% VAT (gross GBP 70.80 split to 59 net + 11.80 VAT via Parex inclusive).
+- The PO appears in the Xero invoice Reference (for the card order, confirm the Shopify Flow rule tagged it and carried the PO into the note — go-live checklist step 4).
+- The Xero VAT invoice is emailed to the club (go-live checklist step 5).
+- The payment reconciles for each route: invoice order = bank transfer into Revolut; card order = card / Shopify Payments settlement (confirm Parex reconciles this, since the Payment Deposit setting assumes the Revolut transfer).
 - No DTC orders were touched.
 - The marked-paid order also routed to Synergy (SCRUM-1058 AC5, adjacent check).
 
@@ -121,16 +123,42 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 - **B2B-only filter: requested from Parex support, NOT yet confirmed active.** Do not run a sync until they confirm (else DTC orders would sync). Example order given: #3503.
 - **Outstanding before the pilot:** Parex confirms the filter, then run one real B2B order through and check Xero (one invoice, B2B Sales, PO in Reference). PO-into-note is already verified to carry through.
 
-## Open questions
+## B2B VAT — pricing decided, mechanism recommended (5 June 2026)
 
-- **B2B VAT is a real Shopify-tax-setup workstream (needs Humphrey / accountant), separate from and bigger than Xero.** Corrected understanding (5 June 2026):
-  - **Pricing decided (Harry, 5 June 2026):** B2B prices are **ex-VAT**, same across all three tiers. A club pays the box price + 20% (e.g. GBP 59 + 11.80 = 70.80) at checkout and reclaims the VAT (just noise to them). The order page's GBP 70.80 display is therefore correct. Set Xero up to match (ex-VAT + 20%).
-  - **The VAT must be on the Shopify order, NOT added in the connector.** The club pays through Shopify, so the order is what they are charged and invoiced. Parex only **mirrors** the order's tax (it does not invent VAT the order did not charge). Adding VAT only in Parex would mean the club is billed GBP 59 while Xero says 70.80, declaring VAT never collected. Not allowed.
-  - **The blocker:** the store currently collects **no** VAT in Shopify for any product (UK "Collecting -"; prices are VAT-inclusive and VAT is handled in accounting). So getting 20% onto a B2B order is a proper Shopify VAT-setup job: enable UK VAT collection and configure B2B as ex-VAT (added on top) **without** disrupting DTC's VAT-inclusive pricing (turning collection on changes how DTC VAT is broken out, hence accountant sign-off). May need Shopify B2B/Markets tax features. Ticking "charge tax on the variant" alone is NOT the lever.
-  - Does **not** block verifying the Parex sync mechanics (one invoice, B2B Sales account, PO in Reference) on a current zero-VAT order; the VAT just needs solving before go-live. Owner: Rudh + Humphrey / accountant.
+- **Pricing decided (Harry, 5 June 2026):** B2B prices are **ex-VAT**, same logic across all three tiers. A club pays the box price + 20% at checkout (Entry GBP 59 -> 70.80, Squad 52 -> 62.40, Institutional 45 -> 54.00) and reclaims the VAT (just noise to them). The order page's net + VAT + gross display is therefore correct and needs no change. Xero must show the same ex-VAT split (net line + 20% VAT).
+- **Non-negotiable:** the club must actually be **charged the gross** (e.g. 70.80) in Shopify, and Parex must treat the amount as **VAT-inclusive** (gross / 1.2 -> net + 20% VAT), never exclusive. Exclusive would invoice more in Xero than the cash collected and break the bank-rec / declare uncollected VAT.
+- **The defect this exposes:** the B2B variants are currently priced at the **net** (GBP 59) and both checkout paths charge that, so the club is *shown* 70.80 but *charged* 59. A Shopify discount can only reduce a price, so the fix is to make the Shopify price the **gross**. See the "Layer" breakdown below.
+
+**Two mechanism roads (needs Humphrey / accountant sign-off on which):**
+
+- **Road A (recommended) — leave Shopify VAT collection off; price the B2B variant at the gross; Parex "inclusive" derives the VAT.** Zero DTC impact, fast, and consistent with the store's existing model (Shopify computes no VAT on any product; the accounting layer / Xero handles it). The legal VAT document is the Xero invoice, which is correct, and the club sees the net + VAT split on the order page before paying. This is what the layers below assume.
+- **Road B — turn on Shopify UK VAT collection** so Shopify itemises VAT at checkout and Parex just mirrors it. Shopify-standard and "purest" at the point of sale, but a bigger change that alters DTC tax reporting (the store currently shows UK "Collecting -") and so needs accountant sign-off. Avoided unless Humphrey wants Shopify itself to compute the VAT.
+
+**Road A implementation — three layers:**
+
+1. **Shopify config (Harry, not code):** set both B2B variant prices (Flow + Clear) to the **gross Entry rate GBP 70.80**; reconfigure the SCRUM-1056 automatic quantity-break discounts to land on the **gross** tier prices **62.40** (25+) and **54.00** (50+), not the old net 52/45. Do **not** enable Shopify VAT on the variants (blocked by the non-collecting UK setting and would touch DTC).
+2. **Code (one contained change):** `app/api/b2b/invoice-order/route.ts` discounts down from the variant base to the tier price in **net** terms (`B2B_ENTRY_PRICE = 59`, `tier.pricePerBox`). Once the variant is the gross 70.80, Entry comes out right but Squad/Institutional land GBP 1.40 / 2.80 per box too high (VAT charged on the discount). Fix: compute the base and tier targets in **gross** (`pricePerBox * (1 + B2B_VAT_RATE)`). Must land **together with** the variant reprice — shipping it against the live 59 variant would make tiers 2-3 wrong.
+3. **Parex / Xero config:** Sales Tax Code = 20% VAT on Income, treatment = **inclusive**. Shopify sends 70.80 as a single gross with no VAT line; inclusive makes Parex book 59 net + 11.80 VAT = 70.80, reconciling against the Revolut deposit.
+
+- Resolving VAT does **not** block verifying the Parex sync mechanics (one invoice, B2B Sales account, PO in Reference) on a current zero-VAT order; but the gross reprice + code change + Parex inclusive must all be in place before B2B go-live, or the club is undercharged. Owner: Rudh + Humphrey / accountant.
+
+## Go-live checklist (agreed 5 June 2026)
+
+The full set of actions to get both B2B paths invoicing correctly into Xero. Card and pay-by-invoice orders both produce a Xero VAT invoice; the fast card purchase is not blocked. Pending Humphrey confirming Road A (above).
+
+1. **Reprice the boxes to gross (Shopify, Harry).** Set both B2B variants (Flow + Clear) to **GBP 70.80** (gross Entry rate), and reconfigure the SCRUM-1056 automatic quantity-break discounts to the gross tier prices **62.40** (25+) / **54.00** (50+). This is what makes Shopify actually collect the VAT-inclusive amount on both paths — Shopify will not add VAT itself.
+2. **Invoice-route code change (code, Rudh) — lands together with step 1.** Make `app/api/b2b/invoice-order/route.ts` compute the tier discount in **gross** terms (`pricePerBox * (1 + B2B_VAT_RATE)`), so Squad/Institutional draft orders match the gross tier price instead of landing GBP 1.40 / 2.80 too high. Do not ship before the reprice.
+3. **Parex tax treatment (Parex, Harry).** Sales Tax Code = 20% VAT on Income, treatment = **inclusive** (never exclusive). Parex splits the GBP 70.80 gross into 59 net + 11.80 VAT on the Xero invoice.
+4. **Card path into scope via a Shopify Flow rule (Shopify Flow, no website code).** The card path builds the order through the Storefront cart API, which **cannot set order tags or the note** — it only attaches cart *attributes* (`Order Type`, PO). So add a Flow rule: *on order created, if `Order Type = B2B Professionals`, add the `B2B Professionals` tag and copy the PO attribute into the order note*. This puts instant-card B2B orders into Parex's tag scope with the PO attached, exactly like the pay-by-invoice path. Without this, card orders either do not sync or sync without the PO.
+5. **Email the Xero VAT invoice to the club (Xero/Parex config).** Neither Shopify surface (card checkout, hosted draft invoice) itemises VAT — the compliant VAT invoice is the **Xero** one. Set Xero (or Parex) to auto-email B2B Sales invoices to the order contact so the club receives their VAT document for reclaim. Without this the buyer pays but has no VAT invoice in hand.
+6. **Parex B2B-only tag filter confirmed (Parex support).** Still pending. No sync runs until confirmed (else DTC orders sync into Xero). Example order given: #3503.
+7. **Disconnect any legacy / native Shopify-to-Xero connector** before enabling auto-sync, to avoid duplicate invoices.
+8. **Sequencing:** keep **Always Manual Sync ON** until the pilot (Phase 3) passes on both an invoice order and a card order; only then enable auto-sync.
+
+## Other open questions
 - Connector pricing: confirm whether Parex's monthly order limit counts all store orders or only synced (B2B) orders. Asked Parex; awaiting reply.
 - Who owns the Xero chart of accounts / VAT settings (confirmed: Humphrey owns Xero).
-- **Card-path (Buy now) B2B orders and Xero.** Phase 1 puts the PO into the order note/tag only on the pay-by-invoice path. The card path (`app/api/b2b/cart`) carries the PO and `Order Type` as cart **attributes**, not order **tags** or the **note** (the Storefront cart API cannot set tags). So if the connector is scoped to the `B2B Professionals` tag and maps the Reference from note/tag, card-path B2B orders will not sync, or will sync without the PO. Decide in Phase 2 whether instant-card B2B orders need their own Xero invoice (if so, tag + PO can be added Shopify-side via a Flow rule on the `Order Type` attribute, no website code), or whether they are fine via the bank feed like DTC.
+- **Card-path (Buy now) B2B orders and Xero — RESOLVED (5 June 2026).** Decided: instant-card B2B orders **do** get their own Xero invoice (we do not suspend the fast purchase). The card path carries the PO and `Order Type` as cart **attributes** only (the Storefront cart API cannot set tags or the note), so a **Shopify Flow rule** adds the `B2B Professionals` tag and copies the PO into the order note on order creation, bringing card orders into Parex scope with the PO attached. No website code. See go-live checklist step 4.
 
 ## References
 

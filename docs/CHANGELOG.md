@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-05 -- B2B Xero VAT model and go-live checklist agreed
+
+Locked how the 20% VAT lands on B2B orders and invoices, and captured it as a single go-live checklist in the plan doc. Decision (Harry): B2B prices are ex-VAT, so the club pays the box price plus 20% and reclaims it. Reading the code surfaced that the B2B variants are priced at the net (59), so both checkout paths currently undercharge (the page promises 70.80 but Shopify charges 59); the fix is to reprice the variants to the gross and let Parex split out the VAT on the Xero invoice (inclusive treatment), with no change to the DTC flow and pending accountant sign-off. Also resolved that instant card "Buy now" orders get their own Xero invoice too, via a Shopify Flow rule that tags the order and carries the PO into the note (the Storefront cart API cannot set tags), so fast purchases are not suspended. The compliant VAT invoice is the Xero one, which must be emailed to the club. Pilot now covers both paths. No website code in this change.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md`
+
 ### 2026-06-05 -- B2B Xero invoicing plan (Shopify-to-Xero connector)
 
 Scoped how paid B2B orders will book into Xero as compliant VAT invoices via an off-the-shelf connector (closing SCRUM-1058 AC6), no bespoke Xero API build. Plan captures the connector comparison (Parex vs the official Amaka integration vs others), the gating risk that our draft-order flow may clash with connectors that do not support draft orders, the one support question that decides the connector, and a three-phase shape: a small additive website change (PO into a connector-readable field), a Xero-side config step owned by whoever manages the books, and a pilot order to verify before anything is locked. Phase 1 code shipped: the B2B invoice-order route now writes the PO into the Shopify order note (verbatim, the clean Xero-Reference carrier) and a comma-sanitized tag, additively, keeping the existing custom attribute. Live-verified against Shopify. Connector setup and pilot remain (owned by whoever manages Xero).
