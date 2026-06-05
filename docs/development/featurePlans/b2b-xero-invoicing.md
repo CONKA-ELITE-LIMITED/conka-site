@@ -2,7 +2,24 @@
 
 Get paid B2B orders into Xero automatically as compliant UK VAT invoices, carrying the club's PO as the invoice reference. Closes SCRUM-1058 AC6. Uses an off-the-shelf Shopify-to-Xero connector, no bespoke Xero API build. Sits downstream of the pay-by-invoice path shipped in SCRUM-1058.
 
-See also: `docs/development/featurePlans/b2b-professionals-portal.md` (the portal this completes).
+See also: `docs/development/featurePlans/b2b-professionals-portal.md` (the portal this completes). VAT decision rationale: `b2b-vat-decision.md`.
+
+## Resume here — next steps (Monday 8 June 2026)
+
+**Where we left off (Fri 5 June):** Invoice-route gross-pricing code DONE (commit 027374c5). Shopify B2B variant base price reset to £70.80 DONE. Parex tax settings + Shopify tax-inclusive flag VERIFIED. VAT approach DECIDED and recorded (`b2b-vat-decision.md`). A fresh Parex support request (tag filter + draft-order handling + VAT-inclusive behaviour) was submitted via the contact form. Nothing is live (whole portal sits on `B2B-PORTAL-FEATURE`).
+
+**Do Monday — no dependency, can run in parallel (all dashboard config, no code):**
+1. **Shopify: finish the discounts.** Set the SCRUM-1056 automatic quantity-break discounts to land on **£62.40** (25–49 boxes) and **£54.00** (50+). The £70.80 base is done; these are the missing half, and the card "Buy now" path is mispriced for tiers 2–3 until they are set.
+2. **Shopify Flow: build the card-path tagging rule.** Trigger `Order created`; condition custom attribute `Order Type` = `B2B Professionals`; action add tag `B2B Professionals`; action add a PO tag from the `PO Number` attribute via Liquid (`{% assign po = order.customAttributes | where: "key", "PO Number" | first %}{% if po %}PO {{ po.value | replace: ",", " " }}{% endif %}`). Full spec in "Go-live checklist" step 4 below.
+3. **Xero/Parex: email the invoice.** Set Xero (or Parex) to email the B2B Sales invoice to the order contact, so the club gets its VAT document. Check the invoice branding/template.
+4. **Parex: re-confirm "Always Manual Sync" is still ticked.** Parex auto-enables Auto Sync 7 days after install; do not let it flip on before the tag filter is confirmed.
+5. **(Optional) Local price-check.** Run `POST /api/b2b/invoice-order` locally (needs the Admin API token + B2B variant IDs in env) to create a test draft order at each tier, confirm totals are £70.80 / £62.40 / £54.00, then delete the test drafts. Proves the gross pricing on real Shopify before the Parex pilot.
+
+**Blocked on Parex support's reply (the only true blocker):**
+6. **When Parex confirms the `B2B Professionals` tag filter is active**, run the **pilot** (one pay-by-invoice order AND one card order) per the Phase 3 checklist: exactly one Xero invoice each, **net £59 + VAT £11.80 = £70.80** (inclusive split, not added on top, not £0 VAT), PO in the invoice Reference, no DTC order touched, invoice emailed to the club. Keep Always Manual Sync ON until the pilot passes. If Parex has not replied by Monday, chase the contact request.
+
+**After the pilot passes:**
+7. Enable auto-sync (untick Always Manual Sync / turn Auto Sync on). The feature is then launch-ready and ships when `B2B-PORTAL-FEATURE` merges. Brief Humphrey from `b2b-vat-decision.md` (non-blocking).
 
 ## Problem
 
