@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-05 -- B2B pay-by-invoice priced at the gross (VAT-inclusive) amount
+
+Road A locked: B2B products get repriced to the gross VAT-inclusive amount in Shopify rather than turning on Shopify VAT collection (which would have put every DTC order's tax reporting at risk for no extra benefit). The pay-by-invoice route now computes its tier discount in gross terms via a new getB2BGrossPerBox helper, so the draft order total is what the club actually pays (Entry 70.80, Squad 62.40, Institutional 54.00 per box), and Parex splits the gross into net plus 20% VAT on the Xero invoice. This must merge to production in lockstep with the matching Shopify variant reprice to 70.80 and the gross auto-discount reconfiguration, or the draft totals will not match the variant base. The order-page display is unchanged (it already shows net plus VAT).
+
+**Modified:** `app/api/b2b/invoice-order/route.ts`, `app/lib/b2bPricing.ts`, `docs/development/featurePlans/b2b-xero-invoicing.md`
+
 ### 2026-06-05 -- B2B Xero VAT model and go-live checklist agreed
 
 Locked how the 20% VAT lands on B2B orders and invoices, and captured it as a single go-live checklist in the plan doc. Decision (Harry): B2B prices are ex-VAT, so the club pays the box price plus 20% and reclaims it. Reading the code surfaced that the B2B variants are priced at the net (59), so both checkout paths currently undercharge (the page promises 70.80 but Shopify charges 59); the fix is to reprice the variants to the gross and let Parex split out the VAT on the Xero invoice (inclusive treatment), with no change to the DTC flow and pending accountant sign-off. Also resolved that instant card "Buy now" orders get their own Xero invoice too, via a Shopify Flow rule that tags the order and carries the PO into the note (the Storefront cart API cannot set tags), so fast purchases are not suspended. The compliant VAT invoice is the Xero one, which must be emailed to the club. Pilot now covers both paths. No website code in this change.

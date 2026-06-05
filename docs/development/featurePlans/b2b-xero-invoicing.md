@@ -123,18 +123,19 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 - **B2B-only filter: requested from Parex support, NOT yet confirmed active.** Do not run a sync until they confirm (else DTC orders would sync). Example order given: #3503.
 - **Outstanding before the pilot:** Parex confirms the filter, then run one real B2B order through and check Xero (one invoice, B2B Sales, PO in Reference). PO-into-note is already verified to carry through.
 
-## B2B VAT — pricing decided, mechanism recommended (5 June 2026)
+## B2B VAT — pricing and mechanism DECIDED (5 June 2026)
 
 - **Pricing decided (Harry, 5 June 2026):** B2B prices are **ex-VAT**, same logic across all three tiers. A club pays the box price + 20% at checkout (Entry GBP 59 -> 70.80, Squad 52 -> 62.40, Institutional 45 -> 54.00) and reclaims the VAT (just noise to them). The order page's net + VAT + gross display is therefore correct and needs no change. Xero must show the same ex-VAT split (net line + 20% VAT).
 - **Non-negotiable:** the club must actually be **charged the gross** (e.g. 70.80) in Shopify, and Parex must treat the amount as **VAT-inclusive** (gross / 1.2 -> net + 20% VAT), never exclusive. Exclusive would invoice more in Xero than the cash collected and break the bank-rec / declare uncollected VAT.
 - **The defect this exposes:** the B2B variants are currently priced at the **net** (GBP 59) and both checkout paths charge that, so the club is *shown* 70.80 but *charged* 59. A Shopify discount can only reduce a price, so the fix is to make the Shopify price the **gross**. See the "Layer" breakdown below.
 
-**Two mechanism roads (needs Humphrey / accountant sign-off on which):**
+**Mechanism DECIDED (Rudh, 5 June 2026): Road A — reprice the B2B products, leave Shopify VAT alone.**
 
-- **Road A (recommended) — leave Shopify VAT collection off; price the B2B variant at the gross; Parex "inclusive" derives the VAT.** Zero DTC impact, fast, and consistent with the store's existing model (Shopify computes no VAT on any product; the accounting layer / Xero handles it). The legal VAT document is the Xero invoice, which is correct, and the club sees the net + VAT split on the order page before paying. This is what the layers below assume.
-- **Road B — turn on Shopify UK VAT collection** so Shopify itemises VAT at checkout and Parex just mirrors it. Shopify-standard and "purest" at the point of sale, but a bigger change that alters DTC tax reporting (the store currently shows UK "Collecting -") and so needs accountant sign-off. Avoided unless Humphrey wants Shopify itself to compute the VAT.
+- **Road A (CHOSEN) — leave Shopify VAT collection off; price the B2B variant at the gross; Parex "inclusive" derives the VAT.** Zero DTC impact, fast, and consistent with the store's existing model (Shopify computes no VAT on any product; the accounting layer / Xero handles it). The legal VAT document is the Xero invoice, which is correct, and the club sees the net + VAT split on the order page before paying. This is what the layers below implement.
+- **Road B (REJECTED) — turn on Shopify UK VAT collection** so Shopify itemises VAT at checkout and Parex just mirrors it. Rejected: it alters DTC tax reporting (the store currently shows UK "Collecting -"), needs the accountant to re-verify the whole store, and takes longer for no extra benefit over Road A. The compliant VAT invoice is the Xero one either way.
+- **Still needs Humphrey/accountant to bless the VAT-accounting treatment** (that the Xero-issued invoice is the compliant VAT document for a B2B sale where Shopify itself shows no VAT line). This is a sign-off on correctness, not a mechanism choice — the mechanism is locked.
 
-**Road A implementation — three layers:**
+**Implementation — three layers:**
 
 1. **Shopify config (Harry, not code):** set both B2B variant prices (Flow + Clear) to the **gross Entry rate GBP 70.80**; reconfigure the SCRUM-1056 automatic quantity-break discounts to land on the **gross** tier prices **62.40** (25+) and **54.00** (50+), not the old net 52/45. Do **not** enable Shopify VAT on the variants (blocked by the non-collecting UK setting and would touch DTC).
 2. **Code (one contained change):** `app/api/b2b/invoice-order/route.ts` discounts down from the variant base to the tier price in **net** terms (`B2B_ENTRY_PRICE = 59`, `tier.pricePerBox`). Once the variant is the gross 70.80, Entry comes out right but Squad/Institutional land GBP 1.40 / 2.80 per box too high (VAT charged on the discount). Fix: compute the base and tier targets in **gross** (`pricePerBox * (1 + B2B_VAT_RATE)`). Must land **together with** the variant reprice — shipping it against the live 59 variant would make tiers 2-3 wrong.

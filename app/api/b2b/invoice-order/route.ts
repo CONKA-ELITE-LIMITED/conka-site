@@ -8,14 +8,20 @@
  * the order paid in Shopify once payment clears; the Shopify-to-Xero connector
  * books the invoice. Code stops at "draft created + invoice sent".
  *
- * Pricing: line items carry the B2B variant at its base (entry) rate, and an
- * order-level FIXED_AMOUNT discount brings the ex-VAT subtotal down to the exact
- * combined-total tier price (GBP 59/52/45 per box from b2bPricing). Setting the
- * price on the draft order this way means the path needs NO Shopify discount
- * config of its own (unlike the card path, which relies on automatic discounts).
+ * Pricing: B2B is sold ex-VAT (tier price + 20%), and the store does not compute
+ * VAT in Shopify, so the B2B variants are priced at the GROSS entry rate (the
+ * amount the club actually pays). Line items carry the variant at that gross base,
+ * and an order-level FIXED_AMOUNT discount brings the subtotal down to the exact
+ * gross combined-total tier price (GBP 70.80/62.40/54.00 per box, from
+ * getB2BGrossPerBox). Parex (inclusive 20%) splits the gross into net + VAT on the
+ * Xero invoice. Setting the price on the draft order this way means the path needs
+ * NO Shopify discount config of its own (unlike the card path, which relies on
+ * automatic discounts).
  *
- * Depends on the B2B variants being priced at the entry rate (GBP 59 ex VAT) in
- * Shopify, the same assumption the order-page display makes.
+ * Depends on the B2B variants being priced at the GROSS entry rate (GBP 70.80) in
+ * Shopify, the same assumption the order-page display makes (net GBP 59 + 20% VAT).
+ * This must stay in lockstep with the Shopify variant price: do not deploy a
+ * mismatched base. See docs/development/featurePlans/b2b-xero-invoicing.md.
  *
  * See docs/development/featurePlans/b2b-professionals-portal.md
  */
@@ -23,7 +29,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { adminGraphql, isAdminApiConfigured } from "@/app/lib/shopifyAdmin";
-import { B2B_TIERS, getB2BTier } from "@/app/lib/b2bPricing";
+import { B2B_TIERS, getB2BTier, getB2BGrossPerBox } from "@/app/lib/b2bPricing";
 import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 
 export const runtime = "nodejs";
@@ -40,9 +46,10 @@ const B2B_VARIANTS: Record<"flow" | "clear", string | undefined> = {
   clear: process.env.B2B_CLEAR_VARIANT_ID,
 };
 
-// Base (entry) per-box rate the B2B variants are priced at in Shopify. The
-// order-level discount is the gap between this and the tier rate.
-const B2B_ENTRY_PRICE = B2B_TIERS[0].pricePerBox;
+// Gross (VAT-inclusive) base rate the B2B variants are priced at in Shopify
+// (entry tier, GBP 70.80). The order-level discount is the gap between this and
+// the gross tier rate, so the draft order total is what the club actually pays.
+const B2B_ENTRY_PRICE = getB2BGrossPerBox(B2B_TIERS[0]);
 
 const NOT_AVAILABLE =
   "Pay by invoice is not available yet. Please use the enquiry form or contact harry@conka.io.";
@@ -146,7 +153,8 @@ export async function POST(request: NextRequest) {
   }
 
   const tier = getB2BTier(totalBoxes);
-  const discountAmount = (B2B_ENTRY_PRICE - tier.pricePerBox) * totalBoxes;
+  const discountAmount =
+    Math.round((B2B_ENTRY_PRICE - getB2BGrossPerBox(tier)) * totalBoxes * 100) / 100;
 
   const customAttributes: Array<{ key: string; value: string }> = [
     { key: "Order Type", value: "B2B Professionals" },
@@ -184,7 +192,7 @@ export async function POST(request: NextRequest) {
       valueType: "FIXED_AMOUNT",
       value: discountAmount,
       title: `Team volume pricing (${tier.label})`,
-      description: `${totalBoxes} boxes at the ${tier.label} tier rate of GBP ${tier.pricePerBox}/box ex VAT.`,
+      description: `${totalBoxes} boxes at the ${tier.label} tier rate of GBP ${tier.pricePerBox}/box ex VAT (GBP ${getB2BGrossPerBox(tier)}/box inc VAT).`,
     };
   }
 
