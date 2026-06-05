@@ -114,10 +114,18 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 - **The Xero-side mapping needs someone who knows the chart of accounts / VAT rates.** Harry has access; if unsure on codes, this needs the accountant. This is the most likely thing to stall.
 - **Duplicate invoices** if a legacy connector is left connected. Mitigated by disconnecting it in Phase 2.
 
+## Setup progress (5 June 2026)
+
+- **Connector chosen: Parex (Xero Bridge), Silver plan, on the 7-day free trial.** Parex confirmed it can scope sync to a tag (the dealbreaker); its draft-order duplicate caveat is to be proven in the pilot.
+- **Parex configured + connected to the live Xero org.** Settings: Individual (per-order) sync; Sales account = `B2B Sales` (new revenue account, code 201, 20% VAT on Income); Unique Customer Every Order (by first/last name for now); Invoice Status = **Awaiting Payment**; Sales Tax Code = 20% VAT on Income, Zero Tax Code = No VAT; Payment Deposit bank = Revolut GBP Main; Shopify Payments Flow OFF; sync start date = today. **Always Manual Sync is ON** so nothing syncs until the filter is confirmed.
+- **B2B-only filter: requested from Parex support, NOT yet confirmed active.** Do not run a sync until they confirm (else DTC orders would sync). Example order given: #3503.
+- **Outstanding before the pilot:** Parex confirms the filter, then run one real B2B order through and check Xero (one invoice, B2B Sales, PO in Reference). PO-into-note is already verified to carry through.
+
 ## Open questions
 
-- Connector choice, pending the Parex / Amaka support answers. Does not block Phase 1.
-- Who owns the Xero chart of accounts / VAT settings (Harry vs accountant), for Phase 2.
+- **VAT is not landing on B2B orders, and it is a separate workstream (needs Humphrey / the accountant).** Test orders came through with no VAT. Causes found on `Settings > Taxes and duties`: (a) a banner "you are not charging taxes on some product variants" (the B2B Team Box variants), and (b) United Kingdom shows "Collecting -" (UK VAT registration / collection may not be configured in Shopify Tax). Compounding this, the store appears to use **tax-inclusive** pricing (the DTC price includes VAT), which conflicts with the B2B model of `GBP 59 ex VAT + VAT`. Resolving this (variant tax flags + UK VAT collection + tax-inclusive-vs-exclusive + whether B2B prices are ex or inc VAT) is required for a *compliant* VAT invoice but does NOT block verifying the Parex sync mechanics. Owner: Rudh + Humphrey / accountant.
+- Connector pricing: confirm whether Parex's monthly order limit counts all store orders or only synced (B2B) orders. Asked Parex; awaiting reply.
+- Who owns the Xero chart of accounts / VAT settings (confirmed: Humphrey owns Xero).
 - **Card-path (Buy now) B2B orders and Xero.** Phase 1 puts the PO into the order note/tag only on the pay-by-invoice path. The card path (`app/api/b2b/cart`) carries the PO and `Order Type` as cart **attributes**, not order **tags** or the **note** (the Storefront cart API cannot set tags). So if the connector is scoped to the `B2B Professionals` tag and maps the Reference from note/tag, card-path B2B orders will not sync, or will sync without the PO. Decide in Phase 2 whether instant-card B2B orders need their own Xero invoice (if so, tag + PO can be added Shopify-side via a Flow rule on the `Order Type` attribute, no website code), or whether they are fine via the bank feed like DTC.
 
 ## References
