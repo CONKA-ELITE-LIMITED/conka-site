@@ -8,9 +8,9 @@
 
 ### 2026-06-05 -- B2B Xero invoicing plan (Shopify-to-Xero connector)
 
-Scoped how paid B2B orders will book into Xero as compliant VAT invoices via an off-the-shelf connector (closing SCRUM-1058 AC6), no bespoke Xero API build. Plan captures the connector comparison (Parex vs the official Amaka integration vs others), the gating risk that our draft-order flow may clash with connectors that do not support draft orders, the one support question that decides the connector, and a three-phase shape: a small additive website change (PO into a connector-readable field), a Xero-side config step owned by whoever manages the books, and a pilot order to verify before anything is locked. No code yet.
+Scoped how paid B2B orders will book into Xero as compliant VAT invoices via an off-the-shelf connector (closing SCRUM-1058 AC6), no bespoke Xero API build. Plan captures the connector comparison (Parex vs the official Amaka integration vs others), the gating risk that our draft-order flow may clash with connectors that do not support draft orders, the one support question that decides the connector, and a three-phase shape: a small additive website change (PO into a connector-readable field), a Xero-side config step owned by whoever manages the books, and a pilot order to verify before anything is locked. Phase 1 code shipped: the B2B invoice-order route now writes the PO into the Shopify order note (verbatim, the clean Xero-Reference carrier) and a comma-sanitized tag, additively, keeping the existing custom attribute. Live-verified against Shopify. Connector setup and pilot remain (owned by whoever manages Xero).
 
-**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (new)
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (new), `app/api/b2b/invoice-order/route.ts`
 
 ### 2026-06-04 -- B2B pay-by-invoice path on the team order page
 

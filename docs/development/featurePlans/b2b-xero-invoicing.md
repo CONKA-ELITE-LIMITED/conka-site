@@ -45,7 +45,7 @@ That answer picks the connector: Parex if confirmed (best documented fit), Amaka
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Make order data connector-ready (PO into note/tag) | Not Started (active, independent) |
+| 1 | Make order data connector-ready (PO into note/tag) | Done (code on `xero-connection` branch, live-verified) |
 | 2 | Connector setup + Xero mapping (config, not code) | Future (gated on connector decision + Humphrey go-ahead) |
 | 3 | Pilot + verify with one real order (de-risk gate) | Future (gated on Phase 2) |
 
@@ -128,8 +128,8 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 
 ## Jira
 
-| Ticket | Title | Status |
-|--------|-------|--------|
-| (to create) | B2B Xero invoicing: connector + PO-to-Reference | To Do |
+| Ticket | Title | Phase | Status |
+|--------|-------|-------|--------|
+| SCRUM-1059 | [Shopify & Subscriptions] B2B Xero invoicing: Shopify-to-Xero connector + PO-to-Reference | 1-3 | To Do |
 
-Relates to SCRUM-1058 (closes its AC6).
+Relates to SCRUM-1058 (closes its AC6). Sprint 27.
