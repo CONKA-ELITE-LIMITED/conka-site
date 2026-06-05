@@ -117,6 +117,7 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 
 - Connector choice, pending the Parex / Amaka support answers. Does not block Phase 1.
 - Who owns the Xero chart of accounts / VAT settings (Harry vs accountant), for Phase 2.
+- **Card-path (Buy now) B2B orders and Xero.** Phase 1 puts the PO into the order note/tag only on the pay-by-invoice path. The card path (`app/api/b2b/cart`) carries the PO and `Order Type` as cart **attributes**, not order **tags** or the **note** (the Storefront cart API cannot set tags). So if the connector is scoped to the `B2B Professionals` tag and maps the Reference from note/tag, card-path B2B orders will not sync, or will sync without the PO. Decide in Phase 2 whether instant-card B2B orders need their own Xero invoice (if so, tag + PO can be added Shopify-side via a Flow rule on the `Order Type` attribute, no website code), or whether they are fine via the bank feed like DTC.
 
 ## References
 
