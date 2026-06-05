@@ -90,6 +90,7 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 
 | Decision | Rationale |
 |----------|-----------|
+| Use a connector, not manual reconciliation | B2B paid by bank transfer already lands in Xero via the bank feed (the company bank account is linked to Xero; Shopify is not), so at low volume the bookkeeper could just code each receipt by hand. But the channel is scaling to more clubs and corporate entities, where manual coding of every transfer does not scale and invites error. A connector gives frictionless, auditable per-order invoices + debtor records. Confirmed necessary (Rudh, June 2026). |
 | Off-the-shelf connector, no bespoke Xero API build | A hand-rolled Shopify-to-Xero sync means owning OAuth + token refresh, a reliable paid-order webhook with idempotency, org-specific account/tax mapping in code, and monitoring, forever, for output a ~GBP 12/mo app already produces reliably. No payoff at this volume. |
 | PO into order `note` (plus optional tag), kept additive | Connectors map the Xero invoice Reference from the order note or a tag, not from custom `note_attributes`. The existing custom attribute alone would not carry the PO to Xero. Additive and reversible, so a wrong guess costs nothing. |
 | Scope connector to the `B2B Professionals` tag | DTC orders are reconciled via the bank feed today. Syncing all orders per-order would clash with that and clutter the ledger. The tag already exists on B2B orders from SCRUM-1058. |
