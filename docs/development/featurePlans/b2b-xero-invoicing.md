@@ -126,6 +126,8 @@ Only after this passes is Phase 1's field choice (note vs tag) locked. If the co
 
 ## B2B VAT — pricing and mechanism DECIDED (5 June 2026)
 
+> Plain-English decision record (what + why, readable by a non-technical owner / accountant): `b2b-vat-decision.md`. The below is the implementation detail.
+
 - **Pricing decided (Harry, 5 June 2026):** B2B prices are **ex-VAT**, same logic across all three tiers. A club pays the box price + 20% at checkout (Entry GBP 59 -> 70.80, Squad 52 -> 62.40, Institutional 45 -> 54.00) and reclaims the VAT (just noise to them). The order page's net + VAT + gross display is therefore correct and needs no change. Xero must show the same ex-VAT split (net line + 20% VAT).
 - **Non-negotiable:** the club must actually be **charged the gross** (e.g. 70.80) in Shopify, and Parex must treat the amount as **VAT-inclusive** (gross / 1.2 -> net + 20% VAT), never exclusive. Exclusive would invoice more in Xero than the cash collected and break the bank-rec / declare uncollected VAT.
 - **The defect this exposes:** the B2B variants are currently priced at the **net** (GBP 59) and both checkout paths charge that, so the club is *shown* 70.80 but *charged* 59. A Shopify discount can only reduce a price, so the fix is to make the Shopify price the **gross**. See the "Layer" breakdown below.
