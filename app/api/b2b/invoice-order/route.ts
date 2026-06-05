@@ -152,17 +152,30 @@ export async function POST(request: NextRequest) {
     { key: "Order Type", value: "B2B Professionals" },
     { key: "Payment Method", value: "Pay by invoice" },
   ];
-  if (parsed.poNumber) {
-    customAttributes.push({ key: "PO Number", value: parsed.poNumber });
-  }
+  const tags = ["B2B Professionals", "Pay by Invoice"];
 
   const input: Record<string, unknown> = {
     email: parsed.financeEmail,
     lineItems,
     customAttributes,
-    tags: ["B2B Professionals", "Pay by Invoice"],
-    note: "B2B pay-by-invoice request from /professionals/order.",
+    tags,
   };
+
+  // Surface the PO where the Shopify-to-Xero connector can read it into the Xero
+  // invoice Reference field (SCRUM-1059). Connectors map the order `note` or an
+  // order `tag`, not custom attributes, so the PO rides in all three: the note
+  // (clean single value, the primary Reference carrier), a sanitized tag (commas
+  // stripped, since Shopify splits tags on them) as a fallback carrier, and the
+  // existing custom attribute (kept, human-readable in admin). Which field the
+  // connector actually uses is finalised by the pilot. See b2b-xero-invoicing.md.
+  if (parsed.poNumber) {
+    customAttributes.push({ key: "PO Number", value: parsed.poNumber });
+    // Note carries the PO verbatim, so it maps cleanly to the Xero invoice
+    // Reference. The tag is sanitized (commas removed, since Shopify splits tags
+    // on them; whitespace collapsed) and labelled for admin filtering.
+    input.note = parsed.poNumber;
+    tags.push(`PO ${parsed.poNumber.replace(/,/g, " ").replace(/\s+/g, " ").trim()}`);
+  }
 
   // Only attach a discount when the tier actually reduces the price (entry tier
   // is the base rate, so no discount there). A zero FIXED_AMOUNT is rejected.
