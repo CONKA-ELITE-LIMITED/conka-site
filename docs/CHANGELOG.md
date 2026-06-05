@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-05 -- B2B Xero invoicing plan (Shopify-to-Xero connector)
+
+Scoped how paid B2B orders will book into Xero as compliant VAT invoices via an off-the-shelf connector (closing SCRUM-1058 AC6), no bespoke Xero API build. Plan captures the connector comparison (Parex vs the official Amaka integration vs others), the gating risk that our draft-order flow may clash with connectors that do not support draft orders, the one support question that decides the connector, and a three-phase shape: a small additive website change (PO into a connector-readable field), a Xero-side config step owned by whoever manages the books, and a pilot order to verify before anything is locked. No code yet.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (new)
+
 ### 2026-06-04 -- B2B pay-by-invoice path on the team order page
 
 Sports clubs can now pay by invoice on /professionals/order, not just by card. A new "Pay by invoice" option creates a Shopify draft order at the correct volume-tier price and emails a VAT invoice to the club's finance team; the buyer pays the hosted invoice (card or bank transfer) and we ship once Harry marks it paid. Lean by design: it reuses the existing PO field and adds only a finance-email field, no second form and no delivery address (captured on Shopify's pay-link). This is CONKA's first use of the Shopify Admin API (draft orders live there, not in the Storefront API), behind a server-only token. The invoice endpoint is rate-limited as an abuse guard, and that limiter was extracted into a shared util now used by the enquiry route too.
