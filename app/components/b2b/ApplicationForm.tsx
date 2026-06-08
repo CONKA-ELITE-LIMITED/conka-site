@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { B2B_SPORTS, B2B_SQUAD_SIZES } from "@/app/lib/b2bData";
+import { B2B_SPORTS, B2B_SQUAD_SIZES, EMAIL_RE } from "@/app/lib/b2bData";
 import { trackB2BApplicationSubmitted } from "@/app/lib/analytics";
 
 /**
@@ -41,8 +41,6 @@ const EMPTY: FormState = {
   hearAbout: "",
   company: "",
 };
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const labelClass = "brand-eyebrow block mb-2";
 const fieldClass =
@@ -107,6 +105,18 @@ export default function ApplicationForm() {
     }
   }
 
+  // Mirror of validate()'s required checks, without writing errors. Gates the
+  // submit button so it can't be clicked until every required field is valid.
+  const requiredComplete =
+    form.firstName.trim() !== "" &&
+    form.lastName.trim() !== "" &&
+    EMAIL_RE.test(form.workEmail.trim()) &&
+    form.phone.trim() !== "" &&
+    form.organisation.trim() !== "" &&
+    form.sport !== "" &&
+    form.squadSize !== "" &&
+    form.jobTitle.trim() !== "";
+
   if (status === "success") {
     return (
       <div className="rounded-none border border-black/12 bg-white p-8 lg:p-10 text-center">
@@ -117,8 +127,8 @@ export default function ApplicationForm() {
           <span className="font-medium">{form.workEmail}</span>. It includes
           everything you need to place an order. Can&apos;t see it? Check your spam
           folder, or email{" "}
-          <a href="mailto:harry@conka.io" className="underline">
-            harry@conka.io
+          <a href="mailto:harryglover@conka.io" className="underline">
+            harryglover@conka.io
           </a>
           .
         </p>
@@ -141,26 +151,30 @@ export default function ApplicationForm() {
         />
       </div>
 
+      <p className="brand-mono-sub">
+        Fields marked <span className="text-red-600">*</span> are required.
+      </p>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="First name" error={errors.firstName}>
+        <Field label="First name" required error={errors.firstName}>
           <input className={fieldClass} value={form.firstName} onChange={update("firstName")} autoComplete="given-name" />
         </Field>
-        <Field label="Last name" error={errors.lastName}>
+        <Field label="Last name" required error={errors.lastName}>
           <input className={fieldClass} value={form.lastName} onChange={update("lastName")} autoComplete="family-name" />
         </Field>
-        <Field label="Work email" error={errors.workEmail}>
+        <Field label="Work email" required error={errors.workEmail}>
           <input className={fieldClass} type="email" value={form.workEmail} onChange={update("workEmail")} autoComplete="email" inputMode="email" />
         </Field>
-        <Field label="Phone" error={errors.phone}>
+        <Field label="Phone" required error={errors.phone}>
           <input className={fieldClass} type="tel" value={form.phone} onChange={update("phone")} autoComplete="tel" inputMode="tel" />
         </Field>
-        <Field label="Organisation name" error={errors.organisation}>
+        <Field label="Organisation name" required error={errors.organisation}>
           <input className={fieldClass} value={form.organisation} onChange={update("organisation")} autoComplete="organization" />
         </Field>
-        <Field label="Job title" error={errors.jobTitle}>
+        <Field label="Job title" required error={errors.jobTitle}>
           <input className={fieldClass} value={form.jobTitle} onChange={update("jobTitle")} autoComplete="organization-title" />
         </Field>
-        <Field label="Sport / sector" error={errors.sport}>
+        <Field label="Sport / sector" required error={errors.sport}>
           <select className={fieldClass} value={form.sport} onChange={update("sport")}>
             <option value="" disabled>
               Select a sport
@@ -172,7 +186,7 @@ export default function ApplicationForm() {
             ))}
           </select>
         </Field>
-        <Field label="Squad / team size" error={errors.squadSize}>
+        <Field label="Squad / team size" required error={errors.squadSize}>
           <select className={fieldClass} value={form.squadSize} onChange={update("squadSize")}>
             <option value="" disabled>
               Select a size
@@ -210,14 +224,16 @@ export default function ApplicationForm() {
 
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={status === "submitting" || !requiredComplete}
         className="brand-btn brand-btn-accent w-full min-h-[52px] text-sm uppercase tracking-[0.15em] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "submitting" ? "Submitting..." : "Get team pricing"}
       </button>
 
       <p className="brand-mono-sub">
-        We&apos;ll email your pricing link instantly. No spam.
+        {requiredComplete
+          ? "We'll email your pricing link instantly. No spam."
+          : "Complete the fields marked * to continue."}
       </p>
     </form>
   );
@@ -227,11 +243,13 @@ function Field({
   label,
   error,
   optional,
+  required,
   children,
 }: {
   label: string;
   error?: string;
   optional?: boolean;
+  required?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -241,6 +259,12 @@ function Field({
       <label className="block">
         <span className={labelClass}>
           {label}
+          {required && (
+            <span className="text-red-600">
+              {" "}
+              *<span className="sr-only"> required</span>
+            </span>
+          )}
           {optional && <span className="text-black/30"> · optional</span>}
         </span>
         {children}

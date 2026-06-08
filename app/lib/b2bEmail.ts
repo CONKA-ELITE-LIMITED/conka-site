@@ -37,6 +37,7 @@ export interface B2BApplication {
 export interface B2BSubmitResult {
   eventSent: boolean;
   listSubscribed: boolean;
+  alertSent: boolean;
 }
 
 /** Absolute URL of the gated order page, for the welcome email. */
@@ -98,6 +99,60 @@ async function fireApplicationEvent(application: B2BApplication): Promise<boolea
     return true;
   } catch (error) {
     console.error("[B2B] Failed to fire Klaviyo event:", error);
+    return false;
+  }
+}
+
+/**
+ * Fire the "B2B Lead Alert" event on the internal recipient's own profile.
+ *
+ * A Klaviyo flow email always sends to the profile that triggered the flow, so
+ * to email Harry (not the applicant) we fire this on Harry's profile and carry
+ * the applicant's details as event properties for the notification template.
+ */
+async function fireLeadAlertEvent(application: B2BApplication): Promise<boolean> {
+  const publicKey = env.klaviyoPublicKey;
+  if (!publicKey) {
+    console.error("[B2B] NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY is not configured");
+    return false;
+  }
+
+  const payload = {
+    token: publicKey,
+    event: B2B_KLAVIYO.alertEventName,
+    // Associates the event with the notify recipient so the flow email reaches them.
+    customer_properties: { $email: B2B_KLAVIYO.notifyEmail },
+    properties: {
+      organisation: application.organisation,
+      contact_name: `${application.firstName} ${application.lastName}`.trim(),
+      applicant_email: application.workEmail,
+      phone: application.phone,
+      sport: application.sport,
+      squad_size: application.squadSize,
+      job_title: application.jobTitle,
+      website: application.website ?? "",
+      vat_number: application.vatNumber ?? "",
+      delivery_postcode: application.postcode ?? "",
+      heard_about: application.hearAbout ?? "",
+    },
+  };
+
+  try {
+    const res = await fetch("https://a.klaviyo.com/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      console.error(
+        `[B2B] Klaviyo alert Track error: ${res.status} ${res.statusText}`,
+        await res.text(),
+      );
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error("[B2B] Failed to fire Klaviyo alert event:", error);
     return false;
   }
 }
@@ -182,11 +237,6 @@ async function subscribeToList(
   application: B2BApplication,
   privateKey: string,
 ): Promise<boolean> {
-  if (!B2B_KLAVIYO.listId) {
-    console.error("[B2B] KLAVIYO_B2B_LIST_ID is not configured");
-    return false;
-  }
-
   const profileId = await resolveProfileId(application, privateKey);
   if (!profileId) {
     console.error("[B2B] Could not resolve profile id; cannot add to list");
@@ -221,17 +271,19 @@ async function subscribeToList(
 }
 
 /**
- * Submit a B2B application to Klaviyo: fire the event (drives the welcome +
- * notification emails) and add the applicant to the B2B Leads list. Runs both
- * concurrently; each fails gracefully and independently.
+ * Submit a B2B application to Klaviyo: fire the applicant event (drives the
+ * welcome email), fire the internal alert event (notifies Harry), and add the
+ * applicant to the B2B Leads list. All run concurrently and fail gracefully and
+ * independently; a failed alert never blocks the applicant's submission.
  */
 export async function submitB2BApplication(
   application: B2BApplication,
 ): Promise<B2BSubmitResult> {
   const privateKey = env.klaviyoPrivateKey;
 
-  const [eventSent, listSubscribed] = await Promise.all([
+  const [eventSent, alertSent, listSubscribed] = await Promise.all([
     fireApplicationEvent(application),
+    fireLeadAlertEvent(application),
     privateKey
       ? subscribeToList(application, privateKey)
       : Promise.resolve(false),
@@ -241,5 +293,5 @@ export async function submitB2BApplication(
     console.error("[B2B] KLAVIYO_PRIVATE_KEY is not configured");
   }
 
-  return { eventSent, listSubscribed };
+  return { eventSent, listSubscribed, alertSent };
 }

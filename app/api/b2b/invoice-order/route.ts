@@ -56,7 +56,7 @@ const B2B_VARIANTS: Record<"flow" | "clear", string | undefined> = {
 const B2B_ENTRY_PRICE = getB2BGrossPerBox(B2B_TIERS[0]);
 
 const NOT_AVAILABLE =
-  "Pay by invoice is not available yet. Please use the enquiry form or contact harry@conka.io.";
+  "Pay by invoice is not available yet. Please use the enquiry form or contact harryglover@conka.io.";
 
 const schema = z.object({
   lines: z

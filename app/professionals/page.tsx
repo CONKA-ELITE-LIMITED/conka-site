@@ -114,7 +114,7 @@ export default function ProfessionalsPage() {
               </h3>
             </div>
             <a
-              href="mailto:harry@conka.io?subject=CONKA%20regular%20team%20supply"
+              href="mailto:harryglover@conka.io?subject=CONKA%20regular%20team%20supply"
               className="brand-btn brand-btn-secondary inline-flex items-center justify-center min-h-[52px] text-sm uppercase tracking-[0.15em] whitespace-nowrap"
             >
               Get in touch

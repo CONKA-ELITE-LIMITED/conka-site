@@ -42,11 +42,26 @@ export type B2BSquadSize = (typeof B2B_SQUAD_SIZES)[number];
  * and the flows are configured in the Klaviyo dashboard, not in code.
  */
 export const B2B_KLAVIYO = {
-  /** Metric name the welcome + notification flows trigger on. */
+  /** Metric the applicant welcome flow triggers on (fired on the applicant's profile). */
   eventName: "B2B Application Submitted",
-  /** List the applicant is added to. Override via env for non-prod. */
-  listId: process.env.KLAVIYO_B2B_LIST_ID ?? "",
+  /**
+   * Metric the internal new-lead alert flow triggers on. Fired on the notify
+   * recipient's own profile (not the applicant's) because a Klaviyo flow email
+   * always sends to the triggering profile, so this is how the alert reaches Harry.
+   */
+  alertEventName: "B2B Lead Alert",
+  /** Internal recipient of the new-lead alert. Plain config, not a secret. */
+  notifyEmail: "harryglover@conka.io",
+  /** Klaviyo "B2B Leads" list. One Klaviyo account, so a constant, not env. */
+  listId: "Xhqyt8",
 } as const;
 
 /** Relative path to the gated order page the applicant is sent to (built in Phase 2). */
 export const B2B_ORDER_PATH = "/professionals/order";
+
+/**
+ * Shared client-side email check for the B2B forms (enquiry + order builder), so
+ * both gate their submit button on the same rule. The server still validates
+ * independently with zod `.email()`; this is only for instant in-form feedback.
+ */
+export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

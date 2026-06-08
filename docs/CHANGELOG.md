@@ -6,6 +6,18 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B portal code-review fixes
+
+Follow-up cleanups from a code review of the full B2B portal flow. Pointed every customer-facing contact address in the portal (enquiry form, order builder, regular-supply CTA, and both payment-route error messages) at `harryglover@conka.io`, since several still used a `harry@conka.io` address that may not resolve. Deduplicated the client email-validation regex into a single shared `EMAIL_RE` in `b2bData.ts` (was copy-pasted in both B2B forms). Added a per-IP rate limiter to the card-checkout cart route so it matches its sibling routes (apply and invoice-order already had one). Gated the "Pay by invoice" button on the PO number as well as the finance email, so both required fields disable the button consistently rather than one erroring on click. No behavioural change to the happy paths.
+
+**Modified:** `app/professionals/page.tsx`, `app/components/b2b/ApplicationForm.tsx`, `app/components/b2b/B2BOrderBuilder.tsx`, `app/lib/b2bData.ts`, `app/api/b2b/cart/route.ts`, `app/api/b2b/invoice-order/route.ts`
+
+### 2026-06-08 -- B2B Phase 1 enquiry email automation live (SCRUM-1055)
+
+Closed the last functional gap in the B2B portal: a club that submits the `/professionals` enquiry now auto-receives the order-page link and Harry is auto-notified, both via Klaviyo flows. Created the "B2B Leads" list plus two live flows keyed off the apply route's events. The applicant welcome triggers on the existing `B2B Application Submitted` event. Harry's alert needed a workaround, since a Klaviyo flow email always sends to the triggering profile: the apply route now fires a second `B2B Lead Alert` event on Harry's own profile (recipient configurable via `B2B_NOTIFY_EMAIL`), carrying the applicant's details, so the alert reaches Harry rather than the applicant. Also fixed the enquiry form, which let you submit with a required field empty: required fields now carry a visible marker and the submit button is disabled until all are valid. Verified end to end against a real inbox. The Klaviyo list id and alert recipient are plain in-code constants (one Klaviyo account, no per-environment variance), so the only env to set in Vercel before deploy is `NEXT_PUBLIC_SITE_URL`.
+
+**Modified:** `app/lib/b2bEmail.ts`, `app/lib/b2bData.ts`, `app/components/b2b/ApplicationForm.tsx`, `docs/development/featurePlans/b2b-professionals-portal.md`
+
 ### 2026-06-08 -- B2B card-path pilot passed; both paths proven end to end (SCRUM-1061)
 
 Ran the card "Buy now" pilot and it passed: a real card order synced to Xero with the Shopify Flow tag applied, correct inclusive VAT, B2B Sales account, and the PO in the invoice Reference (confirming the PO flows on the card path via the tag, since the card order note is empty). The order was refunded. With the invoice path already proven, both B2B purchase paths now produce a compliant Xero VAT invoice end to end. Remaining before fully live: clean up the test Xero invoices, enable Parex auto-sync, decide how the Xero VAT invoice reaches the club (manual to start), the Klaviyo enquiry-to-order email, and the merge plus Vercel env vars.
