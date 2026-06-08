@@ -102,6 +102,10 @@ export default function B2BOrderBuilder() {
 
   async function handleInvoice() {
     if (totalBoxes === 0 || status !== "idle") return;
+    if (poNumber.trim().length === 0) {
+      setError("Enter your PO number to pay by invoice.");
+      return;
+    }
     if (!EMAIL_RE.test(financeEmail.trim())) {
       setError("Enter a valid finance email so we can send the invoice.");
       return;
@@ -229,7 +233,10 @@ export default function B2BOrderBuilder() {
         <div className="mt-6 flex flex-col gap-4">
           <label className="block">
             <span className="block text-sm font-medium mb-2">
-              PO number <span className="text-black/40 font-normal">(optional)</span>
+              PO number{" "}
+              <span className="text-black/40 font-normal">
+                (required to pay by invoice)
+              </span>
             </span>
             <input
               className={INPUT_CLASS}
@@ -284,7 +291,11 @@ export default function B2BOrderBuilder() {
         <button
           type="button"
           onClick={handleInvoice}
-          disabled={totalBoxes === 0 || status !== "idle"}
+          disabled={
+            totalBoxes === 0 ||
+            status !== "idle" ||
+            !EMAIL_RE.test(financeEmail.trim())
+          }
           style={{ borderColor: ACCENT, color: ACCENT }}
           className="w-full min-h-[56px] mt-3 text-base font-medium bg-white border transition-colors hover:bg-black/[0.03] disabled:opacity-40 disabled:cursor-not-allowed"
         >

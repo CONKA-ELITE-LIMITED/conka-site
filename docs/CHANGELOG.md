@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B pay-by-invoice form hardened (SCRUM-1061 Phase 1)
+
+Three small fixes to the B2B order page. The PO number is now required on the pay-by-invoice path (blocked client-side with an inline error and server-side with a zod min(1) in the invoice-order route), since procurement mandates it and it maps to the Xero invoice Reference; the card "Buy now" path keeps PO optional. The "Pay by invoice" button is now disabled until a valid finance email is entered, so it no longer looks clickable while the required field is empty (submission was already enforced, this closes the UX gap). The PO label updated to "required to pay by invoice". Card path behaviour is unchanged. Phase 2 (the both-path pilot to Xero) is operational and run separately.
+
+**Modified:** `app/components/b2b/B2BOrderBuilder.tsx`, `app/api/b2b/invoice-order/route.ts`
+
 ### 2026-06-08 -- Scoped B2B pay-by-invoice hardening + both-path pilot (SCRUM-1061)
 
 Scoped two small fixes to the B2B order page and documented the pilot that gates go-live, on a new branch off the portal feature branch. Investigation corrected the premise: the finance email is already enforced client and server side, so the only gap is UX (the Pay by invoice button is not disabled when the email is empty), and the PO is optional by design. Decisions: require the PO on the pay-by-invoice path only (card stays frictionless), and disable the Pay by invoice button until a valid finance email is entered. The plan doc now carries the full pilot protocol (run both paths to a verified Xero invoice, net 59 plus 11.80 VAT, PO in the Reference, no DTC synced) with fail diagnostics. Created SCRUM-1061, related to SCRUM-1058 and SCRUM-1060.
