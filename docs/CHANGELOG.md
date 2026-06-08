@@ -12,6 +12,12 @@ Implemented the Road B switch in the live Shopify admin. Enabled UK VAT collecti
 
 **Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md`, `docs/development/featurePlans/b2b-vat-decision.md`, `docs/development/featurePlans/b2b-professionals-portal.md` (Shopify-admin config, no app code)
 
+### 2026-06-08 -- B2B card-path tagging Flow built and Parex verified
+
+Built and turned on the Shopify Flow rule that brings instant card "Buy now" B2B orders into the Xero sync. The headless cart can only set cart attributes, not order tags or notes, so the rule fires on order created, checks the Order Type attribute equals B2B Professionals, and adds the B2B Professionals order tag plus a Liquid-built PO tag. That puts card orders into Parex's tag scope with the PO attached, matching the pay-by-invoice path. Also re-verified Parex: connected to Conka Elite, manual sync (auto sync off), and the tax mapping (20% VAT on Income, zero code No VAT) that mirrors the now-live Shopify VAT onto the Xero invoice. All B2B VAT and invoicing config is now complete; the only remaining step is the pilot (one card and one invoice order verified end to end in Xero), best run with Harry. No app code in this change.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (Shopify Flow + Parex config, no app code)
+
 ### 2026-06-08 -- B2B VAT mechanism switched from Road A to Road B
 
 The Parex / Xero Bridge connector vendor confirmed in writing that the connector mirrors whatever tax Shopify charged on an order and does not derive VAT from a gross price: if Shopify charges 0%, it books the Xero invoice at no VAT. Road A (leave Shopify VAT off, let the connector split the gross) would therefore have produced non-compliant zero-VAT invoices. The mechanism is now Road B: enable UK VAT collection in Shopify (VAT no. GB430507628, inclusive pricing) so Shopify charges the 20% the connector mirrors. This is safe because CONKA is VAT-registered and already accounts for DTC VAT on the inclusive gross, and with inclusive pricing on it changes no consumer price. The pricing decision (ex-VAT, club pays gross) and the website code are unchanged: the invoice route already prices in gross and discounts to the gross tier total, which is correct under inclusive 20%, so only the now-false Road A code comments were corrected. The remaining work is Shopify-admin config, an accountant heads-up on the switchover date, the card-path tagging Flow, and a pilot. Tracked in SCRUM-1060.
