@@ -208,6 +208,40 @@ The full set of actions to get both B2B paths invoicing correctly into Xero. Car
 - Who owns the Xero chart of accounts / VAT settings (confirmed: Humphrey owns Xero).
 - **Card-path (Buy now) B2B orders and Xero — RESOLVED (5 June 2026).** Decided: instant-card B2B orders **do** get their own Xero invoice (we do not suspend the fast purchase). The card path carries the PO and `Order Type` as cart **attributes** only (the Storefront cart API cannot set tags or the note), so a **Shopify Flow rule** adds the `B2B Professionals` tag and copies the PO into the order note on order creation, bringing card orders into Parex scope with the PO attached. No website code. See go-live checklist step 4.
 
+## SCRUM-1061: pay-by-invoice hardening + both-path pilot (8 June 2026)
+
+Scoped on `b2b-invoice-hardening` (branched off `B2B-PORTAL-FEATURE`). Two small form fixes, then the pilot that gates go-live.
+
+**Investigation correction:** the finance email is NOT a code hole - it is already enforced client-side (`B2BOrderBuilder.tsx` `handleInvoice()` early-returns on a failed email regex) and server-side (`invoice-order/route.ts` zod `.email()`). The only gap is UX: the "Pay by invoice" button is not disabled when the email is empty, so it errors on click instead of being greyed out. PO is optional on both paths by design.
+
+**Decisions (Rudh, 8 June):** require PO on the **pay-by-invoice path only** (card stays optional, frictionless); **disable the "Pay by invoice" button** until a valid finance email is entered.
+
+### Phase 1 - form hardening (code)
+
+1. `B2BOrderBuilder.tsx`: block invoice submit + show error if PO empty; show "(optional)" PO hint only on the card path. Card `handleBuyNow()` unchanged.
+2. `invoice-order/route.ts`: tighten zod so `poNumber` is required/non-empty. `cart/route.ts` (card) PO stays optional.
+3. `B2BOrderBuilder.tsx`: extend the invoice button `disabled` to also require a valid finance email (reuse `EMAIL_RE`); keep the on-submit error as a backstop.
+
+### Phase 2 - the pilot protocol (run with Harry)
+
+The de-risk gate. Run BOTH paths end to end against the live store, then verify in Xero.
+
+1. **Pre-check:** in Parex, confirm **Auto Sync is OFF** (Account Details). Re-glance because Parex can auto-enable it ~7 days post-install.
+2. **Card path:** from `/professionals/order`, build a small order, "Buy now", pay with a real card (smallest viable order). Confirm the Shopify Flow tagged it `B2B Professionals` and the order carries the PO.
+3. **Invoice path:** build a small order, enter PO + finance email, "Pay by invoice" -> a Shopify draft order is created and the invoice emailed. Mark the draft **paid** in Shopify admin.
+4. **Sync:** in Parex, click **Sync Orders Manually**.
+5. **Verify in Xero, per order:**
+   - Exactly **one** invoice (no duplicate from the draft conversion).
+   - **Net GBP 59 + VAT GBP 11.80 = GBP 70.80** per box at the relevant tier (inclusive 20%, not added on top, not 0%).
+   - **PO in the invoice Reference** (this is also the test of the Flow PO tag, and which field Parex reads - note vs tag).
+   - Booked to **B2B Sales**; **no DTC order** synced.
+   - Marked-paid order **routed to Synergy** (adjacent SCRUM-1058 AC5 check).
+6. **Invoice email:** confirm the B2B Sales invoice reaches the club's finance email (Xero-side send/auto-email, owner Humphrey).
+7. **Clean up:** void/refund the test card order; delete any test draft.
+8. **On pass:** enable Parex Auto Sync; close SCRUM-1060.
+
+**Fail diagnostics:** 0% VAT on the invoice -> Shopify is not charging VAT on that variant (recheck "Charge tax" + UK collection); VAT added on top (70.80 + 11.80) -> inclusive-pricing flag is off; duplicate invoice -> draft-conversion issue (the thing the pilot exists to catch); no PO in Reference -> Parex reads the other field, swap note vs tag.
+
 ## References
 
 - Portal plan + pay-by-invoice build: `docs/development/featurePlans/b2b-professionals-portal.md`
@@ -220,6 +254,8 @@ The full set of actions to get both B2B paths invoicing correctly into Xero. Car
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1059 | [Shopify & Subscriptions] B2B Xero invoicing: Shopify-to-Xero connector + PO-to-Reference | 1-3 | To Do |
+| SCRUM-1059 | [Shopify & Subscriptions] B2B Xero invoicing: Shopify-to-Xero connector + PO-to-Reference | 1-3 | In Progress |
+| SCRUM-1060 | [Shopify & Subscriptions] B2B VAT: enable Shopify UK VAT collection (Road B) | 1-3 | To Do (pilot pending) |
+| SCRUM-1061 | [Website & CRO] B2B order page: require PO + gate finance email on pay-by-invoice, then pilot both paths to Xero | 1-2 | To Do |
 
 Relates to SCRUM-1058 (closes its AC6). Sprint 27.
