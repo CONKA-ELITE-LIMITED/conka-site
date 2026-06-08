@@ -35,6 +35,7 @@ import { z } from "zod";
 import { adminGraphql, isAdminApiConfigured } from "@/app/lib/shopifyAdmin";
 import { B2B_TIERS, getB2BTier, getB2BGrossPerBox } from "@/app/lib/b2bPricing";
 import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
+import { B2B_VARIANTS } from "@/app/lib/b2bVariants";
 
 export const runtime = "nodejs";
 
@@ -42,13 +43,6 @@ export const runtime = "nodejs";
 // caller-supplied address, so it is a heavier abuse target than the cart route.
 // Light per-IP limit as a speed-bump against draft-order spam / email misuse.
 const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
-
-// Server-side B2B variant GIDs, shared with the card path (app/api/b2b/cart).
-// Populated once the B2B products exist (SCRUM-1056). Not exposed to the client.
-const B2B_VARIANTS: Record<"flow" | "clear", string | undefined> = {
-  flow: process.env.B2B_FLOW_VARIANT_ID,
-  clear: process.env.B2B_CLEAR_VARIANT_ID,
-};
 
 // Gross (VAT-inclusive) base rate the B2B variants are priced at in Shopify
 // (entry tier, GBP 70.80). The order-level discount is the gap between this and
@@ -141,22 +135,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  // Fail clearly if the Admin API token or B2B variants are not configured yet,
-  // rather than creating a broken draft order.
+  // Fail clearly if the Admin API token is not configured (it is a secret, so it
+  // lives in env), rather than creating a broken draft order. The variant GIDs
+  // are constants, so they are always present.
   if (!isAdminApiConfigured()) {
     return NextResponse.json({ error: NOT_AVAILABLE }, { status: 503 });
   }
 
-  const lineItems: Array<{ variantId: string; quantity: number }> = [];
-  let totalBoxes = 0;
-  for (const line of parsed.lines) {
-    const variantId = B2B_VARIANTS[line.product];
-    if (!variantId) {
-      return NextResponse.json({ error: NOT_AVAILABLE }, { status: 503 });
-    }
-    lineItems.push({ variantId, quantity: line.quantity });
-    totalBoxes += line.quantity;
-  }
+  const lineItems = parsed.lines.map((line) => ({
+    variantId: B2B_VARIANTS[line.product],
+    quantity: line.quantity,
+  }));
+  const totalBoxes = parsed.lines.reduce((sum, line) => sum + line.quantity, 0);
 
   const tier = getB2BTier(totalBoxes);
   const discountAmount =
