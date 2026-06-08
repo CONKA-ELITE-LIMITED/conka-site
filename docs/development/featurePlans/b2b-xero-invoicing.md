@@ -249,7 +249,7 @@ The de-risk gate. Run BOTH paths end to end against the live store, then verify 
 - Booked to **B2B Sales**.
 - **All DTC orders "Ignored"** in Parex (tag filter works, zero DTC synced).
 - Shopify auto-emailed the invoice to the finance email.
-- **PO in the Xero Reference - FIXED by Parex support (8 June).** Initially Parex defaulted the Reference to the prefixed order number (`SPY-3514`) with no PO. We messaged support; they replied (Mahek, 8 June) that they have **configured the connector to sync the Shopify order Note value into the Xero invoice Reference** for all future orders, and **retro-updated order #3514**. PENDING VERIFY: confirm #3514's Reference now shows the PO, and check the PO lands on the next live order.
+- **PO in the Xero Reference - FIXED + VERIFIED (8 June).** Initially Parex defaulted the Reference to the prefixed order number (`SPY-3514`) with no PO. Parex support (Mahek, 8 June) configured the connector to sync the Shopify order **Note** value into the Xero invoice **Reference** for all future orders, and retro-updated order #3514. **Verified on our side: #3514's Reference now shows the PO.** Applies automatically to future orders (re-confirm on the card-path pilot order).
 
 **Bank-transfer payment path set up (Shopify, no code).** Added a **Bank Deposit** manual payment method (Settings > Payments) with CONKA's bank details (Conka Elite Limited, sort 60-21-03, acct 48757438) and "use your PO number as the payment reference". So a no-card club selects Bank Deposit at the invoice checkout, gets the bank details on the confirmation + email, transfers quoting the PO, and Harry marks the order paid when it lands in Revolut. Verified: the confirmation page shows the bank details correctly.
 
