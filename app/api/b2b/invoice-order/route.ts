@@ -12,13 +12,15 @@
  * the GROSS entry rate (the amount the club actually pays). Line items carry the
  * variant at that gross base, and an order-level FIXED_AMOUNT discount brings the
  * subtotal down to the exact gross combined-total tier price (GBP 70.80/62.40/54.00
- * per box, from getB2BGrossPerBox). Shopify collects UK VAT inclusively (20%), so
- * it extracts the VAT from that gross at checkout and the Shopify-to-Xero connector
- * mirrors it onto the Xero invoice (net + 20% VAT). The connector does NOT derive
- * VAT itself: it passes through whatever Shopify charged, so Shopify must have UK
- * VAT collection enabled. Setting the price on the draft order this way means the
- * path needs NO Shopify discount config of its own (unlike the card path, which
- * relies on automatic discounts).
+ * per box, from getB2BGrossPerBox). Shopify is configured to collect UK VAT
+ * inclusively (20%) (Road B), so it extracts the VAT from that gross at checkout
+ * and the Shopify-to-Xero connector mirrors it onto the Xero invoice (net + 20%
+ * VAT). The connector does NOT derive VAT itself: it passes through whatever
+ * Shopify charged, so this depends on UK VAT collection being enabled in Shopify
+ * (SCRUM-1060) - until then Shopify charges 0% and the invoice books at no VAT.
+ * Setting the price on the draft order this way means the path needs NO Shopify
+ * discount config of its own (unlike the card path, which relies on automatic
+ * discounts).
  *
  * Depends on the B2B variants being priced at the GROSS entry rate (GBP 70.80) in
  * Shopify, the same assumption the order-page display makes (net GBP 59 + 20% VAT).

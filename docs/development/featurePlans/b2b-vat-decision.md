@@ -33,7 +33,7 @@ Trade and club buyers expect to see prices without VAT and have it added on top.
 
 ## The problem this had to solve
 
-This store does **not** compute VAT in Shopify on **any** product, DTC or B2B. Prices are treated as VAT-inclusive and VAT is handled at the accounting layer, not by Shopify (in Shopify the UK shows "Collecting -" and the tax rate is assumed 0% because there is no Shopify-side VAT registration). So Shopify cannot, on its own, add 20% to a B2B order or show a VAT breakdown. We needed compliant per-order VAT invoices for B2B without changing how DTC is handled.
+At the time of writing (true under Road A; Road B reverses this - see Correction at the top), this store did **not** compute VAT in Shopify on **any** product, DTC or B2B. Prices are treated as VAT-inclusive and VAT is handled at the accounting layer, not by Shopify (in Shopify the UK showed "Collecting -" and the tax rate was assumed 0% because UK VAT collection was not switched on). So Shopify could not, on its own, add 20% to a B2B order or show a VAT breakdown. We needed compliant per-order VAT invoices for B2B; Road B solves it by switching on Shopify UK VAT collection (inclusive), which surfaces the VAT without changing consumer prices.
 
 ## How it works (the mechanism)
 
