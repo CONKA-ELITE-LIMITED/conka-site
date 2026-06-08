@@ -138,8 +138,21 @@ What actually shipped, and where it diverged from the plan above. Read this befo
 - **Analytics:** `b2b_application_submitted` (sport, squad size).
 - **Deviations / notes:**
   - **Squad size is a band select** (Under 10 / 10-25 / 26-50 / 51-100 / Over 100), not free text.
-  - **Emails are Klaviyo flows, not sent from code.** The route fires the event and subscribes the profile; the two emails (applicant welcome with the order link, Harry notification) are flows configured in the Klaviyo dashboard, keyed off the event. Setup still required to go live: create the B2B Leads list, set `KLAVIYO_B2B_LIST_ID`, build the two flows. `NEXT_PUBLIC_SITE_URL` is used to build the absolute order-page link.
+  - **Emails are Klaviyo flows, not sent from code.** The route fires the event and subscribes the profile; the two emails (applicant welcome with the order link, Harry notification) are flows configured in the Klaviyo dashboard, keyed off the event. `NEXT_PUBLIC_SITE_URL` is used to build the absolute order-page link.
   - **Removed a legacy redirect:** `next.config.ts` had a permanent `/professionals/:path* -> /` redirect from when the route was deprecated. Removed so the new pages resolve.
+
+#### Phase 1 email automation - DONE + verified end to end (8 June 2026)
+
+The deferred email piece is built and live in Klaviyo. Both emails send and were confirmed delivering to a real inbox.
+
+- **B2B Leads list** created in Klaviyo (id `Xhqyt8`, single opt-in). `KLAVIYO_B2B_LIST_ID` set locally; the apply route adds every applicant to it. Set in Vercel before prod deploy.
+- **Two live flows**, each triggered by a metric the apply route fires:
+  - **`B2B Applicant Welcome`** - triggers on the **`B2B Application Submitted`** event (fired on the applicant's profile). Text-only email with the order-page link (`{{ event.order_url }}`, populated from `NEXT_PUBLIC_SITE_URL` + `/professionals/order`). Sends to the applicant.
+  - **`B2B Lead Alert`** - triggers on a **`B2B Lead Alert`** event. Text-only internal notification listing the applicant's details. Sends to Harry.
+- **Harry-notification mechanism (the non-obvious bit).** A Klaviyo flow email always sends to the profile that triggered it, so an alert keyed off the applicant's event would email the applicant, not Harry. Fix: the apply route fires a **second** event, `B2B Lead Alert`, **on Harry's own profile** (`$email` = `B2B_NOTIFY_EMAIL`, default `harryglover@conka.io`), carrying the applicant's details as event properties. The alert flow triggers on that, so it lands on Harry's profile and emails Harry. Implemented in `fireLeadAlertEvent` (`app/lib/b2bEmail.ts`); event name + recipient live in `B2B_KLAVIYO` (`app/lib/b2bData.ts`) as `alertEventName` / `notifyEmail`. Fails gracefully and independently of the applicant event and the list add.
+- **Klaviyo build gotcha (for future flows):** a flow can only trigger on a metric that already exists, and a metric only exists once its event has fired at least once. Order is: set env -> fire one submit to mint the metric -> then the metric appears in the flow trigger dropdown -> build the flow. Also: flow email **content must be explicitly saved** in the editor, and the **Smart Sending** toggle must be OFF on a service email or repeat submits are suppressed.
+- **Form UX fix (`ApplicationForm.tsx`):** required fields now carry a red `*` plus a legend, and the submit button is **disabled until all required fields are valid** (previously a missing required field, e.g. job title, submitted silently or confused the user). Helper text under the button reflects the gate state.
+- **Deliverability note:** the welcome/alert land in Gmail's **Updates** tab (transactional-looking, plain text), not the Primary inbox or spam.
 
 ### Phase 2b (SCRUM-1057) - In review
 
@@ -176,16 +189,17 @@ What actually shipped, and where it diverged from the plan above. Read this befo
 
 | Var | Phase | Purpose |
 |-----|-------|---------|
-| `KLAVIYO_B2B_LIST_ID` | 1 | The Klaviyo B2B Leads list the applicant is added to. |
+| `KLAVIYO_B2B_LIST_ID` | 1 | The Klaviyo B2B Leads list the applicant is added to. Live value `Xhqyt8`. Set locally; set in Vercel before prod deploy. |
+| `B2B_NOTIFY_EMAIL` | 1 | Recipient of the internal new-lead alert. Defaults to `harryglover@conka.io` if unset, so optional, but set it in Vercel to make the recipient explicit. |
 | `B2B_FLOW_VARIANT_ID` | 2b | Shopify variant GID for the Flow B2B box. Set after SCRUM-1056. |
 | `B2B_CLEAR_VARIANT_ID` | 2b | Shopify variant GID for the Clear B2B box. Set after SCRUM-1056. |
 | `SHOPIFY_ADMIN_API_TOKEN` | 3 | Secret. Static offline Admin API token used by `/api/b2b/invoice-order` to create draft orders + send invoices. Server-only, never `NEXT_PUBLIC_`. In `.env.local` + Vercel (Production + Preview). |
 
-(Reuses existing `NEXT_PUBLIC_SITE_URL`, `KLAVIYO_PRIVATE_KEY`, `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY`.)
+(Reuses existing `KLAVIYO_PRIVATE_KEY`, `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY`. `NEXT_PUBLIC_SITE_URL` was not actually set before Phase 1 emails - now set to `https://www.conka.io` locally; needed in Vercel for the welcome-email link to point at prod rather than the `https://conka.io` code fallback.)
 
 ### Outstanding for a fully live portal
 
 - **SCRUM-1056:** ~~create/rename the B2B products + the total-quantity automatic discounts~~ **DONE 8 June 2026** — `B2B Products` collection + two combined-total automatic discounts (£62.40 at 25+, £54.00 at 50+) created and cart-verified inclusive on the headless checkout. Variant env vars are wired locally (Buy now produced a real checkout). Confirm `B2B_FLOW_VARIANT_ID` / `B2B_CLEAR_VARIANT_ID` are also set in Vercel before prod deploy.
-- **Phase 1 emails:** create the Klaviyo B2B Leads list + the two flows, set `KLAVIYO_B2B_LIST_ID`.
+- **Phase 1 emails:** ~~create the Klaviyo B2B Leads list + the two flows, set `KLAVIYO_B2B_LIST_ID`~~ **DONE 8 June 2026** - B2B Leads list (`Xhqyt8`), both flows (`B2B Applicant Welcome`, `B2B Lead Alert`) live, applicant + Harry emails verified end to end. Remaining: set `KLAVIYO_B2B_LIST_ID`, `B2B_NOTIFY_EMAIL`, and `NEXT_PUBLIC_SITE_URL` in Vercel before prod deploy. See the Phase 1 email-automation entry in the implementation log.
 - **SCRUM-1058:** pay-by-invoice path - built and live-tested (in review). Remaining external setup: confirm the Shopify-to-Xero connector books a marked-paid B2B order into a compliant Xero invoice (manual verify, no code).
 - **SCRUM-1059 / SCRUM-1060 (VAT mechanism):** Xero invoicing + the VAT model superseded the original "tax-exclusive GBP 59 base" wording in this doc. **Current model:** B2B variants are priced at the GROSS VAT-inclusive amount (GBP 70.80 / 62.40 / 54.00 per box) and the invoice route discounts to the gross tier total. The Shopify-to-Xero connector MIRRORS Shopify's tax, so Shopify must charge the VAT: SCRUM-1060 switches us from Road A (Shopify VAT off) to **Road B - enable UK VAT collection in Shopify** (VAT no. GB430507628, inclusive pricing; no consumer price change). Card-path orders also need a Shopify Flow to tag them `B2B Professionals` or they will not sync. Canonical detail: `b2b-vat-decision.md` and `b2b-xero-invoicing.md`. Where this doc's older sections say "tax-exclusive" or "GBP 59 base" (e.g. the Phase 3 implementation log, the discount-pricing decision row, the Phase 2b risk), read them against this note.

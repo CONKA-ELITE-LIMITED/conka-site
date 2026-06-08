@@ -42,8 +42,16 @@ export type B2BSquadSize = (typeof B2B_SQUAD_SIZES)[number];
  * and the flows are configured in the Klaviyo dashboard, not in code.
  */
 export const B2B_KLAVIYO = {
-  /** Metric name the welcome + notification flows trigger on. */
+  /** Metric the applicant welcome flow triggers on (fired on the applicant's profile). */
   eventName: "B2B Application Submitted",
+  /**
+   * Metric the internal new-lead alert flow triggers on. Fired on the notify
+   * recipient's own profile (not the applicant's) because a Klaviyo flow email
+   * always sends to the triggering profile, so this is how the alert reaches Harry.
+   */
+  alertEventName: "B2B Lead Alert",
+  /** Internal recipient of the new-lead alert. Override via env. */
+  notifyEmail: process.env.B2B_NOTIFY_EMAIL ?? "harryglover@conka.io",
   /** List the applicant is added to. Override via env for non-prod. */
   listId: process.env.KLAVIYO_B2B_LIST_ID ?? "",
 } as const;

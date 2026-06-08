@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B Phase 1 enquiry email automation live (SCRUM-1055)
+
+Closed the last functional gap in the B2B portal: a club that submits the `/professionals` enquiry now auto-receives the order-page link and Harry is auto-notified, both via Klaviyo flows. Created the "B2B Leads" list plus two live flows keyed off the apply route's events. The applicant welcome triggers on the existing `B2B Application Submitted` event. Harry's alert needed a workaround, since a Klaviyo flow email always sends to the triggering profile: the apply route now fires a second `B2B Lead Alert` event on Harry's own profile (recipient configurable via `B2B_NOTIFY_EMAIL`), carrying the applicant's details, so the alert reaches Harry rather than the applicant. Also fixed the enquiry form, which let you submit with a required field empty: required fields now carry a visible marker and the submit button is disabled until all are valid. Verified end to end against a real inbox. New env to set in Vercel before deploy: `KLAVIYO_B2B_LIST_ID`, `B2B_NOTIFY_EMAIL`, `NEXT_PUBLIC_SITE_URL`.
+
+**Modified:** `app/lib/b2bEmail.ts`, `app/lib/b2bData.ts`, `app/components/b2b/ApplicationForm.tsx`, `docs/development/featurePlans/b2b-professionals-portal.md`
+
 ### 2026-06-08 -- B2B card-path pilot passed; both paths proven end to end (SCRUM-1061)
 
 Ran the card "Buy now" pilot and it passed: a real card order synced to Xero with the Shopify Flow tag applied, correct inclusive VAT, B2B Sales account, and the PO in the invoice Reference (confirming the PO flows on the card path via the tag, since the card order note is empty). The order was refunded. With the invoice path already proven, both B2B purchase paths now produce a compliant Xero VAT invoice end to end. Remaining before fully live: clean up the test Xero invoices, enable Parex auto-sync, decide how the Xero VAT invoice reaches the club (manual to start), the Klaviyo enquiry-to-order email, and the merge plus Vercel env vars.
