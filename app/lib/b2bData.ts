@@ -58,3 +58,10 @@ export const B2B_KLAVIYO = {
 
 /** Relative path to the gated order page the applicant is sent to (built in Phase 2). */
 export const B2B_ORDER_PATH = "/professionals/order";
+
+/**
+ * Shared client-side email check for the B2B forms (enquiry + order builder), so
+ * both gate their submit button on the same rule. The server still validates
+ * independently with zod `.email()`; this is only for instant in-form feedback.
+ */
+export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

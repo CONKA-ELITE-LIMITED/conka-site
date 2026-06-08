@@ -11,6 +11,7 @@ import {
   getB2BTier,
   type B2BProductKey,
 } from "@/app/lib/b2bPricing";
+import { EMAIL_RE } from "@/app/lib/b2bData";
 import { trackB2BCheckoutStarted, trackB2BInvoiceRequested } from "@/app/lib/analytics";
 
 /**
@@ -23,7 +24,6 @@ import { trackB2BCheckoutStarted, trackB2BInvoiceRequested } from "@/app/lib/ana
  */
 
 const ACCENT = "var(--brand-accent)"; // navy #1B2757 under brand-clinical
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const INPUT_CLASS =
   "w-full min-h-[52px] bg-white border border-black/20 rounded-none px-4 py-3 text-base text-black placeholder-black/35 focus:outline-none focus:border-black/50 transition-colors";
 
@@ -293,7 +293,7 @@ export default function B2BOrderBuilder() {
         <button
           type="button"
           onClick={handleInvoice}
-          disabled={totalBoxes === 0 || status !== "idle" || !financeEmailValid}
+          disabled={totalBoxes === 0 || status !== "idle" || !financeEmailValid || !hasPO}
           style={{ borderColor: ACCENT, color: ACCENT }}
           className="w-full min-h-[56px] mt-3 text-base font-medium bg-white border transition-colors hover:bg-black/[0.03] disabled:opacity-40 disabled:cursor-not-allowed"
         >
@@ -304,10 +304,10 @@ export default function B2BOrderBuilder() {
           Pay by invoice sends a VAT invoice to your finance team. We ship once it
           is paid. Prefer to talk first?{" "}
           <a
-            href="mailto:harry@conka.io?subject=CONKA%20team%20order"
+            href="mailto:harryglover@conka.io?subject=CONKA%20team%20order"
             className="underline"
           >
-            Email harry@conka.io
+            Email harryglover@conka.io
           </a>
         </p>
       </div>
@@ -332,8 +332,8 @@ function InvoiceSentCard({ financeEmail }: { financeEmail: string }) {
       </p>
       <p className="text-base text-black/55 mt-6">
         Questions?{" "}
-        <a href="mailto:harry@conka.io" className="underline">
-          harry@conka.io
+        <a href="mailto:harryglover@conka.io" className="underline">
+          harryglover@conka.io
         </a>
       </p>
     </div>

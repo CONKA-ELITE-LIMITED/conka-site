@@ -17,8 +17,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { shopifyFetch, type Cart } from "@/app/lib/shopify";
 import { CREATE_CART } from "@/app/lib/shopifyQueries";
+import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 
 export const runtime = "nodejs";
+
+// Lighter touch than the invoice route (this only creates a cart, no email or
+// persistent draft order), but throttled to match its siblings and blunt
+// cartCreate spam. A legit buyer rebuilds their cart only a handful of times.
+const isRateLimited = createRateLimiter({ max: 10, windowMs: 10 * 60 * 1000 });
 
 // Server-side B2B variant GIDs. Populated once the B2B products exist
 // (SCRUM-1056). Not exposed to the client.
@@ -47,6 +53,13 @@ interface CartCreateResponse {
 }
 
 export async function POST(request: NextRequest) {
+  if (isRateLimited(getClientIp(request))) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 },
+    );
+  }
+
   let parsed: z.infer<typeof schema>;
   try {
     const body = await request.json();
@@ -71,7 +84,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "B2B checkout is not available yet. Please use the enquiry form or contact harry@conka.io.",
+            "B2B checkout is not available yet. Please use the enquiry form or contact harryglover@conka.io.",
         },
         { status: 503 },
       );

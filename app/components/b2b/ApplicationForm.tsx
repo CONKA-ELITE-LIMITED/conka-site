@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { B2B_SPORTS, B2B_SQUAD_SIZES } from "@/app/lib/b2bData";
+import { B2B_SPORTS, B2B_SQUAD_SIZES, EMAIL_RE } from "@/app/lib/b2bData";
 import { trackB2BApplicationSubmitted } from "@/app/lib/analytics";
 
 /**
@@ -41,8 +41,6 @@ const EMPTY: FormState = {
   hearAbout: "",
   company: "",
 };
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const labelClass = "brand-eyebrow block mb-2";
 const fieldClass =
@@ -129,8 +127,8 @@ export default function ApplicationForm() {
           <span className="font-medium">{form.workEmail}</span>. It includes
           everything you need to place an order. Can&apos;t see it? Check your spam
           folder, or email{" "}
-          <a href="mailto:harry@conka.io" className="underline">
-            harry@conka.io
+          <a href="mailto:harryglover@conka.io" className="underline">
+            harryglover@conka.io
           </a>
           .
         </p>
