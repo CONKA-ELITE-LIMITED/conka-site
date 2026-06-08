@@ -61,6 +61,8 @@ export default function B2BOrderBuilder() {
   const subtotal = unitPrice * totalBoxes;
   const vat = subtotal * B2B_VAT_RATE;
   const total = subtotal + vat;
+  const hasPO = poNumber.trim().length > 0;
+  const financeEmailValid = EMAIL_RE.test(financeEmail.trim());
 
   function setQty(key: B2BProductKey, next: number) {
     setQuantities((prev) => ({ ...prev, [key]: Math.max(0, Math.floor(next) || 0) }));
@@ -91,7 +93,7 @@ export default function B2BOrderBuilder() {
       trackB2BCheckoutStarted({
         totalBoxes,
         subtotalExVat: subtotal,
-        hasPO: poNumber.trim().length > 0,
+        hasPO,
       });
       window.location.assign(data.checkoutUrl);
     } catch {
@@ -102,7 +104,11 @@ export default function B2BOrderBuilder() {
 
   async function handleInvoice() {
     if (totalBoxes === 0 || status !== "idle") return;
-    if (!EMAIL_RE.test(financeEmail.trim())) {
+    if (!hasPO) {
+      setError("Enter your PO number to pay by invoice.");
+      return;
+    }
+    if (!financeEmailValid) {
       setError("Enter a valid finance email so we can send the invoice.");
       return;
     }
@@ -129,7 +135,7 @@ export default function B2BOrderBuilder() {
       trackB2BInvoiceRequested({
         totalBoxes,
         subtotalExVat: subtotal,
-        hasPO: poNumber.trim().length > 0,
+        hasPO,
       });
       setSentTo(financeEmail.trim());
     } catch {
@@ -229,7 +235,10 @@ export default function B2BOrderBuilder() {
         <div className="mt-6 flex flex-col gap-4">
           <label className="block">
             <span className="block text-sm font-medium mb-2">
-              PO number <span className="text-black/40 font-normal">(optional)</span>
+              PO number{" "}
+              <span className="text-black/40 font-normal">
+                (required to pay by invoice)
+              </span>
             </span>
             <input
               className={INPUT_CLASS}
@@ -284,7 +293,7 @@ export default function B2BOrderBuilder() {
         <button
           type="button"
           onClick={handleInvoice}
-          disabled={totalBoxes === 0 || status !== "idle"}
+          disabled={totalBoxes === 0 || status !== "idle" || !financeEmailValid}
           style={{ borderColor: ACCENT, color: ACCENT }}
           className="w-full min-h-[56px] mt-3 text-base font-medium bg-white border transition-colors hover:bg-black/[0.03] disabled:opacity-40 disabled:cursor-not-allowed"
         >

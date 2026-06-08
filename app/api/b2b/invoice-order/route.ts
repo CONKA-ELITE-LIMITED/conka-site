@@ -68,7 +68,9 @@ const schema = z.object({
     )
     .min(1, "Select at least one product"),
   financeEmail: z.string().trim().email("Enter a valid finance email"),
-  poNumber: z.string().trim().max(100).optional().or(z.literal("")),
+  // PO is required on the pay-by-invoice path (procurement mandates it; it maps
+  // to the Xero invoice Reference). The card path keeps it optional (see cart route).
+  poNumber: z.string().trim().min(1, "PO number is required").max(100),
 });
 
 interface DraftOrderCreateResponse {

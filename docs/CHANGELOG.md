@@ -6,6 +6,30 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B card-path pilot passed; both paths proven end to end (SCRUM-1061)
+
+Ran the card "Buy now" pilot and it passed: a real card order synced to Xero with the Shopify Flow tag applied, correct inclusive VAT, B2B Sales account, and the PO in the invoice Reference (confirming the PO flows on the card path via the tag, since the card order note is empty). The order was refunded. With the invoice path already proven, both B2B purchase paths now produce a compliant Xero VAT invoice end to end. Remaining before fully live: clean up the test Xero invoices, enable Parex auto-sync, decide how the Xero VAT invoice reaches the club (manual to start), the Klaviyo enquiry-to-order email, and the merge plus Vercel env vars.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (pilot result, no app code)
+
+### 2026-06-08 -- B2B invoice-path pilot passed + bank-transfer payment set up (SCRUM-1061 Phase 2)
+
+Ran the pay-by-invoice pilot end to end and it passed on the core dimensions: a 1-box order produced exactly one Xero invoice at net 59 plus 11.80 VAT equals 70.80 inclusive, booked to B2B Sales, with every DTC order ignored by Parex (tag filter working). Parex initially did not map the PO into the Xero invoice Reference; their support then configured the connector to sync the Shopify order note into the Reference for future orders and retro-updated the pilot order (pending verify). Also stood up the bank-transfer payment route with no code: added a Bank Deposit manual payment method carrying CONKA's bank details and a use-your-PO-as-reference instruction, then installed the ETP Hide and Sort Payments app and added a rule that hides Bank Deposit unless the cart contains a B2B Products collection item, so it shows only on the two B2B paths and never on DTC checkout. Verified the customer experience: invoice email, pay page offering card or bank deposit, and a pending order with the bank details on confirmation.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (pilot result + Shopify payment config, no app code)
+
+### 2026-06-08 -- B2B pay-by-invoice form hardened (SCRUM-1061 Phase 1)
+
+Three small fixes to the B2B order page. The PO number is now required on the pay-by-invoice path (blocked client-side with an inline error and server-side with a zod min(1) in the invoice-order route), since procurement mandates it and it maps to the Xero invoice Reference; the card "Buy now" path keeps PO optional. The "Pay by invoice" button is now disabled until a valid finance email is entered, so it no longer looks clickable while the required field is empty (submission was already enforced, this closes the UX gap). The PO label updated to "required to pay by invoice". Card path behaviour is unchanged. Phase 2 (the both-path pilot to Xero) is operational and run separately.
+
+**Modified:** `app/components/b2b/B2BOrderBuilder.tsx`, `app/api/b2b/invoice-order/route.ts`
+
+### 2026-06-08 -- Scoped B2B pay-by-invoice hardening + both-path pilot (SCRUM-1061)
+
+Scoped two small fixes to the B2B order page and documented the pilot that gates go-live, on a new branch off the portal feature branch. Investigation corrected the premise: the finance email is already enforced client and server side, so the only gap is UX (the Pay by invoice button is not disabled when the email is empty), and the PO is optional by design. Decisions: require the PO on the pay-by-invoice path only (card stays frictionless), and disable the Pay by invoice button until a valid finance email is entered. The plan doc now carries the full pilot protocol (run both paths to a verified Xero invoice, net 59 plus 11.80 VAT, PO in the Reference, no DTC synced) with fail diagnostics. Created SCRUM-1061, related to SCRUM-1058 and SCRUM-1060.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (scope + pilot protocol, no app code)
+
 ### 2026-06-08 -- B2B VAT enabled in Shopify and quantity-break discounts created (Road B implemented)
 
 Implemented the Road B switch in the live Shopify admin. Enabled UK VAT collection (VAT no. GB430507628) after verifying "include tax in prices" is ON, so no consumer price changed: the 20% was always inside the inclusive gross and Shopify now records it as 20% instead of assuming 0%. Confirmed the B2B Flow and Clear variants are taxable, and briefed the accountant and Humphrey on the 8 June switchover date so they rely on the Shopify/Xero VAT figures from now instead of backing VAT out of gross manually. Created the SCRUM-1056 quantity-break discounts on a new headless-only B2B Products collection: two automatic per-item amount-off discounts triggered on the combined Flow plus Clear quantity, landing on 62.40 per box at 25-plus and 54.00 at 50-plus, with no stacking. Cart-tested on the headless checkout: 30 boxes gave 1,872 inclusive (312 VAT), 50 boxes gave 2,700 inclusive (450 VAT) with only the 50-plus discount applied. Road B is now proven end to end on both the DTC and B2B card paths. Remaining before go-live: the card-path tagging Flow, the Xero/Parex invoice email, and the pilot. Tracked in SCRUM-1060 and SCRUM-1056.
