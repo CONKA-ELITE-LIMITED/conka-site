@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B card-path pilot passed; both paths proven end to end (SCRUM-1061)
+
+Ran the card "Buy now" pilot and it passed: a real card order synced to Xero with the Shopify Flow tag applied, correct inclusive VAT, B2B Sales account, and the PO in the invoice Reference (confirming the PO flows on the card path via the tag, since the card order note is empty). The order was refunded. With the invoice path already proven, both B2B purchase paths now produce a compliant Xero VAT invoice end to end. Remaining before fully live: clean up the test Xero invoices, enable Parex auto-sync, decide how the Xero VAT invoice reaches the club (manual to start), the Klaviyo enquiry-to-order email, and the merge plus Vercel env vars.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (pilot result, no app code)
+
 ### 2026-06-08 -- B2B invoice-path pilot passed + bank-transfer payment set up (SCRUM-1061 Phase 2)
 
 Ran the pay-by-invoice pilot end to end and it passed on the core dimensions: a 1-box order produced exactly one Xero invoice at net 59 plus 11.80 VAT equals 70.80 inclusive, booked to B2B Sales, with every DTC order ignored by Parex (tag filter working). Parex initially did not map the PO into the Xero invoice Reference; their support then configured the connector to sync the Shopify order note into the Reference for future orders and retro-updated the pilot order (pending verify). Also stood up the bank-transfer payment route with no code: added a Bank Deposit manual payment method carrying CONKA's bank details and a use-your-PO-as-reference instruction, then installed the ETP Hide and Sort Payments app and added a rule that hides Bank Deposit unless the cart contains a B2B Products collection item, so it shows only on the two B2B paths and never on DTC checkout. Verified the customer experience: invoice email, pay page offering card or bank deposit, and a pending order with the bank details on confirmation.
