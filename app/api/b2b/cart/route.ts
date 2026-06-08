@@ -18,6 +18,7 @@ import { z } from "zod";
 import { shopifyFetch, type Cart } from "@/app/lib/shopify";
 import { CREATE_CART } from "@/app/lib/shopifyQueries";
 import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
+import { B2B_VARIANTS } from "@/app/lib/b2bVariants";
 
 export const runtime = "nodejs";
 
@@ -25,13 +26,6 @@ export const runtime = "nodejs";
 // persistent draft order), but throttled to match its siblings and blunt
 // cartCreate spam. A legit buyer rebuilds their cart only a handful of times.
 const isRateLimited = createRateLimiter({ max: 10, windowMs: 10 * 60 * 1000 });
-
-// Server-side B2B variant GIDs. Populated once the B2B products exist
-// (SCRUM-1056). Not exposed to the client.
-const B2B_VARIANTS: Record<"flow" | "clear", string | undefined> = {
-  flow: process.env.B2B_FLOW_VARIANT_ID,
-  clear: process.env.B2B_CLEAR_VARIANT_ID,
-};
 
 const schema = z.object({
   lines: z
@@ -75,22 +69,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  // Resolve variant GIDs. If the B2B products are not configured yet, fail
-  // clearly rather than creating a broken cart.
-  const lines: Array<{ merchandiseId: string; quantity: number }> = [];
-  for (const line of parsed.lines) {
-    const variantId = B2B_VARIANTS[line.product];
-    if (!variantId) {
-      return NextResponse.json(
-        {
-          error:
-            "B2B checkout is not available yet. Please use the enquiry form or contact harryglover@conka.io.",
-        },
-        { status: 503 },
-      );
-    }
-    lines.push({ merchandiseId: variantId, quantity: line.quantity });
-  }
+  const lines = parsed.lines.map((line) => ({
+    merchandiseId: B2B_VARIANTS[line.product],
+    quantity: line.quantity,
+  }));
 
   const attributes: Array<{ key: string; value: string }> = [
     { key: "Order Type", value: "B2B Professionals" },

@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B Shopify variant GIDs moved from env to constants
+
+The deployed order page returned "checkout not available yet" because the card and invoice routes resolved the Flow/Clear Shopify variant GIDs from env vars that were not set in Vercel. Those GIDs are not secret (they appear in any cart and checkout URL) and do not vary by environment (one prod Shopify store), so they did not belong in env. Moved them into a single server-side constant module (`app/lib/b2bVariants.ts`), shared by both routes, which also deduplicates the definition that was copy-pasted in each. Card checkout now needs nothing in Vercel; only the genuine secret (`SHOPIFY_ADMIN_API_TOKEN`, for pay-by-invoice) and the per-environment `NEXT_PUBLIC_SITE_URL` remain as env. Dropped the now-dead "variant not configured" 503 branches.
+
+**Modified:** `app/lib/b2bVariants.ts` (new), `app/api/b2b/cart/route.ts`, `app/api/b2b/invoice-order/route.ts`, `docs/development/featurePlans/b2b-professionals-portal.md`
+
 ### 2026-06-08 -- B2B portal code-review fixes
 
 Follow-up cleanups from a code review of the full B2B portal flow. Pointed every customer-facing contact address in the portal (enquiry form, order builder, regular-supply CTA, and both payment-route error messages) at `harryglover@conka.io`, since several still used a `harry@conka.io` address that may not resolve. Deduplicated the client email-validation regex into a single shared `EMAIL_RE` in `b2bData.ts` (was copy-pasted in both B2B forms). Added a per-IP rate limiter to the card-checkout cart route so it matches its sibling routes (apply and invoice-order already had one). Gated the "Pay by invoice" button on the PO number as well as the finance email, so both required fields disable the button consistently rather than one erroring on click. No behavioural change to the happy paths.
