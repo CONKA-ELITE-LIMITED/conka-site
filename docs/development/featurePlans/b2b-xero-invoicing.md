@@ -242,6 +242,21 @@ The de-risk gate. Run BOTH paths end to end against the live store, then verify 
 
 **Fail diagnostics:** 0% VAT on the invoice -> Shopify is not charging VAT on that variant (recheck "Charge tax" + UK collection); VAT added on top (70.80 + 11.80) -> inclusive-pricing flag is off; duplicate invoice -> draft-conversion issue (the thing the pilot exists to catch); no PO in Reference -> Parex reads the other field, swap note vs tag.
 
+## Pilot result + setup done (8 June 2026)
+
+**Invoice-path pilot: PASSED on the core dimensions.** Ran a 1-box pay-by-invoice order (draft -> marked paid -> Parex manual sync) and checked Xero:
+- One invoice, **net GBP 59 + VAT GBP 11.80 = GBP 70.80 inclusive** (Road B proven end to end: Shopify charged 20% inclusive, Parex mirrored it).
+- Booked to **B2B Sales**.
+- **All DTC orders "Ignored"** in Parex (tag filter works, zero DTC synced).
+- Shopify auto-emailed the invoice to the finance email.
+- **PO in the Xero Reference - FIXED by Parex support (8 June).** Initially Parex defaulted the Reference to the prefixed order number (`SPY-3514`) with no PO. We messaged support; they replied (Mahek, 8 June) that they have **configured the connector to sync the Shopify order Note value into the Xero invoice Reference** for all future orders, and **retro-updated order #3514**. PENDING VERIFY: confirm #3514's Reference now shows the PO, and check the PO lands on the next live order.
+
+**Bank-transfer payment path set up (Shopify, no code).** Added a **Bank Deposit** manual payment method (Settings > Payments) with CONKA's bank details (Conka Elite Limited, sort 60-21-03, acct 48757438) and "use your PO number as the payment reference". So a no-card club selects Bank Deposit at the invoice checkout, gets the bank details on the confirmation + email, transfers quoting the PO, and Harry marks the order paid when it lands in Revolut. Verified: the confirmation page shows the bank details correctly.
+
+**Bank Deposit scoped to B2B only (Shopify app, no code).** Bank Deposit is a store-wide method, so it would otherwise show on DTC checkout. Installed **ETP "Hide & Sort Payments"** (free, Built for Shopify, payment customizations) and added a rule: **hide Bank Deposit when the cart does NOT contain a product from the `B2B Products` collection.** So DTC checkouts never show it; both B2B paths (card + invoice, which carry the Team Box products) do. Verified working. (Payment customizations are NOT Plus-gated for UK; the credit-card restriction that needs Plus only applies to US/Canada.)
+
+**Customer payment experience, confirmed working:** invoice email -> "Complete your purchase" -> checkout shows **Credit card / PayPal / Bank Deposit** -> Bank Deposit places a *pending* order and shows the bank details. Card auto-marks paid; bank transfer is marked paid by Harry on receipt.
+
 ## References
 
 - Portal plan + pay-by-invoice build: `docs/development/featurePlans/b2b-professionals-portal.md`
