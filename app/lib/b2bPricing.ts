@@ -76,8 +76,10 @@ export function getB2BTier(boxes: number): B2BTier {
  * Gross (VAT-inclusive) per-box price: the amount the club actually pays. B2B is
  * priced ex-VAT (tier price + 20%). The Shopify B2B variants are priced at the
  * gross ENTRY rate, and the pay-by-invoice route discounts down to the gross tier
- * price; Parex (inclusive 20%) then splits the gross back into net + VAT on the
- * Xero invoice. See docs/development/featurePlans/b2b-xero-invoicing.md.
+ * price. Shopify collects UK VAT inclusively (20%), so it extracts the VAT from
+ * the gross at checkout, and the Shopify-to-Xero connector mirrors that VAT onto
+ * the Xero invoice (net + 20% VAT). The connector does NOT derive VAT on its own:
+ * Shopify must charge it. See docs/development/featurePlans/b2b-xero-invoicing.md.
  */
 export function getB2BGrossPerBox(tier: B2BTier): number {
   return Math.round(tier.pricePerBox * (1 + B2B_VAT_RATE) * 100) / 100;

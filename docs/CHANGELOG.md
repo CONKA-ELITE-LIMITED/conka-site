@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B VAT mechanism switched from Road A to Road B
+
+The Parex / Xero Bridge connector vendor confirmed in writing that the connector mirrors whatever tax Shopify charged on an order and does not derive VAT from a gross price: if Shopify charges 0%, it books the Xero invoice at no VAT. Road A (leave Shopify VAT off, let the connector split the gross) would therefore have produced non-compliant zero-VAT invoices. The mechanism is now Road B: enable UK VAT collection in Shopify (VAT no. GB430507628, inclusive pricing) so Shopify charges the 20% the connector mirrors. This is safe because CONKA is VAT-registered and already accounts for DTC VAT on the inclusive gross, and with inclusive pricing on it changes no consumer price. The pricing decision (ex-VAT, club pays gross) and the website code are unchanged: the invoice route already prices in gross and discounts to the gross tier total, which is correct under inclusive 20%, so only the now-false Road A code comments were corrected. The remaining work is Shopify-admin config, an accountant heads-up on the switchover date, the card-path tagging Flow, and a pilot. Tracked in SCRUM-1060.
+
+**Modified:** `app/api/b2b/invoice-order/route.ts`, `app/lib/b2bPricing.ts`, `docs/development/featurePlans/b2b-vat-decision.md`, `docs/development/featurePlans/b2b-xero-invoicing.md`, `docs/development/featurePlans/b2b-professionals-portal.md`
+
 ### 2026-06-05 -- B2B pay-by-invoice priced at the gross (VAT-inclusive) amount
 
 Road A locked: B2B products get repriced to the gross VAT-inclusive amount in Shopify rather than turning on Shopify VAT collection (which would have put every DTC order's tax reporting at risk for no extra benefit). The pay-by-invoice route now computes its tier discount in gross terms via a new getB2BGrossPerBox helper, so the draft order total is what the club actually pays (Entry 70.80, Squad 62.40, Institutional 54.00 per box), and Parex splits the gross into net plus 20% VAT on the Xero invoice. This must merge to production in lockstep with the matching Shopify variant reprice to 70.80 and the gross auto-discount reconfiguration, or the draft totals will not match the variant base. The order-page display is unchanged (it already shows net plus VAT).
