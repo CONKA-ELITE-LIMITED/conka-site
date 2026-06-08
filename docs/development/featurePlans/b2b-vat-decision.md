@@ -2,7 +2,7 @@
 
 **Decision owner:** Rudh (feature owner)
 **Date:** 5 June 2026 (mechanism corrected 8 June 2026, see Correction below)
-**Status:** Decided. Mechanism switched from Road A to Road B on 8 June 2026. Implementation in progress; final numbers proven by a pilot order.
+**Status:** Decided. Mechanism switched from Road A to Road B on 8 June 2026, and the Shopify side implemented the same day: UK VAT collection enabled (GB430507628, inclusive, no price change), B2B variants confirmed taxable, both quantity-break discounts created and cart-verified inclusive. Remaining before live: Shopify Flow card-tagging rule, Xero/Parex invoice email, then the pilot order. Final numbers to be proven by that pilot.
 **Related:** `b2b-xero-invoicing.md` (implementation detail), SCRUM-1059, SCRUM-1060 (the Road B switch).
 
 This document records what we decided about VAT on B2B (sports club / trade) orders and why. It is the rationale; the step-by-step build lives in the implementation plan above.
