@@ -50,10 +50,10 @@ export const B2B_KLAVIYO = {
    * always sends to the triggering profile, so this is how the alert reaches Harry.
    */
   alertEventName: "B2B Lead Alert",
-  /** Internal recipient of the new-lead alert. Override via env. */
-  notifyEmail: process.env.B2B_NOTIFY_EMAIL ?? "harryglover@conka.io",
-  /** List the applicant is added to. Override via env for non-prod. */
-  listId: process.env.KLAVIYO_B2B_LIST_ID ?? "",
+  /** Internal recipient of the new-lead alert. Plain config, not a secret. */
+  notifyEmail: "harryglover@conka.io",
+  /** Klaviyo "B2B Leads" list. One Klaviyo account, so a constant, not env. */
+  listId: "Xhqyt8",
 } as const;
 
 /** Relative path to the gated order page the applicant is sent to (built in Phase 2). */

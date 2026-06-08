@@ -237,11 +237,6 @@ async function subscribeToList(
   application: B2BApplication,
   privateKey: string,
 ): Promise<boolean> {
-  if (!B2B_KLAVIYO.listId) {
-    console.error("[B2B] KLAVIYO_B2B_LIST_ID is not configured");
-    return false;
-  }
-
   const profileId = await resolveProfileId(application, privateKey);
   if (!profileId) {
     console.error("[B2B] Could not resolve profile id; cannot add to list");
