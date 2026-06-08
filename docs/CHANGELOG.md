@@ -6,6 +6,84 @@
 
 ## June 2026
 
+### 2026-06-08 -- B2B portal code-review fixes
+
+Follow-up cleanups from a code review of the full B2B portal flow. Pointed every customer-facing contact address in the portal (enquiry form, order builder, regular-supply CTA, and both payment-route error messages) at `harryglover@conka.io`, since several still used a `harry@conka.io` address that may not resolve. Deduplicated the client email-validation regex into a single shared `EMAIL_RE` in `b2bData.ts` (was copy-pasted in both B2B forms). Added a per-IP rate limiter to the card-checkout cart route so it matches its sibling routes (apply and invoice-order already had one). Gated the "Pay by invoice" button on the PO number as well as the finance email, so both required fields disable the button consistently rather than one erroring on click. No behavioural change to the happy paths.
+
+**Modified:** `app/professionals/page.tsx`, `app/components/b2b/ApplicationForm.tsx`, `app/components/b2b/B2BOrderBuilder.tsx`, `app/lib/b2bData.ts`, `app/api/b2b/cart/route.ts`, `app/api/b2b/invoice-order/route.ts`
+
+### 2026-06-08 -- B2B Phase 1 enquiry email automation live (SCRUM-1055)
+
+Closed the last functional gap in the B2B portal: a club that submits the `/professionals` enquiry now auto-receives the order-page link and Harry is auto-notified, both via Klaviyo flows. Created the "B2B Leads" list plus two live flows keyed off the apply route's events. The applicant welcome triggers on the existing `B2B Application Submitted` event. Harry's alert needed a workaround, since a Klaviyo flow email always sends to the triggering profile: the apply route now fires a second `B2B Lead Alert` event on Harry's own profile (recipient configurable via `B2B_NOTIFY_EMAIL`), carrying the applicant's details, so the alert reaches Harry rather than the applicant. Also fixed the enquiry form, which let you submit with a required field empty: required fields now carry a visible marker and the submit button is disabled until all are valid. Verified end to end against a real inbox. The Klaviyo list id and alert recipient are plain in-code constants (one Klaviyo account, no per-environment variance), so the only env to set in Vercel before deploy is `NEXT_PUBLIC_SITE_URL`.
+
+**Modified:** `app/lib/b2bEmail.ts`, `app/lib/b2bData.ts`, `app/components/b2b/ApplicationForm.tsx`, `docs/development/featurePlans/b2b-professionals-portal.md`
+
+### 2026-06-08 -- B2B card-path pilot passed; both paths proven end to end (SCRUM-1061)
+
+Ran the card "Buy now" pilot and it passed: a real card order synced to Xero with the Shopify Flow tag applied, correct inclusive VAT, B2B Sales account, and the PO in the invoice Reference (confirming the PO flows on the card path via the tag, since the card order note is empty). The order was refunded. With the invoice path already proven, both B2B purchase paths now produce a compliant Xero VAT invoice end to end. Remaining before fully live: clean up the test Xero invoices, enable Parex auto-sync, decide how the Xero VAT invoice reaches the club (manual to start), the Klaviyo enquiry-to-order email, and the merge plus Vercel env vars.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (pilot result, no app code)
+
+### 2026-06-08 -- B2B invoice-path pilot passed + bank-transfer payment set up (SCRUM-1061 Phase 2)
+
+Ran the pay-by-invoice pilot end to end and it passed on the core dimensions: a 1-box order produced exactly one Xero invoice at net 59 plus 11.80 VAT equals 70.80 inclusive, booked to B2B Sales, with every DTC order ignored by Parex (tag filter working). Parex initially did not map the PO into the Xero invoice Reference; their support then configured the connector to sync the Shopify order note into the Reference for future orders and retro-updated the pilot order (pending verify). Also stood up the bank-transfer payment route with no code: added a Bank Deposit manual payment method carrying CONKA's bank details and a use-your-PO-as-reference instruction, then installed the ETP Hide and Sort Payments app and added a rule that hides Bank Deposit unless the cart contains a B2B Products collection item, so it shows only on the two B2B paths and never on DTC checkout. Verified the customer experience: invoice email, pay page offering card or bank deposit, and a pending order with the bank details on confirmation.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (pilot result + Shopify payment config, no app code)
+
+### 2026-06-08 -- B2B pay-by-invoice form hardened (SCRUM-1061 Phase 1)
+
+Three small fixes to the B2B order page. The PO number is now required on the pay-by-invoice path (blocked client-side with an inline error and server-side with a zod min(1) in the invoice-order route), since procurement mandates it and it maps to the Xero invoice Reference; the card "Buy now" path keeps PO optional. The "Pay by invoice" button is now disabled until a valid finance email is entered, so it no longer looks clickable while the required field is empty (submission was already enforced, this closes the UX gap). The PO label updated to "required to pay by invoice". Card path behaviour is unchanged. Phase 2 (the both-path pilot to Xero) is operational and run separately.
+
+**Modified:** `app/components/b2b/B2BOrderBuilder.tsx`, `app/api/b2b/invoice-order/route.ts`
+
+### 2026-06-08 -- Scoped B2B pay-by-invoice hardening + both-path pilot (SCRUM-1061)
+
+Scoped two small fixes to the B2B order page and documented the pilot that gates go-live, on a new branch off the portal feature branch. Investigation corrected the premise: the finance email is already enforced client and server side, so the only gap is UX (the Pay by invoice button is not disabled when the email is empty), and the PO is optional by design. Decisions: require the PO on the pay-by-invoice path only (card stays frictionless), and disable the Pay by invoice button until a valid finance email is entered. The plan doc now carries the full pilot protocol (run both paths to a verified Xero invoice, net 59 plus 11.80 VAT, PO in the Reference, no DTC synced) with fail diagnostics. Created SCRUM-1061, related to SCRUM-1058 and SCRUM-1060.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (scope + pilot protocol, no app code)
+
+### 2026-06-08 -- B2B VAT enabled in Shopify and quantity-break discounts created (Road B implemented)
+
+Implemented the Road B switch in the live Shopify admin. Enabled UK VAT collection (VAT no. GB430507628) after verifying "include tax in prices" is ON, so no consumer price changed: the 20% was always inside the inclusive gross and Shopify now records it as 20% instead of assuming 0%. Confirmed the B2B Flow and Clear variants are taxable, and briefed the accountant and Humphrey on the 8 June switchover date so they rely on the Shopify/Xero VAT figures from now instead of backing VAT out of gross manually. Created the SCRUM-1056 quantity-break discounts on a new headless-only B2B Products collection: two automatic per-item amount-off discounts triggered on the combined Flow plus Clear quantity, landing on 62.40 per box at 25-plus and 54.00 at 50-plus, with no stacking. Cart-tested on the headless checkout: 30 boxes gave 1,872 inclusive (312 VAT), 50 boxes gave 2,700 inclusive (450 VAT) with only the 50-plus discount applied. Road B is now proven end to end on both the DTC and B2B card paths. Remaining before go-live: the card-path tagging Flow, the Xero/Parex invoice email, and the pilot. Tracked in SCRUM-1060 and SCRUM-1056.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md`, `docs/development/featurePlans/b2b-vat-decision.md`, `docs/development/featurePlans/b2b-professionals-portal.md` (Shopify-admin config, no app code)
+
+### 2026-06-08 -- B2B card-path tagging Flow built and Parex verified
+
+Built and turned on the Shopify Flow rule that brings instant card "Buy now" B2B orders into the Xero sync. The headless cart can only set cart attributes, not order tags or notes, so the rule fires on order created, checks the Order Type attribute equals B2B Professionals, and adds the B2B Professionals order tag plus a Liquid-built PO tag. That puts card orders into Parex's tag scope with the PO attached, matching the pay-by-invoice path. Also re-verified Parex: connected to Conka Elite, manual sync (auto sync off), and the tax mapping (20% VAT on Income, zero code No VAT) that mirrors the now-live Shopify VAT onto the Xero invoice. All B2B VAT and invoicing config is now complete; the only remaining step is the pilot (one card and one invoice order verified end to end in Xero), best run with Harry. No app code in this change.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (Shopify Flow + Parex config, no app code)
+
+### 2026-06-08 -- B2B VAT mechanism switched from Road A to Road B
+
+The Parex / Xero Bridge connector vendor confirmed in writing that the connector mirrors whatever tax Shopify charged on an order and does not derive VAT from a gross price: if Shopify charges 0%, it books the Xero invoice at no VAT. Road A (leave Shopify VAT off, let the connector split the gross) would therefore have produced non-compliant zero-VAT invoices. The mechanism is now Road B: enable UK VAT collection in Shopify (VAT no. GB430507628, inclusive pricing) so Shopify charges the 20% the connector mirrors. This is safe because CONKA is VAT-registered and already accounts for DTC VAT on the inclusive gross, and with inclusive pricing on it changes no consumer price. The pricing decision (ex-VAT, club pays gross) and the website code are unchanged: the invoice route already prices in gross and discounts to the gross tier total, which is correct under inclusive 20%, so only the now-false Road A code comments were corrected. The remaining work is Shopify-admin config, an accountant heads-up on the switchover date, the card-path tagging Flow, and a pilot. Tracked in SCRUM-1060.
+
+**Modified:** `app/api/b2b/invoice-order/route.ts`, `app/lib/b2bPricing.ts`, `docs/development/featurePlans/b2b-vat-decision.md`, `docs/development/featurePlans/b2b-xero-invoicing.md`, `docs/development/featurePlans/b2b-professionals-portal.md`
+
+### 2026-06-05 -- B2B pay-by-invoice priced at the gross (VAT-inclusive) amount
+
+Road A locked: B2B products get repriced to the gross VAT-inclusive amount in Shopify rather than turning on Shopify VAT collection (which would have put every DTC order's tax reporting at risk for no extra benefit). The pay-by-invoice route now computes its tier discount in gross terms via a new getB2BGrossPerBox helper, so the draft order total is what the club actually pays (Entry 70.80, Squad 62.40, Institutional 54.00 per box), and Parex splits the gross into net plus 20% VAT on the Xero invoice. This must merge to production in lockstep with the matching Shopify variant reprice to 70.80 and the gross auto-discount reconfiguration, or the draft totals will not match the variant base. The order-page display is unchanged (it already shows net plus VAT).
+
+**Modified:** `app/api/b2b/invoice-order/route.ts`, `app/lib/b2bPricing.ts`, `docs/development/featurePlans/b2b-xero-invoicing.md`
+
+### 2026-06-05 -- B2B Xero VAT model and go-live checklist agreed
+
+Locked how the 20% VAT lands on B2B orders and invoices, and captured it as a single go-live checklist in the plan doc. Decision (Harry): B2B prices are ex-VAT, so the club pays the box price plus 20% and reclaims it. Reading the code surfaced that the B2B variants are priced at the net (59), so both checkout paths currently undercharge (the page promises 70.80 but Shopify charges 59); the fix is to reprice the variants to the gross and let Parex split out the VAT on the Xero invoice (inclusive treatment), with no change to the DTC flow and pending accountant sign-off. Also resolved that instant card "Buy now" orders get their own Xero invoice too, via a Shopify Flow rule that tags the order and carries the PO into the note (the Storefront cart API cannot set tags), so fast purchases are not suspended. The compliant VAT invoice is the Xero one, which must be emailed to the club. Pilot now covers both paths. No website code in this change.
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md`
+
+### 2026-06-05 -- B2B Xero invoicing plan (Shopify-to-Xero connector)
+
+Scoped how paid B2B orders will book into Xero as compliant VAT invoices via an off-the-shelf connector (closing SCRUM-1058 AC6), no bespoke Xero API build. Plan captures the connector comparison (Parex vs the official Amaka integration vs others), the gating risk that our draft-order flow may clash with connectors that do not support draft orders, the one support question that decides the connector, and a three-phase shape: a small additive website change (PO into a connector-readable field), a Xero-side config step owned by whoever manages the books, and a pilot order to verify before anything is locked. Phase 1 code shipped: the B2B invoice-order route now writes the PO into the Shopify order note (verbatim, the clean Xero-Reference carrier) and a comma-sanitized tag, additively, keeping the existing custom attribute. Live-verified against Shopify. Connector setup and pilot remain (owned by whoever manages Xero).
+
+**Modified:** `docs/development/featurePlans/b2b-xero-invoicing.md` (new), `app/api/b2b/invoice-order/route.ts`
+
+### 2026-06-04 -- B2B pay-by-invoice path on the team order page
+
+Sports clubs can now pay by invoice on /professionals/order, not just by card. A new "Pay by invoice" option creates a Shopify draft order at the correct volume-tier price and emails a VAT invoice to the club's finance team; the buyer pays the hosted invoice (card or bank transfer) and we ship once Harry marks it paid. Lean by design: it reuses the existing PO field and adds only a finance-email field, no second form and no delivery address (captured on Shopify's pay-link). This is CONKA's first use of the Shopify Admin API (draft orders live there, not in the Storefront API), behind a server-only token. The invoice endpoint is rate-limited as an abuse guard, and that limiter was extracted into a shared util now used by the enquiry route too.
+
+**Modified:** `app/lib/shopifyAdmin.ts` (new), `app/api/b2b/invoice-order/route.ts` (new), `app/lib/rateLimit.ts` (new), `app/components/b2b/B2BOrderBuilder.tsx`, `app/lib/analytics.ts`, `app/api/b2b/apply/route.ts`
+
 ### 2026-06-03 -- Navigation contrast raised, logo links use Next Link, guarantee CTA shortened
 
 Navigation text (nav links, account and cart icons, mobile menu items) raised from 65-75% black to full black for stronger contrast and readability. The logo home links in both desktop and mobile navigation now use Next.js Link instead of raw anchors, enabling client-side navigation instead of a full page reload. The /conka-both guarantee section CTA label shortened from "Learn more about the CONKA app" to "Learn more".

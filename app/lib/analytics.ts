@@ -298,6 +298,55 @@ export function trackAppDataInsightsViewed(): void {
   });
 }
 
+// ===== B2B PORTAL TRACKING =====
+
+/**
+ * Track a B2B teams enquiry submission.
+ * Fires once on successful submit of the /professionals application form.
+ */
+export function trackB2BApplicationSubmitted(params: {
+  sport: string;
+  squadSize: string;
+}): void {
+  safeTrack("b2b_application_submitted", {
+    sport: params.sport,
+    squadSize: params.squadSize,
+  });
+}
+
+/**
+ * Track a B2B order heading to Shopify checkout.
+ * Fires when "Buy now" successfully creates a cart on the order page.
+ */
+export function trackB2BCheckoutStarted(params: {
+  totalBoxes: number;
+  subtotalExVat: number;
+  hasPO: boolean;
+}): void {
+  safeTrack("b2b_checkout_started", {
+    totalBoxes: params.totalBoxes,
+    subtotalExVat: params.subtotalExVat,
+    hasPO: params.hasPO,
+  });
+}
+
+/**
+ * Track a B2B pay-by-invoice request.
+ * Fires when "Pay by invoice" successfully creates a Shopify draft order and
+ * sends the invoice on the order page.
+ */
+export function trackB2BInvoiceRequested(params: {
+  totalBoxes: number;
+  subtotalExVat: number;
+  hasPO: boolean;
+}): void {
+  safeTrack("b2b_invoice_requested", {
+    totalBoxes: params.totalBoxes,
+    subtotalExVat: params.subtotalExVat,
+    hasPO: params.hasPO,
+  });
+}
+
 // ===== PURCHASE INTENT TRACKING =====
 
 /**
