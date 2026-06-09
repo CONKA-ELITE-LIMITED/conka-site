@@ -23,6 +23,24 @@ const ADAPTOGENS_DATA: ExplainerData = {
   ),
   definition:
     "Adaptogens are natural compounds that help your body adapt to stress instead of forcing a response the way a stimulant does. They nudge an overworked stress system back toward balance.",
+  ingredientsLabel: "Adaptogens in the CONKA system",
+  ingredients: [
+    {
+      name: "Ashwagandha",
+      render: "/ingredients/renders/Ashwagandha.jpg",
+      note: "Cortisol modulator",
+    },
+    {
+      name: "Rhodiola rosea",
+      render: "/ingredients/renders/RhodiolaRosea.jpg",
+      note: "Anti-fatigue",
+    },
+    {
+      name: "Lemon balm",
+      render: "/ingredients/renders/LemonBalm.jpg",
+      note: "Calm without sedation",
+    },
+  ],
   analogy:
     "Think of them like a thermostat for stress. Rather than blasting heat or cold, they hold the room at a workable temperature.",
   mechanism: [

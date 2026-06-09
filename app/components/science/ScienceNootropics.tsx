@@ -23,6 +23,24 @@ const NOOTROPICS_DATA: ExplainerData = {
   ),
   definition:
     "Nootropics are compounds that support the brain's performance directly: how well you focus, how fast you process, how reliably you recall. They work on the machinery of thinking itself.",
+  ingredientsLabel: "Nootropics in the CONKA system",
+  ingredients: [
+    {
+      name: "Alpha-GPC",
+      render: "/ingredients/renders/AlphaGPC.jpg",
+      note: "Acetylcholine precursor",
+    },
+    {
+      name: "Ginkgo biloba",
+      render: "/ingredients/renders/GinkgoBiloba.jpg",
+      note: "Cerebral blood flow",
+    },
+    {
+      name: "Alpha-lipoic acid",
+      render: "/ingredients/renders/AlphaLipoicAcid.jpg",
+      note: "Cellular energy",
+    },
+  ],
   analogy:
     "Think of them less like fuel and more like tuning the engine. The same brain, running cleaner and responding faster.",
   mechanism: [

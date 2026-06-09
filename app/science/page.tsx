@@ -52,9 +52,9 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 3: TWO-SYSTEM MODEL ===== */}
+      {/* ===== SECTION 3: TWO-SYSTEM MODEL (dark contrast band) ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-black"
         aria-label="The two-system model"
       >
         <div className="brand-track">

@@ -1,10 +1,17 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import Image from "next/image";
 
 export interface ExplainerStep {
   label: string;
   detail: string;
+}
+
+export interface ExplainerIngredient {
+  name: string;
+  render: string;
+  note: string;
 }
 
 export interface ExplainerData {
@@ -13,6 +20,8 @@ export interface ExplainerData {
   systemTag: string;
   icon: ReactNode;
   definition: string;
+  ingredientsLabel: string;
+  ingredients: ExplainerIngredient[];
   analogy: string;
   mechanism: ExplainerStep[];
   doseNote: string;
@@ -36,6 +45,40 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
         <p className="text-base md:text-lg text-black leading-relaxed">
           {data.definition}
         </p>
+      </div>
+
+      {/* Ingredient renders — the visual anchor for the section */}
+      <div className="mb-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+          {data.ingredientsLabel}
+        </p>
+        <div className="grid grid-cols-3 gap-2 lg:gap-3">
+          {data.ingredients.map((ing, idx) => (
+            <figure key={ing.name}>
+              <div className="relative aspect-square bg-white border border-black/12 overflow-hidden">
+                <Image
+                  src={ing.render}
+                  alt={`Render of ${ing.name}`}
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 1024px) 30vw, 220px"
+                  className="object-cover"
+                />
+                <span className="absolute top-2 left-2 font-mono text-[8px] uppercase tracking-[0.18em] text-black/40 bg-white/80 px-1.5 py-0.5 tabular-nums">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <figcaption className="mt-2">
+                <p className="text-sm font-semibold text-black leading-tight">
+                  {ing.name}
+                </p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50 tabular-nums mt-0.5 leading-tight">
+                  {ing.note}
+                </p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
 
       {/* Analogy — a differentiated aside, scannable, always visible */}
