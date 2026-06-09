@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import ApplicationForm from "@/app/components/b2b/ApplicationForm";
+import InformedSportCertification from "@/app/components/InformedSportCertification";
 
 export const metadata: Metadata = {
   title: "Team & Club Pricing | CONKA",
@@ -53,21 +54,38 @@ export default function ProfessionalsPage() {
             clubs and performance organisations at team pricing, with the
             procurement support your finance team expects.
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a
               href="#apply"
-              className="brand-btn brand-btn-accent inline-flex items-center justify-center min-h-[52px] text-sm uppercase tracking-[0.15em]"
+              className="brand-btn brand-btn-accent inline-flex items-center justify-center min-h-[52px] w-full sm:w-auto text-sm uppercase tracking-[0.15em]"
             >
               Get team pricing
             </a>
+            <a
+              href="#pilot"
+              className="brand-btn brand-btn-secondary inline-flex items-center justify-center min-h-[52px] w-full sm:w-auto text-sm uppercase tracking-[0.15em]"
+            >
+              Explore a squad pilot
+            </a>
           </div>
+        </div>
+      </section>
+
+      {/* TRUST — third-party anti-doping certification, promoted high */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Independent certification"
+      >
+        <div className="brand-track">
+          <p className="brand-eyebrow mb-5">{"// Independently tested"}</p>
+          <InformedSportCertification headingLevel="h2" />
         </div>
       </section>
 
       {/* APPLY — value points + enquiry form */}
       <section
         id="apply"
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Apply for team pricing"
       >
         <div className="brand-track">
@@ -102,7 +120,7 @@ export default function ProfessionalsPage() {
 
       {/* SUBSCRIPTION ENQUIRY — recurring supply exit ramp */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Regular supply enquiry"
       >
         <div className="brand-track">
