@@ -11,7 +11,7 @@ export default function AppOrigin() {
     <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
       {/* Asset — leads on desktop, sits below the heading on mobile */}
       <div className="relative order-2 lg:order-1 w-full mt-10 lg:mt-0 lg:flex-1">
-        <div className="relative aspect-[4/5] max-w-[260px] lg:max-w-[320px] mx-auto lg:mx-0 border border-white/12 bg-white/[0.03] overflow-hidden">
+        <div className="relative aspect-square w-full max-w-[500px] mx-auto lg:mx-0 border border-white/12 bg-white/[0.03] overflow-hidden">
           <Image
             src="/TwoFounders.jpg"
             alt="CONKA founders Harry Glover and Humphrey Bodington"

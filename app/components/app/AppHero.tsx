@@ -30,19 +30,26 @@ export default function AppHero() {
         </div>
       </div>
 
-      {/* Hero asset — clinical frame, mirrors the science hero treatment */}
+      {/* Hero asset — light device-card so the dark phone render pops. The
+          phone floats from the top so the live score ring leads; the bottom
+          is clipped by the square frame. */}
       <div className="relative order-2 w-full mt-12 lg:mt-0 lg:flex-1">
-        <div className="relative aspect-[4/5] max-w-[360px] mx-auto lg:mx-0 lg:ml-auto border border-white/12 bg-white/[0.03] overflow-hidden">
-          <Image
-            src="/app/AppConkaRing.png"
-            alt="The CONKA app showing a live cognitive score ring"
-            fill
-            priority
-            sizes="(max-width: 1024px) 90vw, 40vw"
-            className="object-contain p-6"
-          />
-          <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white/80 bg-white/[0.08] px-2 py-1 tabular-nums">
-            Fig. 01 · Your live score
+        <div className="relative aspect-square w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto border border-black/12 bg-[#f5f5f5] overflow-hidden">
+          <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10">
+            Fig. 01 · CONKA App
+          </div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-[25%] w-[60%] lg:w-[58%] aspect-[1/2]">
+            <Image
+              src="/app/AppConkaRing.png"
+              alt="The CONKA app showing a live cognitive score ring"
+              fill
+              priority
+              sizes="(max-width: 1024px) 60vw, 300px"
+              className="object-contain"
+            />
+          </div>
+          <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10">
+            iOS · Android
           </div>
         </div>
       </div>
