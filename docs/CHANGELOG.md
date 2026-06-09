@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-09** | Science page Phase 4: evidence ladder (four rungs, confident transparency), Revolut real-world module, evidence-engine beat, partners/patent strip, shop CTA
 - **2026-06-09** | Science page: drop the dark band back to neutral and merge adaptogens + nootropics into one two-column education section
 - **2026-06-09** | Science page energy pass: ingredient renders in the adaptogen/nootropic sections and a dark two-system contrast band
 - **2026-06-09** | B2B value callout gains a by-the-box estimator mode (toggle) with product/icon visuals (SCRUM-1071)

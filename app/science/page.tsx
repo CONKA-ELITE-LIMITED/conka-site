@@ -7,7 +7,7 @@ import ScienceEducation from "@/app/components/science/ScienceEducation";
 import SciencePillars from "@/app/components/science/SciencePillars";
 import FlowVsClear from "@/app/components/science/FlowVsClear";
 import ScienceDifferent from "@/app/components/science/ScienceDifferent";
-import EvidenceSummary from "@/app/components/science/EvidenceSummary";
+import EvidenceLadder from "@/app/components/science/EvidenceLadder";
 import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
 import Reveal from "@/app/components/landing/Reveal";
 
@@ -106,7 +106,7 @@ export default function SciencePage() {
       >
         <div className="brand-track">
           <Reveal>
-            <EvidenceSummary />
+            <EvidenceLadder />
           </Reveal>
         </div>
       </section>

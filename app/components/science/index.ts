@@ -9,4 +9,4 @@ export { default as PillarCard } from "./PillarCard";
 export { default as SynergyChart } from "./SynergyChart";
 export { default as FlowVsClear } from "./FlowVsClear";
 export { default as ScienceDifferent } from "./ScienceDifferent";
-export { default as EvidenceSummary } from "./EvidenceSummary";
+export { default as EvidenceLadder } from "./EvidenceLadder";
