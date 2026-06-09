@@ -390,7 +390,10 @@ function ProductCard({
       <div className="p-4 lg:p-5 flex flex-col gap-3">
         <div>
           <h3 className="text-lg font-semibold tracking-[-0.01em]">{product.name}</h3>
-          <p className="text-sm text-black/50 mt-0.5">
+          <p className="text-sm font-medium text-black/70 mt-0.5 tabular-nums">
+            {product.shotsPerBox} shots per box
+          </p>
+          <p className="text-sm text-black/50 mt-1">
             {product.blurb}
           </p>
         </div>

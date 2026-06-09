@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 /* ============================================================================
  * PilotProgramme
  *
@@ -7,9 +9,12 @@
  * only (Server Component) - the page owns the section wrapper and the #pilot
  * anchor the hero CTA targets. CTA is a templated mailto to Harry; no backend.
  *
- * Clinical grammar: trio header, hairline data cards, mono labels, em-dash
- * bullets, navy interactive accent. No new product or health claims.
+ * Shows the pilot as one clear staged flow (order -> app -> baseline -> take
+ * CONKA -> test -> readout) rather than competing format options. Clinical
+ * grammar: numbered navy nodes, hairline connector, mono labels, no new claims.
  * ========================================================================== */
+
+const NAVY = "#1B2757";
 
 const PILOT_MAILTO =
   "mailto:harryglover@conka.io?subject=" +
@@ -29,41 +34,96 @@ const PILOT_MAILTO =
     ].join("\n"),
   );
 
-type PilotFormat = {
-  index: string;
-  name: string;
-  duration: string;
-  bestFor: string;
-  phases: string[];
-  features: string[];
+const svgProps = {
+  width: 22,
+  height: 22,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.75,
+  strokeLinecap: "square" as const,
+  strokeLinejoin: "miter" as const,
+  "aria-hidden": true,
 };
 
-const FORMATS: PilotFormat[] = [
+type Stage = {
+  n: string;
+  title: string;
+  detail: string;
+  icon: ReactNode;
+};
+
+const STAGES: Stage[] = [
   {
-    index: "01",
-    name: "Starter pilot",
-    duration: "2 weeks",
-    bestFor: "A fast read on a focused group.",
-    phases: ["Setup", "2-week trial"],
-    features: [
-      "Product for 5 to 15 athletes",
-      "Squad set up on the CONKA app",
-      "Cognitive testing 3x per week",
-      "Coach's view to track performance",
-    ],
+    n: "01",
+    title: "Order the product",
+    detail: "Pick a small batch for the squad and we ship it out to your base.",
+    icon: (
+      <svg {...svgProps}>
+        <path d="M3 7l9-4 9 4v10l-9 4-9-4z" />
+        <path d="M3 7l9 4 9-4" />
+        <path d="M12 11v10" />
+      </svg>
+    ),
   },
   {
-    index: "02",
-    name: "In-depth pilot",
-    duration: "4 to 6 weeks",
-    bestFor: "A measured before-and-after across the squad.",
-    phases: ["2-week baseline", "Product phase", "Readout"],
-    features: [
-      "2-week app baseline before product",
-      "Measures the change, not just the level",
-      "Cognitive testing 3x per week",
-      "Coach's view to track performance",
-    ],
+    n: "02",
+    title: "Athletes onto the app",
+    detail: "Your selected athletes get set up on the CONKA app in minutes.",
+    icon: (
+      <svg {...svgProps}>
+        <path d="M7 3h10v18H7z" />
+        <path d="M7 16h10" />
+      </svg>
+    ),
+  },
+  {
+    n: "03",
+    title: "Baseline on the app",
+    detail: "Capture each athlete's starting cognitive scores before any product.",
+    icon: (
+      <svg {...svgProps}>
+        <path d="M3 20h18" />
+        <path d="M6 20v-6" />
+        <path d="M12 20V6" />
+        <path d="M18 20v-9" />
+      </svg>
+    ),
+  },
+  {
+    n: "04",
+    title: "Take CONKA for 2 to 6 weeks",
+    detail: "The squad takes their daily shot across the agreed trial window.",
+    icon: (
+      <svg {...svgProps}>
+        <path d="M9 3h6" />
+        <path d="M10 3v4l-2 2v11h8V9l-2-2V3" />
+      </svg>
+    ),
+  },
+  {
+    n: "05",
+    title: "Test consistently",
+    detail: "Cognitive testing around 3x per week tracks the change as it happens.",
+    icon: (
+      <svg {...svgProps}>
+        <path d="M17 4l3 3-3 3" />
+        <path d="M20 7H9a5 5 0 0 0-5 5" />
+        <path d="M7 20l-3-3 3-3" />
+        <path d="M4 17h11a5 5 0 0 0 5-5" />
+      </svg>
+    ),
+  },
+  {
+    n: "06",
+    title: "Data analysis and feedback",
+    detail: "We read the squad's data back with a coach's view and clear recommendations.",
+    icon: (
+      <svg {...svgProps}>
+        <path d="M4 5v14h16" />
+        <path d="M7 15l4-5 3 3 5-7" />
+      </svg>
+    ),
   },
 ];
 
@@ -79,7 +139,7 @@ export default function PilotProgramme() {
         Prove it on your own squad first.
       </h2>
       <p className="brand-mono-sub mt-3">
-        App &middot; Coach&apos;s dashboard &middot; 3x weekly testing
+        App &middot; Coach&apos;s dashboard &middot; Cognitive testing
       </p>
       <p className="brand-body mt-5 max-w-[60ch]">
         Start small and see it on your own athletes. We set your squad up on the
@@ -88,62 +148,50 @@ export default function PilotProgramme() {
         of faith.
       </p>
 
-      {/* Format cards */}
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {FORMATS.map((f) => (
-          <div
-            key={f.name}
-            className="bg-white border border-black/12 p-5 lg:p-6 flex flex-col"
-          >
-            <div className="flex items-center justify-between border-b border-black/8 pb-3">
-              <span className="font-mono text-[11px] font-bold tabular-nums text-black/40">
-                {f.index}.
-              </span>
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/50">
-                {f.name}
-              </span>
-            </div>
+      {/* Staged flow */}
+      <p className="brand-eyebrow mt-10 mb-6">{"// How a pilot runs"}</p>
+      <ol className="relative">
+        {STAGES.map((s, i) => {
+          const isLast = i === STAGES.length - 1;
+          return (
+            <li key={s.n} className="relative flex gap-4 sm:gap-5 pb-6 last:pb-0">
+              {/* Connector line between nodes */}
+              {!isLast && (
+                <span
+                  className="absolute left-[21px] sm:left-[27px] top-12 sm:top-14 bottom-0 w-px bg-black/12"
+                  aria-hidden="true"
+                />
+              )}
 
-            <p className="font-mono text-3xl font-bold tabular-nums text-[#1B2757] mt-5 leading-none">
-              {f.duration}
-            </p>
-            <p className="text-sm text-black/70 mt-3">{f.bestFor}</p>
-
-            {/* Phase sequence */}
-            <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1">
-              {f.phases.map((p, i) => (
-                <span key={p} className="flex items-center gap-2">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1B2757] tabular-nums">
-                    {p}
-                  </span>
-                  {i < f.phases.length - 1 && (
-                    <span className="font-mono text-black/30" aria-hidden="true">
-                      &rarr;
-                    </span>
-                  )}
-                </span>
-              ))}
-            </div>
-
-            <ul className="mt-5 flex flex-col gap-2.5 border-t border-black/8 pt-5">
-              {f.features.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-2 text-sm text-black/75 leading-snug"
+              {/* Node: navy icon tile + mono step number */}
+              <div className="relative shrink-0">
+                <div
+                  className="w-11 h-11 sm:w-14 sm:h-14 flex items-center justify-center text-white"
+                  style={{ backgroundColor: NAVY }}
                 >
-                  <span className="font-mono text-black/30 shrink-0" aria-hidden="true">
-                    &mdash;
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+                  {s.icon}
+                </div>
+                <span className="absolute -top-2 -left-2 bg-white border border-black/12 font-mono text-[9px] font-bold tabular-nums text-black/60 px-1 py-0.5 leading-none">
+                  {s.n}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="pt-1 sm:pt-2 flex-1 min-w-0">
+                <h3 className="text-base sm:text-lg font-semibold text-black leading-tight">
+                  {s.title}
+                </h3>
+                <p className="text-sm text-black/65 mt-1 leading-snug max-w-[52ch]">
+                  {s.detail}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
 
       {/* De-risk + CTA */}
-      <div className="mt-8 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mt-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <p className="brand-body max-w-[46ch]">
           A pilot is a small batch with the data layer on top. Prove it on your
           squad, then scale to team pricing.
