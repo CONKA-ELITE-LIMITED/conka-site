@@ -58,7 +58,7 @@ Honest framing only. Do not invent free-versus-paid specifics beyond this confir
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Spine: hero thesis + why/origin | Not Started (ACTIVE) |
+| 1 | Spine: hero thesis + why/origin | Done (SCRUM-1072, commit 534ebe5f) |
 | 2 | The test, explained + de-blackbox | Not Started (ACTIVE) |
 | 3 | What the app is + proof consolidation | Not Started (ACTIVE) |
 | 4 | The model + CTA | Not Started (ACTIVE) |
@@ -177,7 +177,7 @@ Created in Sprint 27, assigned to Rudh, under the Website & CRO epic (SCRUM-763,
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1072 | App page rebuild Phase 1: spine - hero thesis + why/origin | 1 | To Do |
+| SCRUM-1072 | App page rebuild Phase 1: spine - hero thesis + why/origin | 1 | Done |
 | SCRUM-1073 | App page rebuild Phase 2: the test, explained + de-blackbox | 2 | To Do |
 | SCRUM-1074 | App page rebuild Phase 3: what the app is + proof consolidation | 3 | To Do |
 | SCRUM-1075 | App page rebuild Phase 4: the free-vs-subscriber model + CTA | 4 | To Do |
