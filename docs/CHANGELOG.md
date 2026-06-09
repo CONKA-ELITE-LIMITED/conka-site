@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-09 -- B2B portal plan doc trimmed against the live feature doc
+
+Cross-referenced the B2B portal build plan against the now-live feature reference (`docs/features/b2b/B2B_PORTAL.md`) and removed the duplicated and out-of-date material. The plan no longer re-documents the confirmed flow, technical-decisions table, per-file task breakdown, env-var table, or the verbose implementation log, all of which the feature doc now owns as current-state truth. It keeps only what is plan-shaped: the problem and appetite, the deliberate scope decisions, a condensed dated build history, and a consolidated "Outstanding / still to figure out" tracker. Also fixed the one factual contradiction the cross-reference surfaced: SCRUM-1056 (B2B products + discounts) was marked "Not Started" in the phase table while the implementation log already recorded it done on 8 June.
+
+**Modified:** `docs/development/featurePlans/b2b-professionals-portal.md`
+
 ### 2026-06-08 -- B2B Shopify variant GIDs moved from env to constants
 
 The deployed order page returned "checkout not available yet" because the card and invoice routes resolved the Flow/Clear Shopify variant GIDs from env vars that were not set in Vercel. Those GIDs are not secret (they appear in any cart and checkout URL) and do not vary by environment (one prod Shopify store), so they did not belong in env. Moved them into a single server-side constant module (`app/lib/b2bVariants.ts`), shared by both routes, which also deduplicates the definition that was copy-pasted in each. Card checkout now needs nothing in Vercel; only the genuine secret (`SHOPIFY_ADMIN_API_TOKEN`, for pay-by-invoice) and the per-environment `NEXT_PUBLIC_SITE_URL` remain as env. Dropped the now-dead "variant not configured" 503 branches.
