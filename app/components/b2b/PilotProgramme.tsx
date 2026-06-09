@@ -12,10 +12,12 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * the section wrapper and the #pilot anchor the hero CTA targets. CTA is a
  * templated mailto to Harry; no backend.
  *
- * Interactive horizontal stepper: click a stage (or use prev/next) to highlight
- * it; its detail expands below, beside a figure-plate of the CONKA app (matching
- * the home AppUSPSection treatment). Tile labels are a single word on mobile and
- * a fuller title on desktop. Clinical grammar, no new claims.
+ * The intro sits beside a CONKA app figure-plate (matching the home
+ * AppUSPSection treatment). The flow is an interactive horizontal stepper:
+ * click a stage (or use prev/next) to highlight it and expand its detail. Tile
+ * labels are a single word on mobile and a fuller title on desktop. Per-step
+ * assets are intentionally not shown yet (we lack assets for every stage).
+ * Clinical grammar, no new claims.
  * ========================================================================== */
 
 const NAVY = "#1B2757";
@@ -164,26 +166,48 @@ export default function PilotProgramme() {
 
   return (
     <div>
-      {/* Trio header */}
-      <p className="brand-eyebrow mb-4">{"// The squad pilot"}</p>
-      <h2
-        className="brand-h2 max-w-[20ch] text-black"
-        style={{ letterSpacing: "-0.02em" }}
-      >
-        Prove it on your own squad first.
-      </h2>
-      <p className="brand-mono-sub mt-3">
-        App &middot; Coach&apos;s dashboard &middot; Cognitive testing
-      </p>
-      <p className="brand-body mt-5 max-w-[60ch]">
-        Start small and see it on your own athletes. We set your squad up on the
-        CONKA app, run a cognitive testing cadence, and give you a coach&apos;s
-        view of the data, so you decide on a full order from evidence, not a leap
-        of faith.
-      </p>
+      {/* Intro beside the CONKA app figure-plate */}
+      <div className="lg:grid lg:grid-cols-[1.2fr_1fr] lg:gap-10 lg:items-center">
+        <div>
+          <p className="brand-eyebrow mb-4">{"// The squad pilot"}</p>
+          <h2
+            className="brand-h2 max-w-[20ch] text-black"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            Prove it on your own squad first.
+          </h2>
+          <p className="brand-mono-sub mt-3">
+            App &middot; Coach&apos;s dashboard &middot; Cognitive testing
+          </p>
+          <p className="brand-body mt-5 max-w-[60ch]">
+            Start small and see it on your own athletes. We set your squad up on
+            the CONKA app, run a cognitive testing cadence, and give you a
+            coach&apos;s view of the data, so you decide on a full order from
+            evidence, not a leap of faith.
+          </p>
+        </div>
+
+        <div className="relative aspect-square bg-[#f5f5f5] border border-black/12 overflow-hidden mt-8 lg:mt-0">
+          <div className="absolute top-3 left-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
+            Fig. 01 &middot; CONKA App
+          </div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-[13%] w-[44%] lg:w-[42%] aspect-[1/2]">
+            <Image
+              src="/app/AppConkaRing.png"
+              alt="The CONKA app home screen showing today's cognition score"
+              fill
+              sizes="(max-width: 1024px) 50vw, 280px"
+              className="object-contain"
+            />
+          </div>
+          <div className="absolute bottom-3 right-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
+            iOS &middot; Android
+          </div>
+        </div>
+      </div>
 
       {/* Interactive horizontal stepper */}
-      <p className="brand-eyebrow mt-10 mb-6">{"// How a pilot runs"}</p>
+      <p className="brand-eyebrow mt-12 mb-6">{"// How a pilot runs"}</p>
 
       <ol className="flex overflow-x-auto sm:overflow-visible -mx-1 px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STAGES.map((s, i) => {
@@ -242,58 +266,34 @@ export default function PilotProgramme() {
         })}
       </ol>
 
-      {/* Expanded detail: text + app figure plate */}
+      {/* Expanded detail (text only) */}
       <div
-        className="mt-6 border border-black/12 bg-white"
+        className="mt-5 border border-black/12 bg-white p-5 lg:p-6"
         aria-live="polite"
       >
-        <div className="lg:grid lg:grid-cols-[1.3fr_1fr]">
-          {/* App figure - mobile first, desktop right */}
-          <div className="relative aspect-[4/3] sm:aspect-square lg:aspect-auto bg-[#f5f5f5] border-b border-black/12 lg:border-b-0 lg:border-l lg:order-2 overflow-hidden">
-            <div className="absolute top-3 left-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-              Fig. 01 &middot; CONKA App
-            </div>
-            <div className="absolute left-1/2 -translate-x-1/2 top-[12%] w-[42%] sm:w-[40%] lg:w-[46%] aspect-[1/2]">
-              <Image
-                src="/app/AppConkaRing.png"
-                alt="The CONKA app home screen showing today's cognition score"
-                fill
-                sizes="(max-width: 1024px) 40vw, 240px"
-                className="object-contain"
-              />
-            </div>
-            <div className="absolute bottom-3 right-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-              iOS &middot; Android
-            </div>
-          </div>
-
-          {/* Text */}
-          <div className="p-5 lg:p-8 lg:order-1 lg:flex lg:flex-col lg:justify-center">
-            <div className="flex items-center justify-between gap-4 mb-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/45 tabular-nums">
-                Step {step.n} / {String(total).padStart(2, "0")}
-              </span>
-              <div className="flex gap-2">
-                <StepNavButton
-                  direction="prev"
-                  onClick={() => go(-1)}
-                  disabled={active === 0}
-                />
-                <StepNavButton
-                  direction="next"
-                  onClick={() => go(1)}
-                  disabled={active === total - 1}
-                />
-              </div>
-            </div>
-            <h3 className="text-xl lg:text-2xl font-semibold text-black leading-tight">
-              {step.title}
-            </h3>
-            <p className="text-sm lg:text-base text-black/70 mt-2.5 max-w-[52ch] leading-relaxed">
-              {step.detail}
-            </p>
+        <div className="flex items-center justify-between gap-4 mb-3">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/45 tabular-nums">
+            Step {step.n} / {String(total).padStart(2, "0")}
+          </span>
+          <div className="flex gap-2">
+            <StepNavButton
+              direction="prev"
+              onClick={() => go(-1)}
+              disabled={active === 0}
+            />
+            <StepNavButton
+              direction="next"
+              onClick={() => go(1)}
+              disabled={active === total - 1}
+            />
           </div>
         </div>
+        <h3 className="text-lg lg:text-xl font-semibold text-black leading-tight">
+          {step.title}
+        </h3>
+        <p className="text-sm lg:text-base text-black/70 mt-2 max-w-[60ch] leading-relaxed">
+          {step.detail}
+        </p>
       </div>
 
       {/* De-risk + CTA */}
