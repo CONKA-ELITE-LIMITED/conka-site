@@ -4,6 +4,7 @@ import Footer from "@/app/components/footer";
 import ScienceHero from "@/app/components/science/ScienceHero";
 import TwoSystemModel from "@/app/components/science/TwoSystemModel";
 import ScienceAdaptogens from "@/app/components/science/ScienceAdaptogens";
+import ScienceNootropics from "@/app/components/science/ScienceNootropics";
 import SciencePillars from "@/app/components/science/SciencePillars";
 import FlowVsClear from "@/app/components/science/FlowVsClear";
 import ScienceDifferent from "@/app/components/science/ScienceDifferent";
@@ -63,7 +64,7 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 4: ADAPTOGENS ===== */}
+      {/* ===== SECTION 4: ADAPTOGENS EXPLAINER ===== */}
       <section
         className="brand-section brand-bg-tint"
         aria-label="What are adaptogens"
@@ -75,9 +76,21 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 5: FIVE PILLARS ===== */}
+      {/* ===== SECTION 5: NOOTROPICS EXPLAINER ===== */}
       <section
         className="brand-section brand-bg-white"
+        aria-label="What are nootropics"
+      >
+        <div className="brand-track">
+          <Reveal>
+            <ScienceNootropics />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ===== SECTION 6: FIVE PILLARS ===== */}
+      <section
+        className="brand-section brand-bg-tint"
         aria-label="The five pillars"
       >
         <div className="brand-track">
@@ -87,9 +100,9 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 6: FLOW VS CLEAR ===== */}
+      {/* ===== SECTION 7: FLOW VS CLEAR ===== */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Flow vs Clear comparison"
       >
         <div className="brand-track">
@@ -99,9 +112,9 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 7: EVIDENCE & RESEARCH ===== */}
+      {/* ===== SECTION 8: EVIDENCE & RESEARCH ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Evidence and research"
       >
         <div className="brand-track">
@@ -111,7 +124,7 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 8: REAL-WORLD DATA BRIDGE ===== */}
+      {/* ===== SECTION 9: REAL-WORLD DATA BRIDGE ===== */}
       <section
         className="brand-section brand-bg-black"
         aria-label="Real user cognitive data"
