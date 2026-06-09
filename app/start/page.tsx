@@ -135,15 +135,15 @@ export default function StartPage() {
                   Transform crops ~2% off top + ~5% off bottom via scale + translate (GPU-only, no layout cost). */}
               <div className="relative aspect-[4/3] overflow-hidden mb-6 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full md:rounded-[12px]">
                 <Image
-                  src="/lifestyle/clear/ClearDrink.jpg"
-                  alt="Woman holding a CONKA Clear daily brain performance shot"
+                  src="/formulas/both/BothHero.jpg"
+                  alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
                   fill
                   priority
                   fetchPriority="high"
                   sizes="(max-width: 768px) 100vw, 560px"
                   className="object-cover object-center"
                   style={{
-                    transform: "scale(1.2) translateY(1.67%)",
+                    transform: "scale(1.4) translateY(-10%)",
                     transformOrigin: "center center",
                   }}
                 />
@@ -205,22 +205,21 @@ export default function StartPage() {
                 className="text-black font-semibold text-[38px] leading-[1.08] mb-3"
                 style={{ letterSpacing: "-0.02em" }}
               >
-                Brain Performance
+                A Sharper Mind.
                 <br />
-                in One <em className="italic">Daily</em> Shot.
+                Morning to Evening.
               </h1>
 
               <p className="text-[15px] leading-snug text-black mb-5">
-                With a daily dose of CONKA, you&apos;ll experience a noticeable
-                boost in focus, memory, stress resilience &amp; neuroplasticity
-                through our patented formula.
+                For minds that demand more. A patented nootropic shot, clinically
+                formulated to support focus, memory, and mental endurance every day.
               </p>
 
               <Link
                 href={FUNNEL_URL}
                 className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
               >
-                Save £120 + Free Shipping
+                Get Both From £1.61/shot
                 <svg
                   width="20"
                   height="20"

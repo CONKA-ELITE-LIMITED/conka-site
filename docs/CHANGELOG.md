@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-09 -- Scoped B2B portal conversion & credibility upgrade
+
+Researched modern B2B/wholesale conversion best practices and scoped a wave of upgrades to the `/professionals` portal, which is warm Harry-shared sales collateral rather than cold-traffic CRO. The plan keeps direct-buy first-class, surfaces the live pilot programme (product plus app plus coach's cognitive dashboard) as a prominent USP framed as "prove it on your own squad first", promotes Informed Sport certification, and sharpens order-page tier savings. Social proof without named clubs is parked as a Future phase until real figures are gathered. Three active-phase Jira tickets created (SCRUM-1063/1064/1065, Sprint 27); planning only, no app code yet.
+
+**Modified:** `docs/development/featurePlans/b2b-portal-conversion-upgrade.md` (new)
+
 ### 2026-06-09 -- B2B portal plan doc trimmed against the live feature doc
 
 Cross-referenced the B2B portal build plan against the now-live feature reference (`docs/features/b2b/B2B_PORTAL.md`) and removed the duplicated and out-of-date material. The plan no longer re-documents the confirmed flow, technical-decisions table, per-file task breakdown, env-var table, or the verbose implementation log, all of which the feature doc now owns as current-state truth. It keeps only what is plan-shaped: the problem and appetite, the deliberate scope decisions, a condensed dated build history, and a consolidated "Outstanding / still to figure out" tracker. Also fixed the one factual contradiction the cross-reference surfaced: SCRUM-1056 (B2B products + discounts) was marked "Not Started" in the phase table while the implementation log already recorded it done on 8 June.
