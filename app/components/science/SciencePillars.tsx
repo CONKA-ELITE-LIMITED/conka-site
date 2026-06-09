@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { sciencePillars } from "@/app/lib/scienceData";
+import useIsMobile from "@/app/hooks/useIsMobile";
 import PillarCard from "./PillarCard";
 
-interface SciencePillarsProps {
-  isMobile?: boolean;
-}
-
-export default function SciencePillars({ isMobile = false }: SciencePillarsProps) {
+export default function SciencePillars() {
+  const isMobile = !!useIsMobile();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {

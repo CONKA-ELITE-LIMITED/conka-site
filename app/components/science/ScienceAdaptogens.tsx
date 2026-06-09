@@ -1,10 +1,7 @@
 "use client";
 
 import Image from "next/image";
-
-interface ScienceAdaptogensProps {
-  isMobile?: boolean;
-}
+import useIsMobile from "@/app/hooks/useIsMobile";
 
 const TAGS = [
   "HPA Axis Modulation",
@@ -18,9 +15,8 @@ const ADAPTOGENS = [
   { name: "Lemon Balm", role: "Calm without sedation" },
 ];
 
-export default function ScienceAdaptogens({
-  isMobile = false,
-}: ScienceAdaptogensProps) {
+export default function ScienceAdaptogens() {
+  const isMobile = !!useIsMobile();
   return (
     <div>
       <div className="mb-8 lg:mb-10">

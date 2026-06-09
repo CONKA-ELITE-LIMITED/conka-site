@@ -6,14 +6,10 @@ import {
   researchPartnerships,
 } from "@/app/lib/scienceData";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
+import useIsMobile from "@/app/hooks/useIsMobile";
 
-interface EvidenceSummaryProps {
-  isMobile?: boolean;
-}
-
-export default function EvidenceSummary({
-  isMobile = false,
-}: EvidenceSummaryProps) {
+export default function EvidenceSummary() {
+  const isMobile = !!useIsMobile();
   const evidence = clinicalEvidenceSummary;
 
   const stats = [

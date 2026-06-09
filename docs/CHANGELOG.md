@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-09** | Science page Phase 1: server-first rebuild with thesis hero, why-products-fail problem section, and two-system model; removed load-flash gate
 - **2026-06-09** | B2B professionals: clarified pilot section copy, distributed app detail into the relevant steps, removed the weak Why-CONKA section and re-alternated section backgrounds
 - **2026-06-09** | B2B professionals value callout rebuilt as an interactive squad cost estimator; design system clarifies mono is for scanned data, sans for read text
 - **2026-06-09** | Phase 4: added /skill-editor skill (audit + feedback-ingestion self-improvement loop per Anthropic skill-authoring guidance); its first audit fixed 6 skills still instructing full-repo lint and a pinned-model co-author line

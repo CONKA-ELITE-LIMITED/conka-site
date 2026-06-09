@@ -2,10 +2,7 @@
 
 import Image from "next/image";
 import { formulaComparison } from "@/app/lib/scienceData";
-
-interface FlowVsClearProps {
-  isMobile?: boolean;
-}
+import useIsMobile from "@/app/hooks/useIsMobile";
 
 const FORMULA_IMAGES: Record<string, { src: string; alt: string }> = {
   "01": {
@@ -18,7 +15,8 @@ const FORMULA_IMAGES: Record<string, { src: string; alt: string }> = {
   },
 };
 
-export default function FlowVsClear({ isMobile = false }: FlowVsClearProps) {
+export default function FlowVsClear() {
+  const isMobile = !!useIsMobile();
   return (
     <div>
       {/* Header */}
