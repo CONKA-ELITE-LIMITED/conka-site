@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 
 interface Reference {
@@ -25,19 +26,42 @@ const REVOLUT_STATS = [
 
 const ENGINE = [
   {
-    label: "Continuous, not before-and-after",
+    label: "Measured every day",
     detail:
-      "Wearable-connected cognitive testing, measured every day through the app, not a one-off survey at the end.",
+      "Wearable-connected cognitive testing through the app, not a one-off survey at the end of a study.",
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+        <rect x="3" y="4" width="18" height="18" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+      </svg>
+    ),
   },
   {
-    label: "Scale where it is hardest",
+    label: "At real-world scale",
     detail:
-      "Live testing across elite sporting and corporate teams. Access to those participants is slow, expensive, and equipment-bound. We built the system that solves it.",
+      "Live testing across sporting and corporate teams, the participants most research struggles to reach.",
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
   },
   {
-    label: "It compounds",
+    label: "It improves itself",
     detail:
-      "Testing at this scale raises the quality of cognitive measurement itself, which feeds straight back into a better product.",
+      "Testing at this scale sharpens the measurement itself, which feeds back into a better product.",
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+        <polyline points="23 4 23 10 17 10" />
+        <polyline points="1 20 1 14 7 14" />
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+      </svg>
+    ),
   },
 ];
 
@@ -48,58 +72,59 @@ const PARTNERS = [
   { name: "Revolut", logo: "/logos/Revolut.png", role: "Real-world trial" },
 ];
 
+// Rung icons
+const ICON_BOOK = (
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+  </svg>
+);
+const ICON_FLASK = (
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+    <path d="M9 3h6" />
+    <path d="M10 3v7L4.8 19a1 1 0 0 0 .9 1.5h12.6a1 1 0 0 0 .9-1.5L14 10V3" />
+  </svg>
+);
+const ICON_TRIAL = (
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+    <path d="M8 4H6a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-2" />
+    <path d="M9 3h6v3H9z" />
+    <path d="M9 13l2 2 4-4" />
+  </svg>
+);
+const ICON_PULSE = (
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+  </svg>
+);
+
 export default function EvidenceLadder() {
   return (
     <div>
-      {/* Header — the confident-transparency posture */}
-      <div className="mb-8 lg:mb-10 max-w-2xl">
+      {/* Header */}
+      <div className="mb-8 lg:mb-12 max-w-2xl">
         <p className="brand-eyebrow mb-3">{"// The evidence · SCI-07"}</p>
         <h2
           className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}
         >
-          The evidence, without the overclaim.
+          The evidence, from literature to live data.
         </h2>
         <p className="text-sm md:text-base text-black/75 leading-relaxed">
-          We will not say &ldquo;clinically proven&rdquo; until our human results
-          are peer-reviewed and published. Everything beneath that line is a
-          position of strength: real research behind every active, and the most
-          rigorous evidence engine in the category producing more.
+          Four kinds of evidence sit behind CONKA: the published research on each
+          active, our own early studies, a completed human trial, and live
+          cognitive data from real teams. Here is each one, and how far it goes.
         </p>
       </div>
 
-      {/* The standard — what we won't say, what we will stand behind */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-10 lg:mb-12">
-        <div className="bg-white border border-black/12 p-5 lg:p-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-            What we will not say yet
-          </p>
-          <p className="text-sm md:text-base text-black/75 leading-relaxed">
-            &ldquo;Clinically proven.&rdquo; Not until our human results clear
-            peer review and publish. No exceptions, however good the early signal
-            looks.
-          </p>
-        </div>
-        <div className="bg-white border border-black/12 p-5 lg:p-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1B2757] mb-2">
-            What we will stand behind
-          </p>
-          <p className="text-sm md:text-base text-black/75 leading-relaxed">
-            Real primary research on the actives, a published preprint, a
-            completed human trial in write-up, and live real-world data that
-            grows every week.
-          </p>
-        </div>
-      </div>
-
-      {/* The ladder */}
-      <p className="brand-eyebrow mb-4">{"// The evidence ladder · 04 rungs"}</p>
-      <div className="space-y-3 mb-10 lg:mb-12">
-        {/* Rung 01 — literature */}
+      {/* The ladder — connected rail with navy nodes */}
+      <ol className="mb-12 lg:mb-16">
         <LadderRung
           index={1}
+          last={false}
           tier="Established literature"
           title="The research behind the actives"
+          icon={ICON_BOOK}
         >
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
             Every active earns its place from primary, peer-reviewed research,
@@ -128,25 +153,26 @@ export default function EvidenceLadder() {
           </div>
         </LadderRung>
 
-        {/* Rung 02 — Durham preprint */}
         <LadderRung
           index={2}
+          last={false}
           tier="Early research · preprint"
           title="Our own formulation research, Durham"
+          icon={ICON_FLASK}
         >
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
             Early model-organism work from our initial formula development, led
             by neuroscientists at Durham (Prof. Paul Chazot and Prof. Karen
-            Hind). Published as a preprint (manuscript 202411.0241). This is
-            early research, not human proof, and we label it exactly that way.
+            Hind), published as a preprint (manuscript 202411.0241).
           </p>
         </LadderRung>
 
-        {/* Rung 03 — Exeter trial */}
         <LadderRung
           index={3}
+          last={false}
           tier="Human trial · in write-up"
           title="Our human trial, Exeter"
+          icon={ICON_TRIAL}
         >
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
             An eight-week double-blind, placebo-controlled, randomised crossover
@@ -156,22 +182,18 @@ export default function EvidenceLadder() {
             (CognICA), and short-term memory, delivered through the CONKA app
             three sessions a week against a matched placebo and a control.
           </p>
-          <div className="mt-4 bg-black/[0.03] border border-black/8 p-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-              Where we hold the line
-            </p>
-            <p className="text-sm text-black/75 leading-relaxed">
-              Currently in write-up. The results stay sealed until peer review.
-              We will not preview them, not even the good ones.
-            </p>
-          </div>
+          <p className="text-sm md:text-base text-black/75 leading-relaxed mt-3">
+            It is currently in write-up. We will share the results once they are
+            peer-reviewed and published.
+          </p>
         </LadderRung>
 
-        {/* Rung 04 — real-world data */}
         <LadderRung
           index={4}
+          last={true}
           tier="Real-world data"
           title="Live data at scale"
+          icon={ICON_PULSE}
         >
           <p className="text-sm md:text-base text-black/75 leading-relaxed">
             Continuous, app-measured cognitive data from live trials with
@@ -232,23 +254,30 @@ export default function EvidenceLadder() {
             </a>
           </div>
         </LadderRung>
-      </div>
+      </ol>
 
-      {/* The engine differentiator */}
+      {/* The engine */}
       <div className="mb-10 lg:mb-12">
-        <p className="brand-eyebrow mb-3">{"// The engine · Why this is different"}</p>
+        <p className="brand-eyebrow mb-3">{"// The engine · How we keep proving it"}</p>
         <h3
-          className="brand-h3 text-black mb-5"
+          className="brand-h3 text-black mb-3"
           style={{ letterSpacing: "-0.02em" }}
         >
-          We are not running before-and-after surveys.
+          The evidence above is not a one-off.
         </h3>
+        <p className="text-sm md:text-base text-black/75 leading-relaxed max-w-2xl mb-6">
+          It is a system that keeps running. Every day of testing adds to the
+          picture and feeds the next formula.
+        </p>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          {ENGINE.map((item, idx) => (
+          {ENGINE.map((item) => (
             <div key={item.label} className="bg-white border border-black/12 p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-3">
-                {String(idx + 1).padStart(2, "0")}
-              </p>
+              <div
+                className="w-11 h-11 flex items-center justify-center text-white mb-4"
+                style={{ backgroundColor: "#1B2757" }}
+              >
+                {item.icon}
+              </div>
               <p className="text-base font-semibold text-black leading-tight mb-1.5">
                 {item.label}
               </p>
@@ -322,31 +351,49 @@ export default function EvidenceLadder() {
 
 function LadderRung({
   index,
+  last,
   tier,
   title,
+  icon,
   children,
 }: {
   index: number;
+  last: boolean;
   tier: string;
   title: string;
-  children: React.ReactNode;
+  icon: ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <div className="bg-white border border-black/12">
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
-          Rung {String(index).padStart(2, "0")} / 04
-        </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
-          {tier}
-        </span>
+    <li className="grid grid-cols-[2.75rem_1fr] gap-4 lg:gap-6">
+      {/* Rail — navy node + connecting line */}
+      <div className="flex flex-col items-center">
+        <div
+          className="w-11 h-11 flex items-center justify-center text-white flex-shrink-0"
+          style={{ backgroundColor: "#1B2757" }}
+        >
+          {icon}
+        </div>
+        {!last && <div className="w-px flex-1 bg-[#1B2757]/20 my-2" />}
       </div>
-      <div className="p-5 lg:p-6">
-        <h3 className="text-lg lg:text-xl font-semibold leading-tight text-black mb-3">
-          {title}
-        </h3>
-        {children}
+
+      {/* Content card */}
+      <div className={`bg-white border border-black/12 ${last ? "" : "mb-3"}`}>
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
+            Rung {String(index).padStart(2, "0")} / 04
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+            {tier}
+          </span>
+        </div>
+        <div className="p-5 lg:p-6">
+          <h3 className="text-lg lg:text-xl font-semibold leading-tight text-black mb-3">
+            {title}
+          </h3>
+          {children}
+        </div>
       </div>
-    </div>
+    </li>
   );
 }
