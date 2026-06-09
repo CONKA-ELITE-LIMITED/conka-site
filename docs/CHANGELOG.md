@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-09** | B2B value callout gains a by-the-box estimator mode (toggle) with product/icon visuals (SCRUM-1071)
 - **2026-06-09** | Science page Phase 2: adaptogens and nootropics teaching modules with layered-disclosure mechanism explainers
 - **2026-06-09** | Science page Phase 1: server-first rebuild with thesis hero, why-products-fail problem section, and two-system model; removed load-flash gate
 - **2026-06-09** | B2B professionals: clarified pilot section copy, distributed app detail into the relevant steps, removed the weak Why-CONKA section and re-alternated section backgrounds
