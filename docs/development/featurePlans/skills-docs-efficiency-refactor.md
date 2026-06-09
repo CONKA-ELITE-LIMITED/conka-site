@@ -33,7 +33,7 @@ The biggest wins are not skill rewrites. They are (a) a tight efficiency doctrin
 |-------|-------------|--------|
 | 1 | Efficiency doctrine + skill diet | Done (commit 80dc79dc) |
 | 2 | Lint debt, config-first | Done (611fd46e, 8dddd97e) |
-| 3 | Docs cleanup + design-system restraint | Not Started |
+| 3 | Docs cleanup + design-system restraint | Done |
 | 4 | Self-improving skill loop | Future |
 
 ## Phase 1 - Efficiency doctrine + skill diet (ACTIVE)
@@ -82,6 +82,10 @@ The biggest wins are not skill rewrites. They are (a) a tight efficiency doctrin
 
 - Disabling lint rules could mask real bugs - downgrade to `warn` and scope ignores to generated paths rather than blanket-disabling.
 - Trimming docs could drop something referenced elsewhere - grep for references before deleting each file.
+
+## Deferred follow-ups
+
+- Swap 11 `<img>` to `next/image` (Phase 2 triage left these as warnings). Real perf wins; each needs correct width/height to avoid CLS. Standalone task, mostly account/order/subscription UI.
 
 ## References
 
