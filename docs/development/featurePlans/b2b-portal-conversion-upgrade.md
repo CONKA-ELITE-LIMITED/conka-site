@@ -46,7 +46,7 @@ De-risk framing: start small, prove it on your own squad's data, then scale to a
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Credibility backbone + hero refine | Not Started (ACTIVE) |
+| 1 | Credibility backbone + hero refine | For review (SCRUM-1063) |
 | 2 | Pilot programme USP section | Not Started (ACTIVE) |
 | 3 | Order-page pricing clarity | Not Started (ACTIVE) |
 | 4 | B2B social proof | Future (gated on sign-off-ready proof data) |
