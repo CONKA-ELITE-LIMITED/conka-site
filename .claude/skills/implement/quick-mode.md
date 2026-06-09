@@ -14,7 +14,7 @@ Quick Mode for /implement (the `--quick` branch — replaces the standard Proces
 1. **Read** `CLAUDE.md` and the specific files being changed. Nothing else unless genuinely needed.
 2. **State the approach** in 1-2 sentences (not a full plan).
 3. **Build** — make the change.
-4. **Run `npm run lint`** to verify no issues.
+4. **Run `npm run lint:changed`** to verify no issues.
 5. **Commit** with a clear message. Do not push.
 6. **Present** what changed in 3-4 bullet points.
 

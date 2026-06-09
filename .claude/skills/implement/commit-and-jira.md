@@ -14,7 +14,7 @@ Final pass before presenting the completed work:
 2. **Code hygiene:**
    - No unused imports or variables
    - All new files follow project naming conventions (PascalCase components, camelCase utils)
-   - Run linter: `npm run lint`
+   - Run linter on changed files: `npm run lint:changed`
    - Run build: `npm run build` (verify no build errors)
 
 3. **Final standards check** -- run through all applicable checklists one more time against the complete changeset.
@@ -64,7 +64,7 @@ Commit the implementation with a clear, descriptive message. **Do not push** unl
 
    SCRUM-830
 
-   Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+   Co-Authored-By: Claude <noreply@anthropic.com>
    ```
 
 3. **Commit message conventions:**
