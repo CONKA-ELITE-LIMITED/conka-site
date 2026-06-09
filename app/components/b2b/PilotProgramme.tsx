@@ -180,10 +180,13 @@ export default function PilotProgramme() {
             App &middot; Coach&apos;s dashboard &middot; Cognitive testing
           </p>
           <p className="brand-body mt-5 max-w-[60ch]">
-            Start small and see it on your own athletes. We set your squad up on
-            the CONKA app, run a cognitive testing cadence, and give you a
-            coach&apos;s view of the data, so you decide on a full order from
-            evidence, not a leap of faith.
+            The CONKA app is free to install and takes minutes to set up. Each
+            athlete runs a two-minute cognitive test, backed by NHS clinical
+            validation, on your testing cadence. The coach&apos;s view brings it
+            together: squad cognitive performance over time, plus supplement
+            tracking, so you can see compliance with CONKA and anything else your
+            athletes take. Start small, prove it on your own data, then scale
+            from evidence, not a leap of faith.
           </p>
         </div>
 
@@ -193,7 +196,7 @@ export default function PilotProgramme() {
           </div>
           {/* Phone scaled up and anchored to the top so the device bleeds off
               the bottom edge, featuring the score ring (bottom cropped). */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-[8%] h-[185%] aspect-[1/2]">
+          <div className="absolute left-1/2 -translate-x-1/2 top-[10%] h-[150%] aspect-[1/2]">
             <Image
               src="/app/AppConkaRing.png"
               alt="The CONKA app home screen showing today's cognition score"
