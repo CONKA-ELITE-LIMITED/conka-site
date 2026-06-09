@@ -5,7 +5,6 @@ import ApplicationForm from "@/app/components/b2b/ApplicationForm";
 import InformedSportCertification from "@/app/components/InformedSportCertification";
 import PilotProgramme from "@/app/components/b2b/PilotProgramme";
 import B2BValueCallout from "@/app/components/b2b/B2BValueCallout";
-import WhyConkaForTeams from "@/app/components/b2b/WhyConkaForTeams";
 import TeamFAQ from "@/app/components/b2b/TeamFAQ";
 
 export const metadata: Metadata = {
@@ -86,20 +85,10 @@ export default function ProfessionalsPage() {
         </div>
       </section>
 
-      {/* WHY — what a squad gets from CONKA */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Why CONKA for teams"
-      >
-        <div className="brand-track">
-          <WhyConkaForTeams />
-        </div>
-      </section>
-
       {/* PILOT — squad pilot USP (hero secondary CTA anchors here) */}
       <section
         id="pilot"
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Squad pilot programme"
       >
         <div className="brand-track">
@@ -109,7 +98,7 @@ export default function ProfessionalsPage() {
 
       {/* VALUE — interactive estimator reframing the order total into a per-athlete-per-day figure */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Squad cost estimator"
       >
         <div className="brand-track">
@@ -120,7 +109,7 @@ export default function ProfessionalsPage() {
       {/* APPLY — value points + enquiry form */}
       <section
         id="apply"
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Apply for team pricing"
       >
         <div className="brand-track">
@@ -155,7 +144,7 @@ export default function ProfessionalsPage() {
 
       {/* SUBSCRIPTION ENQUIRY — recurring supply exit ramp */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Regular supply enquiry"
       >
         <div className="brand-track">
