@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-09** | Fixed eslint ignores (anchored .next at all depths + exclude stale worktrees): lint problem count dropped 3950 to 97 by excluding build artifacts that were never our code
 - **2026-06-09** | Phase 1 skills/docs efficiency refactor: CLAUDE.md efficiency doctrine, one-line append-only changelog, tightened skill descriptions, implement skill split via progressive disclosure
 
 ## June 2026
