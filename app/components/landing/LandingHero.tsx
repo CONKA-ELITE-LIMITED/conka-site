@@ -103,9 +103,6 @@ export default function LandingHero() {
           <p className="mt-4 text-[15px] leading-snug text-black/70">
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
-            <sup className="ml-0.5 text-[0.6em] text-black/40 align-super">
-              †
-            </sup>
           </p>
         </header>
 
@@ -138,9 +135,6 @@ export default function LandingHero() {
           <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[42ch]">
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
-            <sup className="ml-0.5 text-[0.6em] text-black/40 align-super">
-              †
-            </sup>
           </p>
 
           <div>
