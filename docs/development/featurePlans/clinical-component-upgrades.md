@@ -1,6 +1,6 @@
 # Clinical Component Upgrades - LabTimeline + Ingredients
 
-> Working doc. Continues the consumability learnings from `landing-page-v2.1.md` (the /startv2 build) onto the home page and product pages. Reduce noise, lead with the takeaway, keep depth one tap away.
+> Working doc. Continues the consumability learnings from the /startv2 build onto the home page and product pages. Reduce noise, lead with the takeaway, keep depth one tap away.
 
 ## Problem
 
@@ -123,8 +123,7 @@ Replace `FormulaIngredients` carousels on /conka-flow and /conka-clarity with `C
 
 ## References
 
-- `docs/development/featurePlans/landing-page-v2.1.md` - Section 4 (Ingredients) brief is the reference pattern
-- `app/startv2/IngredientsGrid.tsx` - structural reference for the new component
+- `app/startv2/IngredientsGrid.tsx` - the /startv2 Ingredients section is the structural + consumability reference pattern
 - `app/components/landing/LabTimeline.tsx` - component being rebuilt
 - `app/lib/ingredientsData.ts` - shared ingredient data
 - `docs/branding/DESIGN_SYSTEM.md` - clinical grammar

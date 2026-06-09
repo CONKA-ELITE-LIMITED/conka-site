@@ -225,7 +225,7 @@ Marking research steps as silent prevents the model from narrating its internal 
 ### Step 1: Gather Context (silent -- do not output this step)
 
 Before responding, research thoroughly:
-1. Read docs/app/MASTER_CONTEXT.md for business context and North Star.
+1. Read docs/MASTER_CONTEXT.md for business context and North Star.
 2. Search docs/development/featurePlans/ for existing plans...
 3. ...
 ```
