@@ -49,16 +49,14 @@ export default function TwoSystemModel() {
   return (
     <div>
       <div className="mb-8 lg:mb-10 max-w-2xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-3">
-          {"// The model · SCI-03"}
-        </p>
+        <p className="brand-eyebrow mb-3">{"// The model · SCI-03"}</p>
         <h2
-          className="brand-h2 text-white mb-4"
+          className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}
         >
           Two systems, one daily brain.
         </h2>
-        <p className="text-sm md:text-base text-white/70 leading-relaxed">
+        <p className="text-sm md:text-base text-black/75 leading-relaxed">
           The brain is the most complex organ we know of, so we treat it like a
           system worth engineering for, not a market to sell hype into. CONKA is
           built on two complementary classes of active that do two different
@@ -68,16 +66,13 @@ export default function TwoSystemModel() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {SYSTEMS.map((sys, idx) => (
-          <div
-            key={sys.name}
-            className="bg-white/[0.04] border border-white/10"
-          >
+          <div key={sys.name} className="bg-white border border-black/12">
             {/* Header row */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 tabular-nums">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
                 SYS-{String(idx + 1).padStart(2, "0")} · System {idx + 1} / 2
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums">
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
                 {sys.footer}
               </span>
             </div>
@@ -90,13 +85,13 @@ export default function TwoSystemModel() {
               >
                 {sys.icon}
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold leading-tight text-white mb-1">
+              <h3 className="text-lg lg:text-xl font-semibold leading-tight text-black mb-1">
                 {sys.name}
               </h3>
-              <p className="text-sm md:text-base font-medium text-white mb-3">
+              <p className="text-sm md:text-base font-medium text-black mb-3">
                 {sys.role}
               </p>
-              <p className="text-sm text-white/65 leading-relaxed">
+              <p className="text-sm text-black/70 leading-relaxed">
                 {sys.description}
               </p>
             </div>
@@ -105,8 +100,8 @@ export default function TwoSystemModel() {
       </div>
 
       {/* Bridge to Flow and Clear, kept equal */}
-      <div className="mt-6 lg:mt-8 border-l-2 border-white/30 pl-5 lg:pl-6 max-w-2xl">
-        <p className="text-base md:text-lg text-white leading-relaxed">
+      <div className="mt-6 lg:mt-8 border-l-2 border-[#1B2757] pl-5 lg:pl-6 max-w-2xl">
+        <p className="text-base md:text-lg text-black leading-relaxed">
           It is also why CONKA comes in two formulas. Flow and Clear draw on both
           systems in different balances, each tuned to a different kind of
           demand. Neither is the lite version of the other.

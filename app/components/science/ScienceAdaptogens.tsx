@@ -3,7 +3,6 @@ import ScienceExplainer, {
 } from "./ScienceExplainer";
 
 const ADAPTOGENS_DATA: ExplainerData = {
-  eyebrow: "// Education · SCI-04",
   heading: "What are adaptogens?",
   systemTag: "Resilience system",
   icon: (

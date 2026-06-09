@@ -3,7 +3,6 @@ import ScienceExplainer, {
 } from "./ScienceExplainer";
 
 const NOOTROPICS_DATA: ExplainerData = {
-  eyebrow: "// Education · SCI-05",
   heading: "What are nootropics?",
   systemTag: "Performance system",
   icon: (

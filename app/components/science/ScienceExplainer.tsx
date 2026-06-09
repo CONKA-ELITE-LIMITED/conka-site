@@ -15,7 +15,6 @@ export interface ExplainerIngredient {
 }
 
 export interface ExplainerData {
-  eyebrow: string;
   heading: string;
   systemTag: string;
   icon: ReactNode;
@@ -32,17 +31,16 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="max-w-3xl">
-      {/* Header — eyebrow + heading + plain definition (always visible) */}
+    <div>
+      {/* Header — heading + plain definition (always visible) */}
       <div className="mb-6">
-        <p className="brand-eyebrow mb-3">{data.eyebrow}</p>
-        <h2
-          className="brand-h2 text-black mb-4"
+        <h3
+          className="brand-h3 text-black mb-3"
           style={{ letterSpacing: "-0.02em" }}
         >
           {data.heading}
-        </h2>
-        <p className="text-base md:text-lg text-black leading-relaxed">
+        </h3>
+        <p className="text-base text-black leading-relaxed">
           {data.definition}
         </p>
       </div>

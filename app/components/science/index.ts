@@ -2,6 +2,7 @@ export { default as ScienceHero } from "./ScienceHero";
 export { default as TwoSystemModel } from "./TwoSystemModel";
 export { default as ScienceAdaptogens } from "./ScienceAdaptogens";
 export { default as ScienceNootropics } from "./ScienceNootropics";
+export { default as ScienceEducation } from "./ScienceEducation";
 export { default as ScienceExplainer } from "./ScienceExplainer";
 export { default as SciencePillars } from "./SciencePillars";
 export { default as PillarCard } from "./PillarCard";
