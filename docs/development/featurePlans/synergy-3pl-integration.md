@@ -97,20 +97,26 @@ Humphrey's carrier answer (partial — used to draft the Synergy dispatch sheet)
 - **UK next-day ("24 Hour Delivery"):** paid upgrade, charge the full actual cost (so the current £4.33 needs raising). Carrier NOT explicitly named — assumed DPD Next Day, **to confirm**.
 - **International ("Express International"):** Evri as default (Royal Mail can't carry >2kg and our box is 2.1kg), with a DHL paid premium option. If Evri underperforms, switch default to DHL and absorb some/all cost.
 
-Still OUTSTANDING from Humphrey before the sheet can be returned to Synergy:
-1. **Incoterms (DDP vs DAP) on international** — not answered; this is the border/duty decision (matters most for US tariffs). Hard blocker for the international row.
-2. **24hr UK carrier/service** confirm (DPD Next Day?) + the new full-cost price.
-3. **DHL premium international** = a *second* checkout option per zone (own unique method name → own Synergy row → DHL). Recommendation sent: launch **Evri-only single international method** to unblock go-live, add DHL premium as a fast-follow once Evri's performance is known.
+Decisions now locked (Humphrey, 9 Jun):
+- **UK:** Evri default + DPD as a customer-selectable option (= two UK rates, each uniquely named so Synergy maps Evri vs DPD).
+- **International:** Evri default + DHL as a customer-selectable paid upgrade (= two international rates, each uniquely named, identical name across all zones, price varies per zone).
+- **Incoterms = DAP on ALL international** (customer clears/pays duties on arrival; the "consumer pays" model). Applies to both the Evri and DHL international rows. Does NOT affect the separate future US-only USD duties-inclusive (DDP) rate, which is a later build under its own name.
 
-Clarification reinforced to Humphrey: price already varies by zone under one method name (Synergy ignores price), so per-zone carrier splitting is NOT needed; separate method names are only needed where the carrier itself changes (Evri default vs DHL premium).
+Still to confirm (minor, not blockers): exact Evri UK service name; that the DPD UK option = the existing "24 Hour Delivery" next-day rate (vs a new DPD standard rate) + its new full-cost price; the customer-facing name for the DHL international rate (e.g. "International Priority"); whether Evri International can technically do DAP-only (assumed yes).
 
-Provisional sheet (column 1 = exact Shopify names, fixed; rest pending Humphrey):
+Clarification reinforced to Humphrey: price already varies by zone under one method name (Synergy ignores price), so per-zone carrier splitting is NOT needed; separate method names are only needed where the carrier itself changes (Evri vs DPD, Evri vs DHL).
+
+Provisional sheet (column 1 = exact Shopify names; names must be identical across all zones they cover):
 ```
-Shipping Method      | Carrier | Service      | Market | INCOTERMS
-Express              | Evri    | (service?)   | UK     | n/a
-24 Hour Delivery     | DPD?    | Next Day     | UK     | n/a
-Express International | Evri    | International | ROW    | DDP or DAP?  <- blocker
+Shipping Method       | Carrier | Service      | Market | INCOTERMS
+Express               | Evri    | (service?)   | UK     | n/a
+24 Hour Delivery      | DPD     | Next Day     | UK     | n/a
+Express International  | Evri    | International | ROW    | DAP
+International Priority | DHL     | Express      | ROW    | DAP
 ```
+(`International Priority` = placeholder name for the DHL upgrade; final name TBC. The two UK rates and two international rates are each customer-selectable options at checkout, default = the cheaper Evri one.)
+
+**Website config implied (no code, Shopify Settings > Shipping):** add the DPD option to the UK zone (likely already exists as "24 Hour Delivery") and add a second DHL-named rate to each of the ~9 international zones with the DHL price. Decide launch vs fast-follow for the DHL international option.
 
 ## Update (2026-06-09, Bethany — SKUs approved + 3 test orders specified)
 
