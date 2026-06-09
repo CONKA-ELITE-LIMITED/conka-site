@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-09** | B2B professionals: clarified pilot section copy, distributed app detail into the relevant steps, removed the weak Why-CONKA section and re-alternated section backgrounds
+- **2026-06-09** | B2B professionals value callout rebuilt as an interactive squad cost estimator; design system clarifies mono is for scanned data, sans for read text
 - **2026-06-09** | Phase 4: added /skill-editor skill (audit + feedback-ingestion self-improvement loop per Anthropic skill-authoring guidance); its first audit fixed 6 skills still instructing full-repo lint and a pinned-model co-author line
 - **2026-06-09** | Design-system restraint: clinical detailing is now occasional not default, mono sub-line demoted to optional (eyebrow + heading is the standard opener); condensed DESIGN_SYSTEM.md 651 to 557 lines
 - **2026-06-09** | Triaged the 97 real lint problems to 0 errors: fixed jsx-comment/internal-Link/unescaped-entity issues and unused vars; downgraded no-explicit-any to warn for integration code; deferred img-to-Image (51 warnings remain, acknowledged)

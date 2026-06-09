@@ -41,7 +41,9 @@
 | Role | Font | Variable | Notes |
 |------|------|----------|-------|
 | **Primary** (headings + body) | Neue Haas Grotesk Display | `--font-brand-primary` | `next/font/local` from `app/fonts/`. Weights: 400, 500, 700. |
-| **Data** (metrics, labels, mono) | JetBrains Mono | `--font-brand-data` | `next/font/local` from `app/fonts/`. Weights: 400, 500. |
+| **Data** (metrics, short labels, mono) | JetBrains Mono | `--font-brand-data` | `next/font/local` from `app/fonts/`. Weights: 400, 500. |
+
+> **Two registers — read vs scan.** The Primary font is the *reading layer*: headings, body, descriptions, and any control/form label a user reads to take an action — sentence case, near-black, comfortably sized. The Data font is the *scanning layer*: eyebrows, stat/spec labels, counters, tags, units, PMIDs — short markers (≤3 words), uppercase, low opacity. Clinical clarity comes from keeping these separate; mono is *seasoning*, not the main text. Setting prose or interactive labels in mono is the single most common legibility regression on these pages — when unsure, ask whether a user reads it (sans) or scans it (mono).
 
 ### Type scale
 
@@ -196,7 +198,7 @@ All components using these tokens update automatically. No per-component overrid
 
 **Section header**
 
-Every section opens with an eyebrow + heading. The mono sub-line (`.brand-mono-sub`) is optional — add it only when a section needs a genuine clarifier, proof point, or scale figure. Default to omitting it.
+Every section opens with an eyebrow + heading. The mono sub-line (`.brand-mono-sub`) is optional — add it only when a section needs a genuine clarifier, proof point, or scale figure. Default to omitting it. **`.brand-mono-sub` is a ≤10-word data clarifier, not a description.** For a readable sentence under the heading, use a sans body paragraph (`text-base text-black/80 leading-relaxed`), never the mono sub-line.
 
 | Element | Role | Format | CSS class |
 |---------|------|--------|-----------|
@@ -272,11 +274,13 @@ bg-white border border-black/12 p-5 lg:p-6
 - **Mono sub:** `.brand-mono-sub` — do not write the Tailwind string by hand
 - **Row counter / spec label:** `font-mono text-[9px]–[11px] uppercase tracking-[0.18em] tabular-nums`, opacity `text-black/35–60`
 - **Body paragraph inside a clinical card:** `text-sm md:text-base text-black/70–/75 leading-relaxed`. Never full-opacity `brand-body` in clinical surfaces.
+- **Interactive / form / control labels** (a label a user reads to act on: input labels, slider labels, control captions): sans, sentence case, `text-sm font-medium text-black`. These belong to the *reading* layer, not the data layer — do **not** set them in mono, uppercase, or low opacity. Reference: the order builder and cost estimator on `/professionals`.
 - Canonical separator: middle-dot `·` (U+00B7). Not `|`, not `—`.
 - Every section eyebrow opens with `//`. Format: `// <short concept> · <TOPIC-0X>`.
 - Headings get `letterSpacing: "-0.02em"` inline (stock classes don't tighten enough for clinical).
 - Headings are single `text-black`. No accent spans, no navy fills, no gradient text. Navy `#1B2757` is interactive-only.
-- Any number that can change: `tabular-nums`. Units, labels, percentages, PMIDs: `font-mono`.
+- Any number that can change: `tabular-nums`.
+- **Mono is for *scanned data*, not *read text*.** `font-mono` (uppercase, low opacity) covers data labels and structural markers only — eyebrows, stat/spec labels, counters, units, percentages, PMIDs, tags, fig plates: three words or fewer that the eye scans, never reads. The moment text is a sentence, or a label a user reads to take an action, it leaves the mono register and becomes sans, sentence case, near-black. When unsure: would a user *read* this or *scan* it? Read → sans. Scan → mono.
 
 ### Counter conventions
 

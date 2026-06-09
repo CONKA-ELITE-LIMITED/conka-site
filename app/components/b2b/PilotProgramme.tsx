@@ -80,7 +80,7 @@ const STAGES: Stage[] = [
     short: "Onboard",
     title: "Onboard the squad",
     detail:
-      "Your selected athletes are set up on the CONKA app in minutes, each with their own login and the testing built in.",
+      "The CONKA app is free to install and takes minutes to set up. Each selected athlete gets their own login, with the cognitive testing built in.",
     icon: (
       <svg {...svgProps}>
         <path d="M7 3h10v18H7z" />
@@ -93,7 +93,7 @@ const STAGES: Stage[] = [
     short: "Baseline",
     title: "Set the baseline",
     detail:
-      "Before anyone takes a shot, we capture each athlete's starting cognitive scores so the change is measurable, not anecdotal.",
+      "Before anyone takes a shot, each athlete runs a short two-minute cognitive test, backed by NHS clinical validation, to set their starting scores. The change becomes measurable, not anecdotal.",
     icon: (
       <svg {...svgProps}>
         <path d="M3 20h18" />
@@ -121,7 +121,7 @@ const STAGES: Stage[] = [
     short: "Test",
     title: "Test consistently",
     detail:
-      "Athletes complete short cognitive tests around three times a week, so progress is tracked as it happens.",
+      "Athletes retest around three times a week. The coach's view gives you a full overview of the squad: nudge athletes to keep testing, track who is taking their shots, and spot early trends as they emerge.",
     icon: (
       <svg {...svgProps}>
         <path d="M17 4l3 3-3 3" />
@@ -136,7 +136,7 @@ const STAGES: Stage[] = [
     short: "Review",
     title: "Review the data",
     detail:
-      "We read the squad's data back through a coach's view, with clear recommendations on what to roll out at scale.",
+      "At the end of the window we analyse the squad's data and give you a high-level team report plus an athlete-by-athlete breakdown, so you can see who responded and decide what to roll out at scale.",
     icon: (
       <svg {...svgProps}>
         <path d="M4 5v14h16" />
@@ -174,19 +174,13 @@ export default function PilotProgramme() {
             className="brand-h2 max-w-[20ch] text-black"
             style={{ letterSpacing: "-0.02em" }}
           >
-            Prove it on your own squad first.
+            Run a pilot with your own squad.
           </h2>
-          <p className="brand-mono-sub mt-3">
-            App &middot; Coach&apos;s dashboard &middot; Cognitive testing
-          </p>
-          <p className="brand-body mt-5 max-w-[60ch]">
-            The CONKA app is free to install and takes minutes to set up. Each
-            athlete runs a two-minute cognitive test, backed by NHS clinical
-            validation, on your testing cadence. The coach&apos;s view brings it
-            together: squad cognitive performance over time, plus supplement
-            tracking, so you can see compliance with CONKA and anything else your
-            athletes take. Start small, prove it on your own data, then scale
-            from evidence, not a leap of faith.
+          <p className="mt-5 text-base text-black/80 leading-relaxed max-w-[58ch]">
+            A pilot is the low-risk way in. Buy a small batch for the squad, and
+            we layer the CONKA app, a coach&apos;s dashboard and cognitive testing
+            on top. Watch your own athletes&apos; scores move over a few weeks,
+            then scale to team pricing from evidence, not a leap of faith.
           </p>
         </div>
 
@@ -251,7 +245,7 @@ export default function PilotProgramme() {
                   >
                     {s.icon}
                   </span>
-                  <span className="absolute -top-2 -left-2 bg-white border border-black/12 font-mono text-[9px] font-bold tabular-nums text-black/60 px-1 py-0.5 leading-none">
+                  <span className="absolute -top-2.5 -left-2.5 bg-white border border-black/12 font-mono text-xs font-bold tabular-nums text-black/70 px-1.5 py-1 leading-none">
                     {s.n}
                   </span>
                 </span>
@@ -303,9 +297,9 @@ export default function PilotProgramme() {
 
       {/* De-risk + CTA */}
       <div className="mt-8 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <p className="brand-body max-w-[46ch]">
-          A pilot is a small batch with the data layer on top. Prove it on your
-          squad, then scale to team pricing.
+        <p className="text-base text-black/80 leading-relaxed max-w-[46ch]">
+          Tell us your rough squad size and timing, and we&apos;ll shape a pilot
+          around you.
         </p>
         <a
           href={PILOT_MAILTO}
