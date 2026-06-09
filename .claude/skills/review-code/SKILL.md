@@ -1,6 +1,6 @@
 ---
 name: review-code
-description: Review code correctness, quality, cleanliness, and robustness. The engineering review -- does it work, is it well-structured, is it clean? No design system or branding docs loaded.
+description: Review code correctness, quality, cleanliness, and robustness - does it work, is it well-structured, is it clean? No design system or branding docs loaded. Use before opening a PR, or when asked to "review the code", check a diff, or sanity-check an implementation.
 argument-hint: [--light | --deep | --existing] <SCRUM-XXX | file paths | description>
 allowed-tools: Read, Grep, Glob, Bash, Agent, Edit, Write, mcp__claude_ai_Atlassian__getJiraIssue, mcp__claude_ai_Atlassian__addCommentToJiraIssue, mcp__claude_ai_Atlassian__transitionJiraIssue, mcp__claude_ai_Atlassian__getTransitionsForJiraIssue
 ---

@@ -2,6 +2,17 @@
 
 Headless Shopify e-commerce site. Next.js App Router + TypeScript, hosted on Vercel.
 
+## Operating efficiency
+
+Speed and token cost matter. On any task that is not large:
+
+- **Edit, don't rewrite.** Use targeted `Edit` calls. Never regenerate a whole file for a small change.
+- **Never `npm run lint`** (it lints the whole repo, thousands of pre-existing issues). Lint only what you changed: `npx eslint <file>` or `npx eslint $(git diff --name-only)`.
+- **Batch independent tool calls** into one turn instead of one per round-trip.
+- **Keep prose tight.** Do the work; don't narrate options you won't take.
+- **Delegate big reads** (multi-file searches, large docs) to a subagent so the main context stays lean.
+- **`/clear` between unrelated tasks** so each reply isn't reprocessing a long history.
+
 ## Current strategic direction (March 2026)
 
 **Read `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` before starting any feature work.** The site is undergoing a major simplification:

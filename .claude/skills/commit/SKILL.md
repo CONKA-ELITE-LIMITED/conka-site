@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Stage specific files, update CHANGELOG.md, and commit with the correct message format. Refuses to run on main branch. Use after completing a piece of work ready to go into git history.
+description: Stage specific files by name, append a one-line changelog entry (skipped for chores), and commit with the correct prefix and co-author line. Refuses to run on main. Use when work is ready to go into git history, e.g. "commit this" or "/commit".
 argument-hint: [optional: short description of what you are committing]
 allowed-tools: Bash, Read, Edit
 ---
@@ -51,23 +51,22 @@ Do not proceed.
 
 ---
 
-### Step 2: Update CHANGELOG.md
+### Step 2: Append a changelog line (skip for pure chores)
 
-Open `docs/CHANGELOG.md`. Add an entry at the top of the current month block (or create a new month block if needed):
+`docs/CHANGELOG.md` is a high-level "what changed and when" log. Keep each entry to ONE plain-language line. Skip this step entirely for chores, config, or no-impact refactors.
 
-```
-### YYYY-MM-DD -- [Short title of what changed]
+**Append without reading the file.** Insert one dated line after the marker with a single command (this never loads the long changelog into context):
 
-[2-4 sentences describing what changed and why. Focus on the why and user-visible impact, not implementation details. Those live in git history.]
-
-**Modified:** [key files changed]
+```bash
+awk -v e="- **$(date +%F)** | <high-level summary of what changed>" \
+  '{print} /changelog:newest/ && !d {print e; d=1}' \
+  docs/CHANGELOG.md > docs/CHANGELOG.md.tmp && mv docs/CHANGELOG.md.tmp docs/CHANGELOG.md
 ```
 
 Rules:
-- Use today's date
-- Title is descriptive ("Funnel back button fix"), not a ticket number
-- No em dashes
-- Bullet points for multi-part changes
+- One line, high level: what changed and why it matters, as a phrase. Details live in git history and PRs.
+- Never open or read the whole changelog. The `awk` insert needs no read.
+- No "Modified:" file list (git already has it). No em dashes.
 
 ---
 
@@ -104,7 +103,7 @@ git commit -m "$(cat <<'EOF'
 
 <optional body if context is non-obvious>
 
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 ```
@@ -117,7 +116,8 @@ Run `git status` after to confirm the commit succeeded.
 
 - **Never commit on main.** Always a feature branch.
 - **Never `git add -A`.** Stage specific files; review what you are including.
-- **Changelog first.** The commit message is for git history. The changelog is for humans.
+- **Changelog is one line, and optional.** Skip it for chores. The commit message serves git history; the changelog gives humans high-level optics. Never read the whole changelog to append.
+- **Lint only what changed.** If linting before commit, scope it: `npx eslint $(git diff --cached --name-only --diff-filter=d | grep -E '\.(ts|tsx)$')`. Never `npm run lint` (whole repo).
 - **Imperative mood.** "Add hero section" not "Added hero section".
 - **Co-author line always.** Include it on every commit.
 - **Never use em dashes** in commit messages or changelog entries.

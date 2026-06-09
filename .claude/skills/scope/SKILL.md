@@ -1,7 +1,7 @@
 ---
 name: scope
-description: Scope work like a product-minded architect. Triages scale first, researches minimally via subagent, challenges purpose, shapes phases, creates plan doc and Jira tickets. Supports --continue for existing plans. Use for new features, improvements, or non-trivial changes.
-argument-hint: [--no-pushback | --continue <plan-name>] description of the work
+description: Scope work like a product-minded architect. Triages scale, researches via subagent, challenges purpose, shapes phases, and writes a plan doc - Jira tickets only when wanted. Supports --continue and --no-jira. Use for new features, improvements, or non-trivial changes that need planning before building.
+argument-hint: [--no-pushback | --no-jira | --continue <plan-name>] description of the work
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, Agent, mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql, mcp__claude_ai_Atlassian__createJiraIssue, mcp__claude_ai_Atlassian__getJiraIssue, mcp__claude_ai_Atlassian__editJiraIssue, mcp__claude_ai_Atlassian__createIssueLink
 ---
 
@@ -84,11 +84,13 @@ Wait for an answer. Their answer sets the ceremony level:
 **Mobile consideration:** [1 sentence or "no impact"]
 **Out of scope:** [anything explicitly not included]
 ```
-Present this, wait for confirmation, then create 1 Jira ticket using jira.md.
+Present this, wait for confirmation, then create 1 Jira ticket using jira.md (unless plan-doc-only / `--no-jira`).
 
 If the user pushes back on the triage or says "just do it", default to B.
 
 If the user already named an appetite in the original request (e.g. "quick change", "this should be a small ticket"), you may skip asking and infer — but state your inference so they can correct.
+
+**Tracking.** Confirm how the work should be tracked: plan doc only, or plan doc + Jira. If the user passes `--no-jira`, or the work is internal tooling rather than a website feature, default to plan-doc-only: skip Step 7 entirely, do not load jira.md, and do not bring Jira up again.
 
 ### Step 2 — Research (scales B and C only)
 
@@ -114,9 +116,11 @@ Skip if `--no-pushback`. Otherwise Read `.claude/skills/scope/challenge.md`, pre
 
 Scales B and C: write to `docs/development/featurePlans/<feature-name>.md` (kebab-case). Structure in `shape.md`.
 
-### Step 7 — Create Jira tickets
+### Step 7 — Create Jira tickets (skip if plan-doc-only)
 
-Active phases only. Read `.claude/skills/scope/jira.md` for API specifics, epic mapping, AC rules, and gotchas.
+**Skip this step entirely** if the user chose plan-doc-only tracking, passed `--no-jira`, or the work is internal tooling rather than a website feature. Do not load jira.md and do not bring Jira up again.
+
+Otherwise, active phases only. Read `.claude/skills/scope/jira.md` for API specifics, epic mapping, AC rules, and gotchas.
 
 ### Continue mode (`--continue <plan-name>`)
 

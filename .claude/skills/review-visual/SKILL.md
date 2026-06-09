@@ -1,6 +1,6 @@
 ---
 name: review-visual
-description: Review design system compliance, visual quality, mobile experience, and performance. Does it look premium, work on mobile, and load fast?
+description: Review design system compliance, visual quality, mobile experience, and performance - does it look premium, work on mobile, and load fast? Use after building or changing any page or component, or when asked to "review visual", check mobile, or check performance.
 argument-hint: <file paths | route | description>
 allowed-tools: Read, Grep, Glob, Bash, Agent
 ---

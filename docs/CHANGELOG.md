@@ -4,6 +4,9 @@
 
 ---
 
+<!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-09** | Phase 1 skills/docs efficiency refactor: CLAUDE.md efficiency doctrine, one-line append-only changelog, tightened skill descriptions, implement skill split via progressive disclosure
+
 ## June 2026
 
 ### 2026-06-09 -- B2B portal Phase 1: credibility backbone + dual-path hero
