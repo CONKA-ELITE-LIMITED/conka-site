@@ -9,6 +9,7 @@ import {
   B2B_TIERS,
   B2B_VAT_RATE,
   getB2BTier,
+  getB2BNextTier,
   type B2BProductKey,
 } from "@/app/lib/b2bPricing";
 import { EMAIL_RE } from "@/app/lib/b2bData";
@@ -42,6 +43,7 @@ export default function B2BOrderBuilder() {
   const totalBoxes = quantities.flow + quantities.clear;
   const tier = getB2BTier(totalBoxes);
   const unitPrice = tier.pricePerBox;
+  const nextTier = getB2BNextTier(totalBoxes);
 
   const lines = useMemo(
     () =>
@@ -163,7 +165,7 @@ export default function B2BOrderBuilder() {
       <div className="col-span-2 lg:col-span-1 border border-black/15 bg-white p-6">
         <h2 className="text-xl font-semibold tracking-[-0.01em] mb-4">Your order</h2>
 
-        {/* Volume pricing (combined total) */}
+        {/* Volume pricing (combined total) - per-box anchored, with savings */}
         <div className="border border-black/12">
           {B2B_TIERS.map((t, i) => {
             const isActive = totalBoxes > 0 && t.label === tier.label;
@@ -171,16 +173,28 @@ export default function B2BOrderBuilder() {
               t.maxBoxes === null
                 ? `${t.minBoxes}+ boxes`
                 : `${t.minBoxes}-${t.maxBoxes} boxes`;
+            const savePerBox = B2B_TIERS[0].pricePerBox - t.pricePerBox;
             return (
               <div
                 key={t.label}
                 style={isActive ? { backgroundColor: ACCENT, color: "#fff" } : undefined}
-                className={`flex items-baseline justify-between px-3.5 py-2.5 text-sm ${
+                className={`flex items-baseline justify-between gap-3 px-3.5 py-2.5 text-sm ${
                   i > 0 ? "border-t border-black/12" : ""
                 } ${isActive ? "" : "text-black/70"}`}
               >
-                <span>{range}</span>
-                <span className="font-semibold tabular-nums">
+                <span className="flex items-baseline gap-2">
+                  <span>{range}</span>
+                  {savePerBox > 0 && (
+                    <span
+                      className={`text-xs tabular-nums ${
+                        isActive ? "opacity-80" : "text-black/45"
+                      }`}
+                    >
+                      save {formatPrice(savePerBox)}/box
+                    </span>
+                  )}
+                </span>
+                <span className="font-semibold tabular-nums whitespace-nowrap">
                   {formatPrice(t.pricePerBox)}
                   <span className="font-normal opacity-60"> / box</span>
                 </span>
@@ -188,6 +202,16 @@ export default function B2BOrderBuilder() {
             );
           })}
         </div>
+
+        {/* Next-tier nudge: how many more boxes unlock the next price */}
+        {totalBoxes > 0 && nextTier && (
+          <p className="mt-2 text-xs text-black/60 tabular-nums">
+            Add {nextTier.boxesAway} more{" "}
+            {nextTier.boxesAway === 1 ? "box" : "boxes"} to reach{" "}
+            {formatPrice(nextTier.tier.pricePerBox)}/box (save{" "}
+            {formatPrice(nextTier.savingPerBox)}/box).
+          </p>
+        )}
 
         {/* Line items */}
         <div className="mt-5">
