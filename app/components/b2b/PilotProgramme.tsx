@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /* ============================================================================
@@ -11,10 +12,10 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * the section wrapper and the #pilot anchor the hero CTA targets. CTA is a
  * templated mailto to Harry; no backend.
  *
- * The flow is an interactive horizontal stepper: click any stage (or use the
- * prev/next controls) to highlight it and expand its detail below. The rail
- * scrolls horizontally on mobile and the active stage scrolls into view.
- * Clinical grammar: navy nodes, hairline connector, mono labels, no new claims.
+ * Interactive horizontal stepper: click a stage (or use prev/next) to highlight
+ * it; its detail expands below, beside a figure-plate of the CONKA app (matching
+ * the home AppUSPSection treatment). Tile labels are a single word on mobile and
+ * a fuller title on desktop. Clinical grammar, no new claims.
  * ========================================================================== */
 
 const NAVY = "#1B2757";
@@ -38,12 +39,12 @@ const PILOT_MAILTO =
   );
 
 const svgProps = {
-  width: 22,
-  height: 22,
+  width: 26,
+  height: 26,
   viewBox: "0 0 24 24",
   fill: "none",
   stroke: "currentColor",
-  strokeWidth: 1.75,
+  strokeWidth: 1.6,
   strokeLinecap: "square" as const,
   strokeLinejoin: "miter" as const,
   "aria-hidden": true,
@@ -51,8 +52,8 @@ const svgProps = {
 
 type Stage = {
   n: string;
-  short: string;
-  title: string;
+  short: string; // mobile tile label (one word)
+  title: string; // desktop tile label + panel heading
   detail: string;
   icon: ReactNode;
 };
@@ -74,8 +75,8 @@ const STAGES: Stage[] = [
   },
   {
     n: "02",
-    short: "App",
-    title: "Athletes onto the app",
+    short: "Onboard",
+    title: "Onboard the squad",
     detail:
       "Your selected athletes are set up on the CONKA app in minutes, each with their own login and the testing built in.",
     icon: (
@@ -88,7 +89,7 @@ const STAGES: Stage[] = [
   {
     n: "03",
     short: "Baseline",
-    title: "Baseline on the app",
+    title: "Set the baseline",
     detail:
       "Before anyone takes a shot, we capture each athlete's starting cognitive scores so the change is measurable, not anecdotal.",
     icon: (
@@ -103,9 +104,9 @@ const STAGES: Stage[] = [
   {
     n: "04",
     short: "Take CONKA",
-    title: "Take CONKA for 2 to 6 weeks",
+    title: "Take CONKA daily",
     detail:
-      "The squad takes their daily shot across the agreed window: Flow in the morning, Clear in the afternoon.",
+      "The squad takes their daily shot across the agreed 2 to 6 week window: Flow in the morning, Clear in the afternoon.",
     icon: (
       <svg {...svgProps}>
         <path d="M9 3h6" />
@@ -130,8 +131,8 @@ const STAGES: Stage[] = [
   },
   {
     n: "06",
-    short: "Readout",
-    title: "Data analysis and feedback",
+    short: "Review",
+    title: "Review the data",
     detail:
       "We read the squad's data back through a coach's view, with clear recommendations on what to roll out at scale.",
     icon: (
@@ -184,9 +185,7 @@ export default function PilotProgramme() {
       {/* Interactive horizontal stepper */}
       <p className="brand-eyebrow mt-10 mb-6">{"// How a pilot runs"}</p>
 
-      <ol
-        className="flex overflow-x-auto sm:overflow-visible -mx-1 px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
+      <ol className="flex overflow-x-auto sm:overflow-visible -mx-1 px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STAGES.map((s, i) => {
           const isActive = i === active;
           return (
@@ -195,12 +194,12 @@ export default function PilotProgramme() {
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
-              className="relative shrink-0 min-w-[84px] sm:min-w-0 sm:flex-1"
+              className="relative shrink-0 min-w-[92px] sm:min-w-0 sm:flex-1"
             >
               {/* Connector back to the previous node */}
               {i > 0 && (
                 <span
-                  className="absolute top-[21px] sm:top-[27px] left-[-50%] w-full h-px bg-black/15"
+                  className="absolute top-[27px] sm:top-[35px] left-[-50%] w-full h-px bg-black/15"
                   aria-hidden="true"
                 />
               )}
@@ -210,11 +209,11 @@ export default function PilotProgramme() {
                 onClick={() => setActive(i)}
                 aria-current={isActive ? "step" : undefined}
                 aria-label={`Step ${s.n}: ${s.title}`}
-                className="relative z-10 flex w-full flex-col items-center gap-2 px-1"
+                className="relative z-10 flex w-full flex-col items-center gap-2.5 px-1"
               >
                 <span className="relative">
                   <span
-                    className={`flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center border transition-colors ${
+                    className={`flex h-14 w-14 sm:h-[72px] sm:w-[72px] items-center justify-center border transition-colors ${
                       isActive
                         ? "text-white border-transparent"
                         : "bg-white border-black/15 text-[#1B2757]"
@@ -228,11 +227,14 @@ export default function PilotProgramme() {
                   </span>
                 </span>
                 <span
-                  className={`text-[11px] sm:text-xs text-center leading-tight ${
+                  className={`text-center leading-tight ${
                     isActive ? "text-black font-semibold" : "text-black/55"
                   }`}
                 >
-                  {s.short}
+                  <span className="sm:hidden text-[11px]">{s.short}</span>
+                  <span className="hidden sm:inline text-xs lg:text-sm">
+                    {s.title}
+                  </span>
                 </span>
               </button>
             </li>
@@ -240,31 +242,58 @@ export default function PilotProgramme() {
         })}
       </ol>
 
-      {/* Expanded detail panel for the active stage */}
-      <div className="mt-5 border border-black/12 bg-white p-5 lg:p-6">
-        <div className="flex items-center justify-between gap-4 mb-3">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/45 tabular-nums">
-            Step {step.n} / {String(total).padStart(2, "0")}
-          </span>
-          <div className="flex gap-2">
-            <StepNavButton
-              direction="prev"
-              onClick={() => go(-1)}
-              disabled={active === 0}
-            />
-            <StepNavButton
-              direction="next"
-              onClick={() => go(1)}
-              disabled={active === total - 1}
-            />
+      {/* Expanded detail: text + app figure plate */}
+      <div
+        className="mt-6 border border-black/12 bg-white"
+        aria-live="polite"
+      >
+        <div className="lg:grid lg:grid-cols-[1.3fr_1fr]">
+          {/* App figure - mobile first, desktop right */}
+          <div className="relative aspect-[4/3] sm:aspect-square lg:aspect-auto bg-[#f5f5f5] border-b border-black/12 lg:border-b-0 lg:border-l lg:order-2 overflow-hidden">
+            <div className="absolute top-3 left-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
+              Fig. 01 &middot; CONKA App
+            </div>
+            <div className="absolute left-1/2 -translate-x-1/2 top-[12%] w-[42%] sm:w-[40%] lg:w-[46%] aspect-[1/2]">
+              <Image
+                src="/app/AppConkaRing.png"
+                alt="The CONKA app home screen showing today's cognition score"
+                fill
+                sizes="(max-width: 1024px) 40vw, 240px"
+                className="object-contain"
+              />
+            </div>
+            <div className="absolute bottom-3 right-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
+              iOS &middot; Android
+            </div>
+          </div>
+
+          {/* Text */}
+          <div className="p-5 lg:p-8 lg:order-1 lg:flex lg:flex-col lg:justify-center">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/45 tabular-nums">
+                Step {step.n} / {String(total).padStart(2, "0")}
+              </span>
+              <div className="flex gap-2">
+                <StepNavButton
+                  direction="prev"
+                  onClick={() => go(-1)}
+                  disabled={active === 0}
+                />
+                <StepNavButton
+                  direction="next"
+                  onClick={() => go(1)}
+                  disabled={active === total - 1}
+                />
+              </div>
+            </div>
+            <h3 className="text-xl lg:text-2xl font-semibold text-black leading-tight">
+              {step.title}
+            </h3>
+            <p className="text-sm lg:text-base text-black/70 mt-2.5 max-w-[52ch] leading-relaxed">
+              {step.detail}
+            </p>
           </div>
         </div>
-        <h3 className="text-lg lg:text-xl font-semibold text-black leading-tight">
-          {step.title}
-        </h3>
-        <p className="text-sm lg:text-base text-black/70 mt-2 max-w-[60ch] leading-relaxed">
-          {step.detail}
-        </p>
       </div>
 
       {/* De-risk + CTA */}
