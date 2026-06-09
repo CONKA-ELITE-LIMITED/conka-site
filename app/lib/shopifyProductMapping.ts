@@ -25,11 +25,6 @@ import {
 // INDIVIDUAL FORMULA VARIANTS
 // ============================================
 
-// Formula variants support both one-time and subscription with selling plans
-type FormulaVariantConfig = {
-  variantId: string;
-  sellingPlanId?: string; // Only needed for subscription
-};
 
 // Extended pack sizes for individual formulas (includes 8 and 28)
 type FormulaPackSize = "4" | "8" | "12" | "28";

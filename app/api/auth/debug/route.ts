@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
  * Debug endpoint to check authentication state
  * This helps diagnose issues with the Customer Account API
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const shopId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
   const clientId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID;
 
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       idTokenPayload = JSON.parse(
         Buffer.from(idToken.split('.')[1], 'base64').toString()
       );
-    } catch (e) {
+    } catch (_e) {
       idTokenPayload = { error: 'Failed to decode' };
     }
   }

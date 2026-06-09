@@ -81,7 +81,7 @@ export default function NutritionInfoModal({
         <div className="flex items-start justify-between gap-4 px-5 pt-5 pb-4 lg:px-6 lg:pt-6 border-b border-black/12">
           <div className="min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-2">
-              // Spec · Formulation · Doc-NI-001
+              {"// Spec · Formulation · Doc-NI-001"}
             </p>
             <h3
               id="nutrition-modal-heading"

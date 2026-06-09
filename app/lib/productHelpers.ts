@@ -115,9 +115,6 @@ export function generateProtocolCalendarDays(
         }
       } else if (protocolId === "3") {
         // Balanced: Alternating pattern
-        const { conkaFlowCount, conkaClarityCount } = tierConfig;
-        const totalDoses = conkaFlowCount + conkaClarityCount;
-
         if (tier === "starter") {
           // 2+2: Mon=01, Tue=02, Thu=01, Sat=02
           if (day === 0 || day === 3) days.push({ day: dayNum, formula: "01" });
@@ -140,7 +137,6 @@ export function generateProtocolCalendarDays(
       } else {
         // Protocol 1 or 2: Primary formula most days, secondary once weekly
         const isPrimaryConkaFlow = protocolId === "1";
-        const { conkaFlowCount, conkaClarityCount } = tierConfig;
 
         if (tier === "starter") {
           // 3+1: Mon/Wed/Fri primary, Sun secondary

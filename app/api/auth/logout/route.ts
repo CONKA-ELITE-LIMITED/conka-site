@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
   return response;
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   const cookieStore = await cookies();
 
   // Clear all auth cookies including dev mock

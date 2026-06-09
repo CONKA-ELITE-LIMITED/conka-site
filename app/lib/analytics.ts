@@ -34,8 +34,7 @@ function getQuizSource(): string {
   if (typeof window === "undefined") return "direct";
   
   const referrer = document.referrer;
-  const currentPath = window.location.pathname;
-  
+
   // Check if coming from internal pages
   if (referrer) {
     const referrerUrl = new URL(referrer);
@@ -60,6 +59,8 @@ function getQuizSource(): string {
 /**
  * Safe tracking wrapper - fails silently in production
  */
+// Vercel's track() expects AllowedPropertyValues; `any` keeps callers flexible.
+// no-explicit-any is downgraded to warn for cases like this.
 function safeTrack(eventName: string, properties: Record<string, any>): void {
   if (typeof window === "undefined") return;
   

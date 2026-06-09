@@ -63,7 +63,7 @@ const CUSTOMER_QUERY = `
  * Used by the client to check authentication status and get customer details.
  * In development, when DEV_MOCK_AUTH=true and dev_mock_auth cookie is set, returns a mock customer.
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const cookieStore = await cookies();
   const isDev = process.env.NODE_ENV === 'development';
   const mockAuthEnabled = process.env.DEV_MOCK_AUTH === 'true';
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
         Buffer.from(idToken.split('.')[1], 'base64').toString()
       );
       email = payload.email || '';
-    } catch (e) {
+    } catch (_e) {
       // Ignore decode errors
     }
   }

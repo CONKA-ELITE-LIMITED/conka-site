@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:changed": "FILES=$(git diff --name-only --diff-filter=ACMR HEAD -- '*.ts' '*.tsx'); if [ -n \"$FILES\" ]; then eslint $FILES; else echo 'No changed TS/TSX files to lint.'; fi",
     "build:reviews": "node scripts/build-loox-testimonials.mjs"
   },
   "browserslist": [

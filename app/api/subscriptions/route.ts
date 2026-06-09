@@ -72,7 +72,7 @@ function transformLoopSubscription(loopSub: any, customerEmail: string): Subscri
 const SHOPIFY_SHOP_ID = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
 
 // GET - Fetch customer subscriptions (requires authentication)
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get customer email from session cookie
     const customerEmail = await getCustomerEmailFromSession();

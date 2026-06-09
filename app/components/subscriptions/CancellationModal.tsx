@@ -73,7 +73,7 @@ export function CancellationModal({
   onClose,
   onCancel,
   subscriptionName,
-  currentPlan,
+  currentPlan: _currentPlan,
   onPauseInstead,
   onEditInstead,
   onApplyDiscount,

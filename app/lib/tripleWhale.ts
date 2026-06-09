@@ -10,7 +10,7 @@ declare global {
   interface Window {
     TriplePixel?: (
       event: string,
-      params?: Record<string, any>
+      params?: Record<string, unknown>
     ) => void;
   }
 }
@@ -72,7 +72,7 @@ export function trackAddToCart(params: {
     const variantId = extractNumericId(params.variantId);
 
     // Build event payload
-    const eventParams: Record<string, any> = {
+    const eventParams: Record<string, unknown> = {
       item: itemId,
       v: variantId,
       q: params.quantity,

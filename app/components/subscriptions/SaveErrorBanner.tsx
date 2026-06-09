@@ -14,7 +14,7 @@ interface SaveErrorBannerProps {
 }
 
 export function SaveErrorBanner({
-  error,
+  error: _error,
   errorPartial,
   errorMultiLine,
   subscriptionName,

@@ -15,7 +15,7 @@ interface RadarChartProps {
   accentColor?: string; // Optional accent color for the improved line (defaults to currentColor)
 }
 
-export default function RadarChart({ data, mainValue, accentColor }: RadarChartProps) {
+export default function RadarChart({ data, mainValue: _mainValue, accentColor }: RadarChartProps) {
   // Use black for grid, labels, and baseline; accent color only for improved line
   const gridColor = "rgba(0, 0, 0, 0.15)";
   const labelColor = "rgba(0, 0, 0, 0.7)";

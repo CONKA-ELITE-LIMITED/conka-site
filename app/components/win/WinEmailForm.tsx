@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import useIsMobile from "@/app/hooks/useIsMobile";
 import { subscribeToWinList } from "@/app/lib/klaviyo";
 
 interface WinEmailFormProps {
@@ -18,7 +17,6 @@ export default function WinEmailForm({
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isMobile = useIsMobile();
 
   const submitEntry = useMutation(api.winEntries.submitEntry);
 

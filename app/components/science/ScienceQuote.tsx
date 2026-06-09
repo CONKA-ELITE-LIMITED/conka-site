@@ -8,7 +8,7 @@ export default function ScienceQuote({ isMobile = false }: ScienceQuoteProps) {
   return (
     <div className="max-w-4xl">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6">
-        // Research Philosophy · Doc-RP-001
+        {"// Research Philosophy · Doc-RP-001"}
       </p>
       <div className="border-l-2 border-[#1B2757] pl-5 lg:pl-6">
         <p

@@ -49,7 +49,7 @@ async function fetchFromLoop(subscriptionId: string): Promise<any> {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('customer_access_token')?.value;
   const mockCookie = cookieStore.get('dev_mock_auth')?.value;

@@ -42,7 +42,7 @@ function extractNumericCustomerId(gid: string): string | null {
   return null;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('customer_access_token')?.value;
 

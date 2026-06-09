@@ -89,6 +89,49 @@ read_shipping, write_shipping
   2. Give the **US its own unique method name** (e.g. "Express International USA" / "USA SHIPPING") when the USD / scaled / DDP rate is built, so Synergy routes it to a distinct US carrier/service. No collision since the name is unique.
   3. **UK** keeps "Express" and "24 Hour Delivery" — already distinct names → maps to a UK carrier fine.
 - **Net:** shipping mapping question is resolved. Remaining shipping work is (a) fill Synergy's dispatch-method sheet with the names above, (b) build the real US USD/DDP rate under a unique name (separate, unstarted), (c) B2B/pallet shipping (separate workstream).
+
+## Update (2026-06-09, carrier choices from Humphrey + sheet still open)
+
+Humphrey's carrier answer (partial — used to draft the Synergy dispatch sheet):
+- **UK standard ("Express"):** Evri default; DPD as a non-default alternative.
+- **UK next-day ("24 Hour Delivery"):** paid upgrade, charge the full actual cost (so the current £4.33 needs raising). Carrier NOT explicitly named — assumed DPD Next Day, **to confirm**.
+- **International ("Express International"):** Evri as default (Royal Mail can't carry >2kg and our box is 2.1kg), with a DHL paid premium option. If Evri underperforms, switch default to DHL and absorb some/all cost.
+
+Decisions now locked (Humphrey, 9 Jun):
+- **UK:** Evri default + DPD as a customer-selectable option (= two UK rates, each uniquely named so Synergy maps Evri vs DPD).
+- **International:** Evri default + DHL as a customer-selectable paid upgrade (= two international rates, each uniquely named, identical name across all zones, price varies per zone).
+- **Incoterms = DAP on ALL international** (customer clears/pays duties on arrival; the "consumer pays" model). Applies to both the Evri and DHL international rows. Does NOT affect the separate future US-only USD duties-inclusive (DDP) rate, which is a later build under its own name.
+
+Still to confirm (minor, not blockers): exact Evri UK service name; that the DPD UK option = the existing "24 Hour Delivery" next-day rate (vs a new DPD standard rate) + its new full-cost price; the customer-facing name for the DHL international rate (e.g. "International Priority"); whether Evri International can technically do DAP-only (assumed yes).
+
+Clarification reinforced to Humphrey: price already varies by zone under one method name (Synergy ignores price), so per-zone carrier splitting is NOT needed; separate method names are only needed where the carrier itself changes (Evri vs DPD, Evri vs DHL).
+
+Provisional sheet (column 1 = exact Shopify names; names must be identical across all zones they cover):
+```
+Shipping Method       | Carrier | Service      | Market | INCOTERMS
+Express               | Evri    | (service?)   | UK     | n/a
+24 Hour Delivery      | DPD     | Next Day     | UK     | n/a
+Express International  | Evri    | International | ROW    | DAP
+International Priority | DHL     | Express      | ROW    | DAP
+```
+(`International Priority` = placeholder name for the DHL upgrade; final name TBC. The two UK rates and two international rates are each customer-selectable options at checkout, default = the cheaper Evri one.)
+
+**Website config implied (no code, Shopify Settings > Shipping):** add the DPD option to the UK zone (likely already exists as "24 Hour Delivery") and add a second DHL-named rate to each of the ~9 international zones with the DHL price. Decide launch vs fast-follow for the DHL international option.
+
+## Update (2026-06-09, Bethany — SKUs approved + 3 test orders specified)
+
+- **SKU sync APPROVED.** Bethany confirmed the SKU file is OK; Richard to transfer them to Synergy's **LIVE** system when free (flagged maybe not Tue 9 Jun, his busiest day). Gate to Synergy holding/seeing stock.
+- **3 test orders requested** (ideally created AFTER shipping methods are mapped, so the carrier/tracking writeback can be tested):
+  - Order 1: `FLOW-FUNNEL-28` × 1, method **"Express"** (UK) — single SKU/unit
+  - Order 2: `FLOW-FUNNEL-28` × 2 + `CLEAR-FUNNEL-28` × 2, method **"24 Hour Delivery"** (UK) — multi-SKU/multi-unit
+  - Order 3: `BOTH-FUNNEL-56` × 1, method **"Express International"** (non-UK address) — bundle
+- **Order requirements:** assigned to the **Synergy location**, status **open + paid + unfulfilled**, and **LEFT in Shopify — do NOT cancel** until Synergy confirms systemic shipment + carrier/tracking writeback (cancelling kills the writeback test). Send the 3 order IDs to Bethany → she passes to Richard.
+- **Critical path / blockers for the test orders:**
+  1. Richard transfers SKUs to Synergy live (in progress).
+  2. Humphrey's shipping answers (incoterms + 24hr carrier) → fill & return the mapping sheet → Synergy assigns service codes. Required for the carrier/tracking-writeback half of the test.
+  3. **NEW dependency — routing to the Synergy location.** Funnel SKUs are stocked at Burnside and these products are live and selling; the 3 test orders' fulfillment must land at the Synergy location WITHOUT routing real customer orders there pre-go-live. Confirm the mechanism with Richard (token stock at Synergy + manual fulfillment move vs temporary location priority).
+  4. **Order-creation mechanism:** draft order in Admin (type the shipping line name manually to match exactly, set a test email + correct address, mark as paid → open/paid/unfulfilled). Order 3 needs an international address to surface "Express International".
+- **Recommended sequence:** Humphrey answers → sheet to Synergy → Richard confirms SKUs live + routing settled → create the 3 orders → send IDs. Do NOT create them before the carrier mapping exists.
 - **US shipping reality check:** the planned USD / scaled-by-box / tax-inclusive (DDP) US rate does NOT exist yet. Current US rate is a flat **£20.27 GBP "Express International"**. Building the real US rate is unstarted (separate from the mapping sheet).
 - **B2B / pallet shipping = separate workstream (confirmed with Rudh).** No size/weight-based pallet rate exists in any zone, and B2B draft orders set no shipping line in code (`app/api/b2b/invoice-order/route.ts`), so a B2B order reaches Synergy with a blank shipping method. Bethany's "force 6+ boxes onto a pallet service" ask is a build, not a mapping. To be scoped separately.
 
@@ -98,8 +141,8 @@ read_shipping, write_shipping
 |-------|-------------|--------|
 | 1 | Connect: Dev Dashboard app + credentials + base URL + Synergy Location | DONE (connection confirmed working) |
 | 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | DONE (data entered; pending Synergy SKU file sync) |
-| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (principles set; numbers pending) |
-| 4 | Testing: test SKUs + multi-line test orders against Synergy TEST WMS; end-to-end checklist | Future |
+| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (carriers chosen; incoterms + sheet pending Humphrey) |
+| 4 | Testing: 3 specified test orders against Synergy LIVE system; carrier/tracking writeback | Active (spec received from Bethany; blocked on shipping sheet + SKU live transfer + Synergy-location routing) |
 | 5 | Go-live (9 June): live SKU-name sync, single live sanity order | Future |
 
 ### Phase 1: Connect - DONE
@@ -128,9 +171,14 @@ Then notify Bethany the SKU attributes are done so Synergy can sync the SKU file
 - **UK:** free to customer; Synergy picks the carrier (clause 4.1) unless CONKA names a preferred one. Likely just a "Free UK shipping" rate (probably already exists).
 - **US:** customers pay USD, price scaled by box count, inclusive of tax/tariffs, all products available. Still need: the DHL cost for the US (which DHL zone is the USA, Air vs Road) plus a tariff estimate, then set the scaled USD rates in Settings > Shipping. Visible to Synergy via `read_shipping`.
 
-### Phase 4: Testing (Future, needs 1 to 3)
+### Phase 4: Testing (Active — needs sheet returned + SKUs live + routing)
 
-7. Create test SKUs and a couple of multi-line test orders (qty > 1 per line) at status open + unshipped + paid, against Synergy's TEST WMS. Walk the PDF's end-to-end checklist: SKU sync, order pull, `IMPORTSYNERGY` tagging, shipment write-back, inventory updates both directions. Default to limited live test SKUs/orders unless Synergy requires a separate TEST Shopify instance.
+Bethany specified the test matrix against Synergy's LIVE system (not a separate TEST WMS):
+- Order 1: `FLOW-FUNNEL-28` × 1, "Express" (UK)
+- Order 2: `FLOW-FUNNEL-28` × 2 + `CLEAR-FUNNEL-28` × 2, "24 Hour Delivery" (UK)
+- Order 3: `BOTH-FUNNEL-56` × 1, "Express International" (intl address)
+
+All three: assigned to the Synergy location, status open + paid + unfulfilled, left in Shopify (never cancelled) until Synergy confirms systemic shipment + carrier/tracking writeback. Send the order IDs to Bethany. Walk the PDF's end-to-end checklist alongside: SKU sync, order pull, `IMPORTSYNERGY` tagging, shipment write-back, inventory updates both directions. See the 2026-06-09 update above for the blocker list and recommended sequence.
 
 ### Phase 5: Go-live (Future, needs 4)
 

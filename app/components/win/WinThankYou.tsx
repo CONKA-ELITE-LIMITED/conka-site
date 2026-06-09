@@ -4,7 +4,7 @@ interface WinThankYouProps {
   email?: string;
 }
 
-export default function WinThankYou({ email }: WinThankYouProps) {
+export default function WinThankYou({ email: _email }: WinThankYouProps) {
   return (
     <div className="px-4 md:px-16 py-12">
       <div className="max-w-6xl mx-auto">

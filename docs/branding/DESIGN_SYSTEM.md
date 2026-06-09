@@ -30,6 +30,7 @@
 2. **Minimal, scientific, slightly organic.** Never overdesigned. Every element earns its place.
 3. **One system, not per-page decisions.** Layout, spacing, radius, and typography are fixed constraints — new content drops in without ad-hoc styling.
 4. **Left-aligned by default.** All copy defaults to left alignment for clarity, consistency, and editorial feel. Centre alignment is avoided.
+5. **Restraint over density.** Sharp structure everywhere; dense clinical micro-typography only where the data earns it. Calm, not busy.
 
 ---
 
@@ -123,19 +124,9 @@ The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-ca
 
 ### The rule: page orchestrates, component is content-only
 
-**Page owns:**
-- `<section>` wrapper with `brand-section` (or `premium-section-luxury` on legacy pages)
-- Background class
-- Track wrapper (`brand-track`) for content alignment
-- `aria-label` for accessibility
+**Page owns:** `<section>` wrapper with `brand-section` (or `premium-section-luxury` on legacy pages), background class, track wrapper (`brand-track`) for content alignment, and `aria-label` for accessibility.
 
-**Component owns:**
-- Content only — no `<section>`, no root `max-w-*`, no `px-*`
-- Internal layout (grids, stacks, gaps)
-- Card/surface styling using brand tokens
-- Typography — sets text colour explicitly when surface differs from section background
-
-### Structure
+**Component owns:** content only — no `<section>`, no root `max-w-*`, no `px-*`. Internal layout (grids, stacks, gaps), card/surface styling using brand tokens, and typography — setting text colour explicitly when the surface differs from the section background.
 
 ```tsx
 <section className="brand-section brand-bg-white" aria-label="Benefits">
@@ -179,6 +170,8 @@ Mobile-first is non-negotiable. Full mobile guide: `MOBILE_OPTIMIZATION.md`.
 > Active pages: `/` `/start` `/funnel` `/science` `/our-story` `/case-studies` `/ingredients` `/app` `/app-insights` `/why-conka` `/conka-flow` `/conka-clarity` `/protocol/[id]` + Navigation + Footer
 >
 > **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
+>
+> **Restraint first.** Clinical detailing is a tool, not a default. The structural grammar (zero radius, hairline borders, left-alignment, mono for data) applies everywhere. The dense micro-typography (topic codes, counters, spec strips, PMID tags, formula tags) is reserved for surfaces where data density genuinely earns it. Most sections need only an eyebrow, a heading, and clean body copy. When in doubt, leave it out.
 
 ### Token overrides (`.brand-clinical`)
 
@@ -194,32 +187,30 @@ All components using these tokens update automatically. No per-component overrid
 
 ### Clinical utilities (unscoped, opt-in from `brand-base.css`)
 
-**`.lab-clip-tr`** — top-right 12px chamfer. Apply to primary CTAs, nav buttons, tags only. Never on cards, asset frames, or non-interactive surfaces.
-
-**`.lab-asset-frame`** — double-border `box-shadow` stack for imagery and data surfaces.
-
-**`@keyframes lab-blink`** — terminal cursor blink. `style={{ animation: "lab-blink 1s step-end infinite" }}`.
-
-**Smaller overlay chamfer (10px)** — for badge overlays inside images. Inline: `[clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)]`
+- **`.lab-clip-tr`** — top-right 12px chamfer. Apply to primary CTAs, nav buttons, tags only. Never on cards, asset frames, or non-interactive surfaces.
+- **`.lab-asset-frame`** — double-border `box-shadow` stack for imagery and data surfaces.
+- **`@keyframes lab-blink`** — terminal cursor blink. `style={{ animation: "lab-blink 1s step-end infinite" }}`.
+- **Smaller overlay chamfer (10px)** — for badge overlays inside images. Inline: `[clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)]`
 
 ### Standard patterns
 
-**Trio header (every section opens with one)**
+**Section header**
 
-Three elements, three distinct roles:
+Every section opens with an eyebrow + heading. The mono sub-line (`.brand-mono-sub`) is optional — add it only when a section needs a genuine clarifier, proof point, or scale figure. Default to omitting it.
 
 | Element | Role | Format | CSS class |
 |---------|------|--------|-----------|
 | Eyebrow | Identifies the topic | `// <short concept> · <TOPIC-0X>` | `.brand-eyebrow` |
 | Heading | Bold positioning statement | Single black. No accent spans. `letterSpacing: "-0.02em"` inline. | `brand-h1/h2/h3` |
-| Sub-line | Clarifier, proof, or scale | Mono, middle-dot separated, max 10 words | `.brand-mono-sub` |
+| Sub-line | Optional clarifier, proof, or scale | Mono, middle-dot separated, max 10 words | `.brand-mono-sub` |
 
 ```tsx
 <p className="brand-eyebrow mb-3">{"// Short concept · TOPIC-0X"}</p>
 <h2 className="brand-h2 mb-2 text-black" style={{ letterSpacing: "-0.02em" }}>
   Section heading, single black.
 </h2>
-<p className="brand-mono-sub">Clarifier · Proof · Scale</p>
+{/* Optional sub-line — only when a genuine clarifier/proof/scale is needed:
+<p className="brand-mono-sub">Clarifier · Proof · Scale</p> */}
 ```
 
 Wrap `// ...` as `{"// ..."}` in JSX to avoid `react/jsx-no-comment-textnodes`.
@@ -237,24 +228,7 @@ bg-white border border-black/12 p-5 lg:p-6
 </div>
 ```
 
-**Card header row (labelled counter + right-aligned identity)**
-```tsx
-<div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">P-01 · Pillar 01 / 05</span>
-  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">CONKA Flow</span>
-</div>
-```
-
-**Segmented tabs**
-Zero-radius 2-col grid. Active: `bg-black text-white`. Inactive: `bg-white`. `min-h-[44px]` tap target.
-
-**Em-dash bullets (replace `•`)**
-```tsx
-<li className="flex items-start gap-2">
-  <span className="font-mono text-black/30 shrink-0">—</span>
-  <span>{item}</span>
-</li>
-```
+**Card header row (labelled counter + right-aligned identity)** — same row container; left `font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums` (e.g. `P-01 · Pillar 01 / 05`), right navy identity `font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums`.
 
 **Spec strip (3-col dashboard stats)**
 ```tsx
@@ -266,62 +240,29 @@ Zero-radius 2-col grid. Active: `bg-black text-white`. Inactive: `bg-white`. `mi
 </div>
 ```
 
-**Evidence grid (nested hairlines)**
-Outer `border border-black/12`, inner cells `border-r border-black/8` / `border-b border-black/8`, no gaps. Responsive: 2-col mobile, 4-col desktop.
-
-**Icon tile (card signifier)**
+**Em-dash bullets (replace `•`)**
 ```tsx
-<div className="w-11 h-11 flex items-center justify-center text-white flex-shrink-0" style={{ backgroundColor: "#1B2757" }}>
-  <svg width="22" height="22" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" />
-</div>
+<li className="flex items-start gap-2">
+  <span className="font-mono text-black/30 shrink-0">—</span>
+  <span>{item}</span>
+</li>
 ```
 
-**Hairline data table (numbered rows)**
-```tsx
-<div className="bg-white border border-black/12">
-  {items.map((item, idx) => (
-    <div key={item.name} className={`flex items-baseline justify-between gap-4 px-4 py-3 ${idx < items.length - 1 ? "border-b border-black/8" : ""}`}>
-      <span className="font-mono text-[10px] text-black/35 tabular-nums flex-shrink-0">{String(idx + 1).padStart(2, "0")}</span>
-      <div>
-        <p className="text-sm font-semibold text-black">{item.name}</p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/55 tabular-nums mt-0.5">{item.role}</p>
-      </div>
-    </div>
-  ))}
-</div>
-```
+**Segmented tabs** — zero-radius 2-col grid. Active: `bg-black text-white`. Inactive: `bg-white`. `min-h-[44px]` tap target.
 
-**Formula / variant tag**
-```tsx
-<span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#1B2757] bg-[#1B2757]/6 border border-[#1B2757]/20 px-2 py-0.5 tabular-nums">F01</span>
-```
+**Evidence grid (nested hairlines)** — outer `border border-black/12`, inner cells `border-r border-black/8` / `border-b border-black/8`, no gaps. Responsive: 2-col mobile, 4-col desktop.
 
-**Quote block**
-```tsx
-<p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6">// Research Philosophy · Doc-RP-001</p>
-<div className="border-l-2 border-[#1B2757] pl-5 lg:pl-6">
-  <p className="text-3xl lg:text-4xl text-black leading-tight" style={{ letterSpacing: "-0.02em" }}>{quote}</p>
-  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50 tabular-nums mt-5">— {author} · Durham, 2023</p>
-</div>
-```
+**Icon tile (card signifier)** — `w-11 h-11 flex items-center justify-center text-white`, `backgroundColor: "#1B2757"` inline; SVG at `width/height 22`, `strokeWidth 1.75`, `strokeLinecap="square"`, `strokeLinejoin="miter"`.
 
-**PubMed / citation link**
-```tsx
-<a href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}/`} target="_blank" rel="noopener noreferrer"
-   className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums">
-  PMID {pmid} ↗
-</a>
-```
+**Hairline data table (numbered rows)** — `bg-white border border-black/12`; each row `flex items-baseline justify-between gap-4 px-4 py-3` with `border-b border-black/8` on all but the last. Counter: `font-mono text-[10px] text-black/35 tabular-nums`, padded `String(idx + 1).padStart(2, "0")`. Name: `text-sm font-semibold text-black`; role label: `font-mono text-[10px] uppercase tracking-[0.16em] text-black/55 tabular-nums mt-0.5`.
 
-**Closing CTA card**
-```tsx
-<div className="bg-white border border-black/12 p-5 lg:p-8">
-  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">Recommended start · Balance protocol</p>
-  <h3 className="brand-h3 text-black mb-3" style={{ letterSpacing: "-0.02em" }}>Put the science to work.</h3>
-  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">100-Day money-back guarantee · Free UK shipping · Cancel anytime</p>
-  <ConkaCTAButton href="/protocol/3" meta="// balance protocol · 14 shots · 7-day cadence">Try CONKA now</ConkaCTAButton>
-</div>
-```
+**Formula / variant tag** — `font-mono text-[9px] uppercase tracking-[0.18em] text-[#1B2757] bg-[#1B2757]/6 border border-[#1B2757]/20 px-2 py-0.5 tabular-nums` (e.g. `F01`).
+
+**Quote block** — mono label `font-mono text-[10px] uppercase tracking-[0.2em] text-black/40` above a `border-l-2 border-[#1B2757] pl-5 lg:pl-6` block; quote `text-3xl lg:text-4xl text-black leading-tight` with `letterSpacing: "-0.02em"`; attribution `font-mono text-[10px] uppercase tracking-[0.2em] text-black/50 tabular-nums mt-5`, prefixed `— `.
+
+**PubMed / citation link** — `<a>` to `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`, `target="_blank" rel="noopener noreferrer"`, class `font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums`, label `PMID {pmid} ↗`.
+
+**Closing CTA card** — `bg-white border border-black/12 p-5 lg:p-8`; mono label `font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3`; heading `brand-h3 text-black` with `letterSpacing: "-0.02em"`; mono guarantee strip `font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6`; close with `ConkaCTAButton`.
 
 **Figure plates** — use the `FigurePlate` component (`app/components/FigurePlate.tsx`). Lifestyle and portrait imagery only; never on product renders. Number sequentially across the page (`Fig. 01`, `Fig. 02`, ...).
 
@@ -382,9 +323,7 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 ### Primary CTA — `ConkaCTAButton`
 
-`app/components/landing/ConkaCTAButton.tsx`. Standard CTA for every clinical surface. Do not hand-roll.
-
-Props: `children` (label), `href` (defaults to `FUNNEL_URL`), `meta` (second row).
+`app/components/landing/ConkaCTAButton.tsx`. Standard CTA for every clinical surface. Do not hand-roll. Props: `children` (label), `href` (defaults to `FUNNEL_URL`), `meta` (second row).
 
 ### Clinical "Do not" list
 
@@ -432,7 +371,7 @@ Why one tint: analysis of 4 high-converting D2C supplement landing pages (Headst
 | 9 | FAQ | white | Clean, low-friction |
 | 10 | Disclaimer | tint | Quiet sign-off |
 
-**Rule:** never place two identical backgrounds adjacent.
+(Colour rhythm rule — never two identical backgrounds adjacent — applies; see section 6.)
 
 ### Accent colour `#4058bb`
 
@@ -445,7 +384,7 @@ Why one tint: analysis of 4 high-converting D2C supplement landing pages (Headst
 
 ### Text colour tiers (landing pages)
 
-Same 4-tier system as section 3 above: Primary 100% / Secondary 80% / Tertiary 60% / Muted 40%.
+Same 4-tier system as section 3: Primary 100% / Secondary 80% / Tertiary 60% / Muted 40%.
 
 ### CSS class responsibility split
 
@@ -481,8 +420,6 @@ The page-shell pattern, verbatim from `app/page.tsx` and `app-insights/page.tsx`
 </div>
 ```
 
-The dot grid is currently inlined per page. The `.app-dot-grid` utility in `brand-base.css` Layer 2.5 mirrors the inline pattern exactly so either page can be refactored to a class drop-in without a visual change.
-
 ### White/opacity ramp
 
 Surfaces, borders, and text on the dark canvas span a continuous ramp rather than a fixed palette. Reach for the most-used stops first; fall back to other levels only when an intermediate hierarchy step is genuinely needed.
@@ -513,11 +450,7 @@ Surfaces, borders, and text on the dark canvas span a continuous ramp rather tha
 | `bg-white/[0.07]` | Inactive tab / ghost surface |
 | `bg-white/[0.10]` hover from `[0.06]` | Card-as-button hover state |
 
-**Full ramp in use across `/app` and `/app-insights`:**
-
-Surfaces: `0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.10, 0.12, 0.15`.
-Borders: `10, 12, 15, 20, 22, 25, 30, 35, 40, 50, 55, 60`.
-Text: `25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100`.
+**Full ramp in use** across both pages: surfaces `0.03–0.15`, borders `10–60`, text `25–100` — but stay on the most-used stops above unless an intermediate tier is genuinely needed.
 
 **Discipline:** stay on multiples of 5 for opacity values (`text-white/40`, `text-white/55`, etc.) so the ramp stays predictable. Reach for arbitrary `[0.0X]` only when a hairline-thin surface tier is genuinely needed (e.g. layered ghost panels). Don't introduce new stops without a visual reason — pick the nearest existing tier first.
 
@@ -531,40 +464,14 @@ Text: `25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100`.
 </div>
 ```
 
-### Tab pattern (hero feature tabs)
-
-Active: `bg-white text-black border-white`
-Inactive: `bg-white/[0.07] border-white/30 text-white/70 hover:bg-white/[0.12] hover:border-white/50 hover:text-white/90`
-
-Minimum height: `min-h-[44px]` (tap target).
-
-### Spec strip / scores grid (dark variant)
-
-```tsx
-<div className="bg-white/10 border border-white/12">
-  <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
-    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums">Fig. 08 · Label</p>
-    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 tabular-nums">Results</p>
-  </div>
-  <div className="grid grid-cols-3 gap-0">
-    <div className="p-5 lg:p-6 border-r border-white/10">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">Label</p>
-      <p className="font-mono text-3xl lg:text-4xl font-bold tabular-nums text-white mt-3 leading-none">Value</p>
-      <p className="font-mono text-[9px] text-white/50 mt-3 tabular-nums">Note</p>
-    </div>
-  </div>
-</div>
-```
-
-### Sticky scroll tabs (AppStickyPhoneBlock)
-
-Same active/inactive pattern as hero tabs. Phone asset frame gets `bg-white/[0.06]` for a subtle lift.
-
 ### SVG dot grid
 
-`/app` and `/app-insights` both use the same dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see the page-shell snippet above).
+`/app` and `/app-insights` both use the same dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see snippet above). The `.app-dot-grid` utility in `brand-base.css` (Layer 2.5) mirrors this pattern exactly and is available as a class drop-in (currently unused). Either is fine; do not introduce a third variant.
 
-`.app-dot-grid` in `brand-base.css` (Layer 2.5) mirrors this pattern exactly and is available as a class drop-in. It is currently unused; both pages inline the SVG. Either pattern is fine. Do not introduce a third variant.
+### Variants (brief)
+
+- **Hero feature tabs / sticky scroll tabs** — Active: `bg-white text-black border-white`. Inactive: `bg-white/[0.07] border-white/30 text-white/70 hover:bg-white/[0.12] hover:border-white/50 hover:text-white/90`. `min-h-[44px]` tap target. In `AppStickyPhoneBlock` the phone asset frame gets `bg-white/[0.06]` for a subtle lift.
+- **Spec strip / scores grid (dark)** — dark mirror of the light spec strip: outer `bg-white/10 border border-white/12`; header row `border-b border-white/10 px-4 py-2.5` with `text-white/50`/`text-white/70` mono labels; then `grid grid-cols-3 gap-0` cells `p-5 lg:p-6 border-r border-white/10` — label `font-mono text-[9px] uppercase tracking-[0.18em] text-white/40`, value `font-mono text-3xl lg:text-4xl font-bold tabular-nums text-white`, note `font-mono text-[9px] text-white/50`.
 
 ### App Dark "Do not" list
 
@@ -633,8 +540,8 @@ Before shipping any new section:
 - [ ] Mobile review at 390px before desktop
 - [ ] One idea per viewport on mobile
 - [ ] Can it be understood in under 3 seconds on a phone?
-- [ ] Clinical pages: trio header (eyebrow + heading + sub-line) with topic code
-- [ ] App Dark pages: white/opacity utilities from the fixed palette above
+- [ ] Clinical pages: eyebrow + heading with topic code (sub-line optional — add only if it earns its place)
+- [ ] App Dark pages: white/opacity utilities from the ramp above
 
 ---
 

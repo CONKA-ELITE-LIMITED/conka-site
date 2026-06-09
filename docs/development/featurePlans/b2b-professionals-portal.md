@@ -19,7 +19,7 @@ Roughly 1 to 1.5 weeks. Lean in the sense that we build almost no commerce plumb
 
 ## Design system
 
-brand-base, scoped under `.brand-clinical` (zero-radius tokens plus the navy `#1B2757` interactive accent). Net-new pages built in the clinical aesthetic, deliberately low on micro-typography noise (larger, plainly readable type) per the lessons in `landing-page-v2.1.md`.
+brand-base, scoped under `.brand-clinical` (zero-radius tokens plus the navy `#1B2757` interactive accent). Net-new pages built in the clinical aesthetic, deliberately low on micro-typography noise (larger, plainly readable type) per the consumability lessons from the /startv2 build.
 
 ## Shape of the build — deliberate scope decisions
 
