@@ -1,17 +1,20 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /* ============================================================================
  * PilotProgramme
  *
  * B2B USP section for /professionals. Frames the live squad pilot (product +
  * CONKA app + coach's cognitive dashboard + testing cadence) as the de-risk
- * path: prove it on your own squad, then scale to team pricing. Presentational
- * only (Server Component) - the page owns the section wrapper and the #pilot
- * anchor the hero CTA targets. CTA is a templated mailto to Harry; no backend.
+ * path: prove it on your own squad, then scale to team pricing. The page owns
+ * the section wrapper and the #pilot anchor the hero CTA targets. CTA is a
+ * templated mailto to Harry; no backend.
  *
- * Shows the pilot as one clear staged flow (order -> app -> baseline -> take
- * CONKA -> test -> readout) rather than competing format options. Clinical
- * grammar: numbered navy nodes, hairline connector, mono labels, no new claims.
+ * The flow is an interactive horizontal stepper: click any stage (or use the
+ * prev/next controls) to highlight it and expand its detail below. The rail
+ * scrolls horizontally on mobile and the active stage scrolls into view.
+ * Clinical grammar: navy nodes, hairline connector, mono labels, no new claims.
  * ========================================================================== */
 
 const NAVY = "#1B2757";
@@ -48,6 +51,7 @@ const svgProps = {
 
 type Stage = {
   n: string;
+  short: string;
   title: string;
   detail: string;
   icon: ReactNode;
@@ -56,8 +60,10 @@ type Stage = {
 const STAGES: Stage[] = [
   {
     n: "01",
+    short: "Order",
     title: "Order the product",
-    detail: "Pick a small batch for the squad and we ship it out to your base.",
+    detail:
+      "Choose a small batch for the squad. We ship it to your training base, ready to start.",
     icon: (
       <svg {...svgProps}>
         <path d="M3 7l9-4 9 4v10l-9 4-9-4z" />
@@ -68,8 +74,10 @@ const STAGES: Stage[] = [
   },
   {
     n: "02",
+    short: "App",
     title: "Athletes onto the app",
-    detail: "Your selected athletes get set up on the CONKA app in minutes.",
+    detail:
+      "Your selected athletes are set up on the CONKA app in minutes, each with their own login and the testing built in.",
     icon: (
       <svg {...svgProps}>
         <path d="M7 3h10v18H7z" />
@@ -79,8 +87,10 @@ const STAGES: Stage[] = [
   },
   {
     n: "03",
+    short: "Baseline",
     title: "Baseline on the app",
-    detail: "Capture each athlete's starting cognitive scores before any product.",
+    detail:
+      "Before anyone takes a shot, we capture each athlete's starting cognitive scores so the change is measurable, not anecdotal.",
     icon: (
       <svg {...svgProps}>
         <path d="M3 20h18" />
@@ -92,8 +102,10 @@ const STAGES: Stage[] = [
   },
   {
     n: "04",
+    short: "Take CONKA",
     title: "Take CONKA for 2 to 6 weeks",
-    detail: "The squad takes their daily shot across the agreed trial window.",
+    detail:
+      "The squad takes their daily shot across the agreed window: Flow in the morning, Clear in the afternoon.",
     icon: (
       <svg {...svgProps}>
         <path d="M9 3h6" />
@@ -103,8 +115,10 @@ const STAGES: Stage[] = [
   },
   {
     n: "05",
+    short: "Test",
     title: "Test consistently",
-    detail: "Cognitive testing around 3x per week tracks the change as it happens.",
+    detail:
+      "Athletes complete short cognitive tests around three times a week, so progress is tracked as it happens.",
     icon: (
       <svg {...svgProps}>
         <path d="M17 4l3 3-3 3" />
@@ -116,8 +130,10 @@ const STAGES: Stage[] = [
   },
   {
     n: "06",
+    short: "Readout",
     title: "Data analysis and feedback",
-    detail: "We read the squad's data back with a coach's view and clear recommendations.",
+    detail:
+      "We read the squad's data back through a coach's view, with clear recommendations on what to roll out at scale.",
     icon: (
       <svg {...svgProps}>
         <path d="M4 5v14h16" />
@@ -128,6 +144,23 @@ const STAGES: Stage[] = [
 ];
 
 export default function PilotProgramme() {
+  const [active, setActive] = useState(0);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const total = STAGES.length;
+  const step = STAGES[active];
+
+  // Keep the active stage in view as the user iterates (horizontal scroll only).
+  useEffect(() => {
+    itemRefs.current[active]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [active]);
+
+  const go = (delta: number) =>
+    setActive((a) => Math.min(total - 1, Math.max(0, a + delta)));
+
   return (
     <div>
       {/* Trio header */}
@@ -148,50 +181,94 @@ export default function PilotProgramme() {
         of faith.
       </p>
 
-      {/* Staged flow */}
+      {/* Interactive horizontal stepper */}
       <p className="brand-eyebrow mt-10 mb-6">{"// How a pilot runs"}</p>
-      <ol className="relative">
+
+      <ol
+        className="flex overflow-x-auto sm:overflow-visible -mx-1 px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {STAGES.map((s, i) => {
-          const isLast = i === STAGES.length - 1;
+          const isActive = i === active;
           return (
-            <li key={s.n} className="relative flex gap-4 sm:gap-5 pb-6 last:pb-0">
-              {/* Connector line between nodes */}
-              {!isLast && (
+            <li
+              key={s.n}
+              ref={(el) => {
+                itemRefs.current[i] = el;
+              }}
+              className="relative shrink-0 min-w-[84px] sm:min-w-0 sm:flex-1"
+            >
+              {/* Connector back to the previous node */}
+              {i > 0 && (
                 <span
-                  className="absolute left-[21px] sm:left-[27px] top-12 sm:top-14 bottom-0 w-px bg-black/12"
+                  className="absolute top-[21px] sm:top-[27px] left-[-50%] w-full h-px bg-black/15"
                   aria-hidden="true"
                 />
               )}
 
-              {/* Node: navy icon tile + mono step number */}
-              <div className="relative shrink-0">
-                <div
-                  className="w-11 h-11 sm:w-14 sm:h-14 flex items-center justify-center text-white"
-                  style={{ backgroundColor: NAVY }}
-                >
-                  {s.icon}
-                </div>
-                <span className="absolute -top-2 -left-2 bg-white border border-black/12 font-mono text-[9px] font-bold tabular-nums text-black/60 px-1 py-0.5 leading-none">
-                  {s.n}
+              <button
+                type="button"
+                onClick={() => setActive(i)}
+                aria-current={isActive ? "step" : undefined}
+                aria-label={`Step ${s.n}: ${s.title}`}
+                className="relative z-10 flex w-full flex-col items-center gap-2 px-1"
+              >
+                <span className="relative">
+                  <span
+                    className={`flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center border transition-colors ${
+                      isActive
+                        ? "text-white border-transparent"
+                        : "bg-white border-black/15 text-[#1B2757]"
+                    }`}
+                    style={isActive ? { backgroundColor: NAVY } : undefined}
+                  >
+                    {s.icon}
+                  </span>
+                  <span className="absolute -top-2 -left-2 bg-white border border-black/12 font-mono text-[9px] font-bold tabular-nums text-black/60 px-1 py-0.5 leading-none">
+                    {s.n}
+                  </span>
                 </span>
-              </div>
-
-              {/* Content */}
-              <div className="pt-1 sm:pt-2 flex-1 min-w-0">
-                <h3 className="text-base sm:text-lg font-semibold text-black leading-tight">
-                  {s.title}
-                </h3>
-                <p className="text-sm text-black/65 mt-1 leading-snug max-w-[52ch]">
-                  {s.detail}
-                </p>
-              </div>
+                <span
+                  className={`text-[11px] sm:text-xs text-center leading-tight ${
+                    isActive ? "text-black font-semibold" : "text-black/55"
+                  }`}
+                >
+                  {s.short}
+                </span>
+              </button>
             </li>
           );
         })}
       </ol>
 
+      {/* Expanded detail panel for the active stage */}
+      <div className="mt-5 border border-black/12 bg-white p-5 lg:p-6">
+        <div className="flex items-center justify-between gap-4 mb-3">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/45 tabular-nums">
+            Step {step.n} / {String(total).padStart(2, "0")}
+          </span>
+          <div className="flex gap-2">
+            <StepNavButton
+              direction="prev"
+              onClick={() => go(-1)}
+              disabled={active === 0}
+            />
+            <StepNavButton
+              direction="next"
+              onClick={() => go(1)}
+              disabled={active === total - 1}
+            />
+          </div>
+        </div>
+        <h3 className="text-lg lg:text-xl font-semibold text-black leading-tight">
+          {step.title}
+        </h3>
+        <p className="text-sm lg:text-base text-black/70 mt-2 max-w-[60ch] leading-relaxed">
+          {step.detail}
+        </p>
+      </div>
+
       {/* De-risk + CTA */}
-      <div className="mt-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mt-8 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <p className="brand-body max-w-[46ch]">
           A pilot is a small batch with the data layer on top. Prove it on your
           squad, then scale to team pricing.
@@ -204,5 +281,42 @@ export default function PilotProgramme() {
         </a>
       </div>
     </div>
+  );
+}
+
+function StepNavButton({
+  direction,
+  onClick,
+  disabled,
+}: {
+  direction: "prev" | "next";
+  onClick: () => void;
+  disabled: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={direction === "prev" ? "Previous step" : "Next step"}
+      style={{ borderColor: NAVY, color: NAVY }}
+      className="flex h-11 w-11 items-center justify-center border transition-opacity hover:bg-black/[0.04] disabled:opacity-30 disabled:cursor-not-allowed"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <polyline
+          points={direction === "prev" ? "15 6 9 12 15 18" : "9 6 15 12 9 18"}
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+        />
+      </svg>
+    </button>
   );
 }

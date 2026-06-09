@@ -4,6 +4,8 @@ import Footer from "@/app/components/footer";
 import ApplicationForm from "@/app/components/b2b/ApplicationForm";
 import InformedSportCertification from "@/app/components/InformedSportCertification";
 import PilotProgramme from "@/app/components/b2b/PilotProgramme";
+import WhyConkaForTeams from "@/app/components/b2b/WhyConkaForTeams";
+import TeamFAQ from "@/app/components/b2b/TeamFAQ";
 
 export const metadata: Metadata = {
   title: "Team & Club Pricing | CONKA",
@@ -83,14 +85,34 @@ export default function ProfessionalsPage() {
         </div>
       </section>
 
+      {/* WHY — what a squad gets from CONKA */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Why CONKA for teams"
+      >
+        <div className="brand-track">
+          <WhyConkaForTeams />
+        </div>
+      </section>
+
       {/* PILOT — squad pilot USP (hero secondary CTA anchors here) */}
       <section
         id="pilot"
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Squad pilot programme"
       >
         <div className="brand-track">
           <PilotProgramme />
+        </div>
+      </section>
+
+      {/* FAQ — procurement objection handling */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Team FAQ"
+      >
+        <div className="brand-track">
+          <TeamFAQ />
         </div>
       </section>
 
