@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 /* ============================================================================
  * PilotProgramme
@@ -11,10 +12,10 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * the section wrapper and the #pilot anchor the hero CTA targets. CTA is a
  * templated mailto to Harry; no backend.
  *
- * The flow is an interactive horizontal stepper: click any stage (or use the
- * prev/next controls) to highlight it and expand its detail below. The rail
- * scrolls horizontally on mobile and the active stage scrolls into view.
- * Clinical grammar: navy nodes, hairline connector, mono labels, no new claims.
+ * The flow is an interactive image filmstrip: each stage is a real asset tile;
+ * the selected stage enlarges as the showcase and its detail expands below.
+ * Click a tile or use prev/next to iterate; the rail scrolls on mobile with the
+ * active tile scrolled into view. Clinical grammar, no new claims.
  * ========================================================================== */
 
 const NAVY = "#1B2757";
@@ -37,24 +38,13 @@ const PILOT_MAILTO =
     ].join("\n"),
   );
 
-const svgProps = {
-  width: 22,
-  height: 22,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 1.75,
-  strokeLinecap: "square" as const,
-  strokeLinejoin: "miter" as const,
-  "aria-hidden": true,
-};
-
 type Stage = {
   n: string;
   short: string;
   title: string;
   detail: string;
-  icon: ReactNode;
+  image: string;
+  alt: string;
 };
 
 const STAGES: Stage[] = [
@@ -64,13 +54,8 @@ const STAGES: Stage[] = [
     title: "Order the product",
     detail:
       "Choose a small batch for the squad. We ship it to your training base, ready to start.",
-    icon: (
-      <svg {...svgProps}>
-        <path d="M3 7l9-4 9 4v10l-9 4-9-4z" />
-        <path d="M3 7l9 4 9-4" />
-        <path d="M12 11v10" />
-      </svg>
-    ),
+    image: "/formulas/box/BothBox.jpg",
+    alt: "Two boxes of CONKA ready to ship to a club",
   },
   {
     n: "02",
@@ -78,12 +63,8 @@ const STAGES: Stage[] = [
     title: "Athletes onto the app",
     detail:
       "Your selected athletes are set up on the CONKA app in minutes, each with their own login and the testing built in.",
-    icon: (
-      <svg {...svgProps}>
-        <path d="M7 3h10v18H7z" />
-        <path d="M7 16h10" />
-      </svg>
-    ),
+    image: "/app/AppConkaRing.png",
+    alt: "The CONKA app home screen showing today's cognition score",
   },
   {
     n: "03",
@@ -91,14 +72,8 @@ const STAGES: Stage[] = [
     title: "Baseline on the app",
     detail:
       "Before anyone takes a shot, we capture each athlete's starting cognitive scores so the change is measurable, not anecdotal.",
-    icon: (
-      <svg {...svgProps}>
-        <path d="M3 20h18" />
-        <path d="M6 20v-6" />
-        <path d="M12 20V6" />
-        <path d="M18 20v-9" />
-      </svg>
-    ),
+    image: "/app/AppTestBreakdown.png",
+    alt: "The CONKA app insights screen showing a cognition test breakdown",
   },
   {
     n: "04",
@@ -106,12 +81,8 @@ const STAGES: Stage[] = [
     title: "Take CONKA for 2 to 6 weeks",
     detail:
       "The squad takes their daily shot across the agreed window: Flow in the morning, Clear in the afternoon.",
-    icon: (
-      <svg {...svgProps}>
-        <path d="M9 3h6" />
-        <path d="M10 3v4l-2 2v11h8V9l-2-2V3" />
-      </svg>
-    ),
+    image: "/lifestyle/flow/FlowDrink.jpg",
+    alt: "An athlete taking a CONKA shot",
   },
   {
     n: "05",
@@ -119,14 +90,8 @@ const STAGES: Stage[] = [
     title: "Test consistently",
     detail:
       "Athletes complete short cognitive tests around three times a week, so progress is tracked as it happens.",
-    icon: (
-      <svg {...svgProps}>
-        <path d="M17 4l3 3-3 3" />
-        <path d="M20 7H9a5 5 0 0 0-5 5" />
-        <path d="M7 20l-3-3 3-3" />
-        <path d="M4 17h11a5 5 0 0 0 5-5" />
-      </svg>
-    ),
+    image: "/app/AppTestAnimal.png",
+    alt: "A CONKA cognition test in progress in the app",
   },
   {
     n: "06",
@@ -134,12 +99,8 @@ const STAGES: Stage[] = [
     title: "Data analysis and feedback",
     detail:
       "We read the squad's data back through a coach's view, with clear recommendations on what to roll out at scale.",
-    icon: (
-      <svg {...svgProps}>
-        <path d="M4 5v14h16" />
-        <path d="M7 15l4-5 3 3 5-7" />
-      </svg>
-    ),
+    image: "/lifestyle/flow/FlowConkaRing.jpg",
+    alt: "A CONKA shot beside the app showing a cognition score",
   },
 ];
 
@@ -149,7 +110,7 @@ export default function PilotProgramme() {
   const total = STAGES.length;
   const step = STAGES[active];
 
-  // Keep the active stage in view as the user iterates (horizontal scroll only).
+  // Keep the active tile in view as the user iterates (horizontal scroll only).
   useEffect(() => {
     itemRefs.current[active]?.scrollIntoView({
       behavior: "smooth",
@@ -181,12 +142,10 @@ export default function PilotProgramme() {
         of faith.
       </p>
 
-      {/* Interactive horizontal stepper */}
+      {/* Interactive image filmstrip */}
       <p className="brand-eyebrow mt-10 mb-6">{"// How a pilot runs"}</p>
 
-      <ol
-        className="flex overflow-x-auto sm:overflow-visible -mx-1 px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
+      <ol className="flex items-end gap-2 sm:gap-3 overflow-x-auto -mx-1 px-1 pt-2 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STAGES.map((s, i) => {
           const isActive = i === active;
           return (
@@ -195,44 +154,32 @@ export default function PilotProgramme() {
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
-              className="relative shrink-0 min-w-[84px] sm:min-w-0 sm:flex-1"
+              className="shrink-0"
             >
-              {/* Connector back to the previous node */}
-              {i > 0 && (
-                <span
-                  className="absolute top-[21px] sm:top-[27px] left-[-50%] w-full h-px bg-black/15"
-                  aria-hidden="true"
-                />
-              )}
-
               <button
                 type="button"
                 onClick={() => setActive(i)}
                 aria-current={isActive ? "step" : undefined}
                 aria-label={`Step ${s.n}: ${s.title}`}
-                className="relative z-10 flex w-full flex-col items-center gap-2 px-1"
+                style={{
+                  borderColor: isActive ? NAVY : "rgba(0,0,0,0.15)",
+                  borderWidth: isActive ? 2 : 1,
+                }}
+                className={`relative block overflow-hidden bg-[var(--brand-tint)] transition-all duration-300 ${
+                  isActive
+                    ? "w-32 h-32 sm:w-48 sm:h-48 opacity-100"
+                    : "w-16 h-16 sm:w-[84px] sm:h-[84px] opacity-60 hover:opacity-100"
+                }`}
               >
-                <span className="relative">
-                  <span
-                    className={`flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center border transition-colors ${
-                      isActive
-                        ? "text-white border-transparent"
-                        : "bg-white border-black/15 text-[#1B2757]"
-                    }`}
-                    style={isActive ? { backgroundColor: NAVY } : undefined}
-                  >
-                    {s.icon}
-                  </span>
-                  <span className="absolute -top-2 -left-2 bg-white border border-black/12 font-mono text-[9px] font-bold tabular-nums text-black/60 px-1 py-0.5 leading-none">
-                    {s.n}
-                  </span>
-                </span>
-                <span
-                  className={`text-[11px] sm:text-xs text-center leading-tight ${
-                    isActive ? "text-black font-semibold" : "text-black/55"
-                  }`}
-                >
-                  {s.short}
+                <Image
+                  src={s.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 128px, 192px"
+                  className="object-cover"
+                />
+                <span className="absolute top-1 left-1 bg-white/90 font-mono text-[9px] font-bold tabular-nums text-black/70 px-1 py-0.5 leading-none">
+                  {s.n}
                 </span>
               </button>
             </li>
@@ -240,8 +187,11 @@ export default function PilotProgramme() {
         })}
       </ol>
 
-      {/* Expanded detail panel for the active stage */}
-      <div className="mt-5 border border-black/12 bg-white p-5 lg:p-6">
+      {/* Expanded detail for the active stage */}
+      <div
+        className="mt-5 border border-black/12 bg-white p-5 lg:p-6"
+        aria-live="polite"
+      >
         <div className="flex items-center justify-between gap-4 mb-3">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/45 tabular-nums">
             Step {step.n} / {String(total).padStart(2, "0")}
