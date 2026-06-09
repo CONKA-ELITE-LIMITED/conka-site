@@ -109,21 +109,11 @@ export default function ProfessionalsPage() {
 
       {/* VALUE — reframe the order total into a per-athlete-per-day figure */}
       <section
-        className="brand-section brand-bg-black"
+        className="brand-section brand-bg-white"
         aria-label="Cost per athlete per day"
       >
         <div className="brand-track">
           <B2BValueCallout />
-        </div>
-      </section>
-
-      {/* FAQ — procurement objection handling */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Team FAQ"
-      >
-        <div className="brand-track">
-          <TeamFAQ />
         </div>
       </section>
 
@@ -183,6 +173,13 @@ export default function ProfessionalsPage() {
               Get in touch
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ — procurement objection handling */}
+      <section className="brand-section brand-bg-white" aria-label="Team FAQ">
+        <div className="brand-track">
+          <TeamFAQ />
         </div>
       </section>
 

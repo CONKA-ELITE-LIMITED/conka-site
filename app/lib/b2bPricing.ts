@@ -87,14 +87,13 @@ export function getB2BGrossPerBox(tier: B2BTier): number {
 }
 
 /**
- * Per-athlete-per-day cost (ex VAT) for a tier. One box feeds one athlete for
- * `shotsPerBox` days at one shot a day, so the daily cost is simply the per-box
- * price divided by the shots in a box. Used by the value callout on
- * /professionals to reframe a large order total into a small per-head figure.
- * This is the figure for an athlete on a SINGLE format; an athlete running both
- * Flow and Clear takes two shots a day, so the on-page copy is labelled as such.
+ * Per-shot cost (ex VAT) for a tier: the per-box price divided by the shots in a
+ * box. The shot is the neutral unit - it makes no assumption about how a team
+ * deploys it (one a day, Flow plus Clear, training days only), so it reframes a
+ * large order total into a small, defensible number without overclaiming. Used
+ * by the value callout on /professionals.
  */
-export function getB2BPerAthletePerDay(tier: B2BTier): number {
+export function getB2BPerShot(tier: B2BTier): number {
   const shotsPerBox = B2B_PRODUCTS.flow.shotsPerBox;
   return Math.round((tier.pricePerBox / shotsPerBox) * 100) / 100;
 }
