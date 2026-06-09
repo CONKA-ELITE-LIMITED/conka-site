@@ -107,10 +107,10 @@ export default function ProfessionalsPage() {
         </div>
       </section>
 
-      {/* VALUE — reframe the order total into a per-athlete-per-day figure */}
+      {/* VALUE — interactive estimator reframing the order total into a per-athlete-per-day figure */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="Cost per athlete per day"
+        aria-label="Squad cost estimator"
       >
         <div className="brand-track">
           <B2BValueCallout />

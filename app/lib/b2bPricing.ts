@@ -86,18 +86,6 @@ export function getB2BGrossPerBox(tier: B2BTier): number {
   return Math.round(tier.pricePerBox * (1 + B2B_VAT_RATE) * 100) / 100;
 }
 
-/**
- * Per-shot cost (ex VAT) for a tier: the per-box price divided by the shots in a
- * box. The shot is the neutral unit - it makes no assumption about how a team
- * deploys it (one a day, Flow plus Clear, training days only), so it reframes a
- * large order total into a small, defensible number without overclaiming. Used
- * by the value callout on /professionals.
- */
-export function getB2BPerShot(tier: B2BTier): number {
-  const shotsPerBox = B2B_PRODUCTS.flow.shotsPerBox;
-  return Math.round((tier.pricePerBox / shotsPerBox) * 100) / 100;
-}
-
 export interface B2BNextTier {
   tier: B2BTier;
   boxesAway: number; // boxes still needed to reach it
