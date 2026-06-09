@@ -187,16 +187,18 @@ export default function PilotProgramme() {
           </p>
         </div>
 
-        <div className="relative aspect-square bg-[#f5f5f5] border border-black/12 overflow-hidden mt-8 lg:mt-0">
+        <div className="relative aspect-[2/1] bg-[#f5f5f5] border border-black/12 overflow-hidden mt-8 lg:mt-0">
           <div className="absolute top-3 left-3 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
             Fig. 01 &middot; CONKA App
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-[13%] w-[44%] lg:w-[42%] aspect-[1/2]">
+          {/* Phone scaled up and anchored to the top so the device bleeds off
+              the bottom edge, featuring the score ring (bottom cropped). */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-[8%] h-[185%] aspect-[1/2]">
             <Image
               src="/app/AppConkaRing.png"
               alt="The CONKA app home screen showing today's cognition score"
               fill
-              sizes="(max-width: 1024px) 50vw, 280px"
+              sizes="(max-width: 1024px) 60vw, 320px"
               className="object-contain"
             />
           </div>
