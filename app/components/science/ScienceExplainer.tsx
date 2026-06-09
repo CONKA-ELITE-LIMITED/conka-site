@@ -38,8 +38,11 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
         </p>
       </div>
 
-      {/* Analogy — scannable, always visible */}
-      <div className="border-l-2 border-[#1B2757] pl-5 lg:pl-6 mb-6">
+      {/* Analogy — a differentiated aside, scannable, always visible */}
+      <div className="bg-black/[0.03] border border-black/8 p-4 lg:p-5 mb-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
+          In plain terms
+        </p>
         <p className="text-sm md:text-base text-black/75 leading-relaxed">
           {data.analogy}
         </p>

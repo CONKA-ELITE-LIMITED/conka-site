@@ -3,8 +3,8 @@ import Image from "next/image";
 export default function ScienceHero() {
   return (
     <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
-      {/* Copy */}
-      <div className="order-2 lg:order-1 lg:flex-1 mt-10 lg:mt-0">
+      {/* Copy — leads on mobile so the claim is the first thing read */}
+      <div className="order-1 lg:flex-1">
         <p className="brand-eyebrow mb-3">{"// The science · SCI-01"}</p>
         <h1
           className="brand-h1 text-black mb-5"
@@ -26,7 +26,7 @@ export default function ScienceHero() {
       </div>
 
       {/* Hero image — clinical asset frame */}
-      <div className="relative order-1 lg:order-2 lg:flex-[1.1] w-full">
+      <div className="relative order-2 lg:order-2 lg:flex-[1.1] w-full mt-10 lg:mt-0">
         <div className="relative aspect-[5/4] lg:aspect-[4/5] border border-black/12 bg-white overflow-hidden">
           <Image
             src="/lifestyle/CreationOfConka.jpg"

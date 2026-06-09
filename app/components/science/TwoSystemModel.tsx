@@ -88,7 +88,7 @@ export default function TwoSystemModel() {
               <h3 className="text-lg lg:text-xl font-semibold leading-tight text-black mb-1">
                 {sys.name}
               </h3>
-              <p className="text-sm md:text-base font-medium text-[#1B2757] mb-3">
+              <p className="text-sm md:text-base font-medium text-black mb-3">
                 {sys.role}
               </p>
               <p className="text-sm text-black/70 leading-relaxed">
