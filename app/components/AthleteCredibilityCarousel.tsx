@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
+import InformedSportCertification from "./InformedSportCertification";
 
 /* ============================================================================
  * AthleteCredibilityCarousel
@@ -197,49 +198,6 @@ function ChamferNav({
   );
 }
 
-/* Informed Sport certification — rational anchor below the emotional quotes.
-   Vetted copy lifted verbatim from WhyConkaWorksDesktop so no new claims are
-   introduced. Clinical treatment: sharp corners, mono category label. */
-function InformedSportBlock() {
-  return (
-    <div className="mt-8 flex items-center gap-4 p-5 bg-black/[0.03] border border-black/[0.06]">
-      <div className="relative w-20 h-20 flex-shrink-0">
-        <Image
-          src="/logos/InformedSportLogo.png"
-          alt="Informed Sport certification"
-          fill
-          sizes="80px"
-          loading="lazy"
-          className="object-contain"
-        />
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/50 mb-1.5">
-          Quality &amp; Testing
-        </p>
-        <h3 className="text-base lg:text-lg font-semibold text-black leading-tight mb-1.5">
-          Independently tested. Every batch.
-        </h3>
-        <p className="text-[13px] text-black/70 leading-snug">
-          Every batch of CONKA Flow and CONKA Clear is independently tested by{" "}
-          <strong className="text-black font-semibold">Informed Sport</strong>{" "}
-          for over{" "}
-          <strong className="text-black font-semibold">
-            280 banned substances
-          </strong>
-          . Trusted by{" "}
-          <strong className="text-black font-semibold">WADA</strong>,{" "}
-          <strong className="text-black font-semibold">
-            Olympic committees
-          </strong>
-          , and professional sports leagues worldwide.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export default function AthleteCredibilityCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const totalCount = ATHLETES.length;
@@ -410,7 +368,7 @@ export default function AthleteCredibilityCarousel() {
         })}
       </div>
 
-      <InformedSportBlock />
+      <InformedSportCertification className="mt-8" />
     </div>
   );
 }

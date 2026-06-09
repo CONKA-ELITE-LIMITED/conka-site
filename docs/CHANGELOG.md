@@ -6,6 +6,12 @@
 
 ## June 2026
 
+### 2026-06-09 -- B2B portal Phase 1: credibility backbone + dual-path hero
+
+First phase of the B2B portal conversion upgrade (SCRUM-1063). The `/professionals` landing now leads with credibility: the Informed Sport anti-doping certification is promoted high on the page as a trust strip, and the hero offers a clear dual path (Get team pricing alongside Explore a squad pilot). The certification block was extracted into a shared component so the home page and PDP carousels are unchanged while the landing can reuse the same vetted copy. No new product or health claims introduced.
+
+**Modified:** `app/components/InformedSportCertification.tsx` (new), `app/components/AthleteCredibilityCarousel.tsx`, `app/professionals/page.tsx`
+
 ### 2026-06-09 -- Scoped B2B portal conversion & credibility upgrade
 
 Researched modern B2B/wholesale conversion best practices and scoped a wave of upgrades to the `/professionals` portal, which is warm Harry-shared sales collateral rather than cold-traffic CRO. The plan keeps direct-buy first-class, surfaces the live pilot programme (product plus app plus coach's cognitive dashboard) as a prominent USP framed as "prove it on your own squad first", promotes Informed Sport certification, and sharpens order-page tier savings. Social proof without named clubs is parked as a Future phase until real figures are gathered. Three active-phase Jira tickets created (SCRUM-1063/1064/1065, Sprint 27); planning only, no app code yet.

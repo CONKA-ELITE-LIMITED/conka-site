@@ -85,3 +85,39 @@ export function getB2BTier(boxes: number): B2BTier {
 export function getB2BGrossPerBox(tier: B2BTier): number {
   return Math.round(tier.pricePerBox * (1 + B2B_VAT_RATE) * 100) / 100;
 }
+
+/**
+ * Per-shot cost (ex VAT) for a tier: the per-box price divided by the shots in a
+ * box. The shot is the neutral unit - it makes no assumption about how a team
+ * deploys it (one a day, Flow plus Clear, training days only), so it reframes a
+ * large order total into a small, defensible number without overclaiming. Used
+ * by the value callout on /professionals.
+ */
+export function getB2BPerShot(tier: B2BTier): number {
+  const shotsPerBox = B2B_PRODUCTS.flow.shotsPerBox;
+  return Math.round((tier.pricePerBox / shotsPerBox) * 100) / 100;
+}
+
+export interface B2BNextTier {
+  tier: B2BTier;
+  boxesAway: number; // boxes still needed to reach it
+  savingPerBox: number; // ex-VAT per-box saving vs the current tier
+}
+
+/**
+ * The next cheaper tier and how far away it is, for the "you are N boxes from
+ * the next price" nudge. Returns null when already in the top tier. Based on the
+ * COMBINED box total, like the tiers themselves.
+ */
+export function getB2BNextTier(boxes: number): B2BNextTier | null {
+  const qty = Math.max(0, Math.floor(boxes));
+  const current = getB2BTier(qty);
+  const idx = B2B_TIERS.findIndex((t) => t.label === current.label);
+  const next = B2B_TIERS[idx + 1];
+  if (!next) return null;
+  return {
+    tier: next,
+    boxesAway: Math.max(1, next.minBoxes - qty),
+    savingPerBox: current.pricePerBox - next.pricePerBox,
+  };
+}

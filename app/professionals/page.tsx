@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import ApplicationForm from "@/app/components/b2b/ApplicationForm";
+import InformedSportCertification from "@/app/components/InformedSportCertification";
+import PilotProgramme from "@/app/components/b2b/PilotProgramme";
+import B2BValueCallout from "@/app/components/b2b/B2BValueCallout";
+import WhyConkaForTeams from "@/app/components/b2b/WhyConkaForTeams";
+import TeamFAQ from "@/app/components/b2b/TeamFAQ";
 
 export const metadata: Metadata = {
   title: "Team & Club Pricing | CONKA",
@@ -53,14 +58,62 @@ export default function ProfessionalsPage() {
             clubs and performance organisations at team pricing, with the
             procurement support your finance team expects.
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a
               href="#apply"
-              className="brand-btn brand-btn-accent inline-flex items-center justify-center min-h-[52px] text-sm uppercase tracking-[0.15em]"
+              className="brand-btn brand-btn-accent inline-flex items-center justify-center min-h-[52px] w-full sm:w-auto text-sm uppercase tracking-[0.15em]"
             >
               Get team pricing
             </a>
+            <a
+              href="#pilot"
+              className="brand-btn brand-btn-secondary inline-flex items-center justify-center min-h-[52px] w-full sm:w-auto text-sm uppercase tracking-[0.15em]"
+            >
+              Explore a squad pilot
+            </a>
           </div>
+        </div>
+      </section>
+
+      {/* TRUST — third-party anti-doping certification, promoted high */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Independent certification"
+      >
+        <div className="brand-track">
+          <p className="brand-eyebrow mb-5">{"// Independently tested"}</p>
+          <InformedSportCertification headingLevel="h2" />
+        </div>
+      </section>
+
+      {/* WHY — what a squad gets from CONKA */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Why CONKA for teams"
+      >
+        <div className="brand-track">
+          <WhyConkaForTeams />
+        </div>
+      </section>
+
+      {/* PILOT — squad pilot USP (hero secondary CTA anchors here) */}
+      <section
+        id="pilot"
+        className="brand-section brand-bg-tint"
+        aria-label="Squad pilot programme"
+      >
+        <div className="brand-track">
+          <PilotProgramme />
+        </div>
+      </section>
+
+      {/* VALUE — reframe the order total into a per-athlete-per-day figure */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Cost per athlete per day"
+      >
+        <div className="brand-track">
+          <B2BValueCallout />
         </div>
       </section>
 
@@ -120,6 +173,13 @@ export default function ProfessionalsPage() {
               Get in touch
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ — procurement objection handling */}
+      <section className="brand-section brand-bg-white" aria-label="Team FAQ">
+        <div className="brand-track">
+          <TeamFAQ />
         </div>
       </section>
 
