@@ -117,7 +117,7 @@ Run `git status` after to confirm the commit succeeded.
 - **Never commit on main.** Always a feature branch.
 - **Never `git add -A`.** Stage specific files; review what you are including.
 - **Changelog is one line, and optional.** Skip it for chores. The commit message serves git history; the changelog gives humans high-level optics. Never read the whole changelog to append.
-- **Lint only what changed.** If linting before commit, scope it: `npx eslint $(git diff --cached --name-only --diff-filter=d | grep -E '\.(ts|tsx)$')`. Never `npm run lint` (whole repo).
+- **Lint only what changed.** If linting before commit: `npm run lint:changed`. Never `npm run lint` (whole repo).
 - **Imperative mood.** "Add hero section" not "Added hero section".
 - **Co-author line always.** Include it on every commit.
 - **Never use em dashes** in commit messages or changelog entries.

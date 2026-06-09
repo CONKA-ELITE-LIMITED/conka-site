@@ -32,7 +32,7 @@ The biggest wins are not skill rewrites. They are (a) a tight efficiency doctrin
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Efficiency doctrine + skill diet | Done (commit 80dc79dc) |
-| 2 | Lint debt, config-first | Not Started |
+| 2 | Lint debt, config-first | Done (611fd46e, 8dddd97e) |
 | 3 | Docs cleanup + design-system restraint | Not Started |
 | 4 | Self-improving skill loop | Future |
 
