@@ -4,6 +4,7 @@ import Footer from "@/app/components/footer";
 import ApplicationForm from "@/app/components/b2b/ApplicationForm";
 import InformedSportCertification from "@/app/components/InformedSportCertification";
 import PilotProgramme from "@/app/components/b2b/PilotProgramme";
+import B2BValueCallout from "@/app/components/b2b/B2BValueCallout";
 import WhyConkaForTeams from "@/app/components/b2b/WhyConkaForTeams";
 import TeamFAQ from "@/app/components/b2b/TeamFAQ";
 
@@ -103,6 +104,16 @@ export default function ProfessionalsPage() {
       >
         <div className="brand-track">
           <PilotProgramme />
+        </div>
+      </section>
+
+      {/* VALUE — reframe the order total into a per-athlete-per-day figure */}
+      <section
+        className="brand-section brand-bg-black"
+        aria-label="Cost per athlete per day"
+      >
+        <div className="brand-track">
+          <B2BValueCallout />
         </div>
       </section>
 

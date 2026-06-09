@@ -47,11 +47,13 @@ De-risk framing: start small, prove it on your own squad's data, then scale to a
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Credibility backbone + hero refine | For review (SCRUM-1063) |
-| 2 | Pilot programme USP section | Not Started (ACTIVE) |
-| 3 | Order-page pricing clarity | Not Started (ACTIVE) |
+| 2 | Pilot programme USP section | Done (SCRUM-1064) |
+| 3 | Order-page pricing clarity | Done (SCRUM-1065) |
 | 4 | B2B social proof | Future (gated on sign-off-ready proof data) |
-| 5 | Education + ROI layer | Future |
+| 5 | Value layer (per-athlete-per-day) | Not Started (ACTIVE) |
 | 6 | Nav reachability + section analytics | Future |
+
+> **Note on Phase 5 scope (revised June 2026).** The original Phase 5 was "Education + ROI layer". The education half has effectively shipped out of order: "what you get" via `WhyConkaForTeams`, progressive-disclosure education via `TeamFAQ` (`<details>`), and "how it works" via the pilot stepper. Phase 5 is therefore narrowed to the one genuinely-unbuilt part: the ROI / value-framing layer.
 
 ### Phase 1: Credibility backbone + hero refine - ACTIVE
 
@@ -100,10 +102,38 @@ De-risk framing: start small, prove it on your own squad's data, then scale to a
    - Complexity: Medium.
    - Files: `app/components/b2b/B2BOrderBuilder.tsx`.
 
+### Phase 5: Value layer (per-athlete-per-day) - ACTIVE
+
+Reframe the order total a buyer sees (a 50-box order is roughly GBP 2,250 ex VAT) into a small, defensible per-head daily cost, so the spend feels rational and easy to justify internally. One slim dedicated band, not a content section, to keep the page tight.
+
+Decisions (settled at scope):
+- **Figure: ex VAT.** B2B buyers reclaim VAT and budget ex VAT, and it is also the smaller, better number. Gross stays on the order line only.
+- **Unit: per athlete, per day, on one format.** Derived as `pricePerBox / shotsPerBox` (28). A "Both" athlete runs two shots/day, so the on-screen figure is labelled "per athlete, per day, on one format" to stay honest. No doubled "Both" figure shown.
+- **Form: one slim dedicated band** after the pilot section (a clinical 3-up stat strip: the three tiers reframed as per-day figures). Not an interactive calculator and no squad-size input.
+
+1. **[Lib] Per-athlete-per-day helper.**
+   - What: a small pure helper (e.g. `getB2BPerAthletePerDay(tier)`) returning `tier.pricePerBox / shotsPerBox` (ex VAT), so the figure is computed from the single source of truth (`B2B_TIERS`, 28 shots/box) and never drifts from real pricing.
+   - Dependencies: none.
+   - Complexity: Small.
+   - Files: `app/lib/b2bPricing.ts`.
+
+2. **[Component] B2BValueCallout section.**
+   - What: a content-only component (no `<section>`, `max-w`, or `px` at root) rendering a slim 3-up clinical stat strip: tier label (mono) -> large `tabular-nums` per-day figure -> "/ athlete / day" plus a per-box context line, under one short framing line ("From ~GBP 1.61 per athlete, per day, ex VAT"). Mobile: tightens or stacks to a clean vertical list at 390px, passing the 3-second-consumable test.
+   - Dependencies: task 1.
+   - Complexity: Small/Medium.
+   - Files: new `app/components/b2b/B2BValueCallout.tsx`, `app/professionals/page.tsx`.
+
+3. **[Page] Insert band after pilot.**
+   - What: new `<section>` with `aria-label` between `PilotProgramme` and `TeamFAQ`. Page owns the wrapper/track; background chosen to keep the section rhythm (pilot is `brand-bg-tint`, FAQ is `brand-bg-white`).
+   - Dependencies: task 2.
+   - Complexity: Small.
+   - Files: `app/professionals/page.tsx`.
+
+No analytics in this phase (static informational band, no CTA or cart mutation). Section-engagement events stay deferred to Phase 6.
+
 ## Future phases (not ticketed)
 
 - **Phase 4: B2B social proof.** New B2B proof component: anonymised club outcomes (role + sport + squad band + KPI), aggregate counts, category/sport badges, reframed athlete usage-in-context. Gated on real, sign-off-ready figures (Revolut data plus high-level stats from other trials, to be gathered). Placeholders must not ship.
-- **Phase 5: Education + ROI layer.** Bite-size "how it works / what you get" via progressive disclosure (accordions/steps), plus cost-per-athlete-per-day value framing.
 - **Phase 6: Nav reachability + section analytics.** Make `/professionals` reachable in nav when ready; add light section-engagement events following the existing `app/lib/analytics.ts` pattern (alongside the existing `b2b_checkout_started` / `b2b_invoice_requested`).
 
 ## Rabbit holes
@@ -140,8 +170,9 @@ Created in Sprint 27, assigned to Rudh, under the Website & CRO epic (SCRUM-763,
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1063 | B2B portal upgrade Phase 1: credibility backbone + hero refine | 1 | To Do |
-| SCRUM-1064 | B2B portal upgrade Phase 2: pilot programme USP section | 2 | To Do |
+| SCRUM-1063 | B2B portal upgrade Phase 1: credibility backbone + hero refine | 1 | For review |
+| SCRUM-1064 | B2B portal upgrade Phase 2: pilot programme USP section | 2 | In Progress |
 | SCRUM-1065 | B2B portal upgrade Phase 3: order-page pricing clarity | 3 | To Do |
+| SCRUM-1066 | B2B portal upgrade Phase 5: per-athlete-per-day value callout | 5 | To Do |
 
-Future phases (4 social proof, 5 education/ROI, 6 nav + analytics) are intentionally not ticketed yet.
+Future phases (4 social proof, 6 nav + analytics) are intentionally not ticketed yet.
