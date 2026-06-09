@@ -22,7 +22,7 @@ export default function MethodologyInThirtySeconds() {
     if (typeof window === "undefined") return;
     if (window.innerWidth >= 1024) {
       // One-shot post-mount check; deliberate, not a render-cascade.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setOpen(true);
     }
   }, []);

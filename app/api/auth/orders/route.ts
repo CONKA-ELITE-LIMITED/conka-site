@@ -136,7 +136,7 @@ const CUSTOMER_ORDERS_QUERY = `
 /**
  * Fetch customer orders using the Customer Account API
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const shopId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
 
   if (!shopId) {
@@ -199,7 +199,7 @@ export async function GET(request: NextRequest) {
     let data: CustomerOrdersResponse;
     try {
       data = JSON.parse(responseText);
-    } catch (e) {
+    } catch (_e) {
       console.error("Orders API: Failed to parse JSON");
       return NextResponse.json(
         { error: "Invalid response from Shopify", orders: [] },

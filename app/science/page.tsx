@@ -23,7 +23,7 @@ export default function SciencePage() {
       {isMobile === undefined ? (
         <div className="min-h-screen pt-32 pb-16 flex items-center justify-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 animate-pulse">
-            // Loading research
+            {"// Loading research"}
           </p>
         </div>
       ) : (

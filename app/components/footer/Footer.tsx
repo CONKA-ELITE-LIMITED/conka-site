@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 
 type FooterLink = { label: string; href: string };
 
@@ -171,7 +172,7 @@ export default function Footer() {
 
         {/* Logo + Link columns */}
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-10 lg:gap-16 py-10 md:py-14 border-b border-white/12">
-          <a
+          <Link
             href="/"
             className="flex items-start hover:opacity-70 transition-opacity w-fit shrink-0"
             aria-label="CONKA home"
@@ -183,7 +184,7 @@ export default function Footer() {
               height={56}
               className="h-14 md:h-16 w-auto invert"
             />
-          </a>
+          </Link>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {COLUMNS.map((col) => (
@@ -193,7 +194,7 @@ export default function Footer() {
                 className="flex flex-col"
               >
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 tabular-nums mb-4">
-                  // {col.title}
+                  {"// "}{col.title}
                 </p>
                 <ul className="flex flex-col">
                   {col.links.map((link, idx) => (

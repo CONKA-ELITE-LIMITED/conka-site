@@ -5,7 +5,6 @@ import Image from "next/image";
 import Button from "@/app/components/Button";
 import {
   AthleteData,
-  athletes,
   SportCategory,
   getAthleteById,
 } from "@/app/lib/caseStudiesData";

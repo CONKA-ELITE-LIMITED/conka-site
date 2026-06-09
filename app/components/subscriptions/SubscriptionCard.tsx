@@ -247,7 +247,7 @@ export function SubscriptionCard({
               </div>
               {isMultiLine && (
                 <p className="text-sm text-black/60 px-1">
-                  Billed and delivered on your largest pack's schedule.
+                  Billed and delivered on your largest pack&apos;s schedule.
                 </p>
               )}
               {activeDiscounts.length > 0 && (

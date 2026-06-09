@@ -283,10 +283,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET endpoint to list available operations and fetch subscription info
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const subscriptionId = searchParams.get('subscriptionId');
-
+export async function GET(_request: NextRequest) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('customer_access_token')?.value;
   

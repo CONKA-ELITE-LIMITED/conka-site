@@ -23,7 +23,7 @@ async function getCustomerEmailFromSession(): Promise<string | null> {
 /**
  * Debug endpoint for Loop API connection
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const customerEmail = await getCustomerEmailFromSession();
   
   // Check if Loop API key is configured
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const apiKey = env.loopApiKey;
     loopApiConfigured = !!apiKey;
     loopApiKeyPreview = apiKey ? `${apiKey.substring(0, 10)}...` : null;
-  } catch (e) {
+  } catch (_e) {
     loopApiConfigured = false;
   }
 

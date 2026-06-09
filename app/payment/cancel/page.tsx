@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Payment cancelled | CONKA",
@@ -28,12 +29,12 @@ export default async function PaymentCancelPage({ searchParams }: Props) {
             <span className="block mt-1 text-sm opacity-50">Order reference: {order_id}</span>
           )}
         </p>
-        <a
+        <Link
           href="/"
           className="inline-block bg-[var(--color-ink)] text-white px-8 py-3 rounded-full text-sm font-medium tracking-wide hover:opacity-80 transition-opacity"
         >
           Back to home
-        </a>
+        </Link>
       </div>
     </main>
   );
