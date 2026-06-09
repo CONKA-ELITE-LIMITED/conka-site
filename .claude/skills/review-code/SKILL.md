@@ -154,7 +154,7 @@ Is this a continuation of work already in progress this session?
 - [ ] No leftover prop definitions for props no longer passed
 
 **Hygiene:**
-- [ ] Linter passes: `npm run lint`
+- [ ] Linter passes (changed files only): `npm run lint:changed`
 - [ ] Build succeeds: `npm run build`
 
 ---

@@ -105,7 +105,7 @@ After fixing:
 - [ ] No other callsites are broken
 - [ ] No new states are left unhandled
 - [ ] No console errors introduced
-- [ ] Linter passes: `npm run lint`
+- [ ] Linter passes (changed files only): `npm run lint:changed`
 
 ---
 

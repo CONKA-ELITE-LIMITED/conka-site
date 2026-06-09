@@ -541,3 +541,11 @@ For reference, the ten skills currently shipped in `.claude/skills/`:
 | `prepare-release` | 310 | Version bump, What's New, deploy concerns scan. |
 
 All ten share the same skeleton, the same tone, and the same set of optimisation patterns -- which is what makes them feel like one coherent system rather than ten disconnected commands.
+
+---
+
+## Keeping skills healthy
+
+Run `/skill-editor <name>` (or `/skill-editor all`) to audit skills against the patterns in this guide: description triggering, leanness, progressive disclosure, stale references, and efficiency anti-patterns. It also ingests feedback (`/skill-editor <name> "it was slow because..."`) and edits the skill to fix the root cause. This is the project's self-improvement loop: human-triggered, not autonomous.
+
+The skill table above is illustrative of the source project. For this repo's live skills, see `.claude/skills/`.

@@ -34,7 +34,7 @@ The biggest wins are not skill rewrites. They are (a) a tight efficiency doctrin
 | 1 | Efficiency doctrine + skill diet | Done (commit 80dc79dc) |
 | 2 | Lint debt, config-first | Done (611fd46e, 8dddd97e) |
 | 3 | Docs cleanup + design-system restraint | Done |
-| 4 | Self-improving skill loop | Future |
+| 4 | Self-improving skill loop | Done (skill-editor) |
 
 ## Phase 1 - Efficiency doctrine + skill diet (ACTIVE)
 
@@ -56,7 +56,7 @@ The biggest wins are not skill rewrites. They are (a) a tight efficiency doctrin
 10. **Trim DESIGN_SYSTEM.md + add restraint guidance** - Cut legacy/premium-base sections; add explicit guidance that clinical detailing is now occasional not default: drop the sub-line by default (matching current `app/page.tsx`), reduce visual noise while keeping sharp lines. Medium.
 11. **Reconcile CLAUDE.md doc index** - Remove pointers to deleted docs. Small.
 
-## Phase 4 - Self-improving skill loop (FUTURE)
+## Phase 4 - Self-improving skill loop (DONE)
 
 **Reality check:** "Self-improving skills" in both Anthropic's guide and the creatoreconomy tutorial is **manual-review-plus-feedback-log, not autonomous self-rewriting.** No mechanism edits the skills on its own. Scope Phase 4 accordingly:
 
