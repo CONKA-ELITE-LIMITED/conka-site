@@ -4,8 +4,7 @@ import Footer from "@/app/components/footer";
 import ScienceHero from "@/app/components/science/ScienceHero";
 import TwoSystemModel from "@/app/components/science/TwoSystemModel";
 import ScienceEducation from "@/app/components/science/ScienceEducation";
-import SciencePillars from "@/app/components/science/SciencePillars";
-import FlowVsClear from "@/app/components/science/FlowVsClear";
+import ScienceIngredients from "@/app/components/science/ScienceIngredients";
 import ScienceDifferent from "@/app/components/science/ScienceDifferent";
 import EvidenceLadder from "@/app/components/science/EvidenceLadder";
 import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
@@ -75,33 +74,21 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 5: FIVE PILLARS ===== */}
+      {/* ===== SECTION 5: INGREDIENT DEEP-DIVE ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="The five pillars"
+        aria-label="The ingredients"
       >
         <div className="brand-track">
           <Reveal>
-            <SciencePillars />
+            <ScienceIngredients />
           </Reveal>
         </div>
       </section>
 
-      {/* ===== SECTION 6: FLOW VS CLEAR ===== */}
+      {/* ===== SECTION 6: EVIDENCE & RESEARCH ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="Flow vs Clear comparison"
-      >
-        <div className="brand-track">
-          <Reveal>
-            <FlowVsClear />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ===== SECTION 7: EVIDENCE & RESEARCH ===== */}
-      <section
-        className="brand-section brand-bg-white"
         aria-label="Evidence and research"
       >
         <div className="brand-track">
@@ -111,7 +98,7 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 8: REAL-WORLD DATA BRIDGE ===== */}
+      {/* ===== SECTION 7: REAL-WORLD DATA BRIDGE ===== */}
       <section
         className="brand-section brand-bg-black"
         aria-label="Real user cognitive data"
