@@ -5,6 +5,16 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-10** | Science page refactored to a product-led narrative: Flow and Clear now lead as the realised solution with hero actives folded in as proof; added a page narrative map doc
+- **2026-06-10** | App origin copy now says scans in a Neuro Lab instead of naming Newcastle University.
+- **2026-06-09** | Science page Phase 3: render-led ingredient deep-dive (curated hero actives with per-serving doses, mechanism, PMID) and retired the legacy pillars + Flow-vs-Clear sections
+- **2026-06-09** | App page rebuild Phase 1 (SCRUM-1072): thesis hero, why/origin section, server-first refactor with cognitive test as a client island
+- **2026-06-09** | Science page Phase 4: evidence ladder (four rungs, confident transparency), Revolut real-world module, evidence-engine beat, partners/patent strip, shop CTA
+- **2026-06-09** | Science page: drop the dark band back to neutral and merge adaptogens + nootropics into one two-column education section
+- **2026-06-09** | Science page energy pass: ingredient renders in the adaptogen/nootropic sections and a dark two-system contrast band
+- **2026-06-09** | B2B value callout gains a by-the-box estimator mode (toggle) with product/icon visuals (SCRUM-1071)
+- **2026-06-09** | Science page Phase 2: adaptogens and nootropics teaching modules with layered-disclosure mechanism explainers
+- **2026-06-09** | Science page Phase 1: server-first rebuild with thesis hero, why-products-fail problem section, and two-system model; removed load-flash gate
 - **2026-06-09** | B2B professionals: clarified pilot section copy, distributed app detail into the relevant steps, removed the weak Why-CONKA section and re-alternated section backgrounds
 - **2026-06-09** | B2B professionals value callout rebuilt as an interactive squad cost estimator; design system clarifies mono is for scanned data, sans for read text
 - **2026-06-09** | Phase 4: added /skill-editor skill (audit + feedback-ingestion self-improvement loop per Anthropic skill-authoring guidance); its first audit fixed 6 skills still instructing full-repo lint and a pinned-model co-author line

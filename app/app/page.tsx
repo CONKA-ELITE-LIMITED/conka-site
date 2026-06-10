@@ -1,23 +1,30 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
+  AppHero,
+  AppOrigin,
   AppFeaturePanel,
   AppStickyPhoneBlock,
   AppDownloadSection,
   AppWidgetGrid,
   AppInsightsCallout,
 } from "@/app/components/app";
-import {
-  CognitiveTestSection,
-  CognitiveTestSectionMobile,
-} from "@/app/components/cognitive-test";
-import useIsMobile from "@/app/hooks/useIsMobile";
+import { CognitiveTestIsland } from "@/app/components/cognitive-test";
+
+export const metadata: Metadata = {
+  title: "The App | CONKA",
+  description:
+    "Everyone tells you how you should feel. We show you. A free app and a clinically validated cognitive test that measure how your brain actually performs over time.",
+  openGraph: {
+    title: "The App | CONKA",
+    description:
+      "A free app and a clinically validated cognitive test that measure how your brain actually performs over time.",
+    images: ["/app/AppConkaRing.png"],
+  },
+};
 
 export default function AppPage() {
-  const isMobile = useIsMobile();
-
   return (
     <div
       className="brand-clinical min-h-screen text-white flex flex-col"
@@ -30,25 +37,50 @@ export default function AppPage() {
     >
       <Navigation />
 
-      {/* 1. HERO — what it is, instant desire */}
+      {/* 1. HERO — the thesis: we show you */}
+      {/* paddingTop: clinical scope zeros brand-hero-first top padding on mobile */}
       <section
         className="brand-section brand-hero-first"
-        aria-labelledby="app-hero-heading"
+        style={{ paddingTop: "5rem" }}
+        aria-label="The CONKA app"
       >
+        <div className="brand-track">
+          <AppHero />
+        </div>
+      </section>
+
+      {/* 2. WHY / ORIGIN — you cannot improve what you cannot measure */}
+      <section className="brand-section" aria-label="Why we built it">
+        <div className="brand-track">
+          <AppOrigin />
+        </div>
+      </section>
+
+      {/* 3. HOW IT WORKS — the mechanism */}
+      <AppStickyPhoneBlock />
+
+      {/* 4. WHAT THE APP IS — features (the gold standard) */}
+      <section className="brand-section" aria-label="What the app is">
         <AppFeaturePanel />
       </section>
 
-      {/* 2. APP INSIGHTS — callout linking to /app-insights */}
+      {/* 5. TRY IT — live cognitive test (client island) */}
       <section
         className="brand-section"
-        aria-label="App data insights callout"
+        aria-labelledby="cognitive-test-heading"
       >
+        <div className="brand-track">
+          <CognitiveTestIsland />
+        </div>
+      </section>
+
+      {/* 6. PROOF — real data callout + research and athletes */}
+      <section className="brand-section" aria-label="App data insights callout">
         <div className="brand-track">
           <AppInsightsCallout />
         </div>
       </section>
 
-      {/* 3. CREDIBILITY — research, install, proof, asset */}
       <section
         className="brand-section"
         aria-label="Research, install, and athlete proof"
@@ -58,26 +90,8 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 4. HOW IT WORKS — the mechanism */}
-      <AppStickyPhoneBlock />
-
-      {/* 5. TRY IT — live product demo */}
-      {isMobile !== undefined && (
-        <section
-          className="brand-section"
-          aria-labelledby="cognitive-test-heading"
-        >
-          <div className="brand-track">
-            {isMobile ? <CognitiveTestSectionMobile /> : <CognitiveTestSection />}
-          </div>
-        </section>
-      )}
-
-      {/* 6. DOWNLOAD — final CTA */}
-      <section
-        className="brand-section"
-        aria-label="Download the CONKA app"
-      >
+      {/* 7. DOWNLOAD — final CTA */}
+      <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
           <AppDownloadSection />
         </div>

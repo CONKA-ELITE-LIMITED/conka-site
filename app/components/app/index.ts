@@ -1,3 +1,5 @@
+export { default as AppHero } from "./AppHero";
+export { default as AppOrigin } from "./AppOrigin";
 export { default as AppFeaturePanel } from "./AppFeaturePanel";
 export { default as AppStickyPhoneBlock, PhoneFrame } from "./AppStickyPhoneBlock";
 export { default as AppDownloadSection } from "./AppDownloadSection";

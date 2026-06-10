@@ -162,12 +162,12 @@ function AppFeaturePanelDesktop() {
   return (
     <div className="w-full pt-10 lg:pt-16">
       <div className="mx-auto flex flex-col items-center" style={{ maxWidth: "1280px" }}>
-        <h1
+        <h2
           className="brand-h2 text-white text-center mb-10"
           style={{ letterSpacing: "-0.02em" }}
         >
           The Gold Standard of Cognitive Testing
-        </h1>
+        </h2>
 
         <div className="flex items-start gap-12 lg:gap-20">
           {/* Left column — button stack */}
@@ -211,12 +211,12 @@ function AppFeaturePanelMobile() {
 
   return (
     <div className="pt-8">
-      <h1
+      <h2
         className="brand-h2 text-white mb-8"
         style={{ letterSpacing: "-0.02em" }}
       >
         The Gold Standard of Cognitive Testing
-      </h1>
+      </h2>
 
       {/* Two-column: compact buttons left, phone right */}
       <div className="flex items-start gap-3">

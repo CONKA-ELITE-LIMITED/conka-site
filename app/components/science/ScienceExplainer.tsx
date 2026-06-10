@@ -1,0 +1,196 @@
+"use client";
+
+import { useState, type ReactNode } from "react";
+import Image from "next/image";
+
+export interface ExplainerStep {
+  label: string;
+  detail: string;
+}
+
+export interface ExplainerIngredient {
+  name: string;
+  render: string;
+  note: string;
+}
+
+export interface ExplainerData {
+  heading: string;
+  systemTag: string;
+  icon: ReactNode;
+  definition: string;
+  ingredientsLabel: string;
+  ingredients: ExplainerIngredient[];
+  analogy: string;
+  mechanism: ExplainerStep[];
+  doseNote: string;
+  tags: string[];
+}
+
+export default function ScienceExplainer({ data }: { data: ExplainerData }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div>
+      {/* Header — heading + plain definition (always visible) */}
+      <div className="mb-6">
+        <h3
+          className="brand-h3 text-black mb-3"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          {data.heading}
+        </h3>
+        <p className="text-base text-black leading-relaxed">
+          {data.definition}
+        </p>
+      </div>
+
+      {/* Ingredient renders — the visual anchor for the section */}
+      <div className="mb-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+          {data.ingredientsLabel}
+        </p>
+        <div className="grid grid-cols-3 gap-2 lg:gap-3">
+          {data.ingredients.map((ing, idx) => (
+            <figure key={ing.name}>
+              <div className="relative aspect-square bg-white border border-black/12 overflow-hidden">
+                <Image
+                  src={ing.render}
+                  alt={`Render of ${ing.name}`}
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 1024px) 30vw, 220px"
+                  className="object-cover"
+                />
+                <span className="absolute top-2 left-2 font-mono text-[8px] uppercase tracking-[0.18em] text-black/40 bg-white/80 px-1.5 py-0.5 tabular-nums">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <figcaption className="mt-2">
+                <p className="text-sm font-semibold text-black leading-tight">
+                  {ing.name}
+                </p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50 tabular-nums mt-0.5 leading-tight">
+                  {ing.note}
+                </p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+
+      {/* Analogy — a differentiated aside, scannable, always visible */}
+      <div className="bg-black/[0.03] border border-black/8 p-4 lg:p-5 mb-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
+          In plain terms
+        </p>
+        <p className="text-sm md:text-base text-black/75 leading-relaxed">
+          {data.analogy}
+        </p>
+      </div>
+
+      {/* Layered disclosure card — mechanism + dose behind a toggle */}
+      <div className="bg-white border border-black/12">
+        {/* Header row */}
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
+            Mechanism
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+            {data.systemTag}
+          </span>
+        </div>
+
+        {/* Toggle */}
+        <button
+          type="button"
+          onClick={() => setIsExpanded((v) => !v)}
+          aria-expanded={isExpanded}
+          className="w-full text-left hover:bg-black/[0.02] active:bg-black/[0.03] transition-colors"
+        >
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4 p-4 lg:p-5 min-h-[44px]">
+            <div
+              className="w-11 h-11 flex items-center justify-center text-white flex-shrink-0"
+              style={{ backgroundColor: "#1B2757" }}
+            >
+              {data.icon}
+            </div>
+            <span className="text-sm md:text-base font-semibold text-black">
+              {isExpanded ? "How it works in the body" : "See how it works in the body"}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              className={`transition-transform flex-shrink-0 text-black/45 ${
+                isExpanded ? "rotate-180" : ""
+              }`}
+              aria-hidden
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </button>
+
+        {/* Expanded panel */}
+        {isExpanded && (
+          <div className="border-t border-black/8 p-4 lg:p-6 space-y-6">
+            {/* Mechanism steps — hairline numbered rows */}
+            <div className="border border-black/12">
+              {data.mechanism.map((step, idx) => (
+                <div
+                  key={step.label}
+                  className={`p-4 ${
+                    idx < data.mechanism.length - 1
+                      ? "border-b border-black/8"
+                      : ""
+                  }`}
+                >
+                  <div className="flex items-baseline gap-3 mb-1.5">
+                    <span className="font-mono text-[10px] text-black/35 tabular-nums flex-shrink-0">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+                      {step.label}
+                    </span>
+                  </div>
+                  <p className="text-sm text-black/75 leading-relaxed pl-7">
+                    {step.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Why dose and quality matter */}
+            <div className="bg-[#1B2757]/[0.04] border border-[#1B2757]/15 p-4 lg:p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1B2757] mb-2">
+                Why dose and quality matter
+              </p>
+              <p className="text-sm text-black/75 leading-relaxed">
+                {data.doseNote}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tag strip — scan markers, always visible */}
+      <div className="flex flex-wrap gap-1.5 mt-6">
+        {data.tags.map((tag) => (
+          <span
+            key={tag}
+            className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-3 py-1 border border-black/12 bg-white text-black/70"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}

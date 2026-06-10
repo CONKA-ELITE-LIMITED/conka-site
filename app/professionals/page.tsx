@@ -37,7 +37,6 @@ export default function ProfessionalsPage() {
   return (
     <div className="brand-clinical brand-page min-h-screen flex flex-col">
       <Navigation />
-
       {/* HERO — sport positioning, no pricing */}
       <section
         className="brand-section brand-hero-first brand-bg-white"
@@ -73,7 +72,6 @@ export default function ProfessionalsPage() {
           </div>
         </div>
       </section>
-
       {/* TRUST — third-party anti-doping certification, promoted high */}
       <section
         className="brand-section brand-bg-tint"
@@ -84,32 +82,29 @@ export default function ProfessionalsPage() {
           <InformedSportCertification headingLevel="h2" />
         </div>
       </section>
-
       {/* PILOT — squad pilot USP (hero secondary CTA anchors here) */}
       <section
         id="pilot"
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Squad pilot programme"
       >
         <div className="brand-track">
           <PilotProgramme />
         </div>
       </section>
-
-      {/* VALUE — interactive estimator reframing the order total into a per-athlete-per-day figure */}
+      {/* VALUE — reframe the order total into a per-athlete-per-day figure */}
       <section
-        className="brand-section brand-bg-tint"
-        aria-label="Squad cost estimator"
+        className="brand-section brand-bg-white"
+        aria-label="Cost per athlete per day"
       >
         <div className="brand-track">
           <B2BValueCallout />
         </div>
       </section>
-
       {/* APPLY — value points + enquiry form */}
       <section
         id="apply"
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Apply for team pricing"
       >
         <div className="brand-track">
@@ -141,10 +136,9 @@ export default function ProfessionalsPage() {
           </div>
         </div>
       </section>
-
       {/* SUBSCRIPTION ENQUIRY — recurring supply exit ramp */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Regular supply enquiry"
       >
         <div className="brand-track">
@@ -164,14 +158,13 @@ export default function ProfessionalsPage() {
           </div>
         </div>
       </section>
-
       {/* FAQ — procurement objection handling */}
       <section className="brand-section brand-bg-white" aria-label="Team FAQ">
         <div className="brand-track">
           <TeamFAQ />
         </div>
       </section>
-
+       
       <Footer />
     </div>
   );
