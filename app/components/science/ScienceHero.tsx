@@ -27,9 +27,9 @@ export default function ScienceHero() {
 
       {/* Hero image — clinical asset frame */}
       <div className="relative order-2 lg:order-2 lg:flex-[1.1] w-full mt-10 lg:mt-0">
-        <div className="relative aspect-[5/4] lg:aspect-[4/5] border border-black/12 bg-white overflow-hidden">
+        <div className="relative aspect-[3/2] border border-black/12 bg-white overflow-hidden">
           <Image
-            src="/lifestyle/CreationOfConka.jpg"
+            src="/lifestyle/CreationOfConkaBlack.jpg"
             alt="Two hands passing a CONKA bottle in the research lab"
             fill
             priority
