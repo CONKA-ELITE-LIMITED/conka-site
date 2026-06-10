@@ -6,7 +6,7 @@ import { getFormulaImage } from "@/app/lib/productImageConfig";
 interface HeroActive {
   name: string;
   scientificName: string;
-  dose: string;
+  render: string;
   mechanism: string;
   pmid: string;
 }
@@ -20,6 +20,11 @@ interface ProductData {
   bodyCopy: string;
   render: string;
   link: string;
+  // Total active load per serving, in mg. The total is public (shown on the
+  // PDP); the per-ingredient breakdown is patented and deliberately not shown.
+  // Mirrors FORMULA_GRAMMAGE in ClinicalIngredients.tsx (founder-supplied,
+  // 2026-06) — keep the two in sync.
+  activeMg: number;
   actives: HeroActive[];
 }
 
@@ -43,11 +48,12 @@ const PRODUCTS: ProductData[] = [
       "Sustained focus for training and work. No caffeine, no crash. The adaptogen side of the model, built to raise the floor you operate from.",
     render: getFormulaImage("01"),
     link: "/conka-flow",
+    activeMg: 3700,
     actives: [
       {
         name: "Ashwagandha",
         scientificName: "Withania somnifera",
-        dose: "600mg",
+        render: "/ingredients/renders/Ashwagandha.jpg",
         mechanism:
           "An adaptogen that helps lower cortisol and steady the stress response.",
         pmid: "23439798",
@@ -55,7 +61,7 @@ const PRODUCTS: ProductData[] = [
       {
         name: "Rhodiola rosea",
         scientificName: "Rhodiola rosea",
-        dose: "576mg",
+        render: "/ingredients/renders/RhodiolaRosea.jpg",
         mechanism:
           "Pushes back on burnout and mental fatigue under sustained load.",
         pmid: "19016404",
@@ -63,7 +69,7 @@ const PRODUCTS: ProductData[] = [
       {
         name: "Lemon balm",
         scientificName: "Melissa officinalis",
-        dose: "300mg",
+        render: "/ingredients/renders/LemonBalm.jpg",
         mechanism:
           "Calming without sedation, it takes the edge off while keeping you clear.",
         pmid: "16444660",
@@ -80,11 +86,12 @@ const PRODUCTS: ProductData[] = [
       "Sharpen performance when you need it, support recovery when you're done. The nootropic side of the model, for the demand in front of you.",
     render: getFormulaImage("02"),
     link: "/conka-clarity",
+    activeMg: 3142,
     actives: [
       {
         name: "Alpha-GPC",
         scientificName: "L-Alpha-glycerylphosphorylcholine",
-        dose: "300mg",
+        render: "/ingredients/renders/AlphaGPC.jpg",
         mechanism:
           "A bioavailable choline source that raises acetylcholine, behind focus and recall.",
         pmid: "12882463",
@@ -92,7 +99,7 @@ const PRODUCTS: ProductData[] = [
       {
         name: "Ginkgo biloba",
         scientificName: "Ginkgo biloba",
-        dose: "120mg",
+        render: "/ingredients/renders/GinkgoBiloba.jpg",
         mechanism:
           "Supports cerebral blood flow, getting more oxygen to working neurons.",
         pmid: "19395013",
@@ -100,7 +107,7 @@ const PRODUCTS: ProductData[] = [
       {
         name: "N-acetyl cysteine",
         scientificName: "N-acetyl-L-cysteine",
-        dose: "2000mg",
+        render: "/ingredients/renders/NAcetylCysteine.jpg",
         mechanism:
           "Rebuilds glutathione, the brain's master antioxidant, against oxidative stress.",
         pmid: "18436195",
@@ -198,32 +205,55 @@ export default function RealisedSolution() {
                 {product.bodyCopy}
               </p>
 
-              {/* Hero actives folded in as proof — compact, scannable */}
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-3 pb-2 border-b border-black/12">
+              {/* Total active load — hero number, per-ingredient doses stay private */}
+              <div className="flex items-baseline gap-3 mb-5 pb-5 border-b border-black/12">
+                <span className="text-3xl lg:text-4xl font-semibold tabular-nums text-[#1B2757] leading-none">
+                  {product.activeMg.toLocaleString()}
+                  <span className="text-lg lg:text-xl font-semibold">mg</span>
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45 tabular-nums leading-tight">
+                  Active ingredients
+                  <br />
+                  per serving
+                </span>
+              </div>
+
+              {/* Hero actives folded in as proof — render + mechanism, no dose */}
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-4">
                 Three of the hero actives
               </p>
-              <ul className="space-y-3 mb-5">
+              <ul className="space-y-4 mb-5">
                 {product.actives.map((active) => (
-                  <li key={active.name} className="flex flex-col">
-                    <div className="flex items-baseline justify-between gap-3">
+                  <li key={active.name} className="flex gap-3">
+                    <div className="relative w-16 h-16 shrink-0 border border-black/8 overflow-hidden bg-white">
+                      <Image
+                        src={active.render}
+                        alt={`Render of ${active.name}`}
+                        fill
+                        loading="lazy"
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-col">
                       <span className="text-sm font-semibold text-black leading-tight">
                         {active.name}
                       </span>
-                      <span className="font-mono text-sm font-bold tabular-nums text-[#1B2757] leading-none shrink-0">
-                        {active.dose}
+                      <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-black/45 tabular-nums mt-0.5">
+                        {active.scientificName}
                       </span>
+                      <p className="text-sm text-black/65 leading-relaxed mt-1.5">
+                        {active.mechanism}
+                      </p>
+                      <a
+                        href={`https://pubmed.ncbi.nlm.nih.gov/${active.pmid}/`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums mt-1.5 inline-flex items-center self-start min-h-[44px]"
+                      >
+                        Peer-reviewed · PMID {active.pmid} ↗
+                      </a>
                     </div>
-                    <p className="text-sm text-black/65 leading-relaxed mt-1">
-                      {active.mechanism}
-                    </p>
-                    <a
-                      href={`https://pubmed.ncbi.nlm.nih.gov/${active.pmid}/`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums mt-1.5 inline-flex items-center self-start min-h-[44px]"
-                    >
-                      Peer-reviewed · PMID {active.pmid} ↗
-                    </a>
                   </li>
                 ))}
               </ul>
@@ -247,8 +277,8 @@ export default function RealisedSolution() {
             That is six of them. There are 16 in all.
           </p>
           <p className="text-sm text-black/65 leading-relaxed mt-1">
-            Every active across both formulas, with its dose and the studies
-            behind it, lives on the ingredients page.
+            Every active across both formulas, with the studies behind it, lives
+            on the ingredients page.
           </p>
         </div>
         <a
