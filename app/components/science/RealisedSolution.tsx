@@ -28,15 +28,6 @@ interface ProductData {
   actives: HeroActive[];
 }
 
-// Proof points carried over from the evidence ladder and ingredient data.
-// These are existing, citable facts, not new claims.
-const PROOF_STRIP = [
-  { value: "2", label: "University trials" },
-  { value: "16", label: "Active ingredients" },
-  { value: "8wk", label: "Human trial" },
-  { value: "1", label: "Granted patent" },
-];
-
 const PRODUCTS: ProductData[] = [
   {
     number: "01",
@@ -132,28 +123,8 @@ export default function RealisedSolution() {
           The two systems are the theory. Flow and Clear are where it gets made
           real: two formulas drawn from the same model, built over years of
           formulation work, university research, and serious investment. No
-          proprietary blends, no under-dosing. The amount in the research is the
-          amount in the shot.
+          proprietary blends, no under-dosing, no fillers.
         </p>
-      </div>
-
-      {/* Proof strip — existing, citable facts behind the products */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 border border-black/12 mb-8 lg:mb-10">
-        {PROOF_STRIP.map((stat, idx) => (
-          <div
-            key={stat.label}
-            className={`p-4 lg:p-5 ${idx % 2 === 0 ? "border-r border-black/8" : ""} ${
-              idx < 2 ? "border-b border-black/8 lg:border-b-0" : ""
-            } ${idx === 2 ? "lg:border-r lg:border-black/8" : ""}`}
-          >
-            <p className="font-mono text-2xl lg:text-3xl font-bold tabular-nums text-[#1B2757] leading-none">
-              {stat.value}
-            </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/55 tabular-nums mt-2 leading-tight">
-              {stat.label}
-            </p>
-          </div>
-        ))}
       </div>
 
       {/* Two protagonist cards, equal weight */}
@@ -173,10 +144,10 @@ export default function RealisedSolution() {
               </span>
             </div>
 
-            {/* Product render leads — links to PDP */}
+            {/* Product render leads — shorter crop on desktop to keep the card compact */}
             <Link
               href={product.link}
-              className="relative block w-full aspect-[4/3] overflow-hidden border-b border-black/8 group bg-white"
+              className="relative block w-full aspect-[4/3] lg:aspect-[16/9] overflow-hidden border-b border-black/8 group bg-white"
             >
               <Image
                 src={product.render}
@@ -194,22 +165,22 @@ export default function RealisedSolution() {
             </Link>
 
             {/* Content */}
-            <div className="flex flex-col flex-1 p-5 lg:p-6">
+            <div className="flex flex-col flex-1 p-5">
               <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50 mb-2 leading-none">
                 {product.name}
               </p>
               <h3 className="text-xl lg:text-2xl font-semibold text-black leading-tight mb-3">
                 {product.benefitHeadline}
               </h3>
-              <p className="text-sm text-black/65 leading-relaxed mb-5">
+              <p className="text-sm text-black/65 leading-relaxed mb-4">
                 {product.bodyCopy}
               </p>
 
               {/* Total active load — hero number, per-ingredient doses stay private */}
-              <div className="flex items-baseline gap-3 mb-5 pb-5 border-b border-black/12">
-                <span className="text-3xl lg:text-4xl font-semibold tabular-nums text-[#1B2757] leading-none">
+              <div className="flex items-baseline gap-3 mb-4 pb-4 border-b border-black/12">
+                <span className="text-3xl font-semibold tabular-nums text-[#1B2757] leading-none">
                   {product.activeMg.toLocaleString()}
-                  <span className="text-lg lg:text-xl font-semibold">mg</span>
+                  <span className="text-lg font-semibold">mg</span>
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45 tabular-nums leading-tight">
                   Active ingredients
@@ -219,19 +190,19 @@ export default function RealisedSolution() {
               </div>
 
               {/* Hero actives folded in as proof — render + mechanism, no dose */}
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-4">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-3">
                 Three of the hero actives
               </p>
-              <ul className="space-y-4 mb-5">
+              <ul className="space-y-3 mb-5">
                 {product.actives.map((active) => (
                   <li key={active.name} className="flex gap-3">
-                    <div className="relative w-16 h-16 shrink-0 border border-black/8 overflow-hidden bg-white">
+                    <div className="relative w-14 h-14 shrink-0 border border-black/8 overflow-hidden bg-white">
                       <Image
                         src={active.render}
                         alt={`Render of ${active.name}`}
                         fill
                         loading="lazy"
-                        sizes="64px"
+                        sizes="56px"
                         className="object-cover"
                       />
                     </div>
@@ -242,14 +213,14 @@ export default function RealisedSolution() {
                       <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-black/45 tabular-nums mt-0.5">
                         {active.scientificName}
                       </span>
-                      <p className="text-sm text-black/65 leading-relaxed mt-1.5">
+                      <p className="text-sm text-black/65 leading-snug mt-1.5">
                         {active.mechanism}
                       </p>
                       <a
                         href={`https://pubmed.ncbi.nlm.nih.gov/${active.pmid}/`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums mt-1.5 inline-flex items-center self-start min-h-[44px]"
+                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums mt-1 inline-flex items-center self-start min-h-[44px]"
                       >
                         Peer-reviewed · PMID {active.pmid} ↗
                       </a>
