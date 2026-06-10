@@ -67,6 +67,10 @@ export default function IngredientsPageMobile({
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
           {String(ingredients.length).padStart(2, "0")} Ingredients · Clinical doses · Peer-reviewed
         </p>
+        <p className="text-sm text-black/70 mt-4 leading-relaxed">
+          The whole formula, ingredient by ingredient. What each one does, and
+          the published research behind it.
+        </p>
       </div>
 
       <div className="mb-6">
