@@ -67,8 +67,8 @@ export default function IngredientsPageDesktop({
               {String(ingredients.length).padStart(2, "0")} Ingredients · Clinical doses · Peer-reviewed
             </p>
             <p className="text-sm md:text-base text-black/70 mt-4 max-w-xl leading-relaxed">
-              Every input is chosen for what it does, dosed to clinical targets,
-              and backed by peer-reviewed research.
+              The whole formula, ingredient by ingredient. What each one does,
+              and the published research behind it.
             </p>
           </header>
 

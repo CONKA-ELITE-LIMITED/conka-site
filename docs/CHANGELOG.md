@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-10** | Ingredients page: rewrote the intro description under the title (desktop) and added it to mobile, focused on evidence transparency (SCRUM-1077)
 - **2026-06-10** | Science page refactored to a product-led narrative: Flow and Clear now lead as the realised solution with hero actives folded in as proof; added a page narrative map doc
 - **2026-06-10** | App origin copy now says scans in a Neuro Lab instead of naming Newcastle University.
 - **2026-06-09** | Science page Phase 3: render-led ingredient deep-dive (curated hero actives with per-serving doses, mechanism, PMID) and retired the legacy pillars + Flow-vs-Clear sections
