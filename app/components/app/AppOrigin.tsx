@@ -2,7 +2,7 @@ import Image from "next/image";
 
 /**
  * Why / origin section for /app. Weaves Humphrey's origin (repeated
- * concussions, fMRI and EEG scans at Newcastle) into the "you cannot improve
+ * concussions, fMRI and EEG scans in a Neuro Lab) into the "you cannot improve
  * what you cannot measure" idea. Honest and human, no new medical claims.
  * Content-only; the page owns the section wrapper and dark canvas.
  */
@@ -40,7 +40,7 @@ export default function AppOrigin() {
             clear answer.
           </p>
           <p>
-            During recovery he had fMRI and EEG scans at Newcastle University. For
+            During recovery he had fMRI and EEG scans in a Neuro Lab. For
             the first time he could see his brain measured, not guessed at. That
             became CONKA: an app that gives everyone the same ability to see it. A
             number you can watch move.
