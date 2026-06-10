@@ -6,6 +6,34 @@
 **Jira:** SCRUM-1051 (metafields + tags, done) plus the phase tickets listed below
 **Owner:** Rudh (Shopify config) with Humphrey (ops data: EANs, customs, couriers)
 
+---
+
+## CURRENT STATUS (2026-06-10)
+
+**DONE:**
+- Phase 1 Connect — Dev Dashboard app, credentials, base URL, Synergy location; connection confirmed.
+- Phase 2 SKU readiness — weight/HS/country on the 2 physical boxes; **EANs set** (`FLOWFUNNEL28` / `CLEARFUNNEL28` in the Barcode field).
+- SKU file **approved by Bethany**.
+- **Shipping config in Shopify** — UK (Express/Evri free + 24 Hour Delivery/DPD £6.54); international zones kept and re-priced to Evri cost (Africa £42, Australia £28, NZ £38, Canada split out £36, USA £22, Europe £14.40, etc.); all intl rates named `Express International`. Detail: `docs/shipping/SHIPPING_AND_COURIERS.md`.
+- **Synergy shipping-methods sheet returned** (Express→Evri, 24 Hour Delivery→DPD, Express International→Evri/DAP).
+- **3 test orders created** (#3522, #3523, #3524) — open + paid + unfulfilled, moved to the Synergy location, IDs sent to Bethany.
+- Pallet economics analysed (EFM rates) → parcels cheaper until ~60 boxes; email sent to Bethany sense-checking the logic.
+
+**WAITING ON (external):**
+- **Richard** — transfer SKUs to Synergy's live system (gate for the 3 test orders to pull through).
+- **Synergy** — map the carriers from the returned sheet (service codes); then run the test orders end-to-end and write back carrier + tracking.
+- **Bethany** — replies on: per-parcel handling fee, international freight/pallet option, and confirmation of the carton/parcel logic.
+
+**LEFT TO DO (CONKA side):**
+- Once test orders pass: **go-live cutover** — stock the 3 funnel SKUs at Synergy + switch them to fulfil from Synergy (Phase 5).
+- Post-test cleanup: set the Synergy stock on the 3 SKUs back to 0 (added only to route the test orders).
+- Confirm where B2B / large orders fulfil (Synergy vs Burnside) — decides whose carriers handle bulk.
+- Fast-follow (not blocking): DHL `International Priority` upgrade; pallet `Pallet`→EFM row when bulk volume appears; US USD/DDP rate.
+
+**DO NOT:** fulfil, label, or cancel the 3 test orders until Synergy confirms the writeback.
+
+---
+
 ## Problem
 
 CONKA is onboarding Synergy ("Fulfil with Synergy") as a fulfilment 3PL. Synergy runs a middleware "Connector" that syncs SKUs, inventory, orders and shipments between Shopify and their WMS over the Shopify Admin API. The Connector cannot pull data or fulfil until Shopify exposes the right API credentials, a warehouse location, the required SKU attributes, and visible courier services. Burnside remains the current 3PL for all legacy SKUs during and after the switch.
@@ -102,7 +130,19 @@ Decisions now locked (Humphrey, 9 Jun):
 - **International:** Evri default + DHL as a customer-selectable paid upgrade (= two international rates, each uniquely named, identical name across all zones, price varies per zone).
 - **Incoterms = DAP on ALL international** (customer clears/pays duties on arrival; the "consumer pays" model). Applies to both the Evri and DHL international rows. Does NOT affect the separate future US-only USD duties-inclusive (DDP) rate, which is a later build under its own name.
 
-Still to confirm (minor, not blockers): exact Evri UK service name; that the DPD UK option = the existing "24 Hour Delivery" next-day rate (vs a new DPD standard rate) + its new full-cost price; the customer-facing name for the DHL international rate (e.g. "International Priority"); whether Evri International can technically do DAP-only (assumed yes).
+**DECISIONS LOCKED 9 Jun (Humphrey unresponsive, so Rudh+Claude called them to unblock; none need his input to be safe):**
+- Evri UK service = **Standard** (Synergy completes the exact service code).
+- "24 Hour Delivery" = **DPD Next Day**. Price stays **£4.33 for now** (Synergy ignores price; the "charge full cost" bump is a separate non-blocking Shopify edit once the true DPD cost is known).
+- International launch = **Evri only** (DAP). DHL "International Priority" = **fast-follow** (add rates to ~9 zones later, once Evri performance is seen). Not used by any test order.
+- Pallet / large B2B = **separate scoped workstream**; interim = Harry adds a manual `Pallet` shipping line to the draft order. Not in this sheet, not blocking go-live.
+
+**FINAL sheet to send Synergy now (3 rows — covers all 3 test orders):**
+```
+Express              | Evri | Standard      | UK  | n/a
+24 Hour Delivery     | DPD  | Next Day      | UK  | n/a
+Express International | Evri | International  | ROW | DAP
+```
+(DHL `International Priority` row added later when that option is built.)
 
 Clarification reinforced to Humphrey: price already varies by zone under one method name (Synergy ignores price), so per-zone carrier splitting is NOT needed; separate method names are only needed where the carrier itself changes (Evri vs DPD, Evri vs DHL).
 
@@ -132,6 +172,19 @@ International Priority | DHL     | Express      | ROW    | DAP
   3. **NEW dependency — routing to the Synergy location.** Funnel SKUs are stocked at Burnside and these products are live and selling; the 3 test orders' fulfillment must land at the Synergy location WITHOUT routing real customer orders there pre-go-live. Confirm the mechanism with Richard (token stock at Synergy + manual fulfillment move vs temporary location priority).
   4. **Order-creation mechanism:** draft order in Admin (type the shipping line name manually to match exactly, set a test email + correct address, mark as paid → open/paid/unfulfilled). Order 3 needs an international address to surface "Express International".
 - **Recommended sequence:** Humphrey answers → sheet to Synergy → Richard confirms SKUs live + routing settled → create the 3 orders → send IDs. Do NOT create them before the carrier mapping exists.
+
+## Update (2026-06-10, test orders CREATED + shipping config DONE)
+
+- **Shopify shipping config DONE.** UK: Express (Evri, free) + 24 Hour Delivery (DPD, £6.54). International: kept the existing ~10 zones, all rates named `Express International` (Evri), prices tuned to Evri cost — Africa £42, Australia £28, NZ £38, Canada split into its own zone £36 (USA stays £22), Channel Islands rate renamed to `Express International`, Europe/france/Caribbean/Middle East left as-is. Full detail in `docs/shipping/SHIPPING_AND_COURIERS.md`.
+- **Synergy shipping sheet sent** (3 live rows + a pre-listed DHL `International Priority` row for later): Express|Evri|Standard|UK|n/a · 24 Hour Delivery|DPD|Next Day|UK|n/a · Express International|Evri|International|ROW|DAP.
+- **3 test orders CREATED 2026-06-10** — all open + paid (via draft order → Mark as paid, £0 actually charged) + unfulfilled, fulfillment location manually moved to **Synergy Warehouse**:
+  - **#3522** — FLOW-FUNNEL-28 ×1 — Express
+  - **#3523** — FLOW-FUNNEL-28 ×2 + CLEAR-FUNNEL-28 ×2 — 24 Hour Delivery
+  - **#3524** — BOTH-FUNNEL-56 ×1 — Express International (USA address)
+  - Order IDs sent to Bethany. **Leave untouched — no fulfil, no label, no cancel** until Synergy confirms carrier + tracking writeback.
+- **Routing mechanism used:** stocked FLOW-FUNNEL-28, CLEAR-FUNNEL-28 and BOTH-FUNNEL-56 with 10 units each at the Synergy location; orders auto-assigned to Burnside (the default) on creation, then manually moved to Synergy via the fulfillment card. Confirms real orders default to Burnside (low leakage risk).
+- **Cleanup for later (post-test):** set the Synergy quantities on the 3 SKUs back to 0 so no real orders route there pre-go-live.
+- **Still pending:** Richard's SKU transfer to Synergy's live system (gate for the orders to pull through); Synergy carrier-mapping of the sheet; pallet answers from Bethany.
 - **US shipping reality check:** the planned USD / scaled-by-box / tax-inclusive (DDP) US rate does NOT exist yet. Current US rate is a flat **£20.27 GBP "Express International"**. Building the real US rate is unstarted (separate from the mapping sheet).
 - **B2B / pallet shipping = separate workstream (confirmed with Rudh).** No size/weight-based pallet rate exists in any zone, and B2B draft orders set no shipping line in code (`app/api/b2b/invoice-order/route.ts`), so a B2B order reaches Synergy with a blank shipping method. Bethany's "force 6+ boxes onto a pallet service" ask is a build, not a mapping. To be scoped separately.
 
@@ -215,6 +268,7 @@ All three: assigned to the Synergy location, status open + paid + unfulfilled, l
 
 ## References
 
+- **Shipping & courier services (carriers, zones, rates, pallets):** `docs/shipping/SHIPPING_AND_COURIERS.md` — consolidated working doc; to be formalised into a standalone feature doc once the Shopify shipping config is live.
 - Signed contract: `Fulfil_with_Synergy_x_Conka_Elite_Limited.pdf` (commencement 6 May 2026, go-live 9 June 2026, fee schedule, carrier rate cards, SLA, logistic profile)
 - Synergy "Shopify Integration" PDF (Connector overview, scopes, SKU attributes, order processing, testing, go-live)
 - DHL WPX (Air) rate sheet: zone x weight; 28 box ~2.5kg band, 56 box ~5kg, quarterly ~13kg+
