@@ -4,7 +4,7 @@ export { default as ScienceAdaptogens } from "./ScienceAdaptogens";
 export { default as ScienceNootropics } from "./ScienceNootropics";
 export { default as ScienceEducation } from "./ScienceEducation";
 export { default as ScienceExplainer } from "./ScienceExplainer";
-export { default as ScienceIngredients } from "./ScienceIngredients";
+export { default as RealisedSolution } from "./RealisedSolution";
 export { default as SynergyChart } from "./SynergyChart";
 export { default as ScienceDifferent } from "./ScienceDifferent";
 export { default as EvidenceLadder } from "./EvidenceLadder";

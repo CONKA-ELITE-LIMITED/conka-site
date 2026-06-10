@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-10** | Science page refactored to a product-led narrative: Flow and Clear now lead as the realised solution with hero actives folded in as proof; added a page narrative map doc
 - **2026-06-10** | App origin copy now says scans in a Neuro Lab instead of naming Newcastle University.
 - **2026-06-09** | Science page Phase 3: render-led ingredient deep-dive (curated hero actives with per-serving doses, mechanism, PMID) and retired the legacy pillars + Flow-vs-Clear sections
 - **2026-06-09** | App page rebuild Phase 1 (SCRUM-1072): thesis hero, why/origin section, server-first refactor with cognitive test as a client island

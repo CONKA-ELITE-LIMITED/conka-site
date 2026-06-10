@@ -141,6 +141,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 |-----|-------|
 | `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` | **Active plan** — phased simplification + funnel build |
 | `docs/PROJECT_OVERVIEW.md` | High-level architecture |
+| `docs/PAGE_NARRATIVES.md` | **Page story map** — current section-by-section arc + health rating per page; spot the weakest section to improve next |
 | `docs/PRODUCT_DATA.md` | Product module structure + helper usage |
 | `docs/branding/DESIGN_SYSTEM.md` | **Active design system** — typography, colours, radius, layout, migration guide |
 | `docs/branding/SOFT_TECH_LUXURY_STYLE_SHEET_GUIDELINES.md` | Legacy design system (until pages are migrated) |

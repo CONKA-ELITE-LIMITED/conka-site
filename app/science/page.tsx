@@ -4,7 +4,7 @@ import Footer from "@/app/components/footer";
 import ScienceHero from "@/app/components/science/ScienceHero";
 import TwoSystemModel from "@/app/components/science/TwoSystemModel";
 import ScienceEducation from "@/app/components/science/ScienceEducation";
-import ScienceIngredients from "@/app/components/science/ScienceIngredients";
+import RealisedSolution from "@/app/components/science/RealisedSolution";
 import ScienceDifferent from "@/app/components/science/ScienceDifferent";
 import EvidenceLadder from "@/app/components/science/EvidenceLadder";
 import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
@@ -74,14 +74,14 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 5: INGREDIENT DEEP-DIVE ===== */}
+      {/* ===== SECTION 5: THE REALISED SOLUTION (Flow + Clear) ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="The ingredients"
+        aria-label="The realised solution: Flow and Clear"
       >
         <div className="brand-track">
           <Reveal>
-            <ScienceIngredients />
+            <RealisedSolution />
           </Reveal>
         </div>
       </section>

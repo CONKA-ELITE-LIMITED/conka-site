@@ -103,17 +103,19 @@ export default function EvidenceLadder() {
     <div>
       {/* Header */}
       <div className="mb-8 lg:mb-12 max-w-2xl">
-        <p className="brand-eyebrow mb-3">{"// The evidence · SCI-07"}</p>
+        <p className="brand-eyebrow mb-3">{"// The evidence · SCI-06"}</p>
         <h2
           className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}
         >
-          The evidence, from literature to live data.
+          A growing evidence base, from literature to live data.
         </h2>
         <p className="text-sm md:text-base text-black/75 leading-relaxed">
-          Four kinds of evidence sit behind CONKA: the published research on each
+          Four kinds of evidence sit behind CONKA, and the base is still
+          building in both breadth and depth: the published research on each
           active, our own early studies, a completed human trial, and live
-          cognitive data from real teams. Here is each one, and how far it goes.
+          cognitive data from real teams that grows every week. Here is each
+          one, and how far it goes.
         </p>
       </div>
 

@@ -57,10 +57,10 @@ export default function TwoSystemModel() {
           Two systems, one daily brain.
         </h2>
         <p className="text-sm md:text-base text-black/75 leading-relaxed">
-          The brain is the most complex organ we know of, so we treat it like a
-          system worth engineering for, not a market to sell hype into. CONKA is
-          built on two complementary classes of active that do two different
-          jobs.
+          Nature already holds the answer in two complementary classes of
+          active that do two different jobs. The catch is that raw, under-dosed,
+          and badly combined, that potential stays on the shelf. The model below
+          is the latent solution. What comes after is how CONKA realises it.
         </p>
       </div>
 
