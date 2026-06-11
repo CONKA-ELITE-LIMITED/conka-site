@@ -114,7 +114,7 @@ export function StorySection({ chapter, totalChapters }: StorySectionProps) {
   );
 
   return (
-    <div ref={root} data-section-id={chapter.id}>
+    <div ref={root}>
       <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-20">
         {/* Image — full-bleed on mobile, alternating side on desktop */}
         <div
@@ -127,12 +127,7 @@ export function StorySection({ chapter, totalChapters }: StorySectionProps) {
             className="relative aspect-[4/3] lg:aspect-auto lg:h-[480px] overflow-hidden -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full border-y md:border border-black/12 bg-white"
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
           >
-            <div
-              data-chapter-parallax
-              className={`absolute inset-0 ${
-                chapter.imageFit === "contain" ? "p-6" : ""
-              }`}
-            >
+            <div data-chapter-parallax className="absolute inset-0">
               <Image
                 src={chapter.image}
                 alt={chapter.imageAlt}
@@ -141,7 +136,7 @@ export function StorySection({ chapter, totalChapters }: StorySectionProps) {
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className={
                   chapter.imageFit === "contain"
-                    ? "object-contain"
+                    ? "object-contain p-6"
                     : "object-cover"
                 }
                 style={{

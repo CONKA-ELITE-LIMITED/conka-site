@@ -16,18 +16,21 @@ interface ParsedStat {
   target: number;
   suffix: string;
   grouped: boolean;
+  decimals: number;
 }
 
-export function parseStatValue(raw: string): ParsedStat | null {
-  const match = raw.match(/^([^\d]*)([\d,]+)(.*)$/);
+function parseStatValue(raw: string): ParsedStat | null {
+  const match = raw.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
   if (!match) return null;
-  const target = Number(match[2].replace(/,/g, ""));
+  const numeric = match[2].replace(/,/g, "");
+  const target = Number(numeric);
   if (!Number.isFinite(target)) return null;
   return {
     prefix: match[1],
     target,
     suffix: match[3],
     grouped: match[2].includes(","),
+    decimals: numeric.split(".")[1]?.length ?? 0,
   };
 }
 
@@ -47,8 +50,9 @@ export function countUpStat(
     ease: "power2.out",
     scrollTrigger: { trigger: el, start },
     onUpdate: () => {
-      const n = Math.round(counter.value);
-      const body = parsed.grouped ? n.toLocaleString("en-GB") : String(n);
+      const body = parsed.grouped
+        ? Math.round(counter.value).toLocaleString("en-GB")
+        : counter.value.toFixed(parsed.decimals);
       el.textContent = `${parsed.prefix}${body}${parsed.suffix}`;
     },
   });

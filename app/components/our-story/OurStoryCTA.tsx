@@ -40,7 +40,8 @@ export function OurStoryCTA() {
   );
 
   return (
-    <div ref={root} className="max-w-3xl">
+    <div ref={root}>
+      <div className="max-w-3xl">
       <p
         data-cta-reveal
         className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3"
@@ -139,6 +140,7 @@ export function OurStoryCTA() {
       {/* Routing for visitors who want to keep learning instead of buying */}
       <div data-cta-reveal>
         <ExploreMoreRow />
+      </div>
       </div>
     </div>
   );

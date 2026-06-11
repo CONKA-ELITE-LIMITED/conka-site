@@ -46,8 +46,8 @@ export default function OurStoryPage() {
 
       {storyChapters.map((chapter, index) => (
         <Fragment key={chapter.id}>
-          {/* The turn sits between The Proof (5) and Beyond Sport (6) */}
-          {chapter.id === 6 && (
+          {/* The turn sits just before the final chapter (Beyond Sport) */}
+          {index === storyChapters.length - 1 && (
             <section
               className="brand-section brand-bg-black"
               aria-label="The turn: from protecting the brain to optimising it"
