@@ -248,7 +248,8 @@ export default function B2BOrderBuilder() {
                 <SummaryRow label="Total (inc VAT)" value={formatPrice(total)} strong />
               </div>
               <p className="text-sm text-black/55">
-                Shipping is calculated at checkout by your delivery address.
+                Shipping is calculated by order size, added at checkout or on
+                your invoice.
               </p>
             </div>
           )}

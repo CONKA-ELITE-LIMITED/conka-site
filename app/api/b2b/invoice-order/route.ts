@@ -49,6 +49,29 @@ const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
 // the gross tier rate, so the draft order total is what the club actually pays.
 const B2B_ENTRY_PRICE = getB2BGrossPerBox(B2B_TIERS[0]);
 
+// Freight bands by combined box count, mirroring the live UK "Express" weight
+// bands (canonical table: docs/shipping/SHIPPING_AND_COURIERS.md section 3 -
+// 1 box = 2.1 kg, so box count maps 1:1 onto the weight tiers). Draft orders
+// never pull the Shopify rate table, so without this an invoiced bulk order
+// ships free while the same order by card pays banded freight (SCRUM-1079
+// Phase 2). The title must stay exactly "Express": Synergy routes on the
+// shipping-method name alone, so these orders route correctly when B2B
+// fulfilment moves to Synergy. Orders above ~60 boxes may warrant a pallet
+// instead - Harry replaces the line manually on the draft before sending the
+// invoice (playbook: SHIPPING_AND_COURIERS.md section 7).
+const SHIPPING_TITLE = "Express";
+const SHIPPING_BANDS: Array<{ maxBoxes: number; price: number }> = [
+  { maxBoxes: 6, price: 0 },
+  { maxBoxes: 12, price: 12 },
+  { maxBoxes: 24, price: 25 },
+  { maxBoxes: 50, price: 50 },
+  { maxBoxes: Infinity, price: 75 },
+];
+
+function getShippingPrice(totalBoxes: number): number {
+  return SHIPPING_BANDS.find((band) => totalBoxes <= band.maxBoxes)!.price;
+}
+
 const NOT_AVAILABLE =
   "Pay by invoice is not available yet. Please use the enquiry form or contact harryglover@conka.io.";
 
@@ -163,6 +186,12 @@ export async function POST(request: NextRequest) {
     lineItems,
     customAttributes,
     tags,
+    // Always attached, even at GBP 0: a blank shipping method can never be
+    // routed by Synergy, and the name doubles as the carrier instruction.
+    shippingLine: {
+      title: SHIPPING_TITLE,
+      price: getShippingPrice(totalBoxes).toFixed(2),
+    },
   };
 
   // Surface the PO where the Shopify-to-Xero connector can read it into the Xero

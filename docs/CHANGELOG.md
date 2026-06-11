@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-11** | B2B pay-by-invoice orders now carry weight-banded shipping (free to 6 boxes, then 12/25/50/75 GBP), closing the last freight leak; manual pallet playbook documented
 - **2026-06-11** | Weight-banded all international Shopify shipping zones (Evri, DDU) so freight scales with order size; closes the long-haul quarterly leak
 - **2026-06-11** | Weight-banded the UK Shopify shipping rates (Express + 24 Hour Delivery) so freight scales with box count; protects free shipping to 6 boxes
 - **2026-06-11** | Upgraded /our-story to the GSAP motion standard: animated hero, chapter image wipes, count-up stats, chapter rail, and a new dark manifesto beat

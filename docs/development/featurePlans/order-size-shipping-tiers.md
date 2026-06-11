@@ -1,6 +1,6 @@
 # Order-Size Shipping Tiers + B2B Synergy Consolidation
 
-**Status:** Phase 1 DONE + live-verified (SCRUM-1079, Sprint 27); Phase 2 (B2B invoice shipping line) next
+**Status:** Phases 1 + 2 DONE (SCRUM-1079, Sprint 27) - Phase 1 live-verified 11 Jun, Phase 2 (B2B invoice shipping line + pallet playbook) built 11 Jun pending deploy; Phase 3 (Synergy consolidation) next
 **Created:** 2026-06-10 · **Updated:** 2026-06-11
 **Owner:** Rudh (Shopify config + light code) with Humphrey (Evri/DPD actual costs)
 **Relates to:** `b2b-consolidated.md` (programme-level B2B status), `b2b-professionals-portal.md` (outstanding items 3 + 4), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
@@ -9,7 +9,11 @@
 
 ## Pick up here (next session)
 
-Scoped, costed, and the three open questions are now **settled** (11 Jun):
+**Phases 1 + 2 are done (11 Jun).** Remaining: deploy + verify Phase 2 (one test
+invoice order to confirm the `Express` line and price land on the draft), then
+Phase 3 (B2B → Synergy consolidation) when timing is right - the only open question.
+
+Historical context - the three Phase 1/2 open questions were settled 11 Jun:
 
 1. **Round-number tuning - RESOLVED: cover worst-case.** Customer charge covers our cost even at the top of each band (Express £12/£25/£50, next-day £26/£52). No band ships at a loss.
 2. **Above-top-band behaviour - RESOLVED: high catch-all rate, not a hard block.** Express £75 above 105 kg, next-day £110 above 50.4 kg, so no legitimate buyer is ever blocked at checkout.
@@ -116,7 +120,7 @@ band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPIN
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Weight-band the global UK Shopify rates (Standard + next-day) | **DONE - live-verified 11 Jun** (10-cart Storefront API sweep, all boundaries correct, quarterly bundle Free) |
-| 2 | B2B invoice draft-order shipping line + manual pallet playbook | Not Started - ACTIVE |
+| 2 | B2B invoice draft-order shipping line + manual pallet playbook | **DONE - built 11 Jun** (route attaches an `Express` line banded by box count; pallet playbook in SHIPPING_AND_COURIERS.md §7; order-page copy updated) |
 | 3 | Consolidate B2B onto the funnel SKUs so it fulfils from Synergy | Future (committed next track) |
 
 ### Phase 1 - Weight-band the global UK rates (ACTIVE)
@@ -144,19 +148,18 @@ band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPIN
    - Dependencies: tasks 0-2.
    - Complexity: Small.
 
-### Phase 2 - B2B invoice shipping line + pallet playbook (ACTIVE)
+### Phase 2 - B2B invoice shipping line + pallet playbook (DONE - built 11 Jun)
 
-1. **Code - shipping line on the B2B invoice draft order**
-   - What: in `draftOrderCreate`, set a `shippingLine` computed from box count using the same carton math (`ceil(boxes / 3) × carton rate`), so invoiced bulk orders carry freight. Mirror the weight-band prices for consistency.
-   - Dependencies: agreed band numbers from Phase 1.
-   - Complexity: Small.
-   - Files: `app/api/b2b/invoice-order/route.ts` (currently sets **no** shipping line).
+1. **Code - shipping line on the B2B invoice draft order - DONE**
+   - What: `draftOrderCreate` input now always carries `shippingLine: { title: "Express", price }`, priced from the combined box count against the UK Express band table (Free to 6 / £12 / £25 / £50 / £75 at 51+). Box count maps 1:1 onto the weight tiers (1 box = 2.1 kg), so no weight math needed. Title is exactly `Express` so Synergy can route these orders after Phase 3; attached even at £0 so the method is never blank.
+   - Files: `app/api/b2b/invoice-order/route.ts`.
 
-2. **Doc - manual pallet playbook for >60-box orders**
-   - What: write the interim process - for genuine pallet-scale orders Harry adds a `Pallet` shipping line + cost to the draft order before sending the invoice; international pallets are customer-arranged via their own freight forwarder (Europa / Kuehne+Nagel), notify the Synergy Client Manager the collection date.
-   - Dependencies: none.
-   - Complexity: Small (documentation).
-   - Files: `docs/shipping/SHIPPING_AND_COURIERS.md`.
+2. **Doc - manual pallet playbook for >60-box orders - DONE**
+   - What: playbook written into `SHIPPING_AND_COURIERS.md` §7 - Harry swaps the auto-attached `Express` £75 line for a `Pallet` line priced off the EFM card and resends the invoice; international pallets are customer-arranged via their own freight forwarder (Europa / Kuehne+Nagel), notify the Synergy Client Manager of the collection date.
+
+3. **Copy - order page summary (added during build)**
+   - What: the order-builder small print now reads "Shipping is calculated by order size, added at checkout or on your invoice" (was "at checkout by your delivery address" - wrong for the invoice path and pre-dates weight banding). No new UI: freight as an invoice line is expected by B2B buyers.
+   - Files: `app/components/b2b/B2BOrderBuilder.tsx`.
 
 ### Phase 3 - Consolidate B2B onto funnel SKUs → Synergy (FUTURE, committed next)
 
