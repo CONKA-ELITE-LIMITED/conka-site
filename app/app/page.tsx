@@ -61,7 +61,14 @@ export default function AppPage() {
       {/* 3. HOW IT WORKS — pinned journey (mechanism + gold standard merged) */}
       <AppV2TestJourney />
 
-      {/* 4. TRY IT — live cognitive test (client island) */}
+      {/* 4. HABIT — compete and rewards keep you testing */}
+      <section className="brand-section" aria-label="Compete and rewards">
+        <div className="brand-track">
+          <AppV2BeyondTest />
+        </div>
+      </section>
+
+      {/* 5. TRY IT — live cognitive test (client island) */}
       <section
         className="brand-section"
         aria-labelledby="cognitive-test-heading"
@@ -71,24 +78,17 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 5. PROOF — research counters, product bridge, athlete strip */}
+      {/* 6. PROOF — research counters, product bridge, athlete strip */}
       <section className="brand-section" aria-label="Research and athlete proof">
         <div className="brand-track">
           <AppV2Proof />
         </div>
       </section>
 
-      {/* 6. REAL-WORLD DATA — bridge to /app-insights */}
+      {/* 7. REAL-WORLD DATA — bridge to /app-insights */}
       <section className="brand-section" aria-label="App data insights callout">
         <div className="brand-track">
           <AppInsightsCallout />
-        </div>
-      </section>
-
-      {/* 7. HABIT — compete and rewards keep you testing */}
-      <section className="brand-section" aria-label="Compete and rewards">
-        <div className="brand-track">
-          <AppV2BeyondTest />
         </div>
       </section>
 

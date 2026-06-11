@@ -35,7 +35,7 @@ This is **current-state**, not build history. For why a page was built a certain
 
 **Audience:** top-to-mid-funnel sceptic, plus the existing customer. The app is free, so the page is not selling a supplement, it is selling belief in measurement. It proves CONKA can be trusted by showing you can measure the thing every other brand only claims.
 **Posture:** show, don't tell. Earn credibility through a real, can't-be-gamed test and real user and athlete data. The CTA is "download / take the test," not "buy." This is a trust-and-proof engine that feeds the funnel and retains buyers.
-**Story arc:** we don't tell you how you feel, we show you -> you cannot improve what you cannot measure -> here is the gold-standard test that can't be gamed -> try it yourself right now -> here is the clinical and athlete proof, and CONKA moves the number -> the app keeps you testing -> download it free.
+**Story arc:** we don't tell you how you feel, we show you -> you cannot improve what you cannot measure -> here is the gold-standard test that can't be gamed -> and the app keeps you testing -> try it yourself right now -> here is the clinical and athlete proof, and CONKA moves the number -> download it free.
 
 The page is GSAP-driven (scroll-scrubbed pinned journey, count-up stats, masked reveals); all motion falls back to static layouts under prefers-reduced-motion and on mobile the journey stacks.
 
@@ -44,10 +44,10 @@ The page is GSAP-driven (scroll-scrubbed pinned journey, count-up stats, masked 
 | 1 | Hero (`AppV2Hero`) | State the thesis: "Everyone tells you how you should feel. We show you." Live score ring draws and counts to 92 | OK | The count-up makes the thesis kinetic; same copy as before |
 | 2 | Why / Origin (`AppV2Origin`) | "You cannot improve what you cannot measure." Headline brightens word-by-word on scroll; Humphrey's scan story | OK | Founder credibility; lab reference generalised to "a Neuro Lab" |
 | 3 | How it works (`AppV2TestJourney`) | "The Gold Standard of Cognitive Testing." Pinned 3-beat journey (can't be gamed -> track and log -> 30-day trend), scroll scrubs the phone screens | OK | Merged the old sticky-block + feature-panel redundancy; proof lands a section sooner |
-| 4 | Try it (`CognitiveTestIsland`) | "Measure your cognitive performance." Live in-page test, instant benchmarked result | Strong | The most on-thesis moment on the page: it shows instead of telling |
-| 5 | Proof (`AppV2Proof`) | Count-up research stats, explicit product bridge ("The app shows you the number. CONKA moves it.") with equal Flow/Clear links, athlete strip | OK | Closes the loop the science page opens; athletes stand on their own now |
-| 6 | Real-world data (`AppInsightsCallout`) | "Curious what 700+ users actually show?" Bridge to /app-insights | OK | Link-out, should not pull focus |
-| 7 | Habit (`AppV2BeyondTest`) | Compete + Rewards: "A test you'll actually keep taking." | OK | Retention beat placed after proof so it doesn't delay it |
+| 4 | Habit (`AppV2BeyondTest`) | Compete + Rewards: "A test you'll actually keep taking." | OK | Clusters the app's features with the journey, before the try-it moment |
+| 5 | Try it (`CognitiveTestIsland`) | "Measure your cognitive performance." Live in-page test, instant benchmarked result | Strong | The most on-thesis moment on the page: it shows instead of telling |
+| 6 | Proof (`AppV2Proof`) | Count-up research stats, explicit product bridge ("The app shows you the number. CONKA moves it.") with equal Flow/Clear links, athlete strip | OK | Closes the loop the science page opens; athletes stand on their own now |
+| 7 | Real-world data (`AppInsightsCallout`) | "Curious what 700+ users actually show?" Bridge to /app-insights | OK | Link-out, should not pull focus |
 | 8 | Download (`AppV2Download`) | "Start measuring your brain today." Free, no subscription | OK | Clean conversion layer with decorative scroll-drawn ring |
 
 **Weakest link right now:** unproven, the rebuild shipped June 2026. Watch the pinned journey (section 3) on real devices: pinned scroll sections are the most device-sensitive pattern on the page, and on mobile it falls back to a plain stacked list that has had less design attention than the desktop scrub.

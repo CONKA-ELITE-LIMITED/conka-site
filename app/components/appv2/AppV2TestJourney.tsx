@@ -72,15 +72,18 @@ function PhoneFrame({
       {PHONE_SOURCES.map((src, i) => (
         <div
           key={src}
-          className="absolute left-1/2 -translate-x-1/2 top-[8%] w-[58%] aspect-[1/2]"
+          className="absolute left-1/2 top-1/2 w-[58%] aspect-[1/2]"
           style={
             fade
               ? {
                   opacity: activeIndex === i ? 1 : 0,
-                  transform: `translate(-50%, ${activeIndex === i ? 0 : 12}px)`,
+                  transform: `translate(-50%, -50%) translateY(${activeIndex === i ? 0 : 12}px)`,
                   transition: "opacity 0.45s ease, transform 0.45s ease",
                 }
-              : { opacity: activeIndex === i ? 1 : 0 }
+              : {
+                  opacity: activeIndex === i ? 1 : 0,
+                  transform: "translate(-50%, -50%)",
+                }
           }
         >
           <Image
