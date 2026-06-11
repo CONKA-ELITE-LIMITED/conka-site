@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
-import { gsap, useGSAP } from "./gsapClient";
+import { gsap, useGSAP, withMotion, revealUp } from "@/app/lib/motion";
 
 /**
  * Final download CTA for /app, with a
@@ -15,16 +15,8 @@ export default function AppV2Download() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from("[data-download-reveal]", {
-          y: 28,
-          autoAlpha: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: { trigger: root.current, start: "top 75%" },
-        });
+      withMotion(() => {
+        revealUp("[data-download-reveal]", root.current);
 
         const circumference = 2 * Math.PI * 130;
         gsap.set(ringRef.current, {
