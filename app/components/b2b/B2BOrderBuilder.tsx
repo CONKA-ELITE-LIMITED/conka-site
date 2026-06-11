@@ -256,6 +256,9 @@ export default function B2BOrderBuilder() {
                 <summary className="flex items-center justify-between gap-4 cursor-pointer list-none min-h-[44px]">
                   <span className="text-sm text-black/55 flex items-center gap-2">
                     UK shipping
+                    <span className="text-xs text-black/40 group-open:hidden">
+                      (details)
+                    </span>
                     <span
                       className="font-mono text-base leading-none shrink-0 transition-transform group-open:rotate-45"
                       style={{ color: ACCENT }}
