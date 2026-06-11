@@ -1,6 +1,6 @@
 # Order-Size Shipping Tiers + B2B Synergy Consolidation
 
-**Status:** Scoped, ready to build (SCRUM-1079, Sprint 27)
+**Status:** Phase 1 DONE + live-verified (SCRUM-1079, Sprint 27); Phase 2 (B2B invoice shipping line) next
 **Created:** 2026-06-10 · **Updated:** 2026-06-11
 **Owner:** Rudh (Shopify config + light code) with Humphrey (Evri/DPD actual costs)
 **Relates to:** `b2b-consolidated.md` (programme-level B2B status), `b2b-professionals-portal.md` (outstanding items 3 + 4), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
@@ -60,37 +60,44 @@ Free band deliberately covers **every normal order including the largest quarter
 (`BOTH-FUNNEL-168` = 6 boxes = 12.6 kg), so no subscriber or typical DTC order ever sees a
 charge. Charges begin only at genuine bulk (7+ boxes).
 
+**These are the live Shopify values (entered as `Weight` rate-type tiers, in grams).** Canonical
+copy with full cost columns: `docs/shipping/SHIPPING_AND_COURIERS.md` §3.
+
 ### `Express` (Evri standard) - £2.92/parcel
 
-| Order (boxes) | Weight band | Parcels | Cost to us | Customer charge |
-|---------------|-------------|---------|------------|-----------------|
-| 1 to 6        | 0 to 12.6 kg | 1      | £2.25 to £2.92 | **Free**    |
-| 7 to 12       | 12.6 to 25.2 kg | 3 to 4 | £8.76 to £11.68 | **£12** |
-| 13 to 24      | 25.2 to 50.4 kg | 5 to 8 | £14.60 to £23.36 | **£25** |
-| 25 to 50      | 50.4 to 105 kg | 9 to 17 | £26.28 to £49.64 | **£50** |
-| 50+           | 105 kg+     | 18+     | £52.56+ / pallet | **£75** (catch-all) |
+| Weight band (g) | Weight band (kg) | Price | Boxes | Cartons shipped | Our Evri cost |
+|---|---|---|---|---|---|
+| 0 – 13,650 | 0 – 13.65 | **Free** | 1 to 6 | 1 to 2 | £2.92 – £5.84 |
+| 13,650 – 26,250 | 13.65 – 26.25 | **£12** | 7 to 12 | 3 to 4 | £8.76 – £11.68 |
+| 26,250 – 51,450 | 26.25 – 51.45 | **£25** | 13 to 24 | 5 to 8 | £14.60 – £23.36 |
+| 51,450 – 106,050 | 51.45 – 106.05 | **£50** | 25 to 50 | 9 to 17 | £26.28 – £49.64 |
+| 106,050 – No limit | 106.05+ | **£75** | 51+ | 17+ | £49.64+ |
 
 ### `24 Hour Delivery` (DPD next-day) - £6.54/parcel (kills the flat-rate leak)
 
-The current flat **£6.54** is correct only for a single-parcel order (1 to 6 boxes). Above that
-it bleeds badly: a 50-box next-day order is ~17 parcels = ~£111 of DPD, charged £6.54 today.
+The old flat **£6.54** was correct only for a single-parcel order (1 to 6 boxes). Above that
+it bled badly: a 50-box next-day order is ~17 parcels = ~£111 of DPD, charged £6.54.
 
-| Order (boxes) | Weight band | Parcels | Cost to us | Customer charge |
-|---------------|-------------|---------|------------|-----------------|
-| 1 to 6        | 0 to 12.6 kg | 1      | £6.54      | **£6.54** (unchanged) |
-| 7 to 12       | 12.6 to 25.2 kg | 3 to 4 | £19.62 to £26.16 | **£26** |
-| 13 to 24      | 25.2 to 50.4 kg | 5 to 8 | £32.70 to £52.32 | **£52** |
-| 25+           | 50.4 kg+    | 9+      | £58.86+    | **£110** (catch-all) |
+| Weight band (g) | Weight band (kg) | Price | Boxes | Cartons shipped | Our DPD cost |
+|---|---|---|---|---|---|
+| 0 – 13,650 | 0 – 13.65 | **£6.54** | 1 to 6 | 1 to 2 | £6.54 – £13.08 |
+| 13,650 – 26,250 | 13.65 – 26.25 | **£26** | 7 to 12 | 3 to 4 | £19.62 – £26.16 |
+| 26,250 – 51,450 | 26.25 – 51.45 | **£52** | 13 to 24 | 5 to 8 | £32.70 – £52.32 |
+| 51,450 – No limit | 51.45+ | **£110** | 25+ | 9+ | £58.86+ |
 
 Notes:
-- Shopify weight bands are entered as ranges (`0 to 12.6 kg`, `12.601 to 25.2 kg`, ...). The
-  "boxes" column is just the human reading. Customer charges **cover the worst-case cost** in each
-  band (decision locked 11 Jun: cover-cost, not absorb-some).
+- Customer charges **cover the worst-case cost** in each band (decision locked 11 Jun:
+  cover-cost, not absorb-some). 1 box = 2,100 g; cartons shipped = ceil(boxes ÷ 3).
+- **Boundary finding (11 Jun, live-verified):** Shopify's `Weight` tier treats the **maximum as
+  exclusive** - a cart exactly on a boundary falls into the *higher* band. So every maximum is set
+  **+1,050 g (half a box) above the true box boundary** (12,600 → 13,650, etc.). This keeps the
+  exact box-counts (6/12/24/50) inside the intended band - without it, the quarterly bundle (6
+  boxes = 12,600 g) was charged £12 instead of Free.
 - The **top band uses a high catch-all rate** (Express £75, next-day £110), decided 11 Jun over a
   hard block, so no legitimate buyer is ever blocked at checkout. The catch-all under-recovers on
-  genuinely huge orders (>~75 boxes standard, >~50 boxes next-day), which is acceptable: orders
-  that size should be on the B2B invoice path, where freight or a pallet is set per order. A pallet
-  (~£60+) only starts winning past ~60 boxes and stays a manual draft-order line.
+  genuinely huge orders (>~75 boxes standard), which is acceptable: orders that size should be on
+  the B2B invoice path, where freight or a pallet is set per order. A pallet (~£60+) only starts
+  winning past ~60 boxes and stays a manual draft-order line.
 - The 25 to 50 standard band covers the B2B card path (B2B tiers start at 25 and 50 boxes), so a
   club paying by card still gets sensible freight.
 
@@ -105,7 +112,7 @@ first pass is UK-only. Revisit once the UK table is proven.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Weight-band the global UK Shopify rates (Standard + next-day) | Not Started - ACTIVE |
+| 1 | Weight-band the global UK Shopify rates (Standard + next-day) | **DONE - live-verified 11 Jun** (10-cart Storefront API sweep, all boundaries correct, quarterly bundle Free) |
 | 2 | B2B invoice draft-order shipping line + manual pallet playbook | Not Started - ACTIVE |
 | 3 | Consolidate B2B onto the funnel SKUs so it fulfils from Synergy | Future (committed next track) |
 

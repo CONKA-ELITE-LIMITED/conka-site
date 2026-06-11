@@ -5,7 +5,7 @@
 to be formalised into a standalone feature doc once the Shopify shipping setup is
 live and verified.
 **Owner:** Rudh (Shopify config) with Humphrey (carrier/ops decisions).
-**Last updated:** 2026-06-10.
+**Last updated:** 2026-06-11.
 
 ---
 
@@ -48,31 +48,64 @@ Examples:
 
 ---
 
-## 3. UK shipping
+## 3. UK shipping — weight-banded (SCRUM-1079, live 2026-06-11)
 
-| Rate name (matches Synergy sheet) | Carrier | Customer price |
-|---|---|---|
-| `Express` | Evri | Free (baked into product price) |
-| `24 Hour Delivery` | DPD | £6.54 *(see decision below)* |
+Both UK rates are **weight-banded** so freight scales with order size. The flat rates
+(Express free, 24 Hour Delivery flat £6.54) were priced for a 1–3 box order and leaked
+badly on bulk; the leak is order-size-driven, not channel-driven (a DTC 8-box order
+leaks like a 50-box club). Plan + rationale: `docs/development/featurePlans/order-size-shipping-tiers.md`.
 
-**Evri UK cost to us (Synergy carriage card, "safe place" / POD):**
-- 48hr 0–3kg (1 box): £2.25 / £2.38
-- 48hr 3–15kg (2–6 boxes): £2.92 / £3.05
-- 24hr 0–15kg: £3.48 / £3.61
-- 48hr Large parcel 15kg+: £8.73 / £8.86
-- Northern Ireland 0–15kg: £3.17 / £3.30; Scottish H&I / IoM / IoW: £4.37 / £4.50;
-  Channel Islands: £5.17 / £5.30
+**How to read these tables.** 1 box = 28 shots = **2.1 kg = 2,100 g**. Up to 3 boxes case
+into **1 outer carton** that ships as a single parcel, so **cartons shipped = ceil(boxes ÷ 3)**.
+Carrier cost ≈ cartons × carriage rate (Evri £2.92/parcel, DPD £6.54/parcel; §3 cards below).
+Each band is entered in Shopify as a **Weight** rate-type tier (in grams). Shopify treats a
+tier's **maximum as exclusive** (a cart exactly on a boundary falls into the higher band), so
+every maximum is set **+1,050 g (half a box) above the true boundary** — this keeps exact
+box-counts (6/12/24/50) inside the intended band and tolerates a small mixed-cart add-on
+without losing the band. Rate **names are unchanged** (`Express`, `24 Hour Delivery`) because
+Synergy maps on name only.
 
-So standard UK shipping costs ~£2.50/order — given free, absorbed into the product price.
+### `Express` (Evri) — UK standard
 
-**DPD UK cost to us (Synergy carriage card):**
-- Two Day Mainland: £5.34
-- **Next Day Mainland: £6.54**
-- Before 12: £11.11 · Before 10:30: £15.87 · Saturday: £11.11 · Sunday: £11.11
+| Weight band (g) | Weight band (kg) | Price | Boxes | Cartons shipped | Our Evri cost |
+|---|---|---|---|---|---|
+| 0 – 13,650 | 0 – 13.65 | **Free** | 1 to 6 | 1 to 2 | £2.92 – £5.84 |
+| 13,650 – 26,250 | 13.65 – 26.25 | **£12** | 7 to 12 | 3 to 4 | £8.76 – £11.68 |
+| 26,250 – 51,450 | 26.25 – 51.45 | **£25** | 13 to 24 | 5 to 8 | £14.60 – £23.36 |
+| 51,450 – 106,050 | 51.45 – 106.05 | **£50** | 25 to 50 | 9 to 17 | £26.28 – £49.64 |
+| 106,050 – No limit | 106.05+ | **£75** | 51+ | 17+ | £49.64+ |
 
-**DECIDED (2026-06-10): `24 Hour Delivery` = DPD Next Day, priced at £6.54** (DPD's
-actual cost, up from £4.33). DPD stays on the Synergy sheet. (Evri's own 24hr at £3.48 was
-the cheaper alternative but DPD chosen for the more premium next-day service.)
+### `24 Hour Delivery` (DPD) — UK next-day
+
+| Weight band (g) | Weight band (kg) | Price | Boxes | Cartons shipped | Our DPD cost |
+|---|---|---|---|---|---|
+| 0 – 13,650 | 0 – 13.65 | **£6.54** | 1 to 6 | 1 to 2 | £6.54 – £13.08 |
+| 13,650 – 26,250 | 13.65 – 26.25 | **£26** | 7 to 12 | 3 to 4 | £19.62 – £26.16 |
+| 26,250 – 51,450 | 26.25 – 51.45 | **£52** | 13 to 24 | 5 to 8 | £32.70 – £52.32 |
+| 51,450 – No limit | 51.45+ | **£110** | 25+ | 9+ | £58.86+ |
+
+Notes:
+- **Free band covers up to the quarterly bundle** (`BOTH-FUNNEL-168` = 6 boxes = 12,600 g),
+  so no subscriber or normal order ever pays. The 6-box top of the free band costs us up to
+  £5.84 (2 cartons) — eaten deliberately to protect the free-shipping promise.
+- **24 Hour Delivery loses a little on 4–6 box orders** (2 cartons = £13.08 DPD, charged
+  £6.54): intentional, to keep the common 1–3 box next-day price unchanged at break-even.
+- **Both top bands under-recover past ~75 boxes (Express) / the largest next-day orders** by
+  design — those belong on the B2B invoice path or a manual pallet line (a pallet only beats
+  parcels above ~60 boxes).
+
+**Carrier carriage cards (cost to us, from the Synergy cards):**
+
+*Evri UK ("safe place" / POD):* 48hr 0–3kg (1 box) £2.25/£2.38 · 48hr 3–15kg (2–6 boxes)
+£2.92/£3.05 · 24hr 0–15kg £3.48/£3.61 · 48hr Large parcel 15kg+ £8.73/£8.86 · Northern
+Ireland 0–15kg £3.17/£3.30 · Scottish H&I / IoM / IoW £4.37/£4.50 · Channel Islands £5.17/£5.30.
+
+*DPD UK:* Two Day Mainland £5.34 · **Next Day Mainland £6.54** · Before 12 £11.11 · Before
+10:30 £15.87 · Saturday £11.11 · Sunday £11.11.
+
+**DECIDED (2026-06-10): `24 Hour Delivery` = DPD Next Day** (Evri's own 24hr at £3.48 was
+cheaper but DPD chosen for the more premium next-day service). The flat £6.54 became the
+1–6 box base band on 2026-06-11.
 
 ---
 
