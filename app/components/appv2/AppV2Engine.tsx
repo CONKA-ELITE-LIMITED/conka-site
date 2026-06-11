@@ -378,16 +378,7 @@ export default function AppV2Engine() {
         data-engine-act2
         className="flex flex-col lg:flex-row lg:items-center lg:gap-16 mb-20 lg:mb-28"
       >
-        <div data-engine-a2 className="order-2 lg:order-1 mt-10 lg:mt-0 lg:flex-1">
-          <div className="max-w-[440px] mx-auto lg:mx-0">
-            <EngineDeviceCard
-              src="/app/AppPatterns.png"
-              alt="CONKA app patterns screen showing personalised insights like more daily movement on CONKA days"
-              fig="Fig. 06 · Patterns"
-            />
-          </div>
-        </div>
-
+        {/* Copy first in DOM so the entrance stagger follows reading order */}
         <div className="order-1 lg:order-2 lg:flex-1">
           <ActHeading index="02" title="Patterns out." reveal="data-engine-a2">
             An engine that learns what is true for you. What lifts your score,
@@ -421,6 +412,16 @@ export default function AppV2Engine() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div data-engine-a2 className="order-2 lg:order-1 mt-10 lg:mt-0 lg:flex-1">
+          <div className="max-w-[440px] mx-auto lg:mx-0">
+            <EngineDeviceCard
+              src="/app/AppPatterns.png"
+              alt="CONKA app patterns screen showing personalised insights like more daily movement on CONKA days"
+              fig="Fig. 06 · Patterns"
+            />
           </div>
         </div>
       </div>

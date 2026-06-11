@@ -63,31 +63,18 @@ function JourneyHeading() {
 
 // ─── Phone frame (shared) ──────────────────────────────────────────────────────
 
-function PhoneFrame({
-  activeIndex,
-  fade = true,
-}: {
-  activeIndex: number;
-  fade?: boolean;
-}) {
+function PhoneFrame({ activeIndex }: { activeIndex: number }) {
   return (
     <div className="relative aspect-[4/5] w-full max-w-[440px] mx-auto border border-black/12 bg-[#f5f5f5] overflow-hidden">
       {PHONE_SOURCES.map((src, i) => (
         <div
           key={src}
           className="absolute left-1/2 top-1/2 w-[58%] aspect-[1/2]"
-          style={
-            fade
-              ? {
-                  opacity: activeIndex === i ? 1 : 0,
-                  transform: `translate(-50%, -50%) translateY(${activeIndex === i ? 0 : 12}px)`,
-                  transition: "opacity 0.45s ease, transform 0.45s ease",
-                }
-              : {
-                  opacity: activeIndex === i ? 1 : 0,
-                  transform: "translate(-50%, -50%)",
-                }
-          }
+          style={{
+            opacity: activeIndex === i ? 1 : 0,
+            transform: `translate(-50%, -50%) translateY(${activeIndex === i ? 0 : 12}px)`,
+            transition: "opacity 0.45s ease, transform 0.45s ease",
+          }}
         >
           <Image
             src={src}
