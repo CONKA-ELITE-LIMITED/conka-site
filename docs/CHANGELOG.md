@@ -5,7 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
-- **2026-06-11** | Consolidated the five B2B feature plan docs into one programme-level status doc (b2b-consolidated.md) and marked the Xero/VAT pilot as passed across docs and Jira
+- **2026-06-11** | /app now runs the interactive GSAP rebuild directly; /appv2 route removed and the old app page components deleted
+- **2026-06-11** | Added experimental /appv2 page: interactive GSAP-driven rebuild of the app page with pinned scroll journey, count-up proof stats, and product bridge
 - **2026-06-10** | Ingredients page: rewrote the intro description under the title (desktop) and added it to mobile, focused on evidence transparency (SCRUM-1077)
 - **2026-06-10** | Science page refactored to a product-led narrative: Flow and Clear now lead as the realised solution with hero actives folded in as proof; added a page narrative map doc
 - **2026-06-10** | App origin copy now says scans in a Neuro Lab instead of naming Newcastle University.
