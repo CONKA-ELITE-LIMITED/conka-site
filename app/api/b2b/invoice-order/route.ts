@@ -34,6 +34,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { adminGraphql, isAdminApiConfigured } from "@/app/lib/shopifyAdmin";
 import { B2B_TIERS, getB2BTier, getB2BGrossPerBox } from "@/app/lib/b2bPricing";
+import { B2B_SHIPPING_TITLE, getB2BShippingPrice } from "@/app/lib/b2bShipping";
 import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 import { B2B_VARIANTS } from "@/app/lib/b2bVariants";
 
@@ -163,6 +164,16 @@ export async function POST(request: NextRequest) {
     lineItems,
     customAttributes,
     tags,
+    // Draft orders never pull the Shopify rate table, so freight is applied
+    // here from the shared UK band table (see b2bShipping.ts; SCRUM-1079
+    // Phase 2). Always attached, even at GBP 0: a blank shipping method can
+    // never be routed by Synergy, and the name doubles as the carrier
+    // instruction. Orders above ~60 boxes may warrant a manual pallet line
+    // instead (playbook: SHIPPING_AND_COURIERS.md section 7).
+    shippingLine: {
+      title: B2B_SHIPPING_TITLE,
+      price: getB2BShippingPrice(totalBoxes).toFixed(2),
+    },
   };
 
   // Surface the PO where the Shopify-to-Xero connector can read it into the Xero

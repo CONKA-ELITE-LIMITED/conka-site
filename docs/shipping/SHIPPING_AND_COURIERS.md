@@ -273,14 +273,39 @@ fee collected (absorb on B2B, or add a cost on the big ones).
 Pallets are therefore **rare** — only genuine bulk B2B (~60+ boxes UK). Mechanism: a
 uniquely-named `Pallet` method → mapped to EFM on the Synergy sheet, used only when needed.
 
-**The B2B wrinkle:** B2B orders are created as **draft orders with no shipping line**
-(`app/api/b2b/invoice-order/route.ts` sets line items, discount, tags — but no
-`shippingLine`). So a pallet order currently reaches Synergy with a *blank* method →
-Synergy can't route it. Two ways to add the pallet line:
-- **Manual (interim, zero build):** Harry adds a `Pallet` shipping line + cost to the
-  draft order before sending the invoice. Works now for low volume.
-- **Automated (a build):** the invoice-order route appends
-  `shippingLine: { title: "Pallet", price }` when the box count exceeds a threshold.
+**The B2B wrinkle — RESOLVED (2026-06-11, SCRUM-1079 Phase 2).** The invoice route
+(`app/api/b2b/invoice-order/route.ts`) now attaches a `shippingLine` to every draft
+order: title `Express` (so Synergy can route it once B2B moves there in Phase 3),
+priced from the combined box count using the §3 UK Express bands (Free to 6 boxes,
+£12 / £25 / £50, £75 catch-all at 51+). Pallets stay manual, per the playbook below.
+
+### Manual pallet playbook (UK, ~60+ boxes — interim, no automation)
+
+Invoice orders auto-arrive with the `Express` £75 catch-all line. When a pallet is
+the better call (~60+ boxes, or judgement: parcel count unwieldy, damage risk,
+customer wants one delivery):
+
+1. **Edit the draft order** in Shopify Admin: replace the shipping line with a
+   custom rate titled `Pallet`, priced from the EFM card by postcode zone
+   (mainland £61–90, Scottish Highlands/islands £88–175 — `EFMRateCard.xlsx.csv`).
+2. **Resend the invoice** (draft order → Send invoice) so the finance team sees the
+   updated total before paying. The hosted invoice URL always shows the current
+   draft state, so an early-paid stale total can't happen after a resend.
+3. **First pallet only:** make sure `Pallet` is added to the Synergy mapping sheet
+   (→ EFM) and give the Client Manager a heads-up. (Until Phase 3, B2B fulfils from
+   Burnside, so steps here are Shopify-only.)
+
+**International pallet:** none via Synergy yet. The customer arranges their own
+freight forwarder (Europa, Kuehne+Nagel) to collect; notify the Synergy Client
+Manager of the collection date. Quote case-by-case.
+
+**International invoice orders (rare, manual):** the route has no address when the
+draft is created (the buyer enters it on the hosted invoice), so it always prices
+freight on the UK Express bands. The custom line is fixed - Shopify does not
+recalculate it when the address comes in. If a non-UK club orders by invoice, edit
+the draft: retitle the line `Express International` (≤6 boxes, §4 zone price) or
+quote freight case-by-case for bulk, then resend the invoice. VAT also needs a
+manual look on these (the portal assumes UK 20%).
 
 **Open questions — RESOLVED (Bethany, 2026-06-10):**
 

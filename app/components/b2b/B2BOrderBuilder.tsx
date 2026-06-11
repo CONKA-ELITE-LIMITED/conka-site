@@ -13,6 +13,7 @@ import {
   type B2BProductKey,
 } from "@/app/lib/b2bPricing";
 import { EMAIL_RE } from "@/app/lib/b2bData";
+import { B2B_SHIPPING_BANDS, getB2BShippingPrice } from "@/app/lib/b2bShipping";
 import { trackB2BCheckoutStarted, trackB2BInvoiceRequested } from "@/app/lib/analytics";
 
 /**
@@ -247,9 +248,63 @@ export default function B2BOrderBuilder() {
                 <SummaryRow label="VAT (20%)" value={formatPrice(vat)} />
                 <SummaryRow label="Total (inc VAT)" value={formatPrice(total)} strong />
               </div>
-              <p className="text-sm text-black/55">
-                Shipping is calculated at checkout by your delivery address.
-              </p>
+              {/* Shipping disclosure: collapsed by default so it stays out of
+                  the eyeline, but the exact UK charge is one tap away - freight
+                  depends only on box count (shared band table with the invoice
+                  route), so the invoice total never surprises finance. */}
+              <details className="group">
+                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none min-h-[44px]">
+                  <span className="text-sm text-black/55 flex items-center gap-2">
+                    UK shipping
+                    <span className="text-xs text-black/40 group-open:hidden">
+                      (details)
+                    </span>
+                    <span
+                      className="font-mono text-base leading-none shrink-0 transition-transform group-open:rotate-45"
+                      style={{ color: ACCENT }}
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </span>
+                  <span className="text-sm text-black/55 tabular-nums whitespace-nowrap">
+                    {getB2BShippingPrice(totalBoxes) === 0
+                      ? "Free"
+                      : formatPrice(getB2BShippingPrice(totalBoxes))}
+                  </span>
+                </summary>
+                <div className="border border-black/12 mb-2">
+                  {B2B_SHIPPING_BANDS.map((band, i) => {
+                    const min =
+                      i === 0 ? 1 : (B2B_SHIPPING_BANDS[i - 1].maxBoxes ?? 0) + 1;
+                    const range =
+                      band.maxBoxes === null
+                        ? `${min}+ boxes`
+                        : `${min}-${band.maxBoxes} boxes`;
+                    const isActive =
+                      totalBoxes >= min &&
+                      (band.maxBoxes === null || totalBoxes <= band.maxBoxes);
+                    return (
+                      <div
+                        key={range}
+                        className={`flex items-baseline justify-between gap-3 px-3.5 py-2 text-sm ${
+                          i > 0 ? "border-t border-black/12" : ""
+                        } ${isActive ? "font-medium text-black" : "text-black/55"}`}
+                      >
+                        <span>{range}</span>
+                        <span className="tabular-nums whitespace-nowrap">
+                          {band.price === 0 ? "Free" : formatPrice(band.price)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-sm text-black/55">
+                  Added at checkout or on your invoice. UK delivery; international
+                  orders are quoted separately. Orders over 60 boxes may ship on a
+                  pallet, we will confirm with you first.
+                </p>
+              </details>
             </div>
           )}
         </div>
