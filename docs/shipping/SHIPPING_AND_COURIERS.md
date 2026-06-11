@@ -109,42 +109,68 @@ cheaper but DPD chosen for the more premium next-day service). The flat £6.54 b
 
 ---
 
-## 4. International shipping
+## 4. International shipping — weight-banded (in progress, June 2026)
 
-**Approach: keep the existing ~10 Shopify zones and tune the prices** (rather than
-collapse to a few). Synergy maps on the rate name, not the zone count, so granular zones
-are free — every international rate is just named `Express International` (Evri) and the
-price varies per zone. Prices set to cover the Evri cost of a 1–2 box order (the common
-case); the rare heavy bundle to a far zone is a knowingly accepted small loss.
+International is being moved to the **same weight-banded `Weight` rate-type model as UK**,
+because the old flat rates (priced for a 1-box order) bled badly on quarterly orders in
+long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Every rate stays named
+**`Express International`** (Evri, one carrier — Synergy maps on name only).
 
-| Zone (Shopify) | Covers | Final price | Note |
-|---|---|---|---|
-| Europe | Germany, Italy, Portugal, Spain, Ireland, Netherlands, Austria, Belgium, Czechia, Denmark, Finland (11) | **£14.40** | keep — all under cost at 1–2 box |
-| france | France | **£10.10** | keep |
-| Middle East | UAE | **£19.00** | keep (healthy margin) |
-| Caribbean | Bahamas, Cayman Islands | **£41.49** | keep |
-| USA | United States | **£22.00** | split from Canada |
-| Canada | Canada | **£36.00** | **new zone** — split out (cost £35.80/box) |
-| Australia | Australia | **£28.00** | raised from £24.97 |
-| New Zealand | New Zealand | **£33.94 → £38.00** | raised (cost £37.92/box) |
-| Africa | South Africa | **£35.43 → £42.00** | raised (cost £41.67/box) |
-| Channel Islands | Jersey | **£4.99** | keep price; **rename rate to `Express International`** |
+**Decisions (June 2026):**
+- **All international = Evri.** (DHL `International Priority` upgrade remains a future
+  fast-follow, not built.)
+- **Incoterm = DAP / Evri DDU service: the customer pays import duty/VAT on arrival.** So
+  costs below are the Evri **duty-unpaid (DDU) / commercial** rates (the customer-pays-duty
+  service), which is the true cost under DAP. EU customers get a duty bill on delivery —
+  a deliberate, accepted trade-off.
+- **Priced near worst-country cost per zone**, per box, to never under-recover.
+- **No rate above 6 boxes / 13,650 g** in any international zone — Evri's international
+  parcel maxes at 15 kg / 6 boxes, so genuine bulk has no self-checkout rate and routes to
+  enquiry (customer-arranged freight forwarder).
 
-**Not currently shipped** (in no zone): Cyprus, Greece, Malta, and anywhere not listed
-above. Add to a zone if/when wanted.
+**Tier boundaries (identical to UK — grams, max-exclusive, +1,050 g half-box buffer):**
+1 box ≤3,150 · 2 box ≤5,250 · 3 box ≤7,350 · 4–6 box ≤13,650 · above that **no rate**.
 
-**Maintenance:** if a zone's cost outgrows its fee, edit the one number.
+**Per-zone band prices (customer charge, GBP):**
 
-**DHL upgrade (fast-follow, not at launch):** a second international option,
-`International Priority` (DHL), added as a paid upgrade per zone. Needs DHL cost data
-(not yet supplied) and the customer-facing name finalising. Not used by the Synergy test
-orders, so it does not gate go-live.
+| Zone (Shopify) | Covers | 1 box | 2 box | 3 box (84) | 4–6 box (168) | Status |
+|---|---|---|---|---|---|---|
+| Europe (single zone) | Germany, Italy, Portugal, Spain, Ireland, Netherlands, Austria, Belgium, Czechia, Denmark, Finland (11) | £20 | £23 | £26 | £41 | **LIVE + verified** (priced at the "Mid" band, see note) |
+| france | France | £20 | £22 | £24 | £32 | **LIVE + verified** |
+| Middle East | UAE | £13 | £17 | £20 | £36 | **LIVE + verified** |
+| Canada | Canada | £36 | £52 | £68 | £134 | **LIVE + verified** |
+| Australia | Australia | £25 | £40 | £56 | £116 | **LIVE + verified** |
+| New Zealand | New Zealand | £38 | £65 | £91 | £203 | **LIVE + verified** |
+| Africa | South Africa | £42 | £60 | £77 | £151 | **LIVE + verified** |
+| Caribbean | Bahamas, Cayman Islands | £57 | £78 | £99 | £188 | **LIVE + verified** |
 
-**Incoterms = DAP** (customer pays any import duty on arrival) on the single
-`Express International` method. Note: Evri's EU rates above are its *duty-paid (DDP)*
-service, which is cheaper and avoids surprise customer duty bills — so a future
-refinement is to split Europe into its own DDP-named method (matches Synergy's template).
-Optimisation, not a launch blocker.
+**Europe — single zone at "Mid" band (decision 11 Jun 2026).** The 11-country zone has a
+~4× DDU cost spread (Ireland 168 ≈ £15, Italy 168 ≈ £63). Rather than split it now, it is
+priced at the middle band (£20/£23/£26/£41) as a pragmatic compromise:
+- **Cheap countries (Ireland, Netherlands, Germany)** are slightly over-charged (a 168 costs
+  ~£15–26 but is charged £41) — a conversion drag, accepted for now.
+- **Expensive countries (Italy, Spain, Portugal, Denmark, Finland)** still under-recover at
+  quarterly (Italy 168 costs ~£63, charged £41 = ~−£22) — but far better than the old £14.40
+  flat (which lost ~£48 on the same order).
+- **Future refinement:** split into Near / Mid / Far (£14/16/18/26 · £20/23/26/41 ·
+  £29/34/40/63) to fix both ends. Tables retained for when that is wanted.
+
+**Not banded / left as-is:**
+- **USA** — flat £22 interim; the real US rate is a separate USD / scaled / DDP build (DHL),
+  unstarted.
+- **Channel Islands (Jersey)** — flat £4.99; no Evri rate-card data, UK-adjacent, low cost.
+  Revisit if a cost emerges.
+- **Not shipped** (no zone): Cyprus, Greece, Malta, and anywhere unlisted.
+
+**Source:** band prices derived from the Evri international rate card
+(`evri-bands-extract.csv`), worst country per zone at the DDU/commercial service, rounded
+up to cover cost.
+
+**Verification gotcha:** all band prices are configured in **GBP**, but the Storefront API
+(and checkout) returns shipping in the customer's **local presentment currency** where one
+is enabled (AUD, CAD, USD/BSD). So a Storefront cart probe shows e.g. AUD 49 for the £25
+Australia tier — divide by the FX rate to compare. Zones with no enabled presentment
+currency (e.g. South Africa/ZAR) fall back to GBP and read 1:1.
 
 ---
 

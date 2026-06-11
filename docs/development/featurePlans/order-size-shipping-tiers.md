@@ -101,10 +101,13 @@ Notes:
 - The 25 to 50 standard band covers the B2B card path (B2B tiers start at 25 and 50 boxes), so a
   club paying by card still gets sensible freight.
 
-**International:** deferred by choice, not blocked - we have the full Evri international rate sheet
-(`evri-bands-extract.csv`), so international could be banded too. But international bulk is rare and
-tends toward customer-arranged freight forwarders (Synergy has no international pallet yet), so the
-first pass is UK-only. Revisit once the UK table is proven.
+**International: DONE (11 Jun 2026).** After UK proved out, all international zones were banded
+the same way (driven by the quarterly-order leak in long-haul zones, not bulk). All Evri, DDU
+(customer pays duty), priced near worst-country cost per zone, no rate above 6 boxes (forwarder
+enquiry). Live + verified: Canada, Australia, New Zealand, South Africa, Caribbean, France, Middle
+East (UAE), and Europe (single zone at the "Mid" band as a pragmatic compromise vs a 3-way split).
+USA (separate USD/DHL build) and Channel Islands/Jersey (no rate-card data) left flat. Full per-zone
+band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPING_AND_COURIERS.md` §4.
 
 ---
 
