@@ -52,3 +52,27 @@ The page is GSAP-driven (scroll-scrubbed pinned journey, count-up stats, masked 
 | 9 | Download (`AppV2Download`) | "Start measuring your brain today." Free, no subscription | OK | Clean conversion layer with decorative scroll-drawn ring |
 
 **Weakest link right now:** unproven, the rebuild shipped June 2026. Watch the pinned journey (section 3) on real devices: pinned scroll sections are the most device-sensitive pattern on the page, and on mobile it falls back to a plain stacked list that has had less design attention than the desktop scrub.
+
+---
+
+## /our-story
+
+**Audience:** top-of-funnel and brand-curious. Arrives from nav or about-the-brand searches. Not yet sold; deciding whether to trust the people behind the product.
+**Posture:** founder credibility through narrative. The page sells nothing until the final beat; the story itself is the proof (real injury, real money invested, real trials). Confident-clinical voice, chapters not sales sections.
+**Story arc:** a concussion ends a career -> sport has no answer for the brain -> so they built the research themselves -> 14 capsules collapse into one shot -> proven where performance can't be faked -> the turn: the brain isn't just something to protect, it's something to optimise -> beyond sport, everyone has a brain -> the next chapter is yours to test.
+
+The page is GSAP-driven (masked hero lines, clip-path image wipes with parallax, count-up stats, a scrubbed word-brighten manifesto, fixed chapter rail + scroll progress). All motion is entrance-triggered (no pinning); everything falls back to complete static layouts under prefers-reduced-motion.
+
+| # | Section (component) | Job in the story | Health | Notes |
+|---|---------------------|------------------|--------|-------|
+| 1 | Hero (`OurStoryHero`) | "A concussion changed everything." Masked-line H1, three count-up credibility stats, cinematic pitchside image wipe | OK | Image is product-on-pitch, not founders; founders photo deliberately held for Chapter 1 |
+| 2 | Ch. 1 The Injury (`StorySection`) | Two athletes, one career cut short; Humphrey pull quote | OK | Founders photo leads |
+| 3 | Ch. 2 The Search (`StorySection`) | Sport had an answer for every injury except this one; the "0 options" stat | OK | The tension beat |
+| 4 | Ch. 3 The Research (`StorySection`) | They built the research themselves; Durham, synergy discovery, £500K count-up | OK | |
+| 5 | Ch. 4 The Formula (`StorySection`) | 14 capsules to one shot; Dr. Katekhaye quote | OK | |
+| 6 | Ch. 5 The Proof (`StorySection`) | Cambridge testing, 25+ trials, +16% count-up, tested-environments marquee | OK | Marquee uses generic categories, not named clubs |
+| 7 | The Turn (`StoryManifesto`) | Dark interstitial: "The brain isn't just something to protect. It's something to optimise." Five pillars as chips | OK | The recovery-to-optimisation pivot from the brand foundation; the page's one dark break |
+| 8 | Ch. 6 Beyond Sport (`StorySection`) | Everyone has a brain; 150,000+ shots count-up | OK | Widens the audience right before the CTA |
+| 9 | CTA (`OurStoryCTA`) | "Chapter 07 · You" — proof strip, laurel research badge, Try CONKA button, explore links | OK | The only conversion moment on the page |
+
+**Weakest link right now:** unproven, the motion upgrade shipped June 2026. The hero image (product held pitchside) is the best available asset but a strong founders-in-context photo would open the page harder. Check the chapter rail and dark manifesto on real devices.
