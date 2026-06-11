@@ -2,6 +2,8 @@
 
 One-time bulk purchase portal for UK sports clubs and performance organisations. Public enquiry form, unlisted tiered-pricing page, two payment paths (card now / pay by invoice), both shipping only after confirmed payment. Reuses Shopify for order, payment, and fulfilment, and an off-the-shelf Shopify-to-Xero connector (Parex) for invoicing. No custom checkout, no payment processor, no bespoke Xero build.
 
+> **Programme-level status, decisions, and what's next across all B2B workstreams: `b2b-consolidated.md`** (start there).
+>
 > **The portal is live.** What actually shipped — file map, API contracts, pricing tiers, VAT model, external config, edge cases — is the current-state reference: **`docs/features/b2b/B2B_PORTAL.md`**. Read that for how the portal works today.
 >
 > **This doc is the shaping context** (the problem, the appetite, the deliberate scope decisions) **plus the tracker for what is still outstanding**, and a condensed build history. The Xero/VAT mechanism has its own plan docs: `docs/development/featurePlans/b2b-xero-invoicing.md` and `b2b-vat-decision.md`.
@@ -79,8 +81,8 @@ Created in Sprint 26, assigned to Rudh.
 |--------|-------|-------|--------|
 | SCRUM-1055 | Public `/professionals` landing + enquiry form | 1 | Done (merged) |
 | SCRUM-1056 | Shopify B2B products + quantity-break discounts | 2a | Done |
-| SCRUM-1057 | Unlisted `/professionals/order` page + card checkout | 2b | For review |
-| SCRUM-1058 | Pay-by-invoice path (Shopify draft order + Xero) | 3 | For review |
+| SCRUM-1057 | Unlisted `/professionals/order` page + card checkout | 2b | Done |
+| SCRUM-1058 | Pay-by-invoice path (Shopify draft order + Xero) | 3 | Done (Xero pilot passed 8 Jun, SCRUM-1059/1060/1061) |
 
 ## References
 

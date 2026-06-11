@@ -5,7 +5,7 @@
 to be formalised into a standalone feature doc once the Shopify shipping setup is
 live and verified.
 **Owner:** Rudh (Shopify config) with Humphrey (carrier/ops decisions).
-**Last updated:** 2026-06-10.
+**Last updated:** 2026-06-11.
 
 ---
 
@@ -48,70 +48,129 @@ Examples:
 
 ---
 
-## 3. UK shipping
+## 3. UK shipping — weight-banded (SCRUM-1079, live 2026-06-11)
 
-| Rate name (matches Synergy sheet) | Carrier | Customer price |
-|---|---|---|
-| `Express` | Evri | Free (baked into product price) |
-| `24 Hour Delivery` | DPD | £6.54 *(see decision below)* |
+Both UK rates are **weight-banded** so freight scales with order size. The flat rates
+(Express free, 24 Hour Delivery flat £6.54) were priced for a 1–3 box order and leaked
+badly on bulk; the leak is order-size-driven, not channel-driven (a DTC 8-box order
+leaks like a 50-box club). Plan + rationale: `docs/development/featurePlans/order-size-shipping-tiers.md`.
 
-**Evri UK cost to us (Synergy carriage card, "safe place" / POD):**
-- 48hr 0–3kg (1 box): £2.25 / £2.38
-- 48hr 3–15kg (2–6 boxes): £2.92 / £3.05
-- 24hr 0–15kg: £3.48 / £3.61
-- 48hr Large parcel 15kg+: £8.73 / £8.86
-- Northern Ireland 0–15kg: £3.17 / £3.30; Scottish H&I / IoM / IoW: £4.37 / £4.50;
-  Channel Islands: £5.17 / £5.30
+**How to read these tables.** 1 box = 28 shots = **2.1 kg = 2,100 g**. Up to 3 boxes case
+into **1 outer carton** that ships as a single parcel, so **cartons shipped = ceil(boxes ÷ 3)**.
+Carrier cost ≈ cartons × carriage rate (Evri £2.92/parcel, DPD £6.54/parcel; §3 cards below).
+Each band is entered in Shopify as a **Weight** rate-type tier (in grams). Shopify treats a
+tier's **maximum as exclusive** (a cart exactly on a boundary falls into the higher band), so
+every maximum is set **+1,050 g (half a box) above the true boundary** — this keeps exact
+box-counts (6/12/24/50) inside the intended band and tolerates a small mixed-cart add-on
+without losing the band. Rate **names are unchanged** (`Express`, `24 Hour Delivery`) because
+Synergy maps on name only.
 
-So standard UK shipping costs ~£2.50/order — given free, absorbed into the product price.
+### `Express` (Evri) — UK standard
 
-**DPD UK cost to us (Synergy carriage card):**
-- Two Day Mainland: £5.34
-- **Next Day Mainland: £6.54**
-- Before 12: £11.11 · Before 10:30: £15.87 · Saturday: £11.11 · Sunday: £11.11
+| Weight band (g) | Weight band (kg) | Price | Boxes | Cartons shipped | Our Evri cost |
+|---|---|---|---|---|---|
+| 0 – 13,650 | 0 – 13.65 | **Free** | 1 to 6 | 1 to 2 | £2.92 – £5.84 |
+| 13,650 – 26,250 | 13.65 – 26.25 | **£12** | 7 to 12 | 3 to 4 | £8.76 – £11.68 |
+| 26,250 – 51,450 | 26.25 – 51.45 | **£25** | 13 to 24 | 5 to 8 | £14.60 – £23.36 |
+| 51,450 – 106,050 | 51.45 – 106.05 | **£50** | 25 to 50 | 9 to 17 | £26.28 – £49.64 |
+| 106,050 – No limit | 106.05+ | **£75** | 51+ | 17+ | £49.64+ |
 
-**DECIDED (2026-06-10): `24 Hour Delivery` = DPD Next Day, priced at £6.54** (DPD's
-actual cost, up from £4.33). DPD stays on the Synergy sheet. (Evri's own 24hr at £3.48 was
-the cheaper alternative but DPD chosen for the more premium next-day service.)
+### `24 Hour Delivery` (DPD) — UK next-day
+
+| Weight band (g) | Weight band (kg) | Price | Boxes | Cartons shipped | Our DPD cost |
+|---|---|---|---|---|---|
+| 0 – 13,650 | 0 – 13.65 | **£6.54** | 1 to 6 | 1 to 2 | £6.54 – £13.08 |
+| 13,650 – 26,250 | 13.65 – 26.25 | **£26** | 7 to 12 | 3 to 4 | £19.62 – £26.16 |
+| 26,250 – 51,450 | 26.25 – 51.45 | **£52** | 13 to 24 | 5 to 8 | £32.70 – £52.32 |
+| 51,450 – No limit | 51.45+ | **£110** | 25+ | 9+ | £58.86+ |
+
+Notes:
+- **Free band covers up to the quarterly bundle** (`BOTH-FUNNEL-168` = 6 boxes = 12,600 g),
+  so no subscriber or normal order ever pays. The 6-box top of the free band costs us up to
+  £5.84 (2 cartons) — eaten deliberately to protect the free-shipping promise.
+- **24 Hour Delivery loses a little on 4–6 box orders** (2 cartons = £13.08 DPD, charged
+  £6.54): intentional, to keep the common 1–3 box next-day price unchanged at break-even.
+- **Both top bands under-recover past ~75 boxes (Express) / the largest next-day orders** by
+  design — those belong on the B2B invoice path or a manual pallet line (a pallet only beats
+  parcels above ~60 boxes).
+
+**Carrier carriage cards (cost to us, from the Synergy cards):**
+
+*Evri UK ("safe place" / POD):* 48hr 0–3kg (1 box) £2.25/£2.38 · 48hr 3–15kg (2–6 boxes)
+£2.92/£3.05 · 24hr 0–15kg £3.48/£3.61 · 48hr Large parcel 15kg+ £8.73/£8.86 · Northern
+Ireland 0–15kg £3.17/£3.30 · Scottish H&I / IoM / IoW £4.37/£4.50 · Channel Islands £5.17/£5.30.
+
+*DPD UK:* Two Day Mainland £5.34 · **Next Day Mainland £6.54** · Before 12 £11.11 · Before
+10:30 £15.87 · Saturday £11.11 · Sunday £11.11.
+
+**DECIDED (2026-06-10): `24 Hour Delivery` = DPD Next Day** (Evri's own 24hr at £3.48 was
+cheaper but DPD chosen for the more premium next-day service). The flat £6.54 became the
+1–6 box base band on 2026-06-11.
 
 ---
 
-## 4. International shipping
+## 4. International shipping — weight-banded (in progress, June 2026)
 
-**Approach: keep the existing ~10 Shopify zones and tune the prices** (rather than
-collapse to a few). Synergy maps on the rate name, not the zone count, so granular zones
-are free — every international rate is just named `Express International` (Evri) and the
-price varies per zone. Prices set to cover the Evri cost of a 1–2 box order (the common
-case); the rare heavy bundle to a far zone is a knowingly accepted small loss.
+International is being moved to the **same weight-banded `Weight` rate-type model as UK**,
+because the old flat rates (priced for a 1-box order) bled badly on quarterly orders in
+long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Every rate stays named
+**`Express International`** (Evri, one carrier — Synergy maps on name only).
 
-| Zone (Shopify) | Covers | Final price | Note |
-|---|---|---|---|
-| Europe | Germany, Italy, Portugal, Spain, Ireland, Netherlands, Austria, Belgium, Czechia, Denmark, Finland (11) | **£14.40** | keep — all under cost at 1–2 box |
-| france | France | **£10.10** | keep |
-| Middle East | UAE | **£19.00** | keep (healthy margin) |
-| Caribbean | Bahamas, Cayman Islands | **£41.49** | keep |
-| USA | United States | **£22.00** | split from Canada |
-| Canada | Canada | **£36.00** | **new zone** — split out (cost £35.80/box) |
-| Australia | Australia | **£28.00** | raised from £24.97 |
-| New Zealand | New Zealand | **£33.94 → £38.00** | raised (cost £37.92/box) |
-| Africa | South Africa | **£35.43 → £42.00** | raised (cost £41.67/box) |
-| Channel Islands | Jersey | **£4.99** | keep price; **rename rate to `Express International`** |
+**Decisions (June 2026):**
+- **All international = Evri.** (DHL `International Priority` upgrade remains a future
+  fast-follow, not built.)
+- **Incoterm = DAP / Evri DDU service: the customer pays import duty/VAT on arrival.** So
+  costs below are the Evri **duty-unpaid (DDU) / commercial** rates (the customer-pays-duty
+  service), which is the true cost under DAP. EU customers get a duty bill on delivery —
+  a deliberate, accepted trade-off.
+- **Priced near worst-country cost per zone**, per box, to never under-recover.
+- **No rate above 6 boxes / 13,650 g** in any international zone — Evri's international
+  parcel maxes at 15 kg / 6 boxes, so genuine bulk has no self-checkout rate and routes to
+  enquiry (customer-arranged freight forwarder).
 
-**Not currently shipped** (in no zone): Cyprus, Greece, Malta, and anywhere not listed
-above. Add to a zone if/when wanted.
+**Tier boundaries (identical to UK — grams, max-exclusive, +1,050 g half-box buffer):**
+1 box ≤3,150 · 2 box ≤5,250 · 3 box ≤7,350 · 4–6 box ≤13,650 · above that **no rate**.
 
-**Maintenance:** if a zone's cost outgrows its fee, edit the one number.
+**Per-zone band prices (customer charge, GBP):**
 
-**DHL upgrade (fast-follow, not at launch):** a second international option,
-`International Priority` (DHL), added as a paid upgrade per zone. Needs DHL cost data
-(not yet supplied) and the customer-facing name finalising. Not used by the Synergy test
-orders, so it does not gate go-live.
+| Zone (Shopify) | Covers | 1 box | 2 box | 3 box (84) | 4–6 box (168) | Status |
+|---|---|---|---|---|---|---|
+| Europe (single zone) | Germany, Italy, Portugal, Spain, Ireland, Netherlands, Austria, Belgium, Czechia, Denmark, Finland (11) | £20 | £23 | £26 | £41 | **LIVE + verified** (priced at the "Mid" band, see note) |
+| france | France | £20 | £22 | £24 | £32 | **LIVE + verified** |
+| Middle East | UAE | £13 | £17 | £20 | £36 | **LIVE + verified** |
+| Canada | Canada | £36 | £52 | £68 | £134 | **LIVE + verified** |
+| Australia | Australia | £25 | £40 | £56 | £116 | **LIVE + verified** |
+| New Zealand | New Zealand | £38 | £65 | £91 | £203 | **LIVE + verified** |
+| Africa | South Africa | £42 | £60 | £77 | £151 | **LIVE + verified** |
+| Caribbean | Bahamas, Cayman Islands | £57 | £78 | £99 | £188 | **LIVE + verified** |
 
-**Incoterms = DAP** (customer pays any import duty on arrival) on the single
-`Express International` method. Note: Evri's EU rates above are its *duty-paid (DDP)*
-service, which is cheaper and avoids surprise customer duty bills — so a future
-refinement is to split Europe into its own DDP-named method (matches Synergy's template).
-Optimisation, not a launch blocker.
+**Europe — single zone at "Mid" band (decision 11 Jun 2026).** The 11-country zone has a
+~4× DDU cost spread (Ireland 168 ≈ £15, Italy 168 ≈ £63). Rather than split it now, it is
+priced at the middle band (£20/£23/£26/£41) as a pragmatic compromise:
+- **Cheap countries (Ireland, Netherlands, Germany)** are slightly over-charged (a 168 costs
+  ~£15–26 but is charged £41) — a conversion drag, accepted for now.
+- **Expensive countries (Italy, Spain, Portugal, Denmark, Finland)** still under-recover at
+  quarterly (Italy 168 costs ~£63, charged £41 = ~−£22) — but far better than the old £14.40
+  flat (which lost ~£48 on the same order).
+- **Future refinement:** split into Near / Mid / Far (£14/16/18/26 · £20/23/26/41 ·
+  £29/34/40/63) to fix both ends. Tables retained for when that is wanted.
+
+**Not banded / left as-is:**
+- **USA** — flat £22 interim; the real US rate is a separate USD / scaled / DDP build (DHL),
+  unstarted.
+- **Channel Islands (Jersey)** — flat £4.99; no Evri rate-card data, UK-adjacent, low cost.
+  Revisit if a cost emerges.
+- **Not shipped** (no zone): Cyprus, Greece, Malta, and anywhere unlisted.
+
+**Source:** band prices derived from the Evri international rate card
+(`evri-bands-extract.csv`), worst country per zone at the DDU/commercial service, rounded
+up to cover cost.
+
+**Verification gotcha:** all band prices are configured in **GBP**, but the Storefront API
+(and checkout) returns shipping in the customer's **local presentment currency** where one
+is enabled (AUD, CAD, USD/BSD). So a Storefront cart probe shows e.g. AUD 49 for the £25
+Australia tier — divide by the FX rate to compare. Zones with no enabled presentment
+currency (e.g. South Africa/ZAR) fall back to GBP and read 1:1.
 
 ---
 

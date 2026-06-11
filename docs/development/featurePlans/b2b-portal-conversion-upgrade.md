@@ -2,7 +2,7 @@
 
 A wave of conversion and credibility upgrades to the B2B professionals portal, grounded in B2B best-practice research (2025-2026). Goal: turn the thin `/professionals` landing into proper sales collateral that does Harry's selling for him, showcase the proof CONKA already has, surface the pilot programme as a USP, and make the offer and pricing unmistakable.
 
-> **The portal itself is live.** Implemented logic is documented in `docs/features/b2b/B2B_PORTAL.md`; build history is in `docs/development/featurePlans/b2b-professionals-portal.md`. This doc scopes the visual/conversion upgrade wave only.
+> **The portal itself is live.** Implemented logic is documented in `docs/features/b2b/B2B_PORTAL.md`; build history is in `docs/development/featurePlans/b2b-professionals-portal.md`; programme-level B2B status is in `b2b-consolidated.md`. This doc scopes the visual/conversion upgrade wave only.
 
 ## Problem
 
@@ -171,8 +171,8 @@ Created in Sprint 27, assigned to Rudh, under the Website & CRO epic (SCRUM-763,
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
 | SCRUM-1063 | B2B portal upgrade Phase 1: credibility backbone + hero refine | 1 | For review |
-| SCRUM-1064 | B2B portal upgrade Phase 2: pilot programme USP section | 2 | In Progress |
-| SCRUM-1065 | B2B portal upgrade Phase 3: order-page pricing clarity | 3 | To Do |
+| SCRUM-1064 | B2B portal upgrade Phase 2: pilot programme USP section | 2 | Done |
+| SCRUM-1065 | B2B portal upgrade Phase 3: order-page pricing clarity | 3 | Done |
 | SCRUM-1066 | B2B portal upgrade Phase 5: per-athlete-per-day value callout | 5 | To Do |
 
 Future phases (4 social proof, 6 nav + analytics) are intentionally not ticketed yet.
