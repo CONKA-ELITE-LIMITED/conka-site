@@ -43,17 +43,17 @@ const INPUT_CHIPS: InputChip[] = [
 const PATTERN_CARDS = [
   {
     tag: "CONKA effect",
-    glyph: "↗",
+    icon: "effect",
     text: "What shifts on the days you take it: movement, mental fatigue, your score. Measured, not assumed.",
   },
   {
     tag: "Lifting your scores",
-    glyph: "↗",
+    icon: "lift",
     text: "The habits that reliably lift your number: training days, sleep, time outdoors. Yours will be different. That is the point.",
   },
   {
     tag: "Pulling you down",
-    glyph: "↘",
+    icon: "drag",
     text: "And what drags it: soreness, low readiness, stress. Clear levers you can pull.",
   },
 ];
@@ -78,10 +78,10 @@ const DEPTH_FEATURES = [
 
 // ─── Icons (mono line icons, square caps to match the clinical grammar) ──────
 
-function ChipIcon({ id }: { id: string }) {
+function ChipIcon({ id, size = 18 }: { id: string; size?: number }) {
   const common = {
-    width: 18,
-    height: 18,
+    width: size,
+    height: size,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
@@ -159,6 +159,24 @@ function ChipIcon({ id }: { id: string }) {
         <svg {...common}>
           <polyline points="3 17 9 11 13 15 21 7" />
           <polyline points="16 7 21 7 21 12" />
+        </svg>
+      );
+    case "effect":
+      return (
+        <svg {...common}>
+          <path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" />
+        </svg>
+      );
+    case "lift":
+      return (
+        <svg {...common}>
+          <path d="M7 17L17 7M9 7h8v8" />
+        </svg>
+      );
+    case "drag":
+      return (
+        <svg {...common}>
+          <path d="M7 7l10 10M17 9v8H9" />
         </svg>
       );
     default:
@@ -382,12 +400,9 @@ export default function AppV2Engine() {
                 <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-2">
                   {card.tag}
                 </p>
-                <div className="flex items-baseline gap-3">
-                  <span
-                    aria-hidden
-                    className="font-mono text-2xl lg:text-3xl font-bold text-white leading-none flex-shrink-0"
-                  >
-                    {card.glyph}
+                <div className="flex items-start gap-3">
+                  <span aria-hidden className="text-white flex-shrink-0 mt-0.5">
+                    <ChipIcon id={card.icon} size={24} />
                   </span>
                   <p className="text-sm text-white/85 leading-snug">
                     {card.text}
