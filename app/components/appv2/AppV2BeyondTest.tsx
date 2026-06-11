@@ -5,10 +5,9 @@ import Image from "next/image";
 import { gsap, useGSAP } from "./gsapClient";
 
 /**
- * Retention features for /app: Compete and Rewards. Sits directly after the
- * test journey so the app's features cluster before the try-it moment.
- * Side-by-side cards on all breakpoints. Content-only; the page owns the
- * section wrapper.
+ * Retention features for /app: Compete and Rewards. Sits after the proof
+ * sections as the habit beat, just before the download CTA. Side-by-side
+ * cards on all breakpoints. Content-only; the page owns the section wrapper.
  */
 
 const PERKS = [

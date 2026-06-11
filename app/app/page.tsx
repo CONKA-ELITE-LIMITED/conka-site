@@ -6,6 +6,7 @@ import {
   AppV2Hero,
   AppV2Origin,
   AppV2TestJourney,
+  AppV2Engine,
   AppV2Proof,
   AppV2BeyondTest,
   AppV2Download,
@@ -61,10 +62,10 @@ export default function AppPage() {
       {/* 3. HOW IT WORKS — pinned journey (mechanism + gold standard merged) */}
       <AppV2TestJourney />
 
-      {/* 4. HABIT — compete and rewards keep you testing */}
-      <section className="brand-section" aria-label="Compete and rewards">
+      {/* 4. THE ENGINE — data in, intelligence out, lab-grade depth */}
+      <section className="brand-section" aria-label="The engine behind the app">
         <div className="brand-track">
-          <AppV2BeyondTest />
+          <AppV2Engine />
         </div>
       </section>
 
@@ -92,7 +93,14 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 8. DOWNLOAD — final CTA */}
+      {/* 8. HABIT — compete and rewards keep you testing */}
+      <section className="brand-section" aria-label="Compete and rewards">
+        <div className="brand-track">
+          <AppV2BeyondTest />
+        </div>
+      </section>
+
+      {/* 9. DOWNLOAD — final CTA */}
       <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
           <AppV2Download />

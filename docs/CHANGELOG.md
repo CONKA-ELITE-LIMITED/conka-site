@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-11** | /app gains The Engine section: Apple Health + Screen Time inputs, personalised patterns, per-test depth; journey trimmed to two beats, Compete/Rewards moved after proof
 - **2026-06-11** | /app now runs the interactive GSAP rebuild directly; /appv2 route removed and the old app page components deleted
 - **2026-06-11** | Added experimental /appv2 page: interactive GSAP-driven rebuild of the app page with pinned scroll journey, count-up proof stats, and product bridge
 - **2026-06-10** | Ingredients page: rewrote the intro description under the title (desktop) and added it to mobile, focused on evidence transparency (SCRUM-1077)
