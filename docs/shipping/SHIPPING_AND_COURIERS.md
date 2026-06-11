@@ -299,6 +299,14 @@ customer wants one delivery):
 freight forwarder (Europa, Kuehne+Nagel) to collect; notify the Synergy Client
 Manager of the collection date. Quote case-by-case.
 
+**International invoice orders (rare, manual):** the route has no address when the
+draft is created (the buyer enters it on the hosted invoice), so it always prices
+freight on the UK Express bands. The custom line is fixed - Shopify does not
+recalculate it when the address comes in. If a non-UK club orders by invoice, edit
+the draft: retitle the line `Express International` (≤6 boxes, §4 zone price) or
+quote freight case-by-case for bulk, then resend the invoice. VAT also needs a
+manual look on these (the portal assumes UK 20%).
+
 **Open questions — RESOLVED (Bethany, 2026-06-10):**
 
 For **Synergy / Bethany**:
