@@ -157,9 +157,9 @@ band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPIN
 2. **Doc - manual pallet playbook for >60-box orders - DONE**
    - What: playbook written into `SHIPPING_AND_COURIERS.md` §7 - Harry swaps the auto-attached `Express` £75 line for a `Pallet` line priced off the EFM card and resends the invoice; international pallets are customer-arranged via their own freight forwarder (Europa / Kuehne+Nagel), notify the Synergy Client Manager of the collection date.
 
-3. **Copy - order page summary (added during build)**
-   - What: the order-builder small print now reads "Shipping is calculated by order size, added at checkout or on your invoice" (was "at checkout by your delivery address" - wrong for the invoice path and pre-dates weight banding). No new UI: freight as an invoice line is expected by B2B buyers.
-   - Files: `app/components/b2b/B2BOrderBuilder.tsx`.
+3. **UI - collapsed shipping disclosure on the order builder (added during build)**
+   - What: the summary now carries a collapsed `<details>` row ("UK shipping" + the live charge for the current box count), expanding to the full band table and the UK-only / pallet / international caveats. Freight depends only on box count, so the shown number is exact, not an estimate - the invoice total can never surprise finance. Band table + method title shared with the route via `app/lib/b2bShipping.ts` (single source, no drift).
+   - Files: `app/components/b2b/B2BOrderBuilder.tsx`, `app/lib/b2bShipping.ts`, `app/api/b2b/invoice-order/route.ts`.
 
 ### Phase 3 - Consolidate B2B onto funnel SKUs → Synergy (FUTURE, committed next)
 
