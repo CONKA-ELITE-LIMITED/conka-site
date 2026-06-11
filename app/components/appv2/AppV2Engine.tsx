@@ -43,21 +43,18 @@ const INPUT_CHIPS: InputChip[] = [
 const PATTERN_CARDS = [
   {
     tag: "CONKA effect",
-    value: "+938",
-    unit: "steps",
-    text: "You walk about 938 more steps on CONKA days.",
+    glyph: "↗",
+    text: "What shifts on the days you take it: movement, mental fatigue, your score. Measured, not assumed.",
   },
   {
     tag: "Lifting your scores",
-    value: "+14%",
-    unit: "",
-    text: "Scores run about 14% higher on days you trained for 30+ minutes.",
+    glyph: "↗",
+    text: "The habits that reliably lift your number: training days, sleep, time outdoors. Yours will be different. That is the point.",
   },
   {
     tag: "Pulling you down",
-    value: "-17%",
-    unit: "",
-    text: "Scores drop 17% when you're sore. A clear lever you can pull.",
+    glyph: "↘",
+    text: "And what drags it: soreness, low readiness, stress. Clear levers you can pull.",
   },
 ];
 
@@ -69,7 +66,7 @@ const DEPTH_FEATURES = [
   },
   {
     id: "benchmark",
-    title: "Anonymous benchmarks",
+    title: "Demographic benchmarks",
     text: "Your scores sit against aggregated, anonymised CONKA users, so you know how you actually fare.",
   },
   {
@@ -386,13 +383,11 @@ export default function AppV2Engine() {
                   {card.tag}
                 </p>
                 <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-2xl lg:text-3xl font-bold text-white tabular-nums leading-none flex-shrink-0">
-                    {card.value}
-                    {card.unit && (
-                      <span className="text-sm font-medium text-white/70 ml-1">
-                        {card.unit}
-                      </span>
-                    )}
+                  <span
+                    aria-hidden
+                    className="font-mono text-2xl lg:text-3xl font-bold text-white leading-none flex-shrink-0"
+                  >
+                    {card.glyph}
                   </span>
                   <p className="text-sm text-white/85 leading-snug">
                     {card.text}
