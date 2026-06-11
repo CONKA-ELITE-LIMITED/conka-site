@@ -16,7 +16,7 @@ The B2B channel is **live and proven end to end**: public enquiry at `/professio
 | VAT mechanism (Road B) | **Live, pilot-proven** | `b2b-vat-decision.md` |
 | Xero invoicing via Parex | **Live, both paths pilot-proven** | `b2b-xero-invoicing.md` |
 | Conversion/credibility upgrade wave | **Partial** (P1–3 built, P5 active, P4/6 future) | `b2b-portal-conversion-upgrade.md` |
-| Order-size shipping tiers | **Scoped, not started** | `order-size-shipping-tiers.md` |
+| Order-size shipping tiers | **Scoped, ready (SCRUM-1079)** | `order-size-shipping-tiers.md` |
 | B2B → Synergy fulfilment consolidation | **Committed, next track** | `order-size-shipping-tiers.md` (Phase 3) |
 | Net-30 / pay-on-terms | **Discovery only, not green-lit** | (no doc — see Not Doing) |
 
@@ -56,7 +56,7 @@ In priority order:
    - Confirm Parex Auto Sync is ON (post-pilot step; `B2B_PORTAL.md` records it as ON) and the pilot test data is cleaned (void/delete Xero invoices for #3513/3514/3516/3517, cancel the Shopify test orders) so B2B Sales starts clean.
    - ~~Close SCRUM-1059/1060/1061 in Jira.~~ Done 11 Jun — all portal + Xero tickets (1055–1061) and conversion P2/P3 (1064/1065) moved to Done.
    - Confirm card-settled orders (Shopify Payments, not the Revolut transfer Parex's deposit setting assumes) reconcile cleanly — flagged to Harry at pilot.
-2. **Order-size shipping tiers (scoped, ready — `order-size-shipping-tiers.md`).** The flat rates were priced for 1–3 box consumer orders and leak on any bulk order, DTC or B2B alike (worst: 50 boxes next-day ≈ £111 of DPD charged at £6.54). Fix is global weight-banded UK Shopify rates (free to 6 boxes/12.6 kg protecting the subscription free-shipping promise, then Express £12/£25/£50 and next-day £26/£52, no card rate above the top band) plus a `shippingLine` on the B2B invoice draft order (currently sets none). Costs are known (Evri £2.92/parcel, DPD £6.54/parcel; cost ≈ ceil(boxes/3) parcels). Three pre-build decisions: round-number tuning, hard-block vs catch-all above the top band, and **verify variant weights in Shopify** (the only real dependency — bundles must roll up correctly).
+2. **Order-size shipping tiers (scoped, ready — `order-size-shipping-tiers.md`).** The flat rates were priced for 1–3 box consumer orders and leak on any bulk order, DTC or B2B alike (worst: 50 boxes next-day ≈ £111 of DPD charged at £6.54). Fix is global weight-banded UK Shopify rates (free to 6 boxes/12.6 kg protecting the subscription free-shipping promise, then Express £12/£25/£50 and next-day £26/£52, no card rate above the top band) plus a `shippingLine` on the B2B invoice draft order (currently sets none). Costs are known (Evri £2.92/parcel, DPD £6.54/parcel; cost ≈ ceil(boxes/3) parcels). Decisions locked 11 Jun: cover-worst-case band prices, high catch-all above the top band (Express £75 / next-day £110). One blocking dependency confirmed live: the 4 virtual bundle variants read 0 kg in Shopify and must be set (84s → 6.3 kg, BOTH-56 → 4.2 kg, BOTH-168 → 12.6 kg) before the bands work. Tracked as SCRUM-1079.
 3. **B2B → Synergy consolidation (committed, next track).** Re-point the portal off the archived legacy variants onto the funnel SKUs (`FLOW/CLEAR-FUNNEL-28`) so B2B fulfils from Synergy on the confirmed courier economics instead of Burnside. A consolidation, not a re-onboarding (same physical box). Touches `b2bVariants.ts`, both B2B API routes, and the discount targeting; needs Synergy stock planning. Do on aligned timing — it rewires a just-shipped live portal.
 4. **Conversion wave tail.** Finish P5 (value band); then P4 social proof (gated on sign-off-ready figures — placeholders must not ship) and P6 nav reachability + section analytics when the page should go cold-traffic-ready.
 5. **Pallet playbook (doc-only, with shipping Phase 2).** Manual `Pallet` line on draft orders for >60-box orders; pallets only beat parcels above ~60 boxes (Bethany, 10 June).
@@ -116,7 +116,7 @@ In priority order:
 | SCRUM-1064 | Upgrade P2: pilot programme USP | Done |
 | SCRUM-1065 | Upgrade P3: order-page pricing clarity | Done |
 | SCRUM-1066 | Upgrade P5: per-athlete-per-day value band | To Do (active) |
-| — | Order-size shipping tiers | Scoped, not ticketed |
+| SCRUM-1079 | Order-size weight-banded UK shipping rates (P1 config + P2 B2B shipping line) | To Do (Sprint 27) |
 | — | Synergy consolidation (shipping P3) | Committed, not ticketed |
 
 ## 6. Doc map — and the path to one canonical doc

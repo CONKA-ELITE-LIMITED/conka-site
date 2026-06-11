@@ -1,7 +1,7 @@
 # Order-Size Shipping Tiers + B2B Synergy Consolidation
 
-**Status:** Scoped, not started
-**Created:** 2026-06-10
+**Status:** Scoped, ready to build (SCRUM-1079, Sprint 27)
+**Created:** 2026-06-10 · **Updated:** 2026-06-11
 **Owner:** Rudh (Shopify config + light code) with Humphrey (Evri/DPD actual costs)
 **Relates to:** `b2b-consolidated.md` (programme-level B2B status), `b2b-professionals-portal.md` (outstanding items 3 + 4), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
 
@@ -9,11 +9,11 @@
 
 ## Pick up here (next session)
 
-Scoped and costed; nothing blocking. Before building, settle three things:
+Scoped, costed, and the three open questions are now **settled** (11 Jun):
 
-1. **Round-number tuning** - charge to cover worst-case cost in each band (as drafted: Express £12/£25/£50, next-day £26/£52) or absorb some to stay customer-friendly?
-2. **Above-top-band card behaviour** - hard block (no rate → forces enquiry/invoice) or a high catch-all rate?
-3. **Verify variant weights in Shopify** - confirm each funnel box is 2.1 kg and bundles roll up correctly (`BOTH-FUNNEL-168` must read 12.6 kg), or the bands trigger on wrong weights. This is the only real dependency.
+1. **Round-number tuning - RESOLVED: cover worst-case.** Customer charge covers our cost even at the top of each band (Express £12/£25/£50, next-day £26/£52). No band ships at a loss.
+2. **Above-top-band behaviour - RESOLVED: high catch-all rate, not a hard block.** Express £75 above 105 kg, next-day £110 above 50.4 kg, so no legitimate buyer is ever blocked at checkout.
+3. **Variant weights - CHECKED 11 Jun (Storefront API), and there IS a problem to fix.** The 2 physical boxes (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`) and both B2B Team Boxes correctly read **2.1 kg**, but **all 4 virtual bundles read 0 kg** (`FLOW-FUNNEL-84`, `CLEAR-FUNNEL-84`, `BOTH-FUNNEL-56`, `BOTH-FUNNEL-168`). Bands would misfire (e.g. `BOTH-FUNNEL-168` would land in the free band at 0 kg, which is right by luck, but a `BOTH-FUNNEL-56` + extra boxes cart would under-weigh). **Fixing the bundle weights is now the first Phase 1 task** (see 1.0 below): set 84s → 6.3 kg, `BOTH-56` → 4.2 kg, `BOTH-168` → 12.6 kg.
 
 Then Phase 1 (Shopify Admin config) and Phase 2 (one shippingLine in `app/api/b2b/invoice-order/route.ts`) can both go. Numbers are final - costs are known, no external input needed.
 
@@ -68,7 +68,7 @@ charge. Charges begin only at genuine bulk (7+ boxes).
 | 7 to 12       | 12.6 to 25.2 kg | 3 to 4 | £8.76 to £11.68 | **£12** |
 | 13 to 24      | 25.2 to 50.4 kg | 5 to 8 | £14.60 to £23.36 | **£25** |
 | 25 to 50      | 50.4 to 105 kg | 9 to 17 | £26.28 to £49.64 | **£50** |
-| 50+           | 105 kg+     | 18+     | £52.56+ / pallet | No rate → invoice/enquiry |
+| 50+           | 105 kg+     | 18+     | £52.56+ / pallet | **£75** (catch-all) |
 
 ### `24 Hour Delivery` (DPD next-day) - £6.54/parcel (kills the flat-rate leak)
 
@@ -80,15 +80,17 @@ it bleeds badly: a 50-box next-day order is ~17 parcels = ~£111 of DPD, charged
 | 1 to 6        | 0 to 12.6 kg | 1      | £6.54      | **£6.54** (unchanged) |
 | 7 to 12       | 12.6 to 25.2 kg | 3 to 4 | £19.62 to £26.16 | **£26** |
 | 13 to 24      | 25.2 to 50.4 kg | 5 to 8 | £32.70 to £52.32 | **£52** |
-| 25+           | 50.4 kg+    | 9+      | £58.86+    | No next-day rate → use standard or invoice |
+| 25+           | 50.4 kg+    | 9+      | £58.86+    | **£110** (catch-all) |
 
 Notes:
 - Shopify weight bands are entered as ranges (`0 to 12.6 kg`, `12.601 to 25.2 kg`, ...). The
-  "boxes" column is just the human reading. Numbers above round customer charge up to roughly
-  cover the worst case in each band; tune the round figures to taste (cover-cost vs absorb-some).
-- The **top band intentionally has no card rate** so a genuinely huge order cannot self-checkout
-  on a mispriced rate - it falls to the B2B enquiry / invoice path where freight (or a pallet) is
-  set per order. If a hard block is too blunt, add a high catch-all instead.
+  "boxes" column is just the human reading. Customer charges **cover the worst-case cost** in each
+  band (decision locked 11 Jun: cover-cost, not absorb-some).
+- The **top band uses a high catch-all rate** (Express £75, next-day £110), decided 11 Jun over a
+  hard block, so no legitimate buyer is ever blocked at checkout. The catch-all under-recovers on
+  genuinely huge orders (>~75 boxes standard, >~50 boxes next-day), which is acceptable: orders
+  that size should be on the B2B invoice path, where freight or a pallet is set per order. A pallet
+  (~£60+) only starts winning past ~60 boxes and stays a manual draft-order line.
 - The 25 to 50 standard band covers the B2B card path (B2B tiers start at 25 and 50 boxes), so a
   club paying by card still gets sensible freight.
 
@@ -109,23 +111,28 @@ first pass is UK-only. Revisit once the UK table is proven.
 
 ### Phase 1 - Weight-band the global UK rates (ACTIVE)
 
+0. **Fix the bundle weights (BLOCKING - do first).**
+   - What: the 4 virtual bundles read **0 kg** in Shopify today (verified 11 Jun via Storefront API), so the weight bands would misfire. Set each in Products > variant > Shipping > Weight: `FLOW-FUNNEL-84` → **6.3 kg**, `CLEAR-FUNNEL-84` → **6.3 kg**, `BOTH-FUNNEL-56` → **4.2 kg**, `BOTH-FUNNEL-168` → **12.6 kg**. The 2 physical boxes + both B2B Team Boxes already read 2.1 kg (no change).
+   - Dependencies: none.
+   - Complexity: Small (Admin data entry).
+   - Files: none (Shopify Products).
+
 1. **Shopify config - UK Standard (`Express`) weight bands**
-   - What: replace the flat free UK "Express" rate with the Evri weight-band table above (free to 12.6 kg, then £12 / £25 / £50, no rate above 105 kg).
-   - Dependencies: none - costs are known (Evri £2.92/parcel, §3). Numbers may be tuned to taste.
+   - What: replace the flat free UK "Express" rate with the Evri weight-band table above (free to 12.6 kg, then £12 / £25 / £50, £75 catch-all above 105 kg). Keep the rate name exactly "Express" (Synergy maps on name only).
+   - Dependencies: task 0 (weights must be right first).
    - Complexity: Small (Admin config).
    - Files: none (Shopify Settings > Shipping). Document final numbers in `docs/shipping/SHIPPING_AND_COURIERS.md`.
 
 2. **Shopify config - UK next-day (`24 Hour Delivery` / DPD) weight bands**
-   - What: replace the flat £6.54 "24 Hour Delivery" with the DPD weight-band table above (£6.54 to 6 boxes, then £26 / £52, no next-day rate above 50.4 kg); kills the bulk next-day leak.
-   - Dependencies: none - DPD next-day £6.54/parcel known (§3).
+   - What: replace the flat £6.54 "24 Hour Delivery" with the DPD weight-band table above (£6.54 to 6 boxes, then £26 / £52, £110 catch-all above 50.4 kg); kills the bulk next-day leak. Keep the rate name exactly "24 Hour Delivery".
+   - Dependencies: task 0.
    - Complexity: Small (Admin config).
    - Files: none.
 
 3. **Verify against funnel + subscription SKUs**
-   - What: confirm `BOTH-FUNNEL-168` (6 boxes / 12.6 kg) and all quarterly/sub bundles still land in the **free** band; confirm cart weights compute correctly from the 2.1 kg per-box weight on the funnel variants.
-   - Dependencies: Phase 1.1.
+   - What: with weights fixed, confirm via test carts that `BOTH-FUNNEL-168` (12.6 kg) and all quarterly/sub bundles still land in the **free** band, a 1-box order is free + £6.54, 7 boxes → £12 / £26, and 30 boxes → £50 / £110. If `BOTH-FUNNEL-168` shows a charge, the weight roll-up is still wrong.
+   - Dependencies: tasks 0-2.
    - Complexity: Small.
-   - Files: check variant weights in Shopify (the 2 physical funnel boxes carry 2.1 kg; bundles must roll up correctly).
 
 ### Phase 2 - B2B invoice shipping line + pallet playbook (ACTIVE)
 
@@ -168,15 +175,21 @@ High-level (detail when promoted to active):
 
 ## Risks
 
-- **Weight accuracy is the real dependency** (not cost - costs are known). If any funnel/bundle variant has a wrong or missing weight in Shopify, the band assignment is wrong. Phase 1.3 guards this.
-- **Card path above the top band blocks checkout** by design (no rate). If that frustrates legitimate buyers, swap the hard block for a high catch-all rate.
+- **Weight accuracy is the real dependency** (not cost - costs are known). Confirmed live (11 Jun): the 4 bundles read 0 kg and must be fixed first (Phase 1 task 0); Phase 1.3 re-guards it after.
+- **Catch-all under-recovers on the very largest orders** (>~75 boxes standard, >~50 next-day) by design. Accepted: those orders belong on the B2B invoice path / a manual pallet line.
 - **Banding is never exact.** Within a band the charge over/under-recovers at the edges (e.g. a 7-box order wrapped as one parcel costs £2.92 but sits in the £12 band). Accepted trade-off; these orders are rare.
 
 ## Open questions
 
-- Above-top-band card behaviour: hard block (route to enquiry) vs high catch-all rate?
-- Round-number tuning: cover worst-case cost in each band (as drafted) vs absorb some to stay customer-friendly?
-- Phase 3 timing: when do we want B2B to actually move to Synergy?
+- Phase 3 timing: when do we want B2B to actually move to Synergy? (Only remaining open question; Phase 1/2 decisions all locked 11 Jun.)
+
+## Jira
+
+| Ticket | Title | Phases | Status |
+|--------|-------|--------|--------|
+| SCRUM-1079 | [Shopify & Subscriptions] Order-size weight-banded UK shipping rates | 1 + 2 | To Do (Sprint 27) |
+
+Phase 3 (B2B → Synergy consolidation) is intentionally not ticketed yet; it lives in this doc until promoted.
 
 ## References
 
