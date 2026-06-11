@@ -12,14 +12,12 @@ import {
 import { gsap, useGSAP } from "./gsapClient";
 
 /**
- * Proof section for /appv2: research stats with scroll-triggered count-up,
- * an explicit product bridge ("the app measures, CONKA moves the number" —
- * PAGE_NARRATIVES backlog #2), and a compact athlete strip lifted out of the
- * old widget grid (backlog #3). Content-only; the page owns the section.
+ * Proof section for /app: research stats with scroll-triggered count-up,
+ * an explicit product bridge ("the app measures, CONKA moves the number"),
+ * and a compact athlete strip. Content-only; the page owns the section.
  */
 
-// Same figures as AppWidgetGrid's research tile, with numeric parts split out
-// so GSAP can count them up.
+// Research figures with numeric parts split out so GSAP can count them up.
 const RESEARCH_STATS = [
   {
     target: 93,

@@ -1,7 +1,7 @@
 /**
- * Shared data for AppStickyPhoneBlock (desktop) and AppStickyPhoneBlockMobile.
- * 3 sections — mechanism story: how the test works → daily tracking → improvement over time.
- * Assets: AppTestDistractor, AppWellness, AppTestBreakdown (no overlap with AppFeaturePanel).
+ * Data for AppV2TestJourney.
+ * 3 beats — mechanism story: how the test works → daily tracking → improvement over time.
+ * Assets: AppTestDistractor, AppWellness, AppTestBreakdown.
  */
 
 export type SectionData = {

@@ -10,7 +10,7 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 const SCORE_TARGET = 92;
 
 /**
- * Interactive thesis hero for /appv2. Same copy and asset as AppHero, with a
+ * Interactive thesis hero for /app. Leads with the "we show you" thesis, with a
  * GSAP entrance: masked line reveals on the H1, a clip-path reveal on the
  * device card, and a live score ring that draws and counts up to 92. Content
  * is fully visible without JS (animations use `from` tweens) and all motion

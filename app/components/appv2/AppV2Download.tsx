@@ -5,7 +5,7 @@ import { AppInstallButtons } from "@/app/components/AppInstallButtons";
 import { gsap, useGSAP } from "./gsapClient";
 
 /**
- * Final download CTA for /appv2. Same copy as AppDownloadSection with a
+ * Final download CTA for /app, with a
  * masked headline reveal and a decorative score ring that draws as the
  * section enters. Content-only; the page owns the section wrapper.
  */

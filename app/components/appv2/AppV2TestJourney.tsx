@@ -8,18 +8,17 @@ import {
   PHONE_SOURCES,
   SECTION_TAB_LABELS,
   PHONE_ALT_LABELS,
-} from "@/app/components/app/appStickyPhoneBlockData";
+} from "./testJourneyData";
 import { gsap, ScrollTrigger, useGSAP } from "./gsapClient";
 
 /**
- * "How it works" journey for /appv2. Merges the AppStickyPhoneBlock mechanism
- * story with the AppFeaturePanel "Gold Standard" credibility beat into one
+ *  * story with the AppFeaturePanel "Gold Standard" credibility beat into one
  * section (PAGE_NARRATIVES backlog #1). Desktop: a GSAP-pinned viewport where
  * scroll scrubs through the three beats, swapping phone screens and copy.
  * Mobile and reduced-motion: a stacked layout with simple entrance reveals.
  *
  * Structural exception: owns its own <section> because ScrollTrigger pinning
- * needs control of the wrapper (same pattern as AppStickyPhoneBlock).
+ * needs control of the wrapper.
  */
 
 const KICKER = "// How it works · APP-03";

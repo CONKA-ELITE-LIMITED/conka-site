@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "./gsapClient";
 
 /**
- * Fixed 2px scroll-progress bar across the top of /appv2. Purely decorative
+ * Fixed 2px scroll-progress bar across the top of /app. Purely decorative
  * (aria-hidden); stays empty under prefers-reduced-motion.
  */
 export default function AppV2ProgressRail() {

@@ -5,9 +5,8 @@ import Image from "next/image";
 import { gsap, useGSAP } from "./gsapClient";
 
 /**
- * Retention features for /appv2: Compete and Rewards, reusing the copy and
- * screens from AppFeaturePanel. Sits late in the page (after proof) so the
- * spine stays mechanism -> try -> proof -> habit. Side-by-side cards on all
+ * Retention features for /app: Compete and Rewards. Sits late in the page
+ * (after proof) so the spine stays mechanism -> try -> proof -> habit. Side-by-side cards on all
  * breakpoints. Content-only; the page owns the section wrapper.
  */
 

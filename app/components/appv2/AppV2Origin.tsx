@@ -12,7 +12,7 @@ const PARAGRAPHS = [
 ];
 
 /**
- * Why / origin section for /appv2. Same copy and asset as AppOrigin, with a
+ * Why / origin section for /app. Humphrey's origin story, with a
  * scroll-scrubbed word reveal on the headline (each word brightens as you
  * scroll) and a clip-path reveal on the founders photo. Content-only; the
  * page owns the section wrapper.

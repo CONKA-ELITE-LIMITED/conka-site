@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Shared GSAP entry point for /appv2 components. Registers plugins once;
+ * Shared GSAP entry point for the /app page components. Registers plugins once;
  * import gsap/ScrollTrigger/useGSAP from here, never from the packages
  * directly, so registration is guaranteed before first use.
  */

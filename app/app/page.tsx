@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
-  AppHero,
-  AppOrigin,
-  AppFeaturePanel,
-  AppStickyPhoneBlock,
-  AppDownloadSection,
-  AppWidgetGrid,
-  AppInsightsCallout,
-} from "@/app/components/app";
+  AppV2ProgressRail,
+  AppV2Hero,
+  AppV2Origin,
+  AppV2TestJourney,
+  AppV2Proof,
+  AppV2BeyondTest,
+  AppV2Download,
+} from "@/app/components/appv2";
+import { AppInsightsCallout } from "@/app/components/app";
 import { CognitiveTestIsland } from "@/app/components/cognitive-test";
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function AppPage() {
       }}
     >
       <Navigation />
+      <AppV2ProgressRail />
 
       {/* 1. HERO — the thesis: we show you */}
       {/* paddingTop: clinical scope zeros brand-hero-first top padding on mobile */}
@@ -45,26 +47,21 @@ export default function AppPage() {
         aria-label="The CONKA app"
       >
         <div className="brand-track">
-          <AppHero />
+          <AppV2Hero />
         </div>
       </section>
 
       {/* 2. WHY / ORIGIN — you cannot improve what you cannot measure */}
       <section className="brand-section" aria-label="Why we built it">
         <div className="brand-track">
-          <AppOrigin />
+          <AppV2Origin />
         </div>
       </section>
 
-      {/* 3. HOW IT WORKS — the mechanism */}
-      <AppStickyPhoneBlock />
+      {/* 3. HOW IT WORKS — pinned journey (mechanism + gold standard merged) */}
+      <AppV2TestJourney />
 
-      {/* 4. WHAT THE APP IS — features (the gold standard) */}
-      <section className="brand-section" aria-label="What the app is">
-        <AppFeaturePanel />
-      </section>
-
-      {/* 5. TRY IT — live cognitive test (client island) */}
+      {/* 4. TRY IT — live cognitive test (client island) */}
       <section
         className="brand-section"
         aria-labelledby="cognitive-test-heading"
@@ -74,26 +71,31 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 6. PROOF — real data callout + research and athletes */}
+      {/* 5. PROOF — research counters, product bridge, athlete strip */}
+      <section className="brand-section" aria-label="Research and athlete proof">
+        <div className="brand-track">
+          <AppV2Proof />
+        </div>
+      </section>
+
+      {/* 6. REAL-WORLD DATA — bridge to /app-insights */}
       <section className="brand-section" aria-label="App data insights callout">
         <div className="brand-track">
           <AppInsightsCallout />
         </div>
       </section>
 
-      <section
-        className="brand-section"
-        aria-label="Research, install, and athlete proof"
-      >
+      {/* 7. HABIT — compete and rewards keep you testing */}
+      <section className="brand-section" aria-label="Compete and rewards">
         <div className="brand-track">
-          <AppWidgetGrid />
+          <AppV2BeyondTest />
         </div>
       </section>
 
-      {/* 7. DOWNLOAD — final CTA */}
+      {/* 8. DOWNLOAD — final CTA */}
       <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
-          <AppDownloadSection />
+          <AppV2Download />
         </div>
       </section>
 
