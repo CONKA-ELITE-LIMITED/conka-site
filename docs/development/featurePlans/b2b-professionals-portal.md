@@ -52,8 +52,8 @@ The portal is functionally live. What remains:
 
 1. **Vercel env for prod emails.** Set `NEXT_PUBLIC_SITE_URL` in Vercel so the Klaviyo welcome-email order link points at prod, not the `https://conka.io` code fallback.
 2. **Xero booking verification (SCRUM-1058 tail → SCRUM-1059/1060).** Confirm Parex books a marked-paid B2B order into a compliant Xero VAT invoice end to end. VAT mechanism, pilot steps, and the Road A→B switch are tracked in `b2b-xero-invoicing.md` / `b2b-vat-decision.md`. **Pilot not yet passed — keep Parex on manual sync until it does.**
-3. **Shipping for large orders (next workstream, not started).** Pallet/courier shipping tiers, supplier enforcement, large-order shipping cost, and capping free shipping for big orders. Mostly Shopify Admin config, not code. Needs scoping; blockers are ops facts (box weight, who ships pallets, cost). See `project_b2b_shipping`.
-4. **B2B fulfilment routing unconfirmed.** The plan assumed B2B routes to Synergy "like any order," but B2B products are currently tagged `SYNERGYIGNORE` (only the 3 funnel products go to Synergy). Who actually ships a B2B order is open, and ties into the shipping workstream.
+3. **Shipping for large orders - SCOPED (2026-06-10).** Reframed: the mispricing is order-size-driven, not B2B-specific (a DTC 8-box buyer leaks the same as a 50-box club), so the fix is global weight-banded Shopify rates plus a shipping line on the B2B invoice draft order. Full plan + first-pass band table: **`order-size-shipping-tiers.md`**. Pallet only matters above ~60 boxes (Bethany, 10 Jun) and stays a manual draft-order line for now.
+4. **B2B fulfilment routing - resolved into a plan.** Decision: B2B should fulfil from **Synergy**, not Burnside. Because B2B is the same physical box as the funnel SKUs, this is a consolidation (re-point B2B onto the funnel variants) rather than a second Synergy onboarding. Tracked as Phase 3 of `order-size-shipping-tiers.md` (committed next track, on aligned timing).
 
 ## Build history
 

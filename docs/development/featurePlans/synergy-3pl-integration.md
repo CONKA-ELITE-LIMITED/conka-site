@@ -8,27 +8,34 @@
 
 ---
 
-## CURRENT STATUS (2026-06-10)
+## CURRENT STATUS (2026-06-11)
+
+**TEST IN PROGRESS — Synergy has PULLED the 3 test orders (Bethany email, 11 Jun).** Staged handshake now running:
+1. **Pull — DONE on Synergy's side; CONKA to verify.** Synergy imported #3522/#3523/#3524 and "everything looks good" their end. **Rudh's action: confirm each order in Shopify Admin now carries the `IMPORTSYNERGY` tag** (Synergy auto-tags on successful pull), sanity-check SKUs/shipping-method names/Synergy location came through clean, then reply to Bethany.
+2. **Ship + writeback — NEXT.** Richard & Gareth will systemically ship the 3 orders; Rudh then verifies **fulfilment + carrier + tracking write back into Shopify** (status → Fulfilled, tracking number + carrier populate). This is the return-path half of the test.
+3. **Inventory test — AFTER writeback.** Synergy pushes a stock-level change; Rudh confirms Shopify inventory updates (bidirectional sync).
+- **Bundle confirmed working:** #3524 (`BOTH-FUNNEL-56`) will split into its components **1×Flow28 + 1×Clear28 when Synergy's team allocates it for picking** — matches our `BundleComposition`; no action needed.
 
 **DONE:**
 - Phase 1 Connect — Dev Dashboard app, credentials, base URL, Synergy location; connection confirmed.
-- Phase 2 SKU readiness — weight/HS/country on the 2 physical boxes; **EANs set** (`FLOWFUNNEL28` / `CLEARFUNNEL28` in the Barcode field).
+- Phase 2 SKU readiness — weight/HS/country on the 2 physical boxes; **EANs set** (`FLOWFUNNEL28` / `CLEARFUNNEL28` in the Barcode field). SKUs + bundles LIVE in Synergy's system.
 - SKU file **approved by Bethany**.
 - **Shipping config in Shopify** — UK (Express/Evri free + 24 Hour Delivery/DPD £6.54); international zones kept and re-priced to Evri cost (Africa £42, Australia £28, NZ £38, Canada split out £36, USA £22, Europe £14.40, etc.); all intl rates named `Express International`. Detail: `docs/shipping/SHIPPING_AND_COURIERS.md`.
 - **Synergy shipping-methods sheet returned** (Express→Evri, 24 Hour Delivery→DPD, Express International→Evri/DAP).
-- **3 test orders created** (#3522, #3523, #3524) — open + paid + unfulfilled, moved to the Synergy location, IDs sent to Bethany.
+- **3 test orders created** (#3522, #3523, #3524) — open + paid + unfulfilled, moved to the Synergy location, IDs sent to Bethany — **and now PULLED by Synergy**.
 - Pallet economics analysed (EFM rates) → parcels cheaper until ~60 boxes; email sent to Bethany sense-checking the logic.
 
 **WAITING ON (external):**
-- **Richard** — transfer SKUs to Synergy's live system (gate for the 3 test orders to pull through).
-- **Synergy** — map the carriers from the returned sheet (service codes); then run the test orders end-to-end and write back carrier + tracking.
-- **Bethany** — replies on: per-parcel handling fee, international freight/pallet option, and confirmation of the carton/parcel logic.
+- **Synergy / Richard & Gareth** — systemically ship the 3 pulled orders so CONKA can verify the carrier + tracking + fulfilment writeback, then run a test inventory update.
+
+**RESOLVED (Bethany, 10 Jun):** carton/parcel logic confirmed; no Synergy per-parcel handling fee (carrier surcharges only, charged at cost); no Synergy international pallet option yet (customers use own freight forwarders).
 
 **LEFT TO DO (CONKA side):**
 - Once test orders pass: **go-live cutover** — stock the 3 funnel SKUs at Synergy + switch them to fulfil from Synergy (Phase 5).
 - Post-test cleanup: set the Synergy stock on the 3 SKUs back to 0 (added only to route the test orders).
 - Confirm where B2B / large orders fulfil (Synergy vs Burnside) — decides whose carriers handle bulk.
-- Fast-follow (not blocking): DHL `International Priority` upgrade; pallet `Pallet`→EFM row when bulk volume appears; US USD/DDP rate.
+- **Bulk-order delivery UX:** if shipping bulk as multiple cartons (default, agreed), surface to customers that cartons may arrive on different days (Bethany's caveat).
+- Fast-follow (not blocking): DHL `International Priority` upgrade; pallet `Pallet`→EFM row when bulk volume appears (>~60 boxes); US USD/DDP rate.
 
 **DO NOT:** fulfil, label, or cancel the 3 test orders until Synergy confirms the writeback.
 
@@ -188,14 +195,50 @@ International Priority | DHL     | Express      | ROW    | DAP
 - **US shipping reality check:** the planned USD / scaled-by-box / tax-inclusive (DDP) US rate does NOT exist yet. Current US rate is a flat **£20.27 GBP "Express International"**. Building the real US rate is unstarted (separate from the mapping sheet).
 - **B2B / pallet shipping = separate workstream (confirmed with Rudh).** No size/weight-based pallet rate exists in any zone, and B2B draft orders set no shipping line in code (`app/api/b2b/invoice-order/route.ts`), so a B2B order reaches Synergy with a blank shipping method. Bethany's "force 6+ boxes onto a pallet service" ask is a build, not a mapping. To be scoped separately.
 
+## Update (2026-06-10, Bethany — SKUs live + parcel/pallet/fee answers)
+
+- **SKUs + Bundles now LIVE in Synergy's system.** Bethany confirmed Richard has transferred them with all relevant info — *"so that portion can be ticked off."* This clears the prior gate (Richard's SKU transfer). She has the 3 test order IDs and passed them to Richard; Synergy will run/ship them when ready and tell Rudh to check his end. **Still leave #3522/#3523/#3524 untouched** until Synergy confirms carrier + tracking writeback.
+
+**Parcel vs pallet — Bethany confirmed the economics in full:**
+- **(a) Carton/parcel assumption CONFIRMED.** 3 of our 28-shot boxes case into one larger outer (~6.3 kg), ships as a **single labelled parcel** in **Evri's 3–15 kg band at ~£3**. Correct her end.
+- A **10-box order ≈ 4 cartons ≈ ~£12** as parcels vs **~£60 for the smallest pallet**. Correct.
+- **Crossover ≈ 60 boxes** (3-per-outer = 20 outers) at ~£60 on the *cheapest* pallet postcode — so parcels are cheaper until ~60 boxes; pallet only wins above that, and the crossover moves further out for pricier postcodes.
+- **(b) Bulk-as-multiple-cartons APPROVED.** Synergy is happy to ship bulk orders as multiple parcels rather than defaulting to a pallet — **caveat: customers must be made aware that carriers may not deliver all cartons on the same day** (e.g. a 4-carton order could arrive 3 on day 1, 1 on day 2). Action: surface this in bulk-order comms/UX.
+- **Plan of record (Rudh):** ship larger orders as **parcels by default**, use a **pallet only for genuinely big orders (>~60 boxes)**, handled **case-by-case** for now; structure it later once real appetite appears.
+
+**Fees & surcharges:**
+- **No Synergy per-parcel handling fee** for simply shipping an order — only the standard inbound, picking and contracted charges apply.
+- **Carrier surcharges pass through at cost** and can't be pre-detailed (customer/delivery-dependent): refused parcel, customer address change, current **Middle East fuel surcharge**, and seasonal **peak surcharges**. Always charged on at cost.
+
+**International freight / pallets:**
+- **No Synergy international pallet option currently.** Their customers arrange their **own freight forwarders** (e.g. Europa, Kuehne+Nagel) to collect international pallets — just notify the Client Manager the collection date and it's fine.
+- **Khalil is working on an international pallet solution** but nothing is set up yet. → For occasional large overseas orders, handle via a customer-arranged forwarder case-by-case for now.
+
+**Evri service dims (48hr home delivery / PUDO Parcel, 3–15 kg)** — our outer cartons are well within all limits:
+- Max weight **15 kg**; max combined size **225 cm**; max length **120 cm**; max **40 L**. Old NIO box size **30 × 17 × 25 cm** is within all of these.
+
+## Update (2026-06-11, Bethany — test orders PULLED, staged test running)
+
+Bethany email: *"We have pulled the test orders, everything looks good to me, please can you check your side. I will then ask Richard and Gareth to systemically ship the orders so you can check tracking and fulfilment comes back. Then we can look at doing a test inventory update. With the bundle order, the SKUs will split out into components once the team allocate the order for picking."*
+
+What this means and the staged handshake from here:
+- **Stage 1 — Pull (Synergy done, CONKA verifying now).** The Connector has imported #3522/#3523/#3524 into Synergy's WMS and they look correct their end. **CONKA verification = check each of the 3 orders in Shopify Admin now carries the `IMPORTSYNERGY` tag** (Synergy auto-tags every order it successfully pulls — this is the proof the extract worked). Also eyeball that SKUs, shipping-method names (Express / 24 Hour Delivery / Express International) and the Synergy location came through clean. Then reply to Bethany confirming so she releases the orders to Richard & Gareth to ship.
+- **Stage 2 — Ship + writeback (next).** Richard & Gareth systemically ship the 3 orders. CONKA then confirms the **return path**: each order flips to **Fulfilled** in Shopify with a **carrier + tracking number** written back by the Connector. This validates the half of the integration that pushes shipment data back to Shopify (and would trigger customer shipping notifications in production).
+- **Stage 3 — Inventory test (after writeback).** Synergy runs a test **inventory update**; CONKA confirms the stock level changes flow into Shopify (bidirectional inventory sync — the other live data path).
+- **Bundle behaviour CONFIRMED.** #3524 (`BOTH-FUNNEL-56`) will **split into components (1×Flow28 + 1×Clear28) when Synergy's team allocates the order for picking** — exactly matching our `BundleComposition` metafield. No CONKA action; this is the bundle-explosion test passing.
+
+**Still in force:** do NOT fulfil, label, or cancel any of #3522/#3523/#3524 on the Shopify side — Synergy ships them; a manual fulfil/cancel would break the writeback test.
+
+**Immediate CONKA action:** verify the `IMPORTSYNERGY` tag on all 3 orders + reply to Bethany.
+
 ## Phases
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Connect: Dev Dashboard app + credentials + base URL + Synergy Location | DONE (connection confirmed working) |
-| 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | DONE (data entered; pending Synergy SKU file sync) |
-| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (carriers chosen; incoterms + sheet pending Humphrey) |
-| 4 | Testing: 3 specified test orders against Synergy LIVE system; carrier/tracking writeback | Active (spec received from Bethany; blocked on shipping sheet + SKU live transfer + Synergy-location routing) |
+| 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | DONE (SKUs + bundles LIVE in Synergy's system, 10 Jun) |
+| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (carriers chosen; sheet sent; US USD/DDP rate still to build) |
+| 4 | Testing: 3 specified test orders against Synergy LIVE system; carrier/tracking writeback | Active (orders PULLED by Synergy 11 Jun → CONKA verifying `IMPORTSYNERGY` tag; then ship+writeback, then inventory test) |
 | 5 | Go-live (9 June): live SKU-name sync, single live sanity order | Future |
 
 ### Phase 1: Connect - DONE

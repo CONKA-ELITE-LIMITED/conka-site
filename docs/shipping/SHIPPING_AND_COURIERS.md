@@ -223,22 +223,31 @@ Synergy can't route it. Two ways to add the pallet line:
 - **Automated (a build):** the invoice-order route appends
   `shippingLine: { title: "Pallet", price }` when the box count exceeds a threshold.
 
-**Open questions:**
+**Open questions — RESOLVED (Bethany, 2026-06-10):**
 
 For **Synergy / Bethany**:
-1. Sense-check the carton/parcel logic: 3 × 28-shot boxes per master carton (6.3kg) → one
-   label in the 3-15kg Evri band (~£2.92), so bulk ships cheapest as multiple cartons until
-   ~60 boxes. Do they agree?
-2. Per-parcel pick/handling fee (if any) on top of the £2.92 carriage — lowers the crossover.
-3. International freight/pallet — do they offer it, and rates? (EFM is UK-only.)
+1. Carton/parcel logic — **CONFIRMED.** 3 × 28-shot boxes per master carton (~6.3kg) → one
+   label in the 3-15kg Evri band (~£3), bulk ships cheapest as multiple cartons until ~60 boxes.
+2. Per-parcel pick/handling fee — **none from Synergy** beyond standard inbound/picking/contracted
+   charges. Carrier surcharges (refused parcel, address change, Middle East fuel, peak) pass
+   through **at cost** and can't be pre-quoted.
+3. International freight/pallet — **no Synergy international pallet yet.** Customers arrange their
+   own freight forwarder (Europa, Kuehne+Nagel) to collect; notify the Client Manager the
+   collection date. Khalil is building a solution, nothing live.
 
 For **CONKA / Harry**:
-4. Where do B2B / large orders fulfil — Synergy or Burnside? (decides whose carriers apply)
-5. What does B2B pay for shipping (absorb parcel cost / pass pallet cost)?
+4. Fulfilment of B2B / large orders — **decision: Synergy** (B2B is the same physical box as the
+   funnel SKUs, so consolidate B2B onto the funnel SKUs rather than re-onboard). Tracked as Phase 3
+   of `order-size-shipping-tiers.md`.
+5. What B2B pays for shipping — **resolved via weight-banded tiers**, not a B2B carve-out (the
+   mispricing is order-size-driven; a DTC 8-box buyer leaks the same as a 50-box club). See the
+   plan + first-pass band table in `docs/development/featurePlans/order-size-shipping-tiers.md`.
 
-**Plan of record:** parcels by default; pallet only ~60+ boxes UK (EFM), handled manually;
-international bulk quoted case-by-case until freight rates exist. Build infrastructure only
-once volume/appetite justifies it.
+**Plan of record (SCOPED 2026-06-10 → `order-size-shipping-tiers.md`):** weight-band the global
+Shopify rates so freight scales with order size for everyone (free to 6 boxes / 12.6kg, then
+banded), add a shipping line to the B2B invoice draft order in code, keep parcels-by-default with
+the pallet only ~60+ boxes UK (manual draft-order line), and consolidate B2B onto the funnel SKUs
+so it fulfils from Synergy. International bulk quoted case-by-case until freight rates exist.
 
 ---
 
@@ -270,7 +279,9 @@ once volume/appetite justifies it.
       split Canada (£36) from USA (£22); rename Channel Islands rate → `Express International`. §4/§5.
 - [ ] **DHL upgrade:** obtain DHL intl costs, finalise `International Priority` name + per-zone
       prices, decide launch timing. §4.
-- [ ] **Pallet tier:** get the 5 ops answers from Synergy, then scope manual vs automated. §7.
+- [x] **Pallet tier / B2B shipping:** ops answers received (Bethany 10 Jun); scoped into
+      `docs/development/featurePlans/order-size-shipping-tiers.md` (weight-banded global rates +
+      B2B invoice shipping line + Synergy consolidation). §7.
 - [ ] **EU DDP split** (optimisation): split Europe into its own duty-paid method. §4.
 - [ ] **Bundle variant weights** in Shopify (84=6.3kg, 56=4.2kg, 168=12.6kg) — needed if/when
       any rate is weight-banded. (28-box already 2.1kg.)
