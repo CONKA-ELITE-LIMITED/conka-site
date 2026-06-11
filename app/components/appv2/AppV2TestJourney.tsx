@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import useIsMobile from "@/app/hooks/useIsMobile";
+import usePrefersReducedMotion from "@/app/hooks/usePrefersReducedMotion";
 import {
   SECTIONS_DATA,
   PHONE_SOURCES,
   SECTION_TAB_LABELS,
   PHONE_ALT_LABELS,
 } from "./testJourneyData";
-import { gsap, ScrollTrigger, useGSAP } from "./gsapClient";
+import {
+  gsap,
+  ScrollTrigger,
+  useGSAP,
+  withMotion,
+  revealUp,
+} from "@/app/lib/motion";
 
 /**
  * "How it works" journey for /app: the trust beats (the test can't be gamed,
@@ -27,18 +34,6 @@ const KICKER = "// How it works · APP-03";
 const HEADING = "The Gold Standard of Cognitive Testing";
 const SUPPORT = "Cambridge-derived. NHS-validated. FDA-cleared.";
 const BEAT_TOTAL = String(SECTIONS_DATA.length).padStart(2, "0");
-
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-  return reduced;
-}
 
 // ─── Shared heading row ────────────────────────────────────────────────────────
 
@@ -229,15 +224,11 @@ function JourneyStacked() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      withMotion(() => {
         gsap.utils.toArray<HTMLElement>("[data-journey-card]").forEach((el) => {
-          gsap.from(el, {
+          revealUp(el, el, {
             y: 32,
-            autoAlpha: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 80%" },
+            scrollTrigger: { start: "top 80%" },
           });
         });
       });

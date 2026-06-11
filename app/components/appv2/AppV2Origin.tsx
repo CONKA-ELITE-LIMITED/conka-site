@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { gsap, useGSAP } from "./gsapClient";
+import { gsap, useGSAP, withMotion, revealUp } from "@/app/lib/motion";
 
 const HEADLINE_WORDS = "You cannot improve what you cannot measure.".split(" ");
 
@@ -22,8 +22,8 @@ export default function AppV2Origin() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      withMotion(() => {
+        // Scroll-scrubbed word brighten on the headline
         gsap.fromTo(
           "[data-origin-word]",
           { opacity: 0.2 },
@@ -40,13 +40,9 @@ export default function AppV2Origin() {
           },
         );
 
-        gsap.from("[data-origin-para]", {
+        revealUp("[data-origin-para]", "[data-origin-copy]", {
           y: 24,
-          autoAlpha: 0,
-          duration: 0.8,
           stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: { trigger: "[data-origin-copy]", start: "top 75%" },
         });
 
         gsap.from("[data-origin-image]", {

@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
-import { gsap, useGSAP } from "./gsapClient";
+import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
 
 const RING_RADIUS = 17;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -24,8 +24,7 @@ export default function AppV2Hero() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      withMotion(() => {
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
         tl.from("[data-hero-line]", {
