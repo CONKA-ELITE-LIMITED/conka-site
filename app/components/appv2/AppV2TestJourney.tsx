@@ -12,10 +12,12 @@ import {
 import { gsap, ScrollTrigger, useGSAP } from "./gsapClient";
 
 /**
- *  * story with the AppFeaturePanel "Gold Standard" credibility beat into one
- * section (PAGE_NARRATIVES backlog #1). Desktop: a GSAP-pinned viewport where
- * scroll scrubs through the three beats, swapping phone screens and copy.
- * Mobile and reduced-motion: a stacked layout with simple entrance reveals.
+ * "How it works" journey for /app: the trust beats (the test can't be gamed,
+ * the 30-day improvement) under the "Gold Standard" credibility heading.
+ * Desktop: a GSAP-pinned viewport where scroll scrubs through the beats,
+ * swapping phone screens and copy. Mobile and reduced-motion: a stacked
+ * layout with simple entrance reveals. The tracking/wellness story lives in
+ * AppV2Engine.
  *
  * Structural exception: owns its own <section> because ScrollTrigger pinning
  * needs control of the wrapper.
@@ -24,6 +26,7 @@ import { gsap, ScrollTrigger, useGSAP } from "./gsapClient";
 const KICKER = "// How it works · APP-03";
 const HEADING = "The Gold Standard of Cognitive Testing";
 const SUPPORT = "Cambridge-derived. NHS-validated. FDA-cleared.";
+const BEAT_TOTAL = String(SECTIONS_DATA.length).padStart(2, "0");
 
 function usePrefersReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false);
@@ -60,31 +63,18 @@ function JourneyHeading() {
 
 // ─── Phone frame (shared) ──────────────────────────────────────────────────────
 
-function PhoneFrame({
-  activeIndex,
-  fade = true,
-}: {
-  activeIndex: number;
-  fade?: boolean;
-}) {
+function PhoneFrame({ activeIndex }: { activeIndex: number }) {
   return (
     <div className="relative aspect-[4/5] w-full max-w-[440px] mx-auto border border-black/12 bg-[#f5f5f5] overflow-hidden">
       {PHONE_SOURCES.map((src, i) => (
         <div
           key={src}
           className="absolute left-1/2 top-1/2 w-[58%] aspect-[1/2]"
-          style={
-            fade
-              ? {
-                  opacity: activeIndex === i ? 1 : 0,
-                  transform: `translate(-50%, -50%) translateY(${activeIndex === i ? 0 : 12}px)`,
-                  transition: "opacity 0.45s ease, transform 0.45s ease",
-                }
-              : {
-                  opacity: activeIndex === i ? 1 : 0,
-                  transform: "translate(-50%, -50%)",
-                }
-          }
+          style={{
+            opacity: activeIndex === i ? 1 : 0,
+            transform: `translate(-50%, -50%) translateY(${activeIndex === i ? 0 : 12}px)`,
+            transition: "opacity 0.45s ease, transform 0.45s ease",
+          }}
         >
           <Image
             src={src}
@@ -96,7 +86,7 @@ function PhoneFrame({
         </div>
       ))}
       <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10">
-        {String(activeIndex + 1).padStart(2, "0")} / 03
+        {String(activeIndex + 1).padStart(2, "0")} / {BEAT_TOTAL}
       </div>
     </div>
   );
@@ -117,7 +107,7 @@ function JourneyDesktop() {
       stRef.current = ScrollTrigger.create({
         trigger: pinRef.current,
         start: "top top",
-        end: "+=250%",
+        end: `+=${SECTIONS_DATA.length * 85}%`,
         pin: true,
         onUpdate: (self) => {
           if (barRef.current) {
@@ -285,7 +275,7 @@ function JourneyStacked() {
                 />
               </div>
               <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10">
-                {String(i + 1).padStart(2, "0")} / 03
+                {String(i + 1).padStart(2, "0")} / {BEAT_TOTAL}
               </div>
             </div>
           </article>
