@@ -2,7 +2,7 @@
 
 Live bulk-ordering channel for UK sports clubs and performance orgs at `/professionals`. Public enquiry → unlisted tiered-pricing page → two payment paths (card now / pay by invoice), both shipping only after confirmed payment. Almost no commerce plumbing is custom: Shopify handles the order, payment, VAT, and fulfilment; an off-the-shelf connector (Parex) books every paid order into Xero; Klaviyo sends the transactional emails. There is no custom checkout, no payment processor, no bespoke Xero build, and no database.
 
-> Status: **live**. This doc describes what is actually running. The build history, decisions, and pilot records live in the plan docs: `docs/development/featurePlans/b2b-professionals-portal.md` (portal) and `docs/development/featurePlans/b2b-xero-invoicing.md` (Xero + VAT). This doc is the current-state reference; those are the archaeology.
+> Status: **live**. This doc describes what is actually running. Programme-level status across all B2B workstreams (done/why, next, not-doing) is `docs/development/featurePlans/b2b-consolidated.md`. The build history, decisions, and pilot records live in the plan docs: `b2b-professionals-portal.md` (portal) and `b2b-xero-invoicing.md` (Xero + VAT). This doc is the current-state reference; those are the archaeology.
 
 ## Overview
 

@@ -4,7 +4,11 @@ Get paid B2B orders into Xero automatically as compliant UK VAT invoices, carryi
 
 See also: `docs/development/featurePlans/b2b-professionals-portal.md` (the portal this completes). VAT decision rationale: `b2b-vat-decision.md`.
 
+> **Consolidated B2B status / next / not-doing: `b2b-consolidated.md`** (start there). This doc holds the detail: connector comparison, go-live checklist, pilot protocol + results, Parex config.
+
 ## Resume here — next steps (8 June 2026)
+
+> **RESOLVED — both-path pilot PASSED 8 June 2026** (see "Pilot result + setup done" below): one Xero invoice each, £59 net + £11.80 VAT, B2B Sales, PO in Reference, no DTC synced. Auto Sync enabled. The steps in this section are complete and kept as the working record; programme status lives in `b2b-consolidated.md`.
 
 **MECHANISM CORRECTED 8 June 2026: Road A -> Road B.** Parex support confirmed in writing that the connector **mirrors whatever tax Shopify charged** and does not derive a VAT split: "if no tax has been charged on the order in Shopify... our app will pass the tax code NO VAT." Road A (Shopify at 0%, connector splits the gross) would therefore book every B2B invoice at 0% / NO VAT - non-compliant. So we now go **Road B: enable UK VAT collection in Shopify** (VAT no. GB430507628), inclusive pricing, so Shopify charges the 20% and the connector mirrors it. CONKA is VAT-registered and already accounts for DTC VAT inclusively, so this changes no consumer price. Tracked in **SCRUM-1060**. Rationale + reversal in `b2b-vat-decision.md`. Also confirmed by Parex: the `B2B Professionals` tag filter is now configured (sync gate lifted), no duplicate orders, Silver plan ($15/mo, 100 synced orders, $0.10 over).
 
@@ -273,8 +277,8 @@ The de-risk gate. Run BOTH paths end to end against the live store, then verify 
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1059 | [Shopify & Subscriptions] B2B Xero invoicing: Shopify-to-Xero connector + PO-to-Reference | 1-3 | In Progress |
-| SCRUM-1060 | [Shopify & Subscriptions] B2B VAT: enable Shopify UK VAT collection (Road B) | 1-3 | To Do (pilot pending) |
-| SCRUM-1061 | [Website & CRO] B2B order page: require PO + gate finance email on pay-by-invoice, then pilot both paths to Xero | 1-2 | To Do |
+| SCRUM-1059 | [Shopify & Subscriptions] B2B Xero invoicing: Shopify-to-Xero connector + PO-to-Reference | 1-3 | Done (pilot passed 8 Jun 2026) |
+| SCRUM-1060 | [Shopify & Subscriptions] B2B VAT: enable Shopify UK VAT collection (Road B) | 1-3 | Done (pilot passed 8 Jun 2026) |
+| SCRUM-1061 | [Website & CRO] B2B order page: require PO + gate finance email on pay-by-invoice, then pilot both paths to Xero | 1-2 | Done (pilot passed 8 Jun 2026) |
 
 Relates to SCRUM-1058 (closes its AC6). Sprint 27.

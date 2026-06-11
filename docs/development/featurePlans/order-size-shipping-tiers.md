@@ -3,7 +3,7 @@
 **Status:** Scoped, not started
 **Created:** 2026-06-10
 **Owner:** Rudh (Shopify config + light code) with Humphrey (Evri/DPD actual costs)
-**Relates to:** `b2b-professionals-portal.md` (outstanding items 3 + 4), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
+**Relates to:** `b2b-consolidated.md` (programme-level B2B status), `b2b-professionals-portal.md` (outstanding items 3 + 4), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
 
 ---
 
