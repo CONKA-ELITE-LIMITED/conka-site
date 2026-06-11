@@ -287,18 +287,6 @@ export function trackQuizResultCTAClicked(params: {
   });
 }
 
-// ===== APP PAGE TRACKING =====
-
-/**
- * Track that the app data insights section entered the viewport.
- * Fires once per page load when the section reaches 50% visibility.
- */
-export function trackAppDataInsightsViewed(): void {
-  safeTrack("app:data_insights_viewed", {
-    timestamp: Date.now(),
-  });
-}
-
 // ===== B2B PORTAL TRACKING =====
 
 /**
