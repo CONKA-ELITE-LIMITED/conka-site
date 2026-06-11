@@ -2,7 +2,13 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { gsap, useGSAP } from "./gsapClient";
+import {
+  gsap,
+  useGSAP,
+  withMotion,
+  revealUp,
+  drawLines,
+} from "@/app/lib/motion";
 
 /**
  * "The Engine" section for /app. Three acts telling the intelligence story:
@@ -37,37 +43,45 @@ const INPUT_CHIPS: InputChip[] = [
 const PATTERN_CARDS = [
   {
     tag: "CONKA effect",
-    value: "+938",
-    unit: "steps",
-    text: "You walk about 938 more steps on CONKA days.",
+    icon: "effect",
+    text: "What shifts on the days you take it: movement, mental fatigue, your score. Measured, not assumed.",
   },
   {
     tag: "Lifting your scores",
-    value: "+14%",
-    unit: "",
-    text: "Scores run about 14% higher on days you trained for 30+ minutes.",
+    icon: "lift",
+    text: "The habits that reliably lift your number: training days, sleep, time outdoors. Yours will be different. That is the point.",
   },
   {
     tag: "Pulling you down",
-    value: "-17%",
-    unit: "",
-    text: "Scores drop 17% when you're sore. A clear lever you can pull.",
+    icon: "drag",
+    text: "And what drags it: soreness, low readiness, stress. Clear levers you can pull.",
   },
 ];
 
-const DEPTH_STATS = [
-  { target: 333, suffix: "ms", label: "Average response time" },
-  { target: 18, suffix: "%", label: "Response variation, per test" },
-  { target: 95, suffix: "%", label: "Of CONKA users outperformed" },
-  { target: 56, suffix: "", label: "Tests on one long-term graph" },
+const DEPTH_FEATURES = [
+  {
+    id: "precision",
+    title: "Millisecond precision",
+    text: "Every response timed to the millisecond. Changes too small to feel, made visible.",
+  },
+  {
+    id: "benchmark",
+    title: "Demographic benchmarks",
+    text: "Your scores sit against aggregated, anonymised CONKA users, so you know how you actually fare.",
+  },
+  {
+    id: "trends",
+    title: "Trends across months",
+    text: "Anything worth improving takes time. Watch the line move across weeks and months, not days.",
+  },
 ];
 
 // ─── Icons (mono line icons, square caps to match the clinical grammar) ──────
 
-function ChipIcon({ id }: { id: string }) {
+function ChipIcon({ id, size = 18 }: { id: string; size?: number }) {
   const common = {
-    width: 18,
-    height: 18,
+    width: size,
+    height: size,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
@@ -125,6 +139,44 @@ function ChipIcon({ id }: { id: string }) {
         <svg {...common}>
           <circle cx="12" cy="12" r="7" />
           <circle cx="12" cy="12" r="2" />
+        </svg>
+      );
+    case "precision":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="13" r="8" />
+          <path d="M12 13V8M10 2h4" />
+        </svg>
+      );
+    case "benchmark":
+      return (
+        <svg {...common}>
+          <path d="M5 21v-9M12 21V6M19 21v-6M3 21h18" />
+        </svg>
+      );
+    case "trends":
+      return (
+        <svg {...common}>
+          <polyline points="3 17 9 11 13 15 21 7" />
+          <polyline points="16 7 21 7 21 12" />
+        </svg>
+      );
+    case "effect":
+      return (
+        <svg {...common}>
+          <path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" />
+        </svg>
+      );
+    case "lift":
+      return (
+        <svg {...common}>
+          <path d="M7 17L17 7M9 7h8v8" />
+        </svg>
+      );
+    case "drag":
+      return (
+        <svg {...common}>
+          <path d="M7 7l10 10M17 9v8H9" />
         </svg>
       );
     default:
@@ -210,75 +262,26 @@ export default function AppV2Engine() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      withMotion(() => {
         // Act 1: copy, chips light up in sequence, lines draw into the phone
-        gsap.from("[data-engine-a1]", {
-          y: 28,
-          autoAlpha: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: "[data-engine-act1]", start: "top 75%" },
-        });
-        gsap.from("[data-engine-chip]", {
-          autoAlpha: 0,
+        revealUp("[data-engine-a1]", "[data-engine-act1]", { stagger: 0.1 });
+        revealUp("[data-engine-chip]", "[data-engine-chips]", {
           y: 10,
           duration: 0.45,
           stagger: 0.07,
           ease: "power2.out",
-          scrollTrigger: { trigger: "[data-engine-chips]", start: "top 80%" },
+          scrollTrigger: { start: "top 80%" },
         });
-        gsap.utils
-          .toArray<SVGPathElement>("[data-engine-line]")
-          .forEach((path, i) => {
-            gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
-            gsap.to(path, {
-              strokeDashoffset: 0,
-              duration: 0.9,
-              delay: 0.5 + i * 0.12,
-              ease: "power2.inOut",
-              scrollTrigger: {
-                trigger: "[data-engine-chips]",
-                start: "top 80%",
-              },
-            });
-          });
+        drawLines(
+          gsap.utils.toArray<SVGPathElement>("[data-engine-line]"),
+          "[data-engine-chips]",
+        );
 
-        // Act 2: insight cards stagger in
-        gsap.from("[data-engine-a2]", {
-          y: 28,
-          autoAlpha: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: { trigger: "[data-engine-act2]", start: "top 75%" },
-        });
+        // Act 2: copy, insight cards, then phone stagger in
+        revealUp("[data-engine-a2]", "[data-engine-act2]");
 
-        // Act 3: reveals + stat count-ups
-        gsap.from("[data-engine-a3]", {
-          y: 28,
-          autoAlpha: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: "[data-engine-act3]", start: "top 75%" },
-        });
-        gsap.utils
-          .toArray<HTMLElement>("[data-engine-stat]")
-          .forEach((el, i) => {
-            const stat = DEPTH_STATS[i];
-            const counter = { value: 0 };
-            gsap.to(counter, {
-              value: stat.target,
-              duration: 1.3,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 85%" },
-              onUpdate: () => {
-                el.textContent = `${Math.round(counter.value)}${stat.suffix}`;
-              },
-            });
-          });
+        // Act 3: reveals only; the capability cards carry no live numbers
+        revealUp("[data-engine-a3]", "[data-engine-act3]", { stagger: 0.1 });
       });
     },
     { scope: root },
@@ -397,14 +400,9 @@ export default function AppV2Engine() {
                 <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-2">
                   {card.tag}
                 </p>
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-2xl lg:text-3xl font-bold text-white tabular-nums leading-none flex-shrink-0">
-                    {card.value}
-                    {card.unit && (
-                      <span className="text-sm font-medium text-white/70 ml-1">
-                        {card.unit}
-                      </span>
-                    )}
+                <div className="flex items-start gap-3">
+                  <span aria-hidden className="text-white flex-shrink-0 mt-0.5">
+                    <ChipIcon id={card.icon} size={24} />
                   </span>
                   <p className="text-sm text-white/85 leading-snug">
                     {card.text}
@@ -434,27 +432,29 @@ export default function AppV2Engine() {
           reveal="data-engine-a3"
         >
           Every test breaks down into speed, accuracy and consistency,
-          benchmarked against every CONKA user. Spot the dip, tap the day, see
-          the why: caffeine two hours before, no training, a meal 30 minutes
-          out. The kind of forensics you&apos;d otherwise need a lab for.
+          benchmarked against anonymised CONKA users. Spot the dip, tap the
+          day, see the why: caffeine two hours before, no training, a meal 30
+          minutes out. The kind of forensics you&apos;d otherwise need a lab
+          for.
         </ActHeading>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-8 mb-8">
-          {DEPTH_STATS.map((stat) => (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-8 mb-8">
+          {DEPTH_FEATURES.map((feature) => (
             <div
-              key={stat.label}
+              key={feature.id}
               data-engine-a3
-              className="border border-white/25 bg-white/[0.08] p-4 lg:p-5 flex flex-col gap-2"
+              className="border border-white/25 bg-white/[0.08] p-4 lg:p-5"
             >
-              <p
-                data-engine-stat
-                className="font-mono text-2xl lg:text-3xl font-bold text-white tabular-nums leading-none"
-              >
-                {stat.target}
-                {stat.suffix}
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/75 leading-snug">
-                {stat.label}
+              <div className="flex items-center gap-2.5 mb-3">
+                <span className="text-white/80 flex-shrink-0">
+                  <ChipIcon id={feature.id} />
+                </span>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white tabular-nums leading-none">
+                  {feature.title}
+                </p>
+              </div>
+              <p className="text-sm text-white/85 leading-relaxed">
+                {feature.text}
               </p>
             </div>
           ))}

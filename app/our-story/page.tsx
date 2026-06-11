@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import { OurStoryHero } from "@/app/components/our-story/OurStoryHero";
-import { StorySection } from "@/app/components/our-story/StorySection";
-import { OurStoryCTA } from "@/app/components/our-story/OurStoryCTA";
-import Reveal from "@/app/components/landing/Reveal";
+import {
+  OurStoryHero,
+  StorySection,
+  StoryManifesto,
+  StoryRail,
+  OurStoryCTA,
+} from "@/app/components/our-story";
 import { storyChapters } from "@/app/lib/storyData";
 
 export const metadata: Metadata = {
@@ -18,10 +22,14 @@ export const metadata: Metadata = {
   },
 };
 
+/* Story spine: hero -> chapters 1-5 -> the manifesto turn (dark) ->
+   chapter 6 (Beyond Sport) -> CTA. data-story-beat drives the fixed
+   chapter rail; backgrounds alternate tint/white with one dark break. */
 export default function OurStoryPage() {
   return (
     <div className="brand-clinical min-h-screen bg-white text-black">
       <Navigation />
+      <StoryRail />
 
       {/* paddingTop: .brand-clinical zeros brand-hero-first padding on
           mobile, leaving the hero flush against the nav. Explicit padding
@@ -37,30 +45,40 @@ export default function OurStoryPage() {
       </section>
 
       {storyChapters.map((chapter, index) => (
-        <section
-          key={chapter.id}
-          className={`brand-section ${index % 2 === 0 ? "brand-bg-tint" : "brand-bg-white"}`}
-          aria-label={`Chapter ${chapter.id}: ${chapter.label}`}
-        >
-          <div className="brand-track">
-            <Reveal>
+        <Fragment key={chapter.id}>
+          {/* The turn sits just before the final chapter (Beyond Sport) */}
+          {index === storyChapters.length - 1 && (
+            <section
+              className="brand-section brand-bg-black"
+              aria-label="The turn: from protecting the brain to optimising it"
+            >
+              <div className="brand-track">
+                <StoryManifesto />
+              </div>
+            </section>
+          )}
+          <section
+            data-story-beat={chapter.id}
+            className={`brand-section ${index % 2 === 0 ? "brand-bg-tint" : "brand-bg-white"}`}
+            aria-label={`Chapter ${chapter.id}: ${chapter.label}`}
+          >
+            <div className="brand-track">
               <StorySection
                 chapter={chapter}
                 totalChapters={storyChapters.length}
               />
-            </Reveal>
-          </div>
-        </section>
+            </div>
+          </section>
+        </Fragment>
       ))}
 
       <section
+        data-story-beat={storyChapters.length + 1}
         className={`brand-section ${storyChapters.length % 2 === 0 ? "brand-bg-tint" : "brand-bg-white"}`}
         aria-label="The next chapter is yours"
       >
         <div className="brand-track">
-          <Reveal>
-            <OurStoryCTA />
-          </Reveal>
+          <OurStoryCTA />
         </div>
       </section>
 

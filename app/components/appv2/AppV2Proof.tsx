@@ -9,7 +9,13 @@ import {
   getAthleteById,
   CASE_STUDY_PHOTO_PATHS,
 } from "@/app/lib/caseStudiesData";
-import { gsap, useGSAP } from "./gsapClient";
+import {
+  gsap,
+  useGSAP,
+  withMotion,
+  revealUp,
+  countUp,
+} from "@/app/lib/motion";
 
 /**
  * Proof section for /app: research stats with scroll-triggered count-up,
@@ -81,48 +87,24 @@ export default function AppV2Proof() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      withMotion(() => {
         // Count-up stats when the grid scrolls into view
         gsap.utils
           .toArray<HTMLElement>("[data-proof-value]")
           .forEach((el, i) => {
             const stat = RESEARCH_STATS[i];
-            const counter = { value: 0 };
-            gsap.to(counter, {
-              value: stat.target,
-              duration: 1.4,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 85%" },
-              onUpdate: () => {
-                el.textContent = formatStat(
-                  counter.value,
-                  stat.decimals,
-                  stat.suffix,
-                );
-              },
+            countUp(el, stat.target, {
+              decimals: stat.decimals,
+              suffix: stat.suffix,
             });
           });
 
-        gsap.from("[data-proof-reveal]", {
-          y: 28,
-          autoAlpha: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: { trigger: root.current, start: "top 75%" },
-        });
+        revealUp("[data-proof-reveal]", root.current);
 
-        gsap.from("[data-proof-athlete]", {
-          y: 28,
-          autoAlpha: 0,
+        revealUp("[data-proof-athlete]", "[data-proof-athletes]", {
           duration: 0.7,
           stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: "[data-proof-athletes]",
-            start: "top 80%",
-          },
+          scrollTrigger: { start: "top 80%" },
         });
       });
     },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "./gsapClient";
+import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
 
 /**
  * Fixed 2px scroll-progress bar across the top of /app. Purely decorative
@@ -11,8 +11,7 @@ export default function AppV2ProgressRail() {
   const barRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    withMotion(() => {
       gsap.to(barRef.current, {
         scaleX: 1,
         ease: "none",

@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-11** | Upgraded /our-story to the GSAP motion standard: animated hero, chapter image wipes, count-up stats, chapter rail, and a new dark manifesto beat
+- **2026-06-11** | App page act 3 reframed from personal account stats to instrument capabilities; GSAP patterns extracted into a shared motion library (app/lib/motion.ts) with a new MOTION_GUIDE doc for reuse on future pages
 - **2026-06-11** | /app gains The Engine section: Apple Health + Screen Time inputs, personalised patterns, per-test depth; journey trimmed to two beats, Compete/Rewards moved after proof
 - **2026-06-11** | /app now runs the interactive GSAP rebuild directly; /appv2 route removed and the old app page components deleted
 - **2026-06-11** | Added experimental /appv2 page: interactive GSAP-driven rebuild of the app page with pinned scroll journey, count-up proof stats, and product bridge

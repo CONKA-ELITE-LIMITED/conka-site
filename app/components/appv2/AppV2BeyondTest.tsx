@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { gsap, useGSAP } from "./gsapClient";
+import { useGSAP, withMotion, revealUp } from "@/app/lib/motion";
 
 /**
  * Retention features for /app: Compete and Rewards. Sits after the proof
@@ -34,16 +34,8 @@ export default function AppV2BeyondTest() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from("[data-beyond-reveal]", {
-          y: 28,
-          autoAlpha: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: { trigger: root.current, start: "top 75%" },
-        });
+      withMotion(() => {
+        revealUp("[data-beyond-reveal]", root.current);
       });
     },
     { scope: root },
