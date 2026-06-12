@@ -80,10 +80,10 @@ export function EmptyOrdersState() {
           </Link>
         </div>
         <Link
-          href="/quiz"
+          href="/funnel"
           className="inline-flex items-center gap-2 bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums px-8 py-3 [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] hover:opacity-90 transition-opacity"
         >
-          Find your protocol
+          Get started
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

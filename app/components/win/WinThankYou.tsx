@@ -48,16 +48,15 @@ export default function WinThankYou({ email: _email }: WinThankYouProps) {
           </p>
 
           <p className="font-mono text-sm opacity-70">
-            If you&apos;re curious, our 2-minute quiz helps you understand which
-            protocol fits your goals.
+            If you&apos;re curious, find the daily system that fits your goals.
           </p>
 
           <div className="flex justify-center">
             <a
-              href="/quiz"
+              href="/funnel"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-amber-500 text-black font-semibold text-lg border-2 border-amber-500 hover:bg-amber-600 hover:border-amber-600 transition-all"
             >
-              Find your protocol
+              Get started
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
