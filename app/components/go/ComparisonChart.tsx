@@ -56,9 +56,10 @@ export default function ComparisonChart({
             />
           ))}
 
-          {/* without: shares the accent line's origin, then drifts low */}
+          {/* without: shares the accent line's origin, holds early, then
+              the decline compounds */}
           <path
-            d="M12,150 C80,148 140,154 200,158 C250,162 285,164 308,164"
+            d="M12,150 C90,151 150,155 210,165 C252,173 285,182 308,189"
             fill="none"
             stroke="var(--go-neutral-strong)"
             strokeWidth="2.5"

@@ -44,7 +44,8 @@ export function LandingView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-5">
+      {/* Title block anchored high (same grammar as the question screens) */}
+      <div className="flex flex-col items-center gap-4 pt-4">
         <h1 className="text-4xl font-medium leading-tight tracking-[-0.02em] sm:text-5xl">
           {screen.title}
           {screen.titleAccent && (
@@ -61,16 +62,23 @@ export function LandingView({
             {screen.subtitle}
           </p>
         )}
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center py-6">
         {screen.video && (
-          /* portrait: 720x1280 pour render, centred crop on the bottle;
-             square: 1:1 sources (e.g. the brain scan loop) uncropped */
+          /* portrait: 720x1280 pour render, centred crop on the bottle,
+             accent border; square: 1:1 sources (e.g. the brain scan
+             loop) uncropped, borderless */
           <div
-            className={`w-full overflow-hidden rounded-2xl border-2 ${
+            className={`w-full overflow-hidden rounded-2xl ${
               screen.videoAspect === "square"
                 ? "aspect-square max-w-[220px]"
-                : "aspect-[3/4] max-w-[240px]"
+                : "aspect-[3/4] max-w-[240px] border-2"
             }`}
-            style={{ borderColor: "var(--brand-accent)" }}
+            style={
+              screen.videoAspect === "square"
+                ? undefined
+                : { borderColor: "var(--brand-accent)" }
+            }
           >
             <video
               src={screen.video}
@@ -286,7 +294,7 @@ export function InterstitialView({
             /* Full-contrast text; accent spans carry the emphasis */
             <TypewriterText
               lines={screen.body}
-              className="space-y-6 text-2xl font-medium leading-snug sm:text-3xl"
+              className="space-y-6 text-3xl font-medium leading-snug sm:text-4xl"
             />
           ) : (
             <AnimatedText
@@ -364,14 +372,16 @@ export function RevealView({
           all fit one 390px viewport without scrolling */}
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <div className="flex items-end justify-center gap-10">
-          <div>
-            <p className="go-text-mid text-xs uppercase tracking-[0.14em]" style={mono}>
-              {screen.realAgeLabel}
-            </p>
-            <p className="mt-1 text-5xl font-medium tabular-nums tracking-[-0.02em]">
-              {ages ? <CountUp value={ages.realAge} delayMs={200} /> : "–"}
-            </p>
-          </div>
+          {screen.realAgeLabel && (
+            <div>
+              <p className="go-text-mid text-xs uppercase tracking-[0.14em]" style={mono}>
+                {screen.realAgeLabel}
+              </p>
+              <p className="mt-1 text-5xl font-medium tabular-nums tracking-[-0.02em]">
+                {ages ? <CountUp value={ages.realAge} delayMs={200} /> : "–"}
+              </p>
+            </div>
+          )}
           <div>
             <p
               className="text-xs uppercase tracking-[0.14em]"
@@ -380,10 +390,19 @@ export function RevealView({
               {screen.brainAgeLabel}
             </p>
             <p
-              className="mt-1 text-6xl font-semibold tabular-nums tracking-[-0.02em]"
+              className={`mt-1 font-semibold tabular-nums tracking-[-0.02em] ${
+                screen.realAgeLabel ? "text-6xl" : "text-8xl"
+              }`}
               style={{ color: "var(--brand-accent)", textShadow: "var(--go-glow)" }}
             >
-              {ages ? <CountUp value={ages.brainAge} delayMs={1000} /> : "–"}
+              {ages ? (
+                <CountUp
+                  value={ages.brainAge}
+                  delayMs={screen.realAgeLabel ? 1000 : 300}
+                />
+              ) : (
+                "–"
+              )}
             </p>
           </div>
         </div>

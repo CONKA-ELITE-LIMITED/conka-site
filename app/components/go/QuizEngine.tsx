@@ -75,8 +75,6 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
     [screens],
   );
   const totalQuestions = questionIds.length;
-  const questionNumber =
-    screen.kind === "question" ? questionIds.indexOf(screen.id) + 1 : 0;
 
   const resultBucket: ResultBucket = useMemo(() => {
     const totals: Record<string, number> = {};
@@ -199,6 +197,21 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   );
   const dark = config.theme === "dark";
 
+  // Paint the document itself to match the canvas so rubber-band
+  // overscroll never reveals the default white behind the quiz.
+  useEffect(() => {
+    const bg = dark ? "#0a0a0a" : "#ffffff";
+    const html = document.documentElement;
+    const prevHtml = html.style.backgroundColor;
+    const prevBody = document.body.style.backgroundColor;
+    html.style.backgroundColor = bg;
+    document.body.style.backgroundColor = bg;
+    return () => {
+      html.style.backgroundColor = prevHtml;
+      document.body.style.backgroundColor = prevBody;
+    };
+  }, [dark]);
+
   return (
     <div
       className={`brand-clinical go-quiz${dark ? " go-dark" : ""} flex min-h-[100dvh] flex-col`}
@@ -232,14 +245,6 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             className={`h-10 w-auto${dark ? " invert" : ""}`}
             priority
           />
-          {questionNumber > 0 && (
-            <span
-              className="go-text-faint absolute bottom-2 right-4 text-sm tabular-nums"
-              style={{ fontFamily: "var(--font-brand-data)" }}
-            >
-              {questionNumber}/{totalQuestions}
-            </span>
-          )}
         </div>
         {/* No bar on the landing screen; full-bleed across the viewport */}
         {index > 0 && (
