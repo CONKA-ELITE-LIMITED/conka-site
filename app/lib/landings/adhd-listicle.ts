@@ -49,7 +49,7 @@ export const adhdListicle: ListicleConfig = {
       body: "You've known about it since Monday. It's not even hard. But every time you sit down, your brain slides off it, so you make another coffee and lose the morning. That stuck feeling isn't laziness. An ADHD brain runs low on the focus chemical that gets you moving.\n\nConka 1, your caffeine-free morning shot, supports that exact spark. Most people feel it within minutes, and the task that felt like a locked door is suddenly open.",
       asset: {
         kind: "image",
-        src: "/videos/Neurons.gif",
+        src: "/videos/misc/Neurons.gif",
         alt: "Neurons firing animation",
         // Native 480x270; frame matches so nothing crops
         aspect: "16/9",
@@ -98,7 +98,7 @@ export const adhdListicle: ListicleConfig = {
       headline: "Kill the 2PM Crash (Without More Coffee)",
       body: "You run on coffee because it's the only thing that gets your brain going. Then 2pm hits with the slump, the jitters, and the fog. That crash is baked into caffeine, and an ADHD brain feels the swing harder.\n\nConka has zero caffeine, so there's nothing to spike you up and nothing to crash from. Steady focus all day, and Conka 2 at night helps you wind down instead of lying there wired.",
       // 9:16 source centre-cropped to 3:4, same as the quiz landing frame
-      asset: { kind: "video", src: "/videos/FlowLiquid.mp4", aspect: "3/4" },
+      asset: { kind: "video", src: "/videos/flow/FlowLiquid.mp4", aspect: "3/4" },
     },
     {
       // Hand-cropped excerpts (caffeine/crash theme), not the full bodies
@@ -135,7 +135,7 @@ export const adhdListicle: ListicleConfig = {
       body: "ADHD isn't just distraction. It's ten thoughts at once and a low hum of stress that makes a simple to-do list feel scary. When your focus chemistry is all over the place, your brain struggles to filter any of it out.\n\nConka brings calm alongside focus, without knocking you out. It turns the volume down so you can finally hear yourself think.",
       asset: {
         kind: "image",
-        src: "/videos/BrainScan.gif",
+        src: "/videos/misc/BrainScan.gif",
         alt: "Rotating brain scan animation",
         aspect: "4/3",
         fit: "cover",

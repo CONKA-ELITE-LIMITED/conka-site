@@ -46,7 +46,7 @@ export const brainAgeQuiz: LandingConfig = {
       title: "What's your real",
       titleAccent: "brain age?",
       subtitle: "Take the 2-minute test and find out.",
-      video: "/videos/BrainScan.mp4",
+      video: "/videos/misc/BrainScan.mp4",
       videoAspect: "square",
       // PLACEHOLDER: needs a defensible customer figure before scaled spend
       rating: { text: "Trusted by 10,000+ sharp minds" },
