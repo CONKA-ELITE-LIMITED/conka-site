@@ -197,6 +197,21 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   );
   const dark = config.theme === "dark";
 
+  // Paint the document itself to match the canvas so rubber-band
+  // overscroll never reveals the default white behind the quiz.
+  useEffect(() => {
+    const bg = dark ? "#0a0a0a" : "#ffffff";
+    const html = document.documentElement;
+    const prevHtml = html.style.backgroundColor;
+    const prevBody = document.body.style.backgroundColor;
+    html.style.backgroundColor = bg;
+    document.body.style.backgroundColor = bg;
+    return () => {
+      html.style.backgroundColor = prevHtml;
+      document.body.style.backgroundColor = prevBody;
+    };
+  }, [dark]);
+
   return (
     <div
       className={`brand-clinical go-quiz${dark ? " go-dark" : ""} flex min-h-[100dvh] flex-col`}
