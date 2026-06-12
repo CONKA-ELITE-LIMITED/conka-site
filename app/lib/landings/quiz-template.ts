@@ -43,12 +43,12 @@ export const quizTemplate: LandingConfig = {
     {
       kind: "landing",
       id: "hook",
-      eyebrow: "CONKA ASSESSMENT",
       title: "Where does your focus go?",
       subtitle:
         "Answer a few questions and we will map your focus profile to the system built for it.",
+      video: "/videos/Flow.mp4",
+      rating: { text: "4.9/5 rated by CONKA customers" },
       cta: "Start",
-      footnote: "Takes about 90 seconds",
     },
     {
       kind: "question",
@@ -66,7 +66,6 @@ export const quizTemplate: LandingConfig = {
       kind: "interstitial",
       id: "i_not_alone",
       variant: "stat",
-      eyebrow: "YOU ARE NOT ALONE",
       stat: { value: 67, suffix: "%", label: "of knowledge workers report a daily focus crash" },
       title: "The dip is normal. Losing the day to it is optional.",
       body: ["Placeholder supporting line. Replace with persona-specific proof."],
@@ -107,7 +106,6 @@ export const quizTemplate: LandingConfig = {
       kind: "interstitial",
       id: "i_education",
       variant: "education",
-      eyebrow: "WHY THIS HAPPENS",
       title: "Focus is not willpower. It is chemistry.",
       body: [
         "Placeholder education paragraph one. Explain the mechanism in plain language.",
@@ -130,9 +128,9 @@ export const quizTemplate: LandingConfig = {
       kind: "interstitial",
       id: "i_comparison",
       variant: "comparison",
-      eyebrow: "THE DIFFERENCE",
       title: "Your day, with and without a system",
-      comparison: {
+      chart: {
+        type: "line",
         withLabel: "With CONKA",
         withoutLabel: "Without",
         caption: "Illustrative focus curve across a working day",
@@ -140,9 +138,39 @@ export const quizTemplate: LandingConfig = {
     },
     {
       kind: "interstitial",
+      id: "i_bar_demo",
+      variant: "comparison",
+      title: "Placeholder bar comparison",
+      chart: {
+        type: "bar",
+        items: [
+          { label: "With CONKA", value: 6, accent: true },
+          { label: "Coffee alone", value: 3 },
+          { label: "Nothing", value: 2 },
+        ],
+        unit: "{value} hrs",
+        caption: "Placeholder values. Swap for persona-specific data.",
+      },
+    },
+    {
+      kind: "interstitial",
+      id: "i_pie_demo",
+      variant: "comparison",
+      title: "Placeholder share breakdown",
+      chart: {
+        type: "pie",
+        segments: [
+          { label: "Deep focus", value: 55 },
+          { label: "Distracted", value: 30 },
+          { label: "Flat", value: 15 },
+        ],
+        caption: "Placeholder split. Swap for persona-specific data.",
+      },
+    },
+    {
+      kind: "interstitial",
       id: "i_testimonial",
       variant: "testimonial",
-      eyebrow: "FROM A CUSTOMER",
       title: "People like you, already running the system",
       testimonial: {
         quote: "Placeholder quote. Swap in a real verified review for each persona.",
@@ -154,7 +182,6 @@ export const quizTemplate: LandingConfig = {
       kind: "interstitial",
       id: "i_commitment",
       variant: "commitment",
-      eyebrow: "ONE LAST THING",
       title: "Small daily inputs compound.",
       body: [
         "Placeholder commitment line. This screen primes the result.",
@@ -174,7 +201,6 @@ export const quizTemplate: LandingConfig = {
     {
       kind: "results",
       id: "results",
-      eyebrow: "YOUR RESULT",
     },
   ],
 };

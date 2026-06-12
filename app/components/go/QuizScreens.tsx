@@ -6,25 +6,15 @@ import type {
   InterstitialScreen,
   LandingScreen,
   ResultBucket,
-  ResultsScreen,
 } from "@/app/lib/landings/types";
 import QuizButton from "./QuizButton";
 import AnimatedText from "./AnimatedText";
 import AnimatedStat from "./AnimatedStat";
 import ComparisonChart from "./ComparisonChart";
+import BarChart from "./BarChart";
+import PieChart from "./PieChart";
 
 const mono = { fontFamily: "var(--font-brand-data)" } as const;
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p
-      className="text-xs uppercase tracking-[0.14em] text-black/60"
-      style={mono}
-    >
-      {children}
-    </p>
-  );
-}
 
 export function LandingView({
   screen,
@@ -35,21 +25,47 @@ export function LandingView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col justify-center gap-5">
-        {screen.eyebrow && <Eyebrow>{screen.eyebrow}</Eyebrow>}
-        <h1 className="text-4xl font-medium leading-tight tracking-[-0.02em]">
+      <div className="flex flex-1 flex-col items-center justify-center gap-5">
+        <h1 className="text-4xl font-medium leading-tight tracking-[-0.02em] sm:text-5xl">
           {screen.title}
         </h1>
         {screen.subtitle && (
-          <p className="text-base leading-relaxed text-black/70">
+          <p className="text-base leading-relaxed text-black/70 sm:text-lg">
             {screen.subtitle}
           </p>
         )}
+        {screen.video && (
+          /* 720x900 source cropped to a square: bottom 20% hidden */
+          <div className="aspect-square w-full max-w-[220px] overflow-hidden">
+            <video
+              src={screen.video}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="h-full w-full object-cover object-top"
+              aria-hidden
+            />
+          </div>
+        )}
       </div>
-      <div className="pb-2">
+      <div className="pb-8">
+        {screen.rating && (
+          <p className="mb-3 text-sm text-black/70">
+            <span
+              className="mr-2 tracking-[0.15em]"
+              style={{ color: "var(--brand-accent)" }}
+              aria-hidden
+            >
+              {"★★★★★"}
+            </span>
+            {screen.rating.text}
+          </p>
+        )}
         <QuizButton label={screen.cta} onClick={onStart} />
         {screen.footnote && (
-          <p className="mt-3 text-center text-xs text-black/50" style={mono}>
+          <p className="mt-3 text-sm text-black/50" style={mono}>
             {screen.footnote}
           </p>
         )}
@@ -67,41 +83,50 @@ export function InterstitialView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col justify-center gap-6">
-        {screen.eyebrow && <Eyebrow>{screen.eyebrow}</Eyebrow>}
-
-        {screen.variant === "stat" && screen.stat && (
-          <AnimatedStat {...screen.stat} />
-        )}
-
+      <div className="flex flex-1 flex-col items-center justify-center gap-7">
         <h2
           className={
             screen.variant === "commitment"
-              ? "text-4xl font-medium leading-tight tracking-[-0.02em]"
-              : "text-[1.75rem] font-medium leading-tight tracking-[-0.01em]"
+              ? "text-5xl font-medium leading-tight tracking-[-0.02em]"
+              : "text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl"
           }
         >
           {screen.title}
         </h2>
 
-        {screen.variant === "comparison" && screen.comparison && (
-          <ComparisonChart {...screen.comparison} />
+        {screen.variant === "stat" && screen.stat && (
+          <AnimatedStat {...screen.stat} />
+        )}
+
+        {screen.chart?.type === "line" && (
+          <ComparisonChart
+            withLabel={screen.chart.withLabel}
+            withoutLabel={screen.chart.withoutLabel}
+            caption={screen.chart.caption}
+          />
+        )}
+        {screen.chart?.type === "bar" && (
+          <BarChart
+            items={screen.chart.items}
+            unit={screen.chart.unit}
+            caption={screen.chart.caption}
+          />
+        )}
+        {screen.chart?.type === "pie" && (
+          <PieChart
+            segments={screen.chart.segments}
+            caption={screen.chart.caption}
+          />
         )}
 
         {screen.variant === "testimonial" && screen.testimonial && (
-          <blockquote
-            className="border-l-2 pl-4"
-            style={{ borderColor: "var(--brand-accent)" }}
-          >
-            <p className="text-lg leading-relaxed">
+          <blockquote>
+            <p className="text-2xl leading-snug">
               {"“"}
               {screen.testimonial.quote}
               {"”"}
             </p>
-            <footer
-              className="mt-3 text-xs uppercase tracking-wide text-black/60"
-              style={mono}
-            >
+            <footer className="mt-4 text-sm text-black/60" style={mono}>
               {screen.testimonial.name}
               {screen.testimonial.detail ? ` / ${screen.testimonial.detail}` : ""}
             </footer>
@@ -111,12 +136,12 @@ export function InterstitialView({
         {screen.body && (
           <AnimatedText
             lines={screen.body}
-            className="space-y-3 text-base leading-relaxed text-black/70"
+            className="space-y-3 text-lg leading-relaxed text-black/70"
             startDelayMs={200}
           />
         )}
       </div>
-      <div className="pb-2">
+      <div className="pb-8">
         <QuizButton label={screen.cta ?? "Continue"} onClick={onContinue} />
       </div>
     </div>
@@ -145,23 +170,23 @@ export function AnalyzingView({
   }, [done, screen.steps.length, onComplete]);
 
   return (
-    <div className="flex flex-1 flex-col justify-center gap-8">
-      <h2 className="text-[1.75rem] font-medium leading-tight tracking-[-0.01em]">
+    <div className="flex flex-1 flex-col items-center justify-center gap-10">
+      <h2 className="text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl">
         {screen.title}
       </h2>
-      <ul className="flex flex-col gap-4">
+      <ul className="mx-auto flex flex-col items-start gap-5 text-left">
         {screen.steps.map((step, i) => {
           const isDone = i < done;
           return (
             <li
               key={step}
-              className={`flex items-center gap-3 text-sm transition-opacity duration-300 ${
+              className={`flex items-center gap-3 text-base transition-opacity duration-300 ${
                 isDone ? "opacity-100" : "opacity-40"
               }`}
               style={mono}
             >
               <span
-                className="inline-block h-2 w-2 border border-black/30 transition-colors duration-300"
+                className="inline-block h-2.5 w-2.5 border border-black/30 transition-colors duration-300"
                 style={
                   isDone
                     ? {
@@ -182,13 +207,11 @@ export function AnalyzingView({
 }
 
 export function ResultsView({
-  screen,
   bucket,
   ctaLabel,
   ctaHref,
   onCtaClick,
 }: {
-  screen: ResultsScreen;
   bucket: ResultBucket;
   ctaLabel: string;
   ctaHref: string;
@@ -196,31 +219,27 @@ export function ResultsView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col justify-center gap-6">
-        {screen.eyebrow && <Eyebrow>{screen.eyebrow}</Eyebrow>}
+      <div className="flex flex-1 flex-col items-center justify-center gap-7">
         <div>
           <p
-            className="text-xs uppercase tracking-[0.14em]"
+            className="text-sm uppercase tracking-[0.14em]"
             style={{ ...mono, color: "var(--brand-accent)" }}
           >
             {bucket.tag}
           </p>
-          <h1 className="mt-2 text-3xl font-medium leading-tight tracking-[-0.02em]">
+          <h1 className="mt-3 text-4xl font-medium leading-tight tracking-[-0.02em]">
             {bucket.title}
           </h1>
         </div>
-        <p className="text-base leading-relaxed text-black/70">{bucket.body}</p>
-        <div className="border border-black/10 p-5">
-          <p
-            className="text-xs uppercase tracking-wide text-black/60"
-            style={mono}
-          >
+        <p className="text-lg leading-relaxed text-black/70">{bucket.body}</p>
+        <div className="w-full border border-black/8 bg-white p-6">
+          <p className="text-sm uppercase tracking-wide text-black/60" style={mono}>
             Recommendation
           </p>
-          <p className="mt-2 text-lg font-medium">{bucket.recommendation}</p>
+          <p className="mt-2 text-xl font-medium">{bucket.recommendation}</p>
         </div>
       </div>
-      <div className="pb-2">
+      <div className="pb-8">
         <QuizButton label={ctaLabel} href={ctaHref} onClick={onCtaClick} />
       </div>
     </div>

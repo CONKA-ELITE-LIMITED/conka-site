@@ -65,13 +65,13 @@ export default function QuizQuestion({
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col justify-center gap-8">
+      <div className="flex flex-1 flex-col justify-center gap-10">
         <div>
-          <h2 className="text-[1.75rem] font-medium leading-tight tracking-[-0.01em]">
+          <h2 className="text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl">
             {screen.question}
           </h2>
           {screen.subtitle && (
-            <p className="mt-2 text-base text-black/60">{screen.subtitle}</p>
+            <p className="mt-3 text-lg text-black/60">{screen.subtitle}</p>
           )}
         </div>
 
@@ -84,14 +84,15 @@ export default function QuizQuestion({
                   key={option.label}
                   type="button"
                   onClick={() => handleSelect(i)}
-                  className="flex min-h-[3.5rem] w-full items-center gap-3 border px-5 py-4 text-left text-base transition-colors duration-150"
+                  className="flex min-h-[3.75rem] w-full items-center justify-center gap-3 border px-5 py-4 text-center text-lg transition-colors duration-150"
                   style={{
                     borderColor: isSelected
                       ? "var(--brand-accent)"
                       : "rgba(0,0,0,0.12)",
                     backgroundColor: isSelected
-                      ? "var(--brand-tint)"
-                      : "transparent",
+                      ? "var(--brand-accent)"
+                      : "#ffffff",
+                    color: isSelected ? "#ffffff" : undefined,
                   }}
                   aria-pressed={isSelected}
                 >
@@ -106,7 +107,7 @@ export default function QuizQuestion({
         {screen.type === "slider" && slider && (
           <div className="flex flex-col gap-6">
             <div
-              className="text-center text-4xl font-medium tabular-nums"
+              className="text-center text-5xl font-medium tabular-nums"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
               {slider.unit
@@ -136,7 +137,7 @@ export default function QuizQuestion({
       </div>
 
       {screen.type === "slider" && slider && (
-        <div className="pb-2 pt-6">
+        <div className="pb-8 pt-6">
           <QuizButton
             label="Continue"
             onClick={() =>

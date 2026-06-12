@@ -40,9 +40,12 @@ export interface SliderBand {
 export interface LandingScreen {
   kind: "landing";
   id: string;
-  eyebrow?: string;
   title: string;
   subtitle?: string;
+  /** Optional looping video (public path) shown between copy and CTA */
+  video?: string;
+  /** Star-rating line shown above the CTA, e.g. "4.9/5 from customers" */
+  rating?: { text: string };
   cta: string;
   /** Reassurance line under the CTA, e.g. "Takes 90 seconds" */
   footnote?: string;
@@ -76,11 +79,36 @@ export interface SliderQuestionScreen extends QuestionScreenBase {
 
 export type QuestionScreen = SingleQuestionScreen | SliderQuestionScreen;
 
+/**
+ * Chart shown on an interstitial. The discriminated `type` picks the
+ * renderer: "line" is the stylised with/without curve, "bar" and "pie"
+ * take real values from the config.
+ */
+export type ChartConfig =
+  | {
+      type: "line";
+      withLabel: string;
+      withoutLabel: string;
+      caption?: string;
+    }
+  | {
+      type: "bar";
+      items: { label: string; value: number; accent?: boolean }[];
+      /** Readout template, "{value}" is replaced, e.g. "{value} hrs" */
+      unit?: string;
+      caption?: string;
+    }
+  | {
+      type: "pie";
+      /** First segment gets the accent colour; values are relative */
+      segments: { label: string; value: number }[];
+      caption?: string;
+    };
+
 export interface InterstitialScreen {
   kind: "interstitial";
   id: string;
   variant: "stat" | "education" | "testimonial" | "comparison" | "commitment";
-  eyebrow?: string;
   title: string;
   /** Paragraphs revealed in sequence */
   body?: string[];
@@ -88,8 +116,8 @@ export interface InterstitialScreen {
   stat?: { value: number; prefix?: string; suffix?: string; label: string };
   /** Used by variant "testimonial" */
   testimonial?: { quote: string; name: string; detail?: string };
-  /** Used by variant "comparison" */
-  comparison?: { withLabel: string; withoutLabel: string; caption?: string };
+  /** Renders on any variant when set */
+  chart?: ChartConfig;
   /** Continue button label, defaults to "Continue" */
   cta?: string;
 }
@@ -105,7 +133,6 @@ export interface AnalyzingScreen {
 export interface ResultsScreen {
   kind: "results";
   id: string;
-  eyebrow?: string;
 }
 
 export type Screen =

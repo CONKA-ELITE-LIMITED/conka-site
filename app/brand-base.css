@@ -430,10 +430,21 @@
   animation: go-draw 1.1s ease-out 200ms forwards;
 }
 
+/* Bar grow-in (width set inline, scaled from the left) */
+@keyframes go-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.go-bar {
+  transform-origin: left;
+  animation: go-bar 800ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .go-screen-enter,
   .go-fade-up,
-  .go-draw {
+  .go-draw,
+  .go-bar {
     animation-duration: 1ms;
     animation-delay: 0ms;
   }

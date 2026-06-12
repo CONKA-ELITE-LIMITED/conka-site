@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | Quiz template visual pass: Flow-style centered layout with fixed logo header, bar and pie chart variants, landing video and rating line
 - **2026-06-12** | Added the /go persona landing system: config-driven quiz engine with reusable question, progress, stat and chart components, full funnel analytics
 - **2026-06-12** | Rebuilt /app-insights with a baseline-themed GSAP motion system: hero readings resolve on load, charts draw from the zero line, filter switches animate, plus a sharper storytelling spine and new page narrative entry
 - **2026-06-11** | B2B order page gains a collapsed UK shipping disclosure showing the exact freight for the current box count plus the full band table

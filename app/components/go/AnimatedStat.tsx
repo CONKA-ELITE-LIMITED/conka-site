@@ -41,17 +41,14 @@ export default function AnimatedStat({
   return (
     <div>
       <div
-        className="text-6xl font-medium tabular-nums"
+        className="text-8xl font-medium tabular-nums tracking-[-0.02em]"
         style={{ color: "var(--brand-accent)" }}
       >
         {prefix}
         {display}
         {suffix}
       </div>
-      <p
-        className="mt-2 text-sm uppercase tracking-wide text-black/60"
-        style={{ fontFamily: "var(--font-brand-data)" }}
-      >
+      <p className="mx-auto mt-3 max-w-xs text-lg leading-snug text-black/70">
         {label}
       </p>
     </div>

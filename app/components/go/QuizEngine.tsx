@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import type {
   LandingConfig,
   QuestionScreen,
@@ -24,6 +25,8 @@ import {
   trackLandingStarted,
 } from "@/app/lib/analytics";
 import { trackMetaLead, trackMetaViewContent } from "@/app/lib/metaPixel";
+
+const QUIZ_BG = "#ffffff";
 
 function generateSessionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -137,46 +140,58 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   };
 
   const ctaHref = resultBucket.ctaHref ?? config.resultsCta.href;
-  const showChrome = screen.kind !== "landing";
   const canGoBack =
     index > 0 && screen.kind !== "analyzing" && screen.kind !== "results";
   const progress = screens.length > 1 ? index / (screens.length - 1) : 0;
 
   return (
-    <div className="brand-clinical flex min-h-[100dvh] flex-col bg-white text-black">
-      <header className="mx-auto w-full max-w-xl px-5 pt-5">
-        {showChrome ? (
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={goBack}
-              disabled={!canGoBack}
-              aria-label="Back"
-              className={`-ml-2 px-2 py-1 text-xl leading-none text-black/60 transition-opacity duration-150 ${
-                canGoBack ? "" : "opacity-0"
-              }`}
-            >
-              {"←"}
-            </button>
-            <QuizProgressBar progress={progress} />
+    <div
+      className="brand-clinical flex min-h-[100dvh] flex-col text-black"
+      style={{ backgroundColor: QUIZ_BG }}
+    >
+      {/* Fixed header: logo centred, thick progress bar full-bleed below */}
+      <header
+        className="fixed inset-x-0 top-0 z-10"
+        style={{ backgroundColor: QUIZ_BG }}
+      >
+        <div className="relative flex h-16 items-center justify-center">
+          <button
+            type="button"
+            onClick={goBack}
+            disabled={!canGoBack}
+            aria-label="Back"
+            className={`absolute left-3 px-2 py-1 text-2xl leading-none text-black/70 transition-opacity duration-150 ${
+              canGoBack ? "" : "opacity-0"
+            }`}
+          >
+            {"←"}
+          </button>
+          <Image
+            src="/conka-logo.webp"
+            alt="CONKA logo"
+            width={440}
+            height={112}
+            className="h-8 w-auto"
+            priority
+          />
+          {questionNumber > 0 && (
             <span
-              className="min-w-8 text-right text-xs tabular-nums text-black/50"
+              className="absolute right-4 text-sm tabular-nums text-black/50"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
-              {questionNumber > 0 ? `${questionNumber}/${totalQuestions}` : ""}
+              {questionNumber}/{totalQuestions}
             </span>
+          )}
+        </div>
+        {/* No bar on the landing screen; inset, not full-bleed */}
+        {index > 0 && (
+          <div className="mx-auto w-full max-w-sm px-5 pb-3">
+            <QuizProgressBar progress={progress} />
           </div>
-        ) : (
-          <p
-            className="text-center text-sm font-medium uppercase tracking-[0.2em]"
-            style={{ fontFamily: "var(--font-brand-data)" }}
-          >
-            CONKA
-          </p>
         )}
       </header>
 
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-6 pt-6">
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-6 pt-24 text-center">
         <div key={index} className="go-screen-enter flex flex-1 flex-col">
           {screen.kind === "landing" && (
             <LandingView screen={screen} onStart={goNext} />
@@ -196,7 +211,6 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
           )}
           {screen.kind === "results" && (
             <ResultsView
-              screen={screen}
               bucket={resultBucket}
               ctaLabel={config.resultsCta.label}
               ctaHref={ctaHref}

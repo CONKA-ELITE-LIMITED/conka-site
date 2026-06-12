@@ -49,7 +49,7 @@ export default function ComparisonChart({
       </svg>
 
       <div
-        className="mt-3 flex items-center gap-5 text-xs uppercase tracking-wide"
+        className="mt-3 flex items-center justify-center gap-5 text-xs uppercase tracking-wide"
         style={{ fontFamily: "var(--font-brand-data)" }}
       >
         <span className="flex items-center gap-2">
