@@ -226,19 +226,22 @@ function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
   const [selectedCadence, setSelectedCadence] =
     useState<CadenceType>("monthly-sub");
 
-  const handleAddToCart = async () => {
-    const variantData = getCadenceVariantByProductHeroId(
-      formulaId,
-      selectedCadence,
-    );
+  const handleAddToCart = async (cadence: CadenceType = selectedCadence) => {
+    const variantData = getCadenceVariantByProductHeroId(formulaId, cadence);
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location: "listicle_buybox",
         source: "listicle",
       });
     } else {
-      console.warn("Variant not configured for cadence:", selectedCadence);
+      console.warn("Variant not configured for cadence:", cadence);
     }
+  };
+
+  // IM8 pattern: the one-time-purchase text link adds straight to cart
+  const handleOtpAddToCart = () => {
+    setSelectedCadence("monthly-otp");
+    void handleAddToCart("monthly-otp");
   };
 
   const Hero = isMobile ? ListicleProductHeroMobile : ListicleProductHero;
@@ -247,7 +250,8 @@ function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
       formulaId={formulaId}
       selectedCadence={selectedCadence}
       onCadenceChange={setSelectedCadence}
-      onAddToCart={handleAddToCart}
+      onAddToCart={() => void handleAddToCart()}
+      onOtpAddToCart={handleOtpAddToCart}
     />
   );
 }

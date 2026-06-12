@@ -38,6 +38,8 @@ interface ListicleProductHeroProps {
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
+  /** The OTP text link adds straight to cart (IM8 pattern) */
+  onOtpAddToCart: () => void;
 }
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
@@ -46,6 +48,7 @@ function PlanSelector({
   formulaId,
   selectedCadence,
   onCadenceChange,
+  onOtpAddToCart,
 }: Omit<ListicleProductHeroProps, "onAddToCart">) {
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
   const otpSelected = selectedCadence === "monthly-otp";
@@ -176,10 +179,10 @@ function PlanSelector({
         );
       })}
 
-      {/* One-time purchase demoted to a text link, IM8-style */}
+      {/* One-time purchase demoted to a text link; adds straight to cart */}
       <button
         type="button"
-        onClick={() => onCadenceChange("monthly-otp")}
+        onClick={onOtpAddToCart}
         className={`mx-auto mt-1 w-fit text-center text-sm underline underline-offset-4 transition-colors ${
           otpSelected
             ? "font-semibold text-[#1B2757]"
@@ -236,6 +239,7 @@ function BuyPanel({
   selectedCadence,
   onCadenceChange,
   onAddToCart,
+  onOtpAddToCart,
 }: ListicleProductHeroProps) {
   const content = getHeroContent(formulaId);
 
@@ -303,6 +307,7 @@ function BuyPanel({
           formulaId={formulaId}
           selectedCadence={selectedCadence}
           onCadenceChange={onCadenceChange}
+          onOtpAddToCart={onOtpAddToCart}
         />
       </div>
 
