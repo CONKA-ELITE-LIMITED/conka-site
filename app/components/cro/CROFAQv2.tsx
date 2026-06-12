@@ -38,7 +38,11 @@ function FAQRow({ item }: { item: FaqItem }) {
   );
 }
 
-export default function CROFAQv2() {
+export default function CROFAQv2({
+  items = FAQ_ITEMS,
+}: {
+  items?: FaqItem[];
+} = {}) {
   return (
     <div className="mx-auto max-w-[560px]">
       <h2
@@ -49,7 +53,7 @@ export default function CROFAQv2() {
       </h2>
 
       <div className="space-y-2">
-        {FAQ_ITEMS.map((item) => (
+        {items.map((item) => (
           <FAQRow key={item.id} item={item} />
         ))}
       </div>

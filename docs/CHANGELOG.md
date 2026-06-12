@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | Listicle landing page framework shipped at /go/[slug] with first ADHD persona page, reusing site components for buy box, reviews, athletes and FAQ
 - **2026-06-12** | Removed the CookieYes consent banner integration site-wide (subscription cancelled; we no longer use CookieYes). Analytics scripts now load without a consent gate
 - **2026-06-12** | Quiz polish: header step counter removed, hook title anchored high with the borderless brain-scan loop below, quiz paints the document background so overscroll never flashes white
 - **2026-06-12** | Brain-age quiz iteration rounds: Flow-style layout (full-bleed gamefied progress bar with perceived curve completing at the reveal, top-anchored questions, bigger type), gradient chart cards with glow + decay lines, typed commitment screen, per-answer stat split, brain-scan hook video, shortened funnel ending straight on the Both PDP

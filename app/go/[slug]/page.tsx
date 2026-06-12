@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLandingConfig, landingSlugs } from "@/app/lib/landings";
 import QuizEngine from "@/app/components/go/QuizEngine";
+import ListicleRenderer from "@/app/components/go/listicle/ListicleRenderer";
+import Navigation from "@/app/components/navigation";
+import Footer from "@/app/components/footer";
 
 /**
  * Ad landing pages. Each slug maps to a config in app/lib/landings/.
@@ -37,5 +40,14 @@ export default async function GoPage({
   const { slug } = await params;
   const config = getLandingConfig(slug);
   if (!config) notFound();
+  if (config.format === "listicle") {
+    return (
+      <>
+        <Navigation />
+        <ListicleRenderer config={config} />
+        <Footer />
+      </>
+    );
+  }
   return <QuizEngine config={config} />;
 }
