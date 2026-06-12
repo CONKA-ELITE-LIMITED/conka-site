@@ -7,7 +7,7 @@ import { track } from "@vercel/analytics/react";
  * 
  * Type-safe, centralized analytics tracking for Vercel Analytics.
  * All events are structured to answer key business questions about
- * the quiz funnel and conversion journey.
+ * the landing funnels and conversion journey.
  * 
  * Performance: All tracking is async and non-blocking. Errors fail silently.
  */
@@ -179,9 +179,10 @@ export function trackB2BInvoiceRequested(params: {
 // ===== PURCHASE INTENT TRACKING =====
 
 /**
- * Detect source for add-to-cart events
- * Returns "quiz" if user came from quiz, "direct" otherwise
- * Note: Menu source requires Phase 2 navigation tracking
+ * Detect source for add-to-cart events.
+ * Returns "quiz" if user came from the (now removed) legacy quiz,
+ * "direct" otherwise. Kept because product pages use it for source
+ * tagging; with the quiz gone it effectively always returns "direct".
  */
 export function getAddToCartSource(): string {
   if (typeof window === "undefined") return "direct";
