@@ -150,6 +150,17 @@ export default function LandingValueComparison({
   );
 }
 
+/** Standalone Fig. 01 chart card with its own scroll-reveal — for surfaces
+ *  that want the graphic without the full section (e.g. listicle reasons). */
+export function ValueComparisonChart() {
+  const [ref, isInView] = useInView();
+  return (
+    <div ref={ref}>
+      <ChartCard isInView={isInView} />
+    </div>
+  );
+}
+
 /* ============================ sub-components ============================== */
 
 /** Fig. 01 — the stacked coffee/CONKA energy curves in a clinical card.

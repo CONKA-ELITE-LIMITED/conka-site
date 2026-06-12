@@ -1,6 +1,25 @@
 # Listicle Page Blueprint (IM8 Reference)
 
-Status: BLUEPRINT AGREED, build not started. Part of the [landing conversion programme](./README.md).
+Status: FRAMEWORK BUILT + first persona page live in dev. Part of the [landing conversion programme](./README.md).
+
+## Build status (2026-06-12)
+
+**Shipped (branch LISTICLE-LANDING-PAGE):**
+
+- `format: "listicle"` renderer at `/go/[slug]` beside the quiz engine: `app/components/go/listicle/ListicleRenderer.tsx`, config schema in `app/lib/landings/listicle-types.ts`, registered per page in `app/lib/landings/index.ts`.
+- Two pages live in dev: `/go/listicle-template` (lorem reference config) and `/go/adhd-listicle` (first persona page, ADHD, supplied reason copy verbatim).
+- **Composition shell decision:** the renderer builds only the listicle core (hero, numbered reasons with stats bands and review strips woven in, bridge CTA). The conversion tail reuses existing site components: buy box = `ProductHero`/`ProductHeroMobile` (corners squared, real `addToCart` with `source: "listicle"`), athlete proof = `AthleteCredibilityCarousel`, reviews = `CROTestimonials` + `LandingTrustBadges`, FAQ = `CROFAQv2` (given an optional `items` prop for persona-locked questions). Review quotes map from `customerTestimonials.ts`; stats band uses the four headline trial stats from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
+- Unlike the quiz, listicle pages render the site `Navigation` and `Footer` (user decision, diverges from the IM8 reference).
+- Background rhythm (user decision): dark = hero + buy box only; everything else light/bone. Dark colour is `--color-neuro-blue-dark` via one constant in the renderer.
+- **Deferred from v1:** comparison table and cost breakdown (optional config zones, render only when configured; need sourced competitor doses / stack prices). Trust ticker, bridge, sticky bar are optional per config.
+
+**Open / next:**
+
+- Six reason assets for the ADHD page are labelled placeholders (lifestyle shots, caffeine-curve stat panel, app screenshot).
+- Hero + reasons section polish pass against the IM8 reference; then the mobile pass.
+- Analytics wiring (`landing:section_viewed` via IntersectionObserver, Meta ViewContent) not yet added.
+- Guarantee mismatch to resolve: ADHD copy says 60 days; embedded `ProductHero` renders the site `GuaranteeRow` label on the same page.
+- Drafted-by-Claude copy on the ADHD page needs review: hero headline/subcopy, bridge, FAQ answers, tags, ticker, sticky bar.
 
 Reference: IM8 "Daily Ultimate Essentials Pro" listicle landing pages, structure taken from Luke's Miro board (6 desktop screenshots, digested 2026-06-12). This supersedes the Cloud reference in [listicle-format.md](./listicle-format.md) as the layout we are copying; the Cloud doc remains useful for the *why it converts* principles, which IM8 shares.
 

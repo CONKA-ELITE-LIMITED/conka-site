@@ -29,16 +29,16 @@ import { useEffect, useRef } from "react";
 
 const FORMULA_VIDEOS = {
   flow: {
-    webm: "/videos/Flow.webm",
-    mp4: "/videos/Flow.mp4",
-    poster: "/videos/Flow-poster.jpg",
-    label: "CONKA Flow bottle rotating in space",
+    webm: "/videos/flow/FlowLiquid.webm",
+    mp4: "/videos/flow/FlowLiquid.mp4",
+    poster: "/videos/flow/FlowLiquid-poster.jpg",
+    label: "CONKA Flow shot being poured",
   },
   clear: {
-    webm: "/videos/Clear.webm",
-    mp4: "/videos/Clear.mp4",
-    poster: "/videos/Clear-poster.jpg",
-    label: "CONKA Clear bottle rotating in space",
+    webm: "/videos/clear/ClearLiquid.webm",
+    mp4: "/videos/clear/ClearLiquid.mp4",
+    poster: "/videos/clear/ClearLiquid-poster.jpg",
+    label: "CONKA Clear shot being poured",
   },
 } as const;
 

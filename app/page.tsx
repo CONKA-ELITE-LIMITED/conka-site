@@ -20,8 +20,8 @@ const LabCaseStudies = dynamic(
   { loading: () => <div className="h-[1200px]" /> },
 );
 
-const LandingTestimonials = dynamic(
-  () => import("./components/landing/LandingTestimonials"),
+const CROTestimonials = dynamic(
+  () => import("./components/cro/CROTestimonials"),
   { loading: () => <div className="h-[450px]" /> },
 );
 
@@ -52,11 +52,14 @@ export default function Home() {
     <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
       {/* ===== SECTION 1: HERO ===== */}
       <Navigation />
+      {/* Desktop drops the section gutters/track so the hero asset can
+          bleed to the viewport edge (listicle hero pattern); mobile keeps
+          the standard section padding */}
       <section
-        className="brand-section brand-hero-first brand-bg-white"
+        className="brand-section brand-hero-first brand-bg-white lg:p-0!"
         aria-label="Homepage hero"
       >
-        <div className="brand-track">
+        <div className="brand-track lg:max-w-none!">
           <LandingHero />
         </div>
       </section>
@@ -139,7 +142,7 @@ export default function Home() {
         aria-label="Customer reviews"
       >
         <div className="brand-track">
-          <LandingTestimonials ctaHref="/conka-both" />
+          <CROTestimonials ctaHref="/conka-both" />
         </div>
       </section>
 

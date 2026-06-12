@@ -185,9 +185,11 @@ function NavButton({
 export default function CROTestimonials({
   testimonials = CURATED_TESTIMONIALS,
   hideCTA = false,
+  ctaHref,
 }: {
   testimonials?: Testimonial[];
   hideCTA?: boolean;
+  ctaHref?: string;
 } = {}) {
   const totalCards = testimonials.length;
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -359,7 +361,7 @@ export default function CROTestimonials({
       {!hideCTA && (
         <>
           <div className="mt-10 flex justify-start">
-            <ConkaCTAButton meta={null}>
+            <ConkaCTAButton href={ctaHref} meta={null}>
               Get Both from £{PRICE_PER_SHOT_BOTH}/shot
             </ConkaCTAButton>
           </div>
