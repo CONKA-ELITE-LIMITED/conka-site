@@ -74,7 +74,7 @@ Every Vercel event carries `slug`, `persona`, `format`, `sessionId`, so per-quiz
 
 - `dynamicParams = false`: only registered slugs resolve. New configs need a deploy (config lives in code, by design).
 - The quiz canvas is `var(--go-bg)` from the `.go-quiz` token block in `brand-base.css`; header and engine share it. Dark mode is `theme: "dark"` on the config, nothing else.
-- Progress bar is hidden on the landing screen and full-bleed across the viewport (gamefied: gradient + shimmer via `.go-progress-fill`). Progress is a perceived curve, not linear: the first quarter of screens fills half the bar (`perceivedProgress` in `QuizEngine.tsx`), so early answers feel fast and later screens drip.
+- Progress bar is hidden on the landing screen and full-bleed across the viewport (gamefied: gradient + shimmer via `.go-progress-fill`). Progress is a perceived curve, not linear: the first quarter fills half the bar, and the bar completes at the reveal screen (or the last screen if a flow has none) and stays full after (`perceivedProgress` + `completionIndex` in `QuizEngine.tsx`).
 - Eyebrow/kicker text was deliberately removed from the schema. Do not add it back per-screen; the style is intentionally stripped back.
 - Email capture is not built. If the team wants an email gate, it needs a new screen kind plus Klaviyo wiring.
 - Run `/review-analytics` after any change to the event wiring, before scaling spend.
