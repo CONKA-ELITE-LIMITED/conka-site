@@ -108,19 +108,31 @@ export default function LandingHero() {
         </div>
       </div>
 
-      {/* Desktop — content left, asset right. Even split (was 1fr_2fr) so the
-          asset reads as a complement to the message rather than dominating it.
-          [1fr_1fr] (not grid-cols-2) so the columns respect the nowrap title's
-          min width instead of letting it overflow at narrow desktop widths. */}
-      <div className="hidden lg:grid lg:grid-cols-[1fr_1fr] lg:gap-12 xl:gap-16 lg:items-center">
-        {/* Left — trust row, title, CTA */}
-        <div className="flex flex-col items-start">
+      {/* Desktop — listicle hero pattern: asset bleeds flush to the left
+          viewport edge at its native aspect, content column vertically
+          centred beside it. */}
+      <div className="hidden lg:grid lg:grid-cols-[52fr_48fr] lg:items-center">
+        {/* Left — asset, edge to edge, native 3:2 so nothing crops */}
+        <div className="relative w-full" style={{ aspectRatio: "2528/1696" }}>
+          <Image
+            src="/formulas/both/BoxIngredientHero.png"
+            alt="CONKA Flow and Clear shots surrounded by their ingredients"
+            fill
+            priority
+            fetchPriority="high"
+            sizes="(max-width: 1024px) 100vw, 52vw"
+            className="object-cover object-center"
+          />
+        </div>
+
+        {/* Right — trust row, title, CTA */}
+        <div className="flex flex-col items-start px-14">
           <TrustMicroRow />
 
-          {/* whitespace-nowrap keeps both lines intact; the grid's text column
-              sizes to fit them, which is what holds the image column down */}
+          {/* whitespace-nowrap keeps both lines intact; sized so the longer
+              line fits the fixed 48% column at lg and xl widths */}
           <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05] mb-5 whitespace-nowrap"
+            className="text-black font-semibold text-4xl xl:text-5xl leading-[1.05] mb-5 whitespace-nowrap"
             style={{ letterSpacing: "-0.02em" }}
           >
             A Sharper Mind.
@@ -137,20 +149,6 @@ export default function LandingHero() {
             <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
             <GuaranteeRow />
           </div>
-        </div>
-
-        {/* Right — clean asset, no overlays. Wider/shorter aspect on desktop
-            so the source crop reads less zoomed. */}
-        <div className="relative w-full aspect-[3/2] overflow-hidden border border-black/12 bg-[#f5f5f5]">
-          <Image
-            src="/formulas/both/BoxIngredientHero.png"
-            alt="CONKA Flow and Clear shots surrounded by their ingredients"
-            fill
-            priority
-            fetchPriority="high"
-            sizes="(max-width: 1024px) 100vw, 60vw"
-            className="object-cover object-center"
-          />
         </div>
       </div>
     </div>
