@@ -148,7 +148,14 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
     () => setIndex((i) => Math.min(i + 1, screens.length - 1)),
     [screens.length],
   );
-  const goBack = () => setIndex((i) => Math.max(i - 1, 0));
+  const goBack = () =>
+    setIndex((i) => {
+      let prev = Math.max(i - 1, 0);
+      // Landing back on analyzing would just auto-play forward again;
+      // step past it to the last real screen (e.g. reveal -> Q11)
+      while (prev > 0 && screens[prev].kind === "analyzing") prev -= 1;
+      return prev;
+    });
 
   const handleAnswer = (question: QuestionScreen, answer: QuizAnswer) => {
     setAnswers((a) => ({ ...a, [question.id]: answer }));
@@ -164,13 +171,8 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   };
 
   const ctaHref = resultBucket.ctaHref ?? config.resultsCta.href;
-  // Back is blocked on analyzing/results, and on reveal: stepping back
-  // from the reveal lands on analyzing, which just auto-advances forward.
   const canGoBack =
-    index > 0 &&
-    screen.kind !== "analyzing" &&
-    screen.kind !== "reveal" &&
-    screen.kind !== "results";
+    index > 0 && screen.kind !== "analyzing" && screen.kind !== "results";
   const progress = screens.length > 1 ? index / (screens.length - 1) : 0;
   const dark = config.theme === "dark";
 
