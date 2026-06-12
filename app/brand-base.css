@@ -41,6 +41,8 @@
      non-clinical surfaces (B2B portal, account, etc). */
   --brand-accent: #4058bb;
   --brand-tint: #f4f5f8;
+  /* Light-blue fill for unselected /go quiz options (clearly tinted, not near-white) */
+  --go-option-tint: #dce5f7;
 
   /* Functional aliases */
   --brand-text-primary: var(--brand-black);
@@ -422,6 +424,15 @@
 }
 .go-fade-up { opacity: 0; animation: go-fade-up 420ms ease-out forwards; }
 
+/* Option cascade: staggered reveal for single-choice answers.
+   More travel than go-fade-up so the cascade reads clearly. Delay
+   is set inline per option (index * step) in QuizQuestion. */
+@keyframes go-cascade {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.go-cascade { opacity: 0; animation: go-cascade 460ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
 /* Line draw-in for SVG paths with pathLength="1" */
 @keyframes go-draw { to { stroke-dashoffset: 0; } }
 .go-draw {
@@ -443,6 +454,7 @@
 @media (prefers-reduced-motion: reduce) {
   .go-screen-enter,
   .go-fade-up,
+  .go-cascade,
   .go-draw,
   .go-bar {
     animation-duration: 1ms;

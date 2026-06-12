@@ -84,15 +84,16 @@ export default function QuizQuestion({
                   key={option.label}
                   type="button"
                   onClick={() => handleSelect(i)}
-                  className="flex min-h-[3.75rem] w-full items-center justify-center gap-3 border px-5 py-4 text-center text-lg transition-colors duration-150"
+                  className="go-cascade flex min-h-[3.75rem] w-full items-center justify-center gap-3 border px-5 py-4 text-center text-lg transition-colors duration-150"
                   style={{
                     borderColor: isSelected
                       ? "var(--brand-accent)"
-                      : "rgba(0,0,0,0.12)",
+                      : "var(--go-option-tint)",
                     backgroundColor: isSelected
                       ? "var(--brand-accent)"
-                      : "#ffffff",
+                      : "var(--go-option-tint)",
                     color: isSelected ? "#ffffff" : undefined,
+                    animationDelay: `${120 + i * 90}ms`,
                   }}
                   aria-pressed={isSelected}
                 >
