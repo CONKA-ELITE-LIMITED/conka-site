@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | Restyled /go quiz answer tiles to a light-blue fill with a staggered cascade reveal
 - **2026-06-12** | Removed the legacy protocol quiz (pages, components, data, analytics helpers); /quiz now redirects to /funnel
 - **2026-06-12** | Quiz template visual pass: Flow-style centered layout with fixed logo header, bar and pie chart variants, landing video and rating line
 - **2026-06-12** | Added the /go persona landing system: config-driven quiz engine with reusable question, progress, stat and chart components, full funnel analytics

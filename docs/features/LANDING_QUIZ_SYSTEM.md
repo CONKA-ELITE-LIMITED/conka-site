@@ -20,7 +20,7 @@ These pages are ad destinations only: noindex, no Navigation/Footer (the quiz ow
 | `app/components/go/QuizScreens.tsx` | Landing, interstitial, analyzing, results renderers |
 | `app/components/go/QuizProgressBar.tsx`, `QuizButton.tsx`, `AnimatedText.tsx`, `AnimatedStat.tsx`, `ComparisonChart.tsx`, `BarChart.tsx`, `PieChart.tsx` | Plug-and-play primitives |
 
-Motion utilities (`go-screen-in`, `go-fade-up`, `go-draw`, `go-bar`) live in `app/brand-base.css`. CSS-only by design, all respect `prefers-reduced-motion`. No GSAP, no chart library on these pages.
+Motion utilities (`go-screen-in`, `go-fade-up`, `go-cascade`, `go-draw`, `go-bar`) live in `app/brand-base.css`. CSS-only by design, all respect `prefers-reduced-motion`. No GSAP, no chart library on these pages. (`go-cascade` is the single-choice option reveal: each tile rises and fades in, staggered by an inline per-index `animationDelay` in `QuizQuestion`.)
 
 ## Creating a new landing page
 
