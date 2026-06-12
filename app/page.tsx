@@ -56,10 +56,10 @@ export default function Home() {
           bleed to the viewport edge (listicle hero pattern); mobile keeps
           the standard section padding */}
       <section
-        className="brand-section brand-hero-first brand-bg-white lg:!p-0"
+        className="brand-section brand-hero-first brand-bg-white lg:p-0!"
         aria-label="Homepage hero"
       >
-        <div className="brand-track lg:max-w-none">
+        <div className="brand-track lg:max-w-none!">
           <LandingHero />
         </div>
       </section>
