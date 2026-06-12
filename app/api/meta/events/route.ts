@@ -32,6 +32,7 @@ function isValidEventName(name: string): boolean {
     "PageView",
     "ViewContent",
     "AddToCart",
+    "Lead",
     "InitiateCheckout",
     "AddPaymentInfo",
     "Purchase",

@@ -407,6 +407,38 @@
   50%, 100% { opacity: 0; }
 }
 
+/* ---- /go landing-quiz motion utilities ----
+   Consumed by app/components/go/*. CSS-only by design (no GSAP on ad
+   landing pages). All three respect prefers-reduced-motion below. */
+@keyframes go-screen-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.go-screen-enter { animation: go-screen-in 280ms ease-out both; }
+
+@keyframes go-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.go-fade-up { opacity: 0; animation: go-fade-up 420ms ease-out forwards; }
+
+/* Line draw-in for SVG paths with pathLength="1" */
+@keyframes go-draw { to { stroke-dashoffset: 0; } }
+.go-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: go-draw 1.1s ease-out 200ms forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .go-screen-enter,
+  .go-fade-up,
+  .go-draw {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}
+
 /* ================================================================
  * LAYER 2.5 — APP DARK SCOPE
  * ================================================================

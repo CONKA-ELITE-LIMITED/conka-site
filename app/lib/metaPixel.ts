@@ -200,4 +200,19 @@ export function trackMetaAddToCart(params: {
   trackWithDedup("AddToCart", customData);
 }
 
+/**
+ * Track Lead with deduplication. Fired when a /go landing quiz reaches
+ * its results screen — the ad-side completion signal for quiz funnels.
+ */
+export function trackMetaLead(params: {
+  content_name?: string;
+  content_category?: string;
+}): void {
+  const customData: Record<string, unknown> = {};
+  if (params.content_name != null) customData.content_name = params.content_name;
+  if (params.content_category != null)
+    customData.content_category = params.content_category;
+  trackWithDedup("Lead", customData);
+}
+
 export { toContentId };
