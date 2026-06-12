@@ -62,8 +62,8 @@ export const adhdListicle: ListicleConfig = {
       tag: "RESTLESSNESS",
       headline: "Sit Still Long Enough to Actually Get Things Done",
       body: "Your leg won't stop. Your eyes drift to the window, the door, your phone. It's not that you don't want to focus. Your brain just can't hold itself steady, because its focus chemistry runs uneven. Coffee only winds you up tighter.\n\nConka gives you focus and calm at the same time, with no caffeine to make you jittery. The fidget settles, and you look up to find you've worked for half an hour straight.",
-      // Fig. 01 coffee-vs-CONKA curves: pays off "coffee winds you up tighter"
-      asset: { kind: "valueChart" },
+      // 9:16 source centre-cropped to 3:4, same as the quiz landing frame
+      asset: { kind: "video", src: "/videos/flow/FlowLiquid.mp4", aspect: "3/4" },
     },
     {
       kind: "statsBand",
@@ -97,8 +97,8 @@ export const adhdListicle: ListicleConfig = {
       tag: "THE 2PM CRASH",
       headline: "Kill the 2PM Crash (Without More Coffee)",
       body: "You run on coffee because it's the only thing that gets your brain going. Then 2pm hits with the slump, the jitters, and the fog. That crash is baked into caffeine, and an ADHD brain feels the swing harder.\n\nConka has zero caffeine, so there's nothing to spike you up and nothing to crash from. Steady focus all day, and Conka 2 at night helps you wind down instead of lying there wired.",
-      // 9:16 source centre-cropped to 3:4, same as the quiz landing frame
-      asset: { kind: "video", src: "/videos/flow/FlowLiquid.mp4", aspect: "3/4" },
+      // Fig. 01 coffee-vs-CONKA curves: pays off the caffeine crash story
+      asset: { kind: "valueChart" },
     },
     {
       // Hand-cropped excerpts (caffeine/crash theme), not the full bodies
