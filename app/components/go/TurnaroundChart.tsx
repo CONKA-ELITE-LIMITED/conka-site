@@ -1,27 +1,31 @@
 /**
- * Animated with/without comparison graph for interstitial screens.
- * Stylised illustrative curves, not real data: a hand-drawn SVG with a
- * CSS draw-in on the "with" line (go-draw in brand-base.css), framed
- * in a gradient card with faint gridlines, a glow under the accent
- * line and in-chart label pills. No chart library by design.
+ * Turnaround curve for the brain-age reveal: a line that starts low
+ * ("you now") and climbs hard to a dot ("where you could be").
+ * Stylised and illustrative, not data-driven; same card grammar as
+ * ComparisonChart (gradient card, gridlines, glow, label pills).
  */
-const WITH_PATH = "M12,150 C70,128 130,72 200,50 C250,36 285,31 308,30";
+const UP_PATH = "M16,168 C90,160 150,120 210,70 C250,38 285,26 304,22";
 
-export default function ComparisonChart({
-  withLabel,
-  withoutLabel,
+export default function TurnaroundChart({
+  nowLabel,
+  futureLabel,
   caption,
+  startDelayMs = 0,
 }: {
-  withLabel: string;
-  withoutLabel: string;
+  nowLabel: string;
+  futureLabel: string;
   caption?: string;
+  startDelayMs?: number;
 }) {
   const mono = { fontFamily: "var(--font-brand-data)" } as const;
   const pill =
     "absolute rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.12em]";
 
   return (
-    <figure className="w-full">
+    <figure
+      className="go-fade-up w-full"
+      style={{ animationDelay: `${startDelayMs}ms` }}
+    >
       <div
         className="relative w-full overflow-hidden rounded-2xl p-3"
         style={{ background: "var(--go-card-bg)" }}
@@ -30,9 +34,8 @@ export default function ComparisonChart({
           viewBox="0 0 320 200"
           className="w-full"
           role="img"
-          aria-label={`${withLabel} versus ${withoutLabel}`}
+          aria-label={`${nowLabel} to ${futureLabel}`}
         >
-          {/* faint grid */}
           {[50, 100, 150].map((y) => (
             <line
               key={`h${y}`}
@@ -56,49 +59,49 @@ export default function ComparisonChart({
             />
           ))}
 
-          {/* without: shares the accent line's origin, then drifts low */}
+          {/* dotted decay: where the line heads if nothing changes */}
           <path
-            d="M12,150 C80,148 140,154 200,158 C250,162 285,164 308,164"
+            d="M16,168 C90,172 150,178 210,183 C250,186 285,188 304,188"
             fill="none"
             stroke="var(--go-neutral-strong)"
-            strokeWidth="2.5"
-            strokeDasharray="5 5"
+            strokeWidth="2"
+            strokeDasharray="4 5"
             className="go-fade-up"
-            style={{ animationDelay: "150ms" }}
+            style={{ animationDelay: `${startDelayMs + 300}ms` }}
           />
 
-          {/* with: glow underlay, then the drawn line */}
+          {/* glow underlay, start dot, climbing line, end dot */}
           <path
-            d={WITH_PATH}
+            d={UP_PATH}
             fill="none"
             stroke="var(--brand-accent)"
             strokeWidth="9"
             opacity="0.35"
-            style={{ filter: "blur(7px)" }}
+            style={{ filter: "blur(7px)", animationDelay: `${startDelayMs}ms` }}
             className="go-fade-up"
           />
-          <circle cx="12" cy="150" r="4" fill="var(--go-text)" />
+          <circle cx="16" cy="168" r="4" fill="var(--go-text)" />
           <path
-            d={WITH_PATH}
+            d={UP_PATH}
             fill="none"
             stroke="var(--brand-accent)"
             strokeWidth="3.5"
             pathLength={1}
             className="go-draw"
+            style={{ animationDelay: `${startDelayMs + 200}ms` }}
           />
           <circle
-            cx="308"
-            cy="30"
+            cx="304"
+            cy="22"
             r="5"
             fill="var(--brand-accent)"
             className="go-fade-up"
-            style={{ animationDelay: "1200ms" }}
+            style={{ animationDelay: `${startDelayMs + 1200}ms` }}
           />
         </svg>
 
-        {/* in-chart label pills */}
         <span
-          className={`${pill} bottom-[9%] left-[5%]`}
+          className={`${pill} bottom-[10%] left-[4%]`}
           style={{
             ...mono,
             backgroundColor: "var(--go-surface)",
@@ -106,19 +109,19 @@ export default function ComparisonChart({
             color: "var(--go-text-soft)",
           }}
         >
-          {withoutLabel}
+          {nowLabel}
         </span>
         <span
-          className={`${pill} go-fade-up right-[4%] top-[5%]`}
+          className={`${pill} go-fade-up right-[3%] top-[4%]`}
           style={{
             ...mono,
             backgroundColor: "var(--go-bg)",
             border: "1px solid var(--brand-accent)",
             color: "var(--brand-accent)",
-            animationDelay: "1100ms",
+            animationDelay: `${startDelayMs + 1100}ms`,
           }}
         >
-          {withLabel}
+          {futureLabel}
         </span>
       </div>
 

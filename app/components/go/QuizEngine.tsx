@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import type {
+  BrainAgeResult,
   LandingConfig,
   QuestionScreen,
   QuizAnswer,
@@ -15,6 +16,8 @@ import {
   InterstitialView,
   LandingView,
   ResultsView,
+  RevealView,
+  fillAgeTokens,
 } from "./QuizScreens";
 import {
   trackLandingAnswerSelected,
@@ -26,7 +29,17 @@ import {
 } from "@/app/lib/analytics";
 import { trackMetaLead, trackMetaViewContent } from "@/app/lib/metaPixel";
 
-const QUIZ_BG = "#ffffff";
+/**
+ * Perceived-progress curve (Flow-style front-loading): the first
+ * quarter of the run fills half the bar, so starting feels like
+ * instant progress and the back half drips in slowly. The bar
+ * completes at the reveal (the quiz's payoff) and stays full for the
+ * screens after it. With the brain-age flow that lands ~12% after
+ * Start and ~50% four questions in.
+ */
+function perceivedProgress(linear: number): number {
+  return linear <= 0.25 ? linear * 2 : 0.5 + ((linear - 0.25) * 2) / 3;
+}
 
 function generateSessionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -69,7 +82,7 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
     const totals: Record<string, number> = {};
     for (const bucket of config.buckets) totals[bucket.id] = 0;
     for (const answer of Object.values(answers)) {
-      for (const [bucketId, points] of Object.entries(answer.scores)) {
+      for (const [bucketId, points] of Object.entries(answer.scores ?? {})) {
         totals[bucketId] = (totals[bucketId] ?? 0) + points;
       }
     }
@@ -78,6 +91,24 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
       config.buckets[0],
     );
   }, [answers, config.buckets]);
+
+  /** Brain-age mode: baseline + clamped years gap (null until the
+   *  baseline question is answered, and always null in bucket mode) */
+  const ages: BrainAgeResult | null = useMemo(() => {
+    if (config.scoring?.mode !== "brain-age") return null;
+    let baseline: number | null = null;
+    let years = 0;
+    for (const answer of Object.values(answers)) {
+      if (typeof answer.baselineAge === "number") baseline = answer.baselineAge;
+      years += answer.years ?? 0;
+    }
+    if (baseline === null) return null;
+    const gap = Math.min(
+      Math.max(Math.round(years), config.scoring.gapMin),
+      config.scoring.gapMax,
+    );
+    return { realAge: baseline, brainAge: baseline + gap, gap };
+  }, [answers, config.scoring]);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -103,7 +134,10 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   }, [index]);
 
   useEffect(() => {
-    if (screen.kind !== "results" || resultsFiredRef.current) return;
+    // The reveal counts as completion too: brain-age configs may end on
+    // an interstitial whose CTA links out, with no results screen.
+    const isCompletion = screen.kind === "results" || screen.kind === "reveal";
+    if (!isCompletion || resultsFiredRef.current) return;
     resultsFiredRef.current = true;
     const timeSpentSeconds = Math.floor(
       (Date.now() - startTimeRef.current) / 1000,
@@ -113,8 +147,13 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
       resultBucket: resultBucket.id,
       totalQuestions,
       timeSpentSeconds,
+      ...(ages ? { brainAge: ages.brainAge, brainAgeGap: ages.gap } : {}),
     });
-    trackLandingResultsViewed({ ...base, resultBucket: resultBucket.id });
+    trackLandingResultsViewed({
+      ...base,
+      resultBucket: resultBucket.id,
+      ...(ages ? { brainAge: ages.brainAge, brainAgeGap: ages.gap } : {}),
+    });
     trackMetaLead({ content_name: config.title, content_category: config.slug });
     // Fire once on reaching results; guarded by resultsFiredRef.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,7 +163,14 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
     () => setIndex((i) => Math.min(i + 1, screens.length - 1)),
     [screens.length],
   );
-  const goBack = () => setIndex((i) => Math.max(i - 1, 0));
+  const goBack = () =>
+    setIndex((i) => {
+      let prev = Math.max(i - 1, 0);
+      // Landing back on analyzing would just auto-play forward again;
+      // step past it to the last real screen (e.g. reveal -> Q11)
+      while (prev > 0 && screens[prev].kind === "analyzing") prev -= 1;
+      return prev;
+    });
 
   const handleAnswer = (question: QuestionScreen, answer: QuizAnswer) => {
     setAnswers((a) => ({ ...a, [question.id]: answer }));
@@ -140,27 +186,39 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   };
 
   const ctaHref = resultBucket.ctaHref ?? config.resultsCta.href;
-  const canGoBack =
-    index > 0 && screen.kind !== "analyzing" && screen.kind !== "results";
-  const progress = screens.length > 1 ? index / (screens.length - 1) : 0;
+  // Always available after the first screen; goBack skips analyzing
+  const canGoBack = index > 0;
+  // The bar fills completely at the reveal (or the last screen when a
+  // flow has no reveal) and clamps full from there on
+  const completionIndex = useMemo(() => {
+    const revealIndex = screens.findIndex((s) => s.kind === "reveal");
+    return revealIndex >= 0 ? revealIndex : screens.length - 1;
+  }, [screens]);
+  const progress = perceivedProgress(
+    completionIndex > 0 ? Math.min(index / completionIndex, 1) : 0,
+  );
+  const dark = config.theme === "dark";
 
   return (
     <div
-      className="brand-clinical flex min-h-[100dvh] flex-col text-black"
-      style={{ backgroundColor: QUIZ_BG }}
+      className={`brand-clinical go-quiz${dark ? " go-dark" : ""} flex min-h-[100dvh] flex-col`}
+      style={{
+        backgroundColor: "var(--go-bg)",
+        color: "var(--go-text)",
+      }}
     >
-      {/* Fixed header: logo centred, thick progress bar full-bleed below */}
+      {/* Fixed header: logo centred with breathing room, wide thick bar below */}
       <header
         className="fixed inset-x-0 top-0 z-10"
-        style={{ backgroundColor: QUIZ_BG }}
+        style={{ backgroundColor: "var(--go-bg)" }}
       >
-        <div className="relative flex h-16 items-center justify-center">
+        <div className="relative flex h-14 items-end justify-center pt-4">
           <button
             type="button"
             onClick={goBack}
             disabled={!canGoBack}
             aria-label="Back"
-            className={`absolute left-3 px-2 py-1 text-2xl leading-none text-black/70 transition-opacity duration-150 ${
+            className={`go-text-soft absolute bottom-1 left-3 px-2 py-1 text-2xl leading-none transition-opacity duration-150 ${
               canGoBack ? "" : "opacity-0"
             }`}
           >
@@ -171,27 +229,27 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             alt="CONKA logo"
             width={440}
             height={112}
-            className="h-8 w-auto"
+            className={`h-10 w-auto${dark ? " invert" : ""}`}
             priority
           />
           {questionNumber > 0 && (
             <span
-              className="absolute right-4 text-sm tabular-nums text-black/50"
+              className="go-text-faint absolute bottom-2 right-4 text-sm tabular-nums"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
               {questionNumber}/{totalQuestions}
             </span>
           )}
         </div>
-        {/* No bar on the landing screen; inset, not full-bleed */}
+        {/* No bar on the landing screen; full-bleed across the viewport */}
         {index > 0 && (
-          <div className="mx-auto w-full max-w-sm px-5 pb-3">
+          <div className="w-full pb-3 pt-3.5">
             <QuizProgressBar progress={progress} />
           </div>
         )}
       </header>
 
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-6 pt-24 text-center">
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-6 pt-28 text-center">
         <div key={index} className="go-screen-enter flex flex-1 flex-col">
           {screen.kind === "landing" && (
             <LandingView screen={screen} onStart={goNext} />
@@ -204,14 +262,34 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             />
           )}
           {screen.kind === "interstitial" && (
-            <InterstitialView screen={screen} onContinue={goNext} />
+            <InterstitialView
+              screen={screen}
+              answers={answers}
+              onContinue={goNext}
+              onCtaClick={(destination) =>
+                trackLandingCtaClicked({
+                  ...base,
+                  resultBucket: resultBucket.id,
+                  destination,
+                })
+              }
+            />
           )}
           {screen.kind === "analyzing" && (
             <AnalyzingView screen={screen} onComplete={goNext} />
           )}
+          {screen.kind === "reveal" && (
+            <RevealView screen={screen} ages={ages} onContinue={goNext} />
+          )}
           {screen.kind === "results" && (
             <ResultsView
-              bucket={resultBucket}
+              bucket={{
+                ...resultBucket,
+                tag: fillAgeTokens(resultBucket.tag, ages),
+                title: fillAgeTokens(resultBucket.title, ages),
+                body: fillAgeTokens(resultBucket.body, ages),
+                recommendation: fillAgeTokens(resultBucket.recommendation, ages),
+              }}
               ctaLabel={config.resultsCta.label}
               ctaHref={ctaHref}
               onCtaClick={() =>

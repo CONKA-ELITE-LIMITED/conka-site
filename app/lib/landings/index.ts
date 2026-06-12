@@ -6,9 +6,11 @@
  */
 import type { LandingConfig } from "./types";
 import { quizTemplate } from "./quiz-template";
+import { brainAgeQuiz } from "./brain-age";
 
 const registry: Record<string, LandingConfig> = {
   [quizTemplate.slug]: quizTemplate,
+  [brainAgeQuiz.slug]: brainAgeQuiz,
 };
 
 export const landingSlugs = Object.keys(registry);

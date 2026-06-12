@@ -21,7 +21,7 @@ export default function BarChart({
         {items.map((item, i) => (
           <div key={item.label}>
             <div
-              className="flex items-baseline justify-between text-xs uppercase tracking-wide text-black/60"
+              className="go-text-mid flex items-baseline justify-between text-xs uppercase tracking-wide"
               style={mono}
             >
               <span>{item.label}</span>
@@ -29,14 +29,14 @@ export default function BarChart({
                 {unit ? unit.replace("{value}", String(item.value)) : item.value}
               </span>
             </div>
-            <div className="mt-1.5 h-5 w-full bg-black/5">
+            <div className="mt-1.5 h-5 w-full" style={{ backgroundColor: "var(--go-track)" }}>
               <div
                 className="go-bar h-full"
                 style={{
                   width: `${(item.value / max) * 100}%`,
                   backgroundColor: item.accent
                     ? "var(--brand-accent)"
-                    : "rgba(0,0,0,0.25)",
+                    : "var(--go-neutral)",
                   animationDelay: `${150 + i * 120}ms`,
                 }}
               />
@@ -45,7 +45,7 @@ export default function BarChart({
         ))}
       </div>
       {caption && (
-        <figcaption className="mt-3 text-xs text-black/50">{caption}</figcaption>
+        <figcaption className="go-text-faint mt-3 text-xs">{caption}</figcaption>
       )}
     </figure>
   );

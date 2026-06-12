@@ -110,13 +110,20 @@ export function trackLandingCompleted(
     resultBucket: string;
     totalQuestions: number;
     timeSpentSeconds: number;
+    /** Brain-age scoring mode only */
+    brainAge?: number;
+    brainAgeGap?: number;
   },
 ): void {
   safeTrack("landing:completed", params);
 }
 
 export function trackLandingResultsViewed(
-  params: LandingEventBase & { resultBucket: string },
+  params: LandingEventBase & {
+    resultBucket: string;
+    brainAge?: number;
+    brainAgeGap?: number;
+  },
 ): void {
   safeTrack("landing:results_viewed", params);
 }
