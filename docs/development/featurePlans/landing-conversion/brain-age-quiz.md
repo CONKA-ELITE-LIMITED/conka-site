@@ -2,7 +2,7 @@
 
 Part of the [landing conversion programme](./README.md). First real persona quiz on the shipped engine (quiz-format Phase 2). Copy by Luke, June 2026, for the ageing-brain persona (fear of mental decline, older audience).
 
-**Status:** Phase 1 built 2026-06-12, awaiting visual review + /review-analytics.
+**Status:** Phase 1 built and iterated with Rudh 2026-06-12 (3 visual rounds + code review, all on branch QUIZ-FUNNEL). Outstanding: Vercel preview walk at 390px, /review-analytics before spend, Phase 2 numbers.
 **Appetite:** ~2 days, one PR.
 
 ## Problem
@@ -13,11 +13,11 @@ The persona landing programme needs its first real content quiz. Luke's brain-ag
 
 Extend the quiz engine (numeric brain-age scoring mode, config-flag dark theme, five new screen capabilities), then express Luke's full flow as one config file registered at `/go/brain-age`, persona `ageing-brain`.
 
-## The flow (from Luke's copy)
+## The flow (as shipped)
 
-Hook (dark, "What's your real brain age?", 2-minute promise, social proof line) -> Q1 age -> Q2 mental activity -> Q3 misplacing things -> Q4 names -> Q5 words -> [social proof: "YOU SAID" mirror + big % stat] -> Q6 sharp-vs-past (heaviest weight) -> Q7 fog -> [This isn't your fault + decline graph] -> [The cycle loop] -> Q8 learning -> Q9 sharpness slider (0-100, AVERAGE anchor) -> [Cost of waiting: their score, now vs later] -> Q10 what matters (segmentation only) -> Q11 ideal self (segmentation only) -> [REVEAL: real age vs brain age + turnaround curve] -> [How CONKA works: Flow AM / Clear PM] -> [Payoff orb: "switched on"] -> [Track it in the app: phone screenshots] -> [Today vs CONKA sharpness graph] -> [Commit screen] -> /funnel.
+Hook (dark, "What's your real **brain age?**" accent headline, square brain-scan video loop, rating line) -> Q1 age -> Q2 mental activity -> Q3 misplacing things -> Q4 names -> Q5 words -> [social proof: "YOU SAID" pill + per-answer % stat] -> Q6 sharp-vs-past (heaviest weight) -> Q7 fog -> [This isn't your fault: same-origin supported/left-alone graph] -> [The cycle loop] -> Q8 learning -> Q9 sharpness slider (0-100, AVERAGE anchor) -> [Cost of waiting: their score mirrored + decline stat] -> Q10 what matters (segmentation only) -> Q11 ideal self (segmentation only) -> [analyzing beat] -> [REVEAL: real age vs brain age count-up + turnaround curve with dotted decay line; completion analytics + Meta Lead fire here; progress bar hits 100%] -> [How CONKA works: Flow/Clear product cards, taglines from productData] -> [Payoff orb] -> [Track it in the app: phone screenshot] -> [Commit screen, typed out character by character] -> straight to the Both PDP (/conka-both).
 
-Copy correction applied when writing the config: Luke's "Conka 1 morning / Conka 2 evening (recovery)" was inferred from his swipe file; we write it as Flow in the morning, Clear in the afternoon/second dose, in our real product language.
+Changes from Luke's original sequence, agreed during iteration: the "Today vs with CONKA" reinforcement graph and the final results screen were cut (no value at that point; the commit button links straight out), and an analyzing beat was inserted before the reveal. Copy correction: Luke's "Conka 1 morning / Conka 2 evening (recovery)" became Flow AM / Clear second-half in our real product language.
 
 ## Scoring model
 
@@ -25,7 +25,7 @@ Copy correction applied when writing the config: Luke's "Conka 1 morning / Conka
 - Q2-Q9 answers (and slider bands) carry `years` added or subtracted. Q6 weighting is just larger values in config, no special code.
 - Brain age = baseline + gap, where gap = clamp(sum of years, gapMin, gapMax), default +3 to +12. The floor guarantees even good answers produce a small, honest gap so everyone has a reason to act.
 - Q10 and Q11 score nothing; they exist for desire and segmentation (answers are already captured by `landing:answer_selected`).
-- Result recommendation is always Both. `landing:completed` carries `brainAge` and `gap` instead of `resultBucket`.
+- Recommendation is always Both; the journey ends on the Both PDP. `landing:completed` and `landing:results_viewed` fire at the reveal and carry `brainAge` + `brainAgeGap` alongside `resultBucket`.
 - The number is a lifestyle self-assessment score, never presented as a medical measurement.
 
 ## Decisions
@@ -33,19 +33,26 @@ Copy correction applied when writing the config: Luke's "Conka 1 morning / Conka
 | Decision | Choice |
 |----------|--------|
 | Visual language | Dark theme for this quiz, honouring Luke's art direction, with neuro blue accent instead of the reference orange. Implemented as `theme: "dark"` config flag + scoped CSS variable overrides, nothing site-wide |
-| Stats and numbers | Ship with Luke's placeholders, each marked `// PLACEHOLDER` in config; sourcing real numbers is Phase 2 and gates scaled spend |
-| Ending | Commit screen -> `/funnel` (Both is already the funnel default, so no preselect param) |
+| Layout (iteration round) | Flow grammar copied deliberately: large logo, full-bleed gamefied progress bar (gradient + shimmer), question/title anchored directly under the bar, big stat/value typography, charts in gradient cards with glow and in-chart pills |
+| Progress | Perceived curve, not linear: first quarter of screens fills half the bar, bar completes at the reveal and stays full after |
+| Stats and numbers | Ship with placeholders, each marked `// PLACEHOLDER` in config; sourcing real numbers is Phase 2 and gates scaled spend. The word-loss stat varies by the user's own answer (`stat.byAnswer`, split sums to 100) |
+| Ending | Commit screen links straight to the Both PDP `/conka-both` (results screen cut during iteration); completion analytics + Meta Lead fire at the reveal instead |
 | Recommendation | Always Both |
 | Persona / slug | `ageing-brain` / `/go/brain-age` |
-| App imagery | Existing screenshots: `public/app/AppConkaRing.png`, `AppTestBreakdown.png`, `AppLeaderboard.png` |
+| Hook video | `BrainScan.gif` converted to mp4/webm (~143KB) + poster, shown square under the headline (`videoAspect: "square"`) |
+| App imagery | `public/app/AppConkaRing.png` on the app value screen, capped at 150px so the screen fits 390px |
+| Product imagery | Mechanism screen shows Flow + Clear bottle shots as two equal white cards (AM · FLOW / PM · CLEAR), taglines pulled live from `productData` `formulaContent` |
 | Cycle loop reference | flowalarmclock "It's a cycle" screen: four nodes in a diamond around an accent centre, nodes appear one at a time, active ring + dashed accent arrow steps round on a timer |
+| Honesty edits | Hedging captions removed ("Illustrative...", "Directional, not a prediction"); the turnaround keeps honesty structural instead: a dotted decay line shows the do-nothing path, and both comparison lines share one origin |
 
 ## Phases
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Engine extensions + brain-age config + QA (one PR) | Built (2026-06-12); visual review + /review-analytics outstanding |
-| 2 | Real numbers (customer count, word-loss %, rating) + Luke's offer/pricing screen | Future |
+| 1 | Engine extensions + brain-age config + iteration rounds + code review | Built 2026-06-12; Vercel preview walk + /review-analytics outstanding |
+| 2 | Real numbers + Luke's offer/pricing screen | Future |
+
+Phase 2 placeholder list (all marked `// PLACEHOLDER` in `brain-age.ts`): hook social proof ("Trusted by 10,000+ sharp minds"), word-loss per-answer split (14/41/27/18), cost-of-waiting decline figure (23%).
 
 ## Phase 1 tasks
 
@@ -66,18 +73,16 @@ Copy correction applied when writing the config: Luke's "Conka 1 morning / Conka
 
 ## No-gos
 
-- No `/funnel` preselect param (Both is already the default there).
-- No offer/pricing screen until Luke writes it; commit -> funnel is the v1 ending.
+- No offer/pricing screen until Luke writes it; commit -> Both PDP is the v1 ending.
 - No email gate, no Convex response storage, no orange accent, no chart library.
-- Existing `quiz-template` behaviour and visuals untouched.
+- Existing `quiz-template` behaviour untouched (it inherits the layout/progress upgrades but stays light-themed).
 
 ## Risks
 
-- Dark-theme contrast on charts and muted text needs a deliberate pass, not just inverted opacities.
 - Placeholder stats must not reach scaled spend; Phase 2 gates that.
-- Dark quiz hands off to a light `/funnel`; accepted for v1.
-- Meta Lead fires on the reveal as before; verify dedup with `/review-analytics` since `completed` props change.
-- Brain-age framing stays a lifestyle score; the reveal and turnaround curves are illustrative, consistent with the existing line chart's "illustrative" caption pattern.
+- Dark quiz hands off to the light `/conka-both` PDP; accepted for v1 until the offer screen exists.
+- Meta Lead now fires at the reveal (not a results screen); verify dedup with `/review-analytics` before spend.
+- Brain-age framing stays a lifestyle score, never a medical measurement; curves are illustrative.
 
 ## References
 

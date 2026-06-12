@@ -19,7 +19,7 @@ These pages are ad destinations only: noindex, no Navigation/Footer (the quiz ow
 | `app/components/go/QuizEngine.tsx` | Orchestrator: fixed header (logo, back, counter, progress), screen sequencing, answers map, score tally (buckets or brain-age), all analytics |
 | `app/components/go/QuizQuestion.tsx` | Single-choice (auto-advance ~240ms after tap) and slider questions (optional anchor tick) |
 | `app/components/go/QuizScreens.tsx` | Landing, interstitial, analyzing, reveal, results renderers |
-| `app/components/go/QuizProgressBar.tsx`, `QuizButton.tsx`, `AnimatedText.tsx`, `AnimatedStat.tsx`, `ComparisonChart.tsx`, `BarChart.tsx`, `PieChart.tsx`, `CycleLoop.tsx`, `TurnaroundChart.tsx` | Plug-and-play primitives |
+| `app/components/go/QuizProgressBar.tsx`, `QuizButton.tsx`, `AnimatedText.tsx`, `TypewriterText.tsx`, `AnimatedStat.tsx`, `ComparisonChart.tsx`, `BarChart.tsx`, `PieChart.tsx`, `CycleLoop.tsx`, `TurnaroundChart.tsx` | Plug-and-play primitives |
 
 Motion utilities (`go-screen-in`, `go-fade-up`, `go-cascade`, `go-draw`, `go-bar`, `go-orb-pulse`) live in `app/brand-base.css`. CSS-only by design, all respect `prefers-reduced-motion`. No GSAP, no chart library on these pages. (`go-cascade` is the single-choice option reveal: each tile rises and fades in, staggered by an inline per-index `animationDelay` in `QuizQuestion`.)
 

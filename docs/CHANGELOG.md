@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | Brain-age quiz iteration rounds: Flow-style layout (full-bleed gamefied progress bar with perceived curve completing at the reveal, top-anchored questions, bigger type), gradient chart cards with glow + decay lines, typed commitment screen, per-answer stat split, brain-scan hook video, shortened funnel ending straight on the Both PDP
 - **2026-06-12** | Shipped the brain-age quiz at /go/brain-age (ageing-brain persona, Luke's copy): dark quiz theme via config flag, numeric brain-age scoring, reveal screen with turnaround curve, cycle-loop diagram, answer mirroring, slider anchor and interstitial images
 - **2026-06-12** | Consolidated the five B2B feature-plan docs into the single canonical docs/features/b2b/B2B_PORTAL.md (current state + future work) and removed them from featurePlans
 - **2026-06-12** | Created the landing conversion programme doc hub (personas x formats strategy, tracking plan, listicle reference evaluation)
