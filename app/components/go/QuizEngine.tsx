@@ -29,6 +29,17 @@ import {
 } from "@/app/lib/analytics";
 import { trackMetaLead, trackMetaViewContent } from "@/app/lib/metaPixel";
 
+/**
+ * Perceived-progress curve (Flow-style front-loading): the first
+ * quarter of the screens fills half the bar, so starting feels like
+ * instant progress and the back half drips in slowly. With the
+ * brain-age flow (22 screens) that lands ~10% after Start and ~50%
+ * four to five questions in.
+ */
+function perceivedProgress(linear: number): number {
+  return linear <= 0.25 ? linear * 2 : 0.5 + ((linear - 0.25) * 2) / 3;
+}
+
 function generateSessionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -176,7 +187,9 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   const ctaHref = resultBucket.ctaHref ?? config.resultsCta.href;
   // Always available after the first screen; goBack skips analyzing
   const canGoBack = index > 0;
-  const progress = screens.length > 1 ? index / (screens.length - 1) : 0;
+  const progress = perceivedProgress(
+    screens.length > 1 ? index / (screens.length - 1) : 0,
+  );
   const dark = config.theme === "dark";
 
   return (
