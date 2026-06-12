@@ -76,10 +76,12 @@ Run `/review-analytics` after Phase 1 ships.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Quiz engine + component library + config system + demo config + analytics | Not Started |
+| 1 | Quiz engine + component library + config system + template config + analytics | Complete (2026-06-12, commits b1a1de38 + 4b4ca20f). Extras beyond scope: bar/pie chart variants, landing video + rating line, Flow-style centered layout. Feature doc: `docs/features/LANDING_QUIZ_SYSTEM.md` |
 | 2 | Real persona content: 3 quiz configs from team session, results mapped to Flow/Clear/Both pricing | Not Started |
 | 3 | Listicle format renderer in the same config system | Future |
 | 4 | Third format + per-slug conversion readout loop | Future |
+
+Follow-ons surfaced during build: purge legacy /quiz code and docs (avoid two quiz systems); decide on Convex response storage (see feature doc, Analytics section).
 
 ## Phase 1 tasks
 
