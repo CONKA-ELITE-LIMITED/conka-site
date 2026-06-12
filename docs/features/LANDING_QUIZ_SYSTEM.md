@@ -2,7 +2,7 @@
 
 Persona-aligned ad landing pages with a config-driven quiz engine. Built June 2026 for the conversion push: 3-4 ad personas, each with landing format iterations (quiz live, listicle planned), targeting 1-4% conversion on paid Meta traffic.
 
-These pages are ad destinations only: noindex, no Navigation/Footer (the quiz owns the viewport), never linked from the site. Reference template: `/go/quiz-template`. Plan doc: `docs/development/featurePlans/persona-landing-quiz-system.md`.
+These pages are ad destinations only: noindex, no Navigation/Footer (the quiz owns the viewport), never linked from the site. Reference template: `/go/quiz-template`. Programme + plan docs: `docs/development/featurePlans/landing-conversion/` (start at the README).
 
 **Not the old quiz.** The legacy `/quiz` (protocol scoring) is deprecated and unrelated. This system shares nothing with it except some analytics naming conventions. The legacy code is scheduled for removal.
 
