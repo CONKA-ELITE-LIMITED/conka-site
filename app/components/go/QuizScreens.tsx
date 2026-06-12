@@ -294,7 +294,7 @@ export function InterstitialView({
             /* Full-contrast text; accent spans carry the emphasis */
             <TypewriterText
               lines={screen.body}
-              className="space-y-6 text-2xl font-medium leading-snug sm:text-3xl"
+              className="space-y-6 text-3xl font-medium leading-snug sm:text-4xl"
             />
           ) : (
             <AnimatedText
@@ -372,14 +372,16 @@ export function RevealView({
           all fit one 390px viewport without scrolling */}
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <div className="flex items-end justify-center gap-10">
-          <div>
-            <p className="go-text-mid text-xs uppercase tracking-[0.14em]" style={mono}>
-              {screen.realAgeLabel}
-            </p>
-            <p className="mt-1 text-5xl font-medium tabular-nums tracking-[-0.02em]">
-              {ages ? <CountUp value={ages.realAge} delayMs={200} /> : "–"}
-            </p>
-          </div>
+          {screen.realAgeLabel && (
+            <div>
+              <p className="go-text-mid text-xs uppercase tracking-[0.14em]" style={mono}>
+                {screen.realAgeLabel}
+              </p>
+              <p className="mt-1 text-5xl font-medium tabular-nums tracking-[-0.02em]">
+                {ages ? <CountUp value={ages.realAge} delayMs={200} /> : "–"}
+              </p>
+            </div>
+          )}
           <div>
             <p
               className="text-xs uppercase tracking-[0.14em]"
@@ -388,10 +390,19 @@ export function RevealView({
               {screen.brainAgeLabel}
             </p>
             <p
-              className="mt-1 text-6xl font-semibold tabular-nums tracking-[-0.02em]"
+              className={`mt-1 font-semibold tabular-nums tracking-[-0.02em] ${
+                screen.realAgeLabel ? "text-6xl" : "text-8xl"
+              }`}
               style={{ color: "var(--brand-accent)", textShadow: "var(--go-glow)" }}
             >
-              {ages ? <CountUp value={ages.brainAge} delayMs={1000} /> : "–"}
+              {ages ? (
+                <CountUp
+                  value={ages.brainAge}
+                  delayMs={screen.realAgeLabel ? 1000 : 300}
+                />
+              ) : (
+                "–"
+              )}
             </p>
           </div>
         </div>

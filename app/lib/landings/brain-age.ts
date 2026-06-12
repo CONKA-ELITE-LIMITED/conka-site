@@ -287,7 +287,8 @@ export const brainAgeQuiz: LandingConfig = {
     {
       kind: "reveal",
       id: "reveal",
-      realAgeLabel: "YOUR REAL AGE",
+      // No real-age beat: Q1 only captures a band, so a precise "your
+      // age" number would read as invented. The brain age stands alone.
       brainAgeLabel: "YOUR BRAIN AGE",
       title: "Your brain is acting {gap} years older than it should.",
       body: [

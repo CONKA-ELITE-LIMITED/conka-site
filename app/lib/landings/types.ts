@@ -221,7 +221,8 @@ export interface ResultsScreen {
 export interface RevealScreen {
   kind: "reveal";
   id: string;
-  realAgeLabel: string;
+  /** Omit to reveal the brain age alone (real age is only a band) */
+  realAgeLabel?: string;
   brainAgeLabel: string;
   title: string;
   body?: string[];
