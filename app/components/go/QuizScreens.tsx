@@ -186,7 +186,7 @@ export function InterstitialView({
               height={screen.images[0].height}
               className="go-fade-up h-auto w-full"
               style={{ animationDelay: "250ms" }}
-              sizes="220px"
+              sizes="150px"
             />
           </div>
         )}

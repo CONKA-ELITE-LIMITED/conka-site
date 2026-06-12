@@ -15,6 +15,19 @@ function bandFor(bands: SliderBand[], value: number): SliderBand | undefined {
   return bands[bands.length - 1];
 }
 
+type SliderConfig = Extract<QuestionScreen, { type: "slider" }>["slider"];
+
+/** "54/100" when a unit template is set, otherwise "54" */
+function formatSliderValue(slider: SliderConfig, value: number): string {
+  return slider.unit
+    ? slider.unit.replace("{value}", String(value))
+    : String(value);
+}
+
+function sliderFillPct(slider: SliderConfig, value: number): number {
+  return ((value - slider.min) / (slider.max - slider.min)) * 100;
+}
+
 /**
  * Standard question screen: single-choice (auto-advances shortly after
  * selection) or slider (advances on Continue). Mount with key=screen.id
@@ -115,9 +128,7 @@ export default function QuizQuestion({
               className="text-center text-7xl font-semibold tabular-nums tracking-[-0.02em]"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
-              {slider.unit
-                ? slider.unit.replace("{value}", String(sliderValue))
-                : sliderValue}
+              {formatSliderValue(slider, sliderValue)}
             </div>
             <input
               type="range"
@@ -128,11 +139,10 @@ export default function QuizQuestion({
               onChange={(e) => setSliderValue(Number(e.target.value))}
               className="go-range w-full"
               style={{
-                background: `linear-gradient(to right, var(--brand-accent) ${
-                  ((sliderValue - slider.min) / (slider.max - slider.min)) * 100
-                }%, var(--go-track) ${
-                  ((sliderValue - slider.min) / (slider.max - slider.min)) * 100
-                }%)`,
+                background: `linear-gradient(to right, var(--brand-accent) ${sliderFillPct(
+                  slider,
+                  sliderValue,
+                )}%, var(--go-track) ${sliderFillPct(slider, sliderValue)}%)`,
               }}
               aria-label={screen.question}
             />
@@ -180,7 +190,8 @@ export default function QuizQuestion({
               const band = bandFor(slider.bands, sliderValue);
               onAnswer({
                 value: sliderValue,
-                label: String(sliderValue),
+                // Unit-formatted so mirrors/analytics read "54/100"
+                label: formatSliderValue(slider, sliderValue),
                 scores: band?.scores,
                 years: band?.years,
               });

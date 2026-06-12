@@ -255,6 +255,7 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             <ResultsView
               bucket={{
                 ...resultBucket,
+                tag: fillAgeTokens(resultBucket.tag, ages),
                 title: fillAgeTokens(resultBucket.title, ages),
                 body: fillAgeTokens(resultBucket.body, ages),
                 recommendation: fillAgeTokens(resultBucket.recommendation, ages),

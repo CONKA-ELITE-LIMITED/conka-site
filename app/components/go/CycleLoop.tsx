@@ -116,44 +116,53 @@ export default function CycleLoop({
         })}
       </svg>
 
+      {/* Positioning wrapper and entrance animation are separate
+          elements: go-fade-up animates transform with fill forwards,
+          which would permanently override an inline centring
+          translate on the same element */}
       {nodes.map((node, i) => {
         const isActive = !reduced && i === active;
         const pos = POSITIONS[i % POSITIONS.length];
         return (
           <div
             key={node.label}
-            className={`absolute flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border px-2 text-center text-xs leading-snug transition-all duration-300 ${
-              reduced ? "" : "go-fade-up"
-            }`}
-            style={{
-              ...pos,
-              backgroundColor: "var(--go-surface)",
-              borderColor: isActive
-                ? "var(--brand-accent)"
-                : "var(--go-hairline)",
-              borderWidth: isActive ? 2 : 1,
-              transform: `translate(-50%, -50%) scale(${isActive ? 1.06 : 1})`,
-              animationDelay: reduced ? undefined : `${i * NODE_DELAY_MS}ms`,
-            }}
+            className="absolute -translate-x-1/2 -translate-y-1/2"
+            style={pos}
           >
-            {node.label}
+            <div
+              className={`flex h-24 w-24 items-center justify-center rounded-full border px-2 text-center text-xs leading-snug transition-colors duration-300 ${
+                reduced ? "" : "go-fade-up"
+              }`}
+              style={{
+                backgroundColor: "var(--go-surface)",
+                borderColor: isActive
+                  ? "var(--brand-accent)"
+                  : "var(--go-hairline)",
+                borderWidth: isActive ? 2 : 1,
+                animationDelay: reduced ? undefined : `${i * NODE_DELAY_MS}ms`,
+              }}
+            >
+              {node.label}
+            </div>
           </div>
         );
       })}
 
-      <div
-        className={`absolute left-1/2 top-1/2 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-3 text-center text-sm font-medium leading-snug text-white ${
-          reduced ? "" : "go-fade-up"
-        }`}
-        style={{
-          backgroundColor: "var(--brand-accent)",
-          animationDelay: reduced
-            ? undefined
-            : `${nodes.length * NODE_DELAY_MS}ms`,
-          ...mono,
-        }}
-      >
-        {center}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div
+          className={`flex h-28 w-28 items-center justify-center rounded-full px-3 text-center text-sm font-medium leading-snug text-white ${
+            reduced ? "" : "go-fade-up"
+          }`}
+          style={{
+            backgroundColor: "var(--brand-accent)",
+            animationDelay: reduced
+              ? undefined
+              : `${nodes.length * NODE_DELAY_MS}ms`,
+            ...mono,
+          }}
+        >
+          {center}
+        </div>
       </div>
     </div>
   );
