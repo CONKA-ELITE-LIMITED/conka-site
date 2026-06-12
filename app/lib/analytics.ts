@@ -287,6 +287,83 @@ export function trackQuizResultCTAClicked(params: {
   });
 }
 
+// ===== LANDING SYSTEM TRACKING (/go/[slug]) =====
+
+/**
+ * Shared identity props carried on every /go landing event so per-page
+ * funnels (which quiz, how far people get) read directly out of Vercel.
+ */
+interface LandingEventBase {
+  slug: string;
+  persona: string;
+  format: string;
+  sessionId: string;
+}
+
+/** Fires once on mount of a /go landing page. */
+export function trackLandingStarted(params: LandingEventBase): void {
+  const utm = getUTMParams();
+  safeTrack("landing:started", {
+    ...params,
+    referrer:
+      typeof document !== "undefined"
+        ? document.referrer || "direct"
+        : "direct",
+    ...utm,
+  });
+}
+
+/** Fires on every screen change; screenIndex is the drop-off marker. */
+export function trackLandingScreenViewed(
+  params: LandingEventBase & {
+    screenIndex: number;
+    screenId: string;
+    screenKind: string;
+    totalScreens: number;
+  },
+): void {
+  safeTrack("landing:screen_viewed", {
+    ...params,
+    progress: Math.round(
+      (params.screenIndex / Math.max(params.totalScreens - 1, 1)) * 100,
+    ),
+  });
+}
+
+export function trackLandingAnswerSelected(
+  params: LandingEventBase & {
+    screenId: string;
+    questionNumber: number;
+    totalQuestions: number;
+    answerLabel: string;
+    answerValue: string;
+  },
+): void {
+  safeTrack("landing:answer_selected", params);
+}
+
+export function trackLandingCompleted(
+  params: LandingEventBase & {
+    resultBucket: string;
+    totalQuestions: number;
+    timeSpentSeconds: number;
+  },
+): void {
+  safeTrack("landing:completed", params);
+}
+
+export function trackLandingResultsViewed(
+  params: LandingEventBase & { resultBucket: string },
+): void {
+  safeTrack("landing:results_viewed", params);
+}
+
+export function trackLandingCtaClicked(
+  params: LandingEventBase & { resultBucket: string; destination: string },
+): void {
+  safeTrack("landing:cta_clicked", params);
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**

@@ -131,7 +131,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 ## Routes
 
-**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/professionals` · `/account` · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
+**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes, noindex) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
 **Being built:** Landing page (URL TBD) · Funnel page (URL TBD)
 **Being removed:** `/protocol/[id]` (redirect) · `/quiz` (redirect) · `/shop` (redirect)
 
@@ -145,6 +145,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/PRODUCT_DATA.md` | Product module structure + helper usage |
 | `docs/branding/DESIGN_SYSTEM.md` | **Active design system** — typography, colours, radius, layout, migration guide |
 | `docs/branding/SOFT_TECH_LUXURY_STYLE_SHEET_GUIDELINES.md` | Legacy design system (until pages are migrated) |
+| `docs/features/LANDING_QUIZ_SYSTEM.md` | **Ad landing quiz system** (`/go/[slug]`) — config schema, how to add a page, analytics |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |
 | `docs/features/b2b/B2B_PORTAL.md` | B2B professional portal |
