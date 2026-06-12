@@ -44,7 +44,8 @@ export function LandingView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-5">
+      {/* Title block anchored high (same grammar as the question screens) */}
+      <div className="flex flex-col items-center gap-4 pt-4">
         <h1 className="text-4xl font-medium leading-tight tracking-[-0.02em] sm:text-5xl">
           {screen.title}
           {screen.titleAccent && (
@@ -61,16 +62,23 @@ export function LandingView({
             {screen.subtitle}
           </p>
         )}
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center py-6">
         {screen.video && (
-          /* portrait: 720x1280 pour render, centred crop on the bottle;
-             square: 1:1 sources (e.g. the brain scan loop) uncropped */
+          /* portrait: 720x1280 pour render, centred crop on the bottle,
+             accent border; square: 1:1 sources (e.g. the brain scan
+             loop) uncropped, borderless */
           <div
-            className={`w-full overflow-hidden rounded-2xl border-2 ${
+            className={`w-full overflow-hidden rounded-2xl ${
               screen.videoAspect === "square"
                 ? "aspect-square max-w-[220px]"
-                : "aspect-[3/4] max-w-[240px]"
+                : "aspect-[3/4] max-w-[240px] border-2"
             }`}
-            style={{ borderColor: "var(--brand-accent)" }}
+            style={
+              screen.videoAspect === "square"
+                ? undefined
+                : { borderColor: "var(--brand-accent)" }
+            }
           >
             <video
               src={screen.video}

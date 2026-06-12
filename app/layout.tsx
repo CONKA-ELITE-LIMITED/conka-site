@@ -95,14 +95,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* CookieYes consent banner — loaded on first user interaction to
-             keep it out of LCP (Lighthouse has no interaction, so banner
-             never loads in lab tests; real users trigger it immediately).
-             Failsafe timeout ensures banner appears even without interaction. */}
-        <Script id="cookieyes-loader" strategy="afterInteractive">
-          {`(function(){var d=0;function l(){if(d)return;d=1;var s=document.createElement('script');s.src='https://cdn-cookieyes.com/client_data/da22d570927106b57de609d869ecc4f3/script.js';document.head.appendChild(s)}['mousemove','scroll','keydown','touchstart','click'].forEach(function(e){window.addEventListener(e,l,{once:true,passive:true})});setTimeout(l,7000)})()`}
-        </Script>
-
         {/* Google Analytics */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
