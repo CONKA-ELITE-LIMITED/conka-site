@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import type {
   AnalyzingScreen,
+  BrainAgeResult,
   InterstitialScreen,
   LandingScreen,
+  QuizAnswer,
   ResultBucket,
+  RevealScreen,
 } from "@/app/lib/landings/types";
 import QuizButton from "./QuizButton";
 import AnimatedText from "./AnimatedText";
@@ -13,8 +17,22 @@ import AnimatedStat from "./AnimatedStat";
 import ComparisonChart from "./ComparisonChart";
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
+import CycleLoop from "./CycleLoop";
+import TurnaroundChart from "./TurnaroundChart";
 
 const mono = { fontFamily: "var(--font-brand-data)" } as const;
+
+/** Replaces {realAge}/{brainAge}/{gap} in copy with the computed result */
+export function fillAgeTokens(
+  text: string,
+  ages: BrainAgeResult | null,
+): string {
+  if (!ages) return text;
+  return text
+    .replace(/\{realAge\}/g, String(ages.realAge))
+    .replace(/\{brainAge\}/g, String(ages.brainAge))
+    .replace(/\{gap\}/g, String(ages.gap));
+}
 
 export function LandingView({
   screen,
@@ -30,7 +48,7 @@ export function LandingView({
           {screen.title}
         </h1>
         {screen.subtitle && (
-          <p className="text-base leading-relaxed text-black/70 sm:text-lg">
+          <p className="go-text-soft text-base leading-relaxed sm:text-lg">
             {screen.subtitle}
           </p>
         )}
@@ -55,7 +73,7 @@ export function LandingView({
       </div>
       <div className="pb-8">
         {screen.rating && (
-          <p className="mb-3 text-sm text-black/70">
+          <p className="go-text-soft mb-3 text-sm">
             <span
               className="mr-2 tracking-[0.15em]"
               style={{ color: "var(--brand-accent)" }}
@@ -68,7 +86,7 @@ export function LandingView({
         )}
         <QuizButton label={screen.cta} onClick={onStart} />
         {screen.footnote && (
-          <p className="mt-3 text-sm text-black/50" style={mono}>
+          <p className="go-text-faint mt-3 text-sm" style={mono}>
             {screen.footnote}
           </p>
         )}
@@ -77,16 +95,105 @@ export function LandingView({
   );
 }
 
+/**
+ * Two bars driven by the user's own slider answer: "now" carries the
+ * real value, "later" is directional only (smaller, no invented
+ * number). Honesty rule: the future is a direction, not a prediction.
+ */
+function NowLaterChart({
+  chart,
+  answers,
+}: {
+  chart: Extract<NonNullable<InterstitialScreen["chart"]>, { type: "now-later" }>;
+  answers: Record<string, QuizAnswer>;
+}) {
+  const raw = answers[chart.questionId]?.value;
+  const now = typeof raw === "number" ? raw : 50;
+  const max = 100;
+
+  const rows = [
+    {
+      label: chart.nowLabel,
+      widthPct: Math.max((now / max) * 100, 6),
+      readout: chart.unit ? chart.unit.replace("{value}", String(now)) : String(now),
+      accent: true,
+    },
+    {
+      label: chart.laterLabel,
+      widthPct: Math.max((now / max) * 100 * 0.7, 4),
+      readout: "↘",
+      accent: false,
+    },
+  ];
+
+  return (
+    <figure className="w-full">
+      <div className="flex flex-col gap-4">
+        {rows.map((row, i) => (
+          <div key={row.label}>
+            <div
+              className="go-text-mid flex items-baseline justify-between text-xs uppercase tracking-wide"
+              style={mono}
+            >
+              <span>{row.label}</span>
+              <span className="tabular-nums">{row.readout}</span>
+            </div>
+            <div
+              className="mt-1.5 h-5 w-full"
+              style={{ backgroundColor: "var(--go-track)" }}
+            >
+              <div
+                className="go-bar h-full"
+                style={{
+                  width: `${row.widthPct}%`,
+                  backgroundColor: row.accent
+                    ? "var(--brand-accent)"
+                    : "var(--go-neutral)",
+                  animationDelay: `${150 + i * 250}ms`,
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      {chart.caption && (
+        <figcaption className="go-text-faint mt-3 text-xs">
+          {chart.caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
 export function InterstitialView({
   screen,
+  answers,
   onContinue,
 }: {
   screen: InterstitialScreen;
+  answers: Record<string, QuizAnswer>;
   onContinue: () => void;
 }) {
+  const mirrorLabel = screen.mirror
+    ? answers[screen.mirror.questionId]?.label
+    : undefined;
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col items-center justify-center gap-7">
+        {mirrorLabel && (
+          <p
+            className="border px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
+            style={{ ...mono, borderColor: "var(--brand-accent)", color: "var(--brand-accent)" }}
+          >
+            {screen.mirror?.prefix ?? "YOU SAID:"} {mirrorLabel}
+          </p>
+        )}
+
+        {screen.variant === "payoff" && (
+          <div className="go-orb go-fade-up h-44 w-44" aria-hidden />
+        )}
+
         <h2
           className={
             screen.variant === "commitment"
@@ -99,6 +206,20 @@ export function InterstitialView({
 
         {screen.variant === "stat" && screen.stat && (
           <AnimatedStat {...screen.stat} />
+        )}
+
+        {screen.image && (
+          <div className="w-full max-w-[220px]">
+            <Image
+              src={screen.image.src}
+              alt={screen.image.alt}
+              width={screen.image.width}
+              height={screen.image.height}
+              className="go-fade-up h-auto w-full"
+              style={{ animationDelay: "250ms" }}
+              sizes="220px"
+            />
+          </div>
         )}
 
         {screen.chart?.type === "line" && (
@@ -121,6 +242,12 @@ export function InterstitialView({
             caption={screen.chart.caption}
           />
         )}
+        {screen.chart?.type === "cycle" && (
+          <CycleLoop nodes={screen.chart.nodes} center={screen.chart.center} />
+        )}
+        {screen.chart?.type === "now-later" && (
+          <NowLaterChart chart={screen.chart} answers={answers} />
+        )}
 
         {screen.variant === "testimonial" && screen.testimonial && (
           <blockquote>
@@ -129,7 +256,7 @@ export function InterstitialView({
               {screen.testimonial.quote}
               {"”"}
             </p>
-            <footer className="mt-4 text-sm text-black/60" style={mono}>
+            <footer className="go-text-mid mt-4 text-sm" style={mono}>
               {screen.testimonial.name}
               {screen.testimonial.detail ? ` / ${screen.testimonial.detail}` : ""}
             </footer>
@@ -139,8 +266,112 @@ export function InterstitialView({
         {screen.body && (
           <AnimatedText
             lines={screen.body}
-            className="space-y-3 text-lg leading-relaxed text-black/70"
+            className="go-text-soft space-y-3 text-lg leading-relaxed"
             startDelayMs={200}
+          />
+        )}
+      </div>
+      <div className="pb-8">
+        <QuizButton label={screen.cta ?? "Continue"} onClick={onContinue} />
+      </div>
+    </div>
+  );
+}
+
+/** Eased count-up that can start after a delay (reveal second beat) */
+function CountUp({
+  value,
+  delayMs = 0,
+  durationMs = 900,
+}: {
+  value: number;
+  delayMs?: number;
+  durationMs?: number;
+}) {
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplay(value);
+      return;
+    }
+    let raf: number;
+    const start = performance.now() + delayMs;
+    const tick = (now: number) => {
+      if (now < start) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+      const t = Math.min((now - start) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setDisplay(Math.round(value * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value, delayMs, durationMs]);
+
+  return <>{display}</>;
+}
+
+export function RevealView({
+  screen,
+  ages,
+  onContinue,
+}: {
+  screen: RevealScreen;
+  ages: BrainAgeResult | null;
+  onContinue: () => void;
+}) {
+  return (
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col items-center justify-center gap-8">
+        <div className="flex items-end justify-center gap-10">
+          <div>
+            <p className="go-text-mid text-xs uppercase tracking-[0.14em]" style={mono}>
+              {screen.realAgeLabel}
+            </p>
+            <p className="mt-2 text-6xl font-medium tabular-nums tracking-[-0.02em]">
+              {ages ? <CountUp value={ages.realAge} delayMs={200} /> : "–"}
+            </p>
+          </div>
+          <div>
+            <p
+              className="text-xs uppercase tracking-[0.14em]"
+              style={{ ...mono, color: "var(--brand-accent)" }}
+            >
+              {screen.brainAgeLabel}
+            </p>
+            <p
+              className="mt-2 text-7xl font-medium tabular-nums tracking-[-0.02em]"
+              style={{ color: "var(--brand-accent)" }}
+            >
+              {ages ? <CountUp value={ages.brainAge} delayMs={1000} /> : "–"}
+            </p>
+          </div>
+        </div>
+
+        {screen.turnaround && (
+          <TurnaroundChart
+            nowLabel={screen.turnaround.nowLabel}
+            futureLabel={screen.turnaround.futureLabel}
+            caption={screen.turnaround.caption}
+            startDelayMs={1900}
+          />
+        )}
+
+        <h2
+          className="go-fade-up text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl"
+          style={{ animationDelay: "2300ms" }}
+        >
+          {fillAgeTokens(screen.title, ages)}
+        </h2>
+
+        {screen.body && (
+          <AnimatedText
+            lines={screen.body.map((line) => fillAgeTokens(line, ages))}
+            className="go-text-soft space-y-3 text-lg leading-relaxed"
+            startDelayMs={2600}
           />
         )}
       </div>
@@ -189,15 +420,13 @@ export function AnalyzingView({
               style={mono}
             >
               <span
-                className="inline-block h-2.5 w-2.5 border border-black/30 transition-colors duration-300"
-                style={
-                  isDone
-                    ? {
-                        backgroundColor: "var(--brand-accent)",
-                        borderColor: "var(--brand-accent)",
-                      }
-                    : undefined
-                }
+                className="inline-block h-2.5 w-2.5 border transition-colors duration-300"
+                style={{
+                  borderColor: isDone
+                    ? "var(--brand-accent)"
+                    : "var(--go-neutral-strong)",
+                  backgroundColor: isDone ? "var(--brand-accent)" : undefined,
+                }}
                 aria-hidden
               />
               {step}
@@ -234,9 +463,15 @@ export function ResultsView({
             {bucket.title}
           </h1>
         </div>
-        <p className="text-lg leading-relaxed text-black/70">{bucket.body}</p>
-        <div className="w-full border border-black/8 bg-white p-6">
-          <p className="text-sm uppercase tracking-wide text-black/60" style={mono}>
+        <p className="go-text-soft text-lg leading-relaxed">{bucket.body}</p>
+        <div
+          className="w-full border p-6"
+          style={{
+            borderColor: "var(--go-hairline-soft)",
+            backgroundColor: "var(--go-surface)",
+          }}
+        >
+          <p className="go-text-mid text-sm uppercase tracking-wide" style={mono}>
             Recommendation
           </p>
           <p className="mt-2 text-xl font-medium">{bucket.recommendation}</p>

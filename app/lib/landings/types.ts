@@ -11,6 +11,28 @@
 
 export type LandingFormat = "quiz";
 
+export type LandingTheme = "light" | "dark";
+
+/**
+ * Numeric scoring mode (e.g. the brain-age quiz). The baseline comes
+ * from the answer carrying `baselineAge`; every other answer's `years`
+ * are summed and clamped to [gapMin, gapMax]. gapMin > 0 guarantees
+ * even mostly-good answers produce a small gap. The result is a
+ * lifestyle self-assessment score, never a medical measurement.
+ */
+export interface BrainAgeScoring {
+  mode: "brain-age";
+  gapMin: number;
+  gapMax: number;
+}
+
+/** Computed brain-age result, exposed to reveal/results interpolation */
+export interface BrainAgeResult {
+  realAge: number;
+  brainAge: number;
+  gap: number;
+}
+
 export interface ResultBucket {
   id: string;
   /** Mono tag on the result card, e.g. "MORNING SYSTEM" */
@@ -28,13 +50,19 @@ export interface QuestionOption {
   /** Optional leading glyph */
   icon?: string;
   /** Points toward result buckets, keyed by bucket id */
-  scores: Record<string, number>;
+  scores?: Record<string, number>;
+  /** Brain-age scoring: years this answer adds (or subtracts) */
+  years?: number;
+  /** Brain-age scoring: real-age baseline (set on the age question) */
+  baselineAge?: number;
 }
 
 export interface SliderBand {
   /** Band applies when value <= upTo; bands are checked in order */
   upTo: number;
-  scores: Record<string, number>;
+  scores?: Record<string, number>;
+  /** Brain-age scoring: years this band adds (or subtracts) */
+  years?: number;
 }
 
 export interface LandingScreen {
@@ -73,6 +101,8 @@ export interface SliderQuestionScreen extends QuestionScreenBase {
     maxLabel: string;
     /** Readout template, "{value}" is replaced, e.g. "{value} hours" */
     unit?: string;
+    /** Tick mark under the track, e.g. an "AVERAGE" anchor */
+    anchor?: { value: number; label: string };
     bands: SliderBand[];
   };
 }
@@ -103,12 +133,37 @@ export type ChartConfig =
       /** First segment gets the accent colour; values are relative */
       segments: { label: string; value: number }[];
       caption?: string;
+    }
+  | {
+      type: "cycle";
+      /** Diamond of nodes around an accent centre; the active ring
+       *  steps round on a timer (the "vicious cycle" screen) */
+      nodes: { label: string }[];
+      center: string;
+    }
+  | {
+      type: "now-later";
+      /** Two bars: "now" is the user's own slider answer, "later" is a
+       *  directional (smaller, unnumbered) bar. Honest by design: no
+       *  invented future value is shown. */
+      questionId: string;
+      nowLabel: string;
+      laterLabel: string;
+      /** Readout template for the now bar, "{value}" is replaced */
+      unit?: string;
+      caption?: string;
     };
 
 export interface InterstitialScreen {
   kind: "interstitial";
   id: string;
-  variant: "stat" | "education" | "testimonial" | "comparison" | "commitment";
+  variant:
+    | "stat"
+    | "education"
+    | "testimonial"
+    | "comparison"
+    | "commitment"
+    | "payoff";
   title: string;
   /** Paragraphs revealed in sequence */
   body?: string[];
@@ -118,6 +173,10 @@ export interface InterstitialScreen {
   testimonial?: { quote: string; name: string; detail?: string };
   /** Renders on any variant when set */
   chart?: ChartConfig;
+  /** Static image (e.g. app phone screenshot), rendered between title and body */
+  image?: { src: string; alt: string; width: number; height: number };
+  /** Mirrors a previous answer above the title: "YOU SAID: <label>" */
+  mirror?: { questionId: string; prefix?: string };
   /** Continue button label, defaults to "Continue" */
   cta?: string;
 }
@@ -135,11 +194,29 @@ export interface ResultsScreen {
   id: string;
 }
 
+/**
+ * Brain-age reveal: two count-up ages (real vs brain age), then a
+ * turnaround curve. Title/body support {realAge}, {brainAge} and
+ * {gap} interpolation. Only meaningful with scoring mode "brain-age".
+ */
+export interface RevealScreen {
+  kind: "reveal";
+  id: string;
+  realAgeLabel: string;
+  brainAgeLabel: string;
+  title: string;
+  body?: string[];
+  turnaround?: { nowLabel: string; futureLabel: string; caption?: string };
+  /** Continue button label, defaults to "Continue" */
+  cta?: string;
+}
+
 export type Screen =
   | LandingScreen
   | QuestionScreen
   | InterstitialScreen
   | AnalyzingScreen
+  | RevealScreen
   | ResultsScreen;
 
 export interface LandingConfig {
@@ -149,6 +226,10 @@ export interface LandingConfig {
   format: LandingFormat;
   /** Page title and Meta content_name */
   title: string;
+  /** Canvas theme; defaults to "light" */
+  theme?: LandingTheme;
+  /** Defaults to bucket scoring when omitted */
+  scoring?: BrainAgeScoring;
   resultsCta: { label: string; href: string };
   buckets: ResultBucket[];
   screens: Screen[];
@@ -158,5 +239,7 @@ export interface LandingConfig {
 export interface QuizAnswer {
   value: string | number;
   label: string;
-  scores: Record<string, number>;
+  scores?: Record<string, number>;
+  years?: number;
+  baselineAge?: number;
 }

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | Shipped the brain-age quiz at /go/brain-age (ageing-brain persona, Luke's copy): dark quiz theme via config flag, numeric brain-age scoring, reveal screen with turnaround curve, cycle-loop diagram, answer mirroring, slider anchor and interstitial images
 - **2026-06-12** | Consolidated the five B2B feature-plan docs into the single canonical docs/features/b2b/B2B_PORTAL.md (current state + future work) and removed them from featurePlans
 - **2026-06-12** | Created the landing conversion programme doc hub (personas x formats strategy, tracking plan, listicle reference evaluation)
 - **2026-06-12** | Restyled /go quiz answer tiles to a light-blue fill with a staggered cascade reveal

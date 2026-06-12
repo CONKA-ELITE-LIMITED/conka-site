@@ -5,10 +5,10 @@
  * SVG, no chart library.
  */
 const NEUTRAL_RAMP = [
-  "rgba(0,0,0,0.55)",
-  "rgba(0,0,0,0.3)",
-  "rgba(0,0,0,0.15)",
-  "rgba(0,0,0,0.08)",
+  "var(--go-ramp-1)",
+  "var(--go-ramp-2)",
+  "var(--go-ramp-3)",
+  "var(--go-ramp-4)",
 ];
 
 export default function PieChart({
@@ -73,7 +73,7 @@ export default function PieChart({
           {segments.map((segment, i) => (
             <li
               key={segment.label}
-              className="flex items-center gap-2 text-xs uppercase tracking-wide text-black/70"
+              className="go-text-soft flex items-center gap-2 text-xs uppercase tracking-wide"
               style={mono}
             >
               <span
@@ -82,7 +82,7 @@ export default function PieChart({
                 aria-hidden
               />
               {segment.label}
-              <span className="tabular-nums text-black/50">
+              <span className="go-text-faint tabular-nums">
                 {Math.round((segment.value / total) * 100)}%
               </span>
             </li>
@@ -90,7 +90,7 @@ export default function PieChart({
         </ul>
       </div>
       {caption && (
-        <figcaption className="mt-3 text-xs text-black/50">{caption}</figcaption>
+        <figcaption className="go-text-faint mt-3 text-xs">{caption}</figcaption>
       )}
     </figure>
   );

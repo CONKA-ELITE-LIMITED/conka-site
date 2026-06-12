@@ -22,14 +22,14 @@ export default function ComparisonChart({
         aria-label={`${withLabel} versus ${withoutLabel}`}
       >
         {/* hairline frame */}
-        <line x1="8" y1="164" x2="312" y2="164" stroke="rgba(0,0,0,0.15)" strokeWidth="1" />
-        <line x1="8" y1="12" x2="8" y2="164" stroke="rgba(0,0,0,0.15)" strokeWidth="1" />
+        <line x1="8" y1="164" x2="312" y2="164" stroke="var(--go-hairline)" strokeWidth="1" />
+        <line x1="8" y1="12" x2="8" y2="164" stroke="var(--go-hairline)" strokeWidth="1" />
 
         {/* without: starts fine, fades through the day */}
         <path
           d="M8,84 C70,64 110,72 160,102 C210,130 262,140 312,144"
           fill="none"
-          stroke="rgba(0,0,0,0.35)"
+          stroke="var(--go-neutral-strong)"
           strokeWidth="1.5"
           strokeDasharray="4 4"
           className="go-fade-up"
@@ -56,14 +56,14 @@ export default function ComparisonChart({
           <span className="inline-block h-0.5 w-5" style={{ backgroundColor: "var(--brand-accent)" }} />
           {withLabel}
         </span>
-        <span className="flex items-center gap-2 text-black/60">
-          <span className="inline-block h-px w-5 border-t border-dashed border-black/40" />
+        <span className="go-text-mid flex items-center gap-2">
+          <span className="inline-block h-px w-5 border-t border-dashed" style={{ borderColor: "var(--go-neutral-strong)" }} />
           {withoutLabel}
         </span>
       </div>
 
       {caption && (
-        <figcaption className="mt-2 text-xs text-black/50">{caption}</figcaption>
+        <figcaption className="go-text-faint mt-2 text-xs">{caption}</figcaption>
       )}
     </figure>
   );

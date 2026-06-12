@@ -79,7 +79,7 @@ Run `/review-analytics` after Phase 1 ships.
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Quiz engine + component library + config system + template config + analytics | Complete (2026-06-12, commits b1a1de38 + 4b4ca20f). Extras beyond scope: bar/pie chart variants, landing video + rating line, Flow-style centered layout. Feature doc: `docs/features/LANDING_QUIZ_SYSTEM.md` |
-| 2 | Real persona content: 3 quiz configs from team session, results mapped to Flow/Clear/Both pricing | Not Started |
+| 2 | Real persona content: 3 quiz configs from team session, results mapped to Flow/Clear/Both pricing. First quiz: ageing-brain persona, scoped in [brain-age-quiz.md](./brain-age-quiz.md) (SCRUM-1084) | In Progress |
 | 3 | Listicle format renderer in the same config system | Future |
 | 4 | Third format + per-slug conversion readout loop | Future |
 

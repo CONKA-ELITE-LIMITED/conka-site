@@ -409,6 +409,70 @@
   50%, 100% { opacity: 0; }
 }
 
+/* ---- /go quiz canvas tokens ----
+   Light by default; `.go-dark` flips the canvas (set per-config via
+   `theme: "dark"`). Quiz components read ONLY these tokens plus
+   --brand-accent, so a theme is one variable block, nothing more.
+   Order matters: `.go-dark` sits after `.brand-clinical` so its
+   --brand-accent override wins on the shared root element. */
+.go-quiz {
+  --go-bg: #ffffff;
+  --go-text: #111111;
+  --go-text-soft: rgba(0, 0, 0, 0.7);
+  --go-text-mid: rgba(0, 0, 0, 0.6);
+  --go-text-faint: rgba(0, 0, 0, 0.5);
+  --go-hairline: rgba(0, 0, 0, 0.15);
+  --go-hairline-soft: rgba(0, 0, 0, 0.08);
+  --go-track: rgba(0, 0, 0, 0.08);
+  --go-neutral-strong: rgba(0, 0, 0, 0.35);
+  --go-neutral: rgba(0, 0, 0, 0.25);
+  --go-surface: #ffffff;
+  --go-ramp-1: rgba(0, 0, 0, 0.55);
+  --go-ramp-2: rgba(0, 0, 0, 0.3);
+  --go-ramp-3: rgba(0, 0, 0, 0.15);
+  --go-ramp-4: rgba(0, 0, 0, 0.08);
+}
+
+.go-quiz.go-dark {
+  /* Neuro blue lifted for contrast on the dark canvas; clinical navy
+     #1b2757 is near-invisible on #0a0a0a. */
+  --brand-accent: #6478e0;
+  --go-option-tint: rgba(255, 255, 255, 0.08);
+  --go-bg: #0a0a0a;
+  --go-text: #f5f5f5;
+  --go-text-soft: rgba(255, 255, 255, 0.78);
+  --go-text-mid: rgba(255, 255, 255, 0.66);
+  --go-text-faint: rgba(255, 255, 255, 0.55);
+  --go-hairline: rgba(255, 255, 255, 0.18);
+  --go-hairline-soft: rgba(255, 255, 255, 0.1);
+  --go-track: rgba(255, 255, 255, 0.12);
+  --go-neutral-strong: rgba(255, 255, 255, 0.4);
+  --go-neutral: rgba(255, 255, 255, 0.28);
+  --go-surface: rgba(255, 255, 255, 0.06);
+  --go-ramp-1: rgba(255, 255, 255, 0.6);
+  --go-ramp-2: rgba(255, 255, 255, 0.35);
+  --go-ramp-3: rgba(255, 255, 255, 0.2);
+  --go-ramp-4: rgba(255, 255, 255, 0.1);
+}
+
+.go-text-soft { color: var(--go-text-soft); }
+.go-text-mid { color: var(--go-text-mid); }
+.go-text-faint { color: var(--go-text-faint); }
+
+/* Payoff orb (brain-age "switched on" beat). Pure CSS, no asset. */
+@keyframes go-orb-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.go-orb {
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #c7d2ff 0%, #6478e0 55%, #1b2757 100%);
+  box-shadow:
+    0 0 80px 20px rgba(100, 120, 224, 0.45),
+    0 0 160px 60px rgba(100, 120, 224, 0.2);
+  animation: go-orb-pulse 4s ease-in-out infinite;
+}
+
 /* ---- /go landing-quiz motion utilities ----
    Consumed by app/components/go/*. CSS-only by design (no GSAP on ad
    landing pages). All three respect prefers-reduced-motion below. */
@@ -459,6 +523,9 @@
   .go-bar {
     animation-duration: 1ms;
     animation-delay: 0ms;
+  }
+  .go-orb {
+    animation: none;
   }
 }
 

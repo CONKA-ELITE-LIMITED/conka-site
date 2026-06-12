@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import type {
+  BrainAgeResult,
   LandingConfig,
   QuestionScreen,
   QuizAnswer,
@@ -15,6 +16,8 @@ import {
   InterstitialView,
   LandingView,
   ResultsView,
+  RevealView,
+  fillAgeTokens,
 } from "./QuizScreens";
 import {
   trackLandingAnswerSelected,
@@ -25,8 +28,6 @@ import {
   trackLandingStarted,
 } from "@/app/lib/analytics";
 import { trackMetaLead, trackMetaViewContent } from "@/app/lib/metaPixel";
-
-const QUIZ_BG = "#ffffff";
 
 function generateSessionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -69,7 +70,7 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
     const totals: Record<string, number> = {};
     for (const bucket of config.buckets) totals[bucket.id] = 0;
     for (const answer of Object.values(answers)) {
-      for (const [bucketId, points] of Object.entries(answer.scores)) {
+      for (const [bucketId, points] of Object.entries(answer.scores ?? {})) {
         totals[bucketId] = (totals[bucketId] ?? 0) + points;
       }
     }
@@ -78,6 +79,24 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
       config.buckets[0],
     );
   }, [answers, config.buckets]);
+
+  /** Brain-age mode: baseline + clamped years gap (null until the
+   *  baseline question is answered, and always null in bucket mode) */
+  const ages: BrainAgeResult | null = useMemo(() => {
+    if (config.scoring?.mode !== "brain-age") return null;
+    let baseline: number | null = null;
+    let years = 0;
+    for (const answer of Object.values(answers)) {
+      if (typeof answer.baselineAge === "number") baseline = answer.baselineAge;
+      years += answer.years ?? 0;
+    }
+    if (baseline === null) return null;
+    const gap = Math.min(
+      Math.max(Math.round(years), config.scoring.gapMin),
+      config.scoring.gapMax,
+    );
+    return { realAge: baseline, brainAge: baseline + gap, gap };
+  }, [answers, config.scoring]);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -113,8 +132,13 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
       resultBucket: resultBucket.id,
       totalQuestions,
       timeSpentSeconds,
+      ...(ages ? { brainAge: ages.brainAge, brainAgeGap: ages.gap } : {}),
     });
-    trackLandingResultsViewed({ ...base, resultBucket: resultBucket.id });
+    trackLandingResultsViewed({
+      ...base,
+      resultBucket: resultBucket.id,
+      ...(ages ? { brainAge: ages.brainAge, brainAgeGap: ages.gap } : {}),
+    });
     trackMetaLead({ content_name: config.title, content_category: config.slug });
     // Fire once on reaching results; guarded by resultsFiredRef.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,19 +164,28 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   };
 
   const ctaHref = resultBucket.ctaHref ?? config.resultsCta.href;
+  // Back is blocked on analyzing/results, and on reveal: stepping back
+  // from the reveal lands on analyzing, which just auto-advances forward.
   const canGoBack =
-    index > 0 && screen.kind !== "analyzing" && screen.kind !== "results";
+    index > 0 &&
+    screen.kind !== "analyzing" &&
+    screen.kind !== "reveal" &&
+    screen.kind !== "results";
   const progress = screens.length > 1 ? index / (screens.length - 1) : 0;
+  const dark = config.theme === "dark";
 
   return (
     <div
-      className="brand-clinical flex min-h-[100dvh] flex-col text-black"
-      style={{ backgroundColor: QUIZ_BG }}
+      className={`brand-clinical go-quiz${dark ? " go-dark" : ""} flex min-h-[100dvh] flex-col`}
+      style={{
+        backgroundColor: "var(--go-bg)",
+        color: "var(--go-text)",
+      }}
     >
       {/* Fixed header: logo centred, thick progress bar full-bleed below */}
       <header
         className="fixed inset-x-0 top-0 z-10"
-        style={{ backgroundColor: QUIZ_BG }}
+        style={{ backgroundColor: "var(--go-bg)" }}
       >
         <div className="relative flex h-16 items-center justify-center">
           <button
@@ -160,7 +193,7 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             onClick={goBack}
             disabled={!canGoBack}
             aria-label="Back"
-            className={`absolute left-3 px-2 py-1 text-2xl leading-none text-black/70 transition-opacity duration-150 ${
+            className={`go-text-soft absolute left-3 px-2 py-1 text-2xl leading-none transition-opacity duration-150 ${
               canGoBack ? "" : "opacity-0"
             }`}
           >
@@ -171,12 +204,12 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             alt="CONKA logo"
             width={440}
             height={112}
-            className="h-8 w-auto"
+            className={`h-8 w-auto${dark ? " invert" : ""}`}
             priority
           />
           {questionNumber > 0 && (
             <span
-              className="absolute right-4 text-sm tabular-nums text-black/50"
+              className="go-text-faint absolute right-4 text-sm tabular-nums"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
               {questionNumber}/{totalQuestions}
@@ -204,14 +237,26 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             />
           )}
           {screen.kind === "interstitial" && (
-            <InterstitialView screen={screen} onContinue={goNext} />
+            <InterstitialView
+              screen={screen}
+              answers={answers}
+              onContinue={goNext}
+            />
           )}
           {screen.kind === "analyzing" && (
             <AnalyzingView screen={screen} onComplete={goNext} />
           )}
+          {screen.kind === "reveal" && (
+            <RevealView screen={screen} ages={ages} onContinue={goNext} />
+          )}
           {screen.kind === "results" && (
             <ResultsView
-              bucket={resultBucket}
+              bucket={{
+                ...resultBucket,
+                title: fillAgeTokens(resultBucket.title, ages),
+                body: fillAgeTokens(resultBucket.body, ages),
+                recommendation: fillAgeTokens(resultBucket.recommendation, ages),
+              }}
               ctaLabel={config.resultsCta.label}
               ctaHref={ctaHref}
               onCtaClick={() =>

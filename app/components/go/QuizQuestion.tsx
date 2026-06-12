@@ -8,14 +8,11 @@ import type {
 } from "@/app/lib/landings/types";
 import QuizButton from "./QuizButton";
 
-function bandScores(
-  bands: SliderBand[],
-  value: number,
-): Record<string, number> {
+function bandFor(bands: SliderBand[], value: number): SliderBand | undefined {
   for (const band of bands) {
-    if (value <= band.upTo) return band.scores;
+    if (value <= band.upTo) return band;
   }
-  return bands[bands.length - 1]?.scores ?? {};
+  return bands[bands.length - 1];
 }
 
 /**
@@ -59,7 +56,13 @@ export default function QuizQuestion({
     setSelected(i);
     if (advanceTimer.current) clearTimeout(advanceTimer.current);
     advanceTimer.current = setTimeout(() => {
-      onAnswer({ value: option.label, label: option.label, scores: option.scores });
+      onAnswer({
+        value: option.label,
+        label: option.label,
+        scores: option.scores,
+        years: option.years,
+        baselineAge: option.baselineAge,
+      });
     }, 240);
   };
 
@@ -71,7 +74,7 @@ export default function QuizQuestion({
             {screen.question}
           </h2>
           {screen.subtitle && (
-            <p className="mt-3 text-lg text-black/60">{screen.subtitle}</p>
+            <p className="go-text-mid mt-3 text-lg">{screen.subtitle}</p>
           )}
         </div>
 
@@ -126,8 +129,33 @@ export default function QuizQuestion({
               style={{ accentColor: "var(--brand-accent)" }}
               aria-label={screen.question}
             />
+            {slider.anchor && (
+              <div className="relative -mt-3 h-7" aria-hidden>
+                <div
+                  className="absolute flex -translate-x-1/2 flex-col items-center"
+                  style={{
+                    left: `${
+                      ((slider.anchor.value - slider.min) /
+                        (slider.max - slider.min)) *
+                      100
+                    }%`,
+                  }}
+                >
+                  <span
+                    className="h-2 w-px"
+                    style={{ backgroundColor: "var(--go-neutral-strong)" }}
+                  />
+                  <span
+                    className="go-text-faint mt-1 text-[10px] uppercase tracking-[0.14em]"
+                    style={{ fontFamily: "var(--font-brand-data)" }}
+                  >
+                    {slider.anchor.label}
+                  </span>
+                </div>
+              </div>
+            )}
             <div
-              className="flex justify-between text-xs text-black/60"
+              className="go-text-mid flex justify-between text-xs"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
               <span>{slider.minLabel}</span>
@@ -141,13 +169,15 @@ export default function QuizQuestion({
         <div className="pb-8 pt-6">
           <QuizButton
             label="Continue"
-            onClick={() =>
+            onClick={() => {
+              const band = bandFor(slider.bands, sliderValue);
               onAnswer({
                 value: sliderValue,
                 label: String(sliderValue),
-                scores: bandScores(slider.bands, sliderValue),
-              })
-            }
+                scores: band?.scores,
+                years: band?.years,
+              });
+            }}
           />
         </div>
       )}

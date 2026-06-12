@@ -7,7 +7,8 @@ export default function QuizProgressBar({ progress }: { progress: number }) {
   const pct = Math.round(Math.min(Math.max(progress, 0), 1) * 100);
   return (
     <div
-      className="h-1.5 w-full bg-black/10"
+      className="h-1.5 w-full"
+      style={{ backgroundColor: "var(--go-track)" }}
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={100}
