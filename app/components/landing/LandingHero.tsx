@@ -65,21 +65,17 @@ export default function LandingHero() {
     <div>
       {/* Mobile — full-bleed image (clean, soft fade at bottom), trust row + title + CTA below */}
       <div className="lg:hidden">
-        <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[4/3]">
+        {/* aspect-[3/2] matches the render's native 2528x1696 so the
+            composed ingredients aren't cropped away */}
+        <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[3/2]">
           <Image
-            src="/formulas/both/BothHero.jpg"
-            alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
+            src="/formulas/both/BoxIngredientHero.png"
+            alt="CONKA Flow and Clear shots surrounded by their ingredients"
             fill
             priority
             fetchPriority="high"
             sizes="100vw"
             className="object-cover object-center"
-            style={{
-              // Crop the source's white space so the bottles fill the frame.
-              // GPU-only transform, no layout cost.
-              transform: "scale(1.4) translateY(-10%)",
-              transformOrigin: "center center",
-            }}
           />
           <div
             className="absolute inset-x-0 bottom-0 h-10 pointer-events-none"
@@ -147,18 +143,13 @@ export default function LandingHero() {
             so the source crop reads less zoomed. */}
         <div className="relative w-full aspect-[3/2] overflow-hidden border border-black/12 bg-[#f5f5f5]">
           <Image
-            src="/formulas/both/BothHero.jpg"
-            alt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
+            src="/formulas/both/BoxIngredientHero.png"
+            alt="CONKA Flow and Clear shots surrounded by their ingredients"
             fill
             priority
             fetchPriority="high"
             sizes="(max-width: 1024px) 100vw, 60vw"
             className="object-cover object-center"
-            style={{
-              // Crop the source's white space so the bottles fill the frame.
-              transform: "scale(1.4) translateY(-10%)",
-              transformOrigin: "center center",
-            }}
           />
         </div>
       </div>
