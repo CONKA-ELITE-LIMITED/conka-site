@@ -46,7 +46,7 @@ export const quizTemplate: LandingConfig = {
       title: "Where does your focus go?",
       subtitle:
         "Answer a few questions and we will map your focus profile to the system built for it.",
-      video: "/videos/Flow.mp4",
+      video: "/videos/FlowLiquid.mp4",
       rating: { text: "4.9/5 rated by CONKA customers" },
       cta: "Start",
     },

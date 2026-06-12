@@ -1,6 +1,8 @@
-# Persona Landing System + Quiz Engine
+# Quiz Format - Plan + Build Record
 
-**Status:** Active. Scoped 2026-06-12.
+Part of the [landing conversion programme](./README.md) (start there for strategy, status, decisions).
+
+**Status:** Phase 1 shipped. Scoped 2026-06-12.
 **Appetite:** Quiz framework with demo config same day (pre-meeting). Real persona content wired in immediately after. Listicle and third format follow inside the same system.
 
 ## Problem
