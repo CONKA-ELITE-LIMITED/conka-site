@@ -1,4 +1,8 @@
 import type { LandingConfig } from "./types";
+import { formulaContent } from "@/app/lib/productData";
+
+const flowTagline = formulaContent["01"].tagline;
+const clearTagline = formulaContent["02"].tagline;
 
 /**
  * Brain-age quiz for the ageing-brain persona (copy: Luke, June 2026).
@@ -298,9 +302,10 @@ export const brainAgeQuiz: LandingConfig = {
           caption: "PM · CLEAR",
         },
       ],
+      bodyTone: "strong",
       body: [
-        "*Flow* in the morning: one shot, built for clear, switched-on focus through the day.",
-        "*Clear* for the second half: steady, calm sharpness when the afternoon usually dips.",
+        `*Flow* in the morning. ${flowTagline}`,
+        `*Clear* for the second half. ${clearTagline}`,
         "Two minutes a day. That's the whole ritual.",
       ],
     },

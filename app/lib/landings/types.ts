@@ -162,6 +162,8 @@ export interface InterstitialScreen {
    *  in the accent colour, **strong** in full-contrast text. Commitment
    *  variant types the lines out character by character. */
   body?: string[];
+  /** "strong" renders body in full-contrast text instead of soft grey */
+  bodyTone?: "soft" | "strong";
   /** Used by variant "stat" */
   stat?: { value: number; prefix?: string; suffix?: string; label: string };
   /** Used by variant "testimonial" */

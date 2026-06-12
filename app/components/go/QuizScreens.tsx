@@ -176,7 +176,9 @@ export function InterstitialView({
         )}
 
         {screen.images && screen.images.length === 1 && (
-          <div className="w-full max-w-[220px]">
+          /* Kept small: tall phone shots must leave room for title,
+             body and CTA on a 390px viewport */
+          <div className="w-full max-w-[150px]">
             <Image
               src={screen.images[0].src}
               alt={screen.images[0].alt}
@@ -259,14 +261,17 @@ export function InterstitialView({
 
         {screen.body &&
           (screen.variant === "commitment" ? (
+            /* Full-contrast text; accent spans carry the emphasis */
             <TypewriterText
               lines={screen.body}
-              className="go-text-soft space-y-6 text-2xl font-medium leading-snug sm:text-3xl"
+              className="space-y-6 text-2xl font-medium leading-snug sm:text-3xl"
             />
           ) : (
             <AnimatedText
               lines={screen.body}
-              className="go-text-soft space-y-3 text-lg leading-relaxed"
+              className={`${
+                screen.bodyTone === "strong" ? "" : "go-text-soft "
+              }space-y-3 text-lg leading-relaxed`}
               startDelayMs={200}
             />
           ))}
@@ -325,13 +330,15 @@ export function RevealView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-8">
+      {/* Deliberately compact: numbers, curve, punchline and CTA must
+          all fit one 390px viewport without scrolling */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <div className="flex items-end justify-center gap-10">
           <div>
             <p className="go-text-mid text-xs uppercase tracking-[0.14em]" style={mono}>
               {screen.realAgeLabel}
             </p>
-            <p className="mt-2 text-6xl font-medium tabular-nums tracking-[-0.02em]">
+            <p className="mt-1 text-5xl font-medium tabular-nums tracking-[-0.02em]">
               {ages ? <CountUp value={ages.realAge} delayMs={200} /> : "–"}
             </p>
           </div>
@@ -343,8 +350,8 @@ export function RevealView({
               {screen.brainAgeLabel}
             </p>
             <p
-              className="mt-2 text-7xl font-medium tabular-nums tracking-[-0.02em]"
-              style={{ color: "var(--brand-accent)" }}
+              className="mt-1 text-6xl font-semibold tabular-nums tracking-[-0.02em]"
+              style={{ color: "var(--brand-accent)", textShadow: "var(--go-glow)" }}
             >
               {ages ? <CountUp value={ages.brainAge} delayMs={1000} /> : "–"}
             </p>
@@ -352,16 +359,18 @@ export function RevealView({
         </div>
 
         {screen.turnaround && (
-          <TurnaroundChart
-            nowLabel={screen.turnaround.nowLabel}
-            futureLabel={screen.turnaround.futureLabel}
-            caption={screen.turnaround.caption}
-            startDelayMs={1900}
-          />
+          <div className="w-full max-w-[360px]">
+            <TurnaroundChart
+              nowLabel={screen.turnaround.nowLabel}
+              futureLabel={screen.turnaround.futureLabel}
+              caption={screen.turnaround.caption}
+              startDelayMs={1900}
+            />
+          </div>
         )}
 
         <h2
-          className="go-fade-up text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl"
+          className="go-fade-up text-2xl font-medium leading-tight tracking-[-0.01em] sm:text-3xl"
           style={{ animationDelay: "2300ms" }}
         >
           {fillAgeTokens(screen.title, ages)}
@@ -370,7 +379,7 @@ export function RevealView({
         {screen.body && (
           <AnimatedText
             lines={screen.body.map((line) => fillAgeTokens(line, ages))}
-            className="go-text-soft space-y-3 text-lg leading-relaxed"
+            className="go-text-soft space-y-2 text-base leading-relaxed"
             startDelayMs={2600}
           />
         )}

@@ -476,6 +476,8 @@
   height: 8px;
   border-radius: 9999px;
   outline: none;
+  /* Dragging the thumb must not scroll the page on touch devices */
+  touch-action: none;
 }
 .go-range::-webkit-slider-thumb {
   -webkit-appearance: none;
