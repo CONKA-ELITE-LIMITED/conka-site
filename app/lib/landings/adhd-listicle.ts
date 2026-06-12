@@ -62,13 +62,8 @@ export const adhdListicle: ListicleConfig = {
       tag: "RESTLESSNESS",
       headline: "Sit Still Long Enough to Actually Get Things Done",
       body: "Your leg won't stop. Your eyes drift to the window, the door, your phone. It's not that you don't want to focus. Your brain just can't hold itself steady, because its focus chemistry runs uneven. Coffee only winds you up tighter.\n\nConka gives you focus and calm at the same time, with no caffeine to make you jittery. The fidget settles, and you look up to find you've worked for half an hour straight.",
-      asset: {
-        kind: "image",
-        src: "/listicles/LateWork.jpg",
-        alt: "Working focused at a desk in the evening",
-        aspect: "4/3",
-        fit: "cover",
-      },
+      // Fig. 01 coffee-vs-CONKA curves: pays off "coffee winds you up tighter"
+      asset: { kind: "valueChart" },
     },
     {
       kind: "statsBand",

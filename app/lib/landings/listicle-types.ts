@@ -22,6 +22,8 @@ export type ListicleAsset =
     }
   /** Silent autoplay loop (no controls), the IM8 reason-video pattern */
   | { kind: "video"; src: string; aspect?: string }
+  /** The Fig. 01 coffee-vs-CONKA energy curves card (LandingValueComparison) */
+  | { kind: "valueChart" }
   | {
       kind: "statPanel";
       tone: "dark" | "light";

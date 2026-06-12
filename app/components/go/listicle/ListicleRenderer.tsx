@@ -13,6 +13,7 @@ import ListicleProductHero, {
 } from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
+import { ValueComparisonChart } from "@/app/components/landing/LandingValueComparison";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -129,6 +130,10 @@ function LaurelBadge({ eyebrow, body }: { eyebrow: string; body: string }) {
 }
 
 function AssetBlock({ asset }: { asset: ListicleAsset }) {
+  if (asset.kind === "valueChart") {
+    return <ValueComparisonChart />;
+  }
+
   if (asset.kind === "video") {
     return (
       <div
