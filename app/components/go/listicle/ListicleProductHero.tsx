@@ -1,6 +1,5 @@
 "use client";
 
-import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
 import { formatPrice } from "@/app/lib/productData";
 import {
@@ -18,7 +17,6 @@ import {
   getHeroProductType,
   getPriceFrequency,
   getTileChecklist,
-  getCTAMeta,
 } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
 import HeroAccordions from "@/app/components/product/HeroAccordions";
@@ -195,6 +193,44 @@ function PlanSelector({
   );
 }
 
+/** Checkmark benefit pills under the description, IM8 key-benefits style */
+const KEY_BENEFITS = [
+  "Two daily shots, zero caffeine",
+  "+14.86% sharper thinking, proven against placebo",
+  "Informed Sport Certified",
+  "100-day money-back guarantee",
+];
+
+/** Full-width proof strip below the buy box, IM8 trustband style */
+const TRUST_ITEMS = [
+  "Third Party Tested",
+  "Informed Sport Certified",
+  "Made in the UK",
+  "Zero Caffeine",
+  "Every Batch Tested",
+  "Free UK Shipping",
+  "Cancel Anytime",
+  "100-Day Guarantee",
+];
+
+function TrustStrip() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-black/10 py-4">
+      {TRUST_ITEMS.map((item) => (
+        <span
+          key={item}
+          className="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55"
+        >
+          <span className="text-[#1B2757]" aria-hidden>
+            ✓
+          </span>
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function BuyPanel({
   formulaId,
   selectedCadence,
@@ -202,61 +238,82 @@ function BuyPanel({
   onAddToCart,
 }: ListicleProductHeroProps) {
   const content = getHeroContent(formulaId);
-  const pricing = getCadencePricingByProductHeroId(formulaId, selectedCadence);
 
   return (
     <>
-      <div className="mb-0">
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          <div className="flex" aria-hidden>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <svg
-                key={i}
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="text-[#1B2757]"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            ))}
-          </div>
-          <span className="brand-data text-black/60">{content.soldCount}</span>
+      {/* Stars + review/usage counts in one compact line */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex" aria-hidden>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <svg
+              key={i}
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="text-[#1B2757]"
+            >
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          ))}
         </div>
+        <span className="text-sm font-bold text-black">
+          4.7 <span className="font-semibold">from 622+ Reviews</span>
+        </span>
+        <span className="text-sm text-black/50">· 5,000+ daily users</span>
+      </div>
+
+      {/* Eyebrow + title + short description */}
+      <div className="mb-0">
+        <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+          Daily Nootropic Brain Shots
+        </p>
         <h2
           className="brand-h1 leading-tight lg:!text-[2.25rem]"
           style={{ letterSpacing: "-0.02em" }}
         >
           {content.name}
         </h2>
-        <p
-          className="mb-3 mt-0 text-lg leading-snug text-black/65"
-          style={{ letterSpacing: "-0.01em" }}
-        >
-          {content.tagline}
+        <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
+          {content.headline}
         </p>
       </div>
 
-      <p className="text-sm leading-relaxed text-black/75 md:text-base">
-        {content.headline}
-      </p>
-
-      <PlanSelector
-        formulaId={formulaId}
-        selectedCadence={selectedCadence}
-        onCadenceChange={onCadenceChange}
-      />
+      {/* Key-benefit checkmark pills */}
+      <ul className="flex flex-col gap-2" aria-label="Key benefits">
+        {KEY_BENEFITS.map((benefit) => (
+          <li
+            key={benefit}
+            className="flex items-center gap-2.5 border border-black/10 bg-white px-3.5 py-2 text-[13px] font-semibold text-black/80"
+          >
+            <span className="text-[#1B2757]" aria-hidden>
+              ✓
+            </span>
+            {benefit}
+          </li>
+        ))}
+      </ul>
 
       <div>
-        <ConkaCTAButton
+        <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+          Subscribe &amp; Save:
+        </p>
+        <PlanSelector
+          formulaId={formulaId}
+          selectedCadence={selectedCadence}
+          onCadenceChange={onCadenceChange}
+        />
+      </div>
+
+      <div>
+        <button
+          type="button"
           onClick={onAddToCart}
-          meta={getCTAMeta(selectedCadence, pricing)}
-          className="w-full max-w-none"
+          className="w-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-90 active:opacity-80"
         >
           Add to Cart
-        </ConkaCTAButton>
+        </button>
         <GuaranteeRow />
       </div>
 
@@ -281,11 +338,13 @@ export function ListicleProductHeroMobile(props: ListicleProductHeroProps) {
           alt={`${content.name} bottle`}
           fullBleedThumbnails
           hideThumbnails
+          imageFit="contain"
         />
       </div>
-      <div className="flex w-full min-w-0 flex-col gap-3 pt-3">
+      <div className="flex w-full min-w-0 flex-col gap-3 bg-white px-4 py-4 text-[#111]">
         <BuyPanel {...props} />
       </div>
+      <TrustStrip />
     </>
   );
 }
@@ -297,29 +356,36 @@ export default function ListicleProductHero(props: ListicleProductHeroProps) {
   );
 
   return (
-    <div className="flex flex-col gap-[var(--brand-space-m)] lg:flex-row lg:items-start lg:justify-center">
-      {/* IM8 gallery pattern: primary image, thumbnail strip below */}
-      <div className="relative z-0 order-1 lg:sticky lg:top-8 lg:w-[58%] lg:flex-shrink-0 lg:self-start">
-        <ProductImageSlideshow
-          key={props.selectedCadence}
-          images={images}
-          alt={`${content.name} bottle`}
-        />
-      </div>
+    <div className="flex flex-col gap-[var(--brand-space-m)]">
+      <div className="flex flex-col gap-[var(--brand-space-m)] lg:flex-row lg:items-start lg:justify-center">
+        {/* IM8 gallery pattern: primary image, compact thumbnail strip below */}
+        <div className="relative z-0 order-1 lg:sticky lg:top-8 lg:w-[46%] lg:flex-shrink-0 lg:self-start">
+          <ProductImageSlideshow
+            key={props.selectedCadence}
+            images={images}
+            alt={`${content.name} bottle`}
+            smallThumbnails
+            imageFit="contain"
+          />
+        </div>
 
-      <div className="relative z-10 order-2 min-w-0 flex-1 lg:sticky lg:top-8 lg:w-[40%] lg:flex-shrink-0 lg:self-start">
-        <div
-          className="relative z-10 flex flex-col gap-[var(--brand-space-s)] bg-white lg:gap-[var(--brand-space-m)]"
-          style={{
-            paddingLeft: "var(--brand-space-m)",
-            paddingRight: "var(--brand-space-m)",
-            paddingTop: "var(--brand-space-s)",
-            paddingBottom: "var(--brand-space-m)",
-          }}
-        >
-          <BuyPanel {...props} />
+        <div className="relative z-10 order-2 min-w-0 flex-1 lg:sticky lg:top-8 lg:w-[48%] lg:flex-shrink-0 lg:self-start">
+          <div
+            className="relative z-10 flex flex-col gap-[var(--brand-space-s)] bg-white"
+            style={{
+              paddingLeft: "var(--brand-space-m)",
+              paddingRight: "var(--brand-space-m)",
+              paddingTop: "var(--brand-space-s)",
+              paddingBottom: "var(--brand-space-m)",
+            }}
+          >
+            <BuyPanel {...props} />
+          </div>
         </div>
       </div>
+
+      {/* Proof strip spans both columns */}
+      <TrustStrip />
     </div>
   );
 }

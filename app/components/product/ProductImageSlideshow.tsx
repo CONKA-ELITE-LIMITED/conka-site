@@ -15,6 +15,11 @@ interface ProductImageSlideshowProps {
   fullBleedThumbnails?: boolean;
   /** When true, the thumbnail strip is hidden entirely (rely on prev/next nav buttons) */
   hideThumbnails?: boolean;
+  /** Keep thumbnails at the compact 56px size on all breakpoints */
+  smallThumbnails?: boolean;
+  /** "contain" letterboxes the full image in the square frame on white
+   *  instead of cover-cropping (for wide renders like the Both box) */
+  imageFit?: "cover" | "contain";
 }
 
 export default function ProductImageSlideshow({
@@ -22,6 +27,8 @@ export default function ProductImageSlideshow({
   alt,
   fullBleedThumbnails = false,
   hideThumbnails = false,
+  smallThumbnails = false,
+  imageFit = "cover",
 }: ProductImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -43,7 +50,7 @@ export default function ProductImageSlideshow({
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
-          className="relative w-full h-full overflow-hidden rounded-none shadow-none md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)] cursor-zoom-in block"
+          className={`relative w-full h-full overflow-hidden rounded-none shadow-none md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)] cursor-zoom-in block ${imageFit === "contain" ? "bg-white" : ""}`}
           aria-label={`View ${alt} full size`}
         >
           {images.map((image, index) => (
@@ -57,7 +64,7 @@ export default function ProductImageSlideshow({
                 src={image.src}
                 alt={`${alt} - view ${index + 1}`}
                 fill
-                className="object-cover object-center"
+                className={`${imageFit === "contain" ? "object-contain" : "object-cover"} object-center`}
                 priority={index === 0}
                 sizes="(max-width: 1023px) 100vw, 45vw"
               />
@@ -149,7 +156,7 @@ export default function ProductImageSlideshow({
             <button
               key={image.src}
               onClick={() => setCurrentIndex(index)}
-              className={`flex-shrink-0 w-14 h-14 md:w-28 md:h-28 snap-center rounded overflow-hidden cursor-pointer
+              className={`flex-shrink-0 ${smallThumbnails ? "w-14 h-14" : "w-14 h-14 md:w-28 md:h-28"} snap-center rounded overflow-hidden cursor-pointer
                 transition-all duration-200 hover:opacity-90
                 ${index === currentIndex ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
               aria-label={`Go to image ${index + 1}`}

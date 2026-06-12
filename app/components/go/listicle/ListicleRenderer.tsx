@@ -506,7 +506,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         aria-label="Product offer"
         id="product"
         className="px-5 py-16 md:px-[5vw] md:py-24"
-        style={{ background: DARK, color: "#fff" }}
+        style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
       >
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">

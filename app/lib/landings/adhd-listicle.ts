@@ -49,9 +49,10 @@ export const adhdListicle: ListicleConfig = {
       body: "You've known about it since Monday. It's not even hard. But every time you sit down, your brain slides off it, so you make another coffee and lose the morning. That stuck feeling isn't laziness. An ADHD brain runs low on the focus chemical that gets you moving.\n\nConka 1, your caffeine-free morning shot, supports that exact spark. Most people feel it within minutes, and the task that felt like a locked door is suddenly open.",
       asset: {
         kind: "image",
-        src: "/listicles/UnlockedDoor.jpg",
-        alt: "A door opening into light from a dark room",
-        aspect: "4/3",
+        src: "/videos/Neurons.gif",
+        alt: "Neurons firing animation",
+        // Native 480x270; frame matches so nothing crops
+        aspect: "16/9",
         fit: "cover",
       },
     },
