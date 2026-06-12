@@ -168,7 +168,7 @@ export const brainAgeQuiz: LandingConfig = {
       id: "i_cycle",
       variant: "comparison",
       title: "It's a loop.",
-      body: ["And it spins faster every day you don't fix it."],
+      subtitle: "And it spins faster every day you don't fix it.",
       chart: {
         type: "cycle",
         nodes: [
