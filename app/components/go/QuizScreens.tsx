@@ -35,8 +35,11 @@ export function LandingView({
           </p>
         )}
         {screen.video && (
-          /* 720x900 source cropped to a square: bottom 20% hidden */
-          <div className="aspect-square w-full max-w-[220px] overflow-hidden">
+          /* portrait 720x1280 pour render, centred crop on the bottle */
+          <div
+            className="aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-2xl border-2"
+            style={{ borderColor: "var(--brand-accent)" }}
+          >
             <video
               src={screen.video}
               autoPlay
@@ -44,7 +47,7 @@ export function LandingView({
               loop
               playsInline
               preload="metadata"
-              className="h-full w-full object-cover object-top"
+              className="h-full w-full object-cover object-center"
               aria-hidden
             />
           </div>
