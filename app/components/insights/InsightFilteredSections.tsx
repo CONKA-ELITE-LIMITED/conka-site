@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { gsap } from "@/app/lib/motion";
+import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
 import TimeOfDaySection from "@/app/app-insights/sections/TimeOfDaySection";
 import MentalFatigueSection from "@/app/app-insights/sections/MentalFatigueSection";
 import StressSection from "@/app/app-insights/sections/StressSection";
@@ -58,9 +60,39 @@ function XIcon() {
 
 export default function InsightFilteredSections() {
   const [active, setActive] = useState<FilterId | null>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = usePrefersReducedMotion();
+
+  /**
+   * Switching instruments, not swapping divs: the report canvas reads
+   * down briefly, the selection changes, then the new reading rises in.
+   */
+  function applyFilter(next: FilterId | null) {
+    const canvas = canvasRef.current;
+    if (prefersReduced || !canvas) {
+      setActive(next);
+      return;
+    }
+    gsap.to(canvas, {
+      autoAlpha: 0,
+      y: 10,
+      duration: 0.2,
+      ease: "power2.in",
+      onComplete: () => {
+        setActive(next);
+        requestAnimationFrame(() => {
+          gsap.fromTo(
+            canvas,
+            { autoAlpha: 0, y: 14 },
+            { autoAlpha: 1, y: 0, duration: 0.45, ease: "power3.out" },
+          );
+        });
+      },
+    });
+  }
 
   function select(id: FilterId) {
-    setActive((prev) => (prev === id ? null : id));
+    applyFilter(active === id ? null : id);
   }
 
   function focusReport(id: FilterId) {
@@ -97,10 +129,7 @@ export default function InsightFilteredSections() {
         aria-label="Filter reports by question"
       >
         <div className="brand-track flex flex-col gap-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30 tabular-nums mb-3">
-            {"// Ongoing app data · APP-01"}
-          </p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 tabular-nums">
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 tabular-nums mb-3">
             {"// Filter by question"}
           </p>
 
@@ -113,13 +142,23 @@ export default function InsightFilteredSections() {
                   onClick={() => select(f.id)}
                   aria-pressed={isActive}
                   className={[
-                    "px-2 sm:px-4 py-3 font-mono tracking-wide border-0 text-left transition-colors min-h-[44px]",
+                    "group px-2 sm:px-4 py-3 font-mono tracking-wide text-left transition-colors min-h-[44px] border",
                     "text-[10px] sm:text-[12px]",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]",
                     isActive
-                      ? "bg-white text-[#0a0a0a] ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]"
-                      : "bg-white/75 text-[#0a0a0a]/85 hover:bg-white hover:text-[#0a0a0a]",
+                      ? "bg-white text-[#0a0a0a] border-white"
+                      : "bg-transparent text-white/75 border-white/25 hover:border-white/70 hover:text-white",
                   ].join(" ")}
                 >
+                  <span
+                    className={[
+                      "mb-1.5 block w-1.5 h-1.5 rounded-full transition-colors",
+                      isActive
+                        ? "bg-[#0a0a0a]"
+                        : "border border-white/55 group-hover:border-white",
+                    ].join(" ")}
+                    aria-hidden="true"
+                  />
                   <span className="block sm:hidden">{f.shortLabel}</span>
                   <span className="hidden sm:block leading-snug">{f.label}</span>
                 </button>
@@ -129,7 +168,7 @@ export default function InsightFilteredSections() {
 
           {active !== null && (
             <button
-              onClick={() => setActive(null)}
+              onClick={() => applyFilter(null)}
               className="flex items-center gap-2.5 w-full px-4 py-3 border border-white text-white font-mono text-[11px] uppercase tracking-[0.18em] hover:bg-white/10 transition-colors min-h-[44px]"
             >
               <XIcon />
@@ -140,37 +179,39 @@ export default function InsightFilteredSections() {
       </section>
 
       {/* Report sections — unmount hidden ones so charts don't render offscreen */}
-      {show("time-of-day") && (
-        <section id="time-of-day" className="brand-section scroll-mt-24" aria-label="Time of day report">
-          <div className="brand-track">
-            <TimeOfDaySection />
-          </div>
-        </section>
-      )}
+      <div ref={canvasRef}>
+        {show("time-of-day") && (
+          <section id="time-of-day" className="brand-section scroll-mt-24" aria-label="Time of day report">
+            <div className="brand-track">
+              <TimeOfDaySection />
+            </div>
+          </section>
+        )}
 
-      {show("mental-fatigue") && (
-        <section id="mental-fatigue" className="brand-section scroll-mt-24" aria-label="Mental fatigue and readiness report">
-          <div className="brand-track">
-            <MentalFatigueSection />
-          </div>
-        </section>
-      )}
+        {show("mental-fatigue") && (
+          <section id="mental-fatigue" className="brand-section scroll-mt-24" aria-label="Mental fatigue and readiness report">
+            <div className="brand-track">
+              <MentalFatigueSection />
+            </div>
+          </section>
+        )}
 
-      {show("stress") && (
-        <section id="stress" className="brand-section scroll-mt-24" aria-label="Stress report">
-          <div className="brand-track">
-            <StressSection />
-          </div>
-        </section>
-      )}
+        {show("stress") && (
+          <section id="stress" className="brand-section scroll-mt-24" aria-label="Stress report">
+            <div className="brand-track">
+              <StressSection />
+            </div>
+          </section>
+        )}
 
-      {show("alcohol") && (
-        <section id="alcohol" className="brand-section scroll-mt-24" aria-label="Alcohol and hangover report">
-          <div className="brand-track">
-            <AlcoholSection />
-          </div>
-        </section>
-      )}
+        {show("alcohol") && (
+          <section id="alcohol" className="brand-section scroll-mt-24" aria-label="Alcohol and hangover report">
+            <div className="brand-track">
+              <AlcoholSection />
+            </div>
+          </section>
+        )}
+      </div>
     </>
   );
 }

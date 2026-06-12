@@ -12,6 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import type { BarChartData } from "@/app/lib/appInsightsTypes";
+import { useInView } from "@/app/hooks/useInView";
+import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
 
 const BAR_COLOR = "rgba(255, 255, 255, 0.9)";
 const BAR_COLOR_NOISE = "rgba(255, 255, 255, 0.18)";
@@ -54,7 +56,16 @@ function colorForValue(value: number): string {
   return BAR_COLOR;
 }
 
+/**
+ * Bars grow downward from the zero line when the chart scrolls into view:
+ * the draw literally enacts "points lost vs. your baseline". Mounting is
+ * deferred until the chart is near-visible (reserved height, no CLS);
+ * reduced motion renders immediately with no animation.
+ */
 export default function DataBarChart({ data }: { data: BarChartData }) {
+  const [inViewRef, inView] = useInView({ threshold: 0.25 });
+  const prefersReduced = usePrefersReducedMotion();
+
   const chartData = data.points.map((p) => ({
     label: p.label,
     value: p.value,
@@ -62,68 +73,72 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
   }));
 
   return (
-    <div className="w-full h-[280px] lg:h-[340px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={chartData}
-          margin={{ top: 16, right: 16, left: -8, bottom: 16 }}
-          barCategoryGap="25%"
-        >
-          <CartesianGrid
-            stroke="rgba(255, 255, 255, 0.08)"
-            strokeDasharray="2 4"
-            vertical={false}
-          />
-          <XAxis
-            dataKey="label"
-            tick={TICK_STYLE}
-            tickLine={false}
-            axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
-          />
-          <YAxis
-            tick={TICK_STYLE}
-            tickLine={false}
-            axisLine={false}
-            domain={["auto", 0]}
-            label={{
-              value: data.yLabel,
-              angle: -90,
-              position: "insideLeft",
-              style: {
-                ...TICK_STYLE,
-                textAnchor: "middle",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-              },
-              offset: 24,
-            }}
-          />
-          <ReferenceLine
-            y={0}
-            stroke="rgba(255, 255, 255, 0.3)"
-            label={{
-              value: "YOUR TYPICAL DAY",
-              position: "insideBottomRight",
-              style: ZERO_LINE_LABEL_STYLE,
-            }}
-          />
-          <Tooltip
-            contentStyle={TOOLTIP_STYLE}
-            labelStyle={TOOLTIP_LABEL_STYLE}
-            itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
-            cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
-            formatter={(value: number, _name, item) => {
-              const meta = item?.payload?.meta;
-              return [`${value > 0 ? "+" : ""}${value}${meta ? `  (${meta})` : ""}`, "Score change"];
-            }}
-          />
-          <Bar dataKey="value" radius={0}>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colorForValue(entry.value)} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="w-full">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
+        {`Y · ${data.yLabel}`}
+      </p>
+      <div ref={inViewRef} className="w-full h-[280px] lg:h-[340px]">
+        {inView ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 16, right: 8, left: -14, bottom: 8 }}
+              barCategoryGap="30%"
+            >
+              <CartesianGrid
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeDasharray="2 4"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="label"
+                tick={TICK_STYLE}
+                tickLine={false}
+                axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
+              />
+              <YAxis
+                tick={TICK_STYLE}
+                tickLine={false}
+                axisLine={false}
+                domain={["auto", 0]}
+              />
+              <ReferenceLine
+                y={0}
+                stroke="rgba(255, 255, 255, 0.3)"
+                label={{
+                  value: "YOUR TYPICAL DAY",
+                  position: "insideBottomRight",
+                  style: ZERO_LINE_LABEL_STYLE,
+                }}
+              />
+              <Tooltip
+                contentStyle={TOOLTIP_STYLE}
+                labelStyle={TOOLTIP_LABEL_STYLE}
+                itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
+                cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
+                formatter={(value: number, _name, item) => {
+                  const meta = item?.payload?.meta;
+                  return [
+                    `${value > 0 ? "+" : ""}${value}${meta ? `  (${meta})` : ""}`,
+                    "Score change",
+                  ];
+                }}
+              />
+              <Bar
+                dataKey="value"
+                radius={0}
+                isAnimationActive={!prefersReduced}
+                animationDuration={900}
+                animationEasing="ease-out"
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colorForValue(entry.value)} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        ) : null}
+      </div>
     </div>
   );
 }
