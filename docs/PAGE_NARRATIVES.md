@@ -55,6 +55,30 @@ The page is GSAP-driven (scroll-scrubbed pinned journey, count-up stats, masked 
 
 ---
 
+## /app-insights
+
+**Audience:** the data-curious sceptic, 25-45 UK professionals and athletes who clicked through because the measurement angle intrigued them. Sceptics by default, overwhelmingly mobile. Also the B2B browser evaluating whether the trials offer is real.
+**Posture:** prove the measurement claim with the data itself, then convert to an app download (primary) or a professional-trials enquiry (B2B exit). Confident-clinical: every claim carries its sample size, evidence-strength badge, and methodology; thin data is labelled thin.
+**Story arc:** we don't ask if CONKA works, we measure it (here is the dataset) -> here is how a supplement brand can even have this data (the measurement loop + validated-test credentials) -> four patterns the data keeps showing (skim layer + per-user-delta methodology) -> the four reports: your brain runs on a curve, then the three forces that bend it (fatigue, stress, alcohol), each with a CONKA observation where the sample defends it -> this page is our data, the app gives you yours (download) -> the same instrument runs professional trials (B2B exit) -> how we look at the numbers (methodology + compliance anchors).
+
+The page is GSAP-driven around one idea: everything is measured against a baseline, so the motion enacts the per-user delta method. Calibration rules draw under section headers, readings count from zero to their measured value, bar charts grow downward from the "your typical day" zero line, the two time-of-day curves draw left-to-right, and filtering reports fades the canvas like switching instruments. All motion is entrance-triggered (no pinning), gated behind prefers-reduced-motion, and charts defer mounting until near-visible.
+
+| # | Section (component) | Job in the story | Health | Notes |
+|---|---------------------|------------------|--------|-------|
+| 1 | Hero (`InsightHeroDifferentiator`) | "We don't ask if CONKA works. We measure it." Masked-line H1, then the dataset plate: a drawn baseline and four readings (712 users, 7,593 tests) resolving on load | OK | The orchestrated load moment; the plate header carries the date range |
+| 2 | How this is possible (`HowThisIsPossibleModule`) | Pre-empt the sceptic's first question: take -> test -> see, plus FDA/NHS/Cambridge credentials grid | OK | Credentials stay static by design, a deliberate quiet zone; verbatim citation note is load-bearing |
+| 3 | TL;DR strip (`InsightTldrStrip`) | "Four patterns the data keeps showing." Skim layer: one headline card per report with sample size + evidence badge, tap to jump | OK | The narrative pivot from instrument to findings |
+| 4 | Methodology in 30s (`MethodologyInThirtySeconds`) | Per-user delta explained before the data, can/can't-do list | Strong | Disclosure pattern; open by default on desktop |
+| 5 | Filter bar (`InsightFilteredSections`) | Channel-selector chips, one per question; filtering fades the report canvas out and back like switching instruments | OK | Anchors (#time-of-day etc.) preserved; linked from elsewhere |
+| 6 | Reports 01-04 (`DataReportSection` x4) | The findings, numbered as one investigation: the daily curve, then fatigue, stress, alcohol. Readings resolve, bars fall from the baseline, evidence badges and caveats throughout | Strong | Report order is the spine: the map first, then the three forces that bend it |
+| 7 | Download (`AppDownloadSection`) | "This page is our data. The app gives you yours." Free, no subscription | OK | The conversion payoff of the whole page |
+| 8 | Professional trials (`ProfessionalTrialsBlock`) | 15+ trials, sport tags, NDA note, enquiry CTA | OK | B2B exit ramp; count resolves on entry |
+| 9 | Methodology footer | Per-user delta restated + compliance anchors (findings-as-published, food-supplement statement) | OK | Fully static by design; legal anchors must stay legible |
+
+**Weakest link right now:** unproven, the motion upgrade shipped June 2026. Section 2 is the longest unbroken read on the page; watch drop-off there. The four reports share one layout, which is honest but means report fatigue by report 03 on mobile; if analytics show readers bailing mid-reports, tighten the lower two reports before touching anything else.
+
+---
+
 ## /our-story
 
 **Audience:** top-of-funnel and brand-curious. Arrives from nav or about-the-brand searches. Not yet sold; deciding whether to trust the people behind the product.

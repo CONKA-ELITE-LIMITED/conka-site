@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | Rebuilt /app-insights with a baseline-themed GSAP motion system: hero readings resolve on load, charts draw from the zero line, filter switches animate, plus a sharper storytelling spine and new page narrative entry
 - **2026-06-11** | B2B order page gains a collapsed UK shipping disclosure showing the exact freight for the current box count plus the full band table
 - **2026-06-11** | B2B pay-by-invoice orders now carry weight-banded shipping (free to 6 boxes, then 12/25/50/75 GBP), closing the last freight leak; manual pallet playbook documented
 - **2026-06-11** | Weight-banded all international Shopify shipping zones (Evri, DDU) so freight scales with order size; closes the long-haul quarterly leak

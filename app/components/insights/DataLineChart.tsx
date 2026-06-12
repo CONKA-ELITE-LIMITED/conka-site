@@ -12,6 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import type { LineChartData } from "@/app/lib/appInsightsTypes";
+import { useInView } from "@/app/hooks/useInView";
+import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
 
 const WITHOUT_CONKA_COLOR = "rgba(255, 255, 255, 0.35)";
 const WITH_CONKA_COLOR = "rgba(255, 255, 255, 0.95)";
@@ -48,7 +50,17 @@ const ZERO_LINE_LABEL_STYLE = {
   textTransform: "uppercase" as const,
 };
 
+/**
+ * Both curves draw left-to-right when the chart scrolls into view: the
+ * faint without-CONKA curve first, the bright with-CONKA curve chasing it.
+ * Mounting is deferred until near-visible (reserved height, no CLS);
+ * reduced motion renders immediately with no animation.
+ */
 export default function DataLineChart({ data }: { data: LineChartData }) {
+  const [inViewRef, inView] = useInView({ threshold: 0.25 });
+  const prefersReduced = usePrefersReducedMotion();
+  const animate = !prefersReduced;
+
   const chartData = data.points.map((p) => ({
     hour: p.hourLabel,
     "Without CONKA": p.noConka,
@@ -57,86 +69,90 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
 
   return (
     <div className="w-full">
-      <div className="w-full h-[280px] lg:h-[360px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={chartData}
-          margin={{ top: 16, right: 16, left: -8, bottom: 0 }}
-        >
-          {/* Dosing band fills — rendered before grid so they sit behind everything */}
-          {data.dosingBands?.map((band) => (
-            <ReferenceArea
-              key={band.label}
-              x1={band.x1}
-              x2={band.x2}
-              fill={band.fillColor}
-              fillOpacity={1}
-              stroke="none"
-            />
-          ))}
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
+        {`Y · ${data.yLabel}`}
+      </p>
+      <div ref={inViewRef} className="w-full h-[280px] lg:h-[360px]">
+        {inView ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={chartData}
+              margin={{ top: 16, right: 8, left: -14, bottom: 0 }}
+            >
+              {/* Dosing band fills — rendered before grid so they sit behind everything */}
+              {data.dosingBands?.map((band) => (
+                <ReferenceArea
+                  key={band.label}
+                  x1={band.x1}
+                  x2={band.x2}
+                  fill={band.fillColor}
+                  fillOpacity={1}
+                  stroke="none"
+                />
+              ))}
 
-          <CartesianGrid
-            stroke="rgba(255, 255, 255, 0.08)"
-            strokeDasharray="2 4"
-            vertical={false}
-          />
-          <XAxis
-            dataKey="hour"
-            tick={TICK_STYLE}
-            tickLine={false}
-            axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
-          />
-          <YAxis
-            tick={TICK_STYLE}
-            tickLine={false}
-            axisLine={false}
-            domain={["auto", "auto"]}
-            label={{
-              value: data.yLabel,
-              angle: -90,
-              position: "insideLeft",
-              style: {
-                ...TICK_STYLE,
-                textAnchor: "middle",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-              },
-              offset: 24,
-            }}
-          />
-          <ReferenceLine
-            y={0}
-            stroke="rgba(255, 255, 255, 0.3)"
-            label={{
-              value: "YOUR TYPICAL DAY",
-              position: "insideTopRight",
-              style: ZERO_LINE_LABEL_STYLE,
-            }}
-          />
-          <Tooltip
-            contentStyle={TOOLTIP_STYLE}
-            labelStyle={TOOLTIP_LABEL_STYLE}
-            itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
-            cursor={{ stroke: "rgba(255, 255, 255, 0.2)", strokeDasharray: "2 4" }}
-          />
-          <Line
-            type="monotone"
-            dataKey="Without CONKA"
-            stroke={WITHOUT_CONKA_COLOR}
-            strokeWidth={1.5}
-            dot={{ fill: WITHOUT_CONKA_COLOR, r: 3, strokeWidth: 0 }}
-            activeDot={{ r: 5 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="With CONKA"
-            stroke={WITH_CONKA_COLOR}
-            strokeWidth={2}
-            dot={{ fill: WITH_CONKA_COLOR, r: 4, strokeWidth: 0 }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+              <CartesianGrid
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeDasharray="2 4"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="hour"
+                tick={TICK_STYLE}
+                tickLine={false}
+                axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
+              />
+              <YAxis
+                tick={TICK_STYLE}
+                tickLine={false}
+                axisLine={false}
+                domain={["auto", "auto"]}
+              />
+              <ReferenceLine
+                y={0}
+                stroke="rgba(255, 255, 255, 0.3)"
+                label={{
+                  value: "YOUR TYPICAL DAY",
+                  position: "insideTopRight",
+                  style: ZERO_LINE_LABEL_STYLE,
+                }}
+              />
+              <Tooltip
+                contentStyle={TOOLTIP_STYLE}
+                labelStyle={TOOLTIP_LABEL_STYLE}
+                itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
+                cursor={{
+                  stroke: "rgba(255, 255, 255, 0.2)",
+                  strokeDasharray: "2 4",
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="Without CONKA"
+                stroke={WITHOUT_CONKA_COLOR}
+                strokeWidth={1.5}
+                dot={{ fill: WITHOUT_CONKA_COLOR, r: 3, strokeWidth: 0 }}
+                activeDot={{ r: 5 }}
+                isAnimationActive={animate}
+                animationBegin={0}
+                animationDuration={1100}
+                animationEasing="ease-in-out"
+              />
+              <Line
+                type="monotone"
+                dataKey="With CONKA"
+                stroke={WITH_CONKA_COLOR}
+                strokeWidth={2.5}
+                dot={{ fill: WITH_CONKA_COLOR, r: 3.5, strokeWidth: 0 }}
+                activeDot={{ r: 6 }}
+                isAnimationActive={animate}
+                animationBegin={500}
+                animationDuration={1100}
+                animationEasing="ease-in-out"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : null}
       </div>
 
       {/* Performance legend */}

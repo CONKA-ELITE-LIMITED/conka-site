@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { track } from "@vercel/analytics/react";
+import { gsap, useGSAP, withMotion, revealUp } from "@/app/lib/motion";
+import { drawRule } from "./insightMotion";
 import CredentialsBadgeBlock from "./CredentialsBadgeBlock";
 
 /**
@@ -38,6 +40,20 @@ export default function HowThisIsPossibleModule() {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const firedRef = useRef(false);
 
+  useGSAP(
+    () => {
+      withMotion(() => {
+        gsap.utils
+          .toArray<HTMLElement>("[data-how-reveal]")
+          .forEach((el) => revealUp(el, el));
+        revealUp("[data-how-step]", "[data-how-steps]", { stagger: 0.12 });
+        const rule = sentinelRef.current?.querySelector("[data-how-rule]");
+        if (rule) drawRule(rule, rule);
+      });
+    },
+    { scope: sentinelRef },
+  );
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (firedRef.current) return;
@@ -72,23 +88,27 @@ export default function HowThisIsPossibleModule() {
   return (
     <div ref={sentinelRef}>
       {/* Header */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-4">
-        {"// How this is possible · APP-01"}
-      </p>
-      <h2
-        className="brand-h2 text-white mb-4 max-w-[26ch]"
-        style={{ letterSpacing: "-0.02em" }}
-      >
-        CONKA isn&apos;t just a supplement. It&apos;s a measurement loop.
-      </h2>
-      <p className="text-base lg:text-lg text-white/85 leading-relaxed max-w-[68ch] mb-10">
-        Most supplement brands point to studies on individual ingredients in
-        other people. We do that too, where it matters. But everything below
-        also comes from inside our own product, on our own users.
-      </p>
+      <div data-how-reveal>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-4">
+          {"// How this is possible · APP-01"}
+        </p>
+        <h2
+          className="brand-h2 text-white mb-4 max-w-[26ch]"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          CONKA isn&apos;t just a supplement. It&apos;s a measurement loop.
+        </h2>
+        <p className="text-base lg:text-lg text-white/85 leading-relaxed max-w-[68ch]">
+          Most supplement brands point to studies on individual ingredients in
+          other people. We do that too, where it matters. But everything below
+          also comes from inside our own product, on our own users.
+        </p>
+        <div data-how-rule className="mt-6 mb-10 h-px bg-white/20" aria-hidden="true" />
+      </div>
 
       {/* Three-step flow */}
       <div
+        data-how-steps
         className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-10"
         role="list"
         aria-label="How CONKA captures cognitive data"
@@ -97,6 +117,7 @@ export default function HowThisIsPossibleModule() {
           <div
             key={step.counter}
             role="listitem"
+            data-how-step
             className="border border-white/15 bg-white/[0.06] flex flex-col"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
@@ -123,10 +144,12 @@ export default function HowThisIsPossibleModule() {
       </div>
 
       {/* Validated-test credentials grid */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
-        Cambridge-derived · FDA cleared · NHS validated
-      </p>
-      <CredentialsBadgeBlock />
+      <div data-how-reveal>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
+          Cambridge-derived · FDA cleared · NHS validated
+        </p>
+        <CredentialsBadgeBlock />
+      </div>
 
       {/* Verbatim credential note — cited study references kept exact. */}
       <p className="font-mono text-[11px] leading-relaxed text-white/65 tabular-nums mt-6 max-w-[78ch]">

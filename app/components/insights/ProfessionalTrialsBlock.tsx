@@ -1,15 +1,39 @@
+"use client";
+
+import { useRef } from "react";
+import { useGSAP, withMotion, revealUp } from "@/app/lib/motion";
+import { resolveReading } from "./insightMotion";
 import { PROFESSIONAL_TRIALS } from "@/app/lib/revolutTrialData";
 
 export default function ProfessionalTrialsBlock() {
+  const root = useRef<HTMLDivElement>(null);
+  const countRef = useRef<HTMLParagraphElement>(null);
+
+  useGSAP(
+    () => {
+      withMotion(() => {
+        revealUp("[data-trials-reveal]", root.current, { stagger: 0.1 });
+        if (countRef.current) {
+          resolveReading(countRef.current, { duration: 1.3 });
+        }
+      });
+    },
+    { scope: root },
+  );
+
   return (
-    <div className="border border-white/20 bg-white/[0.06] p-6 lg:p-8 flex flex-col gap-6">
+    <div
+      ref={root}
+      className="border border-white/20 bg-white/[0.06] p-6 lg:p-8 flex flex-col gap-6"
+    >
       {/* Header */}
-      <div>
+      <div data-trials-reveal>
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 tabular-nums mb-4">
           {"// Professional Trials · PROOF-01"}
         </p>
         <div className="flex flex-col lg:flex-row lg:items-end lg:gap-6 gap-3">
           <p
+            ref={countRef}
             className="font-mono text-5xl lg:text-7xl text-white tabular-nums leading-none"
             style={{ letterSpacing: "-0.03em" }}
           >
@@ -22,7 +46,7 @@ export default function ProfessionalTrialsBlock() {
       </div>
 
       {/* Sport tags */}
-      <div className="flex flex-wrap gap-2">
+      <div data-trials-reveal className="flex flex-wrap gap-2">
         {PROFESSIONAL_TRIALS.sports.map((sport) => (
           <span
             key={sport}
@@ -34,7 +58,10 @@ export default function ProfessionalTrialsBlock() {
       </div>
 
       {/* NDA note + CTA */}
-      <div className="border-t border-white/10 pt-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div
+        data-trials-reveal
+        className="border-t border-white/10 pt-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
+      >
         <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/35 tabular-nums">
           {PROFESSIONAL_TRIALS.note}
         </p>

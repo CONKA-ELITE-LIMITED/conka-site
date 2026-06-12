@@ -1,6 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import { track } from "@vercel/analytics/react";
+import { gsap, useGSAP, withMotion, revealUp } from "@/app/lib/motion";
 import { APP_INSIGHTS_REPORTS } from "@/app/lib/appInsightsData";
 import type { ReportData } from "@/app/lib/appInsightsTypes";
 import EvidenceStrengthBadge from "./EvidenceStrengthBadge";
@@ -23,6 +25,28 @@ export default function InsightTldrStrip({
 }: {
   onSelect: (id: ReportData["id"]) => void;
 }) {
+  const root = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      withMotion(() => {
+        revealUp("[data-tldr-header]", root.current);
+        revealUp("[data-tldr-card]", root.current, {
+          stagger: 0.09,
+          scrollTrigger: { start: "top 80%" },
+        });
+        gsap.from("[data-tldr-rule]", {
+          scaleX: 0,
+          transformOrigin: "left center",
+          duration: 1.1,
+          ease: "expo.inOut",
+          scrollTrigger: { trigger: root.current, start: "top 80%" },
+        });
+      });
+    },
+    { scope: root },
+  );
+
   function handleClick(reportId: ReportData["id"]) {
     try {
       track("insights_tldr_card_click", {
@@ -36,10 +60,26 @@ export default function InsightTldrStrip({
   }
 
   return (
-    <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 tabular-nums mb-3">
-        {"// What the data shows"}
-      </p>
+    <div ref={root}>
+      <div data-tldr-header>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 tabular-nums mb-3">
+          {"// What the data shows · APP-01"}
+        </p>
+        <h2
+          className="brand-h3 text-white max-w-[28ch]"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          Four patterns the data keeps showing.
+        </h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 tabular-nums mt-2">
+          Tap a pattern for the full report.
+        </p>
+        <div
+          data-tldr-rule
+          className="mt-6 mb-6 h-px bg-white/20"
+          aria-hidden="true"
+        />
+      </div>
 
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
@@ -53,6 +93,7 @@ export default function InsightTldrStrip({
               key={report.id}
               type="button"
               role="listitem"
+              data-tldr-card
               onClick={() => handleClick(report.id)}
               aria-label={`Jump to ${report.eyebrowConcept} report`}
               className="text-left bg-white/85 hover:bg-white transition-colors flex flex-col min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
