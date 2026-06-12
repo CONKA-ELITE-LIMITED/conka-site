@@ -468,6 +468,36 @@
 .go-text-mid { color: var(--go-text-mid); }
 .go-text-faint { color: var(--go-text-faint); }
 
+/* Quiz slider: thick track (filled portion painted inline via a
+   linear-gradient on the input background), big obvious thumb. */
+.go-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+}
+.go-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: var(--brand-accent);
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+.go-range::-moz-range-thumb {
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: var(--brand-accent);
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
 /* Payoff orb (brain-age "switched on" beat). Pure CSS, no asset. */
 @keyframes go-orb-pulse {
   0%, 100% { transform: scale(1); }

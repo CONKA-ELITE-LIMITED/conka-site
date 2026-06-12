@@ -112,7 +112,7 @@ export default function QuizQuestion({
         {screen.type === "slider" && slider && (
           <div className="flex flex-col gap-8">
             <div
-              className="text-center text-5xl font-medium tabular-nums"
+              className="text-center text-7xl font-semibold tabular-nums tracking-[-0.02em]"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
               {slider.unit
@@ -126,8 +126,14 @@ export default function QuizQuestion({
               step={slider.step ?? 1}
               value={sliderValue}
               onChange={(e) => setSliderValue(Number(e.target.value))}
-              className="w-full"
-              style={{ accentColor: "var(--brand-accent)" }}
+              className="go-range w-full"
+              style={{
+                background: `linear-gradient(to right, var(--brand-accent) ${
+                  ((sliderValue - slider.min) / (slider.max - slider.min)) * 100
+                }%, var(--go-track) ${
+                  ((sliderValue - slider.min) / (slider.max - slider.min)) * 100
+                }%)`,
+              }}
               aria-label={screen.question}
             />
             {slider.anchor && (
