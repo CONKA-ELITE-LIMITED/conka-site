@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-12** | ADHD listicle page fully dressed with assets and IM8-style hero, marquee and optimised buy box; CROTestimonials replaces LandingTestimonials site-wide
 - **2026-06-12** | Listicle landing page framework shipped at /go/[slug] with first ADHD persona page, reusing site components for buy box, reviews, athletes and FAQ
 - **2026-06-12** | Removed the CookieYes consent banner integration site-wide (subscription cancelled; we no longer use CookieYes). Analytics scripts now load without a consent gate
 - **2026-06-12** | Quiz polish: header step counter removed, hook title anchored high with the borderless brain-scan loop below, quiz paints the document background so overscroll never flashes white

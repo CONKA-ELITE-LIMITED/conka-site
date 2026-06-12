@@ -8,8 +8,9 @@ import type {
   ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
-import ProductHero from "@/app/components/product/ProductHero";
-import ProductHeroMobile from "@/app/components/product/ProductHeroMobile";
+import ListicleProductHero, {
+  ListicleProductHeroMobile,
+} from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
@@ -37,36 +38,38 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 
 const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
+/** Neuro blue for section titles on light backgrounds */
+const NAVY = "#1B2757";
 
-/** LandingHero's avatar + star micro-row, adapted for the dark hero */
+/** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
   return (
-    <div className="mb-6 flex items-center gap-3">
+    <div className="mb-5 flex items-center justify-center gap-2.5">
       <div className="flex items-center">
         {Array.from({ length: 5 }, (_, i) => (
           <div
             key={i}
-            className="relative h-[35px] w-[35px] overflow-hidden rounded-full border border-white/30"
-            style={{ marginLeft: i === 0 ? 0 : "-10px", zIndex: 5 - i }}
+            className="relative h-[26px] w-[26px] overflow-hidden rounded-full border border-black/10"
+            style={{ marginLeft: i === 0 ? 0 : "-8px", zIndex: 5 - i }}
           >
             <Image
               src={`/avatars/${i + 1}.jpg`}
               alt="CONKA customer"
               fill
               className="object-cover"
-              sizes="35px"
+              sizes="26px"
             />
           </div>
         ))}
       </div>
       <div className="flex flex-col leading-tight">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <div
             className="relative inline-block leading-none"
-            style={{ fontSize: "20px", letterSpacing: "0.05em" }}
+            style={{ fontSize: "15px", letterSpacing: "0.05em" }}
             aria-label="4.7 out of 5 stars"
           >
-            <span className="text-white/25" aria-hidden="true">
+            <span className="text-black/15" aria-hidden="true">
               ★★★★★
             </span>
             <span
@@ -77,23 +80,73 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
               ★★★★★
             </span>
           </div>
-          <span className="text-[14px] font-bold">{label}</span>
+          <span className="text-[13px] font-bold">{label}</span>
         </div>
-        <span className="mt-1 text-[12px] opacity-80">{sub}</span>
+        <span className="mt-0.5 text-[11px] opacity-80">{sub}</span>
       </div>
     </div>
   );
 }
 
-function ZoneTag({ label }: { label: string }) {
+/** Laurel-flanked credibility chip, IM8 "Clinicians' Choice" style */
+function LaurelBadge({ eyebrow, body }: { eyebrow: string; body: string }) {
   return (
-    <div className="mb-6 inline-block rounded-full border border-dashed border-current px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] opacity-50">
-      {label}
+    <div className="mb-5 flex items-center gap-2.5 rounded-[12px] border border-black/10 bg-white px-3 py-2.5 shadow-[0_2px_12px_rgba(0,0,0,0.07)] md:w-fit">
+      <div
+        className="relative flex-shrink-0 overflow-hidden"
+        style={{ width: 20, height: 44 }}
+        aria-hidden="true"
+      >
+        <Image
+          src="/LaurelWreath.png"
+          alt=""
+          fill
+          sizes="56px"
+          style={{ objectFit: "cover", objectPosition: "left center" }}
+        />
+      </div>
+      <div className="flex-1 text-center leading-snug md:max-w-[34rem]">
+        <div className="mb-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#1B2757]">
+          {eyebrow}
+        </div>
+        <div className="text-[11px] font-semibold text-black">{body}</div>
+      </div>
+      <div
+        className="relative flex-shrink-0 overflow-hidden"
+        style={{ width: 20, height: 44 }}
+        aria-hidden="true"
+      >
+        <Image
+          src="/LaurelWreath.png"
+          alt=""
+          fill
+          sizes="56px"
+          style={{ objectFit: "cover", objectPosition: "right center" }}
+        />
+      </div>
     </div>
   );
 }
 
 function AssetBlock({ asset }: { asset: ListicleAsset }) {
+  if (asset.kind === "video") {
+    return (
+      <div
+        className="relative mx-auto w-4/5 overflow-hidden rounded-3xl"
+        style={{ aspectRatio: asset.aspect ?? "4/3" }}
+      >
+        <video
+          src={asset.src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
+    );
+  }
+
   const note =
     asset.kind === "placeholder"
       ? asset.note
@@ -146,8 +199,9 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
           src={asset.src}
           alt={asset.alt}
           fill
-          className="object-contain"
+          className={asset.fit === "cover" ? "object-cover" : "object-contain"}
           sizes="(max-width: 768px) 100vw, 50vw"
+          unoptimized={asset.src.endsWith(".gif")}
         />
       </div>
     );
@@ -187,23 +241,23 @@ function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
     }
   };
 
-  const Hero = isMobile ? ProductHeroMobile : ProductHero;
+  const Hero = isMobile ? ListicleProductHeroMobile : ListicleProductHero;
   return (
-    <div className="[&_.brand-card]:!rounded-none">
-      <Hero
-        formulaId={formulaId}
-        selectedCadence={selectedCadence}
-        onCadenceChange={setSelectedCadence}
-        onAddToCart={handleAddToCart}
-      />
-    </div>
+    <Hero
+      formulaId={formulaId}
+      selectedCadence={selectedCadence}
+      onCadenceChange={setSelectedCadence}
+      onAddToCart={handleAddToCart}
+    />
   );
 }
 
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
     <div className="rounded-2xl bg-white p-6 text-[#111] shadow-sm">
-      <div className="mb-2 text-sm tracking-widest">★★★★★</div>
+      <div className="mb-2 text-sm tracking-widest" style={{ color: "#F59E0B" }}>
+        ★★★★★
+      </div>
       {review.headline ? (
         <p className="mb-1 text-sm font-semibold">{review.headline}</p>
       ) : null}
@@ -222,7 +276,7 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
     return (
       <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
         <div className={mediaFirst ? "md:order-2" : ""}>
-          <div className="mb-4 text-xl font-medium text-[#0e1f3f]">
+          <div className="mb-4 text-xl font-medium" style={{ color: NAVY }}>
             {String(block.n).padStart(2, "0")}
           </div>
           {block.tag ? (
@@ -231,8 +285,11 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
             </div>
           ) : null}
           <h3
-            className="mb-4 text-3xl leading-tight md:text-4xl"
-            style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+            className="mb-4 text-4xl leading-tight md:text-5xl"
+            style={{
+              letterSpacing: "var(--letter-spacing-premium-title)",
+              color: NAVY,
+            }}
           >
             {block.headline}
           </h3>
@@ -261,7 +318,10 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
 
   if (block.kind === "statsBand") {
     return (
-      <div className="my-10 rounded-3xl bg-white px-8 py-12 text-center shadow-sm">
+      <div
+        className="my-10 rounded-3xl px-8 py-12 text-center"
+        style={{ background: DARK, color: "#fff" }}
+      >
         <div className="mb-8 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
           {block.eyebrow}
         </div>
@@ -309,23 +369,48 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
 export default function ListicleRenderer({ config }: { config: ListicleConfig }) {
   return (
     <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
-      {/* Zone 1: hero */}
-      <section
-        aria-label="Hero"
-        className="px-5 py-16 md:px-[5vw] md:py-24"
-        style={{ background: DARK, color: "#fff" }}
-      >
-        <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2 md:gap-16">
-          <div>
-            <ZoneTag label="01 · Hero" />
-            {config.hero.badge ? (
-              <div className="mb-5 inline-block rounded-full bg-white/10 px-4 py-2 text-xs">
-                {config.hero.badge}
+      {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom
+          edges on desktop at ~half viewport width and near-full height;
+          content column centres vertically beside it. */}
+      <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
+        <div className="grid items-center md:grid-cols-[52fr_48fr]">
+          <div
+            className="relative order-2 w-full md:order-1"
+            style={{
+              aspectRatio:
+                config.hero.asset.kind === "image"
+                  ? (config.hero.asset.aspect ?? "1/1")
+                  : undefined,
+            }}
+          >
+            {config.hero.asset.kind === "image" ? (
+              <Image
+                src={config.hero.asset.src}
+                alt={config.hero.asset.alt}
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 52vw"
+              />
+            ) : (
+              <div className="h-full p-5 md:p-10">
+                <AssetBlock asset={config.hero.asset} />
               </div>
+            )}
+          </div>
+          <div className="order-1 px-5 pt-6 pb-8 md:order-2 md:flex md:flex-col md:justify-center md:px-14 md:py-0">
+            {config.hero.laurel ? (
+              <LaurelBadge
+                eyebrow={config.hero.laurel.eyebrow}
+                body={config.hero.laurel.body}
+              />
             ) : null}
             <h1
-              className="mb-5 text-4xl leading-tight md:text-5xl"
-              style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+              className="mb-5 text-3xl leading-tight md:text-5xl"
+              style={{
+                letterSpacing: "var(--letter-spacing-premium-title)",
+                color: NAVY,
+              }}
             >
               {config.hero.headline}
             </h1>
@@ -340,16 +425,17 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             ) : null}
             <a
               href="#product"
-              className="mb-6 inline-block rounded-full bg-white px-8 py-4 text-sm font-medium text-[#111]"
+              className="mx-auto mb-6 block w-fit rounded-full px-8 py-4 text-center text-sm font-medium text-white"
+              style={{ background: NAVY }}
             >
               {config.hero.cta}
             </a>
             {config.hero.trustPills?.length ? (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 {config.hero.trustPills.map((pill, i) => (
                   <span
                     key={i}
-                    className="rounded-full bg-white/10 px-4 py-1.5 text-xs"
+                    className="rounded-full bg-black/5 px-4 py-1.5 text-xs"
                   >
                     ✓ {pill}
                   </span>
@@ -357,19 +443,31 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               </div>
             ) : null}
           </div>
-          <AssetBlock asset={config.hero.asset} />
         </div>
       </section>
 
-      {/* Zone 1b: proof ticker */}
+      {/* Zone 1b: proof ticker — navy marquee, SportMarquee pattern */}
       {config.ticker?.length ? (
         <div
           aria-label="Proof ticker"
-          className="overflow-hidden border-y border-black/10 bg-white py-3"
+          className="relative overflow-hidden py-3"
+          style={{ background: NAVY }}
         >
-          <div className="flex gap-8 whitespace-nowrap px-5 font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">
+          <span className="sr-only">{config.ticker.join(", ")}</span>
+          <div
+            className="inline-flex whitespace-nowrap [will-change:transform] motion-safe:animate-[marquee_40s_linear_infinite]"
+            aria-hidden="true"
+          >
             {[...config.ticker, ...config.ticker].map((item, i) => (
-              <span key={i}>{item} ·</span>
+              <span
+                key={i}
+                className="inline-flex items-center text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
+              >
+                <span>{item}</span>
+                <span className="mx-5" aria-hidden="true">
+                  ★
+                </span>
+              </span>
             ))}
           </div>
         </div>
@@ -383,7 +481,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         style={{ background: BONE, color: "#111" }}
       >
         <div className="mx-auto max-w-7xl">
-          <ZoneTag label="02 · Reasons" />
           {config.body.map((block, i) => (
             <BodyBlock key={i} block={block} index={i} />
           ))}
@@ -412,9 +509,8 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         style={{ background: DARK, color: "#fff" }}
       >
         <div className="mx-auto max-w-7xl">
-          <ZoneTag label="03 · Buy box" />
           <div className="mb-12 text-center">
-            <h2 className="mb-3 text-4xl">{config.product.headline}</h2>
+            <h2 className="mb-3 text-5xl">{config.product.headline}</h2>
             {config.product.subline ? (
               <p className="opacity-70">{config.product.subline}</p>
             ) : null}
@@ -431,7 +527,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <ZoneTag label="04 · Trust carousel" />
             <AthleteCredibilityCarousel />
           </div>
         </section>
@@ -445,7 +540,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           style={{ background: "#eeeff2", color: "#111" }}
         >
           <div className="mx-auto max-w-4xl text-center">
-            <ZoneTag label="05 · Them vs us" />
             <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
               {config.comparison.eyebrow}
             </div>
@@ -494,7 +588,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <ZoneTag label="06 · Reviews" />
             <CROTestimonials hideCTA />
             <div className="mt-10">
               <LandingTrustBadges />
@@ -512,7 +605,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         >
           <div className="mx-auto grid max-w-7xl gap-10 rounded-3xl bg-white p-10 text-[#111] shadow-sm md:grid-cols-2 md:p-14">
             <div>
-              <ZoneTag label="07 · Cost breakdown" />
               <h2 className="mb-6 text-4xl leading-tight">
                 {config.costBreakdown.claim}
               </h2>
@@ -569,7 +661,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         style={{ background: BONE, color: "#111" }}
       >
         <div className="mx-auto max-w-7xl">
-          <ZoneTag label="08 · FAQ" />
           <CROFAQv2
             items={config.faq.map((f, i) => ({
               id: `faq-${i}`,
@@ -585,7 +676,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         <aside
           aria-label="Offer bar"
           className="fixed bottom-0 left-0 right-0 z-40 px-5 py-3 md:px-[5vw]"
-          style={{ background: "#111", color: "#fff" }}
+          style={{ background: NAVY, color: "#fff" }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <span className="text-sm">{config.stickyBar.label}</span>

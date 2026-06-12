@@ -17,7 +17,7 @@ import WhatToExpect from "@/app/components/home/WhatToExpect";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
-import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
+import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
@@ -135,7 +135,7 @@ export default function ConkaFlowPage() {
         {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
         <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
           <div className="brand-track">
-            <LandingTestimonials hideCTA />
+            <CROTestimonials hideCTA />
           </div>
         </section>
 
@@ -237,7 +237,7 @@ export default function ConkaFlowPage() {
       {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
       <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
         <div className="brand-track">
-          <LandingTestimonials hideCTA />
+          <CROTestimonials hideCTA />
         </div>
       </section>
 

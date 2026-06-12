@@ -32,7 +32,10 @@ export const listicleTemplate: ListicleConfig = {
   format: "listicle",
   title: "6 reasons placeholder headline",
   hero: {
-    badge: "Placeholder credibility badge line",
+    laurel: {
+      eyebrow: "Placeholder eyebrow",
+      body: "Placeholder credibility badge line lorem ipsum dolor sit amet.",
+    },
     headline:
       "6 Reasons Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit Sed Do Eiusmod",
     subcopy:
@@ -51,7 +54,7 @@ export const listicleTemplate: ListicleConfig = {
       kind: "image",
       src: "/formulas/both/BoxIngredientHero.png",
       alt: "CONKA Flow and Clear shots with their ingredients",
-      aspect: "1/1",
+      aspect: "2528/1696",
     },
   },
   ticker: [
@@ -93,10 +96,10 @@ export const listicleTemplate: ListicleConfig = {
       kind: "statsBand",
       eyebrow: "CLINICALLY PROVEN",
       stats: [
-        { value: "+14.86%", label: "Sharper cognitive performance, proven against placebo" },
-        { value: "80%", label: "Improved cognitive performance on CONKA" },
-        { value: "+19.3%", label: "Sharper focus in professional athletes" },
-        { value: "75%", label: "Improved cognitive function in under 3 weeks" },
+        { value: "+14.86%", label: "Sharper thinking vs placebo" },
+        { value: "80%", label: "Improved cognitive scores" },
+        { value: "+19.3%", label: "Sharper focus in pro athletes" },
+        { value: "75%", label: "Improved in under 3 weeks" },
       ],
       footnote:
         "*From CONKA cognitive trials, including a 6-week randomised double-blind placebo-controlled trial with 29 professional rugby players.",

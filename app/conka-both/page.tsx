@@ -18,7 +18,7 @@ import FormulaCaseStudies, {
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import LabTimeline from "@/app/components/landing/LabTimeline";
 import LabFAQ from "@/app/components/landing/LabFAQ";
-import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
+import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import {
@@ -113,7 +113,7 @@ export default function ConkaBothPage() {
       aria-label="Customer reviews"
     >
       <div className="brand-track">
-        <LandingTestimonials hideCTA />
+        <CROTestimonials hideCTA />
       </div>
     </section>
   );

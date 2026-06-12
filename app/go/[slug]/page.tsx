@@ -42,11 +42,12 @@ export default async function GoPage({
   if (!config) notFound();
   if (config.format === "listicle") {
     return (
-      <>
+      // Bone behind the nav spacer so no white sliver shows above the hero
+      <div style={{ background: "var(--color-bone, #F9F9F9)" }}>
         <Navigation />
         <ListicleRenderer config={config} />
         <Footer />
-      </>
+      </div>
     );
   }
   return <QuizEngine config={config} />;

@@ -12,7 +12,16 @@
 import type { ProductHeroId } from "../productTypes";
 
 export type ListicleAsset =
-  | { kind: "image"; src: string; alt: string; aspect?: string }
+  | {
+      kind: "image";
+      src: string;
+      alt: string;
+      aspect?: string;
+      /** "contain" (default) for renders/PNGs, "cover" for photos */
+      fit?: "cover" | "contain";
+    }
+  /** Silent autoplay loop (no controls), the IM8 reason-video pattern */
+  | { kind: "video"; src: string; aspect?: string }
   | {
       kind: "statPanel";
       tone: "dark" | "light";
@@ -68,8 +77,8 @@ export interface ListicleConfig {
   /** Page title and Meta content_name */
   title: string;
   hero: {
-    /** Glass badge chip above the headline */
-    badge?: string;
+    /** Laurel-flanked credibility chip above the headline (IM8 pattern) */
+    laurel?: { eyebrow: string; body: string };
     headline: string;
     subcopy: string;
     /** Avatar + star micro-row (LandingHero pattern), e.g.

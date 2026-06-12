@@ -20,8 +20,8 @@ const LabCaseStudies = dynamic(
   { loading: () => <div className="h-[1200px]" /> },
 );
 
-const LandingTestimonials = dynamic(
-  () => import("./components/landing/LandingTestimonials"),
+const CROTestimonials = dynamic(
+  () => import("./components/cro/CROTestimonials"),
   { loading: () => <div className="h-[450px]" /> },
 );
 
@@ -139,7 +139,7 @@ export default function Home() {
         aria-label="Customer reviews"
       >
         <div className="brand-track">
-          <LandingTestimonials ctaHref="/conka-both" />
+          <CROTestimonials ctaHref="/conka-both" />
         </div>
       </section>
 
