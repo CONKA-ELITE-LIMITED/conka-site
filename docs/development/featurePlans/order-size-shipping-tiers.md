@@ -3,7 +3,7 @@
 **Status:** Phases 1 + 2 DONE (SCRUM-1079, Sprint 27) - Phase 1 live-verified 11 Jun, Phase 2 (B2B invoice shipping line + pallet playbook) built 11 Jun pending deploy; Phase 3 (Synergy consolidation) next
 **Created:** 2026-06-10 · **Updated:** 2026-06-11
 **Owner:** Rudh (Shopify config + light code) with Humphrey (Evri/DPD actual costs)
-**Relates to:** `b2b-consolidated.md` (programme-level B2B status), `b2b-professionals-portal.md` (outstanding items 3 + 4), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
+**Relates to:** `docs/features/b2b/B2B_PORTAL.md` (canonical B2B reference — Phase 3 Synergy consolidation lives in its Future-work section), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
 
 ---
 
@@ -206,7 +206,7 @@ Phase 3 (B2B → Synergy consolidation) is intentionally not ticketed yet; it li
 
 ## References
 
-- `b2b-professionals-portal.md` - the B2B portal (outstanding items 3 + 4 are superseded by this plan)
+- `docs/features/b2b/B2B_PORTAL.md` - the canonical B2B portal reference (its shipping items are this plan)
 - `synergy-3pl-integration.md` - Synergy economics + the funnel SKU fulfilment that Phase 3 consolidates onto
 - `docs/shipping/SHIPPING_AND_COURIERS.md` - canonical shipping/courier working doc; final band numbers land here
 - `app/api/b2b/invoice-order/route.ts` - draft-order creation (Phase 2.1)
