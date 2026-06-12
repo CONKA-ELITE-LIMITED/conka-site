@@ -142,18 +142,6 @@ export type ChartConfig =
        *  steps round on a timer (the "vicious cycle" screen) */
       nodes: { label: string }[];
       center: string;
-    }
-  | {
-      type: "now-later";
-      /** Two bars: "now" is the user's own slider answer, "later" is a
-       *  directional (smaller, unnumbered) bar. Honest by design: no
-       *  invented future value is shown. */
-      questionId: string;
-      nowLabel: string;
-      laterLabel: string;
-      /** Readout template for the now bar, "{value}" is replaced */
-      unit?: string;
-      caption?: string;
     };
 
 export interface InterstitialScreen {
@@ -166,10 +154,13 @@ export interface InterstitialScreen {
     | "comparison"
     | "commitment"
     | "payoff";
-  title: string;
+  /** Optional: commitment screens may be body-lines only (typed out) */
+  title?: string;
   /** Rendered directly under the title, before the visual content */
   subtitle?: string;
-  /** Paragraphs revealed in sequence */
+  /** Paragraphs revealed in sequence. Inline emphasis: *accent* renders
+   *  in the accent colour, **strong** in full-contrast text. Commitment
+   *  variant types the lines out character by character. */
   body?: string[];
   /** Used by variant "stat" */
   stat?: { value: number; prefix?: string; suffix?: string; label: string };
@@ -177,8 +168,16 @@ export interface InterstitialScreen {
   testimonial?: { quote: string; name: string; detail?: string };
   /** Renders on any variant when set */
   chart?: ChartConfig;
-  /** Static image (e.g. app phone screenshot), rendered between title and body */
-  image?: { src: string; alt: string; width: number; height: number };
+  /** Static imagery between title and body: one image renders full
+   *  width (phone screenshots); two render as side-by-side white
+   *  product cards with mono captions */
+  images?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption?: string;
+  }[];
   /** Mirrors a previous answer above the title: "YOU SAID: <label>" */
   mirror?: { questionId: string; prefix?: string };
   /** Continue button label, defaults to "Continue" */

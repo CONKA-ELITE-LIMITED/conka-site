@@ -154,13 +154,12 @@ export const brainAgeQuiz: LandingConfig = {
       title: "This isn't your fault.",
       body: [
         "From your mid-twenties, processing speed and recall naturally start to slide. That's biology, not laziness.",
-        "And it isn't fixed. With the right inputs, it can be lifted back up.",
+        "And it isn't fixed. **With the right inputs, it can be lifted back up.**",
       ],
       chart: {
         type: "line",
         withLabel: "Supported",
         withoutLabel: "Left alone",
-        caption: "Illustrative. Sharpness over the decades.",
       },
     },
     {
@@ -217,17 +216,16 @@ export const brainAgeQuiz: LandingConfig = {
     {
       kind: "interstitial",
       id: "i_cost_of_waiting",
-      variant: "comparison",
+      variant: "stat",
       title: "The cost of waiting.",
-      body: ["This tends to compound. Not overnight, but the direction is set."],
-      chart: {
-        type: "now-later",
-        questionId: "q_sharpness",
-        nowLabel: "Your mind today",
-        laterLabel: "If nothing changes",
-        unit: "{value}/100",
-        caption: "Directional, not a prediction.",
+      mirror: { questionId: "q_sharpness", prefix: "YOU RATED YOURSELF:" },
+      // PLACEHOLDER: source a defensible cognitive-readiness decline figure
+      stat: {
+        value: 23,
+        suffix: "%",
+        label: "drop in cognitive readiness people report by 60",
       },
+      body: ["The earlier you start, the more you keep."],
     },
     {
       kind: "question",
@@ -276,7 +274,6 @@ export const brainAgeQuiz: LandingConfig = {
       turnaround: {
         nowLabel: "You now",
         futureLabel: "Where you could be",
-        caption: "Illustrative. A lifestyle score, not a medical measurement.",
       },
       cta: "Show me how",
     },
@@ -285,9 +282,25 @@ export const brainAgeQuiz: LandingConfig = {
       id: "i_mechanism",
       variant: "education",
       title: "A system, not a pill.",
+      images: [
+        {
+          src: "/formulas/conkaFlow/FlowNew.jpg",
+          alt: "CONKA Flow shot bottle",
+          width: 875,
+          height: 875,
+          caption: "AM · FLOW",
+        },
+        {
+          src: "/formulas/conkaClear/ClearNew.jpg",
+          alt: "CONKA Clear shot bottle",
+          width: 875,
+          height: 875,
+          caption: "PM · CLEAR",
+        },
+      ],
       body: [
-        "CONKA Flow in the morning: one shot, built for clear, switched-on focus through the day.",
-        "CONKA Clear for the second half: steady, calm sharpness when the afternoon usually dips.",
+        "*Flow* in the morning: one shot, built for clear, switched-on focus through the day.",
+        "*Clear* for the second half: steady, calm sharpness when the afternoon usually dips.",
         "Two minutes a day. That's the whole ritual.",
       ],
     },
@@ -307,12 +320,14 @@ export const brainAgeQuiz: LandingConfig = {
         "The CONKA app gives you a 2-minute brain test whenever you want.",
         "Watch your score move over time, like a Garmin for your mind.",
       ],
-      image: {
-        src: "/app/AppConkaRing.png",
-        alt: "CONKA app showing a brain score of 92 with a daily tracking calendar",
-        width: 1455,
-        height: 2942,
-      },
+      images: [
+        {
+          src: "/app/AppConkaRing.png",
+          alt: "CONKA app showing a brain score of 92 with a daily tracking calendar",
+          width: 1455,
+          height: 2942,
+        },
+      ],
     },
     {
       kind: "interstitial",
@@ -324,18 +339,18 @@ export const brainAgeQuiz: LandingConfig = {
         type: "line",
         withLabel: "With CONKA",
         withoutLabel: "Today",
-        caption: "Sharpness, illustrative.",
       },
     },
     {
       kind: "interstitial",
       id: "i_commit",
       variant: "commitment",
-      title: "Make the decision.",
       body: [
-        "This is just text on a screen. It can't make your brain sharper.",
-        "Only you can decide to look after it.",
-        "Don't put it off. Make the decision now.",
+        "This is *just text* on a screen.",
+        "It can't make your brain sharper.",
+        "Only *you* can decide to look after it.",
+        "Don't put it off.",
+        "*Make the decision now.*",
       ],
       cta: "Commit",
     },

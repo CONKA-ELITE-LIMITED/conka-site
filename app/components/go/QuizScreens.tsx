@@ -13,6 +13,7 @@ import type {
 } from "@/app/lib/landings/types";
 import QuizButton from "./QuizButton";
 import AnimatedText from "./AnimatedText";
+import TypewriterText from "./TypewriterText";
 import AnimatedStat from "./AnimatedStat";
 import ComparisonChart from "./ComparisonChart";
 import BarChart from "./BarChart";
@@ -103,76 +104,6 @@ export function LandingView({
   );
 }
 
-/**
- * Two bars driven by the user's own slider answer: "now" carries the
- * real value, "later" is directional only (smaller, no invented
- * number). Honesty rule: the future is a direction, not a prediction.
- */
-function NowLaterChart({
-  chart,
-  answers,
-}: {
-  chart: Extract<NonNullable<InterstitialScreen["chart"]>, { type: "now-later" }>;
-  answers: Record<string, QuizAnswer>;
-}) {
-  const raw = answers[chart.questionId]?.value;
-  const now = typeof raw === "number" ? raw : 50;
-  const max = 100;
-
-  const rows = [
-    {
-      label: chart.nowLabel,
-      widthPct: Math.max((now / max) * 100, 6),
-      readout: chart.unit ? chart.unit.replace("{value}", String(now)) : String(now),
-      accent: true,
-    },
-    {
-      label: chart.laterLabel,
-      widthPct: Math.max((now / max) * 100 * 0.7, 4),
-      readout: "↘",
-      accent: false,
-    },
-  ];
-
-  return (
-    <figure className="w-full">
-      <div className="flex flex-col gap-4">
-        {rows.map((row, i) => (
-          <div key={row.label}>
-            <div
-              className="go-text-mid flex items-baseline justify-between text-xs uppercase tracking-wide"
-              style={mono}
-            >
-              <span>{row.label}</span>
-              <span className="tabular-nums">{row.readout}</span>
-            </div>
-            <div
-              className="mt-1.5 h-5 w-full"
-              style={{ backgroundColor: "var(--go-track)" }}
-            >
-              <div
-                className="go-bar h-full"
-                style={{
-                  width: `${row.widthPct}%`,
-                  backgroundColor: row.accent
-                    ? "var(--brand-accent)"
-                    : "var(--go-neutral)",
-                  animationDelay: `${150 + i * 250}ms`,
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      {chart.caption && (
-        <figcaption className="go-text-faint mt-3 text-xs">
-          {chart.caption}
-        </figcaption>
-      )}
-    </figure>
-  );
-}
-
 export function InterstitialView({
   screen,
   answers,
@@ -191,7 +122,7 @@ export function InterstitialView({
 
   return (
     <div className="flex flex-1 flex-col">
-      {(!isPayoff || mirrorLabel) && (
+      {(mirrorLabel || (!isPayoff && screen.title) || screen.subtitle) && (
         <div className="flex flex-col items-center gap-4 pt-2">
           {mirrorLabel && (
             <p
@@ -208,7 +139,7 @@ export function InterstitialView({
               {mirrorLabel}
             </p>
           )}
-          {!isPayoff && (
+          {!isPayoff && screen.title && (
             <h2
               className={
                 screen.variant === "commitment"
@@ -244,17 +175,47 @@ export function InterstitialView({
           <AnimatedStat {...screen.stat} />
         )}
 
-        {screen.image && (
+        {screen.images && screen.images.length === 1 && (
           <div className="w-full max-w-[220px]">
             <Image
-              src={screen.image.src}
-              alt={screen.image.alt}
-              width={screen.image.width}
-              height={screen.image.height}
+              src={screen.images[0].src}
+              alt={screen.images[0].alt}
+              width={screen.images[0].width}
+              height={screen.images[0].height}
               className="go-fade-up h-auto w-full"
               style={{ animationDelay: "250ms" }}
               sizes="220px"
             />
+          </div>
+        )}
+        {screen.images && screen.images.length > 1 && (
+          /* Side-by-side product cards; white surface needs its own
+             text colour (differs from the section background) */
+          <div className="grid w-full grid-cols-2 gap-3">
+            {screen.images.map((image, i) => (
+              <figure
+                key={image.src}
+                className="go-fade-up overflow-hidden rounded-2xl bg-white p-3"
+                style={{ animationDelay: `${250 + i * 180}ms` }}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={image.width}
+                  height={image.height}
+                  className="h-auto w-full"
+                  sizes="(max-width: 640px) 45vw, 250px"
+                />
+                {image.caption && (
+                  <figcaption
+                    className="pb-1 pt-2 text-center text-xs uppercase tracking-[0.14em] text-black/70"
+                    style={mono}
+                  >
+                    {image.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
           </div>
         )}
 
@@ -281,9 +242,6 @@ export function InterstitialView({
         {screen.chart?.type === "cycle" && (
           <CycleLoop nodes={screen.chart.nodes} center={screen.chart.center} />
         )}
-        {screen.chart?.type === "now-later" && (
-          <NowLaterChart chart={screen.chart} answers={answers} />
-        )}
 
         {screen.variant === "testimonial" && screen.testimonial && (
           <blockquote>
@@ -299,13 +257,19 @@ export function InterstitialView({
           </blockquote>
         )}
 
-        {screen.body && (
-          <AnimatedText
-            lines={screen.body}
-            className="go-text-soft space-y-3 text-lg leading-relaxed"
-            startDelayMs={200}
-          />
-        )}
+        {screen.body &&
+          (screen.variant === "commitment" ? (
+            <TypewriterText
+              lines={screen.body}
+              className="go-text-soft space-y-6 text-2xl font-medium leading-snug sm:text-3xl"
+            />
+          ) : (
+            <AnimatedText
+              lines={screen.body}
+              className="go-text-soft space-y-3 text-lg leading-relaxed"
+              startDelayMs={200}
+            />
+          ))}
       </div>
       <div className="pb-8">
         <QuizButton label={screen.cta ?? "Continue"} onClick={onContinue} />
