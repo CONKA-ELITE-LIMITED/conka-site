@@ -122,7 +122,10 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   }, [index]);
 
   useEffect(() => {
-    if (screen.kind !== "results" || resultsFiredRef.current) return;
+    // The reveal counts as completion too: brain-age configs may end on
+    // an interstitial whose CTA links out, with no results screen.
+    const isCompletion = screen.kind === "results" || screen.kind === "reveal";
+    if (!isCompletion || resultsFiredRef.current) return;
     resultsFiredRef.current = true;
     const timeSpentSeconds = Math.floor(
       (Date.now() - startTimeRef.current) / 1000,
@@ -171,8 +174,8 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   };
 
   const ctaHref = resultBucket.ctaHref ?? config.resultsCta.href;
-  const canGoBack =
-    index > 0 && screen.kind !== "analyzing" && screen.kind !== "results";
+  // Always available after the first screen; goBack skips analyzing
+  const canGoBack = index > 0;
   const progress = screens.length > 1 ? index / (screens.length - 1) : 0;
   const dark = config.theme === "dark";
 
@@ -218,9 +221,9 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             </span>
           )}
         </div>
-        {/* No bar on the landing screen; wide, near full content width */}
+        {/* No bar on the landing screen; full-bleed across the viewport */}
         {index > 0 && (
-          <div className="mx-auto w-full max-w-2xl px-5 pb-3 pt-3.5">
+          <div className="w-full pb-3 pt-3.5">
             <QuizProgressBar progress={progress} />
           </div>
         )}
@@ -243,6 +246,13 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
               screen={screen}
               answers={answers}
               onContinue={goNext}
+              onCtaClick={(destination) =>
+                trackLandingCtaClicked({
+                  ...base,
+                  resultBucket: resultBucket.id,
+                  destination,
+                })
+              }
             />
           )}
           {screen.kind === "analyzing" && (

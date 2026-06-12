@@ -62,9 +62,14 @@ export function LandingView({
           </p>
         )}
         {screen.video && (
-          /* portrait 720x1280 pour render, centred crop on the bottle */
+          /* portrait: 720x1280 pour render, centred crop on the bottle;
+             square: 1:1 sources (e.g. the brain scan loop) uncropped */
           <div
-            className="aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-2xl border-2"
+            className={`w-full overflow-hidden rounded-2xl border-2 ${
+              screen.videoAspect === "square"
+                ? "aspect-square max-w-[220px]"
+                : "aspect-[3/4] max-w-[240px]"
+            }`}
             style={{ borderColor: "var(--brand-accent)" }}
           >
             <video
@@ -108,14 +113,26 @@ export function InterstitialView({
   screen,
   answers,
   onContinue,
+  onCtaClick,
 }: {
   screen: InterstitialScreen;
   answers: Record<string, QuizAnswer>;
   onContinue: () => void;
+  /** Fired instead of onContinue when the screen's CTA is a link */
+  onCtaClick: (destination: string) => void;
 }) {
   const mirrorLabel = screen.mirror
     ? answers[screen.mirror.questionId]?.label
     : undefined;
+
+  /* Stat can vary by the user's own answer (e.g. word-loss % split) */
+  const statAnswer = screen.stat?.byAnswer
+    ? answers[screen.stat.byAnswer.questionId]?.label
+    : undefined;
+  const statValue =
+    (statAnswer !== undefined
+      ? screen.stat?.byAnswer?.values[statAnswer]
+      : undefined) ?? screen.stat?.value;
   /* Payoff keeps its title with the orb in the centred block; everything
      else anchors the title under the progress bar (Flow layout) */
   const isPayoff = screen.variant === "payoff";
@@ -171,8 +188,13 @@ export function InterstitialView({
           </>
         )}
 
-        {screen.variant === "stat" && screen.stat && (
-          <AnimatedStat {...screen.stat} />
+        {screen.variant === "stat" && screen.stat && statValue !== undefined && (
+          <AnimatedStat
+            value={statValue}
+            prefix={screen.stat.prefix}
+            suffix={screen.stat.suffix}
+            label={screen.stat.label}
+          />
         )}
 
         {screen.images && screen.images.length === 1 && (
@@ -277,7 +299,15 @@ export function InterstitialView({
           ))}
       </div>
       <div className="pb-8">
-        <QuizButton label={screen.cta ?? "Continue"} onClick={onContinue} />
+        <QuizButton
+          label={screen.cta ?? "Continue"}
+          href={screen.ctaHref}
+          onClick={
+            screen.ctaHref
+              ? () => onCtaClick(screen.ctaHref as string)
+              : onContinue
+          }
+        />
       </div>
     </div>
   );

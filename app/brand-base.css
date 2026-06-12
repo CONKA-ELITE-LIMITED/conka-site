@@ -468,6 +468,31 @@
 .go-text-mid { color: var(--go-text-mid); }
 .go-text-faint { color: var(--go-text-faint); }
 
+/* Gamefied progress fill: accent gradient, soft glow, moving stripe
+   shimmer. Layer 1 is the animated stripes, layer 2 the gradient. */
+@keyframes go-progress-shimmer {
+  to {
+    background-position: 44px 0, 0 0;
+  }
+}
+.go-progress-fill {
+  background-image:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.18) 0 10px,
+      rgba(255, 255, 255, 0) 10px 22px
+    ),
+    linear-gradient(90deg, var(--brand-accent), #93a5f5);
+  background-size: 44px 100%, 100% 100%;
+  box-shadow: 0 0 14px rgba(100, 120, 224, 0.55);
+  animation: go-progress-shimmer 1.4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .go-progress-fill {
+    animation: none;
+  }
+}
+
 /* Quiz slider: thick track (filled portion painted inline via a
    linear-gradient on the input background), big obvious thumb. */
 .go-range {

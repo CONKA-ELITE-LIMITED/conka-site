@@ -71,6 +71,9 @@ export interface LandingScreen {
   title: string;
   /** Emphasis beat rendered on its own line under the title: larger, accent colour */
   titleAccent?: string;
+  /** Video frame shape: "portrait" crops to 3:4 (bottle pours),
+   *  "square" shows a 1:1 source uncropped. Defaults to "portrait" */
+  videoAspect?: "portrait" | "square";
   subtitle?: string;
   /** Optional looping video (public path) shown between copy and CTA */
   video?: string;
@@ -164,8 +167,16 @@ export interface InterstitialScreen {
   body?: string[];
   /** "strong" renders body in full-contrast text instead of soft grey */
   bodyTone?: "soft" | "strong";
-  /** Used by variant "stat" */
-  stat?: { value: number; prefix?: string; suffix?: string; label: string };
+  /** Used by variant "stat". `byAnswer` swaps the value for the
+   *  user's own answer (keyed by answer label) so different answers
+   *  see different figures; `value` is the fallback */
+  stat?: {
+    value: number;
+    prefix?: string;
+    suffix?: string;
+    label: string;
+    byAnswer?: { questionId: string; values: Record<string, number> };
+  };
   /** Used by variant "testimonial" */
   testimonial?: { quote: string; name: string; detail?: string };
   /** Renders on any variant when set */
@@ -184,6 +195,9 @@ export interface InterstitialScreen {
   mirror?: { questionId: string; prefix?: string };
   /** Continue button label, defaults to "Continue" */
   cta?: string;
+  /** Renders the CTA as a link instead of advancing (e.g. the commit
+   *  screen sending straight to a PDP); fires landing:cta_clicked */
+  ctaHref?: string;
 }
 
 export interface AnalyzingScreen {

@@ -59,6 +59,17 @@ export default function TurnaroundChart({
             />
           ))}
 
+          {/* dotted decay: where the line heads if nothing changes */}
+          <path
+            d="M16,168 C90,172 150,178 210,183 C250,186 285,188 304,188"
+            fill="none"
+            stroke="var(--go-neutral-strong)"
+            strokeWidth="2"
+            strokeDasharray="4 5"
+            className="go-fade-up"
+            style={{ animationDelay: `${startDelayMs + 300}ms` }}
+          />
+
           {/* glow underlay, start dot, climbing line, end dot */}
           <path
             d={UP_PATH}

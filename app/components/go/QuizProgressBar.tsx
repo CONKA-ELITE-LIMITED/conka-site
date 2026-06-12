@@ -16,8 +16,8 @@ export default function QuizProgressBar({ progress }: { progress: number }) {
       aria-label="Quiz progress"
     >
       <div
-        className="h-full transition-[width] duration-500 ease-out"
-        style={{ width: `${pct}%`, backgroundColor: "var(--brand-accent)" }}
+        className="go-progress-fill h-full transition-[width] duration-500 ease-out"
+        style={{ width: `${pct}%` }}
       />
     </div>
   );

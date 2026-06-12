@@ -27,7 +27,9 @@ export const brainAgeQuiz: LandingConfig = {
   title: "What's your real brain age?",
   theme: "dark",
   scoring: { mode: "brain-age", gapMin: 3, gapMax: 12 },
-  resultsCta: { label: "Build my system", href: "/funnel" },
+  // No results screen in this flow (commit links straight to the Both
+  // PDP); kept as the fallback destination and the analytics bucket id
+  resultsCta: { label: "See the system", href: "/conka-both" },
   buckets: [
     {
       id: "both",
@@ -44,6 +46,8 @@ export const brainAgeQuiz: LandingConfig = {
       title: "What's your real",
       titleAccent: "brain age?",
       subtitle: "Take the 2-minute test and find out.",
+      video: "/videos/BrainScan.mp4",
+      videoAspect: "square",
       // PLACEHOLDER: needs a defensible customer figure before scaled spend
       rating: { text: "Trusted by 10,000+ sharp minds" },
       cta: "Test my brain age 🧠",
@@ -119,8 +123,22 @@ export const brainAgeQuiz: LandingConfig = {
       id: "i_not_alone",
       variant: "stat",
       mirror: { questionId: "q_words" },
-      // PLACEHOLDER: replace with a figure we can back (own quiz data)
-      stat: { value: 61, suffix: "%", label: "of people your age lose words the same way" },
+      // PLACEHOLDER split: replace with figures we can back (own quiz
+      // data). Per-answer values sum to 100 across the four options.
+      stat: {
+        value: 41,
+        suffix: "%",
+        label: "of people your age lose words the same way",
+        byAnswer: {
+          questionId: "q_words",
+          values: {
+            Rarely: 14,
+            "A few times a week": 41,
+            "Once a day": 27,
+            "Several times a day": 18,
+          },
+        },
+      },
       title: "You're not alone.",
       body: [
         "Word-finding slips are one of the most common things people notice as the brain gets older. Keep going.",
@@ -336,18 +354,6 @@ export const brainAgeQuiz: LandingConfig = {
     },
     {
       kind: "interstitial",
-      id: "i_today_vs",
-      variant: "comparison",
-      title: "Time to start.",
-      body: ["Feel sharp enough to be yourself again."],
-      chart: {
-        type: "line",
-        withLabel: "With CONKA",
-        withoutLabel: "Today",
-      },
-    },
-    {
-      kind: "interstitial",
       id: "i_commit",
       variant: "commitment",
       body: [
@@ -358,10 +364,8 @@ export const brainAgeQuiz: LandingConfig = {
         "*Make the decision now.*",
       ],
       cta: "Commit",
-    },
-    {
-      kind: "results",
-      id: "results",
+      // Straight to the Both PDP; completion analytics fired at the reveal
+      ctaHref: "/conka-both",
     },
   ],
 };

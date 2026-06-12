@@ -56,9 +56,9 @@ export default function ComparisonChart({
             />
           ))}
 
-          {/* without: starts fine, drifts down through the day */}
+          {/* without: shares the accent line's origin, then drifts low */}
           <path
-            d="M12,96 C80,88 140,104 200,132 C250,152 285,162 308,166"
+            d="M12,150 C80,148 140,154 200,158 C250,162 285,164 308,164"
             fill="none"
             stroke="var(--go-neutral-strong)"
             strokeWidth="2.5"
@@ -98,7 +98,7 @@ export default function ComparisonChart({
 
         {/* in-chart label pills */}
         <span
-          className={`${pill} left-[5%] top-[33%]`}
+          className={`${pill} bottom-[9%] left-[5%]`}
           style={{
             ...mono,
             backgroundColor: "var(--go-surface)",
