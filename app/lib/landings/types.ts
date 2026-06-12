@@ -69,6 +69,8 @@ export interface LandingScreen {
   kind: "landing";
   id: string;
   title: string;
+  /** Emphasis beat rendered on its own line under the title: larger, accent colour */
+  titleAccent?: string;
   subtitle?: string;
   /** Optional looping video (public path) shown between copy and CTA */
   video?: string;
@@ -165,6 +167,8 @@ export interface InterstitialScreen {
     | "commitment"
     | "payoff";
   title: string;
+  /** Rendered directly under the title, before the visual content */
+  subtitle?: string;
   /** Paragraphs revealed in sequence */
   body?: string[];
   /** Used by variant "stat" */

@@ -182,18 +182,18 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
         color: "var(--go-text)",
       }}
     >
-      {/* Fixed header: logo centred, thick progress bar full-bleed below */}
+      {/* Fixed header: logo centred with breathing room, wide thick bar below */}
       <header
         className="fixed inset-x-0 top-0 z-10"
         style={{ backgroundColor: "var(--go-bg)" }}
       >
-        <div className="relative flex h-16 items-center justify-center">
+        <div className="relative flex h-14 items-end justify-center pt-4">
           <button
             type="button"
             onClick={goBack}
             disabled={!canGoBack}
             aria-label="Back"
-            className={`go-text-soft absolute left-3 px-2 py-1 text-2xl leading-none transition-opacity duration-150 ${
+            className={`go-text-soft absolute bottom-1 left-3 px-2 py-1 text-2xl leading-none transition-opacity duration-150 ${
               canGoBack ? "" : "opacity-0"
             }`}
           >
@@ -204,27 +204,27 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
             alt="CONKA logo"
             width={440}
             height={112}
-            className={`h-8 w-auto${dark ? " invert" : ""}`}
+            className={`h-10 w-auto${dark ? " invert" : ""}`}
             priority
           />
           {questionNumber > 0 && (
             <span
-              className="go-text-faint absolute right-4 text-sm tabular-nums"
+              className="go-text-faint absolute bottom-2 right-4 text-sm tabular-nums"
               style={{ fontFamily: "var(--font-brand-data)" }}
             >
               {questionNumber}/{totalQuestions}
             </span>
           )}
         </div>
-        {/* No bar on the landing screen; inset, not full-bleed */}
+        {/* No bar on the landing screen; wide, near full content width */}
         {index > 0 && (
-          <div className="mx-auto w-full max-w-sm px-5 pb-3">
+          <div className="mx-auto w-full max-w-2xl px-5 pb-3 pt-3.5">
             <QuizProgressBar progress={progress} />
           </div>
         )}
       </header>
 
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-6 pt-24 text-center">
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-6 pt-28 text-center">
         <div key={index} className="go-screen-enter flex flex-1 flex-col">
           {screen.kind === "landing" && (
             <LandingView screen={screen} onStart={goNext} />

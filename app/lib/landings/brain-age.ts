@@ -37,12 +37,12 @@ export const brainAgeQuiz: LandingConfig = {
     {
       kind: "landing",
       id: "hook",
-      title: "What's your real brain age?",
+      title: "What's your real",
+      titleAccent: "brain age?",
       subtitle: "Take the 2-minute test and find out.",
       // PLACEHOLDER: needs a defensible customer figure before scaled spend
       rating: { text: "Trusted by 10,000+ sharp minds" },
       cta: "Test my brain age 🧠",
-      footnote: "Free. Takes 2 minutes.",
     },
     {
       kind: "question",

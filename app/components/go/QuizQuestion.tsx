@@ -68,16 +68,17 @@ export default function QuizQuestion({
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col justify-center gap-10">
-        <div>
-          <h2 className="text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl">
-            {screen.question}
-          </h2>
-          {screen.subtitle && (
-            <p className="go-text-mid mt-3 text-lg">{screen.subtitle}</p>
-          )}
-        </div>
+      {/* Question anchored directly under the progress bar (Flow layout) */}
+      <div className="pt-2">
+        <h2 className="text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl">
+          {screen.question}
+        </h2>
+        {screen.subtitle && (
+          <p className="go-text-mid mt-3 text-lg">{screen.subtitle}</p>
+        )}
+      </div>
 
+      <div className="flex flex-1 flex-col justify-center py-8">
         {screen.type === "single" && (
           <div className="flex flex-col gap-3">
             {screen.options.map((option, i) => {
@@ -109,7 +110,7 @@ export default function QuizQuestion({
         )}
 
         {screen.type === "slider" && slider && (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             <div
               className="text-center text-5xl font-medium tabular-nums"
               style={{ fontFamily: "var(--font-brand-data)" }}

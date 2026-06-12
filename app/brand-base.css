@@ -431,6 +431,11 @@
   --go-ramp-2: rgba(0, 0, 0, 0.3);
   --go-ramp-3: rgba(0, 0, 0, 0.15);
   --go-ramp-4: rgba(0, 0, 0, 0.08);
+  /* Inverse pill ("YOU SAID: ..."), stat glow, chart card gradient */
+  --go-pill-bg: #111111;
+  --go-pill-text: #ffffff;
+  --go-glow: none;
+  --go-card-bg: linear-gradient(160deg, rgba(27, 39, 87, 0.07), rgba(27, 39, 87, 0.015));
 }
 
 .go-quiz.go-dark {
@@ -453,6 +458,10 @@
   --go-ramp-2: rgba(255, 255, 255, 0.35);
   --go-ramp-3: rgba(255, 255, 255, 0.2);
   --go-ramp-4: rgba(255, 255, 255, 0.1);
+  --go-pill-bg: #f5f5f5;
+  --go-pill-text: #111111;
+  --go-glow: 0 0 56px rgba(100, 120, 224, 0.55);
+  --go-card-bg: linear-gradient(160deg, rgba(100, 120, 224, 0.16), rgba(255, 255, 255, 0.02));
 }
 
 .go-text-soft { color: var(--go-text-soft); }

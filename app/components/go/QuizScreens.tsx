@@ -46,6 +46,14 @@ export function LandingView({
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <h1 className="text-4xl font-medium leading-tight tracking-[-0.02em] sm:text-5xl">
           {screen.title}
+          {screen.titleAccent && (
+            <span
+              className="mt-1 block text-5xl font-semibold tracking-[-0.02em] sm:text-6xl"
+              style={{ color: "var(--brand-accent)" }}
+            >
+              {screen.titleAccent}
+            </span>
+          )}
         </h1>
         {screen.subtitle && (
           <p className="go-text-soft text-base leading-relaxed sm:text-lg">
@@ -177,32 +185,60 @@ export function InterstitialView({
   const mirrorLabel = screen.mirror
     ? answers[screen.mirror.questionId]?.label
     : undefined;
+  /* Payoff keeps its title with the orb in the centred block; everything
+     else anchors the title under the progress bar (Flow layout) */
+  const isPayoff = screen.variant === "payoff";
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-7">
-        {mirrorLabel && (
-          <p
-            className="border px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
-            style={{ ...mono, borderColor: "var(--brand-accent)", color: "var(--brand-accent)" }}
-          >
-            {screen.mirror?.prefix ?? "YOU SAID:"} {mirrorLabel}
-          </p>
-        )}
+      {(!isPayoff || mirrorLabel) && (
+        <div className="flex flex-col items-center gap-4 pt-2">
+          {mirrorLabel && (
+            <p
+              className="rounded-full px-3.5 py-1.5 text-xs uppercase tracking-[0.14em]"
+              style={{
+                ...mono,
+                backgroundColor: "var(--go-pill-bg)",
+                color: "var(--go-pill-text)",
+              }}
+            >
+              <span className="opacity-60">
+                {screen.mirror?.prefix ?? "YOU SAID:"}
+              </span>{" "}
+              {mirrorLabel}
+            </p>
+          )}
+          {!isPayoff && (
+            <h2
+              className={
+                screen.variant === "commitment"
+                  ? "text-5xl font-medium leading-tight tracking-[-0.02em]"
+                  : "text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl"
+              }
+            >
+              {screen.title}
+            </h2>
+          )}
+          {screen.subtitle && (
+            <p className="go-text-mid text-base leading-relaxed sm:text-lg">
+              {screen.subtitle}
+            </p>
+          )}
+        </div>
+      )}
 
-        {screen.variant === "payoff" && (
-          <div className="go-orb go-fade-up h-44 w-44" aria-hidden />
+      <div className="flex flex-1 flex-col items-center justify-center gap-7 py-8">
+        {isPayoff && (
+          <>
+            <div className="go-orb go-fade-up h-44 w-44" aria-hidden />
+            <h2
+              className="go-fade-up text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl"
+              style={{ animationDelay: "300ms" }}
+            >
+              {screen.title}
+            </h2>
+          </>
         )}
-
-        <h2
-          className={
-            screen.variant === "commitment"
-              ? "text-5xl font-medium leading-tight tracking-[-0.02em]"
-              : "text-3xl font-medium leading-tight tracking-[-0.01em] sm:text-4xl"
-          }
-        >
-          {screen.title}
-        </h2>
 
         {screen.variant === "stat" && screen.stat && (
           <AnimatedStat {...screen.stat} />
@@ -451,18 +487,18 @@ export function ResultsView({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-7">
-        <div>
-          <p
-            className="text-sm uppercase tracking-[0.14em]"
-            style={{ ...mono, color: "var(--brand-accent)" }}
-          >
-            {bucket.tag}
-          </p>
-          <h1 className="mt-3 text-4xl font-medium leading-tight tracking-[-0.02em]">
-            {bucket.title}
-          </h1>
-        </div>
+      <div className="pt-2">
+        <p
+          className="text-sm uppercase tracking-[0.14em]"
+          style={{ ...mono, color: "var(--brand-accent)" }}
+        >
+          {bucket.tag}
+        </p>
+        <h1 className="mt-3 text-4xl font-medium leading-tight tracking-[-0.02em]">
+          {bucket.title}
+        </h1>
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center gap-7 py-8">
         <p className="go-text-soft text-lg leading-relaxed">{bucket.body}</p>
         <div
           className="w-full border p-6"
