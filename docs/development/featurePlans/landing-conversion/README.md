@@ -18,7 +18,7 @@ Two axes, every page is one cell:
 | Format | Status | Doc |
 |--------|--------|-----|
 | Quiz | LIVE - engine + template shipped, awaiting persona content | [quiz-format.md](./quiz-format.md) |
-| Listicle | EXPLORATION - reference evaluated, not scoped, awaiting guidance | [listicle-format.md](./listicle-format.md) |
+| Listicle | BLUEPRINT AGREED - IM8 layout digested, framework build next | [listicle-blueprint.md](./listicle-blueprint.md) |
 | Third format | UNDECIDED - to pick with the team | - |
 
 All formats live on one route system: `/go/[slug]`, one config file per page, registered in `app/lib/landings/index.ts`. Pages are ad destinations only: noindex, no nav, never linked from the site. An iteration or A/B test = a new slug. No CMS, no A/B infra.
@@ -58,7 +58,8 @@ Three layers, all keyed so pages and ads can be compared:
 ## Doc map
 
 - [quiz-format.md](./quiz-format.md) - quiz format plan, phases, what shipped
-- [listicle-format.md](./listicle-format.md) - listicle reference evaluation (usecloud.co) + requirements
+- [listicle-blueprint.md](./listicle-blueprint.md) - **the listicle build plan** - IM8 section-by-section layout, config schema, build phases
+- [listicle-format.md](./listicle-format.md) - earlier listicle reference evaluation (usecloud.co); principles still apply, layout superseded by the blueprint
 - `docs/features/LANDING_QUIZ_SYSTEM.md` - how the shipped system works (schema, recipes, gotchas)
 - `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md` - attribution stack the tracking relies on
 - `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` - the wider strategy this programme sits inside
