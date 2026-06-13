@@ -1,20 +1,36 @@
 import Image from "next/image";
 import ConkaCTAButton from "./ConkaCTAButton";
-import GuaranteeRow from "./GuaranteeRow";
+import LaurelBadge from "./LaurelBadge";
+import TrustChips, { type TrustChip } from "./TrustChips";
+import { GUARANTEE_LABEL } from "@/app/lib/offerConstants";
 
 const AVATAR_COUNT = 5;
 
-/* Trust micro-row: stacked avatars + (4.5 stars + Excellent 4.7) + review count */
-function TrustMicroRow() {
+/* Brain-project credibility banner — generic (non-persona) copy for home */
+const HOME_LAUREL = {
+  eyebrow: "World's Largest",
+  body: "Consumer brain-research project. 1,000+ brains tested regularly through our app.",
+};
+
+/* Under-CTA trust chips — distinct icon per item, shared with the listicle hero */
+const HOME_TRUST_CHIPS: TrustChip[] = [
+  { label: "Zero caffeine", icon: "no-caffeine" },
+  { label: "Informed Sport Certified", icon: "informed-sport" },
+  { label: GUARANTEE_LABEL, icon: "guarantee" },
+];
+
+/* Trust micro-row: stacked avatars + (4.7 stars + Excellent 4.7) + review count.
+   Compacted to the IM8 scale. Bottom margin is owned by the parent. */
+function TrustMicroRow({ className = "" }: { className?: string }) {
   return (
-    <div className="flex items-center gap-3 mb-5">
+    <div className={`flex items-center gap-2.5 ${className}`}>
       <div className="flex items-center">
         {Array.from({ length: AVATAR_COUNT }, (_, i) => (
           <div
             key={i}
-            className="relative w-[35px] h-[35px] rounded-full overflow-hidden"
+            className="relative w-[26px] h-[26px] rounded-full overflow-hidden border border-black/10"
             style={{
-              marginLeft: i === 0 ? 0 : "-10px",
+              marginLeft: i === 0 ? 0 : "-8px",
               zIndex: AVATAR_COUNT - i,
             }}
           >
@@ -23,17 +39,17 @@ function TrustMicroRow() {
               alt="CONKA customer"
               fill
               className="object-cover"
-              sizes="35px"
+              sizes="26px"
             />
           </div>
         ))}
       </div>
       <div className="flex flex-col leading-tight">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {/* 4.7 stars via overlay: grey base + gold clipped to 94% width */}
           <div
             className="relative inline-block leading-none"
-            style={{ fontSize: "20px", letterSpacing: "0.05em" }}
+            style={{ fontSize: "15px", letterSpacing: "0.05em" }}
             aria-label="4.7 out of 5 stars"
           >
             <span className="text-black/15" aria-hidden="true">
@@ -47,11 +63,11 @@ function TrustMicroRow() {
               ★★★★★
             </span>
           </div>
-          <span className="text-[14px] font-bold text-black">
+          <span className="text-[13px] font-bold text-black">
             Excellent 4.7
           </span>
         </div>
-        <span className="text-[12px] text-black mt-1">
+        <span className="text-[11px] text-black/80 mt-0.5">
           <strong className="font-bold">622+</strong> reviews ·{" "}
           <strong className="font-bold">5,000+</strong> daily users
         </span>
@@ -63,8 +79,13 @@ function TrustMicroRow() {
 export default function LandingHero() {
   return (
     <div>
-      {/* Mobile — full-bleed image (clean, soft fade at bottom), trust row + title + CTA below */}
+      {/* Mobile — brain-project badge, full-bleed image, trust row + title + CTA below */}
       <div className="lg:hidden">
+        <LaurelBadge
+          eyebrow={HOME_LAUREL.eyebrow}
+          body={HOME_LAUREL.body}
+          className="mt-2"
+        />
         {/* aspect-[3/2] matches the render's native 2528x1696 so the
             composed ingredients aren't cropped away */}
         <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] aspect-[3/2]">
@@ -87,7 +108,7 @@ export default function LandingHero() {
         </div>
 
         <header className="mt-6">
-          <TrustMicroRow />
+          <TrustMicroRow className="mb-4" />
           <h1
             className="text-black font-semibold text-[38px] leading-[1.08]"
             style={{ letterSpacing: "-0.02em" }}
@@ -104,7 +125,7 @@ export default function LandingHero() {
 
         <div className="mt-6 flex flex-col items-center">
           <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
-          <GuaranteeRow />
+          <TrustChips chips={HOME_TRUST_CHIPS} className="mt-4" />
         </div>
       </div>
 
@@ -125,9 +146,13 @@ export default function LandingHero() {
           />
         </div>
 
-        {/* Right — trust row, title, CTA */}
+        {/* Right — badge, title, trust row, CTA */}
         <div className="flex flex-col items-start px-14">
-          <TrustMicroRow />
+          <LaurelBadge
+            eyebrow={HOME_LAUREL.eyebrow}
+            body={HOME_LAUREL.body}
+            className="mb-5"
+          />
 
           {/* whitespace-nowrap keeps both lines intact; sized so the longer
               line fits the fixed 48% column at lg and xl widths */}
@@ -140,14 +165,16 @@ export default function LandingHero() {
             Morning to Evening.
           </h1>
 
-          <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[42ch]">
+          <p className="text-base lg:text-lg leading-snug text-black/70 mb-7 max-w-[42ch]">
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
           </p>
 
+          <TrustMicroRow className="mb-5" />
+
           <div>
             <ConkaCTAButton href="/conka-both" meta={null}>Buy CONKA Today</ConkaCTAButton>
-            <GuaranteeRow />
+            <TrustChips chips={HOME_TRUST_CHIPS} className="mt-4" />
           </div>
         </div>
       </div>

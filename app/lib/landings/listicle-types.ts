@@ -34,6 +34,15 @@ export type ListicleAsset =
   /** Labelled grey block at the right aspect ratio — framework phase */
   | { kind: "placeholder"; aspect: string; note: string };
 
+/** Icon keys for the under-CTA trust chips; mapped to SVGs in the renderer */
+export type TrustPillIcon =
+  | "no-caffeine"
+  | "informed-sport"
+  | "guarantee"
+  | "shipping"
+  | "batch-tested"
+  | "cancel";
+
 export interface ListicleReview {
   /** Bold one-liner above the quote */
   headline?: string;
@@ -88,8 +97,8 @@ export interface ListicleConfig {
     socialProof?: { label: string; sub: string };
     /** Primary CTA; anchors to #product */
     cta: string;
-    /** Trust pills row under the CTAs */
-    trustPills?: string[];
+    /** Trust chips under the CTA; each gets its own meaningful icon */
+    trustPills?: { label: string; icon: TrustPillIcon }[];
     asset: ListicleAsset;
   };
   /** Marquee proof ticker items below the hero */

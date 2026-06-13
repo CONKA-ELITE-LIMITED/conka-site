@@ -2,10 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FUNNEL_URL } from "@/app/lib/landingConstants";
 
-/* Meta subtitle variants — swap ACTIVE_META to test different directions.
-   Performance note: the blinking _ uses a CSS step-end animation on a text
-   node. It only triggers compositing (no layout, no paint), so perf cost
-   is essentially zero even on low-end mobile. */
+/* Meta subtitle variants — swap ACTIVE_META to test different directions. */
 const META_VARIANTS = {
   aspirational:   "// your brain, optimised.",
   performance:    "// think sharper · every single day",
@@ -18,16 +15,16 @@ const ACTIVE_META: string = META_VARIANTS.aspirational;
 
 /* Default variant — full CTA (O-icon + text + meta + horizontal arrow)
    at every viewport. Shrink-to-content with min/max bounds. Mobile has
-   tighter gap/padding so longer labels still fit on one line. Shape:
-   12px diagonal notches on top-left + bottom-right. */
+   tighter gap/padding so longer labels still fit on one line. Plain
+   rectangle so it reads unmistakably as a button. */
 const OUTER =
-  "inline-flex flex-row items-center gap-3 lg:gap-4 min-w-[14rem] max-w-md py-3.5 pl-3 pr-5 lg:pl-5 lg:pr-8 rounded-none text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(12px_0,100%_0,100%_calc(100%-12px),calc(100%-12px)_100%,0_100%,0_12px)]";
+  "inline-flex flex-row items-center gap-3 lg:gap-4 min-w-[14rem] max-w-md py-3.5 pl-3 pr-5 lg:pl-5 lg:pr-8 rounded-none text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
 
 /* Compact variant — forces the compact treatment on every viewport
    (e.g. in-card ingredients button where the full desktop treatment
    would feel too sales-y for a secondary action). */
 const COMPACT =
-  "group inline-flex flex-row items-center justify-between gap-3 w-full py-2.5 lg:py-3 px-4 rounded-none text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(12px_0,100%_0,100%_calc(100%-12px),calc(100%-12px)_100%,0_100%,0_12px)]";
+  "group inline-flex flex-row items-center justify-between gap-3 w-full py-2.5 lg:py-3 px-4 rounded-none text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
 
 export default function ConkaCTAButton({
   children,
@@ -76,17 +73,10 @@ export default function ConkaCTAButton({
         />
       </span>
 
-      {/* CENTER — title + blinking cursor, with optional meta line */}
+      {/* CENTER — title, with optional meta line */}
       <span className="flex flex-col items-start flex-1 min-w-0">
-        <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] flex items-center gap-0.5 whitespace-nowrap">
+        <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] whitespace-nowrap">
           {children}
-          <span
-            className="inline-block ml-0.5"
-            style={{ animation: "lab-blink 1s step-end infinite" }}
-            aria-hidden
-          >
-            _
-          </span>
         </span>
         {showMeta && (
           <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white mt-1 leading-none">

@@ -8,6 +8,8 @@ import type {
   ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
+import LaurelBadge from "@/app/components/landing/LaurelBadge";
+import TrustChips from "@/app/components/landing/TrustChips";
 import ListicleProductHero, {
   ListicleProductHeroMobile,
 } from "./ListicleProductHero";
@@ -84,46 +86,6 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
           <span className="text-[13px] font-bold">{label}</span>
         </div>
         <span className="mt-0.5 text-[11px] opacity-80">{sub}</span>
-      </div>
-    </div>
-  );
-}
-
-/** Laurel-flanked credibility chip, IM8 "Clinicians' Choice" style */
-function LaurelBadge({ eyebrow, body }: { eyebrow: string; body: string }) {
-  return (
-    <div className="mb-5 flex items-center gap-2.5 rounded-[12px] border border-black/10 bg-white px-3 py-2.5 shadow-[0_2px_12px_rgba(0,0,0,0.07)] md:w-fit">
-      <div
-        className="relative flex-shrink-0 overflow-hidden"
-        style={{ width: 20, height: 44 }}
-        aria-hidden="true"
-      >
-        <Image
-          src="/LaurelWreath.png"
-          alt=""
-          fill
-          sizes="56px"
-          style={{ objectFit: "cover", objectPosition: "left center" }}
-        />
-      </div>
-      <div className="flex-1 text-center leading-snug md:max-w-[34rem]">
-        <div className="mb-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#1B2757]">
-          {eyebrow}
-        </div>
-        <div className="text-[11px] font-semibold text-black">{body}</div>
-      </div>
-      <div
-        className="relative flex-shrink-0 overflow-hidden"
-        style={{ width: 20, height: 44 }}
-        aria-hidden="true"
-      >
-        <Image
-          src="/LaurelWreath.png"
-          alt=""
-          fill
-          sizes="56px"
-          style={{ objectFit: "cover", objectPosition: "right center" }}
-        />
       </div>
     </div>
   );
@@ -412,10 +374,11 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               <LaurelBadge
                 eyebrow={config.hero.laurel.eyebrow}
                 body={config.hero.laurel.body}
+                className="mb-5"
               />
             ) : null}
             <h1
-              className="mb-5 text-3xl leading-tight md:text-5xl"
+              className="mb-4 text-[1.7rem] leading-[1.12] md:mb-5 md:text-5xl md:leading-tight"
               style={{
                 letterSpacing: "var(--letter-spacing-premium-title)",
                 color: NAVY,
@@ -440,16 +403,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               {config.hero.cta}
             </a>
             {config.hero.trustPills?.length ? (
-              <div className="flex flex-wrap justify-center gap-2">
-                {config.hero.trustPills.map((pill, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full bg-black/5 px-4 py-1.5 text-xs"
-                  >
-                    ✓ {pill}
-                  </span>
-                ))}
-              </div>
+              <TrustChips chips={config.hero.trustPills} />
             ) : null}
           </div>
         </div>

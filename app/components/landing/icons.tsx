@@ -105,3 +105,26 @@ export function TrustIconCancel({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** Coffee cup with a slash through it: "zero caffeine / no stimulants" */
+export function TrustIconNoCaffeine({ className }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M5 8h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V8z" />
+      <path d="M16 9h2a2 2 0 0 1 0 4h-2" />
+      <line x1="4" y1="21" x2="17" y2="21" />
+      <line x1="3" y1="3" x2="21" y2="21" />
+    </svg>
+  );
+}
+
+/** Award seal with a check and ribbon tails: money-back guarantee */
+export function TrustIconGuarantee({ className }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="9" r="6" />
+      <polyline points="9 9 11 11 15 7" />
+      <path d="M8.5 14L7 21l5-3 5 3-1.5-7" />
+    </svg>
+  );
+}
