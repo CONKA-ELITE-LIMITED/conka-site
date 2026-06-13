@@ -7,7 +7,16 @@ import type {
   ListicleBodyBlock,
   ListicleConfig,
   ListicleReview,
+  TrustPillIcon,
 } from "@/app/lib/landings/listicle-types";
+import {
+  TrustIconNoCaffeine,
+  TrustIconInformedSport,
+  TrustIconGuarantee,
+  TrustIconShipping,
+  TrustIconBatchTested,
+  TrustIconCancel,
+} from "@/app/components/landing/icons";
 import ListicleProductHero, {
   ListicleProductHeroMobile,
 } from "./ListicleProductHero";
@@ -41,6 +50,19 @@ const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
+
+/** Maps a trust-chip icon key to its SVG so each item reads distinctly */
+const TRUST_PILL_ICONS: Record<
+  TrustPillIcon,
+  (props: { className?: string }) => React.ReactElement
+> = {
+  "no-caffeine": TrustIconNoCaffeine,
+  "informed-sport": TrustIconInformedSport,
+  guarantee: TrustIconGuarantee,
+  shipping: TrustIconShipping,
+  "batch-tested": TrustIconBatchTested,
+  cancel: TrustIconCancel,
+};
 
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
@@ -448,18 +470,19 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               {config.hero.cta}
             </a>
             {config.hero.trustPills?.length ? (
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
-                {config.hero.trustPills.map((pill, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-black/65"
-                  >
-                    <span className="text-[#1B2757]" aria-hidden>
-                      ✓
+              <div className="flex flex-wrap justify-center gap-2">
+                {config.hero.trustPills.map((pill, i) => {
+                  const Icon = TRUST_PILL_ICONS[pill.icon];
+                  return (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-white px-3 py-2 text-[11px] font-semibold leading-tight text-black/75 shadow-[0_1px_6px_rgba(0,0,0,0.05)]"
+                    >
+                      <Icon className="h-4 w-4 flex-shrink-0 text-[#1B2757]" />
+                      {pill.label}
                     </span>
-                    {pill}
-                  </span>
-                ))}
+                  );
+                })}
               </div>
             ) : null}
           </div>

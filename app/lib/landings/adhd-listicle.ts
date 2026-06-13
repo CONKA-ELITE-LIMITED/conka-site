@@ -24,7 +24,11 @@ export const adhdListicle: ListicleConfig = {
       sub: "622+ reviews · 5,000+ daily users",
     },
     cta: "Try Conka Risk-Free for 100 Days →",
-    trustPills: ["Zero caffeine", "Informed Sport Certified", "100-day guarantee"],
+    trustPills: [
+      { label: "Zero caffeine", icon: "no-caffeine" },
+      { label: "Informed Sport Certified", icon: "informed-sport" },
+      { label: "100-day guarantee", icon: "guarantee" },
+    ],
     asset: {
       kind: "image",
       src: "/formulas/both/BoxIngredientHero.png",

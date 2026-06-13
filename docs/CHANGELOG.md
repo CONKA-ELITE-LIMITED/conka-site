@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-13** | ADHD listicle hero trust row: distinct icon mini-chips per item instead of uniform ticks
 - **2026-06-13** | ADHD listicle hero mobile pass: split laurel badge, smaller headline, leaner trust labels, ADHD sticky message
 - **2026-06-12** | ADHD listicle page fully dressed with assets and IM8-style hero, marquee and optimised buy box; CROTestimonials replaces LandingTestimonials site-wide
 - **2026-06-12** | Listicle landing page framework shipped at /go/[slug] with first ADHD persona page, reusing site components for buy box, reviews, athletes and FAQ

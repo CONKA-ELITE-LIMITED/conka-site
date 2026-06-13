@@ -46,9 +46,9 @@ export const listicleTemplate: ListicleConfig = {
     },
     cta: "Placeholder primary CTA",
     trustPills: [
-      "Informed Sport Certified",
-      "100-day guarantee",
-      "Third-party tested",
+      { label: "Informed Sport Certified", icon: "informed-sport" },
+      { label: "100-day guarantee", icon: "guarantee" },
+      { label: "Third-party tested", icon: "batch-tested" },
     ],
     asset: {
       kind: "image",
