@@ -7,16 +7,9 @@ import type {
   ListicleBodyBlock,
   ListicleConfig,
   ListicleReview,
-  TrustPillIcon,
 } from "@/app/lib/landings/listicle-types";
-import {
-  TrustIconNoCaffeine,
-  TrustIconInformedSport,
-  TrustIconGuarantee,
-  TrustIconShipping,
-  TrustIconBatchTested,
-  TrustIconCancel,
-} from "@/app/components/landing/icons";
+import LaurelBadge from "@/app/components/landing/LaurelBadge";
+import TrustChips from "@/app/components/landing/TrustChips";
 import ListicleProductHero, {
   ListicleProductHeroMobile,
 } from "./ListicleProductHero";
@@ -50,19 +43,6 @@ const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
-
-/** Maps a trust-chip icon key to its SVG so each item reads distinctly */
-const TRUST_PILL_ICONS: Record<
-  TrustPillIcon,
-  (props: { className?: string }) => React.ReactElement
-> = {
-  "no-caffeine": TrustIconNoCaffeine,
-  "informed-sport": TrustIconInformedSport,
-  guarantee: TrustIconGuarantee,
-  shipping: TrustIconShipping,
-  "batch-tested": TrustIconBatchTested,
-  cancel: TrustIconCancel,
-};
 
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
@@ -106,54 +86,6 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
           <span className="text-[13px] font-bold">{label}</span>
         </div>
         <span className="mt-0.5 text-[11px] opacity-80">{sub}</span>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Credibility chip, IM8 "Clinicians' Choice" style: a left/right split —
- * laurel-flanked credential label on the left, descriptive sentence on
- * the right, divided by a hairline. Tinted brand border + soft shadow.
- */
-function LaurelBadge({ eyebrow, body }: { eyebrow: string; body: string }) {
-  return (
-    <div className="mb-5 flex items-stretch gap-3 rounded-[14px] border border-[#1B2757]/25 bg-white px-3 py-2.5 shadow-[0_4px_18px_rgba(27,39,87,0.12)] md:w-fit">
-      {/* Left: laurel-flanked credential */}
-      <div className="flex flex-shrink-0 items-center gap-1.5 pr-3">
-        <div
-          className="relative h-9 w-3 flex-shrink-0 overflow-hidden"
-          aria-hidden="true"
-        >
-          <Image
-            src="/LaurelWreath.png"
-            alt=""
-            fill
-            sizes="32px"
-            style={{ objectFit: "cover", objectPosition: "left center" }}
-          />
-        </div>
-        <span className="max-w-[4.5rem] text-center text-[10px] font-bold uppercase leading-[1.15] tracking-[0.08em] text-[#1B2757]">
-          {eyebrow}
-        </span>
-        <div
-          className="relative h-9 w-3 flex-shrink-0 overflow-hidden"
-          aria-hidden="true"
-        >
-          <Image
-            src="/LaurelWreath.png"
-            alt=""
-            fill
-            sizes="32px"
-            style={{ objectFit: "cover", objectPosition: "right center" }}
-          />
-        </div>
-      </div>
-      {/* Right: descriptive body */}
-      <div className="flex items-center border-l border-black/10 pl-3 md:max-w-[20rem]">
-        <p className="text-[11px] font-medium leading-snug text-black/70">
-          {body}
-        </p>
       </div>
     </div>
   );
@@ -442,6 +374,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               <LaurelBadge
                 eyebrow={config.hero.laurel.eyebrow}
                 body={config.hero.laurel.body}
+                className="mb-5"
               />
             ) : null}
             <h1
@@ -470,20 +403,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               {config.hero.cta}
             </a>
             {config.hero.trustPills?.length ? (
-              <div className="flex flex-wrap justify-center gap-2">
-                {config.hero.trustPills.map((pill, i) => {
-                  const Icon = TRUST_PILL_ICONS[pill.icon];
-                  return (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-white px-3 py-2 text-[11px] font-semibold leading-tight text-black/75 shadow-[0_1px_6px_rgba(0,0,0,0.05)]"
-                    >
-                      <Icon className="h-4 w-4 flex-shrink-0 text-[#1B2757]" />
-                      {pill.label}
-                    </span>
-                  );
-                })}
-              </div>
+              <TrustChips chips={config.hero.trustPills} />
             ) : null}
           </div>
         </div>
