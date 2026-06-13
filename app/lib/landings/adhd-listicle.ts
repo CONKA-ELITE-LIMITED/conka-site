@@ -107,6 +107,8 @@ export const adhdListicle: ListicleConfig = {
     {
       // Hand-cropped excerpts (caffeine/crash theme), not the full bodies
       kind: "reviewStrip",
+      eyebrow: "What Customers Say",
+      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
       reviews: [
         {
           headline: "Performance without the burnout",

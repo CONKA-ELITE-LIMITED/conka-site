@@ -71,7 +71,14 @@ export type ListicleBodyBlock =
       stats: { value: string; label: string }[];
       footnote?: string;
     }
-  | { kind: "reviewStrip"; reviews: ListicleReview[] }
+  | {
+      kind: "reviewStrip";
+      /** Mono eyebrow above the strip (default "What Customers Say") */
+      eyebrow?: string;
+      /** Rating line under the strip (default "Rated 4.7 / 5 · 622+ reviews") */
+      ratingSummary?: string;
+      reviews: ListicleReview[];
+    }
   | {
       kind: "quoteBand";
       eyebrow: string;

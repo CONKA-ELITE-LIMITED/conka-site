@@ -225,18 +225,126 @@ function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
 
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
-    <div className="rounded-2xl bg-white p-6 text-[#111] shadow-sm">
-      <div className="mb-2 text-sm tracking-widest" style={{ color: "#F59E0B" }}>
+    <div className="rounded-2xl bg-white p-4 text-[#111] shadow-sm">
+      <div
+        className="mb-1.5 text-[13px] tracking-widest"
+        style={{ color: "#F59E0B" }}
+      >
         ★★★★★
       </div>
       {review.headline ? (
-        <p className="mb-1 text-sm font-semibold">{review.headline}</p>
+        <p className="mb-1 line-clamp-1 text-sm font-semibold">
+          {review.headline}
+        </p>
       ) : null}
-      <p className="mb-4 text-sm leading-relaxed">{review.quote}</p>
-      <div className="text-sm font-medium">{review.name}</div>
+      <p className="mb-3 line-clamp-3 text-[13px] leading-snug">
+        {review.quote}
+      </p>
+      <div className="text-[13px] font-medium">{review.name}</div>
       {review.detail ? (
-        <div className="text-xs opacity-60">{review.detail}</div>
+        <div className="text-[11px] opacity-60">{review.detail}</div>
       ) : null}
+    </div>
+  );
+}
+
+/** Circular nav button for the mobile review carousel */
+function CarouselArrow({
+  dir,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={dir === "prev" ? "Previous review" : "Next review"}
+      onClick={onClick}
+      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full border border-black/15 bg-white text-[#1B2757] shadow-sm transition active:scale-95"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        {dir === "prev" ? (
+          <polyline points="15 18 9 12 15 6" />
+        ) : (
+          <polyline points="9 18 15 12 9 6" />
+        )}
+      </svg>
+    </button>
+  );
+}
+
+/**
+ * Customer-review strip (IM8 "What Customers Say" band). Mobile shows one
+ * review at a time with flanking arrows + dots; desktop shows the full row.
+ * A tinted band + layered white cards distinguish it from the page.
+ */
+function ReviewStrip({
+  reviews,
+  eyebrow = "What Customers Say",
+  ratingSummary = "Rated 4.7 / 5 · 622+ reviews",
+}: {
+  reviews: ListicleReview[];
+  eyebrow?: string;
+  ratingSummary?: string;
+}) {
+  const [index, setIndex] = useState(0);
+  const count = reviews.length;
+  const go = (delta: number) => setIndex((i) => (i + delta + count) % count);
+
+  return (
+    <div
+      className="my-10 rounded-3xl px-4 py-6 md:px-10 md:py-8"
+      style={{ background: "var(--color-neuro-blue-light, #eeeff2)" }}
+    >
+      <div className="mb-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-black/55">
+        {eyebrow}
+      </div>
+
+      {/* Mobile: one review at a time, flanked by arrows */}
+      <div className="md:hidden">
+        <div className="flex items-stretch gap-2.5">
+          <CarouselArrow dir="prev" onClick={() => go(-1)} />
+          <div className="min-w-0 flex-1">
+            <ReviewCard review={reviews[index]} />
+          </div>
+          <CarouselArrow dir="next" onClick={() => go(1)} />
+        </div>
+        <div className="mt-3 flex justify-center gap-1.5">
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to review ${i + 1}`}
+              onClick={() => setIndex(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === index ? "w-5 bg-[#1B2757]" : "w-1.5 bg-black/20"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: full row of cards */}
+      <div className="hidden gap-4 md:grid md:grid-cols-3">
+        {reviews.map((r, i) => (
+          <ReviewCard key={i} review={r} />
+        ))}
+      </div>
+
+      {/* Rating summary */}
+      <div className="mt-5 flex flex-col items-center gap-1">
+        <span
+          aria-hidden
+          className="text-sm leading-none tracking-[0.1em]"
+          style={{ color: "#F59E0B" }}
+        >
+          ★★★★★
+        </span>
+        <span className="text-[13px] font-semibold text-black/75">
+          {ratingSummary}
+        </span>
+      </div>
     </div>
   );
 }
@@ -313,11 +421,11 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
 
   if (block.kind === "reviewStrip") {
     return (
-      <div className="my-10 grid gap-4 md:grid-cols-3">
-        {block.reviews.map((r, i) => (
-          <ReviewCard key={i} review={r} />
-        ))}
-      </div>
+      <ReviewStrip
+        reviews={block.reviews}
+        eyebrow={block.eyebrow}
+        ratingSummary={block.ratingSummary}
+      />
     );
   }
 
