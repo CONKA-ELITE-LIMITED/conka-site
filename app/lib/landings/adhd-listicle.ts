@@ -12,8 +12,8 @@ export const adhdListicle: ListicleConfig = {
   title: "6 Reasons ADHD Brains Love CONKA",
   hero: {
     laurel: {
-      eyebrow: "One of the World's Largest",
-      body: "Consumer brain research project. 1,000+ brains tested regularly through our app.",
+      eyebrow: "World's Largest",
+      body: "Consumer brain-research project. Trusted by 1,000+ ADHD brains, tested through our app.",
     },
     headline:
       "6 Reasons People With ADHD Say CONKA Finally Gets Them Started, Focused and Calm",
@@ -194,7 +194,7 @@ export const adhdListicle: ListicleConfig = {
     },
   ],
   stickyBar: {
-    label: "Two shots a day. Zero caffeine.",
+    label: "Stop fighting your brain.",
     cta: "Get started",
     sub: "100-day guarantee",
   },
