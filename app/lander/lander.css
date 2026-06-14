@@ -9,8 +9,7 @@ html:has(.conka-lander) {
 }
 
 .conka-lander {
-  /* ABC Favorit is added in app/layout.tsx via next/font/local — see INTEGRATION.md.
-     Reference its CSS var here (rename if you declared a different var). */
+  /* ABC Favorit is registered in app/layout.tsx via next/font/local (--font-abc-favorit). */
   font-family: var(--font-abc-favorit), 'ABC Favorit', system-ui, -apple-system, sans-serif;
   background: #fff;
   color: #1d1d1d;

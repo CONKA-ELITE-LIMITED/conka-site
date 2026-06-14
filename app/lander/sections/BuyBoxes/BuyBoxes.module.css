@@ -361,3 +361,10 @@
     margin-top: 16px;
   }
 }
+
+.checkoutError {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #b42318;
+}

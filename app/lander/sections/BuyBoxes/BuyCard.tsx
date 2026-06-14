@@ -63,6 +63,7 @@ export default function BuyCard({data}: {data: CardConfig}) {
   const [subscription, setSubscription] = useState(true);
   const [optionKey, setOptionKey] = useState(data.options?.[0]?.key ?? '');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const option = data.options?.find((o) => o.key === optionKey);
   const image = option?.image ?? data.image;
@@ -77,6 +78,7 @@ export default function BuyCard({data}: {data: CardConfig}) {
   async function handleCheckout() {
     if (!live?.variantId || loading) return;
     setLoading(true);
+    setError(false);
     try {
       await landerCheckout({
         variantId: live.variantId,
@@ -87,6 +89,7 @@ export default function BuyCard({data}: {data: CardConfig}) {
       });
     } catch (e) {
       console.error('Checkout failed', e);
+      setError(true);
       setLoading(false);
     }
   }
@@ -157,6 +160,12 @@ export default function BuyCard({data}: {data: CardConfig}) {
           >
             {loading ? 'Loading…' : isSub ? 'Start Now' : 'Buy Once'}
           </button>
+
+          {error && (
+            <p className={styles.checkoutError} role="alert">
+              Something went wrong. Please try again.
+            </p>
+          )}
 
           {isSub && (
             <div className={styles.bottomText}>
