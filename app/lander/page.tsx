@@ -14,7 +14,7 @@ import Reviews from './sections/Reviews/Reviews';
 import Measure from './sections/Measure/Measure';
 import Footer from './sections/Footer/Footer';
 
-import {shopifyFetchCached} from '@/app/lib/shopify';
+import {getOfferVariant, getOfferPricing, type FunnelProduct} from '@/app/lib/funnelData';
 
 export const metadata: Metadata = {
   title: 'CONKA — Brain Performance in a Shot',
@@ -24,85 +24,55 @@ export const metadata: Metadata = {
   robots: {index: false, follow: false},
 };
 
-// Revalidate product/price data periodically (ISR). Tune as you like.
-export const revalidate = 600;
+const money = (n: number) => '£' + n.toFixed(2);
+const perShot = (n: number) => '£' + n.toFixed(2) + '/shot';
 
-const BUY_QUERY = /* GraphQL */ `
-  fragment BuyVariant on ProductVariant {
-    id
-    title
-    availableForSale
-    price { amount currencyCode }
-    sellingPlanAllocations(first: 10) {
-      nodes {
-        sellingPlan { id name }
-        priceAdjustments { price { amount currencyCode } }
-      }
-    }
-  }
-  fragment BuyProduct on Product {
-    id
-    title
-    variants(first: 20) { nodes { ...BuyVariant } }
-  }
-  query ConkaLanderBuyBoxes {
-    bundle: product(handle: "conka-flow-clear") { ...BuyProduct }
-    flow: product(handle: "protocol-conka-balance-copy") { ...BuyProduct }
-    clear: product(handle: "conka-flow-copy") { ...BuyProduct }
-  }
-`;
+const CARD_TITLE: Record<FunnelProduct, string> = {
+  flow: 'CONKA Flow',
+  clear: 'CONKA Clear',
+  both: 'CONKA – Flow & Clear',
+};
 
-function money(m?: {amount: string} | null) {
-  return m ? '£' + Number(m.amount).toFixed(2) : null;
-}
+// Build one buy card from the canonical funnel catalogue (app/lib/funnelData.ts) —
+// the same variants, selling plans and prices the /funnel page sells. The lander
+// only offers monthly subscription + one-time for each product (no quarterly).
+function buildCard(product: FunnelProduct) {
+  const subVariant = getOfferVariant(product, 'monthly-sub');
+  const otpVariant = getOfferVariant(product, 'monthly-otp');
+  const subPricing = getOfferPricing(product, 'monthly-sub');
+  const otpPricing = getOfferPricing(product, 'monthly-otp');
 
-// Resolve one card's pricing/IDs from a live product + a target shot count.
-function shapeCard(product: any, shots: number) {
-  if (!product) return null;
-  const needle = `${shots} Shots`;
-  const v =
-    product.variants.nodes.find((x: any) => x.title.includes(needle)) ??
-    product.variants.nodes.find((x: any) => x.availableForSale) ??
-    product.variants.nodes[0];
-  if (!v) return null;
-
-  const allocs = v.sellingPlanAllocations?.nodes ?? [];
-  const monthly = allocs.find((a: any) => /month/i.test(a.sellingPlan?.name)) ?? allocs[0];
-  const subAmount = monthly?.priceAdjustments?.[0]?.price?.amount;
-  const oneAmount = v.price.amount;
+  // Monthly-sub and monthly-otp share the same Shopify variant; only the
+  // selling plan differs. Check out that variant directly so display == charge.
+  const variantId = subVariant?.variantId ?? otpVariant?.variantId ?? '';
 
   return {
-    title: product.title,
-    variantId: v.id,
-    available: v.availableForSale,
-    shots,
+    title: CARD_TITLE[product],
+    variantId,
+    available: Boolean(variantId),
     // `amount` (numeric) feeds checkout analytics; `price` (string) is for display.
-    oneTime: {price: money(v.price), perShot: '£' + (Number(oneAmount) / shots).toFixed(2) + '/shot', amount: Number(oneAmount)},
-    subscription: monthly
+    oneTime: {
+      price: money(otpPricing.price),
+      perShot: perShot(otpPricing.perShot),
+      amount: otpPricing.price,
+    },
+    subscription: subVariant
       ? {
-          sellingPlanId: monthly.sellingPlan.id,
-          price: money(monthly.priceAdjustments[0].price),
-          perShot: '£' + (Number(subAmount) / shots).toFixed(2) + '/shot',
-          strike: money(v.price),
-          amount: Number(subAmount),
+          sellingPlanId: subVariant.sellingPlanId,
+          price: money(subPricing.price),
+          perShot: perShot(subPricing.perShot),
+          strike: subPricing.compareAtPrice ? money(subPricing.compareAtPrice) : null,
+          amount: subPricing.price,
         }
       : null,
   };
 }
 
-export default async function LanderPage() {
-  // shopifyFetchCached(query, variables?, ttl?) returns { data, errors }.
-  const result = await shopifyFetchCached<{
-    bundle: unknown;
-    flow: unknown;
-    clear: unknown;
-  }>(BUY_QUERY);
-  const gql = (result?.data ?? {}) as Record<string, unknown>;
-
+export default function LanderPage() {
   const buy = {
-    bundle: shapeCard(gql.bundle, 56),
-    flow: shapeCard(gql.flow, 28),
-    clear: shapeCard(gql.clear, 28),
+    bundle: buildCard('both'),
+    flow: buildCard('flow'),
+    clear: buildCard('clear'),
   };
 
   return (
