@@ -12,6 +12,7 @@ import Testimonials from './sections/Testimonials/Testimonials';
 import ResearchPartners from './sections/ResearchPartners/ResearchPartners';
 import Reviews from './sections/Reviews/Reviews';
 import Measure from './sections/Measure/Measure';
+import FAQ from './sections/FAQ/FAQ';
 import Footer from './sections/Footer/Footer';
 
 import {getOfferVariant, getOfferPricing, type FunnelProduct} from '@/app/lib/funnelData';
@@ -85,9 +86,14 @@ export default function LanderPage() {
       <BuyBoxes data={buy} />
       <CrashChart />
       <Testimonials />
-      <ResearchPartners />
-      <Reviews />
+      <div id="partners">
+        <ResearchPartners />
+      </div>
+      <div id="reviews">
+        <Reviews />
+      </div>
       <Measure />
+      <FAQ />
       <Footer />
     </div>
   );

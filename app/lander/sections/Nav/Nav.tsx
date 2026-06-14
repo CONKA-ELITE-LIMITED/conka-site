@@ -14,18 +14,19 @@
  */
 
 import { useState } from 'react';
+import Link from 'next/link';
 import styles from './Nav.module.css';
 
 const PRODUCTS = [
-  { title: 'FLOW', desc: 'Morning focus & energy', href: '/products/flow', img: '/lander/FlowNew.jpg' },
-  { title: 'CLEAR', desc: 'Afternoon clarity & brain recovery', href: '/products/clear', img: '/lander/ClearNew.jpg' },
-  { title: 'BOTH', desc: 'The full daily system', href: '/products/both', img: '/lander/BothHero.jpg' },
+  { title: 'FLOW', desc: 'Morning focus & energy', href: '/conka-flow', img: '/lander/FlowNew.jpg' },
+  { title: 'CLEAR', desc: 'Afternoon clarity & brain recovery', href: '/conka-clarity', img: '/lander/ClearNew.jpg' },
+  { title: 'BOTH', desc: 'The full daily system', href: '/conka-both', img: '/lander/BothHero.jpg' },
 ];
 const LINKS = [
-  { label: 'Reviews', href: '/pages/reviews' },
-  { label: 'Science', href: '/pages/science' },
-  { label: 'Our Partners', href: '/pages/partners' },
-  { label: 'About Us', href: '/pages/about' },
+  { label: 'Reviews', href: '#reviews' },
+  { label: 'Science', href: '/science' },
+  { label: 'Our Partners', href: '#partners' },
+  { label: 'About Us', href: '/our-story' },
 ];
 
 const Chevron = () => (
@@ -59,7 +60,7 @@ export default function Nav({ onCartClick }: NavProps) {
       <div className={styles.announce}>
         <p className={styles.announceCopy}>
           <b>Limited-Time Offer!</b> Subscribe to claim 31% off + free delivery
-          <a className={styles.announceLink} href="/pages/cyc">
+          <a className={styles.announceLink} href="#purchase-section">
             &nbsp;Get Now
             <Chevron />
           </a>
@@ -77,9 +78,9 @@ export default function Nav({ onCartClick }: NavProps) {
             </span>
             <span className={styles.menuText}>MENU</span>
           </button>
-          <a className={styles.logo} href="/" aria-label="CONKA home">
+          <Link className={styles.logo} href="/" aria-label="CONKA home">
             <img src="/lander/conka-logo.webp" alt="CONKA logo" width={121} height={32} />
-          </a>
+          </Link>
           <button className={styles.iconBtn} aria-label="Cart" onClick={handleCart}>
             <CartIcon />
           </button>
@@ -91,9 +92,9 @@ export default function Nav({ onCartClick }: NavProps) {
           onMouseLeave={() => setMegaOpen(false)}
         >
           <div className={styles.topBar}>
-            <a className={styles.logo} href="/" aria-label="CONKA home">
+            <Link className={styles.logo} href="/" aria-label="CONKA home">
               <img src="/lander/conka-logo.webp" alt="CONKA logo" width={121} height={32} />
-            </a>
+            </Link>
             <div className={styles.userNav}>
               <a href="/account/login">Login</a>
               <a href="#" onClick={(e) => { e.preventDefault(); handleCart(); }} aria-label="Cart">
@@ -130,7 +131,7 @@ export default function Nav({ onCartClick }: NavProps) {
                   ))}
                 </div>
                 <div className={styles.shopAll}>
-                  <a className={styles.shopAllLink} href="/collections/shop-all">Shop All</a>
+                  <a className={styles.shopAllLink} href="/funnel">Shop All</a>
                 </div>
               </div>
             </div>

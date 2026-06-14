@@ -13,28 +13,28 @@ const COLUMNS = [
   {
     title: 'Shop',
     links: [
-      { label: 'FLOW', href: '/products/flow' },
-      { label: 'CLEAR', href: '/products/clear' },
-      { label: 'Flow + Clear', href: '/products/both' },
-      { label: 'Shop All', href: '/products/both' },
+      { label: 'FLOW', href: '/conka-flow' },
+      { label: 'CLEAR', href: '/conka-clarity' },
+      { label: 'Flow + Clear', href: '/conka-both' },
+      { label: 'Shop All', href: '/funnel' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { label: 'Science', href: '/pages/science' },
-      { label: 'Our Partners', href: '/pages/partners' },
-      { label: 'About Us', href: '/pages/about' },
-      { label: 'Reviews', href: '/pages/reviews' },
+      { label: 'Science', href: '/science' },
+      { label: 'Our Partners', href: '#partners' },
+      { label: 'About Us', href: '/our-story' },
+      { label: 'Reviews', href: '#reviews' },
     ],
   },
   {
     title: 'Support',
     links: [
-      { label: 'Contact Us', href: '/pages/contact' },
-      { label: 'FAQ', href: '/pages/faq' },
-      { label: 'Shipping & Returns', href: '/pages/shipping' },
-      { label: 'Manage Subscription', href: '/pages/subscription' },
+      { label: 'Contact Us', href: 'mailto:info@conka.io' },
+      { label: 'FAQ', href: '#faq' },
+      { label: 'Shipping & Returns', href: '/shipping' },
+      { label: 'Manage Subscription', href: '/account/subscriptions' },
     ],
   },
 ];
