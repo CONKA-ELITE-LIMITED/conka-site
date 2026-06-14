@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-14** | Add productivity and brain-ageing persona listicle pages (/go/productivity-listicle, /go/brain-ageing-listicle) on the existing listicle framework
 - **2026-06-13** | Listicle review strip becomes a compact one-at-a-time arrow carousel on mobile (band, eyebrow, dots, rating line), full row on desktop
 - **2026-06-13** | Home hero gets the brain-project badge and listicle trust chips, smaller avatar row above the CTA, and a simplified rectangular CTA button
 - **2026-06-13** | ADHD listicle hero trust row: distinct icon mini-chips per item instead of uniform ticks
