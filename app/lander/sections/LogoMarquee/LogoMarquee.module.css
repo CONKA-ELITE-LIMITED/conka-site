@@ -1,0 +1,51 @@
+/* CONKA — "Fueling High Performers at:" scrolling partner-logo marquee.
+   Two identical groups loop seamlessly via translateX(-50%). Values from the
+   prototype (gap 56 mobile / 90 desktop, 40s loop, per-logo heights inline). */
+
+.section {
+  padding: 48px 0;
+  text-align: center;
+}
+.title {
+  font-weight: 500;
+  font-size: 16.64px;
+  line-height: 24px;
+  letter-spacing: -0.17px;
+  color: #7c7d7c;
+  text-align: center;
+  margin: 0 0 30px;
+}
+.marquee {
+  overflow: hidden;
+}
+.inner {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.group {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  padding-right: 56px;
+}
+.group img {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1000px) {
+  .group {
+    gap: 90px;
+    padding-right: 90px;
+  }
+}

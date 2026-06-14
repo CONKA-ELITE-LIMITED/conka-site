@@ -1,0 +1,149 @@
+/* CONKA — site footer. White, Ketone-style accordion columns.
+   Uses native <details> + CSS [open] for the +/- toggle — no JS required. */
+
+.footer {
+  background: #fff;
+  color: #1d1d1d;
+  padding: 44px 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  margin: 0 32px 26px;
+}
+.cols {
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
+}
+.sec {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+}
+.sec summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15.6px;
+  letter-spacing: -0.16px;
+  color: #1d1d1d;
+}
+.sec summary::-webkit-details-marker {
+  display: none;
+}
+.pm {
+  font-size: 20.8px;
+  letter-spacing: -0.21px;
+  color: #999;
+  line-height: 1;
+  font-weight: 100;
+}
+.sec[open] summary .pmPlus {
+  display: none;
+}
+.sec summary .pmMinus {
+  display: none;
+}
+.sec[open] summary .pmMinus {
+  display: inline;
+}
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 2px 32px 22px;
+}
+.links a {
+  font-weight: 100;
+  font-size: 14.56px;
+  letter-spacing: -0.15px;
+  color: #666;
+  text-decoration: none;
+}
+.links a:hover {
+  color: #1d1d1d;
+}
+.contact {
+  padding: 26px 32px 4px;
+}
+.addr {
+  font-weight: 100;
+  font-size: 13.52px;
+  letter-spacing: -0.14px;
+  line-height: 20px;
+  color: #666;
+  margin: 0 0 14px;
+}
+.addr b {
+  font-weight: 500;
+  color: #1d1d1d;
+}
+.contactLine {
+  font-weight: 100;
+  font-size: 14.56px;
+  letter-spacing: -0.15px;
+  color: #666;
+  margin: 0 0 16px;
+}
+.contactLine a {
+  font-weight: 500;
+  color: #1d1d1d;
+  text-decoration: none;
+}
+.social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14.56px;
+  letter-spacing: -0.15px;
+  color: #1d1d1d;
+  text-decoration: none;
+}
+.social svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+.bottom {
+  margin-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
+  padding: 22px 32px 30px;
+}
+.disclaimer {
+  font-weight: 100;
+  font-size: 11.44px;
+  letter-spacing: -0.11px;
+  line-height: 17px;
+  color: #9a9a9a;
+  margin: 0 0 12px;
+}
+.copy {
+  font-weight: 100;
+  font-size: 11.96px;
+  letter-spacing: -0.12px;
+  line-height: 17px;
+  color: #8a8a8a;
+  margin: 0;
+}
+.copy b {
+  font-weight: 500;
+  color: #666;
+}
+
+@media (min-width: 1000px) {
+  .footer { padding-top: 56px; text-align: center; }
+  .logo { margin-left: auto; margin-right: auto; height: 40px; }
+  .cols { max-width: 680px; margin-left: auto; margin-right: auto; }
+  .contact { max-width: 680px; margin: 8px auto 0; }
+  .social { justify-content: center; }
+  .bottom { max-width: 680px; margin: 32px auto 0; }
+}

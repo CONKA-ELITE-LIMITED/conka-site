@@ -1,0 +1,370 @@
+/* CONKA — Buy boxes. Rebuilt to match the prototype EXACTLY
+   (Ketone `product-card-v3` + the conka mobile + conka-desktop overrides).
+   Values cross-referenced against the live prototype's computed styles. */
+
+.section {
+  background: #f7f7f7;
+  padding: 48px 0 38px;
+}
+.inner {
+  padding: 0 36px; /* prototype content width 320 in a 393 viewport */
+}
+
+/* Section intro (left column on desktop) */
+.headerTitle {
+  font-weight: 850;
+  font-size: 41.6px;
+  line-height: 36px;
+  letter-spacing: -2.42px;
+  color: #313131;
+  margin: 0 0 10px;
+}
+.subhead {
+  display: inline-block;
+  font-weight: 500;
+  font-size: 18.72px;
+  line-height: 25px;
+  color: #313131;
+  margin: 0;
+}
+
+/* Auto-applied discount banner */
+.promo {
+  background: #fff;
+  border: 1px solid #313131;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 16.64px;
+  line-height: 22px;
+  color: #313131;
+  margin: 16px 0 0;
+}
+.promo b {
+  font-weight: 850;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+.card {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Flow/Clear switch (single card) */
+.singleToggle {
+  display: flex;
+  background: #f0efea;
+  border-radius: 999px;
+  padding: 5px;
+  gap: 4px;
+}
+.singleTab {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 12px 8px;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 15px;
+  color: #6b6b6b;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+.singleTabActive {
+  background: #1b2757;
+  color: #fff;
+}
+
+/* Card header — flex column, 4px gap, centred (prototype exact) */
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+.title {
+  font-weight: 500;
+  font-size: 20.8px;
+  line-height: 28px;
+  letter-spacing: -0.21px;
+  color: #313131;
+  margin: 0;
+}
+.priceBig {
+  font-weight: 850;
+  font-size: 41.6px;
+  line-height: 36px;
+  letter-spacing: -2.42px;
+  color: #1b2757;
+  margin: 0;
+}
+.priceSmall {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 16.64px;
+  line-height: 24px;
+  color: #313131;
+  margin: 0;
+}
+.strike {
+  color: #bcbcbc;
+  text-decoration: line-through;
+}
+.sep {
+  color: #cfcfcf;
+}
+.desc {
+  font-weight: 400;
+  font-size: 16.64px;
+  line-height: 24px;
+  letter-spacing: -0.17px;
+  color: #313131;
+  margin: 0;
+}
+
+/* Bottom section wraps offer + CTA + guarantee (12px rhythm) */
+.bottomSection {
+  display: block;
+}
+
+/* Subscribe & Save offer card */
+.offerCard {
+  background: #fff;
+  border: 1px solid rgba(27, 39, 87, 0.16);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 1px 4px rgba(20, 30, 60, 0.05);
+}
+.checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0; /* guard against Hydrogen reset.css input{padding} */
+  border: 1px solid #313131;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  background: transparent;
+}
+.checkbox::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 5px;
+  height: 10px;
+  border-right: 2.5px solid #313131;
+  border-bottom: 2.5px solid #313131;
+  transform: translate(-50%, -50%) rotate(45deg);
+  opacity: 0;
+}
+.checkbox:checked::after {
+  opacity: 1;
+}
+.offerContent {
+  flex: 1;
+  min-width: 0;
+}
+.offerHead {
+  display: block;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  color: #1b2757;
+}
+.offerLine {
+  display: block;
+  font-weight: 100;
+  font-size: 13px;
+  line-height: 18px;
+  color: #555;
+  margin-top: 2px;
+}
+.offerSub {
+  display: block;
+  font-weight: 100;
+  font-size: 11px;
+  line-height: 15px;
+  color: #9a9a9a;
+  margin-top: 5px;
+}
+.offerIcon {
+  flex: 0 0 auto;
+  color: #1b2757;
+  display: flex;
+}
+
+/* CTA — 1px border; green (subscribe) vs white/dark (one-time) */
+.cta {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 12px;
+  border: 1px solid #6bd37b;
+  border-radius: 32px;
+  padding: 19px 31px;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 16.64px;
+  letter-spacing: -0.17px;
+  text-align: center;
+  cursor: pointer;
+  background: #6bd37b;
+  color: #fff;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ctaOnce {
+  background: #fff;
+  border-color: #1d1d1d;
+  color: #1d1d1d;
+}
+
+.bottomText {
+  margin-top: 12px;
+  text-align: center;
+}
+.bottomText p {
+  font-size: 12.48px;
+  line-height: 16px;
+  color: #313131;
+  margin: 0;
+}
+
+/* Trust strip */
+.trust {
+  display: flex;
+  align-items: flex-start;
+  margin: 28px 0 0;
+}
+.trustDesktop {
+  display: none;
+}
+.trustItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 4px 6px;
+  text-align: center;
+}
+.trustMedia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+}
+.trustIcon {
+  color: #1b2757;
+}
+.trustIcon svg {
+  width: 26px;
+  height: 26px;
+}
+.trustLogo {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+}
+.trustLabel {
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 13px;
+  letter-spacing: 0.05em;
+  color: #6b6b6b;
+  text-transform: uppercase;
+}
+
+/* ---- Desktop: two columns (intro+trust left, cards right), 960 centred ---- */
+@media (min-width: 1000px) {
+  .promo {
+    width: fit-content;
+    max-width: 92%;
+    margin: 0 auto;
+  }
+  .body {
+    max-width: 960px;
+    margin: 24px auto 0;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  .intro {
+    flex: 0 0 288px;
+  }
+  .cards {
+    flex: 1;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 0;
+  }
+  /* Trust re-parented into the left column as a 2×2 grid */
+  .trustMobile {
+    display: none;
+  }
+  .trustDesktop {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 8px;
+    margin: 26px 0 0;
+  }
+  .trustDesktop .trustItem {
+    flex: none;
+  }
+  /* Single card: Flow/Clear toggle moves below the header */
+  .single .cardHeader {
+    order: 1;
+  }
+  .single .singleToggle {
+    order: 2;
+    margin-top: 16px;
+  }
+  .single .bottomSection {
+    order: 3;
+    margin-top: 16px;
+  }
+}
+
+.checkoutError {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #b42318;
+}

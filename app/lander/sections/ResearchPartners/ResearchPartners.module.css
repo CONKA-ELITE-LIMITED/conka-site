@@ -1,0 +1,70 @@
+/* CONKA — "World-Class Research" partner band.
+   Full-bleed background photo with a navy gradient scrim + university chips. */
+
+.section {
+  position: relative;
+  background-image: var(--research-bg, url('/lander/research-bg.jpg'));
+  background-size: cover;
+  background-position: center;
+}
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 18, 32, 0.6) 0%,
+    rgba(13, 18, 32, 0.52) 50%,
+    rgba(13, 18, 32, 0.64) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 64px 45px;
+}
+.title {
+  text-align: center;
+  font-weight: 850;
+  font-size: 41.6px;
+  line-height: 36px;
+  letter-spacing: -2.42px;
+  color: #fff;
+  margin: 0;
+}
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  max-width: 360px;
+  margin: 28px auto 0;
+}
+.chip {
+  flex: 0 0 calc(50% - 7px);
+  box-sizing: border-box;
+  min-height: 134px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px rgba(10, 15, 30, 0.24);
+}
+.chip img {
+  max-height: 84px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 1000px) {
+  .section { display: flex; align-items: center; }
+  .content { max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%; }
+  .logos { max-width: 780px; }
+  .chip { flex: 0 0 calc(33.333% - 10px); min-height: 150px; }
+}

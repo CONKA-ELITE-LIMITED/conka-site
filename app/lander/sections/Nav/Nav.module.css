@@ -1,0 +1,312 @@
+/* CONKA — announcement bar + header (nav). Cross-referenced to prototype
+   computed styles (incl. ×1.04 type scale). Mobile: burger / logo / cart +
+   slide-out menu. Desktop (≥1000px): two-row header + Shop mega-menu. */
+
+/* Announcement bar */
+.announce {
+  background: #f7f7f7;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 16px;
+  box-sizing: border-box;
+}
+.announceCopy {
+  font-weight: 100;
+  font-size: 16.64px;
+  line-height: 24px;
+  letter-spacing: -0.17px;
+  color: #313131;
+  margin: 0;
+}
+.announceCopy b {
+  font-weight: 700;
+}
+.announceLink {
+  color: #1b2757;
+  font-weight: 500;
+  font-size: 16.64px;
+  letter-spacing: -0.17px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.announceLink svg {
+  width: 20px;
+  height: 20px;
+}
+.announceLink svg path {
+  stroke: #1b2757;
+}
+
+/* Header shell */
+.header {
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+
+/* Mobile bar */
+.mobileBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 32px;
+}
+.burger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.burgerIcon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.burgerIcon span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #313131;
+}
+.menuText {
+  font-weight: 500;
+  font-size: 10.4px;
+  letter-spacing: -0.1px;
+  color: #313131;
+}
+.logo {
+  display: inline-flex;
+}
+.logo img {
+  width: 121px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
+.iconBtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #313131;
+  display: flex;
+}
+.iconBtn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Desktop nav (hidden on mobile) */
+.desktopNav {
+  display: none;
+}
+
+/* Mobile slide-out menu */
+.mobileMenu {
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+}
+.mobileMenuOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 18, 28, 0.45);
+}
+.mobileMenuPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 84%;
+  max-width: 360px;
+  background: #fff;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+.mobileMenuClose {
+  align-self: flex-end;
+  background: #f0efea;
+  border: 0;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  line-height: 1;
+  color: #1d1d1d;
+  cursor: pointer;
+}
+.mobileProducts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mobileProduct {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+.mobileProduct img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f6f5f2;
+  flex: 0 0 auto;
+}
+.mobileProduct b {
+  display: block;
+  font-weight: 500;
+  font-size: 16.64px;
+  color: #313131;
+}
+.mobileProduct span span {
+  font-weight: 100;
+  font-size: 14.56px;
+  color: #7c7d7c;
+}
+.mobileLinks {
+  display: flex;
+  flex-direction: column;
+}
+.mobileLinks a {
+  display: block;
+  padding: 14px 0;
+  font-weight: 500;
+  font-size: 16.64px;
+  letter-spacing: -0.17px;
+  color: #313131;
+  text-decoration: none;
+  border-top: 1px solid #eee;
+}
+
+@media (min-width: 1000px) {
+  .mobileBar {
+    display: none;
+  }
+  .desktopNav {
+    display: block;
+  }
+  .topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 47px;
+    padding: 0 32px;
+  }
+  .userNav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .userNav a {
+    font-weight: 500;
+    font-size: 16.64px;
+    letter-spacing: -0.17px;
+    color: #313131;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .userNav svg {
+    width: 22px;
+    height: 22px;
+  }
+  .centeredBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    height: 48px;
+  }
+  .navLink {
+    font-weight: 500;
+    font-size: 16.64px;
+    letter-spacing: -0.17px;
+    color: #7c7d7c;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .navLink svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* Mega-menu dropdown */
+  .dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: #fff;
+    border-top: 1px solid #ccc;
+    box-shadow: 0 15px 30px -30px #313131;
+    z-index: 50;
+  }
+  .ddInner {
+    max-width: 1044px;
+    margin: 0 auto;
+    padding: 24px 48px;
+  }
+  .ddCols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .ddItem {
+    text-decoration: none;
+    color: inherit;
+  }
+  .ddItem img {
+    width: 100%;
+    height: 178px;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+  }
+  .ddTitle {
+    font-weight: 500;
+    font-size: 16.64px;
+    color: #313131;
+    margin: 8px 0 2px;
+  }
+  .ddDesc {
+    font-weight: 100;
+    font-size: 14.56px;
+    color: #7c7d7c;
+    margin: 0;
+  }
+  .shopAll {
+    padding: 8px 48px 4px;
+  }
+  .shopAllLink {
+    font-weight: 500;
+    font-size: 16.64px;
+    color: #1b2757;
+    text-decoration: none;
+  }
+}
