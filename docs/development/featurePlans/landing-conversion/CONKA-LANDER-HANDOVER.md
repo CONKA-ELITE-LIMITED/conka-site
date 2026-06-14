@@ -151,3 +151,32 @@ branch → Vercel preview → review → merge. Products/prices change in **Shop
 
 Questions on intent/design → product owner. The page was prototyped + tested in a Hydrogen
 reference build, then ported to this Next package; behaviour should match that reference.
+
+---
+
+## As-built integration notes (SCRUM-1086, 2026-06-14)
+
+What actually shipped differs from the handover's assumptions in a few places. For
+future readers, the source of truth is the code; this records the why.
+
+- **Products come from `funnelData`, not a live handle query.** The handover fetched
+  three products live by handle (`conka-flow-clear`, `protocol-conka-balance-copy`,
+  `conka-flow-copy` — the last two were `-copy` test duplicates). `app/lander/page.tsx`
+  now builds the buy boxes from `app/lib/funnelData.ts` (the same catalogue `/funnel`
+  uses): flow / clear / both, monthly-sub + monthly-otp only (no quarterly). One source
+  of pricing truth; display always matches charge. To change prices, edit `funnelData.ts`.
+- **Checkout uses our `/api/cart` with the displayed variant, not `funnelCheckout()`.**
+  The handover "recommended" `funnelCheckout()`, but that helper re-resolves its own
+  variant from `funnelData` and ignores a passed one — a display/charge mismatch risk.
+  `lander-checkout.ts` posts the displayed variant to `/api/cart` and fires our Meta /
+  Triple Whale / Vercel analytics directly (source `lander_page`), plus
+  `buildMetaCartAttributes()` for `_fbp/_fbc` attribution.
+- **Shopify import + call shape fixed:** `@/app/lib/shopify`, `shopifyFetchCached(query)`
+  (string arg) — though the live fetch is now gone, see above.
+- **ABC Favorit** registered in `app/layout.tsx` (`--font-abc-favorit`). Web-font license
+  clearance still owed before public launch.
+- **`/lander` is `noindex, nofollow`** (matches `/go/[slug]`).
+- **Removed** the extracted package folder + zip after integrating (they were duplicates
+  and broke the build via stale TypeScript).
+- **Outstanding:** Nav + Footer links still point at Hydrogen routes (`/products/*`,
+  `/pages/*`) and need remapping to our real routes; some destinations do not exist yet.
