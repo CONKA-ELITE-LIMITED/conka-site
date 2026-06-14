@@ -131,7 +131,7 @@ export const brainAgeingListicle: ListicleConfig = {
         {
           headline: "Measurable improvements",
           quote:
-            "I am noticing measurable improvements in my tasks, and the 2-minute test lets me track it over time.",
+            "After trying both Flow and Clear, I am noticing measurable improvements.",
           name: "Ankita K.",
           detail: "Verified · Flow + Clear",
         },

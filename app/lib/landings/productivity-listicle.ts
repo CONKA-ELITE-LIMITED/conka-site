@@ -119,7 +119,7 @@ export const productivityListicle: ListicleConfig = {
         {
           headline: "Capacity left for the evenings",
           quote:
-            "I take something after work, lock back in for the side hustle, and still sleep well. Sharper on client work all day.",
+            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
           name: "Sam J.",
           detail: "Verified · Flow + Clear",
         },
