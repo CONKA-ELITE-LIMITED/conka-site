@@ -10,6 +10,8 @@ import { quizTemplate } from "./quiz-template";
 import { brainAgeQuiz } from "./brain-age";
 import { listicleTemplate } from "./listicle-template";
 import { adhdListicle } from "./adhd-listicle";
+import { productivityListicle } from "./productivity-listicle";
+import { brainAgeingListicle } from "./brain-ageing-listicle";
 
 /** Any landing page config; narrow on `format` to render */
 export type AnyLandingConfig = LandingConfig | ListicleConfig;
@@ -19,6 +21,8 @@ const registry: Record<string, AnyLandingConfig> = {
   [brainAgeQuiz.slug]: brainAgeQuiz,
   [listicleTemplate.slug]: listicleTemplate,
   [adhdListicle.slug]: adhdListicle,
+  [productivityListicle.slug]: productivityListicle,
+  [brainAgeingListicle.slug]: brainAgeingListicle,
 };
 
 export const landingSlugs = Object.keys(registry);
