@@ -1,0 +1,25 @@
+/* CONKA lander — page-level styles.
+   Imported by app/lander/page.tsx. Scoped to the lander via the .conka-lander
+   wrapper + :has() so it doesn't affect the rest of conka.io. */
+
+/* Smooth-scroll only on pages that contain the lander (hero CTA / Join button /
+   cart icon all anchor to #purchase-section). */
+html:has(.conka-lander) {
+  scroll-behavior: smooth;
+}
+
+.conka-lander {
+  /* ABC Favorit is added in app/layout.tsx via next/font/local — see INTEGRATION.md.
+     Reference its CSS var here (rename if you declared a different var). */
+  font-family: var(--font-abc-favorit), 'ABC Favorit', system-ui, -apple-system, sans-serif;
+  background: #fff;
+  color: #1d1d1d;
+}
+
+/* The lander assumes border-box (Tailwind v4 preflight already sets this
+   globally, but declare it for safety in case preflight is scoped). */
+.conka-lander *,
+.conka-lander *::before,
+.conka-lander *::after {
+  box-sizing: border-box;
+}

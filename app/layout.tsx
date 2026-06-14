@@ -49,6 +49,20 @@ const jetBrainsMono = localFont({
   display: "swap",
 });
 
+/* ABC Favorit: scoped to the standalone /lander page (via --font-abc-favorit). */
+const abcFavorit = localFont({
+  variable: "--font-abc-favorit",
+  src: [
+    { path: "./fonts/ABCFavorit/ABCFavorit-Regular.otf", weight: "400", style: "normal" },
+    { path: "./fonts/ABCFavorit/ABCFavorit-RegularItalic.otf", weight: "400", style: "italic" },
+    { path: "./fonts/ABCFavorit/ABCFavorit-Medium.otf", weight: "500", style: "normal" },
+    { path: "./fonts/ABCFavorit/ABCFavorit-MediumItalic.otf", weight: "500", style: "italic" },
+    { path: "./fonts/ABCFavorit/ABCFavorit-Bold.otf", weight: "700", style: "normal" },
+    { path: "./fonts/ABCFavorit/ABCFavorit-BoldItalic.otf", weight: "700", style: "italic" },
+  ],
+  display: "swap",
+});
+
 export const viewport: Viewport = {
   viewportFit: "cover",
 };
@@ -155,7 +169,7 @@ export default function RootLayout({
         */}
       </head>
       <body
-        className={`${neueHaas.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${neueHaas.variable} ${jetBrainsMono.variable} ${abcFavorit.variable} antialiased`}
       >
         <MetaPageViewTracker />
         <ConvexClientProvider>
