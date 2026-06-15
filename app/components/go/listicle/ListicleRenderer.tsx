@@ -17,6 +17,7 @@ import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarou
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import { ValueComparisonChart } from "@/app/components/landing/LandingValueComparison";
 import CrashChart from "@/app/components/landing/CrashChart";
+import AppMeasureSection from "@/app/components/landing/AppMeasureSection";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -674,6 +675,19 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             <div className="mt-10">
               <LandingTrustBadges />
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Zone 6b: app proof — "we measure it" (renders only if configured) */}
+      {config.appSection ? (
+        <section
+          aria-label="Measure it with the app"
+          className="px-5 py-16 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <AppMeasureSection />
           </div>
         </section>
       ) : null}

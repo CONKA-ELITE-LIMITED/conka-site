@@ -134,6 +134,8 @@ export interface ListicleConfig {
   trustCarousel?: boolean;
   /** Renders the shared CROTestimonials carousel + LandingTrustBadges */
   reviewsCarousel?: boolean;
+  /** Renders the app proof section (cognitive score count-up, steps, guarantee) */
+  appSection?: boolean;
   /** Deferred from v1 until competitor numbers are sourced; omit to skip */
   comparison?: {
     eyebrow: string;

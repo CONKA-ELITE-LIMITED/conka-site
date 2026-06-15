@@ -173,6 +173,7 @@ export const brainAgeingListicle: ListicleConfig = {
   },
   trustCarousel: true,
   reviewsCarousel: true,
+  appSection: true,
   faq: [
     {
       q: "Is CONKA a medicine or a treatment for cognitive decline?",

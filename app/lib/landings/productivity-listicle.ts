@@ -168,6 +168,7 @@ export const productivityListicle: ListicleConfig = {
   },
   trustCarousel: true,
   reviewsCarousel: true,
+  appSection: true,
   faq: [
     {
       q: "Does CONKA contain caffeine?",

@@ -173,6 +173,7 @@ export const adhdListicle: ListicleConfig = {
   },
   trustCarousel: true,
   reviewsCarousel: true,
+  appSection: true,
   faq: [
     {
       q: "Does CONKA contain caffeine or other stimulants?",
