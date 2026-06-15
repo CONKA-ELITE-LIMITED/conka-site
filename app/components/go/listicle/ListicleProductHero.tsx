@@ -297,14 +297,14 @@ function PlanSelector({
                 <span className="text-sm font-semibold text-black/55">/mo</span>
               </div>
               <div className="mt-2 flex items-center justify-between gap-2">
-                <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black/45">
+                <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black">
                   {formatPrice(pricing.price)} every {weeksPerCycle} weeks
                 </span>
                 <span className="font-mono text-[11px] font-bold uppercase tabular-nums tracking-[0.08em] text-black">
                   {formatPrice(pricing.perShot)} / shot
                 </span>
               </div>
-              <p className="mt-1.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-black/40">
+              <p className="mt-1.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-black">
                 {pricing.shotCount} shots · 2 a day
               </p>
             </button>
