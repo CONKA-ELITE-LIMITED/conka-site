@@ -1,8 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
 import { formatPrice } from "@/app/lib/productData";
+import {
+  TrustIconGuarantee,
+  TrustIconShipping,
+  TrustIconCancel,
+} from "@/app/components/landing/icons";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
@@ -367,6 +371,101 @@ function TrustStrip() {
   );
 }
 
+/** 3-icon reassurance bar shown directly under the CTA (IM8 pattern). */
+function TrustBar() {
+  const items = [
+    { Icon: TrustIconGuarantee, label: "100-day guarantee" },
+    { Icon: TrustIconShipping, label: "Free UK shipping" },
+    { Icon: TrustIconCancel, label: "Cancel anytime" },
+  ];
+  return (
+    <div className="mt-3 grid grid-cols-3 gap-2 border-y border-black/10 py-3">
+      {items.map(({ Icon, label }) => (
+        <div
+          key={label}
+          className="flex flex-col items-center gap-1.5 text-center"
+        >
+          <Icon className="h-5 w-5 text-[#1B2757]" />
+          <span className="text-[11px] font-semibold leading-tight text-black/70">
+            {label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** "What You'll Feel" outcomes — IM8 gradient-chip rows, our verified stats. */
+const FEEL_OUTCOMES = [
+  {
+    emoji: "🧠",
+    title: "Sharper thinking",
+    desc: "Proven against placebo",
+    pct: "+14.86%",
+    grad: "linear-gradient(135deg,#FFF8E1,#FFECB3)",
+  },
+  {
+    emoji: "📈",
+    title: "Higher scores",
+    desc: "Improved cognitive scores",
+    pct: "80%",
+    grad: "linear-gradient(135deg,#E8F5E9,#C8E6C9)",
+  },
+  {
+    emoji: "🎯",
+    title: "Sharper focus",
+    desc: "In professional athletes",
+    pct: "+19.3%",
+    grad: "linear-gradient(135deg,#E3F2FD,#BBDEFB)",
+  },
+  {
+    emoji: "⚡",
+    title: "Fast results",
+    desc: "Improved in under 3 weeks",
+    pct: "75%",
+    grad: "linear-gradient(135deg,#EDE7F6,#D1C4E9)",
+  },
+];
+
+function WhatYouFeel() {
+  return (
+    <div className="rounded-2xl border border-black/10 bg-white p-4">
+      <h3 className="mb-3 text-center text-base font-bold text-black">
+        What You&apos;ll Feel
+      </h3>
+      <div className="flex flex-col">
+        {FEEL_OUTCOMES.map((o, i) => (
+          <div
+            key={o.title}
+            className={`flex items-center gap-3 py-2 ${
+              i < FEEL_OUTCOMES.length - 1 ? "border-b border-black/[0.05]" : ""
+            }`}
+          >
+            <div
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-base shadow-sm"
+              style={{ background: o.grad }}
+              aria-hidden
+            >
+              {o.emoji}
+            </div>
+            <div className="min-w-0 flex-1">
+              <strong className="block text-[13px] font-bold leading-tight text-black">
+                {o.title}
+              </strong>
+              <span className="text-[11px] leading-tight text-black/55">
+                {o.desc}
+              </span>
+            </div>
+            <span className="shrink-0 text-[15px] font-extrabold tabular-nums text-[#1B2757]">
+              {o.pct}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function BuyPanel({
   formulaId,
   selectedCadence,
@@ -465,8 +564,10 @@ function BuyPanel({
         >
           {ctaLabel}
         </button>
-        <GuaranteeRow />
+        <TrustBar />
       </div>
+
+      <WhatYouFeel />
 
       <HeroAccordions productType={getHeroProductType(formulaId)} />
     </>
