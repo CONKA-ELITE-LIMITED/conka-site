@@ -40,6 +40,21 @@ export type ListicleAsset =
   | { kind: "cognitionBars" }
   /** 4-group average cognitive score columns, CONKA groups in green (app data) */
   | { kind: "scoreByGroup" }
+  /** Athlete portrait with their quote overlaid + status (proof for a reason) */
+  | {
+      kind: "athleteQuote";
+      name: string;
+      role: string;
+      image: string;
+      quote: string;
+    }
+  /** Tile grid of named actives + one-line effects (our deficiency-panel answer) */
+  | {
+      kind: "ingredientGrid";
+      eyebrow?: string;
+      items: { icon: string; name: string; dose?: string; benefit: string }[];
+      footer?: string;
+    }
   | {
       kind: "statPanel";
       tone: "dark" | "light";

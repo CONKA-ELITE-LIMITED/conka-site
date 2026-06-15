@@ -22,7 +22,7 @@ export const brainAgeingListicle: ListicleConfig = {
     headline:
       "6 Reasons the Older Generation Is Adding This Daily Shot Before Brain Fog and Cognitive Decline Set In",
     subcopy:
-      "One 30-second habit to protect cognitive longevity. Measurable, clear recall that holds from your morning routine to your evening conversations.",
+      "One 30ml shot to protect cognitive longevity. Measurable, clear recall that holds from your morning routine to your evening conversations.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -55,11 +55,15 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 1,
       tag: "WORD RECALL",
       headline: "Seamless Speech, Without the Hesitation",
-      body: "Struggling to find the right word is agonizing, but this 30-second daily habit flips the script.\n\nBy supporting optimal neural pathways, it helps your mind open up so sentences form seamlessly, curing lost words. Experience the joy of conversation flowing naturally exactly when you need it. Clear communication, without the mental block.",
+      body: "Struggling to find the right word is agonizing, but this 30ml daily shot flips the script.\n\nBy supporting optimal neural pathways, it helps your mind open up so sentences form seamlessly, curing lost words. Experience the joy of conversation flowing naturally exactly when you need it. Clear communication, without the mental block.",
+      // Dan Norton's quote (speaking clearer, words flowing) lands the seamless-speech reason
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Conversation flowing naturally, words on the tip of the tongue",
+        kind: "athleteQuote",
+        name: "Dan Norton",
+        role: "Rugby 7s · Olympic Silver Medallist",
+        image: "/testimonials/athlete/DanNortonNB.jpg",
+        quote:
+          "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
       },
     },
     {
@@ -68,10 +72,33 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "MEMORY",
       headline: "Clearer Memory That Lifts the Fog",
       body: "Forgetting why you entered a room is a frustrating sign of cognitive fatigue.\n\nThis targeted nutrition provides essential fuel to lift the fog, helping you remember exactly where you put things and why you walked in. Instead of accepting decline, you can regain control of your short-term memory in just six weeks. Sharp mental clarity when you need it most.",
+      // The recall stack: actives that feed acetylcholine and clear the fog
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Fog lifting, sharp short-term recall",
+        kind: "ingredientGrid",
+        eyebrow: "What lifts the fog",
+        items: [
+          {
+            icon: "⚡",
+            name: "Alpha GPC",
+            benefit: "The most bioavailable choline for recall.",
+          },
+          {
+            icon: "🧠",
+            name: "Lecithin",
+            benefit: "Rebuilds the membranes neurons rely on.",
+          },
+          {
+            icon: "🩸",
+            name: "Ginkgo Biloba",
+            benefit: "Supports cerebral circulation and attention.",
+          },
+          {
+            icon: "🫐",
+            name: "Bilberry",
+            benefit: "Anthocyanins shown to support recall.",
+          },
+        ],
+        footer: "All in two daily 30ml shots.",
       },
     },
     {
@@ -92,10 +119,43 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "LONGEVITY",
       headline: "Cognitive Protection for the Long Term",
       body: "Brain health is front of mind, and this isn't just a temporary spike, it's a dedicated system for cognitive longevity.\n\nBy delivering targeted, natural support, it ticks all the vital brain health boxes to future-proof your mind. Protect your cognitive function for the long term, safely and naturally. Future-proof your mind for the years ahead.",
+      // The protection stack: antioxidants and neuroprotective actives
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Long-term cognitive protection, daily ritual",
+        kind: "ingredientGrid",
+        eyebrow: "Ticks the brain-health boxes",
+        items: [
+          {
+            icon: "🧬",
+            name: "Turmeric (Longvida)",
+            benefit: "Protects neurons and supports memory.",
+          },
+          {
+            icon: "💊",
+            name: "Vitamin B12",
+            benefit: "Supports healthy brain structure with age.",
+          },
+          {
+            icon: "🛡",
+            name: "Glutathione",
+            benefit: "The body's master antioxidant.",
+          },
+          {
+            icon: "🍊",
+            name: "Vitamin C",
+            benefit: "Concentrated in the brain to defend cells.",
+          },
+          {
+            icon: "♻️",
+            name: "Alpha Lipoic Acid",
+            benefit: "Regenerates vitamins C, E and glutathione.",
+          },
+          {
+            icon: "🌊",
+            name: "N-Acetyl Cysteine",
+            benefit: "Replenishes the body's glutathione.",
+          },
+        ],
+        footer: "All in two daily 30ml shots.",
       },
     },
     {

@@ -18,6 +18,8 @@ import { ValueComparisonChart } from "@/app/components/landing/LandingValueCompa
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
+import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
+import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import AppMeasureSection, {
   MeasureTile,
 } from "@/app/components/landing/AppMeasureSection";
@@ -129,6 +131,27 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   if (asset.kind === "scoreByGroup") {
     return <ScoreByGroup />;
+  }
+
+  if (asset.kind === "athleteQuote") {
+    return (
+      <AthleteQuoteCard
+        name={asset.name}
+        role={asset.role}
+        image={asset.image}
+        quote={asset.quote}
+      />
+    );
+  }
+
+  if (asset.kind === "ingredientGrid") {
+    return (
+      <IngredientGrid
+        eyebrow={asset.eyebrow}
+        items={asset.items}
+        footer={asset.footer}
+      />
+    );
   }
 
   if (asset.kind === "video") {

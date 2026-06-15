@@ -20,7 +20,7 @@ export const productivityListicle: ListicleConfig = {
     headline:
       "6 Reasons Why Smart People Are Improving Their Productivity With CONKA",
     subcopy:
-      "One 30-second shot to start the day, one to replace the afternoon coffee. Calm, measurable focus that holds from your first task to your last.",
+      "One 30ml shot to start the day, one to replace the afternoon coffee. Calm, measurable focus that holds from your first task to your last.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -130,10 +130,43 @@ export const productivityListicle: ListicleConfig = {
       tag: "BACK-TO-BACK",
       headline: "Built for Back-to-Back Days",
       body: "Some days you feel sharp, by Thursday you feel drained. You are on calls all day, focus drops, and by the end of the week you are running on empty.\n\nTwo shots support a 24 hour focus cycle. Flow in the morning and Clear in the afternoon so your focus stays steady.",
+      // The stress-load stack: actives that help absorb a relentless week
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Back-to-back work week, steady through Friday",
+        kind: "ingredientGrid",
+        eyebrow: "Built to absorb the load",
+        items: [
+          {
+            icon: "🏔",
+            name: "Rhodiola Rosea",
+            benefit: "Buffers burnout and fatigue under prolonged stress.",
+          },
+          {
+            icon: "🌿",
+            name: "Ashwagandha",
+            benefit: "Helps lower cortisol and the daily stress load.",
+          },
+          {
+            icon: "🍋",
+            name: "Lemon Balm",
+            benefit: "Calm, steady focus without the sedation.",
+          },
+          {
+            icon: "⚡",
+            name: "Acetyl-L-Carnitine",
+            benefit: "Fuels neurons for sustained mental energy.",
+          },
+          {
+            icon: "🛡",
+            name: "Glutathione",
+            benefit: "Your master antioxidant for recovery.",
+          },
+          {
+            icon: "♻️",
+            name: "Alpha Lipoic Acid",
+            benefit: "Clears the oxidative stress of short sleep.",
+          },
+        ],
+        footer: "All in two 30ml shots, morning and night.",
       },
     },
     {

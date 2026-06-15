@@ -52,7 +52,7 @@ export const adhdListicle: ListicleConfig = {
       n: 1,
       tag: "GETTING STARTED",
       headline: "Finally Start the Thing You've Been Avoiding",
-      body: "You've known about it since Monday. It's not even hard. But every time you sit down, your brain slides off it, so you make another coffee and lose the morning. That stuck feeling isn't laziness. An ADHD brain runs low on the focus chemical that gets you moving.\n\nConka 1, your caffeine-free morning shot, supports that exact spark. Most people feel it within minutes, and the task that felt like a locked door is suddenly open.",
+      body: "You've known about it since Monday. It's not even hard. But every time you sit down, your brain slides off it, so you make another coffee and lose the morning. That stuck feeling isn't laziness. An ADHD brain runs low on the focus chemical that gets you moving.\n\nFlow, your caffeine-free morning shot, supports that exact spark. Most people feel it within minutes, and the task that felt like a locked door is suddenly open.",
       asset: {
         kind: "image",
         src: "/videos/misc/Neurons.gif",
@@ -89,12 +89,14 @@ export const adhdListicle: ListicleConfig = {
       tag: "WORD RECALL",
       headline: "Find Your Words Before Your Face Goes Red",
       body: "Mid-sentence in a meeting, and the word is just gone. You talk around it and lose your point. That blank, lost feeling is brain fog, and it shows up when your brain's focus fuel is running low.\n\nConka supports clear, sharp thinking, so finding your words feels easy instead of like a fight. Names, words, the point you were making. They're there when you reach for them.",
+      // Dan Norton's quote maps directly to word recall / finding your words
       asset: {
-        kind: "image",
-        src: "/listicles/FaceDrawings.jpg",
-        alt: "Classical sketch studies of faces in profile",
-        aspect: "4/3",
-        fit: "cover",
+        kind: "athleteQuote",
+        name: "Dan Norton",
+        role: "Rugby 7s · Olympic Silver Medallist",
+        image: "/testimonials/athlete/DanNortonNB.jpg",
+        quote:
+          "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
       },
     },
     {
@@ -102,7 +104,7 @@ export const adhdListicle: ListicleConfig = {
       n: 4,
       tag: "THE 2PM CRASH",
       headline: "Kill the 2PM Crash (Without More Coffee)",
-      body: "You run on coffee because it's the only thing that gets your brain going. Then 2pm hits with the slump, the jitters, and the fog. That crash is baked into caffeine, and an ADHD brain feels the swing harder.\n\nConka has zero caffeine, so there's nothing to spike you up and nothing to crash from. Steady focus all day, and Conka 2 at night helps you wind down instead of lying there wired.",
+      body: "You run on coffee because it's the only thing that gets your brain going. Then 2pm hits with the slump, the jitters, and the fog. That crash is baked into caffeine, and an ADHD brain feels the swing harder.\n\nConka has zero caffeine, so there's nothing to spike you up and nothing to crash from. Steady focus all day, and Clear at night helps you wind down instead of lying there wired.",
       // Skip-the-2pm-crash curve + cost table: pays off the caffeine crash story
       asset: { kind: "crashChart" },
     },
@@ -167,7 +169,7 @@ export const adhdListicle: ListicleConfig = {
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
     whoItsFor: [
-      "You've got an ADHD brain that won't start in the morning and won't switch off at night. Conka 1 helps you get going without caffeine, and Conka 2 helps you wind down so the day actually ends.",
+      "You've got an ADHD brain that won't start in the morning and won't switch off at night. Flow helps you get going without caffeine, and Clear helps you wind down so the day actually ends.",
       "You're done running on coffee and willpower. Two caffeine-free shots support steady focus and calm across the whole day, and the 2-minute app test lets you watch it working instead of guessing.",
     ],
   },
