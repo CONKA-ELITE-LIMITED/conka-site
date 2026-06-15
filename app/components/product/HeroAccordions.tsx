@@ -10,6 +10,8 @@ interface HeroAccordionsProps {
   productType: HeroProductType;
   /** Persona-specific "who it's for" copy; falls back to the product default. */
   whoItsFor?: string[];
+  /** Drop the Ingredients accordion + panel (listicle uses its own sheet). */
+  hideIngredients?: boolean;
 }
 
 const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
@@ -32,6 +34,7 @@ const GUARANTEE_TEXT = `Install the app, take your cognitive baseline, and track
 export default function HeroAccordions({
   productType,
   whoItsFor,
+  hideIngredients = false,
 }: HeroAccordionsProps) {
   const [openSection, setOpenSection] = useState<"who" | "guarantee" | "ingredients-both" | null>(null);
   const [ingredientsProduct, setIngredientsProduct] = useState<"flow" | "clear" | null>(null);
@@ -118,7 +121,7 @@ export default function HeroAccordions({
         </div>
 
         {/* Ingredients */}
-        {productType === "both" ? (
+        {hideIngredients ? null : productType === "both" ? (
           <div className="border-b border-black/10">
             <button
               type="button"
@@ -188,11 +191,13 @@ export default function HeroAccordions({
         )}
       </div>
 
-      <IngredientsPanel
-        isOpen={ingredientsProduct !== null}
-        product={ingredientsProduct}
-        onClose={() => setIngredientsProduct(null)}
-      />
+      {!hideIngredients && (
+        <IngredientsPanel
+          isOpen={ingredientsProduct !== null}
+          product={ingredientsProduct}
+          onClose={() => setIngredientsProduct(null)}
+        />
+      )}
     </>
   );
 }

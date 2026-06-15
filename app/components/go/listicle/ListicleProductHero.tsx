@@ -23,6 +23,7 @@ import {
 } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
 import HeroAccordions from "@/app/components/product/HeroAccordions";
+import IngredientSheet from "@/app/components/go/listicle/IngredientSheet";
 
 /* ============================================================================
  * ListicleProductHero (+ Mobile)
@@ -47,6 +48,13 @@ interface ListicleProductHeroProps {
 }
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
+
+/** Which ingredient-sheet tabs each product surfaces (Both shows both). */
+const FORMULA_TABS: Record<"flow" | "clear" | "both", ("flow" | "clear")[]> = {
+  flow: ["flow"],
+  clear: ["clear"],
+  both: ["flow", "clear"],
+};
 
 /** What's included with every plan (same on all). No prices — these are the
  *  baked-in extras, distinct from the earnable app rewards below. */
@@ -355,17 +363,33 @@ const TRUST_ITEMS = [
   "100-Day Guarantee",
 ];
 
+const TrustCheck = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden
+    className="h-3.5 w-3.5 shrink-0 text-[#1B2757]"
+  >
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
+    <path
+      d="M7.5 12.5L10.5 15.5L16.5 9.5"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 function TrustStrip() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-black/10 py-4">
+    <div className="flex items-center gap-x-5 gap-y-2 overflow-x-auto border-t border-black/10 py-4 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-wrap md:justify-center md:overflow-x-visible [&::-webkit-scrollbar]:hidden">
       {TRUST_ITEMS.map((item) => (
         <span
           key={item}
-          className="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55"
+          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55"
         >
-          <span className="text-[#1B2757]" aria-hidden>
-            ✓
-          </span>
+          <TrustCheck />
           {item}
         </span>
       ))}
@@ -572,9 +596,12 @@ function BuyPanel({
 
       <WhatYouFeel />
 
+      <IngredientSheet formulas={FORMULA_TABS[getHeroProductType(formulaId)]} />
+
       <HeroAccordions
         productType={getHeroProductType(formulaId)}
         whoItsFor={whoItsFor}
+        hideIngredients
       />
     </>
   );
