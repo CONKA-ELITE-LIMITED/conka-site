@@ -27,9 +27,10 @@ export const brainAgeQuiz: LandingConfig = {
   title: "What's your real brain age?",
   theme: "dark",
   scoring: { mode: "brain-age", gapMin: 3, gapMax: 12 },
-  // No results screen in this flow (commit links straight to the Both
-  // PDP); kept as the fallback destination and the analytics bucket id
-  resultsCta: { label: "See the system", href: "/conka-both" },
+  // No results screen in this flow (commit links straight to the
+  // brain-ageing listicle buy box); kept as the fallback destination
+  // and the analytics bucket id
+  resultsCta: { label: "See the system", href: "/go/brain-ageing-listicle#product" },
   buckets: [
     {
       id: "both",
@@ -365,8 +366,9 @@ export const brainAgeQuiz: LandingConfig = {
         "*Make the decision now.*",
       ],
       cta: "Commit",
-      // Straight to the Both PDP; completion analytics fired at the reveal
-      ctaHref: "/conka-both",
+      // Straight to the brain-ageing listicle buy box; completion analytics
+      // fired at the reveal
+      ctaHref: "/go/brain-ageing-listicle#product",
     },
   ],
 };

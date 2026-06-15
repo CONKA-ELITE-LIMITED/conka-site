@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-15** | Brain-age quiz now routes its final CTA to the brain-ageing listicle buy box (#product) instead of the Both PDP
 - **2026-06-15** | Listicle reasons: day-energy curve (brain-ageing R5) + two-bar focus comparison (ADHD R5), clearing the last placeholder
 - **2026-06-15** | Listicle buy box: port lander ingredient bottom-sheet, drop old ingredients accordion, IM8-style horizontal-scroll trust band
 - **2026-06-15** | Productivity listicle: Flow-bottle video now full-width black tile for consistent reason-tile width
