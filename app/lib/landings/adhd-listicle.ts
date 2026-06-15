@@ -166,6 +166,10 @@ export const adhdListicle: ListicleConfig = {
     headline: "Try Conka Risk-Free for 100 Days",
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
+    whoItsFor: [
+      "You've got an ADHD brain that won't start in the morning and won't switch off at night. Conka 1 helps you get going without caffeine, and Conka 2 helps you wind down so the day actually ends.",
+      "You're done running on coffee and willpower. Two caffeine-free shots support steady focus and calm across the whole day, and the 2-minute app test lets you watch it working instead of guessing.",
+    ],
   },
   reviewsCarousel: true,
   faq: [

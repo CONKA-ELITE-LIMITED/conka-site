@@ -42,6 +42,8 @@ interface ListicleProductHeroProps {
   onAddToCart: () => void;
   /** The OTP text link adds straight to cart (IM8 pattern) */
   onOtpAddToCart: () => void;
+  /** Persona-specific "who it's for" copy for the accordion */
+  whoItsFor?: string[];
 }
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
@@ -472,6 +474,7 @@ function BuyPanel({
   onCadenceChange,
   onAddToCart,
   onOtpAddToCart,
+  whoItsFor,
 }: ListicleProductHeroProps) {
   const content = getHeroContent(formulaId);
 
@@ -569,7 +572,10 @@ function BuyPanel({
 
       <WhatYouFeel />
 
-      <HeroAccordions productType={getHeroProductType(formulaId)} />
+      <HeroAccordions
+        productType={getHeroProductType(formulaId)}
+        whoItsFor={whoItsFor}
+      />
     </>
   );
 }

@@ -164,6 +164,10 @@ export const brainAgeingListicle: ListicleConfig = {
     headline: "Try Conka Risk-Free for 100 Days",
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
+    whoItsFor: [
+      "You've noticed words on the tip of your tongue and the odd \"why did I walk in here\" moment, and you want to stay sharp for the years ahead. Two daily shots support memory, recall and everyday clarity.",
+      "You want something simple and natural you can actually stick to, with proof. Two shots a day plus a 2-minute brain test that tracks your scores over time, so you can see it holding.",
+    ],
   },
   reviewsCarousel: true,
   faq: [

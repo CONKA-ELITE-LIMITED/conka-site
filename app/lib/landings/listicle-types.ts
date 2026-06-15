@@ -139,6 +139,8 @@ export interface ListicleConfig {
     subline?: string;
     /** Which product the buy box sells ("01" Flow, "02" Clear, "03" Both) */
     productHeroId?: ProductHeroId;
+    /** Persona-specific "who it's for" copy for the buy-box accordion */
+    whoItsFor?: string[];
   };
   /** Renders the shared AthleteCredibilityCarousel (own header/content) */
   trustCarousel?: boolean;

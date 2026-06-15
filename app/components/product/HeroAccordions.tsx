@@ -8,6 +8,8 @@ export type HeroProductType = "flow" | "clear" | "both";
 
 interface HeroAccordionsProps {
   productType: HeroProductType;
+  /** Persona-specific "who it's for" copy; falls back to the product default. */
+  whoItsFor?: string[];
 }
 
 const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
@@ -27,7 +29,10 @@ const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
 
 const GUARANTEE_TEXT = `Install the app, take your cognitive baseline, and track your improvement daily. If your score doesn't move after ${GUARANTEE_DAYS} days, we'll refund you completely. No return required. First-time customers only.`;
 
-export default function HeroAccordions({ productType }: HeroAccordionsProps) {
+export default function HeroAccordions({
+  productType,
+  whoItsFor,
+}: HeroAccordionsProps) {
   const [openSection, setOpenSection] = useState<"who" | "guarantee" | "ingredients-both" | null>(null);
   const [ingredientsProduct, setIngredientsProduct] = useState<"flow" | "clear" | null>(null);
 
@@ -38,7 +43,7 @@ export default function HeroAccordions({ productType }: HeroAccordionsProps) {
     setIngredientsProduct(product);
   };
 
-  const whoItems = WHO_ITS_FOR[productType];
+  const whoItems = whoItsFor ?? WHO_ITS_FOR[productType];
 
   return (
     <>

@@ -222,7 +222,13 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 }
 
 /** Embedded PDP hero as the on-page buy box; same wiring as the PDPs */
-function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
+function ListicleBuyBox({
+  formulaId,
+  whoItsFor,
+}: {
+  formulaId: ProductHeroId;
+  whoItsFor?: string[];
+}) {
   const isMobile = useIsMobile();
   const { addToCart } = useCart();
   const [selectedCadence, setSelectedCadence] =
@@ -254,6 +260,7 @@ function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
       onCadenceChange={setSelectedCadence}
       onAddToCart={() => void handleAddToCart()}
       onOtpAddToCart={handleOtpAddToCart}
+      whoItsFor={whoItsFor}
     />
   );
 }
@@ -621,7 +628,10 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               <p className="opacity-70">{config.product.subline}</p>
             ) : null}
           </div>
-          <ListicleBuyBox formulaId={config.product.productHeroId ?? "03"} />
+          <ListicleBuyBox
+            formulaId={config.product.productHeroId ?? "03"}
+            whoItsFor={config.product.whoItsFor}
+          />
         </div>
       </section>
 
