@@ -5,6 +5,20 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-15** | Listicle reasons: day-energy curve (brain-ageing R5) + two-bar focus comparison (ADHD R5), clearing the last placeholder
+- **2026-06-15** | Listicle buy box: port lander ingredient bottom-sheet, drop old ingredients accordion, IM8-style horizontal-scroll trust band
+- **2026-06-15** | Productivity listicle: Flow-bottle video now full-width black tile for consistent reason-tile width
+- **2026-06-15** | Listicle reasons: ingredient-grid asset (stress/recall/protection stacks), Dan Norton athlete-quote card, Flow/Clear naming + 30ml-shot copy
+- **2026-06-15** | Listicle buy box: 3-icon trust bar under the CTA and an IM8-style "What You'll Feel" outcomes panel from verified trial stats
+- **2026-06-15** | Listicle plan cards restyled to IM8: full-width cards (no nested panel), structured header on both states, monthly-equivalent price + billing line, 2-shots-a-day, gold rounded Save badge, black one-time link
+- **2026-06-15** | Listicle buy-box plan cards gain offer depth: price+save, what's-included checklist, CONKA app block (value crossed to free), and an expandable earnable app-rewards group; dynamic Subscribe & Save CTA
+- **2026-06-15** | Listicle buy box gallery: contained (not full-bleed) with a visible thumbnail carousel on mobile; dropped the leading ingredients video so the product image is primary
+- **2026-06-15** | Listicle data-graphics: measure tile on measurable points (replaces standalone app section), coffee-vs-CONKA cognition bars + 4-group score chart from CONKA app data, productivity R1-R3 chart/video mix
+- **2026-06-15** | Listicle social proof: logo marquee with the 3-tile athlete testimonial block below it, replacing the athlete carousel (home page keeps the carousel)
+- **2026-06-15** | Listicle partner-logo marquee (Fueling High Performers at:) as an optional logoMarquee config block
+- **2026-06-15** | Listicle reviews zone now a verified card rail (from CURATED_TESTIMONIALS); research-backed proof graphic (universities photo + Informed Sport / Made in Britain badges) on productivity + brain-ageing proof reasons
+- **2026-06-15** | Listicle app proof section: port lander Measure (cognitive score count-up + draw, steps, app-store links, 100-day guarantee) behind an appSection config flag
+- **2026-06-15** | Listicle reason graphic: port lander CrashChart (2pm-crash curve + cost table) as a config-driven crashChart asset, live on ADHD + productivity pages
 - **2026-06-14** | Wire /lander header + footer to real routes, add on-page FAQ accordion, add /shipping page
 - **2026-06-14** | Add standalone /lander marketing landing page (paid-traffic funnel, live Shopify pricing, straight-to-checkout)
 - **2026-06-14** | Add productivity and brain-ageing persona listicle pages (/go/productivity-listicle, /go/brain-ageing-listicle) on the existing listicle framework

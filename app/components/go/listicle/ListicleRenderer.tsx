@@ -14,8 +14,21 @@ import ListicleProductHero, {
   ListicleProductHeroMobile,
 } from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
-import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import { ValueComparisonChart } from "@/app/components/landing/LandingValueComparison";
+import CrashChart from "@/app/components/landing/CrashChart";
+import CognitionBars from "@/app/components/landing/CognitionBars";
+import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
+import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
+import IngredientGrid from "@/app/components/landing/IngredientGrid";
+import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
+import FocusBars from "@/app/components/landing/FocusBars";
+import AppMeasureSection, {
+  MeasureTile,
+} from "@/app/components/landing/AppMeasureSection";
+import ReviewRail from "@/app/components/landing/ReviewRail";
+import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
+import LogoMarquee from "@/app/components/landing/LogoMarquee";
+import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -96,11 +109,71 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     return <ValueComparisonChart />;
   }
 
+  if (asset.kind === "crashChart") {
+    return (
+      <CrashChart
+        saving={asset.saving}
+        coffeePerDay={asset.coffeePerDay}
+        shotsPerDay={asset.shotsPerDay}
+      />
+    );
+  }
+
+  if (asset.kind === "researchBacked") {
+    return <ResearchBackedGraphic />;
+  }
+
+  if (asset.kind === "measureTile") {
+    return <MeasureTile />;
+  }
+
+  if (asset.kind === "cognitionBars") {
+    return <CognitionBars />;
+  }
+
+  if (asset.kind === "scoreByGroup") {
+    return <ScoreByGroup />;
+  }
+
+  if (asset.kind === "dayEnergyCurve") {
+    return <DayEnergyCurve />;
+  }
+
+  if (asset.kind === "focusBars") {
+    return <FocusBars />;
+  }
+
+  if (asset.kind === "athleteQuote") {
+    return (
+      <AthleteQuoteCard
+        name={asset.name}
+        role={asset.role}
+        image={asset.image}
+        quote={asset.quote}
+      />
+    );
+  }
+
+  if (asset.kind === "ingredientGrid") {
+    return (
+      <IngredientGrid
+        eyebrow={asset.eyebrow}
+        items={asset.items}
+        footer={asset.footer}
+      />
+    );
+  }
+
   if (asset.kind === "video") {
+    // "contain": full-width black tile, clip centred (product renders).
+    // "cover" (default): inset 4/5 frame, clip fills it (texture loops).
+    const contain = asset.fit === "contain";
     return (
       <div
-        className="relative mx-auto w-4/5 overflow-hidden rounded-3xl"
-        style={{ aspectRatio: asset.aspect ?? "4/3" }}
+        className={`relative overflow-hidden rounded-3xl ${
+          contain ? "w-full bg-black" : "mx-auto w-4/5"
+        }`}
+        style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
       >
         <video
           src={asset.src}
@@ -108,7 +181,9 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
           muted
           loop
           playsInline
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full ${
+            contain ? "object-contain" : "object-cover"
+          }`}
         />
       </div>
     );
@@ -187,7 +262,13 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 }
 
 /** Embedded PDP hero as the on-page buy box; same wiring as the PDPs */
-function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
+function ListicleBuyBox({
+  formulaId,
+  whoItsFor,
+}: {
+  formulaId: ProductHeroId;
+  whoItsFor?: string[];
+}) {
   const isMobile = useIsMobile();
   const { addToCart } = useCart();
   const [selectedCadence, setSelectedCadence] =
@@ -219,6 +300,7 @@ function ListicleBuyBox({ formulaId }: { formulaId: ProductHeroId }) {
       onCadenceChange={setSelectedCadence}
       onAddToCart={() => void handleAddToCart()}
       onOtpAddToCart={handleOtpAddToCart}
+      whoItsFor={whoItsFor}
     />
   );
 }
@@ -586,19 +668,36 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               <p className="opacity-70">{config.product.subline}</p>
             ) : null}
           </div>
-          <ListicleBuyBox formulaId={config.product.productHeroId ?? "03"} />
+          <ListicleBuyBox
+            formulaId={config.product.productHeroId ?? "03"}
+            whoItsFor={config.product.whoItsFor}
+          />
         </div>
       </section>
 
-      {/* Zone 4: athlete trust (shared component) */}
-      {config.trustCarousel ? (
+      {/* Zone 4: social proof — logo marquee, then athlete testimonials */}
+      {config.logoMarquee || config.trustCarousel || config.athleteTestimonials ? (
         <section
           aria-label="Trusted by"
           className="px-5 py-16 md:px-[5vw]"
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <AthleteCredibilityCarousel />
+            {config.logoMarquee ? <LogoMarquee /> : null}
+            {config.athleteTestimonials ? (
+              <div className={config.logoMarquee ? "mt-16" : ""}>
+                <AthleteTestimonials />
+              </div>
+            ) : null}
+            {config.trustCarousel ? (
+              <div
+                className={
+                  config.logoMarquee || config.athleteTestimonials ? "mt-14" : ""
+                }
+              >
+                <AthleteCredibilityCarousel />
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}
@@ -659,10 +758,23 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <CROTestimonials hideCTA />
+            <ReviewRail />
             <div className="mt-10">
               <LandingTrustBadges />
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Zone 6b: app proof — "we measure it" (renders only if configured) */}
+      {config.appSection ? (
+        <section
+          aria-label="Measure it with the app"
+          className="px-5 py-16 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <AppMeasureSection />
           </div>
         </section>
       ) : null}

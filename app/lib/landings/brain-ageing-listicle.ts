@@ -22,7 +22,7 @@ export const brainAgeingListicle: ListicleConfig = {
     headline:
       "6 Reasons the Older Generation Is Adding This Daily Shot Before Brain Fog and Cognitive Decline Set In",
     subcopy:
-      "One 30-second habit to protect cognitive longevity. Measurable, clear recall that holds from your morning routine to your evening conversations.",
+      "One 30ml shot to protect cognitive longevity. Measurable, clear recall that holds from your morning routine to your evening conversations.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -47,17 +47,23 @@ export const brainAgeingListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
+  logoMarquee: true,
+  athleteTestimonials: true,
   body: [
     {
       kind: "reason",
       n: 1,
       tag: "WORD RECALL",
       headline: "Seamless Speech, Without the Hesitation",
-      body: "Struggling to find the right word is agonizing, but this 30-second daily habit flips the script.\n\nBy supporting optimal neural pathways, it helps your mind open up so sentences form seamlessly, curing lost words. Experience the joy of conversation flowing naturally exactly when you need it. Clear communication, without the mental block.",
+      body: "Struggling to find the right word is agonizing, but this 30ml daily shot flips the script.\n\nBy supporting optimal neural pathways, it helps your mind open up so sentences form seamlessly, curing lost words. Experience the joy of conversation flowing naturally exactly when you need it. Clear communication, without the mental block.",
+      // Dan Norton's quote (speaking clearer, words flowing) lands the seamless-speech reason
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Conversation flowing naturally, words on the tip of the tongue",
+        kind: "athleteQuote",
+        name: "Dan Norton",
+        role: "Rugby 7s · Olympic Silver Medallist",
+        image: "/testimonials/athlete/DanNortonNB.jpg",
+        quote:
+          "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
       },
     },
     {
@@ -66,10 +72,33 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "MEMORY",
       headline: "Clearer Memory That Lifts the Fog",
       body: "Forgetting why you entered a room is a frustrating sign of cognitive fatigue.\n\nThis targeted nutrition provides essential fuel to lift the fog, helping you remember exactly where you put things and why you walked in. Instead of accepting decline, you can regain control of your short-term memory in just six weeks. Sharp mental clarity when you need it most.",
+      // The recall stack: actives that feed acetylcholine and clear the fog
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Fog lifting, sharp short-term recall",
+        kind: "ingredientGrid",
+        eyebrow: "What lifts the fog",
+        items: [
+          {
+            icon: "⚡",
+            name: "Alpha GPC",
+            benefit: "The most bioavailable choline for recall.",
+          },
+          {
+            icon: "🧠",
+            name: "Lecithin",
+            benefit: "Rebuilds the membranes neurons rely on.",
+          },
+          {
+            icon: "🩸",
+            name: "Ginkgo Biloba",
+            benefit: "Supports cerebral circulation and attention.",
+          },
+          {
+            icon: "🫐",
+            name: "Bilberry",
+            benefit: "Anthocyanins shown to support recall.",
+          },
+        ],
+        footer: "All in two daily 30ml shots.",
       },
     },
     {
@@ -90,10 +119,43 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "LONGEVITY",
       headline: "Cognitive Protection for the Long Term",
       body: "Brain health is front of mind, and this isn't just a temporary spike, it's a dedicated system for cognitive longevity.\n\nBy delivering targeted, natural support, it ticks all the vital brain health boxes to future-proof your mind. Protect your cognitive function for the long term, safely and naturally. Future-proof your mind for the years ahead.",
+      // The protection stack: antioxidants and neuroprotective actives
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Long-term cognitive protection, daily ritual",
+        kind: "ingredientGrid",
+        eyebrow: "Ticks the brain-health boxes",
+        items: [
+          {
+            icon: "🧬",
+            name: "Turmeric (Longvida)",
+            benefit: "Protects neurons and supports memory.",
+          },
+          {
+            icon: "💊",
+            name: "Vitamin B12",
+            benefit: "Supports healthy brain structure with age.",
+          },
+          {
+            icon: "🛡",
+            name: "Glutathione",
+            benefit: "The body's master antioxidant.",
+          },
+          {
+            icon: "🍊",
+            name: "Vitamin C",
+            benefit: "Concentrated in the brain to defend cells.",
+          },
+          {
+            icon: "♻️",
+            name: "Alpha Lipoic Acid",
+            benefit: "Regenerates vitamins C, E and glutathione.",
+          },
+          {
+            icon: "🌊",
+            name: "N-Acetyl Cysteine",
+            benefit: "Replenishes the body's glutathione.",
+          },
+        ],
+        footer: "All in two daily 30ml shots.",
       },
     },
     {
@@ -102,11 +164,7 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "TRACK IT",
       headline: "Measurable Results You Can Actually Track",
       body: "Most supplements make massive claims with zero proof, but this natural brain-boost offers measurable cognition tracking.\n\nBy using the companion app test, you can watch your focus and memory improve in hard numbers. Customers consistently report up to a 15% measured boost in direct brain function. Proven cognitive gains, tracked in real-time.",
-      asset: {
-        kind: "placeholder",
-        aspect: "3/4",
-        note: "App screenshot: focus and memory scores over time",
-      },
+      asset: { kind: "measureTile" },
     },
     {
       // Hand-cropped excerpts (memory / clarity theme)
@@ -143,11 +201,8 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "STAMINA",
       headline: "Mental Energy That Defeats Fatigue",
       body: "Complicated routines kill consistency, so we made this daily approach simple, natural, and effective.\n\nPacked with essential vitamins, it supports optimal daily functioning and keeps your brain feeling distinctly less tired from morning to night. No more midday slumps or mental exhaustion. Sustained mental energy, all day long.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Sustained mental energy morning to night",
-      },
+      // Day-energy curve: afternoon slump without, steady with CONKA
+      asset: { kind: "dayEnergyCurve" },
     },
     {
       kind: "reason",
@@ -155,11 +210,7 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "AUTHORITY",
       headline: "Stable Cognition Backed by Real Proof",
       body: "Concrete authority matters more than hype. This isn't a generic vitamin; it's a tailored, scientifically backed approach you can actively rely on to keep cognitive performance stable.\n\nBuilt on undeniable proof, it provides the natural brain-boost trusted for consistent, long-lasting mental health. Reliable results backed by real authority.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Certifications and science: patent, Informed Sport, universities",
-      },
+      asset: { kind: "researchBacked" },
     },
   ],
   bridge: {
@@ -170,8 +221,11 @@ export const brainAgeingListicle: ListicleConfig = {
     headline: "Try Conka Risk-Free for 100 Days",
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
+    whoItsFor: [
+      "You've noticed words on the tip of your tongue and the odd \"why did I walk in here\" moment, and you want to stay sharp for the years ahead. Two daily shots support memory, recall and everyday clarity.",
+      "You want something simple and natural you can actually stick to, with proof. Two shots a day plus a 2-minute brain test that tracks your scores over time, so you can see it holding.",
+    ],
   },
-  trustCarousel: true,
   reviewsCarousel: true,
   faq: [
     {

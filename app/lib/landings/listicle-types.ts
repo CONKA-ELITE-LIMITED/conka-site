@@ -20,10 +20,47 @@ export type ListicleAsset =
       /** "contain" (default) for renders/PNGs, "cover" for photos */
       fit?: "cover" | "contain";
     }
-  /** Silent autoplay loop (no controls), the IM8 reason-video pattern */
-  | { kind: "video"; src: string; aspect?: string }
+  /** Silent autoplay loop (no controls), the IM8 reason-video pattern.
+   *  fit "contain" centres the clip in a full-width black tile (for product
+   *  renders); default "cover" keeps the inset 4/5 frame (for texture loops). */
+  | { kind: "video"; src: string; aspect?: string; fit?: "cover" | "contain" }
   /** The Fig. 01 coffee-vs-CONKA energy curves card (LandingValueComparison) */
   | { kind: "valueChart" }
+  /** "Skip the 2pm crash" curve + cost table (CrashChart). Figures default
+   *  from landingPricing; override per page. */
+  | {
+      kind: "crashChart";
+      saving?: string;
+      coffeePerDay?: string;
+      shotsPerDay?: string;
+    }
+  /** Research-backed proof card: universities + key credentials */
+  | { kind: "researchBacked" }
+  /** Cognitive-score measure card: count-up graph + routine steps + app stores */
+  | { kind: "measureTile" }
+  /** Coffee vs Coffee + CONKA measured-cognition bars (CONKA app data) */
+  | { kind: "cognitionBars" }
+  /** 4-group average cognitive score columns, CONKA groups in green (app data) */
+  | { kind: "scoreByGroup" }
+  /** Day-energy curve: Without slumps in the afternoon, With CONKA holds steady */
+  | { kind: "dayEnergyCurve" }
+  /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
+  | { kind: "focusBars" }
+  /** Athlete portrait with their quote overlaid + status (proof for a reason) */
+  | {
+      kind: "athleteQuote";
+      name: string;
+      role: string;
+      image: string;
+      quote: string;
+    }
+  /** Tile grid of named actives + one-line effects (our deficiency-panel answer) */
+  | {
+      kind: "ingredientGrid";
+      eyebrow?: string;
+      items: { icon: string; name: string; benefit: string }[];
+      footer?: string;
+    }
   | {
       kind: "statPanel";
       tone: "dark" | "light";
@@ -110,6 +147,8 @@ export interface ListicleConfig {
   };
   /** Marquee proof ticker items below the hero */
   ticker?: string[];
+  /** Partner-logo marquee ("Fueling High Performers at:") below the ticker */
+  logoMarquee?: boolean;
   /** The listicle core: reasons with bands/strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
@@ -121,11 +160,17 @@ export interface ListicleConfig {
     subline?: string;
     /** Which product the buy box sells ("01" Flow, "02" Clear, "03" Both) */
     productHeroId?: ProductHeroId;
+    /** Persona-specific "who it's for" copy for the buy-box accordion */
+    whoItsFor?: string[];
   };
   /** Renders the shared AthleteCredibilityCarousel (own header/content) */
   trustCarousel?: boolean;
+  /** Renders the 3-tile athlete testimonial block (Trusted by the Best) */
+  athleteTestimonials?: boolean;
   /** Renders the shared CROTestimonials carousel + LandingTrustBadges */
   reviewsCarousel?: boolean;
+  /** Renders the app proof section (cognitive score count-up, steps, guarantee) */
+  appSection?: boolean;
   /** Deferred from v1 until competitor numbers are sourced; omit to skip */
   comparison?: {
     eyebrow: string;

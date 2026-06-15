@@ -20,7 +20,7 @@ export const productivityListicle: ListicleConfig = {
     headline:
       "6 Reasons Why Smart People Are Improving Their Productivity With CONKA",
     subcopy:
-      "One 30-second shot to start the day, one to replace the afternoon coffee. Calm, measurable focus that holds from your first task to your last.",
+      "One 30ml shot to start the day, one to replace the afternoon coffee. Calm, measurable focus that holds from your first task to your last.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -45,6 +45,8 @@ export const productivityListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
+  logoMarquee: true,
+  athleteTestimonials: true,
   body: [
     {
       kind: "reason",
@@ -52,11 +54,8 @@ export const productivityListicle: ListicleConfig = {
       tag: "START THE DAY",
       headline: "Start Your Day Focused, Not Wired",
       body: "Three coffees before 9am can leave you wired, anxious, and still struggling to focus.\n\nCONKA Flow uses adaptogens like ashwagandha and lemon balm to support calm, steady focus without caffeine, helping you feel switched on without the jitters.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Calm focused morning, no coffee jitters",
-      },
+      // 4-group average cognitive score (CONKA app data), CONKA groups in green
+      asset: { kind: "scoreByGroup" },
     },
     {
       kind: "reason",
@@ -64,11 +63,8 @@ export const productivityListicle: ListicleConfig = {
       tag: "THE 2PM SLUMP",
       headline: "Stay Sharp Through the Afternoon",
       body: "That 2pm slump can make it hard to stay productive, sending you back for another coffee.\n\nCONKA Clear is designed to support focus later in the day, helping you stay sharp and get more done without relying on caffeine to power through.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Sharp afternoon focus at the desk",
-      },
+      // Coffee-crash vs CONKA-steady energy curve + cost table
+      asset: { kind: "crashChart" },
     },
     {
       kind: "statsBand",
@@ -88,8 +84,14 @@ export const productivityListicle: ListicleConfig = {
       tag: "NO CRASH",
       headline: "It's Not an Energy Drink (and Won't Leave Your Brain Checked Out)",
       body: "Energy drinks give you a quick buzz, then a crash that leaves you foggy. Even \"zero sugar\" drinks often let you down.\n\nConka is caffeine-free. It is a clean boost that keeps your brain clear and focused all day, without the typical burnout.",
-      // Coffee-vs-CONKA energy curves: pays off the crash story
-      asset: { kind: "valueChart" },
+      // 9:16 brain-fuel loop, centre-cropped to 3:4 like the ADHD video tile
+      // Bottle render: centred in a full-width black tile to match the other tiles' width
+      asset: {
+        kind: "video",
+        src: "/lander/video/BrainFuel.mp4",
+        aspect: "3/4",
+        fit: "contain",
+      },
     },
     {
       kind: "reason",
@@ -97,11 +99,7 @@ export const productivityListicle: ListicleConfig = {
       tag: "MEASURABLE",
       headline: "See Your Focus, Not Just Feel It",
       body: "Most focus products just make claims. CONKA is different.\n\nIt includes a 2-minute in-app test so you can see your focus in numbers, not guesswork. In thousands of tests, users saw an average +28.96% improvement, backed by 32 studies.",
-      asset: {
-        kind: "placeholder",
-        aspect: "3/4",
-        note: "App screenshot: 2-minute focus test score",
-      },
+      asset: { kind: "measureTile" },
     },
     {
       // Hand-cropped excerpts (productivity / endurance theme)
@@ -138,10 +136,43 @@ export const productivityListicle: ListicleConfig = {
       tag: "BACK-TO-BACK",
       headline: "Built for Back-to-Back Days",
       body: "Some days you feel sharp, by Thursday you feel drained. You are on calls all day, focus drops, and by the end of the week you are running on empty.\n\nTwo shots support a 24 hour focus cycle. Flow in the morning and Clear in the afternoon so your focus stays steady.",
+      // The stress-load stack: actives that help absorb a relentless week
       asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Back-to-back work week, steady through Friday",
+        kind: "ingredientGrid",
+        eyebrow: "Built to absorb the load",
+        items: [
+          {
+            icon: "🏔",
+            name: "Rhodiola Rosea",
+            benefit: "Buffers burnout and fatigue under prolonged stress.",
+          },
+          {
+            icon: "🌿",
+            name: "Ashwagandha",
+            benefit: "Helps lower cortisol and the daily stress load.",
+          },
+          {
+            icon: "🍋",
+            name: "Lemon Balm",
+            benefit: "Calm, steady focus without the sedation.",
+          },
+          {
+            icon: "⚡",
+            name: "Acetyl-L-Carnitine",
+            benefit: "Fuels neurons for sustained mental energy.",
+          },
+          {
+            icon: "🛡",
+            name: "Glutathione",
+            benefit: "Your master antioxidant for recovery.",
+          },
+          {
+            icon: "♻️",
+            name: "Alpha Lipoic Acid",
+            benefit: "Clears the oxidative stress of short sleep.",
+          },
+        ],
+        footer: "All in two 30ml shots, morning and night.",
       },
     },
     {
@@ -150,11 +181,7 @@ export const productivityListicle: ListicleConfig = {
       tag: "REAL PROOF",
       headline: "Built on Real Proof, Not Big Claims",
       body: "A lot of focus products make big promises without proof. CONKA is different.\n\nIt is patented, Informed Sport certified, made in the UK, and developed with universities. It also comes with a 100-day money-back guarantee if you do not see results.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Certifications: patent, Informed Sport, UK-made",
-      },
+      asset: { kind: "researchBacked" },
     },
   ],
   bridge: {
@@ -165,8 +192,11 @@ export const productivityListicle: ListicleConfig = {
     headline: "Try Conka Risk-Free for 100 Days",
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
+    whoItsFor: [
+      "You run on back-to-back calls and deep work, and you want clean output all day without stacking coffees. Flow in the morning, Clear in the afternoon, no 2pm crash.",
+      "You care about results you can measure, not just a buzz. The 2-minute in-app test tracks your focus in numbers, so you know the shots are actually working.",
+    ],
   },
-  trustCarousel: true,
   reviewsCarousel: true,
   faq: [
     {

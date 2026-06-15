@@ -1,7 +1,12 @@
 "use client";
 
-import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
+import Image from "next/image";
 import { formatPrice } from "@/app/lib/productData";
+import {
+  TrustIconGuarantee,
+  TrustIconShipping,
+  TrustIconCancel,
+} from "@/app/components/landing/icons";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
@@ -15,12 +20,10 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
   getHeroProductType,
-  getPriceFrequency,
-  getTileChecklist,
 } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
 import HeroAccordions from "@/app/components/product/HeroAccordions";
-import TileChecklist from "@/app/components/product/TileChecklist";
+import IngredientSheet from "@/app/components/go/listicle/IngredientSheet";
 
 /* ============================================================================
  * ListicleProductHero (+ Mobile)
@@ -40,16 +43,212 @@ interface ListicleProductHeroProps {
   onAddToCart: () => void;
   /** The OTP text link adds straight to cart (IM8 pattern) */
   onOtpAddToCart: () => void;
+  /** Persona-specific "who it's for" copy for the accordion */
+  whoItsFor?: string[];
 }
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
 
-/** 3s-forward / 3s-reversed boomerang loop, first slide in the gallery */
-const BOTH_INGREDIENTS_VIDEO = {
-  mp4: "/videos/both/BothIngredients.mp4",
-  webm: "/videos/both/BothIngredients.webm",
-  poster: "/videos/both/BothIngredients-poster.jpg",
+/** Which ingredient-sheet tabs each product surfaces (Both shows both). */
+const FORMULA_TABS: Record<"flow" | "clear" | "both", ("flow" | "clear")[]> = {
+  flow: ["flow"],
+  clear: ["clear"],
+  both: ["flow", "clear"],
 };
+
+/** What's included with every plan (same on all). No prices — these are the
+ *  baked-in extras, distinct from the earnable app rewards below. */
+const PLAN_INCLUDED = [
+  "Free baseline brain test",
+  "Free UK shipping",
+  "Cancel or pause anytime",
+  "100-day money-back guarantee",
+];
+
+/** App bullets — mirrors CartAppGift (the cart-drawer app block), trimmed. */
+const APP_BULLETS = [
+  "Daily brain performance score, tracked over time",
+  "Personalised insights from your shots and test results",
+  "Weekly and monthly reports analysing your progress",
+];
+
+/** Rewards you can UNLOCK in the app (not guaranteed on purchase). Values are
+ *  shown struck-through to signal worth. `img` is optional until assets land. */
+interface AppReward {
+  name: string;
+  value: string;
+  img?: string;
+}
+const APP_REWARDS: AppReward[] = [
+  { name: "Conka Beanie", value: "£25", img: "/app/rewards/ConkaBlackBeanie.jpg" },
+  { name: "Conka Shirt", value: "£20", img: "/app/rewards/ConkaBlackTshirt.png" },
+  { name: "Conka Cap", value: "£15", img: "/app/rewards/ConkaTruckerCap.png" },
+];
+
+function RewardTile({ reward }: { reward: AppReward }) {
+  return (
+    <div className="flex flex-col items-center gap-1.5 text-center">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/[0.06] bg-black/[0.03]">
+        {reward.img ? (
+          <Image
+            src={reward.img}
+            alt={reward.name}
+            fill
+            className="object-contain p-1"
+            sizes="80px"
+          />
+        ) : (
+          <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-black/25">
+            Reward
+          </span>
+        )}
+      </div>
+      <span className="font-mono text-[11px] font-bold tabular-nums text-black/45 line-through">
+        {reward.value}
+      </span>
+      <span className="text-[11px] font-medium leading-tight text-black/70">
+        {reward.name}
+      </span>
+    </div>
+  );
+}
+
+/** Circle radio that matches the IM8 plan-card selector. */
+function Radio({ selected }: { selected: boolean }) {
+  return (
+    <span
+      className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+        selected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
+      }`}
+      aria-hidden
+    >
+      {selected && (
+        <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M2.5 8.5L6.5 12L13.5 4"
+            stroke="white"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
+    </span>
+  );
+}
+
+/** "The CONKA app" section — full width inside the plan card (no nested box).
+ *  Mirrors the cart-drawer CartAppGift content; value crossed to free. */
+function PlanAppGift() {
+  return (
+    <div className="mt-4 border-t border-black/10 pt-4">
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+          Also included — the CONKA app
+        </p>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <span className="font-mono text-[10px] font-bold uppercase tabular-nums tracking-[0.05em] text-black/35 line-through">
+            £119.99/yr
+          </span>
+          <span className="bg-[#1B2757] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white">
+            Free
+          </span>
+        </span>
+      </div>
+      <div className="mt-2.5 flex gap-3.5">
+        <Image
+          src="/app/AppConkaRing.png"
+          alt="CONKA app showing daily brain performance score"
+          width={56}
+          height={120}
+          className="h-auto w-14 shrink-0"
+        />
+        <div className="min-w-0 flex-1 space-y-2 pt-0.5">
+          {APP_BULLETS.map((bullet) => (
+            <div key={bullet} className="flex gap-2">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="mt-0.5 shrink-0 text-[#1B2757]"
+                aria-hidden
+              >
+                <path
+                  d="M3 8.5L6.5 12L13 4.5"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                />
+              </svg>
+              <p className="text-[13px] leading-snug text-black/80">{bullet}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Selected-card detail (below the header separator): what's included, the
+ *  app section, and the expandable rewards. Full width, no nested cards.
+ *  Same on every plan, so it takes no props. */
+function PlanDetail() {
+  return (
+    <div className="border-t border-black/10 px-4 pb-4 pt-4">
+      {/* What's included */}
+      <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+        What&apos;s included
+      </p>
+      <ul className="flex flex-col gap-1.5">
+        {PLAN_INCLUDED.map((item) => (
+          <li
+            key={item}
+            className="flex items-center gap-2 text-[13px] font-medium text-black/75"
+          >
+            <span className="text-[#1B2757]" aria-hidden>
+              ✓
+            </span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      {/* The CONKA app — full-width section */}
+      <PlanAppGift />
+
+      {/* Earnable app rewards — expandable */}
+      <details className="mt-4 border-t border-black/10 pt-4">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1B2757]">
+            Rewards you can unlock in the app
+          </span>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            className="flex-shrink-0 text-black/40 transition-transform [details[open]_&]:rotate-180"
+            aria-hidden
+          >
+            <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </summary>
+        <div className="mt-3 grid grid-cols-3 gap-3">
+          {APP_REWARDS.map((reward) => (
+            <RewardTile key={reward.name} reward={reward} />
+          ))}
+        </div>
+        <p className="mt-3 text-[11px] font-medium leading-snug text-black/45">
+          Exclusive for subscribers.
+        </p>
+      </details>
+    </div>
+  );
+}
 
 function PlanSelector({
   formulaId,
@@ -65,124 +264,67 @@ function PlanSelector({
       {SUB_CADENCES.map((cadence) => {
         const display = FUNNEL_CADENCES[cadence];
         const isSelected = selectedCadence === cadence;
-        const cadencePricing = getCadencePricingByProductHeroId(
-          formulaId,
-          cadence,
-        );
-        const frequency = getPriceFrequency(cadence);
+        const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
+        const monthsPerCycle = cadence === "quarterly-sub" ? 3 : 1;
+        const perMonth = pricing.price / monthsPerCycle;
+        const weeksPerCycle = monthsPerCycle * 4;
         const bannerLabel = display.badge;
+        const savePct = pricing.compareAtPrice
+          ? Math.round((1 - pricing.price / pricing.compareAtPrice) * 100)
+          : 0;
 
         return (
-          <button
+          <div
             key={isSelected ? `active-${cadence}` : cadence}
-            type="button"
-            onClick={() => onCadenceChange(cadence)}
-            className={`relative w-full select-none overflow-hidden border-2 bg-white text-left transition-all duration-200 ${
+            className={`relative w-full select-none overflow-hidden border-2 bg-white transition-all duration-200 ${
               isSelected
                 ? "card-pulse border-[#1B2757] shadow-md"
                 : "border-black/10 shadow-sm hover:border-black/25"
             }`}
           >
             {bannerLabel && (
-              <div className="bg-[#1B2757] px-4 py-1.5 text-center font-mono text-[10px] font-bold uppercase leading-none tracking-[0.16em] text-white">
+              <span className="absolute right-0 top-0 z-10 bg-[#1B2757] px-2.5 py-1 font-mono text-[8.5px] font-bold uppercase tracking-[0.14em] text-white">
                 {bannerLabel}
-              </div>
+              </span>
             )}
 
-            <div className={isSelected ? "p-4" : "px-4 py-3"}>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 transition-all duration-200 ${
-                      isSelected
-                        ? "border-[#1B2757] bg-[#1B2757]"
-                        : "border-black/30 bg-white"
-                    }`}
-                  >
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      className={`transition-all duration-200 ${isSelected ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
-                    >
-                      <path
-                        d="M2.5 8.5L6.5 12L13.5 4"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p
-                      className={`font-semibold ${isSelected ? "text-lg text-[var(--brand-black)]" : "text-base text-black/65"}`}
-                    >
-                      {display.label}
-                    </p>
-                    <span
-                      className={`mt-1 inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold uppercase tabular-nums tracking-[0.12em] ${
-                        isSelected
-                          ? "bg-[#1B2757]/10 text-[#1B2757]"
-                          : "bg-black/[0.05] text-black/55"
-                      }`}
-                    >
-                      {cadencePricing.shotCount} shots · 1/day
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex-shrink-0 text-right">
-                  <p
-                    className={`font-semibold tabular-nums ${isSelected ? "text-base text-[var(--brand-black)]" : "text-sm text-black/60"}`}
-                  >
-                    {formatPrice(cadencePricing.perShot)}
-                    <span className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-black/40">
-                      /shot
-                    </span>
-                  </p>
-                  {!isSelected && (
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.12em] text-black/40">
-                      {formatPrice(cadencePricing.price)}
-                      {frequency}
-                    </p>
-                  )}
-                </div>
+            <button
+              type="button"
+              onClick={() => onCadenceChange(cadence)}
+              className="block w-full px-4 pb-4 pt-4 text-left"
+            >
+              <div className="flex items-center gap-2.5 pr-20">
+                <Radio selected={isSelected} />
+                <span className="text-lg font-bold leading-none text-[var(--brand-black)]">
+                  {display.label}
+                </span>
+                {savePct > 0 && (
+                  <span className="rounded-full bg-[#C9A24A] px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+                    Save {savePct}%
+                  </span>
+                )}
               </div>
+              <div className="mt-2.5 flex items-baseline gap-1.5">
+                <span className="text-[28px] font-medium leading-none tabular-nums text-[var(--brand-black)]">
+                  {formatPrice(perMonth)}
+                </span>
+                <span className="text-sm font-semibold text-black/55">/mo</span>
+              </div>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black">
+                  {formatPrice(pricing.price)} every {weeksPerCycle} weeks
+                </span>
+                <span className="font-mono text-[11px] font-bold uppercase tabular-nums tracking-[0.08em] text-black">
+                  {formatPrice(pricing.perShot)} / shot
+                </span>
+              </div>
+              <p className="mt-1.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-black">
+                {pricing.shotCount} shots · 2 a day
+              </p>
+            </button>
 
-              {isSelected && (
-                <div className="ml-8 mt-4 space-y-3 border-t border-black/10 pt-4">
-                  <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="text-2xl font-bold tabular-nums text-[var(--brand-black)]">
-                      {formatPrice(cadencePricing.price)}
-                      <span className="text-base font-semibold">
-                        {frequency}
-                      </span>
-                    </span>
-                    {cadencePricing.compareAtPrice && (
-                      <>
-                        <span className="font-mono text-[10px] uppercase tabular-nums tracking-[0.14em] text-black/40 line-through">
-                          {formatPrice(cadencePricing.compareAtPrice)}
-                        </span>
-                        <span className="font-mono text-[10px] font-semibold uppercase tabular-nums tracking-[0.14em] text-[#1B2757]">
-                          Save{" "}
-                          {formatPrice(
-                            cadencePricing.compareAtPrice -
-                              cadencePricing.price,
-                          )}
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  <TileChecklist
-                    items={getTileChecklist(cadence, cadencePricing.shotCount)}
-                  />
-                </div>
-              )}
-            </div>
-          </button>
+            {isSelected && <PlanDetail />}
+          </div>
         );
       })}
 
@@ -190,10 +332,8 @@ function PlanSelector({
       <button
         type="button"
         onClick={onOtpAddToCart}
-        className={`mx-auto mt-1 w-fit text-center text-sm underline underline-offset-4 transition-colors ${
-          otpSelected
-            ? "font-semibold text-[#1B2757]"
-            : "text-black/55 hover:text-black"
+        className={`mx-auto mt-1 w-fit text-center text-sm underline underline-offset-4 transition-opacity hover:opacity-70 ${
+          otpSelected ? "font-semibold text-[#1B2757]" : "text-black"
         }`}
       >
         One time purchase · {formatPrice(otpPricing.price)}
@@ -223,20 +363,131 @@ const TRUST_ITEMS = [
   "100-Day Guarantee",
 ];
 
+const TrustCheck = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden
+    className="h-3.5 w-3.5 shrink-0 text-[#1B2757]"
+  >
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
+    <path
+      d="M7.5 12.5L10.5 15.5L16.5 9.5"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 function TrustStrip() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-black/10 py-4">
+    <div className="flex items-center gap-x-5 gap-y-2 overflow-x-auto border-t border-black/10 py-4 [scrollbar-color:rgba(0,0,0,0.25)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/25 [&::-webkit-scrollbar]:h-1.5 md:flex-wrap md:justify-center md:overflow-x-visible">
       {TRUST_ITEMS.map((item) => (
         <span
           key={item}
-          className="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55"
+          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55"
         >
-          <span className="text-[#1B2757]" aria-hidden>
-            ✓
-          </span>
+          <TrustCheck />
           {item}
         </span>
       ))}
+    </div>
+  );
+}
+
+/** 3-icon reassurance bar shown directly under the CTA (IM8 pattern). */
+function TrustBar() {
+  const items = [
+    { Icon: TrustIconGuarantee, label: "100-day guarantee" },
+    { Icon: TrustIconShipping, label: "Free UK shipping" },
+    { Icon: TrustIconCancel, label: "Cancel anytime" },
+  ];
+  return (
+    <div className="mt-3 grid grid-cols-3 gap-2 border-y border-black/10 py-3">
+      {items.map(({ Icon, label }) => (
+        <div
+          key={label}
+          className="flex flex-col items-center gap-1.5 text-center"
+        >
+          <Icon className="h-5 w-5 text-[#1B2757]" />
+          <span className="text-[11px] font-semibold leading-tight text-black/70">
+            {label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** "What You'll Feel" outcomes — IM8 gradient-chip rows, our verified stats. */
+const FEEL_OUTCOMES = [
+  {
+    emoji: "🧠",
+    title: "Sharper thinking",
+    desc: "Proven against placebo",
+    pct: "+14.86%",
+    grad: "linear-gradient(135deg,#FFF8E1,#FFECB3)",
+  },
+  {
+    emoji: "📈",
+    title: "Higher scores",
+    desc: "Improved cognitive scores",
+    pct: "80%",
+    grad: "linear-gradient(135deg,#E8F5E9,#C8E6C9)",
+  },
+  {
+    emoji: "🎯",
+    title: "Sharper focus",
+    desc: "In professional athletes",
+    pct: "+19.3%",
+    grad: "linear-gradient(135deg,#E3F2FD,#BBDEFB)",
+  },
+  {
+    emoji: "⚡",
+    title: "Fast results",
+    desc: "Improved in under 3 weeks",
+    pct: "75%",
+    grad: "linear-gradient(135deg,#EDE7F6,#D1C4E9)",
+  },
+];
+
+function WhatYouFeel() {
+  return (
+    <div className="rounded-2xl border border-black/10 bg-white p-4">
+      <h3 className="mb-3 text-center text-base font-bold text-black">
+        What You&apos;ll Feel
+      </h3>
+      <div className="flex flex-col">
+        {FEEL_OUTCOMES.map((o, i) => (
+          <div
+            key={o.title}
+            className={`flex items-center gap-3 py-2 ${
+              i < FEEL_OUTCOMES.length - 1 ? "border-b border-black/[0.05]" : ""
+            }`}
+          >
+            <div
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-base shadow-sm"
+              style={{ background: o.grad }}
+              aria-hidden
+            >
+              {o.emoji}
+            </div>
+            <div className="min-w-0 flex-1">
+              <strong className="block text-[13px] font-bold leading-tight text-black">
+                {o.title}
+              </strong>
+              <span className="text-[11px] leading-tight text-black/55">
+                {o.desc}
+              </span>
+            </div>
+            <span className="shrink-0 text-[15px] font-extrabold tabular-nums text-[#1B2757]">
+              {o.pct}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -247,8 +498,22 @@ function BuyPanel({
   onCadenceChange,
   onAddToCart,
   onOtpAddToCart,
+  whoItsFor,
 }: ListicleProductHeroProps) {
   const content = getHeroContent(formulaId);
+
+  // CTA reflects the selected plan: subscriptions lead with the saving, the
+  // one-time link sets a plain add-to-cart.
+  const selectedPricing = getCadencePricingByProductHeroId(
+    formulaId,
+    selectedCadence,
+  );
+  const ctaLabel =
+    selectedCadence === "monthly-otp"
+      ? "Add to Cart"
+      : selectedPricing.compareAtPrice
+        ? `Subscribe & Save ${Math.round((1 - selectedPricing.price / selectedPricing.compareAtPrice) * 100)}%`
+        : "Subscribe & Save";
 
   return (
     <>
@@ -324,12 +589,20 @@ function BuyPanel({
           onClick={onAddToCart}
           className="w-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-90 active:opacity-80"
         >
-          Add to Cart
+          {ctaLabel}
         </button>
-        <GuaranteeRow />
+        <TrustBar />
       </div>
 
-      <HeroAccordions productType={getHeroProductType(formulaId)} />
+      <WhatYouFeel />
+
+      <IngredientSheet formulas={FORMULA_TABS[getHeroProductType(formulaId)]} />
+
+      <HeroAccordions
+        productType={getHeroProductType(formulaId)}
+        whoItsFor={whoItsFor}
+        hideIngredients
+      />
     </>
   );
 }
@@ -343,18 +616,17 @@ export function ListicleProductHeroMobile(props: ListicleProductHeroProps) {
 
   return (
     <>
-      <div className="relative left-1/2 w-screen -translate-x-1/2 bg-[#FAFAFA]">
+      {/* Contained gallery (not full-bleed) with a visible thumbnail strip */}
+      <div className="overflow-hidden rounded-2xl bg-[#FAFAFA] px-2 pb-1 pt-2">
         <ProductImageSlideshow
           key={props.selectedCadence}
           images={images}
           alt={`${content.name} bottle`}
-          fullBleedThumbnails
-          hideThumbnails
+          smallThumbnails
           imageFit="contain"
-          leadingVideo={BOTH_INGREDIENTS_VIDEO}
         />
       </div>
-      <div className="flex w-full min-w-0 flex-col gap-3 bg-white px-4 py-4 text-[#111]">
+      <div className="flex w-full min-w-0 flex-col gap-3 py-4 text-[#111]">
         <BuyPanel {...props} />
       </div>
       <TrustStrip />
@@ -379,16 +651,13 @@ export default function ListicleProductHero(props: ListicleProductHeroProps) {
             alt={`${content.name} bottle`}
             smallThumbnails
             imageFit="contain"
-            leadingVideo={BOTH_INGREDIENTS_VIDEO}
           />
         </div>
 
         <div className="relative z-10 order-2 min-w-0 flex-1 lg:sticky lg:top-8 lg:w-[48%] lg:flex-shrink-0 lg:self-start">
           <div
-            className="relative z-10 flex flex-col gap-[var(--brand-space-s)] bg-white"
+            className="relative z-10 flex flex-col gap-[var(--brand-space-s)]"
             style={{
-              paddingLeft: "var(--brand-space-m)",
-              paddingRight: "var(--brand-space-m)",
               paddingTop: "var(--brand-space-s)",
               paddingBottom: "var(--brand-space-m)",
             }}
