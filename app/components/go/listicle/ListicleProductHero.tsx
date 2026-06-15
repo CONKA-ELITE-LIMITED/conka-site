@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import GuaranteeRow from "@/app/components/landing/GuaranteeRow";
 import { formatPrice } from "@/app/lib/productData";
 import {
@@ -16,11 +17,9 @@ import {
   getHeroContent,
   getHeroProductType,
   getPriceFrequency,
-  getTileChecklist,
 } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
 import HeroAccordions from "@/app/components/product/HeroAccordions";
-import TileChecklist from "@/app/components/product/TileChecklist";
 
 /* ============================================================================
  * ListicleProductHero (+ Mobile)
@@ -44,6 +43,203 @@ interface ListicleProductHeroProps {
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
 
+/** What's included with every plan (same on all). No prices — these are the
+ *  baked-in extras, distinct from the earnable app rewards below. */
+const PLAN_INCLUDED = [
+  "Free baseline brain test",
+  "Free UK shipping",
+  "Cancel or pause anytime",
+  "100-day money-back guarantee",
+];
+
+/** App bullets — mirrors CartAppGift (the cart-drawer app block), trimmed. */
+const APP_BULLETS = [
+  "Daily brain performance score, tracked over time",
+  "Personalised insights from your shots and test results",
+  "Weekly and monthly reports analysing your progress",
+];
+
+/** Rewards you can UNLOCK in the app (not guaranteed on purchase). Values are
+ *  shown struck-through to signal worth. `img` is optional until assets land. */
+interface AppReward {
+  name: string;
+  value: string;
+  img?: string;
+}
+const APP_REWARDS: AppReward[] = [
+  { name: "Conka Beanie", value: "£25", img: "/app/rewards/ConkaBlackBeanie.jpg" },
+  { name: "Conka Shirt", value: "£20", img: "/app/rewards/ConkaBlackTshirt.png" },
+  { name: "Conka Cap", value: "£15", img: "/app/rewards/ConkaTruckerCap.png" },
+];
+
+function RewardTile({ reward }: { reward: AppReward }) {
+  return (
+    <div className="flex flex-col items-center gap-1.5 text-center">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/[0.06] bg-black/[0.03]">
+        {reward.img ? (
+          <Image
+            src={reward.img}
+            alt={reward.name}
+            fill
+            className="object-contain p-1"
+            sizes="80px"
+          />
+        ) : (
+          <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-black/25">
+            Reward
+          </span>
+        )}
+      </div>
+      <span className="font-mono text-[11px] font-bold tabular-nums text-black/45 line-through">
+        {reward.value}
+      </span>
+      <span className="text-[11px] font-medium leading-tight text-black/70">
+        {reward.name}
+      </span>
+    </div>
+  );
+}
+
+/** Compact "the CONKA app" visual for the plan card — a trimmed version of
+ *  the cart-drawer CartAppGift (app-ring screenshot + Free badge + bullets). */
+function PlanAppGift() {
+  return (
+    <div className="mt-4 overflow-hidden border border-black/10">
+      <div className="flex items-center justify-between gap-2 border-b border-black/[0.08] bg-[#f9f9f9] px-3 py-2">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55">
+          Also included — the CONKA app
+        </p>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <span className="font-mono text-[9px] font-bold uppercase tabular-nums tracking-[0.1em] text-black/35 line-through">
+            £119.99/yr
+          </span>
+          <span className="bg-[#1B2757] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white">
+            Free
+          </span>
+        </span>
+      </div>
+      <div className="flex gap-3 p-3">
+        <Image
+          src="/app/AppConkaRing.png"
+          alt="CONKA app showing daily brain performance score"
+          width={48}
+          height={104}
+          className="h-auto w-12 shrink-0"
+        />
+        <div className="min-w-0 flex-1 space-y-1.5 pt-0.5">
+          {APP_BULLETS.map((bullet) => (
+            <div key={bullet} className="flex gap-2">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="mt-0.5 shrink-0 text-[#1B2757]"
+                aria-hidden
+              >
+                <path
+                  d="M3 8.5L6.5 12L13 4.5"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                />
+              </svg>
+              <p className="text-xs leading-snug text-black/80">{bullet}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Selected-card detail: price + save, "what's included", and the expandable
+ *  "unlock in the app" rewards. Rendered as a sibling of the select button so
+ *  the <details> disclosure is valid (not nested inside a button). */
+function PlanDetail({
+  cadence,
+  formulaId,
+}: {
+  cadence: CadenceType;
+  formulaId: ProductHeroId;
+}) {
+  const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
+  const frequency = getPriceFrequency(cadence);
+
+  return (
+    <div className="px-4 pb-4">
+      <div className="flex flex-wrap items-baseline gap-2 border-t border-black/10 pt-4">
+        <span className="text-2xl font-bold tabular-nums text-[var(--brand-black)]">
+          {formatPrice(pricing.price)}
+          <span className="text-base font-semibold">{frequency}</span>
+        </span>
+        {pricing.compareAtPrice && (
+          <>
+            <span className="font-mono text-[10px] uppercase tabular-nums tracking-[0.14em] text-black/40 line-through">
+              {formatPrice(pricing.compareAtPrice)}
+            </span>
+            <span className="font-mono text-[10px] font-semibold uppercase tabular-nums tracking-[0.14em] text-[#1B2757]">
+              Save {formatPrice(pricing.compareAtPrice - pricing.price)}
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* What's included */}
+      <p className="mb-2 mt-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+        What&apos;s included
+      </p>
+      <ul className="flex flex-col gap-1.5">
+        {PLAN_INCLUDED.map((item) => (
+          <li
+            key={item}
+            className="flex items-center gap-2 text-[13px] font-medium text-black/75"
+          >
+            <span className="text-[#1B2757]" aria-hidden>
+              ✓
+            </span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      {/* The CONKA app — visual block (mirrors the cart-drawer app gift) */}
+      <PlanAppGift />
+
+      {/* Earnable app rewards — expandable */}
+      <details className="mt-3 border-t border-black/10 pt-3">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1B2757]">
+            Rewards you can unlock in the app
+          </span>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            className="flex-shrink-0 text-black/40 transition-transform [details[open]_&]:rotate-180"
+            aria-hidden
+          >
+            <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </summary>
+        <div className="mt-3 grid grid-cols-3 gap-3">
+          {APP_REWARDS.map((reward) => (
+            <RewardTile key={reward.name} reward={reward} />
+          ))}
+        </div>
+        <p className="mt-3 text-[11px] leading-snug text-black/45">
+          Earn rewards by keeping your streak and climbing the leaderboard in the
+          app. Not included with purchase.
+        </p>
+      </details>
+    </div>
+  );
+}
+
 function PlanSelector({
   formulaId,
   selectedCadence,
@@ -66,11 +262,9 @@ function PlanSelector({
         const bannerLabel = display.badge;
 
         return (
-          <button
+          <div
             key={isSelected ? `active-${cadence}` : cadence}
-            type="button"
-            onClick={() => onCadenceChange(cadence)}
-            className={`relative w-full select-none overflow-hidden border-2 bg-white text-left transition-all duration-200 ${
+            className={`relative w-full select-none overflow-hidden border-2 bg-white transition-all duration-200 ${
               isSelected
                 ? "card-pulse border-[#1B2757] shadow-md"
                 : "border-black/10 shadow-sm hover:border-black/25"
@@ -82,7 +276,11 @@ function PlanSelector({
               </div>
             )}
 
-            <div className={isSelected ? "p-4" : "px-4 py-3"}>
+            <button
+              type="button"
+              onClick={() => onCadenceChange(cadence)}
+              className={`block w-full text-left ${isSelected ? "px-4 pb-1 pt-4" : "px-4 py-3"}`}
+            >
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div
@@ -143,39 +341,12 @@ function PlanSelector({
                   )}
                 </div>
               </div>
+            </button>
 
-              {isSelected && (
-                <div className="ml-8 mt-4 space-y-3 border-t border-black/10 pt-4">
-                  <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="text-2xl font-bold tabular-nums text-[var(--brand-black)]">
-                      {formatPrice(cadencePricing.price)}
-                      <span className="text-base font-semibold">
-                        {frequency}
-                      </span>
-                    </span>
-                    {cadencePricing.compareAtPrice && (
-                      <>
-                        <span className="font-mono text-[10px] uppercase tabular-nums tracking-[0.14em] text-black/40 line-through">
-                          {formatPrice(cadencePricing.compareAtPrice)}
-                        </span>
-                        <span className="font-mono text-[10px] font-semibold uppercase tabular-nums tracking-[0.14em] text-[#1B2757]">
-                          Save{" "}
-                          {formatPrice(
-                            cadencePricing.compareAtPrice -
-                              cadencePricing.price,
-                          )}
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  <TileChecklist
-                    items={getTileChecklist(cadence, cadencePricing.shotCount)}
-                  />
-                </div>
-              )}
-            </div>
-          </button>
+            {isSelected && (
+              <PlanDetail cadence={cadence} formulaId={formulaId} />
+            )}
+          </div>
         );
       })}
 
@@ -242,6 +413,19 @@ function BuyPanel({
   onOtpAddToCart,
 }: ListicleProductHeroProps) {
   const content = getHeroContent(formulaId);
+
+  // CTA reflects the selected plan: subscriptions lead with the saving, the
+  // one-time link sets a plain add-to-cart.
+  const selectedPricing = getCadencePricingByProductHeroId(
+    formulaId,
+    selectedCadence,
+  );
+  const ctaLabel =
+    selectedCadence === "monthly-otp"
+      ? "Add to Cart"
+      : selectedPricing.compareAtPrice
+        ? `Subscribe & Save ${Math.round((1 - selectedPricing.price / selectedPricing.compareAtPrice) * 100)}%`
+        : "Subscribe & Save";
 
   return (
     <>
@@ -317,7 +501,7 @@ function BuyPanel({
           onClick={onAddToCart}
           className="w-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-90 active:opacity-80"
         >
-          Add to Cart
+          {ctaLabel}
         </button>
         <GuaranteeRow />
       </div>
