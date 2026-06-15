@@ -85,7 +85,13 @@ export const productivityListicle: ListicleConfig = {
       headline: "It's Not an Energy Drink (and Won't Leave Your Brain Checked Out)",
       body: "Energy drinks give you a quick buzz, then a crash that leaves you foggy. Even \"zero sugar\" drinks often let you down.\n\nConka is caffeine-free. It is a clean boost that keeps your brain clear and focused all day, without the typical burnout.",
       // 9:16 brain-fuel loop, centre-cropped to 3:4 like the ADHD video tile
-      asset: { kind: "video", src: "/lander/video/BrainFuel.mp4", aspect: "3/4" },
+      // Bottle render: centred in a full-width black tile to match the other tiles' width
+      asset: {
+        kind: "video",
+        src: "/lander/video/BrainFuel.mp4",
+        aspect: "3/4",
+        fit: "contain",
+      },
     },
     {
       kind: "reason",

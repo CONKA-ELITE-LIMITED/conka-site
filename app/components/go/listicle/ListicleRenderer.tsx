@@ -155,10 +155,15 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   }
 
   if (asset.kind === "video") {
+    // "contain": full-width black tile, clip centred (product renders).
+    // "cover" (default): inset 4/5 frame, clip fills it (texture loops).
+    const contain = asset.fit === "contain";
     return (
       <div
-        className="relative mx-auto w-4/5 overflow-hidden rounded-3xl"
-        style={{ aspectRatio: asset.aspect ?? "4/3" }}
+        className={`relative overflow-hidden rounded-3xl ${
+          contain ? "w-full bg-black" : "mx-auto w-4/5"
+        }`}
+        style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
       >
         <video
           src={asset.src}
@@ -166,7 +171,9 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
           muted
           loop
           playsInline
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full ${
+            contain ? "object-contain" : "object-cover"
+          }`}
         />
       </div>
     );
