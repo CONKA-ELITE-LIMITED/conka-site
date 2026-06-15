@@ -76,7 +76,7 @@ export function BottleIcon({ stroke = "currentColor" }: { stroke?: string }) {
  * stroke-dashoffset to 0 once in view. The transition is motion-safe only, so
  * reduced-motion users get the fully drawn line with no animation.
  */
-function DrawPath({
+export function DrawPath({
   d,
   stroke,
   isInView,

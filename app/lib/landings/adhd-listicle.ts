@@ -143,13 +143,8 @@ export const adhdListicle: ListicleConfig = {
       tag: "MENTAL NOISE",
       headline: "Quiet the Noise in Your Head",
       body: "ADHD isn't just distraction. It's ten thoughts at once and a low hum of stress that makes a simple to-do list feel scary. When your focus chemistry is all over the place, your brain struggles to filter any of it out.\n\nConka brings calm alongside focus, without knocking you out. It turns the volume down so you can finally hear yourself think.",
-      asset: {
-        kind: "image",
-        src: "/videos/misc/BrainScan.gif",
-        alt: "Rotating brain scan animation",
-        aspect: "4/3",
-        fit: "cover",
-      },
+      // Two-bar focus comparison: quieter mind reads as sharper focus
+      asset: { kind: "focusBars" },
     },
     {
       kind: "reason",

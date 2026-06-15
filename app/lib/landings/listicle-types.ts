@@ -42,6 +42,10 @@ export type ListicleAsset =
   | { kind: "cognitionBars" }
   /** 4-group average cognitive score columns, CONKA groups in green (app data) */
   | { kind: "scoreByGroup" }
+  /** Day-energy curve: Without slumps in the afternoon, With CONKA holds steady */
+  | { kind: "dayEnergyCurve" }
+  /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
+  | { kind: "focusBars" }
   /** Athlete portrait with their quote overlaid + status (proof for a reason) */
   | {
       kind: "athleteQuote";

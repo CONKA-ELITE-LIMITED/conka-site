@@ -201,11 +201,8 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "STAMINA",
       headline: "Mental Energy That Defeats Fatigue",
       body: "Complicated routines kill consistency, so we made this daily approach simple, natural, and effective.\n\nPacked with essential vitamins, it supports optimal daily functioning and keeps your brain feeling distinctly less tired from morning to night. No more midday slumps or mental exhaustion. Sustained mental energy, all day long.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Sustained mental energy morning to night",
-      },
+      // Day-energy curve: afternoon slump without, steady with CONKA
+      asset: { kind: "dayEnergyCurve" },
     },
     {
       kind: "reason",

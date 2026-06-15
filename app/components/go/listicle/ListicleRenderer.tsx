@@ -20,6 +20,8 @@ import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
+import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
+import FocusBars from "@/app/components/landing/FocusBars";
 import AppMeasureSection, {
   MeasureTile,
 } from "@/app/components/landing/AppMeasureSection";
@@ -131,6 +133,14 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   if (asset.kind === "scoreByGroup") {
     return <ScoreByGroup />;
+  }
+
+  if (asset.kind === "dayEnergyCurve") {
+    return <DayEnergyCurve />;
+  }
+
+  if (asset.kind === "focusBars") {
+    return <FocusBars />;
   }
 
   if (asset.kind === "athleteQuote") {
