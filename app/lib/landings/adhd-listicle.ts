@@ -44,6 +44,7 @@ export const adhdListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
+  logoMarquee: true,
   body: [
     {
       kind: "reason",

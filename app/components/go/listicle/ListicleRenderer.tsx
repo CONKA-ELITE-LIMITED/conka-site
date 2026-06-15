@@ -19,6 +19,7 @@ import CrashChart from "@/app/components/landing/CrashChart";
 import AppMeasureSection from "@/app/components/landing/AppMeasureSection";
 import ReviewRail from "@/app/components/landing/ReviewRail";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
+import LogoMarquee from "@/app/components/landing/LogoMarquee";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -559,6 +560,19 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             ))}
           </div>
         </div>
+      ) : null}
+
+      {/* Zone 1c: partner-logo marquee — "Fueling High Performers at:" */}
+      {config.logoMarquee ? (
+        <section
+          aria-label="Fueling high performers"
+          className="px-5 py-12 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <LogoMarquee />
+          </div>
+        </section>
       ) : null}
 
       {/* Zone 2: reasons */}

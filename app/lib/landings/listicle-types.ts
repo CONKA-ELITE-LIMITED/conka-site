@@ -120,6 +120,8 @@ export interface ListicleConfig {
   };
   /** Marquee proof ticker items below the hero */
   ticker?: string[];
+  /** Partner-logo marquee ("Fueling High Performers at:") below the ticker */
+  logoMarquee?: boolean;
   /** The listicle core: reasons with bands/strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
