@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-15** | Listicle buy box gallery: contained (not full-bleed) with a visible thumbnail carousel on mobile; dropped the leading ingredients video so the product image is primary
 - **2026-06-15** | Listicle data-graphics: measure tile on measurable points (replaces standalone app section), coffee-vs-CONKA cognition bars + 4-group score chart from CONKA app data, productivity R1-R3 chart/video mix
 - **2026-06-15** | Listicle social proof: logo marquee with the 3-tile athlete testimonial block below it, replacing the athlete carousel (home page keeps the carousel)
 - **2026-06-15** | Listicle partner-logo marquee (Fueling High Performers at:) as an optional logoMarquee config block

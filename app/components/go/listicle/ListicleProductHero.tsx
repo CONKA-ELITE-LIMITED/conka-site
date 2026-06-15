@@ -44,13 +44,6 @@ interface ListicleProductHeroProps {
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
 
-/** 3s-forward / 3s-reversed boomerang loop, first slide in the gallery */
-const BOTH_INGREDIENTS_VIDEO = {
-  mp4: "/videos/both/BothIngredients.mp4",
-  webm: "/videos/both/BothIngredients.webm",
-  poster: "/videos/both/BothIngredients-poster.jpg",
-};
-
 function PlanSelector({
   formulaId,
   selectedCadence,
@@ -343,15 +336,14 @@ export function ListicleProductHeroMobile(props: ListicleProductHeroProps) {
 
   return (
     <>
-      <div className="relative left-1/2 w-screen -translate-x-1/2 bg-[#FAFAFA]">
+      {/* Contained gallery (not full-bleed) with a visible thumbnail strip */}
+      <div className="overflow-hidden rounded-2xl bg-[#FAFAFA] px-2 pb-1 pt-2">
         <ProductImageSlideshow
           key={props.selectedCadence}
           images={images}
           alt={`${content.name} bottle`}
-          fullBleedThumbnails
-          hideThumbnails
+          smallThumbnails
           imageFit="contain"
-          leadingVideo={BOTH_INGREDIENTS_VIDEO}
         />
       </div>
       <div className="flex w-full min-w-0 flex-col gap-3 bg-white px-4 py-4 text-[#111]">
@@ -379,7 +371,6 @@ export default function ListicleProductHero(props: ListicleProductHeroProps) {
             alt={`${content.name} bottle`}
             smallThumbnails
             imageFit="contain"
-            leadingVideo={BOTH_INGREDIENTS_VIDEO}
           />
         </div>
 
