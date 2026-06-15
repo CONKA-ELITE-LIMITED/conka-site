@@ -20,6 +20,7 @@ import AppMeasureSection from "@/app/components/landing/AppMeasureSection";
 import ReviewRail from "@/app/components/landing/ReviewRail";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import LogoMarquee from "@/app/components/landing/LogoMarquee";
+import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -562,19 +563,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         </div>
       ) : null}
 
-      {/* Zone 1c: partner-logo marquee — "Fueling High Performers at:" */}
-      {config.logoMarquee ? (
-        <section
-          aria-label="Fueling high performers"
-          className="px-5 py-12 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto max-w-7xl">
-            <LogoMarquee />
-          </div>
-        </section>
-      ) : null}
-
       {/* Zone 2: reasons */}
       <section
         aria-label="Reasons"
@@ -621,15 +609,29 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         </div>
       </section>
 
-      {/* Zone 4: athlete trust (shared component) */}
-      {config.trustCarousel ? (
+      {/* Zone 4: social proof — logo marquee, then athlete testimonials */}
+      {config.logoMarquee || config.trustCarousel || config.athleteTestimonials ? (
         <section
           aria-label="Trusted by"
           className="px-5 py-16 md:px-[5vw]"
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <AthleteCredibilityCarousel />
+            {config.logoMarquee ? <LogoMarquee /> : null}
+            {config.athleteTestimonials ? (
+              <div className={config.logoMarquee ? "mt-16" : ""}>
+                <AthleteTestimonials />
+              </div>
+            ) : null}
+            {config.trustCarousel ? (
+              <div
+                className={
+                  config.logoMarquee || config.athleteTestimonials ? "mt-14" : ""
+                }
+              >
+                <AthleteCredibilityCarousel />
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}

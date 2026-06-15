@@ -136,6 +136,8 @@ export interface ListicleConfig {
   };
   /** Renders the shared AthleteCredibilityCarousel (own header/content) */
   trustCarousel?: boolean;
+  /** Renders the 3-tile athlete testimonial block (Trusted by the Best) */
+  athleteTestimonials?: boolean;
   /** Renders the shared CROTestimonials carousel + LandingTrustBadges */
   reviewsCarousel?: boolean;
   /** Renders the app proof section (cognitive score count-up, steps, guarantee) */

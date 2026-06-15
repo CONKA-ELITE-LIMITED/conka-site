@@ -46,6 +46,7 @@ export const productivityListicle: ListicleConfig = {
     "2-MINUTE BRAIN TEST",
   ],
   logoMarquee: true,
+  athleteTestimonials: true,
   body: [
     {
       kind: "reason",
@@ -163,7 +164,6 @@ export const productivityListicle: ListicleConfig = {
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
   },
-  trustCarousel: true,
   reviewsCarousel: true,
   appSection: true,
   faq: [
