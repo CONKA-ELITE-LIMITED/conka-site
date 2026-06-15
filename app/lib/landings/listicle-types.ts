@@ -24,6 +24,14 @@ export type ListicleAsset =
   | { kind: "video"; src: string; aspect?: string }
   /** The Fig. 01 coffee-vs-CONKA energy curves card (LandingValueComparison) */
   | { kind: "valueChart" }
+  /** "Skip the 2pm crash" curve + cost table (CrashChart). Figures default
+   *  from landingPricing; override per page. */
+  | {
+      kind: "crashChart";
+      saving?: string;
+      coffeePerDay?: string;
+      shotsPerDay?: string;
+    }
   | {
       kind: "statPanel";
       tone: "dark" | "light";

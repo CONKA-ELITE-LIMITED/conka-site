@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-15** | Listicle reason graphic: port lander CrashChart (2pm-crash curve + cost table) as a config-driven crashChart asset, live on ADHD + productivity pages
 - **2026-06-14** | Wire /lander header + footer to real routes, add on-page FAQ accordion, add /shipping page
 - **2026-06-14** | Add standalone /lander marketing landing page (paid-traffic funnel, live Shopify pricing, straight-to-checkout)
 - **2026-06-14** | Add productivity and brain-ageing persona listicle pages (/go/productivity-listicle, /go/brain-ageing-listicle) on the existing listicle framework

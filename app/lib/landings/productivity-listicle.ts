@@ -88,8 +88,8 @@ export const productivityListicle: ListicleConfig = {
       tag: "NO CRASH",
       headline: "It's Not an Energy Drink (and Won't Leave Your Brain Checked Out)",
       body: "Energy drinks give you a quick buzz, then a crash that leaves you foggy. Even \"zero sugar\" drinks often let you down.\n\nConka is caffeine-free. It is a clean boost that keeps your brain clear and focused all day, without the typical burnout.",
-      // Coffee-vs-CONKA energy curves: pays off the crash story
-      asset: { kind: "valueChart" },
+      // Skip-the-2pm-crash curve + cost table: pays off the crash story
+      asset: { kind: "crashChart" },
     },
     {
       kind: "reason",

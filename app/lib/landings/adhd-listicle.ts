@@ -101,8 +101,8 @@ export const adhdListicle: ListicleConfig = {
       tag: "THE 2PM CRASH",
       headline: "Kill the 2PM Crash (Without More Coffee)",
       body: "You run on coffee because it's the only thing that gets your brain going. Then 2pm hits with the slump, the jitters, and the fog. That crash is baked into caffeine, and an ADHD brain feels the swing harder.\n\nConka has zero caffeine, so there's nothing to spike you up and nothing to crash from. Steady focus all day, and Conka 2 at night helps you wind down instead of lying there wired.",
-      // Fig. 01 coffee-vs-CONKA curves: pays off the caffeine crash story
-      asset: { kind: "valueChart" },
+      // Skip-the-2pm-crash curve + cost table: pays off the caffeine crash story
+      asset: { kind: "crashChart" },
     },
     {
       // Hand-cropped excerpts (caffeine/crash theme), not the full bodies
