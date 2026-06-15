@@ -34,6 +34,12 @@ export type ListicleAsset =
     }
   /** Research-backed proof card: universities + key credentials */
   | { kind: "researchBacked" }
+  /** Cognitive-score measure card: count-up graph + routine steps + app stores */
+  | { kind: "measureTile" }
+  /** Coffee vs Coffee + CONKA measured-cognition bars (CONKA app data) */
+  | { kind: "cognitionBars" }
+  /** 4-group average cognitive score columns, CONKA groups in green (app data) */
+  | { kind: "scoreByGroup" }
   | {
       kind: "statPanel";
       tone: "dark" | "light";

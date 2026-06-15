@@ -16,7 +16,11 @@ import ListicleProductHero, {
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import { ValueComparisonChart } from "@/app/components/landing/LandingValueComparison";
 import CrashChart from "@/app/components/landing/CrashChart";
-import AppMeasureSection from "@/app/components/landing/AppMeasureSection";
+import CognitionBars from "@/app/components/landing/CognitionBars";
+import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
+import AppMeasureSection, {
+  MeasureTile,
+} from "@/app/components/landing/AppMeasureSection";
 import ReviewRail from "@/app/components/landing/ReviewRail";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import LogoMarquee from "@/app/components/landing/LogoMarquee";
@@ -113,6 +117,18 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   if (asset.kind === "researchBacked") {
     return <ResearchBackedGraphic />;
+  }
+
+  if (asset.kind === "measureTile") {
+    return <MeasureTile />;
+  }
+
+  if (asset.kind === "cognitionBars") {
+    return <CognitionBars />;
+  }
+
+  if (asset.kind === "scoreByGroup") {
+    return <ScoreByGroup />;
   }
 
   if (asset.kind === "video") {

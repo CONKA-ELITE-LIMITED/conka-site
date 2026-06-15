@@ -104,11 +104,7 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "TRACK IT",
       headline: "Measurable Results You Can Actually Track",
       body: "Most supplements make massive claims with zero proof, but this natural brain-boost offers measurable cognition tracking.\n\nBy using the companion app test, you can watch your focus and memory improve in hard numbers. Customers consistently report up to a 15% measured boost in direct brain function. Proven cognitive gains, tracked in real-time.",
-      asset: {
-        kind: "placeholder",
-        aspect: "3/4",
-        note: "App screenshot: focus and memory scores over time",
-      },
+      asset: { kind: "measureTile" },
     },
     {
       // Hand-cropped excerpts (memory / clarity theme)
@@ -170,7 +166,6 @@ export const brainAgeingListicle: ListicleConfig = {
     productHeroId: "03",
   },
   reviewsCarousel: true,
-  appSection: true,
   faq: [
     {
       q: "Is CONKA a medicine or a treatment for cognitive decline?",

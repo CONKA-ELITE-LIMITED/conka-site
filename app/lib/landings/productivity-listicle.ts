@@ -54,11 +54,8 @@ export const productivityListicle: ListicleConfig = {
       tag: "START THE DAY",
       headline: "Start Your Day Focused, Not Wired",
       body: "Three coffees before 9am can leave you wired, anxious, and still struggling to focus.\n\nCONKA Flow uses adaptogens like ashwagandha and lemon balm to support calm, steady focus without caffeine, helping you feel switched on without the jitters.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Calm focused morning, no coffee jitters",
-      },
+      // 4-group average cognitive score (CONKA app data), CONKA groups in green
+      asset: { kind: "scoreByGroup" },
     },
     {
       kind: "reason",
@@ -66,11 +63,8 @@ export const productivityListicle: ListicleConfig = {
       tag: "THE 2PM SLUMP",
       headline: "Stay Sharp Through the Afternoon",
       body: "That 2pm slump can make it hard to stay productive, sending you back for another coffee.\n\nCONKA Clear is designed to support focus later in the day, helping you stay sharp and get more done without relying on caffeine to power through.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Sharp afternoon focus at the desk",
-      },
+      // Coffee-crash vs CONKA-steady energy curve + cost table
+      asset: { kind: "crashChart" },
     },
     {
       kind: "statsBand",
@@ -90,8 +84,8 @@ export const productivityListicle: ListicleConfig = {
       tag: "NO CRASH",
       headline: "It's Not an Energy Drink (and Won't Leave Your Brain Checked Out)",
       body: "Energy drinks give you a quick buzz, then a crash that leaves you foggy. Even \"zero sugar\" drinks often let you down.\n\nConka is caffeine-free. It is a clean boost that keeps your brain clear and focused all day, without the typical burnout.",
-      // Skip-the-2pm-crash curve + cost table: pays off the crash story
-      asset: { kind: "crashChart" },
+      // 9:16 brain-fuel loop, centre-cropped to 3:4 like the ADHD video tile
+      asset: { kind: "video", src: "/lander/video/BrainFuel.mp4", aspect: "3/4" },
     },
     {
       kind: "reason",
@@ -99,11 +93,7 @@ export const productivityListicle: ListicleConfig = {
       tag: "MEASURABLE",
       headline: "See Your Focus, Not Just Feel It",
       body: "Most focus products just make claims. CONKA is different.\n\nIt includes a 2-minute in-app test so you can see your focus in numbers, not guesswork. In thousands of tests, users saw an average +28.96% improvement, backed by 32 studies.",
-      asset: {
-        kind: "placeholder",
-        aspect: "3/4",
-        note: "App screenshot: 2-minute focus test score",
-      },
+      asset: { kind: "measureTile" },
     },
     {
       // Hand-cropped excerpts (productivity / endurance theme)
@@ -165,7 +155,6 @@ export const productivityListicle: ListicleConfig = {
     productHeroId: "03",
   },
   reviewsCarousel: true,
-  appSection: true,
   faq: [
     {
       q: "Does CONKA contain caffeine?",

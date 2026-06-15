@@ -155,13 +155,7 @@ export const adhdListicle: ListicleConfig = {
       tag: "CONSISTENCY",
       headline: "Stick With It, and Actually See It Working",
       body: "You've got a drawer full of half-used supplements and apps you opened twice. Anything complicated dies by week two. And \"trust me, it's working\" means nothing when you can't feel a difference.\n\nConka is just two small shots, morning and night, plus a 2-minute brain test in the app that scores your focus. You watch it climb over time, like a fitness tracker for your brain.",
-      asset: {
-        kind: "image",
-        src: "/formulas/both/BothHero.jpg",
-        alt: "CONKA Flow and Clear shot bottles",
-        aspect: "4/3",
-        fit: "cover",
-      },
+      asset: { kind: "measureTile" },
     },
   ],
   bridge: {
@@ -174,7 +168,6 @@ export const adhdListicle: ListicleConfig = {
     productHeroId: "03",
   },
   reviewsCarousel: true,
-  appSection: true,
   faq: [
     {
       q: "Does CONKA contain caffeine or other stimulants?",

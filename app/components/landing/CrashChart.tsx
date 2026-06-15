@@ -33,7 +33,7 @@ interface CrashChartProps {
   shotsPerDay?: string;
 }
 
-function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
+export function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -52,7 +52,7 @@ function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
   );
 }
 
-function BottleIcon({ stroke = "currentColor" }: { stroke?: string }) {
+export function BottleIcon({ stroke = "currentColor" }: { stroke?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
