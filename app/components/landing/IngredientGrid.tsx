@@ -8,7 +8,7 @@ import { useInView } from "@/app/hooks/useInView";
  * Reason-slot asset: a tile grid of named actives + a one-line effect each,
  * the honest CONKA answer to IM8's deficiency panel. Used to make a reason
  * concrete by showing the specific ingredients doing the work (e.g. the
- * stress-load stack on "Built for Back-to-Back Days"). Names/doses come from
+ * stress-load stack on "Built for Back-to-Back Days"). Names come from
  * ingredientsData; copy is supplied per page in the config. Our patterns:
  * Tailwind, useInView reveal, gradient icon chips matching "What You'll Feel".
  * ========================================================================== */
@@ -17,8 +17,6 @@ export interface IngredientGridItem {
   /** Emoji glyph for the chip */
   icon: string;
   name: string;
-  /** Optional per-serving dose, e.g. "576mg" */
-  dose?: string;
   /** Short effect line */
   benefit: string;
 }
@@ -75,16 +73,9 @@ export default function IngredientGrid({
             >
               {item.icon}
             </div>
-            <div className="mt-2 flex items-baseline gap-1.5">
-              <strong className="text-[13px] font-bold leading-tight text-black">
-                {item.name}
-              </strong>
-              {item.dose ? (
-                <span className="font-mono text-[10px] tabular-nums text-black/40">
-                  {item.dose}
-                </span>
-              ) : null}
-            </div>
+            <strong className="mt-2 block text-[13px] font-bold leading-tight text-black">
+              {item.name}
+            </strong>
             <p className="mt-1 text-[12px] leading-snug text-black/60">
               {item.benefit}
             </p>

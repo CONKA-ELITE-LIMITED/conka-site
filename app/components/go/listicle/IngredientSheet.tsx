@@ -78,7 +78,12 @@ export default function IngredientSheet({
       </button>
 
       {open && (
-        <div className={styles.modal} aria-modal="true" role="dialog">
+        <div
+          className={styles.modal}
+          aria-modal="true"
+          role="dialog"
+          aria-label={`${formula.name} ingredients`}
+        >
           <div className={styles.modalOverlay} onClick={() => setOpen(false)} />
           <div className={styles.modalSheet}>
             <div className={styles.modalHead}>

@@ -58,7 +58,7 @@ export type ListicleAsset =
   | {
       kind: "ingredientGrid";
       eyebrow?: string;
-      items: { icon: string; name: string; dose?: string; benefit: string }[];
+      items: { icon: string; name: string; benefit: string }[];
       footer?: string;
     }
   | {
