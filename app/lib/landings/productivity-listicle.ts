@@ -150,11 +150,7 @@ export const productivityListicle: ListicleConfig = {
       tag: "REAL PROOF",
       headline: "Built on Real Proof, Not Big Claims",
       body: "A lot of focus products make big promises without proof. CONKA is different.\n\nIt is patented, Informed Sport certified, made in the UK, and developed with universities. It also comes with a 100-day money-back guarantee if you do not see results.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Certifications: patent, Informed Sport, UK-made",
-      },
+      asset: { kind: "researchBacked" },
     },
   ],
   bridge: {

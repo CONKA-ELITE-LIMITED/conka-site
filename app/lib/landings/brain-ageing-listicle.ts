@@ -155,11 +155,7 @@ export const brainAgeingListicle: ListicleConfig = {
       tag: "AUTHORITY",
       headline: "Stable Cognition Backed by Real Proof",
       body: "Concrete authority matters more than hype. This isn't a generic vitamin; it's a tailored, scientifically backed approach you can actively rely on to keep cognitive performance stable.\n\nBuilt on undeniable proof, it provides the natural brain-boost trusted for consistent, long-lasting mental health. Reliable results backed by real authority.",
-      asset: {
-        kind: "placeholder",
-        aspect: "4/3",
-        note: "Certifications and science: patent, Informed Sport, universities",
-      },
+      asset: { kind: "researchBacked" },
     },
   ],
   bridge: {

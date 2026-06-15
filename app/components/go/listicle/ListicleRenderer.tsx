@@ -14,10 +14,11 @@ import ListicleProductHero, {
   ListicleProductHeroMobile,
 } from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
-import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import { ValueComparisonChart } from "@/app/components/landing/LandingValueComparison";
 import CrashChart from "@/app/components/landing/CrashChart";
 import AppMeasureSection from "@/app/components/landing/AppMeasureSection";
+import ReviewRail from "@/app/components/landing/ReviewRail";
+import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -106,6 +107,10 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         shotsPerDay={asset.shotsPerDay}
       />
     );
+  }
+
+  if (asset.kind === "researchBacked") {
+    return <ResearchBackedGraphic />;
   }
 
   if (asset.kind === "video") {
@@ -671,7 +676,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <CROTestimonials hideCTA />
+            <ReviewRail />
             <div className="mt-10">
               <LandingTrustBadges />
             </div>

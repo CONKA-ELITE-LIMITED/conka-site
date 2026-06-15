@@ -32,6 +32,8 @@ export type ListicleAsset =
       coffeePerDay?: string;
       shotsPerDay?: string;
     }
+  /** Research-backed proof card: universities + key credentials */
+  | { kind: "researchBacked" }
   | {
       kind: "statPanel";
       tone: "dark" | "light";

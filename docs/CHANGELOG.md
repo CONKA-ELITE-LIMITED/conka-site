@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-15** | Listicle reviews zone now a verified card rail (from CURATED_TESTIMONIALS); research-backed proof graphic (universities photo + Informed Sport / Made in Britain badges) on productivity + brain-ageing proof reasons
 - **2026-06-15** | Listicle app proof section: port lander Measure (cognitive score count-up + draw, steps, app-store links, 100-day guarantee) behind an appSection config flag
 - **2026-06-15** | Listicle reason graphic: port lander CrashChart (2pm-crash curve + cost table) as a config-driven crashChart asset, live on ADHD + productivity pages
 - **2026-06-14** | Wire /lander header + footer to real routes, add on-page FAQ accordion, add /shipping page
