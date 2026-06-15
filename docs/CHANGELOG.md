@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-15** | Listicle plan cards restyled to IM8: full-width cards (no nested panel), structured header on both states, monthly-equivalent price + billing line, 2-shots-a-day, gold rounded Save badge, black one-time link
 - **2026-06-15** | Listicle buy-box plan cards gain offer depth: price+save, what's-included checklist, CONKA app block (value crossed to free), and an expandable earnable app-rewards group; dynamic Subscribe & Save CTA
 - **2026-06-15** | Listicle buy box gallery: contained (not full-bleed) with a visible thumbnail carousel on mobile; dropped the leading ingredients video so the product image is primary
 - **2026-06-15** | Listicle data-graphics: measure tile on measurable points (replaces standalone app section), coffee-vs-CONKA cognition bars + 4-group score chart from CONKA app data, productivity R1-R3 chart/video mix

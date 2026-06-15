@@ -16,7 +16,6 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
   getHeroProductType,
-  getPriceFrequency,
 } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
 import HeroAccordions from "@/app/components/product/HeroAccordions";
@@ -100,17 +99,41 @@ function RewardTile({ reward }: { reward: AppReward }) {
   );
 }
 
-/** Compact "the CONKA app" visual for the plan card — a trimmed version of
- *  the cart-drawer CartAppGift (app-ring screenshot + Free badge + bullets). */
+/** Circle radio that matches the IM8 plan-card selector. */
+function Radio({ selected }: { selected: boolean }) {
+  return (
+    <span
+      className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+        selected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
+      }`}
+      aria-hidden
+    >
+      {selected && (
+        <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M2.5 8.5L6.5 12L13.5 4"
+            stroke="white"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
+    </span>
+  );
+}
+
+/** "The CONKA app" section — full width inside the plan card (no nested box).
+ *  Mirrors the cart-drawer CartAppGift content; value crossed to free. */
 function PlanAppGift() {
   return (
-    <div className="mt-4 overflow-hidden border border-black/10">
-      <div className="flex items-center justify-between gap-2 border-b border-black/[0.08] bg-[#f9f9f9] px-3 py-2">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55">
+    <div className="mt-4 border-t border-black/10 pt-4">
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
           Also included — the CONKA app
         </p>
         <span className="flex shrink-0 items-center gap-1.5">
-          <span className="font-mono text-[9px] font-bold uppercase tabular-nums tracking-[0.1em] text-black/35 line-through">
+          <span className="font-mono text-[10px] font-bold uppercase tabular-nums tracking-[0.05em] text-black/35 line-through">
             £119.99/yr
           </span>
           <span className="bg-[#1B2757] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white">
@@ -118,20 +141,20 @@ function PlanAppGift() {
           </span>
         </span>
       </div>
-      <div className="flex gap-3 p-3">
+      <div className="mt-2.5 flex gap-3.5">
         <Image
           src="/app/AppConkaRing.png"
           alt="CONKA app showing daily brain performance score"
-          width={48}
-          height={104}
-          className="h-auto w-12 shrink-0"
+          width={56}
+          height={120}
+          className="h-auto w-14 shrink-0"
         />
-        <div className="min-w-0 flex-1 space-y-1.5 pt-0.5">
+        <div className="min-w-0 flex-1 space-y-2 pt-0.5">
           {APP_BULLETS.map((bullet) => (
             <div key={bullet} className="flex gap-2">
               <svg
-                width="12"
-                height="12"
+                width="13"
+                height="13"
                 viewBox="0 0 16 16"
                 fill="none"
                 className="mt-0.5 shrink-0 text-[#1B2757]"
@@ -145,7 +168,7 @@ function PlanAppGift() {
                   strokeLinejoin="miter"
                 />
               </svg>
-              <p className="text-xs leading-snug text-black/80">{bullet}</p>
+              <p className="text-[13px] leading-snug text-black/80">{bullet}</p>
             </div>
           ))}
         </div>
@@ -154,40 +177,14 @@ function PlanAppGift() {
   );
 }
 
-/** Selected-card detail: price + save, "what's included", and the expandable
- *  "unlock in the app" rewards. Rendered as a sibling of the select button so
- *  the <details> disclosure is valid (not nested inside a button). */
-function PlanDetail({
-  cadence,
-  formulaId,
-}: {
-  cadence: CadenceType;
-  formulaId: ProductHeroId;
-}) {
-  const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
-  const frequency = getPriceFrequency(cadence);
-
+/** Selected-card detail (below the header separator): what's included, the
+ *  app section, and the expandable rewards. Full width, no nested cards.
+ *  Same on every plan, so it takes no props. */
+function PlanDetail() {
   return (
-    <div className="px-4 pb-4">
-      <div className="flex flex-wrap items-baseline gap-2 border-t border-black/10 pt-4">
-        <span className="text-2xl font-bold tabular-nums text-[var(--brand-black)]">
-          {formatPrice(pricing.price)}
-          <span className="text-base font-semibold">{frequency}</span>
-        </span>
-        {pricing.compareAtPrice && (
-          <>
-            <span className="font-mono text-[10px] uppercase tabular-nums tracking-[0.14em] text-black/40 line-through">
-              {formatPrice(pricing.compareAtPrice)}
-            </span>
-            <span className="font-mono text-[10px] font-semibold uppercase tabular-nums tracking-[0.14em] text-[#1B2757]">
-              Save {formatPrice(pricing.compareAtPrice - pricing.price)}
-            </span>
-          </>
-        )}
-      </div>
-
+    <div className="border-t border-black/10 px-4 pb-4 pt-4">
       {/* What's included */}
-      <p className="mb-2 mt-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+      <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
         What&apos;s included
       </p>
       <ul className="flex flex-col gap-1.5">
@@ -204,11 +201,11 @@ function PlanDetail({
         ))}
       </ul>
 
-      {/* The CONKA app — visual block (mirrors the cart-drawer app gift) */}
+      {/* The CONKA app — full-width section */}
       <PlanAppGift />
 
       {/* Earnable app rewards — expandable */}
-      <details className="mt-3 border-t border-black/10 pt-3">
+      <details className="mt-4 border-t border-black/10 pt-4">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1B2757]">
             Rewards you can unlock in the app
@@ -231,9 +228,8 @@ function PlanDetail({
             <RewardTile key={reward.name} reward={reward} />
           ))}
         </div>
-        <p className="mt-3 text-[11px] leading-snug text-black/45">
-          Earn rewards by keeping your streak and climbing the leaderboard in the
-          app. Not included with purchase.
+        <p className="mt-3 text-[11px] font-medium leading-snug text-black/45">
+          Exclusive for subscribers.
         </p>
       </details>
     </div>
@@ -254,12 +250,14 @@ function PlanSelector({
       {SUB_CADENCES.map((cadence) => {
         const display = FUNNEL_CADENCES[cadence];
         const isSelected = selectedCadence === cadence;
-        const cadencePricing = getCadencePricingByProductHeroId(
-          formulaId,
-          cadence,
-        );
-        const frequency = getPriceFrequency(cadence);
+        const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
+        const monthsPerCycle = cadence === "quarterly-sub" ? 3 : 1;
+        const perMonth = pricing.price / monthsPerCycle;
+        const weeksPerCycle = monthsPerCycle * 4;
         const bannerLabel = display.badge;
+        const savePct = pricing.compareAtPrice
+          ? Math.round((1 - pricing.price / pricing.compareAtPrice) * 100)
+          : 0;
 
         return (
           <div
@@ -271,81 +269,47 @@ function PlanSelector({
             }`}
           >
             {bannerLabel && (
-              <div className="bg-[#1B2757] px-4 py-1.5 text-center font-mono text-[10px] font-bold uppercase leading-none tracking-[0.16em] text-white">
+              <span className="absolute right-0 top-0 z-10 bg-[#1B2757] px-2.5 py-1 font-mono text-[8.5px] font-bold uppercase tracking-[0.14em] text-white">
                 {bannerLabel}
-              </div>
+              </span>
             )}
 
             <button
               type="button"
               onClick={() => onCadenceChange(cadence)}
-              className={`block w-full text-left ${isSelected ? "px-4 pb-1 pt-4" : "px-4 py-3"}`}
+              className="block w-full px-4 pb-4 pt-4 text-left"
             >
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 transition-all duration-200 ${
-                      isSelected
-                        ? "border-[#1B2757] bg-[#1B2757]"
-                        : "border-black/30 bg-white"
-                    }`}
-                  >
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      className={`transition-all duration-200 ${isSelected ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
-                    >
-                      <path
-                        d="M2.5 8.5L6.5 12L13.5 4"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p
-                      className={`font-semibold ${isSelected ? "text-lg text-[var(--brand-black)]" : "text-base text-black/65"}`}
-                    >
-                      {display.label}
-                    </p>
-                    <span
-                      className={`mt-1 inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold uppercase tabular-nums tracking-[0.12em] ${
-                        isSelected
-                          ? "bg-[#1B2757]/10 text-[#1B2757]"
-                          : "bg-black/[0.05] text-black/55"
-                      }`}
-                    >
-                      {cadencePricing.shotCount} shots · 1/day
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex-shrink-0 text-right">
-                  <p
-                    className={`font-semibold tabular-nums ${isSelected ? "text-base text-[var(--brand-black)]" : "text-sm text-black/60"}`}
-                  >
-                    {formatPrice(cadencePricing.perShot)}
-                    <span className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-black/40">
-                      /shot
-                    </span>
-                  </p>
-                  {!isSelected && (
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.12em] text-black/40">
-                      {formatPrice(cadencePricing.price)}
-                      {frequency}
-                    </p>
-                  )}
-                </div>
+              <div className="flex items-center gap-2.5 pr-20">
+                <Radio selected={isSelected} />
+                <span className="text-lg font-bold leading-none text-[var(--brand-black)]">
+                  {display.label}
+                </span>
+                {savePct > 0 && (
+                  <span className="rounded-full bg-[#C9A24A] px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+                    Save {savePct}%
+                  </span>
+                )}
               </div>
+              <div className="mt-2.5 flex items-baseline gap-1.5">
+                <span className="text-[28px] font-medium leading-none tabular-nums text-[var(--brand-black)]">
+                  {formatPrice(perMonth)}
+                </span>
+                <span className="text-sm font-semibold text-black/55">/mo</span>
+              </div>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black/45">
+                  {formatPrice(pricing.price)} every {weeksPerCycle} weeks
+                </span>
+                <span className="font-mono text-[11px] font-bold uppercase tabular-nums tracking-[0.08em] text-black">
+                  {formatPrice(pricing.perShot)} / shot
+                </span>
+              </div>
+              <p className="mt-1.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-black/40">
+                {pricing.shotCount} shots · 2 a day
+              </p>
             </button>
 
-            {isSelected && (
-              <PlanDetail cadence={cadence} formulaId={formulaId} />
-            )}
+            {isSelected && <PlanDetail />}
           </div>
         );
       })}
@@ -354,10 +318,8 @@ function PlanSelector({
       <button
         type="button"
         onClick={onOtpAddToCart}
-        className={`mx-auto mt-1 w-fit text-center text-sm underline underline-offset-4 transition-colors ${
-          otpSelected
-            ? "font-semibold text-[#1B2757]"
-            : "text-black/55 hover:text-black"
+        className={`mx-auto mt-1 w-fit text-center text-sm underline underline-offset-4 transition-opacity hover:opacity-70 ${
+          otpSelected ? "font-semibold text-[#1B2757]" : "text-black"
         }`}
       >
         One time purchase · {formatPrice(otpPricing.price)}
@@ -530,7 +492,7 @@ export function ListicleProductHeroMobile(props: ListicleProductHeroProps) {
           imageFit="contain"
         />
       </div>
-      <div className="flex w-full min-w-0 flex-col gap-3 bg-white px-4 py-4 text-[#111]">
+      <div className="flex w-full min-w-0 flex-col gap-3 py-4 text-[#111]">
         <BuyPanel {...props} />
       </div>
       <TrustStrip />
@@ -560,10 +522,8 @@ export default function ListicleProductHero(props: ListicleProductHeroProps) {
 
         <div className="relative z-10 order-2 min-w-0 flex-1 lg:sticky lg:top-8 lg:w-[48%] lg:flex-shrink-0 lg:self-start">
           <div
-            className="relative z-10 flex flex-col gap-[var(--brand-space-s)] bg-white"
+            className="relative z-10 flex flex-col gap-[var(--brand-space-s)]"
             style={{
-              paddingLeft: "var(--brand-space-m)",
-              paddingRight: "var(--brand-space-m)",
               paddingTop: "var(--brand-space-s)",
               paddingBottom: "var(--brand-space-m)",
             }}
