@@ -7,6 +7,7 @@ import TimeOfDaySection from "@/app/app-insights/sections/TimeOfDaySection";
 import MentalFatigueSection from "@/app/app-insights/sections/MentalFatigueSection";
 import StressSection from "@/app/app-insights/sections/StressSection";
 import AlcoholSection from "@/app/app-insights/sections/AlcoholSection";
+import CoffeeSection from "@/app/app-insights/sections/CoffeeSection";
 import InsightTldrStrip from "./InsightTldrStrip";
 import MethodologyInThirtySeconds from "./MethodologyInThirtySeconds";
 
@@ -34,6 +35,12 @@ const FILTERS = [
     label: "What does a hangover do to your brain?",
     shortLabel: "Alcohol",
     ariaLabel: "Alcohol and hangover report",
+  },
+  {
+    id: "coffee",
+    label: "Coffee, CONKA, or both?",
+    shortLabel: "Coffee",
+    ariaLabel: "Coffee versus CONKA report",
   },
 ] as const;
 
@@ -133,7 +140,7 @@ export default function InsightFilteredSections() {
             {"// Filter by question"}
           </p>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {FILTERS.map((f) => {
               const isActive = active === f.id;
               return (
@@ -208,6 +215,14 @@ export default function InsightFilteredSections() {
           <section id="alcohol" className="brand-section scroll-mt-24" aria-label="Alcohol and hangover report">
             <div className="brand-track">
               <AlcoholSection />
+            </div>
+          </section>
+        )}
+
+        {show("coffee") && (
+          <section id="coffee" className="brand-section scroll-mt-24" aria-label="Coffee versus CONKA report">
+            <div className="brand-track">
+              <CoffeeSection />
             </div>
           </section>
         )}
