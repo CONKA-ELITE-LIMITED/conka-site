@@ -28,6 +28,7 @@ import {
   trackLandingStarted,
 } from "@/app/lib/analytics";
 import { trackMetaLead, trackMetaViewContent } from "@/app/lib/metaPixel";
+import { useQuizEvents } from "@/app/hooks/useQuizEvents";
 
 /**
  * Perceived-progress curve (Flow-style front-loading): the first
@@ -49,6 +50,25 @@ function generateSessionId(): string {
 }
 
 /**
+ * Persist the session id in sessionStorage (keyed by slug) so a reload
+ * continues the same session instead of fragmenting it into a fresh start.
+ * SSR-safe: returns a throwaway id on the server (never rendered).
+ */
+function getOrCreateSessionId(slug: string): string {
+  if (typeof window === "undefined") return generateSessionId();
+  const key = `go_quiz_session_${slug}`;
+  try {
+    const existing = sessionStorage.getItem(key);
+    if (existing) return existing;
+    const id = generateSessionId();
+    sessionStorage.setItem(key, id);
+    return id;
+  } catch {
+    return generateSessionId();
+  }
+}
+
+/**
  * Full-viewport quiz orchestrator for /go/[slug]. Renders whatever the
  * config's screens array describes; owns sequencing, back navigation,
  * the answers map, score tally and all analytics. The page renders no
@@ -57,18 +77,24 @@ function generateSessionId(): string {
 export default function QuizEngine({ config }: { config: LandingConfig }) {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, QuizAnswer>>({});
-  const [sessionId] = useState(generateSessionId);
+  const [sessionId] = useState(() => getOrCreateSessionId(config.slug));
   const startTimeRef = useRef(0);
   const resultsFiredRef = useRef(false);
 
   const screens = config.screens;
   const screen = screens[index];
-  const base = {
-    slug: config.slug,
-    persona: config.persona,
-    format: config.format,
-    sessionId,
-  };
+  const base = useMemo(
+    () => ({
+      slug: config.slug,
+      persona: config.persona,
+      format: config.format,
+      sessionId,
+    }),
+    [config.slug, config.persona, config.format, sessionId],
+  );
+
+  // Durable Convex capture, fired alongside the Vercel trackLanding* events.
+  const recordQuizEvent = useQuizEvents(base);
 
   const questionIds = useMemo(
     () => screens.filter((s) => s.kind === "question").map((s) => s.id),
@@ -111,6 +137,7 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   useEffect(() => {
     startTimeRef.current = Date.now();
     trackLandingStarted(base);
+    recordQuizEvent("started");
     trackMetaViewContent({
       content_ids: [config.slug],
       content_name: config.title,
@@ -122,6 +149,12 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
   useEffect(() => {
     trackLandingScreenViewed({
       ...base,
+      screenIndex: index,
+      screenId: screen.id,
+      screenKind: screen.kind,
+      totalScreens: screens.length,
+    });
+    recordQuizEvent("screen_viewed", {
       screenIndex: index,
       screenId: screen.id,
       screenKind: screen.kind,
@@ -152,6 +185,12 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
       resultBucket: resultBucket.id,
       ...(ages ? { brainAge: ages.brainAge, brainAgeGap: ages.gap } : {}),
     });
+    recordQuizEvent("completed", {
+      resultBucket: resultBucket.id,
+      totalScreens: screens.length,
+      timeSpentSeconds,
+      ...(ages ? { brainAge: ages.brainAge, brainAgeGap: ages.gap } : {}),
+    });
     trackMetaLead({ content_name: config.title, content_category: config.slug });
     // Fire once on reaching results; guarded by resultsFiredRef.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,6 +216,12 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
       screenId: question.id,
       questionNumber: questionIds.indexOf(question.id) + 1,
       totalQuestions,
+      answerLabel: answer.label,
+      answerValue: String(answer.value),
+    });
+    recordQuizEvent("answer_selected", {
+      screenId: question.id,
+      questionNumber: questionIds.indexOf(question.id) + 1,
       answerLabel: answer.label,
       answerValue: String(answer.value),
     });
@@ -271,13 +316,17 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
               screen={screen}
               answers={answers}
               onContinue={goNext}
-              onCtaClick={(destination) =>
+              onCtaClick={(destination) => {
                 trackLandingCtaClicked({
                   ...base,
                   resultBucket: resultBucket.id,
                   destination,
-                })
-              }
+                });
+                recordQuizEvent("cta_clicked", {
+                  resultBucket: resultBucket.id,
+                  destination,
+                });
+              }}
             />
           )}
           {screen.kind === "analyzing" && (
@@ -297,13 +346,17 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
               }}
               ctaLabel={config.resultsCta.label}
               ctaHref={ctaHref}
-              onCtaClick={() =>
+              onCtaClick={() => {
                 trackLandingCtaClicked({
                   ...base,
                   resultBucket: resultBucket.id,
                   destination: ctaHref,
-                })
-              }
+                });
+                recordQuizEvent("cta_clicked", {
+                  resultBucket: resultBucket.id,
+                  destination: ctaHref,
+                });
+              }}
             />
           )}
         </div>

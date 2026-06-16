@@ -61,6 +61,50 @@ export default defineSchema({
     .index("by_question", ["questionId"])
     .index("by_answer", ["questionId", "answerValue"]),
 
+  // Append-only event log for the /go landing quiz engine (QuizEngine.tsx).
+  // One row per event, mirroring the `landing:*` Vercel events. The write
+  // side stays dumb (pure insert); all funnel/conversion shaping happens at
+  // read time in the dashboard. See docs/development/featurePlans/quiz-insights.md.
+  quizEvents: defineTable({
+    // Identity carried on EVERY event ("fat event" so reads never join)
+    sessionId: v.string(),
+    slug: v.string(),
+    persona: v.string(),
+    format: v.string(),
+    // What happened
+    type: v.union(
+      v.literal("started"),
+      v.literal("screen_viewed"),
+      v.literal("answer_selected"),
+      v.literal("completed"),
+      v.literal("cta_clicked"),
+    ),
+    // Screen context (screen_viewed)
+    screenIndex: v.optional(v.number()),
+    screenId: v.optional(v.string()),
+    screenKind: v.optional(v.string()),
+    totalScreens: v.optional(v.number()),
+    // Answer context (answer_selected)
+    questionNumber: v.optional(v.number()),
+    answerValue: v.optional(v.string()),
+    answerLabel: v.optional(v.string()),
+    // Outcome context (completed)
+    resultBucket: v.optional(v.string()),
+    brainAge: v.optional(v.number()),
+    brainAgeGap: v.optional(v.number()),
+    timeSpentSeconds: v.optional(v.number()),
+    // Handoff context (cta_clicked)
+    destination: v.optional(v.string()),
+    // Attribution (captured on started)
+    referrer: v.optional(v.string()),
+    utmSource: v.optional(v.string()),
+    utmMedium: v.optional(v.string()),
+    // Event time (client clock)
+    ts: v.number(),
+  })
+    .index("by_slug_ts", ["slug", "ts"])
+    .index("by_session", ["sessionId"]),
+
   // Store contest entry submissions
   winEntries: defineTable({
     // Contest identifier (e.g., "nike-2026-01")
