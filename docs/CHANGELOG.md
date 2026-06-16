@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-16** | PDP product heroes adopt the IM8 buy box (2 plan cards + OTP text link, app gift, earnable rewards, trust strip) with sharp clinical corners
 - **2026-06-16** | Add Coffee vs CONKA cognition report (5th report) to /app-insights with a four-group comparison chart
 - **2026-06-15** | Listicle reasons: day-energy curve (brain-ageing R5) + two-bar focus comparison (ADHD R5), clearing the last placeholder
 - **2026-06-15** | Listicle buy box: port lander ingredient bottom-sheet, drop old ingredients accordion, IM8-style horizontal-scroll trust band

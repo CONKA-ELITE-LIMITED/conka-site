@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -528,6 +528,36 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
 }
 
 export default function ListicleRenderer({ config }: { config: ListicleConfig }) {
+  // Land on the right section when arriving with a hash (e.g. the brain-age
+  // quiz sends finishers to #product). The page is media-heavy, so elements
+  // above the target shift as images/videos load and a one-shot native scroll
+  // misses; re-pin to the target a few times until layout settles, and bail
+  // the moment the user scrolls themselves.
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    let done = false;
+    const scrollToTarget = () => {
+      if (done) return;
+      document.getElementById(id)?.scrollIntoView({ block: "start" });
+    };
+    const stop = () => {
+      done = true;
+    };
+    window.addEventListener("wheel", stop, { passive: true, once: true });
+    window.addEventListener("touchmove", stop, { passive: true, once: true });
+    const timers = [0, 150, 400, 800, 1400].map((d) =>
+      window.setTimeout(scrollToTarget, d),
+    );
+    window.addEventListener("load", scrollToTarget);
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.removeEventListener("load", scrollToTarget);
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchmove", stop);
+    };
+  }, []);
+
   return (
     <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
       {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom
@@ -658,7 +688,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
       <section
         aria-label="Product offer"
         id="product"
-        className="px-5 py-16 md:px-[5vw] md:py-24"
+        className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
       >
         <div className="mx-auto max-w-7xl">

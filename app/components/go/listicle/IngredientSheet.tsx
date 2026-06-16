@@ -42,9 +42,12 @@ const Chevron = () => (
 
 export default function IngredientSheet({
   formulas,
+  sharp = false,
 }: {
   /** Which formula tabs to surface; first is the default */
   formulas: FormulaKey[];
+  /** Square the corners to match the clinical PDP styling (landings stay rounded) */
+  sharp?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<FormulaKey>(formulas[0]);
@@ -79,7 +82,7 @@ export default function IngredientSheet({
 
       {open && (
         <div
-          className={styles.modal}
+          className={`${styles.modal}${sharp ? " [&_*]:!rounded-none" : ""}`}
           aria-modal="true"
           role="dialog"
           aria-label={`${formula.name} ingredients`}
