@@ -192,7 +192,7 @@ export default function ConkaBothPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 2: TIMELINE ===== */}
+        {/* ===== SECTION 2: BRAIN FUEL BAND ===== */}
         {brainFuelSection}
 
         {/* ===== SECTION 3: INGREDIENTS ===== */}
@@ -250,7 +250,7 @@ export default function ConkaBothPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 2: TIMELINE ===== */}
+      {/* ===== SECTION 2: BRAIN FUEL BAND ===== */}
       {brainFuelSection}
 
       {/* ===== SECTION 3: INGREDIENTS ===== */}
