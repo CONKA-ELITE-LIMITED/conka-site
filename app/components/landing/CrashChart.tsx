@@ -31,6 +31,8 @@ interface CrashChartProps {
   saving?: string;
   coffeePerDay?: string;
   shotsPerDay?: string;
+  /** Square the container to match the clinical PDP/start styling */
+  sharp?: boolean;
 }
 
 export function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
@@ -125,13 +127,16 @@ export default function CrashChart({
   saving = `£${MONTHLY_SAVINGS_VS_COFFEE}`,
   coffeePerDay = `£${COFFEE_PRICE_PER_DAY}/day`,
   shotsPerDay = `£${PRICE_PER_DAY_BOTH}/day`,
+  sharp = false,
 }: CrashChartProps) {
   const [ref, isInView] = useInView();
 
   return (
     <div
       ref={ref}
-      className="overflow-hidden rounded-[24px] border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
+      className={`overflow-hidden border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)] ${
+        sharp ? "" : "rounded-[24px]"
+      }`}
     >
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}

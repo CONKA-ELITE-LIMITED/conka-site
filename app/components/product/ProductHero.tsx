@@ -29,13 +29,14 @@ export default function ProductHero({
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
       <div className="flex flex-col gap-[var(--brand-space-m)] lg:flex-row lg:items-start lg:justify-center">
-        {/* Left: image stack — scrolls while the buy panel stays pinned */}
-        <div className="relative z-0 order-1 lg:w-[58%] lg:flex-shrink-0">
+        {/* Left: image stack — sticky, follows the scroll until the bottom of
+            the hero while the taller buy box on the right scrolls past it */}
+        <div className="relative z-0 order-1 lg:sticky lg:top-24 lg:w-[58%] lg:flex-shrink-0 lg:self-start">
           <HeroImageStack images={images} alt={`${content.name} bottle`} />
         </div>
 
-        {/* Right: IM8 buy box — sticky, no outer card (plan cards stand alone) */}
-        <div className="relative z-10 order-2 min-w-0 flex-1 lg:sticky lg:top-8 lg:w-[40%] lg:flex-shrink-0 lg:self-start">
+        {/* Right: IM8 buy box — scrolls (taller than the image column) */}
+        <div className="relative z-10 order-2 min-w-0 flex-1 lg:w-[40%] lg:flex-shrink-0">
           <div
             className="flex flex-col gap-[var(--brand-space-s)]"
             style={{

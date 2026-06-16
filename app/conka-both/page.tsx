@@ -16,7 +16,7 @@ import FormulaCaseStudies, {
   FormulaCaseStudiesMobile,
 } from "@/app/components/FormulaCaseStudies";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
-import LabTimeline from "@/app/components/landing/LabTimeline";
+import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -75,16 +75,8 @@ export default function ConkaBothPage() {
 
   // Shared sections — ordered as they appear on the page. Backgrounds
   // alternate white/tint starting from the white hero.
-  const timelineSection = (
-    <section
-      className="brand-section brand-bg-tint"
-      aria-label="What to expect"
-    >
-      <div className="brand-track">
-        <LabTimeline hideCTA />
-      </div>
-    </section>
-  );
+  // Full-bleed dark proof band — owns its own section + dark background
+  const brainFuelSection = <BrainFuelBand />;
 
   const ingredientsSection = (
     <section
@@ -201,7 +193,7 @@ export default function ConkaBothPage() {
         </section>
 
         {/* ===== SECTION 2: TIMELINE ===== */}
-        {timelineSection}
+        {brainFuelSection}
 
         {/* ===== SECTION 3: INGREDIENTS ===== */}
         {ingredientsSection}
@@ -259,7 +251,7 @@ export default function ConkaBothPage() {
       </section>
 
       {/* ===== SECTION 2: TIMELINE ===== */}
-      {timelineSection}
+      {brainFuelSection}
 
       {/* ===== SECTION 3: INGREDIENTS ===== */}
       {ingredientsSection}
