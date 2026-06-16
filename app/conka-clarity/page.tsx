@@ -52,8 +52,11 @@ export default function ConkaClarityPage() {
     }
   }, []);
 
-  const handleAddToCart = async (location: "hero" | "sticky_footer") => {
-    const variantData = getCadenceVariantByFormula("02", selectedCadence);
+  const handleAddToCart = async (
+    location: "hero" | "sticky_footer",
+    cadence: CadenceType = selectedCadence,
+  ) => {
+    const variantData = getCadenceVariantByFormula("02", cadence);
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location,
@@ -61,7 +64,7 @@ export default function ConkaClarityPage() {
         sessionId: getQuizSessionId(),
       });
     } else {
-      console.warn("Variant not configured for:", { formula: "02", cadence: selectedCadence });
+      console.warn("Variant not configured for:", { formula: "02", cadence });
     }
   };
 
@@ -79,6 +82,7 @@ export default function ConkaClarityPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
+              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
             />
           </div>
         </section>
@@ -181,6 +185,7 @@ export default function ConkaClarityPage() {
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}
             onAddToCart={() => handleAddToCart("hero")}
+            onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
           />
         </div>
       </section>

@@ -52,10 +52,13 @@ export default function ConkaBothPage() {
     }
   }, []);
 
-  const handleAddToCart = async (location: "hero" | "sticky_footer") => {
+  const handleAddToCart = async (
+    location: "hero" | "sticky_footer",
+    cadence: CadenceType = selectedCadence,
+  ) => {
     const variantData = getCadenceVariantByProductHeroId(
       PRODUCT_HERO_ID,
-      selectedCadence,
+      cadence,
     );
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
@@ -64,7 +67,7 @@ export default function ConkaBothPage() {
         sessionId: getQuizSessionId(),
       });
     } else {
-      console.warn("Variant not configured for cadence:", selectedCadence);
+      console.warn("Variant not configured for cadence:", cadence);
     }
   };
 
@@ -192,6 +195,7 @@ export default function ConkaBothPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
+              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
             />
           </div>
         </section>
@@ -249,6 +253,7 @@ export default function ConkaBothPage() {
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}
             onAddToCart={() => handleAddToCart("hero")}
+            onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
           />
         </div>
       </section>
