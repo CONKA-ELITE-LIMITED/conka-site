@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-16** | Replace the dual caffeine-curve graph with the sharp CrashChart everywhere (/start + all PDP comparison sections); delete the legacy CaffeineCurves and dead valueChart wiring
 - **2026-06-16** | PDP hero sticky image column, conka-both BrainFuel band (desktop split), and /start sharp CrashChart replacing the caffeine curves
 - **2026-06-16** | PDP product heroes adopt the IM8 buy box (2 plan cards + OTP text link, app gift, earnable rewards, trust strip) with sharp clinical corners
 - **2026-06-16** | Add Coffee vs CONKA cognition report (5th report) to /app-insights with a four-group comparison chart

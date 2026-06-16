@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useInView } from "@/app/hooks/useInView";
 import {
   COFFEE_PRICE_PER_DAY,
@@ -130,6 +130,10 @@ export default function CrashChart({
   sharp = false,
 }: CrashChartProps) {
   const [ref, isInView] = useInView();
+  // Unique gradient ids so the chart can render more than once on a page
+  // (e.g. LandingValueComparison's mobile + desktop instances) without the
+  // visible copy's gradient stroke resolving to a hidden copy's defs.
+  const gid = useId();
 
   return (
     <div
@@ -165,16 +169,16 @@ export default function CrashChart({
           aria-label="Focus through the day: coffee crashes at 2pm, CONKA stays steady all day"
         >
           <defs>
-            <linearGradient id="cc-conkaGrad" x1="0" y1="0" x2="1" y2="0">
+            <linearGradient id={`${gid}-conkaGrad`} x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#E9A23A" />
               <stop offset="48%" stopColor="#CF9A78" />
               <stop offset="100%" stopColor="#5B86C9" />
             </linearGradient>
-            <linearGradient id="cc-conkaFill" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={`${gid}-conkaFill`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#9DB8E0" stopOpacity="0.30" />
               <stop offset="100%" stopColor="#9DB8E0" stopOpacity="0" />
             </linearGradient>
-            <linearGradient id="cc-coffeeFill" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={`${gid}-coffeeFill`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#D9483B" stopOpacity="0.16" />
               <stop offset="100%" stopColor="#D9483B" stopOpacity="0" />
             </linearGradient>
@@ -188,20 +192,20 @@ export default function CrashChart({
           {/* CONKA area + line */}
           <path
             d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60 L320,200 L30,200 Z"
-            fill="url(#cc-conkaFill)"
+            fill={`url(#${gid}-conkaFill)`}
             className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
             style={{ opacity: isInView ? 1 : 0 }}
           />
           <DrawPath
             d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60"
-            stroke="url(#cc-conkaGrad)"
+            stroke={`url(#${gid}-conkaGrad)`}
             isInView={isInView}
           />
 
           {/* Coffee area (full) */}
           <path
             d="M30,175 C52,92 62,62 78,60 C110,58 140,64 165,68 C178,70 184,71 191,72 C200,82 205,122 215,152 C224,176 236,188 252,189 C278,191 300,190 320,190 L320,200 L30,200 Z"
-            fill="url(#cc-coffeeFill)"
+            fill={`url(#${gid}-coffeeFill)`}
             className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
             style={{ opacity: isInView ? 1 : 0 }}
           />

@@ -13,7 +13,7 @@ import {
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
-import CaffeineCurves from "./CaffeineCurves";
+import CrashChart from "@/app/components/landing/CrashChart";
 import BottleVideo from "../components/landing/BottleVideo";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
@@ -430,12 +430,9 @@ export default function StartPage() {
                 a habit. It&apos;s the system working as designed.
               </p>
 
-              {/* Stacked animated charts: coffee on top, CONKA below.
-                  Each chart reveals left-to-right at the same horizontal
-                  velocity so the eye reads them as the same day moving in
-                  parallel — comparison is shape, not peak height. */}
+              {/* Steady-vs-crash chart + cost comparison, sharp clinical container */}
               <div className="mb-6">
-                <CaffeineCurves />
+                <CrashChart sharp />
               </div>
 
               <p className="text-[15px] leading-snug text-black mb-6">

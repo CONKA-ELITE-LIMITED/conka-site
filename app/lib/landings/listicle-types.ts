@@ -24,8 +24,6 @@ export type ListicleAsset =
    *  fit "contain" centres the clip in a full-width black tile (for product
    *  renders); default "cover" keeps the inset 4/5 frame (for texture loops). */
   | { kind: "video"; src: string; aspect?: string; fit?: "cover" | "contain" }
-  /** The Fig. 01 coffee-vs-CONKA energy curves card (LandingValueComparison) */
-  | { kind: "valueChart" }
   /** "Skip the 2pm crash" curve + cost table (CrashChart). Figures default
    *  from landingPricing; override per page. */
   | {
