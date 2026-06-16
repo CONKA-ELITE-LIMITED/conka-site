@@ -77,20 +77,23 @@
   margin: 0;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1024px) {
+  /* Desktop: left/right split — video left, stats + content right.
+     Mobile (base rules above) is intentionally left exactly as-is. */
   .inner {
-    max-width: 960px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 96px 20px;
+    padding: 96px 45px;
     gap: 64px;
   }
-  /* Prototype caps the video at 480 and centres it */
   .video {
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
   }
-  .metrics {
-    grid-template-columns: 1fr 1fr;
+  /* Stats stay single-column rows beside the video (not the old 2-col grid) */
+  .details {
+    gap: 32px;
   }
 }

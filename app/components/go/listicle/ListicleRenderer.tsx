@@ -14,7 +14,6 @@ import ListicleProductHero, {
   ListicleProductHeroMobile,
 } from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
-import { ValueComparisonChart } from "@/app/components/landing/LandingValueComparison";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
@@ -105,10 +104,6 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
 }
 
 function AssetBlock({ asset }: { asset: ListicleAsset }) {
-  if (asset.kind === "valueChart") {
-    return <ValueComparisonChart />;
-  }
-
   if (asset.kind === "crashChart") {
     return (
       <CrashChart
