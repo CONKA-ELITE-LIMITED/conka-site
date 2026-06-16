@@ -323,6 +323,9 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
                   destination,
                 });
                 recordQuizEvent("cta_clicked", {
+                  screenId: screen.id,
+                  screenIndex: index,
+                  screenKind: screen.kind,
                   resultBucket: resultBucket.id,
                   destination,
                 });
@@ -353,6 +356,9 @@ export default function QuizEngine({ config }: { config: LandingConfig }) {
                   destination: ctaHref,
                 });
                 recordQuizEvent("cta_clicked", {
+                  screenId: screen.id,
+                  screenIndex: index,
+                  screenKind: screen.kind,
                   resultBucket: resultBucket.id,
                   destination: ctaHref,
                 });
