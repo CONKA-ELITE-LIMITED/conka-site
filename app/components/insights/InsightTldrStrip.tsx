@@ -8,7 +8,7 @@ import type { ReportData } from "@/app/lib/appInsightsTypes";
 import EvidenceStrengthBadge from "./EvidenceStrengthBadge";
 
 /**
- * Sits above the existing filter on /app-insights. Four cards, one per
+ * Sits above the existing filter on /app-insights. One card per
  * report, surfacing the headline finding, sample size, and evidence
  * strength so a visitor reads the punchline before drilling in.
  *
@@ -18,7 +18,7 @@ import EvidenceStrengthBadge from "./EvidenceStrengthBadge";
  * Component is content-only.
  */
 
-const COUNTERS = ["01.", "02.", "03.", "04."] as const;
+const COUNTERS = ["01.", "02.", "03.", "04.", "05."] as const;
 
 export default function InsightTldrStrip({
   onSelect,
@@ -69,7 +69,7 @@ export default function InsightTldrStrip({
           className="brand-h3 text-white max-w-[28ch]"
           style={{ letterSpacing: "-0.02em" }}
         >
-          Four patterns the data keeps showing.
+          Five patterns the data keeps showing.
         </h2>
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 tabular-nums mt-2">
           Tap a pattern for the full report.
@@ -82,7 +82,7 @@ export default function InsightTldrStrip({
       </div>
 
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3"
         role="list"
         aria-label="Report headlines"
       >

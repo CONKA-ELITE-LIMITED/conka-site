@@ -107,7 +107,7 @@ export default function DataReportSection({
           className="border border-white/20 bg-white/[0.12] p-5 lg:p-6"
         >
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-3">
-            {"// CONKA observation · APP-01"}
+            {`// CONKA observation · ${report.topicCode}`}
           </p>
           <h3
             className="brand-h3 text-white mb-3 max-w-[28ch]"
@@ -134,7 +134,7 @@ export default function DataReportSection({
       {/* ── Methodology footnote ─────────────────────────────────── */}
       <div data-report-reveal className="border-t border-white/10 pt-5">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 tabular-nums mb-2">
-          {"// Methodology · APP-01"}
+          {`// Methodology · ${report.topicCode}`}
         </p>
         <p className="text-sm text-white/85 leading-relaxed max-w-[68ch]">
           {report.methodology}

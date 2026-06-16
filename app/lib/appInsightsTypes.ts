@@ -56,7 +56,32 @@ export type BarChartData = {
   insightNote?: string;
 };
 
-export type ChartData = LineChartData | BarChartData;
+/** Single bar in a four-group comparison chart (absolute values, grows up). */
+export type ComparisonBar = {
+  label: string;
+  value: number;
+  /** Optional second-line annotation for the x-axis (e.g. sample size). */
+  meta?: string;
+  /** Emphasised bar (e.g. the best-performing group). */
+  highlight?: boolean;
+};
+
+export type ComparisonChartData = {
+  variant: "comparison";
+  points: ComparisonBar[];
+  yLabel: string;
+  insightNote?: string;
+  /** Y-axis floor so small absolute gaps between groups stay visible. */
+  yMin?: number;
+  /** Unit suffix appended to the tooltip value, e.g. " pts" or "ms". */
+  valueSuffix?: string;
+  /** Fixed decimals for the on-bar value labels (keeps e.g. 80.60 vs 80.97 aligned). */
+  labelDecimals?: number;
+  /** Lower value is better (e.g. reaction time). Defaults to false. */
+  lowerIsBetter?: boolean;
+};
+
+export type ChartData = LineChartData | BarChartData | ComparisonChartData;
 
 export type ConkaSubSection = {
   headline: string;
@@ -87,7 +112,7 @@ export type LaymanAnchor = {
 export type EvidenceStrength = "Strong" | "Moderate" | "Early signal";
 
 export type ReportData = {
-  id: "time-of-day" | "mental-fatigue" | "stress" | "alcohol";
+  id: "time-of-day" | "mental-fatigue" | "stress" | "alcohol" | "coffee";
   topicCode: string;
   eyebrowConcept: string;
   hook: string;

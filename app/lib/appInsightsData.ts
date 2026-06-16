@@ -360,6 +360,83 @@ const alcohol: ReportData = {
     "Per-user delta. Hangover days (1+ drinks the previous night) compared to each user's sober baseline. 27 users met the both-conditions threshold for the core analysis. Data from December 2025 to May 2026.",
 };
 
+// ─── Coffee vs CONKA ──────────────────────────────────────────────────────────
+
+const coffee: ReportData = {
+  id: "coffee",
+  topicCode: "APP-05",
+  eyebrowConcept: "Coffee vs CONKA",
+  hook: "Coffee gets the credit. The data gives it to CONKA.",
+  subline: "490 caffeine users · 166 CONKA users · 19 months",
+  headlineFinding:
+    "Coffee on its own barely moved our users' cognitive scores. Every gain in the data tracked with CONKA, not caffeine.",
+  sampleSize: "501 tests with both logged · 19 months",
+  evidenceStrength: "Moderate",
+  laymanAnchors: [
+    {
+      stat: "Coffee alone: ~0 score change",
+      anchor:
+        "Measured against their own scores, a coffee looked almost identical to drinking nothing at all.",
+    },
+    {
+      stat: "Adding CONKA to coffee: +4 points",
+      anchor:
+        "Among users with both habits logged, nearly two in three improved once CONKA was added on top.",
+    },
+  ],
+  chart: {
+    variant: "comparison",
+    yLabel: "average total score, 0-100",
+    yMin: 78,
+    valueSuffix: " pts",
+    labelDecimals: 2,
+    insightNote:
+      "Every group that includes CONKA scores higher. Coffee on its own sits level with nothing.",
+    points: [
+      { label: "Neither", value: 80.97, meta: "n=32" },
+      { label: "Coffee", value: 80.6, meta: "n=53" },
+      { label: "CONKA", value: 85.38, meta: "n=12" },
+      { label: "Coffee + CONKA", value: 86.44, meta: "n=30", highlight: true },
+    ],
+  },
+  statCards: [
+    {
+      counter: "01.",
+      topic: "COFFEE ALONE",
+      value: "+0.2",
+      context:
+        "Measured against each user's own baseline, a coffee moved total score by almost nothing, and reaction time actually slipped about 13ms slower.",
+      caveat: "n=104-222 users · within-person",
+    },
+    {
+      counter: "02.",
+      topic: "CONKA EFFECT",
+      value: "+2.1",
+      context:
+        "On the same within-person method, CONKA was associated with a +2.1 point lift in total score, with 60% of users improving.^^",
+      caveat: "n=47 users · within-person",
+    },
+    {
+      counter: "03.",
+      topic: "CONKA ON COFFEE",
+      value: "+4.0",
+      context:
+        "Among users with both a coffee-only and a coffee-plus-CONKA history, adding CONKA was associated with +4 points, 64% improving, and fewer errors.^^",
+      caveat: "n=22 users · within-person",
+    },
+  ],
+  interpretation:
+    "Caffeine is the habit everyone credits for their focus. In our app data it barely showed up. Measured against each user's own baseline, coffee on its own left scores flat and was linked to slightly slower, less controlled responding. The lifts in score, control and error rate all tracked with CONKA, and when CONKA was added on top of coffee, the same people improved.^^",
+  conkaSubSection: {
+    headline: "The gains track with CONKA, not caffeine.",
+    body: "Across every way we sliced the data, each best result contained CONKA, and coffee on its own sat level with drinking nothing. The cleanest signal is the interaction: among 22 users with both a coffee-only and a coffee-plus-CONKA history, adding CONKA was associated with +4 points and nearly two in three improving. The faster raw reaction times in the CONKA groups are real in the averages, but within-person that speed gain concentrates in a minority, so we lead with score, not milliseconds.",
+    caveat:
+      "Observational and self-reported · CONKA-only cell is small (n=12) · raw group means and within-person deltas disagree on reaction speed, and the within-person number governs",
+  },
+  methodology:
+    "Two methods. Raw group means average each metric inside the four consumption groups, shown in the chart. Per-user deltas compare each user against their own intake history and govern where the two disagree. Any caffeine logged counts as coffee; any CONKA dose counts as CONKA. 501 tests with both factors logged, practice tests excluded. Data from November 2024 to June 2026.",
+};
+
 // ─── Export ───────────────────────────────────────────────────────────────────
 
 export const APP_INSIGHTS_REPORTS: ReportData[] = [
@@ -367,6 +444,7 @@ export const APP_INSIGHTS_REPORTS: ReportData[] = [
   mentalFatigue,
   stress,
   alcohol,
+  coffee,
 ];
 
 export const APP_INSIGHTS_BY_ID = {
@@ -374,6 +452,7 @@ export const APP_INSIGHTS_BY_ID = {
   "mental-fatigue": mentalFatigue,
   stress: stress,
   alcohol: alcohol,
+  coffee: coffee,
 } as const;
 
 /** Page-level totals for the hero strapline. */
