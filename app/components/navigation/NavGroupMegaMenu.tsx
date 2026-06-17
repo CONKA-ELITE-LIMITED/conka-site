@@ -51,7 +51,7 @@ export default function NavGroupMegaMenu({
             >
               <div
                 className={`relative aspect-square overflow-hidden ${
-                  link.imageFit === "contain" ? "bg-[#1c1c1c]" : "bg-white"
+                  link.imageFit === "contain" ? "bg-[#333333]" : "bg-white"
                 }`}
               >
                 {link.image && (
