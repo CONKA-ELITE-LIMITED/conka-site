@@ -29,7 +29,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     description: "The full daily system.",
     descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
     href: "/conka-both",
-    image: "/lander/BothHero.jpg",
+    image: "/formulas/both/BothNew.jpg",
     alt: "CONKA Flow and Clear",
   },
   {

@@ -50,7 +50,7 @@ export default function ShopMegaMenu({
                     src={product.image}
                     alt={product.alt}
                     fill
-                    className="object-contain p-6 group-hover:scale-[1.02] transition-transform duration-300"
+                    className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
                 </Link>
