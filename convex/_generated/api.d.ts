@@ -10,6 +10,7 @@
 
 import type * as foundingMemberCounter from "../foundingMemberCounter.js";
 import type * as quizAnalytics from "../quizAnalytics.js";
+import type * as quizEvents from "../quizEvents.js";
 import type * as winEntries from "../winEntries.js";
 
 import type {
@@ -21,6 +22,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   foundingMemberCounter: typeof foundingMemberCounter;
   quizAnalytics: typeof quizAnalytics;
+  quizEvents: typeof quizEvents;
   winEntries: typeof winEntries;
 }>;
 
