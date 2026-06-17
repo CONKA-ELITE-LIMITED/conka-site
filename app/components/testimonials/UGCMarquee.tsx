@@ -8,8 +8,9 @@
  * identical groups looping seamlessly, motion-safe so reduced-motion users get
  * a static row. Pure CSS, no JS.
  *
- * Tiles are normalised to one aspect ratio (object-cover) so the mixed-ratio
- * UGC / customer / athlete stills read as one cohesive band. Radius comes from
+ * Each scrolling unit is a COLUMN of two stacked tiles (2 rows). Tiles are
+ * normalised to one aspect ratio (object-cover) so the mixed-ratio UGC /
+ * customer / athlete stills read as one cohesive band. Radius comes from
  * --brand-radius-container, which the clinical PDP scope sets to 0 (sharp), so
  * tiles match the surrounding clinical design automatically.
  *
@@ -42,39 +43,74 @@ const UGC_ITEMS: UGCItem[] = [
   { src: "/testimonials/dtc/AlexL.jpg", alt: "A CONKA customer with their daily shot" },
 ];
 
+// Pair the stills into stacked column units. If the count is odd, the final
+// column borrows the first still so every column is full (invisible in a loop).
+const COLUMNS: [UGCItem, UGCItem][] = [];
+for (let i = 0; i < UGC_ITEMS.length; i += 2) {
+  COLUMNS.push([UGC_ITEMS[i], UGC_ITEMS[i + 1] ?? UGC_ITEMS[0]]);
+}
+
+function Tile({ item }: { item: UGCItem }) {
+  return (
+    <div className="relative aspect-[4/5] w-[150px] flex-shrink-0 overflow-hidden rounded-[var(--brand-radius-container)] bg-[var(--brand-tint)] md:w-[210px]">
+      <Image
+        src={item.src}
+        alt={item.alt}
+        fill
+        sizes="(max-width: 768px) 150px, 210px"
+        loading="lazy"
+        className="object-cover"
+      />
+    </div>
+  );
+}
+
 function Group({ hidden = false }: { hidden?: boolean }) {
   return (
     <div
       className="flex flex-shrink-0 gap-3 pr-3 md:gap-4 md:pr-4"
       aria-hidden={hidden || undefined}
     >
-      {UGC_ITEMS.map((item) => (
-        <div
-          key={item.src}
-          className="relative aspect-[4/5] w-[150px] flex-shrink-0 overflow-hidden rounded-[var(--brand-radius-container)] bg-[var(--brand-tint)] md:w-[210px]"
-        >
-          <Image
-            src={item.src}
-            alt={item.alt}
-            fill
-            sizes="(max-width: 768px) 150px, 210px"
-            loading="lazy"
-            className="object-cover"
-          />
+      {COLUMNS.map((pair, i) => (
+        <div key={i} className="flex flex-shrink-0 flex-col gap-3 md:gap-4">
+          {pair.map((item, j) => (
+            <Tile key={`${item.src}-${j}`} item={item} />
+          ))}
         </div>
       ))}
     </div>
   );
 }
 
-export default function UGCMarquee() {
+export default function UGCMarquee({
+  title = "Join Thousands Staying Sharp, Every Day",
+  subtitle = "Two shots a day.",
+}: {
+  title?: string;
+  subtitle?: string;
+}) {
   // Two identical groups; translateX(-50%) loops seamlessly. motion-safe so
   // reduced-motion users get a static (clipped) row instead of movement.
   return (
-    <div className="overflow-hidden">
-      <div className="flex w-max motion-safe:animate-[marquee_50s_linear_infinite]">
-        <Group />
-        <Group hidden />
+    <div>
+      {title ? (
+        <div className="mx-auto mb-8 max-w-2xl px-[var(--brand-gutter-mobile)] text-center md:mb-10 md:px-[var(--brand-gutter-desktop)]">
+          <p className="brand-eyebrow mb-3">{"// Real people, in the wild"}</p>
+          <h2 className="brand-h2" style={{ letterSpacing: "-0.02em" }}>
+            {title}
+          </h2>
+          {subtitle ? (
+            <p className="mt-2 text-3xl font-bold tracking-[-0.02em] text-black md:text-4xl">
+              {subtitle}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+      <div className="overflow-hidden">
+        <div className="flex w-max motion-safe:animate-[marquee_50s_linear_infinite]">
+          <Group />
+          <Group hidden />
+        </div>
       </div>
     </div>
   );

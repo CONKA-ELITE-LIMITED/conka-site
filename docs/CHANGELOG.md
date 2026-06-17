@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-17** | UGC marquee: two stacked rows of stills, a section title with the "Two shots a day" promise, and the band added to the Both PDP
 - **2026-06-17** | Add a UGC social-proof image marquee (auto-scrolling band of customer + athlete stills) above the reviews on the Flow and Clarity PDPs
 - **2026-06-16** | Removed the stray browser "Leave site?" prompt on quiz CTAs and tagged quiz CTA events with their screen
 - **2026-06-16** | Quiz engine now writes a durable event log to Convex (per-quiz drop-off + conversion data foundation for a dashboard)

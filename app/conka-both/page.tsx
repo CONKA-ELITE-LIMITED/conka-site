@@ -19,6 +19,7 @@ import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
+import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import {
@@ -99,6 +100,16 @@ export default function ConkaBothPage() {
       <div className="brand-track">
         <AthleteCredibilityCarousel />
       </div>
+    </section>
+  );
+
+  const ugcSection = (
+    <section
+      id="ugc"
+      className="brand-section brand-bg-white !px-0"
+      aria-label="Real people using CONKA"
+    >
+      <UGCMarquee />
     </section>
   );
 
@@ -201,6 +212,9 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
         {athleteSection}
 
+        {/* ===== SECTION 4.5: UGC SOCIAL PROOF ===== */}
+        {ugcSection}
+
         {/* ===== SECTION 5: TESTIMONIALS ===== */}
         {testimonialsSection}
 
@@ -258,6 +272,9 @@ export default function ConkaBothPage() {
 
       {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
       {athleteSection}
+
+      {/* ===== SECTION 4.5: UGC SOCIAL PROOF ===== */}
+      {ugcSection}
 
       {/* ===== SECTION 5: TESTIMONIALS ===== */}
       {testimonialsSection}
