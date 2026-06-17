@@ -37,7 +37,7 @@ function NavMenuTrigger({
         onClick={() => setOpenMenu(isOpen ? null : menu)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
+        className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
       >
         {label}
         <svg

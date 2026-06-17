@@ -79,6 +79,15 @@ export default function Navigation({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Close the open menu on Escape
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenMenu(null);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
