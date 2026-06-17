@@ -83,7 +83,7 @@ export default function BuyBoxes({data}: {data: BuyData}) {
 
   const bundleCard: CardConfig = {
     description: '2 shots per day = 28 day supply',
-    image: '/lander/BothHero.jpg',
+    image: '/formulas/both/BothNew.jpg',
     imageAlt: 'CONKA Flow & Clear bundle',
     title: 'CONKA – Flow & Clear',
     live: data.bundle,
