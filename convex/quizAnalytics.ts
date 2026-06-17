@@ -1,3 +1,7 @@
+// LEGACY / DEPRECATED — backend for the old protocol quiz (/quiz, now hidden).
+// These functions read/write the legacy quizSessions + quizAnswers tables and are
+// no longer called by any app code (verified: zero front-end references). Kept only
+// so the historical tables stay queryable. New /go quizzes use convex/quizEvents.ts.
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 

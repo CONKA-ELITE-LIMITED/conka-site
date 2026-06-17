@@ -2,6 +2,9 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // LEGACY — old protocol quiz (/quiz, now hidden/redirected). Orphaned: no app
+  // code reads or writes this; the backend functions in convex/quizAnalytics.ts
+  // are also unused. Kept only for historical data. New /go quizzes use quizEvents.
   // Store each quiz session (one per user taking the quiz)
   quizSessions: defineTable({
     // Anonymous session ID (generated client-side)
@@ -36,6 +39,8 @@ export default defineSchema({
     .index("by_completed", ["completed"])
     .index("by_recommended", ["recommendedProtocol"]),
 
+  // LEGACY — companion to quizSessions (old protocol quiz). Orphaned; kept for
+  // historical data only. See note on quizSessions above.
   // Store individual question answers for detailed analytics
   quizAnswers: defineTable({
     // Reference to the session
