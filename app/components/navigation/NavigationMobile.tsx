@@ -4,62 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
-import { getFormulaImage, getProtocolImage } from "@/app/lib/productImageConfig";
+import { NAV_PRODUCTS, NAV_SCIENCE, NAV_APP, NAV_COMPANY } from "./navConfig";
 import type { NavigationMobileProps } from "./types";
 
-const PRODUCTS = [
-  {
-    code: "F-03",
-    name: "Both (Flow + Clear)",
-    shortLabel: "Flow + Clear",
-    description: "The full daily system.",
-    href: "/conka-both",
-    image: getProtocolImage("3"),
-    alt: "CONKA Flow and Clear",
-  },
-  {
-    code: "F-01",
-    name: "CONKA Flow",
-    shortLabel: "Flow",
-    description: "Morning focus & energy.",
-    href: "/conka-flow",
-    image: getFormulaImage("01"),
-    alt: "CONKA Flow",
-  },
-  {
-    code: "F-02",
-    name: "CONKA Clear",
-    shortLabel: "Clear",
-    description: "Afternoon clarity & recovery.",
-    href: "/conka-clarity",
-    image: getFormulaImage("02"),
-    alt: "CONKA Clear",
-  },
-];
-
-const MENU_GROUPS: { title: string; links: { label: string; href: string }[] }[] = [
-  {
-    title: "Learn more",
-    links: [
-      { label: "Ingredients", href: "/ingredients" },
-      { label: "App Insights", href: "/app-insights" },
-      { label: "Our Story", href: "/our-story" },
-      { label: "Why CONKA", href: "/why-conka" },
-    ],
-  },
-  {
-    title: "Science",
-    links: [
-      { label: "Science", href: "/science" },
-      { label: "Ingredients", href: "/ingredients" },
-      { label: "Case Studies", href: "/case-studies" },
-    ],
-  },
-  {
-    title: "Technology",
-    links: [{ label: "CONKA App", href: "/app" }],
-  },
-];
+// Same IA as desktop, sourced from the shared config (no duplicate links).
+const MENU_GROUPS = [NAV_SCIENCE, NAV_APP, NAV_COMPANY];
 
 export default function NavigationMobile({
   mobileMenuOpen,
@@ -223,60 +172,52 @@ export default function NavigationMobile({
 
             {/* Shop by Product */}
             <div className="px-5 pt-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
-                01 · Shop by product
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black tabular-nums mb-4">
+                Shop by product
               </p>
-              <div className="flex flex-col gap-4">
-                {PRODUCTS.map((product) => (
+              <div className="flex flex-col gap-3">
+                {NAV_PRODUCTS.map((product) => (
                   <a
                     key={product.href}
                     href={product.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex flex-col border border-black/12 bg-white hover:border-[#1B2757] transition-colors overflow-hidden"
+                    className="flex items-center gap-4 bg-[#f5f5f5] hover:bg-black/[0.05] transition-colors p-3"
                   >
-                    <div className="relative aspect-[4/3] w-full bg-[#f5f5f5] overflow-hidden">
+                    <div className="relative w-16 h-16 shrink-0 bg-white overflow-hidden">
                       <Image
                         src={product.image}
                         alt={product.alt}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 50vw"
+                        sizes="64px"
                       />
-                      <span className="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/65 px-2 py-1 tabular-nums">
-                        {product.shortLabel}
-                      </span>
                     </div>
-                    <div className="flex items-start justify-between gap-3 px-4 py-4">
-                      <div className="min-w-0 flex-1">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-1">
-                          {product.code}
-                        </p>
-                        <p className="text-base font-semibold text-black">
-                          {product.name}
-                        </p>
-                        <p className="text-xs text-black/60 mt-1 leading-snug">
-                          {product.description}
-                        </p>
-                      </div>
-                      <span
-                        aria-hidden
-                        className="font-mono text-sm text-black/30 shrink-0 pt-1"
-                      >
-                        ↗
-                      </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-base font-semibold text-black leading-tight">
+                        {product.name}
+                      </p>
+                      <p className="text-xs text-black/60 mt-0.5 leading-snug">
+                        {product.description}
+                      </p>
                     </div>
+                    <span
+                      aria-hidden
+                      className="font-mono text-sm text-black/30 shrink-0"
+                    >
+                      ↗
+                    </span>
                   </a>
                 ))}
               </div>
             </div>
 
             {/* Categorised groups */}
-            {MENU_GROUPS.map((group, groupIdx) => (
+            {MENU_GROUPS.map((group) => (
               <div key={group.title} className="px-5 pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
-                  {String(groupIdx + 2).padStart(2, "0")} · {group.title}
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black tabular-nums mb-4">
+                  {group.title}
                 </p>
-                <div className="border border-black/12 bg-white">
+                <div className="bg-[#f5f5f5]">
                   {group.links.map((link, idx) => (
                     <a
                       key={`${group.title}-${link.href}`}
@@ -284,7 +225,7 @@ export default function NavigationMobile({
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center justify-between px-4 py-4 ${
                         idx < group.links.length - 1 ? "border-b border-black/8" : ""
-                      } hover:bg-[#f5f5f5] transition-colors`}
+                      } hover:bg-black/[0.05] transition-colors`}
                     >
                       <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-black">
                         {link.label}

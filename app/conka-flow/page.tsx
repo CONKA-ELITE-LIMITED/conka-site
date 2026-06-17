@@ -86,6 +86,11 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
+        {/* ===== UGC SOCIAL PROOF ===== */}
+        <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
+          <UGCMarquee />
+        </section>
+
         {/* ===== SECTION 2: BENEFITS PILLARS ===== */}
         <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
           <div className="brand-track">
@@ -135,11 +140,6 @@ export default function ConkaFlowPage() {
           <div className="brand-track">
             <LabGuarantee />
           </div>
-        </section>
-
-        {/* ===== SECTION 9.5: UGC SOCIAL PROOF ===== */}
-        <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
-          <UGCMarquee />
         </section>
 
         {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
@@ -194,6 +194,11 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
+      {/* ===== UGC SOCIAL PROOF ===== */}
+      <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
+        <UGCMarquee />
+      </section>
+
       {/* ===== SECTION 2: BENEFITS PILLARS ===== */}
       <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
         <div className="brand-track">
@@ -243,11 +248,6 @@ export default function ConkaFlowPage() {
         <div className="brand-track">
           <LabGuarantee />
         </div>
-      </section>
-
-      {/* ===== SECTION 9.5: UGC SOCIAL PROOF ===== */}
-      <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
-        <UGCMarquee />
       </section>
 
       {/* ===== SECTION 10: REVIEWS CHORUS ===== */}

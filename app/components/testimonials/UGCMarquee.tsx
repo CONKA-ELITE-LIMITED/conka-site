@@ -39,7 +39,9 @@ const UGC_ITEMS: UGCItem[] = [
   { src: "/testimonials/ugc/5.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/dtc/SamJ.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/6.jpg", alt: "A CONKA customer with the daily shot" },
+  { src: "/testimonials/ugc/10.jpg", alt: "A CONKA customer holding the daily shots" },
   { src: "/testimonials/dtc/MillieH.jpg", alt: "A CONKA customer with their daily shot" },
+  { src: "/testimonials/ugc/11.jpg", alt: "A CONKA customer working with the daily shots" },
   { src: "/testimonials/dtc/AlexL.jpg", alt: "A CONKA customer with their daily shot" },
 ];
 

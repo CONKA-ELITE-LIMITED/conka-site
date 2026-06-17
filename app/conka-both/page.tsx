@@ -203,6 +203,9 @@ export default function ConkaBothPage() {
           </div>
         </section>
 
+        {/* ===== UGC SOCIAL PROOF ===== */}
+        {ugcSection}
+
         {/* ===== SECTION 2: BRAIN FUEL BAND ===== */}
         {brainFuelSection}
 
@@ -211,9 +214,6 @@ export default function ConkaBothPage() {
 
         {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
         {athleteSection}
-
-        {/* ===== SECTION 4.5: UGC SOCIAL PROOF ===== */}
-        {ugcSection}
 
         {/* ===== SECTION 5: TESTIMONIALS ===== */}
         {testimonialsSection}
@@ -264,6 +264,9 @@ export default function ConkaBothPage() {
         </div>
       </section>
 
+      {/* ===== UGC SOCIAL PROOF ===== */}
+      {ugcSection}
+
       {/* ===== SECTION 2: BRAIN FUEL BAND ===== */}
       {brainFuelSection}
 
@@ -272,9 +275,6 @@ export default function ConkaBothPage() {
 
       {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
       {athleteSection}
-
-      {/* ===== SECTION 4.5: UGC SOCIAL PROOF ===== */}
-      {ugcSection}
 
       {/* ===== SECTION 5: TESTIMONIALS ===== */}
       {testimonialsSection}

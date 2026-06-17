@@ -335,6 +335,10 @@
     gap: 18px;
     margin-top: 0;
   }
+  /* Taller image area on desktop so the bottle shots aren't cropped tight */
+  .image {
+    aspect-ratio: 4 / 5;
+  }
   /* Trust re-parented into the left column as a 2×2 grid */
   .trustMobile {
     display: none;

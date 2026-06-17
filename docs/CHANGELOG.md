@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-17** | Moved the UGC social-proof marquee directly beneath the product hero on the Flow, Clear and Both PDPs
+- **2026-06-17** | Nav dropdowns reworked into tile-based mega-menus (Shop/Science/App) with a cleaner, less noisy mobile menu
 - **2026-06-17** | UGC marquee: two stacked rows of stills, a section title with the "Two shots a day" promise, and the band added to the Both PDP
 - **2026-06-17** | Add a UGC social-proof image marquee (auto-scrolling band of customer + athlete stills) above the reviews on the Flow and Clarity PDPs
 - **2026-06-16** | Removed the stray browser "Leave site?" prompt on quiz CTAs and tagged quiz CTA events with their screen
