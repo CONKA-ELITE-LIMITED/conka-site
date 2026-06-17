@@ -12,7 +12,6 @@
  */
 
 export interface NavProduct {
-  code: string;
   name: string;
   /** Short blurb for the compact mobile rows. */
   description: string;
@@ -21,24 +20,19 @@ export interface NavProduct {
   href: string;
   /** Bottle shot used in both the desktop Shop mega-menu and the mobile menu. */
   image: string;
-  /** Optional extra classes for the desktop tile image (e.g. zoom a wide asset). */
-  imageClassName?: string;
   alt: string;
 }
 
 export const NAV_PRODUCTS: NavProduct[] = [
   {
-    code: "F-03",
     name: "Both (Flow + Clear)",
     description: "The full daily system.",
     descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
     href: "/conka-both",
     image: "/lander/BothHero.jpg",
-    imageClassName: "scale-[1.5] group-hover:scale-[1.55]",
     alt: "CONKA Flow and Clear",
   },
   {
-    code: "F-01",
     name: "CONKA Flow",
     description: "Morning focus & energy.",
     descriptionLong: "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
@@ -47,7 +41,6 @@ export const NAV_PRODUCTS: NavProduct[] = [
     alt: "CONKA Flow",
   },
   {
-    code: "F-02",
     name: "CONKA Clear",
     description: "Afternoon clarity & recovery.",
     descriptionLong: "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",

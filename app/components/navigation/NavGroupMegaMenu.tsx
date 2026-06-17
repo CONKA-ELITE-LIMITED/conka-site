@@ -47,7 +47,7 @@ export default function NavGroupMegaMenu({
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="group w-[260px] bg-[#f5f5f5] hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
+              className="group w-[260px] bg-[#f5f5f5] border border-black/12 hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
             >
               <div className="relative aspect-square overflow-hidden bg-white">
                 {link.image && (

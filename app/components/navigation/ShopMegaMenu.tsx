@@ -38,7 +38,7 @@ export default function ShopMegaMenu({
             {NAV_PRODUCTS.map((product) => (
               <div
                 key={product.href}
-                className="group bg-[#f5f5f5] hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
+                className="group bg-[#f5f5f5] border border-black/12 hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
               >
                 <Link
                   href={product.href}
@@ -50,16 +50,11 @@ export default function ShopMegaMenu({
                     src={product.image}
                     alt={product.alt}
                     fill
-                    className={`object-cover transition-transform duration-300 ${
-                      product.imageClassName ?? "group-hover:scale-[1.02]"
-                    }`}
+                    className="object-contain p-6 group-hover:scale-[1.02] transition-transform duration-300"
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
                 </Link>
                 <div className="p-4 flex-1 flex flex-col">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-1">
-                    {product.code}
-                  </p>
                   <p className="text-base font-semibold text-black mb-1">
                     {product.name}
                   </p>
