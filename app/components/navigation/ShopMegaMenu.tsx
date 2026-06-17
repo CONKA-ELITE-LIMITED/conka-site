@@ -38,24 +38,23 @@ export default function ShopMegaMenu({
             {NAV_PRODUCTS.map((product) => (
               <div
                 key={product.href}
-                className="group bg-white border border-black overflow-hidden transition-colors flex flex-col"
+                className="group bg-[#f5f5f5] hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
               >
                 <Link
                   href={product.href}
                   onClick={onClose}
-                  className="relative aspect-square overflow-hidden bg-[#f5f5f5] block"
+                  className="relative aspect-square overflow-hidden bg-white block"
                   aria-label={product.alt}
                 >
                   <Image
                     src={product.image}
                     alt={product.alt}
                     fill
-                    className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    className={`object-cover transition-transform duration-300 ${
+                      product.imageClassName ?? "group-hover:scale-[1.02]"
+                    }`}
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
-                  <span className="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/65 px-2 py-1 tabular-nums">
-                    {product.shortLabel}
-                  </span>
                 </Link>
                 <div className="p-4 flex-1 flex flex-col">
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-1">
