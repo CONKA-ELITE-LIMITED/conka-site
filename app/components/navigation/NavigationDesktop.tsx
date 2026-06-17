@@ -5,15 +5,9 @@ import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import ShopMegaMenu from "./ShopMegaMenu";
+import NavDropdown from "./NavDropdown";
+import { NAV_SCIENCE, NAV_APP, NAV_OUR_STORY } from "./navConfig";
 import type { NavigationDesktopProps } from "./types";
-
-const NAV_LINKS = [
-  { label: "Science", href: "/science" },
-  { label: "Ingredients", href: "/ingredients" },
-  { label: "Case Studies", href: "/case-studies" },
-  { label: "CONKA App", href: "/app" },
-  { label: "Our Story", href: "/our-story" },
-];
 
 export default function NavigationDesktop({
   hideBanner,
@@ -49,9 +43,9 @@ export default function NavigationDesktop({
             />
           </Link>
 
-          <div className="hidden xl:flex items-center gap-6 ml-10">
+          <div className="hidden xl:flex items-stretch self-stretch gap-6 ml-10">
             <div
-              className="relative"
+              className="relative self-stretch flex items-center"
               onMouseEnter={onShopAreaEnter}
               onMouseLeave={onShopAreaLeave}
             >
@@ -92,27 +86,17 @@ export default function NavigationDesktop({
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
-
-              <ShopMegaMenu
-                isOpen={shopDropdownOpen}
-                onClose={() => setShopDropdownOpen(false)}
-                bannerConfig={bannerConfig}
-                hideBanner={hideBanner}
-                onShopAreaEnter={onShopAreaEnter}
-                onShopAreaLeave={onShopAreaLeave}
-              />
             </div>
 
-            <nav className="flex items-center gap-7">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+            <nav className="flex items-stretch self-stretch gap-7">
+              <NavDropdown label={NAV_SCIENCE.title} links={NAV_SCIENCE.links} />
+              <NavDropdown label={NAV_APP.title} links={NAV_APP.links} />
+              <a
+                href={NAV_OUR_STORY.href}
+                className="self-center font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
+              >
+                {NAV_OUR_STORY.label}
+              </a>
             </nav>
           </div>
 
@@ -168,6 +152,15 @@ export default function NavigationDesktop({
           </div>
         </div>
       </header>
+
+      {/* Mega-menu anchored to the fixed wrapper so it drops flush from the
+          header bottom (no gap) and rides the scroll-hide transform. */}
+      <ShopMegaMenu
+        isOpen={shopDropdownOpen}
+        onClose={() => setShopDropdownOpen(false)}
+        onShopAreaEnter={onShopAreaEnter}
+        onShopAreaLeave={onShopAreaLeave}
+      />
     </div>
   );
 }

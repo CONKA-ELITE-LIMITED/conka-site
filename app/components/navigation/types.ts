@@ -38,8 +38,6 @@ export interface NavigationMobileProps {
 export interface ShopMegaMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  bannerConfig: ReturnType<typeof import("@/app/components/banner").useBannerConfig>;
-  hideBanner: boolean;
   onShopAreaEnter: () => void;
   onShopAreaLeave: () => void;
 }
