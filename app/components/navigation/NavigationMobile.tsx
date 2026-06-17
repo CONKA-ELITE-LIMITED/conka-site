@@ -185,7 +185,7 @@ export default function NavigationMobile({
                   >
                     <div className="relative w-16 h-16 shrink-0 bg-white overflow-hidden">
                       <Image
-                        src={product.mobileImage}
+                        src={product.image}
                         alt={product.alt}
                         fill
                         className="object-cover"

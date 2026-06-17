@@ -11,8 +11,6 @@
  * docs/development/featurePlans/navigation-simplification.md.
  */
 
-import { getFormulaImage, getProtocolImage } from "@/app/lib/productImageConfig";
-
 export interface NavProduct {
   code: string;
   name: string;
@@ -22,10 +20,8 @@ export interface NavProduct {
   /** Longer blurb for the desktop mega-menu cards. */
   descriptionLong: string;
   href: string;
-  /** Desktop mega-menu render. */
+  /** Bottle shot used in both the desktop Shop mega-menu and the mobile menu. */
   image: string;
-  /** Mobile menu thumbnail (lander bottle shot on white). */
-  mobileImage: string;
   alt: string;
 }
 
@@ -37,8 +33,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     description: "The full daily system.",
     descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
     href: "/conka-both",
-    image: getProtocolImage("3"),
-    mobileImage: "/lander/BothHero.jpg",
+    image: "/lander/BothHero.jpg",
     alt: "CONKA Flow and Clear",
   },
   {
@@ -48,8 +43,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     description: "Morning focus & energy.",
     descriptionLong: "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
     href: "/conka-flow",
-    image: getFormulaImage("01"),
-    mobileImage: "/lander/FlowNew.jpg",
+    image: "/lander/FlowNew.jpg",
     alt: "CONKA Flow",
   },
   {
@@ -59,8 +53,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     description: "Afternoon clarity & recovery.",
     descriptionLong: "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",
     href: "/conka-clarity",
-    image: getFormulaImage("02"),
-    mobileImage: "/lander/ClearNew.jpg",
+    image: "/lander/ClearNew.jpg",
     alt: "CONKA Clear",
   },
 ];
