@@ -18,6 +18,7 @@ import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarou
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
+import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
@@ -138,6 +139,11 @@ export default function ConkaClarityPage() {
           </div>
         </section>
 
+        {/* ===== SECTION 9.5: UGC SOCIAL PROOF ===== */}
+        <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
+          <UGCMarquee />
+        </section>
+
         {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
         <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
           <div className="brand-track">
@@ -239,6 +245,11 @@ export default function ConkaClarityPage() {
         <div className="brand-track">
           <LabGuarantee />
         </div>
+      </section>
+
+      {/* ===== SECTION 9.5: UGC SOCIAL PROOF ===== */}
+      <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
+        <UGCMarquee />
       </section>
 
       {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
