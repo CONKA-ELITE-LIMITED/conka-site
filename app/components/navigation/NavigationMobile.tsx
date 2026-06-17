@@ -172,8 +172,8 @@ export default function NavigationMobile({
 
             {/* Shop by Product */}
             <div className="px-5 pt-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
-                01 · Shop by product
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black tabular-nums mb-4">
+                Shop by product
               </p>
               <div className="flex flex-col gap-3">
                 {NAV_PRODUCTS.map((product) => (
@@ -181,11 +181,11 @@ export default function NavigationMobile({
                     key={product.href}
                     href={product.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 border border-black/12 bg-white hover:border-[#1B2757] transition-colors p-3"
+                    className="flex items-center gap-4 bg-[#f5f5f5] hover:bg-black/[0.05] transition-colors p-3"
                   >
-                    <div className="relative w-16 h-16 shrink-0 bg-[#f5f5f5] overflow-hidden">
+                    <div className="relative w-16 h-16 shrink-0 bg-white overflow-hidden">
                       <Image
-                        src={product.image}
+                        src={product.mobileImage}
                         alt={product.alt}
                         fill
                         className="object-cover"
@@ -193,9 +193,6 @@ export default function NavigationMobile({
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-0.5">
-                        {product.code}
-                      </p>
                       <p className="text-base font-semibold text-black leading-tight">
                         {product.name}
                       </p>
@@ -215,12 +212,12 @@ export default function NavigationMobile({
             </div>
 
             {/* Categorised groups */}
-            {MENU_GROUPS.map((group, groupIdx) => (
+            {MENU_GROUPS.map((group) => (
               <div key={group.title} className="px-5 pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
-                  {String(groupIdx + 2).padStart(2, "0")} · {group.title}
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black tabular-nums mb-4">
+                  {group.title}
                 </p>
-                <div className="border border-black/12 bg-white">
+                <div className="bg-[#f5f5f5]">
                   {group.links.map((link, idx) => (
                     <a
                       key={`${group.title}-${link.href}`}
@@ -228,7 +225,7 @@ export default function NavigationMobile({
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center justify-between px-4 py-4 ${
                         idx < group.links.length - 1 ? "border-b border-black/8" : ""
-                      } hover:bg-[#f5f5f5] transition-colors`}
+                      } hover:bg-black/[0.05] transition-colors`}
                     >
                       <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-black">
                         {link.label}

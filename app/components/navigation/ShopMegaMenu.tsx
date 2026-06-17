@@ -21,27 +21,24 @@ import type { ShopMegaMenuProps } from "./types";
 export default function ShopMegaMenu({
   isOpen,
   onClose,
-  onShopAreaEnter,
-  onShopAreaLeave,
+  onEnter,
+  onLeave,
 }: ShopMegaMenuProps) {
   if (!isOpen) return null;
 
   return (
     <div
       className="absolute left-0 right-0 top-full bg-white border-b border-black/12 z-50 shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
-      onMouseEnter={onShopAreaEnter}
-      onMouseLeave={onShopAreaLeave}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
     >
       <div className="w-full px-6 md:px-16 py-8">
         <div className="max-w-4xl mx-auto">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-4">
-            Featured · 03 formulas · 100-day guarantee
-          </p>
           <div className="grid grid-cols-3 gap-5">
             {NAV_PRODUCTS.map((product) => (
               <div
                 key={product.href}
-                className="group bg-white border border-black/12 hover:border-[#1B2757] overflow-hidden transition-colors flex flex-col"
+                className="group bg-white border border-black overflow-hidden transition-colors flex flex-col"
               >
                 <Link
                   href={product.href}
@@ -70,12 +67,8 @@ export default function ShopMegaMenu({
                   <p className="text-xs text-black/60 leading-relaxed flex-1 mb-4">
                     {product.descriptionLong}
                   </p>
-                  <ConkaCTAButton
-                    href={product.href}
-                    meta={product.ctaMeta}
-                    className="lg:!w-full lg:!max-w-none"
-                  >
-                    Shop {product.shortLabel}
+                  <ConkaCTAButton href={product.href} compact>
+                    Shop
                   </ConkaCTAButton>
                 </div>
               </div>

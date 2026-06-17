@@ -5,19 +5,69 @@ import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import ShopMegaMenu from "./ShopMegaMenu";
-import NavDropdown from "./NavDropdown";
+import NavGroupMegaMenu from "./NavGroupMegaMenu";
 import { NAV_SCIENCE, NAV_APP, NAV_OUR_STORY } from "./navConfig";
-import type { NavigationDesktopProps } from "./types";
+import type { NavigationDesktopProps, NavMenu } from "./types";
+
+/** Text trigger for a grouped mega-menu (Science, App). */
+function NavMenuTrigger({
+  label,
+  menu,
+  openMenu,
+  setOpenMenu,
+  onMenuEnter,
+  onMenuLeave,
+}: {
+  label: string;
+  menu: NavMenu;
+  openMenu: NavMenu;
+  setOpenMenu: (menu: NavMenu) => void;
+  onMenuEnter: (menu: NavMenu) => void;
+  onMenuLeave: () => void;
+}) {
+  const isOpen = openMenu === menu;
+  return (
+    <div
+      className="relative flex items-center"
+      onMouseEnter={() => onMenuEnter(menu)}
+      onMouseLeave={onMenuLeave}
+    >
+      <button
+        type="button"
+        onClick={() => setOpenMenu(isOpen ? null : menu)}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
+      >
+        {label}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+    </div>
+  );
+}
 
 export default function NavigationDesktop({
   hideBanner,
-  shopDropdownOpen,
-  setShopDropdownOpen,
-  shopDropdownRef,
+  openMenu,
+  setOpenMenu,
+  navRef,
   bannerConfig,
   isScrollingDown,
-  onShopAreaEnter,
-  onShopAreaLeave,
+  onMenuEnter,
+  onMenuLeave,
 }: NavigationDesktopProps) {
   const { openCart, itemCount } = useCart();
 
@@ -26,7 +76,7 @@ export default function NavigationDesktop({
       className={`w-full xl:fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
         isScrollingDown ? "xl:-translate-y-full" : "xl:translate-y-0"
       }`}
-      ref={shopDropdownRef}
+      ref={navRef}
     >
       {!hideBanner && bannerConfig && <Banner config={bannerConfig} />}
 
@@ -43,15 +93,15 @@ export default function NavigationDesktop({
             />
           </Link>
 
-          <div className="hidden xl:flex items-stretch self-stretch gap-6 ml-10">
+          <div className="hidden xl:flex items-center gap-6 ml-10">
             <div
-              className="relative self-stretch flex items-center"
-              onMouseEnter={onShopAreaEnter}
-              onMouseLeave={onShopAreaLeave}
+              className="relative flex items-center"
+              onMouseEnter={() => onMenuEnter("shop")}
+              onMouseLeave={onMenuLeave}
             >
               <button
-                onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
-                aria-expanded={shopDropdownOpen}
+                onClick={() => setOpenMenu(openMenu === "shop" ? null : "shop")}
+                aria-expanded={openMenu === "shop"}
                 aria-haspopup="true"
                 className="flex items-center gap-2 bg-[#1B2757] text-white px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(12px_0,100%_0,100%_calc(100%-12px),calc(100%-12px)_100%,0_100%,0_12px)]"
               >
@@ -81,19 +131,33 @@ export default function NavigationDesktop({
                   strokeWidth="2"
                   strokeLinecap="square"
                   strokeLinejoin="miter"
-                  className={`transition-transform ${shopDropdownOpen ? "rotate-180" : ""}`}
+                  className={`transition-transform ${openMenu === "shop" ? "rotate-180" : ""}`}
                 >
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
             </div>
 
-            <nav className="flex items-stretch self-stretch gap-7">
-              <NavDropdown label={NAV_SCIENCE.title} links={NAV_SCIENCE.links} />
-              <NavDropdown label={NAV_APP.title} links={NAV_APP.links} />
+            <nav className="flex items-center gap-7">
+              <NavMenuTrigger
+                label={NAV_SCIENCE.title}
+                menu="science"
+                openMenu={openMenu}
+                setOpenMenu={setOpenMenu}
+                onMenuEnter={onMenuEnter}
+                onMenuLeave={onMenuLeave}
+              />
+              <NavMenuTrigger
+                label={NAV_APP.title}
+                menu="app"
+                openMenu={openMenu}
+                setOpenMenu={setOpenMenu}
+                onMenuEnter={onMenuEnter}
+                onMenuLeave={onMenuLeave}
+              />
               <a
                 href={NAV_OUR_STORY.href}
-                className="self-center font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
+                className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
               >
                 {NAV_OUR_STORY.label}
               </a>
@@ -153,13 +217,27 @@ export default function NavigationDesktop({
         </div>
       </header>
 
-      {/* Mega-menu anchored to the fixed wrapper so it drops flush from the
-          header bottom (no gap) and rides the scroll-hide transform. */}
+      {/* Mega-menus anchored to the fixed wrapper so they drop flush from the
+          header bottom (no gap) and ride the scroll-hide transform. */}
       <ShopMegaMenu
-        isOpen={shopDropdownOpen}
-        onClose={() => setShopDropdownOpen(false)}
-        onShopAreaEnter={onShopAreaEnter}
-        onShopAreaLeave={onShopAreaLeave}
+        isOpen={openMenu === "shop"}
+        onClose={() => setOpenMenu(null)}
+        onEnter={() => onMenuEnter("shop")}
+        onLeave={onMenuLeave}
+      />
+      <NavGroupMegaMenu
+        isOpen={openMenu === "science"}
+        group={NAV_SCIENCE}
+        onClose={() => setOpenMenu(null)}
+        onEnter={() => onMenuEnter("science")}
+        onLeave={onMenuLeave}
+      />
+      <NavGroupMegaMenu
+        isOpen={openMenu === "app"}
+        group={NAV_APP}
+        onClose={() => setOpenMenu(null)}
+        onEnter={() => onMenuEnter("app")}
+        onLeave={onMenuLeave}
       />
     </div>
   );

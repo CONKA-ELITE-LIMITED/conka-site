@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useBannerConfig } from "@/app/components/banner";
 import NavigationDesktop from "./NavigationDesktop";
 import NavigationMobile from "./NavigationMobile";
-import type { NavigationProps } from "./types";
+import type { NavigationProps, NavMenu } from "./types";
 
 export default function Navigation({
   cartOpen: _cartOpen,
@@ -12,34 +12,33 @@ export default function Navigation({
   hideBanner = false,
 }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<NavMenu>(null);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const shopDropdownRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
   const bannerConfig = useBannerConfig("founding-member");
 
-  // Hover tracking for shop area (button + menu)
+  // Hover tracking for the desktop mega-menus (trigger + panel). One menu is
+  // open at a time; a short close delay bridges the trigger-to-panel gap.
   const resetTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleShopAreaEnter = () => {
+  const handleMenuEnter = (menu: NavMenu) => {
     if (resetTimeoutRef.current) {
       clearTimeout(resetTimeoutRef.current);
       resetTimeoutRef.current = null;
     }
-    if (!shopDropdownOpen) {
-      setShopDropdownOpen(true);
-    }
+    setOpenMenu(menu);
   };
 
-  const handleShopAreaLeave = () => {
+  const handleMenuLeave = () => {
     resetTimeoutRef.current = setTimeout(() => {
-      setShopDropdownOpen(false);
+      setOpenMenu(null);
     }, 150);
   };
 
-  // Cleanup timeout on unmount or when dropdown closes
+  // Cleanup timeout on unmount or when the menu closes
   useEffect(() => {
-    if (!shopDropdownOpen && resetTimeoutRef.current) {
+    if (!openMenu && resetTimeoutRef.current) {
       clearTimeout(resetTimeoutRef.current);
       resetTimeoutRef.current = null;
     }
@@ -48,7 +47,7 @@ export default function Navigation({
         clearTimeout(resetTimeoutRef.current);
       }
     };
-  }, [shopDropdownOpen]);
+  }, [openMenu]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,14 +64,14 @@ export default function Navigation({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // Close dropdown when clicking outside
+  // Close the open menu when clicking outside the nav
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        shopDropdownRef.current &&
-        !shopDropdownRef.current.contains(event.target as Node)
+        navRef.current &&
+        !navRef.current.contains(event.target as Node)
       ) {
-        setShopDropdownOpen(false);
+        setOpenMenu(null);
       }
     };
 
@@ -95,13 +94,13 @@ export default function Navigation({
       <div className="hidden xl:block">
         <NavigationDesktop
           hideBanner={hideBanner}
-          shopDropdownOpen={shopDropdownOpen}
-          setShopDropdownOpen={setShopDropdownOpen}
-          shopDropdownRef={shopDropdownRef}
+          openMenu={openMenu}
+          setOpenMenu={setOpenMenu}
+          navRef={navRef}
           bannerConfig={bannerConfig}
           isScrollingDown={isScrollingDown}
-          onShopAreaEnter={handleShopAreaEnter}
-          onShopAreaLeave={handleShopAreaLeave}
+          onMenuEnter={handleMenuEnter}
+          onMenuLeave={handleMenuLeave}
         />
 
         {/* Spacer to push content down on desktop (accounts for fixed header height) */}

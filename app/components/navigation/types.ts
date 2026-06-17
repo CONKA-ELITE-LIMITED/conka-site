@@ -8,18 +8,21 @@ export interface NavigationProps {
   hideBanner?: boolean;
 }
 
+/** Which desktop mega-menu is open (one at a time), or null. */
+export type NavMenu = "shop" | "science" | "app" | null;
+
 /**
  * Props for NavigationDesktop component
  */
 export interface NavigationDesktopProps {
   hideBanner: boolean;
-  shopDropdownOpen: boolean;
-  setShopDropdownOpen: (open: boolean) => void;
-  shopDropdownRef: React.RefObject<HTMLDivElement | null>;
+  openMenu: NavMenu;
+  setOpenMenu: (menu: NavMenu) => void;
+  navRef: React.RefObject<HTMLDivElement | null>;
   bannerConfig: ReturnType<typeof import("@/app/components/banner").useBannerConfig>;
   isScrollingDown: boolean;
-  onShopAreaEnter: () => void;
-  onShopAreaLeave: () => void;
+  onMenuEnter: (menu: NavMenu) => void;
+  onMenuLeave: () => void;
 }
 
 /**
@@ -38,8 +41,8 @@ export interface NavigationMobileProps {
 export interface ShopMegaMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  onShopAreaEnter: () => void;
-  onShopAreaLeave: () => void;
+  onEnter: () => void;
+  onLeave: () => void;
 }
 
 /**
