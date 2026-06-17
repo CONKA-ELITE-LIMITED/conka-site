@@ -5,6 +5,7 @@ import LandingHero from "./components/landing/LandingHero";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabTimeline from "./components/landing/LabTimeline";
+import UGCMarquee from "./components/testimonials/UGCMarquee";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -114,6 +115,14 @@ export default function Home() {
         <div className="brand-track">
           <LabResearch />
         </div>
+      </section>
+
+      {/* ===== SECTION 6.5: UGC SOCIAL PROOF ===== */}
+      <section
+        className="brand-section brand-bg-white !px-0"
+        aria-label="Real people using CONKA"
+      >
+        <UGCMarquee />
       </section>
 
       {/* ===== SECTION 7: WHAT TO EXPECT (LabTimeline) ===== */}
