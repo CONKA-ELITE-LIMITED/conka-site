@@ -49,7 +49,11 @@ export default function NavGroupMegaMenu({
               onClick={onClose}
               className="group w-[260px] bg-[#f5f5f5] border border-black/12 hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
             >
-              <div className="relative aspect-square overflow-hidden bg-white">
+              <div
+                className={`relative aspect-square overflow-hidden ${
+                  link.imageFit === "contain" ? "bg-[#1c1c1c]" : "bg-white"
+                }`}
+              >
                 {link.image && (
                   <Image
                     src={link.image}
