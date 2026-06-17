@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import Image from "next/image";
 import {
   getIngredientsByFormula,
@@ -31,6 +31,49 @@ import { FormulaId } from "@/app/lib/productData";
  * ========================================================================== */
 
 const NAVY = "#1B2757";
+
+// AM / PM glyphs, ported from the lander IngredientsSection so the two-shot
+// system reads at a glance. Dependency-free inline SVGs; sized via className.
+function FlowIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4" />
+    </svg>
+  );
+}
+
+function ClearIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      aria-hidden
+    >
+      <path d="M12 2v6M15 5l-3 3-3-3" />
+      <path d="M5.2 18a7 7 0 0 1 13.6 0" />
+      <path d="M2 18h3M19 18h3" />
+      <path d="M2 22h20" />
+    </svg>
+  );
+}
+
+const FORMULA_ICON: Record<FormulaId, ({ className }: { className?: string }) => ReactElement> = {
+  "01": FlowIcon,
+  "02": ClearIcon,
+};
 
 // Active nootropic load per formula in mg. Numbers supplied by the founder
 // (2026-06); verify against the formulation spec before any external claim.
@@ -152,6 +195,7 @@ export default function ClinicalIngredients({
               {formulaIds.map((id) => {
                 const isActive = id === activeFormula;
                 const m = FORMULA_META[id];
+                const Icon = FORMULA_ICON[id];
                 return (
                   <button
                     key={id}
@@ -161,12 +205,13 @@ export default function ClinicalIngredients({
                     aria-selected={isActive}
                     aria-controls="clinical-ingredients-panel"
                     onClick={() => setActiveFormula(id)}
-                    className={`min-h-[44px] px-6 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] transition-colors cursor-pointer ${
+                    className={`inline-flex items-center gap-2 min-h-[44px] px-5 sm:px-6 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] transition-colors cursor-pointer ${
                       isActive ? "text-white" : "text-black/55 hover:text-black"
                     }`}
                     style={isActive ? { backgroundColor: NAVY } : undefined}
                   >
-                    {m.timeOfDay}
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    {m.shortName} · {m.time}
                   </button>
                 );
               })}
