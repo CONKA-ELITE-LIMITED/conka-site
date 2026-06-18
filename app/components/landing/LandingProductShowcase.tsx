@@ -40,10 +40,11 @@ const FORMULA_ID: Record<ProductId, FormulaId> = {
 // lander tell the same story.
 const PRODUCTS: Record<
   ProductId,
-  { name: string; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
+  { name: string; timeOfDay: string; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
 > = {
   flow: {
     name: "CONKA Flow",
+    timeOfDay: "Morning",
     sub: "Calm focus for your mornings.",
     mg: "3,700mg",
     bottleSrc: "/formulas/conkaFlow/FlowNew.jpg",
@@ -51,6 +52,7 @@ const PRODUCTS: Record<
   },
   clear: {
     name: "CONKA Clear",
+    timeOfDay: "Afternoon",
     sub: "Afternoon clarity & reset",
     mg: "3,142mg",
     bottleSrc: "/formulas/conkaClear/ClearNew.jpg",
@@ -83,55 +85,93 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     } catch { /* fail silently */ }
   };
 
-  // Single product card — shared by the mobile (one-at-a-time) and desktop
-  // (both side by side) layouts. Larger asset on desktop (lg:w-[200px]).
+  // Shared "Full ingredient list" CTA — used by both card layouts.
+  const ingredientButton = (id: ProductId) => (
+    <button
+      type="button"
+      onClick={() => openIngredients(id)}
+      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
+    >
+      Full ingredient list
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        aria-hidden
+      >
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+    </button>
+  );
+
+  // Product card. Mobile: horizontal (image beside details). Desktop: a dark
+  // neural-blue header (white name + asset) over a light body (stats + CTA) so
+  // the card reads as two clear zones.
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
-      <div key={id} className="bg-white border border-black/8 p-4 lg:p-6">
-        <div className="flex items-center gap-4 lg:gap-6 mb-4">
-          <div className="relative w-[120px] h-[120px] lg:w-[200px] lg:h-[200px] shrink-0 border border-black/8 overflow-hidden bg-white">
-            <Image
-              src={p.bottleSrc}
-              alt={p.bottleAlt}
-              fill
-              sizes="(max-width: 1024px) 120px, 200px"
-              className="object-cover"
-            />
+      <div key={id} className="bg-white border border-black/8 overflow-hidden">
+        {/* Mobile: horizontal */}
+        <div className="lg:hidden p-4">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="relative w-[120px] h-[120px] shrink-0 border border-black/8 overflow-hidden bg-white">
+              <Image
+                src={p.bottleSrc}
+                alt={p.bottleAlt}
+                fill
+                sizes="120px"
+                className="object-cover"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="text-lg font-semibold text-black leading-tight mb-1">
+                {p.name}
+              </p>
+              <p className="text-sm text-black/55 mb-3">{p.sub}</p>
+              <p className="text-2xl font-semibold tabular-nums leading-none text-black">
+                {p.mg}
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">
+                Active nootropics
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-lg lg:text-2xl font-semibold text-black leading-tight mb-1">
-              {p.name}
-            </p>
-            <p className="text-sm text-black/55 mb-3">{p.sub}</p>
-            <p className="text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black">
-              {p.mg}
-            </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">
-              Active nootropics
-            </p>
-          </div>
+          {ingredientButton(id)}
         </div>
 
-        <button
-          type="button"
-          onClick={() => openIngredients(id)}
-          className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
-        >
-          Full ingredient list
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            aria-hidden
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        </button>
+        {/* Desktop: slim blue title bar over an all-white card body */}
+        <div className="hidden lg:block">
+          <div className="bg-[var(--color-neuro-blue-dark,#0e1f3f)] px-6 py-3">
+            <p className="flex items-center justify-center gap-2 text-lg font-semibold text-white leading-tight">
+              {p.name}
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-white/60" aria-hidden />
+              <span className="text-sm font-normal text-white/70">{p.timeOfDay}</span>
+            </p>
+          </div>
+          <div className="p-6 text-center">
+            <div className="relative w-[260px] h-[260px] mx-auto overflow-hidden border border-black/8 bg-white mb-5">
+              <Image
+                src={p.bottleSrc}
+                alt={p.bottleAlt}
+                fill
+                sizes="260px"
+                className="object-cover"
+              />
+            </div>
+            <p className="text-sm text-black/55 mb-3">{p.sub}</p>
+            <p className="text-3xl font-semibold tabular-nums leading-none text-black">
+              {p.mg}
+            </p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5 mb-5">
+              Active nootropics
+            </p>
+            {ingredientButton(id)}
+          </div>
+        </div>
       </div>
     );
   };
@@ -156,7 +196,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
       {/* Mobile: one formula at a time via the AM/PM toggle (keeps the section
           calm on small screens). Desktop: both formulas as two equal cards with
           larger assets and no toggle (equal billing, neither enlarged). */}
-      <div className="mx-auto max-w-[560px] lg:max-w-[1000px] mb-8">
+      <div className="mx-auto max-w-[560px] lg:max-w-[720px] mb-8">
         <div className="lg:hidden">
           <FormulaToggle
             value={active}
