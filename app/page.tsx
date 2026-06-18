@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHero from "./components/landing/LandingHero";
+import LandingHeroVideo from "./components/landing/LandingHeroVideo";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabTimeline from "./components/landing/LabTimeline";
@@ -57,17 +58,26 @@ export default function Home() {
           bleed to the viewport edge (listicle hero pattern); mobile keeps
           the standard section padding */}
       <section
-        className="brand-section brand-hero-first brand-bg-white lg:p-0!"
+        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0!"
         aria-label="Homepage hero"
       >
         <div className="brand-track lg:max-w-none!">
-          <LandingHero />
+          {/* Mobile: Magic Mind-style looped video hero. Desktop keeps the
+              existing listicle hero unchanged. */}
+          <div className="lg:hidden">
+            <LandingHeroVideo />
+          </div>
+          <div className="hidden lg:block">
+            <LandingHero />
+          </div>
         </div>
       </section>
 
       {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
+      {/* On mobile, drop the gap so section 2 starts flush at the base of the
+          hero video (same light tone) for a continuous flow. */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-tint max-lg:pt-0!"
         aria-label="What CONKA does"
       >
         <div className="brand-track">
