@@ -30,7 +30,7 @@ export default function LabResearch() {
         aria-hidden
         loading="lazy"
         className="object-cover"
-        sizes="100vw"
+        sizes="(max-width: 768px) 100vw, 1280px"
       />
       <div
         className="absolute inset-0"

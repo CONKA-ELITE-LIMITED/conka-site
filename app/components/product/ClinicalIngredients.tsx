@@ -159,8 +159,6 @@ export default function ClinicalIngredients({
       {/* Ingredient cards — Magic Mind pattern, clinical skin. Horizontal
           snap rail so the tiles read as a scannable row on every breakpoint. */}
       <div
-        id="clinical-ingredients-panel"
-        role="tabpanel"
         aria-label={`CONKA ${meta.shortName} ingredients`}
         className="flex gap-3 items-start overflow-x-auto snap-x pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
