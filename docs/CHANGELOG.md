@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-18** | Home hero/section-2 mobile tweaks: tint gap above section 2, white unselected toggle pills, higher hero copy, removed section 3 top padding
 - **2026-06-18** | Added a Magic Mind-style looped video hero on the mobile home page (BothStillWater shots in still water), desktop hero unchanged
 - **2026-06-18** | Restyle home research section as a full-bleed university-photo band with navy scrim and university tiles
 - **2026-06-18** | Home showcase and product PDPs adopt the lander's rounded AM/PM toggle and ingredient bottom sheet; PDP ingredient tiles become a horizontal scroll rail

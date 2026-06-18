@@ -74,10 +74,11 @@ export default function Home() {
       </section>
 
       {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
-      {/* On mobile, drop the gap so section 2 starts flush at the base of the
-          hero video (same light tone) for a continuous flow. */}
+      {/* The hero drops its bottom padding on mobile so the spacing above this
+          section comes from this section's own top padding, keeping the gap in
+          the section tint colour rather than white. */}
       <section
-        className="brand-section brand-bg-tint max-lg:pt-0!"
+        className="brand-section brand-bg-tint"
         aria-label="What CONKA does"
       >
         <div className="brand-track">
@@ -86,8 +87,9 @@ export default function Home() {
       </section>
 
       {/* ===== SECTION 3: WHY HIGH PERFORMERS TRUST CONKA ===== */}
+      {/* No top padding; the gap above comes from section 2's bottom padding. */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-white pt-0!"
         aria-label="Athletes who use CONKA"
       >
         <div className="brand-track">
