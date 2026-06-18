@@ -1,12 +1,13 @@
 import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import LandingHero from "./components/landing/LandingHero";
 import LandingHeroVideo from "./components/landing/LandingHeroVideo";
+import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabTimeline from "./components/landing/LabTimeline";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
+import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -41,13 +42,6 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
 });
 
-const LandingDailyBenefits = dynamic(
-  () => import("./components/landing/LandingDailyBenefits"),
-  // Placeholder approximates the rendered height (4:5 video + header +
-  // 3 cards on mobile; sticky split on desktop) to limit CLS during
-  // client-side navigation.
-  { loading: () => <div className="h-[1500px] lg:h-[900px]" /> },
-);
 
 export default function Home() {
   return (
@@ -57,18 +51,23 @@ export default function Home() {
       {/* Desktop drops the section gutters/track so the hero asset can
           bleed to the viewport edge (listicle hero pattern); mobile keeps
           the standard section padding */}
+      {/* The fixed desktop nav reserves a 136px spacer but renders ~120px, so
+          a ~16px white sliver shows above the flush hero. Pull the hero up into
+          that surplus at xl only (its empty top space absorbs it); the mobile
+          and lg-tablet navs are in normal flow and need no adjustment. */}
       <section
-        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0!"
+        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
         aria-label="Homepage hero"
       >
         <div className="brand-track lg:max-w-none!">
-          {/* Mobile: Magic Mind-style looped video hero. Desktop keeps the
-              existing listicle hero unchanged. */}
+          {/* Magic Mind-style looped video hero: portrait video on mobile,
+              landscape video on desktop. (Previous listicle LandingHero is
+              kept in the codebase for revert.) */}
           <div className="lg:hidden">
             <LandingHeroVideo />
           </div>
           <div className="hidden lg:block">
-            <LandingHero />
+            <LandingHeroVideoDesktop />
           </div>
         </div>
       </section>
@@ -97,15 +96,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 4: DAILY BENEFITS — ingredient argument before the formula picker ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Daily habit, lifelong benefits"
-      >
-        <div className="brand-track">
-          <LandingDailyBenefits />
-        </div>
-      </section>
+      {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
+          LandingDailyBenefits; the band owns its own full-bleed dark section,
+          so it is not wrapped in brand-section/brand-track). ===== */}
+      <BrainFuelBand />
 
       {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}
       <div id="product-grid" className="scroll-mt-20">
