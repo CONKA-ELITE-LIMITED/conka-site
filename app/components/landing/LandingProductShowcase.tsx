@@ -106,6 +106,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
           clearValue="clear"
           onChange={setActive}
           className="mb-4"
+          inactiveClassName="bg-white"
         />
 
         <div className="bg-white border border-black/8 p-4 lg:p-5">

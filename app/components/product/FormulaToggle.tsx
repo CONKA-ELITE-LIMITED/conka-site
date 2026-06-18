@@ -30,6 +30,9 @@ interface FormulaToggleProps<T extends string> {
   onChange: (value: T) => void;
   className?: string;
   ariaLabel?: string;
+  /** Extra classes for the unselected tab (e.g. `bg-white` to lift it off an
+   *  off-white section). Active tab styling is unaffected. */
+  inactiveClassName?: string;
 }
 
 export default function FormulaToggle<T extends string>({
@@ -39,6 +42,7 @@ export default function FormulaToggle<T extends string>({
   onChange,
   className = "",
   ariaLabel = "Choose your formula",
+  inactiveClassName = "",
 }: FormulaToggleProps<T>) {
   const tabs = [
     { value: flowValue, label: "Flow", time: "AM", Icon: SunIcon },
@@ -61,7 +65,9 @@ export default function FormulaToggle<T extends string>({
             aria-selected={isActive}
             onClick={() => onChange(tabValue)}
             className={`flex flex-1 min-h-[44px] items-center justify-center gap-2 rounded-full px-2 py-3 text-[15px] font-medium transition-colors cursor-pointer ${
-              isActive ? "text-white" : "text-[#6b6b6b] hover:text-black"
+              isActive
+                ? "text-white"
+                : `text-[#6b6b6b] hover:text-black ${inactiveClassName}`
             }`}
             style={isActive ? { backgroundColor: NAVY } : undefined}
           >

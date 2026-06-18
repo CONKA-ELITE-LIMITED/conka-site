@@ -90,7 +90,7 @@ export default function LandingHeroVideo() {
 
       {/* Content — title/copy at the top, CTA at the bottom (Magic Mind layout).
           min-h drives the container height; the absolute video fills it. */}
-      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-8 pb-10">
+      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-10">
         <header className="text-center">
           <h1
             className="text-black font-semibold text-[38px] leading-[1.08]"
