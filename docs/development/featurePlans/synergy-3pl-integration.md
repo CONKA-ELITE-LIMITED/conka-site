@@ -1,6 +1,6 @@
 # Synergy 3PL Shopify Integration
 
-**Status:** In progress
+**Status:** Testing COMPLETE — pre-go-live ops items remaining
 **Created:** 2026-06-02
 **Hard deadline:** 4 June 2026 (Synergy kickoff call, ahead of next production run)
 **Jira:** SCRUM-1051 (metafields + tags, done) plus the phase tickets listed below
@@ -8,7 +8,31 @@
 
 ---
 
-## CURRENT STATUS (2026-06-11)
+## CURRENT STATUS (2026-06-17)
+
+**ALL THREE TEST PATHS PASS — testing is complete.** Verified end-to-end against Synergy's LIVE system:
+1. **Pull — PASS.** Synergy imported #3522/#3523/#3524. Confirmed by the fact Synergy went on to fulfil them (can't fulfil an unpulled order).
+2. **Ship + writeback — PASS (verified 17 Jun).** All three came back **Fulfilled from Synergy Warehouse with carrier + tracking populated** and shipping-confirmation emails fired, then auto-archived:
+   - #3522 (Express): EVRICORP `H043PA0025682692`
+   - #3523 (24 Hour Delivery): EVRICORP `H043PA0025682577`
+   - #3524 (Express International, USA): EVRICORP `H043PC0025682567`
+3. **Inventory sync — PASS (verified 17 Jun).** After Richard's absolute + relative adjustments, all six funnel SKUs at the Synergy location matched exactly: FLOW-FUNNEL-28 184, CLEAR-FUNNEL-28 181, FLOW-FUNNEL-84 46, CLEAR-FUNNEL-84 46, BOTH-FUNNEL-56 139, BOTH-FUNNEL-168 46; legacy SKUs (101/107/25/CAPS_003) 0. Both relative deltas and absolute re-sets synced correctly = bidirectional inventory sync works.
+- **Bundle CONFIRMED working:** #3524 stayed one `BOTH-FUNNEL-56` line in Shopify and split into 1×Flow28 + 1×Clear28 on Synergy's pick side — matches our `BundleComposition`.
+
+**CARRIER NOTE (not a failure):** all three test orders shipped via **Evri (EVRICORP)**, including #3523 which is mapped to **DPD** for "24 Hour Delivery". Almost certainly because Synergy's carrier accounts aren't set up yet (Bethany's own open item). Asked Bethany to confirm 24 Hour Delivery routes to DPD once accounts are live.
+
+**REMAINING BEFORE GO-LIVE:**
+- **Synergy carrier accounts** — Bethany's side; once live, confirm 24 Hour Delivery → DPD routing (test defaulted to Evri).
+- **Portal training** — not yet done; asked Bethany to book it in.
+- **EAN labelling on inbound** — decide Synergy-labels-on-inbound (~3 hrs / 156 cartons) vs co-packer labels. Pending Humphrey. Values: `FLOWFUNNEL28` / `CLEARFUNNEL28`, Code 128.
+- **Post-test cleanup** — reset the 6 funnel SKUs at the Synergy location back to **0** so live orders don't route there before go-live (do AFTER Bethany signs off).
+- **Go-live cutover (Phase 5)** — stock the 3 funnel SKUs at Synergy + switch them to fulfil from Synergy; single live sanity order.
+
+_Reply confirming all of the above sent to Bethany 17 Jun._
+
+---
+
+## EARLIER STATUS (2026-06-11)
 
 **TEST IN PROGRESS — Synergy has PULLED the 3 test orders (Bethany email, 11 Jun).** Staged handshake now running:
 1. **Pull — DONE on Synergy's side; CONKA to verify.** Synergy imported #3522/#3523/#3524 and "everything looks good" their end. **Rudh's action: confirm each order in Shopify Admin now carries the `IMPORTSYNERGY` tag** (Synergy auto-tags on successful pull), sanity-check SKUs/shipping-method names/Synergy location came through clean, then reply to Bethany.
@@ -231,15 +255,31 @@ What this means and the staged handshake from here:
 
 **Immediate CONKA action:** verify the `IMPORTSYNERGY` tag on all 3 orders + reply to Bethany.
 
+## Update (2026-06-17, all test paths verified — TESTING COMPLETE)
+
+Bethany emailed Richard's dummy inventory adjustments (absolute sync + relative deltas) and asked CONKA to verify, stating "if this is all correct, we believe testing to be complete."
+
+**Verified in Shopify Admin, all PASS:**
+- **Inventory sync (Stage 3).** Synergy location quantities reconciled exactly to the expected end-state after applying the absolute sync then the relative +/− deltas then the final absolute re-sets: FLOW-FUNNEL-28 **184** (140 +54 −10), CLEAR-FUNNEL-28 **181** (139 +53 −11), FLOW-FUNNEL-84 **46**, CLEAR-FUNNEL-84 **46**, BOTH-FUNNEL-56 **139**, BOTH-FUNNEL-168 **46**, legacy 101/107/25/CAPS_003 **0**. Confirms bidirectional inventory sync handles both relative and absolute adjustments.
+- **Ship + writeback (Stage 2).** #3522/#3523/#3524 all Fulfilled from Synergy Warehouse with carrier + tracking written back, shipping-confirmation emails sent, orders auto-archived. Tracking: #3522 EVRICORP `H043PA0025682692`; #3523 EVRICORP `H043PA0025682577`; #3524 EVRICORP `H043PC0025682567`.
+- **Pull (Stage 1).** Implicitly confirmed (Synergy fulfilled all three).
+- **Bundle.** #3524 stayed a single `BOTH-FUNNEL-56` line in Shopify and split into components on Synergy's pick side.
+
+**Carrier observation (flagged to Bethany, not a failure):** all three shipped via **Evri (EVRICORP)**, including #3523 which is mapped to **DPD** ("24 Hour Delivery"). Likely because Synergy's carrier accounts aren't live yet (her open item). Asked her to confirm 24 Hour Delivery routes to DPD once accounts are set up.
+
+**Reply sent to Bethany 17 Jun** confirming inventory + writeback reconcile, raising the Evri/DPD point, requesting portal training, and noting the EAN-labelling answer is pending Humphrey.
+
+**Open before go-live:** (1) Synergy carrier accounts + DPD routing confirmation; (2) portal training; (3) EAN-labelling-on-inbound vs co-packer decision (Humphrey); (4) reset the 6 Synergy SKUs to 0 post-sign-off; (5) Phase 5 cutover.
+
 ## Phases
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Connect: Dev Dashboard app + credentials + base URL + Synergy Location | DONE (connection confirmed working) |
 | 2 | SKU readiness: HS code, weight, country on the 2 physical boxes; inventory tracked by Shopify; barcode blank | DONE (SKUs + bundles LIVE in Synergy's system, 10 Jun) |
-| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (carriers chosen; sheet sent; US USD/DDP rate still to build) |
-| 4 | Testing: 3 specified test orders against Synergy LIVE system; carrier/tracking writeback | Active (orders PULLED by Synergy 11 Jun → CONKA verifying `IMPORTSYNERGY` tag; then ship+writeback, then inventory test) |
-| 5 | Go-live (9 June): live SKU-name sync, single live sanity order | Future |
+| 3 | Couriers: UK free, USA scaled USD price inclusive of tax/tariffs | Active (carriers chosen; sheet sent; US USD/DDP rate still to build; Synergy carrier accounts being set up their side) |
+| 4 | Testing: 3 specified test orders against Synergy LIVE system; carrier/tracking writeback | **DONE (all 3 paths PASS, verified 17 Jun: pull, ship+writeback with tracking, inventory sync)** |
+| 5 | Go-live: live SKU sync, stock funnel SKUs at Synergy + switch to fulfil from Synergy, single live sanity order | Active (next; gated on carrier accounts + portal training + EAN labelling decision) |
 
 ### Phase 1: Connect - DONE
 
@@ -267,7 +307,7 @@ Then notify Bethany the SKU attributes are done so Synergy can sync the SKU file
 - **UK:** free to customer; Synergy picks the carrier (clause 4.1) unless CONKA names a preferred one. Likely just a "Free UK shipping" rate (probably already exists).
 - **US:** customers pay USD, price scaled by box count, inclusive of tax/tariffs, all products available. Still need: the DHL cost for the US (which DHL zone is the USA, Air vs Road) plus a tariff estimate, then set the scaled USD rates in Settings > Shipping. Visible to Synergy via `read_shipping`.
 
-### Phase 4: Testing (Active — needs sheet returned + SKUs live + routing)
+### Phase 4: Testing — DONE (all 3 paths passed, verified 2026-06-17)
 
 Bethany specified the test matrix against Synergy's LIVE system (not a separate TEST WMS):
 - Order 1: `FLOW-FUNNEL-28` × 1, "Express" (UK)

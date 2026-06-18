@@ -5,7 +5,7 @@
 to be formalised into a standalone feature doc once the Shopify shipping setup is
 live and verified.
 **Owner:** Rudh (Shopify config) with Humphrey (carrier/ops decisions).
-**Last updated:** 2026-06-11.
+**Last updated:** 2026-06-17.
 
 ---
 
@@ -209,6 +209,12 @@ Express              | Evri    | Standard     | UK     | n/a
 24 Hour Delivery     | DPD     | Next Day     | UK     | n/a
 Express International | Evri    | International | ROW    | DAP
 ```
+
+**Test observation (2026-06-17):** all 3 Synergy test orders shipped back via **Evri
+(EVRICORP tracking)**, including the `24 Hour Delivery` order that is mapped to DPD —
+because Synergy's carrier accounts were not yet live. Confirmation requested from Bethany
+that `24 Hour Delivery` will route to DPD once the carrier accounts are set up. Routing on
+method name is otherwise validated end-to-end (writeback populated carrier + tracking).
 
 Added later as features land:
 - `International Priority` | DHL | Express | ROW | DAP  — the DHL upgrade.
