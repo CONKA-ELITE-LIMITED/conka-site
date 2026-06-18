@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-18** | Desktop home improvements: section 2 shows both shots as two equal cards, athlete sport marquee runs full-bleed, research band full-width on desktop
 - **2026-06-18** | Added a landscape looped video hero for desktop (Magic Mind style, left copy + brain-project badge), replacing the listicle hero
 - **2026-06-18** | Home: moved showcase cert icons below the CTA, swapped section 4 to the BrainFuelBand proof band (white copy)
 - **2026-06-18** | Home hero/section-2 mobile tweaks: tint gap above section 2, white unselected toggle pills, higher hero copy, removed section 3 top padding

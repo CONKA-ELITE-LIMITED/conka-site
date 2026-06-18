@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import InformedSportCertification from "./InformedSportCertification";
+import AthleteSportMarquee from "./AthleteSportMarquee";
 
 /* ============================================================================
  * AthleteCredibilityCarousel
@@ -15,6 +16,10 @@ import InformedSportCertification from "./InformedSportCertification";
  *
  * Rendered by the home page and the three PDPs (/conka-flow, /conka-clarity,
  * /conka-both) — changes here propagate to all four.
+ *
+ * The sport-breadth marquee lives in its own component (AthleteSportMarquee).
+ * It renders inside this beat by default; home and the PDPs pass
+ * showMarquee={false} and render it full-bleed at the section level instead.
  * ========================================================================== */
 
 export type Athlete = {
@@ -92,58 +97,7 @@ const ATHLETES: Athlete[] = [
   },
 ];
 
-// Sport-breadth marquee — broader than the 7-athlete roster on purpose:
-// captures the full range of sports CONKA athletes compete in rather than
-// only the sports we have signed quotes for.
-const SPORTS = [
-  "Premiership Rugby",
-  "WBO Boxing",
-  "NFL",
-  "Showjumping",
-  "Motorsport",
-  "Rugby Sevens",
-  "MMA",
-  "Mountain Biking",
-  "Football",
-  "Olympic Track",
-  "NHL",
-  "Triathlon",
-  "British GT",
-  "Athletics",
-  "Ultramarathon",
-];
-
 const SWIPE_THRESHOLD = 50;
-
-/* Scrolling navy sport strip. Bleeds to the viewport edge on mobile via the
-   gutter-bleed trick (-mx-5); spans the content track on desktop. Reuses the
-   `marquee` keyframe from globals.css; renders the list twice and translates
-   -50% so the loop is seamless. `motion-safe:` guards reduced motion. */
-function SportMarquee() {
-  return (
-    <div className="relative overflow-hidden bg-[#1B2757] py-3 mb-8 -mx-5 w-[calc(100%+2.5rem)] md:mx-0 md:w-full">
-      <span className="sr-only">
-        CONKA athletes compete in: {SPORTS.join(", ")}.
-      </span>
-      <div
-        className="inline-flex whitespace-nowrap [will-change:transform] motion-safe:animate-[marquee_60s_linear_infinite]"
-        aria-hidden="true"
-      >
-        {[...SPORTS, ...SPORTS].map((sport, i) => (
-          <span
-            key={`${sport}-${i}`}
-            className="inline-flex items-center text-[12px] uppercase tracking-[0.18em] font-semibold text-white"
-          >
-            <span>{sport}</span>
-            <span className="mx-5 text-white" aria-hidden="true">
-              ★
-            </span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function ChamferNav({
   direction,
@@ -198,7 +152,14 @@ function ChamferNav({
   );
 }
 
-export default function AthleteCredibilityCarousel() {
+export default function AthleteCredibilityCarousel({
+  showMarquee = true,
+}: {
+  // The sport-breadth marquee is rendered inside the carousel by default. Home
+  // and the PDPs pass `showMarquee={false}` and render <AthleteSportMarquee
+  // fullBleed /> at the section level instead so the strip runs edge-to-edge.
+  showMarquee?: boolean;
+} = {}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const totalCount = ATHLETES.length;
   const active = ATHLETES[activeIndex];
@@ -252,7 +213,7 @@ export default function AthleteCredibilityCarousel() {
 
   return (
     <div>
-      <SportMarquee />
+      {showMarquee && <AthleteSportMarquee />}
 
       {/* Header */}
       <div className="mb-8">

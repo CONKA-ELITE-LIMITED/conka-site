@@ -15,15 +15,17 @@ import IngredientBottomSheet from "@/app/components/product/IngredientBottomShee
  * LandingProductShowcase
  *
  * "Two shots. Built around your day." — the home page's product-system
- * teaching beat. A rounded AM/PM toggle (ported from the lander) switches
- * between Flow (morning) and Clear (afternoon); one formula shows at a time so
- * the page reads cleaner on mobile. The toggle frames the two formulas by time
- * of day, giving them equal billing — neither product is enlarged or staged
- * over the other. The full ingredient list opens in the shared bottom sheet.
+ * teaching beat. On mobile a rounded AM/PM toggle switches between Flow
+ * (morning) and Clear (afternoon) so one formula shows at a time and the page
+ * reads cleaner on small screens. On desktop both formulas show side by side
+ * as two equal cards with larger assets (no toggle) — neither product is
+ * enlarged or staged over the other, so they keep equal billing. The full
+ * ingredient list opens in the shared bottom sheet.
  *
- * Earlier prototypes that *enlarged* one product (spotlight layouts, a video
- * stage) were rejected 2026-06 because they implicitly demote the other. The
- * time-of-day toggle keeps both equal while still simplifying the view.
+ * Earlier prototypes that *enlarged one product over the other* (spotlight
+ * layouts, a video stage) were rejected 2026-06 because they implicitly demote
+ * the other. Two equal cards (desktop) and the time-of-day toggle (mobile)
+ * both preserve that equal-billing rule.
  * ========================================================================== */
 
 type ProductId = "flow" | "clear";
@@ -73,11 +75,65 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
   const formulaId = FORMULA_ID[active];
   const ingredients = getOrderedActiveIngredients(formulaId);
 
-  const openIngredients = () => {
+  const openIngredients = (id: ProductId) => {
+    setActive(id);
     setSheetOpen(true);
     try {
-      track("showcase:ingredients_viewed", { product: active, source: "product_showcase" });
+      track("showcase:ingredients_viewed", { product: id, source: "product_showcase" });
     } catch { /* fail silently */ }
+  };
+
+  // Single product card — shared by the mobile (one-at-a-time) and desktop
+  // (both side by side) layouts. Larger asset on desktop (lg:w-[200px]).
+  const renderCard = (id: ProductId) => {
+    const p = PRODUCTS[id];
+    return (
+      <div key={id} className="bg-white border border-black/8 p-4 lg:p-6">
+        <div className="flex items-center gap-4 lg:gap-6 mb-4">
+          <div className="relative w-[120px] h-[120px] lg:w-[200px] lg:h-[200px] shrink-0 border border-black/8 overflow-hidden bg-white">
+            <Image
+              src={p.bottleSrc}
+              alt={p.bottleAlt}
+              fill
+              sizes="(max-width: 1024px) 120px, 200px"
+              className="object-cover"
+            />
+          </div>
+          <div className="min-w-0">
+            <p className="text-lg lg:text-2xl font-semibold text-black leading-tight mb-1">
+              {p.name}
+            </p>
+            <p className="text-sm text-black/55 mb-3">{p.sub}</p>
+            <p className="text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black">
+              {p.mg}
+            </p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">
+              Active nootropics
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => openIngredients(id)}
+          className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
+        >
+          Full ingredient list
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+            aria-hidden
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -97,63 +153,25 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         and mental endurance.
       </p>
 
-      {/* One formula at a time — the AM/PM toggle keeps Flow and Clear equal
-          while the single card keeps the section calm on mobile. */}
-      <div className="mx-auto max-w-[560px] mb-8">
-        <FormulaToggle
-          value={active}
-          flowValue="flow"
-          clearValue="clear"
-          onChange={setActive}
-          className="mb-4"
-          inactiveClassName="bg-white"
-        />
+      {/* Mobile: one formula at a time via the AM/PM toggle (keeps the section
+          calm on small screens). Desktop: both formulas as two equal cards with
+          larger assets and no toggle (equal billing, neither enlarged). */}
+      <div className="mx-auto max-w-[560px] lg:max-w-[1000px] mb-8">
+        <div className="lg:hidden">
+          <FormulaToggle
+            value={active}
+            flowValue="flow"
+            clearValue="clear"
+            onChange={setActive}
+            className="mb-4"
+            inactiveClassName="bg-white"
+          />
+          {renderCard(active)}
+        </div>
 
-        <div className="bg-white border border-black/8 p-4 lg:p-5">
-          <div className="flex items-center gap-4 lg:gap-6 mb-4">
-            <div className="relative w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] shrink-0 border border-black/8 overflow-hidden bg-white">
-              <Image
-                key={product.bottleSrc}
-                src={product.bottleSrc}
-                alt={product.bottleAlt}
-                fill
-                sizes="(max-width: 1024px) 120px, 150px"
-                className="object-cover"
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="text-lg lg:text-2xl font-semibold text-black leading-tight mb-1">
-                {product.name}
-              </p>
-              <p className="text-sm text-black/55 mb-3">{product.sub}</p>
-              <p className="text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black">
-                {product.mg}
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">
-                Active nootropics
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={openIngredients}
-            className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
-          >
-            Full ingredient list
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              strokeLinecap="round"
-              aria-hidden
-            >
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </button>
+        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6">
+          {renderCard("flow")}
+          {renderCard("clear")}
         </div>
       </div>
 
