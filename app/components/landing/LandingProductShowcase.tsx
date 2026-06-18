@@ -4,51 +4,57 @@ import { useState } from "react";
 import Image from "next/image";
 import { track } from "@vercel/analytics/react";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
+import { FormulaId } from "@/app/lib/productData";
+import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import ConkaCTAButton from "./ConkaCTAButton";
 import GuaranteeRow from "./GuaranteeRow";
-import IngredientsPanel from "./IngredientsPanel";
-import { SunIcon, SunHorizonIcon } from "./icons";
+import FormulaToggle from "@/app/components/product/FormulaToggle";
+import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
 
 /* ============================================================================
  * LandingProductShowcase
  *
  * "Two shots. Built around your day." — the home page's product-system
- * teaching beat. Two equal cards, Flow (morning) and Clear (afternoon),
- * each led by a navy time-of-day band so the AM/PM ritual is unmissable.
- * Neither product is ever emphasised over the other: the system IS the
- * product. Clicking a card opens the shared IngredientsPanel for that
- * formula.
+ * teaching beat. A rounded AM/PM toggle (ported from the lander) switches
+ * between Flow (morning) and Clear (afternoon); one formula shows at a time so
+ * the page reads cleaner on mobile. The toggle frames the two formulas by time
+ * of day, giving them equal billing — neither product is enlarged or staged
+ * over the other. The full ingredient list opens in the shared bottom sheet.
  *
- * Interactive variants (Morning/Afternoon toggle with a video stage, and a
- * spotlight layout) were prototyped 2026-06 and deliberately rejected: any
- * layout that enlarges one product implicitly demotes the other, which
- * contradicts the two-shots-one-system message.
+ * Earlier prototypes that *enlarged* one product (spotlight layouts, a video
+ * stage) were rejected 2026-06 because they implicitly demote the other. The
+ * time-of-day toggle keeps both equal while still simplifying the view.
  * ========================================================================== */
 
 type ProductId = "flow" | "clear";
 
-const PRODUCTS = [
-  {
-    id: "flow" as ProductId,
+const FORMULA_ID: Record<ProductId, FormulaId> = {
+  flow: "01",
+  clear: "02",
+};
+
+// Copy mirrors the lander's IngredientsSection (morning/afternoon sub-lines and
+// the total active-nootropic load per formula) so the home page and the paid
+// lander tell the same story.
+const PRODUCTS: Record<
+  ProductId,
+  { name: string; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
+> = {
+  flow: {
     name: "CONKA Flow",
-    timeOfDay: "Morning",
-    window: "06:00–10:00",
-    tagline: "Calm morning focus.",
+    sub: "Calm focus for your mornings.",
+    mg: "3,700mg",
     bottleSrc: "/formulas/conkaFlow/FlowNew.jpg",
     bottleAlt: "CONKA Flow bottle",
-    TimeIcon: SunIcon,
   },
-  {
-    id: "clear" as ProductId,
+  clear: {
     name: "CONKA Clear",
-    timeOfDay: "Afternoon",
-    window: "12:00–16:00",
-    tagline: "Afternoon reset.",
+    sub: "Afternoon clarity & reset",
+    mg: "3,142mg",
     bottleSrc: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
-    TimeIcon: SunHorizonIcon,
   },
-];
+};
 
 // Certification strip — Magic Mind-style proof icons above the CTA.
 // Same assets /start renders above its ingredients CTA.
@@ -60,12 +66,17 @@ const CERTS = [
 ];
 
 export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
-  const [openProduct, setOpenProduct] = useState<ProductId | null>(null);
+  const [active, setActive] = useState<ProductId>("flow");
+  const [sheetOpen, setSheetOpen] = useState(false);
 
-  const openIngredients = (product: ProductId) => {
-    setOpenProduct(product);
+  const product = PRODUCTS[active];
+  const formulaId = FORMULA_ID[active];
+  const ingredients = getOrderedActiveIngredients(formulaId);
+
+  const openIngredients = () => {
+    setSheetOpen(true);
     try {
-      track("showcase:ingredients_viewed", { product, source: "product_showcase" });
+      track("showcase:ingredients_viewed", { product: active, source: "product_showcase" });
     } catch { /* fail silently */ }
   };
 
@@ -86,72 +97,71 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         and mental endurance.
       </p>
 
-      {/* Constrained on desktop so the cards read as product tiles rather
-          than spanning the full 1280px track. */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-6 mb-8 lg:max-w-[960px] lg:mx-auto">
-        {PRODUCTS.map((product) => (
-          <button
-            key={product.id}
-            type="button"
-            onClick={() => openIngredients(product.id)}
-            className="group flex flex-col items-center text-center bg-white border border-black/8 w-full hover:border-black/20 transition-colors focus:outline-none focus:ring-2 focus:ring-black/20 overflow-hidden"
-          >
-            {/* Time-of-day band — the AM/PM ritual is the card's lead message */}
-            <div className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-[#1B2757] text-white">
-              <product.TimeIcon className="w-4 h-4 shrink-0" />
-              <span className="font-mono text-[11px] lg:text-xs font-bold uppercase tracking-[0.16em] leading-none">
-                {product.timeOfDay}
-              </span>
-              <span className="hidden sm:inline font-mono text-[9px] lg:text-[10px] uppercase tracking-[0.14em] text-white/60 tabular-nums leading-none">
-                {product.window}
-              </span>
+      {/* One formula at a time — the AM/PM toggle keeps Flow and Clear equal
+          while the single card keeps the section calm on mobile. */}
+      <div className="mx-auto max-w-[560px] mb-8">
+        <FormulaToggle
+          value={active}
+          flowValue="flow"
+          clearValue="clear"
+          onChange={setActive}
+          className="mb-4"
+        />
+
+        <div className="bg-white border border-black/8 p-4 lg:p-5">
+          <div className="flex items-center gap-4 lg:gap-6 mb-4">
+            <div className="relative w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] shrink-0 border border-black/8 overflow-hidden bg-white">
+              <Image
+                key={product.bottleSrc}
+                src={product.bottleSrc}
+                alt={product.bottleAlt}
+                fill
+                sizes="(max-width: 1024px) 120px, 150px"
+                className="object-cover"
+              />
             </div>
-
-            <div className="flex flex-col items-center w-full flex-1 p-5 lg:p-8">
-              {/* Square photographic bottle card — the asset's off-white
-                  background is the tile surface (same treatment as the /start
-                  ingredients grid), so no inner scaling hacks are needed.
-                  Mobile: negative margins pull the asset to the card edges so
-                  it spans the full card width, butting against the time band. */}
-              <div className="relative w-[calc(100%+2.5rem)] -mx-5 -mt-5 lg:w-full lg:mx-0 lg:mt-0 aspect-square mb-4 lg:mb-6 overflow-hidden border-b lg:border border-black/8">
-                <Image
-                  src={product.bottleSrc}
-                  alt={product.bottleAlt}
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 420px"
-                  className="object-cover"
-                />
-              </div>
-
-              <p className="text-base lg:text-2xl font-semibold text-black mb-1">
+            <div className="min-w-0">
+              <p className="text-lg lg:text-2xl font-semibold text-black leading-tight mb-1">
                 {product.name}
               </p>
-              <p className="text-xs lg:text-base text-black/55 mb-4 lg:mb-6">
-                {product.tagline}
+              <p className="text-sm text-black/55 mb-3">{product.sub}</p>
+              <p className="text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black">
+                {product.mg}
               </p>
-
-              {/* CTA-styled footer — the whole card is the real button; this
-                  block just reads as the action. */}
-              <div className="mt-auto w-full flex items-center justify-between gap-2 bg-white border border-black/12 group-hover:border-black/30 text-black px-3 lg:px-4 py-3 min-h-[44px] transition-colors">
-                <span className="font-mono text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.14em] lg:tracking-[0.16em]">
-                  See what&apos;s inside
-                </span>
-                <span
-                  aria-hidden
-                  className="font-mono text-sm text-black/40 group-hover:text-black transition-colors"
-                >
-                  ↗
-                </span>
-              </div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">
+                Active nootropics
+              </p>
             </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={openIngredients}
+            className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
+          >
+            Full ingredient list
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              strokeLinecap="round"
+              aria-hidden
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
           </button>
-        ))}
+        </div>
       </div>
 
-      <IngredientsPanel
-        isOpen={openProduct !== null}
-        product={openProduct}
-        onClose={() => setOpenProduct(null)}
+      <IngredientBottomSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        title={product.name}
+        subtitle={`${ingredients.length} active ingredients · tap any to learn more`}
+        ingredients={ingredients}
       />
 
       {/* Proof + conversion group: cert icons → CTA → guarantee, stacked and

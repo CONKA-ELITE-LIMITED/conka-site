@@ -1456,6 +1456,26 @@ export function getIngredientCategories(formulaId: FormulaId): IngredientCategor
   return Array.from(categories);
 }
 
+// Product-led display order per formula (founder's call: Glutathione leads
+// Clear, not alphabetical). Also acts as the actives allow-list — anything not
+// listed (e.g. a flavouring) is intentionally excluded.
+const FORMULA_DISPLAY_ORDER: Record<FormulaId, string[]> = {
+  "01": ["lemon-balm", "turmeric", "ashwagandha", "rhodiola", "bilberry", "black-pepper"],
+  "02": ["glutathione", "alpha-gpc", "nac", "alcar", "ginkgo", "lecithin", "vitamin-c", "ala", "vitamin-b12"],
+};
+
+/**
+ * Active ingredients for a formula in the founder's display order. Shared by
+ * the home product showcase and the clinical product-page ingredients section
+ * so both render the same set in the same order.
+ */
+export function getOrderedActiveIngredients(formulaId: FormulaId): IngredientData[] {
+  const all = getIngredientsByFormula(formulaId);
+  return FORMULA_DISPLAY_ORDER[formulaId]
+    .map((id) => all.find((ing) => ing.id === id))
+    .filter((ing): ing is IngredientData => ing !== undefined);
+}
+
 /**
  * Maps ingredient name to branded display name
  */
