@@ -62,7 +62,7 @@ export default function LabResearch() {
           {UNIVERSITIES.map((u) => (
             <div
               key={u.alt}
-              className="flex h-[80px] items-center justify-center bg-white px-3 py-4"
+              className="flex h-[88px] items-center justify-center bg-white p-2.5"
             >
               <div className="relative h-full w-full">
                 <Image
