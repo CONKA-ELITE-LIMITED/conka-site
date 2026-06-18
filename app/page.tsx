@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHero from "./components/landing/LandingHero";
+import LandingHeroVideo from "./components/landing/LandingHeroVideo";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabTimeline from "./components/landing/LabTimeline";
@@ -61,7 +62,14 @@ export default function Home() {
         aria-label="Homepage hero"
       >
         <div className="brand-track lg:max-w-none!">
-          <LandingHero />
+          {/* Mobile: Magic Mind-style looped video hero. Desktop keeps the
+              existing listicle hero unchanged. */}
+          <div className="lg:hidden">
+            <LandingHeroVideo />
+          </div>
+          <div className="hidden lg:block">
+            <LandingHero />
+          </div>
         </div>
       </section>
 
