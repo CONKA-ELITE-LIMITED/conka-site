@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { formatPrice } from "@/app/lib/productData";
+import { formatPrice, type FormulaId } from "@/app/lib/productData";
+import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
   TrustIconGuarantee,
   TrustIconShipping,
@@ -18,7 +20,7 @@ import {
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
 import HeroAccordions from "./HeroAccordions";
-import IngredientSheet from "@/app/components/go/listicle/IngredientSheet";
+import IngredientBottomSheet from "./IngredientBottomSheet";
 
 /* ============================================================================
  * ProductBuyPanel (+ TrustStrip)
@@ -468,6 +470,43 @@ function WhatYouFeel() {
   );
 }
 
+/** "See what's inside" trigger + the shared rounded ingredient bottom sheet.
+ *  Mirrors the old IngredientSheet prop shape (a list of formula tabs) so it is
+ *  a drop-in; on Both it shows an in-sheet AM/PM switcher. */
+function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<"flow" | "clear">(formulas[0]);
+
+  const showSwitcher = formulas.length > 1;
+  const formulaId: FormulaId = active === "flow" ? "01" : "02";
+  const ingredients = getOrderedActiveIngredients(formulaId);
+  const title = active === "flow" ? "CONKA Flow" : "CONKA Clear";
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex w-full items-center justify-center gap-2 border border-black/10 bg-white py-3.5 text-sm font-semibold text-black/80 transition-colors hover:bg-black/[0.03]"
+      >
+        See what&apos;s inside {showSwitcher ? "Flow & Clear" : title}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+
+      <IngredientBottomSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        title={title}
+        subtitle={`${ingredients.length} active ingredients · tap any to learn more`}
+        ingredients={ingredients}
+        switcher={showSwitcher ? { value: active, onChange: setActive } : undefined}
+      />
+    </>
+  );
+}
+
 export default function ProductBuyPanel({
   formulaId,
   selectedCadence,
@@ -579,7 +618,7 @@ export default function ProductBuyPanel({
 
       <WhatYouFeel />
 
-      <IngredientSheet formulas={FORMULA_TABS[productType]} sharp />
+      <IngredientListButton formulas={FORMULA_TABS[productType]} />
 
       <HeroAccordions productType={productType} hideIngredients />
     </>

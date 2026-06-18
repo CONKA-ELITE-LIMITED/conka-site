@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, type ReactElement } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import {
-  getIngredientsByFormula,
+  getOrderedActiveIngredients,
   CATEGORY_INFO,
-  IngredientData,
 } from "@/app/lib/ingredientsData";
 import { FormulaId } from "@/app/lib/productData";
+import FormulaToggle from "@/app/components/product/FormulaToggle";
 
 /* ============================================================================
  * ClinicalIngredients
@@ -19,7 +19,7 @@ import { FormulaId } from "@/app/lib/productData";
  * description and the key study finding.
  *
  * Reads everything from the shared ingredientsData.ts (no local copy of
- * ingredient content).
+ * ingredient content or ordering).
  *
  * Modes:
  *   - Dual (default, formulaIds={["01","02"]}): Morning/Afternoon toggle +
@@ -31,49 +31,6 @@ import { FormulaId } from "@/app/lib/productData";
  * ========================================================================== */
 
 const NAVY = "#1B2757";
-
-// AM / PM glyphs, ported from the lander IngredientsSection so the two-shot
-// system reads at a glance. Dependency-free inline SVGs; sized via className.
-function FlowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      aria-hidden
-    >
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4" />
-    </svg>
-  );
-}
-
-function ClearIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      aria-hidden
-    >
-      <path d="M12 2v6M15 5l-3 3-3-3" />
-      <path d="M5.2 18a7 7 0 0 1 13.6 0" />
-      <path d="M2 18h3M19 18h3" />
-      <path d="M2 22h20" />
-    </svg>
-  );
-}
-
-const FORMULA_ICON: Record<FormulaId, ({ className }: { className?: string }) => ReactElement> = {
-  "01": FlowIcon,
-  "02": ClearIcon,
-};
 
 // Active nootropic load per formula in mg. Numbers supplied by the founder
 // (2026-06); verify against the formulation spec before any external claim.
@@ -104,43 +61,11 @@ const FORMULA_META: Record<FormulaId, FormulaMeta> = {
     shortName: "Clear",
     time: "PM",
     timeOfDay: "Afternoon",
-    tagline: "Afternoon clarity, without the coffee.",
+    tagline: "Afternoon clarity & reset",
     bottleImage: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
   },
 };
-
-// Product-led display order (founder's call: Glutathione leads Clear, not
-// alphabetical). Also acts as the actives filter: lemon-oil is a
-// flavouring, not an active, so it is deliberately absent.
-const DISPLAY_ORDER: Record<FormulaId, string[]> = {
-  "01": [
-    "lemon-balm",
-    "turmeric",
-    "ashwagandha",
-    "rhodiola",
-    "bilberry",
-    "black-pepper",
-  ],
-  "02": [
-    "glutathione",
-    "alpha-gpc",
-    "nac",
-    "alcar",
-    "ginkgo",
-    "lecithin",
-    "vitamin-c",
-    "ala",
-    "vitamin-b12",
-  ],
-};
-
-function getOrderedIngredients(formulaId: FormulaId): IngredientData[] {
-  const all = getIngredientsByFormula(formulaId);
-  return DISPLAY_ORDER[formulaId]
-    .map((id) => all.find((ing) => ing.id === id))
-    .filter((ing): ing is IngredientData => ing !== undefined);
-}
 
 export default function ClinicalIngredients({
   formulaIds = ["01", "02"],
@@ -151,7 +76,7 @@ export default function ClinicalIngredients({
     formulaIds[0] ?? "01",
   );
 
-  const ingredients = getOrderedIngredients(activeFormula);
+  const ingredients = getOrderedActiveIngredients(activeFormula);
   const meta = FORMULA_META[activeFormula];
   const isDual = formulaIds.length > 1;
 
@@ -160,7 +85,7 @@ export default function ClinicalIngredients({
     0,
   );
   const totalActives = formulaIds.reduce(
-    (sum, id) => sum + DISPLAY_ORDER[id].length,
+    (sum, id) => sum + getOrderedActiveIngredients(id).length,
     0,
   );
 
@@ -187,35 +112,14 @@ export default function ClinicalIngredients({
         <div className="lg:shrink-0">
           {/* Time-of-day toggle — dual mode only */}
           {isDual && (
-            <div
-              role="tablist"
-              aria-label="Choose a time of day"
-              className="inline-flex border border-black/12 bg-white mb-5"
-            >
-              {formulaIds.map((id) => {
-                const isActive = id === activeFormula;
-                const m = FORMULA_META[id];
-                const Icon = FORMULA_ICON[id];
-                return (
-                  <button
-                    key={id}
-                    id={`clinical-ingredients-tab-${id}`}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    aria-controls="clinical-ingredients-panel"
-                    onClick={() => setActiveFormula(id)}
-                    className={`inline-flex items-center gap-2 min-h-[44px] px-5 sm:px-6 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] transition-colors cursor-pointer ${
-                      isActive ? "text-white" : "text-black/55 hover:text-black"
-                    }`}
-                    style={isActive ? { backgroundColor: NAVY } : undefined}
-                  >
-                    <Icon className="w-3.5 h-3.5 shrink-0" />
-                    {m.shortName} · {m.time}
-                  </button>
-                );
-              })}
-            </div>
+            <FormulaToggle
+              value={activeFormula}
+              flowValue="01"
+              clearValue="02"
+              onChange={setActiveFormula}
+              ariaLabel="Choose a time of day"
+              className="mb-5"
+            />
           )}
 
           {/* Active formula — single asset + identity block */}
@@ -252,21 +156,19 @@ export default function ClinicalIngredients({
         </div>
       </div>
 
-      {/* Ingredient cards — Magic Mind pattern, clinical skin */}
+      {/* Ingredient cards — Magic Mind pattern, clinical skin. Horizontal
+          snap rail so the tiles read as a scannable row on every breakpoint. */}
       <div
         id="clinical-ingredients-panel"
         role="tabpanel"
         aria-label={`CONKA ${meta.shortName} ingredients`}
-        aria-labelledby={
-          isDual ? `clinical-ingredients-tab-${activeFormula}` : undefined
-        }
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start"
+        className="flex gap-3 items-start overflow-x-auto snap-x pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {ingredients.map((ing) => (
           <details
             key={ing.id}
             name="clinical-ingredient"
-            className="group bg-white border border-black/12 lab-clip-tr"
+            className="group bg-white border border-black/12 lab-clip-tr w-[260px] shrink-0 snap-start"
           >
             {/* Collapsed face — name, tags, render, one-liner */}
             <summary className="p-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
