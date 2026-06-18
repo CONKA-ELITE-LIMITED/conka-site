@@ -12,6 +12,7 @@ import {
 } from "@/app/components/product";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
+import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import FormulaCaseStudies, {
   FormulaCaseStudiesMobile,
 } from "@/app/components/FormulaCaseStudies";
@@ -97,8 +98,9 @@ export default function ConkaBothPage() {
       className="brand-section brand-bg-tint"
       aria-label="Athletes who use CONKA"
     >
+      <AthleteSportMarquee fullBleed />
       <div className="brand-track">
-        <AthleteCredibilityCarousel />
+        <AthleteCredibilityCarousel showMarquee={false} />
       </div>
     </section>
   );

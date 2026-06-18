@@ -15,6 +15,7 @@ import {
 } from "@/app/components/product";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
+import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
@@ -125,8 +126,9 @@ export default function ConkaClarityPage() {
 
         {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
         <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
+          <AthleteSportMarquee fullBleed />
           <div className="brand-track">
-            <AthleteCredibilityCarousel />
+            <AthleteCredibilityCarousel showMarquee={false} />
           </div>
         </section>
 
@@ -233,8 +235,9 @@ export default function ConkaClarityPage() {
 
       {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
       <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
+        <AthleteSportMarquee fullBleed />
         <div className="brand-track">
-          <AthleteCredibilityCarousel />
+          <AthleteCredibilityCarousel showMarquee={false} />
         </div>
       </section>
 

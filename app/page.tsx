@@ -6,6 +6,7 @@ import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDeskto
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabTimeline from "./components/landing/LabTimeline";
+import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 
@@ -91,8 +92,11 @@ export default function Home() {
         className="brand-section brand-bg-white pt-0!"
         aria-label="Athletes who use CONKA"
       >
+        {/* Sport marquee runs full-bleed at the section level; the carousel
+            itself stays inside the track. */}
+        <AthleteSportMarquee fullBleed />
         <div className="brand-track">
-          <AthleteCredibilityCarousel />
+          <AthleteCredibilityCarousel showMarquee={false} />
         </div>
       </section>
 
@@ -115,15 +119,15 @@ export default function Home() {
 
       {/* ===== SECTION 6: RESEARCH — university credibility after the ingredient argument ===== */}
       {/* Drops the section's vertical padding (band is flush to the sections
-          above/below) and the horizontal gutter on mobile so the research band
-          runs full-width edge-to-edge; desktop keeps the track. */}
+          above/below) and the horizontal gutter at every breakpoint so the
+          research band runs full-width edge-to-edge on mobile and desktop.
+          No brand-track: the band spans the viewport while LabResearch caps
+          its own content width internally. */}
       <section
-        className="brand-section brand-bg-tint !py-0 max-md:!px-0"
+        className="brand-section brand-bg-tint !py-0 !px-0"
         aria-label="World-class research and university partners"
       >
-        <div className="brand-track">
-          <LabResearch />
-        </div>
+        <LabResearch />
       </section>
 
       {/* ===== SECTION 6.5: UGC SOCIAL PROOF ===== */}

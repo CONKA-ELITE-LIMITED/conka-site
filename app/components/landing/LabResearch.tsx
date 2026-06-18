@@ -7,8 +7,9 @@ import Image from "next/image";
  * photograph under a navy scrim carries the heading and supporting copy, with
  * the partner universities as white tiles on top (modelled on the lander's
  * ResearchPartners). Sharp corners keep it in the clinical grammar of the
- * surrounding page; on mobile the band runs full-width (the home section drops
- * its gutter for this block).
+ * surrounding page; the band runs full-width edge-to-edge on mobile and
+ * desktop (the home section drops its gutter and track for this block) with
+ * the inner content capped at 1280px so the copy stays readable.
  *
  * Replaces WhyConkaWorks ("Certified for Performance") on the home page.
  * ========================================================================== */
@@ -21,7 +22,7 @@ const UNIVERSITIES = [
 
 export default function LabResearch() {
   return (
-    <div className="relative overflow-hidden border-y border-black/12 md:border bg-[#0e1f3f] px-6 py-10 md:px-10 md:py-14">
+    <div className="relative overflow-hidden border-y border-black/12 bg-[#0e1f3f] px-6 py-10 md:px-10 md:py-14">
       {/* Background research photo + navy scrim */}
       <Image
         src="/lander/research-bg.jpg"
@@ -30,7 +31,7 @@ export default function LabResearch() {
         aria-hidden
         loading="lazy"
         className="object-cover"
-        sizes="(max-width: 768px) 100vw, 1280px"
+        sizes="100vw"
       />
       <div
         className="absolute inset-0"
@@ -41,7 +42,9 @@ export default function LabResearch() {
         }}
       />
 
-      <div className="relative z-10">
+      {/* Content capped + centred so the band can bleed full-width while the
+          copy stays readable on wide monitors. */}
+      <div className="relative z-10 mx-auto max-w-[1280px]">
         {/* Header */}
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 mb-3">
           {"// Research · PROOF-02"}
