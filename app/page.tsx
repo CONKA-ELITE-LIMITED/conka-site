@@ -108,8 +108,11 @@ export default function Home() {
       </div>
 
       {/* ===== SECTION 6: RESEARCH — university credibility after the ingredient argument ===== */}
+      {/* Drops the section's vertical padding (band is flush to the sections
+          above/below) and the horizontal gutter on mobile so the research band
+          runs full-width edge-to-edge; desktop keeps the track. */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-tint !py-0 max-md:!px-0"
         aria-label="World-class research and university partners"
       >
         <div className="brand-track">
