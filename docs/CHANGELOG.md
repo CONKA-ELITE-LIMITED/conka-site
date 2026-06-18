@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-18** | Home: moved showcase cert icons below the CTA, swapped section 4 to the BrainFuelBand proof band (white copy)
 - **2026-06-18** | Home hero/section-2 mobile tweaks: tint gap above section 2, white unselected toggle pills, higher hero copy, removed section 3 top padding
 - **2026-06-18** | Added a Magic Mind-style looped video hero on the mobile home page (BothStillWater shots in still water), desktop hero unchanged
 - **2026-06-18** | Restyle home research section as a full-bleed university-photo band with navy scrim and university tiles

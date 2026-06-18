@@ -7,6 +7,7 @@ import LandingHeroVideo from "./components/landing/LandingHeroVideo";
 import LabResearch from "./components/landing/LabResearch";
 import LabTimeline from "./components/landing/LabTimeline";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
+import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -41,13 +42,6 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
 });
 
-const LandingDailyBenefits = dynamic(
-  () => import("./components/landing/LandingDailyBenefits"),
-  // Placeholder approximates the rendered height (4:5 video + header +
-  // 3 cards on mobile; sticky split on desktop) to limit CLS during
-  // client-side navigation.
-  { loading: () => <div className="h-[1500px] lg:h-[900px]" /> },
-);
 
 export default function Home() {
   return (
@@ -97,15 +91,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 4: DAILY BENEFITS — ingredient argument before the formula picker ===== */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Daily habit, lifelong benefits"
-      >
-        <div className="brand-track">
-          <LandingDailyBenefits />
-        </div>
-      </section>
+      {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
+          LandingDailyBenefits; the band owns its own full-bleed dark section,
+          so it is not wrapped in brand-section/brand-track). ===== */}
+      <BrainFuelBand />
 
       {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}
       <div id="product-grid" className="scroll-mt-20">

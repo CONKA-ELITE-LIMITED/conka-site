@@ -165,10 +165,17 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         ingredients={ingredients}
       />
 
-      {/* Proof + conversion group: cert icons → CTA → guarantee, stacked and
-          centred as one block on every breakpoint. */}
+      {/* Proof + conversion group: CTA → cert icons → guarantee, stacked and
+          centred as one block on every breakpoint. The cert icons sit under
+          the CTA so they reinforce the click rather than delay it. */}
       <div className="flex flex-col items-center">
-        <div className="flex items-center justify-center gap-2 mb-5">
+        {!hideCTA && (
+          <ConkaCTAButton href={ctaHref} meta={null}>
+            Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
+          </ConkaCTAButton>
+        )}
+
+        <div className="flex items-center justify-center gap-2 mt-5">
           {CERTS.map((cert) => (
             <Image
               key={cert.label}
@@ -180,14 +187,8 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
           ))}
         </div>
 
-        {!hideCTA && (
-          <ConkaCTAButton href={ctaHref} meta={null}>
-            Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
-          </ConkaCTAButton>
-        )}
-        {/* Guarantee renders even when the CTA is hidden (/conka-both,
-            protocol pages) so the section still closes with reassurance
-            rather than ending abruptly on the cert icons. */}
+        {/* Guarantee closes the section with reassurance (renders even when the
+            CTA is hidden on /conka-both and protocol pages). */}
         <GuaranteeRow />
       </div>
     </div>

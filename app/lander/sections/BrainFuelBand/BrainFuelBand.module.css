@@ -32,12 +32,12 @@
   font-size: 16.64px;
   line-height: 24px;
   letter-spacing: -0.17px;
-  color: #cccccc;
+  color: #ffffff;
   margin: 0;
 }
 .description b {
   font-weight: 500;
-  color: #7c7d7c; /* emphasis is dimmer than the lead — matches prototype */
+  color: #ffffff;
 }
 
 .metrics {
@@ -60,7 +60,7 @@
   font-size: 41.6px;
   line-height: 36px;
   letter-spacing: -2.42px;
-  color: #cccccc;
+  color: #ffffff;
   white-space: nowrap;
 }
 .value small {
@@ -72,7 +72,7 @@
   font-size: 12.48px;
   line-height: 16px;
   letter-spacing: -0.12px;
-  color: #7c7d7c;
+  color: #ffffff;
   text-align: right;
   margin: 0;
 }
