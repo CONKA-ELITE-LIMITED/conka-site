@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-06-19** | Fix Meta over-reporting purchases: stop subscription rebills being sent as new Purchase events (gate the orders/paid webhook on checkout_token)
 - **2026-06-18** | Section 2 desktop cards restyled: larger bottle, slim blue title bar with name and time-of-day label
 - **2026-06-18** | Desktop home improvements: section 2 shows both shots as two equal cards, athlete sport marquee runs full-bleed, research band full-width on desktop
 - **2026-06-18** | Added a landscape looped video hero for desktop (Magic Mind style, left copy + brain-project badge), replacing the listicle hero

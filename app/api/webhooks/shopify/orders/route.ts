@@ -81,28 +81,37 @@ interface ShopifyOrder {
 /**
  * Only orders that came through the web checkout are sent as Purchase events.
  *
- * A genuine storefront checkout has a `checkout_token` (the customer went through
- * Shopify's hosted checkout) and `source_name === "web"`. Subscription rebills
+ * A genuine storefront checkout has a `checkout_token` — the customer went through
+ * Shopify's hosted checkout. This holds for our HEADLESS setup too: the checkout is
+ * the same Shopify-hosted web checkout regardless of which domain the storefront
+ * lives on, so the token is present and domain-independent. Subscription rebills
  * (Loop/Skio/native), POS, and API/manual orders are created from a subscription
  * contract or the Admin API — they never pass through checkout, so they have NO
- * `checkout_token` and a non-web `source_name`, and are excluded here.
+ * `checkout_token` and are excluded here.
  *
  * The first/initial subscription order IS a real checkout (it has a checkout_token),
  * so it is correctly kept.
+ *
+ * WHY ONLY checkout_token (not source_name): `source_name` describes the sales
+ * surface ("web", "pos", an app handle…) and is NOT tied to our domain. We do NOT
+ * gate on `source_name === "web"` because headless Storefront-API flows can report
+ * a non-"web" source, which would wrongly drop real orders. `checkout_token` alone
+ * is the reliable acquisition signal. (We still LOG source_name below so we can see
+ * the real value and tighten later if ever needed.)
  *
  * WHY NOT client_details: the previous check used `client_details` (browser IP /
  * user-agent), assuming rebills have none. That was WRONG — Loop copies the
  * original order's `client_details` onto every renewal, so paid rebills passed the
  * check and were sent to Meta as brand-new Purchases. Result: Meta over-counted
  * purchases (~10 events vs ~2 real orders in a week) and ingested £0.00 rebill
- * values. `checkout_token` is the reliable "a human just checked out" signal that
- * Loop cannot fake. See docs/analytics/HEADLESS_ATTRIBUTION_FIX.md.
+ * values. `checkout_token` is the signal Loop cannot fake. See
+ * docs/analytics/HEADLESS_ATTRIBUTION_FIX.md.
  *
  * Verify once live: watch the verification logs below — a real rebill should log
  * "Skipping" and a genuine web order should log "Sending Purchase".
  */
 function isWebCheckoutOrder(order: ShopifyOrder): boolean {
-  return Boolean(order.checkout_token) && order.source_name === "web";
+  return Boolean(order.checkout_token);
 }
 
 function noteAttr(order: ShopifyOrder, name: string): string | undefined {
