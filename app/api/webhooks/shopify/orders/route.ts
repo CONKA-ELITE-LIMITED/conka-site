@@ -62,6 +62,8 @@ interface ShopifyOrder {
   total_price?: string | null;
   currency?: string | null;
   created_at?: string | null;
+  checkout_token?: string | null;
+  source_name?: string | null;
   note_attributes?: NoteAttribute[];
   line_items?: Array<{ variant_id?: number | null; quantity?: number | null }>;
   customer?: {
@@ -79,28 +81,37 @@ interface ShopifyOrder {
 /**
  * Only orders that came through the web checkout are sent as Purchase events.
  *
- * Real storefront checkouts carry browser context (`client_details`). Subscription
- * rebills (Loop/Skio/native), POS, and API/manual orders are created server-side
- * and have no `client_details`, so they are excluded automatically without
- * hardcoding any app-specific tag/source markers. This mirrors the Shopify
- * Facebook channel, which also only fires Purchase on web checkouts — so our
- * server events stay in scope with the channel's, deduped by order id.
+ * A genuine storefront checkout has a `checkout_token` — the customer went through
+ * Shopify's hosted checkout. This holds for our HEADLESS setup too: the checkout is
+ * the same Shopify-hosted web checkout regardless of which domain the storefront
+ * lives on, so the token is present and domain-independent. Subscription rebills
+ * (Loop/Skio/native), POS, and API/manual orders are created from a subscription
+ * contract or the Admin API — they never pass through checkout, so they have NO
+ * `checkout_token` and are excluded here.
  *
- * The first/initial subscription order IS a real checkout, so it is correctly kept.
+ * The first/initial subscription order IS a real checkout (it has a checkout_token),
+ * so it is correctly kept.
  *
- * Trade-off: a rare accelerated checkout (e.g. some Shop Pay flows) could arrive
- * with sparse client_details and be skipped. That is acceptable — the Shopify
- * channel still counts that order, so we only lose the server-side enrichment on
- * it, never the conversion itself. We err this way deliberately: missing a little
- * enrichment is far better than sending a rebill the channel never sent (which
- * would be a net-new, double-counted Purchase).
+ * WHY ONLY checkout_token (not source_name): `source_name` describes the sales
+ * surface ("web", "pos", an app handle…) and is NOT tied to our domain. We do NOT
+ * gate on `source_name === "web"` because headless Storefront-API flows can report
+ * a non-"web" source, which would wrongly drop real orders. `checkout_token` alone
+ * is the reliable acquisition signal. (We still LOG source_name below so we can see
+ * the real value and tighten later if ever needed.)
  *
- * Verify once live: confirm a real rebill is skipped and a first subscription
- * order is kept (check the Shopify order's `client_details` if unsure).
+ * WHY NOT client_details: the previous check used `client_details` (browser IP /
+ * user-agent), assuming rebills have none. That was WRONG — Loop copies the
+ * original order's `client_details` onto every renewal, so paid rebills passed the
+ * check and were sent to Meta as brand-new Purchases. Result: Meta over-counted
+ * purchases (~10 events vs ~2 real orders in a week) and ingested £0.00 rebill
+ * values. `checkout_token` is the signal Loop cannot fake. See
+ * docs/analytics/HEADLESS_ATTRIBUTION_FIX.md.
+ *
+ * Verify once live: watch the verification logs below — a real rebill should log
+ * "Skipping" and a genuine web order should log "Sending Purchase".
  */
 function isWebCheckoutOrder(order: ShopifyOrder): boolean {
-  const cd = order.client_details;
-  return Boolean(cd && (cd.browser_ip || cd.user_agent));
+  return Boolean(order.checkout_token);
 }
 
 function noteAttr(order: ShopifyOrder, name: string): string | undefined {
@@ -137,10 +148,14 @@ export async function POST(request: NextRequest) {
 
   try {
     // Only web-checkout orders are acquisitions. Rebills, POS, and API/manual
-    // orders have no browser context and are skipped (the channel ignores them too).
+    // orders have no checkout_token and are skipped (the channel ignores them too).
     if (!isWebCheckoutOrder(order)) {
+      // TEMP verification logging (remove once the fix is confirmed in Events Manager):
+      // expect rebills/POS/manual orders to land here with no checkout_token.
       console.log("[Shopify webhook] Skipping non-checkout order (rebill/POS/manual)", {
         orderId: order.id,
+        sourceName: order.source_name,
+        hasCheckoutToken: Boolean(order.checkout_token),
       });
       return NextResponse.json({ ok: true, skipped: "non_checkout" }, { status: 200 });
     }
@@ -154,6 +169,14 @@ export async function POST(request: NextRequest) {
     const addr = order.shipping_address ?? order.billing_address ?? null;
     const parsedTime = order.created_at ? Math.floor(Date.parse(order.created_at) / 1000) : NaN;
     const eventTime = isNaN(parsedTime) ? Math.floor(Date.now() / 1000) : parsedTime;
+
+    // TEMP verification logging (remove once the fix is confirmed in Events Manager):
+    // expect only genuine web checkouts to reach here.
+    console.log("[Shopify webhook] Sending Purchase to Meta CAPI", {
+      orderId: order.id,
+      sourceName: order.source_name,
+      value,
+    });
 
     await sendPurchaseToCapi({
       eventId: String(order.id), // dedupes against the Shopify FB channel Purchase
