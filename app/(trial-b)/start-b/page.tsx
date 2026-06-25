@@ -3,19 +3,19 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Link from "next/link";
-import Navigation from "../components/navigation";
-import Footer from "../components/footer";
-import CROResearch from "../components/cro/CROResearch";
-import CROAppCallout from "../components/cro/CROAppCallout";
-import CROFAQv2 from "../components/cro/CROFAQv2";
-import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import Navigation from "@/app/components/navigation";
+import Footer from "@/app/components/footer";
+import CROResearch from "@/app/components/cro/CROResearch";
+import CROAppCallout from "@/app/components/cro/CROAppCallout";
+import CROFAQv2 from "@/app/components/cro/CROFAQv2";
+import { FUNNEL_URL } from "../lib/landingConstants";
 import {
   getCadencePricingByProductHeroId,
   getCadenceVariantByProductHeroId,
-} from "@/app/lib/cadenceData";
+} from "../lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
-import BottleVideo from "../components/landing/BottleVideo";
+import BottleVideo from "@/app/components/landing/BottleVideo";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
@@ -33,7 +33,7 @@ const BuyBoxCard = dynamic(() => import("./BuyBoxCard"), {
 // import (no edits). Dynamic-imported so its carousel hydration stays off the
 // initial bundle.
 const CROAthletes = dynamic(
-  () => import("../components/cro/CROAthletes"),
+  () => import("@/app/components/cro/CROAthletes"),
   { loading: () => <div className="min-h-[1100px]" /> },
 );
 
@@ -41,7 +41,7 @@ const CROAthletes = dynamic(
 // 3x-render carousel, auto-advance interval, and touch-swipe handlers stay
 // off the initial bundle.
 const CROCustomerReviews = dynamic(
-  () => import("../components/cro/CROCustomerReviews"),
+  () => import("@/app/components/cro/CROCustomerReviews"),
   { loading: () => <div className="min-h-[680px]" /> },
 );
 
@@ -83,6 +83,14 @@ const S5_OTP_VARIANT = getCadenceVariantByProductHeroId(
   BOTH_PRODUCT_HERO_ID,
   "monthly-otp",
 );
+// Offer-trial (B): the hero CTA advertises the LOWEST per-shot price across Both
+// plans, which is the quarterly subscription. Derived (not hardcoded) so it stays
+// in lockstep with the offer data.
+const S5_QUARTERLY_PRICING = getCadencePricingByProductHeroId(
+  BOTH_PRODUCT_HERO_ID,
+  "quarterly-sub",
+);
+const S5_LOWEST_PER_SHOT = S5_QUARTERLY_PRICING.perShot;
 const S5_COMPARE_AT = S5_SUB_PRICING.compareAtPrice ?? S5_OTP_PRICING.price;
 const S5_MONTHLY_SAVINGS = Math.max(0, S5_COMPARE_AT - S5_SUB_PRICING.price);
 const S5_SAVINGS_PERCENT =
@@ -220,7 +228,7 @@ export default function StartPage() {
                 href={FUNNEL_URL}
                 className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
               >
-                Get Both From £1.61/shot
+                Get both from £{S5_LOWEST_PER_SHOT.toFixed(2)}/shot
                 <svg
                   width="20"
                   height="20"
@@ -640,7 +648,9 @@ export default function StartPage() {
                   <strong className="font-semibold">
                     Subscription auto-applied.
                   </strong>{" "}
-                  {S5_SAVINGS_PERCENT > 0
+                  {S5_SUB_PRICING.freeShots
+                    ? `Get started with ${S5_SUB_PRICING.freeShots} free shots on your first order — plus ${S5_SAVINGS_PERCENT}% off, free UK shipping, and full access to the CONKA brain performance app.`
+                    : S5_SAVINGS_PERCENT > 0
                     ? `You will get ${S5_SAVINGS_PERCENT}% off, free UK shipping, and full access to the CONKA brain performance app.`
                     : "You will get free UK shipping and full access to the CONKA brain performance app."}
                 </p>
@@ -846,7 +856,9 @@ export default function StartPage() {
           aria-label="Real people. Real results."
         >
           <div className="brand-track">
-            <CROCustomerReviews />
+            {/* Keep this section's CTA on the same funnel as the page's
+                primary CTAs (funnel-c) — FUNNEL_URL is start-b's trial-b copy. */}
+            <CROCustomerReviews ctaHref={FUNNEL_URL} />
           </div>
         </section>
 
@@ -880,7 +892,8 @@ export default function StartPage() {
         </section>
       </main>
       <Footer />
-      {/* Real-user Core Web Vitals for this page (L8). */}
+      {/* Real-user Core Web Vitals for this variant (L8) — measure against the
+          other /start variants on field data. */}
       <SpeedInsights />
     </div>
   );

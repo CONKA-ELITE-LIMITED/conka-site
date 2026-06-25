@@ -192,8 +192,12 @@ function ArrowButton({
 
 export default function CROCustomerReviews({
   testimonials = CURATED_TESTIMONIALS,
+  ctaHref = FUNNEL_URL,
 }: {
   testimonials?: Testimonial[];
+  /** Funnel the section's CTA links to. Defaults to the main FUNNEL_URL so
+   *  production /start is unaffected; trial pages can override (e.g. funnel-c). */
+  ctaHref?: string;
 } = {}) {
   const totalCards = testimonials.length;
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -386,7 +390,7 @@ export default function CROCustomerReviews({
                  reassurance row adapted from Magic Mind's checkout block. ===== */}
       <div className="mt-10">
         <Link
-          href={FUNNEL_URL}
+          href={ctaHref}
           className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
         >
           Order Now

@@ -1,0 +1,99 @@
+/* CONKA — dark "brain fuel" band: looping shot render + headline + 4 stats.
+   Rebuilt from prototype measurements (was Ketone's `brain-fuel`).
+   Dark band #0e0e0e; light-gray text (#ccc) with dimmer emphasis (#7c7d7c). */
+
+.band {
+  background: #0e0e0e;
+}
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 48px 45px;
+}
+
+.hero {
+  width: 100%;
+}
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.description {
+  font-weight: 500;
+  font-size: 16.64px;
+  line-height: 24px;
+  letter-spacing: -0.17px;
+  color: #ffffff;
+  margin: 0;
+}
+.description b {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+.metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #cccccc;
+  padding-top: 16px;
+}
+.value {
+  font-weight: 850;
+  font-size: 41.6px;
+  line-height: 36px;
+  letter-spacing: -2.42px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+.value small {
+  font-size: 24.96px;
+  font-weight: 850;
+}
+.label {
+  font-weight: 500;
+  font-size: 12.48px;
+  line-height: 16px;
+  letter-spacing: -0.12px;
+  color: #ffffff;
+  text-align: right;
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+  /* Desktop: left/right split — video left, stats + content right.
+     Mobile (base rules above) is intentionally left exactly as-is. */
+  .inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 96px 45px;
+    gap: 64px;
+  }
+  .video {
+    width: 100%;
+  }
+  /* Stats stay single-column rows beside the video (not the old 2-col grid) */
+  .details {
+    gap: 32px;
+  }
+}
