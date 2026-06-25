@@ -74,6 +74,8 @@
   flex-direction: column;
   gap: 16px;
   padding: 16px;
+  /* Fill the (grid-stretched) card height so the bottom section can pin down */
+  flex: 1;
 }
 
 /* Flow/Clear switch (single card) */
@@ -154,6 +156,9 @@
 /* Bottom section wraps offer + CTA + guarantee (12px rhythm) */
 .bottomSection {
   display: block;
+  /* Pin to the bottom of the card so the Subscribe box + CTA align across
+     cards even when the single card carries an extra Flow/Clear toggle. */
+  margin-top: auto;
 }
 
 /* Subscribe & Save offer card */
@@ -393,7 +398,7 @@
   }
   .single .bottomSection {
     order: 3;
-    margin-top: 16px;
+    /* margin-top: auto (from base) pins it to the bottom for cross-card alignment */
   }
 }
 

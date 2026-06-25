@@ -68,6 +68,8 @@ export interface CardConfig {
   live?: LiveData | null;
   product?: LanderProduct;
   options?: CardOption[];
+  /** Analytics source tag for checkout (defaults to the lander). */
+  source?: string;
 }
 
 export default function BuyCard({data}: {data: CardConfig}) {
@@ -97,6 +99,7 @@ export default function BuyCard({data}: {data: CardConfig}) {
         product: option?.product ?? data.product,
         purchaseType: isSub ? 'subscription' : 'one-time',
         price: priceSet?.amount,
+        source: data.source,
       });
     } catch (e) {
       console.error('Checkout failed', e);

@@ -82,7 +82,7 @@ export default function BuyBoxes({data}: {data: BuyData}) {
   const isDesktop = useMinWidth(1000);
 
   const bundleCard: CardConfig = {
-    description: 'Two 20-shot boxes + 16 free shots on your first order',
+    description: '40 shots + 16 free shots on your first order',
     image: '/formulas/both/BothNew.jpg',
     imageAlt: 'CONKA Flow & Clear bundle',
     title: 'CONKA – Flow & Clear',
@@ -90,7 +90,7 @@ export default function BuyBoxes({data}: {data: BuyData}) {
     product: 'both',
   };
   const singleCard: CardConfig = {
-    description: '20-shot box + 8 free shots on your first order',
+    description: '20 shots + 8 free shots on your first order',
     options: [
       {key: 'flow', label: 'Flow · AM', title: 'CONKA Flow', image: '/lander/FlowNew.jpg', imageAlt: 'CONKA Flow', live: data.flow, product: 'flow'},
       {key: 'clear', label: 'Clear · PM', title: 'CONKA Clear', image: '/lander/ClearNew.jpg', imageAlt: 'CONKA Clear', live: data.clear, product: 'clear'},
