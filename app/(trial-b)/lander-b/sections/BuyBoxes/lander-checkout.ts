@@ -25,6 +25,8 @@ export interface CheckoutArgs {
   product?: 'flow' | 'clear' | 'both';
   purchaseType?: 'subscription' | 'one-time';
   price?: number;
+  /** Analytics/source tag — distinguishes lander vs start traffic. */
+  source?: string;
 }
 
 export async function landerCheckout({
@@ -34,6 +36,7 @@ export async function landerCheckout({
   product,
   purchaseType,
   price,
+  source = 'lander_page_b',
 }: CheckoutArgs) {
   const cartAttributes = buildMetaCartAttributes();
 
@@ -46,7 +49,7 @@ export async function landerCheckout({
       quantity,
       ...(sellingPlanId ? {sellingPlanId} : {}),
       attributes: [
-        {key: '_source', value: 'lander_page_b'},
+        {key: '_source', value: source},
         ...(product ? [{key: '_selected_product', value: product}] : []),
       ],
       ...(cartAttributes.length > 0 && {cartAttributes}),
@@ -56,7 +59,7 @@ export async function landerCheckout({
   const url = data?.cart?.checkoutUrl;
   if (!url) throw new Error('No checkout URL returned from /api/cart');
 
-  fireAnalytics({variantId, product, purchaseType, price});
+  fireAnalytics({variantId, product, purchaseType, price, source});
 
   window.location.href = url;
 }
@@ -67,7 +70,8 @@ function fireAnalytics({
   product,
   purchaseType,
   price,
-}: Pick<CheckoutArgs, 'variantId' | 'product' | 'purchaseType' | 'price'>): void {
+  source = 'lander_page_b',
+}: Pick<CheckoutArgs, 'variantId' | 'product' | 'purchaseType' | 'price' | 'source'>): void {
   try {
     trackMetaAddToCart({
       content_ids: [toContentId(variantId)],
@@ -83,8 +87,8 @@ function fireAnalytics({
       productId: product ?? 'lander',
       variantId,
       purchaseType: purchaseType ?? 'subscription',
-      location: 'lander_buybox',
-      source: 'lander_page_b',
+      location: `${source}_buybox`,
+      source,
       price,
     });
   } catch {

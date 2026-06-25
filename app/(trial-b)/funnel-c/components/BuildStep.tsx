@@ -124,7 +124,7 @@ type InfoKey = "ingredients" | "how" | "athletes" | "impact";
 const ROW_TABS: { key: InfoKey; label: string }[] = [
   { key: "ingredients", label: "Ingredients" },
   { key: "how", label: "How it works" },
-  { key: "athletes", label: "Athletes on it" },
+  { key: "athletes", label: "Used by" },
 ];
 
 function CheckIcon() {

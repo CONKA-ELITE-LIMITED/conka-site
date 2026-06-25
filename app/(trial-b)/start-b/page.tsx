@@ -9,10 +9,7 @@ import CROResearch from "@/app/components/cro/CROResearch";
 import CROAppCallout from "@/app/components/cro/CROAppCallout";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import { FUNNEL_URL } from "../lib/landingConstants";
-import {
-  getCadencePricingByProductHeroId,
-  getCadenceVariantByProductHeroId,
-} from "../lib/cadenceData";
+import { getCadencePricingByProductHeroId } from "../lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
 import BottleVideo from "@/app/components/landing/BottleVideo";
@@ -25,9 +22,13 @@ const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
 // Section 5 buy-box card. Same dynamic-import pattern as IngredientsGrid: SSR
 // preserved so the price + spec list render in the initial HTML; the toggle's
 // JS hydration is deferred so its long task lands outside the TBT window.
-const BuyBoxCard = dynamic(() => import("./BuyBoxCard"), {
-  loading: () => <div className="min-h-[700px]" />,
-});
+// Offer-trial (B): the dual offer block (Both bundle + single Flow/Clear toggle)
+// shared with /lander-b. Same dynamic-import pattern so the cards render in the
+// initial HTML but their toggle hydration stays out of the TBT window.
+const OfferCards = dynamic(
+  () => import("../lander-b/sections/BuyBoxes/OfferCards"),
+  { loading: () => <div className="min-h-[700px]" /> },
+);
 
 // Section 6 athlete credibility carousel. Shared CRO component reused via
 // import (no edits). Dynamic-imported so its carousel hydration stays off the
@@ -72,14 +73,6 @@ const S5_SUB_PRICING = getCadencePricingByProductHeroId(
   "monthly-sub",
 );
 const S5_OTP_PRICING = getCadencePricingByProductHeroId(
-  BOTH_PRODUCT_HERO_ID,
-  "monthly-otp",
-);
-const S5_SUB_VARIANT = getCadenceVariantByProductHeroId(
-  BOTH_PRODUCT_HERO_ID,
-  "monthly-sub",
-);
-const S5_OTP_VARIANT = getCadenceVariantByProductHeroId(
   BOTH_PRODUCT_HERO_ID,
   "monthly-otp",
 );
@@ -687,17 +680,7 @@ export default function StartPage() {
                 ))}
               </div>
 
-              <BuyBoxCard
-                subPricing={S5_SUB_PRICING}
-                otpPricing={S5_OTP_PRICING}
-                subVariant={S5_SUB_VARIANT}
-                otpVariant={S5_OTP_VARIANT}
-                compareAt={S5_COMPARE_AT}
-                monthlySavings={S5_MONTHLY_SAVINGS}
-                savingsPercent={S5_SAVINGS_PERCENT}
-                productImage="/formulas/both/BothHero.jpg"
-                productImageAlt="Two CONKA bottles: Flow with a white cap and Clear with a black cap"
-              />
+              <OfferCards source="start_page_b" />
             </div>
           </div>
         </section>
