@@ -1,0 +1,137 @@
+/* CONKA — Hero. Rebuilt clean from the prototype's measured values
+   (was Ketone's `hero-campaign`). Mobile-first; desktop = two columns.
+
+   Type sizes bake in the prototype's final visual scale (the old runtime
+   ×1.04 "typography scaler" is dropped — values are absolute here). */
+
+.section {
+  background: #f7f7f7;
+}
+
+/* Media */
+.media {
+  width: 100%;
+}
+.img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 393 / 279; /* matches prototype crop on mobile + desktop */
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Content */
+.content {
+  padding: 24px 45px 48px; /* 24px gap between image and rating row (prototype) */
+}
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stars {
+  display: inline-flex;
+  align-items: center;
+}
+.stars svg {
+  width: 16px;
+  height: 16px;
+}
+.ratingText {
+  font-weight: 500;
+  font-size: 14.56px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  color: #313131;
+  margin: 0;
+}
+
+.title {
+  font-weight: 850;
+  font-size: 49.92px;
+  line-height: 44px;
+  letter-spacing: -2.5px;
+  color: #313131;
+  margin: 0;
+}
+
+.desc {
+  font-weight: 400;
+  font-size: 16.64px;
+  line-height: 24px;
+  letter-spacing: -0.17px;
+  color: #313131;
+  margin: 0;
+  padding-top: 10px;
+}
+.spacer8 {
+  height: 8px;
+}
+.benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 16.64px;
+  line-height: 24px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: #1b2757;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16.64px;
+  text-align: center;
+  text-decoration: none;
+  padding: 19px 31px;
+  border-radius: 32px;
+  border: 0;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #16204a;
+}
+
+/* Desktop: content left (centered 410px block), image flush right */
+@media (min-width: 1000px) {
+  .section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .media {
+    order: 2;
+    flex: 0 0 50%;
+  }
+  .content {
+    order: 1;
+    flex: 0 0 50%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 32px;
+  }
+  .inner {
+    max-width: 410px;
+    width: 100%;
+  }
+  .btn {
+    display: inline-block;
+    width: auto;
+    align-self: flex-start;
+  }
+}

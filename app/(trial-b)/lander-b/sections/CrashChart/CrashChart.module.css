@@ -1,0 +1,227 @@
+/* CONKA — "Skip the 2pm crash" comparison chart.
+   Self-contained, CONKA-owned. Scroll-triggered draw animation via .isIn. */
+
+.section {
+  background: #f7f7f7;
+  padding: 60px 0 28px;
+}
+.head {
+  padding: 0 45px;
+  margin-bottom: 24px;
+}
+.title {
+  font-weight: 850;
+  font-size: 41.6px;
+  line-height: 38px;
+  letter-spacing: -2.42px;
+  color: #1d1d1d;
+  margin: 0 0 12px;
+}
+.sub {
+  font-weight: 100;
+  font-size: 16.64px;
+  letter-spacing: -0.17px;
+  line-height: 23px;
+  color: #555;
+  margin: 0;
+}
+
+.card {
+  margin: 0 24px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(20, 30, 60, 0.06);
+}
+.chart {
+  padding: 22px 16px 12px;
+}
+.legend {
+  display: flex;
+  gap: 20px;
+  padding: 0 6px 4px;
+  flex-wrap: wrap;
+}
+.leg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.13px;
+  color: #3a3a3a;
+}
+.leg svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+.swatch {
+  width: 24px;
+  height: 5px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+.cap {
+  padding: 2px 6px 10px;
+  font-weight: 500;
+  font-size: 11.44px;
+  letter-spacing: 0.33px;
+  text-transform: uppercase;
+  color: #aaa;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Lines */
+.line {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lineCoffee {
+  stroke: #1d1d1d;
+}
+.lineCrash {
+  stroke: #d9483b;
+}
+.lineConka {
+  stroke: url(#conkaGrad);
+}
+
+/* Draw / reveal animation, gated by .isIn on the section root */
+.area {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.9s;
+}
+.isIn .area {
+  opacity: 1;
+}
+.draw {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+}
+.isIn .draw {
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-dashoffset: 0;
+}
+.isIn .lineCrash {
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.55, 0, 0.3, 1) 1s;
+}
+.dot {
+  opacity: 0;
+  transition: opacity 0.4s ease 1.1s;
+}
+.dotEnd {
+  transition-delay: 1.5s;
+}
+.isIn .dot {
+  opacity: 1;
+}
+.marker {
+  opacity: 0;
+  transition: opacity 0.5s ease 1s;
+}
+.isIn .marker {
+  opacity: 1;
+}
+.axis {
+  font-weight: 500;
+  font-size: 11.44px;
+  letter-spacing: 0.44px;
+  fill: #9a9a9a;
+  text-transform: uppercase;
+}
+.crashLbl {
+  font-weight: 850;
+  font-size: 12.48px;
+  letter-spacing: 0.6px;
+  fill: #d9483b;
+  text-transform: uppercase;
+}
+.endLbl {
+  font-weight: 850;
+  font-size: 11.44px;
+  letter-spacing: 0.33px;
+  fill: #5b86c9;
+  text-transform: uppercase;
+}
+
+/* Cost comparison rows */
+.cost {
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
+  padding: 20px 22px 22px;
+  background: #faf9f6;
+}
+.costHead {
+  font-weight: 500;
+  font-size: 18.72px;
+  letter-spacing: -0.19px;
+  line-height: 24px;
+  color: #1d1d1d;
+  margin: 0 0 14px;
+}
+.costHead b {
+  color: #6bd37b;
+  font-weight: 850;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.row + .row {
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+.isIn .row {
+  opacity: 1;
+  transform: none;
+}
+.isIn .row:nth-child(2) {
+  transition-delay: 1.5s;
+}
+.isIn .row:nth-child(3) {
+  transition-delay: 1.65s;
+}
+.rowLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.62px;
+  text-transform: uppercase;
+  color: #666;
+}
+.rowLabel svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+.rowConka .rowLabel {
+  color: #1b2757;
+}
+.price {
+  font-weight: 850;
+  font-size: 19.76px;
+  letter-spacing: -0.5px;
+  color: #9a9a9a;
+}
+.rowConka .price {
+  color: #1b2757;
+}
+
+@media (min-width: 1000px) {
+  .head { max-width: 540px; margin-left: auto; margin-right: auto; text-align: center; padding: 0 24px; }
+  .card { max-width: 540px; margin-left: auto; margin-right: auto; }
+  .line { stroke-width: 2.6; }
+}

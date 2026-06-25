@@ -15,8 +15,9 @@ import FAQ from './sections/FAQ/FAQ';
 import Footer from './sections/Footer/Footer';
 
 // Below-the-fold client islands — code-split so their hydration JS drops out of
-// the initial TBT window. SSR is preserved (no ssr:false in a server component);
-// loading fallbacks reserve height to avoid layout shift.
+// the initial TBT window. SSR is preserved (no ssr:false in a server component),
+// so the HTML still renders; only the JS chunk is deferred. Loading fallbacks
+// reserve height to avoid layout shift.
 const BuyBoxes = dynamic(() => import('./sections/BuyBoxes/BuyBoxes'), {
   loading: () => <div style={{minHeight: 900}} />,
 });
@@ -27,7 +28,7 @@ const Measure = dynamic(() => import('./sections/Measure/Measure'), {
   loading: () => <div style={{minHeight: 500}} />,
 });
 
-import {getOfferVariant, getOfferPricing, type FunnelProduct} from '@/app/lib/funnelData';
+import {getOfferVariant, getOfferPricing, type FunnelProduct} from '../lib/funnelData';
 
 export const metadata: Metadata = {
   title: 'CONKA — Brain Performance in a Shot',
@@ -68,6 +69,8 @@ function buildCard(product: FunnelProduct) {
       price: money(otpPricing.price),
       perShot: perShot(otpPricing.perShot),
       amount: otpPricing.price,
+      // Offer trial (B): one-time orders carry compulsory postage, shown as a note.
+      postage: otpPricing.postage ?? null,
     },
     subscription: subVariant
       ? {
@@ -76,6 +79,8 @@ function buildCard(product: FunnelProduct) {
           perShot: perShot(subPricing.perShot),
           strike: subPricing.compareAtPrice ? money(subPricing.compareAtPrice) : null,
           amount: subPricing.price,
+          // Offer trial (B): free bonus shots on the first subscription order.
+          freeShots: subPricing.freeShots ?? null,
         }
       : null,
   };
@@ -90,9 +95,9 @@ export default function LanderPage() {
 
   return (
     <div className="conka-lander">
-      {/* Warm the checkout origin — lander sells straight to Shopify (no funnel
-          hop), so the BuyBox redirect to cart.checkoutUrl skips a cold DNS+TLS
-          handshake. No crossOrigin: it's a navigation, not a CORS fetch. */}
+      {/* Warm the checkout origin — lander-b sells straight to Shopify (no
+          funnel hop), so the BuyBox redirect to cart.checkoutUrl skips a cold
+          DNS+TLS handshake. No crossOrigin: it's a navigation, not a CORS fetch. */}
       <link rel="preconnect" href="https://conka-6770.myshopify.com" />
       <link rel="dns-prefetch" href="https://conka-6770.myshopify.com" />
       <Nav />
@@ -112,7 +117,7 @@ export default function LanderPage() {
       <Measure />
       <FAQ />
       <Footer />
-      {/* Real-user Core Web Vitals for this page (L8). */}
+      {/* Real-user Core Web Vitals for this variant (L8). */}
       <SpeedInsights />
     </div>
   );

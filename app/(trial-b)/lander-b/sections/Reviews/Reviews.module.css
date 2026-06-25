@@ -1,0 +1,138 @@
+/* CONKA — "Real people. Real results." review rail. */
+
+.section {
+  background: #fff;
+  padding: 60px 0 56px;
+}
+.head {
+  padding: 0 45px;
+  margin-bottom: 24px;
+}
+.title {
+  font-weight: 850;
+  font-size: 41.6px;
+  line-height: 38px;
+  letter-spacing: -2.42px;
+  color: #1d1d1d;
+  margin: 0 0 12px;
+}
+.sub {
+  font-weight: 100;
+  font-size: 16.64px;
+  letter-spacing: -0.17px;
+  line-height: 23px;
+  color: #555;
+  margin: 0;
+}
+.rail {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 4px 45px 10px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 45px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+.card {
+  flex: 0 0 270px;
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.verified {
+  font-weight: 500;
+  font-size: 10.4px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: #999;
+}
+.tag {
+  font-weight: 500;
+  font-size: 9.36px;
+  letter-spacing: 0.63px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 4px 9px;
+}
+/* Pill colour by product */
+.tagFlow {
+  color: #8a6d00;
+  background: rgba(233, 178, 0, 0.16);
+}
+.tagBoth {
+  color: #1b2757;
+  background: rgba(27, 39, 87, 0.1);
+}
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #e9b200;
+  font-size: 14.56px;
+  letter-spacing: 0.85px;
+  margin-bottom: 12px;
+}
+.stars span {
+  font-weight: 850;
+  font-size: 13.52px;
+  color: #1d1d1d;
+  letter-spacing: -0.14px;
+}
+.hl {
+  font-weight: 500;
+  font-size: 17.68px;
+  letter-spacing: -0.18px;
+  line-height: 22px;
+  color: #1d1d1d;
+  margin: 0 0 8px;
+}
+.body {
+  font-weight: 100;
+  font-size: 14.56px;
+  letter-spacing: -0.15px;
+  line-height: 20px;
+  color: #555;
+  margin: 0 0 16px;
+  flex: 1;
+}
+.author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+.name {
+  font-weight: 500;
+  font-size: 13.52px;
+  letter-spacing: -0.14px;
+  color: #1d1d1d;
+  margin: 0;
+}
+
+@media (min-width: 1000px) {
+  .head { max-width: 820px; margin-left: auto; margin-right: auto; text-align: center; padding: 0 24px; }
+  .rail { max-width: 980px; margin: 0 auto; padding: 4px 24px 12px; }
+}
