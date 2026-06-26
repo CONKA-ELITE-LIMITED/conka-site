@@ -219,7 +219,7 @@ export default function StartPage() {
                 href={FUNNEL_URL}
                 className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
               >
-                Get Both From £1.61/shot
+                Get Both From £1.87/shot
                 <svg
                   width="20"
                   height="20"

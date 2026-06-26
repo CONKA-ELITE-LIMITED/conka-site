@@ -36,9 +36,9 @@ function CoffeeIcon({ stroke = '#1d1d1d', width = 1.6 }: { stroke?: string; widt
 }
 
 export default function CrashChart({
-  saving = '£53',
+  saving = '£37',
   coffeePerDay = '£5.00/day',
-  shotsPerDay = '£3.22/day',
+  shotsPerDay = '£3.74/day',
 }: CrashChartProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
 
