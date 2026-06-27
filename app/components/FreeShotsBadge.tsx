@@ -13,14 +13,27 @@ export default function FreeShotsBadge({
   freeShots,
   cadence,
   className = "",
+  compact = false,
 }: {
   freeShots?: number;
   /** "monthly-sub" | "monthly-otp" | "quarterly-sub" */
   cadence: string;
   className?: string;
+  /** Tight form ("+8 free") for sticky bars and other cramped spots. */
+  compact?: boolean;
 }) {
   if (!freeShots || freeShots <= 0 || cadence === "monthly-otp") return null;
   const suffix = cadence === "quarterly-sub" ? "included" : "on your first order";
+
+  if (compact) {
+    return (
+      <span
+        className={`inline-flex items-center bg-[#1a7f4f]/[0.1] text-[#1a7f4f] text-[11px] font-bold px-2 py-0.5 ${className}`}
+      >
+        +{freeShots} free
+      </span>
+    );
+  }
 
   return (
     <span

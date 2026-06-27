@@ -73,7 +73,9 @@ export default function ConkaBothPage() {
     }
   };
 
-  const cadencePrice = getBalanceCadencePricing(selectedCadence).price;
+  const cadencePricing = getBalanceCadencePricing(selectedCadence);
+  const cadencePrice = cadencePricing.price;
+  const cadenceFreeShots = cadencePricing.freeShots;
 
   // Shared sections — ordered as they appear on the page. Backgrounds
   // alternate white/tint starting from the white hero.
@@ -238,6 +240,7 @@ export default function ConkaBothPage() {
           productHeroId="03"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
+          cadenceFreeShots={cadenceFreeShots}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
       </div>
@@ -299,6 +302,7 @@ export default function ConkaBothPage() {
         productHeroId="03"
         selectedCadence={selectedCadence}
         cadencePrice={cadencePrice}
+        cadenceFreeShots={cadenceFreeShots}
         onAddToCart={() => handleAddToCart("sticky_footer")}
       />
     </div>

@@ -16,6 +16,7 @@ import {
   ProtocolId,
 } from "@/app/lib/productData";
 import { CadenceType } from "@/app/lib/cadenceData";
+import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import { GUARANTEE_LABEL } from "@/app/lib/offerConstants";
 
@@ -44,6 +45,7 @@ interface StickyPurchaseFooterMobileProps {
   selectedCadence?: CadenceType;
   cadencePrice?: number;
   cadenceCompareAtPrice?: number;
+  cadenceFreeShots?: number;
   onAddToCart: () => void;
 }
 
@@ -58,6 +60,7 @@ export default function StickyPurchaseFooterMobile({
   selectedCadence,
   cadencePrice,
   cadenceCompareAtPrice,
+  cadenceFreeShots,
   onAddToCart,
 }: StickyPurchaseFooterMobileProps) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -137,6 +140,11 @@ export default function StickyPurchaseFooterMobile({
           <span>Cancel Anytime</span>
         </div>
         <div className="px-4 pb-3">
+          {cadenceFreeShots && selectedCadence !== "monthly-otp" ? (
+            <div className="flex justify-center mb-2">
+              <FreeShotsBadge freeShots={cadenceFreeShots} cadence={selectedCadence} compact />
+            </div>
+          ) : null}
           <ConkaCTAButton onClick={onAddToCart} meta={meta} className="w-full max-w-none">
             Add to Cart
           </ConkaCTAButton>
