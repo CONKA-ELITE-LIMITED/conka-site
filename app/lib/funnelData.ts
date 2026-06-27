@@ -131,7 +131,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       compareAtPrice: OTP_PRICE.both * 3,
       freeShots: 20,
       firstOrderShots: 140,
-      subsequentShots: 140,
+      subsequentShots: 120,
     },
   },
   flow: {
@@ -159,7 +159,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       compareAtPrice: OTP_PRICE.flow * 3,
       freeShots: 20,
       firstOrderShots: 80,
-      subsequentShots: 80,
+      subsequentShots: 60,
     },
   },
   clear: {
@@ -187,7 +187,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       compareAtPrice: OTP_PRICE.clear * 3,
       freeShots: 20,
       firstOrderShots: 80,
-      subsequentShots: 80,
+      subsequentShots: 60,
     },
   },
 };
