@@ -6,6 +6,7 @@ import Image from "next/image";
 import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
 import { getCartUpsell } from "@/app/lib/cartUpsell";
+import { getOfferByVariantId } from "@/app/lib/funnelData";
 
 // Fallback product images when Shopify doesn't provide one
 const PRODUCT_FALLBACK_IMAGES: Record<string, string> = {
@@ -125,6 +126,20 @@ export default function CartDrawer() {
   } = useCart();
 
   const cartItems = getCartItems();
+
+  // Shots + free-shots summary for the subtotal area. Sums priced shots and
+  // bonus ("20 + 8 free") shots across any recognised funnel lines in the cart.
+  const shotSummary = cartItems.reduce(
+    (acc, item) => {
+      const offer = getOfferByVariantId(item.merchandise.id);
+      if (offer) {
+        acc.shots += (offer.pricing.shotCount ?? 0) * item.quantity;
+        acc.free += (offer.pricing.freeShots ?? 0) * item.quantity;
+      }
+      return acc;
+    },
+    { shots: 0, free: 0 },
+  );
 
   // Hide upsell while any cart mutation is in flight to prevent stale flashes.
   const upsellOffer = !loading ? getCartUpsell(cartItems) : null;
@@ -352,6 +367,24 @@ export default function CartDrawer() {
                   )}
                 </span>
               </div>
+
+              {/* Shots + "20 + 8 free" bonus summary */}
+              {shotSummary.shots > 0 && (
+                <div className="flex items-baseline justify-between">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+                    Shots
+                  </span>
+                  <span className="font-mono text-[11px] tabular-nums text-black/70">
+                    {shotSummary.shots} shots
+                    {shotSummary.free > 0 && (
+                      <span className="font-bold text-[#1a7f4f]">
+                        {" "}
+                        + {shotSummary.free} free
+                      </span>
+                    )}
+                  </span>
+                </div>
+              )}
 
               <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/30 tabular-nums text-center">
                 Shipping &amp; taxes calculated at checkout

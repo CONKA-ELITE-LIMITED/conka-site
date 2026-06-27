@@ -243,6 +243,23 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
   },
 };
 
+/**
+ * Reverse lookup: a cart line's variant GID → its offer (product, cadence,
+ * pricing). Lets the cart drawer show shots + free shots per the "20 + 8" model.
+ */
+export function getOfferByVariantId(
+  variantId: string,
+): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
+  for (const product of Object.keys(FUNNEL_VARIANTS) as FunnelProduct[]) {
+    for (const cadence of Object.keys(FUNNEL_VARIANTS[product]) as FunnelCadence[]) {
+      if (FUNNEL_VARIANTS[product][cadence].variantId === variantId) {
+        return { product, cadence, pricing: FUNNEL_PRICING[product][cadence] };
+      }
+    }
+  }
+  return null;
+}
+
 // ============================================
 // DISPLAY DATA
 // ============================================
