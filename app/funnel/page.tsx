@@ -4,7 +4,7 @@ import FunnelClient from "./FunnelClient";
 export const metadata: Metadata = {
   title: "Get Started | CONKA",
   description:
-    "Choose your CONKA plan. Flow for morning focus, Clear for afternoon clarity, or Both for the complete daily system. Subscribe and save 25%.",
+    "Choose your CONKA plan. Flow for morning focus, Clear for afternoon clarity, or Both for the complete daily system. Subscribe and save up to 33%.",
   robots: {
     index: false,
     follow: false,

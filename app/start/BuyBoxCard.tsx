@@ -8,6 +8,7 @@ import type {
   CadencePricing,
   CadenceVariantConfig,
 } from "@/app/lib/cadenceData";
+import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 
 interface BuyBoxCardProps {
@@ -117,10 +118,16 @@ export default function BuyBoxCard({
           {formatPrice(pricing.perShot)} per shot
         </p>
 
+        <FreeShotsBadge
+          freeShots={pricing.freeShots}
+          cadence={isSubscription ? "monthly-sub" : "monthly-otp"}
+          className="mt-3"
+        />
+
         {/* Shot-count description, Ketone-IQ pattern. Lives above the bullets
             as a plain line, not as a check item. */}
         <p className="text-[14px] text-black/70 font-medium mt-4 mb-3">
-          56 shots = 28 servings
+          40 shots = 20 servings
         </p>
 
         <ul className="space-y-2.5 mb-5">

@@ -39,6 +39,7 @@ export default function ConkaClarityPage() {
   const cadencePricing = getCadencePricingByFormula("02", selectedCadence);
   const cadencePrice = cadencePricing.price;
   const cadenceCompareAtPrice = cadencePricing.compareAtPrice;
+  const cadenceFreeShots = cadencePricing.freeShots;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta).
   // content_name preserved as "CONKA Clarity" to match production tracking
@@ -172,6 +173,7 @@ export default function ConkaClarityPage() {
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
           cadenceCompareAtPrice={cadenceCompareAtPrice}
+          cadenceFreeShots={cadenceFreeShots}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
 
@@ -280,6 +282,7 @@ export default function ConkaClarityPage() {
         formulaId="02"
         selectedCadence={selectedCadence}
         cadencePrice={cadencePrice}
+        cadenceFreeShots={cadenceFreeShots}
         onAddToCart={() => handleAddToCart("sticky_footer")}
       />
 

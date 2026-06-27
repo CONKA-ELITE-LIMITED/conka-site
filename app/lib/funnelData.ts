@@ -20,14 +20,21 @@ export type FunnelCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
 export interface FunnelPricing {
   /** Total price for this combination */
   price: number;
-  /** Price per shot */
+  /** Price per shot — computed on PRICED shots (excludes free bonus shots) */
   perShot: number;
   /** Price per day (shots per day × perShot) */
   perDay: number;
-  /** Total shots included */
+  /** Priced (billed) shots the price buys — excludes free shots */
   shotCount: number;
-  /** Crossed-out compare-at price (the one-time price for the same product; absent on one-time entries) */
+  /** Crossed-out compare-at price (the one-time product price for the same shots; absent on one-time entries) */
   compareAtPrice?: number;
+  // "20 + 8 free" offer fields — surfaced everywhere so the bonus is clear.
+  /** Free bonus shots. Monthly = first order only; quarterly = every cycle. */
+  freeShots?: number;
+  /** Total shots in the FIRST shipment (priced + free). */
+  firstOrderShots?: number;
+  /** Total shots delivered each cycle after the first. */
+  subsequentShots?: number;
 }
 
 export interface FunnelVariantConfig {
@@ -81,81 +88,106 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
   return Math.round(((compareAtPrice - price) / compareAtPrice) * 100);
 }
 
-// One-time prices double as the compare-at anchor on subscription entries —
-// a price the buyer can see and verify on the same page. One-time entries
-// carry no compareAtPrice (they ARE the reference price). Quarterly anchors
-// against 3 one-time boxes.
+// OTP_PRICE = the one-time PRODUCT value (excl. postage). It doubles as the
+// verifiable compare-at "was" on subscription entries (monthly anchors against
+// one box, quarterly against three). The one-time CADENCE price bakes in
+// compulsory postage on top (OTP_POSTAGE) — subscriptions always ship free.
 const OTP_PRICE: Record<FunnelProduct, number> = {
-  both: 129.99,
-  flow: 79.99,
-  clear: 79.99,
+  both: 89.99,
+  flow: 59.99,
+  clear: 59.99,
 };
 
+/** Compulsory postage on one-time orders, baked into the displayed OTP price. */
+const OTP_POSTAGE = 9.99;
+
+// "20 + 8 free" offer. Monthly subscription: the FIRST order ships the bonus
+// box (priced + free shots); recurring orders ship the priced shots only (Loop
+// swaps the SKU). perShot is computed on PRICED shots. compareAtPrice is the
+// real one-time product price for the same shots — a verifiable "was".
 const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>> = {
   both: {
     "monthly-sub": {
-      price: 89.99,
-      perShot: 1.61,
-      perDay: 3.22,
-      shotCount: 56,
+      price: 74.99,
+      perShot: 1.87,
+      perDay: 3.74,
+      shotCount: 40,
       compareAtPrice: OTP_PRICE.both,
+      freeShots: 16,
+      firstOrderShots: 56,
+      subsequentShots: 40,
     },
     "monthly-otp": {
-      price: OTP_PRICE.both,
-      perShot: 2.32,
-      perDay: 4.64,
-      shotCount: 56,
+      price: OTP_PRICE.both + OTP_POSTAGE,
+      perShot: 2.5,
+      perDay: 5.0,
+      shotCount: 40,
     },
     "quarterly-sub": {
-      price: 229.99,
-      perShot: 1.37,
-      perDay: 2.74,
-      shotCount: 168,
+      price: 149.99,
+      perShot: 1.25,
+      perDay: 2.5,
+      shotCount: 120,
       compareAtPrice: OTP_PRICE.both * 3,
+      freeShots: 20,
+      firstOrderShots: 140,
+      subsequentShots: 120,
     },
   },
   flow: {
     "monthly-sub": {
-      price: 59.99,
-      perShot: 2.14,
-      perDay: 2.14,
-      shotCount: 28,
+      price: 39.99,
+      perShot: 2.0,
+      perDay: 2.0,
+      shotCount: 20,
       compareAtPrice: OTP_PRICE.flow,
+      freeShots: 8,
+      firstOrderShots: 28,
+      subsequentShots: 20,
     },
     "monthly-otp": {
-      price: OTP_PRICE.flow,
-      perShot: 2.86,
-      perDay: 2.86,
-      shotCount: 28,
+      price: OTP_PRICE.flow + OTP_POSTAGE,
+      perShot: 3.5,
+      perDay: 3.5,
+      shotCount: 20,
     },
     "quarterly-sub": {
-      price: 149.99,
-      perShot: 1.79,
-      perDay: 1.79,
-      shotCount: 84,
+      price: 109.99,
+      perShot: 1.83,
+      perDay: 1.83,
+      shotCount: 60,
       compareAtPrice: OTP_PRICE.flow * 3,
+      freeShots: 20,
+      firstOrderShots: 80,
+      subsequentShots: 60,
     },
   },
   clear: {
     "monthly-sub": {
-      price: 59.99,
-      perShot: 2.14,
-      perDay: 2.14,
-      shotCount: 28,
+      price: 39.99,
+      perShot: 2.0,
+      perDay: 2.0,
+      shotCount: 20,
       compareAtPrice: OTP_PRICE.clear,
+      freeShots: 8,
+      firstOrderShots: 28,
+      subsequentShots: 20,
     },
     "monthly-otp": {
-      price: OTP_PRICE.clear,
-      perShot: 2.86,
-      perDay: 2.86,
-      shotCount: 28,
+      price: OTP_PRICE.clear + OTP_POSTAGE,
+      perShot: 3.5,
+      perDay: 3.5,
+      shotCount: 20,
     },
     "quarterly-sub": {
-      price: 149.99,
-      perShot: 1.79,
-      perDay: 1.79,
-      shotCount: 84,
+      price: 109.99,
+      perShot: 1.83,
+      perDay: 1.83,
+      shotCount: 60,
       compareAtPrice: OTP_PRICE.clear * 3,
+      freeShots: 20,
+      firstOrderShots: 80,
+      subsequentShots: 60,
     },
   },
 };
@@ -163,52 +195,70 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
 // ============================================
 // VARIANT MAPPING (Shopify GIDs)
 // ============================================
-// Funnel-specific products created 2026-03-27.
-// Monthly uses 28-shot (Flow/Clear) or 56-shot (Both) variant.
-// Quarterly uses 84-shot (Flow/Clear) or 168-shot (Both) variant.
-// Selling plans: Single = Flow/Clear, Dual = Both.
-
+// "20 + 8 free" SKU mapping (new variants created 2026-06-25).
+//   monthly-sub   → 28/56-shot FIRST-ORDER SKU; Loop swaps to the 20/40-shot SKU
+//                   from order 2 (Loop monthly plan). Selling-plan GIDs unchanged
+//                   — the same plans are being re-priced in Loop, not replaced.
+//   monthly-otp   → dedicated one-time SKU (postage baked into the price).
+//   quarterly-sub → 80/140-shot SKU (ships once, no swap).
 const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
   flow: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568795918710",
+      variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/57568795918710",
+      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568795951478",
+      variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
   },
   clear: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568517489014",
+      variantId: "gid://shopify/ProductVariant/57568517489014", // CLEAR-FUNNEL-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/57568517489014",
+      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568746930550",
+      variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
   },
   both: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568809976182",
+      variantId: "gid://shopify/ProductVariant/57568809976182", // BOTH-FUNNEL-56 (first order → Loop swaps to BOTH-FUNNEL-40)
       sellingPlanId: "gid://shopify/SellingPlan/712527479158",
     },
     "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/57568809976182",
+      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568810008950",
+      variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
     },
   },
 };
+
+/**
+ * Reverse lookup: a cart line's variant GID → its offer (product, cadence,
+ * pricing). Lets the cart drawer show shots + free shots per the "20 + 8" model.
+ */
+export function getOfferByVariantId(
+  variantId: string,
+): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
+  for (const product of Object.keys(FUNNEL_VARIANTS) as FunnelProduct[]) {
+    for (const cadence of Object.keys(FUNNEL_VARIANTS[product]) as FunnelCadence[]) {
+      if (FUNNEL_VARIANTS[product][cadence].variantId === variantId) {
+        return { product, cadence, pricing: FUNNEL_PRICING[product][cadence] };
+      }
+    }
+  }
+  return null;
+}
 
 // ============================================
 // DISPLAY DATA
@@ -236,7 +286,7 @@ export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
     name: "Both",
     label: "Flow + Clear",
     tagline: "The complete daily system",
-    shotCount: 56,
+    shotCount: 40,
     description: "The complete protocol. Flow sharpens your morning. Clear sustains your afternoon. Together they cover the full day.",
     thumbnail: "/formulas/both/BothShots.jpg",
     badge: "Most Popular",
@@ -253,7 +303,7 @@ export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
     name: "Flow",
     label: "CONKA Flow",
     tagline: "Morning foundation",
-    shotCount: 28,
+    shotCount: 20,
     description: "Take it in the morning. Calm, sustained focus without caffeine. Your brain on before the day starts.",
     thumbnail: "/formulas/conkaFlow/FlowNoBackground.png",
     accent: "#F59E0B",
@@ -269,7 +319,7 @@ export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
     name: "Clear",
     label: "CONKA Clear",
     tagline: "Afternoon clarity",
-    shotCount: 28,
+    shotCount: 20,
     description: "Take it in the afternoon. Clears the 2pm fog and sustains output. The shot for the second half of your day.",
     thumbnail: "/formulas/conkaClear/ClearNoBackground.png",
     accent: "#0369a1",
@@ -307,7 +357,7 @@ export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
     label: "Try once",
     subtitle: "Single order, no subscription",
     features: [
-      "Subscribe later and save 25% or more",
+      "Subscribe and save up to 33%",
     ],
   },
   "quarterly-sub": {

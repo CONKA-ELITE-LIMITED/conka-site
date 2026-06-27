@@ -76,6 +76,7 @@ function buildCard(product: FunnelProduct) {
           perShot: perShot(subPricing.perShot),
           strike: subPricing.compareAtPrice ? money(subPricing.compareAtPrice) : null,
           amount: subPricing.price,
+          freeShots: subPricing.freeShots ?? null,
         }
       : null,
   };

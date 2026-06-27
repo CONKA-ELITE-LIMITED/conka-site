@@ -20,6 +20,7 @@ import {
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
 import { getProtocolImage } from "@/app/lib/productImageConfig";
 import { CadenceType, FUNNEL_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
+import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import { getBothHeroImages } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 
@@ -44,6 +45,7 @@ interface StickyPurchaseFooterProps {
   // Cadence mode -- replaces purchaseType + pack/tier selector for formula/balance pages
   selectedCadence?: CadenceType;
   cadencePrice?: number;
+  cadenceFreeShots?: number;
   onAddToCart: () => void;
 }
 
@@ -66,6 +68,7 @@ export default function StickyPurchaseFooter({
   onPurchaseTypeChange,
   selectedCadence,
   cadencePrice,
+  cadenceFreeShots,
   onAddToCart,
   productHeroId,
 }: StickyPurchaseFooterProps) {
@@ -192,6 +195,7 @@ export default function StickyPurchaseFooter({
                 <p className="font-mono text-[11px] uppercase tracking-[0.14em] opacity-70 truncate">
                   {cadenceDisplay.label} · {formatPrice(cadencePrice)}
                 </p>
+                <FreeShotsBadge freeShots={cadenceFreeShots} cadence={selectedCadence} compact className="mt-1" />
               </div>
             </div>
             <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto">

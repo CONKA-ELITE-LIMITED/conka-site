@@ -39,6 +39,7 @@ export default function ConkaFlowPage() {
   const cadencePricing = getCadencePricingByFormula("01", selectedCadence);
   const cadencePrice = cadencePricing.price;
   const cadenceCompareAtPrice = cadencePricing.compareAtPrice;
+  const cadenceFreeShots = cadencePricing.freeShots;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta)
   useEffect(() => {
@@ -170,6 +171,7 @@ export default function ConkaFlowPage() {
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
           cadenceCompareAtPrice={cadenceCompareAtPrice}
+          cadenceFreeShots={cadenceFreeShots}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
 
@@ -278,6 +280,7 @@ export default function ConkaFlowPage() {
         formulaId="01"
         selectedCadence={selectedCadence}
         cadencePrice={cadencePrice}
+        cadenceFreeShots={cadenceFreeShots}
         onAddToCart={() => handleAddToCart("sticky_footer")}
       />
 

@@ -5,11 +5,11 @@
 // holds the static promotional copy shared across the buy cards.
 
 export const OFFER = {
-  head: 'Subscribe & Save 31%',
+  head: 'Subscribe & Save up to 33%',
   line: 'Get free shipping every single month',
   sub: 'Pause, skip or cancel anytime.',
 };
 
 export const GUARANTEE = ['100-day money back guarantee', 'Pause, skip or cancel anytime'];
 
-export const PROMO = "You're getting 31% off & Free Shipping";
+export const PROMO = "You're getting up to 33% off & Free Shipping";

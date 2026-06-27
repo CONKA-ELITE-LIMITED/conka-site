@@ -14,6 +14,7 @@ import {
   getCadencePricingByProductHeroId,
   FUNNEL_CADENCES,
 } from "@/app/lib/cadenceData";
+import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
@@ -310,6 +311,7 @@ function PlanSelector({
               <p className="mt-1.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-black">
                 {pricing.shotCount} shots · {shotsPerDay} a day
               </p>
+              <FreeShotsBadge freeShots={pricing.freeShots} cadence={cadence} className="mt-2.5" />
             </button>
 
             {isSelected && <PlanDetail />}
