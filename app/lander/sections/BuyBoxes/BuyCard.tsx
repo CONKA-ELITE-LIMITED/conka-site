@@ -11,6 +11,7 @@
 import {useState} from 'react';
 import styles from './BuyBoxes.module.css';
 import {OFFER, GUARANTEE} from './buyboxes.data';
+import FreeShotsBadge from '@/app/components/FreeShotsBadge';
 import {landerCheckout} from './lander-checkout';
 
 const VanIcon = () => (
@@ -32,6 +33,8 @@ interface LivePrice {
   sellingPlanId?: string;
   /** Numeric price for analytics. */
   amount?: number;
+  /** Free bonus shots on the first subscription order. */
+  freeShots?: number | null;
 }
 interface LiveData {
   title: string;
@@ -131,6 +134,11 @@ export default function BuyCard({data}: {data: CardConfig}) {
             )}
             <span>{priceSet?.perShot}</span>
           </div>
+          <FreeShotsBadge
+            freeShots={priceSet?.freeShots ?? undefined}
+            cadence={isSub ? 'monthly-sub' : 'monthly-otp'}
+            className="mt-1.5"
+          />
           <p className={styles.desc}>{data.description}</p>
         </div>
 

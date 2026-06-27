@@ -10,6 +10,7 @@ import {
   getSavingsPercent,
 } from "@/app/lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
+import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 
 interface CadenceSelectorProps {
   cadence: FunnelCadence;
@@ -205,6 +206,9 @@ export default function CadenceSelector({
                         </>
                       )}
                     </div>
+
+                    {/* "20 + 8 free" bonus shots */}
+                    <FreeShotsBadge freeShots={pricing.freeShots} cadence={cadenceKey} />
 
                     {/* What ships */}
                     <div className="flex items-start gap-2">
