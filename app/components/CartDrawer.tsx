@@ -268,7 +268,22 @@ export default function CartDrawer() {
                       {item.merchandise.product.title}
                     </p>
                     <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 tabular-nums truncate mt-0.5">
-                      {item.merchandise.title}
+                      {(() => {
+                        const offer = getOfferByVariantId(item.merchandise.id);
+                        if (!offer) return item.merchandise.title;
+                        const { shotCount, freeShots } = offer.pricing;
+                        return (
+                          <>
+                            {shotCount} shots
+                            {freeShots && freeShots > 0 ? (
+                              <span className="font-bold text-[#1a7f4f]">
+                                {" "}
+                                + {freeShots} free
+                              </span>
+                            ) : null}
+                          </>
+                        );
+                      })()}
                     </p>
 
                     {isSubscription(item) && (
