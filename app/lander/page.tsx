@@ -55,8 +55,8 @@ function buildCard(product: FunnelProduct) {
   const subPricing = getOfferPricing(product, 'monthly-sub');
   const otpPricing = getOfferPricing(product, 'monthly-otp');
 
-  // Monthly-sub and monthly-otp share the same Shopify variant; only the
-  // selling plan differs. Check out that variant directly so display == charge.
+  // Sub and OTP use DIFFERENT Shopify variants now (OTP is its own 20-shot SKU).
+  // Each cadence carries its own variantId below; this is a fallback only.
   const variantId = subVariant?.variantId ?? otpVariant?.variantId ?? '';
 
   return {
@@ -65,12 +65,14 @@ function buildCard(product: FunnelProduct) {
     available: Boolean(variantId),
     // `amount` (numeric) feeds checkout analytics; `price` (string) is for display.
     oneTime: {
+      variantId: otpVariant?.variantId ?? variantId,
       price: money(otpPricing.price),
       perShot: perShot(otpPricing.perShot),
       amount: otpPricing.price,
     },
     subscription: subVariant
       ? {
+          variantId: subVariant.variantId,
           sellingPlanId: subVariant.sellingPlanId,
           price: money(subPricing.price),
           perShot: perShot(subPricing.perShot),

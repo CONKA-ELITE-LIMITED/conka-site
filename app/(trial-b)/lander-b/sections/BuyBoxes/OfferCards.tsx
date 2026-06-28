@@ -39,6 +39,7 @@ function buildCard(product: FunnelProduct) {
     variantId,
     available: Boolean(variantId),
     oneTime: {
+      variantId: otpVariant?.variantId ?? variantId,
       price: money(otpPricing.price),
       perShot: perShot(otpPricing.perShot),
       amount: otpPricing.price,
@@ -46,6 +47,7 @@ function buildCard(product: FunnelProduct) {
     },
     subscription: subVariant
       ? {
+          variantId: subVariant.variantId,
           sellingPlanId: subVariant.sellingPlanId,
           price: money(subPricing.price),
           perShot: perShot(subPricing.perShot),
