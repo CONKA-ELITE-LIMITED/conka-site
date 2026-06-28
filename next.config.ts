@@ -40,6 +40,18 @@ const nextConfig: NextConfig = {
   // Redirects
   async redirects() {
     return [
+      // Trial: route start/lander traffic to the B variants. Temporary (307) on
+      // purpose — easy to reverse without browsers hard-caching the redirect.
+      {
+        source: '/start',
+        destination: '/start-b',
+        permanent: false,
+      },
+      {
+        source: '/lander',
+        destination: '/lander-b',
+        permanent: false,
+      },
       {
         source: '/startv2',
         destination: '/start',
