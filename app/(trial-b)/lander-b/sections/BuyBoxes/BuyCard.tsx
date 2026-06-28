@@ -35,6 +35,8 @@ type LanderProduct = 'flow' | 'clear' | 'both';
 interface LivePrice {
   price: string | null;
   perShot: string;
+  /** Variant this purchase type checks out (sub and OTP differ). */
+  variantId?: string;
   strike?: string | null;
   sellingPlanId?: string;
   /** Numeric price for analytics. */
@@ -89,13 +91,16 @@ export default function BuyCard({data}: {data: CardConfig}) {
   const priceSet: LivePrice | null = isSub ? live?.subscription ?? null : live?.oneTime ?? null;
 
   async function handleCheckout() {
-    if (!live?.variantId || loading) return;
+    // Sub and OTP now use different variants — pick the one for the active type.
+    const checkoutVariantId =
+      (isSub ? live?.subscription?.variantId : live?.oneTime?.variantId) ?? live?.variantId;
+    if (!checkoutVariantId || loading) return;
     setLoading(true);
     setError(false);
     try {
       await landerCheckout({
-        variantId: live.variantId,
-        sellingPlanId: isSub ? live.subscription?.sellingPlanId : undefined,
+        variantId: checkoutVariantId,
+        sellingPlanId: isSub ? live?.subscription?.sellingPlanId : undefined,
         product: option?.product ?? data.product,
         purchaseType: isSub ? 'subscription' : 'one-time',
         price: priceSet?.amount,
