@@ -6,7 +6,6 @@ import "./globals.css";
 import { CartProvider } from "@/app/context/CartContext";
 import { AuthProvider } from "@/app/context/AuthContext";
 import CartDrawer from "@/app/components/CartDrawer";
-import ConvexClientProvider from "@/app/components/ConvexClientProvider";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
 
 /* Brand design system: Neue Haas Grotesk Display (primary) + JetBrains Mono (data) */
@@ -49,9 +48,16 @@ const jetBrainsMono = localFont({
   display: "swap",
 });
 
-/* ABC Favorit: scoped to the standalone /lander page (via --font-abc-favorit). */
+/* ABC Favorit: only used on the /lander + /lander-b pages (via --font-abc-favorit).
+ * preload:false — the variable + @font-face stay registered globally (so the
+ * lander cascade is unchanged), but the 6 OTF weights are no longer force-
+ * <link rel=preload>ed on every page. They were ~380 KB of forced downloads on
+ * pages that never render this font (start-b, home, etc.). The lander still
+ * loads them on demand (display:swap, same as before); non-lander pages drop
+ * them entirely. No visual change. */
 const abcFavorit = localFont({
   variable: "--font-abc-favorit",
+  preload: false,
   src: [
     { path: "./fonts/ABCFavorit/ABCFavorit-Regular.otf", weight: "400", style: "normal" },
     { path: "./fonts/ABCFavorit/ABCFavorit-RegularItalic.otf", weight: "400", style: "italic" },
@@ -172,14 +178,15 @@ export default function RootLayout({
         className={`${neueHaas.variable} ${jetBrainsMono.variable} ${abcFavorit.variable} antialiased`}
       >
         <MetaPageViewTracker />
-        <ConvexClientProvider>
-          <AuthProvider>
-            <CartProvider>
-              {children}
-              <CartDrawer />
-            </CartProvider>
-          </AuthProvider>
-        </ConvexClientProvider>
+        {/* Convex is NOT provided globally — the only consumers are /win,
+            /barrys and /go (each wrapped by its own layout). Keeping the
+            ConvexReactClient (~80 KB) off every other page is a large TBT win. */}
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <CartDrawer />
+          </CartProvider>
+        </AuthProvider>
         <Analytics />
       </body>
     </html>
