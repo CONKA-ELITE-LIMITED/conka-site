@@ -7,6 +7,7 @@ import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
 import { getCartUpsell } from "@/app/lib/cartUpsell";
 import { getOfferByVariantId } from "@/app/lib/funnelData";
+import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 
 // Fallback product images when Shopify doesn't provide one
 const PRODUCT_FALLBACK_IMAGES: Record<string, string> = {
@@ -412,12 +413,19 @@ export default function CartDrawer() {
             <a
               href={cart?.checkoutUrl || "#"}
               onClick={(e) => {
-                // InitiateCheckout is owned by the Shopify Facebook channel
-                // (fires on the real checkout page); we no longer fire it here.
                 if (!cart?.checkoutUrl || cartItems.length === 0) {
                   e.preventDefault();
                   return;
                 }
+                // Fire InitiateCheckout on our domain before the redirect to the
+                // Shopify-hosted checkout (the pixel can't fire it offsite).
+                // sendBeacon + CAPI keepalive survive the navigation.
+                trackMetaInitiateCheckout({
+                  content_ids: cartItems.map((i) => toContentId(i.merchandise.id)),
+                  value: parseFloat(cart.cost.subtotalAmount.amount) || 0,
+                  currency: cart.cost.subtotalAmount.currencyCode,
+                  num_items: cartItems.reduce((s, i) => s + i.quantity, 0),
+                });
               }}
               className={`relative block w-full bg-[#1B2757] text-white px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-center [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] transition-opacity ${
                 cartItems.length === 0 ? "opacity-40 cursor-not-allowed" : "hover:opacity-90"

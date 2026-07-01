@@ -23,7 +23,7 @@ interface CAPIRequestBody {
   event_name: string;
   event_id: string;
   event_time: number;
-  user_data?: { fbp?: string };
+  user_data?: { fbp?: string; fbc?: string };
   custom_data?: Record<string, unknown>;
 }
 
@@ -78,7 +78,11 @@ export async function POST(request: NextRequest) {
       action_source: "website",
       user_data: {
         client_user_agent: request.headers.get("user-agent") ?? undefined,
+        // First IP in x-forwarded-for is the real client; Meta uses it for matching.
+        client_ip_address:
+          request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined,
         ...(user_data?.fbp && { fbp: user_data.fbp }),
+        ...(user_data?.fbc && { fbc: user_data.fbc }),
       },
       ...(custom_data && Object.keys(custom_data).length > 0 && { custom_data }),
     };
