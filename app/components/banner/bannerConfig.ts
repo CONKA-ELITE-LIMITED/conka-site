@@ -1,23 +1,47 @@
 "use client";
 
-import { useMemo } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { useEffect, useMemo, useState } from "react";
 import type { BannerConfig } from "./types";
 
 const FOUNDING_MEMBER_DEADLINE = new Date("2026-03-15T23:59:59");
+const SPOTS_FALLBACK = 155;
 
 /**
- * Hook to get active banner configuration
- * Handles deadline checking and fetches dynamic data from Convex
+ * Hook to get active banner configuration.
+ *
+ * The spots-remaining number is lazy-loaded from a cached server route
+ * (`/api/founding-count`) rather than a realtime Convex subscription — the
+ * count changes slowly, so there's no need to ship the ConvexReactClient
+ * (~80 KB) on every page just to power this banner. Falls back to a constant
+ * until the fetch resolves, and only fetches when the banner is actually active.
  */
 export function useBannerConfig(bannerId: string): BannerConfig | null {
-  // Fetch spots remaining from Convex
-  const counter = useQuery(api.foundingMemberCounter.getCounter);
-  const spotsRemaining = counter?.spotsRemaining ?? 155; // Fallback to 155
+  const isPastDeadline = useMemo(
+    () =>
+      bannerId === "founding-member" && new Date() > FOUNDING_MEMBER_DEADLINE,
+    [bannerId],
+  );
+  const isActive = bannerId === "founding-member" && !isPastDeadline;
+
+  const [spotsRemaining, setSpotsRemaining] = useState<number>(SPOTS_FALLBACK);
+  useEffect(() => {
+    if (!isActive) return;
+    let cancelled = false;
+    fetch("/api/founding-count")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled && typeof d?.spotsRemaining === "number") {
+          setSpotsRemaining(d.spotsRemaining);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [isActive]);
+
   const isUrgent = spotsRemaining <= 20; // Urgent when 20 or fewer spots (10% of 200)
 
-  // Get config based on bannerId
   const config = useMemo(() => {
     if (bannerId === "founding-member") {
       return {
@@ -54,13 +78,7 @@ export function useBannerConfig(bannerId: string): BannerConfig | null {
     return null;
   }, [bannerId, spotsRemaining, isUrgent]);
 
-  // Check if deadline has passed
-  const isPastDeadline = useMemo(() => {
-    if (!config?.deadline) return false;
-    return new Date() > config.deadline;
-  }, [config?.deadline]);
-
-  // Return null if banner should not be shown
+  // Return null if banner should not be shown (disabled or past deadline).
   if (!config || !config.enabled || isPastDeadline) {
     return null;
   }
