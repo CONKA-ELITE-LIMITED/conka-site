@@ -13,6 +13,8 @@ import { getCadencePricingByProductHeroId } from "../lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
 import BottleVideo from "@/app/components/landing/BottleVideo";
+import MetaViewContent from "@/app/components/MetaViewContent";
+import { getOfferVariant, getOfferPricing } from "../lib/funnelData";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
@@ -123,6 +125,13 @@ const S6_SPORTS = [
 export default function StartPage() {
   return (
     <div className="min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)] overflow-x-hidden">
+      {/* Meta ViewContent for paid traffic — start-b previously fired only
+          PageView, leaving Meta blind mid-funnel. */}
+      <MetaViewContent
+        variantIds={[getOfferVariant("both", "monthly-sub")?.variantId ?? ""]}
+        value={getOfferPricing("both", "monthly-sub").price}
+        contentName="CONKA – Flow & Clear"
+      />
       <Navigation />
       <main>
         {/* ===== 1. HERO ===== */}

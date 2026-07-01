@@ -13,7 +13,7 @@
  * (_fbp/_fbc) so the server-side Purchase webhook can attribute the order.
  */
 
-import {trackMetaAddToCart, toContentId, buildMetaCartAttributes} from '@/app/lib/metaPixel';
+import {trackMetaAddToCart, trackMetaInitiateCheckout, toContentId, buildMetaCartAttributes} from '@/app/lib/metaPixel';
 import {trackAddToCart as trackTripleWhaleAddToCart} from '@/app/lib/tripleWhale';
 import {trackPurchaseAddToCart} from '@/app/lib/analytics';
 
@@ -74,6 +74,14 @@ function fireAnalytics({
 }: Pick<CheckoutArgs, 'variantId' | 'product' | 'purchaseType' | 'price' | 'source'>): void {
   try {
     trackMetaAddToCart({
+      content_ids: [toContentId(variantId)],
+      value: price ?? 0,
+      currency: 'GBP',
+      num_items: 1,
+    });
+    // Fire IC here (our domain) — headless checkout is offsite on Shopify, so
+    // the pixel can't fire it there. sendBeacon/CAPI-keepalive survive the redirect.
+    trackMetaInitiateCheckout({
       content_ids: [toContentId(variantId)],
       value: price ?? 0,
       currency: 'GBP',

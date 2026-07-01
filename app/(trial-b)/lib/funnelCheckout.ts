@@ -13,7 +13,7 @@ import {
   getOfferPricing,
   getCadenceFrequency,
 } from "./funnelData";
-import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from "@/app/lib/metaPixel";
+import { trackMetaAddToCart, trackMetaInitiateCheckout, toContentId, buildMetaCartAttributes } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
 import { trackPurchaseAddToCart } from "@/app/lib/analytics";
 
@@ -119,9 +119,17 @@ function fireAnalytics(params: {
   const purchaseType = cadence === "monthly-otp" ? "one-time" : "subscription";
 
   try {
-    // Meta Pixel — AddToCart only. InitiateCheckout is owned by the Shopify
-    // Facebook channel (fires on the real checkout page), so we do not fire it here.
+    // Meta Pixel — AddToCart + InitiateCheckout, fired here (on our domain) at
+    // the checkout click. Headless checkout is offsite on Shopify, so the pixel
+    // cannot fire IC there; both use sendBeacon/CAPI-keepalive to survive the
+    // redirect that follows.
     trackMetaAddToCart({
+      content_ids: [contentId],
+      value: price,
+      currency: "GBP",
+      num_items: 1,
+    });
+    trackMetaInitiateCheckout({
       content_ids: [contentId],
       value: price,
       currency: "GBP",

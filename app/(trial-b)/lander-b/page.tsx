@@ -13,6 +13,7 @@ import ResearchPartners from './sections/ResearchPartners/ResearchPartners';
 import Reviews from './sections/Reviews/Reviews';
 import FAQ from './sections/FAQ/FAQ';
 import Footer from './sections/Footer/Footer';
+import MetaViewContent from '@/app/components/MetaViewContent';
 
 // Below-the-fold client islands — code-split so their hydration JS drops out of
 // the initial TBT window. SSR is preserved (no ssr:false in a server component),
@@ -102,6 +103,13 @@ export default function LanderPage() {
           DNS+TLS handshake. No crossOrigin: it's a navigation, not a CORS fetch. */}
       <link rel="preconnect" href="https://conka-6770.myshopify.com" />
       <link rel="dns-prefetch" href="https://conka-6770.myshopify.com" />
+      {/* Meta ViewContent for paid traffic — this page previously fired only
+          PageView, leaving Meta blind mid-funnel. */}
+      <MetaViewContent
+        variantIds={[buy.bundle.variantId]}
+        value={buy.bundle.subscription?.amount ?? buy.bundle.oneTime.amount}
+        contentName="CONKA – Flow & Clear"
+      />
       <Nav />
       <Hero />
       <LogoMarquee />

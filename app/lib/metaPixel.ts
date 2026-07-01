@@ -78,7 +78,7 @@ function sendToCAPI(payload: {
   event_name: string;
   event_id: string;
   event_time: number;
-  user_data?: { fbp?: string };
+  user_data?: { fbp?: string; fbc?: string };
   custom_data?: Record<string, unknown>;
 }): void {
   if (typeof fetch === "undefined") return;
@@ -138,7 +138,10 @@ function trackWithDedup(
     event_name: eventName,
     event_id: eventId,
     event_time: eventTime,
-    user_data: { fbp: getFbp() ?? undefined },
+    // Send both browser id (_fbp) and ad-click id (_fbc) so the server event
+    // matches on the strongest available signal — raises Event Match Quality
+    // and reduces Meta's reliance on modelled conversions.
+    user_data: { fbp: getFbp() ?? undefined, fbc: getFbc() ?? undefined },
     custom_data: customData,
   });
 }
@@ -198,6 +201,32 @@ export function trackMetaAddToCart(params: {
   };
   if (params.num_items != null) customData.num_items = params.num_items;
   trackWithDedup("AddToCart", customData);
+}
+
+/**
+ * Track InitiateCheckout with deduplication. Call at the checkout-click moment,
+ * right before redirecting to the Shopify-hosted checkout.
+ *
+ * Headless note: the checkout page lives on a different domain, so the pixel
+ * cannot fire IC there — we must fire it on our own domain before the redirect.
+ * `trackWithDedup` sends via fbq (which uses `sendBeacon`) AND the CAPI relay
+ * (`fetch` with `keepalive: true`), so both survive the navigation that follows.
+ */
+export function trackMetaInitiateCheckout(params: {
+  content_ids: string[];
+  content_type?: "product";
+  value: number;
+  currency: string;
+  num_items?: number;
+}): void {
+  const customData: Record<string, unknown> = {
+    content_ids: params.content_ids,
+    content_type: params.content_type ?? "product",
+    value: params.value,
+    currency: params.currency,
+  };
+  if (params.num_items != null) customData.num_items = params.num_items;
+  trackWithDedup("InitiateCheckout", customData);
 }
 
 /**
