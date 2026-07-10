@@ -104,7 +104,7 @@ export default function IngredientsSection() {
       <div className={styles.product}>
         <div className={styles.productTop}>
           {/* next/image is fine here too; plain <img> keeps the port framework-agnostic. */}
-          <img className={styles.productImg} src={formula.img} alt={formula.name} />
+          <img className={styles.productImg} src={formula.img} alt={formula.name} loading="lazy" />
           <div className={styles.productInfo}>
             <p className={styles.productName}>{formula.name}</p>
             <p className={styles.productSub}>{formula.sub}</p>

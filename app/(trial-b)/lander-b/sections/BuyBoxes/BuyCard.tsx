@@ -117,7 +117,7 @@ export default function BuyCard({data}: {data: CardConfig}) {
     <div className={`${styles.card} ${data.options ? styles.single : ''}`}>
       <div className={styles.image}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt={imageAlt} />
+        <img src={image} alt={imageAlt} loading="lazy" />
       </div>
 
       <div className={styles.content}>

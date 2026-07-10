@@ -53,7 +53,7 @@ function TrustItems() {
       <div className={styles.trustItem}>
         <span className={styles.trustMedia}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.trustLogo} src="/lander/partners/informed-sport.png" alt="Informed Sport certified" />
+          <img className={styles.trustLogo} src="/lander/partners/informed-sport.png" alt="Informed Sport certified" loading="lazy" />
         </span>
       </div>
       <div className={styles.trustItem}>
