@@ -1,9 +1,14 @@
 # SEO / AEO Foundation
 
-**Status:** Phase 1 and Phase 2 active. Phases 3 to 6 documented, not ticketed.
+**Status:** Phase 1 built (in review). Phase 2 unblocked, not started. Phases 3 to 6 documented, not ticketed.
 **Owner:** Rudh
 **Source input:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research)
 **Created:** 2026-07-10
+**Updated:** 2026-07-10
+
+## Progress log
+
+- **2026-07-10** Phase 1 (SCRUM-1131) built on branch `scrum-1131-canonical-fix` off the `SEO-AND-AEO-WORK` integration branch. Root canonical switched to the relative `"./"` form; dead `app/science/layout.tsx` deleted. Verified against the dev server across eight routes plus the `/go/*` noindex and `/start-b` override cases. Reviewed via `/review-code`: LGTM, no fixes needed. Awaiting push and merge into `SEO-AND-AEO-WORK`.
 
 ---
 
@@ -131,8 +136,8 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Fix the site-wide inherited canonical | Not Started (ACTIVE) |
-| 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Not Started (ACTIVE) |
+| 1 | Fix the site-wide inherited canonical | Built, in review (SCRUM-1131) |
+| 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Unblocked, not started (SCRUM-1132) |
 | 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Future |
 | 4 | Descriptive keyword H1s on the product pages | Future |
 | 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Future |
@@ -144,20 +149,18 @@ Phase 1 and Phase 2 ship as **separate commits**. Phase 1 changes what Google in
 
 ## Active phase task breakdown
 
-### Phase 1: Fix the inherited canonical
+### Phase 1: Fix the inherited canonical (DONE, in review)
 
-1. **[Frontend] Make the root canonical self-referencing**
+1. **[Frontend] Make the root canonical self-referencing** (done)
    - What: in `app/layout.tsx`, change `alternates.canonical` from the absolute `"https://www.conka.io"` to the relative `"./"`. Next resolves this against `metadataBase` and the current route.
    - Dependencies: none
    - Complexity: Small
    - Files: `app/layout.tsx`
    - Verify: curl `/`, `/conka-flow`, `/ingredients`, `/science`, `/start`, `/go/productivity-listicle` and confirm each emits its own canonical, that `/start` still canonicals to `/start`, and that `/go/*` is still `noindex, nofollow`.
 
-2. **[Frontend] Remove the duplicate metadata export on `/science`**
-   - What: `app/science/page.tsx` and `app/science/layout.tsx` both export `metadata`. The page wins and the layout is dead code. Delete the layout's export (or the layout, if it does nothing else) so the pattern is not copied.
-   - Dependencies: none
-   - Complexity: Small
-   - Files: `app/science/layout.tsx`, `app/science/page.tsx`
+2. **[Frontend] Remove the duplicate metadata export on `/science`** (done)
+   - What: `app/science/page.tsx` and `app/science/layout.tsx` both exported `metadata`. The page won and the layout was dead code. Deleted `app/science/layout.tsx` outright (it did nothing but return `children`). Confirmed `science` was the only route with this duplication.
+   - Files: `app/science/layout.tsx` (deleted)
 
 ### Phase 2: Per-page metadata plus the FL0W fix
 
@@ -255,7 +258,11 @@ Sprint 28. Phases 3 to 6 are deliberately not ticketed.
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| [SCRUM-1131](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1131) | [Bugs] Every page canonicals to the homepage, blocking the whole site from ranking | 1 | To Do |
+| [SCRUM-1131](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1131) | [Bugs] Every page canonicals to the homepage, blocking the whole site from ranking | 1 | Built, in review |
 | [SCRUM-1132](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1132) | [Website & CRO] Add per-page SEO metadata to the five indexable money pages | 2 | To Do |
 
-SCRUM-1131 blocks SCRUM-1132. SCRUM-1132 is additionally blocked on Humphrey confirming the two disputed prices.
+SCRUM-1131 blocks SCRUM-1132. The disputed prices are now resolved (see "Prices in the meta descriptions" above), so SCRUM-1132 is unblocked once SCRUM-1131 merges. Two soft open questions remain for marketing (the `FL0W` zero and the "From" convention); neither blocks the build.
+
+## Branching model
+
+`SEO-AND-AEO-WORK` is the integration branch and holds the plan docs. Each ticket is built on a sub-branch off it (`scrum-1131-canonical-fix`, `scrum-1132-...`), pushed, and merged back via PR into `SEO-AND-AEO-WORK`, not into `main`.
