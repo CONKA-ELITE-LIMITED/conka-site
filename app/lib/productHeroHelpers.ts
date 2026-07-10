@@ -12,7 +12,10 @@ export function getHeroContent(formulaId: ProductHeroId): BothHeroContent {
   if (formulaId === "03") return BOTH_HERO_CONTENT;
   const formula = formulaContent[formulaId];
   return {
-    name: formulaId === "01" ? "CONKA FL0W" : formula.name,
+    // Product name drives the PDP <h1>; keep it the plain wordmark ("CONKA Flow")
+    // so the strongest on-page SEO signal contains the indexable word "Flow"
+    // rather than the stylised "FL0W" (SCRUM-1132).
+    name: formula.name,
     tagline: formula.tagline,
     headline: formula.headline,
     soldCount: formulaId === "01" ? "Over 90,000 bottles sold" : "Over 60,000 bottles sold",

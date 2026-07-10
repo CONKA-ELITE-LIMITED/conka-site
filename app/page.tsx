@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
@@ -43,6 +44,19 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
 });
 
+// Home is a Server Component, so metadata is exported in place (SCRUM-1132).
+// Overrides the generic root-layout title/description that every page inherited.
+export const metadata: Metadata = {
+  title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
+  description:
+    "CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From £1.25/shot.",
+  openGraph: {
+    title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
+    description:
+      "The UK's leading daily brain shot. Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee.",
+    images: ["/opengraph-image.png"],
+  },
+};
 
 export default function Home() {
   return (
