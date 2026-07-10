@@ -103,8 +103,13 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Relative canonical: Next resolves this against metadataBase and the current
+  // route, so every page self-canonicalises. An absolute URL here is inherited
+  // verbatim by every child route, telling Google they are all duplicates of the
+  // homepage. Routes needing a different canonical (e.g. /start-b -> /start)
+  // override `alternates` themselves.
   alternates: {
-    canonical: "https://www.conka.io",
+    canonical: "./",
   },
 };
 
