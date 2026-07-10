@@ -35,7 +35,7 @@ export default function ResearchPartners() {
         <div className={styles.logos}>
           {UNIVERSITIES.map((u) => (
             <div className={styles.chip} key={u.alt}>
-              <img src={u.src} alt={u.alt} />
+              <img src={u.src} alt={u.alt} loading="lazy" />
             </div>
           ))}
         </div>
