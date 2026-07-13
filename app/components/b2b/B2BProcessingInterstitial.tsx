@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Processing interstitial shown between the B2B enquiry submit and the order
  * page. Content-only: the page owns the section wrapper and background.
  *
  * This is not a fake delay. The submit request is genuinely in flight while the
- * steps run, and `onComplete` fires only once both the steps have played out and
- * the caller's promise has settled. The step sequence gives that wait a shape,
- * and lends the trade-pricing reveal a sense of formal qualification rather than
- * a door that just swings open.
+ * steps run, so the wait is real; the step sequence just gives it a shape, and
+ * lends the trade-pricing reveal a sense of formal qualification rather than a
+ * door that just swings open.
+ *
+ * `onComplete` fires when the steps have played out, which takes ~2.8s (~0.6s
+ * under reduced motion). It says nothing about the request: waiting for that,
+ * and deciding whether to redirect or show an error, is the caller's job.
  *
  * Modelled on AnalyzingView in app/components/go/QuizScreens.tsx, using
  * brand-base tokens rather than the quiz-scoped ones.
@@ -34,6 +37,13 @@ export default function B2BProcessingInterstitial({
   onComplete: () => void;
 }) {
   const [done, setDone] = useState(0);
+  const heading = useRef<HTMLHeadingElement>(null);
+
+  // The form that had focus has just unmounted, so pick it back up here rather
+  // than dropping the user (and the screen reader) at the top of the document.
+  useEffect(() => {
+    heading.current?.focus();
+  }, []);
 
   useEffect(() => {
     const reduced = window.matchMedia(
@@ -57,7 +67,11 @@ export default function B2BProcessingInterstitial({
       aria-live="polite"
     >
       <p className="brand-eyebrow mb-4">Processing your application</p>
-      <h3 className="brand-h3 mb-8 max-w-[18ch]">
+      <h3
+        ref={heading}
+        tabIndex={-1}
+        className="brand-h3 mb-8 max-w-[18ch] focus:outline-none"
+      >
         Setting up your team pricing.
       </h3>
 

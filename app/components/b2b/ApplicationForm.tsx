@@ -23,6 +23,8 @@ import B2BProcessingInterstitial from "./B2BProcessingInterstitial";
 /** Give up rather than leave the applicant staring at a finished interstitial. */
 const REQUEST_TIMEOUT_MS = 15_000;
 
+const GENERIC_ERROR = "Something went wrong. Please try again.";
+
 interface FormState {
   firstName: string;
   lastName: string;
@@ -106,10 +108,7 @@ export default function ApplicationForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data?.success) {
-        return {
-          ok: false,
-          error: data?.error ?? "Something went wrong. Please try again.",
-        };
+        return { ok: false, error: data?.error ?? GENERIC_ERROR };
       }
       return { ok: true };
     } catch {
@@ -125,7 +124,6 @@ export default function ApplicationForm() {
     // Kick the request off and show the interstitial over it. The two run
     // together, so the wait is real rather than a staged pause.
     submission.current = submitApplication();
-    trackB2BApplicationSubmitted({ sport: form.sport, squadSize: form.squadSize });
     setStatus("processing");
   }
 
@@ -136,17 +134,20 @@ export default function ApplicationForm() {
   const handleProcessingComplete = useCallback(async () => {
     const outcome = (await submission.current) ?? {
       ok: false as const,
-      error: "Something went wrong. Please try again.",
+      error: GENERIC_ERROR,
     };
 
-    if (outcome.ok) {
-      router.push(B2B_ORDER_PATH);
+    if (!outcome.ok) {
+      setStatus("error");
+      setServerError(outcome.error);
       return;
     }
 
-    setStatus("error");
-    setServerError(outcome.error);
-  }, [router]);
+    // Only on a confirmed success, so the event count stays reconcilable against
+    // the Klaviyo metric. A failed submit is not an application.
+    trackB2BApplicationSubmitted({ sport: form.sport, squadSize: form.squadSize });
+    router.push(B2B_ORDER_PATH);
+  }, [router, form.sport, form.squadSize]);
 
   // Mirror of validate()'s required checks, without writing errors. Gates the
   // submit button so it can't be clicked until every required field is valid.
