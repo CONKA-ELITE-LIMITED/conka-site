@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-13** | Added sitemap.xml and robots.txt so search engines can discover and recrawl the site's indexable pages (SCRUM-1136)
 - **2026-07-13** | Added Product and FAQPage JSON-LD structured data to the Flow, Clear and Both product pages for SEO and AI answer engines (SCRUM-1133)
 - **2026-07-10** | SEO: unique title tags, meta descriptions, OpenGraph and Twitter cards on the 5 core pages (home, Flow, Clear, Both, Ingredients); retired the stylised FL0W wordmark so the Flow PDP reads CONKA Flow / FLOW (SCRUM-1132)
 - **2026-07-10** | SEO: fixed the site-wide canonical so every page self-references instead of pointing at the homepage (SCRUM-1131)
