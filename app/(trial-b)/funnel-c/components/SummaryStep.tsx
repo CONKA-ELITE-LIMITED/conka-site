@@ -108,7 +108,6 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const isSub = cadence !== "monthly-otp";
   const freeShots = pricing.freeShots ?? 0;
   const freeShotsValue = pricing.freeShotsValue ?? 0;
-  const total = pricing.firstOrderShots ?? pricing.shotCount;
   const postageVal = cadence === "quarterly-sub" ? 29.97 : 9.99;
   const freq = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
   const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
@@ -121,22 +120,20 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const pricedPer = product === "both" ? Math.round(pricing.shotCount / 2) : pricing.shotCount;
   const freePer = product === "both" ? Math.round(freeShots / 2) : freeShots;
 
-  const shotsLabel =
-    cadence === "monthly-sub" ? `${pricing.shotCount} shots / month` : cadence === "quarterly-sub" ? `${pricing.shotCount} shots / quarter` : `${pricing.shotCount} shots`;
+  const period = cadence === "quarterly-sub" ? "quarter" : "month";
+  const planLabel =
+    cadence === "monthly-sub"
+      ? "Monthly subscription"
+      : cadence === "quarterly-sub"
+        ? "Quarterly subscription"
+        : "One-time purchase";
 
+  // The line items are the MONEY. The shot counts live in the breakdown above
+  // and are not repeated here: they were previously stated in the header, again
+  // in the breakdown, and a third time as a line-item label.
   const items: { label: string; value: string; was?: string; free?: boolean }[] = [
-    { label: shotsLabel, value: formatPrice(pricing.price) },
+    { label: planLabel, value: formatPrice(pricing.price) },
   ];
-  // The "first order" qualifier is not optional: the bonus shots ship once, on
-  // the first delivery, on every subscription cadence.
-  if (freeShots > 0) {
-    items.push({
-      label: `${freeShots} bonus shots (first order)`,
-      value: "Free",
-      was: formatPrice(freeShotsValue),
-      free: true,
-    });
-  }
   items.push(
     isSub
       ? { label: "Postage", value: "Free", was: formatPrice(postageVal), free: true }
@@ -162,43 +159,42 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
             {display.timeLabel}
           </span>
         </div>
-        <p className="text-[13px] text-black/60 mt-1.5">
-          {isSub ? shotsLabel : `${pricing.shotCount} shots, delivered once`}
-        </p>
+        {/* What arrives. Recurring shots per formula (Both splits 50:50), then a
+            single line for the first-order bonus.
 
-        {/* What actually arrives, in numbers and words.
-            This was a matrix of ~56 coloured dots. Nobody counts 56 dots, so it
-            was decoration pretending to be information: the reader still had to
-            find the real figures in the legend underneath. */}
+            This was a matrix of up to 56 coloured dots, which nobody counts, so
+            the reader went to the legend underneath anyway. It then stated the
+            per-period shot count three times over (header, breakdown, line item).
+            Once, here. */}
         <div className="mt-4 rounded-[12px] bg-black/[0.03] p-3.5">
           {formulas.map((f) => (
             <div
               key={f}
-              className="flex items-baseline justify-between gap-3 py-1.5 text-[13px]"
+              className="flex items-baseline justify-between gap-3 py-1 text-[13px]"
             >
               <span className="font-semibold" style={{ color: FORMULA_COLOR[f] }}>
                 {f === "flow" ? "Flow" : "Clear"}
               </span>
-              <span className="tabular-nums text-black/70">
-                {pricedPer} paid
-                {freePer > 0 && (
-                  <>
-                    {" + "}
-                    <span className="font-semibold text-[#0b7a55]">{freePer} free</span>
-                  </>
-                )}
-                {" = "}
-                <span className="font-bold text-black">{pricedPer + freePer}</span>
+              <span className="tabular-nums text-black">
+                <span className="font-bold">{pricedPer}</span> shots
+                {isSub ? ` a ${period}` : ""}
               </span>
             </div>
           ))}
 
-          <div className="flex items-baseline justify-between gap-3 border-t border-black/10 mt-2 pt-2.5">
-            <span className="text-[13px] font-semibold text-black">
-              {isSub ? `Shots in your first ${cadence === "quarterly-sub" ? "quarter" : "month"}` : "Shots"}
-            </span>
-            <span className="text-[17px] font-bold tabular-nums text-black">{total}</span>
-          </div>
+          {freeShots > 0 && (
+            <div className="flex items-start gap-2 border-t border-black/10 mt-2.5 pt-2.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 mt-0.5">
+                <circle cx="12" cy="12" r="10" fill="#10B981" />
+                <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <p className="text-[13px] leading-snug text-[#0b7a55]">
+                <strong className="font-bold">+{freeShots} free shots</strong> on your first order
+                {product === "both" && `, ${freePer} of each`}. Worth{" "}
+                <span className="tabular-nums font-semibold">{formatPrice(freeShotsValue)}</span>.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Line items */}
