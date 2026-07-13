@@ -190,7 +190,7 @@ function FormulaCard({
             key={section}
             type="button"
             onClick={() => toggle(section)}
-            className={`inline-flex items-center gap-1.5 min-h-[38px] rounded-full px-3.5 text-[13px] font-medium transition-colors ${
+            className={`inline-flex items-center gap-1.5 min-h-[44px] rounded-full px-3.5 text-[13px] font-medium transition-colors ${
               active === section
                 ? "bg-[#1B2757] text-white"
                 : "bg-black/[0.05] text-black/70 hover:bg-black/[0.09] hover:text-black"

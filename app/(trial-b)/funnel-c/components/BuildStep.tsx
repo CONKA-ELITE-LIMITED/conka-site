@@ -3,10 +3,9 @@
 /**
  * funnel-c — Step 2 (Build). Product + plan on one page.
  *
- * Top: a condensed inline formula toggle (Flow / Clear / Both with period in
- * parens) that drives the left media + summary. Then a product summary with
- * progressive-disclosure dropdowns (ingredients, how it works, athletes).
- * Then the plan cards. The sticky footer reflects the live selection + price.
+ * Formula tiles (Both first, pre-selected) drive the left media and the summary
+ * card, whose detail sits behind disclosure chips. Then the plan cards. The
+ * sticky footer reflects the live selection and price.
  */
 
 import { useState, useEffect } from "react";
@@ -280,7 +279,7 @@ export default function BuildStep({
               key={t.key}
               type="button"
               onClick={() => toggleInfo(t.key)}
-              className={`inline-flex items-center gap-1.5 min-h-[38px] rounded-full px-3.5 text-[13px] font-medium transition-colors ${
+              className={`inline-flex items-center gap-1.5 min-h-[44px] rounded-full px-3.5 text-[13px] font-medium transition-colors ${
                 openInfo === t.key
                   ? "bg-[#1B2757] text-white"
                   : "bg-black/[0.05] text-black/70 hover:bg-black/[0.09] hover:text-black"

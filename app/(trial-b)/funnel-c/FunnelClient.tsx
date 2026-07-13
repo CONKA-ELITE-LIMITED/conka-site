@@ -30,10 +30,6 @@ const UpsellBottomSheet = dynamic(
   () => import("./components/UpsellBottomSheet"),
   { ssr: false },
 );
-const NutritionInfoModal = dynamic(
-  () => import("./components/NutritionInfoModal"),
-  { ssr: false },
-);
 import {
   type FunnelCadence,
   type FunnelProduct,
@@ -76,7 +72,6 @@ const STEPS: { n: Step; label: string }[] = [
 
 export default function FunnelClient() {
   const [step, setStep] = useState<Step>(1);
-  // Land on the headline £39.99 offer (Flow, monthly).
   const [product, setProduct] = useState<FunnelProduct>(FUNNEL_C_DEFAULT_PRODUCT);
   const [cadence, setCadence] = useState<FunnelCadence>(FUNNEL_C_DEFAULT_CADENCE);
 
@@ -93,7 +88,6 @@ export default function FunnelClient() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [upsellOffer, setUpsellOffer] = useState<UpsellOffer | null>(null);
-  const [isNutritionOpen, setIsNutritionOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
   const timeout = useRef<ReturnType<typeof setTimeout>>(null);
@@ -418,13 +412,6 @@ export default function FunnelClient() {
         />
       )}
 
-      {isNutritionOpen && (
-        <NutritionInfoModal
-          isOpen={isNutritionOpen}
-          product={product}
-          onClose={() => setIsNutritionOpen(false)}
-        />
-      )}
     </div>
   );
 }
