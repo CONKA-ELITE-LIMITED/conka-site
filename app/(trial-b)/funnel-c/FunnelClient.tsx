@@ -187,36 +187,38 @@ export default function FunnelClient() {
     trackFunnelAccordionOpened({ variant: FUNNEL_C_VARIANT, id });
   }, []);
 
+  // Tracking reads the previous value from the closure, NOT from inside a
+  // setState updater: updaters must be pure, and React invokes them twice under
+  // StrictMode, which would double-count every switch.
   const handleProductChange = useCallback(
     (p: FunnelProduct) => {
-      setProduct((prev) => {
-        if (prev !== p) {
-          trackFunnelProductChanged({
-            variant: FUNNEL_C_VARIANT,
-            from: prev,
-            to: p,
-          });
-        }
-        return p;
-      });
+      if (p !== product) {
+        trackFunnelProductChanged({
+          variant: FUNNEL_C_VARIANT,
+          from: product,
+          to: p,
+        });
+      }
+      setProduct(p);
       setError(null);
     },
-    [],
+    [product],
   );
 
-  const handleCadenceChange = useCallback((c: FunnelCadence) => {
-    setCadence((prev) => {
-      if (prev !== c) {
+  const handleCadenceChange = useCallback(
+    (c: FunnelCadence) => {
+      if (c !== cadence) {
         trackFunnelCadenceChanged({
           variant: FUNNEL_C_VARIANT,
-          from: prev,
+          from: cadence,
           to: c,
         });
       }
-      return c;
-    });
-    setError(null);
-  }, []);
+      setCadence(c);
+      setError(null);
+    },
+    [cadence],
+  );
 
   const proceedToCheckout = useCallback(
     async (p: FunnelProduct, c: FunnelCadence, upsellAccepted: boolean) => {
