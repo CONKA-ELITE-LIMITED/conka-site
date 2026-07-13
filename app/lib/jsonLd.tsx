@@ -6,8 +6,7 @@
  * each page supplies its own data from funnelData / formulaContent / faqContent.
  */
 
-/** Site origin. Mirrors `metadataBase` in app/layout.tsx; JSON-LD needs absolute URLs. */
-export const SITE_ORIGIN = "https://www.conka.io";
+import { SITE_ORIGIN } from "./site";
 
 /** Resolve a root-relative path (e.g. "/formulas/x.jpg") to an absolute URL. */
 export function absoluteUrl(path: string): string {

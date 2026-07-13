@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_ORIGIN } from "@/app/lib/jsonLd";
+import { SITE_ORIGIN } from "@/app/lib/site";
 
 /**
  * robots.txt for crawl discovery (SEO Phase 5, SCRUM-1136).

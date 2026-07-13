@@ -8,6 +8,7 @@ import { AuthProvider } from "@/app/context/AuthContext";
 import CartDrawer from "@/app/components/CartDrawer";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
 import DelayedAnalytics from "@/app/components/DelayedAnalytics";
+import { SITE_ORIGIN } from "@/app/lib/site";
 
 /* Brand design system: Neue Haas Grotesk Display (primary) + JetBrains Mono (data) */
 const neueHaas = localFont({
@@ -75,7 +76,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.conka.io"),
+  metadataBase: new URL(SITE_ORIGIN),
   title: "CONKA - Daily Nootropic Brain Shot",
   description: "Premium daily nootropic brain shot supplements",
   openGraph: {
