@@ -9,12 +9,13 @@ import type { FunnelCadence, FunnelProduct } from "../lib/funnelData";
  * ViewContent carried the wrong content_id and the wrong value.
  */
 /**
- * Both, pre-selected. The landers that feed this funnel advertise the Both
- * offer ("Get both from £x/shot"), so landing on a single formula broke the
- * promise the ad and the lander just made. It is also the recommended routine
- * and the highest LTV, which is why /funnel and /funnel-b default to it too.
+ * Flow, pre-selected: the headline entry offer, and the lowest-friction first
+ * commitment. Both is still surfaced as the recommended routine on the Build
+ * step, and the checkout upsell offers the Flow to Both upgrade.
+ *
+ * Note this differs from /funnel and /funnel-b, which open on Both.
  */
-export const FUNNEL_C_DEFAULT_PRODUCT: FunnelProduct = "both";
+export const FUNNEL_C_DEFAULT_PRODUCT: FunnelProduct = "flow";
 export const FUNNEL_C_DEFAULT_CADENCE: FunnelCadence = "monthly-sub";
 
 /** Order attribution tag. Distinct from funnel-b so revenue is separable. */

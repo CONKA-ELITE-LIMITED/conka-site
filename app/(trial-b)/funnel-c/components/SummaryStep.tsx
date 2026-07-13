@@ -166,46 +166,39 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
           {isSub ? shotsLabel : `${pricing.shotCount} shots, delivered once`}
         </p>
 
-        {/* Shot matrix — coded by formula; brand colour = paid, green = free */}
-        <div className="mt-4 space-y-2">
-          {formulas.map((f) => {
-            const color = FORMULA_COLOR[f];
-            return (
-              <div key={f} className="flex items-start gap-2.5">
-                {product === "both" && (
-                  <span
-                    className="text-[12px] font-semibold w-10 shrink-0 pt-0.5"
-                    style={{ color }}
-                  >
-                    {f === "flow" ? "Flow" : "Clear"}
-                  </span>
+        {/* What actually arrives, in numbers and words.
+            This was a matrix of ~56 coloured dots. Nobody counts 56 dots, so it
+            was decoration pretending to be information: the reader still had to
+            find the real figures in the legend underneath. */}
+        <div className="mt-4 rounded-[12px] bg-black/[0.03] p-3.5">
+          {formulas.map((f) => (
+            <div
+              key={f}
+              className="flex items-baseline justify-between gap-3 py-1.5 text-[13px]"
+            >
+              <span className="font-semibold" style={{ color: FORMULA_COLOR[f] }}>
+                {f === "flow" ? "Flow" : "Clear"}
+              </span>
+              <span className="tabular-nums text-black/70">
+                {pricedPer} paid
+                {freePer > 0 && (
+                  <>
+                    {" + "}
+                    <span className="font-semibold text-[#0b7a55]">{freePer} free</span>
+                  </>
                 )}
-                <div className="flex flex-wrap gap-[3px]">
-                  {Array.from({ length: pricedPer }).map((_, i) => (
-                    <span key={`p${i}`} className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} aria-hidden />
-                  ))}
-                  {freePer > 0 && (
-                    <>
-                      <span className="mx-1 w-px self-stretch bg-black/15" aria-hidden />
-                      {Array.from({ length: freePer }).map((_, i) => (
-                        <span key={`f${i}`} className="h-2.5 w-2.5 rounded-full bg-[#10B981]" aria-hidden />
-                      ))}
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="mt-3 flex items-center gap-4 text-[12px] flex-wrap">
-          <span className="inline-flex items-center gap-1.5 text-black/60">
-            <span className="h-2.5 w-2.5 rounded-full bg-black/70" /> {pricing.shotCount} paid
-          </span>
-          {freeShots > 0 && (
-            <span className="inline-flex items-center gap-1.5 font-medium text-[#0b7a55]">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#10B981]" /> +{freeShots} free = {total} shots
+                {" = "}
+                <span className="font-bold text-black">{pricedPer + freePer}</span>
+              </span>
+            </div>
+          ))}
+
+          <div className="flex items-baseline justify-between gap-3 border-t border-black/10 mt-2 pt-2.5">
+            <span className="text-[13px] font-semibold text-black">
+              {isSub ? `Shots in your first ${cadence === "quarterly-sub" ? "quarter" : "month"}` : "Shots"}
             </span>
-          )}
+            <span className="text-[17px] font-bold tabular-nums text-black">{total}</span>
+          </div>
         </div>
 
         {/* Line items */}

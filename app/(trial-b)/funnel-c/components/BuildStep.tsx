@@ -26,9 +26,9 @@ interface BuildStepProps {
   onAccordionOpen?: (id: string) => void;
 }
 
-// Both leads: it is the pre-selected default, the recommended routine, and what
-// the landers advertise. Flow and Clear stay equal siblings beside it.
-const PRODUCT_ORDER: FunnelProduct[] = ["both", "flow", "clear"];
+// Flow leads (it is the pre-selected default), then Clear, with Both last as
+// the recommended upgrade.
+const PRODUCT_ORDER: FunnelProduct[] = ["flow", "clear", "both"];
 const TOGGLE: Record<FunnelProduct, { name: string; period: string }> = {
   flow: { name: "Flow", period: "Morning" },
   clear: { name: "Clear", period: "Afternoon" },
