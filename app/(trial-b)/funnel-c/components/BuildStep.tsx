@@ -3,9 +3,10 @@
 /**
  * funnel-c — Step 2 (Build). Product + plan on one page.
  *
- * Formula tiles (Both first, pre-selected) drive the left media and the summary
- * card, whose detail sits behind disclosure chips. Then the plan cards. The
- * sticky footer reflects the live selection and price.
+ * Formula tiles (Flow pre-selected, Both flagged as the recommended upgrade)
+ * drive the left media and the summary card, whose detail sits behind disclosure
+ * chips. Then the plan cards. The sticky footer reflects the live selection and
+ * price.
  */
 
 import { useState, useEffect } from "react";
@@ -316,7 +317,7 @@ export default function BuildStep({
                         onClick={() => setIngPage(Math.max(0, ingSafePage - 1))}
                         disabled={ingSafePage === 0}
                         aria-label="Previous ingredients"
-                        className="text-black/45 hover:text-black/75 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:bg-black/[0.06] hover:text-black disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M15 18l-6-6 6-6" /></svg>
                       </button>
@@ -326,7 +327,7 @@ export default function BuildStep({
                         onClick={() => setIngPage(Math.min(ingPages - 1, ingSafePage + 1))}
                         disabled={ingSafePage === ingPages - 1}
                         aria-label="More ingredients"
-                        className="text-black/45 hover:text-black/75 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:bg-black/[0.06] hover:text-black disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M9 18l6-6-6-6" /></svg>
                       </button>

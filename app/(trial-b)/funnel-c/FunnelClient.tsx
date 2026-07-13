@@ -3,9 +3,11 @@
 /**
  * funnel-c — the alternative funnel layout.
  *
- * Flow: Learn → Build (product + plan on one page) → Review → checkout.
- * A persistent sticky footer carries the step-aware CTA, live price and trust
- * strip. Left column plays the product video (driven by the formula toggle).
+ * Learn → Build (product + plan on one page) → Review → checkout.
+ *
+ * A persistent sticky footer carries the step-aware CTA, the live price, and the
+ * guarantee line (once there is a price on screen to reassure about). The left
+ * column plays the product video, driven by the formula selection.
  */
 
 import { useState, useCallback, useEffect, useRef } from "react";

@@ -3,10 +3,11 @@
 /**
  * funnel-c — Step 3 (Review). The moment of purchase, built as a RECEIPT.
  *
- * Hero card = an itemised order receipt: product, a square-matrix visual of the
- * shots (priced vs free), price line items with FREE callouts, savings, and a
- * bold TOTAL. Then social proof (shots delivered + an athlete quote) and a
- * titled CONKA app block.
+ * The receipt splits cleanly: the breakdown states the SHOTS (recurring volume
+ * per formula, then the first-order bonus), and the line items state the MONEY
+ * (plan, postage, extras, savings, total). Each figure appears exactly once.
+ *
+ * Then social proof (shots delivered + a rotating quote) and the CONKA app block.
  */
 
 import { useState, useEffect } from "react";
