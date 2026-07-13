@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 type FunnelStep = 1 | 2 | 3 | 4;
 
@@ -73,15 +74,22 @@ export default function FunnelStepIndicator({
           </span>
         </div>
 
-        {/* Logo — right-aligned */}
-        <Image
-          src="/conka.png"
-          alt="CONKA"
-          width={80}
-          height={22}
-          priority
-          className="lg:w-[100px] h-auto"
-        />
+        {/* Logo — right-aligned, links home */}
+        <Link
+          href="/"
+          aria-label="CONKA home"
+          prefetch={false}
+          className="flex h-11 items-center"
+        >
+          <Image
+            src="/conka.png"
+            alt="CONKA"
+            width={80}
+            height={22}
+            priority
+            className="lg:w-[100px] h-auto"
+          />
+        </Link>
       </div>
     </header>
   );

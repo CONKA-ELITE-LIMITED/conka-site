@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-13** | Funnel headers: the CONKA logo now links back to the home page. Added a new UGC still to the testimonials marquee.
+- **2026-07-13** | Replaced the Flow liquid animation with a new optimised encode and documented the standard video optimisation recipe
 - **2026-07-13** | Unified the funnel analytics taxonomy across /funnel, /funnel-b and /funnel-c, fixed funnel-c order attribution and its wrong Meta ViewContent product
 - **2026-07-13** | PDP hero H1s now carry a keyword subline, and on mobile the title/rating lead above the image with the description below it (SCRUM-1138)
 - **2026-07-13** | Fixed the B2B enquiry form silently binning every autofilled application (the honeypot was named `company`, so Chrome filled it); applicants now go straight to the order page behind a processing interstitial instead of waiting on an email (SCRUM-1137)

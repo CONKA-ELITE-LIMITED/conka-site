@@ -12,6 +12,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 // First-paint content (step 1 + always-visible chrome) stays eager.
 import EducationStep from "./components/EducationStep";
@@ -287,14 +288,21 @@ export default function FunnelClient() {
           Deliberately quiet: this is orientation, not content. */}
       <div className="fixed top-0 inset-x-0 z-40 bg-white border-b border-black/10">
         <div className="h-14 flex items-center justify-between px-5 lg:px-8">
-          <Image
-            src="/conka-logo.webp"
-            alt="CONKA"
-            width={132}
-            height={30}
-            className="h-[24px] w-auto"
-            priority
-          />
+          <Link
+            href="/"
+            aria-label="CONKA home"
+            prefetch={false}
+            className="flex h-11 items-center"
+          >
+            <Image
+              src="/conka-logo.webp"
+              alt="CONKA"
+              width={132}
+              height={30}
+              className="h-[24px] w-auto"
+              priority
+            />
+          </Link>
 
           {/* Named steps on desktop (they show how short the flow is, which is
               worth the pixels). Mobile gets the count, which says the same in
