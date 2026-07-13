@@ -43,6 +43,7 @@ import {
 import { funnelCheckout, isFunnelCheckoutError } from "../lib/funnelCheckout";
 import { formatPrice } from "@/app/lib/productData";
 import {
+  cadencePriceSuffix,
   FUNNEL_C_DEFAULT_CADENCE,
   FUNNEL_C_DEFAULT_PRODUCT,
   FUNNEL_C_SOURCE,
@@ -268,7 +269,7 @@ export default function FunnelClient() {
 
   // Live product + price shown INSIDE the footer CTA
   const pricing = getOfferPricing(product, cadence);
-  const freq = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
+  const freq = cadencePriceSuffix(cadence);
   const ctaPrice = `${FUNNEL_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
   const ctaPriceShort = `${formatPrice(pricing.price)}${freq}`;
   const isSubscription = cadence !== "monthly-otp";

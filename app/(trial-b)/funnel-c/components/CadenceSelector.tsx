@@ -21,6 +21,7 @@ import {
   getSavingsPercent,
 } from "../../lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
+import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
 
 interface CadenceSelectorProps {
   cadence: FunnelCadence;
@@ -41,12 +42,6 @@ const PLAN_NAME: Record<FunnelCadence, string> = {
 const PLAN_BADGE: Partial<Record<FunnelCadence, string>> = {
   "monthly-sub": "Most popular",
 };
-
-function frequency(cadence: FunnelCadence): string {
-  if (cadence === "monthly-sub") return "/mo";
-  if (cadence === "quarterly-sub") return "/quarter";
-  return "";
-}
 
 function postageValue(cadence: FunnelCadence): number {
   return cadence === "quarterly-sub" ? 29.97 : 9.99;
@@ -88,7 +83,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
         const subRef = getOfferPricing(product, "monthly-sub");
         const otpMissed = (subRef.freeShotsValue ?? 0) + (pricing.postage ?? 0);
 
-        const period = key === "quarterly-sub" ? "a quarter" : "a month";
+        const period = cadenceDeliveryPeriod(key);
 
         // The bonus shots are a FIRST-ORDER acquisition incentive on every
         // subscription cadence, quarterly included. Same rule as the shared
@@ -186,7 +181,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                   )}
                   <span className="block text-[22px] font-bold text-black tabular-nums leading-none mt-1 whitespace-nowrap">
                     {formatPrice(pricing.price)}
-                    <span className="text-[13px] font-medium text-black/50">{frequency(key)}</span>
+                    <span className="text-[13px] font-medium text-black/50">{cadencePriceSuffix(key)}</span>
                   </span>
                   <span className="block text-[12px] tabular-nums mt-1.5 whitespace-nowrap text-[#1B2757]">
                     {isOtp ? `+${formatPrice(pricing.postage ?? 0)} postage` : `${formatPrice(pricing.perShot)} / shot`}

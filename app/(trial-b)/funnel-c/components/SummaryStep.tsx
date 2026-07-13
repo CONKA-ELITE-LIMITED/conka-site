@@ -20,6 +20,7 @@ import {
   getSavingsPercent,
 } from "../../lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
+import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
 
 interface SummaryStepProps {
   product: FunnelProduct;
@@ -110,7 +111,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const freeShots = pricing.freeShots ?? 0;
   const freeShotsValue = pricing.freeShotsValue ?? 0;
   const postageVal = cadence === "quarterly-sub" ? 29.97 : 9.99;
-  const freq = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
+  const freq = cadencePriceSuffix(cadence);
   const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
   const savingsPct = pricing.compareAtPrice ? getSavingsPercent(pricing.price, pricing.compareAtPrice) : 0;
   const totalToday = isSub ? pricing.price : pricing.price + (pricing.postage ?? 0);
@@ -121,7 +122,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const pricedPer = product === "both" ? Math.round(pricing.shotCount / 2) : pricing.shotCount;
   const freePer = product === "both" ? Math.round(freeShots / 2) : freeShots;
 
-  const period = cadence === "quarterly-sub" ? "quarter" : "month";
+  const period = cadenceDeliveryPeriod(cadence);
   const planLabel =
     cadence === "monthly-sub"
       ? "Monthly subscription"
@@ -178,7 +179,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
               </span>
               <span className="tabular-nums text-black">
                 <span className="font-bold">{pricedPer}</span> shots
-                {isSub ? ` a ${period}` : ""}
+                {isSub ? ` ${period}` : ""}
               </span>
             </div>
           ))}
