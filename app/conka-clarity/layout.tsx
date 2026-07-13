@@ -12,6 +12,15 @@ export const metadata: Metadata = {
       "A 30ml afternoon brain shot with Alpha GPC and Ginkgo Biloba. Cuts brain fog and sharpens thinking under pressure. Informed Sport certified.",
     images: ["/opengraph-image.png"],
   },
+  // A page-level twitter object replaces the root layout's entirely (metadata is
+  // shallow-merged), so restate card + image alongside the page-specific copy.
+  twitter: {
+    card: "summary_large_image",
+    title: "CONKA Clear | Afternoon Brain Shot for Focus Under Pressure",
+    description:
+      "A 30ml afternoon brain shot with Alpha GPC and Ginkgo Biloba. Cuts brain fog and sharpens thinking under pressure. Informed Sport certified.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function ConkaClarityLayout({

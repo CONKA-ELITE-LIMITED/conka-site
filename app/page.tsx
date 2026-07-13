@@ -56,6 +56,15 @@ export const metadata: Metadata = {
       "The UK's leading daily brain shot. Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee.",
     images: ["/opengraph-image.png"],
   },
+  // A page-level twitter object replaces the root layout's entirely (metadata is
+  // shallow-merged), so restate card + image alongside the page-specific copy.
+  twitter: {
+    card: "summary_large_image",
+    title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
+    description:
+      "The UK's leading daily brain shot. Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function Home() {

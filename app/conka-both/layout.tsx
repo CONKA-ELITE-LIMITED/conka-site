@@ -12,6 +12,15 @@ export const metadata: Metadata = {
       "CONKA Flow + Clear, the UK's most clinically validated brain shot. Informed Sport certified. 16 active ingredients. 100-day guarantee.",
     images: ["/opengraph-image.png"],
   },
+  // A page-level twitter object replaces the root layout's entirely (metadata is
+  // shallow-merged), so restate card + image alongside the page-specific copy.
+  twitter: {
+    card: "summary_large_image",
+    title: "Buy CONKA Brain Shot | Best Nootropic Supplement UK",
+    description:
+      "CONKA Flow + Clear, the UK's most clinically validated brain shot. Informed Sport certified. 16 active ingredients. 100-day guarantee.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function ConkaBothLayout({

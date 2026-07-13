@@ -12,6 +12,15 @@ export const metadata: Metadata = {
       "Every ingredient in CONKA Flow and Clear is clinically dosed and peer-reviewed. Ashwagandha, Rhodiola, Alpha GPC, Ginkgo Biloba, Lemon Balm.",
     images: ["/opengraph-image.png"],
   },
+  // A page-level twitter object replaces the root layout's entirely (metadata is
+  // shallow-merged), so restate card + image alongside the page-specific copy.
+  twitter: {
+    card: "summary_large_image",
+    title: "CONKA Ingredients | Ashwagandha, Alpha GPC, Ginkgo Biloba & More",
+    description:
+      "Every ingredient in CONKA Flow and Clear is clinically dosed and peer-reviewed. Ashwagandha, Rhodiola, Alpha GPC, Ginkgo Biloba, Lemon Balm.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function IngredientsLayout({

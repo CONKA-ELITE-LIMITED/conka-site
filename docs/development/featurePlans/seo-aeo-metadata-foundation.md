@@ -11,10 +11,14 @@
 - **2026-07-10** Phase 1 (SCRUM-1131) built, reviewed (`/review-code` LGTM), and merged to `main` via PR #336 (into `SEO-AND-AEO-WORK`) then PR #337 (into `main`). Root canonical is now the relative `"./"` form; dead `app/science/layout.tsx` deleted.
 - **2026-07-10** Phase 2 (SCRUM-1132) built on branch `scrum-1132-metadata` off `main`. Added `export const metadata` to `app/page.tsx` (server component, in place) and sibling `layout.tsx` files for `/conka-flow`, `/conka-clarity`, `/conka-both`, `/ingredients` (all client pages). Removed the `CONKA FL0W` override in `productHeroHelpers.ts` so the Flow PDP H1 (and its bottle alt text) now read `CONKA Flow`. Verified against the dev server: all five pages emit their own title/description/OG image, every description is 160 chars or fewer, and the Clear and Both H1s are unchanged. See "Discrepancies found during build" below for two items needing a decision.
 
-## Discrepancies found during build
+## Discrepancies found during build (both resolved)
 
-1. **Three more `FL0W` literals in body copy.** `app/components/product/HeroAccordions.tsx` (lines 19, 20, 27) uses the stylised `FL0W` inside accordion answer prose. These were NOT changed (out of the ticket's H1 scope, and they are deliberate-looking brand copy). The Flow PDP now reads `CONKA Flow` in the H1 but `FL0W` in the accordions, which is inconsistent. Decision for marketing: either retire the stylised zero everywhere (change these three too) or keep it as a brand treatment (in which case the H1 should carry indexable "Flow" via a different mechanism). This is the same underlying open question about the zero.
-2. **OG images are the shared site image.** All five pages reference `/opengraph-image.png` (the existing sitewide brand image) rather than bespoke per-page share images. Correct 1200x630 ratio guaranteed; per-page product OG images are a possible future polish, not in this ticket.
+1. **Three more `FL0W` literals in body copy — RESOLVED.** `app/components/product/HeroAccordions.tsx` (lines 19, 20, 27) used the stylised `FL0W` in accordion prose. Per the product owner (2026-07-10), the stylised zero was retired: these now read `FLOW` (all caps, consistent with the sibling `CLEAR` in the same copy). No stylised `FL0W` remains in rendered output.
+2. **OG images are the shared site image — ACCEPTED as-is.** All five pages reference `/opengraph-image.png` (the existing sitewide brand image) rather than bespoke per-page share images. Correct 1200x630 ratio guaranteed. Product owner confirmed per-page product OG images are nice-to-have, not needed now.
+
+## Post-review fix
+
+A `/review-code` pass found that Twitter cards on all five pages still inherited the generic root title/description (Next merges metadata shallowly, and `twitter` is a separate top-level field from `openGraph`). Added a per-page `twitter` block (card, title, description, image) to each of the five so X/Twitter shares carry the page-specific copy. Verified live.
 
 ---
 
