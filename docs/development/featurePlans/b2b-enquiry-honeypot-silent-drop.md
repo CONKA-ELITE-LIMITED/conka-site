@@ -82,9 +82,10 @@ The 13 Jul diagnostic created a live lead. Delete before/while executing:
 ## Contributing issues (these are why it stayed invisible for a month)
 
 1. **The route lies about success.** `route.ts` returns `{success: true}` if
-   *either* the Klaviyo event *or* the list-add succeeded. The email is the
-   entire point of the form, so a failed event with a successful list-add still
-   tells the applicant to check an inbox that will never receive anything.
+   *either* the Klaviyo event *or* the list-add succeeded, so a failed event
+   with a successful list-add still tells the applicant to check an inbox that
+   will never receive anything. Note the fix for this is **loud logging, not
+   blocking the applicant** - see Phase 1 decision 2.
 2. **Honeypot trips are logged nowhere.** A trapped applicant produces no log
    line, no alert, no lead - completely undetectable.
 3. **No monitoring on the funnel.** Nothing would have told us the metric had
@@ -96,73 +97,124 @@ The 13 Jul diagnostic created a live lead. Delete before/while executing:
 
 ## Plan
 
-### Phase 1 - Stop the bleeding (the actual bug)
+**Scoped 13 Jul 2026 → SCRUM-1137.** Phase 1 below is the approved, ticketed
+scope and ships as a single deploy. Phase 2 is future.
 
-Pick one:
+### Phase 1 - Immediate entry + honeypot fix (SCRUM-1137, ACTIVE)
 
-- **Option A (recommended): remove the honeypot entirely.** `/professionals` is
-  an unlisted, `noindex`, off-nav page reached only via Harry's shared links. It
-  gets warm traffic, not bot traffic. The per-IP rate limit already covers the
-  spam case. The honeypot is defending against a threat this page doesn't have,
-  and it has now cost us real money.
-- **Option B: make it autofill-proof.** Rename to something no heuristic
-  recognises (`hp_token`, not `company`), drop the "Company" label, keep
-  `tabindex="-1"` and `aria-hidden`. Safer than today but still a silent-drop
-  mechanism, so pair it with logging below.
+Three decisions were taken at scoping. They are the plan; the alternatives are
+recorded only so nobody re-opens them.
 
-Either way:
+1. **Remove the honeypot entirely.** Not renamed, not made autofill-proof -
+   removed. `/professionals` is an unlisted, `noindex`, off-nav page reached
+   only via Harry's shared links. It gets warm traffic, not bot traffic. The
+   per-IP rate limit already covers the spam case. The honeypot was defending
+   against a threat this page doesn't have, and it has cost real money. Keeping
+   any silent-drop mechanism in the code invites this class of bug back.
 
-- **Log every honeypot trip** (`console.error` with the submitted email) so a
-  trapped human is never invisible again.
-- **Fix the success contract:** only return `{success: true}` when
-  `eventSent` is true. If the event fails, the applicant must see an error and a
-  fallback (`harryglover@conka.io`), not a false "check your inbox".
+2. **Never block the applicant. Do NOT gate success on `eventSent`.**
 
-### Phase 2 - Simplify: stop making the email the gate
+   > An earlier draft of this doc recommended returning `{success: true}` only
+   > when the Klaviyo event fired. **That recommendation is wrong under
+   > immediate entry and has been withdrawn.** It was written when the email was
+   > the only way in, so a failed event genuinely meant a dead lead. Once the
+   > applicant is redirected straight to the order page, the email is a backup,
+   > not the gate - and blocking entry on a failed marketing-platform call would
+   > mean a Klaviyo outage costs a £2,250 order. That is the exact failure mode
+   > this work exists to delete.
 
-Right now the entire £2,250 lead hangs on one email surviving Klaviyo, spam
-filters and Gmail's Updates tab. It shouldn't.
+   So: return `success` whenever the submission is **received**, let the
+   applicant through, and `console.error` loudly when `eventSent` or `alertSent`
+   is false so a Klaviyo failure is visible in the Vercel logs instead of
+   silent. The lead data is captured at submit either way. A failed alert to
+   Harry is an internal problem, not the applicant's.
 
-**On successful submit, redirect the applicant straight to
-`/professionals/order`**, and send the email as a *backup* copy of the link
-rather than the only way in.
+   A genuine request failure (network error, 500) still shows the inline error
+   with the `harryglover@conka.io` fallback and does **not** redirect.
 
-This removes the whole class of failure we were just blind to for a month, and
-it's a straight conversion win: the club sees pricing immediately, in the moment
-they're motivated, instead of context-switching to their inbox. The email still
-does its job (a permanent, shareable link for the finance team), it just stops
-being a single point of failure.
+3. **Immediate entry, behind an honest processing interstitial.** On submit,
+   capture the lead, fire both Klaviyo flows exactly as today (applicant welcome
+   + Harry lead alert - both already fire from the single `submitB2BApplication`
+   call, so no integration change), then run a short interstitial over the
+   **real** API latency and route the applicant straight to
+   `/professionals/order`.
 
-Note this does not weaken the channel-conflict protection: the order page is
-already an unlisted `noindex` URL, and the only thing the form gates today is
-*being told the URL* - a gate that a 10-second form fill was never really
-enforcing anyway.
+   The interstitial is not a fake delay. It covers a call that genuinely takes a
+   moment, holds a ~2s minimum floor so it cannot flicker, and gives a failed
+   call somewhere to surface an error instead of dumping the user on a page that
+   lied to them. It also lends the trade-pricing reveal a sense of formal
+   qualification rather than a door that just swings open. Model it on
+   `AnalyzingView` (`app/components/go/QuizScreens.tsx:443`).
 
-### Phase 3 - Don't go blind again
+This removes the whole class of failure we were blind to for a month, and it is
+a straight conversion win: the club sees pricing while it is still motivated,
+instead of context-switching to an inbox. The email still does its job (a
+permanent, shareable link for the finance team), it just stops being a single
+point of failure.
 
-- Add a Klaviyo-side or lightweight alert if `B2B Application Submitted` goes
-  N days at zero while `/professionals` is receiving traffic.
+Immediate entry does **not** weaken the channel-conflict protection: the order
+page is already an unlisted `noindex` URL, and the only thing the form ever
+gated was *being told the URL* - a gate that a 10-second form fill was never
+really enforcing anyway.
+
+### Phase 2 - Don't go blind again (Future)
+
+- Alert if `B2B Application Submitted` sits at zero for N days while
+  `/professionals` is receiving traffic. Nothing would have told us the metric
+  had flatlined for a month; the only reason we know is that Harry noticed.
 - Add the section/funnel analytics already listed as future work in
   `B2B_PORTAL.md` (`b2b_application_submitted` fires client-side today via
   `trackB2BApplicationSubmitted`, but nothing reconciles it against what
   actually reached Klaviyo - that reconciliation is exactly the check that would
   have caught this on day one).
 
+## Out of scope (Phase 1)
+
+- **Prefilling the order builder** with the applicant's organisation, finance
+  email or PO. `B2BOrderBuilder` is self-contained `useState` with no props,
+  query params or storage, so this is net-new plumbing and it leaks org details
+  into the URL.
+- **Extracting `AnalyzingView` into a shared primitive.** It is coupled to quiz
+  screen types. Copy it, don't refactor the quiz.
+- **Tokenised access to `/professionals/order`.** It stays unlisted + `noindex`.
+- **Klaviyo flow copy.** The welcome email still reads "here's your link" when
+  the applicant is already on the page. That edit is dashboard-side, not in this
+  repo, and is Rudh's to make.
+
 ## Files touched
 
 | File | Change |
 |------|--------|
-| `app/components/b2b/ApplicationForm.tsx` | Remove or rename the honeypot; redirect to `/professionals/order` on success |
-| `app/api/b2b/apply/route.ts` | Remove/loosen honeypot short-circuit, log trips, tighten the success contract to require `eventSent` |
-| `app/lib/b2bEmail.ts` | No change needed (verified working) |
-| `docs/features/b2b/B2B_PORTAL.md` | Update the journey + edge-cases sections once shipped |
+| `app/api/b2b/apply/route.ts` | Remove the `company` honeypot from the zod schema and delete the silent-success branch; log loudly when `eventSent` / `alertSent` is false; return success whenever the submission is received |
+| `app/components/b2b/ApplicationForm.tsx` | Remove the honeypot div + `company` from `FormState`; replace the success screen with the interstitial, then `router.push("/professionals/order")` |
+| `app/components/b2b/B2BProcessingInterstitial.tsx` | **New.** Sequenced processing steps, modelled on `AnalyzingView`; awaits the API promise with a ~2s minimum floor |
+| `app/lib/b2bEmail.ts` | No change needed (verified working, both emails already fire from one call) |
+| `docs/features/b2b/B2B_PORTAL.md` | Update the journey mermaid, the edge-cases honeypot line, and the API table once shipped |
 
 ## Acceptance criteria
 
+Full, testable list lives on **SCRUM-1137**. The load-bearing ones:
+
 - A form submission made **with browser autofill enabled in Chrome** produces a
-  `B2B Application Submitted` event in Klaviyo and a welcome email. (This is the
-  exact case that fails today - test it explicitly, not just a hand-typed form.)
+  `B2B Application Submitted` event in Klaviyo and a welcome email. This is the
+  exact case that fails today. **Hand-typing the form is not a valid test** - it
+  never triggers autofill and will pass even if the bug survives. That is
+  precisely how this shipped green in June.
+- The same submission fires `B2B Lead Alert` on Harry's profile and he receives
+  the lead-alert email with the applicant's details.
 - A user who submits successfully lands on `/professionals/order` without
   needing the email.
-- A Klaviyo failure produces a visible error to the user, never a false success.
-- Test leads from the 13 Jul diagnostic are cleaned out of Klaviyo.
+- **A Klaviyo failure does NOT block the applicant.** They still reach
+  `/professionals/order`, and the failure is written to the server log with
+  their email. Only a genuine request failure (network / 500) shows the inline
+  error with the `harryglover@conka.io` fallback, and that path does not
+  redirect.
+- No field named `company` (or any other autofill-recognised name) exists in the
+  form or the apply route's zod schema.
+- Test leads from the 13 Jul diagnostic are cleaned out of Klaviyo (see above).
+
+## Jira
+
+| Ticket | Title | Phase | Status |
+|--------|-------|-------|--------|
+| SCRUM-1137 | [Bugs] B2B enquiry: honeypot silently drops autofilled applicants, switch to immediate entry to /professionals/order | 1 | To Do |

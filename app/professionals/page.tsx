@@ -116,8 +116,9 @@ export default function ProfessionalsPage() {
                 Tell us about your team. Get pricing instantly.
               </h2>
               <p className="brand-body mt-5">
-                Fill in the form and we&apos;ll email your team pricing straight
-                away. No approval queue, no sales call required.
+                Fill in the form and your team pricing opens straight away. No
+                approval queue, no sales call required. We&apos;ll email you a copy
+                of the link for your finance team.
               </p>
               <ul className="mt-8 flex flex-col gap-6">
                 {VALUE_POINTS.map((point) => (

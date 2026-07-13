@@ -1,6 +1,6 @@
 # SEO / AEO Foundation
 
-**Status:** Phases 1, 2 and 3 merged to main. Phase 5 (sitemap + robots) pulled ahead of Phase 4 and ticketed (SCRUM-1136). Phases 4 and 6 documented, not ticketed.
+**Status:** Phases 1, 2 and 3 merged to main. Phase 5 (sitemap + robots, SCRUM-1136) and Phase 4 (descriptive keyword H1s, SCRUM-1138) ticketed. Phase 6 documented, not ticketed.
 **Owner:** Rudh
 **Source input:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research)
 **Created:** 2026-07-10
@@ -153,7 +153,7 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Merged to main (SCRUM-1132) |
 | 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Merged to main (SCRUM-1133) |
 | 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Ticketed, in build (SCRUM-1136) |
-| 4 | Descriptive keyword H1s on the product pages | Future |
+| 4 | Descriptive keyword H1s on the product pages (name + visible subline in the `<h1>`) | Ticketed (SCRUM-1138) |
 | 6 | Informational content surface (blog) for the research-intent keywords | Future |
 
 Phases ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible. Phase 5 was pulled ahead of Phase 4 after the Search Console baseline showed discovery, not on-page keyword tuning, is the current bottleneck.
@@ -307,8 +307,9 @@ Sprint 28. Phases 4 and 6 are deliberately not ticketed yet.
 | [SCRUM-1132](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1132) | [Website & CRO] Add per-page SEO metadata to the five indexable money pages | 2 | Done |
 | [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | Done |
 | [SCRUM-1136](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1136) | [Website & CRO] Add sitemap.ts and robots.ts for crawl discovery (SEO Phase 5) | 5 | In build |
+| [SCRUM-1138](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1138) | [Website & CRO] Add descriptive keyword H1s to the three PDPs (SEO Phase 4) | 4 | To Do |
 
-Phases 1, 2 and 3 are merged to main. Phase 5 (SCRUM-1136) is in build, pulled ahead of Phase 4 per the discovery-bottleneck finding in the Search Console baseline.
+Phases 1, 2 and 3 are merged to main. Phase 5 (SCRUM-1136) is in build, pulled ahead of Phase 4 per the discovery-bottleneck finding in the Search Console baseline. Phase 4 (SCRUM-1138) is scoped: product name kept as the visual focal point with a descriptive keyword subline added inside the same `<h1>`, via an optional `seoHeading` field on the hero content (avoids touching `content.name`, which feeds bottle alt text).
 
 ## Branching model
 
