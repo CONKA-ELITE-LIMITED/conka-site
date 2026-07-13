@@ -79,12 +79,16 @@ export function buildFaqSchema(items: { question: string; answer: string }[]) {
   };
 }
 
-/** Renders a JSON-LD script. Content is our own structured data, so serialising it inline is safe. */
+/**
+ * Renders a JSON-LD script. Escapes every "<" as a unicode sequence so editable
+ * copy (FAQ answers, descriptions) can never break out of the script tag.
+ */
 export function JsonLd({ schema }: { schema: Record<string, unknown> }) {
+  const json = JSON.stringify(schema).replace(/</g, "\\u003c");
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: json }}
     />
   );
 }
