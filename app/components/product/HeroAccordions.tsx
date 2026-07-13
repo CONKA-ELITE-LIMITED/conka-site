@@ -16,15 +16,15 @@ interface HeroAccordionsProps {
 
 const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
   flow: [
-    "You want sustained energy and sharp focus across a full cognitive day, without the crash. FL0W stacks alongside your coffee to extend its effect and reduce how much you need, or replaces it entirely through cellular energy production rather than stimulant dependency.",
-    "Your work demands hours of clean output: deep focus, back-to-back calls, physical training. FL0W supports both cognitive and physical performance through the same mitochondrial pathways.",
+    "You want sustained energy and sharp focus across a full cognitive day, without the crash. FLOW stacks alongside your coffee to extend its effect and reduce how much you need, or replaces it entirely through cellular energy production rather than stimulant dependency.",
+    "Your work demands hours of clean output: deep focus, back-to-back calls, physical training. FLOW supports both cognitive and physical performance through the same mitochondrial pathways.",
   ],
   clear: [
     "Your second half of the day consistently underperforms the first. Slower decisions, reduced concentration, mentally checked out by 3pm. CLEAR is designed specifically for this window, extending afternoon output without relying on more caffeine.",
     "You carry background stress that quietly degrades your focus and physical recovery. CLEAR works at the cortisol level, supporting both cognitive clarity and the adaptogenic recovery that athletes and high performers need.",
   ],
   both: [
-    "You need 10+ hours of consistent cognitive performance. FL0W in the morning for sharpness and energy. CLEAR after lunch for afternoon precision and focus. Together they cover the full day without stimulant cycling or a mid-afternoon drop.",
+    "You need 10+ hours of consistent cognitive performance. FLOW in the morning for sharpness and energy. CLEAR after lunch for afternoon precision and focus. Together they cover the full day without stimulant cycling or a mid-afternoon drop.",
     "You're optimising cognitive and physical performance across a full day, and want to reduce caffeine dependence without reducing output. A timed, sequenced system achieves more than either formula alone.",
   ],
 };

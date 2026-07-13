@@ -1,6 +1,6 @@
 # SEO / AEO Foundation
 
-**Status:** Phase 1 built (in review). Phase 2 unblocked, not started. Phases 3 to 6 documented, not ticketed.
+**Status:** Phase 1 merged to main. Phase 2 built (in review). Phases 3 to 6 documented, not ticketed.
 **Owner:** Rudh
 **Source input:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research)
 **Created:** 2026-07-10
@@ -8,7 +8,17 @@
 
 ## Progress log
 
-- **2026-07-10** Phase 1 (SCRUM-1131) built on branch `scrum-1131-canonical-fix` off the `SEO-AND-AEO-WORK` integration branch. Root canonical switched to the relative `"./"` form; dead `app/science/layout.tsx` deleted. Verified against the dev server across eight routes plus the `/go/*` noindex and `/start-b` override cases. Reviewed via `/review-code`: LGTM, no fixes needed. Awaiting push and merge into `SEO-AND-AEO-WORK`.
+- **2026-07-10** Phase 1 (SCRUM-1131) built, reviewed (`/review-code` LGTM), and merged to `main` via PR #336 (into `SEO-AND-AEO-WORK`) then PR #337 (into `main`). Root canonical is now the relative `"./"` form; dead `app/science/layout.tsx` deleted.
+- **2026-07-10** Phase 2 (SCRUM-1132) built on branch `scrum-1132-metadata` off `main`. Added `export const metadata` to `app/page.tsx` (server component, in place) and sibling `layout.tsx` files for `/conka-flow`, `/conka-clarity`, `/conka-both`, `/ingredients` (all client pages). Removed the `CONKA FL0W` override in `productHeroHelpers.ts` so the Flow PDP H1 (and its bottle alt text) now read `CONKA Flow`. Verified against the dev server: all five pages emit their own title/description/OG image, every description is 160 chars or fewer, and the Clear and Both H1s are unchanged. See "Discrepancies found during build" below for two items needing a decision.
+
+## Discrepancies found during build (both resolved)
+
+1. **Three more `FL0W` literals in body copy — RESOLVED.** `app/components/product/HeroAccordions.tsx` (lines 19, 20, 27) used the stylised `FL0W` in accordion prose. Per the product owner (2026-07-10), the stylised zero was retired: these now read `FLOW` (all caps, consistent with the sibling `CLEAR` in the same copy). No stylised `FL0W` remains in rendered output.
+2. **OG images are the shared site image — ACCEPTED as-is.** All five pages reference `/opengraph-image.png` (the existing sitewide brand image) rather than bespoke per-page share images. Correct 1200x630 ratio guaranteed. Product owner confirmed per-page product OG images are nice-to-have, not needed now.
+
+## Post-review fix
+
+A `/review-code` pass found that Twitter cards on all five pages still inherited the generic root title/description (Next merges metadata shallowly, and `twitter` is a separate top-level field from `openGraph`). Added a per-page `twitter` block (card, title, description, image) to each of the five so X/Twitter shares carry the page-specific copy. Verified live.
 
 ---
 
@@ -136,8 +146,8 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Fix the site-wide inherited canonical | Built, in review (SCRUM-1131) |
-| 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Unblocked, not started (SCRUM-1132) |
+| 1 | Fix the site-wide inherited canonical | Merged to main (SCRUM-1131) |
+| 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Built, in review (SCRUM-1132) |
 | 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Future |
 | 4 | Descriptive keyword H1s on the product pages | Future |
 | 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Future |
