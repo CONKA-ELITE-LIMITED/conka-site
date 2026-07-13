@@ -18,6 +18,7 @@ export function getHeroContent(formulaId: ProductHeroId): BothHeroContent {
     name: formula.name,
     tagline: formula.tagline,
     headline: formula.headline,
+    seoHeading: formula.seoHeading,
     soldCount: formulaId === "01" ? "Over 90,000 bottles sold" : "Over 60,000 bottles sold",
   };
 }
