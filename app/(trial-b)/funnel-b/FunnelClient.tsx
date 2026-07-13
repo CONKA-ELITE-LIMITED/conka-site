@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
-import { track } from "@vercel/analytics/react";
 import FunnelStepIndicator from "./components/FunnelStepIndicator";
 import FunnelHeroAsset from "./components/FunnelHeroAsset";
 import CadenceSelector from "./components/CadenceSelector";
@@ -24,23 +23,46 @@ import {
   funnelCheckout,
   isFunnelCheckoutError,
 } from "../lib/funnelCheckout";
+import {
+  trackFunnelCadenceChanged,
+  trackFunnelCheckout,
+  trackFunnelCheckoutFailed,
+  trackFunnelCtaClicked,
+  trackFunnelNutritionViewed,
+  trackFunnelProductChanged,
+  trackFunnelStepCompleted,
+  trackFunnelUpsellAccepted,
+  trackFunnelUpsellDeclined,
+  trackFunnelUpsellDismissed,
+  trackFunnelUpsellShown,
+  trackFunnelViewed,
+} from "@/app/lib/analytics";
 
 type FunnelStep = 1 | 2 | 3 | 4;
 
-function safeTrack(event: string, props: Record<string, string | number | boolean | null>): void {
-  try {
-    track(event, props);
-  } catch {
-    // Analytics should never break the funnel
-  }
-}
+/**
+ * Identifies this funnel in the shared `funnel:*` taxonomy. funnel-b is a clone
+ * of /funnel and fired identical event names, so the two were indistinguishable
+ * in Vercel Analytics. The variant property separates them.
+ */
+const FUNNEL_VARIANT = "b" as const;
+
+const DEFAULT_PRODUCT: FunnelProduct = "both";
+const DEFAULT_CADENCE: FunnelCadence = "monthly-sub";
 
 export default function FunnelClient() {
   const [currentStep, setCurrentStep] = useState<FunnelStep>(1);
 
   // Pre-selected defaults (highest LTV)
-  const [product, setProduct] = useState<FunnelProduct>("both");
-  const [cadence, setCadence] = useState<FunnelCadence>("monthly-sub");
+  const [product, setProduct] = useState<FunnelProduct>(DEFAULT_PRODUCT);
+  const [cadence, setCadence] = useState<FunnelCadence>(DEFAULT_CADENCE);
+
+  /**
+   * Steps whose completion has already been counted. Steps are driven through
+   * history.pushState, so a user who backs up via the step indicator and
+   * re-advances would otherwise fire the same completion twice.
+   */
+  const completedSteps = useRef<Set<FunnelStep>>(new Set());
 
   // Checkout state
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -50,9 +72,10 @@ export default function FunnelClient() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    safeTrack("funnel:viewed", {
-      defaultProduct: "both",
-      defaultCadence: "monthly-sub",
+    trackFunnelViewed({
+      variant: FUNNEL_VARIANT,
+      product: DEFAULT_PRODUCT,
+      cadence: DEFAULT_CADENCE,
     });
   }, []);
 
@@ -95,18 +118,26 @@ export default function FunnelClient() {
     (newProduct: FunnelProduct) => {
       setProduct(newProduct);
       setError(null);
-      safeTrack("funnel:product_changed", { from: product, to: newProduct, cadence });
+      trackFunnelProductChanged({
+        variant: FUNNEL_VARIANT,
+        from: product,
+        to: newProduct,
+      });
     },
-    [product, cadence],
+    [product],
   );
 
   const handleCadenceChange = useCallback(
     (newCadence: FunnelCadence) => {
       setCadence(newCadence);
       setError(null);
-      safeTrack("funnel:cadence_changed", { from: cadence, to: newCadence, product });
+      trackFunnelCadenceChanged({
+        variant: FUNNEL_VARIANT,
+        from: cadence,
+        to: newCadence,
+      });
     },
-    [cadence, product],
+    [cadence],
   );
 
   // Step transition animation
@@ -125,20 +156,33 @@ export default function FunnelClient() {
     }, 150);
   }, []);
 
-  const handleEducationNext = useCallback(() => {
-    safeTrack("funnel:step1_completed", {});
-    goToStep(2);
-  }, [goToStep]);
+  /**
+   * Record a step completion exactly once, then advance.
+   *
+   * Only ever called from forward-intent handlers. It deliberately does NOT live
+   * in `goToStep` (which the step indicator also uses to jump BACKWARD) or in an
+   * effect on `currentStep` (popstate drives that, so browser back/forward would
+   * re-fire it).
+   */
+  const advanceFrom = useCallback(
+    (from: FunnelStep) => {
+      if (!completedSteps.current.has(from)) {
+        completedSteps.current.add(from);
+        trackFunnelStepCompleted({
+          variant: FUNNEL_VARIANT,
+          step: from,
+          product,
+          cadence,
+        });
+      }
+      goToStep((from + 1) as FunnelStep);
+    },
+    [product, cadence, goToStep],
+  );
 
-  const handleProductNext = useCallback(() => {
-    safeTrack("funnel:step2_completed", { product, cadence });
-    goToStep(3);
-  }, [product, cadence, goToStep]);
-
-  const handleCadenceNext = useCallback(() => {
-    safeTrack("funnel:step3_completed", { product, cadence });
-    goToStep(4);
-  }, [product, cadence, goToStep]);
+  const handleEducationNext = useCallback(() => advanceFrom(1), [advanceFrom]);
+  const handleProductNext = useCallback(() => advanceFrom(2), [advanceFrom]);
+  const handleCadenceNext = useCallback(() => advanceFrom(3), [advanceFrom]);
 
   // Checkout
   const proceedToCheckout = useCallback(
@@ -150,11 +194,10 @@ export default function FunnelClient() {
       setIsCheckingOut(true);
       setError(null);
 
-      safeTrack("funnel:checkout", {
+      trackFunnelCheckout({
+        variant: FUNNEL_VARIANT,
         product: finalProduct,
         cadence: finalCadence,
-        upsellAccepted,
-        price: getOfferPricing(finalProduct, finalCadence).price,
       });
 
       const result = await funnelCheckout({
@@ -164,6 +207,10 @@ export default function FunnelClient() {
       });
 
       if (isFunnelCheckoutError(result)) {
+        trackFunnelCheckoutFailed({
+          variant: FUNNEL_VARIANT,
+          reason: result.error,
+        });
         setError(result.error);
         setIsCheckingOut(false);
         return;
@@ -177,22 +224,13 @@ export default function FunnelClient() {
   const handleCheckout = useCallback(() => {
     setError(null);
 
-    safeTrack("funnel:cta_clicked", {
-      product,
-      cadence,
-      price: getOfferPricing(product, cadence).price,
-    });
+    trackFunnelCtaClicked({ variant: FUNNEL_VARIANT, product, cadence });
 
     const offer = getUpsellOffer(product, cadence);
     if (offer) {
       setUpsellOffer(offer);
       setIsUpsellOpen(true);
-      safeTrack("funnel:upsell_shown", {
-        product,
-        cadence,
-        upgradedProduct: offer.upgradedProduct,
-        upgradedCadence: offer.upgradedCadence,
-      });
+      trackFunnelUpsellShown({ variant: FUNNEL_VARIANT, product, cadence });
       return;
     }
 
@@ -201,24 +239,24 @@ export default function FunnelClient() {
 
   const handleUpsellAccept = useCallback(() => {
     if (!upsellOffer) return;
-    safeTrack("funnel:upsell_accepted", {
-      originalProduct: product,
-      originalCadence: cadence,
-      upgradedProduct: upsellOffer.upgradedProduct,
-      upgradedCadence: upsellOffer.upgradedCadence,
+    // Report the UPGRADED offer, so the event reads as the outcome.
+    trackFunnelUpsellAccepted({
+      variant: FUNNEL_VARIANT,
+      product: upsellOffer.upgradedProduct,
+      cadence: upsellOffer.upgradedCadence,
     });
     setIsUpsellOpen(false);
     proceedToCheckout(upsellOffer.upgradedProduct, upsellOffer.upgradedCadence, true);
-  }, [upsellOffer, product, cadence, proceedToCheckout]);
+  }, [upsellOffer, proceedToCheckout]);
 
   const handleUpsellDecline = useCallback(() => {
-    safeTrack("funnel:upsell_declined", { product, cadence });
+    trackFunnelUpsellDeclined({ variant: FUNNEL_VARIANT, product, cadence });
     setIsUpsellOpen(false);
     proceedToCheckout(product, cadence, false);
   }, [product, cadence, proceedToCheckout]);
 
   const handleUpsellDismiss = useCallback(() => {
-    safeTrack("funnel:upsell_dismissed", { product, cadence });
+    trackFunnelUpsellDismissed({ variant: FUNNEL_VARIANT, product, cadence });
     setIsUpsellOpen(false);
   }, [product, cadence]);
 
@@ -353,7 +391,11 @@ export default function FunnelClient() {
                 <button
                   type="button"
                   onClick={() => {
-                    safeTrack("funnel:nutrition_viewed", { product, cadence });
+                    trackFunnelNutritionViewed({
+                      variant: FUNNEL_VARIANT,
+                      product,
+                      cadence,
+                    });
                     setIsNutritionOpen(true);
                   }}
                   className="flex w-full min-h-11 items-center gap-2 py-3 text-left font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60 hover:text-black/80 transition-colors"

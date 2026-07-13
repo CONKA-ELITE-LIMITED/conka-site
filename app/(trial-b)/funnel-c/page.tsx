@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import MetaViewContent from "@/app/components/MetaViewContent";
 import { getOfferVariant, getOfferPricing } from "../lib/funnelData";
+import {
+  FUNNEL_C_DEFAULT_CADENCE,
+  FUNNEL_C_DEFAULT_PRODUCT,
+} from "./defaults";
+import { FUNNEL_PRODUCTS } from "../lib/funnelData";
 import FunnelClient from "./FunnelClient";
 
 export const metadata: Metadata = {
@@ -28,11 +33,23 @@ export default function FunnelPage() {
       <link rel="preconnect" href="https://conka-6770.myshopify.com" />
       <link rel="dns-prefetch" href="https://conka-6770.myshopify.com" />
       {/* Meta ViewContent for paid traffic — the funnel previously fired only
-          PageView until the late AddToCart, leaving Meta blind mid-funnel. */}
+          PageView until the late AddToCart, leaving Meta blind mid-funnel.
+
+          The offer MUST be the one the funnel actually lands on. This hardcoded
+          "both" while the UI opens on Flow, so every ViewContent reported the
+          wrong content_id and a Both-sized value, feeding Meta's optimiser a
+          product the visitor never saw. Both are now derived from the shared
+          defaults the client uses. */}
       <MetaViewContent
-        variantIds={[getOfferVariant("both", "monthly-sub")?.variantId ?? ""]}
-        value={getOfferPricing("both", "monthly-sub").price}
-        contentName="CONKA – Flow & Clear"
+        variantIds={[
+          getOfferVariant(FUNNEL_C_DEFAULT_PRODUCT, FUNNEL_C_DEFAULT_CADENCE)
+            ?.variantId ?? "",
+        ]}
+        value={
+          getOfferPricing(FUNNEL_C_DEFAULT_PRODUCT, FUNNEL_C_DEFAULT_CADENCE)
+            .price
+        }
+        contentName={FUNNEL_PRODUCTS[FUNNEL_C_DEFAULT_PRODUCT].label}
       />
       <FunnelClient />
       {/* Real-user Core Web Vitals for this variant — lets us A/B funnel-c

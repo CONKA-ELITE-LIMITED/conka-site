@@ -21,6 +21,13 @@ interface FunnelCheckoutParams {
   product: FunnelProduct;
   cadence: FunnelCadence;
   upsellAccepted: boolean;
+  /**
+   * Order attribution tag. This module is shared by /funnel-b and /funnel-c, so
+   * a hardcoded value made every funnel-c order look like a funnel-b order in
+   * Shopify and Triple Whale, and no revenue could be attributed to funnel-c.
+   * Defaults to funnel-b's existing tag so its data stays continuous.
+   */
+  source?: string;
 }
 
 interface FunnelCheckoutSuccess {
@@ -42,7 +49,7 @@ export function isFunnelCheckoutError(
 export async function funnelCheckout(
   params: FunnelCheckoutParams,
 ): Promise<FunnelCheckoutResult> {
-  const { product, cadence, upsellAccepted } = params;
+  const { product, cadence, upsellAccepted, source = "funnel_page_b" } = params;
 
   // 1. Look up variant
   const variant = getOfferVariant(product, cadence);
@@ -70,7 +77,7 @@ export async function funnelCheckout(
         quantity: 1,
         sellingPlanId: variant.sellingPlanId || undefined,
         attributes: [
-          { key: "_source", value: "funnel_page_b" },
+          { key: "_source", value: source },
           { key: "_plan_frequency", value: getCadenceFrequency(cadence) },
           { key: "_upsell_accepted", value: String(upsellAccepted) },
           { key: "_selected_product", value: product },
@@ -99,6 +106,7 @@ export async function funnelCheckout(
       product,
       cadence,
       price: pricing.price,
+      source,
     });
 
     return { checkoutUrl };
@@ -113,8 +121,9 @@ function fireAnalytics(params: {
   product: FunnelProduct;
   cadence: FunnelCadence;
   price: number;
+  source: string;
 }): void {
-  const { variantId, product, cadence, price } = params;
+  const { variantId, product, cadence, price, source } = params;
   const contentId = toContentId(variantId);
   const purchaseType = cadence === "monthly-otp" ? "one-time" : "subscription";
 
@@ -150,7 +159,7 @@ function fireAnalytics(params: {
       variantId,
       purchaseType,
       location: "funnel_cta",
-      source: "funnel_page_b",
+      source,
       price,
     });
   } catch {

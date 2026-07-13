@@ -24,6 +24,7 @@ interface BuildStepProps {
   cadence: FunnelCadence;
   onProductChange: (p: FunnelProduct) => void;
   onCadenceChange: (c: FunnelCadence) => void;
+  onAccordionOpen?: (id: string) => void;
 }
 
 const PRODUCT_ORDER: FunnelProduct[] = ["flow", "clear", "both"];
@@ -182,11 +183,18 @@ export default function BuildStep({
   cadence,
   onProductChange,
   onCadenceChange,
+  onAccordionOpen,
 }: BuildStepProps) {
   const display = FUNNEL_PRODUCTS[product];
   const copy = COPY[product];
   const [openInfo, setOpenInfo] = useState<InfoKey | null>(null);
-  const toggleInfo = (k: InfoKey) => setOpenInfo((prev) => (prev === k ? null : k));
+  const toggleInfo = (k: InfoKey) =>
+    setOpenInfo((prev) => {
+      const next = prev === k ? null : k;
+      // Only report opens. A close is not a signal of interest.
+      if (next) onAccordionOpen?.(`build:${next}`);
+      return next;
+    });
 
   // Ingredients pagination — always 6 per page (Both has 15, so it pages).
   const [ingPage, setIngPage] = useState(0);

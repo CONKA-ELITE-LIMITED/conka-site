@@ -183,6 +183,219 @@ export function trackB2BInvoiceRequested(params: {
   });
 }
 
+// ===== FUNNEL TRACKING (/funnel, /funnel-b, /funnel-c) =====
+
+/**
+ * Which funnel emitted the event.
+ *
+ * Deliberately a PROPERTY, not part of the event name. All three funnels fire
+ * the same `funnel:*` names and are told apart by grouping on `variant`
+ * (dashboard drill-down, or `by=eventData/variant` via the Web Analytics API).
+ * Baking the variant into the name (`funnelc:*`) would fragment every query and
+ * make step-to-step drop-off impossible to compare across variants.
+ */
+export type FunnelVariant = "a" | "b" | "c";
+
+/**
+ * Product/cadence are typed loosely here on purpose: the two funnel data
+ * modules (`app/lib/funnelData` and `app/(trial-b)/lib/funnelData`) each
+ * declare their own unions, and analytics must not depend on either.
+ */
+interface FunnelContext {
+  variant: FunnelVariant;
+  product: string;
+  cadence: string;
+}
+
+/**
+ * THE TWO-PROPERTY BUDGET.
+ *
+ * Vercel Web Analytics allows 2 custom properties per event on Pro (8 only with
+ * the Web Analytics Plus add-on). The client SDK does NOT enforce this: it sends
+ * whatever you give it and the limit is applied inside Vercel's ingestion/query
+ * layer, where the behaviour is undocumented. Extra properties may therefore be
+ * silently unqueryable.
+ *
+ * So every helper below sends EXACTLY two properties: `variant`, plus one packed
+ * context field. Product and cadence are packed into a single `config` string
+ * rather than sent as separate properties. Split on "|" when analysing.
+ *
+ * Do not add a third property to any of these without first confirming the plan
+ * has the Plus add-on.
+ */
+function funnelConfig(product: string, cadence: string): string {
+  return `${product}|${cadence}`;
+}
+
+/** Fires once on funnel mount. `config` is the pre-selected default offer. */
+export function trackFunnelViewed(params: FunnelContext): void {
+  safeTrack("funnel:viewed", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/**
+ * Fires when a user advances PAST a step. This is the drop-off signal.
+ *
+ * Call sites must fire this only from explicit forward-intent handlers, and must
+ * guard against repeats. See the callers for the ref-guard pattern: the funnels
+ * drive steps through history.pushState, so a `useEffect` on the step value
+ * would re-fire on every browser back/forward, and the shared `goToStep` helper
+ * is also the BACKWARD handler.
+ */
+export function trackFunnelStepCompleted(
+  params: FunnelContext & { step: number },
+): void {
+  safeTrack(`funnel:step${params.step}_completed`, {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Formula switch. `change` packs from>to so both fit one property. */
+export function trackFunnelProductChanged(params: {
+  variant: FunnelVariant;
+  from: string;
+  to: string;
+}): void {
+  safeTrack("funnel:product_changed", {
+    variant: params.variant,
+    change: `${params.from}>${params.to}`,
+  });
+}
+
+/** Plan switch. `change` packs from>to so both fit one property. */
+export function trackFunnelCadenceChanged(params: {
+  variant: FunnelVariant;
+  from: string;
+  to: string;
+}): void {
+  safeTrack("funnel:cadence_changed", {
+    variant: params.variant,
+    change: `${params.from}>${params.to}`,
+  });
+}
+
+/** Checkout button pressed (before any upsell interstitial). */
+export function trackFunnelCtaClicked(params: FunnelContext): void {
+  safeTrack("funnel:cta_clicked", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/**
+ * Cart created, redirecting to Shopify. Price is deliberately NOT sent: it would
+ * be a third property, and revenue is already carried by `purchase:add_to_cart`,
+ * Meta and Triple Whale.
+ */
+export function trackFunnelCheckout(params: FunnelContext): void {
+  safeTrack("funnel:checkout", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Checkout failed before redirect. `reason` is the user-facing error string. */
+export function trackFunnelCheckoutFailed(params: {
+  variant: FunnelVariant;
+  reason: string;
+}): void {
+  safeTrack("funnel:checkout_failed", {
+    variant: params.variant,
+    reason: params.reason,
+  });
+}
+
+/** Upsell sheet shown. `config` is the ORIGINAL offer, before any upgrade. */
+export function trackFunnelUpsellShown(params: FunnelContext): void {
+  safeTrack("funnel:upsell_shown", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Upsell taken. `config` is the UPGRADED offer, so it reads as the outcome. */
+export function trackFunnelUpsellAccepted(params: FunnelContext): void {
+  safeTrack("funnel:upsell_accepted", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Upsell explicitly declined (user continued to checkout with the original). */
+export function trackFunnelUpsellDeclined(params: FunnelContext): void {
+  safeTrack("funnel:upsell_declined", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Upsell dismissed without choosing (backdrop/close). Not a checkout. */
+export function trackFunnelUpsellDismissed(params: FunnelContext): void {
+  safeTrack("funnel:upsell_dismissed", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Nutrition/spec modal opened. Unreachable in funnel-c; used by /funnel + b. */
+export function trackFunnelNutritionViewed(params: FunnelContext): void {
+  safeTrack("funnel:nutrition_viewed", {
+    variant: params.variant,
+    config: funnelConfig(params.product, params.cadence),
+  });
+}
+
+/** Backward navigation within the funnel. `step` is the step being LEFT. */
+export function trackFunnelBackNav(params: {
+  variant: FunnelVariant;
+  step: number;
+}): void {
+  safeTrack("funnel:back_nav", {
+    variant: params.variant,
+    step: params.step,
+  });
+}
+
+/** A disclosure/accordion was opened. `id` identifies which one. */
+export function trackFunnelAccordionOpened(params: {
+  variant: FunnelVariant;
+  id: string;
+}): void {
+  safeTrack("funnel:accordion_opened", {
+    variant: params.variant,
+    id: params.id,
+  });
+}
+
+/**
+ * TEMPORARY — delete once read.
+ *
+ * Vercel documents a 2-property limit on Pro but never says what happens when
+ * you exceed it, the SDK does not enforce it, and no first-hand account exists
+ * anywhere. This fires ONE event carrying four properties so we can settle it
+ * empirically: query it grouped by `probeC` / `probeD` (dashboard drill-down or
+ * `by=eventData/probeC`).
+ *
+ *   - all four queryable  -> the limit is display/query-side only; we can relax
+ *                            the two-property budget above.
+ *   - only two come back  -> extras are dropped at ingestion; the budget stays,
+ *                            and the result tells us WHICH two survive.
+ *   - event missing       -> over-limit events are rejected outright.
+ *
+ * Costs nothing: billing counts events, not properties.
+ */
+export function trackFunnelPropertyProbe(variant: FunnelVariant): void {
+  safeTrack("funnel:probe", {
+    variant,
+    probeB: "b",
+    probeC: "c",
+    probeD: "d",
+  });
+}
+
 // ===== PURCHASE INTENT TRACKING =====
 
 /**
