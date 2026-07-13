@@ -3,9 +3,11 @@
 /**
  * funnel-c — persistent sticky footer.
  *
- * Left: back / forward step nav. Right (and right-aligned on every screen):
- * the trust strip + a single contained CTA that carries the live product +
- * price inside it. Free shipping only shows for subscriptions.
+ * One primary action, full width. A back arrow appears only once there is
+ * somewhere to go back to.
+ *
+ * There is deliberately NO forward arrow: it did exactly what the CTA does, and
+ * two controls for one action is noise on the most important surface of the page.
  */
 
 interface StickyFooterProps {
@@ -18,26 +20,57 @@ interface StickyFooterProps {
   isSubscription: boolean;
   onCta: () => void;
   onBack: () => void;
-  onForward: () => void;
   canBack: boolean;
-  canForward: boolean;
   loading?: boolean;
   error?: string | null;
 }
 
-function NavArrow({ dir, onClick, disabled }: { dir: "back" | "forward"; onClick: () => void; disabled: boolean }) {
+function BackArrow({ onClick }: { onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
-      aria-label={dir === "back" ? "Previous step" : "Next step"}
-      className="flex h-11 w-11 items-center justify-center border-2 border-black/15 text-black/60 hover:border-black/35 hover:text-black/80 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+      aria-label="Previous step"
+      className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-black/15 text-black/60 hover:border-black/40 hover:text-black transition-colors"
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        {dir === "back" ? <path d="M19 12H5M12 19l-7-7 7-7" /> : <path d="M5 12h14M12 5l7 7-7 7" />}
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M19 12H5M12 19l-7-7 7-7" />
       </svg>
     </button>
+  );
+}
+
+/**
+ * Reassurance under the CTA. The green tick is /start-b's. "Cancel anytime" only
+ * appears on a subscription, because it is only true of a subscription, and it
+ * is the objection actually worth answering at the moment of commitment.
+ */
+function GuaranteeLine({ isSubscription }: { isSubscription: boolean }) {
+  return (
+    <div className="flex items-center justify-center gap-x-4 gap-y-1 flex-wrap text-[12px] text-black/60">
+      <span className="flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
+          <circle cx="12" cy="12" r="10" fill="#10B981" />
+          <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        100-day guarantee
+      </span>
+
+      {isSubscription && (
+        <span className="flex items-center gap-1.5">
+          <svg
+            width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981"
+            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0"
+          >
+            <path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+          Cancel anytime
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -48,14 +81,10 @@ export default function StickyFooter({
   isSubscription,
   onCta,
   onBack,
-  onForward,
   canBack,
-  canForward,
   loading = false,
   error = null,
 }: StickyFooterProps) {
-  const trust = ["100-day guarantee", ...(isSubscription ? ["Free shipping"] : []), "Cancel anytime"];
-
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-white/95 backdrop-blur-sm">
       {error && (
@@ -64,47 +93,43 @@ export default function StickyFooter({
         </p>
       )}
 
-      <div className="flex items-center justify-between gap-3 px-4 lg:px-12 py-3">
-        {/* Left — step navigation */}
-        <div className="flex items-center gap-2 shrink-0">
-          <NavArrow dir="back" onClick={onBack} disabled={!canBack} />
-          <NavArrow dir="forward" onClick={onForward} disabled={!canForward} />
-        </div>
+      <div className="mx-auto w-full max-w-[560px] px-5 py-3 lg:max-w-none lg:px-12">
+        <div className="flex items-center gap-3">
+          {canBack && <BackArrow onClick={onBack} />}
 
-        {/* Right — trust + CTA (CTA always hard right) */}
-        <div className="flex items-center gap-5 min-w-0">
-          <div className="hidden lg:flex items-center gap-4 shrink-0">
-            {trust.map((t) => (
-              <span key={t} className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/40">
-                {t}
-              </span>
-            ))}
-          </div>
-
+          {/* One full-width pill, the same shape as every /start-b CTA. It takes
+              the whole remaining row so it reads as THE action, not one control
+              among several. */}
           <button
             type="button"
             onClick={onCta}
             disabled={loading}
-            className="flex items-center gap-2.5 bg-[#1B2757] text-white pl-5 pr-4 py-3.5 lg:pl-6 lg:pr-5 lg:gap-3 hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity whitespace-nowrap"
+            className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#1B2757] text-white py-4 px-5 font-semibold text-[16px] lg:text-lg hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
           >
             {loading && (
               <span className="h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden />
             )}
-            <span className="text-sm lg:text-[15px] font-semibold tracking-[0.01em]">{label}</span>
+            <span>{label}</span>
             {priceLabel && (
-              <span className="flex items-center gap-2.5 lg:gap-3">
-                <span className="h-4 w-px bg-white/25" aria-hidden />
-                <span className="text-[13px] lg:text-[14px] font-medium text-white/90 tabular-nums">
-                  <span className="sm:hidden">{priceShort}</span>
-                  <span className="hidden sm:inline">{priceLabel}</span>
-                </span>
+              <span className="font-medium text-white/85 tabular-nums">
+                <span className="sm:hidden">· {priceShort}</span>
+                <span className="hidden sm:inline">· {priceLabel}</span>
               </span>
             )}
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="ml-0.5">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
         </div>
+
+        {/* Risk reversal only once there is a price on screen to reverse. On the
+            Learn step there is nothing to be reassured about yet, and it just
+            adds a line of noise under the only button. */}
+        {priceLabel && (
+          <div className="mt-2.5 flex justify-center">
+            <GuaranteeLine isSubscription={isSubscription} />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -3,9 +3,11 @@
 /**
  * funnel-c — the alternative funnel layout.
  *
- * Flow: Learn → Build (product + plan on one page) → Review → checkout.
- * A persistent sticky footer carries the step-aware CTA, live price and trust
- * strip. Left column plays the product video (driven by the formula toggle).
+ * Learn → Build (product + plan on one page) → Review → checkout.
+ *
+ * A persistent sticky footer carries the step-aware CTA, the live price, and the
+ * guarantee line (once there is a price on screen to reassure about). The left
+ * column plays the product video, driven by the formula selection.
  */
 
 import { useState, useCallback, useEffect, useRef } from "react";
@@ -30,10 +32,6 @@ const UpsellBottomSheet = dynamic(
   () => import("./components/UpsellBottomSheet"),
   { ssr: false },
 );
-const NutritionInfoModal = dynamic(
-  () => import("./components/NutritionInfoModal"),
-  { ssr: false },
-);
 import {
   type FunnelCadence,
   type FunnelProduct,
@@ -45,6 +43,7 @@ import {
 import { funnelCheckout, isFunnelCheckoutError } from "../lib/funnelCheckout";
 import { formatPrice } from "@/app/lib/productData";
 import {
+  cadencePriceSuffix,
   FUNNEL_C_DEFAULT_CADENCE,
   FUNNEL_C_DEFAULT_PRODUCT,
   FUNNEL_C_SOURCE,
@@ -76,7 +75,6 @@ const STEPS: { n: Step; label: string }[] = [
 
 export default function FunnelClient() {
   const [step, setStep] = useState<Step>(1);
-  // Land on the headline £39.99 offer (Flow, monthly).
   const [product, setProduct] = useState<FunnelProduct>(FUNNEL_C_DEFAULT_PRODUCT);
   const [cadence, setCadence] = useState<FunnelCadence>(FUNNEL_C_DEFAULT_CADENCE);
 
@@ -93,7 +91,6 @@ export default function FunnelClient() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [upsellOffer, setUpsellOffer] = useState<UpsellOffer | null>(null);
-  const [isNutritionOpen, setIsNutritionOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
   const timeout = useRef<ReturnType<typeof setTimeout>>(null);
@@ -272,7 +269,7 @@ export default function FunnelClient() {
 
   // Live product + price shown INSIDE the footer CTA
   const pricing = getOfferPricing(product, cadence);
-  const freq = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
+  const freq = cadencePriceSuffix(cadence);
   const ctaPrice = `${FUNNEL_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
   const ctaPriceShort = `${formatPrice(pricing.price)}${freq}`;
   const isSubscription = cadence !== "monthly-otp";
@@ -285,35 +282,59 @@ export default function FunnelClient() {
         : { label: "Checkout", priceLabel: ctaPrice, priceShort: ctaPriceShort, onClick: handleCheckout, loading: isCheckingOut };
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-[var(--brand-black)]">
-      {/* Top step indicator + progress bar */}
+    <div className="min-h-screen bg-white text-black">
+      {/* Top chrome. Logo left, step position right, rounded progress bar under.
+          Deliberately quiet: this is orientation, not content. */}
       <div className="fixed top-0 inset-x-0 z-40 bg-white border-b border-black/10">
         <div className="h-14 flex items-center justify-between px-5 lg:px-8">
-          <div className="flex items-center">
+          <Image
+            src="/conka-logo.webp"
+            alt="CONKA"
+            width={132}
+            height={30}
+            className="h-[24px] w-auto"
+            priority
+          />
+
+          {/* Named steps on desktop (they show how short the flow is, which is
+              worth the pixels). Mobile gets the count, which says the same in
+              less space. Completed steps are clickable to go back. */}
+          <div className="hidden sm:flex items-center gap-2">
             {STEPS.map((s, i) => (
-              <div key={s.n} className="flex items-center">
-                {i > 0 && <span className="mx-3 h-3.5 w-px bg-black/15" aria-hidden />}
+              <div key={s.n} className="flex items-center gap-2">
+                {i > 0 && <span className="h-1 w-1 rounded-full bg-black/20" aria-hidden />}
                 <button
                   type="button"
                   onClick={() => s.n < step && handleBack(step, s.n)}
-                  disabled={s.n > step}
-                  className={`font-mono text-[12px] uppercase tracking-[0.12em] transition-colors ${
+                  disabled={s.n >= step}
+                  className={`text-[14px] transition-colors ${
                     s.n === step
-                      ? "text-[#1B2757] font-semibold"
+                      ? "font-semibold text-black"
                       : s.n < step
-                        ? "text-black/45 hover:text-black/70"
+                        ? "text-black/45 hover:text-black cursor-pointer"
                         : "text-black/25 cursor-default"
                   }`}
                 >
-                  <span className="tabular-nums">{s.n < step ? "✓" : `0${s.n}`}</span> {s.label}
+                  {s.label}
                 </button>
               </div>
             ))}
           </div>
-          <Image src="/conka-logo.webp" alt="CONKA" width={132} height={30} className="h-[26px] w-auto" priority />
+          <span className="sm:hidden text-[13px] font-medium text-black/50 tabular-nums">
+            Step {step} of {STEPS.length}
+          </span>
         </div>
-        {/* Gamified progress bar */}
-        <div className="h-[3px] w-full bg-black/[0.07]">
+
+        {/* Quiet 3px rule. The gamified /go fill (gradient + shimmer) was tried
+            here and pulled far too much attention for a checkout surface. */}
+        <div
+          className="h-[3px] w-full bg-black/[0.07]"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round((step / STEPS.length) * 100)}
+          aria-label="Funnel progress"
+        >
           <div
             className="h-full bg-[#1B2757] transition-all duration-500 ease-out"
             style={{ width: `${(step / STEPS.length) * 100}%` }}
@@ -336,7 +357,8 @@ export default function FunnelClient() {
             transform: visible ? "translateY(0)" : "translateY(8px)",
           }}
         >
-          <div className="mx-auto w-full max-w-xl lg:max-w-2xl xl:max-w-3xl px-4 pt-6 pb-40 lg:px-10 lg:pt-10 lg:pb-40">
+          {/* 560px reading measure, matching /start-b. pb clears the sticky footer. */}
+          <div className="mx-auto w-full max-w-[560px] px-5 pt-8 pb-44 lg:pt-12">
             {step === 1 && <EducationStep onAccordionOpen={handleAccordionOpen} />}
             {step === 2 && (
               <BuildStep
@@ -359,9 +381,7 @@ export default function FunnelClient() {
         isSubscription={isSubscription}
         onCta={footer.onClick}
         onBack={() => handleBack(step, Math.max(1, step - 1) as Step)}
-        onForward={() => handleForward(step)}
         canBack={step > 1}
-        canForward={step < 3}
         loading={footer.loading}
         error={error}
       />
@@ -394,13 +414,6 @@ export default function FunnelClient() {
         />
       )}
 
-      {isNutritionOpen && (
-        <NutritionInfoModal
-          isOpen={isNutritionOpen}
-          product={product}
-          onClose={() => setIsNutritionOpen(false)}
-        />
-      )}
     </div>
   );
 }

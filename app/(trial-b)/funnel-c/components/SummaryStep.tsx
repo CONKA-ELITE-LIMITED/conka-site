@@ -3,10 +3,11 @@
 /**
  * funnel-c — Step 3 (Review). The moment of purchase, built as a RECEIPT.
  *
- * Hero card = an itemised order receipt: product, a square-matrix visual of the
- * shots (priced vs free), price line items with FREE callouts, savings, and a
- * bold TOTAL. Then social proof (shots delivered + an athlete quote) and a
- * titled CONKA app block.
+ * The receipt splits cleanly: the breakdown states the SHOTS (recurring volume
+ * per formula, then the first-order bonus), and the line items state the MONEY
+ * (plan, postage, extras, savings, total). Each figure appears exactly once.
+ *
+ * Then social proof (shots delivered + a rotating quote) and the CONKA app block.
  */
 
 import { useState, useEffect } from "react";
@@ -19,6 +20,7 @@ import {
   getSavingsPercent,
 } from "../../lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
+import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
 
 interface SummaryStepProps {
   product: FunnelProduct;
@@ -108,9 +110,8 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const isSub = cadence !== "monthly-otp";
   const freeShots = pricing.freeShots ?? 0;
   const freeShotsValue = pricing.freeShotsValue ?? 0;
-  const total = pricing.firstOrderShots ?? pricing.shotCount;
   const postageVal = cadence === "quarterly-sub" ? 29.97 : 9.99;
-  const freq = cadence === "monthly-sub" ? "/mo" : cadence === "quarterly-sub" ? "/quarter" : "";
+  const freq = cadencePriceSuffix(cadence);
   const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
   const savingsPct = pricing.compareAtPrice ? getSavingsPercent(pricing.price, pricing.compareAtPrice) : 0;
   const totalToday = isSub ? pricing.price : pricing.price + (pricing.postage ?? 0);
@@ -121,13 +122,20 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const pricedPer = product === "both" ? Math.round(pricing.shotCount / 2) : pricing.shotCount;
   const freePer = product === "both" ? Math.round(freeShots / 2) : freeShots;
 
-  const shotsLabel =
-    cadence === "monthly-sub" ? `${pricing.shotCount} shots / month` : cadence === "quarterly-sub" ? `${pricing.shotCount} shots / quarter` : `${pricing.shotCount} shots`;
+  const period = cadenceDeliveryPeriod(cadence);
+  const planLabel =
+    cadence === "monthly-sub"
+      ? "Monthly subscription"
+      : cadence === "quarterly-sub"
+        ? "Quarterly subscription"
+        : "One-time purchase";
 
+  // The line items are the MONEY. The shot counts live in the breakdown above
+  // and are not repeated here: they were previously stated in the header, again
+  // in the breakdown, and a third time as a line-item label.
   const items: { label: string; value: string; was?: string; free?: boolean }[] = [
-    { label: shotsLabel, value: formatPrice(pricing.price) },
+    { label: planLabel, value: formatPrice(pricing.price) },
   ];
-  if (freeShots > 0) items.push({ label: `${freeShots} bonus shots`, value: "Free", was: formatPrice(freeShotsValue), free: true });
   items.push(
     isSub
       ? { label: "Postage", value: "Free", was: formatPrice(postageVal), free: true }
@@ -137,64 +145,57 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">Step 03 · Review</p>
-      <h2 className="text-xl lg:text-3xl font-semibold tracking-[var(--brand-h2-tracking)] mb-5" style={{ color: "var(--brand-black)" }}>
-        Your order
+      <h2
+        className="text-black font-semibold text-[34px] leading-[1.05] mb-6"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        Your order.
       </h2>
 
       {/* ===== RECEIPT ===== */}
-      <div className="border-2 border-[var(--brand-black)] bg-white p-5 mb-3">
+      <div className="rounded-[16px] border-2 border-black/85 bg-white p-5 mb-3">
         {/* Product header */}
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40">Order summary</p>
-          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#1B2757] bg-[#1B2757]/[0.07] px-2 py-1">
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-[19px] font-semibold text-black leading-tight">{display.label}</p>
+          <span className="shrink-0 rounded-full bg-[#1B2757]/[0.08] px-2.5 py-1 text-[11px] font-semibold text-[#1B2757]">
             {display.timeLabel}
           </span>
         </div>
-        <p className="text-xl font-semibold text-[var(--brand-black)] mt-1.5 leading-tight">{display.label}</p>
-        <p className="text-[13px] text-black/55 mt-1">
-          {isSub ? `${shotsLabel}${freeShots > 0 ? ` · +${freeShots} free on your first order` : ""}` : `${pricing.shotCount} shots · one-time`}
-        </p>
+        {/* What arrives. Recurring shots per formula (Both splits 50:50), then a
+            single line for the first-order bonus.
 
-        {/* Shot matrix — coded by formula; filled = paid, outlined = free */}
-        <div className="mt-4 space-y-2">
-          {formulas.map((f) => {
-            const color = FORMULA_COLOR[f];
-            return (
-              <div key={f} className="flex items-start gap-2.5">
-                {product === "both" && (
-                  <span
-                    className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] w-9 shrink-0 pt-0.5"
-                    style={{ color }}
-                  >
-                    {f === "flow" ? "Flow" : "Clear"}
-                  </span>
-                )}
-                <div className="flex flex-wrap gap-[3px]">
-                  {Array.from({ length: pricedPer }).map((_, i) => (
-                    <span key={`p${i}`} className="h-2.5 w-2.5" style={{ backgroundColor: color }} aria-hidden />
-                  ))}
-                  {freePer > 0 && (
-                    <>
-                      <span className="mx-1 w-px self-stretch bg-black/15" aria-hidden />
-                      {Array.from({ length: freePer }).map((_, i) => (
-                        <span key={`f${i}`} className="h-2.5 w-2.5 bg-[#1a7f4f]" aria-hidden />
-                      ))}
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="mt-3 flex items-center gap-4 text-[12px]">
-          <span className="inline-flex items-center gap-1.5 text-black/60">
-            <span className="h-2.5 w-2.5 bg-black/70" /> {pricing.shotCount} shots
-          </span>
+            This was a matrix of up to 56 coloured dots, which nobody counts, so
+            the reader went to the legend underneath anyway. It then stated the
+            per-period shot count three times over (header, breakdown, line item).
+            Once, here. */}
+        <div className="mt-4 rounded-[12px] bg-black/[0.03] p-3.5">
+          {formulas.map((f) => (
+            <div
+              key={f}
+              className="flex items-baseline justify-between gap-3 py-1 text-[13px]"
+            >
+              <span className="font-semibold" style={{ color: FORMULA_COLOR[f] }}>
+                {f === "flow" ? "Flow" : "Clear"}
+              </span>
+              <span className="tabular-nums text-black">
+                <span className="font-bold">{pricedPer}</span> shots
+                {isSub ? ` ${period}` : ""}
+              </span>
+            </div>
+          ))}
+
           {freeShots > 0 && (
-            <span className="inline-flex items-center gap-1.5 text-[#1a7f4f] font-medium">
-              <span className="h-2.5 w-2.5 bg-[#1a7f4f]" /> +{freeShots} free → {total} total
-            </span>
+            <div className="flex items-start gap-2 border-t border-black/10 mt-2.5 pt-2.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 mt-0.5">
+                <circle cx="12" cy="12" r="10" fill="#10B981" />
+                <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <p className="text-[13px] leading-snug text-[#0b7a55]">
+                <strong className="font-bold">+{freeShots} free shots</strong> on your first order
+                {product === "both" && `, ${freePer} of each`}. Worth{" "}
+                <span className="tabular-nums font-semibold">{formatPrice(freeShotsValue)}</span>.
+              </p>
+            </div>
           )}
         </div>
 
@@ -202,10 +203,10 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         <div className="mt-5 space-y-2.5">
           {items.map((li) => (
             <div key={li.label} className="flex items-baseline justify-between gap-3 text-[13px]">
-              <span className="text-black/65">{li.label}</span>
-              <span className="font-mono tabular-nums whitespace-nowrap">
+              <span className="text-black/70">{li.label}</span>
+              <span className="tabular-nums whitespace-nowrap">
                 {li.was && <span className="line-through text-black/30 mr-1.5">{li.was}</span>}
-                <span className={li.free ? "text-[#1a7f4f] font-semibold uppercase tracking-[0.06em]" : "text-[var(--brand-black)]"}>
+                <span className={li.free ? "font-semibold text-[#0b7a55]" : "text-black"}>
                   {li.value}
                 </span>
               </span>
@@ -216,75 +217,76 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         {/* Savings */}
         {savings > 0 && (
           <div className="flex items-baseline justify-between gap-3 border-t border-dashed border-black/20 mt-3 pt-3 text-[13px]">
-            <span className="font-semibold text-[#1B2757]">You save</span>
-            <span className="font-mono tabular-nums font-semibold text-[#1B2757]">
-              −{formatPrice(savings)} <span className="text-[11px]">({savingsPct}%)</span>
+            <span className="font-semibold text-black">You save</span>
+            <span className="tabular-nums font-bold text-[#0b7a55]">
+              −{formatPrice(savings)} <span className="font-semibold">({savingsPct}%)</span>
             </span>
           </div>
         )}
 
         {/* Total */}
-        <div className="flex items-baseline justify-between gap-3 border-t-2 border-[var(--brand-black)] mt-3 pt-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50">Total today</span>
-          <span className="text-3xl font-bold tabular-nums text-[var(--brand-black)] leading-none">
+        <div className="flex items-baseline justify-between gap-3 border-t-2 border-black/85 mt-3 pt-3.5">
+          <span className="text-[15px] font-semibold text-black">Total today</span>
+          <span className="text-[30px] font-bold tabular-nums text-black leading-none">
             {formatPrice(totalToday)}
-            <span className="text-base font-medium text-black/45">{freq}</span>
+            <span className="text-[15px] font-medium text-black/50">{freq}</span>
           </span>
         </div>
-        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/40 mt-3 text-right">
-          Ships in 2–3 days{isSub ? " · cancel anytime" : ""}
+        <p className="text-[12px] text-black/50 mt-3 text-right">
+          Ships in 2 to 3 days{isSub ? " · cancel anytime" : ""}
         </p>
       </div>
 
       {/* ===== SOCIAL PROOF (flippable) ===== */}
-      <div className="border border-black/10 bg-[var(--brand-tint)] p-4 mb-3">
-        <div className="flex items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-black/8">
+      <div className="rounded-[16px] bg-black/[0.04] p-4 mb-3">
+        <div className="flex items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-black/10">
           <div>
-            <p className="text-2xl font-bold text-[var(--brand-black)] tabular-nums leading-none">{SOLD}</p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">shots delivered</p>
+            <p className="text-2xl font-bold text-black tabular-nums leading-none">{SOLD}</p>
+            <p className="text-[12px] text-black/55 mt-1.5">shots delivered</p>
           </div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1">
             <button
               type="button"
               aria-label="Previous review"
               onClick={() => goTestimonial(ti - 1)}
-              className="text-black/45 hover:text-black/75 transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:bg-black/[0.06] hover:text-black transition-colors"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M15 18l-6-6 6-6" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M15 18l-6-6 6-6" /></svg>
             </button>
-            <span className="font-mono text-[9px] tabular-nums text-black/45">{ti + 1} / {TESTIMONIALS.length}</span>
+            <span className="text-[12px] tabular-nums text-black/50">{ti + 1} / {TESTIMONIALS.length}</span>
             <button
               type="button"
               aria-label="Next review"
               onClick={() => goTestimonial(ti + 1)}
-              className="text-black/45 hover:text-black/75 transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:bg-black/[0.06] hover:text-black transition-colors"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M9 18l6-6-6-6" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M9 18l6-6-6-6" /></svg>
             </button>
           </div>
         </div>
         <div className="flex gap-3 min-h-[96px]">
-          <div className="shrink-0 w-12 h-12 bg-white overflow-hidden">
+          <div className="shrink-0 w-12 h-12 rounded-full bg-white overflow-hidden">
             <Image src={t.image} alt={t.name} width={48} height={48} className="w-full h-full object-cover" />
           </div>
           <div className="min-w-0">
             <Stars />
-            <p className="text-[13px] text-black/70 leading-snug italic mt-1.5">&ldquo;{t.quote}&rdquo;</p>
-            <p className="text-[12px] font-semibold text-[var(--brand-black)] mt-1.5">
-              {t.name} <span className="font-normal text-black/45">· {t.role}</span>
+            <p className="text-[13px] text-black/80 leading-snug italic mt-1.5">&ldquo;{t.quote}&rdquo;</p>
+            <p className="text-[12px] font-semibold text-black mt-1.5">
+              {t.name} <span className="font-normal text-black/50">· {t.role}</span>
             </p>
           </div>
         </div>
       </div>
 
       {/* ===== APP BLOCK ===== */}
-      <div className="border border-black/10 bg-white overflow-hidden">
-        <div className="px-4 py-2.5 border-b border-black/8 bg-[var(--brand-tint)]">
-          <p className="text-sm font-semibold text-[var(--brand-black)]">Track it. Watch it work.</p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/40 mt-0.5">
-            The CONKA app · iOS &amp; Google Play · free with your plan
+      <div className="rounded-[16px] border-2 border-black/85 bg-white overflow-hidden">
+        <div className="px-4 pt-4">
+          <p className="text-[17px] font-semibold text-black">Track it. Watch it work.</p>
+          <p className="text-[13px] text-black/60 mt-1">
+            The CONKA app, free with your plan. iOS and Google Play.
           </p>
         </div>
+
         <div className="flex gap-4 p-4">
           <Image
             src="/app/AppConkaRing.png"
@@ -294,19 +296,19 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
             className="shrink-0 w-[72px] h-auto self-start"
           />
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] text-black/65 leading-relaxed">
+            <p className="text-[13px] text-black/75 leading-relaxed">
               A 60-second test sets your baseline. Take CONKA daily and{" "}
-              <span className="text-[var(--brand-black)] font-medium">watch your cognitive score climb</span> — the trend is
+              <span className="text-black font-semibold">watch your score climb</span>. The trend is
               right there in the app.
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/40 mt-3 mb-2">
+            <p className="text-[13px] font-semibold text-black mt-3 mb-2">
               What members are seeing
             </p>
             <div className="space-y-1.5">
               {APP_INSIGHTS.map((insight) => (
-                <div key={insight} className="flex items-start gap-2 text-[12px] text-black/70">
-                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" className="shrink-0 mt-0.5 text-[#1B2757]" aria-hidden>
-                    <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" />
+                <div key={insight} className="flex items-start gap-2 text-[12px] text-black/75">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 mt-0.5 text-[#1B2757]" aria-hidden>
+                    <path d="M5 12.5L10 17L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <span className="leading-snug">{insight}</span>
                 </div>
@@ -314,12 +316,13 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
             </div>
           </div>
         </div>
+
         {/* Real app usage — proof people track results */}
-        <div className="grid grid-cols-3 border-t border-black/8 divide-x divide-black/8">
+        <div className="grid grid-cols-3 gap-2 px-4 pb-4">
           {APP_STATS.map((s) => (
-            <div key={s.label} className="text-center py-3">
+            <div key={s.label} className="rounded-[12px] bg-black/[0.04] text-center py-3">
               <p className="text-xl font-bold text-[#1B2757] tabular-nums leading-none">{s.value}</p>
-              <p className="font-mono text-[8px] uppercase tracking-[0.1em] text-black/45 mt-1.5 leading-tight">{s.label}</p>
+              <p className="text-[11px] text-black/60 mt-1.5 leading-tight">{s.label}</p>
             </div>
           ))}
         </div>
