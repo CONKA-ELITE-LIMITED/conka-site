@@ -97,10 +97,21 @@ const SECTION_LABELS: Record<Section, string> = {
   notice: "What you'll notice",
 };
 
-function FormulaCard({ data }: { data: FormulaData }) {
+function FormulaCard({
+  data,
+  onAccordionOpen,
+}: {
+  data: FormulaData;
+  onAccordionOpen?: (id: string) => void;
+}) {
   const [active, setActive] = useState<Section | null>(null);
   const toggle = (section: Section) =>
-    setActive((prev) => (prev === section ? null : section));
+    setActive((prev) => {
+      const next = prev === section ? null : section;
+      // Only report opens. A close is not a signal of interest.
+      if (next) onAccordionOpen?.(`${data.product}:${next}`);
+      return next;
+    });
   // Lowest per-shot for this formula (its quarterly subscription).
   const fromPrice = formatPrice(getOfferPricing(data.product, "quarterly-sub").perShot);
 
@@ -196,7 +207,11 @@ function FormulaCard({ data }: { data: FormulaData }) {
   );
 }
 
-export default function EducationStep() {
+export default function EducationStep({
+  onAccordionOpen,
+}: {
+  onAccordionOpen?: (id: string) => void;
+}) {
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
@@ -218,8 +233,8 @@ export default function EducationStep() {
       </p>
 
       <div className="flex flex-col gap-3">
-        <FormulaCard data={FLOW_DATA} />
-        <FormulaCard data={CLEAR_DATA} />
+        <FormulaCard data={FLOW_DATA} onAccordionOpen={onAccordionOpen} />
+        <FormulaCard data={CLEAR_DATA} onAccordionOpen={onAccordionOpen} />
       </div>
 
       <div className="flex items-start gap-2.5 mt-3 px-4 py-3 border border-[#1B2757]/15 bg-[#1B2757]/[0.04]">

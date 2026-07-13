@@ -154,7 +154,7 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Merged to main (SCRUM-1133) |
 | 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Ticketed, in build (SCRUM-1136) |
 | 4 | Descriptive keyword H1s on the product pages (name + visible subline in the `<h1>`) | Ticketed (SCRUM-1138) |
-| 6 | Informational content surface (blog) for the research-intent keywords | Future |
+| 6 | Informational content surface (blog) for the research-intent keywords | Scoped (own plan doc: `blog-informational-content-surface.md`), not ticketed |
 
 Phases ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible. Phase 5 was pulled ahead of Phase 4 after the Search Console baseline showed discovery, not on-page keyword tuning, is the current bottleneck.
 
