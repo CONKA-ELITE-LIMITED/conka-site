@@ -240,7 +240,6 @@ export default function ConkaBothPage() {
           productHeroId="03"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
-          cadenceFreeShots={cadenceFreeShots}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
       </div>
