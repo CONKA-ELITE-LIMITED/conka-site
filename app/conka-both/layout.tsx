@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
+import { FAQ_ITEMS } from "@/app/lib/faqContent";
+import {
+  FUNNEL_PRODUCTS,
+  FUNNEL_HERO_IMAGES,
+  getFunnelPriceRange,
+} from "@/app/lib/funnelData";
+import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
 // conka-both/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
@@ -28,5 +35,23 @@ export default function ConkaBothLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  const bothPrices = getFunnelPriceRange("both");
+  const productSchema = buildProductSchema({
+    name: "CONKA Flow + Clear",
+    description: FUNNEL_PRODUCTS.both.description,
+    imagePath: FUNNEL_HERO_IMAGES.both.src,
+    urlPath: "/conka-both",
+    lowPrice: bothPrices.low,
+    highPrice: bothPrices.high,
+    offerCount: bothPrices.count,
+  });
+  const faqSchema = buildFaqSchema(FAQ_ITEMS);
+
+  return (
+    <>
+      <JsonLd schema={productSchema} />
+      <JsonLd schema={faqSchema} />
+      {children}
+    </>
+  );
 }

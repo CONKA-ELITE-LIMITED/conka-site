@@ -1,6 +1,6 @@
 # SEO / AEO Foundation
 
-**Status:** Phase 1 merged to main. Phase 2 built (in review). Phases 3 to 6 documented, not ticketed.
+**Status:** Phases 1 and 2 merged to main. Phase 3 scoped and ticketed (SCRUM-1133). Phases 4 to 6 documented, not ticketed.
 **Owner:** Rudh
 **Source input:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research)
 **Created:** 2026-07-10
@@ -148,12 +148,44 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 |-------|-------------|--------|
 | 1 | Fix the site-wide inherited canonical | Merged to main (SCRUM-1131) |
 | 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Built, in review (SCRUM-1132) |
-| 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Future |
+| 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Scoped, ticketed (SCRUM-1133) |
 | 4 | Descriptive keyword H1s on the product pages | Future |
 | 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Future |
 | 6 | Informational content surface (blog) for the research-intent keywords | Future |
 
 Phase 1 and Phase 2 ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible.
+
+---
+
+## Phase 3 task breakdown (SCRUM-1133, active)
+
+Add `Product` JSON-LD (first) and `FAQPage` JSON-LD to the three PDPs: `/conka-flow`, `/conka-clarity`, `/conka-both`. No visual or layout change. Appetite: roughly half a day. All source data already exists, none is hand-authored.
+
+**Injection model.** The three `page.tsx` are `"use client"`; their sibling `layout.tsx` files (created in Phase 2) are server components. Render the `<script type="application/ld+json">` tags in the layouts alongside `children`.
+
+1. **[Frontend] `jsonLd` render helper** (`app/lib/jsonLd.ts`, new)
+   - Takes a schema object, returns `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(obj) }} />`. Absolutises image/URL paths against `metadataBase` (`https://www.conka.io`, `app/layout.tsx:78`); product images are root-relative (`/formulas/...`).
+   - Complexity: Small.
+
+2. **[Frontend] Product JSON-LD on the three PDPs**
+   - Per page: `name` (Flow "CONKA Flow", Clear "CONKA Clear", Both "CONKA Flow + Clear"), `brand: "CONKA"`, `description` from `FUNNEL_PRODUCTS[product].description`, absolute `image` from `FUNNEL_HERO_IMAGES`, and an `offers` `AggregateOffer` with `lowPrice`/`highPrice` derived from `FUNNEL_PRICING` (Flow/Clear £39.99-£109.99, Both £74.99-£149.99), `priceCurrency: "GBP"`, `availability: InStock`. No `aggregateRating`.
+   - Complexity: Medium (three pages, one pattern). Depends on task 1.
+   - Files: `app/conka-flow/layout.tsx`, `app/conka-clarity/layout.tsx`, `app/conka-both/layout.tsx`; reads `app/lib/funnelData.ts`.
+
+3. **[Frontend] FAQPage JSON-LD on the three PDPs**
+   - Serialise existing Q&A arrays: Flow `formulaContent["01"].faq`, Clear `formulaContent["02"].faq`, Both `FAQ_ITEMS` in `app/lib/faqContent.ts`. Strip HTML in answers to plain text.
+   - Complexity: Small. Depends on task 1.
+   - Files: same three layouts; reads `app/lib/formulaContent.ts`, `app/lib/faqContent.ts`.
+
+4. **[Verify] Validate**
+   - Build, then paste each page's rendered JSON into the Google Rich Results Test and the Schema.org validator; confirm no errors, one Product + one FAQPage node per page, and prices match `funnelData.ts`.
+   - Complexity: Small.
+
+**Decisions (confirmed with product owner):** omit `aggregateRating` (no per-product rating source; sitewide 4.7/622 is not per-product and risks a manual action); `offers` uses real transactable prices, not the per-shot marketing figure; Both's schema `name` is "CONKA Flow + Clear".
+
+**No-gos:** no Product schema on the homepage or `/ingredients` (neither is a single purchasable product); no `/go/*` structured data (noindex); no new component or visual change beyond the helper; no per-product review markup until a queryable rating source exists.
+
+**Known limitations:** FAQPage rich results are restricted to gov/health sites (2023), so expect AEO/LLM value not visible snippets; Product rich results are unaffected. Price drift is mitigated by deriving from `funnelData.ts` rather than hardcoding.
 
 ---
 
@@ -269,7 +301,8 @@ Sprint 28. Phases 3 to 6 are deliberately not ticketed.
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
 | [SCRUM-1131](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1131) | [Bugs] Every page canonicals to the homepage, blocking the whole site from ranking | 1 | Built, in review |
-| [SCRUM-1132](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1132) | [Website & CRO] Add per-page SEO metadata to the five indexable money pages | 2 | To Do |
+| [SCRUM-1132](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1132) | [Website & CRO] Add per-page SEO metadata to the five indexable money pages | 2 | Done |
+| [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | To Do |
 
 SCRUM-1131 blocks SCRUM-1132. The disputed prices are now resolved (see "Prices in the meta descriptions" above), so SCRUM-1132 is unblocked once SCRUM-1131 merges. Two soft open questions remain for marketing (the `FL0W` zero and the "From" convention); neither blocks the build.
 

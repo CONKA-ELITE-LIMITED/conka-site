@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
+import { formulaContent } from "@/app/lib/productData";
+import {
+  FUNNEL_PRODUCTS,
+  FUNNEL_HERO_IMAGES,
+  getFunnelPriceRange,
+} from "@/app/lib/funnelData";
+import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
 // conka-flow/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
@@ -28,5 +35,23 @@ export default function ConkaFlowLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  const flowPrices = getFunnelPriceRange("flow");
+  const productSchema = buildProductSchema({
+    name: "CONKA Flow",
+    description: FUNNEL_PRODUCTS.flow.description,
+    imagePath: FUNNEL_HERO_IMAGES.flow.src,
+    urlPath: "/conka-flow",
+    lowPrice: flowPrices.low,
+    highPrice: flowPrices.high,
+    offerCount: flowPrices.count,
+  });
+  const faqSchema = buildFaqSchema(formulaContent["01"].faq);
+
+  return (
+    <>
+      <JsonLd schema={productSchema} />
+      <JsonLd schema={faqSchema} />
+      {children}
+    </>
+  );
 }
