@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-13** | Fixed the B2B enquiry form silently binning every autofilled application (the honeypot was named `company`, so Chrome filled it); applicants now go straight to the order page behind a processing interstitial instead of waiting on an email (SCRUM-1137)
 - **2026-07-13** | Added sitemap.xml and robots.txt so search engines can discover and recrawl the site's indexable pages (SCRUM-1136)
 - **2026-07-13** | Added Product and FAQPage JSON-LD structured data to the Flow, Clear and Both product pages for SEO and AI answer engines (SCRUM-1133)
 - **2026-07-10** | SEO: unique title tags, meta descriptions, OpenGraph and Twitter cards on the 5 core pages (home, Flow, Clear, Both, Ingredients); retired the stylised FL0W wordmark so the Flow PDP reads CONKA Flow / FLOW (SCRUM-1132)

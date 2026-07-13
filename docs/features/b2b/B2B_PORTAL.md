@@ -15,13 +15,13 @@ Live bulk-ordering channel for UK sports clubs and performance orgs at `/profess
 ```mermaid
 flowchart TD
   A["Club visits /professionals (public, no pricing)"] --> B["Submits enquiry form"]
-  B --> C["POST /api/b2b/apply<br/>(zod + honeypot + rate limit)"]
+  B --> C["POST /api/b2b/apply<br/>(zod + rate limit)"]
+  C --> I["Processing interstitial -><br/>straight to /professionals/order"]
   C --> D["Klaviyo event: B2B Application Submitted<br/>(on applicant profile)"]
   C --> E["Klaviyo event: B2B Lead Alert<br/>(on Harry's profile)"]
   C --> F["Added to B2B Leads list (Xhqyt8)"]
-  D --> G["Welcome email + order-page link -> applicant"]
+  D --> G["Welcome email + order-page link -> applicant<br/>(BACKUP copy of the link, not the way in)"]
   E --> H["Lead alert email -> Harry"]
-  G --> I["Club opens unlisted /professionals/order"]
   I --> J{"Choose payment"}
   J -->|"Buy now (card)"| K["POST /api/b2b/cart<br/>-> Shopify hosted checkout"]
   J -->|"Pay by invoice"| L["POST /api/b2b/invoice-order<br/>-> Shopify draft order + emailed invoice"]
@@ -48,6 +48,10 @@ flowchart TD
 
 **Emails are Klaviyo flows, not sent from code.** `/api/b2b/apply` only fires events and subscribes the profile; the two emails are flows configured in the Klaviyo dashboard ([details](#klaviyo-emails--leads)).
 
+**Entry to the order page is immediate, not email-gated** (SCRUM-1137, 13 Jul 2026). On submit the applicant sees a short processing interstitial (`B2BProcessingInterstitial`, modelled on the quiz's `AnalyzingView`) covering the real API call, then goes straight to `/professionals/order`. The welcome email is a **backup copy of the link** for the finance team, not the way in. A Klaviyo failure therefore never blocks a club from ordering: the route logs loudly and lets them through. Previously the whole lead hung on one email surviving spam filters.
+
+**There is deliberately no honeypot.** The original one was a hidden field named `company`, which Chrome's autofill mapped to the organisation field and filled on the applicant's behalf; the route then silently discarded the application. It ran for a month and binned every autofilled lead. Any field a browser can recognise is a field a browser will fill, so do not reintroduce one. The per-IP rate limit is the spam defence.
+
 **Invoicing is an off-the-shelf connector.** Every paid B2B order syncs to Xero as a compliant VAT invoice via **Parex (Xero Bridge)**, scoped to the `B2B Professionals` tag so it never touches DTC accounting. No Xero API code in this repo.
 
 ## Key files
@@ -56,7 +60,8 @@ flowchart TD
 |------|---------|
 | `app/professionals/page.tsx` | Public landing: enquiry form + conversion sections + regular-supply mailto |
 | `app/professionals/order/page.tsx` | Unlisted (`noindex`) order page wrapper |
-| `app/components/b2b/ApplicationForm.tsx` | Enquiry form. Required-field gating, honeypot, posts to `/api/b2b/apply` |
+| `app/components/b2b/ApplicationForm.tsx` | Enquiry form. Required-field gating, posts to `/api/b2b/apply`, then interstitial + redirect to the order page. **No honeypot** (see above) |
+| `app/components/b2b/B2BProcessingInterstitial.tsx` | Processing steps shown over the in-flight submit before the order page. Content-only, reduced-motion aware |
 | `app/components/b2b/B2BOrderBuilder.tsx` | Order builder: steppers, live pricing, tier table + next-tier nudge, PO + finance email, both CTAs |
 | `app/components/b2b/PilotProgramme.tsx` | Pilot-programme USP section (Starter / In-depth formats, mailto-to-Harry CTA) |
 | `app/components/b2b/B2BValueCallout.tsx` | Per-athlete-per-day value band (ex VAT, `pricePerBox / 28`) |
@@ -79,7 +84,7 @@ All `runtime = "nodejs"`, all validate with zod, all return JSON `{ error }` on 
 
 | Method | Endpoint | Body | Does |
 |--------|----------|------|------|
-| POST | `/api/b2b/apply` | enquiry fields + `company` honeypot | Fires `B2B Application Submitted` (applicant) + `B2B Lead Alert` (Harry) events, adds to B2B Leads list |
+| POST | `/api/b2b/apply` | enquiry fields | Fires `B2B Application Submitted` (applicant) + `B2B Lead Alert` (Harry) events, adds to B2B Leads list. Returns `success` once the submission is **received**: a Klaviyo failure is logged, never surfaced, so the applicant is never blocked from the order page. Rate limit 5/10min |
 | POST | `/api/b2b/cart` | `lines[{product, quantity}]`, `poNumber?` | Creates a Shopify cart (PO + `Order Type` as cart attributes), returns `checkoutUrl`. Rate limit 10/10min |
 | POST | `/api/b2b/invoice-order` | `lines`, `financeEmail`, `poNumber` (required) | Creates a draft order at the gross tier price + UK freight line + emails the invoice. PO into note + tag + attribute. Rate limit 5/10min. 503 if Admin token unset |
 
@@ -171,8 +176,9 @@ Card "Buy now" needs nothing in Vercel. Pay-by-invoice needs `SHOPIFY_ADMIN_API_
 
 - **Admin token unset:** invoice route returns a clean 503 "not available yet" rather than a broken draft order. Card path has no such gate (variant GIDs are constants).
 - **Invoice created but email send fails:** route returns a partial-success 502 with the `draftOrderName` so Harry can resend.
-- **Klaviyo partial failure:** applicant submission succeeds as long as either the event or the list-add worked; the alert fails independently and never blocks the applicant.
-- **Spam:** honeypot field (`company`) + per-IP rate limits on all three routes.
+- **Klaviyo partial failure:** never blocks the applicant. They still reach the order page; the route `console.error`s which of `event` / `alert` / `list` failed, with the applicant's email, so the lead can be recovered by hand from the Vercel logs. This log line is the only signal we get, and its absence is what hid SCRUM-1137 for a month.
+- **Spam:** per-IP rate limits on all three routes. **No honeypot, by design** (see How it works).
+- **Autofill (the SCRUM-1137 bug):** browsers fill any field they recognise, including hidden ones. Never add a field to this form whose name or label a browser could map to a real one, and never silently drop a submission. If a submission is rejected, say so.
 - **PO mapping to Xero:** PO rides in the order note, a sanitized tag, and a custom attribute, because connectors read note/tag, not custom attributes. Card orders carry the PO via the Shopify Flow tag (the Storefront cart cannot set a note).
 - **Pilot-proven (8 Jun 2026):** one invoice order (#3514) and one card order (#3517) each produced exactly one Xero invoice, £59 net + £11.80 VAT, `B2B Sales`, PO in Reference, zero DTC orders synced. PO→Reference confirmed both paths (card carries it via the Flow tag even with an empty note).
 

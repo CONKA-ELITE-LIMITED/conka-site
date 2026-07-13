@@ -3,10 +3,19 @@
  *
  * Receives a B2B teams enquiry, validates it, and hands it to Klaviyo
  * (welcome email + Harry notification + B2B Leads list). No database: the
- * record lives in Klaviyo. See docs/development/featurePlans/b2b-professionals-portal.md
+ * record lives in Klaviyo. See docs/features/b2b/B2B_PORTAL.md
  *
- * Spam defence: a honeypot field (silently accepted, never processed) plus a
- * light per-IP rate limit, since this endpoint sends email.
+ * Spam defence is the per-IP rate limit alone. There is deliberately NO
+ * honeypot: the old one was a hidden field named `company`, which Chrome's
+ * autofill mapped to the organisation field and filled on the applicant's
+ * behalf. Every autofilled application was then silently discarded. Any field
+ * a browser can recognise is a field a browser will fill, so we do not
+ * reintroduce one. See SCRUM-1137.
+ *
+ * The applicant is never blocked on Klaviyo. Once the submission is accepted
+ * we return success and the client sends them straight to the order page; the
+ * email is a backup copy of that link, not the gate. A Klaviyo outage must not
+ * cost a bulk order, so failures are logged loudly rather than surfaced.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -30,10 +39,6 @@ const applicationSchema = z.object({
   vatNumber: z.string().trim().max(40).optional().or(z.literal("")),
   postcode: z.string().trim().max(20).optional().or(z.literal("")),
   hearAbout: z.string().trim().max(300).optional().or(z.literal("")),
-  // Honeypot: real users never see or fill it. Validated permissively so a
-  // tripped honeypot is handled below (silent success) rather than leaking a
-  // validation error that reveals the trap.
-  company: z.string().max(200).optional(),
 });
 
 // Light in-memory rate limit. Adequate as a spam speed-bump alongside the
@@ -68,11 +73,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Honeypot tripped: pretend success so bots move on, but do nothing.
-  if (parsed.company) {
-    return NextResponse.json({ success: true });
-  }
-
   const result = await submitB2BApplication({
     firstName: parsed.firstName,
     lastName: parsed.lastName,
@@ -88,12 +88,16 @@ export async function POST(request: NextRequest) {
     hearAbout: parsed.hearAbout || undefined,
   });
 
-  // The applicant succeeded from their side as long as we received and accepted
-  // the application. Partial Klaviyo failures are logged server-side for follow-up.
-  if (!result.eventSent && !result.listSubscribed) {
-    return NextResponse.json(
-      { success: false, error: "We could not submit your enquiry. Please try again." },
-      { status: 502 },
+  // Deliberately not a failure for the applicant. They are about to be sent
+  // straight to the order page, so a Klaviyo problem costs us the email and the
+  // lead record, not the sale. Blocking here would let a Klaviyo outage turn a
+  // bulk order away at the door. Log loudly instead: this is the only signal we
+  // get, and its absence for a month is what hid SCRUM-1137.
+  if (!result.eventSent || !result.alertSent || !result.listSubscribed) {
+    console.error(
+      `[B2B] Klaviyo handoff incomplete for ${parsed.workEmail} (${parsed.organisation}): ` +
+        `event=${result.eventSent} alert=${result.alertSent} list=${result.listSubscribed}. ` +
+        `Applicant was let through to the order page; follow up manually.`,
     );
   }
 

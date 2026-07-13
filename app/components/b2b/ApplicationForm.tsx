@@ -1,14 +1,27 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { B2B_SPORTS, B2B_SQUAD_SIZES, EMAIL_RE } from "@/app/lib/b2bData";
+import { useCallback, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { B2B_ORDER_PATH, B2B_SPORTS, B2B_SQUAD_SIZES, EMAIL_RE } from "@/app/lib/b2bData";
 import { trackB2BApplicationSubmitted } from "@/app/lib/analytics";
+import B2BProcessingInterstitial from "./B2BProcessingInterstitial";
 
 /**
  * B2B teams enquiry form. Content-only client component: the page owns the
  * section wrapper and background. Posts to /api/b2b/apply, which routes the
  * lead to Klaviyo (welcome email + Harry notification + B2B Leads list).
+ *
+ * On success the applicant goes straight to the order page behind a processing
+ * interstitial. The welcome email is a backup copy of that link, not the way in,
+ * so no delivery problem can cost us a bulk order. See SCRUM-1137.
+ *
+ * There is deliberately NO honeypot field. The old one was named `company`,
+ * which Chrome autofill happily filled on the applicant's behalf, and the route
+ * then binned the application. Do not reintroduce one.
  */
+
+/** Give up rather than leave the applicant staring at a finished interstitial. */
+const REQUEST_TIMEOUT_MS = 15_000;
 
 interface FormState {
   firstName: string;
@@ -23,7 +36,6 @@ interface FormState {
   vatNumber: string;
   postcode: string;
   hearAbout: string;
-  company: string; // honeypot
 }
 
 const EMPTY: FormState = {
@@ -39,18 +51,23 @@ const EMPTY: FormState = {
   vatNumber: "",
   postcode: "",
   hearAbout: "",
-  company: "",
 };
+
+/** Settled outcome of the submit request, awaited by the interstitial. */
+type SubmitOutcome = { ok: true } | { ok: false; error: string };
 
 const labelClass = "brand-eyebrow block mb-2";
 const fieldClass =
   "w-full min-h-[48px] bg-white border border-black/12 rounded-none px-4 py-3 text-base text-black placeholder-black/30 focus:outline-none focus:border-black/40 focus:ring-2 focus:ring-black/10 transition-colors";
 
 export default function ApplicationForm() {
+  const router = useRouter();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "processing" | "error">("idle");
   const [serverError, setServerError] = useState("");
+  /** In-flight submit. The interstitial waits on this before redirecting. */
+  const submission = useRef<Promise<SubmitOutcome> | null>(null);
 
   const update = useCallback(
     (key: keyof FormState) =>
@@ -77,33 +94,59 @@ export default function ApplicationForm() {
     return Object.keys(next).length === 0;
   };
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setServerError("");
-    if (!validate()) return;
-
-    setStatus("submitting");
+  /** Never rejects: the outcome is awaited by the interstitial, not by React. */
+  async function submitApplication(): Promise<SubmitOutcome> {
     try {
       const res = await fetch("/api/b2b/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data?.success) {
-        setStatus("error");
-        setServerError(data?.error ?? "Something went wrong. Please try again.");
-        return;
+        return {
+          ok: false,
+          error: data?.error ?? "Something went wrong. Please try again.",
+        };
       }
-
-      trackB2BApplicationSubmitted({ sport: form.sport, squadSize: form.squadSize });
-      setStatus("success");
+      return { ok: true };
     } catch {
-      setStatus("error");
-      setServerError("Network error. Please try again.");
+      return { ok: false, error: "Network error. Please try again." };
     }
   }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setServerError("");
+    if (!validate()) return;
+
+    // Kick the request off and show the interstitial over it. The two run
+    // together, so the wait is real rather than a staged pause.
+    submission.current = submitApplication();
+    trackB2BApplicationSubmitted({ sport: form.sport, squadSize: form.squadSize });
+    setStatus("processing");
+  }
+
+  /**
+   * The interstitial has played out. Redirect only once the request has also
+   * settled, so we never send someone to the order page on a failed submit.
+   */
+  const handleProcessingComplete = useCallback(async () => {
+    const outcome = (await submission.current) ?? {
+      ok: false as const,
+      error: "Something went wrong. Please try again.",
+    };
+
+    if (outcome.ok) {
+      router.push(B2B_ORDER_PATH);
+      return;
+    }
+
+    setStatus("error");
+    setServerError(outcome.error);
+  }, [router]);
 
   // Mirror of validate()'s required checks, without writing errors. Gates the
   // submit button so it can't be clicked until every required field is valid.
@@ -117,40 +160,12 @@ export default function ApplicationForm() {
     form.squadSize !== "" &&
     form.jobTitle.trim() !== "";
 
-  if (status === "success") {
-    return (
-      <div className="rounded-none border border-black/12 bg-white p-8 lg:p-10 text-center">
-        <p className="brand-eyebrow mb-4">Application received</p>
-        <h3 className="brand-h3 mb-3">Check your inbox.</h3>
-        <p className="brand-body mx-auto">
-          We have sent your team pricing link to{" "}
-          <span className="font-medium">{form.workEmail}</span>. It includes
-          everything you need to place an order. Can&apos;t see it? Check your spam
-          folder, or email{" "}
-          <a href="mailto:harryglover@conka.io" className="underline">
-            harryglover@conka.io
-          </a>
-          .
-        </p>
-      </div>
-    );
+  if (status === "processing") {
+    return <B2BProcessingInterstitial onComplete={handleProcessingComplete} />;
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-      {/* Honeypot: visually hidden, off-screen, not tab-reachable. Bots fill it. */}
-      <div aria-hidden className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
-        <label htmlFor="company">Company</label>
-        <input
-          id="company"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={form.company}
-          onChange={update("company")}
-        />
-      </div>
-
       <p className="brand-mono-sub">
         Fields marked <span className="text-red-600">*</span> are required.
       </p>
@@ -224,15 +239,15 @@ export default function ApplicationForm() {
 
       <button
         type="submit"
-        disabled={status === "submitting" || !requiredComplete}
+        disabled={!requiredComplete}
         className="brand-btn brand-btn-accent w-full min-h-[52px] text-sm uppercase tracking-[0.15em] disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {status === "submitting" ? "Submitting..." : "Get team pricing"}
+        Get team pricing
       </button>
 
       <p className="brand-mono-sub">
         {requiredComplete
-          ? "We'll email your pricing link instantly. No spam."
+          ? "Your pricing opens straight away. We'll email you a copy of the link."
           : "Complete the fields marked * to continue."}
       </p>
     </form>
