@@ -40,17 +40,37 @@ function BackArrow({ onClick }: { onClick: () => void }) {
   );
 }
 
-/** The reassurance line from /start-b. Same green tick, same words. */
+/**
+ * Reassurance under the CTA. The green tick is /start-b's. "Cancel anytime" only
+ * appears on a subscription, because it is only true of a subscription, and it
+ * is the objection actually worth answering at the moment of commitment.
+ */
 function GuaranteeLine({ isSubscription }: { isSubscription: boolean }) {
   return (
-    <span className="flex items-center gap-1.5 text-[12px] text-black/60">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
-        <circle cx="12" cy="12" r="10" fill="#10B981" />
-        <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      100-day guarantee
-      {isSubscription && <span className="hidden sm:inline">· Free UK shipping · Cancel anytime</span>}
-    </span>
+    <div className="flex items-center justify-center gap-x-4 gap-y-1 flex-wrap text-[12px] text-black/60">
+      <span className="flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
+          <circle cx="12" cy="12" r="10" fill="#10B981" />
+          <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        100-day guarantee
+      </span>
+
+      {isSubscription && (
+        <span className="flex items-center gap-1.5">
+          <svg
+            width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981"
+            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0"
+          >
+            <path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+          Cancel anytime
+        </span>
+      )}
+    </div>
   );
 }
 

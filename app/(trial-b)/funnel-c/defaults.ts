@@ -8,7 +8,13 @@ import type { FunnelCadence, FunnelProduct } from "../lib/funnelData";
  * the page told Meta "both" while the UI actually showed Flow, so every
  * ViewContent carried the wrong content_id and the wrong value.
  */
-export const FUNNEL_C_DEFAULT_PRODUCT: FunnelProduct = "flow";
+/**
+ * Both, pre-selected. The landers that feed this funnel advertise the Both
+ * offer ("Get both from £x/shot"), so landing on a single formula broke the
+ * promise the ad and the lander just made. It is also the recommended routine
+ * and the highest LTV, which is why /funnel and /funnel-b default to it too.
+ */
+export const FUNNEL_C_DEFAULT_PRODUCT: FunnelProduct = "both";
 export const FUNNEL_C_DEFAULT_CADENCE: FunnelCadence = "monthly-sub";
 
 /** Order attribution tag. Distinct from funnel-b so revenue is separable. */
