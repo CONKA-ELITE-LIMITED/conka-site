@@ -450,6 +450,24 @@ export function getOfferPricing(
   return FUNNEL_PRICING[product][cadence];
 }
 
+/**
+ * Lowest and highest purchasable price across all cadences for a product,
+ * plus the number of offers. Feeds the Product JSON-LD AggregateOffer so the
+ * structured data stays in sync with FUNNEL_PRICING automatically (SCRUM-1133).
+ */
+export function getFunnelPriceRange(product: FunnelProduct): {
+  low: number;
+  high: number;
+  count: number;
+} {
+  const prices = Object.values(FUNNEL_PRICING[product]).map((p) => p.price);
+  return {
+    low: Math.min(...prices),
+    high: Math.max(...prices),
+    count: prices.length,
+  };
+}
+
 export function getOfferVariant(
   product: FunnelProduct,
   cadence: FunnelCadence,
