@@ -1,15 +1,18 @@
 # SEO / AEO Foundation
 
-**Status:** Phases 1 and 2 merged to main. Phase 3 scoped and ticketed (SCRUM-1133). Phases 4 to 6 documented, not ticketed.
+**Status:** Phases 1, 2 and 3 merged to main. Phase 5 (sitemap + robots) pulled ahead of Phase 4 and ticketed (SCRUM-1136). Phases 4 and 6 documented, not ticketed.
 **Owner:** Rudh
 **Source input:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research)
 **Created:** 2026-07-10
-**Updated:** 2026-07-10
+**Updated:** 2026-07-13
 
 ## Progress log
 
 - **2026-07-10** Phase 1 (SCRUM-1131) built, reviewed (`/review-code` LGTM), and merged to `main` via PR #336 (into `SEO-AND-AEO-WORK`) then PR #337 (into `main`). Root canonical is now the relative `"./"` form; dead `app/science/layout.tsx` deleted.
 - **2026-07-10** Phase 2 (SCRUM-1132) built on branch `scrum-1132-metadata` off `main`. Added `export const metadata` to `app/page.tsx` (server component, in place) and sibling `layout.tsx` files for `/conka-flow`, `/conka-clarity`, `/conka-both`, `/ingredients` (all client pages). Removed the `CONKA FL0W` override in `productHeroHelpers.ts` so the Flow PDP H1 (and its bottle alt text) now read `CONKA Flow`. Verified against the dev server: all five pages emit their own title/description/OG image, every description is 160 chars or fewer, and the Clear and Both H1s are unchanged. See "Discrepancies found during build" below for two items needing a decision.
+- **2026-07-13** Phase 3 (SCRUM-1133) built, Shopify-verified, reviewed (`/review-code` LGTM), and merged to `main`. Added `app/lib/jsonLd.tsx` (`buildProductSchema`, `buildFaqSchema`, `JsonLd`, `absoluteUrl`) and `getFunnelPriceRange` in `funnelData.ts`, wired `Product` + `FAQPage` JSON-LD into the three PDP server layouts. `Product` uses an `AggregateOffer` derived from `FUNNEL_PRICING`; no `aggregateRating` (no per-product source). Verified all 9 funnel variants against the live Storefront API: every price matches `FUNNEL_PRICING` and all are `availableForSale`, so the `InStock` claim and the low/high ranges are correct. Ticket Done.
+- **2026-07-13** Captured a Google Search Console baseline (`docs/analytics/seo-search-console-baseline.md`) as the pre-change measuring stick. Key finding: organic traffic is ~99% brand, only 17 URLs got any impression in 3 months, and the product pages are effectively invisible. This diagnosed discovery as the bottleneck and is the reason Phase 5 (sitemap + robots) was pulled ahead of Phase 4.
+- **2026-07-13** Phase 5 (SCRUM-1136) scoped and ticketed, pulled ahead of Phase 4. Reason: with canonicals fixed but no sitemap or robots, Google is discovering pages by internal links alone. A sitemap accelerates recrawl of the now-indexable pages. The proposed `/science` + `/why-conka` metadata add was cut on inspection: both already have `metadata` exports, so their low CTR is a copy/intent issue, not a missing-tag one.
 
 ## Discrepancies found during build (both resolved)
 
@@ -147,13 +150,13 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Fix the site-wide inherited canonical | Merged to main (SCRUM-1131) |
-| 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Built, in review (SCRUM-1132) |
-| 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Scoped, ticketed (SCRUM-1133) |
+| 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Merged to main (SCRUM-1132) |
+| 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Merged to main (SCRUM-1133) |
+| 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Ticketed, in build (SCRUM-1136) |
 | 4 | Descriptive keyword H1s on the product pages | Future |
-| 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Future |
 | 6 | Informational content surface (blog) for the research-intent keywords | Future |
 
-Phase 1 and Phase 2 ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible.
+Phases ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible. Phase 5 was pulled ahead of Phase 4 after the Search Console baseline showed discovery, not on-page keyword tuning, is the current bottleneck.
 
 ---
 
@@ -296,15 +299,16 @@ All five also need `openGraph` (title, description, image), per `.claude/rules/p
 
 ## Jira tickets
 
-Sprint 28. Phases 3 to 6 are deliberately not ticketed.
+Sprint 28. Phases 4 and 6 are deliberately not ticketed yet.
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| [SCRUM-1131](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1131) | [Bugs] Every page canonicals to the homepage, blocking the whole site from ranking | 1 | Built, in review |
+| [SCRUM-1131](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1131) | [Bugs] Every page canonicals to the homepage, blocking the whole site from ranking | 1 | Done |
 | [SCRUM-1132](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1132) | [Website & CRO] Add per-page SEO metadata to the five indexable money pages | 2 | Done |
-| [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | To Do |
+| [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | Done |
+| [SCRUM-1136](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1136) | [Website & CRO] Add sitemap.ts and robots.ts for crawl discovery (SEO Phase 5) | 5 | In build |
 
-SCRUM-1131 blocks SCRUM-1132. The disputed prices are now resolved (see "Prices in the meta descriptions" above), so SCRUM-1132 is unblocked once SCRUM-1131 merges. Two soft open questions remain for marketing (the `FL0W` zero and the "From" convention); neither blocks the build.
+Phases 1, 2 and 3 are merged to main. Phase 5 (SCRUM-1136) is in build, pulled ahead of Phase 4 per the discovery-bottleneck finding in the Search Console baseline.
 
 ## Branching model
 
