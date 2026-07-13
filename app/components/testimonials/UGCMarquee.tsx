@@ -43,6 +43,7 @@ const UGC_ITEMS: UGCItem[] = [
   { src: "/testimonials/dtc/MillieH.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/11.jpg", alt: "A CONKA customer working with the daily shots" },
   { src: "/testimonials/dtc/AlexL.jpg", alt: "A CONKA customer with their daily shot" },
+  { src: "/testimonials/ugc/12.jpg", alt: "A CONKA customer holding their delivery box" },
 ];
 
 // Pair the stills into stacked column units. If the count is odd, the final
