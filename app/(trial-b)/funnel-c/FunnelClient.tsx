@@ -322,11 +322,10 @@ export default function FunnelClient() {
           </span>
         </div>
 
-        {/* Same gamified fill the /go quizzes use (gradient + shimmer + glow),
-            via the shared .go-progress-fill class in brand-base.css. */}
+        {/* Quiet 3px rule. The gamified /go fill (gradient + shimmer) was tried
+            here and pulled far too much attention for a checkout surface. */}
         <div
-          className="h-2.5 w-full"
-          style={{ backgroundColor: "var(--go-track)" }}
+          className="h-[3px] w-full bg-black/[0.07]"
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={100}
@@ -334,12 +333,12 @@ export default function FunnelClient() {
           aria-label="Funnel progress"
         >
           <div
-            className="go-progress-fill h-full rounded-r-full transition-[width] duration-500 ease-out"
+            className="h-full bg-[#1B2757] transition-all duration-500 ease-out"
             style={{ width: `${(step / STEPS.length) * 100}%` }}
           />
         </div>
       </div>
-      <div className="h-[66px]" />
+      <div className="h-[59px]" />
 
       <main className="lg:flex lg:min-h-[calc(100vh-59px)]">
         {/* Left media — desktop */}

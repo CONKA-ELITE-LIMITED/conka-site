@@ -35,31 +35,36 @@ const TOGGLE: Record<FunnelProduct, { name: string; period: string }> = {
   both: { name: "Both", period: "All day" },
 };
 
-// Punchy descriptor + blurb + proof stats, lifted from the product pages
-// (formulaContent.ts / BOTH_HERO_CONTENT) so the funnel carries real weight.
+// Blurb + proof stats, lifted from the product pages (formulaContent.ts /
+// BOTH_HERO_CONTENT) so the funnel carries real weight.
+//
+// The stats panel is "Proof", not "Impact": the numbers are a mix of measured
+// outcomes from the ingredient studies and hard product facts, and pretending
+// a spec count ("6 adaptogens") is an outcome was what made the old panel read
+// as spin. Each label now says plainly which kind of number it is.
 const COPY: Record<FunnelProduct, { blurb: string; stats: { value: string; label: string }[] }> = {
   flow: {
     blurb: "Sharper focus and calmer energy from the first hour — six clinically-dosed adaptogens, zero caffeine, zero crash.",
     stats: [
-      { value: "−56%", label: "stress scores" },
-      { value: "6", label: "adaptogens" },
-      { value: "0", label: "caffeine" },
+      { value: "−56%", label: "lower stress scores in studies" },
+      { value: "6", label: "clinically dosed adaptogens" },
+      { value: "0", label: "caffeine, so no crash" },
     ],
   },
   clear: {
     blurb: "Cut through brain fog and think clearly under pressure — ten clinically-dosed actives, including Alpha-GPC and Ginkgo Biloba.",
     stats: [
-      { value: "+96%", label: "attention" },
-      { value: "+57%", label: "blood flow" },
-      { value: "10", label: "nootropics" },
+      { value: "+96%", label: "attention in studies" },
+      { value: "+57%", label: "cerebral blood flow in studies" },
+      { value: "10", label: "clinically dosed nootropics" },
     ],
   },
   both: {
     blurb: "Flow for the morning, Clear for the afternoon — two clinically-dosed shots covering the full cognitive day, no stimulants, no crash.",
     stats: [
-      { value: "15", label: "active ingredients" },
-      { value: "150k+", label: "shots delivered" },
-      { value: "AM+PM", label: "full-day cover" },
+      { value: "15", label: "active ingredients across both" },
+      { value: "150k+", label: "shots delivered to date" },
+      { value: "622+", label: "reviews, rated 4.7 out of 5" },
     ],
   },
 };
@@ -124,7 +129,7 @@ const ROW_TABS: { key: InfoKey; label: string }[] = [
   { key: "ingredients", label: "Ingredients" },
   { key: "how", label: "How it works" },
   { key: "athletes", label: "Used by" },
-  { key: "impact", label: "Impact" },
+  { key: "impact", label: "Proof" },
 ];
 
 function CheckIcon() {
@@ -136,10 +141,10 @@ function CheckIcon() {
 }
 
 /**
- * Animated count-up for the Impact stats. Parses a value like "−56%", "+96%",
+ * Animated count-up for the Proof stats. Parses a value like "−56%", "+96%",
  * "150k+" into prefix / number / suffix and eases the number 0 → target on
- * mount (the Impact panel only mounts when opened). Non-numeric values
- * ("AM+PM") render as-is. Honours reduced-motion.
+ * mount (the panel only mounts when opened). Values with no digits render
+ * as-is. Honours reduced-motion.
  */
 function CountUp({ value }: { value: string }) {
   const m = value.match(/^(\D*)(\d[\d.]*)(\D*)$/);
@@ -272,14 +277,16 @@ export default function BuildStep({
           </div>
         </div>
 
-        {/* Disclosure chips — same language as the Learn step's cards. */}
-        <div className="flex items-center gap-2 px-4 pb-4 flex-wrap">
+        {/* Disclosure chips — same language as the Learn step's cards. A 2x2
+            grid rather than flex-wrap: four equal tiles fill the row instead of
+            leaving a ragged gap where the last chip does not reach. */}
+        <div className="grid grid-cols-2 gap-2 px-4 pb-4">
           {ROW_TABS.map((t) => (
             <button
               key={t.key}
               type="button"
               onClick={() => toggleInfo(t.key)}
-              className={`inline-flex items-center gap-1.5 min-h-[44px] rounded-full px-3.5 text-[13px] font-medium transition-colors ${
+              className={`flex items-center justify-between gap-1.5 min-h-[44px] w-full rounded-full px-4 text-[13px] font-medium transition-colors ${
                 openInfo === t.key
                   ? "bg-[#1B2757] text-white"
                   : "bg-black/[0.05] text-black/70 hover:bg-black/[0.09] hover:text-black"
@@ -370,22 +377,32 @@ export default function BuildStep({
             )}
             {openInfo === "impact" && (
               <>
-                <div className="grid grid-cols-3 gap-2">
+                {/* Stacked rows, not a 3-across grid: the labels are sentences
+                    now, and three columns of wrapped sentence fragments at
+                    390px was the other half of why this panel read badly. */}
+                <div className="flex flex-col gap-2">
                   {copy.stats.map((s) => (
-                    <div key={s.label} className="rounded-[12px] bg-white px-2 py-3.5 text-center">
-                      <p className="text-[28px] font-bold text-[#1B2757] tabular-nums leading-none tracking-tight">
+                    <div key={s.label} className="flex items-center gap-3 rounded-[10px] bg-white px-3 py-2.5">
+                      <span className="min-w-[68px] shrink-0 text-[24px] font-bold text-[#1B2757] tabular-nums leading-none tracking-tight">
                         <CountUp value={s.value} />
-                      </p>
-                      <p className="text-[11px] text-black/60 mt-2 leading-tight">{s.label}</p>
+                      </span>
+                      <span className="text-[13px] text-black leading-snug">{s.label}</span>
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center justify-between gap-3 mt-3.5 text-[12px]">
-                  <span className="font-semibold text-black">UK Patent GB2629279</span>
-                  <span className="text-black/55">Informed Sport certified</span>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-black">
+                    UK Patent GB2629279
+                  </span>
+                  <span className="rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-black">
+                    Informed Sport certified
+                  </span>
                 </div>
+
                 <p className="text-[11px] text-black/45 mt-2.5 leading-snug">
-                  Figures from peer-reviewed studies on the active ingredients.
+                  Study figures come from peer-reviewed research on the active
+                  ingredients, not on the finished drink.
                 </p>
               </>
             )}

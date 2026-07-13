@@ -183,14 +183,15 @@ function FormulaCard({
         </div>
       </div>
 
-      {/* Progressive disclosure. Rounded chips, not clinical tabs. */}
-      <div className="flex items-center gap-2 px-4 pb-4 flex-wrap">
+      {/* Progressive disclosure. Rounded chips in a 2x2 grid so four equal
+          tiles fill the row instead of wrapping raggedly. */}
+      <div className="grid grid-cols-2 gap-2 px-4 pb-4">
         {(["ingredients", "timing", "does", "notice"] as Section[]).map((section) => (
           <button
             key={section}
             type="button"
             onClick={() => toggle(section)}
-            className={`inline-flex items-center gap-1.5 min-h-[44px] rounded-full px-3.5 text-[13px] font-medium transition-colors ${
+            className={`flex items-center justify-between gap-1.5 min-h-[44px] w-full rounded-full px-4 text-[13px] font-medium transition-colors ${
               active === section
                 ? "bg-[#1B2757] text-white"
                 : "bg-black/[0.05] text-black/70 hover:bg-black/[0.09] hover:text-black"
