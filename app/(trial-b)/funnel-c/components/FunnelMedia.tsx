@@ -21,9 +21,9 @@ const VIDEO: Record<FunnelProduct, { webm: string; mp4: string; poster?: string 
 };
 
 const CAPTION: Record<FunnelProduct, string> = {
-  flow: "Morning · caffeine-free focus",
-  clear: "Afternoon · clears the 2pm fog",
-  both: "AM + PM · the complete daily system",
+  flow: "Morning. Caffeine-free focus.",
+  clear: "Afternoon. Clears the 2pm fog.",
+  both: "Morning to evening. The full system.",
 };
 
 export default function FunnelMedia({
@@ -39,7 +39,7 @@ export default function FunnelMedia({
   return (
     // Height comes entirely from the parent (mobile banner / desktop column) —
     // no min-height, so the compact mobile banner isn't forced taller.
-    <div className="relative w-full h-full overflow-hidden bg-[var(--brand-tint)]">
+    <div className="relative w-full h-full overflow-hidden bg-black/[0.04]">
       <video
         key={product}
         className="absolute inset-0 h-full w-full object-cover object-center"
@@ -59,10 +59,10 @@ export default function FunnelMedia({
           render behind it. Hidden on Learn to keep the hierarchy clean. */}
       {showCaption && (
         <div className="absolute inset-x-0 bottom-0 px-4 pt-10 pb-3 lg:px-7 lg:pb-5 bg-gradient-to-t from-white via-white/70 to-transparent">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1B2757]">
+          <p className="text-[14px] font-semibold text-black">
             {CAPTION[product]}
           </p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/50 mt-1">
+          <p className="text-[12px] text-black/55 mt-0.5">
             Informed Sport certified · UK patent GB2629279
           </p>
         </div>
