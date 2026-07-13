@@ -102,6 +102,8 @@ export interface BothHeroContent {
   tagline: string;
   headline: string;
   soldCount: string;
+  /** Descriptive, keyword-bearing subline shown under the product name in the PDP <h1> (SEO Phase 4, SCRUM-1138). */
+  seoHeading?: string;
 }
 
 export const BOTH_HERO_CONTENT: BothHeroContent = {
@@ -110,4 +112,5 @@ export const BOTH_HERO_CONTENT: BothHeroContent = {
   headline:
     "Flow in the morning for calm, sustained focus. Clear in the afternoon for precision and output. Two clinically-dosed liquid shots covering the full cognitive day, without stimulants or a crash.",
   soldCount: "Over 150,000 shots delivered",
+  seoHeading: "The Complete Daily Brain Shot System, Morning to Evening",
 };

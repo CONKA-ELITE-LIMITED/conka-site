@@ -40,6 +40,101 @@ export interface ProductBuyPanelProps {
   onAddToCart: () => void;
   /** The OTP text link adds the one-time variant straight to cart */
   onOtpAddToCart: () => void;
+  /** Mobile renders the hero header (rating + title) above the image itself,
+      so the panel skips it to avoid a duplicate (SCRUM-1138). */
+  hideHeader?: boolean;
+}
+
+/**
+ * The PDP hero header: rating line, eyebrow, and the SEO <h1> (product name plus
+ * a keyword subline). Exported so ProductHeroMobile can render it above the image
+ * carousel, while ProductBuyPanel renders it inline on desktop (SCRUM-1138).
+ */
+export function ProductHeroHeader({
+  formulaId,
+  showSubline = true,
+  showHeadline = true,
+}: {
+  formulaId: ProductHeroId;
+  /** Desktop keeps the keyword subline inside the <h1>. Mobile drops it below the
+      image (rendered by ProductHeroLede), so it is suppressed here. */
+  showSubline?: boolean;
+  showHeadline?: boolean;
+}) {
+  const content = getHeroContent(formulaId);
+  return (
+    <>
+      {/* Stars + review/usage counts in one compact line */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex" aria-hidden>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <svg
+              key={i}
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="text-[#1B2757]"
+            >
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          ))}
+        </div>
+        <span className="text-sm font-bold text-black">
+          4.7 <span className="font-semibold">from 622+ Reviews</span>
+        </span>
+        <span className="text-sm text-black/50">· 5,000+ daily users</span>
+      </div>
+
+      {/* Eyebrow + product name. On desktop the keyword subline sits inside the
+          <h1>; on mobile it drops below the image via ProductHeroLede. */}
+      <div>
+        <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+          Daily Nootropic Brain Shots
+        </p>
+        <h1 className="leading-tight">
+          <span
+            className="brand-h1 block lg:!text-[2.25rem]"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            {content.name}
+          </span>
+          {showSubline && content.seoHeading && (
+            <span className="mt-1.5 block text-base font-medium leading-snug text-black/65 md:text-lg">
+              {content.seoHeading}
+            </span>
+          )}
+        </h1>
+        {showHeadline && (
+          <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
+            {content.headline}
+          </p>
+        )}
+      </div>
+    </>
+  );
+}
+
+/**
+ * Mobile-only lede shown directly below the hero image: the keyword subline (as an
+ * h2, since the <h1> product name sits above the image) followed by the short
+ * description. Keeps the descriptive copy off the top of the hero (SCRUM-1138).
+ */
+export function ProductHeroLede({ formulaId }: { formulaId: ProductHeroId }) {
+  const content = getHeroContent(formulaId);
+  return (
+    <div>
+      {content.seoHeading && (
+        <h2 className="text-lg font-medium leading-snug text-black/70">
+          {content.seoHeading}
+        </h2>
+      )}
+      <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
+        {content.headline}
+      </p>
+    </div>
+  );
 }
 
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
@@ -515,8 +610,8 @@ export default function ProductBuyPanel({
   onCadenceChange,
   onAddToCart,
   onOtpAddToCart,
+  hideHeader,
 }: ProductBuyPanelProps) {
-  const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
   const shotsPerDay = productType === "both" ? 2 : 1;
 
@@ -540,44 +635,7 @@ export default function ProductBuyPanel({
 
   return (
     <>
-      {/* Stars + review/usage counts in one compact line */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex" aria-hidden>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <svg
-              key={i}
-              xmlns="http://www.w3.org/2000/svg"
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="text-[#1B2757]"
-            >
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-          ))}
-        </div>
-        <span className="text-sm font-bold text-black">
-          4.7 <span className="font-semibold">from 622+ Reviews</span>
-        </span>
-        <span className="text-sm text-black/50">· 5,000+ daily users</span>
-      </div>
-
-      {/* Eyebrow + title + short description */}
-      <div className="mb-0">
-        <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
-          Daily Nootropic Brain Shots
-        </p>
-        <h1
-          className="brand-h1 leading-tight lg:!text-[2.25rem]"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          {content.name}
-        </h1>
-        <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
-          {content.headline}
-        </p>
-      </div>
+      {!hideHeader && <ProductHeroHeader formulaId={formulaId} />}
 
       {/* Key-benefit checkmark pills */}
       <ul className="flex flex-col gap-2" aria-label="Key benefits">

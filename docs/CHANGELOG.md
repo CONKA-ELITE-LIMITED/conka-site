@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-13** | PDP hero H1s now carry a keyword subline, and on mobile the title/rating lead above the image with the description below it (SCRUM-1138)
 - **2026-07-13** | Fixed the B2B enquiry form silently binning every autofilled application (the honeypot was named `company`, so Chrome filled it); applicants now go straight to the order page behind a processing interstitial instead of waiting on an email (SCRUM-1137)
 - **2026-07-13** | Added sitemap.xml and robots.txt so search engines can discover and recrawl the site's indexable pages (SCRUM-1136)
 - **2026-07-13** | Added Product and FAQPage JSON-LD structured data to the Flow, Clear and Both product pages for SEO and AI answer engines (SCRUM-1133)

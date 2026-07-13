@@ -93,6 +93,8 @@ export interface FormulaContent {
   subheadline: string;
   annotation: string;
   positioning: string; // "ENERGY" or "CLARITY"
+  /** Descriptive, keyword-bearing subline shown under the product name in the PDP <h1> (SEO Phase 4, SCRUM-1138). */
+  seoHeading?: string;
   whenToTake: string;
   ingredients: Ingredient[];
   taste: string;
@@ -116,6 +118,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
     subheadline: "Designed for daily cognitive enhancement",
     annotation: "your daily foundation",
     positioning: "ENERGY",
+    seoHeading: "The Daily Morning Brain Shot for Sharper, Calmer Focus",
     whenToTake:
       "Best taken in the morning with or without food. Perfect as a coffee replacement for sustained energy throughout the day.",
     ingredients: [
@@ -650,6 +653,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
     subheadline: "Strategic enhancement for high-stakes moments",
     annotation: "your competitive edge",
     positioning: "CLARITY",
+    seoHeading: "The Afternoon Brain Shot That Cuts Through Brain Fog",
     whenToTake:
       "Best taken 30-60 minutes before you need peak performance, or in the afternoon to support decision-making and recovery.",
     ingredients: [
