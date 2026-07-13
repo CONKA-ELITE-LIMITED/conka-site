@@ -11,6 +11,21 @@ Related: [seo-aeo-metadata-foundation.md](../development/featurePlans/seo-aeo-me
 
 ---
 
+## How to re-export this data (repeat each time)
+
+1. Go to [search.google.com/search-console](https://search.google.com/search-console) and sign in with an account that has access to the `conka.io` property. If you do not have access, ask whoever manages the domain or Google Ads to add you (Settings to Users and permissions to Add user).
+2. Select the **conka.io** property (top left).
+3. **Performance report** (left menu, "Performance" then "Search results"):
+   - Set the date range to **Last 3 months** so it matches this baseline. Keep it at 3 months, not 7 or 28 days, so comparisons stay like-for-like.
+   - Leave search type on **Web**.
+   - Click **Export** (top right) then **Download CSV**. That gives you a zip / folder containing `Chart.csv`, `Queries.csv`, `Pages.csv`, `Countries.csv`, `Devices.csv`, `Search appearance.csv` and `Filters.csv`. Those are the exact files analysed here.
+4. **Indexed-page count** (a separate report, not in the Performance export): left menu, **Indexing then Pages**. Note the "Indexed" and "Not indexed" totals at the top. This is the fastest signal that the canonical fix is working (product pages should move from not-indexed to indexed).
+5. Give the export folder to Claude (drop it somewhere readable, e.g. Desktop or the repo, since macOS blocks sandboxed access to Downloads) and ask it to add a new row to the Comparison log below.
+
+Optional but recommended when tracking non-brand progress: in the Performance report add two filters, **Query to "Custom (regex)" or "Does not contain" to `conka`** and **Country to United Kingdom**. That view isolates the category traffic this programme is trying to create.
+
+---
+
 ## Headline totals (91 days)
 
 | Metric | Value |
