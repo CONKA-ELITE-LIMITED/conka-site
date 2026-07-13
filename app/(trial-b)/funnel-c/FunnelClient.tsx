@@ -288,7 +288,12 @@ export default function FunnelClient() {
           Deliberately quiet: this is orientation, not content. */}
       <div className="fixed top-0 inset-x-0 z-40 bg-white border-b border-black/10">
         <div className="h-14 flex items-center justify-between px-5 lg:px-8">
-          <Link href="/" aria-label="CONKA home" className="flex items-center">
+          <Link
+            href="/"
+            aria-label="CONKA home"
+            prefetch={false}
+            className="flex h-11 items-center"
+          >
             <Image
               src="/conka-logo.webp"
               alt="CONKA"

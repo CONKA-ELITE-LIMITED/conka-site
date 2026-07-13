@@ -75,7 +75,12 @@ export default function FunnelStepIndicator({
         </div>
 
         {/* Logo — right-aligned, links home */}
-        <Link href="/" aria-label="CONKA home" className="flex items-center">
+        <Link
+          href="/"
+          aria-label="CONKA home"
+          prefetch={false}
+          className="flex h-11 items-center"
+        >
           <Image
             src="/conka.png"
             alt="CONKA"
