@@ -12,7 +12,7 @@
 
 The repo carries two piles of dead weight that make the codebase harder to reason about than the product actually is:
 
-1. **~84 MB of unreferenced assets.** 148 of the 418 files in `public/` are referenced by nothing in the codebase. The bulk is a root-level photo dump: 62 `CONKA_*.jpg` / `CONKA_*[ai].png` files totalling 68 MB, of which only 6 are actually used.
+1. **~84 MB of unreferenced assets.** 150 of the 418 files in `public/` are referenced by nothing in the codebase. The bulk is a root-level photo dump: 62 `CONKA_*.jpg` / `CONKA_*[ai].png` files totalling 68 MB, of which only 6 are actually used. Of the 150, **141 were deleted and 9 kept deliberately** (see the keep-list in Phase 1).
 2. **~3,400 lines of dead protocol code.** The 4-protocol system was hidden behind a redirect months ago but never removed. The route, its components, and its copy modules are still fully present.
 
 An asset audit also surfaced two real bugs (see Phase 2).
@@ -60,7 +60,7 @@ The **presentation** layer is dead. The **commerce** layer is not.
 
 ## Phase 1: Delete unreferenced assets
 
-**What:** Remove the 148 files in `public/` that no code references. Roughly 84 MB.
+**What:** Remove the unreferenced files in `public/`. 150 were unreferenced, 141 were deleted (83.2 MB), 9 were kept deliberately. `public/` went from 125 MB to 42 MB.
 
 **Method used to identify them.** Every file in `public/` was cross-referenced against all 700 non-markdown source files (code, config, CSS, data modules). Two refinements mattered:
 
@@ -78,11 +78,13 @@ The **presentation** layer is dead. The **commerce** layer is not.
 | Story, lifestyle, listicles, science | ~30 | Leftovers from earlier page versions |
 | Next.js scaffold SVGs | 5 | `next.svg`, `vercel.svg`, `file.svg`, `globe.svg`, `window.svg` |
 
-**Explicitly KEEP (do not delete):**
+**Explicitly KEEP (the 9 unreferenced files that were NOT deleted):**
 
-- `public/llms.txt` and `public/googlef7db7b8d1e309e2e.html`. Nothing references them because they are fetched directly by URL. The second is the Google Search Console verification file; deleting it drops site verification.
-- `public/logo.png`, `public/conka.webp`, `public/conka.svg`, `public/logos/Klarna.png`, `public/sebdechaves.jpeg`. Unreferenced in code, but these are exactly the kind of asset hotlinked from a Klaviyo email template or a Meta ad, which this repo cannot see. Only ~600 KB combined, so not worth the risk.
-- `public/protocols/`. Live: renders in the subscriptions and orders UI.
+- `public/llms.txt` and `public/googlef7db7b8d1e309e2e.html` (2). Nothing references them because they are fetched directly by URL. The second is the Google Search Console verification file; deleting it drops site verification.
+- `public/logo.png`, `public/conka.webp`, `public/conka.svg`, `public/logos/Klarna.png`, `public/sebdechaves.jpeg` (5). Unreferenced in code, but these are exactly the kind of asset hotlinked from a Klaviyo email template or a Meta ad, which this repo cannot see. Only ~600 KB combined, so not worth the risk.
+- `public/videos/misc/BrainScan.webm` and `BrainScan-poster.jpg` (2). Unreferenced only because of the Phase 2 bug. `BrainScan.mp4` is live, and Phase 2 exists to start serving these two. Deleting them would turn a fixable bug into permanent asset loss.
+
+Also untouched (never unreferenced): `public/protocols/`, which renders in the subscriptions and orders UI.
 
 **Complexity:** Small. No code changes.
 
@@ -175,7 +177,7 @@ Revisit only if protocol subscriptions reach zero, which would require migrating
 
 - **Refactoring the subscriptions UI while in Phase 4.** It works, real customers depend on it, and it is not what this work is for. Isolate, do not improve.
 - **Collapsing `ProductId = FormulaId | ProtocolId`.** Touches the whole data layer. Blocked behind Phase 5, which is not planned.
-- **Rewriting git history to reclaim the 84 MB.** `.git` is 232 MB and file deletion does not shrink it. Not worth the force-push cost to a shared repo.
+- **Rewriting git history to reclaim the 83 MB.** `.git` is 232 MB and file deletion does not shrink it. Not worth the force-push cost to a shared repo.
 - **Chasing the Phase 3 bonus TODOs.** Evaluate them, but a separate sweep if they turn out to be non-trivial.
 
 ## No-gos
