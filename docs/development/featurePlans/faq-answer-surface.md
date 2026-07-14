@@ -100,6 +100,42 @@ Both, not either. The PDPs keep a short, conversion-focused FAQ (the objections 
 
 The rejected alternatives: PDP-only would mean a 35-question accordion on a purchase page, which hurts conversion; hub-only would strip objection-handling from the page where the decision is actually made.
 
+### 3. Disclosure policy: no per-ingredient mg, anywhere
+
+Surfaced during scoping and settled the same day. It constrains Phase 4 and it also uncovered a live accuracy bug.
+
+**Secret. Never in client code, rendered or not** (data files ship in the JS bundle, so "not displayed" is not protection):
+
+- **Formula-share percentages.**
+- **Per-ingredient mg of our formula.** The individual amounts are patented. Note the two are secret *together* by necessity: per-ingredient mg plus the total effectively reconstructs the percentage table, so publishing one defeats the other.
+
+**Public:**
+
+- **Total active mg per shot.** The PDP hero number. It substantiates "we are not underdosing" without exposing ratios, and it is the only dose figure the FAQ may lean on.
+- **Study doses from published literature**, e.g. "600mg of Ashwagandha reduced cortisol (PMID 23439798)". Public papers, not our formula, and they are the evidence base. **They must be labelled as the study's dose, never "per serving".**
+- **Vitamin C and Vitamin B12 with %NRV.** Legally declarable, and they substantiate the authorised EFSA claims.
+
+The rejected alternatives: publishing the real per-ingredient mg (the Thesis/Qualia posture) would make "clinically dosed" provable and citable, and it is the strongest possible AEO answer, but it gives away the formula. Stripping mg entirely, including the total, would leave "clinically dosed" as an unevidenced claim.
+
+**`app/lib/supplementFacts.ts` is the correct reference implementation** and predates this decision: built from `FORMULATION_SPEC.md` in April, it ships no per-ingredient mg, preserves ingredient *order* (supplement-facts convention is descending concentration, so relative quantity is communicated without numbers), and carries %NRV only for C and B12. **It is used by exactly one component.** The migration was never finished, which is why the rest of the site still leaks.
+
+#### The bug this exposed
+
+The mg figures currently on the product pages are **not CONKA's doses**. They are *study* doses, mislabelled "per serving", and they are wrong in both directions:
+
+| Ingredient | Site publishes | Actual per shot (spec) |
+|---|---|---|
+| Ashwagandha | "600mg per serving" | 1,500 mg |
+| Lemon Balm | "300mg per serving" | 1,500 mg |
+| Alpha GPC | "300mg per serving" | 800 mg |
+| Glutathione | "250mg per serving" | 500 mg |
+| Rhodiola | "576mg per serving" | 525 mg |
+| **Ginkgo Biloba** | **"120mg per serving"** | **88 mg** |
+
+We understate most actives by 2 to 5x, throwing away the very differentiator the numbers were meant to prove, and we **overstate Ginkgo**, which is the direction that carries actual risk. Tracked as items 9 and 10 in `docs/TODO.md`. The cleanup is a separate ticket from this programme: it is an accuracy and IP fix, valuable whether or not the FAQ work happens.
+
+**Unresolved, and it blocks republishing the total:** the site says Flow 3,700mg / Clear 3,142mg; the spec says 5,550mg / 4,965mg. The working theory is that the site figure is the *active nootropics* grammage, but the arithmetic does not obviously support it (the spec's Flow actives sum to exactly 5,550mg and all six are actives). Needs Humphrey. See `docs/TODO.md` item 9.
+
 ---
 
 ## Phases
@@ -177,7 +213,7 @@ Existing questions are kept and reused. **New** questions are marked. Grouped as
 ### Does it actually work (the scepticism cluster, mostly NEW)
 - **Do nootropics actually work?** *(new)*
 - **Does CONKA actually work, or is it placebo?** *(new. This is where the 150+ users / 5,000+ cognitive tests / +28.96% evidence goes. We have the best answer in the category to this question and we currently never ask it.)*
-- **Are the ingredients clinically dosed, or underdosed?** *(new. "Underdosed" is a specific, recurring criticism of Magic Mind in third-party reviews. We answer it with per-serving doses.)*
+- **Are the ingredients clinically dosed, or underdosed?** *(new. "Underdosed" is a specific, recurring criticism of Magic Mind in third-party reviews. **Answer it with the total active load and the study citations, not a per-ingredient breakdown** (see the disclosure policy). This is the hardest answer to write in the whole set: we are making a dose claim while declining to publish the doses, so it has to lean on the total, the liquid-absorption argument, and the fact that we cite the studies our formulation is built on.)*
 - When will I notice results?
 - **What if I don't feel anything?** *(new, distinct from the refund question: sets expectation before it becomes a refund)*
 
@@ -243,9 +279,12 @@ Existing questions are kept and reused. **New** questions are marked. Grouped as
 
 **Thesis.** `ginkgo biloba benefits` is 5,400/mo, the **highest-volume term in the entire keyword dataset**. Ashwagandha, Alpha GPC, Rhodiola and Lemon Balm all carry real demand. `/ingredients` currently has no FAQ and no FAQ schema, and the keyword map has flagged this as the site's biggest single opportunity since v4.
 
+**Hard constraint: we cannot say how much of anything is in the shot.** See "Disclosure policy" below. So the obvious question ("how much Alpha GPC is in Clear?") is one we must *not* answer. That is less damaging than it sounds: the searched questions in this cluster are about **benefits and side effects**, not milligrams, and those are entirely unconstrained.
+
 1. **[Content + Frontend] Per-ingredient Q&A**
-   - For each of the main actives: what it is, what the evidence says it does, what dose CONKA uses, and any side effects or cautions. The dose is the differentiator: we can name a real per-serving figure where a proprietary-blend competitor cannot.
-   - **Constraint:** per-ingredient *doses* are publishable. Formula-share *percentages* are not, and must never reach client code, rendered or otherwise.
+   - For each of the main actives: what it is, what the evidence says it does, and any **side effects or cautions**. Cite the study and *its* dose, clearly labelled as the study's dose. Never state CONKA's per-ingredient figure.
+   - The side-effects and cautions half carries this phase. It is what people search ("ginkgo biloba side effects", "ashwagandha side effects"), it is what no supplement brand publishes willingly, and it is compatible with the disclosure policy.
+   - Where a dose claim is needed to substantiate "clinically dosed", lean on the **total active load** (public) and the study citations, not on a per-ingredient breakdown.
    - Complexity: Medium (content-heavy).
 
 2. **[SEO] FAQPage schema on `/ingredients`**
@@ -265,7 +304,8 @@ Existing questions are kept and reused. **New** questions are marked. Grouped as
 
 - No help-desk or off-domain FAQ platform.
 - No FAQ schema for content the page does not visibly render. This rule already governs `/` and `/professionals` and it is a Google policy line, not a preference.
-- No per-ingredient formula-share percentages in client code, rendered or not.
+- **No per-ingredient mg and no formula-share percentages in client code, rendered or not.** Not in an FAQ answer, not in a data file, not in a comment. The total active load and study doses (labelled as the study's) are the only dose figures available to this work.
+- No FAQ answer that states how much of an ingredient is in a CONKA shot, however it is phrased.
 - No `aggregateRating` or review markup anywhere in this work.
 - No changes to `/go/*` FAQ copy beyond removing the lorem-ipsum template route. Those pages are noindex and out of the programme.
 - No new questions in Phase 1.
@@ -279,6 +319,7 @@ Existing questions are kept and reused. **New** questions are marked. Grouped as
 
 ## Open questions
 
+0. **The true active grammage.** Blocks any FAQ answer that leans on the total, and it is the only dose number the policy leaves us. Site says Flow 3,700mg / Clear 3,142mg; the spec says 5,550mg / 4,965mg. Needs Humphrey. Tracked as `docs/TODO.md` item 9, along with the Ginkgo discrepancy (published 120mg, spec 88mg).
 1. **Who writes the copy?** This is a substantial content job (roughly 20 new answers, several requiring real clinical care). It is the same bottleneck as Phase 9 and Phase 6: content, not code. If Humphrey's engine drafts them, the safety cluster still needs a human and a legal read.
 2. **Do we cycle?** "Do I need to take breaks?" cannot be answered until someone decides what the truthful answer is. Qualia recommends 5 days on, 2 off; we currently say "safe every day", which is a stronger claim.
 3. **Taste.** Nobody has written a truthful, non-defensive answer to "what does it taste like". Worth getting right; it is a repeat-purchase objection.
