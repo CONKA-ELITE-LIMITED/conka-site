@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { COMPANY } from "@/app/lib/site";
+import { BRAND_DESCRIPTION, COMPANY } from "@/app/lib/site";
 
 /**
  * Web app manifest (SCRUM-1141). A brand-identity signal alongside the
@@ -11,8 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: `${COMPANY.name} - Daily Nootropic Brain Shots`,
     short_name: COMPANY.name,
-    description:
-      "CONKA makes daily nootropic brain shots: clinically dosed, caffeine-free formulas for focus, mental clarity and calm. Informed Sport certified.",
+    description: BRAND_DESCRIPTION,
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

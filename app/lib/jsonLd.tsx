@@ -6,7 +6,7 @@
  * each page supplies its own data from funnelData / formulaContent / faqContent.
  */
 
-import { COMPANY, SAME_AS, SITE_ORIGIN } from "./site";
+import { BRAND_DESCRIPTION, COMPANY, SAME_AS, SITE_ORIGIN } from "./site";
 
 /** Resolve a root-relative path (e.g. "/formulas/x.jpg") to an absolute URL. */
 export function absoluteUrl(path: string): string {
@@ -40,8 +40,7 @@ export function buildOrganizationSchema() {
     legalName: COMPANY.legalName,
     url: absoluteUrl("/"),
     logo: absoluteUrl("/icon.png"),
-    description:
-      "CONKA makes daily nootropic brain shots: clinically dosed, caffeine-free formulas for focus, mental clarity and calm. Informed Sport certified.",
+    description: BRAND_DESCRIPTION,
     email: COMPANY.email,
     vatID: COMPANY.vatId,
     foundingDate: COMPANY.foundingDate,

@@ -7,6 +7,14 @@
 export const SITE_ORIGIN = "https://www.conka.io";
 
 /**
+ * One-line description of what CONKA is. Shared by the Organization JSON-LD and
+ * the web manifest so the two cannot drift apart. Keep it factual: an answer
+ * engine may quote it verbatim.
+ */
+export const BRAND_DESCRIPTION =
+  "CONKA makes daily nootropic brain shots: clinically dosed, caffeine-free formulas for focus, mental clarity and calm. Informed Sport certified.";
+
+/**
  * Registered company details, verified against Companies House 2026-07-14.
  * Feed the Organization JSON-LD (SCRUM-1141). Public record, not secrets.
  */
