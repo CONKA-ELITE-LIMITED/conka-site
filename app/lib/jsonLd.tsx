@@ -6,11 +6,67 @@
  * each page supplies its own data from funnelData / formulaContent / faqContent.
  */
 
-import { SITE_ORIGIN } from "./site";
+import { BRAND_DESCRIPTION, COMPANY, SAME_AS, SITE_ORIGIN } from "./site";
 
 /** Resolve a root-relative path (e.g. "/formulas/x.jpg") to an absolute URL. */
 export function absoluteUrl(path: string): string {
   return new URL(path, SITE_ORIGIN).toString();
+}
+
+/**
+ * Stable identifier for the CONKA Organization node. Other schema nodes reference
+ * this instead of restating the brand, so there is exactly one entity on the site.
+ */
+export const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
+
+/**
+ * Build the schema.org Organization node (SCRUM-1141). This is what binds the
+ * string "CONKA" to a verifiable entity for answer engines: `sameAs` points at
+ * profiles we control, and the Companies House entry, VAT ID and registered
+ * address let a machine corroborate the claim against public record.
+ *
+ * No `aggregateRating`: no queryable per-entity rating source, and a sitewide
+ * figure risks a Google manual action. The Trustpilot `sameAs` link gives answer
+ * engines a path to the reviews without us asserting a number we cannot back.
+ * No `telephone`: there is no public support line, and inventing one is worse
+ * than omitting the field.
+ */
+export function buildOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": ORGANIZATION_ID,
+    name: COMPANY.name,
+    legalName: COMPANY.legalName,
+    url: absoluteUrl("/"),
+    logo: absoluteUrl("/icon.png"),
+    description: BRAND_DESCRIPTION,
+    email: COMPANY.email,
+    vatID: COMPANY.vatId,
+    foundingDate: COMPANY.foundingDate,
+    founder: COMPANY.founders.map((name) => ({ "@type": "Person", name })),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: COMPANY.address.street,
+      addressLocality: COMPANY.address.locality,
+      postalCode: COMPANY.address.postalCode,
+      addressCountry: COMPANY.address.country,
+    },
+    sameAs: SAME_AS,
+  };
+}
+
+/** Build the schema.org WebSite node, published by the Organization above. */
+export function buildWebSiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_ORIGIN}/#website`,
+    name: COMPANY.name,
+    alternateName: COMPANY.legalName,
+    url: absoluteUrl("/"),
+    publisher: { "@id": ORGANIZATION_ID },
+  };
 }
 
 /** Strip HTML tags and claims-anchor symbols (†) so answer copy is clean plain text. */

@@ -2,7 +2,7 @@
 
 > **This is the planning and build archive.** For the concise canonical reference of what is live and why, see `docs/seo-aeo/README.md`. This doc keeps the full history: the keyword-map corrections, verified findings, and per-phase task breakdowns.
 
-**Status:** Phases 1 to 5 and 8 all built (SCRUM-1131, 1132, 1133, 1136, 1138, 1140). The **SEO** half of the foundation is complete. An AEO audit on 2026-07-14 found the **AEO** half was only part-built and opened three new phases: **7** (entity identity, blocked on a profile-URL list), **8** (schema coverage and indexation hygiene, **now built**), **9** (AEO content shape, needs a content owner). Phase 6 (blog) remains scoped in its own plan doc, `blog-informational-content-surface.md`.
+**Status:** Phases 1 to 5, 7 and 8 all built (SCRUM-1131, 1132, 1133, 1136, 1138, 1140, 1141). The **SEO** foundation is complete, and after the 2026-07-14 AEO audit the **AEO** foundation now is too: the site has entity identity, structured data on every commercial and FAQ surface, an honest sitemap, and an `llms.txt`. **Phase 9** (AEO content shape) is the only remaining phase in this doc, and it is editorial rather than engineering work: it needs a content owner, not a developer. Phase 6 (blog) is scoped in its own plan doc, `blog-informational-content-surface.md`.
 **Owner:** Rudh
 **Source inputs:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research); AEO best-practice review (Ahrefs AEO course intro + a structured-data-for-AEO talk, summarised 2026-07-14)
 **Created:** 2026-07-10
@@ -21,6 +21,11 @@
 - **2026-07-14** **AEO gap audit.** External AEO best practice (two source videos, see "AEO audit" below) was compared against the live codebase. Verdict: the SEO foundation holds up, but the AEO foundation is roughly a third built. We have the schema *machinery* (`app/lib/jsonLd.tsx`) and two schema types, but only on three routes, and the site has **no entity identity at all**: no `Organization`, no `WebSite`, no `sameAs`, and not even any social links in the footer to populate one. Also found: FAQ content on `/` and `/professionals` that reuses the same `FAQ_ITEMS` array the PDPs already serialise but emits no `FAQPage` schema; `/case-studies` sitting in the sitemap with no metadata; `/barrys` and `/win` indexable despite a sitemap comment claiming otherwise; and a `lastModified` field that lies. Opened as Phases 7, 8 and 9.
 - **2026-07-14** **Phase 8 (SCRUM-1140) built.** Ticketed under the Website & CRO epic (SCRUM-763) and shipped as one commit. `FAQPage` JSON-LD now renders on `/` (from `FAQ_ITEMS`) and `/professionals` (from a newly exported `TEAM_FAQS` in `TeamFAQ.tsx`), reusing the existing `buildFaqSchema`. Sibling server layouts added for `/case-studies` and `/conkaapp-privacy-policy`. `/win` and `/barrys` deleted outright and 301'd to `/` (see the decision below). `lastModified` removed from `app/sitemap.ts`. `public/llms.txt` added. Verified against a running server: exactly one `FAQPage` node per page, both mirroring content that is genuinely server-rendered (schema describing invisible content breaches Google's policy, and `LabFAQ` is a `dynamic()` import, so this was checked rather than assumed).
 - **2026-07-14** **Decision: `/win` and `/barrys` deleted, not noindexed.** Scoping found they were not ad landers at all: both were **contest pages whose deadlines expired in January 2026**, still live and indexable, so Google could serve a dead competition as a CONKA result. Noindex would have left two dead pages on the site. Deleting and redirecting removes them and passes any accumulated link signal to `/`. Their component folders had no external importers. Side effect: `/go` is now the only Convex consumer.
+- **2026-07-14** **Phase 7 (SCRUM-1141) built.** The site now has an entity identity. `buildOrganizationSchema` and `buildWebSiteSchema` added to `app/lib/jsonLd.tsx` and rendered once in the root layout, so every route carries exactly one `Organization` and one `WebSite` node. The Organization has a stable `@id` that `WebSite.publisher` references, so there is one entity on the site rather than a copy per node. Company details (legal name, company number 13235415, incorporation date 2021-03-01, VAT `GB430507628`, registered office, founders) were verified against Companies House and live in `COMPANY` in `app/lib/site.ts`, alongside `SOCIAL_PROFILES`. A social row was added to the main footer, which previously had zero external links. `app/manifest.ts` added, reusing the existing 512x512 `app/icon.png`.
+- **2026-07-14** **`sameAs` is six entries, four of them in the footer.** LinkedIn, Instagram, TikTok and Trustpilot render as footer links; Facebook and Companies House are schema-only. All six are true identity claims, but a registry page and the least-posted channel are not somewhere to send a paying customer. The split is a single `inFooter` flag in `SOCIAL_PROFILES`. Verified: five of six URLs return 200; Trustpilot returns 403 to automated requests (Cloudflare bot-blocking, confirmed live by the product owner). Note the Trustpilot profile is registered against the older `conka.uk` domain, not `conka.io`; this was explicitly confirmed as the same entity.
+- **2026-07-14** **Decisions on what NOT to assert.** No `aggregateRating` on the Organization: no queryable per-entity source, and a sitewide figure risks a Google manual action. The Trustpilot `sameAs` link gives answer engines a path to the reviews without us asserting a number we cannot back. No `telephone`: there is no public support line, and omitting the field beats inventing one. No `SearchAction`: the site has no search page for it to point at. No TikTok/YouTube/X/Amazon claims beyond what was supplied, because every `sameAs` entry is a verifiable claim and an unverifiable one costs trust rather than building it.
+- **2026-07-14** **Footer social links are text, not icons.** Deliberate: the mono footer treatment suits text, and readable anchor text is a stronger corroboration signal for `sameAs` than an unlabelled icon. Icons were considered and deferred rather than shipped unverified (the browser tooling was not connected, so a mangled brand glyph could not have been caught).
+- **2026-07-14** **Follow-up: `Product.brand` is not linked to the Organization.** `buildProductSchema` emits a standalone `brand: { "@type": "Brand", name: "CONKA" }`, so strictly the graph contains two "CONKA" concepts. Pointing `brand` at the Organization's `@id` would unify them and is the more correct entity graph. Deliberately left alone in SCRUM-1141: the PDP `Product` node validates cleanly today, and swapping a working `Brand` object for an `@id` reference risks a validator warning on our highest-value schema. Worth doing as its own small change, validated in the Rich Results Test.
 - **2026-07-14** **Sitemap `lastModified` restored, derived from git.** Phase 8 removed the field because it was fabricated (build time on every URL). Rather than leave the signal off, or reintroduce it as a manual chore, `app/sitemap.ts` now derives each date from `git log -1` over the route's own source paths. It is true by construction, needs no discipline, and cannot rot. A skill or checklist was explicitly rejected for this: a process that depends on remembering to bump a date is how the fake dates appeared in the first place. Requires `VERCEL_DEEP_CLONE=1` in the Vercel env (Vercel shallow-clones to depth 10; the env var is documented for exactly this use case). Verified locally: dates differ per page and match real history (`/privacy` April, `/why-conka` June, the PDPs today), and `/sitemap.xml` still prerenders as static.
 - **2026-07-14** **Known follow-up: `convex/winEntries.ts` is now dead code.** The Phase 8 deletion removed its only callers. Deliberately left in place: the `winEntries` table (`convex/schema.ts:114`) holds real entrant email addresses from the January contests, and dropping it would destroy data. The functions are unreachable but harmless. Fold into a Convex cleanup pass; do not delete the table without an explicit decision on the data.
 
@@ -165,7 +170,7 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | 5 | `sitemap.ts` and `robots.ts` | Merged to main (SCRUM-1136) |
 | 4 | Descriptive keyword H1s on the product pages (name + visible subline in the `<h1>`) | Merged to main (SCRUM-1138) |
 | 6 | Informational content surface (blog) for the research-intent keywords | Scoped (own plan doc: `blog-informational-content-surface.md`), not ticketed |
-| 7 | Entity identity: `Organization` + `WebSite` schema, `sameAs`, footer social links, web manifest | Scoped below, not ticketed. **Blocked** on a profile-URL list |
+| 7 | Entity identity: `Organization` + `WebSite` schema, `sameAs`, footer social links, web manifest | **Built (SCRUM-1141)** |
 | 8 | Schema coverage and indexation hygiene: FAQ schema on `/` and `/professionals`, missing metadata, `/barrys` and `/win` deleted + 301'd, honest `lastModified`, `llms.txt` | **Built (SCRUM-1140)** |
 | 9 | AEO content shape: answer-first (BLUF) openings, self-contained passages, freshness dates on the existing content pages | Scoped below, not ticketed. Depends on nothing, but overlaps Phase 6 |
 
@@ -308,7 +313,9 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 | Atomic passages | **Missing** | `/science` and `/ingredients` have real H2/H3 hierarchy to build on; `/why-conka` is thin (one H2, no H3s) |
 | Off-site brand mentions | **Not a code problem** | No site change can deliver this. Named here so it is not mistaken for done |
 
-**Headline verdict:** the SEO foundation (Phases 1 to 5) is sound. The AEO foundation is about a third built. We have the schema machinery but only two schema types on three routes, and **no entity identity at all** — an LLM has nothing on the site that tells it what CONKA *is* or which external profiles are the same company.
+**Headline verdict (as at the audit, since closed):** the SEO foundation (Phases 1 to 5) is sound. The AEO foundation is about a third built. We have the schema machinery but only two schema types on three routes, and **no entity identity at all**: an LLM has nothing on the site that tells it what CONKA *is* or which external profiles are the same company.
+
+> **Now resolved.** Phase 8 (SCRUM-1140) closed the schema-coverage and hygiene gaps, and Phase 7 (SCRUM-1141) built the entity identity. Everything in the table above is addressed except the content-shape rows (BLUF, atomic passages, visible freshness), which are Phase 9, and off-site brand mentions, which no code change can deliver.
 
 ### Additional defects found during the audit
 
@@ -319,15 +326,15 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 
 ---
 
-## Phase 7 task breakdown (entity identity, not ticketed)
+## Phase 7 task breakdown (entity identity, BUILT: SCRUM-1141)
 
-**Thesis.** Structured data tells an answer engine what a page *is*. `Organization` + `sameAs` tells it who *we* are, and binds "CONKA" to a verified entity rather than a string it has to disambiguate. This is the highest-leverage AEO work available and none of it exists.
+**Thesis.** Structured data tells an answer engine what a page *is*. `Organization` + `sameAs` tells it who *we* are, and binds "CONKA" to a verified entity rather than a string it has to disambiguate. This was the highest-leverage AEO work available and none of it existed.
 
-**Blocked on one input**, and it is not an engineering one: a list of real, live profile URLs to put in `sameAs`. Candidates: Instagram, LinkedIn, TikTok, YouTube, X, Trustpilot, Amazon storefront, Companies House, Crunchbase. Quality matters more than count. A `sameAs` pointing at a dead or unverified profile is worse than a shorter list.
+**Shipped 2026-07-14.** The blocker was never engineering: it was the profile-URL list, supplied by the product owner. What made the final schema unusually strong is that it carries the Companies House number, VAT ID, registered address and incorporation date, so an answer engine can corroborate the identity claim against public record rather than taking the site's word for it. See the progress log for the `sameAs` list, the footer/schema split, and the decisions on what was deliberately not asserted.
 
 1. **[Content] Collect the `sameAs` profile list**
-   - Rudh or marketing supplies the live URLs. This is the gate on the whole phase.
-   - Complexity: Small, but it is the critical path.
+   - Rudh or marketing supplies the live URLs. This was the gate on the whole phase.
+   - Complexity: Small, but it was the critical path.
 
 2. **[Frontend] `buildOrganizationSchema` + `buildWebSiteSchema`**
    - Add to `app/lib/jsonLd.tsx` alongside the existing builders. `Organization`: `name`, `url`, `logo`, `description`, `sameAs[]`, and `contactPoint` if a support address is public. `WebSite`: `name`, `alternateName`, `url`, `publisher` pointing at the Organization.
@@ -443,7 +450,7 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 
 **From the AEO audit (open)**
 
-3. **Which profile URLs go in `sameAs`?** (Phase 7, blocking.) Needs the live list from Rudh or marketing: Instagram, LinkedIn, TikTok, YouTube, X, Trustpilot, Amazon storefront, Companies House, Crunchbase. Only profiles we control and actually maintain. This is the gate on the whole of Phase 7.
+3. **Which profile URLs go in `sameAs`? — RESOLVED.** Supplied by the product owner 2026-07-14: LinkedIn, Instagram, TikTok, Trustpilot, Facebook, Companies House. No Amazon storefront, no active YouTube, no X. Shipped in Phase 7. Still open, and cheap to change: whether `sales@conka.io` should be exposed alongside `info@conka.io` in the Organization schema (only `info@` ships today).
 4. **Are `/barrys` and `/win` meant to be indexable? — RESOLVED.** Neither. They were expired contest pages. Deleted and 301'd to `/` in Phase 8.
 5. **Who owns the content review cadence?** (Phase 9.) Freshness dates are only worth adding if they are true. Without a named owner, task 3 of Phase 9 should not ship.
 6. **Sequencing: Phase 6 (blog) or Phases 7 and 8 first?** 7 and 8 are days of work and lift every page including the future blog. The blog is the bigger acquisition bet but is gated on Humphrey's content engine. They are not mutually exclusive.
@@ -468,7 +475,8 @@ Sprint 28. Phases 6, 7 and 9 are not ticketed yet. Phase 8 is SCRUM-1140 and is 
 | [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | Done |
 | [SCRUM-1136](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1136) | [Website & CRO] Add sitemap.ts and robots.ts for crawl discovery (SEO Phase 5) | 5 | Done |
 | [SCRUM-1138](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1138) | [Website & CRO] Add descriptive keyword H1s to the three PDPs (SEO Phase 4) | 4 | Done |
-| [SCRUM-1140](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1140) | [Website & CRO] AEO schema coverage and indexation hygiene (SEO Phase 8) | 8 | Built, in review |
+| [SCRUM-1140](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1140) | [Website & CRO] AEO schema coverage and indexation hygiene (SEO Phase 8) | 8 | Done, merged |
+| [SCRUM-1141](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1141) | [Website & CRO] Entity identity: Organization + WebSite schema, sameAs, footer socials (SEO Phase 7) | 7 | Built, in review |
 
 All five foundation tickets (SCRUM-1131, 1132, 1133, 1136, 1138) are Done and merged to main. Phase 4 shipped with the product name kept as the visual focal point and a descriptive keyword subline added inside the same `<h1>` via an optional `seoHeading` field on the hero content (leaving `content.name`, which feeds bottle alt text, untouched). Phase 6 (blog) is tracked separately in `blog-informational-content-surface.md`.
 
