@@ -81,15 +81,21 @@ export function LandingView({
             }
           >
             <video
-              src={screen.video}
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
+              poster={screen.video.replace(/\.mp4$/, "-poster.jpg")}
               className="h-full w-full object-cover object-center"
               aria-hidden
-            />
+            >
+              <source
+                src={screen.video.replace(/\.mp4$/, ".webm")}
+                type="video/webm"
+              />
+              <source src={screen.video} type="video/mp4" />
+            </video>
           </div>
         )}
       </div>

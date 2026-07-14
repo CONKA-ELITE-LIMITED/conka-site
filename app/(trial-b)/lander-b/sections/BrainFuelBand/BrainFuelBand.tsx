@@ -5,7 +5,9 @@
  * stats. The figures are editorial — verify sources before launch (see
  * README compliance note).
  *
- * Video: /lander/video/Flow.webm. Add a poster frame for nicer first paint.
+ * Video: /lander/video/BrainFuel.mp4. This one ships as an MP4 only, so it is
+ * missing the .webm source and -poster.jpg that VIDEO_OPTIMISATION.md calls for.
+ * Encode the trio and add them here for a lighter payload and a cleaner first paint.
  */
 
 import type { ReactNode } from 'react';
