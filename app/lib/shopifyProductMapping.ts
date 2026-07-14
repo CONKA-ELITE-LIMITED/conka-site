@@ -15,17 +15,6 @@
 
 import { FormulaId, PackSize, PurchaseType } from "./productData";
 
-// LEGACY: protocols are subscriber support, not a live product.
-// Read app/lib/legacy/protocolSubscriptions.ts before touching anything below
-// that mentions them.
-import { PROTOCOL_VARIANTS } from "./legacy/protocolSubscriptions";
-import type {
-  ProtocolId,
-  ProtocolTier,
-} from "./legacy/protocolSubscriptions";
-
-export { PROTOCOL_VARIANTS };
-
 // ============================================
 // INDIVIDUAL FORMULA VARIANTS
 // ============================================
@@ -107,11 +96,8 @@ export const TRIAL_PACK_VARIANTS: Record<
   },
 };
 
-// ============================================
-// PROTOCOL VARIANTS (LEGACY)
-// ============================================
-// PROTOCOL_VARIANTS is defined in ./legacy/protocolSubscriptions and re-exported
-// above. It maps existing subscribers' renewals to real Shopify variants.
+// Protocol variants are NOT here. They are retired-product support for existing
+// subscribers and live in ./legacy/protocolSubscriptions.
 
 // Subscription discount percentage (for visual display)
 export const SUBSCRIPTION_DISCOUNT_PERCENT = 20;
@@ -154,102 +140,4 @@ export function getTrialPackVariantId(
 ): string | null {
   const variantId = TRIAL_PACK_VARIANTS[formulaId]?.[packSize];
   return variantId || null;
-}
-
-/**
- * Get the Shopify variant ID for a protocol
- * For one-time purchases, only returns variantId
- * For subscriptions, returns both variantId and sellingPlanId
- */
-export function getProtocolVariantId(
-  protocolId: ProtocolId,
-  tier: ProtocolTier,
-  purchaseType: PurchaseType,
-): { variantId: string; sellingPlanId?: string } | null {
-  const tierVariant = PROTOCOL_VARIANTS[protocolId]?.[tier];
-  if (!tierVariant || !tierVariant.variantId) return null;
-
-  if (purchaseType === "subscription") {
-    return {
-      variantId: tierVariant.variantId,
-      sellingPlanId: tierVariant.sellingPlanId || undefined,
-    };
-  }
-
-  // One-time purchase - no selling plan
-  return { variantId: tierVariant.variantId };
-}
-
-/**
- * Check if a variant ID is configured (not empty)
- */
-export function isVariantConfigured(variantId: string | null): boolean {
-  return variantId !== null && variantId !== "";
-}
-
-/**
- * Validate that all required variant IDs are configured
- * Useful for debugging during setup
- */
-export function getUnconfiguredVariants(): string[] {
-  const unconfigured: string[] = [];
-
-  // Check formulas
-  for (const formulaId of ["01", "02"] as FormulaId[]) {
-    for (const packSize of ["4", "8", "12", "28"] as PackSize[]) {
-      for (const purchaseType of [
-        "subscription",
-        "one-time",
-      ] as PurchaseType[]) {
-        const variantData = getFormulaVariantId(
-          formulaId,
-          packSize,
-          purchaseType,
-        );
-        if (!isVariantConfigured(variantData?.variantId || null)) {
-          unconfigured.push(
-            `Formula ${formulaId} - ${packSize}-pack - ${purchaseType}`,
-          );
-        }
-      }
-    }
-  }
-
-  // Check trial packs
-  for (const formulaId of ["01", "02"] as FormulaId[]) {
-    for (const packSize of ["4", "8", "12"] as TrialPackSize[]) {
-      const variantId = getTrialPackVariantId(formulaId, packSize);
-      if (!isVariantConfigured(variantId)) {
-        unconfigured.push(`Trial Pack ${formulaId} - ${packSize}-pack`);
-      }
-    }
-  }
-
-  // Check protocols
-  for (const protocolId of ["1", "2", "3", "4"] as ProtocolId[]) {
-    const tiers =
-      protocolId === "4"
-        ? (["pro", "max"] as ProtocolTier[])
-        : (["starter", "pro", "max"] as ProtocolTier[]);
-
-    for (const tier of tiers) {
-      for (const purchaseType of [
-        "subscription",
-        "one-time",
-      ] as PurchaseType[]) {
-        const variantData = getProtocolVariantId(
-          protocolId,
-          tier,
-          purchaseType,
-        );
-        if (!isVariantConfigured(variantData?.variantId || null)) {
-          unconfigured.push(
-            `Protocol ${protocolId} - ${tier} - ${purchaseType}`,
-          );
-        }
-      }
-    }
-  }
-
-  return unconfigured;
 }

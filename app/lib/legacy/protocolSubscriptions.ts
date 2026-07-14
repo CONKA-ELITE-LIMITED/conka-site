@@ -11,10 +11,12 @@
  * New product work belongs in productTypes / shopifyProductMapping.
  *
  * Consumers (all subscriber-support code, no product pages):
- *   - app/lib/shopifyProductMapping.ts   (variant lookup for renewals)
- *   - app/lib/productMetadata.ts         (reverse lookup: variant ID -> product)
- *   - app/components/subscriptions/*     (account portal editing UI)
- *   - app/api/auth/subscriptions/[id]/pause/route.ts
+ *   - app/lib/productTypes.ts     (ProtocolId, only to keep the ProductId union)
+ *   - app/lib/productMetadata.ts  (reverse lookup: Shopify variant ID -> product)
+ *
+ * The account portal (app/components/subscriptions/*) and the pause route
+ * (app/api/auth/subscriptions/[id]/pause/route.ts) are the reason this exists,
+ * but they carry their own protocol handling rather than importing from here.
  *
  * This module is a dependency leaf on purpose: it imports nothing from the
  * product modules, so productTypes can depend on it without a cycle.
@@ -37,7 +39,7 @@ type ProtocolTierVariant = {
   sellingPlanId: string;
 };
 
-export type ProtocolTierVariants = Partial<
+type ProtocolTierVariants = Partial<
   Record<ProtocolTier, ProtocolTierVariant>
 >;
 

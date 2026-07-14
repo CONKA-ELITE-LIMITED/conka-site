@@ -77,7 +77,9 @@ b2bCartTier.ts            → B2B tier logic (box count → tier → variant upd
 #### `shopifyProductMapping.ts`
 **Purpose:** Forward mapping — internal product IDs to Shopify variant GIDs and selling plan IDs
 **Dependencies:** `productData` (types)
-**Exports:** `FORMULA_VARIANTS`, `FORMULA_SELLING_PLANS`, `TRIAL_PACK_VARIANTS`, `PROTOCOL_VARIANTS`, `getPlanFrequency`, `getFormulaVariantId`, `getProtocolVariantId`
+**Exports:** `FORMULA_VARIANTS`, `FORMULA_SELLING_PLANS`, `TRIAL_PACK_VARIANTS`, `getPlanFrequency`, `getFormulaVariantId`, `getTrialPackVariantId`
+
+Protocol variants are not here. They are retired-product support for existing subscribers and live in `app/lib/legacy/protocolSubscriptions.ts`.
 
 **Selling plans (main site):**
 | Plan GID suffix | Frequency | Pack sizes |

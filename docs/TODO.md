@@ -40,18 +40,9 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ### 3. Remove protocol exports from shared data modules
 
-**Status:** Deferred -- do after task 1
-**Files:**
-- `app/lib/productData.ts` -- exports `ProtocolId`, `ProtocolTier`, `protocolContent`, `getProtocolPricing`
-- `app/lib/productPricing.ts` -- `protocolPricing` export
-- `app/lib/protocolContent.ts` -- entire file
-- `app/lib/shopifyProductMapping.ts` -- `getProtocolVariantId` and related protocol variant maps
-- `app/lib/productHelpers.ts` -- any protocol-specific helpers
-- `app/lib/productMetadata.ts` -- protocol metadata entries
+**Status:** DONE (Phase 4, July 2026). The dead protocol code (`protocolPricing`, `PROTOCOL_COLORS`, `getProtocolVariantId` and the unused variant-audit helpers) is deleted. What genuinely still serves existing subscribers is quarantined in `app/lib/legacy/protocolSubscriptions.ts`, and the `productData` barrel no longer exports anything protocol-related.
 
-**What unblocks it:** Task 1 (delete protocol page and components) -- once those consumers are gone, these exports become unused and TypeScript will flag them.
-
-**Why deferred:** Still referenced by `app/protocol/[id]/page.tsx` and `app/components/protocol/` components. Removing now would break the existing page.
+**Remaining follow-up:** `app/api/auth/subscriptions/[id]/pause/route.ts` carries its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID). Unifying it with the legacy module means touching the renewal path for paying subscribers, so it needs an end-to-end test of a real subscription edit. Left deliberately.
 
 ---
 
