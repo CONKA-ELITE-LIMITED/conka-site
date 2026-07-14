@@ -51,8 +51,8 @@ The **presentation** layer is dead. The **commerce** layer is not.
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Delete unreferenced `public/` assets | **Done** (2026-07-14, 141 files, 83.2 MB) |
-| 2 | Fix the video source and poster bugs | Not started |
-| 3 | Delete the protocol presentation layer | Not started |
+| 2 | Fix the video source and poster bugs | **Done** (2026-07-14, PR #352) |
+| 3 | Delete the protocol presentation layer | **Done** (2026-07-14, 19 files, ~3.4k lines) |
 | 4 | Quarantine the protocol commerce layer | Not started |
 | 5 | Delete the commerce layer entirely | Not planned (see below) |
 
