@@ -4,7 +4,7 @@
  */
 
 import styles from './FAQ.module.css';
-import {FAQ_ITEMS} from './faq.data';
+import {FAQ_ITEMS, stripClaimAnchors} from '@/app/lib/faqContent';
 
 export default function FAQ() {
   return (
@@ -20,7 +20,7 @@ export default function FAQ() {
                 <span className={`${styles.bar} ${styles.barV}`} />
               </span>
             </summary>
-            <p className={styles.answer}>{item.answer}</p>
+            <p className={styles.answer}>{stripClaimAnchors(item.answer)}</p>
           </details>
         ))}
       </div>

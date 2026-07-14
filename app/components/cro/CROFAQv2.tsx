@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FAQ_ITEMS, type FaqItem } from "@/app/lib/faqContent";
+import { FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
 
 /* ============================================================================
  * CROFAQv2
@@ -13,7 +13,7 @@ import { FAQ_ITEMS, type FaqItem } from "@/app/lib/faqContent";
  * multi-open with no broken UX). No client JS.
  * ========================================================================== */
 
-function FAQRow({ item }: { item: FaqItem }) {
+function FAQRow({ item }: { item: FaqEntry }) {
   return (
     <details
       name="faq-still-wondering"
@@ -41,7 +41,7 @@ function FAQRow({ item }: { item: FaqItem }) {
 export default function CROFAQv2({
   items = FAQ_ITEMS,
 }: {
-  items?: FaqItem[];
+  items?: FaqEntry[];
 } = {}) {
   return (
     <div className="mx-auto max-w-[560px]">

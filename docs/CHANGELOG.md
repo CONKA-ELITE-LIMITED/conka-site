@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-14** | FAQ content consolidated to a single source (the two lander duplicates deleted), the coffee and time-to-results contradictions resolved, and the lorem-ipsum /go/listicle-template route unregistered.
 - **2026-07-14** | Entity identity for AI answer engines: sitewide Organization + WebSite JSON-LD with a verified sameAs list (LinkedIn, Instagram, TikTok, Trustpilot, Facebook, Companies House), social links in the footer, and a web manifest (SCRUM-1141)
 - **2026-07-14** | Sitemap lastmod is now derived from git history per page (true by construction, no manual upkeep). Needs VERCEL_DEEP_CLONE=1 in the Vercel env.
 - **2026-07-14** | AEO hygiene: FAQ schema on the home and /professionals pages, metadata for /case-studies and the app privacy policy, deleted the expired /win and /barrys contest pages (301 to home), dropped the fabricated sitemap lastmod, added llms.txt (SCRUM-1140)
