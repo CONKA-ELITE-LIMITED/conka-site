@@ -1,10 +1,10 @@
 # SEO / AEO Foundation
 
-**Status:** Phases 1, 2 and 3 merged to main. Phase 5 (sitemap + robots, SCRUM-1136) and Phase 4 (descriptive keyword H1s, SCRUM-1138) ticketed. Phase 6 documented, not ticketed.
+**Status:** Phases 1 to 5 all built and merged to main (SCRUM-1131, 1132, 1133, 1136, 1138 all Done). Phase 6 (informational content surface / blog) is the only remaining phase and is scoped in its own plan doc, `blog-informational-content-surface.md`. This foundation programme is complete.
 **Owner:** Rudh
 **Source input:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research)
 **Created:** 2026-07-10
-**Updated:** 2026-07-13
+**Updated:** 2026-07-14
 
 ## Progress log
 
@@ -13,6 +13,9 @@
 - **2026-07-13** Phase 3 (SCRUM-1133) built, Shopify-verified, reviewed (`/review-code` LGTM), and merged to `main`. Added `app/lib/jsonLd.tsx` (`buildProductSchema`, `buildFaqSchema`, `JsonLd`, `absoluteUrl`) and `getFunnelPriceRange` in `funnelData.ts`, wired `Product` + `FAQPage` JSON-LD into the three PDP server layouts. `Product` uses an `AggregateOffer` derived from `FUNNEL_PRICING`; no `aggregateRating` (no per-product source). Verified all 9 funnel variants against the live Storefront API: every price matches `FUNNEL_PRICING` and all are `availableForSale`, so the `InStock` claim and the low/high ranges are correct. Ticket Done.
 - **2026-07-13** Captured a Google Search Console baseline (`docs/analytics/seo-search-console-baseline.md`) as the pre-change measuring stick. Key finding: organic traffic is ~99% brand, only 17 URLs got any impression in 3 months, and the product pages are effectively invisible. This diagnosed discovery as the bottleneck and is the reason Phase 5 (sitemap + robots) was pulled ahead of Phase 4.
 - **2026-07-13** Phase 5 (SCRUM-1136) scoped and ticketed, pulled ahead of Phase 4. Reason: with canonicals fixed but no sitemap or robots, Google is discovering pages by internal links alone. A sitemap accelerates recrawl of the now-indexable pages. The proposed `/science` + `/why-conka` metadata add was cut on inspection: both already have `metadata` exports, so their low CTR is a copy/intent issue, not a missing-tag one.
+- **2026-07-13** Phase 5 (SCRUM-1136) built and merged. `app/sitemap.ts` (static hand-maintained list via an `entry(path, priority, changeFrequency)` helper) and `app/robots.ts` (allows `/`, disallows `/api/`, `/account`, `/payment/`; deliberately does not block AI crawlers, for AEO). Ticket Done.
+- **2026-07-13** Phase 4 (SCRUM-1138) built and merged. Descriptive keyword subline added inside the PDP `<h1>` via an optional `seoHeading` field on the hero content, plus a mobile hero reorder. `content.name` left untouched so bottle alt text is unaffected. Ticket Done.
+- **2026-07-14** Status review. Phases 1 to 5 confirmed Done in code (sitemap.ts/robots.ts exist; `seoHeading` wired through `ProductBuyPanel.tsx` and `productHeroHelpers.ts`) and in Jira (all five tickets Done). The foundation is complete. Phase 6 (blog) is the only remaining work and now lives in its own plan doc, `blog-informational-content-surface.md` (content model settled as Notion-as-headless-CMS). The two open questions below were both resolved during the Phase 2 build.
 
 ## Discrepancies found during build (both resolved)
 
@@ -152,8 +155,8 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | 1 | Fix the site-wide inherited canonical | Merged to main (SCRUM-1131) |
 | 2 | Per-page metadata on the five indexable money pages, plus the FL0W H1 fix | Merged to main (SCRUM-1132) |
 | 3 | Structured data: `Product` JSON-LD, then `FAQPage` JSON-LD | Merged to main (SCRUM-1133) |
-| 5 | `sitemap.ts` and `robots.ts` (neither exists today) | Ticketed, in build (SCRUM-1136) |
-| 4 | Descriptive keyword H1s on the product pages (name + visible subline in the `<h1>`) | Ticketed (SCRUM-1138) |
+| 5 | `sitemap.ts` and `robots.ts` | Merged to main (SCRUM-1136) |
+| 4 | Descriptive keyword H1s on the product pages (name + visible subline in the `<h1>`) | Merged to main (SCRUM-1138) |
 | 6 | Informational content surface (blog) for the research-intent keywords | Scoped (own plan doc: `blog-informational-content-surface.md`), not ticketed |
 
 Phases ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible. Phase 5 was pulled ahead of Phase 4 after the Search Console baseline showed discovery, not on-page keyword tuning, is the current bottleneck.
@@ -283,10 +286,10 @@ All five also need `openGraph` (title, description, image), per `.claude/rules/p
 - **The FL0W fix is a brand change.** Cosmetic, but visible. Needs a nod.
 - **No `sitemap.ts` or `robots.ts` exists.** Discovery after Phase 1 will rely on internal linking alone until Phase 5.
 
-## Open questions
+## Open questions (both resolved during the Phase 2 build)
 
-1. Is losing the stylised `FL0W` zero acceptable to marketing, or should it be preserved via CSS with indexable text underneath?
-2. Confirm the "From" convention is intended to mean the cheapest cadence (quarterly), which is what the doc's own homepage line implies. If marketing wants "From" to mean the monthly subscription instead, Flow and Clear become £2.00/shot and the homepage becomes £1.87/shot.
+1. **Losing the stylised `FL0W` zero — RESOLVED.** The stylised zero was retired. The Flow PDP H1, bottle alt text, and the three body-copy literals now read `Flow` / `FLOW`. Shipped in Phase 2.
+2. **The "From" convention — RESOLVED.** Confirmed to mean the cheapest available cadence (quarterly), consistent with the homepage line. Shipped: Flow and Clear "From £1.83/shot", homepage and Both "From £1.25/shot".
 
 ## References
 
@@ -306,10 +309,10 @@ Sprint 28. Phases 4 and 6 are deliberately not ticketed yet.
 | [SCRUM-1131](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1131) | [Bugs] Every page canonicals to the homepage, blocking the whole site from ranking | 1 | Done |
 | [SCRUM-1132](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1132) | [Website & CRO] Add per-page SEO metadata to the five indexable money pages | 2 | Done |
 | [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | Done |
-| [SCRUM-1136](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1136) | [Website & CRO] Add sitemap.ts and robots.ts for crawl discovery (SEO Phase 5) | 5 | In build |
-| [SCRUM-1138](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1138) | [Website & CRO] Add descriptive keyword H1s to the three PDPs (SEO Phase 4) | 4 | To Do |
+| [SCRUM-1136](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1136) | [Website & CRO] Add sitemap.ts and robots.ts for crawl discovery (SEO Phase 5) | 5 | Done |
+| [SCRUM-1138](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1138) | [Website & CRO] Add descriptive keyword H1s to the three PDPs (SEO Phase 4) | 4 | Done |
 
-Phases 1, 2 and 3 are merged to main. Phase 5 (SCRUM-1136) is in build, pulled ahead of Phase 4 per the discovery-bottleneck finding in the Search Console baseline. Phase 4 (SCRUM-1138) is scoped: product name kept as the visual focal point with a descriptive keyword subline added inside the same `<h1>`, via an optional `seoHeading` field on the hero content (avoids touching `content.name`, which feeds bottle alt text).
+All five foundation tickets (SCRUM-1131, 1132, 1133, 1136, 1138) are Done and merged to main. Phase 4 shipped with the product name kept as the visual focal point and a descriptive keyword subline added inside the same `<h1>` via an optional `seoHeading` field on the hero content (leaving `content.name`, which feeds bottle alt text, untouched). Phase 6 (blog) is tracked separately in `blog-informational-content-surface.md` and is not yet ticketed.
 
 ## Branching model
 
