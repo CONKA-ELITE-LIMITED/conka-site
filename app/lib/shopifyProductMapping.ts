@@ -13,13 +13,18 @@
  * The cart system will validate and show errors for missing variant IDs.
  */
 
-import {
-  FormulaId,
-  PackSize,
-  PurchaseType,
+import { FormulaId, PackSize, PurchaseType } from "./productData";
+
+// LEGACY: protocols are subscriber support, not a live product.
+// Read app/lib/legacy/protocolSubscriptions.ts before touching anything below
+// that mentions them.
+import { PROTOCOL_VARIANTS } from "./legacy/protocolSubscriptions";
+import type {
   ProtocolId,
   ProtocolTier,
-} from "./productData";
+} from "./legacy/protocolSubscriptions";
+
+export { PROTOCOL_VARIANTS };
 
 // ============================================
 // INDIVIDUAL FORMULA VARIANTS
@@ -103,75 +108,10 @@ export const TRIAL_PACK_VARIANTS: Record<
 };
 
 // ============================================
-// PROTOCOL VARIANTS
+// PROTOCOL VARIANTS (LEGACY)
 // ============================================
-
-// Protocol variants now include both the variant ID and the selling plan ID for subscriptions
-type ProtocolTierVariant = {
-  variantId: string;
-  sellingPlanId: string; // Used for subscription purchases
-};
-
-type ProtocolTierVariants = Partial<Record<ProtocolTier, ProtocolTierVariant>>;
-
-export const PROTOCOL_VARIANTS: Record<ProtocolId, ProtocolTierVariants> = {
-  // Protocol 1 (Resilience) - CONFIGURED
-  "1": {
-    starter: {
-      variantId: "gid://shopify/ProductVariant/56999240597878", // RESILIANCE_STARTER_4 - £14.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429882230", // 20% discount - £11.99
-    },
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56999240630646", // RESILIANCE_PRO_12 - £39.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £31.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56999240663414", // RESILIANCE_MAX_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £63.99
-    },
-  },
-  // Protocol 2 (Precision) - CONFIGURED
-  "2": {
-    starter: {
-      variantId: "gid://shopify/ProductVariant/56999234503030", // PRECISION_STARTER_4 - £14.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429882230", // 20% discount - £11.99
-    },
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56999234535798", // PRECISION_PRO_12 - £39.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £31.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56999234568566", // PRECISION_MAX_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £63.99
-    },
-  },
-  // Protocol 3 (Balance) - CONFIGURED
-  "3": {
-    starter: {
-      variantId: "gid://shopify/ProductVariant/56998884573558", // BALANCED_STARTER_4 - £14.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429882230", // 20% discount - £11.99
-    },
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56998884606326", // BALANCED_PRO_12 - £39.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £31.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56998884639094", // BALANCED_MAX_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £63.99
-    },
-  },
-  // Protocol 4 (Ultimate) - CONFIGURED - no starter tier
-  "4": {
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56999249478006", // ULTAMATE_PRO_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £63.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56999249510774", // ULTAMATE_MAX_56 - £144.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £115.99
-    },
-  },
-};
+// PROTOCOL_VARIANTS is defined in ./legacy/protocolSubscriptions and re-exported
+// above. It maps existing subscribers' renewals to real Shopify variants.
 
 // Subscription discount percentage (for visual display)
 export const SUBSCRIPTION_DISCOUNT_PERCENT = 20;

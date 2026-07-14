@@ -1,23 +1,36 @@
 "use client";
 
-// TODO: no longer used on /conka-flow PDP. Check if can be deleted once /conka-clarity and /protocol/3 are swept.
-
 import { useState, useRef } from "react";
 import Image from "next/image";
 import {
   AthleteData,
   SportCategory,
   getAthletesForFormula,
-  getAthletesForProtocol,
+  getAthletesForBoth,
   getCaseStudyPhotoPath,
 } from "@/app/lib/caseStudiesData";
-import type { ProductId, FormulaId, ProtocolId } from "@/app/lib/productData";
+import type { BothProductId, FormulaId } from "@/app/lib/productData";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
 
 interface FormulaCaseStudiesProps {
   formulaId?: FormulaId;
-  productId?: ProductId;
+  /** "01" / "02" for a single formula, "03" for Both (/conka-both). */
+  productId?: FormulaId | BothProductId;
   athletes?: AthleteData[];
+}
+
+/** Resolve the athlete cohort for a formula or for Both. */
+function resolveAthletes(
+  productId?: FormulaId | BothProductId,
+  formulaId?: FormulaId,
+): AthleteData[] {
+  if (productId) {
+    return productId === "03"
+      ? getAthletesForBoth()
+      : getAthletesForFormula(productId);
+  }
+  if (formulaId) return getAthletesForFormula(formulaId);
+  return [];
 }
 
 const SPORT_LABELS: Record<SportCategory, string> = {
@@ -172,26 +185,13 @@ export default function FormulaCaseStudies({
   formulaId,
   productId,
 }: FormulaCaseStudiesProps) {
-  let athletes: AthleteData[] = [];
-
-  if (productId) {
-    if (
-      productId === "1" ||
-      productId === "2" ||
-      productId === "3" ||
-      productId === "4"
-    ) {
-      athletes = getAthletesForProtocol(productId as ProtocolId);
-    } else if (productId === "01" || productId === "02") {
-      athletes = getAthletesForFormula(productId as FormulaId);
-    }
-  } else if (formulaId) {
-    athletes = getAthletesForFormula(formulaId);
-  } else {
+  if (!productId && !formulaId) {
     throw new Error(
       "FormulaCaseStudies requires either formulaId or productId",
     );
   }
+
+  const athletes = resolveAthletes(productId, formulaId);
 
   if (athletes.length === 0) return null;
 
@@ -232,24 +232,8 @@ export function FormulaCaseStudiesMobile({
   productId,
   athletes: providedAthletes,
 }: FormulaCaseStudiesProps) {
-  let athletes: AthleteData[] = [];
-
-  if (providedAthletes) {
-    athletes = providedAthletes;
-  } else if (productId) {
-    if (
-      productId === "1" ||
-      productId === "2" ||
-      productId === "3" ||
-      productId === "4"
-    ) {
-      athletes = getAthletesForProtocol(productId as ProtocolId);
-    } else if (productId === "01" || productId === "02") {
-      athletes = getAthletesForFormula(productId as FormulaId);
-    }
-  } else if (formulaId) {
-    athletes = getAthletesForFormula(formulaId);
-  }
+  const athletes =
+    providedAthletes ?? resolveAthletes(productId, formulaId);
 
   const caseStudiesCarouselRef = useRef<HTMLDivElement>(null);
   const [caseStudiesCarouselIndex, setCaseStudiesCarouselIndex] = useState(0);

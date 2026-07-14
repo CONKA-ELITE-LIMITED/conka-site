@@ -149,6 +149,32 @@ That comment was the only thing keeping `/lander/video/Flow.webm` looking alive.
 
 ## Phase 4: Quarantine the protocol commerce layer
 
+**DONE** (2026-07-14, branch `chore-quarantine-protocol-commerce`). Outcome below; the original scoping follows for the record.
+
+### Outcome
+
+4a landed as scoped, plus three extras found by re-verifying consumer counts:
+
+- `getProtocolGradient` / `getProtocolAccent` (`productColors.ts`) were also dead and went with `PROTOCOL_COLORS`.
+- **`whatToExpectData.ts` was not a live leak — it was entirely dead.** Its only consumers were `WhatToExpectTimeline{,Desktop,Mobile}.tsx`, which no page imported. The live PDPs use `components/home/WhatToExpect`, which reads a *different* file, `app/lib/whatToExpectLanding.ts`. The whole subtree was deleted and the `ProtocolId` "leak" went with it. **The name similarity is a trap: `whatToExpectLanding.ts` is the live one.**
+- **`FormulaCaseStudies.tsx` was a real leak, and worse than scoped.** `/conka-both` (a live PDP) passed `productId="3"` — the Balance *protocol* ID — as a magic key meaning "athletes who took both formulas". Fixed by using the concept the codebase already had: `BothProductId = "03"`. `getAthletesForProtocol` became `getAthletesForBoth`, and the component no longer knows what a protocol is. Verified behaviour-neutral: `/conka-both` renders the same three athletes (Jade Shekells +36.72%, Doris Regazi +30.78%, Daniel James +14.24%).
+
+So the answer to the open question was **both PDP dependencies were removable**. The quarantine boundary accommodates no product page.
+
+4b: `app/lib/legacy/protocolSubscriptions.ts` is now the single named home for `ProtocolId`, `ProtocolTier` and `PROTOCOL_VARIANTS`. It is a dependency leaf (imports nothing) so `productTypes` can depend on it without a cycle. The `productData` barrel no longer re-exports any protocol symbol, so the legacy path is the only route in. Exactly three files import it: `productTypes` (for the `ProductId` union), `shopifyProductMapping`, `productMetadata`. All Shopify variant and selling-plan IDs are byte-identical to `main`.
+
+### Known follow-up (deliberately not done)
+
+`app/api/auth/subscriptions/[id]/pause/route.ts` carries its **own duplicate `PROTOCOL_VARIANTS` table**, keyed by numeric variant ID rather than GID. It was left alone: that route is the one thing that must not break, and unifying the two tables is a real change, not a move. Worth doing separately, with a subscriber edit tested end to end.
+
+### Not verified
+
+The account portal renders (`/account` and `/account/subscriptions` both 200), but **editing/pausing a real protocol subscription was not driven end to end** — it needs an authenticated customer with a live protocol subscription. Behaviour is unchanged by construction (identical variant IDs, no logic touched), but that path is untested.
+
+---
+
+### Original scoping (for the record)
+
 **Scope revised after Phase 3** (2026-07-14). Phase 3 killed the only consumers of two of the five original targets, so they are now dead code to delete rather than legacy to quarantine. Verified by reference count on `main` at commit 599f5dc9.
 
 ### 4a. Delete what is now dead (zero consumers)

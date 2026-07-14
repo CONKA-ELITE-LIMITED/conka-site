@@ -1,15 +1,19 @@
 /**
  * Shared product type definitions.
- * No imports from other product modules.
+ * Imports only from the legacy protocol boundary (a dependency leaf).
  */
+
+import type { ProtocolId } from "./legacy/protocolSubscriptions";
 
 export type FormulaId = "01" | "02";
 export type PackSize = "4" | "8" | "12" | "28";
 export type PurchaseType = "subscription" | "one-time";
-export type ProtocolId = "1" | "2" | "3" | "4";
-export type ProtocolTier = "starter" | "pro" | "max";
 
-/** Product gradients: unified system for formulas and protocols */
+/**
+ * Union of every ID that can appear on a Shopify line item, which still
+ * includes the retired protocols because customers hold protocol subscriptions.
+ * Collapsing this to FormulaId is Phase 5, and is not planned.
+ */
 export type ProductId = FormulaId | ProtocolId;
 
 // ============================================
