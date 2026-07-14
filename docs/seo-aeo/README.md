@@ -4,7 +4,9 @@ Canonical reference for the site's organic-search and AI-answer-engine (AEO) fou
 
 ## Overview
 
-A five-phase programme that made the CONKA site discoverable and indexable for organic search and citable by AI answer engines. All five phases are built and merged to `main`. Phase 6 (an informational blog for research-intent keywords) is scoped separately and not yet built.
+A five-phase programme that made the CONKA site discoverable and indexable for organic search. All five phases are built and merged to `main`.
+
+**The SEO half is done. The AEO half is not.** An AEO audit on 2026-07-14 found the site has the structured-data machinery but only two schema types on three routes, and **no entity identity at all**: no `Organization`, no `WebSite`, no `sameAs`, and no social links in the footer to populate one. Four phases remain, all scoped, none ticketed: 6 (blog), 7 (entity identity), 8 (schema and indexation hygiene), 9 (AEO content shape). See "What is next".
 
 ## Why it mattered
 
@@ -58,7 +60,16 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 
 ## What is next
 
-Phase 6, an informational content surface (blog) targeting research-intent, non-brand keywords, is scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). It is the only remaining phase and is not yet ticketed.
+Four phases are scoped and none is ticketed. Full breakdowns, and the AEO gap audit that produced 7 to 9, are in the build archive.
+
+| Phase | What | State |
+|-------|------|-------|
+| 8 | **Schema and indexation hygiene.** `FAQPage` schema on `/` and `/professionals` (the content already renders and the builder already exists, it is simply not called); metadata for `/case-studies` and `/conkaapp-privacy-policy`, both in the sitemap with generic root tags; a real `noindex` on `/barrys` and `/win`, which are indexable today despite a sitemap comment claiming otherwise; drop the fabricated `lastModified`; add `llms.txt`. | Unblocked. Cheapest, ship first |
+| 7 | **Entity identity.** `Organization` + `WebSite` JSON-LD with `sameAs`, plus the footer social links to corroborate it, plus a web manifest. The highest-leverage AEO work available, and none of it exists. | **Blocked** on a list of real profile URLs |
+| 9 | **AEO content shape.** Retrofit answer-first (BLUF) openings, self-contained passages, and true freshness dates onto the existing content pages. Editorial, not engineering. | Needs a content owner |
+| 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness, so Phase 9 is only the retrofit of existing pages. | Gated on the content engine |
+
+**Not a site problem, but recorded:** the strongest AEO lever is off-site brand mentions (PR, citations, Reddit and Quora discussion). No code change can deliver it, and no workstream currently owns it.
 
 ## References
 
