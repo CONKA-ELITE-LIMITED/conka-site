@@ -2,7 +2,7 @@
  * Product colors and gradients.
  */
 
-import type { FormulaId, ProtocolId, ProductId } from "./productTypes";
+import type { FormulaId, ProductId } from "./productTypes";
 
 // Formula colors - ALWAYS consistent
 export const FORMULA_COLORS = {
@@ -79,21 +79,6 @@ export const FORMULA_GRADIENTS: Record<FormulaId, { start: string; end: string }
   "01": { start: PRODUCT_GRADIENTS["01"].start, end: PRODUCT_GRADIENTS["01"].end },
   "02": { start: PRODUCT_GRADIENTS["02"].start, end: PRODUCT_GRADIENTS["02"].end },
 } as const;
-
-export const PROTOCOL_COLORS: Record<ProtocolId, { start: string; end: string; solid: string }> = {
-  "1": PRODUCT_GRADIENTS["1"],
-  "2": PRODUCT_GRADIENTS["2"],
-  "3": PRODUCT_GRADIENTS["3"],
-  "4": PRODUCT_GRADIENTS["4"],
-} as const;
-
-export function getProtocolGradient(protocolId: ProtocolId): { start: string; end: string } {
-  return getProductGradient(protocolId);
-}
-
-export function getProtocolAccent(protocolId: ProtocolId): string {
-  return getProductAccent(protocolId);
-}
 
 /** Interpolate between two hex colors. t in [0, 1]. */
 export function interpolateHex(

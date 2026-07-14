@@ -5,11 +5,16 @@
  * from Shopify variant IDs by reverse-looking up the variant mapping.
  */
 
-import {
-  FORMULA_VARIANTS,
-  PROTOCOL_VARIANTS,
-} from "./shopifyProductMapping";
-import type { FormulaId, ProtocolId, PackSize, ProtocolTier } from "./productData";
+import { FORMULA_VARIANTS } from "./shopifyProductMapping";
+import type { FormulaId, PackSize } from "./productData";
+
+// LEGACY: the protocol branch below exists for customers who still hold a
+// protocol subscription. See app/lib/legacy/protocolSubscriptions.ts.
+import { PROTOCOL_VARIANTS } from "./legacy/protocolSubscriptions";
+import type {
+  ProtocolId,
+  ProtocolTier,
+} from "./legacy/protocolSubscriptions";
 
 export interface ProductMetadata {
   productType: "formula" | "protocol";

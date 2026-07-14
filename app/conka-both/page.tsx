@@ -149,7 +149,7 @@ export default function ConkaBothPage() {
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
-        <FormulaCaseStudiesMobile productId={"3"} />
+        <FormulaCaseStudiesMobile productId={"03"} />
       </div>
     </section>
   );
@@ -160,7 +160,7 @@ export default function ConkaBothPage() {
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
-        <FormulaCaseStudies productId={"3"} />
+        <FormulaCaseStudies productId={"03"} />
       </div>
     </section>
   );

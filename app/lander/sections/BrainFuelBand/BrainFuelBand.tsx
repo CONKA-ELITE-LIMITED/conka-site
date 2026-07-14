@@ -5,7 +5,9 @@
  * stats. The figures are editorial — verify sources before launch (see
  * README compliance note).
  *
- * Video: /lander/video/Flow.webm. Add a poster frame for nicer first paint.
+ * Video: the /lander/video/BrainFuel trio (webm + mp4 + poster), per
+ * VIDEO_OPTIMISATION.md. WebM is listed first so supporting browsers fetch the
+ * lighter file (705KB vs 2.6MB).
  */
 
 import type { ReactNode } from 'react';
@@ -40,7 +42,9 @@ export default function BrainFuelBand() {
             loop
             playsInline
             preload="metadata"
+            poster="/lander/video/BrainFuel-poster.jpg"
           >
+            <source src="/lander/video/BrainFuel.webm" type="video/webm" />
             <source src="/lander/video/BrainFuel.mp4" type="video/mp4" />
           </video>
         </div>

@@ -8,6 +8,7 @@ import type {
   ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
+import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import TrustChips from "@/app/components/landing/TrustChips";
 import ListicleProductHero, {
@@ -163,6 +164,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     // "contain": full-width black tile, clip centred (product renders).
     // "cover" (default): inset 4/5 frame, clip fills it (texture loops).
     const contain = asset.fit === "contain";
+    const video = videoTrio(asset.src);
     return (
       <div
         className={`relative overflow-hidden rounded-3xl ${
@@ -171,15 +173,19 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
       >
         <video
-          src={asset.src}
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
+          poster={video.poster}
           className={`absolute inset-0 h-full w-full ${
             contain ? "object-contain" : "object-cover"
           }`}
-        />
+        >
+          {video.webm && <source src={video.webm} type="video/webm" />}
+          <source src={video.mp4} type="video/mp4" />
+        </video>
       </div>
     );
   }

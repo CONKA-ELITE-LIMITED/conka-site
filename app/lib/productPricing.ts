@@ -28,34 +28,3 @@ export const formulaPricing = {
   },
 } as const;
 
-// Protocol Pricing (per tier)
-// Base prices match Shopify. Subscription = 20% off base price.
-export const protocolPricing = {
-  // Protocols 1, 2, 3 - all three tiers available
-  standard: {
-    // One-time = base price (no discount)
-    "one-time": {
-      starter: { price: 14.99 },
-      pro: { price: 39.99 },
-      max: { price: 79.99 },
-    },
-    // Subscription = 20% off base price
-    subscription: {
-      starter: { price: 11.99, billing: "weekly", basePrice: 14.99 },
-      pro: { price: 31.99, billing: "bi-weekly", basePrice: 39.99 },
-      max: { price: 63.99, billing: "monthly", basePrice: 79.99 },
-    },
-  },
-  // Protocol 4 (Ultimate) - only pro and max available
-  ultimate: {
-    "one-time": {
-      pro: { price: 79.99 },
-      max: { price: 144.99 },
-    },
-    subscription: {
-      pro: { price: 63.99, billing: "bi-weekly", basePrice: 79.99 },
-      max: { price: 115.99, billing: "monthly", basePrice: 144.99 },
-    },
-  },
-} as const;
-

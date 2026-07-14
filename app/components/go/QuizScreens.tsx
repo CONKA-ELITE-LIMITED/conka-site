@@ -11,6 +11,7 @@ import type {
   ResultBucket,
   RevealScreen,
 } from "@/app/lib/landings/types";
+import { videoTrio } from "@/app/lib/landings/videoTrio";
 import QuizButton from "./QuizButton";
 import AnimatedText from "./AnimatedText";
 import TypewriterText from "./TypewriterText";
@@ -42,6 +43,8 @@ export function LandingView({
   screen: LandingScreen;
   onStart: () => void;
 }) {
+  const video = screen.video ? videoTrio(screen.video) : null;
+
   return (
     <div className="flex flex-1 flex-col">
       {/* Title block anchored high (same grammar as the question screens) */}
@@ -64,7 +67,7 @@ export function LandingView({
         )}
       </div>
       <div className="flex flex-1 flex-col items-center justify-center py-6">
-        {screen.video && (
+        {video && (
           /* portrait: 720x1280 pour render, centred crop on the bottle,
              accent border; square: 1:1 sources (e.g. the brain scan
              loop) uncropped, borderless */
@@ -81,15 +84,18 @@ export function LandingView({
             }
           >
             <video
-              src={screen.video}
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
+              poster={video.poster}
               className="h-full w-full object-cover object-center"
               aria-hidden
-            />
+            >
+              {video.webm && <source src={video.webm} type="video/webm" />}
+              <source src={video.mp4} type="video/mp4" />
+            </video>
           </div>
         )}
       </div>
