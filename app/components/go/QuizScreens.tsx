@@ -23,6 +23,16 @@ import TurnaroundChart from "./TurnaroundChart";
 
 const mono = { fontFamily: "var(--font-brand-data)" } as const;
 
+/** Videos ship as a trio sharing one basename (see VIDEO_OPTIMISATION.md):
+ *  `Name.webm` (primary), `Name.mp4` (fallback), `Name-poster.jpg`. Configs
+ *  give the mp4 path, so the siblings are derived from it. Anything that is
+ *  not an mp4 is served as-is with no webm or poster rather than guessing. */
+function videoTrio(src: string) {
+  if (!src.endsWith(".mp4")) return { webm: null, mp4: src, poster: undefined };
+  const base = src.slice(0, -".mp4".length);
+  return { webm: `${base}.webm`, mp4: src, poster: `${base}-poster.jpg` };
+}
+
 /** Replaces {realAge}/{brainAge}/{gap} in copy with the computed result */
 export function fillAgeTokens(
   text: string,
@@ -42,6 +52,8 @@ export function LandingView({
   screen: LandingScreen;
   onStart: () => void;
 }) {
+  const video = screen.video ? videoTrio(screen.video) : null;
+
   return (
     <div className="flex flex-1 flex-col">
       {/* Title block anchored high (same grammar as the question screens) */}
@@ -64,7 +76,7 @@ export function LandingView({
         )}
       </div>
       <div className="flex flex-1 flex-col items-center justify-center py-6">
-        {screen.video && (
+        {video && (
           /* portrait: 720x1280 pour render, centred crop on the bottle,
              accent border; square: 1:1 sources (e.g. the brain scan
              loop) uncropped, borderless */
@@ -86,15 +98,12 @@ export function LandingView({
               loop
               playsInline
               preload="metadata"
-              poster={screen.video.replace(/\.mp4$/, "-poster.jpg")}
+              poster={video.poster}
               className="h-full w-full object-cover object-center"
               aria-hidden
             >
-              <source
-                src={screen.video.replace(/\.mp4$/, ".webm")}
-                type="video/webm"
-              />
-              <source src={screen.video} type="video/mp4" />
+              {video.webm && <source src={video.webm} type="video/webm" />}
+              <source src={video.mp4} type="video/mp4" />
             </video>
           </div>
         )}
