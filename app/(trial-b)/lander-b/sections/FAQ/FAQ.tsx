@@ -12,7 +12,7 @@ export default function FAQ() {
       <div className={styles.inner}>
         <h2 className={styles.heading}>Frequently asked questions</h2>
         {FAQ_ITEMS.map((item) => (
-          <details className={styles.item} key={item.question}>
+          <details className={styles.item} key={item.id}>
             <summary>
               {item.question}
               <span className={styles.pm} aria-hidden="true">

@@ -38,11 +38,6 @@ export function stripClaimAnchors(text: string): string {
   return text.replace(/†/g, "");
 }
 
-/** The subset a surface renders, in authoring order. */
-export function getFaqItems(categories: FaqCategory[]): FaqItem[] {
-  return FAQ_ITEMS.filter((item) => categories.includes(item.category));
-}
-
 export const FAQ_ITEMS: FaqItem[] = [
   {
     id: "different",
