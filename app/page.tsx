@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { getFunnelMinPerShot } from "@/app/lib/funnelData";
+import { formatPrice } from "@/app/lib/productData";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHeroVideo from "./components/landing/LandingHeroVideo";
@@ -48,8 +50,9 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
 // Overrides the generic root-layout title/description that every page inherited.
 export const metadata: Metadata = {
   title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
-  description:
-    "CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From £1.25/shot.",
+  description: `CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From ${formatPrice(
+    getFunnelMinPerShot("both"),
+  )}/shot.`,
   openGraph: {
     title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
     description:

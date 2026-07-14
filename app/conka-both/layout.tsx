@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { FAQ_ITEMS } from "@/app/lib/faqContent";
+import { formatPrice } from "@/app/lib/productData";
 import {
   FUNNEL_PRODUCTS,
   FUNNEL_HERO_IMAGES,
   getFunnelPriceRange,
+  getFunnelMinPerShot,
 } from "@/app/lib/funnelData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
@@ -11,8 +13,9 @@ import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
 export const metadata: Metadata = {
   title: "Buy CONKA Brain Shot | Best Nootropic Supplement UK",
-  description:
-    "Buy CONKA Flow + Clear, the UK's most clinically validated brain shot. Informed Sport certified. 16 active ingredients. 100-day guarantee. From £1.25/shot.",
+  description: `Buy CONKA Flow + Clear, the UK's most clinically validated brain shot. Informed Sport certified. 16 active ingredients. 100-day guarantee. From ${formatPrice(
+    getFunnelMinPerShot("both"),
+  )}/shot.`,
   openGraph: {
     title: "Buy CONKA Brain Shot | Best Nootropic Supplement UK",
     description:

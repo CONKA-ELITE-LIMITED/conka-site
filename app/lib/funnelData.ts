@@ -468,6 +468,18 @@ export function getFunnelPriceRange(product: FunnelProduct): {
   };
 }
 
+/**
+ * Lowest per-shot price across all cadences for a product (the cheapest
+ * cadence, currently quarterly). Feeds the "From £X/shot" figure in the
+ * money-page meta descriptions (SCRUM-1139) so they stay in sync with
+ * FUNNEL_PRICING, the same way getFunnelPriceRange feeds the Product JSON-LD.
+ * When a price changes, also append a dated block to docs/PRICING_HISTORY.md.
+ */
+export function getFunnelMinPerShot(product: FunnelProduct): number {
+  const perShots = Object.values(FUNNEL_PRICING[product]).map((p) => p.perShot);
+  return Math.min(...perShots);
+}
+
 export function getOfferVariant(
   product: FunnelProduct,
   cadence: FunnelCadence,
