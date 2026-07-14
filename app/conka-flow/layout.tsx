@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { formulaContent } from "@/app/lib/productData";
+import { formulaContent, formatPrice } from "@/app/lib/productData";
 import {
   FUNNEL_PRODUCTS,
   FUNNEL_HERO_IMAGES,
@@ -12,9 +12,9 @@ import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
 export const metadata: Metadata = {
   title: "CONKA Flow | Daily Morning Brain Shot for Focus and Calm",
-  description: `CONKA Flow is a 30ml morning brain shot with 6 clinically-dosed adaptogens. Zero caffeine, Informed Sport certified. Sharper focus, no jitters. From £${getFunnelMinPerShot(
-    "flow",
-  ).toFixed(2)}/shot.`,
+  description: `CONKA Flow is a 30ml morning brain shot with 6 clinically-dosed adaptogens. Zero caffeine, Informed Sport certified. Sharper focus, no jitters. From ${formatPrice(
+    getFunnelMinPerShot("flow"),
+  )}/shot.`,
   openGraph: {
     title: "CONKA Flow | Daily Morning Brain Shot for Focus and Calm",
     description:
