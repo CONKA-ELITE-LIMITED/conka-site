@@ -33,7 +33,7 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 | `app/conka-flow/layout.tsx`, `app/conka-clarity/layout.tsx`, `app/conka-both/layout.tsx`, `app/ingredients/layout.tsx`, `app/case-studies/layout.tsx`, `app/conkaapp-privacy-policy/layout.tsx` | Per-page metadata for the client pages, supplied by a sibling server layout. The PDP layouts also render the JSON-LD. |
 | `app/lib/jsonLd.tsx` | JSON-LD builders (`buildProductSchema`, `buildFaqSchema`), the `JsonLd` render component, and `absoluteUrl`. |
 | `app/lib/faqContent.ts`, `app/components/b2b/TeamFAQ.tsx` | FAQ sources. `FAQ_ITEMS` feeds `/` and `/conka-both`; `TEAM_FAQS` (exported from the component) feeds `/professionals`. Both the visible accordion and the JSON-LD read the same array, which is what keeps the schema truthful. |
-| `app/sitemap.ts` | Hand-maintained list of indexable routes. No `lastModified`. |
+| `app/sitemap.ts` | Hand-maintained list of indexable routes. Each carries the source paths it renders, and `lastModified` is the git date of the last commit touching them. |
 | `public/llms.txt` | Plain-text brand and URL map for AI crawlers. |
 | `app/robots.ts` | Allows general and AI crawling; disallows only `/api/`, `/account`, `/payment/`; references the sitemap. |
 | `app/lib/funnelData.ts` | `FUNNEL_PRICING` (pricing source of truth); `getFunnelPriceRange` feeds the JSON-LD, `getFunnelMinPerShot` feeds the meta "From" price. |
@@ -47,14 +47,15 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 - **robots allows AI crawlers and does not block noindex pages.** AEO citation is an explicit goal, so AI crawlers stay allowed. The noindex ad/funnel pages are not disallowed in robots, because blocking them would stop Google seeing their `noindex` tag.
 - **Prices derive from one source.** The Product JSON-LD and the "From £X/shot" meta text both read `FUNNEL_PRICING`, so a price change cannot leave stale figures in the index. "From" means the cheapest cadence (quarterly). See `docs/PRICING_HISTORY.md`.
 - **Schema is generated from the same array the page renders.** FAQ markup describing content a user cannot see breaches Google's policy. Every `FAQPage` node on the site is built from the exact array its visible accordion renders, so the two cannot drift apart.
-- **No `lastModified` in the sitemap.** It used to stamp every URL with the build time, which told Google the whole site changed on every deploy. A signal that is always wrong is worth less than no signal, so it was removed. Set it per-entry only when a real modification date exists (the blog will have one).
+- **Sitemap `lastModified` is derived from git, never hand-maintained.** It used to stamp every URL with the build time, which told Google the whole site changed on every deploy. It is now the date of the last commit touching that route's source files, so it is true by construction and no one has to remember to bump it. This needs `VERCEL_DEEP_CLONE=1` in the Vercel project env: Vercel shallow-clones to depth 10, and without full history `git log` cannot see far enough back. If git returns nothing, the entry ships with no `lastmod`, which is the correct failure mode.
 - **Expired campaign pages get deleted, not noindexed.** `/win` and `/barrys` outlived their January 2026 deadlines while still indexable. Noindex would have left two dead pages on the site; deleting and redirecting removes them and passes any link signal to `/`.
 
 ## Gotchas
 
 - **Client components cannot export `metadata`.** Use a sibling server `layout.tsx`.
 - **`twitter` is a separate top-level metadata field from `openGraph`.** Next merges metadata shallowly, so per-page Twitter cards must be restated or they inherit the generic root copy.
-- **`app/sitemap.ts` is a hand-maintained static list.** Add a line when a new indexable page ships. Also add the page to `public/llms.txt` if it is worth an AI citation.
+- **`app/sitemap.ts` is a hand-maintained static list.** Add a `ROUTES` entry when a new indexable page ships, **including its `sources` paths**, or it gets no `lastmod`. Also add the page to `public/llms.txt` if it is worth an AI citation.
+- **`VERCEL_DEEP_CLONE=1` must stay set** in the Vercel project env, or the sitemap's git dates silently degrade to "missing" for anything untouched in the last 10 commits.
 - **Meta prices and JSON-LD come from `FUNNEL_PRICING`.** When a price changes, append a dated block to `docs/PRICING_HISTORY.md`.
 - **Never emit FAQ schema for content the page does not render.** Build it from the array the accordion uses, not a hand-written copy.
 - **`convex/winEntries.ts` is dead code.** Deleting `/win` and `/barrys` removed its only callers. The `winEntries` table still holds real entrant emails, so neither the table nor the functions were dropped. Handle in a Convex cleanup pass, not by deleting the data.
@@ -64,7 +65,7 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 - View source on `/`, `/conka-flow`, etc.: each emits its own canonical, title, and description.
 - Google Rich Results Test on a PDP: exactly one `Product` and one `FAQPage` node, prices matching `funnelData.ts`.
 - `/` and `/professionals`: exactly one `FAQPage` node each, and every question in it also appears in the rendered HTML.
-- `/sitemap.xml`, `/robots.txt` and `/llms.txt` return HTTP 200. The sitemap carries no `lastmod`.
+- `/sitemap.xml`, `/robots.txt` and `/llms.txt` return HTTP 200. Sitemap `lastmod` dates should **differ per page** and match real commit history (`/privacy` old, the PDPs recent). If every page shares one date, or dates are missing, `VERCEL_DEEP_CLONE` is not set.
 - `/win` and `/barrys` redirect to `/` (Next emits 308 for `permanent: true`; Google treats it as a 301).
 - In Search Console: submit the sitemap, then watch indexed-page count and non-brand impressions move against the baseline.
 
