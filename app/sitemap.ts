@@ -5,22 +5,25 @@ import { SITE_ORIGIN } from "@/app/lib/site";
  * XML sitemap for crawl discovery (SEO Phase 5, SCRUM-1136).
  *
  * Lists canonical, indexable, self-referencing pages only. Deliberately excludes:
- * - noindex ad/funnel landers (/go/*, /funnel, /barrys, /win)
- * - redirect-only routes (/start, /lander, /shop, /quiz, /protocol) - see next.config.ts
+ * - noindex ad/funnel landers (/go/*, /funnel)
+ * - redirect-only routes (/start, /lander, /shop, /quiz, /protocol, /win, /barrys)
+ *   - see next.config.ts
  * - private / transactional paths (/account, /professionals/order, /payment/*)
+ *
+ * No `lastModified`: we track no real per-page content-change date, and stamping
+ * every URL with the build time told Google the whole site changed on every
+ * deploy, which is how a crawler learns to ignore the field. Set it per-entry
+ * only where a genuine modification date exists (SCRUM-1140).
  *
  * Add a line here whenever a new indexable page ships.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
   const entry = (
     path: string,
     priority: number,
     changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
   ): MetadataRoute.Sitemap[number] => ({
     url: `${SITE_ORIGIN}${path}`,
-    lastModified,
     changeFrequency,
     priority,
   });
