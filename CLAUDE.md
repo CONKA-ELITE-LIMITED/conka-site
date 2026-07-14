@@ -156,6 +156,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/development/PERFORMANCE_OPTIMISATION.md` | **Performance rules** — animation, images, scripts, fonts, Lighthouse benchmarks |
 | `docs/development/VIDEO_OPTIMISATION.md` | **Video assets** — ffmpeg recipe for the mp4/webm/poster trio, poster frame selection, size budget |
 | `docs/development/MOTION_GUIDE.md` | **GSAP motion system** — shared helpers (`app/lib/motion.ts`), patterns, reduced-motion rules; `/app` is the reference |
+| `docs/seo-aeo/README.md` | **SEO / AEO foundation** — canonical reference for what is live (canonical, metadata, JSON-LD, sitemap, robots, keyword H1s) and why |
 | `docs/analytics/` | Analytics implementation + verification guides |
 | `docs/CONVEX_DEPLOYMENT.md` | Convex setup |
 

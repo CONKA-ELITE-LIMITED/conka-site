@@ -1,4 +1,6 @@
-# SEO / AEO Foundation
+# SEO / AEO Foundation (build archive)
+
+> **This is the planning and build archive.** For the concise canonical reference of what is live and why, see `docs/seo-aeo/README.md`. This doc keeps the full history: the keyword-map corrections, verified findings, and per-phase task breakdowns.
 
 **Status:** Phases 1 to 5 all built and merged to main (SCRUM-1131, 1132, 1133, 1136, 1138 all Done). Phase 6 (informational content surface / blog) is the only remaining phase and is scoped in its own plan doc, `blog-informational-content-surface.md`. This foundation programme is complete.
 **Owner:** Rudh
