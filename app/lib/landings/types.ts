@@ -75,7 +75,9 @@ export interface LandingScreen {
    *  "square" shows a 1:1 source uncropped. Defaults to "portrait" */
   videoAspect?: "portrait" | "square";
   subtitle?: string;
-  /** Optional looping video (public path) shown between copy and CTA */
+  /** Optional looping video shown between copy and CTA. Give the `.mp4` path;
+   *  the matching `.webm` source and `-poster.jpg` are derived from it, so all
+   *  three files of the trio must share a basename (see VIDEO_OPTIMISATION.md) */
   video?: string;
   /** Star-rating line shown above the CTA, e.g. "4.9/5 from customers" */
   rating?: { text: string };
