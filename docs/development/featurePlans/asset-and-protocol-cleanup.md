@@ -53,7 +53,7 @@ The **presentation** layer is dead. The **commerce** layer is not.
 | 1 | Delete unreferenced `public/` assets | **Done** (2026-07-14, 141 files, 83.2 MB) |
 | 2 | Fix the video source and poster bugs | **Done** (2026-07-14, PR #352) |
 | 3 | Delete the protocol presentation layer | **Done** (2026-07-14, 19 files, ~3.4k lines) |
-| 4 | Quarantine the protocol commerce layer | Not started |
+| 4 | Quarantine the protocol commerce layer (scope revised, see below) | Not started |
 | 5 | Delete the commerce layer entirely | Not planned (see below) |
 
 ---
@@ -149,19 +149,45 @@ That comment was the only thing keeping `/lander/video/Flow.webm` looking alive.
 
 ## Phase 4: Quarantine the protocol commerce layer
 
-**What:** Keep every piece of the commerce layer working, but isolate it behind a clearly named legacy boundary so it reads as "support for existing subscribers" rather than "live product".
+**Scope revised after Phase 3** (2026-07-14). Phase 3 killed the only consumers of two of the five original targets, so they are now dead code to delete rather than legacy to quarantine. Verified by reference count on `main` at commit 599f5dc9.
 
-In scope to relocate or clearly mark:
+### 4a. Delete what is now dead (zero consumers)
 
-- `ProtocolId` (`app/lib/productTypes.ts`)
-- `protocolPricing` (`app/lib/productPricing.ts`)
-- `PROTOCOL_COLORS` (`app/lib/productColors.ts`)
-- `PROTOCOL_VARIANTS` (`app/lib/shopifyProductMapping.ts`)
-- The subscriptions UI and the subscription API routes
+| Symbol | Location | Consumers |
+|--------|----------|-----------|
+| `protocolPricing` | `app/lib/productPricing.ts` | 0 |
+| `PROTOCOL_COLORS` | `app/lib/productColors.ts` | 0 |
 
-The goal is that the next person touching the product-data layer immediately understands this code is legacy support, not something to build on. This is the change that stops the mess being re-discovered.
+Both were used only by the sticky footers and `productHelpers`, which Phase 3 stripped. The earlier "do not delete" note on these two was premised on them being live; that premise no longer holds. Deleting them cannot break the account portal because nothing imports them. Roughly 60 lines.
 
-**Complexity:** Medium. Zero behaviour change; the test is that the account portal still works.
+Also dead, and unblocked by Phase 3 (their TODOs said "delete once /protocol/3 is swept"):
+
+| Component | Consumers |
+|-----------|-----------|
+| `app/components/product/FormulaBenefits.tsx` | barrel export only |
+| `app/components/product/FormulaBenefitsStats.tsx` | barrel export only |
+| `app/components/product/FormulaBenefitsStatsDesktop.tsx` | only `FormulaBenefitsStats` (dead) |
+| `app/components/product/FormulaBenefitsStatsMobile.tsx` | only `FormulaBenefitsStats` (dead) |
+
+Remove their exports from `app/components/product/index.ts` too.
+
+**KEEP `FormulaBenefitsPillars.tsx` and `formulaStatsData.tsx`.** Pillars is live on `/conka-flow` and `/conka-clarity`, and it is the reason `formulaStatsData` must stay. Do not delete the whole `FormulaBenefits*` prefix on sight.
+
+### 4b. Quarantine what is genuinely live
+
+These are real legacy support for existing protocol subscribers. Keep them working; isolate them behind a clearly named boundary so they read as "support for existing subscribers" rather than "live product".
+
+| Symbol | Live consumers |
+|--------|----------------|
+| `ProtocolId` (`productTypes.ts`) | `productMetadata.ts`, `whatToExpectData.ts`, `FormulaCaseStudies.tsx` |
+| `PROTOCOL_VARIANTS` (`shopifyProductMapping.ts`) | `productMetadata.ts`, `app/api/auth/subscriptions/[id]/pause/route.ts` |
+| Subscriptions UI + API routes | the account portal |
+
+`PROTOCOL_VARIANTS` holds real Shopify variant IDs and is how an existing subscriber's renewal maps to a product. This is the part that must not break.
+
+**Open question to resolve first:** `ProtocolId` leaks into `whatToExpectData.ts` and `FormulaCaseStudies.tsx`, which are live PDP code, not subscription code. Decide whether those two can drop the protocol dependency entirely (preferred, keeps the legacy type out of the PDPs) or whether the quarantine boundary has to accommodate them. This is the messiest part and the one that could expand scope.
+
+**Complexity:** Medium. Zero behaviour change. The test is that the account portal still loads, edits and pauses a protocol subscription.
 
 ---
 
