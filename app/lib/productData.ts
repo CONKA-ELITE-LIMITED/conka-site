@@ -4,9 +4,9 @@
  * formulaContent, productHelpers.
  * Consumers keep importing from "@/app/lib/productData".
  *
- * Note: ProtocolId and protocolPricing still live in productTypes/productPricing.
- * They are legacy support for existing protocol subscribers (the account portal
- * and Shopify variant mapping), not a live product surface.
+ * Note: ProtocolId still lives in productTypes. It is legacy support for existing
+ * protocol subscribers (Shopify variant mapping in shopifyProductMapping.ts and
+ * productMetadata.ts), not a live product surface. Do not build on it.
  */
 
 export * from "./productTypes";
