@@ -9,6 +9,11 @@ import CartDrawer from "@/app/components/CartDrawer";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
 import DelayedAnalytics from "@/app/components/DelayedAnalytics";
 import { SITE_ORIGIN } from "@/app/lib/site";
+import {
+  JsonLd,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+} from "@/app/lib/jsonLd";
 
 /* Brand design system: Neue Haas Grotesk Display (primary) + JetBrains Mono (data) */
 const neueHaas = localFont({
@@ -157,6 +162,10 @@ export default function RootLayout({
           async
         />
         */}
+        {/* Entity identity for answer engines (SCRUM-1141). Rendered once here so
+            every route carries exactly one Organization and one WebSite node. */}
+        <JsonLd schema={buildOrganizationSchema()} />
+        <JsonLd schema={buildWebSiteSchema()} />
       </head>
       <body
         className={`${neueHaas.variable} ${jetBrainsMono.variable} ${abcFavorit.variable} antialiased`}
