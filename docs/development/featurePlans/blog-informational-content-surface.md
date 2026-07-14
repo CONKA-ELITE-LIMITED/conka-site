@@ -5,6 +5,7 @@
 **Part of:** The SEO / AEO programme (`docs/development/featurePlans/seo-aeo-metadata-foundation.md`). This is Phase 6, the only remaining phase.
 **Source inputs:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research), `docs/analytics/seo-search-console-baseline.md` (pre-change baseline).
 **Created:** 2026-07-13
+**Updated:** 2026-07-14 — critical review pass. Four adjustments before ticketing: (1) enforced frontmatter shrunk to only the fields Phase 1 renders, clustering fields made optional passthrough; (2) Phase 1 ships one MDX component (`ProductCTA`), not three; (3) MDX library reopened (`next-mdx-remote/rsc` is for out-of-repo content; on Next 16 prefer `@next/mdx`), resolve in task 1; (4) named the strategic tension that the informational-click channel is being disrupted by AI answers, so an AEO citation metric and citeable-content selection are added to the success criteria.
 
 ---
 
@@ -22,6 +23,8 @@ Cold, non-brand organic searchers and AI answer engines (AEO) at the top of the 
 
 Opens a net-new, compounding acquisition channel that reduces dependence on paid Meta traffic over time. Success is measured against the captured Search Console baseline: non-brand impressions and clicks, plus a growing count of indexed, ranking URLs. Secondary metric: blog to PDP CTA clicks (content to product conversion).
 
+**Caveat on the success metric (from the parent doc's own AEO audit).** Informational queries, which are exactly what this blog targets, are increasingly answered by LLMs in-chat, which keep the click. So "non-brand clicks" is a metric on a channel that is being disrupted at the same time we build for it. This does not sink the blog: its value shifts from "rank and get the click" toward "be the source the answer engine cites", which is why the AEO scaffolding (BlogPosting schema, answer-first openings, atomic passages) is not optional garnish here, it is half the point. Two consequences: (1) add an AEO success signal alongside the click metrics, even a crude one (tracking whether CONKA is cited in AI answers for the target queries), and (2) weight seed and early-post selection toward genuinely *citeable* definitional content, not raw search volume. It also strengthens the case for the parent doc's parked "tools" pivot (a formula selector or stack checker is the one informational asset an LLM cannot satisfy in-chat); the blog is the lower-ceiling half of that pair and should be understood as such.
+
 ## Appetite
 
 - **Phase 1 (infrastructure):** 2 to 3 days. One buildable unit.
@@ -37,7 +40,9 @@ brand-base (new). Mirror the `/science` and `/case-studies` page shell: `brand-c
 
 Build `/blog` in Next.js with an **MDX-in-repo** content model. Posts are `.mdx` files with typed, validated frontmatter, rendered statically at build time. This gives the strongest possible SEO and AEO (fully static HTML), zero runtime cost, no new vendor, and version-controlled content that is reviewable in PRs.
 
-MDX (not plain markdown) is chosen specifically so articles can embed a small whitelist of React components, the most important being a `<ProductCTA>` block that links to the PDPs. Every informational post is therefore also a conversion path.
+MDX (not plain markdown) is chosen specifically so articles can embed a `<ProductCTA>` block that links to the PDPs. Every informational post is therefore also a conversion path. Be honest about the size of this need: the engine is expected to emit plain markdown prose plus frontmatter, and the auto-rendered CTA (from `relatedProducts`) does not itself require MDX. The genuine MDX-only capability is placing an *additional* CTA mid-article. That is real but thin, so MDX is a low-cost hedge, not a load-bearing choice. Keep it, but do not over-invest in the component layer (see "Embeddable components" below, which is deliberately cut to one component for Phase 1).
+
+**Library choice is not settled: resolve before task 1.** The prior draft named `next-mdx-remote/rsc`. That library exists for content fetched at runtime from *outside* the repo (a CMS or DB). Our content is in-repo and compiled at build time, and the app is on **Next 16.0.7 + React 19.2** (confirmed in `package.json`). For that shape the grain-aligned options are first-party **`@next/mdx`** or a compile-at-build content layer, not the remote loader. Task 1 must verify compatibility on Next 16 and pick the tool that matches "static files in the repo", most likely `@next/mdx`. This is the one infra decision that can cause real friction; make it deliberately.
 
 `/blog` (singular) is used because `/blogs/*` (plural) is already consumed by a permanent 301 to `/why-conka` (the old Shopify blog, `next.config.ts`). That redirect is left untouched.
 
@@ -72,31 +77,37 @@ On placement into the repo:
 - `.mdx` file goes to `app/blog/posts/<slug>.mdx`
 - images go to `public/blog/<slug>/` and are referenced by that path in frontmatter and body
 
-### Required frontmatter (YAML)
+### Frontmatter (YAML)
+
+**Enforce only what Phase 1 actually renders.** The build-time validator hard-fails on a missing or malformed *required* field, so the required set must not include fields that only serve features not yet built. Clustering (`category`, `tags`) is Phase 3, gated on 8+ posts; requiring those now would force the engine to emit correct values for a system that does not exist, and reject the post if it does not. So they are **optional passthrough**: parsed and stored, never gated on. Tighten the validator to require them only when Phase 3 gives them a job.
 
 ```yaml
 ---
+# --- REQUIRED (validator hard-fails if missing/malformed) ---
 title: "What Are Nootropics? A Plain-English Guide"   # H1 + base for the <title> tag
 description: "..."                # meta description, 150 to 160 characters, no em dashes
 slug: "what-are-nootropics"       # kebab-case, must match the filename
-targetKeyword: "what are nootropics"        # primary keyword from the map
-secondaryKeywords: ["nootropics uk", "cognitive supplements"]
 datePublished: "2026-07-20"       # ISO date
 dateModified: "2026-07-20"        # ISO date
-author: "CONKA"                   # byline; default "CONKA"
 heroImage: "/blog/what-are-nootropics/hero.webp"
-heroImageAlt: "..."               # required, describes the image
-category: "Nootropics 101"        # for future topic clustering
-tags: ["nootropics", "cognition"]
+heroImageAlt: "..."               # describes the image
 relatedProducts: ["flow"]         # any of flow | clear | both; drives the auto CTA
-faq:                              # optional; if present, renders + emits FAQPage JSON-LD
+
+# --- OPTIONAL (parsed and stored; NOT gated by the validator) ---
+targetKeyword: "what are nootropics"        # primary keyword from the map; editorial aid
+secondaryKeywords: ["nootropics uk", "cognitive supplements"]
+author: "CONKA"                   # byline; defaults to "CONKA" if absent
+category: "Nootropics 101"        # reserved for Phase 3 topic clustering; not rendered yet
+tags: ["nootropics", "cognition"] # reserved for Phase 3 clustering; not rendered yet
+faq:                              # if present, renders + emits FAQPage JSON-LD
   - question: "Are nootropics safe?"
     answer: "..."
+readingTime: 6                    # auto-computed from body if absent
 draft: false                      # true = excluded from listing, sitemap, and static params
 ---
 ```
 
-Optional: `readingTime` (auto-computed from body if absent).
+The required set is exactly the fields the Phase 1 template puts on the page or in schema. Everything a future phase will consume is accepted but optional, so a conforming post today never fails on a field with no consumer.
 
 ### Body structure rules (for SEO and AEO)
 
@@ -107,14 +118,17 @@ Optional: `readingTime` (auto-computed from body if absent).
 - **Length guidance:** roughly 800 to 1500 words for a cornerstone post. Not enforced by the build, but the editorial standard.
 - **No em dashes** (house copy rule). No unverified efficacy claims (see Risks).
 
-### Embeddable components (optional, not required)
+### Embeddable components (Phase 1 ships exactly one)
 
-The body can be 100% plain markdown. These components are available for when a post wants them, but the engine does not have to emit any of them:
+The body can be 100% plain markdown. Phase 1 provides a single component, because it is the only one with a consumer:
+
 - `<ProductCTA product="flow|clear|both" />` — branded CTA card linking to the PDP, fires analytics. **By default the template auto-renders one CTA from the `relatedProducts` frontmatter field**, so plain-markdown posts still get a conversion path. Use the tag only to place an additional CTA at a specific point mid-article.
-- `<Callout>` — highlighted aside for key facts.
-- `<FAQ>` — in-body FAQ, an alternative to the frontmatter `faq` array.
 
-Any component not on this list is stripped.
+Deliberately **not** built in Phase 1 (no post needs them, and building/maintaining the MDX component map plus whitelist-stripping for unused tags is over-build):
+- `<Callout>` — a highlighted aside. Add it the first time a post actually wants one.
+- `<FAQ>` — an in-body FAQ. Redundant for now: the frontmatter `faq` array already renders the FAQ and emits its JSON-LD.
+
+Any component not registered in the MDX component map is stripped, so an unexpected tag degrades to nothing rather than breaking the build.
 
 ---
 
@@ -145,7 +159,8 @@ Phase 1 ships as its own commit stream on the SEO integration branch, consistent
 ## Phase 1 task breakdown (active, unticketed)
 
 1. **[Infra] MDX content pipeline + typed frontmatter loader**
-   - Add `next-mdx-remote/rsc` + `gray-matter` (plus `remark-gfm`, `rehype-slug`, `rehype-autolink-headings` for heading anchors that aid AEO). A `app/lib/blog.ts` module reads `app/blog/posts/*.mdx`, parses and **validates** frontmatter against the contract, and exposes `getAllPosts()` / `getPostBySlug()`. Slug = filename. Invalid frontmatter throws at build.
+   - **First, pick the MDX tool for Next 16 (see "Library choice" in Approach).** Content is in-repo and static, so prefer first-party `@next/mdx` or a compile-at-build content layer over the runtime-oriented `next-mdx-remote/rsc`. Verify on Next 16.0.7 + React 19.2 before wiring anything else. Add `gray-matter` for frontmatter (plus `remark-gfm`, `rehype-slug`, `rehype-autolink-headings` for heading anchors that aid AEO).
+   - A `app/lib/blog.ts` module reads `app/blog/posts/*.mdx`, parses and **validates** frontmatter against the contract, and exposes `getAllPosts()` / `getPostBySlug()`. Validate only the required set (title, description, slug, dates, heroImage, heroImageAlt, relatedProducts); accept the optional fields as passthrough. Slug = filename. A missing/malformed *required* field throws at build. A single `getAllPosts({ includeDrafts })` is the one source of truth for the draft filter, so listing, sitemap, and `generateStaticParams` cannot disagree.
    - Complexity: Medium. Dependencies: none.
    - Files: `app/lib/blog.ts` (new), `package.json`, `app/blog/posts/` (new).
 

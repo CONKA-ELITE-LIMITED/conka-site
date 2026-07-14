@@ -5,7 +5,8 @@ import ApplicationForm from "@/app/components/b2b/ApplicationForm";
 import InformedSportCertification from "@/app/components/InformedSportCertification";
 import PilotProgramme from "@/app/components/b2b/PilotProgramme";
 import B2BValueCallout from "@/app/components/b2b/B2BValueCallout";
-import TeamFAQ from "@/app/components/b2b/TeamFAQ";
+import TeamFAQ, { TEAM_FAQS } from "@/app/components/b2b/TeamFAQ";
+import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 
 export const metadata: Metadata = {
   title: "Team & Club Pricing | CONKA",
@@ -36,6 +37,12 @@ const VALUE_POINTS = [
 export default function ProfessionalsPage() {
   return (
     <div className="brand-clinical brand-page min-h-screen flex flex-col">
+      {/* Serialises the same Q&A the TeamFAQ section renders below (SCRUM-1140). */}
+      <JsonLd
+        schema={buildFaqSchema(
+          TEAM_FAQS.map((f) => ({ question: f.q, answer: f.a })),
+        )}
+      />
       <Navigation />
       {/* HERO — sport positioning, no pricing */}
       <section

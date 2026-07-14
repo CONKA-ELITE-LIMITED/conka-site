@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-14** | Sitemap lastmod is now derived from git history per page (true by construction, no manual upkeep). Needs VERCEL_DEEP_CLONE=1 in the Vercel env.
+- **2026-07-14** | AEO hygiene: FAQ schema on the home and /professionals pages, metadata for /case-studies and the app privacy policy, deleted the expired /win and /barrys contest pages (301 to home), dropped the fabricated sitemap lastmod, added llms.txt (SCRUM-1140)
 - **2026-07-13** | Simplified the mobile PDP purchase footer: one CTA carrying its price, guarantee and cancel-anytime underneath, no free-shots badge.
 - **2026-07-13** | Funnel headers: the CONKA logo now links back to the home page. Added a new UGC still to the testimonials marquee.
 - **2026-07-13** | Replaced the Flow liquid animation with a new optimised encode and documented the standard video optimisation recipe

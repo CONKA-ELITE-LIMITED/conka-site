@@ -12,7 +12,8 @@
 
 type QA = { q: string; a: string };
 
-const FAQS: QA[] = [
+/** Exported so /professionals can serialise the same Q&A as FAQPage JSON-LD (SCRUM-1140). */
+export const TEAM_FAQS: QA[] = [
   {
     q: "Is there a minimum order?",
     a: "No minimum. Per-box pricing improves automatically as your combined Flow and Clear box count grows, so a bigger squad order simply costs less per box.",
@@ -48,7 +49,7 @@ export default function TeamFAQ() {
       </h2>
 
       <div className="mt-8 border-t border-black/12">
-        {FAQS.map((f) => (
+        {TEAM_FAQS.map((f) => (
           <details key={f.q} className="group border-b border-black/12">
             <summary className="flex items-center justify-between gap-4 cursor-pointer list-none py-4 min-h-[44px]">
               <span className="text-base font-medium text-black">{f.q}</span>

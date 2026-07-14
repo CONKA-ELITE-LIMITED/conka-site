@@ -147,7 +147,7 @@ export default function RootLayout({
             polyfills, 16 KiB unused CSS, ~360ms main-thread time on /start).
             Server-side subscribe paths (/api/klaviyo/subscribe,
             /api/klaviyo/track-test) are unaffected and keep powering
-            Footer email signup + WinEmailForm.
+            the Footer email signup.
             To restore: publish a form in the Klaviyo dashboard, then
             uncomment the Script tag below. */}
         {/*
@@ -162,9 +162,9 @@ export default function RootLayout({
         className={`${neueHaas.variable} ${jetBrainsMono.variable} ${abcFavorit.variable} antialiased`}
       >
         <MetaPageViewTracker />
-        {/* Convex is NOT provided globally — the only consumers are /win,
-            /barrys and /go (each wrapped by its own layout). Keeping the
-            ConvexReactClient (~80 KB) off every other page is a large TBT win. */}
+        {/* Convex is NOT provided globally — the only consumer is /go, which is
+            wrapped by its own layout. Keeping the ConvexReactClient (~80 KB) off
+            every other page is a large TBT win. */}
         <AuthProvider>
           <CartProvider>
             {children}
