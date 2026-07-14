@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 // conkaapp-privacy-policy/page.tsx is a Client Component and cannot export metadata
 // itself. This sibling server layout supplies the per-page SEO metadata (SCRUM-1140).
 export const metadata: Metadata = {
-  title: "CONKA App Privacy Policy | CONKA",
+  title: "App Privacy Policy | CONKA",
   description:
     "How the CONKA app collects, uses and protects your data, including cognitive test results, account details and your rights over the data we hold.",
   openGraph: {

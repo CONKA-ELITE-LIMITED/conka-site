@@ -2,7 +2,7 @@
 
 > **This is the planning and build archive.** For the concise canonical reference of what is live and why, see `docs/seo-aeo/README.md`. This doc keeps the full history: the keyword-map corrections, verified findings, and per-phase task breakdowns.
 
-**Status:** Phases 1 to 5 all built and merged to main (SCRUM-1131, 1132, 1133, 1136, 1138 all Done). The **SEO** half of the foundation is complete. An AEO audit on 2026-07-14 found the **AEO** half is only part-built and opened three new phases: **7** (entity identity), **8** (schema coverage and indexation hygiene), **9** (AEO content shape). Phase 6 (blog) remains scoped in its own plan doc, `blog-informational-content-surface.md`.
+**Status:** Phases 1 to 5 and 8 all built (SCRUM-1131, 1132, 1133, 1136, 1138, 1140). The **SEO** half of the foundation is complete. An AEO audit on 2026-07-14 found the **AEO** half was only part-built and opened three new phases: **7** (entity identity, blocked on a profile-URL list), **8** (schema coverage and indexation hygiene, **now built**), **9** (AEO content shape, needs a content owner). Phase 6 (blog) remains scoped in its own plan doc, `blog-informational-content-surface.md`.
 **Owner:** Rudh
 **Source inputs:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research); AEO best-practice review (Ahrefs AEO course intro + a structured-data-for-AEO talk, summarised 2026-07-14)
 **Created:** 2026-07-10
@@ -19,6 +19,9 @@
 - **2026-07-13** Phase 4 (SCRUM-1138) built and merged. Descriptive keyword subline added inside the PDP `<h1>` via an optional `seoHeading` field on the hero content, plus a mobile hero reorder. `content.name` left untouched so bottle alt text is unaffected. Ticket Done.
 - **2026-07-14** Status review. Phases 1 to 5 confirmed Done in code (sitemap.ts/robots.ts exist; `seoHeading` wired through `ProductBuyPanel.tsx` and `productHeroHelpers.ts`) and in Jira (all five tickets Done). The foundation is complete. Phase 6 (blog) is the only remaining work and now lives in its own plan doc, `blog-informational-content-surface.md` (content model settled as Notion-as-headless-CMS). The two open questions below were both resolved during the Phase 2 build.
 - **2026-07-14** **AEO gap audit.** External AEO best practice (two source videos, see "AEO audit" below) was compared against the live codebase. Verdict: the SEO foundation holds up, but the AEO foundation is roughly a third built. We have the schema *machinery* (`app/lib/jsonLd.tsx`) and two schema types, but only on three routes, and the site has **no entity identity at all**: no `Organization`, no `WebSite`, no `sameAs`, and not even any social links in the footer to populate one. Also found: FAQ content on `/` and `/professionals` that reuses the same `FAQ_ITEMS` array the PDPs already serialise but emits no `FAQPage` schema; `/case-studies` sitting in the sitemap with no metadata; `/barrys` and `/win` indexable despite a sitemap comment claiming otherwise; and a `lastModified` field that lies. Opened as Phases 7, 8 and 9.
+- **2026-07-14** **Phase 8 (SCRUM-1140) built.** Ticketed under the Website & CRO epic (SCRUM-763) and shipped as one commit. `FAQPage` JSON-LD now renders on `/` (from `FAQ_ITEMS`) and `/professionals` (from a newly exported `TEAM_FAQS` in `TeamFAQ.tsx`), reusing the existing `buildFaqSchema`. Sibling server layouts added for `/case-studies` and `/conkaapp-privacy-policy`. `/win` and `/barrys` deleted outright and 301'd to `/` (see the decision below). `lastModified` removed from `app/sitemap.ts`. `public/llms.txt` added. Verified against a running server: exactly one `FAQPage` node per page, both mirroring content that is genuinely server-rendered (schema describing invisible content breaches Google's policy, and `LabFAQ` is a `dynamic()` import, so this was checked rather than assumed).
+- **2026-07-14** **Decision: `/win` and `/barrys` deleted, not noindexed.** Scoping found they were not ad landers at all: both were **contest pages whose deadlines expired in January 2026**, still live and indexable, so Google could serve a dead competition as a CONKA result. Noindex would have left two dead pages on the site. Deleting and redirecting removes them and passes any accumulated link signal to `/`. Their component folders had no external importers. Side effect: `/go` is now the only Convex consumer.
+- **2026-07-14** **Known follow-up: `convex/winEntries.ts` is now dead code.** The Phase 8 deletion removed its only callers. Deliberately left in place: the `winEntries` table (`convex/schema.ts:114`) holds real entrant email addresses from the January contests, and dropping it would destroy data. The functions are unreachable but harmless. Fold into a Convex cleanup pass; do not delete the table without an explicit decision on the data.
 
 ## Discrepancies found during build (both resolved)
 
@@ -162,7 +165,7 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | 4 | Descriptive keyword H1s on the product pages (name + visible subline in the `<h1>`) | Merged to main (SCRUM-1138) |
 | 6 | Informational content surface (blog) for the research-intent keywords | Scoped (own plan doc: `blog-informational-content-surface.md`), not ticketed |
 | 7 | Entity identity: `Organization` + `WebSite` schema, `sameAs`, footer social links, web manifest | Scoped below, not ticketed. **Blocked** on a profile-URL list |
-| 8 | Schema coverage and indexation hygiene: FAQ schema on `/` and `/professionals`, missing metadata, real noindex on `/barrys` and `/win`, honest `lastModified`, `llms.txt` | Scoped below, not ticketed. Unblocked |
+| 8 | Schema coverage and indexation hygiene: FAQ schema on `/` and `/professionals`, missing metadata, `/barrys` and `/win` deleted + 301'd, honest `lastModified`, `llms.txt` | **Built (SCRUM-1140)** |
 | 9 | AEO content shape: answer-first (BLUF) openings, self-contained passages, freshness dates on the existing content pages | Scoped below, not ticketed. Depends on nothing, but overlaps Phase 6 |
 
 Phases ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible. Phase 5 was pulled ahead of Phase 4 after the Search Console baseline showed discovery, not on-page keyword tuning, is the current bottleneck.
@@ -347,9 +350,11 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 
 ---
 
-## Phase 8 task breakdown (schema coverage and indexation hygiene, not ticketed)
+## Phase 8 task breakdown (schema coverage and indexation hygiene, BUILT: SCRUM-1140)
 
 **Thesis.** A set of small, independent, unblocked fixes that each close a gap the audit found. None needs a decision from anyone. This is the phase to ship first, because Phase 7 is blocked and Phase 9 needs an editorial pass.
+
+**Shipped 2026-07-14.** One deviation from the plan: task 3 changed from "noindex" to "delete and redirect" once scoping revealed the two pages were expired contests, not ad landers. Task 6 (`BreadcrumbList`) was deferred as planned. `convex/winEntries.ts` is now dead code and was deliberately left alone (see the progress log).
 
 1. **[SEO] `FAQPage` schema on `/` and `/professionals`**
    - The builder already exists and the content already renders. Call `buildFaqSchema` with the same `FAQ_ITEMS` on the homepage, and with the `TeamFAQ` source on `/professionals`. `app/page.tsx` is a server component so the schema goes in place; `/professionals` already has a `metadata` export to sit alongside.
@@ -362,10 +367,9 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
    - Complexity: Small.
    - Files: `app/case-studies/layout.tsx` (new), `app/conkaapp-privacy-policy/layout.tsx` (new).
 
-3. **[SEO] Actually noindex `/barrys` and `/win`**
-   - Decide the truth, then make the code match it. If they are ad landers (which is what the sitemap comment claims), give them `robots: { index: false, follow: false }` via their layouts, consistent with `/go/[slug]`. If they are meant to be indexable, correct the misleading comment in `app/sitemap.ts:8` and add them to the sitemap with real metadata. **Do not leave the code and the comment disagreeing.**
-   - Complexity: Small. Needs a one-line answer from Rudh on which they are.
-   - Files: `app/barrys/layout.tsx`, `app/win/layout.tsx`, `app/sitemap.ts`.
+3. **[SEO] Delete `/barrys` and `/win`, and 301 both** (was: "noindex them")
+   - They turned out to be expired contest pages, not ad landers, so deleting beat noindexing. Pages and both component folders deleted, permanent redirects to `/` added in `next.config.ts`, and the false comment in `app/sitemap.ts:8` corrected. Convex data and API routes left intact.
+   - Files: `next.config.ts`, `app/sitemap.ts`, `app/layout.tsx` (two stale comments naming the deleted routes); deleted `app/barrys/`, `app/win/`, `app/components/barrys/`, `app/components/win/`.
 
 4. **[SEO] Stop lying in `lastModified`**
    - `app/sitemap.ts:15` sets `lastModified = new Date()` for all 16 URLs, so every deploy tells Google the whole site changed. That is the fastest way to make a crawler ignore the field entirely. We do not track a real per-page content-change date, so the honest fix is to **drop `lastModified` from the static entries** rather than fabricate one. Reinstate it per-page only when there is a real date to give (which the blog will have, from `dateModified` frontmatter).
@@ -439,7 +443,7 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 **From the AEO audit (open)**
 
 3. **Which profile URLs go in `sameAs`?** (Phase 7, blocking.) Needs the live list from Rudh or marketing: Instagram, LinkedIn, TikTok, YouTube, X, Trustpilot, Amazon storefront, Companies House, Crunchbase. Only profiles we control and actually maintain. This is the gate on the whole of Phase 7.
-4. **Are `/barrys` and `/win` meant to be indexable?** (Phase 8.) The code says yes, the sitemap comment says no. A one-line answer settles it either way.
+4. **Are `/barrys` and `/win` meant to be indexable? — RESOLVED.** Neither. They were expired contest pages. Deleted and 301'd to `/` in Phase 8.
 5. **Who owns the content review cadence?** (Phase 9.) Freshness dates are only worth adding if they are true. Without a named owner, task 3 of Phase 9 should not ship.
 6. **Sequencing: Phase 6 (blog) or Phases 7 and 8 first?** 7 and 8 are days of work and lift every page including the future blog. The blog is the bigger acquisition bet but is gated on Humphrey's content engine. They are not mutually exclusive.
 
@@ -454,7 +458,7 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 
 ## Jira tickets
 
-Sprint 28. Phases 6, 7, 8 and 9 are not ticketed yet.
+Sprint 28. Phases 6, 7 and 9 are not ticketed yet. Phase 8 is SCRUM-1140 and is the first ticket in this programme actually linked to the Website & CRO epic (SCRUM-763): the five before it carried the epic name as a title prefix only, because `.claude/skills/scope/jira.md` used to tell the scope skill not to set `parent`. That instruction is now fixed.
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
@@ -463,6 +467,7 @@ Sprint 28. Phases 6, 7, 8 and 9 are not ticketed yet.
 | [SCRUM-1133](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1133) | [Website & CRO] Add Product and FAQPage JSON-LD to the three PDPs (SEO Phase 3) | 3 | Done |
 | [SCRUM-1136](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1136) | [Website & CRO] Add sitemap.ts and robots.ts for crawl discovery (SEO Phase 5) | 5 | Done |
 | [SCRUM-1138](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1138) | [Website & CRO] Add descriptive keyword H1s to the three PDPs (SEO Phase 4) | 4 | Done |
+| [SCRUM-1140](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1140) | [Website & CRO] AEO schema coverage and indexation hygiene (SEO Phase 8) | 8 | Built, in review |
 
 All five foundation tickets (SCRUM-1131, 1132, 1133, 1136, 1138) are Done and merged to main. Phase 4 shipped with the product name kept as the visual focal point and a descriptive keyword subline added inside the same `<h1>` via an optional `seoHeading` field on the hero content (leaving `content.name`, which feeds bottle alt text, untouched). Phase 6 (blog) is tracked separately in `blog-informational-content-surface.md`.
 
