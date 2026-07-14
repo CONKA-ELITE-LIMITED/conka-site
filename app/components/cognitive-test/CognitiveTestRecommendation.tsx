@@ -3,11 +3,13 @@
 import type { CognitiveTestRecommendationProps } from "./types";
 
 /**
- * The test scores two things, and each formula answers one of them:
- * Clear covers accuracy (attention and precision), Flow covers speed
- * (processing and recall). Every result lands on Flow + Clear, because the
- * pair is what covers both halves. The score only decides which half we lead
- * with, so the reader sees their own result reflected before the offer.
+ * The test scores two things, and each formula answers one of them. The mapping
+ * follows the PDP positioning, so the test and the product pages tell one story:
+ *   Flow  "Sharper focus. Calmer energy."  -> accuracy (focus, sustained attention)
+ *   Clear "Sharper recall. Faster thinking." -> speed (recall, faster thinking)
+ * Every result lands on Flow + Clear, because the pair is what covers both halves.
+ * The score only decides which half we lead with, so the reader sees their own
+ * result reflected before the offer.
  */
 const SCORE_THRESHOLD = 70;
 
@@ -22,25 +24,25 @@ function getRecommendation(accuracy: number, speed: number) {
       eyebrow: "Recommendation · Flow + Clear",
       headline: "Both scores have room to move.",
       description:
-        "Accuracy comes down to attention, which is what CONKA Clear is built for. Speed comes down to processing and recall, which is what CONKA Flow is built for. Together they cover both halves of the test you just took.",
+        "Accuracy comes down to focus and sustained attention, which is what CONKA Flow is built for. Speed comes down to recall and faster thinking, which is what CONKA Clear is built for. Together they cover both halves of the test you just took.",
     };
   }
 
   if (lowAccuracy) {
     return {
-      eyebrow: "Recommendation · Clear first",
+      eyebrow: "Recommendation · Flow first",
       headline: "Accuracy is where you have the most room.",
       description:
-        "Accuracy comes down to attention and precision. That is what CONKA Clear is built for. CONKA Flow covers the other half, speed and recall, so taking both keeps you covered as your scores move.",
+        "Accuracy comes down to focus and sustained attention. That is what CONKA Flow is built for. CONKA Clear covers the other half, recall and faster thinking, so taking both keeps you covered as your scores move.",
     };
   }
 
   if (lowSpeed) {
     return {
-      eyebrow: "Recommendation · Flow first",
+      eyebrow: "Recommendation · Clear first",
       headline: "Speed is where you have the most room.",
       description:
-        "Speed comes down to processing and recall. That is what CONKA Flow is built for. CONKA Clear covers the other half, accuracy and attention, so taking both keeps you covered as your scores move.",
+        "Speed comes down to recall and faster thinking. That is what CONKA Clear is built for. CONKA Flow covers the other half, focus and sustained attention, so taking both keeps you covered as your scores move.",
     };
   }
 
@@ -48,7 +50,7 @@ function getRecommendation(accuracy: number, speed: number) {
     eyebrow: "Recommendation · Flow + Clear",
     headline: "Strong baseline.",
     description:
-      "Both scores are strong. CONKA Flow holds speed and recall, CONKA Clear holds accuracy and attention. Taking both is how you keep a baseline like this one.",
+      "Both scores are strong. CONKA Flow holds focus and attention, CONKA Clear holds recall and speed. Taking both is how you keep a baseline like this one.",
   };
 }
 
