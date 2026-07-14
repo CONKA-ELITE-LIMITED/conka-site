@@ -11,6 +11,7 @@ import type {
   ResultBucket,
   RevealScreen,
 } from "@/app/lib/landings/types";
+import { videoTrio } from "@/app/lib/landings/videoTrio";
 import QuizButton from "./QuizButton";
 import AnimatedText from "./AnimatedText";
 import TypewriterText from "./TypewriterText";
@@ -22,16 +23,6 @@ import CycleLoop from "./CycleLoop";
 import TurnaroundChart from "./TurnaroundChart";
 
 const mono = { fontFamily: "var(--font-brand-data)" } as const;
-
-/** Videos ship as a trio sharing one basename (see VIDEO_OPTIMISATION.md):
- *  `Name.webm` (primary), `Name.mp4` (fallback), `Name-poster.jpg`. Configs
- *  give the mp4 path, so the siblings are derived from it. Anything that is
- *  not an mp4 is served as-is with no webm or poster rather than guessing. */
-function videoTrio(src: string) {
-  if (!src.endsWith(".mp4")) return { webm: null, mp4: src, poster: undefined };
-  const base = src.slice(0, -".mp4".length);
-  return { webm: `${base}.webm`, mp4: src, poster: `${base}-poster.jpg` };
-}
 
 /** Replaces {realAge}/{brainAge}/{gap} in copy with the computed result */
 export function fillAgeTokens(
