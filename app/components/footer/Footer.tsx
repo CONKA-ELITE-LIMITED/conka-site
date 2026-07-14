@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import { FOOTER_SOCIALS } from "@/app/lib/site";
 
-type FooterLink = { label: string; href: string };
+type FooterLink = { label: string; href: string; external?: boolean };
 
 const DISCOVER: FooterLink[] = [
   { label: "The Science", href: "/science" },
@@ -32,11 +32,23 @@ const SUPPORT: FooterLink[] = [
   { label: "Account", href: "/account" },
 ];
 
+/**
+ * The visible counterpart to the Organization schema's `sameAs` claim
+ * (SCRUM-1141): real outbound links are what corroborate it. Text rather than
+ * icons, so crawlers get readable anchor text and the mono footer stays coherent.
+ */
+const FOLLOW: FooterLink[] = FOOTER_SOCIALS.map((social) => ({
+  label: social.label,
+  href: social.url,
+  external: true,
+}));
+
 const COLUMNS: { title: string; links: FooterLink[] }[] = [
   { title: "Discover", links: DISCOVER },
   { title: "Shop", links: SHOP },
   { title: "Company", links: COMPANY },
   { title: "Support", links: SUPPORT },
+  { title: "Follow", links: FOLLOW },
 ];
 
 export default function Footer() {
@@ -187,7 +199,9 @@ export default function Footer() {
             />
           </Link>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* 5 columns: 2-up on mobile (Follow lands last, on its own row),
+              3-up at md, all 5 side by side from lg. */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {COLUMNS.map((col) => (
               <nav
                 key={col.title}
@@ -209,13 +223,17 @@ export default function Footer() {
                     >
                       <a
                         href={link.href}
-                        className="flex items-center gap-3 py-2.5 group"
+                        {...(link.external
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                        className="flex items-center gap-3 py-2.5 min-h-[44px] group"
                       >
                         <span className="font-mono text-[9px] tabular-nums text-white/35 group-hover:text-white/60 transition-colors">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
                         <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-white/75 group-hover:text-white transition-colors">
                           {link.label}
+                          {link.external ? " ↗" : ""}
                         </span>
                       </a>
                     </li>
@@ -225,30 +243,6 @@ export default function Footer() {
             ))}
           </div>
         </div>
-
-        {/* Social row. These are the visible counterpart to the Organization
-            schema's sameAs claim (SCRUM-1141): real outbound links are what
-            corroborate it. Text, not icons, to match the mono footer treatment
-            and to give crawlers readable anchor text. */}
-        <nav
-          aria-label="CONKA on social media"
-          className="flex flex-wrap items-center gap-x-6 gap-y-1 py-4 border-b border-white/12"
-        >
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 tabular-nums">
-            {"// Follow"}
-          </p>
-          {FOOTER_SOCIALS.map((social) => (
-            <a
-              key={social.url}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center min-h-[44px] font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-white/75 hover:text-white transition-colors"
-            >
-              {social.label} ↗
-            </a>
-          ))}
-        </nav>
 
         {/* Meta row */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-6">
