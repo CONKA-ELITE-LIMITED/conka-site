@@ -1,7 +1,7 @@
 /**
  * Product Image Configuration
  * Images used in navigation menus, shop cards, and other navigation contexts.
- * Hero images are defined separately in protocolHeroConfig.ts and productHeroConfig.ts
+ * Hero images are defined separately in productHeroConfig.ts
  */
 
 // Protocol navigation images (for cards, menus)

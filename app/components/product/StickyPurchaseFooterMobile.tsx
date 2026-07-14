@@ -5,15 +5,10 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   PackSize,
   PurchaseType,
-  ProtocolTier,
   formulaPricing,
-  protocolPricing,
-  protocolContent,
   formatPrice,
   getBillingLabel,
-  getProtocolTierPackLabel,
   FormulaId,
-  ProtocolId,
 } from "@/app/lib/productData";
 import { CadenceType } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -64,10 +59,7 @@ interface StickyPurchaseFooterMobileProps {
   formulaId?: FormulaId;
   selectedPack?: PackSize;
   onPackSelect?: (pack: PackSize) => void;
-  protocolId?: ProtocolId;
-  selectedTier?: ProtocolTier;
-  onTierSelect?: (tier: ProtocolTier) => void;
-  // For the "Both" product -- replaces protocolId="3" lookup
+  // For the "Both" product
   productHeroId?: ProductHeroId;
   // NOTE: purchaseType drives the old subscribe/one-time toggle display.
   // Pass selectedCadence instead to enter cadence mode, which replaces all
@@ -84,9 +76,6 @@ export default function StickyPurchaseFooterMobile({
   formulaId,
   selectedPack,
   onPackSelect,
-  protocolId,
-  selectedTier,
-  onTierSelect,
   purchaseType = "subscription",
   selectedCadence,
   cadencePrice,
@@ -114,8 +103,6 @@ export default function StickyPurchaseFooterMobile({
   let priceLine = "";
   let price = 0;
   let showPackSelector = false;
-  let showTierSelector = false;
-  let availableTiers: ProtocolTier[] = [];
 
   if (formulaId && selectedPack) {
     variantLabel = packLabels[selectedPack];
@@ -123,23 +110,9 @@ export default function StickyPurchaseFooterMobile({
     price = pricing.price;
     priceLine = `${formatPrice(pricing.perShot)} / serving`;
     showPackSelector = !!onPackSelect;
-  } else if (protocolId && selectedTier) {
-    variantLabel = getProtocolTierPackLabel(protocolId, selectedTier);
-    const pricingType = protocolId === "4" ? "ultimate" : "standard";
-    const tierPricing = protocolPricing[pricingType][purchaseType];
-    if (selectedTier in tierPricing) {
-      const pricing = tierPricing[selectedTier as keyof typeof tierPricing];
-      price = pricing.price;
-    }
-    priceLine = formatPrice(price);
-    const protocol = protocolContent[protocolId];
-    availableTiers = protocol?.availableTiers ?? [];
-    showTierSelector = !!onTierSelect;
   }
 
-  const hasSelector =
-    (showPackSelector && selectedPack) ||
-    (showTierSelector && selectedTier && availableTiers.length > 0);
+  const hasSelector = showPackSelector && selectedPack;
 
   // Cadence mode: no picker on mobile -- cadence selection lives in the hero widget.
   // Mirrors the funnel footer: one plain CTA carrying its own price, with the
@@ -264,44 +237,6 @@ export default function StickyPurchaseFooterMobile({
                               </span>
                               <span className="font-mono tabular-nums text-xs opacity-70 whitespace-nowrap">
                                 {formatPrice(packPricing.price)}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      {showTierSelector &&
-                        protocolId &&
-                        availableTiers.map((tier) => {
-                          const pricingType =
-                            protocolId === "4" ? "ultimate" : "standard";
-                          const tierPricing =
-                            protocolPricing[pricingType][purchaseType];
-                          const tierData =
-                            tierPricing[tier as keyof typeof tierPricing];
-                          if (!tierData) return null;
-                          const billingText =
-                            purchaseType === "subscription" &&
-                            "billing" in tierData
-                              ? getBillingLabel(tierData.billing)
-                              : "One-time";
-                          return (
-                            <button
-                              key={tier}
-                              type="button"
-                              onClick={() => {
-                                onTierSelect?.(tier);
-                                setShowDropdown(false);
-                              }}
-                              className={`w-full px-4 py-2.5 text-left text-sm hover:bg-black/5 transition-colors flex justify-between items-center gap-3 ${
-                                selectedTier === tier
-                                  ? "bg-black/5 font-semibold"
-                                  : ""
-                              }`}
-                            >
-                              <span className="font-mono tabular-nums">
-                                {getProtocolTierPackLabel(protocolId!, tier)} {billingText}
-                              </span>
-                              <span className="font-mono tabular-nums text-xs opacity-70 whitespace-nowrap">
-                                {formatPrice(tierData.price)}
                               </span>
                             </button>
                           );

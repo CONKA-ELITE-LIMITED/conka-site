@@ -84,7 +84,7 @@ export const whatToExpectByFormula: Record<FormulaId, WhatToExpectStep[]> = {
 // ===== PROTOCOL TIMELINES =====
 // Protocol timelines blend CONKA Flow + CONKA Clear, emphasizing synergy.
 // Copy reduces repetition by using ingredient/mechanism names instead of product names.
-// Science is laced throughout using pathways, mechanisms, and outcomes from protocolSynergyCopy.
+// Science is laced throughout using pathways, mechanisms, and outcomes.
 
 export const whatToExpectStepsResilience: WhatToExpectStep[] = [
   {

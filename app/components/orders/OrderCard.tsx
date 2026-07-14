@@ -20,10 +20,12 @@ function getProductPageUrl(title: string): string | null {
   const t = (title || "").toLowerCase();
   if (t.includes("flow")) return "/conka-flow";
   if (t.includes("clear") || t.includes("clarity")) return "/conka-clarity";
-  if (t.includes("resilience")) return "/protocol/1";
-  if (t.includes("precision")) return "/protocol/2";
+  // Legacy protocol orders (Resilience/Precision/Ultimate) point at the Both PDP,
+  // which is where the /protocol/:path* redirect already sent them.
+  if (t.includes("resilience")) return "/conka-both";
+  if (t.includes("precision")) return "/conka-both";
   if (t.includes("balance")) return "/conka-both";
-  if (t.includes("ultimate")) return "/protocol/4";
+  if (t.includes("ultimate")) return "/conka-both";
   return null;
 }
 

@@ -44,13 +44,3 @@ export interface ShopMegaMenuProps {
   onEnter: () => void;
   onLeave: () => void;
 }
-
-/**
- * Props for ProtocolCard component
- */
-export interface ProtocolCardProps {
-  protocolId: "1" | "2" | "3" | "4";
-  onClick: () => void;
-  /** When true (e.g. in mega menu), hover overlay shows less content to avoid clipping on small desktop */
-  compactHover?: boolean;
-}

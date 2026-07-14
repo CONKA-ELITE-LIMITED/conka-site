@@ -22,7 +22,7 @@ export default function CognitiveTestRecommendation({
         description:
           "Your accuracy score suggests room for improvement. Clinical studies show CONKA Clear ingredients improve cognition by +16% and attention by +14%.",
         buttonText: "Try Precision Protocol",
-        href: "/protocol/2",
+        href: "/conka-both",
         eyebrow: "Recommendation · Precision",
       };
     }
@@ -32,7 +32,7 @@ export default function CognitiveTestRecommendation({
         description:
           "Your speed score suggests room for improvement. Clinical studies show CONKA Flow ingredients improve memory by +18% and cognitive performance.",
         buttonText: "Try Resilience Protocol",
-        href: "/protocol/1",
+        href: "/conka-both",
         eyebrow: "Recommendation · Resilience",
       };
     }
@@ -41,7 +41,7 @@ export default function CognitiveTestRecommendation({
       description:
         "Your scores show strong cognitive function. The Ultimate Protocol (CONKA Flow and CONKA Clear daily) helps maintain and further enhance peak performance.",
       buttonText: "Try Ultimate Protocol",
-      href: "/protocol/4",
+      href: "/conka-both",
       eyebrow: "Recommendation · Ultimate",
     };
   };
