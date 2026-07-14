@@ -13,13 +13,7 @@
  * The cart system will validate and show errors for missing variant IDs.
  */
 
-import {
-  FormulaId,
-  PackSize,
-  PurchaseType,
-  ProtocolId,
-  ProtocolTier,
-} from "./productData";
+import { FormulaId, PackSize, PurchaseType } from "./productData";
 
 // ============================================
 // INDIVIDUAL FORMULA VARIANTS
@@ -102,76 +96,8 @@ export const TRIAL_PACK_VARIANTS: Record<
   },
 };
 
-// ============================================
-// PROTOCOL VARIANTS
-// ============================================
-
-// Protocol variants now include both the variant ID and the selling plan ID for subscriptions
-type ProtocolTierVariant = {
-  variantId: string;
-  sellingPlanId: string; // Used for subscription purchases
-};
-
-type ProtocolTierVariants = Partial<Record<ProtocolTier, ProtocolTierVariant>>;
-
-export const PROTOCOL_VARIANTS: Record<ProtocolId, ProtocolTierVariants> = {
-  // Protocol 1 (Resilience) - CONFIGURED
-  "1": {
-    starter: {
-      variantId: "gid://shopify/ProductVariant/56999240597878", // RESILIANCE_STARTER_4 - £14.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429882230", // 20% discount - £11.99
-    },
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56999240630646", // RESILIANCE_PRO_12 - £39.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £31.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56999240663414", // RESILIANCE_MAX_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £63.99
-    },
-  },
-  // Protocol 2 (Precision) - CONFIGURED
-  "2": {
-    starter: {
-      variantId: "gid://shopify/ProductVariant/56999234503030", // PRECISION_STARTER_4 - £14.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429882230", // 20% discount - £11.99
-    },
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56999234535798", // PRECISION_PRO_12 - £39.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £31.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56999234568566", // PRECISION_MAX_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £63.99
-    },
-  },
-  // Protocol 3 (Balance) - CONFIGURED
-  "3": {
-    starter: {
-      variantId: "gid://shopify/ProductVariant/56998884573558", // BALANCED_STARTER_4 - £14.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429882230", // 20% discount - £11.99
-    },
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56998884606326", // BALANCED_PRO_12 - £39.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £31.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56998884639094", // BALANCED_MAX_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £63.99
-    },
-  },
-  // Protocol 4 (Ultimate) - CONFIGURED - no starter tier
-  "4": {
-    pro: {
-      variantId: "gid://shopify/ProductVariant/56999249478006", // ULTAMATE_PRO_28 - £79.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429947766", // 20% discount - £63.99
-    },
-    max: {
-      variantId: "gid://shopify/ProductVariant/56999249510774", // ULTAMATE_MAX_56 - £144.99
-      sellingPlanId: "gid://shopify/SellingPlan/711429980534", // 20% discount - £115.99
-    },
-  },
-};
+// Protocol variants are NOT here. They are retired-product support for existing
+// subscribers and live in ./legacy/protocolSubscriptions.
 
 // Subscription discount percentage (for visual display)
 export const SUBSCRIPTION_DISCOUNT_PERCENT = 20;
@@ -214,102 +140,4 @@ export function getTrialPackVariantId(
 ): string | null {
   const variantId = TRIAL_PACK_VARIANTS[formulaId]?.[packSize];
   return variantId || null;
-}
-
-/**
- * Get the Shopify variant ID for a protocol
- * For one-time purchases, only returns variantId
- * For subscriptions, returns both variantId and sellingPlanId
- */
-export function getProtocolVariantId(
-  protocolId: ProtocolId,
-  tier: ProtocolTier,
-  purchaseType: PurchaseType,
-): { variantId: string; sellingPlanId?: string } | null {
-  const tierVariant = PROTOCOL_VARIANTS[protocolId]?.[tier];
-  if (!tierVariant || !tierVariant.variantId) return null;
-
-  if (purchaseType === "subscription") {
-    return {
-      variantId: tierVariant.variantId,
-      sellingPlanId: tierVariant.sellingPlanId || undefined,
-    };
-  }
-
-  // One-time purchase - no selling plan
-  return { variantId: tierVariant.variantId };
-}
-
-/**
- * Check if a variant ID is configured (not empty)
- */
-export function isVariantConfigured(variantId: string | null): boolean {
-  return variantId !== null && variantId !== "";
-}
-
-/**
- * Validate that all required variant IDs are configured
- * Useful for debugging during setup
- */
-export function getUnconfiguredVariants(): string[] {
-  const unconfigured: string[] = [];
-
-  // Check formulas
-  for (const formulaId of ["01", "02"] as FormulaId[]) {
-    for (const packSize of ["4", "8", "12", "28"] as PackSize[]) {
-      for (const purchaseType of [
-        "subscription",
-        "one-time",
-      ] as PurchaseType[]) {
-        const variantData = getFormulaVariantId(
-          formulaId,
-          packSize,
-          purchaseType,
-        );
-        if (!isVariantConfigured(variantData?.variantId || null)) {
-          unconfigured.push(
-            `Formula ${formulaId} - ${packSize}-pack - ${purchaseType}`,
-          );
-        }
-      }
-    }
-  }
-
-  // Check trial packs
-  for (const formulaId of ["01", "02"] as FormulaId[]) {
-    for (const packSize of ["4", "8", "12"] as TrialPackSize[]) {
-      const variantId = getTrialPackVariantId(formulaId, packSize);
-      if (!isVariantConfigured(variantId)) {
-        unconfigured.push(`Trial Pack ${formulaId} - ${packSize}-pack`);
-      }
-    }
-  }
-
-  // Check protocols
-  for (const protocolId of ["1", "2", "3", "4"] as ProtocolId[]) {
-    const tiers =
-      protocolId === "4"
-        ? (["pro", "max"] as ProtocolTier[])
-        : (["starter", "pro", "max"] as ProtocolTier[]);
-
-    for (const tier of tiers) {
-      for (const purchaseType of [
-        "subscription",
-        "one-time",
-      ] as PurchaseType[]) {
-        const variantData = getProtocolVariantId(
-          protocolId,
-          tier,
-          purchaseType,
-        );
-        if (!isVariantConfigured(variantData?.variantId || null)) {
-          unconfigured.push(
-            `Protocol ${protocolId} - ${tier} - ${purchaseType}`,
-          );
-        }
-      }
-    }
-  }
-
-  return unconfigured;
 }
