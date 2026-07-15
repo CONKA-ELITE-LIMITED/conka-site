@@ -105,7 +105,12 @@ export function buildProductSchema(input: ProductSchemaInput) {
     description: toPlainText(input.description),
     image: absoluteUrl(input.imagePath),
     url: absoluteUrl(input.urlPath),
-    brand: { "@type": "Brand", name: "CONKA" },
+    // Reference the Organization @id rather than restating a standalone Brand, so
+    // the knowledge graph resolves this product's brand to our single verifiable
+    // CONKA entity. The Organization node (injected site-wide from the root layout)
+    // defines the @id, name and type; a bare @id reference avoids asserting the
+    // node is both a Brand and an Organization (SCRUM-1148).
+    brand: { "@id": ORGANIZATION_ID },
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "GBP",
