@@ -64,7 +64,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "daily-safety",
     question: "Is CONKA safe to take every day?",
     answer:
-      "Yes. CONKA is built for daily use, and every batch is Informed Sport certified and tested for 280+ banned substances, the same standard professional athletes are held to. Both formulas are caffeine-free, so there is no stimulant to build up. If you are pregnant, breastfeeding, under 18, or taking prescription medication, read the questions below and check with your doctor before starting.",
+      "Yes. CONKA is built for daily use, and every batch is Informed Sport certified and tested for 280+ banned substances, the same standard professional athletes are held to. Both formulas are caffeine-free, so there is no stimulant to build up. If you are pregnant, breastfeeding, giving it to a child, or taking prescription medication, read the questions below and check with your doctor before starting.",
     category: "safety",
   },
   {
@@ -78,7 +78,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "who-should-not",
     question: "Who should not take CONKA?",
     answer:
-      "Do not take CONKA if you are pregnant or breastfeeding, or if you are under 18, because the ingredients have not been established as safe for those groups. If you take prescription medication, have a diagnosed medical condition (particularly a thyroid, bleeding or autoimmune condition), or have surgery coming up, check with your GP or pharmacist before starting. CONKA is a food supplement, not a medicine, and it is not a substitute for anything a doctor has prescribed.",
+      "Do not take CONKA if you are pregnant or breastfeeding, and it is not suitable for children under 3. If you take prescription medication, have a diagnosed medical condition (particularly a thyroid, bleeding or autoimmune condition), or have surgery coming up, check with your GP or pharmacist before starting. CONKA is a food supplement, an addition to a balanced diet rather than a medicine, and it is not a substitute for anything a doctor has prescribed.",
     category: "safety",
   },
   {
@@ -92,7 +92,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "under-18",
     question: "Can children or under-18s take CONKA?",
     answer:
-      "No. CONKA is formulated for adults, and the ingredients have not been tested for safety in children or teenagers, so we do not recommend it under 18.",
+      "Yes, from age 3 and up. CONKA is suitable for children over 3 and for teenagers, not only adults. It is a food supplement, an addition to a balanced diet and lifestyle rather than a medicine or a cure, so it works alongside good food, sleep and exercise. We do not recommend it for children under 3. As with any supplement, if your child takes medication or has a health condition, check with your GP first.",
     category: "safety",
   },
   {
