@@ -355,6 +355,13 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "app",
   },
   {
+    id: "app-different",
+    question: "How is the CONKA app different to other brain-training apps?",
+    answer:
+      "Most brain-training apps sell you games you get better at with practice, which tells you nothing about your cognition, only that you have learned the game. The CONKA app is the opposite. It is built around a two-minute, FDA-cleared cognitive assessment designed to be effectively ungameable, so the score reflects genuine processing speed and attention rather than how often you have played. It measures change against your own baseline and lines it up against the real-world factors around each test, so it is a measurement instrument, not a game.",
+    category: "app",
+  },
+  {
     id: "app-free",
     question: "Is the CONKA app free?",
     answer:
@@ -372,7 +379,14 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "app-need-conka",
     question: "Do I need to take CONKA to use the app?",
     answer:
-      "No. The app and the cognitive test are free and work entirely on their own, and plenty of people use it just to track their baseline and their focus. It also means that if you do take CONKA, you can measure the difference against your own before-and-after data rather than taking our word for it.",
+      "No. The app and the cognitive test are free and work entirely on their own. It is not just a focus tracker: it is a place to see holistically what is actually affecting your cognitive performance, with sleep, caffeine, stress and training lined up against your scores and measured against your own baseline. And it means that if you do take CONKA, you can measure the difference against your own before-and-after data rather than taking our word for it.",
+    category: "app",
+  },
+  {
+    id: "app-wearables",
+    question: "Does the app connect to my wearables?",
+    answer:
+      "Yes, on iOS. The app connects to Apple Health, so anything that writes to Health flows in automatically: your Apple Watch, and other wearables like Garmin and Whoop that sync into Apple Health. That lets the app line up your sleep, HRV, activity and training against your cognitive scores without you logging anything by hand. Android wearable syncing is not supported yet.",
     category: "app",
   },
   {

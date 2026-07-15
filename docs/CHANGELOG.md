@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | Added CONKA-app-vs-brain-training and wearables FAQ answers, and made the app answer more holistic (SCRUM-1143)
 - **2026-07-15** | Added a CONKA app FAQ section to /faq and wove the app coffee-vs-caffeine data into the coffee answer (SCRUM-1143)
 - **2026-07-15** | Softened the drug-test FAQ answer, swapped it off the PDP FAQ for a generic nootropic question, and added an operational support section to /faq (SCRUM-1143)
 - **2026-07-15** | Replaced the legacy FormulaFAQ component with the shared LabFAQ on the Flow and Clear PDPs, then deleted it (SCRUM-1143)
