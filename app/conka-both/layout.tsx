@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
+import { BOTH_PDP_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { formatPrice } from "@/app/lib/productData";
 import {
   FUNNEL_PRODUCTS,
@@ -48,7 +48,7 @@ export default function ConkaBothLayout({
     highPrice: bothPrices.high,
     offerCount: bothPrices.count,
   });
-  const faqSchema = buildFaqSchema(CONVERSION_FAQ_ITEMS);
+  const faqSchema = buildFaqSchema(BOTH_PDP_FAQ_ITEMS);
 
   return (
     <>

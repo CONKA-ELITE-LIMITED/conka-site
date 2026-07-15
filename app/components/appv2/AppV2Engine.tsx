@@ -312,7 +312,7 @@ export default function AppV2Engine() {
         <div className="lg:flex-1">
           <ActHeading index="01" title="Everything in." reveal="data-engine-a1">
             Sleep, HRV, steps, time outdoors, caffeine, training. Synced
-            automatically from Apple Health on iOS and Android, not logged by
+            automatically from Apple Health on iOS, not logged by
             hand. And new: screen time, a signal almost nobody has correlated
             with cognition before. We&apos;re watching what it reveals.
           </ActHeading>

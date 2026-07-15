@@ -412,6 +412,16 @@ export const CONVERSION_FAQ_ITEMS: FaqItem[] = CONVERSION_FAQ_IDS.map((id) => {
 });
 
 /**
+ * The /conka-both PDP subset: the conversion set minus the drug-test question,
+ * which reads too intense on a product page (it stays on /faq, and on the
+ * non-PDP conversion surfaces home / start / landers). Keeps all three PDPs
+ * (flow, clarity, both) free of the banned-substances answer.
+ */
+export const BOTH_PDP_FAQ_ITEMS: FaqItem[] = CONVERSION_FAQ_ITEMS.filter(
+  (item) => item.id !== "drug-test",
+);
+
+/**
  * Resolve specific canonical items by id, in the order given. Lets a surface
  * with its own product-specific questions (e.g. the Flow/Clear PDPs) graft on a
  * few shared answers from the single source rather than restating them. Throws

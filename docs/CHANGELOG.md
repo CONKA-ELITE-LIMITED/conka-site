@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | Removed the drug-test FAQ from /conka-both, and corrected the /app Apple Health copy to iOS-only (SCRUM-1143)
 - **2026-07-15** | Added FAQ to the footer Discover column and hoisted the PDP FAQ lists to module scope (SCRUM-1143)
 - **2026-07-15** | Added CONKA-app-vs-brain-training and wearables FAQ answers, and made the app answer more holistic (SCRUM-1143)
 - **2026-07-15** | Added a CONKA app FAQ section to /faq and wove the app coffee-vs-caffeine data into the coffee answer (SCRUM-1143)
