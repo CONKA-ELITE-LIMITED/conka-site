@@ -523,6 +523,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
                 fill
                 priority
                 className="object-cover"
+                style={{ objectPosition: config.hero.asset.objectPosition ?? "center" }}
                 sizes="(max-width: 768px) 100vw, 52vw"
               />
             ) : (

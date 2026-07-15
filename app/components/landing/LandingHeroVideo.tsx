@@ -81,10 +81,10 @@ export default function LandingHeroVideo() {
         }}
       />
       <div
-        className="absolute inset-x-0 bottom-0 h-2/5 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(249,249,249,0.92) 0%, rgba(249,249,249,0) 100%)",
+            "linear-gradient(to top, rgba(244,245,248,1) 0%, rgba(244,245,248,1) 14%, rgba(244,245,248,0) 100%)",
         }}
       />
 

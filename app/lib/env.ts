@@ -16,6 +16,10 @@ const optionalEnvVars = [
   "LOOP_API_KEY",
   "SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID",
   "SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID",
+  // Notion Blog Hub (SEO Phase 6). Optional: the blog surface degrades to empty
+  // if unset rather than breaking the rest of the site.
+  "NOTION_TOKEN",
+  "NOTION_BLOG_DATABASE_ID",
 ] as const;
 
 interface EnvValidationResult {
@@ -151,5 +155,19 @@ export const env = {
 
   get klaviyoPrivateKey(): string | undefined {
     return process.env.KLAVIYO_PRIVATE_KEY;
+  },
+
+  // Notion Blog Hub (SEO Phase 6). Server-only, read-only. Optional: when either
+  // is unset the blog surface degrades to empty rather than throwing.
+  get notionToken(): string | undefined {
+    return process.env.NOTION_TOKEN;
+  },
+
+  get notionBlogDatabaseId(): string | undefined {
+    return process.env.NOTION_BLOG_DATABASE_ID;
+  },
+
+  get isBlogConfigured(): boolean {
+    return Boolean(process.env.NOTION_TOKEN && process.env.NOTION_BLOG_DATABASE_ID);
   },
 } as const;

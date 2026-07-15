@@ -51,3 +51,7 @@ app/lib/reviews.ly_*.csv
 # Raw video / image masters from marketing. Optimized exports live in
 # /public/; raw masters stay local for re-encoding and never ship to Vercel.
 /raw-assets/
+
+# Blog images re-hosted from Notion at build time (SEO Phase 6). Build
+# artifacts: Vercel re-downloads them each build, so they are never committed.
+/public/blog/

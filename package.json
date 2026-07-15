@@ -20,16 +20,20 @@
   ],
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@notionhq/client": "^5.23.2",
     "@shopify/storefront-api-client": "^1.0.9",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^2.0.0",
     "convex": "^1.31.3",
     "gsap": "^3.15.0",
     "next": "16.0.7",
+    "notion-to-md": "^3.1.9",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "recharts": "^3.5.1",
+    "remark-gfm": "^4.0.1",
     "zod": "^4.3.5"
   },
   "devDependencies": {
@@ -42,6 +46,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "tailwindcss": "^4",
+    "tsx": "^4.23.1",
     "typescript": "^5"
   }
 }
