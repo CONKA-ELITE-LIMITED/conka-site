@@ -198,31 +198,15 @@ export const productivityListicle: ListicleConfig = {
     ],
   },
   reviewsCarousel: true,
-  faq: [
-    {
-      q: "Does CONKA contain caffeine?",
-      a: "No. CONKA is completely caffeine-free, so you get steady focus with no jitters and no crash.",
-    },
-    {
-      q: "How is this different from an energy drink?",
-      a: "Energy drinks spike you on caffeine and sugar, then drop you. CONKA is caffeine-free and supports steady, clear focus across the day without the crash.",
-    },
-    {
-      q: "When do I take Flow and Clear?",
-      a: "Flow in the morning to start the day focused, Clear in the early afternoon to replace the coffee and stay sharp into the evening.",
-    },
-    {
-      q: "How quickly will I notice a difference?",
-      a: "Most people feel the morning shot within minutes. The 2-minute test in the app lets you track your focus in numbers over the weeks.",
-    },
-    {
-      q: "Can I take it alongside my morning coffee?",
-      a: "Yes. CONKA is caffeine-free, so it works alongside coffee, though most people find they reach for fewer cups once they are on it.",
-    },
-    {
-      q: "What if it doesn't work for me?",
-      a: "You have 100 days to try it risk-free. If you don't see a difference, you get your money back.",
-    },
+  // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
+  // caffeine, vs-energy-drink, timing, timeline, coffee, guarantee.
+  faqIds: [
+    "caffeine",
+    "vs-energy-drink",
+    "when-to-take",
+    "results",
+    "with-coffee",
+    "guarantee",
   ],
   stickyBar: {
     label: "Stop running on coffee.",

@@ -227,31 +227,15 @@ export const brainAgeingListicle: ListicleConfig = {
     ],
   },
   reviewsCarousel: true,
-  faq: [
-    {
-      q: "Is CONKA a medicine or a treatment for cognitive decline?",
-      a: "No. CONKA is a food supplement that supports everyday focus, memory and mental clarity. It is not a medicine and does not diagnose, treat or prevent any condition.",
-    },
-    {
-      q: "Can I take CONKA with my other medication?",
-      a: "CONKA is a food supplement, not a medicine. If you take prescription medication, check with your GP or pharmacist before adding anything new to your routine.",
-    },
-    {
-      q: "How quickly will I notice a difference?",
-      a: "Most people feel the morning shot within minutes, and many report clearer recall over about six weeks. The 2-minute test in the app lets you track it in numbers.",
-    },
-    {
-      q: "Is it caffeine-free? I don't want anything that affects my sleep.",
-      a: "Yes, completely caffeine-free. There is nothing to spike you up or keep you awake, and Clear in the afternoon is designed to keep you steady into the evening.",
-    },
-    {
-      q: "I'm not very techy. Do I have to use the app?",
-      a: "No. The app is an optional bonus that lets you see your scores over time. The two daily shots work on their own.",
-    },
-    {
-      q: "What if it doesn't work for me?",
-      a: "You have 100 days to try it risk-free. If you don't see a difference, you get your money back.",
-    },
+  // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
+  // cognitive-decline, medication, timeline, sleep, app-optional, guarantee.
+  faqIds: [
+    "cognitive-decline",
+    "medication",
+    "results",
+    "sleep",
+    "app-optional",
+    "guarantee",
   ],
   stickyBar: {
     label: "Protect your sharpest asset.",

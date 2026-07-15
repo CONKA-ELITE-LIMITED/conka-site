@@ -193,7 +193,13 @@ export interface ListicleConfig {
     totals: { themLabel: string; them: string; usLabel: string; us: string };
     cta?: string;
   };
-  faq: { q: string; a: string }[];
+  /**
+   * Canonical FAQ ids (from `app/lib/faqContent.ts`), curated per persona in
+   * display order. Resolved via `pickFaqItems` in the renderer, matching the PDP
+   * tagging pattern. An unknown id fails the build. The `/go` surface is noindex
+   * and renders no claim footnote, so answers are stripped of claim anchors.
+   */
+  faqIds: string[];
   /** Fixed bottom bar anchoring to #product */
   stickyBar?: { label: string; cta: string; sub?: string };
 }
