@@ -200,12 +200,20 @@ export default function NavigationMobile({
                         {product.description}
                       </p>
                     </div>
-                    <span
+                    <svg
                       aria-hidden
-                      className="font-mono text-sm text-black/30 shrink-0"
+                      className="text-black/30 shrink-0"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
                     >
-                      ↗
-                    </span>
+                      <polyline points="9 6 15 12 9 18" />
+                    </svg>
                   </a>
                 ))}
               </div>
@@ -230,12 +238,20 @@ export default function NavigationMobile({
                       <span className="text-base font-semibold text-black leading-tight">
                         {link.label}
                       </span>
-                      <span
+                      <svg
                         aria-hidden
-                        className="font-mono text-xs text-black/30"
+                        className="text-black/30 shrink-0"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
                       >
-                        ↗
-                      </span>
+                        <polyline points="9 6 15 12 9 18" />
+                      </svg>
                     </a>
                   ))}
                 </div>
