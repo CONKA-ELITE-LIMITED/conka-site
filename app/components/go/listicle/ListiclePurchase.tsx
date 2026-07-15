@@ -62,6 +62,43 @@ const Check = ({ className = "" }: { className?: string }) => (
   </svg>
 );
 
+/* Value-stack icons for the expanded plan (mirrors funnel-c). */
+const ico = {
+  width: 15,
+  height: 15,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.6,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+};
+const AppIcon = () => (
+  <svg {...ico}>
+    <rect x="7" y="3" width="10" height="18" rx="1.5" />
+    <line x1="10.5" y1="18" x2="13.5" y2="18" />
+  </svg>
+);
+const BrainIcon = () => (
+  <svg {...ico}>
+    <path d="M9.5 6a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0-1 4.8V15a2.5 2.5 0 0 0 3.5 2.3" />
+    <path d="M14.5 6A2.5 2.5 0 0 1 17 8.5a2.5 2.5 0 0 1 1 4.8V15a2.5 2.5 0 0 1-3.5 2.3" />
+    <line x1="12" y1="6" x2="12" y2="18" />
+  </svg>
+);
+const BoxIcon = () => (
+  <svg {...ico}>
+    <path d="M3 8l9-4 9 4-9 4-9-4z" />
+    <path d="M3 8v8l9 4 9-4V8" />
+  </svg>
+);
+const ShotIcon = () => (
+  <svg {...ico}>
+    <path d="M9 3h6M10 3v5l-4 9a2 2 0 0 0 1.8 3h8.4a2 2 0 0 0 1.8-3l-4-9V3" />
+  </svg>
+);
+
 /** Circle radio matching the clinical plan-row selector. */
 function Radio({ selected }: { selected: boolean }) {
   return (
@@ -103,10 +140,30 @@ function PlanPicker({
           : 0;
         const meta = SUB_META[cadence];
         const freeShots = pricing.freeShots ?? 0;
+        const firstOrderShots = pricing.firstOrderShots ?? pricing.shotCount;
+        // Worth of the free bonus shots at the one-time per-shot rate.
+        const freeShotsValue = freeShots * otpPricing.perShot;
+        const freeStack: {
+          key: string;
+          icon: ReactNode;
+          label: string;
+          was: string | null;
+          note: string | null;
+        }[] = [
+          { key: "shots", icon: <ShotIcon />, label: `${freeShots} bonus shots`, was: formatPrice(freeShotsValue), note: "first order" },
+          { key: "postage", icon: <BoxIcon />, label: "Postage", was: null, note: null },
+          { key: "app", icon: <AppIcon />, label: "CONKA app", was: null, note: null },
+          { key: "coach", icon: <BrainIcon />, label: "Brain Coach", was: null, note: null },
+        ];
 
         return (
-          <div key={cadence} className="relative">
-            {/* Floating badge on the row edge (matches the card's Best value). */}
+          <div
+            key={cadence}
+            className={`relative rounded-[14px] border-2 bg-white transition-colors ${
+              isSelected ? "border-[#1B2757]" : "border-black/10 hover:border-black/25"
+            }`}
+          >
+            {/* Floating badge on the card edge (matches the tile's Best value). */}
             {meta.popular && (
               <span
                 className="absolute -top-3 left-4 z-10 rounded-full px-3 py-1 text-[12px] font-bold text-white"
@@ -115,69 +172,115 @@ function PlanPicker({
                 Most popular
               </span>
             )}
+
             <button
               type="button"
               onClick={() => onSelect(cadence)}
               aria-pressed={isSelected}
-              className={`flex w-full flex-col gap-2.5 rounded-[14px] border-2 bg-white px-4 pb-3.5 pt-4 text-left transition-colors ${
-                isSelected
-                  ? "border-[#1B2757]"
-                  : "border-black/10 hover:border-black/25"
-              }`}
+              className="flex w-full items-center gap-3 p-4 text-left"
             >
-              <div className="flex items-center gap-3">
-                <Radio selected={isSelected} />
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-2">
-                    <span className="text-[16px] font-semibold leading-tight text-black">
-                      {meta.name}
+              <Radio selected={isSelected} />
+              <span className="min-w-0 flex-1">
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-[16px] font-semibold leading-tight text-black">
+                    {meta.name}
+                  </span>
+                  {savePct > 0 && (
+                    <span
+                      className="rounded-full px-2.5 py-0.5 text-[12px] font-bold text-white"
+                      style={{ background: GOLD }}
+                    >
+                      Save {savePct}%
                     </span>
-                    {savePct > 0 && (
-                      <span
-                        className="rounded-full px-2.5 py-0.5 text-[12px] font-bold text-white"
-                        style={{ background: GOLD }}
-                      >
-                        Save {savePct}%
-                      </span>
-                    )}
-                  </span>
-                  <span className="mt-1 block text-[13px] leading-snug text-black/55 tabular-nums">
-                    {formatPrice(pricing.price)} every {weeks} weeks ·{" "}
-                    {pricing.shotCount} shots
-                  </span>
+                  )}
                 </span>
-                <span className="shrink-0 text-right">
-                  <span className="block text-[26px] font-bold leading-none text-black tabular-nums">
-                    {formatPrice(perMonth)}
-                    <span className="text-[13px] font-medium text-black/50">/mo</span>
-                  </span>
-                  <span className="mt-1 block text-[13px] leading-none tabular-nums text-[#1B2757]">
-                    {formatPrice(pricing.perShot)} / shot
-                  </span>
+                <span className="mt-1 block text-[13px] leading-snug text-black/55 tabular-nums">
+                  {formatPrice(pricing.price)} every {weeks} weeks ·{" "}
+                  {pricing.shotCount} shots
+                </span>
+              </span>
+              <span className="shrink-0 text-right">
+                <span className="block text-[26px] font-bold leading-none text-black tabular-nums">
+                  {formatPrice(perMonth)}
+                  <span className="text-[13px] font-medium text-black/50">/mo</span>
+                </span>
+                <span className="mt-1 block text-[13px] leading-none tabular-nums text-[#1B2757]">
+                  {formatPrice(pricing.perShot)} / shot
+                </span>
+              </span>
+            </button>
+
+            {/* Free shots: the headline deal, in funnel green. */}
+            {freeShots > 0 && (
+              <div
+                className="mx-4 -mt-1 mb-4 flex items-center gap-2 rounded-[10px] px-3 py-2"
+                style={{ background: "rgba(16,185,129,0.12)" }}
+              >
+                <span
+                  className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full"
+                  style={{ background: GREEN }}
+                >
+                  <Check className="h-2.5 w-2.5 text-white" />
+                </span>
+                <span
+                  className="text-[13px] font-semibold leading-snug"
+                  style={{ color: GREEN_TEXT }}
+                >
+                  +{freeShots} free shots on your first order
                 </span>
               </div>
+            )}
 
-              {/* Free shots: the headline deal, in funnel green. */}
-              {freeShots > 0 && (
-                <div
-                  className="flex items-center gap-2 rounded-[10px] px-3 py-2"
-                  style={{ background: "rgba(16,185,129,0.12)" }}
-                >
-                  <span
-                    className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full"
-                    style={{ background: GREEN }}
-                  >
-                    <Check className="h-2.5 w-2.5 text-white" />
-                  </span>
-                  <span
-                    className="text-[13px] font-semibold leading-snug"
-                    style={{ color: GREEN_TEXT }}
-                  >
-                    +{freeShots} free shots on your first order
-                  </span>
+            {/* Expanded value stack on the selected plan: what you get and its worth. */}
+            {isSelected && (
+              <div className="px-4 pb-4">
+                <div className="rounded-[12px] border border-black/10 p-3.5">
+                  <p className="mb-3 text-[13px] font-semibold text-black">
+                    Included free
+                  </p>
+                  <div className="flex flex-col gap-2.5">
+                    {freeStack.map((r) => (
+                      <div
+                        key={r.key}
+                        className="flex items-center gap-2.5 text-[13px]"
+                      >
+                        <span className="shrink-0 text-[#1B2757]">{r.icon}</span>
+                        <span className="min-w-0 flex-1 text-black/70">
+                          {r.label}
+                          {r.note && (
+                            <span className="ml-1.5 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[11px] font-medium text-black/60">
+                              {r.note}
+                            </span>
+                          )}
+                        </span>
+                        <span
+                          className="shrink-0 whitespace-nowrap text-[12px] font-semibold tabular-nums"
+                          style={{ color: GREEN_TEXT }}
+                        >
+                          {r.was ? (
+                            <>
+                              <span className="mr-1 font-normal text-black/30 line-through">
+                                {r.was}
+                              </span>
+                              free
+                            </>
+                          ) : (
+                            "free"
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-3.5 border-t border-black/10 pt-3 text-[13px] leading-snug text-black">
+                    <strong className="font-semibold">
+                      {firstOrderShots} shots
+                    </strong>{" "}
+                    in your first delivery, then {pricing.shotCount} every {weeks}{" "}
+                    weeks. Cancel anytime.
+                  </p>
                 </div>
-              )}
-            </button>
+              </div>
+            )}
           </div>
         );
       })}
@@ -218,9 +321,9 @@ function IngredientSheetLink({ formulaId }: { formulaId: ProductHeroId }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-1 inline-flex min-h-[44px] items-center gap-1 text-[13px] font-medium text-black/55 underline underline-offset-4 transition-colors hover:text-black/80"
+        className="inline-flex min-h-[44px] shrink-0 items-center gap-1 whitespace-nowrap text-[13px] font-medium text-black/55 underline underline-offset-4 transition-colors hover:text-black/80"
       >
-        See what&apos;s inside
+        What&apos;s inside
         <svg
           width="13"
           height="13"
@@ -251,12 +354,15 @@ function IngredientSheetLink({ formulaId }: { formulaId: ProductHeroId }) {
 function ProductCard({
   formulaId,
   title,
+  description,
   bestValue,
   toggle,
   onAdd,
 }: {
   formulaId: ProductHeroId;
   title: string;
+  /** Short one-line tagline shown under the product name. */
+  description: string;
   bestValue?: boolean;
   /** Rendered above the image on the single card (Flow/Clear switch). */
   toggle?: ReactNode;
@@ -310,13 +416,17 @@ function ProductCard({
         />
       </div>
 
-      <h3 className="mt-4 text-[19px] font-semibold leading-tight text-black">
-        {title}
-      </h3>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <h3 className="text-[22px] font-semibold leading-tight text-black">
+          {title}
+        </h3>
+        <IngredientSheetLink formulaId={formulaId} />
+      </div>
+      <p className="mt-1.5 text-[15px] font-medium leading-snug text-black">
+        {description}
+      </p>
 
-      <IngredientSheetLink formulaId={formulaId} />
-
-      <div className="mt-3">
+      <div className="mt-6">
         <PlanPicker
           formulaId={formulaId}
           selectedCadence={cadence}
@@ -407,8 +517,8 @@ export default function ListiclePurchase({
     });
   };
 
-  const singleTitle = getHeroContent(singleFormula).name;
-  const bothTitle = getHeroContent("03").name;
+  const single = getHeroContent(singleFormula);
+  const both = getHeroContent("03");
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
@@ -417,14 +527,16 @@ export default function ListiclePurchase({
       <ProductCard
         key={singleFormula}
         formulaId={singleFormula}
-        title={singleTitle}
+        title={single.name}
+        description={single.seoHeading ?? single.tagline}
         toggle={<SingleToggle value={singleFormula} onChange={setSingleFormula} />}
         onAdd={handleAdd}
       />
       {/* Both card second, the best value. */}
       <ProductCard
         formulaId="03"
-        title={bothTitle}
+        title={both.name}
+        description={both.seoHeading ?? both.tagline}
         bestValue
         onAdd={handleAdd}
       />
