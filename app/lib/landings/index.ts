@@ -8,7 +8,6 @@ import type { LandingConfig } from "./types";
 import type { ListicleConfig } from "./listicle-types";
 import { quizTemplate } from "./quiz-template";
 import { brainAgeQuiz } from "./brain-age";
-import { listicleTemplate } from "./listicle-template";
 import { adhdListicle } from "./adhd-listicle";
 import { productivityListicle } from "./productivity-listicle";
 import { brainAgeingListicle } from "./brain-ageing-listicle";
@@ -16,10 +15,12 @@ import { brainAgeingListicle } from "./brain-ageing-listicle";
 /** Any landing page config; narrow on `format` to render */
 export type AnyLandingConfig = LandingConfig | ListicleConfig;
 
+// listicle-template is a scaffold with lorem ipsum copy. Registering it would
+// serve that placeholder text at a live /go/listicle-template. Copy it to start
+// a new lander; do not add it here.
 const registry: Record<string, AnyLandingConfig> = {
   [quizTemplate.slug]: quizTemplate,
   [brainAgeQuiz.slug]: brainAgeQuiz,
-  [listicleTemplate.slug]: listicleTemplate,
   [adhdListicle.slug]: adhdListicle,
   [productivityListicle.slug]: productivityListicle,
   [brainAgeingListicle.slug]: brainAgeingListicle,

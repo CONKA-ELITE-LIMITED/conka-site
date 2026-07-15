@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FAQ_ITEMS, type FaqItem } from "@/app/lib/faqContent";
+import { CONVERSION_FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
 
 /* ============================================================================
  * CROFAQv2
@@ -13,7 +13,7 @@ import { FAQ_ITEMS, type FaqItem } from "@/app/lib/faqContent";
  * multi-open with no broken UX). No client JS.
  * ========================================================================== */
 
-function FAQRow({ item }: { item: FaqItem }) {
+function FAQRow({ item }: { item: FaqEntry }) {
   return (
     <details
       name="faq-still-wondering"
@@ -39,9 +39,13 @@ function FAQRow({ item }: { item: FaqItem }) {
 }
 
 export default function CROFAQv2({
-  items = FAQ_ITEMS,
+  items = CONVERSION_FAQ_ITEMS,
+  // The /go ad landers pass their own items and opt out of the /faq link: they
+  // are noindex funnels and should not send paid traffic off to the hub.
+  showSeeAllLink = true,
 }: {
-  items?: FaqItem[];
+  items?: FaqEntry[];
+  showSeeAllLink?: boolean;
 } = {}) {
   return (
     <div className="mx-auto max-w-[560px]">
@@ -59,7 +63,18 @@ export default function CROFAQv2({
       </div>
 
       <p className="text-center text-[13px] text-black/55 mt-8">
-        Still stuck?{" "}
+        {showSeeAllLink && (
+          <>
+            <Link
+              href="/faq"
+              className="font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
+            >
+              See all questions
+            </Link>{" "}
+            or email{" "}
+          </>
+        )}
+        {!showSeeAllLink && "Still stuck? "}
         <Link
           href="mailto:info@conka.io"
           className="font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"

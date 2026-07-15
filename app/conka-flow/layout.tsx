@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { formulaContent, formatPrice } from "@/app/lib/productData";
+import { formatPrice } from "@/app/lib/productData";
 import {
   FUNNEL_PRODUCTS,
   FUNNEL_HERO_IMAGES,
@@ -7,6 +7,7 @@ import {
   getFunnelMinPerShot,
 } from "@/app/lib/funnelData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
+import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 
 // conka-flow/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
@@ -47,7 +48,8 @@ export default function ConkaFlowLayout({
     highPrice: flowPrices.high,
     offerCount: flowPrices.count,
   });
-  const faqSchema = buildFaqSchema(formulaContent["01"].faq);
+  // Same list the LabFAQ accordion renders, so schema == visible.
+  const faqSchema = buildFaqSchema(getFormulaPdpFaqItems("01"));
 
   return (
     <>

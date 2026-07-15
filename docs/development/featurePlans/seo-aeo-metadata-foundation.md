@@ -2,7 +2,9 @@
 
 > **This is the planning and build archive.** For the concise canonical reference of what is live and why, see `docs/seo-aeo/README.md`. This doc keeps the full history: the keyword-map corrections, verified findings, and per-phase task breakdowns.
 
-**Status:** Phases 1 to 5, 7 and 8 all built (SCRUM-1131, 1132, 1133, 1136, 1138, 1140, 1141). The **SEO** foundation is complete, and after the 2026-07-14 AEO audit the **AEO** foundation now is too: the site has entity identity, structured data on every commercial and FAQ surface, an honest sitemap, and an `llms.txt`. **Phase 9** (AEO content shape) is the only remaining phase in this doc, and it is editorial rather than engineering work: it needs a content owner, not a developer. Phase 6 (blog) is scoped in its own plan doc, `blog-informational-content-surface.md`.
+**Status:** Phases 1 to 5, 7 and 8 all built (SCRUM-1131, 1132, 1133, 1136, 1138, 1140, 1141). The **technical** foundation is complete: the site has entity identity, structured data on every commercial and FAQ surface, an honest sitemap, and an `llms.txt`.
+
+**Everything remaining is content, not code.** **Phase 10** (FAQ answer surface) has since shipped (SCRUM-1143; system doc `docs/features/FAQ_SYSTEM.md`). **Phase 9** (AEO content shape) is editorial and needs a content owner. **Phase 6** (blog, `blog-informational-content-surface.md`) is the bigger acquisition bet but is gated on a content engine.
 **Owner:** Rudh
 **Source inputs:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research); AEO best-practice review (Ahrefs AEO course intro + a structured-data-for-AEO talk, summarised 2026-07-14)
 **Created:** 2026-07-10
@@ -27,6 +29,7 @@
 - **2026-07-14** **Footer social links are text, not icons.** Deliberate: the mono footer treatment suits text, and readable anchor text is a stronger corroboration signal for `sameAs` than an unlabelled icon. Icons were considered and deferred rather than shipped unverified (the browser tooling was not connected, so a mangled brand glyph could not have been caught).
 - **2026-07-14** **Follow-up: `Product.brand` is not linked to the Organization.** `buildProductSchema` emits a standalone `brand: { "@type": "Brand", name: "CONKA" }`, so strictly the graph contains two "CONKA" concepts. Pointing `brand` at the Organization's `@id` would unify them and is the more correct entity graph. Deliberately left alone in SCRUM-1141: the PDP `Product` node validates cleanly today, and swapping a working `Brand` object for an `@id` reference risks a validator warning on our highest-value schema. Worth doing as its own small change, validated in the Rich Results Test.
 - **2026-07-14** **Sitemap `lastModified` restored, derived from git.** Phase 8 removed the field because it was fabricated (build time on every URL). Rather than leave the signal off, or reintroduce it as a manual chore, `app/sitemap.ts` now derives each date from `git log -1` over the route's own source paths. It is true by construction, needs no discipline, and cannot rot. A skill or checklist was explicitly rejected for this: a process that depends on remembering to bump a date is how the fake dates appeared in the first place. Requires `VERCEL_DEEP_CLONE=1` in the Vercel env (Vercel shallow-clones to depth 10; the env var is documented for exactly this use case). Verified locally: dates differ per page and match real history (`/privacy` April, `/why-conka` June, the PDPs today), and `/sitemap.xml` still prerenders as static.
+- **2026-07-14** **FAQ audit, and Phase 10 opened.** A full inventory of the site's FAQ content plus a competitor benchmark (Magic Mind, IM8, AG1, Thesis, Qualia, Heights) and demand-side research. Verdict: our 20 indexed FAQ questions are all objection-handling for someone already on the page, and answer almost none of what people search. Entire clusters are absent (side effects, eligibility, dependency, price, taste), our strongest trust answer (Informed Sport, 280+ substances) is hidden on `/professionals`, and the same 7 questions live in three files with answers that have drifted apart. The opening: no competitor puts FAQPage schema on its product pages, and the brave ones (Thesis, Heights) bury their best answers in Zendesk and Gorgias, off-domain. We are structured and silent; they are loud and unstructured. Scoped as Phase 10; shipped under SCRUM-1143 (system doc `docs/features/FAQ_SYSTEM.md`).
 - **2026-07-14** **Known follow-up: `convex/winEntries.ts` is now dead code.** The Phase 8 deletion removed its only callers. Deliberately left in place: the `winEntries` table (`convex/schema.ts:114`) holds real entrant email addresses from the January contests, and dropping it would destroy data. The functions are unreachable but harmless. Fold into a Convex cleanup pass; do not delete the table without an explicit decision on the data.
 
 ## Discrepancies found during build (both resolved)
@@ -173,6 +176,7 @@ The H1 on `/conka-flow` therefore reads `CONKA FL0W`. Search engines index the l
 | 7 | Entity identity: `Organization` + `WebSite` schema, `sameAs`, footer social links, web manifest | **Built (SCRUM-1141)** |
 | 8 | Schema coverage and indexation hygiene: FAQ schema on `/` and `/professionals`, missing metadata, `/barrys` and `/win` deleted + 301'd, honest `lastModified`, `llms.txt` | **Built (SCRUM-1140)** |
 | 9 | AEO content shape: answer-first (BLUF) openings, self-contained passages, freshness dates on the existing content pages | Scoped below, not ticketed. Depends on nothing, but overlaps Phase 6 |
+| 10 | FAQ answer surface: consolidate the fragmented FAQ, expand it to the questions people actually search, add a `/faq` hub and ingredient FAQs | **Shipped (SCRUM-1143).** System doc: `docs/features/FAQ_SYSTEM.md` |
 
 Phases ship as **separate commits**. Phase 1 changes what Google indexes across the entire site and must be independently revertible. Phase 5 was pulled ahead of Phase 4 after the Search Console baseline showed discovery, not on-page keyword tuning, is the current bottleneck.
 
@@ -410,6 +414,34 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 3. **[Frontend] Freshness signals**
    - Give the content pages a visible and machine-readable last-reviewed date (a `<time datetime>` element plus `dateModified` in schema). This only works if the dates are **true**, which means a review cadence someone actually owns. A fabricated freshness date is the same defect as the sitemap `lastModified` above, and worth less than nothing.
    - Complexity: Small in code, but it creates an ongoing content obligation. Do not ship it without an owner.
+
+---
+
+## Phase 10: FAQ answer surface (shipped, SCRUM-1143)
+
+**System doc: `docs/features/FAQ_SYSTEM.md`.** The original plan doc has been folded into that canonical reference and removed; build history is in git under SCRUM-1143. Summarised here because it came out of this programme and was the first phase whose bottleneck was content rather than code.
+
+**Thesis.** Our FAQs are good at their job, and their job is the wrong one. The 20 questions on indexable pages are all written to close an objection for someone already on the page. None is written to answer a question someone typed into a search box. Only the second kind earns a citation.
+
+**What the 2026-07-14 FAQ audit found.**
+
+- **Whole clusters are missing.** Zero questions anywhere on the site about side effects, who should not take CONKA, dependency, stopping, long-term use, price, taste, or allergens. The only medication question sits on a **noindex** lander and its answer is "check with your GP".
+- **Our best trust answer is hidden.** Informed Sport certification against 280+ banned substances answers a genuinely searched question ("will it show up on a drug test?") and appears **only on `/professionals`**, on none of the three consumer PDPs.
+- **We contradict ourselves.** The same 7-question set exists in three files (`app/lib/faqContent.ts` plus two hand-copied lander clones), and the answers have drifted: "can I take it with coffee" has three official stances, "how long until results" has four. An answer engine cannot form a confident claim about a source that disagrees with itself.
+- **`/go/listicle-template` is live and serves lorem ipsum** under six placeholder question headings. Noindex, but publicly reachable.
+
+**The competitive opening, and it is a real one.** Every brand benchmarked (Magic Mind on both PDPs, IM8, Qualia, TruBrain, Thesis) has an FAQ accordion on its product pages and **not one has FAQPage schema on it**. Magic Mind's 47 schema'd questions are all operational (shipping, billing), so their entire trust FAQ is invisible to answer engines. Conversely, the brands that *are* brave (Thesis: "Will I become reliant on taking my blends?"; Heights) bury that content in Zendesk and Gorgias, off-domain, earning nothing for it. **Nobody is both brave and structured.** We already have the schema (SCRUM-1133, SCRUM-1140) and almost nothing in it.
+
+**Live-search evidence.** A probe for "supplements for menopause brain fog" returns an answer explaining that adaptogens, specifically Rhodiola and Ashwagandha, are the targeted intervention, while citing Health & Her and Midi. The answer engine is describing CONKA Flow's formula and recommending someone else. That term is KD 22, vol 590, and the keyword map already names it as our biggest gap.
+
+**Decisions taken (product owner, 2026-07-14).**
+
+1. **Answer posture: specific, with a GP backstop.** Name the ingredients, publish an explicit "who should not take CONKA" list, address dependency and stopping. Close with a GP line rather than leading with one. This is a deliberate acceptance of regulatory exposure in exchange for the differentiation; the product owner owns the legality pass and `/review-claims` runs before publish.
+2. **Location: distributed *and* a `/faq` hub.** PDPs keep a short conversion-focused subset; a new `/faq` hub carries the full ~35 to 40 question set with schema.
+
+**Phases** (detail in the plan doc): 1, consolidate and de-contradict (half a day, no new copy, independently valuable since it fixes the three-file bug); 2, the `/faq` hub and the expanded question set (1.5 days, the real work is copy); 3, PDP subsets plus surfacing Informed Sport on consumer pages (half a day); 4, ingredient FAQs on `/ingredients` (half a day, targets `ginkgo biloba benefits`, 5,400/mo, the highest-volume term in the dataset).
+
+**Why this ranks above Phase 9 and Phase 6.** It needs no content engine and no new pipeline. The schema is already built and validated. It is the only remaining phase that converts existing infrastructure into citations without a new dependency, and it serves conversion at the same time, because safety and price are the objections that stall a purchase.
 
 ---
 

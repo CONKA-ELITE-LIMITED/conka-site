@@ -9,6 +9,7 @@ type FooterLink = { label: string; href: string; external?: boolean };
 const DISCOVER: FooterLink[] = [
   { label: "The Science", href: "/science" },
   { label: "Ingredients", href: "/ingredients" },
+  { label: "FAQ", href: "/faq" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "The CONKA App", href: "/app" },
   { label: "App Insights", href: "/app-insights" },
@@ -26,6 +27,7 @@ const COMPANY: FooterLink[] = [
 ];
 
 const SUPPORT: FooterLink[] = [
+  { label: "FAQ", href: "/faq" },
   { label: "Terms & Conditions", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Cookie Policy", href: "/cookies" },

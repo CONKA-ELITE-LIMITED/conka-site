@@ -83,8 +83,11 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 
 **The engineering is done.** Everything left is content or off-site, and none of it is ticketed. Full breakdowns are in the build archive.
 
+Worth knowing before you pick: **no competitor in this category puts FAQPage schema on its product pages** (checked: Magic Mind, IM8, Qualia, TruBrain, Thesis), and the brands brave enough to answer the hard questions bury them off-domain in Zendesk and Gorgias. We are structured and silent; they are loud and unstructured. Phase 10 closes that gap and is the only remaining phase with no new dependency.
+
 | Phase | What | State |
 |-------|------|-------|
+| 10 | **FAQ answer surface.** Our 20 indexed FAQ questions all closed objections for someone already on the page; almost none answered what people search. Consolidated onto one source, expanded (`/faq` hub with safety, app and support clusters), per-surface curated subsets, ingredient FAQs on `/ingredients`, and Informed Sport surfaced beyond `/professionals`. | **Shipped** (SCRUM-1143). System doc: `docs/features/FAQ_SYSTEM.md` |
 | 9 | **AEO content shape.** Retrofit answer-first (BLUF) openings, self-contained passages, and true review dates onto the existing content pages. The code is an hour's work; the hard part is someone actually re-reading `/science` on a cadence and setting the date honestly. | Needs a content owner. **Do not ship the visible dates without one:** a "reviewed July 2026" line on a page nobody reviewed is a lie to users as well as crawlers |
 | 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness, so Phase 9 is only the retrofit of existing pages. | Gated on the content engine |
 
@@ -99,4 +102,5 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 - Search Console baseline: `docs/analytics/seo-search-console-baseline.md`
 - Pricing audit log: `docs/PRICING_HISTORY.md`
 - Phase 6 plan: `docs/development/featurePlans/blog-informational-content-surface.md`
+- Phase 10 (FAQ answer surface), shipped: `docs/features/FAQ_SYSTEM.md`
 - Page rules (mandatory SEO and JSON-LD): `.claude/rules/pages.md`

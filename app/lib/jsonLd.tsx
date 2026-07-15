@@ -7,6 +7,7 @@
  */
 
 import { BRAND_DESCRIPTION, COMPANY, SAME_AS, SITE_ORIGIN } from "./site";
+import { stripClaimAnchors } from "./faqContent";
 
 /** Resolve a root-relative path (e.g. "/formulas/x.jpg") to an absolute URL. */
 export function absoluteUrl(path: string): string {
@@ -69,11 +70,9 @@ export function buildWebSiteSchema() {
   };
 }
 
-/** Strip HTML tags and claims-anchor symbols (†) so answer copy is clean plain text. */
+/** Strip HTML tags and claim anchors so answer copy is clean plain text. */
 function toPlainText(value: string): string {
-  return value
-    .replace(/<[^>]*>/g, "")
-    .replace(/†/g, "")
+  return stripClaimAnchors(value.replace(/<[^>]*>/g, ""))
     .replace(/\s+/g, " ")
     .trim();
 }

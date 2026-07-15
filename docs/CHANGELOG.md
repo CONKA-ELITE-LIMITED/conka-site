@@ -5,6 +5,18 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | Removed the drug-test FAQ from /conka-both, and corrected the /app Apple Health copy to iOS-only (SCRUM-1143)
+- **2026-07-15** | Added FAQ to the footer Discover column and hoisted the PDP FAQ lists to module scope (SCRUM-1143)
+- **2026-07-15** | Added CONKA-app-vs-brain-training and wearables FAQ answers, and made the app answer more holistic (SCRUM-1143)
+- **2026-07-15** | Added a CONKA app FAQ section to /faq and wove the app coffee-vs-caffeine data into the coffee answer (SCRUM-1143)
+- **2026-07-15** | Softened the drug-test FAQ answer, swapped it off the PDP FAQ for a generic nootropic question, and added an operational support section to /faq (SCRUM-1143)
+- **2026-07-15** | Replaced the legacy FormulaFAQ component with the shared LabFAQ on the Flow and Clear PDPs, then deleted it (SCRUM-1143)
+- **2026-07-15** | Added per-ingredient benefit and side-effect FAQs with FAQPage schema to /ingredients (SCRUM-1143)
+- **2026-07-15** | Flow/Clear PDPs now surface the side-effects and Informed Sport answers, and FAQ accordions link through to /faq (SCRUM-1143)
+- **2026-07-15** | Removed the EFSA Vitamin C wording from two FAQ answers and paired the remaining clinically-dosed anchor with a footnote on /faq (SCRUM-1143)
+- **2026-07-15** | FAQ conversion surfaces now render a curated 9-question subset instead of all 33; /faq keeps the full set (SCRUM-1143)
+- **2026-07-15** | New /faq answer hub: 33 questions with FAQPage schema, including a full safety cluster (side effects, who should not take it, medication interactions, dependency, drug testing) that most supplement brands avoid answering (SCRUM-1143).
+- **2026-07-14** | FAQ content consolidated to a single source (the two lander duplicates deleted), the coffee and time-to-results contradictions resolved, and the lorem-ipsum /go/listicle-template route unregistered.
 - **2026-07-14** | Entity identity for AI answer engines: sitewide Organization + WebSite JSON-LD with a verified sameAs list (LinkedIn, Instagram, TikTok, Trustpilot, Facebook, Companies House), social links in the footer, and a web manifest (SCRUM-1141)
 - **2026-07-14** | Sitemap lastmod is now derived from git history per page (true by construction, no manual upkeep). Needs VERCEL_DEEP_CLONE=1 in the Vercel env.
 - **2026-07-14** | AEO hygiene: FAQ schema on the home and /professionals pages, metadata for /case-studies and the app privacy policy, deleted the expired /win and /barrys contest pages (301 to home), dropped the fabricated sitemap lastmod, added llms.txt (SCRUM-1140)

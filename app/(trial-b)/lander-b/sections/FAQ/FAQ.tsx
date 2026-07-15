@@ -4,15 +4,15 @@
  */
 
 import styles from './FAQ.module.css';
-import {FAQ_ITEMS} from './faq.data';
+import {CONVERSION_FAQ_ITEMS, stripClaimAnchors} from '@/app/lib/faqContent';
 
 export default function FAQ() {
   return (
     <section id="faq" className={styles.section} aria-label="Frequently asked questions">
       <div className={styles.inner}>
         <h2 className={styles.heading}>Frequently asked questions</h2>
-        {FAQ_ITEMS.map((item) => (
-          <details className={styles.item} key={item.question}>
+        {CONVERSION_FAQ_ITEMS.map((item) => (
+          <details className={styles.item} key={item.id}>
             <summary>
               {item.question}
               <span className={styles.pm} aria-hidden="true">
@@ -20,7 +20,7 @@ export default function FAQ() {
                 <span className={`${styles.bar} ${styles.barV}`} />
               </span>
             </summary>
-            <p className={styles.answer}>{item.answer}</p>
+            <p className={styles.answer}>{stripClaimAnchors(item.answer)}</p>
           </details>
         ))}
       </div>

@@ -209,12 +209,12 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
       {
         question: "How long until I see results?",
         answer:
-          "Most users report noticeable improvements in focus and energy within the first week. Full benefits typically develop over 2-4 weeks of consistent use.",
+          "Day 1: sharper focus and steady energy, no crash. Day 14: adaptogens like Ashwagandha reach full strength and stress rolls off faster. Day 30: your baseline sits measurably higher. Across 150+ tested users and 5,000+ cognitive tests, the average score improvement was +28.96%.",
       },
       {
         question: "Can I take CONKA Flow with coffee?",
         answer:
-          "Yes, but we recommend using CONKA Flow as a coffee replacement. The adaptogens provide sustained energy without the crash that caffeine causes.",
+          "Yes. CONKA Flow is caffeine-free, so it works alongside your morning coffee rather than competing with it. Most people find they reach for fewer cups once the adaptogens are giving them steady energy without the crash.",
       },
     ],
     struggleSolutions: {

@@ -119,6 +119,12 @@ const ROUTES: Route[] = [
   },
   // Content
   {
+    path: "/faq",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    sources: ["app/faq", "app/components/faq", "app/lib/faqContent.ts"],
+  },
+  {
     path: "/science",
     priority: 0.7,
     changeFrequency: "monthly",

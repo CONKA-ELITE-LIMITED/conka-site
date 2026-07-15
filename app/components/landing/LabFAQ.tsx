@@ -2,11 +2,41 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { FAQ_ITEMS } from "@/app/lib/faqContent";
+import Link from "next/link";
+import { CONVERSION_FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
 
-export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
+export interface LabFAQImage {
+  src: string;
+  alt: string;
+  /** Top-left figure caption overlay. */
+  topLabel: string;
+  /** Bottom-right caption overlay. */
+  bottomLabel: string;
+}
+
+const DEFAULT_IMAGE: LabFAQImage = {
+  src: "/lifestyle/flow/FlowDeskClutter.jpg",
+  alt: "CONKA Flow bottle on a desk next to a keyboard, pen, notebook and sticky note",
+  topLabel: "Fig. 04 · Field Use",
+  bottomLabel: "CONKA Flow · Workspace",
+};
+
+interface LabFAQProps {
+  /** The rows to render. Defaults to the curated conversion subset. */
+  items?: FaqEntry[];
+  hideCTA?: boolean;
+  ctaHref?: string;
+  image?: LabFAQImage;
+}
+
+export default function LabFAQ({
+  items = CONVERSION_FAQ_ITEMS,
+  hideCTA = false,
+  ctaHref = "/funnel",
+  image = DEFAULT_IMAGE,
+}: LabFAQProps = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -16,18 +46,18 @@ export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideC
         <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
           <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
             <Image
-              src="/lifestyle/flow/FlowDeskClutter.jpg"
-              alt="CONKA Flow bottle on a desk next to a keyboard, pen, notebook and sticky note"
+              src={image.src}
+              alt={image.alt}
               width={1500}
               height={1000}
               loading="lazy"
               className="w-full h-auto"
             />
             <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-              Fig. 04 · Field Use
+              {image.topLabel}
             </span>
             <span className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-              CONKA Flow · Workspace
+              {image.bottomLabel}
             </span>
           </div>
         </div>
@@ -39,7 +69,7 @@ export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideC
           </div>
 
           <div>
-            {FAQ_ITEMS.map((item, i) => {
+            {items.map((item, i) => {
               const isOpen = openIndex === i;
               const panelId = `lab-faq-panel-${item.id}`;
 
@@ -66,9 +96,10 @@ export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideC
                     id={panelId}
                     className="overflow-hidden transition-[max-height,opacity] duration-300 ease-out"
                     style={{
-                      // Max-height must comfortably exceed the tallest answer at mobile width
-                      // (longest answer ≈ 12 lines at 390px). Bump if answers get longer.
-                      maxHeight: isOpen ? "600px" : "0px",
+                      // Max-height must comfortably exceed the tallest answer at mobile
+                      // width (the "do nootropics work" PDP answer runs ~20 lines at
+                      // 360px). Bump if answers get longer, or the panel clips.
+                      maxHeight: isOpen ? "760px" : "0px",
                       opacity: isOpen ? 1 : 0,
                     }}
                   >
@@ -86,7 +117,13 @@ export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideC
           {/* Support footer */}
           <div className="mt-6">
             <p className="text-sm text-black/60">
-              Still have a question?{" "}
+              <Link
+                href="/faq"
+                className="text-black underline decoration-black/20 hover:decoration-black"
+              >
+                See all questions
+              </Link>{" "}
+              or email{" "}
               <a
                 href="mailto:info@conka.io"
                 className="text-black underline decoration-black/20 hover:decoration-black"
