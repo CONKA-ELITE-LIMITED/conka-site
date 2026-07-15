@@ -158,8 +158,8 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     const video = videoTrio(asset.src);
     return (
       <div
-        className={`relative overflow-hidden rounded-[16px] ${
-          contain ? "w-full bg-black" : "mx-auto w-4/5"
+        className={`relative overflow-hidden rounded-[16px] border border-black/10 w-full ${
+          contain ? "bg-black" : ""
         }`}
         style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
       >
@@ -385,21 +385,18 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
     return (
       <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
         <div className={mediaFirst ? "md:order-2" : ""}>
-          <div
-            className="mb-4 text-xl font-semibold tabular-nums"
-            style={{ color: NAVY }}
-          >
-            {String(block.n).padStart(2, "0")}
-          </div>
           {block.tag ? (
             <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
               {block.tag}
             </div>
           ) : null}
-          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
+          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+            <span className="tabular-nums">
+              {String(block.n).padStart(2, "0")}.
+            </span>{" "}
             {block.headline}
           </h3>
-          <p className="mb-5 max-w-[36rem] whitespace-pre-line text-[17px] leading-relaxed text-black/70 md:text-lg">
+          <p className="mb-5 max-w-[36rem] whitespace-pre-line text-[15px] leading-relaxed text-black md:text-base">
             {block.body}
           </p>
           {block.chips?.length ? (
