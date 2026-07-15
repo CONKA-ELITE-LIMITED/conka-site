@@ -147,6 +147,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/PAGE_NARRATIVES.md` | **Page story map** — current section-by-section arc + health rating per page; spot the weakest section to improve next |
 | `docs/branding/DESIGN_SYSTEM.md` | **Active design system** — typography, colours, radius, layout, migration guide |
 | `docs/features/LANDING_QUIZ_SYSTEM.md` | **Ad landing quiz system** (`/go/[slug]`) — config schema, how to add a page, analytics |
+| `docs/features/FAQ_SYSTEM.md` | **FAQ system** — one source of truth, per-surface subsets, schema == visible rule, claims anchors, disclosure policy |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |
 | `docs/features/b2b/B2B_PORTAL.md` | B2B professional portal |

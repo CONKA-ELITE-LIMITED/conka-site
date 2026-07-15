@@ -87,7 +87,7 @@ Worth knowing before you pick: **no competitor in this category puts FAQPage sch
 
 | Phase | What | State |
 |-------|------|-------|
-| 10 | **FAQ answer surface.** Our 20 indexed FAQ questions all close objections for someone already on the page; almost none answer what people search. No questions anywhere about side effects, who should not take CONKA, dependency, price or taste. Informed Sport (our best trust answer) is hidden on `/professionals`. Consolidate, expand to ~35 to 40 questions, add a `/faq` hub and ingredient FAQs. Scoped in `docs/development/featurePlans/faq-answer-surface.md`. | **Recommended next.** Needs no content engine: the schema is already built and validated |
+| 10 | **FAQ answer surface.** Our 20 indexed FAQ questions all closed objections for someone already on the page; almost none answered what people search. Consolidated onto one source, expanded (`/faq` hub with safety, app and support clusters), per-surface curated subsets, ingredient FAQs on `/ingredients`, and Informed Sport surfaced beyond `/professionals`. | **Shipped** (SCRUM-1143). System doc: `docs/features/FAQ_SYSTEM.md` |
 | 9 | **AEO content shape.** Retrofit answer-first (BLUF) openings, self-contained passages, and true review dates onto the existing content pages. The code is an hour's work; the hard part is someone actually re-reading `/science` on a cadence and setting the date honestly. | Needs a content owner. **Do not ship the visible dates without one:** a "reviewed July 2026" line on a page nobody reviewed is a lie to users as well as crawlers |
 | 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness, so Phase 9 is only the retrofit of existing pages. | Gated on the content engine |
 
@@ -102,5 +102,5 @@ Worth knowing before you pick: **no competitor in this category puts FAQPage sch
 - Search Console baseline: `docs/analytics/seo-search-console-baseline.md`
 - Pricing audit log: `docs/PRICING_HISTORY.md`
 - Phase 6 plan: `docs/development/featurePlans/blog-informational-content-surface.md`
-- Phase 10 plan (FAQ answer surface): `docs/development/featurePlans/faq-answer-surface.md`
+- Phase 10 (FAQ answer surface), shipped: `docs/features/FAQ_SYSTEM.md`
 - Page rules (mandatory SEO and JSON-LD): `.claude/rules/pages.md`

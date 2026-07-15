@@ -114,7 +114,7 @@ So the basis for the published number is not recoverable from the spec.
 
 ### 10. Finish the mg disclosure migration
 
-**Status:** Ready to ticket (see `docs/development/featurePlans/faq-answer-surface.md`)
+**Status:** Ready to ticket. Disclosure policy is documented in `docs/features/FAQ_SYSTEM.md` (the FAQ answer-surface work that surfaced it shipped under SCRUM-1143).
 
 **The rule (confirmed 2026-07-14):** formula-share percentages and per-ingredient mg are **secret** and must never reach client code, rendered or not (data files ship in the JS bundle). Public: the total active mg per shot, study doses from published literature (labelled as the *study's* dose, never "per serving"), and Vitamin C / B12 with %NRV.
 
