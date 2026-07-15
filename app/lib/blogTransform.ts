@@ -195,3 +195,13 @@ export function readingTime(md: string): number {
   const words = md.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
 }
+
+/** Human date for the blog UI, e.g. "14 Jul 2026". Empty string for a null date. */
+export function formatBlogDate(iso: string | null): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}

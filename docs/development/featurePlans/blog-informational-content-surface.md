@@ -1,6 +1,6 @@
 # Blog / Informational Content Surface (SEO Phase 6)
 
-**Status:** Scoped and finalised. Phase 1 ticketed. Phases 2 to 3 ready to ticket when Phase 1 lands.
+**Status:** Scoped and finalised. Phase 1 built (SCRUM-1151); Phase 2 ticketed and in build (SCRUM-1152); Phase 3 ready to ticket when Phase 2 lands.
 **Owner:** Rudh
 **Part of:** The SEO / AEO programme (`docs/development/featurePlans/seo-aeo-metadata-foundation.md`). This is Phase 6, the only remaining phase.
 **Source inputs:** `CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research), `docs/analytics/seo-search-console-baseline.md` (baseline), a Magic Mind blog UX teardown (2026-07-15), and a live inspection of the Notion "Blog Hub" API output.
@@ -123,7 +123,7 @@ Automated deploy-on-publish and a `draft` preview deployment are future niceties
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Notion data layer + content pipeline (fetch, map, `notion-to-md`, FAQ/callout extraction, build-time image download, SSG wiring) | Ticketed (active) |
-| 2 | Blog UI: `/blog` listing + `/blog/[slug]` article, brand markdown renderer, related posts, mobile | Ready to ticket |
+| 2 | Blog UI: `/blog` listing + `/blog/[slug]` article, brand markdown renderer, related posts, mobile | Ticketed, in build (SCRUM-1152) |
 | 3 | SEO/AEO, discovery, analytics, go-live: BlogPosting + FAQ JSON-LD, sitemap, nav/footer, CTA analytics, seed verify | Ready to ticket |
 | 4 | Content stream: engine populates Notion, owner publishes via `Status` | Future / recurring |
 | 5 | Scale features: category filters, search, pagination-at-volume, topic-cluster internal linking (~8+ posts) | Future |
@@ -245,6 +245,9 @@ Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into th
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| [SCRUM-1151](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1151) | [Website & CRO] Blog Phase 6.1: Notion data layer and content pipeline | 1 | To Do |
+| [SCRUM-1151](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1151) | [Website & CRO] Blog Phase 6.1: Notion data layer and content pipeline | 1 | Built |
+| [SCRUM-1152](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1152) | [Website & CRO] Blog Phase 6.2: /blog listing and article UI | 2 | In build |
 
-Sprint 28, under the Website & CRO epic (SCRUM-763). Phases 2 and 3 are scoped and ready to ticket when Phase 1 lands. Phases 4 and 5 stay in this doc until active.
+Sprint 28, under the Website & CRO epic (SCRUM-763). Phase 3 is scoped and ready to ticket when Phase 2 lands. Phases 4 and 5 stay in this doc until active.
+
+**Phase 2 UI decisions (approved 2026-07-15):** show the Topic label on cards and articles; no table of contents in Phase 2 (deferred to Phase 5); the FAQ renders inline via the markdown body (no separate accordion), with the parsed `faq[]` reserved for Phase 3 JSON-LD; a mono-wordmark placeholder tile stands in for a null hero. Three Draft posts exist in Notion (brain-fog fixture, procrastination, what-are-nootropics) to build and review against via dev preview mode.
