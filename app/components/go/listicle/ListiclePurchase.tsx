@@ -113,6 +113,78 @@ function Radio({ selected }: { selected: boolean }) {
   );
 }
 
+/** The "Included free" value stack shown under the selected subscription plan.
+ *  Rendered only when its plan is selected, so its rows are built on demand. */
+function PlanValueStack({
+  freeShots,
+  otpPerShot,
+  firstOrderShots,
+  shotCount,
+  weeks,
+}: {
+  freeShots: number;
+  otpPerShot: number;
+  firstOrderShots: number;
+  shotCount: number;
+  weeks: number;
+}) {
+  const freeStack: {
+    key: string;
+    icon: ReactNode;
+    label: string;
+    was: string | null;
+    note: string | null;
+  }[] = [
+    { key: "shots", icon: <ShotIcon />, label: `${freeShots} bonus shots`, was: formatPrice(freeShots * otpPerShot), note: "first order" },
+    { key: "postage", icon: <BoxIcon />, label: "Postage", was: null, note: null },
+    { key: "app", icon: <AppIcon />, label: "CONKA app", was: null, note: null },
+    { key: "coach", icon: <BrainIcon />, label: "Brain Coach", was: null, note: null },
+  ];
+
+  return (
+    <div className="px-4 pb-4">
+      <div className="rounded-[12px] border border-black/10 p-3.5">
+        <p className="mb-3 text-[13px] font-semibold text-black">Included free</p>
+        <div className="flex flex-col gap-2.5">
+          {freeStack.map((r) => (
+            <div key={r.key} className="flex items-center gap-2.5 text-[13px]">
+              <span className="shrink-0 text-[#1B2757]">{r.icon}</span>
+              <span className="min-w-0 flex-1 text-black/70">
+                {r.label}
+                {r.note && (
+                  <span className="ml-1.5 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[11px] font-medium text-black/60">
+                    {r.note}
+                  </span>
+                )}
+              </span>
+              <span
+                className="shrink-0 whitespace-nowrap text-[12px] font-semibold tabular-nums"
+                style={{ color: GREEN_TEXT }}
+              >
+                {r.was ? (
+                  <>
+                    <span className="mr-1 font-normal text-black/30 line-through">
+                      {r.was}
+                    </span>
+                    free
+                  </>
+                ) : (
+                  "free"
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3.5 border-t border-black/10 pt-3 text-[13px] leading-snug text-black">
+          <strong className="font-semibold">{firstOrderShots} shots</strong> in
+          your first delivery, then {shotCount} every {weeks} weeks. Cancel
+          anytime.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /** Selectable subscription rows + a demoted one-time link. */
 function PlanPicker({
   formulaId,
@@ -140,21 +212,6 @@ function PlanPicker({
           : 0;
         const meta = SUB_META[cadence];
         const freeShots = pricing.freeShots ?? 0;
-        const firstOrderShots = pricing.firstOrderShots ?? pricing.shotCount;
-        // Worth of the free bonus shots at the one-time per-shot rate.
-        const freeShotsValue = freeShots * otpPricing.perShot;
-        const freeStack: {
-          key: string;
-          icon: ReactNode;
-          label: string;
-          was: string | null;
-          note: string | null;
-        }[] = [
-          { key: "shots", icon: <ShotIcon />, label: `${freeShots} bonus shots`, was: formatPrice(freeShotsValue), note: "first order" },
-          { key: "postage", icon: <BoxIcon />, label: "Postage", was: null, note: null },
-          { key: "app", icon: <AppIcon />, label: "CONKA app", was: null, note: null },
-          { key: "coach", icon: <BrainIcon />, label: "Brain Coach", was: null, note: null },
-        ];
 
         return (
           <div
@@ -231,55 +288,15 @@ function PlanPicker({
               </div>
             )}
 
-            {/* Expanded value stack on the selected plan: what you get and its worth. */}
+            {/* Expanded value stack on the selected plan. */}
             {isSelected && (
-              <div className="px-4 pb-4">
-                <div className="rounded-[12px] border border-black/10 p-3.5">
-                  <p className="mb-3 text-[13px] font-semibold text-black">
-                    Included free
-                  </p>
-                  <div className="flex flex-col gap-2.5">
-                    {freeStack.map((r) => (
-                      <div
-                        key={r.key}
-                        className="flex items-center gap-2.5 text-[13px]"
-                      >
-                        <span className="shrink-0 text-[#1B2757]">{r.icon}</span>
-                        <span className="min-w-0 flex-1 text-black/70">
-                          {r.label}
-                          {r.note && (
-                            <span className="ml-1.5 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[11px] font-medium text-black/60">
-                              {r.note}
-                            </span>
-                          )}
-                        </span>
-                        <span
-                          className="shrink-0 whitespace-nowrap text-[12px] font-semibold tabular-nums"
-                          style={{ color: GREEN_TEXT }}
-                        >
-                          {r.was ? (
-                            <>
-                              <span className="mr-1 font-normal text-black/30 line-through">
-                                {r.was}
-                              </span>
-                              free
-                            </>
-                          ) : (
-                            "free"
-                          )}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="mt-3.5 border-t border-black/10 pt-3 text-[13px] leading-snug text-black">
-                    <strong className="font-semibold">
-                      {firstOrderShots} shots
-                    </strong>{" "}
-                    in your first delivery, then {pricing.shotCount} every {weeks}{" "}
-                    weeks. Cancel anytime.
-                  </p>
-                </div>
-              </div>
+              <PlanValueStack
+                freeShots={freeShots}
+                otpPerShot={otpPricing.perShot}
+                firstOrderShots={pricing.firstOrderShots ?? pricing.shotCount}
+                shotCount={pricing.shotCount}
+                weeks={weeks}
+              />
             )}
           </div>
         );
