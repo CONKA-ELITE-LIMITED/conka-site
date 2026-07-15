@@ -20,6 +20,7 @@ export type FaqCategory =
   | "efficacy"
   | "safety"
   | "usage"
+  | "app"
   | "commercial"
   | "support";
 
@@ -251,7 +252,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "with-coffee",
     question: "Can I take CONKA with coffee?",
     answer:
-      "Yes. CONKA is caffeine-free, so it works alongside your morning coffee rather than competing with it. Most people find they reach for fewer cups over time, but nothing about CONKA requires you to give up coffee, and there is no interaction to worry about.",
+      "Yes. CONKA is caffeine-free, so it works alongside your morning coffee rather than competing with it, and there is no interaction to worry about. What is interesting is our own app data: measured against people's own baselines, coffee on its own barely moved their cognitive scores, while the measurable gains tracked with CONKA. Among users who logged both, adding CONKA on top of their coffee was associated with higher scores and fewer errors. Most people also find they reach for fewer cups over time, but nothing about CONKA requires you to give up coffee.",
     category: "usage",
   },
   {
@@ -342,6 +343,44 @@ export const FAQ_ITEMS: FaqItem[] = [
     answer:
       "Email info@conka.io with your order number and, if you can, a quick photo. We will put it right, either a replacement or a refund, without making you jump through hoops. This is rare, but when it happens we sort it quickly.",
     category: "support",
+  },
+
+  // The CONKA app. Genuinely useful practical questions rather than an AEO play,
+  // so these live only on the /faq hub (category is in no conversion subset).
+  {
+    id: "what-is-app",
+    question: "What is the CONKA app?",
+    answer:
+      "The CONKA app is a free companion app built around a two-minute cognitive test. You take the test, and it tracks how your processing speed and attention change over time against your own baseline, so you can see the effect of things like sleep, caffeine or CONKA on your own numbers rather than guessing. The test is a clinically validated, FDA-cleared assessment, and the anonymised patterns from across all users are published openly on our app-insights page.",
+    category: "app",
+  },
+  {
+    id: "app-free",
+    question: "Is the CONKA app free?",
+    answer:
+      "Yes, completely free. There is no subscription and no paywall, and you do not need to buy CONKA to use it. We built it as a measurement tool first: the whole point is that you can see your own data, on or off CONKA.",
+    category: "app",
+  },
+  {
+    id: "app-platforms",
+    question: "Is the app available on iOS and Android?",
+    answer:
+      "Yes, both. You can download the CONKA app free from the Apple App Store on iPhone and iPad, and from Google Play on Android.",
+    category: "app",
+  },
+  {
+    id: "app-need-conka",
+    question: "Do I need to take CONKA to use the app?",
+    answer:
+      "No. The app and the cognitive test are free and work entirely on their own, and plenty of people use it just to track their baseline and their focus. It also means that if you do take CONKA, you can measure the difference against your own before-and-after data rather than taking our word for it.",
+    category: "app",
+  },
+  {
+    id: "app-iq-test",
+    question: "Is the cognitive test an IQ test?",
+    answer:
+      "No. It is a two-minute cognitive assessment, an FDA-cleared task used in clinical settings, that measures things like processing speed and attention. It tracks how your own performance changes over time against your baseline, rather than scoring your intelligence or ranking you against anyone else. A bad night's sleep or a stressful week will show up in it, which is exactly the point.",
+    category: "app",
   },
 ];
 

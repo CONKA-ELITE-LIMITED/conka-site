@@ -14,8 +14,9 @@ const SECTIONS: { category: FaqCategory; title: string; eyebrow: string }[] = [
   { category: "efficacy", title: "Does it actually work?", eyebrow: "// 02" },
   { category: "safety", title: "Safety, side effects and medication", eyebrow: "// 03" },
   { category: "usage", title: "Taking CONKA", eyebrow: "// 04" },
-  { category: "commercial", title: "Price, subscription and delivery", eyebrow: "// 05" },
-  { category: "support", title: "Orders, refunds and help", eyebrow: "// 06" },
+  { category: "app", title: "The CONKA app", eyebrow: "// 05" },
+  { category: "commercial", title: "Price, subscription and delivery", eyebrow: "// 06" },
+  { category: "support", title: "Orders, refunds and help", eyebrow: "// 07" },
 ];
 
 function FaqRow({ item }: { item: FaqItem }) {
