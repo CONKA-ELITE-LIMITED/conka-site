@@ -397,10 +397,10 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
               {block.tag}
             </div>
           ) : null}
-          <h3 className="mb-4 text-balance text-[28px] font-semibold leading-[1.1] text-black md:text-[40px] md:leading-[1.05]">
+          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
             {block.headline}
           </h3>
-          <p className="mb-5 max-w-[36rem] whitespace-pre-line text-[15px] leading-relaxed text-black/70 md:text-base">
+          <p className="mb-5 max-w-[36rem] whitespace-pre-line text-[17px] leading-relaxed text-black/70 md:text-lg">
             {block.body}
           </p>
           {block.chips?.length ? (
@@ -612,7 +612,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               className="mt-10 rounded-[16px] px-8 py-14 text-center"
               style={{ background: DARK, color: "#fff" }}
             >
-              <h3 className="mb-6 text-balance text-[26px] font-semibold md:text-3xl">
+              <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
                 {config.bridge.headline}
               </h3>
               <a
@@ -689,7 +689,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
               {config.comparison.eyebrow}
             </div>
-            <h2 className="mb-2 text-balance text-[28px] font-semibold text-black md:text-4xl">
+            <h2 className="mb-2 text-balance text-[32px] font-semibold text-black md:text-[44px]">
               {config.comparison.headline}
             </h2>
             {config.comparison.subline ? (
