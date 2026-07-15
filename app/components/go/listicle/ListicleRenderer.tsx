@@ -11,9 +11,7 @@ import type {
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import TrustChips from "@/app/components/landing/TrustChips";
-import ListicleProductHero, {
-  ListicleProductHeroMobile,
-} from "./ListicleProductHero";
+import ListiclePurchase from "./ListiclePurchase";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
@@ -31,13 +29,6 @@ import LogoMarquee from "@/app/components/landing/LogoMarquee";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
-import useIsMobile from "@/app/hooks/useIsMobile";
-import { useCart } from "@/app/context/CartContext";
-import {
-  CadenceType,
-  getCadenceVariantByProductHeroId,
-} from "@/app/lib/cadenceData";
-import type { ProductHeroId } from "@/app/lib/productTypes";
 
 /**
  * Listicle landing renderer (/go/[slug], format: "listicle").
@@ -259,50 +250,6 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         {note}
       </span>
     </div>
-  );
-}
-
-/** Embedded PDP hero as the on-page buy box; same wiring as the PDPs */
-function ListicleBuyBox({
-  formulaId,
-  whoItsFor,
-}: {
-  formulaId: ProductHeroId;
-  whoItsFor?: string[];
-}) {
-  const isMobile = useIsMobile();
-  const { addToCart } = useCart();
-  const [selectedCadence, setSelectedCadence] =
-    useState<CadenceType>("monthly-sub");
-
-  const handleAddToCart = async (cadence: CadenceType = selectedCadence) => {
-    const variantData = getCadenceVariantByProductHeroId(formulaId, cadence);
-    if (variantData?.variantId) {
-      await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
-        location: "listicle_buybox",
-        source: "listicle",
-      });
-    } else {
-      console.warn("Variant not configured for cadence:", cadence);
-    }
-  };
-
-  // IM8 pattern: the one-time-purchase text link adds straight to cart
-  const handleOtpAddToCart = () => {
-    setSelectedCadence("monthly-otp");
-    void handleAddToCart("monthly-otp");
-  };
-
-  const Hero = isMobile ? ListicleProductHeroMobile : ListicleProductHero;
-  return (
-    <Hero
-      formulaId={formulaId}
-      selectedCadence={selectedCadence}
-      onCadenceChange={setSelectedCadence}
-      onAddToCart={() => void handleAddToCart()}
-      onOtpAddToCart={handleOtpAddToCart}
-      whoItsFor={whoItsFor}
-    />
   );
 }
 
@@ -692,17 +639,21 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
       >
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <h2 className="mb-3 text-5xl">{config.product.headline}</h2>
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-8">
+            <h2
+              className="text-3xl font-semibold leading-tight text-black md:text-4xl"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {config.product.headline}
+            </h2>
             {config.product.subline ? (
-              <p className="opacity-70">{config.product.subline}</p>
+              <p className="mt-3 max-w-2xl text-base text-black/60">
+                {config.product.subline}
+              </p>
             ) : null}
           </div>
-          <ListicleBuyBox
-            formulaId={config.product.productHeroId ?? "03"}
-            whoItsFor={config.product.whoItsFor}
-          />
+          <ListiclePurchase defaultSingle={config.product.productHeroId} />
         </div>
       </section>
 
