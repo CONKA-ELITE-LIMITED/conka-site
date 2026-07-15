@@ -202,7 +202,7 @@ export default function NavigationMobile({
                     </div>
                     <svg
                       aria-hidden
-                      className="text-black/30 shrink-0"
+                      className="text-black shrink-0"
                       width="18"
                       height="18"
                       viewBox="0 0 24 24"
@@ -240,7 +240,7 @@ export default function NavigationMobile({
                       </span>
                       <svg
                         aria-hidden
-                        className="text-black/30 shrink-0"
+                        className="text-black shrink-0"
                         width="18"
                         height="18"
                         viewBox="0 0 24 24"
