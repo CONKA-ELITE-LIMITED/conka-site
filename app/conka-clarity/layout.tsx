@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { formulaContent, formatPrice } from "@/app/lib/productData";
+import { formatPrice } from "@/app/lib/productData";
 import {
   FUNNEL_PRODUCTS,
   FUNNEL_HERO_IMAGES,
@@ -7,7 +7,7 @@ import {
   getFunnelMinPerShot,
 } from "@/app/lib/funnelData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
-import { pickFaqItems, PDP_TRUST_FAQ_IDS } from "@/app/lib/faqContent";
+import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 
 // conka-clarity/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
@@ -48,12 +48,8 @@ export default function ConkaClarityLayout({
     highPrice: clearPrices.high,
     offerCount: clearPrices.count,
   });
-  // Mirror FormulaFAQ's visible list: product-specific questions plus the two
-  // shared trust answers grafted on from the canonical FAQ source.
-  const faqSchema = buildFaqSchema([
-    ...formulaContent["02"].faq,
-    ...pickFaqItems(...PDP_TRUST_FAQ_IDS),
-  ]);
+  // Same list the LabFAQ accordion renders, so schema == visible.
+  const faqSchema = buildFaqSchema(getFormulaPdpFaqItems("02"));
 
   return (
     <>

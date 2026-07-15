@@ -9,10 +9,11 @@ import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
   ProductWhatYouGet,
-  FormulaFAQ,
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
 } from "@/app/components/product";
+import LabFAQ from "@/app/components/landing/LabFAQ";
+import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
@@ -31,10 +32,18 @@ import {
   getCadencePricingByFormula,
 } from "@/app/lib/cadenceData";
 
+const CLEAR_FAQ_IMAGE = {
+  src: "/lifestyle/clear/ClearDrink.jpg",
+  alt: "Drinking a CONKA Clear shot",
+  topLabel: "Fig. 03 · Daily Ritual",
+  bottomLabel: "CONKA Clear · Afternoon",
+};
+
 export default function ConkaClarityPage() {
   const isMobile = useIsMobile();
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
+  const clearFaqItems = getFormulaPdpFaqItems("02");
 
   const cadencePricing = getCadencePricingByFormula("02", selectedCadence);
   const cadencePrice = cadencePricing.price;
@@ -156,7 +165,7 @@ export default function ConkaClarityPage() {
         {/* ===== SECTION 11: FAQ ===== */}
         <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
           <div className="brand-track">
-            <FormulaFAQ formulaId="02" />
+            <LabFAQ items={clearFaqItems} image={CLEAR_FAQ_IMAGE} hideCTA />
           </div>
         </section>
 
@@ -264,7 +273,7 @@ export default function ConkaClarityPage() {
       {/* ===== SECTION 11: FAQ ===== */}
       <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
         <div className="brand-track">
-          <FormulaFAQ formulaId="02" />
+          <LabFAQ items={clearFaqItems} image={CLEAR_FAQ_IMAGE} hideCTA />
         </div>
       </section>
 
