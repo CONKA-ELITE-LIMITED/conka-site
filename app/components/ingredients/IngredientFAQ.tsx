@@ -56,9 +56,8 @@ export default function IngredientFAQ() {
         </a>
       </p>
 
-      {/* Study doses cited above are the doses used in the referenced trials, not
-          CONKA's per-ingredient amounts. CONKA is a food supplement and is not
-          intended to diagnose, treat, cure or prevent any disease. */}
+      {/* Disclosure-policy footnote: the doses cited in answers are the studies'
+          doses, never CONKA's per-ingredient amounts. */}
       <p className="mt-6 text-xs text-black/45 leading-relaxed max-w-[68ch]">
         Doses quoted are those used in the cited studies, not the amount in a CONKA
         shot. CONKA is a food supplement and is not intended to diagnose, treat, cure
