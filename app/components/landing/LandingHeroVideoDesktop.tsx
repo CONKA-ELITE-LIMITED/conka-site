@@ -80,6 +80,16 @@ export default function LandingHeroVideoDesktop() {
         }}
       />
 
+      {/* Bottom fade — the video melts into the tinted section below rather than
+          ending on a hard edge. Kept short so it only softens the very base. */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-1/5 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(244,245,248,1) 0%, rgba(244,245,248,1) 18%, rgba(244,245,248,0) 100%)",
+        }}
+      />
+
       {/* Content — left-aligned in the negative space, vertically centred. */}
       <div className="relative z-10 flex min-h-[72vh] items-center">
         <div className="px-[5vw] max-w-[40rem]">
