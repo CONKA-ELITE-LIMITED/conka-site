@@ -39,11 +39,12 @@ const FLOW_FAQ_IMAGE = {
   bottomLabel: "CONKA Flow · Morning",
 };
 
+const FLOW_FAQ_ITEMS = getFormulaPdpFaqItems("01");
+
 export default function ConkaFlowPage() {
   const isMobile = useIsMobile();
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
-  const flowFaqItems = getFormulaPdpFaqItems("01");
 
   const cadencePricing = getCadencePricingByFormula("01", selectedCadence);
   const cadencePrice = cadencePricing.price;
@@ -163,7 +164,7 @@ export default function ConkaFlowPage() {
         {/* ===== SECTION 11: FAQ ===== */}
         <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
           <div className="brand-track">
-            <LabFAQ items={flowFaqItems} image={FLOW_FAQ_IMAGE} hideCTA />
+            <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
           </div>
         </section>
 
@@ -271,7 +272,7 @@ export default function ConkaFlowPage() {
       {/* ===== SECTION 11: FAQ ===== */}
       <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
         <div className="brand-track">
-          <LabFAQ items={flowFaqItems} image={FLOW_FAQ_IMAGE} hideCTA />
+          <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
         </div>
       </section>
 

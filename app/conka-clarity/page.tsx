@@ -39,11 +39,12 @@ const CLEAR_FAQ_IMAGE = {
   bottomLabel: "CONKA Clear · Afternoon",
 };
 
+const CLEAR_FAQ_ITEMS = getFormulaPdpFaqItems("02");
+
 export default function ConkaClarityPage() {
   const isMobile = useIsMobile();
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
-  const clearFaqItems = getFormulaPdpFaqItems("02");
 
   const cadencePricing = getCadencePricingByFormula("02", selectedCadence);
   const cadencePrice = cadencePricing.price;
@@ -165,7 +166,7 @@ export default function ConkaClarityPage() {
         {/* ===== SECTION 11: FAQ ===== */}
         <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
           <div className="brand-track">
-            <LabFAQ items={clearFaqItems} image={CLEAR_FAQ_IMAGE} hideCTA />
+            <LabFAQ items={CLEAR_FAQ_ITEMS} image={CLEAR_FAQ_IMAGE} hideCTA />
           </div>
         </section>
 
@@ -273,7 +274,7 @@ export default function ConkaClarityPage() {
       {/* ===== SECTION 11: FAQ ===== */}
       <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
         <div className="brand-track">
-          <LabFAQ items={clearFaqItems} image={CLEAR_FAQ_IMAGE} hideCTA />
+          <LabFAQ items={CLEAR_FAQ_ITEMS} image={CLEAR_FAQ_IMAGE} hideCTA />
         </div>
       </section>
 
