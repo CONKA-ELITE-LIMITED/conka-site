@@ -175,10 +175,9 @@ export const listicleTemplate: ListicleConfig = {
   },
   trustCarousel: true,
   reviewsCarousel: true,
-  faq: Array.from({ length: 6 }, (_, i) => ({
-    q: `Placeholder persona-locked question ${i + 1}?`,
-    a: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  })),
+  // Canonical FAQ ids (see app/lib/faqContent.ts), curated per persona in
+  // display order. Swap for the ids that fit this landing's audience.
+  faqIds: ["different", "caffeine", "results", "how-to-take", "guarantee", "delivery"],
   stickyBar: {
     label: "Placeholder sticky bar line",
     cta: "Get started",

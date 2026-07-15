@@ -77,6 +77,20 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "about",
   },
   {
+    id: "cognitive-decline",
+    question: "Can CONKA help with cognitive decline?",
+    answer:
+      "It is built to support the mechanisms behind a sharp, ageing brain, though it is a daily supplement rather than a cure and does not treat or reverse a diagnosed condition. Several of its ingredients act on the systems that underpin memory and clear thinking. Ginkgo Biloba supports healthy blood flow to the brain, so more oxygen and nutrients reach it. Alpha GPC is a choline source the body uses to make acetylcholine, the neurotransmitter central to memory and learning. Antioxidants like Glutathione and Vitamin C help counter the oxidative stress that builds up with age. Adaptogens like Ashwagandha and Rhodiola help the brain handle stress, which itself drags on recall. Taken daily, that combination is designed to help you stay clear and focused as you get older. If you are noticing real memory changes, see your GP, because that is a medical question a supplement does not replace.",
+    category: "efficacy",
+  },
+  {
+    id: "vs-energy-drink",
+    question: "How is CONKA different from an energy drink?",
+    answer:
+      "An energy drink spikes you on caffeine and sugar and then drops you; CONKA does neither. Both CONKA formulas are caffeine-free, so there is no stimulant to spike from and nothing to crash off. Instead of a short hit, the two daily shots are built around adaptogens and nootropics dosed to the levels used in published trials, aimed at steady focus across the whole day. It is a daily supplement you take to hold a level, not a drink you reach for once you are already flagging.",
+    category: "about",
+  },
+  {
     id: "different",
     question: "What makes CONKA different?",
     answer:
@@ -130,6 +144,13 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: "Can I take CONKA alongside ADHD medication?",
     answer:
       "There is no known direct interaction between CONKA and stimulant ADHD medication such as methylphenidate or amphetamine, but check with your prescriber before combining them. CONKA is caffeine-free and is not a stimulant, and it is not a replacement for prescribed ADHD treatment. Many people take it for everyday focus and calm; it is not a medicine and does not treat ADHD.",
+    category: "safety",
+  },
+  {
+    id: "adhd-replacement",
+    question: "Is CONKA a replacement for ADHD medication?",
+    answer:
+      "No. CONKA is not a replacement for prescribed ADHD medication, and it does not diagnose or treat ADHD. It is a caffeine-free food supplement that supports everyday focus and calm, not a stimulant and not a medicine. Plenty of people with ADHD take it for daily focus alongside whatever their prescriber has them on, but it sits beside prescribed treatment rather than in place of it. Any change to your actual medication is a conversation for your prescriber, not a supplement label.",
     category: "safety",
   },
   {
@@ -380,6 +401,13 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: "Do I need to take CONKA to use the app?",
     answer:
       "No. The app and the cognitive test are free and work entirely on their own. It is not just a focus tracker: it is a place to see holistically what is actually affecting your cognitive performance, with sleep, caffeine, stress and training lined up against your scores and measured against your own baseline. And it means that if you do take CONKA, you can measure the difference against your own before-and-after data rather than taking our word for it.",
+    category: "app",
+  },
+  {
+    id: "app-optional",
+    question: "Do I have to use the app to benefit from CONKA?",
+    answer:
+      "No. The two daily CONKA shots work entirely on their own, with no app required. The CONKA app is an optional, free companion built around a two-minute cognitive test, there if you want to see your focus change in numbers over time rather than guessing. You do not need to be technical or log anything by hand to get the benefit of CONKA; the app is a way to measure it, not a condition of it.",
     category: "app",
   },
   {

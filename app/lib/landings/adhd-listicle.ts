@@ -169,31 +169,15 @@ export const adhdListicle: ListicleConfig = {
     ],
   },
   reviewsCarousel: true,
-  faq: [
-    {
-      q: "Does CONKA contain caffeine or other stimulants?",
-      a: "No. CONKA is completely caffeine-free, so there is nothing to spike you up and nothing to crash from.",
-    },
-    {
-      q: "Can I take CONKA alongside my ADHD medication?",
-      a: "CONKA is a food supplement, not a medicine. If you take prescription medication, check with your GP or prescriber before adding anything new to your routine.",
-    },
-    {
-      q: "Is CONKA a replacement for ADHD medication?",
-      a: "No. CONKA supports everyday focus and calm. It is not a medicine and does not diagnose or treat ADHD.",
-    },
-    {
-      q: "How quickly will I feel something?",
-      a: "Most people notice the morning shot within minutes. The 2-minute brain test in the app lets you track the difference over weeks instead of guessing.",
-    },
-    {
-      q: "I'm terrible at sticking to routines. Is this complicated?",
-      a: "It's two small shots, one in the morning and one at night. No powders, no mixing, no pill organisers.",
-    },
-    {
-      q: "What if it doesn't work for me?",
-      a: "You have 100 days to try it risk-free. If you don't feel a difference, you get your money back.",
-    },
+  // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
+  // caffeine, medication, not-a-replacement, timeline, simplicity, guarantee.
+  faqIds: [
+    "caffeine",
+    "adhd-medication",
+    "adhd-replacement",
+    "results",
+    "how-to-take",
+    "guarantee",
   ],
   stickyBar: {
     label: "Stop fighting your brain.",

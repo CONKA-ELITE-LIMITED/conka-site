@@ -29,6 +29,7 @@ import LogoMarquee from "@/app/components/landing/LogoMarquee";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
+import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 
 /**
  * Listicle landing renderer (/go/[slug], format: "listicle").
@@ -51,7 +52,7 @@ const NAVY = "#1B2757";
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
   return (
-    <div className="mb-5 flex items-center justify-center gap-2.5">
+    <div className="mb-5 flex items-center justify-start gap-2.5">
       <div className="flex items-center">
         {Array.from({ length: 5 }, (_, i) => (
           <div
@@ -87,9 +88,9 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
               ★★★★★
             </span>
           </div>
-          <span className="text-[13px] font-bold">{label}</span>
+          <span className="text-[13px] font-bold tabular-nums">{label}</span>
         </div>
-        <span className="mt-0.5 text-[11px] opacity-80">{sub}</span>
+        <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
       </div>
     </div>
   );
@@ -545,16 +546,10 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
                 className="mb-5"
               />
             ) : null}
-            <h1
-              className="mb-4 text-[1.7rem] leading-[1.12] md:mb-5 md:text-5xl md:leading-tight"
-              style={{
-                letterSpacing: "var(--letter-spacing-premium-title)",
-                color: NAVY,
-              }}
-            >
+            <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-black md:mb-4 md:text-5xl md:leading-[1.05]">
               {config.hero.headline}
             </h1>
-            <p className="mb-5 max-w-[34rem] text-base leading-relaxed opacity-80">
+            <p className="mb-5 max-w-[34rem] text-[15px] leading-relaxed text-black/70 md:text-base">
               {config.hero.subcopy}
             </p>
             {config.hero.socialProof ? (
@@ -565,7 +560,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             ) : null}
             <a
               href="#product"
-              className="mx-auto mb-6 block w-fit rounded-full px-8 py-4 text-center text-sm font-medium text-white"
+              className="mb-6 flex min-h-[52px] w-full items-center justify-center rounded-[12px] px-8 text-center text-[15px] font-bold text-white transition-opacity hover:opacity-90 active:opacity-80 md:w-fit"
               style={{ background: NAVY }}
             >
               {config.hero.cta}
@@ -827,10 +822,10 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
       >
         <div className="mx-auto max-w-7xl">
           <CROFAQv2
-            items={config.faq.map((f, i) => ({
-              id: `faq-${i}`,
-              question: f.q,
-              answer: f.a,
+            items={pickFaqItems(...config.faqIds).map((f) => ({
+              id: f.id,
+              question: f.question,
+              answer: stripClaimAnchors(f.answer),
             }))}
             showSeeAllLink={false}
           />
