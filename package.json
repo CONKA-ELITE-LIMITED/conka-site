@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@notionhq/client": "^5.23.2",
     "@shopify/storefront-api-client": "^1.0.9",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^2.0.0",
