@@ -22,7 +22,7 @@ export const brainAgeingListicle: ListicleConfig = {
     headline:
       "6 Reasons the Older Generation Is Adding This Daily Shot Before Brain Fog and Cognitive Decline Set In",
     subcopy:
-      "One 30ml shot to protect cognitive longevity. Measurable, clear recall that holds from your morning routine to your evening conversations.",
+      "Two caffeine-free daily shots to support memory, focus and mental clarity as you age: Flow in the morning, Clear in the afternoon, so the sharpness you rely on holds day after day.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -35,9 +35,11 @@ export const brainAgeingListicle: ListicleConfig = {
     ],
     asset: {
       kind: "image",
-      src: "/formulas/both/BoxIngredientHero.png",
-      alt: "CONKA Flow and Clear shots with their ingredients",
-      aspect: "2528/1696",
+      src: "/testimonials/ugc/1.jpg",
+      alt: "An older woman taking a CONKA shot at home by a window",
+      // Match the landscape hero frame of the other two listicles; the portrait
+      // source is object-cover center-cropped to fit.
+      aspect: "1500/1000",
     },
   },
   ticker: [
@@ -55,7 +57,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 1,
       tag: "WORD RECALL",
       headline: "Seamless Speech, Without the Hesitation",
-      body: "Struggling to find the right word is agonizing, but this 30ml daily shot flips the script.\n\nBy supporting optimal neural pathways, it helps your mind open up so sentences form seamlessly, curing lost words. Experience the joy of conversation flowing naturally exactly when you need it. Clear communication, without the mental block.",
+      body: "Struggling to find the right word is agonising. This 30ml daily shot supports the neural pathways behind language, so sentences form more easily and the words are there when you reach for them, and conversation flows naturally again.",
       // Dan Norton's quote (speaking clearer, words flowing) lands the seamless-speech reason
       asset: {
         kind: "athleteQuote",
@@ -71,7 +73,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 2,
       tag: "MEMORY",
       headline: "Clearer Memory That Lifts the Fog",
-      body: "Forgetting why you entered a room is a frustrating sign of cognitive fatigue.\n\nThis targeted nutrition provides essential fuel to lift the fog, helping you remember exactly where you put things and why you walked in. Instead of accepting decline, you can regain control of your short-term memory in just six weeks. Sharp mental clarity when you need it most.",
+      body: "Forgetting why you walked into a room is a frustrating sign of cognitive fatigue. This targeted nutrition gives your brain the fuel to lift that fog, so you remember where you put things and why you came in, with many people noticing clearer recall over about six weeks.",
       // The recall stack: actives that feed acetylcholine and clear the fog
       asset: {
         kind: "ingredientGrid",
@@ -118,7 +120,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 3,
       tag: "LONGEVITY",
       headline: "Cognitive Protection for the Long Term",
-      body: "Brain health is front of mind, and this isn't just a temporary spike, it's a dedicated system for cognitive longevity.\n\nBy delivering targeted, natural support, it ticks all the vital brain health boxes to future-proof your mind. Protect your cognitive function for the long term, safely and naturally. Future-proof your mind for the years ahead.",
+      body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support covers the vitals, helping protect your cognitive function for the years ahead, safely and without stimulants.",
       // The protection stack: antioxidants and neuroprotective actives
       asset: {
         kind: "ingredientGrid",
@@ -163,7 +165,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 4,
       tag: "TRACK IT",
       headline: "Measurable Results You Can Actually Track",
-      body: "Most supplements make massive claims with zero proof, but this natural brain-boost offers measurable cognition tracking.\n\nBy using the companion app test, you can watch your focus and memory improve in hard numbers. Customers consistently report up to a 15% measured boost in direct brain function. Proven cognitive gains, tracked in real-time.",
+      body: "Most supplements make big claims with zero proof. With the companion app test you watch your focus and memory change in hard numbers, and customers report up to a 15% measured boost in brain function, tracked over time.",
       asset: { kind: "measureTile" },
     },
     {
@@ -200,7 +202,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 5,
       tag: "STAMINA",
       headline: "Mental Energy That Defeats Fatigue",
-      body: "Complicated routines kill consistency, so we made this daily approach simple, natural, and effective.\n\nPacked with essential vitamins, it supports optimal daily functioning and keeps your brain feeling distinctly less tired from morning to night. No more midday slumps or mental exhaustion. Sustained mental energy, all day long.",
+      body: "Complicated routines kill consistency, so this is simple: two small daily shots. Rich in essential vitamins, they support steady daily function and keep your brain feeling less tired from morning to night, without the midday slump.",
       // Day-energy curve: afternoon slump without, steady with CONKA
       asset: { kind: "dayEnergyCurve" },
     },
@@ -209,7 +211,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 6,
       tag: "AUTHORITY",
       headline: "Stable Cognition Backed by Real Proof",
-      body: "Concrete authority matters more than hype. This isn't a generic vitamin; it's a tailored, scientifically backed approach you can actively rely on to keep cognitive performance stable.\n\nBuilt on undeniable proof, it provides the natural brain-boost trusted for consistent, long-lasting mental health. Reliable results backed by real authority.",
+      body: "Proof matters more than hype. This isn't a generic vitamin, it's a tailored, science-backed formula built to keep cognitive performance stable, so you get reliable, long-lasting support you can actually rely on.",
       asset: { kind: "researchBacked" },
     },
   ],

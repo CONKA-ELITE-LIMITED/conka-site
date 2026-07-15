@@ -18,7 +18,7 @@ export const adhdListicle: ListicleConfig = {
     headline:
       "6 Reasons People With ADHD Say CONKA Finally Gets Them Started, Focused and Calm",
     subcopy:
-      "Two small daily shots. Zero caffeine. Built for brains that won't start, won't settle and won't switch off.",
+      "Two caffeine-free daily shots: Flow for morning focus, Clear for the afternoon dip. Built for the ADHD pattern of won't-start, won't-settle, won't-switch-off, with an app to measure the difference.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -31,10 +31,10 @@ export const adhdListicle: ListicleConfig = {
     ],
     asset: {
       kind: "image",
-      src: "/formulas/both/BoxIngredientHero.png",
-      alt: "CONKA Flow and Clear shots with their ingredients",
-      // Native 2528x1696; frame matches so nothing crops
-      aspect: "2528/1696",
+      src: "/lifestyle/BlurGrab.jpg",
+      alt: "A hand reaching for a CONKA shot on a bedside table beside a mug",
+      // Native 1500x1000; frame matches so nothing crops
+      aspect: "1500/1000",
     },
   },
   ticker: [
@@ -52,7 +52,7 @@ export const adhdListicle: ListicleConfig = {
       n: 1,
       tag: "GETTING STARTED",
       headline: "Finally Start the Thing You've Been Avoiding",
-      body: "You've known about it since Monday. It's not even hard. But every time you sit down, your brain slides off it, so you make another coffee and lose the morning. That stuck feeling isn't laziness. An ADHD brain runs low on the focus chemical that gets you moving.\n\nFlow, your caffeine-free morning shot, supports that exact spark. Most people feel it within minutes, and the task that felt like a locked door is suddenly open.",
+      body: "That stuck feeling isn't laziness. An ADHD brain runs low on the focus chemical that gets you moving, so tasks slide and the morning disappears. Flow, your caffeine-free morning shot, supports that exact spark, and most people feel it within minutes: the task that felt like a locked door opens.",
       asset: {
         kind: "image",
         src: "/videos/misc/Neurons.gif",
@@ -67,7 +67,7 @@ export const adhdListicle: ListicleConfig = {
       n: 2,
       tag: "RESTLESSNESS",
       headline: "Sit Still Long Enough to Actually Get Things Done",
-      body: "Your leg won't stop. Your eyes drift to the window, the door, your phone. It's not that you don't want to focus. Your brain just can't hold itself steady, because its focus chemistry runs uneven. Coffee only winds you up tighter.\n\nConka gives you focus and calm at the same time, with no caffeine to make you jittery. The fidget settles, and you look up to find you've worked for half an hour straight.",
+      body: "The restlessness isn't a willpower problem, it's uneven focus chemistry, and coffee only winds it tighter. Conka gives you focus and calm at once with no caffeine, so the fidget settles and you look up to find you've worked half an hour straight.",
       // 9:16 source centre-cropped to 3:4, same as the quiz landing frame
       asset: { kind: "video", src: "/videos/flow/FlowLiquid.mp4", aspect: "3/4" },
     },
@@ -88,7 +88,7 @@ export const adhdListicle: ListicleConfig = {
       n: 3,
       tag: "WORD RECALL",
       headline: "Find Your Words Before Your Face Goes Red",
-      body: "Mid-sentence in a meeting, and the word is just gone. You talk around it and lose your point. That blank, lost feeling is brain fog, and it shows up when your brain's focus fuel is running low.\n\nConka supports clear, sharp thinking, so finding your words feels easy instead of like a fight. Names, words, the point you were making. They're there when you reach for them.",
+      body: "That blank, mid-sentence moment is brain fog, and it shows up when your focus fuel runs low. Conka supports clear, sharp thinking, so names, words and the point you were making are there when you reach for them.",
       // Dan Norton's quote maps directly to word recall / finding your words
       asset: {
         kind: "athleteQuote",
@@ -104,7 +104,7 @@ export const adhdListicle: ListicleConfig = {
       n: 4,
       tag: "THE 2PM CRASH",
       headline: "Kill the 2PM Crash (Without More Coffee)",
-      body: "You run on coffee because it's the only thing that gets your brain going. Then 2pm hits with the slump, the jitters, and the fog. That crash is baked into caffeine, and an ADHD brain feels the swing harder.\n\nConka has zero caffeine, so there's nothing to spike you up and nothing to crash from. Steady focus all day, and Clear at night helps you wind down instead of lying there wired.",
+      body: "The 2pm slump, jitters and fog are baked into caffeine, and an ADHD brain feels the swing harder. Conka has zero caffeine, so there's nothing to spike from and nothing to crash off: steady focus all day, and Clear in the evening winds you down instead of leaving you wired.",
       // Skip-the-2pm-crash curve + cost table: pays off the caffeine crash story
       asset: { kind: "crashChart" },
     },
@@ -142,7 +142,7 @@ export const adhdListicle: ListicleConfig = {
       n: 5,
       tag: "MENTAL NOISE",
       headline: "Quiet the Noise in Your Head",
-      body: "ADHD isn't just distraction. It's ten thoughts at once and a low hum of stress that makes a simple to-do list feel scary. When your focus chemistry is all over the place, your brain struggles to filter any of it out.\n\nConka brings calm alongside focus, without knocking you out. It turns the volume down so you can finally hear yourself think.",
+      body: "ADHD isn't just distraction, it's ten thoughts at once and a low hum of stress, because scattered focus chemistry struggles to filter any of it out. Conka brings calm alongside focus without knocking you out, turning the volume down so you can hear yourself think.",
       // Two-bar focus comparison: quieter mind reads as sharper focus
       asset: { kind: "focusBars" },
     },
@@ -151,7 +151,7 @@ export const adhdListicle: ListicleConfig = {
       n: 6,
       tag: "CONSISTENCY",
       headline: "Stick With It, and Actually See It Working",
-      body: "You've got a drawer full of half-used supplements and apps you opened twice. Anything complicated dies by week two. And \"trust me, it's working\" means nothing when you can't feel a difference.\n\nConka is just two small shots, morning and night, plus a 2-minute brain test in the app that scores your focus. You watch it climb over time, like a fitness tracker for your brain.",
+      body: "Anything complicated dies by week two, and being told it works means nothing when you can't feel a difference. Conka is two small shots, morning and night, plus a 2-minute brain test in the app that scores your focus so you watch it climb over time, like a fitness tracker for your brain.",
       asset: { kind: "measureTile" },
     },
   ],
