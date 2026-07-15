@@ -9,6 +9,7 @@ import ScienceDifferent from "@/app/components/science/ScienceDifferent";
 import EvidenceLadder from "@/app/components/science/EvidenceLadder";
 import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
 import Reveal from "@/app/components/landing/Reveal";
+import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
   title: "The Science | CONKA",
@@ -107,6 +108,7 @@ export default function SciencePage() {
           <Reveal>
             <AppInsightsCallout />
           </Reveal>
+          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onDark" divider />
         </div>
       </section>
 

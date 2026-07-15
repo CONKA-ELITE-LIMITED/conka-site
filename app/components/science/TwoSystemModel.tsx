@@ -57,10 +57,11 @@ export default function TwoSystemModel() {
           Two systems, one daily brain.
         </h2>
         <p className="text-sm md:text-base text-black/75 leading-relaxed">
-          Nature already holds the answer in two complementary classes of
-          active that do two different jobs. The catch is that raw, under-dosed,
-          and badly combined, that potential stays on the shelf. The model below
-          is the latent solution. What comes after is how CONKA realises it.
+          Two complementary classes of active do the two jobs the brain needs:
+          adaptogens build resilience to load over time, nootropics sharpen
+          performance on the day. Raw, under-dosed, or badly combined, that
+          potential stays on the shelf. The model below is the latent solution;
+          what comes after is how CONKA realises it.
         </p>
       </div>
 
@@ -102,9 +103,10 @@ export default function TwoSystemModel() {
       {/* Bridge to Flow and Clear, kept equal */}
       <div className="mt-6 lg:mt-8 border-l-2 border-[#1B2757] pl-5 lg:pl-6 max-w-2xl">
         <p className="text-base md:text-lg text-black leading-relaxed">
-          It is also why CONKA comes in two formulas. Flow and Clear draw on both
-          systems in different balances, each tuned to a different kind of
-          demand. Neither is the lite version of the other.
+          CONKA splits into two formulas because no single blend can serve both
+          jobs at once. Flow and Clear draw on both systems in different
+          balances, each tuned to a different kind of demand. Neither is the lite
+          version of the other.
         </p>
       </div>
     </div>

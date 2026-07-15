@@ -6,6 +6,7 @@ import Footer from "@/app/components/footer";
 import IngredientsPageDesktop from "@/app/components/ingredients/IngredientsPageDesktop";
 import IngredientsPageMobile from "@/app/components/ingredients/IngredientsPageMobile";
 import IngredientFAQ from "@/app/components/ingredients/IngredientFAQ";
+import ReviewedDate from "@/app/components/ReviewedDate";
 import { FormulaId } from "@/app/lib/productData";
 import useIsMobile from "@/app/hooks/useIsMobile";
 
@@ -50,6 +51,7 @@ export default function IngredientsPage() {
       >
         <div className="brand-track">
           <IngredientFAQ />
+          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onLight" divider />
         </div>
       </section>
 

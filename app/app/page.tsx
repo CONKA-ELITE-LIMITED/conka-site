@@ -13,6 +13,7 @@ import {
 } from "@/app/components/appv2";
 import { AppInsightsCallout } from "@/app/components/app";
 import { CognitiveTestIsland } from "@/app/components/cognitive-test";
+import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
   title: "The App | CONKA",
@@ -104,6 +105,7 @@ export default function AppPage() {
       <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
           <AppV2Download />
+          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onDark" divider />
         </div>
       </section>
 
