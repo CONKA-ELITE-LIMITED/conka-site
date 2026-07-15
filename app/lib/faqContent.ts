@@ -64,7 +64,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "what-is-conka",
     question: "What is CONKA?",
     answer:
-      "CONKA is a daily nootropic brain shot: a 30ml liquid shot you drink straight from the bottle. There are two formulas. CONKA Flow is the morning shot, built on adaptogens like Ashwagandha, Rhodiola and Lemon Balm. CONKA Clear is the afternoon shot, built on nootropics like Alpha GPC and Ginkgo Biloba, plus Vitamin C, which contributes to normal psychological function.†† Both are caffeine-free, Informed Sport certified, and made in the UK.",
+      "CONKA is a daily nootropic brain shot: a 30ml liquid shot you drink straight from the bottle. There are two formulas. CONKA Flow is the morning shot, built on adaptogens like Ashwagandha, Rhodiola and Lemon Balm. CONKA Clear is the afternoon shot, built on nootropics like Alpha GPC and Ginkgo Biloba, plus Vitamin C. Both are caffeine-free, Informed Sport certified, and made in the UK.",
     category: "about",
   },
   {
@@ -183,7 +183,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "which-product",
     question: "Flow, Clear, or Both?",
     answer:
-      "Flow (black cap) is for mornings: adaptogens like Ashwagandha and Lemon Balm for calm, caffeine-free focus. Clear (white cap) is for afternoons: nootropics like Alpha GPC and Glutathione, plus Vitamin C, which contributes to normal psychological function.†† Both is the full system. Morning to evening covered, designed to work as a pair, and the best value per shot.",
+      "Flow (black cap) is for mornings: adaptogens like Ashwagandha and Lemon Balm for calm, caffeine-free focus. Clear (white cap) is for afternoons: nootropics like Alpha GPC and Glutathione, plus Vitamin C. Both is the full system. Morning to evening covered, designed to work as a pair, and the best value per shot.",
     category: "about",
   },
   {

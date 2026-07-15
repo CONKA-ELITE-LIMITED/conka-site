@@ -69,6 +69,13 @@ export default function FaqPage() {
         >
           <div className="brand-track">
             <FaqHub />
+            {/* Claims footnote. Pairs with the † anchor on the "clinically dosed"
+                answer; the anchor must not appear without its substantiation. */}
+            <p className="mt-12 text-xs text-black/45 leading-relaxed max-w-[68ch]">
+              † Clinically dosed: the amounts are built around the doses used in the
+              published studies on each ingredient. CONKA is a food supplement and
+              is not intended to diagnose, treat, cure or prevent any disease.
+            </p>
           </div>
         </section>
 
