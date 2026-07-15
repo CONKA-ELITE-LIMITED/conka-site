@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import type { TrustPillIcon } from "@/app/lib/landings/listicle-types";
 import {
   TrustIconNoCaffeine,
@@ -28,46 +27,17 @@ export interface TrustChip {
 }
 
 /**
- * Under-CTA trust row. Two variants, both sharing the per-item glyphs:
- * - "pills" (default): bordered icon + label mini-chips. Used by the home hero.
- * - "inline": a lightweight icon + text row separated by dots, no boxes or
- *   shadow, to sit flat inside the listicle hero's left-aligned column.
- * Alignment is owned by the parent.
+ * Under-CTA trust row: bordered icon + label mini-chips, each carrying
+ * its own meaningful glyph instead of a uniform tick. Shared by the
+ * listicle hero and the home hero. Alignment is owned by the parent.
  */
 export default function TrustChips({
   chips,
   className = "",
-  variant = "pills",
 }: {
   chips: TrustChip[];
   className?: string;
-  variant?: "pills" | "inline";
 }) {
-  if (variant === "inline") {
-    return (
-      <div
-        className={`flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[12px] font-medium text-black/60 ${className}`}
-      >
-        {chips.map((chip, i) => {
-          const Icon = TRUST_CHIP_ICONS[chip.icon];
-          return (
-            <Fragment key={i}>
-              {i > 0 && (
-                <span className="text-black/20" aria-hidden>
-                  &middot;
-                </span>
-              )}
-              <span className="inline-flex items-center gap-1.5">
-                <Icon className="h-3.5 w-3.5 flex-shrink-0 text-[#1B2757]" />
-                {chip.label}
-              </span>
-            </Fragment>
-          );
-        })}
-      </div>
-    );
-  }
-
   return (
     <div className={`flex flex-wrap justify-center gap-2 ${className}`}>
       {chips.map((chip, i) => {

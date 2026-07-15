@@ -10,7 +10,6 @@ import type {
 } from "@/app/lib/landings/listicle-types";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
-import TrustChips from "@/app/components/landing/TrustChips";
 import ListiclePurchase from "./ListiclePurchase";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
@@ -562,9 +561,6 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             >
               {config.hero.cta}
             </a>
-            {config.hero.trustPills?.length ? (
-              <TrustChips chips={config.hero.trustPills} variant="inline" />
-            ) : null}
           </div>
         </div>
       </section>
