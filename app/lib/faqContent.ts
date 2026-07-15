@@ -20,7 +20,8 @@ export type FaqCategory =
   | "efficacy"
   | "safety"
   | "usage"
-  | "commercial";
+  | "commercial"
+  | "support";
 
 /** What a FAQ component needs to render a row. Landing configs supply their own. */
 export interface FaqEntry {
@@ -155,7 +156,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "drug-test",
     question: "Will CONKA show up on a drug test? Does it contain banned substances?",
     answer:
-      "No, and this is one of the few things we can say with certainty. Every batch of CONKA Flow and CONKA Clear is independently tested by Informed Sport, the most rigorous certification in sports nutrition, and screened for more than 280 substances banned in sport. That is why professional and drug-tested athletes use it. Both formulas are also caffeine-free.",
+      "No. Every batch of CONKA Flow and CONKA Clear is independently tested by Informed Sport, the most rigorous certification in sports nutrition, and screened for more than 280 substances banned in sport. That is why professional and drug-tested athletes use it. Both formulas are also caffeine-free.",
     category: "safety",
   },
   {
@@ -297,6 +298,51 @@ export const FAQ_ITEMS: FaqItem[] = [
       "Yes, anytime, from your account. There is no contract, no minimum term and no cancellation fee, and you can pause instead of cancelling if you just want to skip a month. Subscriptions also ship free.",
     category: "commercial",
   },
+
+  // Support: the operational cluster. Hub-only (category is not in any conversion
+  // subset), and each answer routes to info@conka.io for anything specific.
+  {
+    id: "track-order",
+    question: "Where is my order? How do I track it?",
+    answer:
+      "You get a tracking link by email the moment your order dispatches. Orders placed before 2pm usually ship the same day, and most UK orders arrive within 1 to 2 working days. If your tracking has not arrived, or it looks stuck, email info@conka.io with your order number and we will chase it for you.",
+    category: "support",
+  },
+  {
+    id: "change-order",
+    question: "Can I change or cancel my order after placing it?",
+    answer:
+      "Often yes, if you are quick. We pick and dispatch orders fast, frequently the same day, so email info@conka.io with your order number as soon as possible. If it has not shipped yet we will change or cancel it; if it has already gone, the 100-day guarantee still has you covered.",
+    category: "support",
+  },
+  {
+    id: "refund-process",
+    question: "How do I get a refund?",
+    answer:
+      "Email info@conka.io and we will arrange it. Every order is covered by the 100-day money-back guarantee, so if CONKA has not worked for you, you get a full refund and you do not need to return anything. No forms, no restocking fees.",
+    category: "support",
+  },
+  {
+    id: "international-shipping",
+    question: "Do you ship internationally?",
+    answer:
+      "Yes. We ship across the UK and to most international destinations. The available delivery options, cost and estimated time for your country show at checkout once you enter your address. If you cannot see your country or need a specific courier, email info@conka.io and we will help.",
+    category: "support",
+  },
+  {
+    id: "payment-methods",
+    question: "What payment methods do you accept?",
+    answer:
+      "All major credit and debit cards, plus digital wallets like Apple Pay, Google Pay and Shop Pay, through our secure checkout. Subscriptions renew automatically on the card you set up, and you can update your payment details anytime from your account.",
+    category: "support",
+  },
+  {
+    id: "order-problem",
+    question: "My order arrived damaged or something is missing. What do I do?",
+    answer:
+      "Email info@conka.io with your order number and, if you can, a quick photo. We will put it right, either a replacement or a refund, without making you jump through hoops. This is rare, but when it happens we sort it quickly.",
+    category: "support",
+  },
 ];
 
 const FAQ_BY_ID = new Map(FAQ_ITEMS.map((item) => [item.id, item]));
@@ -326,5 +372,10 @@ export function pickFaqItems(...ids: string[]): FaqItem[] {
   });
 }
 
-/** The shared trust answers grafted onto the consumer PDPs (Phase 3). */
-export const PDP_TRUST_FAQ_IDS = ["side-effects", "drug-test"] as const;
+/**
+ * The shared answers grafted onto the Flow/Clear PDPs on top of their
+ * product-specific questions. Kept to generic, non-intense nootropic questions:
+ * the drug-test / banned-substances answer reads too heavy on a product page and
+ * lives on the /faq hub instead.
+ */
+export const PDP_TRUST_FAQ_IDS = ["side-effects", "do-nootropics-work"] as const;

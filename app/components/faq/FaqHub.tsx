@@ -15,6 +15,7 @@ const SECTIONS: { category: FaqCategory; title: string; eyebrow: string }[] = [
   { category: "safety", title: "Safety, side effects and medication", eyebrow: "// 03" },
   { category: "usage", title: "Taking CONKA", eyebrow: "// 04" },
   { category: "commercial", title: "Price, subscription and delivery", eyebrow: "// 05" },
+  { category: "support", title: "Orders, refunds and help", eyebrow: "// 06" },
 ];
 
 function FaqRow({ item }: { item: FaqItem }) {

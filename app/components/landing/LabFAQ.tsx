@@ -96,9 +96,10 @@ export default function LabFAQ({
                     id={panelId}
                     className="overflow-hidden transition-[max-height,opacity] duration-300 ease-out"
                     style={{
-                      // Max-height must comfortably exceed the tallest answer at mobile width
-                      // (longest answer ≈ 12 lines at 390px). Bump if answers get longer.
-                      maxHeight: isOpen ? "600px" : "0px",
+                      // Max-height must comfortably exceed the tallest answer at mobile
+                      // width (the "do nootropics work" PDP answer runs ~20 lines at
+                      // 360px). Bump if answers get longer, or the panel clips.
+                      maxHeight: isOpen ? "760px" : "0px",
                       opacity: isOpen ? 1 : 0,
                     }}
                   >

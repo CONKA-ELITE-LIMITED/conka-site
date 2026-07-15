@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | Softened the drug-test FAQ answer, swapped it off the PDP FAQ for a generic nootropic question, and added an operational support section to /faq (SCRUM-1143)
 - **2026-07-15** | Replaced the legacy FormulaFAQ component with the shared LabFAQ on the Flow and Clear PDPs, then deleted it (SCRUM-1143)
 - **2026-07-15** | Added per-ingredient benefit and side-effect FAQs with FAQPage schema to /ingredients (SCRUM-1143)
 - **2026-07-15** | Flow/Clear PDPs now surface the side-effects and Informed Sport answers, and FAQ accordions link through to /faq (SCRUM-1143)
