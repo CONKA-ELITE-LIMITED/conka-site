@@ -37,9 +37,6 @@ export type {
   RelatedProduct,
 } from "./blogTransform";
 
-/** Sitewide brand image, used when a post has no hero. */
-const BRAND_FALLBACK_HERO = "/opengraph-image.png";
-
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 
 function isPreview(includeUnpublished: boolean): boolean {
@@ -131,10 +128,10 @@ async function toSummary(row: NotionRow): Promise<BlogPostSummary | null> {
     return null;
   }
 
+  // Null when the post has no hero (or the download fails): the UI renders a
+  // branded placeholder and metadata inherits the sitewide OG image.
   const heroUrl = readFirstFileUrl(props, "Hero image");
-  const heroImage = heroUrl
-    ? (await rehostImage(heroUrl, slug, "hero")) ?? BRAND_FALLBACK_HERO
-    : BRAND_FALLBACK_HERO;
+  const heroImage = heroUrl ? await rehostImage(heroUrl, slug, "hero") : null;
 
   return {
     slug,
@@ -145,7 +142,6 @@ async function toSummary(row: NotionRow): Promise<BlogPostSummary | null> {
     datePublished: readDate(props, "Date published"),
     dateModified: row.lastEditedTime,
     topics: readMultiSelect(props, "Topic"),
-    readingTime: 1, // refined per-post once the body is fetched
   };
 }
 

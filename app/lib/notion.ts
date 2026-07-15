@@ -50,41 +50,48 @@ export interface NotionRow {
  * passes false to include drafts locally.
  */
 export async function queryBlogRows(publishedOnly: boolean): Promise<NotionRow[]> {
-  const notion = getNotionClient();
-  const ds = await getBlogDataSourceId();
-  if (!notion || !ds) return [];
-
   const filter = publishedOnly
     ? { property: "Status", select: { equals: "Published" } }
     : undefined;
 
   const rows: NotionRow[] = [];
-  let cursor: string | undefined;
-  do {
-    // dataSources.query is the SDK v5 entry point (databases.query is removed).
-    const res = (await notion.dataSources.query({
-      data_source_id: ds,
-      filter,
-      start_cursor: cursor,
-      page_size: 100,
-    })) as unknown as {
-      results: Array<{
-        id: string;
-        last_edited_time: string;
-        properties: Record<string, unknown>;
-      }>;
-      has_more: boolean;
-      next_cursor: string | null;
-    };
-    for (const page of res.results) {
-      rows.push({
-        id: page.id,
-        lastEditedTime: page.last_edited_time,
-        properties: page.properties,
-      });
-    }
-    cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
-  } while (cursor);
+  try {
+    const notion = getNotionClient();
+    const ds = await getBlogDataSourceId();
+    if (!notion || !ds) return [];
+
+    let cursor: string | undefined;
+    do {
+      // dataSources.query is the SDK v5 entry point (databases.query is removed).
+      const res = (await notion.dataSources.query({
+        data_source_id: ds,
+        filter,
+        start_cursor: cursor,
+        page_size: 100,
+      })) as unknown as {
+        results: Array<{
+          id: string;
+          last_edited_time: string;
+          properties: Record<string, unknown>;
+        }>;
+        has_more: boolean;
+        next_cursor: string | null;
+      };
+      for (const page of res.results) {
+        rows.push({
+          id: page.id,
+          lastEditedTime: page.last_edited_time,
+          properties: page.properties,
+        });
+      }
+      cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
+    } while (cursor);
+  } catch (err) {
+    // A Notion outage, rate-limit, or bad token must not fail the whole site
+    // build: degrade to an empty blog and let the rest of the site ship.
+    console.error("[blog] Notion query failed, returning no posts:", err);
+    return [];
+  }
 
   return rows;
 }
@@ -93,8 +100,13 @@ export async function queryBlogRows(publishedOnly: boolean): Promise<NotionRow[]
 export async function pageToMarkdown(pageId: string): Promise<string> {
   const notion = getNotionClient();
   if (!notion) return "";
-  const n2m = new NotionToMarkdown({ notionClient: notion });
-  const blocks = await n2m.pageToMarkdown(pageId);
-  const md = n2m.toMarkdownString(blocks);
-  return md.parent ?? "";
+  try {
+    const n2m = new NotionToMarkdown({ notionClient: notion });
+    const blocks = await n2m.pageToMarkdown(pageId);
+    const md = n2m.toMarkdownString(blocks);
+    return md.parent ?? "";
+  } catch (err) {
+    console.error(`[blog] failed to convert page ${pageId} to markdown:`, err);
+    return "";
+  }
 }

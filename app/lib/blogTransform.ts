@@ -19,12 +19,11 @@ export interface BlogPostSummary {
   slug: string;
   title: string;
   description: string;
-  heroImage: string; // resolved local path, or the brand fallback
+  heroImage: string | null; // resolved local path, or null when the post has no hero
   heroImageAlt: string;
   datePublished: string | null; // ISO date
   dateModified: string; // ISO datetime, from Notion last_edited_time
   topics: string[];
-  readingTime: number; // minutes
 }
 
 /** Full post, including the render-ready body. */
@@ -32,6 +31,7 @@ export interface BlogPost extends BlogPostSummary {
   bodyMarkdown: string;
   faq: BlogFaqItem[];
   relatedProducts: RelatedProduct[];
+  readingTime: number; // minutes, computed from the full body
 }
 
 const RELATED_PRODUCTS: readonly RelatedProduct[] = ["flow", "clear", "both"];
@@ -152,17 +152,26 @@ export function cleanBody(md: string, title: string): string {
   return out.replace(/\n{3,}/g, "\n\n").trim();
 }
 
+/** Reduce inline markdown to plain text for schema output. */
+function toPlainText(s: string): string {
+  return s
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // [text](url) -> text
+    .replace(/\*\*/g, "") // bold markers
+    .replace(/\\([*_[\]()`])/g, "$1") // unescape escaped punctuation
+    .trim();
+}
+
 /**
- * Parse the "Frequently Asked Questions" section into structured Q&A for
- * FAQPage JSON-LD. Non-destructive: the FAQ stays in the rendered body, so the
- * schema always mirrors visible content. Questions are bold `Q:` paragraphs,
- * answers are the following `A:` paragraph. Trailing non-Q/A lines are ignored.
+ * Parse the "Frequently Asked Questions" section into structured, plain-text
+ * Q&A for FAQPage JSON-LD. Non-destructive: the FAQ stays in the rendered body,
+ * so the schema always mirrors visible content. A question is a (optionally
+ * bold) `Q:` line; its answer is the first following `A:` line. Any other line,
+ * including a trailing CTA paragraph after the last answer, is ignored.
  */
 export function extractFaq(md: string): BlogFaqItem[] {
   const heading = md.search(/^#{2,3}\s+Frequently Asked Questions\s*$/im);
   if (heading === -1) return [];
-  const section = md.slice(heading);
-  const lines = section.split("\n");
+  const lines = md.slice(heading).split("\n");
   const faq: BlogFaqItem[] = [];
   let current: BlogFaqItem | null = null;
 
@@ -172,14 +181,9 @@ export function extractFaq(md: string): BlogFaqItem[] {
     const a = line.match(/^\**A:\s*(.+?)\**\s*$/i);
     if (q) {
       if (current) faq.push(current);
-      current = { question: q[1].trim(), answer: "" };
-    } else if (a && current) {
-      current.answer = current.answer
-        ? `${current.answer} ${a[1].trim()}`
-        : a[1].trim();
-    } else if (current && current.answer && line && !line.startsWith("#")) {
-      // continuation of the current answer across a wrapped line
-      current.answer += ` ${line}`;
+      current = { question: toPlainText(q[1]), answer: "" };
+    } else if (a && current && !current.answer) {
+      current.answer = toPlainText(a[1]);
     }
   }
   if (current) faq.push(current);
