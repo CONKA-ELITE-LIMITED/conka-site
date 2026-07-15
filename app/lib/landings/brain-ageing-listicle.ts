@@ -37,8 +37,9 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "image",
       src: "/testimonials/ugc/1.jpg",
       alt: "An older woman taking a CONKA shot at home by a window",
-      // Native 810x1013 portrait; frame matches so nothing crops
-      aspect: "810/1013",
+      // Match the landscape hero frame of the other two listicles; the portrait
+      // source is object-cover center-cropped to fit.
+      aspect: "1500/1000",
     },
   },
   ticker: [

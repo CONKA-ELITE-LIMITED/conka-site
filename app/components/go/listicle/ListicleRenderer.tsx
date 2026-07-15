@@ -556,8 +556,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             ) : null}
             <a
               href="#product"
-              className="mb-6 flex min-h-[52px] w-full items-center justify-center rounded-[12px] px-8 text-center text-[15px] font-bold text-white transition-opacity hover:opacity-90 active:opacity-80 md:w-fit"
-              style={{ background: NAVY }}
+              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1B2757] px-10 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-fit"
             >
               {config.hero.cta}
             </a>
