@@ -42,7 +42,7 @@ export const whyConkaReasons: WhyConkaReason[] = [
       caption: "clinical trials completed with high-performing organisations",
     },
     story:
-      "Working with neuroscientists at Durham and Cambridge universities, every ingredient is backed by peer-reviewed research: 32 studies indexed in PubMed. The first professional sport trial showed a 16% increase in brain performance compared to placebo. We do the hard research and bottle it into a simple daily shot.",
+      "Every CONKA ingredient is backed by peer-reviewed research: 32 studies indexed in PubMed, developed with neuroscientists at Durham and Cambridge universities. The first professional sport trial showed a 16% increase in brain performance compared to placebo. CONKA does the hard research and bottles it into a simple daily shot.",
   },
   {
     id: 2,

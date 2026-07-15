@@ -4,6 +4,7 @@ import Footer from "@/app/components/footer";
 import { WhyConkaHero } from "@/app/components/why-conka/WhyConkaHero";
 import WhyConkaReasons from "@/app/components/why-conka/WhyConkaReasons";
 import { WhyConkaCTA } from "@/app/components/why-conka/WhyConkaCTA";
+import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
   title: "Why CONKA | Seven Reasons in Sixty Seconds",
@@ -50,6 +51,7 @@ export default function WhyConkaPage() {
       >
         <div className="brand-track">
           <WhyConkaCTA />
+          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onLight" divider />
         </div>
       </section>
 

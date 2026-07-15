@@ -4,9 +4,9 @@ Canonical reference for the site's organic-search and AI-answer-engine (AEO) fou
 
 ## Overview
 
-A programme that made the CONKA site discoverable and indexable for organic search, and parseable and citable by AI answer engines. **The technical foundation is complete**: phases 1 to 5 (SEO), 8 (AEO hygiene) and 7 (entity identity) are all built.
+A programme that made the CONKA site discoverable and indexable for organic search, and parseable and citable by AI answer engines. **The on-site foundation is complete**: phases 1 to 5 (SEO), 7 (entity identity), 8 (AEO hygiene), 10 (FAQ answer surface) and 9 (AEO content shape) are all built.
 
-What remains is not engineering. **Phase 9** (answer-first copy, self-contained passages, true review dates) is editorial and needs a content owner. **Phase 6** (the blog) is gated on a content engine. And the strongest AEO lever of all, off-site brand mentions, cannot be delivered by any change to this repo. See "What is next".
+What remains is not on-site engineering. **Phase 6** (the blog) is gated on a content engine, and the strongest AEO lever of all, off-site brand mentions, cannot be delivered by any change to this repo. See "What is next".
 
 ## Why it mattered
 
@@ -24,6 +24,9 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 | - | Money-page "From £X/shot" prices derived from `FUNNEL_PRICING` | Removes drift between the meta descriptions and the Product JSON-LD, which already derives from the same source. | SCRUM-1139 |
 | 8 | `FAQPage` JSON-LD on `/` and `/professionals`; metadata for `/case-studies` and `/conkaapp-privacy-policy`; `/win` and `/barrys` deleted and 301'd; sitemap `lastModified` fixed; `public/llms.txt` added | Both pages already rendered the Q&A and the builder already existed, so the schema was free. The two sitemapped pages were inheriting generic root tags. `/win` and `/barrys` were expired January 2026 contests, still live and indexable, so Google could serve a dead competition as a CONKA result. | SCRUM-1140 |
 | 7 | Sitewide `Organization` + `WebSite` JSON-LD with `sameAs`, social links in the footer, and a web manifest | The site had no entity identity: nothing told an answer engine what CONKA *is*, so "CONKA" was a string to disambiguate rather than a verified entity. The Organization carries the Companies House number, VAT ID, registered address and incorporation date, so the identity claim can be corroborated against public record. | SCRUM-1141 |
+| 10 | FAQ answer surface: one FAQ source of truth, a `/faq` hub with safety/app/support clusters, per-surface curated subsets, ingredient FAQs on `/ingredients`, Informed Sport surfaced beyond `/professionals` | Our 20 indexed FAQ questions closed objections for someone already on the page but answered almost nothing people search. One dataset, expanded and surfaced per page. | SCRUM-1143 |
+| - | Product `brand` references the Organization `@id` rather than a standalone `Brand` node | The graph previously held two "CONKA" concepts (the Product's `Brand` and the `Organization`); one `@id` reference resolves them to a single verifiable entity. | SCRUM-1148 |
+| 9 | Answer-first (BLUF) openings and self-contained passages retrofitted onto `/science`, `/why-conka`, `/ingredients`, `/our-story`, `/app` and `/app-insights`; a visible "Reviewed &lt;month year&gt;" freshness line (`ReviewedDate`) on each; the real-world evidence report hosted and linked from `/app-insights` | Answer engines read passages in isolation, so a section that warms up or leans on a cross-paragraph pronoun never gets quoted. The visible review date is an editorial trust signal, distinct from the git-derived sitemap `lastModified`. | SCRUM-1149 |
 
 ## Key files
 
@@ -42,6 +45,8 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 | `app/robots.ts` | Allows general and AI crawling; disallows only `/api/`, `/account`, `/payment/`; references the sitemap. |
 | `app/lib/funnelData.ts` | `FUNNEL_PRICING` (pricing source of truth); `getFunnelPriceRange` feeds the JSON-LD, `getFunnelMinPerShot` feeds the meta "From" price. |
 | `app/components/product/ProductBuyPanel.tsx` | Renders the PDP `<h1>` with the optional `seoHeading` subline. Source content in `productHeroHelpers.ts`, `formulaContent.ts`, `cadenceData.ts`. |
+| `app/components/ReviewedDate.tsx` | The visible "Reviewed &lt;month year&gt;" freshness line on the content pages. Machine-readable `<time>`, light/dark tone, optional tone-matched divider. |
+| `public/CONKA-Real-World-Evidence-Report.pdf` | Real-world evidence report (712 app users, 7,593 cognitive tests). Hosted for the citation/download link in the `/app-insights` methodology footer. |
 
 ## Key decisions and why
 
@@ -52,7 +57,8 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 - **Prices derive from one source.** The Product JSON-LD and the "From £X/shot" meta text both read `FUNNEL_PRICING`, so a price change cannot leave stale figures in the index. "From" means the cheapest cadence (quarterly). See `docs/PRICING_HISTORY.md`.
 - **Schema is generated from the same array the page renders.** FAQ markup describing content a user cannot see breaches Google's policy. Every `FAQPage` node on the site is built from the exact array its visible accordion renders, so the two cannot drift apart.
 - **Sitemap `lastModified` is derived from git, never hand-maintained.** It used to stamp every URL with the build time, which told Google the whole site changed on every deploy. It is now the date of the last commit touching that route's source files, so it is true by construction and no one has to remember to bump it. This needs `VERCEL_DEEP_CLONE=1` in the Vercel project env: Vercel shallow-clones to depth 10, and without full history `git log` cannot see far enough back. If git returns nothing, the entry ships with no `lastmod`, which is the correct failure mode.
-- **One entity, referenced by `@id`.** The `Organization` node carries a stable `@id`, and `WebSite.publisher` points at it rather than restating the brand. There is one CONKA entity on the site, not a copy per node.
+- **One entity, referenced by `@id`.** The `Organization` node carries a stable `@id`; `WebSite.publisher` and each PDP's Product `brand` point at it rather than restating the brand (SCRUM-1148). There is one CONKA entity on the site, not a copy per node.
+- **Visible review dates are editorial, not the git sitemap date.** The sitemap's `lastModified` is a machine signal for when a route's source last changed (a CSS tweak bumps it). The visible "Reviewed &lt;month year&gt;" line is a human assertion that someone re-read the page and it is still accurate. They answer different questions and are stamped independently. Only stamp a page actually reviewed: a date on an unread page misleads users and crawlers alike, so the dates are a standing maintenance commitment, not set-and-forget.
 - **`sameAs` is an identity claim, so only verified profiles go in it.** Six entries: LinkedIn, Instagram, TikTok, Trustpilot, Facebook and Companies House. No Amazon, YouTube or X, because we do not have them. A `sameAs` pointing at a dead or unowned profile is worse than a shorter list. Companies House is quietly the strongest of the six: a government registry independently confirming the company exists.
 - **Footer socials are text, not icons.** Readable anchor text corroborates `sameAs` better than an unlabelled glyph, and it matches the mono footer.
 - **Nothing is asserted that cannot be backed.** No `aggregateRating` on the Organization (no queryable source; the Trustpilot `sameAs` gives engines a path to the reviews without us claiming a number). No `telephone` (there is no public line, and omitting beats inventing). No `SearchAction` (no search page to point at).
@@ -67,11 +73,14 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 - **Meta prices and JSON-LD come from `FUNNEL_PRICING`.** When a price changes, append a dated block to `docs/PRICING_HISTORY.md`.
 - **Never emit FAQ schema for content the page does not render.** Build it from the array the accordion uses, not a hand-written copy.
 - **`convex/winEntries.ts` is dead code.** Deleting `/win` and `/barrys` removed its only callers. The `winEntries` table still holds real entrant emails, so neither the table nor the functions were dropped. Handle in a Convex cleanup pass, not by deleting the data.
+- **Visible review dates go stale.** The "Reviewed &lt;month year&gt;" lines are hand-set, not auto-maintained. Bump one only when the page is genuinely re-reviewed, or remove it. An out-of-date review line is worse than none.
 
 ## How to verify
 
 - View source on `/`, `/conka-flow`, etc.: each emits its own canonical, title, and description.
 - Google Rich Results Test on a PDP: exactly one `Product` and one `FAQPage` node, prices matching `funnelData.ts`.
+- PDP `Product` node: `brand` is a reference to the Organization `@id` (`https://www.conka.io/#organization`), not a standalone `Brand` object, so Product and Organization express one CONKA entity.
+- Content pages (`/science`, `/why-conka`, `/ingredients`, `/our-story`, `/app`, `/app-insights`): each renders a visible "Reviewed &lt;month year&gt;" line, and the dates reflect a real review rather than a blanket stamp.
 - `/` and `/professionals`: exactly one `FAQPage` node each, and every question in it also appears in the rendered HTML.
 - Any page: exactly one `Organization` node and one `WebSite` node, and every `sameAs` URL resolves. Trustpilot returns 403 to automated requests (Cloudflare bot-blocking, not a dead link), so check that one in a browser.
 - `/manifest.webmanifest` returns HTTP 200 with a resolvable icon.
@@ -83,17 +92,15 @@ A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-
 
 **The engineering is done.** Everything left is content or off-site, and none of it is ticketed. Full breakdowns are in the build archive.
 
-Worth knowing before you pick: **no competitor in this category puts FAQPage schema on its product pages** (checked: Magic Mind, IM8, Qualia, TruBrain, Thesis), and the brands brave enough to answer the hard questions bury them off-domain in Zendesk and Gorgias. We are structured and silent; they are loud and unstructured. Phase 10 closes that gap and is the only remaining phase with no new dependency.
+Worth knowing: **no competitor in this category puts FAQPage schema on its product pages** (checked: Magic Mind, IM8, Qualia, TruBrain, Thesis), and the brands brave enough to answer the hard questions bury them off-domain in Zendesk and Gorgias. We are structured and silent; they are loud and unstructured. Phase 10 (shipped) closed that gap.
+
+The only on-site phase still open is the blog, and it is gated on a content engine:
 
 | Phase | What | State |
 |-------|------|-------|
-| 10 | **FAQ answer surface.** Our 20 indexed FAQ questions all closed objections for someone already on the page; almost none answered what people search. Consolidated onto one source, expanded (`/faq` hub with safety, app and support clusters), per-surface curated subsets, ingredient FAQs on `/ingredients`, and Informed Sport surfaced beyond `/professionals`. | **Shipped** (SCRUM-1143). System doc: `docs/features/FAQ_SYSTEM.md` |
-| 9 | **AEO content shape.** Retrofit answer-first (BLUF) openings, self-contained passages, and true review dates onto the existing content pages. The code is an hour's work; the hard part is someone actually re-reading `/science` on a cadence and setting the date honestly. | Needs a content owner. **Do not ship the visible dates without one:** a "reviewed July 2026" line on a page nobody reviewed is a lie to users as well as crawlers |
-| 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness, so Phase 9 is only the retrofit of existing pages. | Gated on the content engine |
+| 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness. | Gated on the content engine |
 
 **Not a site problem, but recorded:** the strongest AEO lever is off-site brand mentions (PR, citations, Reddit and Quora discussion). No code change can deliver it, and no workstream currently owns it. With the on-site foundation now complete, this is the highest-value thing the business could start.
-
-**Small technical follow-up:** `buildProductSchema` emits a standalone `brand: { "@type": "Brand", name: "CONKA" }` rather than referencing the Organization's `@id`, so the graph technically holds two "CONKA" concepts. Unifying them is more correct but risks a validator warning on our highest-value schema, so it deserves its own change with a Rich Results Test run against it.
 
 ## References
 
@@ -103,4 +110,5 @@ Worth knowing before you pick: **no competitor in this category puts FAQPage sch
 - Pricing audit log: `docs/PRICING_HISTORY.md`
 - Phase 6 plan: `docs/development/featurePlans/blog-informational-content-surface.md`
 - Phase 10 (FAQ answer surface), shipped: `docs/features/FAQ_SYSTEM.md`
+- Phase 9 (AEO content shape), shipped: `docs/development/featurePlans/aeo-content-shape-phase-9.md`
 - Page rules (mandatory SEO and JSON-LD): `.claude/rules/pages.md`

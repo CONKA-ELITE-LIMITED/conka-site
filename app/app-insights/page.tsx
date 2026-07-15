@@ -5,6 +5,7 @@ import InsightHeroDifferentiator from "@/app/components/insights/InsightHeroDiff
 import HowThisIsPossibleModule from "@/app/components/insights/HowThisIsPossibleModule";
 import AppDownloadSection from "@/app/components/app/AppDownloadSection";
 import ProfessionalTrialsBlock from "@/app/components/insights/ProfessionalTrialsBlock";
+import ReviewedDate from "@/app/components/ReviewedDate";
 
 export default function AppInsightsPage() {
   return (
@@ -98,6 +99,20 @@ export default function AppInsightsPage() {
               <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
                 Food supplements are not a substitute for a varied and balanced diet and a healthy lifestyle.
               </p>
+            </div>
+            <div className="border-t border-white/10 pt-5 mt-5 flex flex-col gap-3">
+              <a
+                href="/CONKA-Real-World-Evidence-Report.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/85 hover:text-white tabular-nums underline underline-offset-4 decoration-white/30 w-fit"
+              >
+                Download the full report (PDF)
+              </a>
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/50 tabular-nums max-w-[74ch]">
+                Kurup, R. (2026). CONKA Real-World Evidence Report: cognitive performance patterns from 712 app users (APP-01 to APP-05). CONKA.
+              </p>
+              <ReviewedDate isoDate="2026-07" label="July 2026" tone="onDark" className="mt-2" />
             </div>
           </div>
         </div>

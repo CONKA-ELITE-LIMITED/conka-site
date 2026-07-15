@@ -65,6 +65,7 @@ export default function ProductHeroMobile({
           onAddToCart={onAddToCart}
           onOtpAddToCart={onOtpAddToCart}
           hideHeader
+          hideKeyBenefits
         />
       </div>
 
