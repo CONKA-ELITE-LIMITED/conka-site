@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { FAQ_ITEMS } from "@/app/lib/faqContent";
+import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
 
@@ -39,7 +39,7 @@ export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideC
           </div>
 
           <div>
-            {FAQ_ITEMS.map((item, i) => {
+            {CONVERSION_FAQ_ITEMS.map((item, i) => {
               const isOpen = openIndex === i;
               const panelId = `lab-faq-panel-${item.id}`;
 

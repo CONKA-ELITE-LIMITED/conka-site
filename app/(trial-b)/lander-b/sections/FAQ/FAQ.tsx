@@ -4,14 +4,14 @@
  */
 
 import styles from './FAQ.module.css';
-import {FAQ_ITEMS, stripClaimAnchors} from '@/app/lib/faqContent';
+import {CONVERSION_FAQ_ITEMS, stripClaimAnchors} from '@/app/lib/faqContent';
 
 export default function FAQ() {
   return (
     <section id="faq" className={styles.section} aria-label="Frequently asked questions">
       <div className={styles.inner}>
         <h2 className={styles.heading}>Frequently asked questions</h2>
-        {FAQ_ITEMS.map((item) => (
+        {CONVERSION_FAQ_ITEMS.map((item) => (
           <details className={styles.item} key={item.id}>
             <summary>
               {item.question}

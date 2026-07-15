@@ -38,6 +38,27 @@ export function stripClaimAnchors(text: string): string {
   return text.replace(/†/g, "");
 }
 
+/**
+ * The curated conversion subset. Only `/faq` renders the full set; every
+ * conversion surface (home, /conka-both, /start, the landers) renders these,
+ * and their FAQPage schema is built from the same list so schema == visible.
+ *
+ * Ordered by the conversion arc (differentiation, trust, results, choice, risk
+ * reversal, logistics), which is deliberately not the hub's category grouping.
+ * Edit here to change every conversion surface at once.
+ */
+export const CONVERSION_FAQ_IDS = [
+  "different",
+  "daily-safety",
+  "side-effects",
+  "drug-test",
+  "results",
+  "how-to-take",
+  "which-product",
+  "guarantee",
+  "delivery",
+] as const;
+
 export const FAQ_ITEMS: FaqItem[] = [
   {
     id: "what-is-conka",
@@ -277,3 +298,16 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "commercial",
   },
 ];
+
+const FAQ_BY_ID = new Map(FAQ_ITEMS.map((item) => [item.id, item]));
+
+/**
+ * The conversion subset, resolved in CONVERSION_FAQ_IDS order. Throws at module
+ * load if an id is misspelled or removed, so a bad reference fails the build
+ * rather than silently dropping a question.
+ */
+export const CONVERSION_FAQ_ITEMS: FaqItem[] = CONVERSION_FAQ_IDS.map((id) => {
+  const item = FAQ_BY_ID.get(id);
+  if (!item) throw new Error(`CONVERSION_FAQ_IDS references unknown FAQ id "${id}"`);
+  return item;
+});

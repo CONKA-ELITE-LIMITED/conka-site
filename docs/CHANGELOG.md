@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | FAQ conversion surfaces now render a curated 9-question subset instead of all 33; /faq keeps the full set (SCRUM-1143)
 - **2026-07-15** | New /faq answer hub: 33 questions with FAQPage schema, including a full safety cluster (side effects, who should not take it, medication interactions, dependency, drug testing) that most supplement brands avoid answering (SCRUM-1143).
 - **2026-07-14** | FAQ content consolidated to a single source (the two lander duplicates deleted), the coffee and time-to-results contradictions resolved, and the lorem-ipsum /go/listicle-template route unregistered.
 - **2026-07-14** | Entity identity for AI answer engines: sitewide Organization + WebSite JSON-LD with a verified sameAs list (LinkedIn, Instagram, TikTok, Trustpilot, Facebook, Companies House), social links in the footer, and a web manifest (SCRUM-1141)

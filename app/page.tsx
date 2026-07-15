@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getFunnelMinPerShot } from "@/app/lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
-import { FAQ_ITEMS } from "@/app/lib/faqContent";
+import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
-      {/* Serialises the same FAQ_ITEMS the LabFAQ section renders below, so answer
-          engines can parse the Q&A on the site's highest-authority page (SCRUM-1140). */}
-      <JsonLd schema={buildFaqSchema(FAQ_ITEMS)} />
+      {/* Serialises the same conversion subset the LabFAQ section renders below, so
+          the schema never describes a question the page does not show (SCRUM-1140). */}
+      <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
       {/* ===== SECTION 1: HERO ===== */}
       <Navigation />
       {/* Desktop drops the section gutters/track so the hero asset can

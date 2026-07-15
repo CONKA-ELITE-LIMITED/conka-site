@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
+import { CONVERSION_FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
 
 /* ============================================================================
  * CROFAQv2
@@ -39,7 +39,7 @@ function FAQRow({ item }: { item: FaqEntry }) {
 }
 
 export default function CROFAQv2({
-  items = FAQ_ITEMS,
+  items = CONVERSION_FAQ_ITEMS,
 }: {
   items?: FaqEntry[];
 } = {}) {
