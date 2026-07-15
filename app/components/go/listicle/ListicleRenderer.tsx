@@ -881,6 +881,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               question: f.q,
               answer: f.a,
             }))}
+            showSeeAllLink={false}
           />
         </div>
       </section>

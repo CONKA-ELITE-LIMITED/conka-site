@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
@@ -86,7 +87,13 @@ export default function LabFAQ({ hideCTA = false, ctaHref = "/funnel" }: { hideC
           {/* Support footer */}
           <div className="mt-6">
             <p className="text-sm text-black/60">
-              Still have a question?{" "}
+              <Link
+                href="/faq"
+                className="text-black underline decoration-black/20 hover:decoration-black"
+              >
+                See all questions
+              </Link>{" "}
+              or email{" "}
               <a
                 href="mailto:info@conka.io"
                 className="text-black underline decoration-black/20 hover:decoration-black"

@@ -40,8 +40,12 @@ function FAQRow({ item }: { item: FaqEntry }) {
 
 export default function CROFAQv2({
   items = CONVERSION_FAQ_ITEMS,
+  // The /go ad landers pass their own items and opt out of the /faq link: they
+  // are noindex funnels and should not send paid traffic off to the hub.
+  showSeeAllLink = true,
 }: {
   items?: FaqEntry[];
+  showSeeAllLink?: boolean;
 } = {}) {
   return (
     <div className="mx-auto max-w-[560px]">
@@ -59,7 +63,18 @@ export default function CROFAQv2({
       </div>
 
       <p className="text-center text-[13px] text-black/55 mt-8">
-        Still stuck?{" "}
+        {showSeeAllLink && (
+          <>
+            <Link
+              href="/faq"
+              className="font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
+            >
+              See all questions
+            </Link>{" "}
+            or email{" "}
+          </>
+        )}
+        {!showSeeAllLink && "Still stuck? "}
         <Link
           href="mailto:info@conka.io"
           className="font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"

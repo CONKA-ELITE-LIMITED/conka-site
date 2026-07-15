@@ -2,9 +2,16 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { FormulaId, formulaContent } from "@/app/lib/productData";
+import { pickFaqItems, PDP_TRUST_FAQ_IDS } from "@/app/lib/faqContent";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
 import FigurePlate from "@/app/components/FigurePlate";
+
+// The two shared trust answers (side effects, Informed Sport / drug test) grafted
+// onto every consumer PDP from the single FAQ source. conka-{flow,clarity}/layout.tsx
+// build the FAQPage schema from the same combination, so schema stays == visible.
+const PDP_TRUST_FAQS = pickFaqItems(...PDP_TRUST_FAQ_IDS);
 
 const FAQ_ASSETS: Record<FormulaId, { src: string; alt: string }> = {
   "01": { src: "/lifestyle/flow/FlowDrink.jpg", alt: "Drinking CONKA Flow" },
@@ -27,7 +34,7 @@ interface FormulaFAQProps {
 export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 3 }: FormulaFAQProps) {
   const formula = formulaContent[formulaId];
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const faqs = formula.faq;
+  const faqs = [...formula.faq, ...PDP_TRUST_FAQS];
   const asset = FAQ_ASSETS[formulaId];
 
   return (
@@ -152,7 +159,13 @@ export default function FormulaFAQ({ formulaId, hideCTA = false, figN = 3 }: For
           {/* Support footer */}
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-black/8 pt-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50">
-              Still stuck?{" "}
+              <Link
+                href="/faq"
+                className="text-black underline decoration-black/20 hover:decoration-black"
+              >
+                See all questions
+              </Link>
+              {" · "}
               <a
                 href="mailto:info@conka.io"
                 className="text-black underline decoration-black/20 hover:decoration-black"

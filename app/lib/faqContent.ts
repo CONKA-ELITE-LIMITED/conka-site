@@ -311,3 +311,20 @@ export const CONVERSION_FAQ_ITEMS: FaqItem[] = CONVERSION_FAQ_IDS.map((id) => {
   if (!item) throw new Error(`CONVERSION_FAQ_IDS references unknown FAQ id "${id}"`);
   return item;
 });
+
+/**
+ * Resolve specific canonical items by id, in the order given. Lets a surface
+ * with its own product-specific questions (e.g. the Flow/Clear PDPs) graft on a
+ * few shared answers from the single source rather than restating them. Throws
+ * on an unknown id so a typo fails the build.
+ */
+export function pickFaqItems(...ids: string[]): FaqItem[] {
+  return ids.map((id) => {
+    const item = FAQ_BY_ID.get(id);
+    if (!item) throw new Error(`pickFaqItems references unknown FAQ id "${id}"`);
+    return item;
+  });
+}
+
+/** The shared trust answers grafted onto the consumer PDPs (Phase 3). */
+export const PDP_TRUST_FAQ_IDS = ["side-effects", "drug-test"] as const;

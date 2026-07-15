@@ -7,6 +7,7 @@ import {
   getFunnelMinPerShot,
 } from "@/app/lib/funnelData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
+import { pickFaqItems, PDP_TRUST_FAQ_IDS } from "@/app/lib/faqContent";
 
 // conka-clarity/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
@@ -47,7 +48,12 @@ export default function ConkaClarityLayout({
     highPrice: clearPrices.high,
     offerCount: clearPrices.count,
   });
-  const faqSchema = buildFaqSchema(formulaContent["02"].faq);
+  // Mirror FormulaFAQ's visible list: product-specific questions plus the two
+  // shared trust answers grafted on from the canonical FAQ source.
+  const faqSchema = buildFaqSchema([
+    ...formulaContent["02"].faq,
+    ...pickFaqItems(...PDP_TRUST_FAQ_IDS),
+  ]);
 
   return (
     <>

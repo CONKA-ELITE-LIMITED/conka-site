@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | Flow/Clear PDPs now surface the side-effects and Informed Sport answers, and FAQ accordions link through to /faq (SCRUM-1143)
 - **2026-07-15** | Removed the EFSA Vitamin C wording from two FAQ answers and paired the remaining clinically-dosed anchor with a footnote on /faq (SCRUM-1143)
 - **2026-07-15** | FAQ conversion surfaces now render a curated 9-question subset instead of all 33; /faq keeps the full set (SCRUM-1143)
 - **2026-07-15** | New /faq answer hub: 33 questions with FAQPage schema, including a full safety cluster (side effects, who should not take it, medication interactions, dependency, drug testing) that most supplement brands avoid answering (SCRUM-1143).
