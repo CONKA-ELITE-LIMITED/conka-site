@@ -144,3 +144,18 @@ So the basis for the published number is not recoverable from the spec.
 - Add a `--quick` flag that skips research, skips plan doc, creates one ticket, returns compact scope
 
 **Why deferred:** Not urgent, but a `/scope` on a simple funnel refactor consumed 35K tokens before any code was written. Fix before the next large feature.
+
+---
+
+## Listicle Renderer Cleanup
+
+### 9. Delete the dead `costBreakdown` and `appSection` zones from the listicle renderer
+
+**Status:** Deferred
+**File:** `app/components/go/listicle/ListicleRenderer.tsx` (the `config.costBreakdown` and `config.appSection` blocks), plus the matching optional fields in `app/lib/landings/listicle-types.ts`.
+
+**What unblocks it:**
+- Confirm no live or planned listicle config sets `costBreakdown` or `appSection`. As of the Phase 3 consistency sweep (SCRUM-1146), none of the three live personas (adhd, productivity, brain-ageing) render either zone, so both are dead code paths.
+- Once confirmed, remove the two render blocks, their `ListicleConfig` fields, and any now-unused helper types.
+
+**Why deferred:** Left out of the SCRUM-1146 visual sweep deliberately: there was no point restyling zones nothing renders. Flagged here for a clean deletion rather than a silent restyle. These are the only remaining `font-mono` eyebrows and `rounded-3xl` cards left in the renderer.
