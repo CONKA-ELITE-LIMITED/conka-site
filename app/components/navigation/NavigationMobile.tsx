@@ -227,7 +227,7 @@ export default function NavigationMobile({
                         idx < group.links.length - 1 ? "border-b border-black/8" : ""
                       } hover:bg-black/[0.05] transition-colors`}
                     >
-                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-black">
+                      <span className="text-base font-semibold text-black leading-tight">
                         {link.label}
                       </span>
                       <span
