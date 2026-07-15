@@ -68,19 +68,30 @@ export default function MarkdownBody({ markdown }: { markdown: string }) {
         hr: () => <hr className="my-10 border-black/12" />,
         a: ({ href, children }) => {
           const raw = href ?? "";
-          const internal = raw.replace(/^https?:\/\/(www\.)?conka\.io/i, "");
-          const isInternal = internal !== raw || raw.startsWith("/");
-          return isInternal ? (
-            <Link href={internal || "/"} className={linkClass}>
-              {children}
-            </Link>
-          ) : (
-            <a
-              href={raw}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={linkClass}
-            >
+          const internalPath = raw.replace(/^https?:\/\/(www\.)?conka\.io/i, "");
+          const isInternal = internalPath !== raw || raw.startsWith("/");
+          if (isInternal) {
+            return (
+              <Link href={internalPath || "/"} className={linkClass}>
+                {children}
+              </Link>
+            );
+          }
+          if (/^https?:\/\//i.test(raw)) {
+            return (
+              <a
+                href={raw}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClass}
+              >
+                {children}
+              </a>
+            );
+          }
+          // Anchor, mailto, tel, etc.: plain in-page link.
+          return (
+            <a href={raw} className={linkClass}>
               {children}
             </a>
           );

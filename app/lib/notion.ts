@@ -7,6 +7,7 @@
  * `blogTransform.ts`.
  */
 import "server-only";
+import { cache } from "react";
 import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import { env } from "./env";
@@ -49,7 +50,9 @@ export interface NotionRow {
  * and build), only `Status = Published` rows are returned; the dev preview mode
  * passes false to include drafts locally.
  */
-export async function queryBlogRows(publishedOnly: boolean): Promise<NotionRow[]> {
+export const queryBlogRows = cache(async function queryBlogRows(
+  publishedOnly: boolean,
+): Promise<NotionRow[]> {
   const filter = publishedOnly
     ? { property: "Status", select: { equals: "Published" } }
     : undefined;
@@ -94,10 +97,12 @@ export async function queryBlogRows(publishedOnly: boolean): Promise<NotionRow[]
   }
 
   return rows;
-}
+});
 
 /** Convert a Notion page body to a single markdown string. */
-export async function pageToMarkdown(pageId: string): Promise<string> {
+export const pageToMarkdown = cache(async function pageToMarkdown(
+  pageId: string,
+): Promise<string> {
   const notion = getNotionClient();
   if (!notion) return "";
   try {
@@ -109,4 +114,4 @@ export async function pageToMarkdown(pageId: string): Promise<string> {
     console.error(`[blog] failed to convert page ${pageId} to markdown:`, err);
     return "";
   }
-}
+});
