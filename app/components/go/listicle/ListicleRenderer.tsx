@@ -539,10 +539,10 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
                 className="mb-5"
               />
             ) : null}
-            <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-black md:mb-4 md:text-5xl md:leading-[1.05]">
+            <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-[#1B2757] md:mb-4 md:text-5xl md:leading-[1.05]">
               {config.hero.headline}
             </h1>
-            <p className="mb-5 max-w-[34rem] text-[15px] leading-relaxed text-black/70 md:text-base">
+            <p className="mb-5 max-w-[34rem] text-[15px] leading-relaxed text-black md:text-base">
               {config.hero.subcopy}
             </p>
             {config.hero.socialProof ? (
