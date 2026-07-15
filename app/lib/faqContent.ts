@@ -141,7 +141,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "alcohol",
     question: "Can I drink alcohol with CONKA?",
     answer:
-      "There is no known harmful interaction between CONKA and moderate alcohol, but the two work against each other. CONKA is built to support focus, clarity and steady energy, and alcohol does the opposite, so a heavy night will undo what the shot is there to do. There is no safety reason to time them apart; it is just a question of what you want the day to look like.",
+      "Yes. There is no harmful interaction between CONKA and moderate alcohol, so you can drink as you normally would. CONKA Clear is built around antioxidants, and a Clear shot the morning after can help take the edge off. It will not cure a hangover, but it can help. The only caveat is the obvious one: alcohol pulls against the steady focus CONKA is there to give, so a heavy night undoes some of the point.",
     category: "safety",
   },
   {
