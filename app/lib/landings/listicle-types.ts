@@ -19,6 +19,8 @@ export type ListicleAsset =
       aspect?: string;
       /** "contain" (default) for renders/PNGs, "cover" for photos */
       fit?: "cover" | "contain";
+      /** CSS object-position for the cover crop (e.g. "center top"). Default center. */
+      objectPosition?: string;
     }
   /** Silent autoplay loop (no controls), the IM8 reason-video pattern.
    *  fit "contain" centres the clip in a full-width black tile (for product
