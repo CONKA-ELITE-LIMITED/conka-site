@@ -26,6 +26,7 @@ const COMPANY: FooterLink[] = [
 ];
 
 const SUPPORT: FooterLink[] = [
+  { label: "FAQ", href: "/faq" },
   { label: "Terms & Conditions", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Cookie Policy", href: "/cookies" },

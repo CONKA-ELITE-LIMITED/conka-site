@@ -18,6 +18,10 @@ a monthly subscription, a one-time purchase, or a quarterly subscription.
 - [CONKA Flow + Clear](https://www.conka.io/conka-both): Both shots, morning and afternoon. 16 active ingredients across the day.
 - [Ingredients](https://www.conka.io/ingredients): Every ingredient and its per-serving dose, with the research behind each one.
 
+## Answers
+
+- [FAQ](https://www.conka.io/faq): Straight answers on safety, side effects, who should not take CONKA, prescription-medication and SSRI interactions, drug testing, caffeine, results, price and delivery.
+
 ## Evidence and background
 
 - [The science](https://www.conka.io/science): The evidence behind the formulas and how they were developed.
