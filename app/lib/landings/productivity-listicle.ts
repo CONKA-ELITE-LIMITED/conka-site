@@ -33,9 +33,10 @@ export const productivityListicle: ListicleConfig = {
     ],
     asset: {
       kind: "image",
-      src: "/formulas/both/BoxIngredientHero.png",
-      alt: "CONKA Flow and Clear shots with their ingredients",
-      aspect: "2528/1696",
+      src: "/lifestyle/ConkaAtWorkDesk.jpg",
+      alt: "A CONKA shot on a desk beside a keyboard while someone works",
+      // Native 1500x1000; frame matches so nothing crops
+      aspect: "1500/1000",
     },
   },
   ticker: [

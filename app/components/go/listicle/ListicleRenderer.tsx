@@ -563,7 +563,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               {config.hero.cta}
             </a>
             {config.hero.trustPills?.length ? (
-              <TrustChips chips={config.hero.trustPills} />
+              <TrustChips chips={config.hero.trustPills} variant="inline" />
             ) : null}
           </div>
         </div>

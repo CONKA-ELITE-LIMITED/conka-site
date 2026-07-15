@@ -31,10 +31,10 @@ export const adhdListicle: ListicleConfig = {
     ],
     asset: {
       kind: "image",
-      src: "/formulas/both/BoxIngredientHero.png",
-      alt: "CONKA Flow and Clear shots with their ingredients",
-      // Native 2528x1696; frame matches so nothing crops
-      aspect: "2528/1696",
+      src: "/lifestyle/BlurGrab.jpg",
+      alt: "A hand reaching for a CONKA shot on a bedside table beside a mug",
+      // Native 1500x1000; frame matches so nothing crops
+      aspect: "1500/1000",
     },
   },
   ticker: [

@@ -35,9 +35,10 @@ export const brainAgeingListicle: ListicleConfig = {
     ],
     asset: {
       kind: "image",
-      src: "/formulas/both/BoxIngredientHero.png",
-      alt: "CONKA Flow and Clear shots with their ingredients",
-      aspect: "2528/1696",
+      src: "/testimonials/ugc/1.jpg",
+      alt: "An older woman taking a CONKA shot at home by a window",
+      // Native 810x1013 portrait; frame matches so nothing crops
+      aspect: "810/1013",
     },
   },
   ticker: [
