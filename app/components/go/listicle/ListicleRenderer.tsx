@@ -396,7 +396,7 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
             </span>{" "}
             {block.headline}
           </h3>
-          <p className="mb-5 max-w-[36rem] whitespace-pre-line text-[15px] leading-relaxed text-black md:text-base">
+          <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black md:text-base">
             {block.body}
           </p>
           {block.chips?.length ? (
