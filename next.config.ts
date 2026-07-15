@@ -58,11 +58,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/blogs/:path*',
-        destination: 'https://www.conka.io/why-conka',
-        permanent: true,
-      },
-      {
         source: '/products/:path*',
         destination: '/conka-both',
         permanent: true,
