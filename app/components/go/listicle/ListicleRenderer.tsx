@@ -844,7 +844,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             <span className="text-sm">{config.stickyBar.label}</span>
             <a
               href="#product"
-              className="rounded-[10px] bg-white px-6 py-2.5 text-center text-[13px] font-bold text-[#111]"
+              className="rounded-[12px] bg-white px-6 py-2.5 text-center text-[13px] font-bold text-[#111]"
             >
               {config.stickyBar.cta}
               {config.stickyBar.sub ? (
