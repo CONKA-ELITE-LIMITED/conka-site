@@ -2,12 +2,14 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { FOOTER_SOCIALS } from "@/app/lib/site";
 
-type FooterLink = { label: string; href: string };
+type FooterLink = { label: string; href: string; external?: boolean };
 
 const DISCOVER: FooterLink[] = [
   { label: "The Science", href: "/science" },
   { label: "Ingredients", href: "/ingredients" },
+  { label: "FAQ", href: "/faq" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "The CONKA App", href: "/app" },
   { label: "App Insights", href: "/app-insights" },
@@ -25,17 +27,30 @@ const COMPANY: FooterLink[] = [
 ];
 
 const SUPPORT: FooterLink[] = [
+  { label: "FAQ", href: "/faq" },
   { label: "Terms & Conditions", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Cookie Policy", href: "/cookies" },
   { label: "Account", href: "/account" },
 ];
 
+/**
+ * The visible counterpart to the Organization schema's `sameAs` claim
+ * (SCRUM-1141): real outbound links are what corroborate it. Text rather than
+ * icons, so crawlers get readable anchor text and the mono footer stays coherent.
+ */
+const FOLLOW: FooterLink[] = FOOTER_SOCIALS.map((social) => ({
+  label: social.label,
+  href: social.url,
+  external: true,
+}));
+
 const COLUMNS: { title: string; links: FooterLink[] }[] = [
   { title: "Discover", links: DISCOVER },
   { title: "Shop", links: SHOP },
   { title: "Company", links: COMPANY },
   { title: "Support", links: SUPPORT },
+  { title: "Follow", links: FOLLOW },
 ];
 
 export default function Footer() {
@@ -186,7 +201,9 @@ export default function Footer() {
             />
           </Link>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* 5 columns: 2-up on mobile (Follow lands last, on its own row),
+              3-up at md, all 5 side by side from lg. */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {COLUMNS.map((col) => (
               <nav
                 key={col.title}
@@ -208,13 +225,17 @@ export default function Footer() {
                     >
                       <a
                         href={link.href}
-                        className="flex items-center gap-3 py-2.5 group"
+                        {...(link.external
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                        className="flex items-center gap-3 py-2.5 min-h-[44px] group"
                       >
                         <span className="font-mono text-[9px] tabular-nums text-white/35 group-hover:text-white/60 transition-colors">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
                         <span className="font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-white/75 group-hover:text-white transition-colors">
                           {link.label}
+                          {link.external ? " ↗" : ""}
                         </span>
                       </a>
                     </li>

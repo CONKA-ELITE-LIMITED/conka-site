@@ -37,21 +37,22 @@ Most website work falls under **SCRUM-763 (Website & CRO)**.
 
 - **cloudId:** `3fc0ea53-78a2-4095-bc58-97377fd07202`
 - **projectKey:** `SCRUM`
-- **summary:** Clear, concise title. **Prefix with the intended epic category** (e.g. `[Website & CRO] Add timeline to landing page`) so the user can drag it into place on the board.
+- **summary:** Clear, concise title. **Prefix with the epic category** (e.g. `[Website & CRO] Add timeline to landing page`) so it reads correctly on the board.
 - **description:** Use the template from `docs/workflows/08-jira-workflow.md`. Set `contentFormat: markdown`.
-- **additional_fields:**
+- **additional_fields:** always attach the epic via `parent`, so the ticket lands in the right epic rather than sitting loose on the board.
 
   ```json
   {
     "customfield_10020": <sprint_id_number>,
-    "assignee": {"accountId": "712020:8fe0b345-2030-426a-b15b-9eb2fa3a4db6"}
+    "assignee": {"accountId": "712020:8fe0b345-2030-426a-b15b-9eb2fa3a4db6"},
+    "parent": {"key": "SCRUM-763"}
   }
   ```
 
 ### Atlassian API gotchas
 
 - Sprint ID must be a **plain number** (e.g. `567`), NOT `{"id": 567}`.
-- **Do NOT use the `parent` field** to link to epics — it intermittently throws permission errors. Reference the epic in the summary prefix and let the user drag on the board.
+- **Verify the epic actually attached.** Re-query the new ticket with `fields: ["parent"]` after creating it. `parent` has historically been flaky (SCRUM-1131 to 1138 all shipped with the summary prefix but no epic link, because this doc used to say to skip it). It works; it just needs checking. If it genuinely fails, fall back to `editJiraIssue` to set `parent`, and only then ask the user to drag it on the board.
 - Always query the active sprint fresh — sprint IDs change each sprint.
 
 ## 5. Acceptance criteria

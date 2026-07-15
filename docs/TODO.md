@@ -40,18 +40,9 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ### 3. Remove protocol exports from shared data modules
 
-**Status:** Deferred -- do after task 1
-**Files:**
-- `app/lib/productData.ts` -- exports `ProtocolId`, `ProtocolTier`, `protocolContent`, `getProtocolPricing`
-- `app/lib/productPricing.ts` -- `protocolPricing` export
-- `app/lib/protocolContent.ts` -- entire file
-- `app/lib/shopifyProductMapping.ts` -- `getProtocolVariantId` and related protocol variant maps
-- `app/lib/productHelpers.ts` -- any protocol-specific helpers
-- `app/lib/productMetadata.ts` -- protocol metadata entries
+**Status:** DONE (Phase 4, July 2026). The dead protocol code (`protocolPricing`, `PROTOCOL_COLORS`, `getProtocolVariantId` and the unused variant-audit helpers) is deleted. What genuinely still serves existing subscribers is quarantined in `app/lib/legacy/protocolSubscriptions.ts`, and the `productData` barrel no longer exports anything protocol-related.
 
-**What unblocks it:** Task 1 (delete protocol page and components) -- once those consumers are gone, these exports become unused and TypeScript will flag them.
-
-**Why deferred:** Still referenced by `app/protocol/[id]/page.tsx` and `app/components/protocol/` components. Removing now would break the existing page.
+**Remaining follow-up:** `app/api/auth/subscriptions/[id]/pause/route.ts` carries its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID). Unifying it with the legacy module means touching the renewal path for paying subscribers, so it needs an end-to-end test of a real subscription edit. Left deliberately.
 
 ---
 
@@ -94,6 +85,51 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Product Data Accuracy
+
+### 9. Verify the true active grammage for Flow and Clear
+
+**Status:** Blocked on Humphrey
+**Files:**
+- `docs/product/FORMULATION_SPEC.md` -- states Flow 5,550mg / Clear ~4,965mg total
+- `FORMULA_GRAMMAGE` (PDP hero number) -- publishes Flow 3,700mg / Clear 3,142mg
+- `app/components/landing/LandingProductShowcase.tsx`, `app/lander/sections/IngredientsSection/ingredients.data.ts` (+ the trial-b clone) -- render the site figures
+
+**The problem:** the two disagree, and the total active load is a **public** figure under the 2026-07-14 disclosure decision (per-ingredient mg and formula percentages are secret; the total is not). It is currently a hero number on the PDP, so it needs to be the right one.
+
+**Working theory (Rudh):** the site figure is the *active nootropics* grammage and the spec total counts more than that. Worth noting the arithmetic does not obviously support this, which is why it needs the formulator rather than a guess:
+
+- **Flow:** the spec's six ingredients sum to exactly 5,550mg, and all six are actives. The 1,850mg gap to the site's 3,700mg maps to no single ingredient or obvious grouping.
+- **Clear:** spec actives are ~4,725mg with the vitamins and ~2,223mg without. The site's 3,142mg matches neither.
+
+So the basis for the published number is not recoverable from the spec.
+
+**What unblocks it:** Humphrey confirming (a) which figure is correct, and (b) what basis the published number is computed on, so it can finally be written down in the spec.
+
+**Also verify while he is there:** Ginkgo Biloba is published as 120mg but the spec says 88mg. Understating a dose is embarrassing; overstating one is the direction that carries real risk.
+
+**Why deferred:** not a code problem. Needs the formulator.
+
+---
+
+### 10. Finish the mg disclosure migration
+
+**Status:** Ready to ticket. Disclosure policy is documented in `docs/features/FAQ_SYSTEM.md` (the FAQ answer-surface work that surfaced it shipped under SCRUM-1143).
+
+**The rule (confirmed 2026-07-14):** formula-share percentages and per-ingredient mg are **secret** and must never reach client code, rendered or not (data files ship in the JS bundle). Public: the total active mg per shot, study doses from published literature (labelled as the *study's* dose, never "per serving"), and Vitamin C / B12 with %NRV.
+
+**`app/lib/supplementFacts.ts` is the correct reference implementation** (built from the spec in April): no per-ingredient mg to the client, ingredient *order* preserved (supplement-facts convention is descending concentration, so relative quantity is communicated without numbers), only C and B12 carry %NRV. It is used by exactly one component, `IngredientsPanel`. The migration was never finished.
+
+**Still leaking, and the figures are wrong as well as disallowed:**
+- `app/components/KeyBenefits.tsx` and `KeyBenefitsDesktop.tsx` -- render "600mg per serving" etc. These are **study doses mislabelled as ours**.
+- `app/components/landing/LandingProductShowcase.tsx` -- the 3,700mg / 3,142mg totals (see item 9).
+- `app/lib/formulaContent.ts` -- `dosage` and `percentage` fields.
+- `app/lander/sections/IngredientsSection/ingredients.data.ts` and the `(trial-b)` clone.
+
+**Why it matters beyond policy:** we currently understate most actives by 2 to 5x (throwing away the "clinically dosed" differentiator) while overstating Ginkgo.
+
+---
+
 ## Claude Skills Audit
 
 ### 8. Review and tighten `.claude/skills/` to reduce token waste
@@ -108,3 +144,18 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 - Add a `--quick` flag that skips research, skips plan doc, creates one ticket, returns compact scope
 
 **Why deferred:** Not urgent, but a `/scope` on a simple funnel refactor consumed 35K tokens before any code was written. Fix before the next large feature.
+
+---
+
+## Listicle Renderer Cleanup
+
+### 9. Delete the dead `costBreakdown` and `appSection` zones from the listicle renderer
+
+**Status:** Deferred
+**File:** `app/components/go/listicle/ListicleRenderer.tsx` (the `config.costBreakdown` and `config.appSection` blocks), plus the matching optional fields in `app/lib/landings/listicle-types.ts`.
+
+**What unblocks it:**
+- Confirm no live or planned listicle config sets `costBreakdown` or `appSection`. As of the Phase 3 consistency sweep (SCRUM-1146), none of the three live personas (adhd, productivity, brain-ageing) render either zone, so both are dead code paths.
+- Once confirmed, remove the two render blocks, their `ListicleConfig` fields, and any now-unused helper types.
+
+**Why deferred:** Left out of the SCRUM-1146 visual sweep deliberately: there was no point restyling zones nothing renders. Flagged here for a clean deletion rather than a silent restyle. These are the only remaining `font-mono` eyebrows and `rounded-3xl` cards left in the renderer.

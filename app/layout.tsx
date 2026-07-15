@@ -9,6 +9,11 @@ import CartDrawer from "@/app/components/CartDrawer";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
 import DelayedAnalytics from "@/app/components/DelayedAnalytics";
 import { SITE_ORIGIN } from "@/app/lib/site";
+import {
+  JsonLd,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+} from "@/app/lib/jsonLd";
 
 /* Brand design system: Neue Haas Grotesk Display (primary) + JetBrains Mono (data) */
 const neueHaas = localFont({
@@ -147,7 +152,7 @@ export default function RootLayout({
             polyfills, 16 KiB unused CSS, ~360ms main-thread time on /start).
             Server-side subscribe paths (/api/klaviyo/subscribe,
             /api/klaviyo/track-test) are unaffected and keep powering
-            Footer email signup + WinEmailForm.
+            the Footer email signup.
             To restore: publish a form in the Klaviyo dashboard, then
             uncomment the Script tag below. */}
         {/*
@@ -157,14 +162,18 @@ export default function RootLayout({
           async
         />
         */}
+        {/* Entity identity for answer engines (SCRUM-1141). Rendered once here so
+            every route carries exactly one Organization and one WebSite node. */}
+        <JsonLd schema={buildOrganizationSchema()} />
+        <JsonLd schema={buildWebSiteSchema()} />
       </head>
       <body
         className={`${neueHaas.variable} ${jetBrainsMono.variable} ${abcFavorit.variable} antialiased`}
       >
         <MetaPageViewTracker />
-        {/* Convex is NOT provided globally — the only consumers are /win,
-            /barrys and /go (each wrapped by its own layout). Keeping the
-            ConvexReactClient (~80 KB) off every other page is a large TBT win. */}
+        {/* Convex is NOT provided globally — the only consumer is /go, which is
+            wrapped by its own layout. Keeping the ConvexReactClient (~80 KB) off
+            every other page is a large TBT win. */}
         <AuthProvider>
           <CartProvider>
             {children}

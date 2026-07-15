@@ -8,7 +8,7 @@ const HEADLINE_WORDS = "You cannot improve what you cannot measure.".split(" ");
 
 const PARAGRAPHS = [
   "Repeated concussions cut Humphrey Bodington's playing path short. Headaches, light sensitivity, recovery that never quite held, and no clear answer.",
-  "During recovery he had fMRI and EEG scans in a Neuro Lab. For the first time he could see his brain measured, not guessed at. That became CONKA: an app that gives everyone the same ability to see it. A number you can watch move.",
+  "During his recovery, Humphrey had fMRI and EEG scans in a Neuro Lab. For the first time he could see his brain measured, not guessed at. That experience became CONKA: an app that gives everyone the same ability to see their brain measured. A number you can watch move.",
 ];
 
 /**

@@ -10,6 +10,7 @@ import {
   OurStoryCTA,
 } from "@/app/components/our-story";
 import { storyChapters } from "@/app/lib/storyData";
+import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
   title: "Our Story | CONKA",
@@ -79,6 +80,7 @@ export default function OurStoryPage() {
       >
         <div className="brand-track">
           <OurStoryCTA />
+          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onLight" divider />
         </div>
       </section>
 

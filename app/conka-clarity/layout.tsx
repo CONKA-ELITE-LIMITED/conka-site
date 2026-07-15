@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import { formulaContent } from "@/app/lib/productData";
+import { formatPrice } from "@/app/lib/productData";
 import {
   FUNNEL_PRODUCTS,
   FUNNEL_HERO_IMAGES,
   getFunnelPriceRange,
+  getFunnelMinPerShot,
 } from "@/app/lib/funnelData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
+import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 
 // conka-clarity/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
 export const metadata: Metadata = {
   title: "CONKA Clear | Afternoon Brain Shot for Focus Under Pressure",
-  description:
-    "CONKA Clear is a 30ml afternoon brain shot with Alpha GPC and Ginkgo Biloba. Cuts brain fog and sharpens thinking. Informed Sport certified. From £1.83/shot.",
+  description: `CONKA Clear is a 30ml afternoon brain shot with Alpha GPC and Ginkgo Biloba. Cuts brain fog and sharpens thinking. Informed Sport certified. From ${formatPrice(
+    getFunnelMinPerShot("clear"),
+  )}/shot.`,
   openGraph: {
     title: "CONKA Clear | Afternoon Brain Shot for Focus Under Pressure",
     description:
@@ -45,7 +48,8 @@ export default function ConkaClarityLayout({
     highPrice: clearPrices.high,
     offerCount: clearPrices.count,
   });
-  const faqSchema = buildFaqSchema(formulaContent["02"].faq);
+  // Same list the LabFAQ accordion renders, so schema == visible.
+  const faqSchema = buildFaqSchema(getFormulaPdpFaqItems("02"));
 
   return (
     <>

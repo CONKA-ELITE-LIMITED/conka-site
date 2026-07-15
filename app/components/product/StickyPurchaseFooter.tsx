@@ -6,19 +6,13 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   PackSize,
   PurchaseType,
-  ProtocolTier,
   formulaPricing,
-  protocolPricing,
   formatPrice,
   getBillingLabel,
-  getProtocolTierPackLabel,
   FormulaId,
-  ProtocolId,
-  protocolContent,
   formulaContent,
 } from "@/app/lib/productData";
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
-import { getProtocolImage } from "@/app/lib/productImageConfig";
 import { CadenceType, FUNNEL_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
 import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import { getBothHeroImages } from "@/app/lib/heroImageConfig";
@@ -29,12 +23,8 @@ interface StickyPurchaseFooterProps {
   formulaId?: FormulaId;
   selectedPack?: PackSize;
   onPackSelect?: (pack: PackSize) => void;
-  // For protocol pages
-  protocolId?: ProtocolId;
-  // For the "Both" product (productHeroId="03") -- bypasses formula/protocol lookups
+  // For the "Both" product (productHeroId="03") -- bypasses the formula lookup
   productHeroId?: ProductHeroId;
-  selectedTier?: ProtocolTier;
-  onTierSelect?: (tier: ProtocolTier) => void;
   // Shared
   // NOTE: purchaseType/onPurchaseTypeChange are the old pack-size model.
   // They drive the subscribe toggle below. Pass selectedCadence instead to enter
@@ -61,9 +51,6 @@ export default function StickyPurchaseFooter({
   formulaId,
   selectedPack,
   onPackSelect,
-  protocolId,
-  selectedTier,
-  onTierSelect,
   purchaseType = "subscription",
   onPurchaseTypeChange,
   selectedCadence,
@@ -109,13 +96,11 @@ export default function StickyPurchaseFooter({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Calculate price based on formula or protocol
+  // Calculate price from the formula pack model
   let price = 0;
   let billingText = "";
   let productLabel = "";
   let showPackSelector = false;
-  let showTierSelector = false;
-  let availableTiers: ProtocolTier[] = [];
   const isSubscription = purchaseType === "subscription";
 
   if (formulaId && selectedPack) {
@@ -126,28 +111,9 @@ export default function StickyPurchaseFooter({
       : "one-time";
     productLabel = `${packLabels[selectedPack]} ${billingText}`;
     showPackSelector = true;
-  } else if (protocolId && selectedTier) {
-    const pricingType = protocolId === "4" ? "ultimate" : "standard";
-    const tierPricing = protocolPricing[pricingType][purchaseType];
-    if (selectedTier in tierPricing) {
-      const pricing = tierPricing[selectedTier as keyof typeof tierPricing];
-      price = pricing.price;
-      billingText =
-        isSubscription && "billing" in pricing
-          ? getBillingLabel(pricing.billing)
-          : "one-time";
-    }
-    const tierName =
-      selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1);
-    productLabel = `${tierName} ${billingText}`;
-    showTierSelector = true;
-    // Get available tiers from protocol content
-    const protocol = protocolContent[protocolId];
-    availableTiers = protocol?.availableTiers || [];
   }
 
   // Product name and thumbnail for left block (im8-style)
-  // Formula: hero product image from productHeroConfig; Protocol: navigation image from productImageConfig
   let productName = "";
   let thumbnailSrc = "";
   if (productHeroId === "03") {
@@ -156,10 +122,6 @@ export default function StickyPurchaseFooter({
   } else if (formulaId) {
     productName = formulaContent[formulaId].name;
     thumbnailSrc = getProductHeroImages(formulaId)[0]?.src ?? "";
-  } else if (protocolId) {
-    const protocol = protocolContent[protocolId];
-    productName = protocol?.name ?? "";
-    thumbnailSrc = getProtocolImage(protocolId);
   }
 
   // Selector display: variant + savings, and cost per shot / price (two rows, like mobile)
@@ -169,9 +131,6 @@ export default function StickyPurchaseFooter({
     selectorVariantLabel = packLabels[selectedPack];
     const pricing = formulaPricing[purchaseType][selectedPack];
     selectorPriceLine = `${formatPrice(pricing.perShot)} / serving`;
-  } else if (protocolId && selectedTier) {
-    selectorVariantLabel = getProtocolTierPackLabel(protocolId, selectedTier);
-    selectorPriceLine = formatPrice(price);
   }
 
   if (!isVisible) return null;
@@ -244,10 +203,9 @@ export default function StickyPurchaseFooter({
                 </div>
               </div>
 
-              {/* Right: Pack/Tier Selector + Subscribe Toggle + Add to Cart */}
+              {/* Right: Pack Selector + Subscribe Toggle + Add to Cart */}
               <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto justify-end shrink-0">
-                {(showPackSelector && selectedPack && onPackSelect) ||
-                (showTierSelector && selectedTier && onTierSelect) ? (
+                {showPackSelector && selectedPack && onPackSelect ? (
                   <div className="relative" ref={dropdownRef}>
                     <button
                       onClick={() => setShowPackDropdown(!showPackDropdown)}
@@ -284,7 +242,7 @@ export default function StickyPurchaseFooter({
                       </svg>
                     </button>
 
-                    {/* Pack/Tier Dropdown (drops UP from footer) */}
+                    {/* Pack Dropdown (drops UP from footer) */}
                     {showPackDropdown && (
                       <div className="absolute bottom-full left-0 mb-2 bg-white overflow-hidden min-w-[240px] border border-black/8">
                         {showPackSelector &&
@@ -317,45 +275,6 @@ export default function StickyPurchaseFooter({
                                   </span>
                                   <span className="opacity-70 whitespace-nowrap">
                                     {formatPrice(packPricing.price)}
-                                  </span>
-                                </div>
-                              </button>
-                            );
-                          })}
-                        {showTierSelector &&
-                          protocolId &&
-                          availableTiers.map((tier) => {
-                            const pricingType =
-                              protocolId === "4" ? "ultimate" : "standard";
-                            const tierPricing =
-                              protocolPricing[pricingType][purchaseType];
-                            const tierPricingData =
-                              tierPricing[tier as keyof typeof tierPricing];
-                            if (!tierPricingData) return null;
-                            const tierBillingText =
-                              purchaseType === "subscription" &&
-                              "billing" in tierPricingData
-                                ? getBillingLabel(tierPricingData.billing)
-                                : "one-time";
-                            return (
-                              <button
-                                key={tier}
-                                onClick={() => {
-                                  onTierSelect?.(tier);
-                                  setShowPackDropdown(false);
-                                }}
-                                className={`w-full px-4 py-2 text-left font-mono tabular-nums text-sm hover:bg-current/10 transition-colors ${
-                                  selectedTier === tier
-                                    ? "bg-current/10 font-bold"
-                                    : ""
-                                }`}
-                              >
-                                <div className="flex justify-between items-center gap-4">
-                                  <span className="whitespace-nowrap">
-                                    {getProtocolTierPackLabel(protocolId, tier)} {tierBillingText}
-                                  </span>
-                                  <span className="opacity-70 whitespace-nowrap">
-                                    {formatPrice(tierPricingData.price)}
                                   </span>
                                 </div>
                               </button>

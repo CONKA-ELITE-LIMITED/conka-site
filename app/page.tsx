@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { getFunnelMinPerShot } from "@/app/lib/funnelData";
+import { formatPrice } from "@/app/lib/productData";
+import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
+import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import LandingHeroVideo from "./components/landing/LandingHeroVideo";
@@ -48,8 +52,9 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
 // Overrides the generic root-layout title/description that every page inherited.
 export const metadata: Metadata = {
   title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
-  description:
-    "CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From £1.25/shot.",
+  description: `CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From ${formatPrice(
+    getFunnelMinPerShot("both"),
+  )}/shot.`,
   openGraph: {
     title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
     description:
@@ -70,6 +75,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+      {/* Serialises the same conversion subset the LabFAQ section renders below, so
+          the schema never describes a question the page does not show (SCRUM-1140). */}
+      <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
       {/* ===== SECTION 1: HERO ===== */}
       <Navigation />
       {/* Desktop drops the section gutters/track so the hero asset can

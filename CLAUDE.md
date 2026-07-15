@@ -15,9 +15,9 @@ Speed and token cost matter. On any task that is not large:
 
 ## Current strategic direction (March 2026)
 
-**Read `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` before starting any feature work.** The site is undergoing a major simplification:
+**Read `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` (current state + prioritised roadmap) and `docs/TODO.md` (deferred work and tech debt tracker) before starting any feature work.** The site is undergoing a major simplification:
 
-- **Protocols are being removed.** The 4-protocol system is being replaced with a simple Flow / Clear / Both offering.
+- **Protocols are being removed, but only the presentation layer.** The 4-protocol system is replaced by a simple Flow / Clear / Both offering. The `/protocol/[id]` route and its components are being deleted, but `ProtocolId`, `PROTOCOL_VARIANTS` and the subscriptions UI are **live legacy support for existing subscribers** — do not delete them. See `docs/development/featurePlans/asset-and-protocol-cleanup.md`.
 - **New ad landing page** — standalone page for paid Meta traffic (not linked from main nav).
 - **New funnel page** — minimal friction product selector: 3 cadences × 3 products, straight to Shopify checkout (no cart drawer).
 - **Quiz is hidden** — removed from nav, redirected. May be repurposed later.
@@ -47,7 +47,7 @@ npm run dev:all    # Dev + any parallel processes
 
 - **Framework:** Next.js (App Router), React, TypeScript, Tailwind CSS
 - **Commerce:** Shopify Storefront API (`@shopify/storefront-api-client`) — cart only; checkout is Shopify-hosted via `cart.checkoutUrl`
-- **Database:** Convex (see `docs/CONVEX_DEPLOYMENT.md`)
+- **Database:** Convex (see `docs/deployment/CONVEX_DEPLOYMENT.md`)
 - **Hosting:** Vercel
 
 ## Key files
@@ -139,14 +139,15 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 | Doc | Topic |
 |-----|-------|
-| `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` | **Active plan** — phased simplification + funnel build |
+| `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | **Current state + roadmap** — performance, code quality, architecture assessment and prioritised improvements |
+| `docs/TODO.md` | **Deferred work tracker** — tech debt and cleanup tasks, with what unblocks each |
 | `docs/development/featurePlans/landing-conversion/README.md` | **Landing conversion programme** — personas x formats strategy, status, tracking plan, decision log |
-| `docs/PROJECT_OVERVIEW.md` | High-level architecture |
+| `docs/development/featurePlans/asset-and-protocol-cleanup.md` | **Tech debt cleanup** — unreferenced `public/` assets + protocol system removal. Read before touching the product-data layer: the protocol *presentation* layer is dead, but the *commerce* layer (`ProtocolId`, `PROTOCOL_VARIANTS`, subscriptions UI) is live legacy support for existing subscribers |
+| `docs/MASTER_CONTEXT.md` | High-level architecture and business context |
 | `docs/PAGE_NARRATIVES.md` | **Page story map** — current section-by-section arc + health rating per page; spot the weakest section to improve next |
-| `docs/PRODUCT_DATA.md` | Product module structure + helper usage |
 | `docs/branding/DESIGN_SYSTEM.md` | **Active design system** — typography, colours, radius, layout, migration guide |
-| `docs/branding/SOFT_TECH_LUXURY_STYLE_SHEET_GUIDELINES.md` | Legacy design system (until pages are migrated) |
 | `docs/features/LANDING_QUIZ_SYSTEM.md` | **Ad landing quiz system** (`/go/[slug]`) — config schema, how to add a page, analytics |
+| `docs/features/FAQ_SYSTEM.md` | **FAQ system** — one source of truth, per-surface subsets, schema == visible rule, claims anchors, disclosure policy |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |
 | `docs/features/b2b/B2B_PORTAL.md` | B2B professional portal |
@@ -154,9 +155,11 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/branding/BRAND_VOICE.md` | **Brand voice, proof assets, copy rules, claims compliance** |
 | `docs/branding/MOBILE_OPTIMIZATION.md` | Mobile component patterns, split component architecture |
 | `docs/development/PERFORMANCE_OPTIMISATION.md` | **Performance rules** — animation, images, scripts, fonts, Lighthouse benchmarks |
+| `docs/development/VIDEO_OPTIMISATION.md` | **Video assets** — ffmpeg recipe for the mp4/webm/poster trio, poster frame selection, size budget |
 | `docs/development/MOTION_GUIDE.md` | **GSAP motion system** — shared helpers (`app/lib/motion.ts`), patterns, reduced-motion rules; `/app` is the reference |
+| `docs/seo-aeo/README.md` | **SEO / AEO foundation** — canonical reference for what is live (canonical, metadata, JSON-LD, sitemap, robots, keyword H1s) and why |
 | `docs/analytics/` | Analytics implementation + verification guides |
-| `docs/CONVEX_DEPLOYMENT.md` | Convex setup |
+| `docs/deployment/CONVEX_DEPLOYMENT.md` | Convex setup |
 
 ## Workflows
 

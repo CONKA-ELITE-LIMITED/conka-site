@@ -76,7 +76,7 @@ export const storyChapters: StoryChapter[] = [
     label: "The Research",
     headline: "So they built the research themselves.",
     prose:
-      "Working with neuroscientists at Durham University, the focus turned to nootropics: botanical compounds that cross the blood-brain barrier. The key discovery was synergy. The compounds worked better together than alone.",
+      "At Durham University, Harry and Humphrey worked with neuroscientists on nootropics, botanical compounds that cross the blood-brain barrier. Their key discovery was synergy: the compounds worked better together than alone.",
     image: "/story/Screenshot_2025-11-10_143714.webp",
     imageAlt: "Neuroscience research at Durham University",
     stat: {

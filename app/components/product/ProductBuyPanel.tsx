@@ -26,9 +26,10 @@ import IngredientBottomSheet from "./IngredientBottomSheet";
 /* ============================================================================
  * ProductBuyPanel (+ TrustStrip)
  *
- * The IM8-style buy box used on the PDPs (Flow / Clear / Both), a duplicate of
- * the listicle buy box (app/components/go/listicle/ListicleProductHero) adapted
- * for the PDP: shots-per-day and the first key benefit derive from the product,
+ * The IM8-style buy box used on the PDPs (Flow / Clear / Both). Its clinical
+ * two-card sibling on the /go listicle pages lives in
+ * app/components/go/listicle/ListiclePurchase. On the PDP here,
+ * shots-per-day and the first key benefit derive from the product,
  * so it reads correctly on the single-shot Flow/Clear pages as well as Both.
  * Shared by ProductHero (desktop) and ProductHeroMobile so the two stay in step.
  * ========================================================================== */
@@ -43,6 +44,9 @@ export interface ProductBuyPanelProps {
   /** Mobile renders the hero header (rating + title) above the image itself,
       so the panel skips it to avoid a duplicate (SCRUM-1138). */
   hideHeader?: boolean;
+  /** Mobile hides the key-benefit pills. They eat scarce real estate and the
+      same proof appears further down (WhatYouFeel, TrustBar, plan detail). */
+  hideKeyBenefits?: boolean;
 }
 
 /**
@@ -568,8 +572,7 @@ function WhatYouFeel() {
 }
 
 /** "See what's inside" trigger + the shared rounded ingredient bottom sheet.
- *  Mirrors the old IngredientSheet prop shape (a list of formula tabs) so it is
- *  a drop-in; on Both it shows an in-sheet AM/PM switcher. */
+ *  Takes a list of formula tabs; on Both it shows an in-sheet AM/PM switcher. */
 function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<"flow" | "clear">(formulas[0]);
@@ -611,6 +614,7 @@ export default function ProductBuyPanel({
   onAddToCart,
   onOtpAddToCart,
   hideHeader,
+  hideKeyBenefits,
 }: ProductBuyPanelProps) {
   const productType = getHeroProductType(formulaId);
   const shotsPerDay = productType === "both" ? 2 : 1;
@@ -637,20 +641,22 @@ export default function ProductBuyPanel({
     <>
       {!hideHeader && <ProductHeroHeader formulaId={formulaId} />}
 
-      {/* Key-benefit checkmark pills */}
-      <ul className="flex flex-col gap-2" aria-label="Key benefits">
-        {keyBenefits.map((benefit) => (
-          <li
-            key={benefit}
-            className="flex items-center gap-2.5 border border-black/10 bg-white px-3.5 py-2 text-[13px] font-semibold text-black/80"
-          >
-            <span className="text-[#1B2757]" aria-hidden>
-              ✓
-            </span>
-            {benefit}
-          </li>
-        ))}
-      </ul>
+      {/* Key-benefit checkmark pills (hidden on mobile via hideKeyBenefits) */}
+      {!hideKeyBenefits && (
+        <ul className="flex flex-col gap-2" aria-label="Key benefits">
+          {keyBenefits.map((benefit) => (
+            <li
+              key={benefit}
+              className="flex items-center gap-2.5 border border-black/10 bg-white px-3.5 py-2 text-[13px] font-semibold text-black/80"
+            >
+              <span className="text-[#1B2757]" aria-hidden>
+                ✓
+              </span>
+              {benefit}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div>
         <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">

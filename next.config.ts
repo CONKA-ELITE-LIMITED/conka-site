@@ -92,6 +92,19 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Expired contest pages, deleted 2026-07-14 (SCRUM-1140). Both were live
+      // and indexable long after their January 2026 deadlines, so Google could
+      // serve a dead competition as a CONKA result.
+      {
+        source: '/win',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/barrys',
+        destination: '/',
+        permanent: true,
+      },
       {
         source: '/welcome-to-conka',
         destination: '/',

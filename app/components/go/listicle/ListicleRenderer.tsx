@@ -8,11 +8,9 @@ import type {
   ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
+import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
-import TrustChips from "@/app/components/landing/TrustChips";
-import ListicleProductHero, {
-  ListicleProductHeroMobile,
-} from "./ListicleProductHero";
+import ListiclePurchase from "./ListiclePurchase";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
@@ -30,13 +28,7 @@ import LogoMarquee from "@/app/components/landing/LogoMarquee";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
-import useIsMobile from "@/app/hooks/useIsMobile";
-import { useCart } from "@/app/context/CartContext";
-import {
-  CadenceType,
-  getCadenceVariantByProductHeroId,
-} from "@/app/lib/cadenceData";
-import type { ProductHeroId } from "@/app/lib/productTypes";
+import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 
 /**
  * Listicle landing renderer (/go/[slug], format: "listicle").
@@ -59,7 +51,7 @@ const NAVY = "#1B2757";
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
   return (
-    <div className="mb-5 flex items-center justify-center gap-2.5">
+    <div className="mb-5 flex items-center justify-start gap-2.5">
       <div className="flex items-center">
         {Array.from({ length: 5 }, (_, i) => (
           <div
@@ -95,9 +87,9 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
               ★★★★★
             </span>
           </div>
-          <span className="text-[13px] font-bold">{label}</span>
+          <span className="text-[13px] font-bold tabular-nums">{label}</span>
         </div>
-        <span className="mt-0.5 text-[11px] opacity-80">{sub}</span>
+        <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
       </div>
     </div>
   );
@@ -163,23 +155,28 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     // "contain": full-width black tile, clip centred (product renders).
     // "cover" (default): inset 4/5 frame, clip fills it (texture loops).
     const contain = asset.fit === "contain";
+    const video = videoTrio(asset.src);
     return (
       <div
-        className={`relative overflow-hidden rounded-3xl ${
-          contain ? "w-full bg-black" : "mx-auto w-4/5"
+        className={`relative overflow-hidden rounded-[16px] border border-black/10 w-full ${
+          contain ? "bg-black" : ""
         }`}
         style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
       >
         <video
-          src={asset.src}
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
+          poster={video.poster}
           className={`absolute inset-0 h-full w-full ${
             contain ? "object-contain" : "object-cover"
           }`}
-        />
+        >
+          {video.webm && <source src={video.webm} type="video/webm" />}
+          <source src={video.mp4} type="video/mp4" />
+        </video>
       </div>
     );
   }
@@ -197,20 +194,20 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     const dark = asset.tone === "dark";
     return (
       <div
-        className="flex w-full flex-col justify-center gap-4 rounded-3xl p-8"
+        className="flex w-full flex-col justify-center gap-4 rounded-[16px] p-8"
         style={{
           aspectRatio: aspect,
           background: dark ? DARK : "#eeeff2",
           color: dark ? "#fff" : "#111",
         }}
       >
-        <div className="font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
           {asset.eyebrow}
         </div>
         {asset.stats.map((s, i) => (
           <div key={i}>
             <div className="text-sm opacity-70">{s.label}</div>
-            <div className="text-2xl font-medium">
+            <div className="text-2xl font-semibold tabular-nums">
               {s.from ? `${s.from} → ` : ""}
               {s.to}
               {s.delta ? (
@@ -229,7 +226,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   if (asset.kind === "image") {
     return (
       <div
-        className="relative w-full overflow-hidden rounded-3xl"
+        className="relative w-full overflow-hidden rounded-[16px]"
         style={{ aspectRatio: aspect }}
       >
         <Image
@@ -246,63 +243,19 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   return (
     <div
-      className="flex w-full items-center justify-center rounded-3xl border border-dashed border-current opacity-60"
+      className="flex w-full items-center justify-center rounded-[16px] border border-dashed border-current opacity-60"
       style={{ aspectRatio: aspect }}
     >
-      <span className="px-6 text-center font-mono text-xs uppercase tracking-[0.14em]">
+      <span className="px-6 text-center text-[11px] font-semibold uppercase tracking-[0.08em]">
         {note}
       </span>
     </div>
   );
 }
 
-/** Embedded PDP hero as the on-page buy box; same wiring as the PDPs */
-function ListicleBuyBox({
-  formulaId,
-  whoItsFor,
-}: {
-  formulaId: ProductHeroId;
-  whoItsFor?: string[];
-}) {
-  const isMobile = useIsMobile();
-  const { addToCart } = useCart();
-  const [selectedCadence, setSelectedCadence] =
-    useState<CadenceType>("monthly-sub");
-
-  const handleAddToCart = async (cadence: CadenceType = selectedCadence) => {
-    const variantData = getCadenceVariantByProductHeroId(formulaId, cadence);
-    if (variantData?.variantId) {
-      await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
-        location: "listicle_buybox",
-        source: "listicle",
-      });
-    } else {
-      console.warn("Variant not configured for cadence:", cadence);
-    }
-  };
-
-  // IM8 pattern: the one-time-purchase text link adds straight to cart
-  const handleOtpAddToCart = () => {
-    setSelectedCadence("monthly-otp");
-    void handleAddToCart("monthly-otp");
-  };
-
-  const Hero = isMobile ? ListicleProductHeroMobile : ListicleProductHero;
-  return (
-    <Hero
-      formulaId={formulaId}
-      selectedCadence={selectedCadence}
-      onCadenceChange={setSelectedCadence}
-      onAddToCart={() => void handleAddToCart()}
-      onOtpAddToCart={handleOtpAddToCart}
-      whoItsFor={whoItsFor}
-    />
-  );
-}
-
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
-    <div className="rounded-2xl bg-white p-4 text-[#111] shadow-sm">
+    <div className="rounded-[16px] border border-black/10 bg-white p-4 text-[#111]">
       <div
         className="mb-1.5 text-[13px] tracking-widest"
         style={{ color: "#F59E0B" }}
@@ -338,7 +291,7 @@ function CarouselArrow({
       type="button"
       aria-label={dir === "prev" ? "Previous review" : "Next review"}
       onClick={onClick}
-      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full border border-black/15 bg-white text-[#1B2757] shadow-sm transition active:scale-95"
+      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full border border-black/10 bg-white text-[#1B2757] transition active:scale-95"
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         {dir === "prev" ? (
@@ -371,10 +324,10 @@ function ReviewStrip({
 
   return (
     <div
-      className="my-10 rounded-3xl px-4 py-6 md:px-10 md:py-8"
+      className="my-10 rounded-[16px] px-4 py-6 md:px-10 md:py-8"
       style={{ background: "var(--color-neuro-blue-light, #eeeff2)" }}
     >
-      <div className="mb-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-black/55">
+      <div className="mb-4 text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-black/55">
         {eyebrow}
       </div>
 
@@ -418,7 +371,7 @@ function ReviewStrip({
         >
           ★★★★★
         </span>
-        <span className="text-[13px] font-semibold text-black/75">
+        <span className="text-[13px] font-semibold tabular-nums text-black/75">
           {ratingSummary}
         </span>
       </div>
@@ -432,24 +385,18 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
     return (
       <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
         <div className={mediaFirst ? "md:order-2" : ""}>
-          <div className="mb-4 text-xl font-medium" style={{ color: NAVY }}>
-            {String(block.n).padStart(2, "0")}
-          </div>
           {block.tag ? (
-            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
+            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
               {block.tag}
             </div>
           ) : null}
-          <h3
-            className="mb-4 text-4xl leading-tight md:text-5xl"
-            style={{
-              letterSpacing: "var(--letter-spacing-premium-title)",
-              color: NAVY,
-            }}
-          >
+          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+            <span className="tabular-nums">
+              {String(block.n).padStart(2, "0")}.
+            </span>{" "}
             {block.headline}
           </h3>
-          <p className="mb-5 max-w-[36rem] whitespace-pre-line text-base leading-relaxed opacity-80">
+          <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black md:text-base">
             {block.body}
           </p>
           {block.chips?.length ? (
@@ -457,7 +404,7 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
               {block.chips.map((chip, i) => (
                 <span
                   key={i}
-                  className="rounded-full border border-black/20 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em]"
+                  className="rounded-full border border-black/10 px-3.5 py-1.5 text-[12px] font-medium text-black/70"
                 >
                   {chip}
                 </span>
@@ -475,16 +422,16 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
   if (block.kind === "statsBand") {
     return (
       <div
-        className="my-10 rounded-3xl px-8 py-12 text-center"
+        className="my-10 rounded-[16px] px-8 py-12 text-center"
         style={{ background: DARK, color: "#fff" }}
       >
-        <div className="mb-8 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
+        <div className="mb-8 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
           {block.eyebrow}
         </div>
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {block.stats.map((s, i) => (
             <div key={i}>
-              <div className="text-4xl font-medium md:text-5xl">{s.value}</div>
+              <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
               <div className="mt-2 text-sm opacity-70">{s.label}</div>
             </div>
           ))}
@@ -507,8 +454,8 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
   }
 
   return (
-    <div className="my-10 rounded-3xl bg-white px-8 py-12 text-center shadow-sm">
-      <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
+    <div className="my-10 rounded-[16px] border border-black/10 bg-white px-8 py-12 text-center">
+      <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
         {block.eyebrow}
       </div>
       <blockquote className="mx-auto max-w-3xl text-2xl leading-snug">
@@ -592,16 +539,10 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
                 className="mb-5"
               />
             ) : null}
-            <h1
-              className="mb-4 text-[1.7rem] leading-[1.12] md:mb-5 md:text-5xl md:leading-tight"
-              style={{
-                letterSpacing: "var(--letter-spacing-premium-title)",
-                color: NAVY,
-              }}
-            >
+            <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-[#1B2757] md:mb-4 md:text-5xl md:leading-[1.05]">
               {config.hero.headline}
             </h1>
-            <p className="mb-5 max-w-[34rem] text-base leading-relaxed opacity-80">
+            <p className="mb-5 max-w-[34rem] text-[15px] leading-relaxed text-black md:text-base">
               {config.hero.subcopy}
             </p>
             {config.hero.socialProof ? (
@@ -612,14 +553,10 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             ) : null}
             <a
               href="#product"
-              className="mx-auto mb-6 block w-fit rounded-full px-8 py-4 text-center text-sm font-medium text-white"
-              style={{ background: NAVY }}
+              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1B2757] px-10 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-fit"
             >
               {config.hero.cta}
             </a>
-            {config.hero.trustPills?.length ? (
-              <TrustChips chips={config.hero.trustPills} />
-            ) : null}
           </div>
         </div>
       </section>
@@ -664,13 +601,15 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           ))}
           {config.bridge ? (
             <div
-              className="mt-10 rounded-3xl px-8 py-14 text-center"
+              className="mt-10 rounded-[16px] px-8 py-14 text-center"
               style={{ background: DARK, color: "#fff" }}
             >
-              <h3 className="mb-6 text-3xl">{config.bridge.headline}</h3>
+              <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
+                {config.bridge.headline}
+              </h3>
               <a
                 href="#product"
-                className="inline-block rounded-full bg-white px-8 py-4 text-sm font-medium text-[#111]"
+                className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
               </a>
@@ -686,17 +625,21 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
       >
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <h2 className="mb-3 text-5xl">{config.product.headline}</h2>
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-8">
+            <h2
+              className="text-3xl font-semibold leading-tight text-black md:text-4xl"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {config.product.headline}
+            </h2>
             {config.product.subline ? (
-              <p className="opacity-70">{config.product.subline}</p>
+              <p className="mt-3 max-w-2xl text-base text-black/60">
+                {config.product.subline}
+              </p>
             ) : null}
           </div>
-          <ListicleBuyBox
-            formulaId={config.product.productHeroId ?? "03"}
-            whoItsFor={config.product.whoItsFor}
-          />
+          <ListiclePurchase defaultSingle={config.product.productHeroId} />
         </div>
       </section>
 
@@ -735,15 +678,17 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
           style={{ background: "#eeeff2", color: "#111" }}
         >
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
+            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
               {config.comparison.eyebrow}
             </div>
-            <h2 className="mb-2 text-4xl">{config.comparison.headline}</h2>
+            <h2 className="mb-2 text-balance text-[32px] font-semibold text-black md:text-[44px]">
+              {config.comparison.headline}
+            </h2>
             {config.comparison.subline ? (
               <p className="mb-10 opacity-70">{config.comparison.subline}</p>
             ) : null}
-            <div className="overflow-hidden rounded-3xl bg-white text-left shadow-sm">
-              <div className="grid grid-cols-3 gap-4 border-b border-black/10 px-6 py-4 font-mono text-[10px] uppercase tracking-[0.1em] opacity-70">
+            <div className="overflow-hidden rounded-[16px] border border-black/10 bg-white text-left">
+              <div className="grid grid-cols-3 gap-4 border-b border-black/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-70">
                 <div>Ingredient</div>
                 <div>CONKA</div>
                 <div>{config.comparison.competitorLabel}</div>
@@ -757,7 +702,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
                   <div>
                     ✓ {row.us}
                     {row.usDelta ? (
-                      <span className="ml-2 font-medium text-[#0e1f3f]">
+                      <span className="ml-2 font-medium tabular-nums text-[#1B2757]">
                         {row.usDelta}
                       </span>
                     ) : null}
@@ -870,11 +815,12 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
       >
         <div className="mx-auto max-w-7xl">
           <CROFAQv2
-            items={config.faq.map((f, i) => ({
-              id: `faq-${i}`,
-              question: f.q,
-              answer: f.a,
+            items={pickFaqItems(...config.faqIds).map((f) => ({
+              id: f.id,
+              question: f.question,
+              answer: stripClaimAnchors(f.answer),
             }))}
+            showSeeAllLink={false}
           />
         </div>
       </section>
@@ -890,7 +836,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
             <span className="text-sm">{config.stickyBar.label}</span>
             <a
               href="#product"
-              className="rounded-full bg-white px-6 py-2.5 text-center text-xs font-medium text-[#111]"
+              className="rounded-[12px] bg-white px-6 py-2.5 text-center text-[13px] font-bold text-[#111]"
             >
               {config.stickyBar.cta}
               {config.stickyBar.sub ? (

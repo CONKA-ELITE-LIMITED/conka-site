@@ -1305,24 +1305,14 @@ export function getAthletesForFormula(formulaId: "01" | "02"): AthleteData[] {
   return filtered.slice(0, 3);
 }
 
-export function getAthletesForProtocol(protocolId: string): AthleteData[] {
-  const protocolToFormula: Record<string, "01" | "02" | "both"> = {
-    "1": "01",
-    "2": "02",
-    "3": "both",
-    "4": "both",
-  };
-
-  const formulaPreference = protocolToFormula[protocolId];
+/**
+ * Athletes for the Both product (/conka-both): those who took Flow and Clear
+ * together. Ranked by Total Score rather than average improvement, which is why
+ * this does not just call getAthletesForFormula.
+ */
+export function getAthletesForBoth(): AthleteData[] {
   const filtered = athletes
-    .filter((a) => {
-      if (formulaPreference === "both") {
-        return a.productVersion === "both";
-      }
-      return (
-        a.productVersion === formulaPreference || a.productVersion === "both"
-      );
-    })
+    .filter((a) => a.productVersion === "both")
     .sort((a, b) => {
       const aTotal =
         a.improvements.find((i) => i.metric === "Total Score")?.percentage || 0;

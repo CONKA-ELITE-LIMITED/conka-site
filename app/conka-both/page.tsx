@@ -19,6 +19,7 @@ import FormulaCaseStudies, {
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
 import LabFAQ from "@/app/components/landing/LabFAQ";
+import { BOTH_PDP_FAQ_ITEMS } from "@/app/lib/faqContent";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import useIsMobile from "@/app/hooks/useIsMobile";
@@ -149,7 +150,7 @@ export default function ConkaBothPage() {
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
-        <FormulaCaseStudiesMobile productId={"3"} />
+        <FormulaCaseStudiesMobile productId={"03"} />
       </div>
     </section>
   );
@@ -160,7 +161,7 @@ export default function ConkaBothPage() {
       aria-label="Clinically validated results"
     >
       <div className="brand-track">
-        <FormulaCaseStudies productId={"3"} />
+        <FormulaCaseStudies productId={"03"} />
       </div>
     </section>
   );
@@ -179,7 +180,7 @@ export default function ConkaBothPage() {
   const faqSection = (
     <section className="brand-section brand-bg-white" aria-label="FAQ">
       <div className="brand-track">
-        <LabFAQ hideCTA />
+        <LabFAQ items={BOTH_PDP_FAQ_ITEMS} hideCTA />
       </div>
     </section>
   );
@@ -240,7 +241,6 @@ export default function ConkaBothPage() {
           productHeroId="03"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
-          cadenceFreeShots={cadenceFreeShots}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
       </div>

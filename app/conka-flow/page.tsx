@@ -9,10 +9,11 @@ import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
   ProductWhatYouGet,
-  FormulaFAQ,
   StickyPurchaseFooter,
   StickyPurchaseFooterMobile,
 } from "@/app/components/product";
+import LabFAQ from "@/app/components/landing/LabFAQ";
+import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
@@ -31,6 +32,15 @@ import {
   getCadencePricingByFormula,
 } from "@/app/lib/cadenceData";
 
+const FLOW_FAQ_IMAGE = {
+  src: "/lifestyle/flow/FlowDrink.jpg",
+  alt: "Drinking a CONKA Flow shot",
+  topLabel: "Fig. 03 · Daily Ritual",
+  bottomLabel: "CONKA Flow · Morning",
+};
+
+const FLOW_FAQ_ITEMS = getFormulaPdpFaqItems("01");
+
 export default function ConkaFlowPage() {
   const isMobile = useIsMobile();
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
@@ -38,7 +48,6 @@ export default function ConkaFlowPage() {
 
   const cadencePricing = getCadencePricingByFormula("01", selectedCadence);
   const cadencePrice = cadencePricing.price;
-  const cadenceCompareAtPrice = cadencePricing.compareAtPrice;
   const cadenceFreeShots = cadencePricing.freeShots;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta)
@@ -155,7 +164,7 @@ export default function ConkaFlowPage() {
         {/* ===== SECTION 11: FAQ ===== */}
         <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
           <div className="brand-track">
-            <FormulaFAQ formulaId="01" />
+            <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
           </div>
         </section>
 
@@ -170,8 +179,6 @@ export default function ConkaFlowPage() {
           formulaId="01"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
-          cadenceCompareAtPrice={cadenceCompareAtPrice}
-          cadenceFreeShots={cadenceFreeShots}
           onAddToCart={() => handleAddToCart("sticky_footer")}
         />
 
@@ -265,7 +272,7 @@ export default function ConkaFlowPage() {
       {/* ===== SECTION 11: FAQ ===== */}
       <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
         <div className="brand-track">
-          <FormulaFAQ formulaId="01" />
+          <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
         </div>
       </section>
 
