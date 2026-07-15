@@ -5,6 +5,7 @@ import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import IngredientsPageDesktop from "@/app/components/ingredients/IngredientsPageDesktop";
 import IngredientsPageMobile from "@/app/components/ingredients/IngredientsPageMobile";
+import IngredientFAQ from "@/app/components/ingredients/IngredientFAQ";
 import { FormulaId } from "@/app/lib/productData";
 import useIsMobile from "@/app/hooks/useIsMobile";
 
@@ -42,6 +43,15 @@ export default function IngredientsPage() {
           </div>
         </section>
       )}
+
+      <section
+        className="brand-section brand-bg-neutral"
+        aria-label="Ingredient questions"
+      >
+        <div className="brand-track">
+          <IngredientFAQ />
+        </div>
+      </section>
 
       <Footer />
     </div>

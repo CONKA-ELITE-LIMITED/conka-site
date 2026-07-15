@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
+import { INGREDIENT_FAQ_ITEMS } from "@/app/lib/ingredientFaqContent";
 
 // ingredients/page.tsx is a Client Component and cannot export metadata itself.
 // This sibling server layout supplies the per-page SEO metadata (SCRUM-1132).
@@ -28,5 +30,11 @@ export default function IngredientsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      {/* Built from the same array IngredientFAQ renders, so schema == visible. */}
+      <JsonLd schema={buildFaqSchema(INGREDIENT_FAQ_ITEMS)} />
+      {children}
+    </>
+  );
 }
