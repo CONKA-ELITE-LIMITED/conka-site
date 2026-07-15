@@ -26,9 +26,10 @@ import IngredientBottomSheet from "./IngredientBottomSheet";
 /* ============================================================================
  * ProductBuyPanel (+ TrustStrip)
  *
- * The IM8-style buy box used on the PDPs (Flow / Clear / Both), a duplicate of
- * the listicle buy box (app/components/go/listicle/ListicleProductHero) adapted
- * for the PDP: shots-per-day and the first key benefit derive from the product,
+ * The IM8-style buy box used on the PDPs (Flow / Clear / Both). Its clinical
+ * two-card sibling on the /go listicle pages lives in
+ * app/components/go/listicle/ListiclePurchase. On the PDP here,
+ * shots-per-day and the first key benefit derive from the product,
  * so it reads correctly on the single-shot Flow/Clear pages as well as Both.
  * Shared by ProductHero (desktop) and ProductHeroMobile so the two stay in step.
  * ========================================================================== */
@@ -568,8 +569,7 @@ function WhatYouFeel() {
 }
 
 /** "See what's inside" trigger + the shared rounded ingredient bottom sheet.
- *  Mirrors the old IngredientSheet prop shape (a list of formula tabs) so it is
- *  a drop-in; on Both it shows an in-sheet AM/PM switcher. */
+ *  Takes a list of formula tabs; on Both it shows an in-sheet AM/PM switcher. */
 function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<"flow" | "clear">(formulas[0]);

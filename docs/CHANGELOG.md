@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-15** | Rebuilt the /go listicle purchase section into a two-card offer (cheaper single first, Both bundle flagged best value) in the clean funnel-c style, with the shared ingredient bottom sheet reused low-key in each tile.
 - **2026-07-15** | Removed the drug-test FAQ from /conka-both, and corrected the /app Apple Health copy to iOS-only (SCRUM-1143)
 - **2026-07-15** | Added FAQ to the footer Discover column and hoisted the PDP FAQ lists to module scope (SCRUM-1143)
 - **2026-07-15** | Added CONKA-app-vs-brain-training and wearables FAQ answers, and made the app answer more holistic (SCRUM-1143)
