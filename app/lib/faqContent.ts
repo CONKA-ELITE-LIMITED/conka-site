@@ -78,10 +78,10 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     id: "cognitive-decline",
-    question: "Is CONKA a medicine or a treatment for cognitive decline?",
+    question: "Can CONKA help with cognitive decline?",
     answer:
-      "No. CONKA is a food supplement, not a medicine, and it does not diagnose, treat or prevent cognitive decline or any other condition. It supports everyday focus, memory and mental clarity as part of a normal diet and lifestyle, alongside the sleep, food and exercise that do most of the work. If you are worried about memory or cognitive changes, that is worth raising with your GP, because a supplement is not a substitute for medical assessment or anything a doctor prescribes.",
-    category: "about",
+      "It is built to support the mechanisms behind a sharp, ageing brain, though it is a daily supplement rather than a cure and does not treat or reverse a diagnosed condition. Several of its ingredients act on the systems that underpin memory and clear thinking. Ginkgo Biloba supports healthy blood flow to the brain, so more oxygen and nutrients reach it. Alpha GPC is a choline source the body uses to make acetylcholine, the neurotransmitter central to memory and learning. Antioxidants like Glutathione and Vitamin C help counter the oxidative stress that builds up with age. Adaptogens like Ashwagandha and Rhodiola help the brain handle stress, which itself drags on recall. Taken daily, that combination is designed to help you stay clear and focused as you get older. If you are noticing real memory changes, see your GP, because that is a medical question a supplement does not replace.",
+    category: "efficacy",
   },
   {
     id: "vs-energy-drink",
