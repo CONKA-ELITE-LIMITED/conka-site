@@ -44,7 +44,7 @@ export interface ProductBuyPanelProps {
   /** Mobile renders the hero header (rating + title) above the image itself,
       so the panel skips it to avoid a duplicate (SCRUM-1138). */
   hideHeader?: boolean;
-  /** Mobile hides the key-benefit pills — they eat scarce real estate and the
+  /** Mobile hides the key-benefit pills. They eat scarce real estate and the
       same proof appears further down (WhatYouFeel, TrustBar, plan detail). */
   hideKeyBenefits?: boolean;
 }
@@ -641,7 +641,7 @@ export default function ProductBuyPanel({
     <>
       {!hideHeader && <ProductHeroHeader formulaId={formulaId} />}
 
-      {/* Key-benefit checkmark pills (hidden on mobile — see hideKeyBenefits) */}
+      {/* Key-benefit checkmark pills (hidden on mobile via hideKeyBenefits) */}
       {!hideKeyBenefits && (
         <ul className="flex flex-col gap-2" aria-label="Key benefits">
           {keyBenefits.map((benefit) => (
