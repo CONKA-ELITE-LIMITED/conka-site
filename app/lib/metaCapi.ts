@@ -77,7 +77,7 @@ function buildUserData(u: PurchaseUserData): Record<string, unknown> {
   const zp = hashCollapsed(u.zip);
   const country = hashNormalized(u.country);
   const externalIds = (Array.isArray(u.externalId) ? u.externalId : [u.externalId])
-    .map(hashNormalized)
+    .map((id) => hashNormalized(id))
     .filter((v): v is string => Boolean(v));
 
   if (em) ud.em = [em];

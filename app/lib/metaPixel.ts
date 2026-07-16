@@ -54,10 +54,16 @@ function readCookie(name: string): string | null {
   return match ? match[1].trim() : null;
 }
 
-/** Write a first-party identity cookie scoped to the registrable domain. */
+/**
+ * Write a first-party identity cookie scoped to the registrable domain. The
+ * value is encoded because `_fbc` is built from a URL parameter: an unencoded
+ * `?fbclid=x; Domain=...` would smuggle its own attributes into the cookie.
+ * Encoding is a no-op for the ids we actually write (they are unreserved
+ * characters), so the value Meta's pixel reads back is unchanged.
+ */
 function writeCookie(name: string, value: string, maxAge: number): void {
   if (typeof document === "undefined") return;
-  document.cookie = `${name}=${value}; path=/; max-age=${maxAge}; domain=${COOKIE_DOMAIN}; SameSite=Lax; Secure`;
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; domain=${COOKIE_DOMAIN}; SameSite=Lax; Secure`;
 }
 
 /** Read _fbp cookie for CAPI user_data (improves matching) */
@@ -83,8 +89,10 @@ export function ensureFbp(): string | null {
   const existing = getFbp();
   if (existing) return existing;
   // Meta's format: fb.<subdomainIndex>.<creationTime>.<random>. Index 1 == the
-  // registrable domain we scope to. A malformed value is silently ignored by Meta.
-  const random = Math.floor(Math.random() * 1e10);
+  // registrable domain we scope to. A malformed value is silently ignored by
+  // Meta, so keep the random a full 10 digits like the pixel's own: a bare
+  // `Math.random() * 1e10` lands below 1e9 (9 digits or fewer) ~10% of the time.
+  const random = Math.floor(1e9 + Math.random() * 9e9);
   const fbp = `fb.1.${Date.now()}.${random}`;
   writeCookie("_fbp", fbp, FB_COOKIE_MAX_AGE);
   return fbp;
