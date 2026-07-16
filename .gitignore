@@ -55,3 +55,7 @@ app/lib/reviews.ly_*.csv
 # Blog images re-hosted from Notion at build time (SEO Phase 6). Build
 # artifacts: Vercel re-downloads them each build, so they are never committed.
 /public/blog/
+
+# Legacy Shopify blog snapshot (SCRUM-1155). Re-pullable at any time with
+# `npx tsx scripts/legacy-blog/fetch.ts`; a 440k-char source dump, not source.
+/scripts/legacy-blog/.data/

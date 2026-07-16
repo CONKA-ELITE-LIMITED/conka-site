@@ -63,9 +63,10 @@ function extFromUrl(url: string, contentType?: string | null): string {
 }
 
 /**
- * Download a Notion-hosted image to public/blog/<slug>/ and return its stable
- * public path. Notion URLs expire after ~1 hour, so we cannot serve them
- * directly. Skips the download if the file already exists (idempotent within a
+ * Download a remote image to public/blog/<slug>/ and return its stable public
+ * path. Notion URLs expire after ~1 hour and third-party CDNs can drop an asset
+ * at any time, so we cannot serve either directly. Skips the download if the
+ * file already exists (idempotent within a
  * build). Returns null on failure so the caller can fall back.
  */
 async function rehostImage(
@@ -93,7 +94,15 @@ async function rehostImage(
   }
 }
 
-/** Download every in-body Notion image and rewrite the markdown to local paths. */
+/**
+ * Hosts we mirror locally at build. Notion's own URLs expire after ~1 hour;
+ * the Shopify and Wix hosts carry images on legacy posts imported from the old
+ * Shopify blog, which we own no part of and must not hot-link to forever.
+ */
+const REHOSTABLE_IMAGE_HOSTS =
+  /amazonaws\.com|notion\.so|notion-static|cdn\.shopify\.com|static\.wixstatic\.com/i;
+
+/** Download every in-body remote image and rewrite the markdown to local paths. */
 async function rehostBodyImages(md: string, slug: string): Promise<string> {
   const imageRe = /!\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g;
   const matches = [...md.matchAll(imageRe)];
@@ -101,7 +110,7 @@ async function rehostBodyImages(md: string, slug: string): Promise<string> {
   let i = 0;
   for (const match of matches) {
     const [full, alt, url] = match;
-    if (!/amazonaws\.com|notion\.so|notion-static/i.test(url)) continue;
+    if (!REHOSTABLE_IMAGE_HOSTS.test(url)) continue;
     const local = await rehostImage(url, slug, `img-${++i}`);
     if (local) out = out.replace(full, `![${alt}](${local})`);
   }
