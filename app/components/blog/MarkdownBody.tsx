@@ -44,7 +44,7 @@ const bodyClass = "brand-body !max-w-none leading-[1.7] text-black/80 break-word
  */
 function usableAlt(alt: string | undefined): string {
   const value = (alt ?? "").trim();
-  if (!value || value === "ree") return "";
+  if (!value || value.toLowerCase() === "ree") return "";
   return /\.(png|jpe?g|avif|webp|gif)$/i.test(value) ? "" : value;
 }
 
@@ -102,6 +102,11 @@ export default function MarkdownBody({ markdown }: { markdown: string }) {
           ) : null,
         // Legacy posts carry comparison tables. The wrapper is what keeps a wide
         // table scrolling inside itself instead of widening the page on mobile.
+        //
+        // `-mx-5` must stay equal to `--brand-gutter-mobile` (1.25rem): it
+        // cancels the section gutter so the scroller reaches the viewport edge,
+        // and `px-5` puts the padding back inside it. If that token changes,
+        // change this with it.
         table: ({ children }) => (
           <div className="my-8 -mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0">
             <table className="w-full min-w-[32rem] border-collapse text-left">
