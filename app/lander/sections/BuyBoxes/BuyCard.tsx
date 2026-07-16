@@ -42,7 +42,8 @@ interface LiveData {
   title: string;
   variantId: string;
   available: boolean;
-  oneTime: LivePrice;
+  /** Null when no one-time variant exists in Shopify — the card then hides the toggle. */
+  oneTime: LivePrice | null;
   subscription: LivePrice | null;
 }
 export interface CardOption {
@@ -77,13 +78,19 @@ export default function BuyCard({data}: {data: CardConfig}) {
   const live = option?.live ?? data.live ?? null;
 
   const canSubscribe = Boolean(live?.subscription);
-  const isSub = subscription && canSubscribe;
+  // No one-time variant in Shopify (2026-07-16 rebuild) — force subscription so the
+  // card cannot show a one-time price it has no variant to charge.
+  const canBuyOnce = Boolean(live?.oneTime);
+  const isSub = canSubscribe && (subscription || !canBuyOnce);
   const priceSet: LivePrice | null = isSub ? live?.subscription ?? null : live?.oneTime ?? null;
 
   async function handleCheckout() {
-    // Sub and OTP now use different variants — pick the one for the active type.
-    const checkoutVariantId =
-      (isSub ? live?.subscription?.variantId : live?.oneTime?.variantId) ?? live?.variantId;
+    // Sub and OTP use different variants — pick the one for the active type. No
+    // fallback to live.variantId: that is the subscription variant, so a missing
+    // one-time variant would silently charge the sub price under a one-time label.
+    const checkoutVariantId = isSub
+      ? live?.subscription?.variantId
+      : live?.oneTime?.variantId;
     if (!checkoutVariantId || loading) return;
     setLoading(true);
     setError(false);
@@ -153,7 +160,8 @@ export default function BuyCard({data}: {data: CardConfig}) {
               type="checkbox"
               className={styles.checkbox}
               checked={isSub}
-              disabled={!canSubscribe}
+              // Locked on when there is no one-time variant to switch to.
+              disabled={!canSubscribe || !canBuyOnce}
               onChange={(e) => setSubscription(e.target.checked)}
               aria-label="Subscribe & Save up to 33%"
             />

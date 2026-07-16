@@ -38,13 +38,18 @@ function buildCard(product: FunnelProduct) {
     title: CARD_TITLE[product],
     variantId,
     available: Boolean(variantId),
-    oneTime: {
-      variantId: otpVariant?.variantId ?? variantId,
-      price: money(otpPricing.price),
-      perShot: perShot(otpPricing.perShot),
-      amount: otpPricing.price,
-      postage: otpPricing.postage ?? null,
-    },
+    // Null when Shopify has no one-time variant (2026-07-16 rebuild). Never fall
+    // back to the subscription variant here: its price is the SUB price, so the
+    // card would advertise the one-time price and charge the subscription one.
+    oneTime: otpVariant
+      ? {
+          variantId: otpVariant.variantId,
+          price: money(otpPricing.price),
+          perShot: perShot(otpPricing.perShot),
+          amount: otpPricing.price,
+          postage: otpPricing.postage ?? null,
+        }
+      : null,
     subscription: subVariant
       ? {
           variantId: subVariant.variantId,

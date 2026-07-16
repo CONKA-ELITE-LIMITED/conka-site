@@ -195,49 +195,56 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
 // ============================================
 // VARIANT MAPPING (Shopify GIDs)
 // ============================================
-// "20 + 8 free" SKU mapping (new variants created 2026-06-25).
-//   monthly-sub   → 28/56-shot FIRST-ORDER SKU; Loop swaps to the 20/40-shot SKU
-//                   from order 2 (Loop monthly plan). Selling-plan GIDs unchanged
-//                   — the same plans are being re-priced in Loop, not replaced.
-//   monthly-otp   → dedicated one-time SKU (postage baked into the price).
-//   quarterly-sub → 80/140-shot SKU (ships once, no swap).
-const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+// Variant mapping, re-pointed 2026-07-16 at the rebuilt funnel products.
+//
+// The previous GIDs (FLOW-FUNNEL-28 etc.) are DELETED in Shopify — the three
+// funnel products were rebuilt, so every variant was reissued with a new id and
+// cartCreate answered "The merchandise with id ... does not exist" for all nine.
+// Both /funnel and /lander were unable to add to cart. Values below were read
+// live from Shopify (`npx tsx scripts/fetch-funnel-products.ts`, tag:funnel), not
+// copied from the old comments — the SKU names moved products too, so the id is
+// the only reliable key.
+//
+//   flow  → CONKA Flow        gid://shopify/Product/15790363410806 (conka-flow)
+//   clear → CONKA Clear       gid://shopify/Product/15790363443574 (conka-clear)
+//   both  → CONKA Flow + Clear gid://shopify/Product/15790363476342 (conka-flow-clear-1)
+//
+// monthly-otp is UNMAPPED: the rebuilt products expose only two variants each,
+// both subscription. There is no one-time SKU in Shopify to point at, and the
+// one-time price here (product + £9.99 postage) does not match any live variant.
+// `getOfferVariant` returns undefined for it, so the caller must not offer it.
+// Resolving this needs a product decision, not a code one — see the plan doc.
+const FUNNEL_VARIANTS: Record<
+  FunnelProduct,
+  Partial<Record<FunnelCadence, FunnelVariantConfig>>
+> = {
   flow: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
+      variantId: "gid://shopify/ProductVariant/58171575927158", // FLOW-SUB-20 · Flow - 20 Shots · £39.99
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
-    "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP
-    },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
+      variantId: "gid://shopify/ProductVariant/58171576025462", // FLOW-SUB-60 · Flow - 60 Shots · £109.99
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
   },
   clear: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568517489014", // CLEAR-FUNNEL-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
+      variantId: "gid://shopify/ProductVariant/58171576156534", // CLEAR-SUB-20 · Clear - 20 Shots (Monthly) · £39.99
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
-    "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP
-    },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
+      variantId: "gid://shopify/ProductVariant/58171576254838", // CLEAR-SUB-60 · Clear - 60 Shots · £109.99
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
   },
   both: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568809976182", // BOTH-FUNNEL-56 (first order → Loop swaps to BOTH-FUNNEL-40)
+      variantId: "gid://shopify/ProductVariant/58171576353142", // BOTH-SUB-40 · Both - 40 Shots (Monthly) · £74.99
       sellingPlanId: "gid://shopify/SellingPlan/712527479158",
     },
-    "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP
-    },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
+      variantId: "gid://shopify/ProductVariant/58171576451446", // BOTH-SUB-120 · Both - 120 Shots · £149.99
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
     },
   },
@@ -252,7 +259,7 @@ export function getOfferByVariantId(
 ): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
   for (const product of Object.keys(FUNNEL_VARIANTS) as FunnelProduct[]) {
     for (const cadence of Object.keys(FUNNEL_VARIANTS[product]) as FunnelCadence[]) {
-      if (FUNNEL_VARIANTS[product][cadence].variantId === variantId) {
+      if (FUNNEL_VARIANTS[product][cadence]?.variantId === variantId) {
         return { product, cadence, pricing: FUNNEL_PRICING[product][cadence] };
       }
     }
@@ -417,9 +424,9 @@ export function getFunnelProductSlideshow(
 const VARIANT_TO_PRODUCT = new Map<string, FunnelProduct>();
 const QUARTERLY_VARIANT_SET = new Set<string>();
 
-for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
+for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Partial<Record<FunnelCadence, FunnelVariantConfig>>]>) {
   for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
-    if (config.variantId) {
+    if (config?.variantId) {
       VARIANT_TO_PRODUCT.set(config.variantId, product);
       if (cadence === "quarterly-sub") {
         QUARTERLY_VARIANT_SET.add(config.variantId);

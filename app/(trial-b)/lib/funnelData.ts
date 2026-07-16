@@ -213,56 +213,59 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
 // ============================================
 // VARIANT MAPPING (Shopify GIDs)
 // ============================================
-// OFFER TRIAL (B) — "20 + 8 free" variant mapping (created 2026-06-25 via Admin API).
-//   monthly-sub   → existing 28-shot SKU (first order ships 20+8); Loop then swaps
-//                   the contract to the new 20-shot SKU after order #1:
-//                   FLOW-FUNNEL-20 …681846 · CLEAR-FUNNEL-20 …780150 · BOTH-FUNNEL-40 …878454
-//   monthly-otp   → NEW one-time SKU (postage baked into the £69.98 / £99.98 price)
-//   quarterly-sub → NEW 80-shot (single) / 140-shot (Both) SKU
+// Variant mapping, re-pointed 2026-07-16 at the rebuilt funnel products.
 //
-// ⚠️ NOT YET TRANSACTABLE — two go-live gates remain:
-//   1. The NEW variants below are DRAFT (availableForSale:false, inventoryPolicy DENY,
-//      0 stock). Activate inventory + set CONTINUE before they can be sold.
-//   2. The sellingPlanId values are OLD-offer PLACEHOLDERS. Create the new Loop plans
-//      (monthly w/ 28→20 swap, quarterly) and drop their GIDs in here. TODO(loop).
-const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+// This file serves LIVE traffic: next.config.ts 307s /lander -> /lander-b and
+// /start -> /start-b, so these GIDs are what real customers cart.
+//
+// The previous GIDs (FLOW-FUNNEL-28 etc.) are DELETED in Shopify — the three
+// funnel products were rebuilt, so every variant was reissued with a new id and
+// cartCreate answered "The merchandise with id ... does not exist" for all nine.
+// Values below were read live from Shopify (`npx tsx scripts/fetch-funnel-products.ts`,
+// tag:funnel), not carried over from the old comments — the SKU names moved
+// products too (FLOW-FUNNEL-28 now belongs to the B2B Team Box), so the id is the
+// only reliable key.
+//
+//   flow  → CONKA Flow         gid://shopify/Product/15790363410806 (conka-flow)
+//   clear → CONKA Clear        gid://shopify/Product/15790363443574 (conka-clear)
+//   both  → CONKA Flow + Clear gid://shopify/Product/15790363476342 (conka-flow-clear-1)
+//
+// monthly-otp is UNMAPPED: the rebuilt products expose only two variants each,
+// both subscription. There is no one-time SKU in Shopify to point at, and the
+// one-time price here (product + £9.99 postage) matches no live variant.
+// `getOfferVariant` returns null for it, so callers must not offer it.
+const FUNNEL_VARIANTS: Record<
+  FunnelProduct,
+  Partial<Record<FunnelCadence, FunnelVariantConfig>>
+> = {
   flow: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order)
-      sellingPlanId: "gid://shopify/SellingPlan/712527348086", // TODO(loop): new monthly plan w/ swap→FLOW-FUNNEL-20
-    },
-    "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP (DRAFT)
+      variantId: "gid://shopify/ProductVariant/58171575927158", // FLOW-SUB-20 · Flow - 20 Shots · £39.99
+      sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80 (DRAFT)
-      sellingPlanId: "gid://shopify/SellingPlan/712527413622", // TODO(loop): new quarterly plan
+      variantId: "gid://shopify/ProductVariant/58171576025462", // FLOW-SUB-60 · Flow - 60 Shots · £109.99
+      sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
   },
   clear: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568517489014", // CLEAR-FUNNEL-28 (first order)
-      sellingPlanId: "gid://shopify/SellingPlan/712527348086", // TODO(loop): new monthly plan w/ swap→CLEAR-FUNNEL-20
-    },
-    "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP (DRAFT)
+      variantId: "gid://shopify/ProductVariant/58171576156534", // CLEAR-SUB-20 · Clear - 20 Shots (Monthly) · £39.99
+      sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80 (DRAFT)
-      sellingPlanId: "gid://shopify/SellingPlan/712527413622", // TODO(loop): new quarterly plan
+      variantId: "gid://shopify/ProductVariant/58171576254838", // CLEAR-SUB-60 · Clear - 60 Shots · £109.99
+      sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
   },
   both: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568809976182", // BOTH-FUNNEL-56 (first order)
-      sellingPlanId: "gid://shopify/SellingPlan/712527479158", // TODO(loop): new monthly plan w/ swap→BOTH-FUNNEL-40
-    },
-    "monthly-otp": {
-      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP (DRAFT)
+      variantId: "gid://shopify/ProductVariant/58171576353142", // BOTH-SUB-40 · Both - 40 Shots (Monthly) · £74.99
+      sellingPlanId: "gid://shopify/SellingPlan/712527479158",
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140 (DRAFT)
-      sellingPlanId: "gid://shopify/SellingPlan/712527446390", // TODO(loop): new quarterly plan
+      variantId: "gid://shopify/ProductVariant/58171576451446", // BOTH-SUB-120 · Both - 120 Shots · £149.99
+      sellingPlanId: "gid://shopify/SellingPlan/712527446390",
     },
   },
 };

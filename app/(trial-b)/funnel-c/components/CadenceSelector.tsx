@@ -29,7 +29,10 @@ interface CadenceSelectorProps {
   onChange: (cadence: FunnelCadence) => void;
 }
 
-const PLAN_ORDER: FunnelCadence[] = ["monthly-sub", "quarterly-sub", "monthly-otp"];
+// "monthly-otp" is deliberately absent: the rebuilt funnel products expose only
+// subscription variants, so there is no one-time SKU to sell (2026-07-16).
+// Restore once a one-time variant exists in Shopify and funnelData maps it.
+const PLAN_ORDER: FunnelCadence[] = ["monthly-sub", "quarterly-sub"];
 
 /** The plan name carries the commitment, so no separate "Subscription" chip. */
 const PLAN_NAME: Record<FunnelCadence, string> = {
