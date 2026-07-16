@@ -122,7 +122,15 @@ export const pageToMarkdown = cache(async function pageToMarkdown(
     const md = n2m.toMarkdownString(blocks);
     return md.parent ?? "";
   } catch (err) {
-    console.error(`[blog] failed to convert page ${pageId} to markdown:`, err);
-    return "";
+    // Same reasoning as queryBlogRows: fail the build, do not ship the damage.
+    // This fetches a post's blocks, a separate call from the row query, so it
+    // can fail on its own. Returning "" published the post with its title,
+    // hero, metadata and CTA but no article text: live, indexable, and green.
+    // An empty page reads as deliberate, so it is worse than a 404.
+    throw new Error(
+      `[blog] failed to convert page ${pageId} to markdown, refusing to ship an empty post: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
   }
 });
