@@ -18,11 +18,7 @@ interface CadenceSelectorProps {
   onChange: (cadence: FunnelCadence) => void;
 }
 
-// "monthly-otp" is deliberately absent: the rebuilt funnel products expose only
-// subscription variants, so there is no one-time SKU to sell (2026-07-16).
-// Offering it would render a tile whose button has no variant behind it. Restore
-// it here once a one-time variant exists in Shopify and funnelData maps it.
-const CADENCE_ORDER: FunnelCadence[] = ["quarterly-sub", "monthly-sub"];
+const CADENCE_ORDER: FunnelCadence[] = ["quarterly-sub", "monthly-sub", "monthly-otp"];
 
 /** Short delivery label for collapsed cards */
 function getDeliveryLabel(cadence: FunnelCadence): string {

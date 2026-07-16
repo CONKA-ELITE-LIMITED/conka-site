@@ -64,17 +64,12 @@ function buildCard(product: FunnelProduct) {
     variantId,
     available: Boolean(variantId),
     // `amount` (numeric) feeds checkout analytics; `price` (string) is for display.
-    // Null when Shopify has no one-time variant (2026-07-16 rebuild). Never fall
-    // back to the subscription variant here: its price is the SUB price, so the
-    // card would advertise the one-time price and charge the subscription one.
-    oneTime: otpVariant
-      ? {
-          variantId: otpVariant.variantId,
-          price: money(otpPricing.price),
-          perShot: perShot(otpPricing.perShot),
-          amount: otpPricing.price,
-        }
-      : null,
+    oneTime: {
+      variantId: otpVariant?.variantId ?? variantId,
+      price: money(otpPricing.price),
+      perShot: perShot(otpPricing.perShot),
+      amount: otpPricing.price,
+    },
     subscription: subVariant
       ? {
           variantId: subVariant.variantId,
