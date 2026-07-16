@@ -7,6 +7,8 @@ import {
   isProductionHost,
   isPixelAvailable,
   captureFbcFromUrl,
+  ensureFbp,
+  getOrCreateExternalId,
 } from "@/app/lib/metaPixel";
 
 /**
@@ -27,9 +29,13 @@ export default function MetaPageViewTracker() {
     if (!isProductionHost()) return;
     fired.current = true;
 
-    // Capture the ad-click id (fbclid -> _fbc) immediately on landing, before the
-    // first cart action and independent of pixel load, so it reaches the order.
+    // Establish identity on landing, before the first cart action and independent
+    // of pixel load, so every subsequent event and the order itself carry it:
+    // the ad-click id (fbclid -> _fbc), Meta's browser id (_fbp, which the async
+    // pixel may not have written yet), and our own visitor id (conka_uid).
     captureFbcFromUrl();
+    ensureFbp();
+    getOrCreateExternalId();
 
     // Fire CAPI now (always) + the browser pixel if it is already loaded.
     const eventId = trackMetaPageView();

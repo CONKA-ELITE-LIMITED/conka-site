@@ -197,7 +197,13 @@ export async function POST(request: NextRequest) {
         state: addr?.province_code,
         zip: addr?.zip,
         country: addr?.country_code,
-        externalId: order.customer?.id != null ? String(order.customer.id) : undefined,
+        // conka_uid first: the browser carried it on every event this buyer fired
+        // before checkout, so it is what lets Meta join those anonymous events to
+        // this Purchase. The Shopify customer id follows as a second match key.
+        externalId: [
+          noteAttr(order, "conka_uid"),
+          order.customer?.id != null ? String(order.customer.id) : undefined,
+        ].filter((v): v is string => Boolean(v)),
         fbp: noteAttr(order, "_fbp"),
         fbc: noteAttr(order, "_fbc"),
         clientIpAddress: order.client_details?.browser_ip,
