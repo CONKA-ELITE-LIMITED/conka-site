@@ -90,10 +90,21 @@ export const queryBlogRows = cache(async function queryBlogRows(
       cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
     } while (cursor);
   } catch (err) {
-    // A Notion outage, rate-limit, or bad token must not fail the whole site
-    // build: degrade to an empty blog and let the rest of the site ship.
-    console.error("[blog] Notion query failed, returning no posts:", err);
-    return [];
+    // Fail the build rather than ship a silently empty blog.
+    //
+    // This used to swallow the error and return [], so that a Notion outage
+    // could not take the whole site down with it. That was right when the blog
+    // was three drafts and wrong now: [] is indistinguishable from "there are
+    // genuinely no posts", so a rate-limit or blip during a Vercel build
+    // generated zero post routes, rendered an empty /blog, exited 0, and
+    // deployed. Every legacy URL then 308s into a 404 (SCRUM-1157) until a
+    // human happens to notice. A deploy that refuses to ship beats a deploy
+    // that quietly breaks the archive.
+    throw new Error(
+      `[blog] Notion query failed, refusing to build a blog with no posts: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
   }
 
   return rows;
