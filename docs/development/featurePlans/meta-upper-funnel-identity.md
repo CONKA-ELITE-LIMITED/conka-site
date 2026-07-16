@@ -138,6 +138,8 @@ Note that the production-host gate means Vercel preview deploys fire no events, 
 
 ## Jira
 
-| Ticket | Phase | Status |
-|--------|-------|--------|
-| _to be populated_ | 1 and 2 | |
+| Ticket | Title | Phase | Status |
+|--------|-------|-------|--------|
+| SCRUM-1158 | [Analytics & Data] Meta upper-funnel identity: external_id + _fbp on every event, bridged to Purchase | 1 and 2 | To Do |
+
+Phases 1 and 2 share one ticket because they are a single unit of value: Phase 1 without Phase 2 raises the EMQ number without improving matching. Phases 3 (A2) and 4 (B2) get their own tickets when they become active.
