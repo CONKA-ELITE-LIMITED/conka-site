@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-16** | Legacy blog Phase 1: HTML-to-Notion converter and idempotent importer for the 82-post Shopify archive, plus the pilot import of the one post still ranking while 404ing; blog images now re-host from Shopify/Wix instead of hot-linking
 - **2026-07-16** | Meta CAPI now fires server-side even when the browser pixel is blocked (in-app browsers/ad-blockers), recovering upper-funnel events for ad attribution
 - **2026-07-15** | Fade the home hero video base into the section-2 tint so it blends into the next section
 - **2026-07-15** | Swap brain-ageing listicle hero to the working-woman photo and add a per-asset objectPosition crop control

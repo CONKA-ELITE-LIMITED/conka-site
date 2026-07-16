@@ -91,7 +91,7 @@ Pulled via the **Storefront API** (`articles(first:50)` paginated, 130 articles:
 | Excerpt present | 0 of 53 | Ignore |
 | Hero image present | 52 of 53 | Rehost at build (needs the filter fix below) |
 | `authorV2` present | 53 of 53 | Available if an Author column is ever added |
-| **Over Notion's 100-block API limit** | **14 of 53** | **Importer must chunk, see below** |
+| ~~Over Notion's 100-block API limit~~ **0 of 53** | **0** | **Corrected 2026-07-16, see below** |
 | Paragraphs over the 2,000-char `rich_text` limit | 0 | No handling needed |
 
 Cleanup is **87% deterministic**. The fake-heading rule recovers real section titles (verified: "Basis of Language: Brain Regions", "How We Acquire Language").
@@ -105,8 +105,19 @@ The first draft of this plan and its tickets contained four defects. All are cor
 
 1. **A meta description is a hard gate on rendering, not on publishing.** `app/lib/blog.ts:118` is `if (!title || !slug || !description) { console.warn(...); return null; }`. Zero of the 53 posts carry one, so **a post imported without a meta description is silently skipped and never renders**. The original tickets claimed meta descriptions "can lag behind the import". They cannot. Every post needs one before it can appear at all.
 2. **Image rehosting will not fire on Shopify or Wix URLs.** `rehostBodyImages` filters with `if (!/amazonaws\.com|notion\.so|notion-static/i.test(url)) continue;` because it was written for Notion-hosted files, which expire. Imported posts carry `cdn.shopify.com` and `static.wixstatic.com` URLs, which match none of those, so **all 102 images across 33 posts would be skipped and hot-link to third-party CDNs permanently**. Fix: extend the filter in `app/lib/blog.ts` to include both hosts. This is a code change the original plan did not account for.
-3. **The Notion API caps block creation at 100 per request.** 14 of the 53 posts exceed it (max 138 blocks, median 78). The importer must chunk appends into batches of 100 or those posts fail or truncate.
+3. **The Notion API caps block creation at 100 per request.** The importer chunks appends into batches of 100. **The sizing behind this was wrong and is corrected below** (no post actually exceeds 100 blocks); the chunking is kept as a cheap guard, but it is not load-bearing for these 53.
 4. **There are 6 rows in the Blog Hub, not 3.** Both this plan and `blog-informational-content-surface.md` said three drafts. Live: `what-are-nootropics`, `psychology-of-procrastination`, `brain-fog-supplement-what-actually-works`, **two duplicate "Best Nootropics UK" rows**, and **one entirely blank row**. The duplicates and the blank need reconciling before a bulk import lands on top of them.
+
+### Corrections from building Phase 1 (2026-07-16)
+
+Measured against the real converter output for all 53 posts. These supersede the
+estimates above, which were made before a converter existed.
+
+1. **No post exceeds 100 blocks.** Actual: max **89** (`brain-health-habits-a-daily-routine-to-optimise-mental-performance`), median **44**, total 2,396 across the 53. The earlier "14 of 53 over, max 138, median 78" does not reproduce and appears to have counted pre-merge inline runs rather than blocks. The named 138-block post, `the-link-between-gut-health-and-blast-induced-trauma-a-cognitive-perspective`, is **80 blocks**. Chunking is implemented and unit-verified at the boundaries (100 → 1 call, 101 → 2, 138 → [100, 38], 250 → [100, 100, 50]) but never fires on this corpus.
+2. **Text retention is 100%** on every one of the 53 (whitespace-normalised source text vs emitted block text), so the lower block count is not content loss.
+3. **Images: 102 across 33 posts confirmed.** 100 convert; the 2 that do not are `<img>` tags with no `src` attribute at all, which are unrecoverable. Images are buried inside inline wrappers (`<strong>`, `<span>`, `<u>`) inside `<p>`, not just in `<figure>`, so extraction cannot rely on direct children.
+4. **The two "Best Nootropics UK" rows were not duplicates.** Same title and angle, entirely different bodies: a general evidence piece (12 Jul) and a corporate-athlete persona rewrite (14 Jul, with its FAQ in a broken `- question:` YAML format rather than the bold `Q:`/`A:` contract). Resolved by differentiating rather than deleting: slugs `best-nootropics-uk` and `nootropics-for-training-and-working`. The base is therefore **5 engine drafts, not 3**. The 14 Jul FAQ still needs reformatting before publish.
+5. **Mobile overflow is a real Phase 2 blocker.** `app/components/blog/MarkdownBody.tsx` sets no `break-words` on `p`/`li` and maps no `table`. 13 of the 53 carry bare unbroken reference URLs (longest **342 chars**, `the-power-of-mind`) and 2 carry tables (`cognitive-enhancers-for-athletes-what-the-science-says`, `creatine-for-the-brain-more-than-just-muscle`). Both overflow horizontally at 390px. The pilot has neither, so it ships clean, but SCRUM-1156 must fix `MarkdownBody` before the bulk import is published.
 
 ### Cannibalisation: the engine already covers two legacy topics
 
@@ -140,6 +151,8 @@ Blog Hub properties: `Blog name` (title), `Slug`, `Meta description`, `Related p
 
 Two gaps: there is **no `Source` field** to separate legacy from engine rows, and **`Topic` cannot express the real lanes** (sport, concussion, brain fog, recovery, neuroscience, nootropics, military). Both are Phase 1 task 3.
 
+**Both closed 2026-07-16.** `Source` (select: `legacy` / `engine`) added; `Topic` extended to ADHD / Brain Ageing / Productivity / Sport / Concussion / Brain Fog / Recovery / Neuroscience / Nootropics / Military (existing row values survived the change). The 5 real rows are tagged `Source = engine` and are all `Draft` with unique slugs and meta descriptions; the blank template row was trashed.
+
 ---
 
 ## Phases
@@ -153,6 +166,12 @@ Two gaps: there is **no `Source` field** to separate legacy from engine rows, an
 | 5 | Ingredient blog (48 posts) | Future, gated |
 
 ### Phase 1: Converter + pilot
+
+**Built 2026-07-16 (SCRUM-1155).** Tasks 1 to 4 are done; task 5 is imported as
+`Draft` and verified rendering in dev preview, awaiting the human `Status` flip.
+Scripts: `scripts/legacy-blog/{fetch,convert,import,triage,metaDescriptions,env}.ts`.
+Run `npx tsx scripts/legacy-blog/fetch.ts` to re-pull the snapshot (gitignored),
+then `npx tsx scripts/legacy-blog/import.ts --pilot [--dry-run]`.
 
 1. **[Infra] HTML to Notion block converter**
    - What: `scripts/legacy-blog/convert.ts`. Sanitise (strip span/div/meta/class/id, drop empty figures, promote `<p><strong>` to `heading_2`, normalise em dashes), then emit Notion block JSON: `heading_2`/`heading_3`, `paragraph`, `bulleted_list_item`, `numbered_list_item`, rich-text annotations for bold/italic, links with `href`, `image` blocks.
