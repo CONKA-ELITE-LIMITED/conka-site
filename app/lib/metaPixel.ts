@@ -18,26 +18,105 @@ declare global {
 
 const META_EVENTS_API = "/api/meta/events";
 
-/** Generate a unique event ID for pixel/CAPI deduplication */
-function generateEventId(): string {
+/**
+ * Scope for every identity cookie we write. The registrable domain, not the
+ * `www` host, so the Shopify-hosted checkout on shop.conka.io reads the same
+ * ids — that is how identity reaches the order and the Purchase webhook.
+ */
+const COOKIE_DOMAIN = ".conka.io";
+
+/** 90 days, matching Meta's own `_fbp` / `_fbc` cookie lifetime. */
+const FB_COOKIE_MAX_AGE = 90 * 24 * 60 * 60;
+
+/** Our first-party visitor id. Sent to Meta as `external_id` on every event. */
+const EXTERNAL_ID_COOKIE = "conka_uid";
+
+/** 400 days — the longest a browser will honour (Chrome caps `max-age` here). */
+const EXTERNAL_ID_MAX_AGE = 400 * 24 * 60 * 60;
+
+/** Random UUID where available, with a unique-enough fallback. */
+function generateUuid(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return crypto.randomUUID();
   }
   return `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
+/** Generate a unique event ID for pixel/CAPI deduplication */
+function generateEventId(): string {
+  return generateUuid();
+}
+
+/** Read a cookie by name. Null in SSR or when absent. */
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
+  return match ? match[1].trim() : null;
+}
+
+/**
+ * Write a first-party identity cookie scoped to the registrable domain. The
+ * value is encoded because `_fbc` is built from a URL parameter: an unencoded
+ * `?fbclid=x; Domain=...` would smuggle its own attributes into the cookie.
+ * Encoding is a no-op for the ids we actually write (they are unreserved
+ * characters), so the value Meta's pixel reads back is unchanged.
+ */
+function writeCookie(name: string, value: string, maxAge: number): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; domain=${COOKIE_DOMAIN}; SameSite=Lax; Secure`;
+}
+
 /** Read _fbp cookie for CAPI user_data (improves matching) */
 export function getFbp(): string | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/(?:^|;\s*)_fbp=([^;]+)/);
-  return match ? match[1].trim() : null;
+  return readCookie("_fbp");
 }
 
 /** Read _fbc cookie (the ad-click identifier) for CAPI user_data */
 export function getFbc(): string | null {
+  return readCookie("_fbc");
+}
+
+/**
+ * Meta's `_fbp` browser id, writing one ourselves when the pixel has not (yet).
+ * `fbevents.js` loads async, so our CAPI events routinely fired before the
+ * cookie existed and shipped with no `fbp` — a match key we could always have
+ * had. Written in Meta's own format so the pixel adopts it rather than issuing a
+ * competing id, exactly as `captureFbcFromUrl` does for `_fbc`. Never overwrites
+ * an existing value: the pixel's own `_fbp` always wins.
+ */
+export function ensureFbp(): string | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/(?:^|;\s*)_fbc=([^;]+)/);
-  return match ? match[1].trim() : null;
+  const existing = getFbp();
+  if (existing) return existing;
+  // Meta's format: fb.<subdomainIndex>.<creationTime>.<random>. Index 1 == the
+  // registrable domain we scope to. A malformed value is silently ignored by
+  // Meta, so keep the random a full 10 digits like the pixel's own: a bare
+  // `Math.random() * 1e10` lands below 1e9 (9 digits or fewer) ~10% of the time.
+  const random = Math.floor(1e9 + Math.random() * 9e9);
+  const fbp = `fb.1.${Date.now()}.${random}`;
+  writeCookie("_fbp", fbp, FB_COOKIE_MAX_AGE);
+  return fbp;
+}
+
+/** Read the first-party visitor id without minting one. */
+function getExternalId(): string | null {
+  return readCookie(EXTERNAL_ID_COOKIE);
+}
+
+/**
+ * The first-party visitor id, minted on first sight and persisted. Sent as
+ * `external_id` on every event, so even a logged-out visitor carries one stable
+ * match key. On its own an id we invented matches nobody in Meta's graph; it
+ * earns its keep because `buildMetaCartAttributes` carries the same id to the
+ * order, letting Meta join an anonymous AddToCart to the identified buyer.
+ */
+export function getOrCreateExternalId(): string | null {
+  if (typeof document === "undefined") return null;
+  const existing = getExternalId();
+  if (existing) return existing;
+  const id = generateUuid();
+  writeCookie(EXTERNAL_ID_COOKIE, id, EXTERNAL_ID_MAX_AGE);
+  return id;
 }
 
 /**
@@ -53,23 +132,29 @@ export function captureFbcFromUrl(): void {
   const fbclid = new URLSearchParams(window.location.search).get("fbclid");
   if (!fbclid) return;
   const fbc = `fb.1.${Date.now()}.${fbclid}`;
-  const maxAge = 90 * 24 * 60 * 60; // 90 days, matching Meta's _fbc lifetime
-  document.cookie = `_fbc=${fbc}; path=/; max-age=${maxAge}; domain=.conka.io; SameSite=Lax; Secure`;
+  writeCookie("_fbc", fbc, FB_COOKIE_MAX_AGE);
 }
 
 /**
- * Build cart-level Meta attributes (_fbp / _fbc) to attach to a Shopify cart so
- * they flow to the order's note attributes, where the server-side Purchase
- * webhook reads them for attribution. Shared by every checkout path (the global
- * CartContext AND the funnel's isolated checkout) so they cannot drift apart.
- * Returns [] when neither cookie is present (organic visitor) — safe to spread.
+ * Build cart-level Meta attributes (_fbp / _fbc / conka_uid) to attach to a
+ * Shopify cart so they flow to the order's note attributes, where the
+ * server-side Purchase webhook reads them for attribution. Shared by every
+ * checkout path (the global CartContext AND the funnel's isolated checkout) so
+ * they cannot drift apart. `conka_uid` is what lets Meta join this buyer's
+ * Purchase back to the anonymous events they fired before checking out.
+ *
+ * Reads only, never mints: by the time a cart exists the tracker has already
+ * minted the ids on landing, and a pure builder keeps the cart path free of
+ * side effects. Returns [] when no cookie is present — safe to spread.
  */
 export function buildMetaCartAttributes(): Array<{ key: string; value: string }> {
   const attrs: Array<{ key: string; value: string }> = [];
   const fbp = getFbp();
   const fbc = getFbc();
+  const externalId = getExternalId();
   if (fbp) attrs.push({ key: "_fbp", value: fbp });
   if (fbc) attrs.push({ key: "_fbc", value: fbc });
+  if (externalId) attrs.push({ key: EXTERNAL_ID_COOKIE, value: externalId });
   return attrs;
 }
 
@@ -78,7 +163,12 @@ function sendToCAPI(payload: {
   event_name: string;
   event_id: string;
   event_time: number;
-  user_data?: { fbp?: string; fbc?: string; email?: string };
+  user_data?: {
+    fbp?: string;
+    fbc?: string;
+    email?: string;
+    external_id?: string;
+  };
   custom_data?: Record<string, unknown>;
 }): void {
   if (typeof fetch === "undefined") return;
@@ -155,13 +245,16 @@ function trackWithDedup(
     event_name: eventName,
     event_id: eventId,
     event_time: eventTime,
-    // Send browser id (_fbp), ad-click id (_fbc), and the logged-in email so the
-    // server event matches on the strongest available signal — raises Event Match
-    // Quality and reduces Meta's reliance on modelled conversions.
+    // Send browser id (_fbp), ad-click id (_fbc), our first-party visitor id, and
+    // the logged-in email so the server event matches on the strongest available
+    // signal — raises Event Match Quality and reduces Meta's reliance on modelled
+    // conversions. A logged-out ad visitor has no email, so `_fbc` and these two
+    // ids are the only identity they can carry.
     user_data: {
-      fbp: getFbp() ?? undefined,
+      fbp: ensureFbp() ?? undefined,
       fbc: getFbc() ?? undefined,
       email: userEmail ?? undefined,
+      external_id: getOrCreateExternalId() ?? undefined,
     },
     custom_data: customData,
   });

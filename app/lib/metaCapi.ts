@@ -41,7 +41,13 @@ export interface PurchaseUserData {
   state?: string | null;
   zip?: string | null;
   country?: string | null; // 2-letter ISO
-  externalId?: string | null; // e.g. Shopify customer id
+  /**
+   * One or more stable ids for this person, hashed and sent as `external_id`.
+   * Meta accepts several and matches on any. Pass the first-party visitor id
+   * (conka_uid) first: it is the one that also appears on the buyer's earlier
+   * anonymous events, so it is what joins the Purchase back to the upper funnel.
+   */
+  externalId?: string | string[] | null;
   fbp?: string | null; // sent raw, not hashed
   fbc?: string | null; // sent raw, not hashed
   clientIpAddress?: string | null;
@@ -70,7 +76,9 @@ function buildUserData(u: PurchaseUserData): Record<string, unknown> {
   const st = hashNormalized(u.state);
   const zp = hashCollapsed(u.zip);
   const country = hashNormalized(u.country);
-  const externalId = hashNormalized(u.externalId);
+  const externalIds = (Array.isArray(u.externalId) ? u.externalId : [u.externalId])
+    .map((id) => hashNormalized(id))
+    .filter((v): v is string => Boolean(v));
 
   if (em) ud.em = [em];
   if (ph) ud.ph = [ph];
@@ -80,7 +88,7 @@ function buildUserData(u: PurchaseUserData): Record<string, unknown> {
   if (st) ud.st = [st];
   if (zp) ud.zp = [zp];
   if (country) ud.country = [country];
-  if (externalId) ud.external_id = [externalId];
+  if (externalIds.length > 0) ud.external_id = externalIds;
   if (u.fbp) ud.fbp = u.fbp;
   if (u.fbc) ud.fbc = u.fbc;
   if (u.clientIpAddress) ud.client_ip_address = u.clientIpAddress;

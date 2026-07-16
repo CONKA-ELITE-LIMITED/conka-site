@@ -29,6 +29,9 @@ export default function MetaPageViewTracker() {
 
     // Capture the ad-click id (fbclid -> _fbc) immediately on landing, before the
     // first cart action and independent of pixel load, so it reaches the order.
+    // Must run before the PageView below, which reads the cookie it writes.
+    // `_fbp` and `conka_uid` need no equivalent call here: every event mints them
+    // via trackWithDedup, starting with the PageView on the next line.
     captureFbcFromUrl();
 
     // Fire CAPI now (always) + the browser pixel if it is already loaded.

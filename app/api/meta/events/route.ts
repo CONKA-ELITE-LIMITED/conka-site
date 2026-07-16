@@ -13,10 +13,15 @@ import { createHash } from "crypto";
 const META_GRAPH_VERSION = "v21.0";
 const META_GRAPH_URL = `https://graph.facebook.com/${META_GRAPH_VERSION}`;
 
-/** SHA-256 hex of a normalized email (trim + lowercase). Undefined for empty input. */
-function hashEmail(email: string | undefined): string | undefined {
-  if (!email) return undefined;
-  const normalized = email.trim().toLowerCase();
+/**
+ * SHA-256 hex of a normalized value (trim + lowercase). Undefined for empty
+ * input. Mirrors `hashNormalized` in app/lib/metaCapi.ts so the client relay and
+ * the Purchase webhook hash identically — an `external_id` hashed two different
+ * ways would never match across the funnel.
+ */
+function hashNormalized(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const normalized = value.trim().toLowerCase();
   if (!normalized) return undefined;
   return createHash("sha256").update(normalized).digest("hex");
 }
@@ -32,7 +37,13 @@ interface CAPIRequestBody {
   event_name: string;
   event_id: string;
   event_time: number;
-  user_data?: { fbp?: string; fbc?: string; email?: string };
+  user_data?: {
+    fbp?: string;
+    fbc?: string;
+    email?: string;
+    /** Raw first-party visitor id (conka_uid); hashed here before sending. */
+    external_id?: string;
+  };
   custom_data?: Record<string, unknown>;
 }
 
@@ -79,10 +90,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "invalid event_time" }, { status: 400 });
     }
 
-    // Hash the logged-in email (when present) for em + external_id — the highest
-    // Event Match Quality signals. Hashing is server-side so raw email never
-    // leaves our origin. Absent for logged-out visitors, which is expected.
-    const emHash = hashEmail(user_data?.email);
+    // Hash the logged-in email (when present) for `em`, the strongest Event Match
+    // Quality signal. Hashing is server-side so raw email never leaves our origin.
+    // Absent for logged-out visitors, which is expected.
+    const emHash = hashNormalized(user_data?.email);
+
+    // `external_id` is always the first-party visitor id, never the email hash.
+    // Meta only treats external_id as a match key when the SAME value appears
+    // across a person's events, and the Purchase webhook sends conka_uid from the
+    // order's note attributes. Keying off email here would break that join for
+    // logged-in customers, and email already matches on `em` regardless.
+    const externalIdHash = hashNormalized(user_data?.external_id);
 
     const serverEvent: Record<string, unknown> = {
       event_name,
@@ -97,7 +115,8 @@ export async function POST(request: NextRequest) {
           request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined,
         ...(user_data?.fbp && { fbp: user_data.fbp }),
         ...(user_data?.fbc && { fbc: user_data.fbc }),
-        ...(emHash && { em: emHash, external_id: emHash }),
+        ...(emHash && { em: emHash }),
+        ...(externalIdHash && { external_id: externalIdHash }),
       },
       ...(custom_data && Object.keys(custom_data).length > 0 && { custom_data }),
     };
