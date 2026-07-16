@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-16** | The blog is live: all 53 recovered posts published, Blog added to the footer and to the Science nav menu, and the 82 old Shopify blog URLs now land on real pages instead of 404s
 - **2026-07-16** | Legacy blog Phase 2: all 53 recovered posts imported to Notion as Drafts with authored meta descriptions, and the blog body now wraps long reference URLs, scrolls wide tables on mobile, and lazy-loads in-body images instead of shipping filenames as alt text
 - **2026-07-16** | Legacy blog Phase 3: all 82 old Shopify blog URLs now redirect instead of 404ing (53 to their new /blog post, 29 to the live page that owns the topic), blog posts enter the sitemap dated from Notion, and posts emit BlogPosting + FAQPage structured data
 - **2026-07-16** | Legacy blog Phase 1: HTML-to-Notion converter and idempotent importer for the 82-post Shopify archive, plus the pilot import of the one post still ranking while 404ing; blog images now re-host from Shopify/Wix instead of hot-linking

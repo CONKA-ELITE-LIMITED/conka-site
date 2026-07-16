@@ -85,6 +85,13 @@ export const NAV_SCIENCE: NavGroup = {
       imageAlt: "CONKA active ingredient render",
       description: "Every active, dosed to the research.",
     },
+    {
+      label: "Blog",
+      href: "/blog",
+      image: "/lifestyle/CreationOfConka.jpg",
+      imageAlt: "One person passing a CONKA shot to another",
+      description: "Brain science, made practical.",
+    },
   ],
 };
 
