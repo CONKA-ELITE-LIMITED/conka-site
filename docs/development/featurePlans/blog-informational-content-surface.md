@@ -128,7 +128,7 @@ Automated deploy-on-publish and a `draft` preview deployment are future niceties
 | 2 | Blog UI: `/blog` listing + `/blog/[slug]` article, brand markdown renderer, related posts, mobile | Built (SCRUM-1152) |
 | 3 | SEO/AEO, discovery, analytics, go-live: BlogPosting + FAQ JSON-LD, sitemap, nav/footer, CTA analytics, seed verify | Ready to ticket |
 | 4 | Content stream: engine populates Notion, owner publishes via `Status` | Future / recurring |
-| 5 | Scale features: category filters, search, pagination-at-volume, topic-cluster internal linking (~8+ posts) | Future |
+| 5 | Scale features: category filters, search, pagination-at-volume, topic-cluster internal linking (~8+ posts) | **Gate cleared. Filters + pagination now scoped as Phase 6 of `legacy-blog-migration.md`. Search is still Future.** |
 
 Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into the integration branch, not `main`).
 
@@ -197,7 +197,7 @@ Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into th
 
 - **Hand-writing a Notion block renderer.** `notion-to-md` does the walking; we only style markdown.
 - **Rich-block fidelity** (tables, callouts, embeds). Deferred; no competitive need.
-- **Category filters / search / pagination UI** before there is volume. Phase 5.
+- **Category filters / search / pagination UI** before there is volume. Phase 5. **The volume gate cleared on 2026-07-16 at 55 published posts; filters and pagination moved to Phase 6 of `legacy-blog-migration.md`. Search stays parked.**
 - **The `.brand-clinical` mobile hero padding trap.** Needs an explicit `paddingTop`.
 
 ## No-gos

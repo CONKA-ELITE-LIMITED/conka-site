@@ -1,6 +1,6 @@
 # Legacy Blog Migration (Shopify to Notion to /blog)
 
-**Status:** Scoped 2026-07-16, then re-validated against the live code and Notion database the same day. Phase 1 active.
+**Status:** Phases 1 to 3 built and merged (SCRUM-1155/1156/1157); 55 posts live and all 82 legacy URLs redirecting. **Phase 6 scoped 2026-07-16** (SCRUM-1160/1161/1162): underline artifact repair, topic backfill, topic hubs + paginated index.
 **Owner:** Rudh.
 **Created:** 2026-07-16.
 **Design system:** brand-base. No UI work: `/blog` is already built (SCRUM-1152).
@@ -163,11 +163,12 @@ Two gaps: there is **no `Source` field** to separate legacy from engine rows, an
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Converter + Notion schema prep + pilot the one ranking post | **Active** |
-| 2 | Bulk convert and import the remaining 52 as Draft; hand-structure the 6; author 53 meta descriptions | Active |
-| 3 | Redirects, sitemap, go-live | Active |
+| 1 | Converter + Notion schema prep + pilot the one ranking post | **Done** |
+| 2 | Bulk convert and import the remaining 52 as Draft; hand-structure the 6; author 53 meta descriptions | **Done** |
+| 3 | Redirects, sitemap, go-live | **Done** |
 | 4 | Review and publish queue (owner, `/review-claims`) | Recurring |
 | 5 | Ingredient blog (48 posts) | Future, gated |
+| 6 | Underline artifact repair, topic backfill, topic hubs + paginated index | **Active** |
 
 ### Phase 1: Converter + pilot
 
@@ -242,6 +243,232 @@ before Phase 2.
 
 ---
 
+## Phase 6: Taxonomy, artifact repair, topic hubs
+
+**Scoped 2026-07-16.** Appetite: 2 to 3 days. Phase 6.1 is a few hours and ships alone.
+
+Three defects on the same surface, found after go-live:
+
+1. **191 `<u>` artifacts leak as visible text** across 26 of the 55 live posts.
+2. **All 53 legacy posts are untagged**, so the archive has no organising structure.
+3. **The index is one flat grid of 55**, and `RelatedPosts` shows the same 3 newest
+   articles to every reader regardless of subject.
+
+**This is deferred work coming due, not a new idea.** `blog-informational-content-surface.md`
+parked "category filters / search / pagination UI" until "~8+ posts". At 55 that gate is cleared.
+
+### The underline artifact: root cause (confirmed, do not re-diagnose)
+
+The source HTML is a Wix citation link whose text is an underlined digit.
+`convert.ts:126` correctly maps `<u>` to a Notion `underline` annotation.
+**`notion-to-md` emits underline as literal raw HTML** `<u>text</u>`
+(`node_modules/notion-to-md/build/utils/md.js:29`), and `MarkdownBody.tsx` runs
+react-markdown **without `rehype-raw`**, so the raw HTML is escaped and printed as
+visible text.
+
+**Measured blast radius** (swept all 55 live pages 2026-07-16, do not re-measure):
+**191 leaks across 26 posts.** Worst offenders: `10-daily-habits-to-naturally-detoxify-the-brain-and-improve-cognitive-health` (18),
+`brain-health-habits-a-daily-routine-to-optimise-mental-performance` (14),
+`the-link-between-gut-health-and-blast-induced-trauma-a-cognitive-perspective` (13),
+`the-link-between-brain-fog-and-inflammation` (13).
+
+A sweep for **any** escaped tag across all 55 posts returned only `&lt;u` (191 open /
+191 close, balanced). **This is a single bug, not a class of them.**
+
+**Decision: strip the annotation at the Notion source, not `rehype-raw`.** Underline is
+Wix formatting junk, links already carry their own underline via `linkClass` in
+`MarkdownBody`, and `rehype-raw` would widen the parsed surface to all raw HTML in every
+post body. The converter must also drop its `case "u"` mapping or the next
+`fetch`/`import` run silently undoes the repair.
+
+### Why pagination survived the challenge
+
+The measured case against it: `/blog` is **27 KB gzipped, 145 ms, and all 55 hero images
+already carry `loading="lazy"`**, so pagination buys nothing on weight or speed. It was
+scoped anyway on the owner's call (editorial control of a long mobile scroll). The SEO
+objection is weaker than it first appears because the root layout self-canonicalises via
+a relative `alternates: { canonical: "./" }`, so paginated pages get a correct
+self-canonical for free.
+
+**Hard constraint on the route shape:** `?page=N` reads `searchParams`, which forces
+dynamic rendering and **breaks the fully static build**. It must be `/blog/page/[page]`
+as real static routes.
+
+### The taxonomy
+
+Backfilled from this doc's own triage-table lanes. The lanes do not match the `Topic`
+options, so they reconcile as: `Neuro` to Neuroscience, `Ageing` to Brain Ageing,
+`Nootropic` to Nootropics. **`Focus` is added as a new option**; `Productivity` stays and
+is **not** renamed, so the 3 engine rows keep their tag untouched. Thin lanes fold into
+the nearest fat topic: `Sleep` to Recovery, `Trend` to Neuroscience, `Comparison` to
+Nootropics. Compound lanes (`Sport/concussion`) split into two tags.
+
+| Hub | Published posts | From |
+|---|---|---|
+| Sport | 11 | `Sport` (6) + `Sport/concussion` (4) + `Ageing/performance` (1) |
+| Neuroscience | 11 | `Neuro` (10) + `Trend` (1) |
+| Recovery | 10 | `Recovery` (8) + `Sleep` (1) + `Sleep/recovery` (1) |
+| Focus | 10 | `Focus` lane |
+| Concussion | 4 | `Sport/concussion`, shared with Sport |
+| Nootropics | 4 | `Nootropic` (3) + `Comparison` (1) |
+| Brain Fog | 4 | `Brain fog` (3) + 1 engine row |
+| Brain Ageing | 3 | `Ageing` (2) + `Ageing/performance` (1) |
+| Military | 2 | `Military` |
+| Productivity | 2 | 2 published engine rows |
+
+Ten hubs, no singletons. **ADHD gets no hub**: the option exists but has zero published
+posts. The rule "generate a hub only from topics with published posts" handles that
+automatically, and is also the empty-topic answer.
+
+Hub membership uses **`topics.includes()`**, so the 4 `Sport/concussion` posts appear
+under both Sport and Concussion. The card eyebrow still shows `topics[0]` as the primary.
+
+### Sub-phases
+
+| Sub-phase | Description | Status |
+|---|---|---|
+| 6.1 | Underline repair (Notion strip + converter fix) | Active |
+| 6.2 | Topic backfill + topic-matched related posts | Active |
+| 6.3 | Topic hubs, paginated index, sitemap | Active |
+| 6.4 | Hub pagination | Future, see trigger below |
+
+**6.4 trigger:** hubs do not paginate this pass because the largest is 11, under the page
+size of 12. That margin is **one post**. If Phase 5's 48 ingredient posts land, or any
+retag pushes Sport or Neuroscience to 12, hubs need the same `Pagination` component at
+`/blog/topic/[topic]/page/[page]`.
+
+### Phase 6.1: Underline repair
+
+1. **[Infra] Strip the underline annotation at source**
+   - What: walk every legacy post's blocks, clear `underline` on each `rich_text` run,
+     rewrite the block. Idempotent. **Must never touch `Status`** (same discipline as
+     `import.ts`, which omits Status on update so a re-run cannot demote a reviewed post).
+   - Dependencies: none. Complexity: Small.
+   - Files: `scripts/legacy-blog/stripUnderline.ts` (new), `scripts/README.md`
+2. **[Infra] Close the converter hole**
+   - What: drop `case "u"` at `convert.ts:126`. Without this, the next `fetch`/`import`
+     run silently undoes task 1.
+   - Dependencies: none, but pointless without task 1. Complexity: Small.
+   - Files: `scripts/legacy-blog/convert.ts`
+3. **[Verify] Re-sweep the live pages**
+   - What: rerun the sweep that produced 191/26 and confirm zero `&lt;u`. **A deploy is
+     required for the Notion write to appear.** Write, pause, deploy, verify.
+   - Dependencies: 1, 2. Complexity: Small.
+
+### Phase 6.2: Topic backfill + related-post matching
+
+4. **[Data] Add `Focus` to the `Topic` multi-select**
+   - What: `ADD COLUMN` option on data source `39b03d3c-dce2-8037-ab26-000bed4e0a91`.
+     An add, not a rename, so no existing row value can be disturbed.
+   - Dependencies: none. **Blocks task 6.** Complexity: Small. Files: Notion, no code.
+5. **[Infra] Lane-to-topic map**
+   - What: the 53 slug-to-lane table from the triage section below, plus the
+     reconciliation rules above, as data.
+   - Dependencies: none. Complexity: Small. Files: `scripts/legacy-blog/topics.ts` (new)
+6. **[Infra] Backfill script**
+   - What: idempotent write of `Topic` to all 53 legacy rows, reusing `import.ts`'s
+     slug-to-pageId index pattern. Must not touch `Status`.
+   - Dependencies: 4, 5. Complexity: Medium.
+   - Files: `scripts/legacy-blog/backfillTopics.ts` (new)
+7. **[Infra] Write `Topic` on import too**
+   - What: `import.ts:83-108` (`buildProperties`) never writes `Topic`, so a future
+     re-import leaves new rows untagged. Wire the map in.
+   - Dependencies: 5. Complexity: Small. Files: `scripts/legacy-blog/import.ts`
+8. **[Frontend] Topic-matched related posts**
+   - What: `getRelatedPosts(slug)` scores by shared-topic count and falls back to newest
+     when a post has fewer than 3 topic siblings (Military, at 2, always will). Replaces
+     the "3 newest" slice at `blog/[slug]/page.tsx:59-61`, which currently ignores topics
+     entirely and shows every reader the same three links.
+   - Dependencies: 6. Complexity: Medium. Files: `app/lib/blog.ts`, `app/blog/[slug]/page.tsx`
+
+### Phase 6.3: Topic hubs, paginated index, sitemap
+
+9. **[Infra] Topic data layer**
+   - What: `slugifyTopic` / `getTopicSlugs` / `getPostsByTopic` using `topics.includes()`.
+     Hubs generate only for topics with published posts.
+   - Dependencies: 6. Complexity: Small. Files: `app/lib/blogTopics.ts` (new)
+10. **[Frontend] Extract `BlogGrid`**
+    - What: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3` is already duplicated in
+      `blog/page.tsx` and `RelatedPosts.tsx`. A hub would make it a third copy.
+    - Dependencies: none. **Do before 12 and 13.** Complexity: Small.
+    - Files: `app/components/blog/BlogGrid.tsx` (new), `app/components/blog/RelatedPosts.tsx`
+11. **[Frontend] `TopicNav`**
+    - What: port the chip geometry from `InsightFilteredSections.tsx:141-172` (44px min
+      tap target, square, mono, dot indicator), **inverted to light tones and rendering
+      `<Link>` not `<button>`**. Crawlable anchors are the entire SEO point of the route,
+      so this is a server component: no `useState`, no GSAP. **`BlogCard` is not touched**
+      (its outer `<Link>` wraps the whole card and cannot nest an `<a>`).
+    - Dependencies: 9. Complexity: Medium. Files: `app/components/blog/TopicNav.tsx` (new)
+12. **[Frontend] Topic hub route**
+    - What: `/blog/topic/[topic]`, `generateStaticParams` from task 9, per-hub
+      `generateMetadata`, H1 per the `seoHeading` keyword rule. No hub pagination.
+    - Dependencies: 9, 10, 11. Complexity: Medium. Files: `app/blog/topic/[topic]/page.tsx` (new)
+13. **[Frontend] Paginated index**
+    - What: `/blog` is page 1, `/blog/page/[page]` for the rest, `generateStaticParams`.
+      **Never `?page=N`** (see the constraint above). Page size 12, so 55 posts gives 5
+      pages. Prev/next controls.
+    - Dependencies: 10, 11. Complexity: Medium.
+    - Files: `app/blog/page.tsx`, `app/blog/page/[page]/page.tsx` (new), `app/components/blog/Pagination.tsx` (new)
+14. **[SEO] Sitemap + llms.txt**
+    - What: hubs and paginated pages go in `blogEntries()`, **not `ROUTES`**. They are
+      Notion-derived with no source file, so the git-derived `lastModified` rule cannot
+      date them; date each hub from its newest post, mirroring how `/blog` is dated.
+      Priority 0.65 for hubs (between index 0.7 and post 0.6). Add hubs to
+      `public/llms.txt` per the SEO README.
+    - Dependencies: 12, 13. Complexity: Small. Files: `app/sitemap.ts`, `public/llms.txt`
+15. **[Verify] Route collision + build check**
+    - What: assert no post slug is literally `topic` or `page` (a static segment would
+      shadow a dynamic one), confirm all 55 `/blog/<slug>` URLs still resolve, and check
+      build time has not materially regressed: 15 new routes each call `getAllPosts`.
+    - Dependencies: 12, 13. Complexity: Small.
+
+### Phase 6 analytics
+
+**No new events.** Vercel Analytics already reports pageviews per route, so
+`/blog/topic/sport` traffic **is** the "which topics do people want" data. A click handler
+would force `TopicNav` to be a client component and defeat the crawlability that justifies
+the route existing.
+
+### Phase 6 no-gos
+
+- **No `rehype-raw`.** Strip at source instead.
+- **No `?page=`.** It breaks static generation.
+- **No per-page canonical.** The root layout's relative `"./"` self-canonicalises every
+  route. An absolute one is inherited verbatim by every child and tells Google they are
+  all duplicates. Only the two noindex A/B landers override it.
+- **No hub for a topic with zero published posts.**
+- **No `BlogCard` restructure** to make its eyebrow clickable.
+- **No editorial re-tagging pass.** The triage lanes are the source. Fix a wrong lane as a
+  one-row edit in Notion afterwards.
+- **No renaming `Productivity`.** Focus and Productivity stay separate options.
+
+### Phase 6 risks
+
+- **Two Notion-write scripts against a static build.** Nothing is live until a redeploy,
+  and a build run seconds after a Notion write has been observed to bake a 404 into a
+  published post on a green build (see correction 6 above). Every write phase ends with:
+  write, pause, deploy, verify.
+- **Build time.** ~1m40 today, with the 155 image downloads and 55 Notion fetches running
+  sequentially in `app/lib/blog.ts`. Phase 6.3 adds 15 routes that each call
+  `getAllPosts`. The Notion query is `react.cache`d; the filesystem probing is not. Task
+  15 measures it. If it regresses badly, `Promise.all` batching is the known fix and is
+  tracked separately in `docs/TODO.md`.
+- **Concussion (4), Military (2) and Productivity (2) are thin hubs.** Acceptable under the
+  no-singletons rule, but they are the ones most likely to read as low-value to Google.
+  `docs/seo-aeo/README.md` has no explicit thin-content policy; the governing precedent is
+  "expired campaign pages get deleted, not noindexed".
+- **Hub pagination margin is one post.** Sport and Neuroscience sit at 11 against a page
+  size of 12.
+
+### Phase 6 open questions
+
+1. **The 6th engine row.** `cognitive-enhancers-anxiety-natural-alternatives` carries a
+   title, slug and `Topic = ADHD`, but **no `Status` and no `Source`**, so it cannot
+   publish and it is the only thing standing between ADHD and a hub. Not created by this
+   work. **Resolved 2026-07-16: leave it alone.** ADHD therefore gets no hub this pass.
+
+---
+
 ## Rabbit holes
 
 - **Hand-rewriting 53 posts.** The converter is deterministic; only the 6 structureless posts get human attention. If the converter starts needing per-post special cases, stop and route those posts to Humphrey's engine for rewrite instead.
@@ -290,9 +517,14 @@ Sprint 28, under the Website & CRO epic (SCRUM-763). Chained with `Blocks` links
 |--------|-------|-------|--------|
 | [SCRUM-1155](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1155) | [Website & CRO] Legacy blog Phase 1: HTML to Notion converter and pilot import | 1 | To Do |
 | [SCRUM-1156](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1156) | [Website & CRO] Legacy blog Phase 2: bulk import the remaining 52 posts as Draft | 2 | To Do |
-| [SCRUM-1157](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1157) | [Website & CRO] Legacy blog Phase 3: redirects, sitemap and go-live | 3 | To Do |
+| [SCRUM-1157](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1157) | [Website & CRO] Legacy blog Phase 3: redirects, sitemap and go-live | 3 | Done |
+| [SCRUM-1160](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1160) | [Website & CRO] Blog Phase 6.1: strip the underline artifact leaking as literal text on 26 live posts | 6.1 | To Do |
+| [SCRUM-1161](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1161) | [Website & CRO] Blog Phase 6.2: backfill Topic on all 53 legacy posts and make related posts topic-matched | 6.2 | To Do |
+| [SCRUM-1162](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1162) | [Website & CRO] Blog Phase 6.3: topic hub routes, paginated index and sitemap entries | 6.3 | To Do |
 
-Phases 4 and 5 stay in this doc until active.
+Phase 6 is Sprint 28, chained `Blocks` 1160 to 1161 to 1162.
+
+Phases 4, 5 and 6.4 stay in this doc until active.
 
 **Adjacent tickets worth noting:** SCRUM-1151 (blog Phase 6.1, Notion data layer) is still `To Do` in Jira despite its code being merged and `blog-informational-content-surface.md` claiming "Phase 1 built". SCRUM-1152 (blog UI) is `Done`.
 
