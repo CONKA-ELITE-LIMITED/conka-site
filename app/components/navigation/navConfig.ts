@@ -88,8 +88,8 @@ export const NAV_SCIENCE: NavGroup = {
     {
       label: "Blog",
       href: "/blog",
-      image: "/lifestyle/CreationOfConka.jpg",
-      imageAlt: "One person passing a CONKA shot to another",
+      image: "/lifestyle/ConkaAtWorkDesk.jpg",
+      imageAlt: "Typing at a desk with a CONKA shot beside the keyboard",
       description: "Brain science, made practical.",
     },
   ],
