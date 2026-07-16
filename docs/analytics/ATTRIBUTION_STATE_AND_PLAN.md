@@ -14,9 +14,9 @@ Three separate problems. They are often confused for each other. Keep them separ
 |---|---------|----------------|--------|
 | **A. Upper-funnel QUALITY** | AddToCart 3.2/10, InitiateCheckout 3.0/10, ViewContent 4.5/10 in Meta ("update recommended") | Events arrive but carry almost no identity for logged-out visitors (no email, no external_id, patchy fbp/fbc) | **Not started — this is the priority** |
 | **B. Upper-funnel COVERAGE** | Blocked-pixel sessions used to send nothing above Purchase ("purchase with no add-to-cart") | Shared helper suppressed browser AND server event when the pixel was blocked | **Phase 1 fix MERGED. Deployed. Needs verification.** |
-| **C. Purchase SIGNAL contamination** | Meta sees ~110 Purchases/month but only ~12 are real new customers | Loop rebills are reported to Meta as Purchases (server-side, likely the Shopify Facebook channel) | Deferred — do after A + B |
+| **C. Purchase SIGNAL contamination** | Meta sees ~110 Purchases/month but only ~12 are real new customers | Loop rebills reported to Meta as Purchases by the **Shopify Facebook & Instagram channel's own Conversions API** | **CONFIRMED and FIXED 2026-07-16.** Channel data sharing dropped Maximum -> Conservative. Awaiting the 48h count check |
 
-**The decision made 2026-07-16:** fix the upper funnel (A + B) robustly first, then C.
+**The decision made 2026-07-16:** fix the upper funnel (A + B) robustly first, then C. In the event C was confirmed and fixed the same day, because the diagnosis turned out to be a two-screen lookup rather than an investigation. See section 2 C1.
 
 **What A actually is:** Purchase scores 6.6/10 because the Shopify order hands us email + name + address. AddToCart scores 3.2 because a logged-out ad visitor's AddToCart goes to Meta with only IP + user-agent + maybe a cookie. The gap is identity.
 
@@ -84,9 +84,10 @@ Phase 1 does NOT touch problem A's core (identity for logged-out visitors) or pr
 - Impact: medium; a match key absent on a chunk of events.
 - Fix effort: low (generate `_fbp` ourselves on landing).
 
-**A4. `_fbc` dropped on non-`www` hosts.** The exact `www.conka.io` gate throws away the ad-click id (and suppresses events entirely) for apex/in-app-browser traffic.
-- Impact: medium; loses the click id on exactly the traffic we care about, and drops whole events.
-- Fix effort: low (relax the gate to any CONKA production host).
+**A4. ~~`_fbc` dropped on non-`www` hosts.~~ WRONG — DROPPED 2026-07-16. Do not build this.**
+The claim below was tested and is false. `https://conka.io/?fbclid=TESTCLICK123` returns a **307 to `https://www.conka.io/?fbclid=TESTCLICK123`**, preserving the query string, so `_fbc` is captured on the apex today and no events are dropped. The "in-app-browser host" claim is also mistaken: in-app browsers load `www.conka.io` like any other browser. There is no host being lost. The host gate stays as-is.
+- ~~The exact `www.conka.io` gate throws away the ad-click id (and suppresses events entirely) for apex/in-app-browser traffic.~~
+- Was ranked the #1 priority before it was disproven. Effort saved rather than spent.
 
 ### Problem B — Upper-funnel coverage
 
@@ -98,10 +99,32 @@ Phase 1 does NOT touch problem A's core (identity for logged-out visitors) or pr
 
 ### Problem C — Purchase signal contamination (DEFERRED)
 
-**C1. Rebills reported to Meta as Purchases.** Meta shows 110 Purchases/month; real new customers are ~12/month (293 Loop rebills vs 84 web checkouts in the last ~3 months, from Shopify). Purchase is >75% server-side. Our webhook excludes rebills (via `checkout_token`), so the rebills are almost certainly entering through the **Shopify Facebook & Instagram channel's own CAPI**, which fires for every order.
-- Impact: Meta optimises toward existing subscribers, not new customers.
-- Action needed: one confirmation — open the Purchase event -> "Manage integrations" in Events Manager and see whether the Shopify/Facebook channel is listed as a source. Then disable or filter its rebill Purchases, or move acquisition campaigns onto a new-customer custom conversion.
-- Out of scope of A/B; do after.
+**C1. Rebills reported to Meta as Purchases. CONFIRMED and FIXED 2026-07-16.**
+
+The hypothesis was right. Confirmed in **Shopify Admin -> Facebook & Instagram -> Settings -> Share data**, which read:
+
+- **Share data: Maximum** — *"Customer activity data is shared using the Meta Pixel, advanced matching, and Conversions API"*
+- **Dataset: CONKA Web Traffic, ID `1138202151698404`** — the same pixel our own site and webhook send to.
+
+So the channel was independently firing server-side Purchases into our pixel on **every order**, including Loop rebills. The arithmetic corroborates: our webhook only sends web checkouts (~28/month), Meta reported ~110, and Shopify's total order volume (~134/month including ~98 rebills) matches "a source firing on every order".
+
+**Why the channel's CAPI was the whole problem:** a rebill has no browser (nobody visits a thank-you page when a subscription renews), so a rebill can *only* reach Meta server-side. Remove the server-side route and rebills have no path to Meta at all, while real checkouts keep reporting via the browser pixel and our own webhook.
+
+**The fix: data sharing Maximum -> Conservative.** Per Shopify's own docs (`help.shopify.com/en/manual/promoting-marketing/analyze-marketing/meta-data-sharing`), **Conservative is the only level without the Conversions API**:
+
+| Level | Technologies |
+|-------|--------------|
+| Conservative (doc calls it "Standard") | **Meta Pixel only.** Browser-based ad blockers can block it |
+| Enhanced | Conversions API + Meta Pixel |
+| Maximum | Conversions API + Meta Pixel + latest ad technology |
+
+**Enhanced does NOT work and was nearly chosen by mistake.** Both Enhanced and Maximum carry the Conversions API; the only difference between them is that Maximum also shares phone number. Picking Enhanced would have kept every rebill *and* cost us a match key. Verify tier behaviour against the live UI text, not from memory.
+
+**Why Conservative costs us almost nothing:** we are headless. The channel's pixel does not run on `www.conka.io` at all, only on Shopify-hosted surfaces (essentially the checkout). And our webhook already sends a strict **superset** of what the channel's CAPI sent for a real order: `em`, `ph`, `fn`, `ln`, `ct`, `st`, `zp`, `country`, plus `fbp`/`fbc` (which the channel never had) and IP/UA. The only genuine loss is the server-side backup for AddPaymentInfo (17 events/28d, not an optimisation event), which still fires browser-side.
+
+**Accepted risk:** our webhook is now the sole intelligent source of Purchase. No backup. If it breaks, Purchase goes to zero rather than degrading.
+
+**Expected result:** Purchase falls from ~110/month to ~28/month (roughly 3-4/day to ~1/day) within 24-48h, and Purchase EMQ (6.6) holds because our webhook supplies the identity. **Purchase falling to zero means the webhook is not feeding Meta — investigate that day.** Reported cost per purchase will roughly quadruple; that is the fiction leaving, not a regression. Historical Meta Purchase data before 2026-07-16 is inflated ~4x and is not comparable across this date.
 
 **C2. Volume + media structure.** ~1-4 new subscriptions/week is below Meta's learning threshold, and Purchase is used by 29 ad sets. This is a media-strategy matter, NOT website code. Flagged for the marketing team; not addressed here.
 
@@ -146,8 +169,14 @@ Confirm the rebill source (Manage integrations), then stop rebills reaching Meta
 ## 4. How to verify (do not trust code review alone)
 
 **Verify Phase 1 (B1) is live and working:**
-1. Meta Events Manager -> Test Events. On `www.conka.io`, open DevTools and block `connect.facebook.net` (Network request-blocking) to simulate a blocked pixel.
-2. Add to cart. Confirm AddToCart + ViewContent + PageView still appear in Test Events, tagged **Server**. If they do, Phase 1 works. If only Purchase ever appears, Phase 1 is not deployed/working.
+
+> **The Test Events recipe below CANNOT WORK AS WRITTEN. Corrected 2026-07-16.**
+> Meta only routes a **server** event to the Test Events tab when the payload carries `test_event_code`. `META_TEST_EVENT_CODE` exists in this repo but **only in `app/lib/metaCapi.ts`, which serves the Purchase webhook**. The client CAPI route (`app/api/meta/events/route.ts`) never sends one. So following these steps shows **only Purchase** — which the original text below names as the signature of a broken Phase 1. **That is a false negative.** The upper-funnel events fire correctly, straight into the live dataset, invisible to the Test Events tab.
+>
+> **Use real-traffic coverage instead** (see "Verify Problem A" below), or add a `test_event_code` passthrough to the client CAPI route first, mirroring the pattern in `metaCapi.ts`. Note the production-host gate also means preview deploys and localhost fire nothing, so there is no pre-deploy verification path at all.
+
+~~1. Meta Events Manager -> Test Events. On `www.conka.io`, open DevTools and block `connect.facebook.net` (Network request-blocking) to simulate a blocked pixel.~~
+~~2. Add to cart. Confirm AddToCart + ViewContent + PageView still appear in Test Events, tagged **Server**. If they do, Phase 1 works. If only Purchase ever appears, Phase 1 is not deployed/working.~~
 
 **Verify Problem A (identity) before and after:**
 1. In Events Manager, open **Add to cart -> View details -> parameter/customer-information coverage**. Today it should show email coverage near 0% and low overall. Record it as the baseline.
@@ -173,7 +202,16 @@ Confirm the rebill source (Manage integrations), then stop rebills reaching Meta
 | `app/components/DelayedAnalytics.tsx` | Deferred GA + Triple Whale (not Meta). |
 | `app/layout.tsx` | Meta pixel init (host-gated), mounts tracker/provider/analytics. |
 
-## 6. Evidence log (2026-07-16)
+## 6. Evidence log
+
+### 2026-07-16 (afternoon) — Problem C confirmed and fixed, A4 disproven
+
+- **Shopify Admin -> Facebook & Instagram -> Settings -> Share data:** was **Maximum**, described in the UI as *"Meta Pixel, advanced matching, and Conversions API"*, pointed at dataset **CONKA Web Traffic `1138202151698404`** — byte-identical to `NEXT_PUBLIC_META_PIXEL_ID`. This is Problem C's source, confirmed. **Changed to Conservative.**
+- **Shopify tier semantics (from the live UI and Shopify's help doc):** Conservative = pixel only; Enhanced = pixel + advanced matching + **Conversions API**; Maximum = same as Enhanced **plus phone number**. Enhanced would not have fixed anything.
+- **Apex redirect tested:** `curl -sI "https://conka.io/?fbclid=TESTCLICK123"` -> `307` -> `https://www.conka.io/?fbclid=TESTCLICK123`. Query string preserved. A4 is moot.
+- **Access limits found while investigating (relevant to whoever picks this up):** `META_CAPI_ACCESS_TOKEN` is **write-only** — every Graph read returns `(#100) Missing Permission`, so pixel settings cannot be inspected via API. The site's `SHOPIFY_ADMIN_API_TOKEN` lacks `read_orders` and `read_apps`. The separate read-only `attribution-audit` app is the right vehicle for order-level analysis. **Do not add scopes to the production app** — a scope change forces a reinstall, which rotates the token the live site depends on.
+
+### 2026-07-16 (morning) — original diagnosis
 
 - **Meta Events Manager (Jun 18 - Jul 15):** PageView 26.4K (EMQ 6.1), ViewContent 12.7K (4.5, update recommended), AddToCart 419 (3.2, update recommended), InitiateCheckout 275 (3.0, update recommended), Purchase 110 (6.6, 29 ad sets), AddPaymentInfo 17, Lead 4. Purchase is >75% server (browser <25%); Purchase 96% covered on email+name+address.
 - **Shopify Admin API (attribution-audit app, read-only):** last ~400 orders = 293 Loop rebills, 84 web checkouts, 23 manual/draft. Web checkouts since 2026-06-02: 29 total; new customers (nth=1) 15, of which `_fbp` 15/15, `_fbc` 8/15. Rebills carry `_fbp`/`_fbc` ~0% (expected — no browser checkout).
