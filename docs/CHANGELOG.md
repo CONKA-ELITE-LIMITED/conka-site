@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-16** | Legacy blog Phase 3: all 82 old Shopify blog URLs now redirect instead of 404ing (53 to their new /blog post, 29 to the live page that owns the topic), blog posts enter the sitemap dated from Notion, and posts emit BlogPosting + FAQPage structured data
 - **2026-07-16** | Legacy blog Phase 1: HTML-to-Notion converter and idempotent importer for the 82-post Shopify archive, plus the pilot import of the one post still ranking while 404ing; blog images now re-host from Shopify/Wix instead of hot-linking
 - **2026-07-16** | Meta CAPI now fires server-side even when the browser pixel is blocked (in-app browsers/ad-blockers), recovering upper-funnel events for ad attribution
 - **2026-07-15** | Fade the home hero video base into the section-2 tint so it blends into the next section
