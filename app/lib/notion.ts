@@ -21,6 +21,31 @@ export function getNotionClient(): Client | null {
   return client;
 }
 
+/**
+ * The Notion client, or a build failure naming exactly what is missing.
+ *
+ * A missing or misspelt env var is the likeliest way this blog breaks, and it
+ * used to be the quietest: `getNotionClient` returns null when unconfigured,
+ * callers turned that into an empty result, and the build shipped a blog with
+ * no posts and a clean exit code. Since SCRUM-1157 that also points all 82
+ * legacy redirects at 404s.
+ *
+ * The cost is deliberate: you cannot build this site without Notion
+ * credentials any more. That is the correct trade now that 53 posts depend on
+ * them, and the message says what to set rather than leaving you to guess.
+ */
+function requireNotionClient(): Client {
+  const notion = getNotionClient();
+  if (!notion) {
+    throw new Error(
+      "[blog] NOTION_TOKEN and NOTION_BLOG_DATABASE_ID must both be set. " +
+        "Refusing to build: without them the blog renders empty and every " +
+        "/blogs/news/* redirect lands on a 404.",
+    );
+  }
+  return notion;
+}
+
 let dataSourceId: string | null = null;
 
 /**
@@ -57,11 +82,14 @@ export const queryBlogRows = cache(async function queryBlogRows(
     ? { property: "Status", select: { equals: "Published" } }
     : undefined;
 
+  // Outside the try: a config mistake is not a query failure and must not be
+  // reported as one.
+  const notion = requireNotionClient();
+
   const rows: NotionRow[] = [];
   try {
-    const notion = getNotionClient();
     const ds = await getBlogDataSourceId();
-    if (!notion || !ds) return [];
+    if (!ds) throw new Error("no data source on the Blog Hub database");
 
     let cursor: string | undefined;
     do {
@@ -114,8 +142,7 @@ export const queryBlogRows = cache(async function queryBlogRows(
 export const pageToMarkdown = cache(async function pageToMarkdown(
   pageId: string,
 ): Promise<string> {
-  const notion = getNotionClient();
-  if (!notion) return "";
+  const notion = requireNotionClient();
   try {
     const n2m = new NotionToMarkdown({ notionClient: notion });
     const blocks = await n2m.pageToMarkdown(pageId);
