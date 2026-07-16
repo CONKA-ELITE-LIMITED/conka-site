@@ -49,11 +49,22 @@ Make CAPI fire independently of the browser pixel for all events, so blocked tra
 
 ---
 
-## Phase 2 — Shopify native Customer Events pixel on checkout (FUTURE)
+## Phase 2 — Verify checkout-side events (reshaped 2026-07-16)
 
-The hosted checkout (`shop.conka.io`) is Shopify-sandboxed; we cannot inject JS or read our `_fbp`/`_fbc` cookies there. Shopify's native **Customer Events / web pixel** is the only sanctioned browser-side tracking on checkout and is free. Adds browser-side InitiateCheckout / AddPaymentInfo / Purchase with hashed data + dedup against our server events. ([Polar](https://www.polaranalytics.com/post/meta-capi-for-shopify-setup-guide-and-why-it-beats-browser-pixels), [Simo Ahava](https://www.simoahava.com/analytics/cookie-access-with-shopify-checkout-sgtm/))
+**Reshaped from "build a custom pixel" to "verify the channel first."** During implementation we confirmed the browser-side checkout events this phase was going to add **already exist**: the **Facebook & Instagram sales channel is installed and already fires InitiateCheckout, AddPaymentInfo, and Purchase** from the hosted checkout (`META_PIXEL_AND_CAPI.md`). Our server `orders/paid` webhook already dedups its Purchase against the channel using `String(order.id)` as the `event_id` (`app/api/webhooks/shopify/orders/route.ts`).
 
-Note: cookies scoped to `.conka.io` DO reach `shop.conka.io`, but the sandbox blocks reading them — so identity must keep travelling via **cart/note_attributes** (already implemented), not cookie reads at checkout.
+So building a custom Customer Events pixel that fires the same events would be a **third** source and, because the channel's `event_id` is undocumented/sandboxed, would **not reliably dedup** against it — a real double/triple-count risk on the exact metric ads optimise on. We do **not** build a competing pixel. This phase is now: prove the channel is doing its job and deduping with our server event; build a custom pixel later **only if** it is not.
+
+### Verification runbook (no code; Meta Events Manager + one real checkout)
+Needs production (pixel/CAPI gated to `www.conka.io`) and a real order. Closes the long-open A3/A4/C1 items in `HEADLESS_ATTRIBUTION_FIX.md`.
+
+1. **Channel is firing.** Events Manager → dataset `1138202151698404` → Events. Confirm InitiateCheckout, AddPaymentInfo, and Purchase all show recent activity with a **Conversions API + Browser** or **Browser** source on the checkout events. If any checkout event is missing, the channel is misconfigured (fix the channel, not code).
+2. **Server + channel Purchase dedup.** Place one real order. In Events Manager, the Purchase count should rise by **1**, not 2. If it roughly **doubles**, our server `event_id` does not match the channel's → change the `eventId` value in `app/api/webhooks/shopify/orders/route.ts` (one-line fix, noted in that file) and re-test. Use **Test Events** with `META_TEST_EVENT_CODE` set to watch a single order resolve to one deduplicated Purchase.
+3. **Match quality on checkout Purchase.** On the Purchase event, confirm `fbc`/`fbp`/email are present and **EMQ ≥7**. If EMQ is weak, the channel is not passing the click id — that is the trigger to reconsider a custom pixel we control.
+4. **Record the result** in `HEADLESS_ATTRIBUTION_FIX.md` (tick A3/A4/C1). If all pass, Phase 2 is done with no code and the custom-pixel option below stays parked.
+
+### Fallback (only if step 2 or 3 fails) — custom Customer Events pixel as a channel REPLACEMENT
+If the channel does not dedup or has poor match quality, build a Shopify **Customer Events custom pixel** that fires Purchase with `eventID = order.id` (matching our server webhook) plus IC/AddPaymentInfo, AND disable the channel's event firing so we do not triple-count. Identity still travels via **cart/note_attributes** (already implemented) because the sandbox cannot read our `.conka.io` cookies (it can via the `browser.cookie` API, but attributes are the deterministic path). This is a live-channel cutover — treat as its own ticket with careful before/after Purchase-count verification.
 
 ## Phase 3 — Triple Whale server-side signal + subscription hygiene (FUTURE)
 
@@ -78,3 +89,4 @@ Periodic check (extend `/review-analytics`): EMQ trend per event, server-event c
 
 ## Decision log
 - **2026-07-16** — Scoped after finding the pixel-gating flaw during a Triple Whale attribution investigation. Chose "harden own CAPI + Shopify native checkout pixel" over Gateway/Elevar. Phase 1 ticketed; 2-4 documented only.
+- **2026-07-16** — Phase 1 shipped (`c1b9ca6b`, PR #361, merged). Phase 2 **reshaped**: the Facebook & Instagram channel already fires the browser-side checkout events Phase 2 was going to add, so building a custom pixel would triple-count. Phase 2 is now "verify the channel dedups with our server Purchase; build a custom pixel only if it fails." No code shipped for Phase 2.
