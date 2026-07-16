@@ -1,21 +1,36 @@
 # Legacy Blog Migration (Shopify to Notion to /blog)
 
-**Status:** Triage complete, awaiting approval to import. Plan-doc only (no Jira yet).
+**Status:** Scoped 2026-07-16. Phase 1 active.
 **Owner:** Rudh.
 **Created:** 2026-07-16.
-**Part of:** The SEO / AEO programme. Feeds the blog surface (`blog-informational-content-surface.md`) via the engine contract (`blog-notion-engine-brief.md`). Discovered during the Search Console pass logged in `aeo-free-tool-runbook.md`.
+**Design system:** brand-base. No UI work: `/blog` is already built (SCRUM-1152).
+**Part of:** The SEO / AEO programme. Feeds `blog-informational-content-surface.md` via the engine contract in `blog-notion-engine-brief.md`. Discovered during the Search Console pass logged in `aeo-free-tool-runbook.md`.
 
 ---
 
 ## Problem
 
-**82 editorial posts and roughly 440,000 characters of on-brand content are live in Shopify and returning 404 on conka.io.** They were put on hold during the move to the bespoke Next.js site and never restored. They are not in the sitemap. They still serve at `shop.conka.io`, so nothing is lost, but nothing is reachable either.
+**82 editorial posts and roughly 440,000 characters of on-brand content are live in Shopify and returning 404 on conka.io.** They were paused during the move to the bespoke Next.js site and never restored. They are not in the sitemap. They still serve at `shop.conka.io`, so nothing is lost, but nothing is reachable.
 
-Google has not caught up. `/blogs/news/visualisation-mental-imagery-and-rehearsal` still ranks at **position 12.7 and drew 464 impressions in the last three months while returning a 404**. Every impression is a wasted result and the one click it earned hit an error page. That is live authority bleeding away daily.
+Google has not caught up. `/blogs/news/visualisation-mental-imagery-and-rehearsal` still ranks at **position 12.7 and drew 464 impressions in the last three months while returning a 404**.
+
+**Honest sizing:** the whole archive earns roughly **127 impressions and 1 click per three months**. This is a prospective bet on what restored and repaired content can earn, not a rescue of live traffic. The case rests on the archive being cheap raw material for lanes we would otherwise pay to author, not on recovering current traffic.
 
 ### The doc bug this exposed
 
-`blog-informational-content-surface.md` states that `/blogs/*` is "already a permanent 301 to `/why-conka` … left untouched". **No such redirect exists.** Every `source:` in `next.config.ts` was checked on 2026-07-16: there is no `/blogs` rule of any kind. The 404s are unhandled, not managed. The plan's rationale for choosing `/blog` over `/blogs` rested on a redirect that was never built. Choosing `/blog` is still correct, but the doc's claim that the old URLs are handled is false and must be corrected.
+`blog-informational-content-surface.md` states `/blogs/*` is "already a permanent 301 to `/why-conka` ... left untouched". **No such redirect exists.** Every `source:` in `next.config.ts` was checked on 2026-07-16, twice, independently: there is no `/blogs` rule of any kind. The 404s are unhandled, not managed. Choosing `/blog` is still correct, but the doc's claim that the old URLs are handled is false and must be corrected when this lands.
+
+## Who it serves
+
+Cold, non-brand organic searchers and AI answer engines at the top of the funnel, routed to the PDPs via in-article CTAs. Pure acquisition.
+
+## Business impact
+
+Takes `/blog` from 3 draft posts to roughly 58 published ones, and recovers the only page on the site with a proven non-brand organic footprint. Measured against `aeo-scorecard.md` (citation share) and the Search Console baseline (non-brand impressions, indexed URL count).
+
+## Appetite
+
+**3 to 4 days engineering** across Phases 1 to 3. The 55-post claims review (Phase 4) is a separate owner-paced stream and does not block the build.
 
 ## Why this outranks writing new content
 
@@ -32,65 +47,180 @@ The Phase 1 corpus (`aeo-demographic-query-research.md`) assumed the queue's job
 | **Perimenopause** | **0** |
 | **ADHD** | **0** |
 
-So Phase 2 of the research doc should be reframed from "what should we write" to **"what is missing from the 82"**. On that framing the answer is narrow and useful: perimenopause and ADHD, the two highest-intent lanes, have no coverage at all. Everything else needs restoring, not authoring. There is also a **military / blast-trauma** cluster (2 posts) serving an audience absent from the demographic taxonomy entirely.
+Phase 2 of the research doc should be reframed from "what should we write" to **"what is missing from the 82"**. On that framing: perimenopause and ADHD, the two highest-intent lanes, have no coverage. Everything else needs restoring, not authoring. There is also a **military / blast-trauma** cluster (2 posts) serving an audience absent from the demographic taxonomy entirely.
 
-## The URL rule (the highest-leverage decision here)
+## The URL rule (highest-leverage decision here)
 
 **Import each post with `Slug` set to its existing Shopify handle, unchanged.**
 
-Old URLs are `/blogs/news/<handle>`; the new surface is `/blog/<slug>`. If the handles are preserved, the whole archive is recovered by one wildcard redirect:
+Old URLs are `/blogs/news/<handle>`; the new surface is `/blog/<slug>`. Preserve the handles and the whole archive is recovered by one wildcard redirect:
 
-```
+```js
 { source: '/blogs/news/:handle', destination: '/blog/:handle', permanent: true }
 ```
 
-Every post's accumulated authority transfers to its own replacement. If slugs are "improved" during import, that becomes a hand-maintained 82-row mapping table and anything missed dies silently. **The slug is a technical constraint, not an editorial choice.** Retitling is free (the H1 comes from `Blog name`); re-slugging is not.
+Re-slug anything and it needs its own hand-written redirect row; anything missed keeps 404ing and loses its ranking. **The slug is a technical constraint, not an editorial choice.** Retitling is free (the H1 comes from `Blog name`).
 
-Handles for dropped posts still need redirect targets, or they stay 404 (see the not-imported table).
+Confirmed no catch-all interferes: `/pages/:path*` and `/shop/:path*` do not match `/blogs/*`.
+
+---
 
 ## Approach
 
-Import the triaged set into the existing Blog Hub Notion database so the built pipeline (Notion to `notion-to-md` to SSG) picks them up with no special-case code, and the `Status = Published` gate gives each post a claims review before it goes live.
+A one-off Node script converts cleaned Shopify HTML into native Notion blocks and writes rows into the existing Blog Hub database as `Draft`. Nothing else changes: the built pipeline (`app/lib/blog.ts` to `notion-to-md` to SSG, with build-time image rehosting) renders them unmodified.
 
-- **Source:** all 130 articles (82 editorial + 48 ingredient) already pulled via the **Storefront API**. Note the Admin API refused with `[API] This action requires merchant approval for read_content scope` — Storefront was sufficient and needs no new grant. If the engine ever needs Admin content access, that scope must be added.
-- **Conversion:** Shopify bodies are HTML using the same narrow subset the engine brief already targets (H2/H3, paragraphs, bullets, bold, links, images), so HTML to native Notion blocks is mechanical.
-- **Separation:** the engine writes into this database concurrently. Add a `Source` select (`legacy` / `engine`) so the two streams stay separable, or reuse `Angle`.
-- **Columns:** `Slug` = existing handle (above). `Blog name`, `Meta description`, `Related products`, `Topic` per the brief. `Status` left `Draft`; **never set `Published` on import.**
+### Source data (verified 2026-07-16)
 
-## The real cost is review, not import
+Pulled via the **Storefront API** (`articles(first:50)` paginated, 130 articles: 82 editorial + 48 ingredient).
 
-The import is automatable in an afternoon. **55 posts means 55 claims reviews**, and these were written in 2022 to 2023, before the current claims posture. Known flags are called out per row below. That queue, not the conversion, is the bottleneck, and it is the reason to import in lane batches rather than all at once.
+- **Use `contentHtml`, not `content`.** `content` returns plain text with all structure stripped. An earlier pass used `content` and wrongly concluded the bodies were clean HTML. This mistake is recorded because it is easy to repeat.
+- The **Admin API refused** with `[API] This action requires merchant approval for read_content scope`. Storefront needed no new grant and carries `contentHtml`, `image`, `authorV2`, `tags`, `seo`. Only add the Admin scope if a future need demands it.
 
-## Suggested order
+### The cleanup, quantified (of the 55 imports)
 
-1. **`visualisation-mental-imagery-and-rehearsal` first**, alone. It is the only post still ranking. It proves the pipeline end to end on the one URL where a 404 is actively costing traffic.
-2. **Ship the wildcard redirect** as soon as the first batch is published.
-3. Then by lane, highest existing coverage first: sport/concussion (20), focus (14), nootropic (13).
-4. **Then** commission perimenopause and ADHD from the engine, the only genuine content gaps.
+| Structural state | Count | Handling |
+|---|---|---|
+| Real `<h2>`/`<h3>` already | 23 | Convert as-is |
+| Fake headings (`<p><strong>Title</strong></p>`) | 25 | Automated promotion to `<h2>` |
+| **No recoverable structure** | **7** | **Manual pass (listed below)** |
+| Empty `<figure><figcaption></figcaption></figure>` shells | 35 | Strip |
+| Em dashes (violates the engine contract) | 20 | Normalise to commas |
+| `<meta charset>` inside the body | 16 | Strip |
+| span (3,799) / div (1,271) ProseMirror junk | all | Strip |
+| **SEO meta description present** | **0 of 55** | Must be authored |
+| Excerpt present | 0 of 55 | Ignore |
+| Hero image present | 54 of 55 | Rehost at build |
+| `authorV2` present | 55 of 55 | Available if an Author column is ever added |
 
-## Ingredient blog (48 posts) — deferred, not triaged
+Cleanup is **87% deterministic**. The fake-heading rule recovers real section titles (verified: "Basis of Language: Brain Regions", "How We Acquire Language").
 
-`/blogs/ingredients/*` holds 48 posts, but they are 16 ingredients x 3 near-duplicate variants (`-ip` / `-cd` / `-ms` suffixes, e.g. `ashwagandha-ip`, `ashwagandha-cd`, `ashwagandha-ms`). Publishing three near-identical pages per ingredient is a duplicate-content problem, and `/ingredients` already owns that surface. **Decide the dedupe rule before touching these.** Out of scope for this pass.
+**The 7 posts needing a manual structure pass:**
+`the-neuroscience-of-procrastination-why-your-brain-delays-and-how-to-overcome-it`, `the-neuroscience-behind-a-hangover-what-happens-to-your-brain-after-drinking`, `how-to-build-the-power-to-overcome-challenges`, `how-does-ashwagandha-help-reduce-brain-fog`, `how-can-breathwork-improve-your-physical-and-mental-health`, `what-is-dopamine-signalling-and-what-can-we-learn-from-adhd-paranoid-schizophrenia-psz`, `rice-vs-meat-movement-is-the-panacea-for-injury`.
+
+### Verified state of the pipeline (do not re-derive)
+
+- `app/lib/blog.ts` is **fully built**. `getAllPosts({includeUnpublished})`, `getPostBySlug(slug)`. Reads exactly: `Blog name`, `Slug`, `Meta description`, `Hero image`, `Hero image alt`, `Date published`, `Topic`, `Related products`. Malformed rows are skipped with `console.warn`; **a duplicate slug throws and fails the build** (so the 3 existing drafts must not collide).
+- `app/lib/notion.ts` uses `@notionhq/client` v5, resolves a data source id, queries paginated at 100/page, filtering `Status select equals Published`. **Status is confirmed a `select`, so the filter is correct.**
+- **Image rehosting is implemented, not planned.** `rehostImage()` / `rehostBodyImages()` download to `public/blog/<slug>/`. `public/blog/` does not exist yet: nothing has ever been published.
+- `notion-to-md ^3.1.9` and `@notionhq/client ^5.23.2` are installed.
+- **`app/sitemap.ts` has no blog entries at all**, despite the blog doc listing this as Phase 3 work.
+
+### Live Notion schema (fetched 2026-07-16)
+
+Blog Hub properties: `Blog name` (title), `Slug`, `Meta description`, `Related products` (multi-select: flow/clear/both), `Hero image`, `Hero image alt`, `Date published`, `Status` (select: Draft / Ready for review / Published), `Topic` (multi-select: **ADHD / Brain Ageing / Productivity only**), `Angle`, `Source Files`.
+
+Two gaps: there is **no `Source` field** to separate legacy from engine rows, and **`Topic` cannot express the real lanes** (sport, concussion, brain fog, recovery, neuroscience, nootropics, military). Both are Phase 1 task 3.
+
+---
+
+## Phases
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 1 | Converter + Notion schema prep + pilot the one ranking post | **Active** |
+| 2 | Bulk convert and import the remaining 54 as Draft; hand-structure the 7 | Active |
+| 3 | Redirects, sitemap, go-live | Active |
+| 4 | Review and publish queue (owner, `/review-claims`) | Recurring |
+| 5 | Ingredient blog (48 posts) | Future, gated |
+
+### Phase 1: Converter + pilot
+
+1. **[Infra] HTML to Notion block converter**
+   - What: `scripts/legacy-blog/convert.ts`. Sanitise (strip span/div/meta/class/id, drop empty figures, promote `<p><strong>` to `heading_2`, normalise em dashes), then emit Notion block JSON: `heading_2`/`heading_3`, `paragraph`, `bulleted_list_item`, `numbered_list_item`, rich-text annotations for bold/italic, links with `href`, `image` blocks.
+   - Dependencies: none. Source JSON already pulled.
+   - Complexity: Medium.
+   - Files: `scripts/legacy-blog/convert.ts` (new).
+
+2. **[Infra] Notion writer + column mapping**
+   - What: `scripts/legacy-blog/import.ts`. `Slug` = Shopify handle verbatim. `Blog name` = title. `Date published` = Shopify `publishedAt`. `Status` = `Draft`, never `Published`. `Source` = `legacy`. Idempotent: match on slug and update rather than duplicate, so re-runs are safe.
+   - Dependencies: tasks 1 and 3.
+   - Complexity: Medium.
+   - Files: `scripts/legacy-blog/import.ts` (new).
+
+3. **[Data] Notion schema prep**
+   - What: add a `Source` select (`legacy` / `engine`). Extend `Topic` options to cover Sport, Concussion, Brain Fog, Recovery, Neuroscience, Nootropics, Military.
+   - Dependencies: none. **Blocks task 2.**
+   - Complexity: Small.
+   - Files: Notion (no code).
+
+4. **[Verify] Pilot the ranking post**
+   - What: import `visualisation-mental-imagery-and-rehearsal` alone, publish it, confirm it renders at `/blog/visualisation-mental-imagery-and-rehearsal`, images rehost to `public/blog/<slug>/`, metadata and the product CTA fire. Proves the pipeline on the one URL where a 404 is actively costing traffic.
+   - Dependencies: tasks 1, 2, 3.
+   - Complexity: Small.
+
+### Phase 2: Bulk import
+
+5. **[Infra] Convert and import the remaining 54** as `Draft`. Depends on Phase 1. Medium.
+6. **[Content] Hand-structure the 7 unstructured posts** listed above. Depends on task 5. Medium.
+7. **[Content] Author 55 meta descriptions** (0 exist). Can lag: `Blog name` + `Slug` are enough to import. Medium.
+
+### Phase 3: Redirects, sitemap, go-live
+
+8. **[Infra] Wildcard 301** `{ source: '/blogs/news/:handle', destination: '/blog/:handle', permanent: true }` in `next.config.ts` `redirects()`. Small.
+9. **[Infra] Redirects for the 27 dropped handles**, per the not-imported table. Small.
+10. **[SEO] Blog entries in `app/sitemap.ts`.** Note its `lastModified` is git-derived and a Notion-sourced route has no git file, so use Notion `last_edited_time`. Small.
+
+---
+
+## Rabbit holes
+
+- **Hand-rewriting 55 posts.** The converter is deterministic; only the 7 structureless posts get human attention. If the converter starts needing per-post special cases, stop and route those posts to Humphrey's engine for rewrite instead.
+- **Rebuilding the renderer.** The pipeline works. This is data-in, nothing else.
+- **The 48 ingredient posts.** 16 ingredients x 3 near-duplicate variants (`-ip` / `-cd` / `-ms`, e.g. `ashwagandha-ip`, `ashwagandha-cd`, `ashwagandha-ms`). Publishing three near-identical pages per ingredient is a duplicate-content problem and `/ingredients` already owns that surface. Phase 5, gated on a dedupe rule.
+- **Perfecting old copy.** The `Status` gate is where quality is judged, one post at a time. Do not block the import on it.
+
+## No-gos
+
+- **No re-slugging.** Slug = Shopify handle, always.
+- **No auto-publish.** Everything imports as `Draft`. The `Status` flip stays human.
+- **No importing the 27 dropped posts.**
+- **No touching `/blogs/ingredients/*`** this pass.
+- **No engine dependency.** The import is self-contained.
+- **No new UI.** `/blog` is built.
 
 ## Risks
 
-- **Claims exposure.** 55 posts of 2022-23 health copy through a modern claims gate. Highest-risk titles flagged per row.
-- **Slug drift.** Any re-slugging during import silently forfeits that post's authority. See the URL rule.
-- **Database pollution.** 55 legacy rows landing in the database the engine writes into. Mitigate with a `Source` field before importing.
-- **Thin and overlapping posts.** Several are under 3k chars, and `flow-states` overlaps `the-state-of-flow-part-l`/`-ll`. Merge or differentiate rather than publishing three thin pages on one topic.
-- **Doc drift.** The false `/blogs/*` redirect claim shows the blog plan doc has drifted from the code. Correct it when this lands.
+- **`static.wixstatic.com` images.** Some images sit on a third-party host that can vanish independently of Shopify. Build-time rehosting only catches them while the host lives. Mirror during import.
+- **Silent Notion failure.** `app/lib/notion.ts` swallows every error and returns `[]`: a failed query renders an empty blog with a clean build. 55 posts makes this worse. Recommend a build-time assertion. **Exists independent of this work.**
+- **Claims exposure.** 55 posts of 2022-23 health copy through a modern gate. Flagged: `how-does-ashwagandha-help-reduce-brain-fog`, `10-daily-habits-to-naturally-detoxify-the-brain-and-improve-cognitive-health`, `what-is-dopamine-signalling...psz`.
+- **Build time.** 55 posts x hero + in-body downloads. `getAllPosts` is re-invoked per article for related posts; the query is `react.cache`d but the filesystem probing is not.
+- **Slug collision** with the 3 existing drafts fails the build (by design).
+- **Doc drift.** The false `/blogs/*` redirect claim, and `blog-informational-content-surface.md` saying "Phase 1 built (SCRUM-1151)" while **SCRUM-1151 is still `To Do`**. Correct both when this lands.
 
 ## Open questions
 
-1. **Were any posts deliberately dropped?** The premise here is that all 82 were paused for the migration and none were killed on purpose. Confirmed by Rudh 2026-07-16 ("temporarily on hold whilst we moved to the bespoke site"), so the triage is editorial rather than a reversal of an earlier decision.
-2. **`Source` field or `Angle` reuse** for legacy/engine separation?
-3. **Redirect targets for the 27 dropped posts.** Proposed per row; needs a call on whether athlete stories go to `/case-studies` individually or as a group.
+1. **`Topic` options:** extend to the real lanes, or leave legacy untagged? Recommend extend (Phase 1 task 3).
+2. **Meta descriptions for 55 posts:** engine or owner? Unavoidable either way; can lag behind Phase 2.
+3. **Redirect targets for the 27 dropped posts:** athlete stories to `/case-studies` individually, or as a group?
+
+## References
+
+- Triage source data: Storefront API, `contentHtml` (not `content`).
+- Blog surface and pipeline: `docs/development/featurePlans/blog-informational-content-surface.md`
+- Engine contract: `docs/development/featurePlans/blog-notion-engine-brief.md`
+- Demand research this reframes: `docs/development/featurePlans/aeo-demographic-query-research.md`
+- Where the 404 was found: `docs/development/featurePlans/aeo-free-tool-runbook.md`
+- Code: `app/lib/blog.ts`, `app/lib/notion.ts`, `app/blog/[slug]/page.tsx`, `app/sitemap.ts`, `next.config.ts`
+
+## Jira
+
+Sprint 28, under the Website & CRO epic (SCRUM-763). Chained with `Blocks` links: 1155 to 1156 to 1157.
+
+| Ticket | Title | Phase | Status |
+|--------|-------|-------|--------|
+| [SCRUM-1155](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1155) | [Website & CRO] Legacy blog Phase 1: HTML to Notion converter and pilot import | 1 | To Do |
+| [SCRUM-1156](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1156) | [Website & CRO] Legacy blog Phase 2: bulk import the remaining 54 posts as Draft | 2 | To Do |
+| [SCRUM-1157](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1157) | [Website & CRO] Legacy blog Phase 3: redirects, sitemap and go-live | 3 | To Do |
+
+Phases 4 and 5 stay in this doc until active.
+
+**Adjacent tickets worth noting:** SCRUM-1151 (blog Phase 6.1, Notion data layer) is still `To Do` in Jira despite its code being merged and `blog-informational-content-surface.md` claiming "Phase 1 built". SCRUM-1152 (blog UI) is `Done`.
 
 ---
 
 ## Triage
 
-**82 editorial posts: 55 import, 27 do not.** Every post is accounted for below.
+**82 editorial posts: 55 import, 27 do not.** Every post is accounted for.
 
 ### Import (55)
 
