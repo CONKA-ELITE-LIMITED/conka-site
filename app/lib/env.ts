@@ -3,6 +3,12 @@
  *
  * This module validates required environment variables at startup
  * to fail fast with clear error messages instead of failing at runtime.
+ *
+ * CAVEAT: nothing currently calls `validateEnv` or `assertEnv`, so the lists
+ * below are documentation, not enforcement. Adding a variable to
+ * `requiredEnvVars` does not by itself make anything fail. Each consumer still
+ * has to check for what it needs (see `requireNotionClient` in notion.ts,
+ * which is what actually fails a build when the Notion vars are missing).
  */
 
 // Required environment variables for core functionality
