@@ -3,12 +3,32 @@
  *
  * This module validates required environment variables at startup
  * to fail fast with clear error messages instead of failing at runtime.
+ *
+ * CAVEAT: nothing currently calls `validateEnv` or `assertEnv`, so the lists
+ * below are documentation, not enforcement. Adding a variable to
+ * `requiredEnvVars` does not by itself make anything fail. Each consumer still
+ * has to check for what it needs (see `requireNotionClient` in notion.ts,
+ * which is what actually fails a build when the Notion vars are missing).
  */
 
 // Required environment variables for core functionality
 const requiredEnvVars = [
   "NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN",
   "NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN",
+  // Notion Blog Hub. Both must be set in EVERY environment a build runs in,
+  // Production and Preview included. They were listed as optional on the
+  // grounds that "the blog surface degrades to empty if unset rather than
+  // breaking the rest of the site", which stopped being true in SCRUM-1157:
+  // /blog now serves 53 posts and every /blogs/news/* URL redirects into it,
+  // so an unset var means a silently empty archive and 82 live URLs pointing
+  // at 404s. app/lib/notion.ts now fails the build instead.
+  //
+  // This is not hypothetical: NOTION_BLOG_DATABASE_ID was scoped to
+  // Development only while NOTION_TOKEN was scoped to Production and Preview,
+  // so the two never coexisted in one build and production had never rendered
+  // a single post.
+  "NOTION_TOKEN",
+  "NOTION_BLOG_DATABASE_ID",
 ] as const;
 
 // Optional environment variables (warn if missing, don't fail)
@@ -16,10 +36,6 @@ const optionalEnvVars = [
   "LOOP_API_KEY",
   "SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID",
   "SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID",
-  // Notion Blog Hub (SEO Phase 6). Optional: the blog surface degrades to empty
-  // if unset rather than breaking the rest of the site.
-  "NOTION_TOKEN",
-  "NOTION_BLOG_DATABASE_ID",
 ] as const;
 
 interface EnvValidationResult {
