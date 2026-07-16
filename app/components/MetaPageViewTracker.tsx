@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { trackMetaPageView, isProductionHost, captureFbcFromUrl } from "@/app/lib/metaPixel";
+import {
+  trackMetaPageView,
+  firePixelOnly,
+  isProductionHost,
+  isPixelAvailable,
+  captureFbcFromUrl,
+} from "@/app/lib/metaPixel";
 
 /**
- * Fires a single Meta PageView with event_id and sends the same event to CAPI
- * for deduplication. Runs once per mount (SPA navigations may mount again).
- * Non-blocking; does not affect render or performance.
+ * Fires a single Meta PageView. The CAPI (server) event fires immediately and
+ * independently of the pixel, so PageView is reported even when the pixel is
+ * blocked or slow to load (in-app browsers, ad-blockers). The browser pixel
+ * twin fires as soon as `fbq` is available, under the SAME event_id, so the two
+ * dedup Meta-side rather than double-count. Runs once per mount (SPA navigations
+ * may mount again). Non-blocking; does not affect render or performance.
  */
 export default function MetaPageViewTracker() {
   const fired = useRef(false);
@@ -16,22 +25,25 @@ export default function MetaPageViewTracker() {
     if (!process.env.NEXT_PUBLIC_META_PIXEL_ID) return;
     // Production storefront only — never fire on preview deploys or localhost.
     if (!isProductionHost()) return;
+    fired.current = true;
 
     // Capture the ad-click id (fbclid -> _fbc) immediately on landing, before the
     // first cart action and independent of pixel load, so it reaches the order.
     captureFbcFromUrl();
 
-    const tryFire = () => {
-      if (typeof window === "undefined" || !window.fbq) return false;
-      fired.current = true;
-      trackMetaPageView();
-      return true;
-    };
+    // Fire CAPI now (always) + the browser pixel if it is already loaded.
+    const eventId = trackMetaPageView();
+    if (!eventId) return;
+    // Browser twin already fired inside trackMetaPageView.
+    if (isPixelAvailable()) return;
 
-    if (tryFire()) return;
-
+    // Pixel not ready yet: fire the browser twin with the same event_id once it
+    // loads, so it dedups against the CAPI event we just sent.
     const t = setInterval(() => {
-      if (tryFire()) clearInterval(t);
+      if (isPixelAvailable()) {
+        firePixelOnly("PageView", eventId);
+        clearInterval(t);
+      }
     }, 100);
     const timeout = setTimeout(() => clearInterval(t), 5000);
     return () => {

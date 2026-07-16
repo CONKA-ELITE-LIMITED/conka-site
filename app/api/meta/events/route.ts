@@ -8,9 +8,18 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "crypto";
 
 const META_GRAPH_VERSION = "v21.0";
 const META_GRAPH_URL = `https://graph.facebook.com/${META_GRAPH_VERSION}`;
+
+/** SHA-256 hex of a normalized email (trim + lowercase). Undefined for empty input. */
+function hashEmail(email: string | undefined): string | undefined {
+  if (!email) return undefined;
+  const normalized = email.trim().toLowerCase();
+  if (!normalized) return undefined;
+  return createHash("sha256").update(normalized).digest("hex");
+}
 
 /**
  * Production storefront host. CAPI forwards events only when the request comes
@@ -23,7 +32,7 @@ interface CAPIRequestBody {
   event_name: string;
   event_id: string;
   event_time: number;
-  user_data?: { fbp?: string; fbc?: string };
+  user_data?: { fbp?: string; fbc?: string; email?: string };
   custom_data?: Record<string, unknown>;
 }
 
@@ -70,6 +79,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "invalid event_time" }, { status: 400 });
     }
 
+    // Hash the logged-in email (when present) for em + external_id — the highest
+    // Event Match Quality signals. Hashing is server-side so raw email never
+    // leaves our origin. Absent for logged-out visitors, which is expected.
+    const emHash = hashEmail(user_data?.email);
+
     const serverEvent: Record<string, unknown> = {
       event_name,
       event_id,
@@ -83,6 +97,7 @@ export async function POST(request: NextRequest) {
           request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined,
         ...(user_data?.fbp && { fbp: user_data.fbp }),
         ...(user_data?.fbc && { fbc: user_data.fbc }),
+        ...(emHash && { em: emHash, external_id: emHash }),
       },
       ...(custom_data && Object.keys(custom_data).length > 0 && { custom_data }),
     };
