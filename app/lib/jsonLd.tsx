@@ -122,6 +122,48 @@ export function buildProductSchema(input: ProductSchemaInput) {
   };
 }
 
+interface BlogPostingSchemaInput {
+  /** The post headline, which is also the page H1. */
+  title: string;
+  description: string;
+  /** Root-relative canonical path, e.g. "/blog/some-slug". */
+  urlPath: string;
+  /** Root-relative hero path, or null when the post has no hero. */
+  imagePath: string | null;
+  /** ISO date, or null when the post carries no publish date. */
+  datePublished: string | null;
+  /** ISO datetime from Notion `last_edited_time`. */
+  dateModified: string;
+}
+
+/**
+ * Build a schema.org BlogPosting node (SCRUM-1157).
+ *
+ * Author and publisher both reference the Organization `@id` rather than naming
+ * a person: posts are published under the CONKA masthead, and the legacy archive
+ * carries a Shopify `authorV2` we deliberately do not import (there is no Author
+ * column). Referencing the one verifiable entity beats inventing a byline.
+ *
+ * `image` and `datePublished` are omitted rather than faked when absent: an
+ * absent field is honest, a wrong one poisons the entity.
+ */
+export function buildBlogPostingSchema(input: BlogPostingSchemaInput) {
+  const url = absoluteUrl(input.urlPath);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: toPlainText(input.title),
+    description: toPlainText(input.description),
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    ...(input.imagePath ? { image: absoluteUrl(input.imagePath) } : {}),
+    ...(input.datePublished ? { datePublished: input.datePublished } : {}),
+    dateModified: input.dateModified,
+    author: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
+  };
+}
+
 /** Build a schema.org FAQPage node from question/answer pairs. Answers are plain text. */
 export function buildFaqSchema(items: { question: string; answer: string }[]) {
   return {

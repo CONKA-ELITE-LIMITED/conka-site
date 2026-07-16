@@ -9,6 +9,7 @@ import ProductCTA from "@/app/components/blog/ProductCTA";
 import RelatedPosts from "@/app/components/blog/RelatedPosts";
 import { getAllPosts, getPostBySlug } from "@/app/lib/blog";
 import { formatBlogDate } from "@/app/lib/blogTransform";
+import { JsonLd, buildBlogPostingSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
 // includeUnpublished renders Drafts in dev preview; the loader keeps a
 // production build Published-only.
@@ -61,6 +62,20 @@ export default async function BlogArticlePage({
 
   return (
     <div className="brand-clinical min-h-screen bg-white text-black flex flex-col">
+      <JsonLd
+        schema={buildBlogPostingSchema({
+          title: post.title,
+          description: post.description,
+          urlPath: `/blog/${post.slug}`,
+          imagePath: post.heroImage,
+          datePublished: post.datePublished,
+          dateModified: post.dateModified,
+        })}
+      />
+      {/* Only when the post actually has an FAQ: an empty FAQPage is a
+          structured-data error, and the format is optional per the engine brief. */}
+      {post.faq.length > 0 && <JsonLd schema={buildFaqSchema(post.faq)} />}
+
       <Navigation />
 
       <article>

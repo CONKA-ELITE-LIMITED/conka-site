@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { LEGACY_BLOG_REDIRECTS } from "./app/lib/legacyBlogRedirects";
 
 const securityHeaders = [
   {
@@ -125,6 +126,10 @@ const nextConfig: NextConfig = {
         destination: '/account/login',
         permanent: true,
       },
+      // The legacy Shopify blog archive: 29 specific rules then the wildcard.
+      // Order matters and is documented in the module. Nothing below may match
+      // /blogs/*, so these stay last. See SCRUM-1157.
+      ...LEGACY_BLOG_REDIRECTS,
     ];
   },
 

@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import type { MetadataRoute } from "next";
+import { getAllPosts } from "@/app/lib/blog";
 import { SITE_ORIGIN } from "@/app/lib/site";
 
 /**
@@ -24,6 +25,13 @@ import { SITE_ORIGIN } from "@/app/lib/site";
  * omitting the hint beats inventing one.
  *
  * When a new indexable page ships, add a ROUTES line with its source paths.
+ *
+ * Blog posts are the exception to the git rule: they are Notion-sourced and have
+ * no source file of their own, so a git date would be meaningless (every post
+ * would share the date of `blog/[slug]/page.tsx`). They use Notion's
+ * `last_edited_time` instead, which is the real answer to "when did this page
+ * change". They come from `getAllPosts`, the single source of truth for the
+ * Published filter, so a Draft can never leak into the sitemap.
  */
 
 /** Last commit date touching any of `paths`, or undefined if git cannot tell us. */
@@ -212,11 +220,51 @@ const ROUTES: Route[] = [
   },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return ROUTES.map(({ path, priority, changeFrequency, sources }) => ({
-    url: `${SITE_ORIGIN}${path}`,
-    lastModified: gitLastModified(sources),
-    changeFrequency,
-    priority,
-  }));
+/**
+ * The blog index plus one entry per Published post.
+ *
+ * The index is dated by its newest post rather than by git: what a visitor sees
+ * change there is the list of posts, not the component that renders it.
+ *
+ * `/blog` is listed unconditionally. It is a live, indexable page whether or not
+ * Notion answers, and `getAllPosts` degrades to an empty array on any Notion
+ * failure, so keying its presence off the post count would silently drop a real
+ * page from the sitemap during an outage. With no posts it simply ships without
+ * a `lastmod`, the same way a route git cannot date does: omitting the hint
+ * beats inventing one, and dropping the URL is worse than both.
+ */
+async function blogEntries(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getAllPosts();
+  const modified = posts.map((post) => new Date(post.dateModified));
+  const newest = modified.length
+    ? modified.reduce((a, b) => (a > b ? a : b))
+    : undefined;
+
+  return [
+    {
+      url: `${SITE_ORIGIN}/blog`,
+      lastModified: newest,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    ...posts.map((post, i) => ({
+      url: `${SITE_ORIGIN}/blog/${post.slug}`,
+      // Notion's last_edited_time: a Notion-sourced route has no git file.
+      lastModified: modified[i],
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return [
+    ...ROUTES.map(({ path, priority, changeFrequency, sources }) => ({
+      url: `${SITE_ORIGIN}${path}`,
+      lastModified: gitLastModified(sources),
+      changeFrequency,
+      priority,
+    })),
+    ...(await blogEntries()),
+  ];
 }

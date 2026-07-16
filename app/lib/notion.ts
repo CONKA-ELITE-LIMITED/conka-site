@@ -21,6 +21,31 @@ export function getNotionClient(): Client | null {
   return client;
 }
 
+/**
+ * The Notion client, or a build failure naming exactly what is missing.
+ *
+ * A missing or misspelt env var is the likeliest way this blog breaks, and it
+ * used to be the quietest: `getNotionClient` returns null when unconfigured,
+ * callers turned that into an empty result, and the build shipped a blog with
+ * no posts and a clean exit code. Since SCRUM-1157 that also points all 82
+ * legacy redirects at 404s.
+ *
+ * The cost is deliberate: you cannot build this site without Notion
+ * credentials any more. That is the correct trade now that 53 posts depend on
+ * them, and the message says what to set rather than leaving you to guess.
+ */
+function requireNotionClient(): Client {
+  const notion = getNotionClient();
+  if (!notion) {
+    throw new Error(
+      "[blog] NOTION_TOKEN and NOTION_BLOG_DATABASE_ID must both be set. " +
+        "Refusing to build: without them the blog renders empty and every " +
+        "/blogs/news/* redirect lands on a 404.",
+    );
+  }
+  return notion;
+}
+
 let dataSourceId: string | null = null;
 
 /**
@@ -57,11 +82,14 @@ export const queryBlogRows = cache(async function queryBlogRows(
     ? { property: "Status", select: { equals: "Published" } }
     : undefined;
 
+  // Outside the try: a config mistake is not a query failure and must not be
+  // reported as one.
+  const notion = requireNotionClient();
+
   const rows: NotionRow[] = [];
   try {
-    const notion = getNotionClient();
     const ds = await getBlogDataSourceId();
-    if (!notion || !ds) return [];
+    if (!ds) throw new Error("no data source on the Blog Hub database");
 
     let cursor: string | undefined;
     do {
@@ -90,10 +118,21 @@ export const queryBlogRows = cache(async function queryBlogRows(
       cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
     } while (cursor);
   } catch (err) {
-    // A Notion outage, rate-limit, or bad token must not fail the whole site
-    // build: degrade to an empty blog and let the rest of the site ship.
-    console.error("[blog] Notion query failed, returning no posts:", err);
-    return [];
+    // Fail the build rather than ship a silently empty blog.
+    //
+    // This used to swallow the error and return [], so that a Notion outage
+    // could not take the whole site down with it. That was right when the blog
+    // was three drafts and wrong now: [] is indistinguishable from "there are
+    // genuinely no posts", so a rate-limit or blip during a Vercel build
+    // generated zero post routes, rendered an empty /blog, exited 0, and
+    // deployed. Every legacy URL then 308s into a 404 (SCRUM-1157) until a
+    // human happens to notice. A deploy that refuses to ship beats a deploy
+    // that quietly breaks the archive.
+    throw new Error(
+      `[blog] Notion query failed, refusing to build a blog with no posts: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
   }
 
   return rows;
@@ -103,15 +142,22 @@ export const queryBlogRows = cache(async function queryBlogRows(
 export const pageToMarkdown = cache(async function pageToMarkdown(
   pageId: string,
 ): Promise<string> {
-  const notion = getNotionClient();
-  if (!notion) return "";
+  const notion = requireNotionClient();
   try {
     const n2m = new NotionToMarkdown({ notionClient: notion });
     const blocks = await n2m.pageToMarkdown(pageId);
     const md = n2m.toMarkdownString(blocks);
     return md.parent ?? "";
   } catch (err) {
-    console.error(`[blog] failed to convert page ${pageId} to markdown:`, err);
-    return "";
+    // Same reasoning as queryBlogRows: fail the build, do not ship the damage.
+    // This fetches a post's blocks, a separate call from the row query, so it
+    // can fail on its own. Returning "" published the post with its title,
+    // hero, metadata and CTA but no article text: live, indexable, and green.
+    // An empty page reads as deliberate, so it is worse than a 404.
+    throw new Error(
+      `[blog] failed to convert page ${pageId} to markdown, refusing to ship an empty post: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
   }
 });

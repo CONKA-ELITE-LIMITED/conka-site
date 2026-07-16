@@ -120,7 +120,8 @@ estimates above, which were made before a converter existed.
 5. **`MarkdownBody.tsx` needs three fixes before the bulk import publishes.** Found by inspecting the pilot's prerendered production HTML. None block the pilot; all block SCRUM-1156.
    - **No `break-words` on `p`/`li`, and no `table` mapping.** 13 of the 53 carry bare unbroken reference URLs (longest **342 chars**, `the-power-of-mind`) and 2 carry tables (`cognitive-enhancers-for-athletes-what-the-science-says`, `creatine-for-the-brain-more-than-just-muscle`). Both overflow horizontally at 390px.
    - **No `img` mapping**, so in-body images render as a raw `<img>`: no `next/image`, no width/height (layout shift), no lazy loading. And `notion-to-md` fabricates the alt text from the filename, so the pilot currently ships `alt="ea1736_841af758b0434bc4ae79ca5f87e2e550_mv2.avif"`. **Nothing can be salvaged from the source:** 0 of the 100 in-body images have usable alt text (60 are empty, the other 40 are the literal string `ree`, Wix junk). Map `img` to an empty alt (decorative) or author alts as part of the Phase 2 content pass.
-6. **The blog surface emits no JSON-LD at all.** `app/blog/[slug]/page.tsx` has no `BlogPosting` and no `FAQPage`, even though `blog.ts` already parses the FAQ via `extractFaq` and the engine brief sells the FAQ format on the grounds that it "lets the site publish structured FAQ data that answer engines read". For a programme whose entire case rests on organic ranking and AI citation, this is a large gap and it exists independent of this migration. Belongs with the sitemap work in SCRUM-1157.
+6. **A build run straight after a Notion status change bakes a 404 for a published post.** Observed while building Phase 3, not theorised. Seconds after flipping two rows to `Published`, one build produced: `generateStaticParams` seeing 3 published posts, but `getPostBySlug` and `sitemap` seeing 1. Next then prerendered `/blog/what-are-nootropics` with `"status": 404` in its `.meta`, and the sitemap omitted it, **on a green build with no error output**. A clean rebuild minutes later was correct (all 3 at status 200, all 3 in the sitemap). This is the "Silent Notion failure" risk in the Risks section, and it is worse than recorded: `queryBlogRows` swallowing errors into `[]` means an inconsistent or rate-limited read during a Vercel deploy silently ships a 404 for a live post. **A build-time assertion is no longer a nice-to-have.** Publishing and deploying should not race; if they do, redeploy.
+7. **The blog surface emits no JSON-LD at all.** `app/blog/[slug]/page.tsx` has no `BlogPosting` and no `FAQPage`, even though `blog.ts` already parses the FAQ via `extractFaq` and the engine brief sells the FAQ format on the grounds that it "lets the site publish structured FAQ data that answer engines read". For a programme whose entire case rests on organic ranking and AI citation, this is a large gap and it exists independent of this migration. Belongs with the sitemap work in SCRUM-1157.
 
 ### Cannibalisation: the engine already covers two legacy topics
 
@@ -212,6 +213,28 @@ then `npx tsx scripts/legacy-blog/import.ts --pilot [--dry-run]`.
 8. **[Content] Author 53 meta descriptions** (0 exist). **This gates rendering, not just publishing** (`blog.ts:118` skips any row without one), so a post is invisible until it has one. It can be done after the rows land, but no post can be verified before it. Medium.
 
 ### Phase 3: Redirects, sitemap, go-live
+
+**Built 2026-07-16 (SCRUM-1157).** All 82 legacy handles verified against a
+production server: 53 imported 308 to `/blog/<handle>`, 29 dropped 308 to their
+triage targets, 0 failures, 0 chains, query strings preserved, and
+`/blogs/ingredients/*` correctly untouched. Redirects live in
+`app/lib/legacyBlogRedirects.ts` (generated from the triage table, order is
+load-bearing). Sitemap now carries `/blog` plus every Published post, dated from
+Notion. `BlogPosting` and `FAQPage` JSON-LD added.
+
+Two deviations from the ticket, both deliberate:
+- **308, not 301.** Next's `permanent: true` emits 308. Google treats them as
+  equivalent for canonicalisation, and every other redirect on the site is
+  already 308. Consistency beat the letter of the AC.
+- **The 29 dropped rules must precede the wildcard, not follow it.** The ticket
+  lists them as work item 2, after the wildcard in item 1. Appended in that order
+  they would never match, since `/blogs/news/:handle` catches everything, and all
+  29 would 301 into a 404. The module puts every specific rule first.
+
+**52 of the 53 imported handles currently 308 into a 404**, because only the
+pilot is published. That is no worse than the bare 404 they serve today and it
+self-heals as Phase 2 publishes each post, but it is the cost of running Phase 3
+before Phase 2.
 
 9. **[Infra] Redirects.** The **two cannibalisation redirects must be listed before** the wildcard, since Next.js matches in array order and the wildcard would otherwise send them to non-existent slugs. Then `{ source: '/blogs/news/:handle', destination: '/blog/:handle', permanent: true }`. Small. Files: `next.config.ts`.
 10. **[Infra] Redirects for the other 27 dropped handles** (29 drops minus the 2 cannibalisation redirects in task 9), per the not-imported table. Small.

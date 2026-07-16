@@ -37,7 +37,9 @@ brand-base. Mirror the `/science` and `/case-studies` shell: `brand-clinical` wr
 
 Build `/blog` reading from **Notion as a headless CMS**, rendered as **static HTML at build time** so Google and AI engines get full content and there is zero runtime Notion dependency per request.
 
-`/blog` (singular) is used because `/blogs/*` (plural) is already a permanent 301 to `/why-conka` (the old Shopify blog, `next.config.ts`). That redirect is left untouched.
+`/blog` (singular) is used because `/blogs/*` (plural) is the old Shopify blog's URL space.
+
+**Corrected 2026-07-16.** This section previously claimed `/blogs/*` was "already a permanent 301 to `/why-conka` ... left untouched". **That was false**: no `/blogs` rule of any kind existed in `next.config.ts`, so all 82 legacy URLs served a bare 404, including one still ranking at position 12.7 and drawing 464 impressions per quarter. `/blogs/news/*` now redirects to `/blog/*` (SCRUM-1157, `app/lib/legacyBlogRedirects.ts`). `/blogs/ingredients/*` still 404s pending the Phase 5 dedupe decision. Choosing `/blog` was still the right call; the reasoning given for it was not.
 
 ### Decision 1: content source and render pipeline
 
@@ -203,7 +205,7 @@ Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into th
 - No client-side Notion fetching (ships an empty shell to crawlers).
 - No second CMS, no Convex content store.
 - No comments.
-- No reclaiming `/blogs/*`; the 301 stays. Use `/blog`.
+- No serving content from `/blogs/*`; it is redirect-only. Use `/blog`. (Corrected 2026-07-16: this previously said "the 301 stays", but no such 301 existed. See the note above.)
 - No auto-publishing; nothing goes live without the owner's `Status` flip.
 - No per-post generated OG images in Phase 1 (hero image or brand image).
 
