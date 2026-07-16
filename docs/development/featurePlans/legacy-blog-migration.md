@@ -1,6 +1,6 @@
 # Legacy Blog Migration (Shopify to Notion to /blog)
 
-**Status:** Scoped 2026-07-16. Phase 1 active.
+**Status:** Scoped 2026-07-16, then re-validated against the live code and Notion database the same day. Phase 1 active.
 **Owner:** Rudh.
 **Created:** 2026-07-16.
 **Design system:** brand-base. No UI work: `/blog` is already built (SCRUM-1152).
@@ -26,11 +26,11 @@ Cold, non-brand organic searchers and AI answer engines at the top of the funnel
 
 ## Business impact
 
-Takes `/blog` from 3 draft posts to roughly 58 published ones, and recovers the only page on the site with a proven non-brand organic footprint. Measured against `aeo-scorecard.md` (citation share) and the Search Console baseline (non-brand impressions, indexed URL count).
+Takes `/blog` from 6 rows (3 usable drafts, 2 duplicates, 1 blank) to roughly 56 published posts, and recovers the only page on the site with a proven non-brand organic footprint. Measured against `aeo-scorecard.md` (citation share) and the Search Console baseline (non-brand impressions, indexed URL count).
 
 ## Appetite
 
-**3 to 4 days engineering** across Phases 1 to 3. The 55-post claims review (Phase 4) is a separate owner-paced stream and does not block the build.
+**3 to 4 days engineering** across Phases 1 to 3. The 53-post claims review (Phase 4) is a separate owner-paced stream and does not block the build.
 
 ## Why this outranks writing new content
 
@@ -76,26 +76,55 @@ Pulled via the **Storefront API** (`articles(first:50)` paginated, 130 articles:
 - **Use `contentHtml`, not `content`.** `content` returns plain text with all structure stripped. An earlier pass used `content` and wrongly concluded the bodies were clean HTML. This mistake is recorded because it is easy to repeat.
 - The **Admin API refused** with `[API] This action requires merchant approval for read_content scope`. Storefront needed no new grant and carries `contentHtml`, `image`, `authorV2`, `tags`, `seo`. Only add the Admin scope if a future need demands it.
 
-### The cleanup, quantified (of the 55 imports)
+### The cleanup, quantified (of the 53 imports)
 
 | Structural state | Count | Handling |
 |---|---|---|
 | Real `<h2>`/`<h3>` already | 23 | Convert as-is |
-| Fake headings (`<p><strong>Title</strong></p>`) | 25 | Automated promotion to `<h2>` |
-| **No recoverable structure** | **7** | **Manual pass (listed below)** |
+| Fake headings (`<p><strong>Title</strong></p>`) | 24 | Automated promotion to `<h2>` |
+| **No recoverable structure** | **6** | **Manual pass (listed below)** |
 | Empty `<figure><figcaption></figcaption></figure>` shells | 35 | Strip |
 | Em dashes (violates the engine contract) | 20 | Normalise to commas |
 | `<meta charset>` inside the body | 16 | Strip |
 | span (3,799) / div (1,271) ProseMirror junk | all | Strip |
-| **SEO meta description present** | **0 of 55** | Must be authored |
-| Excerpt present | 0 of 55 | Ignore |
-| Hero image present | 54 of 55 | Rehost at build |
-| `authorV2` present | 55 of 55 | Available if an Author column is ever added |
+| **SEO meta description present** | **0 of 53** | **Must be authored. Hard gate, see below.** |
+| Excerpt present | 0 of 53 | Ignore |
+| Hero image present | 52 of 53 | Rehost at build (needs the filter fix below) |
+| `authorV2` present | 53 of 53 | Available if an Author column is ever added |
+| **Over Notion's 100-block API limit** | **14 of 53** | **Importer must chunk, see below** |
+| Paragraphs over the 2,000-char `rich_text` limit | 0 | No handling needed |
 
 Cleanup is **87% deterministic**. The fake-heading rule recovers real section titles (verified: "Basis of Language: Brain Regions", "How We Acquire Language").
 
-**The 7 posts needing a manual structure pass:**
-`the-neuroscience-of-procrastination-why-your-brain-delays-and-how-to-overcome-it`, `the-neuroscience-behind-a-hangover-what-happens-to-your-brain-after-drinking`, `how-to-build-the-power-to-overcome-challenges`, `how-does-ashwagandha-help-reduce-brain-fog`, `how-can-breathwork-improve-your-physical-and-mental-health`, `what-is-dopamine-signalling-and-what-can-we-learn-from-adhd-paranoid-schizophrenia-psz`, `rice-vs-meat-movement-is-the-panacea-for-injury`.
+**The 6 posts needing a manual structure pass:**
+`the-neuroscience-behind-a-hangover-what-happens-to-your-brain-after-drinking`, `how-to-build-the-power-to-overcome-challenges`, `how-does-ashwagandha-help-reduce-brain-fog`, `how-can-breathwork-improve-your-physical-and-mental-health`, `what-is-dopamine-signalling-and-what-can-we-learn-from-adhd-paranoid-schizophrenia-psz`, `rice-vs-meat-movement-is-the-panacea-for-injury`.
+
+### Blockers found by re-validating the plan against live code (2026-07-16)
+
+The first draft of this plan and its tickets contained four defects. All are corrected above and in the tickets. Recorded because each is easy to reintroduce.
+
+1. **A meta description is a hard gate on rendering, not on publishing.** `app/lib/blog.ts:118` is `if (!title || !slug || !description) { console.warn(...); return null; }`. Zero of the 53 posts carry one, so **a post imported without a meta description is silently skipped and never renders**. The original tickets claimed meta descriptions "can lag behind the import". They cannot. Every post needs one before it can appear at all.
+2. **Image rehosting will not fire on Shopify or Wix URLs.** `rehostBodyImages` filters with `if (!/amazonaws\.com|notion\.so|notion-static/i.test(url)) continue;` because it was written for Notion-hosted files, which expire. Imported posts carry `cdn.shopify.com` and `static.wixstatic.com` URLs, which match none of those, so **all 102 images across 33 posts would be skipped and hot-link to third-party CDNs permanently**. Fix: extend the filter in `app/lib/blog.ts` to include both hosts. This is a code change the original plan did not account for.
+3. **The Notion API caps block creation at 100 per request.** 14 of the 53 posts exceed it (max 138 blocks, median 78). The importer must chunk appends into batches of 100 or those posts fail or truncate.
+4. **There are 6 rows in the Blog Hub, not 3.** Both this plan and `blog-informational-content-surface.md` said three drafts. Live: `what-are-nootropics`, `psychology-of-procrastination`, `brain-fog-supplement-what-actually-works`, **two duplicate "Best Nootropics UK" rows**, and **one entirely blank row**. The duplicates and the blank need reconciling before a bulk import lands on top of them.
+
+### Cannibalisation: the engine already covers two legacy topics
+
+No slug collides, so nothing breaks the build. But two engine drafts target queries the archive also covers:
+
+| Engine draft (keep) | Legacy post (drop) |
+|---|---|
+| `what-are-nootropics` | `what-are-nootropics-and-how-do-they-work` |
+| `psychology-of-procrastination` | `the-neuroscience-of-procrastination-why-your-brain-delays-and-how-to-overcome-it` |
+
+**Decision: keep the engine versions, drop the legacy pair.** The engine's are written to the current content contract; the legacy ones are not, and the procrastination post is also one of the unstructured six, so dropping it removes a manual pass. Import count moves from 55 to **53**; drops from 27 to **29**.
+
+**These two handles need explicit redirects placed BEFORE the wildcard**, since `/blogs/news/:handle` to `/blog/:handle` would send them to slugs that do not exist:
+
+```js
+{ source: '/blogs/news/what-are-nootropics-and-how-do-they-work', destination: '/blog/what-are-nootropics', permanent: true },
+{ source: '/blogs/news/the-neuroscience-of-procrastination-why-your-brain-delays-and-how-to-overcome-it', destination: '/blog/psychology-of-procrastination', permanent: true },
+```
 
 ### Verified state of the pipeline (do not re-derive)
 
@@ -118,7 +147,7 @@ Two gaps: there is **no `Source` field** to separate legacy from engine rows, an
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Converter + Notion schema prep + pilot the one ranking post | **Active** |
-| 2 | Bulk convert and import the remaining 54 as Draft; hand-structure the 7 | Active |
+| 2 | Bulk convert and import the remaining 52 as Draft; hand-structure the 6; author 53 meta descriptions | Active |
 | 3 | Redirects, sitemap, go-live | Active |
 | 4 | Review and publish queue (owner, `/review-claims`) | Recurring |
 | 5 | Ingredient blog (48 posts) | Future, gated |
@@ -132,39 +161,45 @@ Two gaps: there is **no `Source` field** to separate legacy from engine rows, an
    - Files: `scripts/legacy-blog/convert.ts` (new).
 
 2. **[Infra] Notion writer + column mapping**
-   - What: `scripts/legacy-blog/import.ts`. `Slug` = Shopify handle verbatim. `Blog name` = title. `Date published` = Shopify `publishedAt`. `Status` = `Draft`, never `Published`. `Source` = `legacy`. Idempotent: match on slug and update rather than duplicate, so re-runs are safe.
+   - What: `scripts/legacy-blog/import.ts`. `Slug` = Shopify handle verbatim. `Blog name` = title. `Date published` = Shopify `publishedAt`. `Status` = `Draft`, never `Published`. `Source` = `legacy`. Idempotent: match on slug and update rather than duplicate, so re-runs are safe. **Must chunk block appends into batches of 100** (Notion API limit; 14 of 53 posts exceed it).
    - Dependencies: tasks 1 and 3.
    - Complexity: Medium.
    - Files: `scripts/legacy-blog/import.ts` (new).
 
-3. **[Data] Notion schema prep**
-   - What: add a `Source` select (`legacy` / `engine`). Extend `Topic` options to cover Sport, Concussion, Brain Fog, Recovery, Neuroscience, Nootropics, Military.
+3. **[Data] Notion schema prep + reconcile existing rows**
+   - What: add a `Source` select (`legacy` / `engine`). Extend `Topic` options to cover Sport, Concussion, Brain Fog, Recovery, Neuroscience, Nootropics, Military. **Reconcile the 6 existing rows**: merge or delete the two duplicate "Best Nootropics UK" rows, and delete the blank row, so a bulk import does not land on an inconsistent base.
    - Dependencies: none. **Blocks task 2.**
    - Complexity: Small.
    - Files: Notion (no code).
 
-4. **[Verify] Pilot the ranking post**
-   - What: import `visualisation-mental-imagery-and-rehearsal` alone, publish it, confirm it renders at `/blog/visualisation-mental-imagery-and-rehearsal`, images rehost to `public/blog/<slug>/`, metadata and the product CTA fire. Proves the pipeline on the one URL where a 404 is actively costing traffic.
-   - Dependencies: tasks 1, 2, 3.
+4. **[Infra] Extend the image rehost filter**
+   - What: `rehostBodyImages` in `app/lib/blog.ts` only rehosts `amazonaws.com|notion.so|notion-static`. Extend it to include `cdn.shopify.com` and `static.wixstatic.com`, otherwise all 102 imported images hot-link to third-party CDNs forever and never reach `public/blog/<slug>/`.
+   - Dependencies: none. **Blocks task 5.**
+   - Complexity: Small.
+   - Files: `app/lib/blog.ts`.
+
+5. **[Verify] Pilot the ranking post**
+   - What: import `visualisation-mental-imagery-and-rehearsal` alone **with an authored meta description** (without one `blog.ts` skips the row and it never renders), publish it, confirm it renders, images rehost to `public/blog/<slug>/`, metadata and the product CTA fire. Proves the pipeline on the one URL where a 404 is actively costing traffic.
+   - Dependencies: tasks 1, 2, 3, 4.
    - Complexity: Small.
 
 ### Phase 2: Bulk import
 
-5. **[Infra] Convert and import the remaining 54** as `Draft`. Depends on Phase 1. Medium.
-6. **[Content] Hand-structure the 7 unstructured posts** listed above. Depends on task 5. Medium.
-7. **[Content] Author 55 meta descriptions** (0 exist). Can lag: `Blog name` + `Slug` are enough to import. Medium.
+6. **[Infra] Convert and import the remaining 52** as `Draft`. Depends on Phase 1. Medium.
+7. **[Content] Hand-structure the 6 unstructured posts** listed above. Depends on task 6. Medium.
+8. **[Content] Author 53 meta descriptions** (0 exist). **This gates rendering, not just publishing** (`blog.ts:118` skips any row without one), so a post is invisible until it has one. It can be done after the rows land, but no post can be verified before it. Medium.
 
 ### Phase 3: Redirects, sitemap, go-live
 
-8. **[Infra] Wildcard 301** `{ source: '/blogs/news/:handle', destination: '/blog/:handle', permanent: true }` in `next.config.ts` `redirects()`. Small.
-9. **[Infra] Redirects for the 27 dropped handles**, per the not-imported table. Small.
-10. **[SEO] Blog entries in `app/sitemap.ts`.** Note its `lastModified` is git-derived and a Notion-sourced route has no git file, so use Notion `last_edited_time`. Small.
+9. **[Infra] Redirects.** The **two cannibalisation redirects must be listed before** the wildcard, since Next.js matches in array order and the wildcard would otherwise send them to non-existent slugs. Then `{ source: '/blogs/news/:handle', destination: '/blog/:handle', permanent: true }`. Small. Files: `next.config.ts`.
+10. **[Infra] Redirects for the other 27 dropped handles** (29 drops minus the 2 cannibalisation redirects in task 9), per the not-imported table. Small.
+11. **[SEO] Blog entries in `app/sitemap.ts`.** Note its `lastModified` is git-derived and a Notion-sourced route has no git file, so use Notion `last_edited_time`. Small.
 
 ---
 
 ## Rabbit holes
 
-- **Hand-rewriting 55 posts.** The converter is deterministic; only the 7 structureless posts get human attention. If the converter starts needing per-post special cases, stop and route those posts to Humphrey's engine for rewrite instead.
+- **Hand-rewriting 53 posts.** The converter is deterministic; only the 6 structureless posts get human attention. If the converter starts needing per-post special cases, stop and route those posts to Humphrey's engine for rewrite instead.
 - **Rebuilding the renderer.** The pipeline works. This is data-in, nothing else.
 - **The 48 ingredient posts.** 16 ingredients x 3 near-duplicate variants (`-ip` / `-cd` / `-ms`, e.g. `ashwagandha-ip`, `ashwagandha-cd`, `ashwagandha-ms`). Publishing three near-identical pages per ingredient is a duplicate-content problem and `/ingredients` already owns that surface. Phase 5, gated on a dedupe rule.
 - **Perfecting old copy.** The `Status` gate is where quality is judged, one post at a time. Do not block the import on it.
@@ -173,7 +208,7 @@ Two gaps: there is **no `Source` field** to separate legacy from engine rows, an
 
 - **No re-slugging.** Slug = Shopify handle, always.
 - **No auto-publish.** Everything imports as `Draft`. The `Status` flip stays human.
-- **No importing the 27 dropped posts.**
+- **No importing the 29 dropped posts.**
 - **No touching `/blogs/ingredients/*`** this pass.
 - **No engine dependency.** The import is self-contained.
 - **No new UI.** `/blog` is built.
@@ -181,17 +216,17 @@ Two gaps: there is **no `Source` field** to separate legacy from engine rows, an
 ## Risks
 
 - **`static.wixstatic.com` images.** Some images sit on a third-party host that can vanish independently of Shopify. Build-time rehosting only catches them while the host lives. Mirror during import.
-- **Silent Notion failure.** `app/lib/notion.ts` swallows every error and returns `[]`: a failed query renders an empty blog with a clean build. 55 posts makes this worse. Recommend a build-time assertion. **Exists independent of this work.**
-- **Claims exposure.** 55 posts of 2022-23 health copy through a modern gate. Flagged: `how-does-ashwagandha-help-reduce-brain-fog`, `10-daily-habits-to-naturally-detoxify-the-brain-and-improve-cognitive-health`, `what-is-dopamine-signalling...psz`.
-- **Build time.** 55 posts x hero + in-body downloads. `getAllPosts` is re-invoked per article for related posts; the query is `react.cache`d but the filesystem probing is not.
-- **Slug collision** with the 3 existing drafts fails the build (by design).
+- **Silent Notion failure.** `app/lib/notion.ts` swallows every error and returns `[]`: a failed query renders an empty blog with a clean build. 53 posts makes this worse. Recommend a build-time assertion. **Exists independent of this work.**
+- **Claims exposure.** 53 posts of 2022-23 health copy through a modern gate. Flagged: `how-does-ashwagandha-help-reduce-brain-fog`, `10-daily-habits-to-naturally-detoxify-the-brain-and-improve-cognitive-health`, `what-is-dopamine-signalling...psz`.
+- **Build time.** 53 posts x hero + in-body downloads. `getAllPosts` is re-invoked per article for related posts; the query is `react.cache`d but the filesystem probing is not.
+- **Slug collision** with the existing rows fails the build (by design). Verified 2026-07-16: no legacy handle collides with the 6 live rows.
 - **Doc drift.** The false `/blogs/*` redirect claim, and `blog-informational-content-surface.md` saying "Phase 1 built (SCRUM-1151)" while **SCRUM-1151 is still `To Do`**. Correct both when this lands.
 
 ## Open questions
 
 1. **`Topic` options:** extend to the real lanes, or leave legacy untagged? Recommend extend (Phase 1 task 3).
-2. **Meta descriptions for 55 posts:** engine or owner? Unavoidable either way; can lag behind Phase 2.
-3. **Redirect targets for the 27 dropped posts:** athlete stories to `/case-studies` individually, or as a group?
+2. **Meta descriptions for 53 posts:** engine or owner? Unavoidable either way. **Resolved on timing:** they cannot lag, because `blog.ts` skips any row without one, so a post is invisible until it has a meta description.
+3. **Redirect targets for the 29 dropped posts:** athlete stories to `/case-studies` individually, or as a group?
 
 ## References
 
@@ -209,7 +244,7 @@ Sprint 28, under the Website & CRO epic (SCRUM-763). Chained with `Blocks` links
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
 | [SCRUM-1155](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1155) | [Website & CRO] Legacy blog Phase 1: HTML to Notion converter and pilot import | 1 | To Do |
-| [SCRUM-1156](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1156) | [Website & CRO] Legacy blog Phase 2: bulk import the remaining 54 posts as Draft | 2 | To Do |
+| [SCRUM-1156](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1156) | [Website & CRO] Legacy blog Phase 2: bulk import the remaining 52 posts as Draft | 2 | To Do |
 | [SCRUM-1157](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1157) | [Website & CRO] Legacy blog Phase 3: redirects, sitemap and go-live | 3 | To Do |
 
 Phases 4 and 5 stay in this doc until active.
@@ -220,98 +255,98 @@ Phases 4 and 5 stay in this doc until active.
 
 ## Triage
 
-**82 editorial posts: 55 import, 27 do not.** Every post is accounted for.
+**82 editorial posts: 53 import, 29 do not.** Every post is accounted for.
 
-### Import (55)
+### Import (53)
 
 Ordered by lane. `Slug` = the existing Shopify handle, unchanged (see the URL rule above).
 
-| Lane | Handle (= new slug) | Chars | Published | Note |
-|---|---|---|---|---|
-| Ageing | `cognitive-function-age` | 6,085 | 2023-05 |  |
-| Ageing | `decoding-language` | 5,998 | 2025-11 |  |
-| Ageing/performance | `visualisation-mental-imagery-and-rehearsal` | 5,751 | 2023-05 | **STILL RANKING pos 12.7 / 464 impr while 404ing. Import first.** |
-| Brain fog | `the-link-between-brain-fog-and-inflammation` | 7,925 | 2025-07 |  |
-| Brain fog | `how-to-reduce-brain-fog-with-nootropics` | 4,406 | 2025-06 |  |
-| Brain fog | `how-does-ashwagandha-help-reduce-brain-fog` | 2,749 | 2023-12 | Claims-check the title: ingredient + benefit. |
-| Comparison | `conka-vs-energy-drinks-what-s-better-for-focus-and-brain-health` | 5,795 | 2025-06 | Brand-vs-category; keep the angle distinct from the PDP. |
-| Focus | `brain-health-habits-a-daily-routine-to-optimise-mental-performance` | 8,615 | 2025-07 |  |
-| Focus | `the-power-of-mindfulness-how-habits-shape-the-brain-through-neuroplasticity` | 6,827 | 2025-08 |  |
-| Focus | `the-power-of-consistency-why-small-daily-habits-drive-big-brain-gains` | 6,737 | 2025-07 |  |
-| Focus | `10-daily-habits-to-naturally-detoxify-the-brain-and-improve-cognitive-health` | 6,678 | 2025-07 | "Detoxify" is a claims-check word. |
-| Focus | `how-to-build-a-brain-boosting-morning-routine` | 6,255 | 2025-07 |  |
-| Focus | `the-power-of-mind` | 6,105 | 2024-05 | Vague title; rewrite for a query. |
-| Focus | `the-neuroscience-of-procrastination-why-your-brain-delays-and-how-to-overcome-it` | 5,955 | 2025-07 |  |
-| Focus | `the-state-of-flow-part-ll` | 5,397 | 2024-01 | Two-parter; consider merging with Part l and flow-states. |
-| Focus | `how-to-build-the-power-to-overcome-challenges` | 5,050 | 2024-01 | Vague/motivational; rewrite for a query. |
-| Focus | `the-state-of-flow-part-l` | 5,003 | 2023-12 | Two-parter. |
-| Focus | `flow-states` | 4,916 | 2023-07 | Overlaps The State of Flow I/II. Merge or differentiate. |
-| Military | `the-link-between-gut-health-and-blast-induced-trauma-a-cognitive-perspective` | 7,327 | 2025-06 | Audience absent from the taxonomy. |
-| Military | `the-hidden-impact-of-blast-induced-trauma-on-military-brain-health` | 6,405 | 2025-06 | Audience absent from the demographic taxonomy. |
-| Neuro | `how-can-neurofeedback-devices-enhance-brain-activity` | 7,520 | 2025-02 |  |
-| Neuro | `the-vagus-nerve-gut-brain-axis` | 7,047 | 2023-05 |  |
-| Neuro | `the-mesolimbic-dopamine-system-unveiling-the-pathway-to-pleasure-and-reward` | 7,029 | 2023-05 |  |
-| Neuro | `the-neural-basis-of-emotions` | 6,971 | 2023-06 |  |
-| Neuro | `the-social-brain` | 6,925 | 2023-07 |  |
-| Neuro | `how-the-brain-learns-and-stores-information` | 6,681 | 2024-06 |  |
-| Neuro | `decision-making` | 5,824 | 2023-06 |  |
-| Neuro | `the-brain-and-creativity` | 5,227 | 2023-07 |  |
-| Neuro | `what-is-dopamine-signalling-and-what-can-we-learn-from-adhd-paranoid-schizophrenia-psz` | 4,323 | 2023-07 | Only ADHD-adjacent post. Title mentions schizophrenia: claims-check. |
-| Neuro | `mirror-neurons-emotional-copycats` | 3,321 | 2023-04 |  |
-| Nootropic | `caffeine-everything-you-need-to-know` | 9,302 | 2022-10 | 9.3k, strong. |
-| Nootropic | `creatine-for-the-brain-more-than-just-muscle` | 7,269 | 2025-06 |  |
-| Nootropic | `adaptogens-stress-relieving-powerhouses` | 5,330 | 2023-04 |  |
-| Nootropic | `what-are-nootropics-and-how-do-they-work` | 4,659 | 2025-06 | **Keyword-map definitional pillar (KD 49, vol 590).** |
-| Recovery | `the-hidden-cost-of-dehydration-how-it-impacts-your-brain` | 7,097 | 2025-06 |  |
-| Recovery | `what-actually-happens-to-your-brain-in-the-sauna` | 6,888 | 2025-06 |  |
-| Recovery | `the-neuroscience-behind-a-hangover-what-happens-to-your-brain-after-drinking` | 6,237 | 2025-06 |  |
-| Recovery | `rice-vs-meat-movement-is-the-panacea-for-injury` | 6,234 | 2023-03 |  |
-| Recovery | `brrrr-embrace-the-cold-cold-water` | 5,174 | 2023-04 |  |
-| Recovery | `ketosis-the-ketogenic-diet` | 5,110 | 2023-04 |  |
-| Recovery | `hope-molecules-exercise-myokines` | 4,220 | 2023-03 |  |
-| Recovery | `how-can-breathwork-improve-your-physical-and-mental-health` | 3,284 | 2023-11 |  |
-| Sleep | `zzzz-a-primer-on-sleep-stages` | 5,541 | 2023-03 |  |
-| Sleep/recovery | `intermittent-fasting-for-brain-health` | 5,544 | 2023-04 |  |
-| Sport | `cognitive-enhancers-for-athletes-what-the-science-says` | 8,078 | 2025-07 |  |
-| Sport | `how-to-optimise-athletic-performance-in-extreme-weather-conditions` | 7,563 | 2024-02 |  |
-| Sport | `tennis-and-brain-health-how-the-game-sharpens-focus-memory-and-resilience` | 6,838 | 2025-07 |  |
-| Sport | `the-weight-of-success-navigating-the-challenges-of-making-weight-in-boxing` | 6,604 | 2024-05 | Borderline: athlete-adjacent but topic-led. |
-| Sport | `can-supplements-improve-reaction-time-in-sport` | 4,542 | 2025-06 |  |
-| Sport | `informed-sport-and-what-that-means` | 2,867 | 2023-10 | Matches corpus batch-testing question. Thin at 2.9k; expand. |
-| Sport/concussion | `5-groundbreaking-discoveries-in-concussion-neuroscience` | 12,162 | 2023-07 | Longest post at 12.2k. |
-| Sport/concussion | `10-ways-to-support-someone-with-post-concussion-syndrome` | 3,333 | 2023-07 |  |
-| Sport/concussion | `the-header-the-facts-so-what` | 2,019 | 2022-02 | Thin at 2k; matches corpus "does heading a football cause brain damage?". |
-| Sport/concussion | `women-sport-is-worse-for-concussion` | 1,610 | 2022-09 | Thin at 1.6k; rewrite/expand. |
-| Trend | `how-chatgpt-may-be-rewiring-the-human-brain-what-the-latest-research-reveals` | 6,658 | 2025-07 |  |
+| Lane | Handle (= new slug) | Published | Note |
+|---|---|---|---|
+| Ageing | `cognitive-function-age` | 2023-05 |  |
+| Ageing | `decoding-language` | 2025-11 |  |
+| Ageing/performance | `visualisation-mental-imagery-and-rehearsal` | 2023-05 | **STILL RANKING pos 12.7 / 464 impr while 404ing. Import first.** |
+| Brain fog | `the-link-between-brain-fog-and-inflammation` | 2025-07 |  |
+| Brain fog | `how-to-reduce-brain-fog-with-nootropics` | 2025-06 |  |
+| Brain fog | `how-does-ashwagandha-help-reduce-brain-fog` | 2023-12 | Claims-check the title: ingredient + benefit. |
+| Comparison | `conka-vs-energy-drinks-what-s-better-for-focus-and-brain-health` | 2025-06 | Brand-vs-category; keep the angle distinct from the PDP. |
+| Focus | `brain-health-habits-a-daily-routine-to-optimise-mental-performance` | 2025-07 |  |
+| Focus | `the-power-of-consistency-why-small-daily-habits-drive-big-brain-gains` | 2025-07 |  |
+| Focus | `10-daily-habits-to-naturally-detoxify-the-brain-and-improve-cognitive-health` | 2025-07 | "Detoxify" is a claims-check word. |
+| Focus | `how-to-build-a-brain-boosting-morning-routine` | 2025-07 |  |
+| Focus | `the-power-of-mindfulness-how-habits-shape-the-brain-through-neuroplasticity` | 2025-08 |  |
+| Focus | `the-state-of-flow-part-l` | 2023-12 | Two-parter. |
+| Focus | `the-state-of-flow-part-ll` | 2024-01 | Two-parter; consider merging with Part l and flow-states. |
+| Focus | `the-power-of-mind` | 2024-05 | Vague title; rewrite for a query. |
+| Focus | `how-to-build-the-power-to-overcome-challenges` | 2024-01 | Vague/motivational; rewrite for a query. |
+| Focus | `flow-states` | 2023-07 | Overlaps The State of Flow I/II. Merge or differentiate. |
+| Military | `the-link-between-gut-health-and-blast-induced-trauma-a-cognitive-perspective` | 2025-06 | Audience absent from the taxonomy. |
+| Military | `the-hidden-impact-of-blast-induced-trauma-on-military-brain-health` | 2025-06 | Audience absent from the demographic taxonomy. |
+| Neuro | `how-can-neurofeedback-devices-enhance-brain-activity` | 2025-02 |  |
+| Neuro | `the-vagus-nerve-gut-brain-axis` | 2023-05 |  |
+| Neuro | `the-mesolimbic-dopamine-system-unveiling-the-pathway-to-pleasure-and-reward` | 2023-05 |  |
+| Neuro | `the-neural-basis-of-emotions` | 2023-06 |  |
+| Neuro | `how-the-brain-learns-and-stores-information` | 2024-06 |  |
+| Neuro | `the-social-brain` | 2023-07 |  |
+| Neuro | `decision-making` | 2023-06 |  |
+| Neuro | `the-brain-and-creativity` | 2023-07 |  |
+| Neuro | `what-is-dopamine-signalling-and-what-can-we-learn-from-adhd-paranoid-schizophrenia-psz` | 2023-07 | Only ADHD-adjacent post. Title mentions schizophrenia: claims-check. |
+| Neuro | `mirror-neurons-emotional-copycats` | 2023-04 |  |
+| Nootropic | `creatine-for-the-brain-more-than-just-muscle` | 2025-06 |  |
+| Nootropic | `caffeine-everything-you-need-to-know` | 2022-10 | 9.3k, strong. |
+| Nootropic | `adaptogens-stress-relieving-powerhouses` | 2023-04 |  |
+| Recovery | `the-hidden-cost-of-dehydration-how-it-impacts-your-brain` | 2025-06 |  |
+| Recovery | `the-neuroscience-behind-a-hangover-what-happens-to-your-brain-after-drinking` | 2025-06 |  |
+| Recovery | `what-actually-happens-to-your-brain-in-the-sauna` | 2025-06 |  |
+| Recovery | `rice-vs-meat-movement-is-the-panacea-for-injury` | 2023-03 |  |
+| Recovery | `ketosis-the-ketogenic-diet` | 2023-04 |  |
+| Recovery | `brrrr-embrace-the-cold-cold-water` | 2023-04 |  |
+| Recovery | `how-can-breathwork-improve-your-physical-and-mental-health` | 2023-11 |  |
+| Recovery | `hope-molecules-exercise-myokines` | 2023-03 |  |
+| Sleep | `zzzz-a-primer-on-sleep-stages` | 2023-03 |  |
+| Sleep/recovery | `intermittent-fasting-for-brain-health` | 2023-04 |  |
+| Sport | `cognitive-enhancers-for-athletes-what-the-science-says` | 2025-07 |  |
+| Sport | `tennis-and-brain-health-how-the-game-sharpens-focus-memory-and-resilience` | 2025-07 |  |
+| Sport | `how-to-optimise-athletic-performance-in-extreme-weather-conditions` | 2024-02 |  |
+| Sport | `the-weight-of-success-navigating-the-challenges-of-making-weight-in-boxing` | 2024-05 | Borderline: athlete-adjacent but topic-led. |
+| Sport | `can-supplements-improve-reaction-time-in-sport` | 2025-06 |  |
+| Sport | `informed-sport-and-what-that-means` | 2023-10 | Matches corpus batch-testing question. Thin at 2.9k; expand. |
+| Sport/concussion | `5-groundbreaking-discoveries-in-concussion-neuroscience` | 2023-07 | Longest post at 12.2k. |
+| Sport/concussion | `10-ways-to-support-someone-with-post-concussion-syndrome` | 2023-07 |  |
+| Sport/concussion | `the-header-the-facts-so-what` | 2022-02 | Thin at 2k; matches corpus "does heading a football cause brain damage?". |
+| Sport/concussion | `women-sport-is-worse-for-concussion` | 2022-09 | Thin at 1.6k; rewrite/expand. |
+| Trend | `how-chatgpt-may-be-rewiring-the-human-brain-what-the-latest-research-reveals` | 2025-07 |  |
 
-### Not imported (27), and why
+### Not imported (29), and why
 
-| Reason | Handle | Chars | Why it is not coming across | Redirect to |
-|---|---|---|---|---|
-| **Announcement** | `introducing-conka-v23` | 1,724 | Obsolete product launch. | /blog |
-| **Announcement** | `discover-track-and-compete-with-the-all-new-conka-app` | 1,943 | Obsolete. /app owns this. | /blog |
-| **BRAND RISK** | `the-nicotinic-effect-preconditioning-the-brain-for-neuroprotection` | 7,588 | Nicotine framed as neuroprotective. Reputationally and claims fraught for a brain-health brand. | /blog |
-| **Brand** | `founders-letter` | 4,446 | /our-story owns the founder narrative. | /our-story or /app |
-| **Brand** | `what-is-conkas-app-technology` | 4,395 | /app and /app-insights own this. | /our-story or /app |
-| **Brand/app** | `how-reliable-is-the-conka-test-a-look-at-the-latest-research` | 4,248 | Route to /app-insights, which owns instrument validation. | /app-insights |
-| **Brand/product** | `the-science-behind-conka-1-short-term-and-long-term-benefits` | 5,950 | /science owns this and would compete with it. | /science |
-| **Brand/product** | `the-science-behind-conka-2-short-term-and-long-term-benefits` | 3,825 | /science owns this. | /science |
-| **CLAIMS RISK** | `chc5-1-conka-formula-component-no1` | 6,171 | Discontinued capsule formula, plus "17% increase in serum testosterone" and "167% increase in total sperm count" fertility claims. Off-brand and high claims exposure. | /blog |
-| **Case study** | `the-cost-of-playing-through-pain-barneys-story` | 5,411 | Athlete story. /case-studies owns this surface. | /case-studies |
-| **Case study** | `bee-stillman-jones-a-journey-of-resilience-and-rediscovery` | 4,316 | Athlete story. /case-studies. | /case-studies |
-| **Case study** | `from-concussions-to-comebacks-sienna-charles-journey-with-show-jumping-and-conka` | 3,901 | Athlete story. /case-studies. | /case-studies |
-| **Case study** | `inside-the-brain-of-a-boxing-world-champion-chris-billam-smiths-brain-data` | 7,113 | Strong copy, but athlete profile. /case-studies. | /case-studies |
-| **Case study** | `behind-the-gloves-the-human-side-of-chris-billam-smiths-journey-to-becoming-world-champion` | 7,030 | Athlete profile. /case-studies. | /case-studies |
-| **Case study** | `racing-driver-josh-stanton-x-conka-16` | 4,527 | Athlete profile. /case-studies. | /case-studies |
-| **DATED** | `achieve-your-goals-for-2024` | 8,150 | Year-stamped. Dead as an evergreen asset. | /blog |
-| **EMPTY** | `bristol-bears-on-conka-data-insights` | 0 | 0 characters. Image-only post. | /blog |
-| **EMPTY** | `harlequins-on-conka-protecting-athletes-from-brain-injuries` | 0 | 0 characters. Image-only post. | /blog |
-| **OBSOLETE PRODUCT** | `10-reasons-why-capsules-work` | 2,606 | Sells capsules as a format. Product discontinued; we sell shots. | /blog |
-| **OBSOLETE PRODUCT** | `chc5-1-conka-formula-component-no3` | 6,312 | Discontinued ChC5+1 capsule formula. | /blog |
-| **OBSOLETE PRODUCT** | `chc5-1-conka-formula-component-no4` | 6,841 | Discontinued ChC5+1 capsule formula. | /blog |
-| **OBSOLETE PRODUCT** | `chc5-1-component-no5-vaccinium-myrtillus-boosts-your-genius-and-helps-you-overcome-stress` | 6,695 | Discontinued formula. Title also claims it "boosts your genius". | /blog |
-| **PR** | `co-founder-harry-glover-wins-vodafone-business-gain-line-award-for-work-with-conka` | 3,830 | Award announcement. No search demand, dates instantly. | /blog |
-| **PR** | `bristol-bears-on-conka-taking-their-performance-to-the-next-level` | 4,297 | Partner announcement. | /blog |
-| **PR** | `conka-x-cognica` | 2,263 | Partnership announcement. | /blog |
-| **Thin** | `no-brainer-with-telusa-veainu` | 857 | 857 chars. | /blog |
-| **Thin PR** | `bristol-bears-on-conka-data-insights-ll` | 725 | 725 chars. Partner announcement. | /blog |
+| Reason | Handle | Why it is not coming across | Redirect to |
+|---|---|---|---|
+| **CANNIBALISATION** | `what-are-nootropics-and-how-do-they-work` | Engine draft `what-are-nootropics` already targets this query and is written to the current content contract. Redirect this handle to /blog/what-are-nootropics. | the engine post (see Why) |
+| **CANNIBALISATION** | `the-neuroscience-of-procrastination-why-your-brain-delays-and-how-to-overcome-it` | Engine draft `psychology-of-procrastination` already targets this query. Also one of the unstructured posts, so dropping it removes a manual pass. Redirect to /blog/psychology-of-procrastination. | the engine post (see Why) |
+| **Announcement** | `introducing-conka-v23` | Obsolete product launch. | /blog |
+| **Announcement** | `discover-track-and-compete-with-the-all-new-conka-app` | Obsolete. /app owns this. | /blog |
+| **BRAND RISK** | `the-nicotinic-effect-preconditioning-the-brain-for-neuroprotection` | Nicotine framed as neuroprotective. Reputationally and claims fraught for a brain-health brand. | /blog |
+| **Brand** | `founders-letter` | /our-story owns the founder narrative. | /our-story or /app |
+| **Brand** | `what-is-conkas-app-technology` | /app and /app-insights own this. | /our-story or /app |
+| **Brand/app** | `how-reliable-is-the-conka-test-a-look-at-the-latest-research` | Route to /app-insights, which owns instrument validation. | /app-insights |
+| **Brand/product** | `the-science-behind-conka-1-short-term-and-long-term-benefits` | /science owns this and would compete with it. | /science |
+| **Brand/product** | `the-science-behind-conka-2-short-term-and-long-term-benefits` | /science owns this. | /science |
+| **CLAIMS RISK** | `chc5-1-conka-formula-component-no1` | Discontinued capsule formula, plus "17% increase in serum testosterone" and "167% increase in total sperm count" fertility claims. Off-brand and high claims exposure. | /blog |
+| **Case study** | `the-cost-of-playing-through-pain-barneys-story` | Athlete story. /case-studies owns this surface. | /case-studies |
+| **Case study** | `bee-stillman-jones-a-journey-of-resilience-and-rediscovery` | Athlete story. /case-studies. | /case-studies |
+| **Case study** | `from-concussions-to-comebacks-sienna-charles-journey-with-show-jumping-and-conka` | Athlete story. /case-studies. | /case-studies |
+| **Case study** | `inside-the-brain-of-a-boxing-world-champion-chris-billam-smiths-brain-data` | Strong copy, but athlete profile. /case-studies. | /case-studies |
+| **Case study** | `behind-the-gloves-the-human-side-of-chris-billam-smiths-journey-to-becoming-world-champion` | Athlete profile. /case-studies. | /case-studies |
+| **Case study** | `racing-driver-josh-stanton-x-conka-16` | Athlete profile. /case-studies. | /case-studies |
+| **DATED** | `achieve-your-goals-for-2024` | Year-stamped. Dead as an evergreen asset. | /blog |
+| **EMPTY** | `bristol-bears-on-conka-data-insights` | 0 characters. Image-only post. | /blog |
+| **EMPTY** | `harlequins-on-conka-protecting-athletes-from-brain-injuries` | 0 characters. Image-only post. | /blog |
+| **OBSOLETE PRODUCT** | `10-reasons-why-capsules-work` | Sells capsules as a format. Product discontinued; we sell shots. | /blog |
+| **OBSOLETE PRODUCT** | `chc5-1-conka-formula-component-no3` | Discontinued ChC5+1 capsule formula. | /blog |
+| **OBSOLETE PRODUCT** | `chc5-1-conka-formula-component-no4` | Discontinued ChC5+1 capsule formula. | /blog |
+| **OBSOLETE PRODUCT** | `chc5-1-component-no5-vaccinium-myrtillus-boosts-your-genius-and-helps-you-overcome-stress` | Discontinued formula. Title also claims it "boosts your genius". | /blog |
+| **PR** | `co-founder-harry-glover-wins-vodafone-business-gain-line-award-for-work-with-conka` | Award announcement. No search demand, dates instantly. | /blog |
+| **PR** | `bristol-bears-on-conka-taking-their-performance-to-the-next-level` | Partner announcement. | /blog |
+| **PR** | `conka-x-cognica` | Partnership announcement. | /blog |
+| **Thin** | `no-brainer-with-telusa-veainu` | 857 chars. | /blog |
+| **Thin PR** | `bristol-bears-on-conka-data-insights-ll` | 725 chars. Partner announcement. | /blog |
