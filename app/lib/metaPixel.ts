@@ -78,7 +78,7 @@ function sendToCAPI(payload: {
   event_name: string;
   event_id: string;
   event_time: number;
-  user_data?: { fbp?: string; fbc?: string };
+  user_data?: { fbp?: string; fbc?: string; email?: string };
   custom_data?: Record<string, unknown>;
 }): void {
   if (typeof fetch === "undefined") return;
@@ -94,8 +94,19 @@ function sendToCAPI(payload: {
   }
 }
 
-function isPixelAvailable(): boolean {
+export function isPixelAvailable(): boolean {
   return typeof window !== "undefined" && typeof window.fbq === "function";
+}
+
+/**
+ * The logged-in customer's email, mirrored out of React (AuthContext) into this
+ * module so the non-React tracking layer can attach it to CAPI events. Email is
+ * the single strongest Event Match Quality signal. Null when logged out. It is
+ * hashed server-side in the CAPI route and never handed to the browser pixel.
+ */
+let userEmail: string | null = null;
+export function setMetaUserData(email: string | null): void {
+  userEmail = email;
 }
 
 function hasPixelId(): boolean {
@@ -121,36 +132,68 @@ export function isProductionHost(): boolean {
   );
 }
 
-/** Safe wrapper: fire fbq with eventID and send same event to CAPI. No-op if pixel unavailable or no ID. */
+/**
+ * Fire an event to Meta with pixel/CAPI deduplication.
+ *
+ * The browser pixel (`fbq`) fires only when it is loaded, but the CAPI relay
+ * fires whenever we are on the production host with a pixel id configured — even
+ * when the pixel is blocked or has not yet loaded. When both fire they share one
+ * `event_id`, so Meta merges them; when only the server fires there is nothing to
+ * merge, so no double-count. This is what keeps the upper funnel reported for
+ * ad-blocked / in-app-browser traffic. Returns the shared `event_id` (or null
+ * when CAPI is not eligible) so a caller can fire a late browser twin with it.
+ */
 function trackWithDedup(
   eventName: string,
   customData?: Record<string, unknown>
-): void {
-  if (!isProductionHost() || !hasPixelId() || !isPixelAvailable()) return;
+): string | null {
+  if (!isProductionHost() || !hasPixelId()) return null;
   const eventId = generateEventId();
   const eventTime = Math.floor(Date.now() / 1000);
+  firePixelOnly(eventName, eventId, customData);
+  sendToCAPI({
+    event_name: eventName,
+    event_id: eventId,
+    event_time: eventTime,
+    // Send browser id (_fbp), ad-click id (_fbc), and the logged-in email so the
+    // server event matches on the strongest available signal — raises Event Match
+    // Quality and reduces Meta's reliance on modelled conversions.
+    user_data: {
+      fbp: getFbp() ?? undefined,
+      fbc: getFbc() ?? undefined,
+      email: userEmail ?? undefined,
+    },
+    custom_data: customData,
+  });
+  return eventId;
+}
+
+/**
+ * Fire ONLY the browser pixel for an event, under a caller-supplied `event_id`.
+ * No-op when the pixel is unavailable. Used to fire a late browser twin (e.g. a
+ * deferred PageView once `fbq` loads) that dedups against a CAPI event already
+ * sent under the same id.
+ */
+export function firePixelOnly(
+  eventName: string,
+  eventId: string,
+  customData?: Record<string, unknown>
+): void {
+  if (!isProductionHost() || !isPixelAvailable()) return;
   try {
     window.fbq!("track", eventName, customData ?? {}, { eventID: eventId });
   } catch {
     // no-op
   }
-  sendToCAPI({
-    event_name: eventName,
-    event_id: eventId,
-    event_time: eventTime,
-    // Send both browser id (_fbp) and ad-click id (_fbc) so the server event
-    // matches on the strongest available signal — raises Event Match Quality
-    // and reduces Meta's reliance on modelled conversions.
-    user_data: { fbp: getFbp() ?? undefined, fbc: getFbc() ?? undefined },
-    custom_data: customData,
-  });
 }
 
 /**
- * Track PageView with deduplication. Call once per full page load (e.g. from a layout client component).
+ * Track PageView with deduplication. Call once per full page load (e.g. from a
+ * layout client component). Returns the shared `event_id` so the caller can fire
+ * a late browser twin if the pixel was not yet loaded when CAPI fired.
  */
-export function trackMetaPageView(): void {
-  trackWithDedup("PageView");
+export function trackMetaPageView(): string | null {
+  return trackWithDedup("PageView");
 }
 
 /**

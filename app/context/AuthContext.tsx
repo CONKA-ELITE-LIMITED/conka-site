@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { setMetaUserData } from '@/app/lib/metaPixel';
 
 export interface CustomerAddress {
   address1: string | null;
@@ -42,6 +43,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = customer !== null;
+
+  // Mirror the logged-in email into the Meta tracking layer (a non-React module)
+  // so client CAPI events can attach it as a hashed match key — the single
+  // strongest Event Match Quality signal. Cleared to null on logout.
+  useEffect(() => {
+    setMetaUserData(customer?.email ?? null);
+  }, [customer]);
 
   // Clear error
   const clearError = useCallback(() => setError(null), []);

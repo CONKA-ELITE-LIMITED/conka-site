@@ -1,6 +1,6 @@
 # Headless Shopify + Meta Attribution — Diagnosis & Fix
 
-**Status:** Diagnosis complete (2026-05-29). **Phases 1 + 2 done** (domain + theme). Now verifying attribution in Meta + completing the headless-specific setup Shopify normally does for you. Phases 3 + 4 (code) pending.
+**Status:** Domain + theme + server-Purchase webhook all shipped. **2026-07-16: upper-funnel CAPI resilience shipped** (SCRUM-1153) — CAPI now fires independently of the browser pixel, so PageView/ViewContent/AddToCart survive pixel-blocking. A wider attribution-robustness programme (Phases 2-4: Shopify checkout pixel, Triple Whale, monitoring) is scoped in `docs/development/featurePlans/attribution-robustness.md`. See the **2026-07-16** section at the bottom for the latest learnings.
 
 ## Progress log
 - **2026-05-29 — Phase 1 done.** Added `shop` CNAME → `shops.myshopify.com` in **Vercel DNS** (conka.io's DNS is hosted by Vercel, not GoDaddy — registrar is GoDaddy but nameservers are Vercel). Set `shop.conka.io` as the **primary domain** in Shopify, so checkout now serves from `shop.conka.io`. Cookie split resolved.
@@ -210,3 +210,35 @@ Model it on the existing CAPI route `app/api/meta/events/route.ts`.
 - **`source_name` is an unversioned free-form string** Shopify changes without changelog. It changed on 1 Oct 2025 for subscriptions: `subscription_contract` → `subscription_contract_checkout_one`. Do not build logic on its exact value. ([thread](https://community.shopify.dev/t/order-paid-webhook-sourcename-property-changed-for-subscription/23868))
 - **`selling_plan` is present on BOTH the first subscription order and every rebill**, so it cannot separate a first order (keep) from a rebill (drop). `checkout_token` is the field that does — the first order went through checkout, rebills do not. ([thread](https://community.shopify.com/t/distinguishing-subscription-orders-from-one-time-purchaseswe-currently-utilize-recharge-for-managing/317888))
 - Headless checkout still uses Shopify's hosted checkout (`cart.checkoutUrl` → `/cart/c/<token>`), the same flow that stamps `checkout_token` — so headless real orders are expected to carry it. Not printed explicitly in the forums, hence the day-1 log verification.
+
+---
+
+## 2026-07-16 — Upper-funnel CAPI resilience (pixel-blocking) — SHIPPED (SCRUM-1153)
+
+**How this was found.** A Triple Whale attribution investigation surfaced a production order that showed a Meta **Purchase** with **no AddToCart, no InitiateCheckout, and no Triple Whale journey**. That shape — a lone Purchase with nothing above it — turned out to be a structural gap, not a one-off.
+
+**The gap.** All the 2026-06 work made the *Purchase* event resilient (server-side `orders/paid` webhook → CAPI, iOS/blocker-proof). But the **upper funnel** (PageView, ViewContent, AddToCart) was still **browser-pixel-only**. Two code paths gated the *entire* event — browser fire AND the CAPI relay — on the pixel being loaded:
+- `trackWithDedup` in `app/lib/metaPixel.ts` early-returned when `isPixelAvailable()` was false (covers AddToCart, ViewContent).
+- `MetaPageViewTracker.tsx` only called `trackMetaPageView()` from inside a `tryFire()` that required `window.fbq`; if the pixel never loaded, no PageView fired at all.
+
+So whenever the Meta pixel was blocked — Facebook/Instagram in-app browsers on iOS, ad-blockers, ITP/ATT — we sent Meta **nothing** above Purchase. **This was site-wide** (the shared helper), not a `/go` bug; ad landings just concentrate the most pixel-hostile traffic. `captureFbcFromUrl()` already ran independently of the pixel, so the `_fbc` ad-click id was being captured even when blocked — we just were not using it for the upper-funnel server events.
+
+**Why it matters (research-backed, 2026-07-16).** Meta's optimiser learns from the *whole* journey, and needs ~50 conversions/adset in a rolling 7-day window plus good event coverage + Event Match Quality to exit the learning phase. Roughly **30-50% of iOS/paid-social conversions go unreported pixel-only** (ATT opt-in ~25-35%, ad-blockers 25-40%, Safari ITP caps JS cookies at 7 days). Starving the upper funnel slows learning and wastes spend. Meta's own guidance is a **redundant Pixel + CAPI setup where CAPI is an independent fallback**, not just a dedup mirror.
+
+**The fix (shipped, commit `c1b9ca6b`).**
+- `trackWithDedup` now fires the **CAPI relay whenever `isProductionHost() && hasPixelId()`**, regardless of pixel load. The browser `fbq` fire was split into `firePixelOnly(eventName, eventId, ...)`, which still no-ops when the pixel is absent. One `event_id` is generated per event and shared by both sends.
+- `MetaPageViewTracker.tsx` fires the CAPI PageView immediately, then fires the browser twin under the **same `event_id`** once `fbq` loads (bounded 5s poll, cleaned up on unmount). If the pixel never loads, CAPI-only.
+- **EMQ hardening:** logged-in email is mirrored out of `AuthContext` via `setMetaUserData()` and attached to client CAPI events; the `/api/meta/events` route SHA-256 hashes it into `em` + `external_id` server-side (raw email never leaves our origin). Email is the single strongest match key.
+
+**Why it is safe (no double-count).** Dedup keys on `event_id` + `event_name` (48h window, Meta keeps the first received). When the pixel is present, browser + server share one `event_id` and Meta merges them. When the pixel is absent, only the server event exists — there is nothing to merge. The change strictly *removes* a blocking dependency (pixel load) from the server event; it never adds one, and all tracking stays post-paint / fire-and-forget, so it cannot delay or block page load.
+
+**Adversarial-review corrections (2026-07-16), folded into the plan doc:**
+- **EMQ target is ≥7, not ≥6** — server-side with `em`+`ph`+`external_id`+`fbp` reaches it easily; 6 is too low a bar.
+- **Triple Whale has NO server-side Purchase/ATC feed.** Its Data-In API ingests Orders/Products/Subscriptions/Customers and *lead-style* offline events only — it cannot be used to supplement the client Triple Pixel with funnel events. The Triple Whale fix (future Phase 3) is **client-pixel reliability** (it is deferred behind first-interaction/4s in `DelayedAnalytics.tsx` and silently no-ops pre-load) plus **subscription order tagging** (first vs recurring), not a server feed.
+
+**Verification (open — needs production deploy; pixel/CAPI gated to `www.conka.io`).**
+1. Block `connect.facebook.net` in DevTools (or use an in-app browser) → confirm AddToCart, ViewContent, PageView still arrive in Events Manager **Test Events**, tagged server.
+2. Unblock → confirm each action shows as **one** deduplicated event, not two.
+3. Confirm a logged-in session carries the hashed email; watch **EMQ hold ≥7** on AddToCart/Purchase over a few days, with upper-funnel server-event volume up.
+
+**Related.** Full programme + future phases: `docs/development/featurePlans/attribution-robustness.md`. Triple Whale integration reality (as-built, not the stale options doc): we send TW only a client-side AddToCart and no server signal; its Shopify sync records orders but journeys go empty when the pixel is blocked, and it mis-buckets Loop rebills as first orders (`is_new_customer` matches on customer_id/email/phone; split rebills via order tags).

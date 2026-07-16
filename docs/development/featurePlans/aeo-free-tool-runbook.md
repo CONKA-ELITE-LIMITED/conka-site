@@ -1,6 +1,6 @@
 # AEO Free-Tool Runbook — mining raw demand without paying
 
-**Status:** Active runbook. First forum pass run 2026-07-15 (results included below).
+**Status:** Active runbook. First forum pass run 2026-07-15; first Search Console pass run 2026-07-16 (results for both included below).
 **Owner:** Rudh.
 **Purpose:** A repeatable, no-cost way to fill the three gaps the automated search fan-out could not reach (see `aeo-demographic-query-research.md` → Methodology): (1) raw first-person user phrasings, (2) Google People Also Ask / autocomplete, (3) real demand ranking. Use this monthly to sharpen the content queue and to rank the P1 lanes by real demand before committing writing effort.
 
@@ -33,7 +33,9 @@ Everything above is a scraper or view of the same two ground-truth sources: Goog
 
 Do this once a month per active lane (start with the P1 lanes: perimenopause, sport). Each step says exactly what to click and what to copy back into the queue.
 
-### Step 1 — Google Search Console first (5 min, highest-value)
+### Step 1 — Google Search Console first (5 min)
+
+> **Ran 2026-07-16: zero impressions in every lane.** Until content ships, Step 1 measures rather than ranks — run it for month-on-month movement, but take lane priority from Steps 2 and 3. Full results and the API method are below.
 
 1. Open Search Console → the conka.io property → **Performance** → **Search results**.
 2. Set the date range to the last 3 months. Add a **Query** filter containing the lane's core word (e.g. `menopause`, `concussion`, `brain fog`, `focus`).
@@ -70,6 +72,82 @@ Do this once a month per active lane (start with the P1 lanes: perimenopause, sp
 
 1. Add net-new questions to the content queue in `aeo-demographic-query-research.md` (Phase 2 table).
 2. Add the queued questions to `aeo-scorecard.md` as the dated cohort (never edit the frozen v1 set).
+
+---
+
+## First-run results — Search Console pass (2026-07-16)
+
+**Range:** 2026-04-15 to 2026-07-14 (92 days). **Property:** `https://www.conka.io/` (URL-prefix, not a domain property). **Method:** pulled via the Search Console API rather than the UI (see "Running Step 1 programmatically" below), so these are full result sets, not the UI's 1,000-row cap.
+
+### Headline
+
+| Metric | Value |
+|---|---|
+| Queries | 193 |
+| Clicks | 945 |
+| Impressions | 6,638 |
+| Brand share | **99% of clicks, 90% of impressions** |
+| True non-brand | **11 clicks in 3 months** |
+
+The brand share is understated even at 99%. Of the 121 queries that survive a `conka` regex, roughly 70% are still brand: fuzzy misspellings (`ganka`, `jonka`, `kanka`, `xonka`, `synka`, `čonka`, `comka`, `chonka`) that Google matches to conka.io at positions 40 to 90. Genuine non-brand demand is a rounding error.
+
+### Lane results — every P1/P2 lane is ZERO
+
+| Lane | Queries | Impressions |
+|---|---|---|
+| Perimenopause | 0 | 0 |
+| Sport / concussion / CTE | 0 | 0 |
+| Brain fog | 0 | 0 |
+| Focus / memory | 0 | 0 |
+| ADHD | 0 | 0 |
+| Ageing / dementia / cognitive decline | 0 | 0 |
+| Nootropic / supplement | 18 | 62 (1 click, avg pos 11.8) |
+
+Checked beyond the runbook's five seeds against the full demographic taxonomy (dementia, cognitive decline, anxiety, chronic fatigue, sleep, recovery, energy, subconcussion, reactions, rugby, boxing, F1/racing): **zero impressions across all of them.** The only lane with a pulse is the `nootropic shot(s)` head term.
+
+### What Step 1 actually established
+
+**GSC cannot rank the P1 lanes, and that is the finding.** It was meant to order perimenopause vs sport by real demand; it cannot distinguish zero from zero. This corroborates the scorecard's "named in 0 of 24" baseline from the retrieval side: CONKA is not weakly present in these lanes, it is absent. **Consequence: demote Step 1 for lanes we have not entered yet.** It is a *measurement* instrument, not a *ranking* one, until content exists. Rank from the corpus and strategic fit instead (Steps 2 and 3 carry that load for now), and re-run Step 1 as the month-on-month check once the queue ships.
+
+### Four findings the lane framing missed
+
+1. **`humphrey bodington` is the single best non-brand asset** — 89 impressions, **6 clicks = 55% of all non-brand clicks**, more than every product and category term combined. The founder outranks the brand's subject matter as an organic entity. Implication for blog author bylines and for whose name the evidence report publishes under.
+2. **One legacy blog post is the entire content engine, and it is on the wrong platform.** The `controlled imagination / mental rehearsal / visualisation` cluster is 11 queries / ~127 impressions at positions 6 to 12, and every query lands on `/blogs/news/visualisation-mental-imagery-and-rehearsal` — a **Shopify-hosted** blog path, not the Next.js site. It is the only page generating non-brand impressions from informational content, and it out-earns the whole product surface on non-brand reach. **Action for the blog build:** decide the migration/redirect for this post before `/blog` ships. Losing it costs the one asset that demonstrably works. It also validates the blog thesis in miniature: one post, written once, beats the entire site on non-brand reach.
+3. **We rank #1 for category head terms that have no volume** — `brain shot`, `cogni shot`, `brain formula`, `nootropic peptides`, and the competitor term `olly brain`, all at position 1.0, each with 1 to 5 impressions. We own the category vocabulary and the category vocabulary is empty. Strongest available evidence that head-term SEO is a dead end here and question-shaped long tail is the only route, which is what this programme already assumed.
+4. **The US sees us and does not click.** GB: 3,864 impressions / 986 clicks / **25.5% CTR** / pos 3.6. US: 2,239 impressions / 75 clicks / **3.3% CTR** / pos 6.6. The US is 37% of impressions and converts 8x worse — a brand-awareness gap, relevant to any US ad spend.
+
+*Curiosity, not yet a signal:* one impression at position 1 for *"what's the best nootropics brand for low-sugar functional shots?"* — a conversational, qualified, AI-assistant-shaped query. One impression is noise, but it is the exact query shape this programme targets and the first sighting of it in our data.
+
+### Cheapest win found — not a content problem
+
+`/science` earns **3,816 impressions at average position 5.1 but only 24 clicks (0.6% CTR)**. `/why-conka`: 1,858 impressions, 7 clicks (0.4%). Ranking fifth and being ignored is a title/meta problem, not a demand problem — the only place on the site where demand already exists and is being left on the table. Route to Phase 9 (`aeo-content-shape-phase-9.md`), which owns title/meta and answer-first framing on exactly these pages.
+
+### Data caveat — do not quote these totals as site totals
+
+Query-level impressions (6,638) undershoot the UI's 3-month figure (10.3K) because Google anonymises low-volume queries. But the **pages** pull sums to ~18.2K, which *overshoots* it. Part of that is the 92-day range vs the UI's "3 months", but not all of it. **Treat the UI's 10.3K / 1.32K as the site total** until the gap is reconciled. The lane and brand-share conclusions above are unaffected: they rest on ratios within the query set, not on absolute totals.
+
+### Running Step 1 programmatically (optional, repeatable)
+
+The UI export works and needs no setup. The API is faster, uncapped (25,000 rows vs the UI's 1,000), and re-runnable monthly without a browser. Cost: an OAuth credential.
+
+```bash
+gcloud auth application-default login \
+  --scopes=https://www.googleapis.com/auth/webmasters.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud services enable searchconsole.googleapis.com --project=conkaapp
+gcloud auth application-default set-quota-project conkaapp
+```
+
+Then POST to `https://searchconsole.googleapis.com/webmasters/v3/sites/https%3A%2F%2Fwww.conka.io%2F/searchAnalytics/query` with `{"startDate","endDate","dimensions":["query"],"rowLimit":25000,"type":"web"}`.
+
+**Security note, read before running.** `gcloud auth application-default login` **cannot** issue a Search-Console-only credential: it hard-requires `cloud-platform`, a full read/write/delete scope over Google Cloud, and refuses to write the credential without it. There is no narrower ADC path. So this grants far more than the task needs. Mitigation used on this pass: consent, pull, then **revoke immediately** —
+
+```bash
+gcloud auth application-default revoke
+```
+
+Do not leave the credential live between passes. If that trade is unacceptable, use the manual UI export in Step 1 above; it costs ~20 minutes and grants nothing.
+
+**Better long-term fix:** enable **Search Console → Settings → Bulk data export** to BigQuery. It needs no scope grant at all and lands the data where it can be queried directly. It is forward-only (no backfill), so it does nothing for the current month but makes every future pass a query instead of a chore. **Not yet enabled as of 2026-07-16** — worth doing at the next pass.
 
 ---
 
@@ -131,7 +209,7 @@ Run headless (Reddit and AnswerSocrates need the browser, which was not connecte
 
 - **Yielded:** Mumsnet, Patient.info, HealthUnlocked (CHADD Adult ADHD), Sherdog, one Quora thread — all with verbatim titles and live URLs.
 - **Did not yield:** netmums.com (no indexed threads), rugbyforum.co.uk and The Student Room (only blog/research pages surfaced), menopausematters.co.uk forum (no individual indexed threads). Reddit and AnswerSocrates were not run this pass (browser not connected).
-- **To close next pass:** connect the browser and run Reddit (r/Menopause, r/ADHD, r/Nootropics, r/rugbyunion) + AnswerSocrates for the PAA breadth layer, plus the GSC step for real demand ranking.
+- **To close next pass:** connect the browser and run Reddit (r/Menopause, r/ADHD, r/Nootropics, r/rugbyunion) + AnswerSocrates for the PAA breadth layer. ~~plus the GSC step for real demand ranking~~ — GSC ran 2026-07-16 and returned zero for every lane; see the Search Console section above for why it cannot rank lanes we have not entered.
 
 ---
 
@@ -139,4 +217,6 @@ Run headless (Reddit and AnswerSocrates need the browser, which was not connecte
 
 1. **Add the net-new hooks to the Phase 2 queue** as candidate H1s, tagged by lane and intent, P3 where medical. Prefer the raw forum phrasings over the tidier authority-page phrasings — they convert better because they match how people actually search and speak.
 2. **Prioritise the two P1 lanes** (perimenopause occupational-panic angle; sport nutrition-prevents-CTE angle) — both are open, specific, and squarely on CONKA's proof.
-3. **Rank by GSC next pass.** Until the GSC step runs, treat these as "real and on-lane", not "highest-volume".
+3. **~~Rank by GSC next pass.~~ Superseded 2026-07-16.** GSC returned zero impressions for every lane, so it cannot rank them. Rank from the corpus, open-lane fit and strategic fit instead; re-run GSC as the month-on-month movement check once content ships. Continue to treat the corpus as "real and on-lane", not "highest-volume" — nothing so far has established magnitude.
+4. **Resolve the Shopify blog post migration** (`/blogs/news/visualisation-mental-imagery-and-rehearsal`) with the blog build before `/blog` ships. It is the only proven non-brand content asset and it currently lives on Shopify.
+5. **Route the `/science` CTR gap to Phase 9** — demand exists there today and is being wasted; cheaper than any new content.
