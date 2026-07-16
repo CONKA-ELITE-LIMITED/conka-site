@@ -8,8 +8,12 @@
  * ORDER IS LOAD-BEARING. Next.js matches `redirects()` in array order and stops
  * at the first hit, so every specific rule must precede the wildcard. The 29
  * posts that were NOT imported have no `/blog/<handle>` to land on, so if the
- * wildcard saw them first it would 301 them straight into a 404. Consumers must
- * spread this array in order and must not sort it.
+ * wildcard saw them first it would redirect them straight into a 404. Consumers
+ * must spread this array in order and must not sort it.
+ *
+ * `permanent: true` emits a 308, not a 301. Google treats the two as equivalent
+ * for canonicalisation and link equity, and every other redirect in
+ * next.config.ts is already 308.
  *
  * Triage (82 posts: 53 import, 29 drop) lives in
  * docs/development/featurePlans/legacy-blog-migration.md. Generated from that

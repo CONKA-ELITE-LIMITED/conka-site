@@ -224,17 +224,21 @@ const ROUTES: Route[] = [
  * The blog index plus one entry per Published post.
  *
  * The index is dated by its newest post rather than by git: what a visitor sees
- * change there is the list of posts, not the component that renders it. Returns
- * nothing at all if Notion is unreachable, since `getAllPosts` degrades to an
- * empty array by design.
+ * change there is the list of posts, not the component that renders it.
+ *
+ * `/blog` is listed unconditionally. It is a live, indexable page whether or not
+ * Notion answers, and `getAllPosts` degrades to an empty array on any Notion
+ * failure, so keying its presence off the post count would silently drop a real
+ * page from the sitemap during an outage. With no posts it simply ships without
+ * a `lastmod`, the same way a route git cannot date does: omitting the hint
+ * beats inventing one, and dropping the URL is worse than both.
  */
 async function blogEntries(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
-  if (posts.length === 0) return [];
-
-  const newest = posts
-    .map((p) => new Date(p.dateModified))
-    .reduce((a, b) => (a > b ? a : b));
+  const modified = posts.map((post) => new Date(post.dateModified));
+  const newest = modified.length
+    ? modified.reduce((a, b) => (a > b ? a : b))
+    : undefined;
 
   return [
     {
@@ -243,10 +247,10 @@ async function blogEntries(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     },
-    ...posts.map((post) => ({
+    ...posts.map((post, i) => ({
       url: `${SITE_ORIGIN}/blog/${post.slug}`,
       // Notion's last_edited_time: a Notion-sourced route has no git file.
-      lastModified: new Date(post.dateModified),
+      lastModified: modified[i],
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
