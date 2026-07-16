@@ -281,16 +281,15 @@ function listBlocks(el: HTMLElement, type: "bulleted_list_item" | "numbered_list
     const nested = childrenByTag(li, ["ul", "ol"]).flatMap((sub) =>
       listBlocks(sub, tagOf(sub) === "ol" ? "numbered_list_item" : "bulleted_list_item"),
     );
-    const own = finaliseRichText(
-      li.childNodes
-        .filter((n) => !["ul", "ol"].includes(tagOf(n)))
-        .flatMap((n) => inlineNode(n, EMPTY_CTX)),
-    );
-    if (own.length === 0 && nested.length === 0) return [];
+    const inlineChildren = li.childNodes.filter((n) => !["ul", "ol"].includes(tagOf(n)));
+    const own = finaliseRichText(inlineChildren.flatMap((n) => inlineNode(n, EMPTY_CTX)));
+    // Notion has no image inside a list item, so one lands after the list.
+    const images = imageBlocksWithin(inlineChildren);
+    if (own.length === 0 && nested.length === 0) return images;
 
     const item = block(type, own) as Record<string, Record<string, unknown>>;
     if (nested.length > 0) item[type].children = nested;
-    return [item as NotionBlock];
+    return [item as NotionBlock, ...images];
   });
 }
 
@@ -315,8 +314,11 @@ function tableBlocks(el: HTMLElement): NotionBlock[] {
         children: cellsPerRow.map((cells) => ({
           object: "block",
           type: "table_row",
-          // Notion requires every row to be exactly table_width wide.
-          table_row: { cells: [...cells, ...Array(width - cells.length).fill([])] },
+          // Notion requires every row to be exactly table_width wide. Ragged
+          // rows are padded with distinct empty cells, never a shared one.
+          table_row: {
+            cells: [...cells, ...Array.from({ length: width - cells.length }, () => [])],
+          },
         })),
       },
     },
@@ -370,9 +372,10 @@ function withText(el: HTMLElement, type: string): NotionBlock[] {
   const images = imageBlocksWithin(el.childNodes);
   if (rich.length === 0) return images;
 
-  // Some posts draw a section break by typing dashes into a paragraph.
+  // Some posts draw a section break by typing dashes into a paragraph. No em
+  // dash here: normaliseText has already turned those into commas.
   const plain = rich.map((r) => r.text.content).join("");
-  if (type === "paragraph" && /^[-–—_*]{3,}$/.test(plain.trim())) {
+  if (type === "paragraph" && /^[-–_*]{3,}$/.test(plain.trim())) {
     return [{ object: "block", type: "divider", divider: {} }, ...images];
   }
   return [block(type, rich), ...images];
@@ -412,7 +415,15 @@ export function convertHtmlToBlocks(html: string): NotionBlock[] {
 }
 
 export function loadArticles(): LegacyArticle[] {
-  return JSON.parse(readFileSync(ARTICLES_PATH, "utf-8")) as LegacyArticle[];
+  try {
+    return JSON.parse(readFileSync(ARTICLES_PATH, "utf-8")) as LegacyArticle[];
+  } catch {
+    // The snapshot is gitignored, so a fresh checkout has none.
+    console.error(
+      `No snapshot at ${ARTICLES_PATH}.\nRun: npx tsx scripts/legacy-blog/fetch.ts`,
+    );
+    process.exit(1);
+  }
 }
 
 function main(): void {

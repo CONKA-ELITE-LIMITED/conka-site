@@ -107,7 +107,13 @@ function buildProperties(article: LegacyArticle, description: string): Record<st
   return props;
 }
 
-/** Remove a page's existing body so a re-run replaces rather than duplicates it. */
+/**
+ * Remove a page's existing body so a re-run replaces rather than duplicates it.
+ *
+ * Not atomic with the re-append that follows: a crash in between leaves the row
+ * with an empty body. Recovery is simply re-running the importer for that
+ * handle, and the row is a Draft either way, so nothing broken reaches the site.
+ */
 async function clearPageBody(notion: Client, pageId: string): Promise<void> {
   let cursor: string | undefined;
   const ids: string[] = [];
