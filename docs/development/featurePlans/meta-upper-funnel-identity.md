@@ -1,6 +1,6 @@
 # Meta upper-funnel identity (Problem A)
 
-**Status:** Scoped 2026-07-16. Phase 1 and Phase 2 active.
+**Status:** Scoped and built 2026-07-16. Phases 1 and 2 complete on branch `scrum-1158-meta-upper-funnel-identity`. Awaiting deploy, then the coverage check in "Verification" below roughly 24h later.
 
 **Source of truth for the diagnosis:** `docs/analytics/ATTRIBUTION_STATE_AND_PLAN.md`. That document holds the evidence, the Meta numbers, and the three-problem split (A quality, B coverage, C rebills). This plan covers **Problem A only** and does not re-derive the diagnosis. Two corrections this plan makes to that document are recorded under "Corrections to the source doc" below.
 
@@ -26,10 +26,23 @@ Events from logged-out ad visitors reach Meta carrying almost no identity. An an
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Identity on every client event (`_fbp` + `conka_uid` + `external_id`) | Not Started |
-| 2 | `external_id` continuity to Purchase (cart attributes to order to webhook) | Not Started |
+| 1 | Identity on every client event (`_fbp` + `conka_uid` + `external_id`) | Built, awaiting deploy |
+| 2 | `external_id` continuity to Purchase (cart attributes to order to webhook) | Built, awaiting deploy |
 | 3 | Email where it already exists (A2): cognitive-test EmailCaptureForm + quiz | Future |
 | 4 | ViewContent on the `/go` listicle (B2, a coverage problem not a quality one) | Future |
+
+### What shipped (2026-07-16)
+
+Commits `a6940725` (implementation) and `8887ed74` (review fixes).
+
+Built as planned, with these notes worth carrying forward:
+
+- **All five checkout paths inherit `conka_uid` for free.** `buildMetaCartAttributes()` is shared by `CartContext`, both lander checkouts, and both funnel checkouts, so none of them needed touching. The cart route's `attributesSchema` is a generic key/value array with no allowlist, so the new key passes through to the order untouched.
+- **`buildMetaCartAttributes()` reads the id, it does not mint it.** Every event mints via `trackWithDedup`, so by the time a cart exists the cookie is there. Keeps the cart path free of side effects.
+- **`MetaPageViewTracker` only calls `captureFbcFromUrl()`.** `_fbp` and `conka_uid` need no landing-specific call, since every event mints them. `captureFbcFromUrl` stays because nothing else writes `_fbc` and it must precede the PageView that reads it.
+- **`metaCapi.ts` `externalId` now accepts `string | string[]`.** The Purchase sends `[conka_uid, shopifyCustomerId]`; Meta matches on any. An order with no `conka_uid` (a legacy or pre-deploy cart) still sends the customer id rather than an empty `external_id`.
+- **Two real bugs were caught in review, not by eyeball.** The generated `_fbp` random fell below 10 digits ~9.9% of the time (measured over 200k), which Meta would silently discard; and `captureFbcFromUrl` fed a URL parameter unencoded into `document.cookie`, so `?fbclid=x; Domain=...` could smuggle cookie attributes. Both fixed. Cookie values are now encoded on write, which is a no-op for the ids we actually write.
+- **The hash agreement was verified empirically**, since it is the thing that fails silently: the client relay (`app/api/meta/events/route.ts`) and the webhook (`app/lib/metaCapi.ts`) produce identical digests for a given `conka_uid`. If they ever diverge, the funnel join breaks with no error anywhere.
 
 Phases 3 and 4 are deliberately out of this phase and get their own tickets. Phase 4 belongs to Problem B, not A, and is tracked here only so it is not lost.
 
@@ -140,6 +153,6 @@ Note that the production-host gate means Vercel preview deploys fire no events, 
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1158 | [Analytics & Data] Meta upper-funnel identity: external_id + _fbp on every event, bridged to Purchase | 1 and 2 | To Do |
+| SCRUM-1158 | [Analytics & Data] Meta upper-funnel identity: external_id + _fbp on every event, bridged to Purchase | 1 and 2 | In Review |
 
 Phases 1 and 2 share one ticket because they are a single unit of value: Phase 1 without Phase 2 raises the EMQ number without improving matching. Phases 3 (A2) and 4 (B2) get their own tickets when they become active.
