@@ -35,7 +35,7 @@ export default function LandingHeroVideo() {
     const el = videoRef.current;
     if (!el) return;
 
-    // Respect reduced-motion: leave the still poster in place, no autoplay loop.
+    // Respect reduced-motion: leave the still background poster visible, no autoplay loop.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observer = new IntersectionObserver(
@@ -55,15 +55,22 @@ export default function LandingHeroVideo() {
     return () => observer.disconnect();
   }, []);
 
+  // The still poster is painted as a background-image (cover) on the container
+  // rather than via the <video poster> attribute: iOS Safari ignores object-fit
+  // on a video poster during the metadata-load window and stretches it to the
+  // box, so it warps until the video decodes. background-size: cover always
+  // crops correctly, so there is no warp during load.
   return (
-    <div className="relative -mx-5 w-[calc(100%+2.5rem)] overflow-hidden">
+    <div
+      className="relative -mx-5 w-[calc(100%+2.5rem)] overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: "url('/videos/both/BothStillWater-poster.jpg')" }}
+    >
       <video
         ref={videoRef}
         muted
         playsInline
         loop
         preload="metadata"
-        poster="/videos/both/BothStillWater-poster.jpg"
         aria-label="CONKA Flow and Clear shots resting in still water"
         className="absolute inset-0 h-full w-full object-cover"
       >
