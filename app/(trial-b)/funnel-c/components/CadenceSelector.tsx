@@ -18,7 +18,7 @@ import {
   type FunnelCadence,
   type FunnelProduct,
   getOfferPricing,
-  getSavingsPercent,
+  getDisplayDiscount,
 } from "../../lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
@@ -78,7 +78,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
         const badge = PLAN_BADGE[key];
         const freeShots = pricing.freeShots ?? 0;
         const freeShotsValue = pricing.freeShotsValue ?? 0;
-        const savingsPct = pricing.compareAtPrice ? getSavingsPercent(pricing.price, pricing.compareAtPrice) : 0;
+        const savingsPct = getDisplayDiscount(pricing);
 
         const subRef = getOfferPricing(product, "monthly-sub");
         const otpMissed = (subRef.freeShotsValue ?? 0) + (pricing.postage ?? 0);

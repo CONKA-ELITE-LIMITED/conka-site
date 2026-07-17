@@ -17,7 +17,7 @@ import {
   type FunnelCadence,
   FUNNEL_PRODUCTS,
   getOfferPricing,
-  getSavingsPercent,
+  getDisplayDiscount,
 } from "../../lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
@@ -113,7 +113,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const postageVal = cadence === "quarterly-sub" ? 29.97 : 9.99;
   const freq = cadencePriceSuffix(cadence);
   const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
-  const savingsPct = pricing.compareAtPrice ? getSavingsPercent(pricing.price, pricing.compareAtPrice) : 0;
+  const savingsPct = getDisplayDiscount(pricing);
   const totalToday = isSub ? pricing.price : pricing.price + (pricing.postage ?? 0);
 
   // Shot matrix coded by formula. Both splits its shots across Flow + Clear.

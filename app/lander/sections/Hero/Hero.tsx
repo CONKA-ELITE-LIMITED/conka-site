@@ -68,14 +68,14 @@ export default function Hero({ ctaHref = '#purchase-section' }: HeroProps) {
               to support focus, memory, and mental endurance every single day.
               <div className={styles.spacer8} />
               <ul className={styles.benefits}>
-                <li>🏷️ Up to 33% off + 8 free shots on your first order</li>
+                <li>🏷️ Up to 43% off + 8 free shots on your first order</li>
                 <li>🚚 Free shipping every month</li>
               </ul>
             </div>
           </div>
 
           <a className={styles.btn} href={ctaHref}>
-            Get up to 33% off
+            Get up to 43% off
           </a>
         </div>
       </div>

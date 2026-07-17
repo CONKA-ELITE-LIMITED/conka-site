@@ -15,7 +15,7 @@ import {
   type FunnelCadence,
   type FunnelProduct,
   getOfferPricing,
-  getSavingsPercent,
+  getDisplayDiscount,
 } from "../../lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
 
@@ -124,9 +124,7 @@ export default function CadenceSelector({
           const freeShots = pricing.freeShots ?? 0;
           const freeShotsValue = pricing.freeShotsValue ?? 0;
           const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
-          const savingsPct = pricing.compareAtPrice
-            ? getSavingsPercent(pricing.price, pricing.compareAtPrice)
-            : 0;
+          const savingsPct = getDisplayDiscount(pricing);
 
           // For OTP, the matching monthly subscription supplies the bonus-shot
           // count/value shown (greyed) so the contrast with subscribing is clear.

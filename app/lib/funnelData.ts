@@ -28,6 +28,13 @@ export interface FunnelPricing {
   shotCount: number;
   /** Crossed-out compare-at price (the one-time product price for the same shots; absent on one-time entries) */
   compareAtPrice?: number;
+  /**
+   * Published discount % to display (factors in free shots). When set, this is
+   * the source of truth for the "Save X%" figure; otherwise the displayed
+   * discount falls back to the derived saving vs compareAtPrice. See
+   * getDisplayDiscount.
+   */
+  discountPercent?: number;
   // "20 + 8 free" offer fields — surfaced everywhere so the bonus is clear.
   /** Free bonus shots. Monthly = first order only; quarterly = every cycle. */
   freeShots?: number;
@@ -88,6 +95,21 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
   return Math.round(((compareAtPrice - price) / compareAtPrice) * 100);
 }
 
+/**
+ * The discount % to DISPLAY for a pricing entry. Prefers the explicit,
+ * published `discountPercent` (which factors in free shots); otherwise falls
+ * back to the derived saving vs the compare-at price. Returns 0 when neither
+ * applies (e.g. one-time entries with no discount), so callers can keep using
+ * `savePct > 0` to decide whether to show a badge.
+ */
+export function getDisplayDiscount(pricing: FunnelPricing): number {
+  if (pricing.discountPercent != null) return pricing.discountPercent;
+  if (pricing.compareAtPrice != null) {
+    return getSavingsPercent(pricing.price, pricing.compareAtPrice);
+  }
+  return 0;
+}
+
 // OTP_PRICE = the one-time PRODUCT value (excl. postage). It doubles as the
 // verifiable compare-at "was" on subscription entries (monthly anchors against
 // one box, quarterly against three). The one-time CADENCE price bakes in
@@ -113,12 +135,14 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perDay: 3.74,
       shotCount: 40,
       compareAtPrice: OTP_PRICE.both,
+      discountPercent: 46,
       freeShots: 16,
       firstOrderShots: 56,
       subsequentShots: 40,
     },
     "monthly-otp": {
       price: OTP_PRICE.both + OTP_POSTAGE,
+      discountPercent: 29,
       perShot: 2.5,
       perDay: 5.0,
       shotCount: 40,
@@ -129,6 +153,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perDay: 2.5,
       shotCount: 120,
       compareAtPrice: OTP_PRICE.both * 3,
+      discountPercent: 69,
       freeShots: 20,
       firstOrderShots: 140,
       subsequentShots: 120,
@@ -141,6 +166,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perDay: 2.0,
       shotCount: 20,
       compareAtPrice: OTP_PRICE.flow,
+      discountPercent: 43,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -157,6 +183,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perDay: 1.83,
       shotCount: 60,
       compareAtPrice: OTP_PRICE.flow * 3,
+      discountPercent: 63,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 60,
@@ -169,6 +196,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perDay: 2.0,
       shotCount: 20,
       compareAtPrice: OTP_PRICE.clear,
+      discountPercent: 43,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -185,6 +213,7 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perDay: 1.83,
       shotCount: 60,
       compareAtPrice: OTP_PRICE.clear * 3,
+      discountPercent: 63,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 60,

@@ -12,6 +12,7 @@ import { FUNNEL_URL } from "@/app/lib/landingConstants";
 import {
   getCadencePricingByProductHeroId,
   getCadenceVariantByProductHeroId,
+  getDisplayDiscount,
 } from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
@@ -85,10 +86,7 @@ const S5_OTP_VARIANT = getCadenceVariantByProductHeroId(
 );
 const S5_COMPARE_AT = S5_SUB_PRICING.compareAtPrice ?? S5_OTP_PRICING.price;
 const S5_MONTHLY_SAVINGS = Math.max(0, S5_COMPARE_AT - S5_SUB_PRICING.price);
-const S5_SAVINGS_PERCENT =
-  S5_COMPARE_AT > 0
-    ? Math.round((S5_MONTHLY_SAVINGS / S5_COMPARE_AT) * 100)
-    : 0;
+const S5_SAVINGS_PERCENT = getDisplayDiscount(S5_SUB_PRICING);
 
 const S5_TRUST_BADGES = [
   { line1: "Informed", line2: "Sport" },

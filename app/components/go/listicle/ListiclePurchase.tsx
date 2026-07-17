@@ -6,6 +6,7 @@ import { formatPrice } from "@/app/lib/productData";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getDisplayDiscount,
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -207,9 +208,7 @@ function PlanPicker({
         const months = cadence === "quarterly-sub" ? 3 : 1;
         const perMonth = pricing.price / months;
         const weeks = months * 4;
-        const savePct = pricing.compareAtPrice
-          ? Math.round((1 - pricing.price / pricing.compareAtPrice) * 100)
-          : 0;
+        const savePct = getDisplayDiscount(pricing);
         const meta = SUB_META[cadence];
         const freeShots = pricing.freeShots ?? 0;
 
@@ -389,9 +388,7 @@ function ProductCard({
   const [pending, setPending] = useState(false);
   const image = CARD_IMAGE[formulaId];
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
-  const savePct = pricing.compareAtPrice
-    ? Math.round((1 - pricing.price / pricing.compareAtPrice) * 100)
-    : 0;
+  const savePct = getDisplayDiscount(pricing);
 
   // Guard against double-adds while the cart mutation is in flight.
   const add = async (c: CadenceType) => {

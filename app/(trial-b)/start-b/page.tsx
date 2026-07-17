@@ -9,7 +9,7 @@ import CROResearch from "@/app/components/cro/CROResearch";
 import CROAppCallout from "@/app/components/cro/CROAppCallout";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import { FUNNEL_URL } from "../lib/landingConstants";
-import { getCadencePricingByProductHeroId } from "../lib/cadenceData";
+import { getCadencePricingByProductHeroId, getDisplayDiscount } from "../lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
 import BottleVideo from "@/app/components/landing/BottleVideo";
@@ -74,10 +74,6 @@ const S5_SUB_PRICING = getCadencePricingByProductHeroId(
   BOTH_PRODUCT_HERO_ID,
   "monthly-sub",
 );
-const S5_OTP_PRICING = getCadencePricingByProductHeroId(
-  BOTH_PRODUCT_HERO_ID,
-  "monthly-otp",
-);
 // Offer-trial (B): the hero CTA advertises the LOWEST per-shot price across Both
 // plans, which is the quarterly subscription. Derived (not hardcoded) so it stays
 // in lockstep with the offer data.
@@ -86,12 +82,7 @@ const S5_QUARTERLY_PRICING = getCadencePricingByProductHeroId(
   "quarterly-sub",
 );
 const S5_LOWEST_PER_SHOT = S5_QUARTERLY_PRICING.perShot;
-const S5_COMPARE_AT = S5_SUB_PRICING.compareAtPrice ?? S5_OTP_PRICING.price;
-const S5_MONTHLY_SAVINGS = Math.max(0, S5_COMPARE_AT - S5_SUB_PRICING.price);
-const S5_SAVINGS_PERCENT =
-  S5_COMPARE_AT > 0
-    ? Math.round((S5_MONTHLY_SAVINGS / S5_COMPARE_AT) * 100)
-    : 0;
+const S5_SAVINGS_PERCENT = getDisplayDiscount(S5_SUB_PRICING);
 
 const S5_TRUST_BADGES = [
   { line1: "Informed", line2: "Sport" },

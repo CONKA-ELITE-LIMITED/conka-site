@@ -11,6 +11,7 @@ import {
   FunnelPricing,
   FunnelVariantConfig,
   FUNNEL_CADENCES,
+  getDisplayDiscount,
   getSavingsPercent,
   getFunnelProductSlideshow,
   getOfferPricing,
@@ -19,7 +20,7 @@ import {
 import { FormulaId } from "./productData";
 import type { ProductHeroId } from "./productTypes";
 
-export { FUNNEL_CADENCES, getSavingsPercent, getFunnelProductSlideshow };
+export { FUNNEL_CADENCES, getDisplayDiscount, getSavingsPercent, getFunnelProductSlideshow };
 
 // Re-export the cadence union so product pages don't import from funnelData directly
 export type CadenceType = FunnelCadence;

@@ -155,7 +155,7 @@ export default function BuyCard({data}: {data: CardConfig}) {
               checked={isSub}
               disabled={!canSubscribe}
               onChange={(e) => setSubscription(e.target.checked)}
-              aria-label="Subscribe & Save up to 33%"
+              aria-label="Subscribe & Save up to 43%"
             />
             <div className={styles.offerContent}>
               <span className={styles.offerHead}>{OFFER.head}</span>
