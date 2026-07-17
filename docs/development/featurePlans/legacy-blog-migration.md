@@ -1,5 +1,9 @@
 # Legacy Blog Migration (Shopify to Notion to /blog)
 
+> **This is a plan and a build record, not a description of current behaviour.**
+> For how the blog works today, read [`docs/features/BLOG_SYSTEM.md`](../../features/BLOG_SYSTEM.md), which is canonical and wins any disagreement.
+> Findings below are dated and several have since been fixed by the very phases they prompted. Known examples: the Risks section still says `notion.ts` "swallows every error and returns `[]`" (it throws since SCRUM-1157), and correction 7 says the surface "emits no JSON-LD at all" (it emits `BlogPosting` and `FAQPage`).
+
 **Status:** Phases 1 to 3 built and merged (SCRUM-1155/1156/1157); 55 posts live and all 82 legacy URLs redirecting. **Phase 6 scoped 2026-07-16** (SCRUM-1160/1161/1162): underline artifact repair, topic backfill, topic hubs + paginated index.
 **Owner:** Rudh.
 **Created:** 2026-07-16.

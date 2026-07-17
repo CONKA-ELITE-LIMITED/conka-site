@@ -166,7 +166,7 @@ So the basis for the published number is not recoverable from the spec.
 
 ### 10. Assert Notion reads at build, and stop the data cache serving stale post bodies
 
-**Status:** Deferred
+**Status:** Ticketed as [SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163). Canonical write-up: `docs/features/BLOG_SYSTEM.md`.
 **Files:**
 - `app/lib/notion.ts` -- `queryBlogRows` swallows errors into `[]`; `pageToMarkdown` fetches each post's blocks
 - `app/lib/blog.ts` -- `getAllPosts`, consumed by `generateStaticParams`, `sitemap` and every post route
@@ -175,7 +175,7 @@ So the basis for the published number is not recoverable from the spec.
 
 Two separate defects, one fix surface:
 
-1. **A build racing a Notion write bakes a 404 into a live post on a green build.** Observed during Phase 3 (correction 6 in the plan doc): `generateStaticParams` saw 3 published posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and no error output. `queryBlogRows` returning `[]` on failure means an inconsistent or rate-limited read during a deploy silently ships a 404 for a live post.
+1. **A build racing a Notion write bakes a 404 into a live post on a green build.** Observed during Phase 3 (correction 6 in the plan doc): `generateStaticParams` saw 3 published posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and no error output. **The mechanism is not error-swallowing:** `queryBlogRows` throws since SCRUM-1157, and correction 6 and the plan's Risks section are both stale on this point. It is that separate, individually *successful* queries across one build can disagree, because Notion is eventually consistent right after a write and `react.cache` dedupes per request, not per build. Nothing throws, because nothing failed. Only a consistency assertion catches it.
 2. **The Notion data cache holds post bodies for a year.** Reproduced on SCRUM-1160 (correction 8): the Notion SDK calls `fetch`, Next patches it, and all 70 entries land in `.next/cache/fetch-cache` with `revalidate: 31536000`, 68 of them `GET /v1/blocks/{id}/children`. A verified-clean Notion body still built green with all 191 leaks; `rm -rf .next/cache` fixed it. Vercel restores that cache between deploys, so **any Notion body edit can be invisible on a green redeploy.** The interim rule is to redeploy with the build cache cleared, which is a human step guarding a silent failure.
 
 A build-time assertion (post count against a floor, and consistency between `generateStaticParams`, `getPostBySlug` and `sitemap`) turns both into a failed build instead of a silent one. The cache half also wants an explicit `cache`/`revalidate` on the Notion reads so correctness does not depend on remembering to untick a checkbox.

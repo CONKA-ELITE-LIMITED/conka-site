@@ -147,6 +147,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/PAGE_NARRATIVES.md` | **Page story map** — current section-by-section arc + health rating per page; spot the weakest section to improve next |
 | `docs/branding/DESIGN_SYSTEM.md` | **Active design system** — typography, colours, radius, layout, migration guide |
 | `docs/features/LANDING_QUIZ_SYSTEM.md` | **Ad landing quiz system** (`/go/[slug]`) — config schema, how to add a page, analytics |
+| `docs/features/BLOG_SYSTEM.md` | **Blog system** — canonical reference for `/blog`. Notion-as-CMS, the content contract (a missing meta description silently skips a post), the render pipeline, and the deploy rules. **Read before any Notion write or blog change:** the blog is static, so a write is invisible until a redeploy, and Next caches Notion responses for a year, so a body edit needs the build cache cleared |
 | `docs/features/FAQ_SYSTEM.md` | **FAQ system** — one source of truth, per-surface subsets, schema == visible rule, claims anchors, disclosure policy |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |

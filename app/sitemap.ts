@@ -226,12 +226,14 @@ const ROUTES: Route[] = [
  * The index is dated by its newest post rather than by git: what a visitor sees
  * change there is the list of posts, not the component that renders it.
  *
- * `/blog` is listed unconditionally. It is a live, indexable page whether or not
- * Notion answers, and `getAllPosts` degrades to an empty array on any Notion
- * failure, so keying its presence off the post count would silently drop a real
- * page from the sitemap during an outage. With no posts it simply ships without
- * a `lastmod`, the same way a route git cannot date does: omitting the hint
- * beats inventing one, and dropping the URL is worse than both.
+ * `/blog` is listed unconditionally: it is a live, indexable page whether or not
+ * it currently holds posts, and dropping the URL is worse than shipping it
+ * without a `lastmod`, the same way a route git cannot date does. Omitting the
+ * hint beats inventing one.
+ *
+ * This used to be justified by `getAllPosts` degrading to an empty array during
+ * a Notion outage. It no longer does: `queryBlogRows` throws since SCRUM-1157,
+ * so an outage fails the build rather than reaching this function.
  */
 async function blogEntries(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
