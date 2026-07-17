@@ -4,11 +4,11 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 
 /**
- * Loads Google Analytics + Triple Whale on the first user engagement
- * (scroll / tap / key / pointer) or a short idle fallback — keeping these two
- * non-critical marketing tags off the initial load window (fewer render-time
- * network requests, better "reduce unused JS / 3rd parties / cache lifetimes"
- * audits, less main-thread contention during load).
+ * Loads Google Analytics + Triple Whale + the Alia email-capture popup on the
+ * first user engagement (scroll / tap / key / pointer) or a short idle fallback
+ * — keeping these non-critical marketing tags off the initial load window (fewer
+ * render-time network requests, better "reduce unused JS / 3rd parties / cache
+ * lifetimes" audits, less main-thread contention during load).
  *
  * The Meta Pixel is deliberately NOT here — it stays early in the root layout
  * because attribution (`_fbc` ad-click capture + PageView) depends on it firing
@@ -65,6 +65,14 @@ export default function DelayedAnalytics() {
         dangerouslySetInnerHTML={{
           __html: '/* >> TriplePixel :: start*/window.TriplePixelData={TripleName:"conka-6770.myshopify.com",ver:"2.17",plat:"SHOPIFY",isHeadless:true},function(W,H,A,L,E,_,B,N){function O(U,T,P,H,R){void 0===R&&(R=!1),H=new XMLHttpRequest,P?(H.open("POST",U,!0),H.setRequestHeader("Content-Type","text/plain")):H.open("GET",U,!0),H.send(JSON.stringify(P||{})),H.onreadystatechange=function(){4===H.readyState&&200===H.status?(R=H.responseText,U.includes("/first")?eval(R):P||(N[B]=R)):(299<H.status||H.status<200)&&T&&!R&&(R=!0,O(U,T-1,P))}}if(N=window,!N[H+"sn"]){N[H+"sn"]=1,L=function(){return Date.now().toString(36)+"_"+Math.random().toString(36)};try{A.setItem(H,1+(0|A.getItem(H)||0)),(E=JSON.parse(A.getItem(H+"U")||"[]")).push({u:location.href,r:document.referrer,t:Date.now(),id:L()}),A.setItem(H+"U",JSON.stringify(E))}catch(e){}var i,m,p;A.getItem(\'"!nC\\`\')||(_=A,A=N,A[H]||(E=A[H]=function(t,e,a){return void 0===a&&(a=[]),"State"==t?E.s:(W=L(),(E._q=E._q||[]).push([W,t,e].concat(a)),W)},E.s="Installed",E._q=[],E.ch=W,B="configSecurityConfModel",N[B]=1,O("https://conf.config-security.com/model",5),i=L(),m=A[atob("c2NyZWVu")],_.setItem("di_pmt_wt",i),p={id:i,action:"profile",avatar:_.getItem("auth-security_rand_salt_"),time:m[atob("d2lkdGg=")]+":"+m[atob("aGVpZ2h0")],host:A.TriplePixelData.TripleName,plat:A.TriplePixelData.plat,url:window.location.href.slice(0,500),ref:document.referrer,ver:A.TriplePixelData.ver},O("https://api.config-security.com/event",5,p),O("https://api.config-security.com/first?host=conka-6770.myshopify.com&plat=SHOPIFY",5)))}}("","TriplePixel",localStorage);/* << TriplePixel :: end*/',
         }}
+      />
+
+      {/* Alia email-capture popup (self-renders; syncs signups to Klaviyo via
+          Alia's native OAuth integration, no Klaviyo code in this repo) */}
+      <Script
+        id="alia-embed"
+        src="https://backend.alia-prod.com/public/embed.js?shop=conka-6770.myshopify.com"
+        strategy="lazyOnload"
       />
     </>
   );
