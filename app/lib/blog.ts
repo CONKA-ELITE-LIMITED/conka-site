@@ -197,8 +197,8 @@ export async function getRelatedPosts(
   slug: string,
   opts: { includeUnpublished?: boolean; limit?: number } = {},
 ): Promise<BlogPostSummary[]> {
-  const limit = opts.limit ?? 3;
-  const all = await getAllPosts(opts);
+  const { limit = 3, ...listOpts } = opts;
+  const all = await getAllPosts(listOpts);
   // getAllPosts is newest-first, so position is the recency tiebreak.
   const others = all
     .map((post, index) => ({ post, index }))

@@ -117,6 +117,3 @@ export function topicsForHandle(handle: string): readonly Topic[] {
   if (!topics) throw new Error(`[topics] no Topic mapping for lane "${lane}" (${handle})`);
   return topics;
 }
-
-/** Every handle this file tags. */
-export const TAGGED_HANDLES: readonly string[] = Object.keys(HANDLE_LANES);

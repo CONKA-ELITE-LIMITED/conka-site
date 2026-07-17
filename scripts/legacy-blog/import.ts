@@ -39,6 +39,21 @@ export function chunk<T>(items: T[], size: number): T[][] {
   return out;
 }
 
+/**
+ * `Topic` for a new row, from the plan doc's triage table (SCRUM-1161). Without
+ * it a re-import lands untagged, which is how all 53 arrived that way.
+ *
+ * Set on create only, never on update, for the same reason `Status` is: the
+ * plan records a wrong lane as a one-row edit in Notion, and writing the table's
+ * value on every update would silently revert that edit. `backfillTopics.ts` is
+ * the deliberate, idempotent way to push a table change onto existing rows.
+ */
+function topicProperty(handle: string): Record<string, unknown> {
+  const topics = topicsForHandle(handle);
+  if (topics.length === 0) return {};
+  return { Topic: { multi_select: topics.map((name) => ({ name })) } };
+}
+
 function buildProperties(article: LegacyArticle, description: string): Record<string, unknown> {
   const props: Record<string, unknown> = {
     "Blog name": { title: [{ type: "text", text: { content: article.title } }] },
@@ -48,13 +63,6 @@ function buildProperties(article: LegacyArticle, description: string): Record<st
     "Date published": { date: { start: article.publishedAt.slice(0, 10) } },
     Source: { select: { name: "legacy" } },
   };
-
-  // Without this a re-import lands untagged, which is how all 53 arrived that
-  // way in the first place (SCRUM-1161). The map is the plan doc's triage table.
-  const topics = topicsForHandle(article.handle);
-  if (topics.length > 0) {
-    props.Topic = { multi_select: topics.map((name) => ({ name })) };
-  }
 
   if (article.image?.url) {
     props["Hero image"] = {
@@ -144,6 +152,7 @@ async function importArticle(
       properties: {
         ...buildProperties(article, description),
         Status: { select: { name: "Draft" } },
+        ...topicProperty(article.handle),
       } as never,
     });
     pageId = created.id;

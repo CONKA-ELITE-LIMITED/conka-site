@@ -25,7 +25,6 @@ export interface BlogRow {
   properties: {
     Slug?: { rich_text?: Array<{ plain_text: string }> };
     Source?: { select?: { name?: string } | null };
-    Status?: { select?: { name?: string } | null };
     Topic?: { multi_select?: Array<{ name: string }> };
   };
 }
