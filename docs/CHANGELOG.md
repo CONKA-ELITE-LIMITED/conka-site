@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-17** | Fixed the home hero warping in a half-loaded state on mobile Safari: the still poster now paints as a background-image (which always crops correctly) instead of the video's poster attribute, which Safari stretches to the box before the video decodes.
 - **2026-07-17** | Added the Alia email-capture popup, loaded through the deferred marketing loader so it stays off the initial load path; it replaces the disabled legacy Klaviyo onsite popup and syncs signups to the Klaviyo master list via Alia's native integration (no Klaviyo code in this repo).
 - **2026-07-17** | Blog build now fails on inconsistent or thin Notion reads, and a deploy-scoped cache key means post edits reach production on an ordinary redeploy (no manual cache clear).
 - **2026-07-17** | Legacy blog Phase 6.2: every blog post now recommends three articles that actually share its subject, instead of showing every reader the same three newest posts, and all 53 recovered posts carry topic tags

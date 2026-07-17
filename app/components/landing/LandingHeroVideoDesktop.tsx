@@ -34,7 +34,7 @@ export default function LandingHeroVideoDesktop() {
     const el = videoRef.current;
     if (!el) return;
 
-    // Respect reduced-motion: leave the still poster in place, no autoplay loop.
+    // Respect reduced-motion: leave the still background poster visible, no autoplay loop.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observer = new IntersectionObserver(
@@ -54,15 +54,22 @@ export default function LandingHeroVideoDesktop() {
     return () => observer.disconnect();
   }, []);
 
+  // See LandingHeroVideo: the poster is painted as a background-image (cover)
+  // rather than the <video poster> attribute, which iOS Safari stretches to the
+  // box during the metadata-load window before the video decodes.
   return (
-    <div className="relative w-full overflow-hidden">
+    <div
+      className="relative w-full overflow-hidden bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/videos/both/BothStillWaterDesktop-poster.jpg')",
+      }}
+    >
       <video
         ref={videoRef}
         muted
         playsInline
         loop
         preload="metadata"
-        poster="/videos/both/BothStillWaterDesktop-poster.jpg"
         aria-label="CONKA Flow and Clear shots resting in still water"
         className="absolute inset-0 h-full w-full object-cover"
       >
