@@ -33,14 +33,31 @@ const REQUEST_DELAY_MS = 350;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** The rich-text-bearing fields on the block types the archive uses. */
+/**
+ * The rich-text-bearing fields across Notion's block types. `rich_text` covers
+ * paragraphs, headings, list items, quotes and callouts; `caption` covers images
+ * and code. `table_row` is the odd one out and holds `cells` instead, an array
+ * of rich-text arrays, so it is walked separately: 2 of the 53 carry tables.
+ */
 const RICH_TEXT_FIELDS = ["rich_text", "caption"] as const;
 
 interface Annotated {
   annotations?: { underline?: boolean };
 }
 
-type Block = { id: string; type: string; has_children?: boolean } & Record<string, unknown>;
+/** Clear underline across one rich-text array. Returns null when nothing changed. */
+function stripRuns(runs: Annotated[]): { runs: Annotated[]; cleared: number } | null {
+  if (!runs.some((run) => run.annotations?.underline)) return null;
+  let cleared = 0;
+  const next = runs.map((run) => {
+    if (!run.annotations?.underline) return run;
+    cleared += 1;
+    return { ...run, annotations: { ...run.annotations, underline: false } };
+  });
+  return { runs: next, cleared };
+}
+
+export type Block = { id: string; type: string; has_children?: boolean } & Record<string, unknown>;
 
 async function resolveDataSourceId(notion: Client, databaseId: string): Promise<string> {
   const db = (await notion.databases.retrieve({ database_id: databaseId })) as unknown as {
@@ -90,22 +107,28 @@ async function fetchLegacyPages(notion: Client, dataSourceId: string): Promise<A
  * Returns the fields that changed and how many runs were cleared, so a block
  * with no underline is never written back.
  */
-function stripBlock(block: Block): { payload: Record<string, unknown>; runs: number } {
+export function stripBlock(block: Block): { payload: Record<string, unknown>; runs: number } {
   const body = block[block.type] as Record<string, unknown> | undefined;
   const payload: Record<string, unknown> = {};
   let runs = 0;
   if (!body) return { payload, runs };
 
   for (const field of RICH_TEXT_FIELDS) {
-    const richText = body[field] as Annotated[] | undefined;
+    const richText = body[field];
     if (!Array.isArray(richText)) continue;
-    if (!richText.some((run) => run.annotations?.underline)) continue;
+    const stripped = stripRuns(richText as Annotated[]);
+    if (!stripped) continue;
+    payload[field] = stripped.runs;
+    runs += stripped.cleared;
+  }
 
-    payload[field] = richText.map((run) => {
-      if (!run.annotations?.underline) return run;
-      runs += 1;
-      return { ...run, annotations: { ...run.annotations, underline: false } };
-    });
+  const cells = body.cells;
+  if (Array.isArray(cells)) {
+    const strippedCells = (cells as Annotated[][]).map((cell) => stripRuns(cell));
+    if (strippedCells.some(Boolean)) {
+      payload.cells = strippedCells.map((s, i) => s?.runs ?? (cells as Annotated[][])[i]);
+      runs += strippedCells.reduce((sum, s) => sum + (s?.cleared ?? 0), 0);
+    }
   }
   return { payload, runs };
 }
@@ -120,6 +143,10 @@ async function stripPage(notion: Client, blockId: string, dryRun: boolean): Prom
     const res = await notion.blocks.children.list({ block_id: blockId, start_cursor: cursor, page_size: 100 });
     children.push(...(res.results as unknown as Block[]));
     cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
+    // Reads are paced too: this walk is read-heavy (one call per page plus one
+    // per nested block), so unpaced it is the part most likely to hit Notion's
+    // rate limit, not the writes.
+    await sleep(REQUEST_DELAY_MS);
   } while (cursor);
 
   for (const block of children) {
