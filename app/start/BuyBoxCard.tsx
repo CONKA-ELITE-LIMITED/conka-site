@@ -16,7 +16,6 @@ interface BuyBoxCardProps {
   otpPricing: CadencePricing;
   subVariant: CadenceVariantConfig | null;
   otpVariant: CadenceVariantConfig | null;
-  compareAt: number;
   monthlySavings: number;
   savingsPercent: number;
   productImage: string;
@@ -56,7 +55,6 @@ export default function BuyBoxCard({
   otpPricing,
   subVariant,
   otpVariant,
-  compareAt,
   monthlySavings,
   savingsPercent,
   productImage,
@@ -104,14 +102,9 @@ export default function BuyBoxCard({
             )}
           </span>
           {showSavings && (
-            <>
-              <span className="text-[15px] text-black/40 line-through tabular-nums">
-                {formatPrice(compareAt)}
-              </span>
-              <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-[0.1em] text-white bg-[#1B2757] px-2 py-1 rounded-full tabular-nums">
-                Save {savingsPercent}%
-              </span>
-            </>
+            <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-[0.1em] text-white bg-[#1B2757] px-2 py-1 rounded-full tabular-nums">
+              Save {savingsPercent}%
+            </span>
           )}
         </div>
         <p className="text-[12px] text-black/55 tabular-nums">

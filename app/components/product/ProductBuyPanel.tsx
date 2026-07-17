@@ -12,6 +12,7 @@ import {
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getDisplayDiscount,
   FUNNEL_CADENCES,
 } from "@/app/lib/cadenceData";
 import FreeShotsBadge from "@/app/components/FreeShotsBadge";
@@ -358,9 +359,7 @@ function PlanSelector({
         const perMonth = pricing.price / monthsPerCycle;
         const weeksPerCycle = monthsPerCycle * 4;
         const bannerLabel = display.badge;
-        const savePct = pricing.compareAtPrice
-          ? Math.round((1 - pricing.price / pricing.compareAtPrice) * 100)
-          : 0;
+        const savePct = getDisplayDiscount(pricing);
 
         return (
           <div

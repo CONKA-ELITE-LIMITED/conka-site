@@ -68,14 +68,14 @@ export default function Hero({ ctaHref = '#purchase-section' }: HeroProps) {
               to support focus, memory, and mental endurance every single day.
               <div className={styles.spacer8} />
               <ul className={styles.benefits}>
-                <li>🏷️ 31% off your first month</li>
+                <li>🏷️ 43% off your first month</li>
                 <li>🚚 Free shipping every month</li>
               </ul>
             </div>
           </div>
 
           <a className={styles.btn} href={ctaHref}>
-            Get your 31% off
+            Get your 43% off
           </a>
         </div>
       </div>

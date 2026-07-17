@@ -59,7 +59,7 @@ export default function Nav({ onCartClick }: NavProps) {
     <>
       <div className={styles.announce}>
         <p className={styles.announceCopy}>
-          <b>Limited-Time Offer!</b> Subscribe to claim 31% off + free delivery
+          <b>Limited-Time Offer!</b> Subscribe to claim 43% off + free delivery
           <a className={styles.announceLink} href="#purchase-section">
             &nbsp;Get Now
             <Chevron />

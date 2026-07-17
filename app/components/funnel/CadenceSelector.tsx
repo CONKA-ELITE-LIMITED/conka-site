@@ -6,8 +6,8 @@ import {
   type FunnelProduct,
   FUNNEL_CADENCES,
   FUNNEL_PRODUCTS,
+  getDisplayDiscount,
   getOfferPricing,
-  getSavingsPercent,
 } from "@/app/lib/funnelData";
 import { formatPrice } from "@/app/lib/productData";
 import FreeShotsBadge from "@/app/components/FreeShotsBadge";
@@ -196,14 +196,9 @@ export default function CadenceSelector({
                         {frequency}
                       </span>
                       {pricing.compareAtPrice && (
-                        <>
-                          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40 line-through tabular-nums">
-                            {formatPrice(pricing.compareAtPrice)}
-                          </span>
-                          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1B2757] tabular-nums">
-                            {getSavingsPercent(pricing.price, pricing.compareAtPrice)}% off
-                          </span>
-                        </>
+                        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1B2757] tabular-nums">
+                          {getDisplayDiscount(pricing)}% off
+                        </span>
                       )}
                     </div>
 
