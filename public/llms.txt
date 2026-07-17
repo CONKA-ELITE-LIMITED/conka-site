@@ -26,6 +26,7 @@ a monthly subscription, a one-time purchase, or a quarterly subscription.
 
 Editorial articles, grouped by topic. Each topic page lists every article on it.
 (Paginated pages such as /blog/page/2 are navigation, not content, and are omitted.)
+This list is hand-maintained: hubs are generated from Notion topics, so add or remove a row here if a topic gains or loses its last published post.
 
 - [Blog](https://www.conka.io/blog): Evidence-led writing on focus, memory, brain fog and getting more out of your brain.
 - [Sport](https://www.conka.io/blog/topic/sport): Reaction time, focus under pressure, and cognitive performance for athletes.

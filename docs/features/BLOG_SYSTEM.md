@@ -8,7 +8,7 @@ Posts live in a Notion database ("Blog Hub"). `app/lib/blog.ts` reads it at **bu
 
 Publishing is a two-step human action: flip `Status` to `Published` in Notion, **then redeploy**. Nothing reaches the site until a build runs.
 
-The surface is deliberately thin: `/blog` (index) and `/blog/[slug]` (post), plus `app/blog/error.tsx`. Topic hubs and pagination are scoped but not built (SCRUM-1162).
+The surface: `/blog` (index, page 1), `/blog/page/[page]` (pages 2+), `/blog/topic/[topic]` (10 hubs) and `/blog/[slug]` (post), plus `app/blog/error.tsx`.
 
 ## The operational rules (read these before touching Notion)
 
@@ -117,10 +117,14 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 
 ## Routes and SEO
 
-- `/blog` and `/blog/[slug]`. Fully static via `generateStaticParams`.
+- `/blog`, `/blog/page/[page]`, `/blog/topic/[topic]`, `/blog/[slug]`. Fully static via `generateStaticParams`.
+- **Hubs are derived, never hardcoded.** `app/lib/blogTopics.ts` builds them from the topics published posts actually carry, so a `Topic` option with no published post generates no hub (ADHD today). Membership is `includes`, so a post tagged Sport and Concussion appears on both hubs.
+- **`/blog` is page 1**, so pagination starts at `/blog/page/2`. `/blog/page/1` does not exist: two URLs listing the same posts would be a self-inflicted duplicate. `/blog/page/01` and any non-integer 404 for the same reason.
+- **Page size 12.** Hubs do not paginate: the largest is 11. That margin is one post, so if a retag or the ingredient archive pushes a hub to 12 it needs `Pagination` at `/blog/topic/[topic]/page/[page]` (Phase 6.4).
+- **`getAllPosts` re-probes every hero image on each call, so fetch once per render and derive.** Use the pure `topicsOf` / `postsForTopic` / `paginate` helpers rather than calling the async wrappers per hub, which turns one build step into twelve.
 - `/blogs/news/*` → `/blog/*` (`app/lib/legacyBlogRedirects.ts`, order is load-bearing). `/blogs/*` is the legacy Shopify space: redirect-only, never a content surface. `/blogs/ingredients/*` is deliberately untouched.
 - **Canonical: do nothing.** The root layout sets a *relative* `alternates: { canonical: "./" }`, so every route self-canonicalises. **Never set an absolute canonical in a parent**: children inherit it verbatim and read to Google as duplicates of the homepage. Fixing exactly that was the highest-value change in the SEO programme.
-- **Sitemap** (`app/sitemap.ts`): `/blog` unconditionally (weekly, 0.7, dated by its newest post) plus one entry per Published post (monthly, 0.6). The blog is the deliberate exception to the git-date rule: posts are dated from Notion's `last_edited_time`, because git cannot date content it does not hold.
+- **Sitemap** (`app/sitemap.ts`): `/blog` unconditionally (weekly, 0.7, dated by its newest post), each hub (weekly, 0.65, dated by its own newest post), each paginated page (weekly, 0.5) and one entry per Published post (monthly, 0.6). All inside `blogEntries()`, never `ROUTES`: Notion-derived routes have no source file, so the git-date rule cannot date them. The blog is the deliberate exception to the git-date rule: posts are dated from Notion's `last_edited_time`, because git cannot date content it does not hold.
 - **JSON-LD** (`app/blog/[slug]/page.tsx`): `BlogPosting` always, `FAQPage` only when the post has parsed FAQ pairs.
 
 ## Scripts
@@ -155,7 +159,7 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 | Gap | Tracked |
 |---|---|
 | Build-time assertion + explicit cache control (the two silent failures above) | [SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163), `docs/TODO.md` item 10 |
-| Topic hubs, paginated index, sitemap entries | [SCRUM-1162](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1162) |
+| Hub pagination, if any hub reaches 12 posts (Sport and Neuroscience sit at 11) | Phase 6.4, no ticket yet |
 | In-body `<img>` has no dimensions, so bodies shift on load. 100 images across 33 posts, none with usable alt text | `docs/TODO.md` item 11 |
 | **Blog → PDP CTA analytics was never built.** `ProductCTA.tsx` says "Analytics (source: 'blog') is wired in Phase 3"; no tracking call exists. The rest of Phase 3 shipped, so this is a dropped task, not a pending one | Untracked as of 2026-07-17 |
 | Sequential image downloads and Notion fetches at build (~1m40). `Promise.all` batching is the known fix | Untracked as of 2026-07-17 |

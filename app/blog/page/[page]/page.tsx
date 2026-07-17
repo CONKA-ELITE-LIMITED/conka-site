@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import BlogListing from "@/app/components/blog/BlogListing";
-import { BLOG_PAGE_SIZE, getPostPage, getTopics } from "@/app/lib/blogTopics";
+import { BLOG_PAGE_SIZE, paginate, topicsOf } from "@/app/lib/blogTopics";
 import { getAllPosts } from "@/app/lib/blog";
 
 const PREVIEW = { includeUnpublished: true };
@@ -56,10 +56,10 @@ export default async function BlogPaginatedPage({
   const page = parsePage(raw);
   if (!page) notFound();
 
-  const [{ posts, totalPages }, topics] = await Promise.all([
-    getPostPage(page, PREVIEW),
-    getTopics(PREVIEW),
-  ]);
+  // One fetch: paging and the topic nav come off the same read.
+  const all = await getAllPosts(PREVIEW);
+  const topics = topicsOf(all);
+  const { posts, totalPages } = paginate(all, page);
 
   // A page past the end holds no posts: 404 rather than render an empty grid
   // that Google would index as thin.

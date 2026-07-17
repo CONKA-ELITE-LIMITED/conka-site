@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/app/lib/blog";
-import { BLOG_PAGE_SIZE, getPostsByTopic, getTopics, slugifyTopic } from "@/app/lib/blogTopics";
+import { BLOG_PAGE_SIZE, postsForTopic, slugifyTopic, topicsOf } from "@/app/lib/blogTopics";
 import { SITE_ORIGIN } from "@/app/lib/site";
 
 /**
@@ -246,21 +246,20 @@ async function blogEntries(): Promise<MetadataRoute.Sitemap> {
   // Hubs and paginated pages belong here rather than in ROUTES: they are
   // Notion-derived and have no source file, so the git-date rule cannot date
   // them. Each is dated from its own newest post, the same way /blog is.
-  const topics = await getTopics();
-  const hubs = await Promise.all(
-    topics.map(async (topic) => {
-      const topicPosts = await getPostsByTopic(topic);
-      const dates = topicPosts.map((post) => new Date(post.dateModified));
-      return {
-        url: `${SITE_ORIGIN}/blog/topic/${slugifyTopic(topic)}`,
-        lastModified: dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : undefined,
-        changeFrequency: "weekly" as const,
-        // Between the index at 0.7 and a post at 0.6: a hub is a real entry
-        // point, but a post is the thing worth ranking.
-        priority: 0.65,
-      };
-    }),
-  );
+  // Derived from the posts already fetched above, not by re-querying per topic:
+  // getAllPosts re-probes every hero image on each call, so a fetch per hub
+  // would turn one build step into twelve.
+  const hubs = topicsOf(posts).map((topic) => {
+    const dates = postsForTopic(posts, topic).map((post) => new Date(post.dateModified));
+    return {
+      url: `${SITE_ORIGIN}/blog/topic/${slugifyTopic(topic)}`,
+      lastModified: dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : undefined,
+      changeFrequency: "weekly" as const,
+      // Between the index at 0.7 and a post at 0.6: a hub is a real entry
+      // point, but a post is the thing worth ranking.
+      priority: 0.65,
+    };
+  });
 
   // Page 1 is /blog, already listed above, so pagination starts at 2.
   const totalPages = Math.ceil(posts.length / BLOG_PAGE_SIZE);

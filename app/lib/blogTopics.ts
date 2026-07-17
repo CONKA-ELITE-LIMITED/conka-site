@@ -25,14 +25,33 @@ export function slugifyTopic(topic: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Every topic carried by at least one published post, newest-first by first appearance. */
-export async function getTopics(
-  opts: { includeUnpublished?: boolean } = {},
-): Promise<string[]> {
-  const posts = await getAllPosts(opts);
+/**
+ * Every topic carried by at least one of the given posts, alphabetical.
+ *
+ * Pure, and separate from `getTopics`, so a caller that already holds the post
+ * list (the sitemap) can derive hubs without re-fetching. `getAllPosts` re-probes
+ * the filesystem for every hero on each call, so calling it once per hub turns
+ * one build step into twelve.
+ */
+export function topicsOf(posts: BlogPostSummary[]): string[] {
   const seen = new Set<string>();
   for (const post of posts) for (const topic of post.topics) seen.add(topic);
   return [...seen].sort((a, b) => a.localeCompare(b));
+}
+
+/** The given posts carrying a topic, order preserved (newest first). */
+export function postsForTopic(
+  posts: BlogPostSummary[],
+  topic: string,
+): BlogPostSummary[] {
+  return posts.filter((post) => post.topics.includes(topic));
+}
+
+/** Every topic carried by at least one published post. */
+export async function getTopics(
+  opts: { includeUnpublished?: boolean } = {},
+): Promise<string[]> {
+  return topicsOf(await getAllPosts(opts));
 }
 
 /** Topic slugs for `generateStaticParams`. */
@@ -53,15 +72,6 @@ export async function resolveTopic(
   return (await getTopics(opts)).find((t) => slugifyTopic(t) === slug) ?? null;
 }
 
-/** Every published post carrying a topic, newest first. */
-export async function getPostsByTopic(
-  topic: string,
-  opts: { includeUnpublished?: boolean } = {},
-): Promise<BlogPostSummary[]> {
-  const posts = await getAllPosts(opts);
-  return posts.filter((post) => post.topics.includes(topic));
-}
-
 export interface BlogPage {
   posts: BlogPostSummary[];
   page: number;
@@ -75,11 +85,7 @@ export interface BlogPage {
  * `totalPages` is at least 1: an empty blog is one empty page, not zero pages,
  * which keeps `/blog` a valid route rather than a 404.
  */
-export async function getPostPage(
-  page: number,
-  opts: { includeUnpublished?: boolean } = {},
-): Promise<BlogPage> {
-  const posts = await getAllPosts(opts);
+export function paginate(posts: BlogPostSummary[], page: number): BlogPage {
   const totalPages = Math.max(1, Math.ceil(posts.length / BLOG_PAGE_SIZE));
   const start = (page - 1) * BLOG_PAGE_SIZE;
   return {

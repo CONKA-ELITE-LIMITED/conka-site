@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import BlogListing from "@/app/components/blog/BlogListing";
-import { getPostsByTopic, getTopics, getTopicSlugs, resolveTopic } from "@/app/lib/blogTopics";
+import { getAllPosts } from "@/app/lib/blog";
+import { getTopicSlugs, postsForTopic, resolveTopic, slugifyTopic, topicsOf } from "@/app/lib/blogTopics";
 
 const PREVIEW = { includeUnpublished: true };
 
@@ -105,13 +106,16 @@ export default async function BlogTopicPage({
   params: Promise<{ topic: string }>;
 }) {
   const { topic: slug } = await params;
-  const topic = await resolveTopic(slug, PREVIEW);
+
+  // One fetch, three derivations: getAllPosts re-probes every hero image per
+  // call, so resolving, listing and navigating off separate calls would read
+  // the whole blog three times per hub.
+  const all = await getAllPosts(PREVIEW);
+  const topics = topicsOf(all);
+  const topic = topics.find((t) => slugifyTopic(t) === slug) ?? null;
   if (!topic) notFound();
 
-  const [posts, topics] = await Promise.all([
-    getPostsByTopic(topic, PREVIEW),
-    getTopics(PREVIEW),
-  ]);
+  const posts = postsForTopic(all, topic);
   if (posts.length === 0) notFound();
 
   const { heading, intro } = copyFor(topic);
