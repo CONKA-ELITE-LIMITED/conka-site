@@ -14,10 +14,52 @@ import { env } from "./env";
 
 let client: Client | null = null;
 
+/**
+ * A token unique to each Vercel deployment, or a fixed local fallback.
+ * `VERCEL_DEPLOYMENT_ID` is set per deploy and stable across a build's workers.
+ */
+const DEPLOY_ID =
+  process.env.VERCEL_DEPLOYMENT_ID ??
+  process.env.VERCEL_GIT_COMMIT_SHA ??
+  "local";
+
+/**
+ * The Notion SDK's `fetch`, made safe to cache across deploys.
+ *
+ * The SDK calls `fetch`; Next patches it; a statically generated route caches
+ * the result with `revalidate: 31536000` (one year). Vercel restores
+ * `.next/cache` between deploys, so a Notion body edit could stay invisible on a
+ * green redeploy for up to a year, fixable only by a human unticking "Use
+ * existing Build Cache" (SCRUM-1163, defect 2).
+ *
+ * `no-store` would fix it but forces dynamic rendering, which the fully static
+ * blog cannot use. Instead we keep the build-time cache (so every route still
+ * prerenders) but fold the deploy id into the request, so a new deploy computes
+ * a different cache key and cannot hit the previous deploy's restored entries.
+ * Within one build the id is constant, so reads are still deduped and shared.
+ *
+ * The same client instance backs NotionToMarkdown in `pageToMarkdown`, so the
+ * block-body reads (68 of the 70 cached entries) are covered too. Notion ignores
+ * the extra header.
+ */
+function notionBuildFetch(
+  url: Parameters<typeof fetch>[0],
+  init?: Parameters<typeof fetch>[1],
+): Promise<Response> {
+  const headers = new Headers(init?.headers);
+  headers.set("x-conka-deploy", DEPLOY_ID);
+  return fetch(url, { ...init, headers });
+}
+
 /** The shared Notion client, or null when the blog is not configured. */
 export function getNotionClient(): Client | null {
   if (!env.isBlogConfigured) return null;
-  if (!client) client = new Client({ auth: env.notionToken });
+  if (!client) {
+    client = new Client({
+      auth: env.notionToken,
+      fetch: notionBuildFetch,
+    });
+  }
   return client;
 }
 

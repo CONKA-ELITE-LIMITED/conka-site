@@ -10,30 +10,23 @@ Publishing is a two-step human action: flip `Status` to `Published` in Notion, *
 
 The surface: `/blog` (index, page 1), `/blog/page/[page]` (pages 2+), `/blog/topic/[topic]` (10 hubs) and `/blog/[slug]` (post), plus `app/blog/error.tsx`.
 
-## The operational rules (read these before touching Notion)
+## How correctness is enforced (SCRUM-1163)
 
-The blog is static and Notion is read at build only, which makes every content change invisible until a deploy, and makes two failure modes silent. Both have bitten us in production.
+The blog is static and Notion is read at build only, which once made two failure modes silent: a wrong blog could ship on a green build with no error output. Both are now handled automatically at build. The former manual rules (pause between write and deploy; clear the build cache on every edit) are gone; you do not need them.
 
-**1. Sequence every Notion write: write, pause, deploy, verify.**
+**Publishing is still write-then-redeploy.** Flip `Status` to `Published` in Notion, then redeploy. Nothing reaches the site until a build runs.
 
-A build running seconds after a Notion write has baked a 404 into a live post **on a green build with no error output** (observed during SCRUM-1157: `generateStaticParams` saw 3 published posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and was dropped from the sitemap). A clean rebuild minutes later was correct. Publishing and deploying must not race. If they do, rebuild.
+**1. Stale bodies cannot survive a redeploy (was defect 2).** The Notion SDK calls `fetch`, Next patches it, and a response would otherwise land in `.next/cache/fetch-cache` with `revalidate: 31536000` (one year); Vercel restores that cache between deploys, so an edit could stay invisible for up to a year. `notion.ts` folds the deploy id (`VERCEL_DEPLOYMENT_ID`) into every Notion request via an `x-conka-deploy` header, so each deploy computes a different fetch-cache key and cannot hit the previous deploy's entries. A body edit reaches production on an ordinary redeploy, **build cache left enabled**. (`no-store` would also work but forces dynamic rendering, which the static blog cannot use; a short `revalidate` would turn the blog into runtime ISR. The deploy-keyed cache keeps it build-only and static.)
 
-**2. After a Notion body or property edit, redeploy with the build cache cleared.**
+**2. A racing or thin read fails the build, loudly (was defect 1).** A build running seconds after a Notion write once baked a 404 into a live post on a green build (`generateStaticParams` saw 3 posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and dropped from the sitemap). `app/lib/blogBuildGuard.ts` now fails the build if two reads disagree about which posts exist, or if the published count falls below a floor (`PUBLISHED_POST_FLOOR`, 40; 55 live today). The `[slug]` route sets `dynamicParams = false` and throws instead of `notFound()` when an enumerated slug goes missing, so the exact 404-baking case cannot ship. If a build fails this way, rebuild once Notion has settled.
 
-The Notion SDK calls `fetch`, Next patches it, and every Notion response lands in `.next/cache/fetch-cache` with **`revalidate: 31536000`** (one year). `react.cache` in `notion.ts` is per-request and does not help. **Vercel restores `.next/cache` between deploys, so an ordinary redeploy can serve a year-old body on a green build.**
-
-- Vercel: Redeploy, then untick **"Use existing Build Cache"**
-- Local: `rm -rf .next/cache` before `npm run build`
-
-Reproduced on SCRUM-1160: after an underline repair was confirmed complete in Notion, a full build was still green and still emitted all 191 leaks; clearing the cache produced zero across all 55 posts. A plain redeploy is not a verification.
-
-**Both rules are human steps guarding silent failures. [SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163) replaces them with a build-time assertion and explicit cache control.** Delete these rules from this doc when it lands.
+**Build-speed note (future work).** Because each deploy uses a fresh cache key, every deploy re-reads the whole blog from Notion; within a build the reads are still cached and shared. At ~55 short posts that is a couple of seconds. If the archive grows large, build time will scale with it: batch the per-post fetches (`Promise.all`, see Known gaps) before reaching for anything more exotic, such as scoping the deploy key so unchanged posts reuse a prior deploy's cache.
 
 ### What already fails loudly (do not re-add these guards)
 
-`queryBlogRows` **throws** rather than returning `[]` (`app/lib/notion.ts:120-136`), because `[]` is indistinguishable from "there are genuinely no posts": a rate-limit during a build once generated zero routes, rendered an empty `/blog`, exited 0, and deployed, pointing all 82 legacy redirects at 404s. Also throwing: missing `NOTION_TOKEN` / `NOTION_BLOG_DATABASE_ID` (`notion.ts:37-47`), a `notion-to-md` conversion failure, and a duplicate `Slug` (`blog.ts:172-176`).
+`queryBlogRows` **throws** rather than returning `[]` (`app/lib/notion.ts`), because `[]` is indistinguishable from "there are genuinely no posts": a rate-limit during a build once generated zero routes, rendered an empty `/blog`, exited 0, and deployed, pointing all 82 legacy redirects at 404s. Also throwing: missing `NOTION_TOKEN` / `NOTION_BLOG_DATABASE_ID` (`notion.ts`), a `notion-to-md` conversion failure, and a duplicate `Slug` (`blog.ts`).
 
-So the residual risk in rule 1 is **not** error-swallowing. It is that separate, individually successful queries across one build can disagree (Notion is eventually consistent right after a write, and `react.cache` dedupes per request, not per build). Nothing throws, because nothing failed.
+So the residual risk that guard 2 covers is **not** error-swallowing. It is that separate, individually successful queries across one build can disagree (Notion is eventually consistent right after a write, and `react.cache` dedupes per request, not per build). Nothing throws, because nothing failed.
 
 ## The content contract
 
@@ -158,7 +151,6 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 
 | Gap | Tracked |
 |---|---|
-| Build-time assertion + explicit cache control (the two silent failures above) | [SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163), `docs/TODO.md` item 10 |
 | Hub pagination, if any hub reaches 12 posts (Sport and Neuroscience sit at 11) | Phase 6.4, no ticket yet |
 | In-body `<img>` has no dimensions, so bodies shift on load. 100 images across 33 posts, none with usable alt text | `docs/TODO.md` item 11 |
 | **Blog → PDP CTA analytics was never built.** `ProductCTA.tsx` says "Analytics (source: 'blog') is wired in Phase 3"; no tracking call exists. The rest of Phase 3 shipped, so this is a dropped task, not a pending one | Untracked as of 2026-07-17 |

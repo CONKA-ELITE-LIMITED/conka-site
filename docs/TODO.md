@@ -166,9 +166,9 @@ So the basis for the published number is not recoverable from the spec.
 
 ### 10. Assert Notion reads at build, and stop the data cache serving stale post bodies
 
-**Status:** Ticketed as [SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163). Canonical write-up: `docs/features/BLOG_SYSTEM.md`.
+**Status:** **Done 2026-07-17 ([SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163)).** Deploy-scoped fetch cache key in `app/lib/notion.ts` (a body edit now reaches prod on an ordinary redeploy, build cache enabled) plus consistency + floor guards in `app/lib/blogBuildGuard.ts`, wired through `app/lib/blog.ts`, and `dynamicParams = false` + throw-on-missing on the `[slug]` route. Canonical write-up: `docs/features/BLOG_SYSTEM.md`. Kept below as history.
 **Files:**
-- `app/lib/notion.ts` -- `queryBlogRows` swallows errors into `[]`; `pageToMarkdown` fetches each post's blocks
+- `app/lib/notion.ts` -- `queryBlogRows` throws on failure (since SCRUM-1157, not error-swallowing); `pageToMarkdown` fetches each post's blocks
 - `app/lib/blog.ts` -- `getAllPosts`, consumed by `generateStaticParams`, `sitemap` and every post route
 
 **What unblocks it:** nothing. Both halves are known and independently reproduced.

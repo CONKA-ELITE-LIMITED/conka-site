@@ -16,6 +16,7 @@ import {
   pageToMarkdown,
   type NotionRow,
 } from "./notion";
+import { assertConsistentSlugs, assertPostFloor } from "./blogBuildGuard";
 import {
   cleanBody,
   extractFaq,
@@ -42,6 +43,27 @@ const PUBLIC_DIR = path.join(process.cwd(), "public");
 function isPreview(includeUnpublished: boolean): boolean {
   // Drafts are only ever visible locally; a production build is Published-only.
   return includeUnpublished && process.env.NODE_ENV !== "production";
+}
+
+/** The slug of every published row, cheaply, from the raw properties. */
+function publishedSlugs(rows: NotionRow[]): string[] {
+  return rows
+    .map((row) => readRichText(row.properties, "Slug"))
+    .filter((slug): slug is string => Boolean(slug));
+}
+
+/**
+ * The two build-integrity guards, run wherever the published set is read: fail
+ * the build if two reads disagree (defect 1) or the count falls through the floor
+ * (SCRUM-1163). Both callers pass the same raw row set, so their slug views are
+ * directly comparable. Off outside a production build and in dev preview, where
+ * failing is wrong.
+ */
+function runBuildGuards(rows: NotionRow[], publishedOnly: boolean): void {
+  if (process.env.NODE_ENV !== "production" || !publishedOnly) return;
+  const slugs = publishedSlugs(rows);
+  assertConsistentSlugs(slugs);
+  assertPostFloor(slugs.length);
 }
 
 async function fileExists(p: string): Promise<boolean> {
@@ -162,7 +184,10 @@ async function toSummary(row: NotionRow): Promise<BlogPostSummary | null> {
 export async function getAllPosts(
   opts: { includeUnpublished?: boolean } = {},
 ): Promise<BlogPostSummary[]> {
-  const rows = await queryBlogRows(!isPreview(Boolean(opts.includeUnpublished)));
+  const publishedOnly = !isPreview(Boolean(opts.includeUnpublished));
+  const rows = await queryBlogRows(publishedOnly);
+  runBuildGuards(rows, publishedOnly);
+
   const summaries: BlogPostSummary[] = [];
   const seen = new Set<string>();
 
@@ -222,7 +247,10 @@ export async function getPostBySlug(
   slug: string,
   opts: { includeUnpublished?: boolean } = {},
 ): Promise<BlogPost | null> {
-  const rows = await queryBlogRows(!isPreview(Boolean(opts.includeUnpublished)));
+  const publishedOnly = !isPreview(Boolean(opts.includeUnpublished));
+  const rows = await queryBlogRows(publishedOnly);
+  runBuildGuards(rows, publishedOnly);
+
   const row = rows.find((r) => readRichText(r.properties, "Slug") === slug);
   if (!row) return null;
 
