@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -508,7 +508,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
         <div className="grid items-center md:grid-cols-[52fr_48fr]">
           <div
-            className="relative order-2 w-full md:order-1"
+            className="relative order-1 w-full"
             style={{
               aspectRatio:
                 config.hero.asset.kind === "image"
@@ -532,14 +532,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               </div>
             )}
           </div>
-          <div className="order-1 px-5 pt-6 pb-8 md:order-2 md:flex md:flex-col md:justify-center md:px-14 md:py-0">
-            {config.hero.laurel ? (
-              <LaurelBadge
-                eyebrow={config.hero.laurel.eyebrow}
-                body={config.hero.laurel.body}
-                className="mb-5"
-              />
-            ) : null}
+          <div className="order-2 px-5 pt-6 pb-8 md:flex md:flex-col md:justify-center md:px-14 md:py-0">
             <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-[#1B2757] md:mb-4 md:text-5xl md:leading-[1.05]">
               {config.hero.headline}
             </h1>
@@ -598,7 +591,19 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
       >
         <div className="mx-auto max-w-7xl">
           {config.body.map((block, i) => (
-            <BodyBlock key={i} block={block} index={i} />
+            <Fragment key={i}>
+              <BodyBlock block={block} index={i} />
+              {/* World's-largest laurel badge, relocated out of the hero to sit
+                  under point 1 so the hero title + CTA sit higher. */}
+              {i === 0 && config.hero.laurel ? (
+                <div className="flex justify-center pb-14">
+                  <LaurelBadge
+                    eyebrow={config.hero.laurel.eyebrow}
+                    body={config.hero.laurel.body}
+                  />
+                </div>
+              ) : null}
+            </Fragment>
           ))}
           {config.bridge ? (
             <div
