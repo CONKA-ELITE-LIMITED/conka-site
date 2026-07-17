@@ -508,7 +508,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
         <div className="grid items-center md:grid-cols-[52fr_48fr]">
           <div
-            className="relative order-2 w-full md:order-1"
+            className="relative order-1 w-full"
             style={{
               aspectRatio:
                 config.hero.asset.kind === "image"
@@ -532,7 +532,7 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
               </div>
             )}
           </div>
-          <div className="order-1 px-5 pt-6 pb-8 md:order-2 md:flex md:flex-col md:justify-center md:px-14 md:py-0">
+          <div className="order-2 px-5 pt-6 pb-8 md:flex md:flex-col md:justify-center md:px-14 md:py-0">
             {config.hero.laurel ? (
               <LaurelBadge
                 eyebrow={config.hero.laurel.eyebrow}
