@@ -7,7 +7,7 @@ import Footer from "@/app/components/footer";
 import MarkdownBody from "@/app/components/blog/MarkdownBody";
 import ProductCTA from "@/app/components/blog/ProductCTA";
 import RelatedPosts from "@/app/components/blog/RelatedPosts";
-import { getAllPosts, getPostBySlug } from "@/app/lib/blog";
+import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/app/lib/blog";
 import { formatBlogDate } from "@/app/lib/blogTransform";
 import { JsonLd, buildBlogPostingSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
@@ -56,9 +56,7 @@ export default async function BlogArticlePage({
   const post = await getPostBySlug(slug, PREVIEW);
   if (!post) notFound();
 
-  const related = (await getAllPosts(PREVIEW))
-    .filter((p) => p.slug !== slug)
-    .slice(0, 3);
+  const related = await getRelatedPosts(slug, PREVIEW);
 
   return (
     <div className="brand-clinical min-h-screen bg-white text-black flex flex-col">

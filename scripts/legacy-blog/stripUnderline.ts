@@ -27,11 +27,7 @@
  */
 import { Client } from "@notionhq/client";
 import { loadEnv, requireEnv } from "./env";
-
-/** Notion allows ~3 requests/second; stay under it on a 55-post walk. */
-const REQUEST_DELAY_MS = 350;
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+import { fetchAllRows, readSlug, REQUEST_DELAY_MS, resolveDataSourceId, sleep } from "./notionDb";
 
 /**
  * The rich-text-bearing fields across Notion's block types. `rich_text` covers
@@ -59,46 +55,13 @@ function stripRuns(runs: Annotated[]): { runs: Annotated[]; cleared: number } | 
 
 export type Block = { id: string; type: string; has_children?: boolean } & Record<string, unknown>;
 
-async function resolveDataSourceId(notion: Client, databaseId: string): Promise<string> {
-  const db = (await notion.databases.retrieve({ database_id: databaseId })) as unknown as {
-    data_sources?: Array<{ id: string }>;
-  };
-  const id = db.data_sources?.[0]?.id;
-  if (!id) throw new Error("No data source on the Blog Hub database");
-  return id;
-}
-
-/** Every legacy row's slug mapped to its page id. Mirrors import.ts. */
+/** Every legacy row's slug and page id. */
 async function fetchLegacyPages(notion: Client, dataSourceId: string): Promise<Array<{ slug: string; id: string }>> {
-  const pages: Array<{ slug: string; id: string }> = [];
-  let cursor: string | undefined;
-  do {
-    const res = (await notion.dataSources.query({
-      data_source_id: dataSourceId,
-      start_cursor: cursor,
-      page_size: 100,
-    })) as unknown as {
-      results: Array<{
-        id: string;
-        properties: {
-          Slug?: { rich_text?: Array<{ plain_text: string }> };
-          Source?: { select?: { name?: string } | null };
-        };
-      }>;
-      has_more: boolean;
-      next_cursor: string | null;
-    };
-    for (const page of res.results) {
-      if (page.properties.Source?.select?.name !== "legacy") continue;
-      const slug = (page.properties.Slug?.rich_text ?? [])
-        .map((r) => r.plain_text)
-        .join("")
-        .trim();
-      if (slug) pages.push({ slug, id: page.id });
-    }
-    cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
-  } while (cursor);
-  return pages;
+  const rows = await fetchAllRows(notion, dataSourceId);
+  return rows
+    .filter((row) => row.properties.Source?.select?.name === "legacy")
+    .map((row) => ({ slug: readSlug(row), id: row.id }))
+    .filter((page) => page.slug !== "");
 }
 
 /**

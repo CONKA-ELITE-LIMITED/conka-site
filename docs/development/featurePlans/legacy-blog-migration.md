@@ -364,6 +364,20 @@ retag pushes Sport or Neuroscience to 12, hubs need the same `Pagination` compon
 
 ### Phase 6.2: Topic backfill + related-post matching
 
+**Built 2026-07-17 (SCRUM-1161).** `Focus` added (schema now 11 options, the 10
+existing preserved by id, engine rows still `Productivity`). All 53 legacy rows
+tagged from the triage table: Sport 11, Neuroscience 11, Recovery 10, Focus 10,
+Concussion 4, Nootropics 4, Brain Fog 3, Brain Ageing 3, Military 2, and 5 posts
+dual-tagged. Scripts: `topics.ts`, `backfillTopics.ts`, plus `notionDb.ts`, which
+extracts the data-source and paged-read helpers that `import.ts`,
+`stripUnderline.ts` and the backfill had each copied.
+
+Verified on a clean build: 55 posts each show exactly 3 related, no post relates
+to itself, no topic-rich post shows an unrelated card, and Military falls back to
+newest after its single sibling. **34 distinct related-post sets across the 55,
+against 1 before**, which is the actual payoff: every reader previously saw the
+same three newest posts.
+
 4. **[Data] Add `Focus` to the `Topic` multi-select**
    - What: `ADD COLUMN` option on data source `39b03d3c-dce2-8037-ab26-000bed4e0a91`.
      An add, not a rename, so no existing row value can be disturbed.
@@ -525,8 +539,8 @@ Sprint 28, under the Website & CRO epic (SCRUM-763). Chained with `Blocks` links
 | [SCRUM-1155](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1155) | [Website & CRO] Legacy blog Phase 1: HTML to Notion converter and pilot import | 1 | To Do |
 | [SCRUM-1156](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1156) | [Website & CRO] Legacy blog Phase 2: bulk import the remaining 52 posts as Draft | 2 | To Do |
 | [SCRUM-1157](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1157) | [Website & CRO] Legacy blog Phase 3: redirects, sitemap and go-live | 3 | Done |
-| [SCRUM-1160](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1160) | [Website & CRO] Blog Phase 6.1: strip the underline artifact leaking as literal text on 26 live posts | 6.1 | To Do |
-| [SCRUM-1161](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1161) | [Website & CRO] Blog Phase 6.2: backfill Topic on all 53 legacy posts and make related posts topic-matched | 6.2 | To Do |
+| [SCRUM-1160](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1160) | [Website & CRO] Blog Phase 6.1: strip the underline artifact leaking as literal text on 26 live posts | 6.1 | Built, awaiting deploy |
+| [SCRUM-1161](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1161) | [Website & CRO] Blog Phase 6.2: backfill Topic on all 53 legacy posts and make related posts topic-matched | 6.2 | Built, awaiting deploy |
 | [SCRUM-1162](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1162) | [Website & CRO] Blog Phase 6.3: topic hub routes, paginated index and sitemap entries | 6.3 | To Do |
 
 Phase 6 is Sprint 28, chained `Blocks` 1160 to 1161 to 1162.

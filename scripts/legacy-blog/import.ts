@@ -25,59 +25,18 @@ import { Client } from "@notionhq/client";
 import { convertHtmlToBlocks, loadArticles, type NotionBlock } from "./convert";
 import { loadEnv, requireEnv } from "./env";
 import { META_DESCRIPTIONS } from "./metaDescriptions";
+import { fetchAllRows, REQUEST_DELAY_MS, resolveDataSourceId, sleep, slugIndex } from "./notionDb";
+import { topicsForHandle } from "./topics";
 import { IMPORT_HANDLES, PILOT_HANDLE } from "./triage";
 import type { LegacyArticle } from "./fetch";
 
 /** Hard Notion API cap: a single children.append takes at most 100 blocks. */
 const BLOCK_APPEND_LIMIT = 100;
 
-/** Notion allows ~3 requests/second; stay under it on a 53-post run. */
-const REQUEST_DELAY_MS = 350;
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 export function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
   return out;
-}
-
-async function resolveDataSourceId(notion: Client, databaseId: string): Promise<string> {
-  const db = (await notion.databases.retrieve({ database_id: databaseId })) as unknown as {
-    data_sources?: Array<{ id: string }>;
-  };
-  const id = db.data_sources?.[0]?.id;
-  if (!id) throw new Error("No data source on the Blog Hub database");
-  return id;
-}
-
-/** Every existing row's slug mapped to its page id, so imports stay idempotent. */
-async function fetchSlugIndex(notion: Client, dataSourceId: string): Promise<Map<string, string>> {
-  const index = new Map<string, string>();
-  let cursor: string | undefined;
-  do {
-    const res = (await notion.dataSources.query({
-      data_source_id: dataSourceId,
-      start_cursor: cursor,
-      page_size: 100,
-    })) as unknown as {
-      results: Array<{
-        id: string;
-        properties: { Slug?: { rich_text?: Array<{ plain_text: string }> } };
-      }>;
-      has_more: boolean;
-      next_cursor: string | null;
-    };
-    for (const page of res.results) {
-      const slug = (page.properties.Slug?.rich_text ?? [])
-        .map((r) => r.plain_text)
-        .join("")
-        .trim();
-      if (slug) index.set(slug, page.id);
-    }
-    cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
-  } while (cursor);
-  return index;
 }
 
 function buildProperties(article: LegacyArticle, description: string): Record<string, unknown> {
@@ -89,6 +48,13 @@ function buildProperties(article: LegacyArticle, description: string): Record<st
     "Date published": { date: { start: article.publishedAt.slice(0, 10) } },
     Source: { select: { name: "legacy" } },
   };
+
+  // Without this a re-import lands untagged, which is how all 53 arrived that
+  // way in the first place (SCRUM-1161). The map is the plan doc's triage table.
+  const topics = topicsForHandle(article.handle);
+  if (topics.length > 0) {
+    props.Topic = { multi_select: topics.map((name) => ({ name })) };
+  }
 
   if (article.image?.url) {
     props["Hero image"] = {
@@ -141,7 +107,7 @@ export async function appendBlocks(notion: Client, pageId: string, blocks: Notio
 async function importArticle(
   notion: Client,
   dataSourceId: string,
-  slugIndex: Map<string, string>,
+  slugToPageId: Map<string, string>,
   article: LegacyArticle,
   dryRun: boolean,
 ): Promise<void> {
@@ -153,12 +119,14 @@ async function importArticle(
   }
 
   const blocks = convertHtmlToBlocks(article.contentHtml);
-  const existingId = slugIndex.get(article.handle);
+  const existingId = slugToPageId.get(article.handle);
 
   if (dryRun) {
+    const topics = topicsForHandle(article.handle);
     console.log(
       `[dry-run] ${existingId ? "update" : "create"} ${article.handle}: ` +
-        `${blocks.length} blocks in ${Math.ceil(blocks.length / BLOCK_APPEND_LIMIT)} append(s)`,
+        `${blocks.length} blocks in ${Math.ceil(blocks.length / BLOCK_APPEND_LIMIT)} append(s), ` +
+        `Topic: ${topics.length > 0 ? topics.join(" + ") : "(none: not in the triage table)"}`,
     );
     return;
   }
@@ -179,7 +147,7 @@ async function importArticle(
       } as never,
     });
     pageId = created.id;
-    slugIndex.set(article.handle, pageId);
+    slugToPageId.set(article.handle, pageId);
     await sleep(REQUEST_DELAY_MS);
   }
 
@@ -219,7 +187,9 @@ async function main(): Promise<void> {
 
   const notion = new Client({ auth: requireEnv("NOTION_TOKEN") });
   const dataSourceId = await resolveDataSourceId(notion, requireEnv("NOTION_BLOG_DATABASE_ID"));
-  const slugIndex = dryRun ? new Map<string, string>() : await fetchSlugIndex(notion, dataSourceId);
+  const index = dryRun
+    ? new Map<string, string>()
+    : slugIndex(await fetchAllRows(notion, dataSourceId));
 
   console.log(`[import] ${handles.length} post(s)${dryRun ? " (dry run)" : ""}`);
   for (const handle of handles) {
@@ -228,7 +198,7 @@ async function main(): Promise<void> {
       console.warn(`[import] SKIP ${handle}: not in the snapshot, re-run fetch.ts`);
       continue;
     }
-    await importArticle(notion, dataSourceId, slugIndex, article, dryRun);
+    await importArticle(notion, dataSourceId, index, article, dryRun);
   }
 }
 

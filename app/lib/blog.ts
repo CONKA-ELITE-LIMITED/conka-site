@@ -185,6 +185,38 @@ export async function getAllPosts(
   );
 }
 
+/**
+ * The posts to show at the end of an article: most shared topics first, newest
+ * breaking ties, never the post itself.
+ *
+ * Posts sharing no topic still fill the grid rather than leaving it short, so a
+ * thin topic degrades to "newest" instead of rendering one card. Military, at 2
+ * posts, can never fill 3 from siblings alone and always takes that path.
+ */
+export async function getRelatedPosts(
+  slug: string,
+  opts: { includeUnpublished?: boolean; limit?: number } = {},
+): Promise<BlogPostSummary[]> {
+  const limit = opts.limit ?? 3;
+  const all = await getAllPosts(opts);
+  // getAllPosts is newest-first, so position is the recency tiebreak.
+  const others = all
+    .map((post, index) => ({ post, index }))
+    .filter(({ post }) => post.slug !== slug);
+
+  const topics = new Set(all.find((p) => p.slug === slug)?.topics ?? []);
+  if (topics.size === 0) return others.slice(0, limit).map(({ post }) => post);
+
+  return others
+    .map((entry) => ({
+      ...entry,
+      shared: entry.post.topics.filter((t) => topics.has(t)).length,
+    }))
+    .sort((a, b) => b.shared - a.shared || a.index - b.index)
+    .slice(0, limit)
+    .map(({ post }) => post);
+}
+
 /** A single post with its render-ready body and parsed FAQ, or null. */
 export async function getPostBySlug(
   slug: string,
