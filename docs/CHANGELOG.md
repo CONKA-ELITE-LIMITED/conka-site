@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-17** | Listicle hero now leads with the title and CTA; the World's-largest brain-research laurel badge moved down to sit under point 1.
 - **2026-07-17** | Listicle (/go/[slug]) hero now leads with the product asset above the copy on mobile (unchanged on desktop: asset left, copy right), so paid traffic sees the visual first.
 - **2026-07-17** | Fixed the home hero warping in a half-loaded state on mobile Safari: the still poster now paints as a background-image (which always crops correctly) instead of the video's poster attribute, which Safari stretches to the box before the video decodes.
 - **2026-07-17** | Added the Alia email-capture popup, loaded through the deferred marketing loader so it stays off the initial load path; it replaces the disabled legacy Klaviyo onsite popup and syncs signups to the Klaviyo master list via Alia's native integration (no Klaviyo code in this repo).
