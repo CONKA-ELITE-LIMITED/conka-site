@@ -294,11 +294,6 @@ export default function CadenceSelector({
                   {/* What you pay — slim bar */}
                   <div className="mt-4 flex items-center justify-between gap-3 bg-[var(--brand-tint)] px-4 py-3">
                     <div className="flex items-baseline gap-2 flex-wrap">
-                      {pricing.compareAtPrice && (
-                        <span className="text-sm line-through text-black/30 tabular-nums">
-                          {formatPrice(pricing.compareAtPrice)}
-                        </span>
-                      )}
                       <span className="text-2xl font-bold text-[var(--brand-black)] tabular-nums leading-none">
                         {formatPrice(pricing.price)}
                       </span>

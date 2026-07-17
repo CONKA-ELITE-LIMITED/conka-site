@@ -78,7 +78,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
         const badge = PLAN_BADGE[key];
         const freeShots = pricing.freeShots ?? 0;
         const freeShotsValue = pricing.freeShotsValue ?? 0;
-        const savingsPct = getDisplayDiscount(pricing);
+        const savingsPct = pricing.compareAtPrice ? getDisplayDiscount(pricing) : 0;
 
         const subRef = getOfferPricing(product, "monthly-sub");
         const otpMissed = (subRef.freeShotsValue ?? 0) + (pricing.postage ?? 0);
@@ -174,12 +174,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
 
                 {/* Price. Fixed column, so a long name can never squash it. */}
                 <span className="shrink-0 text-right">
-                  {pricing.compareAtPrice && (
-                    <span className="block text-[13px] text-black/35 line-through tabular-nums leading-none">
-                      {formatPrice(pricing.compareAtPrice)}
-                    </span>
-                  )}
-                  <span className="block text-[22px] font-bold text-black tabular-nums leading-none mt-1 whitespace-nowrap">
+                  <span className="block text-[22px] font-bold text-black tabular-nums leading-none whitespace-nowrap">
                     {formatPrice(pricing.price)}
                     <span className="text-[13px] font-medium text-black/50">{cadencePriceSuffix(key)}</span>
                   </span>

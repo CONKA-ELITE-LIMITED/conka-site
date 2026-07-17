@@ -680,7 +680,6 @@ export default function StartPage() {
                 otpPricing={S5_OTP_PRICING}
                 subVariant={S5_SUB_VARIANT}
                 otpVariant={S5_OTP_VARIANT}
-                compareAt={S5_COMPARE_AT}
                 monthlySavings={S5_MONTHLY_SAVINGS}
                 savingsPercent={S5_SAVINGS_PERCENT}
                 productImage="/formulas/both/BothHero.jpg"
