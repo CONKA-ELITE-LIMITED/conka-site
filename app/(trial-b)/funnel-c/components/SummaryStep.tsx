@@ -219,7 +219,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
           <div className="flex items-baseline justify-between gap-3 border-t border-dashed border-black/20 mt-3 pt-3 text-[13px]">
             <span className="font-semibold text-black">You save</span>
             <span className="tabular-nums font-bold text-[#0b7a55]">
-              −{formatPrice(savings)} <span className="font-semibold">({savingsPct}%)</span>
+              {savingsPct}%
             </span>
           </div>
         )}
