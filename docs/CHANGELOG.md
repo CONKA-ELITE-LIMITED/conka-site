@@ -5,6 +5,9 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-17** | Blog build now fails on inconsistent or thin Notion reads, and a deploy-scoped cache key means post edits reach production on an ordinary redeploy (no manual cache clear).
+- **2026-07-17** | Legacy blog Phase 6.2: every blog post now recommends three articles that actually share its subject, instead of showing every reader the same three newest posts, and all 53 recovered posts carry topic tags
+- **2026-07-17** | Legacy blog Phase 6.1: stripped the Wix underline artifact that was printing raw `<u>` tags as visible text 191 times across 26 live posts, and stopped the converter re-creating it on the next import
 - **2026-07-16** | The blog is live: all 53 recovered posts published, Blog added to the footer and to the Science nav menu, and the 82 old Shopify blog URLs now land on real pages instead of 404s
 - **2026-07-16** | Legacy blog Phase 2: all 53 recovered posts imported to Notion as Drafts with authored meta descriptions, and the blog body now wraps long reference URLs, scrolls wide tables on mobile, and lazy-loads in-body images instead of shipping filenames as alt text
 - **2026-07-16** | Legacy blog Phase 3: all 82 old Shopify blog URLs now redirect instead of 404ing (53 to their new /blog post, 29 to the live page that owns the topic), blog posts enter the sitemap dated from Notion, and posts emit BlogPosting + FAQPage structured data

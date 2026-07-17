@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/app/lib/blog";
+import { BLOG_PAGE_SIZE, postsForTopic, slugifyTopic, topicsOf } from "@/app/lib/blogTopics";
 import { SITE_ORIGIN } from "@/app/lib/site";
 
 /**
@@ -226,12 +227,14 @@ const ROUTES: Route[] = [
  * The index is dated by its newest post rather than by git: what a visitor sees
  * change there is the list of posts, not the component that renders it.
  *
- * `/blog` is listed unconditionally. It is a live, indexable page whether or not
- * Notion answers, and `getAllPosts` degrades to an empty array on any Notion
- * failure, so keying its presence off the post count would silently drop a real
- * page from the sitemap during an outage. With no posts it simply ships without
- * a `lastmod`, the same way a route git cannot date does: omitting the hint
- * beats inventing one, and dropping the URL is worse than both.
+ * `/blog` is listed unconditionally: it is a live, indexable page whether or not
+ * it currently holds posts, and dropping the URL is worse than shipping it
+ * without a `lastmod`, the same way a route git cannot date does. Omitting the
+ * hint beats inventing one.
+ *
+ * This used to be justified by `getAllPosts` degrading to an empty array during
+ * a Notion outage. It no longer does: `queryBlogRows` throws since SCRUM-1157,
+ * so an outage fails the build rather than reaching this function.
  */
 async function blogEntries(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
@@ -240,6 +243,33 @@ async function blogEntries(): Promise<MetadataRoute.Sitemap> {
     ? modified.reduce((a, b) => (a > b ? a : b))
     : undefined;
 
+  // Hubs and paginated pages belong here rather than in ROUTES: they are
+  // Notion-derived and have no source file, so the git-date rule cannot date
+  // them. Each is dated from its own newest post, the same way /blog is.
+  // Derived from the posts already fetched above, not by re-querying per topic:
+  // getAllPosts re-probes every hero image on each call, so a fetch per hub
+  // would turn one build step into twelve.
+  const hubs = topicsOf(posts).map((topic) => {
+    const dates = postsForTopic(posts, topic).map((post) => new Date(post.dateModified));
+    return {
+      url: `${SITE_ORIGIN}/blog/topic/${slugifyTopic(topic)}`,
+      lastModified: dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : undefined,
+      changeFrequency: "weekly" as const,
+      // Between the index at 0.7 and a post at 0.6: a hub is a real entry
+      // point, but a post is the thing worth ranking.
+      priority: 0.65,
+    };
+  });
+
+  // Page 1 is /blog, already listed above, so pagination starts at 2.
+  const totalPages = Math.ceil(posts.length / BLOG_PAGE_SIZE);
+  const paginated = Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => ({
+    url: `${SITE_ORIGIN}/blog/page/${i + 2}`,
+    lastModified: newest,
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
   return [
     {
       url: `${SITE_ORIGIN}/blog`,
@@ -247,6 +277,8 @@ async function blogEntries(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     },
+    ...hubs,
+    ...paginated,
     ...posts.map((post, i) => ({
       url: `${SITE_ORIGIN}/blog/${post.slug}`,
       // Notion's last_edited_time: a Notion-sourced route has no git file.

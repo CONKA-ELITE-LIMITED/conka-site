@@ -22,6 +22,24 @@ a monthly subscription, a one-time purchase, or a quarterly subscription.
 
 - [FAQ](https://www.conka.io/faq): Straight answers on safety, side effects, who should not take CONKA, prescription-medication and SSRI interactions, drug testing, caffeine, results, price and delivery.
 
+## Writing
+
+Editorial articles, grouped by topic. Each topic page lists every article on it.
+(Paginated pages such as /blog/page/2 are navigation, not content, and are omitted.)
+This list is hand-maintained: hubs are generated from Notion topics, so add or remove a row here if a topic gains or loses its last published post.
+
+- [Blog](https://www.conka.io/blog): Evidence-led writing on focus, memory, brain fog and getting more out of your brain.
+- [Sport](https://www.conka.io/blog/topic/sport): Reaction time, focus under pressure, and cognitive performance for athletes.
+- [Neuroscience](https://www.conka.io/blog/topic/neuroscience): How the brain works: memory, dopamine, emotion and creativity.
+- [Recovery](https://www.conka.io/blog/topic/recovery): Sleep, cold, sauna, hydration and fasting, and what each does to cognition.
+- [Focus](https://www.conka.io/blog/topic/focus): Habits, routines and flow states, and what actually sharpens attention.
+- [Concussion](https://www.conka.io/blog/topic/concussion): Head impact in sport, post-concussion syndrome, and the research on recovery.
+- [Nootropics](https://www.conka.io/blog/topic/nootropics): What the ingredients do, what the studies show, and where claims outrun the data.
+- [Brain Fog](https://www.conka.io/blog/topic/brain-fog): What causes brain fog, and the link to inflammation.
+- [Brain Ageing](https://www.conka.io/blog/topic/brain-ageing): How cognition changes with age and what protects it.
+- [Military](https://www.conka.io/blog/topic/military): Blast-induced trauma and military brain health.
+- [Productivity](https://www.conka.io/blog/topic/productivity): Procrastination, motivation, and the science of getting things done.
+
 ## Evidence and background
 
 - [The science](https://www.conka.io/science): The evidence behind the formulas and how they were developed.

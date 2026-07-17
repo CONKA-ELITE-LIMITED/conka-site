@@ -1,5 +1,9 @@
 # Brief: what the blog engine needs to write into Notion
 
+> **This is the authoring guide, aimed at whoever writes into Notion.** It stays the contract for how a post should be authored.
+> For how the site consumes that content (what silently skips a row, the render pipeline, the deploy rules), read [`docs/features/BLOG_SYSTEM.md`](../../features/BLOG_SYSTEM.md), which is canonical on behaviour.
+> One known drift (found 2026-07-17): this brief requires the FAQ heading to be H2 and the `Q:` line to be bold, but `extractFaq` accepts H2 or H3 and bold or plain. Author to the strict rule here; do not rely on the parser's leniency.
+
 **For:** Humphrey (to pass to the engine / his Claude)
 **About:** The "Blog Hub" Notion database (under CONKA Marketing Calendar > Content) that the site's new `/blog` reads from.
 **Updated:** 2026-07-15. Upgraded from "clean markdown text" to **native Notion blocks** after inspecting the live API output.

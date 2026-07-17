@@ -1,5 +1,9 @@
 # Blog / Informational Content Surface (SEO Phase 6)
 
+> **This is the original plan, not a description of current behaviour.**
+> For how the blog works today, read [`docs/features/BLOG_SYSTEM.md`](../../features/BLOG_SYSTEM.md), which is canonical and wins any disagreement.
+> Known drift in this doc (found 2026-07-17): the status line below and the phase table are stale (Phase 3 is substantially built: JSON-LD, sitemap entries, nav and footer links all exist); the hero-image "falls back to the brand OG image" claim is wrong (a post with no hero renders no hero, and the card shows a mono-wordmark tile, as this doc's own later section says); the schema table omits the `Source` column; and the references still call the old blog redirect "leave untouched" despite SCRUM-1157 adding it.
+
 **Status:** Scoped and finalised. Phase 1 built (SCRUM-1151); Phase 2 built (SCRUM-1152); Phase 3 ready to ticket.
 **Owner:** Rudh
 **Part of:** The SEO / AEO programme (`docs/development/featurePlans/seo-aeo-metadata-foundation.md`). This is Phase 6, the only remaining phase.
@@ -128,7 +132,7 @@ Automated deploy-on-publish and a `draft` preview deployment are future niceties
 | 2 | Blog UI: `/blog` listing + `/blog/[slug]` article, brand markdown renderer, related posts, mobile | Built (SCRUM-1152) |
 | 3 | SEO/AEO, discovery, analytics, go-live: BlogPosting + FAQ JSON-LD, sitemap, nav/footer, CTA analytics, seed verify | Ready to ticket |
 | 4 | Content stream: engine populates Notion, owner publishes via `Status` | Future / recurring |
-| 5 | Scale features: category filters, search, pagination-at-volume, topic-cluster internal linking (~8+ posts) | Future |
+| 5 | Scale features: category filters, search, pagination-at-volume, topic-cluster internal linking (~8+ posts) | **Gate cleared. Filters + pagination now scoped as Phase 6 of `legacy-blog-migration.md`. Search is still Future.** |
 
 Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into the integration branch, not `main`).
 
@@ -197,7 +201,7 @@ Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into th
 
 - **Hand-writing a Notion block renderer.** `notion-to-md` does the walking; we only style markdown.
 - **Rich-block fidelity** (tables, callouts, embeds). Deferred; no competitive need.
-- **Category filters / search / pagination UI** before there is volume. Phase 5.
+- **Category filters / search / pagination UI** before there is volume. Phase 5. **The volume gate cleared on 2026-07-16 at 55 published posts; filters and pagination moved to Phase 6 of `legacy-blog-migration.md`. Search stays parked.**
 - **The `.brand-clinical` mobile hero padding trap.** Needs an explicit `paddingTop`.
 
 ## No-gos

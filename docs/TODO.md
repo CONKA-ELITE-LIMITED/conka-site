@@ -159,3 +159,36 @@ So the basis for the published number is not recoverable from the spec.
 - Once confirmed, remove the two render blocks, their `ListicleConfig` fields, and any now-unused helper types.
 
 **Why deferred:** Left out of the SCRUM-1146 visual sweep deliberately: there was no point restyling zones nothing renders. Flagged here for a clean deletion rather than a silent restyle. These are the only remaining `font-mono` eyebrows and `rounded-3xl` cards left in the renderer.
+
+---
+
+## Blog Surface (`/blog`)
+
+### 10. Assert Notion reads at build, and stop the data cache serving stale post bodies
+
+**Status:** **Done 2026-07-17 ([SCRUM-1163](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1163)).** Deploy-scoped fetch cache key in `app/lib/notion.ts` (a body edit now reaches prod on an ordinary redeploy, build cache enabled) plus consistency + floor guards in `app/lib/blogBuildGuard.ts`, wired through `app/lib/blog.ts`, and `dynamicParams = false` + throw-on-missing on the `[slug]` route. Canonical write-up: `docs/features/BLOG_SYSTEM.md`. Kept below as history.
+**Files:**
+- `app/lib/notion.ts` -- `queryBlogRows` throws on failure (since SCRUM-1157, not error-swallowing); `pageToMarkdown` fetches each post's blocks
+- `app/lib/blog.ts` -- `getAllPosts`, consumed by `generateStaticParams`, `sitemap` and every post route
+
+**What unblocks it:** nothing. Both halves are known and independently reproduced.
+
+Two separate defects, one fix surface:
+
+1. **A build racing a Notion write bakes a 404 into a live post on a green build.** Observed during Phase 3 (correction 6 in the plan doc): `generateStaticParams` saw 3 published posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and no error output. **The mechanism is not error-swallowing:** `queryBlogRows` throws since SCRUM-1157, and correction 6 and the plan's Risks section are both stale on this point. It is that separate, individually *successful* queries across one build can disagree, because Notion is eventually consistent right after a write and `react.cache` dedupes per request, not per build. Nothing throws, because nothing failed. Only a consistency assertion catches it.
+2. **The Notion data cache holds post bodies for a year.** Reproduced on SCRUM-1160 (correction 8): the Notion SDK calls `fetch`, Next patches it, and all 70 entries land in `.next/cache/fetch-cache` with `revalidate: 31536000`, 68 of them `GET /v1/blocks/{id}/children`. A verified-clean Notion body still built green with all 191 leaks; `rm -rf .next/cache` fixed it. Vercel restores that cache between deploys, so **any Notion body edit can be invisible on a green redeploy.** The interim rule is to redeploy with the build cache cleared, which is a human step guarding a silent failure.
+
+A build-time assertion (post count against a floor, and consistency between `generateStaticParams`, `getPostBySlug` and `sitemap`) turns both into a failed build instead of a silent one. The cache half also wants an explicit `cache`/`revalidate` on the Notion reads so correctness does not depend on remembering to untick a checkbox.
+
+**Why deferred:** correction 6 called this "no longer a nice-to-have" during Phase 3 and it was still not built; SCRUM-1160 then found the second, quieter half. Sizing it needs a decision on where the assertion lives (build-time check vs a `revalidate` on the fetches), which is more than a bug fix.
+
+---
+
+### 11. In-body `<img>` carries no dimensions, so post bodies shift on load
+
+**Status:** Deferred
+**Files:** `app/components/blog/MarkdownBody.tsx` (the `img` mapping), `app/lib/blog.ts` (image re-hosting)
+
+**What unblocks it:** the images are already re-hosted locally under `public/blog/<slug>/` at build, so width and height are knowable without a network call. Needs a decision on whether to record dimensions at re-host time and thread them through, or move the mapping to `next/image`.
+
+**Why deferred:** out of scope on SCRUM-1160, which was a text-only repair. **Both that ticket and the plan doc already cite this as "tracked in `docs/TODO.md`" and it was never actually written here** (found 2026-07-17), so this entry exists to make that citation true rather than to propose new work. 100 in-body images across 33 posts; none have usable alt text (correction 3), so an alt pass belongs with it.

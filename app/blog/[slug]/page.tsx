@@ -7,13 +7,19 @@ import Footer from "@/app/components/footer";
 import MarkdownBody from "@/app/components/blog/MarkdownBody";
 import ProductCTA from "@/app/components/blog/ProductCTA";
 import RelatedPosts from "@/app/components/blog/RelatedPosts";
-import { getAllPosts, getPostBySlug } from "@/app/lib/blog";
+import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/app/lib/blog";
 import { formatBlogDate } from "@/app/lib/blogTransform";
 import { JsonLd, buildBlogPostingSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
 // includeUnpublished renders Drafts in dev preview; the loader keeps a
 // production build Published-only.
 const PREVIEW = { includeUnpublished: true };
+
+// Only slugs from generateStaticParams exist. A fully static blog has no
+// runtime post rendering, so an unknown slug is a 404 without a Notion read.
+// This also lets the render below treat a null post as an inconsistency rather
+// than a missing page (SCRUM-1163, defect 1).
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const posts = await getAllPosts(PREVIEW);
@@ -54,11 +60,23 @@ export default async function BlogArticlePage({
 }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug, PREVIEW);
-  if (!post) notFound();
+  if (!post) {
+    if (process.env.NODE_ENV === "production") {
+      // dynamicParams is false, so in a production build this slug came from
+      // generateStaticParams. A null here is not a missing page: it is
+      // generateStaticParams and getPostBySlug disagreeing mid-build about which
+      // posts exist (SCRUM-1163, defect 1). Fail the build rather than bake a
+      // 404 into a live post; a rebuild once Notion has settled is correct.
+      throw new Error(
+        `[blog] getPostBySlug("${slug}") returned null for a slug that ` +
+          "generateStaticParams enumerated. The published set changed mid-build; " +
+          "refusing to prerender a 404 for a live post.",
+      );
+    }
+    notFound();
+  }
 
-  const related = (await getAllPosts(PREVIEW))
-    .filter((p) => p.slug !== slug)
-    .slice(0, 3);
+  const related = await getRelatedPosts(slug, PREVIEW);
 
   return (
     <div className="brand-clinical min-h-screen bg-white text-black flex flex-col">

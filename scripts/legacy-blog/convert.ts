@@ -42,11 +42,11 @@ const BLOCK_TAGS = new Set([
   "blockquote", "hr", "table", "pre", ...CONTAINER_TAGS, ...DROP_TAGS,
 ]);
 
+/** No `underline`: it is never emitted. See the `case "u"` note in inlineNode. */
 export interface Annotations {
   bold?: boolean;
   italic?: boolean;
   strikethrough?: boolean;
-  underline?: boolean;
   code?: boolean;
 }
 
@@ -124,7 +124,10 @@ function inlineNode(node: Node, ctx: InlineCtx): RichText[] {
     case "i":
       return withAnnotation({ italic: true });
     case "u":
-      return withAnnotation({ underline: true });
+      // Deliberately unwrapped, not annotated. Notion underline round-trips out
+      // of notion-to-md as literal <u> text (SCRUM-1160). The source's only <u>
+      // is Wix citation junk, so the digit is kept and the formatting dropped.
+      return inlineNodes(el.childNodes, ctx);
     case "s":
     case "del":
     case "strike":
