@@ -15,6 +15,8 @@ interface ProductImageSlideshowProps {
   fullBleedThumbnails?: boolean;
   /** When true, the thumbnail strip is hidden entirely (rely on prev/next nav buttons) */
   hideThumbnails?: boolean;
+  /** When true, the prev/next overlay arrows are hidden (rely on thumbnails/swipe) */
+  hideArrows?: boolean;
   /** Keep thumbnails at the compact 56px size on all breakpoints */
   smallThumbnails?: boolean;
   /** "contain" letterboxes the full image in the square frame on white
@@ -30,6 +32,7 @@ export default function ProductImageSlideshow({
   alt,
   fullBleedThumbnails = false,
   hideThumbnails = false,
+  hideArrows = false,
   smallThumbnails = false,
   imageFit = "cover",
   leadingVideo,
@@ -103,7 +106,7 @@ export default function ProductImageSlideshow({
         </button>
 
         {/* Navigation arrows */}
-        {totalSlides > 1 && (
+        {totalSlides > 1 && !hideArrows && (
           <>
             <button
               onClick={(e) => {

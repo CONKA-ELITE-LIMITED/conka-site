@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
-  ProductHeroMobile,
   ClinicalIngredients,
   FormulaBenefitsPillars,
   ProductWhatYouGet,
 } from "@/app/components/product";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
+import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
@@ -85,7 +85,7 @@ export default function ConkaFlowPage() {
         {/* ===== SECTION 1: HERO ===== */}
         <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
           <div className="brand-track">
-            <ProductHeroMobile
+            <ProductHeroMobileV2
               formulaId="01"
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}

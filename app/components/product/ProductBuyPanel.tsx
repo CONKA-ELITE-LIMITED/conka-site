@@ -681,9 +681,13 @@ export default function ProductBuyPanel({
       )}
 
       <div>
-        <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
-          Subscribe &amp; Save:
-        </p>
+        {flatCards ? (
+          <p className="mb-3 text-xl font-bold text-black">Select your plan</p>
+        ) : (
+          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+            Subscribe &amp; Save:
+          </p>
+        )}
         <PlanSelector
           formulaId={formulaId}
           selectedCadence={selectedCadence}
