@@ -191,6 +191,7 @@ export default function CROTestimonials({
   ctaHref?: string;
 } = {}) {
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [activeIndex, setActiveIndex] = useState(0);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const toggle = (i: number) =>
@@ -201,23 +202,39 @@ export default function CROTestimonials({
       return next;
     });
 
+  const cardStep = () => {
+    const el = scrollerRef.current;
+    const tile = el?.querySelector<HTMLElement>("[data-tile]");
+    return tile ? tile.offsetWidth + 16 : (el?.offsetWidth ?? 1) * 0.9;
+  };
+
   const scrollByCard = (dir: 1 | -1) => {
+    scrollerRef.current?.scrollBy({ left: dir * cardStep(), behavior: "smooth" });
+  };
+
+  const goToIndex = (i: number) => {
+    scrollerRef.current?.scrollTo({ left: i * cardStep(), behavior: "smooth" });
+  };
+
+  const handleScroll = () => {
     const el = scrollerRef.current;
     if (!el) return;
-    const tile = el.querySelector<HTMLElement>("[data-tile]");
-    const amount = tile ? tile.offsetWidth + 16 : el.offsetWidth * 0.9;
-    el.scrollBy({ left: dir * amount, behavior: "smooth" });
+    const idx = Math.round(el.scrollLeft / cardStep());
+    setActiveIndex(Math.max(0, Math.min(testimonials.length - 1, idx)));
   };
 
   return (
     <div>
       <div className="mb-8">
         <h2
-          className="brand-h2 text-[#0e1f3f]"
+          className="brand-h2 mb-2 text-[#0e1f3f]"
           style={{ letterSpacing: "-0.02em" }}
         >
           Real people. Real results.
         </h2>
+        <p className="text-[15px] leading-snug text-black/75">
+          A few favourites from our 622+ verified reviews.
+        </p>
       </div>
 
       <div className="relative group">
@@ -236,6 +253,7 @@ export default function CROTestimonials({
           ref={scrollerRef}
           role="region"
           aria-label="Customer reviews"
+          onScroll={handleScroll}
           className="flex items-stretch gap-4 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 pb-2 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {testimonials.map((t, i) => (
@@ -254,9 +272,36 @@ export default function CROTestimonials({
         </div>
       </div>
 
+      {/* Dot indicators — primary nav on mobile (arrows are desktop-only) */}
+      <div
+        className="mt-6 flex justify-center gap-2"
+        role="tablist"
+        aria-label="Review navigation"
+      >
+        {testimonials.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            role="tab"
+            aria-selected={i === activeIndex}
+            aria-label={`Go to review ${i + 1}`}
+            onClick={() => goToIndex(i)}
+            className="flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
+          >
+            <span
+              className={`block rounded-full transition-all ${
+                i === activeIndex
+                  ? "h-2 w-5 bg-[#1B2757]"
+                  : "h-2 w-2 bg-black/15 hover:bg-black/30"
+              }`}
+            />
+          </button>
+        ))}
+      </div>
+
       {!hideCTA && (
         <>
-          <div className="mt-10 flex justify-start">
+          <div className="mt-10 flex justify-center lg:justify-start">
             <ConkaCTAButton href={ctaHref} meta={null}>
               Get Both from £{PRICE_PER_SHOT_BOTH}/shot
             </ConkaCTAButton>
