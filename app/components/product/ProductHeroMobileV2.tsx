@@ -6,6 +6,7 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 import { getHeroContent } from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
+import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 
 interface ProductHeroMobileV2Props {
   formulaId: ProductHeroId;
@@ -14,34 +15,6 @@ interface ProductHeroMobileV2Props {
   onAddToCart: () => void;
   /** The OTP text link adds the one-time variant straight to cart */
   onOtpAddToCart: () => void;
-}
-
-/** Live-viewer style social-proof pill (Magic Mind pattern, our fonts + gradient). */
-function SocialProofBadge() {
-  return (
-    <span className="mx-auto inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e7eaf4] to-[#f6f7fb] px-4 py-2 text-sm font-semibold text-black">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path
-          d="M3 13C6.6 5 17.4 5 21 13"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="12" cy="13" r="3" fill="currentColor" />
-      </svg>
-      100+ others exploring focus
-    </span>
-  );
-}
-
-/** Product spec pill (caffeine / timing). Placeholder values for the Flow test. */
-function SpecBadge() {
-  return (
-    <span className="mx-auto inline-flex items-center rounded-full bg-gradient-to-r from-[#dbe0f0] to-[#eef1f8] px-4 py-2 font-mono text-sm font-bold uppercase tracking-wide text-black">
-      0mg caffeine | morning ritual
-    </span>
-  );
 }
 
 /** Rating block (Magic Mind style): subscriber count above, then larger stars
@@ -102,8 +75,8 @@ export default function ProductHeroMobileV2({
     <>
       {/* Above the asset: badges, product name, subtitle */}
       <div className="flex w-full min-w-0 flex-col items-center gap-3 pt-4 text-center text-black">
-        <SocialProofBadge />
-        <SpecBadge />
+        <SocialProofBadge className="mx-auto" />
+        <SpecBadge className="mx-auto" />
         <div>
           <h1 className="brand-h1 leading-tight" style={{ letterSpacing: "-0.02em" }}>
             {content.name}

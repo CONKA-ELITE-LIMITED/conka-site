@@ -56,6 +56,9 @@ export interface ProductBuyPanelProps {
       card; shows a compare-at strikethrough, and the shared "what's included"
       list moves below the cards. Legacy keeps the expanding PlanDetail. */
   flatCards?: boolean;
+  /** V2 moves the "What You'll Feel" block into the left-column accordion, so
+      the buy box drops it here. */
+  hideWhatYouFeel?: boolean;
 }
 
 /**
@@ -839,6 +842,42 @@ const FEEL_OUTCOMES = [
   },
 ];
 
+/** Just the outcome rows — reused by the V2 hero's left-column "What you'll
+ *  feel" accordion (no outer card/heading). */
+export function FeelOutcomesList() {
+  return (
+    <div className="flex flex-col">
+      {FEEL_OUTCOMES.map((o, i) => (
+        <div
+          key={o.title}
+          className={`flex items-center gap-3 py-2 ${
+            i < FEEL_OUTCOMES.length - 1 ? "border-b border-black/[0.05]" : ""
+          }`}
+        >
+          <div
+            className="flex h-9 w-9 shrink-0 items-center justify-center text-base shadow-sm"
+            style={{ background: o.grad }}
+            aria-hidden
+          >
+            {o.emoji}
+          </div>
+          <div className="min-w-0 flex-1">
+            <strong className="block text-[13px] font-bold leading-tight text-black">
+              {o.title}
+            </strong>
+            <span className="text-[11px] leading-tight text-black/55">
+              {o.desc}
+            </span>
+          </div>
+          <span className="shrink-0 text-[15px] font-extrabold tabular-nums text-[#1B2757]">
+            {o.pct}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function WhatYouFeel() {
   return (
     <div className="border border-black/10 bg-white p-4">
@@ -879,8 +918,15 @@ function WhatYouFeel() {
 }
 
 /** "See what's inside" trigger + the shared rounded ingredient bottom sheet.
- *  Takes a list of formula tabs; on Both it shows an in-sheet AM/PM switcher. */
-function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) {
+ *  Takes a list of formula tabs; on Both it shows an in-sheet AM/PM switcher.
+ *  `pill` renders the compact Magic Mind-style "Ingredients" pill (V2 hero). */
+export function IngredientListButton({
+  formulas,
+  pill = false,
+}: {
+  formulas: ("flow" | "clear")[];
+  pill?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<"flow" | "clear">(formulas[0]);
 
@@ -891,16 +937,29 @@ function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) 
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex w-full items-center justify-center gap-2 border border-black/10 bg-white py-3.5 text-sm font-semibold text-black/80 transition-colors hover:bg-black/[0.03]"
-      >
-        See what&apos;s inside {showSwitcher ? "Flow & Clear" : title}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
+      {pill ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-2 self-start rounded-full border border-black px-6 py-3 text-base font-medium text-black transition-colors hover:bg-black hover:text-white"
+        >
+          Ingredients
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="flex w-full items-center justify-center gap-2 border border-black/10 bg-white py-3.5 text-sm font-semibold text-black/80 transition-colors hover:bg-black/[0.03]"
+        >
+          See what&apos;s inside {showSwitcher ? "Flow & Clear" : title}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      )}
 
       <IngredientBottomSheet
         open={open}
@@ -924,6 +983,7 @@ export default function ProductBuyPanel({
   hideKeyBenefits,
   hideSecondary,
   flatCards,
+  hideWhatYouFeel,
 }: ProductBuyPanelProps) {
   const productType = getHeroProductType(formulaId);
   const shotsPerDay = productType === "both" ? 2 : 1;
@@ -1010,7 +1070,7 @@ export default function ProductBuyPanel({
         <TrustBar />
       </div>
 
-      <WhatYouFeel />
+      {!hideWhatYouFeel && <WhatYouFeel />}
 
       {!hideSecondary && (
         <>

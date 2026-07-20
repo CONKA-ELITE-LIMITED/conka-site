@@ -1,11 +1,110 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import ImageLightbox from "./ImageLightbox";
 
 export interface SlideshowImage {
   src: string;
+}
+
+type ThumbSize = "responsive" | "sm" | "xs";
+
+/**
+ * Standalone thumbnail rail. Rendered inside the slideshow by default, but also
+ * exported so a controlled slideshow can move its thumbnails elsewhere (the V2
+ * PDP hero puts them in the left column). Keeps the `mt-3` root class because
+ * FunnelHeroAsset hides thumbnails via a `[&_.mt-3]:hidden` selector.
+ */
+export function ProductThumbnailRail({
+  images,
+  alt,
+  currentIndex,
+  onSelect,
+  leadingVideo,
+  size = "responsive",
+  fullBleed = false,
+  className = "mt-3",
+}: {
+  images: SlideshowImage[];
+  alt: string;
+  currentIndex: number;
+  onSelect: (index: number) => void;
+  leadingVideo?: { mp4: string; webm?: string; poster: string };
+  size?: ThumbSize;
+  fullBleed?: boolean;
+  className?: string;
+}) {
+  const videoCount = leadingVideo ? 1 : 0;
+  const sizeCls =
+    size === "xs"
+      ? "w-12 h-12"
+      : size === "sm"
+        ? "w-14 h-14"
+        : "w-14 h-14 md:w-28 md:h-28";
+  const imgSizes =
+    size === "responsive"
+      ? "(max-width: 768px) 56px, 112px"
+      : size === "xs"
+        ? "48px"
+        : "56px";
+
+  return (
+    <div
+      className={`${className} min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
+      style={
+        fullBleed
+          ? { paddingLeft: "0.25rem", paddingRight: "0.25rem" }
+          : undefined
+      }
+    >
+      {leadingVideo && (
+        <button
+          onClick={() => onSelect(0)}
+          className={`relative flex-shrink-0 ${sizeCls} snap-center rounded overflow-hidden cursor-pointer
+            transition-all duration-200 hover:opacity-90
+            ${currentIndex === 0 ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
+          aria-label="Play product video"
+          aria-current={currentIndex === 0 ? "true" : undefined}
+        >
+          <Image
+            src={leadingVideo.poster}
+            alt={`${alt} video`}
+            width={112}
+            height={112}
+            className="object-cover w-full h-full"
+            sizes={imgSizes}
+          />
+          {/* Play glyph marks the slide as video */}
+          <span className="absolute inset-0 flex items-center justify-center" aria-hidden>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/50 pl-0.5 text-[10px] text-white">
+              ▶
+            </span>
+          </span>
+        </button>
+      )}
+      {images.map((image, index) => (
+        <button
+          key={image.src}
+          onClick={() => onSelect(index + videoCount)}
+          className={`flex-shrink-0 ${sizeCls} snap-center rounded overflow-hidden cursor-pointer
+            transition-all duration-200 hover:opacity-90
+            ${index + videoCount === currentIndex ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
+          aria-label={`Go to image ${index + 1}`}
+          aria-current={index + videoCount === currentIndex ? "true" : undefined}
+        >
+          <Image
+            src={image.src}
+            alt={`${alt} thumbnail ${index + 1}`}
+            width={112}
+            height={112}
+            className="object-cover w-full h-full"
+            sizes={imgSizes}
+          />
+        </button>
+      ))}
+    </div>
+  );
 }
 
 interface ProductImageSlideshowProps {
@@ -25,6 +124,13 @@ interface ProductImageSlideshowProps {
   /** Optional muted autoplay loop rendered as the first slide; its poster
    *  becomes the first thumbnail (IM8 gallery-video pattern) */
   leadingVideo?: { mp4: string; webm?: string; poster: string };
+  /** Drop the rounded card + drop-shadow so the image reads flush and bigger
+   *  (Magic Mind style). Used by ProductHeroV2's de-carded centre column. */
+  noFrame?: boolean;
+  /** Controlled active slide index. When provided (with onIndexChange), the
+   *  parent owns selection so thumbnails can live outside this component. */
+  currentIndex?: number;
+  onIndexChange?: (index: number) => void;
 }
 
 export default function ProductImageSlideshow({
@@ -36,20 +142,23 @@ export default function ProductImageSlideshow({
   smallThumbnails = false,
   imageFit = "cover",
   leadingVideo,
+  noFrame = false,
+  currentIndex: controlledIndex,
+  onIndexChange,
 }: ProductImageSlideshowProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [internalIndex, setInternalIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  // Controlled when the parent passes currentIndex + onIndexChange; else internal.
+  const currentIndex = controlledIndex ?? internalIndex;
+  const setCurrentIndex = (index: number) =>
+    onIndexChange ? onIndexChange(index) : setInternalIndex(index);
   // Video occupies slide 0 when present; image indices shift up by one
   const videoCount = leadingVideo ? 1 : 0;
   const totalSlides = images.length + videoCount;
 
-  const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % totalSlides);
-  }, [totalSlides]);
-
-  const goToPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
+  const goToNext = () => setCurrentIndex((currentIndex + 1) % totalSlides);
+  const goToPrev = () =>
+    setCurrentIndex((currentIndex - 1 + totalSlides) % totalSlides);
 
   if (totalSlides === 0) return null;
 
@@ -62,7 +171,7 @@ export default function ProductImageSlideshow({
         <button
           type="button"
           onClick={() => !isVideoActive && setLightboxOpen(true)}
-          className={`relative w-full h-full overflow-hidden rounded-none shadow-none md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)] block ${isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
+          className={`relative w-full h-full overflow-hidden rounded-none shadow-none block ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
           aria-label={isVideoActive ? alt : `View ${alt} full size`}
         >
           {leadingVideo && (
@@ -113,7 +222,7 @@ export default function ProductImageSlideshow({
                 e.stopPropagation();
                 goToPrev();
               }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full 
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full
                          bg-white/70 hover:bg-white/90 shadow-md
                          transition-all duration-200"
               aria-label="Previous image"
@@ -139,7 +248,7 @@ export default function ProductImageSlideshow({
                 e.stopPropagation();
                 goToNext();
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full 
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full
                          bg-white/70 hover:bg-white/90 shadow-md
                          transition-all duration-200"
               aria-label="Next image"
@@ -174,63 +283,15 @@ export default function ProductImageSlideshow({
 
       {/* Horizontal thumbnail strip */}
       {totalSlides > 1 && !hideThumbnails && (
-        <div
-          className={`mt-3 min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleedThumbnails ? "px-2" : ""}`}
-          style={
-            fullBleedThumbnails
-              ? {
-                  paddingLeft: "0.25rem",
-                  paddingRight: "0.25rem",
-                }
-              : undefined
-          }
-        >
-          {leadingVideo && (
-            <button
-              onClick={() => setCurrentIndex(0)}
-              className={`relative flex-shrink-0 ${smallThumbnails ? "w-14 h-14" : "w-14 h-14 md:w-28 md:h-28"} snap-center rounded overflow-hidden cursor-pointer
-                transition-all duration-200 hover:opacity-90
-                ${isVideoActive ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
-              aria-label="Play product video"
-              aria-current={isVideoActive ? "true" : undefined}
-            >
-              <Image
-                src={leadingVideo.poster}
-                alt={`${alt} video`}
-                width={112}
-                height={112}
-                className="object-cover w-full h-full"
-                sizes="(max-width: 768px) 56px, 112px"
-              />
-              {/* Play glyph marks the slide as video */}
-              <span className="absolute inset-0 flex items-center justify-center" aria-hidden>
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/50 pl-0.5 text-[10px] text-white">
-                  ▶
-                </span>
-              </span>
-            </button>
-          )}
-          {images.map((image, index) => (
-            <button
-              key={image.src}
-              onClick={() => setCurrentIndex(index + videoCount)}
-              className={`flex-shrink-0 ${smallThumbnails ? "w-14 h-14" : "w-14 h-14 md:w-28 md:h-28"} snap-center rounded overflow-hidden cursor-pointer
-                transition-all duration-200 hover:opacity-90
-                ${index + videoCount === currentIndex ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
-              aria-label={`Go to image ${index + 1}`}
-              aria-current={index + videoCount === currentIndex ? "true" : undefined}
-            >
-              <Image
-                src={image.src}
-                alt={`${alt} thumbnail ${index + 1}`}
-                width={112}
-                height={112}
-                className="object-cover w-full h-full"
-                sizes="(max-width: 768px) 56px, 112px"
-              />
-            </button>
-          ))}
-        </div>
+        <ProductThumbnailRail
+          images={images}
+          alt={alt}
+          currentIndex={currentIndex}
+          onSelect={setCurrentIndex}
+          leadingVideo={leadingVideo}
+          size={smallThumbnails ? "sm" : "responsive"}
+          fullBleed={fullBleedThumbnails}
+        />
       )}
     </div>
   );
