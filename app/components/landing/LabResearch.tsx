@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 /* ============================================================================
  * LabResearch
@@ -77,6 +78,29 @@ export default function LabResearch() {
             </div>
           ))}
         </div>
+
+        {/* CTA to the full science page. White-outline pill so it reads on the
+            dark band; flips to a white fill on hover like the other CTAs. */}
+        <Link
+          href="/science"
+          className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 ease-out hover:border-white hover:bg-white hover:text-[#0e1f3f] motion-safe:hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#0e1f3f]"
+        >
+          See the research
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
+            aria-hidden
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="13 6 19 12 13 18" />
+          </svg>
+        </Link>
       </div>
     </div>
   );
