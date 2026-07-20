@@ -46,9 +46,6 @@ export default function LabResearch() {
           copy stays readable on wide monitors. */}
       <div className="relative z-10 mx-auto max-w-[1280px]">
         {/* Header */}
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 mb-3">
-          {"// Research · PROOF-02"}
-        </p>
         <h2 className="brand-h1 mb-4 text-white" style={{ letterSpacing: "-0.02em" }}>
           World-Class Research.
           <br />

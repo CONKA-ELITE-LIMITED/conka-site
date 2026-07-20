@@ -177,18 +177,12 @@ export default function LabCaseStudies({
 
   return (
     <div>
-      {/* Eyebrow */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// Clinical outcomes · PROOF-01"}
-      </p>
-
       {/* Header */}
       <div className="mb-8">
-        <h2 className="brand-h1">
+        <h2 className="brand-h1 text-[#0e1f3f]">
           Athletes, Founders, Execs.
           <br />
           They all take CONKA.
-          <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
         </h2>
       </div>
 

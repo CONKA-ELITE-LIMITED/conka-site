@@ -261,13 +261,9 @@ export default function CROTestimonials({
 
   return (
     <div>
-      <p className="brand-eyebrow mb-3">
-        {"// Field observations · PROOF-03"}
-      </p>
-
       <div className="mb-8">
         <h2
-          className="brand-h2 mb-2"
+          className="brand-h2 mb-2 text-[#0e1f3f]"
           style={{ letterSpacing: "-0.02em" }}
         >
           Real people. Real results.

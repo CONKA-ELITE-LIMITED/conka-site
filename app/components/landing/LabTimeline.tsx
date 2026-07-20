@@ -60,7 +60,7 @@ const MILESTONES: Milestone[] = [
     appData: {
       value: "+1.09 pts",
       label: "evening focus above your daily average, when scores naturally fall",
-      caveat: "n=74 Conka tests · 18–21 window ^^",
+      caveat: "n=74 Conka tests · 18–21 window",
       anchor: "/app-insights#time-of-day",
     },
     mechanism: (
@@ -86,7 +86,7 @@ const MILESTONES: Milestone[] = [
     appData: {
       value: "−5.4 pts",
       label: "what moderate stress takes off a score, before your defence is built",
-      caveat: "n=18 users · 58 tests ^^",
+      caveat: "n=18 users · 58 tests",
       anchor: "/app-insights#stress",
     },
     mechanism: (
@@ -151,18 +151,14 @@ export default function LabTimeline({
       </div>
 
       {/* Trio header */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// Expected outcomes · SCI-02"}
-      </p>
-      <h2 className="brand-h1 mb-2" style={{ letterSpacing: "-0.02em" }}>
+      <h2 className="brand-h1 mb-2 text-[#0e1f3f]" style={{ letterSpacing: "-0.02em" }}>
         Feel it in 24 hours.
         <br />
         Measure it in 30 days.
-        <sup className="text-[0.5em] text-black/30 align-super">^^</sup>
       </h2>
       {/* Provenance — readable sentence, not mono notation. The app dataset
           is a differentiator worth pointing at, so it gets body copy. */}
-      <p className="text-base text-black/70 leading-snug mb-8 max-w-[58ch]">
+      <p className="text-base text-black leading-snug mb-8 max-w-[58ch]">
         Every milestone below is measured from real CONKA app users:{" "}
         <strong className="font-semibold text-black">
           {APP_INSIGHTS_TOTALS.users} people

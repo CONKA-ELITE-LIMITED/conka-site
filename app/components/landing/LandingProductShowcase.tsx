@@ -178,16 +178,13 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// The formulation · CONKA-03"}
-      </p>
       <h2
-        className="brand-h1 mb-4"
+        className="brand-h1 mb-4 text-[#0e1f3f]"
         style={{ letterSpacing: "var(--tracking-tight)" }}
       >
         Two shots. Built around your day.
       </h2>
-      <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[60ch]">
+      <p className="text-base lg:text-lg leading-snug text-black mb-10 max-w-[60ch]">
         Flow for the morning. Clear for the afternoon. Each formulated with
         scientifically-studied ingredients to support sustained focus, memory,
         and mental endurance.

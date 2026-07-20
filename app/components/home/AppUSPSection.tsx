@@ -69,11 +69,8 @@ export default function AppUSPSection() {
   return (
     <div className="w-full">
       {/* Trio header */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-        {"// Proof, not promises · APP-01"}
-      </p>
       <h2
-        className="brand-h1 text-black mb-8 lg:mb-12"
+        className="brand-h1 text-[#0e1f3f] mb-8 lg:mb-12"
         style={{ letterSpacing: "-0.02em" }}
       >
         Most brands claim results. We let you measure yours.

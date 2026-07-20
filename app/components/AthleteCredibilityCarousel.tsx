@@ -217,16 +217,13 @@ export default function AthleteCredibilityCarousel({
 
       {/* Header */}
       <div className="mb-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          {"// Athlete roster · PROOF-01"}
-        </p>
         <h2
-          className="brand-h1 mb-2 text-black"
+          className="brand-h1 mb-2 text-[#0e1f3f]"
           style={{ letterSpacing: "-0.02em" }}
         >
           Why High Performers Trust CONKA
         </h2>
-        <p className="text-[15px] leading-snug text-black/70 max-w-[52ch]">
+        <p className="text-[15px] leading-snug text-black max-w-[52ch]">
           Olympic medallists, world champions, and international competitors
           use CONKA on the days that matter most.
         </p>
