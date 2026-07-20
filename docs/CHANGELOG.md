@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-20** | V2 PDP plan tiles rebuilt Magic-Mind style (flat cards, price-led CTA, tap-to-expand benefits with free-shots badge)
 - **2026-07-20** | New ProductHeroMobileV2 for conka-flow (badges, split header, thumbnail carousel, MM-style rating)
 - **2026-07-20** | New ProductHeroV2 desktop PDP hero (3-column, flat plan cards) live on conka-flow behind a legacy-safe swap
 - **2026-07-20** | Simplify the home What to Expect timeline: drop the expanders and clinical/app-data depth to a 3-milestone scan with a See the research link

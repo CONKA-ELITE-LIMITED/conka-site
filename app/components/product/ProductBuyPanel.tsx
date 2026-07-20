@@ -354,6 +354,249 @@ function PlanDetail() {
   );
 }
 
+/** Funnel green for the free-shots incentive (matches the listicle purchase card). */
+const GREEN = "#10B981";
+const GREEN_TEXT = "#0b7a55";
+
+/** Shared icon props for the benefit list (mirrors the listicle icon set). */
+const benefitIco = {
+  width: 14,
+  height: 14,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.7,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+};
+const ShotIcon = () => (
+  <svg {...benefitIco}>
+    <path d="M9 3h6M10 3v5l-4 9a2 2 0 0 0 1.8 3h8.4a2 2 0 0 0 1.8-3l-4-9V3" />
+  </svg>
+);
+const BoxIcon = () => (
+  <svg {...benefitIco}>
+    <path d="M3 8l9-4 9 4-9 4-9-4z" />
+    <path d="M3 8v8l9 4 9-4V8" />
+  </svg>
+);
+const AppIcon = () => (
+  <svg {...benefitIco}>
+    <rect x="7" y="3" width="10" height="18" rx="1.5" />
+    <line x1="10.5" y1="18" x2="13.5" y2="18" />
+  </svg>
+);
+const BrainIcon = () => (
+  <svg {...benefitIco}>
+    <path d="M9.5 6a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0-1 4.8V15a2.5 2.5 0 0 0 3.5 2.3" />
+    <path d="M14.5 6A2.5 2.5 0 0 1 17 8.5a2.5 2.5 0 0 1 1 4.8V15a2.5 2.5 0 0 1-3.5 2.3" />
+    <line x1="12" y1="6" x2="12" y2="18" />
+  </svg>
+);
+const CancelIcon = () => (
+  <svg {...benefitIco}>
+    <path d="M3 12a9 9 0 1 0 3-6.7" />
+    <path d="M3 4v4h4" />
+  </svg>
+);
+const GuaranteeIcon = () => (
+  <svg {...benefitIco}>
+    <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
+    <path d="M9 12l2 2 4-4" />
+  </svg>
+);
+
+/** Subscription benefits (icon + label) revealed when the tile expands.
+ *  Mirrors the "Included free" value stack from the listicle purchase card. */
+function planBenefits(freeShots: number) {
+  return [
+    ...(freeShots > 0
+      ? [{ Icon: ShotIcon, label: `${freeShots} bonus shots on your first order` }]
+      : []),
+    { Icon: BoxIcon, label: "Free UK postage" },
+    { Icon: AppIcon, label: "The CONKA app" },
+    { Icon: BrainIcon, label: "Personal Brain Coach" },
+    { Icon: CancelIcon, label: "Pause, skip, or cancel anytime" },
+    { Icon: GuaranteeIcon, label: "100-day money-back guarantee" },
+  ];
+}
+
+/**
+ * Magic Mind-style flat plan card: title + prices inline, a tap-to-expand
+ * "subscription benefits" disclosure (no auto-expand on select). Used only in
+ * flatCards mode; legacy keeps the taller PlanSelector card + PlanDetail.
+ */
+function FlatPlanCard({
+  formulaId,
+  cadence,
+  isSelected,
+  onSelect,
+  saveColor,
+}: {
+  formulaId: ProductHeroId;
+  cadence: CadenceType;
+  isSelected: boolean;
+  onSelect: () => void;
+  /** Per-tile discount-badge colour (Magic Mind uses a different one per plan). */
+  saveColor: string;
+}) {
+  const display = FUNNEL_CADENCES[cadence];
+  const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
+  const monthsPerCycle = cadence === "quarterly-sub" ? 3 : 1;
+  const savePct = getDisplayDiscount(pricing);
+  const cadenceWord = monthsPerCycle === 3 ? "quarterly" : "monthly";
+  const freeShots = pricing.freeShots ?? 0;
+
+  return (
+    <div
+      className={`relative w-full select-none rounded-md transition-all duration-200 ${
+        isSelected
+          ? "border-2 border-[#1B2757] bg-[#f8f9fd]"
+          : "border border-black/15 bg-white hover:border-black/30"
+      }`}
+    >
+      {display.badge && (
+        <span className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-[#1B2757] px-3 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
+          {display.badge}
+        </span>
+      )}
+
+      {/* Full-card select target; the benefits disclosure below opts back into
+          pointer events so tapping it expands rather than selects. */}
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-label={`Select ${pricing.shotCount} shot delivery`}
+        className="absolute inset-0 z-0"
+      />
+
+      <div className="pointer-events-none relative z-10 flex items-start justify-between gap-3 px-4 py-3">
+        <div className="min-w-0">
+          <span className="flex items-center gap-2.5">
+            <span
+              className={`flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+                isSelected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
+              }`}
+              aria-hidden
+            >
+              {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+            </span>
+            <span className="text-[15px] font-bold leading-tight text-black">
+              {pricing.shotCount} Shot Delivery
+            </span>
+          </span>
+
+          <details className="pointer-events-auto mt-2">
+            <summary className="flex cursor-pointer list-none flex-col gap-1.5 [&::-webkit-details-marker]:hidden">
+              {/* Line 1: tick + delivery cadence */}
+              <span className="flex items-center gap-1.5">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className="shrink-0 text-[#1B2757]"
+                  aria-hidden
+                >
+                  <path
+                    d="M3 8.5L6.5 12L13 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-[11px] font-medium text-black/55">
+                  Delivered {cadenceWord} + subscription benefits
+                </span>
+              </span>
+
+              {/* Line 2: free-shots incentive + learn-more tile */}
+              <span className="flex items-center gap-2">
+                {freeShots > 0 && (
+                  <span
+                    className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-bold"
+                    style={{ background: "rgba(16,185,129,0.14)", color: GREEN_TEXT }}
+                  >
+                    <span
+                      className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full"
+                      style={{ background: GREEN }}
+                    >
+                      <svg width="7" height="7" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path
+                          d="M3 8.5L6.5 12L13 4.5"
+                          stroke="white"
+                          strokeWidth="2.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    +{freeShots} free shots
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-full bg-[#1B2757]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#1B2757]">
+                  Learn more
+                  <svg
+                    width="8"
+                    height="8"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="shrink-0 transition-transform [details[open]_&]:rotate-180"
+                    aria-hidden
+                  >
+                    <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </span>
+            </summary>
+            <ul className="mt-2 flex flex-col gap-1.5">
+              {planBenefits(freeShots).map(({ Icon, label }) => (
+                <li
+                  key={label}
+                  className="flex items-center gap-2 text-[12px] font-medium text-black"
+                >
+                  <span className="shrink-0 text-[#1B2757]">
+                    <Icon />
+                  </span>
+                  {label}
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+
+        <span className="shrink-0 text-right">
+          <span className="flex items-baseline justify-end gap-1.5 leading-none">
+            {pricing.compareAtPrice && (
+              <s className="text-xs font-bold text-black/40">
+                {formatPrice(pricing.compareAtPrice)}
+              </s>
+            )}
+            <span className="text-lg font-bold tabular-nums text-black">
+              {formatPrice(pricing.price)}
+            </span>
+          </span>
+          <span className="mt-1 block text-[11px] italic tabular-nums text-black/55">
+            {formatPrice(pricing.perShot)} per bottle
+          </span>
+          {savePct > 0 && (
+            <span
+              className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
+              style={{ backgroundColor: saveColor }}
+            >
+              Save {savePct}%
+            </span>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function PlanSelector({
   formulaId,
   selectedCadence,
@@ -364,6 +607,29 @@ function PlanSelector({
 }: Omit<ProductBuyPanelProps, "onAddToCart"> & { shotsPerDay: number }) {
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
   const otpSelected = selectedCadence === "monthly-otp";
+
+  // Flat (V2) cards: ascending order (20 shot then 60 shot), each with its own
+  // discount-badge colour. OTP link moves under the main CTA (panel-rendered).
+  if (flatCards) {
+    const flatOrder: { cadence: CadenceType; saveColor: string }[] = [
+      { cadence: "monthly-sub", saveColor: "#C9A24A" },
+      { cadence: "quarterly-sub", saveColor: "#E07A5F" },
+    ];
+    return (
+      <div className="flex flex-col gap-4 pt-2">
+        {flatOrder.map(({ cadence, saveColor }) => (
+          <FlatPlanCard
+            key={cadence}
+            formulaId={formulaId}
+            cadence={cadence}
+            isSelected={selectedCadence === cadence}
+            onSelect={() => onCadenceChange(cadence)}
+            saveColor={saveColor}
+          />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -645,8 +911,10 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const ctaLabel =
-    selectedCadence === "monthly-otp"
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  const ctaLabel = flatCards
+    ? `Add to cart for ${formatPrice(selectedPricing.price)}`
+    : selectedCadence === "monthly-otp"
       ? "Add to Cart"
       : selectedPricing.compareAtPrice
         ? `Subscribe & Save ${Math.round((1 - selectedPricing.price / selectedPricing.compareAtPrice) * 100)}%`
@@ -682,7 +950,7 @@ export default function ProductBuyPanel({
 
       <div>
         {flatCards ? (
-          <p className="mb-3 text-xl font-bold text-black">Select your plan</p>
+          <p className="mb-3 text-lg font-bold text-black">Select your plan:</p>
         ) : (
           <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
             Subscribe &amp; Save:
@@ -706,31 +974,20 @@ export default function ProductBuyPanel({
         >
           {ctaLabel}
         </ConkaCTAButton>
+
+        {/* Flat layout moves the one-time purchase under the main CTA (MM pattern). */}
+        {flatCards && (
+          <button
+            type="button"
+            onClick={onOtpAddToCart}
+            className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
+          >
+            Buy it once for {formatPrice(otpPricing.price)}
+          </button>
+        )}
+
         <TrustBar />
       </div>
-
-      {/* Flat-card layout relocates the per-plan "what's included" list here,
-          shared across plans, in place of the expanding PlanDetail. */}
-      {flatCards && (
-        <div>
-          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
-            What&apos;s included
-          </p>
-          <ul className="flex flex-col gap-1.5">
-            {PLAN_INCLUDED.map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-2 text-[13px] font-medium text-black"
-              >
-                <span className="text-[#1B2757]" aria-hidden>
-                  ✓
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <WhatYouFeel />
 
