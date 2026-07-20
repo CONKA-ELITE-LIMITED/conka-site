@@ -130,10 +130,10 @@ export default function LabTimeline({
           </ConkaCTAButton>
         )}
         <Link
-          href="/science"
+          href="/app-insights"
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1B2757] underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          See the research
+          See the app data
           <span aria-hidden>→</span>
         </Link>
       </div>
