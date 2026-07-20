@@ -884,35 +884,7 @@ function WhatYouFeel() {
       <h3 className="mb-3 text-center text-base font-bold text-black">
         What You&apos;ll Feel
       </h3>
-      <div className="flex flex-col">
-        {FEEL_OUTCOMES.map((o, i) => (
-          <div
-            key={o.title}
-            className={`flex items-center gap-3 py-2 ${
-              i < FEEL_OUTCOMES.length - 1 ? "border-b border-black/[0.05]" : ""
-            }`}
-          >
-            <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center text-base shadow-sm"
-              style={{ background: o.grad }}
-              aria-hidden
-            >
-              {o.emoji}
-            </div>
-            <div className="min-w-0 flex-1">
-              <strong className="block text-[13px] font-bold leading-tight text-black">
-                {o.title}
-              </strong>
-              <span className="text-[11px] leading-tight text-black/55">
-                {o.desc}
-              </span>
-            </div>
-            <span className="shrink-0 text-[15px] font-extrabold tabular-nums text-[#1B2757]">
-              {o.pct}
-            </span>
-          </div>
-        ))}
-      </div>
+      <FeelOutcomesList />
     </div>
   );
 }

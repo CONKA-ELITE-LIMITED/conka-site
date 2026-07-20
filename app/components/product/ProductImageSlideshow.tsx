@@ -8,15 +8,14 @@ export interface SlideshowImage {
   src: string;
 }
 
-type ThumbSize = "responsive" | "sm" | "xs";
+type ThumbSize = "responsive" | "sm";
 
 /**
- * Standalone thumbnail rail. Rendered inside the slideshow by default, but also
- * exported so a controlled slideshow can move its thumbnails elsewhere (the V2
- * PDP hero puts them in the left column). Keeps the `mt-3` root class because
- * FunnelHeroAsset hides thumbnails via a `[&_.mt-3]:hidden` selector.
+ * Thumbnail rail rendered inside the slideshow. Kept as its own component for
+ * readability. Keeps the `mt-3` root class because FunnelHeroAsset hides
+ * thumbnails via a `[&_.mt-3]:hidden` selector.
  */
-export function ProductThumbnailRail({
+function ProductThumbnailRail({
   images,
   alt,
   currentIndex,
@@ -24,7 +23,6 @@ export function ProductThumbnailRail({
   leadingVideo,
   size = "responsive",
   fullBleed = false,
-  className = "mt-3",
 }: {
   images: SlideshowImage[];
   alt: string;
@@ -33,25 +31,16 @@ export function ProductThumbnailRail({
   leadingVideo?: { mp4: string; webm?: string; poster: string };
   size?: ThumbSize;
   fullBleed?: boolean;
-  className?: string;
 }) {
   const videoCount = leadingVideo ? 1 : 0;
   const sizeCls =
-    size === "xs"
-      ? "w-12 h-12"
-      : size === "sm"
-        ? "w-14 h-14"
-        : "w-14 h-14 md:w-28 md:h-28";
+    size === "sm" ? "w-14 h-14" : "w-14 h-14 md:w-28 md:h-28";
   const imgSizes =
-    size === "responsive"
-      ? "(max-width: 768px) 56px, 112px"
-      : size === "xs"
-        ? "48px"
-        : "56px";
+    size === "responsive" ? "(max-width: 768px) 56px, 112px" : "56px";
 
   return (
     <div
-      className={`${className} min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
+      className={`mt-3 min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
       style={
         fullBleed
           ? { paddingLeft: "0.25rem", paddingRight: "0.25rem" }
@@ -127,10 +116,6 @@ interface ProductImageSlideshowProps {
   /** Drop the rounded card + drop-shadow so the image reads flush and bigger
    *  (Magic Mind style). Used by ProductHeroV2's de-carded centre column. */
   noFrame?: boolean;
-  /** Controlled active slide index. When provided (with onIndexChange), the
-   *  parent owns selection so thumbnails can live outside this component. */
-  currentIndex?: number;
-  onIndexChange?: (index: number) => void;
 }
 
 export default function ProductImageSlideshow({
@@ -143,15 +128,9 @@ export default function ProductImageSlideshow({
   imageFit = "cover",
   leadingVideo,
   noFrame = false,
-  currentIndex: controlledIndex,
-  onIndexChange,
 }: ProductImageSlideshowProps) {
-  const [internalIndex, setInternalIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  // Controlled when the parent passes currentIndex + onIndexChange; else internal.
-  const currentIndex = controlledIndex ?? internalIndex;
-  const setCurrentIndex = (index: number) =>
-    onIndexChange ? onIndexChange(index) : setInternalIndex(index);
   // Video occupies slide 0 when present; image indices shift up by one
   const videoCount = leadingVideo ? 1 : 0;
   const totalSlides = images.length + videoCount;
