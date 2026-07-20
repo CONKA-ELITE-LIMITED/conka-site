@@ -65,7 +65,7 @@ export default function LabFAQ({
         {/* Content column */}
         <div className="lg:w-3/5">
           <div className="mb-8">
-            <h2 className="brand-h1 mb-0">Frequently asked questions</h2>
+            <h2 className="brand-h1 mb-0 text-[#0e1f3f]">Frequently asked questions</h2>
           </div>
 
           <div>

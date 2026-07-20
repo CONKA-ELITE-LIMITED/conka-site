@@ -24,10 +24,12 @@ const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
   loading: () => <div className="h-[900px]" />,
 });
 
-const LabCaseStudies = dynamic(
-  () => import("./components/LabCaseStudies"),
-  { loading: () => <div className="h-[1200px]" /> },
-);
+// Section 10 (Case Studies) commented out per request 2026-07-20. Re-enable this
+// import together with the section block below to restore it.
+// const LabCaseStudies = dynamic(
+//   () => import("./components/LabCaseStudies"),
+//   { loading: () => <div className="h-[1200px]" /> },
+// );
 
 const CROTestimonials = dynamic(
   () => import("./components/cro/CROTestimonials"),
@@ -148,12 +150,8 @@ export default function Home() {
         </section>
       </div>
 
-      {/* ===== SECTION 6: RESEARCH — university credibility after the ingredient argument ===== */}
-      {/* Drops the section's vertical padding (band is flush to the sections
-          above/below) and the horizontal gutter at every breakpoint so the
-          research band runs full-width edge-to-edge on mobile and desktop.
-          No brand-track: the band spans the viewport while LabResearch caps
-          its own content width internally. */}
+      {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
+      {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
       <section
         className="brand-section brand-bg-tint !py-0 !px-0"
         aria-label="World-class research and university partners"
@@ -199,7 +197,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 10: CASE STUDIES — deep proof for the convinced sceptic ===== */}
+      {/* SECTION 10: CASE STUDIES (LabCaseStudies) — commented out per request 2026-07-20.
+          Restore this block and re-enable the LabCaseStudies dynamic import above.
       <section
         className="brand-section brand-bg-tint"
         aria-label="Clinically validated test scores"
@@ -208,6 +207,7 @@ export default function Home() {
           <LabCaseStudies />
         </div>
       </section>
+      */}
 
       {/* ===== SECTION 11: FAQ ===== */}
       <section

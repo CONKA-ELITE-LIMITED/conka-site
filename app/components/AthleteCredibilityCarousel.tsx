@@ -217,23 +217,20 @@ export default function AthleteCredibilityCarousel({
 
       {/* Header */}
       <div className="mb-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          {"// Athlete roster · PROOF-01"}
-        </p>
         <h2
-          className="brand-h1 mb-2 text-black"
+          className="brand-h1 mb-2 text-[#0e1f3f]"
           style={{ letterSpacing: "-0.02em" }}
         >
           Why High Performers Trust CONKA
         </h2>
-        <p className="text-[15px] leading-snug text-black/70 max-w-[52ch]">
+        <p className="text-[15px] leading-snug text-black max-w-[52ch]">
           Olympic medallists, world champions, and international competitors
           use CONKA on the days that matter most.
         </p>
       </div>
 
       {/* Feature card — portrait with overlaid nav, quote as the hero */}
-      <div className="bg-white border border-black/12 overflow-hidden mb-6">
+      <div className="bg-white border-2 border-[#1B2757] overflow-hidden mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch">
           {/* Portrait — nav arrows + counter overlay directly on the asset.
               self-start on mobile stops the grid's items-stretch from
@@ -241,7 +238,7 @@ export default function AthleteCredibilityCarousel({
               so a stretched row collapses to 0 height and hides the image);
               lg restores stretch so the column matches the text height. */}
           <div
-            className="relative self-start lg:self-stretch aspect-square lg:aspect-auto lg:min-h-[480px] bg-[var(--brand-tint)] border-b lg:border-b-0 lg:border-r border-black/8 overflow-hidden"
+            className="relative self-start lg:self-stretch aspect-square lg:aspect-auto lg:min-h-[480px] bg-[var(--brand-tint)] border-b-2 lg:border-b-0 lg:border-r-2 border-[#1B2757]/30 overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >

@@ -98,12 +98,11 @@ export default function UGCMarquee({
     <div>
       {title ? (
         <div className="mx-auto mb-8 max-w-2xl px-[var(--brand-gutter-mobile)] text-center md:mb-10 md:px-[var(--brand-gutter-desktop)]">
-          <p className="brand-eyebrow mb-3">{"// Real people, in the wild"}</p>
-          <h2 className="brand-h2" style={{ letterSpacing: "-0.02em" }}>
+          <h2 className="brand-h2 text-[#0e1f3f]" style={{ letterSpacing: "-0.02em" }}>
             {title}
           </h2>
           {subtitle ? (
-            <p className="mt-2 text-3xl font-bold tracking-[-0.02em] text-black md:text-4xl">
+            <p className="mt-2 text-xl font-medium tracking-[-0.02em] text-black md:text-2xl">
               {subtitle}
             </p>
           ) : null}

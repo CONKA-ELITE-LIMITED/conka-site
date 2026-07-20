@@ -90,7 +90,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     <button
       type="button"
       onClick={() => openIngredients(id)}
-      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
+      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-black/20 px-4 py-3 text-sm font-medium text-black/70 transition-colors hover:border-black/40 hover:bg-black/[0.04] hover:text-black cursor-pointer"
     >
       Full ingredient list
       <svg
@@ -114,7 +114,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
-      <div key={id} className="bg-white border border-black/8 overflow-hidden">
+      <div key={id} className="bg-white border-2 border-[#1B2757] overflow-hidden">
         {/* Mobile: horizontal */}
         <div className="lg:hidden p-4">
           <div className="flex items-center gap-4 mb-4">
@@ -178,16 +178,13 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-        {"// The formulation · CONKA-03"}
-      </p>
       <h2
-        className="brand-h1 mb-4"
+        className="brand-h1 mb-4 text-[#0e1f3f]"
         style={{ letterSpacing: "var(--tracking-tight)" }}
       >
         Two shots. Built around your day.
       </h2>
-      <p className="text-base lg:text-lg leading-snug text-black/70 mb-10 max-w-[60ch]">
+      <p className="text-base lg:text-lg leading-snug text-black mb-10 max-w-[60ch]">
         Flow for the morning. Clear for the afternoon. Each formulated with
         scientifically-studied ingredients to support sustained focus, memory,
         and mental endurance.
@@ -203,7 +200,8 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             flowValue="flow"
             clearValue="clear"
             onChange={setActive}
-            className="mb-4"
+            variant="time"
+            className="mb-4 border border-[#1B2757]/30"
             inactiveClassName="bg-white"
           />
           {renderCard(active)}

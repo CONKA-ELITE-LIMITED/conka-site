@@ -69,11 +69,8 @@ export default function AppUSPSection() {
   return (
     <div className="w-full">
       {/* Trio header */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
-        {"// Proof, not promises · APP-01"}
-      </p>
       <h2
-        className="brand-h1 text-black mb-8 lg:mb-12"
+        className="brand-h1 text-[#0e1f3f] mb-8 lg:mb-12"
         style={{ letterSpacing: "-0.02em" }}
       >
         Most brands claim results. We let you measure yours.
@@ -143,7 +140,7 @@ export default function AppUSPSection() {
                   idx < ROWS.length - 1 ? "border-r border-black/12" : ""
                 } ${
                   isActive
-                    ? "bg-black text-white"
+                    ? "bg-[#1B2757] text-white"
                     : "bg-white text-black/55 hover:text-black"
                 }`}
               >
@@ -179,7 +176,7 @@ export default function AppUSPSection() {
 
       {/* CTA */}
       <div className="mt-8 lg:mt-12 flex justify-center lg:justify-start">
-        <ConkaCTAButton href="/app" meta="// track your own results">
+        <ConkaCTAButton href="/app" meta={null}>
           See the app
         </ConkaCTAButton>
       </div>

@@ -13,18 +13,23 @@ const META_VARIANTS = {
 
 const ACTIVE_META: string = META_VARIANTS.aspirational;
 
+/* Shared interaction: pill shape, navy fill that flips to a white fill with
+   navy text on hover, plus a subtle lift/press (motion-safe only). The `group`
+   lets the inner O-mark, arrow and meta line flip colour in step. */
+const CTA_BASE =
+  "group rounded-full border border-[#1B2757] text-white bg-[#1B2757] transition-all duration-200 ease-out hover:bg-white hover:text-[#1B2757] motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+
 /* Default variant — full CTA (O-icon + text + meta + horizontal arrow)
    at every viewport. Shrink-to-content with min/max bounds. Mobile has
-   tighter gap/padding so longer labels still fit on one line. Plain
-   rectangle so it reads unmistakably as a button. */
+   tighter gap/padding so longer labels still fit on one line. */
 const OUTER =
-  "inline-flex flex-row items-center gap-3 lg:gap-4 min-w-[14rem] max-w-md py-3.5 pl-3 pr-5 lg:pl-5 lg:pr-8 rounded-none text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+  `inline-flex flex-row items-center gap-3 lg:gap-4 min-w-[14rem] max-w-md py-3.5 pl-3 pr-5 lg:pl-5 lg:pr-8 ${CTA_BASE}`;
 
 /* Compact variant — forces the compact treatment on every viewport
    (e.g. in-card ingredients button where the full desktop treatment
    would feel too sales-y for a secondary action). */
 const COMPACT =
-  "group inline-flex flex-row items-center justify-between gap-3 w-full py-2.5 lg:py-3 px-4 rounded-none text-white bg-[#1B2757] transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+  `inline-flex flex-row items-center justify-between gap-3 w-full py-2.5 lg:py-3 px-4 ${CTA_BASE}`;
 
 export default function ConkaCTAButton({
   children,
@@ -54,7 +59,7 @@ export default function ConkaCTAButton({
       </span>
       <span
         aria-hidden
-        className="font-mono text-base lg:text-lg leading-none text-white/55 group-hover:text-white transition-colors"
+        className="font-mono text-base lg:text-lg leading-none text-white/55 group-hover:text-[#1B2757] transition-colors"
       >
         ↗
       </span>
@@ -68,8 +73,7 @@ export default function ConkaCTAButton({
           alt=""
           fill
           sizes="28px"
-          className="object-contain"
-          style={{ filter: "brightness(0) invert(1)" }}
+          className="object-contain [filter:brightness(0)_invert(1)] transition-[filter] duration-200 group-hover:[filter:brightness(0)]"
         />
       </span>
 
@@ -79,7 +83,7 @@ export default function ConkaCTAButton({
           {children}
         </span>
         {showMeta && (
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white mt-1 leading-none">
+          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white group-hover:text-[#1B2757] mt-1 leading-none transition-colors">
             {meta}
           </span>
         )}

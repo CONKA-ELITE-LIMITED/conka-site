@@ -77,16 +77,6 @@ export default function LandingHeroVideoDesktop() {
         <source src="/videos/both/BothStillWaterDesktop.mp4" type="video/mp4" />
       </video>
 
-      {/* Left wash — keeps brand-black copy readable over the pale footage
-          without darkening the centred shots. */}
-      <div
-        className="absolute inset-y-0 left-0 w-3/5 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to right, rgba(249,249,249,0.92) 0%, rgba(249,249,249,0.55) 45%, rgba(249,249,249,0) 100%)",
-        }}
-      />
-
       {/* Bottom fade — the video melts into the tinted section below rather than
           ending on a hard edge. Kept short so it only softens the very base. */}
       <div
@@ -106,14 +96,14 @@ export default function LandingHeroVideoDesktop() {
             className="mb-6"
           />
           <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05]"
+            className="text-[#0e1f3f] font-semibold text-5xl xl:text-6xl leading-[1.05]"
             style={{ letterSpacing: "-0.02em" }}
           >
             A Sharper Mind.
             <br />
             Morning to Evening.
           </h1>
-          <p className="mt-5 max-w-[42ch] text-lg leading-snug text-black/70">
+          <p className="mt-5 max-w-[42ch] text-lg leading-snug text-black">
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
           </p>
