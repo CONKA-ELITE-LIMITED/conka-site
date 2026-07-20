@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-20** | Added a Magic Mind-style benefits band under the conka-flow hero: textured paper tile, three benefit columns, and ingredient renders poking above and below
 - **2026-07-20** | Aligned ProductHeroV2 desktop PDP hero to the Magic Mind layout: de-carded flush gallery, MM-order left identity column with spec/social pills, plain-label accordions, and an ingredients pill
 - **2026-07-20** | V2 PDP plan tiles rebuilt Magic-Mind style (flat cards, price-led CTA, tap-to-expand benefits with free-shots badge)
 - **2026-07-20** | New ProductHeroMobileV2 for conka-flow (badges, split header, thumbnail carousel, MM-style rating)

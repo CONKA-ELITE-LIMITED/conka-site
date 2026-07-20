@@ -10,6 +10,7 @@ import {
 } from "@/app/components/product";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
@@ -203,6 +204,13 @@ export default function ConkaFlowPage() {
             onAddToCart={() => handleAddToCart("hero")}
             onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
           />
+        </div>
+      </section>
+
+      {/* ===== BENEFITS TILE (Magic Mind textured band) ===== */}
+      <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
+        <div className="brand-track">
+          <ProductBenefitTiles />
         </div>
       </section>
 
