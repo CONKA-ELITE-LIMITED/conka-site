@@ -73,16 +73,18 @@ export default function ProductBenefitTiles({
 
       {/* Textured tile */}
       <div
-        className="relative z-10 overflow-hidden rounded-2xl bg-[#F3F4F5] bg-cover bg-center px-6 py-12 shadow-[0_2px_40px_-8px_rgba(0,0,0,0.08)] md:px-14 md:py-16"
+        className="relative z-10 overflow-hidden rounded-2xl bg-[#F3F4F5] bg-cover bg-center px-6 py-16 shadow-[0_2px_40px_-8px_rgba(0,0,0,0.08)] md:px-14 md:py-16"
         style={{ backgroundImage: "url('/paperTextureTile.jpg')" }}
       >
-        <ul className="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-8">
+        {/* Mobile: portrait, stacked and centred (MM mobile). Desktop: 3 columns,
+            left-aligned. */}
+        <ul className="grid grid-cols-1 gap-12 text-center sm:grid-cols-3 sm:gap-8 sm:text-left">
           {items.map((item) => (
             <li key={item.title}>
-              <h3 className="text-3xl font-bold leading-[1.05] tracking-[-0.01em] text-black md:text-[2.5rem]">
+              <h3 className="text-4xl font-bold leading-[1.05] tracking-[-0.01em] text-black sm:text-3xl md:text-[2.5rem]">
                 {item.title}
               </h3>
-              <p className="mt-4 max-w-[34ch] text-base leading-relaxed text-black">
+              <p className="mx-auto mt-4 max-w-[34ch] text-base leading-relaxed text-black sm:mx-0">
                 {item.description}
               </p>
             </li>

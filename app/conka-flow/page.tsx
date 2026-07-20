@@ -96,6 +96,13 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
+        {/* ===== BENEFITS TILE (Magic Mind textured band, portrait on mobile) ===== */}
+        <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
+          <div className="brand-track">
+            <ProductBenefitTiles />
+          </div>
+        </section>
+
         {/* ===== UGC SOCIAL PROOF ===== */}
         <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
           <UGCMarquee />
