@@ -139,7 +139,7 @@ export default function StickyPurchaseFooterMobile({
           <button
             type="button"
             onClick={onAddToCart}
-            className="w-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-90 active:opacity-80"
+            className="w-full rounded-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-all duration-200 ease-out hover:opacity-95 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:opacity-90 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]"
           >
             Add to Cart · {formatPrice(cadencePrice)}
             {frequency}

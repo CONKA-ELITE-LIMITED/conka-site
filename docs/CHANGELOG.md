@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-20** | Pill-shaped CTA buttons with white-on-hover flip, nav hover pills, and branded buy-panel CTA
 - **2026-07-20** | When a visitor submits the Alia email-capture popup we now attach their email (and phone) to that person's Meta CAPI events, so logged-out AddToCart/InitiateCheckout carry real match keys and Meta can tie the eventual purchase back to the earlier anonymous events; sent only when captured, hashed server-side, no change for visitors who never sign up.
 - **2026-07-17** | Removed the strikethrough 'was' price sitting next to the free-shots-inclusive discount on the funnel cadence selectors and the /start buy box (the two numbers used different bases and read as wrong math), and stopped the buy-once option showing a discount badge in the funnel-c variant.
 - **2026-07-17** | Product hero, listicle tiles and funnel now show published per-SKU discount percentages (Flow/Clear monthly 43%, Both 46%, quarterly 63-69%) resolved from a single source of truth (discountPercent in FUNNEL_PRICING via getDisplayDiscount), and the SEO/AEO doc records prices and discounts deriving from that one table.

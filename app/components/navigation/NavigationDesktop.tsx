@@ -37,7 +37,7 @@ function NavMenuTrigger({
         onClick={() => setOpenMenu(isOpen ? null : menu)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
+        className="flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] hover:border-[#1B2757] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
       >
         {label}
         <svg
@@ -103,7 +103,7 @@ export default function NavigationDesktop({
                 onClick={() => setOpenMenu(openMenu === "shop" ? null : "shop")}
                 aria-expanded={openMenu === "shop"}
                 aria-haspopup="true"
-                className="flex items-center gap-2 bg-[#1B2757] text-white px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] [clip-path:polygon(12px_0,100%_0,100%_calc(100%-12px),calc(100%-12px)_100%,0_100%,0_12px)]"
+                className="flex items-center gap-2 rounded-full bg-[#1B2757] text-white px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums transition-all duration-200 ease-out hover:opacity-90 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:opacity-80 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +138,7 @@ export default function NavigationDesktop({
               </button>
             </div>
 
-            <nav className="flex items-center gap-7">
+            <nav className="flex items-center gap-3">
               <NavMenuTrigger
                 label={NAV_SCIENCE.title}
                 menu="science"
@@ -157,7 +157,7 @@ export default function NavigationDesktop({
               />
               <a
                 href={NAV_OUR_STORY.href}
-                className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] transition-colors"
+                className="rounded-full border border-transparent px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] hover:border-[#1B2757] transition-colors"
               >
                 {NAV_OUR_STORY.label}
               </a>

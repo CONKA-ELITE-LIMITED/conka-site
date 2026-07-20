@@ -23,6 +23,7 @@ import {
 } from "@/app/lib/productHeroHelpers";
 import HeroAccordions from "./HeroAccordions";
 import IngredientBottomSheet from "./IngredientBottomSheet";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 
 /* ============================================================================
  * ProductBuyPanel (+ TrustStrip)
@@ -671,13 +672,13 @@ export default function ProductBuyPanel({
       </div>
 
       <div>
-        <button
-          type="button"
+        <ConkaCTAButton
           onClick={onAddToCart}
-          className="w-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-90 active:opacity-80"
+          meta={null}
+          className="w-full !max-w-none"
         >
           {ctaLabel}
-        </button>
+        </ConkaCTAButton>
         <TrustBar />
       </div>
 
