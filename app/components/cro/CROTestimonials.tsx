@@ -158,7 +158,7 @@ function NavButton({
       type="button"
       aria-label={direction === "prev" ? "Previous reviews" : "Next reviews"}
       onClick={onClick}
-      className={`hidden lg:flex absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-white shadow-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2 ${className}`}
+      className={`hidden lg:flex absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-white shadow-sm transition-colors hover:bg-[var(--brand-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2 ${className}`}
     >
       <svg
         width="16"
