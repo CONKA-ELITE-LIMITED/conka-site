@@ -80,14 +80,11 @@ flowchart TD
 - Use the **`/review-analytics`** skill to verify all four systems (Vercel, Triple Whale, Meta Pixel, Meta CAPI dedup) fire after any funnel change.
 - For a live Meta CAPI spot-check: on `www.conka.io`, watch the `POST /api/meta/events` payload in DevTools (identity present), then confirm coverage/EMQ in Events Manager ~24-48h later (the client CAPI route sends no `test_event_code`, so upper-funnel events do **not** appear in the Test Events tab).
 
-### History & superseded
-| Doc | Status |
-|-----|--------|
-| [HEADLESS_ATTRIBUTION_FIX.md](HEADLESS_ATTRIBUTION_FIX.md) | **Historical log** — dated diagnosis + fix record (domain split, rebill leak, CAPI resilience). Kept for provenance; some "how wired" tables predate `shop.conka.io` |
-| [VERIFICATION_GUIDE.md](VERIFICATION_GUIDE.md) | **Superseded** by the `/review-analytics` skill; contains pre-2026-06 event assumptions |
-| [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) | **Superseded** (Feb 2026) — funnel taxonomy now owned by FUNNEL_EVENTS.md |
-| [TRIPLE_WHALE_INTEGRATION.md](TRIPLE_WHALE_INTEGRATION.md) | **Superseded** (Feb 2026) — reconnection-era options; reality is client `TriplePixel` only |
-| [SIMPLIFIED_GUIDE.md](SIMPLIFIED_GUIDE.md) | **Superseded** (Feb 2026) — Triple Whale "drain" era framing |
+### History & narrative
+| Doc | What it covers |
+|-----|----------------|
+| [HISTORY.md](HISTORY.md) | **Start here for the story** — high-level timeline of what changed, when, and why (including the four Feb-2026 guides removed 2026-07-20, recoverable from git) |
+| [HEADLESS_ATTRIBUTION_FIX.md](HEADLESS_ATTRIBUTION_FIX.md) | Dated diagnosis + fix log (domain split, rebill leak, CAPI resilience); some "how wired" tables predate the `shop.conka.io` move |
 
 ### Related (not analytics)
 - SEO / AEO lives in [`docs/seo-aeo/`](../seo-aeo/README.md), including the Search Console baseline.
