@@ -114,7 +114,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
-      <div key={id} className="bg-white border border-[#1B2757] overflow-hidden">
+      <div key={id} className="bg-white border-2 border-[#1B2757] overflow-hidden">
         {/* Mobile: horizontal */}
         <div className="lg:hidden p-4">
           <div className="flex items-center gap-4 mb-4">

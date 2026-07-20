@@ -1,27 +1,52 @@
+"use client";
+
+import { useRef, useState } from "react";
 import Image from "next/image";
 import type { Testimonial } from "@/app/components/testimonials/types";
 import { CURATED_TESTIMONIALS } from "@/app/lib/customerTestimonials";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
-import LabTrustBadges from "../landing/LabTrustBadges";
+import { TrustIconGuarantee, TrustIconShipping } from "../landing/icons";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 
 /* ============================================================================
  * CROTestimonials
  *
- * A responsive grid of verified customer reviews, modelled on the lander-b
- * Testimonials layout (image-top card + author + quote, one navy accent card).
- * Replaces the earlier single-card carousel so desktop shows a full wall of
- * proof (three across) instead of one review at a time. Static — no carousel
- * JS — so it renders as a server component.
+ * Horizontal carousel of verified customer reviews. Tiles are equal height
+ * while collapsed (the scroll row stretches every card to the tallest), and a
+ * "Read more" toggle expands the longer reviews in place. Below the CTA a
+ * three-item trust row (secure checkout / guarantee / free shipping) closes
+ * the section.
  * ========================================================================== */
 
-/* Six reviews keeps two tidy rows of three on desktop while showing far more
-   than the old one-at-a-time carousel. */
-const MAX_CARDS = 6;
-/* Which card renders as the dark navy accent (lander-b visual rhythm). */
-const NAVY_INDEX = 1;
+const TRUNCATE_AT = 200;
 
-function Stars({ rating }: { rating: number }) {
+/** Padlock — matches the stroke style of the shared trust icons. */
+function LockIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+
+const TRUST_ROW = [
+  { Icon: LockIcon, label: "Secure Checkout" },
+  { Icon: TrustIconGuarantee, label: "100-Day Guarantee" },
+  { Icon: TrustIconShipping, label: "Free Shipping" },
+];
+
+function HairlineStars({ rating }: { rating: number }) {
   return (
     <span
       className="inline-flex items-center gap-0.5"
@@ -30,8 +55,8 @@ function Stars({ rating }: { rating: number }) {
       {Array.from({ length: 5 }, (_, i) => (
         <span
           key={i}
-          className={i < rating ? "text-[#C9A24A]" : "text-current opacity-25"}
-          style={{ fontSize: "12px", lineHeight: 1 }}
+          className={i < rating ? "text-[#C9A24A]" : "text-black/15"}
+          style={{ fontSize: "11px", lineHeight: 1 }}
           aria-hidden
         >
           ★
@@ -41,56 +66,88 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-function ReviewCard({
+function ReviewTile({
   testimonial,
-  navy,
+  expanded,
+  onToggle,
 }: {
   testimonial: Testimonial;
-  navy: boolean;
+  expanded: boolean;
+  onToggle: () => void;
 }) {
+  const needsTruncation = testimonial.body.length > TRUNCATE_AT;
+
   return (
-    <figure
-      className={`m-0 flex flex-col overflow-hidden border ${
-        navy
-          ? "border-[#1B2757] bg-[#1B2757] text-white"
-          : "border-[#1B2757]/25 bg-white text-black"
-      }`}
-    >
+    <div className="flex h-full flex-col overflow-hidden border border-black/12 bg-white">
       {testimonial.photo && (
-        <div className="relative aspect-square w-full">
+        <div className="relative aspect-[4/3] w-full border-b border-black/12">
           <Image
             src={testimonial.photo}
             alt={`${testimonial.name} with CONKA`}
             fill
             loading="lazy"
             className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 1024px) 300px, 340px"
           />
         </div>
       )}
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        <div className="flex items-center justify-between gap-2">
-          <p className={`text-sm font-semibold ${navy ? "text-white" : "text-black"}`}>
-            {testimonial.name}
-          </p>
-          <Stars rating={testimonial.rating} />
+      <div className="flex flex-1 flex-col p-5">
+        <div className="mb-2 flex items-center justify-between gap-2 border-b border-black/8 pb-2">
+          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-black/55">
+            Verified · {testimonial.productLabel ?? "CONKA"}
+          </span>
+          <HairlineStars rating={testimonial.rating} />
         </div>
-        <p
-          className={`font-mono text-[9px] font-semibold uppercase tracking-[0.16em] ${
-            navy ? "text-white/60" : "text-black/50"
-          }`}
-        >
-          Verified · {testimonial.productLabel ?? "CONKA"}
+        <p className="mb-1 text-sm font-semibold text-black">
+          {testimonial.name}
         </p>
         <blockquote
-          className={`line-clamp-5 whitespace-pre-line text-sm leading-relaxed ${
-            navy ? "text-white/90" : "text-black/80"
+          className={`whitespace-pre-line text-sm leading-relaxed text-black/80 ${
+            needsTruncation && !expanded ? "line-clamp-4" : ""
           }`}
         >
-          &ldquo;{testimonial.body}&rdquo;
+          {testimonial.body}
         </blockquote>
+        {needsTruncation && (
+          <button
+            type="button"
+            onClick={onToggle}
+            className="mt-2 self-start font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#1B2757] underline underline-offset-2"
+          >
+            {expanded ? "Show less" : "Read more"}
+          </button>
+        )}
       </div>
-    </figure>
+    </div>
+  );
+}
+
+function NavButton({
+  direction,
+  onClick,
+  className = "",
+}: {
+  direction: "prev" | "next";
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={direction === "prev" ? "Previous reviews" : "Next reviews"}
+      onClick={onClick}
+      className={`hidden lg:flex absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 items-center justify-center bg-[#1B2757] text-white opacity-0 group-hover:opacity-100 transition-opacity hover:opacity-90 lab-clip-tr ${className}`}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <polyline
+          points={direction === "prev" ? "15 6 9 12 15 18" : "9 6 15 12 9 18"}
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+        />
+      </svg>
+    </button>
   );
 }
 
@@ -103,42 +160,68 @@ export default function CROTestimonials({
   hideCTA?: boolean;
   ctaHref?: string;
 } = {}) {
-  const cards = testimonials.slice(0, MAX_CARDS);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  const toggle = (i: number) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const tile = el.querySelector<HTMLElement>("[data-tile]");
+    const amount = tile ? tile.offsetWidth + 16 : el.offsetWidth * 0.9;
+    el.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
 
   return (
     <div>
       <div className="mb-8">
         <h2
-          className="brand-h2 mb-2 text-[#0e1f3f]"
+          className="brand-h2 text-[#0e1f3f]"
           style={{ letterSpacing: "-0.02em" }}
         >
           Real people. Real results.
         </h2>
-
-        {/* Star aggregate — proof signal above the wall of reviews */}
-        <div className="mt-2 inline-flex items-center gap-2 border border-black/8 bg-white px-3 py-1.5">
-          <span
-            className="text-black leading-none"
-            style={{ fontSize: "11px", letterSpacing: "0.05em" }}
-          >
-            ★★★★★
-          </span>
-          <span className="font-mono text-[10px] font-bold tabular-nums text-black">
-            4.7 / 5
-          </span>
-          <span className="text-black/15 text-[10px]" aria-hidden>
-            ·
-          </span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/50 tabular-nums">
-            500+ verified reviews
-          </span>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((t, i) => (
-          <ReviewCard key={t.name} testimonial={t} navy={i === NAVY_INDEX} />
-        ))}
+      <div className="relative group">
+        <NavButton
+          direction="prev"
+          onClick={() => scrollByCard(-1)}
+          className="left-0 -translate-x-1/2"
+        />
+        <NavButton
+          direction="next"
+          onClick={() => scrollByCard(1)}
+          className="right-0 translate-x-1/2"
+        />
+
+        <div
+          ref={scrollerRef}
+          role="region"
+          aria-label="Customer reviews"
+          className="flex items-stretch gap-4 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 pb-2 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {testimonials.map((t, i) => (
+            <div
+              key={t.name}
+              data-tile
+              className="w-[300px] shrink-0 snap-start lg:w-[340px]"
+            >
+              <ReviewTile
+                testimonial={t}
+                expanded={expanded.has(i)}
+                onToggle={() => toggle(i)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {!hideCTA && (
@@ -148,8 +231,18 @@ export default function CROTestimonials({
               Get Both from £{PRICE_PER_SHOT_BOTH}/shot
             </ConkaCTAButton>
           </div>
-          <div className="mt-6">
-            <LabTrustBadges />
+          <div className="mt-6 grid max-w-md grid-cols-3 gap-2 border-y border-black/10 py-4">
+            {TRUST_ROW.map(({ Icon, label }) => (
+              <div
+                key={label}
+                className="flex flex-col items-center gap-1.5 text-center"
+              >
+                <Icon className="h-5 w-5 text-[#1B2757]" />
+                <span className="text-[11px] font-semibold leading-tight text-black/70">
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
         </>
       )}
