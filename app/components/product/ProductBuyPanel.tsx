@@ -459,7 +459,7 @@ function FlatPlanCard({
     <div
       className={`relative w-full select-none rounded-md transition-all duration-200 ${
         isSelected
-          ? "border-2 border-[#1B2757] bg-[#f8f9fd]"
+          ? "border-[1.5px] border-[#1B2757] bg-[#f8f9fd]"
           : "border border-black/15 bg-white hover:border-black/30"
       }`}
     >
@@ -1019,7 +1019,7 @@ export default function ProductBuyPanel({
         />
       </div>
 
-      <div>
+      <div className={flatCards ? "mt-3" : undefined}>
         <ConkaCTAButton
           onClick={onAddToCart}
           meta={null}
