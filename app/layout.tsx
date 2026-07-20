@@ -7,6 +7,7 @@ import { CartProvider } from "@/app/context/CartContext";
 import { AuthProvider } from "@/app/context/AuthContext";
 import CartDrawer from "@/app/components/CartDrawer";
 import MetaPageViewTracker from "@/app/components/MetaPageViewTracker";
+import AliaIdentityBridge from "@/app/components/AliaIdentityBridge";
 import DelayedAnalytics from "@/app/components/DelayedAnalytics";
 import { SITE_ORIGIN } from "@/app/lib/site";
 import {
@@ -171,6 +172,7 @@ export default function RootLayout({
         className={`${neueHaas.variable} ${jetBrainsMono.variable} ${abcFavorit.variable} antialiased`}
       >
         <MetaPageViewTracker />
+        <AliaIdentityBridge />
         {/* Convex is NOT provided globally — the only consumer is /go, which is
             wrapped by its own layout. Keeping the ConvexReactClient (~80 KB) off
             every other page is a large TBT win. */}

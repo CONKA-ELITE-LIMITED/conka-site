@@ -34,6 +34,16 @@ const EXTERNAL_ID_COOKIE = "conka_uid";
 /** 400 days — the longest a browser will honour (Chrome caps `max-age` here). */
 const EXTERNAL_ID_MAX_AGE = 400 * 24 * 60 * 60;
 
+/**
+ * On-site captured identity (the Alia email-capture popup). The email and phone
+ * a visitor submits are Meta's strongest match keys. Persisted to `.conka.io` so
+ * they ride onto every later CAPI event and the Purchase, lifting Event Match
+ * Quality for the subset of cold traffic that signs up (SCRUM-1169). Stored raw
+ * (encoded by writeCookie); hashing happens server-side.
+ */
+const CAPTURED_EMAIL_COOKIE = "conka_em";
+const CAPTURED_PHONE_COOKIE = "conka_ph";
+
 /** Random UUID where available, with a unique-enough fallback. */
 function generateUuid(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -167,6 +177,7 @@ function sendToCAPI(payload: {
     fbp?: string;
     fbc?: string;
     email?: string;
+    phone?: string;
     external_id?: string;
   };
   custom_data?: Record<string, unknown>;
@@ -197,6 +208,59 @@ export function isPixelAvailable(): boolean {
 let userEmail: string | null = null;
 export function setMetaUserData(email: string | null): void {
   userEmail = email;
+}
+
+/**
+ * Persist an on-site captured email/phone (from the Alia popup) as first-party
+ * match keys. Written to `.conka.io` cookies so they survive navigation and the
+ * site -> checkout hop; `trackWithDedup` reads them straight back (the cookie is
+ * readable synchronously, so even an event fired later on this same page picks
+ * them up). Values are validated; junk is ignored. Raw email/phone are hashed
+ * server-side and never reach the browser pixel. No-op with nothing usable.
+ * Does not touch `userEmail`, which stays the logged-in customer's email so a
+ * popup submission can never overwrite an authenticated identity. See SCRUM-1169.
+ */
+export function setCapturedIdentity(
+  email?: string | null,
+  phone?: string | null
+): void {
+  const normalizedEmail = normalizeEmail(email);
+  if (normalizedEmail) {
+    writeCookie(CAPTURED_EMAIL_COOKIE, normalizedEmail, EXTERNAL_ID_MAX_AGE);
+  }
+  const normalizedPhone = normalizePhone(phone);
+  if (normalizedPhone) {
+    writeCookie(CAPTURED_PHONE_COOKIE, normalizedPhone, EXTERNAL_ID_MAX_AGE);
+  }
+}
+
+/** Trim + lowercase an email, returning null unless it is shaped like one. */
+function normalizeEmail(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const email = value.trim().toLowerCase();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
+}
+
+/** Keep a phone only if it carries digits; the server strips it to digits before hashing. */
+function normalizePhone(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const phone = value.trim();
+  return /\d/.test(phone) ? phone : null;
+}
+
+/**
+ * Read a captured identity cookie, decoding the percent-encoding writeCookie
+ * applies (an email's `@` becomes `%40` on write, so a bare read would send the
+ * encoded string for the server to hash). Undefined when absent or malformed.
+ */
+function readCapturedCookie(name: string): string | undefined {
+  const raw = readCookie(name);
+  if (!raw) return undefined;
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return undefined;
+  }
 }
 
 function hasPixelId(): boolean {
@@ -246,14 +310,16 @@ function trackWithDedup(
     event_id: eventId,
     event_time: eventTime,
     // Send browser id (_fbp), ad-click id (_fbc), our first-party visitor id, and
-    // the logged-in email so the server event matches on the strongest available
-    // signal — raises Event Match Quality and reduces Meta's reliance on modelled
-    // conversions. A logged-out ad visitor has no email, so `_fbc` and these two
-    // ids are the only identity they can carry.
+    // the strongest available identity so the server event matches well — raising
+    // Event Match Quality and reducing Meta's reliance on modelled conversions.
+    // Email/phone come from the logged-in customer OR an on-site capture (Alia),
+    // falling back to the persisted cookie so they survive a full page load. A
+    // logged-out visitor who never signs up carries only `_fbc` and these ids.
     user_data: {
       fbp: ensureFbp() ?? undefined,
       fbc: getFbc() ?? undefined,
-      email: userEmail ?? undefined,
+      email: userEmail ?? readCapturedCookie(CAPTURED_EMAIL_COOKIE),
+      phone: readCapturedCookie(CAPTURED_PHONE_COOKIE),
       external_id: getOrCreateExternalId() ?? undefined,
     },
     custom_data: customData,

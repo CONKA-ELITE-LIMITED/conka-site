@@ -27,6 +27,18 @@ function hashNormalized(value: string | undefined): string | undefined {
 }
 
 /**
+ * SHA-256 hex of a phone number, digits only (strip spaces, +, punctuation).
+ * Mirrors `hashPhone` in app/lib/metaCapi.ts so the client relay and the
+ * Purchase webhook hash phone identically.
+ */
+function hashPhone(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const digits = value.replace(/[^0-9]/g, "");
+  if (!digits) return undefined;
+  return createHash("sha256").update(digits).digest("hex");
+}
+
+/**
  * Production storefront host. CAPI forwards events only when the request comes
  * from here, so Vercel preview deploys (*.vercel.app) and localhost cannot push
  * events into the production dataset. Mirrors the client gate in metaPixel.ts.
@@ -41,6 +53,8 @@ interface CAPIRequestBody {
     fbp?: string;
     fbc?: string;
     email?: string;
+    /** Raw phone (any format); digits are extracted and hashed here. */
+    phone?: string;
     /** Raw first-party visitor id (conka_uid); hashed here before sending. */
     external_id?: string;
   };
@@ -95,6 +109,10 @@ export async function POST(request: NextRequest) {
     // Absent for logged-out visitors, which is expected.
     const emHash = hashNormalized(user_data?.email);
 
+    // Phone, when an on-site capture (Alia) supplied one — Meta's next strongest
+    // match key after email. Absent for visitors who never sign up, as expected.
+    const phHash = hashPhone(user_data?.phone);
+
     // `external_id` is always the first-party visitor id, never the email hash.
     // Meta only treats external_id as a match key when the SAME value appears
     // across a person's events, and the Purchase webhook sends conka_uid from the
@@ -116,6 +134,7 @@ export async function POST(request: NextRequest) {
         ...(user_data?.fbp && { fbp: user_data.fbp }),
         ...(user_data?.fbc && { fbc: user_data.fbc }),
         ...(emHash && { em: emHash }),
+        ...(phHash && { ph: phHash }),
         ...(externalIdHash && { external_id: externalIdHash }),
       },
       ...(custom_data && Object.keys(custom_data).length > 0 && { custom_data }),
