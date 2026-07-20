@@ -254,7 +254,7 @@ export default function CROTestimonials({
           role="region"
           aria-label="Customer reviews"
           onScroll={handleScroll}
-          className="flex items-stretch gap-4 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 pb-2 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex items-stretch gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {testimonials.map((t, i) => (
             <div

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-20** | Testimonials carousel: inset the first card inside the padded track (was flush to the mobile edge)
 - **2026-07-20** | Testimonials carousel: dot indicators, centered mobile CTA, and the reviews-count subtitle back under the title
 - **2026-07-20** | Cleaner testimonials carousel: equal-height tiles, gold stars only, attribution demoted to the card bottom
 - **2026-07-20** | Thicker (2px) neural-blue card borders and rebuilt testimonials as a horizontal carousel with expandable tiles and a trust row
