@@ -90,7 +90,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     <button
       type="button"
       onClick={() => openIngredients(id)}
-      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-[#1B2757] px-4 py-3 text-sm font-medium text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white cursor-pointer"
+      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-black/20 px-4 py-3 text-sm font-medium text-black/70 transition-colors hover:border-black/40 hover:bg-black/[0.04] hover:text-black cursor-pointer"
     >
       Full ingredient list
       <svg
@@ -114,7 +114,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
-      <div key={id} className="bg-white border border-black/8 overflow-hidden">
+      <div key={id} className="bg-white border border-[#1B2757] overflow-hidden">
         {/* Mobile: horizontal */}
         <div className="lg:hidden p-4">
           <div className="flex items-center gap-4 mb-4">
@@ -200,7 +200,8 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             flowValue="flow"
             clearValue="clear"
             onChange={setActive}
-            className="mb-4"
+            variant="time"
+            className="mb-4 border border-[#1B2757]/30"
             inactiveClassName="bg-white"
           />
           {renderCard(active)}

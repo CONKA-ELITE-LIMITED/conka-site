@@ -132,7 +132,7 @@ export default function ProductCard({
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 85vw, (max-width: 1024px) 33vw, 25vw"
         />
-        <div className="absolute top-0 right-0 bg-[#1B2757] text-white px-3 py-1.5 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)]">
+        <div className={`absolute top-0 right-0 ${product.imageTag === "MOST POPULAR" ? "bg-[#C9A24A]" : "bg-[#1B2757]"} text-white px-3 py-1.5 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)]`}>
           <span className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] leading-none">
             {product.imageTag}
           </span>
@@ -140,24 +140,24 @@ export default function ProductCard({
       </Link>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-5 lg:p-6">
+      <div className="flex flex-col flex-1 p-4 lg:p-5">
         {/* Mono product-name eyebrow */}
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50 mb-2 leading-none">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50 mb-1.5 leading-none">
           {product.name}
         </p>
 
         {/* Benefit headline */}
-        <h3 className="text-xl lg:text-2xl font-semibold text-black leading-tight mb-3">
+        <h3 className="text-lg lg:text-xl font-semibold text-black leading-tight mb-2">
           {product.benefitHeadline}
         </h3>
 
         {/* Body copy */}
-        <p className="text-sm text-black/60 leading-relaxed mb-4">
+        <p className="text-sm text-black/60 leading-relaxed mb-3">
           {product.bodyCopy}
         </p>
 
         {/* 3-metric stat grid */}
-        <div className="grid grid-cols-3 gap-1 py-3 border-y border-black/8 mb-4">
+        <div className="grid grid-cols-3 gap-1 py-2.5 border-y border-black/8 mb-3">
           {product.stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-start gap-1">
               <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-black/40 leading-none">
@@ -171,7 +171,7 @@ export default function ProductCard({
         </div>
 
         {/* Best-for list — em-dash bullets */}
-        <ul className="space-y-1.5 mb-4">
+        <ul className="space-y-1 mb-4">
           {product.bestFor.map((item) => (
             <li
               key={item}

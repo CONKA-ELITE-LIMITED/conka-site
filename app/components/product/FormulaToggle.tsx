@@ -33,6 +33,10 @@ interface FormulaToggleProps<T extends string> {
   /** Extra classes for the unselected tab (e.g. `bg-white` to lift it off an
    *  off-white section). Active tab styling is unaffected. */
   inactiveClassName?: string;
+  /** Label style. "formula" (default) reads "Flow · AM" / "Clear · PM" so the
+   *  product pages name the formula; "time" reads simply "Morning" /
+   *  "Afternoon" for surfaces that only need the time-of-day cue. */
+  variant?: "formula" | "time";
 }
 
 export default function FormulaToggle<T extends string>({
@@ -43,10 +47,11 @@ export default function FormulaToggle<T extends string>({
   className = "",
   ariaLabel = "Choose your formula",
   inactiveClassName = "",
+  variant = "formula",
 }: FormulaToggleProps<T>) {
   const tabs = [
-    { value: flowValue, label: "Flow", time: "AM", Icon: SunIcon },
-    { value: clearValue, label: "Clear", time: "PM", Icon: SunHorizonIcon },
+    { value: flowValue, label: "Flow", time: "AM", word: "Morning", Icon: SunIcon },
+    { value: clearValue, label: "Clear", time: "PM", word: "Afternoon", Icon: SunHorizonIcon },
   ];
 
   return (
@@ -55,7 +60,7 @@ export default function FormulaToggle<T extends string>({
       aria-label={ariaLabel}
       className={`flex gap-1 rounded-full bg-[#f0efea] p-[5px] ${className}`}
     >
-      {tabs.map(({ value: tabValue, label, time, Icon }) => {
+      {tabs.map(({ value: tabValue, label, time, word, Icon }) => {
         const isActive = tabValue === value;
         return (
           <button
@@ -72,7 +77,7 @@ export default function FormulaToggle<T extends string>({
             style={isActive ? { backgroundColor: NAVY } : undefined}
           >
             <Icon className="w-[18px] h-[18px] shrink-0" />
-            {label} · {time}
+            {variant === "time" ? word : `${label} · ${time}`}
           </button>
         );
       })}

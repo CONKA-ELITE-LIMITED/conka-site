@@ -230,7 +230,7 @@ export default function AthleteCredibilityCarousel({
       </div>
 
       {/* Feature card — portrait with overlaid nav, quote as the hero */}
-      <div className="bg-white border border-black/12 overflow-hidden mb-6">
+      <div className="bg-white border border-[#1B2757] overflow-hidden mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch">
           {/* Portrait — nav arrows + counter overlay directly on the asset.
               self-start on mobile stops the grid's items-stretch from
@@ -238,7 +238,7 @@ export default function AthleteCredibilityCarousel({
               so a stretched row collapses to 0 height and hides the image);
               lg restores stretch so the column matches the text height. */}
           <div
-            className="relative self-start lg:self-stretch aspect-square lg:aspect-auto lg:min-h-[480px] bg-[var(--brand-tint)] border-b lg:border-b-0 lg:border-r border-black/8 overflow-hidden"
+            className="relative self-start lg:self-stretch aspect-square lg:aspect-auto lg:min-h-[480px] bg-[var(--brand-tint)] border-b lg:border-b-0 lg:border-r border-[#1B2757]/30 overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >

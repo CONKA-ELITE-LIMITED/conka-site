@@ -1,6 +1,3 @@
-"use client";
-
-import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import type { Testimonial } from "@/app/components/testimonials/types";
 import { CURATED_TESTIMONIALS } from "@/app/lib/customerTestimonials";
@@ -8,24 +5,33 @@ import ConkaCTAButton from "../landing/ConkaCTAButton";
 import LabTrustBadges from "../landing/LabTrustBadges";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 
-const CARD_WIDTH_MOBILE = 300;
-const CARD_WIDTH_DESKTOP = 340;
-const GAP = 16;
-const TRANSITION_MS = 600;
-const CHAR_LIMIT = 200;
-const SWIPE_THRESHOLD = 50;
+/* ============================================================================
+ * CROTestimonials
+ *
+ * A responsive grid of verified customer reviews, modelled on the lander-b
+ * Testimonials layout (image-top card + author + quote, one navy accent card).
+ * Replaces the earlier single-card carousel so desktop shows a full wall of
+ * proof (three across) instead of one review at a time. Static — no carousel
+ * JS — so it renders as a server component.
+ * ========================================================================== */
 
-function HairlineStars({ rating }: { rating: number }) {
+/* Six reviews keeps two tidy rows of three on desktop while showing far more
+   than the old one-at-a-time carousel. */
+const MAX_CARDS = 6;
+/* Which card renders as the dark navy accent (lander-b visual rhythm). */
+const NAVY_INDEX = 1;
+
+function Stars({ rating }: { rating: number }) {
   return (
     <span
-      className="inline-flex items-center gap-0.5 text-black"
+      className="inline-flex items-center gap-0.5"
       aria-label={`${rating} out of 5`}
     >
       {Array.from({ length: 5 }, (_, i) => (
         <span
           key={i}
-          className={i < rating ? "text-black" : "text-black/15"}
-          style={{ fontSize: "11px", lineHeight: 1 }}
+          className={i < rating ? "text-[#C9A24A]" : "text-current opacity-25"}
+          style={{ fontSize: "12px", lineHeight: 1 }}
           aria-hidden
         >
           ★
@@ -35,150 +41,56 @@ function HairlineStars({ rating }: { rating: number }) {
   );
 }
 
-function SpecHeader({ testimonial }: { testimonial: Testimonial }) {
-  const product = (testimonial.productLabel ?? "—").toUpperCase();
-  const rating = testimonial.rating.toFixed(1);
-
-  return (
-    <div className="flex flex-col gap-1 pb-3 border-b border-black/8">
-      <div className="flex items-center gap-2">
-        <span
-          className="inline-flex w-3 h-3 items-center justify-center bg-black text-white text-[8px] font-bold leading-none"
-          aria-hidden
-        >
-          ✓
-        </span>
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-black/60 tabular-nums">
-          Verified · {testimonial.date}
-        </span>
-      </div>
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-[11px] font-bold tabular-nums text-black leading-none">
-            {rating}/5
-          </span>
-          <HairlineStars rating={testimonial.rating} />
-        </div>
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-black/50 truncate">
-          {product}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function TestimonialCard({
+function ReviewCard({
   testimonial,
-  cardWidth,
-  expanded,
-  onToggleExpand,
+  navy,
 }: {
   testimonial: Testimonial;
-  cardWidth: number;
-  expanded: boolean;
-  onToggleExpand: () => void;
+  navy: boolean;
 }) {
-  const needsTruncation = testimonial.body.length > CHAR_LIMIT;
-  const displayBody =
-    expanded || !needsTruncation
-      ? testimonial.body
-      : `${testimonial.body.slice(0, CHAR_LIMIT)}...`;
-
   return (
-    <div
-      className="flex-shrink-0 self-start bg-white border border-black/12 flex flex-col overflow-hidden"
-      style={{ width: cardWidth }}
+    <figure
+      className={`m-0 flex flex-col overflow-hidden border ${
+        navy
+          ? "border-[#1B2757] bg-[#1B2757] text-white"
+          : "border-[#1B2757]/25 bg-white text-black"
+      }`}
     >
-      <div className="p-5 flex flex-col gap-3">
-        <SpecHeader testimonial={testimonial} />
-
-        <p className="text-sm font-semibold text-black">{testimonial.name}</p>
-
-        {testimonial.headline && (
-          <p className="text-sm font-semibold text-black leading-snug">
-            {testimonial.headline}
-          </p>
-        )}
-
-        <div className="relative pl-5">
-          <span
-            className="absolute left-0 top-0 font-mono text-2xl font-bold text-black/25 leading-none select-none"
-            aria-hidden
-          >
-            &ldquo;
-          </span>
-          <p className="text-sm text-black/80 leading-relaxed whitespace-pre-line">
-            {displayBody}
-            {needsTruncation && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleExpand();
-                }}
-                className="ml-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black underline underline-offset-2"
-              >
-                {expanded ? "Show less" : "Read more"}
-              </button>
-            )}
-          </p>
-        </div>
-      </div>
-
       {testimonial.photo && (
-        <div className="relative w-full aspect-[4/3] border-t border-black/12">
+        <div className="relative aspect-square w-full">
           <Image
             src={testimonial.photo}
-            alt={`${testimonial.name} using CONKA`}
+            alt={`${testimonial.name} with CONKA`}
             fill
             loading="lazy"
             className="object-cover"
-            sizes="(max-width: 1024px) 300px, 340px"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         </div>
       )}
-    </div>
-  );
-}
-
-function NavButton({
-  direction,
-  onClick,
-  className = "",
-}: {
-  direction: "prev" | "next";
-  onClick: () => void;
-  className?: string;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={direction === "prev" ? "Previous review" : "Next review"}
-      onClick={onClick}
-      className={`hidden lg:flex absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 items-center justify-center bg-[#1B2757] text-white opacity-0 group-hover:opacity-100 transition-opacity hover:opacity-90 lab-clip-tr ${className}`}
-    >
-      {direction === "prev" ? (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <polyline
-            points="15 6 9 12 15 18"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-        </svg>
-      ) : (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <polyline
-            points="9 6 15 12 9 18"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-        </svg>
-      )}
-    </button>
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <div className="flex items-center justify-between gap-2">
+          <p className={`text-sm font-semibold ${navy ? "text-white" : "text-black"}`}>
+            {testimonial.name}
+          </p>
+          <Stars rating={testimonial.rating} />
+        </div>
+        <p
+          className={`font-mono text-[9px] font-semibold uppercase tracking-[0.16em] ${
+            navy ? "text-white/60" : "text-black/50"
+          }`}
+        >
+          Verified · {testimonial.productLabel ?? "CONKA"}
+        </p>
+        <blockquote
+          className={`line-clamp-5 whitespace-pre-line text-sm leading-relaxed ${
+            navy ? "text-white/90" : "text-black/80"
+          }`}
+        >
+          &ldquo;{testimonial.body}&rdquo;
+        </blockquote>
+      </div>
+    </figure>
   );
 }
 
@@ -191,73 +103,7 @@ export default function CROTestimonials({
   hideCTA?: boolean;
   ctaHref?: string;
 } = {}) {
-  const totalCards = testimonials.length;
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [cardWidth, setCardWidth] = useState(CARD_WIDTH_MOBILE);
-  const step = cardWidth + GAP;
-
-  useEffect(() => {
-    const update = () =>
-      setCardWidth(
-        window.innerWidth >= 1024 ? CARD_WIDTH_DESKTOP : CARD_WIDTH_MOBILE,
-      );
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  const extended = [...testimonials, ...testimonials, ...testimonials];
-
-  const [pos, setPos] = useState(totalCards);
-  const [smooth, setSmooth] = useState(true);
-  const touchStartRef = useRef<number>(0);
-
-  const realIndex = ((pos % totalCards) + totalCards) % totalCards;
-  const offset = -(pos * step);
-
-  const handleTransitionEnd = useCallback(() => {
-    if (pos >= totalCards * 2) {
-      setSmooth(false);
-      setPos(totalCards + (pos % totalCards));
-    } else if (pos < totalCards) {
-      setSmooth(false);
-      setPos(totalCards + (pos % totalCards));
-    }
-  }, [pos, totalCards]);
-
-  useEffect(() => {
-    if (!smooth) {
-      let id: number;
-      id = requestAnimationFrame(() => {
-        id = requestAnimationFrame(() => setSmooth(true));
-      });
-      return () => cancelAnimationFrame(id);
-    }
-  }, [smooth]);
-
-  const goToSlide = (targetReal: number) => {
-    const currentReal = ((pos % totalCards) + totalCards) % totalCards;
-    const diff = targetReal - currentReal;
-    setSmooth(true);
-    setPos((p) => p + diff);
-  };
-
-  const navigate = (direction: 1 | -1) => {
-    setSmooth(true);
-    setPos((p) => p + direction);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartRef.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const delta = touchStartRef.current - e.changedTouches[0].clientX;
-    if (Math.abs(delta) > SWIPE_THRESHOLD) {
-      setSmooth(true);
-      setPos((p) => p + (delta > 0 ? 1 : -1));
-    }
-  };
+  const cards = testimonials.slice(0, MAX_CARDS);
 
   return (
     <div>
@@ -269,88 +115,29 @@ export default function CROTestimonials({
           Real people. Real results.
         </h2>
 
-        {/* Star aggregate — visible signal before carousel loads */}
+        {/* Star aggregate — proof signal above the wall of reviews */}
         <div className="mt-2 inline-flex items-center gap-2 border border-black/8 bg-white px-3 py-1.5">
-          <span className="text-black leading-none" style={{ fontSize: "11px", letterSpacing: "0.05em" }}>
+          <span
+            className="text-black leading-none"
+            style={{ fontSize: "11px", letterSpacing: "0.05em" }}
+          >
             ★★★★★
           </span>
-          <span className="font-mono text-[10px] font-bold tabular-nums text-black">4.7 / 5</span>
-          <span className="text-black/15 text-[10px]" aria-hidden>·</span>
+          <span className="font-mono text-[10px] font-bold tabular-nums text-black">
+            4.7 / 5
+          </span>
+          <span className="text-black/15 text-[10px]" aria-hidden>
+            ·
+          </span>
           <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/50 tabular-nums">
             500+ verified reviews
           </span>
         </div>
       </div>
 
-      <div className="relative group">
-        <NavButton
-          direction="prev"
-          onClick={() => navigate(-1)}
-          className="left-0 -translate-x-1/2"
-        />
-        <NavButton
-          direction="next"
-          onClick={() => navigate(1)}
-          className="right-0 translate-x-1/2"
-        />
-
-        <div
-          className="overflow-hidden -mx-5 px-5 lg:mx-0 lg:px-0"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div
-            className="flex"
-            style={{
-              gap: GAP,
-              transform: `translate3d(${offset}px, 0, 0)`,
-              transition: smooth ? `transform ${TRANSITION_MS}ms ease` : "none",
-            }}
-            onTransitionEnd={handleTransitionEnd}
-          >
-            {extended.map((t, i) => {
-              const realIdx = i % totalCards;
-              return (
-                <TestimonialCard
-                  key={`slide-${i}`}
-                  testimonial={t}
-                  cardWidth={cardWidth}
-                  expanded={expandedIndex === realIdx}
-                  onToggleExpand={() =>
-                    setExpandedIndex((prev) =>
-                      prev === realIdx ? null : realIdx,
-                    )
-                  }
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="flex justify-center gap-1.5 mt-5"
-        role="tablist"
-        aria-label="Review navigation"
-      >
-        {testimonials.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            role="tab"
-            aria-selected={i === realIndex}
-            aria-label={`Review ${i + 1}`}
-            onClick={() => goToSlide(i)}
-            className="flex items-center justify-center w-6 h-6"
-          >
-            <span
-              className={`block w-4 h-1.5 transition-colors duration-300 ${
-                i === realIndex
-                  ? "bg-black"
-                  : "bg-black/20 hover:bg-black/40"
-              }`}
-            />
-          </button>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {cards.map((t, i) => (
+          <ReviewCard key={t.name} testimonial={t} navy={i === NAVY_INDEX} />
         ))}
       </div>
 

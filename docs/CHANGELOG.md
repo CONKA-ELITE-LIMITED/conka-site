@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-20** | Home section polish: neural-blue borders, Morning/Afternoon toggle, gold most-popular badge, neural-blue pickers/tiles, compact product cards, testimonials grid
 - **2026-07-20** | Simplified home sections: removed eyebrow mono lines and title reference anchors, recoloured titles dark neural blue and descriptions black
 - **2026-07-20** | Home hero recolour (dark neural blue title, black copy) and removed the video legibility wash
 - **2026-07-20** | Pill-shaped CTA buttons with white-on-hover flip, nav hover pills, and branded buy-panel CTA

@@ -102,7 +102,7 @@ export default function UGCMarquee({
             {title}
           </h2>
           {subtitle ? (
-            <p className="mt-2 text-3xl font-bold tracking-[-0.02em] text-black md:text-4xl">
+            <p className="mt-2 text-xl font-medium tracking-[-0.02em] text-black md:text-2xl">
               {subtitle}
             </p>
           ) : null}

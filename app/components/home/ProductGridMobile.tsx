@@ -110,7 +110,7 @@ export default function ProductGridMobile(props?: ProductGridProps) {
                     idx > 0 ? "border-l border-black/12" : ""
                   } ${
                     isActive
-                      ? "bg-black text-white"
+                      ? "bg-[#1B2757] text-white"
                       : "bg-white text-black hover:bg-[var(--brand-tint)]"
                   }`}
                 >

@@ -140,7 +140,7 @@ export default function AppUSPSection() {
                   idx < ROWS.length - 1 ? "border-r border-black/12" : ""
                 } ${
                   isActive
-                    ? "bg-black text-white"
+                    ? "bg-[#1B2757] text-white"
                     : "bg-white text-black/55 hover:text-black"
                 }`}
               >
