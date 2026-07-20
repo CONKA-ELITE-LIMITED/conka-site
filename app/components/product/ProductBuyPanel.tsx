@@ -407,20 +407,24 @@ const GuaranteeIcon = () => (
   </svg>
 );
 
-/** Subscription benefits (icon + label) revealed when the tile expands.
+/** Subscription/delivery benefits (icon + label) revealed when the tile expands.
  *  Mirrors the "Included free" value stack from the listicle purchase card. */
-function planBenefits(freeShots: number) {
+function subscriptionBenefits(freeShots: number) {
   return [
     ...(freeShots > 0
       ? [{ Icon: ShotIcon, label: `${freeShots} bonus shots on your first order` }]
       : []),
     { Icon: BoxIcon, label: "Free UK postage" },
-    { Icon: AppIcon, label: "The CONKA app" },
-    { Icon: BrainIcon, label: "Personal Brain Coach" },
     { Icon: CancelIcon, label: "Pause, skip, or cancel anytime" },
     { Icon: GuaranteeIcon, label: "100-day money-back guarantee" },
   ];
 }
+
+/** App benefits shown under the "Full CONKA App Access" separator. */
+const APP_BENEFITS = [
+  { Icon: AppIcon, label: "The CONKA app" },
+  { Icon: BrainIcon, label: "Personal Brain Coach" },
+];
 
 /**
  * Magic Mind-style flat plan card: title + prices inline, a tap-to-expand
@@ -554,7 +558,24 @@ function FlatPlanCard({
               </span>
             </summary>
             <ul className="mt-2 flex flex-col gap-1.5">
-              {planBenefits(freeShots).map(({ Icon, label }) => (
+              {subscriptionBenefits(freeShots).map(({ Icon, label }) => (
+                <li
+                  key={label}
+                  className="flex items-center gap-2 text-[12px] font-medium text-black"
+                >
+                  <span className="shrink-0 text-[#1B2757]">
+                    <Icon />
+                  </span>
+                  {label}
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-3 border-t border-black/10 pt-2.5 text-[10px] font-bold uppercase tracking-wide text-black/45">
+              Full CONKA App Access
+            </p>
+            <ul className="mt-2 flex flex-col gap-1.5">
+              {APP_BENEFITS.map(({ Icon, label }) => (
                 <li
                   key={label}
                   className="flex items-center gap-2 text-[12px] font-medium text-black"
