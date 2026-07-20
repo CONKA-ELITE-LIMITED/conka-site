@@ -123,7 +123,7 @@ Written so Phase 3 can repeat the exact pass and so anyone can scrutinise whethe
 
 ### The reproducible monthly pass (Phase 3), free stack in order
 
-1. **Google Search Console (free, ours) — do this first.** Real queries already reaching conka.io, filtered by demographic theme. The truest signal we have; better than any tool because it is our actual audience. Baseline: `docs/analytics/seo-search-console-baseline.md`.
+1. **Google Search Console (free, ours) — do this first.** Real queries already reaching conka.io, filtered by demographic theme. The truest signal we have; better than any tool because it is our actual audience. Baseline: `docs/seo-aeo/seo-search-console-baseline.md`.
 2. **Direct Reddit + Quora search in a browser (free).** Recovers the raw emotional phrasings this automated pass could not reach. This is the single biggest gap to close.
 3. **AnswerSocrates (free).** PAA + autocomplete question harvest per seed theme.
 4. **AlsoAsked free tier (~3 searches/day).** The nested PAA relationship tree for the top seeds only.
@@ -347,7 +347,7 @@ Six angles, deduped and clustered within each, ~15 to 20 questions each. Columns
 - The engine-facing Notion contract (handoff target): `docs/development/featurePlans/blog-notion-engine-brief.md`
 - Keyword map (volume/KD source to mine from, tiebreaker only): `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
 - SEO/AEO programme master plan: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`
-- Search Console baseline (the free GSC step in Phase 3): `docs/analytics/seo-search-console-baseline.md`
+- Search Console baseline (the free GSC step in Phase 3): `docs/seo-aeo/seo-search-console-baseline.md`
 
 ## Jira
 

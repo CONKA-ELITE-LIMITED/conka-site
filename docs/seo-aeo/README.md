@@ -10,7 +10,7 @@ What remains is not on-site engineering. **Phase 6** (the blog) is gated on a co
 
 ## Why it mattered
 
-A pre-change Google Search Console baseline (`docs/analytics/seo-search-console-baseline.md`) showed roughly 99% of organic traffic was brand ("conka") and only 17 URLs had drawn any impression in three months. The cause was structural, not copy: the site was telling Google every page was a duplicate of the homepage, and the money pages shared one title and description. The organic surface was effectively switched off while the site paid for traffic. This programme fixed that at the infrastructure level.
+A pre-change Google Search Console baseline (`docs/seo-aeo/seo-search-console-baseline.md`) showed roughly 99% of organic traffic was brand ("conka") and only 17 URLs had drawn any impression in three months. The cause was structural, not copy: the site was telling Google every page was a duplicate of the homepage, and the money pages shared one title and description. The organic surface was effectively switched off while the site paid for traffic. This programme fixed that at the infrastructure level.
 
 ## What is live
 
@@ -106,7 +106,7 @@ The only on-site phase still open is the blog, and it is gated on a content engi
 
 - Build archive and full history: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`
 - Keyword research (source input): `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
-- Search Console baseline: `docs/analytics/seo-search-console-baseline.md`
+- Search Console baseline: `docs/seo-aeo/seo-search-console-baseline.md`
 - Pricing audit log: `docs/PRICING_HISTORY.md`
 - Phase 6 plan: `docs/development/featurePlans/blog-informational-content-surface.md`
 - Phase 10 (FAQ answer surface), shipped: `docs/features/FAQ_SYSTEM.md`

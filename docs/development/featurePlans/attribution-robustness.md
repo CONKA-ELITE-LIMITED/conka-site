@@ -2,7 +2,7 @@
 
 **Status:** Phase 1 scoped (active). Phases 2-4 future.
 **Owner:** Rudh. **Branch:** `analytics-capi-resilience`.
-**Related:** `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md` (prior work), `docs/analytics/META_PIXEL_AND_CAPI.md`, `docs/analytics/TRIPLE_WHALE_INTEGRATION.md`.
+**Related:** `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md` (prior work), `docs/analytics/META_PIXEL_AND_CAPI.md`, `docs/analytics/HISTORY.md` (Triple Whale evolution + timeline).
 
 ## Problem
 

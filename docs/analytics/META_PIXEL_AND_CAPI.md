@@ -11,9 +11,11 @@ This doc describes how Meta tracking is implemented and how to get **Purchase** 
 | **PageView**       | Every page load (client component after pixel)    | `event_id` + CAPI  |
 | **ViewContent**    | Product/protocol pages (conka-flow, conka-clarity, protocol/[id]) | `event_id` + CAPI  |
 | **AddToCart**      | After successful add in `CartContext`              | `event_id` + CAPI  |
+| **InitiateCheckout** | At the checkout click, before the Shopify redirect (`CartDrawer` + funnel/lander checkout helpers) | `event_id` + CAPI |
+| **Lead**           | `/go` landing-quiz results screen                  | `event_id` + CAPI  |
 | **Purchase**       | Server-side, `orders/paid` webhook (see below)     | order ID as `event_id` |
 
-**InitiateCheckout is no longer fired by this frontend (2026-06-01, SCRUM-1043).** It is owned solely by the Shopify **Facebook & Instagram channel**, which fires it on the real checkout page. Firing it from both places caused double/triple counting with no shared `event_id`, so the two frontend fires (`CartDrawer`, `funnelCheckout`) were removed.
+**InitiateCheckout** is fired from this frontend at the checkout-click moment, just before redirecting to the Shopify-hosted checkout (`CartDrawer` and the funnel/lander checkout helpers). Headless note: the checkout lives on a different domain, so the pixel cannot fire IC there — we fire it on our own domain first via `trackWithDedup` (fbq + CAPI under one `event_id`), both using beacon/`keepalive` transport so they survive the navigation. (This reverses the temporary 2026-06-01 removal under SCRUM-1043, which had handed IC solely to the Shopify Facebook & Instagram channel.)
 
 **Purchase** is sent **server-side** from this repo via a Shopify `orders/paid` webhook (see "Server-side Purchase" below). **AddPaymentInfo** is not sent by this repo (it occurs on Shopify checkout; rely on the channel if needed). The Shopify Facebook channel also sends its own Purchase from checkout — our server event uses the **Shopify order ID as `event_id`** so Meta deduplicates the two rather than double-counting.
 
@@ -34,7 +36,7 @@ Added 2026-06-01 (SCRUM-1046/1047) as the core of the headless attribution fix (
 
 ## Implementation Details
 
-- **Client:** `app/lib/metaPixel.ts` – generates `event_id`, calls `fbq('track', ..., { eventID })`, and sends the same event to `POST /api/meta/events` (CAPI) with `event_id` and `user_data` (`fbp`, `fbc`, `external_id`, plus `email` when a customer is logged in).
+- **Client:** `app/lib/metaPixel.ts` – generates `event_id`, calls `fbq('track', ..., { eventID })`, and sends the same event to `POST /api/meta/events` (CAPI) with `event_id` and `user_data` (`fbp`, `fbc`, `external_id`, plus `email`/`phone` when a customer is logged in **or** has been captured on-site by the Alia popup — see `EMAIL_CAPTURE_ENRICHMENT.md`).
 - **Server:** `app/api/meta/events/route.ts` – forwards to Meta Graph API with `event_id`, `user_data`, and `event_source_url` for deduplication. Hashes `email` into `em` and `external_id` (SHA-256, trim + lowercase, identical to `hashNormalized` in `metaCapi.ts` so the two ends match), and adds `client_ip_address` / `client_user_agent`. If `META_CAPI_ACCESS_TOKEN` or pixel ID is missing, the route returns 200 and does nothing so the client never fails.
 - **Deduplication:** Same `event_id` is sent with the pixel and with CAPI so Meta can merge them.
 - **`_fbp` generation:** `fbevents.js` loads async, so events used to fire before Meta wrote `_fbp` and shipped without it. `ensureFbp()` now writes one in Meta's own format (`fb.1.<timestamp>.<10-digit random>`) when absent, never overwriting an existing value, so the pixel adopts ours rather than issuing a competing id.

@@ -1,5 +1,7 @@
 # Meta Attribution — Full State, Issues, and Plan (2026-07-16)
 
+> **Update (2026-07-20).** Two things here have moved on: (1) the upper-funnel identity plan (`external_id` + `_fbp`) shipped as SCRUM-1158; (2) the premise that we cannot send email for cold traffic (Klaviyo popup off) is now overtaken by on-site capture via the Alia popup (SCRUM-1169, see [EMAIL_CAPTURE_ENRICHMENT.md](EMAIL_CAPTURE_ENRICHMENT.md)). The Problem-C / Conservative-data-sharing narrative below remains authoritative. Current-state index: [README.md](README.md).
+
 **Purpose:** one self-contained document. What is wired, what is broken (with evidence), what to do, which files, and how to verify. A new chat should be able to execute from this without re-deriving anything.
 
 **Scope of this doc:** the tracking/signal we send to Meta. It does NOT prescribe media-buying (ad-set structure, budgets) — that is the marketing team's domain and explicitly out of scope.

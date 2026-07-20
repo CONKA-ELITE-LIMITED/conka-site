@@ -276,5 +276,5 @@ Ordered by value-per-effort. The engineering (blog Phase 1) proceeds unchanged; 
 - Blog engine plan (the answering machine): `docs/development/featurePlans/blog-informational-content-surface.md`
 - Engine-facing Notion spec: `docs/development/featurePlans/blog-notion-engine-brief.md`
 - Keyword research (SEO input, to be augmented by question mining): `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
-- Search Console baseline: `docs/analytics/seo-search-console-baseline.md`
+- Search Console baseline: `docs/seo-aeo/seo-search-console-baseline.md`
 - Real-world evidence report (citation magnet): `public/CONKA-Real-World-Evidence-Report.pdf`
