@@ -4,14 +4,12 @@ import { useState, useEffect } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
-  ProductHero,
   ProductHeroMobile,
   ClinicalIngredients,
   FormulaBenefitsPillars,
   ProductWhatYouGet,
-  StickyPurchaseFooter,
-  StickyPurchaseFooterMobile,
 } from "@/app/components/product";
+import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
@@ -29,7 +27,6 @@ import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 import {
   CadenceType,
   getCadenceVariantByFormula,
-  getCadencePricingByFormula,
 } from "@/app/lib/cadenceData";
 
 const FLOW_FAQ_IMAGE = {
@@ -46,9 +43,10 @@ export default function ConkaFlowPage() {
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
 
-  const cadencePricing = getCadencePricingByFormula("01", selectedCadence);
-  const cadencePrice = cadencePricing.price;
-  const cadenceFreeShots = cadencePricing.freeShots;
+  // Sticky-footer pricing — restore with the footers after the V2 hero build (SCRUM-1171).
+  // const cadencePricing = getCadencePricingByFormula("01", selectedCadence);
+  // const cadencePrice = cadencePricing.price;
+  // const cadenceFreeShots = cadencePricing.freeShots;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta)
   useEffect(() => {
@@ -175,12 +173,13 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        <StickyPurchaseFooterMobile
+        {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
+        {/* <StickyPurchaseFooterMobile
           formulaId="01"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
           onAddToCart={() => handleAddToCart("sticky_footer")}
-        />
+        /> */}
 
         <Footer />
       </div>
@@ -193,9 +192,11 @@ export default function ConkaFlowPage() {
       <Navigation />
 
       {/* ===== SECTION 1: HERO ===== */}
-      <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
-        <div className="brand-track">
-          <ProductHero
+      {/* V2 hero runs wider than the 1280 brand-track and with a tighter gutter
+          to sit closer to the Magic Mind reference (SCRUM-1171). */}
+      <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[3vw]" aria-label="Product hero">
+        <div className="brand-track !max-w-[1480px]">
+          <ProductHeroV2
             formulaId="01"
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}
@@ -283,13 +284,14 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      <StickyPurchaseFooter
+      {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
+      {/* <StickyPurchaseFooter
         formulaId="01"
         selectedCadence={selectedCadence}
         cadencePrice={cadencePrice}
         cadenceFreeShots={cadenceFreeShots}
         onAddToCart={() => handleAddToCart("sticky_footer")}
-      />
+      /> */}
 
       <Footer />
     </div>

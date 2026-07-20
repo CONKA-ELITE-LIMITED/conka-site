@@ -49,6 +49,13 @@ export interface ProductBuyPanelProps {
   /** Mobile hides the key-benefit pills. They eat scarce real estate and the
       same proof appears further down (WhatYouFeel, TrustBar, plan detail). */
   hideKeyBenefits?: boolean;
+  /** V2 3-column layout moves the ingredients button + accordions into the
+      left identity column, so the buy box on the right suppresses them here. */
+  hideSecondary?: boolean;
+  /** V2 flat cards (Magic Mind style): no expand-on-select unfurl inside the
+      card; shows a compare-at strikethrough, and the shared "what's included"
+      list moves below the cards. Legacy keeps the expanding PlanDetail. */
+  flatCards?: boolean;
 }
 
 /**
@@ -60,14 +67,21 @@ export function ProductHeroHeader({
   formulaId,
   showSubline = true,
   showHeadline = true,
+  blackText = false,
 }: {
   formulaId: ProductHeroId;
   /** Desktop keeps the keyword subline inside the <h1>. Mobile drops it below the
       image (rendered by ProductHeroLede), so it is suppressed here. */
   showSubline?: boolean;
   showHeadline?: boolean;
+  /** V2 left column renders all copy in solid black (no muted greys). */
+  blackText?: boolean;
 }) {
   const content = getHeroContent(formulaId);
+  const usersColor = blackText ? "text-black" : "text-black/50";
+  const eyebrowColor = blackText ? "text-black" : "text-black/50";
+  const sublineColor = blackText ? "text-black" : "text-black/65";
+  const headlineColor = blackText ? "text-black" : "text-black/75";
   return (
     <>
       {/* Stars + review/usage counts in one compact line */}
@@ -90,13 +104,13 @@ export function ProductHeroHeader({
         <span className="text-sm font-bold text-black">
           4.7 <span className="font-semibold">from 622+ Reviews</span>
         </span>
-        <span className="text-sm text-black/50">· 5,000+ daily users</span>
+        <span className={`text-sm ${usersColor}`}>· 5,000+ daily users</span>
       </div>
 
       {/* Eyebrow + product name. On desktop the keyword subline sits inside the
           <h1>; on mobile it drops below the image via ProductHeroLede. */}
       <div>
-        <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+        <p className={`mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${eyebrowColor}`}>
           Daily Nootropic Brain Shots
         </p>
         <h1 className="leading-tight">
@@ -107,13 +121,13 @@ export function ProductHeroHeader({
             {content.name}
           </span>
           {showSubline && content.seoHeading && (
-            <span className="mt-1.5 block text-base font-medium leading-snug text-black/65 md:text-lg">
+            <span className={`mt-1.5 block text-base font-medium leading-snug md:text-lg ${sublineColor}`}>
               {content.seoHeading}
             </span>
           )}
         </h1>
         {showHeadline && (
-          <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
+          <p className={`mt-2 text-sm leading-relaxed md:text-base ${headlineColor}`}>
             {content.headline}
           </p>
         )}
@@ -346,6 +360,7 @@ function PlanSelector({
   onCadenceChange,
   onOtpAddToCart,
   shotsPerDay,
+  flatCards,
 }: Omit<ProductBuyPanelProps, "onAddToCart"> & { shotsPerDay: number }) {
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
   const otpSelected = selectedCadence === "monthly-otp";
@@ -401,6 +416,11 @@ function PlanSelector({
               </div>
               <div className="mt-2 flex items-center justify-between gap-2">
                 <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black">
+                  {flatCards && pricing.compareAtPrice && (
+                    <s className="mr-1.5 font-normal text-black/40">
+                      {formatPrice(pricing.compareAtPrice)}
+                    </s>
+                  )}
                   {formatPrice(pricing.price)} every {weeksPerCycle} weeks
                 </span>
                 <span className="font-mono text-[11px] font-bold uppercase tabular-nums tracking-[0.08em] text-black">
@@ -413,7 +433,7 @@ function PlanSelector({
               <FreeShotsBadge freeShots={pricing.freeShots} cadence={cadence} className="mt-2.5" />
             </button>
 
-            {isSelected && <PlanDetail />}
+            {isSelected && !flatCards && <PlanDetail />}
           </div>
         );
       })}
@@ -615,6 +635,8 @@ export default function ProductBuyPanel({
   onOtpAddToCart,
   hideHeader,
   hideKeyBenefits,
+  hideSecondary,
+  flatCards,
 }: ProductBuyPanelProps) {
   const productType = getHeroProductType(formulaId);
   const shotsPerDay = productType === "both" ? 2 : 1;
@@ -668,6 +690,7 @@ export default function ProductBuyPanel({
           onCadenceChange={onCadenceChange}
           onOtpAddToCart={onOtpAddToCart}
           shotsPerDay={shotsPerDay}
+          flatCards={flatCards}
         />
       </div>
 
@@ -682,11 +705,38 @@ export default function ProductBuyPanel({
         <TrustBar />
       </div>
 
+      {/* Flat-card layout relocates the per-plan "what's included" list here,
+          shared across plans, in place of the expanding PlanDetail. */}
+      {flatCards && (
+        <div>
+          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+            What&apos;s included
+          </p>
+          <ul className="flex flex-col gap-1.5">
+            {PLAN_INCLUDED.map((item) => (
+              <li
+                key={item}
+                className="flex items-center gap-2 text-[13px] font-medium text-black"
+              >
+                <span className="text-[#1B2757]" aria-hidden>
+                  ✓
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <WhatYouFeel />
 
-      <IngredientListButton formulas={FORMULA_TABS[productType]} />
+      {!hideSecondary && (
+        <>
+          <IngredientListButton formulas={FORMULA_TABS[productType]} />
 
-      <HeroAccordions productType={productType} hideIngredients />
+          <HeroAccordions productType={productType} hideIngredients />
+        </>
+      )}
     </>
   );
 }
