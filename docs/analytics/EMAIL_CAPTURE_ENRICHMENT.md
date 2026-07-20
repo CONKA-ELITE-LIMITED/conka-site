@@ -22,9 +22,10 @@ popup are unaffected: the fields are simply absent.
 2. `app/components/AliaIdentityBridge.tsx` (mounted in `app/layout.tsx`) listens and
    calls `setCapturedIdentity(email, phone)` in `app/lib/metaPixel.ts`.
 3. `setCapturedIdentity` validates and persists them to `.conka.io` cookies
-   (`conka_em`, `conka_ph`) and mirrors the email into the in-memory `userEmail`.
-4. Every later `trackWithDedup` event reads them (in-memory email first, else the
-   cookie) and posts them to `/api/meta/events`.
+   (`conka_em`, `conka_ph`). It does not touch `userEmail`, so a popup submission
+   never overwrites a logged-in customer's authenticated email.
+4. Every later `trackWithDedup` event reads identity (logged-in `userEmail` first,
+   else the captured cookie) and posts it to `/api/meta/events`.
 5. `app/api/meta/events/route.ts` hashes email (`hashNormalized`) and phone
    (`hashPhone`, digits-only) with SHA-256 and sends `em` / `ph`. Raw values never
    reach the browser pixel.

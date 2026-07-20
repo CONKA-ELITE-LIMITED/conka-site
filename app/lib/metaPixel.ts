@@ -212,11 +212,13 @@ export function setMetaUserData(email: string | null): void {
 
 /**
  * Persist an on-site captured email/phone (from the Alia popup) as first-party
- * match keys. Written to a `.conka.io` cookie so they survive navigation and the
- * site -> checkout hop, and mirrored into `userEmail` so an event fired later on
- * this same page picks the email up immediately. Values are validated; junk is
- * ignored. Raw email/phone are hashed server-side and never reach the browser
- * pixel. No-op with nothing usable. See SCRUM-1169.
+ * match keys. Written to `.conka.io` cookies so they survive navigation and the
+ * site -> checkout hop; `trackWithDedup` reads them straight back (the cookie is
+ * readable synchronously, so even an event fired later on this same page picks
+ * them up). Values are validated; junk is ignored. Raw email/phone are hashed
+ * server-side and never reach the browser pixel. No-op with nothing usable.
+ * Does not touch `userEmail`, which stays the logged-in customer's email so a
+ * popup submission can never overwrite an authenticated identity. See SCRUM-1169.
  */
 export function setCapturedIdentity(
   email?: string | null,
@@ -225,7 +227,6 @@ export function setCapturedIdentity(
   const normalizedEmail = normalizeEmail(email);
   if (normalizedEmail) {
     writeCookie(CAPTURED_EMAIL_COOKIE, normalizedEmail, EXTERNAL_ID_MAX_AGE);
-    userEmail = normalizedEmail;
   }
   const normalizedPhone = normalizePhone(phone);
   if (normalizedPhone) {
