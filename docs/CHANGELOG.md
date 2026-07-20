@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-20** | Cleaner testimonials carousel: equal-height tiles, gold stars only, attribution demoted to the card bottom
 - **2026-07-20** | Thicker (2px) neural-blue card borders and rebuilt testimonials as a horizontal carousel with expandable tiles and a trust row
 - **2026-07-20** | Home section polish: neural-blue borders, Morning/Afternoon toggle, gold most-popular badge, neural-blue pickers/tiles, compact product cards, testimonials grid
 - **2026-07-20** | Simplified home sections: removed eyebrow mono lines and title reference anchors, recoloured titles dark neural blue and descriptions black
