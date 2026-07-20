@@ -1,5 +1,7 @@
 # Triple Whale Integration Guide
 
+> **SUPERSEDED (Feb 2026 doc, flagged 2026-07-20).** Reconnection-era options; the reality is the client `TriplePixel` only, loaded in `app/components/DelayedAnalytics.tsx`. Current state: [README.md](README.md).
+
 **Purpose:** Reconnect Triple Whale to your new Next.js site and decide what data to send.
 
 **Current Situation:**

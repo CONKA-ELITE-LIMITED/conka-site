@@ -7,7 +7,7 @@
 **Status:** Scoped and finalised. Phase 1 built (SCRUM-1151); Phase 2 built (SCRUM-1152); Phase 3 ready to ticket.
 **Owner:** Rudh
 **Part of:** The SEO / AEO programme (`docs/development/featurePlans/seo-aeo-metadata-foundation.md`). This is Phase 6, the only remaining phase.
-**Source inputs:** `CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research), `docs/analytics/seo-search-console-baseline.md` (baseline), a Magic Mind blog UX teardown (2026-07-15), and a live inspection of the Notion "Blog Hub" API output.
+**Source inputs:** `CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research), `docs/seo-aeo/seo-search-console-baseline.md` (baseline), a Magic Mind blog UX teardown (2026-07-15), and a live inspection of the Notion "Blog Hub" API output.
 **Created:** 2026-07-13
 **Updated:** 2026-07-15. Content model finalised as Notion-as-CMS with **native Notion blocks** as the source and a `notion-to-md` render pipeline; build strategy changed from ISR to **static generation** to solve image-URL expiry; Magic Mind lessons folded in; three-phase structure set.
 
@@ -239,7 +239,7 @@ Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into th
 - Engine-facing spec: `docs/development/featurePlans/blog-notion-engine-brief.md`
 - SEO programme master plan: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`
 - Keyword research: `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
-- Search Console baseline: `docs/analytics/seo-search-console-baseline.md`
+- Search Console baseline: `docs/seo-aeo/seo-search-console-baseline.md`
 - Reused helpers: `app/lib/jsonLd.tsx`, `app/components/ReviewedDate.tsx`
 - Sitemap (needs dynamic blog entries): `app/sitemap.ts`
 - Old blog redirect (leave untouched): `next.config.ts`

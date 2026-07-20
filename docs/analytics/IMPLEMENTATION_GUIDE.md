@@ -1,5 +1,7 @@
 # CONKA Analytics Implementation Guide
 
+> **SUPERSEDED (Feb 2026 doc, flagged 2026-07-20).** Predates the headless attribution rebuild. The Vercel funnel taxonomy is now owned by [FUNNEL_EVENTS.md](FUNNEL_EVENTS.md) and the Meta side by [META_PIXEL_AND_CAPI.md](META_PIXEL_AND_CAPI.md). Start at [README.md](README.md). Kept for history.
+
 **Purpose:** Comprehensive, clarity-inducing analytics tracking for data-driven decision making in a DTC e-commerce environment.
 
 **Platform:** Vercel Analytics (Plus Plan - 8 properties per event, 24 months history, UTM support)

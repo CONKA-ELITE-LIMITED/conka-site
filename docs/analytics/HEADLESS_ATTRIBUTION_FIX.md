@@ -1,5 +1,7 @@
 # Headless Shopify + Meta Attribution — Diagnosis & Fix
 
+> **Historical log.** Dated diagnosis + fix record, kept for provenance. For current live state start at [README.md](README.md); some "how wired" tables below predate the `shop.conka.io` checkout move and the Conservative data-sharing change.
+
 **Status:** Domain + theme + server-Purchase webhook all shipped. **2026-07-16: upper-funnel CAPI resilience shipped** (SCRUM-1153) — CAPI now fires independently of the browser pixel, so PageView/ViewContent/AddToCart survive pixel-blocking. A wider attribution-robustness programme (Phases 2-4: Shopify checkout pixel, Triple Whale, monitoring) is scoped in `docs/development/featurePlans/attribution-robustness.md`. See the **2026-07-16** section at the bottom for the latest learnings.
 
 ## Progress log

@@ -41,7 +41,7 @@ Do this once a month per active lane (start with the P1 lanes: perimenopause, sp
 2. Set the date range to the last 3 months. Add a **Query** filter containing the lane's core word (e.g. `menopause`, `concussion`, `brain fog`, `focus`).
 3. Sort by Impressions. Copy any query that already shows impressions into the queue — these are real people already finding us for that theme, so they rank first.
 4. Note the average position. Queries where we impress but sit at position 8+ are the fastest wins (demand exists, we just aren't answering it well yet).
-5. Cross-reference against the baseline in `docs/analytics/seo-search-console-baseline.md` so month-on-month movement is visible.
+5. Cross-reference against the baseline in `docs/seo-aeo/seo-search-console-baseline.md` so month-on-month movement is visible.
 
 *Why first:* this is our own real demand data. It beats every tool because it is our actual audience, not an estimate.
 

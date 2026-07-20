@@ -1,5 +1,7 @@
 # Analytics Verification Guide
 
+> **SUPERSEDED (2026-07-20).** Use the **`/review-analytics`** skill to verify analytics. This guide carries pre-2026-06 assumptions (InitiateCheckout from the cart drawer, Purchase from Shopify checkout rather than our server webhook). Current state: [README.md](README.md).
+
 **Purpose:** Step-by-step guide to verify that Triple Whale and Vercel Analytics are working correctly.
 
 ---

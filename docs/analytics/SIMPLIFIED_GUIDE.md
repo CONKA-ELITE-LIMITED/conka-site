@@ -1,5 +1,7 @@
 # Simplified Analytics Guide - What You Actually Need
 
+> **SUPERSEDED (Feb 2026 doc, flagged 2026-07-20).** Triple Whale "drain"-era framing; the site now runs the client `TriplePixel` only. Current state: [README.md](README.md).
+
 **TL;DR:** You have everything you need. Vercel Analytics shows detailed product-level data. Triple Whale is for business metrics. No drain needed.
 
 ---
