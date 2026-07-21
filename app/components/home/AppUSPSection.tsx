@@ -1,181 +1,78 @@
-"use client";
-
-import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 
-const ROWS = [
+/* ============================================================================
+ * AppUSPSection (Simple DTC)
+ *
+ * "Most brands claim results. We let you measure yours." — the app is the
+ * differentiator, so the section states what it is and why it matters plainly:
+ * one phone asset on the soft #eef1f8 panel, then a Test / Log / Graph trio in
+ * solid black. Static server component (no tabs, no client state); an earlier
+ * clinical tabbed explorer was replaced 2026-07 because it hid the point behind
+ * a click.
+ * ========================================================================== */
+
+const POINTS = [
   {
-    counter: "01",
-    tabLabel: "Difference",
-    label: "The difference",
-    body: "Other brands tell you it works. CONKA gives you a cognitive test and a daily log so you can watch it happen.",
-    asset: "/app/AppConkaRing.png",
-    assetAlt: "CONKA app cognitive score ring with daily tracking",
+    label: "The test",
+    body: "A two-minute cognitive test, NHS clinically validated. Your baseline in black and white.",
   },
   {
-    counter: "02",
-    tabLabel: "The app",
-    label: "What it is",
-    body: "A companion app with a two-minute cognitive test backed by NHS clinical validation, a daily wellness log, and a progress graph you own.",
-    asset: "/app/AppTestBreakdown.png",
-    assetAlt: "CONKA app cognitive test breakdown and results screen",
+    label: "The daily log",
+    body: "Log sleep, stress and training in seconds, so every score has context.",
   },
   {
-    counter: "03",
-    tabLabel: "The value",
-    label: "Why it matters",
-    body: "See processing speed, sleep, stress and training line up on one screen. If it is working, the graph says so. If it is not, you know what to adjust.",
-    asset: "/app/AppWellness.png",
-    assetAlt: "CONKA app wellness log showing sleep, stress and training trends",
+    label: "The graph",
+    body: "One progress graph you own. If it is working, the line says so.",
   },
 ];
 
 export default function AppUSPSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  // Track which tabs have been visited so inactive phone images do not
-  // load until the user first clicks into them.
-  const [visited, setVisited] = useState<Set<number>>(() => new Set([0]));
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-
-  const selectTab = useCallback((idx: number) => {
-    setActiveIndex(idx);
-    setVisited((prev) => {
-      if (prev.has(idx)) return prev;
-      const next = new Set(prev);
-      next.add(idx);
-      return next;
-    });
-  }, []);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLButtonElement>, idx: number) => {
-      let nextIdx: number | null = null;
-      if (e.key === "ArrowRight") nextIdx = (idx + 1) % ROWS.length;
-      else if (e.key === "ArrowLeft") nextIdx = (idx - 1 + ROWS.length) % ROWS.length;
-      else if (e.key === "Home") nextIdx = 0;
-      else if (e.key === "End") nextIdx = ROWS.length - 1;
-      if (nextIdx !== null) {
-        e.preventDefault();
-        selectTab(nextIdx);
-        tabRefs.current[nextIdx]?.focus();
-      }
-    },
-    [selectTab],
-  );
-
-  const active = ROWS[activeIndex];
-
   return (
     <div className="w-full">
-      {/* Trio header */}
       <h2
-        className="brand-h1 text-[#0e1f3f] mb-8 lg:mb-12"
-        style={{ letterSpacing: "-0.02em" }}
+        className="brand-h1 mb-4 text-black"
+        style={{ letterSpacing: "var(--tracking-tight)" }}
       >
         Most brands claim results. We let you measure yours.
       </h2>
+      <p className="text-base lg:text-lg leading-snug text-black mb-10 max-w-[60ch]">
+        Other brands tell you it works. CONKA gives you a cognitive test and a
+        daily log, so you can watch it happen on a graph you own.
+      </p>
 
-      {/* Mobile stacks naturally (asset, tabs, panel). Desktop switches
-          to a 2-col grid: tabs span both cols on row 1, panel on row 2
-          col 1, asset on row 2 col 2. Panel vertical-centers its content
-          so the tall asset does not leave a hollow card next to it. */}
-      <div className="lg:grid lg:grid-cols-2 lg:gap-x-10 lg:gap-y-6">
-        {/* Phone asset — mobile row 1; desktop row 2 col 2 */}
-        <div className="relative aspect-square border border-black/12 bg-[#f5f5f5] overflow-hidden mb-6 lg:mb-0 lg:col-start-2 lg:row-start-2">
-          <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10">
-            Fig. 01 · CONKA App
-          </div>
-          {ROWS.map((row, idx) => {
-            if (!visited.has(idx)) return null;
-            const isActive = idx === activeIndex;
-            return (
-              <div
-                key={row.asset}
-                aria-hidden={!isActive}
-                className={`absolute left-1/2 -translate-x-1/2 top-[25%] w-[60%] lg:w-[55%] aspect-[1/2] transition-opacity duration-300 ease-out ${
-                  isActive ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <Image
-                  src={row.asset}
-                  alt={row.assetAlt}
-                  fill
-                  sizes="(max-width: 1024px) 60vw, 330px"
-                  className="object-contain"
-                  priority={false}
-                />
-              </div>
-            );
-          })}
-          <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10">
-            iOS · Android
-          </div>
+      <div className="lg:grid lg:grid-cols-2 lg:gap-10 lg:items-center">
+        {/* Phone asset on the soft panel */}
+        <div className="relative aspect-square rounded-2xl bg-[#eef1f8] ring-1 ring-black/8 overflow-hidden mb-8 lg:mb-0">
+          <Image
+            src="/app/AppConkaRing.png"
+            alt="CONKA app cognitive score ring with daily tracking"
+            fill
+            sizes="(max-width: 1024px) 100vw, 560px"
+            className="object-contain p-8"
+            loading="lazy"
+          />
         </div>
 
-        {/* Tabs — mobile row 2; desktop row 1 spanning both cols */}
-        <div
-          role="tablist"
-          aria-label="CONKA app features"
-          aria-orientation="horizontal"
-          className="grid grid-cols-3 border border-black/12 lg:col-span-2 lg:row-start-1"
-        >
-          {ROWS.map((row, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <button
-                key={row.counter}
-                ref={(el) => {
-                  tabRefs.current[idx] = el;
-                }}
-                type="button"
-                role="tab"
-                id={`app-usp-tab-${idx}`}
-                aria-selected={isActive}
-                aria-controls={`app-usp-panel-${idx}`}
-                tabIndex={isActive ? 0 : -1}
-                onClick={() => selectTab(idx)}
-                onKeyDown={(e) => handleKeyDown(e, idx)}
-                className={`min-h-[56px] lg:min-h-[64px] px-3 py-3 lg:px-6 lg:py-4 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]/60 focus-visible:ring-offset-2 flex flex-col items-start lg:flex-row lg:items-baseline lg:gap-3 ${
-                  idx < ROWS.length - 1 ? "border-r border-black/12" : ""
-                } ${
-                  isActive
-                    ? "bg-[#1B2757] text-white"
-                    : "bg-white text-black/55 hover:text-black"
-                }`}
-              >
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] leading-none tabular-nums">
-                  {row.counter}
-                </span>
-                <span className="font-mono text-[10px] lg:text-[11px] uppercase tracking-[0.14em] leading-tight mt-1.5 lg:mt-0 whitespace-nowrap">
-                  {row.tabLabel}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Panel — mobile row 3 (connected to tabs above); desktop row 2
-            col 1, stretches to asset height with content vertically
-            centered so the card reads as intentional whitespace. */}
-        <div
-          role="tabpanel"
-          id={`app-usp-panel-${activeIndex}`}
-          aria-labelledby={`app-usp-tab-${activeIndex}`}
-          tabIndex={0}
-          className="bg-white border border-black/12 border-t-0 px-5 py-6 lg:px-8 lg:py-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]/30 lg:border-t lg:col-start-1 lg:row-start-2 lg:flex lg:flex-col lg:justify-center"
-        >
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-3">
-            {active.counter} · {active.label}
-          </p>
-          <p className="text-sm md:text-base lg:text-lg text-black/75 leading-relaxed">
-            {active.body}
-          </p>
+        {/* Test / Log / Graph trio */}
+        <div className="flex flex-col">
+          {POINTS.map((point) => (
+            <div
+              key={point.label}
+              className="border-t border-black/8 py-5 first:border-t-0 lg:py-6"
+            >
+              <p className="text-lg font-bold text-black leading-tight">
+                {point.label}
+              </p>
+              <p className="mt-1.5 text-base text-black/60 leading-snug max-w-[44ch]">
+                {point.body}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="mt-8 lg:mt-12 flex justify-center lg:justify-start">
+      <div className="mt-10 lg:mt-12 flex justify-center lg:justify-start">
         <ConkaCTAButton href="/app" meta={null}>
           See the app
         </ConkaCTAButton>

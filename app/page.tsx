@@ -10,7 +10,7 @@ import LandingHeroVideo from "./components/landing/LandingHeroVideo";
 import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
-import LabTimeline from "./components/landing/LabTimeline";
+import LabGuarantee from "./components/landing/LabGuarantee";
 import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
@@ -30,11 +30,6 @@ const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
 //   () => import("./components/LabCaseStudies"),
 //   { loading: () => <div className="h-[1200px]" /> },
 // );
-
-const CROTestimonials = dynamic(
-  () => import("./components/cro/CROTestimonials"),
-  { loading: () => <div className="h-[450px]" /> },
-);
 
 const AthleteCredibilityCarousel = dynamic(
   () => import("./components/AthleteCredibilityCarousel"),
@@ -119,20 +114,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 3: WHY HIGH PERFORMERS TRUST CONKA ===== */}
-      {/* No top padding; the gap above comes from section 2's bottom padding. */}
-      <section
-        className="brand-section brand-bg-white pt-0!"
-        aria-label="Athletes who use CONKA"
-      >
-        {/* Sport marquee runs full-bleed at the section level; the carousel
-            itself stays inside the track. */}
-        <AthleteSportMarquee fullBleed />
-        <div className="brand-track">
-          <AthleteCredibilityCarousel showMarquee={false} />
-        </div>
-      </section>
-
       {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
           LandingDailyBenefits; the band owns its own full-bleed dark section,
           so it is not wrapped in brand-section/brand-track). ===== */}
@@ -167,33 +148,23 @@ export default function Home() {
         <UGCMarquee />
       </section>
 
-      {/* ===== SECTION 7: WHAT TO EXPECT (LabTimeline) ===== */}
+      {/* ===== SECTION 7: RISK-FREE GUARANTEE ===== */}
       <section
-        className="brand-section brand-bg-white"
-        aria-label="What to Expect with CONKA"
+        className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile"
+        aria-label="Risk-free guarantee"
       >
         <div className="brand-track">
-          <LabTimeline ctaHref="/conka-both" />
+          <LabGuarantee />
         </div>
       </section>
 
       {/* ===== SECTION 8: APP USP — key differentiator, measure it yourself ===== */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Prove it yourself with the CONKA app"
       >
         <div className="brand-track">
           <AppUSPSection />
-        </div>
-      </section>
-
-      {/* ===== SECTION 9: TESTIMONIALS (real voices after data proof) ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Customer reviews"
-      >
-        <div className="brand-track">
-          <CROTestimonials ctaHref="/conka-both" />
         </div>
       </section>
 
@@ -208,6 +179,19 @@ export default function Home() {
         </div>
       </section>
       */}
+
+      {/* ===== SECTION 9: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Athletes who use CONKA"
+      >
+        {/* Sport marquee runs full-bleed at the section level; the carousel
+            itself stays inside the track. */}
+        <AthleteSportMarquee fullBleed />
+        <div className="brand-track">
+          <AthleteCredibilityCarousel showMarquee={false} />
+        </div>
+      </section>
 
       {/* ===== SECTION 11: FAQ ===== */}
       <section

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Home page Simple DTC pass: black hero titles, athletes moved above FAQ, guarantee section replaces What-to-Expect, on-page testimonials removed, App USP rebuilt as a static Test/Log/Graph section.
 - **2026-07-21** | Simplify Informed Sport tile to one bold title and plain black body
 - **2026-07-21** | Consolidate segmented toggles into one shared SegmentedToggle component
 - **2026-07-21** | Apply Simple DTC styling to athlete carousel and product showcase, soften toggles

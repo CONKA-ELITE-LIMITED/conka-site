@@ -7,7 +7,6 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import { FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import ConkaCTAButton from "./ConkaCTAButton";
-import GuaranteeRow from "./GuaranteeRow";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
 import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
 
@@ -222,9 +221,9 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         ingredients={ingredients}
       />
 
-      {/* Proof + conversion group: CTA → cert icons → guarantee, stacked and
-          centred as one block on every breakpoint. The cert icons sit under
-          the CTA so they reinforce the click rather than delay it. */}
+      {/* Proof + conversion group: CTA → cert icons, stacked and centred as one
+          block on every breakpoint. The cert icons sit under the CTA so they
+          reinforce the click rather than delay it. */}
       <div className="flex flex-col items-center">
         {!hideCTA && (
           <ConkaCTAButton href={ctaHref} meta={null}>
@@ -243,10 +242,6 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             />
           ))}
         </div>
-
-        {/* Guarantee closes the section with reassurance (renders even when the
-            CTA is hidden on /conka-both and protocol pages). */}
-        <GuaranteeRow />
       </div>
     </div>
   );

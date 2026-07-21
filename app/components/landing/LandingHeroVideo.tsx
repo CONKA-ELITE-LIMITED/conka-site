@@ -93,7 +93,7 @@ export default function LandingHeroVideo() {
       <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-10">
         <header className="text-center">
           <h1
-            className="text-[#0e1f3f] font-semibold text-[38px] leading-[1.08]"
+            className="text-black font-semibold text-[38px] leading-[1.08]"
             style={{ letterSpacing: "-0.02em" }}
           >
             A Sharper Mind.
