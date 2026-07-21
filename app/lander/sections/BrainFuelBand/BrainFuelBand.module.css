@@ -82,22 +82,37 @@
 }
 
 @media (min-width: 1024px) {
-  /* Desktop: left/right split — video left, stats + content right.
-     Mobile (base rules above) is intentionally left exactly as-is. */
+  /* Desktop: left/right split — video left, title + stats right. The title is
+     a direct child (so it sits above the video on mobile), so grid areas pull
+     it back into the right column here. Mobile base rules stack it naturally. */
   .inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: center;
+    grid-template-areas:
+      "hero title"
+      "hero details";
+    align-content: center;
+    column-gap: 64px;
+    row-gap: 32px;
     max-width: 1100px;
     margin: 0 auto;
     padding: 96px 45px;
-    gap: 64px;
+  }
+  .title {
+    grid-area: title;
+    align-self: end;
+  }
+  .hero {
+    grid-area: hero;
+    align-self: center;
   }
   .video {
     width: 100%;
   }
   /* Stats stay single-column rows beside the video (not the old 2-col grid) */
   .details {
+    grid-area: details;
+    align-self: start;
     gap: 32px;
   }
 }

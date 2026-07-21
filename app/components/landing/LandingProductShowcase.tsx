@@ -9,6 +9,7 @@ import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import ConkaCTAButton from "./ConkaCTAButton";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
 import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
+import { TIME_OF_DAY_BADGE, type TimeOfDay } from "@/app/lib/timeOfDayBadge";
 
 /* ============================================================================
  * LandingProductShowcase
@@ -39,7 +40,7 @@ const FORMULA_ID: Record<ProductId, FormulaId> = {
 // lander tell the same story.
 const PRODUCTS: Record<
   ProductId,
-  { name: string; timeOfDay: string; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
+  { name: string; timeOfDay: TimeOfDay; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
 > = {
   flow: {
     name: "CONKA Flow",
@@ -98,71 +99,47 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     </button>
   );
 
-  // Product card (Simple DTC). Mobile: horizontal (image beside details).
-  // Desktop: a centred soft card (name, time-of-day pill, asset, stats) matching
-  // the home product tiles.
+  // Product card: asset on top, then name, a time-of-day badge straddling a
+  // divider, sub-line, active-nootropic load and the shared ingredient CTA.
+  // One layout for both breakpoints, scaled up at lg. Neither product is
+  // enlarged over the other, so they keep equal billing.
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
       <div
         key={id}
-        className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden"
+        className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden flex flex-col"
       >
-        {/* Mobile: title above the asset, then image beside the stats */}
-        <div className="lg:hidden p-4">
-          <p className="text-lg font-bold text-black leading-tight mb-3">
-            {p.name}
-          </p>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="relative w-[120px] h-[120px] shrink-0 rounded-xl overflow-hidden bg-[#eef1f8]">
-              <Image
-                src={p.bottleSrc}
-                alt={p.bottleAlt}
-                fill
-                sizes="120px"
-                className="object-cover scale-[1.35]"
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm text-black/60 mb-3">{p.sub}</p>
-              <p className="text-2xl font-bold tabular-nums leading-none text-black">
-                {p.mg}
-              </p>
-              <p className="text-[11px] uppercase tracking-wide text-black/45 mt-1.5">
-                Active nootropics
-              </p>
-            </div>
-          </div>
-          {ingredientButton(id)}
+        <div className="relative aspect-square w-full overflow-hidden bg-[#eef1f8]">
+          <Image
+            src={p.bottleSrc}
+            alt={p.bottleAlt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 360px"
+            className="object-cover scale-[1.35]"
+          />
         </div>
-
-        {/* Desktop: centred soft card */}
-        <div className="hidden lg:block p-6 text-center">
-          <p className="text-2xl font-bold text-black leading-none tracking-tight">
+        <div className="flex flex-1 flex-col p-5 text-center lg:p-6">
+          <p className="text-xl font-bold text-black leading-none tracking-tight lg:text-2xl">
             {p.name}
           </p>
-          <div className="mt-3 flex justify-center">
-            <span className="inline-flex items-center rounded-full bg-[#eef1f8] px-3 py-1 text-xs font-semibold text-[#1B2757] leading-none">
+          {/* Time-of-day badge centred on a divider (mirrors the nav Shop tiles) */}
+          <div className="relative my-4 lg:my-5">
+            <div className="border-t border-black/10" />
+            <span
+              className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold leading-none ${TIME_OF_DAY_BADGE[p.timeOfDay]}`}
+            >
               {p.timeOfDay}
             </span>
           </div>
-          <div className="relative w-[260px] h-[260px] mx-auto overflow-hidden rounded-xl bg-[#eef1f8] my-5">
-            <Image
-              src={p.bottleSrc}
-              alt={p.bottleAlt}
-              fill
-              sizes="260px"
-              className="object-cover scale-[1.35]"
-            />
-          </div>
-          <p className="text-sm text-black/60 mb-3">{p.sub}</p>
-          <p className="text-3xl font-bold tabular-nums leading-none text-black">
+          <p className="text-sm text-black mb-4">{p.sub}</p>
+          <p className="text-2xl font-bold tabular-nums leading-none text-black lg:text-3xl">
             {p.mg}
           </p>
           <p className="text-[11px] uppercase tracking-wide text-black/45 mt-1.5 mb-5">
             Active nootropics
           </p>
-          {ingredientButton(id)}
+          <div className="mt-auto">{ingredientButton(id)}</div>
         </div>
       </div>
     );
