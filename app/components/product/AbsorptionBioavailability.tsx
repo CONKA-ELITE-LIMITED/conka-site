@@ -14,8 +14,6 @@ import Image from "next/image";
  * liquid, Clear + Both -> Clear liquid).
  * ========================================================================== */
 
-const NAVY = "#1B2757";
-
 type Point = { title: string; body: string };
 
 const DEFAULT_POINTS: Point[] = [
@@ -41,8 +39,7 @@ function Tick() {
       height="22"
       viewBox="0 0 24 24"
       fill="none"
-      className="mt-0.5 shrink-0"
-      style={{ color: NAVY }}
+      className="mt-0.5 shrink-0 text-[#1B2757]"
       aria-hidden
     >
       <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.1" />
@@ -81,7 +78,7 @@ export default function AbsorptionBioavailability({
           width={1500}
           height={1500}
           loading="lazy"
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="(max-width: 1024px) 100vw, 640px"
           className="h-auto w-full"
         />
       </div>
