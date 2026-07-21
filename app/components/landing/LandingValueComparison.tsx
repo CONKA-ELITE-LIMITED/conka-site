@@ -12,7 +12,7 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
  * the shared CrashChart (steady-vs-crash curve + cost comparison), a CONKA
  * counter-mechanism paragraph, CTA, and the nootropics/adaptogens strip.
  *
- * The chart is the sharp CrashChart (cost table included), so the section no
+ * The chart is the CrashChart (cost table included), so the section no
  * longer carries its own price-closer line.
  *
  * Desktop: copy column left, chart right. Mobile: narrative order, chart
@@ -33,21 +33,14 @@ export default function LandingValueComparison({
       <div className="lg:flex lg:gap-12 lg:items-center">
         {/* Copy column */}
         <div className="lg:flex-1">
-          {/* Trio header */}
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            {"// Caffeine vs CONKA · SCI-03"}
-          </p>
-          <h2
-            className="brand-h1 mb-6"
-            style={{ letterSpacing: "var(--tracking-tight)" }}
-          >
+          <h2 className="brand-h1 mb-6 text-black">
             Caffeine doesn&apos;t give you energy.
             <br />
             It borrows it.
           </h2>
 
           {/* Mechanism — why coffee hands the fatigue back */}
-          <p className="text-base text-black/75 leading-relaxed max-w-prose mb-6">
+          <p className="brand-body text-black mb-6">
             Caffeine blocks the receptors that tell your brain it&apos;s tired.
             It hides the fatigue for a few hours, spikes cortisol, and hands
             both back to you at 11am. The second cup isn&apos;t a habit.
@@ -56,11 +49,11 @@ export default function LandingValueComparison({
 
           {/* Chart — mobile position, between the two paragraphs */}
           <div className="mb-6 lg:hidden">
-            <CrashChart sharp />
+            <CrashChart />
           </div>
 
           {/* CONKA — the counter-mechanism */}
-          <p className="text-base text-black/75 leading-relaxed max-w-prose mb-8">
+          <p className="brand-body text-black mb-8">
             CONKA works the other way. Fifteen nootropics and adaptogens do
             the heavy lifting: brain-boosting nutrients build the focus,
             stress-mitigating compounds keep cortisol in check. Energy that
@@ -90,7 +83,7 @@ export default function LandingValueComparison({
 
         {/* Chart — desktop position */}
         <div className="hidden lg:block lg:flex-1">
-          <CrashChart sharp />
+          <CrashChart />
         </div>
       </div>
     </div>
@@ -111,7 +104,7 @@ function IngredientClass({
       <Image src={icon} width={42} height={42} alt="" aria-hidden />
       <div className="leading-tight">
         <div className="text-base font-semibold text-black">{name}</div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-black/50 mt-0.5">
+        <div className="text-sm text-black mt-0.5">
           {role}
         </div>
       </div>
