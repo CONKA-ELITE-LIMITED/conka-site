@@ -14,6 +14,9 @@ import LabGuarantee from "./components/landing/LabGuarantee";
 import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
+// Static server component (native <details> accordion, no client state), so a
+// direct import like the other pure server sections above.
+import AppUSPSection from "./components/home/AppUSPSection";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -34,11 +37,6 @@ const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
 const AthleteCredibilityCarousel = dynamic(
   () => import("./components/AthleteCredibilityCarousel"),
   { loading: () => <div className="h-[350px]" /> },
-);
-
-const AppUSPSection = dynamic(
-  () => import("./components/home/AppUSPSection"),
-  { loading: () => <div className="h-[1100px] lg:h-[700px]" /> },
 );
 
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
@@ -171,18 +169,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 10: CASE STUDIES (LabCaseStudies) — commented out per request 2026-07-20.
-          Restore this block and re-enable the LabCaseStudies dynamic import above.
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Clinically validated test scores"
-      >
-        <div className="brand-track">
-          <LabCaseStudies />
-        </div>
-      </section>
-      */}
-
       {/* ===== SECTION 9: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
       {/* No mobile top padding; the App USP section above sits flush against
           this section's marquee. */}
@@ -197,6 +183,18 @@ export default function Home() {
           <AthleteCredibilityCarousel showMarquee={false} />
         </div>
       </section>
+
+      {/* SECTION 10: CASE STUDIES (LabCaseStudies) — commented out per request 2026-07-20.
+          Restore this block and re-enable the LabCaseStudies dynamic import above.
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Clinically validated test scores"
+      >
+        <div className="brand-track">
+          <LabCaseStudies />
+        </div>
+      </section>
+      */}
 
       {/* ===== SECTION 11: FAQ ===== */}
       <section
