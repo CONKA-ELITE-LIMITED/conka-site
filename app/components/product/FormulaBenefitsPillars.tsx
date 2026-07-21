@@ -71,11 +71,6 @@ export default function FormulaBenefitsPillars({
         </summary>
 
         <div className="pb-8">
-          {/* What the figure measures — the label that left the collapsed row. */}
-          <p className="text-sm text-black/55 leading-snug mb-4">
-            {item.label}
-          </p>
-
           {/* Plain sentence weaving the named actives into the outcome. */}
           {item.story && (
             <p className="text-base text-black leading-relaxed">
