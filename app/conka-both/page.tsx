@@ -123,7 +123,7 @@ export default function ConkaBothPage() {
   const athleteSection = (
     <section
       id="athletes"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
       aria-label="Athletes who use CONKA"
     >
       <AthleteSportMarquee fullBleed />
@@ -145,7 +145,7 @@ export default function ConkaBothPage() {
 
   const testimonialsSection = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-white brand-tight-bottom-mobile"
       aria-label="Customer reviews"
     >
       <div className="brand-track">
@@ -157,7 +157,7 @@ export default function ConkaBothPage() {
   const comparisonSection = (
     <section
       id="comparison"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
       aria-label="CONKA vs coffee comparison"
     >
       <div className="brand-track">
@@ -181,7 +181,7 @@ export default function ConkaBothPage() {
 
   const guaranteeSection = (
     <section
-      className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)]"
+      className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile"
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
@@ -191,7 +191,7 @@ export default function ConkaBothPage() {
   );
 
   const faqSection = (
-    <section className="brand-section brand-bg-white" aria-label="FAQ">
+    <section className="brand-section brand-bg-white brand-tight-top-mobile" aria-label="FAQ">
       <div className="brand-track">
         <LabFAQ items={BOTH_PDP_FAQ_ITEMS} hideCTA />
       </div>
