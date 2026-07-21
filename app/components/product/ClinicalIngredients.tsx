@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   getOrderedActiveIngredients,
@@ -12,11 +12,11 @@ import FormulaToggle from "@/app/components/product/FormulaToggle";
 /* ============================================================================
  * ClinicalIngredients
  *
- * Clinical-grammar ingredients section for the product pages. Magic Mind card
- * pattern in the clinical skin: every ingredient is a self-contained card
- * whose collapsed face shows name, class tags, render thumbnail, and a
- * one-line benefit. Expanding (native <details>) reveals the longer
- * description and the key study finding.
+ * Ingredients section for the product pages, in the Simple DTC skin (black
+ * type, no mono eyebrows/tags, soft cards): every ingredient is a
+ * self-contained card whose collapsed face shows name, class tags, render
+ * thumbnail, and a one-line benefit. Expanding (native <details>) reveals the
+ * longer description and the key study finding.
  *
  * Reads everything from the shared ingredientsData.ts (no local copy of
  * ingredient content or ordering).
@@ -80,31 +80,43 @@ export default function ClinicalIngredients({
   const meta = FORMULA_META[activeFormula];
   const isDual = formulaIds.length > 1;
 
-  const totalGrammage = formulaIds.reduce(
-    (sum, id) => sum + FORMULA_GRAMMAGE[id],
-    0,
-  );
-  const totalActives = formulaIds.reduce(
-    (sum, id) => sum + getOrderedActiveIngredients(id).length,
-    0,
-  );
+  // Basic scroll-progress indicator for the horizontal ingredient rail: the
+  // thumb width is the visible fraction, its offset the scrolled fraction.
+  const railRef = useRef<HTMLDivElement>(null);
+  const [thumb, setThumb] = useState({ width: 1, offset: 0 });
+
+  const updateScroll = useCallback(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    if (scrollWidth <= clientWidth) {
+      setThumb({ width: 1, offset: 0 });
+      return;
+    }
+    setThumb({
+      width: clientWidth / scrollWidth,
+      offset: scrollLeft / scrollWidth,
+    });
+  }, []);
+
+  // Recompute on mount and when the active formula (and thus tile count) changes.
+  useEffect(() => {
+    updateScroll();
+  }, [updateScroll, activeFormula]);
 
   return (
     <div>
       {/* Header row — trio header left, toggle + asset right on desktop */}
       <div className="lg:flex lg:items-start lg:justify-between lg:gap-10 mb-8">
-        {/* Trio header — grammage-led */}
-        <div className="mb-8 lg:mb-0">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            {"// What's inside · ING-01"}
-          </p>
-          <h2 className="brand-h1 mb-2" style={{ letterSpacing: "-0.02em" }}>
-            {totalGrammage.toLocaleString()}mg of Active
-            <br />
-            Nootropics.
+        {/* Simple DTC header — human framing, no mono eyebrow or grammage-led H1 */}
+        <div className="mb-8 lg:mb-0 lg:max-w-md">
+          <h2 className="brand-h1 mb-3 text-black">
+            Clinically-backed ingredients
           </h2>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-            {totalActives} science-backed ingredients · 0 caffeine · 0 filler
+          <p className="brand-body text-black/70">
+            We source the highest-quality compounds, at proven doses and in
+            bioavailable forms. Each ingredient is supported by independent,
+            peer-reviewed studies.
           </p>
         </div>
 
@@ -124,7 +136,7 @@ export default function ClinicalIngredients({
 
           {/* Active formula — single asset + identity block */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 border border-black/10 bg-white overflow-hidden lab-clip-tr">
+            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-2xl border border-black/10 bg-white">
               <Image
                 key={meta.bottleImage}
                 src={meta.bottleImage}
@@ -135,20 +147,17 @@ export default function ClinicalIngredients({
               />
             </div>
             <div>
-              <p
-                className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] leading-none mb-2"
-                style={{ color: NAVY }}
-              >
-                CONKA {meta.shortName} · {meta.time}
+              <p className="mb-2 text-sm font-semibold leading-none text-black">
+                CONKA {meta.shortName}
               </p>
-              <p className="text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black mb-1.5">
+              <p className="mb-1.5 text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black">
                 {FORMULA_GRAMMAGE[activeFormula].toLocaleString()}
                 <span className="text-base lg:text-lg font-semibold">mg</span>
               </p>
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-black/45 leading-none mb-3">
+              <p className="mb-3 text-xs leading-none text-black/50">
                 Active nootropics
               </p>
-              <p className="text-sm text-black/60 leading-snug">
+              <p className="text-sm leading-snug text-black/70">
                 {meta.tagline}
               </p>
             </div>
@@ -156,9 +165,11 @@ export default function ClinicalIngredients({
         </div>
       </div>
 
-      {/* Ingredient cards — Magic Mind pattern, clinical skin. Horizontal
+      {/* Ingredient cards — Magic Mind pattern, Simple DTC skin. Horizontal
           snap rail so the tiles read as a scannable row on every breakpoint. */}
       <div
+        ref={railRef}
+        onScroll={updateScroll}
         aria-label={`CONKA ${meta.shortName} ingredients`}
         className="flex gap-3 items-start overflow-x-auto snap-x pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
@@ -166,7 +177,7 @@ export default function ClinicalIngredients({
           <details
             key={ing.id}
             name="clinical-ingredient"
-            className="group bg-white border border-black/12 lab-clip-tr w-[260px] shrink-0 snap-start"
+            className="group w-[260px] shrink-0 snap-start rounded-2xl border border-black/10 bg-white"
           >
             {/* Collapsed face — name, tags, render, one-liner */}
             <summary className="p-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
@@ -174,17 +185,23 @@ export default function ClinicalIngredients({
                 <h3 className="text-base font-semibold leading-snug text-black">
                   {ing.name}
                 </h3>
-                <span
-                  className="font-mono text-[10px] font-bold tabular-nums text-black/40 group-hover:text-black mt-0.5 shrink-0"
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mt-1 shrink-0 text-black/40 transition-transform group-open:rotate-180"
                   aria-hidden
                 >
-                  <span className="group-open:hidden">[+]</span>
-                  <span className="hidden group-open:inline">[−]</span>
-                </span>
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
               </div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-black/45 mb-3">
-                {CATEGORY_INFO[ing.category].name} |{" "}
-                {ing.functionalCategory}
+              <p className="mb-3 text-xs text-black/50">
+                {CATEGORY_INFO[ing.category].name} | {ing.functionalCategory}
               </p>
               <div className="flex items-center gap-3">
                 <div className="relative w-16 h-16 shrink-0 border border-black/8 overflow-hidden bg-white">
@@ -206,7 +223,7 @@ export default function ClinicalIngredients({
                     </div>
                   )}
                 </div>
-                <p className="text-sm text-black/75 leading-snug">
+                <p className="text-sm leading-snug text-black">
                   {ing.oneLineClaim}
                 </p>
               </div>
@@ -214,26 +231,26 @@ export default function ClinicalIngredients({
 
             {/* Expanded — description, key finding */}
             <div className="px-4 pb-4">
-              <div className="border-t border-black/8 pt-3">
-                <p className="text-sm text-black/75 leading-relaxed mb-4">
+              <div className="border-t border-black/10 pt-3">
+                <p className="mb-4 text-sm leading-relaxed text-black/70">
                   {ing.description}
                 </p>
 
                 {ing.keyStats[0] && (
                   <>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1.5">
+                    <p className="mb-1.5 text-xs font-medium text-black/50">
                       Key finding
                     </p>
-                    <p className="text-sm text-black/75 leading-snug mb-1.5">
+                    <p className="mb-1.5 text-sm leading-snug text-black">
                       <span
-                        className="text-xl font-semibold tabular-nums mr-2"
+                        className="mr-2 text-xl font-semibold tabular-nums"
                         style={{ color: NAVY }}
                       >
                         {ing.keyStats[0].value}
                       </span>
                       {ing.keyStats[0].label}
                     </p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/35">
+                    <p className="text-xs text-black/40">
                       {ing.keyStats[0].source}
                     </p>
                   </>
@@ -243,6 +260,22 @@ export default function ClinicalIngredients({
           </details>
         ))}
       </div>
+
+      {/* Scroll indicator — thumb reflects the visible window over the rail */}
+      {thumb.width < 1 && (
+        <div
+          className="mt-4 h-1 w-full max-w-[240px] overflow-hidden rounded-full bg-black/10"
+          aria-hidden
+        >
+          <div
+            className="h-full rounded-full bg-black/40"
+            style={{
+              width: `${thumb.width * 100}%`,
+              marginLeft: `${thumb.offset * 100}%`,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
