@@ -17,6 +17,7 @@ import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // Static server component (native <details> accordion, no client state), so a
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
+import AthleteReviewFeature from "./components/AthleteReviewFeature";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -128,6 +129,18 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      {/* ===== SECTION 5.5: FEATURED ATHLETE REVIEW (Jack Willis) ===== */}
+      {/* White so the white-background cutout portrait floats; pt-0 shares the
+          product grid's bottom padding rather than doubling the white gap. */}
+      <section
+        className="brand-section brand-bg-white pt-0!"
+        aria-label="Featured athlete review"
+      >
+        <div className="brand-track">
+          <AthleteReviewFeature />
+        </div>
+      </section>
 
       {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
       {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
