@@ -31,11 +31,11 @@ function DayItems({ milestones }: { milestones: ExpectMilestone[] }) {
     <>
       {milestones.map((m) => (
         <li key={m.day} className="lg:text-center">
-          <div className="mb-3 text-3xl font-bold leading-none tracking-tight text-black lg:text-4xl">
+          <div className="mb-4 text-3xl font-bold leading-none tracking-tight text-black lg:text-4xl">
             {m.day}
           </div>
-          <div className="mb-3 inline-block rounded-xl border border-black/15 bg-white px-4 py-2.5 shadow-sm">
-            <h3 className="text-lg font-bold leading-tight text-black lg:text-xl">
+          <div className="mb-5 rounded-lg border border-black/15 bg-white px-6 py-6 shadow-sm">
+            <h3 className="text-2xl font-bold leading-tight text-black lg:text-3xl">
               {m.title}
             </h3>
           </div>
@@ -79,7 +79,7 @@ export default function WhatToExpect({
             aria-hidden
           />
         </div>
-        <ol className="grid grid-cols-1 gap-8 px-[var(--brand-gutter-mobile)] py-12">
+        <ol className="grid grid-cols-1 gap-12 px-[var(--brand-gutter-mobile)] py-16">
           <DayItems milestones={milestones} />
         </ol>
       </div>
@@ -96,7 +96,7 @@ export default function WhatToExpect({
           className="h-auto w-full"
         />
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/90 via-white/70 to-transparent pt-12">
-          <ol className="mx-auto grid max-w-[1280px] grid-cols-3 gap-12 px-[var(--brand-gutter-desktop)] pb-10">
+          <ol className="mx-auto grid max-w-[1280px] grid-cols-3 gap-10 px-[var(--brand-gutter-desktop)] pb-14">
             <DayItems milestones={milestones} />
           </ol>
         </div>
