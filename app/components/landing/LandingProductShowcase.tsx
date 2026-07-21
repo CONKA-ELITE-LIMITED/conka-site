@@ -53,7 +53,7 @@ const PRODUCTS: Record<
   clear: {
     name: "CONKA Clear",
     timeOfDay: "Afternoon",
-    sub: "Afternoon clarity & reset",
+    sub: "Afternoon clarity & reset.",
     mg: "3,142mg",
     bottleSrc: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",

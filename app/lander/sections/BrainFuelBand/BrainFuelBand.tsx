@@ -53,7 +53,7 @@ export default function BrainFuelBand() {
 
         <div className={styles.details}>
           <p className={styles.description}>
-            By olympic medallists, world-class athletes &amp; entrepreneurs on
+            By Olympic medallists, world-class athletes &amp; entrepreneurs on
             the days that matter most.
           </p>
 
