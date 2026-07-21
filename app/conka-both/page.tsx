@@ -196,8 +196,11 @@ export default function ConkaBothPage() {
     </section>
   );
 
-  // Mobile version
-  if (isMobile) {
+  // Mobile-first: render the mobile layout on SSR and first paint (74% of
+  // traffic) and only switch to desktop once useIsMobile confirms >= lg. Treating
+  // the undefined initial value as mobile avoids the desktop-then-mobile hero
+  // swap that shifted the image on phones.
+  if (isMobile ?? true) {
     return (
       <div className="brand-clinical brand-page min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
         <Navigation />
