@@ -8,6 +8,7 @@ import {
 } from "@/app/lib/ingredientsData";
 import { FormulaId } from "@/app/lib/productData";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
+import PremiumDotIndicator from "@/app/components/premium/PremiumDotIndicator";
 
 /* ============================================================================
  * ClinicalIngredients
@@ -41,8 +42,6 @@ const FORMULA_GRAMMAGE: Record<FormulaId, number> = {
 
 interface FormulaMeta {
   shortName: string;
-  time: string;
-  timeOfDay: string;
   tagline: string;
   bottleImage: string;
   bottleAlt: string;
@@ -51,16 +50,12 @@ interface FormulaMeta {
 const FORMULA_META: Record<FormulaId, FormulaMeta> = {
   "01": {
     shortName: "Flow",
-    time: "AM",
-    timeOfDay: "Morning",
     tagline: "Calm focus for your mornings.",
     bottleImage: "/formulas/conkaFlow/FlowNew.jpg",
     bottleAlt: "CONKA Flow bottle",
   },
   "02": {
     shortName: "Clear",
-    time: "PM",
-    timeOfDay: "Afternoon",
     tagline: "Afternoon clarity & reset",
     bottleImage: "/formulas/conkaClear/ClearNew.jpg",
     bottleAlt: "CONKA Clear bottle",
@@ -99,7 +94,12 @@ export default function ClinicalIngredients({
   const handleScroll = () => {
     const el = railRef.current;
     if (!el) return;
-    const idx = Math.round(el.scrollLeft / cardStep());
+    // Snap to the last dot at the end of the rail: max scrollLeft never reaches
+    // (n-1) * cardStep, so the trailing tiles would otherwise never activate.
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+    const idx = atEnd
+      ? ingredients.length - 1
+      : Math.round(el.scrollLeft / cardStep());
     setActiveIndex(Math.max(0, Math.min(ingredients.length - 1, idx)));
   };
 
@@ -268,32 +268,15 @@ export default function ClinicalIngredients({
         ))}
       </div>
 
-      {/* Dot indicators — mirrors the CROTestimonials rail pattern */}
-      <div
-        className="mt-6 flex flex-wrap justify-center gap-2"
-        role="tablist"
-        aria-label="Ingredient navigation"
-      >
-        {ingredients.map((ing, i) => (
-          <button
-            key={ing.id}
-            type="button"
-            role="tab"
-            aria-selected={i === activeIndex}
-            aria-label={`Go to ingredient ${i + 1}`}
-            onClick={() => goToIndex(i)}
-            className="flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
-          >
-            <span
-              className={`block rounded-full transition-all ${
-                i === activeIndex
-                  ? "h-2 w-5 bg-[#1B2757]"
-                  : "h-2 w-2 bg-black/15 hover:bg-black/30"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
+      {/* Dot indicators — shared with the CRO testimonials rail */}
+      <PremiumDotIndicator
+        total={ingredients.length}
+        currentIndex={activeIndex}
+        onDotClick={goToIndex}
+        ariaLabel="Ingredient navigation"
+        getDotAriaLabel={(i) => `Go to ingredient ${i + 1}`}
+        className="mt-6"
+      />
     </div>
   );
 }

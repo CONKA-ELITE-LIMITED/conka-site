@@ -13,26 +13,20 @@ interface PremiumDotIndicatorProps {
   getDotAriaLabel?: (index: number) => string;
   /** Optional className for the container */
   className?: string;
-  /** Use light-colored dots (e.g. on dark backgrounds) */
-  variant?: "default" | "light-on-dark";
 }
 
 /**
- * Premium dot indicator component for carousels and pagination.
- * 
- * Features:
- * - Active dot expands to wider pill shape
- * - Smooth transitions
- * - Accessible with ARIA attributes
- * - Hover states on inactive dots
- * 
+ * Dot pagination for horizontal carousels and rails. The active dot expands to
+ * a navy pill; inactive dots are muted and grow on hover. Shared by the CRO
+ * testimonials rail and the PDP ingredients rail so the pattern stays in step.
+ *
  * @example
  * <PremiumDotIndicator
- *   total={5}
- *   currentIndex={2}
- *   onDotClick={(i) => setIndex(i)}
- *   ariaLabel="Product carousel"
- *   getDotAriaLabel={(i) => `Go to product ${i + 1}`}
+ *   total={reviews.length}
+ *   currentIndex={activeIndex}
+ *   onDotClick={goToIndex}
+ *   ariaLabel="Review navigation"
+ *   getDotAriaLabel={(i) => `Go to review ${i + 1}`}
  * />
  */
 export default function PremiumDotIndicator({
@@ -42,12 +36,10 @@ export default function PremiumDotIndicator({
   ariaLabel,
   getDotAriaLabel,
   className = "",
-  variant = "default",
 }: PremiumDotIndicatorProps) {
-  const isLight = variant === "light-on-dark";
   return (
     <div
-      className={`flex justify-center gap-2 ${className}`}
+      className={`flex flex-wrap justify-center gap-2 ${className}`}
       role="tablist"
       aria-label={ariaLabel}
     >
@@ -56,19 +48,21 @@ export default function PremiumDotIndicator({
           key={i}
           type="button"
           role="tab"
-          aria-label={getDotAriaLabel ? getDotAriaLabel(i) : `Go to item ${i + 1}`}
           aria-selected={i === currentIndex}
+          aria-label={
+            getDotAriaLabel ? getDotAriaLabel(i) : `Go to item ${i + 1}`
+          }
           onClick={() => onDotClick(i)}
-          className={`h-2 rounded-full transition-all ${
-            i === currentIndex
-              ? isLight
-                ? "w-8 bg-[var(--color-bone)]"
-                : "w-8 bg-[var(--color-ink)]"
-              : isLight
-                ? "w-2 bg-white/30 hover:bg-white/50"
-                : "w-2 bg-black/20 hover:bg-black/40"
-          }`}
-        />
+          className="flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
+        >
+          <span
+            className={`block rounded-full transition-all ${
+              i === currentIndex
+                ? "h-2 w-5 bg-[#1B2757]"
+                : "h-2 w-2 bg-black/15 hover:bg-black/30"
+            }`}
+          />
+        </button>
       ))}
     </div>
   );

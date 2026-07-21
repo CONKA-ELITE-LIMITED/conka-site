@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { Testimonial } from "@/app/components/testimonials/types";
 import { CURATED_TESTIMONIALS } from "@/app/lib/customerTestimonials";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
+import PremiumDotIndicator from "../premium/PremiumDotIndicator";
 import { TrustIconGuarantee, TrustIconShipping } from "../landing/icons";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 
@@ -273,31 +274,14 @@ export default function CROTestimonials({
       </div>
 
       {/* Dot indicators — primary nav on mobile (arrows are desktop-only) */}
-      <div
-        className="mt-6 flex justify-center gap-2"
-        role="tablist"
-        aria-label="Review navigation"
-      >
-        {testimonials.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            role="tab"
-            aria-selected={i === activeIndex}
-            aria-label={`Go to review ${i + 1}`}
-            onClick={() => goToIndex(i)}
-            className="flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
-          >
-            <span
-              className={`block rounded-full transition-all ${
-                i === activeIndex
-                  ? "h-2 w-5 bg-[#1B2757]"
-                  : "h-2 w-2 bg-black/15 hover:bg-black/30"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
+      <PremiumDotIndicator
+        total={testimonials.length}
+        currentIndex={activeIndex}
+        onDotClick={goToIndex}
+        ariaLabel="Review navigation"
+        getDotAriaLabel={(i) => `Go to review ${i + 1}`}
+        className="mt-6"
+      />
 
       {!hideCTA && (
         <>
