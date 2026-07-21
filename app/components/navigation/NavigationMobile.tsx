@@ -10,6 +10,15 @@ import type { NavigationMobileProps } from "./types";
 // Same IA as desktop, sourced from the shared config (no duplicate links).
 const MENU_GROUPS = [NAV_SCIENCE, NAV_APP, NAV_COMPANY];
 
+// Muted time-of-day tints for the product pills. Warm = morning, cool =
+// afternoon, navy = full day. Kept low-saturation so no formula reads as
+// spotlit over the other.
+const BADGE_STYLE: Record<string, { bg: string; color: string }> = {
+  Morning: { bg: "rgba(217,119,6,0.12)", color: "#b45309" },
+  Afternoon: { bg: "rgba(3,105,161,0.12)", color: "#0369a1" },
+  "Full day": { bg: "rgba(27,39,87,0.10)", color: "#1B2757" },
+};
+
 export default function NavigationMobile({
   mobileMenuOpen,
   setMobileMenuOpen,
@@ -172,77 +181,90 @@ export default function NavigationMobile({
 
             {/* Shop by Product */}
             <div className="px-5 pt-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black tabular-nums mb-4">
+              <p className="text-lg font-bold text-black mb-4">
                 Shop by product
               </p>
-              <div className="flex flex-col gap-3">
-                {NAV_PRODUCTS.map((product) => (
-                  <a
-                    key={product.href}
-                    href={product.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 bg-[#f5f5f5] hover:bg-black/[0.05] transition-colors p-3"
-                  >
-                    <div className="relative w-16 h-16 shrink-0 bg-white overflow-hidden">
-                      <Image
-                        src={product.image}
-                        alt={product.alt}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-base font-semibold text-black leading-tight">
-                        {product.name}
-                      </p>
-                      <p className="text-xs text-black/60 mt-0.5 leading-snug">
-                        {product.description}
-                      </p>
-                    </div>
-                    <svg
-                      aria-hidden
-                      className="text-black shrink-0"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      strokeLinecap="square"
-                      strokeLinejoin="miter"
+              <div className="flex flex-col gap-6">
+                {NAV_PRODUCTS.map((product) => {
+                  const badge = BADGE_STYLE[product.badge];
+                  return (
+                    <a
+                      key={product.href}
+                      href={product.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="group flex items-center gap-4"
                     >
-                      <polyline points="9 6 15 12 9 18" />
-                    </svg>
-                  </a>
-                ))}
+                      <div className="relative w-24 h-24 shrink-0 overflow-hidden border border-black/15 bg-[#f5f5f5]">
+                        <Image
+                          src={product.image}
+                          alt={product.alt}
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1 flex flex-col justify-center gap-1.5">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-xl font-bold text-black leading-none">
+                            {product.name}
+                          </p>
+                          <span
+                            className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] px-1.5 py-1 leading-none"
+                            style={{ backgroundColor: badge.bg, color: badge.color }}
+                          >
+                            {product.badge}
+                          </span>
+                        </div>
+                        <p className="text-[13px] text-black/80 leading-snug">
+                          {product.descriptionLong}
+                        </p>
+                      </div>
+                      <svg
+                        aria-hidden
+                        className="text-black shrink-0 self-center transition-transform group-hover:translate-x-0.5"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                      >
+                        <polyline points="9 6 15 12 9 18" />
+                      </svg>
+                    </a>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Categorised groups */}
+            {/* Categorised groups — compact 2-col grid keeps secondary IA
+                scannable and clearly subordinate to the product rows. */}
             {MENU_GROUPS.map((group) => (
-              <div key={group.title} className="px-5 pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black tabular-nums mb-4">
+              <div
+                key={group.title}
+                className="px-5 mt-8 pt-8 border-t border-black/10"
+              >
+                <p className="text-lg font-bold text-black mb-4">
                   {group.title}
                 </p>
-                <div className="bg-[#f5f5f5]">
-                  {group.links.map((link, idx) => (
+                <div className="grid grid-cols-2 gap-2">
+                  {group.links.map((link) => (
                     <a
                       key={`${group.title}-${link.href}`}
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center justify-between px-4 py-4 ${
-                        idx < group.links.length - 1 ? "border-b border-black/8" : ""
-                      } hover:bg-black/[0.05] transition-colors`}
+                      className="flex items-center justify-between gap-2 bg-[#f5f5f5] px-3.5 py-3.5 hover:bg-black/[0.05] transition-colors"
                     >
-                      <span className="text-base font-semibold text-black leading-tight">
+                      <span className="text-sm font-semibold text-black leading-tight">
                         {link.label}
                       </span>
                       <svg
                         aria-hidden
                         className="text-black shrink-0"
-                        width="18"
-                        height="18"
+                        width="16"
+                        height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -258,10 +280,37 @@ export default function NavigationMobile({
               </div>
             ))}
 
-            {/* Footer meta */}
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40 tabular-nums px-5 pt-8">
-              100-day guarantee · Free UK shipping · Cancel anytime
-            </p>
+            {/* Social proof — featured verified review, replacing the old
+                guarantee microcopy. */}
+            <div className="px-5 mt-8 pt-8 border-t border-black/10">
+              <div
+                className="p-6 text-center text-white"
+                style={{
+                  background:
+                    "linear-gradient(140deg, #4058bb 0%, #26356f 55%, #1B2757 100%)",
+                }}
+              >
+                <span
+                  aria-label="5 out of 5 stars"
+                  className="block text-2xl leading-none tracking-[0.18em] text-[#F59E0B]"
+                >
+                  ★★★★★
+                </span>
+                <p className="mt-4 text-lg font-bold leading-tight text-white">
+                  The combo is unreal
+                </p>
+                <p className="mt-2 text-[15px] italic leading-snug text-white/90">
+                  &ldquo;Started taking both Flow and Clear together and the
+                  combo is unreal.&rdquo;
+                </p>
+                <div className="mt-5 flex items-center justify-center gap-2.5">
+                  <span className="text-sm font-bold text-white">Jack G.</span>
+                  <span className="bg-white px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none text-[#1B2757]">
+                    Verified buyer
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
