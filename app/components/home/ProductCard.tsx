@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { formulaContent } from "@/app/lib/productData";
 import {
   getFormulaImage,
   getProtocolImage,
@@ -19,36 +18,35 @@ interface Stat {
 }
 
 interface ProductCardData {
-  number: string;
-  name: string;
-  categoryTag: string;
-  imageTag: string;
+  displayName: string;
+  rolePill: string;
   benefitHeadline: string;
   bodyCopy: string;
-  bestFor: string[];
   stats: Stat[];
   image: string;
   link: string;
+  /** Soft badge shown only on the bundle card. */
+  badge?: string;
 }
+
+/** Sitewide rating, matching the PDP hero (ProductHeroV2). No per-formula
+ *  source exists; the aggregate figure is attached per product as on the PDP. */
+const RATING = { value: "4.7", reviews: "622" };
 
 const getProductData = (
   productType: "flow" | "clear" | "protocol",
 ): ProductCardData => {
   if (productType === "flow") {
-    const flow = formulaContent["01"];
     return {
-      number: "01",
-      name: flow.name,
-      categoryTag: "CONKA · FLOW",
-      imageTag: "MORNING",
+      displayName: "Flow",
+      rolePill: "Morning ritual",
       benefitHeadline: "Energy without the crash",
       bodyCopy:
-        "Sustained focus for training and work — no caffeine, no crash.",
-      bestFor: ["Morning training", "Long workdays", "Clean mental stamina"],
+        "Sustained focus for training and work, with no caffeine and no crash.",
       stats: [
-        { value: "-56%", label: "STRESS" },
-        { value: "+18%", label: "MEMORY" },
-        { value: "+42%", label: "SLEEP" },
+        { value: "-56%", label: "Stress" },
+        { value: "+18%", label: "Memory" },
+        { value: "+42%", label: "Sleep" },
       ],
       image: getFormulaImage("01"),
       link: "/conka-flow",
@@ -56,20 +54,16 @@ const getProductData = (
   }
 
   if (productType === "clear") {
-    const clear = formulaContent["02"];
     return {
-      number: "02",
-      name: clear.name,
-      categoryTag: "CONKA · CLEAR",
-      imageTag: "AFTERNOON",
-      benefitHeadline: "Mental clarity and complete recovery",
+      displayName: "Clear",
+      rolePill: "Afternoon reset",
+      benefitHeadline: "Clarity and complete recovery",
       bodyCopy:
-        "Sharpen performance when you need it. Support recovery when you're done.",
-      bestFor: ["Post-training recovery", "Afternoon clarity", "Sleep quality"],
+        "Sharpen performance when you need it, support recovery when you're done.",
       stats: [
-        { value: "+63%", label: "MEMORY" },
-        { value: "+57%", label: "BLOOD FLOW" },
-        { value: "-42%", label: "ANXIETY" },
+        { value: "+63%", label: "Memory" },
+        { value: "+57%", label: "Blood flow" },
+        { value: "-42%", label: "Anxiety" },
       ],
       image: getFormulaImage("02"),
       link: "/conka-clarity",
@@ -77,27 +71,50 @@ const getProductData = (
   }
 
   return {
-    number: "03",
-    name: "Both (Flow + Clear)",
-    categoryTag: "CONKA · DAILY SYSTEM",
-    imageTag: "MOST POPULAR",
-    benefitHeadline: "The full daily system",
+    displayName: "Both",
+    rolePill: "Full daily system",
+    benefitHeadline: "Morning focus, afternoon clarity",
     bodyCopy:
-      "Morning focus meets afternoon clarity. Two shots, 16 active ingredients, all-day coverage.",
-    bestFor: [
-      "All-day energy & focus",
-      "Full recovery & clarity",
-      "The complete daily routine",
-    ],
+      "Two shots, 16 active ingredients, all-day coverage from wake-up to wind-down.",
     stats: [
-      { value: "+63%", label: "MEMORY" },
-      { value: "-56%", label: "STRESS" },
-      { value: "+42%", label: "SLEEP" },
+      { value: "+63%", label: "Memory" },
+      { value: "-56%", label: "Stress" },
+      { value: "+42%", label: "Sleep" },
     ],
     image: getProtocolImage("3"),
     link: "/conka-both",
+    badge: "Most popular",
   };
 };
+
+/** Navy five-star row + "4.7 (622 reviews)", mirroring the PDP hero. */
+function CardRating() {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex" aria-hidden>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <svg
+            key={i}
+            xmlns="http://www.w3.org/2000/svg"
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="text-[#1B2757]"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ))}
+      </div>
+      <span className="text-sm font-bold text-black leading-none">
+        {RATING.value}{" "}
+        <span className="font-medium text-black/50">
+          ({RATING.reviews} reviews)
+        </span>
+      </span>
+    </div>
+  );
+}
 
 export default function ProductCard({
   productType,
@@ -108,95 +125,75 @@ export default function ProductCard({
     imageAspect === "wide" ? "aspect-[4/3]" : "aspect-square";
 
   return (
-    <div className="flex flex-col bg-white border border-black/12 overflow-hidden h-full">
-      {/* Category row */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
-        <span className="font-mono text-[11px] font-bold tabular-nums text-black/40 leading-none">
-          {product.number}.
-        </span>
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/60 leading-none">
-          {product.categoryTag}
-        </span>
-      </div>
-
-      {/* Product image → PDP link, with chamfered navy tag */}
+    <article className="flex flex-col h-full bg-white rounded-2xl overflow-hidden ring-1 ring-black/8">
+      {/* Product image → PDP link */}
       <Link
         href={product.link}
-        className={`relative block w-full ${imageAspectClass} overflow-hidden border-b border-black/8 group`}
+        className={`relative block w-full ${imageAspectClass} overflow-hidden bg-[#eef1f8] group`}
       >
         <Image
           src={product.image}
-          alt={product.name}
+          alt={product.displayName}
           fill
           loading="lazy"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 85vw, (max-width: 1024px) 33vw, 25vw"
         />
-        <div className={`absolute top-0 right-0 ${product.imageTag === "MOST POPULAR" ? "bg-[#C9A24A]" : "bg-[#1B2757]"} text-white px-3 py-1.5 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)]`}>
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] leading-none">
-            {product.imageTag}
+        {product.badge && (
+          <span className="absolute top-3 right-3 rounded-full bg-[#C9A24A] px-3 py-1 text-[11px] font-semibold text-white leading-none">
+            {product.badge}
           </span>
-        </div>
+        )}
       </Link>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-4 lg:p-5">
-        {/* Mono product-name eyebrow */}
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50 mb-1.5 leading-none">
-          {product.name}
-        </p>
-
-        {/* Benefit headline */}
-        <h3 className="text-lg lg:text-xl font-semibold text-black leading-tight mb-2">
-          {product.benefitHeadline}
+      <div className="flex flex-col flex-1 p-5 lg:p-6">
+        {/* Name + rating */}
+        <h3 className="text-3xl font-bold text-black leading-none tracking-tight">
+          {product.displayName}
         </h3>
+        <div className="mt-3">
+          <CardRating />
+        </div>
 
-        {/* Body copy */}
-        <p className="text-sm text-black/60 leading-relaxed mb-3">
-          {product.bodyCopy}
-        </p>
+        {/* Role pill + description */}
+        <div className="mt-5 pt-5 border-t border-black/10">
+          <span className="inline-flex items-center rounded-full bg-[#eef1f8] px-3 py-1 text-xs font-semibold text-[#1B2757] leading-none">
+            {product.rolePill}
+          </span>
+          <p className="mt-3 text-base font-semibold text-black leading-snug">
+            {product.benefitHeadline}
+          </p>
+          <p className="mt-1.5 text-sm text-black/70 leading-relaxed">
+            {product.bodyCopy}
+          </p>
+        </div>
 
-        {/* 3-metric stat grid */}
-        <div className="grid grid-cols-3 gap-1 py-2.5 border-y border-black/8 mb-3">
+        {/* Simplified stat trio */}
+        <div className="mt-5 pt-5 grid grid-cols-3 gap-3 border-t border-black/10">
           {product.stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-start gap-1">
-              <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-black/40 leading-none">
-                {stat.label}
-              </span>
-              <span className="font-mono text-sm lg:text-base font-bold tabular-nums text-black leading-none">
+            <div key={stat.label} className="flex flex-col gap-1">
+              <span className="text-xl font-bold text-black leading-none tabular-nums">
                 {stat.value}
+              </span>
+              <span className="text-[11px] uppercase tracking-wide text-black/45 leading-none">
+                {stat.label}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Best-for list — em-dash bullets */}
-        <ul className="space-y-1 mb-4">
-          {product.bestFor.map((item) => (
-            <li
-              key={item}
-              className="flex items-start gap-2 text-sm text-black/70 leading-snug"
-            >
-              <span className="font-mono text-black/30 shrink-0 leading-snug">
-                —
-              </span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-
-        {/* CTA — pinned to bottom; primary CTA uses the shared ConkaCTAButton
-            so the two-corner notch shape stays consistent everywhere. */}
-        <div className="mt-auto">
+        {/* CTA — pinned to bottom */}
+        <div className="mt-6 pt-1">
           <ConkaCTAButton
             href={product.link}
             meta={null}
             className="w-full max-w-none"
           >
-            Shop Now
+            Try {product.displayName}
           </ConkaCTAButton>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

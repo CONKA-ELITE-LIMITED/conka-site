@@ -13,6 +13,7 @@ import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
+import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
@@ -32,8 +33,6 @@ import {
 const CLEAR_FAQ_IMAGE = {
   src: "/lifestyle/clear/ClearDrink.jpg",
   alt: "Drinking a CONKA Clear shot",
-  topLabel: "Fig. 03 · Daily Ritual",
-  bottomLabel: "CONKA Clear · Afternoon",
 };
 
 const CLEAR_FAQ_ITEMS = getFormulaPdpFaqItems("02");
@@ -125,6 +124,16 @@ export default function ConkaClarityPage() {
         <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
           <div className="brand-track">
             <ClinicalIngredients formulaIds={["02"]} />
+          </div>
+        </section>
+
+        {/* ===== SECTION 5: ABSORPTION (why liquid) ===== */}
+        <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
+          <div className="brand-track">
+            <AbsorptionBioavailability
+              imageSrc="/formulas/conkaClear/ClearLiquid.jpg"
+              imageAlt="CONKA Clear liquid pouring from an amber bottle"
+            />
           </div>
         </section>
 

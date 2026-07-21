@@ -33,8 +33,6 @@ import {
 const FLOW_FAQ_IMAGE = {
   src: "/lifestyle/flow/FlowDrink.jpg",
   alt: "Drinking a CONKA Flow shot",
-  topLabel: "Fig. 03 · Daily Ritual",
-  bottomLabel: "CONKA Flow · Morning",
 };
 
 const FLOW_FAQ_ITEMS = getFormulaPdpFaqItems("01");

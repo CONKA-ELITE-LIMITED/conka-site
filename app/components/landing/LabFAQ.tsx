@@ -10,17 +10,11 @@ import ConkaCTAButton from "./ConkaCTAButton";
 export interface LabFAQImage {
   src: string;
   alt: string;
-  /** Top-left figure caption overlay. */
-  topLabel: string;
-  /** Bottom-right caption overlay. */
-  bottomLabel: string;
 }
 
 const DEFAULT_IMAGE: LabFAQImage = {
   src: "/lifestyle/flow/FlowDeskClutter.jpg",
   alt: "CONKA Flow bottle on a desk next to a keyboard, pen, notebook and sticky note",
-  topLabel: "Fig. 04 · Field Use",
-  bottomLabel: "CONKA Flow · Workspace",
 };
 
 interface LabFAQProps {
@@ -53,12 +47,6 @@ export default function LabFAQ({
               loading="lazy"
               className="w-full h-auto"
             />
-            <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-              {image.topLabel}
-            </span>
-            <span className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-              {image.bottomLabel}
-            </span>
           </div>
         </div>
 
