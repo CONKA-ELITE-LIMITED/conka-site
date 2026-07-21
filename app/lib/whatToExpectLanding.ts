@@ -1,56 +1,98 @@
 /**
- * Timeline data for landing page "What to Expect" (Flow / Clear).
- * Shared by WhatToExpectDesktop and WhatToExpectMobile.
+ * "What to expect" milestone data for the PDP timeline (Flow / Clear / Both).
+ * Day-based, outcome-led milestones shown under the full-bleed hero asset.
  */
 
-export interface TimelineStage {
-  subheading: string;
-  heading: string;
+export interface ExpectMilestone {
+  day: string;
+  title: string;
   body: string;
 }
 
-export const timelineFlow: TimelineStage[] = [
+export const expectFlow: ExpectMilestone[] = [
   {
-    subheading: "Within 30 minutes",
-    heading: "Calmer head, sharper focus",
-    body: "Lemon balm supports GABA receptors. You'll feel less mental chatter and easier concentration within 30 minutes.",
+    day: "Day 1",
+    title: "Calm, sharper focus",
+    body: "Less mental chatter and easier concentration, often within the first shot.",
   },
   {
-    subheading: "Week 1-2",
-    heading: "Stress becomes manageable",
-    body: "Adaptogens like ashwagandha stack daily. You'll feel mornings smoother and stress more under control.",
+    day: "Day 7",
+    title: "Stress feels manageable",
+    body: "Adaptogens build day on day, so mornings feel smoother and pressure lighter.",
   },
   {
-    subheading: "Month 1",
-    heading: "Energy and focus compound",
-    body: "Neuroprotection and resilience build. You'll feel steadier energy, clearer thinking, and fewer afternoon dips.",
-  },
-  {
-    subheading: "2+ Months",
-    heading: "Sustainable daily strength",
-    body: "You're supporting your system for the long run. Focus, resilience, and balance maintained as a habit, not a spike.",
+    day: "Day 30",
+    title: "Focus that compounds",
+    body: "Steadier energy, clearer thinking, and fewer afternoon dips.",
   },
 ];
 
-export const timelineClear: TimelineStage[] = [
+export const expectClear: ExpectMilestone[] = [
   {
-    subheading: "Within 30 minutes",
-    heading: "Fog lifts, thinking sharpens",
-    body: "Glutathione and vitamin C dampen oxidative stress. You'll feel the fog lift and complex tasks get easier from the first use.",
+    day: "Day 1",
+    title: "The fog lifts",
+    body: "Complex tasks get easier from the first shot as oxidative stress drops.",
   },
   {
-    subheading: "Week 1-2",
-    heading: "Antioxidant capacity builds",
-    body: "Glutathione and NAC build in your system daily. You'll feel thinking get sharper and mental fatigue lighter.",
+    day: "Day 7",
+    title: "Thinking sharpens",
+    body: "Antioxidant capacity builds daily, so mental fatigue feels lighter.",
   },
   {
-    subheading: "Month 1",
-    heading: "Cognitive clarity established",
-    body: "The antioxidant and nootropic stack compounds. You'll feel mental clarity and focus reliably there, not just a short-lived boost.",
-  },
-  {
-    subheading: "2+ Months",
-    heading: "Long-term cognitive support",
-    body: "You're supporting clarity and brain health for the long term. Sharp thinking and balance maintained, not a quick fix.",
+    day: "Day 30",
+    title: "Clarity established",
+    body: "Reliable mental clarity and focus, not just a short-lived boost.",
   },
 ];
+
+export const expectBoth: ExpectMilestone[] = [
+  {
+    day: "Day 1",
+    title: "Sharper morning to night",
+    body: "Calm focus in the morning, a clean mental reset in the afternoon, from the first day.",
+  },
+  {
+    day: "Day 7",
+    title: "Steadier under pressure",
+    body: "Flow and Clear stack daily, so stress feels lighter and energy holds through the day.",
+  },
+  {
+    day: "Day 30",
+    title: "A better baseline",
+    body: "Clearer thinking, steadier energy, and fewer dips, morning to evening.",
+  },
+];
+
+export type ExpectProductId = "01" | "02" | "both";
+
+export const expectMilestones: Record<ExpectProductId, ExpectMilestone[]> = {
+  "01": expectFlow,
+  "02": expectClear,
+  both: expectBoth,
+};
+
+export interface ExpectAsset {
+  /** 16:9 landscape crop for lg and up. */
+  desktop: string;
+  /** 4:5 portrait crop for below lg. */
+  mobile: string;
+  alt: string;
+}
+
+export const whatToExpectAsset: Record<ExpectProductId, ExpectAsset> = {
+  "01": {
+    desktop: "/formulas/whatToExpect/FlowWhatToExpect.jpg",
+    mobile: "/formulas/whatToExpect/FlowWhatToExpectMobile.jpg",
+    alt: "CONKA Flow, your brain optimised after 30 days",
+  },
+  "02": {
+    desktop: "/formulas/whatToExpect/ClearWhatToExpect.jpg",
+    mobile: "/formulas/whatToExpect/ClearWhatToExpectMobile.jpg",
+    alt: "CONKA Clear, your brain optimised after 30 days",
+  },
+  both: {
+    desktop: "/formulas/whatToExpect/BothWhatToExpect.jpg",
+    mobile: "/formulas/whatToExpect/BothWhatToExpectMobile.jpg",
+    alt: "CONKA Flow and Clear, your brain optimised after 30 days",
+  },
+};

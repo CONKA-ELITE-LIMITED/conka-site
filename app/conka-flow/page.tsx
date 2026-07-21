@@ -126,11 +126,9 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
-        <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
-          <div className="brand-track">
-            <WhatToExpect productId="01" />
-          </div>
+        {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
+        <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
+          <WhatToExpect productId="01" />
         </section>
 
         {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
@@ -237,11 +235,9 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
-      <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
-        <div className="brand-track">
-          <WhatToExpect productId="01" />
-        </div>
+      {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
+      <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
+        <WhatToExpect productId="01" />
       </section>
 
       {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
