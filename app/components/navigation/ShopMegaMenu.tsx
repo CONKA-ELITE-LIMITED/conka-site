@@ -3,7 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { NAV_PRODUCTS } from "./navConfig";
+import type { NavProduct } from "./navConfig";
 import type { ShopMegaMenuProps } from "./types";
+
+// Per time-of-day badge colours: soft pastel fill with a darker accent text so
+// each reads on the white footer and on the navy footer once it fills on hover.
+const BADGE_CLASS: Record<NavProduct["badge"], string> = {
+  Morning: "bg-[#f7edcb] text-[#755b1a]",
+  Afternoon: "bg-[#f7ddd0] text-[#9a4526]",
+  "Full day": "bg-[#dce3f5] text-[#2f3f74]",
+};
 
 /* ============================================================================
  * ShopMegaMenu
@@ -29,14 +38,17 @@ export default function ShopMegaMenu({
     <div
       className="absolute left-0 right-0 top-full z-50 shadow-[0_16px_40px_rgba(0,0,0,0.25)]"
       style={{
+        // Matches the header gradient and is viewport-anchored so the two
+        // read as one continuous panel while Shop is open.
         background:
-          "linear-gradient(135deg, #4058bb 0%, #26356f 55%, #1B2757 100%)",
+          "linear-gradient(135deg, #6774a3 0%, #464f7e 55%, #333a5e 100%)",
+        backgroundAttachment: "fixed",
       }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
       <div className="w-full px-6 md:px-16 py-10">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl">
           <div className="grid grid-cols-3 gap-6">
             {NAV_PRODUCTS.map((product) => (
               <Link
@@ -44,7 +56,7 @@ export default function ShopMegaMenu({
                 href={product.href}
                 onClick={onClose}
                 aria-label={product.alt}
-                className="group block overflow-hidden rounded-xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1"
+                className="group block overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
               >
                 <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <Image
@@ -55,11 +67,13 @@ export default function ShopMegaMenu({
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
                 </div>
-                <div className="flex flex-col items-center gap-2 p-4 text-center transition-colors group-hover:bg-[#1B2757]">
+                <div className="flex flex-col items-start gap-2 border-t border-black/10 p-4 text-left transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
                   <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
                     {product.name}
                   </p>
-                  <span className="rounded-full bg-[#1B2757] px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none text-white transition-colors group-hover:bg-white group-hover:text-[#1B2757]">
+                  <span
+                    className={`rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none transition-colors ${BADGE_CLASS[product.badge]}`}
+                  >
                     {product.badge}
                   </span>
                 </div>

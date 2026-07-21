@@ -9,7 +9,8 @@ import NavGroupMegaMenu from "./NavGroupMegaMenu";
 import { NAV_SCIENCE, NAV_APP, NAV_OUR_STORY } from "./navConfig";
 import type { NavigationDesktopProps, NavMenu } from "./types";
 
-/** Text trigger for a grouped mega-menu (Science, App). */
+/** Text trigger for a mega-menu. `primary` renders the obvious Shop pill;
+ *  `onDark` inverts colours when the header is on the Shop gradient. */
 function NavMenuTrigger({
   label,
   menu,
@@ -17,6 +18,8 @@ function NavMenuTrigger({
   setOpenMenu,
   onMenuEnter,
   onMenuLeave,
+  primary = false,
+  onDark = false,
 }: {
   label: string;
   menu: NavMenu;
@@ -24,8 +27,19 @@ function NavMenuTrigger({
   setOpenMenu: (menu: NavMenu) => void;
   onMenuEnter: (menu: NavMenu) => void;
   onMenuLeave: () => void;
+  primary?: boolean;
+  onDark?: boolean;
 }) {
   const isOpen = openMenu === menu;
+  const base =
+    "flex items-center gap-1.5 rounded-full px-4 py-2 text-[15px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]";
+  const tone = primary
+    ? onDark
+      ? "bg-white text-[#1B2757]"
+      : "bg-[#1B2757] text-white hover:opacity-90"
+    : onDark
+      ? `text-white hover:bg-white/10 ${isOpen ? "bg-white/10" : ""}`
+      : `text-black hover:bg-black/[0.05] ${isOpen ? "bg-black/[0.05]" : ""}`;
   return (
     <div
       className="relative flex items-center"
@@ -37,9 +51,7 @@ function NavMenuTrigger({
         onClick={() => setOpenMenu(isOpen ? null : menu)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[15px] font-bold text-black transition-colors hover:bg-black/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
-          isOpen ? "bg-black/[0.05]" : ""
-        }`}
+        className={`${base} ${tone}`}
       >
         {label}
         <svg
@@ -72,6 +84,7 @@ export default function NavigationDesktop({
   onMenuLeave,
 }: NavigationDesktopProps) {
   const { openCart, itemCount } = useCart();
+  const shopOpen = openMenu === "shop";
 
   return (
     <div
@@ -82,7 +95,22 @@ export default function NavigationDesktop({
     >
       {!hideBanner && bannerConfig && <Banner config={bannerConfig} />}
 
-      <header className="w-full bg-white border-b border-black/12">
+      <header
+        className={`w-full border-b transition-colors duration-200 ${
+          shopOpen ? "border-transparent" : "bg-white border-black/12"
+        }`}
+        style={
+          shopOpen
+            ? {
+                // Viewport-anchored so the header and the Shop panel below it
+                // read as one continuous diagonal (no seam at the boundary).
+                background:
+                  "linear-gradient(135deg, #6774a3 0%, #464f7e 55%, #333a5e 100%)",
+                backgroundAttachment: "fixed",
+              }
+            : undefined
+        }
+      >
         <div className="px-6 md:px-16 py-1 md:py-4 flex items-center relative">
           <Link href="/" className="flex items-center" aria-label="CONKA home">
             <Image
@@ -90,7 +118,9 @@ export default function NavigationDesktop({
               alt="CONKA logo"
               width={440}
               height={112}
-              className="h-7 md:h-9 w-auto"
+              className={`h-7 md:h-9 w-auto transition-[filter] duration-200 ${
+                shopOpen ? "brightness-0 invert" : ""
+              }`}
               priority
             />
           </Link>
@@ -99,6 +129,8 @@ export default function NavigationDesktop({
             <NavMenuTrigger
               label="Shop"
               menu="shop"
+              primary
+              onDark={shopOpen}
               openMenu={openMenu}
               setOpenMenu={setOpenMenu}
               onMenuEnter={onMenuEnter}
@@ -107,6 +139,7 @@ export default function NavigationDesktop({
             <NavMenuTrigger
               label={NAV_SCIENCE.title}
               menu="science"
+              onDark={shopOpen}
               openMenu={openMenu}
               setOpenMenu={setOpenMenu}
               onMenuEnter={onMenuEnter}
@@ -115,6 +148,7 @@ export default function NavigationDesktop({
             <NavMenuTrigger
               label={NAV_APP.title}
               menu="app"
+              onDark={shopOpen}
               openMenu={openMenu}
               setOpenMenu={setOpenMenu}
               onMenuEnter={onMenuEnter}
@@ -122,7 +156,11 @@ export default function NavigationDesktop({
             />
             <a
               href={NAV_OUR_STORY.href}
-              className="rounded-full px-4 py-2 text-[15px] font-bold text-black transition-colors hover:bg-black/[0.05]"
+              className={`rounded-full px-4 py-2 text-[15px] font-bold transition-colors ${
+                shopOpen
+                  ? "text-white hover:bg-white/10"
+                  : "text-black hover:bg-black/[0.05]"
+              }`}
             >
               {NAV_OUR_STORY.label}
             </a>
@@ -136,7 +174,13 @@ export default function NavigationDesktop({
               className="group flex items-center justify-center"
               aria-label="Account"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1B2757] text-white transition-transform group-hover:scale-105">
+              <span
+                className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
+                  shopOpen
+                    ? "border-white text-white group-hover:bg-white group-hover:text-[#1B2757]"
+                    : "border-[#1B2757] text-[#1B2757] group-hover:bg-[#1B2757] group-hover:text-white"
+                }`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="19"
@@ -155,7 +199,11 @@ export default function NavigationDesktop({
             </a>
             <button
               onClick={openCart}
-              className="rounded-full border border-[#1B2757] px-4 py-1.5 text-sm font-bold text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white tabular-nums"
+              className={`rounded-full border px-4 py-1.5 text-sm font-bold tabular-nums transition-colors ${
+                shopOpen
+                  ? "border-white text-white hover:bg-white hover:text-[#1B2757]"
+                  : "border-[#1B2757] text-[#1B2757] hover:bg-[#1B2757] hover:text-white"
+              }`}
               aria-label="Open cart"
             >
               Cart {itemCount > 99 ? "99+" : itemCount}
