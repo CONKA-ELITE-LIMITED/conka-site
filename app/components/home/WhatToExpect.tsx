@@ -14,10 +14,10 @@ import {
  * copy acts as the section header, with a Day 1 / Day 7 / Day 30 outcome
  * timeline.
  *
- * Two layouts mirroring MM:
+ * Two layouts:
  *   - Mobile (< lg): 4:5 portrait asset, timeline stacked underneath.
- *   - Desktop (lg+): 16:9 landscape asset with the timeline overlaid on its
- *     lower band (a light scrim keeps the copy legible over the floor).
+ *   - Desktop (lg+): 16:9 landscape asset, timeline immediately below on a tint
+ *     band (our asset is shorter than MM's, so we don't overlay it).
  *
  * Static server component (no client JS). The page section owns the full-bleed
  * (`!px-0 !py-0`). Used on /conka-flow (01), /conka-clarity (02), and
@@ -34,7 +34,7 @@ function DayItems({ milestones }: { milestones: ExpectMilestone[] }) {
           <div className="mb-4 text-3xl font-bold leading-none tracking-tight text-black lg:text-4xl">
             {m.day}
           </div>
-          <div className="mb-5 rounded-lg border border-black/15 bg-white px-6 py-6 shadow-sm">
+          <div className="mb-5 rounded-lg border-2 border-[#1B2757] bg-white px-6 py-4">
             <h3 className="text-2xl font-bold leading-tight text-black lg:text-3xl">
               {m.title}
             </h3>
@@ -84,8 +84,8 @@ export default function WhatToExpect({
         </ol>
       </div>
 
-      {/* Desktop: landscape asset with the timeline overlaid on its lower band. */}
-      <div className="relative hidden lg:block">
+      {/* Desktop: landscape asset, timeline immediately below on a tint band. */}
+      <div className="hidden lg:block">
         <Image
           src={asset.desktop}
           alt={asset.alt}
@@ -95,8 +95,8 @@ export default function WhatToExpect({
           sizes="100vw"
           className="h-auto w-full"
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/90 via-white/70 to-transparent pt-12">
-          <ol className="mx-auto grid max-w-[1280px] grid-cols-3 gap-10 px-[var(--brand-gutter-desktop)] pb-14">
+        <div className="bg-[var(--brand-tint)]">
+          <ol className="mx-auto grid max-w-[1280px] grid-cols-3 gap-10 px-[var(--brand-gutter-desktop)] pb-16 pt-6">
             <DayItems milestones={milestones} />
           </ol>
         </div>
