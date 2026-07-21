@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Make ProductBenefitTiles formula-aware (Clear shows lecithin/vitamin C renders) and add sizes to the poke images so mobile stops over-fetching.
 - **2026-07-21** | Render the Certifications badge band under the benefit tiles on the Flow, Clear and Both PDPs.
 - **2026-07-21** | Move the home certification badges into a reusable Certifications band rendered under the benefit tiles.
 - **2026-07-21** | Add a featured single-athlete review section (Jack Willis) to the home page under the product grid.

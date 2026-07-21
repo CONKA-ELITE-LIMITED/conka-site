@@ -85,7 +85,7 @@ export default function ConkaClarityPage() {
     <>
       <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
         <div className="brand-track">
-          <ProductBenefitTiles />
+          <ProductBenefitTiles formula="clear" />
         </div>
       </section>
       {/* Certification badges band directly under the benefit tiles. */}

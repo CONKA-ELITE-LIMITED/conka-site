@@ -90,7 +90,7 @@ export default function ConkaBothPage() {
         aria-label="Key benefits"
       >
         <div className="brand-track">
-          <ProductBenefitTiles />
+          <ProductBenefitTiles formula="flow" />
         </div>
       </section>
       {/* Certification badges band directly under the benefit tiles. */}
