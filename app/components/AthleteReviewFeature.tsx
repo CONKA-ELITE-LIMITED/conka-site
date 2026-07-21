@@ -29,14 +29,18 @@ const ATHLETE = {
 export default function AthleteReviewFeature() {
   return (
     <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
-      {/* Cutout portrait on white (no card, floats on the section background) */}
-      <div className="relative mx-auto w-full max-w-[420px] aspect-square lg:mx-0 lg:max-w-none">
+      {/* Cutout portrait in the App USP soft panel: #eef1f8 tint, rounded-2xl,
+          ring-1 ring-black/8. The photo has a white background, so
+          mix-blend-multiply dissolves the white into the tint (white * tint =
+          tint) and he floats on the light blue like the App USP asset. He
+          darkens only a few percent because the tint is near-white. */}
+      <div className="relative mx-auto w-full max-w-[420px] aspect-square overflow-hidden rounded-2xl bg-[#eef1f8] ring-1 ring-black/8 lg:mx-0 lg:max-w-none">
         <Image
           src={ATHLETE.image}
           alt={ATHLETE.imageAlt}
           fill
           sizes="(max-width: 1024px) 420px, 45vw"
-          className="object-contain"
+          className="object-contain mix-blend-multiply"
           loading="lazy"
         />
       </div>
