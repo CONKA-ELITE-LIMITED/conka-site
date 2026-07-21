@@ -8,11 +8,12 @@ interface FormulaBenefitsPillarsProps {
 }
 
 // Simple DTC daily-benefits block (Magic Mind "Daily habit. Lifelong
-// benefits." homage). Three always-open outcome blocks sit beside the
-// rotating 3D render: each leads with the shift, states its one clinical
-// figure, explains the actives behind it in a plain sentence, then shows
-// those actives as render thumbnails. No accordion, no mono eyebrows, no
-// "Fig." plate — one sans voice with the stat as the only mono scalpel.
+// benefits." homage). Three collapsed outcome blocks sit beside the rotating
+// 3D render: each summary keeps the shift and its one clinical figure on a
+// single line; expanding reveals what the figure measures, a plain sentence
+// on the actives behind it, and those actives as render thumbnails. No mono
+// eyebrows, no "Fig." plate — one sans voice with the stat as the only mono
+// scalpel.
 //
 // Pillar copy lives on CURATED_STATS so the legacy renderers still compiling
 // against the same array shape are unaffected.
@@ -25,49 +26,38 @@ export default function FormulaBenefitsPillars({
 
   const header = (
     <div className="mb-8 lg:mb-10">
-      <h2
-        className="brand-h1 mb-3 text-black"
-        style={{ letterSpacing: "-0.02em" }}
-      >
-        {formula.subheadline}
-      </h2>
+      <h2 className="brand-h1 mb-3 text-black">{formula.subheadline}</h2>
       <p className="brand-body text-black">
         The shifts you feel, and the actives behind each one.
       </p>
     </div>
   );
 
-  const blocks = stats.map((item, idx) => {
+  const blocks = stats.map((item) => {
     const pillarLabel = item.pillarName ?? item.label;
 
     return (
       // Native <details> accordion (no client JS): single-open via the shared
-      // name, first block open, the other two collapsed. The summary keeps the
-      // outcome + its clinical figure visible while the story and renders
+      // name, all blocks collapsed on mount. The summary keeps the outcome and
+      // its clinical figure on one line while the label, story and renders
       // collapse away.
       <details
         key={pillarLabel}
         name={`benefits-${formulaId}`}
-        open={idx === 0}
         className="group border-t border-black/10 first:border-t-0"
       >
-        <summary className="flex items-start justify-between gap-4 cursor-pointer list-none py-6 [&::-webkit-details-marker]:hidden">
-          <div>
-            <h3 className="text-2xl lg:text-3xl font-bold text-black leading-tight tracking-tight">
+        <summary className="flex items-center justify-between gap-3 cursor-pointer list-none py-6 [&::-webkit-details-marker]:hidden">
+          {/* Outcome + its clinical figure, one line. Stat is the only mono. */}
+          <span className="flex items-baseline gap-2.5 min-w-0 flex-wrap">
+            <h3 className="text-xl lg:text-2xl font-bold text-black leading-tight tracking-tight">
               {pillarLabel}
             </h3>
-            {/* Single clinical figure — the only mono in the block. */}
-            <p className="mt-2 flex items-baseline gap-2.5">
-              <span className="font-mono text-3xl lg:text-4xl font-bold tabular-nums text-[#1B2757] leading-none">
-                {item.stat}
-              </span>
-              <span className="text-sm text-black/55 leading-snug">
-                {item.label}
-              </span>
-            </p>
-          </div>
+            <span className="font-mono text-lg lg:text-xl font-bold tabular-nums text-[#1B2757] leading-none">
+              {item.stat}
+            </span>
+          </span>
           <svg
-            className="w-5 h-5 mt-1.5 shrink-0 text-black/40 transition-transform duration-300 group-open:rotate-180"
+            className="w-5 h-5 shrink-0 text-black transition-transform duration-300 group-open:rotate-180"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -81,6 +71,11 @@ export default function FormulaBenefitsPillars({
         </summary>
 
         <div className="pb-8">
+          {/* What the figure measures — the label that left the collapsed row. */}
+          <p className="text-sm text-black/55 leading-snug mb-4">
+            {item.label}
+          </p>
+
           {/* Plain sentence weaving the named actives into the outcome. */}
           {item.story && (
             <p className="text-base text-black leading-relaxed">
@@ -115,17 +110,18 @@ export default function FormulaBenefitsPillars({
     );
   });
 
-  // Rotating 3D render in a soft, contained panel; cards stacked beside it.
+  // Mobile stacks title, then the render, then the blocks (source order). On
+  // desktop it becomes a two-column grid: the render sticks on the left across
+  // both rows, with the header and blocks in the right column.
   return (
-    <div className="flex flex-col lg:flex-row lg:gap-12">
-      <div className="relative aspect-[4/5] mb-8 rounded-2xl overflow-hidden bg-[#eef1f8] ring-1 ring-black/8 lg:mb-0 lg:flex-[2] lg:sticky lg:top-24 lg:self-start">
+    <div className="lg:grid lg:grid-cols-[2fr_3fr] lg:gap-x-12 lg:items-start">
+      <div className="lg:col-start-2 lg:row-start-1">{header}</div>
+
+      <div className="relative aspect-[4/5] mb-8 rounded-2xl overflow-hidden bg-[#eef1f8] ring-1 ring-black/8 lg:mb-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-24 lg:self-start">
         <BottleVideo formula={formulaId === "01" ? "flow" : "clear"} />
       </div>
 
-      <div className="lg:flex-[3]">
-        {header}
-        <div className="flex flex-col">{blocks}</div>
-      </div>
+      <div className="flex flex-col lg:col-start-2 lg:row-start-2">{blocks}</div>
     </div>
   );
 }
