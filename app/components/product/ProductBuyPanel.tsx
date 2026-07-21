@@ -410,9 +410,8 @@ function FlatPlanCard({
 }) {
   const display = FUNNEL_CADENCES[cadence];
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
-  const monthsPerCycle = cadence === "quarterly-sub" ? 3 : 1;
   const savePct = getDisplayDiscount(pricing);
-  const cadenceWord = monthsPerCycle === 3 ? "every 3 months" : "monthly";
+  const cadenceWord = cadence === "quarterly-sub" ? "every 3 months" : "monthly";
   const freeShots = pricing.freeShots ?? 0;
 
   // Crossed-out "was":
