@@ -75,6 +75,105 @@ export default function ConkaFlowPage() {
     }
   };
 
+  // Shared sections — defined once, composed into the mobile and desktop trees
+  // below (only the hero differs between them). Order, backgrounds and mobile
+  // spacing mirror conka-both so all three PDPs share one structure.
+  const benefitTilesSection = (
+    <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
+      <div className="brand-track">
+        <ProductBenefitTiles />
+      </div>
+    </section>
+  );
+
+  const ugcSection = (
+    <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
+      <UGCMarquee />
+    </section>
+  );
+
+  const benefitsSection = (
+    <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
+      <div className="brand-track">
+        <FormulaBenefitsPillars formulaId="01" />
+      </div>
+    </section>
+  );
+
+  const ingredientsSection = (
+    <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
+      <div className="brand-track">
+        <ClinicalIngredients formulaIds={["01"]} />
+      </div>
+    </section>
+  );
+
+  const absorptionSection = (
+    <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
+      <div className="brand-track">
+        <AbsorptionBioavailability
+          imageSrc="/formulas/conkaFlow/FlowLiquid.jpg"
+          imageAlt="CONKA Flow liquid pouring from an amber bottle"
+        />
+      </div>
+    </section>
+  );
+
+  const whatToExpectSection = (
+    <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
+      <WhatToExpect productId="01" />
+    </section>
+  );
+
+  const testimonialsSection = (
+    <section id="testimonials" className="brand-section brand-bg-white brand-tight-bottom-mobile" aria-label="Customer reviews">
+      <div className="brand-track">
+        <CROTestimonials hideCTA />
+      </div>
+    </section>
+  );
+
+  const comparisonSection = (
+    <section id="comparison" className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="CONKA vs coffee comparison">
+      <div className="brand-track">
+        <LandingValueComparison ctaHref="/conka-both" ctaLabel="Try the full system" />
+      </div>
+    </section>
+  );
+
+  const guaranteeSection = (
+    <section className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="Risk-free guarantee">
+      <div className="brand-track">
+        <LabGuarantee />
+      </div>
+    </section>
+  );
+
+  const athleteSection = (
+    <section id="athletes" className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="Athletes who use CONKA">
+      <AthleteSportMarquee fullBleed />
+      <div className="brand-track">
+        <AthleteCredibilityCarousel showMarquee={false} />
+      </div>
+    </section>
+  );
+
+  const faqSection = (
+    <section id="faq" className="brand-section brand-bg-white brand-tight-top-mobile" aria-label="FAQ">
+      <div className="brand-track">
+        <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
+      </div>
+    </section>
+  );
+
+  const exploreSection = (
+    <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
+      <div className="brand-track">
+        <ProductGrid exclude={["flow"]} />
+      </div>
+    </section>
+  );
+
   // Mobile-first: render the mobile layout on SSR and first paint (74% of
   // traffic) and only switch to desktop once useIsMobile confirms >= lg. Treating
   // the undefined initial value as mobile avoids the desktop-then-mobile hero
@@ -84,7 +183,7 @@ export default function ConkaFlowPage() {
       <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
         <Navigation />
 
-        {/* ===== SECTION 1: HERO ===== */}
+        {/* ===== HERO ===== */}
         <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
           <div className="brand-track">
             <ProductHeroMobileV2
@@ -97,91 +196,19 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== BENEFITS TILE (Magic Mind textured band, portrait on mobile) ===== */}
-        <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
-          <div className="brand-track">
-            <ProductBenefitTiles />
-          </div>
-        </section>
-
-        {/* ===== UGC SOCIAL PROOF ===== */}
-        <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
-          <UGCMarquee />
-        </section>
-
-        {/* ===== SECTION 2: BENEFITS PILLARS ===== */}
-        <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
-          <div className="brand-track">
-            <FormulaBenefitsPillars formulaId="01" />
-          </div>
-        </section>
-
+        {benefitTilesSection}
+        {ugcSection}
+        {benefitsSection}
         {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
-
-        {/* ===== SECTION 4: INGREDIENTS ===== */}
-        <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
-          <div className="brand-track">
-            <ClinicalIngredients formulaIds={["01"]} />
-          </div>
-        </section>
-
-        {/* ===== SECTION 5: ABSORPTION (why liquid) ===== */}
-        <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
-          <div className="brand-track">
-            <AbsorptionBioavailability
-              imageSrc="/formulas/conkaFlow/FlowLiquid.jpg"
-              imageAlt="CONKA Flow liquid pouring from an amber bottle"
-            />
-          </div>
-        </section>
-
-        {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
-        <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
-          <WhatToExpect productId="01" />
-        </section>
-
-        {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
-        <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
-          <div className="brand-track">
-            <LandingValueComparison ctaHref="/conka-both" ctaLabel="Try the full system" />
-          </div>
-        </section>
-
-        {/* ===== SECTION 9: GUARANTEE (full-bleed on mobile) ===== */}
-        <section id="guarantee" className="brand-section brand-bg-white !px-0" aria-label="Risk-free guarantee">
-          <div className="brand-track">
-            <LabGuarantee />
-          </div>
-        </section>
-
-        {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
-        <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
-          <div className="brand-track">
-            <CROTestimonials hideCTA />
-          </div>
-        </section>
-
-        {/* ===== ATHLETE CREDIBILITY (moved before FAQ) ===== */}
-        <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
-          <AthleteSportMarquee fullBleed />
-          <div className="brand-track">
-            <AthleteCredibilityCarousel showMarquee={false} />
-          </div>
-        </section>
-
-        {/* ===== SECTION 11: FAQ ===== */}
-        <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
-          <div className="brand-track">
-            <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
-          </div>
-        </section>
-
-        {/* ===== SECTION 12: EXPLORE ===== */}
-        <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
-          <div className="brand-track">
-            <ProductGrid exclude={["flow"]} />
-          </div>
-        </section>
+        {ingredientsSection}
+        {absorptionSection}
+        {whatToExpectSection}
+        {testimonialsSection}
+        {comparisonSection}
+        {guaranteeSection}
+        {athleteSection}
+        {faqSection}
+        {exploreSection}
 
         {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
         {/* <StickyPurchaseFooterMobile
@@ -201,7 +228,7 @@ export default function ConkaFlowPage() {
     <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
       <Navigation />
 
-      {/* ===== SECTION 1: HERO ===== */}
+      {/* ===== HERO ===== */}
       {/* V2 hero runs wider than the 1280 brand-track and with a tighter gutter
           to sit closer to the Magic Mind reference (SCRUM-1171). */}
       <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[3vw]" aria-label="Product hero">
@@ -216,91 +243,19 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* ===== BENEFITS TILE (Magic Mind textured band) ===== */}
-      <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
-        <div className="brand-track">
-          <ProductBenefitTiles />
-        </div>
-      </section>
-
-      {/* ===== UGC SOCIAL PROOF ===== */}
-      <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
-        <UGCMarquee />
-      </section>
-
-      {/* ===== SECTION 2: BENEFITS PILLARS ===== */}
-      <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
-        <div className="brand-track">
-          <FormulaBenefitsPillars formulaId="01" />
-        </div>
-      </section>
-
+      {benefitTilesSection}
+      {ugcSection}
+      {benefitsSection}
       {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
-
-      {/* ===== SECTION 4: INGREDIENTS ===== */}
-      <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
-        <div className="brand-track">
-          <ClinicalIngredients formulaIds={["01"]} />
-        </div>
-      </section>
-
-      {/* ===== SECTION 5: ABSORPTION (why liquid) ===== */}
-      <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
-        <div className="brand-track">
-          <AbsorptionBioavailability
-            imageSrc="/formulas/conkaFlow/FlowLiquid.jpg"
-            imageAlt="CONKA Flow liquid pouring from an amber bottle"
-          />
-        </div>
-      </section>
-
-      {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
-      <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
-        <WhatToExpect productId="01" />
-      </section>
-
-      {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
-      <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
-        <div className="brand-track">
-          <LandingValueComparison ctaHref="/conka-both" ctaLabel="Try the full system" />
-        </div>
-      </section>
-
-      {/* ===== SECTION 9: GUARANTEE ===== */}
-      <section id="guarantee" className="brand-section brand-bg-white" aria-label="Risk-free guarantee">
-        <div className="brand-track">
-          <LabGuarantee />
-        </div>
-      </section>
-
-      {/* ===== SECTION 10: REVIEWS CHORUS ===== */}
-      <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
-        <div className="brand-track">
-          <CROTestimonials hideCTA />
-        </div>
-      </section>
-
-      {/* ===== ATHLETE CREDIBILITY (moved before FAQ) ===== */}
-      <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
-        <AthleteSportMarquee fullBleed />
-        <div className="brand-track">
-          <AthleteCredibilityCarousel showMarquee={false} />
-        </div>
-      </section>
-
-      {/* ===== SECTION 11: FAQ ===== */}
-      <section id="faq" className="brand-section brand-bg-white" aria-label="FAQ">
-        <div className="brand-track">
-          <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
-        </div>
-      </section>
-
-      {/* ===== SECTION 12: EXPLORE ===== */}
-      <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
-        <div className="brand-track">
-          <ProductGrid exclude={["flow"]} />
-        </div>
-      </section>
+      {ingredientsSection}
+      {absorptionSection}
+      {whatToExpectSection}
+      {testimonialsSection}
+      {comparisonSection}
+      {guaranteeSection}
+      {athleteSection}
+      {faqSection}
+      {exploreSection}
 
       {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
       {/* <StickyPurchaseFooter
