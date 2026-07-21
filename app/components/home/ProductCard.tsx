@@ -183,8 +183,8 @@ export default function ProductCard({
           ))}
         </div>
 
-        {/* CTA — pinned to bottom */}
-        <div className="mt-6 pt-1">
+        {/* CTA, pinned to bottom */}
+        <div className="mt-6">
           <ConkaCTAButton
             href={product.link}
             meta={null}
