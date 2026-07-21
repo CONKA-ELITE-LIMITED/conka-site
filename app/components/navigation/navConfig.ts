@@ -13,10 +13,12 @@
 
 export interface NavProduct {
   name: string;
-  /** Short blurb for the compact mobile rows. */
-  description: string;
-  /** Longer blurb for the desktop mega-menu cards. */
+  /** Blurb for the enhanced mobile rows. */
   descriptionLong: string;
+  /** Product hero subtitle, shown under the name on the desktop Shop tile. */
+  tagline: string;
+  /** Time-of-day tag shown as a pill beside the name. */
+  badge: "Morning" | "Afternoon" | "Full day";
   href: string;
   /** Bottle shot used in both the desktop Shop mega-menu and the mobile menu. */
   image: string;
@@ -26,24 +28,27 @@ export interface NavProduct {
 export const NAV_PRODUCTS: NavProduct[] = [
   {
     name: "Both (Flow + Clear)",
-    description: "The full daily system.",
     descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
+    tagline: "The Complete Daily Brain Shot System, Morning to Evening",
+    badge: "Full day",
     href: "/conka-both",
     image: "/formulas/both/BothNew.jpg",
     alt: "CONKA Flow and Clear",
   },
   {
     name: "CONKA Flow",
-    description: "Morning focus & energy.",
     descriptionLong: "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
+    tagline: "The Daily Morning Brain Shot for Sharper, Calmer Focus",
+    badge: "Morning",
     href: "/conka-flow",
     image: "/lander/FlowNew.jpg",
     alt: "CONKA Flow",
   },
   {
     name: "CONKA Clear",
-    description: "Afternoon clarity & recovery.",
     descriptionLong: "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",
+    tagline: "The Afternoon Brain Shot That Cuts Through Brain Fog",
+    badge: "Afternoon",
     href: "/conka-clarity",
     image: "/lander/ClearNew.jpg",
     alt: "CONKA Clear",
@@ -136,3 +141,11 @@ export const NAV_COMPANY: NavGroup = {
 
 /** Flat top-level link on desktop. */
 export const NAV_OUR_STORY: NavLink = { label: "Our Story", href: "/our-story" };
+
+/**
+ * Gradient shared by the desktop header and the Shop mega-menu while Shop is
+ * open. Both surfaces set it, viewport-anchored, so they read as one
+ * continuous panel. Keep the two consumers in sync via this single source.
+ */
+export const SHOP_MENU_GRADIENT =
+  "linear-gradient(135deg, #6774a3 0%, #464f7e 55%, #333a5e 100%)";

@@ -6,6 +6,10 @@ import Image from "next/image";
  * A textured cream "paper" tile with three bold benefit columns, and a
  * transparent ingredient render poking out above and below the tile.
  *
+ * The renders are formula-aware: pass formula="flow" (default) or "clear" and
+ * the component picks the matching ingredient pair. topImage/bottomImage still
+ * override the preset if a page needs bespoke art.
+ *
  * Content-only: the page owns the <section>, background, and track.
  */
 
@@ -19,8 +23,11 @@ interface PokeImage {
   alt: string;
 }
 
+type Formula = "flow" | "clear";
+
 interface ProductBenefitTilesProps {
   items?: BenefitItem[];
+  formula?: Formula;
   topImage?: PokeImage;
   bottomImage?: PokeImage;
 }
@@ -43,30 +50,52 @@ const DEFAULT_ITEMS: BenefitItem[] = [
   },
 ];
 
-const DEFAULT_TOP: PokeImage = {
-  src: "/ingredients/renders/RhodiolaRoseaTransparent.png",
-  alt: "Rhodiola rosea, an adaptogen in the CONKA formula",
-};
-
-const DEFAULT_BOTTOM: PokeImage = {
-  src: "/ingredients/renders/TurmericTransparent.png",
-  alt: "Turmeric root, an anti-inflammatory in the CONKA formula",
+// Ingredient renders per formula. Top pokes above the tile, bottom below.
+const FORMULA_RENDERS: Record<Formula, { top: PokeImage; bottom: PokeImage }> = {
+  flow: {
+    top: {
+      src: "/ingredients/renders/RhodiolaRoseaTransparent.png",
+      alt: "Rhodiola rosea, an adaptogen in the CONKA formula",
+    },
+    bottom: {
+      src: "/ingredients/renders/TurmericTransparent.png",
+      alt: "Turmeric root, an anti-inflammatory in the CONKA formula",
+    },
+  },
+  clear: {
+    top: {
+      src: "/ingredients/renders/LecithinTransparent.png",
+      alt: "Sunflower, a source of lecithin in the CONKA formula",
+    },
+    bottom: {
+      src: "/ingredients/renders/VitaminCTransparent.png",
+      alt: "Lemon, a source of vitamin C in the CONKA formula",
+    },
+  },
 };
 
 export default function ProductBenefitTiles({
   items = DEFAULT_ITEMS,
-  topImage = DEFAULT_TOP,
-  bottomImage = DEFAULT_BOTTOM,
+  formula = "flow",
+  topImage,
+  bottomImage,
 }: ProductBenefitTilesProps) {
+  const renders = FORMULA_RENDERS[formula];
+  const top = topImage ?? renders.top;
+  const bottom = bottomImage ?? renders.bottom;
+
   return (
     <div className="relative mx-auto max-w-[1180px]">
-      {/* Top poke — pokes above the tile, hidden behind it where they overlap */}
+      {/* Top poke — pokes above the tile, hidden behind it where they overlap.
+          Decorative, so it lazy-loads (next/image default) and `sizes` keeps
+          mobile from fetching the desktop-width render. */}
       <div className="pointer-events-none absolute left-1/2 top-0 z-0 w-[320px] -translate-x-1/2 -translate-y-[52%] md:w-[500px]">
         <Image
-          src={topImage.src}
-          alt={topImage.alt}
+          src={top.src}
+          alt={top.alt}
           width={640}
           height={640}
+          sizes="(min-width: 768px) 500px, 320px"
           className="h-auto w-full"
         />
       </div>
@@ -95,10 +124,11 @@ export default function ProductBenefitTiles({
       {/* Bottom poke */}
       <div className="pointer-events-none absolute bottom-0 left-1/2 z-0 w-[320px] -translate-x-1/2 translate-y-[52%] md:w-[520px]">
         <Image
-          src={bottomImage.src}
-          alt={bottomImage.alt}
+          src={bottom.src}
+          alt={bottom.alt}
           width={640}
           height={640}
+          sizes="(min-width: 768px) 520px, 320px"
           className="h-auto w-full"
         />
       </div>

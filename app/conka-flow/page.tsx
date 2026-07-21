@@ -10,6 +10,7 @@ import {
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
+import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
@@ -79,11 +80,15 @@ export default function ConkaFlowPage() {
   // below (only the hero differs between them). Order, backgrounds and mobile
   // spacing mirror conka-both so all three PDPs share one structure.
   const benefitTilesSection = (
-    <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
-      <div className="brand-track">
-        <ProductBenefitTiles />
-      </div>
-    </section>
+    <>
+      <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
+        <div className="brand-track">
+          <ProductBenefitTiles formula="flow" />
+        </div>
+      </section>
+      {/* Certification badges band directly under the benefit tiles. */}
+      <Certifications />
+    </>
   );
 
   const ugcSection = (

@@ -5,6 +5,13 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Make ProductBenefitTiles formula-aware (Clear shows lecithin/vitamin C renders) and add sizes to the poke images so mobile stops over-fetching.
+- **2026-07-21** | Render the Certifications badge band under the benefit tiles on the Flow, Clear and Both PDPs.
+- **2026-07-21** | Move the home certification badges into a reusable Certifications band rendered under the benefit tiles.
+- **2026-07-21** | Add a featured single-athlete review section (Jack Willis) to the home page under the product grid.
+- **2026-07-21** | Redesign mobile nav menu: Magic Mind-inspired product rows with time-of-day badges, section dividers, and a featured review card
+- **2026-07-21** | Home App USP section reworked into a condensed what/why/edge accordion with a clearer CTA, and made flush to the athlete marquee on mobile.
+- **2026-07-21** | Home page Simple DTC pass: black hero titles, athletes moved above FAQ, guarantee section replaces What-to-Expect, on-page testimonials removed, App USP rebuilt as a static Test/Log/Graph section.
 - **2026-07-21** | Simplify Informed Sport tile to one bold title and plain black body
 - **2026-07-21** | Consolidate segmented toggles into one shared SegmentedToggle component
 - **2026-07-21** | Apply Simple DTC styling to athlete carousel and product showcase, soften toggles

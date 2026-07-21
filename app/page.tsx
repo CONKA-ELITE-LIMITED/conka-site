@@ -10,10 +10,16 @@ import LandingHeroVideo from "./components/landing/LandingHeroVideo";
 import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
-import LabTimeline from "./components/landing/LabTimeline";
+import LabGuarantee from "./components/landing/LabGuarantee";
 import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
+// Static server component (native <details> accordion, no client state), so a
+// direct import like the other pure server sections above.
+import AppUSPSection from "./components/home/AppUSPSection";
+import AthleteReviewFeature from "./components/AthleteReviewFeature";
+import ProductBenefitTiles from "./components/product/ProductBenefitTiles";
+import Certifications from "./components/Certifications";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -31,19 +37,9 @@ const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
 //   { loading: () => <div className="h-[1200px]" /> },
 // );
 
-const CROTestimonials = dynamic(
-  () => import("./components/cro/CROTestimonials"),
-  { loading: () => <div className="h-[450px]" /> },
-);
-
 const AthleteCredibilityCarousel = dynamic(
   () => import("./components/AthleteCredibilityCarousel"),
   { loading: () => <div className="h-[350px]" /> },
-);
-
-const AppUSPSection = dynamic(
-  () => import("./components/home/AppUSPSection"),
-  { loading: () => <div className="h-[1100px] lg:h-[700px]" /> },
 );
 
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
@@ -119,19 +115,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 3: WHY HIGH PERFORMERS TRUST CONKA ===== */}
-      {/* No top padding; the gap above comes from section 2's bottom padding. */}
+      {/* ===== SECTION 3: KEY BENEFITS (benefit tiles) ===== */}
       <section
-        className="brand-section brand-bg-white pt-0!"
-        aria-label="Athletes who use CONKA"
+        id="benefit-tiles"
+        className="brand-section brand-bg-white"
+        aria-label="Key benefits"
       >
-        {/* Sport marquee runs full-bleed at the section level; the carousel
-            itself stays inside the track. */}
-        <AthleteSportMarquee fullBleed />
         <div className="brand-track">
-          <AthleteCredibilityCarousel showMarquee={false} />
+          <ProductBenefitTiles />
         </div>
       </section>
+
+      {/* Certification badges — self-contained white band under the benefits. */}
+      <Certifications />
 
       {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
           LandingDailyBenefits; the band owns its own full-bleed dark section,
@@ -150,6 +146,18 @@ export default function Home() {
         </section>
       </div>
 
+      {/* ===== SECTION 5.5: FEATURED ATHLETE REVIEW (Jack Willis) ===== */}
+      {/* White so the white-background cutout portrait floats; pt-0 shares the
+          product grid's bottom padding rather than doubling the white gap. */}
+      <section
+        className="brand-section brand-bg-white pt-0!"
+        aria-label="Featured athlete review"
+      >
+        <div className="brand-track">
+          <AthleteReviewFeature />
+        </div>
+      </section>
+
       {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
       {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
       <section
@@ -167,19 +175,22 @@ export default function Home() {
         <UGCMarquee />
       </section>
 
-      {/* ===== SECTION 7: WHAT TO EXPECT (LabTimeline) ===== */}
+      {/* ===== SECTION 7: RISK-FREE GUARANTEE ===== */}
       <section
-        className="brand-section brand-bg-white"
-        aria-label="What to Expect with CONKA"
+        className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile"
+        aria-label="Risk-free guarantee"
       >
         <div className="brand-track">
-          <LabTimeline ctaHref="/conka-both" />
+          <LabGuarantee />
         </div>
       </section>
 
       {/* ===== SECTION 8: APP USP — key differentiator, measure it yourself ===== */}
+      {/* Mobile drops its bottom padding so the section sits flush against the
+          athlete marquee below (the athletes section drops its mobile top
+          padding to match). */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white max-lg:pb-0!"
         aria-label="Prove it yourself with the CONKA app"
       >
         <div className="brand-track">
@@ -187,13 +198,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SECTION 9: TESTIMONIALS (real voices after data proof) ===== */}
+      {/* ===== SECTION 9: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+      {/* No mobile top padding; the App USP section above sits flush against
+          this section's marquee. */}
       <section
-        className="brand-section brand-bg-white"
-        aria-label="Customer reviews"
+        className="brand-section brand-bg-tint max-lg:pt-0!"
+        aria-label="Athletes who use CONKA"
       >
+        {/* Sport marquee runs full-bleed at the section level; the carousel
+            itself stays inside the track. */}
+        <AthleteSportMarquee fullBleed />
         <div className="brand-track">
-          <CROTestimonials ctaHref="/conka-both" />
+          <AthleteCredibilityCarousel showMarquee={false} />
         </div>
       </section>
 

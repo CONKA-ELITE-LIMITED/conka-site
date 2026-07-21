@@ -41,7 +41,7 @@ export default function NavGroupMegaMenu({
       onMouseLeave={onLeave}
     >
       <div className="w-full px-6 md:px-16 py-8">
-        <div className="max-w-4xl mx-auto flex flex-wrap gap-5">
+        <div className="max-w-4xl flex flex-wrap gap-5">
           {group.links.map((link) => (
             <Link
               key={link.href}

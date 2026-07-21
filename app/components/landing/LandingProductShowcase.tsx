@@ -7,7 +7,6 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import { FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import ConkaCTAButton from "./ConkaCTAButton";
-import GuaranteeRow from "./GuaranteeRow";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
 import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
 
@@ -59,15 +58,6 @@ const PRODUCTS: Record<
     bottleAlt: "CONKA Clear bottle",
   },
 };
-
-// Certification strip — Magic Mind-style proof icons above the CTA.
-// Same assets /start renders above its ingredients CTA.
-const CERTS = [
-  { src: "/icons/VeganFriendlyIcon.avif", label: "Vegan" },
-  { src: "/icons/KosherCertifiedIcon.avif", label: "Kosher" },
-  { src: "/icons/BpaFreeIcon.avif", label: "BPA Free" },
-  { src: "/icons/ThirdPartyTestedIcon.avif", label: "Third party tested" },
-];
 
 export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
   const [active, setActive] = useState<ProductId>("flow");
@@ -222,31 +212,14 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         ingredients={ingredients}
       />
 
-      {/* Proof + conversion group: CTA → cert icons → guarantee, stacked and
-          centred as one block on every breakpoint. The cert icons sit under
-          the CTA so they reinforce the click rather than delay it. */}
+      {/* CTA — the section's single conversion action. The certification badges
+          that used to sit here now render below the home benefit tiles. */}
       <div className="flex flex-col items-center">
         {!hideCTA && (
           <ConkaCTAButton href={ctaHref} meta={null}>
             Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
           </ConkaCTAButton>
         )}
-
-        <div className="flex items-center justify-center gap-2 mt-5">
-          {CERTS.map((cert) => (
-            <Image
-              key={cert.label}
-              src={cert.src}
-              width={56}
-              height={56}
-              alt={cert.label}
-            />
-          ))}
-        </div>
-
-        {/* Guarantee closes the section with reassurance (renders even when the
-            CTA is hidden on /conka-both and protocol pages). */}
-        <GuaranteeRow />
       </div>
     </div>
   );

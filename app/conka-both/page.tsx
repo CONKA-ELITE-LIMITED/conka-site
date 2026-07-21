@@ -6,6 +6,7 @@ import Footer from "@/app/components/footer";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
+import Certifications from "@/app/components/Certifications";
 import { ClinicalIngredients } from "@/app/components/product";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
@@ -82,15 +83,19 @@ export default function ConkaBothPage() {
   // Magic Mind textured benefits band (generic across products), rendered
   // directly under the hero on both mobile and desktop.
   const benefitTilesSection = (
-    <section
-      id="benefit-tiles"
-      className="brand-section brand-bg-white"
-      aria-label="Key benefits"
-    >
-      <div className="brand-track">
-        <ProductBenefitTiles />
-      </div>
-    </section>
+    <>
+      <section
+        id="benefit-tiles"
+        className="brand-section brand-bg-white"
+        aria-label="Key benefits"
+      >
+        <div className="brand-track">
+          <ProductBenefitTiles formula="flow" />
+        </div>
+      </section>
+      {/* Certification badges band directly under the benefit tiles. */}
+      <Certifications />
+    </>
   );
 
   const ingredientsSection = (

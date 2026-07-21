@@ -96,7 +96,7 @@ export default function LandingHeroVideoDesktop() {
             className="mb-6"
           />
           <h1
-            className="text-[#0e1f3f] font-semibold text-5xl xl:text-6xl leading-[1.05]"
+            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05]"
             style={{ letterSpacing: "-0.02em" }}
           >
             A Sharper Mind.

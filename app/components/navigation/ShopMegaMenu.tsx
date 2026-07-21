@@ -2,9 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
-import { NAV_PRODUCTS } from "./navConfig";
+import { NAV_PRODUCTS, SHOP_MENU_GRADIENT } from "./navConfig";
+import type { NavProduct } from "./navConfig";
 import type { ShopMegaMenuProps } from "./types";
+
+// Per time-of-day badge colours: soft pastel fill with a darker accent text so
+// each reads on the white footer and on the navy footer once it fills on hover.
+const BADGE_CLASS: Record<NavProduct["badge"], string> = {
+  Morning: "bg-[#f7edcb] text-[#755b1a]",
+  Afternoon: "bg-[#f7ddd0] text-[#9a4526]",
+  "Full day": "bg-[#dce3f5] text-[#2f3f74]",
+};
 
 /* ============================================================================
  * ShopMegaMenu
@@ -28,44 +36,51 @@ export default function ShopMegaMenu({
 
   return (
     <div
-      className="absolute left-0 right-0 top-full bg-white border-b border-black/12 z-50 shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
+      className="absolute left-0 right-0 top-full z-50 shadow-[0_16px_40px_rgba(0,0,0,0.25)]"
+      style={{
+        // Matches the header gradient and is viewport-anchored so the two
+        // read as one continuous panel while Shop is open.
+        background: SHOP_MENU_GRADIENT,
+        backgroundAttachment: "fixed",
+      }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
-      <div className="w-full px-6 md:px-16 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 gap-5">
+      <div className="w-full px-6 md:px-16 py-10">
+        <div className="max-w-4xl">
+          <div className="grid grid-cols-3 gap-6">
             {NAV_PRODUCTS.map((product) => (
-              <div
+              <Link
                 key={product.href}
-                className="group bg-[#f5f5f5] border border-black/12 hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
+                href={product.href}
+                onClick={onClose}
+                aria-label={product.alt}
+                className="group relative block overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
               >
-                <Link
-                  href={product.href}
-                  onClick={onClose}
-                  className="relative aspect-square overflow-hidden bg-white block"
-                  aria-label={product.alt}
-                >
+                <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <Image
                     src={product.image}
                     alt={product.alt}
                     fill
-                    className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
-                </Link>
-                <div className="p-4 flex-1 flex flex-col">
-                  <p className="text-base font-semibold text-black mb-1">
+                </div>
+                <div className="relative border-t border-black/10 px-4 pb-4 pt-7 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
+                  {/* Straddles the image/footer separator, centred. */}
+                  <span
+                    className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none ${BADGE_CLASS[product.badge]}`}
+                  >
+                    {product.badge}
+                  </span>
+                  <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
                     {product.name}
                   </p>
-                  <p className="text-xs text-black/60 leading-relaxed flex-1 mb-4">
-                    {product.descriptionLong}
+                  <p className="mt-1.5 text-xs leading-snug text-black/60 transition-colors group-hover:text-white/70">
+                    {product.tagline}
                   </p>
-                  <ConkaCTAButton href={product.href} compact>
-                    Shop
-                  </ConkaCTAButton>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
