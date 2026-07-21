@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Rework V2 flat purchase tiles (unified green-plus subscription benefits list, Full CONKA App Access, discount-consistent crossed-out prices, clearer delivery cadence) and fix hero social-proof copy
 - **2026-07-21** | Align mobile PDP hero to Magic Mind (plain-label accordions, What-you'll-feel folded in, full-width Ingredients pill) and de-rule the guarantee trust bar
 - **2026-07-20** | Made the conka-flow benefits band render a portrait, centred layout on mobile and mounted it in the mobile page branch
 - **2026-07-20** | Added a Magic Mind-style benefits band under the conka-flow hero: textured paper tile, three benefit columns, and ingredient renders poking above and below

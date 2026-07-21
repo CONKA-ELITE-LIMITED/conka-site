@@ -32,7 +32,7 @@ export function SocialProofBadge({ className = "" }: { className?: string }) {
         />
         <circle cx="12" cy="13" r="3" fill="currentColor" />
       </svg>
-      100+ others exploring focus
+      100+ others exploring better focus
     </span>
   );
 }

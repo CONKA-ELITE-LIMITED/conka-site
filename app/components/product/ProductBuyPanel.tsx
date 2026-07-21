@@ -361,73 +361,33 @@ function PlanDetail() {
 const GREEN = "#10B981";
 const GREEN_TEXT = "#0b7a55";
 
-/** Shared icon props for the benefit list (mirrors the listicle icon set). */
-const benefitIco = {
-  width: 14,
-  height: 14,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 1.7,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-  "aria-hidden": true,
-};
-const ShotIcon = () => (
-  <svg {...benefitIco}>
-    <path d="M9 3h6M10 3v5l-4 9a2 2 0 0 0 1.8 3h8.4a2 2 0 0 0 1.8-3l-4-9V3" />
-  </svg>
-);
-const BoxIcon = () => (
-  <svg {...benefitIco}>
-    <path d="M3 8l9-4 9 4-9 4-9-4z" />
-    <path d="M3 8v8l9 4 9-4V8" />
-  </svg>
-);
-const AppIcon = () => (
-  <svg {...benefitIco}>
-    <rect x="7" y="3" width="10" height="18" rx="1.5" />
-    <line x1="10.5" y1="18" x2="13.5" y2="18" />
-  </svg>
-);
-const BrainIcon = () => (
-  <svg {...benefitIco}>
-    <path d="M9.5 6a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0-1 4.8V15a2.5 2.5 0 0 0 3.5 2.3" />
-    <path d="M14.5 6A2.5 2.5 0 0 1 17 8.5a2.5 2.5 0 0 1 1 4.8V15a2.5 2.5 0 0 1-3.5 2.3" />
-    <line x1="12" y1="6" x2="12" y2="18" />
-  </svg>
-);
-const CancelIcon = () => (
-  <svg {...benefitIco}>
-    <path d="M3 12a9 9 0 1 0 3-6.7" />
-    <path d="M3 4v4h4" />
-  </svg>
-);
-const GuaranteeIcon = () => (
-  <svg {...benefitIco}>
-    <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
-    <path d="M9 12l2 2 4-4" />
-  </svg>
-);
-
-/** Subscription/delivery benefits (icon + label) revealed when the tile expands.
- *  Mirrors the "Included free" value stack from the listicle purchase card. */
-function subscriptionBenefits(freeShots: number) {
-  return [
-    ...(freeShots > 0
-      ? [{ Icon: ShotIcon, label: `${freeShots} bonus shots on your first order` }]
-      : []),
-    { Icon: BoxIcon, label: "Free UK postage" },
-    { Icon: CancelIcon, label: "Pause, skip, or cancel anytime" },
-    { Icon: GuaranteeIcon, label: "100-day money-back guarantee" },
-  ];
+/** Additive green-plus marker for the expanded benefit list ("+ this too"). */
+function GreenPlus() {
+  return (
+    <span
+      className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full"
+      style={{ background: GREEN }}
+      aria-hidden
+    >
+      <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+        <path d="M6 2.5v7M2.5 6h7" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+      </svg>
+    </span>
+  );
 }
 
-/** App benefits shown under the "Full CONKA App Access" separator. */
-const APP_BENEFITS = [
-  { Icon: AppIcon, label: "The CONKA app" },
-  { Icon: BrainIcon, label: "Personal Brain Coach" },
-];
+/** Subscription benefits revealed when the tile expands. One unified list (app
+ *  access included) — every line is a subscription benefit, no separator. */
+function subscriptionBenefits(freeShots: number) {
+  return [
+    ...(freeShots > 0 ? [`+${freeShots} free shots on your first order`] : []),
+    "Free UK postage",
+    "Pause, skip, or cancel anytime",
+    "100-day money-back guarantee",
+    "Full CONKA App Access",
+    "Personal Brain Coach",
+  ];
+}
 
 /**
  * Magic Mind-style flat plan card: title + prices inline, a tap-to-expand
@@ -452,8 +412,21 @@ function FlatPlanCard({
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
   const monthsPerCycle = cadence === "quarterly-sub" ? 3 : 1;
   const savePct = getDisplayDiscount(pricing);
-  const cadenceWord = monthsPerCycle === 3 ? "quarterly" : "monthly";
+  const cadenceWord = monthsPerCycle === 3 ? "every 3 months" : "monthly";
   const freeShots = pricing.freeShots ?? 0;
+
+  // Crossed-out "was":
+  //  - Monthly sub anchors to the real one-time (OTP) price for the same shots,
+  //    so it matches the "Buy it once" figure exactly (~43% off for Flow).
+  //  - Quarterly has no one-time equivalent, so derive a regular-price reference
+  //    from the published discount (e.g. 63% off => price / 0.37) so the
+  //    strikethrough and the Save% badge agree.
+  const compareAtDisplay =
+    cadence === "monthly-sub"
+      ? getCadencePricingByProductHeroId(formulaId, "monthly-otp").price
+      : savePct > 0
+        ? pricing.price / (1 - savePct / 100)
+        : undefined;
 
   return (
     <div
@@ -560,32 +533,16 @@ function FlatPlanCard({
                 </span>
               </span>
             </summary>
-            <ul className="mt-2 flex flex-col gap-1.5">
-              {subscriptionBenefits(freeShots).map(({ Icon, label }) => (
-                <li
-                  key={label}
-                  className="flex items-center gap-2 text-[12px] font-medium text-black"
-                >
-                  <span className="shrink-0 text-[#1B2757]">
-                    <Icon />
-                  </span>
-                  {label}
-                </li>
-              ))}
-            </ul>
-
             <p className="mt-3 border-t border-black/10 pt-2.5 text-[10px] font-bold uppercase tracking-wide text-black/45">
-              Full CONKA App Access
+              Subscription Benefits
             </p>
             <ul className="mt-2 flex flex-col gap-1.5">
-              {APP_BENEFITS.map(({ Icon, label }) => (
+              {subscriptionBenefits(freeShots).map((label) => (
                 <li
                   key={label}
                   className="flex items-center gap-2 text-[12px] font-medium text-black"
                 >
-                  <span className="shrink-0 text-[#1B2757]">
-                    <Icon />
-                  </span>
+                  <GreenPlus />
                   {label}
                 </li>
               ))}
@@ -595,9 +552,9 @@ function FlatPlanCard({
 
         <span className="shrink-0 text-right">
           <span className="flex items-baseline justify-end gap-1.5 leading-none">
-            {pricing.compareAtPrice && (
+            {compareAtDisplay && (
               <s className="text-xs font-bold text-black/40">
-                {formatPrice(pricing.compareAtPrice)}
+                {formatPrice(compareAtDisplay)}
               </s>
             )}
             <span className="text-lg font-bold tabular-nums text-black">
