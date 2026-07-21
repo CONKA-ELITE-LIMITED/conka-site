@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { NAV_PRODUCTS } from "./navConfig";
+import { NAV_PRODUCTS, SHOP_MENU_GRADIENT } from "./navConfig";
 import type { NavProduct } from "./navConfig";
 import type { ShopMegaMenuProps } from "./types";
 
@@ -40,8 +40,7 @@ export default function ShopMegaMenu({
       style={{
         // Matches the header gradient and is viewport-anchored so the two
         // read as one continuous panel while Shop is open.
-        background:
-          "linear-gradient(135deg, #6774a3 0%, #464f7e 55%, #333a5e 100%)",
+        background: SHOP_MENU_GRADIENT,
         backgroundAttachment: "fixed",
       }}
       onMouseEnter={onEnter}

@@ -136,3 +136,11 @@ export const NAV_COMPANY: NavGroup = {
 
 /** Flat top-level link on desktop. */
 export const NAV_OUR_STORY: NavLink = { label: "Our Story", href: "/our-story" };
+
+/**
+ * Gradient shared by the desktop header and the Shop mega-menu while Shop is
+ * open. Both surfaces set it, viewport-anchored, so they read as one
+ * continuous panel. Keep the two consumers in sync via this single source.
+ */
+export const SHOP_MENU_GRADIENT =
+  "linear-gradient(135deg, #6774a3 0%, #464f7e 55%, #333a5e 100%)";

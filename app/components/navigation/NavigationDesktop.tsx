@@ -6,7 +6,12 @@ import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import ShopMegaMenu from "./ShopMegaMenu";
 import NavGroupMegaMenu from "./NavGroupMegaMenu";
-import { NAV_SCIENCE, NAV_APP, NAV_OUR_STORY } from "./navConfig";
+import {
+  NAV_SCIENCE,
+  NAV_APP,
+  NAV_OUR_STORY,
+  SHOP_MENU_GRADIENT,
+} from "./navConfig";
 import type { NavigationDesktopProps, NavMenu } from "./types";
 
 /** Text trigger for a mega-menu. `primary` renders the obvious Shop pill;
@@ -104,8 +109,7 @@ export default function NavigationDesktop({
             ? {
                 // Viewport-anchored so the header and the Shop panel below it
                 // read as one continuous diagonal (no seam at the boundary).
-                background:
-                  "linear-gradient(135deg, #6774a3 0%, #464f7e 55%, #333a5e 100%)",
+                background: SHOP_MENU_GRADIENT,
                 backgroundAttachment: "fixed",
               }
             : undefined
@@ -156,7 +160,7 @@ export default function NavigationDesktop({
             />
             <a
               href={NAV_OUR_STORY.href}
-              className={`rounded-full px-4 py-2 text-[15px] font-bold transition-colors ${
+              className={`rounded-full px-4 py-2 text-[15px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
                 shopOpen
                   ? "text-white hover:bg-white/10"
                   : "text-black hover:bg-black/[0.05]"
@@ -171,7 +175,7 @@ export default function NavigationDesktop({
           <div className="hidden xl:flex items-center gap-3">
             <a
               href="/account/login"
-              className="group flex items-center justify-center"
+              className="group flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
               aria-label="Account"
             >
               <span
@@ -199,7 +203,7 @@ export default function NavigationDesktop({
             </a>
             <button
               onClick={openCart}
-              className={`rounded-full border px-4 py-1.5 text-sm font-bold tabular-nums transition-colors ${
+              className={`rounded-full border px-4 py-1.5 text-sm font-bold tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
                 shopOpen
                   ? "border-white text-white hover:bg-white hover:text-[#1B2757]"
                   : "border-[#1B2757] text-[#1B2757] hover:bg-[#1B2757] hover:text-white"
