@@ -95,7 +95,7 @@ export default function ProductHeroV2({
         <div className="order-1 flex flex-col gap-4 text-black lg:col-span-4">
           <HeroRating />
 
-          <SpecBadge className="self-start" />
+          <SpecBadge productType={productType} className="self-start" />
 
           <div>
             <h1

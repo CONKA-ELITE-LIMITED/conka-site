@@ -144,22 +144,6 @@ export function ProductHeroHeader({
  * h2, since the <h1> product name sits above the image) followed by the short
  * description. Keeps the descriptive copy off the top of the hero (SCRUM-1138).
  */
-export function ProductHeroLede({ formulaId }: { formulaId: ProductHeroId }) {
-  const content = getHeroContent(formulaId);
-  return (
-    <div>
-      {content.seoHeading && (
-        <h2 className="text-lg font-medium leading-snug text-black/70">
-          {content.seoHeading}
-        </h2>
-      )}
-      <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
-        {content.headline}
-      </p>
-    </div>
-  );
-}
-
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
 
 /** Which ingredient-sheet tabs each product surfaces (Both shows both). */

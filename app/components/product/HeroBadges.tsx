@@ -5,13 +5,28 @@
  * with `mx-auto`; the desktop left column leaves them left-aligned).
  */
 
-/** Product spec pill (caffeine / timing). Placeholder values for the Flow test. */
-export function SpecBadge({ className = "" }: { className?: string }) {
+type SpecProductType = "flow" | "clear" | "both";
+
+/** Per-product spec pill copy (caffeine + when to take it). */
+const SPEC_LABEL: Record<SpecProductType, string> = {
+  flow: "0mg caffeine | morning ritual",
+  clear: "0mg caffeine | afternoon clarity",
+  both: "0mg caffeine | full system",
+};
+
+/** Product spec pill (caffeine + timing), shown under the rating in the hero. */
+export function SpecBadge({
+  productType,
+  className = "",
+}: {
+  productType: SpecProductType;
+  className?: string;
+}) {
   return (
     <span
       className={`inline-flex items-center rounded-full bg-gradient-to-r from-[#dbe0f0] to-[#eef1f8] px-4 py-2 font-mono text-sm font-bold uppercase tracking-wide text-black ${className}`}
     >
-      0mg caffeine | morning ritual
+      {SPEC_LABEL[productType]}
     </span>
   );
 }

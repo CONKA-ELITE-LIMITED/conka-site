@@ -3,13 +3,10 @@
 import { useState, useEffect } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import ProductHero from "@/app/components/product/ProductHero";
-import ProductHeroMobile from "@/app/components/product/ProductHeroMobile";
-import {
-  ClinicalIngredients,
-  StickyPurchaseFooter,
-  StickyPurchaseFooterMobile,
-} from "@/app/components/product";
+import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
+import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
+import { ClinicalIngredients } from "@/app/components/product";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
@@ -27,7 +24,6 @@ import { useCart } from "@/app/context/CartContext";
 import {
   CadenceType,
   getCadenceVariantByProductHeroId,
-  getBalanceCadencePricing,
 } from "@/app/lib/cadenceData";
 import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
@@ -74,14 +70,29 @@ export default function ConkaBothPage() {
     }
   };
 
-  const cadencePricing = getBalanceCadencePricing(selectedCadence);
-  const cadencePrice = cadencePricing.price;
-  const cadenceFreeShots = cadencePricing.freeShots;
+  // Sticky-footer pricing — restore with the footers after the V2 hero build (SCRUM-1171).
+  // const cadencePricing = getBalanceCadencePricing(selectedCadence);
+  // const cadencePrice = cadencePricing.price;
+  // const cadenceFreeShots = cadencePricing.freeShots;
 
   // Shared sections — ordered as they appear on the page. Backgrounds
   // alternate white/tint starting from the white hero.
   // Full-bleed dark proof band — owns its own section + dark background
   const brainFuelSection = <BrainFuelBand />;
+
+  // Magic Mind textured benefits band (generic across products), rendered
+  // directly under the hero on both mobile and desktop.
+  const benefitTilesSection = (
+    <section
+      id="benefit-tiles"
+      className="brand-section brand-bg-white"
+      aria-label="Key benefits"
+    >
+      <div className="brand-track">
+        <ProductBenefitTiles />
+      </div>
+    </section>
+  );
 
   const ingredientsSection = (
     <section
@@ -198,7 +209,7 @@ export default function ConkaBothPage() {
           aria-label="Product hero"
         >
           <div className="brand-track">
-            <ProductHeroMobile
+            <ProductHeroMobileV2
               formulaId={PRODUCT_HERO_ID}
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
@@ -207,6 +218,9 @@ export default function ConkaBothPage() {
             />
           </div>
         </section>
+
+        {/* ===== BENEFITS TILE (Magic Mind textured band) ===== */}
+        {benefitTilesSection}
 
         {/* ===== UGC SOCIAL PROOF ===== */}
         {ugcSection}
@@ -237,12 +251,13 @@ export default function ConkaBothPage() {
 
         <Footer />
 
-        <StickyPurchaseFooterMobile
+        {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
+        {/* <StickyPurchaseFooterMobile
           productHeroId="03"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
           onAddToCart={() => handleAddToCart("sticky_footer")}
-        />
+        /> */}
       </div>
     );
   }
@@ -253,13 +268,15 @@ export default function ConkaBothPage() {
       <Navigation />
 
       {/* ===== SECTION 1: HERO ===== */}
+      {/* V2 hero runs wider than the 1280 brand-track and with a tighter gutter
+          to sit closer to the Magic Mind reference (SCRUM-1171). */}
       <section
         id="hero"
-        className="brand-section brand-hero-first brand-bg-white"
+        className="brand-section brand-hero-first brand-bg-white !px-[3vw]"
         aria-label="Product hero"
       >
-        <div className="brand-track">
-          <ProductHero
+        <div className="brand-track !max-w-[1480px]">
+          <ProductHeroV2
             formulaId={PRODUCT_HERO_ID}
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}
@@ -268,6 +285,9 @@ export default function ConkaBothPage() {
           />
         </div>
       </section>
+
+      {/* ===== BENEFITS TILE (Magic Mind textured band) ===== */}
+      {benefitTilesSection}
 
       {/* ===== UGC SOCIAL PROOF ===== */}
       {ugcSection}
@@ -298,13 +318,14 @@ export default function ConkaBothPage() {
 
       <Footer />
 
-      <StickyPurchaseFooter
+      {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
+      {/* <StickyPurchaseFooter
         productHeroId="03"
         selectedCadence={selectedCadence}
         cadencePrice={cadencePrice}
         cadenceFreeShots={cadenceFreeShots}
         onAddToCart={() => handleAddToCart("sticky_footer")}
-      />
+      /> */}
     </div>
   );
 }
