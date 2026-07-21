@@ -20,6 +20,8 @@ interface Stat {
 interface ProductCardData {
   displayName: string;
   rolePill: string;
+  /** Soft time-of-day pill tint, matched to the Shop mega-menu badges. */
+  rolePillClass: string;
   benefitHeadline: string;
   bodyCopy: string;
   rating: number;
@@ -41,6 +43,7 @@ const getProductData = (
     return {
       displayName: "Flow",
       rolePill: "Morning ritual",
+      rolePillClass: "bg-[#f7edcb] text-[#755b1a]",
       benefitHeadline: "Energy without the crash",
       bodyCopy:
         "Sustained focus for training and work, with no caffeine and no crash.",
@@ -60,6 +63,7 @@ const getProductData = (
     return {
       displayName: "Clear",
       rolePill: "Afternoon reset",
+      rolePillClass: "bg-[#f7ddd0] text-[#9a4526]",
       benefitHeadline: "Clarity and complete recovery",
       bodyCopy:
         "Sharpen performance when you need it, support recovery when you're done.",
@@ -78,6 +82,7 @@ const getProductData = (
   return {
     displayName: "Both",
     rolePill: "Full daily system",
+    rolePillClass: "bg-[#dce3f5] text-[#2f3f74]",
     benefitHeadline: "Morning focus, afternoon clarity",
     bodyCopy:
       "Two shots, 16 active ingredients, all-day coverage from wake-up to wind-down.",
@@ -183,7 +188,7 @@ export default function ProductCard({
         {/* Role pill, flanked by hairlines */}
         <div className="mt-5 flex w-full items-center gap-3">
           <span className="h-px flex-1 bg-black/10" />
-          <span className="inline-flex items-center rounded-full bg-[#eef1f8] px-3 py-1 text-xs font-semibold text-[#1B2757] leading-none">
+          <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold leading-none ${product.rolePillClass}`}>
             {product.rolePill}
           </span>
           <span className="h-px flex-1 bg-black/10" />
