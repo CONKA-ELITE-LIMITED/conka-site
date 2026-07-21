@@ -37,7 +37,9 @@ function NavMenuTrigger({
         onClick={() => setOpenMenu(isOpen ? null : menu)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] hover:border-[#1B2757] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
+        className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[15px] font-bold text-black transition-colors hover:bg-black/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
+          isOpen ? "bg-black/[0.05]" : ""
+        }`}
       >
         {label}
         <svg
@@ -93,125 +95,70 @@ export default function NavigationDesktop({
             />
           </Link>
 
-          <div className="hidden xl:flex items-center gap-6 ml-10">
-            <div
-              className="relative flex items-center"
-              onMouseEnter={() => onMenuEnter("shop")}
-              onMouseLeave={onMenuLeave}
+          <nav className="hidden xl:flex items-center gap-1 ml-8">
+            <NavMenuTrigger
+              label="Shop"
+              menu="shop"
+              openMenu={openMenu}
+              setOpenMenu={setOpenMenu}
+              onMenuEnter={onMenuEnter}
+              onMenuLeave={onMenuLeave}
+            />
+            <NavMenuTrigger
+              label={NAV_SCIENCE.title}
+              menu="science"
+              openMenu={openMenu}
+              setOpenMenu={setOpenMenu}
+              onMenuEnter={onMenuEnter}
+              onMenuLeave={onMenuLeave}
+            />
+            <NavMenuTrigger
+              label={NAV_APP.title}
+              menu="app"
+              openMenu={openMenu}
+              setOpenMenu={setOpenMenu}
+              onMenuEnter={onMenuEnter}
+              onMenuLeave={onMenuLeave}
+            />
+            <a
+              href={NAV_OUR_STORY.href}
+              className="rounded-full px-4 py-2 text-[15px] font-bold text-black transition-colors hover:bg-black/[0.05]"
             >
-              <button
-                onClick={() => setOpenMenu(openMenu === "shop" ? null : "shop")}
-                aria-expanded={openMenu === "shop"}
-                aria-haspopup="true"
-                className="flex items-center gap-2 rounded-full bg-[#1B2757] text-white px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums transition-all duration-200 ease-out hover:opacity-90 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:opacity-80 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
-              >
+              {NAV_OUR_STORY.label}
+            </a>
+          </nav>
+
+          <div className="flex-1" />
+
+          <div className="hidden xl:flex items-center gap-3">
+            <a
+              href="/account/login"
+              className="group flex items-center justify-center"
+              aria-label="Account"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1B2757] text-white transition-transform group-hover:scale-105">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="square"
-                  strokeLinejoin="miter"
-                >
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <path d="M16 10a4 4 0 0 1-8 0" />
-                </svg>
-                Shop
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10"
-                  height="10"
+                  width="19"
+                  height="19"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  strokeLinecap="square"
-                  strokeLinejoin="miter"
-                  className={`transition-transform ${openMenu === "shop" ? "rotate-180" : ""}`}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <polyline points="6 9 12 15 18 9" />
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
-              </button>
-            </div>
-
-            <nav className="flex items-center gap-3">
-              <NavMenuTrigger
-                label={NAV_SCIENCE.title}
-                menu="science"
-                openMenu={openMenu}
-                setOpenMenu={setOpenMenu}
-                onMenuEnter={onMenuEnter}
-                onMenuLeave={onMenuLeave}
-              />
-              <NavMenuTrigger
-                label={NAV_APP.title}
-                menu="app"
-                openMenu={openMenu}
-                setOpenMenu={setOpenMenu}
-                onMenuEnter={onMenuEnter}
-                onMenuLeave={onMenuLeave}
-              />
-              <a
-                href={NAV_OUR_STORY.href}
-                className="rounded-full border border-transparent px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-black hover:text-[#1B2757] hover:border-[#1B2757] transition-colors"
-              >
-                {NAV_OUR_STORY.label}
-              </a>
-            </nav>
-          </div>
-
-          <div className="flex-1" />
-
-          <div className="hidden xl:flex items-center gap-2">
-            <a
-              href="/account/login"
-              className="p-2 text-black hover:text-[#1B2757] transition-colors"
-              aria-label="Account"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+              </span>
             </a>
             <button
               onClick={openCart}
-              className="p-2 text-black hover:text-[#1B2757] transition-colors relative"
+              className="rounded-full border border-[#1B2757] px-4 py-1.5 text-sm font-bold text-[#1B2757] transition-colors hover:bg-[#1B2757] hover:text-white tabular-nums"
               aria-label="Open cart"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              >
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              {itemCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-[#1B2757] text-white font-mono text-[9px] font-bold tabular-nums min-w-[16px] h-4 px-1 flex items-center justify-center leading-none">
-                  {itemCount > 99 ? "99+" : itemCount}
-                </span>
-              )}
+              Cart {itemCount > 99 ? "99+" : itemCount}
             </button>
           </div>
         </div>

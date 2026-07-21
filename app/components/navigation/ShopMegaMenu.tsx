@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import { NAV_PRODUCTS } from "./navConfig";
 import type { ShopMegaMenuProps } from "./types";
 
@@ -28,44 +27,43 @@ export default function ShopMegaMenu({
 
   return (
     <div
-      className="absolute left-0 right-0 top-full bg-white border-b border-black/12 z-50 shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
+      className="absolute left-0 right-0 top-full z-50 shadow-[0_16px_40px_rgba(0,0,0,0.25)]"
+      style={{
+        background:
+          "linear-gradient(135deg, #4058bb 0%, #26356f 55%, #1B2757 100%)",
+      }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
-      <div className="w-full px-6 md:px-16 py-8">
+      <div className="w-full px-6 md:px-16 py-10">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-3 gap-6">
             {NAV_PRODUCTS.map((product) => (
-              <div
+              <Link
                 key={product.href}
-                className="group bg-[#f5f5f5] border border-black/12 hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
+                href={product.href}
+                onClick={onClose}
+                aria-label={product.alt}
+                className="group block overflow-hidden rounded-xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1"
               >
-                <Link
-                  href={product.href}
-                  onClick={onClose}
-                  className="relative aspect-square overflow-hidden bg-white block"
-                  aria-label={product.alt}
-                >
+                <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <Image
                     src={product.image}
                     alt={product.alt}
                     fill
-                    className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
-                </Link>
-                <div className="p-4 flex-1 flex flex-col">
-                  <p className="text-base font-semibold text-black mb-1">
+                </div>
+                <div className="flex flex-col items-center gap-2 p-4 text-center transition-colors group-hover:bg-[#1B2757]">
+                  <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
                     {product.name}
                   </p>
-                  <p className="text-xs text-black/60 leading-relaxed flex-1 mb-4">
-                    {product.descriptionLong}
-                  </p>
-                  <ConkaCTAButton href={product.href} compact>
-                    Shop
-                  </ConkaCTAButton>
+                  <span className="rounded-full bg-[#1B2757] px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none text-white transition-colors group-hover:bg-white group-hover:text-[#1B2757]">
+                    {product.badge}
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
