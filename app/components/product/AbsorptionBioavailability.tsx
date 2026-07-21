@@ -72,15 +72,17 @@ export default function AbsorptionBioavailability({
 }) {
   return (
     <div className="flex flex-col overflow-hidden border-y border-black/10 lg:flex-row lg:rounded-2xl lg:border">
-      {/* Media panel — liquid pour, sits on top on mobile. White asset bg. */}
-      <div className="relative order-1 min-h-[320px] w-full bg-white lg:min-h-0 lg:w-1/2">
+      {/* Media panel — full liquid pour, no crop. Sits on top on mobile;
+          centres in its half on desktop (white asset bg fills any gap). */}
+      <div className="order-1 flex w-full items-center justify-center bg-white lg:w-1/2">
         <Image
           src={imageSrc}
           alt={imageAlt}
-          fill
+          width={1500}
+          height={1500}
           loading="lazy"
           sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover object-top"
+          className="h-auto w-full"
         />
       </div>
 

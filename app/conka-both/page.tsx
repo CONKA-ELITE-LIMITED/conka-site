@@ -11,6 +11,7 @@ import LandingValueComparison from "@/app/components/landing/LandingValueCompari
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
+import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
 import LabFAQ from "@/app/components/landing/LabFAQ";
@@ -100,6 +101,21 @@ export default function ConkaBothPage() {
     >
       <div className="brand-track">
         <ClinicalIngredients />
+      </div>
+    </section>
+  );
+
+  const absorptionSection = (
+    <section
+      id="absorption"
+      className="brand-section brand-bg-tint"
+      aria-label="Why liquid absorbs better"
+    >
+      <div className="brand-track">
+        <AbsorptionBioavailability
+          imageSrc="/formulas/conkaClear/ClearLiquid.jpg"
+          imageAlt="CONKA liquid pouring from an amber bottle"
+        />
       </div>
     </section>
   );
@@ -220,6 +236,9 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 3: INGREDIENTS ===== */}
         {ingredientsSection}
 
+        {/* ===== SECTION 3b: ABSORPTION (why liquid) ===== */}
+        {absorptionSection}
+
         {/* ===== SECTION 4: WHAT TO EXPECT ===== */}
         {whatToExpectSection}
 
@@ -286,6 +305,9 @@ export default function ConkaBothPage() {
 
       {/* ===== SECTION 3: INGREDIENTS ===== */}
       {ingredientsSection}
+
+      {/* ===== SECTION 3b: ABSORPTION (why liquid) ===== */}
+      {absorptionSection}
 
       {/* ===== SECTION 4: WHAT TO EXPECT ===== */}
       {whatToExpectSection}

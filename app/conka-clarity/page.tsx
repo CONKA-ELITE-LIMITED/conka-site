@@ -246,6 +246,16 @@ export default function ConkaClarityPage() {
         </div>
       </section>
 
+      {/* ===== SECTION 5: ABSORPTION (why liquid) ===== */}
+      <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
+        <div className="brand-track">
+          <AbsorptionBioavailability
+            imageSrc="/formulas/conkaClear/ClearLiquid.jpg"
+            imageAlt="CONKA Clear liquid pouring from an amber bottle"
+          />
+        </div>
+      </section>
+
       {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
       <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
         <WhatToExpect productId="02" />
