@@ -20,8 +20,8 @@ import {
  *     lower band (a light scrim keeps the copy legible over the floor).
  *
  * Static server component (no client JS). The page section owns the full-bleed
- * (`!px-0 !py-0`). Used on /conka-flow (01), /conka-clarity (02); Both is ready
- * to wire when needed.
+ * (`!px-0 !py-0`). Used on /conka-flow (01), /conka-clarity (02), and
+ * /conka-both (both).
  * ========================================================================== */
 
 /** Shared Day 1 / Day 7 / Day 30 items — MM days-banner styling: a large day
