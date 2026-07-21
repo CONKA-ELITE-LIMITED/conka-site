@@ -50,12 +50,10 @@ export default function BrainFuelBand() {
         </div>
 
         <div className={styles.details}>
+          <h2 className={styles.title}>Trusted where focus can&rsquo;t fail</h2>
           <p className={styles.description}>
-            Trusted where focus can&rsquo;t fail —{' '}
-            <b>
-              by olympic medallists, world-class athletes &amp; entrepreneurs on the days that
-              matter most.
-            </b>
+            By olympic medallists, world-class athletes &amp; entrepreneurs on
+            the days that matter most.
           </p>
 
           <div className={styles.metrics}>

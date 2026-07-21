@@ -108,8 +108,11 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         key={id}
         className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden"
       >
-        {/* Mobile: horizontal */}
+        {/* Mobile: title above the asset, then image beside the stats */}
         <div className="lg:hidden p-4">
+          <p className="text-lg font-bold text-black leading-tight mb-3">
+            {p.name}
+          </p>
           <div className="flex items-center gap-4 mb-4">
             <div className="relative w-[120px] h-[120px] shrink-0 rounded-xl overflow-hidden bg-[#eef1f8]">
               <Image
@@ -117,13 +120,10 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
                 alt={p.bottleAlt}
                 fill
                 sizes="120px"
-                className="object-cover"
+                className="object-cover scale-[1.35]"
               />
             </div>
             <div className="min-w-0">
-              <p className="text-lg font-bold text-black leading-tight mb-1">
-                {p.name}
-              </p>
               <p className="text-sm text-black/60 mb-3">{p.sub}</p>
               <p className="text-2xl font-bold tabular-nums leading-none text-black">
                 {p.mg}
@@ -152,7 +152,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
               alt={p.bottleAlt}
               fill
               sizes="260px"
-              className="object-cover"
+              className="object-cover scale-[1.35]"
             />
           </div>
           <p className="text-sm text-black/60 mb-3">{p.sub}</p>

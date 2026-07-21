@@ -27,6 +27,14 @@
   flex-direction: column;
   gap: 24px;
 }
+.title {
+  font-weight: 800;
+  font-size: clamp(1.9rem, 1.2rem + 3vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
 .description {
   font-weight: 500;
   font-size: 16.64px;

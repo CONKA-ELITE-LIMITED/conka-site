@@ -181,7 +181,9 @@ export default function Home() {
         aria-label="Risk-free guarantee"
       >
         <div className="brand-track">
-          <LabGuarantee />
+          {/* On the home page the guarantee CTA sends people to the Both PDP
+              (there is no on-page purchase section to scroll to). */}
+          <LabGuarantee ctaHref="/conka-both" />
         </div>
       </section>
 
