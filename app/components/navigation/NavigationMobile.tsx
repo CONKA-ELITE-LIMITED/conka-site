@@ -83,55 +83,38 @@ export default function NavigationMobile({
             />
           </Link>
 
-          <div className="xl:hidden min-w-[5.5rem] flex-shrink-0 flex items-center justify-end gap-1">
+          <div className="xl:hidden flex-shrink-0 flex items-center justify-end gap-2">
             <a
               href="/account/login"
-              className="p-2 text-black hover:text-[#1B2757] transition-colors"
+              className="group flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
               aria-label="Account"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#1B2757] text-[#1B2757] transition-colors group-hover:bg-[#1B2757] group-hover:text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </span>
             </a>
             <button
               onClick={() => {
                 openCart();
                 setMobileMenuOpen(false);
               }}
-              className="p-2 text-black hover:text-[#1B2757] transition-colors relative"
+              className="rounded-full border border-[#1B2757] px-3 py-1 text-xs font-bold text-[#1B2757] tabular-nums transition-colors hover:bg-[#1B2757] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
               aria-label="Open cart"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              >
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              {itemCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-[#1B2757] text-white font-mono text-[9px] font-bold tabular-nums min-w-[16px] h-4 px-1 flex items-center justify-center leading-none">
-                  {itemCount > 99 ? "99+" : itemCount}
-                </span>
-              )}
+              Cart {itemCount > 99 ? "99+" : itemCount}
             </button>
           </div>
         </div>
