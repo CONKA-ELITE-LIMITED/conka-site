@@ -159,8 +159,11 @@ export default function Home() {
       </section>
 
       {/* ===== SECTION 8: APP USP — key differentiator, measure it yourself ===== */}
+      {/* Mobile drops its bottom padding so the section sits flush against the
+          athlete marquee below (the athletes section drops its mobile top
+          padding to match). */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-white max-lg:pb-0!"
         aria-label="Prove it yourself with the CONKA app"
       >
         <div className="brand-track">
@@ -181,8 +184,10 @@ export default function Home() {
       */}
 
       {/* ===== SECTION 9: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+      {/* No mobile top padding; the App USP section above sits flush against
+          this section's marquee. */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-tint max-lg:pt-0!"
         aria-label="Athletes who use CONKA"
       >
         {/* Sport marquee runs full-bleed at the section level; the carousel
