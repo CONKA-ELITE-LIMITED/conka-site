@@ -31,6 +31,8 @@ export default function BrainFuelBand() {
   return (
     <section className={styles.band}>
       <div className={styles.inner}>
+        <h2 className={styles.title}>Trusted where focus can&rsquo;t fail</h2>
+
         <div className={styles.hero}>
           {/* preload="metadata" (was "auto") so the 2.6 MB clip isn't fully
               downloaded on page load — it's below the fold. Browser fetches it
@@ -51,11 +53,8 @@ export default function BrainFuelBand() {
 
         <div className={styles.details}>
           <p className={styles.description}>
-            Trusted where focus can&rsquo;t fail —{' '}
-            <b>
-              by olympic medallists, world-class athletes &amp; entrepreneurs on the days that
-              matter most.
-            </b>
+            By Olympic medallists, world-class athletes &amp; entrepreneurs on
+            the days that matter most.
           </p>
 
           <div className={styles.metrics}>

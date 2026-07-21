@@ -3,16 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { NAV_PRODUCTS, SHOP_MENU_GRADIENT } from "./navConfig";
-import type { NavProduct } from "./navConfig";
+import { TIME_OF_DAY_BADGE } from "@/app/lib/timeOfDayBadge";
 import type { ShopMegaMenuProps } from "./types";
-
-// Per time-of-day badge colours: soft pastel fill with a darker accent text so
-// each reads on the white footer and on the navy footer once it fills on hover.
-const BADGE_CLASS: Record<NavProduct["badge"], string> = {
-  Morning: "bg-[#f7edcb] text-[#755b1a]",
-  Afternoon: "bg-[#f7ddd0] text-[#9a4526]",
-  "Full day": "bg-[#dce3f5] text-[#2f3f74]",
-};
 
 /* ============================================================================
  * ShopMegaMenu
@@ -69,7 +61,7 @@ export default function ShopMegaMenu({
                 <div className="relative border-t border-black/10 px-4 pb-4 pt-7 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
                   {/* Straddles the image/footer separator, centred. */}
                   <span
-                    className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none ${BADGE_CLASS[product.badge]}`}
+                    className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none ${TIME_OF_DAY_BADGE[product.badge]}`}
                   >
                     {product.badge}
                   </span>
