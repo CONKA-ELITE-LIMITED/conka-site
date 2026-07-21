@@ -60,9 +60,11 @@ export default function LandingValueComparison({
             doesn&apos;t have to be paid back.
           </p>
 
-          <ConkaCTAButton href={ctaHref} meta={null}>
-            {ctaLabel ?? `Get Both from £${PRICE_PER_SHOT_BOTH}/shot`}
-          </ConkaCTAButton>
+          <div className="flex justify-center lg:justify-start">
+            <ConkaCTAButton href={ctaHref} meta={null}>
+              {ctaLabel ?? `Get Both from £${PRICE_PER_SHOT_BOTH}/shot`}
+            </ConkaCTAButton>
+          </div>
 
           {/* Ingredient-class strip — pays off the "nootropics and
               adaptogens" line above */}
