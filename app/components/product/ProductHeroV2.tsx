@@ -80,8 +80,11 @@ export default function ProductHeroV2({
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
 
-  // Square (mobile) box asset + lead with the lifestyle shot, same as mobile V2.
-  const rawImages = getProductHeroImagesMobile(formulaId, selectedCadence);
+  // The hero gallery is independent of the selected cadence (pack size and
+  // cadence are conveyed by the plan tiles), so toggling a plan never rebuilds
+  // or refetches the slideshow. Always source the square (mobile) box asset and
+  // lead with the lifestyle shot, same as mobile V2.
+  const rawImages = getProductHeroImagesMobile(formulaId, "monthly-sub");
   const ordered =
     rawImages.length > 1
       ? [rawImages[1], rawImages[0], ...rawImages.slice(2)]
@@ -128,7 +131,6 @@ export default function ProductHeroV2({
             under the image; sticky, follows scroll past the buy box */}
         <div className="order-2 lg:sticky lg:top-24 lg:col-span-4 lg:self-start">
           <ProductImageSlideshow
-            key={selectedCadence}
             images={images}
             alt={`${content.name} bottle`}
             noFrame

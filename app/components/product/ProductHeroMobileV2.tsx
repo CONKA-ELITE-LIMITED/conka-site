@@ -71,9 +71,11 @@ export default function ProductHeroMobileV2({
 }: ProductHeroMobileV2Props) {
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
-  // Flow test: lead with a lifestyle shot and move the square box asset to
-  // second, rather than opening on the box.
-  const rawImages = getProductHeroImagesMobile(formulaId, selectedCadence);
+  // The hero gallery is independent of the selected cadence (pack size and
+  // cadence are conveyed by the plan tiles), so toggling a plan never rebuilds
+  // or refetches the slideshow. Lead with a lifestyle shot and move the square
+  // box asset to second, rather than opening on the box.
+  const rawImages = getProductHeroImagesMobile(formulaId, "monthly-sub");
   const ordered =
     rawImages.length > 1
       ? [rawImages[1], rawImages[0], ...rawImages.slice(2)]
@@ -101,7 +103,6 @@ export default function ProductHeroMobileV2({
       {/* Asset — padded (not full-bleed), thumbnail rail on, arrows off */}
       <div className="mt-4">
         <ProductImageSlideshow
-          key={selectedCadence}
           images={images}
           alt={`${content.name} bottle`}
           hideArrows
