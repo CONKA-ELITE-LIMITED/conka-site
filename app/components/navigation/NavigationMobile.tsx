@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import { NAV_PRODUCTS, NAV_SCIENCE, NAV_APP, NAV_COMPANY } from "./navConfig";
+import type { NavProduct } from "./navConfig";
 import type { NavigationMobileProps } from "./types";
 
 // Same IA as desktop, sourced from the shared config (no duplicate links).
@@ -13,7 +14,7 @@ const MENU_GROUPS = [NAV_SCIENCE, NAV_APP, NAV_COMPANY];
 // Muted time-of-day tints for the product pills. Warm = morning, cool =
 // afternoon, navy = full day. Kept low-saturation so no formula reads as
 // spotlit over the other.
-const BADGE_STYLE: Record<string, { bg: string; color: string }> = {
+const BADGE_STYLE: Record<NavProduct["badge"], { bg: string; color: string }> = {
   Morning: { bg: "rgba(217,119,6,0.12)", color: "#b45309" },
   Afternoon: { bg: "rgba(3,105,161,0.12)", color: "#0369a1" },
   "Full day": { bg: "rgba(27,39,87,0.10)", color: "#1B2757" },
@@ -255,7 +256,7 @@ export default function NavigationMobile({
                       key={`${group.title}-${link.href}`}
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between gap-2 bg-[#f5f5f5] px-3.5 py-3.5 hover:bg-black/[0.05] transition-colors"
+                      className="flex items-center justify-between gap-2 bg-[#f5f5f5] p-3.5 hover:bg-black/[0.05] transition-colors"
                     >
                       <span className="text-sm font-semibold text-black leading-tight">
                         {link.label}

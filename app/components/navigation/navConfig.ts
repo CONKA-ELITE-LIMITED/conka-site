@@ -13,9 +13,7 @@
 
 export interface NavProduct {
   name: string;
-  /** Short blurb for the compact mobile rows. */
-  description: string;
-  /** Longer blurb for the desktop mega-menu cards + enhanced mobile rows. */
+  /** Blurb for the desktop mega-menu cards + enhanced mobile rows. */
   descriptionLong: string;
   /** Time-of-day tag shown as a pill beside the name. */
   badge: "Morning" | "Afternoon" | "Full day";
@@ -28,7 +26,6 @@ export interface NavProduct {
 export const NAV_PRODUCTS: NavProduct[] = [
   {
     name: "Both (Flow + Clear)",
-    description: "The full daily system.",
     descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
     badge: "Full day",
     href: "/conka-both",
@@ -37,7 +34,6 @@ export const NAV_PRODUCTS: NavProduct[] = [
   },
   {
     name: "CONKA Flow",
-    description: "Morning focus & energy.",
     descriptionLong: "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
     badge: "Morning",
     href: "/conka-flow",
@@ -46,7 +42,6 @@ export const NAV_PRODUCTS: NavProduct[] = [
   },
   {
     name: "CONKA Clear",
-    description: "Afternoon clarity & recovery.",
     descriptionLong: "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",
     badge: "Afternoon",
     href: "/conka-clarity",
