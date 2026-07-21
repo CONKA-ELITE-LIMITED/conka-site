@@ -13,6 +13,7 @@ import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
+import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
@@ -126,6 +127,16 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
+        {/* ===== SECTION 5: ABSORPTION (why liquid) ===== */}
+        <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
+          <div className="brand-track">
+            <AbsorptionBioavailability
+              imageSrc="/formulas/conkaFlow/FlowLiquid.jpg"
+              imageAlt="CONKA Flow liquid pouring from an amber bottle"
+            />
+          </div>
+        </section>
+
         {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
         <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
           <WhatToExpect productId="01" />
@@ -232,6 +243,16 @@ export default function ConkaFlowPage() {
       <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
         <div className="brand-track">
           <ClinicalIngredients formulaIds={["01"]} />
+        </div>
+      </section>
+
+      {/* ===== SECTION 5: ABSORPTION (why liquid) ===== */}
+      <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
+        <div className="brand-track">
+          <AbsorptionBioavailability
+            imageSrc="/formulas/conkaFlow/FlowLiquid.jpg"
+            imageAlt="CONKA Flow liquid pouring from an amber bottle"
+          />
         </div>
       </section>
 
