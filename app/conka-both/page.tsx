@@ -165,7 +165,7 @@ export default function ConkaBothPage() {
 
   const guaranteeSection = (
     <section
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)]"
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
