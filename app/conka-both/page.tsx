@@ -11,6 +11,7 @@ import LandingValueComparison from "@/app/components/landing/LandingValueCompari
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import WhatToExpect from "@/app/components/home/WhatToExpect";
+import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
 import LabFAQ from "@/app/components/landing/LabFAQ";
@@ -104,10 +105,25 @@ export default function ConkaBothPage() {
     </section>
   );
 
+  const absorptionSection = (
+    <section
+      id="absorption"
+      className="brand-section brand-bg-tint"
+      aria-label="Why liquid absorbs better"
+    >
+      <div className="brand-track">
+        <AbsorptionBioavailability
+          imageSrc="/formulas/conkaClear/ClearLiquid.jpg"
+          imageAlt="CONKA liquid pouring from an amber bottle"
+        />
+      </div>
+    </section>
+  );
+
   const athleteSection = (
     <section
       id="athletes"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
       aria-label="Athletes who use CONKA"
     >
       <AthleteSportMarquee fullBleed />
@@ -129,7 +145,7 @@ export default function ConkaBothPage() {
 
   const testimonialsSection = (
     <section
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-white brand-tight-bottom-mobile"
       aria-label="Customer reviews"
     >
       <div className="brand-track">
@@ -141,7 +157,7 @@ export default function ConkaBothPage() {
   const comparisonSection = (
     <section
       id="comparison"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
       aria-label="CONKA vs coffee comparison"
     >
       <div className="brand-track">
@@ -165,7 +181,7 @@ export default function ConkaBothPage() {
 
   const guaranteeSection = (
     <section
-      className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)]"
+      className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile"
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
@@ -175,7 +191,7 @@ export default function ConkaBothPage() {
   );
 
   const faqSection = (
-    <section className="brand-section brand-bg-white" aria-label="FAQ">
+    <section className="brand-section brand-bg-white brand-tight-top-mobile" aria-label="FAQ">
       <div className="brand-track">
         <LabFAQ items={BOTH_PDP_FAQ_ITEMS} hideCTA />
       </div>
@@ -219,6 +235,9 @@ export default function ConkaBothPage() {
 
         {/* ===== SECTION 3: INGREDIENTS ===== */}
         {ingredientsSection}
+
+        {/* ===== SECTION 3b: ABSORPTION (why liquid) ===== */}
+        {absorptionSection}
 
         {/* ===== SECTION 4: WHAT TO EXPECT ===== */}
         {whatToExpectSection}
@@ -286,6 +305,9 @@ export default function ConkaBothPage() {
 
       {/* ===== SECTION 3: INGREDIENTS ===== */}
       {ingredientsSection}
+
+      {/* ===== SECTION 3b: ABSORPTION (why liquid) ===== */}
+      {absorptionSection}
 
       {/* ===== SECTION 4: WHAT TO EXPECT ===== */}
       {whatToExpectSection}

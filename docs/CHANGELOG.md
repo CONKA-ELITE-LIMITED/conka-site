@@ -5,6 +5,11 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Simplify Informed Sport tile to one bold title and plain black body
+- **2026-07-21** | Consolidate segmented toggles into one shared SegmentedToggle component
+- **2026-07-21** | Apply Simple DTC styling to athlete carousel and product showcase, soften toggles
+- **2026-07-21** | Center home product cards, add per-formula star ratings, soften mobile formula toggle
+- **2026-07-21** | Redesign home product cards to Simple DTC style and remove FAQ figure-plate captions
 - **2026-07-21** | Added What-to-Expect to the conka-both page (replacing case studies) and restyled the timeline (larger day, tiled message, centered on desktop)
 - **2026-07-21** | Rebuilt the PDP What-to-Expect section as a full-bleed asset with a Magic Mind-style Day 1/7/30 timeline (overlaid on desktop, stacked on mobile), static server component
 - **2026-07-21** | Convert the PDP caffeine-vs-CONKA comparison section to Simple DTC (drop mono eyebrow, solid-black copy, softened chart corners)

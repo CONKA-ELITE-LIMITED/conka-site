@@ -4,11 +4,12 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import type { ProductGridProps } from "./ProductGrid";
 import { getProductGridCopy } from "./productGridCopy";
+import SegmentedToggle from "@/app/components/SegmentedToggle";
 
 const ALL_CARDS = [
-  { productType: "protocol" as const, label: "Both", number: "03" },
-  { productType: "flow" as const, label: "Flow", number: "01" },
-  { productType: "clear" as const, label: "Clear", number: "02" },
+  { productType: "protocol" as const, label: "Both" },
+  { productType: "flow" as const, label: "Flow" },
+  { productType: "clear" as const, label: "Clear" },
 ];
 
 export default function ProductGridMobile(props?: ProductGridProps) {
@@ -79,55 +80,24 @@ export default function ProductGridMobile(props?: ProductGridProps) {
   return (
     <>
       <div className="mb-8 px-4">
-        <h2
-          className="brand-h1 text-[#0e1f3f]"
-          style={{ letterSpacing: "-0.02em" }}
-        >
+        <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
           {copy.title}
         </h2>
       </div>
 
       {visibleCards.length > 1 && (
-        <div className="px-4 mb-4">
-          <div
-            className="grid border border-black/12"
-            style={{
-              gridTemplateColumns: `repeat(${visibleCards.length}, minmax(0, 1fr))`,
-            }}
-            role="tablist"
-            aria-label="Product filter"
-          >
-            {visibleCards.map((card, idx) => {
-              const isActive = currentIndex === idx;
-              return (
-                <button
-                  key={card.productType}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => goToCard(idx)}
-                  className={`min-h-[44px] px-3 py-2.5 text-left transition-colors ${
-                    idx > 0 ? "border-l border-black/12" : ""
-                  } ${
-                    isActive
-                      ? "bg-[#1B2757] text-white"
-                      : "bg-white text-black hover:bg-[var(--brand-tint)]"
-                  }`}
-                >
-                  <span
-                    className={`block font-mono text-[8px] font-bold tabular-nums mb-1 leading-none ${
-                      isActive ? "text-white/60" : "text-black/40"
-                    }`}
-                  >
-                    {card.number}
-                  </span>
-                  <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] leading-none">
-                    {card.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+        <div className="px-4 mb-5 flex justify-center">
+          <SegmentedToggle
+            ariaLabel="Product filter"
+            options={visibleCards.map((card) => ({
+              value: card.productType,
+              label: card.label,
+            }))}
+            value={currentCard.productType}
+            onChange={(pt) =>
+              goToCard(visibleCards.findIndex((c) => c.productType === pt))
+            }
+          />
         </div>
       )}
 

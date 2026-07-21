@@ -151,6 +151,16 @@
   .brand-section.brand-hero-first {
     padding-top: var(--brand-space-m);
   }
+  /* Mobile-only tight helpers: reduce a section's top/bottom padding from the
+     full mobile default to a consistent, smaller pad so adjacent sections sit
+     closer without touching. Tightening a boundary needs BOTH touching edges
+     (the gap is the sum of both sections' padding). */
+  .brand-tight-top-mobile {
+    padding-top: var(--brand-space-2xl);
+  }
+  .brand-tight-bottom-mobile {
+    padding-bottom: var(--brand-space-2xl);
+  }
 }
 
 /* ---- Section backgrounds ---- */

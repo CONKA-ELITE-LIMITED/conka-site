@@ -12,7 +12,8 @@ import AthleteSportMarquee from "./AthleteSportMarquee";
  * /start (CROAthletes): sport-breadth marquee → header → feature card with
  * nav arrows overlaid on the portrait → large quote as the visual hero →
  * image-only thumbnail roster → Informed Sport block as the rational anchor.
- * Styling stays clinical: mono labels, sharp corners, chamfered navy nav.
+ * Simple DTC styling: soft rounded card, solid-black title, rounded nav,
+ * soft pill overlays (no clinical mono/chamfer).
  *
  * Rendered by the home page and the three PDPs (/conka-flow, /conka-clarity,
  * /conka-both) — changes here propagate to all four.
@@ -99,7 +100,7 @@ const ATHLETES: Athlete[] = [
 
 const SWIPE_THRESHOLD = 50;
 
-function ChamferNav({
+function NavButton({
   direction,
   onClick,
   className = "",
@@ -113,41 +114,17 @@ function ChamferNav({
       type="button"
       aria-label={direction === "prev" ? "Previous athlete" : "Next athlete"}
       onClick={onClick}
-      className={`w-11 h-11 flex items-center justify-center bg-[#1B2757] text-white transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] lab-clip-tr ${className}`}
+      className={`w-11 h-11 flex items-center justify-center rounded-full bg-[#1B2757] text-white transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] ${className}`}
     >
-      {direction === "prev" ? (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden
-        >
-          <polyline
-            points="15 6 9 12 15 18"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-        </svg>
-      ) : (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden
-        >
-          <polyline
-            points="9 6 15 12 9 18"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-        </svg>
-      )}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <polyline
+          points={direction === "prev" ? "15 6 9 12 15 18" : "9 6 15 12 9 18"}
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </button>
   );
 }
@@ -218,7 +195,7 @@ export default function AthleteCredibilityCarousel({
       {/* Header */}
       <div className="mb-8">
         <h2
-          className="brand-h1 mb-2 text-[#0e1f3f]"
+          className="brand-h1 mb-2 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           Why High Performers Trust CONKA
@@ -229,8 +206,46 @@ export default function AthleteCredibilityCarousel({
         </p>
       </div>
 
+      {/* Roster strip — image-only thumbnails, small and scannable. Sits above
+          the feature card as the athlete picker. py-1 keeps the active ring from
+          being clipped by the horizontal scroll container's vertical overflow. */}
+      <div
+        role="tablist"
+        aria-label="Athlete roster"
+        onKeyDown={handleKeyDown}
+        className="flex gap-2 overflow-x-auto snap-x snap-mandatory py-1 -mx-5 px-5 scroll-pl-5 md:mx-0 md:px-0 md:scroll-pl-0 lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden mb-6"
+      >
+        {ATHLETES.map((a, i) => {
+          const isActive = i === activeIndex;
+          return (
+            <button
+              key={a.name}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-label={`${a.name}, ${a.role}`}
+              onClick={() => setActiveIndex(i)}
+              className={`relative shrink-0 w-[72px] lg:w-auto aspect-square snap-start rounded-xl bg-[#eef1f8] overflow-hidden transition-all ${
+                isActive
+                  ? "ring-2 ring-[#1B2757]"
+                  : "ring-1 ring-black/10 hover:ring-black/30 opacity-70 hover:opacity-100"
+              }`}
+            >
+              <Image
+                src={a.image}
+                alt=""
+                fill
+                loading="lazy"
+                className="object-contain"
+                sizes="(max-width: 1024px) 72px, 170px"
+              />
+            </button>
+          );
+        })}
+      </div>
+
       {/* Feature card — portrait with overlaid nav, quote as the hero */}
-      <div className="bg-white border-2 border-[#1B2757] overflow-hidden mb-6">
+      <div className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch">
           {/* Portrait — nav arrows + counter overlay directly on the asset.
               self-start on mobile stops the grid's items-stretch from
@@ -238,7 +253,7 @@ export default function AthleteCredibilityCarousel({
               so a stretched row collapses to 0 height and hides the image);
               lg restores stretch so the column matches the text height. */}
           <div
-            className="relative self-start lg:self-stretch aspect-square lg:aspect-auto lg:min-h-[480px] bg-[var(--brand-tint)] border-b-2 lg:border-b-0 lg:border-r-2 border-[#1B2757]/30 overflow-hidden"
+            className="relative self-start lg:self-stretch aspect-square lg:aspect-auto lg:min-h-[480px] bg-[#eef1f8] border-b lg:border-b-0 lg:border-r border-black/8 overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -252,20 +267,20 @@ export default function AthleteCredibilityCarousel({
               sizes="(max-width: 1024px) 100vw, 45vw"
             />
 
-            {/* Mono spec overlays — counter top-left, achievement top-right */}
-            <span className="absolute top-3 left-3 font-mono text-[10px] font-bold tabular-nums leading-none text-black/60 bg-white/90 px-2 py-1.5">
+            {/* Soft pill overlays — counter top-left, achievement top-right */}
+            <span className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-bold tabular-nums leading-none text-black">
               {currentLabel}
             </span>
-            <span className="absolute top-3 right-3 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] leading-none text-black/60 bg-white/90 px-2 py-1.5">
+            <span className="absolute top-3 right-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold leading-none text-black">
               {active.achievementMono}
             </span>
 
-            <ChamferNav
+            <NavButton
               direction="prev"
               onClick={goPrev}
               className="absolute left-3 top-1/2 -translate-y-1/2"
             />
-            <ChamferNav
+            <NavButton
               direction="next"
               onClick={goNext}
               className="absolute right-3 top-1/2 -translate-y-1/2"
@@ -292,42 +307,6 @@ export default function AthleteCredibilityCarousel({
 
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         Showing {active.name}, {active.role}.
-      </div>
-
-      {/* Roster strip — image-only thumbnails, small and scannable */}
-      <div
-        role="tablist"
-        aria-label="Athlete roster"
-        onKeyDown={handleKeyDown}
-        className="flex gap-2 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 scroll-pl-5 md:mx-0 md:px-0 md:scroll-pl-0 lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {ATHLETES.map((a, i) => {
-          const isActive = i === activeIndex;
-          return (
-            <button
-              key={a.name}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-label={`${a.name}, ${a.role}`}
-              onClick={() => setActiveIndex(i)}
-              className={`relative shrink-0 w-[72px] lg:w-auto aspect-square snap-start bg-[var(--brand-tint)] overflow-hidden transition-all ${
-                isActive
-                  ? "border-2 border-[#1B2757]"
-                  : "border border-black/12 hover:border-black/40 opacity-70 hover:opacity-100"
-              }`}
-            >
-              <Image
-                src={a.image}
-                alt=""
-                fill
-                loading="lazy"
-                className="object-contain"
-                sizes="(max-width: 1024px) 72px, 170px"
-              />
-            </button>
-          );
-        })}
       </div>
 
       <InformedSportCertification className="mt-8" />
