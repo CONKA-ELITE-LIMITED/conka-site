@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import type { ProductGridProps } from "./ProductGrid";
 import { getProductGridCopy } from "./productGridCopy";
+import SegmentedToggle from "@/app/components/SegmentedToggle";
 
 const ALL_CARDS = [
   { productType: "protocol" as const, label: "Both" },
@@ -86,31 +87,17 @@ export default function ProductGridMobile(props?: ProductGridProps) {
 
       {visibleCards.length > 1 && (
         <div className="px-4 mb-5 flex justify-center">
-          <div
-            className="inline-flex rounded-full bg-[#eef1f8] p-1"
-            role="tablist"
-            aria-label="Product filter"
-          >
-            {visibleCards.map((card, idx) => {
-              const isActive = currentIndex === idx;
-              return (
-                <button
-                  key={card.productType}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => goToCard(idx)}
-                  className={`min-h-[44px] rounded-full px-5 py-2 text-sm font-semibold leading-none transition-colors ${
-                    isActive
-                      ? "bg-[#1B2757] text-white"
-                      : "text-[#1B2757] hover:bg-white/60"
-                  }`}
-                >
-                  {card.label}
-                </button>
-              );
-            })}
-          </div>
+          <SegmentedToggle
+            ariaLabel="Product filter"
+            options={visibleCards.map((card) => ({
+              value: card.productType,
+              label: card.label,
+            }))}
+            value={currentCard.productType}
+            onChange={(pt) =>
+              goToCard(visibleCards.findIndex((c) => c.productType === pt))
+            }
+          />
         </div>
       )}
 
