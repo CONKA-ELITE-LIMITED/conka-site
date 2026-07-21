@@ -75,11 +75,11 @@ export default function WhatToExpect({
           />
           {/* Short lead-in fade from the asset into the timeline background. */}
           <div
-            className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--brand-tint)] to-transparent"
+            className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#eef1f8] to-transparent"
             aria-hidden
           />
         </div>
-        <ol className="grid grid-cols-1 gap-12 px-[var(--brand-gutter-mobile)] py-16">
+        <ol className="grid grid-cols-1 gap-12 bg-gradient-to-b from-[#eef1f8] to-[#dbe0f0] px-[var(--brand-gutter-mobile)] py-16">
           <DayItems milestones={milestones} />
         </ol>
       </div>
