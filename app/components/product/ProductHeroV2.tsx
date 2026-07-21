@@ -111,7 +111,7 @@ export default function ProductHeroV2({
             )}
           </div>
 
-          <SocialProofBadge className="self-start" />
+          <SocialProofBadge productType={productType} className="self-start" />
 
           <p className="text-base leading-relaxed text-black">
             {content.headline}

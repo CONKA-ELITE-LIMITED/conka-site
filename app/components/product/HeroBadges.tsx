@@ -24,18 +24,31 @@ export function SpecBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full bg-gradient-to-r from-[#dbe0f0] to-[#eef1f8] px-4 py-2 font-mono text-sm font-bold uppercase tracking-wide text-black ${className}`}
+      className={`inline-flex items-center rounded-lg bg-gradient-to-r from-[#dbe0f0] to-[#eef1f8] px-4 py-2 font-mono text-sm font-bold uppercase tracking-wide text-black ${className}`}
     >
       {SPEC_LABEL[productType]}
     </span>
   );
 }
 
-/** Live-viewer style social-proof pill (Magic Mind pattern, our fonts + gradient). */
-export function SocialProofBadge({ className = "" }: { className?: string }) {
+/** Live-viewer count per product for the social-proof pill. */
+const SOCIAL_PROOF_COUNT: Record<SpecProductType, number> = {
+  flow: 112,
+  clear: 104,
+  both: 224,
+};
+
+/** Live-viewer style social-proof pill (Magic Mind pattern), grey gradient. */
+export function SocialProofBadge({
+  productType,
+  className = "",
+}: {
+  productType: SpecProductType;
+  className?: string;
+}) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e7eaf4] to-[#f6f7fb] px-4 py-2 text-sm font-semibold text-black ${className}`}
+      className={`inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#e6e6e6] to-[#f4f4f4] px-4 py-2 text-sm font-semibold text-black ${className}`}
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
@@ -47,7 +60,7 @@ export function SocialProofBadge({ className = "" }: { className?: string }) {
         />
         <circle cx="12" cy="13" r="3" fill="currentColor" />
       </svg>
-      100+ others exploring better focus
+      {SOCIAL_PROOF_COUNT[productType]} others exploring better focus
     </span>
   );
 }
