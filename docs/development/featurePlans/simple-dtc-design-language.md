@@ -27,7 +27,7 @@ Document the language and reconcile the stale docs first (this is SCRUM-1172 Par
 The forward direction, captured from the reference implementation (`ProductBuyPanel`, `ProductHeroV2` on `/conka-flow`):
 
 - **Black type, not grey tiers.** Prefer solid black for primary copy. Retire the `text-black/50–/75` opacity ramp as the default; reserve low-opacity greys for genuinely secondary metadata only.
-- **Standard sans, not mono eyebrows.** Drop the JetBrains Mono eyebrow / sub-line / uppercase-tracking pattern (`font-mono ... tracking-[0.18em]`) on consumer conversion surfaces. Use the primary sans at a normal weight/size.
+- **Standard sans, not mono eyebrows.** Drop the JetBrains Mono eyebrow / sub-line / uppercase-tracking pattern (`font-mono ... tracking-[0.18em]`) on consumer conversion surfaces. Use the primary sans at a normal weight/size. Note (see learnings): mono is not banned outright. What Simple DTC kills is the *faded, uppercase, wide-tracked* eyebrow; mono may stay on a compact data/spec micro-label (e.g. an ingredient's `Category | form` tag) as long as it is solid black, not a muted grey.
 - **Drop decorative eyebrows and uppercase micro-labels** where they add chrome without information.
 - **One accent: neural blue.** The navy `#1B2757` is the single accent. It should come from a token, not a hard-coded literal.
 - **Reduce styling noise** generally: fewer borders, fewer nested boxes, less letter-spacing fiddling, simpler structure.
@@ -41,6 +41,17 @@ Simple DTC is added **alongside** Clinical (DESIGN_SYSTEM.md §8) and App-Dark (
 | Home, PDPs (`/conka-flow`, `/conka-clarity`), landing / funnel / `/go`, top-of-funnel `/professionals` | **Simple DTC** |
 | Science / evidence-dense modules, `/app` dark pages (§10 App-Dark) | Clinical / App-Dark (mono + opacity ramp earns its place on dense data) |
 | Account, subscription management, B2B order/management UIs | Clinical for now (mono data labels aid scanning); convert opportunistically |
+
+## Learnings log
+
+Captured as components convert; feeds the eventual DESIGN_SYSTEM.md section.
+
+- **First conversion: the PDP ingredients section** (`app/components/product/ClinicalIngredients.tsx`, live on `/conka-flow`, `/conka-clarity`, `/conka-both`) is the current reference for what Simple DTC looks like in practice.
+- **Mono is a scalpel, not a blanket ban.** The category tag was kept in mono but flipped to solid black. The rule that reads well: kill the faded uppercase wide-tracked *eyebrow*; keep mono only where it labels compact data, and only in black. The sweep must not blanket-delete every `font-mono`.
+- **Clip corners are a clinical tell.** `lab-clip-tr` (angled corner) reads clinical; Simple DTC uses a soft `rounded-2xl`. Same for `[+]/[-]` mono toggles, which became a rotating chevron.
+- **Header shape.** Drop the mono eyebrow and the grammage-led H1; lead with a plain `brand-h1` title + `brand-body` description in solid black. Section titles use `brand-h1` to match sibling sections (do not down-size to `brand-h2`).
+- **Conversions surface shared primitives.** Converting the ingredient rail exposed a reusable `DotIndicator` (`app/components/DotIndicator.tsx`), now shared by the CRO testimonials rail and the PDP ingredients rail. A dead, legacy `premium/PremiumDotIndicator` was folded into it and renamed off the "Premium" prefix. Expect the sweep to keep consolidating like this, which validates the "consolidate after conversions" ordering rather than up front.
+- **Navy is still a literal.** Components hard-code `#1B2757` (dots, focus ring, key-finding stat). Confirms the Phase 2 need for a Layer-1 navy token; deferred deliberately until more surfaces convert.
 
 ## Phases
 
