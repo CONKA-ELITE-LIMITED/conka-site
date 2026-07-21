@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Move the home certification badges into a reusable Certifications band rendered under the benefit tiles.
 - **2026-07-21** | Add a featured single-athlete review section (Jack Willis) to the home page under the product grid.
 - **2026-07-21** | Redesign mobile nav menu: Magic Mind-inspired product rows with time-of-day badges, section dividers, and a featured review card
 - **2026-07-21** | Home App USP section reworked into a condensed what/why/edge accordion with a clearer CTA, and made flush to the athlete marquee on mobile.

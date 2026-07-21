@@ -18,6 +18,8 @@ import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
 import AthleteReviewFeature from "./components/AthleteReviewFeature";
+import ProductBenefitTiles from "./components/product/ProductBenefitTiles";
+import Certifications from "./components/Certifications";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -112,6 +114,20 @@ export default function Home() {
           <LandingProductShowcase ctaHref="/conka-both" />
         </div>
       </section>
+
+      {/* ===== SECTION 3: KEY BENEFITS (benefit tiles) ===== */}
+      <section
+        id="benefit-tiles"
+        className="brand-section brand-bg-white"
+        aria-label="Key benefits"
+      >
+        <div className="brand-track">
+          <ProductBenefitTiles />
+        </div>
+      </section>
+
+      {/* Certification badges — self-contained white band under the benefits. */}
+      <Certifications />
 
       {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
           LandingDailyBenefits; the band owns its own full-bleed dark section,

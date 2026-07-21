@@ -55,7 +55,7 @@ export default function AthleteReviewFeature() {
         </p>
         <div className="mt-1.5 space-y-0.5">
           {ATHLETE.credentials.map((credential) => (
-            <p key={credential} className="text-sm lg:text-base text-black/55">
+            <p key={credential} className="text-sm lg:text-base text-black">
               {credential}
             </p>
           ))}
