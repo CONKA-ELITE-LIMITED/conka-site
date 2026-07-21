@@ -148,8 +148,8 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 9: GUARANTEE ===== */}
-        <section id="guarantee" className="brand-section brand-bg-white" aria-label="Risk-free guarantee">
+        {/* ===== SECTION 9: GUARANTEE (full-bleed on mobile) ===== */}
+        <section id="guarantee" className="brand-section brand-bg-white !px-0" aria-label="Risk-free guarantee">
           <div className="brand-track">
             <LabGuarantee />
           </div>

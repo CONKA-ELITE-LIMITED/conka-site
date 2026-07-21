@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Reworked the PDP guarantee section into a Simple DTC two-column card (paper-textured copy + lifestyle image), dropped the app framing, full-bleed on mobile
 - **2026-07-21** | Simplified the PDP ingredients section to the Simple DTC style (black type, softer cards, human header) and added a scroll indicator to the ingredient rail
 - **2026-07-21** | Make the PDP hero badges rectangular (Magic Mind style), grey-gradient the social-proof pill, and give it a per-product live-viewer count
 - **2026-07-21** | Roll the V2 PDP hero and benefits band out to conka-clarity and conka-both, make the hero spec badge product-aware, and retire the legacy hero components
