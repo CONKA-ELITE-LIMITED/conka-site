@@ -9,9 +9,10 @@ import Image from "next/image";
  * landing) without duplicating markup. Rendered inside the carousel (home +
  * three PDPs) and on the professionals page.
  *
- * Clinical treatment: sharp corners, mono category label, hairline border.
- * Copy is lifted verbatim from the original block, so no new claims are
- * introduced. `headingLevel` lets a host page keep a logical heading order
+ * Simple DTC treatment: soft rounded tile, one bold title, plain black body
+ * (no mono eyebrow, no inline bolding). Copy is lifted verbatim from the
+ * original block, so no new claims are introduced. `headingLevel` lets a host
+ * page keep a logical heading order
  * (h2 on the landing where it opens a section; h3 inside the carousel where it
  * sits under the roster h2). `className` lets the host own outer spacing.
  * ========================================================================== */
@@ -25,7 +26,7 @@ export default function InformedSportCertification({
 }) {
   return (
     <div
-      className={`flex items-center gap-4 p-5 bg-black/[0.03] border border-black/[0.06] ${className}`}
+      className={`flex items-center gap-4 p-5 rounded-2xl bg-black/[0.03] ${className}`}
     >
       <div className="relative w-20 h-20 flex-shrink-0">
         <Image
@@ -39,25 +40,13 @@ export default function InformedSportCertification({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/50 mb-1.5">
-          Quality &amp; Testing
-        </p>
-        <Heading className="text-base lg:text-lg font-semibold text-black leading-tight mb-1.5">
+        <Heading className="text-lg lg:text-xl font-bold text-black leading-tight mb-1.5">
           Independently tested. Every batch.
         </Heading>
-        <p className="text-[13px] text-black/70 leading-snug">
-          Every batch of CONKA Flow and CONKA Clear is independently tested by{" "}
-          <strong className="text-black font-semibold">Informed Sport</strong>{" "}
-          for over{" "}
-          <strong className="text-black font-semibold">
-            280 banned substances
-          </strong>
-          . Trusted by{" "}
-          <strong className="text-black font-semibold">WADA</strong>,{" "}
-          <strong className="text-black font-semibold">
-            Olympic committees
-          </strong>
-          , and professional sports leagues worldwide.
+        <p className="text-sm text-black leading-snug">
+          Every batch of CONKA Flow and CONKA Clear is independently tested by
+          Informed Sport for over 280 banned substances. Trusted by WADA,
+          Olympic committees, and professional sports leagues worldwide.
         </p>
       </div>
     </div>

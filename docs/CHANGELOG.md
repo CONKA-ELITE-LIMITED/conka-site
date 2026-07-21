@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Simplify Informed Sport tile to one bold title and plain black body
 - **2026-07-21** | Consolidate segmented toggles into one shared SegmentedToggle component
 - **2026-07-21** | Apply Simple DTC styling to athlete carousel and product showcase, soften toggles
 - **2026-07-21** | Center home product cards, add per-formula star ratings, soften mobile formula toggle
