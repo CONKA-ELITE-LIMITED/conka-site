@@ -1,6 +1,6 @@
 "use client";
 
-interface PremiumDotIndicatorProps {
+interface DotIndicatorProps {
   /** Total number of dots */
   total: number;
   /** Current active index (0-based) */
@@ -21,7 +21,7 @@ interface PremiumDotIndicatorProps {
  * testimonials rail and the PDP ingredients rail so the pattern stays in step.
  *
  * @example
- * <PremiumDotIndicator
+ * <DotIndicator
  *   total={reviews.length}
  *   currentIndex={activeIndex}
  *   onDotClick={goToIndex}
@@ -29,14 +29,14 @@ interface PremiumDotIndicatorProps {
  *   getDotAriaLabel={(i) => `Go to review ${i + 1}`}
  * />
  */
-export default function PremiumDotIndicator({
+export default function DotIndicator({
   total,
   currentIndex,
   onDotClick,
   ariaLabel,
   getDotAriaLabel,
   className = "",
-}: PremiumDotIndicatorProps) {
+}: DotIndicatorProps) {
   return (
     <div
       className={`flex flex-wrap justify-center gap-2 ${className}`}

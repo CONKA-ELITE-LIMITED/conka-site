@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { Testimonial } from "@/app/components/testimonials/types";
 import { CURATED_TESTIMONIALS } from "@/app/lib/customerTestimonials";
 import ConkaCTAButton from "../landing/ConkaCTAButton";
-import PremiumDotIndicator from "../premium/PremiumDotIndicator";
+import DotIndicator from "../DotIndicator";
 import { TrustIconGuarantee, TrustIconShipping } from "../landing/icons";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 
@@ -274,7 +274,7 @@ export default function CROTestimonials({
       </div>
 
       {/* Dot indicators — primary nav on mobile (arrows are desktop-only) */}
-      <PremiumDotIndicator
+      <DotIndicator
         total={testimonials.length}
         currentIndex={activeIndex}
         onDotClick={goToIndex}

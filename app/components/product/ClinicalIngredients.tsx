@@ -8,7 +8,7 @@ import {
 } from "@/app/lib/ingredientsData";
 import { FormulaId } from "@/app/lib/productData";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
-import PremiumDotIndicator from "@/app/components/premium/PremiumDotIndicator";
+import DotIndicator from "@/app/components/DotIndicator";
 
 /* ============================================================================
  * ClinicalIngredients
@@ -269,7 +269,7 @@ export default function ClinicalIngredients({
       </div>
 
       {/* Dot indicators — shared with the CRO testimonials rail */}
-      <PremiumDotIndicator
+      <DotIndicator
         total={ingredients.length}
         currentIndex={activeIndex}
         onDotClick={goToIndex}
