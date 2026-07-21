@@ -43,10 +43,6 @@
   color: #ffffff;
   margin: 0;
 }
-.description b {
-  font-weight: 500;
-  color: #ffffff;
-}
 
 .metrics {
   display: grid;
