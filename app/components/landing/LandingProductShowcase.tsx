@@ -108,17 +108,20 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     </button>
   );
 
-  // Product card. Mobile: horizontal (image beside details). Desktop: a dark
-  // neural-blue header (white name + asset) over a light body (stats + CTA) so
-  // the card reads as two clear zones.
+  // Product card (Simple DTC). Mobile: horizontal (image beside details).
+  // Desktop: a centred soft card (name, time-of-day pill, asset, stats) matching
+  // the home product tiles.
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
-      <div key={id} className="bg-white border-2 border-[#1B2757] overflow-hidden">
+      <div
+        key={id}
+        className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden"
+      >
         {/* Mobile: horizontal */}
         <div className="lg:hidden p-4">
           <div className="flex items-center gap-4 mb-4">
-            <div className="relative w-[120px] h-[120px] shrink-0 border border-black/8 overflow-hidden bg-white">
+            <div className="relative w-[120px] h-[120px] shrink-0 rounded-xl overflow-hidden bg-[#eef1f8]">
               <Image
                 src={p.bottleSrc}
                 alt={p.bottleAlt}
@@ -128,14 +131,14 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
               />
             </div>
             <div className="min-w-0">
-              <p className="text-lg font-semibold text-black leading-tight mb-1">
+              <p className="text-lg font-bold text-black leading-tight mb-1">
                 {p.name}
               </p>
-              <p className="text-sm text-black/55 mb-3">{p.sub}</p>
-              <p className="text-2xl font-semibold tabular-nums leading-none text-black">
+              <p className="text-sm text-black/60 mb-3">{p.sub}</p>
+              <p className="text-2xl font-bold tabular-nums leading-none text-black">
                 {p.mg}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5">
+              <p className="text-[11px] uppercase tracking-wide text-black/45 mt-1.5">
                 Active nootropics
               </p>
             </div>
@@ -143,34 +146,33 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
           {ingredientButton(id)}
         </div>
 
-        {/* Desktop: slim blue title bar over an all-white card body */}
-        <div className="hidden lg:block">
-          <div className="bg-[var(--color-neuro-blue-dark,#0e1f3f)] px-6 py-3">
-            <p className="flex items-center justify-center gap-2 text-lg font-semibold text-white leading-tight">
-              {p.name}
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-white/60" aria-hidden />
-              <span className="text-sm font-normal text-white/70">{p.timeOfDay}</span>
-            </p>
+        {/* Desktop: centred soft card */}
+        <div className="hidden lg:block p-6 text-center">
+          <p className="text-2xl font-bold text-black leading-none tracking-tight">
+            {p.name}
+          </p>
+          <div className="mt-3 flex justify-center">
+            <span className="inline-flex items-center rounded-full bg-[#eef1f8] px-3 py-1 text-xs font-semibold text-[#1B2757] leading-none">
+              {p.timeOfDay}
+            </span>
           </div>
-          <div className="p-6 text-center">
-            <div className="relative w-[260px] h-[260px] mx-auto overflow-hidden border border-black/8 bg-white mb-5">
-              <Image
-                src={p.bottleSrc}
-                alt={p.bottleAlt}
-                fill
-                sizes="260px"
-                className="object-cover"
-              />
-            </div>
-            <p className="text-sm text-black/55 mb-3">{p.sub}</p>
-            <p className="text-3xl font-semibold tabular-nums leading-none text-black">
-              {p.mg}
-            </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 mt-1.5 mb-5">
-              Active nootropics
-            </p>
-            {ingredientButton(id)}
+          <div className="relative w-[260px] h-[260px] mx-auto overflow-hidden rounded-xl bg-[#eef1f8] my-5">
+            <Image
+              src={p.bottleSrc}
+              alt={p.bottleAlt}
+              fill
+              sizes="260px"
+              className="object-cover"
+            />
           </div>
+          <p className="text-sm text-black/60 mb-3">{p.sub}</p>
+          <p className="text-3xl font-bold tabular-nums leading-none text-black">
+            {p.mg}
+          </p>
+          <p className="text-[11px] uppercase tracking-wide text-black/45 mt-1.5 mb-5">
+            Active nootropics
+          </p>
+          {ingredientButton(id)}
         </div>
       </div>
     );
@@ -179,7 +181,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
   return (
     <div>
       <h2
-        className="brand-h1 mb-4 text-[#0e1f3f]"
+        className="brand-h1 mb-4 text-black"
         style={{ letterSpacing: "var(--tracking-tight)" }}
       >
         Two shots. Built around your day.
@@ -201,8 +203,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             clearValue="clear"
             onChange={setActive}
             variant="time"
-            className="mb-4 border border-[#1B2757]/30"
-            inactiveClassName="bg-white"
+            className="mb-4"
           />
           {renderCard(active)}
         </div>

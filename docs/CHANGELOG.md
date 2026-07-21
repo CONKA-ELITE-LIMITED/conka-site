@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Apply Simple DTC styling to athlete carousel and product showcase, soften toggles
 - **2026-07-21** | Center home product cards, add per-formula star ratings, soften mobile formula toggle
 - **2026-07-21** | Redesign home product cards to Simple DTC style and remove FAQ figure-plate captions
 - **2026-07-21** | Added What-to-Expect to the conka-both page (replacing case studies) and restyled the timeline (larger day, tiled message, centered on desktop)
