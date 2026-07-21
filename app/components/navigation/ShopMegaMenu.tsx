@@ -55,7 +55,7 @@ export default function ShopMegaMenu({
                 href={product.href}
                 onClick={onClose}
                 aria-label={product.alt}
-                className="group block overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
+                className="group relative block overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
               >
                 <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <Image
@@ -66,15 +66,19 @@ export default function ShopMegaMenu({
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
                 </div>
-                <div className="flex flex-col items-start gap-2 border-t border-black/10 p-4 text-left transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
-                  <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
-                    {product.name}
-                  </p>
+                <div className="relative border-t border-black/10 px-4 pb-4 pt-7 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
+                  {/* Straddles the image/footer separator, centred. */}
                   <span
-                    className={`rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none transition-colors ${BADGE_CLASS[product.badge]}`}
+                    className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none ${BADGE_CLASS[product.badge]}`}
                   >
                     {product.badge}
                   </span>
+                  <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
+                    {product.name}
+                  </p>
+                  <p className="mt-1.5 text-xs leading-snug text-black/60 transition-colors group-hover:text-white/70">
+                    {product.tagline}
+                  </p>
                 </div>
               </Link>
             ))}

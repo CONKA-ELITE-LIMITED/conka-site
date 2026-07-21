@@ -13,8 +13,10 @@
 
 export interface NavProduct {
   name: string;
-  /** Blurb for the desktop mega-menu cards + enhanced mobile rows. */
+  /** Blurb for the enhanced mobile rows. */
   descriptionLong: string;
+  /** Product hero subtitle, shown under the name on the desktop Shop tile. */
+  tagline: string;
   /** Time-of-day tag shown as a pill beside the name. */
   badge: "Morning" | "Afternoon" | "Full day";
   href: string;
@@ -27,6 +29,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
   {
     name: "Both (Flow + Clear)",
     descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
+    tagline: "The Complete Daily Brain Shot System, Morning to Evening",
     badge: "Full day",
     href: "/conka-both",
     image: "/formulas/both/BothNew.jpg",
@@ -35,6 +38,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
   {
     name: "CONKA Flow",
     descriptionLong: "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
+    tagline: "The Daily Morning Brain Shot for Sharper, Calmer Focus",
     badge: "Morning",
     href: "/conka-flow",
     image: "/lander/FlowNew.jpg",
@@ -43,6 +47,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
   {
     name: "CONKA Clear",
     descriptionLong: "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",
+    tagline: "The Afternoon Brain Shot That Cuts Through Brain Fog",
     badge: "Afternoon",
     href: "/conka-clarity",
     image: "/lander/ClearNew.jpg",
