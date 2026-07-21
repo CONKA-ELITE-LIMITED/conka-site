@@ -9,7 +9,7 @@ export interface ExpectMilestone {
   body: string;
 }
 
-export const expectFlow: ExpectMilestone[] = [
+const expectFlow: ExpectMilestone[] = [
   {
     day: "Day 1",
     title: "Calm, sharper focus",
@@ -27,7 +27,7 @@ export const expectFlow: ExpectMilestone[] = [
   },
 ];
 
-export const expectClear: ExpectMilestone[] = [
+const expectClear: ExpectMilestone[] = [
   {
     day: "Day 1",
     title: "The fog lifts",
@@ -45,7 +45,7 @@ export const expectClear: ExpectMilestone[] = [
   },
 ];
 
-export const expectBoth: ExpectMilestone[] = [
+const expectBoth: ExpectMilestone[] = [
   {
     day: "Day 1",
     title: "Focus & Clarity",
