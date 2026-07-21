@@ -131,14 +131,6 @@ export default function ConkaFlowPage() {
           <WhatToExpect productId="01" />
         </section>
 
-        {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
-        <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
-          <AthleteSportMarquee fullBleed />
-          <div className="brand-track">
-            <AthleteCredibilityCarousel showMarquee={false} />
-          </div>
-        </section>
-
         {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
         <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
           <div className="brand-track">
@@ -157,6 +149,14 @@ export default function ConkaFlowPage() {
         <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
           <div className="brand-track">
             <CROTestimonials hideCTA />
+          </div>
+        </section>
+
+        {/* ===== ATHLETE CREDIBILITY (moved before FAQ) ===== */}
+        <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
+          <AthleteSportMarquee fullBleed />
+          <div className="brand-track">
+            <AthleteCredibilityCarousel showMarquee={false} />
           </div>
         </section>
 
@@ -240,14 +240,6 @@ export default function ConkaFlowPage() {
         <WhatToExpect productId="01" />
       </section>
 
-      {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
-      <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
-        <AthleteSportMarquee fullBleed />
-        <div className="brand-track">
-          <AthleteCredibilityCarousel showMarquee={false} />
-        </div>
-      </section>
-
       {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
       <section id="comparison" className="brand-section brand-bg-tint" aria-label="CONKA vs coffee comparison">
         <div className="brand-track">
@@ -266,6 +258,14 @@ export default function ConkaFlowPage() {
       <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
         <div className="brand-track">
           <CROTestimonials hideCTA />
+        </div>
+      </section>
+
+      {/* ===== ATHLETE CREDIBILITY (moved before FAQ) ===== */}
+      <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
+        <AthleteSportMarquee fullBleed />
+        <div className="brand-track">
+          <AthleteCredibilityCarousel showMarquee={false} />
         </div>
       </section>
 

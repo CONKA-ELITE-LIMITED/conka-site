@@ -229,11 +229,11 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 6: COMPARISON ===== */}
         {comparisonSection}
 
-        {/* ===== SECTION 7: ATHLETE CREDIBILITY ===== */}
-        {athleteSection}
-
-        {/* ===== SECTION 8: GUARANTEE ===== */}
+        {/* ===== SECTION 7: GUARANTEE ===== */}
         {guaranteeSection}
+
+        {/* ===== SECTION 8: ATHLETE CREDIBILITY (before FAQ) ===== */}
+        {athleteSection}
 
         {/* ===== SECTION 9: FAQ ===== */}
         {faqSection}
@@ -296,11 +296,11 @@ export default function ConkaBothPage() {
       {/* ===== SECTION 6: COMPARISON ===== */}
       {comparisonSection}
 
-      {/* ===== SECTION 7: ATHLETE CREDIBILITY ===== */}
-      {athleteSection}
-
-      {/* ===== SECTION 8: GUARANTEE ===== */}
+      {/* ===== SECTION 7: GUARANTEE ===== */}
       {guaranteeSection}
+
+      {/* ===== SECTION 8: ATHLETE CREDIBILITY (before FAQ) ===== */}
+      {athleteSection}
 
       {/* ===== SECTION 9: FAQ ===== */}
       {faqSection}
