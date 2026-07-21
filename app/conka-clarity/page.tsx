@@ -6,7 +6,6 @@ import Footer from "@/app/components/footer";
 import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
-  ProductWhatYouGet,
 } from "@/app/components/product";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
@@ -129,13 +128,6 @@ export default function ConkaClarityPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 5: WHAT YOU GET ===== */}
-        <section id="what-you-get" className="brand-section brand-bg-tint" aria-label="What ships with your order">
-          <div className="brand-track">
-            <ProductWhatYouGet formulaId="02" />
-          </div>
-        </section>
-
         {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
         <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
           <div className="brand-track">
@@ -244,13 +236,6 @@ export default function ConkaClarityPage() {
       <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
         <div className="brand-track">
           <ClinicalIngredients formulaIds={["02"]} />
-        </div>
-      </section>
-
-      {/* ===== SECTION 5: WHAT YOU GET ===== */}
-      <section id="what-you-get" className="brand-section brand-bg-tint" aria-label="What ships with your order">
-        <div className="brand-track">
-          <ProductWhatYouGet formulaId="02" />
         </div>
       </section>
 

@@ -5,5 +5,4 @@ export { default as StickyPurchaseFooter } from "./StickyPurchaseFooter";
 export { default as StickyPurchaseFooterMobile } from "./StickyPurchaseFooterMobile";
 export { default as ClinicalIngredients } from "./ClinicalIngredients";
 export { default as FormulaBenefitsPillars } from "./FormulaBenefitsPillars";
-export { default as ProductWhatYouGet } from "./ProductWhatYouGet";
 
