@@ -24,7 +24,7 @@ import {
 const NAVY = "#1B2757";
 const COFFEE = "#1d1d1d";
 const CRASH = "#d9483b";
-const END_BLUE = "#5B86C9";
+const SAVINGS = "#3FA95B";
 
 interface CrashChartProps {
   /** Headline saving vs a monthly coffee habit, e.g. "£53". */
@@ -145,19 +145,16 @@ export default function CrashChart({
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}
         <div className="flex flex-wrap gap-x-5 gap-y-1 px-1.5 pb-1">
-          <span className="flex items-center gap-2 text-[13px] font-medium text-[#3a3a3a]">
+          <span className="flex items-center gap-2 text-sm font-medium text-black">
             <CoffeeIcon />
             Coffee
           </span>
-          <span className="flex items-center gap-2 text-[13px] font-medium text-[#3a3a3a]">
-            <span
-              className="h-[5px] w-6 flex-shrink-0 rounded-[3px]"
-              style={{ background: "linear-gradient(90deg,#E9A23A,#6E97D6)" }}
-            />
+          <span className="flex items-center gap-2 text-sm font-medium text-black">
+            <span className="h-[5px] w-6 flex-shrink-0 rounded-[3px] bg-[#1B2757]" />
             CONKA Flow + Clear
           </span>
         </div>
-        <p className="px-1.5 pb-2.5 pt-0.5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#aaa]">
+        <p className="px-1.5 pb-2.5 pt-0.5 text-xs font-medium text-black/50">
           Focus levels through the day
         </p>
 
@@ -169,14 +166,9 @@ export default function CrashChart({
           aria-label="Focus through the day: coffee crashes at 2pm, CONKA stays steady all day"
         >
           <defs>
-            <linearGradient id={`${gid}-conkaGrad`} x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#E9A23A" />
-              <stop offset="48%" stopColor="#CF9A78" />
-              <stop offset="100%" stopColor="#5B86C9" />
-            </linearGradient>
             <linearGradient id={`${gid}-conkaFill`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#9DB8E0" stopOpacity="0.30" />
-              <stop offset="100%" stopColor="#9DB8E0" stopOpacity="0" />
+              <stop offset="0%" stopColor={NAVY} stopOpacity="0.14" />
+              <stop offset="100%" stopColor={NAVY} stopOpacity="0" />
             </linearGradient>
             <linearGradient id={`${gid}-coffeeFill`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#D9483B" stopOpacity="0.16" />
@@ -198,7 +190,7 @@ export default function CrashChart({
           />
           <DrawPath
             d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60"
-            stroke={`url(#${gid}-conkaGrad)`}
+            stroke={NAVY}
             isInView={isInView}
           />
 
@@ -242,7 +234,7 @@ export default function CrashChart({
               x="191"
               y="36"
               textAnchor="middle"
-              className="fill-[#d9483b] text-[12.5px] font-extrabold uppercase tracking-[0.05em]"
+              className="fill-[#d9483b] text-[11.5px] font-semibold"
             >
               ↓ 2pm crash
             </text>
@@ -263,7 +255,7 @@ export default function CrashChart({
             cx="320"
             cy="60"
             r="5.5"
-            fill={END_BLUE}
+            fill={NAVY}
             stroke="#fff"
             strokeWidth="2"
             className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
@@ -273,14 +265,14 @@ export default function CrashChart({
             x="314"
             y="50"
             textAnchor="end"
-            className="fill-[#5B86C9] text-[11.5px] font-extrabold uppercase tracking-[0.04em] motion-safe:[transition:opacity_0.4s_ease_1.5s]"
+            className="fill-[#1B2757] text-[11.5px] font-semibold motion-safe:[transition:opacity_0.4s_ease_1.5s]"
             style={{ opacity: isInView ? 1 : 0 }}
           >
             steady
           </text>
 
           {/* axis */}
-          <g className="fill-[#9a9a9a] text-[11.5px] font-medium uppercase tracking-[0.05em]">
+          <g className="fill-[#9a9a9a] text-[11.5px] font-medium">
             <text x="30" y="222" textAnchor="start">
               9am
             </text>
@@ -299,25 +291,25 @@ export default function CrashChart({
 
       {/* Cost comparison */}
       <div className="border-t border-black/[0.09] bg-[#faf9f6] px-[22px] pb-[22px] pt-5">
-        <p className="mb-3.5 text-[18.5px] font-medium leading-6 text-[#1d1d1d]">
-          Costs <b className="font-extrabold text-[#3FA95B]">{saving}</b> less
+        <p className="mb-3.5 text-lg font-medium leading-6 text-black">
+          Costs <b className="font-semibold" style={{ color: SAVINGS }}>{saving}</b> less
           than your monthly coffee bill
         </p>
         <div className="flex items-center justify-between py-3">
-          <span className="flex items-center gap-2.5 text-[13px] font-medium uppercase tracking-[0.05em] text-[#666]">
+          <span className="flex items-center gap-2.5 text-sm font-medium text-black/60">
             <CoffeeIcon stroke="currentColor" />
             Daily coffee
           </span>
-          <span className="text-[19px] font-extrabold tracking-[-0.02em] text-[#9a9a9a]">
+          <span className="text-lg font-semibold text-black/50">
             {coffeePerDay}
           </span>
         </div>
         <div className="flex items-center justify-between border-t border-black/[0.07] py-3 text-[#1B2757]">
-          <span className="flex items-center gap-2.5 text-[13px] font-medium uppercase tracking-[0.05em]">
+          <span className="flex items-center gap-2.5 text-sm font-medium">
             <BottleIcon stroke={NAVY} />
             Both shots
           </span>
-          <span className="text-[19px] font-extrabold tracking-[-0.02em]">
+          <span className="text-lg font-semibold">
             {shotsPerDay}
           </span>
         </div>

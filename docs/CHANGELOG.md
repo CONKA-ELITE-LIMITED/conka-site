@@ -5,6 +5,11 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Added What-to-Expect to the conka-both page (replacing case studies) and restyled the timeline (larger day, tiled message, centered on desktop)
+- **2026-07-21** | Rebuilt the PDP What-to-Expect section as a full-bleed asset with a Magic Mind-style Day 1/7/30 timeline (overlaid on desktop, stacked on mobile), static server component
+- **2026-07-21** | Convert the PDP caffeine-vs-CONKA comparison section to Simple DTC (drop mono eyebrow, solid-black copy, softened chart corners)
+- **2026-07-21** | Reworked the PDP guarantee section into a Simple DTC two-column card (paper-textured copy + lifestyle image), dropped the app framing, full-bleed on mobile
+- **2026-07-21** | Simplified the PDP ingredients section to the Simple DTC style (black type, softer cards, human header) and added a scroll indicator to the ingredient rail
 - **2026-07-21** | Make the PDP hero badges rectangular (Magic Mind style), grey-gradient the social-proof pill, and give it a per-product live-viewer count
 - **2026-07-21** | Roll the V2 PDP hero and benefits band out to conka-clarity and conka-both, make the hero spec badge product-aware, and retire the legacy hero components
 - **2026-07-21** | Rework V2 flat purchase tiles (unified green-plus subscription benefits list, Full CONKA App Access, discount-consistent crossed-out prices, clearer delivery cadence) and fix hero social-proof copy

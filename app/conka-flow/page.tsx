@@ -6,7 +6,6 @@ import Footer from "@/app/components/footer";
 import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
-  ProductWhatYouGet,
 } from "@/app/components/product";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
@@ -127,26 +126,9 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 5: WHAT YOU GET ===== */}
-        <section id="what-you-get" className="brand-section brand-bg-tint" aria-label="What ships with your order">
-          <div className="brand-track">
-            <ProductWhatYouGet formulaId="01" />
-          </div>
-        </section>
-
-        {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
-        <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
-          <div className="brand-track">
-            <WhatToExpect productId="01" />
-          </div>
-        </section>
-
-        {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
-        <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
-          <AthleteSportMarquee fullBleed />
-          <div className="brand-track">
-            <AthleteCredibilityCarousel showMarquee={false} />
-          </div>
+        {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
+        <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
+          <WhatToExpect productId="01" />
         </section>
 
         {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
@@ -156,8 +138,8 @@ export default function ConkaFlowPage() {
           </div>
         </section>
 
-        {/* ===== SECTION 9: GUARANTEE ===== */}
-        <section id="guarantee" className="brand-section brand-bg-white" aria-label="Risk-free guarantee">
+        {/* ===== SECTION 9: GUARANTEE (full-bleed on mobile) ===== */}
+        <section id="guarantee" className="brand-section brand-bg-white !px-0" aria-label="Risk-free guarantee">
           <div className="brand-track">
             <LabGuarantee />
           </div>
@@ -167,6 +149,14 @@ export default function ConkaFlowPage() {
         <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
           <div className="brand-track">
             <CROTestimonials hideCTA />
+          </div>
+        </section>
+
+        {/* ===== ATHLETE CREDIBILITY (moved before FAQ) ===== */}
+        <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
+          <AthleteSportMarquee fullBleed />
+          <div className="brand-track">
+            <AthleteCredibilityCarousel showMarquee={false} />
           </div>
         </section>
 
@@ -245,26 +235,9 @@ export default function ConkaFlowPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 5: WHAT YOU GET ===== */}
-      <section id="what-you-get" className="brand-section brand-bg-tint" aria-label="What ships with your order">
-        <div className="brand-track">
-          <ProductWhatYouGet formulaId="01" />
-        </div>
-      </section>
-
-      {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
-      <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
-        <div className="brand-track">
-          <WhatToExpect productId="01" />
-        </div>
-      </section>
-
-      {/* ===== SECTION 7: ANCHOR ATHLETE ===== */}
-      <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
-        <AthleteSportMarquee fullBleed />
-        <div className="brand-track">
-          <AthleteCredibilityCarousel showMarquee={false} />
-        </div>
+      {/* ===== SECTION 6: WHAT TO EXPECT (full-bleed asset + timeline) ===== */}
+      <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
+        <WhatToExpect productId="01" />
       </section>
 
       {/* ===== SECTION 8: COMPARISON (Balance upsell to /conka-both) ===== */}
@@ -285,6 +258,14 @@ export default function ConkaFlowPage() {
       <section id="testimonials" className="brand-section brand-bg-tint" aria-label="Customer reviews">
         <div className="brand-track">
           <CROTestimonials hideCTA />
+        </div>
+      </section>
+
+      {/* ===== ATHLETE CREDIBILITY (moved before FAQ) ===== */}
+      <section id="athletes" className="brand-section brand-bg-white" aria-label="Athletes who use CONKA">
+        <AthleteSportMarquee fullBleed />
+        <div className="brand-track">
+          <AthleteCredibilityCarousel showMarquee={false} />
         </div>
       </section>
 
