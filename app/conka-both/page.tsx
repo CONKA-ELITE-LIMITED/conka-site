@@ -10,9 +10,7 @@ import { ClinicalIngredients } from "@/app/components/product";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
-import FormulaCaseStudies, {
-  FormulaCaseStudiesMobile,
-} from "@/app/components/FormulaCaseStudies";
+import WhatToExpect from "@/app/components/home/WhatToExpect";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
 import LabFAQ from "@/app/components/landing/LabFAQ";
@@ -155,25 +153,13 @@ export default function ConkaBothPage() {
     </section>
   );
 
-  const caseStudiesMobile = (
+  const whatToExpectSection = (
     <section
-      className="brand-section brand-bg-white"
-      aria-label="Clinically validated results"
+      id="what-to-expect"
+      className="brand-section brand-bg-tint !px-0 !py-0"
+      aria-label="What to expect"
     >
-      <div className="brand-track">
-        <FormulaCaseStudiesMobile productId={"03"} />
-      </div>
-    </section>
-  );
-
-  const caseStudiesDesktop = (
-    <section
-      className="brand-section brand-bg-white"
-      aria-label="Clinically validated results"
-    >
-      <div className="brand-track">
-        <FormulaCaseStudies productId={"03"} />
-      </div>
+      <WhatToExpect productId="both" />
     </section>
   );
 
@@ -234,8 +220,8 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 3: INGREDIENTS ===== */}
         {ingredientsSection}
 
-        {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
-        {athleteSection}
+        {/* ===== SECTION 4: WHAT TO EXPECT ===== */}
+        {whatToExpectSection}
 
         {/* ===== SECTION 5: TESTIMONIALS ===== */}
         {testimonialsSection}
@@ -243,8 +229,8 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 6: COMPARISON ===== */}
         {comparisonSection}
 
-        {/* ===== SECTION 7: CASE STUDIES ===== */}
-        {caseStudiesMobile}
+        {/* ===== SECTION 7: ATHLETE CREDIBILITY ===== */}
+        {athleteSection}
 
         {/* ===== SECTION 8: GUARANTEE ===== */}
         {guaranteeSection}
@@ -301,8 +287,8 @@ export default function ConkaBothPage() {
       {/* ===== SECTION 3: INGREDIENTS ===== */}
       {ingredientsSection}
 
-      {/* ===== SECTION 4: ATHLETE CREDIBILITY ===== */}
-      {athleteSection}
+      {/* ===== SECTION 4: WHAT TO EXPECT ===== */}
+      {whatToExpectSection}
 
       {/* ===== SECTION 5: TESTIMONIALS ===== */}
       {testimonialsSection}
@@ -310,8 +296,8 @@ export default function ConkaBothPage() {
       {/* ===== SECTION 6: COMPARISON ===== */}
       {comparisonSection}
 
-      {/* ===== SECTION 7: CASE STUDIES ===== */}
-      {caseStudiesDesktop}
+      {/* ===== SECTION 7: ATHLETE CREDIBILITY ===== */}
+      {athleteSection}
 
       {/* ===== SECTION 8: GUARANTEE ===== */}
       {guaranteeSection}

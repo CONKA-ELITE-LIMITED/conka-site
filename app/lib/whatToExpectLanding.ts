@@ -48,18 +48,18 @@ export const expectClear: ExpectMilestone[] = [
 export const expectBoth: ExpectMilestone[] = [
   {
     day: "Day 1",
-    title: "Sharper morning to night",
-    body: "Calm focus in the morning, a clean mental reset in the afternoon, from the first day.",
+    title: "Focus & Clarity",
+    body: "Experience laser-sharp focus and steady, jitter-free energy that eliminates procrastination and helps you maintain deep concentration for hours.",
   },
   {
     day: "Day 7",
-    title: "Steadier under pressure",
-    body: "Flow and Clear stack daily, so stress feels lighter and energy holds through the day.",
+    title: "Resilience",
+    body: "Feel a profound shift in your response to stress as mental fatigue disappears and consistent motivation becomes your new normal.",
   },
   {
     day: "Day 30",
-    title: "A better baseline",
-    body: "Clearer thinking, steadier energy, and fewer dips, morning to evening.",
+    title: "Better Brain",
+    body: "Your cognitive baseline has permanently elevated. Problems feel simpler, thinking flows faster, and decisions come naturally in every area of life.",
   },
 ];
 

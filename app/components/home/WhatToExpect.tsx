@@ -24,17 +24,22 @@ import {
  * to wire when needed.
  * ========================================================================== */
 
-/** Shared Day 1 / Day 7 / Day 30 items — MM days-banner styling. */
+/** Shared Day 1 / Day 7 / Day 30 items — MM days-banner styling: a large day
+ *  marker, the high-level message in a tile, then the supporting description. */
 function DayItems({ milestones }: { milestones: ExpectMilestone[] }) {
   return (
     <>
       {milestones.map((m) => (
-        <li key={m.day} className="border-t border-black/20 pt-5">
-          <div className="mb-2.5 text-sm font-bold text-[#1B2757]">{m.day}</div>
-          <h3 className="mb-2 text-xl font-bold leading-tight text-black lg:text-2xl">
-            {m.title}
-          </h3>
-          <p className="text-sm leading-relaxed text-black/70 lg:text-base">
+        <li key={m.day} className="lg:text-center">
+          <div className="mb-3 text-3xl font-bold leading-none tracking-tight text-black lg:text-4xl">
+            {m.day}
+          </div>
+          <div className="mb-3 inline-block rounded-xl border border-black/15 bg-white px-4 py-2.5 shadow-sm">
+            <h3 className="text-lg font-bold leading-tight text-black lg:text-xl">
+              {m.title}
+            </h3>
+          </div>
+          <p className="text-base leading-relaxed text-black lg:text-lg">
             {m.body}
           </p>
         </li>
@@ -58,15 +63,22 @@ export default function WhatToExpect({
 
       {/* Mobile: portrait asset, timeline stacked underneath. */}
       <div className="lg:hidden">
-        <Image
-          src={asset.mobile}
-          alt={asset.alt}
-          width={1080}
-          height={1350}
-          loading="lazy"
-          sizes="100vw"
-          className="h-auto w-full"
-        />
+        <div className="relative">
+          <Image
+            src={asset.mobile}
+            alt={asset.alt}
+            width={1080}
+            height={1350}
+            loading="lazy"
+            sizes="100vw"
+            className="h-auto w-full"
+          />
+          {/* Short lead-in fade from the asset into the timeline background. */}
+          <div
+            className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--brand-tint)] to-transparent"
+            aria-hidden
+          />
+        </div>
         <ol className="grid grid-cols-1 gap-8 px-[var(--brand-gutter-mobile)] py-12">
           <DayItems milestones={milestones} />
         </ol>
@@ -83,7 +95,7 @@ export default function WhatToExpect({
           sizes="100vw"
           className="h-auto w-full"
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/90 via-white/60 to-transparent pt-28">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/90 via-white/70 to-transparent pt-12">
           <ol className="mx-auto grid max-w-[1280px] grid-cols-3 gap-12 px-[var(--brand-gutter-desktop)] pb-10">
             <DayItems milestones={milestones} />
           </ol>
