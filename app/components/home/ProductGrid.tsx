@@ -38,10 +38,7 @@ export default function ProductGrid(props?: ProductGridProps) {
     return (
       <>
         <div className="mb-10">
-          <h2
-            className="brand-h1 text-[#0e1f3f]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
             {copy.title}
           </h2>
         </div>

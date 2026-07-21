@@ -6,9 +6,9 @@ import type { ProductGridProps } from "./ProductGrid";
 import { getProductGridCopy } from "./productGridCopy";
 
 const ALL_CARDS = [
-  { productType: "protocol" as const, label: "Both", number: "03" },
-  { productType: "flow" as const, label: "Flow", number: "01" },
-  { productType: "clear" as const, label: "Clear", number: "02" },
+  { productType: "protocol" as const, label: "Both" },
+  { productType: "flow" as const, label: "Flow" },
+  { productType: "clear" as const, label: "Clear" },
 ];
 
 export default function ProductGridMobile(props?: ProductGridProps) {
@@ -79,21 +79,15 @@ export default function ProductGridMobile(props?: ProductGridProps) {
   return (
     <>
       <div className="mb-8 px-4">
-        <h2
-          className="brand-h1 text-[#0e1f3f]"
-          style={{ letterSpacing: "-0.02em" }}
-        >
+        <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
           {copy.title}
         </h2>
       </div>
 
       {visibleCards.length > 1 && (
-        <div className="px-4 mb-4">
+        <div className="px-4 mb-5 flex justify-center">
           <div
-            className="grid border border-black/12"
-            style={{
-              gridTemplateColumns: `repeat(${visibleCards.length}, minmax(0, 1fr))`,
-            }}
+            className="inline-flex rounded-full bg-[#eef1f8] p-1"
             role="tablist"
             aria-label="Product filter"
           >
@@ -106,24 +100,13 @@ export default function ProductGridMobile(props?: ProductGridProps) {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => goToCard(idx)}
-                  className={`min-h-[44px] px-3 py-2.5 text-left transition-colors ${
-                    idx > 0 ? "border-l border-black/12" : ""
-                  } ${
+                  className={`min-h-[44px] rounded-full px-5 py-2 text-sm font-semibold leading-none transition-colors ${
                     isActive
                       ? "bg-[#1B2757] text-white"
-                      : "bg-white text-black hover:bg-[var(--brand-tint)]"
+                      : "text-[#1B2757] hover:bg-white/60"
                   }`}
                 >
-                  <span
-                    className={`block font-mono text-[8px] font-bold tabular-nums mb-1 leading-none ${
-                      isActive ? "text-white/60" : "text-black/40"
-                    }`}
-                  >
-                    {card.number}
-                  </span>
-                  <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] leading-none">
-                    {card.label}
-                  </span>
+                  {card.label}
                 </button>
               );
             })}
