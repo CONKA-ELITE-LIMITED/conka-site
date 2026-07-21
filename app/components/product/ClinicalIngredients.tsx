@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import {
   getOrderedActiveIngredients,
@@ -80,29 +80,35 @@ export default function ClinicalIngredients({
   const meta = FORMULA_META[activeFormula];
   const isDual = formulaIds.length > 1;
 
-  // Basic scroll-progress indicator for the horizontal ingredient rail: the
-  // thumb width is the visible fraction, its offset the scrolled fraction.
+  // Dot indicator for the horizontal ingredient rail (same pattern as
+  // CROTestimonials): the active dot tracks scroll, tapping one scrolls to it.
   const railRef = useRef<HTMLDivElement>(null);
-  const [thumb, setThumb] = useState({ width: 1, offset: 0 });
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const updateScroll = useCallback(() => {
+  // gap-3 between tiles = 12px.
+  const cardStep = () => {
+    const el = railRef.current;
+    const tile = el?.querySelector<HTMLElement>("[data-tile]");
+    return tile ? tile.offsetWidth + 12 : (el?.offsetWidth ?? 1) * 0.9;
+  };
+
+  const goToIndex = (i: number) => {
+    railRef.current?.scrollTo({ left: i * cardStep(), behavior: "smooth" });
+  };
+
+  const handleScroll = () => {
     const el = railRef.current;
     if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    if (scrollWidth <= clientWidth) {
-      setThumb({ width: 1, offset: 0 });
-      return;
-    }
-    setThumb({
-      width: clientWidth / scrollWidth,
-      offset: scrollLeft / scrollWidth,
-    });
-  }, []);
+    const idx = Math.round(el.scrollLeft / cardStep());
+    setActiveIndex(Math.max(0, Math.min(ingredients.length - 1, idx)));
+  };
 
-  // Recompute on mount and when the active formula (and thus tile count) changes.
-  useEffect(() => {
-    updateScroll();
-  }, [updateScroll, activeFormula]);
+  // Switching formula resets the rail to the first tile.
+  const handleFormulaChange = (f: FormulaId) => {
+    setActiveFormula(f);
+    setActiveIndex(0);
+    railRef.current?.scrollTo({ left: 0 });
+  };
 
   return (
     <div>
@@ -128,7 +134,7 @@ export default function ClinicalIngredients({
               value={activeFormula}
               flowValue="01"
               clearValue="02"
-              onChange={setActiveFormula}
+              onChange={handleFormulaChange}
               ariaLabel="Choose a time of day"
               className="mb-5"
             />
@@ -169,13 +175,14 @@ export default function ClinicalIngredients({
           snap rail so the tiles read as a scannable row on every breakpoint. */}
       <div
         ref={railRef}
-        onScroll={updateScroll}
+        onScroll={handleScroll}
         aria-label={`CONKA ${meta.shortName} ingredients`}
         className="flex gap-3 items-start overflow-x-auto snap-x pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {ingredients.map((ing) => (
           <details
             key={ing.id}
+            data-tile
             name="clinical-ingredient"
             className="group w-[260px] shrink-0 snap-start rounded-2xl border border-black/10 bg-white"
           >
@@ -261,21 +268,32 @@ export default function ClinicalIngredients({
         ))}
       </div>
 
-      {/* Scroll indicator — thumb reflects the visible window over the rail */}
-      {thumb.width < 1 && (
-        <div
-          className="mt-4 h-1 w-full max-w-[240px] overflow-hidden rounded-full bg-black/10"
-          aria-hidden
-        >
-          <div
-            className="h-full rounded-full bg-black/40"
-            style={{
-              width: `${thumb.width * 100}%`,
-              marginLeft: `${thumb.offset * 100}%`,
-            }}
-          />
-        </div>
-      )}
+      {/* Dot indicators — mirrors the CROTestimonials rail pattern */}
+      <div
+        className="mt-6 flex flex-wrap justify-center gap-2"
+        role="tablist"
+        aria-label="Ingredient navigation"
+      >
+        {ingredients.map((ing, i) => (
+          <button
+            key={ing.id}
+            type="button"
+            role="tab"
+            aria-selected={i === activeIndex}
+            aria-label={`Go to ingredient ${i + 1}`}
+            onClick={() => goToIndex(i)}
+            className="flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
+          >
+            <span
+              className={`block rounded-full transition-all ${
+                i === activeIndex
+                  ? "h-2 w-5 bg-[#1B2757]"
+                  : "h-2 w-2 bg-black/15 hover:bg-black/30"
+              }`}
+            />
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
