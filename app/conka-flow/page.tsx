@@ -100,6 +100,8 @@ export default function ConkaFlowPage() {
     </section>
   );
 
+  // TODO Phase 3: a FormulaQualityBadges section (Informed Sport, vegan, etc.)
+  // will slot between benefits and ingredients.
   const ingredientsSection = (
     <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
       <div className="brand-track">
@@ -142,7 +144,7 @@ export default function ConkaFlowPage() {
   );
 
   const guaranteeSection = (
-    <section className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="Risk-free guarantee">
+    <section id="guarantee" className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="Risk-free guarantee">
       <div className="brand-track">
         <LabGuarantee />
       </div>
@@ -199,7 +201,6 @@ export default function ConkaFlowPage() {
         {benefitTilesSection}
         {ugcSection}
         {benefitsSection}
-        {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
         {ingredientsSection}
         {absorptionSection}
         {whatToExpectSection}
