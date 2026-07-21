@@ -14,8 +14,6 @@ import type { ReactNode } from "react";
  * with time-of-day icons). One control, one look, everywhere.
  * ========================================================================== */
 
-const NAVY = "#1B2757";
-
 export interface SegmentedOption<T extends string> {
   value: T;
   label: ReactNode;
@@ -56,9 +54,10 @@ export default function SegmentedToggle<T extends string>({
             aria-selected={isActive}
             onClick={() => onChange(opt.value)}
             className={`flex ${fill ? "flex-1" : ""} min-h-[44px] items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold leading-none transition-colors cursor-pointer ${
-              isActive ? "text-white" : "text-[#6b6b6b] hover:text-black"
+              isActive
+                ? "bg-[#1B2757] text-white"
+                : "text-[#6b6b6b] hover:text-black"
             }`}
-            style={isActive ? { backgroundColor: NAVY } : undefined}
           >
             {opt.icon}
             {opt.label}
