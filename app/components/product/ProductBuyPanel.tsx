@@ -797,7 +797,7 @@ function TrustBar() {
     { Icon: TrustIconCancel, label: "Cancel anytime" },
   ];
   return (
-    <div className="mt-3 grid grid-cols-3 gap-2 border-y border-black/10 py-3">
+    <div className="mt-3 grid grid-cols-3 gap-2 py-1">
       {items.map(({ Icon, label }) => (
         <div key={label} className="flex flex-col items-center gap-1.5 text-center">
           <Icon className="h-5 w-5 text-[#1B2757]" />
@@ -895,9 +895,13 @@ function WhatYouFeel() {
 export function IngredientListButton({
   formulas,
   pill = false,
+  fullWidth = false,
 }: {
   formulas: ("flow" | "clear")[];
   pill?: boolean;
+  /** Stretch the pill to fill its container (mobile V2), vs the compact
+   *  self-start pill used in the desktop left column. */
+  fullWidth?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<"flow" | "clear">(formulas[0]);
@@ -913,7 +917,7 @@ export function IngredientListButton({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-2 self-start rounded-full border border-black px-6 py-3 text-base font-medium text-black transition-colors hover:bg-black hover:text-white"
+          className={`${fullWidth ? "flex w-full justify-center" : "inline-flex self-start"} items-center gap-2 rounded-full border border-black px-6 py-3 text-base font-medium text-black transition-colors hover:bg-black hover:text-white`}
         >
           Ingredients
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>

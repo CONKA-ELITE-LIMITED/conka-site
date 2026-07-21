@@ -3,9 +3,17 @@
 import { CadenceType } from "@/app/lib/cadenceData";
 import { getProductHeroImagesMobile } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { getHeroContent } from "@/app/lib/productHeroHelpers";
+import {
+  getHeroContent,
+  getHeroProductType,
+} from "@/app/lib/productHeroHelpers";
 import ProductImageSlideshow from "./ProductImageSlideshow";
-import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
+import HeroAccordions from "./HeroAccordions";
+import ProductBuyPanel, {
+  TrustStrip,
+  FeelOutcomesList,
+  IngredientListButton,
+} from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 
 interface ProductHeroMobileV2Props {
@@ -62,6 +70,7 @@ export default function ProductHeroMobileV2({
   onOtpAddToCart,
 }: ProductHeroMobileV2Props) {
   const content = getHeroContent(formulaId);
+  const productType = getHeroProductType(formulaId);
   // Flow test: lead with a lifestyle shot and move the square box asset to
   // second, rather than opening on the box.
   const rawImages = getProductHeroImagesMobile(formulaId, selectedCadence);
@@ -114,7 +123,23 @@ export default function ProductHeroMobileV2({
           onOtpAddToCart={onOtpAddToCart}
           hideHeader
           hideKeyBenefits
+          hideSecondary
+          hideWhatYouFeel
           flatCards
+        />
+
+        {/* MM-aligned: plain-label accordions with "What you'll feel" folded in,
+            then a full-width Ingredients pill (mirrors ProductHeroV2 desktop). */}
+        <HeroAccordions
+          productType={productType}
+          plainLabels
+          whatYouFeel={<FeelOutcomesList />}
+          hideIngredients
+        />
+        <IngredientListButton
+          formulas={productType === "both" ? ["flow", "clear"] : [productType]}
+          pill
+          fullWidth
         />
       </div>
 
