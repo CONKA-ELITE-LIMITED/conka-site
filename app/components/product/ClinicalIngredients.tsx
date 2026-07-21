@@ -113,7 +113,7 @@ export default function ClinicalIngredients({
           <h2 className="brand-h1 mb-3 text-black">
             Clinically-backed ingredients
           </h2>
-          <p className="brand-body text-black/70">
+          <p className="brand-body text-black">
             We source the highest-quality compounds, at proven doses and in
             bioavailable forms. Each ingredient is supported by independent,
             peer-reviewed studies.
@@ -200,7 +200,7 @@ export default function ClinicalIngredients({
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </div>
-              <p className="mb-3 text-xs text-black/50">
+              <p className="mb-3 font-mono text-xs text-black">
                 {CATEGORY_INFO[ing.category].name} | {ing.functionalCategory}
               </p>
               <div className="flex items-center gap-3">
