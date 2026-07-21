@@ -26,8 +26,8 @@ This is the repeatable process for every future persona (women/hormonal, profess
 5. **Re-cluster by intent, not lexeme.** Volume tools cluster by shared words, which buries intent. Re-aggregate by buyer intent (natural, safety, best/which, does-it-work, with-meds, etc.).
 6. **Read as message-fit, not ranking.** For a noindex LP, high volume = the framing your Meta audience resonates with; high CPC = angles competitors already pay to convert on.
 
-**Seeds run so far:** `adhd supplements` (2026-07-20, `AnswerSocrates-GB-en-adhd-supplements-2026-07-20.csv` → `output.xlsx`).
-**Recommended next seeds:** `adhd naturally` (deepens the dominant natural cluster) and `adhd motivation` (task-initiation language for Reason 1). Not `adhd without medication` — see correction 1.
+**Seeds run so far:** `adhd supplements` (2026-07-20 → `output.xlsx`); `adhd naturally` (2026-07-20 → `output (1).xlsx`).
+**Recommended next seed:** `adhd motivation` (task-initiation language for Reason 1). Not `adhd without medication` — see correction 1, now confirmed by seed 2.
 
 ---
 
@@ -56,6 +56,27 @@ This is the repeatable process for every future persona (women/hormonal, profess
 ### The positioning the data points to
 > **A natural, non-stimulant way to focus** — for people frustrated or nervous about ADHD **stimulant side effects**, who are already shopping "best" natural options.
 
+### Seed 2 confirms it: `adhd naturally` (269k raw, 23.7k after removing the `adhd to add` broad-match junk row)
+
+Natural is not just one cluster here, it is the whole search space: **natural supplement/remedy = 15,870, ~67% of the clean volume.**
+
+| Intent | Volume | Note |
+|---|---|---|
+| **Natural supplement / remedy / therapy** | 15,870 | `adhd natural supplement` 3,600, `adhd natural solutions` 1,900, `natural help for adhd` 1,600 |
+| Treat/manage naturally (how-to) | 4,580 | Informational "how do you treat adhd naturally" |
+| Adults | 3,810 | Our buyer |
+| Diet / food / lifestyle | 3,560 | NEW: the "natural route" pairs supplements with diet/exercise |
+| **Without medicine / drug-free** | 2,490 | `how to treat adhd without medicine` **2,400** |
+| Natural alternative to meds | 500 | `natural alternative to adhd meds` 210 |
+
+**Correction 1 is now proven, not inferred.** "how to treat adhd **without medicine**" = 2,400; "without medication" was ~10 in seed 1. The drug-free intent is real and large, phrased as **"without medicine," "natural alternative to meds," "naturally."**
+
+**Borrowable customer phrasing (hero/FAQ):** "natural help for adhd," "adhd natural solutions," "what helps adhd naturally," "how to calm adhd naturally."
+
+**Copy guardrail:** the raw searches say "**cure / treat / get rid of / fix** adhd naturally." Borrow the intent and the word "natural," never those verbs. CONKA supports focus and calm; it does not treat or cure ADHD.
+
+**Minor tension:** `adhd natural stimulants` (590) shows a minority actively want a *natural stimulant*. The non-stimulant/calm play is far larger and stands; noted only so it is a known trade-off, not an oversight.
+
 ---
 
 ## Part 3: Recommended copy
@@ -72,6 +93,8 @@ All drafts respect: no em dashes, two-equal-products rule (never spotlight Flow 
 
 **Subcopy (recommended):**
 > Two caffeine-free daily shots, no stimulants and nothing habit-forming. Flow for the won't-start mornings, Clear for the afternoon dip, with an app that scores your focus so you can watch it work. Steady focus and calm without the jitters, crash or comedown.
+
+**Optional high-intent line (your call on claims):** seed 2 shows "natural alternative to ADHD medication / without medicine" is a real, large intent (2,490+ vol). A sub-line like "the natural alternative many reach for before the medication route" would convert hardest, but it is the strongest claim on the page. Left as a decision, not baked into the recommended subcopy above.
 
 **Laurel:** keep as-is (World's Largest consumer brain-research project, 1,000+ ADHD brains).
 

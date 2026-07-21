@@ -49,6 +49,16 @@ export interface ProductBuyPanelProps {
   /** Mobile hides the key-benefit pills. They eat scarce real estate and the
       same proof appears further down (WhatYouFeel, TrustBar, plan detail). */
   hideKeyBenefits?: boolean;
+  /** V2 3-column layout moves the ingredients button + accordions into the
+      left identity column, so the buy box on the right suppresses them here. */
+  hideSecondary?: boolean;
+  /** V2 flat cards (Magic Mind style): no expand-on-select unfurl inside the
+      card; shows a compare-at strikethrough, and the shared "what's included"
+      list moves below the cards. Legacy keeps the expanding PlanDetail. */
+  flatCards?: boolean;
+  /** V2 moves the "What You'll Feel" block into the left-column accordion, so
+      the buy box drops it here. */
+  hideWhatYouFeel?: boolean;
 }
 
 /**
@@ -60,14 +70,21 @@ export function ProductHeroHeader({
   formulaId,
   showSubline = true,
   showHeadline = true,
+  blackText = false,
 }: {
   formulaId: ProductHeroId;
   /** Desktop keeps the keyword subline inside the <h1>. Mobile drops it below the
       image (rendered by ProductHeroLede), so it is suppressed here. */
   showSubline?: boolean;
   showHeadline?: boolean;
+  /** V2 left column renders all copy in solid black (no muted greys). */
+  blackText?: boolean;
 }) {
   const content = getHeroContent(formulaId);
+  const usersColor = blackText ? "text-black" : "text-black/50";
+  const eyebrowColor = blackText ? "text-black" : "text-black/50";
+  const sublineColor = blackText ? "text-black" : "text-black/65";
+  const headlineColor = blackText ? "text-black" : "text-black/75";
   return (
     <>
       {/* Stars + review/usage counts in one compact line */}
@@ -90,13 +107,13 @@ export function ProductHeroHeader({
         <span className="text-sm font-bold text-black">
           4.7 <span className="font-semibold">from 622+ Reviews</span>
         </span>
-        <span className="text-sm text-black/50">· 5,000+ daily users</span>
+        <span className={`text-sm ${usersColor}`}>· 5,000+ daily users</span>
       </div>
 
       {/* Eyebrow + product name. On desktop the keyword subline sits inside the
           <h1>; on mobile it drops below the image via ProductHeroLede. */}
       <div>
-        <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+        <p className={`mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${eyebrowColor}`}>
           Daily Nootropic Brain Shots
         </p>
         <h1 className="leading-tight">
@@ -107,13 +124,13 @@ export function ProductHeroHeader({
             {content.name}
           </span>
           {showSubline && content.seoHeading && (
-            <span className="mt-1.5 block text-base font-medium leading-snug text-black/65 md:text-lg">
+            <span className={`mt-1.5 block text-base font-medium leading-snug md:text-lg ${sublineColor}`}>
               {content.seoHeading}
             </span>
           )}
         </h1>
         {showHeadline && (
-          <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
+          <p className={`mt-2 text-sm leading-relaxed md:text-base ${headlineColor}`}>
             {content.headline}
           </p>
         )}
@@ -127,22 +144,6 @@ export function ProductHeroHeader({
  * h2, since the <h1> product name sits above the image) followed by the short
  * description. Keeps the descriptive copy off the top of the hero (SCRUM-1138).
  */
-export function ProductHeroLede({ formulaId }: { formulaId: ProductHeroId }) {
-  const content = getHeroContent(formulaId);
-  return (
-    <div>
-      {content.seoHeading && (
-        <h2 className="text-lg font-medium leading-snug text-black/70">
-          {content.seoHeading}
-        </h2>
-      )}
-      <p className="mt-2 text-sm leading-relaxed text-black/75 md:text-base">
-        {content.headline}
-      </p>
-    </div>
-  );
-}
-
 const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
 
 /** Which ingredient-sheet tabs each product surfaces (Both shows both). */
@@ -340,15 +341,259 @@ function PlanDetail() {
   );
 }
 
+/** Funnel green for the free-shots incentive (matches the listicle purchase card). */
+const GREEN = "#10B981";
+const GREEN_TEXT = "#0b7a55";
+
+/** Additive green-plus marker for the expanded benefit list ("+ this too"). */
+function GreenPlus() {
+  return (
+    <span
+      className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full"
+      style={{ background: GREEN }}
+      aria-hidden
+    >
+      <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+        <path d="M6 2.5v7M2.5 6h7" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+      </svg>
+    </span>
+  );
+}
+
+/** Subscription benefits revealed when the tile expands. One unified list (app
+ *  access included) — every line is a subscription benefit, no separator. */
+function subscriptionBenefits(freeShots: number) {
+  return [
+    ...(freeShots > 0 ? [`+${freeShots} free shots on your first order`] : []),
+    "Free UK postage",
+    "Pause, skip, or cancel anytime",
+    "100-day money-back guarantee",
+    "Full CONKA App Access",
+    "Personal Brain Coach",
+  ];
+}
+
+/**
+ * Magic Mind-style flat plan card: title + prices inline, a tap-to-expand
+ * "subscription benefits" disclosure (no auto-expand on select). Used only in
+ * flatCards mode; legacy keeps the taller PlanSelector card + PlanDetail.
+ */
+function FlatPlanCard({
+  formulaId,
+  cadence,
+  isSelected,
+  onSelect,
+  saveColor,
+}: {
+  formulaId: ProductHeroId;
+  cadence: CadenceType;
+  isSelected: boolean;
+  onSelect: () => void;
+  /** Per-tile discount-badge colour (Magic Mind uses a different one per plan). */
+  saveColor: string;
+}) {
+  const display = FUNNEL_CADENCES[cadence];
+  const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
+  const savePct = getDisplayDiscount(pricing);
+  const cadenceWord = cadence === "quarterly-sub" ? "every 3 months" : "monthly";
+  const freeShots = pricing.freeShots ?? 0;
+
+  // Crossed-out "was":
+  //  - Monthly sub anchors to the real one-time (OTP) price for the same shots,
+  //    so it matches the "Buy it once" figure exactly (~43% off for Flow).
+  //  - Quarterly has no one-time equivalent, so derive a regular-price reference
+  //    from the published discount (e.g. 63% off => price / 0.37) so the
+  //    strikethrough and the Save% badge agree.
+  const compareAtDisplay =
+    cadence === "monthly-sub"
+      ? getCadencePricingByProductHeroId(formulaId, "monthly-otp").price
+      : savePct > 0
+        ? pricing.price / (1 - savePct / 100)
+        : undefined;
+
+  return (
+    <div
+      className={`relative w-full select-none rounded-md transition-all duration-200 ${
+        isSelected
+          ? "border-[1.5px] border-[#1B2757] bg-[#f8f9fd]"
+          : "border border-black/15 bg-white hover:border-black/30"
+      }`}
+    >
+      {display.badge && (
+        <span className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-[#1B2757] px-3 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
+          {display.badge}
+        </span>
+      )}
+
+      {/* Full-card select target; the benefits disclosure below opts back into
+          pointer events so tapping it expands rather than selects. */}
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-label={`Select ${pricing.shotCount} shot delivery`}
+        className="absolute inset-0 z-0"
+      />
+
+      <div className="pointer-events-none relative z-10 flex items-start justify-between gap-3 px-4 py-3">
+        <div className="min-w-0">
+          <span className="flex items-center gap-2.5">
+            <span
+              className={`flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+                isSelected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
+              }`}
+              aria-hidden
+            >
+              {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+            </span>
+            <span className="text-[15px] font-bold leading-tight text-black">
+              {pricing.shotCount} Shot Delivery
+            </span>
+          </span>
+
+          <details className="pointer-events-auto mt-2">
+            <summary className="flex cursor-pointer list-none flex-col gap-1.5 [&::-webkit-details-marker]:hidden">
+              {/* Line 1: tick + delivery cadence */}
+              <span className="flex items-center gap-1.5">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className="shrink-0 text-[#1B2757]"
+                  aria-hidden
+                >
+                  <path
+                    d="M3 8.5L6.5 12L13 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-[11px] font-medium text-black/55">
+                  Delivered {cadenceWord} + subscription benefits
+                </span>
+              </span>
+
+              {/* Line 2: free-shots incentive + learn-more tile */}
+              <span className="flex items-center gap-2">
+                {freeShots > 0 && (
+                  <span
+                    className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-bold"
+                    style={{ background: "rgba(16,185,129,0.14)", color: GREEN_TEXT }}
+                  >
+                    <span
+                      className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full"
+                      style={{ background: GREEN }}
+                    >
+                      <svg width="7" height="7" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path
+                          d="M3 8.5L6.5 12L13 4.5"
+                          stroke="white"
+                          strokeWidth="2.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    +{freeShots} free shots
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-full bg-[#1B2757]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#1B2757]">
+                  Learn more
+                  <svg
+                    width="8"
+                    height="8"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="shrink-0 transition-transform [details[open]_&]:rotate-180"
+                    aria-hidden
+                  >
+                    <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </span>
+            </summary>
+            <p className="mt-3 border-t border-black/10 pt-2.5 text-[10px] font-bold uppercase tracking-wide text-black/45">
+              Subscription Benefits
+            </p>
+            <ul className="mt-2 flex flex-col gap-1.5">
+              {subscriptionBenefits(freeShots).map((label) => (
+                <li
+                  key={label}
+                  className="flex items-center gap-2 text-[12px] font-medium text-black"
+                >
+                  <GreenPlus />
+                  {label}
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+
+        <span className="shrink-0 text-right">
+          <span className="flex items-baseline justify-end gap-1.5 leading-none">
+            {compareAtDisplay && (
+              <s className="text-xs font-bold text-black/40">
+                {formatPrice(compareAtDisplay)}
+              </s>
+            )}
+            <span className="text-lg font-bold tabular-nums text-black">
+              {formatPrice(pricing.price)}
+            </span>
+          </span>
+          <span className="mt-1 block text-[11px] italic tabular-nums text-black/55">
+            {formatPrice(pricing.perShot)} per bottle
+          </span>
+          {savePct > 0 && (
+            <span
+              className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
+              style={{ backgroundColor: saveColor }}
+            >
+              Save {savePct}%
+            </span>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function PlanSelector({
   formulaId,
   selectedCadence,
   onCadenceChange,
   onOtpAddToCart,
   shotsPerDay,
+  flatCards,
 }: Omit<ProductBuyPanelProps, "onAddToCart"> & { shotsPerDay: number }) {
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
   const otpSelected = selectedCadence === "monthly-otp";
+
+  // Flat (V2) cards: ascending order (20 shot then 60 shot), each with its own
+  // discount-badge colour. OTP link moves under the main CTA (panel-rendered).
+  if (flatCards) {
+    const flatOrder: { cadence: CadenceType; saveColor: string }[] = [
+      { cadence: "monthly-sub", saveColor: "#C9A24A" },
+      { cadence: "quarterly-sub", saveColor: "#E07A5F" },
+    ];
+    return (
+      <div className="flex flex-col gap-4 pt-2">
+        {flatOrder.map(({ cadence, saveColor }) => (
+          <FlatPlanCard
+            key={cadence}
+            formulaId={formulaId}
+            cadence={cadence}
+            isSelected={selectedCadence === cadence}
+            onSelect={() => onCadenceChange(cadence)}
+            saveColor={saveColor}
+          />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -401,6 +646,11 @@ function PlanSelector({
               </div>
               <div className="mt-2 flex items-center justify-between gap-2">
                 <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black">
+                  {flatCards && pricing.compareAtPrice && (
+                    <s className="mr-1.5 font-normal text-black/40">
+                      {formatPrice(pricing.compareAtPrice)}
+                    </s>
+                  )}
                   {formatPrice(pricing.price)} every {weeksPerCycle} weeks
                 </span>
                 <span className="font-mono text-[11px] font-bold uppercase tabular-nums tracking-[0.08em] text-black">
@@ -413,7 +663,7 @@ function PlanSelector({
               <FreeShotsBadge freeShots={pricing.freeShots} cadence={cadence} className="mt-2.5" />
             </button>
 
-            {isSelected && <PlanDetail />}
+            {isSelected && !flatCards && <PlanDetail />}
           </div>
         );
       })}
@@ -487,7 +737,7 @@ function TrustBar() {
     { Icon: TrustIconCancel, label: "Cancel anytime" },
   ];
   return (
-    <div className="mt-3 grid grid-cols-3 gap-2 border-y border-black/10 py-3">
+    <div className="mt-3 grid grid-cols-3 gap-2 py-1">
       {items.map(({ Icon, label }) => (
         <div key={label} className="flex flex-col items-center gap-1.5 text-center">
           <Icon className="h-5 w-5 text-[#1B2757]" />
@@ -532,48 +782,67 @@ const FEEL_OUTCOMES = [
   },
 ];
 
+/** Just the outcome rows — reused by the V2 hero's left-column "What you'll
+ *  feel" accordion (no outer card/heading). */
+export function FeelOutcomesList() {
+  return (
+    <div className="flex flex-col">
+      {FEEL_OUTCOMES.map((o, i) => (
+        <div
+          key={o.title}
+          className={`flex items-center gap-3 py-2 ${
+            i < FEEL_OUTCOMES.length - 1 ? "border-b border-black/[0.05]" : ""
+          }`}
+        >
+          <div
+            className="flex h-9 w-9 shrink-0 items-center justify-center text-base shadow-sm"
+            style={{ background: o.grad }}
+            aria-hidden
+          >
+            {o.emoji}
+          </div>
+          <div className="min-w-0 flex-1">
+            <strong className="block text-[13px] font-bold leading-tight text-black">
+              {o.title}
+            </strong>
+            <span className="text-[11px] leading-tight text-black/55">
+              {o.desc}
+            </span>
+          </div>
+          <span className="shrink-0 text-[15px] font-extrabold tabular-nums text-[#1B2757]">
+            {o.pct}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function WhatYouFeel() {
   return (
     <div className="border border-black/10 bg-white p-4">
       <h3 className="mb-3 text-center text-base font-bold text-black">
         What You&apos;ll Feel
       </h3>
-      <div className="flex flex-col">
-        {FEEL_OUTCOMES.map((o, i) => (
-          <div
-            key={o.title}
-            className={`flex items-center gap-3 py-2 ${
-              i < FEEL_OUTCOMES.length - 1 ? "border-b border-black/[0.05]" : ""
-            }`}
-          >
-            <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center text-base shadow-sm"
-              style={{ background: o.grad }}
-              aria-hidden
-            >
-              {o.emoji}
-            </div>
-            <div className="min-w-0 flex-1">
-              <strong className="block text-[13px] font-bold leading-tight text-black">
-                {o.title}
-              </strong>
-              <span className="text-[11px] leading-tight text-black/55">
-                {o.desc}
-              </span>
-            </div>
-            <span className="shrink-0 text-[15px] font-extrabold tabular-nums text-[#1B2757]">
-              {o.pct}
-            </span>
-          </div>
-        ))}
-      </div>
+      <FeelOutcomesList />
     </div>
   );
 }
 
 /** "See what's inside" trigger + the shared rounded ingredient bottom sheet.
- *  Takes a list of formula tabs; on Both it shows an in-sheet AM/PM switcher. */
-function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) {
+ *  Takes a list of formula tabs; on Both it shows an in-sheet AM/PM switcher.
+ *  `pill` renders the compact Magic Mind-style "Ingredients" pill (V2 hero). */
+export function IngredientListButton({
+  formulas,
+  pill = false,
+  fullWidth = false,
+}: {
+  formulas: ("flow" | "clear")[];
+  pill?: boolean;
+  /** Stretch the pill to fill its container (mobile V2), vs the compact
+   *  self-start pill used in the desktop left column. */
+  fullWidth?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<"flow" | "clear">(formulas[0]);
 
@@ -584,16 +853,29 @@ function IngredientListButton({ formulas }: { formulas: ("flow" | "clear")[] }) 
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex w-full items-center justify-center gap-2 border border-black/10 bg-white py-3.5 text-sm font-semibold text-black/80 transition-colors hover:bg-black/[0.03]"
-      >
-        See what&apos;s inside {showSwitcher ? "Flow & Clear" : title}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
+      {pill ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className={`${fullWidth ? "flex w-full justify-center" : "inline-flex self-start"} items-center gap-2 rounded-full border border-black px-6 py-3 text-base font-medium text-black transition-colors hover:bg-black hover:text-white`}
+        >
+          Ingredients
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="flex w-full items-center justify-center gap-2 border border-black/10 bg-white py-3.5 text-sm font-semibold text-black/80 transition-colors hover:bg-black/[0.03]"
+        >
+          See what&apos;s inside {showSwitcher ? "Flow & Clear" : title}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      )}
 
       <IngredientBottomSheet
         open={open}
@@ -615,6 +897,9 @@ export default function ProductBuyPanel({
   onOtpAddToCart,
   hideHeader,
   hideKeyBenefits,
+  hideSecondary,
+  flatCards,
+  hideWhatYouFeel,
 }: ProductBuyPanelProps) {
   const productType = getHeroProductType(formulaId);
   const shotsPerDay = productType === "both" ? 2 : 1;
@@ -623,8 +908,10 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const ctaLabel =
-    selectedCadence === "monthly-otp"
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  const ctaLabel = flatCards
+    ? `Add to cart for ${formatPrice(selectedPricing.price)}`
+    : selectedCadence === "monthly-otp"
       ? "Add to Cart"
       : selectedPricing.compareAtPrice
         ? `Subscribe & Save ${Math.round((1 - selectedPricing.price / selectedPricing.compareAtPrice) * 100)}%`
@@ -659,19 +946,24 @@ export default function ProductBuyPanel({
       )}
 
       <div>
-        <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
-          Subscribe &amp; Save:
-        </p>
+        {flatCards ? (
+          <p className="mb-3 text-lg font-bold text-black">Select your plan:</p>
+        ) : (
+          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
+            Subscribe &amp; Save:
+          </p>
+        )}
         <PlanSelector
           formulaId={formulaId}
           selectedCadence={selectedCadence}
           onCadenceChange={onCadenceChange}
           onOtpAddToCart={onOtpAddToCart}
           shotsPerDay={shotsPerDay}
+          flatCards={flatCards}
         />
       </div>
 
-      <div>
+      <div className={flatCards ? "mt-3" : undefined}>
         <ConkaCTAButton
           onClick={onAddToCart}
           meta={null}
@@ -679,14 +971,30 @@ export default function ProductBuyPanel({
         >
           {ctaLabel}
         </ConkaCTAButton>
+
+        {/* Flat layout moves the one-time purchase under the main CTA (MM pattern). */}
+        {flatCards && (
+          <button
+            type="button"
+            onClick={onOtpAddToCart}
+            className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
+          >
+            Buy it once for {formatPrice(otpPricing.price)}
+          </button>
+        )}
+
         <TrustBar />
       </div>
 
-      <WhatYouFeel />
+      {!hideWhatYouFeel && <WhatYouFeel />}
 
-      <IngredientListButton formulas={FORMULA_TABS[productType]} />
+      {!hideSecondary && (
+        <>
+          <IngredientListButton formulas={FORMULA_TABS[productType]} />
 
-      <HeroAccordions productType={productType} hideIngredients />
+          <HeroAccordions productType={productType} hideIngredients />
+        </>
+      )}
     </>
   );
 }

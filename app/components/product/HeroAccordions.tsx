@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 import IngredientsPanel from "@/app/components/landing/IngredientsPanel";
 
@@ -12,6 +12,12 @@ interface HeroAccordionsProps {
   whoItsFor?: string[];
   /** Drop the Ingredients accordion + panel (listicle uses its own sheet). */
   hideIngredients?: boolean;
+  /** V2 renders the row labels in solid black, normal-weight sans (not the
+   *  default mono-uppercase eyebrow style). */
+  plainLabels?: boolean;
+  /** Optional "What you'll feel" content rendered as an extra accordion row
+   *  (V2 moves it out of the right-hand buy box into the left column). */
+  whatYouFeel?: ReactNode;
 }
 
 const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
@@ -31,15 +37,19 @@ const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
 
 const GUARANTEE_TEXT = `Install the app, take your cognitive baseline, and track your improvement daily. If your score doesn't move after ${GUARANTEE_DAYS} days, we'll refund you completely. No return required. First-time customers only.`;
 
+type OpenSection = "who" | "guarantee" | "feel" | "ingredients-both";
+
 export default function HeroAccordions({
   productType,
   whoItsFor,
   hideIngredients = false,
+  plainLabels = false,
+  whatYouFeel,
 }: HeroAccordionsProps) {
-  const [openSection, setOpenSection] = useState<"who" | "guarantee" | "ingredients-both" | null>(null);
+  const [openSection, setOpenSection] = useState<OpenSection | null>(null);
   const [ingredientsProduct, setIngredientsProduct] = useState<"flow" | "clear" | null>(null);
 
-  const toggle = (section: "who" | "guarantee" | "ingredients-both") =>
+  const toggle = (section: OpenSection) =>
     setOpenSection((prev) => (prev === section ? null : section));
 
   const openIngredients = (product: "flow" | "clear") => {
@@ -47,6 +57,11 @@ export default function HeroAccordions({
   };
 
   const whoItems = whoItsFor ?? WHO_ITS_FOR[productType];
+
+  // Row label styling: default mono-uppercase eyebrow, or V2's plain black sans.
+  const labelCls = plainLabels
+    ? "text-base font-normal text-black group-hover:text-black transition-colors"
+    : "font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/60 group-hover:text-black/80 transition-colors";
 
   return (
     <>
@@ -59,7 +74,7 @@ export default function HeroAccordions({
             className="w-full flex items-center justify-between py-3.5 text-left group"
             aria-expanded={openSection === "who"}
           >
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/60 group-hover:text-black/80 transition-colors">
+            <span className={labelCls}>
               Who it&apos;s for
             </span>
             <svg
@@ -97,7 +112,7 @@ export default function HeroAccordions({
             className="w-full flex items-center justify-between py-3.5 text-left group"
             aria-expanded={openSection === "guarantee"}
           >
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/60 group-hover:text-black/80 transition-colors">
+            <span className={labelCls}>
               {GUARANTEE_DAYS}-Day Risk-Free Trial
             </span>
             <svg
@@ -120,6 +135,33 @@ export default function HeroAccordions({
           )}
         </div>
 
+        {/* What you'll feel (V2 only — moved out of the right-hand buy box) */}
+        {whatYouFeel && (
+          <div className="border-b border-black/10">
+            <button
+              type="button"
+              onClick={() => toggle("feel")}
+              className="w-full flex items-center justify-between py-3.5 text-left group"
+              aria-expanded={openSection === "feel"}
+            >
+              <span className={labelCls}>What you&apos;ll feel</span>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="square"
+                className={`text-black/40 transition-transform duration-200 flex-shrink-0 ${openSection === "feel" ? "rotate-180" : ""}`}
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {openSection === "feel" && <div className="pb-4">{whatYouFeel}</div>}
+          </div>
+        )}
+
         {/* Ingredients */}
         {hideIngredients ? null : productType === "both" ? (
           <div className="border-b border-black/10">
@@ -129,7 +171,7 @@ export default function HeroAccordions({
               className="w-full flex items-center justify-between py-3.5 text-left group"
               aria-expanded={openSection === "ingredients-both"}
             >
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/60 group-hover:text-black/80 transition-colors">
+              <span className={labelCls}>
                 Ingredients
               </span>
               <svg
@@ -171,7 +213,7 @@ export default function HeroAccordions({
               onClick={() => openIngredients(productType)}
               className="w-full flex items-center justify-between py-3.5 text-left group"
             >
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/60 group-hover:text-black/80 transition-colors">
+              <span className={labelCls}>
                 Ingredients
               </span>
               <svg

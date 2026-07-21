@@ -5,6 +5,16 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-21** | Make the PDP hero badges rectangular (Magic Mind style), grey-gradient the social-proof pill, and give it a per-product live-viewer count
+- **2026-07-21** | Roll the V2 PDP hero and benefits band out to conka-clarity and conka-both, make the hero spec badge product-aware, and retire the legacy hero components
+- **2026-07-21** | Rework V2 flat purchase tiles (unified green-plus subscription benefits list, Full CONKA App Access, discount-consistent crossed-out prices, clearer delivery cadence) and fix hero social-proof copy
+- **2026-07-21** | Align mobile PDP hero to Magic Mind (plain-label accordions, What-you'll-feel folded in, full-width Ingredients pill) and de-rule the guarantee trust bar
+- **2026-07-20** | Made the conka-flow benefits band render a portrait, centred layout on mobile and mounted it in the mobile page branch
+- **2026-07-20** | Added a Magic Mind-style benefits band under the conka-flow hero: textured paper tile, three benefit columns, and ingredient renders poking above and below
+- **2026-07-20** | Aligned ProductHeroV2 desktop PDP hero to the Magic Mind layout: de-carded flush gallery, MM-order left identity column with spec/social pills, plain-label accordions, and an ingredients pill
+- **2026-07-20** | V2 PDP plan tiles rebuilt Magic-Mind style (flat cards, price-led CTA, tap-to-expand benefits with free-shots badge)
+- **2026-07-20** | New ProductHeroMobileV2 for conka-flow (badges, split header, thumbnail carousel, MM-style rating)
+- **2026-07-20** | New ProductHeroV2 desktop PDP hero (3-column, flat plan cards) live on conka-flow behind a legacy-safe swap
 - **2026-07-20** | Simplify the home What to Expect timeline: drop the expanders and clinical/app-data depth to a 3-milestone scan with a See the research link
 - **2026-07-20** | Home: comment out the Case Studies section, add a See the research CTA to /science, trim the research section comment
 - **2026-07-20** | Testimonials carousel: inset the first card inside the padded track (was flush to the mobile edge)
