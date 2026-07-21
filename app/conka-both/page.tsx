@@ -169,7 +169,7 @@ export default function ConkaBothPage() {
       aria-label="Risk-free guarantee"
     >
       <div className="brand-track">
-        <LabGuarantee ctaLabel="Learn more" ctaHref="/app" />
+        <LabGuarantee />
       </div>
     </section>
   );
