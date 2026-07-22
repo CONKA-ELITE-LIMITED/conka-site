@@ -58,7 +58,13 @@ export type ListicleAsset =
   | {
       kind: "ingredientGrid";
       eyebrow?: string;
-      items: { icon: string; name: string; benefit: string }[];
+      items: {
+        icon: string;
+        name: string;
+        benefit: string;
+        /** Optional source line under the tile, e.g. "PMID: 11081987" */
+        citation?: string;
+      }[];
       footer?: string;
     }
   | {
@@ -98,6 +104,10 @@ export type ListicleBodyBlock =
       headline: string;
       /** Problem-validate paragraph, then solution; one string for now */
       body: string;
+      /** Optional source line under the body, e.g. "DOI: 10.1186/1550-2783-12-S1-P41" */
+      citation?: string;
+      /** Optional link target for the citation line */
+      citationHref?: string;
       /** Pill callout chips under the body, e.g. "250mg citicoline" */
       chips?: string[];
       asset: ListicleAsset;
@@ -122,6 +132,60 @@ export type ListicleBodyBlock =
       quote: string;
       name: string;
       detail?: string;
+    }
+  /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
+  | {
+      kind: "symptomExplainer";
+      /** Display number for the section heading, e.g. 1 renders "01." */
+      n?: number;
+      /** Mono category tag above the headline */
+      tag?: string;
+      headline: string;
+      /** Intro paragraph above the symptom buttons */
+      intro: string;
+      /** Small-print disclaimer under the explainer */
+      disclaimer?: string;
+      symptoms: {
+        icon: string;
+        label: string;
+        /** Primary symptoms show by default; the rest behind "see more" */
+        primary?: boolean;
+        /** "What's happening in your brain" explanation */
+        brain: string;
+        brainCitation?: string;
+        ingredients: {
+          icon: string;
+          name: string;
+          /** Which shot the active sits in, e.g. "Flow" or "Clear" */
+          formula: string;
+          detail: string;
+          citation?: string;
+        }[];
+      }[];
+    }
+  /** Full-width two-segment switcher (bespoke, Brain Ageing men/women) */
+  | {
+      kind: "segmentToggle";
+      /** Display number for the section heading, e.g. 2 renders "02." */
+      n?: number;
+      /** Mono category tag above the headline */
+      tag?: string;
+      headline: string;
+      segments: {
+        /** Toggle button label, e.g. "For men" */
+        label: string;
+        headline: string;
+        body: string;
+        ingredientsEyebrow?: string;
+        ingredients: {
+          icon: string;
+          name: string;
+          benefit: string;
+          citation?: string;
+        }[];
+        ingredientsFooter?: string;
+        testimonial?: { quote: string; name: string; detail?: string };
+      }[];
     };
 
 export interface ListicleConfig {
@@ -149,6 +213,8 @@ export interface ListicleConfig {
   ticker?: string[];
   /** Partner-logo marquee ("Fueling High Performers at:") below the ticker */
   logoMarquee?: boolean;
+  /** Press "As Published On:" marquee (CognICA outlet wordmarks) in the trust zone */
+  pressMarquee?: boolean;
   /** The listicle core: reasons with bands/strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */

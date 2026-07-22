@@ -5,6 +5,16 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | Refactored the cart app-gift into a compact strip and gave the nav cart a filled state when it has items
+- **2026-07-22** | Rewrote the brain-ageing ad listicle to Humphrey's copy with a new men/women segment toggle block
+- **2026-07-22** | Added crossed-out OTP pricing, recurring-discount line, and a savings row to subscription cart lines
+- **2026-07-22** | Rewrote the ADHD ad listicle to Humphrey's copy with a new interactive symptom explainer block
+- **2026-07-22** | Rewrote the productivity ad listicle to Humphrey's copy, with PMID/DOI citations and an As Published On press marquee
+- **2026-07-22** | Constrained the cart Subscribe & Save button to the line item text column
+- **2026-07-22** | Made the cart Subscribe & Save upsell per-product and tidied line item and footer copy
+- **2026-07-22** | Restyled the filled cart line item, upsell button, and checkout footer to a cleaner DTC layout
+- **2026-07-22** | Enlarged the empty-cart heading and swapped tile descriptions for time-of-day badges
+- **2026-07-22** | Redesigned the cart empty state with a free-shipping banner, product tiles from the shop menu, and a Shop CONKA CTA
 - **2026-07-21** | Refine PDP daily-benefits accordion: single-line summaries, all collapsed on mount, title above the render on mobile
 - **2026-07-21** | Rebuild PDP daily-benefits into a Simple DTC accordion and align time-of-day badge colours across nav and product cards
 - **2026-07-21** | Make ProductBenefitTiles formula-aware (Clear shows lecithin/vitamin C renders) and add sizes to the poke images so mobile stops over-fetching.

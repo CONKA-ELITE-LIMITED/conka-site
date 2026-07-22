@@ -24,7 +24,10 @@ import AppMeasureSection, {
 } from "@/app/components/landing/AppMeasureSection";
 import ReviewRail from "@/app/components/landing/ReviewRail";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
-import LogoMarquee from "@/app/components/landing/LogoMarquee";
+import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
+import CitationLine from "@/app/components/landing/CitationLine";
+import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
+import SegmentToggle from "@/app/components/landing/SegmentToggle";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
@@ -399,6 +402,13 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
           <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black md:text-base">
             {block.body}
           </p>
+          {block.citation ? (
+            <CitationLine
+              citation={block.citation}
+              href={block.citationHref}
+              className="-mt-3 mb-5"
+            />
+          ) : null}
           {block.chips?.length ? (
             <div className="flex flex-wrap gap-2">
               {block.chips.map((chip, i) => (
@@ -450,6 +460,52 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
         eyebrow={block.eyebrow}
         ratingSummary={block.ratingSummary}
       />
+    );
+  }
+
+  if (block.kind === "symptomExplainer") {
+    return (
+      <div className="border-t border-black/10 py-14">
+        {block.tag ? (
+          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
+            {block.tag}
+          </div>
+        ) : null}
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+          {block.n ? (
+            <span className="tabular-nums">
+              {String(block.n).padStart(2, "0")}.
+            </span>
+          ) : null}{" "}
+          {block.headline}
+        </h3>
+        <SymptomExplainer
+          intro={block.intro}
+          disclaimer={block.disclaimer}
+          symptoms={block.symptoms}
+        />
+      </div>
+    );
+  }
+
+  if (block.kind === "segmentToggle") {
+    return (
+      <div className="border-t border-black/10 py-14">
+        {block.tag ? (
+          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
+            {block.tag}
+          </div>
+        ) : null}
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+          {block.n ? (
+            <span className="tabular-nums">
+              {String(block.n).padStart(2, "0")}.
+            </span>
+          ) : null}{" "}
+          {block.headline}
+        </h3>
+        <SegmentToggle segments={block.segments} />
+      </div>
     );
   }
 
@@ -649,8 +705,11 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         </div>
       </section>
 
-      {/* Zone 4: social proof — logo marquee, then athlete testimonials */}
-      {config.logoMarquee || config.trustCarousel || config.athleteTestimonials ? (
+      {/* Zone 4: social proof — logo marquee, athlete testimonials, press marquee */}
+      {config.logoMarquee ||
+      config.trustCarousel ||
+      config.athleteTestimonials ||
+      config.pressMarquee ? (
         <section
           aria-label="Trusted by"
           className="px-5 py-16 md:px-[5vw]"
@@ -670,6 +729,19 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
                 }
               >
                 <AthleteCredibilityCarousel />
+              </div>
+            ) : null}
+            {config.pressMarquee ? (
+              <div
+                className={
+                  config.logoMarquee ||
+                  config.athleteTestimonials ||
+                  config.trustCarousel
+                    ? "mt-16"
+                    : ""
+                }
+              >
+                <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
               </div>
             ) : null}
           </div>

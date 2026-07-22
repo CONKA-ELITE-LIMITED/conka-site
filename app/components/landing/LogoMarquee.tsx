@@ -1,14 +1,29 @@
 /* ============================================================================
  * LogoMarquee
  *
- * "Fueling High Performers at:" partner-logo marquee, ported from the lander
- * (app/lander/sections/LogoMarquee) into our patterns: Tailwind, the shared
- * global `marquee` keyframe (translateX -50%), motion-safe so reduced-motion
- * users get a static row. Two identical groups loop seamlessly. Logos keep
- * their per-item heights (natural proportions differ). Static, no JS.
+ * Looping logo marquee, ported from the lander into our patterns: Tailwind,
+ * the shared global `marquee` keyframe (translateX -50%), motion-safe so
+ * reduced-motion users get a static row. Two identical groups loop seamlessly.
+ * Static, no JS.
+ *
+ * Two variants share the same shell:
+ *  - Partners (default): "Fueling High Performers at:" image logos.
+ *  - Press: "As Published On:" outlet wordmarks. Pass `logos={PRESS_LOGOS}`.
+ *
+ * Items with a `src` render as an <img> at their natural height; items with no
+ * `src` render as a text wordmark. PRESS_LOGOS uses text as a placeholder until
+ * the real press-logo images are sourced (see the template-upgrade plan doc).
  * ========================================================================== */
 
-const LOGOS = [
+export interface MarqueeLogo {
+  /** Image path; omit to render `alt` as a text wordmark instead */
+  src?: string;
+  alt: string;
+  /** Pixel height for image logos (natural proportions differ per logo) */
+  h?: number;
+}
+
+const PARTNER_LOGOS: MarqueeLogo[] = [
   { src: "/lander/partners/bath-rugby.png", alt: "Bath Rugby", h: 52 },
   { src: "/lander/partners/southampton.png", alt: "Southampton FC", h: 54 },
   { src: "/lander/partners/england-rugby.png", alt: "England Rugby", h: 58 },
@@ -25,39 +40,72 @@ const LOGOS = [
   { src: "/lander/partners/equinox.png", alt: "Equinox", h: 19 },
 ];
 
-function Group({ hidden = false }: { hidden?: boolean }) {
+/** Press outlets the CognICA test has appeared in. Text wordmarks are a
+ *  placeholder; drop `src` image paths in (Phase 5) to swap to real logos. */
+export const PRESS_LOGOS: MarqueeLogo[] = [
+  { alt: "Medscape" },
+  { alt: "pharmaphorum" },
+  { alt: "NeurologyLive" },
+  { alt: "BioSpace" },
+  { alt: "The Globe and Mail" },
+  { alt: "Frontiers in Aging Neuroscience" },
+  { alt: "Applied Neuropsychology: Adult" },
+];
+
+function Group({
+  logos,
+  hidden = false,
+}: {
+  logos: MarqueeLogo[];
+  hidden?: boolean;
+}) {
   return (
     <div
       className="flex flex-shrink-0 items-center gap-14 pr-14 md:gap-[90px] md:pr-[90px]"
       aria-hidden={hidden || undefined}
     >
-      {LOGOS.map((l) => (
-        // Decorative brand logos with varied aspect ratios; plain img keeps
-        // the per-logo height + auto width without distortion.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={l.alt}
-          src={l.src}
-          alt={l.alt}
-          loading="lazy"
-          style={{ height: l.h }}
-          className="w-auto flex-shrink-0"
-        />
-      ))}
+      {logos.map((l) =>
+        l.src ? (
+          // Decorative brand logos with varied aspect ratios; plain img keeps
+          // the per-logo height + auto width without distortion.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={l.alt}
+            src={l.src}
+            alt={l.alt}
+            loading="lazy"
+            style={{ height: l.h }}
+            className="w-auto flex-shrink-0"
+          />
+        ) : (
+          <span
+            key={l.alt}
+            className="flex-shrink-0 whitespace-nowrap text-[19px] font-semibold tracking-[-0.01em] text-[#7c7d7c]"
+          >
+            {l.alt}
+          </span>
+        ),
+      )}
     </div>
   );
 }
 
-export default function LogoMarquee() {
+export default function LogoMarquee({
+  heading = "Fueling High Performers at:",
+  logos = PARTNER_LOGOS,
+}: {
+  heading?: string;
+  logos?: MarqueeLogo[];
+}) {
   return (
     <div className="text-center">
       <p className="mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]">
-        Fueling High Performers at:
+        {heading}
       </p>
       <div className="overflow-hidden">
         <div className="flex w-max motion-safe:animate-[marquee_40s_linear_infinite]">
-          <Group />
-          <Group hidden />
+          <Group logos={logos} />
+          <Group logos={logos} hidden />
         </div>
       </div>
     </div>

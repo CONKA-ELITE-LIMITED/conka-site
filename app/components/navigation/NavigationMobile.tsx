@@ -88,7 +88,7 @@ export default function NavigationMobile({
               className="group flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
               aria-label="Account"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#1B2757] text-[#1B2757] transition-colors group-hover:bg-[#1B2757] group-hover:text-white">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-black text-black transition-colors group-hover:bg-black group-hover:text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="17"
@@ -110,7 +110,11 @@ export default function NavigationMobile({
                 openCart();
                 setMobileMenuOpen(false);
               }}
-              className="rounded-full border border-[#1B2757] px-3 py-1 text-xs font-bold text-[#1B2757] tabular-nums transition-colors hover:bg-[#1B2757] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
+              className={`rounded-full border px-3 py-1 text-xs font-bold tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
+                itemCount > 0
+                  ? "border-[#1B2757] bg-[#1B2757] text-white hover:opacity-90"
+                  : "border-black text-black hover:bg-black hover:text-white"
+              }`}
               aria-label="Open cart"
             >
               Cart {itemCount > 99 ? "99+" : itemCount}

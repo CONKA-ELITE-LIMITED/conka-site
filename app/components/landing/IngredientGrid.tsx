@@ -1,6 +1,7 @@
 "use client";
 
 import { useInView } from "@/app/hooks/useInView";
+import CitationLine from "./CitationLine";
 
 /* ============================================================================
  * IngredientGrid
@@ -19,6 +20,8 @@ export interface IngredientGridItem {
   name: string;
   /** Short effect line */
   benefit: string;
+  /** Optional source line, e.g. "PMID: 11081987" */
+  citation?: string;
 }
 
 interface IngredientGridProps {
@@ -79,6 +82,9 @@ export default function IngredientGrid({
             <p className="mt-1 text-[12px] leading-snug text-black/60">
               {item.benefit}
             </p>
+            {item.citation ? (
+              <CitationLine citation={item.citation} className="mt-1.5" />
+            ) : null}
           </div>
         ))}
       </div>

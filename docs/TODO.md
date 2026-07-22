@@ -5,6 +5,21 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Listicle Template Upgrade
+
+### ADHD listicle: bespoke FAQ copy pending
+
+**Status:** Deferred (awaiting copy)
+**File:** `app/lib/landings/adhd-listicle.ts` (`faqIds`), `app/lib/faqContent.ts`
+
+**What unblocks it:** Humphrey delivering the bespoke ADHD FAQ copy (not finished at rewrite time, he ran out of credits). The ADHD listicle currently reuses existing canonical FAQ ids so the page is complete and shippable.
+
+**How to apply when it lands:** Add each new Q&A to `app/lib/faqContent.ts` (follow the existing `FaqItem` structure and `††` claim-anchor convention), then reference the new ids in the ADHD `faqIds` array. All FAQ copy stays in the canonical source, per the FAQ-system single-source rule.
+
+**Why deferred:** Copy did not exist. No code change is required, only data entry, so it does not block Phase 3. Plan: `docs/development/featurePlans/listicle-template-upgrade.md`.
+
+---
+
 ## Protocol System Cleanup
 
 ### 1. Delete `app/protocol/[id]/page.tsx` and the protocol route

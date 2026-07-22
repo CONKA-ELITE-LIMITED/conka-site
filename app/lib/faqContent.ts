@@ -84,6 +84,20 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "efficacy",
   },
   {
+    id: "forgetting-words-dementia",
+    question: "Is forgetting words a sign of dementia?",
+    answer:
+      "Usually not. The far more common causes are tiredness, stress, divided attention, or simply speaking faster than your brain can retrieve the word, something that happens at every age. It becomes worth taking seriously when it is frequent, getting worse, or paired with other changes like getting lost in familiar places, in which case see your GP, because that is a medical question a supplement does not replace. For the everyday version, several CONKA ingredients act on the systems behind word retrieval: Alpha GPC supports the acetylcholine pathway central to memory and language, and Ginkgo Biloba supports the blood flow that keeps those pathways fed.",
+    category: "efficacy",
+  },
+  {
+    id: "forget-words-midsentence",
+    question: "Why do I forget words mid-sentence?",
+    answer:
+      "Most often it is your brain outpacing your mouth: the word is there, but retrieval lags under fatigue, stress or mental overload. It tends to happen more as the day wears on, which is why CONKA is split into two shots rather than one: Flow in the morning to start sharp, Clear in the afternoon to stop that dip before it shows up in conversation.",
+    category: "efficacy",
+  },
+  {
     id: "vs-energy-drink",
     question: "How is CONKA different from an energy drink?",
     answer:
@@ -274,6 +288,13 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: "Can I take CONKA with coffee?",
     answer:
       "Yes. CONKA is caffeine-free, so it works alongside your morning coffee rather than competing with it, and there is no interaction to worry about. What is interesting is our own app data: measured against people's own baselines, coffee on its own barely moved their cognitive scores, while the measurable gains tracked with CONKA. Among users who logged both, adding CONKA on top of their coffee was associated with higher scores and fewer errors. Most people also find they reach for fewer cups over time, but nothing about CONKA requires you to give up coffee.",
+    category: "usage",
+  },
+  {
+    id: "reduce-coffee",
+    question: "What happens when you reduce your coffee intake?",
+    answer:
+      "The NHS suggests keeping caffeine to around 3mg per kg of body weight, so roughly 225mg a day for a 75kg adult, about two cups of coffee or one energy drink. Above that, common side effects include disrupted sleep, anxiety and raised blood pressure. Cutting back can bring short-term withdrawal for a few days, usually headaches or fatigue, which is one reason people look for a steadier alternative rather than stopping cold. Because both CONKA formulas are caffeine-free, they give you a way to hold your focus while you ease off the cups, without adding another stimulant to crash from.",
     category: "usage",
   },
   {
