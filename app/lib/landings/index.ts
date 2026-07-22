@@ -16,9 +16,9 @@ import { generalListicle } from "./general-listicle";
 /** Any landing page config; narrow on `format` to render */
 export type AnyLandingConfig = LandingConfig | ListicleConfig;
 
-// listicle-template is a scaffold with lorem ipsum copy. Registering it would
-// serve that placeholder text at a live /go/listicle-template. Copy it to start
-// a new lander; do not add it here.
+// To add a listicle, create a config file and register it here. Copy the
+// closest model: general-listicle.ts for the "mm" template, or a persona file
+// (adhd/productivity/brain-ageing) for "im8". See docs/features/LISTICLE_SYSTEM.md.
 const registry: Record<string, AnyLandingConfig> = {
   [quizTemplate.slug]: quizTemplate,
   [brainAgeQuiz.slug]: brainAgeQuiz,
