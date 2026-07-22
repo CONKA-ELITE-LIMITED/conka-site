@@ -19,6 +19,8 @@ export interface CartUpsellOffer {
   heroSub: string;
   /** Benefit bullets rendered below the hero number */
   benefits: string[];
+  /** Full label for the single rectangular CTA button (e.g. "Subscribe & Save £24.99"). */
+  ctaLabel: string;
   /** Product image to display in the tile */
   image: string;
   price: number;
@@ -76,6 +78,10 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
         `${addedShotCount} shots of Conka ${addedName}${shotsFrequency}`,
         "The complete cognitive performance system",
       ],
+      ctaLabel:
+        savingVsSeparate > 0
+          ? `Add ${addedName} & Save ${formatPrice(savingVsSeparate)}`
+          : `Upgrade to Both, add ${addedName}`,
       image: "/formulas/both/BothShots.jpg",
       price: bothPricing.price,
       variantId: variant.variantId,
@@ -102,6 +108,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellOffer | null {
         "Delivered fresh every month",
         "Cancel anytime, no lock-in",
       ],
+      ctaLabel: `Subscribe & Save ${formatPrice(saving)}`,
       image: "/formulas/both/BothShots.jpg",
       price: upgradePrice,
       variantId: variant.variantId,

@@ -100,19 +100,25 @@ function LineItemPrice({
   formatPrice: (amount: string, currencyCode: string) => string;
 }) {
   const { display, compareAt, showCompare } = getLinePriceInfo(item);
+  const discountPct =
+    showCompare && compareAt
+      ? Math.round(
+          (1 - parseFloat(display.amount) / parseFloat(compareAt.amount)) * 100,
+        )
+      : 0;
   return (
-    <div className="flex items-center gap-2 mt-1">
+    <div className="flex shrink-0 flex-col items-end text-right">
+      <span className="text-base font-bold tabular-nums text-black">
+        {formatPrice(display.amount, display.currencyCode)}
+      </span>
       {showCompare && compareAt && (
-        <span className="font-mono text-[10px] tabular-nums text-black/35 line-through">
+        <span className="text-xs tabular-nums text-black/40 line-through">
           {formatPrice(compareAt.amount, compareAt.currencyCode)}
         </span>
       )}
-      <span className="font-mono text-sm font-bold tabular-nums text-black">
-        {formatPrice(display.amount, display.currencyCode)}
-      </span>
-      {showCompare && (
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#1B2757] bg-[#1B2757]/6 border border-[#1B2757]/20 px-1.5 py-0.5 tabular-nums">
-          -20%
+      {showCompare && discountPct > 0 && (
+        <span className="mt-1 rounded-full bg-[#1a7f4f]/10 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#1a7f4f]">
+          {discountPct}% off
         </span>
       )}
     </div>
@@ -277,115 +283,136 @@ export default function CartDrawer() {
               </div>
             </div>
           ) : (
-            <div className="p-4 space-y-3">
+            <div className="p-4 space-y-4">
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-3 p-3 bg-white border border-black/12"
+                  className="border-b border-black/10 pb-4 last:border-b-0 last:pb-0"
                 >
-                  {/* Product image */}
-                  <div className="w-20 h-20 flex-shrink-0 bg-black/[0.03] border border-black/8 overflow-hidden">
-                    <Image
-                      src={
-                        item.merchandise.product.featuredImage?.url ||
-                        getProductFallbackImage(item.merchandise.product.title)
-                      }
-                      alt={
-                        item.merchandise.product.featuredImage?.altText ||
-                        item.merchandise.product.title
-                      }
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <div className="flex gap-4">
+                    {/* Product image */}
+                    <div className="w-24 h-24 shrink-0 overflow-hidden rounded-lg">
+                      <Image
+                        src={
+                          item.merchandise.product.featuredImage?.url ||
+                          getProductFallbackImage(item.merchandise.product.title)
+                        }
+                        alt={
+                          item.merchandise.product.featuredImage?.altText ||
+                          item.merchandise.product.title
+                        }
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-                  {/* Product info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-black truncate leading-tight">
-                      {item.merchandise.product.title}
-                    </p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 tabular-nums truncate mt-0.5">
-                      {(() => {
-                        const offer = getOfferByVariantId(item.merchandise.id);
-                        if (!offer) return item.merchandise.title;
-                        const { shotCount, freeShots } = offer.pricing;
-                        return (
-                          <>
-                            {shotCount} shots
-                            {freeShots && freeShots > 0 ? (
-                              <span className="font-bold text-[#1a7f4f]">
-                                {" "}
-                                + {freeShots} free
-                              </span>
-                            ) : null}
-                          </>
-                        );
-                      })()}
-                    </p>
+                    {/* Right column: title/price, then controls */}
+                    <div className="flex flex-1 min-w-0 flex-col">
+                      <div className="flex justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-base font-bold leading-snug text-black">
+                            {item.merchandise.product.title}
+                          </p>
+                          <p className="mt-1 text-sm text-black/50">
+                            {(() => {
+                              const offer = getOfferByVariantId(item.merchandise.id);
+                              if (!offer) return item.merchandise.title;
+                              const { shotCount, freeShots } = offer.pricing;
+                              return (
+                                <>
+                                  {shotCount} shots
+                                  {freeShots && freeShots > 0 ? (
+                                    <span className="font-semibold text-[#1a7f4f]">
+                                      {" "}
+                                      + {freeShots} free
+                                    </span>
+                                  ) : null}
+                                </>
+                              );
+                            })()}
+                          </p>
+                          {isSubscription(item) && (
+                            <span className="mt-1.5 inline-block rounded bg-[#1B2757]/8 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-[#1B2757]">
+                              Subscribe
+                            </span>
+                          )}
+                        </div>
+                        <LineItemPrice item={item} formatPrice={formatPrice} />
+                      </div>
 
-                    {isSubscription(item) && (
-                      <span className="inline-block mt-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1B2757] bg-[#1B2757]/6 border border-[#1B2757]/20 px-2 py-0.5 tabular-nums">
-                        Subscribe
-                      </span>
-                    )}
-
-                    <LineItemPrice item={item} formatPrice={formatPrice} />
-
-                    {/* Quantity controls */}
-                    <div className="flex items-center gap-2 mt-2.5">
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        disabled={loading}
-                        className="w-7 h-7 flex items-center justify-center border border-black/12 hover:border-black/40 transition-colors disabled:opacity-40"
-                        aria-label="Decrease quantity"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="square"
-                          strokeLinejoin="miter"
+                      {/* Controls: quantity left, remove right */}
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center rounded-lg border border-black/15">
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            disabled={loading}
+                            className="flex h-9 w-9 items-center justify-center text-black/60 transition-colors hover:text-black disabled:opacity-40"
+                            aria-label="Decrease quantity"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                          </button>
+                          <span className="w-8 text-center text-sm tabular-nums text-black">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            disabled={loading}
+                            className="flex h-9 w-9 items-center justify-center text-black/60 transition-colors hover:text-black disabled:opacity-40"
+                            aria-label="Increase quantity"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <line x1="12" y1="5" x2="12" y2="19" />
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                          </button>
+                        </div>
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          disabled={loading}
+                          className="p-1.5 text-black/40 transition-colors hover:text-black disabled:opacity-40"
+                          aria-label="Remove item"
                         >
-                          <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                      </button>
-                      <span className="font-mono text-sm tabular-nums w-6 text-center text-black">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        disabled={loading}
-                        className="w-7 h-7 flex items-center justify-center border border-black/12 hover:border-black/40 transition-colors disabled:opacity-40"
-                        aria-label="Increase quantity"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="square"
-                          strokeLinejoin="miter"
-                        >
-                          <line x1="12" y1="5" x2="12" y2="19" />
-                          <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        disabled={loading}
-                        className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-black/30 hover:text-black/60 transition-colors disabled:opacity-40 tabular-nums"
-                        aria-label="Remove item"
-                      >
-                        Remove
-                      </button>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                            <path d="M10 11v6M14 11v6" />
+                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -407,30 +434,15 @@ export default function CartDrawer() {
         {/* Footer */}
         <div className="border-t border-black/8 bg-white">
           {cart && cartItems.length > 0 && (
-            <div className="px-4 pt-4 pb-3 space-y-3">
-              {/* Subtotal */}
-              <div className="flex items-baseline justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
-                  Subtotal
-                </span>
-                <span className="font-mono text-lg font-bold tabular-nums text-black">
-                  {formatPrice(
-                    cart.cost.subtotalAmount.amount,
-                    cart.cost.subtotalAmount.currencyCode,
-                  )}
-                </span>
-              </div>
-
-              {/* Shots + "20 + 8 free" bonus summary */}
+            <div className="px-5 pt-4 pb-3 space-y-2">
+              {/* Shots summary */}
               {shotSummary.shots > 0 && (
                 <div className="flex items-baseline justify-between">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
-                    Shots
-                  </span>
-                  <span className="font-mono text-[11px] tabular-nums text-black/70">
+                  <span className="text-sm text-black/60">Shots</span>
+                  <span className="text-sm tabular-nums text-black">
                     {shotSummary.shots} shots
                     {shotSummary.free > 0 && (
-                      <span className="font-bold text-[#1a7f4f]">
+                      <span className="font-semibold text-[#1a7f4f]">
                         {" "}
                         + {shotSummary.free} free
                       </span>
@@ -439,7 +451,20 @@ export default function CartDrawer() {
                 </div>
               )}
 
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/30 tabular-nums text-center">
+              {/* Subtotal */}
+              <div className="flex items-baseline justify-between">
+                <span className="text-base font-semibold text-black">
+                  Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})
+                </span>
+                <span className="text-lg font-bold tabular-nums text-black">
+                  {formatPrice(
+                    cart.cost.subtotalAmount.amount,
+                    cart.cost.subtotalAmount.currencyCode,
+                  )}
+                </span>
+              </div>
+
+              <p className="text-xs text-black/40">
                 Shipping &amp; taxes calculated at checkout
               </p>
             </div>
@@ -459,34 +484,48 @@ export default function CartDrawer() {
                 Shop CONKA
               </ConkaCTAButton>
             ) : (
-            <a
-              href={cart?.checkoutUrl || "#"}
-              onClick={(e) => {
-                if (!cart?.checkoutUrl) {
-                  e.preventDefault();
-                  return;
-                }
-                // Fire InitiateCheckout on our domain before the redirect to the
-                // Shopify-hosted checkout (the pixel can't fire it offsite).
-                // sendBeacon + CAPI keepalive survive the navigation.
-                trackMetaInitiateCheckout({
-                  content_ids: cartItems.map((i) => toContentId(i.merchandise.id)),
-                  value: parseFloat(cart.cost.subtotalAmount.amount) || 0,
-                  currency: cart.cost.subtotalAmount.currencyCode,
-                  num_items: cartItems.reduce((s, i) => s + i.quantity, 0),
-                });
-              }}
-              className="relative block w-full bg-[#1B2757] text-white px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-center [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] transition-opacity hover:opacity-90"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-3.5 h-3.5 border border-white/30 border-t-white rounded-full animate-spin inline-block" />
-                  Updating
-                </span>
-              ) : (
-                "Checkout →"
-              )}
-            </a>
+              <>
+                <ConkaCTAButton
+                  meta={null}
+                  className="w-full max-w-none justify-center"
+                  onClick={() => {
+                    if (!cart?.checkoutUrl) return;
+                    // Fire InitiateCheckout on our domain before the redirect to
+                    // the Shopify-hosted checkout (the pixel can't fire it
+                    // offsite). sendBeacon + CAPI keepalive survive the nav.
+                    trackMetaInitiateCheckout({
+                      content_ids: cartItems.map((i) => toContentId(i.merchandise.id)),
+                      value: parseFloat(cart.cost.subtotalAmount.amount) || 0,
+                      currency: cart.cost.subtotalAmount.currencyCode,
+                      num_items: cartItems.reduce((s, i) => s + i.quantity, 0),
+                    });
+                    window.location.href = cart.checkoutUrl;
+                  }}
+                >
+                  {loading ? "Updating" : "Checkout"}
+                </ConkaCTAButton>
+
+                {/* 100-day guarantee reassurance */}
+                <div className="mt-3 flex items-center justify-center gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1a7f4f"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M8 12l2.5 2.5L16 9" />
+                  </svg>
+                  <span className="text-xs font-medium text-black">
+                    100-Day Money-Back Guarantee
+                  </span>
+                </div>
+              </>
             )}
           </div>
         </div>
