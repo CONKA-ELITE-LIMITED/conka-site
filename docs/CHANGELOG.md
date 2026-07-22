@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | Enlarged the empty-cart heading and swapped tile descriptions for time-of-day badges
 - **2026-07-22** | Redesigned the cart empty state with a free-shipping banner, product tiles from the shop menu, and a Shop CONKA CTA
 - **2026-07-21** | Refine PDP daily-benefits accordion: single-line summaries, all collapsed on mount, title above the render on mobile
 - **2026-07-21** | Rebuild PDP daily-benefits into a Simple DTC accordion and align time-of-day badge colours across nav and product cards

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NAV_PRODUCTS } from "./navigation/navConfig";
+import { TIME_OF_DAY_BADGE } from "@/app/lib/timeOfDayBadge";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
@@ -235,7 +236,7 @@ export default function CartDrawer() {
             </div>
           ) : cartItems.length === 0 ? (
             <div className="px-5 py-8">
-              <h3 className="text-center text-3xl font-bold tracking-tight text-black">
+              <h3 className="text-center text-4xl font-bold tracking-tight text-black">
                 Your cart is empty
               </h3>
               <p className="mx-auto mt-3 max-w-xs text-center text-sm leading-relaxed text-black">
@@ -261,12 +262,14 @@ export default function CartDrawer() {
                         sizes="(max-width: 448px) 50vw, 210px"
                       />
                     </div>
-                    <div className="px-3 py-2.5 text-center">
+                    <div className="relative border-t border-black/10 px-3 pb-3 pt-6 text-center">
+                      <span
+                        className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none ${TIME_OF_DAY_BADGE[product.badge]}`}
+                      >
+                        {product.badge}
+                      </span>
                       <p className="text-sm font-bold leading-tight text-black">
                         {product.name}
-                      </p>
-                      <p className="mt-1 text-[11px] leading-snug text-black/55">
-                        {product.tagline}
                       </p>
                     </div>
                   </Link>
