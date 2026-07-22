@@ -108,6 +108,18 @@ export default function SymptomExplainer({
     setShowAllIngredients(false);
   }
 
+  function toggleSymptoms() {
+    const next = !showAllSymptoms;
+    // Collapsing while a secondary symptom is open would leave the panel showing
+    // a symptom with no visible button; jump back to the first primary.
+    if (!next && hasPrimary && !symptoms[active].primary) {
+      const firstPrimary = symptoms.findIndex((s) => s.primary);
+      setActive(firstPrimary >= 0 ? firstPrimary : 0);
+      setShowAllIngredients(false);
+    }
+    setShowAllSymptoms(next);
+  }
+
   return (
     <div>
       {/* Intro */}
@@ -149,7 +161,7 @@ export default function SymptomExplainer({
       {hasPrimary && hiddenCount > 0 ? (
         <button
           type="button"
-          onClick={() => setShowAllSymptoms((v) => !v)}
+          onClick={toggleSymptoms}
           className="mt-2.5 px-1 py-1 text-[12px] font-semibold"
           style={{ color: INK }}
         >
@@ -177,7 +189,7 @@ export default function SymptomExplainer({
           <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
             How CONKA helps
           </p>
-          <IngredientCard ing={primaryIng} gradIndex={0} />
+          {primaryIng ? <IngredientCard ing={primaryIng} gradIndex={0} /> : null}
 
           {restIng.length > 0 ? (
             <>
