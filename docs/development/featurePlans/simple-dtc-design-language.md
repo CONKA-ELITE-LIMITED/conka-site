@@ -67,8 +67,8 @@ Captured as components convert; feeds the eventual DESIGN_SYSTEM.md section.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Define & reconcile: write the Simple DTC section in DESIGN_SYSTEM.md, fix stale premium-base / Soft-Tech Luxury / `--premium-radius-*` refs | Not Started |
-| 2 | Seed the token layer: minimal additive Simple DTC tokens/utilities in brand-base.css, proven against the reference component | Not Started |
+| 1 | Define & reconcile: write the Simple DTC section in DESIGN_SYSTEM.md, fix stale premium-base / Soft-Tech Luxury / `--premium-radius-*` refs | **Done (SCRUM-1172)** |
+| 2 | Seed the token layer: minimal additive Simple DTC tokens/utilities in brand-base.css, proven against the reference component | In progress — green `--brand-positive` seeded (SCRUM-1172); navy token + label utility + component proof still pending |
 | 3 | Iterative sweep + consolidation: convert components surface-by-surface, then prune unused clinical classes and dedupe | Future |
 
 ### Phase 1 — Define & reconcile (ACTIVE)
