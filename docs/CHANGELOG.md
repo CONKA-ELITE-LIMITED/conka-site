@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | UGC testimonial marquee upgraded to three rows with five new customer stills
 - **2026-07-22** | Refactored the cart app-gift into a compact strip and gave the nav cart a filled state when it has items
 - **2026-07-22** | Rewrote the brain-ageing ad listicle to Humphrey's copy with a new men/women segment toggle block
 - **2026-07-22** | Added crossed-out OTP pricing, recurring-discount line, and a savings row to subscription cart lines
