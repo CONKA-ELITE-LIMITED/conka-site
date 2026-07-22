@@ -162,6 +162,30 @@ export type ListicleBodyBlock =
           citation?: string;
         }[];
       }[];
+    }
+  /** Full-width two-segment switcher (bespoke, Brain Ageing men/women) */
+  | {
+      kind: "segmentToggle";
+      /** Display number for the section heading, e.g. 2 renders "02." */
+      n?: number;
+      /** Mono category tag above the headline */
+      tag?: string;
+      headline: string;
+      segments: {
+        /** Toggle button label, e.g. "For men" */
+        label: string;
+        headline: string;
+        body: string;
+        ingredientsEyebrow?: string;
+        ingredients: {
+          icon: string;
+          name: string;
+          benefit: string;
+          citation?: string;
+        }[];
+        ingredientsFooter?: string;
+        testimonial?: { quote: string; name: string; detail?: string };
+      }[];
     };
 
 export interface ListicleConfig {

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | Rewrote the brain-ageing ad listicle to Humphrey's copy with a new men/women segment toggle block
 - **2026-07-22** | Added crossed-out OTP pricing, recurring-discount line, and a savings row to subscription cart lines
 - **2026-07-22** | Rewrote the ADHD ad listicle to Humphrey's copy with a new interactive symptom explainer block
 - **2026-07-22** | Rewrote the productivity ad listicle to Humphrey's copy, with PMID/DOI citations and an As Published On press marquee

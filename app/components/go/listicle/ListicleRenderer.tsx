@@ -27,6 +27,7 @@ import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphi
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
+import SegmentToggle from "@/app/components/landing/SegmentToggle";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
@@ -483,6 +484,27 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
           disclaimer={block.disclaimer}
           symptoms={block.symptoms}
         />
+      </div>
+    );
+  }
+
+  if (block.kind === "segmentToggle") {
+    return (
+      <div className="border-t border-black/10 py-14">
+        {block.tag ? (
+          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
+            {block.tag}
+          </div>
+        ) : null}
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+          {block.n ? (
+            <span className="tabular-nums">
+              {String(block.n).padStart(2, "0")}.
+            </span>
+          ) : null}{" "}
+          {block.headline}
+        </h3>
+        <SegmentToggle segments={block.segments} />
       </div>
     );
   }

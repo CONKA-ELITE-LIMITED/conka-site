@@ -1,10 +1,13 @@
 import type { ListicleConfig } from "./listicle-types";
 
 /**
- * Persona listicle: older generation / brain-ageing. Hero + 6 reason bodies
- * supplied 2026-06-14 (wired verbatim, light formatting only; claims pass is
- * owned by the user). Framing copy (laurel, ticker, bridge, FAQ, sticky)
- * mirrors the ADHD page. Reason assets are placeholders until sourced.
+ * Persona listicle: older generation / brain-ageing.
+ *
+ * Rewritten 2026-07-22 to Humphrey's improved copy and sentiment (template
+ * upgrade Phase 4). Uses the bespoke men/women segmentToggle block, the Phase 1
+ * citations and press marquee, and canonical FAQ ids (two new word-recall
+ * entries added to faqContent.ts). The "Do you see an animal?" test GIF is a
+ * Phase 5 asset swap. Claims pass is owned by the user.
  *
  * Slug is brain-ageing-listicle to avoid colliding with the brain-age QUIZ
  * page (/go/brain-age, SCRUM-1084).
@@ -13,16 +16,15 @@ export const brainAgeingListicle: ListicleConfig = {
   slug: "brain-ageing-listicle",
   persona: "brain-ageing",
   format: "listicle",
-  title: "6 Reasons to Protect Your Brain With CONKA",
+  title: "Is Forgetting Words Mid-Sentence a Sign of Dementia?",
   hero: {
     laurel: {
       eyebrow: "World's Largest",
       body: "Consumer brain-research project. 1,000+ brains tested through our app.",
     },
-    headline:
-      "6 Reasons the Older Generation Is Adding This Daily Shot Before Brain Fog and Cognitive Decline Set In",
+    headline: "Is Forgetting Words Mid-Sentence a Sign of Dementia?",
     subcopy:
-      "Two caffeine-free daily shots to support memory, focus and mental clarity as you age: Flow in the morning, Clear in the afternoon, so the sharpness you rely on holds day after day.",
+      "Not always what you fear, often just fatigue and mental overload, common in a modern, technology-driven world. Support the recall pathways behind it before it gets worse. Flow in the morning, Clear in the afternoon.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -51,6 +53,7 @@ export const brainAgeingListicle: ListicleConfig = {
     "2-MINUTE BRAIN TEST",
   ],
   logoMarquee: true,
+  pressMarquee: true,
   athleteTestimonials: true,
   body: [
     {
@@ -58,7 +61,7 @@ export const brainAgeingListicle: ListicleConfig = {
       n: 1,
       tag: "WORD RECALL",
       headline: "Seamless Speech, Without the Hesitation",
-      body: "Struggling to find the right word is agonising. This 30ml daily shot supports the neural pathways behind language, so sentences form more easily and the words are there when you reach for them, and conversation flows naturally again.",
+      body: "That moment your words vanish mid-sentence is unsettling, but it's rarely permanent. This 30ml daily shot supports the neural pathways behind language, so sentences form more easily, the words are there when you reach for them, and conversation flows naturally again. The earlier you support it, the easier it is to keep ahead of.",
       // Dan Norton's quote (speaking clearer, words flowing) lands the seamless-speech reason
       asset: {
         kind: "athleteQuote",
@@ -66,115 +69,151 @@ export const brainAgeingListicle: ListicleConfig = {
         role: "Rugby 7s · Olympic Silver Medallist",
         image: "/testimonials/athlete/DanNortonNB.jpg",
         quote:
-          "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
+          "After a career in contact sport, my memory isn't what it was. I am finding myself able to speak clearer, and in conversations my words just flow better. I have more calmness.",
       },
     },
     {
-      kind: "reason",
+      kind: "segmentToggle",
       n: 2,
-      tag: "MEMORY",
-      headline: "Clearer Memory That Lifts the Fog",
-      body: "Forgetting why you walked into a room is a frustrating sign of cognitive fatigue. This targeted nutrition gives your brain the fuel to lift that fog, so you remember where you put things and why you came in, with many people noticing clearer recall over about six weeks.",
-      // The recall stack: actives that feed acetylcholine and clear the fog
-      asset: {
-        kind: "ingredientGrid",
-        eyebrow: "What lifts the fog",
-        items: [
-          {
-            icon: "⚡",
-            name: "Alpha GPC",
-            benefit: "The most bioavailable choline for recall.",
+      tag: "MEN & WOMEN",
+      headline: "Where Ageing Hits Your Brain, and What Helps",
+      segments: [
+        {
+          label: "For men",
+          headline:
+            "From 30, Testosterone Only Goes One Way, Unless You Do Something About It",
+          body: "Ashwagandha and Rhodiola are adaptogens shown in clinical trials to ease the cortisol load that suppresses testosterone, so sustained effort, at work, training, or both, stops feeling like a grind. The adaptogens do their job daily, but the biggest lever is still training: heavy compound lifts trigger the body's largest natural testosterone response of any exercise type. Stack that on daily cortisol support and you are not fighting your hormones on top of everything else.",
+          ingredientsEyebrow: "The men's stack",
+          ingredients: [
+            {
+              icon: "🔥",
+              name: "Ashwagandha",
+              benefit: "Eases the cortisol load that quietly suppresses testosterone.",
+              citation: "PMID: 30854916",
+            },
+            {
+              icon: "⚡",
+              name: "Rhodiola Rosea",
+              benefit: "Makes sustained effort, physical or mental, feel lighter, not harder.",
+              citation: "PMID: 23443221",
+            },
+            {
+              icon: "🩸",
+              name: "Ginkgo Biloba",
+              benefit: "Supports the blood flow behind focus under pressure.",
+              citation: "PMID: 17457961",
+            },
+            {
+              icon: "🧠",
+              name: "Alpha GPC",
+              benefit: "Fuels the neurotransmitter your brain uses for sharp, driven thinking.",
+              citation: "PMID: 39683633",
+            },
+          ],
+          ingredientsFooter: "All in two daily 30ml shots.",
+          testimonial: {
+            quote:
+              "I can now tolerate the same workload as I did in my 30s. I travel from Scotland to London frequently for intense bouts of work. I used to lose my memory in these periods, but now I don't.",
+            name: "Shane",
+            detail: "Verified customer",
           },
-          {
-            icon: "🧠",
-            name: "Lecithin",
-            benefit: "Rebuilds the membranes neurons rely on.",
+        },
+        {
+          label: "For women",
+          headline: "Is Forgetting Words Mid-Sentence a Sign of Perimenopause?",
+          body: "Often, yes, and not dementia. Oestrogen plays a direct role in word retrieval and memory, and the drop during perimenopause is one of the most common, least-talked-about causes of this. Lemon Balm, NAC and high-dose Vitamin C support the calm and clarity that hormonal fog disrupts.",
+          ingredientsEyebrow: "The women's stack",
+          ingredients: [
+            {
+              icon: "🍋",
+              name: "Lemon Balm",
+              benefit:
+                "Shown in clinical trials to significantly improve quality of life for menopausal women with sleep disturbances.",
+              citation: "PMID: 33465795",
+            },
+            {
+              icon: "⚙️",
+              name: "Acetyl-L-Carnitine",
+              benefit:
+                "Clinically shown to reduce mental fatigue and support cognitive function in older women.",
+              citation: "PMID: 17658628",
+            },
+            {
+              icon: "🧪",
+              name: "NAC + Glutathione",
+              benefit:
+                "NAC is the precursor to glutathione; together they make the best detoxifying combination possible.",
+            },
+            {
+              icon: "🍊",
+              name: "Vitamin C (high-dose)",
+              benefit: "An antioxidant shown in clinical trials to help ease anxiety among women.",
+              citation: "PMID: 26353411",
+            },
+          ],
+          ingredientsFooter: "All in two daily 30ml shots.",
+          testimonial: {
+            quote:
+              "I am a patient of Dr Tina Peers, a menopause specialist, who told me to take NAC in this formula. I don't get hot flushes or a red face anymore. I think that says it all.",
+            name: "Rosalind",
+            detail: "Verified customer",
           },
-          {
-            icon: "🩸",
-            name: "Ginkgo Biloba",
-            benefit: "Supports cerebral circulation and attention.",
-          },
-          {
-            icon: "🫐",
-            name: "Bilberry",
-            benefit: "Anthocyanins shown to support recall.",
-          },
-        ],
-        footer: "All in two daily 30ml shots.",
-      },
+        },
+      ],
     },
     {
       kind: "statsBand",
       eyebrow: "CLINICALLY PROVEN",
       stats: [
         { value: "+14.86%", label: "Sharper thinking vs placebo" },
-        { value: "80%", label: "Improved cognitive scores" },
         { value: "+19.3%", label: "Sharper focus in pro athletes" },
-        { value: "75%", label: "Improved in under 3 weeks" },
+        { value: "82%", label: "Improved within 2 hours of a single dose" },
+        { value: "80%", label: "Improved cognitive scores" },
       ],
       footnote:
-        "*From CONKA cognitive trials, including a 6-week randomised double-blind placebo-controlled trial with 29 professional rugby players.",
+        "*From CONKA cognitive trials, including a 6-week randomised double-blind placebo-controlled trial with professional rugby players, plus internal testing on male and female athletes.",
     },
     {
       kind: "reason",
       n: 3,
       tag: "LONGEVITY",
-      headline: "Cognitive Protection for the Long Term",
-      body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support covers the vitals, helping protect your cognitive function for the years ahead, safely and without stimulants.",
-      // The protection stack: antioxidants and neuroprotective actives
-      asset: {
-        kind: "ingredientGrid",
-        eyebrow: "Ticks the brain-health boxes",
-        items: [
-          {
-            icon: "🧬",
-            name: "Turmeric (Longvida)",
-            benefit: "Protects neurons and supports memory.",
-          },
-          {
-            icon: "💊",
-            name: "Vitamin B12",
-            benefit: "Supports healthy brain structure with age.",
-          },
-          {
-            icon: "🛡",
-            name: "Glutathione",
-            benefit: "The body's master antioxidant.",
-          },
-          {
-            icon: "🍊",
-            name: "Vitamin C",
-            benefit: "Concentrated in the brain to defend cells.",
-          },
-          {
-            icon: "♻️",
-            name: "Alpha Lipoic Acid",
-            benefit: "Regenerates vitamins C, E and glutathione.",
-          },
-          {
-            icon: "🌊",
-            name: "N-Acetyl Cysteine",
-            benefit: "Replenishes the body's glutathione.",
-          },
-        ],
-        footer: "All in two daily 30ml shots.",
-      },
+      headline: "How to Protect Your Brain As You Age",
+      body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support covers the vitals, helping protect your cognitive function for the years ahead, safely and without stimulants. Published, peer-reviewed research from Durham University found the combination of ingredients in Flow significantly extended lifespan and reduced oxidative stress in an ageing model.",
+      chips: ["+15 human-year equivalent in an ageing study"],
+      citation:
+        "Alanazi et al., Journal of Pharmacy and Pharmacology, 2025 (Durham University)",
+      asset: { kind: "researchBacked" },
     },
     {
       kind: "reason",
       n: 4,
-      tag: "TRACK IT",
-      headline: "Measurable Results You Can Actually Track",
-      body: "Most supplements make big claims with zero proof. With the companion app test you watch your focus and memory change in hard numbers, and customers report up to a 15% measured boost in brain function, tracked over time.",
+      tag: "MEASURE IT",
+      headline: "Do Brain-Training Apps Actually Work?",
+      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is different. It's built around CognICA, an FDA-cleared, CE-marked cognitive assessment developed by Cambridge University and Cognetivity Neurosciences and used in clinical settings to help diagnose dementia. It's the same test, not a gamified imitation, so when you see your score move, it's measuring something real.",
+      // App cognitive-score count-up card; "Do you see an animal?" GIF is a
+      // Phase 5 asset swap. Press outlets render via pressMarquee (trust zone).
       asset: { kind: "measureTile" },
     },
     {
-      // Hand-cropped excerpts (memory / clarity theme)
+      // Age-matched customer voices for the persona
       kind: "reviewStrip",
       eyebrow: "What Customers Say",
       ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
       reviews: [
+        {
+          headline: "Measure it to manage it",
+          quote:
+            "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
+          name: "Anthony S.",
+          detail: "Verified · Age 61",
+        },
+        {
+          headline: "Clarity, energy and better sleep",
+          quote:
+            "I noticed a clarity and energy and have benefited from that. My sleep wasn't great after I retired, but now I seem to be sleeping well.",
+          name: "Deborough L.",
+          detail: "Verified · Age 62",
+        },
         {
           headline: "Sharper recall, clearer words",
           quote:
@@ -182,38 +221,25 @@ export const brainAgeingListicle: ListicleConfig = {
           name: "Millie H.",
           detail: "Verified · Flow + Clear",
         },
-        {
-          headline: "The fog lifts fast",
-          quote:
-            "About three minutes in, my brain fog has dissipated and I'm locked into my work.",
-          name: "Sam T.",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Measurable improvements",
-          quote:
-            "After trying both Flow and Clear, I am noticing measurable improvements.",
-          name: "Ankita K.",
-          detail: "Verified · Flow + Clear",
-        },
       ],
     },
     {
       kind: "reason",
       n: 5,
-      tag: "STAMINA",
-      headline: "Mental Energy That Defeats Fatigue",
-      body: "Complicated routines kill consistency, so this is simple: two small daily shots. Rich in essential vitamins, they support steady daily function and keep your brain feeling less tired from morning to night, without the midday slump.",
+      tag: "THE 2PM SLUMP",
+      headline: "What Causes the Afternoon Energy Slump?",
+      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. The components in CONKA's shots have been shown to deliver 18.1% faster mental processing speed than caffeine, and CONKA is completely caffeine-free.",
+      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
       // Day-energy curve: afternoon slump without, steady with CONKA
       asset: { kind: "dayEnergyCurve" },
     },
     {
       kind: "reason",
       n: 6,
-      tag: "AUTHORITY",
-      headline: "Stable Cognition Backed by Real Proof",
-      body: "Proof matters more than hype. This isn't a generic vitamin, it's a tailored, science-backed formula built to keep cognitive performance stable, so you get reliable, long-lasting support you can actually rely on.",
-      asset: { kind: "researchBacked" },
+      tag: "REAL PROOF",
+      headline: "Which Brain Supplements Are Actually Proven to Work?",
+      body: "Proof matters. Most energy and focus supplements are hiding a simple trick: caffeine. It works briefly, then comes the crash, the jitters, the dependency. By the original definition of the word nootropic, a substance with side effects like that isn't even a true nootropic, it's just a stimulant. The only real way to know if a supplement works is randomised controlled trial evidence. Not a testimonial, not a before-and-after photo, a trial. CONKA has done it over 20 times, and if that's still not enough, we built something most brands never will: a way to measure it yourself.",
+      asset: { kind: "scoreByGroup" },
     },
   ],
   bridge: {
@@ -231,8 +257,11 @@ export const brainAgeingListicle: ListicleConfig = {
   },
   reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
-  // cognitive-decline, medication, timeline, sleep, app-optional, guarantee.
+  // dementia, mid-sentence, cognitive-decline, medication, timeline, sleep,
+  // app-optional, guarantee. The first two are new canonical entries.
   faqIds: [
+    "forgetting-words-dementia",
+    "forget-words-midsentence",
     "cognitive-decline",
     "medication",
     "results",
