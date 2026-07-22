@@ -82,11 +82,13 @@ function getLineSavings(item: CartLine): {
   const displayNum = parseFloat(getLineDisplayPrice(item).amount);
   const otpUnit = getOfferPricing(offer.product, "monthly-otp").price;
   const compareAt = offer.cadence === "quarterly-sub" ? otpUnit * 3 : otpUnit;
-  if (!(compareAt > displayNum)) return null;
+  const discountPct = Math.round((1 - displayNum / compareAt) * 100);
+  // No saving to show (equal/higher price, or a gap that rounds to 0%).
+  if (compareAt <= displayNum || discountPct < 1) return null;
 
   return {
     compareAt,
-    discountPct: Math.round((1 - displayNum / compareAt) * 100),
+    discountPct,
     savingsTotal: (compareAt - displayNum) * item.quantity,
   };
 }
@@ -224,9 +226,7 @@ export default function CartDrawer() {
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="w-6 h-6 border border-black/15 border-t-black/50 rounded-full animate-spin mx-auto mb-3" />
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/35">
-                  Loading...
-                </p>
+                <p className="text-sm text-black/50">Loading...</p>
               </div>
             </div>
           ) : cartItems.length === 0 ? (
