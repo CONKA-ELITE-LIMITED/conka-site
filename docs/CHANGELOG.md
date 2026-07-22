@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | Rewrote /go/why-conka listicle copy from Magic Mind placeholder to CONKA (ingredients, athletes, and proof from source data)
 - **2026-07-22** | Added general MM-style listicle at /go/why-conka (simple layout variant, ProductGrid buy box, MM reference copy)
 - **2026-07-22** | UGC testimonial marquee upgraded to three rows with five new customer stills
 - **2026-07-22** | Refactored the cart app-gift into a compact strip and gave the nav cart a filled state when it has items
