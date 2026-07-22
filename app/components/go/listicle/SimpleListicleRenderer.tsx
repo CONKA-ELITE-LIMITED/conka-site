@@ -39,7 +39,7 @@ function SimpleHero({ hero }: { hero: MmListicleConfig["hero"] }) {
       className="px-5 pt-10 md:px-[5vw] md:pt-16"
       style={{ background: BONE, color: "#111" }}
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-5xl">
         <h1 className="text-[2.25rem] font-bold leading-[1.08] text-black md:text-[3.5rem] md:leading-[1.05]">
           {hero.headline}
         </h1>
@@ -92,7 +92,7 @@ function SimpleReason({
     </>
   );
   return (
-    <article className="py-10 md:grid md:grid-cols-[minmax(0,440px)_minmax(0,1fr)] md:items-center md:gap-14 md:py-16">
+    <article className="py-10 md:grid md:grid-cols-[minmax(0,400px)_minmax(0,1fr)] md:items-center md:gap-14 md:py-16">
       {/* Heading above the image — mobile only */}
       <h3 className="mb-4 text-[22px] font-bold leading-[1.2] text-black md:hidden">
         {heading}
@@ -111,7 +111,7 @@ function SimpleReason({
             className={
               block.asset.fit === "contain" ? "object-contain" : "object-cover"
             }
-            sizes="(max-width: 768px) 100vw, 440px"
+            sizes="(max-width: 768px) 100vw, 400px"
           />
         </div>
       </div>
@@ -121,7 +121,7 @@ function SimpleReason({
         <h3 className="mb-4 hidden text-[28px] font-bold leading-[1.15] text-black md:block">
           {heading}
         </h3>
-        <p className="max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black">
+        <p className="max-w-[30rem] text-[15px] font-semibold leading-relaxed text-black">
           {block.body}
         </p>
         {block.accentLine ? (
@@ -201,7 +201,7 @@ export default function SimpleListicleRenderer({
         className="px-5 pb-8 md:px-[5vw]"
         style={{ background: BONE, color: "#111" }}
       >
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-5xl">
           {config.body.map((block, i) => {
             if (block.kind === "reason")
               return <SimpleReason key={i} block={block} />;
@@ -226,7 +226,7 @@ export default function SimpleListicleRenderer({
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: TINT, color: "#111" }}
       >
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-5xl">
           <ProductGrid />
         </div>
       </section>
