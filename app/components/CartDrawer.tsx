@@ -3,6 +3,10 @@
 import { useCart } from "@/app/context/CartContext";
 import { CartLine } from "@/app/lib/shopify";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { NAV_PRODUCTS } from "./navigation/navConfig";
+import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
 import { getCartUpsell } from "@/app/lib/cartUpsell";
@@ -115,6 +119,7 @@ function LineItemPrice({
 }
 
 export default function CartDrawer() {
+  const router = useRouter();
   const {
     cart,
     loading,
@@ -168,37 +173,53 @@ export default function CartDrawer() {
       <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white border-l border-black/12 flex flex-col">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
-          <div className="flex items-baseline gap-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
-              Cart
-            </p>
-            {itemCount > 0 && (
-              <span className="font-mono text-[10px] tabular-nums font-bold text-[#1B2757]">
-                {String(itemCount).padStart(2, "0")} {itemCount === 1 ? "item" : "items"}
-              </span>
-            )}
-          </div>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
+          <h2 className="text-xl font-bold tracking-tight text-black">
+            Cart ({itemCount})
+          </h2>
           <button
             onClick={closeCart}
-            className="flex items-center justify-center w-8 h-8 text-black/40 hover:text-black transition-colors"
+            className="flex items-center justify-center w-10 h-10 -mr-2 text-black hover:text-black/50 transition-colors"
             aria-label="Close cart"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="26"
+              height="26"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
+        </div>
+
+        {/* Free shipping banner */}
+        <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#eef0f5] border-b border-black/5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#1B2757"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M1 3h15v13H1z" />
+            <path d="M16 8h4l3 3v5h-7V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#1B2757]">
+            Free shipping on UK subscriptions
+          </span>
         </div>
 
         {/* Cart content */}
@@ -213,30 +234,43 @@ export default function CartDrawer() {
               </div>
             </div>
           ) : cartItems.length === 0 ? (
-            <div className="flex items-center justify-center h-full p-4 text-center">
-              <div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="square"
-                  strokeLinejoin="miter"
-                  className="mx-auto mb-4 text-black/20"
-                >
-                  <circle cx="9" cy="21" r="1" />
-                  <circle cx="20" cy="21" r="1" />
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                </svg>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
-                  Your cart is empty
-                </p>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/25 tabular-nums mt-2">
-                  Add something to get started
-                </p>
+            <div className="px-5 py-8">
+              <h3 className="text-center text-3xl font-bold tracking-tight text-black">
+                Your cart is empty
+              </h3>
+              <p className="mx-auto mt-3 max-w-xs text-center text-sm leading-relaxed text-black">
+                Continue shopping or browse the products below to add items to
+                your cart.
+              </p>
+
+              <div className="mt-7 grid grid-cols-2 gap-3">
+                {NAV_PRODUCTS.map((product) => (
+                  <Link
+                    key={product.href}
+                    href={product.href}
+                    onClick={closeCart}
+                    aria-label={product.alt}
+                    className="group block overflow-hidden rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
+                  >
+                    <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
+                      <Image
+                        src={product.image}
+                        alt={product.alt}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        sizes="(max-width: 448px) 50vw, 210px"
+                      />
+                    </div>
+                    <div className="px-3 py-2.5 text-center">
+                      <p className="text-sm font-bold leading-tight text-black">
+                        {product.name}
+                      </p>
+                      <p className="mt-1 text-[11px] leading-snug text-black/55">
+                        {product.tagline}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           ) : (
@@ -410,6 +444,18 @@ export default function CartDrawer() {
 
           {/* Checkout CTA */}
           <div className="px-4 pb-4">
+            {cartItems.length === 0 ? (
+              <ConkaCTAButton
+                meta={null}
+                className="w-full max-w-none justify-center"
+                onClick={() => {
+                  closeCart();
+                  router.push("/conka-both");
+                }}
+              >
+                Shop CONKA
+              </ConkaCTAButton>
+            ) : (
             <a
               href={cart?.checkoutUrl || "#"}
               onClick={(e) => {
@@ -442,6 +488,7 @@ export default function CartDrawer() {
                 "Checkout →"
               )}
             </a>
+            )}
           </div>
         </div>
       </div>
