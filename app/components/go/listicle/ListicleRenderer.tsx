@@ -10,6 +10,7 @@ import type {
 } from "@/app/lib/landings/listicle-types";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
+import ProductGrid from "@/app/components/home/ProductGrid";
 import ListiclePurchase from "./ListiclePurchase";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
@@ -382,8 +383,66 @@ function ReviewStrip({
   );
 }
 
-function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }) {
+/**
+ * Simple (Magic Mind) reason layout. Desktop: image left, heading + body
+ * right, uniform (no alternating). Mobile: heading then image then body,
+ * stacked. The heading is rendered twice and toggled per breakpoint (the MM
+ * approach) so its position differs between mobile and desktop without
+ * duplicating the block. No mono tag or chips, for the clean editorial look.
+ */
+function SimpleReason({
+  block,
+}: {
+  block: Extract<ListicleBodyBlock, { kind: "reason" }>;
+}) {
+  const heading = (
+    <>
+      <span className="tabular-nums">{block.n}.</span> {block.headline}
+    </>
+  );
+  return (
+    <article className="py-10 md:grid md:grid-cols-2 md:items-center md:gap-14 md:py-16">
+      {/* Heading above the image — mobile only */}
+      <h3 className="mb-5 text-[26px] font-bold leading-[1.15] text-black md:hidden">
+        {heading}
+      </h3>
+
+      {/* Image / asset */}
+      <div className="md:order-1">
+        <AssetBlock asset={block.asset} />
+      </div>
+
+      {/* Text column: heading (desktop only) + body */}
+      <div className="mt-6 md:order-2 md:mt-0">
+        <h3 className="mb-5 hidden text-[38px] font-bold leading-[1.1] text-black md:block">
+          {heading}
+        </h3>
+        <p className="max-w-[36rem] text-[16px] leading-relaxed text-black/80 md:text-[17px]">
+          {block.body}
+        </p>
+        {block.citation ? (
+          <CitationLine
+            citation={block.citation}
+            href={block.citationHref}
+            className="mt-4"
+          />
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
+function BodyBlock({
+  block,
+  index,
+  simple,
+}: {
+  block: ListicleBodyBlock;
+  index: number;
+  simple?: boolean;
+}) {
   if (block.kind === "reason") {
+    if (simple) return <SimpleReason block={block} />;
     const mediaFirst = index % 2 === 1;
     return (
       <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
@@ -460,6 +519,35 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
         eyebrow={block.eyebrow}
         ratingSummary={block.ratingSummary}
       />
+    );
+  }
+
+  if (block.kind === "buyBox") {
+    // Mid-list buy-box reprise (the reference repeats the offer after reason 5).
+    // ProductGrid brings its own product heading; render an optional lead-in
+    // above it. Tinted panel lifts it off the reasons flow.
+    return (
+      <div
+        className="my-12 rounded-[24px] px-4 py-10 md:px-8 md:py-12"
+        style={{ background: "var(--color-neuro-blue-light, #eeeff2)" }}
+      >
+        {block.headline ? (
+          <div className="mb-6 text-center">
+            <h3
+              className="text-[26px] font-semibold leading-tight text-black md:text-[32px]"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {block.headline}
+            </h3>
+            {block.subline ? (
+              <p className="mx-auto mt-2 max-w-xl text-[15px] text-black/60">
+                {block.subline}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+        <ProductGrid />
+      </div>
     );
   }
 
@@ -648,7 +736,11 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         <div className="mx-auto max-w-7xl">
           {config.body.map((block, i) => (
             <Fragment key={i}>
-              <BodyBlock block={block} index={i} />
+              <BodyBlock
+                block={block}
+                index={i}
+                simple={config.layout === "simple"}
+              />
               {/* World's-largest laurel badge, relocated out of the hero to sit
                   under point 1 so the hero title + CTA sit higher. */}
               {i === 0 && config.hero.laurel ? (
@@ -687,21 +779,35 @@ export default function ListicleRenderer({ config }: { config: ListicleConfig })
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
       >
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-8">
-            <h2
-              className="text-3xl font-semibold leading-tight text-black md:text-4xl"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              {config.product.headline}
-            </h2>
-            {config.product.subline ? (
-              <p className="mt-3 max-w-2xl text-base text-black/60">
-                {config.product.subline}
-              </p>
-            ) : null}
-          </div>
-          <ListiclePurchase defaultSingle={config.product.productHeroId} />
+        <div
+          className={
+            config.product.component === "grid"
+              ? "mx-auto max-w-7xl"
+              : "mx-auto max-w-5xl"
+          }
+        >
+          {config.product.component === "grid" ? (
+            // ProductGrid owns its own product heading, so we skip the config
+            // headline here to avoid a double title.
+            <ProductGrid />
+          ) : (
+            <>
+              <div className="mb-8">
+                <h2
+                  className="text-3xl font-semibold leading-tight text-black md:text-4xl"
+                  style={{ letterSpacing: "-0.02em" }}
+                >
+                  {config.product.headline}
+                </h2>
+                {config.product.subline ? (
+                  <p className="mt-3 max-w-2xl text-base text-black/60">
+                    {config.product.subline}
+                  </p>
+                ) : null}
+              </div>
+              <ListiclePurchase defaultSingle={config.product.productHeroId} />
+            </>
+          )}
         </div>
       </section>
 

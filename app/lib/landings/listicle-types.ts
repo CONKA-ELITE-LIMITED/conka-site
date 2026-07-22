@@ -133,6 +133,10 @@ export type ListicleBodyBlock =
       name: string;
       detail?: string;
     }
+  /** Mid-list buy-box reprise: renders the shared home ProductGrid inline
+   *  between reasons (the reference repeats the buy box after reason 5). The
+   *  end-of-page product zone stays the #product anchor. */
+  | { kind: "buyBox"; headline?: string; subline?: string }
   /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
   | {
       kind: "symptomExplainer";
@@ -193,6 +197,14 @@ export interface ListicleConfig {
   /** Ad persona this page targets; tagged on every analytics event */
   persona: string;
   format: "listicle";
+  /**
+   * Reason-block layout. "rich" (default) = numbered navy heading, mono tag,
+   * chips and data-viz asset in an alternating two-column grid (the persona
+   * pages). "simple" = the Magic Mind editorial pattern: image left / text
+   * right on desktop, heading then image then body stacked on mobile, no tag
+   * or chips. Only affects how `reason` blocks render.
+   */
+  layout?: "rich" | "simple";
   /** Page title and Meta content_name */
   title: string;
   hero: {
@@ -228,6 +240,9 @@ export interface ListicleConfig {
     productHeroId?: ProductHeroId;
     /** Persona-specific "who it's for" copy for the buy-box accordion */
     whoItsFor?: string[];
+    /** Buy-box component. "purchase" (default) = the listicle ProductHero buy
+     *  box; "grid" = the home ProductGrid three-card layout (MM-style). */
+    component?: "purchase" | "grid";
   };
   /** Renders the shared AthleteCredibilityCarousel (own header/content) */
   trustCarousel?: boolean;
