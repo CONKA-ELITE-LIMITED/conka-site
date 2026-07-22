@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | Constrained the cart Subscribe & Save button to the line item text column
 - **2026-07-22** | Made the cart Subscribe & Save upsell per-product and tidied line item and footer copy
 - **2026-07-22** | Restyled the filled cart line item, upsell button, and checkout footer to a cleaner DTC layout
 - **2026-07-22** | Enlarged the empty-cart heading and swapped tile descriptions for time-of-day badges

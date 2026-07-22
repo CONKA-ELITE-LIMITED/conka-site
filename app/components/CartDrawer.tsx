@@ -396,24 +396,24 @@ export default function CartDrawer() {
                           </svg>
                         </button>
                       </div>
+
+                      {/* Per-line Subscribe & Save (one-time lines only) */}
+                      {(() => {
+                        const lineOffer = getLineSubscribeOffer(item);
+                        return lineOffer ? (
+                          <div className="mt-3">
+                            <CartUpsellStrip
+                              offer={lineOffer}
+                              currentLineId={item.id}
+                              originalVariantId={item.merchandise.id}
+                              originalSellingPlanId={item.sellingPlanAllocation?.sellingPlan.id}
+                              originalQuantity={item.quantity}
+                            />
+                          </div>
+                        ) : null;
+                      })()}
                     </div>
                   </div>
-
-                  {/* Per-line Subscribe & Save (one-time lines only) */}
-                  {(() => {
-                    const lineOffer = getLineSubscribeOffer(item);
-                    return lineOffer ? (
-                      <div className="mt-3">
-                        <CartUpsellStrip
-                          offer={lineOffer}
-                          currentLineId={item.id}
-                          originalVariantId={item.merchandise.id}
-                          originalSellingPlanId={item.sellingPlanAllocation?.sellingPlan.id}
-                          originalQuantity={item.quantity}
-                        />
-                      </div>
-                    ) : null;
-                  })()}
                 </div>
               ))}
               <CartAppGift />
