@@ -1,8 +1,10 @@
 # CONKA Design System
 
 > Single source of truth for all visual design decisions.
-> Token implementation: `app/brand-base.css` (layers 1-4 in one file).
-> `app/premium-base.css` is now a stub — all legacy classes live in brand-base.css Layer 4.
+> Token implementation: `app/brand-base.css` — the single stylesheet (Layers 1, 2, 2.5, 3).
+> The former `app/premium-base.css` ("Soft-Tech Luxury") has been **deleted**; its still-referenced tokens were folded into `brand-base.css` Layer 3 as `@deprecated`.
+>
+> **Direction:** the forward language is **Simple DTC** (§8.5). **Clinical** (§8) is retained for evidence-dense and `/app` dark surfaces. See the per-surface authority table in §8.5.
 
 ---
 
@@ -16,6 +18,7 @@
 6. [Section and component architecture](#6-section-and-component-architecture)
 7. [Mobile](#7-mobile-74-of-traffic)
 8. [Clinical Aesthetic](#8-clinical-aesthetic)
+8.5. [Simple DTC (forward direction)](#85-simple-dtc-forward-direction)
 9. [Landing Page Visual System](#9-landing-page-visual-system)
 10. [App Dark Aesthetic](#10-app-dark-aesthetic)
 11. [Migration from legacy](#11-migration-from-legacy)
@@ -80,6 +83,7 @@
 | Tint | `--brand-tint` | `#F4F5F8` | Soft zone break (~96% lightness). One tint only. |
 | UI Neutral | `--brand-neutral` | `#CCCCCA` | Dividers and borders only. Not for section backgrounds. |
 | Neuro Blue | `--brand-accent` | `#4058BB` | Primary CTA button colour. Clinical scope overrides to `#1B2757`. |
+| Savings / Positive | `--brand-positive` | `#1A7F4F` | Sanctioned system-wide accent for savings %, "+N free" badges, cart Savings row. Always at `/10` tint bg + solid text (`bg-[#1a7f4f]/10 text-[#1a7f4f]`). See §8.5. |
 | Deep Grey | `--brand-deep-grey` | `#212121` | Use sparingly. |
 | Deep Black | `--brand-black` | `#000000` | Primary text, footer. |
 
@@ -126,7 +130,7 @@ The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-ca
 
 ### The rule: page orchestrates, component is content-only
 
-**Page owns:** `<section>` wrapper with `brand-section` (or `premium-section-luxury` on legacy pages), background class, track wrapper (`brand-track`) for content alignment, and `aria-label` for accessibility.
+**Page owns:** `<section>` wrapper with `brand-section`, background class, track wrapper (`brand-track`) for content alignment, and `aria-label` for accessibility.
 
 **Component owns:** content only — no `<section>`, no root `max-w-*`, no `px-*`. Internal layout (grids, stacks, gaps), card/surface styling using brand tokens, and typography — setting text colour explicitly when the surface differs from the section background.
 
@@ -345,6 +349,75 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 ---
 
+## 8.5. Simple DTC (forward direction)
+
+> **The forward language.** Simple DTC is where new acquisition work is heading. It reads like a modern consumer supplement brand (Magic Mind, Seed): rounded, confident, quietly branded, minimal chrome. It is built from the **Layer 1 base tokens** in `brand-base.css` — it does **not** apply `.brand-clinical`.
+>
+> Reference implementations (shipped, draw the grammar from these): the **cart drawer + `CartAppGift` + `CartUpsellStrip`** (`app/components/CartDrawer.tsx` and siblings), the **nav cart/account states** (`app/components/navigation/NavigationDesktop.tsx` / `NavigationMobile.tsx`), and **`ProductHeroV2` / `ProductHeroMobileV2`** with `HeroBadges` on `/conka-flow`.
+
+### Lineage: premium → clinical → Simple DTC
+
+| Stage | What it was | Why we left it |
+|-------|-------------|----------------|
+| **Premium** ("Soft-Tech Luxury") | Bone canvas, Poppins, neuro-blue gradients, centred headers, 40px pills. `premium-base.css` (deleted). | Over-styled, generic-luxury, gradient-heavy. |
+| **Clinical** (§8) | Zero radius, mono/uppercase micro-labels, hairline borders, navy interactive-only, no shadows, spec-sheet density. | Powerful for evidence, but too austere and busy for acquisition — reads lab-report, not consumer brand. Kept for the surfaces where data density earns it. |
+| **Simple DTC** (this section) | Rounded pills/cards, filled navy as primary/decorative, one green savings accent, light-navy tint strips, soft shadows/rings, sans by default, mono reserved for true scanned data. | The current direction. Cleaner, warmer, higher-converting on paid social. |
+
+### What Simple DTC keeps vs drops (relative to Clinical §8)
+
+**Keeps:**
+- Left-alignment by default (no centred headers).
+- Hairline borders where a divider genuinely helps (`border-black/8`–`/15`).
+- Tokenised spacing and the page-orchestrates / component-content-only architecture (§6).
+- Tight heading tracking via inline `letterSpacing: "-0.02em"` on `brand-h1`/`h2`.
+- Solid-black type as the default; opacity tiers only for genuinely secondary text.
+
+**Drops:**
+- **Zero radius.** Simple DTC is rounded — `rounded-full` for pills/buttons/nav, `rounded-lg`/`rounded-xl`/`rounded-2xl` for cards and tiles.
+- **Navy as interactive-only.** Filled navy `#1B2757` is now allowed as a **primary and decorative** fill (badges, gradient cards, icon/star fills), not just on interactive elements.
+- **The no-shadow / no-gradient rule.** Soft shadows and `ring-1` are permitted on lifted cards; soft navy-terminating gradients are permitted on decorative surfaces.
+- **The faded mono eyebrow.** Drop the `font-mono … uppercase tracking-[0.18em+]` low-opacity eyebrow / sub-line. Lead with a plain `brand-h1` + `brand-body` in solid black. Mono is **not** banned outright: it survives on compact micro-labels (time-of-day badges, "verified buyer" tags) as **solid black/near-solid**, small (`text-[9px]`), at `tracking-[0.12em]` — a scalpel, not a blanket.
+- **The grey text ramp as default.** Prefer solid `text-black`; reserve `text-black/50`–`/70` for secondary/disabled/strikethrough only.
+
+### The grammar (concrete values, from the shipped surfaces)
+
+| Element | Value | Where |
+|---------|-------|-------|
+| Pills / buttons / nav | `rounded-full` | Shop pill, cart button, discount/savings pills |
+| Cards / tiles | `rounded-lg` → `rounded-2xl` | Cart line, app-gift card, product tiles |
+| Primary navy | `#1B2757` — filled (`bg-[#1B2757] text-white`) | Shop pill, active cart button, upsell CTA, "Free!" badge |
+| Decorative navy | `#1B2757` fill / icon fill / gradient | `CartAppGift` "Free!" badge, hero rating stars, mobile social-proof gradient card |
+| Savings / positive | green `#1a7f4f` at `/10` tint bg + solid text | savings %, "+N free" badge, cart Savings row, guarantee tick (`--brand-positive`) |
+| Light-navy tint strip | `#eef0f5` (also `#eef1f8`, `#dbe0f0`→`#eef1f8` gradient) | free-shipping banner, app-gift container, hero SpecBadge |
+| Shadows / rings | soft `shadow-[0_2px_12px_rgba(0,0,0,0.08)]`, `ring-1 ring-black/5` | lifted product cards |
+| Hairlines | `border-black/8`–`/15` | list dividers, nav header, content tiles |
+| Focus ring | `focus-visible:ring-2 focus-visible:ring-[#1B2757]` | all interactive nav elements |
+| Type | solid `text-black`, sans (`--font-brand-primary`) | headings, body, most labels |
+| Mono (scalpel) | `font-mono text-[9px] uppercase tracking-[0.12em]`, solid black | time-of-day + verified-buyer micro-badges only |
+
+Prefer the `--brand-positive` token over the hard-coded `#1a7f4f` on new work; navy is still hard-coded as `#1B2757` at consumer sites (a Layer-1 navy token and a component sweep are deferred — see the plan doc).
+
+### `ConkaCTAButton` mono meta line — clinical holdover, to retire
+
+`ConkaCTAButton`'s `meta` prop renders a mono-uppercase second line — a clinical tell. On Simple DTC surfaces, **pass `meta={null}`** so the button is a clean rounded CTA with no mono sub-line. The component's mono meta styling is a to-be-simplified holdover; it is documented here as deprecated for DTC surfaces (no component change was made in the formalization ticket, SCRUM-1172).
+
+### Per-surface authority
+
+Simple DTC is added **alongside** Clinical (§8) and App-Dark (§10), not as a global replacement. Default split (adjust as surfaces convert):
+
+| Surface group | Language |
+|---------------|----------|
+| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`); landing / funnel / `/go`; top-of-funnel `/professionals` | **Simple DTC** |
+| Science / evidence-dense modules (`/science`) | **Clinical** (§8) — mono + density earn their place on dense data |
+| `/app`, `/app-insights` dark pages | **App-Dark** (§10) — clinical grammar on a dark canvas |
+| Account, subscription management, B2B order/management UIs | Clinical for now (mono data labels aid scanning); convert opportunistically |
+
+### Programme + learnings
+
+Simple DTC is being rolled out iteratively (define → seed tokens → sweep components). The rules above are the definition; the running **learnings log** (soft-card recipe, shared `DotIndicator` / `SegmentedToggle` primitives, the `mix-blend-multiply` cutout trick, native `<details>` accordions, etc.) and the phase plan live in `docs/development/featurePlans/simple-dtc-design-language.md`. Read it before a component conversion.
+
+---
+
 ## 9. Landing Page Visual System
 
 > Evidence-based decisions applied to `/start` and to be extended to other pages.
@@ -470,7 +543,7 @@ Surfaces, borders, and text on the dark canvas span a continuous ramp rather tha
 
 ### SVG dot grid
 
-`/app` and `/app-insights` both use the same dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see snippet above). The `.app-dot-grid` utility in `brand-base.css` (Layer 2.5) mirrors this pattern exactly and is available as a class drop-in (currently unused). Either is fine; do not introduce a third variant.
+`/app` and `/app-insights` both use the same dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see snippet above). Do not introduce a second variant.
 
 ### Variants (brief)
 
@@ -488,12 +561,14 @@ Surfaces, borders, and text on the dark canvas span a continuous ramp rather tha
 
 ---
 
-## 11. Migration from legacy
+## 11. Migration from legacy (complete)
 
-### What changes
+> The premium → brand migration is **done**. `app/premium-base.css` has been deleted and no `premium-*` class or `--premium-radius-*` token exists in the codebase anymore. This section is kept only as a decoder ring for anyone reading an old branch, PR, or changelog. Do not treat any `premium-*` reference as current.
 
-| Area | Legacy (`premium-base.css` / Layer 4) | New (`brand-base.css` Layer 1-2) |
-|------|---------------------------------------|----------------------------------|
+### What changed
+
+| Area | Old (`premium-base.css`, deleted) | Now (`brand-base.css`) |
+|------|-----------------------------------|------------------------|
 | Primary font | Poppins | Neue Haas Grotesk |
 | Data font | IBM Plex Mono | JetBrains Mono |
 | Card radius | 40px | 32px (0px clinical) |
@@ -504,30 +579,20 @@ Surfaces, borders, and text on the dark canvas span a continuous ramp rather tha
 | Accent | Neuro blue gradient | Single `#4058BB` (clinical: `#1B2757`) |
 | Header alignment | Centred | Left-aligned |
 
-### Class mapping
+### Class mapping (historical)
 
-| Legacy class | New class |
+| Old class (deleted) | Current class |
 |-------------|-----------|
 | `.premium-section-luxury` | `.brand-section` |
 | `.premium-track` | `.brand-track` |
 | `.premium-bg-ink` | `.brand-bg-black` |
 | `.premium-bg-bone` | `.brand-bg-white` |
-| `.premium-bg-surface` | `.brand-bg-neutral` |
-| `.premium-bg-mid` | `.brand-bg-neutral` |
+| `.premium-bg-surface` / `.premium-bg-mid` | `.brand-bg-tint` |
 | `.premium-section-heading` | `.brand-h2` |
-| `.premium-section-subtitle` | `.brand-body` |
-| `.premium-body` | `.brand-body` |
+| `.premium-section-subtitle` / `.premium-body` | `.brand-body` |
 | `.premium-body-sm` | `.brand-caption` |
 | `.premium-data` | `.brand-data` |
 | `.premium-header-group` | Remove — left-align content instead |
-
-### How to migrate a page
-
-1. Replace `premium-section-luxury` with `brand-section` and `premium-track` with `brand-track`
-2. Update section backgrounds per the class mapping
-3. Update typography classes
-4. Left-align all headers (remove `text-center` from header groups)
-5. Add `.brand-clinical` to the page root to get zero radius + navy accent
 
 ---
 
@@ -557,5 +622,5 @@ Before shipping any new section:
 | `QUALITY_STANDARDS.md` | Quality bar, reference sites, mobile mandate |
 | `MOBILE_OPTIMIZATION.md` | Mobile component patterns, split architecture |
 | `app/brand-base.css` | Token implementation (all layers) |
-| `app/premium-base.css` | Stub only — classes now in brand-base.css Layer 4 |
+| `docs/development/featurePlans/simple-dtc-design-language.md` | Simple DTC programme — rules, learnings log, phases |
 | `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` | Active site strategy |
