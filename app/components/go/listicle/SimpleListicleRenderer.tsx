@@ -123,6 +123,14 @@ function SimpleReason({
         <p className="max-w-[36rem] text-[15px] leading-relaxed text-black">
           {block.body}
         </p>
+        {block.accentLine ? (
+          <p
+            className="mt-3 max-w-[36rem] text-[15px] font-semibold leading-relaxed"
+            style={{ color: "#1a7f4f" }}
+          >
+            {block.accentLine}
+          </p>
+        ) : null}
         {block.citation ? (
           <CitationLine
             citation={block.citation}

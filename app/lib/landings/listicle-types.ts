@@ -214,6 +214,9 @@ export type MmBodyBlock =
       n: number;
       headline: string;
       body: string;
+      /** Optional accented line under the body (e.g. a highlighted offer),
+       *  rendered in the savings-green accent to stand apart from the body. */
+      accentLine?: string;
       /** Optional source line under the body */
       citation?: string;
       citationHref?: string;

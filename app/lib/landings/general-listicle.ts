@@ -59,7 +59,7 @@ export const generalListicle: ListicleConfig = {
       kind: "reason",
       n: 3,
       headline: "Master your stress response",
-      body: "Build real emotional resilience with CONKA Flow's adaptogenic complex. Ashwagandha and Rhodiola rosea work synergistically to regulate cortisol and support neurotransmitter balance. In one clinical study, participants taking Ashwagandha saw stress scores fall by more than half and serum cortisol drop significantly. You respond to pressure instead of reacting to it.",
+      body: "Experience newfound emotional resilience with our advanced adaptogenic complex. Premium Ashwagandha and Rhodiola rosea work synergistically to regulate cortisol levels while supporting optimal neurotransmitter balance. The result? Enhanced stress adaptation and improved emotional regulation when you need it most.",
       asset: {
         kind: "image",
         src: "/lifestyle/ConkaAppYoga.jpg",
@@ -72,7 +72,7 @@ export const generalListicle: ListicleConfig = {
       kind: "reason",
       n: 4,
       headline: "Results IMPROVE with time (not diminish)",
-      body: "Unlike caffeine, CONKA's benefits build over time. On day one you feel sharper focus and steady energy with no crash. By week two, adaptogens like Ashwagandha reach full strength and stress rolls off faster. By day 30 your baseline sits measurably higher. Across 150+ tested users and more than 5,000 cognitive tests, the average improvement was nearly 29%, and you can track your own in the CONKA app.",
+      body: "Unlike traditional stimulants, CONKA's benefits amplify over time. Our proprietary blend of Ashwagandha, Turmeric, and Lemon Balm supports neuroplasticity and long-term cognitive enhancement. Regular use strengthens memory, sharpens focus, and builds lasting stress resilience, creating compounding improvements in your mental performance.",
       asset: {
         kind: "image",
         src: "/lifestyle/CreationOfConka.jpg",
@@ -104,7 +104,7 @@ export const generalListicle: ListicleConfig = {
       kind: "reason",
       n: 6,
       headline: "You'll sleep better!",
-      body: "Break free from the caffeine cycle. CONKA is completely caffeine-free, and Flow's cortisol-regulating Ashwagandha supports your natural sleep-wake rhythm. In a peer-reviewed study, participants taking Ashwagandha reported meaningfully better sleep quality. Deeper, more restorative rest, with no caffeine dependency or morning brain fog.",
+      body: "Break free from the caffeine cycle. CONKA is completely caffeine-free, and Flow's cortisol-regulating Ashwagandha supports your natural sleep-wake rhythm. Experience deeper, more restorative sleep and wake up refreshed, no more morning brain fog or caffeine dependency.",
       asset: {
         kind: "image",
         src: "/lifestyle/clear/ClearClose.jpg",
@@ -117,7 +117,9 @@ export const generalListicle: ListicleConfig = {
       kind: "reason",
       n: 7,
       headline: "Your bank account will thank you",
-      body: "Whether you complement or replace your coffee, CONKA removes the need for expensive afternoon pick-me-ups. Flow gives you sustained, calm focus through the morning, and Clear cuts the afternoon fog, all caffeine-free. On subscription it works out cheaper per day than the coffee it tends to replace.",
+      body: "Whether you complement or replace your coffee, CONKA removes the need for expensive afternoon pick-me-ups. Flow gives you sustained, calm focus through the morning, and Clear cuts the afternoon fog, all caffeine-free.",
+      accentLine:
+        "Plus, take advantage of our limited-time offer to access premium cognitive enhancement at an unmatched value.",
       asset: {
         kind: "image",
         src: "/lifestyle/flow/FlowDrink.jpg",
@@ -166,10 +168,8 @@ export const generalListicle: ListicleConfig = {
       },
     },
   ],
-  logoMarquee: true,
-  trustCarousel: true,
-  athleteTestimonials: true,
-  reviewsCarousel: true,
+  // Trailing trust/review sections intentionally omitted: the page ends the 10
+  // reasons on the product buy box + FAQ, no logo/athlete/review tail.
   // Canonical, non-persona FAQ ids (resolved in the renderer; unknown id fails
   // the build). Broad-audience set: what makes it different, caffeine, results
   // timeline, how to take it, guarantee, delivery.
