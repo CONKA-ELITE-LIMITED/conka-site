@@ -54,11 +54,18 @@ Build shared components only for what recurs across two or more listicles. Build
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Shared template foundation (citations + press marquee reuse) | Not started |
+| 1 | Shared template foundation (citations + press marquee reuse) | Complete |
 | 2 | Productivity listicle rewrite | Not started |
-| 3 | ADHD listicle rewrite (+ bespoke symptom explainer) | Not started |
-| 4 | Brain Ageing listicle rewrite (+ bespoke male/female toggle) | Not started |
+| 3 | ADHD listicle rewrite (+ bespoke symptom explainer, + ADHD FAQ entries) | Not started |
+| 4 | Brain Ageing listicle rewrite (+ bespoke male/female toggle, + Brain Ageing FAQ entries) | Not started |
 | 5 | Asset finalisation + chart honesty parameterisation | Future |
+
+> **Phase 1 note (build):** the FAQ task was moved out of Phase 1 into the
+> respective persona rewrites (Phases 3 and 4). Adding canonical FAQ entries
+> needs no shared foundation code (the `faqIds` mechanism already resolves),
+> the ADHD FAQ copy was not supplied yet, and the entries belong with each
+> rewrite. Phase 1 shipped the two genuine code capabilities: citations and the
+> press marquee.
 
 Each phase is independently shippable via Vercel preview.
 
@@ -70,9 +77,14 @@ Each phase is independently shippable via Vercel preview.
 2. **Press "As Published On" marquee** - Medium
    - What: make `LogoMarquee` data-driven (heading + logo set as props) so it can render either the existing partner logos or a press-logo set. Add a config flag/field to opt a listicle into the press variant. Placeholder logos.
    - Files: `app/components/landing/LogoMarquee.tsx`, `listicle-types.ts`, `ListicleRenderer.tsx`, `public/lander/press/` (placeholders)
-3. **Add persona FAQ entries to canonical source** - Small
-   - What: add the ADHD and Brain Ageing Q&As to `app/lib/faqContent.ts` so they can be referenced by `faqIds`. Follow the existing structure and claims-anchor conventions.
-   - Files: `app/lib/faqContent.ts`
+3. ~~Add persona FAQ entries to canonical source~~ - **Moved to Phases 3 and 4.** No shared code is required (the `faqIds` mechanism already resolves against `app/lib/faqContent.ts`), so each persona's FAQ entries are added alongside its rewrite, following the existing structure and claims-anchor conventions.
+
+**Phase 1 delivered:**
+- `app/components/landing/CitationLine.tsx` (new): small-print PMID/DOI/PMC source line, optional link.
+- `IngredientGrid` items take an optional `citation` (rendered under each tile).
+- `reason` blocks take optional `citation` + `citationHref` (rendered under the body).
+- `LogoMarquee` parameterised (`heading`, `logos`); items with no `src` render as text wordmarks. New `PRESS_LOGOS` export (text placeholders for the "As Published On:" outlets).
+- New config flag `pressMarquee?: boolean`; renders the press marquee in the trust zone (Zone 4). Placement can move inline per persona later.
 
 ### Phase 2: Productivity listicle rewrite
 

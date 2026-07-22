@@ -58,7 +58,13 @@ export type ListicleAsset =
   | {
       kind: "ingredientGrid";
       eyebrow?: string;
-      items: { icon: string; name: string; benefit: string }[];
+      items: {
+        icon: string;
+        name: string;
+        benefit: string;
+        /** Optional source line under the tile, e.g. "PMID: 11081987" */
+        citation?: string;
+      }[];
       footer?: string;
     }
   | {
@@ -98,6 +104,10 @@ export type ListicleBodyBlock =
       headline: string;
       /** Problem-validate paragraph, then solution; one string for now */
       body: string;
+      /** Optional source line under the body, e.g. "DOI: 10.1186/1550-2783-12-S1-P41" */
+      citation?: string;
+      /** Optional link target for the citation line */
+      citationHref?: string;
       /** Pill callout chips under the body, e.g. "250mg citicoline" */
       chips?: string[];
       asset: ListicleAsset;
@@ -149,6 +159,8 @@ export interface ListicleConfig {
   ticker?: string[];
   /** Partner-logo marquee ("Fueling High Performers at:") below the ticker */
   logoMarquee?: boolean;
+  /** Press "As Published On:" marquee (CognICA outlet wordmarks) in the trust zone */
+  pressMarquee?: boolean;
   /** The listicle core: reasons with bands/strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
