@@ -29,7 +29,6 @@ import { useHashScroll } from "./useHashScroll";
  */
 
 const BONE = "var(--color-bone, #F9F9F9)";
-const NAVY = "#1B2757";
 const TINT = "var(--color-neuro-blue-light, #eeeff2)";
 
 /** Editorial article header: big headline, optional byline, intro, divider. */
@@ -120,7 +119,7 @@ function SimpleReason({
         <h3 className="mb-4 hidden text-[28px] font-bold leading-[1.15] text-black md:block">
           {heading}
         </h3>
-        <p className="max-w-[36rem] text-[15px] leading-relaxed text-black">
+        <p className="max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black">
           {block.body}
         </p>
         {block.accentLine ? (
@@ -286,46 +285,24 @@ export default function SimpleListicleRenderer({
         </section>
       ) : null}
 
-      {/* FAQ */}
-      <section
-        aria-label="FAQs"
-        className="px-5 py-16 pb-32 md:px-[5vw]"
-        style={{ background: BONE, color: "#111" }}
-      >
-        <div className="mx-auto max-w-7xl">
-          <CROFAQv2
-            items={pickFaqItems(...config.faqIds).map((f) => ({
-              id: f.id,
-              question: f.question,
-              answer: stripClaimAnchors(f.answer),
-            }))}
-            showSeeAllLink={false}
-          />
-        </div>
-      </section>
-
-      {/* Sticky bottom bar */}
-      {config.stickyBar ? (
-        <aside
-          aria-label="Offer bar"
-          className="fixed bottom-0 left-0 right-0 z-40 px-5 py-3 md:px-[5vw]"
-          style={{ background: NAVY, color: "#fff" }}
+      {/* FAQ — only when the config supplies faqIds */}
+      {config.faqIds.length ? (
+        <section
+          aria-label="FAQs"
+          className="px-5 py-16 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
         >
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <span className="text-sm">{config.stickyBar.label}</span>
-            <a
-              href="#product"
-              className="rounded-[12px] bg-white px-6 py-2.5 text-center text-[13px] font-bold text-[#111]"
-            >
-              {config.stickyBar.cta}
-              {config.stickyBar.sub ? (
-                <span className="block text-[10px] font-normal opacity-70">
-                  {config.stickyBar.sub}
-                </span>
-              ) : null}
-            </a>
+          <div className="mx-auto max-w-7xl">
+            <CROFAQv2
+              items={pickFaqItems(...config.faqIds).map((f) => ({
+                id: f.id,
+                question: f.question,
+                answer: stripClaimAnchors(f.answer),
+              }))}
+              showSeeAllLink={false}
+            />
           </div>
-        </aside>
+        </section>
       ) : null}
     </main>
   );
