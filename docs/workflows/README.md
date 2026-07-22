@@ -83,7 +83,7 @@ If you also work on the mobile app, here's what's different:
 | **Database** | Firestore + Cloud SQL | Shopify (products, orders) + metafields |
 | **Deployment** | `[Your app deploy process]` | Git push → Vercel auto-deploy |
 | **Preview/staging** | `[Your app staging process]` | Vercel preview deployments per branch |
-| **Styling** | StyleSheet.create | Tailwind CSS + design tokens (`app/premium-base.css`) |
+| **Styling** | StyleSheet.create | Tailwind CSS + design tokens (`app/brand-base.css`) |
 | **State** | `[Your RN state approach]` | Server-first, minimal client state |
 | **SEO** | N/A (native app) | Critical — every page needs metadata |
 | **Commerce** | N/A (or limited) | Shopify Storefront API, Loop Subscriptions |

@@ -50,7 +50,7 @@ Is this a continuation of work already in progress this session?
    - If code has complex mobile layouts or split components: read `docs/branding/MOBILE_OPTIMIZATION.md`
    - Otherwise, the design system summary in `CLAUDE.md` is sufficient.
 
-4. **Determine which design system** is in use: `brand-base.css` (new pages) or `premium-base.css` (legacy).
+4. **Determine which design language** is in use (all from `brand-base.css`, the single stylesheet): Simple DTC (cart/nav/PDP acquisition — rounded, filled navy, green savings accent) or Clinical (`.brand-clinical` — zero radius, mono labels, navy interactive-only; evidence/app-dark). See DESIGN_SYSTEM.md §8.5.
 
 **Do NOT read** CLAIMS_COMPLIANCE.md, BRAND_VOICE.md, or LANDING_PAGE_CLAIMS_LOG.md. This skill reviews visuals, not copy.
 
@@ -61,14 +61,14 @@ Is this a continuation of work already in progress this session?
 #### Check 1: Design System Compliance
 
 - [ ] All colours, spacing, radii, fonts from design tokens -- zero hardcoded values
-- [ ] Correct design system used (`brand-*` for new pages, `premium-*` for legacy)
-- [ ] Radius tiers correct (brand: 16px interactive, 24px container, 32px card / premium: 40px card, 20px nested, pill buttons)
+- [ ] Correct design language for the surface (Simple DTC vs Clinical — DESIGN_SYSTEM.md §8.5)
+- [ ] Radius tiers correct (brand: 16px interactive, 24px container, 32px card; `.brand-clinical` forces `0px`)
 - [ ] Section backgrounds follow colour rhythm guidelines
 - [ ] Components are content-only (no `<section>`, no root `max-w-*` or `px-*`)
 - [ ] Page owns section wrappers with track structure
-- [ ] Text left-aligned by default (brand system); centred only if legacy requires it
+- [ ] Text left-aligned by default (brand system)
 - [ ] Colour used functionally, not decoratively; pages feel monochrome first
-- [ ] `var(--letter-spacing-premium-title)` on section headings
+- [ ] Headings use `-0.02em` letter-spacing (inline) where the design calls for tightening
 
 ---
 
@@ -137,7 +137,7 @@ Speed is premium. A slow page feels cheap.
 ```
 ## Visual Review: [area/page]
 
-**Design system:** brand-base | premium-base
+**Design language:** Simple DTC | Clinical (`.brand-clinical`)
 
 ### Design System Compliance: Pass / Needs work / Fail
 [Specific findings with component:line references]

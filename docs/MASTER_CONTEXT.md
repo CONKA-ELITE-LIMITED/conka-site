@@ -50,8 +50,7 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Vercel hosting. Shopify Sto
 | `app/lib/productData.ts` | **Barrel export** -- always import from here |
 | `app/lib/funnelData.ts` | Standalone funnel types/pricing/variants |
 | `app/lib/funnelCheckout.ts` | Isolated funnel checkout (no CartContext) |
-| `app/brand-base.css` | New design system tokens |
-| `app/premium-base.css` | Legacy tokens (still active during migration) |
+| `app/brand-base.css` | Design system tokens (the single stylesheet; `premium-base.css` deleted) |
 | `app/layout.tsx` | Root layout, nav, footer, analytics scripts |
 
 ### Cart/checkout
@@ -79,7 +78,7 @@ Pass `metadata` (location, source, sessionId) to `addToCart` for funnel tagging.
 
 ## 4. Design System
 
-Two systems coexist during migration. **New pages use `brand-base.css`**. Legacy pages still on `premium-base.css` until migrated.
+One stylesheet: **`app/brand-base.css`** (the former `premium-base.css` has been deleted). The forward language is **Simple DTC** (cart/nav/PDP acquisition); **Clinical** (`.brand-clinical`) is retained for evidence-dense and `/app` dark surfaces. See `docs/branding/DESIGN_SYSTEM.md` §8.5.
 
 ### The pattern: page orchestrates, components are content-only
 

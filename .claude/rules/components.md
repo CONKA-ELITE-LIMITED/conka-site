@@ -9,8 +9,8 @@ paths:
 # Component Rules
 
 ## Design system compliance
-- Use design tokens from `app/premium-base.css` — never hard-code colours, spacing, radii, or font sizes.
-- Cards use `var(--premium-radius-card)` (40px). Buttons use `var(--premium-radius-interactive)` (pill).
+- Use design tokens from `app/brand-base.css` — never hard-code colours, spacing, radii, or font sizes.
+- Cards use `var(--brand-radius-card)` (32px). Buttons use `var(--brand-radius-interactive)` (16px). `.brand-clinical` scope forces all radius tokens to `0px`.
 - Components return content only — no `<section>`, no `max-w-*`, no `px-*` at root. Pages own section wrappers.
 - Components do not set their own background. Exception: cards/surfaces that differ from section bg must set their own text colour explicitly.
 

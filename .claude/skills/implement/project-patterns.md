@@ -21,8 +21,8 @@ Project-specific patterns and references for /implement (consult while building 
 - **Offer constants:** `app/lib/offerConstants.ts` -- never hardcode guarantee periods or offer terms
 
 ### Design system
-- **New system tokens:** `app/brand-base.css` -- for new/migrated pages
-- **Legacy tokens:** `app/premium-base.css` -- for existing pages until migrated
+- **Tokens:** `app/brand-base.css` -- the single stylesheet (`premium-base.css` is deleted)
+- **Direction:** Simple DTC (cart/nav/PDP) vs Clinical `.brand-clinical` (evidence/app-dark) -- see DESIGN_SYSTEM.md §8.5
 - **Design system doc:** `docs/branding/DESIGN_SYSTEM.md`
 - **Brand voice:** `docs/branding/BRAND_VOICE.md`
 

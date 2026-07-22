@@ -59,7 +59,7 @@ npm run dev:all    # Dev + any parallel processes
 | `app/api/cart/route.ts` | Proxies cart actions to Shopify Storefront API |
 | `app/components/CartDrawer.tsx` | Slide-out cart UI; "Checkout" links to `cart.checkoutUrl` |
 | `app/lib/productData.ts` | **Barrel export** — always import product data from here, never from sub-modules |
-| `app/premium-base.css` | Design system tokens and layout classes |
+| `app/brand-base.css` | Design system tokens and layout classes (the only stylesheet; `premium-base.css` is deleted) |
 | `app/layout.tsx` | Root layout — nav, footer, CartDrawer, analytics scripts |
 
 ## Product data
@@ -74,43 +74,35 @@ Modules (no circular deps): `productTypes` → `productColors`, `productPricing`
 
 Key helpers: `getFormulaPricing(packSize, purchaseType)`, `getProtocolPricing(id, tier, purchaseType)`, `formatPrice(n)`, `getB2BTier(qty)`.
 
-## Design system — Soft-Tech Luxury
+## Design system
 
-Full spec: `docs/branding/DESIGN_SYSTEM.md`. New tokens in `app/brand-base.css` (legacy tokens still in `app/premium-base.css` during migration).
+Full spec: `docs/branding/DESIGN_SYSTEM.md`. All tokens and classes live in `app/brand-base.css` — the single stylesheet. The old `app/premium-base.css` ("Soft-Tech Luxury") has been **deleted**; its still-referenced tokens are folded into `brand-base.css` Layer 3 as `@deprecated`. Do not reference `premium-*` classes or `--premium-radius-*` tokens — they no longer exist.
+
+**Direction.** The visual system has evolved premium → clinical → **Simple DTC**. Simple DTC is the forward language (rounded pills/cards, filled navy `#1B2757` as primary/decorative, green `#1a7f4f` savings accent, light-navy `#eef0f5` tint strips, shadows/rings allowed, sans by default) and governs cart / nav / PDP acquisition surfaces. **Clinical** (`.brand-clinical`: zero radii, mono data labels, navy interactive-only) is retained for evidence-dense surfaces (`/science`) and the `/app` dark pages, not the default for new work. See DESIGN_SYSTEM.md §8.5 for the full Simple DTC spec and per-surface authority table.
 
 **The pattern — page orchestrates, components are content-only:**
 
 ```tsx
 // Page (owns section wrapper, background, track)
-<section className="premium-section-luxury premium-bg-bone">
-  <div className="premium-track">
+<section className="brand-section brand-bg-white" aria-label="Benefits">
+  <div className="brand-track">
     <MyComponent />  {/* no <section>, no max-w, no px-* at root */}
   </div>
 </section>
 ```
 
 **Key classes:**
-- `.premium-section-luxury` — section padding + gutters (5vw desktop, 1.25rem mobile)
-- `.premium-track` — max-width 1280px, centred; no own padding
-- `.premium-bg-ink` / `.premium-bg-bone` / `.premium-bg-surface` / `.premium-bg-mid` — section backgrounds
-- `.premium-card-soft` — 40px radius, soft bg, no border (`--premium-radius-card`)
-- `.premium-section-heading` — fluid section title with tight tracking
-- `.premium-body` — body copy (1.125rem, line-height 1.6, max-width 65ch)
-
-**Color palette (ink/bone system):**
-- `--color-ink` (#111111) — dark sections; use `text-white` for text on ink
-- `--color-bone` (#F9F9F9) — light sections
-- `--color-neuro-blue-light` (#eeeff2) — readable content sections
-- `--color-neuro-blue-dark` (#0e1f3f) — high-impact dark sections (use sparingly, max 2×)
-- `--gradient-neuro-blue-accent` — gradient for hero title emphasis spans
-
-**Sticky positioning gotcha:** `.premium-pdp` has `overflow-x: hidden` which breaks `position: sticky`. Place sticky sections *outside* `.premium-pdp`. See `conka-flow/page.tsx` comments.
+- `.brand-section` — section padding + gutters (5vw desktop, 1.25rem mobile)
+- `.brand-track` — max-width 1280px, centred; no own padding
+- `.brand-bg-white` / `.brand-bg-tint` / `.brand-bg-black` — section backgrounds
+- `.brand-h1` / `.brand-h2` / `.brand-h3` / `.brand-body` — typography (left-aligned by default)
+- Radius tokens: `--brand-radius-interactive` (16px) / `--brand-radius-container` (24px) / `--brand-radius-card` (32px); `.brand-clinical` forces all three to `0px`
 
 **Component rules:**
 - Components return content only — no `<section>`, no `max-w-*`, no `px-*` at root
 - Components do not set their own background
 - Cards/surfaces that differ from the section background must set their own text color explicitly
-- Use `var(--letter-spacing-premium-title)` (`-0.03em`) on section headings
+- Use design tokens from `app/brand-base.css` — never hard-code colours, spacing, radii, or font sizes
 
 ## Analytics
 

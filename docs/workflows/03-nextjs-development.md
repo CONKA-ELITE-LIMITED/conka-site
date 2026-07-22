@@ -19,7 +19,7 @@
 ├── app/                        # App Router pages and layouts
 │   ├── layout.tsx              # Root layout (nav, footer, CartDrawer, analytics)
 │   ├── page.tsx                # Homepage
-│   ├── premium-base.css        # Design system tokens and layout classes
+│   ├── brand-base.css          # Design system tokens and layout classes
 │   ├── conka-flow/             # Flow product page
 │   ├── conka-clarity/          # Clarity product page
 │   ├── protocol/[id]/          # Protocol detail pages
@@ -229,8 +229,8 @@ Reference the design system at: `docs/branding/DESIGN_SYSTEM.md`
 
 ### Approach
 - Primary styling method: Tailwind CSS + CSS custom properties (design tokens)
-- Theme/tokens location: `app/brand-base.css` (new) / `app/premium-base.css` (legacy)
-- Global styles: `app/globals.css`, `app/brand-base.css`, `app/premium-base.css`
+- Theme/tokens location: `app/brand-base.css` (the single stylesheet)
+- Global styles: `app/globals.css`, `app/brand-base.css`
 
 ### Key rules
 1. **Use design tokens** — never hard-code colours, spacing, or font sizes
@@ -243,7 +243,7 @@ Mobile-first (hard requirement, not preference). Write base styles for mobile, a
 - sm: 640px
 - md: 768px
 - lg: 1024px
-- xl: 1280px (matches `.premium-track` max-width)
+- xl: 1280px (matches `.brand-track` max-width)
 
 ---
 

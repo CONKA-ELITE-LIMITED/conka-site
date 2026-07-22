@@ -13,7 +13,7 @@ In plan mode, present the implementation plan in this format, then wait for the 
 
 **Ticket:** SCRUM-XXX (if applicable)
 **Type:** Data layer | Components/pages | Full stack
-**Design system:** brand-base (new) | premium-base (legacy)
+**Design system:** brand-base — Simple DTC (cart/nav/PDP) or Clinical (`.brand-clinical`; evidence/app-dark)
 **Source:** [Ticket description / feature plan / verbal description]
 
 ### What I'm going to build
@@ -127,9 +127,10 @@ Follow `docs/workflows/03-nextjs-development.md` and the design system.
    - Every interactive element: minimum 44x44px tap target
    - Primary CTA must be visible without scrolling on mobile
 
-4. **Design system application:**
-   - **New pages (`brand-base.css`):** Use `brand-*` tokens and classes. Radius: 16px interactive, 24px containers, 32px cards. Left-aligned text.
-   - **Legacy pages (`premium-base.css`):** Use `premium-*` tokens and classes. Radius: 40px cards, 20px nested, pill buttons.
+4. **Design system application (`brand-base.css` — the single stylesheet):**
+   - **Simple DTC (cart/nav/PDP acquisition):** rounded `brand-*` tokens (16px interactive, 24px containers, 32px cards), filled navy `#1B2757`, green `#1a7f4f` savings accent, shadows/rings allowed. Left-aligned text.
+   - **Clinical (`.brand-clinical`; evidence/app-dark):** same tokens forced to `0px` radius, mono data labels, navy interactive-only, hairline borders, no shadows.
+   - See DESIGN_SYSTEM.md §8.5 for which system governs which surface.
    - Never hard-code colours, spacing, radii, or font sizes -- use design tokens.
 
 5. **Images:**
@@ -194,7 +195,7 @@ Compose the page from components, applying the section/track pattern.
 ### Build order
 1. **Section orchestration:**
    - Page owns all `<section>` wrappers with appropriate bg class and `aria-label`
-   - Every section contains a `<div className="brand-track">` (or `premium-track`) wrapping the component
+   - Every section contains a `<div className="brand-track">` wrapping the component
    - Alternate section backgrounds to create visual rhythm
    - Follow colour rhythm guidelines from the design system
 
@@ -217,7 +218,7 @@ Compose the page from components, applying the section/track pattern.
 
 ### Page Standards Check
 Before presenting the checkpoint, verify:
-- [ ] Section/track structure correct (`brand-section` + `brand-track` or `premium-section-luxury` + `premium-track`)
+- [ ] Section/track structure correct (`brand-section` + `brand-track`)
 - [ ] Section backgrounds alternate for visual rhythm
 - [ ] SEO metadata exported (title, description, OG)
 - [ ] Single H1, logical heading hierarchy

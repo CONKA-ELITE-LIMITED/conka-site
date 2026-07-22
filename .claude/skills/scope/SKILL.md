@@ -18,7 +18,7 @@ Tone: **trusted advisor**. Raise concerns as genuine questions, not gatekeeping.
 /scope Add a "What to Expect" timeline to the landing page
 
 # Skip the "why" challenge (for known technical requirements)
-/scope --no-pushback Migrate the science page from premium-base to brand-base
+/scope --no-pushback Convert the PDP hero from clinical to Simple DTC tokens
 
 # Continue an existing plan
 /scope --continue website-simplification
@@ -136,7 +136,7 @@ Read `.claude/skills/scope/continue.md` and follow that flow instead of the Step
 - **Mobile-first.** If the mobile experience isn't explicitly scoped, the scope is incomplete.
 - **Only ticket what's active.** Future phases live in the plan doc, not Jira.
 - **Thoughtful, not bureaucratic.** Skip sections that don't apply. Don't invent rabbit holes.
-- **Design system decision upfront.** `brand-base.css` (new) or `premium-base.css` (legacy). This affects effort.
+- **Design language decision upfront.** Simple DTC or Clinical (`.brand-clinical`) — both from `brand-base.css`. See DESIGN_SYSTEM.md §8.5. This affects effort.
 - **Analytics alongside the feature**, not bolted on after.
 - **Read, don't assume.** Technical details live in CLAUDE.md and project docs — read fresh, don't hardcode here.
 - **Implementation teaches you things.** Plans are living documents, not contracts.

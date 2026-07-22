@@ -7,8 +7,7 @@ paths:
 # Page Rules
 
 ## Section structure
-- **New pages:** Use `brand-section` + `brand-bg-{white|black|neutral}` classes from `app/brand-base.css`. Track: `brand-track`.
-- **Legacy pages:** Keep `premium-section-luxury` + `premium-bg-{ink|bone|surface}` from `app/premium-base.css` until migrated. Track: `premium-track`.
+- Use `brand-section` + `brand-bg-{white|tint|black}` classes from `app/brand-base.css` (the single stylesheet). Track: `brand-track`.
 - Alternate section backgrounds to create visual rhythm.
 - Each section gets `aria-label` for accessibility.
 
