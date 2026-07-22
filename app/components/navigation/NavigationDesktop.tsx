@@ -182,7 +182,7 @@ export default function NavigationDesktop({
                 className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
                   shopOpen
                     ? "border-white text-white group-hover:bg-white group-hover:text-[#1B2757]"
-                    : "border-[#1B2757] text-[#1B2757] group-hover:bg-[#1B2757] group-hover:text-white"
+                    : "border-black text-black group-hover:bg-black group-hover:text-white"
                 }`}
               >
                 <svg
@@ -206,7 +206,9 @@ export default function NavigationDesktop({
               className={`rounded-full border px-4 py-1.5 text-sm font-bold tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
                 shopOpen
                   ? "border-white text-white hover:bg-white hover:text-[#1B2757]"
-                  : "border-[#1B2757] text-[#1B2757] hover:bg-[#1B2757] hover:text-white"
+                  : itemCount > 0
+                    ? "border-[#1B2757] bg-[#1B2757] text-white hover:opacity-90"
+                    : "border-black text-black hover:bg-black hover:text-white"
               }`}
               aria-label="Open cart"
             >

@@ -272,7 +272,8 @@ export default function CartDrawer() {
               </div>
             </div>
           ) : (
-            <div className="p-4 space-y-4">
+            <div className="flex min-h-full flex-col p-4">
+              <div className="space-y-4">
               {cartItems.map((item) => (
                 <div
                   key={item.id}
@@ -436,7 +437,10 @@ export default function CartDrawer() {
                   </div>
                 </div>
               ))}
-              <CartAppGift />
+              </div>
+              <div className="mt-auto pt-4">
+                <CartAppGift />
+              </div>
             </div>
           )}
         </div>
@@ -448,7 +452,7 @@ export default function CartDrawer() {
               {/* Subscription savings */}
               {cartSavings.savings > 0 && (
                 <div className="flex items-baseline justify-between">
-                  <span className="text-base font-semibold uppercase text-black">
+                  <span className="text-base font-bold uppercase text-black">
                     Savings
                   </span>
                   <span className="rounded-full bg-[#1a7f4f]/10 px-2.5 py-0.5 text-sm font-semibold tabular-nums text-[#1a7f4f]">
