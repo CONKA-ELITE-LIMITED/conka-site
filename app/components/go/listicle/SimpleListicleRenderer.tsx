@@ -39,7 +39,7 @@ function SimpleHero({ hero }: { hero: MmListicleConfig["hero"] }) {
       className="px-5 pt-10 md:px-[5vw] md:pt-16"
       style={{ background: BONE, color: "#111" }}
     >
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-[820px]">
         <h1 className="text-[2rem] font-bold leading-[1.1] text-black md:text-[2.75rem] md:leading-[1.08]">
           {hero.headline}
         </h1>
@@ -92,7 +92,7 @@ function SimpleReason({
     </>
   );
   return (
-    <article className="py-10 md:grid md:grid-cols-[minmax(0,400px)_minmax(0,1fr)] md:items-center md:gap-14 md:py-16">
+    <article className="py-8 md:grid md:grid-cols-[minmax(0,350px)_minmax(0,1fr)] md:items-center md:gap-10 md:py-10">
       {/* Heading above the image — mobile only */}
       <h3 className="mb-4 text-[22px] font-bold leading-[1.2] text-black md:hidden">
         {heading}
@@ -111,7 +111,7 @@ function SimpleReason({
             className={
               block.asset.fit === "contain" ? "object-contain" : "object-cover"
             }
-            sizes="(max-width: 768px) 100vw, 400px"
+            sizes="(max-width: 768px) 100vw, 350px"
           />
         </div>
       </div>
@@ -201,7 +201,7 @@ export default function SimpleListicleRenderer({
         className="px-5 pb-8 md:px-[5vw]"
         style={{ background: BONE, color: "#111" }}
       >
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[820px]">
           {config.body.map((block, i) => {
             if (block.kind === "reason")
               return <SimpleReason key={i} block={block} />;
@@ -226,7 +226,7 @@ export default function SimpleListicleRenderer({
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: TINT, color: "#111" }}
       >
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[820px]">
           <ProductGrid />
         </div>
       </section>
