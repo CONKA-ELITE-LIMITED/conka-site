@@ -28,7 +28,7 @@ export function getFormulaHeroImages(formulaId: FormulaId, cadence: CadenceType)
       : "/formulas/box/ClearBox.jpg";
   return [
     slot1,
-    "/lifestyle/clear/ClearPassed.jpg",
+    "/lifestyle/clear/ClearClose.jpg",
     "/lifestyle/clear/ClearHoldJeans.jpg",
     "/lifestyle/clear/ClearBoxOpen.jpg",
     "/formulas/conkaClear/ClearNutrition.jpg",
