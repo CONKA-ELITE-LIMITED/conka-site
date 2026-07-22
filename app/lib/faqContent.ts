@@ -277,6 +277,13 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "usage",
   },
   {
+    id: "reduce-coffee",
+    question: "What happens when you reduce your coffee intake?",
+    answer:
+      "The NHS suggests keeping caffeine to around 3mg per kg of body weight, so roughly 225mg a day for a 75kg adult, about two cups of coffee or one energy drink. Above that, common side effects include disrupted sleep, anxiety and raised blood pressure. Cutting back can bring short-term withdrawal for a few days, usually headaches or fatigue, which is one reason people look for a steadier alternative rather than stopping cold. Because both CONKA formulas are caffeine-free, they give you a way to hold your focus while you ease off the cups, without adding another stimulant to crash from.",
+    category: "usage",
+  },
+  {
     id: "sleep",
     question: "Will CONKA affect my sleep?",
     answer:
