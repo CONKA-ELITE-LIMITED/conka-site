@@ -10,7 +10,7 @@ import { TIME_OF_DAY_BADGE } from "@/app/lib/timeOfDayBadge";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
-import { getCartUpsell } from "@/app/lib/cartUpsell";
+import { getLineSubscribeOffer } from "@/app/lib/cartUpsell";
 import { getOfferByVariantId } from "@/app/lib/funnelData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 
@@ -139,23 +139,6 @@ export default function CartDrawer() {
   } = useCart();
 
   const cartItems = getCartItems();
-
-  // Shots + free-shots summary for the subtotal area. Sums priced shots and
-  // bonus ("20 + 8 free") shots across any recognised funnel lines in the cart.
-  const shotSummary = cartItems.reduce(
-    (acc, item) => {
-      const offer = getOfferByVariantId(item.merchandise.id);
-      if (offer) {
-        acc.shots += (offer.pricing.shotCount ?? 0) * item.quantity;
-        acc.free += (offer.pricing.freeShots ?? 0) * item.quantity;
-      }
-      return acc;
-    },
-    { shots: 0, free: 0 },
-  );
-
-  // Hide upsell while any cart mutation is in flight to prevent stale flashes.
-  const upsellOffer = !loading ? getCartUpsell(cartItems) : null;
 
   const formatPrice = (amount: string, currencyCode: string = "GBP") => {
     return new Intl.NumberFormat("en-GB", {
@@ -314,14 +297,14 @@ export default function CartDrawer() {
                           <p className="text-base font-bold leading-snug text-black">
                             {item.merchandise.product.title}
                           </p>
-                          <p className="mt-1 text-sm text-black/50">
+                          <p className="mt-1 text-sm text-black">
                             {(() => {
                               const offer = getOfferByVariantId(item.merchandise.id);
                               if (!offer) return item.merchandise.title;
                               const { shotCount, freeShots } = offer.pricing;
                               return (
                                 <>
-                                  {shotCount} shots
+                                  {shotCount} Bottles
                                   {freeShots && freeShots > 0 ? (
                                     <span className="font-semibold text-[#1a7f4f]">
                                       {" "}
@@ -415,17 +398,24 @@ export default function CartDrawer() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Per-line Subscribe & Save (one-time lines only) */}
+                  {(() => {
+                    const lineOffer = getLineSubscribeOffer(item);
+                    return lineOffer ? (
+                      <div className="mt-3">
+                        <CartUpsellStrip
+                          offer={lineOffer}
+                          currentLineId={item.id}
+                          originalVariantId={item.merchandise.id}
+                          originalSellingPlanId={item.sellingPlanAllocation?.sellingPlan.id}
+                          originalQuantity={item.quantity}
+                        />
+                      </div>
+                    ) : null;
+                  })()}
                 </div>
               ))}
-              {upsellOffer && (
-                <CartUpsellStrip
-                  offer={upsellOffer}
-                  currentLineId={cartItems[0].id}
-                  originalVariantId={cartItems[0].merchandise.id}
-                  originalSellingPlanId={cartItems[0].sellingPlanAllocation?.sellingPlan.id}
-                  originalQuantity={cartItems[0].quantity}
-                />
-              )}
               <CartAppGift />
             </div>
           )}
@@ -435,22 +425,6 @@ export default function CartDrawer() {
         <div className="border-t border-black/8 bg-white">
           {cart && cartItems.length > 0 && (
             <div className="px-5 pt-4 pb-3 space-y-2">
-              {/* Shots summary */}
-              {shotSummary.shots > 0 && (
-                <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-black/60">Shots</span>
-                  <span className="text-sm tabular-nums text-black">
-                    {shotSummary.shots} shots
-                    {shotSummary.free > 0 && (
-                      <span className="font-semibold text-[#1a7f4f]">
-                        {" "}
-                        + {shotSummary.free} free
-                      </span>
-                    )}
-                  </span>
-                </div>
-              )}
-
               {/* Subtotal */}
               <div className="flex items-baseline justify-between">
                 <span className="text-base font-semibold text-black">
@@ -464,8 +438,8 @@ export default function CartDrawer() {
                 </span>
               </div>
 
-              <p className="text-xs text-black/40">
-                Shipping &amp; taxes calculated at checkout
+              <p className="text-xs text-black">
+                Shipping calculated at checkout
               </p>
             </div>
           )}

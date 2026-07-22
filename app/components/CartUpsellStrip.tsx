@@ -48,7 +48,7 @@ export default function CartUpsellStrip({
     try {
       await removeItem(currentLineId);
       try {
-        await addToCart(offer.variantId, 1, offer.sellingPlanId, {
+        await addToCart(offer.variantId, originalQuantity, offer.sellingPlanId, {
           source: "cart_upsell",
           location: "cart_drawer",
         });
