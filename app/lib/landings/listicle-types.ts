@@ -132,6 +132,36 @@ export type ListicleBodyBlock =
       quote: string;
       name: string;
       detail?: string;
+    }
+  /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
+  | {
+      kind: "symptomExplainer";
+      /** Display number for the section heading, e.g. 1 renders "01." */
+      n?: number;
+      /** Mono category tag above the headline */
+      tag?: string;
+      headline: string;
+      /** Intro paragraph above the symptom buttons */
+      intro: string;
+      /** Small-print disclaimer under the explainer */
+      disclaimer?: string;
+      symptoms: {
+        icon: string;
+        label: string;
+        /** Primary symptoms show by default; the rest behind "see more" */
+        primary?: boolean;
+        /** "What's happening in your brain" explanation */
+        brain: string;
+        brainCitation?: string;
+        ingredients: {
+          icon: string;
+          name: string;
+          /** Which shot the active sits in, e.g. "Flow" or "Clear" */
+          formula: string;
+          detail: string;
+          citation?: string;
+        }[];
+      }[];
     };
 
 export interface ListicleConfig {

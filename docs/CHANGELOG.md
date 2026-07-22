@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-22** | Rewrote the ADHD ad listicle to Humphrey's copy with a new interactive symptom explainer block
 - **2026-07-22** | Rewrote the productivity ad listicle to Humphrey's copy, with PMID/DOI citations and an As Published On press marquee
 - **2026-07-22** | Constrained the cart Subscribe & Save button to the line item text column
 - **2026-07-22** | Made the cart Subscribe & Save upsell per-product and tidied line item and footer copy

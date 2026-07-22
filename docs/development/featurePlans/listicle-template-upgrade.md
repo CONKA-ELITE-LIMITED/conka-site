@@ -55,8 +55,8 @@ Build shared components only for what recurs across two or more listicles. Build
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Shared template foundation (citations + press marquee reuse) | Complete |
-| 2 | Productivity listicle rewrite | Not started |
-| 3 | ADHD listicle rewrite (+ bespoke symptom explainer, + ADHD FAQ entries) | Not started |
+| 2 | Productivity listicle rewrite | Complete |
+| 3 | ADHD listicle rewrite (+ bespoke symptom explainer) | Complete (FAQ copy pending, see TODO.md) |
 | 4 | Brain Ageing listicle rewrite (+ bespoke male/female toggle, + Brain Ageing FAQ entries) | Not started |
 | 5 | Asset finalisation + chart honesty parameterisation | Future |
 
