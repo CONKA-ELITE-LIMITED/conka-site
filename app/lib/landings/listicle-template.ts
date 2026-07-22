@@ -30,6 +30,7 @@ export const listicleTemplate: ListicleConfig = {
   slug: "listicle-template",
   persona: "template",
   format: "listicle",
+  template: "im8",
   title: "6 reasons placeholder headline",
   hero: {
     laurel: {

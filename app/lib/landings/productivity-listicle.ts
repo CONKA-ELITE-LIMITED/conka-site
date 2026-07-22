@@ -15,6 +15,7 @@ export const productivityListicle: ListicleConfig = {
   slug: "productivity-listicle",
   persona: "productivity",
   format: "listicle",
+  template: "im8",
   title: "What to Do When You Can't Focus at Work",
   hero: {
     laurel: {

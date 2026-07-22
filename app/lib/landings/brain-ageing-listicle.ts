@@ -16,6 +16,7 @@ export const brainAgeingListicle: ListicleConfig = {
   slug: "brain-ageing-listicle",
   persona: "brain-ageing",
   format: "listicle",
+  template: "im8",
   title: "Is Forgetting Words Mid-Sentence a Sign of Dementia?",
   hero: {
     laurel: {
