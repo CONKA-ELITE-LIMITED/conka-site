@@ -8,11 +8,12 @@
  * identical groups looping seamlessly, motion-safe so reduced-motion users get
  * a static row. Pure CSS, no JS.
  *
- * Each scrolling unit is a COLUMN of two stacked tiles (2 rows). Tiles are
- * normalised to one aspect ratio (object-cover) so the mixed-ratio UGC /
- * customer / athlete stills read as one cohesive band. Radius comes from
- * --brand-radius-container, which the clinical PDP scope sets to 0 (sharp), so
- * tiles match the surrounding clinical design automatically.
+ * Each scrolling unit is a COLUMN of three stacked tiles (3 rows), all moving
+ * as one track at a single rate and direction. Tiles are normalised to one
+ * aspect ratio (object-cover) so the mixed-ratio UGC / customer / athlete
+ * stills read as one cohesive band. Radius comes from --brand-radius-container,
+ * which the clinical PDP scope sets to 0 (sharp), so tiles match the
+ * surrounding clinical design automatically.
  *
  * Content-only: no <section>, no max-width, no horizontal padding at root. The
  * page owns the section wrapper and background. See SCRUM-1092.
@@ -30,37 +31,47 @@ const UGC_ITEMS: UGCItem[] = [
   { src: "/testimonials/athlete/JackWShots.jpg", alt: "A CONKA athlete holding the daily shots" },
   { src: "/testimonials/dtc/AnkitaK.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/2.jpg", alt: "A CONKA customer with the daily shot" },
+  { src: "/testimonials/ugc/13.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/athlete/CbsShots.jpg", alt: "A CONKA athlete holding the daily shot" },
   { src: "/testimonials/dtc/AaronH.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/3.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/dtc/PhilB.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/4.jpg", alt: "A CONKA customer with the daily shot" },
+  { src: "/testimonials/ugc/14.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/dtc/JackG.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/5.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/dtc/SamJ.jpg", alt: "A CONKA customer with their daily shot" },
+  { src: "/testimonials/ugc/15.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/ugc/6.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/ugc/10.jpg", alt: "A CONKA customer holding the daily shots" },
   { src: "/testimonials/dtc/MillieH.jpg", alt: "A CONKA customer with their daily shot" },
+  { src: "/testimonials/ugc/16.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/ugc/11.jpg", alt: "A CONKA customer working with the daily shots" },
   { src: "/testimonials/dtc/AlexL.jpg", alt: "A CONKA customer with their daily shot" },
+  { src: "/testimonials/ugc/17.jpg", alt: "A CONKA customer with the daily shot" },
   { src: "/testimonials/ugc/12.jpg", alt: "A CONKA customer holding their delivery box" },
 ];
 
-// Pair the stills into stacked column units. If the count is odd, the final
-// column borrows the first still so every column is full (invisible in a loop).
-const COLUMNS: [UGCItem, UGCItem][] = [];
-for (let i = 0; i < UGC_ITEMS.length; i += 2) {
-  COLUMNS.push([UGC_ITEMS[i], UGC_ITEMS[i + 1] ?? UGC_ITEMS[0]]);
+// Stack the stills into columns of three tiles (3 rows). If the count doesn't
+// divide by three, the final column borrows from the start so every column is
+// full (invisible in a loop).
+const COLUMNS: [UGCItem, UGCItem, UGCItem][] = [];
+for (let i = 0; i < UGC_ITEMS.length; i += 3) {
+  COLUMNS.push([
+    UGC_ITEMS[i],
+    UGC_ITEMS[i + 1] ?? UGC_ITEMS[0],
+    UGC_ITEMS[i + 2] ?? UGC_ITEMS[1],
+  ]);
 }
 
 function Tile({ item }: { item: UGCItem }) {
   return (
-    <div className="relative aspect-[4/5] w-[150px] flex-shrink-0 overflow-hidden rounded-[var(--brand-radius-container)] bg-[var(--brand-tint)] md:w-[210px]">
+    <div className="relative aspect-[4/5] w-[130px] flex-shrink-0 overflow-hidden rounded-[var(--brand-radius-container)] bg-[var(--brand-tint)] md:w-[180px]">
       <Image
         src={item.src}
         alt={item.alt}
         fill
-        sizes="(max-width: 768px) 150px, 210px"
+        sizes="(max-width: 768px) 130px, 180px"
         loading="lazy"
         className="object-cover"
       />
@@ -74,9 +85,9 @@ function Group({ hidden = false }: { hidden?: boolean }) {
       className="flex flex-shrink-0 gap-3 pr-3 md:gap-4 md:pr-4"
       aria-hidden={hidden || undefined}
     >
-      {COLUMNS.map((pair, i) => (
+      {COLUMNS.map((col, i) => (
         <div key={i} className="flex flex-shrink-0 flex-col gap-3 md:gap-4">
-          {pair.map((item, j) => (
+          {col.map((item, j) => (
             <Tile key={`${item.src}-${j}`} item={item} />
           ))}
         </div>
@@ -92,13 +103,11 @@ export default function UGCMarquee({
   title?: string;
   subtitle?: string;
 }) {
-  // Two identical groups; translateX(-50%) loops seamlessly. motion-safe so
-  // reduced-motion users get a static (clipped) row instead of movement.
   return (
     <div>
       {title ? (
         <div className="mx-auto mb-8 max-w-2xl px-[var(--brand-gutter-mobile)] text-center md:mb-10 md:px-[var(--brand-gutter-desktop)]">
-          <h2 className="brand-h2 text-[#0e1f3f]" style={{ letterSpacing: "-0.02em" }}>
+          <h2 className="brand-h2 text-black" style={{ letterSpacing: "-0.02em" }}>
             {title}
           </h2>
           {subtitle ? (
@@ -109,7 +118,7 @@ export default function UGCMarquee({
         </div>
       ) : null}
       <div className="overflow-hidden">
-        <div className="flex w-max motion-safe:animate-[marquee_50s_linear_infinite]">
+        <div className="flex w-max motion-safe:animate-[marquee_60s_linear_infinite] motion-safe:[will-change:transform]">
           <Group />
           <Group hidden />
         </div>

@@ -34,7 +34,7 @@ Slow pages kill conversion. A fast site *feels* premium. Performance is not poli
 
 This is a premium brand. The site must feel intentional, minimal, and confident-clinical. Not a Shopify theme. Not a template.
 
-- **Design system tokens only** -- never hardcode colours, spacing, radii, or font sizes. Use `brand-base.css` (new) or `premium-base.css` (legacy).
+- **Design system tokens only** -- never hardcode colours, spacing, radii, or font sizes. Use `brand-base.css` (the single stylesheet).
 - **Left-aligned text** by default (brand system). No centred headers unless legacy page requires it.
 - **Brand voice in all copy:** confident-clinical, specific proof points, no vague language. "+28.96% improvement" not "better performance". See `docs/branding/BRAND_VOICE.md`.
 - **Colour is functional, not decorative.** Pages should feel monochrome first. Accent blue (`--brand-accent`) only for CTAs and data emphasis.

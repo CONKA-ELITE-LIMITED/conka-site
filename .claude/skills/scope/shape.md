@@ -13,7 +13,7 @@
    - New shared components or page-specific?
    - Layout / loading / error boundaries?
    - SEO: metadata, structured data, OG images?
-   - Design system: `brand-base.css` (new) or `premium-base.css` (legacy)?
+   - Design language: Simple DTC or Clinical (`.brand-clinical`)? Both from `brand-base.css` — see DESIGN_SYSTEM.md §8.5.
 
    **Shopify / Commerce**
    - Product fields / metafields involved?
@@ -69,7 +69,7 @@ Use this template. Omit any section that doesn't apply (e.g. "Open Questions" if
 **Appetite:** [Time budget]
 
 **Approach:** 1–2 sentences on the solution direction.
-**Design system:** brand-base (new) | premium-base (legacy) | migration required
+**Design language:** Simple DTC | Clinical (`.brand-clinical`) — both from `brand-base.css`
 
 ### Phases
 - **Phase 1: [name]** — [description] — ACTIVE
@@ -121,7 +121,7 @@ Contents:
   | 2     | [name]      | Future |
   ```
 
-- Design system decision (brand-base or premium-base)
+- Design language decision (Simple DTC or Clinical)
 - Technical decisions and rationale
 - Rabbit holes, no-gos, risks
 - References to relevant docs and code

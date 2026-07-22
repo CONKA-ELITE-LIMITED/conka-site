@@ -114,8 +114,8 @@ Does this component need interactivity (state, event handlers, browser APIs)?
    - Hooks: `app/hooks/`
    - Utils: `app/lib/`
 4. **Styling:**
-   - Use the established styling approach: Tailwind CSS + design tokens from `app/premium-base.css`
-   - Reference design tokens/theme from: `app/premium-base.css`
+   - Use the established styling approach: Tailwind CSS + design tokens from `app/brand-base.css`
+   - Reference design tokens/theme from: `app/brand-base.css`
    - DO NOT use magic numbers — use theme values, spacing scale, colour tokens
 5. **Images:**
    - Always use `next/image` for optimised loading
