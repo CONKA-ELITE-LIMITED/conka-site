@@ -96,9 +96,10 @@ export const generalListicle: ListicleConfig = {
     },
     {
       kind: "buyBox",
-      headline: "Start with the full system",
-      subline:
-        "Flow for the morning, Clear for the afternoon. Or pick one to start.",
+      eyebrow: "Limited time offer",
+      headline: "Clinically-dosed brain performance",
+      subline: "Try it risk free, now {percent}% off.",
+      offer: { product: "both", cadence: "monthly-sub" },
     },
     {
       kind: "reason",

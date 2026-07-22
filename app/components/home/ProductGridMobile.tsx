@@ -13,7 +13,7 @@ const ALL_CARDS = [
 ];
 
 export default function ProductGridMobile(props?: ProductGridProps) {
-  const { exclude = [] } = props ?? {};
+  const { exclude = [], hideHeading = false } = props ?? {};
   const visibleCards = ALL_CARDS.filter(
     (c) => !exclude.includes(c.productType),
   );
@@ -79,11 +79,13 @@ export default function ProductGridMobile(props?: ProductGridProps) {
 
   return (
     <>
-      <div className="mb-8 px-4">
-        <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
-          {copy.title}
-        </h2>
-      </div>
+      {!hideHeading ? (
+        <div className="mb-8 px-4">
+          <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
+            {copy.title}
+          </h2>
+        </div>
+      ) : null}
 
       {visibleCards.length > 1 && (
         <div className="px-4 mb-5 flex justify-center">

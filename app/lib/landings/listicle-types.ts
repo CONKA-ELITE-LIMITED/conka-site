@@ -225,7 +225,20 @@ export type MmBodyBlock =
     }
   /** Buy-box reprise between reasons (the reference repeats it after reason 5).
    *  Renders the shared home ProductGrid; the end-of-page grid stays #product. */
-  | { kind: "buyBox"; headline?: string; subline?: string };
+  | {
+      kind: "buyBox";
+      /** Small eyebrow pill above the headline, e.g. "Limited time offer". */
+      eyebrow?: string;
+      headline?: string;
+      subline?: string;
+      /** When set, the live subscription discount for this product + cadence is
+       *  resolved from funnel pricing and substituted for a `{percent}` token in
+       *  the headline/subline (e.g. subline "Try it risk free, now {percent}% off"). */
+      offer?: {
+        product: "both" | "flow" | "clear";
+        cadence: "monthly-sub" | "quarterly-sub";
+      };
+    };
 
 /* ------------------------------------------------------------------ */
 /* Config: a shared base, then one shape per template                  */

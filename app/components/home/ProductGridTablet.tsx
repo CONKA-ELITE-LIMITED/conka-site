@@ -5,7 +5,7 @@ import type { ProductGridProps } from "./ProductGrid";
 import { getProductGridCopy } from "./productGridCopy";
 
 export default function ProductGridTablet(props?: ProductGridProps) {
-  const { exclude = [] } = props ?? {};
+  const { exclude = [], hideHeading = false } = props ?? {};
 
   const showFlow = !exclude.includes("flow");
   const showClear = !exclude.includes("clear");
@@ -14,11 +14,13 @@ export default function ProductGridTablet(props?: ProductGridProps) {
 
   return (
     <>
-      <div className="mb-10">
-        <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
-          {copy.title}
-        </h2>
-      </div>
+      {!hideHeading ? (
+        <div className="mb-10">
+          <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
+            {copy.title}
+          </h2>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-3 gap-5 items-stretch">
         {showProtocol ? (

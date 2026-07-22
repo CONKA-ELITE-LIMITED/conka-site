@@ -6,6 +6,7 @@ import type {
   MmListicleConfig,
 } from "@/app/lib/landings/listicle-types";
 import ProductGrid from "@/app/components/home/ProductGrid";
+import { getDisplayDiscount, getOfferPricing } from "@/app/lib/funnelData";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
@@ -144,35 +145,56 @@ function SimpleReason({
   );
 }
 
-/** Mid-list buy-box reprise (the reference repeats the offer after reason 5). */
-function BuyBoxReprise({
-  headline,
-  subline,
+/**
+ * Buy-box: an optional offer header (eyebrow pill + title + subline) over the
+ * ProductGrid. The grid sits free on the section background — no tile. When the
+ * block sets `offer`, the live subscription discount for that product + cadence
+ * replaces the `{percent}` token in the headline/subline, so the copy stays in
+ * sync with funnel pricing. The grid's own heading is suppressed whenever this
+ * header is shown so there is a single title.
+ */
+function BuyBox({
+  block,
 }: {
-  headline?: string;
-  subline?: string;
+  block: Extract<MmBodyBlock, { kind: "buyBox" }>;
 }) {
+  const percent = block.offer
+    ? getDisplayDiscount(getOfferPricing(block.offer.product, block.offer.cadence))
+    : null;
+  const fill = (s?: string) =>
+    s != null && percent != null ? s.replace(/\{percent\}/g, String(percent)) : s;
+  const headline = fill(block.headline);
+  const subline = fill(block.subline);
+  const hasHeader = Boolean(block.eyebrow || headline || subline);
+
   return (
-    <div
-      className="my-12 rounded-[24px] px-4 py-10 md:px-8 md:py-12"
-      style={{ background: TINT }}
-    >
-      {headline ? (
-        <div className="mb-6 text-center">
-          <h3
-            className="text-[26px] font-semibold leading-tight text-black md:text-[32px]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            {headline}
-          </h3>
+    <div className="my-12 md:my-16">
+      {hasHeader ? (
+        <div className="mb-8 text-center md:mb-10">
+          {block.eyebrow ? (
+            <span
+              className="mb-4 inline-block rounded-[8px] px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-[#14532d]"
+              style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+            >
+              {block.eyebrow}
+            </span>
+          ) : null}
+          {headline ? (
+            <h3
+              className="text-[28px] font-bold leading-[1.1] text-black md:text-[40px]"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {headline}
+            </h3>
+          ) : null}
           {subline ? (
-            <p className="mx-auto mt-2 max-w-xl text-[15px] text-black/60">
+            <p className="mx-auto mt-3 max-w-xl text-[15px] font-medium text-black/60">
               {subline}
             </p>
           ) : null}
         </div>
       ) : null}
-      <ProductGrid />
+      <ProductGrid hideHeading={hasHeader} />
     </div>
   );
 }
@@ -206,13 +228,7 @@ export default function SimpleListicleRenderer({
             if (block.kind === "reason")
               return <SimpleReason key={i} block={block} />;
             if (block.kind === "buyBox")
-              return (
-                <BuyBoxReprise
-                  key={i}
-                  headline={block.headline}
-                  subline={block.subline}
-                />
-              );
+              return <BuyBox key={i} block={block} />;
             // The simple template only uses reason + buyBox blocks.
             return null;
           })}
