@@ -42,8 +42,17 @@ The concrete clinical tells to remove (from the codebase audit, not assumptions)
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Restyle all listicle-owned surfaces + Tier 1 listicle-exclusive components | Not Started |
+| 1a | Restyle the collision-free files: `ListiclePurchase` + the two children + the 5 Tier-1 components | **Done** (commit `2f6ba8ef`) |
+| 1b | Restyle the renderer inline blocks + `listicle-types` | Held — being edited in a parallel session; do as a clean pass once that work lands |
 | 2 | Restyle Tier 2 shared components (verify-then-convert, host-page check) | On hold (Future) |
+
+### Phase 1 completion note
+
+Phase 1 was split by a live collision: a parallel session is rewriting `ListicleRenderer.tsx`, `listicle-types.ts`, `index.ts` and adding `general-listicle.ts`. To avoid clobbering that uncommitted work, Phase 1a shipped only the files that session is not touching.
+
+**1a shipped:** `ListiclePurchase.tsx` (green `#10B981` to `--brand-positive` `#1a7f4f`, gold Save% badge to green, soft-card lift), `SymptomExplainer.tsx` + `IngredientGrid.tsx` (faded mono eyebrows to solid-black micro-labels, mono formula tag solidified), `AthleteTestimonials.tsx` + `ReviewRail.tsx` + `AppMeasureSection.tsx` (dead `--letter-spacing-premium-title` token replaced with `-0.02em`, headings to solid black, soft-card lift). `CitationLine.tsx` and `SegmentToggle.tsx` were already conformant (no change).
+
+**1b held (renderer inline blocks):** hero, proof ticker, bridge card, `statsBand`, `ReviewStrip`, comparison table, `costBreakdown`, sticky bar. Targets: faded grey uppercase eyebrows to solid navy (a local `SectionEyebrow` helper), `#eeeff2` tint to `#eef0f5`, the lone `font-mono` "Monthly breakdown" label, `costBreakdown` CTA `bg-[#111]` to navy + green savings badge, CTA radii to `rounded-full`, soft-card lift on `ReviewCard`. Dark `statPanel`/`statsBand`/bridge panels stay dark per the decision below.
 
 ### Phase 1 (ACTIVE): Listicle-owned surfaces
 
