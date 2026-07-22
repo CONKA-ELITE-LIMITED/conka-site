@@ -2,23 +2,37 @@
  * CONKA Brand Design System
  * ================================================================
  *
- * This file is organised in three clearly separated layers:
+ * This file is organised in layers:
  *
  *   1. BASE TOKENS + CLASSES — default brand system. Rounded corners,
- *      `#4058bb` accent, `#f4f5f8` tint. Used by organic/legacy surfaces
- *      that have not yet been pulled onto the clinical grammar.
+ *      `#4058bb` accent, `#f4f5f8` tint. The "Simple DTC" direction (see
+ *      below) builds on these base tokens.
  *
- *   2. CLINICAL SCOPE + UTILITIES — the `/start`, home, `/funnel`,
- *      `/science`, `/our-story`, `/case-studies`, `/ingredients`,
- *      `/app`, `/why-conka`, PDP, and protocol aesthetic. Opt-in via
- *      `.brand-clinical` on a page root. Zero radii, navy `#1B2757`
- *      accent, neutral `#f5f5f5` tint. This is the DEFAULT for all new
- *      acquisition and content pages.
+ *   2. CLINICAL SCOPE + UTILITIES — the evidence-dense grammar: zero
+ *      radii, navy `#1B2757` interactive-only, mono data labels, no
+ *      shadows/gradients. Opt-in via `.brand-clinical` on a page root.
+ *      Retained for science/evidence surfaces and the `/app` dark pages.
+ *
+ *   2.5 APP DARK SCOPE — dark-canvas `/app` + `/app-insights`
+ *       (`.brand-clinical` + a near-black background).
  *
  *   3. LEGACY COMPAT + DEPRECATION CANDIDATES — tokens that exist only
  *      for components mid-migration. Marked with `@deprecated` headers.
  *
- * All new work goes here and adds the `.brand-clinical` scope.
+ * DIRECTION — the forward language is "Simple DTC": rounded pills/cards
+ * (not zero radius), filled navy `#1B2757` as primary/decorative (not
+ * interactive-only), green `#1a7f4f` savings/positive accent at `/10`
+ * tint, light-navy `#eef0f5` tint strips, shadows/rings allowed, sans by
+ * default, mono reserved for true scanned data only. It governs the cart,
+ * nav, and PDP acquisition surfaces and is built from the Layer 1 base
+ * tokens WITHOUT the clinical scope. Clinical (Layer 2) is no longer the
+ * default for new acquisition/content work. Full spec + the
+ * premium → clinical → Simple DTC lineage: docs/branding/DESIGN_SYSTEM.md
+ * §8.5.
+ *
+ * (The former `app/premium-base.css` "Soft-Tech Luxury" stylesheet has
+ * been DELETED — not stubbed. Its still-referenced tokens were folded
+ * into Layer 3 below as `@deprecated`.)
  *
  * Typography:
  *   Primary: Neue Haas Grotesk (local, next/font/local)
@@ -43,6 +57,13 @@
   --brand-tint: #f4f5f8;
   /* Light-blue fill for unselected /go quiz options (clearly tinted, not near-white) */
   --go-option-tint: #dce5f7;
+
+  /* Savings / positive accent — sanctioned system-wide (Simple DTC).
+     Used at `/10` tint on savings %, "+N free" badges, and the cart
+     Savings row. Currently hard-coded as `#1a7f4f` at consumer sites
+     (CartDrawer, FreeShotsBadge); prefer this token on new work.
+     See DESIGN_SYSTEM.md §3 + §8.5. */
+  --brand-positive: #1a7f4f;
 
   /* Functional aliases */
   --brand-text-primary: var(--brand-black);
@@ -184,13 +205,6 @@
    (B2B portal, account). Prefer brand-bg-white / brand-bg-tint. */
 .brand-bg-neutral {
   background-color: var(--brand-neutral);
-  color: var(--brand-white);
-}
-
-/* @deprecated — not used by clinical pages. Kept for legacy surfaces.
-   Prefer brand-bg-black. */
-.brand-bg-deep-grey {
-  background-color: var(--brand-deep-grey);
   color: var(--brand-white);
 }
 
@@ -371,24 +385,6 @@
   .brand-clinical .brand-section.brand-hero-first {
     padding-top: 0;
   }
-}
-
-/* ================================================================
- * LAYER 2.6 — LANDING V2 SCOPE (opt-in, /start only)
- * ================================================================
- * Softens the clinical grammar for the V2 landing page rebuild
- * (SCRUM-1035). Opt-in via `.brand-v2` on the page root. Other
- * clinical pages are unaffected.
- *
- * Minimal overrides for now — additional softening lives in
- * individual V2 components until the system stabilises. Expand here
- * once 4–5 sections have shipped and the language is consistent.
- * ================================================================ */
-
-.brand-v2 {
-  --brand-radius-interactive: 10px;
-  --brand-radius-container: 12px;
-  --brand-radius-card: 12px;
 }
 
 /* ---- Clinical utilities (unscoped, opt-in) ---- */
@@ -624,12 +620,10 @@
  *     backgroundSize: "24px 24px",
  *   }}>
  *
- * The dot grid is currently applied via inline style. The
- * `.app-dot-grid` helper below mirrors the inline pattern exactly so
- * either page can be refactored to use the class without a visual
- * change. There is no `.brand-app-dark` scope class — the `/app`
- * dark theme is `brand-clinical` + a dark background, not a separate
- * scope.
+ * The dot grid (2x2px white squares at 24px pitch, 18% opacity) is
+ * applied via inline style on both pages. There is no `.brand-app-dark`
+ * scope class — the `/app` dark theme is `brand-clinical` + a dark
+ * background, not a separate scope.
  *
  * Surface, border, and text opacity values used on these pages span
  * a continuous ramp rather than a fixed palette. See section 10 of
@@ -637,14 +631,6 @@
  *
  * Full spec: docs/branding/DESIGN_SYSTEM.md section 10
  * ================================================================ */
-
-/* SVG dot grid overlay matching the inline pattern used on /app and
-   /app-insights: 2x2px white squares at 24px pitch, 18% opacity. Set
-   background-color separately (e.g. `bg-[#0a0a0a]` or inline style). */
-.app-dot-grid {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E");
-  background-size: 24px 24px;
-}
 
 /* ================================================================
  * LAYER 3 — LEGACY COMPAT + DEPRECATION CANDIDATES
@@ -670,12 +656,6 @@
      protocol surface is on the clinical grammar. */
   --brand-flow-accent: #d97706;
   --brand-clear-accent: #0369a1;
-
-  /* @deprecated — gradient accent. Clinical forbids gradients outside
-     figure-plate legibility overlays. Still referenced by the legacy
-     upsell button and funnel accent bar; replace with solid
-     `var(--brand-accent)` when those surfaces are revisited. */
-  --brand-gradient-accent: linear-gradient(135deg, #4058bb 0%, #2a3d8f 100%);
 }
 
 /* ---- Legacy component patterns ----
