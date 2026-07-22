@@ -11,7 +11,7 @@ import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellStrip from "./CartUpsellStrip";
 import { getLineSubscribeOffer } from "@/app/lib/cartUpsell";
-import { getOfferByVariantId } from "@/app/lib/funnelData";
+import { getOfferByVariantId, getOfferPricing } from "@/app/lib/funnelData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 
 // Fallback product images when Shopify doesn't provide one
@@ -32,7 +32,9 @@ function getProductFallbackImage(productTitle: string): string {
   return "/bottle2.png";
 }
 
-const SUBSCRIPTION_DISCOUNT = 0.2;
+// GBP savings at/above which the footer shows the £ amount instead of the %.
+// Psychology: a big saving lands harder as "£64 off", a small one as "43% off".
+const CART_SAVINGS_VALUE_THRESHOLD = 50;
 
 /** Price to display for one line (matches what the customer pays and what subtotal uses). */
 function getLineDisplayPrice(
@@ -60,36 +62,33 @@ function getLineDisplayPrice(
   };
 }
 
-/** Compare-at / original price for strikethrough. */
-function getCompareAtPrice(
-  item: CartLine,
-  currentDisplayAmount?: string,
-): { amount: string; currencyCode: string } | null {
-  if (item.sellingPlanAllocation?.priceAdjustments?.[0]?.compareAtPrice) {
-    return item.sellingPlanAllocation.priceAdjustments[0].compareAtPrice;
-  }
-  if (item.merchandise.compareAtPrice) return item.merchandise.compareAtPrice;
-  if (item.cost?.compareAtAmountPerQuantity) return item.cost.compareAtAmountPerQuantity;
+/**
+ * Subscription savings for one line, anchored on the verifiable one-time (OTP)
+ * price for the same product: the crossed-out "was", the reconciled discount %,
+ * and the £ saved across the line quantity. Returns null for one-time lines and
+ * anything that would not actually show a saving, so the price block falls back
+ * to the plain price. Quarterly ships three months at once, so it anchors
+ * against three one-time boxes.
+ */
+function getLineSavings(item: CartLine): {
+  compareAt: number;
+  discountPct: number;
+  savingsTotal: number;
+} | null {
+  if (!item.sellingPlanAllocation) return null;
+  const offer = getOfferByVariantId(item.merchandise.id);
+  if (!offer) return null;
 
-  if (item.sellingPlanAllocation) {
-    const discounted = parseFloat(
-      currentDisplayAmount ?? item.merchandise.price.amount,
-    );
-    const original = discounted / (1 - SUBSCRIPTION_DISCOUNT);
-    return {
-      amount: original.toFixed(2),
-      currencyCode: item.merchandise.price.currencyCode,
-    };
-  }
-  return null;
-}
+  const displayNum = parseFloat(getLineDisplayPrice(item).amount);
+  const otpUnit = getOfferPricing(offer.product, "monthly-otp").price;
+  const compareAt = offer.cadence === "quarterly-sub" ? otpUnit * 3 : otpUnit;
+  if (!(compareAt > displayNum)) return null;
 
-function getLinePriceInfo(item: CartLine) {
-  const display = getLineDisplayPrice(item);
-  const compareAt = getCompareAtPrice(item, display.amount);
-  const showCompare =
-    compareAt != null && parseFloat(compareAt.amount) > parseFloat(display.amount);
-  return { display, compareAt, showCompare };
+  return {
+    compareAt,
+    discountPct: Math.round((1 - displayNum / compareAt) * 100),
+    savingsTotal: (compareAt - displayNum) * item.quantity,
+  };
 }
 
 function LineItemPrice({
@@ -99,27 +98,22 @@ function LineItemPrice({
   item: CartLine;
   formatPrice: (amount: string, currencyCode: string) => string;
 }) {
-  const { display, compareAt, showCompare } = getLinePriceInfo(item);
-  const discountPct =
-    showCompare && compareAt
-      ? Math.round(
-          (1 - parseFloat(display.amount) / parseFloat(compareAt.amount)) * 100,
-        )
-      : 0;
+  const display = getLineDisplayPrice(item);
+  const savings = getLineSavings(item);
   return (
     <div className="flex shrink-0 flex-col items-end text-right">
       <span className="text-base font-bold tabular-nums text-black">
         {formatPrice(display.amount, display.currencyCode)}
       </span>
-      {showCompare && compareAt && (
-        <span className="text-xs tabular-nums text-black/40 line-through">
-          {formatPrice(compareAt.amount, compareAt.currencyCode)}
-        </span>
-      )}
-      {showCompare && discountPct > 0 && (
-        <span className="mt-1 rounded-full bg-[#1a7f4f]/10 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#1a7f4f]">
-          {discountPct}% off
-        </span>
+      {savings && (
+        <>
+          <span className="text-sm tabular-nums text-black/40 line-through">
+            {formatPrice(savings.compareAt.toFixed(2), display.currencyCode)}
+          </span>
+          <span className="mt-1 rounded-full bg-[#1a7f4f]/10 px-2.5 py-1 text-xs font-semibold tabular-nums text-[#1a7f4f]">
+            {savings.discountPct}% off
+          </span>
+        </>
       )}
     </div>
   );
@@ -140,14 +134,26 @@ export default function CartDrawer() {
 
   const cartItems = getCartItems();
 
+  // Total subscription savings across the cart, plus the compare-at base, so the
+  // footer can show either a £ figure or a blended % (see getLineSavings).
+  const cartSavings = cartItems.reduce(
+    (acc, item) => {
+      const s = getLineSavings(item);
+      if (s) {
+        acc.savings += s.savingsTotal;
+        acc.compareAt += s.compareAt * item.quantity;
+      }
+      return acc;
+    },
+    { savings: 0, compareAt: 0 },
+  );
+
   const formatPrice = (amount: string, currencyCode: string = "GBP") => {
     return new Intl.NumberFormat("en-GB", {
       style: "currency",
       currency: currencyCode,
     }).format(parseFloat(amount));
   };
-
-  const isSubscription = (item: CartLine) => !!item.sellingPlanAllocation;
 
   if (!isOpen) return null;
 
@@ -315,11 +321,20 @@ export default function CartDrawer() {
                               );
                             })()}
                           </p>
-                          {isSubscription(item) && (
-                            <span className="mt-1.5 inline-block rounded bg-[#1B2757]/8 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-[#1B2757]">
-                              Subscribe
-                            </span>
-                          )}
+                          {(() => {
+                            const savings = getLineSavings(item);
+                            if (!savings) return null;
+                            const offer = getOfferByVariantId(item.merchandise.id);
+                            const cadenceLabel =
+                              offer?.cadence === "quarterly-sub"
+                                ? "every 3 months"
+                                : "every month";
+                            return (
+                              <p className="mt-1 text-sm font-semibold text-black">
+                                {savings.discountPct}% off {cadenceLabel}, forever
+                              </p>
+                            );
+                          })()}
                         </div>
                         <LineItemPrice item={item} formatPrice={formatPrice} />
                       </div>
@@ -425,6 +440,22 @@ export default function CartDrawer() {
         <div className="border-t border-black/8 bg-white">
           {cart && cartItems.length > 0 && (
             <div className="px-5 pt-4 pb-3 space-y-2">
+              {/* Subscription savings */}
+              {cartSavings.savings > 0 && (
+                <div className="flex items-baseline justify-between">
+                  <span className="text-base font-semibold text-black">
+                    Savings
+                  </span>
+                  <span className="rounded-full bg-[#1a7f4f]/10 px-2.5 py-0.5 text-sm font-semibold tabular-nums text-[#1a7f4f]">
+                    {cartSavings.savings >= CART_SAVINGS_VALUE_THRESHOLD
+                      ? `£${Math.round(cartSavings.savings)} off`
+                      : `${Math.round(
+                          (cartSavings.savings / cartSavings.compareAt) * 100,
+                        )}% off`}
+                  </span>
+                </div>
+              )}
+
               {/* Subtotal */}
               <div className="flex items-baseline justify-between">
                 <span className="text-base font-semibold text-black">
