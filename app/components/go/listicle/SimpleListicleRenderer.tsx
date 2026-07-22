@@ -74,10 +74,12 @@ function SimpleHero({ hero }: { hero: MmListicleConfig["hero"] }) {
 }
 
 /**
- * One reason: image + heading + body. Desktop is image-left / text-right,
- * uniform (no alternating). Mobile stacks heading, then image, then body; the
- * heading renders twice and toggles per breakpoint so it sits above the image
- * on mobile but beside it on desktop. Reason assets are always images here.
+ * One reason: image + heading + body. Same content, just rearranged per
+ * breakpoint: mobile stacks heading → image → body; desktop is a uniform
+ * two-column row, asset left / copy right, with the asset held to a fixed
+ * width so it does not scale up from its mobile size. The heading renders
+ * twice and toggles per breakpoint so it sits above the image on mobile but
+ * beside it on desktop. Reason assets are always images here.
  */
 function SimpleReason({
   block,
@@ -90,14 +92,14 @@ function SimpleReason({
     </>
   );
   return (
-    <article className="py-10 md:grid md:grid-cols-2 md:items-center md:gap-14 md:py-16">
+    <article className="py-10 md:grid md:grid-cols-[minmax(0,440px)_minmax(0,1fr)] md:items-center md:gap-14 md:py-16">
       {/* Heading above the image — mobile only */}
       <h3 className="mb-4 text-[22px] font-bold leading-[1.2] text-black md:hidden">
         {heading}
       </h3>
 
       {/* Photo — squarish corners for the editorial look */}
-      <div className="md:order-1">
+      <div>
         <div
           className="relative w-full overflow-hidden rounded-[8px]"
           style={{ aspectRatio: block.asset.aspect ?? "4/3" }}
@@ -109,13 +111,13 @@ function SimpleReason({
             className={
               block.asset.fit === "contain" ? "object-contain" : "object-cover"
             }
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 768px) 100vw, 440px"
           />
         </div>
       </div>
 
       {/* Text: heading (desktop only) + body */}
-      <div className="mt-6 md:order-2 md:mt-0">
+      <div className="mt-6 md:mt-0">
         <h3 className="mb-4 hidden text-[28px] font-bold leading-[1.15] text-black md:block">
           {heading}
         </h3>

@@ -135,8 +135,8 @@ export const generalListicle: ListicleConfig = {
       body: "Join the Olympic medallists and world champions who rely on CONKA when it matters most. Olympic silver medallist Dan Norton, world champion boxers Chris Billam-Smith and Adam Azim, and England international Fraser Dingwall use CONKA to sharpen focus and find the small margins. It's Informed Sport certified, so they can trust every batch.",
       asset: {
         kind: "image",
-        src: "/testimonials/athlete/ChrisBillamSmithNB.jpg",
-        alt: "Chris Billam-Smith, WBO Cruiserweight World Champion, with his title belt",
+        src: "/testimonials/athlete/CbsShots.jpg",
+        alt: "Chris Billam-Smith, WBO Cruiserweight World Champion, with CONKA",
         aspect: "1/1",
         fit: "cover",
       },
