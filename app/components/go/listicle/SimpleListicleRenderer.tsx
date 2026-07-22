@@ -146,26 +146,38 @@ function SimpleReason({
 }
 
 /**
- * Buy-box: an optional offer header (eyebrow pill + title + subline) over the
- * ProductGrid. The grid sits free on the section background — no tile. When the
- * block sets `offer`, the live subscription discount for that product + cadence
- * replaces the `{percent}` token in the headline/subline, so the copy stays in
- * sync with funnel pricing. The grid's own heading is suppressed whenever this
- * header is shown so there is a single title.
+ * Default offer-header copy for the buy box. A buyBox block inherits these and
+ * can override any field; set a field to "" to suppress it (and when all three
+ * header fields are empty, the ProductGrid falls back to its own heading).
+ * `{percent}` in the copy is replaced with the live discount for `offer`.
+ */
+const BUYBOX_DEFAULTS = {
+  eyebrow: "Limited time offer",
+  headline: "Clinically-dosed brain performance",
+  subline: "Try it risk free, now {percent}% off.",
+  offer: { product: "both", cadence: "monthly-sub" },
+} as const;
+
+/**
+ * Buy-box: an offer header (eyebrow pill + title + subline) over the free-standing
+ * ProductGrid (no tile). Copy comes from BUYBOX_DEFAULTS; the block can override
+ * any field. The live subscription discount for `offer` (product + cadence)
+ * replaces the `{percent}` token, so the copy stays in sync with funnel pricing.
+ * The grid's own heading is suppressed while a header is shown so there is a
+ * single title.
  */
 function BuyBox({
   block,
 }: {
   block: Extract<MmBodyBlock, { kind: "buyBox" }>;
 }) {
-  const percent = block.offer
-    ? getDisplayDiscount(getOfferPricing(block.offer.product, block.offer.cadence))
-    : null;
-  const fill = (s?: string) =>
-    s != null && percent != null ? s.replace(/\{percent\}/g, String(percent)) : s;
-  const headline = fill(block.headline);
-  const subline = fill(block.subline);
-  const hasHeader = Boolean(block.eyebrow || headline || subline);
+  const eyebrow = block.eyebrow ?? BUYBOX_DEFAULTS.eyebrow;
+  const offer = block.offer ?? BUYBOX_DEFAULTS.offer;
+  const percent = getDisplayDiscount(getOfferPricing(offer.product, offer.cadence));
+  const fill = (s: string) => s.replace(/\{percent\}/g, String(percent));
+  const headline = fill(block.headline ?? BUYBOX_DEFAULTS.headline);
+  const subline = fill(block.subline ?? BUYBOX_DEFAULTS.subline);
+  const hasHeader = Boolean(eyebrow || headline || subline);
 
   return (
     <div className="my-12 md:my-16">
@@ -223,16 +235,23 @@ export default function SimpleListicleRenderer({
         className="px-5 pb-8 md:px-[5vw]"
         style={{ background: BONE, color: "#111" }}
       >
-        <div className="mx-auto max-w-[820px]">
-          {config.body.map((block, i) => {
-            if (block.kind === "reason")
-              return <SimpleReason key={i} block={block} />;
-            if (block.kind === "buyBox")
-              return <BuyBox key={i} block={block} />;
-            // The simple template only uses reason + buyBox blocks.
-            return null;
-          })}
-        </div>
+        {config.body.map((block, i) => {
+          if (block.kind === "reason")
+            return (
+              <div key={i} className="mx-auto max-w-[820px]">
+                <SimpleReason block={block} />
+              </div>
+            );
+          if (block.kind === "buyBox")
+            // Break out of the 820px reading column to the home-page grid width.
+            return (
+              <div key={i} className="brand-track">
+                <BuyBox block={block} />
+              </div>
+            );
+          // The simple template only uses reason + buyBox blocks.
+          return null;
+        })}
       </section>
 
       {/* Product / buy box (#product anchor for the sticky bar) */}
@@ -242,7 +261,7 @@ export default function SimpleListicleRenderer({
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: TINT, color: "#111" }}
       >
-        <div className="mx-auto max-w-[820px]">
+        <div className="brand-track">
           <ProductGrid />
         </div>
       </section>

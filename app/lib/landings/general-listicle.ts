@@ -95,11 +95,9 @@ export const generalListicle: ListicleConfig = {
       },
     },
     {
+      // Offer header + product grid. Copy defaults live in the renderer
+      // (BUYBOX_DEFAULTS); override any field here to change it per page.
       kind: "buyBox",
-      eyebrow: "Limited time offer",
-      headline: "Clinically-dosed brain performance",
-      subline: "Try it risk free, now {percent}% off.",
-      offer: { product: "both", cadence: "monthly-sub" },
     },
     {
       kind: "reason",
