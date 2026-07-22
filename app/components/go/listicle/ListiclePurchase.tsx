@@ -25,14 +25,14 @@ import { useCart } from "@/app/context/CartContext";
  * old box: cadenceData + useCart, tagged listicle_buybox). Deliberately just
  * the two cards: the listicle's own downstream zones carry the supporting proof.
  *
- * Clinical grammar: white surfaces, hairline borders, navy = selected, gold
- * Save% badge, tabular-nums prices. No emoji, no font-mono eyebrows.
+ * Simple DTC grammar (DESIGN_SYSTEM.md §8.5): white surfaces, soft-lifted
+ * cards, navy = selected / primary, green = savings + free, tabular-nums
+ * prices. No emoji, no font-mono eyebrows.
  * ========================================================================== */
 
 const NAVY = "#1B2757";
-const GOLD = "#C9A24A";
-const GREEN = "#10B981";
-const GREEN_TEXT = "#0b7a55";
+/** Sanctioned savings / positive accent (DESIGN_SYSTEM.md §8.5, --brand-positive). */
+const GREEN = "#1a7f4f";
 
 /** Product photos used in the buy cards (single Flow/Clear + Both bundle). */
 const CARD_IMAGE: Record<ProductHeroId, string> = {
@@ -160,7 +160,7 @@ function PlanValueStack({
               </span>
               <span
                 className="shrink-0 whitespace-nowrap text-[12px] font-semibold tabular-nums"
-                style={{ color: GREEN_TEXT }}
+                style={{ color: GREEN }}
               >
                 {r.was ? (
                   <>
@@ -244,7 +244,7 @@ function PlanPicker({
                   {savePct > 0 && (
                     <span
                       className="rounded-full px-2.5 py-0.5 text-[12px] font-bold text-white"
-                      style={{ background: GOLD }}
+                      style={{ background: GREEN }}
                     >
                       Save {savePct}%
                     </span>
@@ -270,7 +270,7 @@ function PlanPicker({
             {freeShots > 0 && (
               <div
                 className="mx-4 -mt-1 mb-4 flex items-center gap-2 rounded-[10px] px-3 py-2"
-                style={{ background: "rgba(16,185,129,0.12)" }}
+                style={{ background: "rgba(26,127,79,0.1)" }}
               >
                 <span
                   className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full"
@@ -280,7 +280,7 @@ function PlanPicker({
                 </span>
                 <span
                   className="text-[13px] font-semibold leading-snug"
-                  style={{ color: GREEN_TEXT }}
+                  style={{ color: GREEN }}
                 >
                   +{freeShots} free shots on your first order
                 </span>
@@ -405,7 +405,7 @@ function ProductCard({
 
   return (
     <div
-      className={`relative flex flex-col rounded-[16px] border-2 bg-white p-4 ${
+      className={`relative flex flex-col rounded-2xl border-2 bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ${
         bestValue ? "border-[#1B2757]" : "border-black/10"
       }`}
     >

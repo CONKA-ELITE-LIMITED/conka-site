@@ -53,8 +53,8 @@ export default function AthleteTestimonials({
     <div>
       <div className="mx-auto max-w-[820px] text-center">
         <h2
-          className="mb-3 text-3xl font-extrabold leading-[1.05] text-[#313131] md:text-5xl"
-          style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+          className="mb-3 text-3xl font-extrabold leading-[1.05] text-black md:text-5xl"
+          style={{ letterSpacing: "-0.02em" }}
         >
           Trusted by the Best in the World.
         </h2>
@@ -73,7 +73,7 @@ export default function AthleteTestimonials({
           return (
             <figure
               key={t.name}
-              className={`m-0 flex flex-col overflow-hidden rounded-2xl lg:w-[304px] lg:flex-shrink-0 ${
+              className={`m-0 flex flex-col overflow-hidden rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.08)] lg:w-[304px] lg:flex-shrink-0 ${
                 navy ? "bg-[#1B2757]" : "border border-black/[0.06] bg-white"
               }`}
             >

@@ -270,7 +270,7 @@ export default function AppMeasureSection() {
       <div className="mx-auto mb-8 max-w-[42rem] text-center">
         <h2
           className="mb-3.5 text-3xl font-extrabold leading-[1.05] md:text-5xl"
-          style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+          style={{ letterSpacing: "-0.02em" }}
         >
           We don&rsquo;t ask if CONKA works.
           <br />

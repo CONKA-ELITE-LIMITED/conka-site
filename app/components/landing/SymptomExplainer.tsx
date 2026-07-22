@@ -70,7 +70,7 @@ function IngredientCard({
           {ing.icon}
         </span>
         <strong className="text-[14px] font-bold text-black">{ing.name}</strong>
-        <span className="rounded-full bg-black/[0.06] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-black/55">
+        <span className="rounded-full bg-black/[0.06] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-black">
           {ing.formula}
         </span>
       </div>
@@ -174,7 +174,7 @@ export default function SymptomExplainer({
       {/* Active panel */}
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         <div className="rounded-2xl border border-black/10 bg-white p-5">
-          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-black">
             {"What's happening in your brain"}
           </p>
           <p className="text-[14px] leading-relaxed text-black/80">
@@ -186,7 +186,7 @@ export default function SymptomExplainer({
         </div>
 
         <div className="rounded-2xl border border-black/10 bg-white p-5">
-          <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-black">
             How CONKA helps
           </p>
           {primaryIng ? <IngredientCard ing={primaryIng} gradIndex={0} /> : null}

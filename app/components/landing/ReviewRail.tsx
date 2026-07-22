@@ -30,8 +30,8 @@ export default function ReviewRail() {
     <div>
       <div className="mb-6 text-center">
         <h2
-          className="mb-2 text-4xl font-extrabold leading-[1.05] text-[#1d1d1d] md:text-5xl"
-          style={{ letterSpacing: "var(--letter-spacing-premium-title)" }}
+          className="mb-2 text-4xl font-extrabold leading-[1.05] text-black md:text-5xl"
+          style={{ letterSpacing: "-0.02em" }}
         >
           Real people. Real results.
         </h2>
@@ -46,7 +46,7 @@ export default function ReviewRail() {
           return (
             <article
               key={`${r.name}-${i}`}
-              className="flex w-[270px] flex-shrink-0 snap-start flex-col rounded-[20px] border border-black/10 bg-white p-5"
+              className="flex w-[270px] flex-shrink-0 snap-start flex-col rounded-[20px] border border-black/10 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
             >
               <div className="mb-3 flex items-center justify-between gap-2">
                 <span className="text-[10.5px] font-medium uppercase tracking-[0.09em] text-[#999]">

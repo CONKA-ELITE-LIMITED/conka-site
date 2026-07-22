@@ -53,7 +53,7 @@ export default function IngredientGrid({
       className="rounded-2xl border border-black/10 bg-white p-4 sm:p-5"
     >
       {eyebrow ? (
-        <p className="mb-3 text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">
+        <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-black">
           {eyebrow}
         </p>
       ) : null}
