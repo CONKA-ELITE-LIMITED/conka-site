@@ -40,7 +40,7 @@ function SimpleHero({ hero }: { hero: MmListicleConfig["hero"] }) {
       style={{ background: BONE, color: "#111" }}
     >
       <div className="mx-auto max-w-5xl">
-        <h1 className="text-[2.25rem] font-bold leading-[1.08] text-black md:text-[3.5rem] md:leading-[1.05]">
+        <h1 className="text-[2rem] font-bold leading-[1.1] text-black md:text-[2.75rem] md:leading-[1.08]">
           {hero.headline}
         </h1>
         {hero.author ? (
@@ -64,7 +64,7 @@ function SimpleHero({ hero }: { hero: MmListicleConfig["hero"] }) {
             </div>
           </div>
         ) : null}
-        <p className="mt-7 max-w-3xl text-[16px] leading-relaxed text-black md:text-[17px]">
+        <p className="mt-7 max-w-3xl text-[16px] font-semibold leading-relaxed text-black md:text-[17px]">
           {hero.subcopy}
         </p>
         <hr className="mt-9 border-0 border-t border-black/10" />
