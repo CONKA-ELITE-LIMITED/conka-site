@@ -462,7 +462,7 @@ export default function CartDrawer() {
             <a
               href={cart?.checkoutUrl || "#"}
               onClick={(e) => {
-                if (!cart?.checkoutUrl || cartItems.length === 0) {
+                if (!cart?.checkoutUrl) {
                   e.preventDefault();
                   return;
                 }
@@ -476,17 +476,13 @@ export default function CartDrawer() {
                   num_items: cartItems.reduce((s, i) => s + i.quantity, 0),
                 });
               }}
-              className={`relative block w-full bg-[#1B2757] text-white px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-center [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] transition-opacity ${
-                cartItems.length === 0 ? "opacity-40 cursor-not-allowed" : "hover:opacity-90"
-              }`}
+              className="relative block w-full bg-[#1B2757] text-white px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums text-center [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] transition-opacity hover:opacity-90"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="w-3.5 h-3.5 border border-white/30 border-t-white rounded-full animate-spin inline-block" />
                   Updating
                 </span>
-              ) : cartItems.length === 0 ? (
-                "Cart is empty"
               ) : (
                 "Checkout →"
               )}
