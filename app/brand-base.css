@@ -353,13 +353,18 @@
 /* ================================================================
  * LAYER 2 — CLINICAL SCOPE + UTILITIES
  * ================================================================
- * The acquisition/content grammar. Default for every new page.
- * Full spec: docs/branding/CLINICAL_AESTHETIC.md
+ * The evidence-dense grammar. No longer the default for new work —
+ * the forward direction is Simple DTC (DESIGN_SYSTEM.md §8.5); clinical
+ * is retained for science/evidence surfaces and the /app dark pages.
+ * Full spec: docs/branding/DESIGN_SYSTEM.md §8.
  *
- * Active pages using `.brand-clinical`:
+ * Pages currently carrying `.brand-clinical`:
  *   /start · / · /funnel · /science · /our-story · /case-studies
  *   /ingredients · /app · /why-conka · /conka-flow · /conka-clarity
- *   /protocol/[id] · + Navigation + Footer
+ *   /protocol/[id] · + Navigation + Footer.
+ *   (Cart, nav, and PDP-acquisition surfaces are converting to Simple
+ *   DTC; a page may keep the scope for zero-radius tokens while its
+ *   hero/cart already follow the Simple DTC grammar.)
  *
  * Rules:
  *   - Zero radius everywhere (token overrides)
@@ -661,7 +666,7 @@
 /* ---- Legacy component patterns ----
    These `.brand-*` component classes predate the clinical grammar.
    Clinical surfaces use Tailwind utilities directly
-   (`bg-white border border-black/12 p-5 lg:p-6`) per CLINICAL_AESTHETIC.md.
+   (`bg-white border border-black/12 p-5 lg:p-6`) per DESIGN_SYSTEM.md §8.
    Kept for non-clinical consumers (legacy B2B portal, account).
    @deprecated — do not reach for these on new work. */
 

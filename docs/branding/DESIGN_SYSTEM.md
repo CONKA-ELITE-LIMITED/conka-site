@@ -171,9 +171,9 @@ Mobile-first is non-negotiable. Full mobile guide: `MOBILE_OPTIMIZATION.md`.
 
 ## 8. Clinical Aesthetic
 
-> Active spec for every acquisition and content surface. Opt-in via `.brand-clinical` on the page root.
+> The evidence-dense grammar. No longer the global default — the forward direction is **Simple DTC** (§8.5). Clinical is retained for science/evidence-dense modules and the `/app` dark pages (§10). Opt-in via `.brand-clinical` on the page root. See the §8.5 per-surface authority table for which language governs which surface.
 >
-> Active pages: `/` `/start` `/funnel` `/science` `/our-story` `/case-studies` `/ingredients` `/app` `/app-insights` `/why-conka` `/conka-flow` `/conka-clarity` `/protocol/[id]` + Navigation + Footer
+> Pages currently carrying `.brand-clinical`: `/` `/start` `/funnel` `/science` `/our-story` `/case-studies` `/ingredients` `/app` `/app-insights` `/why-conka` `/conka-flow` `/conka-clarity` `/protocol/[id]` + Navigation + Footer. Cart, nav, and PDP-acquisition surfaces are converting to Simple DTC (a page can apply `.brand-clinical` for zero-radius tokens while its hero/cart already follow the Simple DTC grammar during the transition).
 >
 > **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
 >
@@ -605,7 +605,7 @@ Before shipping any new section:
 - [ ] No custom spacing: brand tokens only — no ad-hoc `max-w-*` or `px-*` at component root
 - [ ] Radius: one of the three tiers (16/24/32px) — or 0 in clinical/app-dark scope
 - [ ] Typography: correct class, left-aligned
-- [ ] Colour functional: accent blue only for CTAs/data highlights
+- [ ] Colour functional, not decorative (Clinical: navy interactive-only; Simple DTC: filled navy + green `#1a7f4f` savings accent per §8.5)
 - [ ] Mobile review at 390px before desktop
 - [ ] One idea per viewport on mobile
 - [ ] Can it be understood in under 3 seconds on a phone?
