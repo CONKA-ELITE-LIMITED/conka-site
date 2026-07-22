@@ -303,24 +303,29 @@ export default function CartDrawer() {
                           <p className="text-base font-bold leading-snug text-black">
                             {item.merchandise.product.title}
                           </p>
-                          <p className="mt-1 text-sm text-black">
-                            {(() => {
-                              const offer = getOfferByVariantId(item.merchandise.id);
-                              if (!offer) return item.merchandise.title;
-                              const { shotCount, freeShots } = offer.pricing;
+                          {(() => {
+                            const offer = getOfferByVariantId(item.merchandise.id);
+                            if (!offer) {
                               return (
-                                <>
-                                  {shotCount} Bottles
-                                  {freeShots && freeShots > 0 ? (
-                                    <span className="font-semibold text-[#1a7f4f]">
-                                      {" "}
-                                      + {freeShots} free
-                                    </span>
-                                  ) : null}
-                                </>
+                                <p className="mt-1 text-sm text-black">
+                                  {item.merchandise.title}
+                                </p>
                               );
-                            })()}
-                          </p>
+                            }
+                            const { shotCount, freeShots } = offer.pricing;
+                            return (
+                              <>
+                                <p className="mt-1 text-sm text-black">
+                                  {shotCount} Bottles
+                                </p>
+                                {freeShots && freeShots > 0 ? (
+                                  <span className="mt-1 inline-block rounded bg-[#1a7f4f]/10 px-2 py-0.5 text-xs font-semibold text-[#1a7f4f]">
+                                    + {freeShots} free
+                                  </span>
+                                ) : null}
+                              </>
+                            );
+                          })()}
                           {(() => {
                             const savings = getLineSavings(item);
                             if (!savings) return null;
@@ -330,7 +335,7 @@ export default function CartDrawer() {
                                 ? "every 3 months"
                                 : "every month";
                             return (
-                              <p className="mt-1 text-sm font-semibold text-black">
+                              <p className="mt-1 text-sm font-semibold text-black/55">
                                 {savings.discountPct}% off {cadenceLabel}, forever
                               </p>
                             );
@@ -443,7 +448,7 @@ export default function CartDrawer() {
               {/* Subscription savings */}
               {cartSavings.savings > 0 && (
                 <div className="flex items-baseline justify-between">
-                  <span className="text-base font-semibold text-black">
+                  <span className="text-base font-semibold uppercase text-black">
                     Savings
                   </span>
                   <span className="rounded-full bg-[#1a7f4f]/10 px-2.5 py-0.5 text-sm font-semibold tabular-nums text-[#1a7f4f]">
@@ -468,10 +473,6 @@ export default function CartDrawer() {
                   )}
                 </span>
               </div>
-
-              <p className="text-xs text-black">
-                Shipping calculated at checkout
-              </p>
             </div>
           )}
 
