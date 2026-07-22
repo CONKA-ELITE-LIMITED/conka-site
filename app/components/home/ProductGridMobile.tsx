@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import type { ProductGridProps } from "./ProductGrid";
-import { getProductGridCopy } from "./productGridCopy";
+import ProductGridHeader from "./ProductGridHeader";
 import SegmentedToggle from "@/app/components/SegmentedToggle";
 
 const ALL_CARDS = [
@@ -13,12 +13,11 @@ const ALL_CARDS = [
 ];
 
 export default function ProductGridMobile(props?: ProductGridProps) {
-  const { exclude = [], hideHeading = false } = props ?? {};
+  const { exclude = [], hideHeading = false, header } = props ?? {};
   const visibleCards = ALL_CARDS.filter(
     (c) => !exclude.includes(c.productType),
   );
   const maxIndex = Math.max(0, visibleCards.length - 1);
-  const copy = getProductGridCopy({ exclude });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -79,13 +78,7 @@ export default function ProductGridMobile(props?: ProductGridProps) {
 
   return (
     <>
-      {!hideHeading ? (
-        <div className="mb-8 px-4">
-          <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
-            {copy.title}
-          </h2>
-        </div>
-      ) : null}
+      {!hideHeading ? <ProductGridHeader {...(header ?? {})} /> : null}
 
       {visibleCards.length > 1 && (
         <div className="px-4 mb-5 flex justify-center">

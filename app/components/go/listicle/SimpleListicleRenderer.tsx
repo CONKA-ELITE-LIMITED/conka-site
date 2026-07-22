@@ -6,7 +6,6 @@ import type {
   MmListicleConfig,
 } from "@/app/lib/landings/listicle-types";
 import ProductGrid from "@/app/components/home/ProductGrid";
-import { getDisplayDiscount, getOfferPricing } from "@/app/lib/funnelData";
 import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
@@ -146,67 +145,26 @@ function SimpleReason({
 }
 
 /**
- * Default offer-header copy for the buy box. A buyBox block inherits these and
- * can override any field; set a field to "" to suppress it (and when all three
- * header fields are empty, the ProductGrid falls back to its own heading).
- * `{percent}` in the copy is replaced with the live discount for `offer`.
- */
-const BUYBOX_DEFAULTS = {
-  eyebrow: "Limited time offer",
-  headline: "Clinically-dosed brain performance",
-  subline: "Try it risk free, now {percent}% off.",
-  offer: { product: "both", cadence: "monthly-sub" },
-} as const;
-
-/**
- * Buy-box: an offer header (eyebrow pill + title + subline) over the free-standing
- * ProductGrid (no tile). Copy comes from BUYBOX_DEFAULTS; the block can override
- * any field. The live subscription discount for `offer` (product + cadence)
- * replaces the `{percent}` token, so the copy stays in sync with funnel pricing.
- * The grid's own heading is suppressed while a header is shown so there is a
- * single title.
+ * Buy-box: a spacing wrapper around the ProductGrid, which renders its own offer
+ * header (eyebrow pill + title + subline) by default. A buyBox block can override
+ * that header copy; the defaults live in ProductGridHeader. `block.headline` maps
+ * to the header title.
  */
 function BuyBox({
   block,
 }: {
   block: Extract<MmBodyBlock, { kind: "buyBox" }>;
 }) {
-  const eyebrow = block.eyebrow ?? BUYBOX_DEFAULTS.eyebrow;
-  const offer = block.offer ?? BUYBOX_DEFAULTS.offer;
-  const percent = getDisplayDiscount(getOfferPricing(offer.product, offer.cadence));
-  const fill = (s: string) => s.replace(/\{percent\}/g, String(percent));
-  const headline = fill(block.headline ?? BUYBOX_DEFAULTS.headline);
-  const subline = fill(block.subline ?? BUYBOX_DEFAULTS.subline);
-  const hasHeader = Boolean(eyebrow || headline || subline);
-
   return (
     <div className="my-12 md:my-16">
-      {hasHeader ? (
-        <div className="mb-8 text-center md:mb-10">
-          {block.eyebrow ? (
-            <span
-              className="mb-4 inline-block rounded-[8px] px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-[#14532d]"
-              style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
-            >
-              {block.eyebrow}
-            </span>
-          ) : null}
-          {headline ? (
-            <h3
-              className="text-[28px] font-bold leading-[1.1] text-black md:text-[40px]"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              {headline}
-            </h3>
-          ) : null}
-          {subline ? (
-            <p className="mx-auto mt-3 max-w-xl text-[15px] font-medium text-black/60">
-              {subline}
-            </p>
-          ) : null}
-        </div>
-      ) : null}
-      <ProductGrid hideHeading={hasHeader} />
+      <ProductGrid
+        header={{
+          eyebrow: block.eyebrow,
+          title: block.headline,
+          subline: block.subline,
+          offer: block.offer,
+        }}
+      />
     </div>
   );
 }

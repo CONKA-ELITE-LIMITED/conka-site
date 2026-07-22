@@ -202,8 +202,9 @@ export default function ProductCard({
           {product.bodyCopy}
         </p>
 
-        {/* Simplified stat trio */}
-        <div className="mt-5 pt-5 grid w-full grid-cols-3 gap-3 border-t border-black/10">
+        {/* Simplified stat trio — pinned toward the bottom (mt-auto) so the
+            stats and CTA line up across cards despite varying copy lengths. */}
+        <div className="mt-auto pt-5 grid w-full grid-cols-3 gap-3 border-t border-black/10">
           {product.stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center gap-1">
               <span className="text-xl font-bold text-black leading-none tabular-nums">
