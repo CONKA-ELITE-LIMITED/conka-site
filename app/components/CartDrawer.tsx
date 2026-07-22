@@ -314,16 +314,16 @@ export default function CartDrawer() {
                             }
                             const { shotCount, freeShots } = offer.pricing;
                             return (
-                              <>
-                                <p className="mt-1 text-sm text-black">
+                              <div className="mt-1 flex items-center gap-2">
+                                <span className="text-sm text-black">
                                   {shotCount} Bottles
-                                </p>
+                                </span>
                                 {freeShots && freeShots > 0 ? (
-                                  <span className="mt-1 inline-block rounded bg-[#1a7f4f]/10 px-2 py-0.5 text-xs font-semibold text-[#1a7f4f]">
+                                  <span className="inline-block rounded bg-[#1a7f4f]/10 px-2 py-0.5 text-xs font-semibold text-[#1a7f4f]">
                                     + {freeShots} free
                                   </span>
                                 ) : null}
-                              </>
+                              </div>
                             );
                           })()}
                           {(() => {
