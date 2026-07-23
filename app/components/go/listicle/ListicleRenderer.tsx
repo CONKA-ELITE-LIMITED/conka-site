@@ -8,11 +8,11 @@ import type {
   Im8ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
-import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
@@ -20,41 +20,44 @@ import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
 import FocusBars from "@/app/components/landing/FocusBars";
-import AppMeasureSection, {
-  MeasureTile,
-} from "@/app/components/landing/AppMeasureSection";
-import ReviewRail from "@/app/components/landing/ReviewRail";
+import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
-import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
 import SegmentToggle from "@/app/components/landing/SegmentToggle";
-import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
-import CROFAQv2 from "@/app/components/cro/CROFAQv2";
-import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
+import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
+import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
+import LabFAQ from "@/app/components/landing/LabFAQ";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
 
 /**
- * Listicle landing renderer (/go/[slug], format: "listicle").
+ * Listicle landing renderer (/go/[slug], format: "listicle"), IM8 template.
  *
- * SKELETON PHASE: every zone renders as a labelled block with the
- * agreed background rhythm and rough geometry so the full page can be
- * reviewed end to end. Each zone gets rebuilt to quality in its own
- * section pass (see listicle-blueprint.md), at which point it moves
- * into its own component file in this folder.
+ * Zones: hero, proof ticker, reasons (the plug-and-play block library), a logo
+ * band, the product buy box, the post-buy-box proof tier, FAQ, plus an optional
+ * sticky bar. The logo band (ListicleLogoBand) and proof tier (ListicleProofTier)
+ * both live in ListicleProofTier.tsx and are shared with SimpleListicleRenderer;
+ * the reason-block library is still inline here.
  *
  * Dark zones use --color-neuro-blue-dark pending the colour decision;
- * flipping to ink is a one-line change on DARK below.
+ * flipping to ink is a one-line change on DARK below. Colours here are still
+ * hardcoded hex rather than brand-base.css tokens (deferred, see SCRUM-1176).
  */
 
 const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
-/* Marketing CTAs (hero, bridge, sticky, cost) navigate to the Both PDP rather
-   than scrolling to the in-page buy zone. */
-const BUY_HREF = "/conka-both";
+/* Marketing CTAs (hero, bridge, sticky) navigate to the PDP for the product
+   this page sells, following the buy box's productHeroId, rather than scrolling
+   to the in-page buy zone. Flow "01" -> /conka-flow, Clear "02" -> /conka-clarity,
+   Both "03" (and the default) -> /conka-both. */
+const PDP_HREF: Record<ProductHeroId, string> = {
+  "01": "/conka-flow",
+  "02": "/conka-clarity",
+  "03": "/conka-both",
+};
 /* Soft-blue sticky-bar fill (clearly tinted, not the deep navy). */
 const SOFT_BLUE = "var(--go-option-tint, #dce5f7)";
 
@@ -198,7 +201,11 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         ? asset.alt
         : asset.eyebrow;
   const aspect =
-    asset.kind === "placeholder" ? asset.aspect : asset.kind === "image" ? (asset.aspect ?? "4/3") : "4/3";
+    asset.kind === "placeholder"
+      ? asset.aspect
+      : asset.kind === "image"
+        ? (asset.aspect ?? "4/3")
+        : "4/3";
 
   if (asset.kind === "statPanel") {
     const dark = asset.tone === "dark";
@@ -292,17 +299,17 @@ function ReviewCard({ review }: { review: ListicleReview }) {
       </p>
       <div className="mt-auto flex items-center gap-2.5 pt-1">
         {review.image ? (
-          <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+          <span className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-full">
             <Image
               src={review.image}
               alt={review.name}
               fill
-              sizes="36px"
+              sizes="72px"
               className="object-cover object-[center_25%]"
             />
           </span>
         ) : (
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-[11px] font-semibold text-white">
+          <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-base font-semibold text-white">
             {reviewInitials(review.name)}
           </span>
         )}
@@ -392,55 +399,70 @@ function BodyBlock({
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
     return (
-      <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
-        <div className={mediaFirst ? "md:order-2" : ""}>
-          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
-            <span className="tabular-nums">
-              {String(block.n).padStart(2, "0")}.
-            </span>{" "}
-            {block.headline}
-          </h3>
-          <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
-            {block.body}
-          </p>
-          {block.citation ? (
-            <CitationLine
-              citation={block.citation}
-              href={block.citationHref}
-              className="-mt-3 mb-5"
-            />
-          ) : null}
-          {block.chips?.length ? (
-            <div className="flex flex-wrap gap-2">
-              {block.chips.map((chip, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-[12px] font-semibold text-black shadow-sm"
-                >
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#1a7f4f"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                    className="shrink-0"
+      <div className="border-t border-black/10 py-14">
+        <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
+          <div className={mediaFirst ? "md:order-2" : ""}>
+            <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+              <span className="tabular-nums">
+                {String(block.n).padStart(2, "0")}.
+              </span>{" "}
+              {block.headline}
+            </h3>
+            <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
+              {block.body}
+            </p>
+            {block.citation ? (
+              <CitationLine
+                citation={block.citation}
+                href={block.citationHref}
+                className="-mt-3 mb-5"
+              />
+            ) : null}
+            {block.chips?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {block.chips.map((chip, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-[12px] font-semibold text-black shadow-sm"
                   >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  {chip}
-                </span>
-              ))}
-            </div>
-          ) : null}
-        </div>
-        <div className={mediaFirst ? "md:order-1" : ""}>
-          <AssetBlock asset={block.asset} />
-        </div>
-      </article>
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#1a7f4f"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden
+                      className="shrink-0"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+          <div className={mediaFirst ? "md:order-1" : ""}>
+            <AssetBlock asset={block.asset} />
+          </div>
+        </article>
+        {/* Full-width press band, OUTSIDE the grid: the marquee's w-max track
+            would otherwise blow out the auto grid column on mobile and stretch
+            the asset (e.g. the app graph) to the track width. Slower than the
+            partner band (60s vs 40s) so the two never read as one track. */}
+        {block.pressMarquee ? (
+          <div className="mt-12">
+            <LogoMarquee
+              heading="As Published On:"
+              logos={PRESS_LOGOS}
+              durationSeconds={60}
+            />
+          </div>
+        ) : null}
+      </div>
     );
   }
 
@@ -460,7 +482,9 @@ function BodyBlock({
         >
           {block.stats.map((s, i) => (
             <div key={i}>
-              <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
+              <div className="text-4xl font-semibold tabular-nums md:text-5xl">
+                {s.value}
+              </div>
               <div className="mt-2 text-sm opacity-70">{s.label}</div>
             </div>
           ))}
@@ -493,11 +517,7 @@ function BodyBlock({
           ) : null}{" "}
           {block.headline}
         </h3>
-        <SymptomExplainer
-          intro={block.intro}
-          disclaimer={block.disclaimer}
-          symptoms={block.symptoms}
-        />
+        <SymptomExplainer intro={block.intro} symptoms={block.symptoms} />
       </div>
     );
   }
@@ -518,20 +538,8 @@ function BodyBlock({
     );
   }
 
-  return (
-    <div className="my-10 rounded-[16px] border border-black/10 bg-white px-8 py-12 text-center">
-      <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-        {block.eyebrow}
-      </div>
-      <blockquote className="mx-auto max-w-3xl text-2xl leading-snug">
-        “{block.quote}”
-      </blockquote>
-      <div className="mt-6 text-sm font-medium">{block.name}</div>
-      {block.detail ? (
-        <div className="text-xs opacity-60">{block.detail}</div>
-      ) : null}
-    </div>
-  );
+  // Every ListicleBodyBlock kind is handled above; this satisfies the compiler.
+  return null;
 }
 
 export default function ListicleRenderer({
@@ -541,8 +549,20 @@ export default function ListicleRenderer({
 }) {
   useHashScroll();
 
+  // Marketing CTAs follow the product this page sells (see PDP_HREF).
+  const buyHref = PDP_HREF[config.product.productHeroId ?? "03"];
+
+  // The FAQ section carries the sticky-bar clearance (pb-32). If a config
+  // supplies no faqIds that section does not render, so the clearance moves to
+  // <main> to stop the bar covering the last block.
+  const needsStickyClearance =
+    Boolean(config.stickyBar) && !config.faqIds.length;
+
   return (
-    <main className="min-h-screen overflow-x-clip" style={{ background: BONE, color: "#111" }}>
+    <main
+      className={`min-h-screen overflow-x-clip${needsStickyClearance ? " pb-32" : ""}`}
+      style={{ background: BONE, color: "#111" }}
+    >
       {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom edges
           on desktop at ~half viewport width; content column centres beside. */}
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
@@ -563,7 +583,9 @@ export default function ListicleRenderer({
                 fill
                 priority
                 className="object-cover"
-                style={{ objectPosition: config.hero.asset.objectPosition ?? "center" }}
+                style={{
+                  objectPosition: config.hero.asset.objectPosition ?? "center",
+                }}
                 sizes="(max-width: 768px) 100vw, 52vw"
               />
             ) : (
@@ -586,7 +608,7 @@ export default function ListicleRenderer({
               />
             ) : null}
             <Link
-              href={BUY_HREF}
+              href={buyHref}
               className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
               style={{ background: NAVY }}
             >
@@ -670,7 +692,7 @@ export default function ListicleRenderer({
                 {config.bridge.headline}
               </h3>
               <Link
-                href={BUY_HREF}
+                href={buyHref}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
@@ -680,7 +702,20 @@ export default function ListicleRenderer({
         </div>
       </section>
 
-      {/* Zone 3: product / buy box — hard flip to light */}
+      {/* Zone 3a: logo band — institutional trust, ABOVE the buy box */}
+      {config.proof && (config.proof.logoBand || config.proof.pressBand) ? (
+        <section
+          aria-label="Trusted by"
+          className="px-5 pt-16 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <ListicleLogoBand proof={config.proof} />
+          </div>
+        </section>
+      ) : null}
+
+      {/* Zone 3b: product / buy box — hard flip to light */}
       <section
         aria-label="Product offer"
         id="product"
@@ -692,203 +727,44 @@ export default function ListicleRenderer({
         </div>
       </section>
 
-      {/* Zone 4: social proof — logo marquee, athlete testimonials, press marquee */}
-      {config.logoMarquee ||
-      config.trustCarousel ||
-      config.athleteTestimonials ||
-      config.pressMarquee ? (
+      {/* Zone 4: proof tier — one named feature, then the UGC band last so it
+          sits directly before the FAQ. */}
+      {config.proof ? (
         <section
-          aria-label="Trusted by"
+          aria-label="Proof"
           className="px-5 py-16 md:px-[5vw]"
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            {config.logoMarquee ? <LogoMarquee /> : null}
-            {config.athleteTestimonials ? (
-              <div className={config.logoMarquee ? "mt-16" : ""}>
-                <AthleteTestimonials />
-              </div>
-            ) : null}
-            {config.trustCarousel ? (
-              <div
-                className={
-                  config.logoMarquee || config.athleteTestimonials ? "mt-14" : ""
-                }
-              >
-                <AthleteCredibilityCarousel />
-              </div>
-            ) : null}
-            {config.pressMarquee ? (
-              <div
-                className={
-                  config.logoMarquee ||
-                  config.athleteTestimonials ||
-                  config.trustCarousel
-                    ? "mt-16"
-                    : ""
-                }
-              >
-                <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
-              </div>
-            ) : null}
+            <ListicleProofTier proof={config.proof} />
           </div>
         </section>
       ) : null}
 
-      {/* Zone 5: comparison — deferred from v1, renders only if configured */}
-      {config.comparison ? (
+      {/* Zone 5: FAQ — LabFAQ, the site-standard accordion used on home and
+          the PDPs. No image column (no persona lifestyle shot) and no CTA
+          button (the sticky bar and the buy zone already own the CTA).
+          Only when the config supplies faqIds, so an empty list cannot render
+          a bare heading with no rows (matches SimpleListicleRenderer). */}
+      {config.faqIds.length ? (
         <section
-          aria-label="Comparison"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: "#eeeff2", color: "#111" }}
-        >
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-              {config.comparison.eyebrow}
-            </div>
-            <h2 className="mb-2 text-balance text-[32px] font-semibold text-black md:text-[44px]">
-              {config.comparison.headline}
-            </h2>
-            {config.comparison.subline ? (
-              <p className="mb-10 opacity-70">{config.comparison.subline}</p>
-            ) : null}
-            <div className="overflow-hidden rounded-[16px] border border-black/10 bg-white text-left">
-              <div className="grid grid-cols-3 gap-4 border-b border-black/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-70">
-                <div>Ingredient</div>
-                <div>CONKA</div>
-                <div>{config.comparison.competitorLabel}</div>
-              </div>
-              {config.comparison.rows.map((row, i) => (
-                <div
-                  key={i}
-                  className="grid grid-cols-3 gap-4 border-b border-black/5 px-6 py-4 text-sm"
-                >
-                  <div className="font-medium">{row.label}</div>
-                  <div>
-                    ✓ {row.us}
-                    {row.usDelta ? (
-                      <span className="ml-2 font-medium tabular-nums text-[#1B2757]">
-                        {row.usDelta}
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="opacity-60">{row.them}</div>
-                </div>
-              ))}
-            </div>
-            {config.comparison.footnote ? (
-              <p className="mt-6 text-xs opacity-60">
-                {config.comparison.footnote}
-              </p>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 6: customer reviews (shared carousel) */}
-      {config.reviewsCarousel ? (
-        <section
-          aria-label="Reviews"
-          className="px-5 py-16 md:px-[5vw]"
+          aria-label="FAQs"
+          className="px-5 py-16 pb-32 md:px-[5vw]"
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <ReviewRail />
-            <div className="mt-10">
-              <LandingTrustBadges />
-            </div>
+            <LabFAQ
+              items={pickFaqItems(...config.faqIds).map((f) => ({
+                ...f,
+                answer: stripClaimAnchors(f.answer),
+              }))}
+              image={null}
+              hideCTA
+              showSeeAllLink={false}
+            />
           </div>
         </section>
       ) : null}
-
-      {/* Zone 6b: app proof — "we measure it" (renders only if configured) */}
-      {config.appSection ? (
-        <section
-          aria-label="Measure it with the app"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto max-w-7xl">
-            <AppMeasureSection />
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 7: cost breakdown — deferred from v1, renders only if configured */}
-      {config.costBreakdown ? (
-        <section
-          aria-label="Cost breakdown"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto grid max-w-7xl gap-10 rounded-3xl bg-white p-10 text-[#111] shadow-sm md:grid-cols-2 md:p-14">
-            <div>
-              <h2 className="mb-6 text-4xl leading-tight">
-                {config.costBreakdown.claim}
-              </h2>
-              {config.costBreakdown.savingsBadge ? (
-                <div className="mb-6 inline-block rounded-full border border-black/25 px-6 py-6 text-center text-sm">
-                  {config.costBreakdown.savingsBadge}
-                </div>
-              ) : null}
-              {config.costBreakdown.cta ? (
-                <div>
-                  <Link
-                    href={BUY_HREF}
-                    className="inline-block rounded-full bg-[#111] px-8 py-4 text-sm font-medium text-white"
-                  >
-                    {config.costBreakdown.cta}
-                  </Link>
-                </div>
-              ) : null}
-            </div>
-            <div>
-              <div className="mb-4 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
-                Monthly breakdown
-              </div>
-              {config.costBreakdown.lineItems.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between border-b border-black/10 py-3 text-sm"
-                >
-                  <span>{item.label}</span>
-                  <span className="opacity-70">{item.price}</span>
-                </div>
-              ))}
-              <div className="mt-6 rounded-2xl bg-black/5 p-5 text-sm">
-                <div className="flex justify-between py-1">
-                  <span>{config.costBreakdown.totals.themLabel}</span>
-                  <span className="line-through opacity-60">
-                    {config.costBreakdown.totals.them}
-                  </span>
-                </div>
-                <div className="flex justify-between py-1 font-medium">
-                  <span>{config.costBreakdown.totals.usLabel}</span>
-                  <span>{config.costBreakdown.totals.us}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 8: FAQ (shared component, persona-locked questions) */}
-      <section
-        aria-label="FAQs"
-        className="px-5 py-16 pb-32 md:px-[5vw]"
-        style={{ background: BONE, color: "#111" }}
-      >
-        <div className="mx-auto max-w-7xl">
-          <CROFAQv2
-            items={pickFaqItems(...config.faqIds).map((f) => ({
-              id: f.id,
-              question: f.question,
-              answer: stripClaimAnchors(f.answer),
-            }))}
-            showSeeAllLink={false}
-          />
-        </div>
-      </section>
 
       {/* Sticky bottom bar */}
       {config.stickyBar ? (
@@ -898,9 +774,11 @@ export default function ListicleRenderer({
           style={{ background: SOFT_BLUE, color: NAVY }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <span className="text-sm font-medium">{config.stickyBar.label}</span>
+            <span className="text-sm font-medium">
+              {config.stickyBar.label}
+            </span>
             <Link
-              href={BUY_HREF}
+              href={buyHref}
               className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
               style={{ background: NAVY }}
             >

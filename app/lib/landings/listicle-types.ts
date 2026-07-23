@@ -6,19 +6,58 @@
  *
  *   template: "im8" -> ListicleRenderer. The dense layout: a product-image
  *     hero, a proof ticker, and a plug-and-play library of section blocks
- *     (data-viz reason panels, stat bands, comparison tables, cost breakdown).
+ *     (data-viz reason panels, stat bands, review strips, bespoke explainers).
  *
  *   template: "mm"  -> SimpleListicleRenderer. The Magic Mind editorial layout:
  *     a headline + byline hero, and reasons that are simply photo + heading +
  *     body, with a buy box woven in. Nothing between the reasons.
  *
- * Shared fields (title, trust flags, FAQ, sticky bar) live in ListicleBase.
+ * Shared fields (title, proof tier, FAQ, sticky bar) live in ListicleBase.
  * The route narrows on `template` and hands each renderer its exact type.
  *
  * Blueprint: docs/development/featurePlans/landing-conversion/listicle-blueprint.md
  */
 
 import type { ProductHeroId } from "../productTypes";
+import type { UGCItem } from "@/app/components/testimonials/UGCMarquee";
+import type { AthleteReviewContent } from "@/app/components/AthleteReviewFeature";
+
+/**
+ * A single named-person proof feature: white-background cutout portrait beside
+ * one large quote, rendered by AthleteReviewFeature in the post-reasons proof
+ * tier. The portrait MUST be a white-background cutout, because the component
+ * dissolves the white into its tint panel with mix-blend-multiply. Every
+ * `*NB.jpg` under `public/testimonials/athlete/` (the AthleteCredibilityCarousel
+ * roster) meets that requirement and is a valid source.
+ *
+ * Aliased to the component's own prop type rather than redeclared: the config
+ * value is handed straight to AthleteReviewFeature, so the two cannot drift.
+ */
+export type ListicleProofFeature = AthleteReviewContent;
+
+/**
+ * The post-reasons proof tier. Three moments, each doing a different job, so
+ * the tail of the page escalates rather than repeating itself:
+ *
+ *   logoBand -> institutional trust  (partner logos, above the buy box)
+ *   pressBand-> press / journals     (above the buy box, under the partners)
+ *   feature  -> one specific human   (AthleteReviewFeature, after the buy box)
+ *   ugc      -> volume and faces     (UGCMarquee, last, before the FAQ)
+ *
+ * Written customer reviews are deliberately not a proof-tier moment: the
+ * mid-reasons review strip already carries them. Omit a key to skip that
+ * moment; omit `proof` entirely for none.
+ */
+export interface ListicleProof {
+  /** Partner-logo marquee ("Fueling High Performers at:"), above the buy box */
+  logoBand?: boolean;
+  /** Press and journal marquee ("As Published On:"), under the partner band */
+  pressBand?: boolean;
+  /** UGC band. Pass `items` for a persona subset; omit for the shared set. */
+  ugc?: { title?: string; subtitle?: string; items?: UGCItem[] };
+  /** One named person, quote-led */
+  feature?: ListicleProofFeature;
+}
 
 export type ListicleAsset =
   | {
@@ -117,8 +156,6 @@ export type ListicleBodyBlock =
   | {
       kind: "reason";
       n: number;
-      /** Mono category tag above the headline, e.g. "FOCUS" */
-      tag?: string;
       headline: string;
       /** Problem-validate paragraph, then solution; one string for now */
       body: string;
@@ -129,6 +166,9 @@ export type ListicleBodyBlock =
       /** Pill callout chips under the body, e.g. "250mg citicoline" */
       chips?: string[];
       asset: ListicleAsset;
+      /** Render the "As Published On:" press/journal marquee full-width under
+       *  the reason, e.g. on an evidence reason to show where the science ran. */
+      pressMarquee?: boolean;
     }
   | {
       kind: "statsBand";
@@ -144,25 +184,14 @@ export type ListicleBodyBlock =
       ratingSummary?: string;
       reviews: ListicleReview[];
     }
-  | {
-      kind: "quoteBand";
-      eyebrow: string;
-      quote: string;
-      name: string;
-      detail?: string;
-    }
   /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
   | {
       kind: "symptomExplainer";
       /** Display number for the section heading, e.g. 1 renders "01." */
       n?: number;
-      /** Mono category tag above the headline */
-      tag?: string;
       headline: string;
       /** Intro paragraph above the symptom buttons */
       intro: string;
-      /** Small-print disclaimer under the explainer */
-      disclaimer?: string;
       symptoms: {
         icon: string;
         label: string;
@@ -186,8 +215,6 @@ export type ListicleBodyBlock =
       kind: "segmentToggle";
       /** Display number for the section heading, e.g. 2 renders "02." */
       n?: number;
-      /** Mono category tag above the headline */
-      tag?: string;
       headline: string;
       segments: {
         /** Toggle button label, e.g. "For men" */
@@ -259,16 +286,8 @@ interface ListicleBase {
   format: "listicle";
   /** Page title and Meta content_name */
   title: string;
-  /** Partner-logo marquee ("Fueling High Performers at:") in the trust zone */
-  logoMarquee?: boolean;
-  /** Press "As Published On:" marquee in the trust zone */
-  pressMarquee?: boolean;
-  /** Renders the shared AthleteCredibilityCarousel */
-  trustCarousel?: boolean;
-  /** Renders the 3-tile athlete testimonial block (Trusted by the Best) */
-  athleteTestimonials?: boolean;
-  /** Renders the shared reviews carousel + LandingTrustBadges */
-  reviewsCarousel?: boolean;
+  /** Post-reasons proof tier; omit for none. See ListicleProof. */
+  proof?: ListicleProof;
   /**
    * Canonical FAQ ids (from `app/lib/faqContent.ts`), curated per persona in
    * display order. Resolved via `pickFaqItems` in the renderer. An unknown id
@@ -311,30 +330,6 @@ export interface Im8ListicleConfig extends ListicleBase {
     headline?: string;
     subline?: string;
     whoItsFor?: string[];
-  };
-  /** Renders the app proof section (cognitive score count-up, steps, guarantee) */
-  appSection?: boolean;
-  /** Comparison table; omit to skip */
-  comparison?: {
-    eyebrow: string;
-    headline: string;
-    subline?: string;
-    competitorLabel: string;
-    rows: {
-      label: string;
-      us: string;
-      usDelta?: string;
-      them: string;
-    }[];
-    footnote?: string;
-  };
-  /** Cost breakdown block; omit to skip */
-  costBreakdown?: {
-    claim: string;
-    savingsBadge?: string;
-    lineItems: { label: string; price: string }[];
-    totals: { themLabel: string; them: string; usLabel: string; us: string };
-    cta?: string;
   };
 }
 

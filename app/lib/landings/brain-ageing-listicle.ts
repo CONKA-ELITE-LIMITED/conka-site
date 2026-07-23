@@ -55,14 +55,34 @@ export const brainAgeingListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
-  logoMarquee: true,
-  pressMarquee: true,
-  athleteTestimonials: true,
+  // Post-reasons proof tier. Four moments, each doing a different job.
+  proof: {
+    logoBand: true,
+    // No pressBand here: the "As Published On" marquee lives on the app-proof
+    // reason (reason 4) for this page, so a second copy in the tier would be
+    // redundant.
+    // Shared UGC set: the band needs volume to read as volume, and we
+    // have no persona-tagged stills yet. Pass `items` once we do.
+    ugc: {},
+    // Persona-matched: an older athlete talking about word-finding and calmness,
+    // which is exactly this page's promise.
+    feature: {
+      name: "Dan Norton",
+      credentials: [
+        "Olympic Silver Medallist",
+        "Rugby Sevens, Great Britain",
+      ],
+      quote:
+        "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
+      image: "/testimonials/athlete/DanNortonNB.jpg",
+      imageAlt:
+        "Dan Norton, Olympic silver medallist in rugby sevens for Great Britain",
+    },
+  },
   body: [
     {
       kind: "reason",
       n: 1,
-      tag: "WORD RECALL",
       headline: "Find Your Words Again, Without the Hesitation",
       body: "That moment your words vanish mid-sentence is unsettling, but it's rarely permanent. This daily shot supports the language pathways behind recall, so the words are there when you reach for them and conversation flows again. The earlier you support it, the easier to stay ahead.",
       // Dan Norton's quote (speaking clearer, words flowing) lands the word-recall reason
@@ -78,7 +98,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "segmentToggle",
       n: 2,
-      tag: "MEN & WOMEN",
       headline: "Where Ageing Hits Hardest, and What Helps",
       segments: [
         {
@@ -160,6 +179,7 @@ export const brainAgeingListicle: ListicleConfig = {
             quote:
               "I am a patient of Dr Tina Peers, a menopause specialist, who told me to take NAC in this formula. I don't get hot flushes or a red face anymore. I think that says it all.",
             name: "Rosalind",
+            image: "/testimonials/ugc/17.jpg",
             detail: "Verified customer",
           },
         },
@@ -180,7 +200,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 3,
-      tag: "LONGEVITY",
       headline: "Protect Your Brain for the Years Ahead",
       body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support helps protect your cognitive function for the years ahead, without stimulants. Durham University research found the ingredients in Flow extended lifespan and reduced oxidative stress.",
       chips: ["+15 human-year equivalent in an ageing study"],
@@ -191,12 +210,21 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 4,
-      tag: "MEASURE IT",
       headline: "Watch It Working, in Real Numbers",
-      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real.",
+      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real. The same science has been covered and published here:",
       // App cognitive-score count-up card; "Do you see an animal?" GIF is a
-      // Phase 5 asset swap. Press outlets render via pressMarquee (trust zone).
+      // Phase 5 asset swap. Press outlets render below via pressMarquee.
       asset: { kind: "measureTile" },
+      pressMarquee: true,
+    },
+    {
+      kind: "reason",
+      n: 5,
+      headline: "Beat the Afternoon Slump Without Caffeine",
+      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. CONKA's ingredients deliver 18.1% faster mental processing than caffeine, and CONKA is completely caffeine-free.",
+      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
+      // Day-energy curve: afternoon slump without, steady with CONKA
+      asset: { kind: "dayEnergyCurve" },
     },
     {
       // Age-matched customer voices for the persona
@@ -217,7 +245,7 @@ export const brainAgeingListicle: ListicleConfig = {
           quote:
             "I noticed a clarity and energy and have benefited from that. My sleep wasn't great after I retired, but now I seem to be sleeping well.",
           name: "Deborah Lowe",
-          image: "/testimonials/ugc/17.jpg",
+          image: "/testimonials/ugc/18.jpg",
           detail: "Verified · Age 62",
         },
         {
@@ -232,18 +260,7 @@ export const brainAgeingListicle: ListicleConfig = {
     },
     {
       kind: "reason",
-      n: 5,
-      tag: "THE 2PM SLUMP",
-      headline: "Beat the Afternoon Slump Without Caffeine",
-      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. CONKA's ingredients deliver 18.1% faster mental processing than caffeine, and CONKA is completely caffeine-free.",
-      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
-      // Day-energy curve: afternoon slump without, steady with CONKA
-      asset: { kind: "dayEnergyCurve" },
-    },
-    {
-      kind: "reason",
       n: 6,
-      tag: "REAL PROOF",
       headline: "Backed by Trials, Not Testimonials",
       body: "Most focus supplements hide one trick: caffeine, which by the original definition is a stimulant, not a nootropic. CONKA has run randomised controlled trials over 20 times, and we built a way for you to measure it yourself.",
       asset: { kind: "scoreByGroup" },
@@ -251,7 +268,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 7,
-      tag: "RISK-FREE",
       headline: "100 Days to Feel It, or Your Money Back",
       body: "Try CONKA for a full 100 days. If your recall and clarity haven't changed, you get every penny back. Developed from brain research at Durham and Newcastle, Informed Sport certified, made in the UK.",
       // Off CONKA vs on CONKA measured focus (+19.3%)
@@ -265,7 +281,6 @@ export const brainAgeingListicle: ListicleConfig = {
   product: {
     productHeroId: "03",
   },
-  reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // dementia, mid-sentence, cognitive-decline, medication, timeline, sleep,
   // app-optional, guarantee. The first two are new canonical entries.

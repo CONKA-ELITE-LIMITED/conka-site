@@ -5,6 +5,12 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-23** | Moved the press marquee into the app-proof reason (and the reviews below it) on the brain-ageing and productivity listicles, matching ADHD; removed the duplicate press band above the buy box
+- **2026-07-23** | Restructured the listicle proof: logo band above the buy box (large title), UGC before the FAQ (sharp tiles), dropped the review rail; reorganised the ADHD symptom explainer and removed its disclaimer
+- **2026-07-23** | Repositioned the ADHD listicle to sell Flow (Flow PDP CTAs, Flow buy box + video, Flow-only symptom explainer) and added the press marquee to the app-proof reason
+- **2026-07-23** | Added real press and journal logos to the listicle proof tier as a white As Published On band
+- **2026-07-23** | Rebuilt the listicle post-reasons proof tier (logos, UGC band, one persona-matched athlete feature, reviews) and moved the /go FAQ onto the site-standard LabFAQ
+- **2026-07-23** | Restyle product benefit tiles: forced two-line titles, centered on mobile, semibold descriptions
 - **2026-07-23** | Add customer photos to productivity listicle reviews and restyle the proof chip as a white pill with a green check
 - **2026-07-23** | Polish listicles: remove section eyebrows, dedicated normal-font hero CTA, redesigned segment testimonial (photo/stars/quote-marks/verified badge), fix stat band on desktop
 - **2026-07-23** | Fix listicle mobile issues (horizontal scroll, stat band, bold reason bodies) and rebuild the review strip as a photo swipe row with age-matched testimonials

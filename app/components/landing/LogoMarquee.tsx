@@ -11,8 +11,7 @@
  *  - Press: "As Published On:" outlet wordmarks. Pass `logos={PRESS_LOGOS}`.
  *
  * Items with a `src` render as an <img> at their natural height; items with no
- * `src` render as a text wordmark. PRESS_LOGOS uses text as a placeholder until
- * the real press-logo images are sourced (see the template-upgrade plan doc).
+ * `src` render as a text wordmark.
  * ========================================================================== */
 
 export interface MarqueeLogo {
@@ -40,16 +39,44 @@ const PARTNER_LOGOS: MarqueeLogo[] = [
   { src: "/lander/partners/equinox.png", alt: "Equinox", h: 19 },
 ];
 
-/** Press outlets the CognICA test has appeared in. Text wordmarks are a
- *  placeholder; drop `src` image paths in (Phase 5) to swap to real logos. */
+/**
+ * Press and journal outlets the CognICA test has appeared in.
+ *
+ * Sources are trimmed to their bounding box and keyed to a transparent
+ * background (like the partner logos), so both bands render identically on any
+ * surface. Two exceptions keep an opaque coloured fill because the colour IS
+ * the mark: the Globe and Mail red slab and the Nature red banner. Per-logo `h`
+ * is tuned by shape, not set to one value: these range from an 8.8:1 wordmark
+ * (Globe and Mail) to a 1:1 stacked lockup (Medscape), so a single height would
+ * make the wordmarks dominate and the lockups vanish. Editorial first.
+ *
+ * The last three are newswire and syndication rather than editorial coverage.
+ * Cut them if "As Published On" should mean earned press only.
+ */
 export const PRESS_LOGOS: MarqueeLogo[] = [
-  { alt: "Medscape" },
-  { alt: "pharmaphorum" },
-  { alt: "NeurologyLive" },
-  { alt: "BioSpace" },
-  { alt: "The Globe and Mail" },
-  { alt: "Frontiers in Aging Neuroscience" },
-  { alt: "Applied Neuropsychology: Adult" },
+  { src: "/lander/press/medscape.png", alt: "Medscape", h: 66 },
+  { src: "/lander/press/neurology-live.png", alt: "NeurologyLive", h: 26 },
+  { src: "/lander/press/mdedge.png", alt: "MDedge", h: 38 },
+  { src: "/lander/press/psychiatry.png", alt: "Psychiatry", h: 36 },
+  { src: "/lander/press/pharmaphorum.png", alt: "pharmaphorum", h: 30 },
+  { src: "/lander/press/biospace.png", alt: "BioSpace", h: 32 },
+  { src: "/lander/press/globe-and-mail.png", alt: "The Globe and Mail", h: 18 },
+  {
+    src: "/lander/press/nature-scientific-reports.png",
+    alt: "Nature Scientific Reports",
+    h: 44,
+  },
+  {
+    src: "/lander/press/frontiers-aging-neuroscience.png",
+    alt: "Frontiers in Aging Neuroscience",
+    h: 42,
+  },
+  { src: "/lander/press/plos.png", alt: "PLOS", h: 58 },
+  { src: "/lander/press/protolife.png", alt: "proto.life", h: 26 },
+  { src: "/lander/press/the-deep-dive.png", alt: "The Deep Dive", h: 24 },
+  { src: "/lander/press/nasdaq.png", alt: "Nasdaq", h: 30 },
+  { src: "/lander/press/yahoo-finance.png", alt: "Yahoo Finance", h: 32 },
+  { src: "/lander/press/newsfile.png", alt: "Newsfile", h: 36 },
 ];
 
 function Group({
@@ -93,17 +120,35 @@ function Group({
 export default function LogoMarquee({
   heading = "Fueling High Performers at:",
   logos = PARTNER_LOGOS,
+  durationSeconds = 40,
+  largeHeading = false,
 }: {
   heading?: string;
   logos?: MarqueeLogo[];
+  /** Seconds for one full loop. Higher is slower. The press band runs slower
+   *  than the 40s partner default so the two never look like the same track. */
+  durationSeconds?: number;
+  /** Render the heading as a large black section title (brand-h2) instead of
+   *  the small muted eyebrow. Used for the partner band above the buy box. */
+  largeHeading?: boolean;
 }) {
   return (
     <div className="text-center">
-      <p className="mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]">
+      <p
+        className={
+          largeHeading
+            ? "brand-h2 mb-8 text-black"
+            : "mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]"
+        }
+        style={largeHeading ? { letterSpacing: "-0.02em" } : undefined}
+      >
         {heading}
       </p>
       <div className="overflow-hidden">
-        <div className="flex w-max motion-safe:animate-[marquee_40s_linear_infinite]">
+        <div
+          className="flex w-max motion-safe:animate-[marquee_linear_infinite]"
+          style={{ animationDuration: `${durationSeconds}s` }}
+        >
           <Group logos={logos} />
           <Group logos={logos} hidden />
         </div>

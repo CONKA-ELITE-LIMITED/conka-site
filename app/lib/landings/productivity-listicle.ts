@@ -49,14 +49,35 @@ export const productivityListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
-  logoMarquee: true,
-  pressMarquee: true,
-  athleteTestimonials: true,
+  // Post-reasons proof tier. Four moments, each doing a different job.
+  proof: {
+    logoBand: true,
+    // No pressBand here: the "As Published On" marquee lives on the app-proof
+    // reason (reason 4) for this page, so a second copy in the tier would be
+    // redundant.
+    // Shared UGC set: the band needs volume to read as volume, and we
+    // have no persona-tagged stills yet. Pass `items` once we do.
+    ugc: {},
+    // TODO: source a white-background cutout of a productivity/ADHD-relevant
+    // figure and swap this out. Jack Willis is the site-wide default, not a
+    // persona match. Any `*NB.jpg` in public/testimonials/athlete/ works.
+    feature: {
+      name: "Jack Willis",
+      credentials: [
+        "2025 Top 14 Player of the Season",
+        "3\u00d7 Top 14 Champion, Champions Cup winner",
+      ],
+      quote:
+        "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",
+      image: "/testimonials/athlete/JackWillisNB.jpg",
+      imageAlt:
+        "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
+    },
+  },
   body: [
     {
       kind: "reason",
       n: 1,
-      tag: "CAFFEINE VS CONKA",
       headline: "CONKA Focus Beats Caffeine Focus",
       body: "Caffeine focus is jittery and runs on borrowed time, with a hard ceiling the NHS puts at two cups before it works against you. CONKA focus is calm and steady, no comedown, no ceiling to watch.",
       chips: ["88% drank one less coffee a day in their first 45 days"],
@@ -66,7 +87,6 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 2,
-      tag: "THE 2PM SLUMP",
       headline: "Stay Sharp Through the Afternoon",
       body: "The lunch slump sends you back for another coffee just to function. CONKA Clear pairs nine afternoon detoxifiers with Alpha GPC, shown to deliver 18.1% faster mental processing than caffeine.",
       citation: "DOI: 10.1186/1550-2783-12-S1-P41",
@@ -88,7 +108,6 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 3,
-      tag: "COMPOUNDS DAILY",
       headline: "Better Focus Compounds, Day After Day",
       body: "This isn't a one-off spike. Calmer focus today means less cortisol tomorrow, better sleep tonight, and a sharper dose the next day. Durham University research found the exact combination in Flow extended lifespan and cut oxidative stress.",
       citation: "PMID: 31279955 · PMID: 32707771",
@@ -97,49 +116,16 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 4,
-      tag: "MEASURE IT",
       headline: "Watch It Working, in Real Numbers",
-      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real.",
+      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real. The same science has been covered and published here:",
       // App cognitive-score count-up card; "Do you see an animal?" GIF is a
-      // Phase 5 asset swap. Press outlets render via pressMarquee (trust zone).
+      // Phase 5 asset swap. Press outlets render below via pressMarquee.
       asset: { kind: "measureTile" },
-    },
-    {
-      // Hand-cropped excerpts (productivity / endurance theme)
-      kind: "reviewStrip",
-      eyebrow: "What Customers Say",
-      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
-      reviews: [
-        {
-          headline: "Consistent energy, no trade-off",
-          quote:
-            "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
-          name: "Aaron H.",
-          image: "/lander/reviews/AaronH.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Capacity left for the evenings",
-          quote:
-            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
-          name: "Sam J.",
-          image: "/testimonials/dtc/SamJ.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Locked in on long days",
-          quote:
-            "I am on calls all day for work, and Conka has been instrumental to staying focused and locked in on long days.",
-          name: "Alex L.",
-          image: "/lander/reviews/AlexL.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-      ],
+      pressMarquee: true,
     },
     {
       kind: "reason",
       n: 5,
-      tag: "BAD NIGHTS",
       headline: "Built for the Days You Didn't Sleep",
       body: "Interrupted sleep, a deadline all-nighter, one drink too many. Some days you start at a deficit before you've opened your laptop. CONKA won't erase a bad night, but the stack below gives your brain a real head start.",
       // The bad-nights stack, showcasing the Phase 1 per-ingredient citations
@@ -177,9 +163,40 @@ export const productivityListicle: ListicleConfig = {
       },
     },
     {
+      // Hand-cropped excerpts (productivity / endurance theme)
+      kind: "reviewStrip",
+      eyebrow: "What Customers Say",
+      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
+      reviews: [
+        {
+          headline: "Consistent energy, no trade-off",
+          quote:
+            "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
+          name: "Aaron H.",
+          image: "/lander/reviews/AaronH.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+        {
+          headline: "Capacity left for the evenings",
+          quote:
+            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
+          name: "Sam J.",
+          image: "/testimonials/dtc/SamJ.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+        {
+          headline: "Locked in on long days",
+          quote:
+            "I am on calls all day for work, and Conka has been instrumental to staying focused and locked in on long days.",
+          name: "Alex L.",
+          image: "/lander/reviews/AlexL.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+      ],
+    },
+    {
       kind: "reason",
       n: 6,
-      tag: "REAL PROOF",
       headline: "Backed by Trials, Not Testimonials",
       body: "Most focus supplements hide one trick: caffeine, which by the original definition is a stimulant, not a nootropic. CONKA's formula is built on ingredients backed by 32 published studies, and we built a way for you to measure it yourself.",
       // 4-group average cognitive score, CONKA groups in green (app data)
@@ -188,7 +205,6 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 7,
-      tag: "RISK-FREE",
       headline: "100 Days to Feel It, or Your Money Back",
       body: "Try CONKA for a full 100 days. If your focus and output haven't changed, you get every penny back. Informed Sport certified, made in the UK, built on a decade of brain research.",
       // Off CONKA vs on CONKA measured focus (+19.3%)
@@ -202,7 +218,6 @@ export const productivityListicle: ListicleConfig = {
   product: {
     productHeroId: "03",
   },
-  reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // caffeine, vs-energy-drink, reduce-coffee, timing, timeline, coffee, guarantee.
   faqIds: [

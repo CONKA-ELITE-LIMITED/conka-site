@@ -9,11 +9,27 @@ import Image from "next/image";
  * reads as floating. Desktop is a two-column split (image / quote); mobile
  * stacks image over quote.
  *
- * Static server component. Features Jack Willis; the fuller rotating roster
- * lives in AthleteCredibilityCarousel. His quote mirrors the roster entry there.
+ * Static server component. Defaults to Jack Willis (the home-page usage passes
+ * nothing); the fuller rotating roster lives in AthleteCredibilityCarousel and
+ * his quote mirrors the roster entry there. The listicle proof tier passes its
+ * own persona-matched athlete via `athlete`.
+ *
+ * The portrait MUST be a white-background cutout: mix-blend-multiply dissolves
+ * the white into the tint panel. Every `*NB.jpg` under
+ * `public/testimonials/athlete/` satisfies that.
  * ========================================================================== */
 
-const ATHLETE = {
+export interface AthleteReviewContent {
+  name: string;
+  /** Headline credentials under the name, one line each */
+  credentials: string[];
+  quote: string;
+  /** White-background cutout portrait */
+  image: string;
+  imageAlt: string;
+}
+
+const DEFAULT_ATHLETE: AthleteReviewContent = {
   name: "Jack Willis",
   credentials: [
     "2025 Top 14 Player of the Season",
@@ -26,7 +42,11 @@ const ATHLETE = {
     "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
 };
 
-export default function AthleteReviewFeature() {
+export default function AthleteReviewFeature({
+  athlete = DEFAULT_ATHLETE,
+}: {
+  athlete?: AthleteReviewContent;
+} = {}) {
   return (
     <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
       {/* Cutout portrait in the App USP soft panel: #eef1f8 tint, rounded-2xl,
@@ -36,8 +56,8 @@ export default function AthleteReviewFeature() {
           darkens only a few percent because the tint is near-white. */}
       <div className="relative mx-auto w-full max-w-[420px] aspect-square overflow-hidden rounded-2xl bg-[#eef1f8] ring-1 ring-black/8 lg:mx-0 lg:max-w-none">
         <Image
-          src={ATHLETE.image}
-          alt={ATHLETE.imageAlt}
+          src={athlete.image}
+          alt={athlete.imageAlt}
           fill
           sizes="(max-width: 1024px) 420px, 45vw"
           className="object-contain mix-blend-multiply"
@@ -47,14 +67,31 @@ export default function AthleteReviewFeature() {
 
       {/* Quote as the hero, then name + credential */}
       <div className="mt-8 lg:mt-0">
+        {/* Oversized decorative quote marks: text-[4em] makes each glyph 4x the
+            blockquote font size at every breakpoint. leading-[0] keeps them
+            from opening up the line box; the vertical align nudges seat them on
+            the text baseline. Muted so a 4x mark reads as a design element, not
+            heavy punctuation. */}
         <blockquote className="text-2xl lg:text-3xl xl:text-4xl font-bold text-black leading-[1.18] tracking-tight">
-          &ldquo;{ATHLETE.quote}&rdquo;
+          <span
+            aria-hidden
+            className="mr-0.5 align-[-0.35em] text-[4em] leading-[0] text-black/15"
+          >
+            &ldquo;
+          </span>
+          {athlete.quote}
+          <span
+            aria-hidden
+            className="ml-1 align-[-0.6em] text-[4em] leading-[0] text-black/15"
+          >
+            &rdquo;
+          </span>
         </blockquote>
         <p className="mt-6 text-xl lg:text-2xl font-bold text-black leading-tight">
-          {ATHLETE.name}
+          {athlete.name}
         </p>
         <div className="mt-1.5 space-y-0.5">
-          {ATHLETE.credentials.map((credential) => (
+          {athlete.credentials.map((credential) => (
             <p key={credential} className="text-sm lg:text-base text-black">
               {credential}
             </p>
