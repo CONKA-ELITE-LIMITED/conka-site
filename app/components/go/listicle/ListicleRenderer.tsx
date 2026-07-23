@@ -34,9 +34,10 @@ import { useHashScroll } from "./useHashScroll";
 /**
  * Listicle landing renderer (/go/[slug], format: "listicle"), IM8 template.
  *
- * Five zones: hero, proof ticker, reasons (the plug-and-play block library),
- * product buy box, proof tier, FAQ, plus an optional sticky bar. The proof
- * tier lives in ListicleProofTier and is shared with SimpleListicleRenderer;
+ * Zones: hero, proof ticker, reasons (the plug-and-play block library), a logo
+ * band, the product buy box, the post-buy-box proof tier, FAQ, plus an optional
+ * sticky bar. The logo band (ListicleLogoBand) and proof tier (ListicleProofTier)
+ * both live in ListicleProofTier.tsx and are shared with SimpleListicleRenderer;
  * the reason-block library is still inline here.
  *
  * Dark zones use --color-neuro-blue-dark pending the colour decision;

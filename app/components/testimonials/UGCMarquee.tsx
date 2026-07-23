@@ -11,9 +11,9 @@
  * Each scrolling unit is a COLUMN of three stacked tiles (3 rows), all moving
  * as one track at a single rate and direction. Tiles are normalised to one
  * aspect ratio (object-cover) so the mixed-ratio UGC / customer / athlete
- * stills read as one cohesive band. Radius comes from --brand-radius-container,
- * which the clinical PDP scope sets to 0 (sharp), so tiles match the
- * surrounding clinical design automatically.
+ * stills read as one cohesive band. Tile radius is the `tileRadius` prop,
+ * defaulting to --brand-radius-container (0 under the clinical PDP scope, 24px
+ * on Simple DTC); the listicles pass 0 for a sharp band.
  *
  * Content-only: no <section>, no max-width, no horizontal padding at root. The
  * page owns the section wrapper and background. See SCRUM-1092.

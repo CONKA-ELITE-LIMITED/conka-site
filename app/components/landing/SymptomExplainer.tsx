@@ -116,6 +116,7 @@ export default function SymptomExplainer({
       const firstPrimary = symptoms.findIndex((s) => s.primary);
       setActive(firstPrimary >= 0 ? firstPrimary : 0);
       setShowAllIngredients(false);
+      setShowBrain(false);
     }
     setShowAllSymptoms(next);
   }
