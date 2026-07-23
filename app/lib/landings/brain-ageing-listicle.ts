@@ -55,9 +55,28 @@ export const brainAgeingListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
-  logoMarquee: true,
-  pressMarquee: true,
-  athleteTestimonials: true,
+  // Post-reasons proof tier. Four moments, each doing a different job.
+  proof: {
+    logoBand: true,
+    // Shared UGC set: the band needs volume to read as volume, and we
+    // have no persona-tagged stills yet. Pass `items` once we do.
+    ugc: {},
+    // Persona-matched: an older athlete talking about word-finding and calmness,
+    // which is exactly this page's promise.
+    feature: {
+      name: "Dan Norton",
+      credentials: [
+        "Olympic Silver Medallist",
+        "Rugby Sevens, Great Britain",
+      ],
+      quote:
+        "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
+      image: "/testimonials/athlete/DanNortonNB.jpg",
+      imageAlt:
+        "Dan Norton, Olympic silver medallist in rugby sevens for Great Britain",
+    },
+    reviews: true,
+  },
   body: [
     {
       kind: "reason",
@@ -258,7 +277,6 @@ export const brainAgeingListicle: ListicleConfig = {
   product: {
     productHeroId: "03",
   },
-  reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // dementia, mid-sentence, cognitive-decline, medication, timeline, sleep,
   // app-optional, guarantee. The first two are new canonical entries.

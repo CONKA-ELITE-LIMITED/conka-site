@@ -19,6 +19,46 @@
  */
 
 import type { ProductHeroId } from "../productTypes";
+import type { UGCItem } from "@/app/components/testimonials/UGCMarquee";
+
+/**
+ * A single named-person proof feature: white-background cutout portrait beside
+ * one large quote, rendered by AthleteReviewFeature in the post-reasons proof
+ * tier. The portrait MUST be a white-background cutout, because the component
+ * dissolves the white into its tint panel with mix-blend-multiply. Every
+ * `*NB.jpg` under `public/testimonials/athlete/` (the AthleteCredibilityCarousel
+ * roster) meets that requirement and is a valid source.
+ */
+export interface ListicleProofFeature {
+  name: string;
+  /** Headline credentials under the name, one line each */
+  credentials: string[];
+  quote: string;
+  image: string;
+  imageAlt: string;
+}
+
+/**
+ * The post-reasons proof tier. Three moments, each doing a different job, so
+ * the tail of the page escalates rather than repeating itself:
+ *
+ *   logoBand -> institutional trust      (partner logos)
+ *   ugc      -> volume and faces         (UGCMarquee)
+ *   feature  -> one specific human       (AthleteReviewFeature)
+ *   reviews  -> written outcomes         (ReviewRail + trust badges)
+ *
+ * Omit a key to skip that moment. Omit `proof` entirely for no proof tier.
+ */
+export interface ListicleProof {
+  /** Partner-logo marquee ("Fueling High Performers at:") */
+  logoBand?: boolean;
+  /** UGC band. Pass `items` for a persona subset; omit for the shared set. */
+  ugc?: { title?: string; subtitle?: string; items?: UGCItem[] };
+  /** One named person, quote-led */
+  feature?: ListicleProofFeature;
+  /** Canonical customer reviews rail */
+  reviews?: boolean;
+}
 
 export type ListicleAsset =
   | {
@@ -142,13 +182,6 @@ export type ListicleBodyBlock =
       ratingSummary?: string;
       reviews: ListicleReview[];
     }
-  | {
-      kind: "quoteBand";
-      eyebrow: string;
-      quote: string;
-      name: string;
-      detail?: string;
-    }
   /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
   | {
       kind: "symptomExplainer";
@@ -253,16 +286,8 @@ interface ListicleBase {
   format: "listicle";
   /** Page title and Meta content_name */
   title: string;
-  /** Partner-logo marquee ("Fueling High Performers at:") in the trust zone */
-  logoMarquee?: boolean;
-  /** Press "As Published On:" marquee in the trust zone */
-  pressMarquee?: boolean;
-  /** Renders the shared AthleteCredibilityCarousel */
-  trustCarousel?: boolean;
-  /** Renders the 3-tile athlete testimonial block (Trusted by the Best) */
-  athleteTestimonials?: boolean;
-  /** Renders the shared reviews carousel + LandingTrustBadges */
-  reviewsCarousel?: boolean;
+  /** Post-reasons proof tier; omit for none. See ListicleProof. */
+  proof?: ListicleProof;
   /**
    * Canonical FAQ ids (from `app/lib/faqContent.ts`), curated per persona in
    * display order. Resolved via `pickFaqItems` in the renderer. An unknown id
@@ -305,30 +330,6 @@ export interface Im8ListicleConfig extends ListicleBase {
     headline?: string;
     subline?: string;
     whoItsFor?: string[];
-  };
-  /** Renders the app proof section (cognitive score count-up, steps, guarantee) */
-  appSection?: boolean;
-  /** Comparison table; omit to skip */
-  comparison?: {
-    eyebrow: string;
-    headline: string;
-    subline?: string;
-    competitorLabel: string;
-    rows: {
-      label: string;
-      us: string;
-      usDelta?: string;
-      them: string;
-    }[];
-    footnote?: string;
-  };
-  /** Cost breakdown block; omit to skip */
-  costBreakdown?: {
-    claim: string;
-    savingsBadge?: string;
-    lineItems: { label: string; price: string }[];
-    totals: { themLabel: string; them: string; usLabel: string; us: string };
-    cta?: string;
   };
 }
 

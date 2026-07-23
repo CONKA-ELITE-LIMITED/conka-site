@@ -22,7 +22,12 @@ interface LabFAQProps {
   items?: FaqEntry[];
   hideCTA?: boolean;
   ctaHref?: string;
-  image?: LabFAQImage;
+  /** Sticky lifestyle image. Pass `null` to drop the column and run the
+   *  questions full width (the /go listicles do this: no persona image). */
+  image?: LabFAQImage | null;
+  /** Support footer with the /faq hub link. Noindex paid surfaces (`/go`)
+   *  pass false so the funnel does not leak off to the hub. */
+  showSeeAllLink?: boolean;
 }
 
 export default function LabFAQ({
@@ -30,6 +35,7 @@ export default function LabFAQ({
   hideCTA = false,
   ctaHref = "/funnel",
   image = DEFAULT_IMAGE,
+  showSeeAllLink = true,
 }: LabFAQProps = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -37,21 +43,23 @@ export default function LabFAQ({
     <div>
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
         {/* Lifestyle image */}
-        <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
-          <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={1500}
-              height={1000}
-              loading="lazy"
-              className="w-full h-auto"
-            />
+        {image ? (
+          <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
+            <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={1500}
+                height={1000}
+                loading="lazy"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {/* Content column */}
-        <div className="lg:w-3/5">
+        <div className={image ? "lg:w-3/5" : "w-full"}>
           <div className="mb-8">
             <h2 className="brand-h1 mb-0 text-[#0e1f3f]">Frequently asked questions</h2>
           </div>
@@ -105,13 +113,19 @@ export default function LabFAQ({
           {/* Support footer */}
           <div className="mt-6">
             <p className="text-sm text-black/60">
-              <Link
-                href="/faq"
-                className="text-black underline decoration-black/20 hover:decoration-black"
-              >
-                See all questions
-              </Link>{" "}
-              or email{" "}
+              {showSeeAllLink ? (
+                <>
+                  <Link
+                    href="/faq"
+                    className="text-black underline decoration-black/20 hover:decoration-black"
+                  >
+                    See all questions
+                  </Link>{" "}
+                  or email{" "}
+                </>
+              ) : (
+                <>Still have a question? Email </>
+              )}
               <a
                 href="mailto:info@conka.io"
                 className="text-black underline decoration-black/20 hover:decoration-black"

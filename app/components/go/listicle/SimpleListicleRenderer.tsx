@@ -6,12 +6,8 @@ import type {
   MmListicleConfig,
 } from "@/app/lib/landings/listicle-types";
 import ProductGrid from "@/app/components/home/ProductGrid";
-import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
-import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
-import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
-import ReviewRail from "@/app/components/landing/ReviewRail";
-import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
-import CROFAQv2 from "@/app/components/cro/CROFAQv2";
+import ListicleProofTier from "./ListicleProofTier";
+import LabFAQ from "@/app/components/landing/LabFAQ";
 import CitationLine from "@/app/components/landing/CitationLine";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
@@ -176,12 +172,6 @@ export default function SimpleListicleRenderer({
 }) {
   useHashScroll();
 
-  const showTrust =
-    config.logoMarquee ||
-    config.trustCarousel ||
-    config.athleteTestimonials ||
-    config.pressMarquee;
-
   return (
     <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
       <SimpleHero hero={config.hero} />
@@ -224,58 +214,15 @@ export default function SimpleListicleRenderer({
         </div>
       </section>
 
-      {/* Trust: logos, athlete testimonials, press marquee */}
-      {showTrust ? (
+      {/* Proof tier: logos, UGC, one named feature, written reviews */}
+      {config.proof ? (
         <section
-          aria-label="Trusted by"
+          aria-label="Proof"
           className="px-5 py-16 md:px-[5vw]"
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            {config.logoMarquee ? <LogoMarquee /> : null}
-            {config.athleteTestimonials ? (
-              <div className={config.logoMarquee ? "mt-16" : ""}>
-                <AthleteTestimonials />
-              </div>
-            ) : null}
-            {config.trustCarousel ? (
-              <div
-                className={
-                  config.logoMarquee || config.athleteTestimonials ? "mt-14" : ""
-                }
-              >
-                <AthleteCredibilityCarousel />
-              </div>
-            ) : null}
-            {config.pressMarquee ? (
-              <div
-                className={
-                  config.logoMarquee ||
-                  config.athleteTestimonials ||
-                  config.trustCarousel
-                    ? "mt-16"
-                    : ""
-                }
-              >
-                <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
-              </div>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      {/* Customer reviews */}
-      {config.reviewsCarousel ? (
-        <section
-          aria-label="Reviews"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto max-w-7xl">
-            <ReviewRail />
-            <div className="mt-10">
-              <LandingTrustBadges />
-            </div>
+            <ListicleProofTier proof={config.proof} />
           </div>
         </section>
       ) : null}
@@ -288,12 +235,13 @@ export default function SimpleListicleRenderer({
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <CROFAQv2
+            <LabFAQ
               items={pickFaqItems(...config.faqIds).map((f) => ({
-                id: f.id,
-                question: f.question,
+                ...f,
                 answer: stripClaimAnchors(f.answer),
               }))}
+              image={null}
+              hideCTA
               showSeeAllLink={false}
             />
           </div>

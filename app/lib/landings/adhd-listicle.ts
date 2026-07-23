@@ -54,9 +54,29 @@ export const adhdListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
-  logoMarquee: true,
-  pressMarquee: true,
-  athleteTestimonials: true,
+  // Post-reasons proof tier. Four moments, each doing a different job.
+  proof: {
+    logoBand: true,
+    // Shared UGC set: the band needs volume to read as volume, and we
+    // have no persona-tagged stills yet. Pass `items` once we do.
+    ugc: {},
+    // TODO: source a white-background cutout of a productivity/ADHD-relevant
+    // figure and swap this out. Jack Willis is the site-wide default, not a
+    // persona match. Any `*NB.jpg` in public/testimonials/athlete/ works.
+    feature: {
+      name: "Jack Willis",
+      credentials: [
+        "2025 Top 14 Player of the Season",
+        "3\u00d7 Top 14 Champion, Champions Cup winner",
+      ],
+      quote:
+        "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",
+      image: "/testimonials/athlete/JackWillisNB.jpg",
+      imageAlt:
+        "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
+    },
+    reviews: true,
+  },
   body: [
     {
       // Reason 1: the interactive explorer, slimmed to 4 core symptoms.
@@ -300,7 +320,6 @@ export const adhdListicle: ListicleConfig = {
       "You're done running on coffee and willpower. Two caffeine-free shots support steady focus and calm across the whole day, and the 2-minute app test lets you watch it working instead of guessing.",
     ],
   },
-  reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // caffeine, medication, not-a-replacement, timeline, simplicity, guarantee.
   // TODO(FAQ): swap in Humphrey's bespoke ADHD FAQ copy once delivered.

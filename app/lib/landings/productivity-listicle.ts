@@ -49,9 +49,29 @@ export const productivityListicle: ListicleConfig = {
     "100-DAY GUARANTEE",
     "2-MINUTE BRAIN TEST",
   ],
-  logoMarquee: true,
-  pressMarquee: true,
-  athleteTestimonials: true,
+  // Post-reasons proof tier. Four moments, each doing a different job.
+  proof: {
+    logoBand: true,
+    // Shared UGC set: the band needs volume to read as volume, and we
+    // have no persona-tagged stills yet. Pass `items` once we do.
+    ugc: {},
+    // TODO: source a white-background cutout of a productivity/ADHD-relevant
+    // figure and swap this out. Jack Willis is the site-wide default, not a
+    // persona match. Any `*NB.jpg` in public/testimonials/athlete/ works.
+    feature: {
+      name: "Jack Willis",
+      credentials: [
+        "2025 Top 14 Player of the Season",
+        "3\u00d7 Top 14 Champion, Champions Cup winner",
+      ],
+      quote:
+        "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",
+      image: "/testimonials/athlete/JackWillisNB.jpg",
+      imageAlt:
+        "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
+    },
+    reviews: true,
+  },
   body: [
     {
       kind: "reason",
@@ -195,7 +215,6 @@ export const productivityListicle: ListicleConfig = {
   product: {
     productHeroId: "03",
   },
-  reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // caffeine, vs-energy-drink, reduce-coffee, timing, timeline, coffee, guarantee.
   faqIds: [

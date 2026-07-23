@@ -12,7 +12,6 @@ import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
-import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
@@ -20,18 +19,13 @@ import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
 import FocusBars from "@/app/components/landing/FocusBars";
-import AppMeasureSection, {
-  MeasureTile,
-} from "@/app/components/landing/AppMeasureSection";
-import ReviewRail from "@/app/components/landing/ReviewRail";
+import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
-import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
 import SegmentToggle from "@/app/components/landing/SegmentToggle";
-import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
-import CROFAQv2 from "@/app/components/cro/CROFAQv2";
-import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
+import ListicleProofTier from "./ListicleProofTier";
+import LabFAQ from "@/app/components/landing/LabFAQ";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
 
@@ -518,20 +512,7 @@ function BodyBlock({
     );
   }
 
-  return (
-    <div className="my-10 rounded-[16px] border border-black/10 bg-white px-8 py-12 text-center">
-      <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-        {block.eyebrow}
-      </div>
-      <blockquote className="mx-auto max-w-3xl text-2xl leading-snug">
-        “{block.quote}”
-      </blockquote>
-      <div className="mt-6 text-sm font-medium">{block.name}</div>
-      {block.detail ? (
-        <div className="text-xs opacity-60">{block.detail}</div>
-      ) : null}
-    </div>
-  );
+  return null;
 }
 
 export default function ListicleRenderer({
@@ -692,199 +673,35 @@ export default function ListicleRenderer({
         </div>
       </section>
 
-      {/* Zone 4: social proof — logo marquee, athlete testimonials, press marquee */}
-      {config.logoMarquee ||
-      config.trustCarousel ||
-      config.athleteTestimonials ||
-      config.pressMarquee ? (
+      {/* Zone 4: proof tier — logos, UGC, one named feature, written reviews */}
+      {config.proof ? (
         <section
-          aria-label="Trusted by"
+          aria-label="Proof"
           className="px-5 py-16 md:px-[5vw]"
           style={{ background: BONE, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            {config.logoMarquee ? <LogoMarquee /> : null}
-            {config.athleteTestimonials ? (
-              <div className={config.logoMarquee ? "mt-16" : ""}>
-                <AthleteTestimonials />
-              </div>
-            ) : null}
-            {config.trustCarousel ? (
-              <div
-                className={
-                  config.logoMarquee || config.athleteTestimonials ? "mt-14" : ""
-                }
-              >
-                <AthleteCredibilityCarousel />
-              </div>
-            ) : null}
-            {config.pressMarquee ? (
-              <div
-                className={
-                  config.logoMarquee ||
-                  config.athleteTestimonials ||
-                  config.trustCarousel
-                    ? "mt-16"
-                    : ""
-                }
-              >
-                <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
-              </div>
-            ) : null}
+            <ListicleProofTier proof={config.proof} />
           </div>
         </section>
       ) : null}
 
-      {/* Zone 5: comparison — deferred from v1, renders only if configured */}
-      {config.comparison ? (
-        <section
-          aria-label="Comparison"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: "#eeeff2", color: "#111" }}
-        >
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-              {config.comparison.eyebrow}
-            </div>
-            <h2 className="mb-2 text-balance text-[32px] font-semibold text-black md:text-[44px]">
-              {config.comparison.headline}
-            </h2>
-            {config.comparison.subline ? (
-              <p className="mb-10 opacity-70">{config.comparison.subline}</p>
-            ) : null}
-            <div className="overflow-hidden rounded-[16px] border border-black/10 bg-white text-left">
-              <div className="grid grid-cols-3 gap-4 border-b border-black/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-70">
-                <div>Ingredient</div>
-                <div>CONKA</div>
-                <div>{config.comparison.competitorLabel}</div>
-              </div>
-              {config.comparison.rows.map((row, i) => (
-                <div
-                  key={i}
-                  className="grid grid-cols-3 gap-4 border-b border-black/5 px-6 py-4 text-sm"
-                >
-                  <div className="font-medium">{row.label}</div>
-                  <div>
-                    ✓ {row.us}
-                    {row.usDelta ? (
-                      <span className="ml-2 font-medium tabular-nums text-[#1B2757]">
-                        {row.usDelta}
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="opacity-60">{row.them}</div>
-                </div>
-              ))}
-            </div>
-            {config.comparison.footnote ? (
-              <p className="mt-6 text-xs opacity-60">
-                {config.comparison.footnote}
-              </p>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 6: customer reviews (shared carousel) */}
-      {config.reviewsCarousel ? (
-        <section
-          aria-label="Reviews"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto max-w-7xl">
-            <ReviewRail />
-            <div className="mt-10">
-              <LandingTrustBadges />
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 6b: app proof — "we measure it" (renders only if configured) */}
-      {config.appSection ? (
-        <section
-          aria-label="Measure it with the app"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto max-w-7xl">
-            <AppMeasureSection />
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 7: cost breakdown — deferred from v1, renders only if configured */}
-      {config.costBreakdown ? (
-        <section
-          aria-label="Cost breakdown"
-          className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
-        >
-          <div className="mx-auto grid max-w-7xl gap-10 rounded-3xl bg-white p-10 text-[#111] shadow-sm md:grid-cols-2 md:p-14">
-            <div>
-              <h2 className="mb-6 text-4xl leading-tight">
-                {config.costBreakdown.claim}
-              </h2>
-              {config.costBreakdown.savingsBadge ? (
-                <div className="mb-6 inline-block rounded-full border border-black/25 px-6 py-6 text-center text-sm">
-                  {config.costBreakdown.savingsBadge}
-                </div>
-              ) : null}
-              {config.costBreakdown.cta ? (
-                <div>
-                  <Link
-                    href={BUY_HREF}
-                    className="inline-block rounded-full bg-[#111] px-8 py-4 text-sm font-medium text-white"
-                  >
-                    {config.costBreakdown.cta}
-                  </Link>
-                </div>
-              ) : null}
-            </div>
-            <div>
-              <div className="mb-4 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">
-                Monthly breakdown
-              </div>
-              {config.costBreakdown.lineItems.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between border-b border-black/10 py-3 text-sm"
-                >
-                  <span>{item.label}</span>
-                  <span className="opacity-70">{item.price}</span>
-                </div>
-              ))}
-              <div className="mt-6 rounded-2xl bg-black/5 p-5 text-sm">
-                <div className="flex justify-between py-1">
-                  <span>{config.costBreakdown.totals.themLabel}</span>
-                  <span className="line-through opacity-60">
-                    {config.costBreakdown.totals.them}
-                  </span>
-                </div>
-                <div className="flex justify-between py-1 font-medium">
-                  <span>{config.costBreakdown.totals.usLabel}</span>
-                  <span>{config.costBreakdown.totals.us}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* Zone 8: FAQ (shared component, persona-locked questions) */}
+      {/* Zone 5: FAQ — LabFAQ, the site-standard accordion used on home and
+          the PDPs. No image column (no persona lifestyle shot) and no CTA
+          button (the sticky bar and the buy zone already own the CTA). */}
       <section
         aria-label="FAQs"
         className="px-5 py-16 pb-32 md:px-[5vw]"
         style={{ background: BONE, color: "#111" }}
       >
         <div className="mx-auto max-w-7xl">
-          <CROFAQv2
+          <LabFAQ
             items={pickFaqItems(...config.faqIds).map((f) => ({
-              id: f.id,
-              question: f.question,
+              ...f,
               answer: stripClaimAnchors(f.answer),
             }))}
+            image={null}
+            hideCTA
             showSeeAllLink={false}
           />
         </div>

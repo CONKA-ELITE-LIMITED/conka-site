@@ -21,10 +21,13 @@
 
 import Image from "next/image";
 
-type UGCItem = { src: string; alt: string };
+export type UGCItem = { src: string; alt: string };
 
 // Athlete / DTC customer / UGC stills interleaved so the band reads varied.
-const UGC_ITEMS: UGCItem[] = [
+// The default set; callers (e.g. the listicle proof tier) may pass a
+// persona-specific subset via `items`. Below roughly 12 items the band stops
+// reading as volume, so prefer the default over a thin subset.
+export const DEFAULT_UGC_ITEMS: UGCItem[] = [
   { src: "/testimonials/athlete/WustyDrink.jpg", alt: "A CONKA athlete taking the daily shot outdoors" },
   { src: "/testimonials/dtc/SamT.jpg", alt: "A CONKA customer with their daily shot" },
   { src: "/testimonials/ugc/1.jpg", alt: "A CONKA customer with the daily shot" },
@@ -55,13 +58,16 @@ const UGC_ITEMS: UGCItem[] = [
 // Stack the stills into columns of three tiles (3 rows). If the count doesn't
 // divide by three, the final column borrows from the start so every column is
 // full (invisible in a loop).
-const COLUMNS: [UGCItem, UGCItem, UGCItem][] = [];
-for (let i = 0; i < UGC_ITEMS.length; i += 3) {
-  COLUMNS.push([
-    UGC_ITEMS[i],
-    UGC_ITEMS[i + 1] ?? UGC_ITEMS[0],
-    UGC_ITEMS[i + 2] ?? UGC_ITEMS[1],
-  ]);
+function toColumns(items: UGCItem[]): [UGCItem, UGCItem, UGCItem][] {
+  const columns: [UGCItem, UGCItem, UGCItem][] = [];
+  for (let i = 0; i < items.length; i += 3) {
+    columns.push([
+      items[i],
+      items[i + 1] ?? items[0],
+      items[i + 2] ?? items[1],
+    ]);
+  }
+  return columns;
 }
 
 function Tile({ item }: { item: UGCItem }) {
@@ -79,13 +85,19 @@ function Tile({ item }: { item: UGCItem }) {
   );
 }
 
-function Group({ hidden = false }: { hidden?: boolean }) {
+function Group({
+  columns,
+  hidden = false,
+}: {
+  columns: [UGCItem, UGCItem, UGCItem][];
+  hidden?: boolean;
+}) {
   return (
     <div
       className="flex flex-shrink-0 gap-3 pr-3 md:gap-4 md:pr-4"
       aria-hidden={hidden || undefined}
     >
-      {COLUMNS.map((col, i) => (
+      {columns.map((col, i) => (
         <div key={i} className="flex flex-shrink-0 flex-col gap-3 md:gap-4">
           {col.map((item, j) => (
             <Tile key={`${item.src}-${j}`} item={item} />
@@ -99,10 +111,14 @@ function Group({ hidden = false }: { hidden?: boolean }) {
 export default function UGCMarquee({
   title = "Join Thousands Staying Sharp, Every Day",
   subtitle = "Two shots a day.",
+  items = DEFAULT_UGC_ITEMS,
 }: {
   title?: string;
   subtitle?: string;
+  items?: UGCItem[];
 }) {
+  const columns = toColumns(items);
+
   return (
     <div>
       {title ? (
@@ -119,8 +135,8 @@ export default function UGCMarquee({
       ) : null}
       <div className="overflow-hidden">
         <div className="flex w-max motion-safe:animate-[marquee_60s_linear_infinite] motion-safe:[will-change:transform]">
-          <Group />
-          <Group hidden />
+          <Group columns={columns} />
+          <Group columns={columns} hidden />
         </div>
       </div>
     </div>

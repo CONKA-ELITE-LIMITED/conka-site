@@ -52,9 +52,21 @@ That is the whole thing. No route, component, or analytics wiring to touch.
 
 ## Shared fields (both templates)
 
-`slug`, `persona`, `format: "listicle"`, `template`, `title`, `faqIds`, and optional trust/proof toggles: `logoMarquee`, `pressMarquee`, `trustCarousel`, `athleteTestimonials`, `reviewsCarousel`, plus `stickyBar` (`{ label, cta, sub? }`).
+`slug`, `persona`, `format: "listicle"`, `template`, `title`, `faqIds`, an optional `proof` object, plus `stickyBar` (`{ label, cta, sub? }`).
 
-- `faqIds` are ids from `app/lib/faqContent.ts`, in display order. An unknown id fails the build. The `/go` surface strips claim anchors from answers.
+- `faqIds` are ids from `app/lib/faqContent.ts`, in display order. An unknown id fails the build. The `/go` surface strips claim anchors from answers, renders via `LabFAQ` with no image column and no hub link.
+- `proof` is the post-reasons proof tier, rendered by `ListicleProofTier` for both templates. Four optional moments, each doing a different job, in fixed order:
+
+```ts
+proof: {
+  logoBand?: boolean,                                   // partner logos
+  ugc?: { title?, subtitle?, items? },                  // UGCMarquee band
+  feature?: { name, credentials[], quote, image, imageAlt },  // one named person
+  reviews?: boolean,                                    // ReviewRail + trust badges
+}
+```
+
+  Omit a key to skip that moment; omit `proof` for no tier at all. The `feature` portrait **must** be a white-background cutout (the component dissolves the white with `mix-blend-multiply`); every `*NB.jpg` under `public/testimonials/athlete/` qualifies. Leave `ugc.items` unset to use the shared 25-still set: below roughly 12 items the band stops reading as volume.
 
 ## `mm` template reference
 
@@ -63,7 +75,7 @@ That is the whole thing. No route, component, or analytics wiring to touch.
   slug, persona, format: "listicle", template: "mm", title,
   hero: { author?: { name, avatar?, updated }, headline, subcopy },
   body: [ /* reason and buyBox blocks, in order */ ],
-  // shared trust flags + faqIds + stickyBar
+  // shared proof + faqIds + stickyBar
 }
 ```
 
@@ -82,12 +94,11 @@ The hero is text-only (no image, no CTA button); the sticky bar carries the pers
   ticker?: string[],
   body: [ /* the section-block library, in order */ ],
   bridge?, product: { headline, subline?, productHeroId?, whoItsFor? },
-  appSection?, comparison?, costBreakdown?,
-  // shared trust flags + faqIds + stickyBar
+  // shared proof + faqIds + stickyBar
 }
 ```
 
-The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `quoteBand`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
+The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
 ## Gotchas
 
