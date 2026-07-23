@@ -58,7 +58,9 @@ export const brainAgeingListicle: ListicleConfig = {
   // Post-reasons proof tier. Four moments, each doing a different job.
   proof: {
     logoBand: true,
-    pressBand: true,
+    // No pressBand here: the "As Published On" marquee lives on the app-proof
+    // reason (reason 4) for this page, so a second copy in the tier would be
+    // redundant.
     // Shared UGC set: the band needs volume to read as volume, and we
     // have no persona-tagged stills yet. Pass `items` once we do.
     ugc: {},
@@ -208,10 +210,20 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "reason",
       n: 4,
       headline: "Watch It Working, in Real Numbers",
-      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real.",
+      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real. The same science has been covered and published here:",
       // App cognitive-score count-up card; "Do you see an animal?" GIF is a
-      // Phase 5 asset swap. Press outlets render via pressMarquee (trust zone).
+      // Phase 5 asset swap. Press outlets render below via pressMarquee.
       asset: { kind: "measureTile" },
+      pressMarquee: true,
+    },
+    {
+      kind: "reason",
+      n: 5,
+      headline: "Beat the Afternoon Slump Without Caffeine",
+      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. CONKA's ingredients deliver 18.1% faster mental processing than caffeine, and CONKA is completely caffeine-free.",
+      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
+      // Day-energy curve: afternoon slump without, steady with CONKA
+      asset: { kind: "dayEnergyCurve" },
     },
     {
       // Age-matched customer voices for the persona
@@ -244,15 +256,6 @@ export const brainAgeingListicle: ListicleConfig = {
           detail: "Verified · Flow + Clear",
         },
       ],
-    },
-    {
-      kind: "reason",
-      n: 5,
-      headline: "Beat the Afternoon Slump Without Caffeine",
-      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. CONKA's ingredients deliver 18.1% faster mental processing than caffeine, and CONKA is completely caffeine-free.",
-      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
-      // Day-energy curve: afternoon slump without, steady with CONKA
-      asset: { kind: "dayEnergyCurve" },
     },
     {
       kind: "reason",

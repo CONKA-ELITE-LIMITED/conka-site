@@ -52,7 +52,9 @@ export const productivityListicle: ListicleConfig = {
   // Post-reasons proof tier. Four moments, each doing a different job.
   proof: {
     logoBand: true,
-    pressBand: true,
+    // No pressBand here: the "As Published On" marquee lives on the app-proof
+    // reason (reason 4) for this page, so a second copy in the tier would be
+    // redundant.
     // Shared UGC set: the band needs volume to read as volume, and we
     // have no persona-tagged stills yet. Pass `items` once we do.
     ugc: {},
@@ -115,42 +117,11 @@ export const productivityListicle: ListicleConfig = {
       kind: "reason",
       n: 4,
       headline: "Watch It Working, in Real Numbers",
-      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real.",
+      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real. The same science has been covered and published here:",
       // App cognitive-score count-up card; "Do you see an animal?" GIF is a
-      // Phase 5 asset swap. Press outlets render via pressMarquee (trust zone).
+      // Phase 5 asset swap. Press outlets render below via pressMarquee.
       asset: { kind: "measureTile" },
-    },
-    {
-      // Hand-cropped excerpts (productivity / endurance theme)
-      kind: "reviewStrip",
-      eyebrow: "What Customers Say",
-      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
-      reviews: [
-        {
-          headline: "Consistent energy, no trade-off",
-          quote:
-            "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
-          name: "Aaron H.",
-          image: "/lander/reviews/AaronH.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Capacity left for the evenings",
-          quote:
-            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
-          name: "Sam J.",
-          image: "/testimonials/dtc/SamJ.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Locked in on long days",
-          quote:
-            "I am on calls all day for work, and Conka has been instrumental to staying focused and locked in on long days.",
-          name: "Alex L.",
-          image: "/lander/reviews/AlexL.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-      ],
+      pressMarquee: true,
     },
     {
       kind: "reason",
@@ -190,6 +161,38 @@ export const productivityListicle: ListicleConfig = {
         ],
         footer: "All in two 30ml shots, morning and night.",
       },
+    },
+    {
+      // Hand-cropped excerpts (productivity / endurance theme)
+      kind: "reviewStrip",
+      eyebrow: "What Customers Say",
+      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
+      reviews: [
+        {
+          headline: "Consistent energy, no trade-off",
+          quote:
+            "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
+          name: "Aaron H.",
+          image: "/lander/reviews/AaronH.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+        {
+          headline: "Capacity left for the evenings",
+          quote:
+            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
+          name: "Sam J.",
+          image: "/testimonials/dtc/SamJ.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+        {
+          headline: "Locked in on long days",
+          quote:
+            "I am on calls all day for work, and Conka has been instrumental to staying focused and locked in on long days.",
+          name: "Alex L.",
+          image: "/lander/reviews/AlexL.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+      ],
     },
     {
       kind: "reason",
