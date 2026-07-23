@@ -120,9 +120,13 @@ function Group({
 export default function LogoMarquee({
   heading = "Fueling High Performers at:",
   logos = PARTNER_LOGOS,
+  durationSeconds = 40,
 }: {
   heading?: string;
   logos?: MarqueeLogo[];
+  /** Seconds for one full loop. Higher is slower. The press band runs slower
+   *  than the 40s partner default so the two never look like the same track. */
+  durationSeconds?: number;
 }) {
   return (
     <div className="text-center">
@@ -130,7 +134,10 @@ export default function LogoMarquee({
         {heading}
       </p>
       <div className="overflow-hidden">
-        <div className="flex w-max motion-safe:animate-[marquee_40s_linear_infinite]">
+        <div
+          className="flex w-max motion-safe:animate-[marquee_linear_infinite]"
+          style={{ animationDuration: `${durationSeconds}s` }}
+        >
           <Group logos={logos} />
           <Group logos={logos} hidden />
         </div>

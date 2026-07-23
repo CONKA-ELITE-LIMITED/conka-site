@@ -57,7 +57,9 @@ export const adhdListicle: ListicleConfig = {
   // Post-reasons proof tier. Four moments, each doing a different job.
   proof: {
     logoBand: true,
-    pressBand: true,
+    // No pressBand here: the "As Published On" marquee lives on the app-proof
+    // reason (reason 4) for this page, so a second copy in the tier would be
+    // redundant. brain-ageing and productivity still carry it in the tier.
     // Shared UGC set: the band needs volume to read as volume, and we
     // have no persona-tagged stills yet. Pass `items` once we do.
     ugc: {},

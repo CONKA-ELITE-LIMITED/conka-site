@@ -200,7 +200,11 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         ? asset.alt
         : asset.eyebrow;
   const aspect =
-    asset.kind === "placeholder" ? asset.aspect : asset.kind === "image" ? (asset.aspect ?? "4/3") : "4/3";
+    asset.kind === "placeholder"
+      ? asset.aspect
+      : asset.kind === "image"
+        ? (asset.aspect ?? "4/3")
+        : "4/3";
 
   if (asset.kind === "statPanel") {
     const dark = asset.tone === "dark";
@@ -394,60 +398,70 @@ function BodyBlock({
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
     return (
-      <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
-        <div className={mediaFirst ? "md:order-2" : ""}>
-          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
-            <span className="tabular-nums">
-              {String(block.n).padStart(2, "0")}.
-            </span>{" "}
-            {block.headline}
-          </h3>
-          <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
-            {block.body}
-          </p>
-          {block.citation ? (
-            <CitationLine
-              citation={block.citation}
-              href={block.citationHref}
-              className="-mt-3 mb-5"
-            />
-          ) : null}
-          {block.chips?.length ? (
-            <div className="flex flex-wrap gap-2">
-              {block.chips.map((chip, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-[12px] font-semibold text-black shadow-sm"
-                >
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#1a7f4f"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                    className="shrink-0"
+      <div className="border-t border-black/10 py-14">
+        <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
+          <div className={mediaFirst ? "md:order-2" : ""}>
+            <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+              <span className="tabular-nums">
+                {String(block.n).padStart(2, "0")}.
+              </span>{" "}
+              {block.headline}
+            </h3>
+            <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
+              {block.body}
+            </p>
+            {block.citation ? (
+              <CitationLine
+                citation={block.citation}
+                href={block.citationHref}
+                className="-mt-3 mb-5"
+              />
+            ) : null}
+            {block.chips?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {block.chips.map((chip, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-[12px] font-semibold text-black shadow-sm"
                   >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  {chip}
-                </span>
-              ))}
-            </div>
-          ) : null}
-        </div>
-        <div className={mediaFirst ? "md:order-1" : ""}>
-          <AssetBlock asset={block.asset} />
-        </div>
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#1a7f4f"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden
+                      className="shrink-0"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+          <div className={mediaFirst ? "md:order-1" : ""}>
+            <AssetBlock asset={block.asset} />
+          </div>
+        </article>
+        {/* Full-width press band, OUTSIDE the grid: the marquee's w-max track
+            would otherwise blow out the auto grid column on mobile and stretch
+            the asset (e.g. the app graph) to the track width. Slower than the
+            partner band (60s vs 40s) so the two never read as one track. */}
         {block.pressMarquee ? (
-          <div className="md:col-span-2">
-            <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
+          <div className="mt-12">
+            <LogoMarquee
+              heading="As Published On:"
+              logos={PRESS_LOGOS}
+              durationSeconds={60}
+            />
           </div>
         ) : null}
-      </article>
+      </div>
     );
   }
 
@@ -467,7 +481,9 @@ function BodyBlock({
         >
           {block.stats.map((s, i) => (
             <div key={i}>
-              <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
+              <div className="text-4xl font-semibold tabular-nums md:text-5xl">
+                {s.value}
+              </div>
               <div className="mt-2 text-sm opacity-70">{s.label}</div>
             </div>
           ))}
@@ -542,7 +558,8 @@ export default function ListicleRenderer({
   // The FAQ section carries the sticky-bar clearance (pb-32). If a config
   // supplies no faqIds that section does not render, so the clearance moves to
   // <main> to stop the bar covering the last block.
-  const needsStickyClearance = Boolean(config.stickyBar) && !config.faqIds.length;
+  const needsStickyClearance =
+    Boolean(config.stickyBar) && !config.faqIds.length;
 
   return (
     <main
@@ -569,7 +586,9 @@ export default function ListicleRenderer({
                 fill
                 priority
                 className="object-cover"
-                style={{ objectPosition: config.hero.asset.objectPosition ?? "center" }}
+                style={{
+                  objectPosition: config.hero.asset.objectPosition ?? "center",
+                }}
                 sizes="(max-width: 768px) 100vw, 52vw"
               />
             ) : (
@@ -744,7 +763,9 @@ export default function ListicleRenderer({
           style={{ background: SOFT_BLUE, color: NAVY }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <span className="text-sm font-medium">{config.stickyBar.label}</span>
+            <span className="text-sm font-medium">
+              {config.stickyBar.label}
+            </span>
             <Link
               href={buyHref}
               className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
