@@ -5,6 +5,12 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-23** | Add customer photos to productivity listicle reviews and restyle the proof chip as a white pill with a green check
+- **2026-07-23** | Polish listicles: remove section eyebrows, dedicated normal-font hero CTA, redesigned segment testimonial (photo/stars/quote-marks/verified badge), fix stat band on desktop
+- **2026-07-23** | Fix listicle mobile issues (horizontal scroll, stat band, bold reason bodies) and rebuild the review strip as a photo swipe row with age-matched testimonials
+- **2026-07-23** | Restructure Productivity and Brain Ageing listicles into the numbered X-reasons format matching ADHD
+- **2026-07-23** | Rework ADHD listicle into a numbered X-reasons format and update the shared /go template (CTAs to the Both PDP, ProductHeroV2 buy zone, restyled sticky bar and hero CTA)
+- **2026-07-23** | Blog article bodies now render quotes as styled pull-quotes instead of an unstyled browser indent, for the persona post testimonials
 - **2026-07-22** | Restyle /go/why-conka mm template: square assets, bold body copy, no FAQ, no sticky footer
 - **2026-07-22** | Refine /go/why-conka listicle: add green accent offer line to reason 7 and drop trailing trust/review sections
 - **2026-07-22** | Rewrote /go/why-conka listicle copy from Magic Mind placeholder to CONKA (ingredients, athletes, and proof from source data)

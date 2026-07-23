@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -10,7 +10,8 @@ import type {
 } from "@/app/lib/landings/listicle-types";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
-import ListiclePurchase from "./ListiclePurchase";
+import Link from "next/link";
+import ListicleProductHero from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
@@ -51,6 +52,11 @@ const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
+/* Marketing CTAs (hero, bridge, sticky, cost) navigate to the Both PDP rather
+   than scrolling to the in-page buy zone. */
+const BUY_HREF = "/conka-both";
+/* Soft-blue sticky-bar fill (clearly tinted, not the deep navy). */
+const SOFT_BLUE = "var(--go-option-tint, #dce5f7)";
 
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
@@ -257,9 +263,19 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   );
 }
 
+function reviewInitials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
-    <div className="rounded-[16px] border border-black/10 bg-white p-4 text-[#111]">
+    <div className="flex h-full flex-col rounded-[16px] border border-black/10 bg-white p-4 text-[#111]">
       <div
         className="mb-1.5 text-[13px] tracking-widest"
         style={{ color: "#F59E0B" }}
@@ -271,47 +287,44 @@ function ReviewCard({ review }: { review: ListicleReview }) {
           {review.headline}
         </p>
       ) : null}
-      <p className="mb-3 line-clamp-3 text-[13px] leading-snug">
+      <p className="mb-3 line-clamp-4 text-[13px] leading-snug">
         {review.quote}
       </p>
-      <div className="text-[13px] font-medium">{review.name}</div>
-      {review.detail ? (
-        <div className="text-[11px] opacity-60">{review.detail}</div>
-      ) : null}
+      <div className="mt-auto flex items-center gap-2.5 pt-1">
+        {review.image ? (
+          <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+            <Image
+              src={review.image}
+              alt={review.name}
+              fill
+              sizes="36px"
+              className="object-cover object-[center_25%]"
+            />
+          </span>
+        ) : (
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-[11px] font-semibold text-white">
+            {reviewInitials(review.name)}
+          </span>
+        )}
+        <div className="min-w-0">
+          <div className="text-[13px] font-semibold leading-tight">
+            {review.name}
+          </div>
+          {review.detail ? (
+            <div className="text-[11px] leading-tight opacity-60">
+              {review.detail}
+            </div>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }
 
-/** Circular nav button for the mobile review carousel */
-function CarouselArrow({
-  dir,
-  onClick,
-}: {
-  dir: "prev" | "next";
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={dir === "prev" ? "Previous review" : "Next review"}
-      onClick={onClick}
-      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full border border-black/10 bg-white text-[#1B2757] transition active:scale-95"
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        {dir === "prev" ? (
-          <polyline points="15 18 9 12 15 6" />
-        ) : (
-          <polyline points="9 18 15 12 9 6" />
-        )}
-      </svg>
-    </button>
-  );
-}
-
 /**
- * Customer-review strip (IM8 "What Customers Say" band). Mobile shows one
- * review at a time with flanking arrows + dots; desktop shows the full row.
- * A tinted band + layered white cards distinguish it from the page.
+ * Customer-review strip (IM8 "What Customers Say" band). Mobile is a swipe
+ * row of cards (the next card peeks); desktop is a 3-up grid. Cards carry an
+ * optional customer photo. A tinted band distinguishes it from the page.
  */
 function ReviewStrip({
   reviews,
@@ -322,10 +335,6 @@ function ReviewStrip({
   eyebrow?: string;
   ratingSummary?: string;
 }) {
-  const [index, setIndex] = useState(0);
-  const count = reviews.length;
-  const go = (delta: number) => setIndex((i) => (i + delta + count) % count);
-
   return (
     <div
       className="my-10 rounded-[16px] px-4 py-6 md:px-10 md:py-8"
@@ -335,28 +344,18 @@ function ReviewStrip({
         {eyebrow}
       </div>
 
-      {/* Mobile: one review at a time, flanked by arrows */}
-      <div className="md:hidden">
-        <div className="flex items-stretch gap-2.5">
-          <CarouselArrow dir="prev" onClick={() => go(-1)} />
-          <div className="min-w-0 flex-1">
-            <ReviewCard review={reviews[index]} />
+      {/* Mobile: swipe row, next card peeks (no arrows/dots) */}
+      <div
+        role="group"
+        aria-label={`${eyebrow} (swipe to see more)`}
+        tabIndex={0}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {reviews.map((r, i) => (
+          <div key={i} className="w-[85%] shrink-0 snap-start">
+            <ReviewCard review={r} />
           </div>
-          <CarouselArrow dir="next" onClick={() => go(1)} />
-        </div>
-        <div className="mt-3 flex justify-center gap-1.5">
-          {reviews.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              aria-label={`Go to review ${i + 1}`}
-              onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-5 bg-[#1B2757]" : "w-1.5 bg-black/20"
-              }`}
-            />
-          ))}
-        </div>
+        ))}
       </div>
 
       {/* Desktop: full row of cards */}
@@ -395,18 +394,13 @@ function BodyBlock({
     return (
       <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
         <div className={mediaFirst ? "md:order-2" : ""}>
-          {block.tag ? (
-            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-              {block.tag}
-            </div>
-          ) : null}
           <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
             <span className="tabular-nums">
               {String(block.n).padStart(2, "0")}.
             </span>{" "}
             {block.headline}
           </h3>
-          <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black md:text-base">
+          <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
             {block.body}
           </p>
           {block.citation ? (
@@ -421,8 +415,22 @@ function BodyBlock({
               {block.chips.map((chip, i) => (
                 <span
                   key={i}
-                  className="rounded-full border border-black/10 px-3.5 py-1.5 text-[12px] font-medium text-black/70"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-[12px] font-semibold text-black shadow-sm"
                 >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1a7f4f"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                    className="shrink-0"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                   {chip}
                 </span>
               ))}
@@ -445,7 +453,11 @@ function BodyBlock({
         <div className="mb-8 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
           {block.eyebrow}
         </div>
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div
+          className={`mx-auto grid max-w-5xl grid-cols-1 gap-8 md:gap-6 ${
+            block.stats.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4"
+          }`}
+        >
           {block.stats.map((s, i) => (
             <div key={i}>
               <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
@@ -473,11 +485,6 @@ function BodyBlock({
   if (block.kind === "symptomExplainer") {
     return (
       <div className="border-t border-black/10 py-14">
-        {block.tag ? (
-          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-            {block.tag}
-          </div>
-        ) : null}
         <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
@@ -498,11 +505,6 @@ function BodyBlock({
   if (block.kind === "segmentToggle") {
     return (
       <div className="border-t border-black/10 py-14">
-        {block.tag ? (
-          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-            {block.tag}
-          </div>
-        ) : null}
         <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
@@ -540,7 +542,7 @@ export default function ListicleRenderer({
   useHashScroll();
 
   return (
-    <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
+    <main className="min-h-screen overflow-x-clip" style={{ background: BONE, color: "#111" }}>
       {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom edges
           on desktop at ~half viewport width; content column centres beside. */}
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
@@ -583,12 +585,28 @@ export default function ListicleRenderer({
                 sub={config.hero.socialProof.sub}
               />
             ) : null}
-            <a
-              href="#product"
-              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1B2757] px-10 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-fit"
+            <Link
+              href={BUY_HREF}
+              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
+              style={{ background: NAVY }}
             >
               {config.hero.cta}
-            </a>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+                className="shrink-0"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
@@ -651,12 +669,12 @@ export default function ListicleRenderer({
               <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
                 {config.bridge.headline}
               </h3>
-              <a
-                href="#product"
+              <Link
+                href={BUY_HREF}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
-              </a>
+              </Link>
             </div>
           ) : null}
         </div>
@@ -667,23 +685,10 @@ export default function ListicleRenderer({
         aria-label="Product offer"
         id="product"
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
-        style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
+        style={{ background: "#fff", color: "#111" }}
       >
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-8">
-            <h2
-              className="text-3xl font-semibold leading-tight text-black md:text-4xl"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              {config.product.headline}
-            </h2>
-            {config.product.subline ? (
-              <p className="mt-3 max-w-2xl text-base text-black/60">
-                {config.product.subline}
-              </p>
-            ) : null}
-          </div>
-          <ListiclePurchase defaultSingle={config.product.productHeroId} />
+        <div className="mx-auto max-w-6xl">
+          <ListicleProductHero productHeroId={config.product.productHeroId} />
         </div>
       </section>
 
@@ -828,12 +833,12 @@ export default function ListicleRenderer({
               ) : null}
               {config.costBreakdown.cta ? (
                 <div>
-                  <a
-                    href="#product"
+                  <Link
+                    href={BUY_HREF}
                     className="inline-block rounded-full bg-[#111] px-8 py-4 text-sm font-medium text-white"
                   >
                     {config.costBreakdown.cta}
-                  </a>
+                  </Link>
                 </div>
               ) : null}
             </div>
@@ -889,14 +894,15 @@ export default function ListicleRenderer({
       {config.stickyBar ? (
         <aside
           aria-label="Offer bar"
-          className="fixed bottom-0 left-0 right-0 z-40 px-5 py-3 md:px-[5vw]"
-          style={{ background: NAVY, color: "#fff" }}
+          className="fixed bottom-0 left-0 right-0 z-40 px-5 py-2 md:px-[5vw]"
+          style={{ background: SOFT_BLUE, color: NAVY }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <span className="text-sm">{config.stickyBar.label}</span>
-            <a
-              href="#product"
-              className="rounded-[12px] bg-white px-6 py-2.5 text-center text-[13px] font-bold text-[#111]"
+            <span className="text-sm font-medium">{config.stickyBar.label}</span>
+            <Link
+              href={BUY_HREF}
+              className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
+              style={{ background: NAVY }}
             >
               {config.stickyBar.cta}
               {config.stickyBar.sub ? (
@@ -904,7 +910,7 @@ export default function ListicleRenderer({
                   {config.stickyBar.sub}
                 </span>
               ) : null}
-            </a>
+            </Link>
           </div>
         </aside>
       ) : null}
