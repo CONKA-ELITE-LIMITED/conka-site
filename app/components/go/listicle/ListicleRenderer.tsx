@@ -415,8 +415,22 @@ function BodyBlock({
               {block.chips.map((chip, i) => (
                 <span
                   key={i}
-                  className="rounded-full border border-black/10 px-3.5 py-1.5 text-[12px] font-medium text-black/70"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-[12px] font-semibold text-black shadow-sm"
                 >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1a7f4f"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                    className="shrink-0"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                   {chip}
                 </span>
               ))}

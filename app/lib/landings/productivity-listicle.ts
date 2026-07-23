@@ -115,6 +115,7 @@ export const productivityListicle: ListicleConfig = {
           quote:
             "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
           name: "Aaron H.",
+          image: "/lander/reviews/AaronH.jpg",
           detail: "Verified · Flow + Clear",
         },
         {
@@ -122,6 +123,7 @@ export const productivityListicle: ListicleConfig = {
           quote:
             "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
           name: "Sam J.",
+          image: "/testimonials/dtc/SamJ.jpg",
           detail: "Verified · Flow + Clear",
         },
         {
@@ -129,6 +131,7 @@ export const productivityListicle: ListicleConfig = {
           quote:
             "I am on calls all day for work, and Conka has been instrumental to staying focused and locked in on long days.",
           name: "Alex L.",
+          image: "/lander/reviews/AlexL.jpg",
           detail: "Verified · Flow + Clear",
         },
       ],
