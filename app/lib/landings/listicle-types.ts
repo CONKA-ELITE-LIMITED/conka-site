@@ -49,6 +49,10 @@ export type ListicleProofFeature = AthleteReviewContent;
 export interface ListicleProof {
   /** Partner-logo marquee ("Fueling High Performers at:") */
   logoBand?: boolean;
+  /** Press and journal marquee ("As Published On:"), grouped directly under
+   *  the partner band as one institutional-trust moment. Renders in a white
+   *  panel because the press logos are flattened onto white. */
+  pressBand?: boolean;
   /** UGC band. Pass `items` for a persona subset; omit for the shared set. */
   ugc?: { title?: string; subtitle?: string; items?: UGCItem[] };
   /** One named person, quote-led */

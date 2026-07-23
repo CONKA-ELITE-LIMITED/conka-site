@@ -11,8 +11,7 @@
  *  - Press: "As Published On:" outlet wordmarks. Pass `logos={PRESS_LOGOS}`.
  *
  * Items with a `src` render as an <img> at their natural height; items with no
- * `src` render as a text wordmark. PRESS_LOGOS uses text as a placeholder until
- * the real press-logo images are sourced (see the template-upgrade plan doc).
+ * `src` render as a text wordmark.
  * ========================================================================== */
 
 export interface MarqueeLogo {
@@ -40,16 +39,43 @@ const PARTNER_LOGOS: MarqueeLogo[] = [
   { src: "/lander/partners/equinox.png", alt: "Equinox", h: 19 },
 ];
 
-/** Press outlets the CognICA test has appeared in. Text wordmarks are a
- *  placeholder; drop `src` image paths in (Phase 5) to swap to real logos. */
+/**
+ * Press and journal outlets the CognICA test has appeared in.
+ *
+ * Sources are trimmed to their bounding box and flattened onto white, so they
+ * only sit correctly on a white surface (the listicle press band renders in a
+ * white panel for this reason). Per-logo `h` is tuned by shape, not set to one
+ * value: these range from an 8.8:1 wordmark (Globe and Mail) to a 1:1 stacked
+ * lockup (Medscape), so a single height would make the wordmarks dominate and
+ * the lockups vanish. Ordered editorial and scientific first.
+ *
+ * The last three are newswire and syndication rather than editorial coverage.
+ * Cut them if "As Published On" should mean earned press only.
+ */
 export const PRESS_LOGOS: MarqueeLogo[] = [
-  { alt: "Medscape" },
-  { alt: "pharmaphorum" },
-  { alt: "NeurologyLive" },
-  { alt: "BioSpace" },
-  { alt: "The Globe and Mail" },
-  { alt: "Frontiers in Aging Neuroscience" },
-  { alt: "Applied Neuropsychology: Adult" },
+  { src: "/lander/press/medscape.png", alt: "Medscape", h: 66 },
+  { src: "/lander/press/neurology-live.png", alt: "NeurologyLive", h: 26 },
+  { src: "/lander/press/mdedge.png", alt: "MDedge", h: 38 },
+  { src: "/lander/press/psychiatry.png", alt: "Psychiatry", h: 36 },
+  { src: "/lander/press/pharmaphorum.png", alt: "pharmaphorum", h: 30 },
+  { src: "/lander/press/biospace.png", alt: "BioSpace", h: 32 },
+  { src: "/lander/press/globe-and-mail.png", alt: "The Globe and Mail", h: 18 },
+  {
+    src: "/lander/press/nature-scientific-reports.png",
+    alt: "Nature Scientific Reports",
+    h: 44,
+  },
+  {
+    src: "/lander/press/frontiers-aging-neuroscience.png",
+    alt: "Frontiers in Aging Neuroscience",
+    h: 42,
+  },
+  { src: "/lander/press/plos.png", alt: "PLOS", h: 58 },
+  { src: "/lander/press/protolife.png", alt: "proto.life", h: 26 },
+  { src: "/lander/press/the-deep-dive.png", alt: "The Deep Dive", h: 24 },
+  { src: "/lander/press/nasdaq.png", alt: "Nasdaq", h: 30 },
+  { src: "/lander/press/yahoo-finance.png", alt: "Yahoo Finance", h: 32 },
+  { src: "/lander/press/newsfile.png", alt: "Newsfile", h: 36 },
 ];
 
 function Group({

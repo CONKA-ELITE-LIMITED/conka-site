@@ -25,7 +25,7 @@
 
 import type { ReactNode } from "react";
 import type { ListicleProof } from "@/app/lib/landings/listicle-types";
-import LogoMarquee from "@/app/components/landing/LogoMarquee";
+import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import AthleteReviewFeature from "@/app/components/AthleteReviewFeature";
 import ReviewRail from "@/app/components/landing/ReviewRail";
@@ -34,8 +34,30 @@ import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
   const blocks: { key: string; node: ReactNode }[] = [];
 
-  if (proof.logoBand) {
-    blocks.push({ key: "logos", node: <LogoMarquee /> });
+  // Partner logos and press logos are ONE moment, not two: both are
+  // institutional trust, and stacking them as separate beats is what made the
+  // old tier read as a wall. The press marquee sits in a white panel directly
+  // under the partner band, tight enough (mt-8) to group with it, because the
+  // press sources are flattened onto white and would show a seam on the bone
+  // section background.
+  if (proof.logoBand || proof.pressBand) {
+    blocks.push({
+      key: "logos",
+      node: (
+        <>
+          {proof.logoBand ? <LogoMarquee /> : null}
+          {proof.pressBand ? (
+            <div
+              className={`rounded-[var(--brand-radius-container)] bg-white px-5 py-8 text-black ring-1 ring-black/5 md:px-8 ${
+                proof.logoBand ? "mt-8" : ""
+              }`}
+            >
+              <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
+            </div>
+          ) : null}
+        </>
+      ),
+    });
   }
 
   if (proof.ugc) {

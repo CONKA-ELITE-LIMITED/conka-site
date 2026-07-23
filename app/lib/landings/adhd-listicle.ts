@@ -57,6 +57,7 @@ export const adhdListicle: ListicleConfig = {
   // Post-reasons proof tier. Four moments, each doing a different job.
   proof: {
     logoBand: true,
+    pressBand: true,
     // Shared UGC set: the band needs volume to read as volume, and we
     // have no persona-tagged stills yet. Pass `items` once we do.
     ugc: {},

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-23** | Added real press and journal logos to the listicle proof tier as a white As Published On band
 - **2026-07-23** | Rebuilt the listicle post-reasons proof tier (logos, UGC band, one persona-matched athlete feature, reviews) and moved the /go FAQ onto the site-standard LabFAQ
 - **2026-07-23** | Restyle product benefit tiles: forced two-line titles, centered on mobile, semibold descriptions
 - **2026-07-23** | Add customer photos to productivity listicle reviews and restyle the proof chip as a white pill with a green check
