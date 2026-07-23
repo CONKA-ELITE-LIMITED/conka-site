@@ -293,13 +293,15 @@ export interface Im8ListicleConfig extends ListicleBase {
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
   bridge?: { headline: string; cta: string };
-  /** Buy box zone (#product anchor). Renders the ListiclePurchase ProductHero. */
+  /** Buy box zone. Renders ProductHeroV2 (via ListicleProductHero). */
   product: {
-    headline: string;
-    subline?: string;
     /** Which product the buy box sells ("01" Flow, "02" Clear, "03" Both) */
     productHeroId?: ProductHeroId;
-    /** Persona-specific "who it's for" copy for the buy-box accordion */
+    /** @deprecated no longer rendered since the ProductHeroV2 buy-zone swap;
+     *  ProductHeroV2 supplies its own heading + accordions. Retained so
+     *  existing configs keep type-checking until the copy is removed. */
+    headline?: string;
+    subline?: string;
     whoItsFor?: string[];
   };
   /** Renders the app proof section (cognitive score count-up, steps, guarantee) */
