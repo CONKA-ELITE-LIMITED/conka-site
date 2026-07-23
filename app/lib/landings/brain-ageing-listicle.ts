@@ -3,11 +3,13 @@ import type { ListicleConfig } from "./listicle-types";
 /**
  * Persona listicle: older generation / brain-ageing.
  *
- * Rewritten 2026-07-22 to Humphrey's improved copy and sentiment (template
- * upgrade Phase 4). Uses the bespoke men/women segmentToggle block, the Phase 1
- * citations and press marquee, and canonical FAQ ids (two new word-recall
- * entries added to faqContent.ts). The "Do you see an animal?" test GIF is a
- * Phase 5 asset swap. Claims pass is owned by the user.
+ * Restructured 2026-07-23 (conversion pass) into a true numbered "X reasons"
+ * listicle: a counted hero and 7 tight reasons, one idea each, statement
+ * headlines, pain-first openings. The men/women segmentToggle is kept as one
+ * reason (men's body trimmed); the verbose mechanism detail and search-question
+ * framing move to the parallel /blog work (SCRUM-1175). One stats band and one
+ * review strip sit between reasons so the page reads as a scannable list.
+ * Template stays "im8". Claims pass is owned by the user.
  *
  * Slug is brain-ageing-listicle to avoid colliding with the brain-age QUIZ
  * page (/go/brain-age, SCRUM-1084).
@@ -17,15 +19,15 @@ export const brainAgeingListicle: ListicleConfig = {
   persona: "brain-ageing",
   format: "listicle",
   template: "im8",
-  title: "Is Forgetting Words Mid-Sentence a Sign of Dementia?",
+  title: "7 Reasons Word-Slips Don't Have to Get Worse",
   hero: {
     laurel: {
       eyebrow: "World's Largest",
       body: "Consumer brain-research project. 1,000+ brains tested through our app.",
     },
-    headline: "Is Forgetting Words Mid-Sentence a Sign of Dementia?",
+    headline: "7 Reasons Word-Slips Don't Have to Get Worse",
     subcopy:
-      "Not always what you fear, often just fatigue and mental overload, common in a modern, technology-driven world. Support the recall pathways behind it before it gets worse. Flow in the morning, Clear in the afternoon.",
+      "Losing a word mid-sentence is rarely what you fear, more often just fatigue and mental overload in a technology-driven world. You can support the recall pathways behind it before it gets worse. Flow in the morning, Clear in the afternoon.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -61,9 +63,9 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "reason",
       n: 1,
       tag: "WORD RECALL",
-      headline: "Seamless Speech, Without the Hesitation",
-      body: "That moment your words vanish mid-sentence is unsettling, but it's rarely permanent. This 30ml daily shot supports the neural pathways behind language, so sentences form more easily, the words are there when you reach for them, and conversation flows naturally again. The earlier you support it, the easier it is to keep ahead of.",
-      // Dan Norton's quote (speaking clearer, words flowing) lands the seamless-speech reason
+      headline: "Find Your Words Again, Without the Hesitation",
+      body: "That moment your words vanish mid-sentence is unsettling, but it's rarely permanent. This daily shot supports the language pathways behind recall, so the words are there when you reach for them and conversation flows again. The earlier you support it, the easier to stay ahead.",
+      // Dan Norton's quote (speaking clearer, words flowing) lands the word-recall reason
       asset: {
         kind: "athleteQuote",
         name: "Dan Norton",
@@ -77,13 +79,13 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "segmentToggle",
       n: 2,
       tag: "MEN & WOMEN",
-      headline: "Where Ageing Hits Your Brain, and What Helps",
+      headline: "Where Ageing Hits Hardest, and What Helps",
       segments: [
         {
           label: "For men",
           headline:
             "From 30, Testosterone Only Goes One Way, Unless You Do Something About It",
-          body: "Ashwagandha and Rhodiola are adaptogens shown in clinical trials to ease the cortisol load that suppresses testosterone, so sustained effort, at work, training, or both, stops feeling like a grind. The adaptogens do their job daily, but the biggest lever is still training: heavy compound lifts trigger the body's largest natural testosterone response of any exercise type. Stack that on daily cortisol support and you are not fighting your hormones on top of everything else.",
+          body: "From your thirties, testosterone drifts down and sustained effort starts to feel heavier. Ashwagandha and Rhodiola are adaptogens shown in clinical trials to ease the cortisol load that suppresses it, so work and training stop feeling like a grind.",
           ingredientsEyebrow: "The men's stack",
           ingredients: [
             {
@@ -178,8 +180,8 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "reason",
       n: 3,
       tag: "LONGEVITY",
-      headline: "How to Protect Your Brain As You Age",
-      body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support covers the vitals, helping protect your cognitive function for the years ahead, safely and without stimulants. Published, peer-reviewed research from Durham University found the combination of ingredients in Flow significantly extended lifespan and reduced oxidative stress in an ageing model.",
+      headline: "Protect Your Brain for the Years Ahead",
+      body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support helps protect your cognitive function for the years ahead, without stimulants. Durham University research found the ingredients in Flow extended lifespan and reduced oxidative stress.",
       chips: ["+15 human-year equivalent in an ageing study"],
       citation:
         "Alanazi et al., Journal of Pharmacy and Pharmacology, 2025 (Durham University)",
@@ -189,8 +191,8 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "reason",
       n: 4,
       tag: "MEASURE IT",
-      headline: "Do Brain-Training Apps Actually Work?",
-      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is different. It's built around CognICA, an FDA-cleared, CE-marked cognitive assessment developed by Cambridge University and Cognetivity Neurosciences and used in clinical settings to help diagnose dementia. It's the same test, not a gamified imitation, so when you see your score move, it's measuring something real.",
+      headline: "Watch It Working, in Real Numbers",
+      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real.",
       // App cognitive-score count-up card; "Do you see an animal?" GIF is a
       // Phase 5 asset swap. Press outlets render via pressMarquee (trust zone).
       asset: { kind: "measureTile" },
@@ -228,8 +230,8 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "reason",
       n: 5,
       tag: "THE 2PM SLUMP",
-      headline: "What Causes the Afternoon Energy Slump?",
-      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. The components in CONKA's shots have been shown to deliver 18.1% faster mental processing speed than caffeine, and CONKA is completely caffeine-free.",
+      headline: "Beat the Afternoon Slump Without Caffeine",
+      body: "Most energy fixes are just caffeine, and caffeine always ends the same way. CONKA's ingredients deliver 18.1% faster mental processing than caffeine, and CONKA is completely caffeine-free.",
       citation: "DOI: 10.1186/1550-2783-12-S1-P41",
       // Day-energy curve: afternoon slump without, steady with CONKA
       asset: { kind: "dayEnergyCurve" },
@@ -238,9 +240,18 @@ export const brainAgeingListicle: ListicleConfig = {
       kind: "reason",
       n: 6,
       tag: "REAL PROOF",
-      headline: "Which Brain Supplements Are Actually Proven to Work?",
-      body: "Proof matters. Most energy and focus supplements are hiding a simple trick: caffeine. It works briefly, then comes the crash, the jitters, the dependency. By the original definition of the word nootropic, a substance with side effects like that isn't even a true nootropic, it's just a stimulant. The only real way to know if a supplement works is randomised controlled trial evidence. Not a testimonial, not a before-and-after photo, a trial. CONKA has done it over 20 times, and if that's still not enough, we built something most brands never will: a way to measure it yourself.",
+      headline: "Backed by Trials, Not Testimonials",
+      body: "Most focus supplements hide one trick: caffeine, which by the original definition is a stimulant, not a nootropic. CONKA has run randomised controlled trials over 20 times, and we built a way for you to measure it yourself.",
       asset: { kind: "scoreByGroup" },
+    },
+    {
+      kind: "reason",
+      n: 7,
+      tag: "RISK-FREE",
+      headline: "100 Days to Feel It, or Your Money Back",
+      body: "Try CONKA for a full 100 days. If your recall and clarity haven't changed, you get every penny back. Developed from brain research at Durham and Newcastle, Informed Sport certified, made in the UK.",
+      // Off CONKA vs on CONKA measured focus (+19.3%)
+      asset: { kind: "focusBars" },
     },
   ],
   bridge: {
@@ -248,13 +259,7 @@ export const brainAgeingListicle: ListicleConfig = {
     cta: "Try Conka Risk-Free for 100 Days →",
   },
   product: {
-    headline: "Try Conka Risk-Free for 100 Days",
-    subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
     productHeroId: "03",
-    whoItsFor: [
-      "You've noticed words on the tip of your tongue and the odd \"why did I walk in here\" moment, and you want to stay sharp for the years ahead. Two daily shots support memory, recall and everyday clarity.",
-      "You want something simple and natural you can actually stick to, with proof. Two shots a day plus a 2-minute brain test that tracks your scores over time, so you can see it holding.",
-    ],
   },
   reviewsCarousel: true,
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
