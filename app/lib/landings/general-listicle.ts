@@ -1,7 +1,7 @@
 import type { ListicleConfig } from "./listicle-types";
 
 /**
- * General, non-persona listicle (/go/why-conka) on the simple (Magic Mind)
+ * General, non-persona listicle (/go/why-conka-10rw-v1) on the simple (Magic Mind)
  * template. The broad-net creative for cold prospecting traffic: a ten-reason
  * editorial article, each reason a lifestyle photo + heading + body, with a
  * buy box after reason 5 and the product grid at the end.
@@ -15,7 +15,7 @@ import type { ListicleConfig } from "./listicle-types";
  * claims pass is owned by the user.
  */
 export const generalListicle: ListicleConfig = {
-  slug: "why-conka",
+  slug: "why-conka-10rw-v1",
   persona: "general",
   format: "listicle",
   template: "mm",
