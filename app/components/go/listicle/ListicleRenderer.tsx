@@ -10,7 +10,6 @@ import type {
 } from "@/app/lib/landings/listicle-types";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
-import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
@@ -346,7 +345,12 @@ function ReviewStrip({
       </div>
 
       {/* Mobile: swipe row, next card peeks (no arrows/dots) */}
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        role="group"
+        aria-label={`${eyebrow} (swipe to see more)`}
+        tabIndex={0}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {reviews.map((r, i) => (
           <div key={i} className="w-[85%] shrink-0 snap-start">
             <ReviewCard review={r} />
@@ -390,11 +394,6 @@ function BodyBlock({
     return (
       <article className="grid items-center gap-8 border-t border-black/10 py-14 md:grid-cols-2 md:gap-16">
         <div className={mediaFirst ? "md:order-2" : ""}>
-          {block.tag ? (
-            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-              {block.tag}
-            </div>
-          ) : null}
           <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
             <span className="tabular-nums">
               {String(block.n).padStart(2, "0")}.
@@ -440,9 +439,13 @@ function BodyBlock({
         <div className="mb-8 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
           {block.eyebrow}
         </div>
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 md:flex-row md:flex-wrap md:justify-center md:gap-x-12 md:gap-y-10">
+        <div
+          className={`mx-auto grid max-w-5xl grid-cols-1 gap-8 md:gap-6 ${
+            block.stats.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4"
+          }`}
+        >
           {block.stats.map((s, i) => (
-            <div key={i} className="md:w-40">
+            <div key={i}>
               <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
               <div className="mt-2 text-sm opacity-70">{s.label}</div>
             </div>
@@ -468,11 +471,6 @@ function BodyBlock({
   if (block.kind === "symptomExplainer") {
     return (
       <div className="border-t border-black/10 py-14">
-        {block.tag ? (
-          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-            {block.tag}
-          </div>
-        ) : null}
         <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
@@ -493,11 +491,6 @@ function BodyBlock({
   if (block.kind === "segmentToggle") {
     return (
       <div className="border-t border-black/10 py-14">
-        {block.tag ? (
-          <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-            {block.tag}
-          </div>
-        ) : null}
         <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
@@ -578,17 +571,28 @@ export default function ListicleRenderer({
                 sub={config.hero.socialProof.sub}
               />
             ) : null}
-            <div className="mb-6">
-              <ConkaCTAButton
-                href={BUY_HREF}
-                hideIcon
-                meta={null}
-                allowWrap
-                className="w-full md:w-auto"
+            <Link
+              href={BUY_HREF}
+              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
+              style={{ background: NAVY }}
+            >
+              {config.hero.cta}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+                className="shrink-0"
               >
-                {config.hero.cta}
-              </ConkaCTAButton>
-            </div>
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>

@@ -71,35 +71,68 @@ export default function SegmentToggle({
           <h4 className="mb-3 text-[22px] font-semibold leading-tight text-[#1B2757] md:text-[26px]">
             {seg.headline}
           </h4>
-          <p className="text-[15px] leading-relaxed text-black/80 md:text-base">
+          <p className="text-[15px] font-semibold leading-relaxed text-black md:text-base">
             {seg.body}
           </p>
           {seg.testimonial ? (
-            <figure className="mt-5 rounded-2xl border border-black/10 bg-white p-4">
-              <blockquote className="text-[14px] leading-relaxed text-black/80">
-                {`"${seg.testimonial.quote}"`}
+            <figure className="mt-5 rounded-2xl border border-black/10 bg-white p-5">
+              <div
+                aria-hidden
+                className="mb-2 text-[15px] tracking-widest"
+                style={{ color: "#F59E0B" }}
+              >
+                ★★★★★
+              </div>
+              <blockquote className="text-[15px] font-semibold leading-relaxed text-black">
+                <span
+                  aria-hidden
+                  className="mr-0.5 align-[-0.35em] text-[2.5rem] font-bold leading-[0] text-[#1B2757]"
+                >
+                  &ldquo;
+                </span>
+                {seg.testimonial.quote}
+                <span
+                  aria-hidden
+                  className="ml-0.5 align-[-0.5em] text-[2.5rem] font-bold leading-[0] text-[#1B2757]"
+                >
+                  &rdquo;
+                </span>
               </blockquote>
-              <figcaption className="mt-3 flex items-center gap-2.5">
+              <figcaption className="mt-4 flex items-center gap-3">
                 {seg.testimonial.image ? (
-                  <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+                  <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full">
                     <Image
                       src={seg.testimonial.image}
                       alt={seg.testimonial.name}
                       fill
-                      sizes="36px"
+                      sizes="56px"
                       className="object-cover object-[center_25%]"
                     />
                   </span>
                 ) : null}
-                <span className="text-[13px] font-semibold text-black">
-                  {seg.testimonial.name}
+                <div className="min-w-0">
+                  <div className="text-[15px] font-semibold text-black">
+                    {seg.testimonial.name}
+                  </div>
                   {seg.testimonial.detail ? (
-                    <span className="font-normal text-black/50">
-                      {" · "}
+                    <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-[#1a7f4f]/10 px-2 py-0.5 text-[11px] font-semibold text-[#1a7f4f]">
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
                       {seg.testimonial.detail}
                     </span>
                   ) : null}
-                </span>
+                </div>
               </figcaption>
             </figure>
           ) : null}

@@ -38,8 +38,6 @@ export default function ConkaCTAButton({
   meta = ACTIVE_META,
   className = "",
   compact = false,
-  hideIcon = false,
-  allowWrap = false,
 }: {
   children: React.ReactNode;
   href?: string;
@@ -50,10 +48,6 @@ export default function ConkaCTAButton({
   className?: string;
   /** Compact in-card variant: text + light-up ↗ arrow, no O-icon. */
   compact?: boolean;
-  /** Drop the left O-mark in the full variant (e.g. to fit a longer label). */
-  hideIcon?: boolean;
-  /** Let a long label wrap instead of forcing one line (prevents overflow). */
-  allowWrap?: boolean;
 }) {
   const classes = `${compact ? COMPACT : OUTER} ${className}`;
   const showMeta = !compact && Boolean(meta);
@@ -72,26 +66,20 @@ export default function ConkaCTAButton({
     </>
   ) : (
     <>
-      {/* LEFT — Conka "O" mark, inverted to white for the navy fill (hidden when hideIcon) */}
-      {!hideIcon && (
-        <span className="relative w-7 h-7 shrink-0" aria-hidden>
-          <Image
-            src="/logos/ConkaO.png"
-            alt=""
-            fill
-            sizes="28px"
-            className="object-contain [filter:brightness(0)_invert(1)] transition-[filter] duration-200 group-hover:[filter:brightness(0)]"
-          />
-        </span>
-      )}
+      {/* LEFT — Conka "O" mark, inverted to white for the navy fill */}
+      <span className="relative w-7 h-7 shrink-0" aria-hidden>
+        <Image
+          src="/logos/ConkaO.png"
+          alt=""
+          fill
+          sizes="28px"
+          className="object-contain [filter:brightness(0)_invert(1)] transition-[filter] duration-200 group-hover:[filter:brightness(0)]"
+        />
+      </span>
 
       {/* CENTER — title, with optional meta line */}
       <span className="flex flex-col items-start flex-1 min-w-0">
-        <span
-          className={`font-mono font-bold text-sm uppercase tracking-[0.12em] ${
-            allowWrap ? "" : "whitespace-nowrap"
-          }`}
-        >
+        <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] whitespace-nowrap">
           {children}
         </span>
         {showMeta && (
