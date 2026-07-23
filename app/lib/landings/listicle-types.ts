@@ -168,6 +168,9 @@ export type ListicleBodyBlock =
       /** Pill callout chips under the body, e.g. "250mg citicoline" */
       chips?: string[];
       asset: ListicleAsset;
+      /** Render the "As Published On:" press/journal marquee full-width under
+       *  the reason, e.g. on an evidence reason to show where the science ran. */
+      pressMarquee?: boolean;
     }
   | {
       kind: "statsBand";

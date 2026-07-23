@@ -8,6 +8,7 @@ import type {
   Im8ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import Link from "next/link";
@@ -24,6 +25,7 @@ import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphi
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
 import SegmentToggle from "@/app/components/landing/SegmentToggle";
+import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import ListicleProofTier from "./ListicleProofTier";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
@@ -46,9 +48,15 @@ const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
-/* Marketing CTAs (hero, bridge, sticky) navigate to the Both PDP rather
-   than scrolling to the in-page buy zone. */
-const BUY_HREF = "/conka-both";
+/* Marketing CTAs (hero, bridge, sticky) navigate to the PDP for the product
+   this page sells, following the buy box's productHeroId, rather than scrolling
+   to the in-page buy zone. Flow "01" -> /conka-flow, Clear "02" -> /conka-clarity,
+   Both "03" (and the default) -> /conka-both. */
+const PDP_HREF: Record<ProductHeroId, string> = {
+  "01": "/conka-flow",
+  "02": "/conka-clarity",
+  "03": "/conka-both",
+};
 /* Soft-blue sticky-bar fill (clearly tinted, not the deep navy). */
 const SOFT_BLUE = "var(--go-option-tint, #dce5f7)";
 
@@ -434,6 +442,11 @@ function BodyBlock({
         <div className={mediaFirst ? "md:order-1" : ""}>
           <AssetBlock asset={block.asset} />
         </div>
+        {block.pressMarquee ? (
+          <div className="md:col-span-2">
+            <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
+          </div>
+        ) : null}
       </article>
     );
   }
@@ -523,6 +536,9 @@ export default function ListicleRenderer({
 }) {
   useHashScroll();
 
+  // Marketing CTAs follow the product this page sells (see PDP_HREF).
+  const buyHref = PDP_HREF[config.product.productHeroId ?? "03"];
+
   // The FAQ section carries the sticky-bar clearance (pb-32). If a config
   // supplies no faqIds that section does not render, so the clearance moves to
   // <main> to stop the bar covering the last block.
@@ -576,7 +592,7 @@ export default function ListicleRenderer({
               />
             ) : null}
             <Link
-              href={BUY_HREF}
+              href={buyHref}
               className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
               style={{ background: NAVY }}
             >
@@ -660,7 +676,7 @@ export default function ListicleRenderer({
                 {config.bridge.headline}
               </h3>
               <Link
-                href={BUY_HREF}
+                href={buyHref}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
@@ -730,7 +746,7 @@ export default function ListicleRenderer({
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <span className="text-sm font-medium">{config.stickyBar.label}</span>
             <Link
-              href={BUY_HREF}
+              href={buyHref}
               className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
               style={{ background: NAVY }}
             >

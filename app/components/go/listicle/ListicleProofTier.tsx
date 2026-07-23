@@ -36,10 +36,10 @@ export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
 
   // Partner logos and press logos are ONE moment, not two: both are
   // institutional trust, and stacking them as separate beats is what made the
-  // old tier read as a wall. The press marquee sits in a white panel directly
-  // under the partner band, tight enough (mt-8) to group with it, because the
-  // press sources are flattened onto white and would show a seam on the bone
-  // section background.
+  // old tier read as a wall. Same LogoMarquee component, two logo sets; the
+  // press band sits directly under the partner band (mt-8) so they group. The
+  // press logos are transparent PNGs like the partner ones, so no panel: both
+  // bands render identically on the section background.
   if (proof.logoBand || proof.pressBand) {
     blocks.push({
       key: "logos",
@@ -47,11 +47,7 @@ export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
         <>
           {proof.logoBand ? <LogoMarquee /> : null}
           {proof.pressBand ? (
-            <div
-              className={`rounded-[var(--brand-radius-container)] bg-white px-5 py-8 text-black ring-1 ring-black/5 md:px-8 ${
-                proof.logoBand ? "mt-8" : ""
-              }`}
-            >
+            <div className={proof.logoBand ? "mt-8" : ""}>
               <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
             </div>
           ) : null}

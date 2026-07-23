@@ -90,62 +90,66 @@ export const adhdListicle: ListicleConfig = {
       disclaimer:
         "CONKA is a food supplement, not a treatment for ADHD. This explains general research, not personal medical advice.",
       symptoms: [
-        {
-          icon: "🪫",
-          label: "Struggling to start tasks",
-          primary: true,
-          brain:
-            "There's a kind of 'starter motor' in the brain (the locus coeruleus) that runs on norepinephrine and gets you from 'I should do this' to actually doing it. When it's underpowered, you can genuinely want to start something and still not move.",
-          brainCitation: "Aston-Jones et al., Biological Psychiatry, 1999",
-          ingredients: [
-            {
-              icon: "🧠",
-              name: "Alpha GPC",
-              formula: "Clear",
-              detail:
-                "Produced faster processing speed than caffeine in a clinical comparison, with less jitteriness, a cleaner nudge to that starter motor.",
-              citation: "DOI: 10.1186/1550-2783-12-S1-P41",
-            },
-            {
-              icon: "🍊",
-              name: "Vitamin C",
-              formula: "Clear",
-              detail:
-                "The cofactor for the enzyme that converts dopamine into norepinephrine, the exact step that turns 'I should' into 'I am.'",
-            },
-          ],
-        },
-        {
-          icon: "⏳",
-          label: "Losing track of objects and time",
-          primary: true,
-          brain:
-            "The same circuit that lets you hold a thought in your head, 'where did I just put my keys', is the one running low on fuel, so information doesn't stick the way it should.",
-          brainCitation: "Arnsten & Li, Biological Psychiatry, 2005",
-          ingredients: [
-            {
-              icon: "🧠",
-              name: "Alpha GPC",
-              formula: "Clear",
-              detail:
-                "Supplies choline, the raw material the brain uses to build acetylcholine, the messenger tied to laying down and holding onto memories.",
-            },
-            {
-              icon: "🌻",
-              name: "Sunflower Lecithin",
-              formula: "Clear",
-              detail:
-                "A natural source of phosphatidylcholine, a core building block of the neuron membranes signals travel across.",
-            },
-            {
-              icon: "🔴",
-              name: "Vitamin B12",
-              formula: "Clear",
-              detail:
-                "As methylcobalamin, a cofactor needed to produce acetylcholine alongside dopamine, norepinephrine, serotonin and GABA.",
-            },
-          ],
-        },
+        // Commented out for the Flow-only repositioning of this page: these two
+        // symptoms are answered entirely by Clear ingredients (Alpha GPC,
+        // Vitamin C, Sunflower Lecithin, B12). Restore them if the page ever
+        // sells Both again.
+        // {
+        //   icon: "🪫",
+        //   label: "Struggling to start tasks",
+        //   primary: true,
+        //   brain:
+        //     "There's a kind of 'starter motor' in the brain (the locus coeruleus) that runs on norepinephrine and gets you from 'I should do this' to actually doing it. When it's underpowered, you can genuinely want to start something and still not move.",
+        //   brainCitation: "Aston-Jones et al., Biological Psychiatry, 1999",
+        //   ingredients: [
+        //     {
+        //       icon: "🧠",
+        //       name: "Alpha GPC",
+        //       formula: "Clear",
+        //       detail:
+        //         "Produced faster processing speed than caffeine in a clinical comparison, with less jitteriness, a cleaner nudge to that starter motor.",
+        //       citation: "DOI: 10.1186/1550-2783-12-S1-P41",
+        //     },
+        //     {
+        //       icon: "🍊",
+        //       name: "Vitamin C",
+        //       formula: "Clear",
+        //       detail:
+        //         "The cofactor for the enzyme that converts dopamine into norepinephrine, the exact step that turns 'I should' into 'I am.'",
+        //     },
+        //   ],
+        // },
+        // {
+        //   icon: "⏳",
+        //   label: "Losing track of objects and time",
+        //   primary: true,
+        //   brain:
+        //     "The same circuit that lets you hold a thought in your head, 'where did I just put my keys', is the one running low on fuel, so information doesn't stick the way it should.",
+        //   brainCitation: "Arnsten & Li, Biological Psychiatry, 2005",
+        //   ingredients: [
+        //     {
+        //       icon: "🧠",
+        //       name: "Alpha GPC",
+        //       formula: "Clear",
+        //       detail:
+        //         "Supplies choline, the raw material the brain uses to build acetylcholine, the messenger tied to laying down and holding onto memories.",
+        //     },
+        //     {
+        //       icon: "🌻",
+        //       name: "Sunflower Lecithin",
+        //       formula: "Clear",
+        //       detail:
+        //         "A natural source of phosphatidylcholine, a core building block of the neuron membranes signals travel across.",
+        //     },
+        //     {
+        //       icon: "🔴",
+        //       name: "Vitamin B12",
+        //       formula: "Clear",
+        //       detail:
+        //         "As methylcobalamin, a cofactor needed to produce acetylcholine alongside dopamine, norepinephrine, serotonin and GABA.",
+        //     },
+        //   ],
+        // },
         {
           icon: "🌫️",
           label: "Brain fog that won't lift, mentally underwater",
@@ -162,14 +166,15 @@ export const adhdListicle: ListicleConfig = {
                 "Turmeric (curcumin) improved working memory and cut fatigue in a placebo-controlled trial. Black Pepper's piperine lets the body actually absorb the curcumin.",
               citation: "PMC7352411",
             },
-            {
-              icon: "⚡",
-              name: "ALCAR",
-              formula: "Clear",
-              detail:
-                "Ferries fatty acids into mitochondria for energy and supports acetylcholine synthesis. In a randomised trial, L-carnitine significantly reduced physical and mental fatigue versus placebo.",
-              citation: "PMID: 18065594",
-            },
+            // Commented out for the Flow-only repositioning: ALCAR sits in Clear.
+            // {
+            //   icon: "⚡",
+            //   name: "ALCAR",
+            //   formula: "Clear",
+            //   detail:
+            //     "Ferries fatty acids into mitochondria for energy and supports acetylcholine synthesis. In a randomised trial, L-carnitine significantly reduced physical and mental fatigue versus placebo.",
+            //   citation: "PMID: 18065594",
+            // },
           ],
         },
         {
@@ -206,9 +211,9 @@ export const adhdListicle: ListicleConfig = {
       kind: "reason",
       n: 2,
       headline: "It Helps You Start, Not Just Focus",
-      body: "Most focus products help you concentrate once you've started. With ADHD the hard part is starting at all. CONKA Clear feeds the norepinephrine that gets you from 'I should' to 'I'm doing it', without caffeine.",
-      // 9:16 source centre-cropped to 3:4, the animated Clear shot
-      asset: { kind: "video", src: "/videos/clear/ClearLiquid.mp4", aspect: "3/4" },
+      body: "Most focus products help you concentrate once you've started. With ADHD the hard part is starting at all. CONKA Flow gives you the calm, steady drive to get from 'I should' to 'I'm doing it', no caffeine and none of the jittery push.",
+      // 9:16 source centre-cropped to 3:4, the animated Flow shot
+      asset: { kind: "video", src: "/videos/flow/FlowLiquid.mp4", aspect: "3/4" },
     },
     {
       kind: "reason",
@@ -221,8 +226,9 @@ export const adhdListicle: ListicleConfig = {
       kind: "reason",
       n: 4,
       headline: "You Can Watch It Working, in Real Numbers",
-      body: "With ADHD, 'does this actually work?' is a fair question. The CONKA app is built around an FDA-cleared, CE-marked cognitive test from Cambridge University. It takes 75 seconds, so when your focus score moves, it's measuring something real.",
+      body: "With ADHD, 'does this actually work?' is a fair question. The CONKA app is built around an FDA-cleared, CE-marked cognitive test from Cambridge University. It takes 75 seconds, so when your focus score moves, it's measuring something real. The same science has been covered and published here:",
       asset: { kind: "measureTile" },
+      pressMarquee: true,
     },
     {
       kind: "reason",
@@ -315,10 +321,10 @@ export const adhdListicle: ListicleConfig = {
   product: {
     headline: "Try Conka Risk-Free for 100 Days",
     subline: "Two daily shots. Zero caffeine. Track the difference in the app.",
-    productHeroId: "03",
+    productHeroId: "01",
     whoItsFor: [
-      "You've got an ADHD brain that won't start in the morning and won't switch off at night. Flow helps you get going without caffeine, and Clear helps you wind down so the day actually ends.",
-      "You're done running on coffee and willpower. Two caffeine-free shots support steady focus and calm across the whole day, and the 2-minute app test lets you watch it working instead of guessing.",
+      "You've got an ADHD brain that won't get going in the morning. Flow gives you calm, caffeine-free drive to start the things you've been putting off.",
+      "You're done running on coffee and willpower. A caffeine-free daily shot supports steady focus without the jitters, and the 2-minute app test lets you watch it working instead of guessing.",
     ],
   },
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:

@@ -42,12 +42,13 @@ const PARTNER_LOGOS: MarqueeLogo[] = [
 /**
  * Press and journal outlets the CognICA test has appeared in.
  *
- * Sources are trimmed to their bounding box and flattened onto white, so they
- * only sit correctly on a white surface (the listicle press band renders in a
- * white panel for this reason). Per-logo `h` is tuned by shape, not set to one
- * value: these range from an 8.8:1 wordmark (Globe and Mail) to a 1:1 stacked
- * lockup (Medscape), so a single height would make the wordmarks dominate and
- * the lockups vanish. Ordered editorial and scientific first.
+ * Sources are trimmed to their bounding box and keyed to a transparent
+ * background (like the partner logos), so both bands render identically on any
+ * surface. Two exceptions keep an opaque coloured fill because the colour IS
+ * the mark: the Globe and Mail red slab and the Nature red banner. Per-logo `h`
+ * is tuned by shape, not set to one value: these range from an 8.8:1 wordmark
+ * (Globe and Mail) to a 1:1 stacked lockup (Medscape), so a single height would
+ * make the wordmarks dominate and the lockups vanish. Editorial first.
  *
  * The last three are newswire and syndication rather than editorial coverage.
  * Cut them if "As Published On" should mean earned press only.
