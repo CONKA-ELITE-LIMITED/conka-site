@@ -121,16 +121,27 @@ export default function LogoMarquee({
   heading = "Fueling High Performers at:",
   logos = PARTNER_LOGOS,
   durationSeconds = 40,
+  largeHeading = false,
 }: {
   heading?: string;
   logos?: MarqueeLogo[];
   /** Seconds for one full loop. Higher is slower. The press band runs slower
    *  than the 40s partner default so the two never look like the same track. */
   durationSeconds?: number;
+  /** Render the heading as a large black section title (brand-h2) instead of
+   *  the small muted eyebrow. Used for the partner band above the buy box. */
+  largeHeading?: boolean;
 }) {
   return (
     <div className="text-center">
-      <p className="mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]">
+      <p
+        className={
+          largeHeading
+            ? "brand-h2 mb-8 text-black"
+            : "mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]"
+        }
+        style={largeHeading ? { letterSpacing: "-0.02em" } : undefined}
+      >
         {heading}
       </p>
       <div className="overflow-hidden">

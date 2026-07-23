@@ -6,7 +6,7 @@ import type {
   MmListicleConfig,
 } from "@/app/lib/landings/listicle-types";
 import ProductGrid from "@/app/components/home/ProductGrid";
-import ListicleProofTier from "./ListicleProofTier";
+import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import CitationLine from "@/app/components/landing/CitationLine";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
@@ -202,6 +202,19 @@ export default function SimpleListicleRenderer({
         })}
       </section>
 
+      {/* Logo band: institutional trust, above the buy box */}
+      {config.proof && (config.proof.logoBand || config.proof.pressBand) ? (
+        <section
+          aria-label="Trusted by"
+          className="px-5 pt-16 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <ListicleLogoBand proof={config.proof} />
+          </div>
+        </section>
+      ) : null}
+
       {/* Product / buy box (#product anchor for the sticky bar) */}
       <section
         aria-label="Product offer"
@@ -214,7 +227,7 @@ export default function SimpleListicleRenderer({
         </div>
       </section>
 
-      {/* Proof tier: logos, UGC, one named feature, written reviews */}
+      {/* Proof tier: one named feature, then the UGC band before the FAQ */}
       {config.proof ? (
         <section
           aria-label="Proof"

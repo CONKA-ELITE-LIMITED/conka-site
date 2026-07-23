@@ -78,7 +78,6 @@ export const adhdListicle: ListicleConfig = {
       imageAlt:
         "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
     },
-    reviews: true,
   },
   body: [
     {
@@ -89,8 +88,6 @@ export const adhdListicle: ListicleConfig = {
       headline: "It's Built for How an ADHD Brain Actually Works",
       intro:
         "An ADHD brain runs low on signal from two messengers, dopamine and norepinephrine, in the part of the brain that handles focus and self-control. The chemicals haven't disappeared, it's more like a radio signal that keeps cutting in and out. That's why the everyday things below take real effort other brains spend without noticing, and where CONKA's ingredients genuinely fit in.",
-      disclaimer:
-        "CONKA is a food supplement, not a treatment for ADHD. This explains general research, not personal medical advice.",
       symptoms: [
         // Commented out for the Flow-only repositioning of this page: these two
         // symptoms are answered entirely by Clear ingredients (Alpha GPC,

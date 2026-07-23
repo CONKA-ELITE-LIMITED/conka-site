@@ -70,9 +70,12 @@ function toColumns(items: UGCItem[]): [UGCItem, UGCItem, UGCItem][] {
   return columns;
 }
 
-function Tile({ item }: { item: UGCItem }) {
+function Tile({ item, radius }: { item: UGCItem; radius: string }) {
   return (
-    <div className="relative aspect-[4/5] w-[130px] flex-shrink-0 overflow-hidden rounded-[var(--brand-radius-container)] bg-[var(--brand-tint)] md:w-[180px]">
+    <div
+      className="relative aspect-[4/5] w-[130px] flex-shrink-0 overflow-hidden bg-[var(--brand-tint)] md:w-[180px]"
+      style={{ borderRadius: radius }}
+    >
       <Image
         src={item.src}
         alt={item.alt}
@@ -88,9 +91,11 @@ function Tile({ item }: { item: UGCItem }) {
 function Group({
   columns,
   hidden = false,
+  radius,
 }: {
   columns: [UGCItem, UGCItem, UGCItem][];
   hidden?: boolean;
+  radius: string;
 }) {
   return (
     <div
@@ -100,7 +105,7 @@ function Group({
       {columns.map((col, i) => (
         <div key={i} className="flex flex-shrink-0 flex-col gap-3 md:gap-4">
           {col.map((item, j) => (
-            <Tile key={`${item.src}-${j}`} item={item} />
+            <Tile key={`${item.src}-${j}`} item={item} radius={radius} />
           ))}
         </div>
       ))}
@@ -112,10 +117,15 @@ export default function UGCMarquee({
   title = "Join Thousands Staying Sharp, Every Day",
   subtitle = "Two shots a day.",
   items = DEFAULT_UGC_ITEMS,
+  tileRadius = "var(--brand-radius-container)",
 }: {
   title?: string;
   subtitle?: string;
   items?: UGCItem[];
+  /** Tile corner radius. Defaults to the container token (0 under the clinical
+   *  PDP scope, 24px on Simple DTC surfaces). The listicles pass a smaller
+   *  value so the band is less rounded than the Simple DTC default. */
+  tileRadius?: string;
 }) {
   const columns = toColumns(items);
 
@@ -135,8 +145,8 @@ export default function UGCMarquee({
       ) : null}
       <div className="overflow-hidden">
         <div className="flex w-max motion-safe:animate-[marquee_60s_linear_infinite] motion-safe:[will-change:transform]">
-          <Group columns={columns} />
-          <Group columns={columns} hidden />
+          <Group columns={columns} radius={tileRadius} />
+          <Group columns={columns} hidden radius={tileRadius} />
         </div>
       </div>
     </div>

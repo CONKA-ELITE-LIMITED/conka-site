@@ -26,7 +26,7 @@ import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
 import SegmentToggle from "@/app/components/landing/SegmentToggle";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
-import ListicleProofTier from "./ListicleProofTier";
+import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
@@ -516,11 +516,7 @@ function BodyBlock({
           ) : null}{" "}
           {block.headline}
         </h3>
-        <SymptomExplainer
-          intro={block.intro}
-          disclaimer={block.disclaimer}
-          symptoms={block.symptoms}
-        />
+        <SymptomExplainer intro={block.intro} symptoms={block.symptoms} />
       </div>
     );
   }
@@ -705,7 +701,20 @@ export default function ListicleRenderer({
         </div>
       </section>
 
-      {/* Zone 3: product / buy box — hard flip to light */}
+      {/* Zone 3a: logo band — institutional trust, ABOVE the buy box */}
+      {config.proof && (config.proof.logoBand || config.proof.pressBand) ? (
+        <section
+          aria-label="Trusted by"
+          className="px-5 pt-16 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <ListicleLogoBand proof={config.proof} />
+          </div>
+        </section>
+      ) : null}
+
+      {/* Zone 3b: product / buy box — hard flip to light */}
       <section
         aria-label="Product offer"
         id="product"
@@ -717,7 +726,8 @@ export default function ListicleRenderer({
         </div>
       </section>
 
-      {/* Zone 4: proof tier — logos, UGC, one named feature, written reviews */}
+      {/* Zone 4: proof tier — one named feature, then the UGC band last so it
+          sits directly before the FAQ. */}
       {config.proof ? (
         <section
           aria-label="Proof"

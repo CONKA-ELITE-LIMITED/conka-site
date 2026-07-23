@@ -67,8 +67,25 @@ export default function AthleteReviewFeature({
 
       {/* Quote as the hero, then name + credential */}
       <div className="mt-8 lg:mt-0">
+        {/* Oversized decorative quote marks: text-[4em] makes each glyph 4x the
+            blockquote font size at every breakpoint. leading-[0] keeps them
+            from opening up the line box; the vertical align nudges seat them on
+            the text baseline. Muted so a 4x mark reads as a design element, not
+            heavy punctuation. */}
         <blockquote className="text-2xl lg:text-3xl xl:text-4xl font-bold text-black leading-[1.18] tracking-tight">
-          &ldquo;{athlete.quote}&rdquo;
+          <span
+            aria-hidden
+            className="mr-0.5 align-[-0.35em] text-[4em] leading-[0] text-black/15"
+          >
+            &ldquo;
+          </span>
+          {athlete.quote}
+          <span
+            aria-hidden
+            className="ml-1 align-[-0.6em] text-[4em] leading-[0] text-black/15"
+          >
+            &rdquo;
+          </span>
         </blockquote>
         <p className="mt-6 text-xl lg:text-2xl font-bold text-black leading-tight">
           {athlete.name}

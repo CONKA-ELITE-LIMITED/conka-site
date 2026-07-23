@@ -36,7 +36,6 @@ export interface SymptomExplainerSymptom {
 
 interface SymptomExplainerProps {
   intro: string;
-  disclaimer?: string;
   symptoms: SymptomExplainerSymptom[];
 }
 
@@ -84,12 +83,12 @@ function IngredientCard({
 
 export default function SymptomExplainer({
   intro,
-  disclaimer,
   symptoms,
 }: SymptomExplainerProps) {
   const [active, setActive] = useState(0);
   const [showAllSymptoms, setShowAllSymptoms] = useState(false);
   const [showAllIngredients, setShowAllIngredients] = useState(false);
+  const [showBrain, setShowBrain] = useState(false);
 
   const primaryCount = symptoms.filter((s) => s.primary).length;
   // If no symptom is flagged primary, show them all rather than hiding everything
@@ -106,6 +105,7 @@ export default function SymptomExplainer({
   function selectSymptom(i: number) {
     setActive(i);
     setShowAllIngredients(false);
+    setShowBrain(false);
   }
 
   function toggleSymptoms() {
@@ -171,20 +171,10 @@ export default function SymptomExplainer({
         </button>
       ) : null}
 
-      {/* Active panel */}
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <div className="rounded-2xl border border-black/10 bg-white p-5">
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-black">
-            {"What's happening in your brain"}
-          </p>
-          <p className="text-[14px] leading-relaxed text-black/80">
-            {current.brain}
-          </p>
-          {current.brainCitation ? (
-            <CitationLine citation={current.brainCitation} className="mt-2" />
-          ) : null}
-        </div>
-
+      {/* Active panel. "How CONKA helps" leads, directly under the selected
+          issue, since that is the answer the reader wants. The brain science is
+          demoted to a collapsed row they can expand to learn more. */}
+      <div className="mt-4 space-y-3">
         <div className="rounded-2xl border border-black/10 bg-white p-5">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-black">
             How CONKA helps
@@ -213,13 +203,40 @@ export default function SymptomExplainer({
             </>
           ) : null}
         </div>
-      </div>
 
-      {disclaimer ? (
-        <p className="mt-4 text-[11px] leading-relaxed text-black/40">
-          {disclaimer}
-        </p>
-      ) : null}
+        {/* Collapsed brain-science explainer: expand to learn more */}
+        <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
+          <button
+            type="button"
+            onClick={() => setShowBrain((v) => !v)}
+            aria-expanded={showBrain}
+            className="flex w-full items-center justify-between gap-3 p-5 text-left"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+              {"What's happening in your brain"}
+            </span>
+            <span
+              className={`text-lg font-light leading-none transition-transform ${
+                showBrain ? "rotate-45" : ""
+              }`}
+              style={{ color: INK }}
+              aria-hidden
+            >
+              +
+            </span>
+          </button>
+          {showBrain ? (
+            <div className="px-5 pb-5">
+              <p className="text-[14px] leading-relaxed text-black/80">
+                {current.brain}
+              </p>
+              {current.brainCitation ? (
+                <CitationLine citation={current.brainCitation} className="mt-2" />
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }

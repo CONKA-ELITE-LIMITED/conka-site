@@ -1,26 +1,20 @@
 /* ============================================================================
- * ListicleProofTier
+ * Listicle proof, split across the page
  *
- * The post-reasons proof tier for both /go listicle templates.
+ * The post-reasons proof is no longer one stacked block. It is distributed so
+ * the tail escalates instead of repeating:
  *
- * This replaced a six-block trust wall (partner logos -> a hardcoded 3-up
- * athlete grid -> the athlete carousel -> press logos -> reviews -> badges).
- * Two athlete moments and two logo marquees in a row read as undifferentiated
- * noise at exactly the point the reader is deciding whether to buy. The tier
- * is now three moments, each doing a different job and each escalating:
+ *   ListicleLogoBand  -> institutional trust, ABOVE the buy box
+ *                        (partner logos + optional press/journal logos)
+ *   ListicleProofTier -> AFTER the buy box, running into the FAQ:
+ *                        one named human (feature), then the UGC band last so
+ *                        it sits directly before the FAQ.
  *
- *   logoBand -> institutional trust   (partner logos, LogoMarquee)
- *   ugc      -> volume and faces      (UGCMarquee, shared with home + PDPs)
- *   feature  -> one specific human    (AthleteReviewFeature, persona-matched)
- *   reviews  -> written outcomes      (ReviewRail + LandingTrustBadges)
+ * Written customer reviews are intentionally not here: the mid-reasons review
+ * strip already carries them, and the UGC band does the social-proof work.
  *
- * Every moment is optional and driven by `config.proof`, so a persona can
- * drop any of them. Blocks are collected into an array first so the vertical
- * rhythm stays correct whichever subset renders (no leading margin on the
- * first block, regardless of which one it is).
- *
- * Content-only: no <section>, no max-width, no horizontal padding at root.
- * The renderers own the section wrapper and background. See SCRUM-1176.
+ * Content-only: no <section>, no max-width, no horizontal padding at root. The
+ * renderers own the section wrapper and background. See SCRUM-1176.
  * ========================================================================== */
 
 import type { ReactNode } from "react";
@@ -28,31 +22,42 @@ import type { ListicleProof } from "@/app/lib/landings/listicle-types";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import AthleteReviewFeature from "@/app/components/AthleteReviewFeature";
-import ReviewRail from "@/app/components/landing/ReviewRail";
-import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 
+/**
+ * Partner + press logo band, rendered above the buy box. Partner logos get the
+ * large black section title; the press band (when set) sits under them at the
+ * muted eyebrow size, slower, so the two never read as one track.
+ */
+export function ListicleLogoBand({ proof }: { proof: ListicleProof }) {
+  if (!proof.logoBand && !proof.pressBand) return null;
+  return (
+    <div>
+      {proof.logoBand ? <LogoMarquee largeHeading /> : null}
+      {proof.pressBand ? (
+        <div className={proof.logoBand ? "mt-12" : ""}>
+          <LogoMarquee
+            heading="As Published On:"
+            logos={PRESS_LOGOS}
+            durationSeconds={60}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Post-buy-box proof: the named feature, then the UGC band last so it lands
+ * right before the FAQ. Blocks are collected first so the first one never
+ * carries a leading margin whichever subset renders.
+ */
 export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
   const blocks: { key: string; node: ReactNode }[] = [];
 
-  // Partner logos and press logos are ONE moment, not two: both are
-  // institutional trust, and stacking them as separate beats is what made the
-  // old tier read as a wall. Same LogoMarquee component, two logo sets; the
-  // press band sits directly under the partner band (mt-8) so they group. The
-  // press logos are transparent PNGs like the partner ones, so no panel: both
-  // bands render identically on the section background.
-  if (proof.logoBand || proof.pressBand) {
+  if (proof.feature) {
     blocks.push({
-      key: "logos",
-      node: (
-        <>
-          {proof.logoBand ? <LogoMarquee /> : null}
-          {proof.pressBand ? (
-            <div className={proof.logoBand ? "mt-8" : ""}>
-              <LogoMarquee heading="As Published On:" logos={PRESS_LOGOS} />
-            </div>
-          ) : null}
-        </>
-      ),
+      key: "feature",
+      node: <AthleteReviewFeature athlete={proof.feature} />,
     });
   }
 
@@ -64,28 +69,10 @@ export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
           title={proof.ugc.title}
           subtitle={proof.ugc.subtitle}
           items={proof.ugc.items}
+          // Sharp tiles on the listicles (the Simple DTC 24px rounding was
+          // rejected here), matching the clinical UGC band on home and PDPs.
+          tileRadius="0px"
         />
-      ),
-    });
-  }
-
-  if (proof.feature) {
-    blocks.push({
-      key: "feature",
-      node: <AthleteReviewFeature athlete={proof.feature} />,
-    });
-  }
-
-  if (proof.reviews) {
-    blocks.push({
-      key: "reviews",
-      node: (
-        <>
-          <ReviewRail />
-          <div className="mt-10">
-            <LandingTrustBadges />
-          </div>
-        </>
       ),
     });
   }

@@ -71,7 +71,6 @@ export const productivityListicle: ListicleConfig = {
       imageAlt:
         "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
     },
-    reviews: true,
   },
   body: [
     {

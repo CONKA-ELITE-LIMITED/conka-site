@@ -39,26 +39,24 @@ export type ListicleProofFeature = AthleteReviewContent;
  * The post-reasons proof tier. Three moments, each doing a different job, so
  * the tail of the page escalates rather than repeating itself:
  *
- *   logoBand -> institutional trust      (partner logos)
- *   ugc      -> volume and faces         (UGCMarquee)
- *   feature  -> one specific human       (AthleteReviewFeature)
- *   reviews  -> written outcomes         (ReviewRail + trust badges)
+ *   logoBand -> institutional trust  (partner logos, above the buy box)
+ *   pressBand-> press / journals     (above the buy box, under the partners)
+ *   feature  -> one specific human   (AthleteReviewFeature, after the buy box)
+ *   ugc      -> volume and faces     (UGCMarquee, last, before the FAQ)
  *
- * Omit a key to skip that moment. Omit `proof` entirely for no proof tier.
+ * Written customer reviews are deliberately not a proof-tier moment: the
+ * mid-reasons review strip already carries them. Omit a key to skip that
+ * moment; omit `proof` entirely for none.
  */
 export interface ListicleProof {
-  /** Partner-logo marquee ("Fueling High Performers at:") */
+  /** Partner-logo marquee ("Fueling High Performers at:"), above the buy box */
   logoBand?: boolean;
-  /** Press and journal marquee ("As Published On:"), grouped directly under
-   *  the partner band as one institutional-trust moment. Renders in a white
-   *  panel because the press logos are flattened onto white. */
+  /** Press and journal marquee ("As Published On:"), under the partner band */
   pressBand?: boolean;
   /** UGC band. Pass `items` for a persona subset; omit for the shared set. */
   ugc?: { title?: string; subtitle?: string; items?: UGCItem[] };
   /** One named person, quote-led */
   feature?: ListicleProofFeature;
-  /** Canonical customer reviews rail */
-  reviews?: boolean;
 }
 
 export type ListicleAsset =
@@ -194,8 +192,6 @@ export type ListicleBodyBlock =
       headline: string;
       /** Intro paragraph above the symptom buttons */
       intro: string;
-      /** Small-print disclaimer under the explainer */
-      disclaimer?: string;
       symptoms: {
         icon: string;
         label: string;

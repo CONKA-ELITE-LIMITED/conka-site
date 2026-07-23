@@ -76,7 +76,6 @@ export const brainAgeingListicle: ListicleConfig = {
       imageAlt:
         "Dan Norton, Olympic silver medallist in rugby sevens for Great Britain",
     },
-    reviews: true,
   },
   body: [
     {
