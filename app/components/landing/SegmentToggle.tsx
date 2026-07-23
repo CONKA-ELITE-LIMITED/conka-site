@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import IngredientGrid, { type IngredientGridItem } from "./IngredientGrid";
 
 /* ============================================================================
@@ -20,7 +21,12 @@ export interface SegmentToggleSegment {
   ingredientsEyebrow?: string;
   ingredients: IngredientGridItem[];
   ingredientsFooter?: string;
-  testimonial?: { quote: string; name: string; detail?: string };
+  testimonial?: {
+    quote: string;
+    name: string;
+    detail?: string;
+    image?: string;
+  };
 }
 
 const INK = "#1B2757";
@@ -73,14 +79,27 @@ export default function SegmentToggle({
               <blockquote className="text-[14px] leading-relaxed text-black/80">
                 {`"${seg.testimonial.quote}"`}
               </blockquote>
-              <figcaption className="mt-2 text-[13px] font-semibold text-black">
-                {seg.testimonial.name}
-                {seg.testimonial.detail ? (
-                  <span className="font-normal text-black/50">
-                    {" · "}
-                    {seg.testimonial.detail}
+              <figcaption className="mt-3 flex items-center gap-2.5">
+                {seg.testimonial.image ? (
+                  <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+                    <Image
+                      src={seg.testimonial.image}
+                      alt={seg.testimonial.name}
+                      fill
+                      sizes="36px"
+                      className="object-cover object-[center_25%]"
+                    />
                   </span>
                 ) : null}
+                <span className="text-[13px] font-semibold text-black">
+                  {seg.testimonial.name}
+                  {seg.testimonial.detail ? (
+                    <span className="font-normal text-black/50">
+                      {" · "}
+                      {seg.testimonial.detail}
+                    </span>
+                  ) : null}
+                </span>
               </figcaption>
             </figure>
           ) : null}

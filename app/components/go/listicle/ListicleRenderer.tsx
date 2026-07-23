@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -264,9 +264,19 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   );
 }
 
+function reviewInitials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
-    <div className="rounded-[16px] border border-black/10 bg-white p-4 text-[#111]">
+    <div className="flex h-full flex-col rounded-[16px] border border-black/10 bg-white p-4 text-[#111]">
       <div
         className="mb-1.5 text-[13px] tracking-widest"
         style={{ color: "#F59E0B" }}
@@ -278,47 +288,44 @@ function ReviewCard({ review }: { review: ListicleReview }) {
           {review.headline}
         </p>
       ) : null}
-      <p className="mb-3 line-clamp-3 text-[13px] leading-snug">
+      <p className="mb-3 line-clamp-4 text-[13px] leading-snug">
         {review.quote}
       </p>
-      <div className="text-[13px] font-medium">{review.name}</div>
-      {review.detail ? (
-        <div className="text-[11px] opacity-60">{review.detail}</div>
-      ) : null}
+      <div className="mt-auto flex items-center gap-2.5 pt-1">
+        {review.image ? (
+          <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+            <Image
+              src={review.image}
+              alt={review.name}
+              fill
+              sizes="36px"
+              className="object-cover object-[center_25%]"
+            />
+          </span>
+        ) : (
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-[11px] font-semibold text-white">
+            {reviewInitials(review.name)}
+          </span>
+        )}
+        <div className="min-w-0">
+          <div className="text-[13px] font-semibold leading-tight">
+            {review.name}
+          </div>
+          {review.detail ? (
+            <div className="text-[11px] leading-tight opacity-60">
+              {review.detail}
+            </div>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }
 
-/** Circular nav button for the mobile review carousel */
-function CarouselArrow({
-  dir,
-  onClick,
-}: {
-  dir: "prev" | "next";
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={dir === "prev" ? "Previous review" : "Next review"}
-      onClick={onClick}
-      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full border border-black/10 bg-white text-[#1B2757] transition active:scale-95"
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        {dir === "prev" ? (
-          <polyline points="15 18 9 12 15 6" />
-        ) : (
-          <polyline points="9 18 15 12 9 6" />
-        )}
-      </svg>
-    </button>
-  );
-}
-
 /**
- * Customer-review strip (IM8 "What Customers Say" band). Mobile shows one
- * review at a time with flanking arrows + dots; desktop shows the full row.
- * A tinted band + layered white cards distinguish it from the page.
+ * Customer-review strip (IM8 "What Customers Say" band). Mobile is a swipe
+ * row of cards (the next card peeks); desktop is a 3-up grid. Cards carry an
+ * optional customer photo. A tinted band distinguishes it from the page.
  */
 function ReviewStrip({
   reviews,
@@ -329,10 +336,6 @@ function ReviewStrip({
   eyebrow?: string;
   ratingSummary?: string;
 }) {
-  const [index, setIndex] = useState(0);
-  const count = reviews.length;
-  const go = (delta: number) => setIndex((i) => (i + delta + count) % count);
-
   return (
     <div
       className="my-10 rounded-[16px] px-4 py-6 md:px-10 md:py-8"
@@ -342,28 +345,13 @@ function ReviewStrip({
         {eyebrow}
       </div>
 
-      {/* Mobile: one review at a time, flanked by arrows */}
-      <div className="md:hidden">
-        <div className="flex items-stretch gap-2.5">
-          <CarouselArrow dir="prev" onClick={() => go(-1)} />
-          <div className="min-w-0 flex-1">
-            <ReviewCard review={reviews[index]} />
+      {/* Mobile: swipe row, next card peeks (no arrows/dots) */}
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {reviews.map((r, i) => (
+          <div key={i} className="w-[85%] shrink-0 snap-start">
+            <ReviewCard review={r} />
           </div>
-          <CarouselArrow dir="next" onClick={() => go(1)} />
-        </div>
-        <div className="mt-3 flex justify-center gap-1.5">
-          {reviews.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              aria-label={`Go to review ${i + 1}`}
-              onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-5 bg-[#1B2757]" : "w-1.5 bg-black/20"
-              }`}
-            />
-          ))}
-        </div>
+        ))}
       </div>
 
       {/* Desktop: full row of cards */}
@@ -413,7 +401,7 @@ function BodyBlock({
             </span>{" "}
             {block.headline}
           </h3>
-          <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black md:text-base">
+          <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
             {block.body}
           </p>
           {block.citation ? (
@@ -452,9 +440,9 @@ function BodyBlock({
         <div className="mb-8 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
           {block.eyebrow}
         </div>
-        <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-x-8 gap-y-10">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 md:flex-row md:flex-wrap md:justify-center md:gap-x-12 md:gap-y-10">
           {block.stats.map((s, i) => (
-            <div key={i} className="w-[42%] md:w-40">
+            <div key={i} className="md:w-40">
               <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
               <div className="mt-2 text-sm opacity-70">{s.label}</div>
             </div>
@@ -547,7 +535,7 @@ export default function ListicleRenderer({
   useHashScroll();
 
   return (
-    <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
+    <main className="min-h-screen overflow-x-clip" style={{ background: BONE, color: "#111" }}>
       {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom edges
           on desktop at ~half viewport width; content column centres beside. */}
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
@@ -595,6 +583,7 @@ export default function ListicleRenderer({
                 href={BUY_HREF}
                 hideIcon
                 meta={null}
+                allowWrap
                 className="w-full md:w-auto"
               >
                 {config.hero.cta}

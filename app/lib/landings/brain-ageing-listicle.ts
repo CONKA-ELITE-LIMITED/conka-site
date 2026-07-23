@@ -118,6 +118,7 @@ export const brainAgeingListicle: ListicleConfig = {
             quote:
               "I can now tolerate the same workload as I did in my 30s. I travel from Scotland to London frequently for intense bouts of work. I used to lose my memory in these periods, but now I don't.",
             name: "Shane",
+            image: "/testimonials/ugc/16.jpg",
             detail: "Verified customer",
           },
         },
@@ -208,13 +209,15 @@ export const brainAgeingListicle: ListicleConfig = {
           quote:
             "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
           name: "Anthony S.",
+          image: "/testimonials/ugc/15.jpg",
           detail: "Verified · Age 61",
         },
         {
           headline: "Clarity, energy and better sleep",
           quote:
             "I noticed a clarity and energy and have benefited from that. My sleep wasn't great after I retired, but now I seem to be sleeping well.",
-          name: "Deborough L.",
+          name: "Deborah Lowe",
+          image: "/testimonials/ugc/17.jpg",
           detail: "Verified · Age 62",
         },
         {
@@ -222,6 +225,7 @@ export const brainAgeingListicle: ListicleConfig = {
           quote:
             "My short-term memory is better, I feel more eloquent, and I am able to stay focused for longer periods of time.",
           name: "Millie H.",
+          image: "/testimonials/ugc/14.jpg",
           detail: "Verified · Flow + Clear",
         },
       ],

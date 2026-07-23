@@ -105,6 +105,8 @@ export interface ListicleReview {
   name: string;
   /** Role or verification line, e.g. "Verified customer" */
   detail?: string;
+  /** Optional customer photo (public path), rendered as a circular avatar */
+  image?: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -200,7 +202,13 @@ export type ListicleBodyBlock =
           citation?: string;
         }[];
         ingredientsFooter?: string;
-        testimonial?: { quote: string; name: string; detail?: string };
+        testimonial?: {
+          quote: string;
+          name: string;
+          detail?: string;
+          /** Optional customer photo (public path), circular avatar */
+          image?: string;
+        };
       }[];
     };
 
