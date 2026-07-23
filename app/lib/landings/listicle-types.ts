@@ -117,8 +117,6 @@ export type ListicleBodyBlock =
   | {
       kind: "reason";
       n: number;
-      /** Mono category tag above the headline, e.g. "FOCUS" */
-      tag?: string;
       headline: string;
       /** Problem-validate paragraph, then solution; one string for now */
       body: string;
@@ -156,8 +154,6 @@ export type ListicleBodyBlock =
       kind: "symptomExplainer";
       /** Display number for the section heading, e.g. 1 renders "01." */
       n?: number;
-      /** Mono category tag above the headline */
-      tag?: string;
       headline: string;
       /** Intro paragraph above the symptom buttons */
       intro: string;
@@ -186,8 +182,6 @@ export type ListicleBodyBlock =
       kind: "segmentToggle";
       /** Display number for the section heading, e.g. 2 renders "02." */
       n?: number;
-      /** Mono category tag above the headline */
-      tag?: string;
       headline: string;
       segments: {
         /** Toggle button label, e.g. "For men" */

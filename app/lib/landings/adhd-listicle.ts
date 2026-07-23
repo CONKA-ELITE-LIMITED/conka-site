@@ -63,7 +63,6 @@ export const adhdListicle: ListicleConfig = {
       // Full 10-symptom breakdown + per-ingredient mechanisms -> /blog.
       kind: "symptomExplainer",
       n: 1,
-      tag: "YOUR BRAIN",
       headline: "It's Built for How an ADHD Brain Actually Works",
       intro:
         "An ADHD brain runs low on signal from two messengers, dopamine and norepinephrine, in the part of the brain that handles focus and self-control. The chemicals haven't disappeared, it's more like a radio signal that keeps cutting in and out. That's why the everyday things below take real effort other brains spend without noticing, and where CONKA's ingredients genuinely fit in.",
@@ -185,7 +184,6 @@ export const adhdListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 2,
-      tag: "GETTING GOING",
       headline: "It Helps You Start, Not Just Focus",
       body: "Most focus products help you concentrate once you've started. With ADHD the hard part is starting at all. CONKA Clear feeds the norepinephrine that gets you from 'I should' to 'I'm doing it', without caffeine.",
       // 9:16 source centre-cropped to 3:4, the animated Clear shot
@@ -194,7 +192,6 @@ export const adhdListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 3,
-      tag: "NO CAFFEINE",
       headline: "No Caffeine, So No Crash and No 3pm Cliff",
       body: "Coffee buys focus on credit, then the afternoon crash collects. CONKA is completely caffeine-free, so the energy holds steady from your first task to your last, no spike, no cliff.",
       asset: { kind: "dayEnergyCurve" },
@@ -202,7 +199,6 @@ export const adhdListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 4,
-      tag: "MEASURE IT",
       headline: "You Can Watch It Working, in Real Numbers",
       body: "With ADHD, 'does this actually work?' is a fair question. The CONKA app is built around an FDA-cleared, CE-marked cognitive test from Cambridge University. It takes 75 seconds, so when your focus score moves, it's measuring something real.",
       asset: { kind: "measureTile" },
@@ -210,7 +206,6 @@ export const adhdListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 5,
-      tag: "BAD NIGHTS",
       headline: "It's Built for the Nights You Doom-Scrolled Instead of Sleeping",
       body: "Racing thoughts at midnight, one more scroll turning into forty minutes, then a morning already behind. CONKA won't erase a bad night, but the stack below gives your brain a real head start on the next one.",
       asset: {
@@ -277,7 +272,6 @@ export const adhdListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 6,
-      tag: "REAL PROOF",
       headline: "Backed by Trials, Not Testimonials",
       body: "Most focus supplements are hiding one trick: caffeine. CONKA's actives have been through randomised controlled trials over 20 times, and if that isn't enough, we built a way for you to measure it yourself.",
       chips: ["+14.86% sharper thinking vs placebo", "80% improved cognitive scores"],
@@ -288,7 +282,6 @@ export const adhdListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 7,
-      tag: "RISK-FREE",
       headline: "100 Days to Feel It, or Your Money Back",
       body: "Try CONKA for a full 100 days. If your focus, calm and follow-through haven't changed, you get every penny back. Developed from brain research at Newcastle, Informed Sport certified, made in the UK.",
       asset: { kind: "researchBacked" },

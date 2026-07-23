@@ -62,7 +62,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 1,
-      tag: "WORD RECALL",
       headline: "Find Your Words Again, Without the Hesitation",
       body: "That moment your words vanish mid-sentence is unsettling, but it's rarely permanent. This daily shot supports the language pathways behind recall, so the words are there when you reach for them and conversation flows again. The earlier you support it, the easier to stay ahead.",
       // Dan Norton's quote (speaking clearer, words flowing) lands the word-recall reason
@@ -78,7 +77,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "segmentToggle",
       n: 2,
-      tag: "MEN & WOMEN",
       headline: "Where Ageing Hits Hardest, and What Helps",
       segments: [
         {
@@ -180,7 +178,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 3,
-      tag: "LONGEVITY",
       headline: "Protect Your Brain for the Years Ahead",
       body: "This isn't a temporary spike, it's a daily system for long-term brain health. Targeted, natural support helps protect your cognitive function for the years ahead, without stimulants. Durham University research found the ingredients in Flow extended lifespan and reduced oxidative stress.",
       chips: ["+15 human-year equivalent in an ageing study"],
@@ -191,7 +188,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 4,
-      tag: "MEASURE IT",
       headline: "Watch It Working, in Real Numbers",
       body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real.",
       // App cognitive-score count-up card; "Do you see an animal?" GIF is a
@@ -233,7 +229,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 5,
-      tag: "THE 2PM SLUMP",
       headline: "Beat the Afternoon Slump Without Caffeine",
       body: "Most energy fixes are just caffeine, and caffeine always ends the same way. CONKA's ingredients deliver 18.1% faster mental processing than caffeine, and CONKA is completely caffeine-free.",
       citation: "DOI: 10.1186/1550-2783-12-S1-P41",
@@ -243,7 +238,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 6,
-      tag: "REAL PROOF",
       headline: "Backed by Trials, Not Testimonials",
       body: "Most focus supplements hide one trick: caffeine, which by the original definition is a stimulant, not a nootropic. CONKA has run randomised controlled trials over 20 times, and we built a way for you to measure it yourself.",
       asset: { kind: "scoreByGroup" },
@@ -251,7 +245,6 @@ export const brainAgeingListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 7,
-      tag: "RISK-FREE",
       headline: "100 Days to Feel It, or Your Money Back",
       body: "Try CONKA for a full 100 days. If your recall and clarity haven't changed, you get every penny back. Developed from brain research at Durham and Newcastle, Informed Sport certified, made in the UK.",
       // Off CONKA vs on CONKA measured focus (+19.3%)
