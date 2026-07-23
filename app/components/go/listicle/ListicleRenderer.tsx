@@ -1,11 +1,11 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
   ListicleBodyBlock,
-  ListicleConfig,
+  Im8ListicleConfig,
   ListicleReview,
 } from "@/app/lib/landings/listicle-types";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
@@ -32,6 +32,7 @@ import AthleteTestimonials from "@/app/components/landing/AthleteTestimonials";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
 import LandingTrustBadges from "@/app/components/landing/LandingTrustBadges";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
+import { useHashScroll } from "./useHashScroll";
 
 /**
  * Listicle landing renderer (/go/[slug], format: "listicle").
@@ -382,7 +383,13 @@ function ReviewStrip({
   );
 }
 
-function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }) {
+function BodyBlock({
+  block,
+  index,
+}: {
+  block: ListicleBodyBlock;
+  index: number;
+}) {
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
     return (
@@ -525,42 +532,17 @@ function BodyBlock({ block, index }: { block: ListicleBodyBlock; index: number }
   );
 }
 
-export default function ListicleRenderer({ config }: { config: ListicleConfig }) {
-  // Land on the right section when arriving with a hash (e.g. the brain-age
-  // quiz sends finishers to #product). The page is media-heavy, so elements
-  // above the target shift as images/videos load and a one-shot native scroll
-  // misses; re-pin to the target a few times until layout settles, and bail
-  // the moment the user scrolls themselves.
-  useEffect(() => {
-    const id = window.location.hash.slice(1);
-    if (!id) return;
-    let done = false;
-    const scrollToTarget = () => {
-      if (done) return;
-      document.getElementById(id)?.scrollIntoView({ block: "start" });
-    };
-    const stop = () => {
-      done = true;
-    };
-    window.addEventListener("wheel", stop, { passive: true, once: true });
-    window.addEventListener("touchmove", stop, { passive: true, once: true });
-    const timers = [0, 150, 400, 800, 1400].map((d) =>
-      window.setTimeout(scrollToTarget, d),
-    );
-    window.addEventListener("load", scrollToTarget);
-    return () => {
-      timers.forEach(window.clearTimeout);
-      window.removeEventListener("load", scrollToTarget);
-      window.removeEventListener("wheel", stop);
-      window.removeEventListener("touchmove", stop);
-    };
-  }, []);
+export default function ListicleRenderer({
+  config,
+}: {
+  config: Im8ListicleConfig;
+}) {
+  useHashScroll();
 
   return (
     <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
-      {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom
-          edges on desktop at ~half viewport width and near-full height;
-          content column centres vertically beside it. */}
+      {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom edges
+          on desktop at ~half viewport width; content column centres beside. */}
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
         <div className="grid items-center md:grid-cols-[52fr_48fr]">
           <div

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getLandingConfig, landingSlugs } from "@/app/lib/landings";
 import QuizEngine from "@/app/components/go/QuizEngine";
 import ListicleRenderer from "@/app/components/go/listicle/ListicleRenderer";
+import SimpleListicleRenderer from "@/app/components/go/listicle/SimpleListicleRenderer";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 
@@ -41,11 +42,19 @@ export default async function GoPage({
   const config = getLandingConfig(slug);
   if (!config) notFound();
   if (config.format === "listicle") {
+    // The config picks its template: "mm" is the editorial layout, "im8" the
+    // denser one. Narrowing here hands each renderer its exact config type.
+    const content =
+      config.template === "mm" ? (
+        <SimpleListicleRenderer config={config} />
+      ) : (
+        <ListicleRenderer config={config} />
+      );
     return (
       // Bone behind the nav spacer so no white sliver shows above the hero
       <div style={{ background: "var(--color-bone, #F9F9F9)" }}>
         <Navigation />
-        <ListicleRenderer config={config} />
+        {content}
         <Footer />
       </div>
     );

@@ -1,12 +1,21 @@
 /**
  * Listicle landing config (/go/[slug], format: "listicle").
  *
+ * A listicle page picks a TEMPLATE. There are two, each with its own config
+ * shape so a config only ever carries the fields its template renders:
+ *
+ *   template: "im8" -> ListicleRenderer. The dense layout: a product-image
+ *     hero, a proof ticker, and a plug-and-play library of section blocks
+ *     (data-viz reason panels, stat bands, comparison tables, cost breakdown).
+ *
+ *   template: "mm"  -> SimpleListicleRenderer. The Magic Mind editorial layout:
+ *     a headline + byline hero, and reasons that are simply photo + heading +
+ *     body, with a buy box woven in. Nothing between the reasons.
+ *
+ * Shared fields (title, trust flags, FAQ, sticky bar) live in ListicleBase.
+ * The route narrows on `template` and hands each renderer its exact type.
+ *
  * Blueprint: docs/development/featurePlans/landing-conversion/listicle-blueprint.md
- * Zones are fixed in order (hero → reasons → product → trust carousel →
- * comparison → review wall → cost breakdown → FAQ); the `body` array is
- * ordered so stat bands and review strips can be woven between reasons
- * at any position. Section types harden as each zone is built out from
- * the skeleton; the buy box resolves pricing from funnelData, not config.
  */
 
 import type { ProductHeroId } from "../productTypes";
@@ -77,6 +86,9 @@ export type ListicleAsset =
   /** Labelled grey block at the right aspect ratio — framework phase */
   | { kind: "placeholder"; aspect: string; note: string };
 
+/** A plain photo asset (the only asset a "mm" reason uses). */
+export type ListicleImageAsset = Extract<ListicleAsset, { kind: "image" }>;
+
 /** Icon keys for the under-CTA trust chips; mapped to SVGs in the renderer */
 export type TrustPillIcon =
   | "no-caffeine"
@@ -94,6 +106,10 @@ export interface ListicleReview {
   /** Role or verification line, e.g. "Verified customer" */
   detail?: string;
 }
+
+/* ------------------------------------------------------------------ */
+/* IM8 template body blocks (the plug-and-play section library)        */
+/* ------------------------------------------------------------------ */
 
 export type ListicleBodyBlock =
   | {
@@ -188,39 +204,96 @@ export type ListicleBodyBlock =
       }[];
     };
 
-export interface ListicleConfig {
+/* ------------------------------------------------------------------ */
+/* MM template body blocks (photo + heading + body, plus a buy box)    */
+/* ------------------------------------------------------------------ */
+
+export type MmBodyBlock =
+  | {
+      kind: "reason";
+      n: number;
+      headline: string;
+      body: string;
+      /** Optional accented line under the body (e.g. a highlighted offer),
+       *  rendered in the savings-green accent to stand apart from the body. */
+      accentLine?: string;
+      /** Optional source line under the body */
+      citation?: string;
+      citationHref?: string;
+      /** MM reasons are always a lifestyle photo */
+      asset: ListicleImageAsset;
+    }
+  /** Buy-box reprise between reasons (the reference repeats it after reason 5).
+   *  Renders the shared home ProductGrid; the end-of-page grid stays #product. */
+  | {
+      kind: "buyBox";
+      /** Small eyebrow pill above the headline, e.g. "Limited time offer". */
+      eyebrow?: string;
+      headline?: string;
+      subline?: string;
+      /** When set, the live subscription discount for this product + cadence is
+       *  resolved from funnel pricing and substituted for a `{percent}` token in
+       *  the headline/subline (e.g. subline "Try it risk free, now {percent}% off"). */
+      offer?: {
+        product: "both" | "flow" | "clear";
+        cadence: "monthly-sub" | "quarterly-sub";
+      };
+    };
+
+/* ------------------------------------------------------------------ */
+/* Config: a shared base, then one shape per template                  */
+/* ------------------------------------------------------------------ */
+
+interface ListicleBase {
   slug: string;
   /** Ad persona this page targets; tagged on every analytics event */
   persona: string;
   format: "listicle";
   /** Page title and Meta content_name */
   title: string;
+  /** Partner-logo marquee ("Fueling High Performers at:") in the trust zone */
+  logoMarquee?: boolean;
+  /** Press "As Published On:" marquee in the trust zone */
+  pressMarquee?: boolean;
+  /** Renders the shared AthleteCredibilityCarousel */
+  trustCarousel?: boolean;
+  /** Renders the 3-tile athlete testimonial block (Trusted by the Best) */
+  athleteTestimonials?: boolean;
+  /** Renders the shared reviews carousel + LandingTrustBadges */
+  reviewsCarousel?: boolean;
+  /**
+   * Canonical FAQ ids (from `app/lib/faqContent.ts`), curated per persona in
+   * display order. Resolved via `pickFaqItems` in the renderer. An unknown id
+   * fails the build. The `/go` surface is noindex and strips claim anchors.
+   */
+  faqIds: string[];
+  /** Fixed bottom bar anchoring to #product */
+  stickyBar?: { label: string; cta: string; sub?: string };
+}
+
+/** IM8 template: dense layout, product-image hero, section-block library. */
+export interface Im8ListicleConfig extends ListicleBase {
+  template: "im8";
   hero: {
-    /** Laurel-flanked credibility chip above the headline (IM8 pattern) */
+    /** Laurel-flanked credibility chip above the headline */
     laurel?: { eyebrow: string; body: string };
     headline: string;
     subcopy: string;
-    /** Avatar + star micro-row (LandingHero pattern), e.g.
-     *  { label: "Excellent 4.7", sub: "622+ reviews · 5,000+ daily users" } */
+    /** Avatar + star micro-row (LandingHero pattern) */
     socialProof?: { label: string; sub: string };
     /** Primary CTA; anchors to #product */
     cta: string;
-    /** Trust chips under the CTA; each gets its own meaningful icon */
+    /** Trust chips under the CTA; each gets its own icon */
     trustPills?: { label: string; icon: TrustPillIcon }[];
     asset: ListicleAsset;
   };
-  /** Marquee proof ticker items below the hero */
+  /** Marquee proof ticker below the hero */
   ticker?: string[];
-  /** Partner-logo marquee ("Fueling High Performers at:") below the ticker */
-  logoMarquee?: boolean;
-  /** Press "As Published On:" marquee (CognICA outlet wordmarks) in the trust zone */
-  pressMarquee?: boolean;
-  /** The listicle core: reasons with bands/strips woven between */
+  /** Reasons with bands / strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
   bridge?: { headline: string; cta: string };
-  /** Buy box zone (#product anchor). Renders the shared ProductHero;
-   *  pricing/variants resolve via cadenceData from the hero id. */
+  /** Buy box zone (#product anchor). Renders the ListiclePurchase ProductHero. */
   product: {
     headline: string;
     subline?: string;
@@ -229,15 +302,9 @@ export interface ListicleConfig {
     /** Persona-specific "who it's for" copy for the buy-box accordion */
     whoItsFor?: string[];
   };
-  /** Renders the shared AthleteCredibilityCarousel (own header/content) */
-  trustCarousel?: boolean;
-  /** Renders the 3-tile athlete testimonial block (Trusted by the Best) */
-  athleteTestimonials?: boolean;
-  /** Renders the shared CROTestimonials carousel + LandingTrustBadges */
-  reviewsCarousel?: boolean;
   /** Renders the app proof section (cognitive score count-up, steps, guarantee) */
   appSection?: boolean;
-  /** Deferred from v1 until competitor numbers are sourced; omit to skip */
+  /** Comparison table; omit to skip */
   comparison?: {
     eyebrow: string;
     headline: string;
@@ -245,29 +312,34 @@ export interface ListicleConfig {
     competitorLabel: string;
     rows: {
       label: string;
-      /** Our cell: dose/value plus optional "+X% more" delta badge */
       us: string;
       usDelta?: string;
       them: string;
     }[];
     footnote?: string;
   };
-  /** Deferred from v1 until stack prices are sourced; omit to skip */
+  /** Cost breakdown block; omit to skip */
   costBreakdown?: {
     claim: string;
-    /** Circular badge copy, e.g. "Save £400+/yr" */
     savingsBadge?: string;
     lineItems: { label: string; price: string }[];
     totals: { themLabel: string; them: string; usLabel: string; us: string };
     cta?: string;
   };
-  /**
-   * Canonical FAQ ids (from `app/lib/faqContent.ts`), curated per persona in
-   * display order. Resolved via `pickFaqItems` in the renderer, matching the PDP
-   * tagging pattern. An unknown id fails the build. The `/go` surface is noindex
-   * and renders no claim footnote, so answers are stripped of claim anchors.
-   */
-  faqIds: string[];
-  /** Fixed bottom bar anchoring to #product */
-  stickyBar?: { label: string; cta: string; sub?: string };
 }
+
+/** MM template: editorial layout, headline + byline hero, photo reasons.
+ *  The buy box is always the shared home ProductGrid, so there is no product
+ *  or CTA config here. */
+export interface MmListicleConfig extends ListicleBase {
+  template: "mm";
+  hero: {
+    /** Editorial byline: "By {name}" + updated date, optional headshot */
+    author?: { name: string; avatar?: string; updated: string };
+    headline: string;
+    subcopy: string;
+  };
+  body: MmBodyBlock[];
+}
+
+export type ListicleConfig = Im8ListicleConfig | MmListicleConfig;

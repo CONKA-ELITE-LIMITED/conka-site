@@ -4,14 +4,20 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import ProductGridMobile from "./ProductGridMobile";
 import ProductGridTablet from "./ProductGridTablet";
-import { getProductGridCopy } from "./productGridCopy";
+import ProductGridHeader, {
+  type ProductGridHeaderProps,
+} from "./ProductGridHeader";
 
 export interface ProductGridProps {
   exclude?: ("flow" | "clear" | "protocol")[];
+  /** Hide the offer header entirely. */
+  hideHeading?: boolean;
+  /** Override the default offer-header copy (eyebrow / title / subline / offer). */
+  header?: ProductGridHeaderProps;
 }
 
 export default function ProductGrid(props?: ProductGridProps) {
-  const { exclude = [] } = props ?? {};
+  const { exclude = [], hideHeading = false, header } = props ?? {};
   const [width, setWidth] = useState<number | undefined>(undefined);
 
   useEffect(() => {
@@ -24,24 +30,31 @@ export default function ProductGrid(props?: ProductGridProps) {
   const showFlow = !exclude.includes("flow");
   const showClear = !exclude.includes("clear");
   const showProtocol = !exclude.includes("protocol");
-  const copy = getProductGridCopy({ exclude });
 
   if (width !== undefined && width < 768) {
-    return <ProductGridMobile exclude={exclude} />;
+    return (
+      <ProductGridMobile
+        exclude={exclude}
+        hideHeading={hideHeading}
+        header={header}
+      />
+    );
   }
 
   if (width !== undefined && width < 1024) {
-    return <ProductGridTablet exclude={exclude} />;
+    return (
+      <ProductGridTablet
+        exclude={exclude}
+        hideHeading={hideHeading}
+        header={header}
+      />
+    );
   }
 
   if (width !== undefined && width >= 1024) {
     return (
       <>
-        <div className="mb-10">
-          <h2 className="brand-h1 text-black" style={{ letterSpacing: "-0.02em" }}>
-            {copy.title}
-          </h2>
-        </div>
+        {!hideHeading ? <ProductGridHeader {...(header ?? {})} /> : null}
 
         <div className="grid grid-cols-3 gap-6 items-stretch">
           {showProtocol ? (

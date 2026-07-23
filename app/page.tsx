@@ -138,7 +138,7 @@ export default function Home() {
       <div id="product-grid" className="scroll-mt-20">
         <section
           className="brand-section brand-bg-white"
-          aria-label="Find Your Formula"
+          aria-label="Shop CONKA formulas"
         >
           <div className="brand-track">
             <ProductGrid />

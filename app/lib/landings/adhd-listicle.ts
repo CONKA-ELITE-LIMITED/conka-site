@@ -17,6 +17,7 @@ export const adhdListicle: ListicleConfig = {
   slug: "adhd-listicle",
   persona: "adhd",
   format: "listicle",
+  template: "im8",
   title: "Do I Have ADHD, or Am I Just Bad at Focusing?",
   hero: {
     laurel: {
