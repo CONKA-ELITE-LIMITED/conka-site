@@ -79,6 +79,17 @@ export default function MarkdownBody({ markdown }: { markdown: string }) {
           <strong className="font-semibold text-black">{children}</strong>
         ),
         hr: () => <hr className="my-10 border-black/12" />,
+        // The persona posts are the first in the archive to use quotes with
+        // editorial intent (customer and athlete testimonials), and the
+        // react-markdown default is an unstyled browser indent. Square left
+        // rule rather than a card: the article renders inside `.brand-clinical`,
+        // where every radius token is 0. The inner paragraph keeps the `p`
+        // mapping above, so `mb-0` here is what stops a double gap.
+        blockquote: ({ children }) => (
+          <blockquote className="my-8 border-l-2 border-black/20 pl-5 [&>p:last-child]:mb-0 [&>p]:text-black">
+            {children}
+          </blockquote>
+        ),
         // Rehosted to public/blog/<slug>/ at build, so these are same-origin
         // and already served from our own CDN.
         //
