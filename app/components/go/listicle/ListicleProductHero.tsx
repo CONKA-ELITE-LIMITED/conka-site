@@ -1,0 +1,57 @@
+"use client";
+
+import { useState } from "react";
+import useIsMobile from "@/app/hooks/useIsMobile";
+import { useCart } from "@/app/context/CartContext";
+import {
+  CadenceType,
+  getCadenceVariantByProductHeroId,
+} from "@/app/lib/cadenceData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
+import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
+import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+
+/**
+ * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV2 desktop /
+ * ProductHeroMobileV2 mobile), wired with its own cadence state + cart exactly
+ * like the /conka-both PDP. Defaults to Both ("03"). Replaces the former
+ * ListiclePurchase two-card box. Add-to-cart is tagged listicle_buybox.
+ */
+export default function ListicleProductHero({
+  productHeroId = "03",
+}: {
+  productHeroId?: ProductHeroId;
+}) {
+  const isMobile = useIsMobile();
+  const { addToCart } = useCart();
+  const [selectedCadence, setSelectedCadence] =
+    useState<CadenceType>("monthly-sub");
+
+  const handleAddToCart = async (cadence: CadenceType = selectedCadence) => {
+    const variantData = getCadenceVariantByProductHeroId(productHeroId, cadence);
+    if (variantData?.variantId) {
+      await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
+        location: "listicle_buybox",
+        source: getAddToCartSource() === "quiz" ? "quiz" : "product_page",
+        sessionId: getQuizSessionId(),
+      });
+    } else {
+      console.warn("Variant not configured for cadence:", cadence);
+    }
+  };
+
+  const sharedProps = {
+    formulaId: productHeroId,
+    selectedCadence,
+    onCadenceChange: setSelectedCadence,
+    onAddToCart: () => handleAddToCart(),
+    onOtpAddToCart: () => handleAddToCart("monthly-otp"),
+  };
+
+  return isMobile ? (
+    <ProductHeroMobileV2 {...sharedProps} />
+  ) : (
+    <ProductHeroV2 {...sharedProps} />
+  );
+}

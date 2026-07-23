@@ -29,7 +29,7 @@ export const productivityListicle: ListicleConfig = {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
     },
-    cta: "Try Conka Risk-Free for 100 Days →",
+    cta: "Try it risk free, now 46% off",
     trustPills: [
       { label: "Zero caffeine", icon: "no-caffeine" },
       { label: "Informed Sport Certified", icon: "informed-sport" },

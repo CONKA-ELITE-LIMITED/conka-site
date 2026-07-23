@@ -10,7 +10,9 @@ import type {
 } from "@/app/lib/landings/listicle-types";
 import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
-import ListiclePurchase from "./ListiclePurchase";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
+import Link from "next/link";
+import ListicleProductHero from "./ListicleProductHero";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
@@ -51,6 +53,11 @@ const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
+/* Marketing CTAs (hero, bridge, sticky, cost) navigate to the Both PDP rather
+   than scrolling to the in-page buy zone. */
+const BUY_HREF = "/conka-both";
+/* Soft-blue sticky-bar fill (clearly tinted, not the deep navy). */
+const SOFT_BLUE = "var(--go-option-tint, #dce5f7)";
 
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
@@ -445,9 +452,9 @@ function BodyBlock({
         <div className="mb-8 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
           {block.eyebrow}
         </div>
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-x-8 gap-y-10">
           {block.stats.map((s, i) => (
-            <div key={i}>
+            <div key={i} className="w-[42%] md:w-40">
               <div className="text-4xl font-semibold tabular-nums md:text-5xl">{s.value}</div>
               <div className="mt-2 text-sm opacity-70">{s.label}</div>
             </div>
@@ -583,12 +590,16 @@ export default function ListicleRenderer({
                 sub={config.hero.socialProof.sub}
               />
             ) : null}
-            <a
-              href="#product"
-              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1B2757] px-10 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-fit"
-            >
-              {config.hero.cta}
-            </a>
+            <div className="mb-6">
+              <ConkaCTAButton
+                href={BUY_HREF}
+                hideIcon
+                meta={null}
+                className="w-full md:w-auto"
+              >
+                {config.hero.cta}
+              </ConkaCTAButton>
+            </div>
           </div>
         </div>
       </section>
@@ -651,12 +662,12 @@ export default function ListicleRenderer({
               <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
                 {config.bridge.headline}
               </h3>
-              <a
-                href="#product"
+              <Link
+                href={BUY_HREF}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
-              </a>
+              </Link>
             </div>
           ) : null}
         </div>
@@ -667,23 +678,10 @@ export default function ListicleRenderer({
         aria-label="Product offer"
         id="product"
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
-        style={{ background: "var(--color-neuro-blue-light, #eeeff2)", color: "#111" }}
+        style={{ background: "#fff", color: "#111" }}
       >
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-8">
-            <h2
-              className="text-3xl font-semibold leading-tight text-black md:text-4xl"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              {config.product.headline}
-            </h2>
-            {config.product.subline ? (
-              <p className="mt-3 max-w-2xl text-base text-black/60">
-                {config.product.subline}
-              </p>
-            ) : null}
-          </div>
-          <ListiclePurchase defaultSingle={config.product.productHeroId} />
+        <div className="mx-auto max-w-6xl">
+          <ListicleProductHero productHeroId={config.product.productHeroId} />
         </div>
       </section>
 
@@ -828,12 +826,12 @@ export default function ListicleRenderer({
               ) : null}
               {config.costBreakdown.cta ? (
                 <div>
-                  <a
-                    href="#product"
+                  <Link
+                    href={BUY_HREF}
                     className="inline-block rounded-full bg-[#111] px-8 py-4 text-sm font-medium text-white"
                   >
                     {config.costBreakdown.cta}
-                  </a>
+                  </Link>
                 </div>
               ) : null}
             </div>
@@ -889,14 +887,15 @@ export default function ListicleRenderer({
       {config.stickyBar ? (
         <aside
           aria-label="Offer bar"
-          className="fixed bottom-0 left-0 right-0 z-40 px-5 py-3 md:px-[5vw]"
-          style={{ background: NAVY, color: "#fff" }}
+          className="fixed bottom-0 left-0 right-0 z-40 px-5 py-2 md:px-[5vw]"
+          style={{ background: SOFT_BLUE, color: NAVY }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <span className="text-sm">{config.stickyBar.label}</span>
-            <a
-              href="#product"
-              className="rounded-[12px] bg-white px-6 py-2.5 text-center text-[13px] font-bold text-[#111]"
+            <span className="text-sm font-medium">{config.stickyBar.label}</span>
+            <Link
+              href={BUY_HREF}
+              className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
+              style={{ background: NAVY }}
             >
               {config.stickyBar.cta}
               {config.stickyBar.sub ? (
@@ -904,7 +903,7 @@ export default function ListicleRenderer({
                   {config.stickyBar.sub}
                 </span>
               ) : null}
-            </a>
+            </Link>
           </div>
         </aside>
       ) : null}

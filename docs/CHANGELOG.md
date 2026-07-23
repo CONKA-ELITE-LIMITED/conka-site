@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-23** | Rework ADHD listicle into a numbered X-reasons format and update the shared /go template (CTAs to the Both PDP, ProductHeroV2 buy zone, restyled sticky bar and hero CTA)
 - **2026-07-23** | Blog article bodies now render quotes as styled pull-quotes instead of an unstyled browser indent, for the persona post testimonials
 - **2026-07-22** | Restyle /go/why-conka mm template: square assets, bold body copy, no FAQ, no sticky footer
 - **2026-07-22** | Refine /go/why-conka listicle: add green accent offer line to reason 7 and drop trailing trust/review sections
