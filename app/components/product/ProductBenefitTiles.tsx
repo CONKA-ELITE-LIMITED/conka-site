@@ -32,19 +32,21 @@ interface ProductBenefitTilesProps {
   bottomImage?: PokeImage;
 }
 
+// Titles use "\n" to force a consistent two-line break (Magic Mind pattern),
+// so all three columns share the same visual structure.
 const DEFAULT_ITEMS: BenefitItem[] = [
   {
-    title: "Mental performance",
+    title: "Mental\nperformance",
     description:
       "Sharpen focus, cognition, and recall with clinically-backed ingredients.",
   },
   {
-    title: "Sustained energy",
+    title: "Sustained\nenergy",
     description:
       "Sustain your mental energy and stay productive all day with energy-supporting ingredients.",
   },
   {
-    title: "Brain health",
+    title: "Brain\nhealth",
     description:
       "Optimise long-term brain health and cognitive function with neurosupportive antioxidants.",
   },
@@ -110,10 +112,14 @@ export default function ProductBenefitTiles({
         <ul className="grid grid-cols-1 gap-12 text-center sm:grid-cols-3 sm:gap-8 sm:text-left">
           {items.map((item) => (
             <li key={item.title}>
-              <h3 className="text-4xl font-bold leading-[1.05] tracking-[-0.01em] text-black sm:text-3xl md:text-[2.5rem]">
-                {item.title}
+              <h3 className="text-center text-4xl font-bold leading-[1.05] tracking-[-0.01em] text-black sm:text-left sm:text-3xl md:text-[2.5rem]">
+                {item.title.split("\n").map((line, i) => (
+                  <span key={i} className="block">
+                    {line}
+                  </span>
+                ))}
               </h3>
-              <p className="mx-auto mt-4 max-w-[34ch] text-base leading-relaxed text-black sm:mx-0">
+              <p className="mx-auto mt-5 max-w-[30ch] text-base font-semibold leading-relaxed text-black sm:mx-0">
                 {item.description}
               </p>
             </li>
