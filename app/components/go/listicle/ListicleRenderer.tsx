@@ -299,17 +299,17 @@ function ReviewCard({ review }: { review: ListicleReview }) {
       </p>
       <div className="mt-auto flex items-center gap-2.5 pt-1">
         {review.image ? (
-          <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+          <span className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-full">
             <Image
               src={review.image}
               alt={review.name}
               fill
-              sizes="36px"
+              sizes="72px"
               className="object-cover object-[center_25%]"
             />
           </span>
         ) : (
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-[11px] font-semibold text-white">
+          <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-base font-semibold text-white">
             {reviewInitials(review.name)}
           </span>
         )}

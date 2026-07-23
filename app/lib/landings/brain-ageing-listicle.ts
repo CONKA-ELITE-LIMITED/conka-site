@@ -244,7 +244,7 @@ export const brainAgeingListicle: ListicleConfig = {
           quote:
             "I noticed a clarity and energy and have benefited from that. My sleep wasn't great after I retired, but now I seem to be sleeping well.",
           name: "Deborah Lowe",
-          image: "/testimonials/ugc/17.jpg",
+          image: "/testimonials/ugc/18.jpg",
           detail: "Verified · Age 62",
         },
         {
