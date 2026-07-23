@@ -179,6 +179,7 @@ export const brainAgeingListicle: ListicleConfig = {
             quote:
               "I am a patient of Dr Tina Peers, a menopause specialist, who told me to take NAC in this formula. I don't get hot flushes or a red face anymore. I think that says it all.",
             name: "Rosalind",
+            image: "/testimonials/ugc/17.jpg",
             detail: "Verified customer",
           },
         },
