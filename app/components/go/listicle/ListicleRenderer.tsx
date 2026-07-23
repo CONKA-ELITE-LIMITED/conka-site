@@ -30,23 +30,23 @@ import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
 
 /**
- * Listicle landing renderer (/go/[slug], format: "listicle").
+ * Listicle landing renderer (/go/[slug], format: "listicle"), IM8 template.
  *
- * SKELETON PHASE: every zone renders as a labelled block with the
- * agreed background rhythm and rough geometry so the full page can be
- * reviewed end to end. Each zone gets rebuilt to quality in its own
- * section pass (see listicle-blueprint.md), at which point it moves
- * into its own component file in this folder.
+ * Five zones: hero, proof ticker, reasons (the plug-and-play block library),
+ * product buy box, proof tier, FAQ, plus an optional sticky bar. The proof
+ * tier lives in ListicleProofTier and is shared with SimpleListicleRenderer;
+ * the reason-block library is still inline here.
  *
  * Dark zones use --color-neuro-blue-dark pending the colour decision;
- * flipping to ink is a one-line change on DARK below.
+ * flipping to ink is a one-line change on DARK below. Colours here are still
+ * hardcoded hex rather than brand-base.css tokens (deferred, see SCRUM-1176).
  */
 
 const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
 const BONE = "var(--color-bone, #F9F9F9)";
 /** Neuro blue for section titles on light backgrounds */
 const NAVY = "#1B2757";
-/* Marketing CTAs (hero, bridge, sticky, cost) navigate to the Both PDP rather
+/* Marketing CTAs (hero, bridge, sticky) navigate to the Both PDP rather
    than scrolling to the in-page buy zone. */
 const BUY_HREF = "/conka-both";
 /* Soft-blue sticky-bar fill (clearly tinted, not the deep navy). */
@@ -512,6 +512,7 @@ function BodyBlock({
     );
   }
 
+  // Every ListicleBodyBlock kind is handled above; this satisfies the compiler.
   return null;
 }
 
@@ -522,8 +523,16 @@ export default function ListicleRenderer({
 }) {
   useHashScroll();
 
+  // The FAQ section carries the sticky-bar clearance (pb-32). If a config
+  // supplies no faqIds that section does not render, so the clearance moves to
+  // <main> to stop the bar covering the last block.
+  const needsStickyClearance = Boolean(config.stickyBar) && !config.faqIds.length;
+
   return (
-    <main className="min-h-screen overflow-x-clip" style={{ background: BONE, color: "#111" }}>
+    <main
+      className={`min-h-screen overflow-x-clip${needsStickyClearance ? " pb-32" : ""}`}
+      style={{ background: BONE, color: "#111" }}
+    >
       {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom edges
           on desktop at ~half viewport width; content column centres beside. */}
       <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
@@ -688,24 +697,28 @@ export default function ListicleRenderer({
 
       {/* Zone 5: FAQ — LabFAQ, the site-standard accordion used on home and
           the PDPs. No image column (no persona lifestyle shot) and no CTA
-          button (the sticky bar and the buy zone already own the CTA). */}
-      <section
-        aria-label="FAQs"
-        className="px-5 py-16 pb-32 md:px-[5vw]"
-        style={{ background: BONE, color: "#111" }}
-      >
-        <div className="mx-auto max-w-7xl">
-          <LabFAQ
-            items={pickFaqItems(...config.faqIds).map((f) => ({
-              ...f,
-              answer: stripClaimAnchors(f.answer),
-            }))}
-            image={null}
-            hideCTA
-            showSeeAllLink={false}
-          />
-        </div>
-      </section>
+          button (the sticky bar and the buy zone already own the CTA).
+          Only when the config supplies faqIds, so an empty list cannot render
+          a bare heading with no rows (matches SimpleListicleRenderer). */}
+      {config.faqIds.length ? (
+        <section
+          aria-label="FAQs"
+          className="px-5 py-16 pb-32 md:px-[5vw]"
+          style={{ background: BONE, color: "#111" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <LabFAQ
+              items={pickFaqItems(...config.faqIds).map((f) => ({
+                ...f,
+                answer: stripClaimAnchors(f.answer),
+              }))}
+              image={null}
+              hideCTA
+              showSeeAllLink={false}
+            />
+          </div>
+        </section>
+      ) : null}
 
       {/* Sticky bottom bar */}
       {config.stickyBar ? (

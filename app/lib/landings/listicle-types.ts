@@ -6,13 +6,13 @@
  *
  *   template: "im8" -> ListicleRenderer. The dense layout: a product-image
  *     hero, a proof ticker, and a plug-and-play library of section blocks
- *     (data-viz reason panels, stat bands, comparison tables, cost breakdown).
+ *     (data-viz reason panels, stat bands, review strips, bespoke explainers).
  *
  *   template: "mm"  -> SimpleListicleRenderer. The Magic Mind editorial layout:
  *     a headline + byline hero, and reasons that are simply photo + heading +
  *     body, with a buy box woven in. Nothing between the reasons.
  *
- * Shared fields (title, trust flags, FAQ, sticky bar) live in ListicleBase.
+ * Shared fields (title, proof tier, FAQ, sticky bar) live in ListicleBase.
  * The route narrows on `template` and hands each renderer its exact type.
  *
  * Blueprint: docs/development/featurePlans/landing-conversion/listicle-blueprint.md
@@ -20,6 +20,7 @@
 
 import type { ProductHeroId } from "../productTypes";
 import type { UGCItem } from "@/app/components/testimonials/UGCMarquee";
+import type { AthleteReviewContent } from "@/app/components/AthleteReviewFeature";
 
 /**
  * A single named-person proof feature: white-background cutout portrait beside
@@ -28,15 +29,11 @@ import type { UGCItem } from "@/app/components/testimonials/UGCMarquee";
  * dissolves the white into its tint panel with mix-blend-multiply. Every
  * `*NB.jpg` under `public/testimonials/athlete/` (the AthleteCredibilityCarousel
  * roster) meets that requirement and is a valid source.
+ *
+ * Aliased to the component's own prop type rather than redeclared: the config
+ * value is handed straight to AthleteReviewFeature, so the two cannot drift.
  */
-export interface ListicleProofFeature {
-  name: string;
-  /** Headline credentials under the name, one line each */
-  credentials: string[];
-  quote: string;
-  image: string;
-  imageAlt: string;
-}
+export type ListicleProofFeature = AthleteReviewContent;
 
 /**
  * The post-reasons proof tier. Three moments, each doing a different job, so
