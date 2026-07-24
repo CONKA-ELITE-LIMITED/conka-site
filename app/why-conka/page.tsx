@@ -55,13 +55,14 @@ export default function WhyConkaPage() {
 
         {/* Offer. Breaks out of the 820px reading column to the full grid
             width, the same way the MM listicle closes on its #product section.
+            Stays on the page's white canvas rather than the listicle's tint
+            strip, so the article reads as one surface top to bottom.
             No `linkSrc`: that origin token is for the /go listicles' purchase
             attribution and would misreport organic traffic here. */}
         <section
           aria-label="Product offer"
           id="product"
           className="px-5 py-16 md:px-[5vw] md:py-24"
-          style={{ background: "#eef0f5" }}
         >
           <div className="brand-track">
             <ProductGrid />
