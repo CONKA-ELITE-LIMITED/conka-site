@@ -3,7 +3,7 @@ import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import { WhyConkaHero } from "@/app/components/why-conka/WhyConkaHero";
 import WhyConkaReasons from "@/app/components/why-conka/WhyConkaReasons";
-import { WhyConkaCTA } from "@/app/components/why-conka/WhyConkaCTA";
+import ProductGrid from "@/app/components/home/ProductGrid";
 
 export const metadata: Metadata = {
   title: "Why CONKA | Seven Reasons in Sixty Seconds",
@@ -53,12 +53,18 @@ export default function WhyConkaPage() {
           </div>
         </section>
 
+        {/* Offer. Breaks out of the 820px reading column to the full grid
+            width, the same way the MM listicle closes on its #product section.
+            No `linkSrc`: that origin token is for the /go listicles' purchase
+            attribution and would misreport organic traffic here. */}
         <section
-          aria-label="Try CONKA"
-          className="px-5 pb-16 md:px-[5vw] md:pb-24"
+          aria-label="Product offer"
+          id="product"
+          className="px-5 py-16 md:px-[5vw] md:py-24"
+          style={{ background: "#eef0f5" }}
         >
-          <div className="mx-auto max-w-[820px]">
-            <WhyConkaCTA />
+          <div className="brand-track">
+            <ProductGrid />
           </div>
         </section>
       </main>
