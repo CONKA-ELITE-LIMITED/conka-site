@@ -21,7 +21,10 @@ import { AppInstallButtons } from "@/app/components/AppInstallButtons";
 export default function WhyConkaReasons() {
   return (
     <div>
-      {whyConkaReasons.map((reason) => {
+      {whyConkaReasons.map((reason, index) => {
+        // The hero carries no image, so reason 1's asset is the likely LCP
+        // element. Everything below it stays lazy.
+        const isFirst = index === 0;
         const heading = (
           <>
             <span className="tabular-nums">{reason.id}.</span> {reason.headline}
@@ -45,7 +48,7 @@ export default function WhyConkaReasons() {
                   src={reason.asset}
                   alt={reason.assetAlt}
                   fill
-                  loading="lazy"
+                  priority={isFirst}
                   sizes="(max-width: 768px) 100vw, 350px"
                   className={
                     reason.assetFit === "contain"

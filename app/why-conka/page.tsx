@@ -24,12 +24,14 @@ export const metadata: Metadata = {
  *
  * `.brand-clinical` is deliberately absent: the MM template is Simple DTC
  * (rounded assets, sans throughout, no mono micro-labels).
+ *
+ * Canvas is plain white, not the MM renderer's bone: bone was the premium
+ * "Soft-Tech Luxury" canvas and DESIGN_SYSTEM.md maps `.premium-bg-bone` to
+ * `.brand-bg-white`. Only the layout is borrowed from MM, not the old palette.
  */
-const BONE = "var(--color-bone, #F9F9F9)";
-
 export default function WhyConkaPage() {
   return (
-    <div className="min-h-screen" style={{ background: BONE, color: "#111" }}>
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
 
       <main>

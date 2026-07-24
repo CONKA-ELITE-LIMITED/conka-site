@@ -60,17 +60,21 @@ const HelpIcon = () => (
 const variantStyles = {
   "button-primary":
     "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-6 py-2.5 brand-caption font-semibold text-white hover:opacity-90 transition-opacity",
+  // white/black rather than the old --color-bone / --color-ink: neither token
+  // is defined anywhere, so these declarations were invalid at computed-value
+  // time and dropped (no border colour, inherited text). DESIGN_SYSTEM.md maps
+  // the premium bone canvas to white.
   "button-secondary":
-    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-bone)] px-6 py-2.5 brand-caption font-semibold text-[var(--color-bone)] hover:bg-[var(--color-bone)]/10 transition-colors",
+    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-white px-6 py-2.5 brand-caption font-semibold text-white hover:bg-white/10 transition-colors",
   "button-primary-small":
     "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-5 py-2.5 brand-caption font-semibold text-white hover:opacity-90 transition-opacity",
   "button-outline":
-    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-ink)]/40 bg-[var(--color-bone)] px-6 py-2.5 brand-caption font-semibold text-[var(--color-ink)] hover:bg-[var(--brand-stroke)] transition-colors",
+    "inline-flex items-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-black/40 bg-white px-6 py-2.5 brand-caption font-semibold text-black hover:bg-[var(--brand-stroke)] transition-colors",
   inline: "underline font-medium",
   "link-blue":
     "brand-caption text-[var(--color-neuro-blue-dark)] font-medium hover:underline inline-flex items-center gap-1.5",
   "button-outline-subtle":
-    "inline-flex items-center justify-center gap-2 rounded-[var(--brand-radius-interactive)] border border-[var(--brand-stroke)] py-2.5 brand-caption font-semibold text-[var(--color-ink)] hover:bg-[var(--brand-stroke)] transition-colors",
+    "inline-flex items-center justify-center gap-2 rounded-[var(--brand-radius-interactive)] border border-[var(--brand-stroke)] py-2.5 brand-caption font-semibold text-black hover:bg-[var(--brand-stroke)] transition-colors",
   "button-primary-small-full":
     "inline-flex items-center justify-center gap-2 rounded-[var(--brand-radius-interactive)] border-2 border-[var(--color-neuro-blue-dark)] bg-[var(--color-neuro-blue-dark)] px-4 py-2.5 brand-caption font-semibold text-white hover:opacity-90 transition-opacity w-full",
 } as const;
