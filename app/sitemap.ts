@@ -214,6 +214,12 @@ const ROUTES: Route[] = [
     sources: ["app/cookies"],
   },
   {
+    path: "/disclaimer",
+    priority: 0.3,
+    changeFrequency: "yearly",
+    sources: ["app/disclaimer"],
+  },
+  {
     path: "/conkaapp-privacy-policy",
     priority: 0.3,
     changeFrequency: "yearly",
