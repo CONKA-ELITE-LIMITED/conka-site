@@ -25,8 +25,31 @@ config (app/lib/landings/*.ts)
 ```
 
 - **Static + noindex.** `generateStaticParams` builds every registered slug; `dynamicParams = false` (an unregistered slug 404s). `generateMetadata` sets `robots: { index: false, follow: false }`.
-- **Analytics.** Events are tagged with `persona`; set it per config.
 - **Buy box.** `mm` always renders the home `ProductGrid`. `im8` renders `ListiclePurchase` (pricing resolves from `funnelData`, not config).
+
+## Analytics
+
+Two events, wired automatically by both renderers. Nothing to configure per page.
+
+| Event | Fires | Properties |
+|-------|-------|------------|
+| `listicle:section_viewed` | Once per section per pageview, when it scrolls into view | `slug`, `section` |
+| `listicle:cta_clicked` | On CTA click (or add-to-cart in the `im8` buy zone) | `slug`, `section` |
+
+`section` is either a body block (`reason_3`, `buyBox_5`) or a fixed zone (`hero`, `bridge`, `sticky`, `product`). Block ids are `${kind}_${index}` over `config.body`, so **inserting or reordering a block changes the ids below it** and breaks comparability with earlier data for that page.
+
+Exactly two properties per event, respecting the two-property budget documented in `app/lib/analytics.ts`. The CTA's position is folded into `section` rather than sent separately, so one query returns the whole matrix:
+
+```
+dataset=events by=["eventData/slug","eventData/section"]
+filter=eventName eq 'listicle:cta_clicked'
+```
+
+`section_viewed` is the denominator for `cta_clicked`: without it a low click count cannot separate a weak section from a rarely-reached one. Divide one by the other to get a per-section click-through rate.
+
+Implementation is `app/components/go/listicle/listicleAnalytics.tsx`: one shared `IntersectionObserver` for the page, handed to blocks through context. `mm` buy boxes use click delegation so the shared home `ProductGrid` needs no tracking props; the `im8` buy zone fires on add-to-cart instead, because delegating there would count cadence toggles and accordions as CTA clicks.
+
+Plan and rationale: `docs/development/featurePlans/listicle-cta-attribution.md` (SCRUM-1177).
 
 ## Key files
 
