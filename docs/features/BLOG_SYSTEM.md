@@ -18,15 +18,27 @@ The blog is static and Notion is read at build only, which once made two failure
 
 **1. Stale bodies cannot survive a redeploy (was defect 2).** The Notion SDK calls `fetch`, Next patches it, and a response would otherwise land in `.next/cache/fetch-cache` with `revalidate: 31536000` (one year); Vercel restores that cache between deploys, so an edit could stay invisible for up to a year. `notion.ts` folds the deploy id (`VERCEL_DEPLOYMENT_ID`) into every Notion request via an `x-conka-deploy` header, so each deploy computes a different fetch-cache key and cannot hit the previous deploy's entries. A body edit reaches production on an ordinary redeploy, **build cache left enabled**. (`no-store` would also work but forces dynamic rendering, which the static blog cannot use; a short `revalidate` would turn the blog into runtime ISR. The deploy-keyed cache keeps it build-only and static.)
 
-**2. A racing or thin read fails the build, loudly (was defect 1).** A build running seconds after a Notion write once baked a 404 into a live post on a green build (`generateStaticParams` saw 3 posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and dropped from the sitemap). `app/lib/blogBuildGuard.ts` now fails the build if two reads disagree about which posts exist, or if the published count falls below a floor (`PUBLISHED_POST_FLOOR`, 40; 55 live today). The `[slug]` route sets `dynamicParams = false` and throws instead of `notFound()` when an enumerated slug goes missing, so the exact 404-baking case cannot ship. If a build fails this way, rebuild once Notion has settled.
+**2. A racing or thin read fails the build, loudly (was defect 1).** A build running seconds after a Notion write once baked a 404 into a live post on a green build (`generateStaticParams` saw 3 posts while `getPostBySlug` and `sitemap` saw 1, so `/blog/what-are-nootropics` prerendered with `"status": 404` and dropped from the sitemap). `app/lib/blogBuildGuard.ts` now fails the build if two reads disagree about which posts exist, or if the published count falls below a floor (`PUBLISHED_POST_FLOOR`, 40; 58 live today). The `[slug]` route sets `dynamicParams = false` and throws instead of `notFound()` when an enumerated slug goes missing, so the exact 404-baking case cannot ship. If a build fails this way, rebuild once Notion has settled.
 
-**Build-speed note (future work).** Because each deploy uses a fresh cache key, every deploy re-reads the whole blog from Notion; within a build the reads are still cached and shared. At ~55 short posts that is a couple of seconds. If the archive grows large, build time will scale with it: batch the per-post fetches (`Promise.all`, see Known gaps) before reaching for anything more exotic, such as scoping the deploy key so unchanged posts reuse a prior deploy's cache.
+**3. The row set is read once per build, so it cannot disagree with itself (SCRUM-1179).** Guard 2 turned the race into a loud failure. It stayed loud: builds began failing on a *different* post each run, because `react.cache` memoises per render scope, not per build, so `generateStaticParams`, each post, each listing page and the sitemap each issued their own Notion query, fanned across 11 worker processes. Roughly 60 independent reads of a set that had to be identical in all of them; one disagreement was enough to fail the build.
+
+`queryBlogRows` (`app/lib/notion.ts`) now resolves the set once and shares it with every worker through a snapshot in the temp dir, named for the build (`VERCEL_DEPLOYMENT_ID` plus the parent pid, so it cannot outlive the build or leak into the next deploy). A lock elects one worker to read; the rest wait for its result, and any that read anyway adopt the winner's rows rather than their own. A build makes **one** Notion row query, verifiable in the build log:
+
+```bash
+grep -c "queried Notion for the" build.log   # 1
+```
+
+Outside a build this is unchanged, so a dev server still picks up a Notion edit on refresh, and two local `npm run build` runs still read Notion twice.
+
+**Build-speed note (future work).** Because each deploy uses a fresh cache key, every deploy re-reads the whole blog from Notion. The row query is now a single request; the remaining cost is the per-post body fetch. At ~58 short posts that is a couple of seconds. If the archive grows large, build time will scale with it: batch the per-post fetches (`Promise.all`, see Known gaps) before reaching for anything more exotic, such as scoping the deploy key so unchanged posts reuse a prior deploy's cache.
 
 ### What already fails loudly (do not re-add these guards)
 
 `queryBlogRows` **throws** rather than returning `[]` (`app/lib/notion.ts`), because `[]` is indistinguishable from "there are genuinely no posts": a rate-limit during a build once generated zero routes, rendered an empty `/blog`, exited 0, and deployed, pointing all 82 legacy redirects at 404s. Also throwing: missing `NOTION_TOKEN` / `NOTION_BLOG_DATABASE_ID` (`notion.ts`), a `notion-to-md` conversion failure, and a duplicate `Slug` (`blog.ts`).
 
-So the residual risk that guard 2 covers is **not** error-swallowing. It is that separate, individually successful queries across one build can disagree (Notion is eventually consistent right after a write, and `react.cache` dedupes per request, not per build). Nothing throws, because nothing failed.
+So the residual risk that guard 2 covers is **not** error-swallowing. It is that separate, individually successful queries across one build could disagree (Notion is eventually consistent right after a write). Nothing throws, because nothing failed. Guard 3 removes the opportunity by construction; guard 2 stays as the check that it worked, and now costs nothing.
+
+**If guard 2 or the `[slug]` route does fail,** read the message rather than assuming a race. It reports what was observed: the row counts, and whether the slug was absent from the set or present but failing validation. "Present but failed validation" is a content defect (a post missing its title, slug or Meta description) and a rebuild will not fix it.
 
 ## The content contract
 
@@ -94,8 +106,8 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 
 | File | Purpose |
 |---|---|
-| `app/lib/notion.ts` | Client, data-source resolution, `queryBlogRows`, `pageToMarkdown`. Both `react.cache`d, both throw on failure |
-| `app/lib/blog.ts` | `getAllPosts`, `getPostBySlug`, `getRelatedPosts`, image re-hosting |
+| `app/lib/notion.ts` | Client, data-source resolution, `queryBlogRows` (one read per build, shared by every worker), `pageToMarkdown` (`react.cache`d). Both throw on failure |
+| `app/lib/blog.ts` | `getAllPosts`, `getPostBySlug`, `getRelatedPosts`, `diagnoseMissingPost`, image re-hosting |
 | `app/lib/blogTransform.ts` | Property readers, `cleanBody`, `extractFaq`, `readingTime` |
 | `app/components/blog/MarkdownBody.tsx` | The markdown → JSX mapping |
 | `app/components/blog/` | `BlogCard`, `RelatedPosts`, `ProductCTA` |
@@ -154,7 +166,7 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 | Hub pagination, if any hub reaches 12 posts (Sport and Neuroscience sit at 11) | Phase 6.4, no ticket yet |
 | In-body `<img>` has no dimensions, so bodies shift on load. 100 images across 33 posts, none with usable alt text | `docs/TODO.md` item 11 |
 | **Blog → PDP CTA analytics was never built.** `ProductCTA.tsx` says "Analytics (source: 'blog') is wired in Phase 3"; no tracking call exists. The rest of Phase 3 shipped, so this is a dropped task, not a pending one | Untracked as of 2026-07-17 |
-| Sequential image downloads and Notion fetches at build (~1m40). `Promise.all` batching is the known fix | Untracked as of 2026-07-17 |
+| Sequential image downloads and per-post body fetches at build (~40s since SCRUM-1179 made the row query a single request; was ~1m40). `Promise.all` batching is the known fix for what remains | Untracked as of 2026-07-17 |
 | 6 legacy posts read as walls of text (no recoverable structure) | `legacy-blog-migration.md` |
 
 ## References
