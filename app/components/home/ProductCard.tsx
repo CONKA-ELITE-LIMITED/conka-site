@@ -156,8 +156,10 @@ export default function ProductCard({
   const imageAspectClass =
     imageAspect === "wide" ? "aspect-[4/3]" : "aspect-square";
   // Both the image and the CTA go to the same place, so tag them identically.
+  // Separator is computed rather than assumed: product links carry no query
+  // today, but hardcoding "?" would silently break the first one that does.
   const href = linkSrc
-    ? `${product.link}?src=${encodeURIComponent(linkSrc)}`
+    ? `${product.link}${product.link.includes("?") ? "&" : "?"}src=${encodeURIComponent(linkSrc)}`
     : product.link;
 
   return (

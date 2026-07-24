@@ -480,18 +480,29 @@ function getListicleSrc(): string | null {
 }
 
 /**
- * `source` for a purchase event: where this visitor came FROM, as opposed to
+ * Coarse `source` for a purchase: where this visitor came FROM, as opposed to
  * `location`, which is where on the page they clicked.
  *
- * Precedence is most-specific-first. A listicle origin is the strongest signal
- * available, because it names the exact page and section that produced the
- * click, so it wins over the generic "product_page".
+ * Deliberately coarse, because CartContext writes this to Shopify as a cart
+ * line item property, and a property whose key does not start with "_" is
+ * shown to the customer in checkout. Only clean, canonical values belong here.
+ * The specific page and section go in `getPurchaseOrigin`, which stays
+ * client-side.
  */
 export function getPurchaseSource(): string {
-  const listicle = getListicleSrc();
-  if (listicle) return listicle;
+  if (getListicleSrc()) return "listicle";
 
   return getAddToCartSource() === "quiz" ? "quiz" : "product_page";
+}
+
+/**
+ * The exact `<slug>-<section>` that produced the click, for analytics only.
+ *
+ * Never written to Shopify: see getPurchaseSource. Undefined when the visitor
+ * did not arrive from a listicle.
+ */
+export function getPurchaseOrigin(): string | undefined {
+  return getListicleSrc() ?? undefined;
 }
 
 /**
