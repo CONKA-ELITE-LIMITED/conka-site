@@ -54,7 +54,11 @@ export default function NavGroupMegaMenu({
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="group block w-[260px] overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#1B2757] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
+              // flex-col, not block: the row stretches every tile to the
+              // tallest, so the footer has to grow into that height. Left as a
+              // block, a one-line description leaves bare card below the
+              // footer, which shows up as a white bar under the navy hover.
+              className="group flex w-[260px] flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#1B2757] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
             >
               <div
                 className={`relative aspect-square overflow-hidden ${
@@ -77,7 +81,7 @@ export default function NavGroupMegaMenu({
                   />
                 )}
               </div>
-              <div className="border-t border-black/10 px-4 py-4 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
+              <div className="flex-1 border-t border-black/10 px-4 py-4 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
                 <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
                   {link.label}
                 </p>
