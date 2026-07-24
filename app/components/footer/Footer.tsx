@@ -270,32 +270,39 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Follow CONKA" className="flex flex-wrap gap-2">
-            {FOOTER_SOCIALS.map((social) => (
-              <a
-                key={social.url}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 min-h-[44px] rounded-full border border-white/20 px-4 text-[14px] text-white/70 hover:text-white hover:border-white/50 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="17"
-                  height="17"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                  className="shrink-0"
+            {FOOTER_SOCIALS.map((social) => {
+              // Flipping a profile to `inFooter` without adding a glyph would
+              // otherwise render an empty box; fall back to the label alone.
+              const icon = SOCIAL_ICONS[social.label];
+              return (
+                <a
+                  key={social.url}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 min-h-[44px] rounded-full border border-white/20 px-4 text-[14px] text-white/70 hover:text-white hover:border-white/50 transition-colors"
                 >
-                  {SOCIAL_ICONS[social.label]}
-                </svg>
-                {social.label}
-              </a>
-            ))}
+                  {icon && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17"
+                      height="17"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className="shrink-0"
+                    >
+                      {icon}
+                    </svg>
+                  )}
+                  {social.label}
+                </a>
+              );
+            })}
           </nav>
         </div>
 

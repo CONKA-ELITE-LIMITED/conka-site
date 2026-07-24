@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import { SITE_ORIGIN } from "@/app/lib/site";
 
+// No `alternates` here: the root layout sets `canonical: "./"`, so Next
+// self-canonicalises this route against metadataBase. Only routes needing a
+// canonical other than their own URL override it (see app/layout.tsx).
 export const metadata: Metadata = {
   title: "Disclaimer | CONKA",
   description:
     "Product, health and endorsement disclaimers for CONKA food supplements, including UK and EU supplement wording and information for customers in the United States.",
-  alternates: { canonical: `${SITE_ORIGIN}/disclaimer` },
   openGraph: {
     title: "Disclaimer | CONKA",
     description:
