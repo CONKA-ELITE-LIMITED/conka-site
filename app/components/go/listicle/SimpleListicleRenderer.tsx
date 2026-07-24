@@ -16,6 +16,7 @@ import {
   SectionImpressions,
   TrackedSection,
   sectionId,
+  useListicleSrc,
 } from "./listicleAnalytics";
 
 /**
@@ -154,12 +155,15 @@ function SimpleReason({
  */
 function BuyBox({
   block,
+  linkSrc,
 }: {
   block: Extract<MmBodyBlock, { kind: "buyBox" }>;
+  linkSrc?: string;
 }) {
   return (
     <div className="my-12 md:my-16">
       <ProductGrid
+        linkSrc={linkSrc}
         header={{
           eyebrow: block.eyebrow,
           title: block.headline,
@@ -187,6 +191,7 @@ export default function SimpleListicleRenderer({
 
 function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
   useHashScroll();
+  const srcFor = useListicleSrc();
 
   return (
     <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
@@ -221,7 +226,10 @@ function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
                 trackClicks
                 className="brand-track"
               >
-                <BuyBox block={block} />
+                <BuyBox
+                  block={block}
+                  linkSrc={srcFor(sectionId(block.kind, i))}
+                />
               </TrackedSection>
             );
           // The simple template only uses reason + buyBox blocks.
@@ -254,7 +262,7 @@ function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
           trackClicks
           className="brand-track"
         >
-          <ProductGrid />
+          <ProductGrid linkSrc={srcFor(SECTION.product)} />
         </TrackedSection>
       </section>
 

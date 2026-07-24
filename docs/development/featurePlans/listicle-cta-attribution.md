@@ -43,9 +43,17 @@ The impression event is what makes the click data readable. Without it, clicks p
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Instrument the listicle (section ids, impression + click events, both templates) | Not Started |
-| 2 | Close the funnel (`?src=` param through to `purchase:add_to_cart`) | Not Started |
+| 1 | Instrument the listicle (section ids, impression + click events, both templates) | Built, in review (SCRUM-1177) |
+| 2 | Close the funnel (`?src=` param through to `purchase:add_to_cart`) | Built (SCRUM-1178) |
 | 3 | Reporting view (saved query or dashboard turning raw events into rates) | Future |
+
+### Decisions taken during implementation
+
+- **`source`, not `location`, carries the origin.** `location` already distinguishes `hero` from `sticky_footer` on the PDP and that signal is worth keeping. `source` already means "where did this visitor come from", so the listicle token replaces `product_page` there. One shared `getPurchaseSource()` now serves all four buy surfaces.
+- **The token is sanitised on read.** It arrives from a URL param, so anything not matching `^[a-z0-9_-]{1,96}$` is discarded rather than allowed to create junk dimensions in the dashboard.
+- **mm needed the prop after all.** Click *tracking* avoided touching the shared `ProductGrid` via delegation, but the `?src=` param has to be on the href itself, which delegation cannot do without rewriting URLs mid-click. An optional `linkSrc` prop threads through `ProductGrid` to `ProductCard`; unset, links are untouched.
+- **The im8 buy zone tags `source` from context.** It sells in place, so there is no `?src=` to read, but its purchases still need to name their page.
+- **Canonical needed no work.** The root layout's relative `canonical: "./"` resolves on pathname only, so `?src=` is stripped and creates no duplicate.
 
 A property-budget probe runs alongside Phase 1 but does not block it. See Technical decisions.
 

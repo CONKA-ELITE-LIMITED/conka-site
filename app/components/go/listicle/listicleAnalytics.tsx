@@ -156,6 +156,43 @@ export function useListicleCta(): (section: string) => void {
 }
 
 /**
+ * Builds the `?src=` origin token for this page: `<slug>-<section>`.
+ *
+ * Returned as a plain string rather than applied to an href, because the mm
+ * template hands it to ProductGrid as a prop while the im8 template appends it
+ * to its own links.
+ */
+export function useListicleSrc(): (section: string) => string | undefined {
+  const ctx = useContext(SectionCtx);
+
+  return useCallback(
+    (section: string) => (ctx ? `${ctx.slug}-${section}` : undefined),
+    [ctx],
+  );
+}
+
+/**
+ * Appends the origin token to an outbound PDP link, so `purchase:add_to_cart`
+ * on the PDP can be attributed back to the section that produced the click.
+ *
+ * A URL param rather than sessionStorage: it survives new tabs, middle-clicks
+ * and back-navigation, where sessionStorage is fragile.
+ */
+export function useListicleHref(): (href: string, section: string) => string {
+  const srcFor = useListicleSrc();
+
+  return useCallback(
+    (href, section) => {
+      const src = srcFor(section);
+      if (!src) return href;
+      const separator = href.includes("?") ? "&" : "?";
+      return `${href}${separator}src=${encodeURIComponent(src)}`;
+    },
+    [srcFor],
+  );
+}
+
+/**
  * Marks one section. Renders a plain <div>, so pass the wrapper className the
  * block already had rather than nesting another element inside it.
  *

@@ -49,7 +49,21 @@ filter=eventName eq 'listicle:cta_clicked'
 
 `section_viewed` is the denominator for `cta_clicked`: without it a low click count cannot separate a weak section from a rarely-reached one. Divide one by the other to get a per-section click-through rate.
 
-Implementation is `app/components/go/listicle/listicleAnalytics.tsx`: one shared `IntersectionObserver` for the page, handed to blocks through context. `mm` buy boxes use click delegation so the shared home `ProductGrid` needs no tracking props; the `im8` buy zone fires on add-to-cart instead, because delegating there would count cadence toggles and accordions as CTA clicks.
+### Attributing the purchase
+
+Most listicle CTAs link out to a PDP, so the click and the eventual add-to-cart would otherwise be unrelated rows. Every outbound CTA carries an origin token, `?src=<slug>-<section>`, and the PDP feeds it into the `source` field of the existing `purchase:add_to_cart` event through `getPurchaseSource()`. No new purchase event.
+
+`source` is the right field because it already means "where did this visitor come from"; `location` keeps its existing job of saying where on the PDP they clicked (`hero` / `sticky_footer`).
+
+The im8 buy zone sells in place, so there is no URL to read: it tags `source` from context in the same `<slug>-<section>` format, so a listicle-originated purchase looks identical whether it closed on the listicle or on a PDP.
+
+Two guards worth knowing about: the token is sanitised on read (anything not matching `^[a-z0-9_-]{1,96}$` is discarded, since a URL param is attacker-controlled and would otherwise pollute the dashboard), and PDPs self-canonicalise from the root layout's relative `canonical: "./"`, which resolves on pathname only, so `?src=` creates no duplicate-content risk.
+
+The mm buy boxes pass the token to the shared home `ProductGrid` through an optional `linkSrc` prop. Unset, links are untouched, so the home page is unaffected.
+
+### Implementation
+
+`app/components/go/listicle/listicleAnalytics.tsx`: one shared `IntersectionObserver` for the page, handed to blocks through context. The slug lives only on the provider, so no call site can tag an event with the wrong page. `mm` buy boxes use click delegation so the shared home `ProductGrid` needs no tracking props; the `im8` buy zone fires on add-to-cart instead, because delegating there would count cadence toggles and accordions as CTA clicks.
 
 Plan and rationale: `docs/development/featurePlans/listicle-cta-attribution.md` (SCRUM-1177).
 

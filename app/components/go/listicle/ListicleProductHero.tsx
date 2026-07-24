@@ -8,10 +8,10 @@ import {
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import { getPurchaseSource, getQuizSessionId } from "@/app/lib/analytics";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
-import { SECTION, useListicleCta } from "./listicleAnalytics";
+import { SECTION, useListicleCta, useListicleSrc } from "./listicleAnalytics";
 
 /**
  * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV2 desktop /
@@ -26,6 +26,7 @@ export default function ListicleProductHero({
 }) {
   const isMobile = useIsMobile();
   const fireCta = useListicleCta();
+  const srcFor = useListicleSrc();
   const { addToCart } = useCart();
   const [selectedCadence, setSelectedCadence] =
     useState<CadenceType>("monthly-sub");
@@ -40,7 +41,10 @@ export default function ListicleProductHero({
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location: "listicle_buybox",
-        source: getAddToCartSource() === "quiz" ? "quiz" : "product_page",
+        // This buy zone sits on the listicle itself, so there is no ?src= in
+        // the URL to read. Tag it from context so an in-page purchase is
+        // attributed to the page, in the same format the PDP handoff uses.
+        source: srcFor(SECTION.product) ?? getPurchaseSource(),
         sessionId: getQuizSessionId(),
       });
     } else {

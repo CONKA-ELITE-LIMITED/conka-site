@@ -24,7 +24,7 @@ import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
-import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import { getPurchaseSource, getQuizSessionId } from "@/app/lib/analytics";
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 import {
   CadenceType,
@@ -70,7 +70,7 @@ export default function ConkaClarityPage() {
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location,
-        source: getAddToCartSource() === "quiz" ? "quiz" : "product_page",
+        source: getPurchaseSource(),
         sessionId: getQuizSessionId(),
       });
     } else {

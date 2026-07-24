@@ -463,6 +463,38 @@ export function getAddToCartSource(): string {
 }
 
 /**
+ * The `?src=` origin token a /go listicle appends to its outbound PDP links.
+ *
+ * Sanitised deliberately: this value lands in an analytics property straight
+ * from the URL, so anyone can put anything in it. Anything that is not a plain
+ * slug-and-section token is discarded rather than allowed to pollute the
+ * dashboard with junk dimensions.
+ */
+function getListicleSrc(): string | null {
+  if (typeof window === "undefined") return null;
+
+  const raw = new URLSearchParams(window.location.search).get("src");
+  if (!raw) return null;
+
+  return /^[a-z0-9_-]{1,96}$/i.test(raw) ? raw : null;
+}
+
+/**
+ * `source` for a purchase event: where this visitor came FROM, as opposed to
+ * `location`, which is where on the page they clicked.
+ *
+ * Precedence is most-specific-first. A listicle origin is the strongest signal
+ * available, because it names the exact page and section that produced the
+ * click, so it wins over the generic "product_page".
+ */
+export function getPurchaseSource(): string {
+  const listicle = getListicleSrc();
+  if (listicle) return listicle;
+
+  return getAddToCartSource() === "quiz" ? "quiz" : "product_page";
+}
+
+/**
  * Get quiz session ID if available
  */
 export function getQuizSessionId(): string | undefined {

@@ -25,7 +25,7 @@ import {
   CadenceType,
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
-import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import { getPurchaseSource, getQuizSessionId } from "@/app/lib/analytics";
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 
 const PRODUCT_HERO_ID = "03" as const;
@@ -62,7 +62,7 @@ export default function ConkaBothPage() {
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location,
-        source: getAddToCartSource() === "quiz" ? "quiz" : "product_page",
+        source: getPurchaseSource(),
         sessionId: getQuizSessionId(),
       });
     } else {

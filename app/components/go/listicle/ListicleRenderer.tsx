@@ -36,6 +36,7 @@ import {
   TrackedSection,
   sectionId,
   useListicleCta,
+  useListicleHref,
 } from "./listicleAnalytics";
 
 /**
@@ -566,6 +567,7 @@ export default function ListicleRenderer({
 function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   useHashScroll();
   const fireCta = useListicleCta();
+  const withSrc = useListicleHref();
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
   const buyHref = PDP_HREF[config.product.productHeroId ?? "03"];
@@ -626,7 +628,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               />
             ) : null}
             <Link
-              href={buyHref}
+              href={withSrc(buyHref, SECTION.hero)}
               onClick={() => fireCta(SECTION.hero)}
               className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
               style={{ background: NAVY }}
@@ -716,7 +718,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 {config.bridge.headline}
               </h3>
               <Link
-                href={buyHref}
+                href={withSrc(buyHref, SECTION.bridge)}
                 onClick={() => fireCta(SECTION.bridge)}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
@@ -803,7 +805,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               {config.stickyBar.label}
             </span>
             <Link
-              href={buyHref}
+              href={withSrc(buyHref, SECTION.sticky)}
               onClick={() => fireCta(SECTION.sticky)}
               className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
               style={{ background: NAVY }}
