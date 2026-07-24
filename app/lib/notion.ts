@@ -232,7 +232,12 @@ function snapshotPath(publishedOnly: boolean): string {
  * machine can draw the same number, and a temp dir keeps files for days, so
  * without an age check a local build could silently adopt a previous build's
  * blog. Silent staleness is the exact failure `notionBuildFetch` above exists to
- * prevent, so it is worth one `stat`. No build runs for an hour.
+ * prevent, so it is worth one `stat`.
+ *
+ * No build runs for an hour. One that did would expire its own snapshot mid-run
+ * and start reading again, which is the bug this file just fixed, so it is worth
+ * saying that it degrades loudly rather than silently: `assertConsistentSlugs`
+ * compares the second read against the first and fails the build.
  */
 const SNAPSHOT_MAX_AGE_MS = 60 * 60 * 1000;
 
@@ -288,7 +293,15 @@ async function publishSnapshot(
       await rename(temp, file);
     }
     return rows;
-  } catch {
+  } catch (err) {
+    // The snapshot could not be written at all, so every other worker will read
+    // Notion for itself. The build still works and stays consistent, but it has
+    // quietly lost the single-read guarantee, and the only symptom would be a
+    // query count that no longer says 1. Say so instead.
+    console.warn(
+      `[blog] could not write the build snapshot, falling back to a read per ` +
+        `worker: ${err instanceof Error ? err.message : String(err)}`,
+    );
     return (await readSnapshot(file)) ?? rows;
   } finally {
     // A successful `rename` already consumed the temp file, hence the catch.
@@ -326,11 +339,17 @@ async function awaitSnapshot(
       return readSnapshot(file);
     }
   }
+  // A holder that neither published nor released within the timeout is wedged.
+  // Reading Notion ourselves is the right recovery, but it is not normal.
+  console.warn(
+    `[blog] waited ${LOCK_TIMEOUT_MS}ms for another worker's Notion read and ` +
+      `gave up, reading it again here`,
+  );
   return null;
 }
 
 /** Per-process memo, so a worker touches the disk once rather than once a post. */
-const buildSnapshots = new Map<string, Promise<NotionRow[]>>();
+const buildSnapshots = new Map<boolean, Promise<NotionRow[]>>();
 
 /**
  * Elect one worker to do the reading.
@@ -388,11 +407,12 @@ const queryBlogRowsLive = cache(fetchBlogRows);
 export function queryBlogRows(publishedOnly: boolean): Promise<NotionRow[]> {
   if (!IS_BUILD) return queryBlogRowsLive(publishedOnly);
 
-  const key = String(publishedOnly);
-  let pending = buildSnapshots.get(key);
+  let pending = buildSnapshots.get(publishedOnly);
   if (!pending) {
+    // Memoised whether it settles or rejects: a Notion failure should surface
+    // once and stop the build, not be retried by all 58 posts in turn.
     pending = loadBuildSnapshot(publishedOnly);
-    buildSnapshots.set(key, pending);
+    buildSnapshots.set(publishedOnly, pending);
   }
   return pending;
 }
