@@ -10,6 +10,8 @@ interface ProductCardProps {
   productType: "flow" | "clear" | "protocol";
   /** Image aspect. Square for desktop/tablet cards, wide for mobile carousel. */
   imageAspect?: "square" | "wide";
+  /** Origin token appended to the PDP link as `?src=`. See ProductGridProps. */
+  linkSrc?: string;
 }
 
 interface Stat {
@@ -148,16 +150,23 @@ function CardRating({ rating, reviews }: { rating: number; reviews: string }) {
 export default function ProductCard({
   productType,
   imageAspect = "square",
+  linkSrc,
 }: ProductCardProps) {
   const product = getProductData(productType);
   const imageAspectClass =
     imageAspect === "wide" ? "aspect-[4/3]" : "aspect-square";
+  // Both the image and the CTA go to the same place, so tag them identically.
+  // Separator is computed rather than assumed: product links carry no query
+  // today, but hardcoding "?" would silently break the first one that does.
+  const href = linkSrc
+    ? `${product.link}${product.link.includes("?") ? "&" : "?"}src=${encodeURIComponent(linkSrc)}`
+    : product.link;
 
   return (
     <article className="flex flex-col h-full bg-white rounded-2xl overflow-hidden ring-1 ring-black/8">
       {/* Product image → PDP link */}
       <Link
-        href={product.link}
+        href={href}
         className={`relative block w-full ${imageAspectClass} overflow-hidden bg-[#eef1f8] group`}
       >
         <Image
@@ -220,7 +229,7 @@ export default function ProductCard({
         {/* CTA, pinned to bottom */}
         <div className="mt-6 w-full">
           <ConkaCTAButton
-            href={product.link}
+            href={href}
             meta={null}
             className="w-full max-w-none"
           >

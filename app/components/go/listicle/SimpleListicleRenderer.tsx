@@ -11,6 +11,13 @@ import LabFAQ from "@/app/components/landing/LabFAQ";
 import CitationLine from "@/app/components/landing/CitationLine";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
+import {
+  SECTION,
+  SectionImpressions,
+  TrackedSection,
+  sectionId,
+  useListicleSrc,
+} from "./listicleAnalytics";
 
 /**
  * Simple (Magic Mind) listicle template. An editorial "N reasons" article:
@@ -148,12 +155,15 @@ function SimpleReason({
  */
 function BuyBox({
   block,
+  linkSrc,
 }: {
   block: Extract<MmBodyBlock, { kind: "buyBox" }>;
+  linkSrc?: string;
 }) {
   return (
     <div className="my-12 md:my-16">
       <ProductGrid
+        linkSrc={linkSrc}
         header={{
           eyebrow: block.eyebrow,
           title: block.headline,
@@ -170,7 +180,18 @@ export default function SimpleListicleRenderer({
 }: {
   config: MmListicleConfig;
 }) {
+  // Split so the provider sits above the body: TrackedSection reads the shared
+  // observer from context, which has to be mounted by an ancestor.
+  return (
+    <SectionImpressions slug={config.slug}>
+      <SimpleListicleBody config={config} />
+    </SectionImpressions>
+  );
+}
+
+function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
   useHashScroll();
+  const srcFor = useListicleSrc();
 
   return (
     <main className="min-h-screen" style={{ background: BONE, color: "#111" }}>
@@ -186,16 +207,30 @@ export default function SimpleListicleRenderer({
         {config.body.map((block, i) => {
           if (block.kind === "reason")
             return (
-              <div key={i} className="mx-auto max-w-[820px]">
+              <TrackedSection
+                key={i}
+                section={sectionId(block.kind, i)}
+                className="mx-auto max-w-[820px]"
+              >
                 <SimpleReason block={block} />
-              </div>
+              </TrackedSection>
             );
           if (block.kind === "buyBox")
             // Break out of the 820px reading column to the home-page grid width.
+            // CTAs here belong to the shared ProductGrid, so clicks are picked
+            // up by delegation rather than a prop threaded through it.
             return (
-              <div key={i} className="brand-track">
-                <BuyBox block={block} />
-              </div>
+              <TrackedSection
+                key={i}
+                section={sectionId(block.kind, i)}
+                trackClicks
+                className="brand-track"
+              >
+                <BuyBox
+                  block={block}
+                  linkSrc={srcFor(sectionId(block.kind, i))}
+                />
+              </TrackedSection>
             );
           // The simple template only uses reason + buyBox blocks.
           return null;
@@ -222,9 +257,13 @@ export default function SimpleListicleRenderer({
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: TINT, color: "#111" }}
       >
-        <div className="brand-track">
-          <ProductGrid />
-        </div>
+        <TrackedSection
+          section={SECTION.product}
+          trackClicks
+          className="brand-track"
+        >
+          <ProductGrid linkSrc={srcFor(SECTION.product)} />
+        </TrackedSection>
       </section>
 
       {/* Proof tier: one named feature, then the UGC band before the FAQ */}

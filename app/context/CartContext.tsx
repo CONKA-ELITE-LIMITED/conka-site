@@ -12,7 +12,14 @@ const CART_ID_KEY = 'shopify_cart_id';
 
 interface AddToCartMetadata {
   location?: string;  // "hero", "sticky_footer", "results_page", "calendar", "product_grid"
-  source?: string;   // Canonical: "quiz" | "product_page" | "protocol_page" | "product_grid"
+  source?: string;   // Canonical: "quiz" | "product_page" | "protocol_page" | "product_grid" | "listicle"
+  /**
+   * Precise origin, e.g. a listicle's "<slug>-<section>". ANALYTICS ONLY:
+   * deliberately not added to the cart attributes below, because those go to
+   * Shopify as line item properties and any key not prefixed "_" is shown to
+   * the customer in checkout. Keep internal tokens off that surface.
+   */
+  origin?: string;
   sessionId?: string; // Quiz session ID
 }
 
@@ -237,7 +244,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               tier: productMetadata.tier,
               purchaseType: sellingPlanId ? "subscription" : "one-time",
               location: metadata?.location || "unknown",
-              source: metadata?.source || "direct",
+              // Prefer the precise origin; falls back to the coarse source.
+              // Property count is unchanged, so the event stays within budget.
+              source: metadata?.origin || metadata?.source || "direct",
               price: parseFloat(merchandise.price.amount),
               sessionId: metadata?.sessionId,
             });

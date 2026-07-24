@@ -24,7 +24,11 @@ import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
-import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import {
+  getPurchaseOrigin,
+  getPurchaseSource,
+  getQuizSessionId,
+} from "@/app/lib/analytics";
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 import {
   CadenceType,
@@ -68,7 +72,8 @@ export default function ConkaFlowPage() {
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location,
-        source: getAddToCartSource() === "quiz" ? "quiz" : "product_page",
+        source: getPurchaseSource(),
+        origin: getPurchaseOrigin(),
         sessionId: getQuizSessionId(),
       });
     } else {

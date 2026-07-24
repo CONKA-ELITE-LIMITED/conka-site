@@ -13,7 +13,7 @@ const ALL_CARDS = [
 ];
 
 export default function ProductGridMobile(props?: ProductGridProps) {
-  const { exclude = [], hideHeading = false, header } = props ?? {};
+  const { exclude = [], hideHeading = false, header, linkSrc } = props ?? {};
   const visibleCards = ALL_CARDS.filter(
     (c) => !exclude.includes(c.productType),
   );
@@ -123,6 +123,7 @@ export default function ProductGridMobile(props?: ProductGridProps) {
             <ProductCard
               productType={card.productType}
               imageAspect="wide"
+              linkSrc={linkSrc}
             />
           </div>
         ))}

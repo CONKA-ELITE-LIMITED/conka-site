@@ -30,6 +30,14 @@ import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
 import { useHashScroll } from "./useHashScroll";
+import {
+  SECTION,
+  SectionImpressions,
+  TrackedSection,
+  sectionId,
+  useListicleCta,
+  useListicleHref,
+} from "./listicleAnalytics";
 
 /**
  * Listicle landing renderer (/go/[slug], format: "listicle"), IM8 template.
@@ -547,7 +555,19 @@ export default function ListicleRenderer({
 }: {
   config: Im8ListicleConfig;
 }) {
+  // Split so the provider sits above the body: TrackedSection reads the shared
+  // observer from context, which has to be mounted by an ancestor.
+  return (
+    <SectionImpressions slug={config.slug}>
+      <ListicleBody config={config} />
+    </SectionImpressions>
+  );
+}
+
+function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   useHashScroll();
+  const fireCta = useListicleCta();
+  const withSrc = useListicleHref();
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
   const buyHref = PDP_HREF[config.product.productHeroId ?? "03"];
@@ -608,7 +628,8 @@ export default function ListicleRenderer({
               />
             ) : null}
             <Link
-              href={buyHref}
+              href={withSrc(buyHref, SECTION.hero)}
+              onClick={() => fireCta(SECTION.hero)}
               className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
               style={{ background: NAVY }}
             >
@@ -670,7 +691,9 @@ export default function ListicleRenderer({
         <div className="mx-auto max-w-7xl">
           {config.body.map((block, i) => (
             <Fragment key={i}>
-              <BodyBlock block={block} index={i} />
+              <TrackedSection section={sectionId(block.kind, i)}>
+                <BodyBlock block={block} index={i} />
+              </TrackedSection>
               {/* World's-largest laurel badge, relocated out of the hero to sit
                   under point 1 so the hero title + CTA sit higher. */}
               {i === 0 && config.hero.laurel ? (
@@ -684,7 +707,10 @@ export default function ListicleRenderer({
             </Fragment>
           ))}
           {config.bridge ? (
-            <div
+            // Tracked so the bridge CTA has a denominator: unlike the hero and
+            // sticky bar it is a mid-page block that can be scrolled past.
+            <TrackedSection
+              section={SECTION.bridge}
               className="mt-10 rounded-[16px] px-8 py-14 text-center"
               style={{ background: DARK, color: "#fff" }}
             >
@@ -692,12 +718,13 @@ export default function ListicleRenderer({
                 {config.bridge.headline}
               </h3>
               <Link
-                href={buyHref}
+                href={withSrc(buyHref, SECTION.bridge)}
+                onClick={() => fireCta(SECTION.bridge)}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
               </Link>
-            </div>
+            </TrackedSection>
           ) : null}
         </div>
       </section>
@@ -722,9 +749,9 @@ export default function ListicleRenderer({
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: "#fff", color: "#111" }}
       >
-        <div className="mx-auto max-w-6xl">
+        <TrackedSection section={SECTION.product} className="mx-auto max-w-6xl">
           <ListicleProductHero productHeroId={config.product.productHeroId} />
-        </div>
+        </TrackedSection>
       </section>
 
       {/* Zone 4: proof tier — one named feature, then the UGC band last so it
@@ -778,7 +805,8 @@ export default function ListicleRenderer({
               {config.stickyBar.label}
             </span>
             <Link
-              href={buyHref}
+              href={withSrc(buyHref, SECTION.sticky)}
+              onClick={() => fireCta(SECTION.sticky)}
               className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
               style={{ background: NAVY }}
             >

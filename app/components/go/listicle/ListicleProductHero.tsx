@@ -8,9 +8,10 @@ import {
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import { getQuizSessionId } from "@/app/lib/analytics";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import { SECTION, useListicleCta, useListicleSrc } from "./listicleAnalytics";
 
 /**
  * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV2 desktop /
@@ -24,16 +25,27 @@ export default function ListicleProductHero({
   productHeroId?: ProductHeroId;
 }) {
   const isMobile = useIsMobile();
+  const fireCta = useListicleCta();
+  const srcFor = useListicleSrc();
   const { addToCart } = useCart();
   const [selectedCadence, setSelectedCadence] =
     useState<CadenceType>("monthly-sub");
 
   const handleAddToCart = async (cadence: CadenceType = selectedCadence) => {
+    // Fired here rather than by click delegation on the section: this zone is
+    // full of cadence toggles and accordions, so delegating every button click
+    // would wildly over-count. Intent to buy is the add-to-cart itself.
+    fireCta(SECTION.product);
+
     const variantData = getCadenceVariantByProductHeroId(productHeroId, cadence);
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {
         location: "listicle_buybox",
-        source: getAddToCartSource() === "quiz" ? "quiz" : "product_page",
+        // This buy zone sits on the listicle itself, so there is no ?src= in
+        // the URL to read; both values come from context instead. The precise
+        // token goes to analytics only, never to Shopify.
+        source: "listicle",
+        origin: srcFor(SECTION.product),
         sessionId: getQuizSessionId(),
       });
     } else {

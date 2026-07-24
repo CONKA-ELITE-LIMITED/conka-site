@@ -14,10 +14,16 @@ export interface ProductGridProps {
   hideHeading?: boolean;
   /** Override the default offer-header copy (eyebrow / title / subline / offer). */
   header?: ProductGridHeaderProps;
+  /**
+   * Origin token appended to every card link as `?src=`, so the PDP can
+   * attribute a purchase back to where the click came from. Set by the /go
+   * listicles; unset everywhere else, which leaves links untouched.
+   */
+  linkSrc?: string;
 }
 
 export default function ProductGrid(props?: ProductGridProps) {
-  const { exclude = [], hideHeading = false, header } = props ?? {};
+  const { exclude = [], hideHeading = false, header, linkSrc } = props ?? {};
   const [width, setWidth] = useState<number | undefined>(undefined);
 
   useEffect(() => {
@@ -37,6 +43,7 @@ export default function ProductGrid(props?: ProductGridProps) {
         exclude={exclude}
         hideHeading={hideHeading}
         header={header}
+        linkSrc={linkSrc}
       />
     );
   }
@@ -47,6 +54,7 @@ export default function ProductGrid(props?: ProductGridProps) {
         exclude={exclude}
         hideHeading={hideHeading}
         header={header}
+        linkSrc={linkSrc}
       />
     );
   }
@@ -58,19 +66,19 @@ export default function ProductGrid(props?: ProductGridProps) {
 
         <div className="grid grid-cols-3 gap-6 items-stretch">
           {showProtocol ? (
-            <ProductCard productType="protocol" />
+            <ProductCard productType="protocol" linkSrc={linkSrc} />
           ) : (
             <div aria-hidden="true" />
           )}
 
           {showFlow ? (
-            <ProductCard productType="flow" />
+            <ProductCard productType="flow" linkSrc={linkSrc} />
           ) : (
             <div aria-hidden="true" />
           )}
 
           {showClear ? (
-            <ProductCard productType="clear" />
+            <ProductCard productType="clear" linkSrc={linkSrc} />
           ) : (
             <div aria-hidden="true" />
           )}

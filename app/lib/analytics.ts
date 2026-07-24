@@ -134,6 +134,47 @@ export function trackLandingCtaClicked(
   safeTrack("landing:cta_clicked", params);
 }
 
+// ===== LISTICLE TRACKING (/go/[slug], format: "listicle") =====
+
+/**
+ * Listicle events carry EXACTLY two properties, respecting the two-property
+ * budget documented under FUNNEL TRACKING below: `slug` (which page) and
+ * `section` (which part of it).
+ *
+ * The CTA's position is folded INTO `section` rather than sent as a third
+ * property, and nothing is packed into a delimited string. That means one
+ * query grouped by `eventData/slug` + `eventData/section` returns the whole
+ * matrix with no post-processing:
+ *
+ *   by=["eventData/slug","eventData/section"]
+ *   filter=eventName eq 'listicle:cta_clicked'
+ *
+ * Section ids are produced by `sectionId()` / `SECTION` in
+ * app/components/go/listicle/listicleAnalytics.tsx.
+ */
+interface ListicleEventBase {
+  /** Landing slug, e.g. "adhd-listicle" */
+  slug: string;
+  /** Body block ("reason_3") or fixed zone ("hero", "bridge", "sticky") */
+  section: string;
+}
+
+/**
+ * Fires once per section per pageview, when that section scrolls into view.
+ *
+ * This is the DENOMINATOR for the click event. Without it, clicks per section
+ * mostly measure how many people scrolled far enough to reach the section, so
+ * a low count cannot separate a weak section from a rarely-reached one.
+ */
+export function trackListicleSectionViewed(params: ListicleEventBase): void {
+  safeTrack("listicle:section_viewed", params);
+}
+
+/** Fires on CTA click, tagged with the section that carried the CTA. */
+export function trackListicleCtaClicked(params: ListicleEventBase): void {
+  safeTrack("listicle:cta_clicked", params);
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**
@@ -419,6 +460,49 @@ export function getAddToCartSource(): string {
   
   // Default
   return "direct";
+}
+
+/**
+ * The `?src=` origin token a /go listicle appends to its outbound PDP links.
+ *
+ * Sanitised deliberately: this value lands in an analytics property straight
+ * from the URL, so anyone can put anything in it. Anything that is not a plain
+ * slug-and-section token is discarded rather than allowed to pollute the
+ * dashboard with junk dimensions.
+ */
+function getListicleSrc(): string | null {
+  if (typeof window === "undefined") return null;
+
+  const raw = new URLSearchParams(window.location.search).get("src");
+  if (!raw) return null;
+
+  return /^[a-z0-9_-]{1,96}$/i.test(raw) ? raw : null;
+}
+
+/**
+ * Coarse `source` for a purchase: where this visitor came FROM, as opposed to
+ * `location`, which is where on the page they clicked.
+ *
+ * Deliberately coarse, because CartContext writes this to Shopify as a cart
+ * line item property, and a property whose key does not start with "_" is
+ * shown to the customer in checkout. Only clean, canonical values belong here.
+ * The specific page and section go in `getPurchaseOrigin`, which stays
+ * client-side.
+ */
+export function getPurchaseSource(): string {
+  if (getListicleSrc()) return "listicle";
+
+  return getAddToCartSource() === "quiz" ? "quiz" : "product_page";
+}
+
+/**
+ * The exact `<slug>-<section>` that produced the click, for analytics only.
+ *
+ * Never written to Shopify: see getPurchaseSource. Undefined when the visitor
+ * did not arrive from a listicle.
+ */
+export function getPurchaseOrigin(): string | undefined {
+  return getListicleSrc() ?? undefined;
 }
 
 /**
