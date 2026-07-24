@@ -4,7 +4,6 @@ import Footer from "@/app/components/footer";
 import { WhyConkaHero } from "@/app/components/why-conka/WhyConkaHero";
 import WhyConkaReasons from "@/app/components/why-conka/WhyConkaReasons";
 import { WhyConkaCTA } from "@/app/components/why-conka/WhyConkaCTA";
-import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
   title: "Why CONKA | Seven Reasons in Sixty Seconds",
@@ -17,43 +16,50 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Laid out as an MM-template listicle article: one bone canvas, a single 820px
+ * reading column, and flat numbered reasons. The page keeps its own nav, footer
+ * and indexable metadata; it does not go through the /go listicle config or
+ * renderer, so none of that page's analytics or noindex behaviour applies here.
+ *
+ * `.brand-clinical` is deliberately absent: the MM template is Simple DTC
+ * (rounded assets, sans throughout, no mono micro-labels).
+ */
+const BONE = "var(--color-bone, #F9F9F9)";
+
 export default function WhyConkaPage() {
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen" style={{ background: BONE, color: "#111" }}>
       <Navigation />
 
-      {/* Hero — paddingTop: .brand-clinical zeros brand-hero-first padding on
-          mobile, leaving the hero flush against the nav. */}
-      <section
-        className="brand-section brand-hero-first brand-bg-white"
-        style={{ paddingTop: "5rem", paddingBottom: "2rem" }}
-        aria-labelledby="why-conka-hero-heading"
-      >
-        <div className="brand-track">
-          <WhyConkaHero />
-        </div>
-      </section>
+      <main>
+        <section
+          aria-labelledby="why-conka-hero-heading"
+          className="px-5 pt-10 md:px-[5vw] md:pt-16"
+        >
+          <div className="mx-auto max-w-[820px]">
+            <WhyConkaHero />
+          </div>
+        </section>
 
-      {/* The 7 proof cards */}
-      <section
-        className="brand-section brand-bg-tint"
-        aria-label="Seven reasons to choose CONKA"
-      >
-        <div className="brand-track">
-          <WhyConkaReasons />
-        </div>
-      </section>
+        <section
+          aria-label="Seven reasons to choose CONKA"
+          className="px-5 pb-8 md:px-[5vw]"
+        >
+          <div className="mx-auto max-w-[820px]">
+            <WhyConkaReasons />
+          </div>
+        </section>
 
-      {/* Final CTA + explore routing */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Try CONKA"
-      >
-        <div className="brand-track">
-          <WhyConkaCTA />
-          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onLight" divider />
-        </div>
-      </section>
+        <section
+          aria-label="Try CONKA"
+          className="px-5 pb-16 md:px-[5vw] md:pb-24"
+        >
+          <div className="mx-auto max-w-[820px]">
+            <WhyConkaCTA />
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-24** | /why-conka relaid out as an editorial listicle article: flat numbered reasons with the asset beside the copy, no accordion
 - **2026-07-24** | Footer rebuilt in Simple DTC style (sans typography, 4 columns, company details, socials, disclaimer strip) and new /disclaimer page covering UK/EU supplement wording plus a US-scoped FDA section
 - **2026-07-23** | Moved the press marquee into the app-proof reason (and the reviews below it) on the brain-ageing and productivity listicles, matching ADHD; removed the duplicate press band above the buy box
 - **2026-07-23** | Restructured the listicle proof: logo band above the buy box (large title), UGC before the FAQ (sharp tiles), dropped the review rail; reorganised the ADHD symptom explainer and removed its disclaimer
