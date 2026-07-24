@@ -8,9 +8,14 @@ import {
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
+import {
+  getAddToCartSource,
+  getQuizSessionId,
+  trackListicleCtaClicked,
+} from "@/app/lib/analytics";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import { SECTION } from "./listicleAnalytics";
 
 /**
  * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV2 desktop /
@@ -20,8 +25,11 @@ import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
  */
 export default function ListicleProductHero({
   productHeroId = "03",
+  slug,
 }: {
   productHeroId?: ProductHeroId;
+  /** Landing slug, for buy-zone CTA attribution. Omit outside a listicle. */
+  slug?: string;
 }) {
   const isMobile = useIsMobile();
   const { addToCart } = useCart();
@@ -29,6 +37,11 @@ export default function ListicleProductHero({
     useState<CadenceType>("monthly-sub");
 
   const handleAddToCart = async (cadence: CadenceType = selectedCadence) => {
+    // Fired here rather than by click delegation on the section: this zone is
+    // full of cadence toggles and accordions, so delegating every button click
+    // would wildly over-count. Intent to buy is the add-to-cart itself.
+    if (slug) trackListicleCtaClicked({ slug, section: SECTION.product });
+
     const variantData = getCadenceVariantByProductHeroId(productHeroId, cadence);
     if (variantData?.variantId) {
       await addToCart(variantData.variantId, 1, variantData.sellingPlanId, {

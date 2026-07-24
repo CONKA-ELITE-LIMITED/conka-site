@@ -134,6 +134,47 @@ export function trackLandingCtaClicked(
   safeTrack("landing:cta_clicked", params);
 }
 
+// ===== LISTICLE TRACKING (/go/[slug], format: "listicle") =====
+
+/**
+ * Listicle events carry EXACTLY two properties, respecting the two-property
+ * budget documented under FUNNEL TRACKING below: `slug` (which page) and
+ * `section` (which part of it).
+ *
+ * The CTA's position is folded INTO `section` rather than sent as a third
+ * property, and nothing is packed into a delimited string. That means one
+ * query grouped by `eventData/slug` + `eventData/section` returns the whole
+ * matrix with no post-processing:
+ *
+ *   by=["eventData/slug","eventData/section"]
+ *   filter=eventName eq 'listicle:cta_clicked'
+ *
+ * Section ids are produced by `sectionId()` / `SECTION` in
+ * app/components/go/listicle/listicleAnalytics.tsx.
+ */
+interface ListicleEventBase {
+  /** Landing slug, e.g. "adhd-listicle" */
+  slug: string;
+  /** Body block ("reason_3") or fixed zone ("hero", "bridge", "sticky") */
+  section: string;
+}
+
+/**
+ * Fires once per section per pageview, when that section scrolls into view.
+ *
+ * This is the DENOMINATOR for the click event. Without it, clicks per section
+ * mostly measure how many people scrolled far enough to reach the section, so
+ * a low count cannot separate a weak section from a rarely-reached one.
+ */
+export function trackListicleSectionViewed(params: ListicleEventBase): void {
+  safeTrack("listicle:section_viewed", params);
+}
+
+/** Fires on CTA click, tagged with the section that carried the CTA. */
+export function trackListicleCtaClicked(params: ListicleEventBase): void {
+  safeTrack("listicle:cta_clicked", params);
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**
