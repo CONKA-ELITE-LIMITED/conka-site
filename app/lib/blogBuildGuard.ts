@@ -15,7 +15,7 @@ import "server-only";
 /**
  * The published-post count must not drop below this or the build fails.
  *
- * 55 posts are published today. 40 is low enough not to trip on a handful of
+ * 58 posts are published today. 40 is low enough not to trip on a handful of
  * deliberate unpublishes, and high enough that a mass-unpublish or a thin read
  * (a race returning a near-empty snapshot) cannot quietly ship an empty blog.
  * Raise it as the archive grows; it is a floor, not a target.
@@ -37,10 +37,14 @@ let firstSeen: Set<string> | null = null;
 
 /**
  * Assert that the published-slug set has not changed since the first read this
- * build. Notion is eventually consistent right after a write, and `react.cache`
- * dedupes per request, not per build, so `generateStaticParams`, each post
- * render, and the sitemap can each observe a different snapshot. Nothing throws,
- * because nothing failed: only this comparison catches the disagreement.
+ * build. Notion is eventually consistent right after a write, so two reads could
+ * observe different snapshots and neither would throw: nothing failed, so only
+ * this comparison catches the disagreement.
+ *
+ * Since SCRUM-1179 a build reads the set once and shares it with every worker,
+ * so within a build there is no second read to disagree. This is now a backstop
+ * on that sharing rather than the thing standing between the blog and a baked-in
+ * 404, and it costs a set comparison to keep.
  *
  * The first call records the snapshot; every later call compares against it.
  */
@@ -64,6 +68,16 @@ export function assertConsistentSlugs(slugs: string[]): void {
       `  present at first read, gone now: ${missing.join(", ") || "(none)"}\n` +
       `  absent at first read, here now: ${added.join(", ") || "(none)"}`,
   );
+}
+
+/**
+ * How many slugs the first read in this process saw, or null before that read.
+ * For diagnostics only: it is the closest thing a worker has to "what the build
+ * expected", since `generateStaticParams` may have run elsewhere (SCRUM-1179).
+ * The count rather than the set, so the baseline cannot be mutated from outside.
+ */
+export function firstSeenSlugCount(): number | null {
+  return firstSeen?.size ?? null;
 }
 
 /**

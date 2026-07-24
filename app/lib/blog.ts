@@ -16,7 +16,11 @@ import {
   pageToMarkdown,
   type NotionRow,
 } from "./notion";
-import { assertConsistentSlugs, assertPostFloor } from "./blogBuildGuard";
+import {
+  assertConsistentSlugs,
+  assertPostFloor,
+  firstSeenSlugCount,
+} from "./blogBuildGuard";
 import {
   cleanBody,
   extractFaq,
@@ -240,6 +244,46 @@ export async function getRelatedPosts(
     .sort((a, b) => b.shared - a.shared || a.index - b.index)
     .slice(0, limit)
     .map(({ post }) => post);
+}
+
+/**
+ * Why `getPostBySlug` returned null, in terms of what was observed rather than a
+ * cause assumed in advance (SCRUM-1179).
+ *
+ * The old message named one culprit, "the published set changed mid-build", for
+ * a null that has three quite different origins. Report the row counts and which
+ * branch actually fired, so the next failure is diagnosed from its own output
+ * instead of from a hypothesis.
+ *
+ * Cheap to call: the row set is memoised for the build, so this re-reads nothing.
+ * Deliberately skips `runBuildGuards`: a guard throwing here would replace the
+ * diagnosis with its own error, and the guards have already run on this set.
+ */
+export async function diagnoseMissingPost(
+  slug: string,
+  opts: { includeUnpublished?: boolean } = {},
+): Promise<string> {
+  const publishedOnly = !isPreview(Boolean(opts.includeUnpublished));
+  const rows = await queryBlogRows(publishedOnly);
+  const slugs = publishedSlugs(rows);
+  const baseline = firstSeenSlugCount();
+  const counts =
+    `${rows.length} rows read, ${slugs.length} with a slug` +
+    (baseline === null ? "" : `; first read in this worker saw ${baseline}`);
+
+  if (rows.some((r) => readRichText(r.properties, "Slug") === slug)) {
+    return (
+      `the row is present but failed validation, so it has a missing title, ` +
+      `slug or Meta description. See the "[blog] skipping row" warning above ` +
+      `for which. This is a content defect, not a race (${counts}).`
+    );
+  }
+
+  return (
+    `the slug is absent from the row set (${counts}). The set is read once per ` +
+    `build and shared by every worker, so this is the Blog Hub genuinely not ` +
+    `carrying the slug at read time, not two reads disagreeing.`
+  );
 }
 
 /** A single post with its render-ready body and parsed FAQ, or null. */

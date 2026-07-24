@@ -7,7 +7,12 @@ import Footer from "@/app/components/footer";
 import MarkdownBody from "@/app/components/blog/MarkdownBody";
 import ProductCTA from "@/app/components/blog/ProductCTA";
 import RelatedPosts from "@/app/components/blog/RelatedPosts";
-import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/app/lib/blog";
+import {
+  diagnoseMissingPost,
+  getAllPosts,
+  getPostBySlug,
+  getRelatedPosts,
+} from "@/app/lib/blog";
 import { formatBlogDate } from "@/app/lib/blogTransform";
 import { JsonLd, buildBlogPostingSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
@@ -63,14 +68,17 @@ export default async function BlogArticlePage({
   if (!post) {
     if (process.env.NODE_ENV === "production") {
       // dynamicParams is false, so in a production build this slug came from
-      // generateStaticParams. A null here is not a missing page: it is
-      // generateStaticParams and getPostBySlug disagreeing mid-build about which
-      // posts exist (SCRUM-1163, defect 1). Fail the build rather than bake a
-      // 404 into a live post; a rebuild once Notion has settled is correct.
+      // generateStaticParams. A null here is not a missing page (SCRUM-1163,
+      // defect 1), so fail the build rather than bake a 404 into a live post.
+      // The diagnosis says what was actually observed instead of asserting a
+      // cause, which the old message did wrongly enough to send SCRUM-1179
+      // hunting a race that a content defect can also produce.
       throw new Error(
         `[blog] getPostBySlug("${slug}") returned null for a slug that ` +
-          "generateStaticParams enumerated. The published set changed mid-build; " +
-          "refusing to prerender a 404 for a live post.",
+          `generateStaticParams enumerated, and ${await diagnoseMissingPost(
+            slug,
+            PREVIEW,
+          )} Refusing to prerender a 404 for a live post.`,
       );
     }
     notFound();

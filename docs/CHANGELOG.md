@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-24** | Fixed the intermittent blog build failure by reading the Notion post list once per build and sharing it across workers, and made the failure message report what it observed
 - **2026-07-24** | Science and CONKA App nav menus now use the same lifted product-tile treatment as the Shop menu
 - **2026-07-24** | /why-conka now closes on the shared ProductGrid instead of its own bespoke CTA card
 - **2026-07-24** | /why-conka relaid out as an editorial listicle article: flat numbered reasons with the asset beside the copy, no accordion
