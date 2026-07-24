@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Laid out as an MM-template listicle article: one bone canvas, a single 820px
+ * Laid out as an MM-template listicle article: one flat canvas, a single 820px
  * reading column, and flat numbered reasons. The page keeps its own nav, footer
  * and indexable metadata; it does not go through the /go listicle config or
  * renderer, so none of that page's analytics or noindex behaviour applies here.

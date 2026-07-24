@@ -73,7 +73,7 @@ export default function WhyConkaReasons() {
               {reason.stat && (
                 <p
                   className="mt-3 max-w-[36rem] text-[15px] font-semibold leading-relaxed"
-                  style={{ color: "#1a7f4f" }}
+                  style={{ color: "var(--brand-positive)" }}
                 >
                   {reason.stat.value} {reason.stat.caption}
                 </p>
