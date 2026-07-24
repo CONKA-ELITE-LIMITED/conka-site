@@ -50,7 +50,7 @@ export default function ShopMegaMenu({
                 // flex-col, not block: the grid stretches every tile to the
                 // tallest, so the footer has to grow into that height or a
                 // shorter tagline leaves bare card below the hover fill.
-                className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
+                className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
               >
                 <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <Image

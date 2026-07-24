@@ -48,7 +48,13 @@ export default function WhyConkaReasons() {
                   src={reason.asset}
                   alt={reason.assetAlt}
                   fill
+                  // fetchPriority is explicit because Next's SSR does not
+                  // always emit it from `priority` alone; below-fold images
+                  // state loading="lazy" explicitly. Both per
+                  // PERFORMANCE_OPTIMISATION.md rule 3.
                   priority={isFirst}
+                  fetchPriority={isFirst ? "high" : "auto"}
+                  loading={isFirst ? undefined : "lazy"}
                   sizes="(max-width: 768px) 100vw, 350px"
                   className={
                     reason.assetFit === "contain"

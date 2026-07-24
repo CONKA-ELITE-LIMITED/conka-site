@@ -58,7 +58,10 @@ export default function NavGroupMegaMenu({
               // tallest, so the footer has to grow into that height. Left as a
               // block, a one-line description leaves bare card below the
               // footer, which shows up as a white bar under the navy hover.
-              className="group flex w-[260px] flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#1B2757] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
+              // transition-[transform,box-shadow], not transition-all: the
+              // hover moves transform and the ring (a box-shadow). Naming them
+              // is required by PERFORMANCE_OPTIMISATION.md rule 1.
+              className="group flex w-[260px] flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/10 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#1B2757] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
             >
               <div
                 className={`relative aspect-square overflow-hidden ${
