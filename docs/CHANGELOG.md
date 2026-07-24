@@ -5,6 +5,10 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-24** | Science and CONKA App nav menus now use the same lifted product-tile treatment as the Shop menu
+- **2026-07-24** | /why-conka now closes on the shared ProductGrid instead of its own bespoke CTA card
+- **2026-07-24** | /why-conka relaid out as an editorial listicle article: flat numbered reasons with the asset beside the copy, no accordion
+- **2026-07-24** | Footer rebuilt in Simple DTC style (sans typography, 4 columns, company details, socials, disclaimer strip) and new /disclaimer page covering UK/EU supplement wording plus a US-scoped FDA section
 - **2026-07-23** | Moved the press marquee into the app-proof reason (and the reviews below it) on the brain-ageing and productivity listicles, matching ADHD; removed the duplicate press band above the buy box
 - **2026-07-23** | Restructured the listicle proof: logo band above the buy box (large title), UGC before the FAQ (sharp tiles), dropped the review rail; reorganised the ADHD symptom explainer and removed its disclaimer
 - **2026-07-23** | Repositioned the ADHD listicle to sell Flow (Flow PDP CTAs, Flow buy box + video, Flow-only symptom explainer) and added the press marquee to the app-proof reason

@@ -47,7 +47,10 @@ export default function ShopMegaMenu({
                 href={product.href}
                 onClick={onClose}
                 aria-label={product.alt}
-                className="group relative block overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
+                // flex-col, not block: the grid stretches every tile to the
+                // tallest, so the footer has to grow into that height or a
+                // shorter tagline leaves bare card below the hover fill.
+                className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-transparent transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-white"
               >
                 <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <Image
@@ -58,7 +61,7 @@ export default function ShopMegaMenu({
                     sizes="(max-width: 1024px) 33vw, 300px"
                   />
                 </div>
-                <div className="relative border-t border-black/10 px-4 pb-4 pt-7 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
+                <div className="relative flex-1 border-t border-black/10 px-4 pb-4 pt-7 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
                   {/* Straddles the image/footer separator, centred. */}
                   <span
                     className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none ${TIME_OF_DAY_BADGE[product.badge]}`}

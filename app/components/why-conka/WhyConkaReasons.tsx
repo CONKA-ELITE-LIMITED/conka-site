@@ -1,134 +1,95 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 import { whyConkaReasons } from "@/app/lib/whyConkaData";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
 
 /* ============================================================================
- * WhyConkaReasons — the 7 proof cards.
+ * WhyConkaReasons — the 7 proof cards, rendered in the MM listicle grammar
+ * (app/components/go/listicle/SimpleListicleRenderer.tsx SimpleReason).
  *
- * Collapsed: number, outcome-led headline, one line, asset thumbnail, and a
- * compact mono Learn-more affordance. The whole page reads in ~60 seconds
- * collapsed. Expanded: larger asset, headline stat, and the story prose.
+ * Every reason is flat and open: no accordion. Mobile stacks heading → image →
+ * body; desktop is a two-column row with the asset held to a fixed 350px so it
+ * does not scale up from its mobile size. The heading renders twice and toggles
+ * per breakpoint so it sits above the image on mobile but beside it on desktop.
  *
- * Same expandable-card grammar as the PDP benefits pillars.
+ * Now a server component: dropping the expand/collapse state removed the only
+ * reason this needed to be a client component.
+ *
+ * The classes are duplicated from SimpleListicleRenderer rather than shared,
+ * so the live paid /go listicle is untouched by changes here.
  * ========================================================================== */
 
 export default function WhyConkaReasons() {
-  const [expandedId, setExpandedId] = useState<number | null>(null);
-  const total = whyConkaReasons.length;
-  const totalPadded = String(total).padStart(2, "0");
-
   return (
-    <div className="grid grid-cols-1 gap-4 max-w-3xl">
-      {whyConkaReasons.map((reason) => {
-        const isExpanded = expandedId === reason.id;
-        const number = String(reason.id).padStart(2, "0");
-        const panelId = `why-conka-reason-${reason.id}`;
+    <div>
+      {whyConkaReasons.map((reason, index) => {
+        // The hero carries no image, so reason 1's asset is the likely LCP
+        // element. Everything below it stays lazy.
+        const isFirst = index === 0;
+        const heading = (
+          <>
+            <span className="tabular-nums">{reason.id}.</span> {reason.headline}
+          </>
+        );
 
         return (
           <article
             key={reason.id}
-            className="bg-white border border-black/12"
+            className="py-8 md:grid md:grid-cols-[minmax(0,350px)_minmax(0,1fr)] md:items-center md:gap-10 md:py-10"
           >
-            {/* Card body — heading lives OUTSIDE the toggle button (valid
-                HTML: buttons can't contain headings). The [+] Learn more
-                row below is the interactive element. */}
-            <div className="px-5 pt-5 lg:px-6 lg:pt-6 flex gap-4 lg:gap-5">
-              {/* Asset thumbnail — collapsed state */}
-              {!isExpanded && (
-                <span className="relative w-20 h-20 lg:w-24 lg:h-24 shrink-0 border border-black/8 overflow-hidden bg-white block">
-                  <Image
-                    src={reason.asset}
-                    alt=""
-                    fill
-                    loading="lazy"
-                    sizes="96px"
-                    className={
-                      reason.assetFit === "contain"
-                        ? "object-contain p-1"
-                        : "object-cover"
-                    }
-                  />
-                </span>
-              )}
+            {/* Heading above the image — mobile only */}
+            <h2 className="mb-4 text-[22px] font-bold leading-[1.2] text-black md:hidden">
+              {heading}
+            </h2>
 
-              <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
-                  {number} / {totalPadded}
-                </span>
-                <h2
-                  className="text-xl lg:text-2xl font-semibold text-black leading-tight"
-                  style={{ letterSpacing: "-0.01em" }}
-                >
-                  {reason.headline}
-                </h2>
-                <p className="text-sm lg:text-base text-black/70 leading-snug">
-                  {reason.oneLine}
-                </p>
+            {/* Photo — squarish corners for the editorial look */}
+            <div>
+              <div className="relative w-full overflow-hidden rounded-[8px] aspect-[4/3]">
+                <Image
+                  src={reason.asset}
+                  alt={reason.assetAlt}
+                  fill
+                  // fetchPriority is explicit because Next's SSR does not
+                  // always emit it from `priority` alone; below-fold images
+                  // state loading="lazy" explicitly. Both per
+                  // PERFORMANCE_OPTIMISATION.md rule 3.
+                  priority={isFirst}
+                  fetchPriority={isFirst ? "high" : "auto"}
+                  loading={isFirst ? undefined : "lazy"}
+                  sizes="(max-width: 768px) 100vw, 350px"
+                  className={
+                    reason.assetFit === "contain"
+                      ? "object-contain"
+                      : "object-cover"
+                  }
+                />
               </div>
             </div>
 
-            {/* Toggle — full-width row, 44px tap target */}
-            <button
-              type="button"
-              onClick={() =>
-                setExpandedId(isExpanded ? null : reason.id)
-              }
-              aria-expanded={isExpanded}
-              aria-controls={panelId}
-              className="w-full text-left px-5 lg:px-6 pb-4 pt-2 inline-flex items-center gap-1.5 min-h-[44px] font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50 hover:text-black transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]/40 focus-visible:ring-offset-2"
-            >
-              <span className="tabular-nums">
-                {isExpanded ? "[−]" : "[+]"}
-              </span>
-              <span>{isExpanded ? "Show less" : "Learn more"}</span>
-            </button>
-
-            {/* Expanded: asset large → stat → story */}
-            {isExpanded && (
-              <div
-                id={panelId}
-                className="px-5 pb-6 lg:px-6 lg:pb-7 border-t border-black/8"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden border border-black/8 bg-white mt-5">
-                  <Image
-                    src={reason.asset}
-                    alt={reason.assetAlt}
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 1024px) 100vw, 720px"
-                    className={
-                      reason.assetFit === "contain"
-                        ? "object-contain p-4"
-                        : "object-cover"
-                    }
-                  />
-                </div>
-
-                {reason.stat && (
-                  <div className="mt-5 flex items-baseline gap-4">
-                    <p className="font-mono text-4xl lg:text-5xl font-bold tabular-nums text-[#1B2757] leading-none shrink-0">
-                      {reason.stat.value}
-                    </p>
-                    <p className="text-sm text-black/65 leading-snug max-w-[36ch]">
-                      {reason.stat.caption}
-                    </p>
-                  </div>
-                )}
-
-                <p className="mt-4 text-sm lg:text-base leading-relaxed text-black/75">
-                  {reason.story}
+            {/* Text: heading (desktop only) + body */}
+            <div className="mt-6 md:mt-0">
+              <h2 className="mb-4 hidden text-[28px] font-bold leading-[1.15] text-black md:block">
+                {heading}
+              </h2>
+              <p className="max-w-[30rem] text-[15px] font-semibold leading-relaxed text-black">
+                {reason.oneLine}
+              </p>
+              <p className="mt-3 max-w-[30rem] text-[15px] leading-relaxed text-black/75">
+                {reason.story}
+              </p>
+              {reason.stat && (
+                <p
+                  className="mt-3 max-w-[36rem] text-[15px] font-semibold leading-relaxed"
+                  style={{ color: "var(--brand-positive)" }}
+                >
+                  {reason.stat.value} {reason.stat.caption}
                 </p>
-
-                {reason.showAppButtons && (
-                  <div className="mt-5">
-                    <AppInstallButtons variant="clinical" iconSize={16} />
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+              {reason.showAppButtons && (
+                <div className="mt-5">
+                  <AppInstallButtons variant="clinical" iconSize={16} />
+                </div>
+              )}
+            </div>
           </article>
         );
       })}

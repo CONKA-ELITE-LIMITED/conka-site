@@ -94,9 +94,12 @@ export default function HeroBannerCarousel({
         <div
           className="absolute inset-0 z-[3] pointer-events-none"
           style={{
+            // Literal colours, not --color-ink / --color-bone: neither token is
+            // defined anywhere, and one invalid custom property invalidates the
+            // whole `background`, so this scrim was not rendering at all.
             background: isDark
-              ? "linear-gradient(to right, var(--color-ink) 0%, rgba(17, 17, 17, 0.9) 10%, rgba(17, 17, 17, 0.35) 18%, transparent 28%)"
-              : "linear-gradient(to right, var(--color-bone) 0%, rgba(249, 249, 249, 0.75) 10%, rgba(249, 249, 249, 0.2) 20%, transparent 30%)",
+              ? "linear-gradient(to right, rgb(17, 17, 17) 0%, rgba(17, 17, 17, 0.9) 10%, rgba(17, 17, 17, 0.35) 18%, transparent 28%)"
+              : "linear-gradient(to right, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0.75) 10%, rgba(255, 255, 255, 0.2) 20%, transparent 30%)",
           }}
         />
       )}
