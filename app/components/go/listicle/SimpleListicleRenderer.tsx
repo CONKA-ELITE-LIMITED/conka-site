@@ -218,7 +218,6 @@ function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
               <TrackedSection
                 key={i}
                 section={sectionId(block.kind, i)}
-                slug={config.slug}
                 trackClicks
                 className="brand-track"
               >
@@ -252,7 +251,6 @@ function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
       >
         <TrackedSection
           section={SECTION.product}
-          slug={config.slug}
           trackClicks
           className="brand-track"
         >

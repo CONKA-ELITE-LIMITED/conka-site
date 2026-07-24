@@ -8,14 +8,10 @@ import {
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import {
-  getAddToCartSource,
-  getQuizSessionId,
-  trackListicleCtaClicked,
-} from "@/app/lib/analytics";
+import { getAddToCartSource, getQuizSessionId } from "@/app/lib/analytics";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
-import { SECTION } from "./listicleAnalytics";
+import { SECTION, useListicleCta } from "./listicleAnalytics";
 
 /**
  * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV2 desktop /
@@ -25,13 +21,11 @@ import { SECTION } from "./listicleAnalytics";
  */
 export default function ListicleProductHero({
   productHeroId = "03",
-  slug,
 }: {
   productHeroId?: ProductHeroId;
-  /** Landing slug, for buy-zone CTA attribution. Omit outside a listicle. */
-  slug?: string;
 }) {
   const isMobile = useIsMobile();
+  const fireCta = useListicleCta();
   const { addToCart } = useCart();
   const [selectedCadence, setSelectedCadence] =
     useState<CadenceType>("monthly-sub");
@@ -40,7 +34,7 @@ export default function ListicleProductHero({
     // Fired here rather than by click delegation on the section: this zone is
     // full of cadence toggles and accordions, so delegating every button click
     // would wildly over-count. Intent to buy is the add-to-cart itself.
-    if (slug) trackListicleCtaClicked({ slug, section: SECTION.product });
+    fireCta(SECTION.product);
 
     const variantData = getCadenceVariantByProductHeroId(productHeroId, cadence);
     if (variantData?.variantId) {

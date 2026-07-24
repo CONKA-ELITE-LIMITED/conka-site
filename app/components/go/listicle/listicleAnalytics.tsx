@@ -5,7 +5,9 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import {
@@ -23,7 +25,8 @@ import {
  * Both templates wrap their body in <SectionImpressions slug>, then mark each
  * block with <TrackedSection section>. One IntersectionObserver serves the
  * whole page: TrackedSection registers its element with the provider rather
- * than creating an observer of its own.
+ * than creating an observer of its own. The slug lives only on the provider,
+ * so no call site can tag an event with the wrong page.
  *
  * Event shapes and the two-property budget: see app/lib/analytics.ts.
  */
@@ -51,10 +54,16 @@ export const SECTION = {
 /** Registers an element for impression tracking; returns its unregister fn. */
 type RegisterSection = (el: Element, section: string) => () => void;
 
-const SectionCtx = createContext<RegisterSection | null>(null);
+interface ListicleAnalyticsValue {
+  slug: string;
+  register: RegisterSection;
+}
+
+const SectionCtx = createContext<ListicleAnalyticsValue | null>(null);
 
 /**
- * Owns the single IntersectionObserver and the once-per-section guard.
+ * Owns the page's single IntersectionObserver, the once-per-section guard, and
+ * the slug every event is tagged with.
  *
  * A scroll listener calling getBoundingClientRect would force layout on every
  * scroll frame; IntersectionObserver does not, which is why it is used here.
@@ -98,6 +107,8 @@ export function SectionImpressions({
     );
 
     observer.current = obs;
+    // Children mount before their parent, so anything that registered while
+    // observer.current was still null is waiting here.
     pending.current.forEach((el) => obs.observe(el));
     pending.current.clear();
 
@@ -118,33 +129,60 @@ export function SectionImpressions({
     };
   }, []);
 
-  return <SectionCtx.Provider value={register}>{children}</SectionCtx.Provider>;
+  const value = useMemo<ListicleAnalyticsValue>(
+    () => ({ slug, register }),
+    [slug, register],
+  );
+
+  return <SectionCtx.Provider value={value}>{children}</SectionCtx.Provider>;
+}
+
+/**
+ * Returns a fire-and-forget CTA reporter bound to this page's slug.
+ *
+ * Never awaited and never calls preventDefault, so navigation and interaction
+ * latency are untouched. No-ops outside a <SectionImpressions> provider.
+ */
+export function useListicleCta(): (section: string) => void {
+  const ctx = useContext(SectionCtx);
+
+  return useCallback(
+    (section: string) => {
+      if (!ctx) return;
+      trackListicleCtaClicked({ slug: ctx.slug, section });
+    },
+    [ctx],
+  );
 }
 
 /**
  * Marks one section. Renders a plain <div>, so pass the wrapper className the
  * block already had rather than nesting another element inside it.
  *
- * `trackClicks` turns the div into a click-delegation zone for sections whose
+ * `trackClicks` turns the div into a click-delegation zone, for sections whose
  * CTAs live inside shared components (the home ProductGrid). Any click on an
  * anchor or button below it reports as a CTA click for this section, which
  * avoids threading a callback prop through components the home page also uses.
+ * Do not set it on a zone containing non-CTA controls (toggles, accordions):
+ * those would all be counted. Such zones should call useListicleCta directly.
  */
 export function TrackedSection({
   section,
-  slug,
   className,
+  style,
   trackClicks = false,
   children,
 }: {
   section: string;
-  /** Required only when `trackClicks` is set. */
-  slug?: string;
   className?: string;
+  /** For blocks whose wrapper carried inline styling before being tracked. */
+  style?: CSSProperties;
   trackClicks?: boolean;
   children: ReactNode;
 }) {
-  const register = useContext(SectionCtx);
+  const ctx = useContext(SectionCtx);
+  const register = ctx?.register;
+  const fireCta = useListicleCta();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -155,32 +193,22 @@ export function TrackedSection({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || !trackClicks || !slug) return;
+    if (!el || !trackClicks) return;
 
     // Delegated, so it also covers links rendered by shared child components.
-    // Listener only: never preventDefault and never await, so navigation and
-    // interaction latency are untouched.
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (!target?.closest("a[href], button")) return;
-      trackListicleCtaClicked({ slug, section });
+      fireCta(section);
     };
 
     el.addEventListener("click", onClick);
     return () => el.removeEventListener("click", onClick);
-  }, [slug, section, trackClicks]);
+  }, [fireCta, section, trackClicks]);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={className} style={style}>
       {children}
     </div>
   );
-}
-
-/**
- * Click handler for a CTA the renderer owns directly (hero, bridge, sticky).
- * Fire and forget: no await before the <Link> navigates.
- */
-export function ctaClickHandler(slug: string, section: string): () => void {
-  return () => trackListicleCtaClicked({ slug, section });
 }

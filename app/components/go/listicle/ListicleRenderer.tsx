@@ -34,8 +34,8 @@ import {
   SECTION,
   SectionImpressions,
   TrackedSection,
-  ctaClickHandler,
   sectionId,
+  useListicleCta,
 } from "./listicleAnalytics";
 
 /**
@@ -565,6 +565,7 @@ export default function ListicleRenderer({
 
 function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   useHashScroll();
+  const fireCta = useListicleCta();
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
   const buyHref = PDP_HREF[config.product.productHeroId ?? "03"];
@@ -626,7 +627,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             ) : null}
             <Link
               href={buyHref}
-              onClick={ctaClickHandler(config.slug, SECTION.hero)}
+              onClick={() => fireCta(SECTION.hero)}
               className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
               style={{ background: NAVY }}
             >
@@ -704,7 +705,10 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             </Fragment>
           ))}
           {config.bridge ? (
-            <div
+            // Tracked so the bridge CTA has a denominator: unlike the hero and
+            // sticky bar it is a mid-page block that can be scrolled past.
+            <TrackedSection
+              section={SECTION.bridge}
               className="mt-10 rounded-[16px] px-8 py-14 text-center"
               style={{ background: DARK, color: "#fff" }}
             >
@@ -713,12 +717,12 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               </h3>
               <Link
                 href={buyHref}
-                onClick={ctaClickHandler(config.slug, SECTION.bridge)}
+                onClick={() => fireCta(SECTION.bridge)}
                 className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
               </Link>
-            </div>
+            </TrackedSection>
           ) : null}
         </div>
       </section>
@@ -744,10 +748,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         style={{ background: "#fff", color: "#111" }}
       >
         <TrackedSection section={SECTION.product} className="mx-auto max-w-6xl">
-          <ListicleProductHero
-            productHeroId={config.product.productHeroId}
-            slug={config.slug}
-          />
+          <ListicleProductHero productHeroId={config.product.productHeroId} />
         </TrackedSection>
       </section>
 
@@ -803,7 +804,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             </span>
             <Link
               href={buyHref}
-              onClick={ctaClickHandler(config.slug, SECTION.sticky)}
+              onClick={() => fireCta(SECTION.sticky)}
               className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
               style={{ background: NAVY }}
             >

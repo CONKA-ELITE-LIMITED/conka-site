@@ -25,7 +25,7 @@ config (app/lib/landings/*.ts)
 ```
 
 - **Static + noindex.** `generateStaticParams` builds every registered slug; `dynamicParams = false` (an unregistered slug 404s). `generateMetadata` sets `robots: { index: false, follow: false }`.
-- **Buy box.** `mm` always renders the home `ProductGrid`. `im8` renders `ListiclePurchase` (pricing resolves from `funnelData`, not config).
+- **Buy box.** `mm` always renders the home `ProductGrid`, whose cards link out to the PDPs. `im8` renders `ListicleProductHero`, the PDP hero (`ProductHeroV2` / `ProductHeroMobileV2`) wired to its own cadence state and the cart, so it adds to cart in place.
 
 ## Analytics
 
@@ -35,6 +35,8 @@ Two events, wired automatically by both renderers. Nothing to configure per page
 |-------|-------|------------|
 | `listicle:section_viewed` | Once per section per pageview, when it scrolls into view | `slug`, `section` |
 | `listicle:cta_clicked` | On CTA click (or add-to-cart in the `im8` buy zone) | `slug`, `section` |
+
+`product` means different things per template, because the buy boxes differ: on `mm` it is a click through to a PDP, on `im8` it is an add-to-cart. Compare it within a template, not across.
 
 `section` is either a body block (`reason_3`, `buyBox_5`) or a fixed zone (`hero`, `bridge`, `sticky`, `product`). Block ids are `${kind}_${index}` over `config.body`, so **inserting or reordering a block changes the ids below it** and breaks comparability with earlier data for that page.
 
