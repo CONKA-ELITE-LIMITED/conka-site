@@ -100,9 +100,13 @@ export const NAV_SCIENCE: NavGroup = {
   ],
 };
 
-/** App + proof cluster. Desktop "App" mega-menu + mobile "App" group. */
+/**
+ * App + proof cluster. Desktop "CONKA App" mega-menu + mobile group heading.
+ * `title` drives both surfaces (NavigationDesktop's trigger label and
+ * NavigationMobile's group heading), so it is not a desktop-only string.
+ */
 export const NAV_APP: NavGroup = {
-  title: "App",
+  title: "CONKA App",
   links: [
     {
       label: "The CONKA App",

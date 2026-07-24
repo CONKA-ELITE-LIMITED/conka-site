@@ -7,10 +7,17 @@ import type { NavGroup } from "./navConfig";
 /* ============================================================================
  * NavGroupMegaMenu
  *
- * Desktop mega-menu for a grouped set of links (Science, App), rendered as
- * image tiles in the same visual language as ShopMegaMenu: black-bordered
- * tiles, square asset, title + one-line description. No CTA; the whole tile
- * is the link.
+ * Desktop mega-menu for a grouped set of links (Science, App), rendered with
+ * the same lifted product-tile treatment as ShopMegaMenu: rounded white card,
+ * square asset, centred title + one-line description, and a navy footer fill
+ * on hover. No CTA; the whole tile is the link.
+ *
+ * Two deliberate differences from the Shop tiles. The panel here stays white
+ * rather than taking Shop's navy gradient, so Shop reads as the primary menu;
+ * that means the card needs its own hairline ring for an edge, since a shadow
+ * alone does not separate white-on-white. And there is no badge straddling the
+ * image seam, because a NavLink carries no equivalent of a product's
+ * time-of-day tag, so the footer uses even padding instead of Shop's pt-7.
  *
  * Positioned `absolute top-full` against the fixed nav wrapper so it drops
  * flush from the header bottom with no gap and rides the scroll-hide
@@ -47,11 +54,13 @@ export default function NavGroupMegaMenu({
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="group w-[260px] bg-[#f5f5f5] border border-black/12 hover:bg-black/[0.04] overflow-hidden transition-colors flex flex-col"
+              className="group block w-[260px] overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#1B2757] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
             >
               <div
                 className={`relative aspect-square overflow-hidden ${
-                  link.imageFit === "contain" ? "bg-[#333333]" : "bg-white"
+                  // Dark plate for transparent app screenshots; photos fill the
+                  // tile and sit on the same grey as the Shop product shots.
+                  link.imageFit === "contain" ? "bg-[#333333]" : "bg-[#f5f5f5]"
                 }`}
               >
                 {link.image && (
@@ -63,17 +72,17 @@ export default function NavGroupMegaMenu({
                       link.imageFit === "contain"
                         ? "object-contain p-6"
                         : "object-cover"
-                    } group-hover:scale-[1.02] transition-transform duration-300`}
+                    } transition-transform duration-300 group-hover:scale-[1.04]`}
                     sizes="260px"
                   />
                 )}
               </div>
-              <div className="p-4 flex flex-col">
-                <p className="text-base font-semibold text-black mb-1">
+              <div className="border-t border-black/10 px-4 py-4 text-center transition-colors group-hover:border-white/15 group-hover:bg-[#1B2757]">
+                <p className="text-lg font-bold text-black transition-colors group-hover:text-white">
                   {link.label}
                 </p>
                 {link.description && (
-                  <p className="text-xs text-black/60 leading-relaxed">
+                  <p className="mt-1.5 text-xs leading-snug text-black/60 transition-colors group-hover:text-white/70">
                     {link.description}
                   </p>
                 )}
