@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { formatPrice, type FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
@@ -15,7 +14,6 @@ import {
   getDisplayDiscount,
   FUNNEL_CADENCES,
 } from "@/app/lib/cadenceData";
-import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
@@ -52,10 +50,6 @@ export interface ProductBuyPanelProps {
   /** V2 3-column layout moves the ingredients button + accordions into the
       left identity column, so the buy box on the right suppresses them here. */
   hideSecondary?: boolean;
-  /** V2 flat cards (Magic Mind style): no expand-on-select unfurl inside the
-      card; shows a compare-at strikethrough, and the shared "what's included"
-      list moves below the cards. Legacy keeps the expanding PlanDetail. */
-  flatCards?: boolean;
   /** V2 moves the "What You'll Feel" block into the left-column accordion, so
       the buy box drops it here. */
   hideWhatYouFeel?: boolean;
@@ -113,7 +107,7 @@ export function ProductHeroHeader({
       {/* Eyebrow + product name. On desktop the keyword subline sits inside the
           <h1>; on mobile it drops below the image via ProductHeroLede. */}
       <div>
-        <p className={`mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${eyebrowColor}`}>
+        <p className={`mb-1 text-[10px] font-bold uppercase tracking-[0.14em] ${eyebrowColor}`}>
           Daily Nootropic Brain Shots
         </p>
         <h1 className="leading-tight">
@@ -144,7 +138,6 @@ export function ProductHeroHeader({
  * h2, since the <h1> product name sits above the image) followed by the short
  * description. Keeps the descriptive copy off the top of the hero (SCRUM-1138).
  */
-const SUB_CADENCES: CadenceType[] = ["quarterly-sub", "monthly-sub"];
 
 /** Which ingredient-sheet tabs each product surfaces (Both shows both). */
 const FORMULA_TABS: Record<"flow" | "clear" | "both", ("flow" | "clear")[]> = {
@@ -153,197 +146,9 @@ const FORMULA_TABS: Record<"flow" | "clear" | "both", ("flow" | "clear")[]> = {
   both: ["flow", "clear"],
 };
 
-/** What's included with every plan (same on all). No prices — these are the
- *  baked-in extras, distinct from the earnable app rewards below. */
-const PLAN_INCLUDED = [
-  "Free baseline brain test",
-  "Free UK shipping",
-  "Cancel or pause anytime",
-  "100-day money-back guarantee",
-];
-
-/** App bullets — mirrors CartAppGift (the cart-drawer app block), trimmed. */
-const APP_BULLETS = [
-  "Daily brain performance score, tracked over time",
-  "Personalised insights from your shots and test results",
-  "Weekly and monthly reports analysing your progress",
-];
-
-/** Rewards you can UNLOCK in the app (not guaranteed on purchase). Values are
- *  shown struck-through to signal worth. */
-interface AppReward {
-  name: string;
-  value: string;
-  img?: string;
-}
-const APP_REWARDS: AppReward[] = [
-  { name: "Conka Beanie", value: "£25", img: "/app/rewards/ConkaBlackBeanie.jpg" },
-  { name: "Conka Shirt", value: "£20", img: "/app/rewards/ConkaBlackTshirt.png" },
-  { name: "Conka Cap", value: "£15", img: "/app/rewards/ConkaTruckerCap.png" },
-];
-
-function RewardTile({ reward }: { reward: AppReward }) {
-  return (
-    <div className="flex flex-col items-center gap-1.5 text-center">
-      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden border border-black/[0.06] bg-black/[0.03]">
-        {reward.img ? (
-          <Image
-            src={reward.img}
-            alt={reward.name}
-            fill
-            className="object-contain p-1"
-            sizes="80px"
-          />
-        ) : (
-          <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-black/25">
-            Reward
-          </span>
-        )}
-      </div>
-      <span className="font-mono text-[11px] font-bold tabular-nums text-black/45 line-through">
-        {reward.value}
-      </span>
-      <span className="text-[11px] font-medium leading-tight text-black/70">
-        {reward.name}
-      </span>
-    </div>
-  );
-}
-
-/** Circle radio that matches the IM8 plan-card selector. */
-function Radio({ selected }: { selected: boolean }) {
-  return (
-    <span
-      className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center border-2 transition-colors ${
-        selected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
-      }`}
-      aria-hidden
-    >
-      {selected && (
-        <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M2.5 8.5L6.5 12L13.5 4"
-            stroke="white"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
-    </span>
-  );
-}
-
-/** "The CONKA app" section — full width inside the plan card (no nested box). */
-function PlanAppGift() {
-  return (
-    <div className="mt-4 border-t border-black/10 pt-4">
-      <div className="flex items-center justify-between gap-2">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
-          Also included — the CONKA app
-        </p>
-        <span className="flex shrink-0 items-center gap-1.5">
-          <span className="font-mono text-[10px] font-bold uppercase tabular-nums tracking-[0.05em] text-black/35 line-through">
-            £119.99/yr
-          </span>
-          <span className="bg-[#1B2757] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white">
-            Free
-          </span>
-        </span>
-      </div>
-      <div className="mt-2.5 flex gap-3.5">
-        <Image
-          src="/app/AppConkaRing.png"
-          alt="CONKA app showing daily brain performance score"
-          width={56}
-          height={120}
-          className="h-auto w-14 shrink-0"
-        />
-        <div className="min-w-0 flex-1 space-y-2 pt-0.5">
-          {APP_BULLETS.map((bullet) => (
-            <div key={bullet} className="flex gap-2">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="mt-0.5 shrink-0 text-[#1B2757]"
-                aria-hidden
-              >
-                <path
-                  d="M3 8.5L6.5 12L13 4.5"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="square"
-                  strokeLinejoin="miter"
-                />
-              </svg>
-              <p className="text-[13px] leading-snug text-black/80">{bullet}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Selected-card detail: what's included, the app section, expandable rewards. */
-function PlanDetail() {
-  return (
-    <div className="border-t border-black/10 px-4 pb-4 pt-4">
-      <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
-        What&apos;s included
-      </p>
-      <ul className="flex flex-col gap-1.5">
-        {PLAN_INCLUDED.map((item) => (
-          <li
-            key={item}
-            className="flex items-center gap-2 text-[13px] font-medium text-black/75"
-          >
-            <span className="text-[#1B2757]" aria-hidden>
-              ✓
-            </span>
-            {item}
-          </li>
-        ))}
-      </ul>
-
-      <PlanAppGift />
-
-      <details className="mt-4 border-t border-black/10 pt-4">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1B2757]">
-            Rewards you can unlock in the app
-          </span>
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            className="flex-shrink-0 text-black/40 transition-transform [details[open]_&]:rotate-180"
-            aria-hidden
-          >
-            <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </summary>
-        <div className="mt-3 grid grid-cols-3 gap-3">
-          {APP_REWARDS.map((reward) => (
-            <RewardTile key={reward.name} reward={reward} />
-          ))}
-        </div>
-        <p className="mt-3 text-[11px] font-medium leading-snug text-black/45">
-          Exclusive for subscribers.
-        </p>
-      </details>
-    </div>
-  );
-}
-
 /** Funnel green for the free-shots incentive (matches the listicle purchase card). */
-const GREEN = "#10B981";
-const GREEN_TEXT = "#0b7a55";
+const GREEN = "#1a7f4f";
+const GREEN_TEXT = "#1a7f4f";
 
 /** Additive green-plus marker for the expanded benefit list ("+ this too"). */
 function GreenPlus() {
@@ -375,8 +180,8 @@ function subscriptionBenefits(freeShots: number) {
 
 /**
  * Magic Mind-style flat plan card: title + prices inline, a tap-to-expand
- * "subscription benefits" disclosure (no auto-expand on select). Used only in
- * flatCards mode; legacy keeps the taller PlanSelector card + PlanDetail.
+ * "subscription benefits" disclosure (no auto-expand on select). The only
+ * plan-card style rendered.
  */
 function FlatPlanCard({
   formulaId,
@@ -480,7 +285,7 @@ function FlatPlanCard({
                 {freeShots > 0 && (
                   <span
                     className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    style={{ background: "rgba(16,185,129,0.14)", color: GREEN_TEXT }}
+                    style={{ background: "rgba(26,127,79,0.14)", color: GREEN_TEXT }}
                   >
                     <span
                       className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full"
@@ -565,120 +370,25 @@ function PlanSelector({
   formulaId,
   selectedCadence,
   onCadenceChange,
-  onOtpAddToCart,
-  shotsPerDay,
-  flatCards,
-}: Omit<ProductBuyPanelProps, "onAddToCart"> & { shotsPerDay: number }) {
-  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
-  const otpSelected = selectedCadence === "monthly-otp";
-
+}: Omit<ProductBuyPanelProps, "onAddToCart" | "onOtpAddToCart">) {
   // Flat (V2) cards: ascending order (20 shot then 60 shot), each with its own
-  // discount-badge colour. OTP link moves under the main CTA (panel-rendered).
-  if (flatCards) {
-    const flatOrder: { cadence: CadenceType; saveColor: string }[] = [
-      { cadence: "monthly-sub", saveColor: "#C9A24A" },
-      { cadence: "quarterly-sub", saveColor: "#E07A5F" },
-    ];
-    return (
-      <div className="flex flex-col gap-4 pt-2">
-        {flatOrder.map(({ cadence, saveColor }) => (
-          <FlatPlanCard
-            key={cadence}
-            formulaId={formulaId}
-            cadence={cadence}
-            isSelected={selectedCadence === cadence}
-            onSelect={() => onCadenceChange(cadence)}
-            saveColor={saveColor}
-          />
-        ))}
-      </div>
-    );
-  }
-
+  // discount-badge colour. The OTP link is rendered under the main CTA (panel).
+  const flatOrder: { cadence: CadenceType; saveColor: string }[] = [
+    { cadence: "monthly-sub", saveColor: "#C9A24A" },
+    { cadence: "quarterly-sub", saveColor: "#E07A5F" },
+  ];
   return (
-    <div className="flex flex-col gap-3">
-      {SUB_CADENCES.map((cadence) => {
-        const display = FUNNEL_CADENCES[cadence];
-        const isSelected = selectedCadence === cadence;
-        const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
-        const monthsPerCycle = cadence === "quarterly-sub" ? 3 : 1;
-        const perMonth = pricing.price / monthsPerCycle;
-        const weeksPerCycle = monthsPerCycle * 4;
-        const bannerLabel = display.badge;
-        const savePct = getDisplayDiscount(pricing);
-
-        return (
-          <div
-            key={isSelected ? `active-${cadence}` : cadence}
-            className={`relative w-full select-none overflow-hidden border-2 bg-white transition-all duration-200 ${
-              isSelected
-                ? "card-pulse border-[#1B2757] shadow-md"
-                : "border-black/10 shadow-sm hover:border-black/25"
-            }`}
-          >
-            {bannerLabel && (
-              <span className="absolute right-0 top-0 z-10 bg-[#1B2757] px-2.5 py-1 font-mono text-[8.5px] font-bold uppercase tracking-[0.14em] text-white">
-                {bannerLabel}
-              </span>
-            )}
-
-            <button
-              type="button"
-              onClick={() => onCadenceChange(cadence)}
-              className="block w-full px-4 pb-4 pt-4 text-left"
-            >
-              <div className="flex items-center gap-2.5 pr-20">
-                <Radio selected={isSelected} />
-                <span className="text-lg font-bold leading-none text-[var(--brand-black)]">
-                  {display.label}
-                </span>
-                {savePct > 0 && (
-                  <span className="bg-[#C9A24A] px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-white">
-                    Save {savePct}%
-                  </span>
-                )}
-              </div>
-              <div className="mt-2.5 flex items-baseline gap-1.5">
-                <span className="text-[28px] font-medium leading-none tabular-nums text-[var(--brand-black)]">
-                  {formatPrice(perMonth)}
-                </span>
-                <span className="text-sm font-semibold text-black/55">/mo</span>
-              </div>
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <span className="font-mono text-[11px] uppercase tabular-nums tracking-[0.08em] text-black">
-                  {flatCards && pricing.compareAtPrice && (
-                    <s className="mr-1.5 font-normal text-black/40">
-                      {formatPrice(pricing.compareAtPrice)}
-                    </s>
-                  )}
-                  {formatPrice(pricing.price)} every {weeksPerCycle} weeks
-                </span>
-                <span className="font-mono text-[11px] font-bold uppercase tabular-nums tracking-[0.08em] text-black">
-                  {formatPrice(pricing.perShot)} / shot
-                </span>
-              </div>
-              <p className="mt-1.5 font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-black">
-                {pricing.shotCount} shots · {shotsPerDay} a day
-              </p>
-              <FreeShotsBadge freeShots={pricing.freeShots} cadence={cadence} className="mt-2.5" />
-            </button>
-
-            {isSelected && !flatCards && <PlanDetail />}
-          </div>
-        );
-      })}
-
-      {/* One-time purchase demoted to a text link; adds straight to cart */}
-      <button
-        type="button"
-        onClick={onOtpAddToCart}
-        className={`mx-auto mt-1 w-fit text-center text-sm underline underline-offset-4 transition-opacity hover:opacity-70 ${
-          otpSelected ? "font-semibold text-[#1B2757]" : "text-black"
-        }`}
-      >
-        One time purchase · {formatPrice(otpPricing.price)}
-        {otpSelected ? " ✓" : ""}
-      </button>
+    <div className="flex flex-col gap-4 pt-2">
+      {flatOrder.map(({ cadence, saveColor }) => (
+        <FlatPlanCard
+          key={cadence}
+          formulaId={formulaId}
+          cadence={cadence}
+          isSelected={selectedCadence === cadence}
+          onSelect={() => onCadenceChange(cadence)}
+          saveColor={saveColor}
+        />
+      ))}
     </div>
   );
 }
@@ -719,7 +429,7 @@ export function TrustStrip() {
       {TRUST_ITEMS.map((item) => (
         <span
           key={item}
-          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55"
+          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.08em] text-black/55"
         >
           <TrustCheck />
           {item}
@@ -898,7 +608,6 @@ export default function ProductBuyPanel({
   hideHeader,
   hideKeyBenefits,
   hideSecondary,
-  flatCards,
   hideWhatYouFeel,
 }: ProductBuyPanelProps) {
   const productType = getHeroProductType(formulaId);
@@ -909,13 +618,7 @@ export default function ProductBuyPanel({
     selectedCadence,
   );
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
-  const ctaLabel = flatCards
-    ? `Add to cart for ${formatPrice(selectedPricing.price)}`
-    : selectedCadence === "monthly-otp"
-      ? "Add to Cart"
-      : selectedPricing.compareAtPrice
-        ? `Subscribe & Save ${Math.round((1 - selectedPricing.price / selectedPricing.compareAtPrice) * 100)}%`
-        : "Subscribe & Save";
+  const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [
     `${shotsPerDay === 2 ? "Two daily shots" : "One daily shot"}, zero caffeine`,
@@ -946,24 +649,15 @@ export default function ProductBuyPanel({
       )}
 
       <div>
-        {flatCards ? (
-          <p className="mb-3 text-lg font-bold text-black">Select your plan:</p>
-        ) : (
-          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/50">
-            Subscribe &amp; Save:
-          </p>
-        )}
+        <p className="mb-3 text-lg font-bold text-black">Select your plan:</p>
         <PlanSelector
           formulaId={formulaId}
           selectedCadence={selectedCadence}
           onCadenceChange={onCadenceChange}
-          onOtpAddToCart={onOtpAddToCart}
-          shotsPerDay={shotsPerDay}
-          flatCards={flatCards}
         />
       </div>
 
-      <div className={flatCards ? "mt-3" : undefined}>
+      <div className="mt-3">
         <ConkaCTAButton
           onClick={onAddToCart}
           meta={null}
@@ -972,16 +666,14 @@ export default function ProductBuyPanel({
           {ctaLabel}
         </ConkaCTAButton>
 
-        {/* Flat layout moves the one-time purchase under the main CTA (MM pattern). */}
-        {flatCards && (
-          <button
-            type="button"
-            onClick={onOtpAddToCart}
-            className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
-          >
-            Buy it once for {formatPrice(otpPricing.price)}
-          </button>
-        )}
+        {/* The one-time purchase sits under the main CTA (MM pattern). */}
+        <button
+          type="button"
+          onClick={onOtpAddToCart}
+          className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
+        >
+          Buy it once for {formatPrice(otpPricing.price)}
+        </button>
 
         <TrustBar />
       </div>

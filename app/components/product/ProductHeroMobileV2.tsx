@@ -126,7 +126,6 @@ export default function ProductHeroMobileV2({
           hideKeyBenefits
           hideSecondary
           hideWhatYouFeel
-          flatCards
         />
 
         {/* MM-aligned: plain-label accordions with "What you'll feel" folded in,

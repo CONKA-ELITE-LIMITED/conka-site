@@ -151,7 +151,6 @@ export default function ProductHeroV2({
               hideKeyBenefits
               hideSecondary
               hideWhatYouFeel
-              flatCards
             />
             <HeroAccordions
               productType={productType}
