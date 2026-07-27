@@ -16,8 +16,8 @@ import type { ListicleConfig } from "./listicle-types";
  * juggler origin); reasons re-themed off generic caffeine fights to: 1 performance-
  * without-burnout, 2 socialise-keep-tomorrow, 3 founder cheat-code, 4 have-it-all,
  * 5 sharp-all-day, 6 app-proof, 7 guarantee. Plan: docs/development/featurePlans/
- * productivity-listicle-founder-reposition.md. Deferred: named exec quotes
- * (Shane, Nimisha) integrated into the review strip.
+ * productivity-listicle-founder-reposition.md. Shane's exec quote sits on
+ * reason 1 as a quote tile; Nimisha's quote is still deferred.
  */
 export const productivityListicle: ListicleConfig = {
   slug: "productivity-listicle",
@@ -62,14 +62,13 @@ export const productivityListicle: ListicleConfig = {
   proof: {
     logoBand: true,
     // No pressBand here: the "As Published On" marquee lives on the app-proof
-    // reason (reason 4) for this page, so a second copy in the tier would be
+    // reason (reason 6) for this page, so a second copy in the tier would be
     // redundant.
     // Shared UGC set: the band needs volume to read as volume, and we
     // have no persona-tagged stills yet. Pass `items` once we do.
     ugc: {},
-    // TODO: source a white-background cutout of a productivity/ADHD-relevant
-    // figure and swap this out. Jack Willis is the site-wide default, not a
-    // persona match. Any `*NB.jpg` in public/testimonials/athlete/ works.
+    // Jack Willis kept deliberately (confirmed with Rudh 2026-07-27): a high
+    // achiever who reached the greatness this persona is chasing.
     feature: {
       name: "Jack Willis",
       credentials: [
@@ -154,7 +153,7 @@ export const productivityListicle: ListicleConfig = {
       kind: "reason",
       n: 3,
       headline: "The Cheat Code Two Founders Built for Themselves",
-      body: "This started as a private edge, not a product. Harry needed to think clearly under Olympic pressure with Team GB; Humphrey was running a full-time team while training for Ironmans. Nothing on the market worked, so they spent years and £500,000 of their own money building it, collapsing 14 daily capsules into a single shot tested at Cambridge. What was their cheat code is now yours.",
+      body: "This started as a private edge, not a product. Harry needed to think clearly under Olympic pressure with Team GB; Humphrey was running a full-time team whilst training for ultramarathons and Ironmans. Nothing on the market worked, so they spent years and £500,000 of their own money building it, collapsing 14 daily capsules into a single shot tested at Cambridge. What was their cheat code is now yours.",
       chips: ["Backed by 25+ cognitive trials"],
       asset: {
         kind: "image",
