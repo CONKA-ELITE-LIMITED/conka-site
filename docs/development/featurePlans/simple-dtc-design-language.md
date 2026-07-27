@@ -50,9 +50,10 @@ Nothing on acquisition surfaces is sharp (0px); zero radius stays clinical-only.
 
 | Key | Title | Ticket | Status |
 |-----|-------|--------|--------|
-| SCRUM-1181 | [Website & CRO] Align core Simple DTC components (radius, savings green, mono) | 1 | To Do |
+| SCRUM-1181 | Align core Simple DTC components (radius, savings green, mono) | 1 | Done |
+| SCRUM-1182 | Document the ratified Simple DTC direction (DESIGN_SYSTEM + brand-base.css) | 2 | Done |
 
-T2 (document the ratified direction) and T3 (propagate) are ticketed when they go active, per the active-only rule.
+T3 (propagate to the 24+ clinical pages) is ticketed when it goes active, per the active-only rule. It follows the "Clinical to Simple DTC" mapping table now in DESIGN_SYSTEM.md §8.5.
 
 ---
 

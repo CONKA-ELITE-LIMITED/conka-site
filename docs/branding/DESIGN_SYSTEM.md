@@ -110,6 +110,8 @@
 
 The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-canvas pages (`/app`, `/app-insights`) inherit zero radius because they apply `.brand-clinical` themselves; there is no separate "App Dark" radius rule.
 
+**Simple DTC (§8.5) does not use these tokens.** Its rounded grammar is set with Tailwind utilities (`rounded-md` cards, `rounded-lg` standalone tiles, `rounded-full` pills), so the clinical zeroing never reaches it even on pages that keep `.brand-clinical` for token inheritance (home, the PDPs).
+
 ---
 
 ## 5. Spacing and layout
@@ -173,7 +175,7 @@ Mobile-first is non-negotiable. Full mobile guide: `MOBILE_OPTIMIZATION.md`.
 
 > The evidence-dense grammar. No longer the global default — the forward direction is **Simple DTC** (§8.5). Clinical is retained for science/evidence-dense modules and the `/app` dark pages (§10). Opt-in via `.brand-clinical` on the page root. See the §8.5 per-surface authority table for which language governs which surface.
 >
-> Pages currently carrying `.brand-clinical`: `/` `/start` `/funnel` `/science` `/our-story` `/case-studies` `/ingredients` `/app` `/app-insights` `/why-conka` `/conka-flow` `/conka-clarity` `/protocol/[id]` + Navigation + Footer. Cart, nav, and PDP-acquisition surfaces are converting to Simple DTC (a page can apply `.brand-clinical` for zero-radius tokens while its hero/cart already follow the Simple DTC grammar during the transition).
+> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/science` · `/ingredients` · `/our-story` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/account` (+ `/login` `/register` `/details` `/orders` `/subscriptions`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app` · `/app-insights`. Note `/start` and `/funnel` are NOT clinical — they are Simple DTC (see the §8.5 authority table). Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
 >
 > **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
 >
@@ -373,7 +375,7 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 - Solid-black type as the default; opacity tiers only for genuinely secondary text.
 
 **Drops:**
-- **Zero radius.** Simple DTC is rounded — `rounded-full` for pills/buttons/nav, `rounded-lg`/`rounded-xl`/`rounded-2xl` for cards and tiles.
+- **Zero radius.** Simple DTC is rounded on one tight scale — `rounded-full` for pills/buttons/nav/radios, `rounded-md` for cards/containers/controls, `rounded-lg` for standalone small tiles (e.g. the hero SpecBadge). Nothing sharp; zero radius stays clinical-only.
 - **Navy as interactive-only.** Filled navy `#1B2757` is now allowed as a **primary and decorative** fill (badges, gradient cards, icon/star fills), not just on interactive elements.
 - **The no-shadow / no-gradient rule.** Soft shadows and `ring-1` are permitted on lifted cards; soft navy-terminating gradients are permitted on decorative surfaces.
 - **The faded mono eyebrow.** Drop the `font-mono … uppercase tracking-[0.18em+]` low-opacity eyebrow / sub-line. Lead with a plain `brand-h1` + `brand-body` in solid black. Mono is **not** banned outright: it survives on compact micro-labels (time-of-day badges, "verified buyer" tags) as **solid black/near-solid**, small (`text-[9px]`), at `tracking-[0.12em]` — a scalpel, not a blanket.
@@ -383,19 +385,39 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 | Element | Value | Where |
 |---------|-------|-------|
-| Pills / buttons / nav | `rounded-full` | Shop pill, cart button, discount/savings pills |
-| Cards / tiles | `rounded-lg` → `rounded-2xl` | Cart line, app-gift card, product tiles |
-| Primary navy | `#1B2757` — filled (`bg-[#1B2757] text-white`) | Shop pill, active cart button, upsell CTA, "Free!" badge |
-| Decorative navy | `#1B2757` fill / icon fill / gradient | `CartAppGift` "Free!" badge, hero rating stars, mobile social-proof gradient card |
-| Savings / positive | green `#1a7f4f` at `/10` tint bg + solid text | savings %, "+N free" badge, cart Savings row, guarantee tick (`--brand-positive`) |
-| Light-navy tint strip | `#eef0f5` (also `#eef1f8`, `#dbe0f0`→`#eef1f8` gradient) | free-shipping banner, app-gift container, hero SpecBadge |
+| Pills / buttons / nav / radios | `rounded-full` | shop pill, cart + CTA buttons, savings + "+N free" + "Free!" pills, plan radios |
+| Cards / containers / controls | `rounded-md` | product cards, cart line tiles, buy panel + `FlatPlanCard`, qty stepper, ingredient / what-to-expect / testimonial tiles, media + asset containers, the CrashChart graph tile |
+| Standalone small tiles / spec badges | `rounded-lg` | hero SpecBadge / SocialProofBadge — kept equal-or-tighter than the parent when nested inside a `rounded-md` card |
+| Primary navy | `#1B2757` (`--brand-navy`) — filled (`bg-[#1B2757] text-white`) | shop pill, active cart button, upsell CTA, "Free!" gift chip |
+| Decorative navy | `#1B2757` fill / icon fill / gradient | `CartAppGift` "Free!" chip, hero rating stars, testimonial product-name badge, mobile social-proof gradient card |
+| Savings / positive | green `#1a7f4f` (`--brand-positive`) at `/10` tint bg + solid text | savings %, "+N free" badge, cart Savings row, guarantee tick, PDP free-shots pill |
+| Plan Save% accent (exception) | per-plan gold `#C9A24A` (monthly) / coral `#E07A5F` (quarterly) | PDP `FlatPlanCard` "Save X%" badge ONLY — a deliberate per-cadence accent, NOT the savings green |
+| Light-navy tint strip | `#eef0f5` (also `#eef1f8`, `#dbe0f0`→`#eef1f8` gradient) | free-shipping banner, app-gift container, hero SpecBadge, testimonial product badge |
 | Shadows / rings | soft `shadow-[0_2px_12px_rgba(0,0,0,0.08)]`, `ring-1 ring-black/5` | lifted product cards |
 | Hairlines | `border-black/8`–`/15` | list dividers, nav header, content tiles |
 | Focus ring | `focus-visible:ring-2 focus-visible:ring-[#1B2757]` | all interactive nav elements |
-| Type | solid `text-black`, sans (`--font-brand-primary`) | headings, body, most labels |
+| Type | solid `text-black`, sans (`--font-brand-primary`); section titles solid black (not `#0e1f3f`) | headings, body, most labels |
 | Mono (scalpel) | `font-mono text-[9px] uppercase tracking-[0.12em]`, solid black | time-of-day + verified-buyer micro-badges only |
 
-Prefer the `--brand-positive` token over the hard-coded `#1a7f4f` on new work; navy is still hard-coded as `#1B2757` at consumer sites (a Layer-1 navy token and a component sweep are deferred — see the plan doc).
+Prefer the tokens on new work: `--brand-positive` (`#1a7f4f`) for savings/positive and `--brand-navy` (`#1B2757`) for the primary/decorative navy — both live in `brand-base.css` Layer 1. Many consumer components still hard-code the `#1B2757` literal; the repo-wide sweep to the token is deferred (Ticket 3 territory), so the token plus this table is the target, not yet the universal state.
+
+### Refactoring a clinical page to Simple DTC (mechanical map)
+
+Converting a `.brand-clinical` page (§8) to Simple DTC is mostly find-and-replace. Per property:
+
+| Clinical (§8) | Simple DTC | Notes |
+|---------------|-----------|-------|
+| `.brand-clinical` zero-radius everywhere | remove the scope, or keep it only for token inheritance; set radius with Tailwind: `rounded-md` cards, `rounded-full` pills, `rounded-lg` standalone badges | home + PDPs keep the scope only for the navy accent + `#f5f5f5` tint; their radius is Tailwind utilities |
+| mono eyebrow `font-mono … uppercase tracking-[0.18em]` low-opacity | drop it; lead with a plain `brand-h1` + `brand-body` in solid black | mono survives only as the scalpel below |
+| section title `text-[#0e1f3f]` or navy | `text-black` | titles are solid black |
+| mono data labels (prices, per-shot, "Save %", trust items) | sans, solid black | anything a user READS leaves the mono register |
+| mono micro-badge you SCAN (time-of-day, verified-buyer) | keep mono, solid black, `text-[9px]`, `tracking-[0.12em]` | the only surviving mono |
+| navy interactive-only | filled navy `#1B2757` (`--brand-navy`) as primary AND decorative (badges, stars, gradients) | |
+| no shadows / no gradients | soft `shadow-[0_2px_12px_rgba(0,0,0,0.08)]` + `ring-1` on lifted cards; soft navy gradients on decorative surfaces | |
+| `lab-clip-tr` chamfer, `[+]/[-]` mono toggles | `rounded-full` buttons; rotating chevron | chamfers read clinical |
+| savings / positive value | green `#1a7f4f` (`--brand-positive`) at `/10` tint | the plan Save% gold/coral is the sole exception |
+
+Reference implementations to copy from: the cart drawer, home (`app/page.tsx`), and the `/conka-flow` PDP (`ProductHeroV2` + `ProductBuyPanel`).
 
 ### `ConkaCTAButton` mono meta line — clinical holdover, to retire
 
@@ -407,7 +429,7 @@ Simple DTC is added **alongside** Clinical (§8) and App-Dark (§10), not as a g
 
 | Surface group | Language |
 |---------------|----------|
-| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`); landing / funnel / `/go`; top-of-funnel `/professionals` | **Simple DTC** |
+| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`, `/conka-both`); landing / funnel / `/go`; top-of-funnel `/professionals` | **Simple DTC** |
 | Science / evidence-dense modules (`/science`) | **Clinical** (§8) — mono + density earn their place on dense data |
 | `/app`, `/app-insights` dark pages | **App-Dark** (§10) — clinical grammar on a dark canvas |
 | Account, subscription management, B2B order/management UIs | Clinical for now (mono data labels aid scanning); convert opportunistically |
@@ -623,4 +645,4 @@ Before shipping any new section:
 | `MOBILE_OPTIMIZATION.md` | Mobile component patterns, split architecture |
 | `app/brand-base.css` | Token implementation (all layers) |
 | `docs/development/featurePlans/simple-dtc-design-language.md` | Simple DTC programme — rules, learnings log, phases |
-| `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` | Active site strategy |
+| `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | Current state + prioritised roadmap |

@@ -33,4 +33,3 @@ paths:
 - Design system: `docs/branding/DESIGN_SYSTEM.md`
 - Brand voice: `docs/branding/BRAND_VOICE.md`
 - SEO checklist: `docs/workflows/02-implementation-workflow.md` (Phase 5)
-- Legacy design system: `docs/branding/SOFT_TECH_LUXURY_STYLE_SHEET_GUIDELINES.md`
