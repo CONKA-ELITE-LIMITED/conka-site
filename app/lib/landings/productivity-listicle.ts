@@ -89,10 +89,16 @@ export const productivityListicle: ListicleConfig = {
       n: 1,
       headline: "High Performance, Without the Burnout",
       body: "You don't call it burnout. You call it a busy quarter, then another. The ones most at risk are the people still hitting every target, running on willpower and caffeine until something gives. CONKA's adaptogens are shown to lower the cortisol load that turns drive into depletion, so you can perform hard without paying for it later.",
-      chips: ["28% less burnout in a clinical trial", "28% lower cortisol, the stress hormone"],
-      citation: "PMID: 19016404 · PMID: 23439798",
-      // Clear shot liquid loop
-      asset: { kind: "video", src: "/videos/clear/ClearLiquid.mp4", aspect: "3/4" },
+      // Exec quote tile: Shane's workload-without-burnout testimonial. Confirm the
+      // exact title + that the quote is his before shipping (claims pass).
+      asset: {
+        kind: "athleteQuote",
+        name: "Shane Corstorphine",
+        role: "Former CFO, Skyscanner",
+        image: "/caseStudies/ShaneCorstorphine.jpg",
+        quote:
+          "I can now tolerate the same workload as I did in my 30s. I travel from Scotland to London frequently for intense bouts of work. I used to lose my memory in these periods, but now I don't.",
+      },
     },
     {
       kind: "reason",
@@ -163,6 +169,8 @@ export const productivityListicle: ListicleConfig = {
       n: 4,
       headline: "Have the Career Without Losing the Life",
       body: "Chasing the next deadline while the dinners, the friends, the people at home quietly slip down the list. You were told that's the cost of ambition. It isn't. CONKA gives you steady, all-day capacity, so you can go hard at work and still show up for the life that makes it worth it, present in both and drained by neither.",
+      chips: ["28% less burnout in a clinical trial", "28% lower cortisol, the stress hormone"],
+      citation: "PMID: 19016404 · PMID: 23439798",
       asset: {
         kind: "image",
         src: "/lifestyle/GirlsLaughing.jpg",
@@ -213,11 +221,11 @@ export const productivityListicle: ListicleConfig = {
           detail: "Verified · Flow + Clear",
         },
         {
-          headline: "Locked in on long days",
+          headline: "Measure it to manage it",
           quote:
-            "I am on calls all day for work, and Conka has been instrumental to staying focused and locked in on long days.",
-          name: "Alex L.",
-          image: "/lander/reviews/AlexL.jpg",
+            "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
+          name: "Anthony Stodart",
+          image: "/testimonials/ugc/15.jpg",
           detail: "Verified · Flow + Clear",
         },
       ],
