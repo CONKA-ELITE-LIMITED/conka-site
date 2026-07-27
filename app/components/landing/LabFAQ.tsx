@@ -45,7 +45,7 @@ export default function LabFAQ({
         {/* Lifestyle image */}
         {image ? (
           <div className="lg:w-2/5 lg:sticky lg:top-8 mb-8 lg:mb-0">
-            <div className="relative overflow-hidden -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
+            <div className="relative overflow-hidden lg:rounded-md -mx-5 w-[calc(100%+2.5rem)] lg:mx-0 lg:w-full max-w-none">
               <Image
                 src={image.src}
                 alt={image.alt}
@@ -61,7 +61,7 @@ export default function LabFAQ({
         {/* Content column */}
         <div className={image ? "lg:w-3/5" : "w-full"}>
           <div className="mb-8">
-            <h2 className="brand-h1 mb-0 text-[#0e1f3f]">Frequently asked questions</h2>
+            <h2 className="brand-h1 mb-0 text-black">Frequently asked questions</h2>
           </div>
 
           <div>

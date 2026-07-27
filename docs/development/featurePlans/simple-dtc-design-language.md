@@ -1,10 +1,59 @@
 # Simple DTC Design Language
 
-**Status:** Phases 1–2 active, Phase 3 future
+**Status:** Re-scoped 2026-07-27 into three sequenced tickets - see "Current plan" below. Prior Phases 1-2 fold into it.
 **Owner:** Rudh
-**Branch:** `pdp-hero-simple-dtc`
+**Branch:** `pdp-hero-simple-dtc` (original); re-scope + doc work on `chore/branding-docs-cleanup`.
 **Related Jira:** SCRUM-1172 (Formalize "Simple DTC" design language), split from SCRUM-1171 (PDP hero Simple DTC reposition). This plan supersedes and expands 1172's original "docs-only" framing.
 **Design system:** `app/brand-base.css` (the only system; `premium-base.css` is deleted).
+
+---
+
+## Current plan (2026-07-27 re-scope)
+
+Re-scoped with Rudh into three sequenced tickets: **align the reference components first, then document the aligned reality, then propagate.** Documenting after aligning means the docs describe shipped truth with zero target-vs-actual gap, which is what makes the propagation pass mechanical instead of a per-page judgment call.
+
+The three aligned reference surfaces that define the direction: **home** (`app/page.tsx`), **PDP** (`/conka-flow`, `ProductHeroV2` + `ProductBuyPanel`), and the **cart drawer** (`CartDrawer.tsx`). They agree at the macro level (sans, `brand-h1`, navy, `brand-section`/`brand-track`) but diverged at the micro level; the ratified decisions below resolve those.
+
+### Ratified grammar decisions
+
+**Radius - one language, borrowed from the purchase panel.** This SUPERSEDES the `rounded-2xl` guidance in the learnings log further down (the Magic Mind soft-card recipe): reference to MM shows tighter corners, so the soft cards get pulled DOWN to the commerce-control radius rather than the controls being pushed up.
+
+| Element | Radius |
+|---|---|
+| Pills / buttons / nav / radios | `rounded-full` |
+| Cards (content AND commerce) | `rounded-md` |
+| Inner tiles / spec badges / standalone sub-elements | `rounded-lg` (kept equal-or-tighter than the parent when nested inside a card, so nothing inner looks rounder than its container) |
+
+Nothing on acquisition surfaces is sharp (0px); zero radius stays clinical-only. Concretely: home `rounded-2xl` cards and cart `rounded-xl` tiles come down to `rounded-md`; the PDP purchase panel (`rounded-md`) is already correct and is the anchor.
+
+**Colour.** Savings / positive = single green `#1a7f4f` (the `--brand-positive` token) everywhere; the PDP FlatPlanCard `#10B981` / `#0b7a55` is retired. Navy `#1B2757` = primary + decorative fill, sourced from a token (`--brand-navy`, to be seeded in T2). Open call inside T1: the PDP plan-tile gold `#C9A24A` "Save %" chip may be a deliberate premium accent rather than a savings signal - decide keep-gold vs go-green during the audit, do not blanket-green it.
+
+**Typography / mono.** Sans (`--font-brand-primary`), solid black for anything a user reads. Mono is a scalpel: small, solid-black micro-badges that are scanned only (time-of-day, verified-buyer). Pare the PDP's data-label mono (eyebrow, struck price, per-shot, save chip) back to sans. Confirms the existing learnings-log rule.
+
+### The three tickets
+
+| # | Ticket | Scope | Status |
+|---|--------|-------|--------|
+| 1 | Align core Simple DTC components | Audit + name the lead variant per generic component type, then reconcile home + PDP + cart to it: radius to the `rounded-md` scale above, savings to `#1a7f4f`, mono to scalpel, and consolidate the PDP plan-card implementations (legacy `PlanSelector` banners vs `FlatPlanCard`) into one. Code + per-surface visual review. | ACTIVE |
+| 2 | Document the ratified direction | Expand DESIGN_SYSTEM.md §8.5 to canonical with the concrete grammar + a "clinical to Simple DTC" mechanical mapping table; reframe `brand-base.css` so Simple DTC reads as the default and clinical as the opt-in scope; seed `--brand-navy`; fix all drift (below). Starts when T1 merges, so it documents shipped reality. | Next |
+| 3 | Propagate + clean up other pages | Parent only. Per-page children cut once T2's mapping table exists. Convert the 24+ clinical pages surface-by-surface per the authority table. | Future |
+
+### Drift to fix in Ticket 2 (verified this pass)
+
+- `/protocol/[id]` listed as a live clinical page in DESIGN_SYSTEM.md §8 and the `brand-base.css` Layer 2 comment - the route is deleted.
+- The "pages carrying `.brand-clinical`" list undercounts reality (~13 documented vs 24+ actual; missing `account/*`, `blog/*`, `faq`, `conka-both`, `professionals/*`).
+- Dead doc links: `.claude/rules/pages.md` points at `SOFT_TECH_LUXURY_STYLE_SHEET_GUIDELINES.md` (missing); DESIGN_SYSTEM.md §13 points at `WEBSITE_SIMPLIFICATION_PLAN.md` (missing; the live doc is `CODEBASE_AUDIT_AND_ROADMAP.md`).
+- `.claude/rules/components.md` says cards use `var(--brand-radius-card)` (32px) - contradicts the ratified `rounded-md` and the shipped Tailwind-utility approach.
+- DESIGN_SYSTEM.md §8 lists `/funnel` as clinical while the §8.5 authority table assigns it to Simple DTC - resolve the contradiction.
+
+### Jira tickets
+
+| Key | Title | Ticket | Status |
+|-----|-------|--------|--------|
+| SCRUM-1181 | Align core Simple DTC components (radius, savings green, mono) | 1 | Done |
+| SCRUM-1182 | Document the ratified Simple DTC direction (DESIGN_SYSTEM + brand-base.css) | 2 | Done |
+
+T3 (propagate to the 24+ clinical pages) is ticketed when it goes active, per the active-only rule. It follows the "Clinical to Simple DTC" mapping table now in DESIGN_SYSTEM.md §8.5.
 
 ---
 

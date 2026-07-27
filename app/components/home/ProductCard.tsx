@@ -163,7 +163,7 @@ export default function ProductCard({
     : product.link;
 
   return (
-    <article className="flex flex-col h-full bg-white rounded-2xl overflow-hidden ring-1 ring-black/8">
+    <article className="flex flex-col h-full bg-white rounded-md overflow-hidden ring-1 ring-black/8">
       {/* Product image → PDP link */}
       <Link
         href={href}

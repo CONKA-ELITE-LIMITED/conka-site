@@ -225,7 +225,7 @@ export default function AthleteCredibilityCarousel({
               aria-selected={isActive}
               aria-label={`${a.name}, ${a.role}`}
               onClick={() => setActiveIndex(i)}
-              className={`relative shrink-0 w-[72px] lg:w-auto aspect-square snap-start rounded-xl bg-[#eef1f8] overflow-hidden transition-all ${
+              className={`relative shrink-0 w-[72px] lg:w-auto aspect-square snap-start rounded-md bg-[#eef1f8] overflow-hidden transition-all ${
                 isActive
                   ? "ring-2 ring-[#1B2757]"
                   : "ring-1 ring-black/10 hover:ring-black/30 opacity-70 hover:opacity-100"
@@ -245,7 +245,7 @@ export default function AthleteCredibilityCarousel({
       </div>
 
       {/* Feature card — portrait with overlaid nav, quote as the hero */}
-      <div className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden mb-6">
+      <div className="bg-white rounded-md ring-1 ring-black/8 overflow-hidden mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch">
           {/* Portrait — nav arrows + counter overlay directly on the asset.
               self-start on mobile stops the grid's items-stretch from

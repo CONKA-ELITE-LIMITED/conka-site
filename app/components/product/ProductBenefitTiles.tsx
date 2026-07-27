@@ -104,7 +104,7 @@ export default function ProductBenefitTiles({
 
       {/* Textured tile */}
       <div
-        className="relative z-10 overflow-hidden rounded-2xl bg-[#F3F4F5] bg-cover bg-center px-6 py-16 shadow-[0_2px_40px_-8px_rgba(0,0,0,0.08)] md:px-14 md:py-16"
+        className="relative z-10 overflow-hidden rounded-md bg-[#F3F4F5] bg-cover bg-center px-6 py-16 shadow-[0_2px_40px_-8px_rgba(0,0,0,0.08)] md:px-14 md:py-16"
         style={{ backgroundImage: "url('/paperTextureTile.jpg')" }}
       >
         {/* Mobile: portrait, stacked and centred (MM mobile). Desktop: 3 columns,

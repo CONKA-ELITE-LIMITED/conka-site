@@ -65,6 +65,14 @@
      See DESIGN_SYSTEM.md §3 + §8.5. */
   --brand-positive: #1a7f4f;
 
+  /* Simple DTC primary + decorative navy. The forward direction uses this
+     filled navy as the primary CTA/accent AND decoratively (badges, stars,
+     gradient cards). Always #1B2757 regardless of scope (unlike --brand-accent,
+     which the clinical scope overrides to this same value). Many consumer
+     components still hard-code the literal; prefer this token on new work.
+     See DESIGN_SYSTEM.md §8.5. */
+  --brand-navy: #1b2757;
+
   /* Functional aliases */
   --brand-text-primary: var(--brand-black);
   --brand-text-on-dark: var(--brand-white);
@@ -358,13 +366,15 @@
  * is retained for science/evidence surfaces and the /app dark pages.
  * Full spec: docs/branding/DESIGN_SYSTEM.md §8.
  *
- * Pages currently carrying `.brand-clinical`:
- *   /start · / · /funnel · /science · /our-story · /case-studies
- *   /ingredients · /app · /why-conka · /conka-flow · /conka-clarity
- *   /protocol/[id] · + Navigation + Footer.
- *   (Cart, nav, and PDP-acquisition surfaces are converting to Simple
- *   DTC; a page may keep the scope for zero-radius tokens while its
- *   hero/cart already follow the Simple DTC grammar.)
+ * Pages currently carrying `.brand-clinical` (grep-verified 2026-07):
+ *   / · /science · /ingredients · /our-story · /why-conka · /case-studies
+ *   /conka-flow · /conka-clarity · /conka-both · /faq · /professionals(+/order)
+ *   /account(+/login /register /details /orders /subscriptions)
+ *   /blog(+/[slug] /page /topic) · /app · /app-insights.
+ *   (/start and /funnel are Simple DTC, not clinical.) Home + the PDPs keep the
+ *   scope only for token inheritance (navy accent + #f5f5f5 tint); their visible
+ *   radius is Tailwind rounded-* utilities, NOT the zeroed --brand-radius-*
+ *   tokens. See DESIGN_SYSTEM.md §8.5.
  *
  * Rules:
  *   - Zero radius everywhere (token overrides)

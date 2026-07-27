@@ -44,7 +44,7 @@ export default function AppUSPSection() {
 
       <div className="lg:grid lg:grid-cols-2 lg:gap-10 lg:items-center">
         {/* Score-ring asset on the soft panel */}
-        <div className="relative aspect-square rounded-2xl bg-[#eef1f8] ring-1 ring-black/8 overflow-hidden mb-8 lg:mb-0">
+        <div className="relative aspect-square rounded-md bg-[#eef1f8] ring-1 ring-black/8 overflow-hidden mb-8 lg:mb-0">
           <Image
             src="/app/AppConkaRing.png"
             alt="CONKA app home screen showing the live cognitive score ring"

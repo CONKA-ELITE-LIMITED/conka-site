@@ -34,7 +34,7 @@ function DayItems({ milestones }: { milestones: ExpectMilestone[] }) {
           <div className="mb-4 text-3xl font-bold leading-none tracking-tight text-black lg:text-4xl">
             {m.day}
           </div>
-          <div className="mb-5 rounded-lg border-2 border-[#1B2757] bg-white px-6 py-4">
+          <div className="mb-5 rounded-md border-2 border-[#1B2757] bg-white px-6 py-4">
             <h3 className="text-2xl font-bold leading-tight text-black lg:text-3xl">
               {m.title}
             </h3>
