@@ -33,8 +33,11 @@ const INK = "#1B2757";
 
 export default function SegmentToggle({
   segments,
+  onSelect,
 }: {
   segments: SegmentToggleSegment[];
+  /** Fired with the segment label when a visitor switches (analytics). */
+  onSelect?: (label: string) => void;
 }) {
   const [active, setActive] = useState(0);
   const seg = segments[active];
@@ -53,7 +56,10 @@ export default function SegmentToggle({
               key={s.label}
               type="button"
               aria-pressed={isActive}
-              onClick={() => setActive(i)}
+              onClick={() => {
+                setActive(i);
+                onSelect?.(s.label);
+              }}
               className="rounded-full px-5 py-2 text-[13px] font-semibold transition-colors"
               style={{
                 background: isActive ? INK : "transparent",

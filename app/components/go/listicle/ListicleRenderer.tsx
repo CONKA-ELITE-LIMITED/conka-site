@@ -35,8 +35,10 @@ import {
   SectionImpressions,
   TrackedSection,
   sectionId,
+  slugifyChoice,
   useListicleCta,
   useListicleHref,
+  useListicleInteraction,
 } from "./listicleAnalytics";
 
 /**
@@ -404,6 +406,10 @@ function BodyBlock({
   block: ListicleBodyBlock;
   index: number;
 }) {
+  // Active-intent reporter for the interactive blocks below (symptom picker,
+  // segment toggle). Unconditional per the rules of hooks; a no-op for the rest.
+  const fireInteraction = useListicleInteraction();
+
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
     return (
@@ -525,7 +531,13 @@ function BodyBlock({
           ) : null}{" "}
           {block.headline}
         </h3>
-        <SymptomExplainer intro={block.intro} symptoms={block.symptoms} />
+        <SymptomExplainer
+          intro={block.intro}
+          symptoms={block.symptoms}
+          onSelect={(label) =>
+            fireInteraction(`symptom_${slugifyChoice(label)}`)
+          }
+        />
       </div>
     );
   }
@@ -541,7 +553,12 @@ function BodyBlock({
           ) : null}{" "}
           {block.headline}
         </h3>
-        <SegmentToggle segments={block.segments} />
+        <SegmentToggle
+          segments={block.segments}
+          onSelect={(label) =>
+            fireInteraction(`segment_${slugifyChoice(label)}`)
+          }
+        />
       </div>
     );
   }

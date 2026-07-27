@@ -175,6 +175,22 @@ export function trackListicleCtaClicked(params: ListicleEventBase): void {
   safeTrack("listicle:cta_clicked", params);
 }
 
+/**
+ * Fires when a visitor operates an interactive block (symptom picker, segment
+ * toggle), i.e. an *active-intent* signal rather than a scroll-past. The choice
+ * is folded into `section` (`symptom_<label>`, `segment_<label>`), the same way
+ * the CTA position is, so it still respects the two-property budget:
+ *
+ *   by=["eventData/slug","eventData/section"]
+ *   filter=eventName eq 'listicle:interaction'
+ *
+ * Only presses fire, never the pre-selected default, so a toggle's default
+ * option is under-counted relative to the one visitors switch to.
+ */
+export function trackListicleInteraction(params: ListicleEventBase): void {
+  safeTrack("listicle:interaction", params);
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**

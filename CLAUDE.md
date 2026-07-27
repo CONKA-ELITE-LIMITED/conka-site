@@ -134,6 +134,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | **Current state + roadmap** — performance, code quality, architecture assessment and prioritised improvements |
 | `docs/TODO.md` | **Deferred work tracker** — tech debt and cleanup tasks, with what unblocks each |
 | `docs/development/featurePlans/landing-conversion/README.md` | **Landing conversion programme** — personas x formats strategy, status, tracking plan, decision log |
+| `docs/sprints/README.md` | **Commercial / growth sprints** — time-boxed business pushes (ad-spend trials, launches). Current: the £300/day listicle ad-spend trial. Live data lives in `docs/analytics/LISTICLE_PERFORMANCE.md` |
 | `docs/development/featurePlans/asset-and-protocol-cleanup.md` | **Tech debt cleanup** — unreferenced `public/` assets + protocol system removal. Read before touching the product-data layer: the protocol *presentation* layer is dead, but the *commerce* layer (`ProtocolId`, `PROTOCOL_VARIANTS`, subscriptions UI) is live legacy support for existing subscribers |
 | `docs/MASTER_CONTEXT.md` | High-level architecture and business context |
 | `docs/PAGE_NARRATIVES.md` | **Page story map** — current section-by-section arc + health rating per page; spot the weakest section to improve next |
