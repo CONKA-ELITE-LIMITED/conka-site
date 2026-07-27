@@ -23,6 +23,8 @@ Two axes, every page is one cell:
 
 All formats live on one route system: `/go/[slug]`, one config file per page, registered in `app/lib/landings/index.ts`. Pages are ad destinations only: noindex, no nav, never linked from the site. An iteration or A/B test = a new slug. No CMS, no A/B infra.
 
+**Active spend:** [2026-07 ad-spend sprint](../../../sprints/2026-07-listicle-ad-spend.md) — £300/day Meta trial on the three persona listicles (live 24 Jul → ~7 Aug 2026). Live performance data: [LISTICLE_PERFORMANCE.md](../../../analytics/LISTICLE_PERFORMANCE.md).
+
 **Current-state mechanics reference:** `docs/features/LANDING_QUIZ_SYSTEM.md` (architecture, schema, how to add a page). This README is strategy and status; that doc is how the code works.
 
 ## Tracking plan
