@@ -9,10 +9,10 @@
  */
 export default function CartAppGift() {
   return (
-    <div className="rounded-lg bg-[#eef0f5] px-4 py-3 text-[#1B2757]">
+    <div className="rounded-md bg-[#eef0f5] px-4 py-3 text-[#1B2757]">
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm font-semibold">CONKA app included</p>
-        <span className="shrink-0 rounded bg-[#1B2757] px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
+        <span className="shrink-0 rounded-full bg-[#1B2757] px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
           Free!
         </span>
       </div>

@@ -246,7 +246,7 @@ export default function CartDrawer() {
                     href={product.href}
                     onClick={closeCart}
                     aria-label={product.alt}
-                    className="group block overflow-hidden rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
+                    className="group block overflow-hidden rounded-md bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
                   >
                     <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                       <Image
@@ -281,7 +281,7 @@ export default function CartDrawer() {
                 >
                   <div className="flex gap-4">
                     {/* Product image */}
-                    <div className="w-24 h-24 shrink-0 overflow-hidden rounded-lg">
+                    <div className="w-24 h-24 shrink-0 overflow-hidden rounded-md">
                       <Image
                         src={
                           item.merchandise.product.featuredImage?.url ||
@@ -320,7 +320,7 @@ export default function CartDrawer() {
                                   {shotCount} Bottles
                                 </span>
                                 {freeShots && freeShots > 0 ? (
-                                  <span className="inline-block rounded bg-[#1a7f4f]/10 px-2 py-0.5 text-xs font-semibold text-[#1a7f4f]">
+                                  <span className="inline-block rounded-full bg-[#1a7f4f]/10 px-2 py-0.5 text-xs font-semibold text-[#1a7f4f]">
                                     + {freeShots} free
                                   </span>
                                 ) : null}
@@ -347,7 +347,7 @@ export default function CartDrawer() {
 
                       {/* Controls: quantity left, remove right */}
                       <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center rounded-lg border border-black/15">
+                        <div className="flex items-center rounded-md border border-black/15">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             disabled={loading}

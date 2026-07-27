@@ -30,7 +30,7 @@ export default function FreeShotsBadge({
   if (compact) {
     return (
       <span
-        className={`inline-flex items-center bg-[#1a7f4f]/[0.1] text-[#1a7f4f] text-[11px] font-bold px-2 py-0.5 ${className}`}
+        className={`inline-flex items-center rounded-full bg-[#1a7f4f]/[0.1] text-[#1a7f4f] text-[11px] font-bold px-2 py-0.5 ${className}`}
       >
         +{freeShots} free
       </span>
@@ -39,7 +39,7 @@ export default function FreeShotsBadge({
 
   return (
     <span
-      className={`inline-flex items-center bg-[#1a7f4f]/[0.1] text-[#1a7f4f] text-xs font-semibold px-2.5 py-1 ${className}`}
+      className={`inline-flex items-center rounded-full bg-[#1a7f4f]/[0.1] text-[#1a7f4f] text-xs font-semibold px-2.5 py-1 ${className}`}
     >
       +<span className="font-bold mx-1">{freeShots} free shots</span> {suffix}
     </span>

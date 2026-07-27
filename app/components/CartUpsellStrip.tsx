@@ -76,7 +76,7 @@ export default function CartUpsellStrip({
       <button
         onClick={handleAccept}
         disabled={busy}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1B2757] px-5 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-40"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1B2757] px-5 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-40"
         aria-label={offer.ctaLabel}
       >
         {isActing ? (
