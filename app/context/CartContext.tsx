@@ -170,6 +170,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const attributes = buildCartAttributes(metadata, sellingPlanId);
     const cartAttributes = buildMetaCartAttributes();
+    // Carry the precise listicle origin (<slug>-<section>) as a hidden, cart-level
+    // attribute so the orders/paid webhook can tag the order by persona (SCRUM-1180).
+    // The "_" prefix keeps it off the customer's checkout, matching _fbp / _fbc.
+    if (metadata?.origin) {
+      cartAttributes.push({ key: "_listicle_origin", value: metadata.origin });
+    }
 
     setLoading(true);
     setError(null);

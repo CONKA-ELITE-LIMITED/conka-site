@@ -479,20 +479,69 @@ export function getAddToCartSource(): string {
 }
 
 /**
- * The `?src=` origin token a /go listicle appends to its outbound PDP links.
+ * Session-scoped key holding the listicle `?src=` token across a within-tab
+ * navigation, so a PDP add-to-cart still knows its origin after the URL param
+ * has been dropped. Mirrors how `_fbc` persists the ad-click id.
+ */
+const LISTICLE_SRC_KEY = "listicle_src";
+
+/**
+ * A raw `src` token is valid only if it is a plain slug-and-section string.
+ * Anything else lands in an analytics property and a Shopify cart attribute
+ * straight from the URL, so it is discarded rather than allowed to pollute the
+ * data with attacker-controlled junk.
+ */
+function isValidListicleSrc(raw: string): boolean {
+  return /^[a-z0-9_-]{1,96}$/i.test(raw);
+}
+
+/**
+ * Persist the `?src=` token a /go listicle appended to its outbound PDP link.
  *
- * Sanitised deliberately: this value lands in an analytics property straight
- * from the URL, so anyone can put anything in it. Anything that is not a plain
- * slug-and-section token is discarded rather than allowed to pollute the
- * dashboard with junk dimensions.
+ * Called on landing so the origin survives a within-PDP navigation that drops
+ * the param before the visitor adds to cart. Safe to call on every page load:
+ * a no-op when there is no valid `src` in the URL.
+ */
+export function captureListicleSrc(): void {
+  if (typeof window === "undefined") return;
+
+  const raw = new URLSearchParams(window.location.search).get("src");
+  if (!raw || !isValidListicleSrc(raw)) return;
+
+  try {
+    window.sessionStorage.setItem(LISTICLE_SRC_KEY, raw);
+  } catch {
+    // sessionStorage unavailable (private mode); attribution simply degrades.
+  }
+}
+
+/**
+ * The `?src=` origin token a /go listicle appended to its outbound PDP links.
+ *
+ * Reads the live URL first, falling back to the value captured into
+ * sessionStorage on landing (see captureListicleSrc), so attribution survives a
+ * within-PDP navigation that drops the param.
  */
 function getListicleSrc(): string | null {
   if (typeof window === "undefined") return null;
 
   const raw = new URLSearchParams(window.location.search).get("src");
-  if (!raw) return null;
+  if (raw && isValidListicleSrc(raw)) {
+    // Write-through so a later add-to-cart on this same tab still has it.
+    try {
+      window.sessionStorage.setItem(LISTICLE_SRC_KEY, raw);
+    } catch {
+      // ignore
+    }
+    return raw;
+  }
 
-  return /^[a-z0-9_-]{1,96}$/i.test(raw) ? raw : null;
+  try {
+    const stored = window.sessionStorage.getItem(LISTICLE_SRC_KEY);
+    return stored && isValidListicleSrc(stored) ? stored : null;
+  } catch {
+    return null;
+  }
 }
 
 /**

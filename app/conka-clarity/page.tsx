@@ -25,6 +25,7 @@ import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import {
+  captureListicleSrc,
   getPurchaseOrigin,
   getPurchaseSource,
   getQuizSessionId,
@@ -56,6 +57,10 @@ export default function ConkaClarityPage() {
   // content_name preserved as "CONKA Clarity" to match production tracking
   // history; the product name in formulaContent is "CONKA Clear".
   useEffect(() => {
+    // Persist any listicle ?src= that carried the visitor here, so an add-to-cart
+    // after navigating within the PDP still attributes to its listicle (SCRUM-1180).
+    captureListicleSrc();
+
     const variantData = getCadenceVariantByFormula("02", "monthly-sub");
     if (variantData?.variantId) {
       trackMetaViewContent({

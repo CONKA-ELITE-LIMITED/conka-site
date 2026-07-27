@@ -63,3 +63,45 @@ export async function adminGraphql<T>(
 
   return (await res.json()) as AdminGraphqlResponse<T>;
 }
+
+interface TagsAddResponse {
+  tagsAdd?: {
+    userErrors?: Array<{ field?: string[] | null; message: string }>;
+  };
+}
+
+/**
+ * Add tags to an order via the Admin API `tagsAdd` mutation.
+ *
+ * Idempotent by nature: Shopify ignores tags the order already has, so a webhook
+ * retry re-adding the same tags is a safe no-op. A no-op too when the token is
+ * unset (guards with isAdminApiConfigured) or when no tags are passed. Throws on
+ * GraphQL or userErrors so the caller can log; requires the token to have
+ * write_orders scope.
+ */
+export async function addOrderTags(
+  orderId: number,
+  tags: string[],
+): Promise<void> {
+  if (!isAdminApiConfigured() || tags.length === 0) return;
+
+  const mutation = `
+    mutation AddOrderTags($id: ID!, $tags: [String!]!) {
+      tagsAdd(id: $id, tags: $tags) {
+        userErrors { field message }
+      }
+    }`;
+
+  const res = await adminGraphql<TagsAddResponse>(mutation, {
+    id: `gid://shopify/Order/${orderId}`,
+    tags,
+  });
+
+  const userErrors = res.data?.tagsAdd?.userErrors ?? [];
+  const errors = [...(res.errors ?? []), ...userErrors];
+  if (errors.length > 0) {
+    throw new Error(
+      `tagsAdd failed: ${errors.map((e) => e.message).join("; ")}`,
+    );
+  }
+}
