@@ -37,7 +37,7 @@ export const productivityListicle: ListicleConfig = {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
     },
-    cta: "Try it risk free, now 46% off",
+    cta: "Have it all, risk-free for 100 days",
     trustPills: [
       { label: "Zero caffeine", icon: "no-caffeine" },
       { label: "Informed Sport Certified", icon: "informed-sport" },
