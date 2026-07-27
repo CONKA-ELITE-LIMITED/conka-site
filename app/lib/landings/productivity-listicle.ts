@@ -13,9 +13,9 @@ import type { ListicleConfig } from "./listicle-types";
  * Repositioned 2026-07-27 (SCRUM-1187) to a founder-led "CEOs and executives"
  * have-it-all angle to message-match the founder-driven ads and fix the weak
  * first fold. Hero carries the founder proof (TwoFounders photo + Harry/Humphrey
- * juggler origin); reasons re-themed off generic caffeine fights to: 1 founder
- * cheat-code, 2 have-it-all, 3 performance-without-burnout, 4 socialise-keep-
- * tomorrow, 5 sharp-all-day, 6 app-proof, 7 guarantee. Plan: docs/development/featurePlans/
+ * juggler origin); reasons re-themed off generic caffeine fights to: 1 performance-
+ * without-burnout, 2 socialise-keep-tomorrow, 3 founder cheat-code, 4 have-it-all,
+ * 5 sharp-all-day, 6 app-proof, 7 guarantee. Plan: docs/development/featurePlans/
  * productivity-listicle-founder-reposition.md. Deferred: named exec quotes
  * (Shane, Nimisha) integrated into the review strip.
  */
@@ -87,33 +87,6 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 1,
-      headline: "The Cheat Code Two Founders Built for Themselves",
-      body: "This started as a private edge, not a product. Harry needed to think clearly under Olympic pressure with Team GB; Humphrey was running a full-time team while training for Ironmans. Nothing on the market worked, so they spent years and £500,000 of their own money building it, collapsing 14 daily capsules into a single shot tested at Cambridge. What was their cheat code is now yours.",
-      chips: ["Backed by 25+ cognitive trials"],
-      asset: {
-        kind: "image",
-        src: "/lifestyle/CreationOfConka.jpg",
-        alt: "CONKA founders developing the formula",
-        fit: "cover",
-        aspect: "1500/1000",
-      },
-    },
-    {
-      kind: "reason",
-      n: 2,
-      headline: "Have the Career Without Losing the Life",
-      body: "Chasing the next deadline while the dinners, the friends, the people at home quietly slip down the list. You were told that's the cost of ambition. It isn't. CONKA gives you steady, all-day capacity, so you can go hard at work and still show up for the life that makes it worth it, present in both and drained by neither.",
-      asset: {
-        kind: "image",
-        src: "/lifestyle/GirlsLaughing.jpg",
-        alt: "Friends laughing together over a meal",
-        fit: "cover",
-        aspect: "1/1",
-      },
-    },
-    {
-      kind: "reason",
-      n: 3,
       headline: "High Performance, Without the Burnout",
       body: "You don't call it burnout. You call it a busy quarter, then another. The ones most at risk are the people still hitting every target, running on willpower and caffeine until something gives. CONKA's adaptogens are shown to lower the cortisol load that turns drive into depletion, so you can perform hard without paying for it later.",
       chips: ["28% less burnout in a clinical trial", "28% lower cortisol, the stress hormone"],
@@ -122,20 +95,8 @@ export const productivityListicle: ListicleConfig = {
       asset: { kind: "video", src: "/videos/clear/ClearLiquid.mp4", aspect: "3/4" },
     },
     {
-      kind: "statsBand",
-      eyebrow: "CLINICALLY PROVEN",
-      stats: [
-        { value: "18.1%", label: "Faster processing than caffeine" },
-        { value: "80%", label: "Improved cognitive scores in week one" },
-        { value: "+14.86%", label: "Sharper thinking vs placebo" },
-        { value: "75%", label: "Improved in under three weeks" },
-      ],
-      footnote:
-        "*From CONKA cognitive trials, including a 6-week randomised double-blind placebo-controlled trial with 29 professional rugby players.",
-    },
-    {
       kind: "reason",
-      n: 4,
+      n: 2,
       headline: "Enjoy the Night. Keep Tomorrow.",
       body: "The dinners and the late nights are part of the life you are working for, and they should not cost you the morning after. CONKA will not undo a big night, but the stack below helps your brain clear the load and start the next day closer to sharp.",
       asset: {
@@ -169,6 +130,45 @@ export const productivityListicle: ListicleConfig = {
           },
         ],
         footer: "All in two 30ml shots, morning and night.",
+      },
+    },
+    {
+      kind: "statsBand",
+      eyebrow: "CLINICALLY PROVEN",
+      stats: [
+        { value: "18.1%", label: "Faster processing than caffeine" },
+        { value: "80%", label: "Improved cognitive scores in week one" },
+        { value: "+14.86%", label: "Sharper thinking vs placebo" },
+        { value: "75%", label: "Improved in under three weeks" },
+      ],
+      footnote:
+        "*From CONKA cognitive trials, including a 6-week randomised double-blind placebo-controlled trial with 29 professional rugby players.",
+    },
+    {
+      kind: "reason",
+      n: 3,
+      headline: "The Cheat Code Two Founders Built for Themselves",
+      body: "This started as a private edge, not a product. Harry needed to think clearly under Olympic pressure with Team GB; Humphrey was running a full-time team while training for Ironmans. Nothing on the market worked, so they spent years and £500,000 of their own money building it, collapsing 14 daily capsules into a single shot tested at Cambridge. What was their cheat code is now yours.",
+      chips: ["Backed by 25+ cognitive trials"],
+      asset: {
+        kind: "image",
+        src: "/lifestyle/CreationOfConka.jpg",
+        alt: "CONKA founders developing the formula",
+        fit: "cover",
+        aspect: "1500/1000",
+      },
+    },
+    {
+      kind: "reason",
+      n: 4,
+      headline: "Have the Career Without Losing the Life",
+      body: "Chasing the next deadline while the dinners, the friends, the people at home quietly slip down the list. You were told that's the cost of ambition. It isn't. CONKA gives you steady, all-day capacity, so you can go hard at work and still show up for the life that makes it worth it, present in both and drained by neither.",
+      asset: {
+        kind: "image",
+        src: "/lifestyle/GirlsLaughing.jpg",
+        alt: "Friends laughing together over a meal",
+        fit: "cover",
+        aspect: "1/1",
       },
     },
     {
