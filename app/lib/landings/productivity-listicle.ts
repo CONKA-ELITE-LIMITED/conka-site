@@ -182,8 +182,8 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 5,
-      headline: "Sharp From the First Meeting to the Last",
-      body: "The clarity you have at 9am is usually gone by 3pm, and a fourth coffee only rents it back with a crash to follow. CONKA is completely caffeine-free, and its ingredients deliver 18.1% faster mental processing than caffeine, so your thinking holds from the first meeting to the last.",
+      headline: "Sharp From Your Morning Workout to Your Late-Night Deadline",
+      body: "The clarity you have at 9am is usually gone by 3pm, and a fourth coffee only rents it back with a crash to follow. CONKA is completely caffeine-free, and its ingredients deliver 18.1% faster mental processing than caffeine, so your sharpness holds from the morning workout to the last deadline of the day.",
       citation: "DOI: 10.1186/1550-2783-12-S1-P41",
       // Day-energy curve: afternoon holds steady with CONKA
       asset: { kind: "dayEnergyCurve" },
