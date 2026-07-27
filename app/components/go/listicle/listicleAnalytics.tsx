@@ -12,6 +12,7 @@ import {
 } from "react";
 import {
   trackListicleCtaClicked,
+  trackListicleInteraction,
   trackListicleSectionViewed,
 } from "@/app/lib/analytics";
 
@@ -150,6 +151,39 @@ export function useListicleCta(): (section: string) => void {
     (section: string) => {
       if (!ctx) return;
       trackListicleCtaClicked({ slug: ctx.slug, section });
+    },
+    [ctx],
+  );
+}
+
+/**
+ * Normalises a human choice label into a section-token fragment, e.g.
+ * "For women" -> "for-women". Keeps the interaction `section` values inside the
+ * `[a-z0-9_-]` shape the rest of the dashboard uses.
+ */
+export function slugifyChoice(label: string): string {
+  return (
+    label
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 40) || "unknown"
+  );
+}
+
+/**
+ * Returns a fire-and-forget interaction reporter bound to this page's slug, for
+ * interactive blocks (symptom picker, segment toggle). The caller folds the
+ * choice into `section` (e.g. `symptom_forgetfulness`). No-ops outside a
+ * <SectionImpressions> provider. Mirrors useListicleCta.
+ */
+export function useListicleInteraction(): (section: string) => void {
+  const ctx = useContext(SectionCtx);
+
+  return useCallback(
+    (section: string) => {
+      if (!ctx) return;
+      trackListicleInteraction({ slug: ctx.slug, section });
     },
     [ctx],
   );

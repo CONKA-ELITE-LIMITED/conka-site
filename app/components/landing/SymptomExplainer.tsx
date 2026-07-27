@@ -37,6 +37,8 @@ export interface SymptomExplainerSymptom {
 interface SymptomExplainerProps {
   intro: string;
   symptoms: SymptomExplainerSymptom[];
+  /** Fired with the symptom label when a visitor picks one (analytics). */
+  onSelect?: (label: string) => void;
 }
 
 // Soft gradient chips cycled across the ingredient cards (matches IngredientGrid)
@@ -84,6 +86,7 @@ function IngredientCard({
 export default function SymptomExplainer({
   intro,
   symptoms,
+  onSelect,
 }: SymptomExplainerProps) {
   const [active, setActive] = useState(0);
   const [showAllSymptoms, setShowAllSymptoms] = useState(false);
@@ -106,6 +109,7 @@ export default function SymptomExplainer({
     setActive(i);
     setShowAllIngredients(false);
     setShowBrain(false);
+    onSelect?.(symptoms[i].label);
   }
 
   function toggleSymptoms() {
