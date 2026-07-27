@@ -29,12 +29,13 @@ config (app/lib/landings/*.ts)
 
 ## Analytics
 
-Two events, wired automatically by both renderers. Nothing to configure per page.
+Three events, wired automatically by both renderers. Nothing to configure per page.
 
 | Event | Fires | Properties |
 |-------|-------|------------|
 | `listicle:section_viewed` | Once per section per pageview, when it scrolls into view | `slug`, `section` |
 | `listicle:cta_clicked` | On CTA click (or add-to-cart in the `im8` buy zone) | `slug`, `section` |
+| `listicle:interaction` | On an interactive-block press: the ADHD symptom picker and the brain-ageing segment toggle | `slug`, `section` |
 
 `product` means different things per template, because the buy boxes differ: on `mm` it is a click through to a PDP, on `im8` it is an add-to-cart. Compare it within a template, not across.
 
@@ -49,6 +50,8 @@ filter=eventName eq 'listicle:cta_clicked'
 
 `section_viewed` is the denominator for `cta_clicked`: without it a low click count cannot separate a weak section from a rarely-reached one. Divide one by the other to get a per-section click-through rate.
 
+`listicle:interaction` is the active-intent signal (a self-identifying press, not a scroll-past). It folds the *choice* into `section`, as `symptom_<label>` (ADHD) or `segment_<label>` (brain-ageing), so the same grouped query works. Only presses fire, never the pre-selected default, so a toggle's default option is under-counted relative to the one visitors switch to. Wired in `ListicleRenderer` via `useListicleInteraction`; the `SymptomExplainer` / `SegmentToggle` components stay analytics-agnostic behind an `onSelect` prop.
+
 ### Attributing the purchase
 
 Most listicle CTAs link out to a PDP, so the click and the eventual add-to-cart would otherwise be unrelated rows. Every outbound CTA carries an origin token, `?src=<slug>-<section>`, and the PDP feeds it into the `source` field of the existing `purchase:add_to_cart` event through `getPurchaseSource()`. No new purchase event.
@@ -60,6 +63,16 @@ The im8 buy zone sells in place, so there is no URL to read: it tags `source` fr
 Two guards worth knowing about: the token is sanitised on read (anything not matching `^[a-z0-9_-]{1,96}$` is discarded, since a URL param is attacker-controlled and would otherwise pollute the dashboard), and PDPs self-canonicalise from the root layout's relative `canonical: "./"`, which resolves on pathname only, so `?src=` creates no duplicate-content risk.
 
 The mm buy boxes pass the token to the shared home `ProductGrid` through an optional `linkSrc` prop. Unset, links are untouched, so the home page is unaffected.
+
+### Tagging the order with the persona (SCRUM-1180)
+
+The `source` above lands the origin in Vercel, but the Shopify order needs it too, so paid orders are filterable by persona in the Orders list. The origin rides through to the order and becomes order tags:
+
+1. **Persist.** `captureListicleSrc()` writes `?src=` to `sessionStorage` on PDP landing (the three PDP pages call it on mount), so the origin survives a within-PDP navigation that drops the param. `getListicleSrc()` reads the live URL first, then falls back to the stored value.
+2. **Carry.** `CartContext` writes the origin as a hidden, cart-level `_listicle_origin` attribute on every add-to-cart (sourced from `getPurchaseOrigin()`, exactly like `_fbp` / `_fbc`, so a later origin-less add cannot wipe it). The `_` prefix keeps it off the customer's checkout.
+3. **Tag.** The `orders/paid` webhook reads `_listicle_origin` from the order's note attributes and adds `listicle` plus `persona:<slug>` tags via the Admin API (`addOrderTags`), in its own try/catch so it never blocks the Purchase send.
+
+Persona-only by design: the finer `section` stays in Vercel, keeping the Orders filter low-cardinality. An organic purchase (no `?src=` ever) carries no attribute and no tags.
 
 ### Implementation
 

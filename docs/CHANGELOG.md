@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-27** | Tag Shopify orders with the originating listicle persona (SCRUM-1180) so paid orders are filterable by persona in the Orders list
 - **2026-07-27** | Track listicle interactive-block engagement (ADHD symptom picker, brain-ageing segment toggle) via a new listicle:interaction event
 - **2026-07-24** | Fixed the intermittent blog build failure by reading the Notion post list once per build and sharing it across workers, and made the failure message report what it observed
 - **2026-07-24** | Science and CONKA App nav menus now use the same lifted product-tile treatment as the Shop menu

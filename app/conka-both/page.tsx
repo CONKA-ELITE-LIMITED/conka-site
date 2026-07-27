@@ -26,6 +26,7 @@ import {
   getCadenceVariantByProductHeroId,
 } from "@/app/lib/cadenceData";
 import {
+  captureListicleSrc,
   getPurchaseOrigin,
   getPurchaseSource,
   getQuizSessionId,
@@ -42,6 +43,10 @@ export default function ConkaBothPage() {
 
   // Meta ViewContent on page load
   useEffect(() => {
+    // Persist any listicle ?src= that carried the visitor here, so an add-to-cart
+    // after navigating within the PDP still attributes to its listicle (SCRUM-1180).
+    captureListicleSrc();
+
     const variantData = getCadenceVariantByProductHeroId(
       PRODUCT_HERO_ID,
       "monthly-sub",

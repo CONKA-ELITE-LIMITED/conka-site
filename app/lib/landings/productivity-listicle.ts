@@ -65,7 +65,7 @@ export const productivityListicle: ListicleConfig = {
       name: "Jack Willis",
       credentials: [
         "2025 Top 14 Player of the Season",
-        "3\u00d7 Top 14 Champion, Champions Cup winner",
+        "4\u00d7 Top 14 Champion, Champions Cup winner",
       ],
       quote:
         "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",

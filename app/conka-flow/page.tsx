@@ -25,6 +25,7 @@ import ProductGrid from "@/app/components/home/ProductGrid";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import {
+  captureListicleSrc,
   getPurchaseOrigin,
   getPurchaseSource,
   getQuizSessionId,
@@ -54,6 +55,10 @@ export default function ConkaFlowPage() {
 
   // Meta ViewContent (once per page view; stable variant ID for Meta)
   useEffect(() => {
+    // Persist any listicle ?src= that carried the visitor here, so an add-to-cart
+    // after navigating within the PDP still attributes to its listicle (SCRUM-1180).
+    captureListicleSrc();
+
     const variantData = getCadenceVariantByFormula("01", "monthly-sub");
     if (variantData?.variantId) {
       trackMetaViewContent({

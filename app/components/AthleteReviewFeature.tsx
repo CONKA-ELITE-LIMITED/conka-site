@@ -33,7 +33,7 @@ const DEFAULT_ATHLETE: AthleteReviewContent = {
   name: "Jack Willis",
   credentials: [
     "2025 Top 14 Player of the Season",
-    "3× Top 14 Champion, Champions Cup winner",
+    "4× Top 14 Champion, Champions Cup winner",
   ],
   quote:
     "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",

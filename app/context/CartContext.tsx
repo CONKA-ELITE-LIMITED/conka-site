@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Cart, CartLine } from '@/app/lib/shopify';
 import { trackAddToCart } from '@/app/lib/tripleWhale';
-import { trackPurchaseAddToCart } from '@/app/lib/analytics';
+import { trackPurchaseAddToCart, getPurchaseOrigin } from '@/app/lib/analytics';
 import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
 import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
@@ -170,6 +170,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const attributes = buildCartAttributes(metadata, sellingPlanId);
     const cartAttributes = buildMetaCartAttributes();
+    // Carry the precise listicle origin (<slug>-<section>) as a hidden, cart-level
+    // attribute so the orders/paid webhook can tag the order by persona (SCRUM-1180).
+    // Sourced from getPurchaseOrigin() (live URL + persisted sessionStorage), NOT
+    // metadata.origin, so it re-attaches on every add: cartAttributesUpdate REPLACES
+    // the cart's attributes, so an origin-less later add (home grid, upsell) would
+    // otherwise wipe it. Mirrors how _fbp / _fbc are re-derived each add. The "_"
+    // prefix keeps it off the customer's checkout.
+    const listicleOrigin = getPurchaseOrigin();
+    if (listicleOrigin) {
+      cartAttributes.push({ key: "_listicle_origin", value: listicleOrigin });
+    }
 
     setLoading(true);
     setError(null);
