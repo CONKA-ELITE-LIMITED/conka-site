@@ -12,8 +12,9 @@
  * as one track at a single rate and direction. Tiles are normalised to one
  * aspect ratio (object-cover) so the mixed-ratio UGC / customer / athlete
  * stills read as one cohesive band. Tile radius is the `tileRadius` prop,
- * defaulting to --brand-radius-container (0 under the clinical PDP scope, 24px
- * on Simple DTC); the listicles pass 0 for a sharp band.
+ * defaulting to 6px (rounded-md) so the band matches the Simple DTC card
+ * radius on home and the PDPs regardless of the clinical scope; the listicles
+ * pass 0 for a sharp band.
  *
  * Content-only: no <section>, no max-width, no horizontal padding at root. The
  * page owns the section wrapper and background. See SCRUM-1092.
@@ -119,14 +120,14 @@ export default function UGCMarquee({
   title = "Join Thousands Staying Sharp, Every Day",
   subtitle = "Two shots a day.",
   items = DEFAULT_UGC_ITEMS,
-  tileRadius = "var(--brand-radius-container)",
+  tileRadius = "6px",
 }: {
   title?: string;
   subtitle?: string;
   items?: UGCItem[];
-  /** Tile corner radius. Defaults to the container token (0 under the clinical
-   *  PDP scope, 24px on Simple DTC surfaces). The listicles pass a smaller
-   *  value so the band is less rounded than the Simple DTC default. */
+  /** Tile corner radius. Defaults to 6px (rounded-md), the Simple DTC card
+   *  radius, applied as a fixed value so the clinical scope does not zero it.
+   *  The listicles pass "0px" for a sharp band. */
   tileRadius?: string;
 }) {
   const columns = toColumns(items);

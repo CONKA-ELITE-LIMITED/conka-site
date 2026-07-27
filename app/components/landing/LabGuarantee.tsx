@@ -57,7 +57,7 @@ export default function LabGuarantee({
   mediaAlt?: string;
 } = {}) {
   return (
-    <div className="flex flex-col overflow-hidden border-y border-black/10 lg:flex-row lg:rounded-2xl lg:border">
+    <div className="flex flex-col overflow-hidden border-y border-black/10 lg:flex-row lg:rounded-md lg:border">
       {/* Copy panel — paper texture, stacks below the image on mobile */}
       <div
         className="order-2 flex flex-col justify-center p-8 lg:order-1 lg:w-1/2 lg:p-12 xl:p-16"

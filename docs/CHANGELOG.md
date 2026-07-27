@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-27** | Align home surface card radii to Simple DTC rounded-md (product cards, benefit tile, athlete carousel, app/review/guarantee panels, UGC + university tiles)
 - **2026-07-27** | Align cart drawer radii to the Simple DTC grammar (rounded-md containers, rounded-full badges/pills)
 - **2026-07-27** | Tag Shopify orders with the originating listicle persona (SCRUM-1180) so paid orders are filterable by persona in the Orders list
 - **2026-07-27** | Track listicle interactive-block engagement (ADHD symptom picker, brain-ageing segment toggle) via a new listicle:interaction event

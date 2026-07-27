@@ -108,7 +108,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     return (
       <div
         key={id}
-        className="bg-white rounded-2xl ring-1 ring-black/8 overflow-hidden flex flex-col"
+        className="bg-white rounded-md ring-1 ring-black/8 overflow-hidden flex flex-col"
       >
         <div className="relative aspect-square w-full overflow-hidden bg-[#eef1f8]">
           <Image
