@@ -30,13 +30,13 @@ export default function AthleteSidebar({
   return (
     <div className="space-y-6">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
           Filter by Sport
         </p>
         <div className="flex flex-wrap gap-1.5">
           <button
             onClick={() => onSelectSport("all")}
-            className={`px-3 py-1.5 border transition-colors font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums ${
+            className={`px-3 py-1.5 rounded-full border transition-colors text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums ${
               selectedSport === "all"
                 ? "bg-[#1B2757] text-white border-[#1B2757]"
                 : "bg-white text-black/70 border-black/12 hover:border-black/40"
@@ -51,7 +51,7 @@ export default function AthleteSidebar({
               <button
                 key={sport}
                 onClick={() => onSelectSport(sport)}
-                className={`px-3 py-1.5 border transition-colors font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-full border transition-colors text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums flex items-center gap-1.5 ${
                   selectedSport === sport
                     ? "bg-[#1B2757] text-white border-[#1B2757]"
                     : "bg-white text-black/70 border-black/12 hover:border-black/40"
@@ -67,7 +67,7 @@ export default function AthleteSidebar({
       </div>
 
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3 tabular-nums">
           Athletes · {String(filteredAthletes.length).padStart(2, "0")}
         </p>
         <div className="space-y-1.5 max-h-[calc(100vh-400px)] overflow-y-auto pr-2">
@@ -80,14 +80,14 @@ export default function AthleteSidebar({
               <button
                 key={athlete.id}
                 onClick={() => onSelectAthlete(athlete.id)}
-                className={`w-full text-left p-3 border transition-colors ${
+                className={`w-full text-left p-3 rounded-md border transition-colors ${
                   isActive
                     ? "border-[#1B2757] border-2 bg-white"
                     : "border-black/12 hover:border-black/40 bg-white"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 flex-shrink-0 overflow-hidden border border-black/8 bg-black/[0.03]">
+                  <div className="w-12 h-12 flex-shrink-0 overflow-hidden rounded-md border border-black/8 bg-black/[0.03]">
                     {showPhotoPlaceholder ? (
                       <div className="w-full h-full flex items-center justify-center">
                         <SportIcon sport={athlete.sport} size={20} className="opacity-40" />
@@ -108,11 +108,11 @@ export default function AthleteSidebar({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
-                      <span className="font-mono text-[9px] font-bold tabular-nums text-black/35">
+                      <span className="text-[9px] font-bold tabular-nums text-black/35">
                         {String(idx + 1).padStart(2, "0")}.
                       </span>
                       {athlete.featured && (
-                        <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+                        <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[#1B2757] tabular-nums">
                           Featured
                         </span>
                       )}
@@ -120,15 +120,15 @@ export default function AthleteSidebar({
                     <p className={`text-[13px] font-semibold truncate leading-tight ${isActive ? "text-[#1B2757]" : "text-black"}`}>
                       {athlete.name}
                     </p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/50 truncate mt-0.5 tabular-nums">
+                    <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-black/50 truncate mt-0.5 tabular-nums">
                       {athlete.profession}
                     </p>
                     {topImprovement && (
                       <div className="mt-1.5 flex items-baseline gap-1.5">
-                        <span className="font-mono text-sm font-bold tabular-nums text-[#1B2757]">
+                        <span className="text-sm font-bold tabular-nums text-[#1B2757]">
                           {topImprovement.value}
                         </span>
-                        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/45 tabular-nums truncate">
+                        <span className="text-[9px] font-medium uppercase tracking-[0.12em] text-black/45 tabular-nums truncate">
                           {topImprovement.metric}
                         </span>
                       </div>

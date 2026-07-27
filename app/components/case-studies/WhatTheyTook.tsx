@@ -45,16 +45,16 @@ export default function WhatTheyTook({
   const product = resolveProduct(version);
   const isBoth = product.bottles.length === 2;
   const meta = isBoth
-    ? "// balance protocol · flow + clear"
+    ? "// flow + clear"
     : `// ${product.label.toLowerCase()} · single formula`;
 
   return (
-    <div className="bg-white border border-black/12">
+    <div className="bg-white rounded-md border border-black/12 overflow-hidden shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
       <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50">
           What they took
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#1B2757] tabular-nums">
           {product.label}
         </p>
       </div>
@@ -81,7 +81,7 @@ export default function WhatTheyTook({
                   className="object-contain object-center"
                 />
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/70 tabular-nums">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/70 tabular-nums">
                 CONKA {bottle.name}
               </span>
             </div>

@@ -28,7 +28,7 @@ export default function CaseStudiesPage() {
 
         {isMobile === undefined ? (
           <div className="py-16 flex items-center justify-center">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/40 tabular-nums">
               Loading case studies…
             </p>
           </div>

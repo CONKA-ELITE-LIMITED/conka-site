@@ -18,7 +18,7 @@ function ProductBadge({ version }: { version?: "01" | "02" | "both" }) {
   const label =
     version === "01" ? "CONKA Flow" : version === "02" ? "CONKA Clear" : "Flow + Clear";
   return (
-    <span className="font-mono text-[9px] uppercase tracking-[0.18em] tabular-nums bg-white text-[#1B2757] border border-white/60 px-1.5 py-0.5">
+    <span className="text-[9px] font-semibold uppercase tracking-[0.12em] tabular-nums bg-white text-[#1B2757] rounded-full border border-white/60 px-2 py-0.5">
       {label}
     </span>
   );
@@ -46,7 +46,7 @@ function ChamferNav({
       type="button"
       onClick={onClick}
       aria-label={ariaLabel}
-      className="flex items-center justify-center w-11 h-11 bg-[#1B2757] text-white hover:opacity-85 active:opacity-70 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] lab-clip-tr"
+      className="flex items-center justify-center w-11 h-11 bg-[#1B2757] text-white hover:opacity-85 active:opacity-70 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] rounded-full"
     >
       <svg
         width="16"
@@ -107,7 +107,7 @@ export default function CaseStudiesPageMobile() {
         <div className="flex gap-1.5 pb-0.5">
           <button
             onClick={() => setSelectedSport("all")}
-            className={`flex-shrink-0 px-3 py-1.5 border transition-colors font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums ${
+            className={`flex-shrink-0 px-3 py-1.5 rounded-full border transition-colors text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums ${
               selectedSport === "all"
                 ? "bg-[#1B2757] text-white border-[#1B2757]"
                 : "bg-white text-black/70 border-black/12"
@@ -121,7 +121,7 @@ export default function CaseStudiesPageMobile() {
               <button
                 key={sport}
                 onClick={() => setSelectedSport(sport)}
-                className={`flex-shrink-0 px-3 py-1.5 border transition-colors font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums flex items-center gap-1.5 ${
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full border transition-colors text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums flex items-center gap-1.5 ${
                   selectedSport === sport
                     ? "bg-[#1B2757] text-white border-[#1B2757]"
                     : "bg-white text-black/70 border-black/12"
@@ -137,7 +137,7 @@ export default function CaseStudiesPageMobile() {
 
       {activeAthlete ? (
         <>
-          <div className="relative w-full aspect-[3/4] overflow-hidden border border-black/12 bg-white">
+          <div className="relative w-full aspect-[3/4] overflow-hidden rounded-md border border-black/12 bg-white">
             {(() => {
               const photoSrc =
                 getCaseStudyPhotoPath(activeAthlete.id) || activeAthlete.photo;
@@ -146,7 +146,7 @@ export default function CaseStudiesPageMobile() {
               if (showPlaceholder) {
                 return (
                   <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/[0.03]">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50">
                       {activeAthlete.name || "Photo"}
                     </span>
                   </div>
@@ -171,10 +171,10 @@ export default function CaseStudiesPageMobile() {
               aria-hidden
             />
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-              <span className="font-mono text-[10px] font-bold tabular-nums text-white bg-black/50 px-2 py-1 uppercase tracking-[0.16em]">
+              <span className="text-[10px] font-bold tabular-nums text-white bg-black/50 rounded-full px-2 py-1 uppercase tracking-[0.12em]">
                 {String(activeAthleteIndex + 1).padStart(2, "0")} / {String(filteredAthletes.length).padStart(2, "0")}
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white bg-black/50 px-2 py-1 tabular-nums">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white bg-black/50 rounded-full px-2 py-1 tabular-nums">
                 {SPORT_INFO[activeAthlete.sport].name}
               </span>
             </div>
@@ -185,7 +185,7 @@ export default function CaseStudiesPageMobile() {
                 </span>
                 <ProductBadge version={activeAthlete.productVersion} />
               </div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/75 line-clamp-1 tabular-nums mb-3">
+              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/75 line-clamp-1 tabular-nums mb-3">
                 {activeAthlete.achievement ?? activeAthlete.profession}
               </p>
               <div className="border-t border-white/25 pt-3">
@@ -198,10 +198,10 @@ export default function CaseStudiesPageMobile() {
                     const value = stat?.value ?? "—";
                     return (
                       <div key={i} className={i < 2 ? "border-r border-white/20" : ""}>
-                        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/70 leading-none">
+                        <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/70 leading-none">
                           {label}
                         </p>
-                        <p className="font-mono text-xl font-bold tabular-nums text-white mt-1.5 leading-none">
+                        <p className="text-xl font-bold tabular-nums text-white mt-1.5 leading-none">
                           {value}
                         </p>
                       </div>
@@ -209,7 +209,7 @@ export default function CaseStudiesPageMobile() {
                   })}
                 </div>
               </div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/55 tabular-nums mt-3">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/55 tabular-nums mt-3">
                 {activeAthlete.testingPeriod} · {activeAthlete.testsCompleted} Tests
               </p>
             </div>
@@ -236,7 +236,7 @@ export default function CaseStudiesPageMobile() {
                   onClick={() => setActiveAthleteIndex(i)}
                   aria-label={`Go to athlete ${i + 1}`}
                   aria-current={i === activeAthleteIndex}
-                  className={`w-1.5 h-1.5 transition-colors ${
+                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
                     i === activeAthleteIndex
                       ? "bg-[#1B2757]"
                       : "bg-black/20 hover:bg-black/35"
@@ -252,8 +252,8 @@ export default function CaseStudiesPageMobile() {
           </div>
         </>
       ) : (
-        <div className="bg-white border border-black/12 p-6 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+        <div className="bg-white rounded-md border border-black/12 p-6 text-center shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50">
             No athletes found for this filter
           </p>
         </div>

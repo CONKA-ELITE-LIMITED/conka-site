@@ -42,7 +42,7 @@ export default function CaseStudiesPageDesktop() {
     <div className="pb-8 md:pb-6">
       <div className="mb-10">
         <div className="mb-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3 tabular-nums">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3 tabular-nums">
             Featured · {String(featuredAthletes.length).padStart(2, "0")} Studies
           </p>
           <FeaturedAthletesCarousel
@@ -55,7 +55,7 @@ export default function CaseStudiesPageDesktop() {
 
       <div className="flex gap-8">
         <div className="w-80 flex-shrink-0 lg:sticky lg:top-24 lg:self-start">
-          <div className="bg-white border border-black/12 p-4">
+          <div className="bg-white rounded-md border border-black/12 p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
             <AthleteSidebar
               athletes={athletes}
               activeAthleteId={activeAthleteId}
@@ -68,19 +68,19 @@ export default function CaseStudiesPageDesktop() {
 
         <div className="flex-1 min-w-0">
           {activeAthlete ? (
-            <div className="bg-white border border-black/12 overflow-hidden">
+            <div className="bg-white rounded-md border border-black/12 overflow-hidden shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
               <div className="flex items-center justify-between px-5 py-3 border-b border-black/8">
-                <span className="font-mono text-[11px] font-bold tabular-nums text-black/40">
+                <span className="text-[11px] font-bold tabular-nums text-black/40">
                   {String(activeIndex + 1).padStart(2, "0")}.
                 </span>
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/50">
+                <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/50">
                   Case Study · {activeAthlete.sport}
                 </span>
               </div>
 
               <div className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-8 mb-8">
-                  <div className="relative aspect-square overflow-hidden border border-black/12 bg-black/[0.03]">
+                  <div className="relative aspect-square overflow-hidden rounded-md border border-black/12 bg-black/[0.03]">
                     {(() => {
                       const photoSrc =
                         getCaseStudyPhotoPath(activeAthlete.id) ||
@@ -89,7 +89,7 @@ export default function CaseStudiesPageDesktop() {
                       if (showPlaceholder) {
                         return (
                           <div className="w-full h-full flex items-center justify-center">
-                            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50">
                               {activeAthlete.name || "No photo available"}
                             </span>
                           </div>
@@ -112,7 +112,7 @@ export default function CaseStudiesPageDesktop() {
                   </div>
                   <div className="flex flex-col">
                     <div className="mb-6">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 mb-2 tabular-nums">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-2 tabular-nums">
                         {[activeAthlete.position, activeAthlete.organization]
                           .filter(Boolean)
                           .join(" · ")}
@@ -128,7 +128,7 @@ export default function CaseStudiesPageDesktop() {
                     </div>
                     <div className="border-t border-black/8 mb-6" />
                     <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 mb-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
                         Baseline vs Results
                       </p>
                       <ComparisonChart athlete={activeAthlete} />
@@ -136,7 +136,7 @@ export default function CaseStudiesPageDesktop() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-0 border border-black/12 mb-8">
+                <div className="grid grid-cols-3 gap-0 rounded-md border border-black/12 overflow-hidden mb-8">
                   {[
                     {
                       label: "Total Improvement",
@@ -155,10 +155,10 @@ export default function CaseStudiesPageDesktop() {
                       key={stat.label}
                       className={`py-6 px-5 ${idx < 2 ? "border-r border-black/8" : ""}`}
                     >
-                      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/40 leading-none">
                         {stat.label}
                       </p>
-                      <p className="font-mono text-4xl md:text-5xl font-bold tabular-nums text-[#1B2757] mt-3 leading-none">
+                      <p className="text-4xl md:text-5xl font-bold tabular-nums text-[#1B2757] mt-3 leading-none">
                         {stat.value}
                       </p>
                     </div>
@@ -166,21 +166,25 @@ export default function CaseStudiesPageDesktop() {
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 mb-8">
-                  <span className="px-3 py-1 border border-black/12 bg-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-black/70">
+                  <span className="px-3 py-1 rounded-full border border-black/12 bg-white text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums text-black/70">
                     {activeAthlete.testsCompleted} Tests
                   </span>
-                  <span className="px-3 py-1 border border-black/12 bg-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-black/70">
+                  <span className="px-3 py-1 rounded-full border border-black/12 bg-white text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums text-black/70">
                     {activeAthlete.testingPeriod}
                   </span>
-                  {activeAthlete.protocolUsed && (
-                    <span className="px-3 py-1 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums">
-                      {activeAthlete.protocolUsed}
+                  {activeAthlete.productVersion && (
+                    <span className="px-3 py-1 rounded-full bg-[#1B2757] text-white text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums">
+                      {activeAthlete.productVersion === "01"
+                        ? "CONKA Flow"
+                        : activeAthlete.productVersion === "02"
+                          ? "CONKA Clear"
+                          : "Flow + Clear"}
                     </span>
                   )}
                 </div>
 
                 <div className="mb-8">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
                     Field notes
                   </p>
                   <p className="text-sm text-black/75 leading-relaxed">
@@ -195,8 +199,8 @@ export default function CaseStudiesPageDesktop() {
               </div>
             </div>
           ) : (
-            <div className="bg-white border border-black/12 p-12 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+            <div className="bg-white rounded-md border border-black/12 p-12 text-center shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50">
                 Select an athlete to view their case study
               </p>
             </div>
@@ -204,10 +208,10 @@ export default function CaseStudiesPageDesktop() {
         </div>
       </div>
 
-      <div className="mt-16 bg-white border border-black/12 p-6 lg:p-8">
+      <div className="mt-16 bg-white rounded-md border border-black/12 p-6 lg:p-8 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
         <div className="max-w-3xl">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-            Start your journey · Balance Protocol
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
+            Start your journey · Flow + Clear
           </p>
           <h3
             className="brand-h2 text-black mb-3"
@@ -215,13 +219,10 @@ export default function CaseStudiesPageDesktop() {
           >
             Ready to start your own journey?
           </h3>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/50 tabular-nums mb-6">
             100-Day money-back guarantee · Free UK shipping · Cancel anytime
           </p>
-          <ConkaCTAButton
-            href="/conka-both"
-            meta="// balance protocol · 14 shots · 7-day cadence"
-          >
+          <ConkaCTAButton href="/conka-both" meta={null}>
             Try CONKA now
           </ConkaCTAButton>
         </div>

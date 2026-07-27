@@ -33,7 +33,7 @@ export default function FeaturedAthletesCarousel({
             key={athlete.id}
             type="button"
             onClick={() => onSelectAthlete(athlete.id)}
-            className={`relative flex-shrink-0 w-[140px] aspect-[3/4] overflow-hidden text-left transition-colors focus:outline-none focus:ring-2 focus:ring-[#1B2757] focus:ring-offset-2 bg-white snap-start ${
+            className={`relative flex-shrink-0 w-[140px] aspect-[3/4] rounded-md overflow-hidden text-left transition-colors focus:outline-none focus:ring-2 focus:ring-[#1B2757] focus:ring-offset-2 bg-white snap-start ${
               isActive
                 ? "border-2 border-[#1B2757]"
                 : "border border-black/12 hover:border-black/40"
@@ -58,18 +58,18 @@ export default function FeaturedAthletesCarousel({
               aria-hidden
             />
             <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
-              <span className="font-mono text-[9px] font-bold tabular-nums text-white/85 bg-black/45 px-1.5 py-0.5">
+              <span className="text-[9px] font-bold tabular-nums text-white/85 bg-black/45 rounded-full px-2 py-0.5">
                 {String(idx + 1).padStart(2, "0")}
               </span>
-              <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 bg-black/45 px-1.5 py-0.5">
+              <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-white/85 bg-black/45 rounded-full px-2 py-0.5">
                 {SPORT_INFO[athlete.sport]?.name ?? athlete.sport}
               </span>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-2.5 text-white">
-              <p className="font-mono text-[11px] font-semibold truncate leading-tight mb-1">
+              <p className="text-[11px] font-semibold truncate leading-tight mb-1">
                 {athlete.name}
               </p>
-              <p className="font-mono text-lg font-bold tabular-nums leading-none">
+              <p className="text-lg font-bold tabular-nums leading-none">
                 {improvement?.value ?? "+0%"}
               </p>
             </div>
