@@ -61,7 +61,7 @@ export default function LabFAQ({
         {/* Content column */}
         <div className={image ? "lg:w-3/5" : "w-full"}>
           <div className="mb-8">
-            <h2 className="brand-h1 mb-0 text-[#0e1f3f]">Frequently asked questions</h2>
+            <h2 className="brand-h1 mb-0 text-black">Frequently asked questions</h2>
           </div>
 
           <div>

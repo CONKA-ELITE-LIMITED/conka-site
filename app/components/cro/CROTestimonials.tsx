@@ -93,7 +93,7 @@ function ReviewTile({
       : `${testimonial.body.slice(0, CHAR_LIMIT).trimEnd()}...`;
 
   return (
-    <div className="flex h-full flex-col overflow-hidden border border-black/12 bg-white">
+    <div className="flex h-full flex-col overflow-hidden rounded-md border border-black/12 bg-white">
       {testimonial.photo && (
         <div className="relative aspect-[4/3] w-full border-b border-black/12 bg-black/[0.04]">
           <Image
@@ -111,7 +111,7 @@ function ReviewTile({
         <div className="flex items-center justify-between gap-2">
           <GoldStars rating={testimonial.rating} />
           {testimonial.productLabel && (
-            <span className="truncate text-[11px] font-semibold text-black/55">
+            <span className="shrink-0 truncate rounded-full bg-[#eef0f5] px-2 py-0.5 text-[11px] font-semibold text-[#1B2757]">
               {testimonial.productLabel}
             </span>
           )}
@@ -228,7 +228,7 @@ export default function CROTestimonials({
     <div>
       <div className="mb-8">
         <h2
-          className="brand-h2 mb-2 text-[#0e1f3f]"
+          className="brand-h2 mb-2 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           Real people. Real results.

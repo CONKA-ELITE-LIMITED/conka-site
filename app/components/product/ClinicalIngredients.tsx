@@ -142,7 +142,7 @@ export default function ClinicalIngredients({
 
           {/* Active formula — single asset + identity block */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-2xl border border-black/10 bg-white">
+            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-md border border-black/10 bg-white">
               <Image
                 key={meta.bottleImage}
                 src={meta.bottleImage}
@@ -184,7 +184,7 @@ export default function ClinicalIngredients({
             key={ing.id}
             data-tile
             name="clinical-ingredient"
-            className="group w-[260px] shrink-0 snap-start rounded-2xl border border-black/10 bg-white"
+            className="group w-[260px] shrink-0 snap-start rounded-md border border-black/10 bg-white"
           >
             {/* Collapsed face — name, tags, render, one-liner */}
             <summary className="p-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
