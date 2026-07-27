@@ -230,22 +230,13 @@ export default function CaseStudiesPageMobile() {
               onClick={handlePrev}
               ariaLabel="Previous athlete"
             />
-            <div className="flex items-center gap-1.5 flex-wrap justify-center">
-              {filteredAthletes.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setActiveAthleteIndex(i)}
-                  aria-label={`Go to athlete ${i + 1}`}
-                  aria-current={i === activeAthleteIndex}
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                    i === activeAthleteIndex
-                      ? "bg-[#1B2757]"
-                      : "bg-black/20 hover:bg-black/35"
-                  }`}
-                />
-              ))}
-            </div>
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 tabular-nums"
+              aria-live="polite"
+            >
+              {String(activeAthleteIndex + 1).padStart(2, "0")} /{" "}
+              {String(filteredAthletes.length).padStart(2, "0")} athletes
+            </p>
             <CircleNav
               direction="next"
               onClick={handleNext}
