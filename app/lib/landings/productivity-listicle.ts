@@ -116,6 +116,7 @@ export const productivityListicle: ListicleConfig = {
       n: 3,
       headline: "High Performance, Without the Burnout",
       body: "You don't call it burnout. You call it a busy quarter, then another. The ones most at risk are the people still hitting every target, running on willpower and caffeine until something gives. CONKA's adaptogens are shown to lower the cortisol load that turns drive into depletion, so you can perform hard without paying for it later.",
+      chips: ["28% less burnout in a clinical trial", "28% lower cortisol, the stress hormone"],
       citation: "PMID: 19016404 · PMID: 23439798",
       // Clear shot liquid loop
       asset: { kind: "video", src: "/videos/clear/ClearLiquid.mp4", aspect: "3/4" },
