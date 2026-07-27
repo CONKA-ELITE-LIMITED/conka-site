@@ -32,7 +32,7 @@ export const productivityListicle: ListicleConfig = {
     },
     headline: "7 Reasons High Performers Run on CONKA",
     subcopy:
-      "You want it all, the career and the life, without one costing you the other. So did the two founders who built CONKA: one an Olympian with Team GB at Tokyo, the other juggling a full-time team with ultramarathons and Ironmans. Two caffeine-free shots, Flow and Clear, with an app to prove it's working.",
+      "You want it all, the career and the life, without one costing you the other. So did the two founders who built CONKA: one an Olympian with Team GB at Tokyo, the other juggling a full-time team whilst training for ultramarathons. Two caffeine-free shots, Flow and Clear.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
