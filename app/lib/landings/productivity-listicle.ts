@@ -116,7 +116,6 @@ export const productivityListicle: ListicleConfig = {
       n: 3,
       headline: "High Performance, Without the Burnout",
       body: "You don't call it burnout. You call it a busy quarter, then another. The ones most at risk are the people still hitting every target, running on willpower and caffeine until something gives. CONKA's adaptogens are shown to lower the cortisol load that turns drive into depletion, so you can perform hard without paying for it later.",
-      chips: ["Rhodiola: -28% burnout score", "Ashwagandha: -28% cortisol"],
       citation: "PMID: 19016404 · PMID: 23439798",
       // Clear shot liquid loop
       asset: { kind: "video", src: "/videos/clear/ClearLiquid.mp4", aspect: "3/4" },
@@ -184,7 +183,7 @@ export const productivityListicle: ListicleConfig = {
       kind: "reason",
       n: 6,
       headline: "You Measure Everything Else. Measure This Too.",
-      body: "You run your work on numbers, so run this on numbers too. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. It takes under two minutes, so when your score moves, it's real, not a feeling. The same science has been covered and published here:",
+      body: "You run your work on numbers, so run this on numbers too. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. It takes under two minutes, so when your score moves, it's real, not a feeling.",
       // App cognitive-score count-up card. Press outlets render below via pressMarquee.
       asset: { kind: "measureTile" },
       pressMarquee: true,
