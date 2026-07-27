@@ -62,22 +62,22 @@ export function MolecularStructure({ structure, ingredientName }: MolecularStruc
   }, [structure.pubchemCid]);
 
   return (
-    <div className="bg-white border border-black/12 p-4">
+    <div className="bg-white rounded-md border border-black/12 p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
       <div className="flex items-center justify-between mb-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/45">
           Chemical Structure
         </p>
         <a
           href={pubchemUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/60 hover:text-[#1B2757] transition-colors"
+          className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/60 hover:text-[#1B2757] transition-colors"
         >
           View on PubChem →
         </a>
       </div>
 
-      <div className="relative bg-white p-4 flex items-center justify-center min-h-[200px] border border-black/8">
+      <div className="relative bg-white p-4 flex items-center justify-center min-h-[200px] rounded-md border border-black/8">
         {isLoading && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
             <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin opacity-30" />
@@ -94,7 +94,7 @@ export function MolecularStructure({ structure, ingredientName }: MolecularStruc
               href={pubchemUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-[10px] uppercase tracking-[0.14em] hover:underline mt-2 inline-block text-black"
+              className="text-[10px] font-semibold uppercase tracking-[0.12em] hover:underline mt-2 inline-block text-black"
             >
               View on PubChem
             </a>
@@ -113,16 +113,16 @@ export function MolecularStructure({ structure, ingredientName }: MolecularStruc
 
       <div className="mt-3 flex items-center justify-between text-black">
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/45 leading-none">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 leading-none">
             Active Compound
           </p>
           <p className="text-sm font-medium mt-1">{structure.activeCompound}</p>
         </div>
         <div className="text-right">
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/45 leading-none">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 leading-none">
             PubChem CID
           </p>
-          <p className="font-mono text-sm tabular-nums mt-1">
+          <p className="text-sm tabular-nums mt-1">
             {structure.pubchemCid}
           </p>
         </div>

@@ -20,7 +20,7 @@ export default function IngredientsPage() {
 
       {isMobile === undefined ? (
         <div className="min-h-screen pt-32 pb-16 flex items-center justify-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/40 tabular-nums">
             Loading ingredients…
           </p>
         </div>

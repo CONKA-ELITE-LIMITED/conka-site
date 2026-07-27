@@ -128,7 +128,7 @@ export default function IngredientBenefits({ benefits, nested = false }: Ingredi
   }
 
   return (
-    <div className="bg-white border border-black/12 divide-y divide-black/8 overflow-hidden">
+    <div className="bg-white rounded-md border border-black/12 divide-y divide-black/8 overflow-hidden">
       {content}
     </div>
   );

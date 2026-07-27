@@ -86,7 +86,7 @@ export default function WhyConkaReasons() {
               )}
               {reason.showAppButtons && (
                 <div className="mt-5">
-                  <AppInstallButtons variant="clinical" iconSize={16} />
+                  <AppInstallButtons variant="dtc" iconSize={16} />
                 </div>
               )}
             </div>

@@ -12,7 +12,7 @@ interface IngredientStatsProps {
 
 export default function IngredientStats({ stats }: IngredientStatsProps) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 border border-black/12">
+    <div className="grid grid-cols-2 lg:grid-cols-4 rounded-md border border-black/12 overflow-hidden">
       {stats.map((stat, idx) => {
         const isLastRow = idx >= stats.length - (stats.length % 4 || 4);
         const isLastCol = (idx + 1) % 4 === 0;
@@ -25,13 +25,13 @@ export default function IngredientStats({ stats }: IngredientStatsProps) {
               idx % 2 === 0 ? "border-r border-black/8 lg:border-r" : ""
             }`}
           >
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none mb-3">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/40 leading-none mb-3">
               {stat.label}
             </p>
-            <p className="font-mono text-2xl lg:text-3xl font-bold tabular-nums text-[#1B2757] leading-none">
+            <p className="text-2xl lg:text-3xl font-bold tabular-nums text-[#1B2757] leading-none">
               {stat.value}
             </p>
-            <p className="font-mono text-[10px] tabular-nums text-black/45 mt-3 leading-snug">
+            <p className="text-[10px] tabular-nums text-black/45 mt-3 leading-snug">
               {stat.source}
             </p>
           </div>

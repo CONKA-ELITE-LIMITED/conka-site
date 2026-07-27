@@ -48,7 +48,7 @@ export default function IngredientCarousel({
               type="button"
               onClick={() => onSelect(ingredient.id)}
               aria-pressed={isActive}
-              className={`flex-shrink-0 w-[108px] snap-start text-left bg-white transition-colors ${
+              className={`flex-shrink-0 w-[108px] snap-start text-left bg-white rounded-md overflow-hidden transition-colors ${
                 isActive
                   ? "border-2 border-[#1B2757]"
                   : "border border-black/12 hover:border-black/40"
@@ -65,7 +65,7 @@ export default function IngredientCarousel({
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-black/[0.03]">
-                    <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-black/40 text-center px-1">
+                    <span className="text-[8px] uppercase tracking-[0.12em] text-black/40 text-center px-1">
                       {ingredient.name}
                     </span>
                   </div>
@@ -73,11 +73,11 @@ export default function IngredientCarousel({
               </div>
               <div className="p-2">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="font-mono text-[9px] font-bold tabular-nums text-black/35">
+                  <span className="text-[9px] font-bold tabular-nums text-black/35">
                     {String(idx + 1).padStart(2, "0")}.
                   </span>
                   <span
-                    className={`font-mono text-[8px] uppercase tracking-[0.14em] tabular-nums ${
+                    className={`text-[8px] font-medium uppercase tracking-[0.12em] tabular-nums ${
                       isActive ? "text-[#1B2757]" : "text-black/40"
                     }`}
                   >
@@ -97,7 +97,7 @@ export default function IngredientCarousel({
         })}
       </div>
 
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums text-center mt-3">
+      <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-black/40 tabular-nums text-center mt-3">
         Swipe to explore · {String(ingredients.length).padStart(2, "0")} Inputs
       </p>
     </div>

@@ -5,8 +5,8 @@ interface AppInstallButtonsProps {
   buttonClassName?: string;
   iconSize?: number;
   inverted?: boolean;
-  /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) | 'clinical-dark' (white on black) */
-  variant?: "gradient" | "clinical" | "clinical-dark";
+  /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) | 'clinical-dark' (white on black) | 'dtc' (Simple DTC: rounded-full, sans, navy) */
+  variant?: "gradient" | "clinical" | "clinical-dark" | "dtc";
 }
 
 const APP_STORE_URL = "https://apps.apple.com/gb/app/conka-app/id6450399391";
@@ -109,7 +109,34 @@ export function AppInstallButtons({
     );
   }
 
-  // Legacy gradient variant (unchanged — still used by /why-conka)
+  if (variant === "dtc") {
+    return (
+      <div className={`flex flex-row flex-wrap gap-3 items-center ${className}`}>
+        <a
+          href={APP_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download CONKA app from the App Store"
+          className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-[13px] font-semibold text-white bg-[#1B2757] hover:bg-[#151f45] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2 ${buttonClassName}`}
+        >
+          <AppStoreIcon size={iconSize} />
+          <span>App Store</span>
+        </a>
+        <a
+          href={PLAY_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download CONKA app from Google Play"
+          className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-[13px] font-semibold text-[#1B2757] bg-white border border-[#1B2757] hover:bg-[#1B2757]/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2 ${buttonClassName}`}
+        >
+          <PlayStoreIcon size={iconSize} />
+          <span>Play Store</span>
+        </a>
+      </div>
+    );
+  }
+
+  // Legacy gradient variant (unchanged)
   void inverted;
   return (
     <div className={`flex flex-row flex-wrap gap-4 justify-center items-center ${className}`}>

@@ -17,8 +17,6 @@ export default function CaseStudiesHero() {
 
   return (
     <div>
-      <p className="brand-eyebrow mb-3">{"// Real results, real people · PROOF-01"}</p>
-
       <h1
         className="brand-h1 text-black mb-6 max-w-[22ch]"
         style={{ letterSpacing: "-0.02em" }}
@@ -35,7 +33,7 @@ export default function CaseStudiesHero() {
       </p>
 
       <div
-        className="grid grid-cols-2 gap-px bg-black/12 border border-black/12"
+        className="grid grid-cols-2 gap-px bg-black/12 rounded-md border border-black/12 overflow-hidden"
         role="list"
         aria-label="Dataset totals"
       >
@@ -45,10 +43,10 @@ export default function CaseStudiesHero() {
             role="listitem"
             className="bg-white px-4 py-5 lg:px-5 lg:py-6 flex flex-col gap-2"
           >
-            <p className="font-mono text-2xl lg:text-[2rem] font-bold text-[#1B2757] tabular-nums leading-none">
+            <p className="text-2xl lg:text-[2rem] font-bold text-[#1B2757] tabular-nums leading-none">
               {s.value}
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums leading-snug">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/50 tabular-nums leading-snug">
               {s.label}
             </p>
           </div>

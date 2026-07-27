@@ -55,16 +55,13 @@ export default function IngredientsPageMobile({
   return (
     <div className="pt-4 pb-8">
       <div className="mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-          {"// Formula inputs · ING-01"}
-        </p>
         <h1
           className="brand-h1 text-black mb-2"
           style={{ letterSpacing: "-0.02em" }}
         >
           The science inside every shot
         </h1>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/50 tabular-nums">
           {String(ingredients.length).padStart(2, "0")} Ingredients · Clinical doses · Peer-reviewed
         </p>
         <p className="text-sm text-black/70 mt-4 leading-relaxed">
@@ -90,12 +87,12 @@ export default function IngredientsPageMobile({
       </div>
 
       <div className="space-y-4">
-        <div className="bg-white border border-black/12 overflow-hidden">
+        <div className="bg-white rounded-md border border-black/12 overflow-hidden shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
           <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
-            <span className="font-mono text-[11px] font-bold tabular-nums text-black/40">
+            <span className="text-[11px] font-bold tabular-nums text-black/40">
               {String(activeIndex + 1).padStart(2, "0")}.
             </span>
-            <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/50">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/50">
               {categoryInfo?.name}
             </span>
           </div>
@@ -111,7 +108,7 @@ export default function IngredientsPageMobile({
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-black/[0.03]">
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40">
+                <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-black/40">
                   {activeIngredient.name}
                 </span>
               </div>
@@ -122,7 +119,7 @@ export default function IngredientsPageMobile({
             className="p-4 text-white"
             style={{ backgroundColor: "#1B2757" }}
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 mb-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/60 mb-2">
               {qualityLine}
             </p>
             <div className="flex items-start justify-between gap-3">
@@ -130,7 +127,7 @@ export default function IngredientsPageMobile({
                 <h2 className="text-2xl font-semibold leading-tight">
                   {activeIngredient.name}
                 </h2>
-                <p className="font-mono text-[11px] italic text-white/65 mt-1 tabular-nums">
+                <p className="text-[11px] italic text-white/70 mt-1 tabular-nums">
                   {activeIngredient.scientificName}
                 </p>
               </div>
@@ -148,10 +145,10 @@ export default function IngredientsPageMobile({
         </div>
 
         <section
-          className="bg-white border border-black/12 p-4"
+          className="bg-white rounded-md border border-black/12 p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
           aria-labelledby="mobile-stats-heading"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
             Mechanism · Evidence · Outcomes
           </p>
           <h3
@@ -164,8 +161,8 @@ export default function IngredientsPageMobile({
           <IngredientStats stats={activeIngredient.keyStats} />
         </section>
 
-        <section className="bg-white border border-black/12 p-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+        <section className="bg-white rounded-md border border-black/12 p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
             How it works · Mechanism of action
           </p>
           <h3
@@ -179,8 +176,8 @@ export default function IngredientsPageMobile({
           </p>
         </section>
 
-        <section className="bg-white border border-black/12 p-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+        <section className="bg-white rounded-md border border-black/12 p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
             Key Benefits
           </p>
           <h3
@@ -193,7 +190,7 @@ export default function IngredientsPageMobile({
         </section>
 
         <section>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
             Peer-Reviewed · PubMed · DOI
           </p>
           <h3
@@ -212,8 +209,8 @@ export default function IngredientsPageMobile({
           />
         )}
 
-        <section className="bg-white border border-black/12 p-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+        <section className="bg-white rounded-md border border-black/12 p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
             Formula Context · Stacking
           </p>
           <h3
@@ -228,14 +225,14 @@ export default function IngredientsPageMobile({
                 key={idx}
                 className="flex items-start gap-2 text-sm text-black/80"
               >
-                <span className="font-mono text-black/30 shrink-0">—</span>
+                <span className="text-black/30 shrink-0">—</span>
                 <span>{synergy}</span>
               </li>
             ))}
           </ul>
         </section>
 
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums text-center py-4">
+        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-black/40 tabular-nums text-center py-4">
           Scroll up · swipe to explore
         </p>
       </div>

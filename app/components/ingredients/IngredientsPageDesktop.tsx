@@ -54,16 +54,13 @@ export default function IngredientsPageDesktop({
       <div>
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
           <header>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-              {"// Formula inputs · ING-01"}
-            </p>
             <h1
               className="brand-h1 mb-2 text-black"
               style={{ letterSpacing: "-0.02em" }}
             >
               The science inside every shot
             </h1>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/50 tabular-nums">
               {String(ingredients.length).padStart(2, "0")} Ingredients · Clinical doses · Peer-reviewed
             </p>
             <p className="text-sm md:text-base text-black/70 mt-4 max-w-xl leading-relaxed">
@@ -88,15 +85,15 @@ export default function IngredientsPageDesktop({
 
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-2/5 lg:sticky lg:top-24 lg:self-start space-y-4">
-          <div className="bg-white border border-black/12 overflow-hidden">
+          <div className="bg-white rounded-md border border-black/12 overflow-hidden shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
             <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
-              <span className="font-mono text-[11px] font-bold tabular-nums text-black/40">
+              <span className="text-[11px] font-bold tabular-nums text-black/40">
                 {String(
                   ingredients.findIndex((i) => i.id === activeIngredient.id) + 1,
                 ).padStart(2, "0")}
                 .
               </span>
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/50">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/50">
                 {categoryInfo?.name}
               </span>
             </div>
@@ -112,7 +109,7 @@ export default function IngredientsPageDesktop({
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-black/[0.03]">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40">
+                  <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-black/40">
                     {activeIngredient.name}
                   </span>
                 </div>
@@ -121,10 +118,10 @@ export default function IngredientsPageDesktop({
 
             <div className="border-t border-black/8">
               <div className="p-4">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/40 leading-none">
                   Category
                 </p>
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] tabular-nums text-black mt-2 leading-none">
+                <p className="text-[11px] font-medium uppercase tracking-[0.12em] tabular-nums text-black mt-2 leading-none">
                   {activeIngredient.functionalCategory}
                 </p>
               </div>
@@ -140,20 +137,20 @@ export default function IngredientsPageDesktop({
         </div>
 
         <div className="lg:w-3/5 space-y-6">
-          <div className="bg-white border border-black/12 overflow-hidden">
+          <div className="bg-white rounded-md border border-black/12 overflow-hidden shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
             <div
               className="p-5 text-white"
               style={{ backgroundColor: "#1B2757" }}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 mb-2">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/60 mb-2">
                     {qualityLine}
                   </p>
                   <h2 className="text-3xl font-semibold leading-tight">
                     {activeIngredient.name}
                   </h2>
-                  <p className="font-mono text-[12px] italic text-white/65 mt-1 tabular-nums">
+                  <p className="text-[12px] italic text-white/70 mt-1 tabular-nums">
                     {activeIngredient.scientificName}
                   </p>
                 </div>
@@ -170,10 +167,10 @@ export default function IngredientsPageDesktop({
           </div>
 
           <section
-            className="bg-white border border-black/12 p-5 lg:p-6"
+            className="bg-white rounded-md border border-black/12 p-5 lg:p-6 shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
             aria-labelledby="how-it-works-heading"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-4">
               Mechanism · Evidence · Outcomes
             </p>
             <h2
@@ -185,14 +182,14 @@ export default function IngredientsPageDesktop({
             </h2>
 
             <div className="mb-8">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/45 mb-3">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 mb-3">
                 Key statistics
               </p>
               <IngredientStats stats={activeIngredient.keyStats} />
             </div>
 
             <div className="mb-8">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/45 mb-2">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 mb-2">
                 Mechanism
               </p>
               <p className="text-sm text-black/75 leading-relaxed">
@@ -201,7 +198,7 @@ export default function IngredientsPageDesktop({
             </div>
 
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/45 mb-3">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 mb-3">
                 Key benefits
               </p>
               <IngredientBenefits
@@ -212,10 +209,10 @@ export default function IngredientsPageDesktop({
           </section>
 
           <section
-            className="bg-white border border-black/12 p-5 lg:p-6"
+            className="bg-white rounded-md border border-black/12 p-5 lg:p-6 shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
             aria-labelledby="clinical-studies-heading"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-4">
               Peer-Reviewed · PubMed · DOI
             </p>
             <h2
@@ -229,10 +226,10 @@ export default function IngredientsPageDesktop({
           </section>
 
           <section
-            className="bg-white border border-black/12 p-5 lg:p-6"
+            className="bg-white rounded-md border border-black/12 p-5 lg:p-6 shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
             aria-labelledby="synergies-heading"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
               Formula Context · Stacking
             </p>
             <h2
@@ -245,7 +242,7 @@ export default function IngredientsPageDesktop({
             <ul className="space-y-2">
               {activeIngredient.synergies.map((synergy, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm text-black/80">
-                  <span className="font-mono text-black/30 shrink-0">—</span>
+                  <span className="text-black/30 shrink-0">—</span>
                   <span>{synergy}</span>
                 </li>
               ))}
