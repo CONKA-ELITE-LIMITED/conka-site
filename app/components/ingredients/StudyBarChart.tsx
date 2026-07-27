@@ -51,8 +51,8 @@ export default function StudyBarChart({ data }: StudyBarChartProps) {
         <Tooltip
           contentStyle={{
             backgroundColor: "var(--background)",
-            border: "2px solid var(--foreground)",
-            borderRadius: 0,
+            border: "1px solid rgba(0,0,0,0.1)",
+            borderRadius: 8,
             fontFamily: "var(--font-jetbrains-mono)",
             fontSize: 12,
           }}

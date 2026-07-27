@@ -12,7 +12,7 @@ import { INGREDIENT_FAQ_ITEMS } from "@/app/lib/ingredientFaqContent";
 export default function IngredientFAQ() {
   return (
     <div>
-      <p className="brand-eyebrow mb-3">{"// Ingredient questions · FAQ-02"}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">{"// Ingredient questions · FAQ-02"}</p>
       <h2
         className="brand-h2 text-black mb-6 max-w-[22ch]"
         style={{ letterSpacing: "-0.02em" }}
@@ -25,13 +25,21 @@ export default function IngredientFAQ() {
           <details key={item.id} className="group border-b border-black/12">
             <summary className="flex items-start justify-between gap-4 cursor-pointer list-none py-4 min-h-[44px]">
               <h3 className="text-base font-medium text-black">{item.question}</h3>
-              <span
-                className="font-mono text-xl leading-none shrink-0 transition-transform group-open:rotate-45 mt-0.5"
-                style={{ color: "#1B2757" }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#1B2757"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0 mt-1 transition-transform group-open:rotate-180"
                 aria-hidden="true"
               >
-                +
-              </span>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
             </summary>
             <p className="text-sm text-black/65 leading-relaxed pb-5 max-w-[68ch]">
               {item.answer}

@@ -31,7 +31,7 @@ export default function FormulaToggle({
         <button
           type="button"
           onClick={() => onChange("01")}
-          className={`relative w-24 h-24 overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
+          className={`relative w-24 h-24 rounded-md overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
             value === "01"
               ? "border-2 border-[#1B2757]"
               : "border border-black/12 hover:border-black/40"
@@ -50,7 +50,7 @@ export default function FormulaToggle({
           />
         </button>
         <span
-          className={`mt-2 font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums ${
+          className={`mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] tabular-nums ${
             value === "01" ? "text-[#1B2757]" : "text-black/50"
           }`}
         >
@@ -61,7 +61,7 @@ export default function FormulaToggle({
         <button
           type="button"
           onClick={() => onChange("02")}
-          className={`relative w-24 h-24 overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
+          className={`relative w-24 h-24 rounded-md overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] transition-colors ${
             value === "02"
               ? "border-2 border-[#1B2757]"
               : "border border-black/12 hover:border-black/40"
@@ -78,7 +78,7 @@ export default function FormulaToggle({
           />
         </button>
         <span
-          className={`mt-2 font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums ${
+          className={`mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] tabular-nums ${
             value === "02" ? "text-[#1B2757]" : "text-black/50"
           }`}
         >
