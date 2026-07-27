@@ -277,6 +277,7 @@ export const adhdListicle: ListicleConfig = {
           quote:
             "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
           name: "Aaron H.",
+          image: "/testimonials/dtc/AaronH.jpg",
           detail: "Verified · Flow + Clear",
         },
         {
@@ -284,6 +285,7 @@ export const adhdListicle: ListicleConfig = {
           quote:
             "In the first few days of taking Flow, I relied less on the jitters of caffeine to get me through a day.",
           name: "Ankita K.",
+          image: "/lander/reviews/AnkitaK.jpg",
           detail: "Verified · Flow + Clear",
         },
         {
@@ -291,6 +293,7 @@ export const adhdListicle: ListicleConfig = {
           quote:
             "What I didn't expect was being able to take something after work, lock back in for the hustle, and still sleep well.",
           name: "Sam J.",
+          image: "/testimonials/dtc/SamJ.jpg",
           detail: "Verified · Flow + Clear",
         },
       ],

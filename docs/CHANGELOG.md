@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-27** | Fixed missing reviewer avatars on the ADHD listicle review strip
+- **2026-07-27** | Repositioned the productivity listicle to a founder-led CEOs-and-executives have-it-all angle (SCRUM-1187)
 - **2026-07-27** | Converted /why-conka app-install buttons to the Simple DTC grammar (rounded, sans, navy).
 - **2026-07-27** | Refined case-studies: removed hero eyebrows, product thumbnails + time-of-day formula badge colours, decluttered mobile case card
 - **2026-07-27** | Converted /case-studies to Simple DTC and swapped protocol names for Flow / Clear / Flow + Clear product labels
