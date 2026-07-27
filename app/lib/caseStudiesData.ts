@@ -1,6 +1,52 @@
 // ===== CASE STUDIES DATA =====
 // All athlete data from real CONKA case study CSV - NO FABRICATED QUOTES
 
+import { TIME_OF_DAY_BADGE } from "./timeOfDayBadge";
+
+/**
+ * Presentation for "the product they took", mapping the simple Flow / Clear /
+ * Flow + Clear vocabulary (productVersion) to a label, a real photographic
+ * asset, the PDP href, and the shared time-of-day badge colour (Flow=Morning,
+ * Clear=Afternoon, both=Full day). Replaces the removed protocol naming.
+ */
+export interface FormulaPresentation {
+  label: string;
+  href: string;
+  image: string;
+  imageAlt: string;
+  badgeClass: string;
+}
+
+export function getFormulaPresentation(
+  version?: "01" | "02" | "both",
+): FormulaPresentation {
+  if (version === "01") {
+    return {
+      label: "CONKA Flow",
+      href: "/conka-flow",
+      image: "/lander/FlowNew.jpg",
+      imageAlt: "CONKA Flow",
+      badgeClass: TIME_OF_DAY_BADGE.Morning,
+    };
+  }
+  if (version === "02") {
+    return {
+      label: "CONKA Clear",
+      href: "/conka-clarity",
+      image: "/lander/ClearNew.jpg",
+      imageAlt: "CONKA Clear",
+      badgeClass: TIME_OF_DAY_BADGE.Afternoon,
+    };
+  }
+  return {
+    label: "Flow + Clear",
+    href: "/conka-both",
+    image: "/formulas/both/BothNew.jpg",
+    imageAlt: "CONKA Flow and CONKA Clear",
+    badgeClass: TIME_OF_DAY_BADGE["Full day"],
+  };
+}
+
 // Sport categories for filtering
 export type SportCategory =
   | "rugby"

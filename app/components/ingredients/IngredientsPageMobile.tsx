@@ -55,9 +55,6 @@ export default function IngredientsPageMobile({
   return (
     <div className="pt-4 pb-8">
       <div className="mb-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">
-          {"// Formula inputs · ING-01"}
-        </p>
         <h1
           className="brand-h1 text-black mb-2"
           style={{ letterSpacing: "-0.02em" }}

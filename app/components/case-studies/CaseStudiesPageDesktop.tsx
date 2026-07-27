@@ -6,6 +6,7 @@ import {
   athletes,
   getCaseStudyPhotoPath,
   getFeaturedAthletes,
+  getFormulaPresentation,
 } from "@/app/lib/caseStudiesData";
 import AthleteSidebar from "./AthleteSidebar";
 import { ComparisonChart } from "./AthleteStats";
@@ -37,6 +38,7 @@ export default function CaseStudiesPageDesktop() {
   };
 
   const activeIndex = athletes.findIndex((a) => a.id === activeAthleteId);
+  const activeProduct = getFormulaPresentation(activeAthlete?.productVersion);
 
   return (
     <div className="pb-8 md:pb-6">
@@ -173,12 +175,10 @@ export default function CaseStudiesPageDesktop() {
                     {activeAthlete.testingPeriod}
                   </span>
                   {activeAthlete.productVersion && (
-                    <span className="px-3 py-1 rounded-full bg-[#1B2757] text-white text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums">
-                      {activeAthlete.productVersion === "01"
-                        ? "CONKA Flow"
-                        : activeAthlete.productVersion === "02"
-                          ? "CONKA Clear"
-                          : "Flow + Clear"}
+                    <span
+                      className={`px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums ${activeProduct.badgeClass}`}
+                    >
+                      {activeProduct.label}
                     </span>
                   )}
                 </div>

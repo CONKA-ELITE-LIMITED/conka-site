@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-27** | Refined case-studies: removed hero eyebrows, product thumbnails + time-of-day formula badge colours, decluttered mobile case card
 - **2026-07-27** | Converted /case-studies to Simple DTC and swapped protocol names for Flow / Clear / Flow + Clear product labels
 - **2026-07-27** | Converted /ingredients from clinical to Simple DTC (rounded cards, sans labels, chevron FAQ)
 - **2026-07-27** | Make DESIGN_SYSTEM.md + brand-base.css the accurate SSOT for the Simple DTC direction (seed --brand-navy, canonical §8.5 grammar + clinical-to-DTC mapping table, fix doc drift)

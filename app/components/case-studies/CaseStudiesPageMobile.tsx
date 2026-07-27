@@ -7,6 +7,7 @@ import {
   athletes,
   getCaseStudyPhotoPath,
   getAllSports,
+  getFormulaPresentation,
 } from "@/app/lib/caseStudiesData";
 import SportIcon from "./SportIcon";
 import WhatTheyTook from "./WhatTheyTook";
@@ -15,11 +16,12 @@ const STAT_LABELS = ["Total", "Acc.", "Speed"];
 
 function ProductBadge({ version }: { version?: "01" | "02" | "both" }) {
   if (!version) return null;
-  const label =
-    version === "01" ? "CONKA Flow" : version === "02" ? "CONKA Clear" : "Flow + Clear";
+  const product = getFormulaPresentation(version);
   return (
-    <span className="text-[9px] font-semibold uppercase tracking-[0.12em] tabular-nums bg-white text-[#1B2757] rounded-full border border-white/60 px-2 py-0.5">
-      {label}
+    <span
+      className={`text-[9px] font-semibold uppercase tracking-[0.12em] tabular-nums rounded-full px-2 py-0.5 ${product.badgeClass}`}
+    >
+      {product.label}
     </span>
   );
 }
@@ -167,7 +169,7 @@ export default function CaseStudiesPageMobile() {
               );
             })()}
             <div
-              className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-transparent"
+              className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"
               aria-hidden
             />
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
@@ -178,41 +180,41 @@ export default function CaseStudiesPageMobile() {
                 {SPORT_INFO[activeAthlete.sport].name}
               </span>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-              <div className="flex items-center gap-2 mb-1">
+            <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+              <div className="flex items-center gap-2">
                 <span className="font-semibold text-base leading-tight">
                   {activeAthlete.name}
                 </span>
                 <ProductBadge version={activeAthlete.productVersion} />
               </div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/75 line-clamp-1 tabular-nums mb-3">
+              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/80 line-clamp-1 tabular-nums mt-1">
                 {activeAthlete.achievement ?? activeAthlete.profession}
               </p>
-              <div className="border-t border-white/25 pt-3">
-                <div className="grid grid-cols-3 gap-1">
-                  {[0, 1, 2].map((i) => {
-                    const stat = activeAthlete.improvements[i];
-                    const label = stat
-                      ? shortenMetric(stat.metric)
-                      : STAT_LABELS[i];
-                    const value = stat?.value ?? "—";
-                    return (
-                      <div key={i} className={i < 2 ? "border-r border-white/20" : ""}>
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/70 leading-none">
-                          {label}
-                        </p>
-                        <p className="text-xl font-bold tabular-nums text-white mt-1.5 leading-none">
-                          {value}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/55 tabular-nums mt-3">
-                {activeAthlete.testingPeriod} · {activeAthlete.testsCompleted} Tests
-              </p>
             </div>
+          </div>
+
+          {/* Stats pulled off the photo into a clean card so the hero image can breathe. */}
+          <div className="mt-4 rounded-md border border-black/12 bg-white p-4 shadow-[0_4px_24px_rgba(20,30,60,0.06)]">
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map((i) => {
+                const stat = activeAthlete.improvements[i];
+                const label = stat ? shortenMetric(stat.metric) : STAT_LABELS[i];
+                const value = stat?.value ?? "—";
+                return (
+                  <div key={i} className={i < 2 ? "border-r border-black/8 pr-2" : ""}>
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 leading-none">
+                      {label}
+                    </p>
+                    <p className="text-2xl font-bold tabular-nums text-[#1B2757] mt-2 leading-none">
+                      {value}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45 tabular-nums mt-4 pt-3 border-t border-black/8">
+              {activeAthlete.testingPeriod} · {activeAthlete.testsCompleted} Tests
+            </p>
           </div>
 
           <div className="mt-6">

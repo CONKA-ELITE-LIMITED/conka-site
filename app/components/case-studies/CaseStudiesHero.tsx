@@ -17,8 +17,6 @@ export default function CaseStudiesHero() {
 
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 mb-3">{"// Real results, real people · PROOF-01"}</p>
-
       <h1
         className="brand-h1 text-black mb-6 max-w-[22ch]"
         style={{ letterSpacing: "-0.02em" }}
