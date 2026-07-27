@@ -34,7 +34,7 @@ function shortenMetric(metric: string): string {
   return metric;
 }
 
-function ChamferNav({
+function CircleNav({
   direction,
   onClick,
   ariaLabel,
@@ -225,7 +225,7 @@ export default function CaseStudiesPageMobile() {
           </div>
 
           <div className="flex items-center justify-between gap-4 mt-6">
-            <ChamferNav
+            <CircleNav
               direction="prev"
               onClick={handlePrev}
               ariaLabel="Previous athlete"
@@ -246,7 +246,7 @@ export default function CaseStudiesPageMobile() {
                 />
               ))}
             </div>
-            <ChamferNav
+            <CircleNav
               direction="next"
               onClick={handleNext}
               ariaLabel="Next athlete"
