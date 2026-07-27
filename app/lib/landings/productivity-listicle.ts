@@ -9,21 +9,30 @@ import type { ListicleConfig } from "./listicle-types";
  * search-question framing move to the parallel /blog work (SCRUM-1175). One
  * stats band and one review strip sit between reasons so the page reads as a
  * scannable list. Template stays "im8". Claims pass is owned by the user.
+ *
+ * Repositioned 2026-07-27 (SCRUM-1187) to a founder-led "CEOs and executives"
+ * have-it-all angle to message-match the founder-driven ads and fix the weak
+ * first fold. Hero carries the founder proof (TwoFounders photo + Harry/Humphrey
+ * juggler origin); reasons re-themed off generic caffeine fights to: 1 founder
+ * cheat-code, 2 have-it-all, 3 performance-without-burnout, 4 socialise-keep-
+ * tomorrow, 5 sharp-all-day, 6 app-proof, 7 guarantee. Plan: docs/development/featurePlans/
+ * productivity-listicle-founder-reposition.md. Deferred: named exec quotes
+ * (Shane, Nimisha) integrated into the review strip.
  */
 export const productivityListicle: ListicleConfig = {
   slug: "productivity-listicle",
   persona: "productivity",
   format: "listicle",
   template: "im8",
-  title: "7 Reasons You'll Get More Done on CONKA",
+  title: "7 Reasons CEOs and Executives Run on CONKA",
   hero: {
     laurel: {
       eyebrow: "World's Largest",
       body: "Consumer brain-research project. 1,000+ brains tested through our app.",
     },
-    headline: "7 Reasons You'll Get More Done on CONKA",
+    headline: "7 Reasons CEOs and Executives Run on CONKA",
     subcopy:
-      "The 11am fog, the 3pm crash, the fourth coffee that stopped working. Focus that fades by lunch isn't a willpower problem, it's a fuel problem. CONKA is two caffeine-free shots, Flow to start sharp and Clear to replace the afternoon coffee, with an app to prove it's working.",
+      "You want it all, the career and the life, without one costing you the other. So did the two founders who built CONKA: one an Olympian with Team GB at Tokyo, the other juggling a full-time team with ultramarathons and Ironmans. Two caffeine-free shots, Flow and Clear, with an app to prove it's working.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -36,10 +45,10 @@ export const productivityListicle: ListicleConfig = {
     ],
     asset: {
       kind: "image",
-      src: "/lifestyle/ConkaAtWorkDesk.jpg",
-      alt: "A CONKA shot on a desk beside a keyboard while someone works",
-      // Native 1500x1000; frame matches so nothing crops
-      aspect: "1500/1000",
+      src: "/TwoFounders.jpg",
+      alt: "CONKA founders Harry Glover and Humphrey Bodington",
+      // Native 1840x1226 (3:2); frame matches so nothing crops
+      aspect: "1840/1226",
     },
   },
   ticker: [
@@ -78,20 +87,39 @@ export const productivityListicle: ListicleConfig = {
     {
       kind: "reason",
       n: 1,
-      headline: "CONKA Focus Beats Caffeine Focus",
-      body: "Caffeine focus is jittery and runs on borrowed time, with a hard ceiling the NHS puts at two cups before it works against you. CONKA focus is calm and steady, no comedown, no ceiling to watch.",
-      chips: ["88% drank one less coffee a day in their first 45 days"],
-      // Coffee-crash vs CONKA-steady energy curve + cost table
-      asset: { kind: "crashChart" },
+      headline: "The Cheat Code Two Founders Built for Themselves",
+      body: "This started as a private edge, not a product. Harry needed to think clearly under Olympic pressure with Team GB; Humphrey was running a full-time team while training for Ironmans. Nothing on the market worked, so they spent years and £500,000 of their own money building it, collapsing 14 daily capsules into a single shot tested at Cambridge. What was their cheat code is now yours.",
+      chips: ["Backed by 25+ cognitive trials"],
+      asset: {
+        kind: "image",
+        src: "/lifestyle/CreationOfConka.jpg",
+        alt: "CONKA founders developing the formula",
+        fit: "cover",
+        aspect: "1500/1000",
+      },
     },
     {
       kind: "reason",
       n: 2,
-      headline: "Stay Sharp Through the Afternoon",
-      body: "The lunch slump sends you back for another coffee just to function. CONKA Clear pairs nine afternoon detoxifiers with Alpha GPC, shown to deliver 18.1% faster mental processing than caffeine.",
-      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
-      // Day-energy curve: afternoon holds steady with CONKA
-      asset: { kind: "dayEnergyCurve" },
+      headline: "Have the Career Without Losing the Life",
+      body: "Chasing the next deadline while the dinners, the friends, the people at home quietly slip down the list. You were told that's the cost of ambition. It isn't. CONKA gives you steady, all-day capacity, so you can go hard at work and still show up for the life that makes it worth it, present in both and drained by neither.",
+      asset: {
+        kind: "image",
+        src: "/lifestyle/GirlsLaughing.jpg",
+        alt: "Friends laughing together over a meal",
+        fit: "cover",
+        aspect: "1/1",
+      },
+    },
+    {
+      kind: "reason",
+      n: 3,
+      headline: "High Performance, Without the Burnout",
+      body: "You don't call it burnout. You call it a busy quarter, then another. The ones most at risk are the people still hitting every target, running on willpower and caffeine until something gives. CONKA's adaptogens are shown to lower the cortisol load that turns drive into depletion, so you can perform hard without paying for it later.",
+      chips: ["Rhodiola: -28% burnout score", "Ashwagandha: -28% cortisol"],
+      citation: "PMID: 19016404 · PMID: 23439798",
+      // Clear shot liquid loop
+      asset: { kind: "video", src: "/videos/clear/ClearLiquid.mp4", aspect: "3/4" },
     },
     {
       kind: "statsBand",
@@ -107,31 +135,12 @@ export const productivityListicle: ListicleConfig = {
     },
     {
       kind: "reason",
-      n: 3,
-      headline: "Better Focus Compounds, Day After Day",
-      body: "This isn't a one-off spike. Calmer focus today means less cortisol tomorrow, better sleep tonight, and a sharper dose the next day. Durham University research found the exact combination in Flow extended lifespan and cut oxidative stress.",
-      citation: "PMID: 31279955 · PMID: 32707771",
-      asset: { kind: "researchBacked" },
-    },
-    {
-      kind: "reason",
       n: 4,
-      headline: "Watch It Working, in Real Numbers",
-      body: "Most brain-training apps are just games with a leaderboard. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. The same test, so when your score moves, it's real. The same science has been covered and published here:",
-      // App cognitive-score count-up card; "Do you see an animal?" GIF is a
-      // Phase 5 asset swap. Press outlets render below via pressMarquee.
-      asset: { kind: "measureTile" },
-      pressMarquee: true,
-    },
-    {
-      kind: "reason",
-      n: 5,
-      headline: "Built for the Days You Didn't Sleep",
-      body: "Interrupted sleep, a deadline all-nighter, one drink too many. Some days you start at a deficit before you've opened your laptop. CONKA won't erase a bad night, but the stack below gives your brain a real head start.",
-      // The bad-nights stack, showcasing the Phase 1 per-ingredient citations
+      headline: "Enjoy the Night. Keep Tomorrow.",
+      body: "The dinners and the late nights are part of the life you are working for, and they should not cost you the morning after. CONKA will not undo a big night, but the stack below helps your brain clear the load and start the next day closer to sharp.",
       asset: {
         kind: "ingredientGrid",
-        eyebrow: "Built to absorb booze and bad nights",
+        eyebrow: "The morning-after stack",
         items: [
           {
             icon: "🏔",
@@ -163,7 +172,26 @@ export const productivityListicle: ListicleConfig = {
       },
     },
     {
-      // Hand-cropped excerpts (productivity / endurance theme)
+      kind: "reason",
+      n: 5,
+      headline: "Sharp From the First Meeting to the Last",
+      body: "The clarity you have at 9am is usually gone by 3pm, and a fourth coffee only rents it back with a crash to follow. CONKA is completely caffeine-free, and its ingredients deliver 18.1% faster mental processing than caffeine, so your thinking holds from the first meeting to the last.",
+      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
+      // Day-energy curve: afternoon holds steady with CONKA
+      asset: { kind: "dayEnergyCurve" },
+    },
+    {
+      kind: "reason",
+      n: 6,
+      headline: "You Measure Everything Else. Measure This Too.",
+      body: "You run your work on numbers, so run this on numbers too. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. It takes under two minutes, so when your score moves, it's real, not a feeling. The same science has been covered and published here:",
+      // App cognitive-score count-up card. Press outlets render below via pressMarquee.
+      asset: { kind: "measureTile" },
+      pressMarquee: true,
+    },
+    {
+      // Hand-cropped excerpts (productivity / endurance theme). Named exec
+      // quotes (Shane, Nimisha) are the deferred final pass, pending real copy.
       kind: "reviewStrip",
       eyebrow: "What Customers Say",
       ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
@@ -196,23 +224,15 @@ export const productivityListicle: ListicleConfig = {
     },
     {
       kind: "reason",
-      n: 6,
-      headline: "Backed by Trials, Not Testimonials",
-      body: "Most focus supplements hide one trick: caffeine, which by the original definition is a stimulant, not a nootropic. CONKA's formula is built on ingredients backed by 32 published studies, and we built a way for you to measure it yourself.",
-      // 4-group average cognitive score, CONKA groups in green (app data)
-      asset: { kind: "scoreByGroup" },
-    },
-    {
-      kind: "reason",
       n: 7,
       headline: "100 Days to Feel It, or Your Money Back",
-      body: "Try CONKA for a full 100 days. If your focus and output haven't changed, you get every penny back. Informed Sport certified, made in the UK, built on a decade of brain research.",
-      // Off CONKA vs on CONKA measured focus (+19.3%)
-      asset: { kind: "focusBars" },
+      body: "Try CONKA for a full 100 days. If your clarity and output haven't changed, you get every penny back. Informed Sport certified, made in the UK, built on a decade of brain research.",
+      // University research proof (matches the ADHD guarantee asset)
+      asset: { kind: "researchBacked" },
     },
   ],
   bridge: {
-    headline: "Stop running on coffee. Start running on focus.",
+    headline: "Have the career and the life. Refuse the trade-off.",
     cta: "Try Conka Risk-Free for 100 Days →",
   },
   product: {
@@ -230,7 +250,7 @@ export const productivityListicle: ListicleConfig = {
     "guarantee",
   ],
   stickyBar: {
-    label: "Stop running on coffee.",
+    label: "Have it all, without the burnout.",
     cta: "Get started",
     sub: "100-day guarantee",
   },
