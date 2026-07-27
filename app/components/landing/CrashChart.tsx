@@ -139,7 +139,7 @@ export default function CrashChart({
     <div
       ref={ref}
       className={`overflow-hidden border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)] ${
-        sharp ? "" : "rounded-[24px]"
+        sharp ? "" : "rounded-md"
       }`}
     >
       <div className="px-4 pb-3 pt-[22px]">
