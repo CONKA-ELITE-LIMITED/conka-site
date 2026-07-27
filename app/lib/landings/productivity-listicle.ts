@@ -10,7 +10,7 @@ import type { ListicleConfig } from "./listicle-types";
  * stats band and one review strip sit between reasons so the page reads as a
  * scannable list. Template stays "im8". Claims pass is owned by the user.
  *
- * Repositioned 2026-07-27 (SCRUM-1187) to a founder-led "CEOs and executives"
+ * Repositioned 2026-07-27 (SCRUM-1187) to a founder-led "high performers"
  * have-it-all angle to message-match the founder-driven ads and fix the weak
  * first fold. Hero carries the founder proof (TwoFounders photo + Harry/Humphrey
  * juggler origin); reasons re-themed off generic caffeine fights to: 1 performance-
@@ -24,13 +24,13 @@ export const productivityListicle: ListicleConfig = {
   persona: "productivity",
   format: "listicle",
   template: "im8",
-  title: "7 Reasons CEOs and Executives Run on CONKA",
+  title: "7 Reasons High Performers Run on CONKA",
   hero: {
     laurel: {
       eyebrow: "World's Largest",
       body: "Consumer brain-research project. 1,000+ brains tested through our app.",
     },
-    headline: "7 Reasons CEOs and Executives Run on CONKA",
+    headline: "7 Reasons High Performers Run on CONKA",
     subcopy:
       "You want it all, the career and the life, without one costing you the other. So did the two founders who built CONKA: one an Olympian with Team GB at Tokyo, the other juggling a full-time team with ultramarathons and Ironmans. Two caffeine-free shots, Flow and Clear, with an app to prove it's working.",
     socialProof: {
