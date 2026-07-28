@@ -115,7 +115,7 @@ export function NextDeliveryHero({
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 mt-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-auto">
           <HeroActionButton
             onClick={onSkipNext}
             disabled={isActionLoading}

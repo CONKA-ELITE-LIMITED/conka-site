@@ -18,7 +18,7 @@ export function AccountSubNav() {
       aria-label="Account navigation"
       className="bg-white pt-5 pb-4 px-4 lg:pt-8 lg:pb-5 lg:px-[5vw]"
     >
-      <div className="mx-auto max-w-[1280px] grid grid-cols-4 gap-2 lg:gap-3">
+      <div className="mx-auto max-w-[1280px] grid grid-cols-2 sm:grid-cols-4 gap-2 lg:gap-3">
         {TABS.map((tab) => {
           const isActive =
             tab.href === "/account"
