@@ -19,7 +19,7 @@ export default function AccountDetailsPage() {
 
   if (loading) {
     return (
-      <div className="brand-clinical min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin mx-auto mb-3" />
           <p className="text-sm text-black/60">Loading...</p>
@@ -47,7 +47,7 @@ export default function AccountDetailsPage() {
   const phone = customer.phone || "Not set";
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
       <AccountSubNav />
 
@@ -59,8 +59,8 @@ export default function AccountDetailsPage() {
           <div className="brand-track">
             {/* Header */}
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-                {"// Account · Details"}
+              <p className="text-sm font-medium text-black/50 mb-3">
+                Account · Details
               </p>
               <h1
                 id="details-heading"
@@ -69,19 +69,18 @@ export default function AccountDetailsPage() {
               >
                 Your details.
               </h1>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+              <p className="text-sm text-black/50 tabular-nums">
                 Contact · Delivery address · Payment
               </p>
             </div>
 
             {/* Contact card */}
             <DetailsCard
-              counter="01"
               category="Contact"
               onEdit={() => setShowEditProfile(true)}
             >
               <DetailRow label="Name" value={fullName} />
-              <DetailRow label="Email" value={customer.email} mono />
+              <DetailRow label="Email" value={customer.email} />
               <DetailRow label="Phone" value={phone} />
             </DetailsCard>
 
@@ -89,7 +88,6 @@ export default function AccountDetailsPage() {
 
             {/* Delivery address card */}
             <DetailsCard
-              counter="02"
               category="Delivery address"
               onEdit={() => setShowEditProfile(true)}
             >
@@ -99,13 +97,11 @@ export default function AccountDetailsPage() {
             <div className="h-5" />
 
             {/* Payment placeholder */}
-            <div className="bg-white border border-black/12">
+            <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
-                  03 · Payment
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
-                  MANAGED ON FILE
+                <span className="text-sm font-medium text-black/50">Payment</span>
+                <span className="text-[13px] font-medium text-[var(--brand-navy)]">
+                  Managed on file
                 </span>
               </div>
               <div className="px-5 lg:px-6 py-5 lg:py-6">
@@ -114,7 +110,7 @@ export default function AccountDetailsPage() {
                 </p>
                 <ContactSupportLink
                   variant="inline"
-                  className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#1B2757]"
+                  className="text-[13px] font-semibold text-[var(--brand-navy)]"
                   icon={false}
                   subject="Payment method update"
                 >
@@ -126,22 +122,20 @@ export default function AccountDetailsPage() {
             <div className="h-10" />
 
             {/* Help card */}
-            <div className="bg-white border border-black/12 p-5 lg:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-                Need a hand
-              </p>
+            <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-5 lg:p-8">
+              <p className="text-sm font-medium text-black/50 mb-3">Need a hand</p>
               <h3
                 className="text-xl lg:text-2xl font-semibold text-black mb-2"
                 style={{ letterSpacing: "-0.02em" }}
               >
                 We can help with any account change.
               </h3>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
+              <p className="text-sm text-black/50 tabular-nums mb-6">
                 Support · same day reply · UK team
               </p>
               <ContactSupportLink
                 variant="inline"
-                className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#1B2757]"
+                className="text-[13px] font-semibold text-[var(--brand-navy)]"
                 icon={false}
               >
                 Email support ↗
@@ -161,26 +155,22 @@ export default function AccountDetailsPage() {
 }
 
 function DetailsCard({
-  counter,
   category,
   onEdit,
   children,
 }: {
-  counter: string;
   category: string;
   onEdit: () => void;
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white border border-black/12">
+    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
-          {counter} · {category}
-        </span>
+        <span className="text-sm font-medium text-black/50">{category}</span>
         <button
           type="button"
           onClick={onEdit}
-          className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] hover:underline min-h-[36px] px-1"
+          className="text-[13px] font-semibold text-[var(--brand-navy)] hover:underline min-h-[36px] px-1"
         >
           Edit ↗
         </button>
@@ -193,12 +183,10 @@ function DetailsCard({
 function DetailRow({
   label,
   value,
-  mono = false,
   isLast = false,
 }: {
   label: string;
   value: string;
-  mono?: boolean;
   isLast?: boolean;
 }) {
   return (
@@ -207,14 +195,8 @@ function DetailRow({
         isLast ? "" : "border-b border-black/8"
       }`}
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45 tabular-nums shrink-0">
-        {label}
-      </p>
-      <p
-        className={`text-sm font-medium text-black text-right min-w-0 break-words ${
-          mono ? "font-mono tracking-[0.01em]" : ""
-        }`}
-      >
+      <p className="text-[13px] text-black/45 shrink-0">{label}</p>
+      <p className="text-sm font-medium text-black text-right min-w-0 break-words">
         {value}
       </p>
     </div>

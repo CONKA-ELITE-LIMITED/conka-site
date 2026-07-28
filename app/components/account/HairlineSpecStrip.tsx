@@ -14,7 +14,7 @@ export function HairlineSpecStrip({ items }: HairlineSpecStripProps) {
 
   return (
     <div
-      className={`grid grid-cols-2 ${desktopColsClass} bg-white border border-black/12`}
+      className={`grid grid-cols-2 ${desktopColsClass} bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden`}
     >
       {items.map((item, idx) => {
         const isLastOverall = idx === count - 1;
@@ -45,16 +45,16 @@ export function HairlineSpecStrip({ items }: HairlineSpecStripProps) {
 
         return (
           <div key={idx} className={cellClasses}>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/40 leading-none">
+            <p className="text-[11px] font-medium text-black/50 leading-none">
               {item.label}
             </p>
             <p
-              className={`font-mono ${valueSizeClass} font-bold tabular-nums text-[#1B2757] mt-2 leading-none`}
+              className={`${valueSizeClass} font-bold tabular-nums text-black mt-2 leading-none`}
             >
               {item.value}
             </p>
             {item.hint ? (
-              <p className="font-mono text-[9px] text-black/45 tabular-nums mt-2 leading-none">
+              <p className="text-[11px] text-black/45 tabular-nums mt-2 leading-none">
                 {item.hint}
               </p>
             ) : null}

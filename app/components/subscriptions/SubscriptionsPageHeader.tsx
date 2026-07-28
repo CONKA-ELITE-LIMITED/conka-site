@@ -5,7 +5,7 @@ interface SubscriptionsPageHeaderProps {
 export function SubscriptionsPageHeader({ subtitle }: SubscriptionsPageHeaderProps) {
   return (
     <div className="mb-8">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+      <p className="text-sm font-medium text-black/50 mb-3">
         Account · Subscriptions
       </p>
       <h1
@@ -15,7 +15,7 @@ export function SubscriptionsPageHeader({ subtitle }: SubscriptionsPageHeaderPro
       >
         Subscriptions
       </h1>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+      <p className="text-[13px] text-black/50 tabular-nums">
         {subtitle}
       </p>
     </div>

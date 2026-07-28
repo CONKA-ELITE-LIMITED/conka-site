@@ -147,7 +147,7 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} aria-hidden />
-      <div className="relative bg-white border border-black/12 max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="relative bg-white rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] border border-black/10 max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
           <h3 className="font-semibold text-black" style={{ letterSpacing: "-0.02em" }}>
             Edit profile
@@ -155,7 +155,7 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
           <button
             type="button"
             onClick={onClose}
-            className="p-2 hover:bg-[#f5f5f5] transition-colors"
+            className="p-2 rounded-full hover:bg-[#f5f5f5] transition-colors"
             aria-label="Close"
           >
             <svg
@@ -176,119 +176,119 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
         </div>
         <div className="p-4 overflow-y-auto flex-1">
           {success && (
-            <div className="mb-4 p-3 border border-black/12 bg-[#f5f5f5] text-black text-sm">
+            <div className="mb-4 p-3 rounded-md border border-black/10 bg-[#f5f5f5] text-black text-sm">
               Profile updated.
             </div>
           )}
           {error && (
-            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 text-red-700 text-sm">
+            <div className="mb-4 p-3 rounded-md border border-red-200 bg-red-50/50 text-red-700 text-sm">
               {error}
             </div>
           )}
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 First name
               </label>
               <input
                 type="text"
                 value={form.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
               />
             </div>
             <div>
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Last name
               </label>
               <input
                 type="text"
                 value={form.lastName}
                 onChange={(e) => handleChange("lastName", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Email
               </label>
               <input
                 type="email"
                 value={customer.email ?? ""}
                 readOnly
-                className="w-full px-3 py-2 border border-black/12 bg-[#f5f5f5] text-black/50 text-sm cursor-not-allowed"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-[#f5f5f5] text-black/50 text-sm cursor-not-allowed"
               />
               <p className="text-xs text-black/50 mt-1">
                 Email is managed by Shopify and cannot be changed here.
               </p>
             </div>
             <div className="sm:col-span-2">
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Phone
               </label>
               <input
                 type="tel"
                 value={form.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
                 placeholder="+447123456789"
                 inputMode="tel"
                 autoComplete="tel"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Address line 1
               </label>
               <input
                 type="text"
                 value={form.address.address1}
                 onChange={(e) => handleChange("address.address1", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Address line 2
               </label>
               <input
                 type="text"
                 value={form.address.address2}
                 onChange={(e) => handleChange("address.address2", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
                 placeholder="Optional"
               />
             </div>
             <div>
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 City
               </label>
               <input
                 type="text"
                 value={form.address.city}
                 onChange={(e) => handleChange("address.city", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
               />
             </div>
             <div>
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Postcode
               </label>
               <input
                 type="text"
                 value={form.address.zip}
                 onChange={(e) => handleChange("address.zip", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+              <label className="block text-[13px] font-medium text-black/60 mb-1">
                 Country
               </label>
               <select
                 value={form.address.country}
                 onChange={(e) => handleChange("address.country", e.target.value)}
-                className="w-full px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757]"
+                className="w-full px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)]"
               >
                 <option value="United Kingdom">United Kingdom</option>
                 <option value="Ireland">Ireland</option>
@@ -303,7 +303,7 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 text-sm font-semibold border border-black/12 hover:border-black/40 text-black transition-colors min-h-[44px]"
+            className="flex-1 py-2.5 rounded-full text-sm font-semibold border border-black/10 hover:border-black/40 text-black transition-colors min-h-[44px]"
           >
             Cancel
           </button>
@@ -311,7 +311,7 @@ export function EditProfileModal({ isOpen, onClose, customer }: EditProfileModal
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="flex-1 py-2.5 text-sm font-semibold bg-[#1B2757] text-white hover:opacity-90 disabled:opacity-50 transition-opacity min-h-[44px]"
+            className="flex-1 py-2.5 rounded-full text-sm font-semibold bg-[var(--brand-navy)] text-white hover:opacity-90 disabled:opacity-50 transition-opacity min-h-[44px]"
           >
             {saving ? "Saving..." : "Save"}
           </button>

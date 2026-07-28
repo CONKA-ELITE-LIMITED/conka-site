@@ -16,9 +16,9 @@ interface NextDeliveryHeroProps {
 }
 
 function getFormulaLabel(type: ReturnType<typeof getSubscriptionType>): string {
-  if (type === "flow") return "F01";
-  if (type === "clear") return "F02";
-  return "BOTH";
+  if (type === "flow") return "Flow";
+  if (type === "clear") return "Clear";
+  return "Both";
 }
 
 function formatNextDelivery(iso: string): string {
@@ -47,10 +47,10 @@ export function NextDeliveryHero({
   return (
     <article
       aria-label="Next delivery"
-      className="bg-white border border-black/12 grid grid-cols-1 lg:grid-cols-[288px_1fr]"
+      className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden grid grid-cols-1 lg:grid-cols-[288px_1fr]"
     >
       {/* Imagery */}
-      <div className="relative aspect-[4/5] bg-[#f5f5f5] border-b lg:border-b-0 lg:border-r border-black/12 overflow-hidden">
+      <div className="relative aspect-[4/5] bg-[#f5f5f5] border-b lg:border-b-0 lg:border-r border-black/10 overflow-hidden">
         {image ? (
           <Image
             src={image}
@@ -63,8 +63,8 @@ export function NextDeliveryHero({
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className="w-11 h-11 flex items-center justify-center text-white"
-              style={{ backgroundColor: "#1B2757" }}
+              className="w-11 h-11 flex items-center justify-center rounded-md text-white"
+              style={{ backgroundColor: "var(--brand-navy)" }}
             >
               <svg
                 width="22"
@@ -86,8 +86,8 @@ export function NextDeliveryHero({
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none"
         />
-        <span className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums">
-          Fig. 01 · Next ship
+        <span className="absolute top-3 left-3 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-medium text-white">
+          Next ship
         </span>
       </div>
 
@@ -100,15 +100,13 @@ export function NextDeliveryHero({
           >
             {title}
           </h2>
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#1B2757] bg-[#1B2757]/[0.06] border border-[#1B2757]/20 px-2 py-0.5 tabular-nums shrink-0 mt-1">
+          <span className="rounded-full border border-[var(--brand-navy)]/20 bg-[var(--brand-navy)]/[0.06] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--brand-navy)] shrink-0 mt-1">
             {formulaLabel}
           </span>
         </div>
 
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-            Next renewal
-          </p>
+          <p className="text-sm font-medium text-black/50 mb-2">Next renewal</p>
           <p
             className="text-3xl lg:text-4xl font-semibold tabular-nums text-black"
             style={{ letterSpacing: "-0.02em" }}
@@ -117,7 +115,7 @@ export function NextDeliveryHero({
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 mt-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-auto">
           <HeroActionButton
             onClick={onSkipNext}
             disabled={isActionLoading}
@@ -153,7 +151,7 @@ function HeroActionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="lab-clip-tr min-h-[44px] flex items-center justify-center bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="rounded-full min-h-[44px] flex items-center justify-center bg-[var(--brand-navy)] text-white text-[13px] font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {label}
     </button>

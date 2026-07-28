@@ -6,8 +6,8 @@ export function EmptyOrdersState() {
   const flowImage = getFormulaImage("01");
   const clearImage = getFormulaImage("02");
   return (
-    <div className="bg-white border border-black/12 p-10 md:p-12 text-center">
-      <div className="w-20 h-20 mx-auto mb-6 bg-[#f5f5f5] border border-black/12 flex items-center justify-center">
+    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-10 md:p-12 text-center">
+      <div className="w-20 h-20 mx-auto mb-6 rounded-md bg-[#f5f5f5] border border-black/10 flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="40"
@@ -38,16 +38,14 @@ export function EmptyOrdersState() {
       </p>
 
       <div className="border-t border-black/8 pt-8 mt-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-4">
-          Start Shopping
-        </p>
+        <p className="text-sm font-medium text-black/50 mb-4">Start shopping</p>
         <div className="grid grid-cols-2 gap-6 max-w-lg mx-auto mb-8">
           <Link
             href="/conka-flow"
-            className="bg-white border border-black/12 hover:border-black/40 p-5 transition-colors text-left overflow-hidden"
+            className="bg-white rounded-md border border-black/10 hover:border-black/40 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-5 transition-colors text-left overflow-hidden"
           >
             {flowImage ? (
-              <div className="w-full aspect-square max-w-[180px] mx-auto border border-black/8 overflow-hidden mb-4">
+              <div className="w-full aspect-square max-w-[180px] mx-auto rounded-md border border-black/8 overflow-hidden mb-4">
                 <Image src={flowImage} alt="CONKA Flow" width={180} height={180} className="w-full h-full object-cover" />
               </div>
             ) : (
@@ -62,10 +60,10 @@ export function EmptyOrdersState() {
           </Link>
           <Link
             href="/conka-clarity"
-            className="bg-white border border-black/12 hover:border-black/40 p-5 transition-colors text-left overflow-hidden"
+            className="bg-white rounded-md border border-black/10 hover:border-black/40 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-5 transition-colors text-left overflow-hidden"
           >
             {clearImage ? (
-              <div className="w-full aspect-square max-w-[180px] mx-auto border border-black/8 overflow-hidden mb-4">
+              <div className="w-full aspect-square max-w-[180px] mx-auto rounded-md border border-black/8 overflow-hidden mb-4">
                 <Image src={clearImage} alt="CONKA Clear" width={180} height={180} className="w-full h-full object-cover" />
               </div>
             ) : (
@@ -81,7 +79,7 @@ export function EmptyOrdersState() {
         </div>
         <Link
           href="/funnel"
-          className="inline-flex items-center gap-2 bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums px-8 py-3 [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-8 py-3 hover:opacity-90 transition-opacity"
         >
           Get started
           <svg

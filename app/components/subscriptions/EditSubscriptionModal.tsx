@@ -128,7 +128,7 @@ export function EditSubscriptionModal({
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal - Desktop */}
-      <div className="relative bg-white border border-black/12 w-full max-w-4xl max-h-[90vh] overflow-hidden hidden md:flex flex-col">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] w-full max-w-4xl max-h-[90vh] overflow-hidden hidden md:flex flex-col">
         {/* Header */}
         <div className="border-b border-black/8 px-6 py-4">
           <div className="flex items-start justify-between mb-3">
@@ -143,11 +143,11 @@ export function EditSubscriptionModal({
             </button>
           </div>
           {/* Current plan visual summary */}
-          <div className="flex items-center gap-3 p-3 bg-[#f5f5f5] border border-black/12">
+          <div className="flex items-center gap-3 p-3 bg-[#f5f5f5] border border-black/10 rounded-md">
             {isProtocol ? (
               <>
                 {getProtocolImage(currentProtocolId) && (
-                  <div className="w-12 h-12 flex-shrink-0 overflow-hidden border border-black/8">
+                  <div className="w-12 h-12 flex-shrink-0 overflow-hidden border border-black/8 rounded-md">
                     <Image
                       src={getProtocolImage(currentProtocolId)}
                       alt={currentProtocolName ?? 'Protocol'}
@@ -158,7 +158,7 @@ export function EditSubscriptionModal({
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums">Your current plan</p>
+                  <p className="text-sm font-medium text-black/50">Your current plan</p>
                   <p className="font-semibold text-sm text-black">
                     {currentProtocolName ?? 'Protocol'} · {currentPlanShots ?? '–'} shots · {currentTierInfo?.frequency ?? '–'}
                   </p>
@@ -170,7 +170,7 @@ export function EditSubscriptionModal({
             ) : (
               <>
                 {getFormulaImage(currentFormulaId) && (
-                  <div className="w-12 h-12 flex-shrink-0 overflow-hidden border border-black/8">
+                  <div className="w-12 h-12 flex-shrink-0 overflow-hidden border border-black/8 rounded-md">
                     <Image
                       src={getFormulaImage(currentFormulaId)}
                       alt={currentFormulaName ?? 'Formula'}
@@ -181,7 +181,7 @@ export function EditSubscriptionModal({
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums">Your current plan</p>
+                  <p className="text-sm font-medium text-black/50">Your current plan</p>
                   <p className="font-semibold text-sm text-black">
                     {currentFormulaName ?? 'Formula'} · {currentPackSize} shots
                   </p>
@@ -194,7 +194,7 @@ export function EditSubscriptionModal({
         {/* Content */}
         <div className="flex flex-1 overflow-hidden">
           {/* Left: Protocol or Formula selector */}
-          <div className="w-2/5 border-r border-black/12 p-6 overflow-y-auto bg-[#1B2757]/5">
+          <div className="w-2/5 border-r border-black/10 p-6 overflow-y-auto bg-[var(--brand-navy)]/5">
             <ProductSelectorPanel
               isProtocol={isProtocol}
               selectedProtocol={selectedProtocol}
@@ -244,7 +244,7 @@ export function EditSubscriptionModal({
             hasChanges={hasChanges}
           />
           {hasUnfulfilledFirstOrder && hasChanges && (
-            <div className="mb-4 p-3 bg-[#1B2757]/5 border border-[#1B2757]/20">
+            <div className="mb-4 p-3 bg-[var(--brand-navy)]/5 border border-[var(--brand-navy)]/20 rounded-md">
               <div className="flex items-start gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -256,13 +256,13 @@ export function EditSubscriptionModal({
                   strokeWidth="2"
                   strokeLinecap="square"
                   strokeLinejoin="miter"
-                  className="text-[#1B2757] flex-shrink-0 mt-0.5"
+                  className="text-[var(--brand-navy)] flex-shrink-0 mt-0.5"
                 >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 16v-4" />
                   <path d="M12 8h.01" />
                 </svg>
-                <p className="text-sm text-[#1B2757]">
+                <p className="text-sm text-[var(--brand-navy)]">
                   This change will take effect on your{" "}
                   <strong>next delivery</strong>. Your first order is already
                   being prepared. Need to adjust it?{" "}
@@ -302,14 +302,14 @@ export function EditSubscriptionModal({
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="border border-black/12 hover:border-black/40 px-6 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-black transition-colors"
+                className="rounded-full border border-black/10 hover:border-black/40 px-6 py-2.5 text-[13px] font-medium text-black transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={!hasChanges || saving || loading || (!isProtocol && !onSaveFormula)}
-                className="bg-[#1B2757] px-6 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-white disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                className="rounded-full bg-[var(--brand-navy)] px-6 py-2.5 text-[13px] font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
               >
                 {saving ? (
                   <span className="flex items-center gap-2">
@@ -326,7 +326,7 @@ export function EditSubscriptionModal({
       </div>
 
       {/* Modal - Mobile */}
-      <div className="relative bg-white border border-black/12 w-full max-h-[90vh] overflow-hidden flex flex-col md:hidden">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] w-full max-h-[90vh] overflow-hidden flex flex-col md:hidden">
         {/* Header */}
         <div className="border-b border-black/8 px-4 py-3">
           <div className="flex items-start justify-between mb-2">
@@ -336,11 +336,11 @@ export function EditSubscriptionModal({
             </button>
           </div>
           {/* Current plan visual summary — mobile */}
-          <div className="flex items-center gap-2.5 p-2.5 bg-[#f5f5f5] border border-black/12">
+          <div className="flex items-center gap-2.5 p-2.5 bg-[#f5f5f5] border border-black/10 rounded-md">
             {isProtocol ? (
               <>
                 {getProtocolImage(currentProtocolId) && (
-                  <div className="w-10 h-10 flex-shrink-0 overflow-hidden border border-black/8">
+                  <div className="w-10 h-10 flex-shrink-0 overflow-hidden border border-black/8 rounded-md">
                     <Image
                       src={getProtocolImage(currentProtocolId)}
                       alt={currentProtocolName ?? 'Protocol'}
@@ -351,7 +351,7 @@ export function EditSubscriptionModal({
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums">Current plan</p>
+                  <p className="text-sm font-medium text-black/50">Current plan</p>
                   <p className="font-semibold text-sm text-black truncate">
                     {currentProtocolName ?? 'Protocol'} · {currentPlanShots ?? '–'} shots · {currentTierInfo?.frequency ?? '–'}
                   </p>
@@ -360,7 +360,7 @@ export function EditSubscriptionModal({
             ) : (
               <>
                 {getFormulaImage(currentFormulaId) && (
-                  <div className="w-10 h-10 flex-shrink-0 overflow-hidden border border-black/8">
+                  <div className="w-10 h-10 flex-shrink-0 overflow-hidden border border-black/8 rounded-md">
                     <Image
                       src={getFormulaImage(currentFormulaId)}
                       alt={currentFormulaName ?? 'Formula'}
@@ -371,7 +371,7 @@ export function EditSubscriptionModal({
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums">Current plan</p>
+                  <p className="text-sm font-medium text-black/50">Current plan</p>
                   <p className="font-semibold text-sm text-black truncate">
                     {currentFormulaName ?? 'Formula'} · {currentPackSize} shots
                   </p>
@@ -386,9 +386,9 @@ export function EditSubscriptionModal({
           <button
             type="button"
             onClick={() => setMobileStep("product")}
-            className={`flex-1 py-3 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums transition-colors ${
+            className={`flex-1 py-3 text-[13px] font-medium tabular-nums transition-colors ${
               mobileStep === "product"
-                ? "bg-[#1B2757] text-white"
+                ? "bg-[var(--brand-navy)] text-white"
                 : "text-black bg-white hover:bg-[#f5f5f5]"
             }`}
           >
@@ -397,9 +397,9 @@ export function EditSubscriptionModal({
           <button
             type="button"
             onClick={() => setMobileStep("tier")}
-            className={`flex-1 py-3 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums border-l border-black/8 transition-colors ${
+            className={`flex-1 py-3 text-[13px] font-medium tabular-nums border-l border-black/8 transition-colors ${
               mobileStep === "tier"
-                ? "bg-[#1B2757] text-white"
+                ? "bg-[var(--brand-navy)] text-white"
                 : "text-black bg-white hover:bg-[#f5f5f5]"
             }`}
           >
@@ -458,7 +458,7 @@ export function EditSubscriptionModal({
             compact={true}
           />
           {hasUnfulfilledFirstOrder && hasChanges && (
-            <div className="mb-3 p-2 bg-[#1B2757]/5 border border-[#1B2757]/20">
+            <div className="mb-3 p-2 bg-[var(--brand-navy)]/5 border border-[var(--brand-navy)]/20 rounded-md">
               <div className="flex items-start gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -470,13 +470,13 @@ export function EditSubscriptionModal({
                   strokeWidth="2"
                   strokeLinecap="square"
                   strokeLinejoin="miter"
-                  className="text-[#1B2757] flex-shrink-0 mt-0.5"
+                  className="text-[var(--brand-navy)] flex-shrink-0 mt-0.5"
                 >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 16v-4" />
                   <path d="M12 8h.01" />
                 </svg>
-                <p className="text-sm text-[#1B2757]">
+                <p className="text-sm text-[var(--brand-navy)]">
                   Changes apply to your <strong>next delivery</strong>.{" "}
                   <ContactSupportLink variant="inline" icon={false} className="ml-1" />
                   {" "}to adjust your first order.
@@ -503,7 +503,7 @@ export function EditSubscriptionModal({
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving || loading || (!isProtocol && !onSaveFormula)}
-            className="w-full py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+            className="w-full py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
           >
             {saving
               ? "Updating..."

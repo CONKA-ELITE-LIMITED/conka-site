@@ -81,12 +81,12 @@ export function SubscriptionCard({
   }];
   const productImage = getSubscriptionImage(subscription);
   return (
-    <div className="bg-white border border-black/12 p-6 md:p-8 space-y-6">
+    <div className="bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 md:p-8 space-y-6">
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex gap-5 min-w-0">
             {productImage ? (
-              <div className="w-32 h-32 md:w-40 md:h-40 border border-black/8 flex-shrink-0 overflow-hidden">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-md border border-black/8 flex-shrink-0 overflow-hidden">
                 <img
                   src={productImage}
                   alt={subscription.product.title}
@@ -94,7 +94,7 @@ export function SubscriptionCard({
                 />
               </div>
             ) : (
-              <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f5f5f5] border border-black/8 flex-shrink-0 flex items-center justify-center">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-md bg-[#f5f5f5] border border-black/8 flex-shrink-0 flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="32"
@@ -127,7 +127,7 @@ export function SubscriptionCard({
                         <span className="text-black">
                           {line.productTitle}{line.variantTitle ? ` · ${line.variantTitle}` : ''}
                         </span>
-                        <span className="text-black/60 shrink-0 tabular-nums font-mono text-[10px]">
+                        <span className="text-black/60 shrink-0 tabular-nums text-[10px]">
                           £{typeof line.price === 'number' ? line.price.toFixed(2) : line.price} × {line.quantity}
                         </span>
                       </li>
@@ -143,7 +143,7 @@ export function SubscriptionCard({
                     {subscription.product.title}
                   </h3>
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="px-2.5 py-1 bg-[#f5f5f5] border border-black/12 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-black">
+                    <span className="px-2.5 py-1 rounded-full bg-[#f5f5f5] border border-black/10 font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums text-black">
                       {info.tierName}
                     </span>
                     <span className="text-sm text-black/60">
@@ -158,7 +158,7 @@ export function SubscriptionCard({
             </div>
           </div>
           <span
-            className={`px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums font-semibold flex-shrink-0 ${getStatusColor(
+            className={`px-3 py-1.5 rounded-full font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums font-semibold flex-shrink-0 ${getStatusColor(
               subscription.status
             )}`}
           >
@@ -211,9 +211,9 @@ export function SubscriptionCard({
 
           return (
             <div className="space-y-2">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 bg-[#f5f5f5] border border-black/12">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 rounded-md bg-[#f5f5f5] border border-black/10">
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+                  <p className="text-[13px] text-black/50 mb-1">
                     Billing
                   </p>
                   <p className="font-semibold text-black" style={{ letterSpacing: "-0.02em" }}>
@@ -221,7 +221,7 @@ export function SubscriptionCard({
                   </p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+                  <p className="text-[13px] text-black/50 mb-1">
                     Total price
                   </p>
                   <p className="font-semibold text-black tabular-nums" style={{ letterSpacing: "-0.02em" }}>
@@ -229,7 +229,7 @@ export function SubscriptionCard({
                   </p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+                  <p className="text-[13px] text-black/50 mb-1">
                     Shots
                   </p>
                   <p className="font-semibold text-black tabular-nums" style={{ letterSpacing: "-0.02em" }}>
@@ -237,7 +237,7 @@ export function SubscriptionCard({
                   </p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">
+                  <p className="text-[13px] text-black/50 mb-1">
                     Per shot
                   </p>
                   <p className="font-semibold text-black tabular-nums" style={{ letterSpacing: "-0.02em" }}>
@@ -255,7 +255,7 @@ export function SubscriptionCard({
                   {activeDiscounts.map((d) => (
                     <span
                       key={d.title}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums font-medium text-green-800"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 border border-green-200 font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums font-medium text-green-800"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
@@ -280,8 +280,8 @@ export function SubscriptionCard({
         })()}
 
         {!isMultiLine && (
-        <div className="flex flex-wrap items-center gap-4 p-4 border border-black/12 bg-[#f5f5f5]">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+        <div className="flex flex-wrap items-center gap-4 p-4 rounded-md border border-black/10 bg-[#f5f5f5]">
+          <span className="text-[13px] text-black/50">
             Formula mix
           </span>
           <div className="flex items-center gap-3">
@@ -308,7 +308,7 @@ export function SubscriptionCard({
       </div>
 
       {successMessage && (
-        <div className="border border-black/12 bg-[#f5f5f5] p-4">
+        <div className="rounded-md border border-black/10 bg-[#f5f5f5] p-4">
           <div className="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +353,7 @@ export function SubscriptionCard({
       )}
 
       {subscription.status === "active" && !successMessage && (
-        <div className="border border-black/12 bg-[#f5f5f5] p-4">
+        <div className="rounded-md border border-black/10 bg-[#f5f5f5] p-4">
           <div className="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -383,7 +383,7 @@ export function SubscriptionCard({
       )}
 
       {subscription.status === "paused" && (
-        <div className="border border-black/12 bg-[#f5f5f5] p-4">
+        <div className="rounded-md border border-black/10 bg-[#f5f5f5] p-4">
           <div className="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -409,7 +409,7 @@ export function SubscriptionCard({
       )}
 
       {subscription.hasUnfulfilledOrder && subscription.status === "active" && (
-        <div className="border border-[#1B2757]/20 bg-[#1B2757]/5 p-4">
+        <div className="rounded-md border border-[var(--brand-navy)]/20 bg-[var(--brand-navy)]/5 p-4">
           <div className="flex items-start gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -421,20 +421,20 @@ export function SubscriptionCard({
               strokeWidth="2"
               strokeLinecap="square"
               strokeLinejoin="miter"
-              className="text-[#1B2757] flex-shrink-0 mt-0.5"
+              className="text-[var(--brand-navy)] flex-shrink-0 mt-0.5"
             >
               <circle cx="12" cy="12" r="10" />
               <path d="M12 16v-4" />
               <path d="M12 8h.01" />
             </svg>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-[#1B2757] mb-1">
+              <p className="text-sm font-medium text-[var(--brand-navy)] mb-1">
                 {subscription.unfulfilledOrdersCount === 1 ||
                 !subscription.unfulfilledOrdersCount
                   ? "You have an order being prepared"
                   : `You have ${subscription.unfulfilledOrdersCount} orders being prepared`}
               </p>
-              <p className="text-sm text-[#1B2757]/70">
+              <p className="text-sm text-[var(--brand-navy)]/70">
                 Any plan changes will apply to your next delivery. To change a
                 pending order,{" "}
                 <ContactSupportLink variant="inline" icon={false} />
@@ -451,7 +451,7 @@ export function SubscriptionCard({
             <button
               onClick={() => { setDiscountExpanded(true); setDiscountFeedback(null); }}
               aria-expanded={false}
-              className="text-sm font-medium text-[#1B2757] hover:underline flex items-center gap-1.5"
+              className="text-sm font-medium text-[var(--brand-navy)] hover:underline flex items-center gap-1.5"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
                 <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
@@ -468,7 +468,7 @@ export function SubscriptionCard({
                   placeholder="Enter promo code"
                   aria-label="Promo code"
                   maxLength={50}
-                  className="flex-1 px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757] font-mono tracking-[0.1em] uppercase"
+                  className="flex-1 px-3 py-2 rounded-md border border-black/10 bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)] uppercase"
                   disabled={discountLoading}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
@@ -481,7 +481,7 @@ export function SubscriptionCard({
                   onClick={handleApplyDiscount}
                   disabled={discountLoading || !discountCode.trim()}
                   aria-label={discountLoading ? 'Applying discount' : 'Apply discount code'}
-                  className="px-4 py-2 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums hover:opacity-90 disabled:opacity-50 transition-opacity flex items-center gap-2"
+                  className="px-4 py-2 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity flex items-center gap-2"
                 >
                   {discountLoading ? (
                     <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
@@ -524,7 +524,7 @@ export function SubscriptionCard({
         <button
           onClick={onEdit}
           disabled={isActionLoading}
-          className="bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums px-5 py-2.5 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)] hover:opacity-90 disabled:opacity-50 flex items-center gap-2 transition-opacity"
+          className="rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-5 py-2.5 hover:opacity-90 disabled:opacity-50 flex items-center gap-2 transition-opacity"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -535,7 +535,7 @@ export function SubscriptionCard({
         <button
           onClick={onTogglePause}
           disabled={isActionLoading}
-          className="border border-black/12 hover:border-black/40 bg-white text-black font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
+          className="rounded-full border border-black/10 hover:border-black/40 bg-white text-black text-[13px] font-medium px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
         >
           {isActionLoading ? (
             <>
@@ -583,7 +583,7 @@ export function SubscriptionCard({
           <button
             onClick={onSkipNext}
             disabled={isActionLoading}
-            className="border border-black/12 hover:border-black/40 bg-white text-black font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
+            className="rounded-full border border-black/10 hover:border-black/40 bg-white text-black text-[13px] font-medium px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
               <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/>
@@ -595,7 +595,7 @@ export function SubscriptionCard({
           <button
             onClick={onReschedule}
             disabled={isActionLoading}
-            className="border border-black/12 hover:border-black/40 bg-white text-black font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
+            className="rounded-full border border-black/10 hover:border-black/40 bg-white text-black text-[13px] font-medium px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -610,7 +610,7 @@ export function SubscriptionCard({
           <button
             onClick={onPlaceOrder}
             disabled={isActionLoading}
-            className="border border-black/12 hover:border-black/40 bg-white text-black font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
+            className="rounded-full border border-black/10 hover:border-black/40 bg-white text-black text-[13px] font-medium px-5 py-2.5 disabled:opacity-50 flex items-center gap-2 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
               <circle cx="9" cy="21" r="1"/>
@@ -623,7 +623,7 @@ export function SubscriptionCard({
         <button
           onClick={onCancel}
           disabled={isActionLoading}
-          className="border border-red-400 bg-transparent text-red-600 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-5 py-2.5 hover:bg-red-50/50 disabled:opacity-50 flex items-center gap-2 transition-colors"
+          className="rounded-full border border-red-400 bg-transparent text-red-600 text-[13px] font-medium px-5 py-2.5 hover:bg-red-50/50 disabled:opacity-50 flex items-center gap-2 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

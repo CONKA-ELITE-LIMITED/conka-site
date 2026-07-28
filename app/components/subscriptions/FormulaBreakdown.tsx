@@ -28,7 +28,7 @@ export function FormulaBreakdown({
           height={16}
           className="overflow-hidden"
         />
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums">{flowCount}x Flow</span>
+        <span className="text-[10px] tabular-nums">{flowCount}x Flow</span>
       </div>
       <span className={isSelected ? 'opacity-50' : 'opacity-30'}>+</span>
       <div className="flex items-center gap-1">
@@ -39,9 +39,9 @@ export function FormulaBreakdown({
           height={16}
           className="overflow-hidden"
         />
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums">{clarityCount}x Clear</span>
+        <span className="text-[10px] tabular-nums">{clarityCount}x Clear</span>
       </div>
-      <span className={`font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums ${isSelected ? 'opacity-50' : 'opacity-40'}`}>
+      <span className={`text-[10px] tabular-nums ${isSelected ? 'opacity-50' : 'opacity-40'}`}>
         {perDeliveryText}
       </span>
     </div>

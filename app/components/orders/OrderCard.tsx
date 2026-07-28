@@ -80,7 +80,7 @@ function OrderStatusIcon({ status }: { status: string }) {
           strokeWidth="2"
           strokeLinecap="square"
           strokeLinejoin="miter"
-          className="text-[#1B2757]"
+          className="text-[var(--brand-navy)]"
         >
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
@@ -120,7 +120,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
   const itemCount = order.lineItems.reduce((acc, i) => acc + i.quantity, 0);
 
   return (
-    <div className="bg-white border border-black/12 overflow-hidden">
+    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden">
       <button
         type="button"
         onClick={onToggle}
@@ -129,7 +129,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div className="flex items-start gap-4 min-w-0">
             {firstItemImage?.url ? (
-              <div className="w-24 h-24 md:w-28 md:h-28 border border-black/8 flex-shrink-0 overflow-hidden">
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-md border border-black/8 flex-shrink-0 overflow-hidden">
                 <img
                   src={firstItemImage.url}
                   alt={firstItemImage.altText || "Order item"}
@@ -137,7 +137,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
                 />
               </div>
             ) : (
-              <div className="w-24 h-24 md:w-28 md:h-28 bg-[#f5f5f5] border border-black/8 flex-shrink-0 flex items-center justify-center">
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-md bg-[#f5f5f5] border border-black/8 flex-shrink-0 flex items-center justify-center">
                 <OrderStatusIcon status={displayStatus} />
               </div>
             )}
@@ -150,7 +150,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
                   Order #{order.orderNumber}
                 </h3>
                 <span
-                  className={`px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums ${
+                  className={`rounded-full px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums ${
                     progress.cancelled
                       ? "bg-red-100 text-red-800"
                       : getStatusColor(displayStatus)
@@ -211,11 +211,9 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
       {isExpanded && (
         <div className="border-t border-black/8">
           <div className="p-6 bg-[#f5f5f5]">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums font-semibold mb-4">
-              Order Status
-            </p>
+            <p className="text-sm font-semibold text-black/50 mb-4">Order status</p>
             {progress.cancelled ? (
-              <div className="flex items-center gap-3 p-4 bg-red-50/50 border border-red-200">
+              <div className="flex items-center gap-3 p-4 rounded-md bg-red-50/50 border border-red-200">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -265,7 +263,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
                         style={{ width: "20%" }}
                       >
                         <div
-                          className={`w-6 h-6 flex items-center justify-center relative z-10 transition-all ${
+                          className={`w-6 h-6 rounded-full flex items-center justify-center relative z-10 transition-all ${
                             isCompleted || isPast
                               ? "bg-green-500 text-white"
                               : isCurrent
@@ -288,7 +286,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
                               <polyline points="20 6 9 17 4 12" />
                             </svg>
                           ) : (
-                            <span className="font-mono text-[10px] font-bold tabular-nums">{index + 1}</span>
+                            <span className="text-[11px] font-bold tabular-nums">{index + 1}</span>
                           )}
                         </div>
                         <p
@@ -310,7 +308,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
 
           {order.shippingAddress && (
             <div className="p-6 bg-white">
-              <div className="p-4 border border-black/12 bg-[#f5f5f5]">
+              <div className="p-4 rounded-md border border-black/10 bg-[#f5f5f5]">
                 <div className="flex items-start gap-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -358,18 +356,16 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
           )}
 
           <div className="p-6 pt-0 bg-white">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-4">
-              Items
-            </p>
+            <p className="text-sm font-medium text-black/50 mb-4">Items</p>
             <div className="space-y-3">
               {order.lineItems.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 border border-black/12 bg-[#f5f5f5]"
+                  className="flex items-center justify-between p-3 rounded-md border border-black/10 bg-[#f5f5f5]"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     {item.image?.url ? (
-                      <div className="w-12 h-12 border border-black/8 overflow-hidden flex-shrink-0">
+                      <div className="w-12 h-12 rounded-md border border-black/8 overflow-hidden flex-shrink-0">
                         <img
                           src={item.image.url}
                           alt={item.image.altText || item.title}
@@ -377,7 +373,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
                         />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 bg-white border border-black/8 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-md bg-white border border-black/8 flex items-center justify-center flex-shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="18"
@@ -416,9 +412,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
             </div>
 
             <div className="mt-6 pt-4 border-t border-black/8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-3">
-                Order Summary
-              </p>
+              <p className="text-sm font-medium text-black/50 mb-3">Order summary</p>
               <div className="space-y-2">
                 {order.subtotal && (
                   <div className="flex justify-between text-sm">
@@ -500,7 +494,7 @@ export function OrderCard({ order, isExpanded, onToggle }: OrderCardProps) {
                 return (
                   <Link
                     href={href}
-                    className="inline-flex items-center gap-2 bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums px-6 py-2.5 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)] hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-6 py-2.5 hover:opacity-90 transition-opacity"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

@@ -44,9 +44,9 @@ function safeFormatDate(
 }
 
 function getFormulaBadge(type: ReturnType<typeof getSubscriptionType>): string {
-  if (type === "flow") return "F01";
-  if (type === "clear") return "F02";
-  return "BOTH";
+  if (type === "flow") return "Flow";
+  if (type === "clear") return "Clear";
+  return "Both";
 }
 
 export default function AccountPage() {
@@ -172,7 +172,7 @@ export default function AccountPage() {
 
   if (loading) {
     return (
-      <div className="brand-clinical min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin mx-auto mb-3" />
           <p className="text-sm text-black/60">Loading...</p>
@@ -184,7 +184,7 @@ export default function AccountPage() {
   if (!isAuthenticated || !customer) return null;
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
       <AccountSubNav />
 
@@ -197,9 +197,7 @@ export default function AccountPage() {
             {/* Welcome header */}
             <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
               <div className="min-w-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-                  {"// Account · Overview"}
-                </p>
+                <p className="text-sm font-medium text-black/50 mb-3">Overview</p>
                 <h1
                   id="overview-heading"
                   className="text-3xl lg:text-4xl font-semibold text-black mb-2"
@@ -207,14 +205,12 @@ export default function AccountPage() {
                 >
                   {greeting}
                 </h1>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
-                  {headerSub}
-                </p>
+                <p className="text-sm text-black/50 tabular-nums">{headerSub}</p>
               </div>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] px-4 py-2 transition-colors min-h-[44px]"
+                className="rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium px-5 py-2 transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
               >
                 Sign out
               </button>
@@ -234,8 +230,8 @@ export default function AccountPage() {
 
             {/* Next delivery section */}
             <div className="mb-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-                Fig. 01 · Next delivery
+              <p className="text-sm font-medium text-black/50 mb-3">
+                Next delivery
               </p>
               <h2
                 className="text-2xl lg:text-3xl font-semibold text-black mb-2"
@@ -243,13 +239,13 @@ export default function AccountPage() {
               >
                 Your next shipment.
               </h2>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+              <p className="text-sm text-black/50 tabular-nums">
                 Skip · Reschedule · Get now
               </p>
             </div>
 
             {ordersLoading && nextSub ? (
-              <div className="mb-4 bg-white border border-black/12 h-[72px]" />
+              <div className="mb-4 bg-white rounded-md border border-black/10 h-[72px]" />
             ) : activeOrder ? (
               <div className="mb-4">
                 <ActiveOrderCard
@@ -262,7 +258,7 @@ export default function AccountPage() {
 
             <div className="mb-12">
               {subsLoading && subscriptions.length === 0 ? (
-                <div className="bg-white border border-black/12 h-[360px] flex items-center justify-center">
+                <div className="bg-white rounded-md border border-black/10 h-[360px] flex items-center justify-center">
                   <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
                 </div>
               ) : nextSub ? (
@@ -282,8 +278,8 @@ export default function AccountPage() {
             {otherActive.length > 0 && (
               <>
                 <div className="mb-5">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-                    Fig. 02 · All active subscriptions
+                  <p className="text-sm font-medium text-black/50 mb-3">
+                    All active subscriptions
                   </p>
                   <h2
                     className="text-2xl lg:text-3xl font-semibold text-black mb-2"
@@ -291,12 +287,12 @@ export default function AccountPage() {
                   >
                     {nextSub ? "Also in rotation." : "Your subscriptions."}
                   </h2>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+                  <p className="text-sm text-black/50 tabular-nums">
                     Tap any row to manage
                   </p>
                 </div>
 
-                <div className="mb-12 bg-white border border-black/12">
+                <div className="mb-12 bg-white rounded-md border border-black/10 overflow-hidden">
                   {otherActive.map((sub, idx) => {
                     const img = getSubscriptionImage(sub);
                     const type = getSubscriptionType(sub);
@@ -318,11 +314,11 @@ export default function AccountPage() {
                           idx < otherActive.length - 1 ? "border-b border-black/8" : ""
                         }`}
                       >
-                        <span className="font-mono text-[10px] text-black/35 tabular-nums flex-shrink-0 w-5">
+                        <span className="text-[13px] text-black/35 tabular-nums flex-shrink-0 w-5">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
                         {img ? (
-                          <span className="relative w-12 h-12 shrink-0 overflow-hidden bg-[#f5f5f5] border border-black/8">
+                          <span className="relative w-12 h-12 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
                             <Image
                               src={img}
                               alt=""
@@ -337,18 +333,15 @@ export default function AccountPage() {
                             <p className="text-sm font-semibold text-black truncate">
                               {label}
                             </p>
-                            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#1B2757] bg-[#1B2757]/[0.06] border border-[#1B2757]/20 px-1.5 py-0.5 tabular-nums shrink-0">
+                            <span className="rounded-full border border-[var(--brand-navy)]/20 bg-[var(--brand-navy)]/[0.06] px-2 py-0.5 text-[11px] font-semibold text-[var(--brand-navy)] shrink-0">
                               {badge}
                             </span>
                           </div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/55 tabular-nums mt-0.5">
+                          <p className="text-[13px] text-black/55 tabular-nums mt-0.5">
                             Renews · {date}
                           </p>
                         </div>
-                        <span
-                          className="text-black/40 font-mono shrink-0"
-                          aria-hidden
-                        >
+                        <span className="text-black/40 shrink-0" aria-hidden>
                           →
                         </span>
                       </Link>
@@ -359,22 +352,20 @@ export default function AccountPage() {
             )}
 
             {/* Closing CTA / help */}
-            <div className="bg-white border border-black/12 p-5 lg:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
-                {"// Support · Fig. 03"}
-              </p>
+            <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-5 lg:p-8">
+              <p className="text-sm font-medium text-black/50 mb-3">Support</p>
               <h3
                 className="text-xl lg:text-2xl font-semibold text-black mb-2"
                 style={{ letterSpacing: "-0.02em" }}
               >
                 Need a hand with your account?
               </h3>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
+              <p className="text-sm text-black/50 tabular-nums mb-6">
                 Same day reply · UK team · real humans
               </p>
               <ContactSupportLink
                 variant="inline"
-                className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#1B2757]"
+                className="text-[13px] font-semibold text-[var(--brand-navy)]"
                 icon={false}
               >
                 Email support ↗
@@ -406,20 +397,18 @@ export default function AccountPage() {
 
 function EmptyHeroCard() {
   return (
-    <div className="bg-white border border-black/12 p-6 lg:p-10 flex flex-col items-start gap-5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
-        No active subscription
-      </p>
+    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 lg:p-10 flex flex-col items-start gap-5">
+      <p className="text-sm font-medium text-black/50">No active subscription</p>
       <h2
         className="text-2xl lg:text-3xl font-semibold text-black"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Start a protocol to see your next delivery here.
+        Start a subscription to see your next delivery here.
       </h2>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+      <p className="text-sm text-black/50 tabular-nums">
         100-day guarantee · Free UK shipping · Cancel anytime
       </p>
-      <ConkaCTAButton href="/funnel" meta="// start your protocol">
+      <ConkaCTAButton href="/funnel" meta={null}>
         Start now
       </ConkaCTAButton>
     </div>

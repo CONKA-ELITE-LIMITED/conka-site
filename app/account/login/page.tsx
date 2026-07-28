@@ -44,14 +44,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
 
       <main className="pt-24 pb-24 px-4 lg:px-[5vw]">
         <div className="mx-auto max-w-[28rem]">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-            Account
-          </p>
+          <p className="text-sm font-medium text-black/50 mb-2">Account</p>
           <h1
             className="text-2xl font-semibold text-black mb-1"
             style={{ letterSpacing: '-0.02em' }}
@@ -62,9 +60,9 @@ export default function LoginPage() {
             Sign in to view orders, manage subscriptions, and update your details.
           </p>
 
-          <div className="bg-white border border-black/12 p-6">
+          <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6">
             {error && (
-              <div className="mb-4 border border-red-200 bg-red-50/50 p-3 text-sm text-red-700">
+              <div className="mb-4 rounded-md border border-red-200 bg-red-50/50 p-3 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -77,7 +75,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleLogin}
               disabled={loading}
-              className="w-full bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums py-3.5 [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] hover:opacity-90 disabled:opacity-50 transition-opacity"
+              className="w-full rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold py-3.5 hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -94,7 +92,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleMockLogin}
                 disabled={mockLoading}
-                className="w-full mt-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] py-3.5 transition-colors disabled:opacity-50"
+                className="w-full mt-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium py-3.5 transition-colors disabled:opacity-50"
               >
                 {mockLoading ? 'Loading...' : 'Use mock account (dev)'}
               </button>

@@ -118,7 +118,7 @@ export function PauseModal({
         onClick={handleClose}
       />
 
-      <div className="relative bg-white border border-black/12 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-black/8 px-4 py-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-black" style={{ letterSpacing: '-0.02em' }}>Pause Subscription</h2>
@@ -132,12 +132,12 @@ export function PauseModal({
               </svg>
             </button>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mt-1">{subscriptionName}</p>
+          <p className="text-sm font-medium text-black/50 tabular-nums mt-1">{subscriptionName}</p>
         </div>
 
         <div className="p-4">
           {error && (
-            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 text-red-700 text-sm">
+            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 rounded-md text-red-700 text-sm">
               {error}
             </div>
           )}
@@ -150,10 +150,10 @@ export function PauseModal({
             {pauseOptions.map((option, idx) => (
               <label
                 key={option.weeks}
-                className={`flex items-center justify-between p-3 border cursor-pointer transition-colors ${
+                className={`flex items-center justify-between p-3 border rounded-md cursor-pointer transition-colors ${
                   selectedWeeks === option.weeks
-                    ? 'border-[#1B2757] bg-[#1B2757]/5'
-                    : 'border-black/12 hover:border-black/40'
+                    ? 'border-[var(--brand-navy)] bg-[var(--brand-navy)]/5'
+                    : 'border-black/10 hover:border-black/40'
                 }`}
               >
                 <div className="flex items-center">
@@ -165,13 +165,13 @@ export function PauseModal({
                     onChange={() => setSelectedWeeks(option.weeks)}
                     className="sr-only"
                   />
-                  <div className={`w-4 h-4 border-2 mr-3 flex items-center justify-center ${
+                  <div className={`w-4 h-4 rounded-full border-2 mr-3 flex items-center justify-center ${
                     selectedWeeks === option.weeks
-                      ? 'border-[#1B2757]'
+                      ? 'border-[var(--brand-navy)]'
                       : 'border-black/20'
                   }`}>
                     {selectedWeeks === option.weeks && (
-                      <div className="w-2 h-2 bg-[#1B2757]" />
+                      <div className="w-2 h-2 rounded-full bg-[var(--brand-navy)]" />
                     )}
                   </div>
                   <span className="text-sm font-medium text-black">
@@ -182,14 +182,14 @@ export function PauseModal({
                   </span>
                 </div>
                 {option.weeks === maxWeeks && (
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Maximum</span>
+                  <span className="text-[13px] font-medium text-black/40">Maximum</span>
                 )}
               </label>
             ))}
           </div>
 
           {selectedWeeks != null && resumeDate && (
-            <div className="mt-4 p-3 bg-[#f5f5f5] border border-black/12">
+            <div className="mt-4 p-3 bg-[#f5f5f5] border border-black/10 rounded-md">
               <p className="text-sm text-black">
                 Your deliveries will resume around{' '}
                 <span className="font-semibold tabular-nums">
@@ -208,14 +208,14 @@ export function PauseModal({
             <button
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-50"
+              className="flex-1 py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors disabled:opacity-50"
             >
               Keep Active
             </button>
             <button
               onClick={handleConfirm}
               disabled={selectedWeeks == null || loading}
-              className="flex-1 py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+              className="flex-1 py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

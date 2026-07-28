@@ -49,13 +49,13 @@ function ProtocolMiniCard({
 
   return (
     <div className="flex-1 min-w-0">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1.5">
+      <p className="text-[13px] text-black/50 mb-1.5">
         {label}
       </p>
       <div className="flex items-center gap-2.5">
         {img && (
           <div
-            className={`${compact ? 'w-10 h-10' : 'w-12 h-12'} flex-shrink-0 overflow-hidden border border-black/8`}
+            className={`${compact ? 'w-10 h-10' : 'w-12 h-12'} flex-shrink-0 overflow-hidden rounded-md border border-black/8`}
           >
             <Image
               src={img}
@@ -76,10 +76,10 @@ function ProtocolMiniCard({
           {breakdown && (
             <div className="flex items-center gap-1.5 mt-0.5">
               <Image src="/formulas/ConkaFlowColour.jpg" alt="" width={14} height={14} className="overflow-hidden" />
-              <span className="font-mono text-[10px] tabular-nums text-black/60">{breakdown.flowCount}</span>
+              <span className="text-[10px] tabular-nums text-black/60">{breakdown.flowCount}</span>
               <span className="font-mono text-[10px] tabular-nums text-black/40">+</span>
               <Image src="/formulas/ConkaClearColour.jpg" alt="" width={14} height={14} className="overflow-hidden" />
-              <span className="font-mono text-[10px] tabular-nums text-black/60">{breakdown.clarityCount}</span>
+              <span className="text-[10px] tabular-nums text-black/60">{breakdown.clarityCount}</span>
             </div>
           )}
         </div>
@@ -105,13 +105,13 @@ function FormulaMiniCard({
 
   return (
     <div className="flex-1 min-w-0">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1.5">
+      <p className="text-[13px] text-black/50 mb-1.5">
         {label}
       </p>
       <div className="flex items-center gap-2.5">
         {img && (
           <div
-            className={`${compact ? 'w-10 h-10' : 'w-12 h-12'} flex-shrink-0 overflow-hidden border border-black/8`}
+            className={`${compact ? 'w-10 h-10' : 'w-12 h-12'} flex-shrink-0 overflow-hidden rounded-md border border-black/8`}
           >
             <Image
               src={img}
@@ -152,7 +152,7 @@ export function PlanPreviewBar({
 
   return (
     <div
-      className={`${compact ? 'p-3' : 'p-4'} border border-[#1B2757]/20 bg-[#1B2757]/5 mb-4`}
+      className={`${compact ? 'p-3' : 'p-4'} rounded-md border border-[var(--brand-navy)]/20 bg-[var(--brand-navy)]/5 mb-4`}
     >
       <div className="flex items-stretch gap-3">
         {isProtocol ? (
@@ -174,7 +174,7 @@ export function PlanPreviewBar({
                 strokeWidth="2"
                 strokeLinecap="square"
                 strokeLinejoin="miter"
-                className="text-[#1B2757] flex-shrink-0"
+                className="text-[var(--brand-navy)] flex-shrink-0"
               >
                 <path d="M5 12h14" />
                 <path d="m12 5 7 7-7 7" />
@@ -206,7 +206,7 @@ export function PlanPreviewBar({
                 strokeWidth="2"
                 strokeLinecap="square"
                 strokeLinejoin="miter"
-                className="text-[#1B2757] flex-shrink-0"
+                className="text-[var(--brand-navy)] flex-shrink-0"
               >
                 <path d="M5 12h14" />
                 <path d="m12 5 7 7-7 7" />

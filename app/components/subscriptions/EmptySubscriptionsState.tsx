@@ -6,7 +6,7 @@ export function EmptySubscriptionsState() {
   const flowImage = getFormulaImage("01");
   const clearImage = getFormulaImage("02");
   return (
-    <div className="bg-white border border-black/12 p-10 md:p-12 text-center">
+    <div className="bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-10 md:p-12 text-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="48"
@@ -37,9 +37,9 @@ export function EmptySubscriptionsState() {
           {flowImage && (
             <Link
               href="/conka-flow"
-              className="bg-white border border-black/12 hover:border-black/40 p-5 transition-colors text-left overflow-hidden"
+              className="bg-white border border-black/10 rounded-md hover:border-black/40 p-5 transition-colors text-left overflow-hidden"
             >
-              <div className="w-full aspect-square max-w-[180px] mx-auto border border-black/8 overflow-hidden mb-4">
+              <div className="w-full aspect-square max-w-[180px] mx-auto border border-black/8 rounded-md overflow-hidden mb-4">
                 <Image src={flowImage} alt="CONKA Flow" width={180} height={180} className="w-full h-full object-cover" />
               </div>
               <p className="font-semibold text-black" style={{ letterSpacing: "-0.02em" }}>CONKA Flow</p>
@@ -49,9 +49,9 @@ export function EmptySubscriptionsState() {
           {clearImage && (
             <Link
               href="/conka-clarity"
-              className="bg-white border border-black/12 hover:border-black/40 p-5 transition-colors text-left overflow-hidden"
+              className="bg-white border border-black/10 rounded-md hover:border-black/40 p-5 transition-colors text-left overflow-hidden"
             >
-              <div className="w-full aspect-square max-w-[180px] mx-auto border border-black/8 overflow-hidden mb-4">
+              <div className="w-full aspect-square max-w-[180px] mx-auto border border-black/8 rounded-md overflow-hidden mb-4">
                 <Image src={clearImage} alt="CONKA Clear" width={180} height={180} className="w-full h-full object-cover" />
               </div>
               <p className="font-semibold text-black" style={{ letterSpacing: "-0.02em" }}>CONKA Clear</p>
@@ -62,7 +62,7 @@ export function EmptySubscriptionsState() {
       )}
       <Link
         href="/funnel"
-        className="inline-flex items-center gap-2 bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums px-8 py-3 [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] hover:opacity-90 transition-opacity"
+        className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-8 py-3 hover:opacity-90 transition-opacity"
       >
         Get started
         <svg
