@@ -128,6 +128,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         saving={asset.saving}
         coffeePerDay={asset.coffeePerDay}
         shotsPerDay={asset.shotsPerDay}
+        variant="dtc"
       />
     );
   }

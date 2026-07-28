@@ -29,9 +29,9 @@ export default function FocusBars() {
   return (
     <div
       ref={ref}
-      className="rounded-3xl border border-black/10 bg-white p-6 md:p-7"
+      className="rounded-lg border border-black/10 bg-white p-6 md:p-7"
     >
-      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">
+      <p className="mb-1 text-[12px] font-semibold text-black/50">
         Measured focus
       </p>
       <h3 className="mb-6 text-lg font-bold text-[#1d1d1d]">

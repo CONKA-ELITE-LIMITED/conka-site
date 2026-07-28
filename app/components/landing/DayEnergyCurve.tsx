@@ -22,7 +22,7 @@ export default function DayEnergyCurve() {
   return (
     <div
       ref={ref}
-      className="overflow-hidden rounded-[24px] border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
+      className="overflow-hidden rounded-lg border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
     >
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}
@@ -42,7 +42,7 @@ export default function DayEnergyCurve() {
             Without
           </span>
         </div>
-        <p className="px-1.5 pb-2.5 pt-0.5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#aaa]">
+        <p className="px-1.5 pb-2.5 pt-0.5 text-[12px] font-medium text-black/40">
           Mental energy through the day
         </p>
 
@@ -147,7 +147,7 @@ export default function DayEnergyCurve() {
         </svg>
       </div>
 
-      <div className="border-t border-black/[0.09] bg-[#faf9f6] px-[22px] py-4">
+      <div className="border-t border-black/[0.09] bg-[var(--brand-tint)] px-[22px] py-4">
         <p className="text-[15px] font-semibold leading-snug text-[#1d1d1d]">
           Sustained mental energy from morning to night. No midday slump.
         </p>
