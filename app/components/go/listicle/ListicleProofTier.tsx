@@ -69,9 +69,8 @@ export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
           title={proof.ugc.title}
           subtitle={proof.ugc.subtitle}
           items={proof.ugc.items}
-          // Sharp tiles on the listicles (the Simple DTC 24px rounding was
-          // rejected here), matching the clinical UGC band on home and PDPs.
-          tileRadius="0px"
+          // Simple DTC: the standard rounded-md tile radius (UGCMarquee's
+          // default), matching the UGC band on home and the PDPs.
         />
       ),
     });

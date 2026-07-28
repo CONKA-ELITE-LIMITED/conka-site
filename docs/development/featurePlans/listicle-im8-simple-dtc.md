@@ -42,10 +42,12 @@ Other live consumers of the shared graphics that must stay visually unchanged: `
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | im8 chrome + go shell + im8 hero + listicle proof tier | Not Started |
-| 2 | Shared graphics to DTC variants, batch A (proof / stat / data-viz panels) | Not Started |
-| 3 | Shared graphics to DTC variants, batch B (badges / marquees / toggles / explainers) | Not Started |
-| 4 | Regression pass + docs | Not Started |
+| 1 | im8 chrome + go shell + im8 hero + listicle proof tier | Done |
+| 2 | Shared graphics to DTC variants, batch A (proof / stat / data-viz panels) | Done |
+| 3 | Shared graphics to DTC variants, batch B (badges / marquees / toggles / explainers) | Done |
+| 4 | Regression pass + docs | Done |
+
+**Build note (SCRUM-1189):** shared graphics with zero external consumers (all listicle-only) were converted in place rather than behind a variant, per the plan's anti-sprawl guidance; only `CrashChart` and `LaurelBadge` (which have other live consumers) took an opt-in `variant="dtc"`. `MeasureTile` kept its dark App-Dark surface (radius tightened to `rounded-lg`/`rounded-md` per review). Post-review tweaks: listicle UGC tiles use the standard rounded-md radius (dropped the `0px` override), and the numbered reason titles are navy (`--brand-navy`), not black.
 
 All phases active. Ship each phase independently. Single Jira ticket; phases are the internal build order.
 

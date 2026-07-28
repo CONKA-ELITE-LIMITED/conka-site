@@ -84,7 +84,7 @@ function MeasureScoreCard() {
   return (
     <div
       ref={ref}
-      className="rounded-[22px] border border-white/12 bg-[#18233f] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
+      className="rounded-md border border-white/12 bg-[#18233f] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
     >
       <span className="text-[13.5px] font-medium text-white/85">
         Your cognitive score
@@ -251,7 +251,7 @@ function MeasureStoreButtons() {
 /** Compact measure card for a listicle reason slot: graph + steps + stores. */
 export function MeasureTile() {
   return (
-    <div className="rounded-3xl bg-[#101a33] p-5 text-white md:p-6">
+    <div className="rounded-lg bg-[#101a33] p-5 text-white md:p-6">
       <MeasureScoreCard />
       <div className="mt-7">
         <MeasureSteps />

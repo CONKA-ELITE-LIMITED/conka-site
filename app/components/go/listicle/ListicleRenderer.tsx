@@ -419,7 +419,7 @@ function BodyBlock({
       <div className="border-t border-black/10 py-14">
         <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
           <div className={mediaFirst ? "md:order-2" : ""}>
-            <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
+            <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[var(--brand-navy)] md:text-[44px] md:leading-[1.05]">
               <span className="tabular-nums">
                 {String(block.n).padStart(2, "0")}.
               </span>{" "}
@@ -526,7 +526,7 @@ function BodyBlock({
   if (block.kind === "symptomExplainer") {
     return (
       <div className="border-t border-black/10 py-14">
-        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[var(--brand-navy)] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
               {String(block.n).padStart(2, "0")}.
@@ -548,7 +548,7 @@ function BodyBlock({
   if (block.kind === "segmentToggle") {
     return (
       <div className="border-t border-black/10 py-14">
-        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[var(--brand-navy)] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
               {String(block.n).padStart(2, "0")}.
