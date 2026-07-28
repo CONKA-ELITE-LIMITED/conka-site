@@ -210,7 +210,7 @@ export default function AccountPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-full border border-black/12 hover:border-black/40 text-black text-[13px] font-medium px-5 py-2 transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
+                className="rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium px-5 py-2 transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
               >
                 Sign out
               </button>
