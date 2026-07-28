@@ -181,7 +181,7 @@ export default function NavigationMobile({
                       onClick={() => setMobileMenuOpen(false)}
                       className="group flex items-center gap-4"
                     >
-                      <div className="relative w-24 h-24 shrink-0 overflow-hidden border border-black/15 bg-[#f5f5f5]">
+                      <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-md border border-black/10 bg-[#f5f5f5]">
                         <Image
                           src={product.image}
                           alt={product.alt}
@@ -242,7 +242,7 @@ export default function NavigationMobile({
                       key={`${group.title}-${link.href}`}
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between gap-2 bg-[#f5f5f5] p-3.5 hover:bg-black/[0.05] transition-colors"
+                      className="flex items-center justify-between gap-2 rounded-md bg-[#f5f5f5] p-3.5 hover:bg-black/[0.05] transition-colors"
                     >
                       <span className="text-sm font-semibold text-black leading-tight">
                         {link.label}
@@ -271,7 +271,7 @@ export default function NavigationMobile({
                 guarantee microcopy. */}
             <div className="px-5 mt-8 pt-8 border-t border-black/10">
               <div
-                className="p-6 text-center text-white"
+                className="rounded-md p-6 text-center text-white"
                 style={{
                   background:
                     "linear-gradient(140deg, #4058bb 0%, #26356f 55%, #1B2757 100%)",
@@ -292,7 +292,7 @@ export default function NavigationMobile({
                 </p>
                 <div className="mt-5 flex items-center justify-center gap-2.5">
                   <span className="text-sm font-bold text-white">Jack G.</span>
-                  <span className="bg-white px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none text-[#1B2757]">
+                  <span className="rounded-full bg-white px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] leading-none text-[#1B2757]">
                     Verified buyer
                   </span>
                 </div>
