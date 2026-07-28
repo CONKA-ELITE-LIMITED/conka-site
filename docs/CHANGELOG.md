@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-28** | account portal shell + dashboard converted to Simple DTC (rounded cards/pills, sans labels, tokenised navy, humanized formula codes)
 - **2026-07-28** | im8 listicle DTC polish (UGC tiles + app-measure graphic to standard radius, numbered reason titles set to navy) + design-system authority note
 - **2026-07-28** | im8 listicle badges/toggles/explainers aligned to Simple DTC (DTC radius, mono eyebrows dropped, tokenised navy; LaurelBadge via opt-in dtc variant)
 - **2026-07-28** | im8 listicle data-viz graphics aligned to Simple DTC (DTC radius, mono eyebrows dropped, tokenised navy/tint; CrashChart via opt-in dtc variant)
