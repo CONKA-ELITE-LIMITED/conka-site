@@ -11,10 +11,10 @@ export function PastSubscriptionCard({ subscription, onReactivate, isActionLoadi
   const canReactivate = subscription.status === 'cancelled';
 
   return (
-    <div className="bg-white border border-black/12 p-5 opacity-75">
+    <div className="bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-5 opacity-75">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 min-w-0">
-          <div className="w-12 h-12 bg-[#f5f5f5] border border-black/8 flex-shrink-0 flex items-center justify-center">
+          <div className="w-12 h-12 bg-[#f5f5f5] border border-black/8 rounded-md flex-shrink-0 flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -45,13 +45,13 @@ export function PastSubscriptionCard({ subscription, onReactivate, isActionLoadi
             <button
               onClick={onReactivate}
               disabled={isActionLoading}
-              className="px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] border border-[#1B2757] text-[#1B2757] hover:bg-[#1B2757]/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-1.5 rounded-full text-[13px] font-medium border border-[var(--brand-navy)] text-[var(--brand-navy)] hover:bg-[var(--brand-navy)]/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isActionLoading ? 'Reactivating...' : 'Reactivate'}
             </button>
           )}
           <span
-            className={`px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums font-semibold ${getStatusColor(
+            className={`px-2.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums font-semibold ${getStatusColor(
               subscription.status
             )}`}
           >

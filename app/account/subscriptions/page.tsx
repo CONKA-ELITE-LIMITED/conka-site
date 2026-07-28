@@ -256,7 +256,7 @@ export default function SubscriptionsPage() {
 
   if (authLoading || (!initialFetchDone && loading)) {
     return (
-      <div className="brand-clinical min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white text-black flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin mx-auto mb-4" />
           <p className="text-sm text-black/60">
@@ -300,7 +300,7 @@ export default function SubscriptionsPage() {
       ].filter(Boolean).join(" · ");
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
       <AccountSubNav />
 
@@ -321,7 +321,7 @@ export default function SubscriptionsPage() {
             )}
 
             {error && (
-              <div className="border border-red-200 bg-red-50/50 p-6 mb-8">
+              <div className="border border-red-200 bg-red-50/50 rounded-md p-6 mb-8">
                 <p className="text-sm text-red-700">{error}</p>
               </div>
             )}
@@ -332,7 +332,7 @@ export default function SubscriptionsPage() {
               <div className="space-y-6">
                 {activeSubscriptions.length > 0 ? (
                   <div>
-                    <h2 className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
+                    <h2 className="text-sm font-medium text-black/50 tabular-nums mb-6">
                       {activeSubscriptions.length === 1
                         ? "Active & paused"
                         : `Active & paused (${activeSubscriptions.length} subscriptions)`}
@@ -372,7 +372,7 @@ export default function SubscriptionsPage() {
 
                 {inactiveSubscriptions.length > 0 && (
                   <div className="mt-10">
-                    <h2 className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
+                    <h2 className="text-sm font-medium text-black/50 tabular-nums mb-6">
                       Past subscriptions
                     </h2>
                     <div className="space-y-4">

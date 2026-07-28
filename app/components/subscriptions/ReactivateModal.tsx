@@ -50,7 +50,7 @@ export function ReactivateModal({
         onClick={handleClose}
       />
 
-      <div className="relative bg-white border border-black/12 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-black/8 px-4 py-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-black" style={{ letterSpacing: '-0.02em' }}>Reactivate Subscription</h2>
@@ -64,18 +64,18 @@ export function ReactivateModal({
               </svg>
             </button>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mt-1">{subscriptionName}</p>
+          <p className="text-sm font-medium text-black/50 tabular-nums mt-1">{subscriptionName}</p>
         </div>
 
         <div className="p-4">
           {error && (
-            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 text-red-700 text-sm">
+            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 rounded-md text-red-700 text-sm">
               {error}
             </div>
           )}
 
           <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-[#f5f5f5] border border-black/12 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-[#f5f5f5] border border-black/10 rounded-md flex items-center justify-center mx-auto mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-black/40">
                 <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
               </svg>
@@ -86,7 +86,7 @@ export function ReactivateModal({
             </p>
           </div>
 
-          <div className="bg-[#f5f5f5] border border-black/12 p-4 mb-6">
+          <div className="bg-[#f5f5f5] border border-black/10 rounded-md p-4 mb-6">
             <p className="text-sm text-black/60">
               After reactivating, you can adjust your plan, delivery schedule, or pause again at any time from your subscriptions page.
             </p>
@@ -96,14 +96,14 @@ export function ReactivateModal({
             <button
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-50"
+              className="flex-1 py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
               disabled={loading}
-              className="flex-1 py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+              className="flex-1 py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

@@ -26,7 +26,7 @@ export function SaveErrorBanner({
     : `Subscription support: ${subscriptionName}${subscriptionId ? ` (${subscriptionId})` : ''}`;
 
   const colorClasses = errorMultiLine
-    ? 'border-[#1B2757]/30 bg-[#1B2757]/5 text-[#1B2757]'
+    ? 'border-[var(--brand-navy)]/30 bg-[var(--brand-navy)]/5 text-[var(--brand-navy)]'
     : errorPartial
       ? 'border-amber-500 bg-amber-50 text-amber-900'
       : 'border-red-300 bg-red-50 text-red-800';
@@ -45,7 +45,7 @@ export function SaveErrorBanner({
 
   return (
     <div
-      className={`${compact ? 'mb-3' : 'mb-4'} p-4 border ${colorClasses}`}
+      className={`${compact ? 'mb-3' : 'mb-4'} p-4 border rounded-md ${colorClasses}`}
     >
       <p className="font-semibold mb-2">{heading}</p>
       <p className={`text-sm ${compact ? 'mb-3' : 'mb-4'}`}>{body}</p>

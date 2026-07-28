@@ -116,7 +116,7 @@ export function RescheduleModal({
         onClick={handleClose}
       />
 
-      <div className="relative bg-white border border-black/12 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-black/8 px-4 py-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-black" style={{ letterSpacing: '-0.02em' }}>Reschedule Delivery</h2>
@@ -130,19 +130,19 @@ export function RescheduleModal({
               </svg>
             </button>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mt-1">{subscriptionName}</p>
+          <p className="text-sm font-medium text-black/50 tabular-nums mt-1">{subscriptionName}</p>
         </div>
 
         <div className="p-4">
           {error && (
-            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 text-red-700 text-sm">
+            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 rounded-md text-red-700 text-sm">
               {error}
             </div>
           )}
 
           {hasUnfulfilledOrder && (
-            <div className="mb-4 p-3 bg-[#1B2757]/5 border border-[#1B2757]/20">
-              <p className="text-sm text-[#1B2757]">
+            <div className="mb-4 p-3 bg-[var(--brand-navy)]/5 border border-[var(--brand-navy)]/20 rounded-md">
+              <p className="text-sm text-[var(--brand-navy)]">
                 Your next order is already being prepared. Rescheduling will move the <strong>following</strong> delivery after that.
               </p>
             </div>
@@ -160,23 +160,23 @@ export function RescheduleModal({
 
           <div className="space-y-3">
             <label className="block">
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1 block">New delivery date</span>
+              <span className="text-[13px] font-medium text-black/60 mb-1 block">New delivery date</span>
               <input
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={minDate}
                 max={maxDateStr}
-                className="w-full px-4 py-3 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757] transition-colors"
+                className="w-full px-4 py-3 border border-black/10 rounded-md bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)] transition-colors"
               />
             </label>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40 tabular-nums">
+            <p className="text-[13px] text-black/50 tabular-nums">
               Select a date at least {MIN_LEAD_DAYS} days from now, up to {cycleDays} days ahead.
             </p>
           </div>
 
           {selectedDate && (
-            <div className="mt-4 p-3 bg-[#f5f5f5] border border-black/12 space-y-2">
+            <div className="mt-4 p-3 bg-[#f5f5f5] border border-black/10 rounded-md space-y-2">
               <p className="text-sm text-black">
                 Your next delivery will move to{' '}
                 <span className="font-semibold tabular-nums">
@@ -184,7 +184,7 @@ export function RescheduleModal({
                 </span>
                 .
               </p>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50 tabular-nums">
+              <p className="text-[13px] text-black/50">
                 This will shift your entire delivery schedule. All future deliveries will follow from this new date.
               </p>
             </div>
@@ -194,14 +194,14 @@ export function RescheduleModal({
             <button
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-50"
+              className="flex-1 py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors disabled:opacity-50"
             >
               Keep Current Date
             </button>
             <button
               onClick={handleConfirm}
               disabled={!selectedDate || loading}
-              className="flex-1 py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+              className="flex-1 py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

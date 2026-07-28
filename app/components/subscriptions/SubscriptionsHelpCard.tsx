@@ -2,7 +2,7 @@ import { ContactSupportLink } from "@/app/components/ContactSupportLink";
 
 export function SubscriptionsHelpCard() {
   return (
-    <div className="mt-14 bg-[#1B2757] text-white p-8 text-center">
+    <div className="mt-14 bg-[var(--brand-navy)] rounded-md text-white p-8 text-center">
       <h3
         className="font-semibold text-lg text-white mb-2"
         style={{ letterSpacing: "-0.02em" }}

@@ -163,7 +163,7 @@ export function CancellationModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-white border border-black/12 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-w-lg w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-black/8 px-4 py-3">
           <div className="flex items-center justify-between">
@@ -182,13 +182,13 @@ export function CancellationModal({
               </svg>
             </button>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mt-1">{subscriptionName}</p>
+          <p className="text-sm font-medium text-black/50 tabular-nums mt-1">{subscriptionName}</p>
         </div>
 
         {/* Content */}
         <div className="p-4">
           {error && (
-            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 text-red-700 text-sm">
+            <div className="mb-4 p-3 border border-red-200 bg-red-50/50 rounded-md text-red-700 text-sm">
               {error}
             </div>
           )}
@@ -204,10 +204,10 @@ export function CancellationModal({
                 {CANCELLATION_REASONS.map((reason) => (
                   <label
                     key={reason.id}
-                    className={`flex items-center p-3 border cursor-pointer transition-colors ${
+                    className={`flex items-center p-3 border rounded-md cursor-pointer transition-colors ${
                       selectedReason === reason.id
-                        ? 'border-[#1B2757] bg-[#1B2757]/5'
-                        : 'border-black/12 hover:border-black/40'
+                        ? 'border-[var(--brand-navy)] bg-[var(--brand-navy)]/5'
+                        : 'border-black/10 hover:border-black/40'
                     }`}
                   >
                     <input
@@ -218,13 +218,13 @@ export function CancellationModal({
                       onChange={(e) => setSelectedReason(e.target.value)}
                       className="sr-only"
                     />
-                    <div className={`w-4 h-4 border-2 mr-3 flex items-center justify-center ${
+                    <div className={`w-4 h-4 rounded-full border-2 mr-3 flex items-center justify-center ${
                       selectedReason === reason.id
-                        ? 'border-[#1B2757]'
+                        ? 'border-[var(--brand-navy)]'
                         : 'border-black/20'
                     }`}>
                       {selectedReason === reason.id && (
-                        <div className="w-2 h-2 bg-[#1B2757]" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--brand-navy)]" />
                       )}
                     </div>
                     <span className="text-sm text-black">{reason.label}</span>
@@ -237,7 +237,7 @@ export function CancellationModal({
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Please tell us more..."
-                  className="w-full p-3 border border-black/12 bg-white text-black text-sm resize-none focus:outline-none focus:border-[#1B2757]"
+                  className="w-full p-3 border border-black/10 rounded-md bg-white text-black text-sm resize-none focus:outline-none focus:border-[var(--brand-navy)]"
                   rows={3}
                 />
               )}
@@ -245,14 +245,14 @@ export function CancellationModal({
               <div className="flex gap-2 pt-4">
                 <button
                   onClick={handleClose}
-                  className="flex-1 py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors"
+                  className="flex-1 py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors"
                 >
                   Keep Subscription
                 </button>
                 <button
                   onClick={handleReasonSubmit}
                   disabled={!selectedReason}
-                  className="flex-1 py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                  className="flex-1 py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                 >
                   Continue
                 </button>
@@ -264,7 +264,7 @@ export function CancellationModal({
           {step === 'retention' && retentionOffer && (
             <div className="space-y-4">
               <div className="text-center mb-2">
-                <div className="w-16 h-16 bg-[#f5f5f5] border border-black/12 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#f5f5f5] border border-black/10 rounded-md flex items-center justify-center mx-auto mb-4">
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-black/40">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 16v-4" />
@@ -282,7 +282,7 @@ export function CancellationModal({
                   <button
                     onClick={handleRetentionAction}
                     disabled={discountLoading}
-                    className="w-full py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums hover:opacity-90 transition-opacity disabled:opacity-50"
+                    className="w-full py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
                     {discountLoading ? (
                       <span className="flex items-center justify-center gap-2">
@@ -300,13 +300,13 @@ export function CancellationModal({
                 <button
                   onClick={() => setStep('confirm')}
                   disabled={discountLoading}
-                  className="w-full py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-50"
+                  className="w-full py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors disabled:opacity-50"
                 >
                   I still want to cancel
                 </button>
                 <button
                   onClick={handleClose}
-                  className="w-full py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black/40 hover:text-black transition-colors"
+                  className="w-full py-2 rounded-full text-[13px] font-medium text-black/40 hover:text-black transition-colors"
                 >
                   Never mind, keep my subscription
                 </button>
@@ -318,7 +318,7 @@ export function CancellationModal({
           {step === 'confirm' && (
             <div className="space-y-4">
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-red-50/50 border border-red-200 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-red-50/50 border border-red-200 rounded-md flex items-center justify-center mx-auto mb-4">
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-red-600">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="15" y1="9" x2="9" y2="15" />
@@ -331,9 +331,9 @@ export function CancellationModal({
                 </p>
               </div>
 
-              <div className="bg-[#f5f5f5] border border-black/12 p-4">
+              <div className="bg-[#f5f5f5] border border-black/10 rounded-md p-4">
                 <div className="text-sm">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1">Cancellation reason</div>
+                  <div className="text-[13px] font-medium text-black/60 mb-1">Cancellation reason</div>
                   <div className="text-black">
                     {CANCELLATION_REASONS.find(r => r.id === selectedReason)?.label}
                   </div>
@@ -343,8 +343,8 @@ export function CancellationModal({
                 </div>
               </div>
 
-              <div className="border border-[#1B2757]/20 bg-[#1B2757]/5 p-4">
-                <p className="text-sm text-[#1B2757]">
+              <div className="border border-[var(--brand-navy)]/20 bg-[var(--brand-navy)]/5 rounded-md p-4">
+                <p className="text-sm text-[var(--brand-navy)]">
                   You can reactivate your subscription at any time from your account page.
                 </p>
               </div>
@@ -353,14 +353,14 @@ export function CancellationModal({
                 <button
                   onClick={() => setStep(retentionOffer ? 'retention' : 'reason')}
                   disabled={loading}
-                  className="flex-1 py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors disabled:opacity-50"
                 >
                   Go Back
                 </button>
                 <button
                   onClick={handleConfirmCancel}
                   disabled={loading}
-                  className="flex-1 py-3 bg-red-600 text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums hover:bg-red-700 transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 rounded-full bg-red-600 text-white text-[13px] font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">

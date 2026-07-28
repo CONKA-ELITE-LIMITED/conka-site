@@ -30,12 +30,12 @@ export function PaymentCardSection({
   return (
     <div className="flex flex-col sm:flex-row sm:items-start gap-4">
       {/* Card mockup */}
-      <div className={`relative p-5 overflow-hidden text-white select-none w-full sm:w-80 flex-shrink-0 ${
+      <div className={`relative p-5 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden text-white select-none w-full sm:w-80 flex-shrink-0 ${
         cardStatus === 'expired'
           ? 'bg-red-900'
           : cardStatus === 'expiring_soon'
           ? 'bg-amber-800'
-          : 'bg-[#1B2757]'
+          : 'bg-[var(--brand-navy)]'
       }`}>
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-12 -left-6 w-36 h-36 bg-white/5 pointer-events-none" />
@@ -65,21 +65,21 @@ export function PaymentCardSection({
             <p className="font-mono text-sm text-white tabular-nums">{expiry}</p>
           </div>
           {cardStatus === 'safe' && (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/20 border border-green-400/30">
-              <span className="w-1.5 h-1.5 bg-green-400" aria-hidden="true" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-green-300">Active</span>
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/20 border border-green-400/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" aria-hidden="true" />
+              <span className="font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums text-green-300">Active</span>
             </span>
           )}
           {cardStatus === 'expiring_soon' && (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-400/20 border border-amber-300/30">
-              <span className="w-1.5 h-1.5 bg-amber-300" aria-hidden="true" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-amber-200">Expiring soon</span>
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-400/20 border border-amber-300/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-300" aria-hidden="true" />
+              <span className="font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums text-amber-200">Expiring soon</span>
             </span>
           )}
           {cardStatus === 'expired' && (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 bg-red-400/20 border border-red-300/30">
-              <span className="w-1.5 h-1.5 bg-red-300" aria-hidden="true" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-red-200">Expired</span>
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-400/20 border border-red-300/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-300" aria-hidden="true" />
+              <span className="font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums text-red-200">Expired</span>
             </span>
           )}
         </div>
@@ -94,7 +94,7 @@ export function PaymentCardSection({
             type="button"
             onClick={() => onTriggerUpdateEmail(primaryMethod.id)}
             disabled={paymentUpdateLoading || Date.now() < (paymentCooldownUntil ?? 0)}
-            className="bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums px-4 py-2 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)] hover:opacity-90 disabled:opacity-50 flex items-center gap-2 transition-opacity"
+            className="rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-4 py-2 hover:opacity-90 disabled:opacity-50 flex items-center gap-2 transition-opacity"
           >
             {paymentUpdateLoading ? (
               <>

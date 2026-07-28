@@ -133,7 +133,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} aria-hidden />
-      <div className="relative bg-white border border-black/12 max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="relative bg-white border border-black/10 rounded-md shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
@@ -144,7 +144,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
             >
               Edit subscription
             </h3>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mt-0.5">
+            <p className="text-sm font-medium text-black/50 tabular-nums mt-0.5">
               {subscription.lines?.length ?? 0} products · shared delivery schedule
             </p>
           </div>
@@ -164,7 +164,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
 
           {/* Per-line editors */}
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-3">
+            <p className="text-sm font-medium text-black/50 mb-3">
               Products
             </p>
             <div className="space-y-4">
@@ -174,15 +174,15 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
                 return (
                   <div
                     key={String(edit.lineId)}
-                    className="border border-black/12 bg-[#f5f5f5] p-4 space-y-3"
+                    className="border border-black/10 rounded-md bg-[#f5f5f5] p-4 space-y-3"
                   >
-                    <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums">
+                    <p className="text-[13px] text-black/50 tabular-nums">
                       Line {index + 1}
                     </p>
 
                     {/* Product picker */}
                     <div>
-                      <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1.5">
+                      <label className="block text-[13px] font-medium text-black/60 mb-1.5">
                         Product
                       </label>
                       <div className="flex items-center gap-3">
@@ -190,13 +190,13 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
                           <img
                             src={product.image}
                             alt=""
-                            className="w-10 h-10 object-cover flex-shrink-0 border border-black/8"
+                            className="w-10 h-10 object-cover flex-shrink-0 border border-black/8 rounded-md"
                           />
                         )}
                         <select
                           value={edit.productKey}
                           onChange={e => handleProductChange(index, e.target.value)}
-                          className="flex-1 px-3 py-2 border border-black/12 bg-white text-black text-sm focus:outline-none focus:border-[#1B2757] transition-colors"
+                          className="flex-1 px-3 py-2 border border-black/10 rounded-md bg-white text-black text-sm focus:outline-none focus:border-[var(--brand-navy)] transition-colors"
                         >
                           {CATALOG.map(p => (
                             <option key={p.key} value={p.key}>{p.label}</option>
@@ -207,7 +207,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
 
                     {/* Size picker */}
                     <div>
-                      <label className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-1.5">
+                      <label className="block text-[13px] font-medium text-black/60 mb-1.5">
                         Pack size
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -216,10 +216,10 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
                             key={size}
                             type="button"
                             onClick={() => handleSizeChange(index, size)}
-                            className={`px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums transition-colors border ${
+                            className={`px-4 py-2 rounded-full text-[13px] font-medium tabular-nums transition-colors border ${
                               edit.size === size
-                                ? "bg-[#1B2757] text-white border-[#1B2757]"
-                                : "bg-white text-black border-black/12 hover:border-black/40"
+                                ? "bg-[var(--brand-navy)] text-white border-[var(--brand-navy)]"
+                                : "bg-white text-black border-black/10 hover:border-black/40"
                             }`}
                           >
                             {size} shots
@@ -234,9 +234,9 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
           </div>
 
           {/* Shared delivery frequency — auto-derived, read-only */}
-          <div className="border border-black/12 bg-[#f5f5f5] p-4 flex items-center justify-between gap-4">
+          <div className="border border-black/10 rounded-md bg-[#f5f5f5] p-4 flex items-center justify-between gap-4">
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-0.5">
+              <p className="text-sm font-medium text-black/50 mb-0.5">
                 Delivery schedule
               </p>
               <p className="font-semibold text-black">
@@ -255,7 +255,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
           </div>
 
           {error && (
-            <div className="border border-red-200 bg-red-50/50 p-4">
+            <div className="border border-red-200 bg-red-50/50 rounded-md p-4">
               <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
@@ -266,7 +266,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-3 border border-black/12 hover:border-black/40 text-black font-mono text-[10px] uppercase tracking-[0.16em] transition-colors"
+            className="flex-1 py-3 rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium transition-colors"
           >
             Cancel
           </button>
@@ -274,7 +274,7 @@ export function MultiLineEditModal({ isOpen, onClose, subscription, onSave, load
             type="button"
             onClick={handleSave}
             disabled={loading || lineEdits.length === 0}
-            className="flex-1 py-3 bg-[#1B2757] text-white font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-opacity"
+            className="flex-1 py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-opacity"
           >
             {loading ? (
               <>
