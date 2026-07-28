@@ -56,10 +56,12 @@ Heaviest: `app/account/page.tsx`, `app/account/details/page.tsx`, `EditProfileMo
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Shell + dashboard | Not Started |
-| 2 | Orders | Not Started |
-| 3 | Subscriptions (list + 8 modals) | Not Started |
-| 4 | Details + auth entry + docs | Not Started |
+| 1 | Shell + dashboard | Done |
+| 2 | Orders | Done |
+| 3 | Subscriptions (list + 8 modals) | Done |
+| 4 | Details + auth entry + docs | Done |
+
+**Build note (SCRUM-1188):** whole portal converted in place (self-contained, no cross-surface consumers). Phase 3 (subscriptions, ~20 files) was swept with parallel subagents against the §8.5 map, then centrally verified. Per the approved copy decision, the `//` and `Fig. 0N ·` caption affectations were stripped and the `F01/F02/BOTH` formula codes humanized to Flow/Clear/Both. Status pills keep the mono scalpel; the credit-card mockup face and EditSubscriptionModal's segmented step-tabs were kept deliberately. Commerce logic and PROTOCOL_VARIANTS untouched throughout.
 
 All phases are active (the whole portal is in scope). Ship each phase independently so the portal is never half-broken. Tracked as a single Jira child ticket; phases are the internal build order.
 

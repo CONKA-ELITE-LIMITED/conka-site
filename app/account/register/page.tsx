@@ -32,15 +32,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
 
       <main className="pt-24 pb-24 lg:pt-36 px-4">
         <div className="max-w-lg mx-auto">
           {/* Header */}
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
-            Account
-          </p>
+          <p className="text-sm font-medium text-black/50 mb-2">Account</p>
           <h1
             className="text-3xl font-semibold text-black mb-2"
             style={{ letterSpacing: '-0.02em' }}
@@ -52,10 +50,10 @@ export default function RegisterPage() {
           </p>
 
           {/* Registration Card */}
-          <div className="bg-white border border-black/12 p-6 md:p-8">
+          <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 md:p-8">
             {/* Error Message */}
             {error && (
-              <div className="mb-6 border border-red-200 bg-red-50/50 p-3 text-red-700 text-sm">
+              <div className="mb-6 rounded-md border border-red-200 bg-red-50/50 p-3 text-red-700 text-sm">
                 {error}
               </div>
             )}
@@ -75,7 +73,7 @@ export default function RegisterPage() {
             <button
               onClick={handleGetStarted}
               disabled={loading}
-              className="w-full bg-[#1B2757] text-white font-mono text-[11px] uppercase tracking-[0.18em] tabular-nums py-4 [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,0_100%)] hover:opacity-90 disabled:opacity-50 transition-opacity mb-6"
+              className="w-full rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold py-4 hover:opacity-90 disabled:opacity-50 transition-opacity mb-6"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -90,8 +88,8 @@ export default function RegisterPage() {
             {/* Benefits Grid */}
             <div className="grid grid-cols-2 gap-3">
               {/* Track Orders */}
-              <div className="p-4 bg-[#f5f5f5] border border-black/12">
-                <div className="w-10 h-10 bg-white border border-black/12 flex items-center justify-center mb-3">
+              <div className="p-4 rounded-md bg-[#f5f5f5] border border-black/10">
+                <div className="w-10 h-10 rounded-md bg-white border border-black/10 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" className="text-black/50">
                     <rect x="1" y="3" width="15" height="13"/>
                     <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
@@ -100,41 +98,41 @@ export default function RegisterPage() {
                   </svg>
                 </div>
                 <p className="font-semibold text-sm text-black mb-1" style={{ letterSpacing: '-0.02em' }}>Track Orders</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50">Real-time updates</p>
+                <p className="text-[13px] text-black/50">Real-time updates</p>
               </div>
 
               {/* Manage Subscriptions */}
-              <div className="p-4 bg-[#f5f5f5] border border-black/12">
-                <div className="w-10 h-10 bg-white border border-black/12 flex items-center justify-center mb-3">
+              <div className="p-4 rounded-md bg-[#f5f5f5] border border-black/10">
+                <div className="w-10 h-10 rounded-md bg-white border border-black/10 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" className="text-black/50">
                     <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
                     <path d="M22 12A10 10 0 0 0 12 2v10z"/>
                   </svg>
                 </div>
                 <p className="font-semibold text-sm text-black mb-1" style={{ letterSpacing: '-0.02em' }}>Subscriptions</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50">Pause, skip, cancel</p>
+                <p className="text-[13px] text-black/50">Pause, skip, cancel</p>
               </div>
 
               {/* Faster Checkout */}
-              <div className="p-4 bg-[#f5f5f5] border border-black/12">
-                <div className="w-10 h-10 bg-white border border-black/12 flex items-center justify-center mb-3">
+              <div className="p-4 rounded-md bg-[#f5f5f5] border border-black/10">
+                <div className="w-10 h-10 rounded-md bg-white border border-black/10 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" className="text-black/50">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                   </svg>
                 </div>
                 <p className="font-semibold text-sm text-black mb-1" style={{ letterSpacing: '-0.02em' }}>Fast Checkout</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50">Saved address</p>
+                <p className="text-[13px] text-black/50">Saved address</p>
               </div>
 
               {/* Exclusive Access */}
-              <div className="p-4 bg-[#f5f5f5] border border-black/12">
-                <div className="w-10 h-10 bg-white border border-black/12 flex items-center justify-center mb-3">
+              <div className="p-4 rounded-md bg-[#f5f5f5] border border-black/10">
+                <div className="w-10 h-10 rounded-md bg-white border border-black/10 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" className="text-black/50">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                   </svg>
                 </div>
                 <p className="font-semibold text-sm text-black mb-1" style={{ letterSpacing: '-0.02em' }}>Early Access</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50">New products & offers</p>
+                <p className="text-[13px] text-black/50">New products & offers</p>
               </div>
             </div>
 

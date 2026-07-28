@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-28** | account details + auth entry (login/register) + EditProfileModal converted to Simple DTC; portal fully de-clinicalized; DESIGN_SYSTEM 8.5 authority table updated
 - **2026-07-28** | account subscriptions surface (list, cards, commerce panels, 8 modals) converted to Simple DTC
 - **2026-07-28** | account orders surface converted to Simple DTC (rounded cards, sans labels, de-chamfered CTAs, tokenised navy)
 - **2026-07-28** | account portal shell + dashboard converted to Simple DTC (rounded cards/pills, sans labels, tokenised navy, humanized formula codes)
