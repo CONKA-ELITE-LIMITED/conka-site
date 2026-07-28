@@ -50,15 +50,20 @@ import {
  * both live in ListicleProofTier.tsx and are shared with SimpleListicleRenderer;
  * the reason-block library is still inline here.
  *
- * Dark zones use --color-neuro-blue-dark pending the colour decision;
- * flipping to ink is a one-line change on DARK below. Colours here are still
- * hardcoded hex rather than brand-base.css tokens (deferred, see SCRUM-1176).
+ * Grammar: Simple DTC (DESIGN_SYSTEM.md §8.5). White canvas, section titles in
+ * solid black, tokenised navy (--brand-navy) for decorative/interactive fills,
+ * light-navy tint strips (--brand-tint), savings green (--brand-positive), DTC
+ * radius scale. This resolves the hardcoded-hex colour question from SCRUM-1176.
  */
 
-const DARK = "var(--color-neuro-blue-dark, #0e1f3f)";
-const BONE = "var(--color-bone, #F9F9F9)";
-/** Neuro blue for section titles on light backgrounds */
-const NAVY = "#1B2757";
+/** White DTC canvas. */
+const CANVAS = "#fff";
+/**
+ * Filled navy (--brand-navy). Serves both the dark decorative proof bands
+ * (stats band, bridge, dark stat panel) and the primary/interactive +
+ * decorative marks (ticker, CTAs, review initials).
+ */
+const NAVY = "var(--brand-navy, #1b2757)";
 /* Marketing CTAs (hero, bridge, sticky) navigate to the PDP for the product
    this page sells, following the buy box's productHeroId, rather than scrolling
    to the in-page buy zone. Flow "01" -> /conka-flow, Clear "02" -> /conka-clarity,
@@ -68,8 +73,8 @@ const PDP_HREF: Record<ProductHeroId, string> = {
   "02": "/conka-clarity",
   "03": "/conka-both",
 };
-/* Soft-blue sticky-bar fill (clearly tinted, not the deep navy). */
-const SOFT_BLUE = "var(--go-option-tint, #dce5f7)";
+/* Light-navy tint strip for the sticky bar (Simple DTC tint, not soft-blue). */
+const TINT = "var(--brand-tint, #f4f5f8)";
 
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
@@ -125,6 +130,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         saving={asset.saving}
         coffeePerDay={asset.coffeePerDay}
         shotsPerDay={asset.shotsPerDay}
+        variant="dtc"
       />
     );
   }
@@ -181,7 +187,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     const video = videoTrio(asset.src);
     return (
       <div
-        className={`relative overflow-hidden rounded-[16px] border border-black/10 w-full ${
+        className={`relative overflow-hidden rounded-md border border-black/10 w-full ${
           contain ? "bg-black" : ""
         }`}
         style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
@@ -221,16 +227,14 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
     const dark = asset.tone === "dark";
     return (
       <div
-        className="flex w-full flex-col justify-center gap-4 rounded-[16px] p-8"
+        className="flex w-full flex-col justify-center gap-4 rounded-md p-8"
         style={{
           aspectRatio: aspect,
-          background: dark ? DARK : "#eeeff2",
+          background: dark ? NAVY : TINT,
           color: dark ? "#fff" : "#111",
         }}
       >
-        <div className="text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
-          {asset.eyebrow}
-        </div>
+        <div className="text-xs font-semibold opacity-60">{asset.eyebrow}</div>
         {asset.stats.map((s, i) => (
           <div key={i}>
             <div className="text-sm opacity-70">{s.label}</div>
@@ -253,7 +257,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   if (asset.kind === "image") {
     return (
       <div
-        className="relative w-full overflow-hidden rounded-[16px]"
+        className="relative w-full overflow-hidden rounded-md"
         style={{ aspectRatio: aspect }}
       >
         <Image
@@ -270,12 +274,10 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   return (
     <div
-      className="flex w-full items-center justify-center rounded-[16px] border border-dashed border-current opacity-60"
+      className="flex w-full items-center justify-center rounded-md border border-dashed border-current opacity-60"
       style={{ aspectRatio: aspect }}
     >
-      <span className="px-6 text-center text-[11px] font-semibold uppercase tracking-[0.08em]">
-        {note}
-      </span>
+      <span className="px-6 text-center text-xs font-semibold">{note}</span>
     </div>
   );
 }
@@ -292,7 +294,7 @@ function reviewInitials(name: string) {
 
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
-    <div className="flex h-full flex-col rounded-[16px] border border-black/10 bg-white p-4 text-[#111]">
+    <div className="flex h-full flex-col rounded-md border border-black/10 bg-white p-4 text-[#111]">
       <div
         className="mb-1.5 text-[13px] tracking-widest"
         style={{ color: "#F59E0B" }}
@@ -319,7 +321,10 @@ function ReviewCard({ review }: { review: ListicleReview }) {
             />
           </span>
         ) : (
-          <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-base font-semibold text-white">
+          <span
+            className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
+            style={{ background: NAVY }}
+          >
             {reviewInitials(review.name)}
           </span>
         )}
@@ -354,10 +359,10 @@ function ReviewStrip({
 }) {
   return (
     <div
-      className="my-10 rounded-[16px] px-4 py-6 md:px-10 md:py-8"
-      style={{ background: "var(--color-neuro-blue-light, #eeeff2)" }}
+      className="my-10 rounded-md px-4 py-6 md:px-10 md:py-8"
+      style={{ background: TINT }}
     >
-      <div className="mb-4 text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-black/55">
+      <div className="mb-4 text-center text-[13px] font-semibold text-black/55">
         {eyebrow}
       </div>
 
@@ -416,7 +421,7 @@ function BodyBlock({
       <div className="border-t border-black/10 py-14">
         <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
           <div className={mediaFirst ? "md:order-2" : ""}>
-            <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+            <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-[var(--brand-navy)] md:text-[44px] md:leading-[1.05]">
               <span className="tabular-nums">
                 {String(block.n).padStart(2, "0")}.
               </span>{" "}
@@ -444,7 +449,7 @@ function BodyBlock({
                       height="13"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#1a7f4f"
+                      stroke="var(--brand-positive, #1a7f4f)"
                       strokeWidth="3"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -483,10 +488,10 @@ function BodyBlock({
   if (block.kind === "statsBand") {
     return (
       <div
-        className="my-10 rounded-[16px] px-8 py-12 text-center"
-        style={{ background: DARK, color: "#fff" }}
+        className="my-10 rounded-md px-8 py-12 text-center"
+        style={{ background: NAVY, color: "#fff" }}
       >
-        <div className="mb-8 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-60">
+        <div className="mb-8 text-[13px] font-semibold opacity-60">
           {block.eyebrow}
         </div>
         <div
@@ -523,7 +528,7 @@ function BodyBlock({
   if (block.kind === "symptomExplainer") {
     return (
       <div className="border-t border-black/10 py-14">
-        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[var(--brand-navy)] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
               {String(block.n).padStart(2, "0")}.
@@ -545,7 +550,7 @@ function BodyBlock({
   if (block.kind === "segmentToggle") {
     return (
       <div className="border-t border-black/10 py-14">
-        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[#1B2757] md:text-[44px] md:leading-[1.05]">
+        <h3 className="mb-6 text-balance text-[32px] font-semibold leading-[1.1] text-[var(--brand-navy)] md:text-[44px] md:leading-[1.05]">
           {block.n ? (
             <span className="tabular-nums">
               {String(block.n).padStart(2, "0")}.
@@ -598,11 +603,11 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   return (
     <main
       className={`min-h-screen overflow-x-clip${needsStickyClearance ? " pb-32" : ""}`}
-      style={{ background: BONE, color: "#111" }}
+      style={{ background: CANVAS, color: "#111" }}
     >
       {/* Zone 1: hero — IM8 pattern: asset bleeds to the left/top/bottom edges
           on desktop at ~half viewport width; content column centres beside. */}
-      <section aria-label="Hero" style={{ background: BONE, color: "#111" }}>
+      <section aria-label="Hero" style={{ background: CANVAS, color: "#111" }}>
         <div className="grid items-center md:grid-cols-[52fr_48fr]">
           <div
             className="relative order-1 w-full"
@@ -632,7 +637,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             )}
           </div>
           <div className="order-2 px-5 pt-6 pb-8 md:flex md:flex-col md:justify-center md:px-14 md:py-0">
-            <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-[#1B2757] md:mb-4 md:text-5xl md:leading-[1.05]">
+            <h1 className="mb-3 text-balance text-[1.75rem] font-semibold leading-[1.1] text-black md:mb-4 md:text-5xl md:leading-[1.05]">
               {config.hero.headline}
             </h1>
             <p className="mb-5 max-w-[34rem] text-[15px] leading-relaxed text-black md:text-base">
@@ -647,7 +652,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             <Link
               href={withSrc(buyHref, SECTION.hero)}
               onClick={() => fireCta(SECTION.hero)}
-              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] md:w-auto"
+              className="mb-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)] md:w-auto"
               style={{ background: NAVY }}
             >
               {config.hero.cta}
@@ -703,7 +708,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         aria-label="Reasons"
         id="reasons"
         className="px-5 py-16 md:px-[5vw]"
-        style={{ background: BONE, color: "#111" }}
+        style={{ background: CANVAS, color: "#111" }}
       >
         <div className="mx-auto max-w-7xl">
           {config.body.map((block, i) => (
@@ -718,6 +723,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                   <LaurelBadge
                     eyebrow={config.hero.laurel.eyebrow}
                     body={config.hero.laurel.body}
+                    variant="dtc"
                   />
                 </div>
               ) : null}
@@ -728,8 +734,8 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             // sticky bar it is a mid-page block that can be scrolled past.
             <TrackedSection
               section={SECTION.bridge}
-              className="mt-10 rounded-[16px] px-8 py-14 text-center"
-              style={{ background: DARK, color: "#fff" }}
+              className="mt-10 rounded-md px-8 py-14 text-center"
+              style={{ background: NAVY, color: "#fff" }}
             >
               <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
                 {config.bridge.headline}
@@ -737,7 +743,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               <Link
                 href={withSrc(buyHref, SECTION.bridge)}
                 onClick={() => fireCta(SECTION.bridge)}
-                className="inline-block rounded-[12px] bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
+                className="inline-block rounded-full bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
               >
                 {config.bridge.cta}
               </Link>
@@ -751,7 +757,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         <section
           aria-label="Trusted by"
           className="px-5 pt-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
+          style={{ background: CANVAS, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
             <ListicleLogoBand proof={config.proof} />
@@ -777,7 +783,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         <section
           aria-label="Proof"
           className="px-5 py-16 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
+          style={{ background: CANVAS, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
             <ListicleProofTier proof={config.proof} />
@@ -794,7 +800,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         <section
           aria-label="FAQs"
           className="px-5 py-16 pb-32 md:px-[5vw]"
-          style={{ background: BONE, color: "#111" }}
+          style={{ background: CANVAS, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
             <LabFAQ
@@ -815,7 +821,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         <aside
           aria-label="Offer bar"
           className="fixed bottom-0 left-0 right-0 z-40 px-5 py-2 md:px-[5vw]"
-          style={{ background: SOFT_BLUE, color: NAVY }}
+          style={{ background: TINT, color: NAVY }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <span className="text-sm font-medium">

@@ -33,6 +33,11 @@ interface CrashChartProps {
   shotsPerDay?: string;
   /** Square the container to match the clinical PDP/start styling */
   sharp?: boolean;
+  /**
+   * Simple DTC opt-in (im8 listicle). Swaps the warm-bone cost panel for the
+   * light-navy DTC tint strip. Default path (start, PDPs) is untouched.
+   */
+  variant?: "default" | "dtc";
 }
 
 export function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
@@ -128,6 +133,7 @@ export default function CrashChart({
   coffeePerDay = `£${COFFEE_PRICE_PER_DAY}/day`,
   shotsPerDay = `£${PRICE_PER_DAY_BOTH}/day`,
   sharp = false,
+  variant = "default",
 }: CrashChartProps) {
   const [ref, isInView] = useInView();
   // Unique gradient ids so the chart can render more than once on a page
@@ -290,7 +296,11 @@ export default function CrashChart({
       </div>
 
       {/* Cost comparison */}
-      <div className="border-t border-black/[0.09] bg-[#faf9f6] px-[22px] pb-[22px] pt-5">
+      <div
+        className={`border-t border-black/[0.09] px-[22px] pb-[22px] pt-5 ${
+          variant === "dtc" ? "bg-[var(--brand-tint)]" : "bg-[#faf9f6]"
+        }`}
+      >
         <p className="mb-3.5 text-lg font-medium leading-6 text-black">
           Costs <b className="font-semibold" style={{ color: SAVINGS }}>{saving}</b> less
           than your monthly coffee bill

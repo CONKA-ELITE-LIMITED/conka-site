@@ -434,6 +434,8 @@ Simple DTC is added **alongside** Clinical (§8) and App-Dark (§10), not as a g
 | `/app`, `/app-insights` dark pages | **App-Dark** (§10) — clinical grammar on a dark canvas |
 | Account, subscription management, B2B order/management UIs | Clinical for now (mono data labels aid scanning); convert opportunistically |
 
+Both `/go` listicle renderers are now Simple DTC: `SimpleListicleRenderer` (`mm`) and, as of SCRUM-1189, `ListicleRenderer` (`im8`). The im8 conversion moved its chrome and its ~15 shared `components/landing/*` graphics to the DTC grammar (white canvas, black/navy headings, tokenised navy/tint, DTC radius); graphics shared with other live landers (`CrashChart`, `LaurelBadge`) took an opt-in `variant="dtc"` so their default path (`/lander`, `/start`, home, PDPs) is unchanged. One deliberate im8 exception: the numbered reason titles are navy (`--brand-navy`), not black.
+
 ### Programme + learnings
 
 Simple DTC is being rolled out iteratively (define → seed tokens → sweep components). The rules above are the definition; the running **learnings log** (soft-card recipe, shared `DotIndicator` / `SegmentedToggle` primitives, the `mix-blend-multiply` cutout trick, native `<details>` accordions, etc.) and the phase plan live in `docs/development/featurePlans/simple-dtc-design-language.md`. Read it before a component conversion.

@@ -16,7 +16,7 @@ import { useInView } from "@/app/hooks/useInView";
  * never an implied within-person speed gain.
  * ========================================================================== */
 
-const NAVY = "#1B2757";
+const NAVY = "var(--brand-navy, #1b2757)";
 
 interface Row {
   label: string;
@@ -87,9 +87,9 @@ export default function CognitionBars() {
   return (
     <div
       ref={ref}
-      className="rounded-3xl border border-black/10 bg-white p-6 md:p-7"
+      className="rounded-lg border border-black/10 bg-white p-6 md:p-7"
     >
-      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">
+      <p className="mb-1 text-[12px] font-semibold text-black/50">
         Measured in the CONKA app
       </p>
       <h3 className="mb-5 text-lg font-bold text-[#1d1d1d]">
@@ -103,7 +103,7 @@ export default function CognitionBars() {
               <span className="text-[13px] font-semibold text-[#1d1d1d]">
                 {m.title}
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/40">
+              <span className="text-[11px] font-medium text-black/40">
                 {m.hint}
               </span>
             </div>
@@ -117,8 +117,11 @@ export default function CognitionBars() {
       </div>
 
       <p
-        className="mt-5 rounded-xl px-4 py-3 text-[13px] font-semibold leading-snug"
-        style={{ background: "rgba(27,39,87,0.06)", color: NAVY }}
+        className="mt-5 rounded-md px-4 py-3 text-[13px] font-semibold leading-snug"
+        style={{
+          background: "color-mix(in srgb, var(--brand-navy) 7%, transparent)",
+          color: NAVY,
+        }}
       >
         64% improved when they added CONKA to their coffee.
       </p>

@@ -10,14 +10,25 @@ export default function LaurelBadge({
   eyebrow,
   body,
   className = "",
+  variant = "default",
 }: {
   eyebrow: string;
   body: string;
   className?: string;
+  /**
+   * Simple DTC opt-in (im8 listicle): DTC hairline + soft shadow + rounded-lg
+   * and a black credential label. Default (home hero) keeps the navy chip.
+   */
+  variant?: "default" | "dtc";
 }) {
+  const dtc = variant === "dtc";
   return (
     <div
-      className={`flex items-stretch gap-3 rounded-[14px] border border-[#1B2757]/25 bg-white px-3 py-2.5 shadow-[0_4px_18px_rgba(27,39,87,0.12)] md:w-fit ${className}`}
+      className={`flex items-stretch gap-3 bg-white px-3 py-2.5 md:w-fit ${
+        dtc
+          ? "rounded-lg border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
+          : "rounded-[14px] border border-[#1B2757]/25 shadow-[0_4px_18px_rgba(27,39,87,0.12)]"
+      } ${className}`}
     >
       {/* Left: laurel-flanked credential */}
       <div className="flex flex-shrink-0 items-center gap-1.5 pr-3">
@@ -33,7 +44,11 @@ export default function LaurelBadge({
             style={{ objectFit: "cover", objectPosition: "left center" }}
           />
         </div>
-        <span className="max-w-[4.5rem] text-center text-[10px] font-bold uppercase leading-[1.15] tracking-[0.08em] text-[#1B2757]">
+        <span
+          className={`max-w-[4.5rem] text-center text-[10px] font-bold uppercase leading-[1.15] tracking-[0.08em] ${
+            dtc ? "text-black" : "text-[#1B2757]"
+          }`}
+        >
           {eyebrow}
         </span>
         <div
