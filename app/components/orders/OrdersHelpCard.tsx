@@ -2,7 +2,7 @@ import { ContactSupportLink } from "@/app/components/ContactSupportLink";
 
 export function OrdersHelpCard() {
   return (
-    <div className="mt-14 bg-white border border-black/12 p-8 text-center">
+    <div className="mt-14 bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-8 text-center">
       <h3
         className="font-semibold text-lg text-black mb-2"
         style={{ letterSpacing: "-0.02em" }}

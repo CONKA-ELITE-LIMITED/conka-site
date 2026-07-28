@@ -63,7 +63,7 @@ export default function OrdersPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="brand-clinical min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white text-black flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin mx-auto mb-4" />
           <p className="text-sm text-black/60">
@@ -97,7 +97,7 @@ export default function OrdersPage() {
       ].filter(Boolean).join(" · ");
 
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black">
       <Navigation />
       <AccountSubNav />
 
@@ -118,7 +118,7 @@ export default function OrdersPage() {
             )}
 
             {error && (
-              <div className="border border-red-200 bg-red-50/50 p-6 mb-8">
+              <div className="rounded-md border border-red-200 bg-red-50/50 p-6 mb-8">
                 <p className="text-sm text-red-700">{error}</p>
               </div>
             )}
