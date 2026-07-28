@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-28** | im8 listicle badges/toggles/explainers aligned to Simple DTC (DTC radius, mono eyebrows dropped, tokenised navy; LaurelBadge via opt-in dtc variant)
 - **2026-07-28** | im8 listicle data-viz graphics aligned to Simple DTC (DTC radius, mono eyebrows dropped, tokenised navy/tint; CrashChart via opt-in dtc variant)
 - **2026-07-28** | im8 listicle template chrome converted to Simple DTC (white canvas, black headings, tokenised navy/tint, DTC radius)
 - **2026-07-27** | Fixed missing reviewer avatars on the ADHD listicle review strip

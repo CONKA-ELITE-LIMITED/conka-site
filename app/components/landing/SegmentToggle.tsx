@@ -29,7 +29,7 @@ export interface SegmentToggleSegment {
   };
 }
 
-const INK = "#1B2757";
+const INK = "var(--brand-navy, #1b2757)";
 
 export default function SegmentToggle({
   segments,
@@ -74,14 +74,14 @@ export default function SegmentToggle({
 
       <div className="grid gap-6 md:grid-cols-2 md:items-start">
         <div>
-          <h4 className="mb-3 text-[22px] font-semibold leading-tight text-[#1B2757] md:text-[26px]">
+          <h4 className="mb-3 text-[22px] font-semibold leading-tight text-black md:text-[26px]">
             {seg.headline}
           </h4>
           <p className="text-[15px] font-semibold leading-relaxed text-black md:text-base">
             {seg.body}
           </p>
           {seg.testimonial ? (
-            <figure className="mt-5 rounded-2xl border border-black/10 bg-white p-5">
+            <figure className="mt-5 rounded-md border border-black/10 bg-white p-5">
               <div
                 aria-hidden
                 className="mb-2 text-[15px] tracking-widest"
@@ -92,14 +92,14 @@ export default function SegmentToggle({
               <blockquote className="text-[15px] font-semibold leading-relaxed text-black">
                 <span
                   aria-hidden
-                  className="mr-0.5 align-[-0.35em] text-[2.5rem] font-bold leading-[0] text-[#1B2757]"
+                  className="mr-0.5 align-[-0.35em] text-[2.5rem] font-bold leading-[0] text-[var(--brand-navy)]"
                 >
                   &ldquo;
                 </span>
                 {seg.testimonial.quote}
                 <span
                   aria-hidden
-                  className="ml-0.5 align-[-0.5em] text-[2.5rem] font-bold leading-[0] text-[#1B2757]"
+                  className="ml-0.5 align-[-0.5em] text-[2.5rem] font-bold leading-[0] text-[var(--brand-navy)]"
                 >
                   &rdquo;
                 </span>

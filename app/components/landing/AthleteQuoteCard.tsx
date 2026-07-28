@@ -24,7 +24,7 @@ export default function AthleteQuoteCard({
 }: AthleteQuoteCardProps) {
   return (
     <div
-      className="relative overflow-hidden rounded-3xl bg-[var(--brand-tint,#eeeff2)]"
+      className="relative overflow-hidden rounded-lg bg-[var(--brand-tint,#eeeff2)]"
       style={{ aspectRatio: "4/5" }}
     >
       <Image

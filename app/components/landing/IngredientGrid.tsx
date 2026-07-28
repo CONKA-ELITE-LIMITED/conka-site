@@ -50,10 +50,10 @@ export default function IngredientGrid({
   return (
     <div
       ref={ref}
-      className="rounded-2xl border border-black/10 bg-white p-4 sm:p-5"
+      className="rounded-lg border border-black/10 bg-white p-4 sm:p-5"
     >
       {eyebrow ? (
-        <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+        <p className="mb-3 text-center text-[12px] font-semibold text-black/70">
           {eyebrow}
         </p>
       ) : null}
@@ -62,7 +62,7 @@ export default function IngredientGrid({
         {items.map((item, i) => (
           <div
             key={item.name}
-            className="rounded-xl bg-[#FAFAFA] p-3 transition-all duration-500"
+            className="rounded-md bg-[var(--brand-tint)] p-3 transition-all duration-500"
             style={{
               opacity: inView ? 1 : 0,
               transform: inView ? "translateY(0)" : "translateY(8px)",

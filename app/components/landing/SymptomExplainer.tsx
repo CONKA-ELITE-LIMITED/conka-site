@@ -51,7 +51,7 @@ const CHIP_GRADS = [
   "linear-gradient(135deg,#FCE4EC,#F8BBD0)",
 ];
 
-const INK = "#1B2757";
+const INK = "var(--brand-navy, #1b2757)";
 
 function IngredientCard({
   ing,
@@ -71,7 +71,7 @@ function IngredientCard({
           {ing.icon}
         </span>
         <strong className="text-[14px] font-bold text-black">{ing.name}</strong>
-        <span className="rounded-full bg-black/[0.06] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-black">
+        <span className="rounded-full bg-black/[0.06] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-black">
           {ing.formula}
         </span>
       </div>
@@ -128,7 +128,7 @@ export default function SymptomExplainer({
   return (
     <div>
       {/* Intro */}
-      <div className="mb-4 rounded-2xl border border-black/10 bg-white p-5">
+      <div className="mb-4 rounded-md border border-black/10 bg-white p-5">
         <p className="text-[14px] leading-relaxed text-black/80">{intro}</p>
       </div>
 
@@ -143,10 +143,12 @@ export default function SymptomExplainer({
               type="button"
               onClick={() => selectSymptom(i)}
               aria-pressed={isActive}
-              className="flex items-start gap-2.5 rounded-xl border p-3 text-left transition-colors"
+              className="flex items-start gap-2.5 rounded-md border p-3 text-left transition-colors"
               style={{
                 borderColor: isActive ? INK : "rgba(0,0,0,0.1)",
-                background: isActive ? "rgba(27,39,87,0.05)" : "#fff",
+                background: isActive
+                  ? "color-mix(in srgb, var(--brand-navy) 5%, #fff)"
+                  : "#fff",
               }}
             >
               <span className="text-lg leading-none" aria-hidden>
@@ -180,10 +182,8 @@ export default function SymptomExplainer({
           issue, since that is the answer the reader wants. The brain science is
           demoted to a collapsed row they can expand to learn more. */}
       <div className="mt-4 space-y-3">
-        <div className="rounded-2xl border border-black/10 bg-white p-5">
-          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-black">
-            How CONKA helps
-          </p>
+        <div className="rounded-md border border-black/10 bg-white p-5">
+          <p className="mb-3 text-[12px] font-bold text-black">How CONKA helps</p>
           {primaryIng ? <IngredientCard ing={primaryIng} gradIndex={0} /> : null}
 
           {restIng.length > 0 ? (
@@ -210,14 +210,14 @@ export default function SymptomExplainer({
         </div>
 
         {/* Collapsed brain-science explainer: expand to learn more */}
-        <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
+        <div className="overflow-hidden rounded-md border border-black/10 bg-white">
           <button
             type="button"
             onClick={() => setShowBrain((v) => !v)}
             aria-expanded={showBrain}
             className="flex w-full items-center justify-between gap-3 p-5 text-left"
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+            <span className="text-[12px] font-bold text-black">
               {"What's happening in your brain"}
             </span>
             <span

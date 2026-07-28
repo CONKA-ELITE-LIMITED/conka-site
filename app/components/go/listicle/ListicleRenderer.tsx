@@ -721,6 +721,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                   <LaurelBadge
                     eyebrow={config.hero.laurel.eyebrow}
                     body={config.hero.laurel.body}
+                    variant="dtc"
                   />
                 </div>
               ) : null}
