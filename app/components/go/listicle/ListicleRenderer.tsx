@@ -56,11 +56,13 @@ import {
  * radius scale. This resolves the hardcoded-hex colour question from SCRUM-1176.
  */
 
-/** Decorative navy for the dark proof bands (stats band, bridge, dark stat panel). */
-const NAVY_DARK = "var(--brand-navy, #1b2757)";
 /** White DTC canvas. */
 const CANVAS = "#fff";
-/** Filled navy for primary/interactive + decorative marks (ticker, CTAs, initials). */
+/**
+ * Filled navy (--brand-navy). Serves both the dark decorative proof bands
+ * (stats band, bridge, dark stat panel) and the primary/interactive +
+ * decorative marks (ticker, CTAs, review initials).
+ */
 const NAVY = "var(--brand-navy, #1b2757)";
 /* Marketing CTAs (hero, bridge, sticky) navigate to the PDP for the product
    this page sells, following the buy box's productHeroId, rather than scrolling
@@ -228,7 +230,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
         className="flex w-full flex-col justify-center gap-4 rounded-md p-8"
         style={{
           aspectRatio: aspect,
-          background: dark ? NAVY_DARK : TINT,
+          background: dark ? NAVY : TINT,
           color: dark ? "#fff" : "#111",
         }}
       >
@@ -487,7 +489,7 @@ function BodyBlock({
     return (
       <div
         className="my-10 rounded-md px-8 py-12 text-center"
-        style={{ background: NAVY_DARK, color: "#fff" }}
+        style={{ background: NAVY, color: "#fff" }}
       >
         <div className="mb-8 text-[13px] font-semibold opacity-60">
           {block.eyebrow}
@@ -733,7 +735,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             <TrackedSection
               section={SECTION.bridge}
               className="mt-10 rounded-md px-8 py-14 text-center"
-              style={{ background: NAVY_DARK, color: "#fff" }}
+              style={{ background: NAVY, color: "#fff" }}
             >
               <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
                 {config.bridge.headline}
