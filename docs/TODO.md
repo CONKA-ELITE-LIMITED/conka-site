@@ -5,6 +5,25 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Analytics / Attribution
+
+### Listicle `persona:` order tags aren't writing (no `write_orders` on live token)
+
+**Status:** Deferred (needs infra change, not a code fix)
+**Files:** `app/api/webhooks/shopify/orders/route.ts` (`listicleOrderTags` → `addOrderTags`), `app/lib/shopifyAdmin.ts` (`addOrderTags`)
+
+**Symptom:** On `orders/paid`, the webhook calls `tagsAdd` to stamp `listicle` + `persona:<name>` on listicle-driven orders (SCRUM-1180). It silently fails: the live `SHOPIFY_ADMIN_API_TOKEN` is the **B2B Invoicing** app's token, which has only draft-order/customer scopes — no `write_orders`. The webhook catches the error and continues, so orders never get the tag. Confirmed 29 Jul: of the 3 first-party listicle orders (#3701/#3707/#3711), all carry the `_listicle_origin` note attribute but none carry a `persona:` tag.
+
+**Impact:** Low — attribution still works via the `_listicle_origin` note attribute (set by the cart, not the webhook). But you can't filter Orders by `persona:adhd` in Shopify admin, and any downstream report keyed on the tag reads empty.
+
+**Assessment (Rudh, 29 Jul):** arguably not a real issue — the `_listicle_origin` note attribute already carries persona + section first-party, so the tag is just redundant convenience. Only worth doing (b) if we actually want tag-based filtering / segments in Shopify admin or Flow; otherwise leave it, or close as won't-fix.
+
+**What unblocks it:** give the webhook a token with `write_orders`. Options: (a) add `write_orders` to the B2B Invoicing app and re-install (broadens that app's blast radius — least preferred); (b) stand up / point at a dedicated app-token that has `write_orders` and read it from a new env var, keeping the B2B token untouched. attribution-audit is read-only, so it can't do this. Then re-verify a live order gets tagged.
+
+**Why deferred:** Requires a Shopify app scope change + prod env var, which is an ops action outside the codebase. See `docs/analytics/LISTICLE_PERFORMANCE.md` (known-gap note).
+
+---
+
 ## Listicle Template Upgrade
 
 ### ADHD listicle: bespoke FAQ copy pending
