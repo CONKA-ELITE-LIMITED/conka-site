@@ -210,7 +210,7 @@ export default function NikeTrialPage() {
             Cognition trial &middot; 2 weeks
           </p>
           <h1 className="mx-auto mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
-            Welcome to the CONKA &times; Nike Trial.
+            Welcome to the Nike Mind Trial.
           </h1>
           <p className="mx-auto mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
             You&rsquo;re about to spend 2 weeks measuring your own mind. The best
