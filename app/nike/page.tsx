@@ -63,12 +63,6 @@ const GiftIcon = ({ className }: IconProps) => (
     <path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7S11 3 8.5 3 6 6 8 7M12 7s1-4 3.5-4S18 6 16 7" />
   </svg>
 );
-const CheckIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M8.5 12.5l2.5 2.5 4.5-5" />
-  </svg>
-);
 const WhatsAppIcon = ({ className }: IconProps) => (
   <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
     <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0 0 12.04 2zm0 1.67c2.2 0 4.27.86 5.83 2.42a8.2 8.2 0 0 1 2.42 5.82c0 4.54-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24zm-4.6 4.4c-.15 0-.4.06-.6.28-.2.22-.79.77-.79 1.88s.81 2.18.92 2.33c.11.15 1.57 2.4 3.8 3.36.53.23.94.37 1.27.47.53.17 1.02.15 1.4.09.43-.06 1.31-.53 1.5-1.05.18-.52.18-.96.13-1.05-.05-.09-.2-.15-.42-.26-.22-.11-1.31-.65-1.51-.72-.2-.07-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.17-.48.06-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.21-.68-1.65-.18-.43-.36-.37-.5-.38l-.42-.01z" />
@@ -88,30 +82,25 @@ const rewards = [
     title: "A prize draw",
     body: "Consistent testers go into a prize draw, with smaller rewards along the way.",
   },
-  {
-    Icon: CheckIcon,
-    title: "Something for everyone",
-    body: "Everyone who takes part finishes the trial with something.",
-  },
 ];
 
 const asks = [
   {
     n: 1,
     title: "Download the app and create your account",
-    body: "Your test and your results live here. Search “CONKA” if the buttons don’t open.",
+    body: "Search “CONKA” if the buttons don’t open.",
     app: true,
   },
   {
     n: 2,
     title: "Turn on notifications",
-    body: "One daily reminder, at a time you choose. It’s the difference between a full fortnight of data and a patchy one.",
+    body: "It’s how we remind you to test each day.",
     app: false,
   },
   {
     n: 3,
-    title: "Take one practice test",
-    body: "It doesn’t count. It means your first real test measures you, not the ten seconds it takes to learn the controls.",
+    title: "Complete one test",
+    body: "This will be your practice test, so don’t worry about your score.",
     app: false,
   },
 ];
@@ -217,11 +206,10 @@ export default function NikeTrialPage() {
           <h2 id="about-heading" className="text-[26px] font-bold sm:text-[34px]">
             This is CONKA
           </h2>
-          <p className="mt-4 max-w-[600px] text-[16px] leading-relaxed text-white">
-            We make a daily brain shot and an app that measures its effect on your
-            focus. Athletes, founders and teams use it to train the one thing
-            everything else runs on: attention. Over the next two weeks,
-            you&rsquo;ll put it to the test on yourself.
+          <p className="mt-4 max-w-[560px] text-[16px] leading-relaxed text-white">
+            A daily brain shot, and an app that measures how your brain is
+            performing. Over the next two weeks, you&rsquo;ll test both on
+            yourself.
           </p>
 
           {/* The shots — Flow/Clear toggle, bottle asset and the shared
@@ -249,9 +237,6 @@ export default function NikeTrialPage() {
                 it becomes a trend, so you can see the shots working on your own
                 numbers.
               </p>
-              <p className="mt-4 text-[13px] text-white/70">
-                One test a day, in a window you choose.
-              </p>
             </div>
           </div>
         </div>
@@ -269,12 +254,8 @@ export default function NikeTrialPage() {
           <h2 id="setup-heading" className="text-[26px] font-bold sm:text-[34px]">
             Three things before Thursday
           </h2>
-          <p className="mt-3 text-[16px] text-white">
-            Five minutes on your phone. Do them now and Thursday is about you, not
-            setup.
-          </p>
 
-          <ol className="mt-8 border-t border-white/10">
+          <ol className="mt-6 border-t border-white/10">
             {asks.map((ask) => (
               <li
                 key={ask.n}
@@ -309,8 +290,7 @@ export default function NikeTrialPage() {
                 Join the WhatsApp group
               </h3>
               <p className="mt-2 max-w-[440px] text-[15px] leading-relaxed text-white/85">
-                A daily nudge so no day slips, and a direct line to us for anything
-                across the trial.
+                A daily nudge, and a direct line to us during the trial.
               </p>
             </div>
             <a
@@ -342,8 +322,7 @@ export default function NikeTrialPage() {
             Your two weeks
           </h2>
           <p className="mt-3 text-[16px] text-white">
-            Three days to set your baseline, then a fortnight of testing that
-            builds into a trend that&rsquo;s yours.
+            Three days to set your baseline, then the two-week trial.
           </p>
 
           <div className="mt-8">
@@ -356,17 +335,11 @@ export default function NikeTrialPage() {
               Pick a window that suits you
             </h3>
             <p className="mt-2 text-[15px] leading-relaxed text-white">
-              Choose one two-hour window between 8am and 8pm. We&rsquo;ll send a
-              reminder when it opens, so your test lands at a similar time each
-              day. Just after your morning flow shot tends to work best.
+              Choose one two-hour window between 8am and 8pm. We&rsquo;ll remind
+              you when it opens, so testing lands at a similar time each day.
             </p>
             <TestWindow />
           </div>
-
-          <p className="mt-10 border-l-2 border-[#6478e0] pl-5 text-[18px] font-medium leading-relaxed text-white sm:text-[21px]">
-            The story only appears if you show up for it. Two weeks is exactly
-            long enough to watch it move.
-          </p>
         </div>
       </section>
 
@@ -386,7 +359,7 @@ export default function NikeTrialPage() {
             When the two weeks are up
           </h2>
 
-          <div className="mt-10 grid gap-9 sm:grid-cols-3">
+          <div className="mt-10 grid gap-9 sm:max-w-[520px] sm:grid-cols-2">
             {rewards.map((reward) => {
               const Icon = reward.Icon;
               return (
@@ -416,7 +389,7 @@ export default function NikeTrialPage() {
       <section className="brand-section" aria-label="See you Thursday">
         <div className="brand-track max-w-[720px] text-center">
           <h2 className="text-[26px] font-bold leading-tight sm:text-[36px]">
-            Bring your phone charged. That&rsquo;s it.
+            Two weeks. Let&rsquo;s see what you&rsquo;ve got.
           </h2>
           <p className="mt-4 text-[16px] text-white/80">See you Thursday.</p>
           <div className="mt-8 flex justify-center">
