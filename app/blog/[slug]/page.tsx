@@ -112,7 +112,7 @@ export default async function BlogArticlePage({
         >
           <div className="brand-track">
             <div className="max-w-[720px]">
-              <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-black/50">
+              <div className="flex items-center gap-3 text-[13px] text-black/50">
                 <Link href="/blog" className="hover:text-black transition-colors">
                   &larr; Blog
                 </Link>
@@ -121,7 +121,7 @@ export default async function BlogArticlePage({
                 )}
               </div>
               <h1 className="brand-h1 mt-4">{post.title}</h1>
-              <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-black/50 tabular-nums">
+              <p className="mt-4 text-[13px] text-black/50 tabular-nums">
                 CONKA
                 {post.datePublished
                   ? ` · ${formatBlogDate(post.datePublished)}`
@@ -131,7 +131,7 @@ export default async function BlogArticlePage({
             </div>
 
             {post.heroImage && (
-              <div className="relative mt-8 aspect-[16/9] overflow-hidden bg-black/[0.03]">
+              <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-md bg-[#eef1f8]">
                 <Image
                   src={post.heroImage}
                   alt={post.heroImageAlt}

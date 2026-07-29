@@ -6,7 +6,7 @@ export default function RelatedPosts({ posts }: { posts: BlogPostSummary[] }) {
   if (posts.length === 0) return null;
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50">
+      <p className="text-lg font-semibold tracking-tight text-black">
         More reading
       </p>
       <div className="mt-5">

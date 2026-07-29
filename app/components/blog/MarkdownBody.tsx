@@ -108,7 +108,7 @@ export default function MarkdownBody({ markdown }: { markdown: string }) {
               alt={usableAlt(alt)}
               loading="lazy"
               decoding="async"
-              className="my-8 h-auto w-full"
+              className="my-8 h-auto w-full rounded-md"
             />
           ) : null,
         // Legacy posts carry comparison tables. The wrapper is what keeps a wide
@@ -126,7 +126,7 @@ export default function MarkdownBody({ markdown }: { markdown: string }) {
           </div>
         ),
         th: ({ children }) => (
-          <th className="border-b border-black/20 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.15em] text-black/60">
+          <th className="border-b border-black/20 px-3 py-2 text-[13px] font-semibold text-black/70">
             {children}
           </th>
         ),

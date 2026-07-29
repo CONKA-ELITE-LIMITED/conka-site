@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-29** | Blog article surface (post header, product CTA, related posts, markdown tables) restyled to Simple DTC grammar.
 - **2026-07-29** | Blog listing surface (cards, topic nav, pagination) restyled to Simple DTC grammar.
 - **2026-07-28** | navigation DTC polish (desktop mega-menu cards to rounded-md, mobile menu tiles rounded, desktop top-right icon hover navy)
 - **2026-07-28** | account details + auth entry (login/register) + EditProfileModal converted to Simple DTC; portal fully de-clinicalized; DESIGN_SYSTEM 8.5 authority table updated
