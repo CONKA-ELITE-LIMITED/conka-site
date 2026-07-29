@@ -30,16 +30,16 @@ const PRODUCTS: Record<
     timeOfDay: "Morning",
     sub: "Calm focus for your mornings.",
     mg: "3,700mg",
-    src: "/formulas/conkaFlow/FlowNew.jpg",
-    alt: "CONKA Flow bottle",
+    src: "/formulas/conkaFlow/FlowLabDark.png",
+    alt: "CONKA Flow bottle lit on a panel against a dark backdrop",
   },
   clear: {
     name: "CONKA Clear",
     timeOfDay: "Afternoon",
     sub: "Afternoon clarity & reset.",
     mg: "3,142mg",
-    src: "/formulas/conkaClear/ClearNew.jpg",
-    alt: "CONKA Clear bottle",
+    src: "/formulas/conkaClear/ClearLabDark.png",
+    alt: "CONKA Clear bottle lit on a panel against a dark backdrop",
   },
 };
 
@@ -71,15 +71,15 @@ export default function ShotsShowcase() {
           className="mb-5"
         />
 
-        {/* Asset */}
-        <div className="overflow-hidden rounded-2xl bg-[#eef1f8]">
+        {/* Asset — lab-dark render, its own dark backdrop blends with the page */}
+        <div className="overflow-hidden rounded-2xl bg-white/[0.03]">
           <div className="relative aspect-square w-full">
             <Image
               src={product.src}
               alt={product.alt}
               fill
               sizes="(max-width: 640px) 90vw, 440px"
-              className="scale-[1.35] object-cover"
+              className="object-cover object-center"
             />
           </div>
         </div>
