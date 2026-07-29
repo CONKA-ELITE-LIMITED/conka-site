@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
 import NikeTrialNav from "./NikeTrialNav";
 import TrialCalendar from "./TrialCalendar";
@@ -41,13 +42,6 @@ const iconBase = {
   strokeLinejoin: "round" as const,
 };
 
-const TargetIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="12" r="4.5" />
-    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
-  </svg>
-);
 const SunIcon = ({ className }: IconProps) => (
   <svg {...iconBase} className={className} aria-hidden>
     <circle cx="12" cy="12" r="4" />
@@ -57,6 +51,12 @@ const SunIcon = ({ className }: IconProps) => (
 const MoonIcon = ({ className }: IconProps) => (
   <svg {...iconBase} className={className} aria-hidden>
     <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+  </svg>
+);
+const BellIcon = ({ className }: IconProps) => (
+  <svg {...iconBase} className={className} aria-hidden>
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
   </svg>
 );
 const TrendIcon = ({ className }: IconProps) => (
@@ -87,43 +87,54 @@ const WhatsAppIcon = ({ className }: IconProps) => (
 const rewards = [
   {
     Icon: TrendIcon,
-    title: "Your personal results",
-    body: "A clear picture of how your cognition moved across the two weeks. Yours to keep.",
+    title: "Your results",
+    body: "You see how your scores moved from your baseline across the two weeks.",
   },
   {
     Icon: GiftIcon,
-    title: "Rewards for consistency",
-    body: "Show up across the fortnight and you're in for rewards, including a prize draw.",
+    title: "A prize draw",
+    body: "Consistent testers go into a prize draw, with smaller rewards along the way.",
   },
   {
     Icon: CheckIcon,
-    title: "Everyone finishes with something",
-    body: "Whatever your scores decide to do, nobody leaves empty-handed.",
+    title: "Something for everyone",
+    body: "Everyone who takes part finishes the trial with something.",
   },
 ];
 
 const asks = [
   {
     n: 1,
-    title: "Download the app and create an account",
-    body: "This is where your daily test lives and where your results build up. Search “CONKA” if the buttons don’t open.",
+    title: "Download the app and create your account",
+    body: "Your test and your results live here. Search “CONKA” if the buttons don’t open.",
     app: true,
   },
   {
     n: 2,
-    title: "Allow notifications when the app asks",
-    body: "This is how you get your daily test reminder at the time you choose. Without it, it’s easy to lose a day, and the days are what make your results.",
+    title: "Turn on notifications",
+    body: "One daily reminder, at a time you choose. It’s the difference between a full fortnight of data and a patchy one.",
     app: false,
   },
   {
     n: 3,
-    title: "Do one practice test at home",
-    body: "It won’t count toward anything. It just means your first real test on the day reflects you, not the five seconds it takes to learn the buttons.",
+    title: "Take one practice test",
+    body: "It doesn’t count. It means your first real test measures you, not the ten seconds it takes to learn the controls.",
     app: false,
   },
 ];
 
-const cardClass = "rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-7";
+// 6 two-hour windows across an 8am-8pm day. Index 0 shown as the worked example.
+const WINDOWS = ["8am", "10am", "12pm", "2pm", "4pm", "6pm"];
+
+const moreLinks = [
+  { href: "/our-story", label: "Our story" },
+  { href: "/science", label: "The science" },
+  { href: "/app", label: "The app" },
+  { href: "/", label: "conka.io" },
+];
+
+const learnLink =
+  "underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white";
 
 export default function NikeTrialPage() {
   return (
@@ -137,15 +148,17 @@ export default function NikeTrialPage() {
     >
       {/* Minimal header — deliberately no site nav/cart, this is a focused page */}
       <header className="mx-auto flex max-w-[1280px] items-center justify-between px-5 py-4 md:px-[5vw]">
-        <Image
-          src="/conka-logo.webp"
-          alt="CONKA"
-          width={440}
-          height={112}
-          className="h-6 w-auto brightness-0 invert sm:h-7"
-          priority
-        />
-        <span className="text-[11px] uppercase tracking-[0.22em] text-white/45">
+        <Link href="/" aria-label="CONKA home" className="inline-flex">
+          <Image
+            src="/conka-logo.webp"
+            alt="CONKA"
+            width={440}
+            height={112}
+            className="h-6 w-auto brightness-0 invert sm:h-7"
+            priority
+          />
+        </Link>
+        <span className="text-[11px] uppercase tracking-[0.22em] text-white/70">
           For the Nike team
         </span>
       </header>
@@ -160,41 +173,42 @@ export default function NikeTrialPage() {
           <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
             Welcome
           </p>
-          <h1 className="mt-4 text-[30px] font-bold leading-[1.12] sm:text-[44px]">
+          <h1 className="mt-4 text-[32px] font-bold leading-[1.08] sm:text-[46px]">
             You&rsquo;re about to spend two weeks measuring your own mind.
           </h1>
-          <p className="mt-5 text-[16px] leading-relaxed text-white/70 sm:text-[18px]">
-            You&rsquo;re on a two-week CONKA trial with the Nike team. Two daily
-            shots, one quick test in the app, and you get to watch your own
-            cognition change. Everything to get started is on this page.
+          <p className="mt-6 text-[16px] leading-relaxed text-white sm:text-[18px]">
+            The best performers don&rsquo;t guess whether they&rsquo;re getting
+            sharper. They measure it. For the next two weeks you&rsquo;ll do the
+            same with your focus: two CONKA shots a day, a two-minute test in the
+            app, and a straight read on how you&rsquo;re actually performing.
           </p>
 
-          <div className="mt-7">
+          <div className="mt-8">
             <AppInstallButtons variant="dtc-dark" />
-            <p className="mt-3 text-[13px] text-white/45">Free to download.</p>
+            <p className="mt-3 text-[13px] text-white/70">Free to download.</p>
           </div>
 
-          {/* Kickoff card */}
-          <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          {/* Kickoff — open info block, not a tile */}
+          <div className="mt-10 border-t border-white/10 pt-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f9fe8]">
               Kickoff
             </p>
-            <p className="mt-3 text-[22px] font-bold sm:text-[26px]">
-              Thursday 6 August
-            </p>
-            <p className="mt-1 text-[15px] text-white/70">
-              About 20 minutes, in person.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-t border-white/10 pt-4 text-[15px]">
-              <span className="text-white/50">
-                Time{" "}
-                <span className="font-medium text-white/85">{SESSION_TIME}</span>
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <span className="text-[22px] font-bold sm:text-[26px]">
+                Thursday 6 August
               </span>
-              <span className="text-white/50">
+              <span className="text-[15px] text-white/80">
+                About 20 minutes, in person
+              </span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px]">
+              <span className="text-white/70">
+                Time{" "}
+                <span className="font-medium text-white">{SESSION_TIME}</span>
+              </span>
+              <span className="text-white/70">
                 Where{" "}
-                <span className="font-medium text-white/85">
-                  {SESSION_LOCATION}
-                </span>
+                <span className="font-medium text-white">{SESSION_LOCATION}</span>
               </span>
             </div>
           </div>
@@ -211,71 +225,92 @@ export default function NikeTrialPage() {
       >
         <div className="brand-track max-w-[760px]">
           <h2 id="about-heading" className="text-[26px] font-bold sm:text-[34px]">
-            First, what this is
+            This is CONKA
           </h2>
-          <p className="mt-3 max-w-[580px] text-[16px] leading-relaxed text-white/65">
-            CONKA is a cognitive-performance company. We make a daily brain shot,
-            and an app that measures whether it&rsquo;s working. For the next two
-            weeks, you&rsquo;re testing both on yourself.
+          <p className="mt-4 max-w-[600px] text-[16px] leading-relaxed text-white">
+            We make a daily brain shot and an app that measures its effect on your
+            focus. Athletes, founders and teams use it to train the one thing
+            everything else runs on: attention. Over the next two weeks,
+            you&rsquo;ll put it to the test on yourself.
           </p>
 
-          <div className="mt-8 grid items-stretch gap-4 sm:grid-cols-2">
+          <div className="mt-10 grid gap-10 sm:grid-cols-2">
             {/* The shots */}
-            <div className={cardClass}>
+            <div>
               <div className="overflow-hidden rounded-2xl bg-white">
                 <Image
                   src="/formulas/both/BothNew.jpg"
-                  alt="The two CONKA shots, flow and clear, side by side"
+                  alt="CONKA Flow and CONKA Clear shots side by side"
                   width={875}
                   height={875}
                   className="h-auto w-full"
                   sizes="(max-width: 640px) 90vw, 360px"
                 />
               </div>
-              <h3 className="mt-5 text-[19px] font-semibold">The shots</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-white/65">
-                Two a day. They&rsquo;re the thing we&rsquo;re testing.
+              <h3 className="mt-5 text-[20px] font-semibold">The shots</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-white">
+                Two a day, and this trial is testing both.
               </p>
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-white/55">
-                <span className="inline-flex items-center gap-1.5">
-                  <SunIcon className="h-4 w-4 text-[#f0b24b]" /> Morning: flow
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <MoonIcon className="h-4 w-4 text-[#8f9fe8]" /> Afternoon: clear
-                </span>
+              <div className="mt-4 space-y-3">
+                <div>
+                  <p className="flex items-center gap-2 text-[15px] font-semibold">
+                    <SunIcon className="h-4 w-4 text-[#f0b24b]" /> CONKA Flow
+                    <span className="font-normal text-white/70">
+                      &middot; mornings
+                    </span>
+                  </p>
+                  <p className="mt-1 text-[14px] leading-relaxed text-white/85">
+                    Sharp, driven focus to start the day.{" "}
+                    <Link href="/conka-flow" className={learnLink}>
+                      Learn more
+                    </Link>
+                  </p>
+                </div>
+                <div>
+                  <p className="flex items-center gap-2 text-[15px] font-semibold">
+                    <MoonIcon className="h-4 w-4 text-[#8f9fe8]" /> CONKA Clear
+                    <span className="font-normal text-white/70">
+                      &middot; afternoons
+                    </span>
+                  </p>
+                  <p className="mt-1 text-[14px] leading-relaxed text-white/85">
+                    Calm, steady focus to hold it through the afternoon, no crash.{" "}
+                    <Link href="/conka-clarity" className={learnLink}>
+                      Learn more
+                    </Link>
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* The test */}
-            <div className={cardClass}>
-              <div className="flex justify-center rounded-2xl bg-white/[0.02] py-4">
+            <div>
+              <div className="flex justify-center rounded-2xl bg-white/[0.03] py-5">
                 <Image
                   src="/app/AppConkaRing.png"
                   alt="The CONKA app showing a daily cognition score and a history of tested days"
                   width={1455}
                   height={2942}
-                  className="h-auto max-h-[300px] w-auto"
-                  sizes="(max-width: 640px) 55vw, 220px"
+                  className="h-auto max-h-[320px] w-auto"
+                  sizes="(max-width: 640px) 55vw, 240px"
                 />
               </div>
-              <h3 className="mt-5 text-[19px] font-semibold">The test</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-white/65">
-                A two-minute test in the app scores how your mind is performing.
-                Take it once a day and it becomes a trend that&rsquo;s yours.
+              <h3 className="mt-5 text-[20px] font-semibold">The test</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-white">
+                Two minutes in the app scores how sharp you are. Take it daily and
+                it becomes a trend, so you can see the shots working on your own
+                numbers.
               </p>
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-white/55">
-                <span className="inline-flex items-center gap-1.5">
-                  <TargetIcon className="h-4 w-4 text-[#8f9fe8]" /> One a day, in a
-                  window you pick
-                </span>
-              </div>
+              <p className="mt-4 text-[13px] text-white/70">
+                One test a day, in a window you choose.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* SETUP — the three asks */}
+      {/* SETUP — the three asks (open list, not tiles) */}
       {/* ---------------------------------------------------------------- */}
       <section
         id="setup"
@@ -286,51 +321,55 @@ export default function NikeTrialPage() {
           <h2 id="setup-heading" className="text-[26px] font-bold sm:text-[34px]">
             Three things before Thursday
           </h2>
-          <p className="mt-3 text-[16px] text-white/60">
-            About five minutes, all on your phone.
+          <p className="mt-3 text-[16px] text-white">
+            Five minutes on your phone. Do them now and Thursday is about you, not
+            setup.
           </p>
 
-          <div className="mt-8 space-y-4">
+          <ol className="mt-8 border-t border-white/10">
             {asks.map((ask) => (
-              <div key={ask.n} className={cardClass}>
-                <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[17px] font-bold text-white">
-                    {ask.n}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
-                      {ask.title}
-                    </h3>
-                    <p className="mt-2 text-[15px] leading-relaxed text-white/65">
-                      {ask.body}
-                    </p>
-                    {ask.app && (
-                      <AppInstallButtons
-                        variant="dtc-dark"
-                        className="mt-5"
-                        buttonClassName="text-[13px] px-5 py-3"
-                      />
-                    )}
-                  </div>
+              <li
+                key={ask.n}
+                className="flex gap-4 border-b border-white/10 py-7 sm:gap-5"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
+                  {ask.n}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
+                    {ask.title}
+                  </h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-white/85">
+                    {ask.body}
+                  </p>
+                  {ask.app && (
+                    <AppInstallButtons
+                      variant="dtc-dark"
+                      className="mt-5"
+                      buttonClassName="text-[13px] px-5 py-3"
+                    />
+                  )}
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
 
-          {/* WhatsApp */}
-          <div className="mt-6 rounded-3xl border border-[#1a7f4f]/30 bg-[#1a7f4f]/[0.08] p-6">
-            <h3 className="text-[18px] font-semibold sm:text-[20px]">
-              Join the WhatsApp group
-            </h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-white/65">
-              One daily nudge so a day never slips, and somewhere to ask us
-              anything across the trial.
-            </p>
+          {/* WhatsApp — open row, not a tile */}
+          <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-[18px] font-semibold sm:text-[20px]">
+                Join the WhatsApp group
+              </h3>
+              <p className="mt-2 max-w-[440px] text-[15px] leading-relaxed text-white/85">
+                A daily nudge so no day slips, and a direct line to us for anything
+                across the trial.
+              </p>
+            </div>
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#25D366] px-6 text-[14px] font-semibold text-[#0a1a10] transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="inline-flex min-h-[48px] shrink-0 items-center gap-2 self-start rounded-full bg-[#25D366] px-6 text-[14px] font-semibold text-[#0a1a10] transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
             >
               <WhatsAppIcon />
               Join the group
@@ -340,7 +379,7 @@ export default function NikeTrialPage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* FORTNIGHT — calendar */}
+      {/* FORTNIGHT — plan + calendar + window */}
       {/* ---------------------------------------------------------------- */}
       <section
         id="fortnight"
@@ -352,17 +391,61 @@ export default function NikeTrialPage() {
             id="fortnight-heading"
             className="text-[26px] font-bold sm:text-[34px]"
           >
-            What the two weeks look like
+            Your two weeks
           </h2>
-          <p className="mt-3 text-[16px] text-white/60">
-            A few tests to find your baseline, then a trend that&rsquo;s yours.
+          <p className="mt-3 text-[16px] text-white">
+            Three days to set your baseline, then a fortnight of testing that
+            builds into a trend that&rsquo;s yours.
           </p>
 
           <div className="mt-8">
             <TrialCalendar />
           </div>
 
-          <p className="mt-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-[17px] font-medium leading-relaxed text-white/85 sm:text-[19px]">
+          {/* Window picker */}
+          <div className="mt-10">
+            <h3 className="text-[20px] font-semibold">
+              Pick a window that suits you
+            </h3>
+            <p className="mt-2 text-[15px] leading-relaxed text-white">
+              Choose one two-hour window between 8am and 8pm. We&rsquo;ll send a
+              reminder when it opens, so your test lands at a similar time each
+              day. Just after your morning flow shot tends to work best.
+            </p>
+            <div className="mt-5 flex gap-1.5">
+              {WINDOWS.map((label, i) => {
+                const isPick = i === 0;
+                return (
+                  <div
+                    key={label}
+                    className={`flex flex-1 flex-col items-center gap-1 rounded-lg border py-2.5 ${
+                      isPick
+                        ? "border-[#6478e0] bg-[#6478e0]/20"
+                        : "border-white/10 bg-white/[0.02]"
+                    }`}
+                  >
+                    {isPick && (
+                      <BellIcon className="h-3.5 w-3.5 text-[#8f9fe8]" />
+                    )}
+                    <span
+                      className={`text-[12px] ${
+                        isPick ? "font-semibold text-white" : "text-white/70"
+                      }`}
+                    >
+                      {label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-1.5 flex items-center justify-between text-[12px] text-white/60">
+              <span>8am</span>
+              <span className="text-[#8f9fe8]">Example: your 8&ndash;10am window</span>
+              <span>8pm</span>
+            </div>
+          </div>
+
+          <p className="mt-10 border-l-2 border-[#6478e0] pl-5 text-[18px] font-medium leading-relaxed text-white sm:text-[21px]">
             The story only appears if you show up for it. Two weeks is exactly
             long enough to watch it move.
           </p>
@@ -370,7 +453,7 @@ export default function NikeTrialPage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* REWARDS — what you get */}
+      {/* REWARDS — what happens at the end (open columns) */}
       {/* ---------------------------------------------------------------- */}
       <section
         id="rewards"
@@ -382,21 +465,21 @@ export default function NikeTrialPage() {
             id="rewards-heading"
             className="text-[26px] font-bold sm:text-[34px]"
           >
-            What you walk away with
+            When the two weeks are up
           </h2>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <div className="mt-10 grid gap-9 sm:grid-cols-3">
             {rewards.map((reward) => {
               const Icon = reward.Icon;
               return (
-                <div key={reward.title} className={cardClass}>
+                <div key={reward.title}>
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1a7f4f]/15 text-[#4ade80]">
                     <Icon className="h-5 w-5" />
                   </span>
                   <h3 className="mt-4 text-[18px] font-semibold">
                     {reward.title}
                   </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-white/65">
+                  <p className="mt-2 text-[15px] leading-relaxed text-white/85">
                     {reward.body}
                   </p>
                 </div>
@@ -410,21 +493,37 @@ export default function NikeTrialPage() {
       {/* CLOSE */}
       {/* ---------------------------------------------------------------- */}
       <section className="brand-section" aria-label="See you Thursday">
+        <div className="brand-track max-w-[720px] text-center">
+          <h2 className="text-[26px] font-bold leading-tight sm:text-[36px]">
+            Bring your phone charged. That&rsquo;s it.
+          </h2>
+          <p className="mt-4 text-[16px] text-white/80">See you Thursday.</p>
+          <div className="mt-8 flex justify-center">
+            <AppInstallButtons variant="dtc-dark" />
+          </div>
+        </div>
+      </section>
+
+      {/* Learn more — progressive disclosure for the curious */}
+      <section className="brand-section" aria-label="More about CONKA">
         <div className="brand-track max-w-[760px]">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center sm:p-10">
-            <h2 className="text-[24px] font-bold leading-tight sm:text-[32px]">
-              Bring your phone charged. That&rsquo;s it.
-            </h2>
-            <p className="mt-3 text-[16px] text-white/60">See you Thursday.</p>
-            <div className="mt-7 flex justify-center">
-              <AppInstallButtons variant="dtc-dark" />
+          <div className="border-t border-white/10 pt-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">
+              More about CONKA
+            </p>
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-[15px]">
+              {moreLinks.map((link) => (
+                <Link key={link.href} href={link.href} className={learnLink}>
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="mx-auto max-w-[1280px] px-5 pb-10 pt-4 md:px-[5vw]">
-        <p className="text-[12px] text-white/35">
+      <footer className="mx-auto max-w-[1280px] px-5 pb-10 pt-2 md:px-[5vw]">
+        <p className="text-[12px] text-white/60">
           CONKA &middot; for the Nike team
         </p>
       </footer>

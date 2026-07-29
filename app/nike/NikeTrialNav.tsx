@@ -63,8 +63,8 @@ export default function NikeTrialNav() {
     >
       {/* hide the horizontal scrollbar under the chip row */}
       <style>{`.nike-nav-scroll::-webkit-scrollbar{display:none}`}</style>
-      <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-5 py-2.5 md:px-[5vw]">
-        <div className="nike-nav-scroll -mx-1 min-w-0 flex-1 overflow-x-auto px-1 [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-[5vw]">
+        <div className="nike-nav-scroll -mx-1 overflow-x-auto px-1 py-2.5 [-ms-overflow-style:none] [scrollbar-width:none]">
           <ul className="flex w-max items-center gap-2">
             {NAV_ITEMS.map((item) => {
               const isActive = active === item.id;
@@ -74,7 +74,7 @@ export default function NikeTrialNav() {
                     href={`#${item.id}`}
                     onClick={(event) => scrollTo(event, item.id)}
                     aria-current={isActive ? "true" : undefined}
-                    className={`inline-flex min-h-[38px] items-center rounded-full px-3.5 text-[13px] font-medium transition-colors ${
+                    className={`inline-flex min-h-[38px] items-center rounded-full px-4 text-[13px] font-medium transition-colors ${
                       isActive
                         ? "bg-[#6478e0] text-white"
                         : "border border-white/15 text-white/60 hover:text-white/90"
@@ -87,14 +87,6 @@ export default function NikeTrialNav() {
             })}
           </ul>
         </div>
-        <a
-          href="#setup"
-          onClick={(event) => scrollTo(event, "setup")}
-          className="inline-flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-full bg-white px-4 text-[13px] font-semibold text-[#0a0a0a] transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-        >
-          Get the app
-          <span aria-hidden>↓</span>
-        </a>
       </div>
     </nav>
   );
