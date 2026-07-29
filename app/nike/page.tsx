@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
-import LandingProductShowcase from "@/app/components/landing/LandingProductShowcase";
 import NikeTrialNav from "./NikeTrialNav";
+import ShotsShowcase from "./ShotsShowcase";
+import TestWindow from "./TestWindow";
 import TrialCalendar from "./TrialCalendar";
 
 export const metadata: Metadata = {
@@ -43,12 +44,6 @@ const iconBase = {
   strokeLinejoin: "round" as const,
 };
 
-const BellIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-  </svg>
-);
 const TrendIcon = ({ className }: IconProps) => (
   <svg {...iconBase} className={className} aria-hidden>
     <path d="M3 17l6-6 4 4 8-8" />
@@ -112,9 +107,6 @@ const asks = [
     app: false,
   },
 ];
-
-// 6 two-hour windows across an 8am-8pm day. Index 0 shown as the worked example.
-const WINDOWS = ["8am", "10am", "12pm", "2pm", "4pm", "6pm"];
 
 const moreLinks = [
   { href: "/our-story", label: "Our story" },
@@ -224,11 +216,10 @@ export default function NikeTrialPage() {
             you&rsquo;ll put it to the test on yourself.
           </p>
 
-          {/* The shots — interactive showcase (Flow/Clear toggle + ingredient
-              inspection). Built for light surfaces, so it sits in a white panel;
-              hideCTA drops its commerce button, this is not a sales page. */}
-          <div className="mt-8 rounded-3xl bg-white p-5 text-black sm:p-8">
-            <LandingProductShowcase hideCTA />
+          {/* The shots — Flow/Clear toggle, bottle asset and the shared
+              ingredient bottom sheet, composed natively on the dark canvas. */}
+          <div className="mt-8">
+            <ShotsShowcase />
           </div>
 
           {/* The test */}
@@ -361,37 +352,7 @@ export default function NikeTrialPage() {
               reminder when it opens, so your test lands at a similar time each
               day. Just after your morning flow shot tends to work best.
             </p>
-            <div className="mt-5 flex gap-1.5">
-              {WINDOWS.map((label, i) => {
-                const isPick = i === 0;
-                return (
-                  <div
-                    key={label}
-                    className={`flex flex-1 flex-col items-center gap-1 rounded-lg border py-2.5 ${
-                      isPick
-                        ? "border-[#6478e0] bg-[#6478e0]/20"
-                        : "border-white/10 bg-white/[0.02]"
-                    }`}
-                  >
-                    {isPick && (
-                      <BellIcon className="h-3.5 w-3.5 text-[#8f9fe8]" />
-                    )}
-                    <span
-                      className={`text-[12px] ${
-                        isPick ? "font-semibold text-white" : "text-white/70"
-                      }`}
-                    >
-                      {label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-1.5 flex items-center justify-between text-[12px] text-white/60">
-              <span>8am</span>
-              <span className="text-[#8f9fe8]">Example: your 8&ndash;10am window</span>
-              <span>8pm</span>
-            </div>
+            <TestWindow />
           </div>
 
           <p className="mt-10 border-l-2 border-[#6478e0] pl-5 text-[18px] font-medium leading-relaxed text-white sm:text-[21px]">
