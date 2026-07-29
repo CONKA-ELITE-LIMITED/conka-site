@@ -15,6 +15,14 @@ export const metadata: Metadata = {
   // tag is the mechanism (the page is deliberately left out of sitemap.ts and is
   // NOT disallowed in robots.ts, so crawlers can still see and honour this tag).
   robots: { index: false, follow: false },
+  // The link is forwarded person-to-person, so the message unfurl matters.
+  // Reuses the existing site OG image (no new asset).
+  openGraph: {
+    title: "For the Nike Team | CONKA",
+    description:
+      "Your two-week CONKA cognition trial. Everything to set up before we meet, and what the fortnight looks like.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 /* -------------------------------------------------------------------------- */

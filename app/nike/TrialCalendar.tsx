@@ -34,10 +34,15 @@ const CELL_STYLE: Record<Phase, string> = {
 export default function TrialCalendar() {
   return (
     <div>
-      <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+      <div
+        role="img"
+        aria-label="Calendar: three baseline days from Thursday 6 to Saturday 8 August, then the two-week trial from Monday 10 to Sunday 23 August."
+        className="grid grid-cols-7 gap-1.5 sm:gap-2"
+      >
         {HEAD.map((wd) => (
           <span
             key={wd}
+            aria-hidden
             className="pb-1 text-center text-[11px] font-medium text-white/60"
           >
             {wd}

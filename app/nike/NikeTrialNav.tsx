@@ -61,10 +61,9 @@ export default function NikeTrialNav() {
       aria-label="On this page"
       className="sticky top-0 z-40 border-b border-white/10 bg-[#0a0a0a]/85 backdrop-blur-md"
     >
-      {/* hide the horizontal scrollbar under the chip row */}
-      <style>{`.nike-nav-scroll::-webkit-scrollbar{display:none}`}</style>
       <div className="mx-auto max-w-[1280px] px-5 md:px-[5vw]">
-        <div className="nike-nav-scroll -mx-1 overflow-x-auto px-1 py-2.5 [-ms-overflow-style:none] [scrollbar-width:none]">
+        {/* scrollbar hidden so the overflow chip row reads as intentional */}
+        <div className="-mx-1 overflow-x-auto px-1 py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <ul className="flex w-max items-center gap-2">
             {NAV_ITEMS.map((item) => {
               const isActive = active === item.id;
