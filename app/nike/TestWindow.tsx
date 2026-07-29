@@ -49,7 +49,7 @@ export default function TestWindow() {
               aria-label={`Test window ${w.range}`}
               className={`flex min-h-[52px] flex-1 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border transition-colors ${
                 isSelected
-                  ? "border-[#6478e0] bg-[#6478e0]/25 text-[#8f9fe8]"
+                  ? "border-[#1B2757] bg-[#1B2757]/25 text-[#6E7CB0]"
                   : "border-white/10 bg-white/[0.02] text-white/70 hover:border-white/30"
               }`}
             >
@@ -65,7 +65,7 @@ export default function TestWindow() {
       </div>
       <div className="mt-2 flex items-center justify-between text-[12px] text-white/60">
         <span>8am</span>
-        <span className="font-medium text-[#8f9fe8]">
+        <span className="font-medium text-[#6E7CB0]">
           Your window: {WINDOWS[selected].range}
         </span>
         <span>8pm</span>

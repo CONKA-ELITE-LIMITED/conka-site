@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-29** | Nike trial showcase uses the lab-dark bottle renders
+- **2026-07-29** | Nike trial hero now leads with the ClearLabDark bottle asset (full-width on mobile, left/right split on desktop)
 - **2026-07-29** | Ceremonial code-gate entry (logo, Nike Mind Trial, countdown, access code, processing reveal) added to the Nike trial page
 - **2026-07-29** | Added the Nike trial 'know before you go' onboarding page at /nike
 - **2026-07-29** | Blog error boundary restyled to Simple DTC, completing the blog surface conversion.

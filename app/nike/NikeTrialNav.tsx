@@ -76,7 +76,7 @@ export default function NikeTrialNav() {
                     aria-current={isActive ? "true" : undefined}
                     className={`inline-flex min-h-[38px] items-center rounded-full px-4 text-[13px] font-medium transition-colors ${
                       isActive
-                        ? "bg-[#6478e0] text-white"
+                        ? "bg-[#1B2757] text-white"
                         : "border border-white/15 text-white/60 hover:text-white/90"
                     }`}
                   >

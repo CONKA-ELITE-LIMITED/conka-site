@@ -77,7 +77,7 @@ function Countdown() {
 
   if (remaining?.done) {
     return (
-      <p className="text-[15px] font-medium text-[#8f9fe8]">
+      <p className="text-[15px] font-medium text-[#6E7CB0]">
         The trial is underway.
       </p>
     );
@@ -156,7 +156,7 @@ function Processing({ onDone }: { onDone: () => void }) {
         {/* soft glow that intensifies as the ring fills */}
         <div
           aria-hidden
-          className="absolute inset-3 rounded-full bg-[#6478e0] blur-2xl transition-opacity duration-300"
+          className="absolute inset-3 rounded-full bg-[#6E7CB0] blur-2xl transition-opacity duration-300"
           style={{ opacity: 0.12 + (progress / 100) * 0.28 }}
         />
         <svg viewBox="0 0 152 152" className="h-full w-full -rotate-90">
@@ -173,7 +173,7 @@ function Processing({ onDone }: { onDone: () => void }) {
             cy="76"
             r={RING_RADIUS}
             fill="none"
-            stroke="#8f9fe8"
+            stroke="#6E7CB0"
             strokeWidth="4"
             strokeLinecap="round"
             strokeDasharray={RING_CIRCUMFERENCE}
@@ -188,7 +188,7 @@ function Processing({ onDone }: { onDone: () => void }) {
               height="40"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#8f9fe8"
+              stroke="#6E7CB0"
               strokeWidth="2.25"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -331,7 +331,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
           />
           <p
             data-gate-reveal
-            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8f9fe8]"
+            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#6E7CB0]"
           >
             Presents
           </p>
@@ -388,7 +388,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
               className={`min-h-[52px] w-full rounded-lg border bg-white/[0.04] px-4 text-center text-[16px] font-semibold uppercase tracking-[0.18em] text-white placeholder:tracking-[0.18em] placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] ${
                 error
                   ? "border-[#fca5a5]/60 focus:ring-[#fca5a5]/60"
-                  : "border-white/15 focus:ring-[#6478e0]"
+                  : "border-white/15 focus:ring-[#6E7CB0]"
               }`}
             />
             {error && (
@@ -402,7 +402,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
             )}
             <button
               type="submit"
-              className="mt-4 flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#6478e0] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[#5468d0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6478e0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="mt-4 flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#1B2757] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[#26356F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6E7CB0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
             >
               Enter
             </button>

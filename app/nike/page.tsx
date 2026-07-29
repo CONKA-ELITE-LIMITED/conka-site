@@ -204,49 +204,79 @@ export default function NikeTrialPage() {
       {/* ---------------------------------------------------------------- */}
       {/* HERO */}
       {/* ---------------------------------------------------------------- */}
-      <section className="brand-section" aria-label="Welcome">
-        <div className="brand-track mx-auto max-w-[720px] lg:text-center">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
-            Cognition trial &middot; 2 weeks
-          </p>
-          <h1 className="mx-auto mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
-            Welcome to the Nike Mind Trial.
-          </h1>
-          <p className="mx-auto mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
-            You&rsquo;re about to spend 2 weeks measuring your own mind. The best
-            performers don&rsquo;t guess whether they&rsquo;re getting sharper,
-            they measure it. For the next 14 days you&rsquo;ll do the same with
-            your focus: two CONKA shots a day, a two-minute test in the app, and a
-            straight read on how you&rsquo;re actually performing.
-          </p>
-
-          <div className="mt-8">
-            <AppInstallButtons variant="dtc-dark" className="lg:justify-center" />
-            <p className="mt-3 text-[13px] text-white/70">Free to download.</p>
-          </div>
-
-          {/* Kickoff — open info block, not a tile */}
-          <div className="mx-auto mt-10 max-w-[440px] border-t border-white/10 pt-6 lg:max-w-none">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f9fe8]">
-              Kickoff
-            </p>
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 lg:justify-center">
-              <span className="text-[22px] font-bold sm:text-[26px]">
-                Thursday 6 August
-              </span>
-              <span className="text-[15px] text-white/80">
-                About 20 minutes, in person
-              </span>
+      <section aria-label="Welcome">
+        <div className="mx-auto lg:max-w-[1280px] lg:px-[5vw] lg:py-16">
+          <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-14">
+            {/* Asset — full width on mobile with the top 10% and bottom 15%
+                cropped away (the middle band, anchored at 40% so the split is
+                10/15); natural in the left split column on desktop. Its dark
+                backdrop blends with the page. */}
+            <div className="relative aspect-[768/1032] w-full overflow-hidden lg:aspect-auto lg:h-[560px] lg:overflow-visible">
+              <Image
+                src="/formulas/conkaClear/ClearLabDark.png"
+                alt="A bottle of CONKA Clear lit on a panel against a dark backdrop"
+                fill
+                priority
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover object-[center_40%] lg:object-contain"
+              />
             </div>
-            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px] lg:justify-center">
-              <span className="text-white/70">
-                Time{" "}
-                <span className="font-medium text-white">{SESSION_TIME}</span>
-              </span>
-              <span className="text-white/70">
-                Where{" "}
-                <span className="font-medium text-white">{SESSION_LOCATION}</span>
-              </span>
+
+            {/* Copy — title then the rest, below the asset on mobile; the right
+                split column on desktop */}
+            <div className="px-5 pt-8 sm:px-6 lg:p-0">
+              <div className="mx-auto max-w-[600px] lg:mx-0 lg:max-w-none">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#6E7CB0]">
+                  Cognition trial &middot; 2 weeks
+                </p>
+                <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
+                  Welcome to the Nike Mind Trial.
+                </h1>
+                <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
+                  You&rsquo;re about to spend 2 weeks measuring your own mind. The
+                  best performers don&rsquo;t guess whether they&rsquo;re getting
+                  sharper, they measure it. For the next 14 days you&rsquo;ll do
+                  the same with your focus: two CONKA shots a day, a two-minute
+                  test in the app, and a straight read on how you&rsquo;re actually
+                  performing.
+                </p>
+
+                <div className="mt-8">
+                  <AppInstallButtons variant="dtc-dark" />
+                  <p className="mt-3 text-[13px] text-white/70">
+                    Free to download.
+                  </p>
+                </div>
+
+                {/* Kickoff — open info block, not a tile */}
+                <div className="mt-10 max-w-[440px] border-t border-white/10 pt-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6E7CB0]">
+                    Kickoff
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <span className="text-[22px] font-bold sm:text-[26px]">
+                      Thursday 6 August
+                    </span>
+                    <span className="text-[15px] text-white/80">
+                      About 20 minutes, in person
+                    </span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px]">
+                    <span className="text-white/70">
+                      Time{" "}
+                      <span className="font-medium text-white">
+                        {SESSION_TIME}
+                      </span>
+                    </span>
+                    <span className="text-white/70">
+                      Where{" "}
+                      <span className="font-medium text-white">
+                        {SESSION_LOCATION}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -322,7 +352,7 @@ export default function NikeTrialPage() {
             {asks.map((ask) => (
               <li key={ask.n} className="border-b border-white/10 py-7">
                 <div className="flex gap-4 sm:gap-5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-[16px] font-bold text-white">
                     {ask.n}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -390,7 +420,7 @@ export default function NikeTrialPage() {
 
           {/* Daily rhythm */}
           <div className="mt-10">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8] lg:text-center">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6E7CB0] lg:text-center">
               Every day
             </p>
             <div className="mt-5 grid gap-6 sm:grid-cols-3">
@@ -410,7 +440,7 @@ export default function NikeTrialPage() {
                       </div>
                     ) : (
                       Icon && (
-                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#8f9fe8]">
+                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#6E7CB0]">
                           <Icon className="h-8 w-8" />
                         </span>
                       )
@@ -441,7 +471,7 @@ export default function NikeTrialPage() {
 
           {/* The 14-day map */}
           <div className="mt-14">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8] lg:text-center">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6E7CB0] lg:text-center">
               The 14 days
             </p>
             <div className="mx-auto mt-5 max-w-[560px]">
@@ -451,7 +481,7 @@ export default function NikeTrialPage() {
 
           {/* The one requirement — 10 / 14 */}
           <div className="mt-14 text-center">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8]">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6E7CB0]">
               The one requirement
             </p>
             <p className="mt-3 text-[56px] font-bold leading-none tabular-nums sm:text-[64px]">
@@ -465,7 +495,7 @@ export default function NikeTrialPage() {
                 <span
                   key={i}
                   className={`h-2.5 w-2.5 rounded-full ${
-                    i < 10 ? "bg-[#6478e0]" : "border border-white/25"
+                    i < 10 ? "bg-[#6E7CB0]" : "border border-white/25"
                   }`}
                   aria-hidden
                 />
@@ -546,7 +576,7 @@ export default function NikeTrialPage() {
                   {f.q}
                   <span
                     aria-hidden
-                    className="shrink-0 text-[22px] font-normal leading-none text-[#8f9fe8] transition-transform duration-200 group-open:rotate-45"
+                    className="shrink-0 text-[22px] font-normal leading-none text-[#6E7CB0] transition-transform duration-200 group-open:rotate-45"
                   >
                     +
                   </span>
