@@ -206,24 +206,10 @@ export default function NikeTrialPage() {
       {/* ---------------------------------------------------------------- */}
       <section aria-label="Welcome">
         <div className="mx-auto lg:max-w-[1280px] lg:px-[5vw] lg:py-16">
-          <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-14">
-            {/* Asset — full-width natural bottle on mobile (above the copy),
-                height-capped in the left split column on desktop. The image's
-                own dark backdrop blends with the page. */}
-            <div className="lg:flex lg:justify-center">
-              <Image
-                src="/formulas/conkaClear/ClearLabDark.png"
-                alt="A bottle of CONKA Clear lit on a panel against a dark backdrop"
-                width={768}
-                height={1376}
-                priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="h-auto w-full lg:h-[560px] lg:w-auto"
-              />
-            </div>
-
-            {/* Copy */}
-            <div className="px-5 pt-8 sm:px-6 lg:p-0">
+          <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-14">
+            {/* Title — above the asset on mobile; top of the copy column on
+                desktop (grid placement reorders it without duplicating). */}
+            <div className="px-5 pt-8 sm:px-6 lg:col-start-2 lg:row-start-1 lg:px-0 lg:pt-0">
               <div className="mx-auto max-w-[600px] lg:mx-0 lg:max-w-none">
                 <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
                   Cognition trial &middot; 2 weeks
@@ -231,7 +217,27 @@ export default function NikeTrialPage() {
                 <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
                   Welcome to the Nike Mind Trial.
                 </h1>
-                <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
+              </div>
+            </div>
+
+            {/* Asset — full width with the bottom 20% cropped on mobile;
+                natural in the left split column on desktop. Its dark backdrop
+                blends with the page. */}
+            <div className="relative mt-6 aspect-[768/1101] w-full overflow-hidden lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:mt-0 lg:aspect-auto lg:h-[560px] lg:overflow-visible">
+              <Image
+                src="/formulas/conkaClear/ClearLabDark.png"
+                alt="A bottle of CONKA Clear lit on a panel against a dark backdrop"
+                fill
+                priority
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover object-top lg:object-contain"
+              />
+            </div>
+
+            {/* Copy — below the asset on mobile; below the title on desktop */}
+            <div className="px-5 pt-8 sm:px-6 lg:col-start-2 lg:row-start-2 lg:px-0 lg:pt-6">
+              <div className="mx-auto max-w-[600px] lg:mx-0 lg:max-w-none">
+                <p className="max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
                   You&rsquo;re about to spend 2 weeks measuring your own mind. The
                   best performers don&rsquo;t guess whether they&rsquo;re getting
                   sharper, they measure it. For the next 14 days you&rsquo;ll do
