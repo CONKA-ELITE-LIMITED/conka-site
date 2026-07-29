@@ -204,49 +204,78 @@ export default function NikeTrialPage() {
       {/* ---------------------------------------------------------------- */}
       {/* HERO */}
       {/* ---------------------------------------------------------------- */}
-      <section className="brand-section" aria-label="Welcome">
-        <div className="brand-track mx-auto max-w-[720px] lg:text-center">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
-            Cognition trial &middot; 2 weeks
-          </p>
-          <h1 className="mx-auto mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
-            Welcome to the Nike Mind Trial.
-          </h1>
-          <p className="mx-auto mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
-            You&rsquo;re about to spend 2 weeks measuring your own mind. The best
-            performers don&rsquo;t guess whether they&rsquo;re getting sharper,
-            they measure it. For the next 14 days you&rsquo;ll do the same with
-            your focus: two CONKA shots a day, a two-minute test in the app, and a
-            straight read on how you&rsquo;re actually performing.
-          </p>
-
-          <div className="mt-8">
-            <AppInstallButtons variant="dtc-dark" className="lg:justify-center" />
-            <p className="mt-3 text-[13px] text-white/70">Free to download.</p>
-          </div>
-
-          {/* Kickoff — open info block, not a tile */}
-          <div className="mx-auto mt-10 max-w-[440px] border-t border-white/10 pt-6 lg:max-w-none">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f9fe8]">
-              Kickoff
-            </p>
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 lg:justify-center">
-              <span className="text-[22px] font-bold sm:text-[26px]">
-                Thursday 6 August
-              </span>
-              <span className="text-[15px] text-white/80">
-                About 20 minutes, in person
-              </span>
+      <section aria-label="Welcome">
+        <div className="mx-auto lg:max-w-[1280px] lg:px-[5vw] lg:py-16">
+          <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-14">
+            {/* Asset — full-width natural bottle on mobile (above the copy),
+                height-capped in the left split column on desktop. The image's
+                own dark backdrop blends with the page. */}
+            <div className="lg:flex lg:justify-center">
+              <Image
+                src="/formulas/conkaClear/ClearLabDark.png"
+                alt="A bottle of CONKA Clear lit on a panel against a dark backdrop"
+                width={768}
+                height={1376}
+                priority
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="h-auto w-full lg:h-[560px] lg:w-auto"
+              />
             </div>
-            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px] lg:justify-center">
-              <span className="text-white/70">
-                Time{" "}
-                <span className="font-medium text-white">{SESSION_TIME}</span>
-              </span>
-              <span className="text-white/70">
-                Where{" "}
-                <span className="font-medium text-white">{SESSION_LOCATION}</span>
-              </span>
+
+            {/* Copy */}
+            <div className="px-5 pt-8 sm:px-6 lg:p-0">
+              <div className="mx-auto max-w-[600px] lg:mx-0 lg:max-w-none">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
+                  Cognition trial &middot; 2 weeks
+                </p>
+                <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
+                  Welcome to the Nike Mind Trial.
+                </h1>
+                <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
+                  You&rsquo;re about to spend 2 weeks measuring your own mind. The
+                  best performers don&rsquo;t guess whether they&rsquo;re getting
+                  sharper, they measure it. For the next 14 days you&rsquo;ll do
+                  the same with your focus: two CONKA shots a day, a two-minute
+                  test in the app, and a straight read on how you&rsquo;re actually
+                  performing.
+                </p>
+
+                <div className="mt-8">
+                  <AppInstallButtons variant="dtc-dark" />
+                  <p className="mt-3 text-[13px] text-white/70">
+                    Free to download.
+                  </p>
+                </div>
+
+                {/* Kickoff — open info block, not a tile */}
+                <div className="mt-10 max-w-[440px] border-t border-white/10 pt-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f9fe8]">
+                    Kickoff
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <span className="text-[22px] font-bold sm:text-[26px]">
+                      Thursday 6 August
+                    </span>
+                    <span className="text-[15px] text-white/80">
+                      About 20 minutes, in person
+                    </span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px]">
+                    <span className="text-white/70">
+                      Time{" "}
+                      <span className="font-medium text-white">
+                        {SESSION_TIME}
+                      </span>
+                    </span>
+                    <span className="text-white/70">
+                      Where{" "}
+                      <span className="font-medium text-white">
+                        {SESSION_LOCATION}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
