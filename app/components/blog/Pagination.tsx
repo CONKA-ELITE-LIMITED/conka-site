@@ -36,7 +36,7 @@ export default function Pagination({
         Previous
       </Step>
 
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50 tabular-nums">
+      <p className="text-[13px] text-black/50 tabular-nums">
         Page {page} / {totalPages}
       </p>
 
@@ -59,13 +59,13 @@ function Step({
   children: string;
 }) {
   const base =
-    "inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-5 border font-mono text-[10px] uppercase tracking-[0.2em] transition-colors";
+    "inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-6 rounded-full text-[13px] font-medium transition-colors";
 
   if (!enabled) {
     return (
       <span
         aria-disabled="true"
-        className={`${base} border-black/10 text-black/25 cursor-default`}
+        className={`${base} bg-black/[0.04] text-black/30 cursor-default`}
       >
         {children}
       </span>
@@ -76,7 +76,7 @@ function Step({
     <Link
       href={href}
       rel={rel}
-      className={`${base} border-black/20 text-black/70 hover:border-black/60 hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2`}
+      className={`${base} bg-[#1B2757] text-white hover:bg-[#26325f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2`}
     >
       {children}
     </Link>

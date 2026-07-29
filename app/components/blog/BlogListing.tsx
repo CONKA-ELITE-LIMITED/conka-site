@@ -32,7 +32,7 @@ export default function BlogListing({
 }) {
   return (
     <>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50">
+      <p className="text-[13px] font-medium tracking-tight text-black/45">
         {eyebrow}
       </p>
       <h1 className="brand-h1 mt-3">{heading}</h1>

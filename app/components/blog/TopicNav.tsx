@@ -7,9 +7,8 @@
  * Analytics already reports pageviews per route, so hub traffic is the "which
  * topics do people want" data without a client component.
  *
- * Geometry is ported from InsightFilteredSections' filter chips (square, mono,
- * dot indicator, 44px minimum tap target), inverted to light tones for the white
- * blog surface.
+ * Geometry follows the Simple DTC grammar (§8.5): rounded-full pills, sans, a
+ * filled-navy active state, 44px minimum tap target on the white blog surface.
  */
 import Link from "next/link";
 import { slugifyTopic } from "@/app/lib/blogTopics";
@@ -26,11 +25,11 @@ export default function TopicNav({
 
   return (
     <nav aria-label="Blog topics">
-      <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/40 tabular-nums mb-3">
-        {"// Browse by topic"}
+      <p className="text-[13px] font-medium text-black/45 mb-3">
+        Browse by topic
       </p>
 
-      <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 list-none p-0 m-0">
+      <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
         <li>
           <TopicChip href="/blog" label="All" isActive={activeTopic === null} />
         </li>
@@ -64,22 +63,14 @@ function TopicChip({
       // rendering a dead non-link, which would break back-navigation.
       aria-current={isActive ? "page" : undefined}
       className={[
-        "group flex flex-col justify-start px-2 sm:px-4 py-3 font-mono tracking-wide text-left transition-colors min-h-[44px] border",
-        "text-[10px] sm:text-[12px]",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+        "inline-flex items-center justify-center min-h-[44px] px-4 rounded-full text-[13px] font-medium transition-colors",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
         isActive
-          ? "bg-black text-white border-black"
-          : "bg-transparent text-black/70 border-black/20 hover:border-black/60 hover:text-black",
+          ? "bg-[#1B2757] text-white"
+          : "bg-black/[0.04] text-black/70 hover:bg-black/[0.07] hover:text-black",
       ].join(" ")}
     >
-      <span
-        className={[
-          "mb-1.5 block w-1.5 h-1.5 rounded-full transition-colors",
-          isActive ? "bg-white" : "border border-black/45 group-hover:border-black",
-        ].join(" ")}
-        aria-hidden="true"
-      />
-      <span className="block leading-snug">{label}</span>
+      {label}
     </Link>
   );
 }

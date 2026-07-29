@@ -1,6 +1,7 @@
 /**
- * Listing / related-posts card. Clinical treatment: hard border, zero radius,
- * mono meta. Falls back to a wordmark tile when a post has no hero image.
+ * Listing / related-posts card. Simple DTC treatment (§8.5): soft rounded shell
+ * with a hairline ring, tinted topic pill, sans meta. Falls back to a wordmark
+ * tile on the light-navy tint when a post has no hero image.
  */
 import Image from "next/image";
 import Link from "next/link";
@@ -10,9 +11,9 @@ export default function BlogCard({ post }: { post: BlogPostSummary }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col border border-black/12 hover:border-black/40 transition-colors"
+      className="group flex flex-col rounded-md overflow-hidden bg-white ring-1 ring-black/8 transition-shadow hover:shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-black/[0.03]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-[#eef1f8]">
         {post.heroImage ? (
           <Image
             src={post.heroImage}
@@ -23,7 +24,7 @@ export default function BlogCard({ post }: { post: BlogPostSummary }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="font-mono text-sm uppercase tracking-[0.4em] text-black/25">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[#1B2757]/30">
               CONKA
             </span>
           </div>
@@ -31,16 +32,16 @@ export default function BlogCard({ post }: { post: BlogPostSummary }) {
       </div>
       <div className="flex flex-1 flex-col p-5">
         {post.topics[0] && (
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50">
+          <span className="inline-flex w-fit rounded-full bg-[#eef1f8] px-2.5 py-1 text-[11px] font-semibold text-[#1B2757]">
             {post.topics[0]}
-          </p>
+          </span>
         )}
-        <h3 className="brand-h3 mt-2">{post.title}</h3>
+        <h3 className="brand-h3 mt-3">{post.title}</h3>
         <p className="brand-body !max-w-none mt-2 text-black/60 line-clamp-2">
           {post.description}
         </p>
         {post.datePublished && (
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 tabular-nums">
+          <p className="mt-4 text-[12px] text-black/45 tabular-nums">
             {formatBlogDate(post.datePublished)}
           </p>
         )}
