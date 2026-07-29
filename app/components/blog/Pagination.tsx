@@ -76,7 +76,7 @@ function Step({
     <Link
       href={href}
       rel={rel}
-      className={`${base} bg-[#1B2757] text-white hover:bg-[#26325f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2`}
+      className={`${base} bg-[#1B2757] text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757] focus-visible:ring-offset-2`}
     >
       {children}
     </Link>

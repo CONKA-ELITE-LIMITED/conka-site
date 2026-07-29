@@ -47,7 +47,7 @@ export default function ProductCTA({ product }: { product: RelatedProduct }) {
         </div>
         <Link
           href={nav.href}
-          className="inline-flex items-center justify-center rounded-full bg-[#1B2757] text-white hover:bg-[#26325f] transition-colors min-h-[48px] px-7 text-[15px] font-semibold whitespace-nowrap"
+          className="inline-flex items-center justify-center rounded-full bg-[#1B2757] text-white hover:opacity-90 transition-opacity min-h-[48px] px-7 text-[15px] font-semibold whitespace-nowrap"
         >
           Shop {SHORT[product]}
         </Link>
