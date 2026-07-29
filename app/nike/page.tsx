@@ -12,7 +12,7 @@ import TrialCalendar from "./TrialCalendar";
 export const metadata: Metadata = {
   title: "For the Nike Team | CONKA",
   description:
-    "Your CONKA cognition trial. Three quick things to set up before we meet, and what the two weeks look like.",
+    "Your CONKA cognition trial. Three quick things to set up before we meet, and how your 14 days work.",
   // Private onboarding page for the Nike trial. Not for search: the noindex meta
   // tag is the mechanism (the page is deliberately left out of sitemap.ts and is
   // NOT disallowed in robots.ts, so crawlers can still see and honour this tag).
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "For the Nike Team | CONKA",
     description:
-      "Your two-week CONKA cognition trial. Everything to set up before we meet, and what the fortnight looks like.",
+      "Your 14-day CONKA cognition trial. Everything to set up before we meet, and how the trial works.",
     images: ["/opengraph-image.png"],
   },
 };
