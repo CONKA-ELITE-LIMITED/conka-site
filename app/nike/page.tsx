@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
+import { SunHorizonIcon } from "@/app/components/landing/icons";
 import NikeTrialNav from "./NikeTrialNav";
 import ShotsShowcase from "./ShotsShowcase";
 import TestWindow from "./TestWindow";
@@ -52,24 +54,6 @@ const iconBase = {
   strokeLinejoin: "round" as const,
 };
 
-const SunIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-  </svg>
-);
-const MoonIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-  </svg>
-);
-const TargetIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="12" r="4.5" />
-    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
-  </svg>
-);
 const TrendIcon = ({ className }: IconProps) => (
   <svg {...iconBase} className={className} aria-hidden>
     <path d="M3 17l6-6 4 4 8-8" />
@@ -123,10 +107,28 @@ const asks = [
   },
 ];
 
-const dailyRhythm = [
-  { Icon: SunIcon, color: "#f0b24b", label: "Morning", title: "CONKA Flow" },
-  { Icon: MoonIcon, color: "#8f9fe8", label: "Afternoon", title: "CONKA Clear" },
-  { Icon: TargetIcon, color: "#8f9fe8", label: "In your window", title: "One 2-min test" },
+type RhythmStep = {
+  label: string;
+  title: string;
+  img?: string;
+  alt?: string;
+  Icon?: ComponentType<{ className?: string }>;
+};
+
+const dailyRhythm: RhythmStep[] = [
+  {
+    img: "/formulas/conkaFlow/FlowNew.jpg",
+    alt: "CONKA Flow",
+    label: "Morning",
+    title: "CONKA Flow",
+  },
+  {
+    img: "/formulas/conkaClear/ClearNew.jpg",
+    alt: "CONKA Clear",
+    label: "Afternoon",
+    title: "CONKA Clear",
+  },
+  { Icon: SunHorizonIcon, label: "In your window", title: "One 2-min test" },
 ];
 
 const faqs = [
@@ -318,28 +320,27 @@ export default function NikeTrialPage() {
 
           <ol className="mx-auto mt-6 max-w-[600px] border-t border-white/10">
             {asks.map((ask) => (
-              <li
-                key={ask.n}
-                className="flex gap-4 border-b border-white/10 py-7 sm:gap-5"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
-                  {ask.n}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
-                    {ask.title}
-                  </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-white/85">
-                    {ask.body}
-                  </p>
-                  {ask.app && (
-                    <AppInstallButtons
-                      variant="dtc-dark"
-                      className="mt-5"
-                      buttonClassName="text-[13px] px-5 py-3"
-                    />
-                  )}
+              <li key={ask.n} className="border-b border-white/10 py-7">
+                <div className="flex gap-4 sm:gap-5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
+                    {ask.n}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
+                      {ask.title}
+                    </h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-white/85">
+                      {ask.body}
+                    </p>
+                  </div>
                 </div>
+                {ask.app && (
+                  <AppInstallButtons
+                    variant="dtc-dark"
+                    className="mt-5"
+                    buttonClassName="text-[13px] px-5 py-3"
+                  />
+                )}
               </li>
             ))}
           </ol>
@@ -397,13 +398,24 @@ export default function NikeTrialPage() {
                 const Icon = step.Icon;
                 return (
                   <div key={step.title} className="text-center">
-                    <span
-                      className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.05]"
-                      style={{ color: step.color }}
-                    >
-                      <Icon className="h-6 w-6" />
-                    </span>
-                    <p className="mt-3 text-[12px] uppercase tracking-wide text-white/60">
+                    {step.img ? (
+                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-2xl bg-[#eef1f8]">
+                        <Image
+                          src={step.img}
+                          alt={step.alt ?? ""}
+                          width={192}
+                          height={192}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      Icon && (
+                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#8f9fe8]">
+                          <Icon className="h-8 w-8" />
+                        </span>
+                      )
+                    )}
+                    <p className="mt-3 text-[12px] uppercase tracking-wide text-white">
                       {step.label}
                     </p>
                     <p className="mt-1 text-[16px] font-semibold">{step.title}</p>
@@ -459,9 +471,10 @@ export default function NikeTrialPage() {
                 />
               ))}
             </div>
-            <p className="mx-auto mt-5 max-w-[440px] text-[14px] leading-relaxed text-white/80">
-              We need at least 10 tests across your 14 days for the data to be
-              usable. Miss the odd day, just don&rsquo;t let it drop below 10.
+            <p className="mx-auto mt-5 max-w-[460px] text-[14px] leading-relaxed text-white/80">
+              Ideally you test every day, but we know how life goes. The real ask
+              is 10 test days across your 14, that&rsquo;s enough to see your true
+              trend. Miss one? No stress, just pick it back up.
             </p>
           </div>
         </div>
@@ -524,7 +537,11 @@ export default function NikeTrialPage() {
           </h2>
           <div className="mx-auto mt-8 max-w-[640px] border-t border-white/10">
             {faqs.map((f) => (
-              <details key={f.q} className="group border-b border-white/10">
+              <details
+                key={f.q}
+                name="nike-faq"
+                className="group border-b border-white/10"
+              >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-[16px] font-semibold [&::-webkit-details-marker]:hidden">
                   {f.q}
                   <span
