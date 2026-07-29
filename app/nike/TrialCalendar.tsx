@@ -1,42 +1,31 @@
 /**
- * A plain calendar of the trial. Weekday columns (Mon-Sun), opaque cells: one
- * colour for the 3 baseline days (Thu 6 to Sat 8 Aug), one for the two-week
- * stretch (Mon 10 to Sun 23 Aug). No per-day markers: the days you test are up
- * to you, the point is only which window of dates the trial covers. Content
- * only (no outer container) — the page owns the section.
+ * A plain calendar of the trial. Weekday columns (Mon-Sun), opaque cells in a
+ * single colour for the trial stretch (Thursday 6 to Thursday 20 August). No
+ * per-day markers and no phases: the days you test are up to you, the point is
+ * only which window of dates the trial covers. Content only (no outer
+ * container) — the page owns the section.
  */
 
 const HEAD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-type Phase = "out" | "base" | "fort";
-const CELLS: { d: number; phase: Phase }[] = [
-  // Week of Aug 3-9 (trial starts Thu 6)
-  { d: 3, phase: "out" },
-  { d: 4, phase: "out" },
-  { d: 5, phase: "out" },
-  { d: 6, phase: "base" },
-  { d: 7, phase: "base" },
-  { d: 8, phase: "base" },
-  { d: 9, phase: "out" },
-  // The fortnight: Mon 10 - Sun 23
-  ...Array.from({ length: 14 }, (_, i) => ({
-    d: 10 + i,
-    phase: "fort" as Phase,
-  })),
-];
-
-const CELL_STYLE: Record<Phase, string> = {
-  out: "text-white/25",
-  base: "bg-[#6478e0] font-semibold text-white",
-  fort: "bg-[#2f6f4c] font-semibold text-white",
-};
+// The trial runs 14 days, Thursday 6 to Wednesday 19 August. Cells outside
+// that window (including the following Thursday) are greyed for context.
+const TRIAL_START = 6;
+const TRIAL_END = 19;
+const CELLS: { d: number; inTrial: boolean }[] = Array.from(
+  { length: 21 },
+  (_, i) => {
+    const d = 3 + i; // Mon 3 Aug through Sun 23 Aug (three weeks)
+    return { d, inTrial: d >= TRIAL_START && d <= TRIAL_END };
+  },
+);
 
 export default function TrialCalendar() {
   return (
     <div>
       <div
         role="img"
-        aria-label="Calendar: three baseline days from Thursday 6 to Saturday 8 August, then the 14-day trial from Monday 10 to Sunday 23 August."
+        aria-label="Calendar: the 14-day trial runs from Thursday 6 to Wednesday 19 August."
         className="grid grid-cols-7 gap-1.5 sm:gap-2"
       >
         {HEAD.map((wd) => (
@@ -51,22 +40,20 @@ export default function TrialCalendar() {
         {CELLS.map((cell) => (
           <div
             key={cell.d}
-            className={`flex aspect-square items-center justify-center rounded-lg text-[15px] ${CELL_STYLE[cell.phase]}`}
+            className={`flex aspect-square items-center justify-center rounded-lg text-[15px] ${
+              cell.inTrial
+                ? "bg-[#6478e0] font-semibold text-white"
+                : "text-white/25"
+            }`}
           >
             {cell.d}
           </div>
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-white">
-        <span className="inline-flex items-center gap-2">
-          <span className="h-3.5 w-3.5 rounded bg-[#6478e0]" aria-hidden /> Baseline
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="h-3.5 w-3.5 rounded bg-[#2f6f4c]" aria-hidden /> The 14
-          days
-        </span>
-      </div>
+      <p className="mt-4 text-[14px] text-white/70 lg:text-center">
+        Thursday 6 to Wednesday 19 August.
+      </p>
     </div>
   );
 }

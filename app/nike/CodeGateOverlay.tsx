@@ -1,0 +1,414 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
+
+/* -------------------------------------------------------------------------- */
+/*  Ceremonial entry gate for the Nike trial page.                            */
+/*                                                                            */
+/*  Not real auth: the code is a hardcoded, case-insensitive client check     */
+/*  (the page is noindex and forwarded person-to-person, nothing precious).   */
+/*  The point is the moment of arrival: logo, "Nike Mind Trial", a live       */
+/*  countdown to kickoff, a code, then a short processing beat before the     */
+/*  page is revealed underneath.                                              */
+/* -------------------------------------------------------------------------- */
+
+// The access code. Not a secret; update here if the shared code changes.
+const ACCESS_CODE = "NIKEMIND2026";
+
+// Kickoff datetime the countdown targets. Thursday 6 August 2026.
+// TODO: set the real kickoff time once confirmed (currently 09:00 local).
+const KICKOFF = new Date("2026-08-06T09:00:00");
+
+// Radial progress ring geometry (drawn in the processing beat).
+const RING_RADIUS = 58;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia(REDUCED_MOTION).matches;
+
+type Remaining = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  done: boolean;
+};
+
+function getRemaining(target: Date): Remaining {
+  const ms = target.getTime() - Date.now();
+  if (ms <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, done: true };
+  const seconds = Math.floor(ms / 1000);
+  return {
+    days: Math.floor(seconds / 86400),
+    hours: Math.floor((seconds % 86400) / 3600),
+    minutes: Math.floor((seconds % 3600) / 60),
+    seconds: seconds % 60,
+    done: false,
+  };
+}
+
+const pad = (n: number) => n.toString().padStart(2, "0");
+
+/* -------------------------------------------------------------------------- */
+/*  Countdown                                                                 */
+/* -------------------------------------------------------------------------- */
+
+function Countdown() {
+  // Server render and first paint show a stable placeholder; the live values
+  // only appear after mount, so server and client markup never disagree.
+  const [remaining, setRemaining] = useState<Remaining | null>(null);
+
+  useEffect(() => {
+    setRemaining(getRemaining(KICKOFF));
+    const id = setInterval(() => setRemaining(getRemaining(KICKOFF)), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const cells: { value: string; label: string }[] = [
+    { value: remaining ? pad(remaining.days) : "--", label: "Days" },
+    { value: remaining ? pad(remaining.hours) : "--", label: "Hrs" },
+    { value: remaining ? pad(remaining.minutes) : "--", label: "Min" },
+    { value: remaining ? pad(remaining.seconds) : "--", label: "Sec" },
+  ];
+
+  if (remaining?.done) {
+    return (
+      <p className="text-[15px] font-medium text-[#8f9fe8]">
+        The trial is underway.
+      </p>
+    );
+  }
+
+  return (
+    <div
+      className="flex items-stretch justify-center gap-2 sm:gap-3"
+      role="timer"
+      aria-label="Time until kickoff"
+    >
+      {cells.map((cell) => (
+        <div
+          key={cell.label}
+          className="flex min-w-[62px] flex-col items-center rounded-lg border border-white/12 bg-white/[0.04] px-3 py-3 sm:min-w-[74px] sm:py-4"
+        >
+          <span className="text-[26px] font-bold leading-none tabular-nums sm:text-[32px]">
+            {cell.value}
+          </span>
+          <span className="mt-1.5 text-[10px] uppercase tracking-[0.18em] text-white/50 sm:text-[11px]">
+            {cell.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Processing beat (fake, adapted from CognitiveTestLoader)                   */
+/* -------------------------------------------------------------------------- */
+
+const PROCESSING_STAGES = [
+  "Verifying access",
+  "Preparing your trial",
+  "Welcome to the team",
+];
+
+function Processing({ onDone }: { onDone: () => void }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // Reduced motion: skip the bar, hold briefly on the final label, reveal.
+    if (prefersReducedMotion()) {
+      setProgress(100);
+      const t = setTimeout(onDone, 500);
+      return () => clearTimeout(t);
+    }
+    const id = setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + 2;
+        if (next >= 100) {
+          clearInterval(id);
+          setTimeout(onDone, 450);
+          return 100;
+        }
+        return next;
+      });
+    }, 2200 / 50);
+    return () => clearInterval(id);
+  }, [onDone]);
+
+  const stage = progress < 40 ? 0 : progress < 80 ? 1 : 2;
+  const isComplete = progress >= 100;
+  // Radial progress ring (echoes the CONKA app's cognition ring). The stroke
+  // is drawn as the fake check advances, then snaps to a tick on completion.
+  const dashoffset = RING_CIRCUMFERENCE * (1 - progress / 100);
+
+  return (
+    <div className="flex w-full max-w-[420px] flex-col items-center text-center">
+      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/40">
+        Cognition check
+      </p>
+
+      <div className="relative mt-6 h-[152px] w-[152px]">
+        {/* soft glow that intensifies as the ring fills */}
+        <div
+          aria-hidden
+          className="absolute inset-3 rounded-full bg-[#6478e0] blur-2xl transition-opacity duration-300"
+          style={{ opacity: 0.12 + (progress / 100) * 0.28 }}
+        />
+        <svg viewBox="0 0 152 152" className="h-full w-full -rotate-90">
+          <circle
+            cx="76"
+            cy="76"
+            r={RING_RADIUS}
+            fill="none"
+            stroke="rgba(255,255,255,0.10)"
+            strokeWidth="4"
+          />
+          <circle
+            cx="76"
+            cy="76"
+            r={RING_RADIUS}
+            fill="none"
+            stroke="#8f9fe8"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={RING_CIRCUMFERENCE}
+            strokeDashoffset={dashoffset}
+            className="transition-[stroke-dashoffset] duration-100 ease-out"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          {isComplete ? (
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#8f9fe8"
+              strokeWidth="2.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <span className="text-[30px] font-bold tabular-nums">
+              {progress}
+              <span className="text-[16px] text-white/40">%</span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      <p className="mt-7 text-[20px] font-semibold sm:text-[22px]">
+        {PROCESSING_STAGES[stage]}.
+      </p>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Overlay                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) {
+  const root = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [code, setCode] = useState("");
+  const [error, setError] = useState(false);
+  const [phase, setPhase] = useState<"entry" | "processing">("entry");
+
+  // Staggered entrance for the lockup. Under reduced motion the from-tween
+  // never runs, so the final state (already in the DOM) is what shows.
+  useGSAP(
+    () => {
+      withMotion(() => {
+        gsap.from("[data-gate-reveal]", {
+          y: 24,
+          autoAlpha: 0,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "power3.out",
+          delay: 0.05,
+        });
+      });
+    },
+    { scope: root },
+  );
+
+  // Autofocus the code field on mount.
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const reveal = useCallback(() => {
+    if (prefersReducedMotion() || !root.current) {
+      onUnlock();
+      return;
+    }
+    gsap.to(root.current, {
+      autoAlpha: 0,
+      duration: 0.6,
+      ease: "power2.inOut",
+      onComplete: onUnlock,
+    });
+  }, [onUnlock]);
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (phase !== "entry") return;
+    if (code.trim().toUpperCase() === ACCESS_CODE) {
+      setError(false);
+      setPhase("processing");
+      return;
+    }
+    // Wrong code: subtle shake + inline error, unlimited retries.
+    setError(true);
+    if (!prefersReducedMotion() && inputRef.current) {
+      gsap.fromTo(
+        inputRef.current,
+        { x: -8 },
+        {
+          x: 0,
+          duration: 0.5,
+          ease: "elastic.out(1, 0.35)",
+        },
+      );
+    }
+    inputRef.current?.focus();
+  };
+
+  // Lightweight focus trap: keep Tab within the overlay while it is open.
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab" || !root.current) return;
+    const focusables = root.current.querySelectorAll<HTMLElement>(
+      'button, input, a[href], [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  return (
+    <div
+      ref={root}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Nike Mind Trial entry"
+      onKeyDown={onKeyDown}
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center overflow-y-auto bg-[#0a0a0a] px-6 py-10 text-white"
+      style={{
+        backgroundImage:
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.14)'/%3E%3C/svg%3E\")",
+        backgroundSize: "24px 24px",
+      }}
+    >
+      {phase === "processing" ? (
+        <Processing onDone={reveal} />
+      ) : (
+        <div className="flex w-full max-w-[440px] flex-col items-center text-center">
+          {/* Lockup: logo, then "Nike Mind Trial" beneath it */}
+          <Image
+            src="/conka-logo.webp"
+            alt="CONKA"
+            width={440}
+            height={112}
+            priority
+            data-gate-reveal
+            className="h-7 w-auto brightness-0 invert sm:h-8"
+          />
+          <p
+            data-gate-reveal
+            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8f9fe8]"
+          >
+            Presents
+          </p>
+          <h1
+            data-gate-reveal
+            className="mt-4 text-[38px] font-bold leading-[1.05] sm:text-[52px]"
+          >
+            Nike Mind Trial
+          </h1>
+          <p
+            data-gate-reveal
+            className="mt-4 max-w-[34ch] text-[15px] leading-relaxed text-white/70 sm:text-[16px]"
+          >
+            Two weeks measuring your own mind. It begins Thursday 6 August.
+          </p>
+
+          {/* Countdown */}
+          <div data-gate-reveal className="mt-9">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">
+              Kickoff in
+            </p>
+            <Countdown />
+          </div>
+
+          {/* Code entry */}
+          <form
+            data-gate-reveal
+            onSubmit={submit}
+            className="mt-10 w-full max-w-[340px]"
+          >
+            <label
+              htmlFor="access-code"
+              className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50"
+            >
+              Enter your access code
+            </label>
+            <input
+              ref={inputRef}
+              id="access-code"
+              name="access-code"
+              type="text"
+              inputMode="text"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value);
+                if (error) setError(false);
+              }}
+              aria-invalid={error}
+              aria-describedby={error ? "access-error" : undefined}
+              placeholder="ACCESS CODE"
+              className={`min-h-[52px] w-full rounded-lg border bg-white/[0.04] px-4 text-center text-[16px] font-semibold uppercase tracking-[0.18em] text-white placeholder:tracking-[0.18em] placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] ${
+                error
+                  ? "border-[#fca5a5]/60 focus:ring-[#fca5a5]/60"
+                  : "border-white/15 focus:ring-[#6478e0]"
+              }`}
+            />
+            {error && (
+              <p
+                id="access-error"
+                role="alert"
+                className="mt-2 text-[13px] text-[#fca5a5]"
+              >
+                That code isn&rsquo;t right. Check it and try again.
+              </p>
+            )}
+            <button
+              type="submit"
+              className="mt-4 flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#6478e0] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[#5468d0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6478e0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+            >
+              Enter
+            </button>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
