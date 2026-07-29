@@ -352,7 +352,7 @@ export default function NikeTrialPage() {
             {asks.map((ask) => (
               <li key={ask.n} className="border-b border-white/10 py-7">
                 <div className="flex gap-4 sm:gap-5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1B2757] text-[16px] font-bold text-white">
                     {ask.n}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -495,7 +495,7 @@ export default function NikeTrialPage() {
                 <span
                   key={i}
                   className={`h-2.5 w-2.5 rounded-full ${
-                    i < 10 ? "bg-[#6478e0]" : "border border-white/25"
+                    i < 10 ? "bg-[#1B2757]" : "border border-white/25"
                   }`}
                   aria-hidden
                 />

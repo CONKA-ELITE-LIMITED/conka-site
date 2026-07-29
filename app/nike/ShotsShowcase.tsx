@@ -89,7 +89,7 @@ export default function ShotsShowcase() {
           <p className="text-[20px] font-bold leading-none">{product.name}</p>
           <div className="relative my-4">
             <div className="border-t border-white/15" />
-            <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6478e0] px-3 py-1 text-[12px] font-semibold leading-none text-white">
+            <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1B2757] px-3 py-1 text-[12px] font-semibold leading-none text-white">
               {product.timeOfDay}
             </span>
           </div>

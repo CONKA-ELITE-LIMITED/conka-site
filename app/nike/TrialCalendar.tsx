@@ -42,7 +42,7 @@ export default function TrialCalendar() {
             key={cell.d}
             className={`flex aspect-square items-center justify-center rounded-lg text-[15px] ${
               cell.inTrial
-                ? "bg-[#6478e0] font-semibold text-white"
+                ? "bg-[#1B2757] font-semibold text-white"
                 : "text-white/25"
             }`}
           >
