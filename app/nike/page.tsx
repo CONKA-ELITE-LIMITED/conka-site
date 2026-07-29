@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
+import LandingProductShowcase from "@/app/components/landing/LandingProductShowcase";
 import NikeTrialNav from "./NikeTrialNav";
 import TrialCalendar from "./TrialCalendar";
 
@@ -42,17 +43,6 @@ const iconBase = {
   strokeLinejoin: "round" as const,
 };
 
-const SunIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-  </svg>
-);
-const MoonIcon = ({ className }: IconProps) => (
-  <svg {...iconBase} className={className} aria-hidden>
-    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-  </svg>
-);
 const BellIcon = ({ className }: IconProps) => (
   <svg {...iconBase} className={className} aria-hidden>
     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -234,68 +224,27 @@ export default function NikeTrialPage() {
             you&rsquo;ll put it to the test on yourself.
           </p>
 
-          <div className="mt-10 grid gap-10 sm:grid-cols-2">
-            {/* The shots */}
-            <div>
-              <div className="overflow-hidden rounded-2xl bg-white">
-                <Image
-                  src="/formulas/both/BothNew.jpg"
-                  alt="CONKA Flow and CONKA Clear shots side by side"
-                  width={875}
-                  height={875}
-                  className="h-auto w-full"
-                  sizes="(max-width: 640px) 90vw, 360px"
-                />
-              </div>
-              <h3 className="mt-5 text-[20px] font-semibold">The shots</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-white">
-                Two a day, and this trial is testing both.
-              </p>
-              <div className="mt-4 space-y-3">
-                <div>
-                  <p className="flex items-center gap-2 text-[15px] font-semibold">
-                    <SunIcon className="h-4 w-4 text-[#f0b24b]" /> CONKA Flow
-                    <span className="font-normal text-white/70">
-                      &middot; mornings
-                    </span>
-                  </p>
-                  <p className="mt-1 text-[14px] leading-relaxed text-white/85">
-                    Sharp, driven focus to start the day.{" "}
-                    <Link href="/conka-flow" className={learnLink}>
-                      Learn more
-                    </Link>
-                  </p>
-                </div>
-                <div>
-                  <p className="flex items-center gap-2 text-[15px] font-semibold">
-                    <MoonIcon className="h-4 w-4 text-[#8f9fe8]" /> CONKA Clear
-                    <span className="font-normal text-white/70">
-                      &middot; afternoons
-                    </span>
-                  </p>
-                  <p className="mt-1 text-[14px] leading-relaxed text-white/85">
-                    Calm, steady focus to hold it through the afternoon, no crash.{" "}
-                    <Link href="/conka-clarity" className={learnLink}>
-                      Learn more
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>
+          {/* The shots — interactive showcase (Flow/Clear toggle + ingredient
+              inspection). Built for light surfaces, so it sits in a white panel;
+              hideCTA drops its commerce button, this is not a sales page. */}
+          <div className="mt-8 rounded-3xl bg-white p-5 text-black sm:p-8">
+            <LandingProductShowcase hideCTA />
+          </div>
 
-            {/* The test */}
-            <div>
-              <div className="flex justify-center rounded-2xl bg-white/[0.03] py-5">
-                <Image
-                  src="/app/AppConkaRing.png"
-                  alt="The CONKA app showing a daily cognition score and a history of tested days"
-                  width={1455}
-                  height={2942}
-                  className="h-auto max-h-[320px] w-auto"
-                  sizes="(max-width: 640px) 55vw, 240px"
-                />
-              </div>
-              <h3 className="mt-5 text-[20px] font-semibold">The test</h3>
+          {/* The test */}
+          <div className="mt-12 sm:flex sm:items-center sm:gap-8">
+            <div className="flex justify-center rounded-2xl bg-white/[0.03] py-5 sm:w-[240px] sm:shrink-0">
+              <Image
+                src="/app/AppConkaRing.png"
+                alt="The CONKA app showing a daily cognition score and a history of tested days"
+                width={1455}
+                height={2942}
+                className="h-auto max-h-[320px] w-auto"
+                sizes="(max-width: 640px) 55vw, 240px"
+              />
+            </div>
+            <div className="mt-5 sm:mt-0">
+              <h3 className="text-[20px] font-semibold">The test</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-white">
                 Two minutes in the app scores how sharp you are. Take it daily and
                 it becomes a trend, so you can see the shots working on your own
@@ -472,14 +421,17 @@ export default function NikeTrialPage() {
             {rewards.map((reward) => {
               const Icon = reward.Icon;
               return (
-                <div key={reward.title}>
+                <div
+                  key={reward.title}
+                  className="flex flex-col items-center text-center"
+                >
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1a7f4f]/15 text-[#4ade80]">
                     <Icon className="h-5 w-5" />
                   </span>
                   <h3 className="mt-4 text-[18px] font-semibold">
                     {reward.title}
                   </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-white/85">
+                  <p className="mt-2 max-w-[280px] text-[15px] leading-relaxed text-white/85">
                     {reward.body}
                   </p>
                 </div>
