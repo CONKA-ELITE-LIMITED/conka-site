@@ -495,7 +495,7 @@ export default function NikeTrialPage() {
                 <span
                   key={i}
                   className={`h-2.5 w-2.5 rounded-full ${
-                    i < 10 ? "bg-[#1B2757]" : "border border-white/25"
+                    i < 10 ? "bg-[#6E7CB0]" : "border border-white/25"
                   }`}
                   aria-hidden
                 />
