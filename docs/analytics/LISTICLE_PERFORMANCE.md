@@ -14,7 +14,11 @@ Three events, all keyed `{ slug, section }` (the two-property budget — see `ap
 
 `section` values: body blocks are `<kind>_<index>` (e.g. `reason_3`, `symptomExplainer_0`); fixed zones are `hero` / `bridge` / `sticky` / `product`; interaction choices fold into `section` as `symptom_<label>` / `segment_<label>`.
 
-**Why CTA-click is the conversion signal:** every listicle CTA links to a PDP, so a click is the furthest-down-funnel action we can attribute to a persona. Purchase-level attribution (`?src=` → `purchase:add_to_cart.source`) is wired and deployed (see below) but currently returns ~zero because listicle CTAs land on the classic PDPs, which barely convert to a tracked add-to-cart; the real purchases run through the funnel path, which skips the cart and goes straight to Shopify checkout. Routing listicle CTAs at the funnel is the open decision in the sprint doc.
+**Why CTA-click is the conversion signal (baseline):** every listicle CTA links to a PDP, so a click is the furthest-down-funnel action we could attribute to a persona. This holds for the 24–27 Jul baseline snapshot below.
+
+**First-party purchase attribution is now live (from ~27 Jul).** Listicle CTAs were re-routed to the **funnel** (not the classic PDP). The funnel carries the cart-level `_listicle_origin` attribute (`<slug>-<section>`, set in `CartContext`) straight through Shopify's hosted checkout, so it lands on the **order** as a note attribute — first-party, per persona *and* section. This supersedes the old `?src=` → `purchase:add_to_cart.source` path, which stays ~zero because the funnel skips the cart (no `add_to_cart` event fires). Pull orders by `_listicle_origin` (query 6 below).
+
+> **Known gap — `persona:` order tags aren't writing.** The `orders/paid` webhook also calls `tagsAdd` to stamp `listicle` + `persona:<name>` on the order (SCRUM-1180), but the live `SHOPIFY_ADMIN_API_TOKEN` (B2B Invoicing app) lacks `write_orders`, so the tag write silently fails. Orders still carry the `_listicle_origin` note attribute (that comes from the cart, not the webhook) — so attribution works, but you must filter by the note attribute, **not** the tag. Tracked in `docs/TODO.md`.
 
 ## How to pull the data
 
@@ -36,10 +40,12 @@ dataset=events mode=aggregate by=["eventData/slug","eventData/section"]
 dataset=events mode=aggregate by=["eventData/slug","eventData/section"]
   filter=eventName eq 'listicle:interaction'
 
-# 5. Purchase attribution (currently ~empty for listicles — see note above)
+# 5. Purchase attribution via add_to_cart (~empty since CTAs route at the funnel — see note above)
 dataset=events mode=aggregate by=["eventData/source"]
   filter=eventName eq 'purchase:add_to_cart'
 ```
+
+**6. First-party order attribution (Shopify Admin API).** The real per-persona purchase signal since ~27 Jul. The read-only **attribution-audit** app (`read_orders`) mints a 24h token via a client-credentials grant against `SHOPIFY_CLIENT_ID`/`SHOPIFY_CLIENT_SECRET` in `.env.local`; then GraphQL `orders(query:"created_at:>=<start>")` returning `customAttributes` + `tags`. Filter to orders where `_listicle_origin` is set (or a `persona:`/`listicle` tag exists, once the tag write is fixed). The origin token is `<slug>-<section>`, so persona = everything before the last hyphen (minus any `-listicle` suffix) and section = the last segment. Run it as a throwaway `node` script (reads a secret + hits Shopify) rather than committing it — the classifier gates that call, so run it yourself via the `!` prefix.
 
 **Always match the window.** Section events first fired **2026-07-24**; use same-window pageviews as the denominator or every rate is understated. Confirm the live window by grouping `section_viewed` `by=["day"]`.
 
@@ -119,3 +125,24 @@ Not tracked this window (`listicle:interaction` deployed at window close). First
   ]
 }
 ```
+
+---
+
+## Snapshot — 2026-07-28 → 2026-07-29 (first first-party orders)
+
+First pull of **first-party order attribution** (Shopify, query 6). CTAs now route at the funnel, so purchases carry `_listicle_origin` onto the order. Pulled 29 Jul AM; source = Shopify Admin API on prod store (`conka-6770.myshopify.com`), all orders `created_at:>=2026-07-24`, filtered to those with `_listicle_origin`.
+
+### First-party listicle orders
+
+| Order | Created | Value | Persona | Section | Cadence |
+|-------|---------|------:|---------|---------|---------|
+| #3701 | 2026-07-28 10:02Z | £42.54 | ADHD | sticky | Monthly Single Subscription |
+| #3707 | 2026-07-28 16:03Z | £36.00 | ADHD | sticky | Monthly Single Subscription |
+| #3711 | 2026-07-29 09:14Z | £135.00 | ADHD | hero | Quarterly Dual Subscription |
+
+**Totals:** 3 orders · £213.54 · 100% ADHD · sticky ×2 / hero ×1 · all funnel subscriptions.
+
+- Of 39 total store orders since 24 Jul, **3** carried `_listicle_origin`; **0** carried a `persona:`/`listicle` tag (tag write is broken — see known gap). No listicle orders dated 24–27 Jul: the funnel-routing + origin capture only went live ~27 Jul, which is exactly why the baseline above is Meta-only.
+- **ADHD flips the ranking.** It was the *worst* persona on Meta CVR (0.5%) yet is the only one producing first-party funnel sales so far. n=3 over ~2 days — directional, not conclusive.
+- **Section matches the click data.** 2 of 3 came via the sticky bar, 1 via the hero — the two zones that dominate CTA clicks in the baseline (§04). Body reasons still don't close.
+- **Not yet computable:** per-persona first-party CVR needs funnel *entries* per persona over the same window (not pulled). Brain-ageing and Productivity had 0 first-party orders this window.
