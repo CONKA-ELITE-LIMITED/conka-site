@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
+import { SunHorizonIcon } from "@/app/components/landing/icons";
 import NikeTrialNav from "./NikeTrialNav";
 import ShotsShowcase from "./ShotsShowcase";
 import TestWindow from "./TestWindow";
@@ -10,7 +12,7 @@ import TrialCalendar from "./TrialCalendar";
 export const metadata: Metadata = {
   title: "For the Nike Team | CONKA",
   description:
-    "Your CONKA cognition trial. Three quick things to set up before we meet, and what the two weeks look like.",
+    "Your CONKA cognition trial. Three quick things to set up before we meet, and how your 14 days work.",
   // Private onboarding page for the Nike trial. Not for search: the noindex meta
   // tag is the mechanism (the page is deliberately left out of sitemap.ts and is
   // NOT disallowed in robots.ts, so crawlers can still see and honour this tag).
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "For the Nike Team | CONKA",
     description:
-      "Your two-week CONKA cognition trial. Everything to set up before we meet, and what the fortnight looks like.",
+      "Your 14-day CONKA cognition trial. Everything to set up before we meet, and how the trial works.",
     images: ["/opengraph-image.png"],
   },
 };
@@ -75,7 +77,7 @@ const rewards = [
   {
     Icon: TrendIcon,
     title: "Your results",
-    body: "You see how your scores moved from your baseline across the two weeks.",
+    body: "You see how your scores moved from your baseline across the 14 days.",
   },
   {
     Icon: GiftIcon,
@@ -102,6 +104,61 @@ const asks = [
     title: "Complete one test",
     body: "This will be your practice test, so don’t worry about your score.",
     app: false,
+  },
+];
+
+type RhythmStep = {
+  label: string;
+  title: string;
+  img?: string;
+  alt?: string;
+  Icon?: ComponentType<{ className?: string }>;
+};
+
+const dailyRhythm: RhythmStep[] = [
+  {
+    img: "/formulas/conkaFlow/FlowNew.jpg",
+    alt: "CONKA Flow",
+    label: "Morning",
+    title: "CONKA Flow",
+  },
+  {
+    img: "/formulas/conkaClear/ClearNew.jpg",
+    alt: "CONKA Clear",
+    label: "Afternoon",
+    title: "CONKA Clear",
+  },
+  { Icon: SunHorizonIcon, label: "In your window", title: "One 2-min test" },
+];
+
+const faqs = [
+  {
+    q: "What’s the difference between Flow and Clear?",
+    a: "Flow (black cap) is for mornings: adaptogens like Ashwagandha and Lemon Balm for calm, caffeine-free focus. Clear (white cap) is for afternoons: nootropics like Alpha GPC and Glutathione, plus Vitamin C.",
+  },
+  {
+    q: "Can I take both formulas at the same time?",
+    a: "They’re built for different points in the day, Flow in the morning and Clear in the afternoon, so space them out rather than taking them together. That’s how the trial is set up and how you’ll get the cleanest read.",
+  },
+  {
+    q: "Do I need to test at the same time every day?",
+    a: "No. But we’ve found a regular testing window makes it much easier to stay consistent and on track, which is exactly what the data needs.",
+  },
+  {
+    q: "Is the cognitive test an IQ test?",
+    a: "No. It’s a two-minute cognitive assessment, an FDA-cleared task used in clinical settings, that measures things like processing speed and attention. It tracks how your own performance changes over time against your baseline, rather than scoring your intelligence or ranking you against anyone else. A bad night’s sleep or a stressful week will show up in it, which is exactly the point.",
+  },
+  {
+    q: "Can I take CONKA with caffeine?",
+    a: "Yes. CONKA is caffeine-free, so it works alongside your morning coffee with no interaction to worry about. Most people find they reach for fewer cups over time, but nothing about CONKA requires you to give up coffee.",
+  },
+  {
+    q: "Will it affect my sleep?",
+    a: "It shouldn’t, because there’s no caffeine or stimulant in either formula. That’s the practical difference between CONKA and most “focus” products, and it’s exactly why Clear is built for the afternoon slot.",
+  },
+  {
+    q: "Can I take CONKA with medication or other supplements?",
+    a: "Most everyday supplements are fine. For medication, check with your GP or pharmacist first, because it depends on the medication. Some botanicals can interact with specific drug groups: Ginkgo Biloba with blood-thinning medication, Ashwagandha with thyroid medication and sedatives, and Rhodiola with antidepressants. If you take anything in those groups, run the ingredient list past your pharmacist before you start.",
   },
 ];
 
@@ -148,31 +205,32 @@ export default function NikeTrialPage() {
       {/* HERO */}
       {/* ---------------------------------------------------------------- */}
       <section className="brand-section" aria-label="Welcome">
-        <div className="brand-track max-w-[720px]">
+        <div className="brand-track mx-auto max-w-[720px] lg:text-center">
           <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
-            Welcome
+            Cognition trial &middot; 2 weeks
           </p>
-          <h1 className="mt-4 text-[32px] font-bold leading-[1.08] sm:text-[46px]">
-            You&rsquo;re about to spend two weeks measuring your own mind.
+          <h1 className="mx-auto mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
+            Welcome to the CONKA &times; Nike Trial.
           </h1>
-          <p className="mt-6 text-[16px] leading-relaxed text-white sm:text-[18px]">
-            The best performers don&rsquo;t guess whether they&rsquo;re getting
-            sharper. They measure it. For the next two weeks you&rsquo;ll do the
-            same with your focus: two CONKA shots a day, a two-minute test in the
-            app, and a straight read on how you&rsquo;re actually performing.
+          <p className="mx-auto mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
+            You&rsquo;re about to spend 2 weeks measuring your own mind. The best
+            performers don&rsquo;t guess whether they&rsquo;re getting sharper,
+            they measure it. For the next 14 days you&rsquo;ll do the same with
+            your focus: two CONKA shots a day, a two-minute test in the app, and a
+            straight read on how you&rsquo;re actually performing.
           </p>
 
           <div className="mt-8">
-            <AppInstallButtons variant="dtc-dark" />
+            <AppInstallButtons variant="dtc-dark" className="lg:justify-center" />
             <p className="mt-3 text-[13px] text-white/70">Free to download.</p>
           </div>
 
           {/* Kickoff — open info block, not a tile */}
-          <div className="mt-10 border-t border-white/10 pt-6">
+          <div className="mx-auto mt-10 max-w-[440px] border-t border-white/10 pt-6 lg:max-w-none">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f9fe8]">
               Kickoff
             </p>
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 lg:justify-center">
               <span className="text-[22px] font-bold sm:text-[26px]">
                 Thursday 6 August
               </span>
@@ -180,7 +238,7 @@ export default function NikeTrialPage() {
                 About 20 minutes, in person
               </span>
             </div>
-            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px]">
+            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px] lg:justify-center">
               <span className="text-white/70">
                 Time{" "}
                 <span className="font-medium text-white">{SESSION_TIME}</span>
@@ -202,35 +260,37 @@ export default function NikeTrialPage() {
         aria-labelledby="about-heading"
         className="brand-section scroll-mt-20"
       >
-        <div className="brand-track max-w-[760px]">
-          <h2 id="about-heading" className="text-[26px] font-bold sm:text-[34px]">
+        <div className="brand-track mx-auto max-w-[760px]">
+          <h2
+            id="about-heading"
+            className="text-[26px] font-bold sm:text-[34px] lg:text-center"
+          >
             This is CONKA
           </h2>
-          <p className="mt-4 max-w-[560px] text-[16px] leading-relaxed text-white">
+          <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-relaxed text-white lg:text-center">
             A daily brain shot, and an app that measures how your brain is
-            performing. Over the next two weeks, you&rsquo;ll test both on
-            yourself.
+            performing. Over the next 14 days, you&rsquo;ll test both on yourself.
           </p>
 
           {/* The shots — Flow/Clear toggle, bottle asset and the shared
               ingredient bottom sheet, composed natively on the dark canvas. */}
-          <div className="mt-8">
+          <div className="mt-10">
             <ShotsShowcase />
           </div>
 
-          {/* The test */}
-          <div className="mt-12 sm:flex sm:items-center sm:gap-8">
-            <div className="flex justify-center rounded-2xl bg-white/[0.03] py-5 sm:w-[240px] sm:shrink-0">
+          {/* The test — asset centred, copy stacked below */}
+          <div className="mt-14 lg:text-center">
+            <div className="mx-auto flex w-[220px] justify-center rounded-2xl bg-white/[0.03] py-5">
               <Image
                 src="/app/AppConkaRing.png"
                 alt="The CONKA app showing a daily cognition score and a history of tested days"
                 width={1455}
                 height={2942}
                 className="h-auto max-h-[320px] w-auto"
-                sizes="(max-width: 640px) 55vw, 240px"
+                sizes="220px"
               />
             </div>
-            <div className="mt-5 sm:mt-0">
+            <div className="mx-auto mt-6 max-w-[520px]">
               <h3 className="text-[20px] font-semibold">The test</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-white">
                 Two minutes in the app scores how sharp you are. Take it daily and
@@ -250,41 +310,43 @@ export default function NikeTrialPage() {
         aria-labelledby="setup-heading"
         className="brand-section scroll-mt-20"
       >
-        <div className="brand-track max-w-[760px]">
-          <h2 id="setup-heading" className="text-[26px] font-bold sm:text-[34px]">
+        <div className="brand-track mx-auto max-w-[760px]">
+          <h2
+            id="setup-heading"
+            className="text-[26px] font-bold sm:text-[34px] lg:text-center"
+          >
             Three things before Thursday
           </h2>
 
-          <ol className="mt-6 border-t border-white/10">
+          <ol className="mx-auto mt-6 max-w-[600px] border-t border-white/10">
             {asks.map((ask) => (
-              <li
-                key={ask.n}
-                className="flex gap-4 border-b border-white/10 py-7 sm:gap-5"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
-                  {ask.n}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
-                    {ask.title}
-                  </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-white/85">
-                    {ask.body}
-                  </p>
-                  {ask.app && (
-                    <AppInstallButtons
-                      variant="dtc-dark"
-                      className="mt-5"
-                      buttonClassName="text-[13px] px-5 py-3"
-                    />
-                  )}
+              <li key={ask.n} className="border-b border-white/10 py-7">
+                <div className="flex gap-4 sm:gap-5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6478e0] text-[16px] font-bold text-white">
+                    {ask.n}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
+                      {ask.title}
+                    </h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-white/85">
+                      {ask.body}
+                    </p>
+                  </div>
                 </div>
+                {ask.app && (
+                  <AppInstallButtons
+                    variant="dtc-dark"
+                    className="mt-5"
+                    buttonClassName="text-[13px] px-5 py-3"
+                  />
+                )}
               </li>
             ))}
           </ol>
 
           {/* WhatsApp — open row, not a tile */}
-          <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mx-auto mt-10 flex max-w-[600px] flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h3 className="text-[18px] font-semibold sm:text-[20px]">
                 Join the WhatsApp group
@@ -314,31 +376,106 @@ export default function NikeTrialPage() {
         aria-labelledby="fortnight-heading"
         className="brand-section scroll-mt-20"
       >
-        <div className="brand-track max-w-[760px]">
+        <div className="brand-track mx-auto max-w-[760px]">
           <h2
             id="fortnight-heading"
-            className="text-[26px] font-bold sm:text-[34px]"
+            className="text-[26px] font-bold sm:text-[34px] lg:text-center"
           >
-            Your two weeks
+            How your 14 days work
           </h2>
-          <p className="mt-3 text-[16px] text-white">
-            Three days to set your baseline, then the two-week trial.
+          <p className="mx-auto mt-3 max-w-[520px] text-[16px] text-white lg:text-center">
+            The same routine every day, for 14 days. Three days to set your
+            baseline, then keep it going.
           </p>
 
-          <div className="mt-8">
-            <TrialCalendar />
+          {/* Daily rhythm */}
+          <div className="mt-10">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8] lg:text-center">
+              Every day
+            </p>
+            <div className="mt-5 grid gap-6 sm:grid-cols-3">
+              {dailyRhythm.map((step) => {
+                const Icon = step.Icon;
+                return (
+                  <div key={step.title} className="text-center">
+                    {step.img ? (
+                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-2xl bg-[#eef1f8]">
+                        <Image
+                          src={step.img}
+                          alt={step.alt ?? ""}
+                          width={192}
+                          height={192}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      Icon && (
+                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#8f9fe8]">
+                          <Icon className="h-8 w-8" />
+                        </span>
+                      )
+                    )}
+                    <p className="mt-3 text-[12px] uppercase tracking-wide text-white">
+                      {step.label}
+                    </p>
+                    <p className="mt-1 text-[16px] font-semibold">{step.title}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Window picker */}
-          <div className="mt-10">
+          <div className="mt-14 lg:text-center">
             <h3 className="text-[20px] font-semibold">
               Pick a window that suits you
             </h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-white">
+            <p className="mx-auto mt-2 max-w-[520px] text-[15px] leading-relaxed text-white">
               Choose one two-hour window between 8am and 8pm. We&rsquo;ll remind
               you when it opens, so testing lands at a similar time each day.
             </p>
-            <TestWindow />
+            <div className="mx-auto mt-1 max-w-[520px]">
+              <TestWindow />
+            </div>
+          </div>
+
+          {/* The 14-day map */}
+          <div className="mt-14">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8] lg:text-center">
+              The 14 days
+            </p>
+            <div className="mx-auto mt-5 max-w-[560px]">
+              <TrialCalendar />
+            </div>
+          </div>
+
+          {/* The one requirement — 10 / 14 */}
+          <div className="mt-14 text-center">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8]">
+              The one requirement
+            </p>
+            <p className="mt-3 text-[56px] font-bold leading-none tabular-nums sm:text-[64px]">
+              10<span className="text-white/40">/14</span>
+            </p>
+            <p className="mt-2 text-[15px] font-medium text-white">
+              test days, minimum
+            </p>
+            <div className="mx-auto mt-5 flex max-w-[300px] flex-wrap justify-center gap-1.5">
+              {Array.from({ length: 14 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-2.5 w-2.5 rounded-full ${
+                    i < 10 ? "bg-[#6478e0]" : "border border-white/25"
+                  }`}
+                  aria-hidden
+                />
+              ))}
+            </div>
+            <p className="mx-auto mt-5 max-w-[460px] text-[14px] leading-relaxed text-white/80">
+              Ideally you test every day, but we know how life goes. The real ask
+              is 10 test days across your 14, that&rsquo;s enough to see your true
+              trend. Miss one? No stress, just pick it back up.
+            </p>
           </div>
         </div>
       </section>
@@ -351,15 +488,15 @@ export default function NikeTrialPage() {
         aria-labelledby="rewards-heading"
         className="brand-section scroll-mt-20"
       >
-        <div className="brand-track max-w-[760px]">
+        <div className="brand-track mx-auto max-w-[760px]">
           <h2
             id="rewards-heading"
-            className="text-[26px] font-bold sm:text-[34px]"
+            className="text-[26px] font-bold sm:text-[34px] lg:text-center"
           >
-            When the two weeks are up
+            When the 14 days are up
           </h2>
 
-          <div className="mt-10 grid gap-9 sm:max-w-[520px] sm:grid-cols-2">
+          <div className="mx-auto mt-10 grid gap-9 sm:max-w-[520px] sm:grid-cols-2">
             {rewards.map((reward) => {
               const Icon = reward.Icon;
               return (
@@ -384,12 +521,59 @@ export default function NikeTrialPage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
+      {/* FAQ */}
+      {/* ---------------------------------------------------------------- */}
+      <section
+        id="faq"
+        aria-labelledby="faq-heading"
+        className="brand-section scroll-mt-20"
+      >
+        <div className="brand-track mx-auto max-w-[760px]">
+          <h2
+            id="faq-heading"
+            className="text-[26px] font-bold sm:text-[34px] lg:text-center"
+          >
+            Questions
+          </h2>
+          <div className="mx-auto mt-8 max-w-[640px] border-t border-white/10">
+            {faqs.map((f) => (
+              <details
+                key={f.q}
+                name="nike-faq"
+                className="group border-b border-white/10"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-[16px] font-semibold [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-[22px] font-normal leading-none text-[#8f9fe8] transition-transform duration-200 group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="max-w-[600px] pb-5 text-[15px] leading-relaxed text-white/80">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </div>
+          <p className="mt-6 text-[14px] text-white/70 lg:text-center">
+            More at{" "}
+            <Link href="/faq" className={learnLink}>
+              our full FAQ
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
       {/* CLOSE */}
       {/* ---------------------------------------------------------------- */}
       <section className="brand-section" aria-label="See you Thursday">
-        <div className="brand-track max-w-[720px] text-center">
+        <div className="brand-track mx-auto max-w-[720px] text-center">
           <h2 className="text-[26px] font-bold leading-tight sm:text-[36px]">
-            Two weeks. Let&rsquo;s see what you&rsquo;ve got.
+            14 days. Let&rsquo;s see what you&rsquo;ve got.
           </h2>
           <p className="mt-4 text-[16px] text-white/80">See you Thursday.</p>
           <div className="mt-8 flex justify-center">
@@ -400,12 +584,12 @@ export default function NikeTrialPage() {
 
       {/* Learn more — progressive disclosure for the curious */}
       <section className="brand-section" aria-label="More about CONKA">
-        <div className="brand-track max-w-[760px]">
-          <div className="border-t border-white/10 pt-6">
+        <div className="brand-track mx-auto max-w-[760px]">
+          <div className="border-t border-white/10 pt-6 lg:text-center">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">
               More about CONKA
             </p>
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-[15px]">
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-[15px] lg:justify-center">
               {moreLinks.map((link) => (
                 <Link key={link.href} href={link.href} className={learnLink}>
                   {link.label}

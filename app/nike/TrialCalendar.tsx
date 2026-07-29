@@ -36,7 +36,7 @@ export default function TrialCalendar() {
     <div>
       <div
         role="img"
-        aria-label="Calendar: three baseline days from Thursday 6 to Saturday 8 August, then the two-week trial from Monday 10 to Sunday 23 August."
+        aria-label="Calendar: three baseline days from Thursday 6 to Saturday 8 August, then the 14-day trial from Monday 10 to Sunday 23 August."
         className="grid grid-cols-7 gap-1.5 sm:gap-2"
       >
         {HEAD.map((wd) => (
@@ -63,16 +63,10 @@ export default function TrialCalendar() {
           <span className="h-3.5 w-3.5 rounded bg-[#6478e0]" aria-hidden /> Baseline
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="h-3.5 w-3.5 rounded bg-[#2f6f4c]" aria-hidden /> Your two
-          weeks
+          <span className="h-3.5 w-3.5 rounded bg-[#2f6f4c]" aria-hidden /> The 14
+          days
         </span>
       </div>
-
-      <p className="mt-4 text-[16px] leading-relaxed text-white">
-        Test on at least{" "}
-        <span className="font-semibold">10 days across the two weeks</span>. We
-        will remind you, so keep notifications on.
-      </p>
     </div>
   );
 }
