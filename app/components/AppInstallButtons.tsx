@@ -5,8 +5,8 @@ interface AppInstallButtonsProps {
   buttonClassName?: string;
   iconSize?: number;
   inverted?: boolean;
-  /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) | 'clinical-dark' (white on black) | 'dtc' (Simple DTC: rounded-full, sans, navy) */
-  variant?: "gradient" | "clinical" | "clinical-dark" | "dtc";
+  /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) | 'clinical-dark' (white on black) | 'dtc' (Simple DTC: rounded-full, sans, navy) | 'dtc-dark' (Simple DTC on a dark canvas: rounded-full, sans, white-filled primary + outlined secondary) */
+  variant?: "gradient" | "clinical" | "clinical-dark" | "dtc" | "dtc-dark";
 }
 
 const APP_STORE_URL = "https://apps.apple.com/gb/app/conka-app/id6450399391";
@@ -104,6 +104,33 @@ export function AppInstallButtons({
           <span aria-hidden className="text-[#1B2757]/60">
             ↗
           </span>
+        </a>
+      </div>
+    );
+  }
+
+  if (variant === "dtc-dark") {
+    return (
+      <div className={`flex flex-row flex-wrap gap-3 items-stretch ${className}`}>
+        <a
+          href={APP_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download CONKA app from the App Store"
+          className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[14px] font-semibold text-[#0a0a0a] bg-white hover:bg-white/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] ${buttonClassName}`}
+        >
+          <AppStoreIcon size={iconSize} />
+          <span>App Store</span>
+        </a>
+        <a
+          href={PLAY_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download CONKA app from Google Play"
+          className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[14px] font-semibold text-white bg-white/[0.06] border border-white/25 hover:bg-white/10 hover:border-white/45 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] ${buttonClassName}`}
+        >
+          <PlayStoreIcon size={iconSize} />
+          <span>Play Store</span>
         </a>
       </div>
     );
