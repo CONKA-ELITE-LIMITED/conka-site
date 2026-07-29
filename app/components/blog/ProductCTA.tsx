@@ -25,12 +25,12 @@ export default function ProductCTA({ product }: { product: RelatedProduct }) {
   if (!nav) return null;
 
   return (
-    <aside className="border border-black/12 bg-black/[0.02] p-6 sm:p-8">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/50">
+    <aside className="rounded-md bg-[#eef1f8] p-6 sm:p-8 ring-1 ring-black/8">
+      <p className="text-[13px] font-semibold text-[#1B2757]">
         Recommended
       </p>
       <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-5">
-        <div className="relative h-24 w-24 shrink-0 bg-black/[0.03]">
+        <div className="relative h-24 w-24 shrink-0 rounded-md bg-white">
           <Image
             src={nav.image}
             alt={nav.alt}
@@ -47,7 +47,7 @@ export default function ProductCTA({ product }: { product: RelatedProduct }) {
         </div>
         <Link
           href={nav.href}
-          className="lab-clip-tr inline-flex items-center justify-center bg-black text-white hover:bg-[#1B2757] transition-colors min-h-[48px] px-6 font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums whitespace-nowrap"
+          className="inline-flex items-center justify-center rounded-full bg-[#1B2757] text-white hover:opacity-90 transition-opacity min-h-[48px] px-7 text-[15px] font-semibold whitespace-nowrap"
         >
           Shop {SHORT[product]}
         </Link>
