@@ -6,6 +6,7 @@ import { FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
 import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
+import { TIME_OF_DAY_BADGE, type TimeOfDay } from "@/app/lib/timeOfDayBadge";
 
 /* ============================================================================
  * ShotsShowcase (Nike trial)
@@ -23,7 +24,7 @@ const FORMULA_ID: Record<ProductId, FormulaId> = { flow: "01", clear: "02" };
 
 const PRODUCTS: Record<
   ProductId,
-  { name: string; timeOfDay: string; sub: string; mg: string; src: string; alt: string }
+  { name: string; timeOfDay: TimeOfDay; sub: string; mg: string; src: string; alt: string }
 > = {
   flow: {
     name: "CONKA Flow",
@@ -89,7 +90,9 @@ export default function ShotsShowcase() {
           <p className="text-[20px] font-bold leading-none">{product.name}</p>
           <div className="relative my-4">
             <div className="border-t border-white/15" />
-            <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1B2757] px-3 py-1 text-[12px] font-semibold leading-none text-white">
+            <span
+              className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-[12px] font-semibold leading-none ${TIME_OF_DAY_BADGE[product.timeOfDay]}`}
+            >
               {product.timeOfDay}
             </span>
           </div>

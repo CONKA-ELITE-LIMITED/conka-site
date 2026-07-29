@@ -226,7 +226,7 @@ export default function NikeTrialPage() {
                 split column on desktop */}
             <div className="px-5 pt-8 sm:px-6 lg:p-0">
               <div className="mx-auto max-w-[600px] lg:mx-0 lg:max-w-none">
-                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#8f9fe8]">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#6E7CB0]">
                   Cognition trial &middot; 2 weeks
                 </p>
                 <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
@@ -250,7 +250,7 @@ export default function NikeTrialPage() {
 
                 {/* Kickoff — open info block, not a tile */}
                 <div className="mt-10 max-w-[440px] border-t border-white/10 pt-6">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f9fe8]">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6E7CB0]">
                     Kickoff
                   </p>
                   <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -420,7 +420,7 @@ export default function NikeTrialPage() {
 
           {/* Daily rhythm */}
           <div className="mt-10">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8] lg:text-center">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6E7CB0] lg:text-center">
               Every day
             </p>
             <div className="mt-5 grid gap-6 sm:grid-cols-3">
@@ -440,7 +440,7 @@ export default function NikeTrialPage() {
                       </div>
                     ) : (
                       Icon && (
-                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#8f9fe8]">
+                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#6E7CB0]">
                           <Icon className="h-8 w-8" />
                         </span>
                       )
@@ -471,7 +471,7 @@ export default function NikeTrialPage() {
 
           {/* The 14-day map */}
           <div className="mt-14">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8] lg:text-center">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6E7CB0] lg:text-center">
               The 14 days
             </p>
             <div className="mx-auto mt-5 max-w-[560px]">
@@ -481,7 +481,7 @@ export default function NikeTrialPage() {
 
           {/* The one requirement — 10 / 14 */}
           <div className="mt-14 text-center">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f9fe8]">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6E7CB0]">
               The one requirement
             </p>
             <p className="mt-3 text-[56px] font-bold leading-none tabular-nums sm:text-[64px]">
@@ -576,7 +576,7 @@ export default function NikeTrialPage() {
                   {f.q}
                   <span
                     aria-hidden
-                    className="shrink-0 text-[22px] font-normal leading-none text-[#8f9fe8] transition-transform duration-200 group-open:rotate-45"
+                    className="shrink-0 text-[22px] font-normal leading-none text-[#6E7CB0] transition-transform duration-200 group-open:rotate-45"
                   >
                     +
                   </span>
