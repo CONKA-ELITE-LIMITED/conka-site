@@ -34,7 +34,7 @@ Every visit is gated behind a ceremonial code overlay (`CodeGateOverlay`), mount
 | `app/nike/NikeTrialNav.tsx` | Client. Sticky anchor chips + scroll-spy. `NAV_ITEMS` ids must match the section `id`s in the page. |
 | `app/nike/ShotsShowcase.tsx` | Client. Flow/Clear toggle + bottle asset + ingredient sheet, composed dark-native. Reuses `FormulaToggle`, `IngredientBottomSheet`, and `getOrderedActiveIngredients` (`app/lib/ingredientsData.ts`). |
 | `app/nike/TestWindow.tsx` | Client. Interactive tap-to-select 2-hour test-window picker (illustrative only, no state persisted). |
-| `app/nike/TrialCalendar.tsx` | Server. Plain calendar: the single-colour trial stretch (Thu 6 to Thu 20 Aug) over Mon-Sun columns, no phases. |
+| `app/nike/TrialCalendar.tsx` | Server. Plain calendar: the single-colour 14-day trial stretch (Thu 6 to Wed 19 Aug) over Mon-Sun columns, no phases. |
 | `app/components/AppInstallButtons.tsx` | The `dtc-dark` variant was added here for this page (rounded-full, white-filled App Store + outlined Play Store on dark). |
 
 ## Before sharing the link (operational)
@@ -51,7 +51,7 @@ App Store / Play Store URLs are the real live CONKA links (baked into `AppInstal
 ## Decisions and gotchas
 
 - **noindex mechanism.** Set via `metadata.robots`. The page is deliberately **left out of `sitemap.ts`** and **not disallowed in `robots.ts`** (disallowing would stop crawlers seeing and honouring the noindex tag). This matches the project policy for noindex landers.
-- **Trial dates are hard-coded.** Kickoff Thursday 6 August; the trial runs Thursday 6 to Thursday 20 August as a single 14-day stretch (no baseline phase). They live in `TrialCalendar.tsx` (`TRIAL_START` / `TRIAL_END` / `CELLS`), the hero/kickoff copy in `page.tsx`, and `KICKOFF` in `CodeGateOverlay.tsx`. Change all three if the schedule moves.
+- **Trial dates are hard-coded.** Kickoff Thursday 6 August; the trial runs Thursday 6 to Wednesday 19 August, a single 14-day stretch (no baseline phase). They live in `TrialCalendar.tsx` (`TRIAL_START` / `TRIAL_END` / `CELLS`), the hero/kickoff copy in `page.tsx`, and `KICKOFF` in `CodeGateOverlay.tsx`. Change all three if the schedule moves.
 - **FAQ copy is a trimmed reuse** of `app/lib/faqContent.ts` (Flow vs Clear, both at once, testing timing, IQ test, caffeine, sleep, medication). It is duplicated as a local `faqs` array (not imported) so it can be tuned for this audience; keep it roughly aligned if the canonical FAQ changes. Rendered as a native exclusive `<details>` accordion (shared `name="nike-faq"`), no client JS.
 - **Assets are all existing** (no new files): `FlowNew.jpg` / `ClearNew.jpg`, `AppConkaRing.png`, `conka-logo.webp`, and `/opengraph-image.png` for the unfurl.
 - The daily-rhythm **test** step uses the formula toggle's `SunHorizonIcon` as a placeholder glyph (the two product slots took the bottle images).

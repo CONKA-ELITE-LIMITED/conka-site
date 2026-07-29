@@ -8,10 +8,10 @@
 
 const HEAD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-// The trial runs Thursday 6 to Thursday 20 August. Cells outside that window
-// are shown greyed for calendar context.
+// The trial runs 14 days, Thursday 6 to Wednesday 19 August. Cells outside
+// that window (including the following Thursday) are greyed for context.
 const TRIAL_START = 6;
-const TRIAL_END = 20;
+const TRIAL_END = 19;
 const CELLS: { d: number; inTrial: boolean }[] = Array.from(
   { length: 21 },
   (_, i) => {
@@ -25,7 +25,7 @@ export default function TrialCalendar() {
     <div>
       <div
         role="img"
-        aria-label="Calendar: the 14-day trial runs from Thursday 6 to Thursday 20 August."
+        aria-label="Calendar: the 14-day trial runs from Thursday 6 to Wednesday 19 August."
         className="grid grid-cols-7 gap-1.5 sm:gap-2"
       >
         {HEAD.map((wd) => (
@@ -52,7 +52,7 @@ export default function TrialCalendar() {
       </div>
 
       <p className="mt-4 text-[14px] text-white/70 lg:text-center">
-        Thursday 6 to Thursday 20 August.
+        Thursday 6 to Wednesday 19 August.
       </p>
     </div>
   );
