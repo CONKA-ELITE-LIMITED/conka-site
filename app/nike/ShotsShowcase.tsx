@@ -52,16 +52,16 @@ export default function ShotsShowcase() {
 
   return (
     <div>
-      <h3 className="text-[22px] font-bold sm:text-[28px]">
+      <h3 className="text-[22px] font-bold sm:text-[28px] lg:text-center">
         Two shots. Built around your day.
       </h3>
-      <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-white sm:text-[16px]">
+      <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-white sm:text-[16px] lg:mx-auto lg:text-center">
         Flow for the morning. Clear for the afternoon. Each formulated with
         scientifically-studied ingredients to support sustained focus, memory,
         and mental endurance.
       </p>
 
-      <div className="mt-6 max-w-[440px]">
+      <div className="mx-auto mt-6 max-w-[440px]">
         <FormulaToggle
           value={active}
           flowValue="flow"
