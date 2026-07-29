@@ -384,8 +384,8 @@ export default function NikeTrialPage() {
             How your 14 days work
           </h2>
           <p className="mx-auto mt-3 max-w-[520px] text-[16px] text-white lg:text-center">
-            The same routine every day, for 14 days. Three days to set your
-            baseline, then keep it going.
+            The same routine every day, for 14 days, Thursday to Thursday. Just
+            the daily rhythm below, from your first day to your last.
           </p>
 
           {/* Daily rhythm */}
