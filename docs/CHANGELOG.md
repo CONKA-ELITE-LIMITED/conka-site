@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-29** | Added the Nike trial 'know before you go' onboarding page at /nike
 - **2026-07-29** | Blog error boundary restyled to Simple DTC, completing the blog surface conversion.
 - **2026-07-29** | Blog article surface (post header, product CTA, related posts, markdown tables) restyled to Simple DTC grammar.
 - **2026-07-29** | Blog listing surface (cards, topic nav, pagination) restyled to Simple DTC grammar.
