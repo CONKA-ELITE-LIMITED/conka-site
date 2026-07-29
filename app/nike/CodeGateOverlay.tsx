@@ -21,6 +21,10 @@ const ACCESS_CODE = "NIKEMIND2026";
 // TODO: set the real kickoff time once confirmed (currently 09:00 local).
 const KICKOFF = new Date("2026-08-06T09:00:00");
 
+// Radial progress ring geometry (drawn in the processing beat).
+const RING_RADIUS = 58;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -136,23 +140,74 @@ function Processing({ onDone }: { onDone: () => void }) {
     return () => clearInterval(id);
   }, [onDone]);
 
-  const stage =
-    progress < 40 ? 0 : progress < 80 ? 1 : 2;
+  const stage = progress < 40 ? 0 : progress < 80 ? 1 : 2;
+  const isComplete = progress >= 100;
+  // Radial progress ring (echoes the CONKA app's cognition ring). The stroke
+  // is drawn as the fake check advances, then snaps to a tick on completion.
+  const dashoffset = RING_CIRCUMFERENCE * (1 - progress / 100);
 
   return (
-    <div className="w-full max-w-[420px] text-center">
-      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/40 tabular-nums">
-        {progress.toString().padStart(3, "0")}%
+    <div className="flex w-full max-w-[420px] flex-col items-center text-center">
+      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/40">
+        Cognition check
       </p>
-      <p className="mt-6 text-[20px] font-semibold sm:text-[24px]">
+
+      <div className="relative mt-6 h-[152px] w-[152px]">
+        {/* soft glow that intensifies as the ring fills */}
+        <div
+          aria-hidden
+          className="absolute inset-3 rounded-full bg-[#6478e0] blur-2xl transition-opacity duration-300"
+          style={{ opacity: 0.12 + (progress / 100) * 0.28 }}
+        />
+        <svg viewBox="0 0 152 152" className="h-full w-full -rotate-90">
+          <circle
+            cx="76"
+            cy="76"
+            r={RING_RADIUS}
+            fill="none"
+            stroke="rgba(255,255,255,0.10)"
+            strokeWidth="4"
+          />
+          <circle
+            cx="76"
+            cy="76"
+            r={RING_RADIUS}
+            fill="none"
+            stroke="#8f9fe8"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={RING_CIRCUMFERENCE}
+            strokeDashoffset={dashoffset}
+            className="transition-[stroke-dashoffset] duration-100 ease-out"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          {isComplete ? (
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#8f9fe8"
+              strokeWidth="2.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <span className="text-[30px] font-bold tabular-nums">
+              {progress}
+              <span className="text-[16px] text-white/40">%</span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      <p className="mt-7 text-[20px] font-semibold sm:text-[22px]">
         {PROCESSING_STAGES[stage]}.
       </p>
-      <div className="mt-8 h-px w-full overflow-hidden bg-white/12">
-        <div
-          className="h-full bg-[#8f9fe8] transition-[width] duration-100 ease-out"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
     </div>
   );
 }
