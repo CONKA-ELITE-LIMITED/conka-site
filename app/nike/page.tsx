@@ -375,6 +375,36 @@ export default function NikeTrialPage() {
                     buttonClassName="text-[13px] px-5 py-3"
                   />
                 )}
+                {/* Account-type guide — only on step 1 (account creation). */}
+                {ask.n === 1 && (
+                  <div className="mt-6 flex flex-col gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
+                    <div className="mx-auto w-[150px] shrink-0 overflow-hidden rounded-xl border border-white/10 sm:mx-0">
+                      <Image
+                        src="/app/NikeUserType.png"
+                        alt="The CONKA app account setup screen with Everyday User selected and NIKE entered as the organisation"
+                        width={1206}
+                        height={2622}
+                        className="h-auto w-full"
+                        sizes="150px"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6E7CB0]">
+                        On the &ldquo;type of user&rdquo; screen
+                      </p>
+                      <ul className="mt-3 space-y-3">
+                        <li className="text-[15px] leading-snug text-white">
+                          User type{" "}
+                          <span className="font-semibold">Everyday User</span>
+                        </li>
+                        <li className="text-[15px] leading-snug text-white">
+                          Organisation{" "}
+                          <span className="font-semibold">NIKE</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </li>
             ))}
           </ol>
