@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
 import { SunHorizonIcon } from "@/app/components/landing/icons";
+import HeroScanVideo from "./HeroScanVideo";
 import NikeTrialNav from "./NikeTrialNav";
 import ShotsShowcase from "./ShotsShowcase";
 import TestWindow from "./TestWindow";
@@ -212,14 +213,7 @@ export default function NikeTrialPage() {
                 10/15); natural in the left split column on desktop. Its dark
                 backdrop blends with the page. */}
             <div className="relative aspect-[768/1032] w-full overflow-hidden lg:aspect-auto lg:h-[560px] lg:overflow-visible">
-              <Image
-                src="/formulas/conkaClear/ClearLabDark.png"
-                alt="A bottle of CONKA Clear lit on a panel against a dark backdrop"
-                fill
-                priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover object-[center_40%] lg:object-contain"
-              />
+              <HeroScanVideo className="h-full w-full object-cover object-[center_40%] lg:object-contain" />
             </div>
 
             {/* Copy — title then the rest, below the asset on mobile; the right
