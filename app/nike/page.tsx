@@ -232,7 +232,7 @@ export default function NikeTrialPage() {
                   A mind-altering shot
                 </p>
                 <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
-                  Welcome to the Nike Mind Trial.
+                  Welcome to the Nike Trial.
                 </h1>
                 <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
                   It&rsquo;s not about doing more, it&rsquo;s about thinking

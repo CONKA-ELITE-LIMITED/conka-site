@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-30** | Rename the Nike gate copy from Nike Mind Trial to Nike Trial
 - **2026-07-30** | Set the Nike gate WhatsApp invite link and access code, and blacken the html background behind the locked overlay
 - **2026-07-30** | Fix Nike gate overlay so the keyboard no longer opens a gap onto the page behind, and lock background scroll on iOS
 - **2026-07-30** | Nike page tweaks: scaled chrome-head image, squared the test asset, phone render for the daily test step, neural-blue reward icons

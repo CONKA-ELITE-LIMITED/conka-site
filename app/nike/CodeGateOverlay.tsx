@@ -9,7 +9,7 @@ import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
 /*                                                                            */
 /*  Not real auth: the code is a hardcoded, case-insensitive client check     */
 /*  (the page is noindex and forwarded person-to-person, nothing precious).   */
-/*  The point is the moment of arrival: logo, "Nike Mind Trial", a live       */
+/*  The point is the moment of arrival: logo, "Nike Trial", a live            */
 /*  countdown to kickoff, a code, then a short processing beat before the     */
 /*  page is revealed underneath.                                              */
 /* -------------------------------------------------------------------------- */
@@ -336,7 +336,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
       ref={root}
       role="dialog"
       aria-modal="true"
-      aria-label="Nike Mind Trial entry"
+      aria-label="Nike Trial entry"
       onKeyDown={onKeyDown}
       className="fixed inset-0 z-[60] flex flex-col items-center overflow-y-auto bg-[#0a0a0a] px-6 py-10 text-white"
       style={{
@@ -368,7 +368,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
         </div>
       ) : (
         <div className="relative z-10 my-auto flex w-full max-w-[440px] flex-col items-center text-center">
-          {/* Lockup: logo, then "Nike Mind Trial" beneath it */}
+          {/* Lockup: logo, then "Nike Trial" beneath it */}
           <Image
             src="/conka-logo.webp"
             alt="CONKA"
@@ -388,7 +388,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
             data-gate-reveal
             className="mt-4 text-[38px] font-bold leading-[1.05] sm:text-[52px]"
           >
-            Nike Mind Trial
+            Nike Trial
           </h1>
           <p
             data-gate-reveal
