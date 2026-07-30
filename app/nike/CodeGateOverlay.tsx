@@ -17,9 +17,10 @@ import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
 // The access code. Not a secret; update here if the shared code changes.
 const ACCESS_CODE = "CONKA2026";
 
-// Kickoff datetime the countdown targets. Thursday 6 August 2026.
-// TODO: set the real kickoff time once confirmed (currently 09:00 local).
-const KICKOFF = new Date("2026-08-06T09:00:00");
+// Kickoff datetime the countdown targets: Thursday 6 August 2026, 11:30am UK.
+// Pinned to +01:00 (BST) so the countdown ends at 11:30 UK time for every
+// viewer, regardless of their device timezone.
+const KICKOFF = new Date("2026-08-06T11:30:00+01:00");
 
 // Radial progress ring geometry (drawn in the processing beat).
 const RING_RADIUS = 58;

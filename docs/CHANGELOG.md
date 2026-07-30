@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-30** | Point Nike gate countdown at the real kickoff (Thu 6 Aug 11:30am UK, BST-pinned)
 - **2026-07-30** | Fill in Nike trial kickoff time (11:30am) and location (Nike London HQ)
 - **2026-07-30** | Rename the Nike gate copy from Nike Mind Trial to Nike Trial
 - **2026-07-30** | Set the Nike gate WhatsApp invite link and access code, and blacken the html background behind the locked overlay
