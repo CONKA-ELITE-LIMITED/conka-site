@@ -219,6 +219,7 @@ function Processing({ onDone }: { onDone: () => void }) {
 export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) {
   const root = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState(false);
   const [phase, setPhase] = useState<"entry" | "processing">("entry");
@@ -244,6 +245,15 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
   // Autofocus the code field on mount.
   useEffect(() => {
     inputRef.current?.focus();
+  }, []);
+
+  // Play the background scan only when motion is allowed; otherwise the poster
+  // frame stands in (the video is rendered without an autoplay attribute).
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    videoRef.current?.play().catch(() => {
+      // Autoplay can be refused; the poster frame remains, which is fine.
+    });
   }, []);
 
   const reveal = useCallback(() => {
@@ -315,10 +325,29 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
         backgroundSize: "24px 24px",
       }}
     >
+      {/* Full-bleed background scan (seamless boomerang). The poster shows
+          first and under reduced motion; the scrim keeps the text legible. */}
+      <video
+        ref={videoRef}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/videos/nike/BothShotsScan-poster.jpg"
+        aria-hidden
+        className="fixed inset-0 z-0 h-full w-full object-cover"
+      >
+        <source src="/videos/nike/BothShotsScan.webm" type="video/webm" />
+        <source src="/videos/nike/BothShotsScan.mp4" type="video/mp4" />
+      </video>
+      <div aria-hidden className="fixed inset-0 z-0 bg-black/55" />
+
       {phase === "processing" ? (
-        <Processing onDone={reveal} />
+        <div className="relative z-10 flex w-full flex-col items-center">
+          <Processing onDone={reveal} />
+        </div>
       ) : (
-        <div className="flex w-full max-w-[440px] flex-col items-center text-center">
+        <div className="relative z-10 flex w-full max-w-[440px] flex-col items-center text-center">
           {/* Lockup: logo, then "Nike Mind Trial" beneath it */}
           <Image
             src="/conka-logo.webp"
