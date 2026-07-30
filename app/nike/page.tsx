@@ -3,7 +3,6 @@ import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
-import { SunHorizonIcon } from "@/app/components/landing/icons";
 import HeroScanVideo from "./HeroScanVideo";
 import NikeTrialNav from "./NikeTrialNav";
 import ShotsShowcase from "./ShotsShowcase";
@@ -113,6 +112,8 @@ type RhythmStep = {
   title: string;
   img?: string;
   alt?: string;
+  imgClassName?: string;
+  imgBg?: string;
   Icon?: ComponentType<{ className?: string }>;
 };
 
@@ -129,7 +130,14 @@ const dailyRhythm: RhythmStep[] = [
     label: "Afternoon",
     title: "CONKA Clear",
   },
-  { Icon: SunHorizonIcon, label: "In your window", title: "One 2-min test" },
+  {
+    img: "/app/AppConkaRing.png",
+    alt: "The CONKA app cognition test",
+    label: "In the app",
+    title: "Take a test",
+    imgClassName: "object-top",
+    imgBg: "bg-white/[0.05]",
+  },
 ];
 
 const faqs = [
@@ -308,14 +316,14 @@ export default function NikeTrialPage() {
 
           {/* The test — asset centred, copy stacked below */}
           <div className="mt-14 lg:text-center">
-            <div className="mx-auto flex w-[220px] justify-center rounded-md bg-white/[0.03] py-5">
+            <div className="mx-auto flex aspect-square w-[280px] items-center justify-center rounded-md bg-white/[0.03]">
               <Image
                 src="/app/AppConkaRing.png"
                 alt="The CONKA app showing a daily cognition score and a history of tested days"
                 width={1455}
                 height={2942}
-                className="h-auto max-h-[320px] w-auto"
-                sizes="220px"
+                className="h-auto max-h-[240px] w-auto"
+                sizes="280px"
               />
             </div>
             <div className="mx-auto mt-6 max-w-[520px]">
@@ -427,13 +435,19 @@ export default function NikeTrialPage() {
                 return (
                   <div key={step.title} className="text-center">
                     {step.img ? (
-                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-md bg-[#eef1f8]">
+                      <div
+                        className={`mx-auto h-24 w-24 overflow-hidden rounded-md ${
+                          step.imgBg ?? "bg-[#eef1f8]"
+                        }`}
+                      >
                         <Image
                           src={step.img}
                           alt={step.alt ?? ""}
                           width={192}
                           height={192}
-                          className="h-full w-full object-cover"
+                          className={`h-full w-full object-cover ${
+                            step.imgClassName ?? ""
+                          }`}
                         />
                       </div>
                     ) : (
@@ -532,7 +546,7 @@ export default function NikeTrialPage() {
                   key={reward.title}
                   className="flex flex-col items-center text-center"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1a7f4f]/15 text-[#4ade80]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#6E7CB0]/15 text-[#6E7CB0]">
                     <Icon className="h-5 w-5" />
                   </span>
                   <h3 className="mt-4 text-[18px] font-semibold">
@@ -554,15 +568,15 @@ export default function NikeTrialPage() {
       <section className="brand-section" aria-label="A sharper mind">
         <div className="brand-track mx-auto max-w-[520px]">
           <p className="text-[20px] font-bold leading-snug sm:text-[24px] lg:text-center">
-            Two shots. A sharper mind.
+            A mind-altering shot.
           </p>
           <Image
             src="/formulas/both/BothChromiumHead.jpg"
             alt="CONKA Flow and Clear shots floating above a chrome head"
             width={810}
             height={1013}
-            sizes="(min-width: 640px) 520px, 100vw"
-            className="mt-8 h-auto w-full rounded-md"
+            sizes="(min-width: 640px) 380px, 100vw"
+            className="mx-auto mt-8 h-auto w-full max-w-[380px] rounded-md"
           />
           <p className="mt-8 text-[17px] font-bold text-white sm:text-[19px] lg:text-center">
             Side effects may include:
