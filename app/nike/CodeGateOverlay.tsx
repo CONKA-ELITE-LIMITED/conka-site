@@ -15,7 +15,7 @@ import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
 /* -------------------------------------------------------------------------- */
 
 // The access code. Not a secret; update here if the shared code changes.
-const ACCESS_CODE = "NIKEMIND2026";
+const ACCESS_CODE = "CONKA2026";
 
 // Kickoff datetime the countdown targets. Thursday 6 August 2026.
 // TODO: set the real kickoff time once confirmed (currently 09:00 local).

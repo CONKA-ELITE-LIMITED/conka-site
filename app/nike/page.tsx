@@ -35,8 +35,8 @@ export const metadata: Metadata = {
 const SESSION_TIME = "[ add time ]";
 // TODO: kickoff location, e.g. "Nike London, 3rd floor studio"
 const SESSION_LOCATION = "[ add location ]";
-// TODO: replace with the real WhatsApp group invite link (https://chat.whatsapp.com/...)
-const WHATSAPP_URL = "https://chat.whatsapp.com/REPLACE_WITH_INVITE_CODE";
+const WHATSAPP_URL =
+  "https://chat.whatsapp.com/DT7x9gvFc9B7mgndOVy7K0?s=cl&p=i&mlu=4&amv=2";
 
 /* -------------------------------------------------------------------------- */
 /*  Small inline icons (no new assets). Stroke = currentColor.                */
