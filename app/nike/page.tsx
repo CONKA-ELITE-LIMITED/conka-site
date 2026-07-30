@@ -306,21 +306,9 @@ export default function NikeTrialPage() {
             <ShotsShowcase />
           </div>
 
-          <p className="mx-auto mt-8 max-w-[560px] text-[17px] font-semibold leading-snug text-white sm:text-[19px] lg:text-center">
-            Get out of your head and into your day.
-          </p>
-          <div className="mx-auto mt-6 max-w-[520px] rounded-2xl border border-white/15 bg-white/[0.05] p-6 text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6E7CB0]">
-              Side effects may include
-            </p>
-            <p className="mt-3 text-[19px] font-bold leading-snug text-white sm:text-[22px]">
-              Sharper mornings, calmer focus, and fewer afternoon crashes.
-            </p>
-          </div>
-
           {/* The test — asset centred, copy stacked below */}
           <div className="mt-14 lg:text-center">
-            <div className="mx-auto flex w-[220px] justify-center rounded-2xl bg-white/[0.03] py-5">
+            <div className="mx-auto flex w-[220px] justify-center rounded-md bg-white/[0.03] py-5">
               <Image
                 src="/app/AppConkaRing.png"
                 alt="The CONKA app showing a daily cognition score and a history of tested days"
@@ -439,7 +427,7 @@ export default function NikeTrialPage() {
                 return (
                   <div key={step.title} className="text-center">
                     {step.img ? (
-                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-2xl bg-[#eef1f8]">
+                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-md bg-[#eef1f8]">
                         <Image
                           src={step.img}
                           alt={step.alt ?? ""}
@@ -450,7 +438,7 @@ export default function NikeTrialPage() {
                       </div>
                     ) : (
                       Icon && (
-                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#6E7CB0]">
+                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-md bg-white/[0.05] text-[#6E7CB0]">
                           <Icon className="h-8 w-8" />
                         </span>
                       )
@@ -563,16 +551,25 @@ export default function NikeTrialPage() {
       {/* ---------------------------------------------------------------- */}
       {/* BRAND IMAGE — chrome head, both shots floating above */}
       {/* ---------------------------------------------------------------- */}
-      <section className="brand-section" aria-label="CONKA">
+      <section className="brand-section" aria-label="A sharper mind">
         <div className="brand-track mx-auto max-w-[520px]">
+          <p className="text-[20px] font-bold leading-snug sm:text-[24px] lg:text-center">
+            Two shots. A sharper mind.
+          </p>
           <Image
             src="/formulas/both/BothChromiumHead.jpg"
             alt="CONKA Flow and Clear shots floating above a chrome head"
             width={810}
             height={1013}
             sizes="(min-width: 640px) 520px, 100vw"
-            className="h-auto w-full rounded-2xl"
+            className="mt-8 h-auto w-full rounded-md"
           />
+          <p className="mt-8 text-[17px] font-bold text-white sm:text-[19px] lg:text-center">
+            Side effects may include:
+          </p>
+          <p className="mt-1 text-[15px] leading-relaxed text-white sm:text-[16px] lg:text-center">
+            Sharper mornings, calmer focus, and fewer afternoon crashes.
+          </p>
         </div>
       </section>
 
