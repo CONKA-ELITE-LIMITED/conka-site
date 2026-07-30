@@ -92,12 +92,12 @@ function Countdown() {
       {cells.map((cell) => (
         <div
           key={cell.label}
-          className="flex min-w-[62px] flex-col items-center rounded-lg border border-white/12 bg-white/[0.04] px-3 py-3 sm:min-w-[74px] sm:py-4"
+          className="flex min-w-[62px] flex-col items-center rounded-lg border border-white/20 bg-black/50 px-3 py-3 sm:min-w-[74px] sm:py-4"
         >
           <span className="text-[26px] font-bold leading-none tabular-nums sm:text-[32px]">
             {cell.value}
           </span>
-          <span className="mt-1.5 text-[10px] uppercase tracking-[0.18em] text-white/50 sm:text-[11px]">
+          <span className="mt-1.5 text-[10px] uppercase tracking-[0.18em] text-white sm:text-[11px]">
             {cell.label}
           </span>
         </div>
@@ -148,17 +148,11 @@ function Processing({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="flex w-full max-w-[420px] flex-col items-center text-center">
-      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/40">
+      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white">
         Cognition check
       </p>
 
       <div className="relative mt-6 h-[152px] w-[152px]">
-        {/* soft glow that intensifies as the ring fills */}
-        <div
-          aria-hidden
-          className="absolute inset-3 rounded-full bg-[#6E7CB0] blur-2xl transition-opacity duration-300"
-          style={{ opacity: 0.12 + (progress / 100) * 0.28 }}
-        />
         <svg viewBox="0 0 152 152" className="h-full w-full -rotate-90">
           <circle
             cx="76"
@@ -199,7 +193,7 @@ function Processing({ onDone }: { onDone: () => void }) {
           ) : (
             <span className="text-[30px] font-bold tabular-nums">
               {progress}
-              <span className="text-[16px] text-white/40">%</span>
+              <span className="text-[16px] text-white/80">%</span>
             </span>
           )}
         </div>
@@ -219,6 +213,7 @@ function Processing({ onDone }: { onDone: () => void }) {
 export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) {
   const root = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState(false);
   const [phase, setPhase] = useState<"entry" | "processing">("entry");
@@ -244,6 +239,15 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
   // Autofocus the code field on mount.
   useEffect(() => {
     inputRef.current?.focus();
+  }, []);
+
+  // Play the background scan only when motion is allowed; otherwise the poster
+  // frame stands in (the video is rendered without an autoplay attribute).
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    videoRef.current?.play().catch(() => {
+      // Autoplay can be refused; the poster frame remains, which is fine.
+    });
   }, []);
 
   const reveal = useCallback(() => {
@@ -315,10 +319,29 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
         backgroundSize: "24px 24px",
       }}
     >
+      {/* Full-bleed background scan (seamless boomerang). The poster shows
+          first and under reduced motion; the scrim keeps the text legible. */}
+      <video
+        ref={videoRef}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/videos/nike/BothShotsScan-poster.jpg"
+        aria-hidden
+        className="fixed inset-0 z-0 h-full w-full object-cover"
+      >
+        <source src="/videos/nike/BothShotsScan.webm" type="video/webm" />
+        <source src="/videos/nike/BothShotsScan.mp4" type="video/mp4" />
+      </video>
+      <div aria-hidden className="fixed inset-0 z-0 bg-black/55" />
+
       {phase === "processing" ? (
-        <Processing onDone={reveal} />
+        <div className="relative z-10 flex w-full flex-col items-center">
+          <Processing onDone={reveal} />
+        </div>
       ) : (
-        <div className="flex w-full max-w-[440px] flex-col items-center text-center">
+        <div className="relative z-10 flex w-full max-w-[440px] flex-col items-center text-center">
           {/* Lockup: logo, then "Nike Mind Trial" beneath it */}
           <Image
             src="/conka-logo.webp"
@@ -331,9 +354,9 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
           />
           <p
             data-gate-reveal
-            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#6E7CB0]"
+            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-white"
           >
-            Presents
+            A mind-altering shot
           </p>
           <h1
             data-gate-reveal
@@ -343,14 +366,14 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
           </h1>
           <p
             data-gate-reveal
-            className="mt-4 max-w-[34ch] text-[15px] leading-relaxed text-white/70 sm:text-[16px]"
+            className="mt-4 max-w-[34ch] text-[15px] leading-relaxed text-white sm:text-[16px]"
           >
-            Two weeks measuring your own mind. It begins Thursday 6 August.
+            A two-week performance hack. It begins Thursday 6 August.
           </p>
 
           {/* Countdown */}
           <div data-gate-reveal className="mt-9">
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
               Kickoff in
             </p>
             <Countdown />
@@ -364,7 +387,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
           >
             <label
               htmlFor="access-code"
-              className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50"
+              className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.22em] text-white"
             >
               Enter your access code
             </label>

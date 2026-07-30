@@ -73,7 +73,7 @@ export default function ShotsShowcase() {
         />
 
         {/* Asset — lab-dark render, its own dark backdrop blends with the page */}
-        <div className="overflow-hidden rounded-2xl bg-white/[0.03]">
+        <div className="overflow-hidden rounded-md bg-white/[0.03]">
           <div className="relative aspect-square w-full">
             <Image
               src={product.src}

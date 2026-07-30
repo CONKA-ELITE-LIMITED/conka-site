@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
 import { SunHorizonIcon } from "@/app/components/landing/icons";
+import HeroScanVideo from "./HeroScanVideo";
 import NikeTrialNav from "./NikeTrialNav";
 import ShotsShowcase from "./ShotsShowcase";
 import TestWindow from "./TestWindow";
@@ -134,7 +135,7 @@ const dailyRhythm: RhythmStep[] = [
 const faqs = [
   {
     q: "What’s the difference between Flow and Clear?",
-    a: "Flow (black cap) is for mornings: adaptogens like Ashwagandha and Lemon Balm for calm, caffeine-free focus. Clear (white cap) is for afternoons: nootropics like Alpha GPC and Glutathione, plus Vitamin C.",
+    a: "Flow (black cap) is for mornings: adaptogens like Ashwagandha and Lemon Balm for calm, caffeine-free focus, a state of relaxed alertness. Clear (white cap) is for afternoons: nootropics like Alpha GPC and Glutathione, plus Vitamin C.",
   },
   {
     q: "Can I take both formulas at the same time?",
@@ -194,7 +195,7 @@ export default function NikeTrialPage() {
             priority
           />
         </Link>
-        <span className="text-[11px] uppercase tracking-[0.22em] text-white/70">
+        <span className="text-[11px] uppercase tracking-[0.22em] text-white">
           For the Nike team
         </span>
       </header>
@@ -212,14 +213,7 @@ export default function NikeTrialPage() {
                 10/15); natural in the left split column on desktop. Its dark
                 backdrop blends with the page. */}
             <div className="relative aspect-[768/1032] w-full overflow-hidden lg:aspect-auto lg:h-[560px] lg:overflow-visible">
-              <Image
-                src="/formulas/conkaClear/ClearLabDark.png"
-                alt="A bottle of CONKA Clear lit on a panel against a dark backdrop"
-                fill
-                priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover object-[center_40%] lg:object-contain"
-              />
+              <HeroScanVideo className="h-full w-full object-cover object-[center_40%] lg:object-contain" />
             </div>
 
             {/* Copy — title then the rest, below the asset on mobile; the right
@@ -227,23 +221,24 @@ export default function NikeTrialPage() {
             <div className="px-5 pt-8 sm:px-6 lg:p-0">
               <div className="mx-auto max-w-[600px] lg:mx-0 lg:max-w-none">
                 <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#6E7CB0]">
-                  Cognition trial &middot; 2 weeks
+                  A mind-altering shot
                 </p>
                 <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
                   Welcome to the Nike Mind Trial.
                 </h1>
                 <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
-                  You&rsquo;re about to spend 2 weeks measuring your own mind. The
-                  best performers don&rsquo;t guess whether they&rsquo;re getting
-                  sharper, they measure it. For the next 14 days you&rsquo;ll do
-                  the same with your focus: two CONKA shots a day, a two-minute
-                  test in the app, and a straight read on how you&rsquo;re actually
-                  performing.
+                  It&rsquo;s not about doing more, it&rsquo;s about thinking
+                  clearer. You&rsquo;re about to spend 2 weeks measuring your own
+                  mind. The best performers don&rsquo;t guess whether they&rsquo;re
+                  getting sharper, they measure it. For the next 14 days
+                  you&rsquo;ll do the same with your focus: two CONKA shots a day,
+                  a two-minute test in the app, and a straight read on how
+                  you&rsquo;re actually performing.
                 </p>
 
                 <div className="mt-8">
                   <AppInstallButtons variant="dtc-dark" />
-                  <p className="mt-3 text-[13px] text-white/70">
+                  <p className="mt-3 text-[13px] text-white">
                     Free to download.
                   </p>
                 </div>
@@ -257,18 +252,18 @@ export default function NikeTrialPage() {
                     <span className="text-[22px] font-bold sm:text-[26px]">
                       Thursday 6 August
                     </span>
-                    <span className="text-[15px] text-white/80">
+                    <span className="text-[15px] text-white">
                       About 20 minutes, in person
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[15px]">
-                    <span className="text-white/70">
+                    <span className="text-white">
                       Time{" "}
                       <span className="font-medium text-white">
                         {SESSION_TIME}
                       </span>
                     </span>
-                    <span className="text-white/70">
+                    <span className="text-white">
                       Where{" "}
                       <span className="font-medium text-white">
                         {SESSION_LOCATION}
@@ -301,6 +296,9 @@ export default function NikeTrialPage() {
             A daily brain shot, and an app that measures how your brain is
             performing. Over the next 14 days, you&rsquo;ll test both on yourself.
           </p>
+          <p className="mt-5 text-[18px] font-bold sm:text-[20px] lg:text-center">
+            Calm. Focused. Sharp.
+          </p>
 
           {/* The shots — Flow/Clear toggle, bottle asset and the shared
               ingredient bottom sheet, composed natively on the dark canvas. */}
@@ -310,7 +308,7 @@ export default function NikeTrialPage() {
 
           {/* The test — asset centred, copy stacked below */}
           <div className="mt-14 lg:text-center">
-            <div className="mx-auto flex w-[220px] justify-center rounded-2xl bg-white/[0.03] py-5">
+            <div className="mx-auto flex w-[220px] justify-center rounded-md bg-white/[0.03] py-5">
               <Image
                 src="/app/AppConkaRing.png"
                 alt="The CONKA app showing a daily cognition score and a history of tested days"
@@ -359,7 +357,7 @@ export default function NikeTrialPage() {
                     <h3 className="text-[18px] font-semibold leading-snug sm:text-[20px]">
                       {ask.title}
                     </h3>
-                    <p className="mt-2 text-[15px] leading-relaxed text-white/85">
+                    <p className="mt-2 text-[15px] leading-relaxed text-white">
                       {ask.body}
                     </p>
                   </div>
@@ -381,7 +379,7 @@ export default function NikeTrialPage() {
               <h3 className="text-[18px] font-semibold sm:text-[20px]">
                 Join the WhatsApp group
               </h3>
-              <p className="mt-2 max-w-[440px] text-[15px] leading-relaxed text-white/85">
+              <p className="mt-2 max-w-[440px] text-[15px] leading-relaxed text-white">
                 A daily nudge, and a direct line to us during the trial.
               </p>
             </div>
@@ -429,7 +427,7 @@ export default function NikeTrialPage() {
                 return (
                   <div key={step.title} className="text-center">
                     {step.img ? (
-                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-2xl bg-[#eef1f8]">
+                      <div className="mx-auto h-24 w-24 overflow-hidden rounded-md bg-[#eef1f8]">
                         <Image
                           src={step.img}
                           alt={step.alt ?? ""}
@@ -440,7 +438,7 @@ export default function NikeTrialPage() {
                       </div>
                     ) : (
                       Icon && (
-                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-white/[0.05] text-[#6E7CB0]">
+                        <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-md bg-white/[0.05] text-[#6E7CB0]">
                           <Icon className="h-8 w-8" />
                         </span>
                       )
@@ -501,7 +499,7 @@ export default function NikeTrialPage() {
                 />
               ))}
             </div>
-            <p className="mx-auto mt-5 max-w-[460px] text-[14px] leading-relaxed text-white/80">
+            <p className="mx-auto mt-5 max-w-[460px] text-[14px] leading-relaxed text-white">
               Ideally you test every day, but we know how life goes. The real ask
               is 10 test days across your 14, that&rsquo;s enough to see your true
               trend. Miss one? No stress, just pick it back up.
@@ -540,13 +538,38 @@ export default function NikeTrialPage() {
                   <h3 className="mt-4 text-[18px] font-semibold">
                     {reward.title}
                   </h3>
-                  <p className="mt-2 max-w-[280px] text-[15px] leading-relaxed text-white/85">
+                  <p className="mt-2 max-w-[280px] text-[15px] leading-relaxed text-white">
                     {reward.body}
                   </p>
                 </div>
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* BRAND IMAGE — chrome head, both shots floating above */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="brand-section" aria-label="A sharper mind">
+        <div className="brand-track mx-auto max-w-[520px]">
+          <p className="text-[20px] font-bold leading-snug sm:text-[24px] lg:text-center">
+            Two shots. A sharper mind.
+          </p>
+          <Image
+            src="/formulas/both/BothChromiumHead.jpg"
+            alt="CONKA Flow and Clear shots floating above a chrome head"
+            width={810}
+            height={1013}
+            sizes="(min-width: 640px) 520px, 100vw"
+            className="mt-8 h-auto w-full rounded-md"
+          />
+          <p className="mt-8 text-[17px] font-bold text-white sm:text-[19px] lg:text-center">
+            Side effects may include:
+          </p>
+          <p className="mt-1 text-[15px] leading-relaxed text-white sm:text-[16px] lg:text-center">
+            Sharper mornings, calmer focus, and fewer afternoon crashes.
+          </p>
         </div>
       </section>
 
@@ -581,13 +604,13 @@ export default function NikeTrialPage() {
                     +
                   </span>
                 </summary>
-                <p className="max-w-[600px] pb-5 text-[15px] leading-relaxed text-white/80">
+                <p className="max-w-[600px] pb-5 text-[15px] leading-relaxed text-white">
                   {f.a}
                 </p>
               </details>
             ))}
           </div>
-          <p className="mt-6 text-[14px] text-white/70 lg:text-center">
+          <p className="mt-6 text-[14px] text-white lg:text-center">
             More at{" "}
             <Link href="/faq" className={learnLink}>
               our full FAQ
@@ -605,7 +628,7 @@ export default function NikeTrialPage() {
           <h2 className="text-[26px] font-bold leading-tight sm:text-[36px]">
             14 days. Let&rsquo;s see what you&rsquo;ve got.
           </h2>
-          <p className="mt-4 text-[16px] text-white/80">See you Thursday.</p>
+          <p className="mt-4 text-[16px] text-white">See you Thursday.</p>
           <div className="mt-8 flex justify-center">
             <AppInstallButtons variant="dtc-dark" />
           </div>
@@ -616,7 +639,7 @@ export default function NikeTrialPage() {
       <section className="brand-section" aria-label="More about CONKA">
         <div className="brand-track mx-auto max-w-[760px]">
           <div className="border-t border-white/10 pt-6 lg:text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
               More about CONKA
             </p>
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-[15px] lg:justify-center">
@@ -631,7 +654,7 @@ export default function NikeTrialPage() {
       </section>
 
       <footer className="mx-auto max-w-[1280px] px-5 pb-10 pt-2 md:px-[5vw]">
-        <p className="text-[12px] text-white/60">
+        <p className="text-[12px] text-white">
           CONKA &middot; for the Nike team
         </p>
       </footer>

@@ -5,6 +5,9 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-30** | Nike page: DTC rounded-md radius, moved the side-effects line to frame the chrome-head asset (de-tiled), reworked the mind line
+- **2026-07-30** | Nike hero now uses the BothShots scan video; gate + loader text brightened and blue glow removed
+- **2026-07-30** | Nike gate now plays a full-bleed BothShots scan video (seamless boomerang loop) behind the entry lockup
 - **2026-07-29** | Nike trial showcase uses the lab-dark bottle renders
 - **2026-07-29** | Nike trial hero now leads with the ClearLabDark bottle asset (full-width on mobile, left/right split on desktop)
 - **2026-07-29** | Ceremonial code-gate entry (logo, Nike Mind Trial, countdown, access code, processing reveal) added to the Nike trial page
