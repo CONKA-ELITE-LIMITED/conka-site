@@ -345,7 +345,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
             data-gate-reveal
             className="mt-4 max-w-[34ch] text-[15px] leading-relaxed text-white/70 sm:text-[16px]"
           >
-            Two weeks measuring your own mind. It begins Thursday 6 August.
+            A two-week performance hack. It begins Thursday 6 August.
           </p>
 
           {/* Countdown */}
