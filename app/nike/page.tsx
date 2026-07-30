@@ -561,6 +561,22 @@ export default function NikeTrialPage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
+      {/* BRAND IMAGE — chrome head, both shots floating above */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="brand-section" aria-label="CONKA">
+        <div className="brand-track mx-auto max-w-[520px]">
+          <Image
+            src="/formulas/both/BothChromiumHead.jpg"
+            alt="CONKA Flow and Clear shots floating above a chrome head"
+            width={810}
+            height={1013}
+            sizes="(min-width: 640px) 520px, 100vw"
+            className="h-auto w-full rounded-2xl"
+          />
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
       {/* FAQ */}
       {/* ---------------------------------------------------------------- */}
       <section
