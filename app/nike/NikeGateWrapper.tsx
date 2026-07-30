@@ -22,13 +22,30 @@ export default function NikeGateWrapper({
 
   const handleUnlock = useCallback(() => setUnlocked(true), []);
 
-  // Lock body scroll while the overlay covers the page.
+  // Lock body scroll while the overlay covers the page. `overflow: hidden`
+  // alone does not hold on iOS (the page still scrolls behind the overlay,
+  // especially once the keyboard is open), so we pin the body with
+  // `position: fixed` and restore the scroll position on release.
   useEffect(() => {
     if (!showOverlay) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = previous;
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.width = previous.width;
+      body.style.overflow = previous.overflow;
+      window.scrollTo(0, scrollY);
     };
   }, [showOverlay]);
 

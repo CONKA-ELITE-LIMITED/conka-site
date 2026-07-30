@@ -241,6 +241,32 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
     inputRef.current?.focus();
   }, []);
 
+  // Pin the overlay to the visual viewport. On iOS the software keyboard does
+  // not resize the layout viewport, so a plain `fixed inset-0` overlay keeps
+  // its `bottom: 0` below the keyboard and the page underneath peeks through.
+  // Sizing to `visualViewport` (which shrinks with the keyboard) keeps the
+  // overlay covering exactly what is on screen, with no gap to scroll into.
+  useEffect(() => {
+    const vv = window.visualViewport;
+    const el = root.current;
+    if (!vv || !el) return;
+    const sync = () => {
+      el.style.top = `${vv.offsetTop}px`;
+      el.style.height = `${vv.height}px`;
+      el.style.bottom = "auto";
+    };
+    sync();
+    vv.addEventListener("resize", sync);
+    vv.addEventListener("scroll", sync);
+    return () => {
+      vv.removeEventListener("resize", sync);
+      vv.removeEventListener("scroll", sync);
+      el.style.top = "";
+      el.style.height = "";
+      el.style.bottom = "";
+    };
+  }, []);
+
   // Play the background scan only when motion is allowed; otherwise the poster
   // frame stands in (the video is rendered without an autoplay attribute).
   useEffect(() => {
@@ -312,7 +338,7 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
       aria-modal="true"
       aria-label="Nike Mind Trial entry"
       onKeyDown={onKeyDown}
-      className="fixed inset-0 z-[60] flex flex-col items-center justify-center overflow-y-auto bg-[#0a0a0a] px-6 py-10 text-white"
+      className="fixed inset-0 z-[60] flex flex-col items-center overflow-y-auto bg-[#0a0a0a] px-6 py-10 text-white"
       style={{
         backgroundImage:
           "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.14)'/%3E%3C/svg%3E\")",
@@ -337,11 +363,11 @@ export default function CodeGateOverlay({ onUnlock }: { onUnlock: () => void }) 
       <div aria-hidden className="fixed inset-0 z-0 bg-black/55" />
 
       {phase === "processing" ? (
-        <div className="relative z-10 flex w-full flex-col items-center">
+        <div className="relative z-10 my-auto flex w-full flex-col items-center">
           <Processing onDone={reveal} />
         </div>
       ) : (
-        <div className="relative z-10 flex w-full max-w-[440px] flex-col items-center text-center">
+        <div className="relative z-10 my-auto flex w-full max-w-[440px] flex-col items-center text-center">
           {/* Lockup: logo, then "Nike Mind Trial" beneath it */}
           <Image
             src="/conka-logo.webp"
