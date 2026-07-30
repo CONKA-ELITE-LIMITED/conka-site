@@ -35,8 +35,8 @@ export const metadata: Metadata = {
 const SESSION_TIME = "[ add time ]";
 // TODO: kickoff location, e.g. "Nike London, 3rd floor studio"
 const SESSION_LOCATION = "[ add location ]";
-// TODO: replace with the real WhatsApp group invite link (https://chat.whatsapp.com/...)
-const WHATSAPP_URL = "https://chat.whatsapp.com/REPLACE_WITH_INVITE_CODE";
+const WHATSAPP_URL =
+  "https://chat.whatsapp.com/DT7x9gvFc9B7mgndOVy7K0?s=cl&p=i&mlu=4&amv=2";
 
 /* -------------------------------------------------------------------------- */
 /*  Small inline icons (no new assets). Stroke = currentColor.                */
@@ -232,7 +232,7 @@ export default function NikeTrialPage() {
                   A mind-altering shot
                 </p>
                 <h1 className="mt-4 max-w-[20ch] text-[32px] font-bold leading-[1.08] sm:text-[46px]">
-                  Welcome to the Nike Mind Trial.
+                  Welcome to the Nike Trial.
                 </h1>
                 <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-white sm:text-[18px]">
                   It&rsquo;s not about doing more, it&rsquo;s about thinking
