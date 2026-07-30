@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-30** | Fix Nike gate overlay so the keyboard no longer opens a gap onto the page behind, and lock background scroll on iOS
 - **2026-07-30** | Nike page tweaks: scaled chrome-head image, squared the test asset, phone render for the daily test step, neural-blue reward icons
 - **2026-07-30** | Nike page: DTC rounded-md radius, moved the side-effects line to frame the chrome-head asset (de-tiled), reworked the mind line
 - **2026-07-30** | Nike hero now uses the BothShots scan video; gate + loader text brightened and blue glow removed
