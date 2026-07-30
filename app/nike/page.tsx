@@ -31,10 +31,8 @@ export const metadata: Metadata = {
 /*  Fill-in slots. Update these before sharing the link with the Nike team.   */
 /* -------------------------------------------------------------------------- */
 
-// TODO: kickoff time, e.g. "10:00am"
-const SESSION_TIME = "[ add time ]";
-// TODO: kickoff location, e.g. "Nike London, 3rd floor studio"
-const SESSION_LOCATION = "[ add location ]";
+const SESSION_TIME = "11:30am";
+const SESSION_LOCATION = "Nike London HQ";
 const WHATSAPP_URL =
   "https://chat.whatsapp.com/DT7x9gvFc9B7mgndOVy7K0?s=cl&p=i&mlu=4&amv=2";
 
