@@ -1,15 +1,17 @@
-# 2026-07 Ad-Spend Sprint — £300/day Listicle Trial
+# 2026-07 Ad-Spend Sprint — Listicle Trial
 
-**Window:** Fri 24 Jul → ~Fri 7 Aug 2026 (2 weeks) · **Spend:** £300/day Meta · **Status:** live
+**Window:** Fri 24 Jul → ~Fri 7 Aug 2026 (2 weeks) · **Spend:** £600/day Meta (£200/listicle × 3), stepped up from £300/day on Thu 30 Jul ~4pm · **Status:** live
 **Data:** [LISTICLE_PERFORMANCE.md](../analytics/LISTICLE_PERFORMANCE.md) · **Dashboard:** <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>
 
 ## What this is
 
-A two-week trial of increased Meta spend (£300/day) pointed at the three persona listicles, to learn which persona and which content actually converts before committing to a larger budget. It sits under the [Landing Conversion Programme](../development/featurePlans/landing-conversion/README.md) — the personas × formats push — and is the first real spend behind the listicle format.
+A two-week trial of increased Meta spend pointed at the three persona listicles, to learn which persona and which content actually converts before committing to a larger budget. It sits under the [Landing Conversion Programme](../development/featurePlans/landing-conversion/README.md) — the personas × formats push — and is the first real spend behind the listicle format.
 
 Two things landed together on **Friday 24 July**, which is why that date is the analytics floor for everything:
 1. **The spend increase** to £300/day.
 2. **Section-level analytics** (`listicle:section_viewed`, `listicle:cta_clicked`) went live — the first time we can see behaviour *inside* a listicle, not just that it was visited.
+
+**Update, Thu 30 Jul ~4pm:** spend stepped up again from £300/day to **£600/day total (£200/listicle × 3)**. Keep this date in mind when reading rate trends: pre-30-Jul figures are at the lower budget.
 
 ## Context: the Magic Mind refactor
 

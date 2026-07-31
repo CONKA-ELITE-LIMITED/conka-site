@@ -243,7 +243,7 @@ export const productivityListicle: ListicleConfig = {
     cta: "Try Conka Risk-Free for 100 Days →",
   },
   product: {
-    productHeroId: "03",
+    productHeroId: "01",
   },
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // caffeine, vs-energy-drink, reduce-coffee, timing, timeline, coffee, guarantee.
