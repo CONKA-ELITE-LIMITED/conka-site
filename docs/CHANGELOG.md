@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-07-31** | Productivity and brain-ageing listicles now sell the Flow offering (buy zone + CTAs), matching ADHD
 - **2026-07-30** | Add Nike account-setup guide (Everyday User + NIKE org) with screenshot to the trial setup step
 - **2026-07-30** | Point Nike gate countdown at the real kickoff (Thu 6 Aug 11:30am UK, BST-pinned)
 - **2026-07-30** | Fill in Nike trial kickoff time (11:30am) and location (Nike London HQ)

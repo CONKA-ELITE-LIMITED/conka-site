@@ -279,7 +279,7 @@ export const brainAgeingListicle: ListicleConfig = {
     cta: "Try Conka Risk-Free for 100 Days →",
   },
   product: {
-    productHeroId: "03",
+    productHeroId: "01",
   },
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
   // dementia, mid-sentence, cognitive-decline, medication, timeline, sleep,
