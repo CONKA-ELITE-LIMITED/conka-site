@@ -38,6 +38,13 @@ export const productivityListicle: ListicleConfig = {
       sub: "622+ reviews · 5,000+ daily users",
     },
     cta: "Have it all, risk-free for 100 days",
+    // Message-match for the "first week free" productivity ad angle (Flow's
+    // monthly-sub first-order bonus is 8 shots, ~a week). Green badge above the
+    // hero CTA and compact on the sticky bar.
+    offerBadge: {
+      hero: "+1 week of free brain supplements on your first order",
+      sticky: "+8 free shots",
+    },
     trustPills: [
       { label: "Zero caffeine", icon: "no-caffeine" },
       { label: "Informed Sport Certified", icon: "informed-sport" },
