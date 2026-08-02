@@ -310,6 +310,12 @@ export interface Im8ListicleConfig extends ListicleBase {
     socialProof?: { label: string; sub: string };
     /** Primary CTA; anchors to #product */
     cta: string;
+    /**
+     * Free-offer copy (message-match for "first week free" ad angles).
+     * `hero` is the full green badge above the hero CTA (centred on mobile);
+     * `sticky` is the short sub-line under the sticky-bar CTA. Omit for no badge.
+     */
+    offerBadge?: { hero: string; sticky: string };
     /** Trust chips under the CTA; each gets its own icon */
     trustPills?: { label: string; icon: TrustPillIcon }[];
     asset: ListicleAsset;

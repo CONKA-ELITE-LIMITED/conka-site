@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -75,6 +75,24 @@ const PDP_HREF: Record<ProductHeroId, string> = {
 };
 /* Light-navy tint strip for the sticky bar (Simple DTC tint, not soft-blue). */
 const TINT = "var(--brand-tint, #f4f5f8)";
+
+/** Green free-offer badge (--brand-positive at /10), matching the "+N free"
+ *  pill used on PDPs and the funnel. Sits above the hero CTA. */
+function OfferPill({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center justify-center rounded-full bg-[#1a7f4f]/[0.1] font-semibold text-[#1a7f4f] ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
 
 /** LandingHero's avatar + star micro-row, compacted to the IM8 scale */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
@@ -649,6 +667,11 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 sub={config.hero.socialProof.sub}
               />
             ) : null}
+            {config.hero.offerBadge ? (
+              <OfferPill className="mb-4 mx-auto w-fit max-w-full px-4 py-1.5 text-center text-[13px] leading-snug md:mx-0 md:text-sm">
+                {config.hero.offerBadge.hero}
+              </OfferPill>
+            ) : null}
             <Link
               href={withSrc(buyHref, SECTION.hero)}
               onClick={() => fireCta(SECTION.hero)}
@@ -823,20 +846,31 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           className="fixed bottom-0 left-0 right-0 z-40 px-5 py-2 md:px-[5vw]"
           style={{ background: TINT, color: NAVY }}
         >
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <span className="text-sm font-medium">
-              {config.stickyBar.label}
-            </span>
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+            <div className="flex min-w-0 flex-col gap-1">
+              <span className="truncate text-[13px] font-semibold leading-tight md:text-sm">
+                {config.stickyBar.label}
+              </span>
+              {config.stickyBar.sub ? (
+                <span className="truncate text-[11px] leading-tight opacity-70">
+                  {config.stickyBar.sub}
+                </span>
+              ) : null}
+            </div>
             <Link
               href={withSrc(buyHref, SECTION.sticky)}
               onClick={() => fireCta(SECTION.sticky)}
-              className="rounded-full px-6 py-2 text-center text-[13px] font-bold text-white"
+              className="flex shrink-0 flex-col items-center justify-center rounded-full px-7 py-2 text-center text-white"
               style={{ background: NAVY }}
             >
-              {config.stickyBar.cta}
-              {config.stickyBar.sub ? (
-                <span className="block text-[10px] font-normal opacity-70">
-                  {config.stickyBar.sub}
+              <span className="text-sm font-bold leading-tight">
+                {config.stickyBar.cta}
+              </span>
+              {config.hero.offerBadge ? (
+                // Lighter mint than --brand-positive (#1a7f4f), which is too
+                // dark to read on the navy CTA; reads as the "free" value cue.
+                <span className="text-[11px] font-medium leading-tight text-[#8fe3b4]">
+                  {config.hero.offerBadge.sticky}
                 </span>
               ) : null}
             </Link>
