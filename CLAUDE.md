@@ -131,6 +131,8 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 | Doc | Topic |
 |-----|-------|
+| `docs/README.md` | **Docs index** — the full, grouped map of the `docs/` tree. Start here to find the canonical doc for a topic |
+| `docs/product/SKU_AND_SHOT_REFERENCE.md` | **Canonical SKU + shot-count map** — funnel / main-site / legacy protocol variant GIDs, selling plans, shot counts, prices, and the account shot/per-shot display history (why the tiles were removed) |
 | `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | **Current state + roadmap** — performance, code quality, architecture assessment and prioritised improvements |
 | `docs/TODO.md` | **Deferred work tracker** — tech debt and cleanup tasks, with what unblocks each |
 | `docs/development/featurePlans/landing-conversion/README.md` | **Landing conversion programme** — personas x formats strategy, status, tracking plan, decision log |
