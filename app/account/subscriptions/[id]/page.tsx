@@ -381,8 +381,8 @@ export default function SubscriptionDetailPage() {
 
                       {upsell.benefits && upsell.benefits.length > 0 && (
                         <ul className="mt-4 space-y-1.5">
-                          {upsell.benefits.map((b, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-black/75">
+                          {upsell.benefits.map((b) => (
+                            <li key={b} className="flex items-start gap-2 text-sm text-black/75">
                               <svg className="w-4 h-4 mt-0.5 shrink-0 text-[var(--brand-positive)]" viewBox="0 0 24 24" fill="none" aria-hidden>
                                 <path stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="m5 13 4 4L19 7" />
                               </svg>

@@ -99,7 +99,7 @@ export function DeliveryModal({
           </div>
 
           <div className="space-y-2">
-            <button type="button" onClick={onChooseDate} className={rowBase}>
+            <button type="button" onClick={onChooseDate} disabled={skipping} className={rowBase}>
               <span className="flex-1">
                 <span className="block text-sm font-medium text-black">Reschedule to a new date</span>
                 <span className="block text-[13px] text-black/50 mt-0.5">Move your next delivery.</span>
@@ -118,7 +118,7 @@ export function DeliveryModal({
             </button>
 
             {canOrderNow && (
-              <button type="button" onClick={onOrderNow} className={rowBase}>
+              <button type="button" onClick={onOrderNow} disabled={skipping} className={rowBase}>
                 <span className="flex-1">
                   <span className="block text-sm font-medium text-black">Order now</span>
                   <span className="block text-[13px] text-black/50 mt-0.5">
