@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-03** | Extended the first-week-free offer badge (hero pill + "+8 free shots" sticky sub-line) to the ADHD and Brain-ageing listicles
 - **2026-08-02** | Productivity listicle: add a first-week-free offer badge to the hero and sticky CTA to message-match the free-week ad angle
 - **2026-07-31** | Productivity and brain-ageing listicles now sell the Flow offering (buy zone + CTAs), matching ADHD
 - **2026-07-30** | Add Nike account-setup guide (Everyday User + NIKE org) with screenshot to the trial setup step

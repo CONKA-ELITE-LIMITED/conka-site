@@ -218,7 +218,7 @@ The Productivity listicle was **repositioned to the founder/exec angle on 27 Jul
 
 ### Timeline of key changes (now in the artifact)
 
-`24 Jul` trial live £300/day + section tracking + CTA→funnel attribution · `27 Jul` Productivity rebuilt (founder angle) + order-origin capture hardened (attribution reliable) · `30 Jul ~4pm` spend doubled to £600/day (£200/listicle) · `31 Jul 2:30pm` all 3 listicles aligned to Flow-primary offer — CTA + product hero lead with Flow, not Both (PR #409) · `31 Jul` end of week 1 (this snapshot) · `2 Aug 6:40pm` Productivity listicle: added a "first week free" offer badge to message-match the free-week ad angle (green "+1 week of free brain supplements" pill above the hero CTA, "+8 free shots" sub-line under the sticky CTA); copy/layout only, no tracking change.
+`24 Jul` trial live £300/day + section tracking + CTA→funnel attribution · `27 Jul` Productivity rebuilt (founder angle) + order-origin capture hardened (attribution reliable) · `30 Jul ~4pm` spend doubled to £600/day (£200/listicle) · `31 Jul 2:30pm` all 3 listicles aligned to Flow-primary offer — CTA + product hero lead with Flow, not Both (PR #409) · `31 Jul` end of week 1 (this snapshot) · `2 Aug 6:40pm` Productivity listicle: added a "first week free" offer badge to message-match the free-week ad angle (green "+1 week of free brain supplements" pill above the hero CTA, "+8 free shots" sub-line under the sticky CTA); copy/layout only, no tracking change. · `3 Aug 11:30am` Same offer badge extended to the ADHD and Brain-ageing listicles (identical hero pill "+1 week of free brain supplements on your first order" + "+8 free shots" sticky sub-line); copy only, no tracking change.
 
 ### Artifact
 
