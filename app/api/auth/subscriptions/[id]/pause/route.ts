@@ -18,6 +18,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/app/lib/env';
 import { sizeToTierKey } from '@/app/lib/productSizeUtils';
 import { SUPPORT_EMAIL } from '@/app/lib/supportEmail';
+import { getFunnelSwapGroupId, getFunnelVariantNumericId } from '@/app/lib/funnelData';
 
 const LOOP_API_BASE = 'https://api.loopsubscriptions.com/admin/2023-10';
 
@@ -103,9 +104,10 @@ const PLAN_CONFIGURATIONS = {
   },
 };
 
-type ActionType = 'pause' | 'resume' | 'resume-now' | 'cancel' | 'skip' | 'change-frequency' | 'edit-multi-line' | 'reactivate' | 'place-order' | 'apply-discount';
+type ActionType = 'pause' | 'resume' | 'resume-now' | 'cancel' | 'skip' | 'change-frequency' | 'edit-multi-line' | 'reactivate' | 'place-order' | 'apply-discount' | 'swap-product';
 type PlanType = 'starter' | 'pro' | 'max';
 type ProtocolIdType = '1' | '2' | '3' | '4';
+type FunnelProductKey = 'flow' | 'clear' | 'both';
 
 interface ActionRequest {
   action?: ActionType;
@@ -116,6 +118,7 @@ interface ActionRequest {
   resumeNowEpoch?: number; // For resume-now: epoch timestamp for the new next billing date
   lines?: Array<{ lineId: string | number; productKey: string; size: number }>;
   discountCode?: string; // For apply-discount: Shopify discount code to apply
+  targetProduct?: FunnelProductKey; // For swap-product: the funnel product to swap to (same cadence)
 }
 
 /**
@@ -768,6 +771,102 @@ export async function POST(
           { preponeFutureOrder: true }
         );
         successMessage = 'Order placed! Your delivery is on the way.';
+        break;
+      }
+
+      case 'swap-product': {
+        // Same-cadence funnel product swap (Flow / Clear / Both). Every funnel
+        // product is a SINGLE variant (Both = BOTH-FUNNEL-56/140, not two lines),
+        // so this is a single-line variant swap. Cadence never changes, so there
+        // is no /frequency call. Legacy PROTOCOL_VARIANTS path is untouched.
+        const target = body.targetProduct;
+        if (!target || !['flow', 'clear', 'both'].includes(target)) {
+          return NextResponse.json({
+            success: false,
+            error: 'Invalid swap target.',
+          }, { status: 400 });
+        }
+
+        // Dev mock: no Loop call — echo success so the flow is testable locally.
+        const isDevMock =
+          process.env.NODE_ENV === 'development' &&
+          process.env.DEV_MOCK_AUTH === 'true' &&
+          cookieStore.get('dev_mock_auth')?.value === '1';
+        if (isDevMock) {
+          return NextResponse.json({ success: true, message: `Swapped to ${target}.` });
+        }
+
+        // Step 1: GET the subscription to resolve the line id + billing cadence.
+        const swapSubResult = await loopRequest(`/subscription/${loopSubscriptionId}`, loopToken, 'GET');
+        if (!swapSubResult.response.ok) {
+          console.error('[SWAP-PRODUCT] Failed to fetch subscription:', JSON.stringify(swapSubResult.data));
+          return NextResponse.json({
+            success: false,
+            error: 'Unable to swap your product right now. Please try again or contact support.',
+          }, { status: 502 });
+        }
+        const swapData = swapSubResult.data?.data;
+        const swapLines = swapData?.lines || [];
+        if (swapLines.length !== 1) {
+          // Funnel products are single-line; a multi-line contract is legacy.
+          return NextResponse.json({
+            success: false,
+            multiLine: true,
+            error: `This subscription can't be swapped in-account. Please contact support at ${SUPPORT_EMAIL}.`,
+          }, { status: 422 });
+        }
+        const swapLineId = swapLines[0].id;
+
+        // Cadence from the billing policy (funnel subs are monthly or quarterly).
+        const billing = swapData?.billingPolicy || {};
+        const bInterval = String(billing.interval || '').toUpperCase();
+        const bCount = billing.intervalCount ?? 1;
+        const cadence =
+          bInterval === 'MONTH' && bCount === 1
+            ? 'monthly-sub'
+            : bInterval === 'MONTH' && bCount === 3
+              ? 'quarterly-sub'
+              : null;
+        if (!cadence) {
+          return NextResponse.json({
+            success: false,
+            error: `This subscription's billing cycle isn't eligible for in-account swaps. Please contact support at ${SUPPORT_EMAIL}.`,
+          }, { status: 422 });
+        }
+
+        const targetVariantId = getFunnelVariantNumericId(target, cadence);
+        const targetGroupId = getFunnelSwapGroupId(target, cadence);
+        if (!targetVariantId) {
+          return NextResponse.json({
+            success: false,
+            error: 'That product is not available on your current plan.',
+          }, { status: 400 });
+        }
+        if (!targetGroupId) {
+          // Selling-plan group ids not configured yet (SCRUM-1200 data dependency).
+          console.error(`[SWAP-PRODUCT] Missing selling-plan group id for ${target}/${cadence}`);
+          return NextResponse.json({
+            success: false,
+            error: 'Product swaps are not available yet. Please contact support.',
+          }, { status: 503 });
+        }
+
+        console.log(`[SWAP-PRODUCT] ${loopSubscriptionId} line ${swapLineId} -> ${target}/${cadence} variant ${targetVariantId} group ${targetGroupId}`);
+        // Single swap call: change the line's variant + selling-plan group. No
+        // frequency update — the cadence is unchanged. pricingType 'OLD' preserves
+        // any active discount; the base price follows the new variant.
+        result = await loopRequest(
+          `/subscription/${loopSubscriptionId}/line/${swapLineId}/swap`,
+          loopToken,
+          'PUT',
+          {
+            variantShopifyId: parseInt(targetVariantId, 10),
+            quantity: 1,
+            pricingType: 'OLD',
+            sellingPlanGroupId: parseInt(targetGroupId, 10),
+          },
+        );
+        successMessage = 'Product swapped. Your next delivery reflects the change.';
         break;
       }
 

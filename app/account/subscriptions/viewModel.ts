@@ -28,9 +28,13 @@ import {
 } from "@/app/account/subscriptions/utils";
 import {
   getOfferPricing,
+  getOfferByVariantId,
   type FunnelProduct,
   type FunnelCadence,
 } from "@/app/lib/funnelData";
+
+/** Both is a single combined product; this is its box shot. */
+const BOTH_IMAGE = "/formulas/both/BothBox.jpg";
 
 export type SubscriptionCadence = "monthly" | "quarterly" | "other";
 
@@ -100,21 +104,58 @@ function resolveCadence(interval: Subscription["interval"]): {
   return { cadence: "other", cadenceLabel: label, cadenceHeroLabel: label };
 }
 
-function resolveDisplayName(
-  subscription: Subscription,
-  isMultiLine: boolean,
-): { displayName: string; funnelProduct: FunnelProduct | null } {
-  // Two lines (Flow + Clear) is the funnel "Both" bundle.
-  if (isMultiLine) return { displayName: "Both", funnelProduct: "both" };
+/** Build the Shopify variant GID for a subscription's primary line, if known. */
+function primaryVariantGid(subscription: Subscription): string | null {
+  const numeric = subscription.lines?.[0]?.variantShopifyId;
+  return numeric ? `gid://shopify/ProductVariant/${numeric}` : null;
+}
+
+/**
+ * Resolve the funnel product (flow / clear / both) for a subscription.
+ *
+ * "Both" is a single combined product (BOTH-FUNNEL-56/40/140), not a two-line
+ * Flow + Clear contract, so we must NOT infer it from line count. Detection order:
+ *   1. Known funnel variant GID (first-order / quarterly / OTP SKUs).
+ *   2. Title/variant naming: "Both - N Shots", or a title carrying both formulas
+ *      (covers the post-order-1 20/40-shot SKUs that aren't in FUNNEL_VARIANTS).
+ *   3. Single-formula title match (Flow / Clear).
+ * Returns null for legacy protocol / unknown subscriptions.
+ */
+function resolveFunnelProduct(subscription: Subscription): FunnelProduct | null {
+  const gid = primaryVariantGid(subscription);
+  if (gid) {
+    const offer = getOfferByVariantId(gid);
+    if (offer) return offer.product;
+  }
+
+  const combined = `${subscription.product?.title ?? ""} ${
+    subscription.lines?.map((l) => `${l.productTitle} ${l.variantTitle}`).join(" ") ?? ""
+  }`.toLowerCase();
+  if (combined.includes("both") || (combined.includes("flow") && combined.includes("clear"))) {
+    return "both";
+  }
 
   const type = getSubscriptionType(subscription);
-  if (type === "flow") return { displayName: "Flow", funnelProduct: "flow" };
-  if (type === "clear") return { displayName: "Clear", funnelProduct: "clear" };
+  if (type === "flow") return "flow";
+  if (type === "clear") return "clear";
+  return null;
+}
 
-  // Legacy protocol: use the protocol name, falling back to the raw title.
+function resolveDisplayName(
+  subscription: Subscription,
+): { displayName: string; funnelProduct: FunnelProduct | null } {
+  // Legacy protocol subs keep their protocol name and stay off the funnel path.
   const protocolId = getProtocolFromSubscription(subscription);
-  const name = PROTOCOL_NAMES[protocolId] || subscription.product?.title || "Subscription";
-  return { displayName: name, funnelProduct: null };
+  if (protocolId && PROTOCOL_NAMES[protocolId]) {
+    return { displayName: PROTOCOL_NAMES[protocolId], funnelProduct: null };
+  }
+
+  const funnelProduct = resolveFunnelProduct(subscription);
+  if (funnelProduct === "both") return { displayName: "Both", funnelProduct: "both" };
+  if (funnelProduct === "flow") return { displayName: "Flow", funnelProduct: "flow" };
+  if (funnelProduct === "clear") return { displayName: "Clear", funnelProduct: "clear" };
+
+  return { displayName: subscription.product?.title || "Subscription", funnelProduct: null };
 }
 
 function funnelCadenceKey(cadence: SubscriptionCadence): FunnelCadence | null {
@@ -147,10 +188,7 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
       ];
 
   const { cadence, cadenceLabel, cadenceHeroLabel } = resolveCadence(subscription.interval);
-  const { displayName, funnelProduct: rawFunnelProduct } = resolveDisplayName(
-    subscription,
-    isMultiLine,
-  );
+  const { displayName, funnelProduct: rawFunnelProduct } = resolveDisplayName(subscription);
   const funnelCadence = funnelCadenceKey(cadence);
   // A funnel product only makes sense on a funnel cadence (monthly/quarterly).
   // Legacy protocol duals bill weekly/bi-weekly, so keep them un-tagged (the
@@ -181,7 +219,7 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
     price: Number.isFinite(price) ? price : 0,
     nextDate: subscription.nextBillingDate,
     status: subscription.status,
-    image: getSubscriptionImage(subscription),
+    image: funnelProduct === "both" ? BOTH_IMAGE : getSubscriptionImage(subscription),
     isMultiLine,
     lines,
     funnelProduct,

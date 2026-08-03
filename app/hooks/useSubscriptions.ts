@@ -31,6 +31,7 @@ interface UseSubscriptionsReturn {
   applyDiscount: (subscriptionId: string, code: string) => Promise<{ success: boolean; message: string }>;
   changePlan: (subscriptionId: string, plan: 'starter' | 'pro' | 'max', protocolId?: string) => Promise<ChangePlanResult>;
   editMultiLine: (subscriptionId: string, lines: Array<{ lineId: string | number; productKey: string; size: number }>, plan?: 'starter' | 'pro' | 'max') => Promise<ChangePlanResult>;
+  swapProduct: (subscriptionId: string, targetProduct: 'flow' | 'clear' | 'both') => Promise<ChangePlanResult>;
   updateFrequency: (subscriptionId: string, interval: SubscriptionInterval) => Promise<boolean>;
   updateQuantity: (subscriptionId: string, quantity: number) => Promise<boolean>;
   rescheduleSubscription: (subscriptionId: string, newDateEpoch: number) => Promise<boolean>;
@@ -490,6 +491,41 @@ export function useSubscriptions(): UseSubscriptionsReturn {
     [fetchSubscriptions]
   );
 
+  // Swap to another funnel product at the SAME cadence (Flow / Clear / Both).
+  const swapProduct = useCallback(
+    async (subscriptionId: string, targetProduct: 'flow' | 'clear' | 'both'): Promise<ChangePlanResult> => {
+      setLoading(true);
+      setError(null);
+      try {
+        const numericId = extractShopifyId(subscriptionId);
+        const response = await fetch(`/api/auth/subscriptions/${numericId}/pause`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'swap-product', targetProduct }),
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          setError(data.error || data.message || 'Failed to swap product');
+          return {
+            success: false,
+            message: data.error || data.message || 'Failed to swap product',
+            multiLine: data.multiLine === true,
+          };
+        }
+        await fetchSubscriptions();
+        return { success: true, message: data.message };
+      } catch (err) {
+        console.error('Failed to swap product:', err);
+        setError('Failed to swap product');
+        return { success: false, message: 'Failed to swap product' };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchSubscriptions]
+  );
+
   // Update subscription frequency - uses change plan
   const updateFrequency = useCallback(
     async (subscriptionId: string, interval: SubscriptionInterval): Promise<boolean> => {
@@ -613,6 +649,7 @@ export function useSubscriptions(): UseSubscriptionsReturn {
     applyDiscount,
     editMultiLine,
     changePlan,
+    swapProduct,
     updateFrequency,
     updateQuantity,
     rescheduleSubscription,

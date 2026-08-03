@@ -19,6 +19,8 @@ import { EditSubscriptionModal } from "@/app/components/subscriptions/EditSubscr
 import { MultiLineEditModal } from "@/app/components/subscriptions/MultiLineEditModal";
 import { ReactivateModal } from "@/app/components/subscriptions/ReactivateModal";
 import { PlaceOrderModal } from "@/app/components/subscriptions/PlaceOrderModal";
+import { SkipModal } from "@/app/components/subscriptions/SkipModal";
+import { SwapModal } from "@/app/components/subscriptions/SwapModal";
 import {
   formatDate,
   getStatusColor,
@@ -45,9 +47,49 @@ function DetailSection({ title, children }: { title: string; children: React.Rea
 /** Per-line product asset, derived from the line's product title. */
 function lineImage(productTitle: string): string {
   const t = productTitle.toLowerCase();
+  if (t.includes("both") || (t.includes("flow") && t.includes("clear"))) {
+    return "/formulas/both/BothBox.jpg";
+  }
   if (t.includes("flow")) return getFormulaImage("01");
   if (t.includes("clear") || t.includes("clarity")) return getFormulaImage("02");
   return "";
+}
+
+/** MM-style product card: asset, name, price, and a variant descriptor. */
+function ProductCard({
+  image,
+  name,
+  price,
+  quantity = 1,
+  descriptor,
+}: {
+  image: string;
+  name: string;
+  price: number;
+  quantity?: number;
+  descriptor?: string;
+}) {
+  return (
+    <div className="flex gap-4 rounded-lg border border-black/10 bg-white p-4">
+      {image ? (
+        <span className="relative w-16 h-16 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
+          <Image src={image} alt="" fill sizes="64px" className="object-cover" />
+        </span>
+      ) : (
+        <span className="w-16 h-16 shrink-0 rounded-md bg-[#f5f5f5] border border-black/8" />
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-black" style={{ letterSpacing: "-0.01em" }}>
+          {name}
+        </p>
+        <p className="font-semibold text-black tabular-nums mt-0.5">
+          £{price.toFixed(2)}
+          {quantity > 1 ? ` × ${quantity}` : ""}
+        </p>
+        {descriptor ? <p className="text-sm text-black/55 mt-0.5">{descriptor}</p> : null}
+      </div>
+    </div>
+  );
 }
 
 export default function SubscriptionDetailPage() {
@@ -69,6 +111,7 @@ export default function SubscriptionDetailPage() {
     applyDiscount,
     changePlan,
     editMultiLine,
+    swapProduct,
     rescheduleSubscription,
   } = useSubscriptions();
   const {
@@ -86,6 +129,8 @@ export default function SubscriptionDetailPage() {
   const [showPause, setShowPause] = useState(false);
   const [showResume, setShowResume] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
+  const [showSkip, setShowSkip] = useState(false);
+  const [showSwap, setShowSwap] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
   const [showReactivate, setShowReactivate] = useState(false);
   const [showPlaceOrder, setShowPlaceOrder] = useState(false);
@@ -281,40 +326,41 @@ export default function SubscriptionDetailPage() {
             <div className="space-y-8">
               {/* Products */}
               <DetailSection title="Products">
-                <div className="space-y-3">
-                  {view.lines.map((line, idx) => {
-                    const img = lineImage(line.productTitle) || view.image;
-                    return (
-                      <div
-                        key={line.id ?? idx}
-                        className="flex gap-4 rounded-lg border border-black/10 bg-white p-4"
+                {view.funnelProduct ? (
+                  // Funnel subscriptions (Flow / Clear / Both) are a single combined
+                  // product — render one clean card, not a per-line breakdown.
+                  <div className="space-y-3">
+                    <ProductCard
+                      image={view.image}
+                      name={view.displayName}
+                      price={view.price}
+                      descriptor={view.lines[0]?.variantTitle || view.cadenceLabel}
+                    />
+                    {(isActive || isPaused) && (
+                      <button
+                        type="button"
+                        onClick={() => setShowSwap(true)}
+                        className={btnGhost}
+                        disabled={actionLoading}
                       >
-                        {img ? (
-                          <span className="relative w-16 h-16 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
-                            <Image src={img} alt="" fill sizes="64px" className="object-cover" />
-                          </span>
-                        ) : (
-                          <span className="w-16 h-16 shrink-0 rounded-md bg-[#f5f5f5] border border-black/8" />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p
-                            className="font-semibold text-black"
-                            style={{ letterSpacing: "-0.01em" }}
-                          >
-                            {line.productTitle}
-                          </p>
-                          <p className="font-semibold text-black tabular-nums mt-0.5">
-                            £{parseFloat(String(line.price)).toFixed(2)}
-                            {line.quantity > 1 ? ` × ${line.quantity}` : ""}
-                          </p>
-                          {line.variantTitle ? (
-                            <p className="text-sm text-black/55 mt-0.5">{line.variantTitle}</p>
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                        Swap product
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {view.lines.map((line, idx) => (
+                      <ProductCard
+                        key={line.id ?? idx}
+                        image={lineImage(line.productTitle) || view.image}
+                        name={line.productTitle}
+                        price={parseFloat(String(line.price))}
+                        quantity={line.quantity}
+                        descriptor={line.variantTitle}
+                      />
+                    ))}
+                  </div>
+                )}
                 {(isActive || isPaused) && (
                   <button
                     type="button"
@@ -421,7 +467,7 @@ export default function SubscriptionDetailPage() {
                   </button>
                 )}
                 {isActive && (
-                  <button onClick={() => withAction(() => skipNextOrder(subscription.id), "Next order skipped.")} disabled={actionLoading} className={btnGhost}>
+                  <button onClick={() => setShowSkip(true)} disabled={actionLoading} className={btnGhost}>
                     Skip next order
                   </button>
                 )}
@@ -522,6 +568,28 @@ export default function SubscriptionDetailPage() {
         hasUnfulfilledOrder={subscription.hasUnfulfilledOrder}
         interval={subscription.interval}
       />
+      <SkipModal
+        isOpen={showSkip}
+        onClose={() => setShowSkip(false)}
+        onSkipNext={() => withAction(() => skipNextOrder(subscription.id), "Next order skipped.")}
+        onReschedule={(epoch) => withAction(() => rescheduleSubscription(subscription.id, epoch), "Next delivery pushed back.")}
+        onPauseInstead={() => { setShowSkip(false); setShowPause(true); }}
+        subscriptionName={view.displayName}
+        cadenceHeroLabel={view.cadenceHeroLabel}
+        price={view.price}
+        currentNextBillingDate={subscription.nextBillingDate}
+      />
+      {view.funnelProduct && view.funnelCadence && (
+        <SwapModal
+          isOpen={showSwap}
+          onClose={() => setShowSwap(false)}
+          onSwap={(target) => withAction(() => swapProduct(subscription.id, target).then((r) => r.success), "Product swapped.")}
+          currentProduct={view.funnelProduct}
+          cadence={view.funnelCadence}
+          currentPrice={view.price}
+          subscriptionName={view.displayName}
+        />
+      )}
       <CancellationModal
         isOpen={showCancel}
         onClose={() => setShowCancel(false)}

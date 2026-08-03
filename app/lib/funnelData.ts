@@ -290,6 +290,48 @@ export function getOfferByVariantId(
 }
 
 // ============================================
+// SUBSCRIPTION SWAP (account portal, SCRUM-1200)
+// ============================================
+// Loop's line-swap API keys on the selling-plan GROUP id (not the individual
+// plan). Flow and Clear share one group per cadence; Both has its own. These are
+// Shopify Admin SellingPlanGroup numeric ids.
+//
+// They are filled by hand: the Storefront API does not expose SellingPlanGroup
+// ids and the current admin token lacks read_products scope, so neither can be
+// resolved programmatically from this app. Until set, swap returns 503.
+export const FUNNEL_SELLING_PLAN_GROUPS: Record<
+  "single" | "both",
+  Partial<Record<FunnelCadence, string>>
+> = {
+  single: { "monthly-sub": "", "quarterly-sub": "" }, // Flow + Clear (shared)
+  both: { "monthly-sub": "", "quarterly-sub": "" },
+};
+
+/** Numeric selling-plan group id for a same-cadence funnel swap, or null if unset. */
+export function getFunnelSwapGroupId(
+  product: FunnelProduct,
+  cadence: FunnelCadence,
+): string | null {
+  const key = product === "both" ? "both" : "single";
+  return FUNNEL_SELLING_PLAN_GROUPS[key][cadence] || null;
+}
+
+/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */
+export function getFunnelVariantNumericId(
+  product: FunnelProduct,
+  cadence: FunnelCadence,
+): string | null {
+  const cfg = FUNNEL_VARIANTS[product]?.[cadence];
+  if (!cfg?.variantId) return null;
+  return cfg.variantId.split("/").pop() ?? null;
+}
+
+/** The other two funnel products at the same cadence — the valid swap targets. */
+export function getSwapTargets(current: FunnelProduct): FunnelProduct[] {
+  return (["flow", "clear", "both"] as FunnelProduct[]).filter((p) => p !== current);
+}
+
+// ============================================
 // DISPLAY DATA
 // ============================================
 

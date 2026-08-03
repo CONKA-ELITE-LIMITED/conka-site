@@ -64,7 +64,7 @@ export async function GET(_request: NextRequest) {
 
     return NextResponse.json({
       subscriptions: [
-        // 1. Both — quarterly (multi-line: Flow + Clear, billed every 3 months)
+        // 1. Both — quarterly (single combined product BOTH-FUNNEL-140, billed every 3 months)
         {
           id: 'gid://shopify/SubscriptionContract/dev-mock-both-quarterly',
           status: 'active',
@@ -73,18 +73,24 @@ export async function GET(_request: NextRequest) {
           updatedAt: ago90days.toISOString(),
           product: {
             id: 'dev-mock-both-quarterly-product',
-            title: 'Conka Both',
-            variantTitle: 'Flow + Clear',
+            title: 'CONKA Flow + Clear – Daily Brain Shot System',
+            variantTitle: 'Both - 140 Shots (Quarterly)',
             quantity: 1,
             image: '/formulas/both/BothBox.jpg',
           },
           price: { amount: '149.99', currencyCode: 'GBP' },
           interval: { value: 3, unit: 'month' },
           lines: [
-            { id: 'line-1', productTitle: 'Conka Flow', variantTitle: 'Quarterly · 80 shots', price: '75.00', quantity: 1 },
-            { id: 'line-2', productTitle: 'Conka Clear', variantTitle: 'Quarterly · 80 shots', price: '74.99', quantity: 1 },
+            {
+              id: 'line-1',
+              productTitle: 'CONKA Flow + Clear',
+              variantTitle: 'Both - 140 Shots (Quarterly)',
+              price: '149.99',
+              quantity: 1,
+              variantShopifyId: 58153768943990,
+            },
           ],
-          isMultiLine: true,
+          isMultiLine: false,
           hasUnfulfilledOrder: false,
           completedOrdersCount: 1,
           totalOrdersPlaced: 1,
@@ -99,14 +105,23 @@ export async function GET(_request: NextRequest) {
           updatedAt: ago30days.toISOString(),
           product: {
             id: 'dev-mock-flow-monthly-product',
-            title: 'Conka Flow',
-            variantTitle: 'Monthly · 28 shots',
+            title: 'CONKA Flow AM - Daily Morning Brain Shot',
+            variantTitle: 'Flow - 28 Shots',
             quantity: 28,
             image: '/formulas/conkaFlow/FlowBox.jpg',
           },
           price: { amount: '39.99', currencyCode: 'GBP' },
           interval: { value: 1, unit: 'month' },
-          lines: [],
+          lines: [
+            {
+              id: 'line-1',
+              productTitle: 'CONKA Flow AM',
+              variantTitle: 'Flow - 28 Shots',
+              price: '39.99',
+              quantity: 1,
+              variantShopifyId: 57568795918710,
+            },
+          ],
           isMultiLine: false,
           hasUnfulfilledOrder: false,
           completedOrdersCount: 2,
@@ -122,14 +137,23 @@ export async function GET(_request: NextRequest) {
           updatedAt: ago30days.toISOString(),
           product: {
             id: 'dev-mock-clear-cancelled-product',
-            title: 'Conka Clear',
-            variantTitle: 'Monthly · 28 shots',
+            title: 'CONKA Clear PM - Daily Evening Brain Shot',
+            variantTitle: 'Clear - 28 Shots',
             quantity: 28,
             image: '/formulas/conkaClear/ClearBox.jpg',
           },
           price: { amount: '39.99', currencyCode: 'GBP' },
           interval: { value: 1, unit: 'month' },
-          lines: [],
+          lines: [
+            {
+              id: 'line-1',
+              productTitle: 'CONKA Clear PM',
+              variantTitle: 'Clear - 28 Shots',
+              price: '39.99',
+              quantity: 1,
+              variantShopifyId: 57568517489014,
+            },
+          ],
           isMultiLine: false,
           hasUnfulfilledOrder: false,
           completedOrdersCount: 3,
