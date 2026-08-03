@@ -57,132 +57,61 @@ export async function GET(_request: NextRequest) {
   const mockAuthEnabled = process.env.DEV_MOCK_AUTH === 'true';
 
   if (isDev && mockAuthEnabled && mockCookie === '1') {
-    const in7days = new Date(); in7days.setDate(in7days.getDate() + 7);
-    const in14days = new Date(); in14days.setDate(in14days.getDate() + 14);
     const in30days = new Date(); in30days.setDate(in30days.getDate() + 30);
-    const ago60days = new Date(); ago60days.setDate(ago60days.getDate() - 60);
+    const in80days = new Date(); in80days.setDate(in80days.getDate() + 80);
     const ago30days = new Date(); ago30days.setDate(ago30days.getDate() - 30);
+    const ago90days = new Date(); ago90days.setDate(ago90days.getDate() - 90);
 
     return NextResponse.json({
       subscriptions: [
-        // 1. Active single-formula (Flow) — weekly cadence, unfulfilled first order
+        // 1. Both — quarterly (multi-line: Flow + Clear, billed every 3 months)
         {
-          id: 'gid://shopify/SubscriptionContract/dev-mock-flow',
+          id: 'gid://shopify/SubscriptionContract/dev-mock-both-quarterly',
           status: 'active',
-          nextBillingDate: in7days.toISOString().slice(0, 10),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          nextBillingDate: in80days.toISOString().slice(0, 10),
+          createdAt: ago90days.toISOString(),
+          updatedAt: ago90days.toISOString(),
           product: {
-            id: 'dev-mock-flow-product',
-            title: 'Conka Flow - Starter - 4',
-            variantTitle: 'Starter · 4 shots',
-            quantity: 4,
-            image: '/formulas/ConkaFlowColour.jpg',
+            id: 'dev-mock-both-quarterly-product',
+            title: 'Conka Both',
+            variantTitle: 'Flow + Clear',
+            quantity: 1,
+            image: '/formulas/both/BothBox.jpg',
           },
-          price: { amount: '11.99', currencyCode: 'GBP' },
-          interval: { value: 1, unit: 'week' },
-          lines: [],
-          isMultiLine: false,
-          hasUnfulfilledOrder: true,
-          unfulfilledOrdersCount: 1,
-          completedOrdersCount: 0,
-          totalOrdersPlaced: 1,
-          paymentMethod: { id: 1, brand: 'Visa', lastDigits: '4242', expiryMonth: 1, expiryYear: 28, status: 'safe' },
-        },
-        // 2. Active protocol (Resilience) — bi-weekly cadence
-        {
-          id: 'gid://shopify/SubscriptionContract/dev-mock-resilience',
-          status: 'active',
-          nextBillingDate: in14days.toISOString().slice(0, 10),
-          createdAt: ago30days.toISOString(),
-          updatedAt: ago30days.toISOString(),
-          product: {
-            id: 'dev-mock-resilience-product',
-            title: 'Conka Resilience - Pro - 12',
-            variantTitle: 'Pro · 12 shots',
-            quantity: 12,
-            image: '/protocols/ResilienceRed.jpg',
-          },
-          price: { amount: '31.99', currencyCode: 'GBP' },
-          interval: { value: 14, unit: 'day' },
-          lines: [],
-          isMultiLine: false,
-          hasUnfulfilledOrder: false,
-          completedOrdersCount: 2,
-          totalOrdersPlaced: 2,
-          paymentMethod: { id: 1, brand: 'Visa', lastDigits: '4242', expiryMonth: 1, expiryYear: 28, status: 'safe' },
-        },
-        // 3. Multi-line contract — Flow + Clarity in one subscription (the problematic case)
-        {
-          id: 'gid://shopify/SubscriptionContract/dev-mock-multiline',
-          status: 'active',
-          nextBillingDate: in14days.toISOString().slice(0, 10),
-          createdAt: ago30days.toISOString(),
-          updatedAt: ago30days.toISOString(),
-          product: {
-            id: 'dev-mock-multiline-product',
-            title: 'Conka Flow - Pro - 12',
-            variantTitle: 'Pro · 12 shots',
-            quantity: 12,
-            image: '/formulas/ConkaFlowColour.jpg',
-          },
-          price: { amount: '63.98', currencyCode: 'GBP' },
-          interval: { value: 14, unit: 'day' },
+          price: { amount: '149.99', currencyCode: 'GBP' },
+          interval: { value: 3, unit: 'month' },
           lines: [
-            { id: 'line-1', productTitle: 'Conka Flow', variantTitle: 'Pro · 12 shots', price: '31.99', quantity: 12, variantShopifyId: 56999967752566 },
-            { id: 'line-2', productTitle: 'Conka Clarity', variantTitle: 'Pro · 12 shots', price: '31.99', quantity: 12, variantShopifyId: 57000418673014 },
+            { id: 'line-1', productTitle: 'Conka Flow', variantTitle: 'Quarterly · 80 shots', price: '75.00', quantity: 1 },
+            { id: 'line-2', productTitle: 'Conka Clear', variantTitle: 'Quarterly · 80 shots', price: '74.99', quantity: 1 },
           ],
           isMultiLine: true,
           hasUnfulfilledOrder: false,
           completedOrdersCount: 1,
           totalOrdersPlaced: 1,
-          paymentMethod: { id: 1, brand: 'Visa', lastDigits: '4242', expiryMonth: 1, expiryYear: 28, status: 'expiring_soon' },
+          paymentMethod: { id: 1, brand: 'Visa', lastDigits: '4242', expiryMonth: 1, expiryYear: 28, status: 'safe' },
         },
-        // 4. Paused protocol (Precision) — monthly cadence
+        // 2. Flow — monthly (single formula, billed every month)
         {
-          id: 'gid://shopify/SubscriptionContract/dev-mock-precision',
-          status: 'paused',
+          id: 'gid://shopify/SubscriptionContract/dev-mock-flow-monthly',
+          status: 'active',
           nextBillingDate: in30days.toISOString().slice(0, 10),
-          createdAt: ago60days.toISOString(),
+          createdAt: ago30days.toISOString(),
           updatedAt: ago30days.toISOString(),
           product: {
-            id: 'dev-mock-precision-product',
-            title: 'Conka Precision - Max - 28',
-            variantTitle: 'Max · 28 shots',
+            id: 'dev-mock-flow-monthly-product',
+            title: 'Conka Flow',
+            variantTitle: 'Monthly · 28 shots',
             quantity: 28,
-            image: '/protocols/PrecisionPurple.jpg',
+            image: '/formulas/conkaFlow/FlowBox.jpg',
           },
-          price: { amount: '63.99', currencyCode: 'GBP' },
+          price: { amount: '39.99', currencyCode: 'GBP' },
           interval: { value: 1, unit: 'month' },
           lines: [],
           isMultiLine: false,
           hasUnfulfilledOrder: false,
           completedOrdersCount: 2,
           totalOrdersPlaced: 2,
-          paymentMethod: { id: 2, brand: 'Mastercard', lastDigits: '9876', expiryMonth: 3, expiryYear: 24, status: 'expired' },
-        },
-        // 5. Cancelled (past subscription)
-        {
-          id: 'gid://shopify/SubscriptionContract/dev-mock-cancelled',
-          status: 'cancelled',
-          nextBillingDate: '',
-          createdAt: ago60days.toISOString(),
-          updatedAt: ago30days.toISOString(),
-          product: {
-            id: 'dev-mock-cancelled-product',
-            title: 'Conka Balance - Starter - 4',
-            variantTitle: 'Starter · 4 shots',
-            quantity: 4,
-            image: '/protocols/BalanceGreen.jpg',
-          },
-          price: { amount: '11.99', currencyCode: 'GBP' },
-          interval: { value: 1, unit: 'week' },
-          lines: [],
-          isMultiLine: false,
-          hasUnfulfilledOrder: false,
-          completedOrdersCount: 3,
-          totalOrdersPlaced: 3,
-          paymentMethod: null,
+          paymentMethod: { id: 1, brand: 'Visa', lastDigits: '4242', expiryMonth: 1, expiryYear: 28, status: 'safe' },
         },
       ],
     });

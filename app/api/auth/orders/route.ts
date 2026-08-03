@@ -156,7 +156,43 @@ export async function GET(_request: NextRequest) {
   const mockAuthEnabled = process.env.DEV_MOCK_AUTH === "true";
 
   if (isDev && mockAuthEnabled && mockCookie === "1") {
-    return NextResponse.json({ orders: [] });
+    const ago30days = new Date();
+    ago30days.setDate(ago30days.getDate() - 30);
+    return NextResponse.json({
+      orders: [
+        // One-time purchase of Conka Flow (no subscription), placed ~a month ago
+        {
+          id: "gid://shopify/Order/dev-mock-flow-otp",
+          orderNumber: "1042",
+          orderName: "#1042",
+          processedAt: ago30days.toISOString(),
+          fulfillmentStatus: "FULFILLED",
+          financialStatus: "PAID",
+          totalPrice: { amount: "69.98", currencyCode: "GBP" },
+          subtotal: { amount: "59.99", currencyCode: "GBP" },
+          totalShipping: { amount: "9.99", currencyCode: "GBP" },
+          totalTax: { amount: "0.00", currencyCode: "GBP" },
+          shippingAddress: {
+            address1: "1 Test Street",
+            city: "London",
+            province: "",
+            country: "United Kingdom",
+            zip: "E1 6AN",
+          },
+          lineItems: [
+            {
+              title: "Conka Flow — One-time",
+              quantity: 1,
+              image: {
+                url: "/formulas/conkaFlow/FlowBox.jpg",
+                altText: "Conka Flow",
+              },
+              price: { amount: "59.99", currencyCode: "GBP" },
+            },
+          ],
+        },
+      ],
+    });
   }
 
   if (!accessToken) {
