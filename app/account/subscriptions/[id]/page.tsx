@@ -11,8 +11,6 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useSubscriptions, Subscription } from "@/app/hooks/useSubscriptions";
 import { usePaymentMethods } from "@/app/hooks/usePaymentMethods";
 import { PaymentCardSection } from "@/app/components/subscriptions/PaymentCardSection";
-import { CancellationModal } from "@/app/components/subscriptions/CancellationModal";
-import { PauseModal } from "@/app/components/subscriptions/PauseModal";
 import { RescheduleModal } from "@/app/components/subscriptions/RescheduleModal";
 import { ResumeModal } from "@/app/components/subscriptions/ResumeModal";
 import { EditSubscriptionModal } from "@/app/components/subscriptions/EditSubscriptionModal";
@@ -99,13 +97,10 @@ export default function SubscriptionDetailPage() {
     loading,
     error,
     fetchSubscriptions,
-    pauseSubscription,
     resumeSubscription,
-    cancelSubscription,
     skipNextOrder,
     reactivateSubscription,
     placeOrderNow,
-    applyDiscount,
     changePlan,
     editMultiLine,
     swapProduct,
@@ -123,12 +118,10 @@ export default function SubscriptionDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [showEdit, setShowEdit] = useState(false);
-  const [showPause, setShowPause] = useState(false);
   const [showResume, setShowResume] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
   const [showDelivery, setShowDelivery] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
-  const [showCancel, setShowCancel] = useState(false);
   const [showReactivate, setShowReactivate] = useState(false);
   const [showPlaceOrder, setShowPlaceOrder] = useState(false);
 
@@ -364,29 +357,77 @@ export default function SubscriptionDetailPage() {
                 </div>
               </DetailSection>
 
-              {/* Upsell (read-only) */}
-              {upsell && (isActive || isPaused) && (
-                <DetailSection title="Try something new">
-                  <div className="rounded-md border border-black/10 bg-[#f5f5f5] p-5">
-                    <p className="font-semibold text-black mb-1" style={{ letterSpacing: "-0.02em" }}>
-                      {upsell.headline}
-                    </p>
-                    <p className="text-sm text-black/60 mb-3">{upsell.body}</p>
-                    {upsell.savingsLabel && (
-                      <p className="inline-flex items-center rounded-full bg-[var(--brand-positive)]/10 text-[var(--brand-positive)] text-[13px] font-semibold px-3 py-1 mb-3">
-                        {upsell.savingsLabel}
-                      </p>
-                    )}
-                    <p className="text-sm text-black/60">
-                      Want to switch?{" "}
-                      <ContactSupportLink variant="inline" icon={false}>
-                        Message the team
-                      </ContactSupportLink>{" "}
-                      and we will sort it. In-account switching is coming soon.
-                    </p>
-                  </div>
-                </DetailSection>
-              )}
+              {/* Upsell — a visual, one-tap swap to the fuller product (same cadence) */}
+              {upsell &&
+                view.funnelCadence &&
+                upsell.upgradedCadence === view.funnelCadence &&
+                upsell.upgradedProduct !== view.funnelProduct &&
+                (isActive || isPaused) && (
+                  <DetailSection title="Try something new">
+                    <div className="rounded-lg border border-black/10 bg-white p-4 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5">
+                      <div className="flex gap-4">
+                        {upsell.image ? (
+                          <span className="relative w-24 h-24 shrink-0 overflow-hidden rounded-md bg-[#f7f7f8] border border-black/8">
+                            <Image src={upsell.image.src} alt={upsell.image.alt} fill sizes="96px" className="object-cover" />
+                          </span>
+                        ) : null}
+                        <div className="min-w-0">
+                          <h3 className="text-lg lg:text-xl font-semibold text-black" style={{ letterSpacing: "-0.02em" }}>
+                            {upsell.headline}
+                          </h3>
+                          <p className="text-sm text-black/70 mt-1 leading-relaxed">{upsell.body}</p>
+                        </div>
+                      </div>
+
+                      {upsell.benefits && upsell.benefits.length > 0 && (
+                        <ul className="mt-4 space-y-1.5">
+                          {upsell.benefits.map((b, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm text-black/75">
+                              <svg className="w-4 h-4 mt-0.5 shrink-0 text-[var(--brand-positive)]" viewBox="0 0 24 24" fill="none" aria-hidden>
+                                <path stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="m5 13 4 4L19 7" />
+                              </svg>
+                              {b}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {upsell.perShotHero ? (
+                        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-md bg-[#f7f7f8] border border-black/8 p-3">
+                          <span className="text-sm text-black tabular-nums">
+                            £{upsell.perShotHero.currentPerShot.toFixed(2)}/shot
+                            <span className="text-black/40"> → </span>
+                            <span className="font-semibold">£{upsell.perShotHero.upgradedPerShot.toFixed(2)}/shot</span>
+                          </span>
+                          <span className="ml-auto inline-flex items-center rounded-full bg-[var(--brand-positive)]/10 text-[var(--brand-positive)] text-[13px] font-semibold px-2.5 py-0.5">
+                            {upsell.perShotHero.savingsPercent}% off {upsell.perShotHero.addedProductName}
+                          </span>
+                        </div>
+                      ) : (
+                        upsell.savingsLabel && (
+                          <p className="mt-3 inline-flex items-center rounded-full bg-[var(--brand-positive)]/10 text-[var(--brand-positive)] text-[13px] font-semibold px-3 py-1">
+                            {upsell.savingsLabel}
+                          </p>
+                        )
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          withAction(
+                            () => swapProduct(subscription.id, upsell.upgradedProduct).then((r) => r.success),
+                            "Upgraded. Your next delivery reflects the change.",
+                          )
+                        }
+                        disabled={actionLoading}
+                        className="mt-4 w-full py-3 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+                      >
+                        {upsell.acceptLabel}
+                        {upsell.priceDifference ? ` · +£${upsell.priceDifference.toFixed(2)}` : ""}
+                      </button>
+                    </div>
+                  </DetailSection>
+                )}
 
               {/* Shipping */}
               <DetailSection title="Shipping">
@@ -449,28 +490,6 @@ export default function SubscriptionDetailPage() {
                   </div>
                 )}
               </DetailSection>
-
-              {/* Manage: quiet, de-emphasized so the positive path stays primary */}
-              {(isActive || isPaused) && (
-                <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-[13px]">
-                  {isActive && (
-                    <button
-                      onClick={() => setShowPause(true)}
-                      disabled={actionLoading}
-                      className="text-black/45 hover:text-black/70 hover:underline transition-colors disabled:opacity-50"
-                    >
-                      Pause subscription
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setShowCancel(true)}
-                    disabled={actionLoading}
-                    className="text-black/45 hover:text-black/70 hover:underline transition-colors disabled:opacity-50"
-                  >
-                    Cancel subscription
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </section>
@@ -523,13 +542,6 @@ export default function SubscriptionDetailPage() {
         />
       )}
 
-      <PauseModal
-        isOpen={showPause}
-        onClose={() => setShowPause(false)}
-        onPause={(weeks) => withAction(() => pauseSubscription(subscription.id, weeks), "Subscription paused. You can resume anytime.")}
-        subscriptionName={view.displayName}
-        interval={subscription.interval}
-      />
       <ResumeModal
         isOpen={showResume}
         onClose={() => setShowResume(false)}
@@ -570,20 +582,6 @@ export default function SubscriptionDetailPage() {
           subscriptionName={view.displayName}
         />
       )}
-      <CancellationModal
-        isOpen={showCancel}
-        onClose={() => setShowCancel(false)}
-        onCancel={async (reason) => {
-          const ok = await cancelSubscription(subscription.id, reason);
-          if (ok) await fetchSubscriptions();
-          return ok;
-        }}
-        subscriptionName={view.displayName}
-        currentPlan={getCurrentPlan(subscription)}
-        onPauseInstead={() => { setShowCancel(false); setShowPause(true); }}
-        onEditInstead={() => { setShowCancel(false); setShowEdit(true); }}
-        onApplyDiscount={(code) => applyDiscount(subscription.id, code)}
-      />
       <ReactivateModal
         isOpen={showReactivate}
         onClose={() => setShowReactivate(false)}
