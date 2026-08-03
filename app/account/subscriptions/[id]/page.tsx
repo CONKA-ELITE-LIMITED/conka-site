@@ -49,6 +49,7 @@ export default function SubscriptionDetailPage() {
   const {
     subscriptions,
     loading,
+    error,
     fetchSubscriptions,
     pauseSubscription,
     resumeSubscription,
@@ -128,6 +129,39 @@ export default function SubscriptionDetailPage() {
     );
   }
   if (!isAuthenticated) return null;
+
+  if (error && !subscription) {
+    return (
+      <div className="min-h-screen bg-white text-black">
+        <Navigation />
+        <AccountSubNav />
+        <main className="pt-3 pb-24 lg:pt-4">
+          <section className="brand-section brand-bg-white">
+            <div className="brand-track">
+              <div className="border border-red-200 bg-red-50/50 rounded-md p-6 mb-4">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => fetchSubscriptions()}
+                  className="rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-5 py-2.5 min-h-[44px] hover:opacity-90 transition-opacity"
+                >
+                  Try again
+                </button>
+                <Link
+                  href="/account/subscriptions"
+                  className="text-[13px] font-semibold text-[var(--brand-navy)] hover:underline self-center"
+                >
+                  ← Back to subscriptions
+                </Link>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   if (!subscription || !view) {
     return (

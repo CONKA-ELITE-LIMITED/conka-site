@@ -141,8 +141,15 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
       ];
 
   const { cadence, cadenceLabel } = resolveCadence(subscription.interval);
-  const { displayName, funnelProduct } = resolveDisplayName(subscription, isMultiLine);
+  const { displayName, funnelProduct: rawFunnelProduct } = resolveDisplayName(
+    subscription,
+    isMultiLine,
+  );
   const funnelCadence = funnelCadenceKey(cadence);
+  // A funnel product only makes sense on a funnel cadence (monthly/quarterly).
+  // Legacy protocol duals bill weekly/bi-weekly, so keep them un-tagged (the
+  // display name can still read "Both"; funnel pricing/upsell must not apply).
+  const funnelProduct = funnelCadence ? rawFunnelProduct : null;
 
   const price =
     subscription.totalLineItemDiscountedPrice ??
