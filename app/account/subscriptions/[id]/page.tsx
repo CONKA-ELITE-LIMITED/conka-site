@@ -19,7 +19,7 @@ import { EditSubscriptionModal } from "@/app/components/subscriptions/EditSubscr
 import { MultiLineEditModal } from "@/app/components/subscriptions/MultiLineEditModal";
 import { ReactivateModal } from "@/app/components/subscriptions/ReactivateModal";
 import { PlaceOrderModal } from "@/app/components/subscriptions/PlaceOrderModal";
-import { SkipModal } from "@/app/components/subscriptions/SkipModal";
+import { DeliveryModal } from "@/app/components/subscriptions/DeliveryModal";
 import { SwapModal } from "@/app/components/subscriptions/SwapModal";
 import {
   formatDate,
@@ -69,24 +69,22 @@ function ProductCard({
   descriptor?: string;
 }) {
   return (
-    <div className="flex gap-4 rounded-md border border-black/8 bg-[#f7f7f8] p-3">
+    <div className="rounded-md border border-black/8 bg-[#f7f7f8] p-4">
       {image ? (
-        <span className="relative w-16 h-16 shrink-0 overflow-hidden rounded-md bg-white border border-black/8">
-          <Image src={image} alt="" fill sizes="64px" className="object-cover" />
+        <span className="relative block w-36 h-36 lg:w-40 lg:h-40 overflow-hidden rounded-md bg-white border border-black/8 mb-4">
+          <Image src={image} alt="" fill sizes="160px" className="object-cover" />
         </span>
       ) : (
-        <span className="w-16 h-16 shrink-0 rounded-md bg-[#f5f5f5] border border-black/8" />
+        <span className="block w-36 h-36 lg:w-40 lg:h-40 rounded-md bg-white border border-black/8 mb-4" />
       )}
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold text-black" style={{ letterSpacing: "-0.01em" }}>
-          {name}
-        </p>
-        <p className="font-semibold text-black tabular-nums mt-0.5">
-          £{price.toFixed(2)}
-          {quantity > 1 ? ` × ${quantity}` : ""}
-        </p>
-        {descriptor ? <p className="text-sm text-black/55 mt-0.5">{descriptor}</p> : null}
-      </div>
+      <p className="text-lg lg:text-xl font-semibold text-black" style={{ letterSpacing: "-0.01em" }}>
+        {name}
+      </p>
+      <p className="text-base font-semibold text-black tabular-nums mt-1">
+        £{price.toFixed(2)}
+        {quantity > 1 ? ` × ${quantity}` : ""}
+      </p>
+      {descriptor ? <p className="text-sm text-black/55 mt-0.5">{descriptor}</p> : null}
     </div>
   );
 }
@@ -128,7 +126,7 @@ export default function SubscriptionDetailPage() {
   const [showPause, setShowPause] = useState(false);
   const [showResume, setShowResume] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
-  const [showSkip, setShowSkip] = useState(false);
+  const [showDelivery, setShowDelivery] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
   const [showReactivate, setShowReactivate] = useState(false);
@@ -306,7 +304,7 @@ export default function SubscriptionDetailPage() {
             <div className="space-y-6">
               {/* Subscription tile: the product(s) plus the actions that manage them */}
               <DetailSection title="Products">
-                <div className="rounded-lg border border-black/10 bg-white p-4 space-y-4">
+                <div className="rounded-lg border border-black/10 bg-white p-4 space-y-4 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5">
                   {view.funnelProduct ? (
                     // Funnel subscriptions (Flow / Clear / Both) are a single combined
                     // product — one product tile, not a per-line breakdown.
@@ -344,18 +342,8 @@ export default function SubscriptionDetailPage() {
                         </button>
                       )}
                       {isActive && (
-                        <button onClick={() => setShowSkip(true)} disabled={actionLoading} className={btnGhost}>
-                          Skip next
-                        </button>
-                      )}
-                      {isActive && (
-                        <button onClick={() => setShowReschedule(true)} disabled={actionLoading} className={btnGhost}>
+                        <button onClick={() => setShowDelivery(true)} disabled={actionLoading} className={btnGhost}>
                           Reschedule delivery
-                        </button>
-                      )}
-                      {isActive && !subscription.hasUnfulfilledOrder && (
-                        <button onClick={() => setShowPlaceOrder(true)} disabled={actionLoading} className={btnGhost}>
-                          Order now
                         </button>
                       )}
                       {isPaused && (
@@ -559,16 +547,17 @@ export default function SubscriptionDetailPage() {
         hasUnfulfilledOrder={subscription.hasUnfulfilledOrder}
         interval={subscription.interval}
       />
-      <SkipModal
-        isOpen={showSkip}
-        onClose={() => setShowSkip(false)}
-        onSkipNext={() => withAction(() => skipNextOrder(subscription.id), "Next order skipped.")}
-        onReschedule={(epoch) => withAction(() => rescheduleSubscription(subscription.id, epoch), "Next delivery pushed back.")}
-        onPauseInstead={() => { setShowSkip(false); setShowPause(true); }}
+      <DeliveryModal
+        isOpen={showDelivery}
+        onClose={() => setShowDelivery(false)}
+        onSkip={() => withAction(() => skipNextOrder(subscription.id), "Next order skipped.")}
+        onChooseDate={() => { setShowDelivery(false); setShowReschedule(true); }}
+        onOrderNow={() => { setShowDelivery(false); setShowPlaceOrder(true); }}
+        canOrderNow={!subscription.hasUnfulfilledOrder}
         subscriptionName={view.displayName}
         cadenceHeroLabel={view.cadenceHeroLabel}
+        nextDate={subscription.nextBillingDate}
         price={view.price}
-        currentNextBillingDate={subscription.nextBillingDate}
       />
       {view.funnelProduct && view.funnelCadence && (
         <SwapModal
