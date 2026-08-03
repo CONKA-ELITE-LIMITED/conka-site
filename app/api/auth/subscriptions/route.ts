@@ -113,6 +113,29 @@ export async function GET(_request: NextRequest) {
           totalOrdersPlaced: 2,
           paymentMethod: { id: 1, brand: 'Visa', lastDigits: '4242', expiryMonth: 1, expiryYear: 28, status: 'safe' },
         },
+        // 3. Clear — monthly, cancelled (populates the Inactive section)
+        {
+          id: 'gid://shopify/SubscriptionContract/dev-mock-clear-cancelled',
+          status: 'cancelled',
+          nextBillingDate: '',
+          createdAt: ago90days.toISOString(),
+          updatedAt: ago30days.toISOString(),
+          product: {
+            id: 'dev-mock-clear-cancelled-product',
+            title: 'Conka Clear',
+            variantTitle: 'Monthly · 28 shots',
+            quantity: 28,
+            image: '/formulas/conkaClear/ClearBox.jpg',
+          },
+          price: { amount: '39.99', currencyCode: 'GBP' },
+          interval: { value: 1, unit: 'month' },
+          lines: [],
+          isMultiLine: false,
+          hasUnfulfilledOrder: false,
+          completedOrdersCount: 3,
+          totalOrdersPlaced: 3,
+          paymentMethod: null,
+        },
       ],
     });
   }
