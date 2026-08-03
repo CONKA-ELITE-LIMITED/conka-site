@@ -30,6 +30,7 @@ import {
 } from "@/app/account/subscriptions/utils";
 import { subscriptionRouteId, toDtcSubscriptionView } from "@/app/account/subscriptions/viewModel";
 import { getUpsellOffer } from "@/app/lib/funnelData";
+import { getFormulaImage } from "@/app/lib/productImageConfig";
 
 /** Section wrapper: label + rounded surface, consistent across the detail view. */
 function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
@@ -39,6 +40,14 @@ function DetailSection({ title, children }: { title: string; children: React.Rea
       {children}
     </section>
   );
+}
+
+/** Per-line product asset, derived from the line's product title. */
+function lineImage(productTitle: string): string {
+  const t = productTitle.toLowerCase();
+  if (t.includes("flow")) return getFormulaImage("01");
+  if (t.includes("clear") || t.includes("clarity")) return getFormulaImage("02");
+  return "";
 }
 
 export default function SubscriptionDetailPage() {
@@ -272,21 +281,39 @@ export default function SubscriptionDetailPage() {
             <div className="space-y-8">
               {/* Products */}
               <DetailSection title="Products">
-                <div className="rounded-md border border-black/10 bg-white divide-y divide-black/8">
-                  {view.lines.map((line, idx) => (
-                    <div key={line.id ?? idx} className="flex items-center justify-between gap-3 p-4">
-                      <span className="text-sm text-black min-w-0">
-                        {line.productTitle}
-                        {line.variantTitle ? (
-                          <span className="text-black/55"> · {line.variantTitle}</span>
-                        ) : null}
-                      </span>
-                      <span className="text-sm text-black/70 tabular-nums shrink-0">
-                        £{parseFloat(String(line.price)).toFixed(2)}
-                        {line.quantity > 1 ? ` × ${line.quantity}` : ""}
-                      </span>
-                    </div>
-                  ))}
+                <div className="space-y-3">
+                  {view.lines.map((line, idx) => {
+                    const img = lineImage(line.productTitle) || view.image;
+                    return (
+                      <div
+                        key={line.id ?? idx}
+                        className="flex gap-4 rounded-lg border border-black/10 bg-white p-4"
+                      >
+                        {img ? (
+                          <span className="relative w-16 h-16 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
+                            <Image src={img} alt="" fill sizes="64px" className="object-cover" />
+                          </span>
+                        ) : (
+                          <span className="w-16 h-16 shrink-0 rounded-md bg-[#f5f5f5] border border-black/8" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p
+                            className="font-semibold text-black"
+                            style={{ letterSpacing: "-0.01em" }}
+                          >
+                            {line.productTitle}
+                          </p>
+                          <p className="font-semibold text-black tabular-nums mt-0.5">
+                            £{parseFloat(String(line.price)).toFixed(2)}
+                            {line.quantity > 1 ? ` × ${line.quantity}` : ""}
+                          </p>
+                          {line.variantTitle ? (
+                            <p className="text-sm text-black/55 mt-0.5">{line.variantTitle}</p>
+                          ) : null}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
                 {(isActive || isPaused) && (
                   <button

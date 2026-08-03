@@ -93,10 +93,24 @@ const ACTIONS = [
   { href: "/account/details", label: "Account", Icon: AccountIcon },
 ] as const;
 
+/** Breadcrumb trail for the current account location. Root is always "Home". */
+function useAccountCrumbs(pathname: string): { label: string; href?: string }[] {
+  const path = pathname.replace(/\/+$/, "") || "/account";
+  const rest = path.startsWith("/account") ? path.slice("/account".length) : "";
+  const seg = rest.split("/").filter(Boolean);
+  const crumbs: { label: string; href?: string }[] = [{ label: "Home", href: "/account" }];
+  if (seg[0] === "orders") crumbs.push({ label: "Orders" });
+  else if (seg[0] === "details") crumbs.push({ label: "Account" });
+  else if (seg[0] === "subscriptions")
+    crumbs.push({ label: seg[1] ? "Subscription" : "Subscriptions" });
+  return crumbs;
+}
+
 export function AccountSubNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
+  const crumbs = useAccountCrumbs(pathname);
 
   const handleLogout = async () => {
     await logout();
@@ -109,44 +123,75 @@ export function AccountSubNav() {
   return (
     <nav
       aria-label="Account navigation"
-      className="bg-white pt-5 pb-4 px-4 lg:pt-8 lg:pb-5 lg:px-[5vw]"
+      className="bg-white pt-5 pb-2 px-4 lg:pt-7 lg:pb-2 lg:px-[5vw]"
     >
-      <div className="mx-auto max-w-[1280px] flex justify-between items-center gap-4 flex-wrap">
-        {/* Left: trust badge (also returns to the account home) */}
-        <Link
-          href="/account"
-          className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border-[1.5px] border-black/15 py-1 pl-2.5 pr-3 text-sm font-medium text-black hover:border-black/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
-        >
-          <ShieldCheckIcon />
-          Secure account
-        </Link>
+      <div className="mx-auto max-w-[1280px]">
+        {/* Header: trust badge + actions */}
+        <div className="flex justify-between items-center gap-4 flex-wrap">
+          {/* Left: trust badge (also returns to the account home) */}
+          <Link
+            href="/account"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border-[1.5px] border-black/15 py-1 pl-2.5 pr-3 text-sm font-medium text-black hover:border-black/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
+          >
+            <ShieldCheckIcon />
+            Secure account
+          </Link>
 
-        {/* Right: actions */}
-        <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-          {ACTIONS.map(({ href, label, Icon }) => {
-            const isActive = pathname.startsWith(href);
+          {/* Right: actions */}
+          <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+            {ACTIONS.map(({ href, label, Icon }) => {
+              const isActive = pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`${actionBase} text-black ${
+                    isActive ? "" : "hover:opacity-70"
+                  }`}
+                >
+                  <Icon />
+                  {label}
+                </Link>
+              );
+            })}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className={`${actionBase} text-black hover:opacity-70`}
+            >
+              <LogoutIcon />
+              Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Breadcrumb: where you are in the account */}
+        <div
+          aria-label="Breadcrumb"
+          className="mt-3 flex items-center gap-1.5 text-[13px] tabular-nums"
+        >
+          {crumbs.map((c, i) => {
+            const isLast = i === crumbs.length - 1;
             return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={isActive ? "page" : undefined}
-                className={`${actionBase} text-black ${
-                  isActive ? "" : "hover:opacity-70"
-                }`}
-              >
-                <Icon />
-                {label}
-              </Link>
+              <span key={c.label} className="flex items-center gap-1.5">
+                {i > 0 && (
+                  <span className="text-black/30" aria-hidden>
+                    ›
+                  </span>
+                )}
+                {c.href && !isLast ? (
+                  <Link href={c.href} className="text-black/50 hover:text-black transition-colors">
+                    {c.label}
+                  </Link>
+                ) : (
+                  <span className="font-semibold text-black" aria-current="page">
+                    {c.label}
+                  </span>
+                )}
+              </span>
             );
           })}
-          <button
-            type="button"
-            onClick={handleLogout}
-            className={`${actionBase} text-black hover:opacity-70`}
-          >
-            <LogoutIcon />
-            Logout
-          </button>
         </div>
       </div>
     </nav>
