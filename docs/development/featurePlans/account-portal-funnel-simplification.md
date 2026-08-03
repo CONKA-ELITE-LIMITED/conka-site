@@ -86,13 +86,13 @@ Enhance the existing `CancellationModal` (already has reason + pause/edit/discou
 
 | Phase | Description | Depends on | Risk |
 |-------|-------------|-----------|------|
-| **0** | Introduce the `DtcSubscriptionView` normalizer and render the current card from it: display name from `getSubscriptionType` (Flow/Clear/Both), headline = cadence + price. The tier badge, protocol subtitle/description, and formula-mix card fall out because the model has no such fields. Legacy protocol subs degrade to a generic card. | none | Low — ship now |
-| **1** | List → detail IA split for the Subscriptions tab; detail scaffold (Products / Upsell / Shipping / Summary / Billing sections), rendered from the view model. Markup + routing. | 0 | Medium |
+| **0** | ✅ **Done (SCRUM-1199).** Introduce the `DtcSubscriptionView` normalizer and render the card from it: display name from `getSubscriptionType` (Flow/Clear/Both), headline = cadence + price. The tier badge, protocol subtitle/description, and formula-mix card fall out because the model has no such fields. Legacy protocol subs degrade to a generic card. | none | Low |
+| **1** | ✅ **Done (SCRUM-1199).** List → detail IA split for the Subscriptions tab; deep-linkable detail route with Products / Upsell (read-only) / Shipping / Summary / Billing sections, rendered from the view model. | 0 | Medium |
 | **2** | **Swap model:** re-point edit/swap from protocol tiers to funnel product × cadence via `FUNNEL_VARIANTS`; `swapTargets` = same-cadence products; handle Both multi-line add/remove. | 0 | High (commerce logic) |
 | **3** | In-portal filtered upsell carousel (reuse `getUpsellOffer`). | 1, 2 | Medium |
 | **4** | Reason-driven cancel flow + order-milestone recognition, structured per Skio's cancel-flow recommendations. | 0 | Medium |
 
-Phase 0 lands the abstraction and ships on its own. Everything after builds on the view model; nothing here assumes or requires a platform migration.
+Phases 0 and 1 shipped together in SCRUM-1199 (the `DtcSubscriptionView` normalizer, compact list card, deep-linkable detail route, and retirement of the monolithic protocol `SubscriptionCard`). Phases 2-4 build on the view model; nothing here assumes or requires a platform migration.
 
 ## Affected files (current-state map)
 
@@ -109,6 +109,14 @@ Phase 0 lands the abstraction and ships on its own. Everything after builds on t
 
 - `app/lib/legacy/protocolSubscriptions.ts` and `PROTOCOL_VARIANTS` stay live for existing protocol subscribers — do not delete. Existing protocol subs must still render and renew; the view model degrades them gracefully (generic name, empty/locked `swapTargets`, no funnel-shaped tiles).
 - This is a platform-agnostic build on our current stack. Skio is a **pattern reference**, not a dependency or a migration; don't couple anything to Skio.
+
+## Jira
+
+| Ticket | Phases | Status |
+|--------|--------|--------|
+| SCRUM-1199 | 0 + 1 (view model, list → detail IA) | In Progress (built; branch `feature/account-portal-dtc-view-model`) |
+
+Phases 2-4 are not yet ticketed (scope them when picked up).
 
 ## References
 
