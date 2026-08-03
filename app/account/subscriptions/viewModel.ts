@@ -52,6 +52,8 @@ export interface DtcSubscriptionView {
   cadence: SubscriptionCadence;
   /** Human label: "Monthly" | "Quarterly" | fallback frequency label. */
   cadenceLabel: string;
+  /** Delivery-rhythm hero label (Magic-Mind style): "Every month" | "Every 3 months". */
+  cadenceHeroLabel: string;
   /** Authoritative charged total (Loop's discounted total, or the line price). */
   price: number;
   /** ISO next billing / delivery date. */
@@ -85,13 +87,17 @@ export function subscriptionRouteId(id: string): string {
 function resolveCadence(interval: Subscription["interval"]): {
   cadence: SubscriptionCadence;
   cadenceLabel: string;
+  cadenceHeroLabel: string;
 } {
   if (interval?.unit === "month") {
-    if (interval.value === 1) return { cadence: "monthly", cadenceLabel: "Monthly" };
-    if (interval.value === 3) return { cadence: "quarterly", cadenceLabel: "Quarterly" };
+    if (interval.value === 1)
+      return { cadence: "monthly", cadenceLabel: "Monthly", cadenceHeroLabel: "Every month" };
+    if (interval.value === 3)
+      return { cadence: "quarterly", cadenceLabel: "Quarterly", cadenceHeroLabel: "Every 3 months" };
   }
   // Legacy protocol subs use week/day intervals — keep their frequency label.
-  return { cadence: "other", cadenceLabel: intervalToFrequencyLabel(interval) };
+  const label = intervalToFrequencyLabel(interval);
+  return { cadence: "other", cadenceLabel: label, cadenceHeroLabel: label };
 }
 
 function resolveDisplayName(
@@ -140,7 +146,7 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
         },
       ];
 
-  const { cadence, cadenceLabel } = resolveCadence(subscription.interval);
+  const { cadence, cadenceLabel, cadenceHeroLabel } = resolveCadence(subscription.interval);
   const { displayName, funnelProduct: rawFunnelProduct } = resolveDisplayName(
     subscription,
     isMultiLine,
@@ -171,6 +177,7 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
     displayName,
     cadence,
     cadenceLabel,
+    cadenceHeroLabel,
     price: Number.isFinite(price) ? price : 0,
     nextDate: subscription.nextBillingDate,
     status: subscription.status,
