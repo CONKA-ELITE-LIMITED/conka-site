@@ -23,7 +23,6 @@ import { SkipModal } from "@/app/components/subscriptions/SkipModal";
 import { SwapModal } from "@/app/components/subscriptions/SwapModal";
 import {
   formatDate,
-  getStatusColor,
   getProtocolFromSubscription,
   getCurrentPlan,
   getSubscriptionType,
@@ -70,9 +69,9 @@ function ProductCard({
   descriptor?: string;
 }) {
   return (
-    <div className="flex gap-4 rounded-lg border border-black/10 bg-white p-4">
+    <div className="flex gap-4 rounded-md border border-black/8 bg-[#f7f7f8] p-3">
       {image ? (
-        <span className="relative w-16 h-16 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
+        <span className="relative w-16 h-16 shrink-0 overflow-hidden rounded-md bg-white border border-black/8">
           <Image src={image} alt="" fill sizes="64px" className="object-cover" />
         </span>
       ) : (
@@ -255,8 +254,6 @@ export default function SubscriptionDetailPage() {
     "rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-5 py-2.5 min-h-[44px] hover:opacity-90 disabled:opacity-50 flex items-center gap-2 transition-opacity";
   const btnGhost =
     "rounded-full border border-black/10 hover:border-black/40 bg-white text-black text-[13px] font-medium px-5 py-2.5 min-h-[44px] disabled:opacity-50 flex items-center gap-2 transition-colors";
-  const btnDanger =
-    "rounded-full border border-red-400 bg-transparent text-red-600 text-[13px] font-medium px-5 py-2.5 min-h-[44px] hover:bg-red-50/50 disabled:opacity-50 flex items-center gap-2 transition-colors";
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -267,42 +264,25 @@ export default function SubscriptionDetailPage() {
         <section className="brand-section brand-bg-white" aria-labelledby="subscription-detail-heading">
           <div className="brand-track max-w-[720px]">
             <Link
-              href="/account/subscriptions"
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-black/55 hover:text-black transition-colors mb-6"
+              href="/account"
+              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-black/55 hover:text-black transition-colors mb-4"
             >
               ← Subscriptions
             </Link>
 
-            {/* Header */}
-            <div className="flex items-start gap-4 mb-8">
-              {view.image ? (
-                <span className="relative w-20 h-20 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
-                  <Image src={view.image} alt="" fill sizes="80px" className="object-cover" />
-                </span>
-              ) : null}
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <h1
-                    id="subscription-detail-heading"
-                    className="text-2xl lg:text-3xl font-semibold text-black"
-                    style={{ letterSpacing: "-0.02em" }}
-                  >
-                    {view.displayName}
-                  </h1>
-                  <span
-                    className={`px-3 py-1 rounded-full font-mono text-[9px] uppercase tracking-[0.12em] tabular-nums font-semibold ${getStatusColor(
-                      view.status,
-                    )}`}
-                  >
-                    {statusLabel}
-                  </span>
-                </div>
-                <p className="text-sm text-black/60 tabular-nums">
-                  {view.cadenceLabel} · £{view.price.toFixed(2)}
-                  {isActive && view.nextDate ? ` · renews ${formatDate(view.nextDate)}` : ""}
-                  {isPaused ? " · paused" : ""}
-                </p>
-              </div>
+            {/* Hero: delivery rhythm leads, product lives in the tile below */}
+            <div className="mb-6">
+              <h1
+                id="subscription-detail-heading"
+                className="text-3xl lg:text-4xl font-semibold text-black"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                {view.cadenceHeroLabel}
+              </h1>
+              <p className="text-sm text-black/60 tabular-nums mt-1.5">
+                £{view.price.toFixed(2)} · {statusLabel}
+                {isActive && view.nextDate ? ` · renews ${formatDate(view.nextDate)}` : ""}
+              </p>
             </div>
 
             {feedback && (
@@ -323,54 +303,77 @@ export default function SubscriptionDetailPage() {
               </div>
             )}
 
-            <div className="space-y-8">
-              {/* Products */}
+            <div className="space-y-6">
+              {/* Subscription tile: the product(s) plus the actions that manage them */}
               <DetailSection title="Products">
-                {view.funnelProduct ? (
-                  // Funnel subscriptions (Flow / Clear / Both) are a single combined
-                  // product — render one clean card, not a per-line breakdown.
-                  <div className="space-y-3">
+                <div className="rounded-lg border border-black/10 bg-white p-4 space-y-4">
+                  {view.funnelProduct ? (
+                    // Funnel subscriptions (Flow / Clear / Both) are a single combined
+                    // product — one product tile, not a per-line breakdown.
                     <ProductCard
                       image={view.image}
                       name={view.displayName}
                       price={view.price}
                       descriptor={view.lines[0]?.variantTitle || view.cadenceLabel}
                     />
-                    {(isActive || isPaused) && (
-                      <button
-                        type="button"
-                        onClick={() => setShowSwap(true)}
-                        className={btnGhost}
-                        disabled={actionLoading}
-                      >
-                        Swap product
+                  ) : (
+                    <div className="space-y-3">
+                      {view.lines.map((line, idx) => (
+                        <ProductCard
+                          key={line.id ?? idx}
+                          image={lineImage(line.productTitle) || view.image}
+                          name={line.productTitle}
+                          price={parseFloat(String(line.price))}
+                          quantity={line.quantity}
+                          descriptor={line.variantTitle}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Positive actions live inside the tile */}
+                  {(isActive || isPaused) && (
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-black/8">
+                      {view.funnelProduct ? (
+                        <button onClick={() => setShowSwap(true)} disabled={actionLoading} className={btnGhost}>
+                          Swap product
+                        </button>
+                      ) : (
+                        <button onClick={() => setShowEdit(true)} disabled={actionLoading} className={btnGhost}>
+                          Change plan
+                        </button>
+                      )}
+                      {isActive && (
+                        <button onClick={() => setShowSkip(true)} disabled={actionLoading} className={btnGhost}>
+                          Skip next
+                        </button>
+                      )}
+                      {isActive && (
+                        <button onClick={() => setShowReschedule(true)} disabled={actionLoading} className={btnGhost}>
+                          Reschedule delivery
+                        </button>
+                      )}
+                      {isActive && !subscription.hasUnfulfilledOrder && (
+                        <button onClick={() => setShowPlaceOrder(true)} disabled={actionLoading} className={btnGhost}>
+                          Order now
+                        </button>
+                      )}
+                      {isPaused && (
+                        <button onClick={() => setShowResume(true)} disabled={actionLoading} className={btnPrimary}>
+                          Resume subscription
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {isPast && (
+                    <div className="pt-4 border-t border-black/8">
+                      <button onClick={() => setShowReactivate(true)} disabled={actionLoading} className={btnPrimary}>
+                        Reactivate
                       </button>
-                    )}
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {view.lines.map((line, idx) => (
-                      <ProductCard
-                        key={line.id ?? idx}
-                        image={lineImage(line.productTitle) || view.image}
-                        name={line.productTitle}
-                        price={parseFloat(String(line.price))}
-                        quantity={line.quantity}
-                        descriptor={line.variantTitle}
-                      />
-                    ))}
-                  </div>
-                )}
-                {(isActive || isPaused) && (
-                  <button
-                    type="button"
-                    onClick={() => setShowEdit(true)}
-                    className={btnGhost}
-                    disabled={actionLoading}
-                  >
-                    Change plan
-                  </button>
-                )}
+                    </div>
+                  )}
+                </div>
               </DetailSection>
 
               {/* Upsell (read-only) */}
@@ -459,39 +462,27 @@ export default function SubscriptionDetailPage() {
                 )}
               </DetailSection>
 
-              {/* Actions */}
-              <div className="flex flex-wrap gap-3 pt-2">
-                {isActive && (
-                  <button onClick={() => setShowPlaceOrder(true)} disabled={actionLoading || subscription.hasUnfulfilledOrder} className={btnGhost}>
-                    Order now
-                  </button>
-                )}
-                {isActive && (
-                  <button onClick={() => setShowSkip(true)} disabled={actionLoading} className={btnGhost}>
-                    Skip next order
-                  </button>
-                )}
-                {isActive && (
-                  <button onClick={() => setShowReschedule(true)} disabled={actionLoading} className={btnGhost}>
-                    Reschedule delivery
-                  </button>
-                )}
-                {(isActive || isPaused) && (
-                  <button onClick={() => (isPaused ? setShowResume(true) : setShowPause(true))} disabled={actionLoading} className={btnGhost}>
-                    {isPaused ? "Resume subscription" : "Pause subscription"}
-                  </button>
-                )}
-                {(isActive || isPaused) && (
-                  <button onClick={() => setShowCancel(true)} disabled={actionLoading} className={btnDanger}>
+              {/* Manage: quiet, de-emphasized so the positive path stays primary */}
+              {(isActive || isPaused) && (
+                <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-[13px]">
+                  {isActive && (
+                    <button
+                      onClick={() => setShowPause(true)}
+                      disabled={actionLoading}
+                      className="text-black/45 hover:text-black/70 hover:underline transition-colors disabled:opacity-50"
+                    >
+                      Pause subscription
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowCancel(true)}
+                    disabled={actionLoading}
+                    className="text-black/45 hover:text-black/70 hover:underline transition-colors disabled:opacity-50"
+                  >
                     Cancel subscription
                   </button>
-                )}
-                {isPast && (
-                  <button onClick={() => setShowReactivate(true)} disabled={actionLoading} className={btnPrimary}>
-                    Reactivate
-                  </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </section>

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-03** | Account detail page: cadence-led hero, single subscription tile with in-tile actions, demoted negative actions; redirect /account/subscriptions to overview
 - **2026-08-03** | Account portal Phase 2 (SCRUM-1200): Both renders as one product, Skip modal, and same-cadence product Swap (behind a group-id guard until configured)
 - **2026-08-03** | Account overview polish (welcome emoji, compact navy stat bar), account breadcrumb, and MM-style Products cards on the subscription detail page
 - **2026-08-03** | Rebuilt account overview to a subscription-focused layout; vertical MM-style subscription tiles with status badges
