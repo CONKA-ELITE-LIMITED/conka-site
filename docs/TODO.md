@@ -5,6 +5,29 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Account Portal / Subscriptions
+
+### Per-shot cost derived from stale protocol-tier table (wrong for all funnel subscribers)
+
+**Status:** Deferred (needs real Loop subscription data to verify the fix)
+**Files:**
+- `app/account/subscriptions/utils.ts` (`getTierDisplayInfo` ~217-273, `getCurrentPlan` ~117-145) — single-line shot/price source
+- `app/components/subscriptions/SubscriptionCard.tsx` (~170-247) — renders Shots / Total price / Per shot tiles; multi-line shot derivation ~195-203
+- Data available but unused: `app/api/auth/subscriptions/route.ts` (~396-403) passes each line's `variantShopifyId`, `variantTitle`, `quantity`, `price`
+- Correct shot counts: `app/lib/funnelData.ts` (`FUNNEL_PRICING`)
+
+**Symptom:** The account subscription cards compute "Shots per delivery" and "Per shot" from a hardcoded **protocol-tier** table (`standardPricing` 4/12/28, `ultimatePricing` 28/56) with the tier *inferred* from title keywords or billing interval. This table is the retired protocol model; the live funnel products (Flow/Clear/Both = 20/40/60/120 shots) match none of it. Example: a Flow Monthly subscriber (£39.99, 20 shots) is inferred as `max` → 28 shots → per-shot shown as **£1.43** instead of the real **£2.00**. The multi-line "Both" path only recognises the substrings 56/28/12/8/4 in `variantTitle`, so a 40-shot box falls back to `quantity` (≈1) and is also wrong. Full analysis: `docs/product/SKU_AND_SHOT_REFERENCE.md` §5.
+
+**Impact:** Every funnel-era subscriber (i.e. all current subscribers) sees an incorrect shot count and per-shot cost on their account page. Cosmetic/trust issue, not a billing error — the price charged is Loop's actual amount; only the *displayed* shots and derived per-shot are wrong.
+
+**What unblocks it:** confirm what a **real active funnel subscription's line data** actually looks like in Loop (`product.title`, `variantTitle`, `quantity`, `variantShopifyId`) — pull one live example via the account page or Loop dashboard. Needed because recurring monthly funnel variants (FLOW-FUNNEL-20 etc.) are **not** in the codebase (Loop swaps to them after order 1), so a variant-GID → shots map alone can't resolve them; the resolver must parse `variantTitle`/SKU, and the exact format has to be verified rather than guessed.
+
+**How to apply when confirmed:** replace the hardcoded tier-shot table with a shot resolver that (1) matches `variantShopifyId` against a combined funnel + main-site + legacy variant→shots map, (2) falls back to parsing "N shot(s)" / a trailing pack number from `variantTitle`/title, (3) falls back to `quantity`. Compute per-shot = displayed price ÷ resolved shots. Pick and document one definition of "shots" per surface (see the shot-count ambiguity in SKU_AND_SHOT_REFERENCE.md §4). Keep the legacy protocol path working for existing protocol subscribers.
+
+**Why deferred:** touches live subscriber-facing money display and can't be verified from code alone (real Loop line format unknown). Scoped as docs-only on the review branch; the code fix follows once a real funnel subscription's data is confirmed.
+
+---
+
 ## Analytics / Attribution
 
 ### Listicle `persona:` order tags aren't writing (no `write_orders` on live token)

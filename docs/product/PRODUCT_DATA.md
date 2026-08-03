@@ -3,6 +3,8 @@
 Overview of how product data is organized, where Shopify variant IDs live, and how to use helpers.
 
 > **For the physical formulation (per-shot doses, ingredients, %NRV, nutrition label data):** see [FORMULATION_SPEC.md](./FORMULATION_SPEC.md).
+>
+> **For the actual SKUs, variant GIDs, selling plans, shot counts, and prices** (funnel / main-site / legacy protocol) and the account per-shot display logic: see [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md). This doc covers how the *code* is organised; that one is the data.
 
 ## Two Product Systems
 
@@ -25,26 +27,25 @@ They are intentionally separate. The funnel system was built standalone to avoid
 productTypes.ts           → Core types (no dependencies)
     ↓
 productColors.ts          → Colors and gradients
-productPricing.ts         → Pricing data, VAT, B2B constants
+productPricing.ts         → Formula pricing data, VAT, B2B constants
 formulaContent.ts         → Formula narrative, ingredients, clinical data
-protocolContent.ts        → Protocol content and tier configs (being removed)
+productImages.ts          → Formula image sets (slideshows, quarterly swaps)
     ↓
-productHelpers.ts         → Pricing lookups, formatting, calendar generation
+productHelpers.ts         → Pricing lookups + formatting (imports productPricing)
     ↓
 productData.ts            → BARREL: re-exports everything above
     ↓
 shopifyProductMapping.ts  → Maps internal IDs → Shopify variant GIDs + selling plans
 productMetadata.ts        → Reverse: Shopify variant GID → internal product info
-b2bCartTier.ts            → B2B tier logic (box count → tier → variant updates)
 ```
 
-**Barrel export:** `productData.ts` re-exports everything, so consumers use `from "@/app/lib/productData"`.
+**Barrel export:** `productData.ts` re-exports `productTypes`, `productColors`, `productPricing`, `formulaContent`, `productHelpers`, and `productImages`, so consumers use `from "@/app/lib/productData"`. It **deliberately excludes all protocol data** — those types/IDs live in `app/lib/legacy/protocolSubscriptions.ts` (retired-product support; see [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §3).
 
 ### Modules
 
 #### `productTypes.ts`
 **Purpose:** Shared type definitions
-**Dependencies:** None
+**Dependencies:** None (re-exports `ProtocolId`/`ProtocolTier` from `legacy/protocolSubscriptions` to keep the `ProductId` union whole)
 **Exports:** `FormulaId`, `PackSize`, `PurchaseType`, `ProtocolId`, `ProtocolTier`, `ProductId`
 
 #### `productColors.ts`
@@ -53,24 +54,26 @@ b2bCartTier.ts            → B2B tier logic (box count → tier → variant upd
 **Exports:** `FORMULA_COLORS`, `PRODUCT_GRADIENTS`, `getProductGradient`, `getProductAccent`, `PROTOCOL_COLORS`, `getProtocolGradient`, `getProtocolAccent`, `interpolateHex`
 
 #### `productPricing.ts`
-**Purpose:** All pricing data for formulas and protocols
+**Purpose:** Pricing data for the main-site formula packs (4/8/12/28), plus VAT/B2B constants
 **Dependencies:** None
-**Exports:** `formulaPricing`, `protocolPricing`
+**Exports:** `formulaPricing` (and pricing constants). Display-only; cart/checkout prices come from Shopify — see [`../development/CART_PRICING_SOURCE_OF_TRUTH.md`](../development/CART_PRICING_SOURCE_OF_TRUTH.md).
 
 #### `formulaContent.ts`
 **Purpose:** Formula content, struggle types, and clinical data
 **Dependencies:** `productTypes` (FormulaId)
 **Exports:** `StruggleId`, `RadarDataPoint`, `ClinicalStudy`, `StruggleSolution`, `Ingredient`, `ClinicalResult`, `FormulaBenefit`, `FormulaContent`, `formulaContent`, `STRUGGLE_OPTIONS`
 
-#### `protocolContent.ts`
-**Purpose:** Protocol content and tier configurations (being phased out — see `WEBSITE_SIMPLIFICATION_PLAN.md`)
-**Dependencies:** `productTypes` (ProtocolId, ProtocolTier)
-**Exports:** `ProtocolTierConfig`, `ProtocolBenefitStat`, `ProtocolContent`, `protocolContent`
+#### `productImages.ts`
+**Purpose:** Formula image sets used by the funnel and product surfaces (slideshow frames, quarterly-cadence first-slide swaps)
+**Dependencies:** None
+**Exports:** `formulaImages`, `quarterlyImages`
 
 #### `productHelpers.ts`
-**Purpose:** Pure helper functions — pricing lookups, formatting, calendar generation
-**Dependencies:** `productTypes`, `productPricing`, `protocolContent`
-**Exports:** `formatPrice`, `getFormulaPricing`, `getProtocolPricing`, `getBillingLabel`, `generateProtocolCalendarDays`
+**Purpose:** Pure helper functions — formula pricing lookups + formatting
+**Dependencies:** `productTypes` (types), `productPricing` (`formulaPricing`)
+**Exports:** `formatPrice`, `getFormulaPricing`, `getBillingLabel`
+
+> **Note:** protocol content, protocol pricing helpers, and the protocol calendar have been removed from the main modules. The former `protocolContent.ts` and the `getProtocolPricing`/`generateProtocolCalendarDays` helpers no longer exist. Protocol *display* data that survives lives in `app/lib/subscriptionProduct.ts` (`PROTOCOLS`); protocol *commerce* IDs live in `app/lib/legacy/protocolSubscriptions.ts`.
 
 ### Shopify Integration Layer
 
@@ -141,36 +144,23 @@ funnelCheckout.ts   → Isolated cart creation, analytics, checkout URL redirect
 | `isVariantReady()` | Check if a combination has a real Shopify variant ID |
 | `getUpsellOffer()` | Contextual upsell logic (Flow→Both, Clear→Both, OTP→Sub, Monthly→Quarterly) |
 
-### Funnel Pricing (from COGS analysis, 2026-03-27)
+### Funnel Pricing (current — "priced + free shots" model)
 
-| | Monthly Sub | Monthly OTP | Quarterly Sub |
+The prices below are the live model (`FUNNEL_PRICING` in `funnelData.ts`). The **full** SKU / shot-count / per-shot table — including free-shot bonuses and the Loop first-order swap — is the source of truth in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1. Don't duplicate it; this is the short version.
+
+| | Monthly Sub | One-time | Quarterly Sub |
 |---|---|---|---|
-| **Flow** (28 shots) | £59.99 | £79.99 | £149.99 |
-| **Clear** (28 shots) | £59.99 | £79.99 | £149.99 |
-| **Both** (56 shots) | £89.99 | £129.99 | £229.99 |
+| **Flow** | £39.99 (20 shots) | £69.98 (20) | £109.99 (60) |
+| **Clear** | £39.99 (20 shots) | £69.98 (20) | £109.99 (60) |
+| **Both** | £74.99 (40 shots) | £99.98 (40) | £149.99 (120) |
 
-### Funnel Shopify Products
+Shot counts are **priced** shots. Monthly subs ship a bonus box on the first order only (Loop swaps the SKU from order 2); quarterly ships a bonus every cycle. One-time prices bake in £9.99 compulsory postage.
 
-3 products tagged `funnel`, each with 2 variants (monthly + quarterly size):
+### Funnel Shopify variants & selling plans
 
-| Product | Shopify title | Monthly variant | Quarterly variant |
-|---------|--------------|-----------------|-------------------|
-| Flow | CONKA Flow AM | Flow - 28 Shots (£79.99) | Flow - 84 Shots (£229.99) |
-| Clear | CONKA Clear PM | Clear - 28 Shots (£79.99) | Clear - 84 Shots (£229.99) |
-| Both | CONKA Flow + Clear | Both - 56 Shots (£129.99) | Both - 168 Shots (£389.99) |
+9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `FUNNEL_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
 
-### Funnel Selling Plans (Loop)
-
-4 selling plans (fixed amount discount):
-
-| Plan (internal name) | Discount | Attached to | Sub price result |
-|----------------------|----------|-------------|------------------|
-| Monthly Single Subscription - Funnel | £20 off | Flow, Clear (28-shot variant) | £59.99 |
-| Monthly Dual Subscription - Funnel | £40 off | Both (56-shot variant) | £89.99 |
-| Quarterly Single Subscription - Funnel | £80 off | Flow, Clear (84-shot variant) | £149.99 |
-| Quarterly Dual Subscription - Funnel | £160 off | Both (168-shot variant) | £229.99 |
-
-**Why 4 plans?** Loop selling plans apply a fixed discount globally to all products they're attached to. Flow/Clear and Both have different base prices, so they need different discount amounts. Monthly and quarterly use different variants (different base prices), so they also need separate plans.
+**Why separate monthly vs quarterly selling plans?** Loop selling plans apply a fixed discount globally to every product they're attached to. Flow/Clear and Both have different base prices, and monthly vs quarterly use different variants, so each combination needs its own plan.
 
 ### `funnelCheckout.ts`
 **Purpose:** Creates an isolated Shopify cart and redirects to checkout. Does not use global CartContext or open the cart drawer.
@@ -184,7 +174,7 @@ funnelCheckout.ts   → Isolated cart creation, analytics, checkout URL redirect
 ### Main Site Pricing
 
 ```typescript
-import { getFormulaPricing, getProtocolPricing, formatPrice } from "@/app/lib/productData";
+import { getFormulaPricing, formatPrice } from "@/app/lib/productData";
 
 const pricing = getFormulaPricing("28", "subscription");
 // Returns: { price: number, priceExVat: number, billing: string }
@@ -198,7 +188,7 @@ const displayPrice = formatPrice(123.45); // "£123.45"
 import { getOfferPricing, getOfferVariant, isVariantReady } from "@/app/lib/funnelData";
 
 const pricing = getOfferPricing("both", "monthly-sub");
-// Returns: { price: 89.99, perShot: 1.61, perDay: 3.22, shotCount: 56, compareAtPrice: 129.99 }
+// Returns: { price: 74.99, perShot: 1.87, perDay: 3.74, shotCount: 40, compareAtPrice: 89.99, freeShots: 16, firstOrderShots: 56, ... }
 
 const variant = getOfferVariant("flow", "quarterly-sub");
 // Returns: { variantId: "gid://shopify/ProductVariant/...", sellingPlanId: "gid://shopify/SellingPlan/..." }
@@ -227,22 +217,24 @@ import { FunnelProduct, getOfferPricing, FUNNEL_PRODUCTS } from "@/app/lib/funne
 ## Dependency Graph
 
 ```
-productTypes (foundation — no deps)
+productTypes (foundation — no deps; re-exports ProtocolId/Tier from legacy)
     ↓
     ├→ productColors
     ├→ productPricing
     ├→ formulaContent
-    ├→ protocolContent
+    ├→ productImages
     │
-    └→ productHelpers (imports productPricing, protocolContent)
+    └→ productHelpers (imports productPricing)
         │
         └→ productData (BARREL: re-exports all above)
             │
             ├→ shopifyProductMapping (variant GIDs)
-            └→ productMetadata (reverse variant lookup)
+            └→ productMetadata (reverse variant lookup — also reads legacy/protocolSubscriptions)
 
-funnelData (INDEPENDENT — only imports formatPrice from productData)
+funnelData (INDEPENDENT — only imports formatPrice + image sets from productData)
     └→ funnelCheckout (cart creation + analytics)
+
+legacy/protocolSubscriptions (dependency leaf — retired-product IDs, imported by productTypes + productMetadata)
 ```
 
 ## Key Principles
