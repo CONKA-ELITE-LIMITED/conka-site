@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-03** | Remove the wrong Shots-per-delivery and Per-shot tiles from account subscription cards (kept Billing + Total price)
 - **2026-08-03** | Add docs index + canonical SKU/shot reference, refresh stale product-data doc, and log the account per-shot display bug as deferred work
 - **2026-08-03** | Extended the first-week-free offer badge (hero pill + "+8 free shots" sticky sub-line) to the ADHD and Brain-ageing listicles
 - **2026-08-02** | Productivity listicle: add a first-week-free offer badge to the hero and sticky CTA to message-match the free-week ad angle

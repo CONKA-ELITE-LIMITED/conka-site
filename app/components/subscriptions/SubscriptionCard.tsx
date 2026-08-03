@@ -168,11 +168,9 @@ export function SubscriptionCard({
         </div>
 
         {(() => {
-          // For multi-line: derive stats from all lines rather than from a single product.
+          // For multi-line: derive the total from all lines rather than from a single product.
           let displayFrequency: string;
           let displayPrice: number;
-          let displayShots: number | null;
-          let displayPricePerShot: number | null;
 
           // Active discounts (exclude shipping-only)
           const activeDiscounts = (subscription.discounts ?? []).filter(
@@ -191,27 +189,19 @@ export function SubscriptionCard({
               );
               displayPrice = lineTotal > 0 ? lineTotal : parseFloat(subscription.price.amount) || 0;
             }
-            // Infer shot count per line from variantTitle
-            const shotsTotal = lines.reduce((sum, l) => {
-              const v = (l.variantTitle || "").toLowerCase();
-              for (const s of [56, 28, 12, 8, 4]) {
-                if (v.includes(String(s))) return sum + s;
-              }
-              return sum + l.quantity;
-            }, 0);
-            displayShots = shotsTotal > 0 ? shotsTotal : null;
-            displayPricePerShot = (displayShots && displayPrice) ? displayPrice / displayShots : null;
           } else {
             displayFrequency = info.frequency;
             // Use Loop's discounted total if available, otherwise fall back to derived price
             displayPrice = subscription.totalLineItemDiscountedPrice ?? info.price;
-            displayShots = info.shots;
-            displayPricePerShot = displayShots ? displayPrice / displayShots : info.pricePerShot;
           }
 
           return (
             <div className="space-y-2">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 rounded-md bg-[#f5f5f5] border border-black/10">
+              {/* Billing + total only. Shots-per-delivery and per-shot were removed:
+                  their counts came from a stale protocol-tier table that is wrong for
+                  funnel products, and per-shot adds little value post-purchase.
+                  See docs/product/SKU_AND_SHOT_REFERENCE.md §5. */}
+              <div className="grid grid-cols-2 gap-4 p-5 rounded-md bg-[#f5f5f5] border border-black/10">
                 <div>
                   <p className="text-[13px] text-black/50 mb-1">
                     Billing
@@ -226,22 +216,6 @@ export function SubscriptionCard({
                   </p>
                   <p className="font-semibold text-black tabular-nums" style={{ letterSpacing: "-0.02em" }}>
                     £{displayPrice.toFixed(2)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[13px] text-black/50 mb-1">
-                    Shots
-                  </p>
-                  <p className="font-semibold text-black tabular-nums" style={{ letterSpacing: "-0.02em" }}>
-                    {displayShots != null ? `${displayShots} per delivery` : "—"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[13px] text-black/50 mb-1">
-                    Per shot
-                  </p>
-                  <p className="font-semibold text-black tabular-nums" style={{ letterSpacing: "-0.02em" }}>
-                    {displayPricePerShot != null ? `£${displayPricePerShot.toFixed(2)}` : "—"}
                   </p>
                 </div>
               </div>

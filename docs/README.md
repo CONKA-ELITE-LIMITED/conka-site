@@ -24,7 +24,7 @@ The most important cluster for anything touching products, variants, or money.
 
 | Doc | Source of truth for |
 |-----|--------------------|
-| [`product/SKU_AND_SHOT_REFERENCE.md`](./product/SKU_AND_SHOT_REFERENCE.md) | **Canonical SKU + shot-count map** across all three product generations (funnel / legacy protocol / main-site formula). Reconciles the conflicting shot-count numbers and documents the account-portal per-shot display logic + its known bug. Start here for "which SKU / how many shots / what price". |
+| [`product/SKU_AND_SHOT_REFERENCE.md`](./product/SKU_AND_SHOT_REFERENCE.md) | **Canonical SKU + shot-count map** across all three product generations (funnel / legacy protocol / main-site formula). Reconciles the conflicting shot-count numbers and documents the account-portal shot/per-shot display history (why the tiles were removed). Start here for "which SKU / how many shots / what price". |
 | [`product/PRODUCT_DATA.md`](./product/PRODUCT_DATA.md) | How the product-data **code** is organised: the two systems (main site barrel vs funnel), module dependency graph, where Shopify GIDs live. |
 | [`product/FORMULATION_SPEC.md`](./product/FORMULATION_SPEC.md) | Physical formulation: per-shot doses, ingredients, %NRV, nutrition-label data for Flow (01) and Clear (02). |
 | [`product/LOOX_PRODUCT_IDS_AND_SHOPIFY.md`](./product/LOOX_PRODUCT_IDS_AND_SHOPIFY.md) | Loox → Shopify product-ID mapping for reviews. |

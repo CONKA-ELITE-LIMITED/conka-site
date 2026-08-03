@@ -118,22 +118,14 @@ So "pack size 12" and "per-delivery 6" are both real and both correct for their 
 
 ---
 
-## 5. Account-portal per-shot display — current logic & known bug
+## 5. Account-portal shot / per-shot display — history & current state
 
-**Where:** the Shots / Total price / Per shot tiles on subscription cards.
-- `app/components/subscriptions/SubscriptionCard.tsx` (lines ~170-247) — renders the tiles.
-- `app/account/subscriptions/utils.ts` `getTierDisplayInfo` (lines ~217-273) — single-line shot/price source.
+**Current state (resolved by removal):** the subscription card (`app/components/subscriptions/SubscriptionCard.tsx`) shows only **Billing** and **Total price**. The **Shots per delivery** and **Per shot** tiles were **removed**, because their numbers were wrong (see below) and per-shot adds little value once someone has already subscribed.
 
-**How it derives shots today (single-line):**
-1. `getCurrentPlan` infers a tier (`starter`/`pro`/`max`) from the product title keywords (`-4`/`-12`/`-28`/`-56`, "starter/pro/max") or, failing that, from the billing interval (weekly→starter, bi-weekly→pro, **monthly→max**).
-2. A hardcoded table maps tier→shots: `standardPricing` = 4 / 12 / 28; `ultimatePricing` = 28 / 56.
-3. Per shot = actual Loop-charged price ÷ that hardcoded shot count.
+**What was wrong (why they were removed):**
+- Shots came from `app/account/subscriptions/utils.ts` `getTierDisplayInfo`: `getCurrentPlan` inferred a tier (`starter`/`pro`/`max`) from product-title keywords or the billing interval (weekly→starter, bi-weekly→pro, **monthly→max**), then a hardcoded table mapped tier→shots (`standardPricing` 4/12/28, `ultimatePricing` 28/56) and per-shot = price ÷ that count.
+- That table is the retired **protocol** model. The current **funnel** products (Flow/Clear/Both = 20/40/60/120 shots) match none of it: a Flow Monthly sub (£39.99, 20 shots) inferred as `max` → 28 shots → per-shot £39.99/28 = **£1.43** instead of **£2.00**. The multi-line "Both" path scanned `variantTitle` only for `56/28/12/8/4`, so a 40-shot box fell back to `quantity` (≈1) and was also wrong.
 
-**The bug:** this table is the retired **protocol** model. The current **funnel** products (Flow/Clear/Both = 20/40/60/120 shots) match none of it, so:
+**`getTierDisplayInfo` still exists** and still carries the stale `shots`/`pricePerShot` fields — they are simply no longer read by the card. `TierSelectorPanel.tsx` (the plan-edit UI) still renders a `£X/shot` figure from the same stale source; that surface was **not** touched by this change and remains protocol-shaped.
 
-- A **Flow Monthly** subscriber (£39.99, really 20 shots) → title "Flow" + monthly interval → inferred `max` → **28 shots** → per shot shown as £39.99 / 28 = **£1.43**. Correct figure is £39.99 / 20 = **£2.00**. Both the shot count and per-shot are wrong.
-- The **multi-line ("Both")** path (`SubscriptionCard.tsx` ~195-203) scans `variantTitle` only for the substrings `56/28/12/8/4`. A 40-shot Both box matches none, so it falls back to line `quantity` (≈1) — wrong shots and wrong per-shot again.
-
-**Why it's fixable but deferred:** the API already passes each line's `variantShopifyId`, `variantTitle`, `quantity`, and `price` through (`app/api/auth/subscriptions/route.ts` ~396-403). A resolver could combine a variant-GID→shots map (§1/§2/§3) with `variantTitle` parsing and a `quantity` fallback. The catch (see §1): **recurring monthly funnel variants (FLOW-FUNNEL-20 etc.) are not in the codebase**, so variant-GID lookup alone can't cover post-first-order subscribers — the fix needs `variantTitle`/SKU parsing verified against **real Loop subscription data**, which is why it is not done here.
-
-**Tracked as:** the deferred item in [`../TODO.md`](../TODO.md) → "Account portal: per-shot cost derived from stale protocol-tier table".
+**If shot count is ever reinstated** (e.g. "20 per delivery" on the card), do NOT revive the tier table. Build a resolver that: (1) matches `variantShopifyId` against a combined funnel + main-site + legacy variant→shots map (§1-§3), (2) falls back to parsing "N shot(s)" / a trailing pack number from `variantTitle`/title, (3) falls back to `quantity`. The API already passes `variantShopifyId`, `variantTitle`, `quantity`, `price` (`app/api/auth/subscriptions/route.ts` ~396-403). The catch (§1): recurring monthly funnel variants (FLOW-FUNNEL-20 etc.) are **not** in the codebase, so variant-GID lookup alone can't cover post-first-order subscribers — verify the resolver against **real Loop subscription data** before shipping, and pick one definition of "shots" per surface (§4).
