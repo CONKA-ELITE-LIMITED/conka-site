@@ -244,3 +244,97 @@ Pre-trial baseline ≈ 3 new customers / £334 a week; renewals held flat (14–
 **Per-listicle (Meta, 24–30, best per-persona signal):** ADHD 1,749 visitors · 10 orders · **0.57% CVR** · £72.77 CPA · £0.42/visitor · Productivity 956 · 9 · **0.94%** · £82.22 · £0.77/visitor · Brain-ageing 547 · 6 · **1.10%** · £122.39 · £1.34/visitor. (Meta CVR = Meta orders ÷ page visitors matched to 24–30; numerator includes view-through so it's a proxy.) **Twist:** Brain-ageing *converts best per visitor* but has the worst CPA because its audience costs ~3× ADHD's per click — an audience-cost problem, not a page problem. So Brain-ageing is *expensive, not dead*, not the "zero" the tag implied.
 
 **Caveat:** incrementality assumes the 3 listicle campaigns are the dominant new paid spend that week (confirmed by Rudh). Pull scripts: `scratchpad/pull-listicle-orders.mjs` (tagged orders) and `scratchpad/weekly-orders.mjs` (weekly new-demand).
+
+---
+
+## Snapshot — 2026-07-31 → 2026-08-03 (end of first weekend at £600/day)
+
+Pulled **3 Aug PM** (end of Monday, weekend passed). Sources: Vercel Web Analytics (visits + section/CTA events, new window 31 Jul–3 Aug), Shopify Admin API (query 6 tagged + query 7 incrementality, `created_at:>=2026-07-03`), and Meta Ads Manager (all three `Conka | TOF UK | * Listicle` campaigns, **24 Jul – 3 Aug**, screenshot from Rudh). Spend has run at **£600/day (£200/listicle)** since ~4pm 30 Jul — this is the first read of the doubled-spend period. Framed cumulatively (trial to date, 24 Jul – 3 Aug) since Meta reports the full window; 3 Aug is a partial day.
+
+**Headline: volume roughly doubled at flat CPA.** Meta orders 25 → **54**, first-party tagged 6 → **22**, spend £2.2k → **£4.5k** — and blended Meta CPA *held* (~£88 → **£84**). Doubling the budget did not blow up efficiency. First-order ROAS compressed toward ~1.1× on the newest (still-maturing) spend, but subscriptions recur so LTV runs higher.
+
+### Cumulative Meta view (24 Jul – 3 Aug, the volume + per-persona signal)
+
+| Listicle | Visitors | Meta orders | Meta CVR | CPA | Spend | £/visitor |
+|----------|---------:|------------:|---------:|----:|------:|----------:|
+| ADHD | 3,410 | 21 | 0.62% | **£72.06** | £1,513.25 | £0.44 |
+| Productivity | 1,595 | 17 | 1.07% | £89.24 | £1,517.10 | £0.95 |
+| Brain-ageing | 1,032 | 16 | **1.55%** | £94.12 | £1,505.86 | £1.46 |
+| **All three** | **6,037** | **54** | **0.89%** | **~£84** | **£4,536** | £0.75 |
+
+- **Rankings settled, and the week-1 "twist" strengthened.** Brain-ageing is now the **best converter (1.55%)** and its CPA fell from £122 → **£94** as it accrued volume — *expensive, not dead*, and closing the gap. ADHD stays the cheap-clicks volume play (£72 CPA, lowest CVR). Productivity sits in the middle on rate but leads on first-party revenue (below).
+- Meta CVR = Meta orders ÷ matched-window visitors; numerator includes view-through, so read as a proxy.
+
+### First-party tagged orders — 22 to date (up from 6)
+
+| | Orders | Revenue | vs week 1 |
+|--|-------:|--------:|-----------|
+| **Productivity** | 10 | £800.45 | was 2 — now the leader |
+| **ADHD** | 9 | £551.47 | was 4 |
+| **Brain-ageing** | 3 | £108.00 | was 0 — broke through |
+| **Total** | **22** | **£1,459.92** | was 6 / £573.52 |
+
+The 16 new tagged orders (31 Jul–2 Aug): #3737, #3739, #3740, #3743, #3744, #3746, #3748, #3749, #3753, #3754, #3755, #3757, #3758, #3759, #3760, #3761. Cadence is mostly monthly singles/duals with five quarterly duals (#3711/#3722/#3726/#3753/#3759) and one one-time (#3743).
+
+- **Section split flipped toward the hero.** All 22: **sticky ×11, hero ×10, bridge ×1** (week 1 was sticky ×5 / hero ×1). The hero surge tracks the CTA-click data below and lands right after the **Flow-offer alignment (31 Jul)** + the **hero "first week free" offer badge** (Productivity 2 Aug, all three 3 Aug). Body reasons/product block still close ~nothing.
+- **Tag capture improved.** 22 tagged vs 54 Meta ≈ **41%**, up from ~20% in week 1 — more buyers are now riding the funnel→checkout path the tag rides (plausibly the offer badge/Flow alignment). Still a floor, not the truth.
+
+### Store-level incrementality (new-demand orders, excl. renewals; re-pulled 3 Aug)
+
+| Week | New-demand orders | New-customer orders | New-demand rev | Tagged | Renewals |
+|------|------------------:|--------------------:|---------------:|-------:|---------:|
+| 3–10 Jul | 6 | 3 | £532 | 0 | 14 |
+| 10–17 Jul | 2 | 2 | £197 | 0 | 15 |
+| 17–24 Jul | 4 | 4 | £274 | 0 | 16 |
+| 24–31 Jul (trial) | 38 | 30* | £3,341 | 5 | 19 |
+| **31 Jul–3 Aug (4d, partial)** | **29** | **27** | **£1,842** | 17 | 9 |
+
+\* The 24–31 new-*customer* count reads 30 on this re-pull vs the **34** published in the week-1 snapshot: `customer.numberOfOrders==1` is evaluated *now*, so week-1 first-timers who have since reordered drop out. New-demand orders (excl. renewals) is the reproducible metric; new-customer is a decaying floor. Renewals held flat throughout — the lift is genuinely new demand.
+
+- **The doubled spend is sustaining/accelerating acquisition.** 29 new-demand orders in just **4 partial days** already approaches the prior full trial week's 38, i.e. the daily new-demand pace rose with the £600/day.
+- **Three lenses (24 Jul – 3 Aug):** tagged **22** · Meta **54** · store lift **~60** (incremental new-demand over the ~4/week baseline). Coherent and ordered as expected (tag ≤ Meta ≤ lift). Trust Meta + lift for volume; first-party for *which section closes*.
+
+### Scroll funnel — refreshed to the current window (31 Jul–3 Aug, post-rebuild + post-Flow-alignment for all three)
+
+Reach-to-product: **ADHD 14% · Brain-ageing 8% · Productivity 7%**. Depth compressed slightly vs the small post-rebuild Productivity window (was 18%) — expected: 2× spend pulled in broader, colder top-of-funnel traffic, so scroll depth normalised down across all pages. Hero + sticky still do all the converting; the body is scroll, not clicks.
+
+### CTA clicks — finally re-pulled post-rebuild (31 Jul–3 Aug)
+
+| Section | ADHD | Brain-ageing | Productivity |
+|---------|-----:|-------------:|-------------:|
+| hero | **81** | 15 | 18 |
+| sticky | 45 | 14 | **40** |
+| bridge | 16 | 2 | 2 |
+| product | 5 | 0 | 1 |
+
+- **ADHD's clicks moved to the hero** (81 vs 45 sticky — was 21/21 at baseline); **Productivity concentrates on the sticky bar** (40 vs 18). Brain-ageing balanced. Consistent with the tagged-order hero surge.
+
+### Timeline additions
+
+`2 Aug 6:40pm` Productivity offer badge (hero "+1 week free" pill + "+8 free shots" sticky sub-line) · `3 Aug 11:30am` same badge extended to ADHD + Brain-ageing · `3 Aug PM` end of first weekend at £600/day (this snapshot).
+
+### Artifact
+
+Dashboard refreshed to the trial-to-date view (window → 24 Jul–3 Aug; timeline extended; tagged table → 22 orders; Meta table, funnels and CTA matrix repulled). Same URL <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>.
+
+### Artifact data block
+
+```json
+{
+  "window": "2026-07-31 → 2026-08-03 (cumulative 24 Jul–3 Aug)",
+  "funnels": [
+    { "name": "ADHD", "visitors": 1661, "pv": 1859, "window": "31 Jul–3 Aug",
+      "steps": [["Hero / entry",1661],["Symptom explainer",690],["Stats band",517],["Reason 2",444],["Reason 3",389],["Reason 4",367],["Reason 5",322],["Review strip",296],["Reason 7",293],["Reason 8",252],["Bridge",229],["Product",229]] },
+    { "name": "Brain-ageing", "visitors": 485, "pv": 523, "window": "31 Jul–3 Aug",
+      "steps": [["Hero / entry",485],["Reason 0",107],["Segment toggle",80],["Stats band",66],["Reason 3",53],["Reason 4",47],["Reason 5",42],["Review strip",38],["Reason 7",38],["Reason 8",40],["Bridge",37],["Product",37]] },
+    { "name": "Productivity", "visitors": 639, "pv": 676, "window": "31 Jul–3 Aug",
+      "steps": [["Hero / entry",639],["Reason 0",187],["Reason 1",139],["Stats band",118],["Reason 3",106],["Reason 4",94],["Reason 5",81],["Reason 6",72],["Review strip",59],["Reason 8",55],["Bridge",49],["Product",47]] }
+  ],
+  "cta": [
+    { "section": "hero",    "ADHD": [81,1661], "Brain-ageing": [15,485], "Productivity": [18,639] },
+    { "section": "sticky",  "ADHD": [45,1661], "Brain-ageing": [14,485], "Productivity": [40,639] },
+    { "section": "bridge",  "ADHD": [16,1661], "Brain-ageing": [2,485],  "Productivity": [2,639] },
+    { "section": "product", "ADHD": [5,1661],  "Brain-ageing": [0,485],  "Productivity": [1,639] }
+  ]
+}
+```
