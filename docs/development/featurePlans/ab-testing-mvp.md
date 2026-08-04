@@ -2,191 +2,260 @@
 
 **Status:** Research / not built · **Date:** 2026-08-04 · **Owner:** Rudh
 
-Goal: improve conversion rate on Meta-ad → listicle → PDP → checkout, by testing
-big-swing changes on a low ad budget. This doc covers what the market tools
-(Shoplift/Intelligems) actually do, why they don't fit our stack, and the
-smallest system that gets us real answers using hooks we already have.
+Goal: improve conversion on Meta-ad → listicle → PDP → checkout by testing
+**big-swing** changes on a low ad budget, and knowing clearly which one won
+without drowning in noise. This doc is the settled framing: how we judge a test,
+what we capture, and the one mechanism we build.
 
 ---
 
-## TL;DR (the decision)
+## TL;DR (the decisions)
 
-1. **Decision (2026-08-04): no third-party tool.** Shoplift/Intelligems are
-   Shopify **theme-native** — they inject a script into `theme.liquid` and test
-   Liquid templates in the theme editor. Our storefront is **headless Next.js**;
-   those pages never render through the Shopify theme, so the tools could only
-   test our hosted *checkout*, not the listicles/PDPs we want to test.
-   ~$99–499/mo for zero coverage. Binned.
-2. **Build a ~1–2 day self-hosted split-test** on primitives we already have:
-   the `conka_uid` first-party cookie for sticky bucketing, the existing
-   `?src=`/origin string to carry the variant into analytics **and** Shopify
-   order tags for free, and the Convex `quizEvents` pattern to log exposures.
-3. **Two split mechanisms, pick per test:** split at the **Meta ad-set level**
-   (zero code — one landing URL per ad set) for listicle tests; split
-   **on-site by cookie** for same-URL tests like the Both-PDP selector.
-4. **Given our traffic, only test big swings and measure an up-funnel proxy**
-   (landing→PDP CTR, or add-to-cart rate). Purchase is a directional check,
-   not the significance gate. Small tweaks measured on a 3% purchase baseline
-   would need ~100k visitors/variant — months we don't have.
-5. **Accumulate a rolling window (~10+ days), don't judge on a single day.**
-   Sticky `conka_uid` bucketing keeps returning visitors in their original
-   variant across the whole window, so a longer run *adds* sample without
-   double-counting. Hold conditions constant for the window (see §2).
+1. **No third-party tool.** Shoplift/Intelligems are Shopify **theme-native** —
+   they inject into `theme.liquid` and test Liquid templates. Our storefront is
+   **headless Next.js**; those pages never render through the Shopify theme, so
+   the tools could only test our hosted *checkout*. ~$99–499/mo for zero
+   coverage. Binned. (Details §1.)
+2. **Judge every test on one tiny KPI set, tiered by role** (§2): a **verdict**
+   metric that decides it (nCPA at held NC-AOV), a **proxy** that reads fast
+   (listicle CTR / add-to-cart rate), and **guardrails** that stop us fooling
+   ourselves (CVR, AOV). Plus the **funnel step-chain** per variant so a loss is
+   diagnostic, not a shrug. Nothing else gets captured (§2.3).
+3. **Split on our own side, at one URL, via edge middleware — this is the
+   default** (§4). It keeps traffic on **one Meta ad set**, which protects Meta's
+   learning phase. Splitting at the ad-set level fragments the conversion signal
+   and, at our volume, is the *worse* option — reserve it for when the variable
+   lives inside the ad itself (§3).
+4. **Only test big swings; call it on the proxy, confirm on the verdict.** A 10%
+   lift on our ~3% purchase baseline would need ~100k visitors/variant. The proxy
+   (20–40% baseline) reaches significance ~10× faster; nCPA confirms direction.
+5. **Two-phase discipline** (§2.4): Phase 1 answers *which* variant wins — ship
+   it and move on. Only spend on Phase 2 (*why* it wins) when a result demands it
+   (a tie, or a winner that sets brand-wide direction).
+6. **Rolling ~10+ day window, conditions frozen.** Sticky bucketing keeps each
+   returning visitor in one variant, so a longer run accumulates clean sample.
+   Don't change creative/price/offer mid-test.
 
 ---
 
-## 1. What Shoplift (and Intelligems) actually offer
+## 1. Why the market tools don't fit
 
-**Shoplift** — the "how pages *look*" tester. From $99/mo.
-- Duplicate a **Shopify theme template**, edit it in the theme editor (no code),
-  split traffic 50/50 via a script added after `<head>` in `theme.liquid`.
-  No-flicker because the variant is decided server-side in the theme.
-- Tests homepage, PDP, collection, landing, nav, mini-cart, whole-theme rebrands.
-- Reports CVR, **revenue per visitor (RPV)**, AOV, CTR, with segments.
-- "Lift Assist" auto-suggests proven sections (sticky ATC, trust badges, etc.).
+**Shoplift** ($99+/mo, "how pages look") and **Intelligems** ($49–499/mo, "how
+much you charge") both integrate through the **Shopify theme + Liquid**. Our site
+is headless Next.js on Vercel; Shopify only renders checkout. So neither can test
+`/go/[slug]` or `/conka-both`. The ideas worth copying: 50/50 sticky split,
+**server-decided (no flicker)**, and RPV/CVR/AOV per variant.
 
-**Intelligems** — the "how much you *charge*" tester. $49 redirects / $79 content /
-$499 Plus for price/shipping/offer testing with profit-based reporting.
+## 2. How we judge a test (the KPI framework)
 
-**Why neither fits us:** both integrate through the **Shopify theme + Liquid**.
-Our site is headless Next.js on Vercel; Shopify only renders checkout. So they
-can't test `/go/[slug]` or `/conka-both`. The *good ideas* worth copying:
-50/50 sticky split, server-decided (no flicker), and RPV/CVR/AOV per variant.
+This is the part that keeps us out of the noise. We measure the money outcome,
+one fast leading indicator that predicts it, a couple of guardrails, and the
+funnel steps — and nothing else.
 
-## 2. The traffic reality (why we must be pragmatic)
+### 2.1 The three roles
 
-Standard guidance: **~1,000+ visitors and 100–200 conversions per variant,
-2–4 weeks, 50/50 split**. Detecting a **10% lift on a 3% purchase baseline needs
-~100k visitors per variant** — effectively unreachable on our budget.
+Testing two heroes, in plain terms:
 
-Two levers make it work on low traffic:
+- **Verdict = the scoreboard.** The one number a decision actually turns on:
+  **nCPA** (new-customer cost per acquisition = ad spend ÷ new customers), read
+  **with NC-AOV** attached so a "cheaper but worse customers" win doesn't count.
+  Lower nCPA at equal-or-better NC-AOV → ship it.
+- **Proxy = the halftime read.** nCPA is slow to trust at our volume, so we watch
+  a metric that moves in *days* and points the same way: **listicle CTR**
+  (listicle→PDP) for landing tests, **add-to-cart rate** for PDP tests. High
+  baseline (20–40%) → significance ~10× faster than purchase. This is what you
+  *watch*; nCPA *confirms*.
+- **Guardrail = the anti-cheat.** A variant can win the proxy by lying — a
+  clickbait hero pulls clicks (CTR up) from the wrong people who then don't buy
+  (**CVR** down) or buy less (**AOV** down). Guardrails catch that.
 
-- **Test big swings, not tweaks.** Landing-page/offer changes commonly move CR
-  **20–50%**. Large effects need far less traffic to detect than 5% tweaks.
-- **Measure an up-funnel proxy with a high baseline.** Landing→PDP click-through
-  or add-to-cart rate has a **20–40% baseline** vs 3% for purchase, so
-  significance arrives ~10× faster. Treat purchase/RPV as a directional read.
+| Role | Metric | What it's for |
+|---|---|---|
+| **Verdict** | **nCPA** + **NC-AOV** (together) | The decision. Lower nCPA at held-or-better NC-AOV = win. |
+| **Proxy** | **Listicle CTR** · **Add-to-cart rate** | Fast leading read; what you watch day to day. |
+| **Guardrail** | **CVR** (session→purchase) · **AOV** | Catches a variant that games the proxy but leaks lower down. |
+| *Context (denominators, not KPIs)* | Sessions · Orders · Ad spend | Needed to compute the above; never judged on directly. |
 
-**Discipline rules:** always 50/50 (unequal splits need far bigger samples);
-one variable per test; **run a rolling ~10+ day window** (not a single day) and
-don't call it before ~2 full weeks even if it looks decided early. Because
-`conka_uid` bucketing is sticky for 400 days, a longer window keeps each returning
-visitor in the same variant — it accumulates clean sample rather than re-rolling
-them. The tradeoff: **freeze the test conditions for the window** — don't change
-ad creative, price, or the offer mid-test, or you contaminate the comparison. Call
-it only on the proxy metric with a sanity check that purchase didn't move the
-wrong way. Use a free significance calculator — we do **not** need a stats engine.
+### 2.2 The funnel step-chain (the one thing we DO add)
 
-## 3. Core metrics & how we already track them
+For each variant, capture the counts at every step:
 
-| Metric | Baseline | Why | Where it comes from today |
-|---|---|---|---|
-| **Landing→PDP CTR** (primary for listicle tests) | high (20–40%) | fastest to significance | `?src=<slug>-<section>` on outbound CTA → `captureListicleSrc()` on PDP |
-| **Add-to-cart rate** (primary for PDP tests) | mid | closest high-baseline signal to money | `CartContext.addToCart` fires Vercel/Meta/TW |
-| **Initiate checkout rate** | mid | catches cart-drawer drop-off | `CartDrawer` `trackMetaInitiateCheckout` |
-| **Purchase CR / RPV / AOV** | low (~3%) | truth, but slow | Shopify `orders/paid` webhook + order tags |
+**sessions → listicle→PDP clicks → add-to-cart → checkout → purchase**
 
-All four analytics systems (Vercel, Meta Pixel, Meta CAPI, Triple Whale) already
-fire from `CartContext.addToCart` after a successful cart mutation. We attach the
-variant to the events that already exist — no new tracking pipeline.
+Five counts. This is the difference between *"variant B has a worse CVR"* (a dead
+number) and *"B is worse **because it loses people at the cart, not the PDP**"*
+(actionable — the hero's fine, the cart's the problem). It's **nearly free**: we
+already fire add-to-cart and initiate-checkout events; this is just reading them
+**sliced by variant**. It stays inside Phase 1 and makes a losing test diagnostic.
 
-## 4. MVP architecture (build on existing hooks)
+### 2.3 What we deliberately do NOT capture
 
-**a. Sticky bucketing — reuse `conka_uid`.**
-`getOrCreateExternalId()` in `app/lib/metaPixel.ts` already mints a first-party
-visitor id: **400-day cookie, scoped `.conka.io` (survives to checkout), read
-everywhere.** Bucket deterministically: `bucket = hash(conka_uid) % 100`, then
-map to a variant per active experiment. No new id, sticky by construction,
-consistent server- and client-side.
+Time on section, scroll depth, per-section dwell, section bounce, heatmaps. None
+of it changes a ship/kill decision. **The line:** capture *where in the funnel a
+variant leaks* (the 5 counts); do **not** capture *why they leaked at that step* —
+until a specific result makes us ask.
 
-**b. Carry the variant with zero new plumbing — pack it into `source`/`origin`.**
-`analytics.ts` documents a **2-custom-prop budget** on Vercel, which is why the
-codebase already *packs* values into single strings (`source = "<slug>-<section>"`,
-`config = "product|cadence"`). Append the experiment id the same way, e.g.
-`origin = "<slug>-<section>|exp_bothsel_v1:B"`. That single string already flows
-to the Vercel event **and** to Shopify order tags via the `orders/paid` webhook —
-so we can slice purchase CR by variant in Shopify with no extra work.
-Meta CAPI/Triple Whale have **no prop limit** — add `variant` to `custom_data`
-if we want it in the ads dataset too.
+### 2.4 Two-phase discipline
 
-**c. (Optional) exposure log — clone the Convex `quizEvents` pattern.**
-Add an `experimentEvents` table to `convex/schema.ts` and a `record` mutation
-(pure insert, append-only, mirror `convex/quizEvents.ts`), fired from a
-`useExperiment` hook modelled on `useQuizEvents`. Logs `{ uid, experiment,
-variant, event, ts }` on assignment/exposure/conversion. Nice-to-have for clean
-per-variant funnels; **not required for v1** if we lean on Shopify order tags +
-Meta/Vercel.
+- **Phase 1 — "which?"** Does hero A or B buy new customers cheaper? Needs only
+  the verdict + the step-chain. You do not need to know *why* to answer this.
+- **Phase 2 — "why?"** What about the winner works. This is where richer capture
+  would live — **but you only earn it when Phase 1 hands you a specific
+  question.** Most tests never raise one: B wins, you ship B, next test. Spend on
+  "why" only when (a) the test *tied* (the one case the endpoint told you
+  nothing), or (b) the winner implies a **brand-wide direction** you'll reuse
+  (e.g. "clinical hero beats lifestyle hero" shapes every future page).
 
-**Minimal v1 (no Convex):** a tiny `getVariant(experiment)` helper (reads
-`conka_uid`, hashes, returns variant + records nothing), used to (i) render the
-variant and (ii) append the exp id to the origin string at add-to-cart. Ship,
-read results in Shopify + Meta. Add Convex only if we want richer funnels.
+## 3. Why we split on-site, not at the ad set
 
-## 5. Two split mechanisms — pick per test
+The instinct is that a second landing URL + a duplicate ad set is "free" (zero
+code). It isn't — it hides a **media cost** that, at our volume, makes it the
+*worse* option.
 
-- **Meta ad-set split (zero code) — for listicle tests.** Duplicate the ad set,
-  same creative + same optimization event, **one landing URL per set, 50/50**.
-  We already control the traffic source and listicles are cheap to register at a
-  new slug. Downside: Meta audience overlap adds noise — keep strictly 50/50 and
-  read the on-site proxy, not just Meta's CR.
-- **On-site cookie split — for same-URL tests** like the Both-PDP selector,
-  where every visitor lands on `/conka-both`. Use `getVariant()` (§4a).
+**Meta's learning phase.** Meta optimises **one ad set** toward a conversion
+event and needs **~50 conversions/ad set/week** to exit learning and deliver
+efficiently. Below that, delivery stays noisy and expensive.
 
-## 6. The two proposed tests, scoped
+- **Ad-set split** cuts one ad set into two → each gets **half the budget and
+  half the conversion signal**, and the two sets **bid against each other**
+  (audience overlap), inflating our own costs. At **single-digit new-customer
+  orders/day** (per the jbiq dashboard), one consolidated set is *already*
+  marginal against the 50/week bar; split it and **neither set clears learning** →
+  both deliver worse, and you need ~2× the time to read a result.
+- **On-site split keeps one ad set.** All budget, all conversion events, all
+  learning stay consolidated. Meta optimises one clean funnel; the A/B difference
+  happens *after* the click, invisible to the optimiser. Only mild cost: Meta
+  optimises toward a *blend* of A and B — nothing like fragmenting the signal.
 
-### Test A — Both PDP variant selector (Magic-Mind-style)
-Add a segmented "**choose Flow / Clear / Both**" selector to `/conka-both`,
-letting a visitor pick a single formula inline instead of bouncing to another PDP.
+**The rule:**
 
-- **Self-contained, no schema/cart changes.** `funnelData.ts` already holds
+| If the variable lives… | Split… | Why |
+|---|---|---|
+| **On our pages** (hero, headline, CTA, PDP selector, listicle content) | **Same URL, on-site middleware** (default) | One ad set → learning protected, reads faster. One-time build serves every future on-site test. |
+| **Inside the ad** (creative, audience, placement) | Meta's **native A/B Experiments** (mutually exclusive, no overlap) | Genuinely in Meta, not our site. Accept it needs more volume; run only for large expected effects. |
+
+## 4. The mechanism — one thin edge middleware
+
+For a same-URL test, the only real engineering question is **where the variant is
+decided**, because of flicker:
+
+- **Browser-side (wrong default):** server renders control, React hydrates, reads
+  the cookie, *swaps in* the variant → a visible flash of control **that biases
+  the test** (people half-see both states) and adds layout shift (CLS).
+- **Server-side (right):** the server knows the variant before it renders a pixel
+  → one clean version, zero flash.
+
+Server-side means middleware — Next.js Server Components can't set cookies during
+render, so the edge is the correct (and only clean) place to decide + persist a
+bucket.
+
+```ts
+// middleware.ts — matcher scoped to the ONE test route
+export function middleware(req) {
+  let bucket = req.cookies.get('exp_bucket')?.value          // sticky 0–99
+  const res = NextResponse.next()
+  if (!bucket) {
+    bucket = String(hash(crypto.randomUUID()) % 100)
+    res.cookies.set('exp_bucket', bucket, { maxAge: 400d, domain: '.conka.io' })
+  }
+  const variant = Number(bucket) < 50 ? 'A' : 'B'            // 50/50, sticky
+  res.headers.set('x-exp-bothsel', variant)                 // server render reads this
+  return res
+}
+```
+
+The page (Server Component) reads `x-exp-bothsel` via `headers()` and renders the
+right version directly.
+
+**Design notes:**
+- **Dedicated `exp_bucket` cookie, not `conka_uid`.** `conka_uid` is minted
+  *client-side* (`document.cookie` in `metaPixel.ts`), so a first-time visitor's
+  first paint has no id server-side → flicker at the exact moment it matters. A
+  middleware-minted cookie is authoritative from request #1, and keeps us off the
+  Meta identity path (which we don't want to risk).
+- **Scope the matcher tightly** (the one test route). Rest of the site never
+  invokes middleware → zero overhead. Our PDPs are already dynamic (Shopify data,
+  cart), so the marginal cost on the test route is a few ms + no full-page CDN
+  cache for that route — negligible and contained.
+
+### Carrying the variant to the KPIs (no new pipeline)
+
+Once the server knows the variant, pack it into the `source`/`origin` string at
+add-to-cart the way the codebase already packs values (`analytics.ts` documents a
+2-custom-prop Vercel budget, hence `source = "<slug>-<section>"`):
+`origin = "<slug>-<section>|exp_bothsel:B"`. That single string already flows to
+the **Vercel event** *and* to **Shopify order tags** via the `orders/paid`
+webhook. So per variant we get, with no extra instrumentation:
+
+- the **funnel step-chain** (§2.2), sliced by variant
+- **nCPA** = (½ the shared spend) ÷ new customers per variant (traffic ~50/50)
+- **AOV / CVR** straight off the tagged orders
+
+Meta CAPI/Triple Whale have no prop limit — add `variant` to `custom_data` if we
+want it in the ads dataset too. Convex `experimentEvents` (clone the `quizEvents`
+pattern) is an **optional** richer-funnel follow-up, not needed for v1.
+
+## 5. Sticky bucketing — the facts we rely on
+
+- **`conka_uid`** (`getOrCreateExternalId()`, `app/lib/metaPixel.ts`): 400-day
+  first-party cookie, scoped `.conka.io` (survives to checkout). Minted
+  **client-side** — hence we mint the experiment bucket in middleware instead, so
+  the server has it on first paint.
+- Bucketing is deterministic and sticky by construction: `hash(bucket) % 100` →
+  variant, held for the cookie's life, so a longer window accumulates sample
+  rather than re-rolling returning visitors.
+
+## 6. The two candidate tests
+
+### Test A — Both-PDP variant selector (Magic-Mind-style)
+A segmented "**choose Flow / Clear / Both**" selector on `/conka-both`, so a
+visitor picks a single formula inline instead of bouncing to another PDP.
+
+- **Self-contained, no schema/cart changes.** `funnelData.ts` holds
   `FUNNEL_VARIANTS.flow/.clear/.both` (variant GID + selling plan per cadence),
   and `addToCart` takes an arbitrary `variantId`/`sellingPlanId`. Add a
   `selectedProduct` state next to `selectedCadence` in `app/conka-both/page.tsx`,
   swap `getCadenceVariantByProductHeroId("03", cadence)` for a product+cadence
   lookup, render a toggle in `ProductHeroV2`/`ProductHeroMobileV2`.
-- **Split:** on-site cookie (control = current Both-only page, variant = page with
-  selector). **Primary metric:** add-to-cart rate. **Guardrail:** AOV/RPV (a
-  selector could shift mix from Both → single and lower AOV — watch it).
-- **⚠️ Brand constraint:** memory `no-single-product-emphasis` — never spotlight
-  or enlarge one formula over the other; a *neutral, equal-weight* three-way
-  toggle is fine, a Flow-forward default is not.
+- **Split:** on-site middleware (control = current Both-only page; variant = page
+  with selector). **Proxy:** add-to-cart rate. **Guardrail:** AOV (a selector can
+  shift mix Both→single and lower basket — watch it).
+- **⚠️ Brand constraint:** memory `no-single-product-emphasis` — a *neutral,
+  equal-weight* three-way toggle is fine; a Flow-forward default is not. Confirm
+  in design review before it ships.
 
 ### Test B — Listicle hero / copy / CTA / traffic-direction
 The listicle registry (`app/lib/landings/`) makes each page a **pure config
-object** — hero image, headline, subcopy, CTA text, and destination all live in
-config. Cheapest possible variant creation.
+object** — hero image, headline, subcopy, CTA, destination all in config.
 
 - **What to test (one variable per test):** `hero.asset` (image), `hero.headline`
-  / `hero.subcopy` (copy), `hero.cta` + `stickyBar.cta` (CTA messaging),
-  **traffic direction** = which PDP a `mm` CTA points to (`ProductCard` link:
-  `/conka-flow` vs `/conka-clarity` vs `/conka-both`), or `template` (`mm`
-  editorial vs `im8` sell-in-place).
-- **Split:** Meta ad-set level — register a second slug with the varied config,
-  point a duplicate ad set at it, 50/50. **Primary metric:** landing→PDP CTR
-  (via `?src=`) for `mm`, or add-to-cart rate for `im8`.
-- **Highest-leverage first:** hero image and the "traffic direction" test tend to
-  move CR most; CTA wording least. Rank accordingly.
+  / `hero.subcopy`, `hero.cta` + `stickyBar.cta`, **traffic direction** (which PDP
+  a `mm` CTA points to), or `template` (`mm` editorial vs `im8` sell-in-place).
+- **Split:** prefer **same URL + on-site middleware flip** (one ad set, protects
+  learning) over registering a second slug + duplicate ad set. **Proxy:**
+  listicle→PDP CTR (`?src=`) for `mm`, add-to-cart rate for `im8`.
+- **Highest-leverage first:** hero image and traffic-direction move CR most; CTA
+  wording least. Rank accordingly.
 
 ## 7. Suggested order & effort
 
-| # | Test | Split | Build | Why first |
-|---|---|---|---|---|
-| 1 | Listicle **hero image** | Meta ad-set | ~1h (new config + slug) | zero infra, biggest effect size, fastest signal |
-| 2 | Listicle **traffic direction** (which PDP) | Meta ad-set | ~1h | tests a strategic question cheaply |
-| 3 | **Both PDP selector** | on-site cookie | ~0.5–1 day | needs `getVariant()` helper; higher-effort UI |
-| 4 | Listicle CTA / copy | Meta ad-set | ~1h each | smaller effect, run after the big levers |
+| # | Test | Build | Why this order |
+|---|---|---|---|
+| 1 | Build `getVariant()` + the scoped **middleware** + origin-packing | ~half a day | The one piece of real infra; unblocks every on-site test and protects Meta learning. |
+| 2 | Listicle **hero image** (same-URL flip) | ~1h config | Biggest effect size, fastest proxy signal. |
+| 3 | Listicle **traffic direction** (which PDP) | ~1h config | Strategic question, cheap once middleware exists. |
+| 4 | **Both-PDP selector** | ~0.5–1 day | Higher-effort UI; needs the brand-constraint sign-off. |
+| 5 | Listicle CTA / copy | ~1h each | Smaller effect; run after the big levers. |
 
-Tests 1–2 need **no code beyond a new config** — start there to prove the loop
-while we build `getVariant()` for on-site tests. `getVariant()` + origin-packing
-is the only real engineering (~half a day); Convex `experimentEvents` is an
-optional follow-up.
+Convex `experimentEvents` is an optional follow-up if we want richer per-variant
+funnels than Shopify tags + Vercel already give us.
 
 ## 8. Open questions
 
-- Do we want per-variant funnels in Convex (build `experimentEvents`), or is
-  "Shopify order tags + Meta + Vercel" enough for v1? (Recommend: enough for v1.)
+- Per-variant funnels in Convex, or is "Shopify order tags + Meta + Vercel" enough
+  for v1? (Lean: enough for v1.)
 - Significance: manual calculator per test, or a small `/app`-style internal
-  readout? (Recommend: manual calculator first.)
+  readout? (Lean: manual calculator first.)
 - Confirm the Both selector respects `no-single-product-emphasis` in design
   review before it ships as a variant.
 
