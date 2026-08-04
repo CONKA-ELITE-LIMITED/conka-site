@@ -292,30 +292,27 @@ export function getOfferByVariantId(
 // ============================================
 // SUBSCRIPTION SWAP (account portal, SCRUM-1200)
 // ============================================
-// Loop's line-swap API keys on the selling-plan GROUP id (not the individual
-// plan). Flow and Clear share one group per cadence; Both has its own. These are
-// Shopify Admin SellingPlanGroup numeric ids.
+// Loop's line-swap API reassigns the plan via the individual SELLING PLAN id
+// (`sellingPlanId`), NOT the selling-plan group id. Verified empirically against
+// live Loop on 2026-08-04: passing `sellingPlanGroupId` is silently ignored (the
+// swapped line keeps its old plan — e.g. a single Clear left stuck on the
+// "Monthly Dual" plan) and is rejected outright when combined with
+// pricingType 'NEW' (UNPROCESSABLE_ENTITY). Passing the target `sellingPlanId`
+// with pricingType 'NEW' correctly moves BOTH the plan and the line price.
 //
-// They are filled by hand: the Storefront API does not expose SellingPlanGroup
-// ids and the current admin token lacks read_products scope, so neither can be
-// resolved programmatically from this app. Until set, swap returns 503.
-export const FUNNEL_SELLING_PLAN_GROUPS: Record<
-  "single" | "both",
-  Partial<Record<FunnelCadence, string>>
-> = {
-  // Resolved 2026-08-04 via Shopify Admin (product.sellingPlanGroups). Flow and
-  // Clear share a group per cadence; Both has its own.
-  single: { "monthly-sub": "99802579318", "quarterly-sub": "99802644854" }, // Flow + Clear (shared)
-  both: { "monthly-sub": "99802710390", "quarterly-sub": "99802677622" },
-};
+// The plan GIDs already live in FUNNEL_VARIANTS (used at funnel checkout), so
+// there is no separate table to hand-maintain — this just extracts the numeric
+// id Loop's swap body expects. Returns null if the cadence has no plan (e.g.
+// one-time), so the route can 503 rather than send a bad swap.
 
-/** Numeric selling-plan group id for a same-cadence funnel swap, or null if unset. */
-export function getFunnelSwapGroupId(
+/** Numeric selling-plan id for a same-cadence funnel swap, or null if unset. */
+export function getFunnelSwapSellingPlanId(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): string | null {
-  const key = product === "both" ? "both" : "single";
-  return FUNNEL_SELLING_PLAN_GROUPS[key][cadence] || null;
+  const gid = FUNNEL_VARIANTS[product]?.[cadence]?.sellingPlanId;
+  if (!gid) return null;
+  return gid.split("/").pop() ?? null;
 }
 
 /** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */

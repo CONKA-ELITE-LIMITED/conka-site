@@ -18,7 +18,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/app/lib/env';
 import { sizeToTierKey } from '@/app/lib/productSizeUtils';
 import { SUPPORT_EMAIL } from '@/app/lib/supportEmail';
-import { getFunnelSwapGroupId, getFunnelVariantNumericId } from '@/app/lib/funnelData';
+import { getFunnelSwapSellingPlanId, getFunnelVariantNumericId } from '@/app/lib/funnelData';
 
 const LOOP_API_BASE = 'https://api.loopsubscriptions.com/admin/2023-10';
 
@@ -835,26 +835,30 @@ export async function POST(
         }
 
         const targetVariantId = getFunnelVariantNumericId(target, cadence);
-        const targetGroupId = getFunnelSwapGroupId(target, cadence);
+        const targetSellingPlanId = getFunnelSwapSellingPlanId(target, cadence);
         if (!targetVariantId) {
           return NextResponse.json({
             success: false,
             error: 'That product is not available on your current plan.',
           }, { status: 400 });
         }
-        if (!targetGroupId) {
-          // Selling-plan group ids not configured yet (SCRUM-1200 data dependency).
-          console.error(`[SWAP-PRODUCT] Missing selling-plan group id for ${target}/${cadence}`);
+        if (!targetSellingPlanId) {
+          // No subscription selling plan for this product/cadence (SCRUM-1200).
+          console.error(`[SWAP-PRODUCT] Missing selling-plan id for ${target}/${cadence}`);
           return NextResponse.json({
             success: false,
             error: 'Product swaps are not available yet. Please contact support.',
           }, { status: 503 });
         }
 
-        console.log(`[SWAP-PRODUCT] ${loopSubscriptionId} line ${swapLineId} -> ${target}/${cadence} variant ${targetVariantId} group ${targetGroupId}`);
-        // Single swap call: change the line's variant + selling-plan group. No
-        // frequency update — the cadence is unchanged. pricingType 'OLD' preserves
-        // any active discount; the base price follows the new variant.
+        console.log(`[SWAP-PRODUCT] ${loopSubscriptionId} line ${swapLineId} -> ${target}/${cadence} variant ${targetVariantId} plan ${targetSellingPlanId}`);
+        // Single swap call: change the line's variant + selling plan. No frequency
+        // update — the cadence is unchanged. Loop's swap reassigns the plan via the
+        // individual `sellingPlanId` (NOT `sellingPlanGroupId`, which it ignores),
+        // and `pricingType: 'NEW'` reprices the line to the target variant/plan.
+        // 'OLD' would freeze the previous line price onto the new product (the
+        // SCRUM-1200 mispricing bug); subscription-level discounts persist either
+        // way. Verified against live Loop 2026-08-04.
         result = await loopRequest(
           `/subscription/${loopSubscriptionId}/line/${swapLineId}/swap`,
           loopToken,
@@ -862,8 +866,8 @@ export async function POST(
           {
             variantShopifyId: parseInt(targetVariantId, 10),
             quantity: 1,
-            pricingType: 'OLD',
-            sellingPlanGroupId: parseInt(targetGroupId, 10),
+            pricingType: 'NEW',
+            sellingPlanId: parseInt(targetSellingPlanId, 10),
           },
         );
         successMessage = 'Product swapped. Your next delivery reflects the change.';
