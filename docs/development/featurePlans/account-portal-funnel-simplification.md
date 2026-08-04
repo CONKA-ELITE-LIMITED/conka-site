@@ -86,13 +86,13 @@ Enhance the existing `CancellationModal` (already has reason + pause/edit/discou
 
 | Phase | Description | Depends on | Risk |
 |-------|-------------|-----------|------|
-| **0** | Introduce the `DtcSubscriptionView` normalizer and render the current card from it: display name from `getSubscriptionType` (Flow/Clear/Both), headline = cadence + price. The tier badge, protocol subtitle/description, and formula-mix card fall out because the model has no such fields. Legacy protocol subs degrade to a generic card. | none | Low — ship now |
-| **1** | List → detail IA split for the Subscriptions tab; detail scaffold (Products / Upsell / Shipping / Summary / Billing sections), rendered from the view model. Markup + routing. | 0 | Medium |
+| **0** | ✅ **Done (SCRUM-1199).** Introduce the `DtcSubscriptionView` normalizer and render the card from it: display name from `getSubscriptionType` (Flow/Clear/Both), headline = cadence + price. The tier badge, protocol subtitle/description, and formula-mix card fall out because the model has no such fields. Legacy protocol subs degrade to a generic card. | none | Low |
+| **1** | ✅ **Done (SCRUM-1199).** List → detail IA split for the Subscriptions tab; deep-linkable detail route with Products / Upsell (read-only) / Shipping / Summary / Billing sections, rendered from the view model. | 0 | Medium |
 | **2** | **Swap model:** re-point edit/swap from protocol tiers to funnel product × cadence via `FUNNEL_VARIANTS`; `swapTargets` = same-cadence products; handle Both multi-line add/remove. | 0 | High (commerce logic) |
 | **3** | In-portal filtered upsell carousel (reuse `getUpsellOffer`). | 1, 2 | Medium |
 | **4** | Reason-driven cancel flow + order-milestone recognition, structured per Skio's cancel-flow recommendations. | 0 | Medium |
 
-Phase 0 lands the abstraction and ships on its own. Everything after builds on the view model; nothing here assumes or requires a platform migration.
+Phases 0 and 1 shipped together in SCRUM-1199 (the `DtcSubscriptionView` normalizer, compact list card, deep-linkable detail route, and retirement of the monolithic protocol `SubscriptionCard`). Phases 2-4 build on the view model; nothing here assumes or requires a platform migration.
 
 ## Affected files (current-state map)
 
@@ -109,6 +109,29 @@ Phase 0 lands the abstraction and ships on its own. Everything after builds on t
 
 - `app/lib/legacy/protocolSubscriptions.ts` and `PROTOCOL_VARIANTS` stay live for existing protocol subscribers — do not delete. Existing protocol subs must still render and renew; the view model degrades them gracefully (generic name, empty/locked `swapTargets`, no funnel-shaped tiles).
 - This is a platform-agnostic build on our current stack. Skio is a **pattern reference**, not a dependency or a migration; don't couple anything to Skio.
+
+## Jira
+
+| Ticket | Phases | Status |
+|--------|--------|--------|
+| SCRUM-1199 | 0 + 1 (view model, list → detail IA) | In Progress (built; branch `feature/account-portal-dtc-view-model`) |
+
+Phases 2-4 are not yet ticketed (scope them when picked up).
+
+## Build progress & handoff (visual alignment to Magic Mind)
+
+**Design decision (locked):** the subscription card and detail view lead with the **delivery cadence** as the hero ("Every month" / "Every 3 months"), not the product name. Rationale: a subscription contract bills and delivers every line item on a single cadence, so the cadence is a property of the whole subscription; the product(s) are line items within it. One subscription per cadence is the norm; a customer holding multiple cadences is an edge case (route to support to adjust rather than build multi-cadence editing). This is the Magic Mind / Skio structure.
+
+**Built on branch `feature/account-portal-dtc-view-model` (SCRUM-1199):**
+- Phase 0: `DtcSubscriptionView` normalizer (`app/account/subscriptions/viewModel.ts`), with `cadenceHeroLabel`; retired the protocol `SubscriptionCard`.
+- Phase 1: compact list card (`SubscriptionListCard`) + deep-linkable detail route (`app/account/subscriptions/[id]/page.tsx`) with Products / Shipping / Summary / Billing.
+- Card aligned to MM: temporal hero ("Every month") + `Product · £price · Status` subline, dimmed image + optional Reactivate for inactive.
+
+**Next (not yet built):**
+1. **Detail hero** — make `[id]/page.tsx` lead with the cadence hero ("Every month") + `Flow · £39.99 · renews 10 Aug`; keep Back; NO edit-frequency pencil (cadence is not editable for us).
+2. **Overview** (`app/account/page.tsx`) — restructure to `Hello, {name}` + subscription card(s) as the focus (active first, else inactive) + an Inactive subscriptions section + a "Looking for past orders? See here" link (to `/account/orders`); trim the spec strip and the separate "Your next shipment" hero so subscriptions are the focus.
+
+Still deferred (not in this visual pass): upsell accept (Phase 3), swap (Phase 2), cancel flow (Phase 4).
 
 ## References
 

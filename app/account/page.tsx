@@ -3,68 +3,25 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import Navigation from "@/app/components/navigation";
 import { AccountSubNav } from "@/app/components/account/AccountSubNav";
-import { NextDeliveryHero } from "@/app/components/account/NextDeliveryHero";
-import { HairlineSpecStrip } from "@/app/components/account/HairlineSpecStrip";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
-import { ContactSupportLink } from "@/app/components/ContactSupportLink";
 import { useAuth } from "@/app/context/AuthContext";
 import { useSubscriptions, Subscription } from "@/app/hooks/useSubscriptions";
-import {
-  getSubscriptionImage,
-  getSubscriptionType,
-} from "@/app/account/subscriptions/utils";
-import { RescheduleModal } from "@/app/components/subscriptions/RescheduleModal";
-import { PlaceOrderModal } from "@/app/components/subscriptions/PlaceOrderModal";
-import { ActiveOrderCard } from "@/app/components/account/ActiveOrderCard";
-import { isActiveOrder } from "@/app/account/orders/utils";
-
-interface OrderSummary {
-  id: string;
-  orderNumber: string;
-  orderName?: string;
-  processedAt: string;
-  cancelledAt?: string;
-  financialStatus: string;
-  fulfillmentStatus: string;
-  lineItems: Array<{ title: string }>;
-}
-
-function safeFormatDate(
-  iso: string | undefined,
-  options: Intl.DateTimeFormatOptions,
-  fallback = "Scheduling"
-): string {
-  if (!iso) return fallback;
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return fallback;
-  return d.toLocaleDateString("en-GB", options);
-}
-
-function getFormulaBadge(type: ReturnType<typeof getSubscriptionType>): string {
-  if (type === "flow") return "Flow";
-  if (type === "clear") return "Clear";
-  return "Both";
-}
+import { SubscriptionListCard } from "@/app/components/subscriptions/SubscriptionListCard";
+import { ReactivateModal } from "@/app/components/subscriptions/ReactivateModal";
 
 export default function AccountPage() {
   const router = useRouter();
-  const { customer, loading, isAuthenticated, logout } = useAuth();
+  const { customer, loading, isAuthenticated } = useAuth();
   const {
     subscriptions,
     fetchSubscriptions,
     loading: subsLoading,
-    skipNextOrder,
-    placeOrderNow,
-    rescheduleSubscription,
+    reactivateSubscription,
   } = useSubscriptions();
 
-  const [orders, setOrders] = useState<OrderSummary[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(true);
-  const [showRescheduleModal, setShowRescheduleModal] = useState<Subscription | null>(null);
-  const [showPlaceOrderModal, setShowPlaceOrderModal] = useState<Subscription | null>(null);
+  const [showReactivateModal, setShowReactivateModal] = useState<Subscription | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,99 +29,28 @@ export default function AccountPage() {
   }, [loading, isAuthenticated, router]);
 
   useEffect(() => {
-    if (!isAuthenticated || !customer) return;
-    fetchSubscriptions();
-    fetch("/api/auth/orders", { credentials: "include" })
-      .then((r) => (r.ok ? r.json() : { orders: [] }))
-      .then((d) => setOrders(d.orders || []))
-      .catch(() => setOrders([]))
-      .finally(() => setOrdersLoading(false));
+    if (isAuthenticated && customer) fetchSubscriptions();
   }, [isAuthenticated, customer, fetchSubscriptions]);
 
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
-
+  // Two buckets only: Active (active) and Inactive (paused, cancelled, expired).
   const activeSubscriptions = subscriptions.filter((s) => s.status === "active");
-  const nextSub = activeSubscriptions
-    .map((s) => ({
-      sub: s,
-      time: new Date(s.nextBillingDate).getTime(),
-    }))
-    .filter((x) => !isNaN(x.time))
-    .sort((a, b) => a.time - b.time)[0]?.sub;
+  const inactiveSubscriptions = subscriptions.filter((s) => s.status !== "active");
 
-  const otherActive = nextSub
-    ? activeSubscriptions.filter((s) => s.id !== nextSub.id)
-    : activeSubscriptions;
-
-  const nextDeliveryShort = nextSub
-    ? safeFormatDate(nextSub.nextBillingDate, { day: "numeric", month: "short" }, "None")
+  const nextRenewalMs = activeSubscriptions
+    .map((s) => new Date(s.nextBillingDate).getTime())
+    .filter((t) => !isNaN(t))
+    .sort((a, b) => a - b)[0];
+  const nextRenewalLabel = nextRenewalMs
+    ? new Date(nextRenewalMs).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
     : "None";
-  const nextDeliveryLong = nextSub
-    ? safeFormatDate(
-        nextSub.nextBillingDate,
-        { day: "numeric", month: "short", year: "numeric" },
-        "Scheduling"
-      )
-    : null;
-
-  // Earliest order date for "Member since". Iterate rather than trust sort order.
-  const earliestProcessedAt = orders.reduce<string | null>((min, o) => {
-    if (!o.processedAt) return min;
-    if (!min) return o.processedAt;
-    return new Date(o.processedAt).getTime() < new Date(min).getTime()
-      ? o.processedAt
-      : min;
-  }, null);
-  const memberSince = earliestProcessedAt
-    ? safeFormatDate(earliestProcessedAt, { month: "short", year: "numeric" }, "New")
-    : ordersLoading
-    ? "—"
-    : "New";
 
   const firstName = customer?.firstName;
-  const greeting = firstName ? `Welcome back, ${firstName}.` : "Welcome back.";
-  const orderCountLabel = ordersLoading
-    ? null
-    : `${orders.length} order${orders.length !== 1 ? "s" : ""}`;
-  const activeLabel =
-    activeSubscriptions.length > 0
-      ? `${activeSubscriptions.length} active subscription${activeSubscriptions.length !== 1 ? "s" : ""}`
-      : null;
-  const headerSub = [
-    orderCountLabel,
-    activeLabel,
-    nextDeliveryLong ? `next renewal ${nextDeliveryLong}` : null,
-  ]
-    .filter(Boolean)
-    .join(" · ") || "Your account at a glance";
+  const greeting = firstName ? `Welcome, ${firstName} 👋` : "Welcome 👋";
 
-  const activeOrder =
-    orders.length > 0 && isActiveOrder(orders[0]) ? orders[0] : null;
-
-  const handleSkipNext = async () => {
-    if (!nextSub) return;
-    setActionLoading(nextSub.id);
-    await skipNextOrder(nextSub.id);
-    await fetchSubscriptions();
-    setActionLoading(null);
-  };
-
-  const handleRescheduleFromModal = async (newDateEpoch: number): Promise<boolean> => {
-    if (!showRescheduleModal) return false;
-    setActionLoading(showRescheduleModal.id);
-    const success = await rescheduleSubscription(showRescheduleModal.id, newDateEpoch);
-    if (success) await fetchSubscriptions();
-    setActionLoading(null);
-    return success;
-  };
-
-  const handlePlaceOrderFromModal = async (): Promise<boolean> => {
-    if (!showPlaceOrderModal) return false;
-    setActionLoading(showPlaceOrderModal.id);
-    const success = await placeOrderNow(showPlaceOrderModal.id);
+  const handleReactivateFromModal = async (): Promise<boolean> => {
+    if (!showReactivateModal) return false;
+    setActionLoading(showReactivateModal.id);
+    const success = await reactivateSubscription(showReactivateModal.id);
     if (success) await fetchSubscriptions();
     setActionLoading(null);
     return success;
@@ -173,237 +59,137 @@ export default function AccountPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-black/60">Loading...</p>
-        </div>
+        <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!isAuthenticated || !customer) return null;
 
+  const isInitialLoading = subsLoading && subscriptions.length === 0;
+
   return (
     <div className="min-h-screen bg-white text-black">
       <Navigation />
       <AccountSubNav />
 
-      <main className="pt-3 pb-24 lg:pt-4">
-        <section
-          className="brand-section brand-bg-white"
-          aria-labelledby="overview-heading"
-        >
+      <main className="pt-1 pb-24 lg:pt-1">
+        <section className="brand-section brand-bg-white" aria-labelledby="overview-heading">
           <div className="brand-track">
-            {/* Welcome header */}
-            <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-black/50 mb-3">Overview</p>
-                <h1
-                  id="overview-heading"
-                  className="text-3xl lg:text-4xl font-semibold text-black mb-2"
-                  style={{ letterSpacing: "-0.02em" }}
-                >
-                  {greeting}
-                </h1>
-                <p className="text-sm text-black/50 tabular-nums">{headerSub}</p>
+            {/* Welcome */}
+            <h1
+              id="overview-heading"
+              className="text-3xl lg:text-4xl font-semibold text-black mb-5"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {greeting}
+            </h1>
+
+            {isInitialLoading ? (
+              <div className="bg-white rounded-md border border-black/10 h-[128px] flex items-center justify-center">
+                <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
               </div>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="rounded-full border border-black/10 hover:border-black/40 text-black text-[13px] font-medium px-5 py-2 transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
-              >
-                Sign out
-              </button>
-            </div>
-
-            {/* Spec strip */}
-            <div className="mb-12">
-              <HairlineSpecStrip
-                items={[
-                  { label: "Active subs", value: activeSubscriptions.length },
-                  { label: "Next renewal", value: nextDeliveryShort },
-                  { label: "Orders placed", value: ordersLoading ? "—" : orders.length },
-                  { label: "Member since", value: memberSince },
-                ]}
-              />
-            </div>
-
-            {/* Next delivery section */}
-            <div className="mb-5">
-              <p className="text-sm font-medium text-black/50 mb-3">
-                Next delivery
-              </p>
-              <h2
-                className="text-2xl lg:text-3xl font-semibold text-black mb-2"
-                style={{ letterSpacing: "-0.02em" }}
-              >
-                Your next shipment.
-              </h2>
-              <p className="text-sm text-black/50 tabular-nums">
-                Skip · Reschedule · Get now
-              </p>
-            </div>
-
-            {ordersLoading && nextSub ? (
-              <div className="mb-4 bg-white rounded-md border border-black/10 h-[72px]" />
-            ) : activeOrder ? (
-              <div className="mb-4">
-                <ActiveOrderCard
-                  orderName={activeOrder.orderName || `#${activeOrder.orderNumber}`}
-                  productTitle={activeOrder.lineItems[0]?.title || "Your order"}
-                  fulfillmentStatus={activeOrder.fulfillmentStatus}
-                />
-              </div>
-            ) : null}
-
-            <div className="mb-12">
-              {subsLoading && subscriptions.length === 0 ? (
-                <div className="bg-white rounded-md border border-black/10 h-[360px] flex items-center justify-center">
-                  <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
-                </div>
-              ) : nextSub ? (
-                <NextDeliveryHero
-                  subscription={nextSub}
-                  onSkipNext={handleSkipNext}
-                  onReschedule={() => setShowRescheduleModal(nextSub)}
-                  onPlaceOrder={() => setShowPlaceOrderModal(nextSub)}
-                  isActionLoading={actionLoading === nextSub.id}
-                />
-              ) : (
-                <EmptyHeroCard />
-              )}
-            </div>
-
-            {/* All active subscriptions */}
-            {otherActive.length > 0 && (
+            ) : (
               <>
-                <div className="mb-5">
-                  <p className="text-sm font-medium text-black/50 mb-3">
-                    All active subscriptions
-                  </p>
-                  <h2
-                    className="text-2xl lg:text-3xl font-semibold text-black mb-2"
-                    style={{ letterSpacing: "-0.02em" }}
-                  >
-                    {nextSub ? "Also in rotation." : "Your subscriptions."}
-                  </h2>
-                  <p className="text-sm text-black/50 tabular-nums">
-                    Tap any row to manage
-                  </p>
-                </div>
+                {/* Compact stat bar */}
+                {subscriptions.length > 0 && (
+                  <AccountStatBar
+                    stats={[
+                      { label: "Active", value: activeSubscriptions.length },
+                      { label: "Next renewal", value: nextRenewalLabel },
+                    ]}
+                  />
+                )}
 
-                <div className="mb-12 bg-white rounded-md border border-black/10 overflow-hidden">
-                  {otherActive.map((sub, idx) => {
-                    const img = getSubscriptionImage(sub);
-                    const type = getSubscriptionType(sub);
-                    const badge = getFormulaBadge(type);
-                    const date = safeFormatDate(
-                      sub.nextBillingDate,
-                      { day: "numeric", month: "short", year: "numeric" },
-                      "Scheduling"
-                    );
-                    const label =
-                      sub.isMultiLine && sub.lines?.length
-                        ? sub.lines.map((l) => l.productTitle).join(" + ")
-                        : sub.product.title;
-                    return (
-                      <Link
-                        key={sub.id}
-                        href="/account/subscriptions"
-                        className={`flex items-center gap-4 px-4 py-4 hover:bg-black/[0.02] transition-colors ${
-                          idx < otherActive.length - 1 ? "border-b border-black/8" : ""
-                        }`}
-                      >
-                        <span className="text-[13px] text-black/35 tabular-nums flex-shrink-0 w-5">
-                          {String(idx + 1).padStart(2, "0")}
-                        </span>
-                        {img ? (
-                          <span className="relative w-12 h-12 shrink-0 overflow-hidden rounded-md bg-[#f5f5f5] border border-black/8">
-                            <Image
-                              src={img}
-                              alt=""
-                              fill
-                              sizes="48px"
-                              className="object-cover"
-                            />
-                          </span>
-                        ) : null}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className="text-sm font-semibold text-black truncate">
-                              {label}
-                            </p>
-                            <span className="rounded-full border border-[var(--brand-navy)]/20 bg-[var(--brand-navy)]/[0.06] px-2 py-0.5 text-[11px] font-semibold text-[var(--brand-navy)] shrink-0">
-                              {badge}
-                            </span>
-                          </div>
-                          <p className="text-[13px] text-black/55 tabular-nums mt-0.5">
-                            Renews · {date}
-                          </p>
-                        </div>
-                        <span className="text-black/40 shrink-0" aria-hidden>
-                          →
-                        </span>
-                      </Link>
-                    );
-                  })}
-                </div>
+                {/* Active subscriptions */}
+                {activeSubscriptions.length > 0 ? (
+                  <div className="mb-8">
+                    <h2 className="text-sm font-medium text-black/50 mb-3">Active</h2>
+                    <div className="space-y-3">
+                      {activeSubscriptions.map((sub) => (
+                        <SubscriptionListCard key={sub.id} subscription={sub} />
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mb-8">
+                    <EmptyHeroCard />
+                  </div>
+                )}
+
+                {/* Inactive subscriptions */}
+                {inactiveSubscriptions.length > 0 && (
+                  <div className="mb-8">
+                    <h2 className="text-sm font-medium text-black/50 mb-3">Inactive</h2>
+                    <div className="space-y-3">
+                      {inactiveSubscriptions.map((sub) => (
+                        <SubscriptionListCard
+                          key={sub.id}
+                          subscription={sub}
+                          onReactivate={() => setShowReactivateModal(sub)}
+                          reactivateLoading={actionLoading === sub.id}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Previous orders */}
+                <Link
+                  href="/account/orders"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--brand-navy)] hover:underline"
+                >
+                  Looking for past orders? View order history →
+                </Link>
               </>
             )}
-
-            {/* Closing CTA / help */}
-            <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-5 lg:p-8">
-              <p className="text-sm font-medium text-black/50 mb-3">Support</p>
-              <h3
-                className="text-xl lg:text-2xl font-semibold text-black mb-2"
-                style={{ letterSpacing: "-0.02em" }}
-              >
-                Need a hand with your account?
-              </h3>
-              <p className="text-sm text-black/50 tabular-nums mb-6">
-                Same day reply · UK team · real humans
-              </p>
-              <ContactSupportLink
-                variant="inline"
-                className="text-[13px] font-semibold text-[var(--brand-navy)]"
-                icon={false}
-              >
-                Email support ↗
-              </ContactSupportLink>
-            </div>
           </div>
         </section>
       </main>
 
-      <RescheduleModal
-        isOpen={!!showRescheduleModal}
-        onClose={() => setShowRescheduleModal(null)}
-        onReschedule={handleRescheduleFromModal}
-        subscriptionName={showRescheduleModal?.product.title || "Subscription"}
-        currentNextBillingDate={showRescheduleModal?.nextBillingDate}
-        hasUnfulfilledOrder={showRescheduleModal?.hasUnfulfilledOrder}
-        interval={showRescheduleModal?.interval}
+      <ReactivateModal
+        isOpen={!!showReactivateModal}
+        onClose={() => setShowReactivateModal(null)}
+        onReactivate={handleReactivateFromModal}
+        subscriptionName={showReactivateModal?.product.title || "Subscription"}
       />
+    </div>
+  );
+}
 
-      <PlaceOrderModal
-        isOpen={!!showPlaceOrderModal}
-        onClose={() => setShowPlaceOrderModal(null)}
-        onPlaceOrder={handlePlaceOrderFromModal}
-        subscriptionName={showPlaceOrderModal?.product.title || "Subscription"}
-      />
+/** Compact navy stat bar: value over label, evenly split. */
+function AccountStatBar({
+  stats,
+}: {
+  stats: { label: string; value: string | number }[];
+}) {
+  return (
+    <div
+      className="grid rounded-xl bg-[var(--brand-navy)] text-white overflow-hidden mb-8"
+      style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}
+    >
+      {stats.map((s, i) => (
+        <div
+          key={s.label}
+          className={`px-3 py-2.5 text-center ${i > 0 ? "border-l border-white/15" : ""}`}
+        >
+          <p className="text-base font-semibold tabular-nums leading-tight">{s.value}</p>
+          <p className="text-[11px] text-white mt-0.5">{s.label}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
 function EmptyHeroCard() {
   return (
-    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 lg:p-10 flex flex-col items-start gap-5">
+    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 lg:p-8 flex flex-col items-start gap-4">
       <p className="text-sm font-medium text-black/50">No active subscription</p>
       <h2
         className="text-2xl lg:text-3xl font-semibold text-black"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Start a subscription to see your next delivery here.
+        Start a subscription to see it here.
       </h2>
       <p className="text-sm text-black/50 tabular-nums">
         100-day guarantee · Free UK shipping · Cancel anytime

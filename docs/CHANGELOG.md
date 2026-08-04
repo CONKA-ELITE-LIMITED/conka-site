@@ -5,6 +5,16 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-04** | Resolved + hardcoded the 4 funnel selling-plan-group IDs, making same-cadence Swap and the upsell-accept live (SCRUM-1200)
+- **2026-08-04** | Reintroduce quiet Pause/Cancel links on subscription detail (interim, pending Phase 4 cancel flow)
+- **2026-08-03** | Subscription detail: removed Pause/Cancel links; rebuilt the upsell as a visual one-tap swap (image, benefits, per-shot + savings, accept = swap)
+- **2026-08-03** | Subscription detail: vertical product tile (larger asset + title), soft-shadow tile, consolidated delivery actions behind a Reschedule bottom-sheet (Skip / new date / Order now)
+- **2026-08-03** | Account detail page: cadence-led hero, single subscription tile with in-tile actions, demoted negative actions; redirect /account/subscriptions to overview
+- **2026-08-03** | Account portal Phase 2 (SCRUM-1200): Both renders as one product, Skip modal, and same-cadence product Swap (behind a group-id guard until configured)
+- **2026-08-03** | Account overview polish (welcome emoji, compact navy stat bar), account breadcrumb, and MM-style Products cards on the subscription detail page
+- **2026-08-03** | Rebuilt account overview to a subscription-focused layout; vertical MM-style subscription tiles with status badges
+- **2026-08-03** | Rebuilt account nav to Magic Mind style: Secure badge + Orders/Account/Logout icon actions
+- **2026-08-03** | Rebuild account subscriptions on a generic DTC view model with a compact list plus deep-linkable detail view (removes protocol tiers, shots, and formula-mix from the portal)
 - **2026-08-03** | Remove the wrong Shots-per-delivery and Per-shot tiles from account subscription cards (kept Billing + Total price)
 - **2026-08-03** | Add docs index + canonical SKU/shot reference, refresh stale product-data doc, and log the account per-shot display bug as deferred work
 - **2026-08-03** | Extended the first-week-free offer badge (hero pill + "+8 free shots" sticky sub-line) to the ADHD and Brain-ageing listicles
