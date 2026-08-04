@@ -191,6 +191,29 @@ export function trackListicleInteraction(params: ListicleEventBase): void {
   safeTrack("listicle:interaction", params);
 }
 
+// ===== CART UPSELL TILE TRACKING (CartDrawer, SCRUM-1201) =====
+
+/**
+ * The single-tile cart upsell events. Two properties only (the analytics
+ * budget): `type` is the upgrade kind, `product` is the formula the shopper
+ * already had (the FROM product), so "flow -> both" and "clear -> both" stay
+ * separable without a third property.
+ */
+interface CartUpsellEvent {
+  type: "otp_to_sub" | "single_to_both";
+  product: string;
+}
+
+/** Fires once when the upsell tile becomes visible in the cart drawer. */
+export function trackCartUpsellShown(params: CartUpsellEvent): void {
+  safeTrack("cart:upsell_shown", params);
+}
+
+/** Fires when the shopper accepts the upsell (before the cart swap runs). */
+export function trackCartUpsellAccepted(params: CartUpsellEvent): void {
+  safeTrack("cart:upsell_accepted", params);
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**

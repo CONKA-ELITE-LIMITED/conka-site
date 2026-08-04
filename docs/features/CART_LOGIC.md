@@ -5,8 +5,8 @@ Concise overview of how the cart works in the app.
 ## Where it lives
 
 - **State & API:** `app/context/CartContext.tsx` — cart state, persistence, and all cart actions.
-- **UI:** `app/components/CartDrawer.tsx` — slide-out drawer: empty state, line items, per-line upsell, savings, subtotal, checkout. See [Drawer UI](#drawer-ui-cartdrawertsx).
-- **Upsell:** `app/components/CartUpsellStrip.tsx` + `app/lib/cartUpsell.ts` — the per-line “Subscribe & Save” button and its offer logic.
+- **UI:** `app/components/CartDrawer.tsx` — slide-out drawer: empty state, line items, upgrade tile, savings, subtotal, checkout. See [Drawer UI](#drawer-ui-cartdrawertsx).
+- **Upsell:** `app/components/CartUpsellTile.tsx` + `app/lib/cartUpsell.ts` — one cart-level upgrade tile and its offer logic (`getCartUpsell`).
 - **API route:** `app/api/cart/route.ts` — proxies to Shopify Storefront API (create, add, update, remove, get cart).
 
 ## Persistence
@@ -41,7 +41,7 @@ Big “Your cart is empty” heading + the three products from `NAV_PRODUCTS` (s
 
 ### Line item
 
-Layout mirrors a simple DTC cart (Magic Mind aligned): unframed square image on the left; the right column holds the wrapping product name, an “N Bottles” line, and — when the offer includes bonus shots — a green **“+ X free”** badge on its own line. Below that, a bordered quantity group on the left and a trash-icon remove on the right. The per-line upsell button (below) sits inside this right column so it spans only that width.
+Layout mirrors a simple DTC cart (Magic Mind aligned): unframed square image on the left; the right column holds the wrapping product name, an “N Bottles” line, and — when the offer includes bonus shots — a green **“+ X free”** badge on its own line. Below that, a bordered quantity group on the left and a trash-icon remove on the right. The upgrade tile is a single cart-level card rendered below the whole line list (not per line).
 
 ### Subscription pricing & savings
 
@@ -55,11 +55,22 @@ Layout mirrors a simple DTC cart (Magic Mind aligned): unframed square image on 
 
 The displayed **price** always comes from Shopify (`getLineDisplayPrice`) so line prices match the Shopify subtotal; only the compare-at/percent are derived.
 
-### Per-line “Subscribe & Save” upsell
+### Upgrade tile (`CartUpsellTile`, SCRUM-1201/1202)
 
-`getLineSubscribeOffer(line)` (`cartUpsell.ts`) returns an offer for **one-time funnel lines only** — null when the line is already a subscription, is not a recognised funnel product, or the monthly sub would not actually save money. It converts that line to the same product’s monthly subscription.
+One cart-level upgrade tile, not per line. `getCartUpsell(lines)` (`cartUpsell.ts`) returns a single offer or null. It shows only when the cart is **exactly one line**, that line is a recognised funnel product, and no upsell has been accepted yet (see suppression below). The map is one step, **never a chain**:
 
-`CartUpsellStrip` renders the offer as a single rectangular button (`offer.ctaLabel`, e.g. “Subscribe & Save £24.99”). Accepting it: `removeItem(line)` → `addToCart(subVariant, originalQuantity, sellingPlanId)`, **preserving quantity**; if the add fails it restores the original line, and it fires `cart:upsell_shown` / `cart:upsell_accepted` Vercel Analytics events.
+- **One-time → monthly subscription** (same product: Flow / Clear / Both)
+- **Flow / Clear monthly → Both monthly**
+- **Flow / Clear quarterly → Both quarterly**
+- **Both** (any cadence) is terminal — no offer.
+
+The tile is copy-only; all wording (headline, value line, an optional green highlight badge like “+16 free shots”, CTA) is built into the offer. There is no dismiss: it self-clears once the cart stops qualifying.
+
+**Accepting = add-first swap.** `markUpsellAccepted` → `addToCart(target, quantity, sellingPlan, { source: "cart_upsell" })` → confirm the target landed in the returned cart → `removeItem(original)`. Add-first (not remove-first) because `addToCart` / `removeItem` swallow their errors and never reject, so a failed add must leave the original line untouched rather than orphan an empty cart; on that failure the accept flag is cleared. Fires `cart:upsell_shown` / `cart:upsell_accepted` (`{ type, product }`).
+
+**Suppression / cooldown.** On accept, a `conka_cart_upsell` sessionStorage flag is set; while set, `getCartUpsell` returns null. This blocks a ladder (the just-upgraded single line would otherwise re-qualify for Both). The flag clears when the cart is **genuinely emptied** (`CartDrawer`, on a >0→0 transition so a page load can’t wipe it), re-enabling the upsell for a fresh cart; it also clears on a failed swap add.
+
+**Attribution.** The accepted origin (`<type>:<fromProduct>`) is re-derived into a hidden `_upsell` cart attribute on every `addToCart` (same pattern as `_listicle_origin`), so upsell-influenced orders carry it as a note attribute through Shopify checkout.
 
 ### Footer
 
@@ -75,7 +86,8 @@ The displayed **price** always comes from Shopify (`getLineDisplayPrice`) so lin
 
 - **Add to cart** (in `CartContext` after a successful add): Triple Whale `trackAddToCart`, Vercel Analytics `trackPurchaseAddToCart`, Meta Pixel (and CAPI) `trackMetaAddToCart`. Optional metadata: `location`, `source`, `sessionId` for funnel analysis.
 - **Click to checkout** (in `CartDrawer` on the Checkout link): Meta `trackMetaInitiateCheckout` only. No Klaviyo event from the app.
+- **Cart upsell** (on the upgrade tile): `cart:upsell_shown` on view, `cart:upsell_accepted` on accept (Vercel, `{ type, product }`). The accepted add carries `source: "cart_upsell"` plus a hidden `_upsell` cart attribute for per-order attribution.
 
 ## Add-to-cart call sites
 
-- `addToCart(variantId, quantity?, sellingPlanId?, metadata?)` is used from product pages, protocol/formula pages, quiz results, and cart-related UI. Pass `metadata` where available (e.g. `location`, `source`) for analytics.
+- `addToCart(variantId, quantity?, sellingPlanId?, metadata?)` returns the updated cart (or `null` on failure, so callers like the upgrade tile can confirm the add landed). Used from product pages, protocol/formula pages, quiz results, and cart-related UI. Pass `metadata` where available (e.g. `location`, `source`) for analytics.

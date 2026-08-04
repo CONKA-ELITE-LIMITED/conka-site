@@ -5,6 +5,9 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-04** | Cart upsell: reset the one-time suppression when the cart is emptied, so a fresh cart re-triggers the upsell (SCRUM-1202)
+- **2026-08-04** | Cart upsell tile: single Recommended-upgrade tile in the cart drawer (add-first swap, replaces the per-line strip) (SCRUM-1202)
+- **2026-08-04** | Cart upsell data layer: single non-chaining getCartUpsell resolver, session accept-flag attribution (_upsell order attribute), and cart:upsell analytics (SCRUM-1201)
 - **2026-08-04** | Resolved + hardcoded the 4 funnel selling-plan-group IDs, making same-cadence Swap and the upsell-accept live (SCRUM-1200)
 - **2026-08-04** | Reintroduce quiet Pause/Cancel links on subscription detail (interim, pending Phase 4 cancel flow)
 - **2026-08-03** | Subscription detail: removed Pause/Cancel links; rebuilt the upsell as a visual one-tap swap (image, benefits, per-shot + savings, accept = swap)

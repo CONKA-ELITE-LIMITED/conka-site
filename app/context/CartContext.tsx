@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { Cart, CartLine } from '@/app/lib/shopify';
 import { trackAddToCart } from '@/app/lib/tripleWhale';
 import { trackPurchaseAddToCart, getPurchaseOrigin } from '@/app/lib/analytics';
+import { getAcceptedUpsellOrigin } from '@/app/lib/cartUpsell';
 import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
 import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
@@ -50,7 +51,7 @@ interface CartContextType {
     quantity?: number,
     sellingPlanId?: string,
     metadata?: AddToCartMetadata
-  ) => Promise<void>;
+  ) => Promise<Cart | null>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   clearCart: () => void;
@@ -162,10 +163,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     quantity: number = 1,
     sellingPlanId?: string,
     metadata?: AddToCartMetadata
-  ): Promise<void> => {
+  ): Promise<Cart | null> => {
     if (!variantId) {
       setError('Invalid product variant');
-      return;
+      return null;
     }
 
     const attributes = buildCartAttributes(metadata, sellingPlanId);
@@ -181,6 +182,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (listicleOrigin) {
       cartAttributes.push({ key: "_listicle_origin", value: listicleOrigin });
     }
+    // Same re-derive-every-add pattern for the cart-upsell origin (SCRUM-1201):
+    // set only once a shopper accepts the cart-drawer upsell, it rides through to
+    // the order as a hidden note attribute so upsell-influenced orders are
+    // filterable, and survives origin-less later adds that cartAttributesUpdate
+    // would otherwise wipe. The "_" prefix keeps it off the customer's checkout.
+    const upsellOrigin = getAcceptedUpsellOrigin();
+    if (upsellOrigin) {
+      cartAttributes.push({ key: "_upsell", value: upsellOrigin });
+    }
+
+    let updatedCart: Cart | null = null;
 
     setLoading(true);
     setError(null);
@@ -188,7 +200,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
       let warning: string | undefined;
-      let updatedCart: Cart | null = null;
 
       if (!cartId) {
         const result = await createCart(variantId, quantity, sellingPlanId, attributes, cartAttributes);
@@ -282,6 +293,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
+
+    return updatedCart;
   }, [cart?.id]);
 
   // Remove item from cart (defined before updateQuantity, which calls it)
