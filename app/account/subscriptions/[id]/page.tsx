@@ -11,6 +11,8 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useSubscriptions, Subscription } from "@/app/hooks/useSubscriptions";
 import { usePaymentMethods } from "@/app/hooks/usePaymentMethods";
 import { PaymentCardSection } from "@/app/components/subscriptions/PaymentCardSection";
+import { CancellationModal } from "@/app/components/subscriptions/CancellationModal";
+import { PauseModal } from "@/app/components/subscriptions/PauseModal";
 import { RescheduleModal } from "@/app/components/subscriptions/RescheduleModal";
 import { ResumeModal } from "@/app/components/subscriptions/ResumeModal";
 import { EditSubscriptionModal } from "@/app/components/subscriptions/EditSubscriptionModal";
@@ -97,10 +99,13 @@ export default function SubscriptionDetailPage() {
     loading,
     error,
     fetchSubscriptions,
+    pauseSubscription,
     resumeSubscription,
+    cancelSubscription,
     skipNextOrder,
     reactivateSubscription,
     placeOrderNow,
+    applyDiscount,
     changePlan,
     editMultiLine,
     swapProduct,
@@ -118,10 +123,12 @@ export default function SubscriptionDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [showEdit, setShowEdit] = useState(false);
+  const [showPause, setShowPause] = useState(false);
   const [showResume, setShowResume] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
   const [showDelivery, setShowDelivery] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
+  const [showCancel, setShowCancel] = useState(false);
   const [showReactivate, setShowReactivate] = useState(false);
   const [showPlaceOrder, setShowPlaceOrder] = useState(false);
 
@@ -490,6 +497,28 @@ export default function SubscriptionDetailPage() {
                   </div>
                 )}
               </DetailSection>
+
+              {/* Manage: quiet, de-emphasized so the positive path stays primary */}
+              {(isActive || isPaused) && (
+                <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-[13px]">
+                  {isActive && (
+                    <button
+                      onClick={() => setShowPause(true)}
+                      disabled={actionLoading}
+                      className="text-black/45 hover:text-black/70 hover:underline transition-colors disabled:opacity-50"
+                    >
+                      Pause subscription
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowCancel(true)}
+                    disabled={actionLoading}
+                    className="text-black/45 hover:text-black/70 hover:underline transition-colors disabled:opacity-50"
+                  >
+                    Cancel subscription
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -542,6 +571,13 @@ export default function SubscriptionDetailPage() {
         />
       )}
 
+      <PauseModal
+        isOpen={showPause}
+        onClose={() => setShowPause(false)}
+        onPause={(weeks) => withAction(() => pauseSubscription(subscription.id, weeks), "Subscription paused. You can resume anytime.")}
+        subscriptionName={view.displayName}
+        interval={subscription.interval}
+      />
       <ResumeModal
         isOpen={showResume}
         onClose={() => setShowResume(false)}
@@ -582,6 +618,20 @@ export default function SubscriptionDetailPage() {
           subscriptionName={view.displayName}
         />
       )}
+      <CancellationModal
+        isOpen={showCancel}
+        onClose={() => setShowCancel(false)}
+        onCancel={async (reason) => {
+          const ok = await cancelSubscription(subscription.id, reason);
+          if (ok) await fetchSubscriptions();
+          return ok;
+        }}
+        subscriptionName={view.displayName}
+        currentPlan={getCurrentPlan(subscription)}
+        onPauseInstead={() => { setShowCancel(false); setShowPause(true); }}
+        onEditInstead={() => { setShowCancel(false); setShowEdit(true); }}
+        onApplyDiscount={(code) => applyDiscount(subscription.id, code)}
+      />
       <ReactivateModal
         isOpen={showReactivate}
         onClose={() => setShowReactivate(false)}

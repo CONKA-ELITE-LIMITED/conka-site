@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-04** | Reintroduce quiet Pause/Cancel links on subscription detail (interim, pending Phase 4 cancel flow)
 - **2026-08-03** | Subscription detail: removed Pause/Cancel links; rebuilt the upsell as a visual one-tap swap (image, benefits, per-shot + savings, accept = swap)
 - **2026-08-03** | Subscription detail: vertical product tile (larger asset + title), soft-shadow tile, consolidated delivery actions behind a Reschedule bottom-sheet (Skip / new date / Order now)
 - **2026-08-03** | Account detail page: cadence-led hero, single subscription tile with in-tile actions, demoted negative actions; redirect /account/subscriptions to overview
