@@ -303,8 +303,10 @@ export const FUNNEL_SELLING_PLAN_GROUPS: Record<
   "single" | "both",
   Partial<Record<FunnelCadence, string>>
 > = {
-  single: { "monthly-sub": "", "quarterly-sub": "" }, // Flow + Clear (shared)
-  both: { "monthly-sub": "", "quarterly-sub": "" },
+  // Resolved 2026-08-04 via Shopify Admin (product.sellingPlanGroups). Flow and
+  // Clear share a group per cadence; Both has its own.
+  single: { "monthly-sub": "99802579318", "quarterly-sub": "99802644854" }, // Flow + Clear (shared)
+  both: { "monthly-sub": "99802710390", "quarterly-sub": "99802677622" },
 };
 
 /** Numeric selling-plan group id for a same-cadence funnel swap, or null if unset. */
