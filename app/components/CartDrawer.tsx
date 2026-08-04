@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useCart } from "@/app/context/CartContext";
 import { CartLine } from "@/app/lib/shopify";
 import Image from "next/image";
@@ -10,7 +11,7 @@ import { TIME_OF_DAY_BADGE } from "@/app/lib/timeOfDayBadge";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellTile from "./CartUpsellTile";
-import { getCartUpsell } from "@/app/lib/cartUpsell";
+import { getCartUpsell, clearUpsellAccepted } from "@/app/lib/cartUpsell";
 import { getOfferByVariantId, getOfferPricing } from "@/app/lib/funnelData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 
@@ -139,6 +140,18 @@ export default function CartDrawer() {
   // One deterministic, one-time upsell for the whole cart (single qualifying
   // line only; null once accepted this session). See getCartUpsell.
   const upsell = getCartUpsell(cartItems);
+
+  // Reset the one-time upsell suppression when the cart is genuinely emptied, so
+  // starting a fresh cart re-enables the offer. Guard on a > 0 -> 0 transition,
+  // not "length === 0", so a page load (empty before the cart hydrates) doesn't
+  // wipe the flag and re-open a just-accepted upgrade to a chained offer.
+  const prevItemCount = useRef(cartItems.length);
+  useEffect(() => {
+    if (prevItemCount.current > 0 && cartItems.length === 0) {
+      clearUpsellAccepted();
+    }
+    prevItemCount.current = cartItems.length;
+  }, [cartItems.length]);
 
   // Total subscription savings across the cart, plus the compare-at base, so the
   // footer can show either a £ figure or a blended % (see getLineSavings).
