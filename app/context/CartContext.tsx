@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { Cart, CartLine } from '@/app/lib/shopify';
 import { trackAddToCart } from '@/app/lib/tripleWhale';
 import { trackPurchaseAddToCart, getPurchaseOrigin } from '@/app/lib/analytics';
+import { getAcceptedUpsellOrigin } from '@/app/lib/cartUpsell';
 import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
 import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
@@ -180,6 +181,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const listicleOrigin = getPurchaseOrigin();
     if (listicleOrigin) {
       cartAttributes.push({ key: "_listicle_origin", value: listicleOrigin });
+    }
+    // Same re-derive-every-add pattern for the cart-upsell origin (SCRUM-1201):
+    // set only once a shopper accepts the cart-drawer upsell, it rides through to
+    // the order as a hidden note attribute so upsell-influenced orders are
+    // filterable, and survives origin-less later adds that cartAttributesUpdate
+    // would otherwise wipe. The "_" prefix keeps it off the customer's checkout.
+    const upsellOrigin = getAcceptedUpsellOrigin();
+    if (upsellOrigin) {
+      cartAttributes.push({ key: "_upsell", value: upsellOrigin });
     }
 
     setLoading(true);
