@@ -51,7 +51,7 @@ interface CartContextType {
     quantity?: number,
     sellingPlanId?: string,
     metadata?: AddToCartMetadata
-  ) => Promise<void>;
+  ) => Promise<Cart | null>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   clearCart: () => void;
@@ -163,10 +163,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     quantity: number = 1,
     sellingPlanId?: string,
     metadata?: AddToCartMetadata
-  ): Promise<void> => {
+  ): Promise<Cart | null> => {
     if (!variantId) {
       setError('Invalid product variant');
-      return;
+      return null;
     }
 
     const attributes = buildCartAttributes(metadata, sellingPlanId);
@@ -192,13 +192,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       cartAttributes.push({ key: "_upsell", value: upsellOrigin });
     }
 
+    let updatedCart: Cart | null = null;
+
     setLoading(true);
     setError(null);
 
     try {
       const cartId = cart?.id || localStorage.getItem(CART_ID_KEY);
       let warning: string | undefined;
-      let updatedCart: Cart | null = null;
 
       if (!cartId) {
         const result = await createCart(variantId, quantity, sellingPlanId, attributes, cartAttributes);
@@ -292,6 +293,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
+
+    return updatedCart;
   }, [cart?.id]);
 
   // Remove item from cart (defined before updateQuantity, which calls it)
