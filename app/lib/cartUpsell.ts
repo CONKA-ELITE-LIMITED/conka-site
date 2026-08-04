@@ -45,8 +45,10 @@ export interface CartUpsellTileOffer {
   /** Display (the tile is copy-only; all wording is decided here). */
   thumbnail: string;
   headline: string;
-  /** One value/savings line. */
+  /** One value/description line. Rendered green on its own, or black when a `highlight` badge sits below it. */
   valueLine: string;
+  /** Optional green badge shown under the value line, e.g. "+16 free shots". */
+  highlight?: string;
   ctaLabel: string;
 }
 
@@ -54,6 +56,7 @@ export interface CartUpsellTileOffer {
 interface UpsellCopy {
   headline: string;
   valueLine: string;
+  highlight?: string;
   ctaLabel: string;
 }
 
@@ -143,17 +146,22 @@ function buildOtpToSubCopy(product: FunnelProduct, quantity: number): UpsellCopy
 function buildSingleToBothCopy(
   product: FunnelProduct,
   cadence: FunnelCadence,
-  quantity: number,
 ): UpsellCopy {
   const current = getOfferPricing(product, cadence);
   const both = getOfferPricing("both", cadence);
-  const extra = (both.price - current.price) * quantity;
-  const addedName = product === "flow" ? "Clear" : "Flow";
+  // Price the addition (the increment, not the £74.99 total) so the shopper sees
+  // the real bill change up front rather than being surprised at checkout.
+  // Round before the whole-pound check: 74.99 - 39.99 is 34.9999... in float, so
+  // a raw Number.isInteger would miss it and render "£35.00" instead of "£35".
+  const extra = Math.round((both.price - current.price) * 100) / 100;
   const periodSuffix = cadence === "quarterly-sub" ? "/quarter" : "/mo";
+  const amount = Number.isInteger(extra) ? `£${extra}` : formatPrice(extra);
+  const addedName = product === "flow" ? "Clear" : "Flow";
   return {
     headline: `Add ${addedName} for the full day`,
-    valueLine: `${formatPrice(both.perShot)}/shot, morning and afternoon covered`,
-    ctaLabel: `Add ${addedName} for ${formatPrice(extra)}${periodSuffix}`,
+    valueLine: "The complete AM + PM system",
+    highlight: both.freeShots ? `+${both.freeShots} free shots` : undefined,
+    ctaLabel: `Upgrade to Both · +${amount}${periodSuffix}`,
   };
 }
 
@@ -185,7 +193,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
   const copy =
     upgrade.type === "otp_to_sub"
       ? buildOtpToSubCopy(product, line.quantity)
-      : buildSingleToBothCopy(product, cadence, line.quantity);
+      : buildSingleToBothCopy(product, cadence);
 
   return {
     type: upgrade.type,

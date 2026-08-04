@@ -90,9 +90,18 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
           <p className="text-sm font-bold leading-snug text-black">
             {offer.headline}
           </p>
-          <p className="mt-0.5 text-xs font-semibold text-[#1a7f4f]">
+          <p
+            className={`mt-0.5 text-xs ${
+              offer.highlight ? "text-black/70" : "font-semibold text-[#1a7f4f]"
+            }`}
+          >
             {offer.valueLine}
           </p>
+          {offer.highlight && (
+            <span className="mt-1.5 inline-flex items-center rounded-full bg-[#1a7f4f]/10 px-2 py-0.5 text-[11px] font-semibold text-[#1a7f4f]">
+              {offer.highlight}
+            </span>
+          )}
         </div>
       </div>
 
