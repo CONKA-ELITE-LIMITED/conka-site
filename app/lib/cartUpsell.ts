@@ -17,10 +17,11 @@ import { formatPrice } from "./productData";
 // in the CartDrawer (`CartUpsellTile`).
 //
 // The offer is UNIQUE and NON-CHAINING: it only appears for a single-line cart,
-// offers exactly one upgrade, and is suppressed for the rest of the session once
-// any upsell has been accepted (so OTP Flow -> monthly Flow never then offers
-// Both). The accepted-origin doubles as purchase attribution via the `_upsell`
-// hidden cart attribute (see CartContext).
+// offers exactly one upgrade, and is suppressed once an upsell has been accepted
+// (so OTP Flow -> monthly Flow never then offers Both). That suppression resets
+// when the cart is emptied (CartDrawer), so a fresh cart is eligible again. The
+// accepted-origin doubles as purchase attribution via the `_upsell` hidden cart
+// attribute (see CartContext).
 // ============================================================================
 
 /** Which kind of upgrade the tile is offering (also the analytics `type`). */
@@ -63,11 +64,12 @@ interface UpsellCopy {
 const UPSELL_ACCEPTED_KEY = "conka_cart_upsell";
 
 /**
- * Record that an upsell was accepted this session. Call this BEFORE the swap add
- * so the `_upsell` cart attribute attaches to that add (see CartContext). The
- * value is the offer's `origin` token (`<type>:<fromProduct>`). Session-scoped
- * (like the listicle origin), so the tile stays suppressed and the attribution
- * rides every subsequent add for the rest of the tab session.
+ * Record that an upsell was accepted. Call this BEFORE the swap add so the
+ * `_upsell` cart attribute attaches to that add (see CartContext). The value is
+ * the offer's `origin` token (`<type>:<fromProduct>`). Persisted in
+ * sessionStorage: the tile stays suppressed (and the attribution rides
+ * subsequent adds) until the cart is emptied (CartDrawer clears it) or a swap
+ * add fails.
  */
 export function markUpsellAccepted(origin: string): void {
   if (typeof window === "undefined") return;
@@ -102,7 +104,7 @@ export function clearUpsellAccepted(): void {
   }
 }
 
-/** True once any upsell has been accepted this session (the anti-chain guard). */
+/** True while an accepted-upsell flag is set (the anti-chain guard; cleared on cart-empty or add-failure). */
 function hasAcceptedUpsell(): boolean {
   return getAcceptedUpsellOrigin() !== undefined;
 }
@@ -173,7 +175,7 @@ function buildSingleToBothCopy(
  * map (`resolveUpgrade`). Multi-line carts and Both subscriptions get nothing.
  */
 export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
-  // Anti-chain: one accepted upsell per session, full stop.
+  // Anti-chain: suppress once an upsell was accepted (reset when the cart empties).
   if (hasAcceptedUpsell()) return null;
   // Single-line carts only — keeps the offer specific and unique.
   if (lines.length !== 1) return null;
