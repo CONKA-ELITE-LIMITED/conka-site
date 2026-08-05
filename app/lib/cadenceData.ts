@@ -16,6 +16,7 @@ import {
   getFunnelProductSlideshow,
   getOfferPricing,
   getOfferVariant,
+  getReadyOtpCadence,
 } from "./funnelData";
 import { FormulaId } from "./productData";
 import type { ProductHeroId } from "./productTypes";
@@ -89,6 +90,21 @@ export function getCadenceVariantByProductHeroId(
 ): FunnelVariantConfig | null {
   if (productHeroId === "03") return getBalanceCadenceVariant(cadence);
   return getCadenceVariantByFormula(productHeroId, cadence);
+}
+
+/**
+ * The OTP cadence a PDP's "buy it once" control should use for the currently
+ * selected plan: quarterly plans pair with quarterly-otp, monthly with
+ * monthly-otp, with a monthly-otp fallback while the quarterly OTP variant is
+ * unwired. Both the displayed price (ProductBuyPanel) and the add-to-cart call
+ * (the PDP page) resolve through this, so they never diverge. (SCRUM-1203)
+ */
+export function getReadyOtpCadenceByProductHeroId(
+  productHeroId: ProductHeroId,
+  selectedCadence: CadenceType,
+): CadenceType {
+  const product = productHeroId === "03" ? "both" : FORMULA_TO_PRODUCT[productHeroId];
+  return getReadyOtpCadence(product, selectedCadence);
 }
 
 // ============================================

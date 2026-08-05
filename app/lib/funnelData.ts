@@ -15,7 +15,7 @@ import { formatPrice, formulaImages, quarterlyImages } from "./productData";
 // ============================================
 
 export type FunnelProduct = "both" | "flow" | "clear";
-export type FunnelCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
+export type FunnelCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub" | "quarterly-otp";
 
 export interface FunnelPricing {
   /** Total price for this combination */
@@ -158,6 +158,14 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       firstOrderShots: 140,
       subsequentShots: 120,
     },
+    // One-time quarterly quantity: 3 boxes, no free bonus shots. Postage baked
+    // once (one shipment), so it lands below 3x the monthly OTP. (SCRUM-1203)
+    "quarterly-otp": {
+      price: OTP_PRICE.both * 3 + OTP_POSTAGE,
+      perShot: 2.33,
+      perDay: 4.66,
+      shotCount: 120,
+    },
   },
   flow: {
     "monthly-sub": {
@@ -187,6 +195,13 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 60,
+    },
+    // One-time quarterly quantity: 3 boxes, no free bonus shots (SCRUM-1203).
+    "quarterly-otp": {
+      price: OTP_PRICE.flow * 3 + OTP_POSTAGE,
+      perShot: 3.17,
+      perDay: 3.17,
+      shotCount: 60,
     },
   },
   clear: {
@@ -218,6 +233,13 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       firstOrderShots: 80,
       subsequentShots: 60,
     },
+    // One-time quarterly quantity: 3 boxes, no free bonus shots (SCRUM-1203).
+    "quarterly-otp": {
+      price: OTP_PRICE.clear * 3 + OTP_POSTAGE,
+      perShot: 3.17,
+      perDay: 3.17,
+      shotCount: 60,
+    },
   },
 };
 
@@ -243,6 +265,11 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
       variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
+    "quarterly-otp": {
+      // TODO(SCRUM-1203): set to the FLOW-FUNNEL-60-OTP variant GID once created
+      // in Shopify. Empty until then — isVariantReady() keeps the option hidden.
+      variantId: "",
+    },
   },
   clear: {
     "monthly-sub": {
@@ -256,6 +283,11 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
       variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
+    "quarterly-otp": {
+      // TODO(SCRUM-1203): set to the CLEAR-FUNNEL-60-OTP variant GID once created
+      // in Shopify. Empty until then — isVariantReady() keeps the option hidden.
+      variantId: "",
+    },
   },
   both: {
     "monthly-sub": {
@@ -268,6 +300,11 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
     "quarterly-sub": {
       variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
+    },
+    "quarterly-otp": {
+      // TODO(SCRUM-1203): set to the BOTH-FUNNEL-120-OTP variant GID once created
+      // in Shopify. Empty until then — isVariantReady() keeps the option hidden.
+      variantId: "",
     },
   },
 };
@@ -440,6 +477,13 @@ export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
       "Lowest cost per shot across all plans",
     ],
   },
+  "quarterly-otp": {
+    label: "Try once",
+    subtitle: "3-month supply, single order",
+    features: [
+      "Subscribe and save more",
+    ],
+  },
 };
 
 // ============================================
@@ -486,6 +530,7 @@ export function getFunnelProductSlideshow(
 
 const VARIANT_TO_PRODUCT = new Map<string, FunnelProduct>();
 const QUARTERLY_VARIANT_SET = new Set<string>();
+const QUARTERLY_OTP_VARIANT_SET = new Set<string>();
 
 for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
   for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
@@ -493,6 +538,8 @@ for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[Funn
       VARIANT_TO_PRODUCT.set(config.variantId, product);
       if (cadence === "quarterly-sub") {
         QUARTERLY_VARIANT_SET.add(config.variantId);
+      } else if (cadence === "quarterly-otp") {
+        QUARTERLY_OTP_VARIANT_SET.add(config.variantId);
       }
     }
   }
@@ -505,6 +552,9 @@ export function detectFunnelProduct(variantId: string): FunnelProduct | null {
 
 /** Given a variant GID and whether a sellingPlan is active, return the cadence. */
 export function detectFunnelCadence(variantId: string, hasSellingPlan: boolean): FunnelCadence {
+  // Quarterly OTP has no selling plan, so match it by variant before the
+  // no-selling-plan fallback would misread it as monthly-otp.
+  if (QUARTERLY_OTP_VARIANT_SET.has(variantId)) return "quarterly-otp";
   if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
   return hasSellingPlan ? "monthly-sub" : "monthly-otp";
 }
@@ -530,7 +580,11 @@ export function getFunnelPriceRange(product: FunnelProduct): {
   high: number;
   count: number;
 } {
-  const prices = Object.values(FUNNEL_PRICING[product]).map((p) => p.price);
+  // Only purchasable cadences count, so JSON-LD never advertises a price point
+  // whose variant is not yet wired (e.g. quarterly OTP before its GID is set).
+  const prices = (Object.keys(FUNNEL_PRICING[product]) as FunnelCadence[])
+    .filter((cadence) => isVariantReady(product, cadence))
+    .map((cadence) => FUNNEL_PRICING[product][cadence].price);
   return {
     low: Math.min(...prices),
     high: Math.max(...prices),
@@ -546,7 +600,9 @@ export function getFunnelPriceRange(product: FunnelProduct): {
  * When a price changes, also append a dated block to docs/PRICING_HISTORY.md.
  */
 export function getFunnelMinPerShot(product: FunnelProduct): number {
-  const perShots = Object.values(FUNNEL_PRICING[product]).map((p) => p.perShot);
+  const perShots = (Object.keys(FUNNEL_PRICING[product]) as FunnelCadence[])
+    .filter((cadence) => isVariantReady(product, cadence))
+    .map((cadence) => FUNNEL_PRICING[product][cadence].perShot);
   return Math.min(...perShots);
 }
 
@@ -567,6 +623,25 @@ export function isVariantReady(
   return Boolean(config?.variantId);
 }
 
+/**
+ * The one-time (OTP) cadence that pairs with a selected plan cadence: monthly
+ * plans → monthly-otp, quarterly plans → quarterly-otp. Falls back to
+ * monthly-otp when the paired OTP variant is not yet wired (isVariantReady),
+ * so the "buy it once" control never offers an unpurchasable variant. Once the
+ * quarterly OTP variant GIDs are set, quarterly selections resolve to the
+ * quarterly OTP automatically. (SCRUM-1203)
+ */
+export function getReadyOtpCadence(
+  product: FunnelProduct,
+  selectedCadence: FunnelCadence,
+): FunnelCadence {
+  const paired: FunnelCadence =
+    selectedCadence === "quarterly-sub" || selectedCadence === "quarterly-otp"
+      ? "quarterly-otp"
+      : "monthly-otp";
+  return isVariantReady(product, paired) ? paired : "monthly-otp";
+}
+
 /** For "Both", get the price of buying Flow + Clear separately at the same cadence */
 export function getBuySeparatelyPrice(cadence: FunnelCadence): number {
   return FUNNEL_PRICING.flow[cadence].price + FUNNEL_PRICING.clear[cadence].price;
@@ -583,6 +658,8 @@ export function getCadenceFrequency(
       return "one-time";
     case "quarterly-sub":
       return "quarterly";
+    case "quarterly-otp":
+      return "quarterly-one-time";
   }
 }
 
@@ -804,7 +881,8 @@ export function getFunnelCTALabels(
         subLabel: savings > 0 ? `Save ${formatPrice(savings)}` : "",
       };
     }
-    case "monthly-otp": {
+    case "monthly-otp":
+    case "quarterly-otp": {
       const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
       return {
         label: `Buy once · ${formatPrice(pricing.price)}`,

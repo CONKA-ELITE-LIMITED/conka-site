@@ -27,6 +27,7 @@ function getWhatShips(product: FunnelProduct, cadence: FunnelCadence, shotCount:
     case "quarterly-sub":
       return `${boxLabel} · ${shotCount} shots · delivered every 3 months`;
     case "monthly-otp":
+    case "quarterly-otp":
       return `${boxLabel} · ${shotCount} shots · one-off delivery`;
   }
 }

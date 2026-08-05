@@ -11,6 +11,7 @@ import {
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getReadyOtpCadenceByProductHeroId,
   getDisplayDiscount,
   FUNNEL_CADENCES,
 } from "@/app/lib/cadenceData";
@@ -617,7 +618,12 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  // "Buy it once" pairs with the selected plan: quarterly plan → quarterly OTP,
+  // monthly → monthly OTP (falls back to monthly OTP until the quarterly OTP
+  // variant is wired). Resolved the same way the page resolves the add, so the
+  // shown price and the added variant always match. (SCRUM-1203)
+  const otpCadence = getReadyOtpCadenceByProductHeroId(formulaId, selectedCadence);
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, otpCadence);
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [

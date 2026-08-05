@@ -26,6 +26,7 @@ function getDeliveryLabel(cadence: FunnelCadence): string {
     case "monthly-sub":
       return "Delivered Monthly";
     case "monthly-otp":
+    case "quarterly-otp":
       return "One-Time Delivery";
     case "quarterly-sub":
       return "Delivered Quarterly";
@@ -38,6 +39,7 @@ function getPriceFrequency(cadence: FunnelCadence): string {
     case "monthly-sub":
       return "/mo";
     case "monthly-otp":
+    case "quarterly-otp":
       return "";
     case "quarterly-sub":
       return "/quarter";
@@ -60,6 +62,10 @@ function getWhatShips(cadence: FunnelCadence, product: FunnelProduct, shotCount:
       return isBoth
         ? `6 boxes (${shotCount} shots total) delivered every 3 months`
         : `3 boxes (${shotCount} shots total) delivered every 3 months`;
+    case "quarterly-otp":
+      return isBoth
+        ? `6 boxes (${shotCount} shots), one-time delivery`
+        : `3 boxes (${shotCount} shots), one-time delivery`;
   }
 }
 

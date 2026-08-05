@@ -34,6 +34,7 @@ import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 import {
   CadenceType,
   getCadenceVariantByFormula,
+  getReadyOtpCadenceByProductHeroId,
 } from "@/app/lib/cadenceData";
 
 const FLOW_FAQ_IMAGE = {
@@ -208,7 +209,7 @@ export default function ConkaFlowPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
-              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+              onOtpAddToCart={() => handleAddToCart("hero", getReadyOtpCadenceByProductHeroId("01", selectedCadence))}
             />
           </div>
         </section>

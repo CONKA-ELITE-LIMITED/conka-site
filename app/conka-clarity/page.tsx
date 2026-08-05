@@ -34,6 +34,7 @@ import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 import {
   CadenceType,
   getCadenceVariantByFormula,
+  getReadyOtpCadenceByProductHeroId,
 } from "@/app/lib/cadenceData";
 
 const CLEAR_FAQ_IMAGE = {
@@ -210,7 +211,7 @@ export default function ConkaClarityPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
-              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+              onOtpAddToCart={() => handleAddToCart("hero", getReadyOtpCadenceByProductHeroId("02", selectedCadence))}
             />
           </div>
         </section>
