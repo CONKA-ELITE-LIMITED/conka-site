@@ -43,8 +43,8 @@ cheapest is the effective default.
 
 Examples:
 - **UK:** `Express` (Evri, free) + `24 Hour Delivery` (DPD, paid) → customer picks.
-- **International:** `Express International` (Evri) + `International Priority` (DHL, dearer)
-  → customer picks. *(DHL option is a fast-follow — see §4.)*
+- **International:** `Express International` (Evri) + `Express International DHL` (DHL, dearer)
+  → customer picks. *(DHL option is a fast-follow — see §4; tracked in SCRUM-1204.)*
 
 ---
 
@@ -117,8 +117,11 @@ long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Every rate sta
 **`Express International`** (Evri, one carrier — Synergy maps on name only).
 
 **Decisions (June 2026):**
-- **All international = Evri.** (DHL `International Priority` upgrade remains a future
-  fast-follow, not built.)
+- **All international = Evri by default.** DHL is offered as a customer-selectable paid
+  upgrade named `Express International DHL` (distributor's method name, confirmed Aug 2026;
+  supersedes the earlier working name `International Priority`). Added as a second rate per
+  intl zone. Fast-follow, tracked in SCRUM-1204 — blocked on per-zone DHL prices and
+  Synergy's DHL carrier account going live.
 - **Incoterm = DAP / Evri DDU service: the customer pays import duty/VAT on arrival.** So
   costs below are the Evri **duty-unpaid (DDU) / commercial** rates (the customer-pays-duty
   service), which is the true cost under DAP. EU customers get a duty bill on delivery —
@@ -183,8 +186,8 @@ currency (e.g. South Africa/ZAR) fall back to GBP and read 1:1.
 | `24 Hour Delivery` | DPD | £6.54 |
 
 **International zones:** keep the existing ~10 zones, all rates named `Express International`
-(Evri), prices per the §4 table. *(Fast-follow: add `International Priority` (DHL) as a
-second rate per intl zone for the upgrade option.)*
+(Evri), prices per the §4 table. *(Fast-follow: add `Express International DHL` (DHL) as a
+second rate per intl zone for the upgrade option — SCRUM-1204.)*
 
 **Steps in Shopify (Settings → Shipping):**
 1. Names: every international rate = `Express International` exactly (rename the Channel
@@ -200,14 +203,15 @@ by the price/zone work.
 
 ## 6. Synergy mapping sheet
 
-Synergy maps each method name to a carrier + service. Current sheet (3 rows — covers all
-test orders):
+Synergy maps each method name to a carrier + service. Current sheet (the first 3 rows cover
+all test orders; the DHL row is a fast-follow, SCRUM-1204):
 
 ```
-Shipping Method      | Carrier | Service      | Market | INCOTERMS
-Express              | Evri    | Standard     | UK     | n/a
-24 Hour Delivery     | DPD     | Next Day     | UK     | n/a
-Express International | Evri    | International | ROW    | DAP
+Shipping Method          | Carrier | Service      | Market | INCOTERMS
+Express                  | Evri    | Standard     | UK     | n/a
+24 Hour Delivery         | DPD     | Next Day     | UK     | n/a
+Express International     | Evri    | International | ROW    | DAP
+Express International DHL | DHL     | International | ROW    | DAP
 ```
 
 **Test observation (2026-06-17):** all 3 Synergy test orders shipped back via **Evri
