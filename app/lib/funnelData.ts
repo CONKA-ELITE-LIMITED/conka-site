@@ -316,6 +316,9 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
 export function getOfferByVariantId(
   variantId: string,
 ): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
+  // Guard against a falsy id matching an unwired placeholder variant (e.g. the
+  // quarterly OTP entries hold "" until their Shopify GID is set).
+  if (!variantId) return null;
   for (const product of Object.keys(FUNNEL_VARIANTS) as FunnelProduct[]) {
     for (const cadence of Object.keys(FUNNEL_VARIANTS[product]) as FunnelCadence[]) {
       if (FUNNEL_VARIANTS[product][cadence].variantId === variantId) {
