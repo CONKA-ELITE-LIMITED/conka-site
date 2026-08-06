@@ -13,14 +13,15 @@
 
 ## 1. The thesis (the spine of the deck)
 
-Nike spent 10+ years and a global launch teaching consumers that **"calm, focused, present"** is a
-performance surface worth paying for. They opened our category. But three gaps sit inside that bet,
-and CONKA closes all three:
+Nike spent 10+ years, a dedicated science team and a global launch teaching consumers that
+**"calm, focused, present"** is a performance surface worth paying for. They opened our category and
+proved the appetite. CONKA **completes the experience they started**, adding three things the shoe
+alone cannot (we build ON their science, we never question it):
 
-1. **The evidence gap.** Nike Mind is a *passive shoe* that makes a brain claim it cannot measure.
-   Neuroscientists publicly call it "probably a placebo" ("brain activation alone does not equal
-   cognitive enhancement"). CONKA is the **proof layer**: clinical substantiation + an app that
-   *measures* the cognitive result.
+1. **A personal measure.** Nike Mind delivers the science and the *state* through the shoe; by design
+   it's passive and doesn't give each wearer a way to *see* their own mind performing. CONKA adds the
+   measurement and feedback loop: a clinically-grounded score you track day to day, so the benefit
+   becomes visible and trackable in your own numbers.
 2. **The youth-credibility gap.** Nike is chasing a younger, wellness-native, deeply distrustful
    generation for whom **"authenticity is a standard of evidence, proof not perfection."** CONKA's
    transparency and measurement is exactly the trust currency that audience demands.
@@ -28,9 +29,9 @@ and CONKA closes all three:
    cognitive data. CONKA has a daily-return app on the young user's phone and a longitudinal dataset.
 
 **The match, in one line:** Nike Mind alters the brain from the *outside* (a shoe, a sensation).
-CONKA alters it from the *inside* (fuel) and, uniquely, **proves it moved** (measurement). A
-mind-altering shoe and a mind-altering shot, and the one instrument that makes the whole idea
-believable to a generation that believes nothing.
+CONKA alters it from the *inside* (fuel) and adds the *personal measure* that lets each person see it
+working. A mind-altering shoe and a mind-altering shot, and the app that turns the shared science
+into your own numbers, moving.
 
 ---
 
@@ -73,12 +74,13 @@ zeitgeist. ([PredictStreet](https://markets.financialcontent.com/ms.intelvalue/a
 electronic trackers (Whoop, Oura, Apple readiness), EEG feedback (Muse), and calm/focus apps
 (Calm, Headspace) by needing no device. ([CNN](https://www.cnn.com/style/nike-mind-altering-shoes-neuro-wearables-intl-spc))
 
-**The weakness that is our opening.** No published, peer-reviewed efficacy. Neuroscientists:
-*"activation alone does not equal cognitive enhancement"*; *"little evidence that passive underfoot
-stimulation meaningfully improves concentration in healthy adults"*; widely called *"probably a
-placebo."* ([ScienceAlert](https://www.sciencealert.com/nike-says-its-new-shoes-can-alter-your-mind-a-neuroscientist-weighs-in),
-[Psyche](https://psyche.co/notes-to-self/nikes-new-neuro-shoes-are-probably-a-placebo-so-what))
-**We do not attack this in the deck, we solve it:** CONKA is the evidence Nike Mind is missing.
+**Where CONKA adds (do NOT attack).** Nike Mind leads with the felt *sensation* and state, and is
+passive by design, so it doesn't hand the wearer a personal metric. External commentary has
+questioned the shoe's standalone efficacy, **but we deliberately do not use that.** Nike claims years
+of research and a dedicated science team; attacking their evidence backfires in the room and insults
+the people we're pitching. CONKA's posture is purely **additive**: the fuel and the personal
+measurement that turn Nike Mind's science into something each person can track and feel. Respect the
+research, extend the experience.
 
 ---
 
@@ -102,8 +104,8 @@ placebo."* ([ScienceAlert](https://www.sciencealert.com/nike-says-its-new-shoes-
 - **Nike's youth problem is credibility/relevance, not distribution.** It needs *authentic,
   science-backed newness that reads as culture.* That is the gap a partner fills.
 
-> ⚠️ The specific **"16-22" age band is our inference.** Sources support "Gen Z / teens / teen girls"
-> but not a precise band. Confirm Nike's actual target with Lucy.
+> ✅ **Confirmed by Rudh (source of truth): the target is 16-22.** Public sources only say "Gen Z /
+> teens", but Rudh has this direct from the Nike side, so treat 16-22 as settled.
 
 ---
 
@@ -133,8 +135,9 @@ placebo."* ([ScienceAlert](https://www.sciencealert.com/nike-says-its-new-shoes-
   ([Grow Therapy](https://growtherapy.com/blog/gen-z-mental-health-statistics/)) Frame CONKA as
   *performance/focus*, never as anxiety treatment.
 
-> ⚠️ **"Delusional drive" is not a documented public phrase.** "Delulu"/"delusional confidence" are.
-> Treat "delusional drive" as Nike's proprietary framing and confirm it's live campaign language.
+> ✅ **Confirmed by Rudh: "delusional drive" is Nike's language.** It isn't a documented *public*
+> phrase (only "delulu"/"delusional confidence" are), which just means it's Nike's own framing. Use
+> it as theirs, and lean into **"delusional drive needs a real engine."**
 
 ---
 
@@ -166,10 +169,11 @@ placebo."* ([ScienceAlert](https://www.sciencealert.com/nike-says-its-new-shoes-
 
 ## 6. What this means for the deck
 
-**CONKA solves Nike's three problems at once** (evidence, youth-credibility, engagement/data). Build
-the deck so each act quietly does one:
-- *Who is CONKA* (research, trials, the app) → seeds the **evidence** answer.
-- *The match, outside + inside* → CONKA is the **proof** to Nike Mind's sensation.
+**CONKA adds three things Nike wants** (a personal measure, youth-credibility, daily engagement/data).
+Build the deck so each act quietly delivers one:
+- *Who is CONKA* (research, trials, the app) → establishes we're the real, expert, evidenced thing.
+- *The match, outside + inside* → CONKA is the **personal, measurable** layer on top of Nike Mind's
+  science (additive, never a critique of the shoe).
 - *The vision* (measure it, don't just manifest it; the app, rings, challenges) → the **engagement**
   and **youth** answer.
 
@@ -192,9 +196,9 @@ the deck so each act quietly does one:
 
 1. Is **"Nike Mind"** the specific unit we're pitching (complement to the shoe) or broader Nike
    training/sportswear? Who owns partnership decisions (NSRL/Innovation vs a commercial unit)?
-2. Nike's actual **age target** (confirm/deny the "16-22" band) and whether the **teen-girl gap** is
-   the specific wedge they want help on.
-3. Is **"delusional drive"** live 2026 campaign language?
+2. Is the **teen-girl mindshare gap** (Nike sub-40% with teen girls) a specific wedge they want help
+   on? It would reshape which personas we lead with.
+3. *(Resolved: the 16-22 target and "delusional drive" are confirmed by Rudh, no longer open.)*
 4. Nike Mind **roadmap**: footwear-only, or app/apparel/ingestible extensions planned (an ingestible
    is our opening, or our collision)? Any existing supplement/nutrition partner conflicts?
 5. **Evidence posture**: is closing the placebo critique a stated priority they'd want a partner for?

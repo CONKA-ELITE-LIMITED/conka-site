@@ -101,17 +101,20 @@ memory/reaction/composure scores, no fMRI/brain-scan claim.)*
 
 Mapped onto Nike's own Prime / Train / Recover frame (directional, not a commitment to lock now):
 
-| Nike frame | Nike Mind today | Where CONKA extends it |
-|------------|-----------------|------------------------|
+| Nike frame | Where Nike plays | Where CONKA adds |
+|------------|-----------------|------------------|
 | **Prime** | The state: calm, present, ready (the shoe) | **Flow** fuels the primed state the shoe creates: calm, caffeine-free focus. |
-| **Train** | *(gap: Nike Mind has no measurement or training)* | **The app** measures and trains cognition. The only place in the whole system a number gets put on the mind. This is our unique wedge. |
-| **Recover** | *(light)* | **Clear** + the app's recovery signals (HRV, sleep, readiness) close the loop. |
+| **Train** | The shoe primes; daily training sits with the individual | **The app** measures and trains cognition day to day, the personal layer that puts a number on the mind and turns the science into something you can watch move. Our unique wedge. |
+| **Recover** | Nike plays across recovery already | **Clear** + the app's recovery signals (HRV, sleep, readiness) add the cognitive dimension. |
 
 Two arguments this unlocks:
 
-1. **We complete Nike's mind loop, and we can prove it.** Nike Mind can prime a state but cannot show
-   it worked. CONKA's app is the measurement engine. That completes Prime/Train/Recover for the mind
-   and gives Nike Mind the one thing it lacks: evidence of change.
+1. **Outside and inside, made personal.** Nike Mind primes the state from the outside, through the
+   science in the shoe. CONKA fuels it from the inside and adds the personal feedback loop: a
+   clinically-grounded score each person can track, so the benefit becomes something they see and
+   feel in their own numbers, day to day. We **extend** Nike Mind's science into the individual's
+   everyday. We never audit or second-guess it (respect the research team behind it), we make it
+   personal and trackable.
 2. **Our tech is the native bridge to Nike's new audience.** This generation was born with a phone in
    their hand. An app that measures and trains their mind speaks their language, and its
    transparency (real trials, a real baseline, a real number) is exactly the **BTS proof** that
