@@ -338,3 +338,76 @@ Dashboard refreshed to the trial-to-date view (window → 24 Jul–3 Aug; timeli
   ]
 }
 ```
+
+---
+
+## Snapshot — 2026-08-03 → 2026-08-10 (trial to date, second full week at £600/day)
+
+Pulled **10 Aug AM**. Sources: Meta Ads Manager (all three `Conka | TOF UK | * Listicle` campaigns, **24 Jul – 10 Aug**, screenshot from Rudh), Shopify Admin API (query 6 tagged + query 7 incrementality, `created_at:>=2026-07-03`), and Vercel Web Analytics (visits + section events). Framed cumulatively (24 Jul – 10 Aug) since Meta reports the full window. Budgets are **no longer split evenly** — ADHD is now £300/day, Brain-ageing £200/day, Productivity £100/day (weighted toward the cheap-clicks workhorse).
+
+**Headline: volume ~doubled again at a slightly looser CPA.** Meta orders 54 → **94**, first-party tagged 22 → **42**, spend £4.5k → **£8.5k** — blended Meta nCPA drifted £84 → **£90**, still under the £100 target. The efficiency spread widened: ADHD holds at **£73**, but Productivity landed **right on £100** and Brain-ageing has crept **just over to £109** as it accrued volume.
+
+### Cumulative Meta view (24 Jul – 10 Aug, the volume + per-persona signal)
+
+| Listicle | Visitors | Meta orders | Meta CVR | nCPA | Spend | £/visitor |
+|----------|---------:|------------:|---------:|-----:|------:|----------:|
+| ADHD | 6,147 | 43 | 0.70% | **£72.75** | £3,128.27 | £0.51 |
+| Productivity | 2,291 | 25 | 1.09% | £100.32 | £2,507.96 | £1.09 |
+| Brain-ageing | 1,986 | 26 | **1.31%** | £108.85 | £2,830.01 | £1.42 |
+| **All three** | **10,424** | **94** | **0.90%** | **~£90** | **£8,466.24** | £0.81 |
+
+- **ADHD is the efficient engine** — cheapest nCPA (£73) and cheapest clicks (£0.51/visitor), which is why it now carries the biggest budget (£300/day). Lowest CVR (0.70%) but volume more than compensates.
+- **Brain-ageing still converts best per visitor (1.31%)** but its clicks cost ~2.8× ADHD's, so its nCPA is the worst and has now nudged over target. Its CVR eased from 1.55% (to 3 Aug) as more/colder volume came in — expected.
+- **Productivity sits in the middle** on rate (1.09%) and is exactly on the £100 line; it still leads on first-party AOV/revenue (below).
+- Meta CVR = Meta orders ÷ matched-window visitors; numerator includes view-through, so read as a proxy.
+
+### First-party tagged orders — 42 to date (up from 22)
+
+| | Orders | Revenue | AOV | vs 3 Aug |
+|--|-------:|--------:|----:|----------|
+| **ADHD** | 23 | £1,431.89 | £62.26 | was 9 |
+| **Productivity** | 13 | £1,101.95 | £84.77 | was 10 |
+| **Brain-ageing** | 6 | £289.99 | £48.33 | was 3 |
+| **Total** | **42** | **£2,823.83** | **£67.23** | was 22 / £1,459.92 |
+
+- **Section split:** sticky ×22, hero ×16, bridge ×4, product ×0. Hero + sticky still do essentially all the closing; the two new bridge orders (#3780, #3819, #3820) are the only body-block closes all trial.
+- **Cadence (of the 42):** monthly ×31 (£1,476.90), quarterly ×10 (£1,283.94), one-time ×1 (£62.99). Ten quarterly subs carry nearly as much revenue as all 31 monthly ones — the quarterly duals remain the revenue engine.
+- **Tag capture ≈ 45%** (42 tagged ÷ 94 Meta), up from ~41%. Still a floor — the `persona:`/`listicle` tag write remains broken (0 orders carry it; filter on the `_listicle_origin` note attribute, not the tag).
+
+### Store-level incrementality (new-demand orders, excl. renewals = billing cycle #2+; re-pulled 10 Aug)
+
+| Week | New-demand orders | New-demand rev | Tagged | Renewals |
+|------|------------------:|---------------:|-------:|---------:|
+| 3–10 Jul | 6 | £532 | 0 | 16 |
+| 10–17 Jul | 3 | £237 | 0 | 16 |
+| 17–24 Jul | 5 | £394 | 0 | 20 |
+| 24–31 Jul (trial) | 47 | £3,878 | 9 | 23 |
+| 31 Jul–7 Aug | 55 | £3,824 | 31 | 21 |
+| 7–10 Aug (3d, partial) | 19 | £1,682 | 9 | 6 |
+
+- Pre-trial baseline ≈ **5 new-demand orders / week**; renewals held flat (16–20) throughout, so the lift is genuinely new demand, not churn timing. New-demand pace has held at ~50/week across both full trial weeks — the doubled £600/day spend is **sustaining** acquisition, not decaying.
+- **Three lenses (24 Jul – 10 Aug):** tagged **42** (floor) · Meta **94** · store new-demand lift **~110** over the ~5/week baseline. Ordered as expected (tag ≤ Meta ≤ lift) and coherent. Trust Meta + lift for volume; first-party for *which section closes*.
+- **Caveat:** the new-demand classifier here is coarse (total orders minus billing-cycle-#2+ renewals), so it runs a touch higher than the whitelisted "new subs + one-time" method used in earlier snapshots. Directionally the lift clearly exceeds Meta's 94; treat ~110 as an upper-ish estimate, not a precise count.
+
+### Scroll funnel — refreshed as a drop-off (31 Jul–10 Aug)
+
+Normalised to a 5-step funnel (% of Vercel page **entries** still on the page at each step). The cliff is the **first scroll** — most visitors leave before reason 1 — after which the taper is gentle and consistent across pages.
+
+| Step | ADHD | Productivity | Brain-ageing |
+|------|-----:|-------------:|-------------:|
+| Entry | 100% | 100% | 100% |
+| 1st section | 43% | 41% | 30% |
+| Stats band | 32% | 24% | 18% |
+| Reviews | 18% | 13% | 10% |
+| **Product** | **13%** | **11%** | **8%** |
+
+- **ADHD retains best at every depth**; Brain-ageing loses 70% on the first scroll (vs ADHD's 57%). Hero + sticky continue to do the converting, so low reach is not itself a problem — the body is scroll, not clicks. Full CTA-by-section not re-pulled this snapshot.
+- Entries: ADHD 4,398 · Productivity 1,335 · Brain-ageing 1,440 (Vercel visits, 31 Jul–10 Aug).
+
+### Timeline additions
+
+`3 Aug PM` end of first weekend at £600/day · `8 Aug (Fri)` **upsell flow added / improved** and **budget rebalanced to £300 ADHD · £200 Brain-ageing · £100 Productivity** (off the earlier even split, weighting toward ADHD as the cheapest-nCPA engine) · `10 Aug` end of second full week (this snapshot).
+
+### Artifact
+
+Dashboard refreshed to 24 Jul – 10 Aug (blended nCPA → £90; spend £8,466 / 94 purchases; per-listicle bars now show Brain-ageing over the £100 line; traffic, CVR, cadence, AOV and reach repulled). Same URL <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>.
