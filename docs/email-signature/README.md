@@ -43,7 +43,9 @@ recipient has images turned off.
 ## Install in Gmail
 
 1. Ensure this branch is merged and deployed (assets live at the URLs above).
-2. Open `conka-signature-dark.html` in a browser.
+2. Open the signature in a browser. A served copy also lives in `public/email/`,
+   so once deployed you can open it directly at
+   `https://www.conka.io/email/conka-signature-dark.html` (or the local file).
 3. Select the whole signature block, copy (Cmd+C).
 4. Gmail -> Settings (gear) -> See all settings -> General -> Signature.
 5. Paste into the signature box, Save Changes.
