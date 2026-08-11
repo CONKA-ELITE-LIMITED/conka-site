@@ -6,7 +6,7 @@ import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import LandingHeroVideo from "./components/landing/LandingHeroVideo";
+import HeroV2 from "./components/landing/HeroV2";
 import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
@@ -93,8 +93,11 @@ export default function Home() {
           {/* Magic Mind-style looped video hero: portrait video on mobile,
               landscape video on desktop. (Previous listicle LandingHero is
               kept in the codebase for revert.) */}
+          {/* PROTOTYPE: mobile hero restructured into stacked asset/copy/CTA
+              blocks (HeroV2, MM-style). Swap back to <LandingHeroVideo /> to
+              revert. Desktop still uses the video hero below. */}
           <div className="lg:hidden">
-            <LandingHeroVideo />
+            <HeroV2 />
           </div>
           <div className="hidden lg:block">
             <LandingHeroVideoDesktop />
