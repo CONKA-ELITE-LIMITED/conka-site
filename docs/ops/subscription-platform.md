@@ -9,11 +9,13 @@ App is **Loop Subscriptions** (not Loop Returns).
 | Term | Value |
 |------|-------|
 | Plan | Pro |
-| Platform fee | **$399 / month** |
+| Platform fee | **$399 / month** (est. £295.79 GBP) |
+| Billing cycle | **Monthly — "every 30 days", plus usage charges** (confirmed in Shopify > Settings > Billing, 11 Aug 2026). NOT annual. No annual commitment on the Shopify side. |
 | Transaction fee | **0.75%** (flat) |
-| Pricing model | Recurring **+ usage-based** |
 | Started | 1 Sep 2025 |
-| Current billing period ends | **2 Sep 2026** (auto-renews for another year) |
+| Next renewal | **2 Sep 2026** = the next 30-day cycle, not a yearly cliff |
+
+> **No Loop lock-in on Shopify's side.** Loop bills every 30 days and can be cancelled any time; each extra month is one more ~£296 + usage charge, not a year. The only 12-month commitment in this whole picture is Skio's contract below. Still verify the *signed Loop agreement* separately for any minimum term or cancellation fee (Shopify billing != contract terms).
 
 ## Proposed: Skio — CONTRACT UNSIGNED (as of 11 Aug 2026)
 
@@ -44,21 +46,21 @@ Contract from Skio (contact: aidan@skio.com).
 
 Caveat before signing: the 12-month term auto-renews for another 12, so there is a lock-in. Weigh the migration effort (Loop -> Skio) and any feature parity gaps against the ~$2.4k+/yr saving.
 
-## Migration timing (the hard deadline)
+## Migration timing (no cliff, but the meter runs)
 
-**Hard deadline: migrate off Loop before 2 Sep 2026.** Loop auto-renews for another full year on that date, and Shopify processes app renewal charges automatically at period end with no grace period and no guaranteed refund once charged. Cancelling after 2 Sep means eating another year of $399/mo.
+Corrected 11 Aug 2026: Loop bills **monthly (every 30 days)**, so there is **no annual cliff**. The earlier read of a yearly lock-in was wrong. 2 Sep 2026 is just the next 30-day charge.
 
-Because Loop is usage-based on top of the recurring fee, expect a **final usage charge** billed for usage up to the cancellation date regardless of when you cancel. Also confirm with Loop whether there is any **mid-cycle cancellation fee** in the agreement.
+What actually drives timing: every month left on Loop is another **~£296 + usage**. Migrating sooner saves ~£296/month, full stop. There is no penalty for crossing 2 Sep beyond paying for one more normal month.
 
-Suggested runway (from the ~11 Aug starting point, ~3 weeks out):
+Because Loop carries usage charges on top of the recurring fee, expect a **final usage charge** up to the cancellation date whenever you cancel. Confirm any **minimum term / cancellation fee** in the signed Loop agreement (not visible in Shopify billing).
+
+Suggested runway (relaxed, since there is no cliff):
 
 | Window | Work |
 |--------|------|
 | Now -> 20 Aug | Set up Skio, configure subscription products, test thoroughly |
 | 20 -> 28 Aug | Migrate active subscribers across, verify everything runs |
-| By 29 Aug | Cancel Loop Subscriptions (a few days buffer before the 2 Sep renewal) |
-
-The buffer before 2 Sep is the point that matters most: cancel with days to spare, not on the deadline.
+| By ~29 Aug | Cancel Loop to stop the next 30-day charge (~2 Sep). Slipping past it just costs one more month, not a year. |
 
 ## Migration status
 
