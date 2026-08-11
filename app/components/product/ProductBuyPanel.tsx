@@ -1,13 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { formatPrice, type FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
-import {
-  TrustIconGuarantee,
-  TrustIconShipping,
-  TrustIconCancel,
-} from "@/app/components/landing/icons";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
@@ -146,42 +141,14 @@ const FORMULA_TABS: Record<"flow" | "clear" | "both", ("flow" | "clear")[]> = {
   both: ["flow", "clear"],
 };
 
-/** Funnel green for the free-shots incentive (matches the listicle purchase card). */
+/** Funnel green for the subscription-summary accents (matches the listicle purchase card). */
 const GREEN = "#1a7f4f";
-const GREEN_TEXT = "#1a7f4f";
-
-/** Additive green-plus marker for the expanded benefit list ("+ this too"). */
-function GreenPlus() {
-  return (
-    <span
-      className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full"
-      style={{ background: GREEN }}
-      aria-hidden
-    >
-      <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-        <path d="M6 2.5v7M2.5 6h7" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-      </svg>
-    </span>
-  );
-}
-
-/** Subscription benefits revealed when the tile expands. One unified list (app
- *  access included) — every line is a subscription benefit, no separator. */
-function subscriptionBenefits(freeShots: number) {
-  return [
-    ...(freeShots > 0 ? [`+${freeShots} free shots on your first order`] : []),
-    "Free UK postage",
-    "Pause, skip, or cancel anytime",
-    "100-day money-back guarantee",
-    "Full CONKA App Access",
-    "Personal Brain Coach",
-  ];
-}
 
 /**
- * Magic Mind-style flat plan card: title + prices inline, a tap-to-expand
- * "subscription benefits" disclosure (no auto-expand on select). The only
- * plan-card style rendered.
+ * Magic Mind-style flat plan card. Unselected cards are a single clean row
+ * (radio + shots/cadence + discount pill + price). The selected card expands a
+ * light 2x2 detail grid. The fuller "what you get" list now lives in the
+ * SubscriptionSummary box under the CTA, so the cards stay lean.
  */
 function FlatPlanCard({
   formulaId,
@@ -200,8 +167,18 @@ function FlatPlanCard({
   const display = FUNNEL_CADENCES[cadence];
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
   const savePct = getDisplayDiscount(pricing);
+  // Short label ("monthly" / "quarterly") is used only in the aria-label now;
+  // the fuller phrasing ("every 3 months") shows in the expanded detail + box.
+  const cadenceShort = cadence === "quarterly-sub" ? "quarterly" : "monthly";
   const cadenceWord = cadence === "quarterly-sub" ? "every 3 months" : "monthly";
   const freeShots = pricing.freeShots ?? 0;
+  const [tipOpen, setTipOpen] = useState(false);
+
+  // Close the tooltip when the card is deselected so it does not reappear
+  // already-open the next time the card is selected.
+  useEffect(() => {
+    if (!isSelected) setTipOpen(false);
+  }, [isSelected]);
 
   // Crossed-out "was":
   //  - Monthly sub anchors to the real one-time (OTP) price for the same shots,
@@ -218,149 +195,132 @@ function FlatPlanCard({
 
   return (
     <div
-      className={`relative w-full select-none rounded-md transition-all duration-200 ${
+      className={`relative w-full select-none rounded-xl transition-all duration-200 ${
         isSelected
-          ? "border-[1.5px] border-[#1B2757] bg-[#f8f9fd]"
-          : "border border-black/15 bg-white hover:border-black/30"
+          ? ""
+          : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
       }`}
+      // Selected state uses the brand offer gradient as a 2px border ring
+      // (padding-box keeps the fill, border-box paints the gradient edge) so the
+      // rounded corners survive — a plain border-color can't do a gradient.
+      style={
+        isSelected
+          ? {
+              border: "2px solid transparent",
+              background:
+                "linear-gradient(#f8f9fd,#f8f9fd) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+            }
+          : undefined
+      }
     >
       {display.badge && (
-        <span className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-[#1B2757] px-3 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
+        <span
+          className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
+          style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+        >
           {display.badge}
         </span>
       )}
 
-      {/* Full-card select target; the benefits disclosure below opts back into
-          pointer events so tapping it expands rather than selects. */}
+      {/* Full-card select target sitting behind the (pointer-events-none) content. */}
       <button
         type="button"
         onClick={onSelect}
-        aria-label={`Select ${pricing.shotCount} shot delivery`}
-        className="absolute inset-0 z-0"
+        aria-label={`Select ${pricing.shotCount} shot ${cadenceShort} delivery`}
+        className="absolute inset-0 z-0 rounded-xl"
       />
 
-      <div className="pointer-events-none relative z-10 flex items-start justify-between gap-3 px-4 py-3">
-        <div className="min-w-0">
-          <span className="flex items-center gap-2.5">
+      <div className="pointer-events-none relative z-10 px-3 py-3 sm:px-4">
+        {/* Top row: radio + shots/cadence ..... discount pill + strike + price.
+            Kept compact so nothing truncates in the narrow buy column. */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-center gap-2">
             <span
-              className={`flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+              className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
                 isSelected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
               }`}
               aria-hidden
             >
               {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
             </span>
-            <span className="text-[15px] font-bold leading-tight text-black">
-              {pricing.shotCount} Shot Delivery
+            <span className="whitespace-nowrap text-sm font-bold leading-tight text-black">
+              {pricing.shotCount} shots
             </span>
           </span>
 
-          <details className="pointer-events-auto mt-2">
-            <summary className="flex cursor-pointer list-none flex-col gap-1.5 [&::-webkit-details-marker]:hidden">
-              {/* Line 1: tick + delivery cadence */}
-              <span className="flex items-center gap-1.5">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className="shrink-0 text-[#1B2757]"
-                  aria-hidden
-                >
-                  <path
-                    d="M3 8.5L6.5 12L13 4.5"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="text-[11px] font-medium text-black/55">
-                  Delivered {cadenceWord} + subscription benefits
-                </span>
+          <span className="flex shrink-0 items-center gap-1.5">
+            {savePct > 0 && (
+              <span
+                className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white"
+                style={{ backgroundColor: saveColor }}
+              >
+                {savePct}% off
               </span>
-
-              {/* Line 2: free-shots incentive + learn-more tile */}
-              <span className="flex items-center gap-2">
-                {freeShots > 0 && (
-                  <span
-                    className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    style={{ background: "rgba(26,127,79,0.14)", color: GREEN_TEXT }}
-                  >
-                    <span
-                      className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full"
-                      style={{ background: GREEN }}
-                    >
-                      <svg width="7" height="7" viewBox="0 0 16 16" fill="none" aria-hidden>
-                        <path
-                          d="M3 8.5L6.5 12L13 4.5"
-                          stroke="white"
-                          strokeWidth="2.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    +{freeShots} free shots
-                  </span>
-                )}
-                <span className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-full bg-[#1B2757]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#1B2757]">
-                  Learn more
-                  <svg
-                    width="8"
-                    height="8"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="shrink-0 transition-transform [details[open]_&]:rotate-180"
-                    aria-hidden
-                  >
-                    <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
+            )}
+            <span className="flex items-baseline gap-1 leading-none">
+              {compareAtDisplay && (
+                <s className="text-[11px] font-bold text-black/40">
+                  {formatPrice(compareAtDisplay)}
+                </s>
+              )}
+              <span className="text-base font-bold tabular-nums text-black">
+                {formatPrice(pricing.price)}
               </span>
-            </summary>
-            <p className="mt-3 border-t border-black/10 pt-2.5 text-[10px] font-bold uppercase tracking-wide text-black/45">
-              Subscription Benefits
-            </p>
-            <ul className="mt-2 flex flex-col gap-1.5">
-              {subscriptionBenefits(freeShots).map((label) => (
-                <li
-                  key={label}
-                  className="flex items-center gap-2 text-[12px] font-medium text-black"
-                >
-                  <GreenPlus />
-                  {label}
-                </li>
-              ))}
-            </ul>
-          </details>
+            </span>
+          </span>
         </div>
 
-        <span className="shrink-0 text-right">
-          <span className="flex items-baseline justify-end gap-1.5 leading-none">
-            {compareAtDisplay && (
-              <s className="text-xs font-bold text-black/40">
-                {formatPrice(compareAtDisplay)}
-              </s>
-            )}
-            <span className="text-lg font-bold tabular-nums text-black">
-              {formatPrice(pricing.price)}
+        {/* Selected-only 2x2 detail (Magic Mind pattern): guarantee / per-bottle
+            over delivery cadence / shipping. Collapsed on unselected cards. */}
+        {isSelected && (
+          <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-black/10 pt-3 text-[11px] leading-tight text-black">
+            <span>100-day guarantee</span>
+            <span className="text-right tabular-nums">
+              {formatPrice(pricing.perShot)} per bottle
             </span>
-          </span>
-          <span className="mt-1 block text-[11px] italic tabular-nums text-black/55">
-            {formatPrice(pricing.perShot)} per bottle
-          </span>
-          {savePct > 0 && (
-            <span
-              className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
-              style={{ backgroundColor: saveColor }}
-            >
-              Save {savePct}%
+            <span className="flex items-center gap-1.5">
+              Delivered {cadenceWord}
+              <span className="pointer-events-auto relative inline-flex">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTipOpen((v) => !v);
+                  }}
+                  onMouseEnter={() => setTipOpen(true)}
+                  onMouseLeave={() => setTipOpen(false)}
+                  aria-label="Delivery details"
+                  className="flex h-4 w-4 items-center justify-center rounded-full border border-black/40 text-[9px] font-bold leading-none text-black/55"
+                >
+                  i
+                </button>
+                {tipOpen && (
+                  <span
+                    role="tooltip"
+                    className="absolute bottom-full left-0 z-30 mb-2 w-52 rounded-lg bg-black px-3 py-2 text-[11px] font-medium leading-snug text-white shadow-lg"
+                  >
+                    Your shots arrive{" "}
+                    {cadence === "quarterly-sub" ? "every 3 months" : "every month"}. Pause,
+                    skip, or cancel anytime.
+                  </span>
+                )}
+              </span>
             </span>
-          )}
-        </span>
+            <span className="text-right">Free UK shipping</span>
+          </div>
+        )}
+
+        {/* Full-width gradient footer on the selected card reinforcing the
+            free-shots incentive. Negative margins let it bleed to the card edges
+            and hug the rounded bottom corners inside the 2px gradient border. */}
+        {isSelected && freeShots > 0 && (
+          <div
+            className="-mx-3 -mb-3 mt-3 rounded-b-[10px] px-3 py-2 text-center text-[12px] font-bold text-[#14532d] sm:-mx-4 sm:px-4"
+            style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+          >
+            +{freeShots} free shots on your first order
+          </div>
+        )}
       </div>
     </div>
   );
@@ -439,23 +399,94 @@ export function TrustStrip() {
   );
 }
 
-/** 3-icon reassurance bar shown directly under the CTA (IM8 pattern). */
-function TrustBar() {
-  const items = [
-    { Icon: TrustIconGuarantee, label: "100-day guarantee" },
-    { Icon: TrustIconShipping, label: "Free UK shipping" },
-    { Icon: TrustIconCancel, label: "Cancel anytime" },
+/**
+ * SubscriptionSummary — the dynamic "Your subscription" box shown under the CTA
+ * (SCRUM-1207). It restates exactly what the selected plan delivers and rewrites
+ * itself whenever the plan changes, since every figure is derived from the same
+ * cadenceData the plan cards read. This is the single home for the fuller "what
+ * you get" list that used to live inside each plan card.
+ */
+function SubscriptionSummary({
+  formulaId,
+  cadence,
+}: {
+  formulaId: ProductHeroId;
+  cadence: CadenceType;
+}) {
+  const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
+  const savePct = getDisplayDiscount(pricing);
+  const cadenceWord = cadence === "quarterly-sub" ? "every 3 months" : "monthly";
+  const freeShots = pricing.freeShots ?? 0;
+
+  const lines: { id: string; text: ReactNode }[] = [
+    { id: "delivery", text: <>{pricing.shotCount} shots delivered {cadenceWord}</> },
+    ...(freeShots > 0
+      ? [
+          {
+            id: "free-shots",
+            text: (
+              <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                <span
+                  className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-bold"
+                  style={{ background: "rgba(26,127,79,0.14)", color: GREEN }}
+                >
+                  <span
+                    className="flex h-3 w-3 items-center justify-center rounded-full"
+                    style={{ background: GREEN }}
+                  >
+                    <svg width="7" height="7" viewBox="0 0 16 16" fill="none" aria-hidden>
+                      <path
+                        d="M3 8.5L6.5 12L13 4.5"
+                        stroke="white"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  +{freeShots} free shots
+                </span>
+                on your first order
+              </span>
+            ),
+          },
+        ]
+      : []),
+    ...(savePct > 0
+      ? [{ id: "savings", text: <>Save {savePct}% vs buying once</> }]
+      : []),
+    { id: "shipping", text: <>Free UK shipping</> },
+    {
+      id: "guarantee",
+      text: (
+        <>
+          100-day money-back guarantee
+          <span className="block">(less than 1.2% of people actually use it)</span>
+        </>
+      ),
+    },
+    { id: "app", text: <>Full app access + personal brain coach</> },
+    { id: "cancel", text: <>Pause, skip, or cancel anytime</> },
   ];
+
   return (
-    <div className="mt-3 grid grid-cols-3 gap-2 py-1">
-      {items.map(({ Icon, label }) => (
-        <div key={label} className="flex flex-col items-center gap-1.5 text-center">
-          <Icon className="h-5 w-5 text-[#1B2757]" />
-          <span className="text-[11px] font-semibold leading-tight text-black/70">
-            {label}
-          </span>
-        </div>
-      ))}
+    <div className="mt-4 rounded-xl border border-black/15 bg-white p-5">
+      <p className="text-lg font-medium text-black">Your subscription</p>
+      <ul className="mt-3 flex flex-col gap-3">
+        {lines.map((line) => (
+          <li
+            key={line.id}
+            className="flex items-start gap-2.5 text-sm leading-snug text-black"
+          >
+            <span
+              className="mt-[6px] h-[7px] w-[7px] shrink-0 rounded-full"
+              style={{ background: GREEN }}
+              aria-hidden
+            />
+            <span>{line.text}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -675,7 +706,7 @@ export default function ProductBuyPanel({
           Buy it once for {formatPrice(otpPricing.price)}
         </button>
 
-        <TrustBar />
+        <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />
       </div>
 
       {!hideWhatYouFeel && <WhatYouFeel />}

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-11** | Flow/Clear/Both PDPs: dynamic 'Your subscription' box under the CTA and a tightened plan-picker (collapsed cards, selected-only detail, gradient selected state, delivery tooltip)
 - **2026-08-04** | Cart upsell: reset the one-time suppression when the cart is emptied, so a fresh cart re-triggers the upsell (SCRUM-1202)
 - **2026-08-04** | Cart upsell tile: single Recommended-upgrade tile in the cart drawer (add-first swap, replaces the per-line strip) (SCRUM-1202)
 - **2026-08-04** | Cart upsell data layer: single non-chaining getCartUpsell resolver, session accept-flag attribution (_upsell order attribute), and cart:upsell analytics (SCRUM-1201)
