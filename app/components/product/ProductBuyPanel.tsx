@@ -458,7 +458,12 @@ function SubscriptionSummary({
     { id: "shipping", text: <>Free UK shipping</> },
     {
       id: "guarantee",
-      text: <>100-day money-back guarantee (less than 1.2% of people actually use it)</>,
+      text: (
+        <>
+          100-day money-back guarantee
+          <span className="block">(less than 1.2% of people actually use it)</span>
+        </>
+      ),
     },
     { id: "app", text: <>Full app access + personal brain coach</> },
     { id: "cancel", text: <>Pause, skip, or cancel anytime</> },
