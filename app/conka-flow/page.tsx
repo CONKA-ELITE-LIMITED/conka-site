@@ -7,6 +7,7 @@ import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
 } from "@/app/components/product";
+import IngredientOutcomeAccordions from "@/app/components/product/IngredientOutcomeAccordions";
 import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
 import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
@@ -115,12 +116,21 @@ export default function ConkaFlowPage() {
     </section>
   );
 
-  // TODO Phase 3: a FormulaQualityBadges section (Informed Sport, vegan, etc.)
-  // will slot between benefits and ingredients.
   const ingredientsSection = (
     <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
       <div className="brand-track">
         <ClinicalIngredients formulaIds={["01"]} />
+      </div>
+    </section>
+  );
+
+  // Ingredient-led benefits (SCRUM-1209): new Magic Mind-style section grouping
+  // the ingredients by outcome. Runs ALONGSIDE the existing pillars + carousel
+  // for now so we can compare; the old sections can be removed when we choose.
+  const ingredientBenefitsSection = (
+    <section id="ingredient-benefits" className="brand-section brand-bg-tint" aria-label="Ingredients by benefit">
+      <div className="brand-track">
+        <IngredientOutcomeAccordions />
       </div>
     </section>
   );
@@ -215,6 +225,7 @@ export default function ConkaFlowPage() {
 
         {benefitTilesSection}
         {ugcSection}
+        {ingredientBenefitsSection}
         {benefitsSection}
         {ingredientsSection}
         {absorptionSection}
@@ -261,8 +272,8 @@ export default function ConkaFlowPage() {
 
       {benefitTilesSection}
       {ugcSection}
+      {ingredientBenefitsSection}
       {benefitsSection}
-      {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
       {ingredientsSection}
       {absorptionSection}
       {whatToExpectSection}
