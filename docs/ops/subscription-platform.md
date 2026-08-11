@@ -1,0 +1,44 @@
+# Subscription Platform: Loop vs Skio
+
+Tracks the subscription-management vendor: current provider, the proposed switch, fees, and contract terms. Snapshot as of **11 Aug 2026**.
+
+## Current: Loop (Pro plan) — LIVE
+
+| Term | Value |
+|------|-------|
+| Plan | Pro |
+| Platform fee | **$399 / month** |
+| Transaction fee | **0.75%** (flat) |
+
+## Proposed: Skio — CONTRACT UNSIGNED (as of 11 Aug 2026)
+
+Contract from Skio (contact: aidan@skio.com).
+
+| Term | Value |
+|------|-------|
+| Service | Subscription for Shopify |
+| Initial term | 12 months, auto-renews every 12 months |
+| Platform fee | **$199 / month** |
+| Transaction fee | **0.7% + $0**, tiered down by monthly sub revenue (see below) |
+
+**Transaction-fee tiers (by monthly subscription revenue, USD):**
+
+| Monthly sub revenue | Rate |
+|---------------------|------|
+| $0 – $499,999 | 0.7% |
+| $500,000 – $999,999 | 0.65% |
+| $1,000,000 – $1,999,999 | 0.575% |
+| $2,000,000+ | 0.515% |
+
+## The saving
+
+- **Fixed:** $399 - $199 = **$200 / month saved = $2,400 / year.**
+- **Variable:** 0.75% - 0.7% = **0.05% of monthly sub revenue** (more as the tiers step down at higher volume).
+
+> To finish this: what is our current monthly subscription revenue (USD)? At $R/month the variable saving is `0.0005 x R` per month. E.g. $100k/mo -> +$50/mo ($600/yr), $200k/mo -> +$100/mo ($1,200/yr). Total annual saving = $2,400 + (0.006 x R).
+
+Caveat before signing: the 12-month term auto-renews for another 12, so there is a lock-in. Weigh the migration effort (Loop -> Skio) and any feature parity gaps against the ~$2.4k+/yr saving.
+
+## Migration status
+
+Loop -> Skio migration is under discussion, not committed. See memory `project_loop_to_skio_phase4_hold.md`: the account-portal cancel flow is deliberately **not** being built because a Skio migration may moot it (Skio does swap/cancel/upsell natively). Phases 0-3 of the portal work are already live.
