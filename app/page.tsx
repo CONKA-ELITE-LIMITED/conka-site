@@ -6,8 +6,7 @@ import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import LandingHeroVideo from "./components/landing/LandingHeroVideo";
-import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
+import HomeHeroV3 from "./components/landing/HomeHeroV3";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabGuarantee from "./components/landing/LabGuarantee";
@@ -86,19 +85,14 @@ export default function Home() {
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
       <section
-        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
+        className="brand-section brand-hero-first brand-bg-white"
         aria-label="Homepage hero"
       >
-        <div className="brand-track lg:max-w-none!">
-          {/* Magic Mind-style looped video hero: portrait video on mobile,
-              landscape video on desktop. (Previous listicle LandingHero is
-              kept in the codebase for revert.) */}
-          <div className="lg:hidden">
-            <LandingHeroVideo />
-          </div>
-          <div className="hidden lg:block">
-            <LandingHeroVideoDesktop />
-          </div>
+        <div className="brand-track">
+          {/* Magic Mind-style image hero: asset-top on mobile, asset-left /
+              copy-right on desktop. (The previous video hero,
+              LandingHeroVideo*, is kept in the codebase for revert.) */}
+          <HomeHeroV3 />
         </div>
       </section>
 
