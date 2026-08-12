@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-12** | Flow PDP: new ProductHeroV3 two-column desktop hero (large sticky asset, buy panel + inline ingredient-benefit section with who-it's-for + guarantee blocks)
 - **2026-08-11** | Flow PDP: new ingredient-led benefits section (MM-style outcome accordions), running alongside the existing pillars + ingredient carousel for now
 - **2026-08-11** | Flow/Clear/Both PDPs: dynamic 'Your subscription' box under the CTA and a tightened plan-picker (collapsed cards, selected-only detail, gradient selected state, delivery tooltip)
 - **2026-08-04** | Cart upsell: reset the one-time suppression when the cart is emptied, so a fresh cart re-triggers the upsell (SCRUM-1202)
