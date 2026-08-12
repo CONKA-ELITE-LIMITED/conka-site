@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-12** | Align PDP card + hero-asset radii to the rounded-md spec, and document the DTC offer gradient + larger hero heading tier in the design system
 - **2026-08-12** | Flow PDP: new ProductHeroV3 two-column desktop hero (large sticky asset, buy panel + inline ingredient-benefit section with who-it's-for + guarantee blocks)
 - **2026-08-11** | Flow PDP: new ingredient-led benefits section (MM-style outcome accordions), running alongside the existing pillars + ingredient carousel for now
 - **2026-08-11** | Flow/Clear/Both PDPs: dynamic 'Your subscription' box under the CTA and a tightened plan-picker (collapsed cards, selected-only detail, gradient selected state, delivery tooltip)

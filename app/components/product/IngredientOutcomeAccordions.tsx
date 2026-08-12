@@ -118,10 +118,10 @@ function IngredientCard({
 }) {
   const studies = pubmedUrl(ing);
   return (
-    <details className="group rounded-xl border border-black/10 bg-white">
+    <details className="group rounded-md border border-black/10 bg-white">
       {/* Collapsed face: render icon + name + chevron (44px+ tap target) */}
       <summary className="flex cursor-pointer list-none items-center gap-3 p-3.5 [&::-webkit-details-marker]:hidden">
-        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-[#f1f1f3]">
+        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md bg-[#f1f1f3]">
           {ing.image && (
             <Image
               src={ing.image}
@@ -143,7 +143,7 @@ function IngredientCard({
       <div className="px-3.5 pb-5">
         <div className="border-t border-black/10 pt-4">
           {ing.image && (
-            <div className="relative mx-auto mb-4 aspect-square w-40 max-w-full overflow-hidden rounded-lg bg-[#f1f1f3]">
+            <div className="relative mx-auto mb-4 aspect-square w-40 max-w-full overflow-hidden rounded-md bg-[#f1f1f3]">
               <Image
                 src={ing.image}
                 alt={ing.name}
@@ -160,7 +160,7 @@ function IngredientCard({
           <p className="text-sm leading-relaxed text-black/70">{ing.description}</p>
 
           {partner && (
-            <p className="mt-3 rounded-lg bg-[#f1f1f3] px-3 py-2.5 text-sm leading-snug text-black/70">
+            <p className="mt-3 rounded-md bg-[#f1f1f3] px-3 py-2.5 text-sm leading-snug text-black/70">
               <span className="font-semibold text-black">
                 Paired with {partner.name}:
               </span>{" "}

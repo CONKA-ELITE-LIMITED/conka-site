@@ -195,7 +195,7 @@ function FlatPlanCard({
 
   return (
     <div
-      className={`relative w-full select-none rounded-xl transition-all duration-200 ${
+      className={`relative w-full select-none rounded-md transition-all duration-200 ${
         isSelected
           ? ""
           : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
@@ -227,7 +227,7 @@ function FlatPlanCard({
         type="button"
         onClick={onSelect}
         aria-label={`Select ${pricing.shotCount} shot ${cadenceShort} delivery`}
-        className="absolute inset-0 z-0 rounded-xl"
+        className="absolute inset-0 z-0 rounded-md"
       />
 
       <div className="pointer-events-none relative z-10 px-3 py-3 sm:px-4">
@@ -315,7 +315,7 @@ function FlatPlanCard({
             and hug the rounded bottom corners inside the 2px gradient border. */}
         {isSelected && freeShots > 0 && (
           <div
-            className="-mx-3 -mb-3 mt-3 rounded-b-[10px] px-3 py-2 text-center text-[12px] font-bold text-[#14532d] sm:-mx-4 sm:px-4"
+            className="-mx-3 -mb-3 mt-3 rounded-b-md px-3 py-2 text-center text-[12px] font-bold text-[#14532d] sm:-mx-4 sm:px-4"
             style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
           >
             +{freeShots} free shots on your first order
@@ -470,7 +470,7 @@ function SubscriptionSummary({
   ];
 
   return (
-    <div className="mt-4 rounded-xl border border-black/15 bg-white p-5">
+    <div className="mt-4 rounded-md border border-black/15 bg-white p-5">
       <p className="text-lg font-medium text-black">Your subscription</p>
       <ul className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (
