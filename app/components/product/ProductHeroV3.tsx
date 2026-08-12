@@ -88,20 +88,20 @@ export default function ProductHeroV3({
 
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
-      <div className="grid grid-cols-1 gap-[var(--brand-space-m)] lg:grid-cols-[65fr_35fr] lg:items-start">
-        {/* LEFT (65%): large gallery — de-carded, small thumbnail rail under the
-            image; sticky so it follows the taller right column on scroll */}
+      {/* Fixed-width, centred two-column block (Magic Mind alignment): the asset
+          column is sized to the asset, the buy column sits right beside it with a
+          small gap, and the whole block centres within the track so the side
+          gutters grow. Drop a 7:5 landscape asset in and it fills the column. */}
+      <div className="grid grid-cols-1 gap-[var(--brand-space-m)] lg:grid-cols-[minmax(0,560px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
+        {/* LEFT: gallery — de-carded, small thumbnail rail under the image;
+            sticky so it follows the taller right column on scroll */}
         <div className="order-2 lg:order-1 lg:sticky lg:top-24 lg:self-start">
-          {/* Cap the asset so the 65% column does not blow the square image up
-              to full width; centre it within the column. */}
-          <div className="mx-auto w-full lg:max-w-[540px]">
-            <ProductImageSlideshow
-              images={images}
-              alt={`${content.name} bottle`}
-              noFrame
-              smallThumbnails
-            />
-          </div>
+          <ProductImageSlideshow
+            images={images}
+            alt={`${content.name} bottle`}
+            noFrame
+            smallThumbnails
+          />
         </div>
 
         {/* RIGHT (35%): identity + buy box + inline ingredient-benefit section.
