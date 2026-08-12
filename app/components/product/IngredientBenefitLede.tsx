@@ -1,6 +1,6 @@
 import { getHeroContent } from "@/app/lib/productHeroHelpers";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { LEDE_DESCRIPTION } from "@/app/lib/mmPdpData";
+import { LEDE_DESCRIPTION, LEDE_SUBLINE } from "@/app/lib/mmPdpData";
 
 /* ============================================================================
  * IngredientBenefitLede (SCRUM-1209)
@@ -46,7 +46,7 @@ export default function IngredientBenefitLede({
   // descriptor tail, breaking onto two lines. Prefer a word connector
   // ("... for ..." Flow, "... that ..." Clear); fall back to a comma (Both),
   // dropping the comma from the tail.
-  const subline = content.seoHeading ?? "";
+  const subline = LEDE_SUBLINE[formulaId] ?? content.seoHeading ?? "";
   const wordSplit = [" for ", " That ", " that "]
     .map((c) => subline.indexOf(c))
     .filter((i) => i > 0)

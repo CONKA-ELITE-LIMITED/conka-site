@@ -101,21 +101,27 @@ export const OUTCOME_BUCKETS: Record<ProductHeroId, OutcomeBucket[]> = {
       id: "mental-performance",
       title: "Mental performance",
       subhead: "Calm morning focus and sharp afternoon recall.",
-      ingredientIds: ["lemon-balm", "alpha-gpc"],
+      ingredientIds: ["lemon-balm", "alpha-gpc", "ginkgo"],
     },
     {
       id: "sustained-energy",
       title: "Sustained energy",
       subhead: "Steady energy across the full cognitive day.",
-      ingredientIds: ["rhodiola", "alcar"],
+      ingredientIds: ["rhodiola", "alcar", "vitamin-b12"],
     },
     {
       id: "brain-health",
       title: "Brain health",
       subhead: "Neuroprotection and antioxidant defense, morning to evening.",
-      ingredientIds: ["turmeric", "glutathione"],
+      ingredientIds: ["turmeric", "glutathione", "bilberry"],
     },
   ],
+};
+
+/** Optional subline override where the SEO heading needs trimming for display
+ *  (Both drops its ", Morning to Evening" tail). Falls back to seoHeading. */
+export const LEDE_SUBLINE: Partial<Record<ProductHeroId, string>> = {
+  "03": "The Complete Daily Brain Shot System",
 };
 
 /** Ingredient id -> partner ingredient folded into its card (not its own accordion). */

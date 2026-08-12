@@ -192,8 +192,7 @@ export default function IngredientOutcomeAccordions({
 
       <a
         href="/ingredients"
-        className="inline-flex items-center gap-1 self-start text-sm font-semibold underline underline-offset-4"
-        style={{ color: NAVY }}
+        className="inline-flex items-center gap-1 self-start text-sm font-semibold text-black underline underline-offset-4"
       >
         See all ingredients
         <svg
