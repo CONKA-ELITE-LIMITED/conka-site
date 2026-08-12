@@ -6,8 +6,7 @@ import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import LandingHeroVideo from "./components/landing/LandingHeroVideo";
-import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
+import HomeHeroV3 from "./components/landing/HomeHeroV3";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabGuarantee from "./components/landing/LabGuarantee";
@@ -85,29 +84,24 @@ export default function Home() {
           a ~16px white sliver shows above the flush hero. Pull the hero up into
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
+      {/* Full-bleed image hero: asset-top on mobile, asset-left / copy-right on
+          desktop. The section drops its gutters + track so the asset reaches the
+          viewport edges; HomeHeroV3 pads its own copy column. (The previous video
+          hero, LandingHeroVideo*, is kept in the codebase for revert.) */}
       <section
-        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
+        className="brand-section brand-hero-first brand-bg-white !p-0 xl:-mt-4"
         aria-label="Homepage hero"
       >
-        <div className="brand-track lg:max-w-none!">
-          {/* Magic Mind-style looped video hero: portrait video on mobile,
-              landscape video on desktop. (Previous listicle LandingHero is
-              kept in the codebase for revert.) */}
-          <div className="lg:hidden">
-            <LandingHeroVideo />
-          </div>
-          <div className="hidden lg:block">
-            <LandingHeroVideoDesktop />
-          </div>
-        </div>
+        <HomeHeroV3 />
       </section>
 
       {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
-      {/* The hero drops its bottom padding on mobile so the spacing above this
-          section comes from this section's own top padding, keeping the gap in
-          the section tint colour rather than white. */}
+      {/* White so it flows straight out of the hero's white copy column; the
+          benefit-tiles section below carries the first tint break. The hero
+          drops its bottom padding on mobile, so the gap above this section
+          comes from this section's own top padding. */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="What CONKA does"
       >
         <div className="brand-track">
@@ -118,7 +112,7 @@ export default function Home() {
       {/* ===== SECTION 3: KEY BENEFITS (benefit tiles) ===== */}
       <section
         id="benefit-tiles"
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Key benefits"
       >
         <div className="brand-track">
