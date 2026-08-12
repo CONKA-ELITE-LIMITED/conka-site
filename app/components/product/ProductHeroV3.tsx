@@ -1,7 +1,6 @@
 "use client";
 
 import { CadenceType } from "@/app/lib/cadenceData";
-import { getProductHeroImagesMobile } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
@@ -12,6 +11,19 @@ import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
+
+// New rectangular (7:5) Magic Mind-style Flow gallery assets, in presentation
+// order. All 2400x1715 landscape.
+const FLOW_MM_ASSETS = [
+  "/formulas/mmPdpAssets/FlowMmHero.jpg",
+  "/formulas/mmPdpAssets/FlowSharperMind.jpg",
+  "/formulas/mmPdpAssets/FlowMmIngredients.jpg",
+  "/formulas/mmPdpAssets/SevenYearsResearch.jpg",
+  "/formulas/mmPdpAssets/Clear3rdPartyTesting.jpg",
+  "/formulas/mmPdpAssets/ConkaVsOther.jpg",
+  "/formulas/mmPdpAssets/JackWillisReview.jpg",
+  "/formulas/mmPdpAssets/RiskFreeTrial.jpg",
+];
 
 interface ProductHeroV3Props {
   formulaId: ProductHeroId;
@@ -81,14 +93,8 @@ export default function ProductHeroV3({
     ? [...facts.actives, ...facts.base].map((i) => i.name).join(", ")
     : null;
 
-  // The hero gallery is independent of the selected cadence, so toggling a plan
-  // never rebuilds the slideshow. Square (mobile) box assets, lifestyle shot first.
-  const rawImages = getProductHeroImagesMobile(formulaId, "monthly-sub");
-  const ordered =
-    rawImages.length > 1
-      ? [rawImages[1], rawImages[0], ...rawImages.slice(2)]
-      : rawImages;
-  const images = ordered.map((src) => ({ src }));
+  // Rectangular (7:5) Magic Mind-style gallery, independent of the selected plan.
+  const images = FLOW_MM_ASSETS.map((src) => ({ src }));
 
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
@@ -106,6 +112,7 @@ export default function ProductHeroV3({
             alt={`${content.name} bottle`}
             noFrame
             smallThumbnails
+            aspectRatio="landscape"
           />
 
           {ingredientsList && (

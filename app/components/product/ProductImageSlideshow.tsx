@@ -23,6 +23,7 @@ function ProductThumbnailRail({
   leadingVideo,
   size = "responsive",
   fullBleed = false,
+  aspectRatio = "square",
 }: {
   images: SlideshowImage[];
   alt: string;
@@ -31,12 +32,22 @@ function ProductThumbnailRail({
   leadingVideo?: { mp4: string; webm?: string; poster: string };
   size?: ThumbSize;
   fullBleed?: boolean;
+  aspectRatio?: "square" | "landscape";
 }) {
   const videoCount = leadingVideo ? 1 : 0;
-  const sizeCls =
-    size === "sm" ? "w-14 h-14" : "w-14 h-14 md:w-28 md:h-28";
-  const imgSizes =
-    size === "responsive" ? "(max-width: 768px) 56px, 112px" : "56px";
+  const isLandscape = aspectRatio === "landscape";
+  // Landscape (Magic Mind) thumbnails are rectangular 7:5 and a touch larger.
+  const sizeCls = isLandscape
+    ? "h-[68px] aspect-[7/5]"
+    : size === "sm"
+      ? "w-14 h-14"
+      : "w-14 h-14 md:w-28 md:h-28";
+  const roundCls = isLandscape ? "rounded-lg" : "rounded";
+  const imgSizes = isLandscape
+    ? "96px"
+    : size === "responsive"
+      ? "(max-width: 768px) 56px, 112px"
+      : "56px";
 
   return (
     <div
@@ -50,7 +61,7 @@ function ProductThumbnailRail({
       {leadingVideo && (
         <button
           onClick={() => onSelect(0)}
-          className={`relative flex-shrink-0 ${sizeCls} snap-center rounded overflow-hidden cursor-pointer
+          className={`relative flex-shrink-0 ${sizeCls} snap-center ${roundCls} overflow-hidden cursor-pointer
             transition-all duration-200 hover:opacity-90
             ${currentIndex === 0 ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
           aria-label="Play product video"
@@ -76,7 +87,7 @@ function ProductThumbnailRail({
         <button
           key={image.src}
           onClick={() => onSelect(index + videoCount)}
-          className={`flex-shrink-0 ${sizeCls} snap-center rounded overflow-hidden cursor-pointer
+          className={`flex-shrink-0 ${sizeCls} snap-center ${roundCls} overflow-hidden cursor-pointer
             transition-all duration-200 hover:opacity-90
             ${index + videoCount === currentIndex ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
           aria-label={`Go to image ${index + 1}`}
@@ -116,6 +127,9 @@ interface ProductImageSlideshowProps {
   /** Drop the rounded card + drop-shadow so the image reads flush and bigger
    *  (Magic Mind style). Used by ProductHeroV2's de-carded centre column. */
   noFrame?: boolean;
+  /** Frame + thumbnail shape. "landscape" is the 7:5 Magic Mind PDP asset ratio;
+   *  defaults to the legacy square. */
+  aspectRatio?: "square" | "landscape";
 }
 
 export default function ProductImageSlideshow({
@@ -128,6 +142,7 @@ export default function ProductImageSlideshow({
   imageFit = "cover",
   leadingVideo,
   noFrame = false,
+  aspectRatio = "square",
 }: ProductImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -146,7 +161,7 @@ export default function ProductImageSlideshow({
   return (
     <div className="flex flex-col w-full">
       {/* Main image area */}
-      <div className="relative w-full aspect-square">
+      <div className={`relative w-full ${aspectRatio === "landscape" ? "aspect-[7/5]" : "aspect-square"}`}>
         <button
           type="button"
           onClick={() => !isVideoActive && setLightboxOpen(true)}
@@ -270,6 +285,7 @@ export default function ProductImageSlideshow({
           leadingVideo={leadingVideo}
           size={smallThumbnails ? "sm" : "responsive"}
           fullBleed={fullBleedThumbnails}
+          aspectRatio={aspectRatio}
         />
       )}
     </div>
