@@ -112,7 +112,7 @@ function ProductThumbnailRail({
         <button
           onClick={() => onSelect(0)}
           className={`relative flex-shrink-0 ${sizeCls} snap-center ${roundCls} overflow-hidden cursor-pointer
-            transition-all duration-200 hover:opacity-90
+            transition-opacity duration-200 hover:opacity-90
             ${currentIndex === 0 ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
           aria-label="Play product video"
           aria-current={currentIndex === 0 ? "true" : undefined}
@@ -138,7 +138,7 @@ function ProductThumbnailRail({
           key={image.src}
           onClick={() => onSelect(index + videoCount)}
           className={`flex-shrink-0 ${sizeCls} snap-center ${roundCls} overflow-hidden cursor-pointer
-            transition-all duration-200 hover:opacity-90
+            transition-opacity duration-200 hover:opacity-90
             ${index + videoCount === currentIndex ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
           aria-label={`Go to image ${index + 1}`}
           aria-current={index + videoCount === currentIndex ? "true" : undefined}
@@ -267,6 +267,10 @@ export default function ProductImageSlideshow({
                 fill
                 className={`${imageFit === "contain" ? "object-contain" : "object-cover"} object-center`}
                 priority={index === 0 && videoCount === 0}
+                // Explicit hint (Next SSR does not always emit it): the first
+                // slide is the LCP element; the other stacked slides sit in the
+                // viewport too, so keep them low so they never contend with it.
+                fetchPriority={index === 0 && videoCount === 0 ? "high" : "low"}
                 sizes="(max-width: 1023px) 100vw, 45vw"
               />
             </div>
@@ -283,7 +287,7 @@ export default function ProductImageSlideshow({
               }}
               className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full
                          bg-white/70 hover:bg-white/90 shadow-md
-                         transition-all duration-200"
+                         transition-colors duration-200"
               aria-label="Previous image"
             >
               <svg
@@ -309,7 +313,7 @@ export default function ProductImageSlideshow({
               }}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full
                          bg-white/70 hover:bg-white/90 shadow-md
-                         transition-all duration-200"
+                         transition-colors duration-200"
               aria-label="Next image"
             >
               <svg

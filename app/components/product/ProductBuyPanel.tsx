@@ -195,7 +195,7 @@ function FlatPlanCard({
 
   return (
     <div
-      className={`relative w-full select-none rounded-md transition-all duration-200 ${
+      className={`relative w-full select-none rounded-md transition-colors duration-200 ${
         isSelected
           ? ""
           : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
