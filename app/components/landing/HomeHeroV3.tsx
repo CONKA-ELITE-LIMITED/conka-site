@@ -31,9 +31,9 @@ export default function HomeHeroV3() {
         />
       </div>
 
-      {/* Copy — centred on mobile, left-aligned + vertically centred in the
-          split on desktop. */}
-      <div className="flex flex-col items-center gap-5 px-5 py-10 text-center text-black lg:items-start lg:px-[5vw] lg:py-16 lg:text-left">
+      {/* Copy — left-aligned title + description; the CTA and trust row centre
+          on mobile (self-center) and return to the left edge on desktop. */}
+      <div className="flex flex-col items-start gap-5 px-5 py-10 text-left text-black lg:px-[5vw] lg:py-16">
         {/* Staggered two-tier title (Magic Mind): a large bold first line, then
             a smaller lighter second line displaced to the right on desktop. */}
         <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
@@ -48,10 +48,14 @@ export default function HomeHeroV3() {
           For minds that demand more. A patented nootropic shot, clinically
           formulated to support focus, memory, and mental endurance every day.
         </p>
-        <ConkaCTAButton href="/conka-both" meta={null}>
+        <ConkaCTAButton
+          href="/conka-both"
+          meta={null}
+          className="self-center lg:self-start"
+        >
           Buy CONKA Today
         </ConkaCTAButton>
-        <TrustMicroRow className="mt-1" />
+        <TrustMicroRow className="mt-1 self-center lg:self-start" />
       </div>
     </div>
   );
