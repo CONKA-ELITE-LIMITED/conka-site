@@ -1,22 +1,22 @@
 "use client";
 
 import { CadenceType } from "@/app/lib/cadenceData";
-import type { ProductHeroId } from "@/app/lib/productTypes";
+import type { FormulaId } from "@/app/lib/productData";
 import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
 import { getSupplementFacts } from "@/app/lib/supplementFacts";
+import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
 import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
-import { FLOW_MM_ASSETS } from "./ProductHeroV3";
 
 interface ProductHeroMobileV3Props {
-  formulaId: ProductHeroId;
+  formulaId: FormulaId;
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
@@ -49,7 +49,7 @@ export default function ProductHeroMobileV3({
     ? [...facts.actives, ...facts.base].map((i) => i.name).join(", ")
     : null;
 
-  const images = FLOW_MM_ASSETS.map((src) => ({ src }));
+  const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
 
   return (
     <div className="flex flex-col gap-6 text-black">
@@ -77,7 +77,7 @@ export default function ProductHeroMobileV3({
       />
 
       {/* Subline + description + check grid, above the widget */}
-      <IngredientBenefitLede />
+      <IngredientBenefitLede formulaId={formulaId} />
 
       {/* Pricing widget + Add to cart + buy-once + subscription box */}
       <ProductBuyPanel
@@ -120,7 +120,7 @@ export default function ProductHeroMobileV3({
 
       {/* Ingredient-benefit outcome accordions + who-it's-for + risk-free (the
           lede is already rendered above the widget, so suppress it here) */}
-      <IngredientOutcomeAccordions hideLede />
+      <IngredientOutcomeAccordions formulaId={formulaId} hideLede />
 
       <TrustStrip />
     </div>

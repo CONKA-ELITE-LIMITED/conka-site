@@ -1,33 +1,21 @@
 "use client";
 
 import { CadenceType } from "@/app/lib/cadenceData";
-import type { ProductHeroId } from "@/app/lib/productTypes";
+import type { FormulaId } from "@/app/lib/productData";
 import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
 import { getSupplementFacts } from "@/app/lib/supplementFacts";
+import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
 
-// New rectangular (7:5) Magic Mind-style Flow gallery assets, in presentation
-// order. All 2400x1715 landscape. Shared with ProductHeroMobileV3.
-export const FLOW_MM_ASSETS = [
-  "/formulas/mmPdpAssets/FlowMmHero.jpg",
-  "/formulas/mmPdpAssets/FlowSharperMind.jpg",
-  "/formulas/mmPdpAssets/FlowMmIngredients.jpg",
-  "/formulas/mmPdpAssets/SevenYearsResearch.jpg",
-  "/formulas/mmPdpAssets/Clear3rdPartyTesting.jpg",
-  "/formulas/mmPdpAssets/ConkaVsOther.jpg",
-  "/formulas/mmPdpAssets/JackWillisReview.jpg",
-  "/formulas/mmPdpAssets/RiskFreeTrial.jpg",
-];
-
 interface ProductHeroV3Props {
-  formulaId: ProductHeroId;
+  formulaId: FormulaId;
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
@@ -36,7 +24,7 @@ interface ProductHeroV3Props {
 }
 
 /**
- * ProductHeroV3 — Magic Mind two-column PDP hero (Flow only).
+ * ProductHeroV3 — Magic Mind two-column PDP hero (Flow + Clear).
  *
  * A large sticky asset on the LEFT; the RIGHT column holds the whole decision +
  * education scroll: rating, name, badges, buy box, then the ingredient-benefit
@@ -65,7 +53,7 @@ export default function ProductHeroV3({
     : null;
 
   // Rectangular (7:5) Magic Mind-style gallery, independent of the selected plan.
-  const images = FLOW_MM_ASSETS.map((src) => ({ src }));
+  const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
 
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
@@ -132,7 +120,7 @@ export default function ProductHeroV3({
           {/* Ingredient-benefit section, inline in the second column (MM layout).
               The component renders the moved subline + description + check grid on
               desktop, then the outcome accordions. */}
-          <IngredientOutcomeAccordions />
+          <IngredientOutcomeAccordions formulaId={formulaId} />
         </div>
       </div>
 

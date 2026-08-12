@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-12** | Clear PDP now uses the Magic Mind V3 hero (parameterised by formula): shared config for gallery assets, outcome buckets, partners, and lede copy
 - **2026-08-12** | Flow PDP mobile: new ProductHeroMobileV3 (MM-order stacked hero with shared HeroRating + IngredientBenefitLede, collapsed Ingredients, outcome accordions, who-its-for + risk-free)
 - **2026-08-12** | Align PDP card + hero-asset radii to the rounded-md spec, and document the DTC offer gradient + larger hero heading tier in the design system
 - **2026-08-12** | Flow PDP: new ProductHeroV3 two-column desktop hero (large sticky asset, buy panel + inline ingredient-benefit section with who-it's-for + guarantee blocks)

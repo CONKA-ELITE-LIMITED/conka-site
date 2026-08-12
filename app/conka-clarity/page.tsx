@@ -7,8 +7,8 @@ import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
 } from "@/app/components/product";
-import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
-import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
+import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
@@ -203,9 +203,9 @@ export default function ConkaClarityPage() {
         <Navigation />
 
         {/* ===== HERO ===== */}
-        <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
+        <section id="hero" className="brand-section brand-hero-first brand-bg-white !pt-6" aria-label="Product hero">
           <div className="brand-track">
-            <ProductHeroMobileV2
+            <ProductHeroMobileV3
               formulaId="02"
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
@@ -249,9 +249,9 @@ export default function ConkaClarityPage() {
       {/* ===== HERO ===== */}
       {/* V2 hero runs wider than the 1280 brand-track and with a tighter gutter
           to sit closer to the Magic Mind reference (SCRUM-1171). */}
-      <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[3vw]" aria-label="Product hero">
+      <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[6vw]" aria-label="Product hero">
         <div className="brand-track !max-w-[1480px]">
-          <ProductHeroV2
+          <ProductHeroV3
             formulaId="02"
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}

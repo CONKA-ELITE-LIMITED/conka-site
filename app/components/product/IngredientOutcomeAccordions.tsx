@@ -5,57 +5,24 @@ import {
   getOrderedActiveIngredients,
   type IngredientData,
 } from "@/app/lib/ingredientsData";
+import type { FormulaId } from "@/app/lib/productData";
+import { OUTCOME_BUCKETS, INGREDIENT_PARTNERS } from "@/app/lib/mmPdpData";
 import { WHO_ITS_FOR } from "./HeroAccordions";
 import IngredientBenefitLede from "./IngredientBenefitLede";
 
 /* ============================================================================
  * IngredientOutcomeAccordions (SCRUM-1209)
  *
- * The Flow PDP ingredient section, Magic Mind style: ingredients grouped under
- * three outcome headings, each a stack of collapsed accordion cards. The
- * collapsed face is an icon + name + chevron; expanding reveals the render, a
- * bold one-line claim, the description, and a "Studies support" PubMed link.
+ * The PDP ingredient section, Magic Mind style: ingredients grouped under three
+ * outcome headings, each a stack of collapsed accordion cards. The collapsed
+ * face is an icon + name + chevron; expanding reveals the render, a bold
+ * one-line claim, the description, and a "Studies support" PubMed link.
  *
- * Reads everything from the shared ingredientsData.ts. Flow only for now
- * (buckets reference Flow ingredient ids); Clear/Both keep ClinicalIngredients.
+ * Reads everything from the shared ingredientsData.ts; the per-formula bucket
+ * map + partners live in mmPdpData.ts. Flow ("01") and Clear ("02").
  * ========================================================================== */
 
 const NAVY = "#1B2757";
-
-// Magic Mind's three outcome buckets, mapped to Flow's six ingredients. Black
-// Pepper is not its own card: it is folded into the Turmeric card as its
-// absorption partner (see PARTNER_OF).
-const BUCKETS: {
-  id: string;
-  title: string;
-  subhead: string;
-  ingredientIds: string[];
-}[] = [
-  {
-    id: "mental-performance",
-    title: "Mental performance",
-    subhead: "Sharper focus, calm attention, and recall.",
-    ingredientIds: ["lemon-balm", "ashwagandha"],
-  },
-  {
-    id: "sustained-energy",
-    title: "Sustained energy",
-    subhead: "Steady mental energy and stress resilience, without the crash.",
-    ingredientIds: ["rhodiola"],
-  },
-  {
-    id: "brain-health",
-    title: "Brain health",
-    subhead: "Protects neurons and supports long-term cognition.",
-    ingredientIds: ["turmeric", "bilberry"],
-  },
-];
-
-// Ingredient id -> partner ingredient shown inside its card rather than as its
-// own accordion. Black Pepper multiplies Turmeric's absorption.
-const PARTNER_OF: Record<string, string> = {
-  turmeric: "black-pepper",
-};
 
 /** First study with a pmid becomes the "Studies support" PubMed link; none => no link. */
 function pubmedUrl(ing: IngredientData): string | null {
@@ -172,23 +139,28 @@ function IngredientCard({
 }
 
 export default function IngredientOutcomeAccordions({
+  formulaId,
   hideLede = false,
 }: {
+  formulaId: FormulaId;
   /** Mobile V3 renders the lede (subline + description + check grid) above the
       pricing widget, so it suppresses it here to avoid a duplicate. */
   hideLede?: boolean;
-} = {}) {
-  // Flow only. Index the six Flow ingredients by id so buckets can pull them
-  // (and Turmeric can pull its Black Pepper partner) without re-querying.
+}) {
+  // Index the formula's ingredients by id so buckets can pull them (and a card
+  // can pull its folded-in partner) without re-querying.
   const byId = new Map(
-    getOrderedActiveIngredients("01").map((ing) => [ing.id, ing]),
+    getOrderedActiveIngredients(formulaId).map((ing) => [ing.id, ing]),
   );
+  const buckets = OUTCOME_BUCKETS[formulaId];
+  const partners = INGREDIENT_PARTNERS[formulaId];
+  const whoItsFor = formulaId === "02" ? WHO_ITS_FOR.clear : WHO_ITS_FOR.flow;
 
   return (
     <div className="flex flex-col gap-10">
-      {!hideLede && <IngredientBenefitLede />}
+      {!hideLede && <IngredientBenefitLede formulaId={formulaId} />}
 
-      {BUCKETS.map((bucket) => {
+      {buckets.map((bucket) => {
         const items = bucket.ingredientIds
           .map((id) => byId.get(id))
           .filter((ing): ing is IngredientData => Boolean(ing));
@@ -202,7 +174,7 @@ export default function IngredientOutcomeAccordions({
             <p className="brand-body mb-4 text-black">{bucket.subhead}</p>
             <div className="flex flex-col gap-3">
               {items.map((ing) => {
-                const partnerId = PARTNER_OF[ing.id];
+                const partnerId = partners[ing.id];
                 const partner = partnerId ? byId.get(partnerId) : undefined;
                 return <IngredientCard key={ing.id} ing={ing} partner={partner} />;
               })}
@@ -216,7 +188,7 @@ export default function IngredientOutcomeAccordions({
       <div className="border-t border-black/10 pt-8">
         <h3 className="mb-3 text-2xl font-bold text-black">Who is it for?</h3>
         <div className="flex flex-col gap-3">
-          {WHO_ITS_FOR.flow.map((para) => (
+          {whoItsFor.map((para) => (
             <p key={para.slice(0, 24)} className="brand-body text-black">
               {para}
             </p>

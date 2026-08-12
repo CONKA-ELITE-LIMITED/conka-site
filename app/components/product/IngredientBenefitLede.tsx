@@ -1,11 +1,14 @@
 import { getHeroContent } from "@/app/lib/productHeroHelpers";
+import type { FormulaId } from "@/app/lib/productData";
+import { LEDE_DESCRIPTION } from "@/app/lib/mmPdpData";
 
 /* ============================================================================
  * IngredientBenefitLede (SCRUM-1209)
  *
- * The product subline + description + green-check benefit grid. On desktop V3 it
- * sits above the outcome accordions (inside IngredientOutcomeAccordions); on
- * mobile V3 it sits between the asset and the pricing widget. Flow only.
+ * The product subline + condensed description + green-check benefit grid. On
+ * desktop V3 it sits above the outcome accordions (inside
+ * IngredientOutcomeAccordions); on mobile V3 it sits between the asset and the
+ * pricing widget. Flow ("01") and Clear ("02").
  * ========================================================================== */
 
 const GREEN = "#1a7f4f";
@@ -33,14 +36,22 @@ function CheckMark() {
   );
 }
 
-export default function IngredientBenefitLede() {
-  const content = getHeroContent("01");
-  // Subline: bold the lead clause, lighten the "for ..." tail, at a smaller
-  // (product-name-ish) size rather than the full display heading.
+export default function IngredientBenefitLede({
+  formulaId,
+}: {
+  formulaId: FormulaId;
+}) {
+  const content = getHeroContent(formulaId);
+  // Subline: bold the lead clause (product name), lighten + shrink the
+  // descriptor tail. Split on the first connector so it breaks onto two lines
+  // ("... for ..." on Flow, "... that ..." on Clear).
   const subline = content.seoHeading ?? "";
-  const forIdx = subline.indexOf(" for ");
-  const sublineBold = forIdx > 0 ? subline.slice(0, forIdx) : subline;
-  const sublineRest = forIdx > 0 ? subline.slice(forIdx) : "";
+  const splitAt = [" for ", " That ", " that "]
+    .map((c) => subline.indexOf(c))
+    .filter((i) => i > 0)
+    .sort((a, b) => a - b)[0] ?? -1;
+  const sublineBold = splitAt > 0 ? subline.slice(0, splitAt) : subline;
+  const sublineRest = splitAt > 0 ? subline.slice(splitAt) : "";
 
   return (
     <div>
@@ -57,12 +68,10 @@ export default function IngredientBenefitLede() {
           )}
         </h2>
       )}
-      {/* Condensed description: the images now carry the focus/energy hook and
-          the Informed Sport + app proof, so the lede keeps only the core "what
-          it is" sentence. Canonical formulaContent.headline is left intact. */}
+      {/* Condensed description (the images carry the fuller story). Canonical
+          formulaContent.headline is left intact for other surfaces. */}
       <p className="brand-body mt-4 max-w-2xl text-black">
-        Powered by 6 clinically-dosed adaptogens in a fast-absorbing liquid shot,
-        with zero caffeine and zero crash.
+        {LEDE_DESCRIPTION[formulaId]}
       </p>
       <ul className="mt-6 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-3">
         {CHECK_ITEMS.map((item) => (
