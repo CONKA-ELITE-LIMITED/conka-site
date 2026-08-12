@@ -57,7 +57,7 @@ export default function ProductHeroMobileV3({
       <div className="flex flex-col gap-2">
         <SocialProofBadge productType={productType} className="self-start" />
         <h1
-          className="brand-h1 leading-none"
+          className="brand-h1 !mb-0 !leading-none"
           style={{ letterSpacing: "-0.02em" }}
         >
           {content.name}

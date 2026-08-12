@@ -106,7 +106,7 @@ export default function ProductHeroV3({
             <SocialProofBadge productType={productType} className="self-start" />
 
             <h1
-              className="brand-h1 leading-none lg:!text-[3.25rem]"
+              className="brand-h1 !mb-0 !leading-none lg:!text-[3.25rem]"
               style={{ letterSpacing: "-0.02em" }}
             >
               {content.name}

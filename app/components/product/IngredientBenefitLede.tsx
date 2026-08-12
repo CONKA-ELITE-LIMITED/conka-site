@@ -15,7 +15,6 @@ const CHECK_ITEMS = [
   "Clinically-backed ingredients",
   "5x absorption vs pills & powders",
   "Informed Sport Certified",
-  "+14.86% sharper thinking, placebo-tested",
 ];
 
 function CheckMark() {
@@ -58,7 +57,13 @@ export default function IngredientBenefitLede() {
           )}
         </h2>
       )}
-      <p className="brand-body mt-4 max-w-2xl text-black">{content.headline}</p>
+      {/* Condensed description: the images now carry the focus/energy hook and
+          the Informed Sport + app proof, so the lede keeps only the core "what
+          it is" sentence. Canonical formulaContent.headline is left intact. */}
+      <p className="brand-body mt-4 max-w-2xl text-black">
+        Powered by 6 clinically-dosed adaptogens in a fast-absorbing liquid shot,
+        with zero caffeine and zero crash.
+      </p>
       <ul className="mt-6 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-3">
         {CHECK_ITEMS.map((item) => (
           <li

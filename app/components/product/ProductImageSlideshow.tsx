@@ -69,7 +69,7 @@ function ProductThumbnailRail({
   const isLandscape = aspectRatio === "landscape";
   // Landscape (Magic Mind) thumbnails are rectangular 7:5 and a touch larger.
   const sizeCls = isLandscape
-    ? "h-[52px] aspect-[7/5] lg:h-[68px]"
+    ? "h-[44px] aspect-[7/5] lg:h-[68px]"
     : size === "sm"
       ? "w-14 h-14"
       : "w-14 h-14 md:w-28 md:h-28";
@@ -219,6 +219,9 @@ export default function ProductImageSlideshow({
   if (totalSlides === 0) return null;
 
   const isVideoActive = videoCount > 0 && currentIndex === 0;
+  // The landscape (PDP hero) gallery uses graphic slides, not zoomable product
+  // shots, so it does not open the lightbox on click.
+  const lightboxEnabled = aspectRatio !== "landscape";
 
   return (
     <div className="flex flex-col w-full">
@@ -226,9 +229,9 @@ export default function ProductImageSlideshow({
       <div className={`relative w-full ${aspectRatio === "landscape" ? "aspect-[7/5]" : "aspect-square"}`}>
         <button
           type="button"
-          onClick={() => !isVideoActive && setLightboxOpen(true)}
-          className={`relative w-full h-full overflow-hidden shadow-none block ${aspectRatio === "landscape" ? "rounded-md" : "rounded-none"} ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
-          aria-label={isVideoActive ? alt : `View ${alt} full size`}
+          onClick={() => lightboxEnabled && !isVideoActive && setLightboxOpen(true)}
+          className={`relative w-full h-full overflow-hidden shadow-none block ${aspectRatio === "landscape" ? "rounded-md" : "rounded-none"} ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${!lightboxEnabled || isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
+          aria-label={lightboxEnabled && !isVideoActive ? `View ${alt} full size` : alt}
         >
           {leadingVideo && (
             <div
@@ -328,7 +331,7 @@ export default function ProductImageSlideshow({
         )}
       </div>
 
-      {lightboxOpen && (
+      {lightboxEnabled && lightboxOpen && (
         <ImageLightbox
           images={images.map((img) => img.src)}
           alt={alt}
