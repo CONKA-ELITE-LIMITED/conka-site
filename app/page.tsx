@@ -84,16 +84,15 @@ export default function Home() {
           a ~16px white sliver shows above the flush hero. Pull the hero up into
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
+      {/* Full-bleed image hero: asset-top on mobile, asset-left / copy-right on
+          desktop. The section drops its gutters + track so the asset reaches the
+          viewport edges; HomeHeroV3 pads its own copy column. (The previous video
+          hero, LandingHeroVideo*, is kept in the codebase for revert.) */}
       <section
-        className="brand-section brand-hero-first brand-bg-white"
+        className="brand-section brand-hero-first brand-bg-white !p-0"
         aria-label="Homepage hero"
       >
-        <div className="brand-track">
-          {/* Magic Mind-style image hero: asset-top on mobile, asset-left /
-              copy-right on desktop. (The previous video hero,
-              LandingHeroVideo*, is kept in the codebase for revert.) */}
-          <HomeHeroV3 />
-        </div>
+        <HomeHeroV3 />
       </section>
 
       {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
