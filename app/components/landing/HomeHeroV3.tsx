@@ -1,13 +1,6 @@
 import Image from "next/image";
 import ConkaCTAButton from "./ConkaCTAButton";
-import LaurelBadge from "./LaurelBadge";
 import TrustMicroRow from "./TrustMicroRow";
-
-/* Brain-project credibility badge — generic (non-persona) copy for home. */
-const HOME_LAUREL = {
-  eyebrow: "World's Largest",
-  body: "Consumer brain-research project. 1,000+ brains tested regularly through our app.",
-};
 
 /* ============================================================================
  * HomeHeroV3 — simple image-led home hero (Magic Mind structure).
@@ -38,21 +31,20 @@ export default function HomeHeroV3() {
         />
       </div>
 
-      {/* Copy — padded, vertically centred in the split on desktop. */}
-      <div className="flex flex-col items-start justify-center gap-5 px-5 py-10 text-black lg:px-[5vw] lg:py-16">
-        <LaurelBadge
-          eyebrow={HOME_LAUREL.eyebrow}
-          body={HOME_LAUREL.body}
-        />
-        <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.02em" }}>
-          <span className="block text-[2.75rem] font-bold leading-[1.02] lg:text-[4rem]">
+      {/* Copy — centred on mobile, left-aligned + vertically centred in the
+          split on desktop. */}
+      <div className="flex flex-col items-center gap-5 px-5 py-10 text-center text-black lg:items-start lg:px-[5vw] lg:py-16 lg:text-left">
+        {/* Staggered two-tier title (Magic Mind): a large bold first line, then
+            a smaller lighter second line displaced to the right on desktop. */}
+        <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
+          <span className="block text-[2.5rem] font-bold leading-[0.98] lg:text-[5rem]">
             A Sharper Mind.
           </span>
-          <span className="block text-[1.75rem] font-medium leading-tight lg:text-[2.5rem]">
+          <span className="mt-1 block text-[2rem] font-medium leading-[1.05] lg:ml-28 lg:text-[3.5rem]">
             Morning to Evening.
           </span>
         </h1>
-        <p className="brand-body max-w-[46ch] text-black">
+        <p className="max-w-[34ch] text-[1.0625rem] leading-relaxed text-black lg:text-[1.1875rem]">
           For minds that demand more. A patented nootropic shot, clinically
           formulated to support focus, memory, and mental endurance every day.
         </p>

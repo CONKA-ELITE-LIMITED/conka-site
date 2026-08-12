@@ -89,18 +89,19 @@ export default function Home() {
           viewport edges; HomeHeroV3 pads its own copy column. (The previous video
           hero, LandingHeroVideo*, is kept in the codebase for revert.) */}
       <section
-        className="brand-section brand-hero-first brand-bg-white !p-0"
+        className="brand-section brand-hero-first brand-bg-white !p-0 xl:-mt-4"
         aria-label="Homepage hero"
       >
         <HomeHeroV3 />
       </section>
 
       {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
-      {/* The hero drops its bottom padding on mobile so the spacing above this
-          section comes from this section's own top padding, keeping the gap in
-          the section tint colour rather than white. */}
+      {/* White so it flows straight out of the hero's white copy column; the
+          benefit-tiles section below carries the first tint break. The hero
+          drops its bottom padding on mobile, so the gap above this section
+          comes from this section's own top padding. */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="What CONKA does"
       >
         <div className="brand-track">
@@ -111,7 +112,7 @@ export default function Home() {
       {/* ===== SECTION 3: KEY BENEFITS (benefit tiles) ===== */}
       <section
         id="benefit-tiles"
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Key benefits"
       >
         <div className="brand-track">
