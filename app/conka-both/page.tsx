@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
-import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
+import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import Certifications from "@/app/components/Certifications";
 import { ClinicalIngredients } from "@/app/components/product";
@@ -225,11 +225,11 @@ export default function ConkaBothPage() {
         {/* ===== SECTION 1: HERO ===== */}
         <section
           id="hero"
-          className="brand-section brand-hero-first brand-bg-white"
+          className="brand-section brand-hero-first brand-bg-white !pt-6"
           aria-label="Product hero"
         >
           <div className="brand-track">
-            <ProductHeroMobileV2
+            <ProductHeroMobileV3
               formulaId={PRODUCT_HERO_ID}
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
@@ -295,11 +295,11 @@ export default function ConkaBothPage() {
           to sit closer to the Magic Mind reference (SCRUM-1171). */}
       <section
         id="hero"
-        className="brand-section brand-hero-first brand-bg-white !px-[3vw]"
+        className="brand-section brand-hero-first brand-bg-white !px-[6vw]"
         aria-label="Product hero"
       >
         <div className="brand-track !max-w-[1480px]">
-          <ProductHeroV2
+          <ProductHeroV3
             formulaId={PRODUCT_HERO_ID}
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}

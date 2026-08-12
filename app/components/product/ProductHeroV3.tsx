@@ -1,13 +1,12 @@
 "use client";
 
 import { CadenceType } from "@/app/lib/cadenceData";
-import type { FormulaId } from "@/app/lib/productData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
-import { getSupplementFacts } from "@/app/lib/supplementFacts";
-import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
+import { MM_GALLERY_ASSETS, getPdpIngredientList } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
@@ -15,7 +14,7 @@ import HeroRating from "./HeroRating";
 import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
 
 interface ProductHeroV3Props {
-  formulaId: FormulaId;
+  formulaId: ProductHeroId;
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
@@ -46,11 +45,8 @@ export default function ProductHeroV3({
   const productType = getHeroProductType(formulaId);
 
   // Written-out ingredient list for the left column (Magic Mind "Ingredients"
-  // block). Both has no single supplement-facts record, so it is skipped there.
-  const facts = productType !== "both" ? getSupplementFacts(productType) : null;
-  const ingredientsList = facts
-    ? [...facts.actives, ...facts.base].map((i) => i.name).join(", ")
-    : null;
+  // block). Both returns a "Flow:" + "Clear:" line pair.
+  const ingredientLines = getPdpIngredientList(formulaId);
 
   // Rectangular (7:5) Magic Mind-style gallery, independent of the selected plan.
   const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
@@ -75,14 +71,24 @@ export default function ProductHeroV3({
             hideArrows
           />
 
-          {ingredientsList && (
+          {ingredientLines.length > 0 && (
             <div className="mt-10">
               <h2 className="mb-3 border-b border-black/15 pb-3 text-2xl font-bold text-black">
                 Ingredients
               </h2>
-              <p className="text-sm leading-relaxed text-black">
-                {ingredientsList}
-              </p>
+              <div className="flex flex-col gap-2">
+                {ingredientLines.map((line) => (
+                  <p
+                    key={line.label ?? "list"}
+                    className="text-sm leading-relaxed text-black"
+                  >
+                    {line.label && (
+                      <strong className="font-bold">{line.label} </strong>
+                    )}
+                    {line.text}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
         </div>

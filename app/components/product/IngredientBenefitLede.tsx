@@ -1,5 +1,5 @@
 import { getHeroContent } from "@/app/lib/productHeroHelpers";
-import type { FormulaId } from "@/app/lib/productData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import { LEDE_DESCRIPTION } from "@/app/lib/mmPdpData";
 
 /* ============================================================================
@@ -39,19 +39,29 @@ function CheckMark() {
 export default function IngredientBenefitLede({
   formulaId,
 }: {
-  formulaId: FormulaId;
+  formulaId: ProductHeroId;
 }) {
   const content = getHeroContent(formulaId);
   // Subline: bold the lead clause (product name), lighten + shrink the
-  // descriptor tail. Split on the first connector so it breaks onto two lines
-  // ("... for ..." on Flow, "... that ..." on Clear).
+  // descriptor tail, breaking onto two lines. Prefer a word connector
+  // ("... for ..." Flow, "... that ..." Clear); fall back to a comma (Both),
+  // dropping the comma from the tail.
   const subline = content.seoHeading ?? "";
-  const splitAt = [" for ", " That ", " that "]
+  const wordSplit = [" for ", " That ", " that "]
     .map((c) => subline.indexOf(c))
     .filter((i) => i > 0)
     .sort((a, b) => a - b)[0] ?? -1;
-  const sublineBold = splitAt > 0 ? subline.slice(0, splitAt) : subline;
-  const sublineRest = splitAt > 0 ? subline.slice(splitAt) : "";
+  let boldEnd = wordSplit;
+  let restStart = wordSplit;
+  if (boldEnd < 0) {
+    const ci = subline.indexOf(", ");
+    if (ci > 0) {
+      boldEnd = ci;
+      restStart = ci + 2;
+    }
+  }
+  const sublineBold = boldEnd > 0 ? subline.slice(0, boldEnd) : subline;
+  const sublineRest = boldEnd > 0 ? subline.slice(restStart) : "";
 
   return (
     <div>

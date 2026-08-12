@@ -1,13 +1,12 @@
 "use client";
 
 import { CadenceType } from "@/app/lib/cadenceData";
-import type { FormulaId } from "@/app/lib/productData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
-import { getSupplementFacts } from "@/app/lib/supplementFacts";
-import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
+import { MM_GALLERY_ASSETS, getPdpIngredientList } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
@@ -16,7 +15,7 @@ import IngredientBenefitLede from "./IngredientBenefitLede";
 import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
 
 interface ProductHeroMobileV3Props {
-  formulaId: FormulaId;
+  formulaId: ProductHeroId;
   selectedCadence: CadenceType;
   onCadenceChange: (cadence: CadenceType) => void;
   onAddToCart: () => void;
@@ -44,11 +43,7 @@ export default function ProductHeroMobileV3({
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
 
-  const facts = productType !== "both" ? getSupplementFacts(productType) : null;
-  const ingredientsList = facts
-    ? [...facts.actives, ...facts.base].map((i) => i.name).join(", ")
-    : null;
-
+  const ingredientLines = getPdpIngredientList(formulaId);
   const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
 
   return (
@@ -93,7 +88,7 @@ export default function ProductHeroMobileV3({
       />
 
       {/* Written-out Ingredients — collapsed accordion under the subscription box */}
-      {ingredientsList && (
+      {ingredientLines.length > 0 && (
         <details className="group">
           <summary className="flex cursor-pointer list-none items-center justify-between border-b border-black/15 py-2 [&::-webkit-details-marker]:hidden">
             <span className="text-lg font-bold text-black">Ingredients</span>
@@ -112,9 +107,19 @@ export default function ProductHeroMobileV3({
               <path d="M6 9l6 6 6-6" />
             </svg>
           </summary>
-          <p className="pt-3 text-sm leading-relaxed text-black">
-            {ingredientsList}
-          </p>
+          <div className="flex flex-col gap-2 pt-3">
+            {ingredientLines.map((line) => (
+              <p
+                key={line.label ?? "list"}
+                className="text-sm leading-relaxed text-black"
+              >
+                {line.label && (
+                  <strong className="font-bold">{line.label} </strong>
+                )}
+                {line.text}
+              </p>
+            ))}
+          </div>
         </details>
       )}
 

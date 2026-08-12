@@ -5,7 +5,8 @@ import {
   getOrderedActiveIngredients,
   type IngredientData,
 } from "@/app/lib/ingredientsData";
-import type { FormulaId } from "@/app/lib/productData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
+import { getHeroProductType } from "@/app/lib/productHeroHelpers";
 import { OUTCOME_BUCKETS, INGREDIENT_PARTNERS } from "@/app/lib/mmPdpData";
 import { WHO_ITS_FOR } from "./HeroAccordions";
 import IngredientBenefitLede from "./IngredientBenefitLede";
@@ -142,19 +143,25 @@ export default function IngredientOutcomeAccordions({
   formulaId,
   hideLede = false,
 }: {
-  formulaId: FormulaId;
+  formulaId: ProductHeroId;
   /** Mobile V3 renders the lede (subline + description + check grid) above the
       pricing widget, so it suppresses it here to avoid a duplicate. */
   hideLede?: boolean;
 }) {
-  // Index the formula's ingredients by id so buckets can pull them (and a card
-  // can pull its folded-in partner) without re-querying.
-  const byId = new Map(
-    getOrderedActiveIngredients(formulaId).map((ing) => [ing.id, ing]),
-  );
+  // Both ("03") spans Flow + Clear, so combine both ingredient sets; Flow/Clear
+  // query their own. Index by id so buckets can pull them (and a card can pull
+  // its folded-in partner) without re-querying.
+  const activeIngredients =
+    formulaId === "03"
+      ? [
+          ...getOrderedActiveIngredients("01"),
+          ...getOrderedActiveIngredients("02"),
+        ]
+      : getOrderedActiveIngredients(formulaId);
+  const byId = new Map(activeIngredients.map((ing) => [ing.id, ing]));
   const buckets = OUTCOME_BUCKETS[formulaId];
   const partners = INGREDIENT_PARTNERS[formulaId];
-  const whoItsFor = formulaId === "02" ? WHO_ITS_FOR.clear : WHO_ITS_FOR.flow;
+  const whoItsFor = WHO_ITS_FOR[getHeroProductType(formulaId)];
 
   return (
     <div className="flex flex-col gap-10">
@@ -182,6 +189,27 @@ export default function IngredientOutcomeAccordions({
           </div>
         );
       })}
+
+      <a
+        href="/ingredients"
+        className="inline-flex items-center gap-1 self-start text-sm font-semibold underline underline-offset-4"
+        style={{ color: NAVY }}
+      >
+        See all ingredients
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
 
       {/* Magic Mind "Who is it for" + "Try risk free" text blocks, reusing our
           existing copy. */}
