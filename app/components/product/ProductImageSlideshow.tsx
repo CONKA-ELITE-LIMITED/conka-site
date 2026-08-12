@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ImageLightbox from "./ImageLightbox";
 
@@ -81,10 +81,22 @@ function ProductThumbnailRail({
       : "56px";
 
   const railRef = useRef<HTMLDivElement>(null);
-  const nudge = (dir: 1 | -1) => {
+  const total = images.length + videoCount;
+  // Arrows advance the SELECTED slide (main asset + focus), not just the rail.
+  const go = (dir: 1 | -1) => onSelect((currentIndex + dir + total) % total);
+
+  // Keep the active thumbnail centred in the rail as the index changes.
+  useEffect(() => {
+    if (!isLandscape) return;
     const el = railRef.current;
-    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.7, behavior: "smooth" });
-  };
+    const active = el?.children[currentIndex] as HTMLElement | undefined;
+    if (el && active) {
+      el.scrollTo({
+        left: active.offsetLeft - (el.clientWidth - active.clientWidth) / 2,
+        behavior: "smooth",
+      });
+    }
+  }, [currentIndex, isLandscape]);
 
   const rail = (
     <div
@@ -147,9 +159,9 @@ function ProductThumbnailRail({
   if (isLandscape) {
     return (
       <div className="mt-3 flex items-center gap-2">
-        <ThumbArrow dir="prev" onClick={() => nudge(-1)} />
+        <ThumbArrow dir="prev" onClick={() => go(-1)} />
         {rail}
-        <ThumbArrow dir="next" onClick={() => nudge(1)} />
+        <ThumbArrow dir="next" onClick={() => go(1)} />
       </div>
     );
   }
