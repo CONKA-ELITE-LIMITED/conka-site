@@ -89,7 +89,7 @@ function ProductThumbnailRail({
   const rail = (
     <div
       ref={railRef}
-      className={`${isLandscape ? "" : "mt-3"} min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
+      className={`${isLandscape ? "" : "mt-3 snap-x snap-mandatory"} min-w-0 flex gap-2 overflow-x-auto scroll-smooth py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
       style={
         fullBleed
           ? { paddingLeft: "0.25rem", paddingRight: "0.25rem" }
@@ -215,7 +215,7 @@ export default function ProductImageSlideshow({
         <button
           type="button"
           onClick={() => !isVideoActive && setLightboxOpen(true)}
-          className={`relative w-full h-full overflow-hidden rounded-none shadow-none block ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
+          className={`relative w-full h-full overflow-hidden shadow-none block ${aspectRatio === "landscape" ? "rounded-2xl" : "rounded-none"} ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
           aria-label={isVideoActive ? alt : `View ${alt} full size`}
         >
           {leadingVideo && (
