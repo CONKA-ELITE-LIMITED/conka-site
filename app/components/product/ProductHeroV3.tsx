@@ -106,10 +106,10 @@ export default function ProductHeroV3({
         {/* LEFT: sticky gallery + the written-out Ingredients list beneath it
             (Magic Mind pattern). The image and list are ONE sticky unit so the
             list never slides under the pinned thumbnail rail. */}
-        <div className="order-2 lg:order-1 lg:sticky lg:top-24 lg:self-start">
+        <div className="order-2 lg:sticky lg:top-24 lg:order-1 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:[scrollbar-width:thin]">
           <ProductImageSlideshow
             images={images}
-            alt={`${content.name} bottle`}
+            alt={content.name}
             noFrame
             smallThumbnails
             aspectRatio="landscape"
