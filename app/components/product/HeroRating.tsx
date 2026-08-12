@@ -48,14 +48,11 @@ function Stars() {
 
 export default function HeroRating() {
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="text-sm font-semibold text-black">5,000+ subscribers</span>
-      <div className="flex items-center gap-2">
-        <Stars />
-        <span className="text-sm font-bold text-black">
-          {RATING} <span className="font-medium text-black/60">(622 reviews)</span>
-        </span>
-      </div>
+    <div className="flex items-center gap-2">
+      <Stars />
+      <span className="text-sm font-bold text-black">
+        {RATING} <span className="font-medium text-black/60">(622 reviews)</span>
+      </span>
     </div>
   );
 }
