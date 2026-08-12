@@ -5,8 +5,8 @@ import {
   getOrderedActiveIngredients,
   type IngredientData,
 } from "@/app/lib/ingredientsData";
-import { getHeroContent } from "@/app/lib/productHeroHelpers";
 import { WHO_ITS_FOR } from "./HeroAccordions";
+import IngredientBenefitLede from "./IngredientBenefitLede";
 
 /* ============================================================================
  * IngredientOutcomeAccordions (SCRUM-1209)
@@ -21,7 +21,6 @@ import { WHO_ITS_FOR } from "./HeroAccordions";
  * ========================================================================== */
 
 const NAVY = "#1B2757";
-const GREEN = "#1a7f4f";
 
 // Magic Mind's three outcome buckets, mapped to Flow's six ingredients. Black
 // Pepper is not its own card: it is folded into the Turmeric card as its
@@ -62,32 +61,6 @@ const PARTNER_OF: Record<string, string> = {
 function pubmedUrl(ing: IngredientData): string | null {
   const pmid = ing.clinicalStudies.find((s) => s.pmid)?.pmid;
   return pmid ? `https://pubmed.ncbi.nlm.nih.gov/${pmid}` : null;
-}
-
-// Green-check benefit grid shown above the buckets on desktop (moved out of the
-// hero). Flow proof points, brand savings green.
-const CHECK_ITEMS = [
-  "Zero caffeine, zero crash",
-  "Clinically-backed ingredients",
-  "5x absorption vs pills & powders",
-  "Informed Sport Certified",
-  "+14.86% sharper thinking, placebo-tested",
-];
-
-function CheckMark() {
-  return (
-    <svg
-      viewBox="0 0 15 15"
-      width="16"
-      height="16"
-      fill="none"
-      className="mt-0.5 shrink-0"
-      aria-hidden
-    >
-      <circle cx="7.5" cy="7.5" r="7.5" fill={GREEN} />
-      <path d="M4.2 7.7L6.5 10L10.8 5.4" stroke="#fff" strokeWidth="1.6" />
-    </svg>
-  );
 }
 
 function Chevron() {
@@ -198,59 +171,22 @@ function IngredientCard({
   );
 }
 
-export default function IngredientOutcomeAccordions() {
+export default function IngredientOutcomeAccordions({
+  hideLede = false,
+}: {
+  /** Mobile V3 renders the lede (subline + description + check grid) above the
+      pricing widget, so it suppresses it here to avoid a duplicate. */
+  hideLede?: boolean;
+} = {}) {
   // Flow only. Index the six Flow ingredients by id so buckets can pull them
   // (and Turmeric can pull its Black Pepper partner) without re-querying.
   const byId = new Map(
     getOrderedActiveIngredients("01").map((ing) => [ing.id, ing]),
   );
-  const content = getHeroContent("01");
-  // Subline: bold the lead clause, lighten the "for ..." tail, at a smaller
-  // (product-name-ish) size rather than the full display heading.
-  const subline = content.seoHeading ?? "";
-  const forIdx = subline.indexOf(" for ");
-  const sublineBold = forIdx > 0 ? subline.slice(0, forIdx) : subline;
-  const sublineRest = forIdx > 0 ? subline.slice(forIdx) : "";
 
   return (
     <div className="flex flex-col gap-10">
-      {/* Desktop: the product subline + description + benefit grid move here out
-          of the hero (MM two-column layout). Mobile keeps them in the hero for
-          now, so this block is desktop-only. */}
-      <div className="hidden lg:block">
-        {subline && (
-          <h2
-            className="text-[2.25rem] leading-tight text-black"
-            style={{ letterSpacing: "-0.01em" }}
-          >
-            <span className="font-bold">{sublineBold}</span>
-            {sublineRest && (
-              <span className="font-medium text-black/75">{sublineRest}</span>
-            )}
-          </h2>
-        )}
-        <p className="brand-body mt-4 max-w-2xl text-black">{content.headline}</p>
-        <ul className="mt-6 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
-          {CHECK_ITEMS.map((item) => (
-            <li
-              key={item}
-              className="flex items-start gap-2 text-sm leading-snug text-black"
-            >
-              <CheckMark />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Mobile: simple section intro (subline/description remain in the hero). */}
-      <div className="max-w-2xl lg:hidden">
-        <h2 className="brand-h1 mb-3 text-black">Clinically-backed ingredients</h2>
-        <p className="brand-body text-black">
-          Every compound at a proven dose and bioavailable form, grouped by what it
-          does for you.
-        </p>
-      </div>
+      {!hideLede && <IngredientBenefitLede />}
 
       {BUCKETS.map((bucket) => {
         const items = bucket.ingredientIds
@@ -275,9 +211,9 @@ export default function IngredientOutcomeAccordions() {
         );
       })}
 
-      {/* Desktop-only text blocks (Magic Mind "Who is it for" + "Try risk free"),
-          reusing our existing copy. Mobile keeps its own guarantee section. */}
-      <div className="hidden border-t border-black/10 pt-8 lg:block">
+      {/* Magic Mind "Who is it for" + "Try risk free" text blocks, reusing our
+          existing copy. */}
+      <div className="border-t border-black/10 pt-8">
         <h3 className="mb-3 text-2xl font-bold text-black">Who is it for?</h3>
         <div className="flex flex-col gap-3">
           {WHO_ITS_FOR.flow.map((para) => (
@@ -288,7 +224,7 @@ export default function IngredientOutcomeAccordions() {
         </div>
       </div>
 
-      <div className="hidden border-t border-black/10 pt-8 lg:block">
+      <div className="border-t border-black/10 pt-8">
         <h3 className="mb-3 text-2xl font-bold text-black">Try risk free</h3>
         <p className="brand-body text-black/80">
           Try CONKA for 100 days. If your mental performance doesn&apos;t noticeably

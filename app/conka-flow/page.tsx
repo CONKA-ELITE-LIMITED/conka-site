@@ -7,9 +7,8 @@ import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
 } from "@/app/components/product";
-import IngredientOutcomeAccordions from "@/app/components/product/IngredientOutcomeAccordions";
 import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
-import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
@@ -124,17 +123,6 @@ export default function ConkaFlowPage() {
     </section>
   );
 
-  // Ingredient-led benefits (SCRUM-1209): new Magic Mind-style section grouping
-  // the ingredients by outcome. Runs ALONGSIDE the existing pillars + carousel
-  // for now so we can compare; the old sections can be removed when we choose.
-  const ingredientBenefitsSection = (
-    <section id="ingredient-benefits" className="brand-section brand-bg-tint" aria-label="Ingredients by benefit">
-      <div className="brand-track">
-        <IngredientOutcomeAccordions />
-      </div>
-    </section>
-  );
-
   const absorptionSection = (
     <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
       <div className="brand-track">
@@ -213,7 +201,7 @@ export default function ConkaFlowPage() {
         {/* ===== HERO ===== */}
         <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
           <div className="brand-track">
-            <ProductHeroMobileV2
+            <ProductHeroMobileV3
               formulaId="01"
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
@@ -225,7 +213,6 @@ export default function ConkaFlowPage() {
 
         {benefitTilesSection}
         {ugcSection}
-        {ingredientBenefitsSection}
         {benefitsSection}
         {ingredientsSection}
         {absorptionSection}
