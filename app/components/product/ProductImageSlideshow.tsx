@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import ImageLightbox from "./ImageLightbox";
 
@@ -9,6 +9,37 @@ export interface SlideshowImage {
 }
 
 type ThumbSize = "responsive" | "sm";
+
+/** Circular scroll button flanking the landscape thumbnail rail (Magic Mind). */
+function ThumbArrow({
+  dir,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={dir === "prev" ? "Previous thumbnails" : "Next thumbnails"}
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#efefef] text-black/60 transition-colors hover:bg-[#e2e2e2]"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points={dir === "prev" ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} />
+      </svg>
+    </button>
+  );
+}
 
 /**
  * Thumbnail rail rendered inside the slideshow. Kept as its own component for
@@ -49,9 +80,16 @@ function ProductThumbnailRail({
       ? "(max-width: 768px) 56px, 112px"
       : "56px";
 
-  return (
+  const railRef = useRef<HTMLDivElement>(null);
+  const nudge = (dir: 1 | -1) => {
+    const el = railRef.current;
+    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.7, behavior: "smooth" });
+  };
+
+  const rail = (
     <div
-      className={`mt-3 min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
+      ref={railRef}
+      className={`${isLandscape ? "" : "mt-3"} min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
       style={
         fullBleed
           ? { paddingLeft: "0.25rem", paddingRight: "0.25rem" }
@@ -105,6 +143,18 @@ function ProductThumbnailRail({
       ))}
     </div>
   );
+
+  if (isLandscape) {
+    return (
+      <div className="mt-3 flex items-center gap-2">
+        <ThumbArrow dir="prev" onClick={() => nudge(-1)} />
+        {rail}
+        <ThumbArrow dir="next" onClick={() => nudge(1)} />
+      </div>
+    );
+  }
+
+  return rail;
 }
 
 interface ProductImageSlideshowProps {

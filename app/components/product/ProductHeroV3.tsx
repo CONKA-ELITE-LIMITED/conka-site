@@ -102,7 +102,7 @@ export default function ProductHeroV3({
           column is sized to the asset, the buy column sits right beside it with a
           small gap, and the whole block centres within the track so the side
           gutters grow. Drop a 7:5 landscape asset in and it fills the column. */}
-      <div className="grid grid-cols-1 gap-[var(--brand-space-m)] lg:grid-cols-[minmax(0,560px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
+      <div className="grid grid-cols-1 gap-[var(--brand-space-m)] lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
         {/* LEFT: sticky gallery + the written-out Ingredients list beneath it
             (Magic Mind pattern). The image and list are ONE sticky unit so the
             list never slides under the pinned thumbnail rail. */}
@@ -113,6 +113,7 @@ export default function ProductHeroV3({
             noFrame
             smallThumbnails
             aspectRatio="landscape"
+            hideArrows
           />
 
           {ingredientsList && (
