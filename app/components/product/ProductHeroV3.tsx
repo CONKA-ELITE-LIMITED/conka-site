@@ -23,16 +23,13 @@ interface ProductHeroV3Props {
 }
 
 /**
- * ProductHeroV3 — Magic Mind two-column PDP hero (Flow + Clear).
+ * ProductHeroV3 — Magic Mind two-column PDP hero (Flow, Clear, Both).
  *
  * A large sticky asset on the LEFT; the RIGHT column holds the whole decision +
  * education scroll: rating, name, badges, buy box, then the ingredient-benefit
  * section (subline + description + check grid + outcome accordions) inline, the
- * way Magic Mind runs it. ProductHeroV2 (3-column) is kept as the fallback and
- * still serves Clear / Both.
- *
- * Desktop-only for now (mobile still routes to ProductHeroMobileV2, with the
- * ingredient section rendered as a normal page section below the hero).
+ * way Magic Mind runs it. Desktop only; mobile uses ProductHeroMobileV3.
+ * ProductHeroV2 (3-column) is retained as the fallback but no longer routed to.
  */
 export default function ProductHeroV3({
   formulaId,

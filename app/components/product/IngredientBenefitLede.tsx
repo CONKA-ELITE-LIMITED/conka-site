@@ -8,7 +8,7 @@ import { LEDE_DESCRIPTION, LEDE_SUBLINE } from "@/app/lib/mmPdpData";
  * The product subline + condensed description + green-check benefit grid. On
  * desktop V3 it sits above the outcome accordions (inside
  * IngredientOutcomeAccordions); on mobile V3 it sits between the asset and the
- * pricing widget. Flow ("01") and Clear ("02").
+ * pricing widget. Flow ("01"), Clear ("02"), and Both ("03").
  * ========================================================================== */
 
 const GREEN = "#1a7f4f";

@@ -24,7 +24,7 @@ interface ProductHeroMobileV3Props {
 }
 
 /**
- * ProductHeroMobileV3 — the mobile counterpart of ProductHeroV3 (Flow only).
+ * ProductHeroMobileV3 — the mobile counterpart of ProductHeroV3 (Flow, Clear, Both).
  *
  * Single stacked column in the Magic Mind order: identity (viewing → title →
  * spec → rating) → rectangular asset + thumbnails → subline + description +

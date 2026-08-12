@@ -20,7 +20,7 @@ import IngredientBenefitLede from "./IngredientBenefitLede";
  * one-line claim, the description, and a "Studies support" PubMed link.
  *
  * Reads everything from the shared ingredientsData.ts; the per-formula bucket
- * map + partners live in mmPdpData.ts. Flow ("01") and Clear ("02").
+ * map + partners live in mmPdpData.ts. Flow ("01"), Clear ("02"), Both ("03").
  * ========================================================================== */
 
 const NAVY = "#1B2757";
