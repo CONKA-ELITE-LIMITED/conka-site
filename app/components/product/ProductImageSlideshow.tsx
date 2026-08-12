@@ -69,7 +69,7 @@ function ProductThumbnailRail({
   const isLandscape = aspectRatio === "landscape";
   // Landscape (Magic Mind) thumbnails are rectangular 7:5 and a touch larger.
   const sizeCls = isLandscape
-    ? "h-[68px] aspect-[7/5]"
+    ? "h-[52px] aspect-[7/5] lg:h-[68px]"
     : size === "sm"
       ? "w-14 h-14"
       : "w-14 h-14 md:w-28 md:h-28";

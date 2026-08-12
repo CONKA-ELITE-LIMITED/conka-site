@@ -47,12 +47,14 @@ export default function IngredientBenefitLede() {
     <div>
       {subline && (
         <h2
-          className="text-[2.25rem] leading-tight text-black"
+          className="leading-tight text-black"
           style={{ letterSpacing: "-0.01em" }}
         >
-          <span className="font-bold">{sublineBold}</span>
+          <span className="block text-[2.25rem] font-bold">{sublineBold}</span>
           {sublineRest && (
-            <span className="font-medium text-black/75">{sublineRest}</span>
+            <span className="block text-[1.5rem] font-medium text-black">
+              {sublineRest.trim()}
+            </span>
           )}
         </h2>
       )}

@@ -54,7 +54,7 @@ export default function ProductHeroMobileV3({
   return (
     <div className="flex flex-col gap-6 text-black">
       {/* Identity — MM order: viewing → title → spec → rating */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <SocialProofBadge productType={productType} className="self-start" />
         <h1
           className="brand-h1 leading-none"
@@ -94,8 +94,8 @@ export default function ProductHeroMobileV3({
 
       {/* Written-out Ingredients — collapsed accordion under the subscription box */}
       {ingredientsList && (
-        <details className="group border-t border-black/10 pt-2">
-          <summary className="flex cursor-pointer list-none items-center justify-between py-2 [&::-webkit-details-marker]:hidden">
+        <details className="group">
+          <summary className="flex cursor-pointer list-none items-center justify-between border-b border-black/15 py-2 [&::-webkit-details-marker]:hidden">
             <span className="text-lg font-bold text-black">Ingredients</span>
             <svg
               width="18"
@@ -112,7 +112,7 @@ export default function ProductHeroMobileV3({
               <path d="M6 9l6 6 6-6" />
             </svg>
           </summary>
-          <p className="pb-2 text-sm leading-relaxed text-black">
+          <p className="pt-3 text-sm leading-relaxed text-black">
             {ingredientsList}
           </p>
         </details>

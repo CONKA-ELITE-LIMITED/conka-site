@@ -116,13 +116,13 @@ function IngredientCard({
       <div className="px-3.5 pb-5">
         <div className="border-t border-black/10 pt-4">
           {ing.image && (
-            <div className="relative mx-auto mb-4 aspect-square w-40 max-w-full overflow-hidden rounded-md bg-[#f1f1f3]">
+            <div className="relative mx-auto mb-4 aspect-square w-full max-w-[15rem] overflow-hidden rounded-md">
               <Image
                 src={ing.image}
                 alt={ing.name}
                 fill
                 loading="lazy"
-                sizes="160px"
+                sizes="240px"
                 className="object-cover"
               />
             </div>
@@ -130,10 +130,10 @@ function IngredientCard({
           <p className="mb-2 text-base font-bold leading-snug text-black">
             {ing.oneLineClaim}
           </p>
-          <p className="text-sm leading-relaxed text-black/70">{ing.description}</p>
+          <p className="text-sm leading-relaxed text-black">{ing.description}</p>
 
           {partner && (
-            <p className="mt-3 rounded-md bg-[#f1f1f3] px-3 py-2.5 text-sm leading-snug text-black/70">
+            <p className="mt-3 rounded-md bg-[#f1f1f3] px-3 py-2.5 text-sm leading-snug text-black">
               <span className="font-semibold text-black">
                 Paired with {partner.name}:
               </span>{" "}
@@ -199,7 +199,7 @@ export default function IngredientOutcomeAccordions({
             <h3 className="mb-1.5 text-3xl font-bold leading-tight text-black">
               {bucket.title}
             </h3>
-            <p className="brand-body mb-4 text-black/70">{bucket.subhead}</p>
+            <p className="brand-body mb-4 text-black">{bucket.subhead}</p>
             <div className="flex flex-col gap-3">
               {items.map((ing) => {
                 const partnerId = PARTNER_OF[ing.id];
@@ -217,7 +217,7 @@ export default function IngredientOutcomeAccordions({
         <h3 className="mb-3 text-2xl font-bold text-black">Who is it for?</h3>
         <div className="flex flex-col gap-3">
           {WHO_ITS_FOR.flow.map((para) => (
-            <p key={para.slice(0, 24)} className="brand-body text-black/80">
+            <p key={para.slice(0, 24)} className="brand-body text-black">
               {para}
             </p>
           ))}
@@ -226,7 +226,7 @@ export default function IngredientOutcomeAccordions({
 
       <div className="border-t border-black/10 pt-8">
         <h3 className="mb-3 text-2xl font-bold text-black">Try risk free</h3>
-        <p className="brand-body text-black/80">
+        <p className="brand-body text-black">
           Try CONKA for 100 days. If your mental performance doesn&apos;t noticeably
           improve, we&apos;ll refund your purchase completely, no return necessary.
         </p>

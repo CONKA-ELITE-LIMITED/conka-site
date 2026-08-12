@@ -199,7 +199,7 @@ export default function ConkaFlowPage() {
         <Navigation />
 
         {/* ===== HERO ===== */}
-        <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
+        <section id="hero" className="brand-section brand-hero-first brand-bg-white !pt-6" aria-label="Product hero">
           <div className="brand-track">
             <ProductHeroMobileV3
               formulaId="01"
