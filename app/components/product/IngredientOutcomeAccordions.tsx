@@ -78,8 +78,8 @@ function CheckMark() {
   return (
     <svg
       viewBox="0 0 15 15"
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       fill="none"
       className="mt-0.5 shrink-0"
       aria-hidden
@@ -234,7 +234,7 @@ export default function IngredientOutcomeAccordions() {
           {CHECK_ITEMS.map((item) => (
             <li
               key={item}
-              className="flex items-start gap-2.5 text-base leading-snug text-black"
+              className="flex items-start gap-2 text-sm leading-snug text-black"
             >
               <CheckMark />
               {item}
@@ -258,14 +258,10 @@ export default function IngredientOutcomeAccordions() {
           .filter((ing): ing is IngredientData => Boolean(ing));
         if (items.length === 0) return null;
 
-        // Magic Mind emphasises the second word of each outcome heading.
-        const [firstWord, ...rest] = bucket.title.split(" ");
-
         return (
           <div key={bucket.id}>
-            <h3 className="mb-1.5 text-2xl font-bold leading-tight text-black">
-              {firstWord}{" "}
-              <span className="italic font-semibold">{rest.join(" ")}</span>
+            <h3 className="mb-1.5 text-3xl font-bold leading-tight text-black">
+              {bucket.title}
             </h3>
             <p className="brand-body mb-4 text-black/70">{bucket.subhead}</p>
             <div className="flex flex-col gap-3">

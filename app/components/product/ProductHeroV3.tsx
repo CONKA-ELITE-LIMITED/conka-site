@@ -7,12 +7,9 @@ import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
+import { getSupplementFacts } from "@/app/lib/supplementFacts";
 import ProductImageSlideshow from "./ProductImageSlideshow";
-import HeroAccordions from "./HeroAccordions";
-import ProductBuyPanel, {
-  TrustStrip,
-  FeelOutcomesList,
-} from "./ProductBuyPanel";
+import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
 
@@ -77,6 +74,13 @@ export default function ProductHeroV3({
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
 
+  // Written-out ingredient list for the left column (Magic Mind "Ingredients"
+  // block). Both has no single supplement-facts record, so it is skipped there.
+  const facts = productType !== "both" ? getSupplementFacts(productType) : null;
+  const ingredientsList = facts
+    ? [...facts.actives, ...facts.base].map((i) => i.name).join(", ")
+    : null;
+
   // The hero gallery is independent of the selected cadence, so toggling a plan
   // never rebuilds the slideshow. Square (mobile) box assets, lifestyle shot first.
   const rawImages = getProductHeroImagesMobile(formulaId, "monthly-sub");
@@ -93,8 +97,9 @@ export default function ProductHeroV3({
           small gap, and the whole block centres within the track so the side
           gutters grow. Drop a 7:5 landscape asset in and it fills the column. */}
       <div className="grid grid-cols-1 gap-[var(--brand-space-m)] lg:grid-cols-[minmax(0,560px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
-        {/* LEFT: gallery — de-carded, small thumbnail rail under the image;
-            sticky so it follows the taller right column on scroll */}
+        {/* LEFT: sticky gallery + the written-out Ingredients list beneath it
+            (Magic Mind pattern). The image and list are ONE sticky unit so the
+            list never slides under the pinned thumbnail rail. */}
         <div className="order-2 lg:order-1 lg:sticky lg:top-24 lg:self-start">
           <ProductImageSlideshow
             images={images}
@@ -102,16 +107,27 @@ export default function ProductHeroV3({
             noFrame
             smallThumbnails
           />
+
+          {ingredientsList && (
+            <div className="mt-10">
+              <h2 className="mb-3 border-b border-black/15 pb-3 text-2xl font-bold text-black">
+                Ingredients
+              </h2>
+              <p className="text-sm leading-relaxed text-black">
+                {ingredientsList}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* RIGHT (35%): identity + buy box + inline ingredient-benefit section.
             Order mirrors Magic Mind: viewing → title → spec → rating. */}
         <div className="order-1 flex min-w-0 flex-col gap-6 text-black lg:order-2">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <SocialProofBadge productType={productType} className="self-start" />
 
             <h1
-              className="brand-h1 leading-tight lg:!text-[3.25rem]"
+              className="brand-h1 leading-none lg:!text-[3.25rem]"
               style={{ letterSpacing: "-0.02em" }}
             >
               {content.name}
@@ -131,13 +147,6 @@ export default function ProductHeroV3({
               hideKeyBenefits
               hideSecondary
               hideWhatYouFeel
-            />
-
-            <HeroAccordions
-              productType={productType}
-              plainLabels
-              whatYouFeel={<FeelOutcomesList />}
-              hideIngredients
             />
           </div>
 
