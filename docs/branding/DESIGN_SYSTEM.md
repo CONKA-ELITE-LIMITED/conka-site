@@ -392,6 +392,7 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 | Decorative navy | `#1B2757` fill / icon fill / gradient | `CartAppGift` "Free!" chip, hero rating stars, testimonial product-name badge, mobile social-proof gradient card |
 | Savings / positive | green `#1a7f4f` (`--brand-positive`) at `/10` tint bg + solid text | savings %, "+N free" badge, cart Savings row, guarantee tick, PDP free-shots pill |
 | Plan Save% accent (exception) | per-plan gold `#C9A24A` (monthly) / coral `#E07A5F` (quarterly) | PDP `FlatPlanCard` "Save X%" badge ONLY — a deliberate per-cadence accent, NOT the savings green |
+| Offer gradient (PDP, exception) | `linear-gradient(90deg,#cdeecf,#e9f5c9)` fill + `#14532d` text | Soft green-to-lime offer accent on `ProductHeroV3` (`/conka-flow`): MOST POPULAR badge, selected plan-card border ring, and free-shots footer bar. Distinct from the savings green; also used as the offer-header eyebrow on `ProductGridHeader` |
 | Light-navy tint strip | `#eef0f5` (also `#eef1f8`, `#dbe0f0`→`#eef1f8` gradient) | free-shipping banner, app-gift container, hero SpecBadge, testimonial product badge |
 | Shadows / rings | soft `shadow-[0_2px_12px_rgba(0,0,0,0.08)]`, `ring-1 ring-black/5` | lifted product cards |
 | Hairlines | `border-black/8`–`/15` | list dividers, nav header, content tiles |
@@ -400,6 +401,19 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 | Mono (scalpel) | `font-mono text-[9px] uppercase tracking-[0.12em]`, solid black | time-of-day + verified-buyer micro-badges only |
 
 Prefer the tokens on new work: `--brand-positive` (`#1a7f4f`) for savings/positive and `--brand-navy` (`#1B2757`) for the primary/decorative navy — both live in `brand-base.css` Layer 1. Many consumer components still hard-code the `#1B2757` literal; the repo-wide sweep to the token is deferred (Ticket 3 territory), so the token plus this table is the target, not yet the universal state.
+
+### Display headings (DTC hero tier)
+
+The consumer PDP hero (`ProductHeroV3` on `/conka-flow`) runs a larger, bolder heading tier than the `brand-h*` scale. On a stripped-back DTC surface the oversized heading carries the hierarchy that the clinical eyebrow + mono sub-line used to, and reads as the simpler, more confident Magic Mind / Seed register. This tier is opt-in for DTC hero and grouped-content headings; the standard `brand-h*` scale still governs ordinary sections.
+
+| Element | Treatment |
+|---------|-----------|
+| Product name (hero H1) | `brand-h1` bumped to `lg:text-[3.25rem]`, `leading-none` |
+| Keyword subline | `text-[2.25rem]` `leading-tight`, lead clause `font-bold` + tail `font-medium text-black/75` |
+| Outcome-group titles | `text-3xl font-bold`, no italics (larger and bolder than `brand-h3`) |
+| Sub-section headings (Ingredients / Who is it for / Try risk free) | `text-2xl font-bold` |
+
+Rules that still hold: solid `text-black`, left-aligned, Primary font (never mono for these), tight tracking on the H1 via inline `letterSpacing: "-0.02em"`.
 
 ### Refactoring a clinical page to Simple DTC (mechanical map)
 

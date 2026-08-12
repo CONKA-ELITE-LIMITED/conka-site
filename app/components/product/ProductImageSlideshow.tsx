@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ImageLightbox from "./ImageLightbox";
 
@@ -9,6 +9,37 @@ export interface SlideshowImage {
 }
 
 type ThumbSize = "responsive" | "sm";
+
+/** Circular scroll button flanking the landscape thumbnail rail (Magic Mind). */
+function ThumbArrow({
+  dir,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={dir === "prev" ? "Previous thumbnails" : "Next thumbnails"}
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#efefef] text-black/60 transition-colors hover:bg-[#e2e2e2]"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points={dir === "prev" ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} />
+      </svg>
+    </button>
+  );
+}
 
 /**
  * Thumbnail rail rendered inside the slideshow. Kept as its own component for
@@ -23,6 +54,7 @@ function ProductThumbnailRail({
   leadingVideo,
   size = "responsive",
   fullBleed = false,
+  aspectRatio = "square",
 }: {
   images: SlideshowImage[];
   alt: string;
@@ -31,16 +63,45 @@ function ProductThumbnailRail({
   leadingVideo?: { mp4: string; webm?: string; poster: string };
   size?: ThumbSize;
   fullBleed?: boolean;
+  aspectRatio?: "square" | "landscape";
 }) {
   const videoCount = leadingVideo ? 1 : 0;
-  const sizeCls =
-    size === "sm" ? "w-14 h-14" : "w-14 h-14 md:w-28 md:h-28";
-  const imgSizes =
-    size === "responsive" ? "(max-width: 768px) 56px, 112px" : "56px";
+  const isLandscape = aspectRatio === "landscape";
+  // Landscape (Magic Mind) thumbnails are rectangular 7:5 and a touch larger.
+  const sizeCls = isLandscape
+    ? "h-[44px] aspect-[7/5] lg:h-[68px]"
+    : size === "sm"
+      ? "w-14 h-14"
+      : "w-14 h-14 md:w-28 md:h-28";
+  const roundCls = isLandscape ? "rounded-lg" : "rounded";
+  const imgSizes = isLandscape
+    ? "96px"
+    : size === "responsive"
+      ? "(max-width: 768px) 56px, 112px"
+      : "56px";
 
-  return (
+  const railRef = useRef<HTMLDivElement>(null);
+  const total = images.length + videoCount;
+  // Arrows advance the SELECTED slide (main asset + focus), not just the rail.
+  const go = (dir: 1 | -1) => onSelect((currentIndex + dir + total) % total);
+
+  // Keep the active thumbnail centred in the rail as the index changes.
+  useEffect(() => {
+    if (!isLandscape) return;
+    const el = railRef.current;
+    const active = el?.children[currentIndex] as HTMLElement | undefined;
+    if (el && active) {
+      el.scrollTo({
+        left: active.offsetLeft - (el.clientWidth - active.clientWidth) / 2,
+        behavior: "smooth",
+      });
+    }
+  }, [currentIndex, isLandscape]);
+
+  const rail = (
     <div
-      className={`mt-3 min-w-0 flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
+      ref={railRef}
+      className={`${isLandscape ? "" : "mt-3 snap-x snap-mandatory"} min-w-0 flex gap-2 overflow-x-auto scroll-smooth py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${!fullBleed ? "px-2" : ""}`}
       style={
         fullBleed
           ? { paddingLeft: "0.25rem", paddingRight: "0.25rem" }
@@ -50,8 +111,8 @@ function ProductThumbnailRail({
       {leadingVideo && (
         <button
           onClick={() => onSelect(0)}
-          className={`relative flex-shrink-0 ${sizeCls} snap-center rounded overflow-hidden cursor-pointer
-            transition-all duration-200 hover:opacity-90
+          className={`relative flex-shrink-0 ${sizeCls} snap-center ${roundCls} overflow-hidden cursor-pointer
+            transition-opacity duration-200 hover:opacity-90
             ${currentIndex === 0 ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
           aria-label="Play product video"
           aria-current={currentIndex === 0 ? "true" : undefined}
@@ -76,8 +137,8 @@ function ProductThumbnailRail({
         <button
           key={image.src}
           onClick={() => onSelect(index + videoCount)}
-          className={`flex-shrink-0 ${sizeCls} snap-center rounded overflow-hidden cursor-pointer
-            transition-all duration-200 hover:opacity-90
+          className={`flex-shrink-0 ${sizeCls} snap-center ${roundCls} overflow-hidden cursor-pointer
+            transition-opacity duration-200 hover:opacity-90
             ${index + videoCount === currentIndex ? "ring-2 ring-offset-2 ring-gray-600" : "opacity-70"}`}
           aria-label={`Go to image ${index + 1}`}
           aria-current={index + videoCount === currentIndex ? "true" : undefined}
@@ -94,6 +155,18 @@ function ProductThumbnailRail({
       ))}
     </div>
   );
+
+  if (isLandscape) {
+    return (
+      <div className="mt-3 flex items-center gap-2">
+        <ThumbArrow dir="prev" onClick={() => go(-1)} />
+        {rail}
+        <ThumbArrow dir="next" onClick={() => go(1)} />
+      </div>
+    );
+  }
+
+  return rail;
 }
 
 interface ProductImageSlideshowProps {
@@ -116,6 +189,9 @@ interface ProductImageSlideshowProps {
   /** Drop the rounded card + drop-shadow so the image reads flush and bigger
    *  (Magic Mind style). Used by ProductHeroV2's de-carded centre column. */
   noFrame?: boolean;
+  /** Frame + thumbnail shape. "landscape" is the 7:5 Magic Mind PDP asset ratio;
+   *  defaults to the legacy square. */
+  aspectRatio?: "square" | "landscape";
 }
 
 export default function ProductImageSlideshow({
@@ -128,6 +204,7 @@ export default function ProductImageSlideshow({
   imageFit = "cover",
   leadingVideo,
   noFrame = false,
+  aspectRatio = "square",
 }: ProductImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -142,16 +219,19 @@ export default function ProductImageSlideshow({
   if (totalSlides === 0) return null;
 
   const isVideoActive = videoCount > 0 && currentIndex === 0;
+  // The landscape (PDP hero) gallery uses graphic slides, not zoomable product
+  // shots, so it does not open the lightbox on click.
+  const lightboxEnabled = aspectRatio !== "landscape";
 
   return (
     <div className="flex flex-col w-full">
       {/* Main image area */}
-      <div className="relative w-full aspect-square">
+      <div className={`relative w-full ${aspectRatio === "landscape" ? "aspect-[7/5]" : "aspect-square"}`}>
         <button
           type="button"
-          onClick={() => !isVideoActive && setLightboxOpen(true)}
-          className={`relative w-full h-full overflow-hidden rounded-none shadow-none block ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
-          aria-label={isVideoActive ? alt : `View ${alt} full size`}
+          onClick={() => lightboxEnabled && !isVideoActive && setLightboxOpen(true)}
+          className={`relative w-full h-full overflow-hidden shadow-none block ${aspectRatio === "landscape" ? "rounded-md" : "rounded-none"} ${noFrame ? "" : "md:rounded-xl md:shadow-[0_-4px_12px_-2px_rgba(0,0,0,0.08),0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"} ${!lightboxEnabled || isVideoActive ? "cursor-default" : "cursor-zoom-in"} ${imageFit === "contain" ? "bg-white" : ""}`}
+          aria-label={lightboxEnabled && !isVideoActive ? `View ${alt} full size` : alt}
         >
           {leadingVideo && (
             <div
@@ -187,6 +267,10 @@ export default function ProductImageSlideshow({
                 fill
                 className={`${imageFit === "contain" ? "object-contain" : "object-cover"} object-center`}
                 priority={index === 0 && videoCount === 0}
+                // Explicit hint (Next SSR does not always emit it): the first
+                // slide is the LCP element; the other stacked slides sit in the
+                // viewport too, so keep them low so they never contend with it.
+                fetchPriority={index === 0 && videoCount === 0 ? "high" : "low"}
                 sizes="(max-width: 1023px) 100vw, 45vw"
               />
             </div>
@@ -203,7 +287,7 @@ export default function ProductImageSlideshow({
               }}
               className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full
                          bg-white/70 hover:bg-white/90 shadow-md
-                         transition-all duration-200"
+                         transition-colors duration-200"
               aria-label="Previous image"
             >
               <svg
@@ -229,7 +313,7 @@ export default function ProductImageSlideshow({
               }}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full
                          bg-white/70 hover:bg-white/90 shadow-md
-                         transition-all duration-200"
+                         transition-colors duration-200"
               aria-label="Next image"
             >
               <svg
@@ -251,7 +335,7 @@ export default function ProductImageSlideshow({
         )}
       </div>
 
-      {lightboxOpen && (
+      {lightboxEnabled && lightboxOpen && (
         <ImageLightbox
           images={images.map((img) => img.src)}
           alt={alt}
@@ -270,6 +354,7 @@ export default function ProductImageSlideshow({
           leadingVideo={leadingVideo}
           size={smallThumbnails ? "sm" : "responsive"}
           fullBleed={fullBleedThumbnails}
+          aspectRatio={aspectRatio}
         />
       )}
     </div>

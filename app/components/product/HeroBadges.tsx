@@ -38,7 +38,8 @@ const SOCIAL_PROOF_COUNT: Record<SpecProductType, number> = {
   both: 224,
 };
 
-/** Live-viewer style social-proof pill (Magic Mind pattern), grey gradient. */
+/** Live-viewer social proof (Magic Mind pattern): small plain text + eye icon,
+ *  no background pill. */
 export function SocialProofBadge({
   productType,
   className = "",
@@ -48,9 +49,9 @@ export function SocialProofBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#e6e6e6] to-[#f4f4f4] px-4 py-2 text-sm font-semibold text-black ${className}`}
+      className={`inline-flex items-center gap-1.5 text-[13px] font-medium text-black/70 ${className}`}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
           d="M3 13C6.6 5 17.4 5 21 13"
           stroke="currentColor"

@@ -20,7 +20,7 @@ interface HeroAccordionsProps {
   whatYouFeel?: ReactNode;
 }
 
-const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
+export const WHO_ITS_FOR: Record<HeroProductType, string[]> = {
   flow: [
     "You want sustained energy and sharp focus across a full cognitive day, without the crash. FLOW stacks alongside your coffee to extend its effect and reduce how much you need, or replaces it entirely through cellular energy production rather than stimulant dependency.",
     "Your work demands hours of clean output: deep focus, back-to-back calls, physical training. FLOW supports both cognitive and physical performance through the same mitochondrial pathways.",

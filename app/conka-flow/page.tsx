@@ -7,8 +7,8 @@ import {
   ClinicalIngredients,
   FormulaBenefitsPillars,
 } from "@/app/components/product";
-import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
-import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
+import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
 import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
@@ -115,8 +115,6 @@ export default function ConkaFlowPage() {
     </section>
   );
 
-  // TODO Phase 3: a FormulaQualityBadges section (Informed Sport, vegan, etc.)
-  // will slot between benefits and ingredients.
   const ingredientsSection = (
     <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
       <div className="brand-track">
@@ -201,9 +199,9 @@ export default function ConkaFlowPage() {
         <Navigation />
 
         {/* ===== HERO ===== */}
-        <section id="hero" className="brand-section brand-hero-first brand-bg-white" aria-label="Product hero">
+        <section id="hero" className="brand-section brand-hero-first brand-bg-white !pt-6" aria-label="Product hero">
           <div className="brand-track">
-            <ProductHeroMobileV2
+            <ProductHeroMobileV3
               formulaId="01"
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
@@ -245,11 +243,13 @@ export default function ConkaFlowPage() {
       <Navigation />
 
       {/* ===== HERO ===== */}
-      {/* V2 hero runs wider than the 1280 brand-track and with a tighter gutter
-          to sit closer to the Magic Mind reference (SCRUM-1171). */}
-      <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[3vw]" aria-label="Product hero">
+      {/* V3 two-column hero runs wider than the 1280 brand-track with a tighter
+          gutter to sit closer to the Magic Mind reference. It embeds the
+          ingredient-benefit section in its right column, so that section is NOT
+          rendered again in the desktop body below (SCRUM-1209). */}
+      <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[6vw]" aria-label="Product hero">
         <div className="brand-track !max-w-[1480px]">
-          <ProductHeroV2
+          <ProductHeroV3
             formulaId="01"
             selectedCadence={selectedCadence}
             onCadenceChange={setSelectedCadence}
@@ -262,7 +262,6 @@ export default function ConkaFlowPage() {
       {benefitTilesSection}
       {ugcSection}
       {benefitsSection}
-      {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
       {ingredientsSection}
       {absorptionSection}
       {whatToExpectSection}
