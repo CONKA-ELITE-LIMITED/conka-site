@@ -38,17 +38,17 @@ An investor-flavoured **brand overview**, not a fundraise and not a Nike co-bran
 5. **What You'll Feel** *(light)* — Flow (AM) / Clear (PM) / it compounds · reuse trial 08
 
 **Act 3 — The proof**
-6. **The Research** *(light)* — built on research, not hype: +14.86% double-blind, 25+ trials, universities · reuse trial 03
-7. **The Proof** *(light)* — elite minds, measurably sharper (athlete grid + gains) · reuse trial 04
-8. **The App** *(light)* — the measurement engine: baseline, trend, habit · trial "the test"
+6. **The Research** *(light)* — built on research, not hype: +14.86% double-blind, 25+ trials, universities
+7. **Proven & Trusted** *(light)* — MERGED proof + traction: athlete photo wall (7 carousel athletes) + slim navy stat line (150k shots · +14.86% · 25+ trials · 500+ reviews) + club/partner logo wall
+8. **The App** *(light)* — the measurement engine: baseline, trend, habit
 
 **Act 4 — Who & where (the investor beat)**
-9. **Who We Are** *(light)* — founders + scientific board + advisors · NEW, needs data
-10. **Traction** *(light)* — proof-only numbers (bottles 150k+, reviews 500+, trials 25+, R&D £500k+, patent, app tests) + optional backers/partner logo strip · NEW, needs data
-11. **Where We're Going** *(dark, impact)* — the bespoke future: everyone is different, so why the same shot? App + clinical-trial data personalise the formula; tap a dispenser for a bespoke shot. One-size-fits-all → personalised, measured brain fuel. The category-creation payoff. · NEW
+9. **Who We Are** *(light)* — founders + scientific board + advisor line; team headshots
+10. **Personalised by data** *(light)* — vision I: everyone's different, so why the same shot? Measure → Learn → Personalise (app + clinical data → bespoke formula)
+11. **Everywhere you perform** *(dark)* — vision II: distribution: smart dispenser + app-to-postal, in gyms (Third Space, Nuffield), sports clubs, corporate offices, universities
 12. **Close** *(dark)* — one line + contact
 
-*Backers/partners (investors + universities + certifications) ride as a logo strip on slide 10, or split into their own slide if the older Canva yields enough logos.*
+*Accent is brand navy `#1B2757` (the vivid `#2e38d1` blue was dropped per Rudh). Cover headline "Performance begins in the mind."*
 
 ## Depth & cadence
 
@@ -83,7 +83,9 @@ Source PDFs: `~/Desktop/DownloadsForClaude/Management Deck 2025.pdf` (16pp, inve
 - **Vision validated:** the bespoke/dispenser thesis is literally their Phase 3 ("Millions of possible combinations, customised for any brain") with a real dispenser photo (portable to slide 11).
 - **Alt lines from current deck:** cover "Elite Brain Performance" / "Clinically validated cognitive support"; close "Validated. Trusted. Ready."
 
-## Build status (complete v1)
+## Build status (v2 — Rudh review round applied)
+
+**v2 changes:** slide 3 → single ShotsAndPhone asset (`~/Desktop/DownloadsForClaude/`) + cleaner copy; slide 5 renders enlarged; slides 7+10 MERGED into "Proven & Trusted" (athlete wall from `public/testimonials/athlete/*NB.jpg` + logo wall + slim stat line, weak stats dropped); accent recolored vivid blue → navy `#1B2757` deck-wide; vision split into two slides (Personalised by data / Everywhere you perform). Arc stays 12.
 
 All 12 slides built with real imagery. Ported from the trial deck + Canva PDFs: bottle/product renders, app screens, 15 ingredient glyphs, athlete photo, university + backer logo wall (slide 10), 6 team headshots (slide 9), the smart-dispenser photo (slide 11). Cover headline = **"Performance begins in the mind."** (grander/aspirational, per Rudh); closer kept as "The mind is the next frontier."; contact = Harry Glover.
 
