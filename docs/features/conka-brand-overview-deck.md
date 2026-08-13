@@ -83,6 +83,10 @@ Source PDFs: `~/Desktop/DownloadsForClaude/Management Deck 2025.pdf` (16pp, inve
 - **Vision validated:** the bespoke/dispenser thesis is literally their Phase 3 ("Millions of possible combinations, customised for any brain") with a real dispenser photo (portable to slide 11).
 - **Alt lines from current deck:** cover "Elite Brain Performance" / "Clinically validated cognitive support"; close "Validated. Trusted. Ready."
 
+## Build status (v3 — second review round)
+
+**v3 changes:** slide 3 title moved to top single-line (was low + wrapped); slide 5 renders made uniform-size + centered over columns; slide 9 rebuilt as 2×2 leadership photos (Humphrey/Harry/Rudh + Henry Muir added, new Rudh photo) + Scientific Board list (Hind, Chazot, Katekhaye, Glassbrook, Vine) + David Giles/Engineering; slide 10 reframed aspirational ("The future of supplementation is personal" — The Product/Access/Measurement moat). **TO CONFIRM:** affiliations for Dr Daniel Glassbrook ("Performance science") and Prof Sam Vine ("University of Exeter"); David Giles placement.
+
 ## Build status (v2 — Rudh review round applied)
 
 **v2 changes:** slide 3 → single ShotsAndPhone asset (`~/Desktop/DownloadsForClaude/`) + cleaner copy; slide 5 renders enlarged; slides 7+10 MERGED into "Proven & Trusted" (athlete wall from `public/testimonials/athlete/*NB.jpg` + logo wall + slim stat line, weak stats dropped); accent recolored vivid blue → navy `#1B2757` deck-wide; vision split into two slides (Personalised by data / Everywhere you perform). Arc stays 12.
