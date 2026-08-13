@@ -16,7 +16,7 @@ All share one visual system (below). Reuse copy, renders, logos, and layouts acr
 | Nike × CONKA trial (onboarding) | `a6SzuvMKvSWVBFqeM7N9Cw` | (frames canonical) |
 | CONKA · Brand Overview | `QMhVlt4PcinAkZlYheisYP` | `docs/features/conka-brand-overview-deck.md` |
 
-The **trial deck (`a6Sz…`) is the reference implementation** of the visual system — read tokens and lift layouts/renders from it first.
+The **trial deck (`a6Sz…`) is the reference implementation** of the visual system — read tokens and lift layouts/renders from it first. The **Brand Overview (`QMhV…`) is the fullest worked example** of asset porting, Canva-PDF extraction, and PDF export (patterns below).
 
 ---
 
@@ -53,13 +53,22 @@ Figma MCP (`mcp__plugin_figma_figma__*`). Load the skills before the matching to
 
 ---
 
-## Asset porting (source deck → new deck)
+## Asset porting (from another Figma deck, or a Canva PDF)
 
-Renders, athlete photos, logos, app screens live in the trial deck. To reuse:
+**From a Figma deck:** `download_assets` on the source node returns `export` (the node rendered — usually **transparent RGBA**, so it sits clean on a white slide) and `rawImages` (raw source fills, but often off-crop / wrong-aspect — prefer `export`). Batch a slide's downloads in one message.
 
-1. `download_assets` on the source node → gives `export` (rendered PNG of the node) + `rawImages` (original source fills).
-2. **Wordmark / logo transparency gotcha:** Figma's node `export` PNG comes back with an **opaque white background**, which boxes the logo against the glow. Fix it locally (Pillow: set near-white pixels to alpha 0, derive edge alpha from luminance) before re-uploading. The `rawImages` source fills are usually already transparent but may be the wrong aspect/crop.
-3. `upload_assets` on the target file — pass `nodeId` to set the image as a fill on an existing rectangle (`scaleMode` `FIT` for logos), or omit `nodeId` to drop new frames. `POST` the bytes to the returned `submitUrl` (multipart `file` field preferred; single-use, 10-min expiry).
+**From a Canva PDF export** (Canva edit URLs are login-gated, so a PDF is the only way in): render the page with PyMuPDF (`page.get_pixmap(matrix=fitz.Matrix(3,3))`) and crop with Pillow. `page.get_image_info()` gives embedded-image bboxes, but they can be off-page / overlapping — **cropping by visual grid cells off a 3–4× render is more reliable**. Source photos often have baked-in captions or borders → crop the inner region.
+
+**Placing images:** build placeholder rects in the slide, `return` their node ids, then `upload_assets(nodeId=…)` and POST the bytes to the returned `submitUrl` (single-use, 10-min expiry). `scaleMode`: **FIT** for logos/renders (show the whole thing), **FILL** for photos/portraits (crop-to-fill).
+- **Batch uploads:** request N submit URLs in one message, then POST with a **`while read` heredoc loop** — an unquoted `set -- $arrayItem` loop mangled the filenames, so avoid it.
+- **Keep a local copy of every ported asset** in the scratchpad. Rebuilding a frame drops its image fills (you re-upload) — that's only cheap if the files are still local.
+- **Wordmark exception:** the CONKA wordmark `export` came back opaque-white (not transparent). Knock white out with Pillow (near-white → alpha 0, edge alpha from luminance) before uploading.
+
+## Exporting the deck to PDF
+
+- **`download_assets(nodeId=frame, defaultScale=3)` returns a per-frame VECTOR PDF** (`format:"pdf"`), not a raster — text stays crisp. Download every frame's `export.url`, then merge in slide order with PyMuPDF (`out=fitz.open(); for f: out.insert_pdf(fitz.open(f)); out.save(dest)`). This is the way to hand Rudh a send-ready deck.
+- `get_screenshot`'s `maxDimension` only scales **down** (won't upscale past the 1280 native frame) — use `download_assets` `defaultScale` when you need higher res.
+- Frames laid left-to-right export in slide order. For Rudh's own export: Figma → **File → Export frames to PDF** (native, one combined PDF, keeps vector text).
 
 ---
 
@@ -68,8 +77,13 @@ Renders, athlete photos, logos, app screens live in the trial deck. To reuse:
 - **Fonts:** build in **Inter**. Licensed display faces (e.g. Neue Haas) render but are **not editable via MCP**, and local installs don't reach the cloud. Inter style strings are `"Semi Bold"` / `"Extra Bold"` (with the space).
 - **Seat/limits:** editing needs a **Full** seat; Starter tier hits an MCP rate limit — upgrade the file's team to fix. (See `reference_figma_mcp_constraints` in memory.)
 - **`use_figma` is atomic:** a failed script makes no changes — read the error, fix, retry; don't blind-retry.
+- **Rebuilding a frame loses its image fills** — you must re-upload. For small tweaks prefer surgical edits (resize / reposition / recolour existing nodes), which preserve fills. **Node IDs change on every rebuild** — re-query before editing, and keep the plan doc's per-slide IDs current.
+- **`textAutoResize` wrap:** setting a label's `characters` to a longer string while it's `'HEIGHT'` makes it wrap (width stays fixed). Use `'WIDTH_AND_HEIGHT'` for single-line labels whose text may change length.
+- **Accent a word in a headline:** `setRangeFills` — reset the whole string to the base colour first, then apply the accent range, so stale partial fills from earlier edits don't linger.
+- **Recolour deck-wide by fill:** `findAll('TEXT')`, match `fills[0].color` within a tolerance, reassign — used to swap the vivid `#2e38d1` blue → navy `#1B2757` across every slide in one pass.
 - **Screenshots are not user-facing:** Rudh reviews in Figma directly. Screenshot only to self-verify (respect `feedback_no_browser_screenshots` — don't drive Chrome for this).
 - **Canva sources are login-gated:** WebFetch can't read Canva edit URLs. Ask Rudh to export to PDF (readable in-repo) or screenshot.
+- **macOS folder access:** the terminal's **Desktop** access can vanish mid-session (TCC) even after it worked earlier; `~/Downloads` may still work. Don't depend on the user's local exports — regenerate from Figma and write to `~/Downloads`.
 
 ---
 
