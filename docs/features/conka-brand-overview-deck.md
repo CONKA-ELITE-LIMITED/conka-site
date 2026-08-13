@@ -83,9 +83,12 @@ Source PDFs: `~/Desktop/DownloadsForClaude/Management Deck 2025.pdf` (16pp, inve
 - **Vision validated:** the bespoke/dispenser thesis is literally their Phase 3 ("Millions of possible combinations, customised for any brain") with a real dispenser photo (portable to slide 11).
 - **Alt lines from current deck:** cover "Elite Brain Performance" / "Clinically validated cognitive support"; close "Validated. Trusted. Ready."
 
+## Build status (complete v1)
+
+All 12 slides built with real imagery. Ported from the trial deck + Canva PDFs: bottle/product renders, app screens, 15 ingredient glyphs, athlete photo, university + backer logo wall (slide 10), 6 team headshots (slide 9), the smart-dispenser photo (slide 11). Cover headline = **"Performance begins in the mind."** (grander/aspirational, per Rudh); closer kept as "The mind is the next frontier."; contact = Harry Glover.
+
 ## Open items
 
-- [ ] Rudh exports both Canva decks to PDF for extraction (board, advisors, investors, logos, founders photo).
-- [ ] Sign off the 11-slide arc (or adjust).
-- [ ] Final cover headline.
-- [ ] Vision copy points (category creation).
+- [ ] Rudh review pass in Figma; tweak copy/headlines as desired.
+- [ ] Optional: dedicated advisors slide (declined for now, kept as a line on slide 9).
+- [ ] Optional: swap slide 7 to the full athlete photo wall.
