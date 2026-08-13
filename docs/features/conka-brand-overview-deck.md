@@ -15,7 +15,7 @@ An investor-flavoured **brand overview**, not a fundraise and not a Nike co-bran
 
 - **Title/positioning:** "CONKA · Brand Overview".
 - **Traction depth:** **Proof only** — bottles, reviews, trials, R&D spend, patent, app tests. **No revenue / funding / valuation** on any slide.
-- **Vision framing:** **Category creation** — "we're building the brain-performance category; the mind is the next frontier; measurement is the moat."
+- **Vision framing:** **Category creation** — "we're building the brain-performance category; the mind is the next frontier; measurement is the moat." The forward hero is **bespoke formulation**: everyone is different and every goal is different, so why take the same shot? The app + our clinical-trial data personalise the formula, and a dispenser lets you tap and get a bespoke shot. One-size-fits-all → personalised, measured brain fuel.
 - **Cover headline:** _open_ — working line "A sharper mind, measured." (alternatives: "We fuel the mind. And make it measurable." / "Brain performance, proven.")
 
 ## Visual system (locked, matches trial deck)
@@ -26,7 +26,7 @@ An investor-flavoured **brand overview**, not a fundraise and not a Nike co-bran
 - **Cover:** white + blue radial glow top-left (`#4058bb`→`#a9b8f2`→transparent, 55px blur), transparent CONKA wordmark, headline bottom-left, footer rule + mono captions.
 - Dark "impact" slides at Problem and Close. No em dashes in on-slide copy.
 
-## The arc (11 slides)
+## The arc (12 slides)
 
 **Act 1 — Why we exist**
 1. **Cover** *(light)* — "A sharper mind, measured." ✅ built
@@ -44,10 +44,11 @@ An investor-flavoured **brand overview**, not a fundraise and not a Nike co-bran
 
 **Act 4 — Who & where (the investor beat)**
 9. **Who We Are** *(light)* — founders + scientific board + advisors · NEW, needs data
-10. **Traction & Where We're Going** *(light)* — proof-only numbers + category-creation vision · NEW, needs data
-11. **Close** *(dark)* — one line + contact
+10. **Traction** *(light)* — proof-only numbers (bottles 150k+, reviews 500+, trials 25+, R&D £500k+, patent, app tests) + optional backers/partner logo strip · NEW, needs data
+11. **Where We're Going** *(dark, impact)* — the bespoke future: everyone is different, so why the same shot? App + clinical-trial data personalise the formula; tap a dispenser for a bespoke shot. One-size-fits-all → personalised, measured brain fuel. The category-creation payoff. · NEW
+12. **Close** *(dark)* — one line + contact
 
-*Optional 12th — Backers & Partners logo wall (investors + universities + certifications) if the older Canva yields enough logos; else folded into 9/10.*
+*Backers/partners (investors + universities + certifications) ride as a logo strip on slide 10, or split into their own slide if the older Canva yields enough logos.*
 
 ## Depth & cadence
 
@@ -66,7 +67,7 @@ An investor-flavoured **brand overview**, not a fundraise and not a Nike co-bran
 | 9 Who We Are | Full scientific board (names + roles), advisors, founders photo | Older Canva (`DAGp4PExxmI`) + files |
 | 9/12 Backers | Investor names/logos, partner or retail logos | Older Canva |
 | 10 Traction | Confirm which proof numbers to show (bottles 150k+, reviews 500+, trials 25+, R&D £500k+, patent GB2620279, app tests 5,000+) | Rudh |
-| 10 Vision | Category-creation copy points to anchor the "where we're going" slide | Rudh |
+| 11 Where We're Going | Bespoke-formulation vision confirmed (app + trial data → personalised shot; tap-a-dispenser). Any **dispenser render / concept image**? If none, done typographically. | Rudh |
 | Cover | Final headline choice | Rudh |
 
 **Canva decks:** current `DAHAReigPjY`, older `DAGp4PExxmI` (has investors/advisors/scientific board + logos). Edit URLs are login-gated; export each to PDF into the repo for extraction.
