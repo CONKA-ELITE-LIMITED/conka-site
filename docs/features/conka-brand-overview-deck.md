@@ -83,6 +83,10 @@ Source PDFs: `~/Desktop/DownloadsForClaude/Management Deck 2025.pdf` (16pp, inve
 - **Vision validated:** the bespoke/dispenser thesis is literally their Phase 3 ("Millions of possible combinations, customised for any brain") with a real dispenser photo (portable to slide 11).
 - **Alt lines from current deck:** cover "Elite Brain Performance" / "Clinically validated cognitive support"; close "Validated. Trusted. Ready."
 
+## Build status (v5)
+
+**v5:** slide 2 "Not your mind." set to blue accent; slide 9 Scientific Board rebuilt as larger photos in horizontal rows (3+3+1).
+
 ## Build status (v4 — team + dynamic future slide)
 
 **v4 changes:** slide 9 rebuilt from CONKA Deck slide-14 assets — smaller 2x2 leadership photos (overlap fixed), full Scientific Board with photos (Hind/Chazot/Katekhaye/Vine/Glassbrook/O'Mally/Halmai); slide 10 made dynamic with product/logo/app image tiles above the three pillars; close slide eyebrow → 'CONKA · BRAND OVERVIEW', contact → rudhkurup@conka.io. **Judgment calls to confirm:** kept Harry Glover as 'Head of Partnerships' (slide 14 shows 'CSO'); David Giles dropped from slide 9 (not on the official team slide); Glassbrook/O'Mally/Halmai listed as 'Research scientist' (no role given on slide).
