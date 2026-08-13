@@ -95,6 +95,26 @@ PDP / home / B2B. One-time base prices; subscriptions apply a global **20%** dis
 
 ---
 
+## 3b. Loop → Skio selling-plan mapping (migration, Phase 2 input)
+
+Consolidated old-Loop-GID → new-Skio-GID map for the [Skio migration](../development/featurePlans/skio-subscription-migration.md). This is the **direct input to Phase 2** (re-point purchase surfaces). Every distinct Loop selling plan across §1–§3 appears once. Mirror of `app/lib/skio.ts` `LOOP_TO_SKIO_SELLING_PLAN`.
+
+**Fill the Skio column once the Skio plans exist (Phase 1 Task 1).** Skio GIDs are `gid://shopify/SellingPlan/<n>`; enter the full GID.
+
+| Surface | Plan / tier | Loop selling plan (GID numeric) | Skio selling plan (GID numeric) | Notes |
+|---------|-------------|---------------------------------|---------------------------------|-------|
+| Funnel | Flow & Clear — Monthly Sub | 712527348086 | _TBD_ | single-product monthly |
+| Funnel | Flow & Clear — Quarterly | 712527413622 | _TBD_ | single-product quarterly (−80 SKU) |
+| Funnel | Both — Monthly Sub | 712527479158 | _TBD_ | |
+| Funnel | Both — Quarterly | 712527446390 | _TBD_ | |
+| PDP + Protocol | Starter (−20%) | 711429882230 | _TBD_ | group 98722480502; shared PDP + legacy protocol |
+| PDP + Protocol | Pro (−20%) | 711429947766 | _TBD_ | group 98722546038; shared PDP + legacy protocol |
+| PDP + Protocol | Max (−20%) | 711429980534 | _TBD_ | group 98722578806; shared PDP + legacy protocol |
+
+The PDP (`PLAN_CONFIGURATIONS`) and legacy protocol (`PROTOCOL_VARIANTS`) surfaces reuse the **same three** Loop plans (starter/pro/max), so they collapse to three rows. Confirm Skio replicates the −20% Subscribe & Save discount on the new plans before filling.
+
+---
+
 ## 4. The shot-count ambiguity (read before touching per-shot display)
 
 For a legacy protocol tier, **three different numbers** all claim to be "the shots", and they disagree. For a "pro" Resilience sub:

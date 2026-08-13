@@ -1,8 +1,8 @@
 # Skio Subscription Migration (replace Loop)
 
-**Status:** Scoped, not started
+**Status:** Phase 1 in progress
 **Scale:** C (multi-day, phased)
-**Tracking:** Plan doc only (no Jira yet; each active phase gets scoped more deeply and ticketed at build time)
+**Tracking:** This doc owns scope/rationale; live status in [`skio-migration-status.md`](./skio-migration-status.md) (canonical "where are we"). Each active phase is ticketed at build time.
 **Owner:** Rudh
 **Created:** 2026-08-12
 
