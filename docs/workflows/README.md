@@ -58,6 +58,7 @@ When creating or updating Jira tickets, follow: docs/workflows/08-jira-workflow.
 | 07 | [Testing & Validation](./07-testing-validation.md) | Verifying that code works |
 | 08 | [Jira Workflow](./08-jira-workflow.md) | Creating tickets, writing AC, updating status |
 | 09 | [UX Iteration](./09-ux-iteration.md) | Refining existing pages for conversion, layout, or information hierarchy |
+| 10 | [Figma Decks](./10-figma-decks.md) | Building or editing CONKA slide decks in Figma (visual system, file keys, asset porting) |
 
 ### Typical workflow chains
 
