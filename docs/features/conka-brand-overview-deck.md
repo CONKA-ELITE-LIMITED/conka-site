@@ -83,6 +83,10 @@ Source PDFs: `~/Desktop/DownloadsForClaude/Management Deck 2025.pdf` (16pp, inve
 - **Vision validated:** the bespoke/dispenser thesis is literally their Phase 3 ("Millions of possible combinations, customised for any brain") with a real dispenser photo (portable to slide 11).
 - **Alt lines from current deck:** cover "Elite Brain Performance" / "Clinically validated cognitive support"; close "Validated. Trusted. Ready."
 
+## Build status (v6 — final)
+
+**v6:** cover & close accent extended to "the mind"; full copy review (no spelling/grammar errors); fixed "Research Scientist" case (slide 9) and lowercased cover footer "conka.io" to match close.
+
 ## Build status (v5)
 
 **v5:** slide 2 "Not your mind." set to blue accent; slide 9 Scientific Board rebuilt as larger photos in horizontal rows (3+3+1).
