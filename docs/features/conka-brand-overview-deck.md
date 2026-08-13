@@ -72,6 +72,17 @@ An investor-flavoured **brand overview**, not a fundraise and not a Nike co-bran
 
 **Canva decks:** current `DAHAReigPjY`, older `DAGp4PExxmI` (has investors/advisors/scientific board + logos). Edit URLs are login-gated; export each to PDF into the repo for extraction.
 
+## Extracted from the Canva PDFs (Investor Deck 2025 + current CONKA Deck)
+
+Source PDFs: `~/Desktop/DownloadsForClaude/Management Deck 2025.pdf` (16pp, investor) + `CONKA Deck ().pdf` (11pp, current).
+
+- **Team (applied to slide 9):** Humphrey Bodington (CEO) · Harry Glover (Head of Partnerships) · Rudh Kurup (CTO) · David Giles (Electronics Engineer) · Prof. Karen Hind (Chief Research Officer) · Prof. Paul Chazot (Head of Nutritional Research). Headshots exist in the PDF (portable if wanted).
+- **Investors & Advisors (14):** Steven Bartlett (Flight Fund / DOAC), John Clark (ex-CEO GSK & SiS), Christopher Quinlan (FA Chairman), Sid Sutton (CEO Sale Sharks), Peter Body (ex-CEO MaxiNutrition), Dr James Morehouse (England Rugby), Aaron Smedley (Arc'teryx), Callum Clarke (perf. psych, Saracens), Guido van Garderen (brand strategy), Jack Willis (Stade Toulousain), Shane McGuigan (boxing coach), David Marshall (Suji), Carlo Buckley (CBDFX), Dr Shanker Katekhaye (scientist). B&W headshots + company logos in the PDF.
+- **Logo wall (CONKA Deck p5, "Trusted across sport and academia"):** Cambridge, Durham, Exeter + Everton, Blackburn Rovers, Bayern Munich, Wolves, Leeds, Bristol Bears, WRU, Harlequins, Bath, Edinburgh, Team GB, MoD, McLaren, England Rugby + Informed Sport, IPO, FDA. Good source for slide 10's backer strip (needs logo extraction from the PDF).
+- **Contact (applied to slide 12):** Harry Glover, harryglover@conka.io, +447300298866.
+- **Vision validated:** the bespoke/dispenser thesis is literally their Phase 3 ("Millions of possible combinations, customised for any brain") with a real dispenser photo (portable to slide 11).
+- **Alt lines from current deck:** cover "Elite Brain Performance" / "Clinically validated cognitive support"; close "Validated. Trusted. Ready."
+
 ## Open items
 
 - [ ] Rudh exports both Canva decks to PDF for extraction (board, advisors, investors, logos, founders photo).
