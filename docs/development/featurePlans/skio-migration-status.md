@@ -157,16 +157,20 @@ Nothing here is edited during the migration — they keep serving live Loop + on
 
 ### Selling plans (4 — Subscribe & Save)
 
-Flow and Clear share plans (identical pricing); Both has its own (different discount). Discount given as a fixed amount off so the sub price lands exactly on the current live price; the % is the equivalent for reference. Named by recurring quantity + cadence (unambiguous: 20/60 = single formula, 40/120 = Both). Admin-only names.
+**Build status (14 Aug):** Plan 1 (`20 Shots - Monthly`) was attempted but the save appeared to fail and redirected to the Shopify billing-approval screen to accept Skio's first subscription charge. Rudh emailed **Noah (Skio)** to postpone/correct that billing value (as offered); plan creation resumes once resolved. **Plans 1-4 all still to be (re)created.**
 
-| # | Plan (group) name | Interval | Attaches to | Base | Discount | Sub price |
-|---|-------------------|----------|-------------|------|----------|-----------|
-| 1 | 20 Shots - Monthly | every 1 month | `FLOW-20`+`FLOW-28`, `CLEAR-20`+`CLEAR-28` | £69.98 | −£29.99 (42.86%) | £39.99 |
-| 2 | 60 Shots - Quarterly | every 3 months | `FLOW-60`+`FLOW-80`, `CLEAR-60`+`CLEAR-80` | £189.99 | −£80.00 (42.1%) | £109.99 |
-| 3 | 40 Shots - Monthly | every 1 month | `BOTH-40`+`BOTH-56` | £99.98 | −£24.99 (25%) | £74.99 |
-| 4 | 120 Shots - Quarterly | every 3 months | `BOTH-120`+`BOTH-140` | £279.99 | −£130.00 (46.4%) | £149.99 |
+**Use % discount, not Set price.** Skio warns Set price is ignored under Shopify market prices (international overcharge risk) — use **Percentage off**. Named by recurring quantity + cadence (admin-only). Attach to the **base variant only** at Stage 1 (no bonus variants / swap yet — that's Stage 2).
 
-Each plan attaches to **both** the base and the first-order-bonus variant (same base price → same sub price), so the subscription starts on the bonus variant and stays priced correctly after the swap.
+**Constants on every plan:** Subscribe & Save · Shipping profile = Managed by Shopify · Pricing rule = Percentage off · Advantages always include **Free UK Shipping** + **Full CONKA app access** + the per-plan free-shots line.
+
+| # | Group name | Products (variant, base £) | Customer-facing label | Bill every | % off | Sub price | Free-shots advantage |
+|---|-----------|----------------------------|-----------------------|-----------|-------|-----------|----------------------|
+| 1 | `20 Shots - Monthly` | `FLOW-20` + `CLEAR-20` (£69.98) | Monthly subscription | 1 month | 42.86% | £39.99 | +8 Free Shots on your 1st order |
+| 2 | `60 Shots - Quarterly` | `FLOW-60` + `CLEAR-60` (£189.99) | Quarterly subscription | 3 months | 42.11% | £109.99 | +20 Free Shots on your 1st order |
+| 3 | `40 Shots - Monthly` | `BOTH-40` (£99.98) | Monthly subscription | 1 month | 25.00% | £74.99 | +16 Free Shots on your 1st order |
+| 4 | `120 Shots - Quarterly` | `BOTH-120` (£279.99) | Quarterly subscription | 3 months | 46.43% | £149.99 | +20 Free Shots on your 1st order |
+
+Free-shots = first-order shots − recurring (8, 20, 16, 20). **Verify each % preview lands on the target price** (nudge the last decimal if it rounds off by a penny). Once all 4 exist: drop the Skio API key in `.env.local` → Claude pulls the plan GIDs → Phase 2 code re-point.
 
 ### First-order swap (Skio Journey, after plans + variants exist)
 
@@ -218,6 +222,8 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 ## Change log
 
 Newest first. One line per meaningful change.
+
+- **2026-08-14** — Started building the Skio plans. **Blocker:** creating plan 1 (`20 Shots - Monthly`) redirected to Shopify's billing-approval screen to accept Skio's first subscription charge; Rudh emailed Noah (Skio) to postpone/correct the value before continuing. Chose **Percentage off** over Set price (Set price is ignored under Shopify market prices = international overcharge risk). Locked the full 4-plan build table (group name, variants, customer-facing label, interval, % off, sub price, per-plan free-shots advantage) into the selling-plans section so the build can resume cleanly. 6 base variants + all live quarterly bundlecomposition already done.
 
 - **2026-08-14** — Verified all 6 live quarterly variants (`FLOW/CLEAR-FUNNEL-60`/`-80`, `BOTH-FUNNEL-120`/`-140`) now carry Stage-1 `bundlecomposition` (3×28 single / 3F+2C Both) + corrected weights — **manual quarterly portal work resolved**. Rewrote the Synergy section into a repeatable **process for adding a Synergy-safe variant** (bundlecomposition + blank batch + weight = boxes×2.1kg + one SKU→box doc to Synergy), added the confirmed Stage-1 box mapping, and documented **Stage 2 fulfilment work** (re-point the 20-increment bundles' composition + weight when the physical 20-box goes live). Mirrored the process into the plan doc. Flagged remaining gap: monthly `-20`/`-40` variants still lack bundlecomposition (dormant — confirm).
 - **2026-08-14** — Structured the fulfilment side into **3 stages** (assumptions made explicit): Stage 1 launch on 28-boxes (6 base variants, no swap, bundlecomposition → 28s, mirrors current monthly), Stage 2 when 20-boxes go live (add 6 bonus variants + swap, re-point bundlecomposition to 20-boxes), Stage 3 when a 4/8-shot gift box exists (20-box + first-order gift). Skio plans/variants constant across stages; only `bundlecomposition` changes. **Key dependency = 20-box go-live date.** Corrected Both-quarterly to 3 Flow + 2 Clear (140 shots).
