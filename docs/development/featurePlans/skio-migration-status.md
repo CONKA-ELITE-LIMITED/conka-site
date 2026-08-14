@@ -66,28 +66,89 @@ Applies to NEW subscriptions going forward. Skio migrates EXISTING Loop contract
 
 ## Target Skio build spec (Phase 1 → 2)
 
-The concrete structure to build. **Create new variants; never reprice or delete a variant a live Loop contract sits on.** Loop stays untouched until cutover.
+The concrete structure to build. **Create new variants — never touch a variant Loop uses.** We build the whole Skio structure alongside live Loop, then flip at cutover. This keeps existing subscribers completely safe (no variant they're on is ever edited or repriced), and lets us test the new setup before switching. The cost is new SKUs (told to Synergy once); the payoff is zero risk to live customers and a testable build. (Repricing existing variants was considered and rejected: it can't be tested pre-cutover and depends on Loop's price-sync behaviour.)
 
-**Base-price convention:** the base variant price = the product's **one-time price** (postage baked in, matching how OTP is sold today, so no Shopify shipping reconfig). The Skio plan discounts off that base to the current live sub price. Quarterly base ≈ 3× the monthly product value + one delivery's postage, rounded (£189.99 single / £279.99 Both) so the plan discount is a clean round number. **Subscriptions must ship free** in Shopify (already true for current Loop subs) — confirm the subscription shipping rate is £0 so the baked-in postage isn't charged twice on subs.
+**Base-price convention:** the base variant price = the product's **one-time price** (postage baked in, matching how OTP is sold today, so no Shopify shipping reconfig). Today's Loop sub variants are priced at the DISCOUNTED value because Loop baked the discount into the SKU (Loop itself applies £0 discount); the new variants carry the full one-time value and the Skio plan takes the discount off. Quarterly base ≈ 3× the monthly product value + one delivery's postage, rounded (£189.99 single / £279.99 Both) so the plan discount is a clean round number. **Subscriptions must ship free** in Shopify (already true for current Loop subs).
 
-### Variants (per product)
+### Fulfilment stages & assumptions
 
-Reuse the existing one-time variant as the monthly base/recurring; create the rest fresh at the base price.
+The Skio selling variants and plans stay **constant across all stages** — only the fulfilment metafield (`bundlecomposition`) changes as new box formats arrive. The customer and Skio never see these stages; they are purely a warehouse/box-format evolution.
 
-Live variants confirmed from Shopify Admin 2026-08-13 (read-only app). Monthly OTP/base variants already exist; **the quarterly base/OTP variant is missing for all three products** and must be created. `-S` = new Skio-era variant (suffix TBD); every new variant points at a physical box that already ships, so each needs a Synergy SKU mapping.
+**Assumptions:**
+- Today the only physical unit is the **28-shot Flow/Clear box** (`FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`). Both = combinations of these; **Both-quarterly = 3 Flow + 2 Clear** (140 shots).
+- We *will* procure a physical **20-shot box** — timing **TBD, this gates Stage 2**. Key dependency: when do the 20-boxes go live?
+- We *will* procure a small **gift box (4 or 8 shots)** — timing TBD, gates Stage 3.
 
-| Product | Cadence | Role | Shots | Base price | SKU | Action |
-|---------|---------|------|-------|-----------|-----|--------|
-| Flow / Clear | Monthly | base / recurring / OTP | 20 | £69.98 | `FLOW/CLEAR-FUNNEL-20-OTP` (58153768714614 / 58153768812918) | **Reuse** |
-| Flow / Clear | Monthly | first-order bonus | 28 | £69.98 | `FLOW/CLEAR-FUNNEL-28-S` | **Create** |
-| Flow / Clear | Quarterly | base / recurring / OTP | 60 | £189.99 | `FLOW/CLEAR-FUNNEL-60-OTP` | **Create** |
-| Flow / Clear | Quarterly | first-order bonus | 80 | £189.99 | `FLOW/CLEAR-FUNNEL-80-S` | **Create** |
-| Both | Monthly | base / recurring / OTP | 40 | £99.98 | `BOTH-FUNNEL-40-OTP` (58153768911222) | **Reuse** |
-| Both | Monthly | first-order bonus | 56 | £99.98 | `BOTH-FUNNEL-56-S` | **Create** |
-| Both | Quarterly | base / recurring / OTP | 120 | £279.99 | `BOTH-FUNNEL-120-OTP` | **Create** |
-| Both | Quarterly | first-order bonus | 140 | £279.99 | `BOTH-FUNNEL-140-S` | **Create** |
+**Stage 1 — Launch (now, on 28-box stock):** everyone ships the 28-box (or multiples); first order and recurring are physically identical, so **no swap and no bonus variants — just the 6 base variants**. The free-shots offer is honoured because the box is already the bigger one. `bundlecomposition` → 28-boxes. Interim cost: we ship more than we charge for until smaller boxes exist (8 extra shots/monthly, ~20-24/quarterly). This mirrors what monthly already does today (Loop swap off, shipping the 28 SKU); it also fixes quarterly's missing bundlecomposition so Humphrey stops hand-fixing orders.
 
-**Synergy:** fulfilment (incl. the existing swap) is already live and agreed — nothing physical changes. The one thing to clarify with Synergy is what the new **quarterly OTP SKUs** (`FLOW/CLEAR-FUNNEL-60-OTP`, `BOTH-FUNNEL-120-OTP`) refer to. Legacy `*-FUNNEL-84/-168` variants: ignore.
+**Stage 2 — 20-box live (differentiate first vs recurring):** add the 6 bonus variants + the Skio swap Journey. First order ships the 28 (real bonus), recurring ships the new 20-box. Re-point recurring `bundlecomposition` to the 20-box (clean multiples: 20→`1x`, 60→`3x`, 80→`4x`); first-box variants stay on the 28. Move existing Stage-1 subs onto 20-boxes for recurring. Ends the interim giveaway.
+
+**Stage 3 — Gift box live (clean end state):** recurring and first both use the 20-box; first order additionally gets a small gift box (4/8 shots) attached as a first-order gift line (not a swap). Drop the swap Journey. Cleanest steady state.
+
+### Variants
+
+**Launch (Stage 1) needs only the 6 base variants** (`FLOW-20`, `FLOW-60`, `CLEAR-20`, `CLEAR-60`, `BOTH-40`, `BOTH-120`). The 6 bonus variants (`-28`/`-80`/`-56`/`-140`) + the swap are **Stage 2**. All 12 are listed for completeness.
+
+**Nothing existing is touched — every new variant is a net-new SKU.** No renaming, no repricing any live variant, so one-time and Loop orders during the transition are unaffected, and Synergy gets **one document** with all the new SKUs at once. Existing variants stay as-is until cutover, then get deleted.
+
+**SKU naming:** `PRODUCT-SHOTS` (e.g. `FLOW-28`) — no `FUNNEL`, no type suffix. Shot count is the ID; role (one-time / first box / recurring) is the plan's job.
+
+**New variants to create (12)** — all net-new, at the full one-time price:
+
+| SKU | Shots | Price | Role |
+|-----|-------|-------|------|
+| `FLOW-20` | 20 | £69.98 | Flow monthly recurring + one-time |
+| `FLOW-28` | 28 | £69.98 | Flow monthly first box (+8 free) |
+| `FLOW-60` | 60 | £189.99 | Flow quarterly recurring + one-time |
+| `FLOW-80` | 80 | £189.99 | Flow quarterly first box (+20 free) |
+| `CLEAR-20` | 20 | £69.98 | Clear monthly recurring + one-time |
+| `CLEAR-28` | 28 | £69.98 | Clear monthly first box |
+| `CLEAR-60` | 60 | £189.99 | Clear quarterly recurring + one-time |
+| `CLEAR-80` | 80 | £189.99 | Clear quarterly first box |
+| `BOTH-40` | 40 | £99.98 | Both monthly recurring + one-time |
+| `BOTH-56` | 56 | £99.98 | Both monthly first box |
+| `BOTH-120` | 120 | £279.99 | Both quarterly recurring + one-time |
+| `BOTH-140` | 140 | £279.99 | Both quarterly first box |
+
+**Synergy fulfilment — the real work** (from [`synergy-3pl-integration.md`](./synergy-3pl-integration.md) + live metafield check 14 Aug). The only physical unit is the **28-shot box** (`FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`, `BATCHEXPIRY` set); everything else is a **virtual bundle** defined by a `custom.bundlecomposition` metafield that Synergy explodes into 28-boxes at pick time (e.g. `FLOW-FUNNEL-84` = `3xFLOW-FUNNEL-28`).
+
+**Data check (14 Aug):** the current `-20`/`-20-OTP`/`-60`/`-80` variants have **no bundle metafields** — only the original `-28` (physical) and `-84` (bundle) do. So the newer variants aren't configured for Synergy (confirm they fulfil via Burnside today).
+
+So each of the 12 new variants needs Synergy setup, not just a SKU:
+1. a `custom.bundlecomposition` metafield resolving to physical 28-boxes (replicate the SCRUM-1051 pattern);
+2. inventory-sync setting so the bundle doesn't double-count stock;
+3. SKU synced into Synergy's system.
+**No new physical stock or labels** — everything explodes into the existing 28-boxes.
+
+**Likely box mapping (CONFIRM with ops — shot labels don't map to multiples of 28):**
+
+| New variant | → physical boxes |
+|-------------|------------------|
+| `FLOW-20`, `FLOW-28` (and `CLEAR-*`) | `1× *-FUNNEL-28` |
+| `FLOW-60`, `FLOW-80` (and `CLEAR-*`) | `3× *-FUNNEL-28` |
+| `BOTH-40`, `BOTH-56` | `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28` |
+| `BOTH-120`, `BOTH-140` | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28` (3 Flow + 2 Clear = 140) |
+
+**Open questions for ops (only Rudh/Humphrey can answer):**
+- Do recurring boxes (`-20`/`-60`) ship the **same physical box** as the first-order (`-28`/`-80`)? If yes, the "free shots" is a pricing label with no physical difference and Synergy ignores the swap. If no, a genuinely smaller pack must be accounted for.
+- How do the current `-20`/`-60`/`-80` subs fulfil today (no bundle metafield) — Burnside or a gap?
+
+**Cutover rules (Synergy):** Connector pulls only open+paid+unfulfilled; never remove the `IMPORTSYNERGY` tag; orders can't be edited after Synergy pulls them.
+
+### Existing variants + post-migration action
+
+Nothing here is edited during the migration — they keep serving live Loop + one-time orders until cutover, then get deleted once Skio confirms zero contracts remain. (Flow shown; Clear/Both mirror it.)
+
+| Existing SKU | Shots | Price | What it is | Post-migration action |
+|--------------|-------|-------|------------|-----------------------|
+| `FLOW-FUNNEL-20-OTP` | 20 | £69.98 | one-time | Delete once site points to `FLOW-20` |
+| `FLOW-FUNNEL-20` | 20 | £39.99 | Loop monthly recurring | Delete once migrated |
+| `FLOW-FUNNEL-28` | 28 | £39.99 | Loop monthly first box | Delete once migrated |
+| `FLOW-FUNNEL-60` | 60 | £109.99 | Loop quarterly recurring | Delete once migrated |
+| `FLOW-FUNNEL-80` | 80 | £109.99 | Loop quarterly first box | Delete once migrated |
+| `FLOW-FUNNEL-84` | 84 | £229.99 | old standalone (dead) | Delete anytime |
+
+**Code:** at cutover, `funnelData.ts` `FUNNEL_VARIANTS` points one-time + subscription attach points at the new variant GIDs + Skio plan GIDs (behind the config swap).
 
 ### Selling plans (4 — Subscribe & Save)
 
@@ -95,10 +156,10 @@ Flow and Clear share plans (identical pricing); Both has its own (different disc
 
 | # | Plan (group) name | Interval | Attaches to | Base | Discount | Sub price |
 |---|-------------------|----------|-------------|------|----------|-----------|
-| 1 | 20 Shots - Monthly | every 1 month | Flow+Clear monthly base + bonus (20/28) | £69.98 | −£29.99 (42.86%) | £39.99 |
-| 2 | 60 Shots - Quarterly | every 3 months | Flow+Clear quarterly base + bonus (60/80) | £189.99 | −£80.00 (42.1%) | £109.99 |
-| 3 | 40 Shots - Monthly | every 1 month | Both monthly base + bonus (40/56) | £99.98 | −£24.99 (25%) | £74.99 |
-| 4 | 120 Shots - Quarterly | every 3 months | Both quarterly base + bonus (120/140) | £279.99 | −£130.00 (46.4%) | £149.99 |
+| 1 | 20 Shots - Monthly | every 1 month | `FLOW-20`+`FLOW-28`, `CLEAR-20`+`CLEAR-28` | £69.98 | −£29.99 (42.86%) | £39.99 |
+| 2 | 60 Shots - Quarterly | every 3 months | `FLOW-60`+`FLOW-80`, `CLEAR-60`+`CLEAR-80` | £189.99 | −£80.00 (42.1%) | £109.99 |
+| 3 | 40 Shots - Monthly | every 1 month | `BOTH-40`+`BOTH-56` | £99.98 | −£24.99 (25%) | £74.99 |
+| 4 | 120 Shots - Quarterly | every 3 months | `BOTH-120`+`BOTH-140` | £279.99 | −£130.00 (46.4%) | £149.99 |
 
 Each plan attaches to **both** the base and the first-order-bonus variant (same base price → same sub price), so the subscription starts on the bonus variant and stays priced correctly after the swap.
 
@@ -112,12 +173,18 @@ Price is unchanged by the swap (both variants share the base); the swap only shr
 
 ### Order of operations
 
-1. Skio: create the 4 selling plans (basics + interval + discount). Products can be attached after the variants exist.
-2. Shopify: create the new variants at the base prices above (leave Loop-referenced variants alone).
-3. Skio: attach each plan to its variants.
-4. Skio: build the swap Journeys.
-5. Phase 2: re-point `funnelData.ts` (`FUNNEL_VARIANTS`) to the new variant GIDs + Skio plan GIDs, behind the config swap.
-6. Cutover: Loop billing off, Skio live. Post-cutover: archive the old Loop-era variants.
+**Part 1 — build alongside live Loop (nothing live changes):**
+1. Shopify: create the 12 net-new variants at base price. Hand Synergy the one SKU→box document.
+2. Skio: create the 4 selling plans (interval + discount).
+3. Skio: attach each plan to its new + reused variants (see plans table).
+4. Skio: build the swap Journeys (28→20, 80→60, etc.).
+
+**Part 2 — code:**
+5. Phase 2: point `funnelData.ts` `FUNNEL_VARIANTS` at the new variant GIDs + Skio plan GIDs, behind the config swap. Deployed at cutover.
+
+**Part 3 — cutover (one coordinated moment):**
+6. Skio migrates existing Loop contracts (at their current prices) → Loop billing off → deploy the Part 2 code so new customers go through Skio.
+7. Post-cutover: archive the now-unused Loop-era variants.
 
 ---
 
@@ -147,6 +214,10 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 
 Newest first. One line per meaningful change.
 
+- **2026-08-14** — Structured the fulfilment side into **3 stages** (assumptions made explicit): Stage 1 launch on 28-boxes (6 base variants, no swap, bundlecomposition → 28s, mirrors current monthly), Stage 2 when 20-boxes go live (add 6 bonus variants + swap, re-point bundlecomposition to 20-boxes), Stage 3 when a 4/8-shot gift box exists (20-box + first-order gift). Skio plans/variants constant across stages; only `bundlecomposition` changes. **Key dependency = 20-box go-live date.** Corrected Both-quarterly to 3 Flow + 2 Clear (140 shots).
+- **2026-08-14** — Read the Synergy 3PL doc + checked live variant metafields. Key finding: only the 28-shot box is physical; other variants are `bundlecomposition` metafield bundles, and the current `-20`/`-60`/`-80` variants have **no** bundle metafields (not Synergy-configured). So each new variant needs a bundle metafield → 28-boxes (SCRUM-1051 pattern), inventory-sync setting, and SKU sync — not just "a SKU". No new physical stock/labels. Two ops questions flagged (does recurring ship the same box as first order; how do current subs fulfil today). Synergy section rewritten.
+- **2026-08-14** — **12 net-new variants, nothing existing touched** (3PL-safe): renaming an existing SKU would disrupt Synergy's mapping for live transition-period orders, so `FLOW-20`/`CLEAR-20`/`BOTH-40` are created fresh too (not renamed). All 12 new SKUs handed to Synergy in one SKU→box document before cutover; every existing variant untouched until cutover, then deleted post-migration. Clean SKU naming `PRODUCT-SHOTS` (no `FUNNEL`, no type suffix). Added existing-variants table with post-migration delete actions.
+- **2026-08-14** — **Final variant strategy: create 9 new variants, never touch a variant Loop uses** (safety over SKU-count). Build the whole Skio structure alongside live Loop, test, then flip at cutover; existing subscribers untouched until Skio migrates them. Reprice-at-cutover was considered and rejected (untestable pre-cutover, depends on Loop price-sync). New-variant list + reused-variant list + 3-part order of operations locked in the build spec. Supersedes the 13 Aug reprice entry.
 - **2026-08-13** — Pulled all 3 funnel products' live variants from Shopify Admin (read-only). Confirmed monthly OTP/base variants exist, **quarterly base/OTP variant missing for all three** → must create. Renamed plans to quantity + cadence (`20/40/60/120 Shots - Monthly/Quarterly`). Set quarterly base £189.99/£279.99 with clean −£80/−£130 discounts. Added SKU suggestions + Synergy mapping note (new OTP SKUs = same physical box as existing sub variants; notify Synergy before go-live). `*-FUNNEL-84/-168` confirmed legacy (old standalone-28 era), ignore.
 - **2026-08-13** — Skio approach validated by Skio support (base-price + selling-plan discount, per-interval variants, shared plans by equal %, Journey swap). Locked the [target build spec](#target-skio-build-spec-phase-1--2): base = one-time price (postage baked in), quarterly base = 3× monthly, create-not-reprice variants, 4 Subscribe & Save plans (Flow/Clear shared, Both separate) with exact fixed-amount discounts, swap via Journey. Decided to keep current live prices (4 plans, not standardised to 2).
 

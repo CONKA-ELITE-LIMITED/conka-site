@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-14** | Skio migration status doc: 3-stage fulfilment plan (28-box launch, 20-box swap, gift-box end state), Synergy bundlecomposition requirement, net-new variant strategy
 - **2026-08-13** | Skio migration Phase 1 scaffold: env getters, skio.ts client + Loop-to-Skio plan mapping, canonical status doc, SKU reference mapping
 - **2026-08-12** | Home hero V3: centred mobile copy, staggered oversized title, section 2/3 background flip, badge removed
 - **2026-08-12** | Home hero: new image-led HomeHeroV3 (asset-top on mobile, asset-left/copy-right on desktop) replacing the video hero; server component, LCP image priority
