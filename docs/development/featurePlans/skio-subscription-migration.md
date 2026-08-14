@@ -22,6 +22,15 @@ Skio installs as a Shopify app and uses **Shopify Subscription Contracts nativel
 
 **Design language:** Simple DTC for the `/account` page frame. The portal itself is themed inside the Skio dashboard (our CSS cannot reach into the iframe).
 
+## Fulfilment (Synergy) — critical
+
+Subscription variants must be set up as **Synergy virtual bundles**, or they reach the 3PL as plain SKUs that get hand-fixed on every order. Full process + the staged box model live in [`skio-migration-status.md`](./skio-migration-status.md) (Synergy fulfilment section). In short:
+
+- The only **physical** unit is the **28-shot box** (`FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`, `BATCHEXPIRY` set); every subscription variant is a **virtual bundle** via a `custom.bundlecomposition` metafield (`NxSKU+NxSKU`) that Synergy explodes into 28-boxes at pick time.
+- **Process per new variant:** SKU `PRODUCT-SHOTS`, base price; set `bundlecomposition` (batch blank, invsync blank); weight = boxes × 2.1 kg; hand Synergy the SKU → box mapping in one document; never delete the physical `-28`.
+- **Stage model** (fulfilment-gated): **Stage 1** ships everything in 28-boxes, same for first + recurring (quarterly = 3 boxes); **Stage 2** (when the physical 20-box exists) re-points the recurring "20-increment" bundles' `bundlecomposition` + weight to the 20-box; **Stage 3** adds a first-order gift box. Skio plans/variants stay constant across stages.
+- Adding `bundlecomposition` to the live quarterly variants (done 14 Aug) already fixed the manual quarterly work, independent of the Skio cutover.
+
 ## Migration model (confirmed with user)
 
 Big-bang cutover coordinated with Skio's team:

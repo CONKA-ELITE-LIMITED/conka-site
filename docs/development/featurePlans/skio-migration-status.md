@@ -110,28 +110,33 @@ The Skio selling variants and plans stay **constant across all stages** — only
 | `BOTH-120` | 120 | £279.99 | Both quarterly recurring + one-time |
 | `BOTH-140` | 140 | £279.99 | Both quarterly first box |
 
-**Synergy fulfilment — the real work** (from [`synergy-3pl-integration.md`](./synergy-3pl-integration.md) + live metafield check 14 Aug). The only physical unit is the **28-shot box** (`FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`, `BATCHEXPIRY` set); everything else is a **virtual bundle** defined by a `custom.bundlecomposition` metafield that Synergy explodes into 28-boxes at pick time (e.g. `FLOW-FUNNEL-84` = `3xFLOW-FUNNEL-28`).
+### Synergy fulfilment — process for any new/changed subscription variant
 
-**Data check (14 Aug):** the current `-20`/`-20-OTP`/`-60`/`-80` variants have **no bundle metafields** — only the original `-28` (physical) and `-84` (bundle) do. So the newer variants aren't configured for Synergy (confirm they fulfil via Burnside today).
+The only physical unit is the **28-shot box** (`FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`, `BATCHEXPIRY` set). Every other variant is a **virtual bundle** defined by a `custom.bundlecomposition` metafield that Synergy explodes into 28-boxes at pick time (Synergy confirmed the single-line format `NxSKU+NxSKU` explodes into component lines). **A variant without this metafield reaches Synergy as a plain SKU and must be hand-fixed on every order — that was the quarterly pain.**
 
-So each of the 12 new variants needs Synergy setup, not just a SKU:
-1. a `custom.bundlecomposition` metafield resolving to physical 28-boxes (replicate the SCRUM-1051 pattern);
-2. inventory-sync setting so the bundle doesn't double-count stock;
-3. SKU synced into Synergy's system.
-**No new physical stock or labels** — everything explodes into the existing 28-boxes.
+**Process — adding (or fixing) a Synergy-safe variant:**
+1. Create the variant: SKU `PRODUCT-SHOTS` (e.g. `FLOW-60`), price = base one-time price.
+2. Set the metafields:
+   - `custom.bundlecomposition` = the physical boxes, single-line `NxSKU+NxSKU` (e.g. `3xFLOW-FUNNEL-28`).
+   - `custom.batchexpiry` = **blank** (only physical boxes carry batch/expiry; a bundle has none).
+   - `custom.disableinvsync` = match the working bundles (blank, per `-84`/`-56`).
+3. Weight = (number of 28-boxes) × 2.1 kg (1→2.1, 2→4.2, 3→6.3, 5→10.5).
+4. **Never delete** `FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28` — every bundle points at them.
+5. Give Synergy the new SKU → box mapping (one document). They explode via the metafield automatically; no manual portal work.
+6. Verify on a live/test order it interfaces exploded into components (Synergy's KIT_ID / LINE_ID feed).
 
-**Likely box mapping (CONFIRM with ops — shot labels don't map to multiples of 28):**
+**Stage 1 box mapping (confirmed 14 Aug — no first/recurring differentiation; everything in 28-boxes):**
 
-| New variant | → physical boxes |
-|-------------|------------------|
-| `FLOW-20`, `FLOW-28` (and `CLEAR-*`) | `1× *-FUNNEL-28` |
-| `FLOW-60`, `FLOW-80` (and `CLEAR-*`) | `3× *-FUNNEL-28` |
-| `BOTH-40`, `BOTH-56` | `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28` |
-| `BOTH-120`, `BOTH-140` | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28` (3 Flow + 2 Clear = 140) |
+| Variant(s) | `bundlecomposition` | boxes | weight |
+|------------|---------------------|-------|--------|
+| `FLOW-20`/`CLEAR-20` (+ `-28`) | `1x*-FUNNEL-28` | 1 | 2.1kg |
+| `FLOW-60`/`CLEAR-60` (+ `-80`) | `3x*-FUNNEL-28` | 3 | 6.3kg |
+| `BOTH-40` (+ `-56`) | `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28` | 2 | 4.2kg |
+| `BOTH-120` (+ `-140`) | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28` | 5 | 10.5kg |
 
-**Open questions for ops (only Rudh/Humphrey can answer):**
-- Do recurring boxes (`-20`/`-60`) ship the **same physical box** as the first-order (`-28`/`-80`)? If yes, the "free shots" is a pricing label with no physical difference and Synergy ignores the swap. If no, a genuinely smaller pack must be accounted for.
-- How do the current `-20`/`-60`/`-80` subs fulfil today (no bundle metafield) — Burnside or a gap?
+**Live quarterly fix DONE (verified 14 Aug):** the existing active quarterly variants (`FLOW/CLEAR-FUNNEL-60`/`-80`, `BOTH-FUNNEL-120`/`-140`) now carry the Stage-1 `bundlecomposition` + corrected weights above — the manual quarterly portal work is resolved, independent of the Skio cutover. **Remaining gap:** the monthly `-20`/`-40` and their `-OTP` variants still have no `bundlecomposition` (and wrong weights 1.5/3.0kg). Dormant if monthly routes to the physical `-28`/`-56`, but set them for correctness: `FLOW-FUNNEL-20`/`-20-OTP` → `1xFLOW-FUNNEL-28` (2.1kg); `CLEAR-FUNNEL-20`/`-20-OTP` → `1xCLEAR-FUNNEL-28` (2.1kg); `BOTH-FUNNEL-40`/`-40-OTP` → `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28` (4.2kg). Also confirm no legacy monthly sub still renews on them.
+
+**Stage 2 fulfilment work (when the 20-box goes live):** the physical 20-shot box becomes a new physical SKU (`BATCHEXPIRY`, stocked at Synergy, EAN/label). Then re-point and re-weight the recurring "20-increment" bundles: update each recurring variant's `bundlecomposition` to the 20-box (clean multiples — `1x`/`3x`/…) and its weight to (count × 20-box weight). Selling variants and Skio plans don't change; only the fulfilment metafields + weights.
 
 **Cutover rules (Synergy):** Connector pulls only open+paid+unfulfilled; never remove the `IMPORTSYNERGY` tag; orders can't be edited after Synergy pulls them.
 
@@ -214,6 +219,7 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 
 Newest first. One line per meaningful change.
 
+- **2026-08-14** — Verified all 6 live quarterly variants (`FLOW/CLEAR-FUNNEL-60`/`-80`, `BOTH-FUNNEL-120`/`-140`) now carry Stage-1 `bundlecomposition` (3×28 single / 3F+2C Both) + corrected weights — **manual quarterly portal work resolved**. Rewrote the Synergy section into a repeatable **process for adding a Synergy-safe variant** (bundlecomposition + blank batch + weight = boxes×2.1kg + one SKU→box doc to Synergy), added the confirmed Stage-1 box mapping, and documented **Stage 2 fulfilment work** (re-point the 20-increment bundles' composition + weight when the physical 20-box goes live). Mirrored the process into the plan doc. Flagged remaining gap: monthly `-20`/`-40` variants still lack bundlecomposition (dormant — confirm).
 - **2026-08-14** — Structured the fulfilment side into **3 stages** (assumptions made explicit): Stage 1 launch on 28-boxes (6 base variants, no swap, bundlecomposition → 28s, mirrors current monthly), Stage 2 when 20-boxes go live (add 6 bonus variants + swap, re-point bundlecomposition to 20-boxes), Stage 3 when a 4/8-shot gift box exists (20-box + first-order gift). Skio plans/variants constant across stages; only `bundlecomposition` changes. **Key dependency = 20-box go-live date.** Corrected Both-quarterly to 3 Flow + 2 Clear (140 shots).
 - **2026-08-14** — Read the Synergy 3PL doc + checked live variant metafields. Key finding: only the 28-shot box is physical; other variants are `bundlecomposition` metafield bundles, and the current `-20`/`-60`/`-80` variants have **no** bundle metafields (not Synergy-configured). So each new variant needs a bundle metafield → 28-boxes (SCRUM-1051 pattern), inventory-sync setting, and SKU sync — not just "a SKU". No new physical stock/labels. Two ops questions flagged (does recurring ship the same box as first order; how do current subs fulfil today). Synergy section rewritten.
 - **2026-08-14** — **12 net-new variants, nothing existing touched** (3PL-safe): renaming an existing SKU would disrupt Synergy's mapping for live transition-period orders, so `FLOW-20`/`CLEAR-20`/`BOTH-40` are created fresh too (not renamed). All 12 new SKUs handed to Synergy in one SKU→box document before cutover; every existing variant untouched until cutover, then deleted post-migration. Clean SKU naming `PRODUCT-SHOTS` (no `FUNNEL`, no type suffix). Added existing-variants table with post-migration delete actions.
