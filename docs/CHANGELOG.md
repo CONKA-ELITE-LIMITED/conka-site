@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-17** | Skio migration paused (Skio billing approval blocker); status doc refreshed to a clean resume point
 - **2026-08-14** | Skio plan build: full 4-plan table (%, labels, advantages) + billing-approval blocker noted, resume-ready
 - **2026-08-14** | Skio docs: Synergy bundle process (add/fix variants), Stage-1 box mapping, Stage-2 20-box re-point, live quarterly fix verified
 - **2026-08-14** | Skio migration status doc: 3-stage fulfilment plan (28-box launch, 20-box swap, gift-box end state), Synergy bundlecomposition requirement, net-new variant strategy

@@ -13,7 +13,7 @@
 
 | Phase | Description | Status | Ticket |
 |-------|-------------|--------|--------|
-| 1 | Skio setup + selling-plan mapping | 🟡 In progress (code scaffold done; Skio dashboard + GIDs pending) | SCRUM-1210 |
+| 1 | Skio setup + selling-plan mapping | 🔴 Blocked — Skio account billing approval (variants + bundlecomposition done; plans pending) | SCRUM-1210 |
 | 2 | Re-point purchase surfaces (PDP → funnel → rest) | ⚪ Not started | — |
 | 3 | Embedded Skio customer portal (iframe) | ⚪ Not started | — |
 | 4 | Cutover + Loop decommission | ⚪ Not started | — |
@@ -25,12 +25,19 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 
 ## Current focus & next action
 
-**Phase 1.** Code scaffold is built and reviewed. The remaining Phase 1 work is dashboard-side and depends on Rudh:
+**⏸ PAUSED (17 Aug) — blocked on Skio account billing approval.** Creating the first selling plan redirected to Shopify's billing-approval screen (accept Skio's first subscription charge). Rudh emailed **Noah (Skio)** to postpone/correct that value. Nothing further can be reliably built until the Skio account is active: Phase 2 needs the plan GIDs; the Phase 3 portal likely needs an active account too. Decided to pause rather than build code that hits the same wall.
 
-1. **(Rudh)** Create the Skio selling plans (see [Plan-GID mapping](#plan-gid-mapping-tracker) below for what to recreate).
-2. **(Rudh)** Hand back the new Skio selling-plan GIDs per row.
-3. **(Rudh)** Set `SKIO_API_TOKEN` + `SKIO_STORE_ID_HASH` in Vercel env + `.env.local`.
-4. **(Claude)** Populate `LOOP_TO_SKIO_SELLING_PLAN` in `app/lib/skio.ts` + the doc table; verify the cart label with a real Skio plan; close SCRUM-1210.
+**Done and safe (no rework needed):**
+- 6 Stage-1 base variants created + verified — `FLOW-20`/`CLEAR-20`, `FLOW-60`/`CLEAR-60`, `BOTH-40`, `BOTH-120` — correct `bundlecomposition` + weights.
+- All live quarterly variants' `bundlecomposition` fixed → manual quarterly portal work resolved.
+- Phase 1 code scaffold (`env.ts` getters, `app/lib/skio.ts`) committed on `feature/skio-integration` (5 commits, unpushed).
+
+**Resume when unblocked (in order):**
+1. **(Rudh)** Finish creating the 4 Skio plans from the [Selling plans build table](#selling-plans-4--subscribe--save) (Percentage off; base variant only).
+2. **(Rudh)** Set `SKIO_API_TOKEN` + `SKIO_STORE_ID_HASH` in `.env.local` (+ Vercel).
+3. **(Claude)** Pull the plan GIDs via the Skio API → populate `LOOP_TO_SKIO_SELLING_PLAN` in `app/lib/skio.ts` + the mapping table.
+4. **(Claude)** Phase 2: discovery sweep of all subscribe attach points → re-point `funnelData.ts` to the new variant GIDs + Skio plan GIDs, behind a config flag.
+5. **(Claude)** Phase 3: portal scaffold (signed iframe route + `/account` embed + CSP `frame-src`) — needs `STORE_ID_HASH` + confirmed portal version (cpv3 vs v2).
 
 ---
 
@@ -38,14 +45,16 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 
 | # | Item | Owner | Notes |
 |---|------|-------|-------|
-| 1 | New Skio selling-plan GIDs | Rudh | The one hard input; gates the mapping + cart-label AC. |
-| 2 | **Offer-architecture decision (see below)** — Option A price policy vs Option B variant-swap Journey | Rudh (marketing call) | **Blocks the shape of the Skio plans.** Decide before building. |
-| 4 | Portal version provisioned: **cpv3 vs v2** | Rudh | Feeds Phase 3 iframe URL. Record on SCRUM-1210. |
-| 5 | Does Skio's portal write address edits back to Shopify? | Rudh / Skio onboarding | Gates dropping the Loop per-contract address-mirror at Phase 4. |
+| 1 | **Skio account billing approval** (blocks everything) | Rudh / Noah (Skio) | First-plan save redirected to Shopify billing approval for Skio's first charge; emailed Noah to postpone/correct the value. Until active, plans can't be created and the portal likely won't fully work. |
+| 2 | New Skio selling-plan GIDs | Rudh | Gates the mapping + Phase 2 re-point. Comes free once the 4 plans are created (Claude pulls them via API). |
+| 3 | Portal version provisioned: **cpv3 vs v2** | Rudh | Feeds Phase 3 iframe URL. |
+| 4 | Does Skio's portal write address edits back to Shopify? | Rudh / Skio onboarding | Gates dropping the Loop per-contract address-mirror at Phase 4. |
 
 **Resolved:**
-- ~~#3 Confirm funnel Loop plans carry 0% adjustment~~ — **CONFIRMED 13 Aug** from the Loop UI: plan #712527348086 shows "£0.00 discount". The funnel saving is entirely SKU-priced; Loop applies no discount. The "Save 25%" text is just the plan description field (and is stale/inconsistent with the real ~43%).
-- ~~#2-old First-order swap feasibility~~ — Skio **can** do it, two ways (see decision below); superseded by the architecture decision.
+- ~~Offer-architecture decision~~ — settled: **3-stage fulfilment model** (28-box launch → 20-box swap → gift box); Skio plans use **Percentage off**; net-new variants, nothing existing touched.
+- ~~Confirm funnel Loop plans carry 0% adjustment~~ — CONFIRMED 13 Aug (Loop UI shows £0.00 discount; saving is SKU-priced).
+- ~~First-order swap feasibility~~ — Skio supports it (Journey); deferred to Stage 2.
+- ~~Box mapping / how current subs fulfil~~ — confirmed: 28-box physical unit, quarterly = 3 boxes at Stage 1, live quarterly `bundlecomposition` now set.
 
 ---
 
@@ -222,6 +231,8 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 ## Change log
 
 Newest first. One line per meaningful change.
+
+- **2026-08-17** — **Paused, blocked on Skio account billing approval** (awaiting Noah). Refreshed the top of the doc to a clean pickup point: status-at-a-glance Phase 1 → blocked, current-focus rewritten with done/safe list + ordered resume steps, blockers table led by the billing gate (stale offer-architecture decision cleared as resolved). No code/config lost; 6 base variants + live quarterly bundlecomposition remain done.
 
 - **2026-08-14** — Started building the Skio plans. **Blocker:** creating plan 1 (`20 Shots - Monthly`) redirected to Shopify's billing-approval screen to accept Skio's first subscription charge; Rudh emailed Noah (Skio) to postpone/correct the value before continuing. Chose **Percentage off** over Set price (Set price is ignored under Shopify market prices = international overcharge risk). Locked the full 4-plan build table (group name, variants, customer-facing label, interval, % off, sub price, per-plan free-shots advantage) into the selling-plans section so the build can resume cleanly. 6 base variants + all live quarterly bundlecomposition already done.
 
