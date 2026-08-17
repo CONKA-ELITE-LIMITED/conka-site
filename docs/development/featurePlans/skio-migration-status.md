@@ -58,18 +58,18 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 
 ---
 
-## Offer-architecture decision (open — blocks plan build)
+## Offer-architecture decision — RESOLVED
 
-Skio's AI + best-practice guidance (13 Aug) confirmed our inherited Loop setup is non-ideal: we hand-manage separately-priced SKUs + a first-order SKU swap, with the plan at £0 discount. Skio's recommended shape is **one variant per product, subscription saving applied by the selling plan** (native, analytics-visible), with the first-order bonus done natively. This turns Phase 1 from "recreate Loop's 7 plans like-for-like" into "build the clean Skio model," and simplifies Phase 2 (the "recurring SKU GID not in codebase" rabbit hole disappears under Option A).
+**Decision: keep the free-shots offer (Option B), delivered via the [3-stage fulfilment model](#fulfilment-stages--assumptions).** Skio plans apply **Percentage off** on **net-new base variants** (nothing existing touched). Option A (a "cheaper first box" price policy) was rejected because the "+N free shots on your 1st order" offer is a core conversion driver Rudh is keeping.
 
-Our current bonus is a **quantity** bonus (28 shots first, 20 recurring, flat £39.99) — Skio's price-policy example is a **price** bonus. So there is a fork:
+How the free-shots bonus is delivered per stage:
+- **Stage 1 (now):** everyone ships the bigger 28-box (first + recurring the same) — the bonus is baked in, no swap needed.
+- **Stage 2 (20-box live):** first order ships the bigger box, recurring switches to the smaller 20-box via a Skio Journey — the true "extra shots on first order" mechanic.
+- **Stage 3 (gift box live):** recurring is the 20-box; first order gets a small gift box added.
 
-- **Option A — Recurring Price Policy (recommended).** One variant per product+cadence. Base price = one-time price; selling plan carries the recurring discount; first order gets a bigger discount (cheaper first box) that Skio auto-steps down after order 1. Kills SKU sprawl + swap entirely. **Changes the offer** from "extra shots" to "cheaper first box."
-- **Option B — Journey variant swap.** Keeps "20 + 8 free" exactly (28-shot variant first, Skio Journey swaps to 20-shot after order 1). Preserves the current offer but keeps two variants + an automation to maintain.
+Applies to NEW subscriptions. Skio migrates EXISTING Loop contracts as-is at cutover, so this does not disturb current subscribers.
 
-**Recommendation:** Option A unless "8 free shots on first box" is a tested conversion winner. Engineering/maintainability favours A clearly; the offer change is the only reason to hold. **Decision owner: Rudh (marketing).**
-
-Applies to NEW subscriptions going forward. Skio migrates EXISTING Loop contracts as-is at cutover, so this redesign does not disturb current subscribers.
+_Background (why the fork existed):_ Skio's inherited-Loop critique was that we hand-managed separately-priced SKUs + a £0-discount plan. The clean shape is one variant per product with the plan applying the discount — which we adopted (net-new variants + Percentage off). The only fork was whether to keep the quantity bonus (Option B, chosen) or switch to a price bonus (Option A, rejected).
 
 ---
 
