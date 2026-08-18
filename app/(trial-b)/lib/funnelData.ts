@@ -9,6 +9,7 @@
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";
+import { subscriptionsUseSkio } from "@/app/lib/subscriptionsFlag";
 
 // ============================================
 // TYPES
@@ -343,11 +344,6 @@ const SKIO_SUBSCRIPTION_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, Fu
     },
   },
 };
-
-/** True when the storefront should attach Skio subscriptions instead of Loop (see main file). */
-function subscriptionsUseSkio(): boolean {
-  return process.env.NEXT_PUBLIC_SKIO_ENABLED === "true";
-}
 
 /** The variant table the storefront selects from right now (flag-gated). */
 function activeOfferVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {

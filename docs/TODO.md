@@ -5,6 +5,21 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Subscriptions / Skio
+
+### Consolidate `/account` onto the Skio portal once cutover is done
+
+**Status:** Deferred (do after Skio is fully wired up / at Phase 4 cutover)
+**Files:** `app/account/page.tsx`, `app/account/manage/*`, `app/lib/subscriptionsFlag.ts`
+
+**What:** With Skio on, `/account/manage` (the embedded Skio portal) is the whole account experience, and the header account icon already points there. But `/account` itself still renders the interim "Manage subscription" button (plus the Loop list when the flag is off). Once Skio is fully live and Loop is decommissioned, `/account` should **redirect to `/account/manage`** (when `NEXT_PUBLIC_SKIO_ENABLED` is on) so there is a single account surface and no redundant hop, catching anyone who lands on `/account` directly or via an old link/email.
+
+**What unblocks it:** the Phase 4 cutover (flag flipped on in production, Loop removed). Doing it before cutover would break the live Loop portal that `/account` still serves when the flag is off.
+
+**Why deferred:** left as a harmless fallback for now (Rudh, 18 Aug) so `/account` keeps working for Loop until everything is wired up. See `docs/development/featurePlans/skio-subscription-migration.md` (Phase 3/4) and `skio-migration-status.md`.
+
+---
+
 ## Analytics / Attribution
 
 ### Listicle `persona:` order tags aren't writing (no `write_orders` on live token)

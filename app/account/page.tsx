@@ -10,6 +10,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useSubscriptions, Subscription } from "@/app/hooks/useSubscriptions";
 import { SubscriptionListCard } from "@/app/components/subscriptions/SubscriptionListCard";
 import { ReactivateModal } from "@/app/components/subscriptions/ReactivateModal";
+import { subscriptionsUseSkio } from "@/app/lib/subscriptionsFlag";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -28,8 +29,19 @@ export default function AccountPage() {
     if (!loading && !isAuthenticated) router.push("/account/login");
   }, [loading, isAuthenticated, router]);
 
+  // Skio cutover: the Skio portal is the whole account experience, so send
+  // /account straight to /account/manage (also catches the post-login landing).
+  // Loop keeps the list below when the flag is off.
   useEffect(() => {
-    if (isAuthenticated && customer) fetchSubscriptions();
+    if (!loading && isAuthenticated && subscriptionsUseSkio()) {
+      router.replace("/account/manage");
+    }
+  }, [loading, isAuthenticated, router]);
+
+  useEffect(() => {
+    // When Skio is on, subscriptions are managed at /account/manage, so skip the
+    // Loop fetch (its list is not rendered here).
+    if (isAuthenticated && customer && !subscriptionsUseSkio()) fetchSubscriptions();
   }, [isAuthenticated, customer, fetchSubscriptions]);
 
   // Two buckets only: Active (active) and Inactive (paused, cancelled, expired).
@@ -65,6 +77,16 @@ export default function AccountPage() {
   }
 
   if (!isAuthenticated || !customer) return null;
+
+  // Redirecting to the Skio portal (effect above) — show a spinner, never the
+  // interim Loop list, so there is no flash of the old account page.
+  if (subscriptionsUseSkio()) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const isInitialLoading = subsLoading && subscriptions.length === 0;
 

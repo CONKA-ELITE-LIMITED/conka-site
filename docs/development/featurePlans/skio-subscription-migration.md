@@ -104,22 +104,27 @@ Swap every subscribe attach point from Loop plan IDs to Skio plan IDs. Order: **
 
 ### Phase 3 - Embedded Skio customer portal (iframe)
 
-Replace the self-built subscriptions UI with Skio's hosted portal via a server-signed magic link.
+Embed Skio's hosted portal via a server-signed magic link, at a **new route** so the live Loop portal is untouched during the build. Ticket: **SCRUM-1221**. Design language: Simple DTC for the `/account/manage` frame (portal interior themed in the Skio dashboard, our CSS cannot reach it).
 
-1. **[Server] Signed iframe-src route**
-   - What: route handler reads the authenticated Shopify customer id/email (via the Customer Account API session), computes `hash = md5(customerId + STORE_ID_HASH)`, and returns/injects the `https://cpv3.skio.com/a/account/shopify-login` src with the required query params (`hostname`, `shop`, `email`, `id`, `totalSpent`, `hash`). `STORE_ID_HASH` stays server-side only, never exposed to the client.
-   - Dependencies: Phase 1 secrets.
-   - Complexity: Medium.
-   - Files: new `app/api/auth/skio-portal/route.ts`, `app/context/AuthContext.tsx`.
-2. **[Frontend] Embed in /account**
-   - What: replace the subscriptions UI with the iframe inside a Simple DTC shell; handle loading / empty / signed-out states, resize, and mobile layout.
-   - Dependencies: task 1.
-   - Complexity: Medium.
-   - Files: `app/account/subscriptions/*`.
-3. **[Infra] CSP + frame headers**
-   - What: add `frame-src https://cpv3.skio.com` to our CSP; confirm Skio's `frame-ancestors` / `X-Frame-Options` permit our domain (verify in a preview deploy). Theme the portal in the Skio dashboard.
+**Pragmatic decision (approved 18 Aug):** build the Skio portal at a **new URL `/account/manage`** rather than gating the body of `/account`. `/account` and the whole Loop portal (`app/account/page.tsx` list + `app/account/subscriptions/[id]` detail + `app/components/subscriptions/*`) stay exactly as-is. The `NEXT_PUBLIC_SKIO_ENABLED` flag only controls the **entry point**: when on, `/account`'s "Manage Subscriptions" link points to `/account/manage`; when off, `/account` is unchanged. This mirrors Skio's own "embed a Manage Subscriptions link" guidance and keeps the switch reversible.
+
+1. **[Infra] Shared flag helper + CSP**
+   - What: extract the inline-duplicated `subscriptionsUseSkio()` (in `app/lib/funnelData.ts` + `app/(trial-b)/lib/funnelData.ts`) into one shared `NEXT_PUBLIC_SKIO_ENABLED` helper. Add a `Content-Security-Policy` header with `frame-src https://cpv3.skio.com` to the `securityHeaders` array in `next.config.ts` (no CSP exists today; our own `X-Frame-Options: DENY` is about others embedding us and does not block us embedding Skio).
    - Complexity: Small.
-   - Files: `next.config.ts` / headers config.
+   - Files: new `app/lib/subscriptionsFlag.ts`, `next.config.ts`, the two `funnelData.ts`.
+2. **[Server] Signed iframe-src route**
+   - What: `app/api/auth/skio-portal/route.ts` reads the authenticated customer from the session cookies (as `app/api/auth/session/route.ts` does), parses the **numeric** id out of the Shopify GID, computes `hash = md5(customerId + SKIO_STORE_ID_HASH)`, and returns the `https://cpv3.skio.com/a/account/login` src with `hostname`, `shop`, `email`, `id`, `totalSpent`, `hash`. `totalSpent` is not in our session and not part of the hash: send `0` (verify in the spike). `SKIO_STORE_ID_HASH` stays server-side only.
+   - Dependencies: task 1, Phase 1 secrets (`env.skioStoreIdHash`).
+   - Complexity: Medium.
+   - Files: new `app/api/auth/skio-portal/route.ts`, `app/lib/env.ts`.
+3. **[Frontend] New `/account/manage` route + entry point**
+   - What: new `app/account/manage/page.tsx` renders the Skio iframe in a Simple DTC shell (loading / signed-out / error states, mobile height, postMessage resize). Flag-gate the entry point in `app/account/page.tsx`: link "Manage Subscriptions" to `/account/manage` when the flag is on, else keep the current Loop list. `/account/manage` exists unconditionally (a new page harms nothing) and is directly testable when logged in.
+   - Dependencies: task 2.
+   - Complexity: Medium.
+   - Files: new `app/account/manage/page.tsx` (+ client island), `app/account/page.tsx` (entry link only).
+4. **[Verify] Preview spike** (gating)
+   - What: on a Vercel preview with the flag on and a REAL Customer Account login (mock auth gives a non-numeric id and cannot drive the portal), confirm the exact URL (`/a/account/login` vs `/a/account/shopify-login`), that the hash auto-logs in, that Skio's `frame-ancestors` allow our domain, and postMessage resize. Fix the URL/param format if the spike disproves the assumptions.
+   - Complexity: Small but blocking sign-off.
 
 ### Phase 4 - Cutover + Loop decommission
 
@@ -233,5 +238,6 @@ After Skio confirms zero remaining protocol contracts, retire `app/lib/legacy/pr
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
 | SCRUM-1210 | [Shopify & Subscriptions] Skio Phase 1: install app, create selling plans, capture plan mapping + secrets scaffold | 1 | To Do |
+| SCRUM-1221 | [Shopify & Subscriptions] Skio Phase 3: embedded customer portal (iframe) at /account/manage | 3 | To Do |
 
 Sprint 29, epic SCRUM-768 (Shopify & Subscriptions). Phases 2-4 are scoped more deeply and ticketed at build time; Phase 5 is Future/ops-gated.

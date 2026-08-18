@@ -9,6 +9,7 @@
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "./productData";
+import { subscriptionsUseSkio } from "./subscriptionsFlag";
 
 // ============================================
 // TYPES
@@ -326,19 +327,11 @@ const SKIO_SUBSCRIPTION_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, Fu
   },
 };
 
-/**
- * True when the storefront should attach Skio subscriptions instead of Loop.
- *
- * Build-time flag (NEXT_PUBLIC_ so the client-bundled subscribe surfaces read it).
- * Default/false keeps Loop fully live; flip to "true" + redeploy at the Phase 4
- * cutover. Emergency rollback: Vercel Instant Rollback to the pre-cutover deploy.
- * Only the FORWARD selection (getOfferVariant / isVariantReady) switches — the
- * reverse lookups resolve BOTH tables so in-flight Loop lines still render, and
- * the Loop portal-swap accessors stay on Loop until Phase 4.
- */
-function subscriptionsUseSkio(): boolean {
-  return process.env.NEXT_PUBLIC_SKIO_ENABLED === "true";
-}
+// Loop -> Skio cutover flag lives in app/lib/subscriptionsFlag.ts (shared with
+// the /account portal entry point). Only the FORWARD selection (getOfferVariant /
+// isVariantReady) switches on it; reverse lookups resolve BOTH tables so in-flight
+// Loop lines still render, and the Loop portal-swap accessors stay on Loop until
+// Phase 4.
 
 /** The variant table the storefront selects from right now (flag-gated). */
 function activeOfferVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
