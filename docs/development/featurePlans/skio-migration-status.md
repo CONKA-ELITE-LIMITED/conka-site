@@ -33,10 +33,14 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 - All live quarterly variants' `bundlecomposition` fixed → manual quarterly portal work resolved.
 - Phase 1 code scaffold (`env.ts` getters, `app/lib/skio.ts`) on `feature/skio-integration`.
 
-**Next (Phase 2), in order:**
-1. **(Claude)** Discovery sweep of all subscribe attach points (grep `sellingPlanId` / `sellingPlan`) → complete list of surfaces.
-2. **(Claude)** Re-point `funnelData.ts` `FUNNEL_VARIANTS` to the new variant GIDs + Skio plan GIDs, behind a config flag (PDP → funnel → rest).
-3. **(Claude)** Phase 3: portal scaffold (signed iframe route + `/account` embed + CSP `frame-src`) — needs `SKIO_STORE_ID_HASH` (from `dashboard.skio.com/theme`) + confirmed portal version (cpv3 vs v2).
+**Phase 2 done (18 Aug):** discovery sweep confirmed every live subscribe surface routes through `getOfferVariant`/`getOfferByVariantId`. Added `SKIO_SUBSCRIPTION_VARIANTS` + the build-time flag `NEXT_PUBLIC_SKIO_ENABLED` (default false = Loop). Forward selection flips to Skio when true; reverse lookups resolve both tables; OTP + Loop portal-swap stay on Loop. `monthly-otp` untouched (one-time ≠ subscription). Lint + tsc clean.
+
+**How to test the Skio path (local or preview):** set `NEXT_PUBLIC_SKIO_ENABLED=true` in `.env.local` (or on a Vercel preview env) and restart the dev server / redeploy the preview. Then a subscribe add-to-cart should attach the Skio variant + plan and checkout should show the discounted price. Production stays on Loop (flag absent = false).
+
+**Next — Phase 3 (portal), blocked on two vendor inputs:**
+1. **(Rudh)** `SKIO_STORE_ID_HASH` from `dashboard.skio.com/theme`.
+2. **(Rudh)** Confirm portal version provisioned: **cpv3 vs v2** (ask Noah).
+3. **(Claude)** Then: signed iframe route + `/account` embed + CSP `frame-src`.
 
 ---
 
@@ -242,6 +246,7 @@ Source of truth in code: `app/lib/funnelData.ts` (`SKIO_SUBSCRIPTION_VARIANTS` �
 
 Newest first. One line per meaningful change.
 
+- **2026-08-18** — **Cleanup + naming.** Renamed the Skio offer const `SKIO_FUNNEL_VARIANTS` → `SKIO_SUBSCRIPTION_VARIANTS` and `activeFunnelVariants` → `activeOfferVariants` ("funnel" was too narrow). Removed the duplicated `SKIO_SUBSCRIPTION_VARIANT_GID` from `skio.ts` (funnelData is the single live source). Clarified that the flag is locally testable (`NEXT_PUBLIC_SKIO_ENABLED=true` in `.env.local` + restart dev). Separately (not Skio): deleted the dead `funnel-b` trial page and labelled `start-b`/`lander-b`/`funnel-c` as dormant.
 - **2026-08-18** — **Phase 2 code complete (behind flag).** Discovery sweep confirmed every live subscribe surface funnels through `getOfferVariant`/`getOfferByVariantId` in `app/lib/funnelData.ts` (+ the trial-b copy). Added `SKIO_SUBSCRIPTION_VARIANTS` + a build-time flag `NEXT_PUBLIC_SKIO_ENABLED` (default false = Loop): forward selection (`getOfferVariant`/`isVariantReady`) switches to Skio when true; reverse lookups (`getOfferByVariantId`, `detectFunnelProduct/Cadence`) resolve BOTH tables so in-flight/Loop lines still render; the Loop portal-swap accessors stay on Loop until Phase 4. **`monthly-otp` is untouched** (one-time, no plan → not a subscription-platform concern), which also sidesteps a shared-variant reverse-lookup ambiguity. Switch mechanism decided: **server-safe flag + Vercel Instant Rollback** (no Edge Config). Pending: preview-deploy verification with the flag on (cart-drawer price display, funnel checkout attaches the Skio plan). Lint + tsc clean.
 - **2026-08-18** — **Phase 1 complete.** Billing approval cleared; created all 4 Skio Subscribe & Save plans (Percentage off, base variant only). Generated `SKIO_API_TOKEN` (set in `.env.local` + Vercel prod/preview). Pulled plan + variant GIDs via the Skio GraphQL API and populated `LOOP_TO_SKIO_SELLING_PLAN` + new `SKIO_SUBSCRIPTION_VARIANT_GID` in `app/lib/skio.ts`, plus the mapping-tracker tables. Mapped by discount %: 42.86→`712928887158` (20-Monthly), 42.11→`712928919926` (60-Quarterly), 25.00→`712928952694` (40-Monthly), 46.43→`712928985462` (120-Quarterly); variant attachments verified via SellingPlanGroupResources. Family B (PDP/protocol 20% plans) left unmapped — no Skio equivalents created. Next: Phase 2 discovery sweep + re-point.
 - **2026-08-17** — **Paused, blocked on Skio account billing approval** (awaiting Noah). Refreshed the top of the doc to a clean pickup point: status-at-a-glance Phase 1 → blocked, current-focus rewritten with done/safe list + ordered resume steps, blockers table led by the billing gate (stale offer-architecture decision cleared as resolved). No code/config lost; 6 base variants + live quarterly bundlecomposition remain done.
