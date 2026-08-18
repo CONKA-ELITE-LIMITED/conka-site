@@ -59,19 +59,21 @@ export default function SkioPortalFrame() {
   }, [authLoading, isAuthenticated, router]);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-white text-black">
+    <div className="flex h-[100dvh] flex-col overflow-hidden bg-white text-black">
       <Navigation />
-      <main className="flex flex-1 flex-col">
+      {/* Full-bleed: the iframe fills the area under the header edge-to-edge
+          (absolute inset-0 removes any sizing gaps) and scrolls internally. */}
+      <main className="relative min-h-0 flex-1">
         <h1 className="sr-only">Manage your CONKA subscription</h1>
 
         {state.status === "loading" && (
-          <div className="flex flex-1 items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
           </div>
         )}
 
         {state.status === "error" && (
-          <div className="flex flex-1 items-center justify-center p-6 text-center">
+          <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
             <p className="text-black/70 text-[15px]">{state.message}</p>
           </div>
         )}
@@ -80,7 +82,7 @@ export default function SkioPortalFrame() {
           <iframe
             src={state.src}
             title="Manage your CONKA subscription"
-            className="w-full flex-1 border-0 bg-white"
+            className="absolute inset-0 block h-full w-full border-0 bg-white"
           />
         )}
       </main>
