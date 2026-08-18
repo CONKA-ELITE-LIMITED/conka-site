@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navigation from "@/app/components/navigation";
 import { AccountSubNav } from "@/app/components/account/AccountSubNav";
@@ -26,7 +26,6 @@ export default function SkioPortalFrame() {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [state, setState] = useState<LoadState>({ status: "loading" });
   const [frameHeight, setFrameHeight] = useState(MIN_FRAME_HEIGHT);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Redirect signed-out visitors to login (mirrors /account).
   useEffect(() => {
@@ -111,7 +110,6 @@ export default function SkioPortalFrame() {
 
             {state.status === "ready" && (
               <iframe
-                ref={iframeRef}
                 src={state.src}
                 title="Manage your CONKA subscription"
                 className="w-full rounded-md border border-black/10 bg-white"

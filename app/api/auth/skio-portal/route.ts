@@ -33,10 +33,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Portal not configured" }, { status: 500 });
   }
 
+  const shopId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
+  if (!shopId) {
+    console.error("skio-portal: SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID is not configured");
+    return NextResponse.json({ error: "Portal not configured" }, { status: 500 });
+  }
+
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("customer_access_token")?.value;
   const expiresAt = cookieStore.get("customer_token_expires")?.value;
-  const shopId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_SHOP_ID;
 
   if (!accessToken) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
@@ -45,36 +50,49 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ authenticated: false, expired: true }, { status: 401 });
   }
 
-  // Resolve the customer id (GID) + email from the Customer Account API.
+  // Resolve the customer id (GID) + email from the Customer Account API. A
+  // transient failure here is NOT "not logged in" (502, retryable); a valid
+  // response with no customer is a dead/invalid session (401).
   let gid = "";
   let email = "";
-  if (shopId) {
-    try {
-      const res = await fetch(
-        `https://shopify.com/${shopId}/account/customer/api/2024-10/graphql`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: accessToken },
-          body: JSON.stringify({
-            query: `query { customer { id emailAddress { emailAddress } } }`,
-          }),
-        },
+  try {
+    const res = await fetch(
+      `https://shopify.com/${shopId}/account/customer/api/2024-10/graphql`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: accessToken },
+        body: JSON.stringify({
+          query: `query { customer { id emailAddress { emailAddress } } }`,
+        }),
+      },
+    );
+    if (!res.ok) {
+      console.error("skio-portal: customer API returned", res.status);
+      return NextResponse.json(
+        { error: "Could not reach the subscription portal. Please try again." },
+        { status: 502 },
       );
-      if (res.ok) {
-        const data: CustomerResponse = await res.json();
-        gid = data.data?.customer?.id ?? "";
-        email = data.data?.customer?.emailAddress?.emailAddress ?? "";
-      }
-    } catch (error) {
-      console.error("skio-portal: failed to fetch customer profile", error);
     }
+    const data: CustomerResponse = await res.json();
+    gid = data.data?.customer?.id ?? "";
+    email = data.data?.customer?.emailAddress?.emailAddress ?? "";
+  } catch (error) {
+    console.error("skio-portal: failed to fetch customer profile", error);
+    return NextResponse.json(
+      { error: "Could not reach the subscription portal. Please try again." },
+      { status: 502 },
+    );
+  }
+
+  if (!gid) {
+    return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 
   // Skio needs the NUMERIC id, not the Shopify GID (gid://shopify/Customer/123).
   const numericId = gid.split("/").pop() ?? "";
   if (!/^\d+$/.test(numericId)) {
-    // Real Shopify login required. DEV_MOCK_AUTH yields a non-numeric id, so the
-    // portal cannot be exercised under mock auth (verify on a preview instead).
+    // Defensive: a real Shopify customer id is always numeric. DEV_MOCK_AUTH has
+    // no customer_access_token, so it 401s above rather than reaching here.
     return NextResponse.json(
       { error: "A real Shopify login is required to open the subscription portal." },
       { status: 400 },

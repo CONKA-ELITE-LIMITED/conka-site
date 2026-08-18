@@ -30,7 +30,9 @@ export default function AccountPage() {
   }, [loading, isAuthenticated, router]);
 
   useEffect(() => {
-    if (isAuthenticated && customer) fetchSubscriptions();
+    // When Skio is on, subscriptions are managed at /account/manage, so skip the
+    // Loop fetch (its list is not rendered here).
+    if (isAuthenticated && customer && !subscriptionsUseSkio()) fetchSubscriptions();
   }, [isAuthenticated, customer, fetchSubscriptions]);
 
   // Two buckets only: Active (active) and Inactive (paused, cancelled, expired).
