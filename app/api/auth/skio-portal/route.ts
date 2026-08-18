@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createHash } from "crypto";
 import { env } from "@/app/lib/env";
@@ -26,7 +26,7 @@ interface CustomerResponse {
   data?: { customer?: { id: string; emailAddress?: { emailAddress: string } } };
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const storeIdHash = env.skioStoreIdHash;
   if (!storeIdHash) {
     console.error("skio-portal: SKIO_STORE_ID_HASH is not configured");
@@ -101,10 +101,12 @@ export async function GET(request: NextRequest) {
 
   const hash = createHash("md5").update(numericId + storeIdHash).digest("hex");
 
-  // `shop` = myshopify identity; `hostname` = the public domain serving the portal
-  // (the host the customer is on). Exact expectation is spike-verified.
+  // `hostname` must be a domain Skio has registered for the site: its portal calls
+  // get-site-by-domain-or-hostname and 400s on an unknown host (e.g. a Vercel
+  // preview URL), which stalls the whole portal. Default to the myshopify identity
+  // (always registered); override with SKIO_PORTAL_HOSTNAME (e.g. shop.conka.io).
   const shop = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? "";
-  const hostname = request.headers.get("host") ?? shop;
+  const hostname = process.env.SKIO_PORTAL_HOSTNAME || shop;
 
   const params = new URLSearchParams({
     hostname,
