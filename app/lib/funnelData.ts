@@ -284,7 +284,7 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
 // the full one-time value, with the Skio plan applying the discount (e.g.
 // FLOW-20 £69.98 + 42.86% off = £39.99, matching the Loop display price). GIDs
 // pulled from the Skio API 2026-08-18; see app/lib/skio.ts + skio-migration-status.md.
-const SKIO_FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+const SKIO_SUBSCRIPTION_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
   flow: {
     "monthly-sub": {
       variantId: "gid://shopify/ProductVariant/58457787040118", // FLOW-20
@@ -341,8 +341,8 @@ function subscriptionsUseSkio(): boolean {
 }
 
 /** The variant table the storefront selects from right now (flag-gated). */
-function activeFunnelVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
-  return subscriptionsUseSkio() ? SKIO_FUNNEL_VARIANTS : FUNNEL_VARIANTS;
+function activeOfferVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
+  return subscriptionsUseSkio() ? SKIO_SUBSCRIPTION_VARIANTS : FUNNEL_VARIANTS;
 }
 
 /**
@@ -358,7 +358,7 @@ function activeFunnelVariants(): Record<FunnelProduct, Record<FunnelCadence, Fun
 export function getOfferByVariantId(
   variantId: string,
 ): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
-  for (const table of [FUNNEL_VARIANTS, SKIO_FUNNEL_VARIANTS]) {
+  for (const table of [FUNNEL_VARIANTS, SKIO_SUBSCRIPTION_VARIANTS]) {
     for (const product of Object.keys(table) as FunnelProduct[]) {
       for (const cadence of Object.keys(table[product]) as FunnelCadence[]) {
         if (table[product][cadence].variantId === variantId) {
@@ -570,7 +570,7 @@ const QUARTERLY_VARIANT_SET = new Set<string>();
 
 // Built from BOTH Loop and Skio tables so cart-line detection (upsell, analytics)
 // resolves a line whichever platform created it — during and after the cutover.
-for (const table of [FUNNEL_VARIANTS, SKIO_FUNNEL_VARIANTS]) {
+for (const table of [FUNNEL_VARIANTS, SKIO_SUBSCRIPTION_VARIANTS]) {
   for (const [product, cadences] of Object.entries(table) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
     for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
       if (config.variantId) {
@@ -639,7 +639,7 @@ export function getOfferVariant(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): FunnelVariantConfig | null {
-  const config = activeFunnelVariants()[product][cadence];
+  const config = activeOfferVariants()[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
@@ -648,7 +648,7 @@ export function isVariantReady(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): boolean {
-  const config = activeFunnelVariants()[product][cadence];
+  const config = activeOfferVariants()[product][cadence];
   return Boolean(config?.variantId);
 }
 

@@ -25,7 +25,7 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 
 ## Current focus & next action
 
-**✅ Phase 1 complete (18 Aug) — billing approval cleared, 4 plans live, GIDs mapped.** All 4 Skio Subscribe & Save plans created (Percentage off, base variant only); plan + variant GIDs pulled via the Skio API and populated into `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN` + `SKIO_SUBSCRIPTION_VARIANT_GID`) and the [mapping tracker](#plan-gid-mapping-tracker). `SKIO_API_TOKEN` set in `.env.local` + Vercel (prod/preview).
+**✅ Phase 1 complete (18 Aug) — billing approval cleared, 4 plans live, GIDs mapped.** All 4 Skio Subscribe & Save plans created (Percentage off, base variant only); plan + variant GIDs pulled via the Skio API and populated into `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN`, plan-level reference) and the live storefront wiring `SKIO_SUBSCRIPTION_VARIANTS` in `app/lib/funnelData.ts`, plus the [mapping tracker](#plan-gid-mapping-tracker). `SKIO_API_TOKEN` set in `.env.local` + Vercel (prod/preview).
 
 **Done and safe (no rework needed):**
 - 6 Stage-1 base variants created + verified — `FLOW-20`/`CLEAR-20`, `FLOW-60`/`CLEAR-60`, `BOTH-40`, `BOTH-120` — correct `bundlecomposition` + weights.
@@ -234,7 +234,7 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 | `712928952694` | `100167942518` | 25.00% | `BOTH-40` → `58457859686774` |
 | `712928985462` | `100167975286` | 46.43% | `BOTH-120` → `58457864077686` |
 
-Source of truth in code: `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN` + `SKIO_SUBSCRIPTION_VARIANT_GID`). Family B left null — no Skio equivalents created (recreate only if a surface still sells against those plans).
+Source of truth in code: `app/lib/funnelData.ts` (`SKIO_SUBSCRIPTION_VARIANTS` — live storefront wiring, flag-gated) for variant+plan attachment; `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN`) for the plan-level reference/reconciliation map. Family B left null — no Skio equivalents created (recreate only if a surface still sells against those plans).
 
 ---
 
@@ -242,7 +242,7 @@ Source of truth in code: `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN` + `SKIO_
 
 Newest first. One line per meaningful change.
 
-- **2026-08-18** — **Phase 2 code complete (behind flag).** Discovery sweep confirmed every live subscribe surface funnels through `getOfferVariant`/`getOfferByVariantId` in `app/lib/funnelData.ts` (+ the trial-b copy). Added `SKIO_FUNNEL_VARIANTS` + a build-time flag `NEXT_PUBLIC_SKIO_ENABLED` (default false = Loop): forward selection (`getOfferVariant`/`isVariantReady`) switches to Skio when true; reverse lookups (`getOfferByVariantId`, `detectFunnelProduct/Cadence`) resolve BOTH tables so in-flight/Loop lines still render; the Loop portal-swap accessors stay on Loop until Phase 4. **`monthly-otp` is untouched** (one-time, no plan → not a subscription-platform concern), which also sidesteps a shared-variant reverse-lookup ambiguity. Switch mechanism decided: **server-safe flag + Vercel Instant Rollback** (no Edge Config). Pending: preview-deploy verification with the flag on (cart-drawer price display, funnel checkout attaches the Skio plan). Lint + tsc clean.
+- **2026-08-18** — **Phase 2 code complete (behind flag).** Discovery sweep confirmed every live subscribe surface funnels through `getOfferVariant`/`getOfferByVariantId` in `app/lib/funnelData.ts` (+ the trial-b copy). Added `SKIO_SUBSCRIPTION_VARIANTS` + a build-time flag `NEXT_PUBLIC_SKIO_ENABLED` (default false = Loop): forward selection (`getOfferVariant`/`isVariantReady`) switches to Skio when true; reverse lookups (`getOfferByVariantId`, `detectFunnelProduct/Cadence`) resolve BOTH tables so in-flight/Loop lines still render; the Loop portal-swap accessors stay on Loop until Phase 4. **`monthly-otp` is untouched** (one-time, no plan → not a subscription-platform concern), which also sidesteps a shared-variant reverse-lookup ambiguity. Switch mechanism decided: **server-safe flag + Vercel Instant Rollback** (no Edge Config). Pending: preview-deploy verification with the flag on (cart-drawer price display, funnel checkout attaches the Skio plan). Lint + tsc clean.
 - **2026-08-18** — **Phase 1 complete.** Billing approval cleared; created all 4 Skio Subscribe & Save plans (Percentage off, base variant only). Generated `SKIO_API_TOKEN` (set in `.env.local` + Vercel prod/preview). Pulled plan + variant GIDs via the Skio GraphQL API and populated `LOOP_TO_SKIO_SELLING_PLAN` + new `SKIO_SUBSCRIPTION_VARIANT_GID` in `app/lib/skio.ts`, plus the mapping-tracker tables. Mapped by discount %: 42.86→`712928887158` (20-Monthly), 42.11→`712928919926` (60-Quarterly), 25.00→`712928952694` (40-Monthly), 46.43→`712928985462` (120-Quarterly); variant attachments verified via SellingPlanGroupResources. Family B (PDP/protocol 20% plans) left unmapped — no Skio equivalents created. Next: Phase 2 discovery sweep + re-point.
 - **2026-08-17** — **Paused, blocked on Skio account billing approval** (awaiting Noah). Refreshed the top of the doc to a clean pickup point: status-at-a-glance Phase 1 → blocked, current-focus rewritten with done/safe list + ordered resume steps, blockers table led by the billing gate (stale offer-architecture decision cleared as resolved). No code/config lost; 6 base variants + live quarterly bundlecomposition remain done.
 

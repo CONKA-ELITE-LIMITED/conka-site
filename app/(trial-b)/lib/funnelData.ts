@@ -299,10 +299,10 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
 // ============================================
 // SKIO VARIANT MAPPING (Loop → Skio migration, Phase 2)
 // ============================================
-// Mirror of app/lib/funnelData.ts SKIO_FUNNEL_VARIANTS for the trial-b A/B group.
+// Mirror of app/lib/funnelData.ts SKIO_SUBSCRIPTION_VARIANTS for the trial-b A/B group.
 // Only subscription cadences switch when NEXT_PUBLIC_SKIO_ENABLED === "true";
 // monthly-otp (one-time, no plan) is unaffected. See the main file + skio.ts.
-const SKIO_FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+const SKIO_SUBSCRIPTION_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
   flow: {
     "monthly-sub": {
       variantId: "gid://shopify/ProductVariant/58457787040118", // FLOW-20
@@ -350,8 +350,8 @@ function subscriptionsUseSkio(): boolean {
 }
 
 /** The variant table the storefront selects from right now (flag-gated). */
-function activeFunnelVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
-  return subscriptionsUseSkio() ? SKIO_FUNNEL_VARIANTS : FUNNEL_VARIANTS;
+function activeOfferVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
+  return subscriptionsUseSkio() ? SKIO_SUBSCRIPTION_VARIANTS : FUNNEL_VARIANTS;
 }
 
 // ============================================
@@ -513,7 +513,7 @@ const QUARTERLY_VARIANT_SET = new Set<string>();
 
 // Built from BOTH Loop and Skio tables so cart-line detection resolves a line
 // whichever platform created it — during and after the cutover.
-for (const table of [FUNNEL_VARIANTS, SKIO_FUNNEL_VARIANTS]) {
+for (const table of [FUNNEL_VARIANTS, SKIO_SUBSCRIPTION_VARIANTS]) {
   for (const [product, cadences] of Object.entries(table) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
     for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
       if (config.variantId) {
@@ -552,7 +552,7 @@ export function getOfferVariant(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): FunnelVariantConfig | null {
-  const config = activeFunnelVariants()[product][cadence];
+  const config = activeOfferVariants()[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
@@ -561,7 +561,7 @@ export function isVariantReady(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): boolean {
-  const config = activeFunnelVariants()[product][cadence];
+  const config = activeOfferVariants()[product][cadence];
   return Boolean(config?.variantId);
 }
 

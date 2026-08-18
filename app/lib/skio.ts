@@ -31,8 +31,10 @@ export function skioAuthHeader(): { authorization: string } | undefined {
 /**
  * Loop selling-plan GID -> Skio selling-plan GID mapping.
  *
- * The direct input Phase 2 consumes: every subscribe surface (funnel, PDP,
- * legacy protocol) is re-pointed from the Loop GID (key) to the Skio GID (value).
+ * Reference / reconciliation map. The LIVE storefront wiring is inlined in
+ * `app/lib/funnelData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`, flag-gated) — this const is
+ * not consumed by the purchase path; it documents the plan-level old->new
+ * mapping (and which Loop plans have no Skio equivalent).
  *
  * Keys are the CURRENT live Loop selling-plan GIDs, sourced from:
  *   - Funnel:   app/lib/funnelData.ts (FUNNEL_VARIANTS)
@@ -43,8 +45,6 @@ export function skioAuthHeader(): { authorization: string } | undefined {
  * (starter/pro/max, 20% off) — deliberately kept as three entries, not deduped,
  * so each surface's mapping is self-evident.
  *
- * Skio side is `null` until Phase 1 Task 1 (create Skio plans) is complete;
- * fill each value with the matching Skio SellingPlan GID once the plans exist.
  * The full old->new table also lives in docs/product/SKU_AND_SHOT_REFERENCE.md.
  */
 export const LOOP_TO_SKIO_SELLING_PLAN: Record<string, string | null> = {
@@ -69,21 +69,9 @@ export const LOOP_TO_SKIO_SELLING_PLAN: Record<string, string | null> = {
   "gid://shopify/SellingPlan/711429980534": null,
 };
 
-/**
- * Skio subscription selling-variant GIDs (net-new Stage-1 base variants), keyed by SKU.
- *
- * Phase 2 re-points `funnelData.ts` `FUNNEL_VARIANTS` from the current Loop
- * `FLOW-FUNNEL-*` variants to these. Each plan above is attached to the variant(s)
- * listed alongside it. Pulled from the Skio API (SellingPlanGroupResources) 2026-08-18.
- */
-export const SKIO_SUBSCRIPTION_VARIANT_GID: Record<string, string> = {
-  "FLOW-20": "gid://shopify/ProductVariant/58457787040118",
-  "CLEAR-20": "gid://shopify/ProductVariant/58457822069110",
-  "FLOW-60": "gid://shopify/ProductVariant/58457811550582",
-  "CLEAR-60": "gid://shopify/ProductVariant/58457854411126",
-  "BOTH-40": "gid://shopify/ProductVariant/58457859686774",
-  "BOTH-120": "gid://shopify/ProductVariant/58457864077686",
-};
+// The Skio subscription variant GIDs (net-new Stage-1 base variants) are the
+// live storefront wiring and live in `app/lib/funnelData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`),
+// alongside the plans they attach to. Not duplicated here to avoid drift.
 
 const SELLING_PLAN_GID_PREFIX = "gid://shopify/SellingPlan/";
 
