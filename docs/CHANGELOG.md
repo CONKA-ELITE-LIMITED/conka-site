@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-18** | Deleted dead funnel-b trial page; labelled start-b, lander-b, funnel-c as dormant
 - **2026-08-18** | Skio migration Phase 2: re-point subscribe surfaces to Skio behind NEXT_PUBLIC_SKIO_ENABLED flag (default off)
 - **2026-08-18** | Skio migration Phase 1 complete: created 4 selling plans, pulled and mapped plan + variant GIDs
 - **2026-08-17** | Skio migration paused (Skio billing approval blocker); status doc refreshed to a clean resume point

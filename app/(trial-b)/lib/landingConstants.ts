@@ -3,6 +3,6 @@
  * Single source of truth for URLs and values used across multiple landing components.
  */
 
-// start-b feeds the approved funnel-c (funnel-b was never approved and is slated
-// for removal). Used by start-b's primary CTAs.
+// start-b feeds the approved funnel-c. (funnel-b, the unapproved sibling, was
+// deleted 2026-08-18.) Used by start-b's primary CTAs.
 export const FUNNEL_URL = "/funnel-c";

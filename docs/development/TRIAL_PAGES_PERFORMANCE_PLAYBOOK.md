@@ -1,10 +1,18 @@
 # Trial Pages — Performance Playbook
 
-> **Scope:** The A/B trial pages under `app/(trial-b)/` — `funnel-c`, `funnel-b`,
-> `start-b`, `lander-b` — plus their production siblings (`/funnel`, `/start`,
-> `/lander`). They share the same architecture and therefore the same
-> performance gaps, so this is **one reusable checklist** rather than three
-> one-offs.
+> **⚠️ Status update (2026-08-18): these pages are DORMANT.** `funnel-b` was
+> **deleted** (unapproved orphan, no inbound traffic). `start-b`, `lander-b`,
+> and `funnel-c` are **live but not a current primary ad target** — reached only
+> via the `/start` and `/lander` 307 redirects (`next.config.ts`) and start-b's
+> CTAs. Kept for reference / possible reuse, not actively invested in. Known gap:
+> their OTP/quarterly cadences still point at DRAFT Shopify variants, so those
+> checkouts fail (see the funnel data-layer notes). Confirm a page is back in the
+> ad rotation before spending time on it.
+>
+> **Scope:** The trial pages under `app/(trial-b)/` — `funnel-c`, `start-b`,
+> `lander-b` — plus their production siblings (`/funnel`, `/start`, `/lander`).
+> They share the same architecture and therefore the same performance gaps, so
+> this is **one reusable checklist** rather than three one-offs.
 >
 > **Status:** `funnel-c` is the proving ground. Phase 1 (per-page, design-safe
 > levers) is **applied** there; use it as the reference implementation when
