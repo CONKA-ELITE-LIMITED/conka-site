@@ -263,7 +263,7 @@ export function trackB2BInvoiceRequested(params: {
   });
 }
 
-// ===== FUNNEL TRACKING (/funnel, /funnel-b, /funnel-c) =====
+// ===== FUNNEL TRACKING (/funnel, /funnel-c) =====
 
 /**
  * Which funnel emitted the event.

@@ -13,12 +13,12 @@ import type { FunnelCadence, FunnelProduct } from "../lib/funnelData";
  * commitment. Both is still surfaced as the recommended routine on the Build
  * step, and the checkout upsell offers the Flow to Both upgrade.
  *
- * Note this differs from /funnel and /funnel-b, which open on Both.
+ * Note this differs from /funnel, which opens on Both.
  */
 export const FUNNEL_C_DEFAULT_PRODUCT: FunnelProduct = "flow";
 export const FUNNEL_C_DEFAULT_CADENCE: FunnelCadence = "monthly-sub";
 
-/** Order attribution tag. Distinct from funnel-b so revenue is separable. */
+/** Order attribution tag, so funnel-c revenue is separable in Shopify / Triple Whale. */
 export const FUNNEL_C_SOURCE = "funnel_page_c";
 
 /** Identifies this funnel in the shared `funnel:*` event taxonomy. */

@@ -42,7 +42,7 @@ type FunnelStep = 1 | 2 | 3 | 4;
 
 /**
  * Identifies this funnel in the shared `funnel:*` taxonomy. /funnel and
- * /funnel-b are clones that both fired identical event names, so they were
+ * /funnel-c are clones that both fire identical event names, so they would be
  * indistinguishable in Vercel Analytics. The variant property separates them.
  */
 const FUNNEL_VARIANT = "a" as const;

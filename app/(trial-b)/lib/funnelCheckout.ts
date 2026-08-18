@@ -22,12 +22,11 @@ interface FunnelCheckoutParams {
   cadence: FunnelCadence;
   upsellAccepted: boolean;
   /**
-   * Order attribution tag. This module is shared by /funnel-b and /funnel-c, so
-   * a hardcoded value made every funnel-c order look like a funnel-b order in
-   * Shopify and Triple Whale, and no revenue could be attributed to funnel-c.
-   * Defaults to funnel-b's existing tag so its data stays continuous.
+   * Order attribution tag. Required: a shared default previously made every
+   * order look identical in Shopify and Triple Whale (no per-page revenue
+   * split), so each caller passes its own tag (e.g. funnel-c: "funnel_page_c").
    */
-  source?: string;
+  source: string;
 }
 
 interface FunnelCheckoutSuccess {
@@ -49,7 +48,7 @@ export function isFunnelCheckoutError(
 export async function funnelCheckout(
   params: FunnelCheckoutParams,
 ): Promise<FunnelCheckoutResult> {
-  const { product, cadence, upsellAccepted, source = "funnel_page_b" } = params;
+  const { product, cadence, upsellAccepted, source } = params;
 
   // 1. Look up variant
   const variant = getOfferVariant(product, cadence);
