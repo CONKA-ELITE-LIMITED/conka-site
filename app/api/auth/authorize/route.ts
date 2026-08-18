@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
+import { customerAuthRedirectUri } from '@/app/lib/customerAuthRedirect';
 
 /**
  * Generate a cryptographically random string for PKCE
@@ -47,9 +48,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Get the origin for the callback URL
+  // Callback URL: pinned via SHOPIFY_REDIRECT_URI when set (preview/ngrok),
+  // else derived from the request origin.
   const origin = request.headers.get('origin') || request.nextUrl.origin;
-  const redirectUri = `${origin}/api/auth/callback`;
+  const redirectUri = customerAuthRedirectUri(origin);
 
   // Generate PKCE parameters
   const codeVerifier = generateCodeVerifier();

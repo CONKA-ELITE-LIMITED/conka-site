@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { customerAuthRedirectUri } from '@/app/lib/customerAuthRedirect';
 
 interface TokenResponse {
   access_token: string;
@@ -65,9 +66,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/account/login?error=missing_verifier', request.url));
   }
 
-  // Get the origin for the redirect URI
-  const origin = request.nextUrl.origin;
-  const redirectUri = `${origin}/api/auth/callback`;
+  // Must match the redirect_uri used at authorize (pinned via SHOPIFY_REDIRECT_URI
+  // when set, else derived from the request origin).
+  const redirectUri = customerAuthRedirectUri(request.nextUrl.origin);
 
   try {
     // Exchange authorization code for tokens
