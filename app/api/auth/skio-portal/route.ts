@@ -101,12 +101,13 @@ export async function GET() {
 
   const hash = createHash("md5").update(numericId + storeIdHash).digest("hex");
 
-  // `hostname` must be a domain Skio has registered for the site: its portal calls
-  // get-site-by-domain-or-hostname and 400s on an unknown host (e.g. a Vercel
-  // preview URL), which stalls the whole portal. Default to the myshopify identity
-  // (always registered); override with SKIO_PORTAL_HOSTNAME (e.g. shop.conka.io).
+  // `hostname` must be the domain Skio registered for the site: its portal calls
+  // get-site-by-domain-or-hostname and 400s on an unknown host (a Vercel preview
+  // URL AND the myshopify domain both 400 - verified 2026-08-18), which stalls the
+  // whole portal. Skio keys the site on the Shopify PRIMARY domain, `shop.conka.io`,
+  // so default to that (single, non-secret store value); override via SKIO_PORTAL_HOSTNAME.
   const shop = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? "";
-  const hostname = process.env.SKIO_PORTAL_HOSTNAME || shop;
+  const hostname = process.env.SKIO_PORTAL_HOSTNAME || "shop.conka.io";
 
   const params = new URLSearchParams({
     hostname,

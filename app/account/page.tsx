@@ -29,6 +29,15 @@ export default function AccountPage() {
     if (!loading && !isAuthenticated) router.push("/account/login");
   }, [loading, isAuthenticated, router]);
 
+  // Skio cutover: the Skio portal is the whole account experience, so send
+  // /account straight to /account/manage (also catches the post-login landing).
+  // Loop keeps the list below when the flag is off.
+  useEffect(() => {
+    if (!loading && isAuthenticated && subscriptionsUseSkio()) {
+      router.replace("/account/manage");
+    }
+  }, [loading, isAuthenticated, router]);
+
   useEffect(() => {
     // When Skio is on, subscriptions are managed at /account/manage, so skip the
     // Loop fetch (its list is not rendered here).
@@ -69,6 +78,16 @@ export default function AccountPage() {
 
   if (!isAuthenticated || !customer) return null;
 
+  // Redirecting to the Skio portal (effect above) — show a spinner, never the
+  // interim Loop list, so there is no flash of the old account page.
+  if (subscriptionsUseSkio()) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   const isInitialLoading = subsLoading && subscriptions.length === 0;
 
   return (
@@ -88,30 +107,7 @@ export default function AccountPage() {
               {greeting}
             </h1>
 
-            {subscriptionsUseSkio() ? (
-              /* Skio cutover: subscriptions are managed in the Skio portal at
-                 /account/manage. Loop list/detail below is bypassed (kept intact). */
-              <>
-                <div className="mb-8 bg-white rounded-md border border-black/10 p-6">
-                  <h2 className="text-base font-semibold text-black mb-1.5">Your subscription</h2>
-                  <p className="text-[15px] text-black/60 mb-5">
-                    Skip, swap, pause, or update your plan, payment, and delivery details.
-                  </p>
-                  <Link
-                    href="/account/manage"
-                    className="inline-flex items-center justify-center rounded-full bg-[var(--brand-navy)] px-6 py-3 text-[15px] font-semibold text-white hover:opacity-90"
-                  >
-                    Manage subscription
-                  </Link>
-                </div>
-                <Link
-                  href="/account/orders"
-                  className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--brand-navy)] hover:underline"
-                >
-                  Looking for past orders? View order history →
-                </Link>
-              </>
-            ) : isInitialLoading ? (
+            {isInitialLoading ? (
               <div className="bg-white rounded-md border border-black/10 h-[128px] flex items-center justify-center">
                 <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
               </div>
