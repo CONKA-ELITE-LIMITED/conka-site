@@ -7,7 +7,10 @@ import { AccountSubNav } from "@/app/components/account/AccountSubNav";
 import { useAuth } from "@/app/context/AuthContext";
 
 const SKIO_ORIGIN = "https://cpv3.skio.com";
-const MIN_FRAME_HEIGHT = 720;
+const MIN_FRAME_HEIGHT = 800;
+// The frame fills the viewport below the nav; it grows past this if Skio posts a
+// taller height. Keeps the portal seamless with no double scrollbars.
+const FRAME_MIN_VH = "calc(100dvh - 150px)";
 
 type LoadState =
   | { status: "loading" }
@@ -86,38 +89,38 @@ export default function SkioPortalFrame() {
     <div className="min-h-screen bg-white text-black">
       <Navigation />
       <AccountSubNav />
-      <main className="pt-1 pb-24 lg:pt-1">
-        <section className="brand-section brand-bg-white" aria-label="Manage subscription">
-          <div className="brand-track">
-            <h1
-              className="text-3xl lg:text-4xl font-semibold text-black mb-5"
-              style={{ letterSpacing: "-0.02em" }}
+      <main className="pb-8">
+        {/* Seamless portal frame: minimal chrome, iframe carries its own header. */}
+        <div className="mx-auto w-full max-w-[1400px] px-3 pt-3 sm:px-5">
+          <h1 className="sr-only">Manage your CONKA subscription</h1>
+
+          {state.status === "loading" && (
+            <div
+              className="flex items-center justify-center rounded-2xl bg-black/[0.02]"
+              style={{ minHeight: FRAME_MIN_VH }}
             >
-              Manage subscription
-            </h1>
+              <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
+            </div>
+          )}
 
-            {state.status === "loading" && (
-              <div className="bg-white rounded-md border border-black/10 h-[320px] flex items-center justify-center">
-                <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
-              </div>
-            )}
+          {state.status === "error" && (
+            <div
+              className="flex items-center justify-center rounded-2xl bg-black/[0.02] p-6 text-center"
+              style={{ minHeight: FRAME_MIN_VH }}
+            >
+              <p className="text-black/70 text-[15px]">{state.message}</p>
+            </div>
+          )}
 
-            {state.status === "error" && (
-              <div className="bg-white rounded-md border border-black/10 p-6">
-                <p className="text-black/70 text-[15px]">{state.message}</p>
-              </div>
-            )}
-
-            {state.status === "ready" && (
-              <iframe
-                src={state.src}
-                title="Manage your CONKA subscription"
-                className="w-full rounded-md border border-black/10 bg-white"
-                style={{ height: frameHeight }}
-              />
-            )}
-          </div>
-        </section>
+          {state.status === "ready" && (
+            <iframe
+              src={state.src}
+              title="Manage your CONKA subscription"
+              className="w-full rounded-2xl bg-white"
+              style={{ height: frameHeight, minHeight: FRAME_MIN_VH }}
+            />
+          )}
+        </div>
       </main>
     </div>
   );
