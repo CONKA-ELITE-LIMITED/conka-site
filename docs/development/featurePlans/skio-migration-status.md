@@ -13,8 +13,8 @@
 
 | Phase | Description | Status | Ticket |
 |-------|-------------|--------|--------|
-| 1 | Skio setup + selling-plan mapping | 🔴 Blocked — Skio account billing approval (variants + bundlecomposition done; plans pending) | SCRUM-1210 |
-| 2 | Re-point purchase surfaces (PDP → funnel → rest) | ⚪ Not started | — |
+| 1 | Skio setup + selling-plan mapping | ✅ Done — 4 plans created, GIDs pulled + mapped in `skio.ts` | SCRUM-1210 |
+| 2 | Re-point purchase surfaces (PDP → funnel → rest) | 🟡 Next — discovery sweep + re-point behind config flag | — |
 | 3 | Embedded Skio customer portal (iframe) | ⚪ Not started | — |
 | 4 | Cutover + Loop decommission | ⚪ Not started | — |
 | 5 | Legacy protocol retirement | ⚪ Future (ops-gated) | — |
@@ -25,19 +25,18 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 
 ## Current focus & next action
 
-**⏸ PAUSED (17 Aug) — blocked on Skio account billing approval.** Creating the first selling plan redirected to Shopify's billing-approval screen (accept Skio's first subscription charge). Rudh emailed **Noah (Skio)** to postpone/correct that value. Nothing further can be reliably built until the Skio account is active: Phase 2 needs the plan GIDs; the Phase 3 portal likely needs an active account too. Decided to pause rather than build code that hits the same wall.
+**✅ Phase 1 complete (18 Aug) — billing approval cleared, 4 plans live, GIDs mapped.** All 4 Skio Subscribe & Save plans created (Percentage off, base variant only); plan + variant GIDs pulled via the Skio API and populated into `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN` + `SKIO_SUBSCRIPTION_VARIANT_GID`) and the [mapping tracker](#plan-gid-mapping-tracker). `SKIO_API_TOKEN` set in `.env.local` + Vercel (prod/preview).
 
 **Done and safe (no rework needed):**
 - 6 Stage-1 base variants created + verified — `FLOW-20`/`CLEAR-20`, `FLOW-60`/`CLEAR-60`, `BOTH-40`, `BOTH-120` — correct `bundlecomposition` + weights.
+- 4 Skio selling plans created + GIDs mapped (this session).
 - All live quarterly variants' `bundlecomposition` fixed → manual quarterly portal work resolved.
-- Phase 1 code scaffold (`env.ts` getters, `app/lib/skio.ts`) committed on `feature/skio-integration` (5 commits, unpushed).
+- Phase 1 code scaffold (`env.ts` getters, `app/lib/skio.ts`) on `feature/skio-integration`.
 
-**Resume when unblocked (in order):**
-1. **(Rudh)** Finish creating the 4 Skio plans from the [Selling plans build table](#selling-plans-4--subscribe--save) (Percentage off; base variant only).
-2. **(Rudh)** Set `SKIO_API_TOKEN` + `SKIO_STORE_ID_HASH` in `.env.local` (+ Vercel).
-3. **(Claude)** Pull the plan GIDs via the Skio API → populate `LOOP_TO_SKIO_SELLING_PLAN` in `app/lib/skio.ts` + the mapping table.
-4. **(Claude)** Phase 2: discovery sweep of all subscribe attach points → re-point `funnelData.ts` to the new variant GIDs + Skio plan GIDs, behind a config flag.
-5. **(Claude)** Phase 3: portal scaffold (signed iframe route + `/account` embed + CSP `frame-src`) — needs `STORE_ID_HASH` + confirmed portal version (cpv3 vs v2).
+**Next (Phase 2), in order:**
+1. **(Claude)** Discovery sweep of all subscribe attach points (grep `sellingPlanId` / `sellingPlan`) → complete list of surfaces.
+2. **(Claude)** Re-point `funnelData.ts` `FUNNEL_VARIANTS` to the new variant GIDs + Skio plan GIDs, behind a config flag (PDP → funnel → rest).
+3. **(Claude)** Phase 3: portal scaffold (signed iframe route + `/account` embed + CSP `frame-src`) — needs `SKIO_STORE_ID_HASH` (from `dashboard.skio.com/theme`) + confirmed portal version (cpv3 vs v2).
 
 ---
 
@@ -45,12 +44,12 @@ Legend: ✅ done · 🟡 in progress · ⚪ not started · 🔴 blocked
 
 | # | Item | Owner | Notes |
 |---|------|-------|-------|
-| 1 | **Skio account billing approval** (blocks everything) | Rudh / Noah (Skio) | First-plan save redirected to Shopify billing approval for Skio's first charge; emailed Noah to postpone/correct the value. Until active, plans can't be created and the portal likely won't fully work. |
-| 2 | New Skio selling-plan GIDs | Rudh | Gates the mapping + Phase 2 re-point. Comes free once the 4 plans are created (Claude pulls them via API). |
 | 3 | Portal version provisioned: **cpv3 vs v2** | Rudh | Feeds Phase 3 iframe URL. |
 | 4 | Does Skio's portal write address edits back to Shopify? | Rudh / Skio onboarding | Gates dropping the Loop per-contract address-mirror at Phase 4. |
 
 **Resolved:**
+- ~~Skio account billing approval~~ — cleared 18 Aug; 4 plans created.
+- ~~New Skio selling-plan GIDs~~ — pulled via API 18 Aug, mapped in `skio.ts` + tracker.
 - ~~Offer-architecture decision~~ — settled: **3-stage fulfilment model** (28-box launch → 20-box swap → gift box); Skio plans use **Percentage off**; net-new variants, nothing existing touched.
 - ~~Confirm funnel Loop plans carry 0% adjustment~~ — CONFIRMED 13 Aug (Loop UI shows £0.00 discount; saving is SKU-priced).
 - ~~First-order swap feasibility~~ — Skio supports it (Journey); deferred to Stage 2.
@@ -218,13 +217,24 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 
 | Family | Plan | Interval | Discount | Loop GID | Skio GID |
 |--------|------|----------|----------|----------|----------|
-| A | Flow/Clear — Monthly | every 1 month | 0% (SKU-priced) | `712527348086` | _TBD_ |
-| A | Flow/Clear — Quarterly | every 3 months | 0% (SKU-priced) | `712527413622` | _TBD_ |
-| A | Both — Monthly | every 1 month | 0% (SKU-priced) | `712527479158` | _TBD_ |
-| A | Both — Quarterly | every 3 months | 0% (SKU-priced) | `712527446390` | _TBD_ |
-| B | Starter | Weekly (WEEK ×1) | −20% | `711429882230` | _TBD_ |
-| B | Pro | Bi-weekly (WEEK ×2) | −20% | `711429947766` | _TBD_ |
-| B | Max | Monthly (MONTH ×1) | −20% | `711429980534` | _TBD_ |
+| A | Flow/Clear — Monthly | every 1 month | 42.86% (Skio) | `712527348086` | `712928887158` ✅ |
+| A | Flow/Clear — Quarterly | every 3 months | 42.11% (Skio) | `712527413622` | `712928919926` ✅ |
+| A | Both — Monthly | every 1 month | 25.00% (Skio) | `712527479158` | `712928952694` ✅ |
+| A | Both — Quarterly | every 3 months | 46.43% (Skio) | `712527446390` | `712928985462` ✅ |
+| B | Starter | Weekly (WEEK ×1) | −20% | `711429882230` | — (not recreated) |
+| B | Pro | Bi-weekly (WEEK ×2) | −20% | `711429947766` | — (not recreated) |
+| B | Max | Monthly (MONTH ×1) | −20% | `711429980534` | — (not recreated) |
+
+**Skio plan → variant attachment (pulled from Skio API 2026-08-18):**
+
+| Skio plan GID | Group GID | % off | Variant SKU → GID |
+|---|---|---|---|
+| `712928887158` | `100167876982` | 42.86% | `FLOW-20` → `58457787040118`, `CLEAR-20` → `58457822069110` |
+| `712928919926` | `100167909750` | 42.11% | `FLOW-60` → `58457811550582`, `CLEAR-60` → `58457854411126` |
+| `712928952694` | `100167942518` | 25.00% | `BOTH-40` → `58457859686774` |
+| `712928985462` | `100167975286` | 46.43% | `BOTH-120` → `58457864077686` |
+
+Source of truth in code: `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN` + `SKIO_SUBSCRIPTION_VARIANT_GID`). Family B left null — no Skio equivalents created (recreate only if a surface still sells against those plans).
 
 ---
 
@@ -232,6 +242,7 @@ Source of truth for the mapping is `app/lib/skio.ts` (`LOOP_TO_SKIO_SELLING_PLAN
 
 Newest first. One line per meaningful change.
 
+- **2026-08-18** — **Phase 1 complete.** Billing approval cleared; created all 4 Skio Subscribe & Save plans (Percentage off, base variant only). Generated `SKIO_API_TOKEN` (set in `.env.local` + Vercel prod/preview). Pulled plan + variant GIDs via the Skio GraphQL API and populated `LOOP_TO_SKIO_SELLING_PLAN` + new `SKIO_SUBSCRIPTION_VARIANT_GID` in `app/lib/skio.ts`, plus the mapping-tracker tables. Mapped by discount %: 42.86→`712928887158` (20-Monthly), 42.11→`712928919926` (60-Quarterly), 25.00→`712928952694` (40-Monthly), 46.43→`712928985462` (120-Quarterly); variant attachments verified via SellingPlanGroupResources. Family B (PDP/protocol 20% plans) left unmapped — no Skio equivalents created. Next: Phase 2 discovery sweep + re-point.
 - **2026-08-17** — **Paused, blocked on Skio account billing approval** (awaiting Noah). Refreshed the top of the doc to a clean pickup point: status-at-a-glance Phase 1 → blocked, current-focus rewritten with done/safe list + ordered resume steps, blockers table led by the billing gate (stale offer-architecture decision cleared as resolved). No code/config lost; 6 base variants + live quarterly bundlecomposition remain done.
 
 - **2026-08-14** — Started building the Skio plans. **Blocker:** creating plan 1 (`20 Shots - Monthly`) redirected to Shopify's billing-approval screen to accept Skio's first subscription charge; Rudh emailed Noah (Skio) to postpone/correct the value before continuing. Chose **Percentage off** over Set price (Set price is ignored under Shopify market prices = international overcharge risk). Locked the full 4-plan build table (group name, variants, customer-facing label, interval, % off, sub price, per-plan free-shots advantage) into the selling-plans section so the build can resume cleanly. 6 base variants + all live quarterly bundlecomposition already done.

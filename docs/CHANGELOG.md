@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-18** | Skio migration Phase 1 complete: created 4 selling plans, pulled and mapped plan + variant GIDs
 - **2026-08-17** | Skio migration paused (Skio billing approval blocker); status doc refreshed to a clean resume point
 - **2026-08-14** | Skio plan build: full 4-plan table (%, labels, advantages) + billing-approval blocker noted, resume-ready
 - **2026-08-14** | Skio docs: Synergy bundle process (add/fix variants), Stage-1 box mapping, Stage-2 20-box re-point, live quarterly fix verified

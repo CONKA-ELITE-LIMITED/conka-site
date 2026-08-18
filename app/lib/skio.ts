@@ -49,22 +49,40 @@ export function skioAuthHeader(): { authorization: string } | undefined {
  */
 export const LOOP_TO_SKIO_SELLING_PLAN: Record<string, string | null> = {
   // --- Funnel (FUNNEL_VARIANTS) ---
-  // Flow & Clear — Monthly Subscription
-  "gid://shopify/SellingPlan/712527348086": null,
-  // Flow & Clear — Quarterly
-  "gid://shopify/SellingPlan/712527413622": null,
-  // Both — Monthly Subscription
-  "gid://shopify/SellingPlan/712527479158": null,
-  // Both — Quarterly
-  "gid://shopify/SellingPlan/712527446390": null,
+  // Flow & Clear — Monthly  →  Skio "20 Shots - Monthly" (42.86% off, FLOW-20/CLEAR-20)
+  "gid://shopify/SellingPlan/712527348086": "gid://shopify/SellingPlan/712928887158",
+  // Flow & Clear — Quarterly  →  Skio "60 Shots - Quarterly" (42.11% off, FLOW-60/CLEAR-60)
+  "gid://shopify/SellingPlan/712527413622": "gid://shopify/SellingPlan/712928919926",
+  // Both — Monthly  →  Skio "40 Shots - Monthly" (25.00% off, BOTH-40)
+  "gid://shopify/SellingPlan/712527479158": "gid://shopify/SellingPlan/712928952694",
+  // Both — Quarterly  →  Skio "120 Shots - Quarterly" (46.43% off, BOTH-120)
+  "gid://shopify/SellingPlan/712527446390": "gid://shopify/SellingPlan/712928985462",
 
   // --- PDP + legacy protocol (PLAN_CONFIGURATIONS / PROTOCOL_VARIANTS), 20% off ---
+  // No Skio equivalents created: these Family-B plans are only recreated if a
+  // surface still sells against them (see status doc). Left null intentionally.
   // Starter tier
   "gid://shopify/SellingPlan/711429882230": null,
   // Pro tier
   "gid://shopify/SellingPlan/711429947766": null,
   // Max tier
   "gid://shopify/SellingPlan/711429980534": null,
+};
+
+/**
+ * Skio subscription selling-variant GIDs (net-new Stage-1 base variants), keyed by SKU.
+ *
+ * Phase 2 re-points `funnelData.ts` `FUNNEL_VARIANTS` from the current Loop
+ * `FLOW-FUNNEL-*` variants to these. Each plan above is attached to the variant(s)
+ * listed alongside it. Pulled from the Skio API (SellingPlanGroupResources) 2026-08-18.
+ */
+export const SKIO_SUBSCRIPTION_VARIANT_GID: Record<string, string> = {
+  "FLOW-20": "gid://shopify/ProductVariant/58457787040118",
+  "CLEAR-20": "gid://shopify/ProductVariant/58457822069110",
+  "FLOW-60": "gid://shopify/ProductVariant/58457811550582",
+  "CLEAR-60": "gid://shopify/ProductVariant/58457854411126",
+  "BOTH-40": "gid://shopify/ProductVariant/58457859686774",
+  "BOTH-120": "gid://shopify/ProductVariant/58457864077686",
 };
 
 const SELLING_PLAN_GID_PREFIX = "gid://shopify/SellingPlan/";
