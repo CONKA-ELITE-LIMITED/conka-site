@@ -10,6 +10,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useSubscriptions, Subscription } from "@/app/hooks/useSubscriptions";
 import { SubscriptionListCard } from "@/app/components/subscriptions/SubscriptionListCard";
 import { ReactivateModal } from "@/app/components/subscriptions/ReactivateModal";
+import { subscriptionsUseSkio } from "@/app/lib/subscriptionsFlag";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -85,7 +86,30 @@ export default function AccountPage() {
               {greeting}
             </h1>
 
-            {isInitialLoading ? (
+            {subscriptionsUseSkio() ? (
+              /* Skio cutover: subscriptions are managed in the Skio portal at
+                 /account/manage. Loop list/detail below is bypassed (kept intact). */
+              <>
+                <div className="mb-8 bg-white rounded-md border border-black/10 p-6">
+                  <h2 className="text-base font-semibold text-black mb-1.5">Your subscription</h2>
+                  <p className="text-[15px] text-black/60 mb-5">
+                    Skip, swap, pause, or update your plan, payment, and delivery details.
+                  </p>
+                  <Link
+                    href="/account/manage"
+                    className="inline-flex items-center justify-center rounded-full bg-[var(--brand-navy)] px-6 py-3 text-[15px] font-semibold text-white hover:opacity-90"
+                  >
+                    Manage subscription
+                  </Link>
+                </div>
+                <Link
+                  href="/account/orders"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--brand-navy)] hover:underline"
+                >
+                  Looking for past orders? View order history →
+                </Link>
+              </>
+            ) : isInitialLoading ? (
               <div className="bg-white rounded-md border border-black/10 h-[128px] flex items-center justify-center">
                 <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
               </div>

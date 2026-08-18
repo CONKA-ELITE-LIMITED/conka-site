@@ -141,6 +141,19 @@ const nextConfig: NextConfig = {
         source: '/:path*',
         headers: securityHeaders,
       },
+      {
+        // Skio customer portal (Phase 3): allow embedding the Skio iframe here
+        // only. Scoped to /account/manage so no other page's iframe policy
+        // changes. frame-src governs what THIS page may embed; our global
+        // X-Frame-Options: DENY (who may embed us) is unaffected and irrelevant.
+        source: '/account/manage',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-src 'self' https://cpv3.skio.com;",
+          },
+        ],
+      },
     ];
   },
 };
