@@ -297,6 +297,64 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
 };
 
 // ============================================
+// SKIO VARIANT MAPPING (Loop → Skio migration, Phase 2)
+// ============================================
+// Mirror of app/lib/funnelData.ts SKIO_FUNNEL_VARIANTS for the trial-b A/B group.
+// Only subscription cadences switch when NEXT_PUBLIC_SKIO_ENABLED === "true";
+// monthly-otp (one-time, no plan) is unaffected. See the main file + skio.ts.
+const SKIO_FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+  flow: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457787040118", // FLOW-20
+      sellingPlanId: "gid://shopify/SellingPlan/712928887158", // Skio 20 Shots - Monthly (42.86%)
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP (unchanged)
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457811550582", // FLOW-60
+      sellingPlanId: "gid://shopify/SellingPlan/712928919926", // Skio 60 Shots - Quarterly (42.11%)
+    },
+  },
+  clear: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457822069110", // CLEAR-20
+      sellingPlanId: "gid://shopify/SellingPlan/712928887158", // Skio 20 Shots - Monthly (42.86%)
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP (unchanged)
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457854411126", // CLEAR-60
+      sellingPlanId: "gid://shopify/SellingPlan/712928919926", // Skio 60 Shots - Quarterly (42.11%)
+    },
+  },
+  both: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457859686774", // BOTH-40
+      sellingPlanId: "gid://shopify/SellingPlan/712928952694", // Skio 40 Shots - Monthly (25.00%)
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP (unchanged)
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457864077686", // BOTH-120
+      sellingPlanId: "gid://shopify/SellingPlan/712928985462", // Skio 120 Shots - Quarterly (46.43%)
+    },
+  },
+};
+
+/** True when the storefront should attach Skio subscriptions instead of Loop (see main file). */
+function subscriptionsUseSkio(): boolean {
+  return process.env.NEXT_PUBLIC_SKIO_ENABLED === "true";
+}
+
+/** The variant table the storefront selects from right now (flag-gated). */
+function activeFunnelVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
+  return subscriptionsUseSkio() ? SKIO_FUNNEL_VARIANTS : FUNNEL_VARIANTS;
+}
+
+// ============================================
 // DISPLAY DATA
 // ============================================
 
@@ -453,12 +511,16 @@ export function getFunnelProductSlideshow(
 const VARIANT_TO_PRODUCT = new Map<string, FunnelProduct>();
 const QUARTERLY_VARIANT_SET = new Set<string>();
 
-for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
-  for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
-    if (config.variantId) {
-      VARIANT_TO_PRODUCT.set(config.variantId, product);
-      if (cadence === "quarterly-sub") {
-        QUARTERLY_VARIANT_SET.add(config.variantId);
+// Built from BOTH Loop and Skio tables so cart-line detection resolves a line
+// whichever platform created it — during and after the cutover.
+for (const table of [FUNNEL_VARIANTS, SKIO_FUNNEL_VARIANTS]) {
+  for (const [product, cadences] of Object.entries(table) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
+    for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
+      if (config.variantId) {
+        VARIANT_TO_PRODUCT.set(config.variantId, product);
+        if (cadence === "quarterly-sub") {
+          QUARTERLY_VARIANT_SET.add(config.variantId);
+        }
       }
     }
   }
@@ -490,7 +552,7 @@ export function getOfferVariant(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): FunnelVariantConfig | null {
-  const config = FUNNEL_VARIANTS[product][cadence];
+  const config = activeFunnelVariants()[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
@@ -499,7 +561,7 @@ export function isVariantReady(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): boolean {
-  const config = FUNNEL_VARIANTS[product][cadence];
+  const config = activeFunnelVariants()[product][cadence];
   return Boolean(config?.variantId);
 }
 

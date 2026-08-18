@@ -272,17 +272,98 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
   },
 };
 
+// ============================================
+// SKIO VARIANT MAPPING (Loop → Skio migration, Phase 2)
+// ============================================
+// New-customer subscribe surfaces switch from Loop to Skio when the build-time
+// flag NEXT_PUBLIC_SKIO_ENABLED is "true" (see subscriptionsUseSkio). Only the
+// SUBSCRIPTION cadences move: monthly-otp is a one-time purchase with no selling
+// plan, so it is unaffected by the subscription platform and keeps its variant.
+//
+// Skio's Stage-1 model: one net-new base variant per product×cadence, priced at
+// the full one-time value, with the Skio plan applying the discount (e.g.
+// FLOW-20 £69.98 + 42.86% off = £39.99, matching the Loop display price). GIDs
+// pulled from the Skio API 2026-08-18; see app/lib/skio.ts + skio-migration-status.md.
+const SKIO_FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+  flow: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457787040118", // FLOW-20
+      sellingPlanId: "gid://shopify/SellingPlan/712928887158", // Skio 20 Shots - Monthly (42.86%)
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP (unchanged — not a subscription)
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457811550582", // FLOW-60
+      sellingPlanId: "gid://shopify/SellingPlan/712928919926", // Skio 60 Shots - Quarterly (42.11%)
+    },
+  },
+  clear: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457822069110", // CLEAR-20
+      sellingPlanId: "gid://shopify/SellingPlan/712928887158", // Skio 20 Shots - Monthly (42.86%)
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP (unchanged)
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457854411126", // CLEAR-60
+      sellingPlanId: "gid://shopify/SellingPlan/712928919926", // Skio 60 Shots - Quarterly (42.11%)
+    },
+  },
+  both: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457859686774", // BOTH-40
+      sellingPlanId: "gid://shopify/SellingPlan/712928952694", // Skio 40 Shots - Monthly (25.00%)
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP (unchanged)
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58457864077686", // BOTH-120
+      sellingPlanId: "gid://shopify/SellingPlan/712928985462", // Skio 120 Shots - Quarterly (46.43%)
+    },
+  },
+};
+
+/**
+ * True when the storefront should attach Skio subscriptions instead of Loop.
+ *
+ * Build-time flag (NEXT_PUBLIC_ so the client-bundled subscribe surfaces read it).
+ * Default/false keeps Loop fully live; flip to "true" + redeploy at the Phase 4
+ * cutover. Emergency rollback: Vercel Instant Rollback to the pre-cutover deploy.
+ * Only the FORWARD selection (getOfferVariant / isVariantReady) switches — the
+ * reverse lookups resolve BOTH tables so in-flight Loop lines still render, and
+ * the Loop portal-swap accessors stay on Loop until Phase 4.
+ */
+function subscriptionsUseSkio(): boolean {
+  return process.env.NEXT_PUBLIC_SKIO_ENABLED === "true";
+}
+
+/** The variant table the storefront selects from right now (flag-gated). */
+function activeFunnelVariants(): Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> {
+  return subscriptionsUseSkio() ? SKIO_FUNNEL_VARIANTS : FUNNEL_VARIANTS;
+}
+
 /**
  * Reverse lookup: a cart line's variant GID → its offer (product, cadence,
  * pricing). Lets the cart drawer show shots + free shots per the "20 + 8" model.
+ *
+ * Resolves against BOTH the Loop and Skio tables (superset), so a cart or an
+ * existing subscriber's line renders correctly regardless of which platform the
+ * line was created under. Subscription variants are distinct GIDs across the two
+ * tables; the shared one-time (otp) variants map to the same product/cadence in
+ * both, so the union is unambiguous.
  */
 export function getOfferByVariantId(
   variantId: string,
 ): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
-  for (const product of Object.keys(FUNNEL_VARIANTS) as FunnelProduct[]) {
-    for (const cadence of Object.keys(FUNNEL_VARIANTS[product]) as FunnelCadence[]) {
-      if (FUNNEL_VARIANTS[product][cadence].variantId === variantId) {
-        return { product, cadence, pricing: FUNNEL_PRICING[product][cadence] };
+  for (const table of [FUNNEL_VARIANTS, SKIO_FUNNEL_VARIANTS]) {
+    for (const product of Object.keys(table) as FunnelProduct[]) {
+      for (const cadence of Object.keys(table[product]) as FunnelCadence[]) {
+        if (table[product][cadence].variantId === variantId) {
+          return { product, cadence, pricing: FUNNEL_PRICING[product][cadence] };
+        }
       }
     }
   }
@@ -487,12 +568,16 @@ export function getFunnelProductSlideshow(
 const VARIANT_TO_PRODUCT = new Map<string, FunnelProduct>();
 const QUARTERLY_VARIANT_SET = new Set<string>();
 
-for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
-  for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
-    if (config.variantId) {
-      VARIANT_TO_PRODUCT.set(config.variantId, product);
-      if (cadence === "quarterly-sub") {
-        QUARTERLY_VARIANT_SET.add(config.variantId);
+// Built from BOTH Loop and Skio tables so cart-line detection (upsell, analytics)
+// resolves a line whichever platform created it — during and after the cutover.
+for (const table of [FUNNEL_VARIANTS, SKIO_FUNNEL_VARIANTS]) {
+  for (const [product, cadences] of Object.entries(table) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
+    for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
+      if (config.variantId) {
+        VARIANT_TO_PRODUCT.set(config.variantId, product);
+        if (cadence === "quarterly-sub") {
+          QUARTERLY_VARIANT_SET.add(config.variantId);
+        }
       }
     }
   }
@@ -554,7 +639,7 @@ export function getOfferVariant(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): FunnelVariantConfig | null {
-  const config = FUNNEL_VARIANTS[product][cadence];
+  const config = activeFunnelVariants()[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
@@ -563,7 +648,7 @@ export function isVariantReady(
   product: FunnelProduct,
   cadence: FunnelCadence,
 ): boolean {
-  const config = FUNNEL_VARIANTS[product][cadence];
+  const config = activeFunnelVariants()[product][cadence];
   return Boolean(config?.variantId);
 }
 
