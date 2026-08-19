@@ -126,5 +126,10 @@ export async function GET() {
     hash,
   });
 
-  return NextResponse.json({ src: `${SKIO_PORTAL_BASE}?${params.toString()}` });
+  // no-store: the src carries a per-customer Skio login hash, so it must never be
+  // cached by an intermediary/CDN and handed to another customer.
+  return NextResponse.json(
+    { src: `${SKIO_PORTAL_BASE}?${params.toString()}` },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }
