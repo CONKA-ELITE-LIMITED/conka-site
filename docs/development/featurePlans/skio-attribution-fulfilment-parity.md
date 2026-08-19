@@ -90,7 +90,7 @@ All 6 Skio base variants carry `custom.bundlecomposition` + correct weight (2.1k
 ## Open questions
 
 - **Ops:** do recurring Skio orders (open + paid + unfulfilled) get pulled by Synergy and inventory-route to the Synergy location? Unverified in code; pure fulfilment config. Phase 2 confirms.
-- **Decision (Phase 3):** does recurring subscription revenue need Meta / Triple Whale visibility (via Skio webhooks), or does it stay acquisition-only? Question sent to Skio (Noah) to understand what Skio can feed.
+- **Decision (Phase 3):** does recurring subscription revenue need Meta / Triple Whale visibility, or stay acquisition-only? **Noah answered (2026-08-18), so the decision is now a menu, not a blocker:** (a) stay acquisition-only (today's behaviour; rebills carry no `checkout_token`, CONFIRMED by Noah, so our webhook correctly skips them); (b) recurring revenue into Triple Whale via Skio's **native Triple Whale integration** (no build - recommended, enable at cutover); (c) recurring revenue into Meta by building off Skio's lifecycle webhooks (real work, only if Meta needs LTV). Also confirmed: our cart-level `_fbp`/`_fbc`/`conka_uid` should persist onto the subscription contract and appear on renewals (attributes must be on the contract from checkout, which ours are). Full detail in [`skio/migration.md`](../../features/skio/migration.md#answers-from-skio-noah-2026-08-18).
 
 ## References
 

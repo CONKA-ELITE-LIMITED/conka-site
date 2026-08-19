@@ -32,15 +32,19 @@ The Skio selling variants + plans stay constant; only the fulfilment metafield c
 
 - **Kept the free-shots offer** (quantity bonus on the first order), delivered via the staged fulfilment model, rather than a cheaper-first-box price policy.
 - **Percentage-off plans on net-new base variants** (the clean Skio shape), nothing existing repriced.
-- **Recurring-revenue attribution** is acquisition-only today (rebills send no Meta Purchase, matching Loop). Whether to feed recurring/churn signals via Skio webhooks is deferred (SCRUM-1223 Phase 3); questions sent to Skio.
+- **Recurring-revenue attribution** is acquisition-only today (rebills send no Meta Purchase, matching Loop). At cutover, the cheapest recurring visibility is Skio's **native Triple Whale integration** (no build); Meta CAPI for rebills would be built off Skio's webhooks and is deferred (SCRUM-1223 Phase 3).
 
-## Open questions for Skio (Noah)
+## Answers from Skio (Noah, 2026-08-18)
 
-- Do Skio-created rebill orders carry the first order's note attributes (`_fbp`/`_fbc`/`conka_uid`/`_source`), and do they have a `checkout_token`? (We skip Purchase CAPI on no-token orders.)
-- What webhooks does Skio emit (billed / order created / cancelled / paused / skipped) for reporting?
-- Does Skio have native Meta CAPI / Triple Whale for rebills, or do we build off webhooks?
-- Do migrated Loop contracts keep the customer's original attribution?
-- Confirm the exact portal `hostname`/params and that the account is fully provisioned (see [`customer-portal.md`](./customer-portal.md)).
+All the pre-cutover open questions are answered. Sources: Noah (Skio) email 2026-08-18; Skio headless iframe + webhooks docs.
+
+- **Rebill attribution (1.B).** Attributes carry to renewal orders ONLY if they live on the Shopify **subscription contract**, which is populated from the **checkout/cart** data, not from edits made to the first order after checkout. Our `_fbp`/`_fbc`/`conka_uid`/`_listicle_origin` are attached as **cart-level attributes at checkout**, so they should persist to the contract and appear on each renewal. Skio does not re-copy attributes per bill. (Worth confirming on the first real renewal.)
+- **Rebill `checkout_token` (2.B).** CONFIRMED: Skio rebills are created server-side through Shopify's native subscription billing and have **no `checkout_token`**. So our `orders/paid` webhook correctly skips them (see `META_PIXEL_AND_CAPI.md`). Noah suggests also keying on `subscription_contract_id`/selling-plan data for belt-and-braces.
+- **Webhooks / events (3.B).** Skio emits subscription-lifecycle events (billed / order created / cancelled / paused / skipped) via its webhooks + event-metrics API - the basis for any recurring-revenue / churn reporting.
+- **Native integrations (4.B).** Skio has a **native Triple Whale** integration (enable at cutover for recurring visibility). No native Meta CAPI - that would be built off Skio's webhooks if we decide we need it.
+- **Migrated contracts (5.B).** Migrated Loop contracts keep their **operational** history (start date, order history, billing schedule, products, payment method) but do **NOT** retain Loop's original attribution/custom fields. If channel-to-LTV reporting matters, preserve the original source in Shopify customer metafields/tags before cutover and join to Skio LTV in the warehouse. (Acceptable for us: migrated contracts are already-acquired customers.)
+- **Portal params + provisioning (2.A/3.A/4.A).** Store is on **cpv3** (Customer Portal v3). Auto-login endpoint is **`/a/account/shopify-login`** (fixed in SCRUM-1227); params `hostname` = public domain, `shop` = myshopify domain, `totalSpent` = real value (we send `0`, display-only, not in the hash). Address/payment changes in the Skio portal **write back to Shopify automatically** (so the Loop address-mirror can be dropped at cutover). See [`customer-portal.md`](./customer-portal.md).
+- **Creating a test subscription (1.A).** Either run a 100%-off discount through Shopify checkout, or manually create one in the Skio backend (Subscribers -> Subscriptions -> "create subscription").
 
 ## Cutover checklist (Phase 4, not started)
 
@@ -49,3 +53,6 @@ The Skio selling variants + plans stay constant; only the fulfilment metafield c
 3. Set `NEXT_PUBLIC_SKIO_ENABLED=true` (+ `SKIO_STORE_ID_HASH`, `SKIO_API_TOKEN`) in Vercel prod; deploy the Loop-removal release.
 4. Verify a real Skio purchase + portal login in prod; verify attribution + Synergy fulfilment (SCRUM-1223).
 5. Remove Loop wiring (`app/lib/loop.ts`, `app/api/auth/subscriptions/*`, the self-built portal, RETENTION15 flow, Loop env vars).
+6. Enable Skio's native **Triple Whale** integration for recurring-revenue visibility (4.B).
+7. Drop the Loop per-contract **address-mirror** now that Skio writes address/payment back to Shopify (4.A).
+8. (Optional) If channel-to-LTV reporting is wanted, preserve original source in Shopify customer metafields/tags before cutover (5.B) - migrated contracts do not carry Loop attribution.
