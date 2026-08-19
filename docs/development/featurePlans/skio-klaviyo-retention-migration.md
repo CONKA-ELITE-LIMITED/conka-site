@@ -28,6 +28,26 @@ Pulled from Klaviyo this session:
 
 **Yes - both events and profile properties.** Skio's native Klaviyo integration sends subscription events (metrics) AND a set of custom profile properties, all `skio_*` prefixed, e.g. `skio_nextBillingDate`, `skio_cyclesCompleted`, `skio_remainingCyclesUntilRenewal`, `skio_nextRenewalDate`, `skio_hasActiveSubscription` / `skio_activeSubscriptionCount`, `skio_hasPausedSubscription` / `skio_pausedSubscriptionCount`, `skio_hasFailedSubscription` / `skio_failedSubscriptionCount`, `skio_hasCancelledSubscription` / `skio_cancelledSubscriptionCount`, `skio_hasPrepaidSubscription`, `skio_totalItemQuantity`, `skio_hasBackupPaymentMethod`, `skio_membership_tier`, `skio_referralCode`, `skio_storefrontUserId`. The **names differ from Loop's**, so every segment referencing a Loop property must be re-pointed to the `skio_*` equivalent. The full **event-metric** name list is thin in the docs (only `subscriptionCreated` is named) and is best captured live once the integration is connected (Phase 2). Source: help.skio.com/docs/skio-event-and-profile-properties-in-klaviyo.
 
+## Phase 1 findings (2026-08-19, SCRUM-1233)
+
+The audit reshaped the risk picture: **almost none of the Loop coupling lives inside Klaviyo.** The earlier assumption (retention-lab flows fed by Loop-built segments) was wrong.
+
+**Segment audit:** 4 segments exist in the whole account, and **0 reference any Loop metric or subscription property**. They are all `userType` app-audience segments (Athlete / Coach / Everyday) plus one non-Loop exclusion segment. No Loop→Skio risk in segments.
+
+**Flow audit (18 retention / cancellation / replenishment flows):**
+
+| Coupling | Flows | Detail |
+|----------|-------|--------|
+| **Direct Loop-metric trigger** | `NEW Cancellation Flow` (`WQxVrN`, draft) | Triggers on `Loop Subscription Cancelled` (`Uxj4vP`). The ONE hard in-Klaviyo Loop dependency. Re-point to Skio's cancellation event. |
+| **List-membership triggered** (no Loop in trigger/filter) | 14 "(TEST)" flows: Chronic Pauser, Dunning, Payment Recovered, Involuntary Churn, Reactivated from Pause, Won Back from Cancel, Cancelled Winback, New Sub Converted, Repeat OTP, Habitual OTP, Low Frequency, Monthly Watchful, Monthly Stable, Quarterly VIP Stable | Each fires off "Added to List" for its own list and filters only on that membership. Lists: `U2Ari5`, `Yj6vh4`, `U7dFDt`, `SiMN8Y`, `XG5sEr`, `TucD2Q`, `S4U36N`, `SLyk4P`, `XsbFCf`, `VDKN7L`, `TVXaWF`, `XwNVXD`, `WTMTm2`, `QTvccW`. |
+| **Non-Loop metric trigger** | `Cancellation Flow` (`Vs5RRf`), `Replenishment Reminder - Standard` (`WapsuW`), `Customer Winback - Standard` (`Vj5zYe`), all draft | Trigger on metric `WLjkbP` (not a Loop metric, e.g. a Shopify order metric). Loop-independent. |
+
+**The dependency moved upstream.** Because no segment feeds those 14 lists, the retention lab's real Loop coupling (if any) is **whatever external process populates the 14 lists** - a reverse-ETL / warehouse job / custom sync that classifies subscribers from Loop data and pushes them into Klaviyo lists. That process lives OUTSIDE Klaviyo and is the actual thing that must be re-pointed from Loop to Skio at cutover. Identifying it is the critical next step (Phase 2).
+
+**Revised risk:** far smaller inside Klaviyo than assumed - only 1 draft flow to re-point. The migration weight is (a) tracing + re-pointing the external list-population source, and (b) the cancellation re-point. The 14 flows themselves need no change as long as their lists keep getting populated from Skio data.
+
+**RETENTION15 decision (recommendation):** move cancellation **deflection / save-offers into Skio's portal** (matches the no-code iframe direction; the parent removes the self-built RETENTION15 code flow at Phase 4), and keep a **post-cancel winback** as a Klaviyo flow re-pointed from `NEW Cancellation Flow`'s Loop trigger to Skio's cancellation event. So: deflection = Skio portal; winback = Klaviyo off the Skio cancel event.
+
 ## Approach
 
 Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (draft / off), then switch at the same coordinated moment as the parent's Phase 4 code cutover. Same "build in parallel, flip at cutover" pattern the whole Skio migration uses, so live subscribers are never disrupted.
@@ -40,8 +60,8 @@ Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (d
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Dependency audit + Loop to Skio mapping table | Not Started (Active) |
-| 2 | Connect Skio to Klaviyo (native integration) | Not Started (Active) |
+| 1 | Dependency audit + Loop to Skio mapping table | **Done (2026-08-19, SCRUM-1233) - see Phase 1 findings** |
+| 2 | Connect Skio to Klaviyo + trace the retention-lab list-population source | Not Started (Active) |
 | 3 | Rebuild segments + flows in parallel (draft) | Future (unblocks after 1+2) |
 | 4 | Cutover switch (synced with parent Phase 4) | Future |
 | 5 | Verify + decommission Loop metrics/segments | Future |
@@ -50,18 +70,19 @@ Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (d
 
 ## Active phase task breakdown
 
-### Phase 1 - Dependency audit + mapping table (ACTIVE, ticketed)
+### Phase 1 - Dependency audit + mapping table (DONE, SCRUM-1233)
 
-1. **[Klaviyo] Segment audit.** Pull every segment definition; flag those referencing a `Loop Subscriptions` metric or a Loop-synced profile property; map each flagged segment to the list(s)/flow(s) it feeds. Deliverable: a complete "Loop-dependent segment" inventory. Complexity: Medium.
-2. **[Klaviyo] Flow audit.** For each retention-lab flow, record its trigger (metric vs "Added to List") and, for list-triggered ones, the feeding segment. Confirms the full set of retention paths that depend on Loop. Complexity: Small.
-3. **[Docs] Loop to Skio mapping table.** The 23 Loop metrics + the Loop profile properties, each mapped to its Skio equivalent (event metric or `skio_*` property). Right-hand column for event metrics is filled in Phase 2 once real Skio events arrive; profile-property column seeded now from the `skio_*` list above. Complexity: Small.
-4. **[Decision] RETENTION15 cancellation handling.** Decide: keep cancellation deflection as a Klaviyo flow off Skio's cancel event, or move save-offers into Skio's portal deflection (the parent removes the self-built RETENTION15 flow at Phase 4). Complexity: decision, not build.
+1. ~~**[Klaviyo] Segment audit.**~~ **DONE** - 4 segments, 0 Loop-dependent (see Phase 1 findings).
+2. ~~**[Klaviyo] Flow audit.**~~ **DONE** - 18 flows audited; only `NEW Cancellation Flow` (draft) couples to a Loop metric; 14 fire off list membership; 3 use a non-Loop metric.
+3. ~~**[Docs] Loop to Skio mapping table.**~~ **DONE** - seeded below; event column fills in Phase 2 from live Skio events.
+4. ~~**[Decision] RETENTION15 cancellation handling.**~~ **DECIDED** (recommendation recorded in Phase 1 findings): deflection in Skio portal, winback as a Klaviyo flow off the Skio cancel event.
 
-### Phase 2 - Connect Skio to Klaviyo (ACTIVE)
+### Phase 2 - Connect Skio to Klaviyo + trace list population (ACTIVE)
 
-1. **[Klaviyo/Skio] Enable Skio's native Klaviyo integration** so Skio events + `skio_*` properties start flowing in as new metrics/properties.
-2. **[Docs] Capture the real Skio event-metric names** (fire events via the test subscription) and complete the mapping table's event column.
-3. **[Verify] Confirm profile-property sync** - that the `skio_*` properties our segments will rely on actually populate on a real profile.
+1. **[Investigate] Trace the retention-lab list-population source (BLOCKING).** No Klaviyo segment feeds the 14 retention-lab lists (`U2Ari5` etc.), so an external process populates them from subscriber data. Find it (reverse-ETL / warehouse / custom sync / app). This is where the real Loop coupling lives; it is the thing that must be re-pointed from Loop to Skio. Complexity: TBD - needs Rudh's knowledge of the retention-lab pipeline.
+2. **[Klaviyo/Skio] Enable Skio's native Klaviyo integration** so Skio events + `skio_*` properties flow in as new metrics/properties.
+3. **[Docs] Capture the real Skio event-metric names** (fire events via the test subscription) and complete the mapping table's event column.
+4. **[Verify] Confirm profile-property sync** - that the `skio_*` properties actually populate on a real profile.
 
 Phases 3-5 (rebuild in parallel, cutover switch, verify + decommission) live here and are ticketed at build time, matching the parent doc's convention.
 
