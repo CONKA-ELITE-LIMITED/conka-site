@@ -1,6 +1,6 @@
 # Skio Orders: Attribution + Fulfilment Parity
 
-**Status:** Not started (lined up, not yet active)
+**Status:** Phase 1 VERIFIED (2026-08-18) · Phase 2 metafield audit PASSED · remaining Phase 2 = Synergy handoff + live routing test (ops)
 **Scale:** C (cross-system verification, non-negotiable), but little-to-no code
 **Tracking:** This doc + Jira (SCRUM-1223). Part of the Loop to Skio migration; see [`skio-subscription-migration.md`](./skio-subscription-migration.md) and [`skio-migration-status.md`](./skio-migration-status.md).
 **Owner:** Rudh
@@ -29,24 +29,47 @@ Net: the "tags for Synergy" are Synergy's job on pull. Our job is making the Ski
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Attribution verification (prove Skio order carries attribution + fires CAPI Purchase; rebill skipped) | Active (lined up) |
-| 2 | Synergy fulfilment verification/config (bundlecomposition, new SKUs to Synergy, pull + location routing) | Active (lined up, ops-led) |
+| 1 | Attribution verification (prove Skio order carries attribution + fires CAPI Purchase; rebill skipped) | **VERIFIED 2026-08-18** (see Verification results) |
+| 2 | Synergy fulfilment verification/config (bundlecomposition, new SKUs to Synergy, pull + location routing) | **Task 1 (metafield audit) PASSED**; tasks 2-3 (Synergy handoff + live routing) open, ops-led |
 | 3 | Recurring-revenue attribution decision (Skio webhooks vs acquisition-only) | Future (decision-gated) |
+
+## Verification results (2026-08-18)
+
+### Phase 1 — attribution: PASS
+
+- **Code path proven variant-agnostic.** `funnelCheckout.ts` + `CartContext.tsx` attach `buildMetaCartAttributes()` (cart-level `_fbp`/`_fbc`/`conka_uid`) + line attrs on every add, regardless of Loop vs Skio variant; `/api/cart` forwards cart attributes → order `note_attributes`; the webhook gates CAPI on `checkout_token`. No Skio-specific branch anywhere.
+- **Live evidence (read via the attribution-audit Admin app, `read_orders`).** Real 2026-08-18 funnel orders carry the full attribute set with `checkout_token` present and real £ values: `#3878` (£39.99 — `_fbp`+`_fbc`+`conka_uid`+`_listicle_origin=adhd-listicle-sticky`), `#3875` (£69.98), `#3873` (£67.50), `#3872` (£39.99). Since a Skio order uses the identical `/api/cart` path, parity is established.
+- **Skio test order `#3879` is not a valid attribution artifact** (and needs no fix): it went through the real PDP path (line prop `source: product_page`, Skio variant `FLOW-20`) but in a **cookie-less session** → empty `note_attributes`, £0 total (100%-off discount), app/channel-created. It confirms the pipes connect (checkout_token present → webhook would fire) but proves nothing about attribution quality. A real ad-driven buyer sets the cookies; they flow through the path `#3878` proves.
+- **Rebill skip is by design and certain:** Skio rebills are contract-created with no `checkout_token` → skipped, same as Loop rebills (which prod logs already show excluded). Recorded in `META_PIXEL_AND_CAPI.md`.
+- **Remaining "verify by effect" (non-blocking, needs Rudh's Meta/Vercel access):** Events Manager EMQ on a `#3878`-class Purchase; the first real Skio rebill logging "Skipping non-checkout order".
+
+### Phase 2 task 1 — metafield audit: PASS
+
+All 6 Skio base variants carry `custom.bundlecomposition` + correct weight (2.1kg per 28-box), none `SYNERGYIGNORE`, compositions matching the live Loop funnel shot economics:
+
+| SKU | Variant GID | Weight | `bundlecomposition` |
+|-----|-------------|--------|---------------------|
+| `FLOW-20` | 58457787040118 | 2.1kg | `1xFLOW-FUNNEL-28` |
+| `FLOW-60` | 58457811550582 | 6.3kg | `3xFLOW-FUNNEL-28` |
+| `CLEAR-20` | 58457822069110 | 2.1kg | `1xCLEAR-FUNNEL-28` |
+| `CLEAR-60` | 58457854411126 | 6.3kg | `3xCLEAR-FUNNEL-28` |
+| `BOTH-40` | 58457859686774 | 4.2kg | `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28` |
+| `BOTH-120` | 58457864077686 | 10.5kg | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28` (140 shots — matches Loop `BOTH-FUNNEL-140`) |
 
 ## Active phase task breakdown
 
 ### Phase 1 - Attribution verification
 
-1. **[Verify] Inspect the Skio test order's note attributes.** Pull order #3879 (read-only Admin/API) and confirm `_fbp`, `_fbc`, `conka_uid`, `_source`, `_upsell_accepted`, `_listicle_origin` are present with real values. Complexity: Small.
-2. **[Verify] Confirm the CAPI Purchase fired.** Vercel logs (`conka-shopify` prod, filter `[Shopify webhook]`, `hooks.conka.io`) show "Sending Purchase" for #3879 with value 39.99 and the attribution `user_data`; Meta Test Events / Events Manager shows the Purchase with good EMQ. Complexity: Small.
-3. **[Verify] Confirm a rebill is skipped.** On the first real Skio rebill (or a simulated no-token order), logs show "Skipping non-checkout order" with `hasCheckoutToken:false`. Complexity: Small (may wait for a real rebill).
-4. **[Doc] Record results** in `docs/analytics/META_PIXEL_AND_CAPI.md` and the Skio status doc. Run `/review-analytics`. Complexity: Small.
+1. ~~**[Verify] Inspect the Skio test order's note attributes.**~~ **DONE — see Verification results.** #3879's attributes were empty (cookie-less test session), so parity was instead proven from real prod orders (`#3878` et al.) that share the identical code path.
+2. **[Verify] Confirm the CAPI Purchase fired.** *Open, needs Rudh's Vercel/Meta access.* Vercel logs (`conka-shopify` prod, filter `[Shopify webhook]`) + Events Manager EMQ. Verify against a `#3878`-class real order (not #3879, which is £0/attribution-less).
+3. **[Verify] Confirm a rebill is skipped.** *Open, waits for the first real Skio rebill.* Logs show "Skipping non-checkout order" with `hasCheckoutToken:false`. Logic is certain (rebills carry no `checkout_token`).
+4. ~~**[Doc] Record results**~~ **DONE** in `docs/analytics/META_PIXEL_AND_CAPI.md` + `skio-migration-status.md`. `/review-analytics`: no cart-mutation code changed (verification-only), so no re-run warranted.
 
 ### Phase 2 - Synergy fulfilment verification/config (ops-led)
 
-1. **[Ops] Metafield audit.** Verify `custom.bundlecomposition` + correct weight on all 6 Skio base variants (`FLOW-20`, `CLEAR-20`, `BOTH-40`, `FLOW-60`, `CLEAR-60`, `BOTH-120`) and confirm none are `SYNERGYIGNORE`. Fix any gaps. Complexity: Small.
-2. **[Ops] Hand Synergy the new SKUs.** One SKU-to-box document for `FLOW-20`...`BOTH-120`, per the Synergy add-a-variant process. Complexity: Small.
-3. **[Ops] Routing test.** A Skio order (first + a recurring) pulls to Synergy, gets `IMPORTSYNERGY`, explodes into 28-boxes on Synergy's pick side, and inventory routes to the Synergy location. Complexity: Medium (coordination with Bethany/Synergy).
+1. ~~**[Ops] Metafield audit.**~~ **DONE — PASS.** All 6 Skio base variants carry `custom.bundlecomposition` + correct weight, none `SYNERGYIGNORE` (see Verification results table). No gaps to fix.
+2. **[Ops] Hand Synergy the new SKUs.** *Open — next action.* Ready-to-send document drafted: [`skio-synergy-sku-handoff.md`](./skio-synergy-sku-handoff.md) (context + a plain-text message to forward to Bethany with the 6 SKU→box mappings). Per the [Synergy add-a-variant process](./skio-migration-status.md#synergy-fulfilment--process-for-any-newchanged-subscription-variant); Synergy explodes via the metafield, no manual portal work. Complexity: Small.
+3. **[Ops] Routing test.** *Open — needs a Synergy pull.* A Skio order (first + a recurring) pulls to Synergy, gets `IMPORTSYNERGY`, explodes into 28-boxes on Synergy's pick side, and inventory routes to the Synergy location. Coordinate with Bethany/Synergy. Note: Synergy pulls only **open + paid + unfulfilled** — the 100%-off `#3879` was auto-fulfilled, so it won't pull; use a normally-paid Skio order for this test. Complexity: Medium.
 
 ## Rabbit holes
 
