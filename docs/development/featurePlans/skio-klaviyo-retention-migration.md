@@ -48,6 +48,23 @@ The audit reshaped the risk picture: **almost none of the Loop coupling lives in
 
 **RETENTION15 decision (recommendation):** move cancellation **deflection / save-offers into Skio's portal** (matches the no-code iframe direction; the parent removes the self-built RETENTION15 code flow at Phase 4), and keep a **post-cancel winback** as a Klaviyo flow re-pointed from `NEW Cancellation Flow`'s Loop trigger to Skio's cancellation event. So: deflection = Skio portal; winback = Klaviyo off the Skio cancel event.
 
+## Phase 2 finding (2026-08-19): the retention lab is `conka-lab`, and the migration surface is its Loop ingest adapter
+
+Traced the list-population source (Phase 2 task 1). **The retention lab is the separate `conka-lab` repo** (Convex + a Python pipeline on Render), NOT Klaviyo config, and NOT Loop's native Klaviyo integration. It computes cohorts and pushes profiles into the Klaviyo lists itself.
+
+**How the 14 lists get populated:**
+- Python pipeline (`conka-api/app/pipeline/`, daily 12:00 UTC on Render) ingests **Loop REST** (subscriptions, activity logs, orders, billing attempts) into Convex `raw_loop_*` tables; `sanitize.py` merges Shopify + Loop into `sanitized_customers` / `sanitized_orders` (the source of truth).
+- The retention engine (`convex/actions/retentionEval.ts`, every 6h) reads only `sanitized_customers`, assigns each customer one of ~21 segments, writes `customer_segment_membership`, and enqueues add/remove ops to `klaviyo_sync_queue`.
+- `klaviyoSync.processQueue` (cron every 30 min) drains the queue into the Klaviyo API (add/remove-to-list + `conka_*` profile properties). Cohort to Klaviyo-list mapping lives in Convex `segment_definitions.klaviyoListId`; master kill switch env `KLAVIYO_ENABLED`.
+
+**Where Loop enters (the ONLY migration surface):** the ingest + `sanitize.py` layer of the Python pipeline. Loop-specific fields the engine depends on: `billingFrequency` (Loop `billing_policy`), pause/resume event dates (Loop activity logs), `cancellationReason`/`cancellationComment`, `lastBillingStatus` (Loop billing attempts), `isPrepaid`, and the involuntary-churn signal (Loop `payment_failed_last_retry` -> `subscription_cancelled`).
+
+**What survives unchanged:** everything downstream of `sanitized_customers` - the retention engine, all ~21 segment rules, the `conka_*` properties, and the entire Klaviyo sync layer - is platform-agnostic (consumes fields by meaning, not Loop identity). The 14 Klaviyo lists and their flows need no change as long as `sanitized_customers` keeps being populated with equivalent fields.
+
+**So the real migration is a `conka-lab` ingest-adapter rewrite** (Loop REST -> Skio API/webhooks), repopulating the same sanitized fields - NOT a Klaviyo re-point. Key fields Skio must supply: billing frequency, last-billing-status (FAILED/SUCCESS), pause/resume dates, and a voluntary-vs-involuntary cancellation distinction (Skio's status model differs from Loop's 3-state machine, so the involuntary-churn derivation needs re-validation). All the Loop-payload workarounds in conka-lab's `KNOWN_DATA_DISCREPANCIES.md` get re-solved or made moot against Skio's schema.
+
+**Boundary:** this work belongs in the **`conka-lab` repo** (its own docs + tickets), not conkaWebsite. This plan records the finding and the boundary; the conka-lab ingest-adapter migration is scoped there. The conkaWebsite-side Klaviyo work stays trivial (re-point the 1 draft cancellation flow, or replace it with a `conka_*`-driven signal).
+
 ## Approach
 
 Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (draft / off), then switch at the same coordinated moment as the parent's Phase 4 code cutover. Same "build in parallel, flip at cutover" pattern the whole Skio migration uses, so live subscribers are never disrupted.
@@ -79,10 +96,10 @@ Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (d
 
 ### Phase 2 - Connect Skio to Klaviyo + trace list population (ACTIVE)
 
-1. **[Investigate] Trace the retention-lab list-population source (BLOCKING).** No Klaviyo segment feeds the 14 retention-lab lists (`U2Ari5` etc.), so an external process populates them from subscriber data. Find it (reverse-ETL / warehouse / custom sync / app). This is where the real Loop coupling lives; it is the thing that must be re-pointed from Loop to Skio. Complexity: TBD - needs Rudh's knowledge of the retention-lab pipeline.
-2. **[Klaviyo/Skio] Enable Skio's native Klaviyo integration** so Skio events + `skio_*` properties flow in as new metrics/properties.
-3. **[Docs] Capture the real Skio event-metric names** (fire events via the test subscription) and complete the mapping table's event column.
-4. **[Verify] Confirm profile-property sync** - that the `skio_*` properties actually populate on a real profile.
+1. ~~**[Investigate] Trace the retention-lab list-population source.**~~ **DONE** - it is the `conka-lab` repo's pipeline (see Phase 2 finding). The real migration surface is conka-lab's Loop ingest adapter, not Klaviyo.
+2. **[conka-lab] Scope + build the Loop -> Skio ingest-adapter rewrite.** In the `conka-lab` repo (its own ticket): swap the Python pipeline's Loop REST ingest for Skio, repopulate `raw_*` -> `sanitized_customers` with the same fields the retention engine depends on, and re-validate the voluntary-vs-involuntary churn derivation against Skio's status model. Everything downstream is untouched. Complexity: Large (but isolated to the ingest/sanitize layer).
+3. **[conkaWebsite/Klaviyo] Re-point the one cancellation flow.** Either connect Skio's native Klaviyo integration for the cancel event, or replace `NEW Cancellation Flow`'s Loop trigger with a `conka_*`-driven signal from conka-lab. Trivial. Complexity: Small.
+4. **[Verify] End-to-end** - after the conka-lab adapter is live on Skio data, confirm a test subscriber flows through sanitize -> segment -> Klaviyo list correctly.
 
 Phases 3-5 (rebuild in parallel, cutover switch, verify + decommission) live here and are ticketed at build time, matching the parent doc's convention.
 
