@@ -1,6 +1,6 @@
 # Skio Customer Portal (embedded iframe)
 
-How the Skio hosted customer portal is embedded in the headless storefront at **`/account/manage`**, auto-logged-in via a server-signed magic link. Built in Phase 3 (SCRUM-1221). Iframe shell + signed-src plumbing verified 2026-08-18; the auto-login endpoint was corrected to `/a/account/shopify-login` in SCRUM-1227 (final auto-login into a real subscription still needs a Skio test contract, see gotchas).
+How the Skio hosted customer portal is embedded in the headless storefront at **`/account/manage`**, auto-logged-in via a server-signed magic link. Built in Phase 3 (SCRUM-1221); auto-login **verified end-to-end 2026-08-19** on the skio-integration preview (a logged-in customer lands on their subscription, no Skio email-login screen), after the endpoint was corrected to `/a/account/shopify-login` in SCRUM-1227.
 
 ## Approach
 
