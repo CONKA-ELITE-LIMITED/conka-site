@@ -1,6 +1,6 @@
 # Skio Customer Portal (embedded iframe)
 
-How the Skio hosted customer portal is embedded in the headless storefront at **`/account/manage`**, auto-logged-in via a server-signed magic link. Built in Phase 3 (SCRUM-1221), verified end-to-end 2026-08-18.
+How the Skio hosted customer portal is embedded in the headless storefront at **`/account/manage`**, auto-logged-in via a server-signed magic link. Built in Phase 3 (SCRUM-1221). Iframe shell + signed-src plumbing verified 2026-08-18; the auto-login endpoint was corrected to `/a/account/shopify-login` in SCRUM-1227 (final auto-login into a real subscription still needs a Skio test contract, see gotchas).
 
 ## Approach
 
@@ -18,8 +18,9 @@ Removing our login is not possible: it is the SSO that powers the seamless Skio 
 
 `app/api/auth/skio-portal/route.ts` (Node runtime, for `crypto.md5`):
 - Returns `500` if `SKIO_STORE_ID_HASH` / shop id are unconfigured; `401` if not authenticated / no customer; `502` on a transient Customer Account API failure; `400` if the id is non-numeric.
-- Builds `https://cpv3.skio.com/a/account/login?hostname=&shop=&email=&id=&totalSpent=&hash=`.
-- **`hostname` = `shop.conka.io`** (see gotcha below). `shop` = `conka-6770.myshopify.com`. `totalSpent = 0` (not in our session, not part of the hash).
+- Builds `https://cpv3.skio.com/a/account/shopify-login?hostname=&shop=&email=&id=&totalSpent=&hash=`.
+- **Endpoint = `/a/account/shopify-login`** (the auto-login flow). NOT `/a/account/login`, which is Skio's standard passwordless email login and renders the "email login / Email does not exist" screen (SCRUM-1227). Host stays `cpv3.skio.com` (Customer Portal v3; `storefront-iframe.skio.com` is v2).
+- **`hostname` = `shop.conka.io`** (see gotcha below). `shop` = `conka-6770.myshopify.com`. `totalSpent = 0`: display-only in the portal, not part of the hash. Skio asked for the real value, but the Customer Account API has no lifetime-spend field (`amountSpent` is Admin-only), so we send `0`.
 
 ## Frontend
 
