@@ -14,13 +14,21 @@ export const runtime = "nodejs";
  * (`/account/manage`) drops the returned `src` into an iframe.
  *
  * SKIO_STORE_ID_HASH signs `md5(numericCustomerId + STORE_ID_HASH)` and MUST stay
- * server-side. `totalSpent` is not in our session and is not part of the hash, so
- * we send `0` (verify in the Phase 3 preview spike).
+ * server-side. `totalSpent` is display-only in Skio's portal and NOT part of the
+ * hash, so it cannot affect auto-login. Skio asked for the real value, but the
+ * Customer Account API Customer type exposes no lifetime-spend field (`amountSpent`
+ * is Admin-API-only), so we send `0`; a real value would need an orders-aggregate
+ * or Admin lookup and isn't worth it for a display value (SCRUM-1227).
  *
- * Doc: help.skio.com/docs/how-do-i-render-the-skio-logincustomer-portal-in-an-iframe
+ * Doc: help.skio.com iframe auto-login flow — endpoint /a/account/shopify-login
  */
 
-const SKIO_PORTAL_BASE = "https://cpv3.skio.com/a/account/login";
+// Auto-login endpoint. MUST be /a/account/shopify-login, NOT /a/account/login:
+// the latter is Skio's standard passwordless email login, which renders the
+// "email login / Email does not exist" screen instead of signing the customer
+// in via our hash (SCRUM-1227). Host stays cpv3.skio.com (Customer Portal v3,
+// the version our store is provisioned on; storefront-iframe.skio.com is v2).
+const SKIO_PORTAL_BASE = "https://cpv3.skio.com/a/account/shopify-login";
 
 interface CustomerResponse {
   data?: { customer?: { id: string; emailAddress?: { emailAddress: string } } };
@@ -118,5 +126,10 @@ export async function GET() {
     hash,
   });
 
-  return NextResponse.json({ src: `${SKIO_PORTAL_BASE}?${params.toString()}` });
+  // no-store: the src carries a per-customer Skio login hash, so it must never be
+  // cached by an intermediary/CDN and handed to another customer.
+  return NextResponse.json(
+    { src: `${SKIO_PORTAL_BASE}?${params.toString()}` },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

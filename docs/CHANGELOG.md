@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-19** | SCRUM-1227: fix Skio portal auto-login to use /a/account/shopify-login (was landing on Skio's email login)
 - **2026-08-19** | SCRUM-1223: verified Skio orders inherit Meta attribution + Synergy fulfilment parity (docs only, no code change); drafted Synergy SKU handoff
 - **2026-08-18** | Skio Phase 3: Skio customer portal at /account/manage (iframe, flag-gated), shared cutover flag
 - **2026-08-18** | Deleted dead funnel-b trial page; labelled start-b, lander-b, funnel-c as dormant
