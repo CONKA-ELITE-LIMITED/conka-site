@@ -155,6 +155,15 @@ The 23 Loop metrics to map. Skio-equivalent column filled in Phase 2 from live e
 - **Silent retention loss at cutover** - mitigated by build-in-parallel + a switch synced to the parent's Phase 4.
 - **Skio event granularity differs from Loop's** - surfaced by the mapping table; budget for some re-logic.
 
+## Cross-repo tracking
+
+The substantive migration work (the Loop -> Skio ingest-adapter rewrite) lives in the **`conka-lab` repo**, not here. This doc is the conkaWebsite-side record + boundary; the conka-lab pipeline migration is scoped there.
+
+- **conka-lab plan (the ingest-adapter rewrite):** `conka-lab` repo -> `docs/featurePlans/loop-to-skio-ingest-migration.md` (expected path; the conka-lab session creates it and should back-link to this doc).
+- **This doc covers:** the Klaviyo-side dependency audit (SCRUM-1233) + the trivial conkaWebsite re-point (1 cancellation flow).
+- **conka-lab covers:** rewriting `conka-api/app/pipeline/` ingest + `sanitize.py` from Loop REST to Skio, keeping `sanitized_customers` schema-stable.
+- **Cutover is synced** to the parent's Phase 4 (both repos flip together, Loop billing off at the same moment).
+
 ## References
 
 - Parent plan: [`skio-subscription-migration.md`](./skio-subscription-migration.md) (Phase 4 + retention-analytics follow-up)
