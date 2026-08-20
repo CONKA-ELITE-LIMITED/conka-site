@@ -90,7 +90,7 @@ export default function LandingHeroVideo() {
 
       {/* Content — title/copy at the top, CTA at the bottom (Magic Mind layout).
           min-h drives the container height; the absolute video fills it. */}
-      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-10">
+      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-3">
         {/* Staggered two-tier title (HomeHeroV3 style): large bold first line
             that must never wrap, smaller lighter second line. */}
         <header className="text-center">
