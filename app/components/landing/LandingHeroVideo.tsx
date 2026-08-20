@@ -81,10 +81,10 @@ export default function LandingHeroVideo() {
       {/* Bottom fade — the video melts into the white section below rather than
           ending on a hard edge. */}
       <div
-        className="absolute inset-x-0 bottom-0 h-1/4 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-[36%] pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 14%, rgba(255,255,255,0) 100%)",
+            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 100%)",
         }}
       />
 
@@ -109,7 +109,7 @@ export default function LandingHeroVideo() {
             Buy CONKA Today
           </ConkaCTAButton>
           <TrustMicroRow className="mt-4" />
-          <p className="mt-4 max-w-[34ch] text-center text-[15px] leading-snug text-black">
+          <p className="mt-7 max-w-[34ch] text-center text-[15px] font-medium leading-snug text-black">
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
           </p>
