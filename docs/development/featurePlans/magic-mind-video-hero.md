@@ -40,9 +40,15 @@ tokens. Reuses `ConkaCTAButton`. Video playback reuses the `FlowVideo` /
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Video optimisation (mp4 + webm + poster, ping-pong loop) | Not Started |
-| 2 | Mobile video hero component + mobile hard-swap | Not Started |
-| 3 | Desktop layout for the video hero | Future |
+| 1 | Video optimisation (mp4 + webm + poster, ping-pong loop) | Done (SCRUM-1099) |
+| 2 | Mobile video hero component + mobile hard-swap | Done (SCRUM-1099) |
+| 3 | Desktop layout for the video hero | Done (SCRUM-1238) |
+
+> **Aug 2026 note (SCRUM-1238).** The video hero was briefly replaced by the
+> image-led `HomeHeroV3` (kept for revert), then restored with the new
+> `BothNeuronFloat` / `BothNeuronFloatDesktop` assets, completing Phase 3 with
+> a dedicated landscape (1280x720) desktop video. The `BothStillWater` trios
+> remain in `public/videos/both/` as a revert path.
 
 ### Phase 1: Video optimisation (ACTIVE)
 1. **Encode the loop set**

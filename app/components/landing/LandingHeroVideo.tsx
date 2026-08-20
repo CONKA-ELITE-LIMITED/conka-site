@@ -7,17 +7,17 @@ import TrustMicroRow from "./TrustMicroRow";
 /* ============================================================================
  * LandingHeroVideo — mobile-only home hero (Magic Mind structure)
  *
- * A full-bleed background video of the Flow + Clear shots resting in still
- * water, with the existing hero title and supporting copy overlaid near the
- * top and a single CTA near the bottom. Copy is reused verbatim from
- * LandingHero; this is a structural homage to the Magic Mind hero, not a
- * messaging change.
+ * A full-bleed background video of the Flow + Clear shots floating through a
+ * glass neuron network, with the existing hero title and supporting copy
+ * overlaid near the top and a single CTA near the bottom. Copy is reused
+ * verbatim from LandingHero; this is a structural homage to the Magic Mind
+ * hero, not a messaging change.
  *
  * Footage is bright and airy, so text stays brand-black (monochrome-first)
  * with a light wash top and bottom for guaranteed legibility rather than a
  * dark scrim with white text.
  *
- * Video: BothStillWater is encoded as a forward+reverse concatenation, so the
+ * Video: BothNeuronFloat is encoded as a forward+reverse concatenation, so the
  * native `loop` attribute gives a seamless ping-pong with no visible jump.
  * WebM/VP9 first (smaller), MP4/H.264 fallback for Safari. `muted` +
  * `playsInline` so iOS Safari autoplays inline; `preload="metadata"` keeps the
@@ -63,7 +63,7 @@ export default function LandingHeroVideo() {
   return (
     <div
       className="relative -mx-5 w-[calc(100%+2.5rem)] overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('/videos/both/BothStillWater-poster.jpg')" }}
+      style={{ backgroundImage: "url('/videos/both/BothNeuronFloat-poster.jpg')" }}
     >
       <video
         ref={videoRef}
@@ -71,20 +71,20 @@ export default function LandingHeroVideo() {
         playsInline
         loop
         preload="metadata"
-        aria-label="CONKA Flow and Clear shots resting in still water"
+        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
         className="absolute inset-0 h-full w-full object-cover"
       >
-        <source src="/videos/both/BothStillWater.webm" type="video/webm" />
-        <source src="/videos/both/BothStillWater.mp4" type="video/mp4" />
+        <source src="/videos/both/BothNeuronFloat.webm" type="video/webm" />
+        <source src="/videos/both/BothNeuronFloat.mp4" type="video/mp4" />
       </video>
 
-      {/* Bottom fade — the video melts into the tinted section below rather than
+      {/* Bottom fade — the video melts into the white section below rather than
           ending on a hard edge. */}
       <div
         className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(244,245,248,1) 0%, rgba(244,245,248,1) 14%, rgba(244,245,248,0) 100%)",
+            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 14%, rgba(255,255,255,0) 100%)",
         }}
       />
 

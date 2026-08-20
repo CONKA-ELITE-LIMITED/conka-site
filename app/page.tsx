@@ -6,7 +6,8 @@ import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import HomeHeroV3 from "./components/landing/HomeHeroV3";
+import LandingHeroVideo from "./components/landing/LandingHeroVideo";
+import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabGuarantee from "./components/landing/LabGuarantee";
@@ -84,15 +85,21 @@ export default function Home() {
           a ~16px white sliver shows above the flush hero. Pull the hero up into
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
-      {/* Full-bleed image hero: asset-top on mobile, asset-left / copy-right on
-          desktop. The section drops its gutters + track so the asset reaches the
-          viewport edges; HomeHeroV3 pads its own copy column. (The previous video
-          hero, LandingHeroVideo*, is kept in the codebase for revert.) */}
+      {/* Magic Mind-style looped video hero (Both Neuron Float): portrait video
+          on mobile, landscape video on desktop. (HomeHeroV3, the image hero, is
+          kept in the codebase for revert.) */}
       <section
-        className="brand-section brand-hero-first brand-bg-white !p-0 xl:-mt-4"
+        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
         aria-label="Homepage hero"
       >
-        <HomeHeroV3 />
+        <div className="brand-track lg:max-w-none!">
+          <div className="lg:hidden">
+            <LandingHeroVideo />
+          </div>
+          <div className="hidden lg:block">
+            <LandingHeroVideoDesktop />
+          </div>
+        </div>
       </section>
 
       {/* ===== SECTION 2: WHAT CONKA DOES ===== */}

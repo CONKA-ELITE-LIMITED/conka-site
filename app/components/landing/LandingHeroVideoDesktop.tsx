@@ -14,10 +14,10 @@ const HOME_LAUREL = {
 /* ============================================================================
  * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
  *
- * Landscape companion to LandingHeroVideo. The BothStillWaterDesktop shot has
- * the two shots centred with wide pale negative space either side, so the copy
- * sits in the left space (left-aligned, brand rule) over a full-bleed
- * background video, with the bottles staying centred on screen.
+ * Landscape companion to LandingHeroVideo. The BothNeuronFloatDesktop shot
+ * keeps the two shots right of centre with pale negative space on the left, so
+ * the copy sits in that left space (left-aligned, brand rule) over a
+ * full-bleed background video without covering the bottles.
  *
  * Copy is reused verbatim from LandingHero. Footage is bright, so text stays
  * brand-black with a left-to-right wash for legibility rather than a dark
@@ -61,7 +61,7 @@ export default function LandingHeroVideoDesktop() {
     <div
       className="relative w-full overflow-hidden bg-cover bg-center"
       style={{
-        backgroundImage: "url('/videos/both/BothStillWaterDesktop-poster.jpg')",
+        backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
       }}
     >
       <video
@@ -70,20 +70,20 @@ export default function LandingHeroVideoDesktop() {
         playsInline
         loop
         preload="metadata"
-        aria-label="CONKA Flow and Clear shots resting in still water"
+        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
         className="absolute inset-0 h-full w-full object-cover"
       >
-        <source src="/videos/both/BothStillWaterDesktop.webm" type="video/webm" />
-        <source src="/videos/both/BothStillWaterDesktop.mp4" type="video/mp4" />
+        <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
+        <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
       </video>
 
-      {/* Bottom fade — the video melts into the tinted section below rather than
+      {/* Bottom fade — the video melts into the white section below rather than
           ending on a hard edge. Kept short so it only softens the very base. */}
       <div
         className="absolute inset-x-0 bottom-0 h-1/5 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(244,245,248,1) 0%, rgba(244,245,248,1) 18%, rgba(244,245,248,0) 100%)",
+            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 100%)",
         }}
       />
 
