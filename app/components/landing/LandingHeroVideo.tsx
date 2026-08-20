@@ -90,7 +90,7 @@ export default function LandingHeroVideo() {
 
       {/* Content — title/copy at the top, CTA at the bottom (Magic Mind layout).
           min-h drives the container height; the absolute video fills it. */}
-      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-3">
+      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-10">
         {/* Staggered two-tier title (HomeHeroV3 style): large bold first line
             that must never wrap, smaller lighter second line. */}
         <header className="text-center">
@@ -104,7 +104,9 @@ export default function LandingHeroVideo() {
           </h1>
         </header>
 
-        <div className="flex flex-col items-center">
+        {/* translate (not margin/padding) so the block sits lower without
+            changing the container height, which would rescale the cover video. */}
+        <div className="flex translate-y-7 flex-col items-center">
           <ConkaCTAButton href="/conka-both" meta={null}>
             Buy CONKA Today
           </ConkaCTAButton>
