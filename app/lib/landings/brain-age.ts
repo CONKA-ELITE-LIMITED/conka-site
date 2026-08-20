@@ -308,14 +308,14 @@ export const brainAgeQuiz: LandingConfig = {
       title: "A system, not a pill.",
       images: [
         {
-          src: "/formulas/conkaFlow/FlowNew.jpg",
+          src: "/formulas/conkaFlow/FlowV3.jpg",
           alt: "CONKA Flow shot bottle",
           width: 1000,
           height: 1000,
           caption: "AM · FLOW",
         },
         {
-          src: "/formulas/conkaClear/ClearNew.jpg",
+          src: "/formulas/conkaClear/ClearV3.jpg",
           alt: "CONKA Clear shot bottle",
           width: 1000,
           height: 1000,

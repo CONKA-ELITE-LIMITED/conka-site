@@ -24,7 +24,7 @@ export function getFormulaPresentation(
     return {
       label: "CONKA Flow",
       href: "/conka-flow",
-      image: "/lander/FlowNew.jpg",
+      image: "/lander/FlowV3.jpg",
       imageAlt: "CONKA Flow",
       badgeClass: TIME_OF_DAY_BADGE.Morning,
     };
@@ -33,7 +33,7 @@ export function getFormulaPresentation(
     return {
       label: "CONKA Clear",
       href: "/conka-clarity",
-      image: "/lander/ClearNew.jpg",
+      image: "/lander/ClearV3.jpg",
       imageAlt: "CONKA Clear",
       badgeClass: TIME_OF_DAY_BADGE.Afternoon,
     };
@@ -41,7 +41,7 @@ export function getFormulaPresentation(
   return {
     label: "Flow + Clear",
     href: "/conka-both",
-    image: "/formulas/both/BothNew.jpg",
+    image: "/formulas/both/BothV3.jpg",
     imageAlt: "CONKA Flow and CONKA Clear",
     badgeClass: TIME_OF_DAY_BADGE["Full day"],
   };

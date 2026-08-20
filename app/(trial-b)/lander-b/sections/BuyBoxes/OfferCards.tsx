@@ -69,7 +69,7 @@ interface OfferCardsProps {
 export default function OfferCards({ source, className = '' }: OfferCardsProps) {
   const bundleCard: CardConfig = {
     description: '40 shots + 16 free shots on your first order',
-    image: '/formulas/both/BothNew.jpg',
+    image: '/formulas/both/BothV3.jpg',
     imageAlt: 'CONKA Flow & Clear bundle',
     title: 'CONKA – Flow & Clear',
     live: buildCard('both'),
@@ -80,8 +80,8 @@ export default function OfferCards({ source, className = '' }: OfferCardsProps) 
     description: '20 shots + 8 free shots on your first order',
     source,
     options: [
-      { key: 'flow', label: 'Flow · AM', title: 'CONKA Flow', image: '/lander/FlowNew.jpg', imageAlt: 'CONKA Flow', live: buildCard('flow'), product: 'flow' },
-      { key: 'clear', label: 'Clear · PM', title: 'CONKA Clear', image: '/lander/ClearNew.jpg', imageAlt: 'CONKA Clear', live: buildCard('clear'), product: 'clear' },
+      { key: 'flow', label: 'Flow · AM', title: 'CONKA Flow', image: '/lander/FlowV3.jpg', imageAlt: 'CONKA Flow', live: buildCard('flow'), product: 'flow' },
+      { key: 'clear', label: 'Clear · PM', title: 'CONKA Clear', image: '/lander/ClearV3.jpg', imageAlt: 'CONKA Clear', live: buildCard('clear'), product: 'clear' },
     ],
   };
 

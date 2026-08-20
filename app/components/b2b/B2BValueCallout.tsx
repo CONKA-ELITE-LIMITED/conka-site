@@ -354,8 +354,8 @@ function MediaIcon({ children }: { children: ReactNode }) {
 // Single-shot bottle render, contained in a large tile (box mode). Flow carries
 // the black cap, Clear the white cap, so the bottle alone reads the format.
 const BOX_MEDIA: Record<"flow" | "clear", { src: string; alt: string }> = {
-  flow: { src: "/formulas/conkaFlow/FlowNew.jpg", alt: "CONKA Flow shot bottle" },
-  clear: { src: "/formulas/conkaClear/ClearNew.jpg", alt: "CONKA Clear shot bottle" },
+  flow: { src: "/formulas/conkaFlow/FlowV3.jpg", alt: "CONKA Flow shot bottle" },
+  clear: { src: "/formulas/conkaClear/ClearV3.jpg", alt: "CONKA Clear shot bottle" },
 };
 
 function MediaBox({ productKey }: { productKey: "flow" | "clear" }) {

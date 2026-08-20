@@ -51,13 +51,13 @@ const FORMULA_META: Record<FormulaId, FormulaMeta> = {
   "01": {
     shortName: "Flow",
     tagline: "Calm focus for your mornings.",
-    bottleImage: "/formulas/conkaFlow/FlowNew.jpg",
+    bottleImage: "/formulas/conkaFlow/FlowV3.jpg",
     bottleAlt: "CONKA Flow bottle",
   },
   "02": {
     shortName: "Clear",
     tagline: "Afternoon clarity & reset",
-    bottleImage: "/formulas/conkaClear/ClearNew.jpg",
+    bottleImage: "/formulas/conkaClear/ClearV3.jpg",
     bottleAlt: "CONKA Clear bottle",
   },
 };
