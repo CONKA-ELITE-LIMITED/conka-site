@@ -2,27 +2,21 @@
 
 import { useEffect, useRef } from "react";
 import ConkaCTAButton from "./ConkaCTAButton";
-import LaurelBadge from "./LaurelBadge";
 import TrustMicroRow from "./TrustMicroRow";
-
-/* Brain-project credibility badge — generic (non-persona) copy for home. */
-const HOME_LAUREL = {
-  eyebrow: "World's Largest",
-  body: "Consumer brain-research project. 1,000+ brains tested regularly through our app.",
-};
 
 /* ============================================================================
  * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
  *
- * Landscape companion to LandingHeroVideo. The BothStillWaterDesktop shot has
- * the two shots centred with wide pale negative space either side, so the copy
- * sits in the left space (left-aligned, brand rule) over a full-bleed
- * background video, with the bottles staying centred on screen.
+ * Landscape companion to LandingHeroVideo. Full-bleed at the V2 asset's
+ * native wide 7:3 (1470x630), so the box never crops the frame and the
+ * upscale past native stays mild even on wide screens. The bottles are
+ * composed right of centre, so the copy + CTA overlay the pale negative
+ * space on the left (V3 staggered title, left-aligned, brand rule).
  *
- * Copy is reused verbatim from LandingHero. Footage is bright, so text stays
- * brand-black with a left-to-right wash for legibility rather than a dark
- * scrim. Video is a forward+reverse ping-pong (seamless native loop), WebM
- * first then MP4. IntersectionObserver play/pause, reduced-motion respected.
+ * Copy is reused verbatim from LandingHero with the HomeHeroV3 staggered
+ * two-tier title. Video is a forward+reverse ping-pong (seamless native
+ * loop), WebM first then MP4. IntersectionObserver play/pause,
+ * reduced-motion respected.
  *
  * Rendered only at lg+; below lg the page renders LandingHeroVideo.
  * ========================================================================== */
@@ -59,9 +53,9 @@ export default function LandingHeroVideoDesktop() {
   // box during the metadata-load window before the video decodes.
   return (
     <div
-      className="relative w-full overflow-hidden bg-cover bg-center"
+      className="relative aspect-[7/3] w-full overflow-hidden bg-cover bg-center"
       style={{
-        backgroundImage: "url('/videos/both/BothStillWaterDesktop-poster.jpg')",
+        backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
       }}
     >
       <video
@@ -70,51 +64,44 @@ export default function LandingHeroVideoDesktop() {
         playsInline
         loop
         preload="metadata"
-        aria-label="CONKA Flow and Clear shots resting in still water"
+        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
         className="absolute inset-0 h-full w-full object-cover"
       >
-        <source src="/videos/both/BothStillWaterDesktop.webm" type="video/webm" />
-        <source src="/videos/both/BothStillWaterDesktop.mp4" type="video/mp4" />
+        <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
+        <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
       </video>
 
-      {/* Bottom fade — the video melts into the tinted section below rather than
-          ending on a hard edge. Kept short so it only softens the very base. */}
+      {/* Bottom fade — the footage melts into the white section below rather
+          than ending on a hard edge. Kept short. */}
       <div
-        className="absolute inset-x-0 bottom-0 h-1/5 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-[10%] pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(244,245,248,1) 0%, rgba(244,245,248,1) 18%, rgba(244,245,248,0) 100%)",
+            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
         }}
       />
 
-      {/* Content — left-aligned in the negative space, vertically centred. */}
-      <div className="relative z-10 flex min-h-[72vh] items-center">
-        <div className="px-[5vw] max-w-[40rem]">
-          <LaurelBadge
-            eyebrow={HOME_LAUREL.eyebrow}
-            body={HOME_LAUREL.body}
-            className="mb-6"
-          />
-          <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            A Sharper Mind.
-            <br />
-            Morning to Evening.
+      {/* Copy — overlaid in the left negative space, vertically centred.
+          Staggered two-tier title (HomeHeroV3 style): large bold first line,
+          smaller lighter second line displaced right. */}
+      <div className="absolute inset-0 z-10 flex items-center">
+        <div className="flex flex-col items-start gap-5 px-[5vw] text-left text-black">
+          <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
+            <span className="block whitespace-nowrap text-[4rem] font-bold leading-[0.98] xl:text-[5rem]">
+              A Sharper Mind.
+            </span>
+            <span className="mt-1 block text-[2.75rem] font-medium leading-[1.05] xl:ml-28 xl:text-[3.5rem]">
+              Morning to Evening.
+            </span>
           </h1>
-          <p className="mt-5 max-w-[42ch] text-lg leading-snug text-black">
+          <p className="max-w-[42ch] text-lg leading-snug text-black xl:text-[1.1875rem]">
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
           </p>
-
-          <div className="mt-7">
-            <ConkaCTAButton href="/conka-both" meta={null}>
-              Buy CONKA Today
-            </ConkaCTAButton>
-          </div>
-
-          <TrustMicroRow className="mt-6" />
+          <ConkaCTAButton href="/conka-both" meta={null}>
+            Buy CONKA Today
+          </ConkaCTAButton>
+          <TrustMicroRow className="mt-1" />
         </div>
       </div>
     </div>

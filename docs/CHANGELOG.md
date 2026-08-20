@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-20** | New PDP hero images for Flow/Clear/Both: neuron background with mg-of-nootropics stat replaces the pink Magic Mind style
+- **2026-08-20** | Home hero: restored the full-bleed looping video hero with new Both Neuron Float assets (portrait mobile + landscape desktop trios, ping-pong loops); HomeHeroV3 kept for revert (SCRUM-1238)
 - **2026-08-12** | Home hero V3: centred mobile copy, staggered oversized title, section 2/3 background flip, badge removed
 - **2026-08-12** | Home hero: new image-led HomeHeroV3 (asset-top on mobile, asset-left/copy-right on desktop) replacing the video hero; server component, LCP image priority
 - **2026-08-12** | Both PDP now uses the Magic Mind V3 hero: cross-formula ingredient buckets, a Flow:/Clear: ingredient list, a See-all-ingredients link, and Both gallery assets

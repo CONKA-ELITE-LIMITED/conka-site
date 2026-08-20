@@ -70,7 +70,7 @@ const FORMULAS: Record<Formula, FormulaContent> = {
   flow: {
     name: "CONKA Flow",
     tagline: "Calm focus for your mornings.",
-    bottleImage: "/formulas/conkaFlow/FlowNew.jpg",
+    bottleImage: "/formulas/conkaFlow/FlowV3.jpg",
     bottleAlt: "CONKA Flow bottle",
     ingredients: [
       {
@@ -120,7 +120,7 @@ const FORMULAS: Record<Formula, FormulaContent> = {
   clear: {
     name: "CONKA Clear",
     tagline: "Afternoon clarity, without the coffee.",
-    bottleImage: "/formulas/conkaClear/ClearNew.jpg",
+    bottleImage: "/formulas/conkaClear/ClearV3.jpg",
     bottleAlt: "CONKA Clear bottle",
     ingredients: [
       {

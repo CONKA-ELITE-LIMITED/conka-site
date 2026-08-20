@@ -90,7 +90,7 @@ export const storyChapters: StoryChapter[] = [
     headline: "From 14 capsules a day to one shot.",
     prose:
       "Early versions required up to 14 capsules a day. A new alcohol-free extraction method, invented by Dr. Shankar Katekhaye, collapsed the system into a single daily liquid shot.",
-    image: "/formulas/conkaFlow/FlowNew.jpg",
+    image: "/formulas/conkaFlow/FlowV3.jpg",
     imageAlt: "The CONKA Flow daily shot bottle",
     quote: {
       text: "When any single component was removed, the benefits significantly decreased. The formula is the system.",

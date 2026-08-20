@@ -45,7 +45,7 @@ const R = '/lander/ingredients/';
 export const FORMULAS: Record<'flow' | 'clear', Formula> = {
   flow: {
     key: 'flow',
-    img: '/lander/FlowNew.jpg',
+    img: '/lander/FlowV3.jpg',
     name: 'CONKA Flow',
     sub: 'Calm focus for your mornings.',
     mg: '3,700mg',
@@ -122,7 +122,7 @@ export const FORMULAS: Record<'flow' | 'clear', Formula> = {
   },
   clear: {
     key: 'clear',
-    img: '/lander/ClearNew.jpg',
+    img: '/lander/ClearV3.jpg',
     name: 'CONKA Clear',
     sub: 'Afternoon clarity & reset',
     mg: '3,142mg',
