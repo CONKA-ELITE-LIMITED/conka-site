@@ -106,7 +106,7 @@ export default function LandingHeroVideo() {
 
         {/* translate (not margin/padding) so the block sits lower without
             changing the container height, which would rescale the cover video. */}
-        <div className="flex translate-y-7 flex-col items-center">
+        <div className="flex translate-y-10 flex-col items-center">
           <ConkaCTAButton href="/conka-both" meta={null}>
             Buy CONKA Today
           </ConkaCTAButton>
