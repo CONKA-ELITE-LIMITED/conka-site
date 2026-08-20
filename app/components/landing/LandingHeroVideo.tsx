@@ -81,7 +81,7 @@ export default function LandingHeroVideo() {
       {/* Bottom fade — the video melts into the white section below rather than
           ending on a hard edge. */}
       <div
-        className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-1/4 pointer-events-none"
         style={{
           background:
             "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 14%, rgba(255,255,255,0) 100%)",

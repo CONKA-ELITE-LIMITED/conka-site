@@ -2,14 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import ConkaCTAButton from "./ConkaCTAButton";
-import LaurelBadge from "./LaurelBadge";
 import TrustMicroRow from "./TrustMicroRow";
-
-/* Brain-project credibility badge — generic (non-persona) copy for home. */
-const HOME_LAUREL = {
-  eyebrow: "World's Largest",
-  body: "Consumer brain-research project. 1,000+ brains tested regularly through our app.",
-};
 
 /* ============================================================================
  * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
@@ -80,21 +73,18 @@ export default function LandingHeroVideoDesktop() {
       {/* Bottom fade — the video melts into the white section below rather than
           ending on a hard edge. Kept short so it only softens the very base. */}
       <div
-        className="absolute inset-x-0 bottom-0 h-1/5 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-[10%] pointer-events-none"
         style={{
           background:
             "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 100%)",
         }}
       />
 
-      {/* Content — left-aligned in the negative space, vertically centred. */}
-      <div className="relative z-10 flex min-h-[72vh] items-center">
+      {/* Content — left-aligned in the negative space, vertically centred.
+          min-h close to the video's native 16:9 height at viewport width, so
+          object-cover trims as little off the top and bottom as possible. */}
+      <div className="relative z-10 flex min-h-[85vh] items-center">
         <div className="px-[5vw] max-w-[40rem]">
-          <LaurelBadge
-            eyebrow={HOME_LAUREL.eyebrow}
-            body={HOME_LAUREL.body}
-            className="mb-6"
-          />
           <h1
             className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05]"
             style={{ letterSpacing: "-0.02em" }}
