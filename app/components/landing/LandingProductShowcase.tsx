@@ -116,7 +116,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             alt={p.bottleAlt}
             fill
             sizes="(max-width: 1024px) 100vw, 360px"
-            className="object-cover scale-[1.35]"
+            className="object-cover scale-[1.25]"
           />
         </div>
         <div className="flex flex-1 flex-col p-5 text-center lg:p-6">
