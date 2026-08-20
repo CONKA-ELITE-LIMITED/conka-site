@@ -88,7 +88,9 @@ export default function LandingHeroVideo() {
             that must never wrap, smaller lighter second line. */}
         <header className="relative z-10 px-5 pt-4 text-center">
           <h1 className="text-black" style={{ letterSpacing: "-0.025em" }}>
-            <span className="block whitespace-nowrap text-[2.5rem] font-bold leading-[0.98]">
+            {/* min() caps the size on sub-360px viewports so the nowrap line
+                cannot clip; at 375px+ it resolves to the full 2.5rem. */}
+            <span className="block whitespace-nowrap text-[min(2.5rem,11vw)] font-bold leading-[0.98]">
               A Sharper Mind.
             </span>
             <span className="mt-1 block text-[2rem] font-medium leading-[1.05]">
