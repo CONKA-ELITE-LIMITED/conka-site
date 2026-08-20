@@ -7,15 +7,15 @@ import TrustMicroRow from "./TrustMicroRow";
 /* ============================================================================
  * LandingHeroVideo — mobile-only home hero (Magic Mind structure)
  *
- * A full-bleed background video of the Flow + Clear shots floating through a
- * glass neuron network, with the existing hero title and supporting copy
- * overlaid near the top and a single CTA near the bottom. Copy is reused
- * verbatim from LandingHero; this is a structural homage to the Magic Mind
- * hero, not a messaging change.
+ * A full-width video of the Flow + Clear shots floating through a glass
+ * neuron network at its native 3:4, with the hero title overlaid at the top.
+ * The CTA straddles the asset's bottom edge, and the trust row + supporting
+ * copy sit below the asset on the section's white background. Copy is reused
+ * verbatim from LandingHero; this is a structural change, not a messaging
+ * change.
  *
- * Footage is bright and airy, so text stays brand-black (monochrome-first)
- * with a light wash top and bottom for guaranteed legibility rather than a
- * dark scrim with white text.
+ * Footage is bright and airy, so the overlaid title stays brand-black
+ * (monochrome-first) with no scrim.
  *
  * Video: BothNeuronFloat is encoded as a forward+reverse concatenation, so the
  * native `loop` attribute gives a seamless ping-pong with no visible jump.
@@ -55,45 +55,38 @@ export default function LandingHeroVideo() {
     return () => observer.disconnect();
   }, []);
 
-  // The still poster is painted as a background-image (cover) on the container
+  // The still poster is painted as a background-image (cover) on the asset box
   // rather than via the <video poster> attribute: iOS Safari ignores object-fit
   // on a video poster during the metadata-load window and stretches it to the
   // box, so it warps until the video decodes. background-size: cover always
   // crops correctly, so there is no warp during load.
+  //
+  // Layout: the asset box is the video's native 3:4, so the full frame shows
+  // with no crop and only the title overlays it. The CTA straddles the asset's
+  // bottom edge (negative top margin), and the trust row + supporting copy sit
+  // below the asset on the white section background.
   return (
-    <div
-      className="relative -mx-5 w-[calc(100%+2.5rem)] overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('/videos/both/BothNeuronFloat-poster.jpg')" }}
-    >
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        loop
-        preload="metadata"
-        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
-        className="absolute inset-0 h-full w-full object-cover"
-      >
-        <source src="/videos/both/BothNeuronFloat.webm" type="video/webm" />
-        <source src="/videos/both/BothNeuronFloat.mp4" type="video/mp4" />
-      </video>
-
-      {/* Bottom fade — the video melts into the white section below rather than
-          ending on a hard edge. */}
+    <div className="-mx-5 w-[calc(100%+2.5rem)]">
       <div
-        className="absolute inset-x-0 bottom-0 h-[36%] pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 100%)",
-        }}
-      />
+        className="relative aspect-[3/4] w-full overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: "url('/videos/both/BothNeuronFloat-poster.jpg')" }}
+      >
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          loop
+          preload="metadata"
+          aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/videos/both/BothNeuronFloat.webm" type="video/webm" />
+          <source src="/videos/both/BothNeuronFloat.mp4" type="video/mp4" />
+        </video>
 
-      {/* Content — title/copy at the top, CTA at the bottom (Magic Mind layout).
-          min-h drives the container height; the absolute video fills it. */}
-      <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-10">
         {/* Staggered two-tier title (HomeHeroV3 style): large bold first line
             that must never wrap, smaller lighter second line. */}
-        <header className="text-center">
+        <header className="relative z-10 px-5 pt-4 text-center">
           <h1 className="text-black" style={{ letterSpacing: "-0.025em" }}>
             <span className="block whitespace-nowrap text-[2.5rem] font-bold leading-[0.98]">
               A Sharper Mind.
@@ -103,19 +96,19 @@ export default function LandingHeroVideo() {
             </span>
           </h1>
         </header>
+      </div>
 
-        {/* translate (not margin/padding) so the block sits lower without
-            changing the container height, which would rescale the cover video. */}
-        <div className="flex translate-y-10 flex-col items-center">
-          <ConkaCTAButton href="/conka-both" meta={null}>
-            Buy CONKA Today
-          </ConkaCTAButton>
-          <TrustMicroRow className="mt-4" />
-          <p className="mt-7 max-w-[34ch] text-center text-[15px] font-medium leading-snug text-black">
-            For minds that demand more. A patented nootropic shot, clinically
-            formulated to support focus, memory, and mental endurance every day.
-          </p>
-        </div>
+      {/* CTA overlaps the bottom of the asset; everything after it is in normal
+          flow under the asset. */}
+      <div className="relative z-10 -mt-7 flex flex-col items-center px-5">
+        <ConkaCTAButton href="/conka-both" meta={null}>
+          Buy CONKA Today
+        </ConkaCTAButton>
+        <TrustMicroRow className="mt-4" />
+        <p className="mt-4 max-w-[34ch] text-center text-[15px] font-medium leading-snug text-black">
+          For minds that demand more. A patented nootropic shot, clinically
+          formulated to support focus, memory, and mental endurance every day.
+        </p>
       </div>
     </div>
   );
