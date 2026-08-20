@@ -8,9 +8,10 @@ import TrustMicroRow from "./TrustMicroRow";
  * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
  *
  * Landscape companion to LandingHeroVideo. A 50/50 split (mirror of the
- * HomeHeroV3 layout): copy + CTA in the padded LEFT half, the landscape video
- * in the RIGHT half at its native 16:9. Half-width keeps the 1280x720 encode
- * at or below native resolution, so it stays sharp (full-bleed stretched it).
+ * HomeHeroV3 layout): copy + CTA in the padded LEFT half, the wide landscape
+ * video in the RIGHT half at its native 7:3 (1470x630 V2 asset). Half-width
+ * keeps the encode at or below native resolution, so it stays sharp
+ * (full-bleed stretched it).
  *
  * Copy is reused verbatim from LandingHero with the HomeHeroV3 staggered
  * two-tier title. Video is a forward+reverse ping-pong (seamless native
@@ -73,12 +74,11 @@ export default function LandingHeroVideoDesktop() {
         <TrustMicroRow className="mt-1" />
       </div>
 
-      {/* Video — right half. 4:3 box with object-right crops away the empty
-          left of the 16:9 frame (the bottles are composed right of centre), so
-          they sit centred in the panel and more native pixels fill the box,
-          keeping the 1280x720 encode sharp. */}
+      {/* Video — right half at the V2 asset's native wide 7:3 (1470x630), so
+          the full frame shows uncropped and the half-width panel stays at or
+          below native resolution (sharp). */}
       <div
-        className="relative aspect-[4/3] w-full overflow-hidden bg-cover bg-right"
+        className="relative aspect-[7/3] w-full overflow-hidden bg-cover bg-center"
         style={{
           backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
         }}
@@ -90,7 +90,7 @@ export default function LandingHeroVideoDesktop() {
           loop
           preload="metadata"
           aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
-          className="absolute inset-0 h-full w-full object-cover object-right"
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
           <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
