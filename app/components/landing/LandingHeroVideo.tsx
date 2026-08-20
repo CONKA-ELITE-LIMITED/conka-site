@@ -101,7 +101,7 @@ export default function LandingHeroVideo() {
       {/* CTA overlaps the bottom of the asset; everything after it is in normal
           flow under the asset. */}
       <div className="relative z-10 -mt-7 flex flex-col items-center px-5">
-        <ConkaCTAButton href="/conka-both" meta={null}>
+        <ConkaCTAButton href="/conka-both" meta={null} inverted>
           Buy CONKA Today
         </ConkaCTAButton>
         <TrustMicroRow className="mt-4" />

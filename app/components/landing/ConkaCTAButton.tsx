@@ -19,17 +19,23 @@ const ACTIVE_META: string = META_VARIANTS.aspirational;
 const CTA_BASE =
   "group rounded-full border border-[#1B2757] text-white bg-[#1B2757] transition-all duration-200 ease-out hover:bg-white hover:text-[#1B2757] motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
 
+/* Inverted fill — white pill with navy border/text that flips to the navy
+   fill on hover (the exact mirror of CTA_BASE), for placements on busy or
+   dark-adjacent footage where the solid navy pill is too heavy. */
+const CTA_BASE_INVERTED =
+  "group rounded-full border border-[#1B2757] text-[#1B2757] bg-white transition-all duration-200 ease-out hover:bg-[#1B2757] hover:text-white motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+
 /* Default variant — full CTA (O-icon + text + meta + horizontal arrow)
    at every viewport. Shrink-to-content with min/max bounds. Mobile has
    tighter gap/padding so longer labels still fit on one line. */
 const OUTER =
-  `inline-flex flex-row items-center gap-3 lg:gap-4 min-w-[14rem] max-w-md py-3.5 pl-3 pr-5 lg:pl-5 lg:pr-8 ${CTA_BASE}`;
+  "inline-flex flex-row items-center gap-3 lg:gap-4 min-w-[14rem] max-w-md py-3.5 pl-3 pr-5 lg:pl-5 lg:pr-8";
 
 /* Compact variant — forces the compact treatment on every viewport
    (e.g. in-card ingredients button where the full desktop treatment
    would feel too sales-y for a secondary action). */
 const COMPACT =
-  `inline-flex flex-row items-center justify-between gap-3 w-full py-2.5 lg:py-3 px-4 ${CTA_BASE}`;
+  "inline-flex flex-row items-center justify-between gap-3 w-full py-2.5 lg:py-3 px-4";
 
 export default function ConkaCTAButton({
   children,
@@ -38,6 +44,7 @@ export default function ConkaCTAButton({
   meta = ACTIVE_META,
   className = "",
   compact = false,
+  inverted = false,
 }: {
   children: React.ReactNode;
   href?: string;
@@ -48,8 +55,12 @@ export default function ConkaCTAButton({
   className?: string;
   /** Compact in-card variant: text + light-up ↗ arrow, no O-icon. */
   compact?: boolean;
+  /** White pill with navy border/text; hover flips to the navy fill. */
+  inverted?: boolean;
 }) {
-  const classes = `${compact ? COMPACT : OUTER} ${className}`;
+  const classes = `${compact ? COMPACT : OUTER} ${
+    inverted ? CTA_BASE_INVERTED : CTA_BASE
+  } ${className}`;
   const showMeta = !compact && Boolean(meta);
 
   const inner = compact ? (
@@ -59,21 +70,29 @@ export default function ConkaCTAButton({
       </span>
       <span
         aria-hidden
-        className="font-mono text-base lg:text-lg leading-none text-white/55 group-hover:text-[#1B2757] transition-colors"
+        className={`font-mono text-base lg:text-lg leading-none transition-colors ${
+          inverted
+            ? "text-[#1B2757]/55 group-hover:text-white"
+            : "text-white/55 group-hover:text-[#1B2757]"
+        }`}
       >
         ↗
       </span>
     </>
   ) : (
     <>
-      {/* LEFT — Conka "O" mark, inverted to white for the navy fill */}
+      {/* LEFT — Conka "O" mark, filtered to match the fill it sits on */}
       <span className="relative w-7 h-7 shrink-0" aria-hidden>
         <Image
           src="/logos/ConkaO.png"
           alt=""
           fill
           sizes="28px"
-          className="object-contain [filter:brightness(0)_invert(1)] transition-[filter] duration-200 group-hover:[filter:brightness(0)]"
+          className={`object-contain transition-[filter] duration-200 ${
+            inverted
+              ? "[filter:brightness(0)] group-hover:[filter:brightness(0)_invert(1)]"
+              : "[filter:brightness(0)_invert(1)] group-hover:[filter:brightness(0)]"
+          }`}
         />
       </span>
 
@@ -83,7 +102,13 @@ export default function ConkaCTAButton({
           {children}
         </span>
         {showMeta && (
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white group-hover:text-[#1B2757] mt-1 leading-none transition-colors">
+          <span
+            className={`font-mono text-[9px] uppercase tracking-[0.18em] mt-1 leading-none transition-colors ${
+              inverted
+                ? "text-[#1B2757] group-hover:text-white"
+                : "text-white group-hover:text-[#1B2757]"
+            }`}
+          >
             {meta}
           </span>
         )}
