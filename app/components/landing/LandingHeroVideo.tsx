@@ -84,6 +84,16 @@ export default function LandingHeroVideo() {
           <source src="/videos/both/BothNeuronFloat.mp4" type="video/mp4" />
         </video>
 
+        {/* Tiny white fade at the base so the asset melts into the white
+            below rather than ending on a hard edge. */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-[8%] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
+          }}
+        />
+
         {/* Staggered two-tier title (HomeHeroV3 style): large bold first line
             that must never wrap, smaller lighter second line. */}
         <header className="relative z-10 px-5 pt-4 text-center">
