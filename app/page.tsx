@@ -76,6 +76,24 @@ export default function Home() {
       {/* Serialises the same conversion subset the LabFAQ section renders below, so
           the schema never describes a question the page does not show (SCRUM-1140). */}
       <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
+      {/* The hero posters are painted as CSS background-images inside client
+          components, so without a preload the browser discovers the LCP image
+          late. React hoists these to <head>; media queries keep each
+          breakpoint to one download. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/videos/both/BothNeuronFloat-poster.jpg"
+        media="(max-width: 1023px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/videos/both/BothNeuronFloatDesktop-poster.jpg"
+        media="(min-width: 1024px)"
+        fetchPriority="high"
+      />
       {/* ===== SECTION 1: HERO ===== */}
       <Navigation />
       {/* Desktop drops the section gutters/track so the hero asset can

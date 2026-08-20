@@ -16,14 +16,16 @@ const ACTIVE_META: string = META_VARIANTS.aspirational;
 /* Shared interaction: pill shape, navy fill that flips to a white fill with
    navy text on hover, plus a subtle lift/press (motion-safe only). The `group`
    lets the inner O-mark, arrow and meta line flip colour in step. */
-const CTA_BASE =
-  "group rounded-full border border-[#1B2757] text-white bg-[#1B2757] transition-all duration-200 ease-out hover:bg-white hover:text-[#1B2757] motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+/* Shape, motion and focus treatment shared by both fills. */
+const CTA_SHARED =
+  "group rounded-full transition-all duration-200 ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+
+const CTA_BASE = `${CTA_SHARED} border border-[#1B2757] text-white bg-[#1B2757] hover:bg-white hover:text-[#1B2757]`;
 
 /* Inverted fill — white pill with navy border/text that flips to the navy
    fill on hover (the exact mirror of CTA_BASE), for placements on busy or
    dark-adjacent footage where the solid navy pill is too heavy. */
-const CTA_BASE_INVERTED =
-  "group rounded-full border-2 border-[#1B2757] text-[#1B2757] bg-white transition-all duration-200 ease-out hover:bg-[#1B2757] hover:text-white motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+const CTA_BASE_INVERTED = `${CTA_SHARED} border-2 border-[#1B2757] text-[#1B2757] bg-white hover:bg-[#1B2757] hover:text-white`;
 
 /* Default variant — full CTA (O-icon + text + meta + horizontal arrow)
    at every viewport. Shrink-to-content with min/max bounds. Mobile has

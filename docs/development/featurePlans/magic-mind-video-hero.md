@@ -47,8 +47,9 @@ tokens. Reuses `ConkaCTAButton`. Video playback reuses the `FlowVideo` /
 > **Aug 2026 note (SCRUM-1238).** The video hero was briefly replaced by the
 > image-led `HomeHeroV3` (kept for revert), then restored with the new
 > `BothNeuronFloat` / `BothNeuronFloatDesktop` assets, completing Phase 3 with
-> a dedicated landscape (1280x720) desktop video. The `BothStillWater` trios
-> remain in `public/videos/both/` as a revert path.
+> a dedicated wide landscape (1470x630 V2) desktop video rendered full-bleed
+> at its native 7:3. The `BothStillWater` trios remain in
+> `public/videos/both/` as a revert path.
 
 ### Phase 1: Video optimisation (ACTIVE)
 1. **Encode the loop set**
