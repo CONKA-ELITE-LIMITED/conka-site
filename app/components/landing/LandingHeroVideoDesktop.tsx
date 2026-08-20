@@ -7,15 +7,15 @@ import TrustMicroRow from "./TrustMicroRow";
 /* ============================================================================
  * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
  *
- * Landscape companion to LandingHeroVideo. The BothNeuronFloatDesktop shot
- * keeps the two shots right of centre with pale negative space on the left, so
- * the copy sits in that left space (left-aligned, brand rule) over a
- * full-bleed background video without covering the bottles.
+ * Landscape companion to LandingHeroVideo. A 50/50 split (mirror of the
+ * HomeHeroV3 layout): copy + CTA in the padded LEFT half, the landscape video
+ * in the RIGHT half at its native 16:9. Half-width keeps the 1280x720 encode
+ * at or below native resolution, so it stays sharp (full-bleed stretched it).
  *
- * Copy is reused verbatim from LandingHero. Footage is bright, so text stays
- * brand-black with a left-to-right wash for legibility rather than a dark
- * scrim. Video is a forward+reverse ping-pong (seamless native loop), WebM
- * first then MP4. IntersectionObserver play/pause, reduced-motion respected.
+ * Copy is reused verbatim from LandingHero with the HomeHeroV3 staggered
+ * two-tier title. Video is a forward+reverse ping-pong (seamless native
+ * loop), WebM first then MP4. IntersectionObserver play/pause,
+ * reduced-motion respected.
  *
  * Rendered only at lg+; below lg the page renders LandingHeroVideo.
  * ========================================================================== */
@@ -51,61 +51,48 @@ export default function LandingHeroVideoDesktop() {
   // rather than the <video poster> attribute, which iOS Safari stretches to the
   // box during the metadata-load window before the video decodes.
   return (
-    <div
-      className="relative w-full overflow-hidden bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
-      }}
-    >
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        loop
-        preload="metadata"
-        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
-        className="absolute inset-0 h-full w-full object-cover"
-      >
-        <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
-        <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
-      </video>
-
-      {/* Bottom fade — the video melts into the white section below rather than
-          ending on a hard edge. Kept short so it only softens the very base. */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[10%] pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 100%)",
-        }}
-      />
-
-      {/* Content — left-aligned in the negative space, vertically centred.
-          min-h close to the video's native 16:9 height at viewport width, so
-          object-cover trims as little off the top and bottom as possible. */}
-      <div className="relative z-10 flex min-h-[85vh] items-center">
-        <div className="px-[5vw] max-w-[40rem]">
-          <h1
-            className="text-black font-semibold text-5xl xl:text-6xl leading-[1.05]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+    <div className="grid grid-cols-2 items-center">
+      {/* Copy — left half. Staggered two-tier title (HomeHeroV3 style): large
+          bold first line, smaller lighter second line displaced right. */}
+      <div className="flex flex-col items-start gap-5 px-[5vw] py-16 text-left text-black">
+        <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
+          <span className="block text-[4rem] font-bold leading-[0.98] xl:text-[5rem]">
             A Sharper Mind.
-            <br />
+          </span>
+          <span className="mt-1 block text-[2.75rem] font-medium leading-[1.05] xl:ml-28 xl:text-[3.5rem]">
             Morning to Evening.
-          </h1>
-          <p className="mt-5 max-w-[42ch] text-lg leading-snug text-black">
-            For minds that demand more. A patented nootropic shot, clinically
-            formulated to support focus, memory, and mental endurance every day.
-          </p>
+          </span>
+        </h1>
+        <p className="max-w-[42ch] text-lg leading-snug text-black xl:text-[1.1875rem]">
+          For minds that demand more. A patented nootropic shot, clinically
+          formulated to support focus, memory, and mental endurance every day.
+        </p>
+        <ConkaCTAButton href="/conka-both" meta={null}>
+          Buy CONKA Today
+        </ConkaCTAButton>
+        <TrustMicroRow className="mt-1" />
+      </div>
 
-          <div className="mt-7">
-            <ConkaCTAButton href="/conka-both" meta={null}>
-              Buy CONKA Today
-            </ConkaCTAButton>
-          </div>
-
-          <TrustMicroRow className="mt-6" />
-        </div>
+      {/* Video — right half at its native 16:9, so the 1280x720 encode is
+          never upscaled past ~1:1 and stays sharp. */}
+      <div
+        className="relative aspect-video w-full overflow-hidden bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
+        }}
+      >
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          loop
+          preload="metadata"
+          aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
+          <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   );
