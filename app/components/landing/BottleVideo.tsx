@@ -15,7 +15,9 @@ import { useEffect, useRef } from "react";
  * where the forward half started, the native `loop` attribute gives a
  * mathematically seamless ping-pong with zero JS overhead and no visible
  * jump. Flow is 5s forward + 5s reverse (10s loop); Clear is 2s forward +
- * 2s reverse (4s loop — only the first 2s of its source are usable).
+ * 2s reverse (4s loop — only the first 2s of its source are usable). The
+ * Float variants (floating bottle over a neuron background, used on PDP
+ * section 4) are each 5s forward + 5s reverse.
  *
  * IntersectionObserver:
  * - `play()` when 40% of the element enters the viewport.
@@ -39,6 +41,24 @@ const FORMULA_VIDEOS = {
     mp4: "/videos/clear/ClearLiquid.mp4",
     poster: "/videos/clear/ClearLiquid-poster.jpg",
     label: "CONKA Clear shot being poured",
+  },
+  flowFloat: {
+    webm: "/videos/flow/FlowFloat.webm",
+    mp4: "/videos/flow/FlowFloat.mp4",
+    poster: "/videos/flow/FlowFloat-poster.jpg",
+    label: "CONKA Flow bottle floating over a neural network",
+  },
+  clearFloat: {
+    webm: "/videos/clear/ClearFloat.webm",
+    mp4: "/videos/clear/ClearFloat.mp4",
+    poster: "/videos/clear/ClearFloat-poster.jpg",
+    label: "CONKA Clear bottle floating over a neural network",
+  },
+  bothFloat: {
+    webm: "/videos/both/BothFloat.webm",
+    mp4: "/videos/both/BothFloat.mp4",
+    poster: "/videos/both/BothFloat-poster.jpg",
+    label: "CONKA Flow and Clear bottles floating over a neural network",
   },
 } as const;
 
