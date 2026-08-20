@@ -7,11 +7,11 @@ import TrustMicroRow from "./TrustMicroRow";
 /* ============================================================================
  * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
  *
- * Landscape companion to LandingHeroVideo. A 50/50 split (mirror of the
- * HomeHeroV3 layout): copy + CTA in the padded LEFT half, the wide landscape
- * video in the RIGHT half at its native 7:3 (1470x630 V2 asset). Half-width
- * keeps the encode at or below native resolution, so it stays sharp
- * (full-bleed stretched it).
+ * Landscape companion to LandingHeroVideo. Full-bleed at the V2 asset's
+ * native wide 7:3 (1470x630), so the box never crops the frame and the
+ * upscale past native stays mild even on wide screens. The bottles are
+ * composed right of centre, so the copy + CTA overlay the pale negative
+ * space on the left (V3 staggered title, left-aligned, brand rule).
  *
  * Copy is reused verbatim from LandingHero with the HomeHeroV3 staggered
  * two-tier title. Video is a forward+reverse ping-pong (seamless native
@@ -52,59 +52,57 @@ export default function LandingHeroVideoDesktop() {
   // rather than the <video poster> attribute, which iOS Safari stretches to the
   // box during the metadata-load window before the video decodes.
   return (
-    <div className="grid grid-cols-2 items-center">
-      {/* Copy — left half. Staggered two-tier title (HomeHeroV3 style): large
-          bold first line, smaller lighter second line displaced right. */}
-      <div className="flex flex-col items-start gap-5 px-[5vw] py-16 text-left text-black">
-        <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
-          <span className="block text-[4rem] font-bold leading-[0.98] xl:text-[5rem]">
-            A Sharper Mind.
-          </span>
-          <span className="mt-1 block text-[2.75rem] font-medium leading-[1.05] xl:ml-28 xl:text-[3.5rem]">
-            Morning to Evening.
-          </span>
-        </h1>
-        <p className="max-w-[42ch] text-lg leading-snug text-black xl:text-[1.1875rem]">
-          For minds that demand more. A patented nootropic shot, clinically
-          formulated to support focus, memory, and mental endurance every day.
-        </p>
-        <ConkaCTAButton href="/conka-both" meta={null}>
-          Buy CONKA Today
-        </ConkaCTAButton>
-        <TrustMicroRow className="mt-1" />
-      </div>
-
-      {/* Video — right half at the V2 asset's native wide 7:3 (1470x630), so
-          the full frame shows uncropped and the half-width panel stays at or
-          below native resolution (sharp). */}
-      <div
-        className="relative aspect-[7/3] w-full overflow-hidden bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
-        }}
+    <div
+      className="relative aspect-[7/3] w-full overflow-hidden bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
+      }}
+    >
+      <video
+        ref={videoRef}
+        muted
+        playsInline
+        loop
+        preload="metadata"
+        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
+        className="absolute inset-0 h-full w-full object-cover"
       >
-        <video
-          ref={videoRef}
-          muted
-          playsInline
-          loop
-          preload="metadata"
-          aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
-          <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
-        </video>
+        <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
+        <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
+      </video>
 
-        {/* Left-edge white fade so the panel melts into the copy half instead
-            of starting on a hard line at the page midline. */}
-        <div
-          className="absolute inset-y-0 left-0 w-[14%] pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
-          }}
-        />
+      {/* Bottom fade — the footage melts into the white section below rather
+          than ending on a hard edge. Kept short. */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[10%] pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+
+      {/* Copy — overlaid in the left negative space, vertically centred.
+          Staggered two-tier title (HomeHeroV3 style): large bold first line,
+          smaller lighter second line displaced right. */}
+      <div className="absolute inset-0 z-10 flex items-center">
+        <div className="flex flex-col items-start gap-5 px-[5vw] text-left text-black">
+          <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
+            <span className="block whitespace-nowrap text-[4rem] font-bold leading-[0.98] xl:text-[5rem]">
+              A Sharper Mind.
+            </span>
+            <span className="mt-1 block text-[2.75rem] font-medium leading-[1.05] xl:ml-28 xl:text-[3.5rem]">
+              Morning to Evening.
+            </span>
+          </h1>
+          <p className="max-w-[42ch] text-lg leading-snug text-black xl:text-[1.1875rem]">
+            For minds that demand more. A patented nootropic shot, clinically
+            formulated to support focus, memory, and mental endurance every day.
+          </p>
+          <ConkaCTAButton href="/conka-both" meta={null}>
+            Buy CONKA Today
+          </ConkaCTAButton>
+          <TrustMicroRow className="mt-1" />
+        </div>
       </div>
     </div>
   );
