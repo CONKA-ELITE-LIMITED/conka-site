@@ -8,8 +8,8 @@ interface FormulaBenefitsPillarsProps {
 }
 
 // Simple DTC daily-benefits block (Magic Mind "Daily habit. Lifelong
-// benefits." homage). Three collapsed outcome blocks sit beside the rotating
-// 3D render: each summary keeps the shift and its one clinical figure on a
+// benefits." homage). Three collapsed outcome blocks sit beside the floating
+// bottle render: each summary keeps the shift and its one clinical figure on a
 // single line; expanding reveals what the figure measures, a plain sentence
 // on the actives behind it, and those actives as render thumbnails. No mono
 // eyebrows, no "Fig." plate — one sans voice with the stat as the only mono
@@ -113,7 +113,7 @@ export default function FormulaBenefitsPillars({
       <div className="lg:col-start-2 lg:row-start-1">{header}</div>
 
       <div className="relative aspect-[4/5] mb-8 rounded-2xl overflow-hidden bg-[#eef1f8] ring-1 ring-black/8 lg:mb-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-24 lg:self-start">
-        <BottleVideo formula={formulaId === "01" ? "flow" : "clear"} />
+        <BottleVideo formula={formulaId === "01" ? "flowFloat" : "clearFloat"} />
       </div>
 
       <div className="flex flex-col lg:col-start-2 lg:row-start-2">{blocks}</div>

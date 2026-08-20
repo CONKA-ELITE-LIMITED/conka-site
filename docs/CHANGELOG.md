@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-20** | PDP section 4 benefits video swapped to new Float renders (Flow and Clear), Both asset encoded ready for wiring
 - **2026-08-20** | Listicle buy zones upgraded to the V3 PDP hero (current gallery assets, ingredients list, outcome accordions)
 - **2026-08-20** | New PDP hero images for Flow/Clear/Both: neuron background with mg-of-nootropics stat replaces the pink Magic Mind style
 - **2026-08-20** | Home hero: restored the full-bleed looping video hero with new Both Neuron Float assets (portrait mobile + landscape desktop trios, ping-pong loops); HomeHeroV3 kept for revert (SCRUM-1238)
