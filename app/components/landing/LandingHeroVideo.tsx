@@ -91,19 +91,17 @@ export default function LandingHeroVideo() {
       {/* Content — title/copy at the top, CTA at the bottom (Magic Mind layout).
           min-h drives the container height; the absolute video fills it. */}
       <div className="relative z-10 flex min-h-[86svh] flex-col justify-between px-5 pt-4 pb-10">
+        {/* Staggered two-tier title (HomeHeroV3 style): large bold first line
+            that must never wrap, smaller lighter second line. */}
         <header className="text-center">
-          <h1
-            className="text-black font-semibold text-[38px] leading-[1.08]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            A Sharper Mind.
-            <br />
-            Morning to Evening.
+          <h1 className="text-black" style={{ letterSpacing: "-0.025em" }}>
+            <span className="block whitespace-nowrap text-[2.5rem] font-bold leading-[0.98]">
+              A Sharper Mind.
+            </span>
+            <span className="mt-1 block text-[2rem] font-medium leading-[1.05]">
+              Morning to Evening.
+            </span>
           </h1>
-          <p className="mt-4 mx-auto max-w-[34ch] text-[15px] leading-snug text-black">
-            For minds that demand more. A patented nootropic shot, clinically
-            formulated to support focus, memory, and mental endurance every day.
-          </p>
         </header>
 
         <div className="flex flex-col items-center">
@@ -111,6 +109,10 @@ export default function LandingHeroVideo() {
             Buy CONKA Today
           </ConkaCTAButton>
           <TrustMicroRow className="mt-4" />
+          <p className="mt-4 max-w-[34ch] text-center text-[15px] leading-snug text-black">
+            For minds that demand more. A patented nootropic shot, clinically
+            formulated to support focus, memory, and mental endurance every day.
+          </p>
         </div>
       </div>
     </div>
