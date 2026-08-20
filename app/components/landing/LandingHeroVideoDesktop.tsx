@@ -73,10 +73,12 @@ export default function LandingHeroVideoDesktop() {
         <TrustMicroRow className="mt-1" />
       </div>
 
-      {/* Video — right half at its native 16:9, so the 1280x720 encode is
-          never upscaled past ~1:1 and stays sharp. */}
+      {/* Video — right half. 4:3 box with object-right crops away the empty
+          left of the 16:9 frame (the bottles are composed right of centre), so
+          they sit centred in the panel and more native pixels fill the box,
+          keeping the 1280x720 encode sharp. */}
       <div
-        className="relative aspect-video w-full overflow-hidden bg-cover bg-center"
+        className="relative aspect-[4/3] w-full overflow-hidden bg-cover bg-right"
         style={{
           backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
         }}
@@ -88,11 +90,21 @@ export default function LandingHeroVideoDesktop() {
           loop
           preload="metadata"
           aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-right"
         >
           <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
           <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
         </video>
+
+        {/* Left-edge white fade so the panel melts into the copy half instead
+            of starting on a hard line at the page midline. */}
+        <div
+          className="absolute inset-y-0 left-0 w-[14%] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
+          }}
+        />
       </div>
     </div>
   );
