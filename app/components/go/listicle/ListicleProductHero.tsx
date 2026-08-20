@@ -9,13 +9,13 @@ import {
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import { getQuizSessionId } from "@/app/lib/analytics";
-import ProductHeroV2 from "@/app/components/product/ProductHeroV2";
-import ProductHeroMobileV2 from "@/app/components/product/ProductHeroMobileV2";
+import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
+import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
 import { SECTION, useListicleCta, useListicleSrc } from "./listicleAnalytics";
 
 /**
- * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV2 desktop /
- * ProductHeroMobileV2 mobile), wired with its own cadence state + cart exactly
+ * Listicle buy zone (/go): the Simple DTC PDP hero (ProductHeroV3 desktop /
+ * ProductHeroMobileV3 mobile), wired with its own cadence state + cart exactly
  * like the /conka-both PDP. Defaults to Both ("03"). Replaces the former
  * ListiclePurchase two-card box. Add-to-cart is tagged listicle_buybox.
  */
@@ -62,8 +62,8 @@ export default function ListicleProductHero({
   };
 
   return isMobile ? (
-    <ProductHeroMobileV2 {...sharedProps} />
+    <ProductHeroMobileV3 {...sharedProps} />
   ) : (
-    <ProductHeroV2 {...sharedProps} />
+    <ProductHeroV3 {...sharedProps} />
   );
 }

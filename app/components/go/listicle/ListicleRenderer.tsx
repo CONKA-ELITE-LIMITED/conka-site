@@ -795,7 +795,9 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         className="scroll-mt-0 px-5 py-16 md:px-[5vw] md:py-24 xl:scroll-mt-24"
         style={{ background: "#fff", color: "#111" }}
       >
-        <TrackedSection section={SECTION.product} className="mx-auto max-w-6xl">
+        {/* max-w-7xl (not 6xl): ProductHeroV3's two-column grid is ~1208px at
+            its natural width, so the narrower container would squeeze it. */}
+        <TrackedSection section={SECTION.product} className="mx-auto max-w-7xl">
           <ListicleProductHero productHeroId={config.product.productHeroId} />
         </TrackedSection>
       </section>
