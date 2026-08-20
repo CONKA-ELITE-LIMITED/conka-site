@@ -23,7 +23,7 @@ const CTA_BASE =
    fill on hover (the exact mirror of CTA_BASE), for placements on busy or
    dark-adjacent footage where the solid navy pill is too heavy. */
 const CTA_BASE_INVERTED =
-  "group rounded-full border border-[#1B2757] text-[#1B2757] bg-white transition-all duration-200 ease-out hover:bg-[#1B2757] hover:text-white motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
+  "group rounded-full border-2 border-[#1B2757] text-[#1B2757] bg-white transition-all duration-200 ease-out hover:bg-[#1B2757] hover:text-white motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:scale-[0.97] motion-safe:active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]";
 
 /* Default variant — full CTA (O-icon + text + meta + horizontal arrow)
    at every viewport. Shrink-to-content with min/max bounds. Mobile has
