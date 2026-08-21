@@ -47,7 +47,7 @@ const PRODUCTS: Record<
     timeOfDay: "Morning",
     sub: "Calm focus for your mornings.",
     mg: "3,700mg",
-    bottleSrc: "/formulas/conkaFlow/FlowNew.jpg",
+    bottleSrc: "/formulas/conkaFlow/FlowV3.jpg",
     bottleAlt: "CONKA Flow bottle",
   },
   clear: {
@@ -55,7 +55,7 @@ const PRODUCTS: Record<
     timeOfDay: "Afternoon",
     sub: "Afternoon clarity & reset.",
     mg: "3,142mg",
-    bottleSrc: "/formulas/conkaClear/ClearNew.jpg",
+    bottleSrc: "/formulas/conkaClear/ClearV3.jpg",
     bottleAlt: "CONKA Clear bottle",
   },
 };
@@ -116,7 +116,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
             alt={p.bottleAlt}
             fill
             sizes="(max-width: 1024px) 100vw, 360px"
-            className="object-cover scale-[1.35]"
+            className="object-cover scale-[1.25]"
           />
         </div>
         <div className="flex flex-1 flex-col p-5 text-center lg:p-6">

@@ -5,17 +5,10 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
-- **2026-08-19** | SCRUM-1227: fix Skio portal auto-login to use /a/account/shopify-login (was landing on Skio's email login)
-- **2026-08-19** | SCRUM-1223: verified Skio orders inherit Meta attribution + Synergy fulfilment parity (docs only, no code change); drafted Synergy SKU handoff
-- **2026-08-18** | Skio Phase 3: Skio customer portal at /account/manage (iframe, flag-gated), shared cutover flag
-- **2026-08-18** | Deleted dead funnel-b trial page; labelled start-b, lander-b, funnel-c as dormant
-- **2026-08-18** | Skio migration Phase 2: re-point subscribe surfaces to Skio behind NEXT_PUBLIC_SKIO_ENABLED flag (default off)
-- **2026-08-18** | Skio migration Phase 1 complete: created 4 selling plans, pulled and mapped plan + variant GIDs
-- **2026-08-17** | Skio migration paused (Skio billing approval blocker); status doc refreshed to a clean resume point
-- **2026-08-14** | Skio plan build: full 4-plan table (%, labels, advantages) + billing-approval blocker noted, resume-ready
-- **2026-08-14** | Skio docs: Synergy bundle process (add/fix variants), Stage-1 box mapping, Stage-2 20-box re-point, live quarterly fix verified
-- **2026-08-14** | Skio migration status doc: 3-stage fulfilment plan (28-box launch, 20-box swap, gift-box end state), Synergy bundlecomposition requirement, net-new variant strategy
-- **2026-08-13** | Skio migration Phase 1 scaffold: env getters, skio.ts client + Loop-to-Skio plan mapping, canonical status doc, SKU reference mapping
+- **2026-08-20** | PDP section 4 benefits video swapped to new Float renders (Flow and Clear), Both asset encoded ready for wiring
+- **2026-08-20** | Listicle buy zones upgraded to the V3 PDP hero (current gallery assets, ingredients list, outcome accordions)
+- **2026-08-20** | New PDP hero images for Flow/Clear/Both: neuron background with mg-of-nootropics stat replaces the pink Magic Mind style
+- **2026-08-20** | Home hero: restored the full-bleed looping video hero with new Both Neuron Float assets (portrait mobile + landscape desktop trios, ping-pong loops); HomeHeroV3 kept for revert (SCRUM-1238)
 - **2026-08-12** | Home hero V3: centred mobile copy, staggered oversized title, section 2/3 background flip, badge removed
 - **2026-08-12** | Home hero: new image-led HomeHeroV3 (asset-top on mobile, asset-left/copy-right on desktop) replacing the video hero; server component, LCP image priority
 - **2026-08-12** | Both PDP now uses the Magic Mind V3 hero: cross-formula ingredient buckets, a Flow:/Clear: ingredient list, a See-all-ingredients link, and Both gallery assets

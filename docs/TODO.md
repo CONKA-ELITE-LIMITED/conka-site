@@ -114,6 +114,19 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Asset Cleanup
+
+### Delete superseded `*New.jpg` product statics once V3 rollout is confirmed
+
+**Status:** Deferred (waiting for the V3 filenames to be live in prod)
+**Files:** `public/formulas/conkaFlow/FlowNew.jpg`, `public/formulas/conkaClear/ClearNew.jpg`, `public/formulas/both/BothNew.jpg`, `public/lander/FlowNew.jpg`, `public/lander/ClearNew.jpg`
+
+The Aug 2026 cache-busting rename moved every in-code reference to the `*V3.jpg` basenames. The old `*New.jpg` files were overwritten with the same V3 artwork and kept only so cached HTML and any external links (ads, emails) keep resolving during the transition. They are byte-identical duplicates of the V3 files.
+
+**What unblocks it:** the V3 branch merged and live in prod for a couple of weeks with no external surface still pointing at the old basenames. Then delete the five files.
+
+---
+
 ## Shop System Cleanup
 
 ### 7. ~~Delete orphaned shop components~~

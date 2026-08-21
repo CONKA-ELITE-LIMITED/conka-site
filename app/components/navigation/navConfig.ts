@@ -32,7 +32,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     tagline: "The Complete Daily Brain Shot System, Morning to Evening",
     badge: "Full day",
     href: "/conka-both",
-    image: "/formulas/both/BothNew.jpg",
+    image: "/formulas/both/BothV3.jpg",
     alt: "CONKA Flow and Clear",
   },
   {
@@ -41,7 +41,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     tagline: "The Daily Morning Brain Shot for Sharper, Calmer Focus",
     badge: "Morning",
     href: "/conka-flow",
-    image: "/lander/FlowNew.jpg",
+    image: "/lander/FlowV3.jpg",
     alt: "CONKA Flow",
   },
   {
@@ -50,7 +50,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     tagline: "The Afternoon Brain Shot That Cuts Through Brain Fog",
     badge: "Afternoon",
     href: "/conka-clarity",
-    image: "/lander/ClearNew.jpg",
+    image: "/lander/ClearV3.jpg",
     alt: "CONKA Clear",
   },
 ];

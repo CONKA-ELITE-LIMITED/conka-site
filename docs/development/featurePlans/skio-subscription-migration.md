@@ -149,9 +149,13 @@ The switch. Coordinated with Skio, then Loop is removed.
 
 After Skio confirms zero remaining protocol contracts, retire `app/lib/legacy/protocolSubscriptions.ts` and `PROTOCOL_VARIANTS`. This is the QUARANTINED live-legacy commerce layer (non-deletable today) and ties into the existing `asset-and-protocol-cleanup.md` Phase 5. Gated on ops confirmation that no subscriber still holds a protocol contract.
 
+### Klaviyo / retention-lab migration (sub-plan)
+
+Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, lifecycle segments) runs on Loop's 23 subscription-event metrics + Loop-synced profile properties. At the Phase 4 cutover these must be re-pointed to Skio's equivalents or the whole retention lab silently goes quiet. Scoped separately in [`skio-klaviyo-retention-migration.md`](./skio-klaviyo-retention-migration.md); its cutover switch is synced to this doc's Phase 4.
+
 ### Possible follow-ups (not committed)
 
-- **Retention analytics via Skio webhooks** - with the iframe we lose visibility into in-portal cancel/pause/skip actions our custom flow used to fire. If retention analytics matter, feed Skio webhooks into our analytics. Decide after go-live.
+- **Retention analytics via Skio webhooks** - with the iframe we lose visibility into in-portal cancel/pause/skip actions our custom flow used to fire. Skio confirmed it emits subscription-lifecycle webhooks + has a native Triple Whale integration (see [`../../features/skio/migration.md`](../../features/skio/migration.md)); the Klaviyo side is covered by the sub-plan above.
 - **Native retention/deflection** - if Skio's portal cancel-deflection proves weaker than our RETENTION15 flow, consider rebuilding deflection natively on Skio's GraphQL API.
 
 ---

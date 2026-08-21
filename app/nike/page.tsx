@@ -117,13 +117,13 @@ type RhythmStep = {
 
 const dailyRhythm: RhythmStep[] = [
   {
-    img: "/formulas/conkaFlow/FlowNew.jpg",
+    img: "/formulas/conkaFlow/FlowV3.jpg",
     alt: "CONKA Flow",
     label: "Morning",
     title: "CONKA Flow",
   },
   {
-    img: "/formulas/conkaClear/ClearNew.jpg",
+    img: "/formulas/conkaClear/ClearV3.jpg",
     alt: "CONKA Clear",
     label: "Afternoon",
     title: "CONKA Clear",

@@ -41,7 +41,7 @@ export default function FormulaToggle({
           {/* Square photographic tile — the asset's off-white background is
               the button surface, no inner scaling needed. */}
           <Image
-            src="/formulas/conkaFlow/FlowNew.jpg"
+            src="/formulas/conkaFlow/FlowV3.jpg"
             alt=""
             fill
             className="object-cover"
@@ -69,7 +69,7 @@ export default function FormulaToggle({
           aria-pressed={value === "02"}
         >
           <Image
-            src="/formulas/conkaClear/ClearNew.jpg"
+            src="/formulas/conkaClear/ClearV3.jpg"
             alt=""
             fill
             className="object-cover"
