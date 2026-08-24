@@ -5,6 +5,7 @@
 **Tracking:** This doc owns scope/rationale; live status in [`skio-migration-status.md`](./skio-migration-status.md) (canonical "where are we"). Each active phase is ticketed at build time.
 **Owner:** Rudh
 **Created:** 2026-08-12
+**Last updated:** 2026-08-24 (Skio's migration answers folded in - see Migration model + Open questions)
 
 ---
 
@@ -31,16 +32,39 @@ Subscription variants must be set up as **Synergy virtual bundles**, or they rea
 - **Stage model** (fulfilment-gated): **Stage 1** ships everything in 28-boxes, same for first + recurring (quarterly = 3 boxes); **Stage 2** (when the physical 20-box exists) re-points the recurring "20-increment" bundles' `bundlecomposition` + weight to the 20-box; **Stage 3** adds a first-order gift box. Skio plans/variants stay constant across stages.
 - Adding `bundlecomposition` to the live quarterly variants (done 14 Aug) already fixed the manual quarterly work, independent of the Skio cutover.
 
-## Migration model (confirmed with user)
+## Migration model (confirmed with user + Skio, Aug 2026)
 
-Big-bang cutover coordinated with Skio's team:
+Big-bang cutover coordinated with Skio's team. Skio's answers (Noah, 19 Aug) put real numbers on it:
 
-1. Skio's team exports our live Loop contracts and recreates them as Skio subscription contracts (copies).
-2. We flip the storefront to Skio's selling plans.
-3. Loop auto-billing is disabled at that moment so nobody is double-charged.
-4. Loop wiring is removed in the cutover release.
+1. **Pre-cutover (ours, one-way door).** Archive all Loop history. Skio replays none of it into Skio, so anything not exported before Loop is switched off is gone. conka-lab's `raw_loop_*` Convex tables already hold most of it - verify completeness and freeze a snapshot.
+2. **Possible Loop plan upgrade (ours).** Skio may need us to upgrade our Loop plan so their team can generate the migration CSV. Skio credits the cost back on our next Skio invoice; their migrations team flags it if needed.
+3. **Gate.** Skio confirms all Loop billing has completed for that day, then starts the copy. **This is what prevents a double charge** - contracts arrive in Skio carrying their existing next-charge dates, so nothing bills twice.
+4. **Migration (Skio, 2-4 days end to end).** Loop contracts are recreated as **new** Shopify/Skio subscription contracts.
+5. **Storefront flip (ours).** Re-point selling plans to Skio (already code-complete behind `NEXT_PUBLIC_SKIO_ENABLED`).
+6. **Loop billing off, Loop wiring removed.**
 
-The single hard coordination point is timing the storefront flip with Skio's migration-complete confirmation and the Loop billing shutoff. This lives in the Phase 4 runbook, not extra build.
+### What migrates and what does not
+
+Confirmed by Skio twice (19 + 20 Aug):
+
+| Carries over | Does **not** carry over |
+|---|---|
+| Next-charge dates (billing continuity) | Original subscription start date - the Skio contract's create date **is the migration date** |
+| Line items, frequencies, current status | Prior billing / cycle count (`cyclesCompleted` starts fresh) |
+| Historical orders (they live in Shopify, untouched) | Loop lifecycle events - no replay of skips, pauses, cancellations, dunning attempts |
+| | Loop cancel-flow reasons |
+
+Skio's guidance: export and retain Loop reporting before cutover, and expect a discontinuity in cohort / churn / tenure reporting across the boundary. Their migrations team reviews the field-level data mapping with us before go-live - **book that session.**
+
+### Why the create-date reset matters more than it looks
+
+conka-lab's retention engine derives subscriber tenure from the subscription start date, and low tenure is what defines the `NEW_SUB_*` onboarding segments. Taken naively, every long-tenured subscriber re-materialises at cutover with tenure ~0 and gets pitched the new-subscriber welcome sequence. The fix is ours (freeze Loop-derived history and coalesce it in) and it is now **a certainty to build for, not a risk to monitor**. Detail: conka-lab plan sections 6a and 11.
+
+### Coordination points
+
+- Timing the storefront flip against Skio's migration-complete confirmation and the Loop billing shutoff (Phase 4 runbook).
+- Confirming from the Migrations Guide who disables Loop auto-billing and at which point in the window. Skio's billing-completed-first gate already prevents a double charge; this is a runbook line, not an open risk.
+- conka-lab's ingest source flip (`SUBSCRIPTION_SOURCE=skio`) must land **after** Skio confirms migration complete, or the not-yet-migrated back book disappears from `sanitized_customers` mid-window.
 
 ---
 
@@ -130,9 +154,22 @@ Embed Skio's hosted portal via a server-signed magic link, at a **new route** so
 
 The switch. Coordinated with Skio, then Loop is removed.
 
+0. **[Pre-cutover] Archive Loop history** (blocking, one-way door)
+   - What: full export + frozen snapshot of Loop subscriptions, activity logs, orders, billing attempts and cancel-flow reasons. Skio replays none of it and Loop is unrecoverable once switched off. conka-lab's `raw_loop_*` Convex tables are the existing store - verify completeness against the Loop API, then freeze. Also export Loop's own reporting so we keep a pre-cutover churn/tenure baseline.
+   - Dependencies: none - can start now.
+   - Complexity: Medium. Owned jointly with conka-lab.
+0b. **[Ops] Loop plan upgrade - awareness only, no action needed**
+   - What: Skio may need us on a higher Loop plan so their team can generate the migration CSV. **Skio committed to notifying us if/when this is necessary**, and they credit the cost back on the next Skio invoice. Nothing to chase - just know the Loop tier we are on (visible in the Loop dashboard) so the ask is not a surprise, and budget for a one-off Loop charge.
+   - Complexity: None until they flag it.
+0c. **[Ops] Skio data-mapping session**
+   - What: book the pre-go-live mapping review Skio offers; take conka-lab's field map (`loop-to-skio-ingest-migration.md` section 4) into it.
+   - Complexity: Small.
 1. **[Cutover] Runbook**
-   - What: sequence the storefront flip with Skio's migration-complete confirmation and Loop auto-billing shutoff so no contract is double-billed. Written before the release.
+   - What: sequence the storefront flip, Skio's 2-4 day migration window, the migration-complete confirmation, the conka-lab `SUBSCRIPTION_SOURCE` flip and the Loop auto-billing shutoff so no subscriber disappears mid-window. Double-billing is already handled by Skio's billing-completed-first gate; the open detail is who disables Loop auto-billing and when, per the Migrations Guide. Written before the release.
    - Complexity: Small doc, high-stakes.
+1b. **[Safety] Mute retention email across the window**
+   - What: set conka-lab `KLAVIYO_ENABLED=false` for the duration of the cutover window, re-enable after a post-migration segment-parity check passes. Cheap insurance against the back book being mass re-segmented (tenure reset, blank pause history) and emailed while data is in flux.
+   - Complexity: Small.
 2. **[Cleanup] Remove Loop**
    - What: delete `app/lib/loop.ts`, all `app/api/auth/subscriptions/*` Loop routes, custom subscription components/modals + the RETENTION15 cancel flow, Loop env vars, and the Loop per-contract address-mirror in `customer/update` (after confirming Skio re-reads Shopify addresses).
    - Complexity: Large.
@@ -180,9 +217,29 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 
 ## Open questions
 
+### Still open with Skio
+
+1. **Can the migration carry the original subscription start date onto the new contract?** Skio already writes a `migrationIndex` on migrated subscriptions, so migration-time writes are possible. If they can also write the original Loop start date (and ideally cycle count) into `metadata` / `note` / `customAttributes`, the tenure-reset problem disappears at source. *(Highest leverage - ask before building the workaround.)*
+*(Was: does the Klaviyo integration carry the cancel reason? **Answered by Skio's own docs, 2026-08-24 - yes.** See the answered list below. No need to ask.)*
+
+### Previously open, still unanswered
+
 - Skio portal **v3 (`cpv3`) vs v2 (`storefront-iframe.skio.com`)** - confirm which is provisioned for us.
 - Does Skio's portal handle **address edits and payment-method updates** fully, or do we retain any of our own routes for those?
-- Exact **webhook setup** and the **migration checklist** - get directly from Skio's onboarding team.
+- Exact **webhook setup** - Skio answered the *polling* question (audit log) but not the webhook configuration.
+
+### Answered by Skio (19-20 Aug 2026, Noah)
+
+- **Migration mechanics** - Migrations Guide is the walkthrough; 2-4 days end to end; possible Loop plan upgrade, credited back. -> Migration model above.
+- **Double-billing** - handled by sequencing: Skio confirms Loop billing has completed for the day *before* copying, and copies carry their existing next-charge dates.
+- **What migrates** - next-charge dates and current state yes; original start date, cycle count and Loop event history no. -> Migration model table.
+- **Status model** - `status` (ACTIVE / FAILED / PAUSED / CANCELLED / UNDER_REVIEW) plus optional `statusContext` (e.g. `DUNNING`). A failing subscription sits in `FAILED`, not `ACTIVE`; `FAILED -> ACTIVE` on recovery, `FAILED -> CANCELLED` on retry exhaustion.
+- **Voluntary vs involuntary cancellation** - a dunning-exhausted cancel carries no cancel-flow reason; a customer cancel does.
+- **Cancel reasons are not available via the *API*** - approved feature request, in development. This reflects Skio's no-code model: the reason tree is built and acted on inside their cancel-flow builder, so the reason never needs to cross an API boundary for Skio's own purposes. It is also why moving deflection into Skio's portal is the right call.
+- **But reasons DO reach us via the event layer** (verified from Skio's docs, 2026-08-24, not asked of Noah): the `subscriptionCancelled` payload carries `cancellationReason` (root) and `finalCancellationReason` (sub-reason), delivered through the Klaviyo integration or Skio's custom webhook. Skio's own winback guidance is to trigger-split on `cancellationReason` in Klaviyo. This is better than the CSV export Skio pointed us at, since it includes the sub-reason that exports handle unreliably. Net: no reporting loss and no redesign of the involuntary/voluntary split. -> retention sub-plan + conka-lab section 6a.2.
+- **Pause history** - `PAUSED` for current state; full pause/resume history in the audit log.
+- **Lifecycle events** - the audit-log / event table is confirmed as the right source for a scheduled feed.
+- **Bulk historical load** - Public REST API (cursor pagination, date/ID filters) or the BigQuery integration, not paged GraphQL.
 
 ---
 
@@ -213,6 +270,10 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 - Storefront wiring is via Shopify's Storefront API selling-plan objects (no Skio JS SDK for the selector). The Hydrogen/Remix onboarding is the closest analog to our Next.js setup: query `sellingPlanGroups` / `sellingPlanAllocations`, add to cart with `{ merchandiseId, quantity, sellingPlanId }`, render the label from the cart line's `sellingPlanAllocation`.
 - Iframe portal: `https://cpv3.skio.com/a/account/shopify-login?hostname=&shop=&email=&id=&totalSpent=&hash=` where `hash = md5(customerId + STORE_ID_HASH)`; `STORE_ID_HASH` from dashboard.skio.com/theme. Portal theming is done in the Skio dashboard.
 - Skio GraphQL API: `https://graphql.skio.com/v1/graphql`, header `authorization: API {token}`. Limits: depth 4, 100 nodes/request, 2,000 req/min. Exposes Shopify GIDs as `platformId` (useful for reconciliation). Mutations cover pause/skip/cancel/reactivate/swap/line edits.
+- Three data channels: **GraphQL** for scheduled incremental pulls, the **Public REST API** (cursor pagination + date/ID filters; orders / subscriptions / storefront users / products) for bulk exports, and the **BigQuery integration** for a turn-key historical backfill. Skio's recommendation for a one-time full history load is REST bulk or BigQuery, not paged GraphQL.
+- Subscription state is two fields: `status` (`ACTIVE` / `FAILED` / `PAUSED` / `CANCELLED` / `UNDER_REVIEW`) and optional `statusContext` (e.g. `DUNNING`). Dunning subscriptions sit in `FAILED`, not `ACTIVE`.
+- The subscription **audit log** is the canonical lifecycle event feed and is confirmed as pollable on a schedule.
+- **Cancel-flow reason text is not exposed over the API** (feature request in development). Reporting-only via dashboard exports.
 - Dashboard roles: Store Owner / Admin / Member (per-section restrictions, per-user overrides).
 
 ### Related docs
@@ -224,6 +285,7 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 - `docs/development/featurePlans/account-portal-simple-dtc.md` - `/account` restyle.
 - `docs/development/featurePlans/asset-and-protocol-cleanup.md` - Phase 5 protocol retirement.
 - `docs/product/SKU_AND_SHOT_REFERENCE.md` - canonical selling-plan GIDs.
+- **conka-lab repo** `docs/featurePlans/loop-to-skio-ingest-migration.md` - the data-pipeline half (field-by-field Loop -> Skio map, involuntary-churn derivation, cutover continuity). Cutover synced to this doc's Phase 4.
 
 ### Skio documentation (vendor)
 

@@ -5,6 +5,7 @@
 **Tracking:** This plan doc + Jira (Phase 1 ticketed; later phases ticketed at build time)
 **Owner:** Rudh
 **Created:** 2026-08-19
+**Last updated:** 2026-08-24 (Skio's answers parsed - see "Skio's answers" below)
 **Parent:** [`skio-subscription-migration.md`](./skio-subscription-migration.md) - this realises the parent's Phase 4 retention piece and its "retention analytics via Skio webhooks" follow-up.
 
 ---
@@ -65,6 +66,62 @@ Traced the list-population source (Phase 2 task 1). **The retention lab is the s
 
 **Boundary:** this work belongs in the **`conka-lab` repo** (its own docs + tickets), not conkaWebsite. This plan records the finding and the boundary; the conka-lab ingest-adapter migration is scoped there. The conkaWebsite-side Klaviyo work stays trivial (re-point the 1 draft cancellation flow, or replace it with a `conka_*`-driven signal).
 
+## Skio's answers (2026-08-24): two consequences for the retention lab
+
+Skio (Noah) answered our data-model questions across three emails on 19-20 Aug. Most confirmed what we had already inferred from the docs. Two answers were new, and both are negative:
+
+### 1. Cancel reasons are not available over the API
+
+Skio confirmed cancellation reasons are **not currently retrievable via the API** - it is an approved feature request still in development. They are available only through dashboard exports / Cancel Flow analytics, and Skio added that sub-reasons and free-text entered under "Other" have "historically had limited or inconsistent export support" and are "not a reliable API reporting surface."
+
+This is a **regression against Loop**, which served `cancellationReason` and `cancellationComment` straight off the subscription object.
+
+**What actually breaks - narrower than it first looks, and see the event-layer finding below, which largely closes it.** The retention engine's `isInvoluntaryChurn` derivation tests *cancellation reason is empty* as the involuntary signal. With the reason permanently empty the rule collapses to "cancelled AND last billing attempt FAILED". That still classifies the large majority correctly, because a voluntary cancel from a healthy subscriber has `lastBillingStatus = SUCCESS`. The one population it misreads is **customers who cancel voluntarily while already in dunning** - a case Skio explicitly calls out - who get payment-recovery messaging instead of a winback. Bounded, and arguably not badly wrong for that person.
+
+The apparent loss was **automated reason-breakdown reporting** ("why are people leaving") dropping to a manual CSV export. The event-layer finding below removes that too - reasons arrive on the cancellation event.
+
+**Why the gap exists (and why it is not a defect).** Skio is a no-code platform: you build the cancellation reason tree in their cancel-flow builder and branch save-offers off each reason *inside Skio*, and their own analytics report on it. The reason never has to leave Skio for Skio's purposes. Our previous model was the opposite - capture the reason, ship it to conka-lab, act on it in Klaviyo. The API gap is that difference showing, not a missing feature, which is also why the feature request exists but is not urgent for them.
+
+**This vindicates the deflection decision.** Phase 1 already decided deflection moves into Skio's portal with Klaviyo keeping only the post-cancel winback. Skio's in-platform reason tree is precisely why that is the right split: the reason gets acted on where it is captured, so it never needs to cross the API boundary to drive a save-offer. What crosses the boundary is only the *outcome* (cancelled), which we do get.
+
+**Reasons DO reach us - through the event layer, not the API** (verified against Skio's docs, 2026-08-24). Noah answered narrowly and correctly about the API; the data leaves Skio a different way:
+
+- The **`subscriptionCancelled`** event payload carries **`cancellationReason`** (root reason) and **`finalCancellationReason`** (specific / sub-reason).
+- Skio's own guidance for [winback flows in Klaviyo](https://help.skio.com/docs/creating-winback-flows-in-klaviyo-1) is to add a trigger split on dimension `cancellationReason` - so the property is confirmed present in Klaviyo, by their own recommended pattern.
+- The same payload is available over Skio's [custom webhook](https://integrate.skio.com/skio/platform-integrations/custom-webhook-integration-for-email-sms-platforms), if we prefer a direct feed to a Klaviyo round-trip.
+- `skioSubscriptionCancellationReason` additionally covers merchant-initiated cancellations.
+
+**This is strictly better than the CSV path Skio pointed us at.** `finalCancellationReason` is the sub-reason - precisely the field Noah flagged as having unreliable *export* support. Taking it off the event stream sidesteps that.
+
+**Consequence: the involuntary/voluntary split does not need redesigning.** With the reason present on the event, the original rule (reason empty = involuntary) holds - it just sources from the event stream rather than the subscription object. conka-lab section 6a.2 shrinks from a redesign to a re-plumb. Audit-log status transitions remain the fallback and a useful cross-check, not the primary mechanism.
+
+**Two routes to pick between** (conka-lab decision, not blocking): read the reason back off Klaviyo events via the Klaviyo API, which suits the existing batch pipeline; or receive Skio's custom webhook directly, which is cleaner but needs a receiver conka-lab does not currently have.
+
+**The replacement signal, if the answer is no.** Skio recommends triggering on **status transitions** rather than a current-state snapshot, and their audit log tracks `ACTIVE -> FAILED`, `FAILED -> ACTIVE` and `-> CANCELLED`. A cancellation reached via `FAILED -> CANCELLED` is passive/involuntary. We need a boolean, not the reason text. `cancellationComment` should be treated as gone either way. Detail: conka-lab plan section 6a.2.
+
+### 2. Migrated subscriptions reset their start date and cycle count
+
+Skio confirmed twice that migrated contracts are created as **new** Shopify/Skio contracts at migration time: create date = migration date, no prior cycle count, and no replay of Loop's pauses, skips, cancellations or dunning attempts. Next-charge dates and Shopify order history do carry over.
+
+**What breaks:** subscriber tenure. Tenure is what separates the `NEW_SUB_*` onboarding segments from the steady-state ones, so taken naively the entire back book re-materialises at cutover with tenure ~0 and is pitched the new-subscriber welcome sequence. Pause history goes blank too, so `CHRONIC_PAUSER` empties out (quieter, not wrong-email, but a real behaviour change). This was previously the open branch in the conka-lab plan's section 11 decision tree; Skio's answer collapses it to the bad branch, so it is now **a certainty to build for, not a risk to monitor**.
+
+Note this hits the **native Skio Klaviyo integration too**, not just our pipeline: `skio_cyclesCompleted` and any tenure-flavoured `skio_*` profile property will be reset for migrated subscribers. Any flow we re-point onto those properties inherits the same distortion.
+
+**Mitigations, in order of preference:**
+
+1. **Ask Skio to stamp the original start date and cycle count into each migrated contract** (`metadata` / `note` / `customAttributes`). They already write a `migrationIndex` on migrated subscriptions, so migration-time writes are clearly possible. If they will do this, the problem disappears at source. Raised as open question 2 in the parent plan.
+2. **Freeze Loop-derived history before cutover and coalesce it in** (conka-lab, ours, no Skio dependency): snapshot per-customer first-subscription date, completed renewals and pause dates from the `raw_loop_*` tables, then have sanitize take the earlier of the Loop start and the Skio create date. Build this regardless of (1).
+3. **Mute the retention sync across the cutover window** - set `KLAVIYO_ENABLED=false` for the duration and re-enable only after a post-migration segment-parity check passes. The migration takes 2-4 days, during which the subscriber population is split across both platforms, so this is cheap insurance against a mass mis-segmentation reaching inboxes. Added as Phase 4 task 1b in the parent plan.
+
+### Confirmed, no action beyond what was planned
+
+- **Status model** - `status` (`ACTIVE` / `FAILED` / `PAUSED` / `CANCELLED` / `UNDER_REVIEW`) plus optional `statusContext` (e.g. `DUNNING`). Dunning subscriptions sit in `FAILED`, never `ACTIVE`. Matches what we had already mapped, and matches the engine's existing dunning/cancelled split.
+- **Pause history** - audit log per subscriber, segments for the wide view.
+- **Lifecycle events** - the audit-log / event table is confirmed as the right source for a scheduled feed.
+- **Historical backfill** - Public REST API (cursor pagination) or the BigQuery integration; not paged GraphQL.
+
+---
+
 ## Approach
 
 Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (draft / off), then switch at the same coordinated moment as the parent's Phase 4 code cutover. Same "build in parallel, flip at cutover" pattern the whole Skio migration uses, so live subscribers are never disrupted.
@@ -83,6 +140,8 @@ Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (d
 | 4 | Cutover switch (synced with parent Phase 4) | Future |
 | 5 | Verify + decommission Loop metrics/segments | Future |
 
+Cross-cutting: Skio's own answers (19-20 Aug) are parsed in ["Skio's answers"](#skios-answers-2026-08-24-two-consequences-for-the-retention-lab) below - they change *how* Phase 2's ingest work derives churn, and add a cutover safeguard.
+
 ---
 
 ## Active phase task breakdown
@@ -99,7 +158,9 @@ Build the Skio-fed replacements **alongside** the live Loop-fed retention lab (d
 1. ~~**[Investigate] Trace the retention-lab list-population source.**~~ **DONE** - it is the `conka-lab` repo's pipeline (see Phase 2 finding). The real migration surface is conka-lab's Loop ingest adapter, not Klaviyo.
 2. **[conka-lab] Scope + build the Loop -> Skio ingest-adapter rewrite.** In the `conka-lab` repo (its own ticket): swap the Python pipeline's Loop REST ingest for Skio, repopulate `raw_*` -> `sanitized_customers` with the same fields the retention engine depends on, and re-validate the voluntary-vs-involuntary churn derivation against Skio's status model. Everything downstream is untouched. Complexity: Large (but isolated to the ingest/sanitize layer).
 3. **[conkaWebsite/Klaviyo] Re-point the one cancellation flow.** Either connect Skio's native Klaviyo integration for the cancel event, or replace `NEW Cancellation Flow`'s Loop trigger with a `conka_*`-driven signal from conka-lab. Trivial. Complexity: Small.
-4. **[Verify] End-to-end** - after the conka-lab adapter is live on Skio data, confirm a test subscriber flows through sanitize -> segment -> Klaviyo list correctly.
+4. **[Skio dashboard] Build the cancel flow: reason tree + save-offers.** Phase 1 decided deflection moves into Skio's portal, but that is recorded as a *decision* with no task behind it. Someone has to actually build it in the Skio dashboard: the cancellation reason tree, the per-reason branches, and a recreation of the current RETENTION15 15%-off save offer including its discount mechanics. Pre-cutover, because the parent plan deletes our own RETENTION15 code flow at Phase 4 - if Skio's flow is not built by then we ship a cancel journey with no deflection at all. Complexity: Medium (dashboard config, no code), owner Rudh/ops.
+5. **[Verify] Cancel-reason event payload on live data.** Skio's docs confirm `cancellationReason` + `finalCancellationReason` ship on `subscriptionCancelled`. Once the integration is connected, confirm on a real event and record the exact reason string vocabulary (needed because Klaviyo's `contains` operator is case-sensitive, and the strings are whatever was configured in Skio's cancel-flow builder). Then decide the ingest route: Klaviyo API read vs direct webhook. Complexity: Small.
+6. **[Verify] End-to-end** - after the conka-lab adapter is live on Skio data, confirm a test subscriber flows through sanitize -> segment -> Klaviyo list correctly.
 
 Phases 3-5 (rebuild in parallel, cutover switch, verify + decommission) live here and are ticketed at build time, matching the parent doc's convention.
 
@@ -154,6 +215,8 @@ The 23 Loop metrics to map. Skio-equivalent column filled in Phase 2 from live e
 
 - **Silent retention loss at cutover** - mitigated by build-in-parallel + a switch synced to the parent's Phase 4.
 - **Skio event granularity differs from Loop's** - surfaced by the mapping table; budget for some re-logic.
+- **Mass mis-segmentation at cutover** (new, confirmed 2026-08-24) - migrated contracts reset tenure and cycle count, so without the legacy-history coalesce the back book classifies as brand-new subscribers and receives onboarding email. Mitigated by the three steps in "Skio's answers"; `KLAVIYO_ENABLED=false` across the window is the backstop.
+- **Involuntary/voluntary churn misclassification** (new, confirmed 2026-08-24) - cancel reasons are not API-exposed, so a customer who cancels voluntarily while in dunning reads as involuntary churn until the derivation moves to audit-log status transitions.
 
 ## Cross-repo tracking
 
@@ -167,8 +230,9 @@ The substantive migration work (the Loop -> Skio ingest-adapter rewrite) lives i
 ## References
 
 - Parent plan: [`skio-subscription-migration.md`](./skio-subscription-migration.md) (Phase 4 + retention-analytics follow-up)
-- Canonical Skio reference: [`../../features/skio/migration.md`](../../features/skio/migration.md) ("Answers from Skio" - native Triple Whale + lifecycle webhooks)
+- Canonical Skio reference: [`../../features/skio/migration.md`](../../features/skio/migration.md)
 - Attribution/fulfilment parity: [`skio-attribution-fulfilment-parity.md`](./skio-attribution-fulfilment-parity.md)
+- Data-pipeline half (the substantive work): **conka-lab repo** `docs/featurePlans/loop-to-skio-ingest-migration.md`
 - Skio: help.skio.com/docs/skio-event-and-profile-properties-in-klaviyo ; help.skio.com Klaviyo Integration + "Upgrading to the New Klaviyo Integration"
 
 ## Jira
