@@ -214,6 +214,38 @@ export function trackCartUpsellAccepted(params: CartUpsellEvent): void {
   safeTrack("cart:upsell_accepted", params);
 }
 
+/**
+ * The cart path's checkout stage (SCRUM-1243). Fires on a successful Checkout
+ * press in the drawer, immediately before the redirect to Shopify-hosted
+ * checkout, alongside Meta's InitiateCheckout.
+ *
+ * Two properties only (the analytics budget): `items` is the number of distinct
+ * cart LINES and `value` is the cart subtotal. Note this differs from the Meta
+ * InitiateCheckout fired on the same click, whose `num_items` is the summed
+ * QUANTITY across lines: a 2-line cart holding 3 units reports items=2 here and
+ * num_items=3 there. Both are correct for their own dashboards; do not
+ * reconcile them.
+ *
+ * Currency is deliberately omitted rather than packed in, since the store sells
+ * in GBP only; if that changes, pack it into `value` as a string rather than
+ * adding a third property.
+ *
+ * Safe to fire immediately before `window.location.href`: Vercel's insights
+ * script posts custom events with `keepalive: true` (verified against the live
+ * script, 2026-08-24), so the request survives the navigation. Do NOT "fix"
+ * this by deferring the redirect behind a setTimeout; the delay is not needed
+ * and it would slow the path to checkout.
+ */
+export function trackCartCheckoutClicked(params: {
+  items: number;
+  value: number;
+}): void {
+  safeTrack("cart:checkout_clicked", {
+    items: params.items,
+    value: params.value,
+  });
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**

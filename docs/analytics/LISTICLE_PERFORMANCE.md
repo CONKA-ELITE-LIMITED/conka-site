@@ -2,6 +2,22 @@
 
 > **Living data log for the `/go/*` listicle landing pages.** Append a dated snapshot each time we pull Vercel Web Analytics; the JSON block in each snapshot feeds the dashboard artifact directly. This is the data home — the [2026-07 ad-spend sprint doc](../sprints/2026-07-listicle-ad-spend.md) is the narrative context.
 
+> ## ⚠️ 2026-08-24 — routing correction: there was never a funnel epoch
+>
+> **Checked against git while pinning the CTA routing epoch for SCRUM-1242. The funnel framing below is wrong and was never true.**
+>
+> **What the code actually says.** Listicle CTAs have pointed at the **PDPs** continuously since **2026-07-24** (`b224d714`, "attribute listicle CTA clicks through to purchase"), which is when `withSrc(buyHref, …)` replaced the in-page anchor. The `PDP_HREF` map itself landed a day earlier in `76ffe504` (2026-07-23). A pickaxe search over the whole history of `app/components/go/`, `app/go/` and `app/lib/landings/` returns **no commit that ever put a `/funnel` href in a listicle**. So the claim below that "listicle CTAs were re-routed to the funnel (not the classic PDP)" from ~27 Jul describes something that never shipped, and there is no re-route date to annotate a chart with.
+>
+> **Live routing.** CTA → `/conka-flow` · `/conka-clarity` · `/conka-both` (by the buy box's `productHeroId`), with `?src=<slug>-<section>` appended. Hero, bridge and sticky CTAs all use it.
+>
+> **Attribution is path-independent, which is why it kept working.** `?src=` is read on landing and written through to `sessionStorage` (`getListicleSrc`, `app/lib/analytics.ts`), so `getPurchaseOrigin()` still resolves at add-to-cart time even after in-PDP navigation drops the param. `CartContext` (line ~181) writes it as the `_listicle_origin` cart attribute, which rides Shopify's hosted checkout onto the order. None of that depends on which page the CTA landed on.
+>
+> **Two knock-on corrections to the text below:**
+> - "the old `?src=` → `purchase:add_to_cart.source` path … stays ~zero because the funnel skips the cart" is **wrong twice over**. The funnel was never in the path, and `getPurchaseSource()` returns the literal `"listicle"` whenever a `src` token is present. If that path really is reading ~zero, it is a **bug to investigate**, not expected behaviour.
+> - The **~1-in-5 floor is still real data** (6 tagged vs 25 Meta-attributed vs ~38 store-lift in week 1) — but its stated *cause* is wrong. The undercount cannot be "the funnel bypasses the cart". The live candidates are cross-device, come-back-later direct visits, the `myshopify.com` checkout-cookie split, and `sessionStorage` loss between landing and purchase. Treat the ratio as observed, the explanation as open.
+>
+> **For SCRUM-1242:** no epoch annotation is needed for a funnel-to-PDP re-route. The only routing boundary worth marking is **2026-07-24**, before which listicle CTAs scrolled to the in-page buy zone rather than handing off to a PDP. Trends may be read continuously across everything after that date.
+
 ## What we measure and why
 
 Three events, all keyed `{ slug, section }` (the two-property budget — see `app/lib/analytics.ts`):

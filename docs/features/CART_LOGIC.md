@@ -85,7 +85,7 @@ The tile is copy-only; all wording (headline, value line, an optional green high
 ## Analytics (from cart actions)
 
 - **Add to cart** (in `CartContext` after a successful add): Triple Whale `trackAddToCart`, Vercel Analytics `trackPurchaseAddToCart`, Meta Pixel (and CAPI) `trackMetaAddToCart`. Optional metadata: `location`, `source`, `sessionId` for funnel analysis.
-- **Click to checkout** (in `CartDrawer` on the Checkout link): Meta `trackMetaInitiateCheckout` only. No Klaviyo event from the app.
+- **Click to checkout** (in `CartDrawer` on the Checkout link): Meta `trackMetaInitiateCheckout` plus Vercel `cart:checkout_clicked` (`{ items, value }`, SCRUM-1243), both fired before the redirect to `cart.checkoutUrl`. `items` is the distinct LINE count; Meta's `num_items` on the same click is the summed QUANTITY, so the two differ by design. No Klaviyo event from the app.
 - **Cart upsell** (on the upgrade tile): `cart:upsell_shown` on view, `cart:upsell_accepted` on accept (Vercel, `{ type, product }`). The accepted add carries `source: "cart_upsell"` plus a hidden `_upsell` cart attribute for per-order attribution.
 
 ## Add-to-cart call sites
