@@ -35,8 +35,12 @@ export interface ProductMetadata {
 }
 
 /**
- * `productId` for a variant that matched no table. Query this value in Vercel
- * to find catalogue changes that outran this mapping.
+ * Fallback `productId` when a variant matched no table AND carried no usable
+ * GID (an empty variantId). An unmapped variant that DOES have a GID keeps it
+ * as its `productId`, so the specific variant is identifiable from the data.
+ *
+ * To find catalogue changes that outran this mapping, filter on
+ * `productType eq 'unknown'`, not on this value.
  */
 export const UNKNOWN_PRODUCT_ID = "unknown";
 

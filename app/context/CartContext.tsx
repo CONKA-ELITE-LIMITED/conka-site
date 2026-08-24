@@ -240,52 +240,62 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Track analytics events after successful cart update
-      if (updatedCart) {
-        const lineItems = updatedCart.lines?.edges || [];
-        const newLineItem = lineItems[lineItems.length - 1]?.node;
+      // Analytics must never surface as a cart failure. This block sits inside
+      // the mutation's try, whose catch calls setError("Failed to add item to
+      // cart"), so a throwing tracker would tell the shopper their add failed
+      // when it actually succeeded. Same guard funnelCheckout.ts uses.
+      try {
+        if (updatedCart) {
+          const lineItems = updatedCart.lines?.edges || [];
+          const newLineItem = lineItems[lineItems.length - 1]?.node;
 
-        if (newLineItem?.merchandise) {
-          const merchandise = newLineItem.merchandise;
+          if (newLineItem?.merchandise) {
+            const merchandise = newLineItem.merchandise;
 
-          if (merchandise.product?.id && merchandise.id) {
-            trackAddToCart({
-              productId: merchandise.product.id,
-              variantId: merchandise.id,
-              quantity: quantity,
-              cartToken: updatedCart.id,
+            if (merchandise.product?.id && merchandise.id) {
+              trackAddToCart({
+                productId: merchandise.product.id,
+                variantId: merchandise.id,
+                quantity: quantity,
+                cartToken: updatedCart.id,
+              });
+            }
+
+            // Unconditional by design (SCRUM-1244). extractProductMetadata is
+            // total: an unrecognised variant reports as productType "unknown"
+            // rather than returning null. This used to sit behind an
+            // `if (productMetadata)` guard, which silently dropped every
+            // add-to-cart once the catalogue moved to funnel variants.
+            const productMetadata = extractProductMetadata(variantId);
+            trackPurchaseAddToCart({
+              productType: productMetadata.productType,
+              productId: productMetadata.productId,
+              variantId: variantId,
+              packSize: productMetadata.packSize,
+              tier: productMetadata.tier,
+              purchaseType: sellingPlanId ? "subscription" : "one-time",
+              location: metadata?.location || "unknown",
+              // Prefer the precise origin; falls back to the coarse source.
+              // Property count is unchanged, so the event stays within budget.
+              source: metadata?.origin || metadata?.source || "direct",
+              price: parseFloat(merchandise.price.amount),
+              sessionId: metadata?.sessionId,
+            });
+
+            const price = parseFloat(merchandise.price.amount);
+            const currency = merchandise.price.currencyCode ?? "GBP";
+            trackMetaAddToCart({
+              content_ids: [toContentId(merchandise.id)],
+              value: price * quantity,
+              currency,
+              num_items: quantity,
             });
           }
-
-          // Unconditional by design (SCRUM-1244). extractProductMetadata is
-          // total: an unrecognised variant reports as productType "unknown"
-          // rather than returning null. This used to sit behind an
-          // `if (productMetadata)` guard, which silently dropped every
-          // add-to-cart once the catalogue moved to funnel variants.
-          const productMetadata = extractProductMetadata(variantId);
-          trackPurchaseAddToCart({
-            productType: productMetadata.productType,
-            productId: productMetadata.productId,
-            variantId: variantId,
-            packSize: productMetadata.packSize,
-            tier: productMetadata.tier,
-            purchaseType: sellingPlanId ? "subscription" : "one-time",
-            location: metadata?.location || "unknown",
-            // Prefer the precise origin; falls back to the coarse source.
-            // Property count is unchanged, so the event stays within budget.
-            source: metadata?.origin || metadata?.source || "direct",
-            price: parseFloat(merchandise.price.amount),
-            sessionId: metadata?.sessionId,
-          });
-
-          const price = parseFloat(merchandise.price.amount);
-          const currency = merchandise.price.currencyCode ?? "GBP";
-          trackMetaAddToCart({
-            content_ids: [toContentId(merchandise.id)],
-            value: price * quantity,
-            currency,
-            num_items: quantity,
-          });
         }
+      } catch (analyticsErr) {
+        // Swallow: the item is already in the cart. Log so the failure is
+        // visible in dev without ever reaching the shopper.
+        console.error("Add to cart analytics error:", analyticsErr);
       }
 
       setIsOpen(true);
