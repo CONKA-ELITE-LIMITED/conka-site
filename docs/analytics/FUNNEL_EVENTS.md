@@ -30,6 +30,12 @@ Billing counts events, not properties, so this costs nothing either way.
 
 **Do not add a third property to any funnel event without first confirming the account has the Plus add-on.**
 
+## Events survive navigation (verified 2026-08-24)
+
+Firing a Vercel event immediately before `window.location.href` is safe. Vercel's insights script posts custom events with `fetch(..., { keepalive: true })`, so the request is not cancelled by the navigation. Verified by reading the live script at `va.vercel-scripts.com/v1/script.js`; the keepalive flag sits on the shared options object covering both the pageview and the event endpoint.
+
+This matters wherever we measure a click that leaves the site (`cart:checkout_clicked`, `funnel:checkout`, `listicle:cta_clicked`). Do not add a `setTimeout` before such a redirect to "give analytics time" - it is unnecessary and it slows the path to checkout.
+
 ## Events
 
 | Event | Properties | Fires when |
