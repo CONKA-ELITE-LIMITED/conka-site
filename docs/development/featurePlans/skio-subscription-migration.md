@@ -224,8 +224,8 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 
 ### Previously open, still unanswered
 
-- Skio portal **v3 (`cpv3`) vs v2 (`storefront-iframe.skio.com`)** - confirm which is provisioned for us.
-- Does Skio's portal handle **address edits and payment-method updates** fully, or do we retain any of our own routes for those?
+- ~~Skio portal **v3 (`cpv3`) vs v2**~~ **ANSWERED (Noah, 18 Aug, recorded on SCRUM-1227):** we are on Customer Portal v3, host `cpv3.skio.com`, auto-login path `/a/account/shopify-login`.
+- ~~Does Skio's portal handle **address edits and payment-method updates**?~~ **ANSWERED (Noah, recorded on SCRUM-1227):** Skio writes address and payment changes back to Shopify, so the Loop per-contract address mirror can be dropped at Phase 4.
 - Exact **webhook setup** - Skio answered the *polling* question (audit log) but not the webhook configuration.
 
 ### Answered by Skio (19-20 Aug 2026, Noah)
@@ -305,5 +305,9 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 |--------|-------|-------|--------|
 | SCRUM-1210 | [Shopify & Subscriptions] Skio Phase 1: install app, create selling plans, capture plan mapping + secrets scaffold | 1 | To Do |
 | SCRUM-1221 | [Shopify & Subscriptions] Skio Phase 3: embedded customer portal (iframe) at /account/manage | 3 | To Do |
+| SCRUM-1227 | [Shopify & Subscriptions] Fix Skio portal auto-login endpoint (headless iframe) | 3 | For review |
+| SCRUM-1240 | [Shopify & Subscriptions] Preserve Loop subscriber history through the Skio cutover (archive + tenure coalesce) | 4 (pre-cutover) | To Do |
 
-Sprint 29, epic SCRUM-768 (Shopify & Subscriptions). Phases 2-4 are scoped more deeply and ticketed at build time; Phase 5 is Future/ops-gated.
+Epic SCRUM-768 (Shopify & Subscriptions); SCRUM-1240 is in Sprint 30. Phase 5 is Future/ops-gated.
+
+**SCRUM-1240 lands in the conka-lab repo**, not here. It covers the pre-cutover Loop archive plus the tenure coalesce that stops migrated subscribers being re-onboarded into the welcome sequence. Detail in `conka-lab:docs/featurePlans/loop-to-skio-ingest-migration.md` section 6a.1.
