@@ -214,6 +214,26 @@ export function trackCartUpsellAccepted(params: CartUpsellEvent): void {
   safeTrack("cart:upsell_accepted", params);
 }
 
+/**
+ * The cart path's checkout stage (SCRUM-1243). Fires on a successful Checkout
+ * press in the drawer, immediately before the redirect to Shopify-hosted
+ * checkout, alongside Meta's InitiateCheckout.
+ *
+ * Two properties only (the analytics budget): `items` is the number of distinct
+ * cart lines and `value` is the cart subtotal. Currency is deliberately omitted
+ * rather than packed in, since the store sells in GBP only; if that changes,
+ * pack it into `value` as a string rather than adding a third property.
+ */
+export function trackCartCheckoutClicked(params: {
+  items: number;
+  value: number;
+}): void {
+  safeTrack("cart:checkout_clicked", {
+    items: params.items,
+    value: params.value,
+  });
+}
+
 // ===== B2B PORTAL TRACKING =====
 
 /**
