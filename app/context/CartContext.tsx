@@ -256,23 +256,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             });
           }
 
+          // Unconditional by design (SCRUM-1244). extractProductMetadata is
+          // total: an unrecognised variant reports as productType "unknown"
+          // rather than returning null. This used to sit behind an
+          // `if (productMetadata)` guard, which silently dropped every
+          // add-to-cart once the catalogue moved to funnel variants.
           const productMetadata = extractProductMetadata(variantId);
-          if (productMetadata) {
-            trackPurchaseAddToCart({
-              productType: productMetadata.productType,
-              productId: productMetadata.productId,
-              variantId: variantId,
-              packSize: productMetadata.packSize,
-              tier: productMetadata.tier,
-              purchaseType: sellingPlanId ? "subscription" : "one-time",
-              location: metadata?.location || "unknown",
-              // Prefer the precise origin; falls back to the coarse source.
-              // Property count is unchanged, so the event stays within budget.
-              source: metadata?.origin || metadata?.source || "direct",
-              price: parseFloat(merchandise.price.amount),
-              sessionId: metadata?.sessionId,
-            });
-          }
+          trackPurchaseAddToCart({
+            productType: productMetadata.productType,
+            productId: productMetadata.productId,
+            variantId: variantId,
+            packSize: productMetadata.packSize,
+            tier: productMetadata.tier,
+            purchaseType: sellingPlanId ? "subscription" : "one-time",
+            location: metadata?.location || "unknown",
+            // Prefer the precise origin; falls back to the coarse source.
+            // Property count is unchanged, so the event stays within budget.
+            source: metadata?.origin || metadata?.source || "direct",
+            price: parseFloat(merchandise.price.amount),
+            sessionId: metadata?.sessionId,
+          });
 
           const price = parseFloat(merchandise.price.amount);
           const currency = merchandise.price.currencyCode ?? "GBP";

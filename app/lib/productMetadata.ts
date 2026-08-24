@@ -1,10 +1,20 @@
 /**
  * Product Metadata Extraction
- * 
- * Helper functions to extract product metadata (productType, productId, packSize, tier)
- * from Shopify variant IDs by reverse-looking up the variant mapping.
+ *
+ * Resolves a Shopify variant GID to the product metadata our analytics events
+ * carry (productType, productId, packSize, tier).
+ *
+ * THIS FUNCTION IS TOTAL: it always returns metadata, never null. That is
+ * deliberate (SCRUM-1244). It previously returned null on an unrecognised
+ * variant, and its one caller read null as "skip tracking", so when the
+ * catalogue moved to funnel variants every live add-to-cart stopped being
+ * tracked and nothing surfaced the problem: 86 visitors provably had a cart
+ * line in a week while only 3 `purchase:add_to_cart` events fired.
+ *
+ * A lookup miss is now data ("unknown"), not silence.
  */
 
+import { getOfferByVariantId, type FunnelProduct } from "./funnelData";
 import { FORMULA_VARIANTS } from "./shopifyProductMapping";
 import type { FormulaId, PackSize } from "./productData";
 
@@ -17,23 +27,64 @@ import type {
 } from "./legacy/protocolSubscriptions";
 
 export interface ProductMetadata {
-  productType: "formula" | "protocol";
-  productId: string;  // "01", "02" (formulas) or "1", "2", "3", "4" (protocols)
+  /** "unknown" means the variant resolved against no table. See UNKNOWN_PRODUCT_ID. */
+  productType: "formula" | "protocol" | "unknown";
+  productId: string;  // "01", "02", "03" (formulas) or "1".."4" (protocols)
   packSize?: PackSize;
   tier?: ProtocolTier;
 }
 
 /**
- * Extract product metadata from variant ID
- * 
- * Reverse-looks up the variant ID in FORMULA_VARIANTS and PROTOCOL_VARIANTS
- * to determine product type, ID, pack size, and tier.
- * 
- * @param variantId - Shopify variant GID (e.g., "gid://shopify/ProductVariant/...")
- * @returns Product metadata or null if not found
+ * `productId` for a variant that matched no table. Query this value in Vercel
+ * to find catalogue changes that outran this mapping.
  */
-export function extractProductMetadata(variantId: string): ProductMetadata | null {
-  // Check formulas first
+export const UNKNOWN_PRODUCT_ID = "unknown";
+
+/**
+ * The live offer catalogue uses "flow" / "clear" / "both"; analytics has always
+ * keyed formulas numerically ("01" Flow, "02" Clear), and "03" is Both, matching
+ * ProductHeroId. Kept in sync by the type: adding a FunnelProduct fails the build
+ * here rather than silently emitting an unmapped event.
+ */
+const FUNNEL_PRODUCT_TO_ID: Record<FunnelProduct, string> = {
+  flow: "01",
+  clear: "02",
+  both: "03",
+};
+
+/**
+ * Extract product metadata from a variant ID.
+ *
+ * Resolution order, most authoritative first:
+ *
+ * 1. **The live offer catalogue** (`getOfferByVariantId` over `FUNNEL_VARIANTS`).
+ *    Every current buy path resolves its variant through `getOfferVariant`, so
+ *    this covers everything the site sells today. It is the same table checkout
+ *    reads, which is the point: it cannot go stale without checkout breaking
+ *    loudly first, unlike an analytics-only mapping that rots in silence.
+ * 2. **Legacy formula TRIAL variants** - historical carts and old links.
+ * 3. **Legacy protocol variants** - customers still holding a protocol sub.
+ * 4. **Unknown** - returns `productType: "unknown"` with the raw variant GID as
+ *    `productId`, so the event still fires and the gap is visible in the data.
+ *
+ * @param variantId - Shopify variant GID (e.g. "gid://shopify/ProductVariant/...")
+ * @returns Product metadata. Never null.
+ */
+export function extractProductMetadata(variantId: string): ProductMetadata {
+  // 1. The live offer catalogue - everything the site currently sells.
+  const offer = getOfferByVariantId(variantId);
+  if (offer) {
+    return {
+      productType: "formula",
+      productId: FUNNEL_PRODUCT_TO_ID[offer.product],
+      // packSize is deliberately omitted: funnel offers ship 20 / 28 / 80 shots
+      // and PackSize only allows "4" | "8" | "12" | "28". Reporting a wrong size
+      // is worse than reporting none, and `purchaseType` already separates
+      // subscription from one-time on the event.
+    };
+  }
+
+  // 2. Legacy formula TRIAL variants (historical carts, old links).
   for (const formulaId of ["01", "02"] as FormulaId[]) {
     const formulaVariants = FORMULA_VARIANTS[formulaId];
     if (!formulaVariants) continue;
@@ -49,7 +100,7 @@ export function extractProductMetadata(variantId: string): ProductMetadata | nul
     }
   }
 
-  // Check protocols
+  // 3. Legacy protocol variants (customers still holding a protocol sub).
   for (const protocolId of ["1", "2", "3", "4"] as ProtocolId[]) {
     const protocolVariants = PROTOCOL_VARIANTS[protocolId];
     if (!protocolVariants) continue;
@@ -78,6 +129,11 @@ export function extractProductMetadata(variantId: string): ProductMetadata | nul
     }
   }
 
-  // Not found in mappings
-  return null;
+  // 4. Unrecognised. Return metadata anyway so the event still fires and the
+  // gap shows up as data. The raw GID goes in productId so an unmapped variant
+  // can be identified from the dashboard without a code change.
+  return {
+    productType: "unknown",
+    productId: variantId || UNKNOWN_PRODUCT_ID,
+  };
 }

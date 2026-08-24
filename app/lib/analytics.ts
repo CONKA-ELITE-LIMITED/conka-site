@@ -638,8 +638,11 @@ export function getQuizSessionId(): string | undefined {
  * Phase 4A: Purchase intent with context
  */
 export function trackPurchaseAddToCart(params: {
-  productType: "formula" | "protocol";
-  productId: string;  // "01", "02", "1", "2", "3", "4"
+  // "unknown" is a real, expected value: a variant that resolved against no
+  // mapping still reports (SCRUM-1244), carrying its raw GID as productId.
+  // Filter it in dashboards; do not assume it never occurs.
+  productType: "formula" | "protocol" | "unknown";
+  productId: string;  // "01", "02", "03", "1".."4", or a raw variant GID
   variantId: string;  // Shopify variant GID
   packSize?: "4" | "8" | "12" | "28";
   tier?: "starter" | "pro" | "max";
