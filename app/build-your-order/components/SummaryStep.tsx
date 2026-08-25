@@ -149,6 +149,13 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
           />
         </div>
         <div className="p-5">
+        {/* Product name — the photo shows the delivery, this names it. */}
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <p className="text-[19px] font-semibold text-black leading-tight">{display.label}</p>
+          <span className="shrink-0 rounded-full bg-black/[0.06] px-2.5 py-1 text-[11px] font-semibold text-black/70">
+            {display.timeLabel}
+          </span>
+        </div>
         {/* What the plan delivers — the same list as the Build step's
             "Your subscription" box (PlanSummaryList), so the receipt and the
             plan selector can never tell different stories (SCRUM-1249). */}

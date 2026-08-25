@@ -295,8 +295,11 @@ export default function BuildYourOrderClient() {
   // Live product + price shown INSIDE the footer CTA
   const pricing = getOfferPricing(product, cadence);
   const freq = cadencePriceSuffix(cadence);
+  // Mobile shortens "/3 months" to "/3 mo": with the back arrow beside it, the
+  // full suffix pushed the quarterly CTA wider than a 390px viewport.
+  const freqShort = cadence === "quarterly-sub" ? "/3 mo" : freq;
   const ctaPrice = `${BYO_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
-  const ctaPriceShort = `${formatPrice(pricing.price)}${freq}`;
+  const ctaPriceShort = `${formatPrice(pricing.price)}${freqShort}`;
   const isSubscription = cadence !== "monthly-otp";
 
   const footer =

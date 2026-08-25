@@ -104,14 +104,16 @@ export default function StickyFooter({
             type="button"
             onClick={onCta}
             disabled={loading}
-            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#1B2757] text-white py-3 px-5 font-semibold text-[15px] hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-[#1B2757] text-white py-3 px-5 font-semibold text-[15px] hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
           >
             {loading && (
               <span className="h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden />
             )}
-            <span>{label}</span>
+            <span className="whitespace-nowrap">{label}</span>
             {priceLabel && (
-              <span className="font-medium text-white/85 tabular-nums">
+              // min-w-0 + truncate: an over-long price ellipsizes inside the
+              // pill rather than pushing it past the viewport edge.
+              <span className="min-w-0 truncate font-medium text-white/85 tabular-nums">
                 <span className="sm:hidden">· {priceShort}</span>
                 <span className="hidden sm:inline">· {priceLabel}</span>
               </span>
