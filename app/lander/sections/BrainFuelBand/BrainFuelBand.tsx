@@ -5,9 +5,10 @@
  * stats. The figures are editorial — verify sources before launch (see
  * README compliance note).
  *
- * Video: the /lander/video/BrainFuel trio (webm + mp4 + poster), per
- * VIDEO_OPTIMISATION.md. WebM is listed first so supporting browsers fetch the
- * lighter file (705KB vs 2.6MB).
+ * Video: the /videos/both/BothNeuronFloat trio (webm + mp4 + poster), per
+ * VIDEO_OPTIMISATION.md — the 3:4 neuron-network float of both shots (also
+ * the retired video hero's mobile asset). WebM is listed first so supporting
+ * browsers fetch the lighter file (652KB vs 724KB).
  */
 
 import type { ReactNode } from 'react';
@@ -34,9 +35,9 @@ export default function BrainFuelBand() {
         <h2 className={styles.title}>Trusted where focus can&rsquo;t fail</h2>
 
         <div className={styles.hero}>
-          {/* preload="metadata" (was "auto") so the 2.6 MB clip isn't fully
-              downloaded on page load — it's below the fold. Browser fetches it
-              when the autoplay element scrolls into range. */}
+          {/* preload="metadata" so the clip isn't fully downloaded on page
+              load — it's below the fold. Browser fetches it when the autoplay
+              element scrolls into range. */}
           <video
             className={styles.video}
             autoPlay
@@ -44,10 +45,10 @@ export default function BrainFuelBand() {
             loop
             playsInline
             preload="metadata"
-            poster="/lander/video/BrainFuel-poster.jpg"
+            poster="/videos/both/BothNeuronFloat-poster.jpg"
           >
-            <source src="/lander/video/BrainFuel.webm" type="video/webm" />
-            <source src="/lander/video/BrainFuel.mp4" type="video/mp4" />
+            <source src="/videos/both/BothNeuronFloat.webm" type="video/webm" />
+            <source src="/videos/both/BothNeuronFloat.mp4" type="video/mp4" />
           </video>
         </div>
 
