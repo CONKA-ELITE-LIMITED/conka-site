@@ -376,17 +376,12 @@ export default function BuildYourOrderClient() {
       <div className="h-[59px]" />
 
       {/* Mobile media (SCRUM-1249 review): the Build step gets the swipeable
-          gallery, scrolling away naturally (not pinned); the Review step gets
-          a single static of the selection; the Learn step stays media-free so
-          the pitch owns the viewport. */}
+          gallery, scrolling away naturally (not pinned). The Learn step stays
+          media-free so the pitch owns the viewport, and the Review step's
+          asset lives inside the receipt tile itself. */}
       {step === 2 && (
         <div className="lg:hidden">
           <ByoMobileGallery product={product} />
-        </div>
-      )}
-      {step === 3 && (
-        <div className="lg:hidden relative aspect-[7/5] max-h-[300px]">
-          <ByoMedia product={product} showCaption={false} />
         </div>
       )}
 

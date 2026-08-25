@@ -29,6 +29,14 @@ interface SummaryStepProps {
 
 const SOLD = "150,000+";
 
+// The delivery photo that heads the receipt: product AND box, the thing that
+// actually arrives.
+const BOX_IMG: Record<ByoProduct, string> = {
+  flow: "/formulas/box/FlowBox.jpg",
+  clear: "/formulas/box/ClearBox.jpg",
+  both: "/formulas/box/BothBox.jpg",
+};
+
 // Verbatim from the site's data — 2 athletes (testimonials.data.ts) + 2
 // verified customers (reviews.data.ts). Do NOT paraphrase attributed quotes.
 const TESTIMONIALS = [
@@ -122,20 +130,23 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       </h2>
 
       {/* ===== RECEIPT ===== */}
-      <div className="rounded-md ring-1 ring-black/10 bg-white p-5 mb-3">
-        {/* Product header */}
-        <div className="flex items-start justify-between gap-3">
-          <p className="text-[19px] font-semibold text-black leading-tight">{display.label}</p>
-          <span className="shrink-0 rounded-full bg-black/[0.06] px-2.5 py-1 text-[11px] font-semibold text-black/70">
-            {display.timeLabel}
-          </span>
+      <div className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden mb-3">
+        {/* The order, shown: the box-and-bottle photo IS the receipt's header
+            (SCRUM-1249 review) — what arrives on the doormat, not a label. */}
+        <div className="relative aspect-[3/2] w-full bg-[#f1f1f3]">
+          <Image
+            src={BOX_IMG[product]}
+            alt={`${display.label} delivery box`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 560px"
+            className="object-cover"
+          />
         </div>
+        <div className="p-5">
         {/* What the plan delivers — the same list as the Build step's
             "Your subscription" box (PlanSummaryList), so the receipt and the
             plan selector can never tell different stories (SCRUM-1249). */}
-        <div className="mt-4">
-          <PlanSummaryList product={product} cadence={cadence} />
-        </div>
+        <PlanSummaryList product={product} cadence={cadence} />
 
         {/* Total */}
         <div className="flex items-baseline justify-between gap-3 border-t-2 border-black/20 mt-3 pt-3.5">
@@ -148,6 +159,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         <p className="text-[12px] text-black/50 mt-3 text-right">
           Ships in 2 to 3 days{isSub ? " · cancel anytime" : ""}
         </p>
+        </div>
       </div>
 
       {/* ===== SOCIAL PROOF (flippable) ===== */}
