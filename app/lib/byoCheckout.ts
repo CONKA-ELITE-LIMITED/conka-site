@@ -167,7 +167,7 @@ function fireAnalytics(params: {
       productId: product,
       variantId,
       purchaseType,
-      location: "funnel_cta",
+      location: "byo_cta",
       source,
       price,
     });
