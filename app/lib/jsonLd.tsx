@@ -3,7 +3,7 @@
  *
  * Renders schema.org markup as an `application/ld+json` script for the PDPs.
  * Builders take primitives, so they stay decoupled from the product-data layer;
- * each page supplies its own data from funnelData / formulaContent / faqContent.
+ * each page supplies its own data from byoData / formulaContent / faqContent.
  */
 
 import { BRAND_DESCRIPTION, COMPANY, SAME_AS, SITE_ORIGIN } from "./site";

@@ -1,9 +1,9 @@
 /**
  * Cadence data adapter for product pages (SCRUM-916).
  *
- * Wraps funnelData.ts so Flow, Clear, and Both product pages share
+ * Wraps byoData.ts so Flow, Clear, and Both product pages share
  * the same Shopify variant IDs and pricing as the funnel without
- * duplicating data. funnelData.ts is the single source of truth.
+ * duplicating data. byoData.ts is the single source of truth.
  */
 
 import {
@@ -22,11 +22,11 @@ import type { ProductHeroId } from "./productTypes";
 
 export { BYO_CADENCES, getDisplayDiscount, getSavingsPercent, getByoProductSlideshow };
 
-// Re-export the cadence union so product pages don't import from funnelData directly
+// Re-export the cadence union so product pages don't import from byoData directly
 export type CadenceType = ByoCadence;
 export type { ByoPricing as CadencePricing, ByoVariantConfig as CadenceVariantConfig };
 
-// Maps FormulaId to the ByoProduct key used in funnelData
+// Maps FormulaId to the ByoProduct key used in byoData
 const FORMULA_TO_PRODUCT = {
   "01": "flow",
   "02": "clear",
@@ -93,9 +93,9 @@ export function getCadenceVariantByProductHeroId(
 
 // ============================================
 // BOTH HERO CONTENT ("03")
-// Mirrors funnelData BYO_PRODUCTS.both, structured here so product
+// Mirrors byoData BYO_PRODUCTS.both, structured here so product
 // pages have a single import path (cadenceData) rather than reaching
-// into funnelData directly.
+// into byoData directly.
 // ============================================
 
 export interface BothHeroContent {

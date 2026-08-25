@@ -48,7 +48,7 @@ const CARD_TITLE: Record<ByoProduct, string> = {
   both: 'CONKA – Flow & Clear',
 };
 
-// Build one buy card from the canonical funnel catalogue (app/lib/funnelData.ts) —
+// Build one buy card from the canonical offer catalogue (app/lib/byoData.ts) —
 // the same variants, selling plans and prices the /funnel page sells. The lander
 // only offers monthly subscription + one-time for each product (no quarterly).
 function buildCard(product: ByoProduct) {

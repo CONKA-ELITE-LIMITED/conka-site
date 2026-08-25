@@ -22,12 +22,13 @@ interface ByoCheckoutParams {
   cadence: ByoCadence;
   upsellAccepted: boolean;
   /**
-   * Order attribution tag. This module is shared by /funnel-b and /funnel-c, so
-   * a hardcoded value made every funnel-c order look like a funnel-b order in
-   * Shopify and Triple Whale, and no revenue could be attributed to funnel-c.
-   * Defaults to funnel-b's existing tag so its data stays continuous.
+   * Order attribution tag, written to the cart's `_source` attribute and the
+   * `purchase:add_to_cart` event (flows into Shopify and Triple Whale).
+   * Required, never defaulted: a hardcoded default once made every funnel-c
+   * order look like a funnel-b order and revenue could not be attributed.
+   * The live flow passes BYO_SOURCE (app/build-your-order/defaults.ts).
    */
-  source?: string;
+  source: string;
 }
 
 interface ByoCheckoutSuccess {
@@ -49,7 +50,7 @@ export function isByoCheckoutError(
 export async function byoCheckout(
   params: ByoCheckoutParams,
 ): Promise<ByoCheckoutResult> {
-  const { product, cadence, upsellAccepted, source = "funnel_page_b" } = params;
+  const { product, cadence, upsellAccepted, source } = params;
 
   // 1. Look up variant
   const variant = getOfferVariant(product, cadence);
