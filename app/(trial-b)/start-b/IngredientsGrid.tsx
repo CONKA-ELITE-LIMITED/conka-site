@@ -1,5 +1,6 @@
 "use client";
 
+import { bottleRenders } from "@/app/lib/productImages";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -70,7 +71,7 @@ const FORMULAS: Record<Formula, FormulaContent> = {
   flow: {
     name: "CONKA Flow",
     tagline: "Calm focus for your mornings.",
-    bottleImage: "/formulas/conkaFlow/FlowV3.jpg",
+    bottleImage: bottleRenders.flow.src,
     bottleAlt: "CONKA Flow bottle",
     ingredients: [
       {
@@ -120,7 +121,7 @@ const FORMULAS: Record<Formula, FormulaContent> = {
   clear: {
     name: "CONKA Clear",
     tagline: "Afternoon clarity, without the coffee.",
-    bottleImage: "/formulas/conkaClear/ClearV3.jpg",
+    bottleImage: bottleRenders.clear.src,
     bottleAlt: "CONKA Clear bottle",
     ingredients: [
       {

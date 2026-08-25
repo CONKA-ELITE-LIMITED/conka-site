@@ -15,6 +15,7 @@
 
 import Image from "next/image";
 import { type ByoProduct } from "@/app/lib/byoData";
+import { bottleRenders } from "@/app/lib/productImages";
 import LearnMoreAccordion, { type LearnMoreRow } from "./LearnMoreAccordion";
 
 const SunIcon = () => (
@@ -42,7 +43,7 @@ interface Formula {
 const FORMULAS: Formula[] = [
   {
     product: "flow",
-    image: "/formulas/thin/FlowThin.jpg",
+    image: bottleRenders.flow.src,
     name: "Flow",
     period: "AM",
     accentColor: "#C4892A",
@@ -51,7 +52,7 @@ const FORMULAS: Formula[] = [
   },
   {
     product: "clear",
-    image: "/formulas/thin/ClearThin.jpg",
+    image: bottleRenders.clear.src,
     name: "Clear",
     period: "PM",
     accentColor: "#0369a1",

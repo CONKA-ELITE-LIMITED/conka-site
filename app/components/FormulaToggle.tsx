@@ -1,5 +1,6 @@
 "use client";
 
+import { bottleRenders } from "@/app/lib/productImages";
 import Image from "next/image";
 
 export type FormulaId = "01" | "02";
@@ -38,10 +39,10 @@ export default function FormulaToggle({
           }`}
           aria-pressed={value === "01"}
         >
-          {/* Square photographic tile — the asset's off-white background is
-              the button surface, no inner scaling needed. */}
+          {/* Photographic tile — the tall render centre-crops into the square
+              button; its studio background is the button surface. */}
           <Image
-            src="/formulas/conkaFlow/FlowV3.jpg"
+            src={bottleRenders.flow.src}
             alt=""
             fill
             className="object-cover"
@@ -69,7 +70,7 @@ export default function FormulaToggle({
           aria-pressed={value === "02"}
         >
           <Image
-            src="/formulas/conkaClear/ClearV3.jpg"
+            src={bottleRenders.clear.src}
             alt=""
             fill
             className="object-cover"

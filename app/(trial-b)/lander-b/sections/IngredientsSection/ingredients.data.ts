@@ -1,6 +1,9 @@
 // CONKA — "15 Science-Backed Ingredients" section data.
 // Pure content. No commerce dependency — safe to keep in the repo as-is.
-// `img` paths assume assets live under /public/lander/... (see ASSETS.md).
+// Formula bottle imgs come from the shared bottleRenders map; ingredient
+// render paths assume assets live under /public/lander/... (see ASSETS.md).
+
+import { bottleRenders } from "@/app/lib/productImages";
 
 export type IngredientTag =
   | 'Adaptogen'
@@ -45,7 +48,7 @@ const R = '/lander/ingredients/';
 export const FORMULAS: Record<'flow' | 'clear', Formula> = {
   flow: {
     key: 'flow',
-    img: '/lander/FlowV3.jpg',
+    img: bottleRenders.flow.src,
     name: 'CONKA Flow',
     sub: 'Calm focus for your mornings.',
     mg: '3,700mg',
@@ -122,7 +125,7 @@ export const FORMULAS: Record<'flow' | 'clear', Formula> = {
   },
   clear: {
     key: 'clear',
-    img: '/lander/ClearV3.jpg',
+    img: bottleRenders.clear.src,
     name: 'CONKA Clear',
     sub: 'Afternoon clarity & reset',
     mg: '3,142mg',

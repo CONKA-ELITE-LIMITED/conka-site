@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-25** | New-label bottle renders rolled out site-wide through a single bottleRenders map; home showcase now shows Flow and Clear side by side on every screen size
 - **2026-08-25** | Build your order flow signed off: thin renders on Learn, PDP-grammar plan cards, box-photo receipt, overflow-proof CTA
 - **2026-08-25** | Build your order restyle: statics replace animations (V3 bottles + PDP hero assets), plan and formula cards adopt the PDP green-ring grammar
 - **2026-08-25** | Build your order flow: neuron Float videos, mobile sticky product gallery with offer ribbon, plan cards gain strike-through anchors and guarantee line
