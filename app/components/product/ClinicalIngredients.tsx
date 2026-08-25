@@ -143,14 +143,17 @@ export default function ClinicalIngredients({
 
           {/* Active formula — single asset + identity block */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-md border border-black/10 bg-white">
+            {/* The tall labelV2 render is object-contain'd so the full bottle
+                shows; the box bg matches the asset's studio grey so the
+                letterboxed sides read as one surface. */}
+            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-md border border-black/10 bg-[#f1f1f3]">
               <Image
                 key={meta.bottleImage}
                 src={meta.bottleImage}
                 alt={meta.bottleAlt}
                 fill
                 sizes="(max-width: 1024px) 280px, 360px"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
             <div>

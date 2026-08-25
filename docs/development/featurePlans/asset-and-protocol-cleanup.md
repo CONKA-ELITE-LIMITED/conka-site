@@ -107,7 +107,7 @@ There are no `<source>` elements and no `poster` attribute, so the `.webm` fallb
 
 This applies to `BrainScan` only. `public/videos/misc/BrainScan.webm` and `BrainScan-poster.jpg` were therefore **excluded from the Phase 1 deletion** and remain on disk, because they are unreferenced only as a consequence of this bug. The `BothIngredients`, `Flow` and `Clear` video sets were fully unreferenced including their MP4s, so those were deleted in Phase 1.
 
-**Fix:** adopt the `<source>` + `poster` pattern already used correctly in `app/components/landing/LandingHeroVideo.tsx`. WebM first, MP4 second, poster on the element.
+**Fix:** adopt the `<source>` + `poster` pattern already used correctly in `app/components/landing/HomeHeroVideo.tsx`. WebM first, MP4 second, poster on the element.
 
 **Bug 2: stale comment.**
 A comment points at `/lander/video/Flow.webm` while the actual `<source>` loads `BrainFuel.mp4`. It exists in **two** files:

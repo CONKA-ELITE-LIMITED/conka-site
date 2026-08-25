@@ -6,8 +6,7 @@ import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import LandingHeroVideo from "./components/landing/LandingHeroVideo";
-import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
+import HomeHeroStatic from "./components/landing/HomeHeroStatic";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabGuarantee from "./components/landing/LabGuarantee";
@@ -76,24 +75,10 @@ export default function Home() {
       {/* Serialises the same conversion subset the LabFAQ section renders below, so
           the schema never describes a question the page does not show (SCRUM-1140). */}
       <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
-      {/* The hero posters are painted as CSS background-images inside client
-          components, so without a preload the browser discovers the LCP image
-          late. React hoists these to <head>; media queries keep each
-          breakpoint to one download. */}
-      <link
-        rel="preload"
-        as="image"
-        href="/videos/both/BothNeuronFloat-poster.jpg"
-        media="(max-width: 1023px)"
-        fetchPriority="high"
-      />
-      <link
-        rel="preload"
-        as="image"
-        href="/videos/both/BothNeuronFloatDesktop-poster.jpg"
-        media="(min-width: 1024px)"
-        fetchPriority="high"
-      />
+      {/* No hero preload links needed: HomeHeroStatic renders an eager
+          fetchpriority=high <img> in the initial HTML, so the preload scanner
+          discovers the LCP asset itself (the old video hero painted CSS
+          background posters, which needed explicit preloads). */}
       {/* ===== SECTION 1: HERO ===== */}
       <Navigation />
       {/* Desktop drops the section gutters/track so the hero asset can
@@ -103,20 +88,16 @@ export default function Home() {
           a ~16px white sliver shows above the flush hero. Pull the hero up into
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
-      {/* Magic Mind-style looped video hero (Both Neuron Float): portrait video
-          on mobile, landscape video on desktop. (HomeHeroV3, the image hero, is
+      {/* Magic Mind-style metal-tray still hero: portrait render on mobile,
+          landscape render on desktop, art-directed inside HomeHeroStatic.
+          (HomeHeroVideo + HomeHeroVideoDesktop, the looped video hero, are
           kept in the codebase for revert.) */}
       <section
         className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
         aria-label="Homepage hero"
       >
         <div className="brand-track lg:max-w-none!">
-          <div className="lg:hidden">
-            <LandingHeroVideo />
-          </div>
-          <div className="hidden lg:block">
-            <LandingHeroVideoDesktop />
-          </div>
+          <HomeHeroStatic />
         </div>
       </section>
 
