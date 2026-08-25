@@ -2,7 +2,7 @@
 
 **Status:** Scoped, approved 25 Aug 2026. Phases 1-3 active.
 **Branch:** TBD at pickup (off main).
-**Owner docs:** this plan + `docs/analytics/FUNNEL_EVENTS.md` (to be rewritten as the byo events doc in Phase 1).
+**Owner docs:** this plan + `docs/analytics/BYO_EVENTS.md` (to be rewritten as the byo events doc in Phase 1).
 
 ## Problem
 
@@ -38,8 +38,8 @@ Promote `/funnel-c` (the live, perf-optimised 3-step flow: Learn > Build > Revie
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Consolidate and rename (delete first, then merge libs, promote funnel-c, redirects, docs) | Built (SCRUM-1247), pending review + 9-combo checkout verification |
-| 2 | Attribution and measurability (src capture, checkout event, byo taxonomy, conka-lab wiring, verification) | Not Started |
+| 1 | Consolidate and rename (delete first, then merge libs, promote funnel-c, redirects, docs) | Done (SCRUM-1247, merged PR #436) |
+| 2 | Attribution and measurability (src capture, checkout event, byo taxonomy, conka-lab wiring, verification) | Built (SCRUM-1248), pending review + 9-combo checkout verification |
 | 3 | Copy and asset alignment (section-by-section, user-directed) | Not Started |
 | 4 | Route traffic at the flow (listicle CTAs and/or ad sets) | Future. Marketing call; trigger criteria decided at pickup. |
 | 5 | Collapse the rest of `(trial-b)` (promote start-b/lander-b, delete the group) | Future |
@@ -53,7 +53,7 @@ Order matters: deletions first so the merge/rename never touches doomed files.
 3. **Promote funnel-c to `app/build-your-order/`.** Move page, client, `defaults.ts`, 7 components out of `(trial-b)`. Keep noindex, MetaViewContent, Shopify preconnects, SpeedInsights, code-splitting. Rename `FUNNEL_C_*` constants to `BYO_*`. **Change defaults to `both` + `monthly-sub`.** Medium.
 4. **Repoint CTAs.** `FUNNEL_URL` becomes `BYO_URL = "/build-your-order"` in `app/lib/landingConstants.ts` and the `(trial-b)` copy (start-b CTAs and the ConkaCTAButton default across ~33 files follow automatically). Small.
 5. **Redirects and metadata.** `next.config.ts`: permanent redirects `/funnel`, `/funnel-b`, `/funnel-c` > `/build-your-order`; retarget the existing `/quiz/:path*` redirect directly at the new route (no chains). Update `app/sitemap.ts` `lastModified` source path and `app/robots.ts` comment. Small.
-6. **Docs.** Rewrite `docs/analytics/FUNNEL_EVENTS.md` as the byo events doc; fix stale `TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md` (describes a start-b > funnel-b chain that no longer exists), `MASTER_CONTEXT.md` (describes the deleted 4-step flow and "4 of 9 combos"), CLAUDE.md routes table, CHANGELOG entry. Small.
+6. **Docs.** Rewrite `docs/analytics/BYO_EVENTS.md` as the byo events doc; fix stale `TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md` (describes a start-b > funnel-b chain that no longer exists), `MASTER_CONTEXT.md` (describes the deleted 4-step flow and "4 of 9 combos"), CLAUDE.md routes table, CHANGELOG entry. Small.
 
 ## Phase 2: Attribution and measurability
 
@@ -92,7 +92,7 @@ Section-by-section conversion pass on the Learn, Build, Review steps: current he
 ## References
 
 - Research basis: session funnel-system map (25 Aug 2026); conversion context doc (conka-lab scratchpad, 14 Jul - 24 Aug data).
-- `docs/analytics/FUNNEL_EVENTS.md`, `docs/product/SKU_AND_SHOT_REFERENCE.md`, `docs/development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md`, `docs/sprints/2026-07-listicle-ad-spend.md`, `docs/development/featurePlans/ab-testing-mvp.md`.
+- `docs/analytics/BYO_EVENTS.md`, `docs/product/SKU_AND_SHOT_REFERENCE.md`, `docs/development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md`, `docs/sprints/2026-07-listicle-ad-spend.md`, `docs/development/featurePlans/ab-testing-mvp.md`.
 - conka-lab: `src/lib/website-pages.ts`, `convex/lib/vercelClient.ts`, `src/app/(dashboard)/acquisition/funnel/page.tsx`.
 
 ## Jira tickets

@@ -85,7 +85,7 @@ The most important cluster for anything touching products, variants, or money.
 | [`analytics/README.md`](./analytics/README.md) | **Analytics index** — fact-box, ad-click→Purchase data flow, routing to sub-docs. |
 | [`analytics/META_PIXEL_AND_CAPI.md`](./analytics/META_PIXEL_AND_CAPI.md) | Meta Pixel + server-side CAPI dedup. |
 | [`analytics/HEADLESS_ATTRIBUTION_FIX.md`](./analytics/HEADLESS_ATTRIBUTION_FIX.md) | Checkout-domain cookie-split root cause + fix. |
-| [`analytics/FUNNEL_EVENTS.md`](./analytics/FUNNEL_EVENTS.md) | Funnel event taxonomy. |
+| [`analytics/BYO_EVENTS.md`](./analytics/BYO_EVENTS.md) | Funnel event taxonomy. |
 | [`analytics/LISTICLE_PERFORMANCE.md`](./analytics/LISTICLE_PERFORMANCE.md) | Live listicle ad-spend performance data. |
 
 ---

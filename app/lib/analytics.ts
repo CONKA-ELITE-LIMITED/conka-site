@@ -200,7 +200,8 @@ export function trackListicleInteraction(params: ListicleEventBase): void {
  * separable without a third property.
  */
 interface CartUpsellEvent {
-  type: "otp_to_sub" | "single_to_both";
+  /** The FROM product, so "flow -> both" and "clear -> both" stay separable. */
+  type: "otp_to_sub" | "single_to_both" | "monthly_to_quarterly";
   product: string;
 }
 
@@ -295,26 +296,26 @@ export function trackB2BInvoiceRequested(params: {
   });
 }
 
-// ===== FUNNEL TRACKING (/funnel, /funnel-b, /funnel-c) =====
+// ===== BUILD YOUR ORDER TRACKING (/build-your-order) =====
 
 /**
- * Which funnel emitted the event.
+ * Which variant of the flow emitted the event.
  *
- * Deliberately a PROPERTY, not part of the event name. All three funnels fire
- * the same `funnel:*` names and are told apart by grouping on `variant`
- * (dashboard drill-down, or `by=eventData/variant` via the Web Analytics API).
- * Baking the variant into the name (`funnelc:*`) would fragment every query and
- * make step-to-step drop-off impossible to compare across variants.
+ * Deliberately a PROPERTY, not part of the event name, so a future A/B variant
+ * shares every event and step-to-step drop-off stays comparable (dashboard
+ * drill-down, or `by=eventData/variant` via the Web Analytics API). The live
+ * flow sends "v1" (SCRUM-1248); pre-consolidation history used "a"/"b"/"c"
+ * under the retired `funnel:*` names.
  */
-export type FunnelVariant = "a" | "b" | "c";
+export type ByoVariant = "v1";
 
 /**
  * Product/cadence are typed loosely here on purpose: the data layer
  * (`app/lib/byoData`) declares its own unions, and analytics must not
  * depend on it.
  */
-interface FunnelContext {
-  variant: FunnelVariant;
+interface ByoContext {
+  variant: ByoVariant;
   product: string;
   cadence: string;
 }
@@ -335,15 +336,15 @@ interface FunnelContext {
  * Do not add a third property to any of these without first confirming the plan
  * has the Plus add-on.
  */
-function funnelConfig(product: string, cadence: string): string {
+function byoConfig(product: string, cadence: string): string {
   return `${product}|${cadence}`;
 }
 
-/** Fires once on funnel mount. `config` is the pre-selected default offer. */
-export function trackFunnelViewed(params: FunnelContext): void {
-  safeTrack("funnel:viewed", {
+/** Fires once on flow mount. `config` is the pre-selected default offer. */
+export function trackByoViewed(params: ByoContext): void {
+  safeTrack("byo:viewed", {
     variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
+    config: byoConfig(params.product, params.cadence),
   });
 }
 
@@ -351,27 +352,27 @@ export function trackFunnelViewed(params: FunnelContext): void {
  * Fires when a user advances PAST a step. This is the drop-off signal.
  *
  * Call sites must fire this only from explicit forward-intent handlers, and must
- * guard against repeats. See the callers for the ref-guard pattern: the funnels
- * drive steps through history.pushState, so a `useEffect` on the step value
+ * guard against repeats. See the callers for the ref-guard pattern: the flow
+ * drives steps through history.pushState, so a `useEffect` on the step value
  * would re-fire on every browser back/forward, and the shared `goToStep` helper
  * is also the BACKWARD handler.
  */
-export function trackFunnelStepCompleted(
-  params: FunnelContext & { step: number },
+export function trackByoStepCompleted(
+  params: ByoContext & { step: number },
 ): void {
-  safeTrack(`funnel:step${params.step}_completed`, {
+  safeTrack(`byo:step${params.step}_completed`, {
     variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
+    config: byoConfig(params.product, params.cadence),
   });
 }
 
 /** Formula switch. `change` packs from>to so both fit one property. */
 export function trackByoProductChanged(params: {
-  variant: FunnelVariant;
+  variant: ByoVariant;
   from: string;
   to: string;
 }): void {
-  safeTrack("funnel:product_changed", {
+  safeTrack("byo:product_changed", {
     variant: params.variant,
     change: `${params.from}>${params.to}`,
   });
@@ -379,21 +380,21 @@ export function trackByoProductChanged(params: {
 
 /** Plan switch. `change` packs from>to so both fit one property. */
 export function trackByoCadenceChanged(params: {
-  variant: FunnelVariant;
+  variant: ByoVariant;
   from: string;
   to: string;
 }): void {
-  safeTrack("funnel:cadence_changed", {
+  safeTrack("byo:cadence_changed", {
     variant: params.variant,
     change: `${params.from}>${params.to}`,
   });
 }
 
 /** Checkout button pressed (before any upsell interstitial). */
-export function trackFunnelCtaClicked(params: FunnelContext): void {
-  safeTrack("funnel:cta_clicked", {
+export function trackByoCtaClicked(params: ByoContext): void {
+  safeTrack("byo:cta_clicked", {
     variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
+    config: byoConfig(params.product, params.cadence),
   });
 }
 
@@ -402,109 +403,65 @@ export function trackFunnelCtaClicked(params: FunnelContext): void {
  * be a third property, and revenue is already carried by `purchase:add_to_cart`,
  * Meta and Triple Whale.
  */
-export function trackFunnelCheckout(params: FunnelContext): void {
-  safeTrack("funnel:checkout", {
+export function trackByoCheckout(params: ByoContext): void {
+  safeTrack("byo:checkout", {
     variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
+    config: byoConfig(params.product, params.cadence),
   });
 }
 
 /** Checkout failed before redirect. `reason` is the user-facing error string. */
-export function trackFunnelCheckoutFailed(params: {
-  variant: FunnelVariant;
+export function trackByoCheckoutFailed(params: {
+  variant: ByoVariant;
   reason: string;
 }): void {
-  safeTrack("funnel:checkout_failed", {
+  safeTrack("byo:checkout_failed", {
     variant: params.variant,
     reason: params.reason,
   });
 }
 
-/** Upsell sheet shown. `config` is the ORIGINAL offer, before any upgrade. */
-export function trackFunnelUpsellShown(params: FunnelContext): void {
-  safeTrack("funnel:upsell_shown", {
-    variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
-  });
-}
-
-/** Upsell taken. `config` is the UPGRADED offer, so it reads as the outcome. */
-export function trackFunnelUpsellAccepted(params: FunnelContext): void {
-  safeTrack("funnel:upsell_accepted", {
-    variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
-  });
-}
+// The flow's upsell impressions/accepts fire the SHARED `cart:upsell_shown` /
+// `cart:upsell_accepted` events (trackCartUpsellShown/Accepted above) so the
+// conka-lab dashboard ingests them without an allowlist change; `type`
+// distinguishes the flow's upgrades from the cart drawer tile. Declines and
+// dismissals stay in the byo taxonomy (the dashboard does not read them).
 
 /** Upsell explicitly declined (user continued to checkout with the original). */
-export function trackFunnelUpsellDeclined(params: FunnelContext): void {
-  safeTrack("funnel:upsell_declined", {
+export function trackByoUpsellDeclined(params: ByoContext): void {
+  safeTrack("byo:upsell_declined", {
     variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
+    config: byoConfig(params.product, params.cadence),
   });
 }
 
 /** Upsell dismissed without choosing (backdrop/close). Not a checkout. */
-export function trackFunnelUpsellDismissed(params: FunnelContext): void {
-  safeTrack("funnel:upsell_dismissed", {
+export function trackByoUpsellDismissed(params: ByoContext): void {
+  safeTrack("byo:upsell_dismissed", {
     variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
+    config: byoConfig(params.product, params.cadence),
   });
 }
 
-/** Nutrition/spec modal opened. Unreachable in funnel-c; used by /funnel + b. */
-export function trackFunnelNutritionViewed(params: FunnelContext): void {
-  safeTrack("funnel:nutrition_viewed", {
-    variant: params.variant,
-    config: funnelConfig(params.product, params.cadence),
-  });
-}
-
-/** Backward navigation within the funnel. `step` is the step being LEFT. */
-export function trackFunnelBackNav(params: {
-  variant: FunnelVariant;
+/** Backward navigation within the flow. `step` is the step being LEFT. */
+export function trackByoBackNav(params: {
+  variant: ByoVariant;
   step: number;
 }): void {
-  safeTrack("funnel:back_nav", {
+  safeTrack("byo:back_nav", {
     variant: params.variant,
     step: params.step,
   });
 }
 
 /** A disclosure/accordion was opened. `id` identifies which one. */
-export function trackFunnelAccordionOpened(params: {
-  variant: FunnelVariant;
+export function trackByoAccordionOpened(params: {
+  variant: ByoVariant;
   id: string;
 }): void {
-  safeTrack("funnel:accordion_opened", {
+  safeTrack("byo:accordion_opened", {
     variant: params.variant,
     id: params.id,
-  });
-}
-
-/**
- * TEMPORARY — delete once read.
- *
- * Vercel documents a 2-property limit on Pro but never says what happens when
- * you exceed it, the SDK does not enforce it, and no first-hand account exists
- * anywhere. This fires ONE event carrying four properties so we can settle it
- * empirically: query it grouped by `probeC` / `probeD` (dashboard drill-down or
- * `by=eventData/probeC`).
- *
- *   - all four queryable  -> the limit is display/query-side only; we can relax
- *                            the two-property budget above.
- *   - only two come back  -> extras are dropped at ingestion; the budget stays,
- *                            and the result tells us WHICH two survive.
- *   - event missing       -> over-limit events are rejected outright.
- *
- * Costs nothing: billing counts events, not properties.
- */
-export function trackFunnelPropertyProbe(variant: FunnelVariant): void {
-  safeTrack("funnel:probe", {
-    variant,
-    probeB: "b",
-    probeC: "c",
-    probeD: "d",
   });
 }
 

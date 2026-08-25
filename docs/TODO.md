@@ -7,6 +7,21 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ## Analytics / Attribution
 
+### OTP price claims: split presentation needs `getChargedPrice` at every bare-figure site
+
+**Status:** Guarded but structural (recurring foot-gun, caught in the SCRUM-1247 review)
+**Files:** `app/lib/byoData.ts` (`getChargedPrice`, `BYO_PRICING`), any surface stating a one-time price
+
+**The trap:** the merged data layer uses the itemised funnel-c presentation: one-time entries carry `price` EXCLUDING the compulsory GBP 9.99 postage, with `postage` as a separate field. But the Shopify OTP SKUs have postage baked into the variant price, so checkout charges `price + postage`. Any surface that states a single all-in one-time figure without an itemised postage line understates the charge by GBP 9.99. The SCRUM-1247 merge briefly did exactly this on the PDP "Buy it once" link, its compare-at anchor, the cart drawer savings anchor, the cart subscribe-upsell saving, and the start/start-b buy boxes (start-b's was a pre-existing understatement). All fixed with `getChargedPrice(pricing)`.
+
+**The rule:** a bare one-time figure must be `getChargedPrice(pricing)`; `pricing.price` alone is only correct next to a visible postage line (byo flow, lander buy cards).
+
+**Residual:** Meta AddToCart/InitiateCheckout `value` from `byoCheckout` sends the ex-postage price for OTP (pre-existing funnel-c behaviour, not a regression). Consider aligning `value` to the charged price during SCRUM-1248 so Meta's value matches the order total.
+
+**What closes it fully:** either bake postage back into `price` in `BYO_PRICING` and derive the itemised split the other way round, or add a lint/convention note. Revisit when the Phase 3 copy pass touches pricing surfaces.
+
+---
+
 ### Listicle `persona:` order tags aren't writing (no `write_orders` on live token)
 
 **Status:** Deferred (needs infra change, not a code fix)

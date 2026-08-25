@@ -18,14 +18,22 @@ export const BYO_DEFAULT_PRODUCT: ByoProduct = "both";
 export const BYO_DEFAULT_CADENCE: ByoCadence = "monthly-sub";
 
 /**
- * Order attribution tag. Kept at the historic funnel-c value so Shopify /
- * Triple Whale revenue attribution stays continuous; renames with the rest of
- * the analytics taxonomy in Phase 2 (SCRUM-1248).
+ * FALLBACK order attribution tag, written to the cart's `_source` attribute
+ * and the `purchase:add_to_cart` `source` prop when the visitor did not arrive
+ * from a listicle. Listicle arrivals carry their captured `?src=` token
+ * instead (see the source resolution in BuildYourOrderClient, SCRUM-1248).
+ * Historic values in Shopify / Triple Whale: `funnel_page` (deleted variant a),
+ * `funnel_page_b` (deleted variant b), `funnel_page_c` (funnel-c, this flow's
+ * previous tag until the 2026-08 cutover).
  */
-export const BYO_SOURCE = "funnel_page_c";
+export const BYO_SOURCE = "byo_page";
 
-/** Identifies this flow in the shared `funnel:*` event taxonomy (Phase 2 renames it). */
-export const BYO_VARIANT = "c" as const;
+/**
+ * Identifies this flow variant in the `byo:*` event taxonomy. Fixed at "v1"
+ * until an A/B variant exists; pre-consolidation history used "c" under the
+ * retired `funnel:*` names.
+ */
+export const BYO_VARIANT = "v1" as const;
 
 /**
  * Cadence wording.
