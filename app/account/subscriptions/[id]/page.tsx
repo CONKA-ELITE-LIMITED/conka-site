@@ -150,8 +150,8 @@ export default function SubscriptionDetailPage() {
   );
   const upsell = useMemo(
     () =>
-      view?.funnelProduct && view.funnelCadence
-        ? getUpsellOffer(view.funnelProduct, view.funnelCadence)
+      view?.offerProduct && view.offerCadence
+        ? getUpsellOffer(view.offerProduct, view.offerCadence)
         : null,
     [view],
   );
@@ -305,7 +305,7 @@ export default function SubscriptionDetailPage() {
               {/* Subscription tile: the product(s) plus the actions that manage them */}
               <DetailSection title="Products">
                 <div className="rounded-lg border border-black/10 bg-white p-4 space-y-4 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5">
-                  {view.funnelProduct ? (
+                  {view.offerProduct ? (
                     // Funnel subscriptions (Flow / Clear / Both) are a single combined
                     // product — one product tile, not a per-line breakdown.
                     <ProductCard
@@ -332,7 +332,7 @@ export default function SubscriptionDetailPage() {
                   {/* Positive actions live inside the tile */}
                   {(isActive || isPaused) && (
                     <div className="flex flex-wrap gap-2 pt-4 border-t border-black/8">
-                      {view.funnelProduct ? (
+                      {view.offerProduct ? (
                         <button onClick={() => setShowSwap(true)} disabled={actionLoading} className={btnGhost}>
                           Swap product
                         </button>
@@ -366,9 +366,9 @@ export default function SubscriptionDetailPage() {
 
               {/* Upsell — a visual, one-tap swap to the fuller product (same cadence) */}
               {upsell &&
-                view.funnelCadence &&
-                upsell.upgradedCadence === view.funnelCadence &&
-                upsell.upgradedProduct !== view.funnelProduct &&
+                view.offerCadence &&
+                upsell.upgradedCadence === view.offerCadence &&
+                upsell.upgradedProduct !== view.offerProduct &&
                 (isActive || isPaused) && (
                   <DetailSection title="Try something new">
                     <div className="rounded-lg border border-black/10 bg-white p-4 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5">
@@ -607,13 +607,13 @@ export default function SubscriptionDetailPage() {
         nextDate={subscription.nextBillingDate}
         price={view.price}
       />
-      {view.funnelProduct && view.funnelCadence && (
+      {view.offerProduct && view.offerCadence && (
         <SwapModal
           isOpen={showSwap}
           onClose={() => setShowSwap(false)}
           onSwap={(target) => withAction(() => swapProduct(subscription.id, target).then((r) => r.success), "Product swapped.")}
-          currentProduct={view.funnelProduct}
-          cadence={view.funnelCadence}
+          currentProduct={view.offerProduct}
+          cadence={view.offerCadence}
           currentPrice={view.price}
           subscriptionName={view.displayName}
         />

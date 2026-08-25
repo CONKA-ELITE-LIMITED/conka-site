@@ -67,9 +67,9 @@ export interface DtcSubscriptionView {
   isMultiLine: boolean;
   lines: DtcSubscriptionLine[];
   /** Funnel product key, or null for legacy / unknown. Feeds swap + upsell. */
-  funnelProduct: ByoProduct | null;
+  offerProduct: ByoProduct | null;
   /** Funnel cadence key, or null. */
-  funnelCadence: ByoCadence | null;
+  offerCadence: ByoCadence | null;
   /** compareAtPrice - price for funnel subs (savings vs one-time), else null. */
   savingsVsOneTime: number | null;
 }
@@ -143,22 +143,22 @@ function resolveByoProduct(subscription: Subscription): ByoProduct | null {
 
 function resolveDisplayName(
   subscription: Subscription,
-): { displayName: string; funnelProduct: ByoProduct | null } {
+): { displayName: string; offerProduct: ByoProduct | null } {
   // Legacy protocol subs keep their protocol name and stay off the funnel path.
   const protocolId = getProtocolFromSubscription(subscription);
   if (protocolId && PROTOCOL_NAMES[protocolId]) {
-    return { displayName: PROTOCOL_NAMES[protocolId], funnelProduct: null };
+    return { displayName: PROTOCOL_NAMES[protocolId], offerProduct: null };
   }
 
-  const funnelProduct = resolveByoProduct(subscription);
-  if (funnelProduct === "both") return { displayName: "Both", funnelProduct: "both" };
-  if (funnelProduct === "flow") return { displayName: "Flow", funnelProduct: "flow" };
-  if (funnelProduct === "clear") return { displayName: "Clear", funnelProduct: "clear" };
+  const offerProduct = resolveByoProduct(subscription);
+  if (offerProduct === "both") return { displayName: "Both", offerProduct: "both" };
+  if (offerProduct === "flow") return { displayName: "Flow", offerProduct: "flow" };
+  if (offerProduct === "clear") return { displayName: "Clear", offerProduct: "clear" };
 
-  return { displayName: subscription.product?.title || "Subscription", funnelProduct: null };
+  return { displayName: subscription.product?.title || "Subscription", offerProduct: null };
 }
 
-function funnelCadenceKey(cadence: SubscriptionCadence): ByoCadence | null {
+function offerCadenceKey(cadence: SubscriptionCadence): ByoCadence | null {
   if (cadence === "monthly") return "monthly-sub";
   if (cadence === "quarterly") return "quarterly-sub";
   return null;
@@ -188,12 +188,12 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
       ];
 
   const { cadence, cadenceLabel, cadenceHeroLabel } = resolveCadence(subscription.interval);
-  const { displayName, funnelProduct: rawByoProduct } = resolveDisplayName(subscription);
-  const funnelCadence = funnelCadenceKey(cadence);
+  const { displayName, offerProduct: rawByoProduct } = resolveDisplayName(subscription);
+  const offerCadence = offerCadenceKey(cadence);
   // A funnel product only makes sense on a funnel cadence (monthly/quarterly).
   // Legacy protocol duals bill weekly/bi-weekly, so keep them un-tagged (the
   // display name can still read "Both"; funnel pricing/upsell must not apply).
-  const funnelProduct = funnelCadence ? rawByoProduct : null;
+  const offerProduct = offerCadence ? rawByoProduct : null;
 
   const price =
     subscription.totalLineItemDiscountedPrice ??
@@ -201,8 +201,8 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
     0;
 
   let savingsVsOneTime: number | null = null;
-  if (funnelProduct && funnelCadence) {
-    const pricing = getOfferPricing(funnelProduct, funnelCadence);
+  if (offerProduct && offerCadence) {
+    const pricing = getOfferPricing(offerProduct, offerCadence);
     if (pricing.compareAtPrice != null) {
       const saving = pricing.compareAtPrice - price;
       savingsVsOneTime = saving > 0 ? Math.round(saving * 100) / 100 : null;
@@ -219,11 +219,11 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
     price: Number.isFinite(price) ? price : 0,
     nextDate: subscription.nextBillingDate,
     status: subscription.status,
-    image: funnelProduct === "both" ? BOTH_IMAGE : getSubscriptionImage(subscription),
+    image: offerProduct === "both" ? BOTH_IMAGE : getSubscriptionImage(subscription),
     isMultiLine,
     lines,
-    funnelProduct,
-    funnelCadence,
+    offerProduct,
+    offerCadence,
     savingsVsOneTime,
   };
 }
