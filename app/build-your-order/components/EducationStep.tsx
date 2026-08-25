@@ -8,8 +8,8 @@
  * side (equal billing, even on mobile); copy stays to one line per formula.
  * Depth deliberately lives on the Build step's disclosures, not here — this
  * step used to carry eight accordion chips that duplicated Build's, and read
- * as homework. A slim "learn more" cluster (mechanism / what's inside / what
- * are nootropics) sits below the proof for the visitor who wants depth
+ * as homework. A slim "learn more" cluster (when to take / what's inside /
+ * what are nootropics) sits below the proof for the visitor who wants depth
  * before configuring.
  */
 
@@ -60,11 +60,11 @@ const FORMULAS: Formula[] = [
   },
 ];
 
-/** The mechanism in three beats, for the visitor who wants it before building. */
-const HOW_IT_WORKS: { when: string; what: string }[] = [
-  { when: "Morning", what: "Flow's six adaptogens lower cortisol, so you reach deep focus without caffeine." },
-  { when: "Afternoon", what: "Clear's ten actives flush the oxidative load that builds through the day, the cause of the 2pm dip." },
-  { when: "Over weeks", what: "Track the effect in the CONKA app: a 60-second test, a daily score, a visible trend." },
+/** The routine in three beats, for the visitor who wants it before building. */
+const WHEN_TO_TAKE: { when: string; what: string }[] = [
+  { when: "Morning", what: "Flow, with or without breakfast. Calm, caffeine-free focus for the first half of the day." },
+  { when: "1 to 2pm", what: "Clear, before the afternoon dip rather than after it." },
+  { when: "Daily", what: "One shot each. That is the whole routine. Track the effect in the CONKA app." },
 ];
 
 const PROOF = [
@@ -80,7 +80,7 @@ const ProofCheck = () => (
   </svg>
 );
 
-type LearnMoreId = "how" | "inside" | "nootropics";
+type LearnMoreId = "when" | "inside" | "nootropics";
 
 export default function EducationStep({
   onAccordionOpen,
@@ -98,11 +98,11 @@ export default function EducationStep({
 
   const LEARN_MORE: { id: LearnMoreId; label: string; body: React.ReactNode }[] = [
     {
-      id: "how",
-      label: "How the system works",
+      id: "when",
+      label: "When to take CONKA",
       body: (
         <div className="flex flex-col gap-2.5">
-          {HOW_IT_WORKS.map((s) => (
+          {WHEN_TO_TAKE.map((s) => (
             <div key={s.when} className="flex items-start gap-3">
               <span className="shrink-0 min-w-[76px] rounded-full bg-black/[0.05] px-2.5 py-1.5 text-center text-[12px] font-bold text-black leading-none">
                 {s.when}
@@ -139,12 +139,26 @@ export default function EducationStep({
       id: "nootropics",
       label: "What are nootropics?",
       body: (
-        <p className="text-[13px] text-black/75 leading-snug">
-          Ingredients with published evidence for cognitive function: focus,
-          memory, processing speed. CONKA doses them at the levels the studies
-          used, with no stimulants, so the effect comes from the pathway, not a
-          caffeine spike.
-        </p>
+        <div className="flex flex-col gap-2 text-[13px] text-black/75 leading-snug">
+          <p>
+            From the Greek <em>nous</em> (mind) and <em>tropein</em> (to turn):
+            a term coined by the psychologist Corneliu Giurgea in 1972 for
+            compounds that enhance learning and memory, protect the brain, and
+            do it with minimal side effects.
+          </p>
+          <p>
+            They work through different pathways. Some increase cerebral blood
+            flow, some support neurotransmitters like acetylcholine and
+            dopamine, and others protect neurons from the oxidative stress that
+            builds through a working day.
+          </p>
+          <p>
+            Nootropics range from natural compounds to prescription stimulants.
+            CONKA uses only the natural end of that spectrum, dosed at the
+            levels the published studies used. No caffeine, no stimulants: the
+            effect comes from the pathway, not a spike.
+          </p>
+        </div>
       ),
     },
   ];
