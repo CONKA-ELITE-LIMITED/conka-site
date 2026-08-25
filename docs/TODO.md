@@ -121,7 +121,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 **Status:** Deferred (waiting for the labelV2 filenames to be live in prod)
 **Files:** `public/formulas/conkaFlow/FlowNew.jpg`, `public/formulas/conkaClear/ClearNew.jpg`, `public/lander/FlowNew.jpg`, `public/lander/ClearNew.jpg`
 
-The Aug 2026 cache-busting rename moved every in-code reference to the `*V3.jpg` basenames; the `*New.jpg` files were kept as byte-identical aliases so cached HTML and external links (ads, emails) kept resolving. On 25 Aug 2026 the site moved again, to the `public/formulas/labelV2/` renders referenced via the `bottleRenders` map in `app/lib/productImages.ts`: the `*V3.jpg` files were deleted outright, and `both/BothNew.jpg` was renamed to `labelV2/BothPair.jpg` (it was the new-label pair shot, not a V3 duplicate). Anything external still pointing at a `*V3.jpg` or `BothNew.jpg` path now 404s once deployed.
+The Aug 2026 cache-busting rename moved every in-code reference to the `*V3.jpg` basenames; the `*New.jpg` files were kept as byte-identical aliases so cached HTML and external links (ads, emails) kept resolving. On 25 Aug 2026 the site moved again, to the `public/formulas/labelV2/` renders referenced via the `bottleRenders` map in `app/lib/productImages.ts` (square `*V4.jpg` canonical, tall `*Thin.jpg` crops only for the two side-by-side pair layouts): the `*V3.jpg` files and `both/BothNew.jpg` were deleted outright, so anything external still pointing at those paths now 404s once deployed.
 
 **What unblocks it:** the labelV2 branch merged and live in prod for a couple of weeks with no external surface still pointing at the old basenames. Then delete the four files.
 

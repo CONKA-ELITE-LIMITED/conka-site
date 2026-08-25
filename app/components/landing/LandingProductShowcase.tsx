@@ -1,6 +1,5 @@
 "use client";
 
-import { bottleRenders } from "@/app/lib/productImages";
 import { useState } from "react";
 import Image from "next/image";
 import { track } from "@vercel/analytics/react";
@@ -36,6 +35,10 @@ const FORMULA_ID: Record<ProductId, FormulaId> = {
 // Copy mirrors the lander's IngredientsSection (morning/afternoon sub-lines and
 // the total active-nootropic load per formula) so the home page and the paid
 // lander tell the same story.
+//
+// Deliberately NOT the shared bottleRenders map: this side-by-side pair layout
+// needs the tall 1:2 *Thin crops to fit two cards on a 390px viewport, while
+// the canonical renders are square.
 const PRODUCTS: Record<
   ProductId,
   { name: string; timeOfDay: TimeOfDay; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
@@ -45,7 +48,7 @@ const PRODUCTS: Record<
     timeOfDay: "Morning",
     sub: "Calm focus for your mornings.",
     mg: "3,700mg",
-    bottleSrc: bottleRenders.flow.src,
+    bottleSrc: "/formulas/labelV2/FlowThin.jpg",
     bottleAlt: "CONKA Flow bottle",
   },
   clear: {
@@ -53,7 +56,7 @@ const PRODUCTS: Record<
     timeOfDay: "Afternoon",
     sub: "Afternoon clarity & reset.",
     mg: "3,142mg",
-    bottleSrc: bottleRenders.clear.src,
+    bottleSrc: "/formulas/labelV2/ClearThin.jpg",
     bottleAlt: "CONKA Clear bottle",
   },
 };

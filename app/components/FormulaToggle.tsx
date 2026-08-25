@@ -39,8 +39,8 @@ export default function FormulaToggle({
           }`}
           aria-pressed={value === "01"}
         >
-          {/* Photographic tile — the tall render centre-crops into the square
-              button; its studio background is the button surface. */}
+          {/* Square photographic tile — the asset's studio background is the
+              button surface, no inner scaling needed. */}
           <Image
             src={bottleRenders.flow.src}
             alt=""
