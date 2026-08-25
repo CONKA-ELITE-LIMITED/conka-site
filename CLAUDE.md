@@ -123,9 +123,8 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 ## Routes
 
-**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes, noindex) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
-**Being built:** Landing page (URL TBD) · Funnel page (URL TBD)
-**Being removed:** `/protocol/[id]` (redirect) · `/quiz` (redirect) · `/shop` (redirect)
+**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/byoData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes + listicles, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
+**Being removed:** `/protocol/[id]` (redirect) · `/quiz` (redirect) · `/shop` (redirect) · `/funnel`, `/funnel-b`, `/funnel-c` (redirect to `/build-your-order`, SCRUM-1247)
 
 ## Docs index
 

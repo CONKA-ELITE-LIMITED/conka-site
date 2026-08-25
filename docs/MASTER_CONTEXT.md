@@ -15,9 +15,9 @@ CONKA is a UK-based D2C brand selling liquid nootropic brain shots (30ml daily d
 **Core pivot (March 2026):** The 4-protocol system is being scrapped. Replaced with a simple **Flow / Clear / Both** offering across 3 cadences (Monthly Sub, Monthly OTP, Quarterly Sub). "Both" is the hero product (synergistic compounding effect, highest LTV).
 
 ### What's been built
-- **Landing page** (`/start`) -- standalone conversion page for paid Meta traffic. 8 sections, noindex, all CTAs point to `/funnel`. Not linked from main nav.
-- **Funnel page** (`/funnel`) -- multi-step paginated selector (Plan > Product > Checkout). Pre-selects Both + Monthly Sub. Isolated checkout flow (bypasses CartContext, creates fresh cart, redirects to Shopify). No nav/footer. Noindex.
-- **Funnel data layer** (`app/lib/funnelData.ts`) -- standalone types, 3x3 pricing matrix, variant mapping. 4 of 9 combos work end-to-end (Flow/Clear x Monthly Sub/OTP).
+- **Landing page** (`/start`, redirects to `/start-b`) -- standalone conversion page for paid Meta traffic. Noindex, all CTAs point to `/build-your-order`. Not linked from main nav.
+- **Build Your Order flow** (`/build-your-order`) -- 3-step selector (Learn > Build > Review). Pre-selects Both + Monthly Sub. Isolated checkout flow (bypasses CartContext, creates fresh cart, redirects to Shopify). No nav/footer. Noindex. Consolidated from the three former funnel pages (`/funnel`, `/funnel-b`, `/funnel-c`), which now redirect here (SCRUM-1247).
+- **Offer data layer** (`app/lib/byoData.ts`) -- standalone types, 3x3 pricing matrix, variant mapping. All 9 combos live end-to-end.
 - **Phase 1 foundations** -- quiz hidden, protocols removed from nav, redirects in place, shop page deleted.
 
 ### What's blocked
@@ -48,8 +48,8 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Vercel hosting. Shopify Sto
 | `app/context/CartContext.tsx` | Global cart state. Cart ID in localStorage (`shopify_cart_id`). |
 | `app/api/cart/route.ts` | Proxies to Shopify Storefront API |
 | `app/lib/productData.ts` | **Barrel export** -- always import from here |
-| `app/lib/funnelData.ts` | Standalone funnel types/pricing/variants |
-| `app/lib/funnelCheckout.ts` | Isolated funnel checkout (no CartContext) |
+| `app/lib/byoData.ts` | Standalone offer types/pricing/variants (Build Your Order) |
+| `app/lib/byoCheckout.ts` | Isolated Build Your Order checkout (no CartContext) |
 | `app/brand-base.css` | Design system tokens (the single stylesheet; `premium-base.css` deleted) |
 | `app/layout.tsx` | Root layout, nav, footer, analytics scripts |
 

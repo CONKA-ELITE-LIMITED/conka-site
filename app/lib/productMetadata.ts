@@ -14,7 +14,7 @@
  * A lookup miss is now data ("unknown"), not silence.
  */
 
-import { getOfferByVariantId, type FunnelProduct } from "./funnelData";
+import { getOfferByVariantId, type ByoProduct } from "./byoData";
 import { FORMULA_VARIANTS } from "./shopifyProductMapping";
 import type { FormulaId, PackSize } from "./productData";
 
@@ -47,10 +47,10 @@ export const UNKNOWN_PRODUCT_ID = "unknown";
 /**
  * The live offer catalogue uses "flow" / "clear" / "both"; analytics has always
  * keyed formulas numerically ("01" Flow, "02" Clear), and "03" is Both, matching
- * ProductHeroId. Kept in sync by the type: adding a FunnelProduct fails the build
+ * ProductHeroId. Kept in sync by the type: adding a ByoProduct fails the build
  * here rather than silently emitting an unmapped event.
  */
-const FUNNEL_PRODUCT_TO_ID: Record<FunnelProduct, string> = {
+const BYO_PRODUCT_TO_ID: Record<ByoProduct, string> = {
   flow: "01",
   clear: "02",
   both: "03",
@@ -61,7 +61,7 @@ const FUNNEL_PRODUCT_TO_ID: Record<FunnelProduct, string> = {
  *
  * Resolution order, most authoritative first:
  *
- * 1. **The live offer catalogue** (`getOfferByVariantId` over `FUNNEL_VARIANTS`).
+ * 1. **The live offer catalogue** (`getOfferByVariantId` over `BYO_VARIANTS`).
  *    Every current buy path resolves its variant through `getOfferVariant`, so
  *    this covers everything the site sells today. It is the same table checkout
  *    reads, which is the point: it cannot go stale without checkout breaking
@@ -80,7 +80,7 @@ export function extractProductMetadata(variantId: string): ProductMetadata {
   if (offer) {
     return {
       productType: "formula",
-      productId: FUNNEL_PRODUCT_TO_ID[offer.product],
+      productId: BYO_PRODUCT_TO_ID[offer.product],
       // packSize is deliberately omitted: funnel offers ship 20 / 28 / 80 shots
       // and PackSize only allows "4" | "8" | "12" | "28". Reporting a wrong size
       // is worse than reporting none, and `purchaseType` already separates

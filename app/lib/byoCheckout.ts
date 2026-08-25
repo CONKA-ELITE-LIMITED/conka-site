@@ -1,55 +1,56 @@
 /**
- * Funnel Page — Isolated Checkout Flow
+ * Build Your Order — Isolated Checkout Flow
  *
  * Creates a fresh Shopify cart, fires analytics, and returns the
  * checkout URL for redirect. Completely independent of the global
- * CartContext — the funnel never opens the cart drawer.
+ * CartContext — the Build Your Order flow never opens the cart drawer.
  */
 
 import {
-  type FunnelProduct,
-  type FunnelCadence,
+  type ByoProduct,
+  type ByoCadence,
   getOfferVariant,
   getOfferPricing,
   getCadenceFrequency,
-} from "./funnelData";
+} from "./byoData";
 import { trackMetaAddToCart, trackMetaInitiateCheckout, toContentId, buildMetaCartAttributes } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
 import { trackPurchaseAddToCart } from "@/app/lib/analytics";
 
-interface FunnelCheckoutParams {
-  product: FunnelProduct;
-  cadence: FunnelCadence;
+interface ByoCheckoutParams {
+  product: ByoProduct;
+  cadence: ByoCadence;
   upsellAccepted: boolean;
   /**
-   * Order attribution tag. This module is shared by /funnel-b and /funnel-c, so
-   * a hardcoded value made every funnel-c order look like a funnel-b order in
-   * Shopify and Triple Whale, and no revenue could be attributed to funnel-c.
-   * Defaults to funnel-b's existing tag so its data stays continuous.
+   * Order attribution tag, written to the cart's `_source` attribute and the
+   * `purchase:add_to_cart` event (flows into Shopify and Triple Whale).
+   * Required, never defaulted: a hardcoded default once made every funnel-c
+   * order look like a funnel-b order and revenue could not be attributed.
+   * The live flow passes BYO_SOURCE (app/build-your-order/defaults.ts).
    */
-  source?: string;
+  source: string;
 }
 
-interface FunnelCheckoutSuccess {
+interface ByoCheckoutSuccess {
   checkoutUrl: string;
 }
 
-interface FunnelCheckoutError {
+interface ByoCheckoutError {
   error: string;
 }
 
-export type FunnelCheckoutResult = FunnelCheckoutSuccess | FunnelCheckoutError;
+export type ByoCheckoutResult = ByoCheckoutSuccess | ByoCheckoutError;
 
-export function isFunnelCheckoutError(
-  result: FunnelCheckoutResult,
-): result is FunnelCheckoutError {
+export function isByoCheckoutError(
+  result: ByoCheckoutResult,
+): result is ByoCheckoutError {
   return "error" in result;
 }
 
-export async function funnelCheckout(
-  params: FunnelCheckoutParams,
-): Promise<FunnelCheckoutResult> {
-  const { product, cadence, upsellAccepted, source = "funnel_page_b" } = params;
+export async function byoCheckout(
+  params: ByoCheckoutParams,
+): Promise<ByoCheckoutResult> {
+  const { product, cadence, upsellAccepted, source } = params;
 
   // 1. Look up variant
   const variant = getOfferVariant(product, cadence);
@@ -118,8 +119,8 @@ export async function funnelCheckout(
 /** Fire all analytics events. Non-blocking, fails silently. */
 function fireAnalytics(params: {
   variantId: string;
-  product: FunnelProduct;
-  cadence: FunnelCadence;
+  product: ByoProduct;
+  cadence: ByoCadence;
   price: number;
   source: string;
 }): void {

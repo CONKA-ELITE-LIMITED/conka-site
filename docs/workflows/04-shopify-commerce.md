@@ -70,7 +70,7 @@ The codebase has **two independent product data systems** — see `docs/PRODUCT_
 | System | Import from | Shopify mapping | Used by |
 |--------|-------------|-----------------|---------|
 | **Main site** | `@/app/lib/productData` | `shopifyProductMapping.ts` | PDP pages, cart |
-| **Funnel** | `@/app/lib/funnelData` | Built into `funnelData.ts` | `/funnel` page only |
+| **Funnel** | `@/app/lib/byoData` | Built into `byoData.ts` | `/build-your-order` page only |
 
 **Key rule:** These systems are intentionally separate. The funnel has its own Shopify products (tagged `funnel`), its own selling plans, its own variant GIDs, and its own checkout flow (bypasses CartContext). Do not merge them.
 

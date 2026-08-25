@@ -243,7 +243,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Analytics must never surface as a cart failure. This block sits inside
       // the mutation's try, whose catch calls setError("Failed to add item to
       // cart"), so a throwing tracker would tell the shopper their add failed
-      // when it actually succeeded. Same guard funnelCheckout.ts uses.
+      // when it actually succeeded. Same guard byoCheckout.ts uses.
       try {
         if (updatedCart) {
           const lineItems = updatedCart.lines?.edges || [];

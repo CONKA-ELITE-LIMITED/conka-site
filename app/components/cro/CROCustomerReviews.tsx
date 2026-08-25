@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Testimonial } from "@/app/components/testimonials/types";
 import { CURATED_TESTIMONIALS } from "@/app/lib/customerTestimonials";
-import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import { BYO_URL } from "@/app/lib/landingConstants";
 
 /* ============================================================================
  * CROCustomerReviews
@@ -192,10 +192,10 @@ function ArrowButton({
 
 export default function CROCustomerReviews({
   testimonials = CURATED_TESTIMONIALS,
-  ctaHref = FUNNEL_URL,
+  ctaHref = BYO_URL,
 }: {
   testimonials?: Testimonial[];
-  /** Funnel the section's CTA links to. Defaults to the main FUNNEL_URL so
+  /** Funnel the section's CTA links to. Defaults to the main BYO_URL so
    *  production /start is unaffected; trial pages can override (e.g. funnel-c). */
   ctaHref?: string;
 } = {}) {

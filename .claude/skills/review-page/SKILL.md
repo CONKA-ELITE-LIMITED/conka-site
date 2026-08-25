@@ -88,7 +88,7 @@ Is this a continuation of work already in progress this session?
 - [ ] No broken links or 404-producing hrefs
 - [ ] `noindex` set where appropriate (landing page, funnel page)
 
-**Exception:** `/start` and `/funnel` are correctly `noindex` -- paid traffic only.
+**Exception:** `/start` and `/build-your-order` are correctly `noindex` -- paid traffic only.
 
 ---
 

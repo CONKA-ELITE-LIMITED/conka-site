@@ -14,19 +14,19 @@ import BuyCard, { type CardConfig } from './BuyCard';
 import {
   getOfferVariant,
   getOfferPricing,
-  type FunnelProduct,
-} from '../../../lib/funnelData';
+  type ByoProduct,
+} from '@/app/lib/byoData';
 
 const money = (n: number) => '£' + n.toFixed(2);
 const perShot = (n: number) => '£' + n.toFixed(2) + '/shot';
 
-const CARD_TITLE: Record<FunnelProduct, string> = {
+const CARD_TITLE: Record<ByoProduct, string> = {
   flow: 'CONKA Flow',
   clear: 'CONKA Clear',
   both: 'CONKA – Flow & Clear',
 };
 
-function buildCard(product: FunnelProduct) {
+function buildCard(product: ByoProduct) {
   const subVariant = getOfferVariant(product, 'monthly-sub');
   const otpVariant = getOfferVariant(product, 'monthly-otp');
   const subPricing = getOfferPricing(product, 'monthly-sub');

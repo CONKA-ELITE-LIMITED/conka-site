@@ -194,7 +194,7 @@ function EmptyHeroCard() {
       <p className="text-sm text-black/50 tabular-nums">
         100-day guarantee · Free UK shipping · Cancel anytime
       </p>
-      <ConkaCTAButton href="/funnel" meta={null}>
+      <ConkaCTAButton href="/build-your-order" meta={null}>
         Start now
       </ConkaCTAButton>
     </div>

@@ -32,7 +32,7 @@ The most important cluster for anything touching products, variants, or money.
 | [`development/CART_PRICING_SOURCE_OF_TRUTH.md`](./development/CART_PRICING_SOURCE_OF_TRUTH.md) | Rule: pre-add UI prices from `productPricing.ts`; cart/checkout prices from Shopify only. |
 | [`development/GO_LIVE_PRICING_AUDIT.md`](./development/GO_LIVE_PRICING_AUDIT.md) | Variant/price reconciliation audit. |
 
-**Code source of truth:** `app/lib/funnelData.ts` (funnel), `app/lib/shopifyProductMapping.ts` + `app/lib/productData.ts` barrel (main site), `app/lib/legacy/protocolSubscriptions.ts` (retired protocols, live for existing subscribers).
+**Code source of truth:** `app/lib/byoData.ts` (Build Your Order offer catalogue), `app/lib/shopifyProductMapping.ts` + `app/lib/productData.ts` barrel (main site), `app/lib/legacy/protocolSubscriptions.ts` (retired protocols, live for existing subscribers).
 
 ---
 

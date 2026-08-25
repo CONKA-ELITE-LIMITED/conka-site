@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
-import { type UpsellOffer } from "../../lib/funnelData";
+import { type UpsellOffer } from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
 
 interface UpsellBottomSheetProps {
@@ -144,7 +144,7 @@ export default function UpsellBottomSheet({
             </ul>
           )}
 
-          {/* Accept — the same navy pill as every other CTA in the funnel */}
+          {/* Accept — the same navy pill as every other CTA in the flow */}
           <button
             type="button"
             onClick={onAccept}

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — Step 3 (Review). The moment of purchase, built as a RECEIPT.
+ * Build Your Order — Step 3 (Review). The moment of purchase, built as a RECEIPT.
  *
  * The receipt splits cleanly: the breakdown states the SHOTS (recurring volume
  * per formula, then the first-order bonus), and the line items state the MONEY
@@ -13,18 +13,18 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
-  type FunnelProduct,
-  type FunnelCadence,
-  FUNNEL_PRODUCTS,
+  type ByoProduct,
+  type ByoCadence,
+  BYO_PRODUCTS,
   getOfferPricing,
   getDisplayDiscount,
-} from "../../lib/funnelData";
+} from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
 
 interface SummaryStepProps {
-  product: FunnelProduct;
-  cadence: FunnelCadence;
+  product: ByoProduct;
+  cadence: ByoCadence;
 }
 
 const SOLD = "150,000+";
@@ -105,7 +105,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
     setAutoKey((k) => k + 1);
   };
 
-  const display = FUNNEL_PRODUCTS[product];
+  const display = BYO_PRODUCTS[product];
   const pricing = getOfferPricing(product, cadence);
   const isSub = cadence !== "monthly-otp";
   const freeShots = pricing.freeShots ?? 0;

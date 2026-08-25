@@ -208,7 +208,7 @@ function NavButton({
 export default function LandingTestimonials({
   testimonials = CURATED_TESTIMONIALS,
   hideCTA = false,
-  ctaHref = "/funnel",
+  ctaHref = "/build-your-order",
 }: {
   testimonials?: Testimonial[];
   hideCTA?: boolean;

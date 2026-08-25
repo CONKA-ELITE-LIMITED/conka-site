@@ -82,7 +82,7 @@ export default function CognitiveTestRecommendation({
           <span aria-hidden>↗</span>
         </a>
         <a
-          href="/funnel"
+          href="/build-your-order"
           className="inline-flex items-center justify-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50"
         >
           <span>Get started</span>

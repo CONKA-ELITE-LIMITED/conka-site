@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — left-column media.
+ * Build Your Order — left-column media.
  *
  * Plays the product motion clip (the same liquid/bottle videos used on the
  * lander) rather than a slideshow of box photos. Swaps source by selected
@@ -9,28 +9,28 @@
  * without cluttering the frame.
  */
 
-import { type FunnelProduct } from "../../lib/funnelData";
+import { type ByoProduct } from "@/app/lib/byoData";
 
 // The swirling-liquid 3D renders used in the product-page benefits section
 // (FlowLiquid / ClearLiquid). Both has no liquid variant, so it keeps the
 // still-water bottle render.
-const VIDEO: Record<FunnelProduct, { webm: string; mp4: string; poster?: string }> = {
+const VIDEO: Record<ByoProduct, { webm: string; mp4: string; poster?: string }> = {
   flow: { webm: "/videos/flow/FlowLiquid.webm", mp4: "/videos/flow/FlowLiquid.mp4", poster: "/videos/flow/FlowLiquid-poster.jpg" },
   clear: { webm: "/videos/clear/ClearLiquid.webm", mp4: "/videos/clear/ClearLiquid.mp4", poster: "/videos/clear/ClearLiquid-poster.jpg" },
   both: { webm: "/videos/both/BothStillWater.webm", mp4: "/videos/both/BothStillWater.mp4", poster: "/videos/both/BothStillWater-poster.jpg" },
 };
 
-const CAPTION: Record<FunnelProduct, string> = {
+const CAPTION: Record<ByoProduct, string> = {
   flow: "Morning. Caffeine-free focus.",
   clear: "Afternoon. Clears the 2pm fog.",
   both: "Morning to evening. The full system.",
 };
 
-export default function FunnelMedia({
+export default function ByoMedia({
   product,
   showCaption = true,
 }: {
-  product: FunnelProduct;
+  product: ByoProduct;
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
 }) {

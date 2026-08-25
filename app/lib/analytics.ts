@@ -309,9 +309,9 @@ export function trackB2BInvoiceRequested(params: {
 export type FunnelVariant = "a" | "b" | "c";
 
 /**
- * Product/cadence are typed loosely here on purpose: the two funnel data
- * modules (`app/lib/funnelData` and `app/(trial-b)/lib/funnelData`) each
- * declare their own unions, and analytics must not depend on either.
+ * Product/cadence are typed loosely here on purpose: the data layer
+ * (`app/lib/byoData`) declares its own unions, and analytics must not
+ * depend on it.
  */
 interface FunnelContext {
   variant: FunnelVariant;
@@ -366,7 +366,7 @@ export function trackFunnelStepCompleted(
 }
 
 /** Formula switch. `change` packs from>to so both fit one property. */
-export function trackFunnelProductChanged(params: {
+export function trackByoProductChanged(params: {
   variant: FunnelVariant;
   from: string;
   to: string;
@@ -378,7 +378,7 @@ export function trackFunnelProductChanged(params: {
 }
 
 /** Plan switch. `change` packs from>to so both fit one property. */
-export function trackFunnelCadenceChanged(params: {
+export function trackByoCadenceChanged(params: {
   variant: FunnelVariant;
   from: string;
   to: string;

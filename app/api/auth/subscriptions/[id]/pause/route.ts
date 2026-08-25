@@ -18,7 +18,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/app/lib/env';
 import { sizeToTierKey } from '@/app/lib/productSizeUtils';
 import { SUPPORT_EMAIL } from '@/app/lib/supportEmail';
-import { getFunnelSwapSellingPlanId, getFunnelVariantNumericId } from '@/app/lib/funnelData';
+import { getByoSwapSellingPlanId, getByoVariantNumericId } from '@/app/lib/byoData';
 
 const LOOP_API_BASE = 'https://api.loopsubscriptions.com/admin/2023-10';
 
@@ -107,7 +107,7 @@ const PLAN_CONFIGURATIONS = {
 type ActionType = 'pause' | 'resume' | 'resume-now' | 'cancel' | 'skip' | 'change-frequency' | 'edit-multi-line' | 'reactivate' | 'place-order' | 'apply-discount' | 'swap-product';
 type PlanType = 'starter' | 'pro' | 'max';
 type ProtocolIdType = '1' | '2' | '3' | '4';
-type FunnelProductKey = 'flow' | 'clear' | 'both';
+type ByoProductKey = 'flow' | 'clear' | 'both';
 
 interface ActionRequest {
   action?: ActionType;
@@ -118,7 +118,7 @@ interface ActionRequest {
   resumeNowEpoch?: number; // For resume-now: epoch timestamp for the new next billing date
   lines?: Array<{ lineId: string | number; productKey: string; size: number }>;
   discountCode?: string; // For apply-discount: Shopify discount code to apply
-  targetProduct?: FunnelProductKey; // For swap-product: the funnel product to swap to (same cadence)
+  targetProduct?: ByoProductKey; // For swap-product: the funnel product to swap to (same cadence)
 }
 
 /**
@@ -834,8 +834,8 @@ export async function POST(
           }, { status: 422 });
         }
 
-        const targetVariantId = getFunnelVariantNumericId(target, cadence);
-        const targetSellingPlanId = getFunnelSwapSellingPlanId(target, cadence);
+        const targetVariantId = getByoVariantNumericId(target, cadence);
+        const targetSellingPlanId = getByoSwapSellingPlanId(target, cadence);
         if (!targetVariantId) {
           return NextResponse.json({
             success: false,

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — Step 1 (Learn).
+ * Build Your Order — Step 1 (Learn).
  *
  * Two shots, two jobs: Flow in the morning, Clear in the afternoon, with Both
  * as the recommended routine. Timing rides on a rounded period pill next to the
@@ -11,7 +11,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { type FunnelProduct, getOfferPricing } from "../../lib/funnelData";
+import { type ByoProduct, getOfferPricing } from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
 
 type Section = "ingredients" | "timing" | "does" | "notice";
@@ -46,7 +46,7 @@ const MoonIcon = () => (
 
 const FLOW_DATA = {
   accentColor: "#C4892A",
-  product: "flow" as FunnelProduct,
+  product: "flow" as ByoProduct,
   image: "/formulas/conkaFlow/FlowNoBackground.png",
   name: "CONKA Flow",
   period: "Morning",
@@ -78,7 +78,7 @@ const FLOW_DATA = {
 
 const CLEAR_DATA = {
   accentColor: "#0369a1",
-  product: "clear" as FunnelProduct,
+  product: "clear" as ByoProduct,
   image: "/formulas/conkaClear/ClearNoBackground.png",
   name: "CONKA Clear",
   period: "Afternoon",

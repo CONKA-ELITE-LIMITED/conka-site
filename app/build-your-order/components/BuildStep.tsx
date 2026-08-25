@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — Step 2 (Build). Product + plan on one page.
+ * Build Your Order — Step 2 (Build). Product + plan on one page.
  *
  * Formula tiles (Flow pre-selected, Both flagged as the recommended upgrade)
  * drive the left media and the summary card, whose detail sits behind disclosure
@@ -12,38 +12,38 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
-  type FunnelProduct,
-  type FunnelCadence,
-  FUNNEL_PRODUCTS,
-} from "../../lib/funnelData";
+  type ByoProduct,
+  type ByoCadence,
+  BYO_PRODUCTS,
+} from "@/app/lib/byoData";
 import CadenceSelector from "./CadenceSelector";
-import FunnelMedia from "./FunnelMedia";
+import ByoMedia from "./ByoMedia";
 
 interface BuildStepProps {
-  product: FunnelProduct;
-  cadence: FunnelCadence;
-  onProductChange: (p: FunnelProduct) => void;
-  onCadenceChange: (c: FunnelCadence) => void;
+  product: ByoProduct;
+  cadence: ByoCadence;
+  onProductChange: (p: ByoProduct) => void;
+  onCadenceChange: (c: ByoCadence) => void;
   onAccordionOpen?: (id: string) => void;
 }
 
 // Flow leads (it is the pre-selected default), then Clear, with Both last as
 // the recommended upgrade.
-const PRODUCT_ORDER: FunnelProduct[] = ["flow", "clear", "both"];
-const TOGGLE: Record<FunnelProduct, { name: string; period: string }> = {
+const PRODUCT_ORDER: ByoProduct[] = ["flow", "clear", "both"];
+const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
   flow: { name: "Flow", period: "Morning" },
   clear: { name: "Clear", period: "Afternoon" },
   both: { name: "Both", period: "All day" },
 };
 
 // Blurb + proof stats, lifted from the product pages (formulaContent.ts /
-// BOTH_HERO_CONTENT) so the funnel carries real weight.
+// BOTH_HERO_CONTENT) so the flow carries real weight.
 //
 // The stats panel is "Proof", not "Impact": the numbers are a mix of measured
 // outcomes from the ingredient studies and hard product facts, and pretending
 // a spec count ("6 adaptogens") is an outcome was what made the old panel read
 // as spin. Each label now says plainly which kind of number it is.
-const COPY: Record<FunnelProduct, { blurb: string; stats: { value: string; label: string }[] }> = {
+const COPY: Record<ByoProduct, { blurb: string; stats: { value: string; label: string }[] }> = {
   flow: {
     blurb: "Sharper focus and calmer energy from the first hour — six clinically-dosed adaptogens, zero caffeine, zero crash.",
     stats: [
@@ -90,15 +90,15 @@ const CLEAR_ING = [
   { name: "Lecithin", img: "/ingredients/renders/Lecithin.jpg" },
   { name: "Alpha Lipoic Acid", img: "/ingredients/renders/AlphaLipoicAcid.jpg" },
 ];
-const INGREDIENTS_IMG: Record<FunnelProduct, { name: string; img: string }[]> = {
+const INGREDIENTS_IMG: Record<ByoProduct, { name: string; img: string }[]> = {
   flow: FLOW_ING,
   clear: CLEAR_ING,
   both: [...FLOW_ING, ...CLEAR_ING],
 };
-const ACTIVE_COUNT: Record<FunnelProduct, number> = { flow: 6, clear: 10, both: 15 };
+const ACTIVE_COUNT: Record<ByoProduct, number> = { flow: 6, clear: 10, both: 15 };
 
 // "How it works" as a when → what action list (timings referenced across the site).
-const HOW_STEPS: Record<FunnelProduct, { when: string; what: string }[]> = {
+const HOW_STEPS: Record<ByoProduct, { when: string; what: string }[]> = {
   flow: [
     { when: "Morning", what: "Take with or without breakfast — no caffeine, no jitters." },
     { when: "~45 min", what: "Calm, focused energy sets in as the adaptogens take hold." },
@@ -190,7 +190,7 @@ export default function BuildStep({
   onCadenceChange,
   onAccordionOpen,
 }: BuildStepProps) {
-  const display = FUNNEL_PRODUCTS[product];
+  const display = BYO_PRODUCTS[product];
   const copy = COPY[product];
   const [openInfo, setOpenInfo] = useState<InfoKey | null>(null);
   const toggleInfo = (k: InfoKey) => {
@@ -265,7 +265,7 @@ export default function BuildStep({
               to the content height (desktop uses the sticky left column, so the
               video is hidden and the content takes the full width). */}
           <div className="lg:hidden shrink-0 w-24 self-stretch rounded-[12px] bg-black/[0.04] overflow-hidden">
-            <FunnelMedia product={product} showCaption={false} />
+            <ByoMedia product={product} showCaption={false} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
