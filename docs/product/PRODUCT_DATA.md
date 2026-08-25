@@ -13,7 +13,7 @@ The codebase has **two independent product data systems**:
 | System | Purpose | Barrel import | Shopify mapping |
 |--------|---------|---------------|-----------------|
 | **Main site** | PDP pages, cart, B2B portal | `@/app/lib/productData` | `shopifyProductMapping.ts` |
-| **Funnel** | `/funnel` page (paid traffic) | `@/app/lib/funnelData` | Built into `funnelData.ts` |
+| **Build Your Order** | `/build-your-order` flow (paid traffic) | `@/app/lib/byoData` | Built into `byoData.ts` |
 
 They are intentionally separate. The funnel system was built standalone to avoid coupling to the protocol-era product structure (which is being removed). The only shared dependency is `formatPrice()` from productHelpers.
 
@@ -107,46 +107,46 @@ Protocol variants are not here. They are retired-product support for existing su
 
 ---
 
-## Funnel Product Data
+## Build Your Order Product Data
 
-The funnel system is a **standalone module** for the `/funnel` page. It has its own types, pricing matrix, variant mapping, display data, and checkout logic.
+The Build Your Order system (formerly the funnel) is a **standalone module** for the `/build-your-order` flow. It has its own types, pricing matrix, variant mapping, display data, and checkout logic.
 
 ### Why separate?
 
 1. The funnel sells a simplified offering (Flow / Clear / Both × 3 cadences) that doesn't map to the main site's pack-size model
-2. Funnel products are separate Shopify products (tagged `funnel`) with their own variant IDs and selling plans
+2. Offer products are separate Shopify products (tagged `funnel` in Shopify) with their own variant IDs and selling plans
 3. Clean separation means the funnel isn't affected by protocol cleanup or main site product changes
 4. The funnel uses direct-to-checkout (isolated cart creation), not the global CartContext
 
 ### Module Structure
 
 ```
-funnelData.ts       → Types, 3×3 pricing matrix, variant mapping, display data, upsell logic
+byoData.ts       → Types, 3×3 pricing matrix, variant mapping, display data, upsell logic
     ↓
-funnelCheckout.ts   → Isolated cart creation, analytics, checkout URL redirect
+byoCheckout.ts   → Isolated cart creation, analytics, checkout URL redirect
 ```
 
-### `funnelData.ts`
+### `byoData.ts`
 **Purpose:** All funnel product data — pricing, Shopify GIDs, display content, upsell logic
 **Dependencies:** `productData` (only `formatPrice()`)
 **Key exports:**
 
 | Export | What |
 |--------|------|
-| `FunnelProduct` | `"both" \| "flow" \| "clear"` |
-| `FunnelCadence` | `"monthly-sub" \| "monthly-otp" \| "quarterly-sub"` |
-| `FUNNEL_PRICING` | 3×3 pricing matrix (price, perShot, perDay, shotCount, compareAtPrice) |
-| `FUNNEL_VARIANTS` | 3×3 Shopify variant GID + selling plan ID mapping |
-| `FUNNEL_PRODUCTS` | Display data per product (name, tagline, features, thumbnail, accent) |
-| `FUNNEL_CADENCES` | Display data per cadence (label, subtitle, badge, features) |
+| `ByoProduct` | `"both" \| "flow" \| "clear"` |
+| `ByoCadence` | `"monthly-sub" \| "monthly-otp" \| "quarterly-sub"` |
+| `BYO_PRICING` | 3×3 pricing matrix (price, perShot, perDay, shotCount, compareAtPrice) |
+| `BYO_VARIANTS` | 3×3 Shopify variant GID + selling plan ID mapping |
+| `BYO_PRODUCTS` | Display data per product (name, tagline, features, thumbnail, accent) |
+| `BYO_CADENCES` | Display data per cadence (label, subtitle, badge, features) |
 | `getOfferPricing()` | Look up pricing for a product × cadence combination |
 | `getOfferVariant()` | Look up Shopify variant config for a product × cadence |
 | `isVariantReady()` | Check if a combination has a real Shopify variant ID |
 | `getUpsellOffer()` | Contextual upsell logic (Flow→Both, Clear→Both, OTP→Sub, Monthly→Quarterly) |
 
-### Funnel Pricing (current — "priced + free shots" model)
+### Offer Pricing (current — "priced + free shots" model)
 
-The prices below are the live model (`FUNNEL_PRICING` in `funnelData.ts`). The **full** SKU / shot-count / per-shot table — including free-shot bonuses and the Loop first-order swap — is the source of truth in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1. Don't duplicate it; this is the short version.
+The prices below are the live model (`BYO_PRICING` in `byoData.ts`). The **full** SKU / shot-count / per-shot table — including free-shot bonuses and the Loop first-order swap — is the source of truth in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1. Don't duplicate it; this is the short version.
 
 | | Monthly Sub | One-time | Quarterly Sub |
 |---|---|---|---|
@@ -156,13 +156,13 @@ The prices below are the live model (`FUNNEL_PRICING` in `funnelData.ts`). The *
 
 Shot counts are **priced** shots. Monthly subs ship a bonus box on the first order only (Loop swaps the SKU from order 2); quarterly ships a bonus every cycle. One-time prices bake in £9.99 compulsory postage.
 
-### Funnel Shopify variants & selling plans
+### Offer Shopify variants & selling plans
 
-9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `FUNNEL_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
+9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `BYO_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
 
 **Why separate monthly vs quarterly selling plans?** Loop selling plans apply a fixed discount globally to every product they're attached to. Flow/Clear and Both have different base prices, and monthly vs quarterly use different variants, so each combination needs its own plan.
 
-### `funnelCheckout.ts`
+### `byoCheckout.ts`
 **Purpose:** Creates an isolated Shopify cart and redirects to checkout. Does not use global CartContext or open the cart drawer.
 **Dependencies:** `funnelData`, `metaPixel`, `tripleWhale`, `analytics`
 **Flow:** Create cart via `/api/cart` → fire analytics (Meta Pixel, Triple Whale, Vercel) → redirect to `cart.checkoutUrl`
@@ -182,10 +182,10 @@ const pricing = getFormulaPricing("28", "subscription");
 const displayPrice = formatPrice(123.45); // "£123.45"
 ```
 
-### Funnel Pricing
+### Offer Pricing
 
 ```typescript
-import { getOfferPricing, getOfferVariant, isVariantReady } from "@/app/lib/funnelData";
+import { getOfferPricing, getOfferVariant, isVariantReady } from "@/app/lib/byoData";
 
 const pricing = getOfferPricing("both", "monthly-sub");
 // Returns: { price: 74.99, perShot: 1.87, perDay: 3.74, shotCount: 40, compareAtPrice: 89.99, freeShots: 16, firstOrderShots: 56, ... }
@@ -205,9 +205,9 @@ const ready = isVariantReady("both", "quarterly-sub"); // true
 import { FormulaId, formulaContent, getFormulaPricing, formatPrice } from "@/app/lib/productData";
 ```
 
-**Funnel — import directly from funnelData:**
+**Build Your Order — import directly from byoData:**
 ```typescript
-import { FunnelProduct, getOfferPricing, FUNNEL_PRODUCTS } from "@/app/lib/funnelData";
+import { ByoProduct, getOfferPricing, BYO_PRODUCTS } from "@/app/lib/byoData";
 ```
 
 **Never import from sub-modules directly** (e.g. don't import from `productPricing.ts` or `productHelpers.ts`).
@@ -243,7 +243,7 @@ legacy/protocolSubscriptions (dependency leaf — retired-product IDs, imported 
 2. **Single source of truth:** Each piece of data lives in one module
 3. **Two systems, not one:** Main site and funnel are deliberately separate
 4. **Tree-shaking friendly:** Barrel uses `export *`, unused modules aren't bundled
-5. **Shopify GIDs live in mapping files:** `shopifyProductMapping.ts` for main site, `funnelData.ts` for funnel
+5. **Shopify GIDs live in mapping files:** `shopifyProductMapping.ts` for main site, `byoData.ts` for funnel
 
 ## Scripts
 

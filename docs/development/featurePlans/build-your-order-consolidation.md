@@ -38,7 +38,7 @@ Promote `/funnel-c` (the live, perf-optimised 3-step flow: Learn > Build > Revie
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Consolidate and rename (delete first, then merge libs, promote funnel-c, redirects, docs) | Not Started |
+| 1 | Consolidate and rename (delete first, then merge libs, promote funnel-c, redirects, docs) | Built (SCRUM-1247), pending review + 9-combo checkout verification |
 | 2 | Attribution and measurability (src capture, checkout event, byo taxonomy, conka-lab wiring, verification) | Not Started |
 | 3 | Copy and asset alignment (section-by-section, user-directed) | Not Started |
 | 4 | Route traffic at the flow (listicle CTAs and/or ad sets) | Future. Marketing call; trigger criteria decided at pickup. |

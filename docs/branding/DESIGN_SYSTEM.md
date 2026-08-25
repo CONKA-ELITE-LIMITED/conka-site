@@ -175,7 +175,7 @@ Mobile-first is non-negotiable. Full mobile guide: `MOBILE_OPTIMIZATION.md`.
 
 > The evidence-dense grammar. No longer the global default — the forward direction is **Simple DTC** (§8.5). Clinical is retained for science/evidence-dense modules and the `/app` dark pages (§10). Opt-in via `.brand-clinical` on the page root. See the §8.5 per-surface authority table for which language governs which surface.
 >
-> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/science` · `/ingredients` · `/our-story` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app` · `/app-insights`. Note `/start` and `/funnel` are NOT clinical — they are Simple DTC (see the §8.5 authority table). The `/account` portal (`/account` + `/login` `/register` `/details` `/orders` `/subscriptions`) dropped the scope in SCRUM-1188 and is now Simple DTC. Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
+> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/science` · `/ingredients` · `/our-story` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app` · `/app-insights`. Note `/start` and `/build-your-order` are NOT clinical — they are Simple DTC (see the §8.5 authority table). The `/account` portal (`/account` + `/login` `/register` `/details` `/orders` `/subscriptions`) dropped the scope in SCRUM-1188 and is now Simple DTC. Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
 >
 > **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
 >
@@ -333,7 +333,7 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 ### Primary CTA — `ConkaCTAButton`
 
-`app/components/landing/ConkaCTAButton.tsx`. Standard CTA for every clinical surface. Do not hand-roll. Props: `children` (label), `href` (defaults to `FUNNEL_URL`), `meta` (second row).
+`app/components/landing/ConkaCTAButton.tsx`. Standard CTA for every clinical surface. Do not hand-roll. Props: `children` (label), `href` (defaults to `BYO_URL`), `meta` (second row).
 
 ### Clinical "Do not" list
 
