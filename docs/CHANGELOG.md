@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-25** | Build Your Order attribution live: byo:* event taxonomy, listicle src passthrough to orders, checkout-clicked and upsell events now dashboard-visible
 - **2026-08-25** | Consolidated the three funnel pages into /build-your-order (funnel-c promoted, defaults to Both, old URLs redirect); merged the forked funnel data layer into app/lib/byoData.ts
 - **2026-08-20** | PDP section 4 benefits video swapped to new Float renders (Flow and Clear), Both asset encoded ready for wiring
 - **2026-08-20** | Listicle buy zones upgraded to the V3 PDP hero (current gallery assets, ingredients list, outcome accordions)

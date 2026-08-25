@@ -9,13 +9,14 @@
 import {
   type ByoProduct,
   type ByoCadence,
+  getChargedPrice,
   getOfferVariant,
   getOfferPricing,
   getCadenceFrequency,
 } from "./byoData";
 import { trackMetaAddToCart, trackMetaInitiateCheckout, toContentId, buildMetaCartAttributes } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
-import { trackPurchaseAddToCart } from "@/app/lib/analytics";
+import { trackCartCheckoutClicked, trackPurchaseAddToCart } from "@/app/lib/analytics";
 
 interface ByoCheckoutParams {
   product: ByoProduct;
@@ -60,8 +61,10 @@ export async function byoCheckout(
     };
   }
 
-  // 2. Get pricing for analytics
-  const pricing = getOfferPricing(product, cadence);
+  // 2. Get pricing for analytics. Analytics carry the ALL-IN charged price
+  // (OTP SKUs bake postage into the variant price), so reported values match
+  // the order total Shopify sees.
+  const price = getChargedPrice(getOfferPricing(product, cadence));
 
   // 3. Create cart via existing API. Cart-level _fbp/_fbc (the ad-click
   // identifiers) ride along so the order carries them for the server-side
@@ -106,7 +109,7 @@ export async function byoCheckout(
       variantId: variant.variantId,
       product,
       cadence,
-      price: pricing.price,
+      price,
       source,
     });
 
@@ -152,6 +155,11 @@ function fireAnalytics(params: {
       variantId,
       quantity: 1,
     });
+
+    // The dashboard's bottom funnel stage: one line, all-in value. Fired here,
+    // immediately before the redirect (keepalive survives it), matching the
+    // cart drawer's checkout-click semantics.
+    trackCartCheckoutClicked({ items: 1, value: price });
 
     // Vercel Analytics
     trackPurchaseAddToCart({

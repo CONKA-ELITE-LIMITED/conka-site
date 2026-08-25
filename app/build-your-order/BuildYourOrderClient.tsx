@@ -51,23 +51,38 @@ import {
   BYO_VARIANT,
 } from "./defaults";
 import {
-  trackFunnelAccordionOpened,
-  trackFunnelBackNav,
+  captureListicleSrc,
+  getPurchaseOrigin,
+  trackByoAccordionOpened,
+  trackByoBackNav,
   trackByoCadenceChanged,
-  trackFunnelCheckout,
-  trackFunnelCheckoutFailed,
-  trackFunnelCtaClicked,
+  trackByoCheckout,
+  trackByoCheckoutFailed,
+  trackByoCtaClicked,
   trackByoProductChanged,
-  trackFunnelPropertyProbe,
-  trackFunnelStepCompleted,
-  trackFunnelUpsellAccepted,
-  trackFunnelUpsellDeclined,
-  trackFunnelUpsellDismissed,
-  trackFunnelUpsellShown,
-  trackFunnelViewed,
+  trackByoStepCompleted,
+  trackByoUpsellDeclined,
+  trackByoUpsellDismissed,
+  trackByoViewed,
+  trackCartUpsellAccepted,
+  trackCartUpsellShown,
 } from "@/app/lib/analytics";
 
 type Step = 1 | 2 | 3;
+
+/**
+ * Which upgrade kind an upsell offer represents, in the shared `cart:upsell_*`
+ * vocabulary (`product` is always the FROM product, matching CartUpsellTile).
+ */
+function upsellKind(
+  offer: UpsellOffer,
+  from: ByoProduct,
+): "otp_to_sub" | "single_to_both" | "monthly_to_quarterly" {
+  if (offer.upgradedProduct !== from) return "single_to_both";
+  return offer.upgradedCadence === "monthly-sub"
+    ? "otp_to_sub"
+    : "monthly_to_quarterly";
+}
 const STEPS: { n: Step; label: string }[] = [
   { n: 1, label: "Learn" },
   { n: 2, label: "Build" },
@@ -97,14 +112,14 @@ export default function BuildYourOrderClient() {
   const timeout = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
-    trackFunnelViewed({
+    // Persist a listicle `?src=` before anything else, so the checkout still
+    // knows its origin after the param is long gone (SCRUM-1248).
+    captureListicleSrc();
+    trackByoViewed({
       variant: BYO_VARIANT,
       product: BYO_DEFAULT_PRODUCT,
       cadence: BYO_DEFAULT_CADENCE,
     });
-    // TEMPORARY: settles whether Vercel Pro's 2-property limit drops extras at
-    // ingestion or is only a query-side gate. Delete once read. See analytics.ts.
-    trackFunnelPropertyProbe(BYO_VARIANT);
     window.history.replaceState({ step: 1 }, "");
   }, []);
 
@@ -160,7 +175,7 @@ export default function BuildYourOrderClient() {
     (from: Step) => {
       if (!completedSteps.current.has(from)) {
         completedSteps.current.add(from);
-        trackFunnelStepCompleted({
+        trackByoStepCompleted({
           variant: BYO_VARIANT,
           step: from,
           product,
@@ -175,14 +190,14 @@ export default function BuildYourOrderClient() {
   /** Step back. `from` is the step being left. */
   const handleBack = useCallback(
     (from: Step, to: Step) => {
-      trackFunnelBackNav({ variant: BYO_VARIANT, step: from });
+      trackByoBackNav({ variant: BYO_VARIANT, step: from });
       goToStep(to);
     },
     [goToStep],
   );
 
   const handleAccordionOpen = useCallback((id: string) => {
-    trackFunnelAccordionOpened({ variant: BYO_VARIANT, id });
+    trackByoAccordionOpened({ variant: BYO_VARIANT, id });
   }, []);
 
   // Tracking reads the previous value from the closure, NOT from inside a
@@ -222,15 +237,18 @@ export default function BuildYourOrderClient() {
     async (p: ByoProduct, c: ByoCadence, upsellAccepted: boolean) => {
       setIsCheckingOut(true);
       setError(null);
-      trackFunnelCheckout({ variant: BYO_VARIANT, product: p, cadence: c });
+      trackByoCheckout({ variant: BYO_VARIANT, product: p, cadence: c });
+      // Listicle arrivals carry their captured `?src=` token through to the
+      // cart `_source` attribute and purchase:add_to_cart; everyone else gets
+      // the flow's own tag.
       const result = await byoCheckout({
         product: p,
         cadence: c,
         upsellAccepted,
-        source: BYO_SOURCE,
+        source: getPurchaseOrigin() ?? BYO_SOURCE,
       });
       if (isByoCheckoutError(result)) {
-        trackFunnelCheckoutFailed({
+        trackByoCheckoutFailed({
           variant: BYO_VARIANT,
           reason: result.error,
         });
@@ -249,20 +267,21 @@ export default function BuildYourOrderClient() {
     // Pressing Checkout is what completes step 3, the last step before Shopify.
     if (!completedSteps.current.has(3)) {
       completedSteps.current.add(3);
-      trackFunnelStepCompleted({
+      trackByoStepCompleted({
         variant: BYO_VARIANT,
         step: 3,
         product,
         cadence,
       });
     }
-    trackFunnelCtaClicked({ variant: BYO_VARIANT, product, cadence });
+    trackByoCtaClicked({ variant: BYO_VARIANT, product, cadence });
 
     const offer = getUpsellOffer(product, cadence);
     if (offer) {
       setUpsellOffer(offer);
       setIsUpsellOpen(true);
-      trackFunnelUpsellShown({ variant: BYO_VARIANT, product, cadence });
+      // Shared cart:upsell_* names so the conka-lab dashboard ingests these.
+      trackCartUpsellShown({ type: upsellKind(offer, product), product });
       return;
     }
     proceedToCheckout(product, cadence, false);
@@ -400,22 +419,20 @@ export default function BuildYourOrderClient() {
           offer={upsellOffer}
           onAccept={() => {
             if (!upsellOffer) return;
-            // Report the UPGRADED offer, so the event reads as the outcome.
-            trackFunnelUpsellAccepted({
-              variant: BYO_VARIANT,
-              product: upsellOffer.upgradedProduct,
-              cadence: upsellOffer.upgradedCadence,
+            trackCartUpsellAccepted({
+              type: upsellKind(upsellOffer, product),
+              product,
             });
             setIsUpsellOpen(false);
             proceedToCheckout(upsellOffer.upgradedProduct, upsellOffer.upgradedCadence, true);
           }}
           onDecline={() => {
-            trackFunnelUpsellDeclined({ variant: BYO_VARIANT, product, cadence });
+            trackByoUpsellDeclined({ variant: BYO_VARIANT, product, cadence });
             setIsUpsellOpen(false);
             proceedToCheckout(product, cadence, false);
           }}
           onDismiss={() => {
-            trackFunnelUpsellDismissed({ variant: BYO_VARIANT, product, cadence });
+            trackByoUpsellDismissed({ variant: BYO_VARIANT, product, cadence });
             setIsUpsellOpen(false);
           }}
           loading={isCheckingOut}
