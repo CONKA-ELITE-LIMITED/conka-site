@@ -6,6 +6,7 @@ import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getChargedPrice,
   getDisplayDiscount,
   BYO_CADENCES,
 } from "@/app/lib/cadenceData";
@@ -188,7 +189,7 @@ function FlatPlanCard({
   //    strikethrough and the Save% badge agree.
   const compareAtDisplay =
     cadence === "monthly-sub"
-      ? getCadencePricingByProductHeroId(formulaId, "monthly-otp").price
+      ? getChargedPrice(getCadencePricingByProductHeroId(formulaId, "monthly-otp"))
       : savePct > 0
         ? pricing.price / (1 - savePct / 100)
         : undefined;
@@ -703,7 +704,7 @@ export default function ProductBuyPanel({
           onClick={onOtpAddToCart}
           className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          Buy it once for {formatPrice(otpPricing.price)}
+          Buy it once for {formatPrice(getChargedPrice(otpPricing))}
         </button>
 
         <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />

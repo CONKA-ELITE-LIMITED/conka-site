@@ -8,6 +8,7 @@ import type {
   CadencePricing,
   CadenceVariantConfig,
 } from "@/app/lib/cadenceData";
+import { getChargedPrice } from "@/app/lib/cadenceData";
 import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 
 interface BuyBoxCardProps {
@@ -111,7 +112,7 @@ export default function BuyBoxCard({
 
         <div className="flex items-baseline gap-3 flex-wrap mt-3 mb-1">
           <span className="text-[28px] font-bold text-[#1B2757] tabular-nums leading-none">
-            {formatPrice(pricing.price)}
+            {formatPrice(getChargedPrice(pricing))}
             {isSubscription && (
               <span className="text-[14px] font-semibold text-black/55 ml-1">
                 /mo

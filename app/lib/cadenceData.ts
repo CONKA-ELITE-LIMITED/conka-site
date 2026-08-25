@@ -14,13 +14,14 @@ import {
   getDisplayDiscount,
   getSavingsPercent,
   getByoProductSlideshow,
+  getChargedPrice,
   getOfferPricing,
   getOfferVariant,
 } from "./byoData";
 import { FormulaId } from "./productData";
 import type { ProductHeroId } from "./productTypes";
 
-export { BYO_CADENCES, getDisplayDiscount, getSavingsPercent, getByoProductSlideshow };
+export { BYO_CADENCES, getChargedPrice, getDisplayDiscount, getSavingsPercent, getByoProductSlideshow };
 
 // Re-export the cadence union so product pages don't import from byoData directly
 export type CadenceType = ByoCadence;

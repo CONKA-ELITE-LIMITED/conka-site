@@ -1,5 +1,6 @@
 import { CartLine } from "@/app/lib/shopify";
 import {
+  getChargedPrice,
   getOfferPricing,
   getOfferVariant,
   detectByoProduct,
@@ -134,7 +135,8 @@ function resolveUpgrade(
 function buildOtpToSubCopy(product: ByoProduct, quantity: number): UpsellCopy {
   const otp = getOfferPricing(product, "monthly-otp");
   const sub = getOfferPricing(product, "monthly-sub");
-  const saving = (otp.price - sub.price) * quantity;
+  // Anchor against the all-in charged OTP price (postage baked into the SKU).
+  const saving = (getChargedPrice(otp) - sub.price) * quantity;
   const valueLine = sub.freeShots
     ? `Free shipping and ${sub.freeShots} free shots on your first order`
     : "Free shipping, cancel anytime";

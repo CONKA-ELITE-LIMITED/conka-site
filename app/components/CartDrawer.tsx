@@ -12,7 +12,7 @@ import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellTile from "./CartUpsellTile";
 import { getCartUpsell, clearUpsellAccepted } from "@/app/lib/cartUpsell";
-import { getOfferByVariantId, getOfferPricing } from "@/app/lib/byoData";
+import { getChargedPrice, getOfferByVariantId, getOfferPricing } from "@/app/lib/byoData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 import { trackCartCheckoutClicked } from "@/app/lib/analytics";
 
@@ -82,7 +82,7 @@ function getLineSavings(item: CartLine): {
   if (!offer) return null;
 
   const displayNum = parseFloat(getLineDisplayPrice(item).amount);
-  const otpUnit = getOfferPricing(offer.product, "monthly-otp").price;
+  const otpUnit = getChargedPrice(getOfferPricing(offer.product, "monthly-otp"));
   const compareAt = offer.cadence === "quarterly-sub" ? otpUnit * 3 : otpUnit;
   const discountPct = Math.round((1 - displayNum / compareAt) * 100);
   // No saving to show (equal/higher price, or a gap that rounds to 0%).

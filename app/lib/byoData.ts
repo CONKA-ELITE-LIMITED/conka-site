@@ -750,6 +750,18 @@ export function getByoCTALabels(
   }
 }
 
+/**
+ * The all-in price the variant actually charges at checkout. Shopify bakes
+ * compulsory postage into the one-time SKUs, while BYO_PRICING lists the
+ * product price and `postage` separately (the itemised funnel-c presentation).
+ * Any surface that states a single one-time price WITHOUT an itemised postage
+ * line must use this, or it understates what the customer pays by £9.99.
+ * Subscription entries have no postage, so this is a no-op for them.
+ */
+export function getChargedPrice(pricing: ByoPricing): number {
+  return pricing.price + (pricing.postage ?? 0);
+}
+
 // ============================================
 // VARIANT LOOKUP + PORTAL HELPERS
 // (ported from the pre-merge app/lib/funnelData.ts fork; SCRUM-1247)
