@@ -17,6 +17,7 @@ import { useState, Fragment } from "react";
 import {
   type ByoCadence,
   type ByoProduct,
+  getChargedPrice,
   getOfferPricing,
   getDisplayDiscount,
 } from "@/app/lib/byoData";
@@ -82,6 +83,13 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
 
         const subRef = getOfferPricing(product, "monthly-sub");
         const otpMissed = (subRef.freeShotsValue ?? 0) + (pricing.postage ?? 0);
+
+        // Crossed-out anchor, matching the PDP buy panel: the REAL all-in
+        // one-time price for the same period (charged OTP; quarterly anchors
+        // against three of them). Never an invented value stack. OTP is the
+        // reference itself, so it gets no anchor.
+        const otpCharged = getChargedPrice(getOfferPricing(product, "monthly-otp"));
+        const anchor = isOtp ? null : key === "quarterly-sub" ? otpCharged * 3 : otpCharged;
 
         const period = cadenceDeliveryPeriod(key);
 
@@ -172,8 +180,15 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                   </span>
                 </span>
 
-                {/* Price. Fixed column, so a long name can never squash it. */}
+                {/* Price. Fixed column, so a long name can never squash it.
+                    The struck anchor sits on its own line so the pair can never
+                    overflow the column at 390px. */}
                 <span className="shrink-0 text-right">
+                  {anchor !== null && anchor > pricing.price && (
+                    <span className="block text-[12px] tabular-nums leading-none mb-1 text-black/35 line-through whitespace-nowrap">
+                      {formatPrice(anchor)}
+                    </span>
+                  )}
                   <span className="block text-[22px] font-bold text-black tabular-nums leading-none whitespace-nowrap">
                     {formatPrice(pricing.price)}
                     <span className="text-[13px] font-medium text-black/50">{cadencePriceSuffix(key)}</span>
@@ -249,7 +264,8 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
 
                     <p className="mt-3.5 pt-3 border-t border-black/10 text-[13px] text-black leading-snug">
                       <strong className="font-semibold">{pricing.firstOrderShots} shots</strong> in your first
-                      delivery, then {pricing.shotCount} {period}. Cancel any time.
+                      delivery, then {pricing.shotCount} {period}. 100-day money-back
+                      guarantee. Pause, skip, or cancel any time.
                     </p>
                   </div>
                 </div>

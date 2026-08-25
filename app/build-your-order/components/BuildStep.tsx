@@ -17,7 +17,6 @@ import {
   BYO_PRODUCTS,
 } from "@/app/lib/byoData";
 import CadenceSelector from "./CadenceSelector";
-import ByoMedia from "./ByoMedia";
 
 interface BuildStepProps {
   product: ByoProduct;
@@ -27,8 +26,8 @@ interface BuildStepProps {
   onAccordionOpen?: (id: string) => void;
 }
 
-// Flow leads (it is the pre-selected default), then Clear, with Both last as
-// the recommended upgrade.
+// Flow and Clear lead as the two equal single formulas; Both sits last as the
+// recommended full system (and the pre-selected default since SCRUM-1247).
 const PRODUCT_ORDER: ByoProduct[] = ["flow", "clear", "both"];
 const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
   flow: { name: "Flow", period: "Morning" },
@@ -261,12 +260,9 @@ export default function BuildStep({
       {/* Product summary + info dropdowns */}
       <div className="mt-3.5 rounded-[16px] border-2 border-black/85 bg-white overflow-hidden">
         <div className="p-4 flex gap-4">
-          {/* Mobile: video on the left, content beside it; the column stretches
-              to the content height (desktop uses the sticky left column, so the
-              video is hidden and the content takes the full width). */}
-          <div className="lg:hidden shrink-0 w-24 self-stretch rounded-[12px] bg-black/[0.04] overflow-hidden">
-            <ByoMedia product={product} showCaption={false} />
-          </div>
+          {/* Media lives above the widget now: the sticky mobile gallery and the
+              desktop left column both track the selection, so the card is pure
+              content on every breakpoint. */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <p className="text-[17px] font-semibold text-black leading-tight">{display.label}</p>

@@ -65,7 +65,26 @@ Order matters: deletions first so the merge/rename never touches doomed files.
 
 ## Phase 3: Copy and asset alignment
 
-Section-by-section conversion pass on the Learn, Build, Review steps: current headline ("A Sharper Mind. Morning to Evening."), proof assets and social proof in line with listicles/PDPs, refresh `FunnelMedia` video/imagery if newer assets exist. Built one section at a time with the user directing specifics, visual review then commit per section. Two-equal-cards rule respected (no spotlighting Flow or Clear over the other). Medium/Large, timeboxed.
+Section-by-section conversion pass, user-directed, visual review then commit per section. Two-equal-cards rule respected throughout (no spotlighting Flow or Clear over the other).
+
+### First pass: aesthetic alignment (approved 25 Aug 2026, branch feature/byo-aesthetic-alignment, no ticket - tracked here)
+
+Reference: the Bob mobile PDP pattern (sticky product gallery on top, rich numbered plan widget beneath). Layout/density reference only, NOT a palette reference - Simple DTC tokens throughout.
+
+Finding that motivated S2: `ByoMedia` renders desktop-only, so mobile (74% of traffic) currently sees a text-only flow with no product visual at any step.
+
+- **S1. Media swap to the neuron Float renders.** `ByoMedia` moves from FlowLiquid / ClearLiquid / BothStillWater to `FlowFloat` / `ClearFloat` / `BothNeuronFloat` (Desktop variant on the large left column), poster trios kept, `preload="metadata"` kept.
+- **S2. Bob-style mobile top: sticky media gallery.** A pinned media band under the step chrome: product video plus swipeable stills (arrows + swipe, reusing the PDP gallery assets), widget scrolling beneath. Optional narrow navy offer ribbon between gallery and content, derived live from `byoData` so it cannot drift.
+- **S3. Widget upgrade to the PDP V3 grammar.** Build step adopts `ProductBuyPanel` density: numbered section labels, plan cards with save badge, strike-through anchor, expanded value-stack on the selected card (bonus shots worth X, free shipping, renews monthly / cancel anytime), free-shots chip on the recommended plan. Reuse `ProductBuyPanel` subcomponents where they lift cleanly, port styling where they do not.
+- **Cleanup rider:** delete any code, components or public assets orphaned by these changes (e.g. the old Liquid/StillWater video trios if nothing else references them), verified by repo-wide grep before deletion.
+
+Rabbit holes: sticky-gallery scroll mechanics on mobile (no 100vw bleeds, nothing that breaks sticky; fall back to a scroll-away gallery if pinning fights the fixed chrome); do not drag PDP-specific concerns into the flow by reusing `ProductBuyPanel` wholesale; video weight on mobile (poster + metadata preload + IO-gated playback).
+
+No-gos for this pass: no checkout/analytics logic changes (Phase 2 is live); no copy rewrite beyond what the new layout needs; no spotlight layouts.
+
+### Later in Phase 3 (not yet scoped in detail)
+
+Copy and proof pass on the Learn, Build, Review steps: current headline ("A Sharper Mind. Morning to Evening."), proof assets and social proof in line with listicles/PDPs.
 
 ## Rabbit holes
 

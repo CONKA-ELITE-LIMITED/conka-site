@@ -1,23 +1,35 @@
 "use client";
 
 /**
- * Build Your Order — left-column media.
+ * Build Your Order — product motion media.
  *
- * Plays the product motion clip (the same liquid/bottle videos used on the
- * lander) rather than a slideshow of box photos. Swaps source by selected
- * product. A restrained caption keeps the core selling point (patent / cert)
- * without cluttering the frame.
+ * Plays the neuron Float renders (the current asset generation, matching the
+ * home hero and PDP benefit sections) and swaps source by selected product.
+ * A restrained caption keeps the core selling point (patent / cert) without
+ * cluttering the frame.
+ *
+ * `desktop` selects the wider Desktop encode where one exists (Both), for the
+ * large sticky left column; the portrait-friendly default feeds the mobile
+ * gallery.
  */
 
 import { type ByoProduct } from "@/app/lib/byoData";
 
-// The swirling-liquid 3D renders used in the product-page benefits section
-// (FlowLiquid / ClearLiquid). Both has no liquid variant, so it keeps the
-// still-water bottle render.
-const VIDEO: Record<ByoProduct, { webm: string; mp4: string; poster?: string }> = {
-  flow: { webm: "/videos/flow/FlowLiquid.webm", mp4: "/videos/flow/FlowLiquid.mp4", poster: "/videos/flow/FlowLiquid-poster.jpg" },
-  clear: { webm: "/videos/clear/ClearLiquid.webm", mp4: "/videos/clear/ClearLiquid.mp4", poster: "/videos/clear/ClearLiquid-poster.jpg" },
-  both: { webm: "/videos/both/BothStillWater.webm", mp4: "/videos/both/BothStillWater.mp4", poster: "/videos/both/BothStillWater-poster.jpg" },
+interface VideoSource {
+  webm: string;
+  mp4: string;
+  poster?: string;
+}
+
+const VIDEO: Record<ByoProduct, VideoSource> = {
+  flow: { webm: "/videos/flow/FlowFloat.webm", mp4: "/videos/flow/FlowFloat.mp4", poster: "/videos/flow/FlowFloat-poster.jpg" },
+  clear: { webm: "/videos/clear/ClearFloat.webm", mp4: "/videos/clear/ClearFloat.mp4", poster: "/videos/clear/ClearFloat-poster.jpg" },
+  both: { webm: "/videos/both/BothNeuronFloat.webm", mp4: "/videos/both/BothNeuronFloat.mp4", poster: "/videos/both/BothNeuronFloat-poster.jpg" },
+};
+
+/** Wider desktop encodes, where they exist. Falls back to the default. */
+const VIDEO_DESKTOP: Partial<Record<ByoProduct, VideoSource>> = {
+  both: { webm: "/videos/both/BothNeuronFloatDesktop.webm", mp4: "/videos/both/BothNeuronFloatDesktop.mp4", poster: "/videos/both/BothNeuronFloatDesktop-poster.jpg" },
 };
 
 const CAPTION: Record<ByoProduct, string> = {
@@ -29,19 +41,22 @@ const CAPTION: Record<ByoProduct, string> = {
 export default function ByoMedia({
   product,
   showCaption = true,
+  desktop = false,
 }: {
   product: ByoProduct;
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
+  /** Use the wider desktop encode where one exists (the sticky left column). */
+  desktop?: boolean;
 }) {
-  const src = VIDEO[product];
+  const src = (desktop ? VIDEO_DESKTOP[product] : undefined) ?? VIDEO[product];
 
   return (
-    // Height comes entirely from the parent (mobile banner / desktop column) —
-    // no min-height, so the compact mobile banner isn't forced taller.
+    // Height comes entirely from the parent (mobile gallery slide / desktop
+    // column) — no min-height, so compact containers aren't forced taller.
     <div className="relative w-full h-full overflow-hidden bg-black/[0.04]">
       <video
-        key={product}
+        key={`${product}-${desktop}`}
         className="absolute inset-0 h-full w-full object-cover object-center"
         autoPlay
         loop
