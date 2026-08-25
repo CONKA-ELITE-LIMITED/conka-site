@@ -44,8 +44,10 @@ export default function ByoMedia({
         alt={media.alt}
         fill
         sizes="(max-width: 1024px) 100vw, 42vw"
+        // Default lazy loading on purpose: this column is display:none on
+        // mobile, so lazy means the hidden image is never fetched there, while
+        // on desktop it sits in the first viewport and loads immediately.
         className="object-cover object-center"
-        priority
       />
 
       {/* Slim caption only — no product name (the page heading + selections own

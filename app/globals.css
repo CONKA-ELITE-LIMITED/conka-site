@@ -318,7 +318,7 @@ body {
 .hero-delay-4.revealed { transition-delay: 400ms; }
 .hero-delay-5.revealed { transition-delay: 500ms; }
 
-/* Reduced motion: disable all reveal and pulse animations */
+/* Reduced motion: disable all reveal animations */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-fade,

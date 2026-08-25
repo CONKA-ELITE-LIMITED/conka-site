@@ -307,9 +307,10 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                 </div>
               )}
 
-              {/* Free-shots incentive as a full-width gradient footer, hugging
-                  the rounded bottom corners (PDP FlatPlanCard pattern). */}
-              {hasFreeShots && (
+              {/* Free-shots incentive as a full-width gradient footer on the
+                  SELECTED card only, hugging the rounded bottom corners (PDP
+                  FlatPlanCard pattern - one strip on screen at a time). */}
+              {isSelected && hasFreeShots && (
                 <div
                   className="rounded-b-md px-4 py-2 text-center text-[12px] font-bold text-[#14532d]"
                   style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
