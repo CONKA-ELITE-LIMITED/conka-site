@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-25** | Brain-fuel proof section redesigned for the bright neuron clip: white section, full-bleed footage, stats centred on a grey hairline-divided card
 - **2026-08-25** | Brain-fuel proof band (home, both PDP, lander) now plays the Both Neuron float clip instead of the BrainFuel render
 - **2026-08-25** | Canonical bottle renders switched to the square V4 label shots; tall thin crops reserved for the two side-by-side pair layouts
 - **2026-08-25** | Home hero swapped from the looped video to the new metal-tray still renders (art-directed per breakpoint, lighter LCP); PDP ingredient thumbs show the full bottle

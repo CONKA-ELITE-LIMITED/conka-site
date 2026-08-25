@@ -1,14 +1,20 @@
 /**
- * CONKA — dark "brain fuel" band. Server component.
+ * CONKA — "brain fuel" proof section. Server component.
  *
- * Looping muted video (the CONKA shot render) + a headline + four proof
- * stats. The figures are editorial — verify sources before launch (see
- * README compliance note).
+ * Light section built around the bright BothNeuronFloat footage: the clip
+ * runs full-bleed at its native 3:4 on mobile, its pale studio edges
+ * sitting naturally against the white section. The proof — headline,
+ * medallists line + four metrics — sits on a light-grey card in black,
+ * the four stats centred in a hairline-divided 2x2 grid. Desktop: clip
+ * left in a rounded tile, headline above the proof card right.
+ *
+ * The headline renders twice (inside the card for mobile, column heading
+ * for desktop); each copy is display:none at the other breakpoint, so
+ * assistive tech sees exactly one.
  *
  * Video: the /videos/both/BothNeuronFloat trio (webm + mp4 + poster), per
- * VIDEO_OPTIMISATION.md — the 3:4 neuron-network float of both shots (also
- * the retired video hero's mobile asset). WebM is listed first so supporting
- * browsers fetch the lighter file (652KB vs 724KB).
+ * VIDEO_OPTIMISATION.md. WebM is listed first so supporting browsers fetch
+ * the lighter file (652KB vs 724KB).
  */
 
 import type { ReactNode } from 'react';
@@ -28,13 +34,13 @@ const METRICS: Metric[] = [
   { value: '4', label: <>clinical<br />trials</> },
 ];
 
+const TITLE = <>Trusted where focus can&rsquo;t fail</>;
+
 export default function BrainFuelBand() {
   return (
     <section className={styles.band}>
       <div className={styles.inner}>
-        <h2 className={styles.title}>Trusted where focus can&rsquo;t fail</h2>
-
-        <div className={styles.hero}>
+        <div className={styles.media}>
           {/* preload="metadata" so the clip isn't fully downloaded on page
               load — it's below the fold. Browser fetches it when the autoplay
               element scrolls into range. */}
@@ -53,21 +59,27 @@ export default function BrainFuelBand() {
         </div>
 
         <div className={styles.details}>
-          <p className={styles.description}>
-            By Olympic medallists, world-class athletes &amp; entrepreneurs on
-            the days that matter most.
-          </p>
+          <h2 className={`${styles.title} ${styles.titleDesktop}`}>{TITLE}</h2>
 
-          <div className={styles.metrics}>
-            {METRICS.map((m, i) => (
-              <div className={styles.metric} key={i}>
-                <div className={styles.value}>
-                  {m.value}
-                  {m.small && <small>{m.small}</small>}
+          {/* Proof card: title (mobile), medallists line + the 2x2 stat grid */}
+          <div className={styles.card}>
+            <h2 className={`${styles.title} ${styles.titleMobile}`}>{TITLE}</h2>
+            <p className={styles.description}>
+              By Olympic medallists, world-class athletes &amp; entrepreneurs
+              on the days that matter most.
+            </p>
+
+            <div className={styles.metrics}>
+              {METRICS.map((m, i) => (
+                <div className={styles.metric} key={i}>
+                  <div className={styles.value}>
+                    {m.value}
+                    {m.small && <small>{m.small}</small>}
+                  </div>
+                  <p className={styles.label}>{m.label}</p>
                 </div>
-                <p className={styles.label}>{m.label}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

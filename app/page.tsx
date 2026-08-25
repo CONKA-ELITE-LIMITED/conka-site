@@ -129,9 +129,10 @@ export default function Home() {
       {/* Certification badges — self-contained white band under the benefits. */}
       <Certifications />
 
-      {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
-          LandingDailyBenefits; the band owns its own full-bleed dark section,
-          so it is not wrapped in brand-section/brand-track). ===== */}
+      {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
+          LandingDailyBenefits; white section with the neuron clip full-bleed
+          and the stats on a light-grey proof card. Owns its own full-bleed
+          section, so it is not wrapped in brand-section/brand-track). ===== */}
       <BrainFuelBand />
 
       {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}

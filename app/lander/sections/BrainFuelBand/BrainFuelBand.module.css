@@ -1,70 +1,89 @@
-/* CONKA — dark "brain fuel" band: looping shot render + headline + 4 stats.
-   Rebuilt from prototype measurements (was Ketone's `brain-fuel`).
-   Dark band #0e0e0e; light-gray text (#ccc) with dimmer emphasis (#7c7d7c). */
+/* CONKA — "brain fuel" proof section: bright neuron footage on a white
+   section, with the headline + proof stats on a light-grey card in black,
+   the four stats centred in a hairline-divided 2x2 grid.
+   Was the dark #0e0e0e band built for the old dark BrainFuel render. */
 
 .band {
-  background: #0e0e0e;
+  background: #ffffff;
 }
 .inner {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 48px 45px;
+  padding: 40px 0 48px;
 }
 
-.hero {
-  width: 100%;
-}
+/* Mobile: the clip is full-bleed at its native 3:4 — its pale studio edges
+   sit naturally against the white section; the headline titles the proof
+   card below. */
 .video {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 20px;
+}
+
+.title {
+  font-weight: 800;
+  font-size: clamp(1.9rem, 1.2rem + 3vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #000000;
+  margin: 0;
+}
+.titleDesktop {
+  display: none;
 }
 
 .details {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  padding: 0 20px;
 }
-.title {
-  font-weight: 800;
-  font-size: clamp(1.9rem, 1.2rem + 3vw, 2.75rem);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  margin: 0;
+
+/* Light-grey proof card — black copy, stats centred in a 2x2 grid whose
+   1px gaps over the darker container read as hairline dividers. */
+.card {
+  background: #f1f1f3;
+  border-radius: 8px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 .description {
   font-weight: 500;
   font-size: 16.64px;
   line-height: 24px;
   letter-spacing: -0.17px;
-  color: #ffffff;
+  color: #000000;
   margin: 0;
 }
 
 .metrics {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(0, 0, 0, 0.12);
   margin: 0;
   padding: 0;
 }
 .metric {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border-top: 1px solid #cccccc;
-  padding-top: 16px;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  background: #f1f1f3;
+  padding: 16px 10px;
 }
 .value {
   font-weight: 850;
   font-size: 41.6px;
   line-height: 36px;
   letter-spacing: -2.42px;
-  color: #ffffff;
+  color: #000000;
   white-space: nowrap;
 }
 .value small {
@@ -76,43 +95,45 @@
   font-size: 12.48px;
   line-height: 16px;
   letter-spacing: -0.12px;
-  color: #ffffff;
-  text-align: right;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
   margin: 0;
 }
 
 @media (min-width: 1024px) {
-  /* Desktop: left/right split — video left, title + stats right. The title is
-     a direct child (so it sits above the video on mobile), so grid areas pull
-     it back into the right column here. Mobile base rules stack it naturally. */
+  /* Desktop: clip left in a rounded tile, headline + proof card right. */
   .inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "hero title"
-      "hero details";
-    align-content: center;
+    grid-template-areas: 'media details';
+    align-items: center;
     column-gap: 64px;
-    row-gap: 32px;
     max-width: 1100px;
     margin: 0 auto;
     padding: 96px 45px;
   }
-  .title {
-    grid-area: title;
-    align-self: end;
+  .media {
+    grid-area: media;
+    border-radius: 8px;
+    overflow: hidden;
   }
-  .hero {
-    grid-area: hero;
-    align-self: center;
+  .titleMobile {
+    display: none;
   }
-  .video {
-    width: 100%;
+  .titleDesktop {
+    display: block;
   }
-  /* Stats stay single-column rows beside the video (not the old 2-col grid) */
   .details {
     grid-area: details;
-    align-self: start;
+    align-self: center;
     gap: 32px;
+    padding: 0;
+  }
+  .card {
+    padding: 32px 28px;
+    gap: 28px;
+  }
+  .metric {
+    padding: 24px 16px;
   }
 }
