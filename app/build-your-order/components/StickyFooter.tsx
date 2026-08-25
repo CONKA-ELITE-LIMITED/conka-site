@@ -31,7 +31,7 @@ function BackArrow({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label="Previous step"
-      className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-black/15 text-black/60 hover:border-black/40 hover:text-black transition-colors"
+      className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-black/15 text-black/60 hover:border-black/40 hover:text-black transition-colors"
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -104,7 +104,7 @@ export default function StickyFooter({
             type="button"
             onClick={onCta}
             disabled={loading}
-            className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#1B2757] text-white py-4 px-5 font-semibold text-[16px] lg:text-lg hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#1B2757] text-white py-3 px-5 font-semibold text-[15px] hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
           >
             {loading && (
               <span className="h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden />
@@ -116,7 +116,7 @@ export default function StickyFooter({
                 <span className="hidden sm:inline">· {priceLabel}</span>
               </span>
             )}
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>

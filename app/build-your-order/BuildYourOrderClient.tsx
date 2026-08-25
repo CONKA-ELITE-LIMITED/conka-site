@@ -375,13 +375,17 @@ export default function BuildYourOrderClient() {
       </div>
       <div className="h-[59px]" />
 
-      {/* Mobile sticky media band (Bob pattern): pinned under the chrome, the
-          content scrolls beneath it. Deliberately a sibling of <main>, NOT
-          inside the transformed step column — an ancestor transform would
-          re-anchor position:sticky and unpin it. */}
-      <div className="lg:hidden sticky top-[59px] z-30">
-        <ByoMobileGallery product={product} step={step} />
-      </div>
+      {/* Mobile sticky media band (Bob pattern): pinned under the chrome from
+          the Build step on, the content scrolls beneath it. The Learn step
+          stays media-free so the pitch owns the viewport (SCRUM-1249 review).
+          Deliberately a sibling of <main>, NOT inside the transformed step
+          column — an ancestor transform would re-anchor position:sticky and
+          unpin it. */}
+      {step !== 1 && (
+        <div className="lg:hidden sticky top-[59px] z-30">
+          <ByoMobileGallery product={product} step={step} />
+        </div>
+      )}
 
       <main className="lg:flex lg:min-h-[calc(100vh-59px)]">
         {/* Left media — desktop */}
