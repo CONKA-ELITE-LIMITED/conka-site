@@ -8,14 +8,14 @@
  * side (equal billing, even on mobile); copy stays to one line per formula.
  * Depth deliberately lives on the Build step's disclosures, not here — this
  * step used to carry eight accordion chips that duplicated Build's, and read
- * as homework. One light "how the system works" disclosure remains for the
- * visitor who wants the mechanism before configuring.
+ * as homework. A slim "learn more" cluster (mechanism / what's inside / what
+ * are nootropics) sits below the proof for the visitor who wants depth
+ * before configuring.
  */
 
 import { useState } from "react";
 import Image from "next/image";
-import { type ByoProduct, getOfferPricing } from "@/app/lib/byoData";
-import { formatPrice } from "@/app/lib/productData";
+import { type ByoProduct } from "@/app/lib/byoData";
 
 const SunIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -80,44 +80,92 @@ const ProofCheck = () => (
   </svg>
 );
 
+type LearnMoreId = "how" | "inside" | "nootropics";
+
 export default function EducationStep({
   onAccordionOpen,
 }: {
   onAccordionOpen?: (id: string) => void;
 }) {
-  const [howOpen, setHowOpen] = useState(false);
-  const toggleHow = () => {
-    const next = !howOpen;
+  const [openId, setOpenId] = useState<LearnMoreId | null>(null);
+  const toggleRow = (id: LearnMoreId) => {
+    const next = openId === id ? null : id;
     // Report opens only, and from outside the updater: state updaters must be
     // pure, and React double-invokes them under StrictMode.
-    if (next) onAccordionOpen?.("learn:how");
-    setHowOpen(next);
+    if (next) onAccordionOpen?.(`learn:${next}`);
+    setOpenId(next);
   };
+
+  const LEARN_MORE: { id: LearnMoreId; label: string; body: React.ReactNode }[] = [
+    {
+      id: "how",
+      label: "How the system works",
+      body: (
+        <div className="flex flex-col gap-2.5">
+          {HOW_IT_WORKS.map((s) => (
+            <div key={s.when} className="flex items-start gap-3">
+              <span className="shrink-0 min-w-[76px] rounded-full bg-black/[0.05] px-2.5 py-1.5 text-center text-[12px] font-bold text-black leading-none">
+                {s.when}
+              </span>
+              <p className="text-[13px] text-black/75 leading-snug pt-1">{s.what}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: "inside",
+      label: "What's inside",
+      body: (
+        <div className="flex flex-col gap-2 text-[13px] leading-snug">
+          <p className="text-black/75">
+            <strong className="font-semibold text-black">Flow:</strong> six
+            clinically dosed adaptogens, led by Ashwagandha, Lemon Balm and
+            Rhodiola rosea. Zero caffeine.
+          </p>
+          <p className="text-black/75">
+            <strong className="font-semibold text-black">Clear:</strong> ten
+            clinically dosed actives, led by Alpha-GPC, Ginkgo Biloba and
+            Glutathione.
+          </p>
+          <p className="text-black/55">
+            Full ingredient lists, doses and studies sit one tap away on the
+            next step.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "nootropics",
+      label: "What are nootropics?",
+      body: (
+        <p className="text-[13px] text-black/75 leading-snug">
+          Ingredients with published evidence for cognitive function: focus,
+          memory, processing speed. CONKA doses them at the levels the studies
+          used, with no stimulants, so the effect comes from the pathway, not a
+          caffeine spike.
+        </p>
+      ),
+    },
+  ];
 
   return (
     <div>
       {/* The step name already sits in the top chrome, so no eyebrow. */}
       <h2
-        className="text-black font-semibold text-[34px] leading-[1.05] mb-3 text-balance"
+        className="text-black font-semibold text-[34px] leading-[1.05] mb-6 text-balance"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Two shots. All day.
+        A Sharper Mind. Morning to Evening.
       </h2>
-
-      <p className="text-[15px] leading-snug text-black mb-6">
-        Flow sets up your morning. Clear holds your afternoon. Run one, or
-        cover the full day.
-      </p>
 
       {/* The pair, side by side on every breakpoint (equal billing). The tall
           renders do the talking; each card carries exactly one line of copy. */}
       <div className="grid grid-cols-2 gap-3">
         {FORMULAS.map((f) => {
-          // Lowest per-shot for this formula (its quarterly subscription).
-          const fromPrice = formatPrice(getOfferPricing(f.product, "quarterly-sub").perShot);
           return (
             <div key={f.product} className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden flex flex-col">
-              <div className="relative aspect-[3/4] w-full bg-[#f1f1f3]">
+              <div className="relative aspect-[3/5] w-full bg-[#f1f1f3]">
                 <Image
                   src={f.image}
                   alt={`CONKA ${f.name} bottle`}
@@ -138,47 +186,10 @@ export default function EducationStep({
                   </span>
                 </div>
                 <p className="text-[13px] text-black/70 leading-snug mt-1.5">{f.job}</p>
-                <p className="text-[12px] text-black mt-auto pt-2">
-                  From <span className="font-bold tabular-nums">{fromPrice}</span>
-                  <span className="text-black/50"> per shot</span>
-                </p>
               </div>
             </div>
           );
         })}
-      </div>
-
-      {/* One light disclosure for the mechanism. Depth beyond this (full
-          ingredient lists, proof stats, athletes) lives on the Build step. */}
-      <div className="mt-3 rounded-md ring-1 ring-black/10 bg-white overflow-hidden">
-        <button
-          type="button"
-          onClick={toggleHow}
-          aria-expanded={howOpen}
-          className="flex w-full min-h-[48px] items-center justify-between gap-2 px-4 text-left text-[14px] font-semibold text-black"
-        >
-          How the system works
-          <svg
-            width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden
-            className="shrink-0 text-black/40 transition-transform duration-200"
-            style={{ transform: howOpen ? "rotate(180deg)" : "none" }}
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </button>
-        <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: howOpen ? "400px" : "0px" }}>
-          <div className="px-4 pb-4 flex flex-col gap-2.5">
-            {HOW_IT_WORKS.map((s) => (
-              <div key={s.when} className="flex items-start gap-3">
-                <span className="shrink-0 min-w-[76px] rounded-full bg-black/[0.05] px-2.5 py-1.5 text-center text-[12px] font-bold text-black leading-none">
-                  {s.when}
-                </span>
-                <p className="text-[13px] text-black/75 leading-snug pt-1">{s.what}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Proof, in three quiet beats. */}
@@ -189,6 +200,37 @@ export default function EducationStep({
             {item}
           </span>
         ))}
+      </div>
+
+      {/* Learn more — the optional depth, lower down so the pitch stays one
+          screen. Three slim disclosures; anything past this lives on Build. */}
+      <div className="mt-4 rounded-md ring-1 ring-black/10 bg-white overflow-hidden divide-y divide-black/10">
+        {LEARN_MORE.map((row) => {
+          const open = openId === row.id;
+          return (
+            <div key={row.id}>
+              <button
+                type="button"
+                onClick={() => toggleRow(row.id)}
+                aria-expanded={open}
+                className="flex w-full min-h-[48px] items-center justify-between gap-2 px-4 text-left text-[14px] font-semibold text-black"
+              >
+                {row.label}
+                <svg
+                  width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden
+                  className="shrink-0 text-black/40 transition-transform duration-200"
+                  style={{ transform: open ? "rotate(180deg)" : "none" }}
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: open ? "400px" : "0px" }}>
+                <div className="px-4 pb-4">{row.body}</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* The nudge toward the recommended configuration, in the offer colour. */}
