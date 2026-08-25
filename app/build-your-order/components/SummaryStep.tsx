@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — Step 3 (Review). The moment of purchase, built as a RECEIPT.
+ * Build Your Order — Step 3 (Review). The moment of purchase, built as a RECEIPT.
  *
  * The receipt splits cleanly: the breakdown states the SHOTS (recurring volume
  * per formula, then the first-order bonus), and the line items state the MONEY

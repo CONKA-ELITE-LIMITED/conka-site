@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — Step 1 (Learn).
+ * Build Your Order — Step 1 (Learn).
  *
  * Two shots, two jobs: Flow in the morning, Clear in the afternoon, with Both
  * as the recommended routine. Timing rides on a rounded period pill next to the

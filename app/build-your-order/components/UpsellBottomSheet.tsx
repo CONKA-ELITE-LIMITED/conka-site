@@ -144,7 +144,7 @@ export default function UpsellBottomSheet({
             </ul>
           )}
 
-          {/* Accept — the same navy pill as every other CTA in the funnel */}
+          {/* Accept — the same navy pill as every other CTA in the flow */}
           <button
             type="button"
             onClick={onAccept}

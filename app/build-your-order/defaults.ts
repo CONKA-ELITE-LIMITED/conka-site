@@ -1,7 +1,7 @@
 import type { ByoCadence, ByoProduct } from "@/app/lib/byoData";
 
 /**
- * The offer funnel-c lands on.
+ * The offer the Build Your Order flow lands on.
  *
  * Single source of truth, shared by the server page (Meta ViewContent) and the
  * client state machine. They previously declared this separately and drifted:
@@ -9,20 +9,23 @@ import type { ByoCadence, ByoProduct } from "@/app/lib/byoData";
  * ViewContent carried the wrong content_id and the wrong value.
  */
 /**
- * Flow, pre-selected: the headline entry offer, and the lowest-friction first
- * commitment. Both is still surfaced as the recommended routine on the Build
- * step, and the checkout upsell offers the Flow to Both upgrade.
- *
- * Note this differs from /funnel and /funnel-b, which open on Both.
+ * Both, pre-selected (SCRUM-1247): Both outsells Flow (98 vs 66 orders over
+ * the 6 weeks to 24 Aug 2026) on less traffic, so the flow opens on the
+ * best-converting configuration. Flow and Clear stay presented as equals on
+ * the Build step (two-equal-cards rule).
  */
-export const FUNNEL_C_DEFAULT_PRODUCT: ByoProduct = "flow";
-export const FUNNEL_C_DEFAULT_CADENCE: ByoCadence = "monthly-sub";
+export const BYO_DEFAULT_PRODUCT: ByoProduct = "both";
+export const BYO_DEFAULT_CADENCE: ByoCadence = "monthly-sub";
 
-/** Order attribution tag. Distinct from funnel-b so revenue is separable. */
-export const FUNNEL_C_SOURCE = "funnel_page_c";
+/**
+ * Order attribution tag. Kept at the historic funnel-c value so Shopify /
+ * Triple Whale revenue attribution stays continuous; renames with the rest of
+ * the analytics taxonomy in Phase 2 (SCRUM-1248).
+ */
+export const BYO_SOURCE = "funnel_page_c";
 
-/** Identifies this funnel in the shared `funnel:*` event taxonomy. */
-export const FUNNEL_C_VARIANT = "c" as const;
+/** Identifies this flow in the shared `funnel:*` event taxonomy (Phase 2 renames it). */
+export const BYO_VARIANT = "c" as const;
 
 /**
  * Cadence wording.

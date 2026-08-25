@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — plan selector (lives inside the single-page Build step).
+ * Build Your Order — plan selector (lives inside the single-page Build step).
  *
  * Layout rules that matter here:
  *  - The collapsed row is a strict 3-column grid: radio | name+detail | price.
@@ -87,7 +87,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
 
         // The bonus shots are a FIRST-ORDER acquisition incentive on every
         // subscription cadence, quarterly included. Same rule as the shared
-        // FreeShotsBadge used on the PDPs, so the funnel cannot promise more
+        // FreeShotsBadge used on the PDPs, so the flow cannot promise more
         // than the product pages do.
         const hasFreeShots = !isOtp && freeShots > 0;
 

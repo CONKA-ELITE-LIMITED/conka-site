@@ -1,6 +1,6 @@
 "use client";
 
-export default function FunnelError({
+export default function BuildYourOrderError({
   reset,
 }: {
   error: Error & { digest?: string };

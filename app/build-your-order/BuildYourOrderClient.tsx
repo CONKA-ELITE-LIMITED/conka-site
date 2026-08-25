@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — the alternative funnel layout.
+ * Build Your Order — the alternative funnel layout.
  *
  * Learn → Build (product + plan on one page) → Review → checkout.
  *
@@ -17,7 +17,7 @@ import dynamic from "next/dynamic";
 // First-paint content (step 1 + always-visible chrome) stays eager.
 import EducationStep from "./components/EducationStep";
 import StickyFooter from "./components/StickyFooter";
-import FunnelMedia from "./components/FunnelMedia";
+import ByoMedia from "./components/ByoMedia";
 
 // Downstream steps (2/3) and the overlays are code-split so only step-1 JS
 // ships at first paint. BuildStep/SummaryStep keep SSR (they prefetch on
@@ -45,10 +45,10 @@ import { byoCheckout, isByoCheckoutError } from "@/app/lib/byoCheckout";
 import { formatPrice } from "@/app/lib/productData";
 import {
   cadencePriceSuffix,
-  FUNNEL_C_DEFAULT_CADENCE,
-  FUNNEL_C_DEFAULT_PRODUCT,
-  FUNNEL_C_SOURCE,
-  FUNNEL_C_VARIANT,
+  BYO_DEFAULT_CADENCE,
+  BYO_DEFAULT_PRODUCT,
+  BYO_SOURCE,
+  BYO_VARIANT,
 } from "./defaults";
 import {
   trackFunnelAccordionOpened,
@@ -74,10 +74,10 @@ const STEPS: { n: Step; label: string }[] = [
   { n: 3, label: "Review" },
 ];
 
-export default function FunnelClient() {
+export default function BuildYourOrderClient() {
   const [step, setStep] = useState<Step>(1);
-  const [product, setProduct] = useState<ByoProduct>(FUNNEL_C_DEFAULT_PRODUCT);
-  const [cadence, setCadence] = useState<ByoCadence>(FUNNEL_C_DEFAULT_CADENCE);
+  const [product, setProduct] = useState<ByoProduct>(BYO_DEFAULT_PRODUCT);
+  const [cadence, setCadence] = useState<ByoCadence>(BYO_DEFAULT_CADENCE);
 
   /**
    * Steps whose completion event has already fired.
@@ -98,13 +98,13 @@ export default function FunnelClient() {
 
   useEffect(() => {
     trackFunnelViewed({
-      variant: FUNNEL_C_VARIANT,
-      product: FUNNEL_C_DEFAULT_PRODUCT,
-      cadence: FUNNEL_C_DEFAULT_CADENCE,
+      variant: BYO_VARIANT,
+      product: BYO_DEFAULT_PRODUCT,
+      cadence: BYO_DEFAULT_CADENCE,
     });
     // TEMPORARY: settles whether Vercel Pro's 2-property limit drops extras at
     // ingestion or is only a query-side gate. Delete once read. See analytics.ts.
-    trackFunnelPropertyProbe(FUNNEL_C_VARIANT);
+    trackFunnelPropertyProbe(BYO_VARIANT);
     window.history.replaceState({ step: 1 }, "");
   }, []);
 
@@ -161,7 +161,7 @@ export default function FunnelClient() {
       if (!completedSteps.current.has(from)) {
         completedSteps.current.add(from);
         trackFunnelStepCompleted({
-          variant: FUNNEL_C_VARIANT,
+          variant: BYO_VARIANT,
           step: from,
           product,
           cadence,
@@ -175,14 +175,14 @@ export default function FunnelClient() {
   /** Step back. `from` is the step being left. */
   const handleBack = useCallback(
     (from: Step, to: Step) => {
-      trackFunnelBackNav({ variant: FUNNEL_C_VARIANT, step: from });
+      trackFunnelBackNav({ variant: BYO_VARIANT, step: from });
       goToStep(to);
     },
     [goToStep],
   );
 
   const handleAccordionOpen = useCallback((id: string) => {
-    trackFunnelAccordionOpened({ variant: FUNNEL_C_VARIANT, id });
+    trackFunnelAccordionOpened({ variant: BYO_VARIANT, id });
   }, []);
 
   // Tracking reads the previous value from the closure, NOT from inside a
@@ -192,7 +192,7 @@ export default function FunnelClient() {
     (p: ByoProduct) => {
       if (p !== product) {
         trackByoProductChanged({
-          variant: FUNNEL_C_VARIANT,
+          variant: BYO_VARIANT,
           from: product,
           to: p,
         });
@@ -207,7 +207,7 @@ export default function FunnelClient() {
     (c: ByoCadence) => {
       if (c !== cadence) {
         trackByoCadenceChanged({
-          variant: FUNNEL_C_VARIANT,
+          variant: BYO_VARIANT,
           from: cadence,
           to: c,
         });
@@ -222,16 +222,16 @@ export default function FunnelClient() {
     async (p: ByoProduct, c: ByoCadence, upsellAccepted: boolean) => {
       setIsCheckingOut(true);
       setError(null);
-      trackFunnelCheckout({ variant: FUNNEL_C_VARIANT, product: p, cadence: c });
+      trackFunnelCheckout({ variant: BYO_VARIANT, product: p, cadence: c });
       const result = await byoCheckout({
         product: p,
         cadence: c,
         upsellAccepted,
-        source: FUNNEL_C_SOURCE,
+        source: BYO_SOURCE,
       });
       if (isByoCheckoutError(result)) {
         trackFunnelCheckoutFailed({
-          variant: FUNNEL_C_VARIANT,
+          variant: BYO_VARIANT,
           reason: result.error,
         });
         setError(result.error);
@@ -250,19 +250,19 @@ export default function FunnelClient() {
     if (!completedSteps.current.has(3)) {
       completedSteps.current.add(3);
       trackFunnelStepCompleted({
-        variant: FUNNEL_C_VARIANT,
+        variant: BYO_VARIANT,
         step: 3,
         product,
         cadence,
       });
     }
-    trackFunnelCtaClicked({ variant: FUNNEL_C_VARIANT, product, cadence });
+    trackFunnelCtaClicked({ variant: BYO_VARIANT, product, cadence });
 
     const offer = getUpsellOffer(product, cadence);
     if (offer) {
       setUpsellOffer(offer);
       setIsUpsellOpen(true);
-      trackFunnelUpsellShown({ variant: FUNNEL_C_VARIANT, product, cadence });
+      trackFunnelUpsellShown({ variant: BYO_VARIANT, product, cadence });
       return;
     }
     proceedToCheckout(product, cadence, false);
@@ -341,7 +341,7 @@ export default function FunnelClient() {
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round((step / STEPS.length) * 100)}
-          aria-label="Funnel progress"
+          aria-label="Order progress"
         >
           <div
             className="h-full bg-[#1B2757] transition-all duration-500 ease-out"
@@ -354,7 +354,7 @@ export default function FunnelClient() {
       <main className="lg:flex lg:min-h-[calc(100vh-59px)]">
         {/* Left media — desktop */}
         <div className="hidden lg:block lg:w-[42%] lg:sticky lg:top-[59px] lg:h-[calc(100vh-59px)]">
-          <FunnelMedia product={product} showCaption={step !== 1} />
+          <ByoMedia product={product} showCaption={step !== 1} />
         </div>
 
         {/* Right content */}
@@ -402,7 +402,7 @@ export default function FunnelClient() {
             if (!upsellOffer) return;
             // Report the UPGRADED offer, so the event reads as the outcome.
             trackFunnelUpsellAccepted({
-              variant: FUNNEL_C_VARIANT,
+              variant: BYO_VARIANT,
               product: upsellOffer.upgradedProduct,
               cadence: upsellOffer.upgradedCadence,
             });
@@ -410,12 +410,12 @@ export default function FunnelClient() {
             proceedToCheckout(upsellOffer.upgradedProduct, upsellOffer.upgradedCadence, true);
           }}
           onDecline={() => {
-            trackFunnelUpsellDeclined({ variant: FUNNEL_C_VARIANT, product, cadence });
+            trackFunnelUpsellDeclined({ variant: BYO_VARIANT, product, cadence });
             setIsUpsellOpen(false);
             proceedToCheckout(product, cadence, false);
           }}
           onDismiss={() => {
-            trackFunnelUpsellDismissed({ variant: FUNNEL_C_VARIANT, product, cadence });
+            trackFunnelUpsellDismissed({ variant: BYO_VARIANT, product, cadence });
             setIsUpsellOpen(false);
           }}
           loading={isCheckingOut}

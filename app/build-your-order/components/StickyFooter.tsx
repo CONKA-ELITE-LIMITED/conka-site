@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — persistent sticky footer.
+ * Build Your Order — persistent sticky footer.
  *
  * One primary action, full width. A back arrow appears only once there is
  * somewhere to go back to.

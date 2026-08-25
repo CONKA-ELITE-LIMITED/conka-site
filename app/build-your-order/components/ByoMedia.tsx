@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — left-column media.
+ * Build Your Order — left-column media.
  *
  * Plays the product motion clip (the same liquid/bottle videos used on the
  * lander) rather than a slideshow of box photos. Swaps source by selected
@@ -26,7 +26,7 @@ const CAPTION: Record<ByoProduct, string> = {
   both: "Morning to evening. The full system.",
 };
 
-export default function FunnelMedia({
+export default function ByoMedia({
   product,
   showCaption = true,
 }: {

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * funnel-c — Step 2 (Build). Product + plan on one page.
+ * Build Your Order — Step 2 (Build). Product + plan on one page.
  *
  * Formula tiles (Flow pre-selected, Both flagged as the recommended upgrade)
  * drive the left media and the summary card, whose detail sits behind disclosure
@@ -17,7 +17,7 @@ import {
   BYO_PRODUCTS,
 } from "@/app/lib/byoData";
 import CadenceSelector from "./CadenceSelector";
-import FunnelMedia from "./FunnelMedia";
+import ByoMedia from "./ByoMedia";
 
 interface BuildStepProps {
   product: ByoProduct;
@@ -37,7 +37,7 @@ const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
 };
 
 // Blurb + proof stats, lifted from the product pages (formulaContent.ts /
-// BOTH_HERO_CONTENT) so the funnel carries real weight.
+// BOTH_HERO_CONTENT) so the flow carries real weight.
 //
 // The stats panel is "Proof", not "Impact": the numbers are a mix of measured
 // outcomes from the ingredient studies and hard product facts, and pretending
@@ -265,7 +265,7 @@ export default function BuildStep({
               to the content height (desktop uses the sticky left column, so the
               video is hidden and the content takes the full width). */}
           <div className="lg:hidden shrink-0 w-24 self-stretch rounded-[12px] bg-black/[0.04] overflow-hidden">
-            <FunnelMedia product={product} showCaption={false} />
+            <ByoMedia product={product} showCaption={false} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
