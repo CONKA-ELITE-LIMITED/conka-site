@@ -1,3 +1,4 @@
+import { bottleRenders } from "@/app/lib/productImages";
 import type { Metadata } from "next";
 import type { ComponentType } from "react";
 import Image from "next/image";
@@ -117,13 +118,13 @@ type RhythmStep = {
 
 const dailyRhythm: RhythmStep[] = [
   {
-    img: "/formulas/conkaFlow/FlowV3.jpg",
+    img: bottleRenders.flow.src,
     alt: "CONKA Flow",
     label: "Morning",
     title: "CONKA Flow",
   },
   {
-    img: "/formulas/conkaClear/ClearV3.jpg",
+    img: bottleRenders.clear.src,
     alt: "CONKA Clear",
     label: "Afternoon",
     title: "CONKA Clear",

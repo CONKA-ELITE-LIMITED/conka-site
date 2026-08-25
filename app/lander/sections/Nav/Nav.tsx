@@ -1,5 +1,6 @@
 'use client';
 
+import { bottleRenders } from "@/app/lib/productImages";
 
 /**
  * CONKA — announcement bar + header. Rebuilt from the prototype.
@@ -18,9 +19,9 @@ import Link from 'next/link';
 import styles from './Nav.module.css';
 
 const PRODUCTS = [
-  { title: 'FLOW', desc: 'Morning focus & energy', href: '/conka-flow', img: '/lander/FlowV3.jpg' },
-  { title: 'CLEAR', desc: 'Afternoon clarity & brain recovery', href: '/conka-clarity', img: '/lander/ClearV3.jpg' },
-  { title: 'BOTH', desc: 'The full daily system', href: '/conka-both', img: '/formulas/both/BothV3.jpg' },
+  { title: 'FLOW', desc: 'Morning focus & energy', href: '/conka-flow', img: bottleRenders.flow.src },
+  { title: 'CLEAR', desc: 'Afternoon clarity & brain recovery', href: '/conka-clarity', img: bottleRenders.clear.src },
+  { title: 'BOTH', desc: 'The full daily system', href: '/conka-both', img: bottleRenders.both.src },
 ];
 const LINKS = [
   { label: 'Reviews', href: '#reviews' },

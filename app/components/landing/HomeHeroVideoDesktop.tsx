@@ -5,23 +5,26 @@ import ConkaCTAButton from "./ConkaCTAButton";
 import TrustMicroRow from "./TrustMicroRow";
 
 /* ============================================================================
- * LandingHeroVideoDesktop — desktop (lg+) home hero, Magic Mind structure
+ * HomeHeroVideoDesktop — desktop (lg+) looped-video home hero
  *
- * Landscape companion to LandingHeroVideo. Full-bleed at the V2 asset's
+ * UNUSED since Aug 2026: the home page renders HomeHeroStatic (metal-tray
+ * stills). Kept, with its /videos/both assets, as the revert path.
+ *
+ * Landscape companion to HomeHeroVideo. Full-bleed at the V2 asset's
  * native wide 7:3 (1470x630), so the box never crops the frame and the
  * upscale past native stays mild even on wide screens. The bottles are
  * composed right of centre, so the copy + CTA overlay the pale negative
  * space on the left (V3 staggered title, left-aligned, brand rule).
  *
- * Copy is reused verbatim from LandingHero with the HomeHeroV3 staggered
+ * Copy is reused verbatim from LandingHero with the staggered
  * two-tier title. Video is a forward+reverse ping-pong (seamless native
  * loop), WebM first then MP4. IntersectionObserver play/pause,
  * reduced-motion respected.
  *
- * Rendered only at lg+; below lg the page renders LandingHeroVideo.
+ * Rendered only at lg+; below lg the page rendered HomeHeroVideo.
  * ========================================================================== */
 
-export default function LandingHeroVideoDesktop() {
+export default function HomeHeroVideoDesktop() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ export default function LandingHeroVideoDesktop() {
     return () => observer.disconnect();
   }, []);
 
-  // See LandingHeroVideo: the poster is painted as a background-image (cover)
+  // See HomeHeroVideo: the poster is painted as a background-image (cover)
   // rather than the <video poster> attribute, which iOS Safari stretches to the
   // box during the metadata-load window before the video decodes.
   return (
@@ -82,7 +85,7 @@ export default function LandingHeroVideoDesktop() {
       />
 
       {/* Copy — overlaid in the left negative space, vertically centred.
-          Staggered two-tier title (HomeHeroV3 style): large bold first line,
+          Staggered two-tier title (HomeHeroStatic style): large bold first line,
           smaller lighter second line displaced right. */}
       <div className="absolute inset-0 z-10 flex items-center">
         <div className="flex flex-col items-start gap-5 px-[5vw] text-left text-black">

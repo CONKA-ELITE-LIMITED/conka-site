@@ -5,6 +5,11 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-25** | Brain-fuel proof section redesigned for the bright neuron clip: white section, full-bleed footage, stats centred on a grey hairline-divided card
+- **2026-08-25** | Brain-fuel proof band (home, both PDP, lander) now plays the Both Neuron float clip instead of the BrainFuel render
+- **2026-08-25** | Canonical bottle renders switched to the square V4 label shots; tall thin crops reserved for the two side-by-side pair layouts
+- **2026-08-25** | Home hero swapped from the looped video to the new metal-tray still renders (art-directed per breakpoint, lighter LCP); PDP ingredient thumbs show the full bottle
+- **2026-08-25** | New-label bottle renders rolled out site-wide through a single bottleRenders map; home showcase now shows Flow and Clear side by side on every screen size
 - **2026-08-25** | Build your order flow signed off: thin renders on Learn, PDP-grammar plan cards, box-photo receipt, overflow-proof CTA
 - **2026-08-25** | Build your order restyle: statics replace animations (V3 bottles + PDP hero assets), plan and formula cards adopt the PDP green-ring grammar
 - **2026-08-25** | Build your order flow: neuron Float videos, mobile sticky product gallery with offer ribbon, plan cards gain strike-through anchors and guarantee line

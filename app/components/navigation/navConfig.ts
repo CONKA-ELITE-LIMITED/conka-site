@@ -11,6 +11,8 @@
  * docs/development/featurePlans/navigation-simplification.md.
  */
 
+import { bottleRenders } from "@/app/lib/productImages";
+
 export interface NavProduct {
   name: string;
   /** Blurb for the enhanced mobile rows. */
@@ -32,7 +34,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     tagline: "The Complete Daily Brain Shot System, Morning to Evening",
     badge: "Full day",
     href: "/conka-both",
-    image: "/formulas/both/BothV3.jpg",
+    image: bottleRenders.both.src,
     alt: "CONKA Flow and Clear",
   },
   {
@@ -41,7 +43,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     tagline: "The Daily Morning Brain Shot for Sharper, Calmer Focus",
     badge: "Morning",
     href: "/conka-flow",
-    image: "/lander/FlowV3.jpg",
+    image: bottleRenders.flow.src,
     alt: "CONKA Flow",
   },
   {
@@ -50,7 +52,7 @@ export const NAV_PRODUCTS: NavProduct[] = [
     tagline: "The Afternoon Brain Shot That Cuts Through Brain Fog",
     badge: "Afternoon",
     href: "/conka-clarity",
-    image: "/lander/ClearV3.jpg",
+    image: bottleRenders.clear.src,
     alt: "CONKA Clear",
   },
 ];

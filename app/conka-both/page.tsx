@@ -87,7 +87,8 @@ export default function ConkaBothPage() {
 
   // Shared sections — ordered as they appear on the page. Backgrounds
   // alternate white/tint starting from the white hero.
-  // Full-bleed dark proof band — owns its own section + dark background
+  // Full-bleed proof section (white, neuron clip + grey stat card) — owns
+  // its own section + background
   const brainFuelSection = <BrainFuelBand />;
 
   // Magic Mind textured benefits band (generic across products), rendered

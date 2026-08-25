@@ -1,5 +1,6 @@
 "use client";
 
+import { bottleRenders } from "@/app/lib/productImages";
 import { useState, useRef } from "react";
 import Image from "next/image";
 import {
@@ -51,13 +52,13 @@ const FORMULA_META: Record<FormulaId, FormulaMeta> = {
   "01": {
     shortName: "Flow",
     tagline: "Calm focus for your mornings.",
-    bottleImage: "/formulas/conkaFlow/FlowV3.jpg",
+    bottleImage: bottleRenders.flow.src,
     bottleAlt: "CONKA Flow bottle",
   },
   "02": {
     shortName: "Clear",
     tagline: "Afternoon clarity & reset",
-    bottleImage: "/formulas/conkaClear/ClearV3.jpg",
+    bottleImage: bottleRenders.clear.src,
     bottleAlt: "CONKA Clear bottle",
   },
 };
@@ -142,14 +143,16 @@ export default function ClinicalIngredients({
 
           {/* Active formula — single asset + identity block */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-md border border-black/10 bg-white">
+            {/* Square labelV2 render in a square box — contain shows it 1:1;
+                the bg matches the asset's studio grey as a loading surface. */}
+            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-md border border-black/10 bg-[#f1f1f3]">
               <Image
                 key={meta.bottleImage}
                 src={meta.bottleImage}
                 alt={meta.bottleAlt}
                 fill
                 sizes="(max-width: 1024px) 280px, 360px"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
             <div>

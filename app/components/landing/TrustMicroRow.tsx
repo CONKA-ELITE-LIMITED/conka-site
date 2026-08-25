@@ -4,7 +4,7 @@ const AVATAR_COUNT = 5;
 
 /* Trust micro-row: stacked avatars + (4.7 stars + Excellent 4.7) + review count.
    Compacted to the IM8 scale. Bottom margin is owned by the parent. Shared by
-   the home heroes (LandingHero, LandingHeroVideo). */
+   the home heroes (LandingHero, HomeHeroStatic, HomeHeroVideo). */
 export default function TrustMicroRow({
   className = "",
 }: {

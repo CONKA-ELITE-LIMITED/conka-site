@@ -12,12 +12,9 @@
 
 import Image from "next/image";
 import { type ByoProduct } from "@/app/lib/byoData";
+import { bottleRenders } from "@/app/lib/productImages";
 
-export const BYO_STATIC: Record<ByoProduct, { src: string; alt: string }> = {
-  flow: { src: "/lander/FlowV3.jpg", alt: "CONKA Flow bottle" },
-  clear: { src: "/lander/ClearV3.jpg", alt: "CONKA Clear bottle" },
-  both: { src: "/formulas/both/BothNew.jpg", alt: "CONKA Flow and Clear bottles" },
-};
+export const BYO_STATIC: Record<ByoProduct, { src: string; alt: string }> = bottleRenders;
 
 const CAPTION: Record<ByoProduct, string> = {
   flow: "Morning. Caffeine-free focus.",

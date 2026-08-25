@@ -1,3 +1,4 @@
+import { bottleRenders } from "@/app/lib/productImages";
 import type { LandingConfig } from "./types";
 import { formulaContent } from "@/app/lib/productData";
 
@@ -308,14 +309,14 @@ export const brainAgeQuiz: LandingConfig = {
       title: "A system, not a pill.",
       images: [
         {
-          src: "/formulas/conkaFlow/FlowV3.jpg",
+          src: bottleRenders.flow.src,
           alt: "CONKA Flow shot bottle",
           width: 1000,
           height: 1000,
           caption: "AM · FLOW",
         },
         {
-          src: "/formulas/conkaClear/ClearV3.jpg",
+          src: bottleRenders.clear.src,
           alt: "CONKA Clear shot bottle",
           width: 1000,
           height: 1000,

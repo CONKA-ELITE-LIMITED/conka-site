@@ -5,7 +5,10 @@ import ConkaCTAButton from "./ConkaCTAButton";
 import TrustMicroRow from "./TrustMicroRow";
 
 /* ============================================================================
- * LandingHeroVideo — mobile-only home hero (Magic Mind structure)
+ * HomeHeroVideo — mobile-only looped-video home hero (Magic Mind structure)
+ *
+ * UNUSED since Aug 2026: the home page renders HomeHeroStatic (metal-tray
+ * stills). Kept, with its /videos/both assets, as the revert path.
  *
  * A full-width video of the Flow + Clear shots floating through a glass
  * neuron network at its native 3:4, with the hero title overlaid at the top.
@@ -24,11 +27,11 @@ import TrustMicroRow from "./TrustMicroRow";
  * initial fetch tiny. IntersectionObserver play/pause (40% threshold) so the
  * browser is not decoding the video once it scrolls out of view.
  *
- * Mobile only — the page renders this below `lg` and keeps LandingHero at
- * `lg` and above.
+ * Mobile only — when live, the page rendered this below `lg` and
+ * HomeHeroVideoDesktop at `lg` and above.
  * ========================================================================== */
 
-export default function LandingHeroVideo() {
+export default function HomeHeroVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -84,7 +87,7 @@ export default function LandingHeroVideo() {
           <source src="/videos/both/BothNeuronFloat.mp4" type="video/mp4" />
         </video>
 
-        {/* Staggered two-tier title (HomeHeroV3 style): large bold first line
+        {/* Staggered two-tier title (HomeHeroStatic style): large bold first line
             that must never wrap, smaller lighter second line. */}
         <header className="relative z-10 px-5 pt-4 text-center">
           <h1 className="text-black" style={{ letterSpacing: "-0.025em" }}>

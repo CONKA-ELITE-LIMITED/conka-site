@@ -39,10 +39,13 @@ interface Formula {
   job: string;
 }
 
+// Deliberately NOT the shared bottleRenders map: this side-by-side pair layout
+// needs the tall 1:2 *Thin crops to fit two cards on a 390px viewport, while
+// the canonical renders are square.
 const FORMULAS: Formula[] = [
   {
     product: "flow",
-    image: "/formulas/thin/FlowThin.jpg",
+    image: "/formulas/labelV2/FlowThin.jpg",
     name: "Flow",
     period: "AM",
     accentColor: "#C4892A",
@@ -51,7 +54,7 @@ const FORMULAS: Formula[] = [
   },
   {
     product: "clear",
-    image: "/formulas/thin/ClearThin.jpg",
+    image: "/formulas/labelV2/ClearThin.jpg",
     name: "Clear",
     period: "PM",
     accentColor: "#0369a1",

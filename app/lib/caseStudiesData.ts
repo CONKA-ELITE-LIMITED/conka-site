@@ -1,6 +1,7 @@
 // ===== CASE STUDIES DATA =====
 // All athlete data from real CONKA case study CSV - NO FABRICATED QUOTES
 
+import { bottleRenders } from "@/app/lib/productImages";
 import { TIME_OF_DAY_BADGE } from "./timeOfDayBadge";
 
 /**
@@ -24,7 +25,7 @@ export function getFormulaPresentation(
     return {
       label: "CONKA Flow",
       href: "/conka-flow",
-      image: "/lander/FlowV3.jpg",
+      image: bottleRenders.flow.src,
       imageAlt: "CONKA Flow",
       badgeClass: TIME_OF_DAY_BADGE.Morning,
     };
@@ -33,7 +34,7 @@ export function getFormulaPresentation(
     return {
       label: "CONKA Clear",
       href: "/conka-clarity",
-      image: "/lander/ClearV3.jpg",
+      image: bottleRenders.clear.src,
       imageAlt: "CONKA Clear",
       badgeClass: TIME_OF_DAY_BADGE.Afternoon,
     };
@@ -41,7 +42,7 @@ export function getFormulaPresentation(
   return {
     label: "Flow + Clear",
     href: "/conka-both",
-    image: "/formulas/both/BothV3.jpg",
+    image: bottleRenders.both.src,
     imageAlt: "CONKA Flow and CONKA Clear",
     badgeClass: TIME_OF_DAY_BADGE["Full day"],
   };
