@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-25** | Build your order flow signed off: thin renders on Learn, PDP-grammar plan cards, box-photo receipt, overflow-proof CTA
 - **2026-08-25** | Build your order restyle: statics replace animations (V3 bottles + PDP hero assets), plan and formula cards adopt the PDP green-ring grammar
 - **2026-08-25** | Build your order flow: neuron Float videos, mobile sticky product gallery with offer ribbon, plan cards gain strike-through anchors and guarantee line
 - **2026-08-25** | Build Your Order attribution live: byo:* event taxonomy, listicle src passthrough to orders, checkout-clicked and upsell events now dashboard-visible
