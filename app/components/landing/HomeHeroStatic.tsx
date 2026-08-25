@@ -6,9 +6,10 @@ import TrustMicroRow from "./TrustMicroRow";
  * HomeHeroStatic — the live home hero: metal-tray still renders (Magic Mind
  * structure), one art-directed asset per breakpoint.
  *
- * Mobile: the portrait tray render (750x1500) at its native 1:2, fully
- * self-contained — staggered title + description overlaid in the asset's top
- * white space, CTA + trust row overlaid near its bottom edge. Desktop: the
+ * Mobile: the portrait tray render (750x1500) in a box ~10% shorter than
+ * its native 1:2 (cropped off the top white headroom), fully self-contained
+ * — staggered title + description overlaid in the remaining headroom, CTA +
+ * trust row overlaid above its bottom edge. Desktop: the
  * landscape tray render (2560x1097) full-bleed at native aspect; the tray is
  * composed right of centre, so the copy + CTA overlay the pale negative
  * space on the left.
@@ -44,16 +45,18 @@ export default function HomeHeroStatic() {
 
   return (
     <div className="max-lg:-mx-5 max-lg:w-[calc(100%+2.5rem)]">
-      {/* Both crops at their native aspect. Mobile: title + description
-          overlaid in the asset's top white space, CTA + trust row overlaid
-          near its bottom edge — everything lives on the asset. */}
-      <div className="relative aspect-[1/2] w-full overflow-hidden lg:aspect-[2560/1097]">
+      {/* Mobile: ~10% shorter than the asset's native 1:2 — object-bottom
+          takes the crop out of the top white headroom so the tray stays
+          intact and the CTA sits higher on screen. Title + description
+          overlay the remaining headroom, CTA + trust row overlay near the
+          bottom edge. Desktop: native 2560:1097, no crop. */}
+      <div className="relative aspect-[5/9] w-full overflow-hidden lg:aspect-[2560/1097]">
         <picture>
           <source media="(min-width: 1024px)" srcSet={desktopSrcSet} sizes="100vw" />
           {/* eslint-disable-next-line jsx-a11y/alt-text -- alt is in mobileImgProps */}
           <img
             {...mobileImgProps}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-bottom lg:object-center"
           />
         </picture>
 
@@ -76,8 +79,8 @@ export default function HomeHeroStatic() {
           </p>
         </header>
 
-        {/* Mobile CTA + trust row — overlaid near the asset's bottom edge. */}
-        <div className="absolute inset-x-0 bottom-5 z-10 flex flex-col items-center px-5 lg:hidden">
+        {/* Mobile CTA + trust row — overlaid above the asset's bottom edge. */}
+        <div className="absolute inset-x-0 bottom-10 z-10 flex flex-col items-center px-5 lg:hidden">
           <ConkaCTAButton href="/conka-both" meta={null} inverted>
             Buy CONKA Today
           </ConkaCTAButton>
