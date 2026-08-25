@@ -13,9 +13,9 @@
  * before configuring.
  */
 
-import { useState } from "react";
 import Image from "next/image";
 import { type ByoProduct } from "@/app/lib/byoData";
+import LearnMoreAccordion, { type LearnMoreRow } from "./LearnMoreAccordion";
 
 const SunIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -80,25 +80,14 @@ const ProofCheck = () => (
   </svg>
 );
 
-type LearnMoreId = "when" | "inside" | "nootropics";
-
 export default function EducationStep({
   onAccordionOpen,
 }: {
   onAccordionOpen?: (id: string) => void;
 }) {
-  const [openId, setOpenId] = useState<LearnMoreId | null>(null);
-  const toggleRow = (id: LearnMoreId) => {
-    const next = openId === id ? null : id;
-    // Report opens only, and from outside the updater: state updaters must be
-    // pure, and React double-invokes them under StrictMode.
-    if (next) onAccordionOpen?.(`learn:${next}`);
-    setOpenId(next);
-  };
-
-  const LEARN_MORE: { id: LearnMoreId; label: string; body: React.ReactNode }[] = [
+  const LEARN_MORE: LearnMoreRow[] = [
     {
-      id: "when",
+      id: "learn:when",
       label: "When to take CONKA",
       body: (
         <div className="flex flex-col gap-2.5">
@@ -114,7 +103,7 @@ export default function EducationStep({
       ),
     },
     {
-      id: "inside",
+      id: "learn:inside",
       label: "What's inside",
       body: (
         <div className="flex flex-col gap-2 text-[13px] leading-snug">
@@ -136,7 +125,7 @@ export default function EducationStep({
       ),
     },
     {
-      id: "nootropics",
+      id: "learn:nootropics",
       label: "What are nootropics?",
       body: (
         <div className="flex flex-col gap-2 text-[13px] text-black/75 leading-snug">
@@ -218,33 +207,8 @@ export default function EducationStep({
 
       {/* Learn more — the optional depth, lower down so the pitch stays one
           screen. Three slim disclosures; anything past this lives on Build. */}
-      <div className="mt-4 rounded-md ring-1 ring-black/10 bg-white overflow-hidden divide-y divide-black/10">
-        {LEARN_MORE.map((row) => {
-          const open = openId === row.id;
-          return (
-            <div key={row.id}>
-              <button
-                type="button"
-                onClick={() => toggleRow(row.id)}
-                aria-expanded={open}
-                className="flex w-full min-h-[48px] items-center justify-between gap-2 px-4 text-left text-[14px] font-semibold text-black"
-              >
-                {row.label}
-                <svg
-                  width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden
-                  className="shrink-0 text-black/40 transition-transform duration-200"
-                  style={{ transform: open ? "rotate(180deg)" : "none" }}
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </button>
-              <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: open ? "400px" : "0px" }}>
-                <div className="px-4 pb-4">{row.body}</div>
-              </div>
-            </div>
-          );
-        })}
+      <div className="mt-4">
+        <LearnMoreAccordion rows={LEARN_MORE} onOpen={onAccordionOpen} />
       </div>
 
       {/* The nudge toward the recommended configuration, in the offer colour. */}
