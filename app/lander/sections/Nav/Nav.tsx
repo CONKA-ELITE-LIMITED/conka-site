@@ -131,7 +131,7 @@ export default function Nav({ onCartClick }: NavProps) {
                   ))}
                 </div>
                 <div className={styles.shopAll}>
-                  <a className={styles.shopAllLink} href="/funnel">Shop All</a>
+                  <a className={styles.shopAllLink} href="/build-your-order">Shop All</a>
                 </div>
               </div>
             </div>

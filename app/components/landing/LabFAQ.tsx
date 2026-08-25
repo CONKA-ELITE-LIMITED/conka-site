@@ -33,7 +33,7 @@ interface LabFAQProps {
 export default function LabFAQ({
   items = CONVERSION_FAQ_ITEMS,
   hideCTA = false,
-  ctaHref = "/funnel",
+  ctaHref = "/build-your-order",
   image = DEFAULT_IMAGE,
   showSeeAllLink = true,
 }: LabFAQProps = {}) {

@@ -8,7 +8,7 @@ import { SITE_ORIGIN } from "@/app/lib/site";
  * XML sitemap for crawl discovery (SEO Phase 5, SCRUM-1136).
  *
  * Lists canonical, indexable, self-referencing pages only. Deliberately excludes:
- * - noindex ad/funnel landers (/go/*, /funnel)
+ * - noindex ad landers and the order flow (/go/*, /build-your-order)
  * - redirect-only routes (/start, /lander, /shop, /quiz, /protocol, /win, /barrys)
  *   - see next.config.ts
  * - private / transactional paths (/account, /professionals/order, /payment/*)
@@ -87,7 +87,7 @@ const ROUTES: Route[] = [
       "app/components/landing",
       "app/components/testimonials",
       "app/lib/faqContent.ts",
-      "app/lib/funnelData.ts",
+      "app/lib/byoData.ts",
     ],
   },
   {
@@ -102,7 +102,7 @@ const ROUTES: Route[] = [
       "app/components/landing",
       "app/components/testimonials",
       "app/lib/formulaContent.ts",
-      "app/lib/funnelData.ts",
+      "app/lib/byoData.ts",
     ],
   },
   {
@@ -117,7 +117,7 @@ const ROUTES: Route[] = [
       "app/components/landing",
       "app/components/testimonials",
       "app/lib/formulaContent.ts",
-      "app/lib/funnelData.ts",
+      "app/lib/byoData.ts",
     ],
   },
   {

@@ -60,7 +60,7 @@ const PRODUCTS: Record<
   },
 };
 
-export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
+export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/build-your-order" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
   const [active, setActive] = useState<ProductId>("flow");
   const [sheetOpen, setSheetOpen] = useState(false);
 

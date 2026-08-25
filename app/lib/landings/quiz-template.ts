@@ -13,7 +13,7 @@ export const quizTemplate: LandingConfig = {
   persona: "template",
   format: "quiz",
   title: "Find your focus profile",
-  resultsCta: { label: "See your system", href: "/funnel" },
+  resultsCta: { label: "See your system", href: "/build-your-order" },
   buckets: [
     {
       id: "flow",
