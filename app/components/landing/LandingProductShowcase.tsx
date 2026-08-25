@@ -80,7 +80,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/bu
     <button
       type="button"
       onClick={() => openIngredients(id)}
-      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-black/20 px-3 py-3 text-[13px] lg:text-sm font-medium text-black/70 transition-colors hover:border-black/40 hover:bg-black/[0.04] hover:text-black cursor-pointer"
+      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-black/10 bg-white px-3 py-3 text-[13px] lg:text-sm font-medium text-black/70 transition-colors hover:border-black/40 hover:text-black cursor-pointer"
     >
       <span className="lg:hidden">Ingredients</span>
       <span className="hidden lg:inline">Full ingredient list</span>
@@ -101,10 +101,9 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/bu
 
   // Product card: a pastel time-of-day bar caps the tile, then the
   // full-bottle render (3:5 crop of the tall labelV2 asset — same treatment
-  // as the BYO Learn step), the product name directly under the asset, then
-  // full-width separators sectioning the sub-line, a grey-banded
-  // active-nootropic load, and the shared ingredient CTA. Neither product is
-  // enlarged over the other (equal billing).
+  // as the BYO Learn step), name + sub-line as one unit, the active-nootropic
+  // load on a navy-tint accent band, and the shared ingredient CTA. Neither
+  // product is enlarged over the other (equal billing).
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
@@ -126,23 +125,27 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/bu
             className="object-cover object-center"
           />
         </div>
-        <p className="pt-3.5 pb-3 lg:pt-5 lg:pb-4 text-center text-lg font-bold text-black leading-none tracking-tight lg:text-2xl">
-          {p.name}
-        </p>
-        <div className="border-t border-black/10" />
-        <p className="flex-1 px-3 py-3 lg:px-6 lg:py-4 text-center text-[13px] lg:text-sm text-black/70 leading-snug">
-          {p.sub}
-        </p>
-        {/* Active-nootropic load, banded off with full-width separators */}
-        <div className="border-y border-black/10 bg-[#dfe0de] py-3 lg:py-4 text-center">
-          <p className="text-xl font-bold tabular-nums leading-none text-black lg:text-3xl">
-            {p.mg}
+        {/* Name + sub-line read as one unit under the bottle */}
+        <div className="px-3 pt-4 pb-4 lg:px-6 lg:pt-5 text-center">
+          <p className="text-lg font-bold text-black leading-none tracking-tight lg:text-2xl">
+            {p.name}
           </p>
-          <p className="text-[10px] lg:text-[11px] uppercase tracking-wide text-black/60 mt-1.5">
-            Active nootropics
+          <p className="mt-1.5 text-[13px] lg:text-sm text-black/60 leading-snug">
+            {p.sub}
           </p>
         </div>
-        <div className="p-3 lg:p-5">{ingredientButton(id)}</div>
+        {/* Active-nootropic load + ingredient CTA share the tinted footer —
+            the fill runs to the bottom of the tile so the white pill sits in
+            contrast on it. */}
+        <div className="mt-auto bg-[#eef0f5] pt-3 lg:pt-4 text-center">
+          <p className="text-xl font-bold tabular-nums leading-none text-[#1B2757] lg:text-3xl">
+            {p.mg}
+          </p>
+          <p className="text-[10px] lg:text-[11px] uppercase tracking-wide text-[#1B2757]/60 mt-1.5">
+            Active nootropics
+          </p>
+          <div className="p-3 lg:px-5 lg:pb-5 lg:pt-4">{ingredientButton(id)}</div>
+        </div>
       </div>
     );
   };
