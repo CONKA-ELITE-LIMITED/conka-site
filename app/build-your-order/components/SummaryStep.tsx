@@ -110,7 +110,10 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const isSub = cadence !== "monthly-otp";
   const freeShots = pricing.freeShots ?? 0;
   const freeShotsValue = pricing.freeShotsValue ?? 0;
-  const postageVal = cadence === "quarterly-sub" ? 29.97 : 9.99;
+  // The postage value being waived, from the data layer (the OTP entries carry
+  // the real charged postage), never a hardcoded literal that could drift.
+  const otpPostage = getOfferPricing(product, "monthly-otp").postage ?? 0;
+  const postageVal = cadence === "quarterly-sub" ? otpPostage * 3 : otpPostage;
   const freq = cadencePriceSuffix(cadence);
   const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
   const savingsPct = getDisplayDiscount(pricing);
