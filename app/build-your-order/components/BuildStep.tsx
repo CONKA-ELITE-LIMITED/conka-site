@@ -17,6 +17,7 @@ import {
   BYO_PRODUCTS,
 } from "@/app/lib/byoData";
 import CadenceSelector from "./CadenceSelector";
+import { BYO_STATIC } from "./ByoMedia";
 
 interface BuildStepProps {
   product: ByoProduct;
@@ -233,23 +234,41 @@ export default function BuildStep({
               type="button"
               onClick={() => onProductChange(p)}
               aria-pressed={active}
-              className={`relative flex-1 flex flex-col items-center justify-center rounded-[14px] border-2 px-2 py-4 transition-colors ${
-                active
-                  ? "border-[#1B2757] bg-[#1B2757] text-white"
-                  : "border-black/10 bg-white text-black hover:border-black/25"
+              className={`relative flex-1 flex flex-col items-center rounded-md overflow-visible pb-3 transition-colors ${
+                active ? "" : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
               }`}
+              // Selected state matches the PDP plan cards: the brand offer
+              // gradient as a 2px ring over a near-white fill.
+              style={
+                active
+                  ? {
+                      border: "2px solid transparent",
+                      background:
+                        "linear-gradient(#f8f9fd,#f8f9fd) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+                    }
+                  : undefined
+              }
             >
               {p === "both" && (
                 <span
-                  className={`absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 text-[10px] font-bold whitespace-nowrap ${
-                    active ? "bg-[#10B981] text-white" : "bg-black text-white"
-                  }`}
+                  className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#14532d]"
+                  style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
                 >
                   Recommended
                 </span>
               )}
-              <span className="text-[16px] font-semibold leading-tight">{t.name}</span>
-              <span className={`text-[12px] leading-tight mt-1 ${active ? "text-white/70" : "text-black/50"}`}>
+              {/* Product static (the PDP hero assets, not an animation). */}
+              <span className="relative mt-2 mb-1.5 block h-16 w-16 overflow-hidden rounded-md">
+                <Image
+                  src={BYO_STATIC[p].src}
+                  alt={BYO_STATIC[p].alt}
+                  fill
+                  sizes="64px"
+                  className="object-cover scale-[1.4]"
+                />
+              </span>
+              <span className="text-[16px] font-semibold leading-tight text-black">{t.name}</span>
+              <span className="text-[12px] leading-tight mt-0.5 text-black/50">
                 {t.period}
               </span>
             </button>
@@ -258,7 +277,7 @@ export default function BuildStep({
       </div>
 
       {/* Product summary + info dropdowns */}
-      <div className="mt-3.5 rounded-[16px] border-2 border-black/85 bg-white overflow-hidden">
+      <div className="mt-3.5 rounded-md ring-1 ring-black/10 bg-white overflow-hidden">
         <div className="p-4 flex gap-4">
           {/* Media lives above the widget now: the sticky mobile gallery and the
               desktop left column both track the selection, so the card is pure
@@ -266,7 +285,7 @@ export default function BuildStep({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <p className="text-[17px] font-semibold text-black leading-tight">{display.label}</p>
-              <span className="shrink-0 rounded-full bg-[#1B2757]/[0.08] px-2.5 py-1 text-[11px] font-semibold text-[#1B2757]">
+              <span className="shrink-0 rounded-full bg-black/[0.06] px-2.5 py-1 text-[11px] font-semibold text-black/70">
                 {display.timeLabel}
               </span>
             </div>
@@ -285,7 +304,7 @@ export default function BuildStep({
               onClick={() => toggleInfo(t.key)}
               className={`flex items-center justify-between gap-1.5 min-h-[44px] w-full rounded-full px-4 text-[13px] font-medium transition-colors ${
                 openInfo === t.key
-                  ? "bg-[#1B2757] text-white"
+                  ? "bg-black text-white"
                   : "bg-black/[0.05] text-black/70 hover:bg-black/[0.09] hover:text-black"
               }`}
             >
@@ -299,7 +318,7 @@ export default function BuildStep({
 
         {/* Disclosure panels */}
         <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: openInfo ? "1100px" : "0px" }}>
-          <div className="mx-4 mb-4 rounded-[12px] bg-black/[0.03] p-4">
+          <div className="mx-4 mb-4 rounded-md bg-black/[0.03] p-4">
             {openInfo === "ingredients" && (
               <>
                 <div className="flex items-center justify-between mb-3">
@@ -333,7 +352,7 @@ export default function BuildStep({
                 <div className="grid grid-cols-3 gap-x-3 gap-y-4">
                   {ingItems.map((ing) => (
                     <div key={ing.name} className="flex flex-col items-center text-center gap-1.5">
-                      <div className="w-full aspect-square rounded-[10px] bg-white overflow-hidden">
+                      <div className="w-full aspect-square rounded-md bg-white overflow-hidden">
                         <Image src={ing.img} alt={ing.name} width={140} height={140} className="w-full h-full object-cover" />
                       </div>
                       <span className="text-[11px] text-black leading-tight">{ing.name}</span>
@@ -346,7 +365,7 @@ export default function BuildStep({
               <div className="flex flex-col gap-2.5">
                 {HOW_STEPS[product].map((s) => (
                   <div key={s.when} className="flex items-start gap-3">
-                    <span className="shrink-0 min-w-[72px] rounded-full bg-white px-2.5 py-1.5 text-center text-[12px] font-bold text-[#1B2757] leading-none">
+                    <span className="shrink-0 min-w-[72px] rounded-full bg-white px-2.5 py-1.5 text-center text-[12px] font-bold text-black leading-none">
                       {s.when}
                     </span>
                     <p className="text-[14px] text-black leading-snug pt-1">{s.what}</p>
@@ -379,8 +398,8 @@ export default function BuildStep({
                     390px was the other half of why this panel read badly. */}
                 <div className="flex flex-col gap-2">
                   {copy.stats.map((s) => (
-                    <div key={s.label} className="flex items-center gap-3 rounded-[10px] bg-white px-3 py-2.5">
-                      <span className="min-w-[68px] shrink-0 text-[24px] font-bold text-[#1B2757] tabular-nums leading-none tracking-tight">
+                    <div key={s.label} className="flex items-center gap-3 rounded-md bg-white px-3 py-2.5">
+                      <span className="min-w-[68px] shrink-0 text-[24px] font-bold text-black tabular-nums leading-none tracking-tight">
                         <CountUp value={s.value} />
                       </span>
                       <span className="text-[13px] text-black leading-snug">{s.label}</span>

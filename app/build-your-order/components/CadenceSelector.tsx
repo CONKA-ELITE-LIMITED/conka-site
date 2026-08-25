@@ -8,8 +8,9 @@
  *    Nothing wraps into the price column, so long names cannot squash it.
  *  - Free shots are stated ONCE, in the detail line. They used to appear in a
  *    wrapping pill, again in the value stack, and again in a table.
- *  - Unselected cards take a quiet grey border. Black is reserved for content
- *    tiles; navy means "this is the one you have chosen".
+ *  - Card grammar matches the PDP buy panel (ProductBuyPanel.FlatPlanCard):
+ *    quiet grey fill unselected, the brand offer gradient as a 2px ring when
+ *    selected. Navy appears only on the radio.
  *  - No per-card CTA. The sticky footer is the single forward action.
  */
 
@@ -44,6 +45,13 @@ const PLAN_BADGE: Partial<Record<ByoCadence, string>> = {
   "monthly-sub": "Most popular",
 };
 
+/** Per-plan discount-badge colour, mirroring the PDP buy panel. */
+const SAVE_COLOR: Record<ByoCadence, string> = {
+  "monthly-sub": "#C9A24A",
+  "quarterly-sub": "#E07A5F",
+  "monthly-otp": "#C9A24A",
+};
+
 function postageValue(cadence: ByoCadence): number {
   return cadence === "quarterly-sub" ? 29.97 : 9.99;
 }
@@ -61,10 +69,8 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
   // The pre-selected plan starts open, so its value stack is the first thing the
   // user reads rather than something they have to go looking for.
   const [openKey, setOpenKey] = useState<ByoCadence | null>(cadence);
-  const [pulseKey, setPulseKey] = useState(0);
 
   const handleToggle = (key: ByoCadence) => {
-    setPulseKey((k) => k + 1);
     setOpenKey((prev) => (prev === key ? null : key));
     onChange(key);
   };
@@ -118,7 +124,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
         ];
 
         return (
-          <Fragment key={isOpen ? `open-${pulseKey}` : key}>
+          <Fragment key={key}>
             {/* Separates the subscriptions from the one-time option */}
             {isOtp && (
               <div className="flex items-center gap-3 py-1">
@@ -129,17 +135,26 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
             )}
 
             <div
-              className={`relative rounded-[16px] border-2 transition-colors duration-200 ${
-                isSelected
-                  ? "card-pulse border-[#1B2757] bg-[#1B2757]/[0.03]"
-                  : "border-black/10 bg-white hover:border-black/25"
+              className={`relative rounded-md transition-colors duration-200 ${
+                isSelected ? "" : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
               }`}
+              // Selected state uses the brand offer gradient as a 2px ring
+              // (padding-box keeps the fill, border-box paints the gradient
+              // edge), exactly as the PDP plan cards do.
+              style={
+                isSelected
+                  ? {
+                      border: "2px solid transparent",
+                      background:
+                        "linear-gradient(#f8f9fd,#f8f9fd) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+                    }
+                  : undefined
+              }
             >
               {badge && (
                 <span
-                  className={`absolute -top-2.5 left-5 z-10 rounded-full px-2.5 py-0.5 text-[10px] font-bold whitespace-nowrap ${
-                    isSelected ? "bg-[#10B981] text-white" : "bg-black text-white"
-                  }`}
+                  className="absolute left-5 top-0 z-10 -translate-y-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#14532d]"
+                  style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
                 >
                   {badge}
                 </span>
@@ -170,8 +185,11 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                       {PLAN_NAME[key]}
                     </span>
                     {savingsPct > 0 && (
-                      <span className="rounded-full bg-[#C9A24A] px-2 py-0.5 text-[11px] font-bold text-white whitespace-nowrap">
-                        Save {savingsPct}%
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white whitespace-nowrap"
+                        style={{ backgroundColor: SAVE_COLOR[key] }}
+                      >
+                        {savingsPct}% off
                       </span>
                     )}
                   </span>
@@ -193,7 +211,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                     {formatPrice(pricing.price)}
                     <span className="text-[13px] font-medium text-black/50">{cadencePriceSuffix(key)}</span>
                   </span>
-                  <span className="block text-[12px] tabular-nums mt-1.5 whitespace-nowrap text-[#1B2757]">
+                  <span className="block text-[12px] tabular-nums mt-1.5 whitespace-nowrap text-black/60">
                     {isOtp ? `+${formatPrice(pricing.postage ?? 0)} postage` : `${formatPrice(pricing.perShot)} / shot`}
                   </span>
                 </span>
@@ -210,22 +228,10 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
               {/* Free shots get a full-width row of their own. Squeezed into the
                   name column they wrapped into an unreadable blob, and the
                   "first order" qualifier is too important to lose to a line break. */}
-              {hasFreeShots && (
-                <div className="mx-4 mb-4 -mt-1 flex items-center gap-2 rounded-[10px] bg-[#10B981]/[0.10] px-3 py-2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
-                    <circle cx="12" cy="12" r="10" fill="#10B981" />
-                    <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <span className="text-[13px] leading-snug text-[#0b7a55]">
-                    <strong className="font-bold">{freeShots} free shots</strong> on your first order
-                  </span>
-                </div>
-              )}
-
               {/* One-time: the cost of NOT subscribing, stated up front rather
                   than hidden behind the chevron. */}
               {isOtp && (
-                <div className="mx-4 mb-4 -mt-1 flex items-start gap-2 rounded-[10px] bg-[#C4892A]/[0.10] px-3 py-2">
+                <div className="mx-4 mb-4 -mt-1 flex items-start gap-2 rounded-md bg-[#C4892A]/[0.10] px-3 py-2">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C4892A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0 mt-0.5">
                     <path d="M12 9v4M12 17h.01" />
                     <path d="M10.3 3.9L2.4 17a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
@@ -241,7 +247,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                   old "Your shots" table was trying to convey. */}
               {isOpen && !isOtp && (
                 <div className="px-4 pb-4">
-                  <div className="rounded-[12px] bg-white border border-black/10 p-4">
+                  <div className="rounded-md bg-white border border-black/10 p-4">
                     <p className="text-[13px] font-semibold text-black mb-3">Included free</p>
                     <div className="flex flex-col gap-2.5">
                       {freeStack.map((r) => (
@@ -274,7 +280,7 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
               {/* Expanded — one-time. What you pay, and what you give up. */}
               {isOpen && isOtp && (
                 <div className="px-4 pb-4">
-                  <div className="rounded-[12px] bg-white border border-black/10 p-4">
+                  <div className="rounded-md bg-white border border-black/10 p-4">
                     <div className="flex flex-col gap-2.5 text-[13px]">
                       <div className="flex items-center justify-between">
                         <span className="text-black/70">{pricing.shotCount} shots</span>
@@ -298,6 +304,17 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
                       {formatPrice(subRef.price)}/mo. Cancel any time.
                     </p>
                   </div>
+                </div>
+              )}
+
+              {/* Free-shots incentive as a full-width gradient footer, hugging
+                  the rounded bottom corners (PDP FlatPlanCard pattern). */}
+              {hasFreeShots && (
+                <div
+                  className="rounded-b-md px-4 py-2 text-center text-[12px] font-bold text-[#14532d]"
+                  style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+                >
+                  +{freeShots} free shots on your first order
                 </div>
               )}
             </div>

@@ -153,7 +153,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       </h2>
 
       {/* ===== RECEIPT ===== */}
-      <div className="rounded-[16px] border-2 border-black/85 bg-white p-5 mb-3">
+      <div className="rounded-md ring-1 ring-black/10 bg-white p-5 mb-3">
         {/* Product header */}
         <div className="flex items-start justify-between gap-3">
           <p className="text-[19px] font-semibold text-black leading-tight">{display.label}</p>
@@ -168,7 +168,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
             the reader went to the legend underneath anyway. It then stated the
             per-period shot count three times over (header, breakdown, line item).
             Once, here. */}
-        <div className="mt-4 rounded-[12px] bg-black/[0.03] p-3.5">
+        <div className="mt-4 rounded-md bg-black/[0.03] p-3.5">
           {formulas.map((f) => (
             <div
               key={f}
@@ -225,7 +225,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         )}
 
         {/* Total */}
-        <div className="flex items-baseline justify-between gap-3 border-t-2 border-black/85 mt-3 pt-3.5">
+        <div className="flex items-baseline justify-between gap-3 border-t-2 border-black/20 mt-3 pt-3.5">
           <span className="text-[15px] font-semibold text-black">Total today</span>
           <span className="text-[30px] font-bold tabular-nums text-black leading-none">
             {formatPrice(totalToday)}
@@ -238,7 +238,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       </div>
 
       {/* ===== SOCIAL PROOF (flippable) ===== */}
-      <div className="rounded-[16px] bg-black/[0.04] p-4 mb-3">
+      <div className="rounded-md bg-black/[0.04] p-4 mb-3">
         <div className="flex items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-black/10">
           <div>
             <p className="text-2xl font-bold text-black tabular-nums leading-none">{SOLD}</p>
@@ -279,7 +279,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       </div>
 
       {/* ===== APP BLOCK ===== */}
-      <div className="rounded-[16px] border-2 border-black/85 bg-white overflow-hidden">
+      <div className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden">
         <div className="px-4 pt-4">
           <p className="text-[17px] font-semibold text-black">Track it. Watch it work.</p>
           <p className="text-[13px] text-black/60 mt-1">
@@ -320,8 +320,8 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         {/* Real app usage — proof people track results */}
         <div className="grid grid-cols-3 gap-2 px-4 pb-4">
           {APP_STATS.map((s) => (
-            <div key={s.label} className="rounded-[12px] bg-black/[0.04] text-center py-3">
-              <p className="text-xl font-bold text-[#1B2757] tabular-nums leading-none">{s.value}</p>
+            <div key={s.label} className="rounded-md bg-black/[0.04] text-center py-3">
+              <p className="text-xl font-bold text-black tabular-nums leading-none">{s.value}</p>
               <p className="text-[11px] text-black/60 mt-1.5 leading-tight">{s.label}</p>
             </div>
           ))}

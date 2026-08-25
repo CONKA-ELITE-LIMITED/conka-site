@@ -318,17 +318,6 @@ body {
 .hero-delay-4.revealed { transition-delay: 400ms; }
 .hero-delay-5.revealed { transition-delay: 500ms; }
 
-/* Funnel card selection pulse */
-@keyframes card-pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.015); }
-  100% { transform: scale(1); }
-}
-
-.card-pulse {
-  animation: card-pulse 200ms ease-out;
-}
-
 /* Reduced motion: disable all reveal and pulse animations */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
@@ -344,9 +333,6 @@ body {
   }
   [data-stagger].revealed {
     transition-delay: 0ms;
-  }
-  .card-pulse {
-    animation: none;
   }
 }
 

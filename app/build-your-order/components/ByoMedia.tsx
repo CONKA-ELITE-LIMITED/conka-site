@@ -1,35 +1,22 @@
 "use client";
 
 /**
- * Build Your Order — product motion media.
+ * Build Your Order — product media (static).
  *
- * Plays the neuron Float renders (the current asset generation, matching the
- * home hero and PDP benefit sections) and swaps source by selected product.
- * A restrained caption keeps the core selling point (patent / cert) without
- * cluttering the frame.
- *
- * `desktop` selects the wider Desktop encode where one exists (Both), for the
- * large sticky left column; the portrait-friendly default feeds the mobile
- * gallery.
+ * The clean V3/New floating-bottle statics, swapped by selected product. The
+ * flow deliberately carries NO motion assets (SCRUM-1249 review): statics keep
+ * the checkout surface calm and the neuron Float animations stay on the
+ * marketing surfaces. A restrained caption keeps the core selling point
+ * (patent / cert) without cluttering the frame.
  */
 
+import Image from "next/image";
 import { type ByoProduct } from "@/app/lib/byoData";
 
-interface VideoSource {
-  webm: string;
-  mp4: string;
-  poster?: string;
-}
-
-const VIDEO: Record<ByoProduct, VideoSource> = {
-  flow: { webm: "/videos/flow/FlowFloat.webm", mp4: "/videos/flow/FlowFloat.mp4", poster: "/videos/flow/FlowFloat-poster.jpg" },
-  clear: { webm: "/videos/clear/ClearFloat.webm", mp4: "/videos/clear/ClearFloat.mp4", poster: "/videos/clear/ClearFloat-poster.jpg" },
-  both: { webm: "/videos/both/BothNeuronFloat.webm", mp4: "/videos/both/BothNeuronFloat.mp4", poster: "/videos/both/BothNeuronFloat-poster.jpg" },
-};
-
-/** Wider desktop encodes, where they exist. Falls back to the default. */
-const VIDEO_DESKTOP: Partial<Record<ByoProduct, VideoSource>> = {
-  both: { webm: "/videos/both/BothNeuronFloatDesktop.webm", mp4: "/videos/both/BothNeuronFloatDesktop.mp4", poster: "/videos/both/BothNeuronFloatDesktop-poster.jpg" },
+export const BYO_STATIC: Record<ByoProduct, { src: string; alt: string }> = {
+  flow: { src: "/lander/FlowV3.jpg", alt: "CONKA Flow bottle" },
+  clear: { src: "/lander/ClearV3.jpg", alt: "CONKA Clear bottle" },
+  both: { src: "/formulas/both/BothNew.jpg", alt: "CONKA Flow and Clear bottles" },
 };
 
 const CAPTION: Record<ByoProduct, string> = {
@@ -41,33 +28,25 @@ const CAPTION: Record<ByoProduct, string> = {
 export default function ByoMedia({
   product,
   showCaption = true,
-  desktop = false,
 }: {
   product: ByoProduct;
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
-  /** Use the wider desktop encode where one exists (the sticky left column). */
-  desktop?: boolean;
 }) {
-  const src = (desktop ? VIDEO_DESKTOP[product] : undefined) ?? VIDEO[product];
+  const media = BYO_STATIC[product];
 
   return (
     // Height comes entirely from the parent (mobile gallery slide / desktop
     // column) — no min-height, so compact containers aren't forced taller.
-    <div className="relative w-full h-full overflow-hidden bg-black/[0.04]">
-      <video
-        key={`${product}-${desktop}`}
-        className="absolute inset-0 h-full w-full object-cover object-center"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster={src.poster}
-      >
-        <source src={src.webm} type="video/webm" />
-        <source src={src.mp4} type="video/mp4" />
-      </video>
+    <div className="relative w-full h-full overflow-hidden bg-[#f1f1f3]">
+      <Image
+        src={media.src}
+        alt={media.alt}
+        fill
+        sizes="(max-width: 1024px) 100vw, 42vw"
+        className="object-cover object-center"
+        priority
+      />
 
       {/* Slim caption only — no product name (the page heading + selections own
           the title). Sits on a strong white scrim so it never clashes with the

@@ -33,10 +33,10 @@ const UpsellBottomSheet = dynamic(
   () => import("./components/UpsellBottomSheet"),
   { ssr: false },
 );
-// Mobile-only and absent from step 1, so it loads with the Build step rather
-// than the first paint.
+// Mobile-only; a ratio-matched placeholder keeps the band from shifting layout
+// while the chunk loads.
 const ByoMobileGallery = dynamic(() => import("./components/ByoMobileGallery"), {
-  loading: () => <div className="aspect-[7/5] max-h-[300px] w-full bg-black/[0.04]" aria-hidden />,
+  loading: () => <div className="aspect-[7/5] max-h-[300px] w-full bg-[#f1f1f3]" aria-hidden />,
 });
 import {
   type ByoCadence,
@@ -375,20 +375,18 @@ export default function BuildYourOrderClient() {
       </div>
       <div className="h-[59px]" />
 
-      {/* Mobile sticky media band (Bob pattern): pinned under the chrome from
-          the Build step onward, the widget scrolls beneath it. Deliberately a
-          sibling of <main>, NOT inside the transformed step column — an
-          ancestor transform would re-anchor position:sticky and unpin it. */}
-      {step !== 1 && (
-        <div className="lg:hidden sticky top-[59px] z-30">
-          <ByoMobileGallery product={product} />
-        </div>
-      )}
+      {/* Mobile sticky media band (Bob pattern): pinned under the chrome, the
+          content scrolls beneath it. Deliberately a sibling of <main>, NOT
+          inside the transformed step column — an ancestor transform would
+          re-anchor position:sticky and unpin it. */}
+      <div className="lg:hidden sticky top-[59px] z-30">
+        <ByoMobileGallery product={product} step={step} />
+      </div>
 
       <main className="lg:flex lg:min-h-[calc(100vh-59px)]">
         {/* Left media — desktop */}
         <div className="hidden lg:block lg:w-[42%] lg:sticky lg:top-[59px] lg:h-[calc(100vh-59px)]">
-          <ByoMedia product={product} showCaption={step !== 1} desktop />
+          <ByoMedia product={product} showCaption={step !== 1} />
         </div>
 
         {/* Right content */}
