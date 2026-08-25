@@ -3,12 +3,11 @@
 /**
  * Build Your Order — mobile sticky media gallery (Bob pattern, SCRUM-1249).
  *
- * A pinned media band under the step chrome, swipeable with scroll-snap plus
- * arrow controls. Statics only, no motion (SCRUM-1249 review):
- *   - Learn step: the clean V3/New floating-bottle shots (system first).
- *   - Build / Review: the selected product's PDP hero gallery assets, so the
- *     choice stage shows the same frames the product pages sell with.
- * Mobile only — desktop keeps the sticky left column.
+ * The Build step's media band, swipeable with scroll-snap plus arrow
+ * controls; it scrolls away naturally with the page (not pinned). Statics
+ * only, no motion (SCRUM-1249 review): the selected product's PDP hero
+ * gallery assets, so the choice stage shows the same frames the product
+ * pages sell with. Mobile only — desktop keeps the sticky left column.
  *
  * A gradient offer ribbon closes the band. Every figure derives live from
  * byoData (the monthly subscription of the SELECTED product), so the ribbon
@@ -24,7 +23,6 @@ import {
 } from "@/app/lib/byoData";
 import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { BYO_STATIC } from "./ByoMedia";
 
 const PRODUCT_TO_HERO_ID: Record<ByoProduct, ProductHeroId> = {
   flow: "01",
@@ -35,29 +33,18 @@ const PRODUCT_TO_HERO_ID: Record<ByoProduct, ProductHeroId> = {
 /** Hero-asset slides per product on the choice stages, capped for weight. */
 const STILL_COUNT = 5;
 
-export default function ByoMobileGallery({
-  product,
-  step,
-}: {
-  product: ByoProduct;
-  step: number;
-}) {
-  // Learn: the three bottle statics, the full system leading. Build/Review:
-  // the selected product's PDP hero frames.
-  const slides =
-    step === 1
-      ? [BYO_STATIC.both.src, BYO_STATIC.flow.src, BYO_STATIC.clear.src]
-      : MM_GALLERY_ASSETS[PRODUCT_TO_HERO_ID[product]].slice(0, STILL_COUNT);
+export default function ByoMobileGallery({ product }: { product: ByoProduct }) {
+  const slides = MM_GALLERY_ASSETS[PRODUCT_TO_HERO_ID[product]].slice(0, STILL_COUNT);
   const slideCount = slides.length;
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
 
-  // Jump back to the first slide when the slide set changes (product switch or
-  // step change), so the media always matches the selection.
+  // Jump back to the first slide when the product changes, so the media
+  // always matches the selection.
   useEffect(() => {
     setIndex(0);
     trackRef.current?.scrollTo({ left: 0, behavior: "instant" });
-  }, [product, step]);
+  }, [product]);
 
   const goTo = useCallback((i: number) => {
     const track = trackRef.current;

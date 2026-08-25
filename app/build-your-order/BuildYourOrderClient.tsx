@@ -375,15 +375,18 @@ export default function BuildYourOrderClient() {
       </div>
       <div className="h-[59px]" />
 
-      {/* Mobile sticky media band (Bob pattern): pinned under the chrome from
-          the Build step on, the content scrolls beneath it. The Learn step
-          stays media-free so the pitch owns the viewport (SCRUM-1249 review).
-          Deliberately a sibling of <main>, NOT inside the transformed step
-          column — an ancestor transform would re-anchor position:sticky and
-          unpin it. */}
-      {step !== 1 && (
-        <div className="lg:hidden sticky top-[59px] z-30">
-          <ByoMobileGallery product={product} step={step} />
+      {/* Mobile media (SCRUM-1249 review): the Build step gets the swipeable
+          gallery, scrolling away naturally (not pinned); the Review step gets
+          a single static of the selection; the Learn step stays media-free so
+          the pitch owns the viewport. */}
+      {step === 2 && (
+        <div className="lg:hidden">
+          <ByoMobileGallery product={product} />
+        </div>
+      )}
+      {step === 3 && (
+        <div className="lg:hidden relative aspect-[7/5] max-h-[300px]">
+          <ByoMedia product={product} showCaption={false} />
         </div>
       )}
 

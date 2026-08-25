@@ -173,11 +173,12 @@ function PlanCard({
 }
 
 /**
- * The dynamic "Your subscription" box (PDP SubscriptionSummary pattern). It
+ * The dynamic "what you get" list (PDP SubscriptionSummary pattern). It
  * restates exactly what the selected plan delivers and rewrites itself when
  * the plan changes; every figure derives from the same pricing the cards read.
+ * Exported frameless so the Review step's receipt reuses the same list.
  */
-function PlanSummary({ product, cadence }: { product: ByoProduct; cadence: ByoCadence }) {
+export function PlanSummaryList({ product, cadence }: { product: ByoProduct; cadence: ByoCadence }) {
   const pricing = getOfferPricing(product, cadence);
   const isOtp = cadence === "monthly-otp";
   const savePct = getDisplayDiscount(pricing);
@@ -222,18 +223,25 @@ function PlanSummary({ product, cadence }: { product: ByoProduct; cadence: ByoCa
       ];
 
   return (
+    <ul className="flex flex-col gap-2">
+      {lines.map((line, i) => (
+        <li key={i} className="flex items-start gap-2.5 text-[13px] text-black/80 leading-snug">
+          <span className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "#1a7f4f" }} aria-hidden />
+          <span className="min-w-0">{line}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** The framed "Your subscription" box shown under the plan cards. */
+function PlanSummary({ product, cadence }: { product: ByoProduct; cadence: ByoCadence }) {
+  return (
     <div className="rounded-md ring-1 ring-black/10 bg-white p-4">
       <p className="text-[16px] font-semibold text-black mb-3">
-        {isOtp ? "Your one-time order" : "Your subscription"}
+        {cadence === "monthly-otp" ? "Your one-time order" : "Your subscription"}
       </p>
-      <ul className="flex flex-col gap-2">
-        {lines.map((line, i) => (
-          <li key={i} className="flex items-start gap-2.5 text-[13px] text-black/80 leading-snug">
-            <span className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "#1a7f4f" }} aria-hidden />
-            <span className="min-w-0">{line}</span>
-          </li>
-        ))}
-      </ul>
+      <PlanSummaryList product={product} cadence={cadence} />
     </div>
   );
 }
