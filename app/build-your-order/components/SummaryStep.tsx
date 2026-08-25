@@ -3,11 +3,10 @@
 /**
  * Build Your Order — Step 3 (Review). The moment of purchase, built as a RECEIPT.
  *
- * The receipt splits cleanly: the breakdown states the SHOTS (recurring volume
- * per formula, then the first-order bonus), and the line items state the MONEY
- * (plan, postage, extras, savings, total). Each figure appears exactly once.
- *
- * Then social proof (shots delivered + a rotating quote) and the CONKA app block.
+ * The receipt is the product header, the same "what you get" list the Build
+ * step's plan box shows (PlanSummaryList, so the two can never tell different
+ * stories), and the all-in total. Then social proof (shots delivered + a
+ * rotating quote) and the CONKA app block.
  */
 
 import { useState, useEffect } from "react";
@@ -16,11 +15,12 @@ import {
   type ByoProduct,
   type ByoCadence,
   BYO_PRODUCTS,
+  getChargedPrice,
   getOfferPricing,
-  getDisplayDiscount,
 } from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
-import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
+import { cadencePriceSuffix } from "../defaults";
+import { PlanSummaryList } from "./CadenceSelector";
 
 interface SummaryStepProps {
   product: ByoProduct;
@@ -28,6 +28,20 @@ interface SummaryStepProps {
 }
 
 const SOLD = "150,000+";
+
+// The delivery photo that heads the receipt: product AND box, the thing that
+// actually arrives. Quarterly shows the larger shipment (same precedent as the
+// PDP slideshow's quarterly first-slide swap).
+const BOX_IMG: Record<ByoProduct, string> = {
+  flow: "/formulas/box/FlowBox.jpg",
+  clear: "/formulas/box/ClearBox.jpg",
+  both: "/formulas/box/BothBox.jpg",
+};
+const QUARTERLY_BOX_IMG: Record<ByoProduct, string> = {
+  flow: "/formulas/box/FlowQuarterlyBox.jpg",
+  clear: "/formulas/box/ClearQuarterlyBox.jpg",
+  both: "/formulas/box/BothQuarterlyBox.jpg",
+};
 
 // Verbatim from the site's data — 2 athletes (testimonials.data.ts) + 2
 // verified customers (reviews.data.ts). Do NOT paraphrase attributed quotes.
@@ -108,40 +122,9 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const display = BYO_PRODUCTS[product];
   const pricing = getOfferPricing(product, cadence);
   const isSub = cadence !== "monthly-otp";
-  const freeShots = pricing.freeShots ?? 0;
-  const freeShotsValue = pricing.freeShotsValue ?? 0;
-  const postageVal = cadence === "quarterly-sub" ? 29.97 : 9.99;
   const freq = cadencePriceSuffix(cadence);
-  const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
-  const savingsPct = getDisplayDiscount(pricing);
-  const totalToday = isSub ? pricing.price : pricing.price + (pricing.postage ?? 0);
-
-  // Shot matrix coded by formula. Both splits its shots across Flow + Clear.
-  const FORMULA_COLOR: Record<"flow" | "clear", string> = { flow: "#C4892A", clear: "#0369a1" };
-  const formulas: ("flow" | "clear")[] = product === "both" ? ["flow", "clear"] : [product as "flow" | "clear"];
-  const pricedPer = product === "both" ? Math.round(pricing.shotCount / 2) : pricing.shotCount;
-  const freePer = product === "both" ? Math.round(freeShots / 2) : freeShots;
-
-  const period = cadenceDeliveryPeriod(cadence);
-  const planLabel =
-    cadence === "monthly-sub"
-      ? "Monthly subscription"
-      : cadence === "quarterly-sub"
-        ? "Quarterly subscription"
-        : "One-time purchase";
-
-  // The line items are the MONEY. The shot counts live in the breakdown above
-  // and are not repeated here: they were previously stated in the header, again
-  // in the breakdown, and a third time as a line-item label.
-  const items: { label: string; value: string; was?: string; free?: boolean }[] = [
-    { label: planLabel, value: formatPrice(pricing.price) },
-  ];
-  items.push(
-    isSub
-      ? { label: "Postage", value: "Free", was: formatPrice(postageVal), free: true }
-      : { label: "Postage (required)", value: formatPrice(pricing.postage ?? 0) },
-  );
-  items.push({ label: "CONKA app + Brain Coach", value: "Free", free: true });
+  // The all-in figure: subscriptions ship free, one-time carries postage.
+  const totalToday = isSub ? pricing.price : getChargedPrice(pricing);
 
   return (
     <div>
@@ -153,79 +136,33 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       </h2>
 
       {/* ===== RECEIPT ===== */}
-      <div className="rounded-[16px] border-2 border-black/85 bg-white p-5 mb-3">
-        {/* Product header */}
-        <div className="flex items-start justify-between gap-3">
+      <div className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden mb-3">
+        {/* The order, shown: the box-and-bottle photo IS the receipt's header
+            (SCRUM-1249 review) — what arrives on the doormat, not a label. */}
+        <div className="relative aspect-[3/2] w-full bg-[#f1f1f3]">
+          <Image
+            src={(cadence === "quarterly-sub" ? QUARTERLY_BOX_IMG : BOX_IMG)[product]}
+            alt={`${display.label} delivery box`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 560px"
+            className="object-cover"
+          />
+        </div>
+        <div className="p-5">
+        {/* Product name — the photo shows the delivery, this names it. */}
+        <div className="flex items-center justify-between gap-3 mb-3">
           <p className="text-[19px] font-semibold text-black leading-tight">{display.label}</p>
-          <span className="shrink-0 rounded-full bg-[#1B2757]/[0.08] px-2.5 py-1 text-[11px] font-semibold text-[#1B2757]">
+          <span className="shrink-0 rounded-full bg-black/[0.06] px-2.5 py-1 text-[11px] font-semibold text-black/70">
             {display.timeLabel}
           </span>
         </div>
-        {/* What arrives. Recurring shots per formula (Both splits 50:50), then a
-            single line for the first-order bonus.
-
-            This was a matrix of up to 56 coloured dots, which nobody counts, so
-            the reader went to the legend underneath anyway. It then stated the
-            per-period shot count three times over (header, breakdown, line item).
-            Once, here. */}
-        <div className="mt-4 rounded-[12px] bg-black/[0.03] p-3.5">
-          {formulas.map((f) => (
-            <div
-              key={f}
-              className="flex items-baseline justify-between gap-3 py-1 text-[13px]"
-            >
-              <span className="font-semibold" style={{ color: FORMULA_COLOR[f] }}>
-                {f === "flow" ? "Flow" : "Clear"}
-              </span>
-              <span className="tabular-nums text-black">
-                <span className="font-bold">{pricedPer}</span> shots
-                {isSub ? ` ${period}` : ""}
-              </span>
-            </div>
-          ))}
-
-          {freeShots > 0 && (
-            <div className="flex items-start gap-2 border-t border-black/10 mt-2.5 pt-2.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 mt-0.5">
-                <circle cx="12" cy="12" r="10" fill="#10B981" />
-                <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <p className="text-[13px] leading-snug text-[#0b7a55]">
-                <strong className="font-bold">+{freeShots} free shots</strong> on your first order
-                {product === "both" && `, ${freePer} of each`}. Worth{" "}
-                <span className="tabular-nums font-semibold">{formatPrice(freeShotsValue)}</span>.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Line items */}
-        <div className="mt-5 space-y-2.5">
-          {items.map((li) => (
-            <div key={li.label} className="flex items-baseline justify-between gap-3 text-[13px]">
-              <span className="text-black/70">{li.label}</span>
-              <span className="tabular-nums whitespace-nowrap">
-                {li.was && <span className="line-through text-black/30 mr-1.5">{li.was}</span>}
-                <span className={li.free ? "font-semibold text-[#0b7a55]" : "text-black"}>
-                  {li.value}
-                </span>
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Savings */}
-        {savings > 0 && (
-          <div className="flex items-baseline justify-between gap-3 border-t border-dashed border-black/20 mt-3 pt-3 text-[13px]">
-            <span className="font-semibold text-black">You save</span>
-            <span className="tabular-nums font-bold text-[#0b7a55]">
-              {savingsPct}%
-            </span>
-          </div>
-        )}
+        {/* What the plan delivers — the same list as the Build step's
+            "Your subscription" box (PlanSummaryList), so the receipt and the
+            plan selector can never tell different stories (SCRUM-1249). */}
+        <PlanSummaryList product={product} cadence={cadence} />
 
         {/* Total */}
-        <div className="flex items-baseline justify-between gap-3 border-t-2 border-black/85 mt-3 pt-3.5">
+        <div className="flex items-baseline justify-between gap-3 border-t-2 border-black/20 mt-3 pt-3.5">
           <span className="text-[15px] font-semibold text-black">Total today</span>
           <span className="text-[30px] font-bold tabular-nums text-black leading-none">
             {formatPrice(totalToday)}
@@ -235,10 +172,11 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         <p className="text-[12px] text-black/50 mt-3 text-right">
           Ships in 2 to 3 days{isSub ? " · cancel anytime" : ""}
         </p>
+        </div>
       </div>
 
       {/* ===== SOCIAL PROOF (flippable) ===== */}
-      <div className="rounded-[16px] bg-black/[0.04] p-4 mb-3">
+      <div className="rounded-md bg-black/[0.04] p-4 mb-3">
         <div className="flex items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-black/10">
           <div>
             <p className="text-2xl font-bold text-black tabular-nums leading-none">{SOLD}</p>
@@ -279,7 +217,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       </div>
 
       {/* ===== APP BLOCK ===== */}
-      <div className="rounded-[16px] border-2 border-black/85 bg-white overflow-hidden">
+      <div className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden">
         <div className="px-4 pt-4">
           <p className="text-[17px] font-semibold text-black">Track it. Watch it work.</p>
           <p className="text-[13px] text-black/60 mt-1">
@@ -320,8 +258,8 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
         {/* Real app usage — proof people track results */}
         <div className="grid grid-cols-3 gap-2 px-4 pb-4">
           {APP_STATS.map((s) => (
-            <div key={s.label} className="rounded-[12px] bg-black/[0.04] text-center py-3">
-              <p className="text-xl font-bold text-[#1B2757] tabular-nums leading-none">{s.value}</p>
+            <div key={s.label} className="rounded-md bg-black/[0.04] text-center py-3">
+              <p className="text-xl font-bold text-black tabular-nums leading-none">{s.value}</p>
               <p className="text-[11px] text-black/60 mt-1.5 leading-tight">{s.label}</p>
             </div>
           ))}

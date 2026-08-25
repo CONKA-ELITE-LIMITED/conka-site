@@ -33,6 +33,11 @@ const UpsellBottomSheet = dynamic(
   () => import("./components/UpsellBottomSheet"),
   { ssr: false },
 );
+// Mobile-only; a ratio-matched placeholder keeps the band from shifting layout
+// while the chunk loads.
+const ByoMobileGallery = dynamic(() => import("./components/ByoMobileGallery"), {
+  loading: () => <div className="aspect-[7/5] max-h-[300px] w-full bg-[#f1f1f3]" aria-hidden />,
+});
 import {
   type ByoCadence,
   type ByoProduct,
@@ -290,8 +295,11 @@ export default function BuildYourOrderClient() {
   // Live product + price shown INSIDE the footer CTA
   const pricing = getOfferPricing(product, cadence);
   const freq = cadencePriceSuffix(cadence);
+  // Mobile shortens "/3 months" to "/3 mo": with the back arrow beside it, the
+  // full suffix pushed the quarterly CTA wider than a 390px viewport.
+  const freqShort = cadence === "quarterly-sub" ? "/3 mo" : freq;
   const ctaPrice = `${BYO_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
-  const ctaPriceShort = `${formatPrice(pricing.price)}${freq}`;
+  const ctaPriceShort = `${formatPrice(pricing.price)}${freqShort}`;
   const isSubscription = cadence !== "monthly-otp";
 
   const footer =
@@ -369,6 +377,16 @@ export default function BuildYourOrderClient() {
         </div>
       </div>
       <div className="h-[59px]" />
+
+      {/* Mobile media (SCRUM-1249 review): the Build step gets the swipeable
+          gallery, scrolling away naturally (not pinned). The Learn step stays
+          media-free so the pitch owns the viewport, and the Review step's
+          asset lives inside the receipt tile itself. */}
+      {step === 2 && (
+        <div className="lg:hidden">
+          <ByoMobileGallery product={product} />
+        </div>
+      )}
 
       <main className="lg:flex lg:min-h-[calc(100vh-59px)]">
         {/* Left media — desktop */}

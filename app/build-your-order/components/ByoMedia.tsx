@@ -1,23 +1,22 @@
 "use client";
 
 /**
- * Build Your Order — left-column media.
+ * Build Your Order — product media (static).
  *
- * Plays the product motion clip (the same liquid/bottle videos used on the
- * lander) rather than a slideshow of box photos. Swaps source by selected
- * product. A restrained caption keeps the core selling point (patent / cert)
- * without cluttering the frame.
+ * The clean V3/New floating-bottle statics, swapped by selected product. The
+ * flow deliberately carries NO motion assets (SCRUM-1249 review): statics keep
+ * the checkout surface calm and the neuron Float animations stay on the
+ * marketing surfaces. A restrained caption keeps the core selling point
+ * (patent / cert) without cluttering the frame.
  */
 
+import Image from "next/image";
 import { type ByoProduct } from "@/app/lib/byoData";
 
-// The swirling-liquid 3D renders used in the product-page benefits section
-// (FlowLiquid / ClearLiquid). Both has no liquid variant, so it keeps the
-// still-water bottle render.
-const VIDEO: Record<ByoProduct, { webm: string; mp4: string; poster?: string }> = {
-  flow: { webm: "/videos/flow/FlowLiquid.webm", mp4: "/videos/flow/FlowLiquid.mp4", poster: "/videos/flow/FlowLiquid-poster.jpg" },
-  clear: { webm: "/videos/clear/ClearLiquid.webm", mp4: "/videos/clear/ClearLiquid.mp4", poster: "/videos/clear/ClearLiquid-poster.jpg" },
-  both: { webm: "/videos/both/BothStillWater.webm", mp4: "/videos/both/BothStillWater.mp4", poster: "/videos/both/BothStillWater-poster.jpg" },
+export const BYO_STATIC: Record<ByoProduct, { src: string; alt: string }> = {
+  flow: { src: "/lander/FlowV3.jpg", alt: "CONKA Flow bottle" },
+  clear: { src: "/lander/ClearV3.jpg", alt: "CONKA Clear bottle" },
+  both: { src: "/formulas/both/BothNew.jpg", alt: "CONKA Flow and Clear bottles" },
 };
 
 const CAPTION: Record<ByoProduct, string> = {
@@ -34,25 +33,22 @@ export default function ByoMedia({
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
 }) {
-  const src = VIDEO[product];
+  const media = BYO_STATIC[product];
 
   return (
-    // Height comes entirely from the parent (mobile banner / desktop column) —
-    // no min-height, so the compact mobile banner isn't forced taller.
-    <div className="relative w-full h-full overflow-hidden bg-black/[0.04]">
-      <video
-        key={product}
-        className="absolute inset-0 h-full w-full object-cover object-center"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster={src.poster}
-      >
-        <source src={src.webm} type="video/webm" />
-        <source src={src.mp4} type="video/mp4" />
-      </video>
+    // Height comes entirely from the parent (mobile gallery slide / desktop
+    // column) — no min-height, so compact containers aren't forced taller.
+    <div className="relative w-full h-full overflow-hidden bg-[#f1f1f3]">
+      <Image
+        src={media.src}
+        alt={media.alt}
+        fill
+        sizes="(max-width: 1024px) 100vw, 42vw"
+        // Default lazy loading on purpose: this column is display:none on
+        // mobile, so lazy means the hidden image is never fetched there, while
+        // on desktop it sits in the first viewport and loads immediately.
+        className="object-cover object-center"
+      />
 
       {/* Slim caption only — no product name (the page heading + selections own
           the title). Sits on a strong white scrim so it never clashes with the

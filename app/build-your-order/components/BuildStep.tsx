@@ -3,10 +3,11 @@
 /**
  * Build Your Order — Step 2 (Build). Product + plan on one page.
  *
- * Formula tiles (Flow pre-selected, Both flagged as the recommended upgrade)
- * drive the left media and the summary card, whose detail sits behind disclosure
- * chips. Then the plan cards. The sticky footer reflects the live selection and
- * price.
+ * Formula tiles (Both pre-selected as the recommended default) drive the media
+ * and a single blurb line, then the plan cards. Product depth (ingredients,
+ * mechanism, athletes, proof) sits in the shared learn-more accordion BELOW
+ * the decision, so the widget stays on the decision path. The sticky footer
+ * reflects the live selection and price.
  */
 
 import { useState, useEffect } from "react";
@@ -17,7 +18,8 @@ import {
   BYO_PRODUCTS,
 } from "@/app/lib/byoData";
 import CadenceSelector from "./CadenceSelector";
-import ByoMedia from "./ByoMedia";
+import LearnMoreAccordion from "./LearnMoreAccordion";
+import { BYO_STATIC } from "./ByoMedia";
 
 interface BuildStepProps {
   product: ByoProduct;
@@ -27,8 +29,8 @@ interface BuildStepProps {
   onAccordionOpen?: (id: string) => void;
 }
 
-// Flow leads (it is the pre-selected default), then Clear, with Both last as
-// the recommended upgrade.
+// Flow and Clear lead as the two equal single formulas; Both sits last as the
+// recommended full system (and the pre-selected default since SCRUM-1247).
 const PRODUCT_ORDER: ByoProduct[] = ["flow", "clear", "both"];
 const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
   flow: { name: "Flow", period: "Morning" },
@@ -125,14 +127,6 @@ const ATHLETES = [
   { name: "Adam Azim", sport: "Boxing · Undefeated Pro" },
 ];
 
-type InfoKey = "ingredients" | "how" | "athletes" | "impact";
-const ROW_TABS: { key: InfoKey; label: string }[] = [
-  { key: "ingredients", label: "Ingredients" },
-  { key: "how", label: "How it works" },
-  { key: "athletes", label: "Used by" },
-  { key: "impact", label: "Proof" },
-];
-
 function CheckIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0 mt-0.5 text-[#1B2757]" aria-hidden>
@@ -192,14 +186,6 @@ export default function BuildStep({
 }: BuildStepProps) {
   const display = BYO_PRODUCTS[product];
   const copy = COPY[product];
-  const [openInfo, setOpenInfo] = useState<InfoKey | null>(null);
-  const toggleInfo = (k: InfoKey) => {
-    const next = openInfo === k ? null : k;
-    // Report opens only, and from outside the updater: state updaters must be
-    // pure, and React double-invokes them under StrictMode.
-    if (next) onAccordionOpen?.(`build:${next}`);
-    setOpenInfo(next);
-  };
 
   // Ingredients pagination — always 6 per page (Both has 15, so it pages).
   const [ingPage, setIngPage] = useState(0);
@@ -234,23 +220,41 @@ export default function BuildStep({
               type="button"
               onClick={() => onProductChange(p)}
               aria-pressed={active}
-              className={`relative flex-1 flex flex-col items-center justify-center rounded-[14px] border-2 px-2 py-4 transition-colors ${
-                active
-                  ? "border-[#1B2757] bg-[#1B2757] text-white"
-                  : "border-black/10 bg-white text-black hover:border-black/25"
+              className={`relative flex-1 flex flex-col items-center rounded-md overflow-visible pb-3 transition-colors ${
+                active ? "" : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
               }`}
+              // Selected state matches the PDP plan cards: the brand offer
+              // gradient as a 2px ring over a near-white fill.
+              style={
+                active
+                  ? {
+                      border: "2px solid transparent",
+                      background:
+                        "linear-gradient(#f8f9fd,#f8f9fd) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+                    }
+                  : undefined
+              }
             >
               {p === "both" && (
                 <span
-                  className={`absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 text-[10px] font-bold whitespace-nowrap ${
-                    active ? "bg-[#10B981] text-white" : "bg-black text-white"
-                  }`}
+                  className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#14532d]"
+                  style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
                 >
                   Recommended
                 </span>
               )}
-              <span className="text-[16px] font-semibold leading-tight">{t.name}</span>
-              <span className={`text-[12px] leading-tight mt-1 ${active ? "text-white/70" : "text-black/50"}`}>
+              {/* Product static (the PDP hero assets, not an animation). */}
+              <span className="relative mt-2 mb-1.5 block h-16 w-16 overflow-hidden rounded-md">
+                <Image
+                  src={BYO_STATIC[p].src}
+                  alt={BYO_STATIC[p].alt}
+                  fill
+                  sizes="64px"
+                  className="object-cover scale-[1.4]"
+                />
+              </span>
+              <span className="text-[16px] font-semibold leading-tight text-black">{t.name}</span>
+              <span className="text-[12px] leading-tight mt-0.5 text-black/50">
                 {t.period}
               </span>
             </button>
@@ -258,53 +262,30 @@ export default function BuildStep({
         })}
       </div>
 
-      {/* Product summary + info dropdowns */}
-      <div className="mt-3.5 rounded-[16px] border-2 border-black/85 bg-white overflow-hidden">
-        <div className="p-4 flex gap-4">
-          {/* Mobile: video on the left, content beside it; the column stretches
-              to the content height (desktop uses the sticky left column, so the
-              video is hidden and the content takes the full width). */}
-          <div className="lg:hidden shrink-0 w-24 self-stretch rounded-[12px] bg-black/[0.04] overflow-hidden">
-            <ByoMedia product={product} showCaption={false} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-[17px] font-semibold text-black leading-tight">{display.label}</p>
-              <span className="shrink-0 rounded-full bg-[#1B2757]/[0.08] px-2.5 py-1 text-[11px] font-semibold text-[#1B2757]">
-                {display.timeLabel}
-              </span>
-            </div>
-            <p className="text-[14px] text-black/70 leading-snug mt-2">{copy.blurb}</p>
-          </div>
-        </div>
+      {/* One line on the selection, no card chrome: the tile carries the
+          identity and the sticky media carries the visual, so the widget stays
+          on the decision path (SCRUM-1249 review). */}
+      <p className="text-[13px] text-black/60 leading-snug mt-3">{copy.blurb}</p>
 
-        {/* Disclosure chips — same language as the Learn step's cards. A 2x2
-            grid rather than flex-wrap: four equal tiles fill the row instead of
-            leaving a ragged gap where the last chip does not reach. */}
-        <div className="grid grid-cols-2 gap-2 px-4 pb-4">
-          {ROW_TABS.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => toggleInfo(t.key)}
-              className={`flex items-center justify-between gap-1.5 min-h-[44px] w-full rounded-full px-4 text-[13px] font-medium transition-colors ${
-                openInfo === t.key
-                  ? "bg-[#1B2757] text-white"
-                  : "bg-black/[0.05] text-black/70 hover:bg-black/[0.09] hover:text-black"
-              }`}
-            >
-              {t.label}
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-200 shrink-0" style={{ transform: openInfo === t.key ? "rotate(180deg)" : "none" }}>
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
-          ))}
-        </div>
+      {/* 2. Plan */}
+      <p className="text-[15px] font-semibold text-black mt-8 mb-3">
+        <span className="text-black/40 tabular-nums mr-1.5">2</span>
+        Choose your plan
+      </p>
+      <CadenceSelector product={product} cadence={cadence} onChange={onCadenceChange} />
 
-        {/* Disclosure panels */}
-        <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: openInfo ? "1100px" : "0px" }}>
-          <div className="mx-4 mb-4 rounded-[12px] bg-black/[0.03] p-4">
-            {openInfo === "ingredients" && (
+      {/* Optional depth, below the decision: same slim accordion cluster as
+          the Learn step. Content tracks the selected formula. */}
+      <p className="text-[15px] font-semibold text-black mt-8 mb-3">
+        Learn more about {display.label}
+      </p>
+      <LearnMoreAccordion
+        onOpen={onAccordionOpen}
+        rows={[
+          {
+            id: "build:ingredients",
+            label: "Ingredients",
+            body: (
               <>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-[13px] font-semibold text-black">
@@ -337,7 +318,7 @@ export default function BuildStep({
                 <div className="grid grid-cols-3 gap-x-3 gap-y-4">
                   {ingItems.map((ing) => (
                     <div key={ing.name} className="flex flex-col items-center text-center gap-1.5">
-                      <div className="w-full aspect-square rounded-[10px] bg-white overflow-hidden">
+                      <div className="w-full aspect-square rounded-md bg-[#f1f1f3] overflow-hidden">
                         <Image src={ing.img} alt={ing.name} width={140} height={140} className="w-full h-full object-cover" />
                       </div>
                       <span className="text-[11px] text-black leading-tight">{ing.name}</span>
@@ -345,20 +326,28 @@ export default function BuildStep({
                   ))}
                 </div>
               </>
-            )}
-            {openInfo === "how" && (
+            ),
+          },
+          {
+            id: "build:how",
+            label: "How it works",
+            body: (
               <div className="flex flex-col gap-2.5">
-                {HOW_STEPS[product].map((s) => (
-                  <div key={s.when} className="flex items-start gap-3">
-                    <span className="shrink-0 min-w-[72px] rounded-full bg-white px-2.5 py-1.5 text-center text-[12px] font-bold text-[#1B2757] leading-none">
-                      {s.when}
+                {HOW_STEPS[product].map((step) => (
+                  <div key={step.when} className="flex items-start gap-3">
+                    <span className="shrink-0 min-w-[72px] rounded-full bg-black/[0.05] px-2.5 py-1.5 text-center text-[12px] font-bold text-black leading-none">
+                      {step.when}
                     </span>
-                    <p className="text-[14px] text-black leading-snug pt-1">{s.what}</p>
+                    <p className="text-[14px] text-black leading-snug pt-1">{step.what}</p>
                   </div>
                 ))}
               </div>
-            )}
-            {openInfo === "athletes" && (
+            ),
+          },
+          {
+            id: "build:athletes",
+            label: "Used by pros",
+            body: (
               <>
                 <p className="text-[13px] font-semibold text-black mb-3">
                   Informed Sport certified. Used by pros.
@@ -375,48 +364,41 @@ export default function BuildStep({
                   ))}
                 </div>
               </>
-            )}
-            {openInfo === "impact" && (
+            ),
+          },
+          {
+            id: "build:impact",
+            label: "Proof",
+            body: (
               <>
-                {/* Stacked rows, not a 3-across grid: the labels are sentences
-                    now, and three columns of wrapped sentence fragments at
-                    390px was the other half of why this panel read badly. */}
                 <div className="flex flex-col gap-2">
-                  {copy.stats.map((s) => (
-                    <div key={s.label} className="flex items-center gap-3 rounded-[10px] bg-white px-3 py-2.5">
-                      <span className="min-w-[68px] shrink-0 text-[24px] font-bold text-[#1B2757] tabular-nums leading-none tracking-tight">
-                        <CountUp value={s.value} />
+                  {copy.stats.map((stat) => (
+                    <div key={stat.label} className="flex items-center gap-3 rounded-md bg-black/[0.03] px-3 py-2.5">
+                      <span className="min-w-[68px] shrink-0 text-[24px] font-bold text-black tabular-nums leading-none tracking-tight">
+                        <CountUp value={stat.value} />
                       </span>
-                      <span className="text-[13px] text-black leading-snug">{s.label}</span>
+                      <span className="text-[13px] text-black leading-snug">{stat.label}</span>
                     </div>
                   ))}
                 </div>
-
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-black">
+                  <span className="rounded-full bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold text-black">
                     UK Patent GB2629279
                   </span>
-                  <span className="rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-black">
+                  <span className="rounded-full bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold text-black">
                     Informed Sport certified
                   </span>
                 </div>
-
                 <p className="text-[11px] text-black/45 mt-2.5 leading-snug">
                   Study figures come from peer-reviewed research on the active
                   ingredients, not on the finished drink.
                 </p>
               </>
-            )}
-          </div>
-        </div>
-      </div>
+            ),
+          },
+        ]}
+      />
 
-      {/* 2. Plan */}
-      <p className="text-[15px] font-semibold text-black mt-8 mb-3">
-        <span className="text-black/40 tabular-nums mr-1.5">2</span>
-        Choose your plan
-      </p>
-      <CadenceSelector product={product} cadence={cadence} onChange={onCadenceChange} />
     </div>
   );
 }

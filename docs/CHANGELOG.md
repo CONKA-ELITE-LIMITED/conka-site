@@ -5,6 +5,9 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-25** | Build your order flow signed off: thin renders on Learn, PDP-grammar plan cards, box-photo receipt, overflow-proof CTA
+- **2026-08-25** | Build your order restyle: statics replace animations (V3 bottles + PDP hero assets), plan and formula cards adopt the PDP green-ring grammar
+- **2026-08-25** | Build your order flow: neuron Float videos, mobile sticky product gallery with offer ribbon, plan cards gain strike-through anchors and guarantee line
 - **2026-08-25** | Build Your Order attribution live: byo:* event taxonomy, listicle src passthrough to orders, checkout-clicked and upsell events now dashboard-visible
 - **2026-08-25** | Consolidated the three funnel pages into /build-your-order (funnel-c promoted, defaults to Both, old URLs redirect); merged the forked funnel data layer into app/lib/byoData.ts
 - **2026-08-20** | PDP section 4 benefits video swapped to new Float renders (Flow and Clear), Both asset encoded ready for wiring
