@@ -30,7 +30,7 @@ import {
   getCurrentPackSizeForFormula,
 } from "@/app/account/subscriptions/utils";
 import { subscriptionRouteId, toDtcSubscriptionView } from "@/app/account/subscriptions/viewModel";
-import { getUpsellOffer } from "@/app/lib/funnelData";
+import { getUpsellOffer } from "@/app/lib/byoData";
 import { getFormulaImage } from "@/app/lib/productImageConfig";
 
 /** Section wrapper: label + rounded surface, consistent across the detail view. */

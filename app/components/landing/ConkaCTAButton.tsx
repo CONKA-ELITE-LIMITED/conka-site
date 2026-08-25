@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import { BYO_URL } from "@/app/lib/landingConstants";
 
 /* Meta subtitle variants — swap ACTIVE_META to test different directions. */
 const META_VARIANTS = {
@@ -143,7 +143,7 @@ export default function ConkaCTAButton({
     );
   }
 
-  const resolvedHref = href ?? FUNNEL_URL;
+  const resolvedHref = href ?? BYO_URL;
   const isExternal = resolvedHref.startsWith("http") || resolvedHref.startsWith("//");
   if (isExternal) {
     return <a href={resolvedHref} className={classes}>{inner}</a>;

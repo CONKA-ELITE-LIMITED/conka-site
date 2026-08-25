@@ -12,7 +12,7 @@ import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellTile from "./CartUpsellTile";
 import { getCartUpsell, clearUpsellAccepted } from "@/app/lib/cartUpsell";
-import { getOfferByVariantId, getOfferPricing } from "@/app/lib/funnelData";
+import { getOfferByVariantId, getOfferPricing } from "@/app/lib/byoData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 import { trackCartCheckoutClicked } from "@/app/lib/analytics";
 

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import MetaViewContent from "@/app/components/MetaViewContent";
-import { getOfferVariant, getOfferPricing } from "../lib/funnelData";
+import { getOfferVariant, getOfferPricing } from "@/app/lib/byoData";
 import {
   FUNNEL_C_DEFAULT_CADENCE,
   FUNNEL_C_DEFAULT_PRODUCT,
 } from "./defaults";
-import { FUNNEL_PRODUCTS } from "../lib/funnelData";
+import { BYO_PRODUCTS } from "@/app/lib/byoData";
 import FunnelClient from "./FunnelClient";
 
 export const metadata: Metadata = {
@@ -49,7 +49,7 @@ export default function FunnelPage() {
           getOfferPricing(FUNNEL_C_DEFAULT_PRODUCT, FUNNEL_C_DEFAULT_CADENCE)
             .price
         }
-        contentName={FUNNEL_PRODUCTS[FUNNEL_C_DEFAULT_PRODUCT].label}
+        contentName={BYO_PRODUCTS[FUNNEL_C_DEFAULT_PRODUCT].label}
       />
       <FunnelClient />
       {/* Real-user Core Web Vitals for this variant — lets us A/B funnel-c

@@ -7,7 +7,7 @@ import {
   CadenceType,
   getCadencePricingByProductHeroId,
   getDisplayDiscount,
-  FUNNEL_CADENCES,
+  BYO_CADENCES,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
@@ -164,7 +164,7 @@ function FlatPlanCard({
   /** Per-tile discount-badge colour (Magic Mind uses a different one per plan). */
   saveColor: string;
 }) {
-  const display = FUNNEL_CADENCES[cadence];
+  const display = BYO_CADENCES[cadence];
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
   const savePct = getDisplayDiscount(pricing);
   // Short label ("monthly" / "quarterly") is used only in the aria-label now;

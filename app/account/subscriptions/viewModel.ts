@@ -29,9 +29,9 @@ import {
 import {
   getOfferPricing,
   getOfferByVariantId,
-  type FunnelProduct,
-  type FunnelCadence,
-} from "@/app/lib/funnelData";
+  type ByoProduct,
+  type ByoCadence,
+} from "@/app/lib/byoData";
 
 /** Both is a single combined product; this is its box shot. */
 const BOTH_IMAGE = "/formulas/both/BothBox.jpg";
@@ -67,9 +67,9 @@ export interface DtcSubscriptionView {
   isMultiLine: boolean;
   lines: DtcSubscriptionLine[];
   /** Funnel product key, or null for legacy / unknown. Feeds swap + upsell. */
-  funnelProduct: FunnelProduct | null;
+  funnelProduct: ByoProduct | null;
   /** Funnel cadence key, or null. */
-  funnelCadence: FunnelCadence | null;
+  funnelCadence: ByoCadence | null;
   /** compareAtPrice - price for funnel subs (savings vs one-time), else null. */
   savingsVsOneTime: number | null;
 }
@@ -117,11 +117,11 @@ function primaryVariantGid(subscription: Subscription): string | null {
  * Flow + Clear contract, so we must NOT infer it from line count. Detection order:
  *   1. Known funnel variant GID (first-order / quarterly / OTP SKUs).
  *   2. Title/variant naming: "Both - N Shots", or a title carrying both formulas
- *      (covers the post-order-1 20/40-shot SKUs that aren't in FUNNEL_VARIANTS).
+ *      (covers the post-order-1 20/40-shot SKUs that aren't in BYO_VARIANTS).
  *   3. Single-formula title match (Flow / Clear).
  * Returns null for legacy protocol / unknown subscriptions.
  */
-function resolveFunnelProduct(subscription: Subscription): FunnelProduct | null {
+function resolveByoProduct(subscription: Subscription): ByoProduct | null {
   const gid = primaryVariantGid(subscription);
   if (gid) {
     const offer = getOfferByVariantId(gid);
@@ -143,14 +143,14 @@ function resolveFunnelProduct(subscription: Subscription): FunnelProduct | null 
 
 function resolveDisplayName(
   subscription: Subscription,
-): { displayName: string; funnelProduct: FunnelProduct | null } {
+): { displayName: string; funnelProduct: ByoProduct | null } {
   // Legacy protocol subs keep their protocol name and stay off the funnel path.
   const protocolId = getProtocolFromSubscription(subscription);
   if (protocolId && PROTOCOL_NAMES[protocolId]) {
     return { displayName: PROTOCOL_NAMES[protocolId], funnelProduct: null };
   }
 
-  const funnelProduct = resolveFunnelProduct(subscription);
+  const funnelProduct = resolveByoProduct(subscription);
   if (funnelProduct === "both") return { displayName: "Both", funnelProduct: "both" };
   if (funnelProduct === "flow") return { displayName: "Flow", funnelProduct: "flow" };
   if (funnelProduct === "clear") return { displayName: "Clear", funnelProduct: "clear" };
@@ -158,7 +158,7 @@ function resolveDisplayName(
   return { displayName: subscription.product?.title || "Subscription", funnelProduct: null };
 }
 
-function funnelCadenceKey(cadence: SubscriptionCadence): FunnelCadence | null {
+function funnelCadenceKey(cadence: SubscriptionCadence): ByoCadence | null {
   if (cadence === "monthly") return "monthly-sub";
   if (cadence === "quarterly") return "quarterly-sub";
   return null;
@@ -188,12 +188,12 @@ export function toDtcSubscriptionView(subscription: Subscription): DtcSubscripti
       ];
 
   const { cadence, cadenceLabel, cadenceHeroLabel } = resolveCadence(subscription.interval);
-  const { displayName, funnelProduct: rawFunnelProduct } = resolveDisplayName(subscription);
+  const { displayName, funnelProduct: rawByoProduct } = resolveDisplayName(subscription);
   const funnelCadence = funnelCadenceKey(cadence);
   // A funnel product only makes sense on a funnel cadence (monthly/quarterly).
   // Legacy protocol duals bill weekly/bi-weekly, so keep them un-tagged (the
   // display name can still read "Both"; funnel pricing/upsell must not apply).
-  const funnelProduct = funnelCadence ? rawFunnelProduct : null;
+  const funnelProduct = funnelCadence ? rawByoProduct : null;
 
   const price =
     subscription.totalLineItemDiscountedPrice ??

@@ -5,18 +5,18 @@ import Image from 'next/image';
 import {
   getOfferPricing,
   getSwapTargets,
-  type FunnelProduct,
-  type FunnelCadence,
-} from '@/app/lib/funnelData';
+  type ByoProduct,
+  type ByoCadence,
+} from '@/app/lib/byoData';
 import { getFormulaImage } from '@/app/lib/productImageConfig';
 
-const PRODUCT_NAME: Record<FunnelProduct, string> = {
+const PRODUCT_NAME: Record<ByoProduct, string> = {
   flow: 'Flow',
   clear: 'Clear',
   both: 'Both',
 };
 
-function productImage(product: FunnelProduct): string {
+function productImage(product: ByoProduct): string {
   if (product === 'both') return '/formulas/both/BothBox.jpg';
   return getFormulaImage(product === 'flow' ? '01' : '02');
 }
@@ -24,9 +24,9 @@ function productImage(product: FunnelProduct): string {
 interface SwapModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSwap: (target: FunnelProduct) => Promise<boolean>;
-  currentProduct: FunnelProduct;
-  cadence: FunnelCadence;
+  onSwap: (target: ByoProduct) => Promise<boolean>;
+  currentProduct: ByoProduct;
+  cadence: ByoCadence;
   currentPrice: number;
   subscriptionName: string;
 }
@@ -40,7 +40,7 @@ export function SwapModal({
   currentPrice,
   subscriptionName,
 }: SwapModalProps) {
-  const [selected, setSelected] = useState<FunnelProduct | null>(null);
+  const [selected, setSelected] = useState<ByoProduct | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

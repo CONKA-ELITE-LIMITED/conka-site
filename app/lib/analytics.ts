@@ -366,7 +366,7 @@ export function trackFunnelStepCompleted(
 }
 
 /** Formula switch. `change` packs from>to so both fit one property. */
-export function trackFunnelProductChanged(params: {
+export function trackByoProductChanged(params: {
   variant: FunnelVariant;
   from: string;
   to: string;
@@ -378,7 +378,7 @@ export function trackFunnelProductChanged(params: {
 }
 
 /** Plan switch. `change` packs from>to so both fit one property. */
-export function trackFunnelCadenceChanged(params: {
+export function trackByoCadenceChanged(params: {
   variant: FunnelVariant;
   from: string;
   to: string;

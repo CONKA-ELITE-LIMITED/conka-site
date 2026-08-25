@@ -7,7 +7,7 @@ import { formatPrice } from "@/app/lib/productData";
 import type {
   CadencePricing,
   CadenceVariantConfig,
-} from "../lib/cadenceData";
+} from "@/app/lib/cadenceData";
 import { GUARANTEE_LABEL_FULL } from "@/app/lib/offerConstants";
 
 interface BuyBoxCardProps {

@@ -7,26 +7,26 @@
  */
 
 import {
-  FunnelCadence,
-  FunnelPricing,
-  FunnelVariantConfig,
-  FUNNEL_CADENCES,
+  ByoCadence,
+  ByoPricing,
+  ByoVariantConfig,
+  BYO_CADENCES,
   getDisplayDiscount,
   getSavingsPercent,
-  getFunnelProductSlideshow,
+  getByoProductSlideshow,
   getOfferPricing,
   getOfferVariant,
-} from "./funnelData";
+} from "./byoData";
 import { FormulaId } from "./productData";
 import type { ProductHeroId } from "./productTypes";
 
-export { FUNNEL_CADENCES, getDisplayDiscount, getSavingsPercent, getFunnelProductSlideshow };
+export { BYO_CADENCES, getDisplayDiscount, getSavingsPercent, getByoProductSlideshow };
 
 // Re-export the cadence union so product pages don't import from funnelData directly
-export type CadenceType = FunnelCadence;
-export type { FunnelPricing as CadencePricing, FunnelVariantConfig as CadenceVariantConfig };
+export type CadenceType = ByoCadence;
+export type { ByoPricing as CadencePricing, ByoVariantConfig as CadenceVariantConfig };
 
-// Maps FormulaId to the FunnelProduct key used in funnelData
+// Maps FormulaId to the ByoProduct key used in funnelData
 const FORMULA_TO_PRODUCT = {
   "01": "flow",
   "02": "clear",
@@ -46,14 +46,14 @@ export const BALANCE_ACCENT = "#0369a1";
 export function getCadencePricingByFormula(
   formulaId: FormulaId,
   cadence: CadenceType,
-): FunnelPricing {
+): ByoPricing {
   return getOfferPricing(FORMULA_TO_PRODUCT[formulaId], cadence);
 }
 
 export function getCadenceVariantByFormula(
   formulaId: FormulaId,
   cadence: CadenceType,
-): FunnelVariantConfig | null {
+): ByoVariantConfig | null {
   return getOfferVariant(FORMULA_TO_PRODUCT[formulaId], cadence);
 }
 
@@ -61,11 +61,11 @@ export function getCadenceVariantByFormula(
 // BALANCE HELPERS (Both / protocol 3 page)
 // ============================================
 
-export function getBalanceCadencePricing(cadence: CadenceType): FunnelPricing {
+export function getBalanceCadencePricing(cadence: CadenceType): ByoPricing {
   return getOfferPricing("both", cadence);
 }
 
-export function getBalanceCadenceVariant(cadence: CadenceType): FunnelVariantConfig | null {
+export function getBalanceCadenceVariant(cadence: CadenceType): ByoVariantConfig | null {
   return getOfferVariant("both", cadence);
 }
 
@@ -77,7 +77,7 @@ export function getBalanceCadenceVariant(cadence: CadenceType): FunnelVariantCon
 export function getCadencePricingByProductHeroId(
   productHeroId: ProductHeroId,
   cadence: CadenceType,
-): FunnelPricing {
+): ByoPricing {
   if (productHeroId === "03") return getBalanceCadencePricing(cadence);
   return getCadencePricingByFormula(productHeroId, cadence);
 }
@@ -86,14 +86,14 @@ export function getCadencePricingByProductHeroId(
 export function getCadenceVariantByProductHeroId(
   productHeroId: ProductHeroId,
   cadence: CadenceType,
-): FunnelVariantConfig | null {
+): ByoVariantConfig | null {
   if (productHeroId === "03") return getBalanceCadenceVariant(cadence);
   return getCadenceVariantByFormula(productHeroId, cadence);
 }
 
 // ============================================
 // BOTH HERO CONTENT ("03")
-// Mirrors funnelData FUNNEL_PRODUCTS.both, structured here so product
+// Mirrors funnelData BYO_PRODUCTS.both, structured here so product
 // pages have a single import path (cadenceData) rather than reaching
 // into funnelData directly.
 // ============================================

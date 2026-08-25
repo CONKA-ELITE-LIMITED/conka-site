@@ -34,14 +34,14 @@ const UpsellBottomSheet = dynamic(
   { ssr: false },
 );
 import {
-  type FunnelCadence,
-  type FunnelProduct,
+  type ByoCadence,
+  type ByoProduct,
   type UpsellOffer,
-  FUNNEL_PRODUCTS,
+  BYO_PRODUCTS,
   getOfferPricing,
   getUpsellOffer,
-} from "../lib/funnelData";
-import { funnelCheckout, isFunnelCheckoutError } from "../lib/funnelCheckout";
+} from "@/app/lib/byoData";
+import { byoCheckout, isByoCheckoutError } from "@/app/lib/byoCheckout";
 import { formatPrice } from "@/app/lib/productData";
 import {
   cadencePriceSuffix,
@@ -53,11 +53,11 @@ import {
 import {
   trackFunnelAccordionOpened,
   trackFunnelBackNav,
-  trackFunnelCadenceChanged,
+  trackByoCadenceChanged,
   trackFunnelCheckout,
   trackFunnelCheckoutFailed,
   trackFunnelCtaClicked,
-  trackFunnelProductChanged,
+  trackByoProductChanged,
   trackFunnelPropertyProbe,
   trackFunnelStepCompleted,
   trackFunnelUpsellAccepted,
@@ -76,8 +76,8 @@ const STEPS: { n: Step; label: string }[] = [
 
 export default function FunnelClient() {
   const [step, setStep] = useState<Step>(1);
-  const [product, setProduct] = useState<FunnelProduct>(FUNNEL_C_DEFAULT_PRODUCT);
-  const [cadence, setCadence] = useState<FunnelCadence>(FUNNEL_C_DEFAULT_CADENCE);
+  const [product, setProduct] = useState<ByoProduct>(FUNNEL_C_DEFAULT_PRODUCT);
+  const [cadence, setCadence] = useState<ByoCadence>(FUNNEL_C_DEFAULT_CADENCE);
 
   /**
    * Steps whose completion event has already fired.
@@ -189,9 +189,9 @@ export default function FunnelClient() {
   // setState updater: updaters must be pure, and React invokes them twice under
   // StrictMode, which would double-count every switch.
   const handleProductChange = useCallback(
-    (p: FunnelProduct) => {
+    (p: ByoProduct) => {
       if (p !== product) {
-        trackFunnelProductChanged({
+        trackByoProductChanged({
           variant: FUNNEL_C_VARIANT,
           from: product,
           to: p,
@@ -204,9 +204,9 @@ export default function FunnelClient() {
   );
 
   const handleCadenceChange = useCallback(
-    (c: FunnelCadence) => {
+    (c: ByoCadence) => {
       if (c !== cadence) {
-        trackFunnelCadenceChanged({
+        trackByoCadenceChanged({
           variant: FUNNEL_C_VARIANT,
           from: cadence,
           to: c,
@@ -219,17 +219,17 @@ export default function FunnelClient() {
   );
 
   const proceedToCheckout = useCallback(
-    async (p: FunnelProduct, c: FunnelCadence, upsellAccepted: boolean) => {
+    async (p: ByoProduct, c: ByoCadence, upsellAccepted: boolean) => {
       setIsCheckingOut(true);
       setError(null);
       trackFunnelCheckout({ variant: FUNNEL_C_VARIANT, product: p, cadence: c });
-      const result = await funnelCheckout({
+      const result = await byoCheckout({
         product: p,
         cadence: c,
         upsellAccepted,
         source: FUNNEL_C_SOURCE,
       });
-      if (isFunnelCheckoutError(result)) {
+      if (isByoCheckoutError(result)) {
         trackFunnelCheckoutFailed({
           variant: FUNNEL_C_VARIANT,
           reason: result.error,
@@ -271,7 +271,7 @@ export default function FunnelClient() {
   // Live product + price shown INSIDE the footer CTA
   const pricing = getOfferPricing(product, cadence);
   const freq = cadencePriceSuffix(cadence);
-  const ctaPrice = `${FUNNEL_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
+  const ctaPrice = `${BYO_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
   const ctaPriceShort = `${formatPrice(pricing.price)}${freq}`;
   const isSubscription = cadence !== "monthly-otp";
 

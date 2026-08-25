@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { BOTH_PDP_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { formatPrice } from "@/app/lib/productData";
 import {
-  FUNNEL_PRODUCTS,
-  FUNNEL_HERO_IMAGES,
-  getFunnelPriceRange,
-  getFunnelMinPerShot,
-} from "@/app/lib/funnelData";
+  BYO_PRODUCTS,
+  BYO_HERO_IMAGES,
+  getByoPriceRange,
+  getByoMinPerShot,
+} from "@/app/lib/byoData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 
 // conka-both/page.tsx is a Client Component and cannot export metadata itself.
@@ -14,7 +14,7 @@ import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 export const metadata: Metadata = {
   title: "Buy CONKA Brain Shot | Best Nootropic Supplement UK",
   description: `Buy CONKA Flow + Clear, the UK's most clinically validated brain shot. Informed Sport certified. 16 active ingredients. 100-day guarantee. From ${formatPrice(
-    getFunnelMinPerShot("both"),
+    getByoMinPerShot("both"),
   )}/shot.`,
   openGraph: {
     title: "Buy CONKA Brain Shot | Best Nootropic Supplement UK",
@@ -38,11 +38,11 @@ export default function ConkaBothLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const bothPrices = getFunnelPriceRange("both");
+  const bothPrices = getByoPriceRange("both");
   const productSchema = buildProductSchema({
     name: "CONKA Flow + Clear",
-    description: FUNNEL_PRODUCTS.both.description,
-    imagePath: FUNNEL_HERO_IMAGES.both.src,
+    description: BYO_PRODUCTS.both.description,
+    imagePath: BYO_HERO_IMAGES.both.src,
     urlPath: "/conka-both",
     lowPrice: bothPrices.low,
     highPrice: bothPrices.high,

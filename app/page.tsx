@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { getFunnelMinPerShot } from "@/app/lib/funnelData";
+import { getByoMinPerShot } from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
 import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
@@ -51,7 +51,7 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
 export const metadata: Metadata = {
   title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
   description: `CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From ${formatPrice(
-    getFunnelMinPerShot("both"),
+    getByoMinPerShot("both"),
   )}/shot.`,
   openGraph: {
     title: "Best Brain Supplement UK | CONKA Daily Brain Shot",

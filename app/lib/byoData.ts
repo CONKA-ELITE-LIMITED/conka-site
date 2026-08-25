@@ -1,32 +1,37 @@
 /**
- * Funnel Page — Data Layer
+ * Build Your Order — Data Layer
  *
  * Types, pricing, variant mapping, display data, and upsell logic
- * for the product funnel page (/funnel).
+ * for the Build Your Order flow (/build-your-order) and every surface
+ * that sells the offer catalogue (cart, account portal, JSON-LD).
  *
  * All 9 product/cadence combos (Flow, Clear, Both x Monthly Sub, OTP, Quarterly)
  * are live in Shopify. Variant IDs and selling plans are mapped below.
+ *
+ * Merged from the pre-consolidation app/lib/funnelData.ts and
+ * app/(trial-b)/lib/funnelData.ts forks (SCRUM-1247); the live funnel-c
+ * presentation won, plus the portal/JSON-LD helpers from the main fork.
  */
 
-import { formatPrice, formulaImages, quarterlyImages } from "./productData";
+import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";
 
 // ============================================
 // TYPES
 // ============================================
 
-export type FunnelProduct = "both" | "flow" | "clear";
-export type FunnelCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
+export type ByoProduct = "both" | "flow" | "clear";
+export type ByoCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
 
-export interface FunnelPricing {
+export interface ByoPricing {
   /** Total price for this combination */
   price: number;
-  /** Price per shot — computed on PRICED shots (excludes free bonus shots) */
+  /** Price per shot — computed on PRICED shots (excludes free shots) */
   perShot: number;
   /** Price per day (shots per day × perShot) */
   perDay: number;
-  /** Priced (billed) shots the price buys — excludes free shots */
+  /** Priced (billed) shots — the amount the price buys, excluding free shots */
   shotCount: number;
-  /** Crossed-out compare-at price (the one-time product price for the same shots; absent on one-time entries) */
+  /** Crossed-out compare-at "was" value (value stack: OTP + bonus-shot value + postage). Absent on one-time entries. */
   compareAtPrice?: number;
   /**
    * Published discount % to display (factors in free shots). When set, this is
@@ -35,16 +40,25 @@ export interface FunnelPricing {
    * getDisplayDiscount.
    */
   discountPercent?: number;
-  // "20 + 8 free" offer fields — surfaced everywhere so the bonus is clear.
-  /** Free bonus shots. Monthly = first order only; quarterly = every cycle. */
+
+  // ============================================
+  // OFFER TRIAL (B) — "20 + 8 free" model fields
+  // Values mirror the client mockups (conka_funnel.html / conka_lander.html).
+  // DISPLAY-ONLY for now; Shopify fulfilment of free shots is TBD (see fulfilment spec).
+  // ============================================
+  /** Bonus shots given free. Monthly = first order only; quarterly = every cycle. */
   freeShots?: number;
   /** Total shots in the FIRST shipment (priced + free). */
   firstOrderShots?: number;
-  /** Total shots delivered each cycle after the first. */
+  /** Total shots delivered each cycle after the first (monthly recurring = priced only). */
   subsequentShots?: number;
+  /** Compulsory postage on one-time orders (£). Absent/0 = free postage (subscriptions). */
+  postage?: number;
+  /** Value attributed to the free bonus shots (freeShots × OTP per-shot), for the "was" stack. */
+  freeShotsValue?: number;
 }
 
-export interface FunnelVariantConfig {
+export interface ByoVariantConfig {
   variantId: string;
   sellingPlanId?: string;
 }
@@ -54,8 +68,8 @@ export interface UpsellOffer {
   body: string;
   acceptLabel: string;
   declineLabel: string;
-  upgradedProduct: FunnelProduct;
-  upgradedCadence: FunnelCadence;
+  upgradedProduct: ByoProduct;
+  upgradedCadence: ByoCadence;
   /** What the customer actually pays extra */
   priceDifference?: number;
   /** What the added product would cost on its own (crossed-out reference price) */
@@ -99,10 +113,10 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
  * The discount % to DISPLAY for a pricing entry. Prefers the explicit,
  * published `discountPercent` (which factors in free shots); otherwise falls
  * back to the derived saving vs the compare-at price. Returns 0 when neither
- * applies (e.g. one-time entries with no discount), so callers can keep using
- * `savePct > 0` to decide whether to show a badge.
+ * applies, so callers can keep using `savePct > 0` to decide whether to show a
+ * badge.
  */
-export function getDisplayDiscount(pricing: FunnelPricing): number {
+export function getDisplayDiscount(pricing: ByoPricing): number {
   if (pricing.discountPercent != null) return pricing.discountPercent;
   if (pricing.compareAtPrice != null) {
     return getSavingsPercent(pricing.price, pricing.compareAtPrice);
@@ -110,24 +124,24 @@ export function getDisplayDiscount(pricing: FunnelPricing): number {
   return 0;
 }
 
-// OTP_PRICE = the one-time PRODUCT value (excl. postage). It doubles as the
-// verifiable compare-at "was" on subscription entries (monthly anchors against
-// one box, quarterly against three). The one-time CADENCE price bakes in
-// compulsory postage on top (OTP_POSTAGE) — subscriptions always ship free.
-const OTP_PRICE: Record<FunnelProduct, number> = {
+// OFFER TRIAL (B) — "20 + 8 free" pricing model.
+// perShot is computed on PRICED shots. compareAtPrice is the REAL one-time (OTP)
+// price for the same shots — a verifiable "was" the buyer can see on the OTP
+// option (monthly anchors against 1 one-time box, quarterly against 3). Free
+// shots / postage / app are shown as separate FREE line items, NOT rolled into
+// an inflated "was". One-time entries carry no compareAtPrice (they ARE the
+// reference) but DO carry compulsory `postage`.
+// NOTE: free-shot counts (esp. quarterly) are still under review — single source of truth here.
+const OTP_PRICE: Record<ByoProduct, number> = {
   both: 89.99,
   flow: 59.99,
   clear: 59.99,
 };
 
-/** Compulsory postage on one-time orders, baked into the displayed OTP price. */
+/** Compulsory postage charged on one-time orders (subscriptions ship free). */
 const OTP_POSTAGE = 9.99;
 
-// "20 + 8 free" offer. Monthly subscription: the FIRST order ships the bonus
-// box (priced + free shots); recurring orders ship the priced shots only (Loop
-// swaps the SKU). perShot is computed on PRICED shots. compareAtPrice is the
-// real one-time product price for the same shots — a verifiable "was".
-const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>> = {
+const BYO_PRICING: Record<ByoProduct, Record<ByoCadence, ByoPricing>> = {
   both: {
     "monthly-sub": {
       price: 74.99,
@@ -139,13 +153,15 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       freeShots: 16,
       firstOrderShots: 56,
       subsequentShots: 40,
+      freeShotsValue: 47.99,
     },
     "monthly-otp": {
-      price: OTP_PRICE.both + OTP_POSTAGE,
+      price: OTP_PRICE.both,
       discountPercent: 29,
-      perShot: 2.5,
-      perDay: 5.0,
+      perShot: 2.25,
+      perDay: 4.5,
       shotCount: 40,
+      postage: OTP_POSTAGE,
     },
     "quarterly-sub": {
       price: 149.99,
@@ -156,7 +172,8 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       discountPercent: 69,
       freeShots: 20,
       firstOrderShots: 140,
-      subsequentShots: 120,
+      subsequentShots: 140,
+      freeShotsValue: 59.99,
     },
   },
   flow: {
@@ -165,28 +182,31 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      compareAtPrice: OTP_PRICE.flow,
+      compareAtPrice: 59.99,
       discountPercent: 43,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
+      freeShotsValue: 23.99,
     },
     "monthly-otp": {
-      price: OTP_PRICE.flow + OTP_POSTAGE,
-      perShot: 3.5,
-      perDay: 3.5,
+      price: OTP_PRICE.flow,
+      perShot: 3.0,
+      perDay: 3.0,
       shotCount: 20,
+      postage: OTP_POSTAGE,
     },
     "quarterly-sub": {
       price: 109.99,
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: OTP_PRICE.flow * 3,
+      compareAtPrice: 179.97,
       discountPercent: 63,
       freeShots: 20,
       firstOrderShots: 80,
-      subsequentShots: 60,
+      subsequentShots: 80,
+      freeShotsValue: 59.99,
     },
   },
   clear: {
@@ -195,28 +215,31 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      compareAtPrice: OTP_PRICE.clear,
+      compareAtPrice: 59.99,
       discountPercent: 43,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
+      freeShotsValue: 23.99,
     },
     "monthly-otp": {
-      price: OTP_PRICE.clear + OTP_POSTAGE,
-      perShot: 3.5,
-      perDay: 3.5,
+      price: OTP_PRICE.clear,
+      perShot: 3.0,
+      perDay: 3.0,
       shotCount: 20,
+      postage: OTP_POSTAGE,
     },
     "quarterly-sub": {
       price: 109.99,
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: OTP_PRICE.clear * 3,
+      compareAtPrice: 179.97,
       discountPercent: 63,
       freeShots: 20,
       firstOrderShots: 80,
-      subsequentShots: 60,
+      subsequentShots: 80,
+      freeShotsValue: 59.99,
     },
   },
 };
@@ -228,9 +251,10 @@ const FUNNEL_PRICING: Record<FunnelProduct, Record<FunnelCadence, FunnelPricing>
 //   monthly-sub   → 28/56-shot FIRST-ORDER SKU; Loop swaps to the 20/40-shot SKU
 //                   from order 2 (Loop monthly plan). Selling-plan GIDs unchanged
 //                   — the same plans are being re-priced in Loop, not replaced.
-//   monthly-otp   → dedicated one-time SKU (postage baked into the price).
+//   monthly-otp   → dedicated one-time SKU (postage baked into the Shopify price;
+//                   displayed here as price + postage, same checkout total).
 //   quarterly-sub → 80/140-shot SKU (ships once, no swap).
-const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>> = {
+const BYO_VARIANTS: Record<ByoProduct, Record<ByoCadence, ByoVariantConfig>> = {
   flow: {
     "monthly-sub": {
       variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
@@ -272,69 +296,11 @@ const FUNNEL_VARIANTS: Record<FunnelProduct, Record<FunnelCadence, FunnelVariant
   },
 };
 
-/**
- * Reverse lookup: a cart line's variant GID → its offer (product, cadence,
- * pricing). Lets the cart drawer show shots + free shots per the "20 + 8" model.
- */
-export function getOfferByVariantId(
-  variantId: string,
-): { product: FunnelProduct; cadence: FunnelCadence; pricing: FunnelPricing } | null {
-  for (const product of Object.keys(FUNNEL_VARIANTS) as FunnelProduct[]) {
-    for (const cadence of Object.keys(FUNNEL_VARIANTS[product]) as FunnelCadence[]) {
-      if (FUNNEL_VARIANTS[product][cadence].variantId === variantId) {
-        return { product, cadence, pricing: FUNNEL_PRICING[product][cadence] };
-      }
-    }
-  }
-  return null;
-}
-
-// ============================================
-// SUBSCRIPTION SWAP (account portal, SCRUM-1200)
-// ============================================
-// Loop's line-swap API reassigns the plan via the individual SELLING PLAN id
-// (`sellingPlanId`), NOT the selling-plan group id. Verified empirically against
-// live Loop on 2026-08-04: passing `sellingPlanGroupId` is silently ignored (the
-// swapped line keeps its old plan — e.g. a single Clear left stuck on the
-// "Monthly Dual" plan) and is rejected outright when combined with
-// pricingType 'NEW' (UNPROCESSABLE_ENTITY). Passing the target `sellingPlanId`
-// with pricingType 'NEW' correctly moves BOTH the plan and the line price.
-//
-// The plan GIDs already live in FUNNEL_VARIANTS (used at funnel checkout), so
-// there is no separate table to hand-maintain — this just extracts the numeric
-// id Loop's swap body expects. Returns null if the cadence has no plan (e.g.
-// one-time), so the route can 503 rather than send a bad swap.
-
-/** Numeric selling-plan id for a same-cadence funnel swap, or null if unset. */
-export function getFunnelSwapSellingPlanId(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
-): string | null {
-  const gid = FUNNEL_VARIANTS[product]?.[cadence]?.sellingPlanId;
-  if (!gid) return null;
-  return gid.split("/").pop() ?? null;
-}
-
-/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */
-export function getFunnelVariantNumericId(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
-): string | null {
-  const cfg = FUNNEL_VARIANTS[product]?.[cadence];
-  if (!cfg?.variantId) return null;
-  return cfg.variantId.split("/").pop() ?? null;
-}
-
-/** The other two funnel products at the same cadence — the valid swap targets. */
-export function getSwapTargets(current: FunnelProduct): FunnelProduct[] {
-  return (["flow", "clear", "both"] as FunnelProduct[]).filter((p) => p !== current);
-}
-
 // ============================================
 // DISPLAY DATA
 // ============================================
 
-export interface FunnelProductDisplay {
+export interface ByoProductDisplay {
   name: string;
   label: string;
   tagline: string;
@@ -351,12 +317,12 @@ export interface FunnelProductDisplay {
   features: string[];
 }
 
-export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
+export const BYO_PRODUCTS: Record<ByoProduct, ByoProductDisplay> = {
   both: {
     name: "Both",
     label: "Flow + Clear",
     tagline: "The complete daily system",
-    shotCount: 40,
+    shotCount: 56,
     description: "The complete protocol. Flow sharpens your morning. Clear sustains your afternoon. Together they cover the full day.",
     thumbnail: "/formulas/both/BothShots.jpg",
     badge: "Most Popular",
@@ -373,7 +339,7 @@ export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
     name: "Flow",
     label: "CONKA Flow",
     tagline: "Morning foundation",
-    shotCount: 20,
+    shotCount: 28,
     description: "Take it in the morning. Calm, sustained focus without caffeine. Your brain on before the day starts.",
     thumbnail: "/formulas/conkaFlow/FlowNoBackground.png",
     accent: "#F59E0B",
@@ -389,7 +355,7 @@ export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
     name: "Clear",
     label: "CONKA Clear",
     tagline: "Afternoon clarity",
-    shotCount: 20,
+    shotCount: 28,
     description: "Take it in the afternoon. Clears the 2pm fog and sustains output. The shot for the second half of your day.",
     thumbnail: "/formulas/conkaClear/ClearNoBackground.png",
     accent: "#0369a1",
@@ -403,7 +369,7 @@ export const FUNNEL_PRODUCTS: Record<FunnelProduct, FunnelProductDisplay> = {
   },
 };
 
-export interface FunnelCadenceDisplay {
+export interface ByoCadenceDisplay {
   label: string;
   subtitle: string;
   badge?: string;
@@ -413,7 +379,7 @@ export interface FunnelCadenceDisplay {
   features: string[];
 }
 
-export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
+export const BYO_CADENCES: Record<ByoCadence, ByoCadenceDisplay> = {
   "monthly-sub": {
     label: "1-month supply",
     subtitle: "Delivered monthly, cancel anytime",
@@ -427,7 +393,7 @@ export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
     label: "Try once",
     subtitle: "Single order, no subscription",
     features: [
-      "Subscribe and save up to 33%",
+      "Subscribe later and save 25% or more",
     ],
   },
   "quarterly-sub": {
@@ -447,7 +413,7 @@ export const FUNNEL_CADENCES: Record<FunnelCadence, FunnelCadenceDisplay> = {
 // ============================================
 
 /** Product-specific hero images (used in static mode for step 2) */
-export const FUNNEL_HERO_IMAGES: Record<FunnelProduct, { src: string; alt: string }> = {
+export const BYO_HERO_IMAGES: Record<ByoProduct, { src: string; alt: string }> = {
   both: {
     src: "/formulas/both/BothBox.jpg",
     alt: "CONKA Flow and Clear — your AM and PM brain performance system",
@@ -463,15 +429,15 @@ export const FUNNEL_HERO_IMAGES: Record<FunnelProduct, { src: string; alt: strin
 };
 
 /** Step 2: Slideshow images per product (carousel) — sourced from central config */
-const FUNNEL_PRODUCT_SLIDESHOW_BASE: Record<FunnelProduct, { src: string }[]> = formulaImages;
+const FUNNEL_PRODUCT_SLIDESHOW_BASE: Record<ByoProduct, { src: string }[]> = formulaImages;
 
 /** Quarterly swaps the first slide to show the larger shipment */
-const QUARTERLY_FIRST_SLIDE: Record<FunnelProduct, { src: string }> = quarterlyImages;
+const QUARTERLY_FIRST_SLIDE: Record<ByoProduct, { src: string }> = quarterlyImages;
 
 /** Get slideshow images for a product, adjusted for cadence */
-export function getFunnelProductSlideshow(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
+export function getByoProductSlideshow(
+  product: ByoProduct,
+  cadence: ByoCadence,
 ): { src: string }[] {
   const base = FUNNEL_PRODUCT_SLIDESHOW_BASE[product];
   if (cadence === "quarterly-sub") {
@@ -484,11 +450,11 @@ export function getFunnelProductSlideshow(
 // VARIANT REVERSE-LOOKUP (single source of truth for GID detection)
 // ============================================
 
-const VARIANT_TO_PRODUCT = new Map<string, FunnelProduct>();
+const VARIANT_TO_PRODUCT = new Map<string, ByoProduct>();
 const QUARTERLY_VARIANT_SET = new Set<string>();
 
-for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[FunnelProduct, Record<FunnelCadence, FunnelVariantConfig>]>) {
-  for (const [cadence, config] of Object.entries(cadences) as Array<[FunnelCadence, FunnelVariantConfig]>) {
+for (const [product, cadences] of Object.entries(BYO_VARIANTS) as Array<[ByoProduct, Record<ByoCadence, ByoVariantConfig>]>) {
+  for (const [cadence, config] of Object.entries(cadences) as Array<[ByoCadence, ByoVariantConfig]>) {
     if (config.variantId) {
       VARIANT_TO_PRODUCT.set(config.variantId, product);
       if (cadence === "quarterly-sub") {
@@ -499,12 +465,12 @@ for (const [product, cadences] of Object.entries(FUNNEL_VARIANTS) as Array<[Funn
 }
 
 /** Given a Shopify variant GID, return the CONKA product or null if not a known variant. */
-export function detectFunnelProduct(variantId: string): FunnelProduct | null {
+export function detectByoProduct(variantId: string): ByoProduct | null {
   return VARIANT_TO_PRODUCT.get(variantId) ?? null;
 }
 
 /** Given a variant GID and whether a sellingPlan is active, return the cadence. */
-export function detectFunnelCadence(variantId: string, hasSellingPlan: boolean): FunnelCadence {
+export function detectByoCadence(variantId: string, hasSellingPlan: boolean): ByoCadence {
   if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
   return hasSellingPlan ? "monthly-sub" : "monthly-otp";
 }
@@ -514,67 +480,37 @@ export function detectFunnelCadence(variantId: string, hasSellingPlan: boolean):
 // ============================================
 
 export function getOfferPricing(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
-): FunnelPricing {
-  return FUNNEL_PRICING[product][cadence];
-}
-
-/**
- * Lowest and highest purchasable price across all cadences for a product,
- * plus the number of offers. Feeds the Product JSON-LD AggregateOffer so the
- * structured data stays in sync with FUNNEL_PRICING automatically (SCRUM-1133).
- */
-export function getFunnelPriceRange(product: FunnelProduct): {
-  low: number;
-  high: number;
-  count: number;
-} {
-  const prices = Object.values(FUNNEL_PRICING[product]).map((p) => p.price);
-  return {
-    low: Math.min(...prices),
-    high: Math.max(...prices),
-    count: prices.length,
-  };
-}
-
-/**
- * Lowest per-shot price across all cadences for a product (the cheapest
- * cadence, currently quarterly). Feeds the "From £X/shot" figure in the
- * money-page meta descriptions (SCRUM-1139) so they stay in sync with
- * FUNNEL_PRICING, the same way getFunnelPriceRange feeds the Product JSON-LD.
- * When a price changes, also append a dated block to docs/PRICING_HISTORY.md.
- */
-export function getFunnelMinPerShot(product: FunnelProduct): number {
-  const perShots = Object.values(FUNNEL_PRICING[product]).map((p) => p.perShot);
-  return Math.min(...perShots);
+  product: ByoProduct,
+  cadence: ByoCadence,
+): ByoPricing {
+  return BYO_PRICING[product][cadence];
 }
 
 export function getOfferVariant(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
-): FunnelVariantConfig | null {
-  const config = FUNNEL_VARIANTS[product][cadence];
+  product: ByoProduct,
+  cadence: ByoCadence,
+): ByoVariantConfig | null {
+  const config = BYO_VARIANTS[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
 
 export function isVariantReady(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
+  product: ByoProduct,
+  cadence: ByoCadence,
 ): boolean {
-  const config = FUNNEL_VARIANTS[product][cadence];
+  const config = BYO_VARIANTS[product][cadence];
   return Boolean(config?.variantId);
 }
 
 /** For "Both", get the price of buying Flow + Clear separately at the same cadence */
-export function getBuySeparatelyPrice(cadence: FunnelCadence): number {
-  return FUNNEL_PRICING.flow[cadence].price + FUNNEL_PRICING.clear[cadence].price;
+export function getBuySeparatelyPrice(cadence: ByoCadence): number {
+  return BYO_PRICING.flow[cadence].price + BYO_PRICING.clear[cadence].price;
 }
 
 /** Get the cadence frequency label for cart attributes */
 export function getCadenceFrequency(
-  cadence: FunnelCadence,
+  cadence: ByoCadence,
 ): string {
   switch (cadence) {
     case "monthly-sub":
@@ -604,8 +540,8 @@ export function getCadenceFrequency(
  * Priority: product upgrade first (higher AOV impact), then cadence upgrade.
  */
 export function getUpsellOffer(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
+  product: ByoProduct,
+  cadence: ByoCadence,
 ): UpsellOffer | null {
   const bothImage = { src: "/formulas/both/BothBox.jpg", alt: "CONKA Flow and Clear — AM and PM brain performance" };
 
@@ -767,13 +703,13 @@ export function getUpsellOffer(
  *
  * All values are derived from the pricing matrix so they stay in sync.
  */
-export function getFunnelCTALabels(
+export function getByoCTALabels(
   step: 1 | 2,
-  product: FunnelProduct,
-  cadence: FunnelCadence,
+  product: ByoProduct,
+  cadence: ByoCadence,
 ): { label: string; subLabel: string } {
   const pricing = getOfferPricing(product, cadence);
-  const display = FUNNEL_PRODUCTS[product];
+  const display = BYO_PRODUCTS[product];
 
   if (step === 1) {
     const label = `Get for ${formatPrice(pricing.perShot)}/shot`;
@@ -812,4 +748,102 @@ export function getFunnelCTALabels(
       };
     }
   }
+}
+
+// ============================================
+// VARIANT LOOKUP + PORTAL HELPERS
+// (ported from the pre-merge app/lib/funnelData.ts fork; SCRUM-1247)
+// ============================================
+
+/**
+ * Reverse lookup: given a Shopify variant GID, return the offer it belongs to.
+ * Used by cart analytics (productMetadata) and the account portal to recognise
+ * offer lines without hand-maintained tables.
+ */
+export function getOfferByVariantId(
+  variantId: string,
+): { product: ByoProduct; cadence: ByoCadence; pricing: ByoPricing } | null {
+  for (const product of Object.keys(BYO_VARIANTS) as ByoProduct[]) {
+    for (const cadence of Object.keys(BYO_VARIANTS[product]) as ByoCadence[]) {
+      if (BYO_VARIANTS[product][cadence].variantId === variantId) {
+        return { product, cadence, pricing: BYO_PRICING[product][cadence] };
+      }
+    }
+  }
+  return null;
+}
+
+// ============================================
+// SUBSCRIPTION SWAP (account portal, SCRUM-1200)
+// ============================================
+// Loop's line-swap API reassigns the plan via the individual SELLING PLAN id
+// (`sellingPlanId`), NOT the selling-plan group id. Verified empirically against
+// live Loop on 2026-08-04: passing `sellingPlanGroupId` is silently ignored (the
+// swapped line keeps its old plan — e.g. a single Clear left stuck on the
+// "Monthly Dual" plan) and is rejected outright when combined with
+// pricingType 'NEW' (UNPROCESSABLE_ENTITY). Passing the target `sellingPlanId`
+// with pricingType 'NEW' correctly moves BOTH the plan and the line price.
+//
+// The plan GIDs already live in BYO_VARIANTS (used at checkout), so there is no
+// separate table to hand-maintain — this just extracts the numeric id Loop's
+// swap body expects. Returns null if the cadence has no plan (e.g. one-time),
+// so the route can 503 rather than send a bad swap.
+
+/** Numeric selling-plan id for a same-cadence offer swap, or null if unset. */
+export function getByoSwapSellingPlanId(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): string | null {
+  const gid = BYO_VARIANTS[product]?.[cadence]?.sellingPlanId;
+  if (!gid) return null;
+  return gid.split("/").pop() ?? null;
+}
+
+/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */
+export function getByoVariantNumericId(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): string | null {
+  const cfg = BYO_VARIANTS[product]?.[cadence];
+  if (!cfg?.variantId) return null;
+  return cfg.variantId.split("/").pop() ?? null;
+}
+
+/** The other two products at the same cadence — the valid swap targets. */
+export function getSwapTargets(current: ByoProduct): ByoProduct[] {
+  return (["flow", "clear", "both"] as ByoProduct[]).filter((p) => p !== current);
+}
+
+/**
+ * Lowest and highest purchasable price across all cadences for a product,
+ * plus the number of offers. Feeds the Product JSON-LD AggregateOffer so the
+ * structured data stays in sync with BYO_PRICING automatically (SCRUM-1133).
+ * One-time entries add `postage` back because the Shopify variant price has
+ * postage baked in — the structured data must match what the variant charges.
+ */
+export function getByoPriceRange(product: ByoProduct): {
+  low: number;
+  high: number;
+  count: number;
+} {
+  const prices = Object.values(BYO_PRICING[product]).map(
+    (p) => p.price + (p.postage ?? 0),
+  );
+  return {
+    low: Math.min(...prices),
+    high: Math.max(...prices),
+    count: prices.length,
+  };
+}
+
+/**
+ * Lowest per-shot price across all cadences for a product (the cheapest
+ * cadence, currently quarterly). Feeds the "From £X/shot" figure in the
+ * money-page meta descriptions (SCRUM-1139) so they stay in sync with
+ * BYO_PRICING, the same way getByoPriceRange feeds the Product JSON-LD.
+ * When a price changes, also append a dated block to docs/PRICING_HISTORY.md.
+ */
+export function getByoMinPerShot(product: ByoProduct): number {
+  const perShots = Object.values(BYO_PRICING[product]).map((p) => p.perShot);
+  return Math.min(...perShots);
 }

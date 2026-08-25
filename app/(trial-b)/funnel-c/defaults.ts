@@ -1,4 +1,4 @@
-import type { FunnelCadence, FunnelProduct } from "../lib/funnelData";
+import type { ByoCadence, ByoProduct } from "@/app/lib/byoData";
 
 /**
  * The offer funnel-c lands on.
@@ -15,8 +15,8 @@ import type { FunnelCadence, FunnelProduct } from "../lib/funnelData";
  *
  * Note this differs from /funnel and /funnel-b, which open on Both.
  */
-export const FUNNEL_C_DEFAULT_PRODUCT: FunnelProduct = "flow";
-export const FUNNEL_C_DEFAULT_CADENCE: FunnelCadence = "monthly-sub";
+export const FUNNEL_C_DEFAULT_PRODUCT: ByoProduct = "flow";
+export const FUNNEL_C_DEFAULT_CADENCE: ByoCadence = "monthly-sub";
 
 /** Order attribution tag. Distinct from funnel-b so revenue is separable. */
 export const FUNNEL_C_SOURCE = "funnel_page_c";
@@ -36,13 +36,13 @@ export const FUNNEL_C_VARIANT = "c" as const;
  */
 
 /** Suffix beside a price, e.g. "£109.99/3 months". Empty for one-time. */
-export function cadencePriceSuffix(cadence: FunnelCadence): string {
+export function cadencePriceSuffix(cadence: ByoCadence): string {
   if (cadence === "monthly-sub") return "/mo";
   if (cadence === "quarterly-sub") return "/3 months";
   return "";
 }
 
 /** Reads after a shot count, e.g. "60 shots every 3 months". */
-export function cadenceDeliveryPeriod(cadence: FunnelCadence): string {
+export function cadenceDeliveryPeriod(cadence: ByoCadence): string {
   return cadence === "quarterly-sub" ? "every 3 months" : "a month";
 }

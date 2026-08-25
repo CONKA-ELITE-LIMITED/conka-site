@@ -1,7 +1,7 @@
 /**
- * Fetch funnel product variant IDs and selling plan IDs from Shopify Storefront API.
+ * Fetch Build Your Order (Shopify tag: funnel) product variant IDs and selling plan IDs from Shopify Storefront API.
  *
- * Usage: npx tsx scripts/fetch-funnel-products.ts
+ * Usage: npx tsx scripts/fetch-byo-products.ts
  *
  * Requires .env.local with:
  *   NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
@@ -147,7 +147,7 @@ async function main() {
     console.log("");
   }
 
-  // Summary for copy-paste into funnelData.ts
+  // Summary for copy-paste into byoData.ts
   console.log("=== COPY-PASTE SUMMARY ===\n");
   for (const { node: product } of products) {
     const title = product.title.toLowerCase();

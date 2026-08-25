@@ -15,35 +15,35 @@
 
 import { useState, Fragment } from "react";
 import {
-  type FunnelCadence,
-  type FunnelProduct,
+  type ByoCadence,
+  type ByoProduct,
   getOfferPricing,
   getDisplayDiscount,
-} from "../../lib/funnelData";
+} from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
 
 interface CadenceSelectorProps {
-  cadence: FunnelCadence;
-  product: FunnelProduct;
-  onChange: (cadence: FunnelCadence) => void;
+  cadence: ByoCadence;
+  product: ByoProduct;
+  onChange: (cadence: ByoCadence) => void;
 }
 
-const PLAN_ORDER: FunnelCadence[] = ["monthly-sub", "quarterly-sub", "monthly-otp"];
+const PLAN_ORDER: ByoCadence[] = ["monthly-sub", "quarterly-sub", "monthly-otp"];
 
 /** The plan name carries the commitment, so no separate "Subscription" chip. */
-const PLAN_NAME: Record<FunnelCadence, string> = {
+const PLAN_NAME: Record<ByoCadence, string> = {
   "monthly-sub": "Monthly subscription",
   "quarterly-sub": "Quarterly subscription",
   "monthly-otp": "One-time purchase",
 };
 
 /** Floating badge on the top edge of the card. */
-const PLAN_BADGE: Partial<Record<FunnelCadence, string>> = {
+const PLAN_BADGE: Partial<Record<ByoCadence, string>> = {
   "monthly-sub": "Most popular",
 };
 
-function postageValue(cadence: FunnelCadence): number {
+function postageValue(cadence: ByoCadence): number {
   return cadence === "quarterly-sub" ? 29.97 : 9.99;
 }
 
@@ -59,10 +59,10 @@ const ShotIcon = () => (<svg {...ico}><path d="M9 3h6M10 3v5l-4 9a2 2 0 0 0 1.8 
 export default function CadenceSelector({ cadence, product, onChange }: CadenceSelectorProps) {
   // The pre-selected plan starts open, so its value stack is the first thing the
   // user reads rather than something they have to go looking for.
-  const [openKey, setOpenKey] = useState<FunnelCadence | null>(cadence);
+  const [openKey, setOpenKey] = useState<ByoCadence | null>(cadence);
   const [pulseKey, setPulseKey] = useState(0);
 
-  const handleToggle = (key: FunnelCadence) => {
+  const handleToggle = (key: ByoCadence) => {
     setPulseKey((k) => k + 1);
     setOpenKey((prev) => (prev === key ? null : key));
     onChange(key);
