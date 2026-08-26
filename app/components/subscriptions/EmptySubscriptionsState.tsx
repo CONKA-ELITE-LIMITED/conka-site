@@ -61,7 +61,7 @@ export function EmptySubscriptionsState() {
         </div>
       )}
       <Link
-        href="/funnel"
+        href="/build-your-order"
         className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-navy)] text-white text-[13px] font-semibold px-8 py-3 hover:opacity-90 transition-opacity"
       >
         Get started

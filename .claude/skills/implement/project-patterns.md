@@ -17,7 +17,7 @@ Project-specific patterns and references for /implement (consult while building 
 - **Shopify queries:** `app/lib/shopifyQueries.ts`
 - **Cart context:** `app/context/CartContext.tsx` -- all cart operations
 - **Cart API proxy:** `app/api/cart/route.ts`
-- **Funnel data:** `app/lib/funnelData.ts` (standalone, does not modify shared product data)
+- **Funnel data:** `app/lib/byoData.ts` (standalone, does not modify shared product data)
 - **Offer constants:** `app/lib/offerConstants.ts` -- never hardcode guarantee periods or offer terms
 
 ### Design system

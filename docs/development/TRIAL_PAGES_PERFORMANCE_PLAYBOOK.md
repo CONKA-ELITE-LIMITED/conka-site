@@ -1,22 +1,15 @@
 # Trial Pages — Performance Playbook
 
-> **⚠️ Status update (2026-08-18): these pages are DORMANT.** `funnel-b` was
-> **deleted** (unapproved orphan, no inbound traffic). `start-b`, `lander-b`,
-> and `funnel-c` are **live but not a current primary ad target** — reached only
-> via the `/start` and `/lander` 307 redirects (`next.config.ts`) and start-b's
-> CTAs. Kept for reference / possible reuse, not actively invested in. Known gap:
-> their OTP/quarterly cadences still point at DRAFT Shopify variants, so those
-> checkouts fail (see the funnel data-layer notes). Confirm a page is back in the
-> ad rotation before spending time on it.
+> **Scope:** The trial pages under `app/(trial-b)/` — `start-b`, `lander-b` —
+> plus their redirecting production siblings (`/start`, `/lander`) and
+> `/build-your-order` (formerly `funnel-c`; promoted out of the trial group in
+> SCRUM-1247, with `funnel-b` and `/funnel` deleted). They share the same
+> architecture and therefore the same performance gaps, so this is **one
+> reusable checklist** rather than three one-offs.
 >
-> **Scope:** The trial pages under `app/(trial-b)/` — `funnel-c`, `start-b`,
-> `lander-b` — plus their production siblings (`/funnel`, `/start`, `/lander`).
-> They share the same architecture and therefore the same performance gaps, so
-> this is **one reusable checklist** rather than three one-offs.
->
-> **Status:** `funnel-c` is the proving ground. Phase 1 (per-page, design-safe
-> levers) is **applied** there; use it as the reference implementation when
-> doing `start-b` and `lander-b`.
+> **Status:** `/build-your-order` (then `funnel-c`) was the proving ground.
+> Phase 1 (per-page, design-safe levers) is **applied** there; use it as the
+> reference implementation.
 >
 > Parent context: see `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md`
 > (item P5 = "Convex out of root", which L1 below depends on).
@@ -32,7 +25,7 @@ page folder. They all share the same gaps:
 | Page | Client files | `next/dynamic` | Group layout | Preconnect |
 |------|:---:|:---:|:---:|:---:|
 | `funnel-c` | 14/16 → **fixed** | ✅ (added) | ❌ (L1 pending) | ✅ (added) |
-| `funnel-b` | 11/13 | ❌ | ❌ | ❌ |
+| `funnel-b` (deleted, SCRUM-1247) | 11/13 | ❌ | ❌ | ❌ |
 | `start-b` | server shell + client islands | ✅ (already) | ❌ (L1 pending) | n/a (internal CTA) |
 | `lander-b` | 6/15 → **Phase 1 done** | ✅ (added) | ❌ (L1 pending) | ✅ (added) |
 | `/start` (prod) | server shell + client islands | ✅ (already) | ❌ (L1 pending) | n/a (internal CTA) |
@@ -83,15 +76,15 @@ place everywhere so the before/after is measurable.
 
 ---
 
-## Reference implementation — `funnel-c` Phase 1 (done)
+## Reference implementation — `/build-your-order` (then `funnel-c`) Phase 1 (done)
 
 | Lesson | Change | File |
 |--------|--------|------|
-| L2 | `BuildStep`, `SummaryStep` → `next/dynamic` with min-height loading fallbacks; modals → `dynamic(..., { ssr: false })` | `funnel-c/FunnelClient.tsx` |
-| L3 | `UpsellBottomSheet` + `NutritionInfoModal` wrapped in `{isOpen && …}` (verified both already `return null` when closed, no exit animation) | `funnel-c/FunnelClient.tsx` |
-| L4 | `preconnect` to `cdn.shopify.com` + `conka-6770.myshopify.com`, `dns-prefetch` fallback | `funnel-c/page.tsx` |
-| L6 | Added the missing `both` video poster (`BothStillWater-poster.jpg`) | `funnel-c/components/FunnelMedia.tsx` |
-| L8 | `<SpeedInsights />` on the page | `funnel-c/page.tsx` |
+| L2 | `BuildStep`, `SummaryStep` → `next/dynamic` with min-height loading fallbacks; modals → `dynamic(..., { ssr: false })` | `app/build-your-order/BuildYourOrderClient.tsx` |
+| L3 | `UpsellBottomSheet` + `NutritionInfoModal` wrapped in `{isOpen && …}` (verified both already `return null` when closed, no exit animation) | `app/build-your-order/BuildYourOrderClient.tsx` |
+| L4 | `preconnect` to `cdn.shopify.com` + `conka-6770.myshopify.com`, `dns-prefetch` fallback | `app/build-your-order/page.tsx` |
+| L6 | Added the missing `both` video poster (`BothStillWater-poster.jpg`) | `app/build-your-order/components/ByoMedia.tsx` |
+| L8 | `<SpeedInsights />` on the page | `app/build-your-order/page.tsx` |
 | Cleanup | Deleted orphaned `FunnelHeroAsset.tsx` (unused in funnel-c; funnel-b/funnel keep their own copies) | — |
 
 **Deferred to Phase 3 (shared):** L1 (group layout / Convex-out-of-root) and L7
@@ -124,11 +117,11 @@ and `CrashChart` is hand-rolled SVG (not recharts). Only real gap was **L8**
     benefit. Only code-split `"use client"` islands. start-b correctly keeps
     `CROResearch`/`CROAppCallout`/`CROFAQv2` (all server) eager.
   - **L4 is about the *next hop the browser makes directly*.** start-b's CTA is
-    an internal `<Link href="/funnel-b">`, which Next auto-prefetches — so there
+    an internal `<Link href="/build-your-order">`, which Next auto-prefetches — so there
     is no Shopify origin to preconnect here. Only add the Shopify preconnect on
     pages that redirect *straight* to `cart.checkoutUrl` (the funnels). The
-    weak link in the start-b → funnel-b → checkout chain is now **funnel-b**,
-    which still needs funnel-c's Phase 1.
+    weak link in the start-b → build-your-order → checkout chain was **funnel-b**,
+    which has since been deleted (SCRUM-1247); start-b CTAs now land on /build-your-order, which has Phase 1 applied.
 
 **`lander-b`** — ✅ **Phase 1 done.** Sells straight to Shopify (no funnel hop),
 so L4 applies here. Changes:

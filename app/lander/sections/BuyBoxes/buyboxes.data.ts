@@ -1,6 +1,6 @@
 // CONKA lander — static buy-box copy.
 //
-// Product pricing, variants and selling plans come live from app/lib/funnelData.ts
+// Product pricing, variants and selling plans come live from app/lib/byoData.ts
 // (shaped in app/lander/page.tsx, passed down as the `live` prop). This file only
 // holds the static promotional copy shared across the buy cards.
 

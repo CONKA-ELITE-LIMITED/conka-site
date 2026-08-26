@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { formatPrice } from "@/app/lib/productData";
 import {
-  FUNNEL_PRODUCTS,
-  FUNNEL_HERO_IMAGES,
-  getFunnelPriceRange,
-  getFunnelMinPerShot,
-} from "@/app/lib/funnelData";
+  BYO_PRODUCTS,
+  BYO_HERO_IMAGES,
+  getByoPriceRange,
+  getByoMinPerShot,
+} from "@/app/lib/byoData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 
@@ -14,7 +14,7 @@ import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 export const metadata: Metadata = {
   title: "CONKA Clear | Afternoon Brain Shot for Focus Under Pressure",
   description: `CONKA Clear is a 30ml afternoon brain shot with Alpha GPC and Ginkgo Biloba. Cuts brain fog and sharpens thinking. Informed Sport certified. From ${formatPrice(
-    getFunnelMinPerShot("clear"),
+    getByoMinPerShot("clear"),
   )}/shot.`,
   openGraph: {
     title: "CONKA Clear | Afternoon Brain Shot for Focus Under Pressure",
@@ -38,11 +38,11 @@ export default function ConkaClarityLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const clearPrices = getFunnelPriceRange("clear");
+  const clearPrices = getByoPriceRange("clear");
   const productSchema = buildProductSchema({
     name: "CONKA Clear",
-    description: FUNNEL_PRODUCTS.clear.description,
-    imagePath: FUNNEL_HERO_IMAGES.clear.src,
+    description: BYO_PRODUCTS.clear.description,
+    imagePath: BYO_HERO_IMAGES.clear.src,
     urlPath: "/conka-clarity",
     lowPrice: clearPrices.low,
     highPrice: clearPrices.high,

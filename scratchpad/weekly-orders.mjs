@@ -56,15 +56,17 @@ while (has) {
   cursor = conn.pageInfo.endCursor;
 }
 
-// week buckets Thu 24 Jul-based (match doc: 3-10, 10-17, 17-24, 24-31, 31-7, 7-10...)
-const weeks = [
-  ["2026-07-03", "2026-07-10"],
-  ["2026-07-10", "2026-07-17"],
-  ["2026-07-17", "2026-07-24"],
-  ["2026-07-24", "2026-07-31"],
-  ["2026-07-31", "2026-08-07"],
-  ["2026-08-07", "2026-08-11"],
-];
+// week buckets: 7-day Thursdays from SINCE, rolling to today (auto-extends each pull)
+const weeks = [];
+{
+  const end = new Date();
+  let cur = new Date(SINCE + "T00:00:00Z");
+  while (cur < end) {
+    const nxt = new Date(cur.getTime() + 7 * 864e5);
+    weeks.push([cur.toISOString().slice(0, 10), nxt.toISOString().slice(0, 10)]);
+    cur = nxt;
+  }
+}
 
 function isRenewal(o) {
   const tags = o.tags.map((t) => t.toLowerCase());
@@ -80,7 +82,7 @@ function isListicle(o) {
 console.log(`Total orders since ${SINCE}: ${orders.length}\n`);
 console.log("Week\tTotal\tNewDemand\tNewCust\tRenewals\tTagged\tNewDemandRev");
 for (const [start, end] of weeks) {
-  const inWeek = orders.filter((o) => o.createdAt >= start && o.createdAt < end + "T23:59:59Z");
+  const inWeek = orders.filter((o) => o.createdAt >= start && o.createdAt < end + "T00:00:00Z");
   const renewals = inWeek.filter(isRenewal);
   const newDemand = inWeek.filter((o) => !isRenewal(o));
   const newCust = newDemand.filter((o) => o.customer?.numberOfOrders === 1);
@@ -91,7 +93,9 @@ for (const [start, end] of weeks) {
   );
 }
 
+if (process.env.DUMP_TAGS) {
 // dump tag vocabulary to verify classifier
 const allTags = new Set();
 for (const o of orders) for (const t of o.tags) allTags.add(t);
 console.log("\nAll tags seen:", [...allTags].sort().join(" | "));
+}

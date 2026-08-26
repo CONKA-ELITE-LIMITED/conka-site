@@ -5,6 +5,17 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | Build Your Order desktop pass: Build-step gallery fills the left media column, Review shows the delivery box on the left, Learn cards go compact, and the sticky CTA sits under the content rail instead of spanning the viewport
+- **2026-08-25** | Brain-fuel proof section redesigned for the bright neuron clip: white section, full-bleed footage, stats centred on a grey hairline-divided card
+- **2026-08-25** | Brain-fuel proof band (home, both PDP, lander) now plays the Both Neuron float clip instead of the BrainFuel render
+- **2026-08-25** | Canonical bottle renders switched to the square V4 label shots; tall thin crops reserved for the two side-by-side pair layouts
+- **2026-08-25** | Home hero swapped from the looped video to the new metal-tray still renders (art-directed per breakpoint, lighter LCP); PDP ingredient thumbs show the full bottle
+- **2026-08-25** | New-label bottle renders rolled out site-wide through a single bottleRenders map; home showcase now shows Flow and Clear side by side on every screen size
+- **2026-08-25** | Build your order flow signed off: thin renders on Learn, PDP-grammar plan cards, box-photo receipt, overflow-proof CTA
+- **2026-08-25** | Build your order restyle: statics replace animations (V3 bottles + PDP hero assets), plan and formula cards adopt the PDP green-ring grammar
+- **2026-08-25** | Build your order flow: neuron Float videos, mobile sticky product gallery with offer ribbon, plan cards gain strike-through anchors and guarantee line
+- **2026-08-25** | Build Your Order attribution live: byo:* event taxonomy, listicle src passthrough to orders, checkout-clicked and upsell events now dashboard-visible
+- **2026-08-25** | Consolidated the three funnel pages into /build-your-order (funnel-c promoted, defaults to Both, old URLs redirect); merged the forked funnel data layer into app/lib/byoData.ts
 - **2026-08-20** | PDP section 4 benefits video swapped to new Float renders (Flow and Clear), Both asset encoded ready for wiring
 - **2026-08-20** | Listicle buy zones upgraded to the V3 PDP hero (current gallery assets, ingredients list, outcome accordions)
 - **2026-08-20** | New PDP hero images for Flow/Clear/Both: neuron background with mg-of-nootropics stat replaces the pink Magic Mind style

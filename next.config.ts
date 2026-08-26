@@ -70,7 +70,24 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/quiz/:path*',
-        destination: '/funnel',
+        destination: '/build-your-order',
+        permanent: true,
+      },
+      // Funnel consolidation (SCRUM-1247): the three funnel variants collapsed
+      // into /build-your-order. Permanent — the funnel URLs are retired.
+      {
+        source: '/funnel',
+        destination: '/build-your-order',
+        permanent: true,
+      },
+      {
+        source: '/funnel-b',
+        destination: '/build-your-order',
+        permanent: true,
+      },
+      {
+        source: '/funnel-c',
+        destination: '/build-your-order',
         permanent: true,
       },
       {

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { formatPrice } from "@/app/lib/productData";
 import {
-  FUNNEL_PRODUCTS,
-  FUNNEL_HERO_IMAGES,
-  getFunnelPriceRange,
-  getFunnelMinPerShot,
-} from "@/app/lib/funnelData";
+  BYO_PRODUCTS,
+  BYO_HERO_IMAGES,
+  getByoPriceRange,
+  getByoMinPerShot,
+} from "@/app/lib/byoData";
 import { JsonLd, buildProductSchema, buildFaqSchema } from "@/app/lib/jsonLd";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 
@@ -14,7 +14,7 @@ import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 export const metadata: Metadata = {
   title: "CONKA Flow | Daily Morning Brain Shot for Focus and Calm",
   description: `CONKA Flow is a 30ml morning brain shot with 6 clinically-dosed adaptogens. Zero caffeine, Informed Sport certified. Sharper focus, no jitters. From ${formatPrice(
-    getFunnelMinPerShot("flow"),
+    getByoMinPerShot("flow"),
   )}/shot.`,
   openGraph: {
     title: "CONKA Flow | Daily Morning Brain Shot for Focus and Calm",
@@ -38,11 +38,11 @@ export default function ConkaFlowLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const flowPrices = getFunnelPriceRange("flow");
+  const flowPrices = getByoPriceRange("flow");
   const productSchema = buildProductSchema({
     name: "CONKA Flow",
-    description: FUNNEL_PRODUCTS.flow.description,
-    imagePath: FUNNEL_HERO_IMAGES.flow.src,
+    description: BYO_PRODUCTS.flow.description,
+    imagePath: BYO_HERO_IMAGES.flow.src,
     urlPath: "/conka-flow",
     lowPrice: flowPrices.low,
     highPrice: flowPrices.high,

@@ -1,13 +1,14 @@
 import { CartLine } from "@/app/lib/shopify";
 import {
+  getChargedPrice,
   getOfferPricing,
   getOfferVariant,
-  detectFunnelProduct,
-  detectFunnelCadence,
-  FUNNEL_PRODUCTS,
-  type FunnelProduct,
-  type FunnelCadence,
-} from "./funnelData";
+  detectByoProduct,
+  detectByoCadence,
+  BYO_PRODUCTS,
+  type ByoProduct,
+  type ByoCadence,
+} from "./byoData";
 import { formatPrice } from "./productData";
 
 // ============================================================================
@@ -30,7 +31,7 @@ export type CartUpsellType = "otp_to_sub" | "single_to_both";
 export interface CartUpsellTileOffer {
   type: CartUpsellType;
   /** The product the shopper currently has (the FROM product) — the analytics dimension. */
-  product: FunnelProduct;
+  product: ByoProduct;
   /** Origin token persisted on accept and written to the `_upsell` cart attribute: `<type>:<fromProduct>`. */
   origin: string;
 
@@ -111,9 +112,9 @@ function hasAcceptedUpsell(): boolean {
 
 /** The single deterministic upgrade for a given line state, or null if terminal. */
 function resolveUpgrade(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
-): { product: FunnelProduct; cadence: FunnelCadence; type: CartUpsellType } | null {
+  product: ByoProduct,
+  cadence: ByoCadence,
+): { product: ByoProduct; cadence: ByoCadence; type: CartUpsellType } | null {
   // OTP -> monthly subscription, same product (Flow / Clear / Both all qualify).
   if (cadence === "monthly-otp") {
     return { product, cadence: "monthly-sub", type: "otp_to_sub" };
@@ -131,10 +132,11 @@ function resolveUpgrade(
   return null;
 }
 
-function buildOtpToSubCopy(product: FunnelProduct, quantity: number): UpsellCopy {
+function buildOtpToSubCopy(product: ByoProduct, quantity: number): UpsellCopy {
   const otp = getOfferPricing(product, "monthly-otp");
   const sub = getOfferPricing(product, "monthly-sub");
-  const saving = (otp.price - sub.price) * quantity;
+  // Anchor against the all-in charged OTP price (postage baked into the SKU).
+  const saving = (getChargedPrice(otp) - sub.price) * quantity;
   const valueLine = sub.freeShots
     ? `Free shipping and ${sub.freeShots} free shots on your first order`
     : "Free shipping, cancel anytime";
@@ -146,8 +148,8 @@ function buildOtpToSubCopy(product: FunnelProduct, quantity: number): UpsellCopy
 }
 
 function buildSingleToBothCopy(
-  product: FunnelProduct,
-  cadence: FunnelCadence,
+  product: ByoProduct,
+  cadence: ByoCadence,
 ): UpsellCopy {
   const current = getOfferPricing(product, cadence);
   const both = getOfferPricing("both", cadence);
@@ -181,10 +183,10 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
   if (lines.length !== 1) return null;
 
   const line = lines[0];
-  const product = detectFunnelProduct(line.merchandise.id);
+  const product = detectByoProduct(line.merchandise.id);
   if (!product) return null;
 
-  const cadence = detectFunnelCadence(line.merchandise.id, Boolean(line.sellingPlanAllocation));
+  const cadence = detectByoCadence(line.merchandise.id, Boolean(line.sellingPlanAllocation));
 
   const upgrade = resolveUpgrade(product, cadence);
   if (!upgrade) return null;
@@ -205,7 +207,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
     originalQuantity: line.quantity,
     targetVariantId: targetVariant.variantId,
     targetSellingPlanId: targetVariant.sellingPlanId,
-    thumbnail: FUNNEL_PRODUCTS[upgrade.product].thumbnail,
+    thumbnail: BYO_PRODUCTS[upgrade.product].thumbnail,
     ...copy,
   };
 }

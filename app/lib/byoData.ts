@@ -1,0 +1,861 @@
+/**
+ * Build Your Order — Data Layer
+ *
+ * Types, pricing, variant mapping, display data, and upsell logic
+ * for the Build Your Order flow (/build-your-order) and every surface
+ * that sells the offer catalogue (cart, account portal, JSON-LD).
+ *
+ * All 9 product/cadence combos (Flow, Clear, Both x Monthly Sub, OTP, Quarterly)
+ * are live in Shopify. Variant IDs and selling plans are mapped below.
+ *
+ * Merged from the pre-consolidation app/lib/funnelData.ts and
+ * app/(trial-b)/lib/funnelData.ts forks (SCRUM-1247); the live funnel-c
+ * presentation won, plus the portal/JSON-LD helpers from the main fork.
+ */
+
+import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";
+
+// ============================================
+// TYPES
+// ============================================
+
+export type ByoProduct = "both" | "flow" | "clear";
+export type ByoCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
+
+export interface ByoPricing {
+  /** Total price for this combination */
+  price: number;
+  /** Price per shot — computed on PRICED shots (excludes free shots) */
+  perShot: number;
+  /** Price per day (shots per day × perShot) */
+  perDay: number;
+  /** Priced (billed) shots — the amount the price buys, excluding free shots */
+  shotCount: number;
+  /** Crossed-out compare-at "was" value (value stack: OTP + bonus-shot value + postage). Absent on one-time entries. */
+  compareAtPrice?: number;
+  /**
+   * Published discount % to display (factors in free shots). When set, this is
+   * the source of truth for the "Save X%" figure; otherwise the displayed
+   * discount falls back to the derived saving vs compareAtPrice. See
+   * getDisplayDiscount.
+   */
+  discountPercent?: number;
+
+  // ============================================
+  // OFFER TRIAL (B) — "20 + 8 free" model fields
+  // Values mirror the client mockups (conka_funnel.html / conka_lander.html).
+  // DISPLAY-ONLY for now; Shopify fulfilment of free shots is TBD (see fulfilment spec).
+  // ============================================
+  /** Bonus shots given free. Monthly = first order only; quarterly = every cycle. */
+  freeShots?: number;
+  /** Total shots in the FIRST shipment (priced + free). */
+  firstOrderShots?: number;
+  /** Total shots delivered each cycle after the first (monthly recurring = priced only). */
+  subsequentShots?: number;
+  /** Compulsory postage on one-time orders (£). Absent/0 = free postage (subscriptions). */
+  postage?: number;
+  /** Value attributed to the free bonus shots (freeShots × OTP per-shot), for the "was" stack. */
+  freeShotsValue?: number;
+}
+
+export interface ByoVariantConfig {
+  variantId: string;
+  sellingPlanId?: string;
+}
+
+export interface UpsellOffer {
+  headline: string;
+  body: string;
+  acceptLabel: string;
+  declineLabel: string;
+  upgradedProduct: ByoProduct;
+  upgradedCadence: ByoCadence;
+  /** What the customer actually pays extra */
+  priceDifference?: number;
+  /** What the added product would cost on its own (crossed-out reference price) */
+  compareAtUpgrade?: number;
+  /** Total savings vs buying separately or vs current selection */
+  savingsAmount?: number;
+  /** Savings as a label (e.g. "Save £29 vs buying separately") */
+  savingsLabel?: string;
+  /** Product image for the upsell card */
+  image?: { src: string; alt: string };
+  /** Benefit bullets with tick marks */
+  benefits?: string[];
+  /** Per-shot price hero block (product upgrades only) */
+  perShotHero?: {
+    /** Per-shot price the user committed to on the previous screen */
+    currentPerShot: number;
+    /** Per-shot price after upgrading to Both */
+    upgradedPerShot: number;
+    /** Human-readable extra cost label, e.g. "+£30/mo" */
+    extraCostLabel: string;
+    /** Savings % vs buying the added product separately */
+    savingsPercent: number;
+    /** Name of the product being added */
+    addedProductName: string;
+  };
+  /** Social nudge line shown beneath decline button */
+  socialNudge?: string;
+}
+
+// ============================================
+// PRICING MATRIX (3 products × 3 cadences)
+// ============================================
+// Pricing from COGS analysis (2026-03-27). All 9 product × cadence variants are live in Shopify.
+
+/** Savings percentage vs the compare-at (one-time) price */
+export function getSavingsPercent(price: number, compareAtPrice: number): number {
+  return Math.round(((compareAtPrice - price) / compareAtPrice) * 100);
+}
+
+/**
+ * The discount % to DISPLAY for a pricing entry. Prefers the explicit,
+ * published `discountPercent` (which factors in free shots); otherwise falls
+ * back to the derived saving vs the compare-at price. Returns 0 when neither
+ * applies, so callers can keep using `savePct > 0` to decide whether to show a
+ * badge.
+ */
+export function getDisplayDiscount(pricing: ByoPricing): number {
+  if (pricing.discountPercent != null) return pricing.discountPercent;
+  if (pricing.compareAtPrice != null) {
+    return getSavingsPercent(pricing.price, pricing.compareAtPrice);
+  }
+  return 0;
+}
+
+// OFFER TRIAL (B) — "20 + 8 free" pricing model.
+// perShot is computed on PRICED shots. compareAtPrice is the REAL one-time (OTP)
+// price for the same shots — a verifiable "was" the buyer can see on the OTP
+// option (monthly anchors against 1 one-time box, quarterly against 3). Free
+// shots / postage / app are shown as separate FREE line items, NOT rolled into
+// an inflated "was". One-time entries carry no compareAtPrice (they ARE the
+// reference) but DO carry compulsory `postage`.
+// NOTE: free-shot counts (esp. quarterly) are still under review — single source of truth here.
+const OTP_PRICE: Record<ByoProduct, number> = {
+  both: 89.99,
+  flow: 59.99,
+  clear: 59.99,
+};
+
+/** Compulsory postage charged on one-time orders (subscriptions ship free). */
+const OTP_POSTAGE = 9.99;
+
+const BYO_PRICING: Record<ByoProduct, Record<ByoCadence, ByoPricing>> = {
+  both: {
+    "monthly-sub": {
+      price: 74.99,
+      perShot: 1.87,
+      perDay: 3.74,
+      shotCount: 40,
+      compareAtPrice: OTP_PRICE.both,
+      discountPercent: 46,
+      freeShots: 16,
+      firstOrderShots: 56,
+      subsequentShots: 40,
+      freeShotsValue: 47.99,
+    },
+    "monthly-otp": {
+      price: OTP_PRICE.both,
+      discountPercent: 29,
+      perShot: 2.25,
+      perDay: 4.5,
+      shotCount: 40,
+      postage: OTP_POSTAGE,
+    },
+    "quarterly-sub": {
+      price: 149.99,
+      perShot: 1.25,
+      perDay: 2.5,
+      shotCount: 120,
+      compareAtPrice: OTP_PRICE.both * 3,
+      discountPercent: 69,
+      freeShots: 20,
+      firstOrderShots: 140,
+      subsequentShots: 140,
+      freeShotsValue: 59.99,
+    },
+  },
+  flow: {
+    "monthly-sub": {
+      price: 39.99,
+      perShot: 2.0,
+      perDay: 2.0,
+      shotCount: 20,
+      compareAtPrice: 59.99,
+      discountPercent: 43,
+      freeShots: 8,
+      firstOrderShots: 28,
+      subsequentShots: 20,
+      freeShotsValue: 23.99,
+    },
+    "monthly-otp": {
+      price: OTP_PRICE.flow,
+      perShot: 3.0,
+      perDay: 3.0,
+      shotCount: 20,
+      postage: OTP_POSTAGE,
+    },
+    "quarterly-sub": {
+      price: 109.99,
+      perShot: 1.83,
+      perDay: 1.83,
+      shotCount: 60,
+      compareAtPrice: 179.97,
+      discountPercent: 63,
+      freeShots: 20,
+      firstOrderShots: 80,
+      subsequentShots: 80,
+      freeShotsValue: 59.99,
+    },
+  },
+  clear: {
+    "monthly-sub": {
+      price: 39.99,
+      perShot: 2.0,
+      perDay: 2.0,
+      shotCount: 20,
+      compareAtPrice: 59.99,
+      discountPercent: 43,
+      freeShots: 8,
+      firstOrderShots: 28,
+      subsequentShots: 20,
+      freeShotsValue: 23.99,
+    },
+    "monthly-otp": {
+      price: OTP_PRICE.clear,
+      perShot: 3.0,
+      perDay: 3.0,
+      shotCount: 20,
+      postage: OTP_POSTAGE,
+    },
+    "quarterly-sub": {
+      price: 109.99,
+      perShot: 1.83,
+      perDay: 1.83,
+      shotCount: 60,
+      compareAtPrice: 179.97,
+      discountPercent: 63,
+      freeShots: 20,
+      firstOrderShots: 80,
+      subsequentShots: 80,
+      freeShotsValue: 59.99,
+    },
+  },
+};
+
+// ============================================
+// VARIANT MAPPING (Shopify GIDs)
+// ============================================
+// "20 + 8 free" SKU mapping (new variants created 2026-06-25).
+//   monthly-sub   → 28/56-shot FIRST-ORDER SKU; Loop swaps to the 20/40-shot SKU
+//                   from order 2 (Loop monthly plan). Selling-plan GIDs unchanged
+//                   — the same plans are being re-priced in Loop, not replaced.
+//   monthly-otp   → dedicated one-time SKU (postage baked into the Shopify price;
+//                   displayed here as price + postage, same checkout total).
+//   quarterly-sub → 80/140-shot SKU (ships once, no swap).
+const BYO_VARIANTS: Record<ByoProduct, Record<ByoCadence, ByoVariantConfig>> = {
+  flow: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
+      sellingPlanId: "gid://shopify/SellingPlan/712527348086",
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
+      sellingPlanId: "gid://shopify/SellingPlan/712527413622",
+    },
+  },
+  clear: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/57568517489014", // CLEAR-FUNNEL-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
+      sellingPlanId: "gid://shopify/SellingPlan/712527348086",
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
+      sellingPlanId: "gid://shopify/SellingPlan/712527413622",
+    },
+  },
+  both: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/57568809976182", // BOTH-FUNNEL-56 (first order → Loop swaps to BOTH-FUNNEL-40)
+      sellingPlanId: "gid://shopify/SellingPlan/712527479158",
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
+      sellingPlanId: "gid://shopify/SellingPlan/712527446390",
+    },
+  },
+};
+
+// ============================================
+// DISPLAY DATA
+// ============================================
+
+export interface ByoProductDisplay {
+  name: string;
+  label: string;
+  tagline: string;
+  shotCount: number;
+  description: string;
+  /** Small product thumbnail for the card */
+  thumbnail: string;
+  badge?: string;
+  /** Accent colour for the card (warm for Flow, cool for Clear, gradient for Both) */
+  accent: string;
+  /** Time-of-day indicator */
+  timeLabel: string;
+  timeEmoji: string;
+  features: string[];
+}
+
+export const BYO_PRODUCTS: Record<ByoProduct, ByoProductDisplay> = {
+  both: {
+    name: "Both",
+    label: "Flow + Clear",
+    tagline: "The complete daily system",
+    shotCount: 56,
+    description: "The complete protocol. Flow sharpens your morning. Clear sustains your afternoon. Together they cover the full day.",
+    thumbnail: "/formulas/both/BothShots.jpg",
+    badge: "Most Popular",
+    accent: "#378ADD",
+    timeLabel: "AM + PM",
+    timeEmoji: "☀️🌙",
+    features: [
+      "Lowest price per shot",
+      "Free shipping for subscribers",
+      "Informed Sport Certified",
+    ],
+  },
+  flow: {
+    name: "Flow",
+    label: "CONKA Flow",
+    tagline: "Morning foundation",
+    shotCount: 28,
+    description: "Take it in the morning. Calm, sustained focus without caffeine. Your brain on before the day starts.",
+    thumbnail: "/formulas/conkaFlow/FlowNoBackground.png",
+    accent: "#F59E0B",
+    timeLabel: "Morning",
+    timeEmoji: "☀️",
+    features: [
+      "Caffeine-free, no crash",
+      "Free shipping for subscribers",
+      "UK patented (GB2629279)",
+    ],
+  },
+  clear: {
+    name: "Clear",
+    label: "CONKA Clear",
+    tagline: "Afternoon clarity",
+    shotCount: 28,
+    description: "Take it in the afternoon. Clears the 2pm fog and sustains output. The shot for the second half of your day.",
+    thumbnail: "/formulas/conkaClear/ClearNoBackground.png",
+    accent: "#0369a1",
+    timeLabel: "Afternoon",
+    timeEmoji: "☀️",
+    features: [
+      "Vitamin C for psychological function††",
+      "Free shipping for subscribers",
+      "Glutathione + Alpha GPC",
+    ],
+  },
+};
+
+export interface ByoCadenceDisplay {
+  label: string;
+  subtitle: string;
+  badge?: string;
+  savingsLabel?: string;
+  /** Shipping callout shown as a standalone badge on subscription cards */
+  shippingCallout?: string;
+  features: string[];
+}
+
+export const BYO_CADENCES: Record<ByoCadence, ByoCadenceDisplay> = {
+  "monthly-sub": {
+    label: "1-month supply",
+    subtitle: "Delivered monthly, cancel anytime",
+    badge: "Most Popular",
+    shippingCallout: "Free shipping on every delivery",
+    features: [
+      "Cancel or pause anytime, no lock-in",
+    ],
+  },
+  "monthly-otp": {
+    label: "Try once",
+    subtitle: "Single order, no subscription",
+    features: [
+      "Subscribe later and save 25% or more",
+    ],
+  },
+  "quarterly-sub": {
+    label: "3-month supply",
+    subtitle: "Lowest price per shot",
+    savingsLabel: "Best Value",
+    shippingCallout: "Free shipping",
+    features: [
+      "Cancel or pause anytime",
+      "Lowest cost per shot across all plans",
+    ],
+  },
+};
+
+// ============================================
+// HERO IMAGES
+// ============================================
+
+/** Product-specific hero images (used in static mode for step 2) */
+export const BYO_HERO_IMAGES: Record<ByoProduct, { src: string; alt: string }> = {
+  both: {
+    src: "/formulas/both/BothBox.jpg",
+    alt: "CONKA Flow and Clear — your AM and PM brain performance system",
+  },
+  flow: {
+    src: "/formulas/conkaFlow/FlowBox.jpg",
+    alt: "CONKA Flow — morning focus and calm formula",
+  },
+  clear: {
+    src: "/formulas/conkaClear/ClearBox.jpg",
+    alt: "CONKA Clear — afternoon clarity and recovery formula",
+  },
+};
+
+/** Step 2: Slideshow images per product (carousel) — sourced from central config */
+const FUNNEL_PRODUCT_SLIDESHOW_BASE: Record<ByoProduct, { src: string }[]> = formulaImages;
+
+/** Quarterly swaps the first slide to show the larger shipment */
+const QUARTERLY_FIRST_SLIDE: Record<ByoProduct, { src: string }> = quarterlyImages;
+
+/** Get slideshow images for a product, adjusted for cadence */
+export function getByoProductSlideshow(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): { src: string }[] {
+  const base = FUNNEL_PRODUCT_SLIDESHOW_BASE[product];
+  if (cadence === "quarterly-sub") {
+    return [QUARTERLY_FIRST_SLIDE[product], ...base.slice(1)];
+  }
+  return base;
+}
+
+// ============================================
+// VARIANT REVERSE-LOOKUP (single source of truth for GID detection)
+// ============================================
+
+const VARIANT_TO_PRODUCT = new Map<string, ByoProduct>();
+const QUARTERLY_VARIANT_SET = new Set<string>();
+
+for (const [product, cadences] of Object.entries(BYO_VARIANTS) as Array<[ByoProduct, Record<ByoCadence, ByoVariantConfig>]>) {
+  for (const [cadence, config] of Object.entries(cadences) as Array<[ByoCadence, ByoVariantConfig]>) {
+    if (config.variantId) {
+      VARIANT_TO_PRODUCT.set(config.variantId, product);
+      if (cadence === "quarterly-sub") {
+        QUARTERLY_VARIANT_SET.add(config.variantId);
+      }
+    }
+  }
+}
+
+/** Given a Shopify variant GID, return the CONKA product or null if not a known variant. */
+export function detectByoProduct(variantId: string): ByoProduct | null {
+  return VARIANT_TO_PRODUCT.get(variantId) ?? null;
+}
+
+/** Given a variant GID and whether a sellingPlan is active, return the cadence. */
+export function detectByoCadence(variantId: string, hasSellingPlan: boolean): ByoCadence {
+  if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
+  return hasSellingPlan ? "monthly-sub" : "monthly-otp";
+}
+
+// ============================================
+// HELPERS
+// ============================================
+
+export function getOfferPricing(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): ByoPricing {
+  return BYO_PRICING[product][cadence];
+}
+
+export function getOfferVariant(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): ByoVariantConfig | null {
+  const config = BYO_VARIANTS[product][cadence];
+  if (!config || !config.variantId) return null;
+  return config;
+}
+
+export function isVariantReady(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): boolean {
+  const config = BYO_VARIANTS[product][cadence];
+  return Boolean(config?.variantId);
+}
+
+/** For "Both", get the price of buying Flow + Clear separately at the same cadence */
+export function getBuySeparatelyPrice(cadence: ByoCadence): number {
+  return BYO_PRICING.flow[cadence].price + BYO_PRICING.clear[cadence].price;
+}
+
+/** Get the cadence frequency label for cart attributes */
+export function getCadenceFrequency(
+  cadence: ByoCadence,
+): string {
+  switch (cadence) {
+    case "monthly-sub":
+      return "monthly";
+    case "monthly-otp":
+      return "one-time";
+    case "quarterly-sub":
+      return "quarterly";
+  }
+}
+
+// ============================================
+// UPSELL LOGIC
+// ============================================
+
+/**
+ * Upsell logic for Product > Cadence > Checkout flow.
+ *
+ * All upsells trigger at checkout (after the user has chosen both product
+ * and cadence). Two categories:
+ *
+ * 1. Product upgrades: Flow/Clear → Both (the user picked a single product,
+ *    we offer the pair at a discount vs buying separately).
+ * 2. Cadence upgrades: OTP → subscription, monthly → quarterly (the user
+ *    picked Both but a less committed cadence, we offer more savings).
+ *
+ * Priority: product upgrade first (higher AOV impact), then cadence upgrade.
+ */
+export function getUpsellOffer(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): UpsellOffer | null {
+  const bothImage = { src: "/formulas/both/BothBox.jpg", alt: "CONKA Flow and Clear — AM and PM brain performance" };
+
+  // --- Product upgrades: single product → Both ---
+
+  // Flow → Both (add Clear)
+  if (product === "flow") {
+    if (!isVariantReady("both", cadence)) return null;
+    const currentPricing = getOfferPricing("flow", cadence);
+    const clearAlonePrice = getOfferPricing("clear", cadence).price;
+    const bothPricing = getOfferPricing("both", cadence);
+    const priceDiff = bothPricing.price - currentPricing.price;
+    const savingsVsSeparate = clearAlonePrice - priceDiff;
+    const savingsPercent = Math.round((savingsVsSeparate / clearAlonePrice) * 100);
+    const extraCostLabel = cadence === "monthly-sub"
+      ? `+${formatPrice(priceDiff)}/mo`
+      : cadence === "quarterly-sub"
+        ? `+${formatPrice(priceDiff)}/qtr`
+        : `+${formatPrice(priceDiff)}`;
+    return {
+      headline: "Get the full system?",
+      body: "Your morning is covered. Your afternoon holds. That's the full protocol.",
+      acceptLabel: "Upgrade to Both",
+      declineLabel: "No thanks, just Flow",
+      upgradedProduct: "both",
+      upgradedCadence: cadence,
+      priceDifference: priceDiff,
+      compareAtUpgrade: clearAlonePrice,
+      savingsAmount: savingsVsSeparate,
+      savingsLabel: `Save ${formatPrice(savingsVsSeparate)} vs adding Clear separately`,
+      image: bothImage,
+      perShotHero: {
+        currentPerShot: currentPricing.perShot,
+        upgradedPerShot: bothPricing.perShot,
+        extraCostLabel,
+        savingsPercent,
+        addedProductName: "Clear",
+      },
+      benefits: [
+        `Save ${savingsPercent}% vs buying separately`,
+        "Flow sharpens the morning. Clear holds the afternoon",
+        "One decision. Full day covered",
+      ],
+      // TODO: Verify "30 days" figure against actual subscription data before publishing
+      socialNudge: "Most people who start with Flow switch to Both within 30 days.",
+    };
+  }
+
+  // Clear → Both (add Flow)
+  if (product === "clear") {
+    if (!isVariantReady("both", cadence)) return null;
+    const currentPricing = getOfferPricing("clear", cadence);
+    const flowAlonePrice = getOfferPricing("flow", cadence).price;
+    const bothPricing = getOfferPricing("both", cadence);
+    const priceDiff = bothPricing.price - currentPricing.price;
+    const savingsVsSeparate = flowAlonePrice - priceDiff;
+    const savingsPercent = Math.round((savingsVsSeparate / flowAlonePrice) * 100);
+    const extraCostLabel = cadence === "monthly-sub"
+      ? `+${formatPrice(priceDiff)}/mo`
+      : cadence === "quarterly-sub"
+        ? `+${formatPrice(priceDiff)}/qtr`
+        : `+${formatPrice(priceDiff)}`;
+    return {
+      headline: "Get the full system?",
+      body: "Your morning is covered. Your afternoon holds. That's the full protocol.",
+      acceptLabel: "Upgrade to Both",
+      declineLabel: "No thanks, just Clear",
+      upgradedProduct: "both",
+      upgradedCadence: cadence,
+      priceDifference: priceDiff,
+      compareAtUpgrade: flowAlonePrice,
+      savingsAmount: savingsVsSeparate,
+      savingsLabel: `Save ${formatPrice(savingsVsSeparate)} vs adding Flow separately`,
+      image: bothImage,
+      perShotHero: {
+        currentPerShot: currentPricing.perShot,
+        upgradedPerShot: bothPricing.perShot,
+        extraCostLabel,
+        savingsPercent,
+        addedProductName: "Flow",
+      },
+      benefits: [
+        `Save ${savingsPercent}% vs buying separately`,
+        "Flow sharpens the morning. Clear holds the afternoon",
+        "One decision. Full day covered",
+      ],
+      // TODO: Verify "30 days" figure against actual subscription data before publishing
+      socialNudge: "Most people who start with Clear switch to Both within 30 days.",
+    };
+  }
+
+  // --- Cadence upgrades: Both selected, offer better cadence ---
+
+  // Both + OTP → Both + monthly sub
+  if (product === "both" && cadence === "monthly-otp") {
+    if (!isVariantReady("both", "monthly-sub")) return null;
+    const currentPrice = getOfferPricing("both", "monthly-otp").price;
+    const upgradePrice = getOfferPricing("both", "monthly-sub").price;
+    const savings = currentPrice - upgradePrice;
+    return {
+      headline: `Subscribe and save ${formatPrice(savings)}/mo`,
+      body: `You're paying ${formatPrice(currentPrice)} for a one-time order. Subscribe at ${formatPrice(upgradePrice)}/mo and save ${formatPrice(savings)} every month. Cancel or pause anytime.`,
+      acceptLabel: `Subscribe at ${formatPrice(upgradePrice)}/mo`,
+      declineLabel: "No thanks, one-time is fine",
+      upgradedProduct: "both",
+      upgradedCadence: "monthly-sub",
+      priceDifference: upgradePrice - currentPrice,
+      compareAtUpgrade: currentPrice,
+      savingsAmount: savings,
+      savingsLabel: `Save ${formatPrice(savings)} every month`,
+      image: bothImage,
+      benefits: [
+        `Save ${formatPrice(savings)} every month`,
+        "Cancel or pause anytime, no lock-in",
+        "Free UK shipping on every delivery",
+      ],
+    };
+  }
+
+  // Both + monthly sub → Both + quarterly
+  if (product === "both" && cadence === "monthly-sub") {
+    if (!isVariantReady("both", "quarterly-sub")) return null;
+    const monthlyTotal = getOfferPricing("both", "monthly-sub").price * 3;
+    const quarterlyPrice = getOfferPricing("both", "quarterly-sub").price;
+    const savings = monthlyTotal - quarterlyPrice;
+    return {
+      headline: "Go quarterly, save more",
+      body: `3 months delivered at once for ${formatPrice(quarterlyPrice)} instead of ${formatPrice(monthlyTotal)}. Lowest price per shot, fewer deliveries.`,
+      acceptLabel: `Go quarterly at ${formatPrice(quarterlyPrice)}`,
+      declineLabel: "No thanks, monthly is fine",
+      upgradedProduct: "both",
+      upgradedCadence: "quarterly-sub",
+      priceDifference: quarterlyPrice - monthlyTotal,
+      compareAtUpgrade: monthlyTotal,
+      savingsAmount: savings,
+      savingsLabel: `Save ${formatPrice(savings)} vs 3x monthly`,
+      image: bothImage,
+      benefits: [
+        `Save ${formatPrice(savings)} vs 3 months of monthly`,
+        "Lowest price per shot across all plans",
+        "Cancel or pause anytime",
+      ],
+    };
+  }
+
+  // Both + quarterly → no upsell (best option already selected)
+  return null;
+}
+
+// ============================================
+// CTA LABELS
+// ============================================
+
+/**
+ * Compute dynamic CTA label + sub-label for the funnel.
+ *
+ * Step 1 (product selection): reflects selected product + per-shot price.
+ * Step 2 (plan selection): reflects cadence + total price + key reassurance.
+ *
+ * All values are derived from the pricing matrix so they stay in sync.
+ */
+export function getByoCTALabels(
+  step: 1 | 2,
+  product: ByoProduct,
+  cadence: ByoCadence,
+): { label: string; subLabel: string } {
+  const pricing = getOfferPricing(product, cadence);
+  const display = BYO_PRODUCTS[product];
+
+  if (step === 1) {
+    const label = `Get for ${formatPrice(pricing.perShot)}/shot`;
+
+    if (product === "both") {
+      const separatePrice = getBuySeparatelyPrice(cadence);
+      const savings = separatePrice - pricing.price;
+      const subLabel = `// ${display.label} · save ${formatPrice(savings)}`;
+      return { label, subLabel };
+    }
+
+    return { label, subLabel: `// ${display.label} · ${pricing.shotCount} shots/mo` };
+  }
+
+  // Step 2 — cadence-specific labels
+  switch (cadence) {
+    case "monthly-sub": {
+      const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
+      return {
+        label: `${formatPrice(pricing.price)}/mo`,
+        subLabel: savings > 0 ? `Save ${formatPrice(savings)}` : "",
+      };
+    }
+    case "quarterly-sub": {
+      const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
+      return {
+        label: `${formatPrice(pricing.price)}/quarter`,
+        subLabel: savings > 0 ? `Save ${formatPrice(savings)}` : "",
+      };
+    }
+    case "monthly-otp": {
+      const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
+      return {
+        label: `Buy once · ${formatPrice(pricing.price)}`,
+        subLabel: savings > 0 ? `Save ${formatPrice(savings)}` : "",
+      };
+    }
+  }
+}
+
+/**
+ * The all-in price the variant actually charges at checkout. Shopify bakes
+ * compulsory postage into the one-time SKUs, while BYO_PRICING lists the
+ * product price and `postage` separately (the itemised funnel-c presentation).
+ * Any surface that states a single one-time price WITHOUT an itemised postage
+ * line must use this, or it understates what the customer pays by £9.99.
+ * Subscription entries have no postage, so this is a no-op for them.
+ */
+export function getChargedPrice(pricing: ByoPricing): number {
+  return pricing.price + (pricing.postage ?? 0);
+}
+
+// ============================================
+// VARIANT LOOKUP + PORTAL HELPERS
+// (ported from the pre-merge app/lib/funnelData.ts fork; SCRUM-1247)
+// ============================================
+
+/**
+ * Reverse lookup: given a Shopify variant GID, return the offer it belongs to.
+ * Used by cart analytics (productMetadata) and the account portal to recognise
+ * offer lines without hand-maintained tables.
+ */
+export function getOfferByVariantId(
+  variantId: string,
+): { product: ByoProduct; cadence: ByoCadence; pricing: ByoPricing } | null {
+  for (const product of Object.keys(BYO_VARIANTS) as ByoProduct[]) {
+    for (const cadence of Object.keys(BYO_VARIANTS[product]) as ByoCadence[]) {
+      if (BYO_VARIANTS[product][cadence].variantId === variantId) {
+        return { product, cadence, pricing: BYO_PRICING[product][cadence] };
+      }
+    }
+  }
+  return null;
+}
+
+// ============================================
+// SUBSCRIPTION SWAP (account portal, SCRUM-1200)
+// ============================================
+// Loop's line-swap API reassigns the plan via the individual SELLING PLAN id
+// (`sellingPlanId`), NOT the selling-plan group id. Verified empirically against
+// live Loop on 2026-08-04: passing `sellingPlanGroupId` is silently ignored (the
+// swapped line keeps its old plan — e.g. a single Clear left stuck on the
+// "Monthly Dual" plan) and is rejected outright when combined with
+// pricingType 'NEW' (UNPROCESSABLE_ENTITY). Passing the target `sellingPlanId`
+// with pricingType 'NEW' correctly moves BOTH the plan and the line price.
+//
+// The plan GIDs already live in BYO_VARIANTS (used at checkout), so there is no
+// separate table to hand-maintain — this just extracts the numeric id Loop's
+// swap body expects. Returns null if the cadence has no plan (e.g. one-time),
+// so the route can 503 rather than send a bad swap.
+
+/** Numeric selling-plan id for a same-cadence offer swap, or null if unset. */
+export function getByoSwapSellingPlanId(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): string | null {
+  const gid = BYO_VARIANTS[product]?.[cadence]?.sellingPlanId;
+  if (!gid) return null;
+  return gid.split("/").pop() ?? null;
+}
+
+/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */
+export function getByoVariantNumericId(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): string | null {
+  const cfg = BYO_VARIANTS[product]?.[cadence];
+  if (!cfg?.variantId) return null;
+  return cfg.variantId.split("/").pop() ?? null;
+}
+
+/** The other two products at the same cadence — the valid swap targets. */
+export function getSwapTargets(current: ByoProduct): ByoProduct[] {
+  return (["flow", "clear", "both"] as ByoProduct[]).filter((p) => p !== current);
+}
+
+/**
+ * Lowest and highest purchasable price across all cadences for a product,
+ * plus the number of offers. Feeds the Product JSON-LD AggregateOffer so the
+ * structured data stays in sync with BYO_PRICING automatically (SCRUM-1133).
+ * One-time entries add `postage` back because the Shopify variant price has
+ * postage baked in — the structured data must match what the variant charges.
+ */
+export function getByoPriceRange(product: ByoProduct): {
+  low: number;
+  high: number;
+  count: number;
+} {
+  const prices = Object.values(BYO_PRICING[product]).map(
+    (p) => p.price + (p.postage ?? 0),
+  );
+  return {
+    low: Math.min(...prices),
+    high: Math.max(...prices),
+    count: prices.length,
+  };
+}
+
+/**
+ * Lowest per-shot price across all cadences for a product (the cheapest
+ * cadence, currently quarterly). Feeds the "From £X/shot" figure in the
+ * money-page meta descriptions (SCRUM-1139) so they stay in sync with
+ * BYO_PRICING, the same way getByoPriceRange feeds the Product JSON-LD.
+ * When a price changes, also append a dated block to docs/PRICING_HISTORY.md.
+ */
+export function getByoMinPerShot(product: ByoProduct): number {
+  const perShots = Object.values(BYO_PRICING[product]).map((p) => p.perShot);
+  return Math.min(...perShots);
+}

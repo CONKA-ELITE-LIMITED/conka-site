@@ -6,8 +6,9 @@ import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getChargedPrice,
   getDisplayDiscount,
-  FUNNEL_CADENCES,
+  BYO_CADENCES,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import {
@@ -164,7 +165,7 @@ function FlatPlanCard({
   /** Per-tile discount-badge colour (Magic Mind uses a different one per plan). */
   saveColor: string;
 }) {
-  const display = FUNNEL_CADENCES[cadence];
+  const display = BYO_CADENCES[cadence];
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
   const savePct = getDisplayDiscount(pricing);
   // Short label ("monthly" / "quarterly") is used only in the aria-label now;
@@ -188,7 +189,7 @@ function FlatPlanCard({
   //    strikethrough and the Save% badge agree.
   const compareAtDisplay =
     cadence === "monthly-sub"
-      ? getCadencePricingByProductHeroId(formulaId, "monthly-otp").price
+      ? getChargedPrice(getCadencePricingByProductHeroId(formulaId, "monthly-otp"))
       : savePct > 0
         ? pricing.price / (1 - savePct / 100)
         : undefined;
@@ -703,7 +704,7 @@ export default function ProductBuyPanel({
           onClick={onOtpAddToCart}
           className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          Buy it once for {formatPrice(otpPricing.price)}
+          Buy it once for {formatPrice(getChargedPrice(otpPricing))}
         </button>
 
         <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />

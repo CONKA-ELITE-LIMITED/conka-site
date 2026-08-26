@@ -13,7 +13,7 @@ import {
   formulaContent,
 } from "@/app/lib/productData";
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
-import { CadenceType, FUNNEL_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
+import { CadenceType, BYO_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
 import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import { getBothHeroImages } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -138,7 +138,7 @@ export default function StickyPurchaseFooter({
   // Cadence mode: simplified strip for formula + balance pages.
   // Cadence selection lives in the hero widget; footer just confirms what's being bought.
   if (selectedCadence !== undefined && cadencePrice !== undefined) {
-    const cadenceDisplay = FUNNEL_CADENCES[selectedCadence];
+    const cadenceDisplay = BYO_CADENCES[selectedCadence];
     return (
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/12">
         <div className="max-w-6xl mx-auto lg:ml-auto lg:mr-0 lg:max-w-[90%] xl:max-w-[85%] px-4 md:px-6 lg:pl-0 lg:pr-16 py-3">

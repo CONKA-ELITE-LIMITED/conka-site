@@ -1,5 +1,11 @@
 # Magic Mind-Inspired Video Hero (Home, Mobile)
 
+> **Superseded (25 Aug 2026):** the home hero now renders `HomeHeroStatic`
+> (metal-tray still renders, art-directed per breakpoint). The video hero
+> components built by this plan were renamed `HomeHeroVideo` /
+> `HomeHeroVideoDesktop` and are kept unused, with their `/videos/both`
+> assets, as the revert path.
+
 ## Problem
 The current home hero is a static image. A calm, premium looping video of the two
 shots in still water (the Magic Mind playbook) is a stronger first impression for

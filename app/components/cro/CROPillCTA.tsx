@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { FUNNEL_URL } from "@/app/lib/landingConstants";
+import { BYO_URL } from "@/app/lib/landingConstants";
 
 interface CROPillCTAProps {
   children: React.ReactNode;
-  /** Provide for link mode. Defaults to FUNNEL_URL when neither href nor onClick is set. */
+  /** Provide for link mode. Defaults to BYO_URL when neither href nor onClick is set. */
   href?: string;
   className?: string;
   /** Providing onClick switches to button mode (renders a <button> instead of a <Link>). */
@@ -38,7 +38,7 @@ export default function CROPillCTA({
   }
 
   return (
-    <Link href={href ?? FUNNEL_URL} className={base}>
+    <Link href={href ?? BYO_URL} className={base}>
       {children}
     </Link>
   );

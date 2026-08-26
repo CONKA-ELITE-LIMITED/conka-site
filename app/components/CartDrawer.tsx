@@ -12,8 +12,9 @@ import ConkaCTAButton from "./landing/ConkaCTAButton";
 import CartAppGift from "./CartAppGift";
 import CartUpsellTile from "./CartUpsellTile";
 import { getCartUpsell, clearUpsellAccepted } from "@/app/lib/cartUpsell";
-import { getOfferByVariantId, getOfferPricing } from "@/app/lib/funnelData";
+import { getChargedPrice, getOfferByVariantId, getOfferPricing } from "@/app/lib/byoData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
+import { trackCartCheckoutClicked } from "@/app/lib/analytics";
 
 // Fallback product images when Shopify doesn't provide one
 const PRODUCT_FALLBACK_IMAGES: Record<string, string> = {
@@ -81,7 +82,7 @@ function getLineSavings(item: CartLine): {
   if (!offer) return null;
 
   const displayNum = parseFloat(getLineDisplayPrice(item).amount);
-  const otpUnit = getOfferPricing(offer.product, "monthly-otp").price;
+  const otpUnit = getChargedPrice(getOfferPricing(offer.product, "monthly-otp"));
   const compareAt = offer.cadence === "quarterly-sub" ? otpUnit * 3 : otpUnit;
   const discountPct = Math.round((1 - displayNum / compareAt) * 100);
   // No saving to show (equal/higher price, or a gap that rounds to 0%).
@@ -508,14 +509,21 @@ export default function CartDrawer() {
                   className="w-full max-w-none justify-center"
                   onClick={() => {
                     if (!cart?.checkoutUrl) return;
+                    const subtotal =
+                      parseFloat(cart.cost.subtotalAmount.amount) || 0;
                     // Fire InitiateCheckout on our domain before the redirect to
                     // the Shopify-hosted checkout (the pixel can't fire it
                     // offsite). sendBeacon + CAPI keepalive survive the nav.
                     trackMetaInitiateCheckout({
                       content_ids: cartItems.map((i) => toContentId(i.merchandise.id)),
-                      value: parseFloat(cart.cost.subtotalAmount.amount) || 0,
+                      value: subtotal,
                       currency: cart.cost.subtotalAmount.currencyCode,
                       num_items: cartItems.reduce((s, i) => s + i.quantity, 0),
+                    });
+                    // The cart path's checkout stage for the Vercel funnel.
+                    trackCartCheckoutClicked({
+                      items: cartItems.length,
+                      value: subtotal,
                     });
                     window.location.href = cart.checkoutUrl;
                   }}

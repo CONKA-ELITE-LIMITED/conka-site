@@ -250,6 +250,31 @@ object** — hero image, headline, subcopy, CTA, destination all in config.
 Convex `experimentEvents` is an optional follow-up if we want richer per-variant
 funnels than Shopify tags + Vercel already give us.
 
+## 7.5 Decision — measuring the new purchasing-layout PDP (2026-08-24, SCRUM-1243)
+
+**Decision: split at one URL via middleware (option b), but build at its own path first.** Two stages, because they answer different questions.
+
+**Stage 1 — own path, while building.** Ship the new layout at its own route (e.g. `/conka-both-v2`), `noindex`, no middleware. This is for QA, design review and `/review-visual`, not for measurement. It costs nothing (it is just a route), it shows up as its own row in the conka-lab Pages view, and you can share a link without touching live traffic.
+
+**Stage 2 — middleware sticky 50/50 at the canonical URL, when it goes live for the test.** The own path stays as the direct-access route for internal checks.
+
+**Why not the own path alone.** An own path needs its own traffic. At ~21k visitors/month there is no spare ad budget to point at a second destination, and organic/direct visitors will never find the test route, so you would be measuring a self-selected trickle against a normal population. That is not a comparison. The middleware split also keeps one Meta ad set intact (§3), which matters more at our volume than it would at scale.
+
+**Call it on the proxy, not the verdict.** 21k/month split 50/50 is ~10.5k visitors per variant per month. On a ~3% purchase baseline that is nowhere near significance for nCPA in any sane window (§TL;DR 4 puts it at ~100k/variant). Judge this test on **add-to-cart rate** (20-40% baseline, roughly 10x faster to significance) and treat nCPA as directional confirmation only. If the proxy cannot separate the variants inside a rolling ~10-day window, the layout change was not a big enough swing.
+
+### Carrying the variant to the KPIs — two channels, only one is budget-constrained
+
+The two-property limit is a **Vercel Web Analytics** constraint. **Shopify cart attributes have no such limit.** Treating them as one problem is what makes this look harder than it is.
+
+- **To Shopify / the order:** add the variant as its **own cart attribute** (e.g. `_experiment`), alongside `_listicle_origin` in `CartContext`. Underscore-prefixed so it stays hidden from the customer in checkout (see the `getPurchaseSource` note in `analytics.ts`). No packing, no limit, and it works for **all** traffic rather than only listicle-sourced visitors.
+- **To Vercel events:** keep to two properties by packing the variant into an existing one, as §"Carrying the variant to the KPIs" describes.
+
+**⚠️ The packing scheme in that section does not work as written.** It proposes `origin = "<slug>-<section>|exp_bothsel:B"`, but `isValidListicleSrc` (`app/lib/analytics.ts:537`) validates against `/^[a-z0-9_-]{1,96}$/i`. Neither `|` nor `:` is in that character class, so the token is **silently rejected** and `getListicleSrc()` returns null: the origin is not degraded, it is *lost*. Use a separator that survives the existing regex, e.g. `brainage-hero__exp-pdpv2-b`, or widen the regex deliberately. Do not widen it casually, since the value reaches Shopify.
+
+**Second gap in that scheme:** `_listicle_origin` is only set for visitors who arrived from a `/go` listicle. A PDP test will take most of its traffic direct, so packing the variant into the origin string covers a minority of the sample. This is the main reason the variant belongs in its own cart attribute rather than packed into the origin.
+
+---
+
 ## 8. Open questions
 
 - Per-variant funnels in Convex, or is "Shopify order tags + Meta + Vercel" enough

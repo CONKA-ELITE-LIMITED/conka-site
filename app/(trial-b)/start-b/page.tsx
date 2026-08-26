@@ -16,13 +16,13 @@ import Footer from "@/app/components/footer";
 import CROResearch from "@/app/components/cro/CROResearch";
 import CROAppCallout from "@/app/components/cro/CROAppCallout";
 import CROFAQv2 from "@/app/components/cro/CROFAQv2";
-import { FUNNEL_URL } from "../lib/landingConstants";
-import { getCadencePricingByProductHeroId, getDisplayDiscount } from "../lib/cadenceData";
+import { BYO_URL } from "@/app/lib/landingConstants";
+import { getCadencePricingByProductHeroId, getDisplayDiscount } from "@/app/lib/cadenceData";
 import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
 import BottleVideo from "@/app/components/landing/BottleVideo";
 import MetaViewContent from "@/app/components/MetaViewContent";
-import { getOfferVariant, getOfferPricing } from "../lib/funnelData";
+import { getOfferVariant, getOfferPricing } from "@/app/lib/byoData";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {
@@ -226,7 +226,7 @@ export default function StartPage() {
               </p>
 
               <Link
-                href={FUNNEL_URL}
+                href={BYO_URL}
                 className="inline-flex items-center justify-center gap-2 w-full bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
               >
                 Get both from £{S5_LOWEST_PER_SHOT.toFixed(2)}/shot
@@ -333,7 +333,7 @@ export default function StartPage() {
 
               <div className="flex justify-center">
                 <Link
-                  href={FUNNEL_URL}
+                  href={BYO_URL}
                   className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
                 >
                   Order Now
@@ -454,7 +454,7 @@ export default function StartPage() {
 
               <div className="flex justify-center">
                 <Link
-                  href={FUNNEL_URL}
+                  href={BYO_URL}
                   className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
                 >
                   Try CONKA
@@ -569,7 +569,7 @@ export default function StartPage() {
 
               <div className="flex justify-center">
                 <Link
-                  href={FUNNEL_URL}
+                  href={BYO_URL}
                   className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
                 >
                   Order Now
@@ -734,7 +734,7 @@ export default function StartPage() {
 
               <div className="mt-10 flex justify-center">
                 <Link
-                  href={FUNNEL_URL}
+                  href={BYO_URL}
                   className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
                 >
                   Join the Elite
@@ -793,7 +793,7 @@ export default function StartPage() {
 
               <div className="mt-10 flex justify-center">
                 <Link
-                  href={FUNNEL_URL}
+                  href={BYO_URL}
                   className="inline-flex items-center justify-center gap-2 bg-[#1B2757] text-white font-semibold text-lg py-4 px-10 rounded-full transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757]"
                 >
                   Try CONKA Today
@@ -848,8 +848,8 @@ export default function StartPage() {
         >
           <div className="brand-track">
             {/* Keep this section's CTA on the same funnel as the page's
-                primary CTAs (funnel-c) — FUNNEL_URL is start-b's trial-b copy. */}
-            <CROCustomerReviews ctaHref={FUNNEL_URL} />
+                primary CTAs (funnel-c) — BYO_URL is start-b's trial-b copy. */}
+            <CROCustomerReviews ctaHref={BYO_URL} />
           </div>
         </section>
 

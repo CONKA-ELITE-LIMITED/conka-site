@@ -1,0 +1,404 @@
+"use client";
+
+/**
+ * Build Your Order — Step 2 (Build). Product + plan on one page.
+ *
+ * Formula tiles (Both pre-selected as the recommended default) drive the media
+ * and a single blurb line, then the plan cards. Product depth (ingredients,
+ * mechanism, athletes, proof) sits in the shared learn-more accordion BELOW
+ * the decision, so the widget stays on the decision path. The sticky footer
+ * reflects the live selection and price.
+ */
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import {
+  type ByoProduct,
+  type ByoCadence,
+  BYO_PRODUCTS,
+} from "@/app/lib/byoData";
+import CadenceSelector from "./CadenceSelector";
+import LearnMoreAccordion from "./LearnMoreAccordion";
+import { BYO_STATIC } from "./ByoMedia";
+
+interface BuildStepProps {
+  product: ByoProduct;
+  cadence: ByoCadence;
+  onProductChange: (p: ByoProduct) => void;
+  onCadenceChange: (c: ByoCadence) => void;
+  onAccordionOpen?: (id: string) => void;
+}
+
+// Flow and Clear lead as the two equal single formulas; Both sits last as the
+// recommended full system (and the pre-selected default since SCRUM-1247).
+const PRODUCT_ORDER: ByoProduct[] = ["flow", "clear", "both"];
+const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
+  flow: { name: "Flow", period: "Morning" },
+  clear: { name: "Clear", period: "Afternoon" },
+  both: { name: "Both", period: "All day" },
+};
+
+// Blurb + proof stats, lifted from the product pages (formulaContent.ts /
+// BOTH_HERO_CONTENT) so the flow carries real weight.
+//
+// The stats panel is "Proof", not "Impact": the numbers are a mix of measured
+// outcomes from the ingredient studies and hard product facts, and pretending
+// a spec count ("6 adaptogens") is an outcome was what made the old panel read
+// as spin. Each label now says plainly which kind of number it is.
+const COPY: Record<ByoProduct, { blurb: string; stats: { value: string; label: string }[] }> = {
+  flow: {
+    blurb: "Sharper focus and calmer energy from the first hour — six clinically-dosed adaptogens, zero caffeine, zero crash.",
+    stats: [
+      { value: "−56%", label: "lower stress scores in studies" },
+      { value: "6", label: "clinically dosed adaptogens" },
+      { value: "0", label: "caffeine, so no crash" },
+    ],
+  },
+  clear: {
+    blurb: "Cut through brain fog and think clearly under pressure — ten clinically-dosed actives, including Alpha-GPC and Ginkgo Biloba.",
+    stats: [
+      { value: "+96%", label: "attention in studies" },
+      { value: "+57%", label: "cerebral blood flow in studies" },
+      { value: "10", label: "clinically dosed nootropics" },
+    ],
+  },
+  both: {
+    blurb: "Flow for the morning, Clear for the afternoon — two clinically-dosed shots covering the full cognitive day, no stimulants, no crash.",
+    stats: [
+      { value: "15", label: "active ingredients across both" },
+      { value: "150k+", label: "shots delivered to date" },
+      { value: "622+", label: "reviews, rated 4.7 out of 5" },
+    ],
+  },
+};
+
+// Ingredient renders (same images as the site's ingredients section).
+const FLOW_ING = [
+  { name: "Lemon Balm", img: "/ingredients/renders/LemonBalm.jpg" },
+  { name: "Turmeric", img: "/ingredients/renders/Turmeric.jpg" },
+  { name: "Ashwagandha", img: "/ingredients/renders/Ashwagandha.jpg" },
+  { name: "Rhodiola rosea", img: "/ingredients/renders/RhodiolaRosea.jpg" },
+  { name: "Bilberry", img: "/ingredients/renders/Bilberry.jpg" },
+  { name: "Black Pepper", img: "/ingredients/renders/BlackPepper.jpg" },
+];
+const CLEAR_ING = [
+  { name: "Alpha-GPC", img: "/ingredients/renders/AlphaGPC.jpg" },
+  { name: "Glutathione", img: "/ingredients/renders/11.jpg" },
+  { name: "Ginkgo Biloba", img: "/ingredients/renders/GinkgoBiloba.jpg" },
+  { name: "N-Acetyl Cysteine", img: "/ingredients/renders/NAcetylCysteine.jpg" },
+  { name: "Acetyl-L-Carnitine", img: "/ingredients/renders/11.jpg" },
+  { name: "Vitamin B12", img: "/ingredients/renders/VitaminB12.jpg" },
+  { name: "Vitamin C", img: "/ingredients/renders/VitaminC.jpg" },
+  { name: "Lecithin", img: "/ingredients/renders/Lecithin.jpg" },
+  { name: "Alpha Lipoic Acid", img: "/ingredients/renders/AlphaLipoicAcid.jpg" },
+];
+const INGREDIENTS_IMG: Record<ByoProduct, { name: string; img: string }[]> = {
+  flow: FLOW_ING,
+  clear: CLEAR_ING,
+  both: [...FLOW_ING, ...CLEAR_ING],
+};
+const ACTIVE_COUNT: Record<ByoProduct, number> = { flow: 6, clear: 10, both: 15 };
+
+// "How it works" as a when → what action list (timings referenced across the site).
+const HOW_STEPS: Record<ByoProduct, { when: string; what: string }[]> = {
+  flow: [
+    { when: "Morning", what: "Take with or without breakfast — no caffeine, no jitters." },
+    { when: "~45 min", what: "Calm, focused energy sets in as the adaptogens take hold." },
+    { when: "Day 7", what: "Cleaner, earlier focus becomes the norm — less morning warm-up." },
+  ],
+  clear: [
+    { when: "1–2pm", what: "Take as the afternoon dip approaches." },
+    { when: "~45 min", what: "Brain fog lifts and thinking sharpens." },
+    { when: "Day 3–5", what: "The 2–3pm dip noticeably eases; afternoons hold." },
+  ],
+  both: [
+    { when: "AM", what: "Flow in the morning for calm, sustained focus." },
+    { when: "1–2pm", what: "Clear in the afternoon for precision and output." },
+    { when: "Week 1", what: "Full morning-to-evening cognitive cover, no crash." },
+  ],
+};
+
+const ATHLETES = [
+  { name: "Dan Norton", sport: "Rugby Sevens · Olympic Silver" },
+  { name: "Chris Billam-Smith", sport: "Boxing · WBO World Champion" },
+  { name: "Fraser Dingwall", sport: "Rugby Union · England" },
+  { name: "Sienna Charles", sport: "Showjumping · Team GB" },
+  { name: "Josh Stanton", sport: "Motorsport · British GT" },
+  { name: "Adam Azim", sport: "Boxing · Undefeated Pro" },
+];
+
+function CheckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0 mt-0.5 text-[#1B2757]" aria-hidden>
+      <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" />
+    </svg>
+  );
+}
+
+/**
+ * Animated count-up for the Proof stats. Parses a value like "−56%", "+96%",
+ * "150k+" into prefix / number / suffix and eases the number 0 → target on
+ * mount (the panel only mounts when opened). Values with no digits render
+ * as-is. Honours reduced-motion.
+ */
+function CountUp({ value }: { value: string }) {
+  const m = value.match(/^(\D*)(\d[\d.]*)(\D*)$/);
+  const [n, setN] = useState(0);
+
+  useEffect(() => {
+    const mm = value.match(/^(\D*)(\d[\d.]*)(\D*)$/);
+    if (!mm) return;
+    const target = Math.round(parseFloat(mm[2]));
+    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setN(target);
+      return;
+    }
+    let raf = 0;
+    let start: number | null = null;
+    const dur = 1100;
+    const tick = (t: number) => {
+      if (start === null) start = t;
+      const p = Math.min((t - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(Math.round(target * eased));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+
+  if (!m) return <>{value}</>;
+  return (
+    <>
+      {m[1]}
+      {n}
+      {m[3]}
+    </>
+  );
+}
+
+export default function BuildStep({
+  product,
+  cadence,
+  onProductChange,
+  onCadenceChange,
+  onAccordionOpen,
+}: BuildStepProps) {
+  const display = BYO_PRODUCTS[product];
+  const copy = COPY[product];
+
+  // Ingredients pagination — always 6 per page (Both has 15, so it pages).
+  const [ingPage, setIngPage] = useState(0);
+  useEffect(() => setIngPage(0), [product]);
+  const ingList = INGREDIENTS_IMG[product];
+  const ING_PAGE_SIZE = 6;
+  const ingPages = Math.max(1, Math.ceil(ingList.length / ING_PAGE_SIZE));
+  const ingSafePage = Math.min(ingPage, ingPages - 1);
+  const ingItems = ingList.slice(ingSafePage * ING_PAGE_SIZE, ingSafePage * ING_PAGE_SIZE + ING_PAGE_SIZE);
+
+  return (
+    <div>
+      <h2
+        className="text-black font-semibold text-[34px] leading-[1.05] mb-6"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        Build your order.
+      </h2>
+
+      {/* 1. Formula */}
+      <p className="text-[15px] font-semibold text-black mb-3">
+        <span className="text-black/40 tabular-nums mr-1.5">1</span>
+        Choose your formula
+      </p>
+      <div className="flex gap-2.5">
+        {PRODUCT_ORDER.map((p) => {
+          const t = TOGGLE[p];
+          const active = product === p;
+          return (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onProductChange(p)}
+              aria-pressed={active}
+              className={`relative flex-1 flex flex-col items-center rounded-md overflow-visible pb-3 transition-colors ${
+                active ? "" : "border-2 border-transparent bg-[#f1f1f3] hover:bg-[#e9e9ee]"
+              }`}
+              // Selected state matches the PDP plan cards: the brand offer
+              // gradient as a 2px ring over a near-white fill.
+              style={
+                active
+                  ? {
+                      border: "2px solid transparent",
+                      background:
+                        "linear-gradient(#f8f9fd,#f8f9fd) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+                    }
+                  : undefined
+              }
+            >
+              {p === "both" && (
+                <span
+                  className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#14532d]"
+                  style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+                >
+                  Recommended
+                </span>
+              )}
+              {/* Product static (the PDP hero assets, not an animation). */}
+              <span className="relative mt-2 mb-1.5 block h-16 w-16 overflow-hidden rounded-md">
+                <Image
+                  src={BYO_STATIC[p].src}
+                  alt={BYO_STATIC[p].alt}
+                  fill
+                  sizes="64px"
+                  className="object-cover scale-[1.4]"
+                />
+              </span>
+              <span className="text-[16px] font-semibold leading-tight text-black">{t.name}</span>
+              <span className="text-[12px] leading-tight mt-0.5 text-black/50">
+                {t.period}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* One line on the selection, no card chrome: the tile carries the
+          identity and the sticky media carries the visual, so the widget stays
+          on the decision path (SCRUM-1249 review). */}
+      <p className="text-[13px] text-black/60 leading-snug mt-3">{copy.blurb}</p>
+
+      {/* 2. Plan */}
+      <p className="text-[15px] font-semibold text-black mt-8 mb-3">
+        <span className="text-black/40 tabular-nums mr-1.5">2</span>
+        Choose your plan
+      </p>
+      <CadenceSelector product={product} cadence={cadence} onChange={onCadenceChange} />
+
+      {/* Optional depth, below the decision: same slim accordion cluster as
+          the Learn step. Content tracks the selected formula. */}
+      <p className="text-[15px] font-semibold text-black mt-8 mb-3">
+        Learn more about {display.label}
+      </p>
+      <LearnMoreAccordion
+        onOpen={onAccordionOpen}
+        rows={[
+          {
+            id: "build:ingredients",
+            label: "Ingredients",
+            body: (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-[13px] font-semibold text-black">
+                    {ACTIVE_COUNT[product]} actives · 30ml shot
+                  </p>
+                  {ingPages > 1 && (
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setIngPage(Math.max(0, ingSafePage - 1))}
+                        disabled={ingSafePage === 0}
+                        aria-label="Previous ingredients"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:bg-black/[0.06] hover:text-black disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M15 18l-6-6 6-6" /></svg>
+                      </button>
+                      <span className="text-[12px] tabular-nums text-black/50">{ingSafePage + 1} / {ingPages}</span>
+                      <button
+                        type="button"
+                        onClick={() => setIngPage(Math.min(ingPages - 1, ingSafePage + 1))}
+                        disabled={ingSafePage === ingPages - 1}
+                        aria-label="More ingredients"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:bg-black/[0.06] hover:text-black disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M9 18l6-6-6-6" /></svg>
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="grid grid-cols-3 gap-x-3 gap-y-4">
+                  {ingItems.map((ing) => (
+                    <div key={ing.name} className="flex flex-col items-center text-center gap-1.5">
+                      <div className="w-full aspect-square rounded-md bg-[#f1f1f3] overflow-hidden">
+                        <Image src={ing.img} alt={ing.name} width={140} height={140} className="w-full h-full object-cover" />
+                      </div>
+                      <span className="text-[11px] text-black leading-tight">{ing.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "build:how",
+            label: "How it works",
+            body: (
+              <div className="flex flex-col gap-2.5">
+                {HOW_STEPS[product].map((step) => (
+                  <div key={step.when} className="flex items-start gap-3">
+                    <span className="shrink-0 min-w-[72px] rounded-full bg-black/[0.05] px-2.5 py-1.5 text-center text-[12px] font-bold text-black leading-none">
+                      {step.when}
+                    </span>
+                    <p className="text-[14px] text-black leading-snug pt-1">{step.what}</p>
+                  </div>
+                ))}
+              </div>
+            ),
+          },
+          {
+            id: "build:athletes",
+            label: "Used by pros",
+            body: (
+              <>
+                <p className="text-[13px] font-semibold text-black mb-3">
+                  Informed Sport certified. Used by pros.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2.5">
+                  {ATHLETES.map((a) => (
+                    <div key={a.name} className="flex items-start gap-2">
+                      <CheckIcon />
+                      <div className="min-w-0">
+                        <p className="text-[13px] font-semibold text-black leading-tight">{a.name}</p>
+                        <p className="text-[12px] text-black/55 mt-0.5 leading-tight">{a.sport}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "build:impact",
+            label: "Proof",
+            body: (
+              <>
+                <div className="flex flex-col gap-2">
+                  {copy.stats.map((stat) => (
+                    <div key={stat.label} className="flex items-center gap-3 rounded-md bg-black/[0.03] px-3 py-2.5">
+                      <span className="min-w-[68px] shrink-0 text-[24px] font-bold text-black tabular-nums leading-none tracking-tight">
+                        <CountUp value={stat.value} />
+                      </span>
+                      <span className="text-[13px] text-black leading-snug">{stat.label}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="rounded-full bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold text-black">
+                    UK Patent GB2629279
+                  </span>
+                  <span className="rounded-full bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold text-black">
+                    Informed Sport certified
+                  </span>
+                </div>
+                <p className="text-[11px] text-black/45 mt-2.5 leading-snug">
+                  Study figures come from peer-reviewed research on the active
+                  ingredients, not on the finished drink.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+    </div>
+  );
+}

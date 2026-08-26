@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { getFunnelMinPerShot } from "@/app/lib/funnelData";
+import { getByoMinPerShot } from "@/app/lib/byoData";
 import { formatPrice } from "@/app/lib/productData";
 import { CONVERSION_FAQ_ITEMS } from "@/app/lib/faqContent";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
-import LandingHeroVideo from "./components/landing/LandingHeroVideo";
-import LandingHeroVideoDesktop from "./components/landing/LandingHeroVideoDesktop";
+import HomeHeroStatic from "./components/landing/HomeHeroStatic";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import LabGuarantee from "./components/landing/LabGuarantee";
@@ -51,7 +50,7 @@ const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
 export const metadata: Metadata = {
   title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
   description: `CONKA is the UK's leading daily brain shot, Informed Sport certified, backed by Cambridge, Durham and Exeter. 100-day guarantee. From ${formatPrice(
-    getFunnelMinPerShot("both"),
+    getByoMinPerShot("both"),
   )}/shot.`,
   openGraph: {
     title: "Best Brain Supplement UK | CONKA Daily Brain Shot",
@@ -76,24 +75,10 @@ export default function Home() {
       {/* Serialises the same conversion subset the LabFAQ section renders below, so
           the schema never describes a question the page does not show (SCRUM-1140). */}
       <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
-      {/* The hero posters are painted as CSS background-images inside client
-          components, so without a preload the browser discovers the LCP image
-          late. React hoists these to <head>; media queries keep each
-          breakpoint to one download. */}
-      <link
-        rel="preload"
-        as="image"
-        href="/videos/both/BothNeuronFloat-poster.jpg"
-        media="(max-width: 1023px)"
-        fetchPriority="high"
-      />
-      <link
-        rel="preload"
-        as="image"
-        href="/videos/both/BothNeuronFloatDesktop-poster.jpg"
-        media="(min-width: 1024px)"
-        fetchPriority="high"
-      />
+      {/* No hero preload links needed: HomeHeroStatic renders an eager
+          fetchpriority=high <img> in the initial HTML, so the preload scanner
+          discovers the LCP asset itself (the old video hero painted CSS
+          background posters, which needed explicit preloads). */}
       {/* ===== SECTION 1: HERO ===== */}
       <Navigation />
       {/* Desktop drops the section gutters/track so the hero asset can
@@ -103,20 +88,16 @@ export default function Home() {
           a ~16px white sliver shows above the flush hero. Pull the hero up into
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
-      {/* Magic Mind-style looped video hero (Both Neuron Float): portrait video
-          on mobile, landscape video on desktop. (HomeHeroV3, the image hero, is
+      {/* Magic Mind-style metal-tray still hero: portrait render on mobile,
+          landscape render on desktop, art-directed inside HomeHeroStatic.
+          (HomeHeroVideo + HomeHeroVideoDesktop, the looped video hero, are
           kept in the codebase for revert.) */}
       <section
         className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
         aria-label="Homepage hero"
       >
         <div className="brand-track lg:max-w-none!">
-          <div className="lg:hidden">
-            <LandingHeroVideo />
-          </div>
-          <div className="hidden lg:block">
-            <LandingHeroVideoDesktop />
-          </div>
+          <HomeHeroStatic />
         </div>
       </section>
 
@@ -148,9 +129,10 @@ export default function Home() {
       {/* Certification badges — self-contained white band under the benefits. */}
       <Certifications />
 
-      {/* ===== SECTION 4: BRAIN FUEL BAND — dark proof band (swapped in for
-          LandingDailyBenefits; the band owns its own full-bleed dark section,
-          so it is not wrapped in brand-section/brand-track). ===== */}
+      {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
+          LandingDailyBenefits; white section with the neuron clip full-bleed
+          and the stats on a light-grey proof card. Owns its own full-bleed
+          section, so it is not wrapped in brand-section/brand-track). ===== */}
       <BrainFuelBand />
 
       {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}

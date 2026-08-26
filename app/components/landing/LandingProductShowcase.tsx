@@ -7,7 +7,6 @@ import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import { FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import ConkaCTAButton from "./ConkaCTAButton";
-import FormulaToggle from "@/app/components/product/FormulaToggle";
 import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
 import { TIME_OF_DAY_BADGE, type TimeOfDay } from "@/app/lib/timeOfDayBadge";
 
@@ -15,17 +14,15 @@ import { TIME_OF_DAY_BADGE, type TimeOfDay } from "@/app/lib/timeOfDayBadge";
  * LandingProductShowcase
  *
  * "Two shots. Built around your day." — the home page's product-system
- * teaching beat. On mobile a rounded AM/PM toggle switches between Flow
- * (morning) and Clear (afternoon) so one formula shows at a time and the page
- * reads cleaner on small screens. On desktop both formulas show side by side
- * as two equal cards with larger assets (no toggle) — neither product is
- * enlarged or staged over the other, so they keep equal billing. The full
- * ingredient list opens in the shared bottom sheet.
+ * teaching beat. Both formulas render side by side on every breakpoint as two
+ * equal cards — the labelV2 tall renders are narrow enough that the pair fits
+ * a 390px viewport (the old square assets forced a mobile AM/PM toggle that
+ * showed one formula at a time; retired 2026-08). The 3:5 crop shows the full
+ * bottle. The full ingredient list opens in the shared bottom sheet.
  *
  * Earlier prototypes that *enlarged one product over the other* (spotlight
  * layouts, a video stage) were rejected 2026-06 because they implicitly demote
- * the other. Two equal cards (desktop) and the time-of-day toggle (mobile)
- * both preserve that equal-billing rule.
+ * the other. Two equal cards on every breakpoint preserves that rule.
  * ========================================================================== */
 
 type ProductId = "flow" | "clear";
@@ -38,6 +35,10 @@ const FORMULA_ID: Record<ProductId, FormulaId> = {
 // Copy mirrors the lander's IngredientsSection (morning/afternoon sub-lines and
 // the total active-nootropic load per formula) so the home page and the paid
 // lander tell the same story.
+//
+// Deliberately NOT the shared bottleRenders map: this side-by-side pair layout
+// needs the tall 1:2 *Thin crops to fit two cards on a 390px viewport, while
+// the canonical renders are square.
 const PRODUCTS: Record<
   ProductId,
   { name: string; timeOfDay: TimeOfDay; sub: string; mg: string; bottleSrc: string; bottleAlt: string }
@@ -47,7 +48,7 @@ const PRODUCTS: Record<
     timeOfDay: "Morning",
     sub: "Calm focus for your mornings.",
     mg: "3,700mg",
-    bottleSrc: "/formulas/conkaFlow/FlowV3.jpg",
+    bottleSrc: "/formulas/labelV2/FlowThin.jpg",
     bottleAlt: "CONKA Flow bottle",
   },
   clear: {
@@ -55,12 +56,12 @@ const PRODUCTS: Record<
     timeOfDay: "Afternoon",
     sub: "Afternoon clarity & reset.",
     mg: "3,142mg",
-    bottleSrc: "/formulas/conkaClear/ClearV3.jpg",
+    bottleSrc: "/formulas/labelV2/ClearThin.jpg",
     bottleAlt: "CONKA Clear bottle",
   },
 };
 
-export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/funnel" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
+export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/build-your-order" }: { hideCTA?: boolean; ctaHref?: string } = {}) {
   const [active, setActive] = useState<ProductId>("flow");
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -76,14 +77,16 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     } catch { /* fail silently */ }
   };
 
-  // Shared "Full ingredient list" CTA — used by both card layouts.
+  // Shared ingredient-list CTA — the label shortens on mobile where the card
+  // is half the viewport wide.
   const ingredientButton = (id: ProductId) => (
     <button
       type="button"
       onClick={() => openIngredients(id)}
-      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-black/20 px-4 py-3 text-sm font-medium text-black/70 transition-colors hover:border-black/40 hover:bg-black/[0.04] hover:text-black cursor-pointer"
+      className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border-[1.5px] border-black/10 bg-white px-3 py-3 text-[13px] lg:text-sm font-medium text-black/70 transition-colors hover:border-black/40 hover:text-black cursor-pointer"
     >
-      Full ingredient list
+      <span className="lg:hidden">Ingredients</span>
+      <span className="hidden lg:inline">Full ingredient list</span>
       <svg
         width="14"
         height="14"
@@ -99,10 +102,11 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
     </button>
   );
 
-  // Product card: asset on top, then name, a time-of-day badge straddling a
-  // divider, sub-line, active-nootropic load and the shared ingredient CTA.
-  // One layout for both breakpoints, scaled up at lg. Neither product is
-  // enlarged over the other, so they keep equal billing.
+  // Product card: a pastel time-of-day bar caps the tile, then the
+  // full-bottle render (3:5 crop of the tall labelV2 asset — same treatment
+  // as the BYO Learn step), name + sub-line as one unit, the active-nootropic
+  // load on a navy-tint accent band, and the shared ingredient CTA. Neither
+  // product is enlarged over the other (equal billing).
   const renderCard = (id: ProductId) => {
     const p = PRODUCTS[id];
     return (
@@ -110,36 +114,40 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         key={id}
         className="bg-white rounded-md ring-1 ring-black/8 overflow-hidden flex flex-col"
       >
-        <div className="relative aspect-square w-full overflow-hidden bg-[#eef1f8]">
+        <div
+          className={`py-2 text-center text-[11px] lg:text-xs font-semibold uppercase tracking-[0.14em] leading-none ${TIME_OF_DAY_BADGE[p.timeOfDay]}`}
+        >
+          {p.timeOfDay}
+        </div>
+        <div className="relative aspect-[3/5] w-full overflow-hidden bg-[#f1f1f3]">
           <Image
             src={p.bottleSrc}
             alt={p.bottleAlt}
             fill
-            sizes="(max-width: 1024px) 100vw, 360px"
-            className="object-cover scale-[1.25]"
+            sizes="(max-width: 1024px) 50vw, 340px"
+            className="object-cover object-center"
           />
         </div>
-        <div className="flex flex-1 flex-col p-5 text-center lg:p-6">
-          <p className="text-xl font-bold text-black leading-none tracking-tight lg:text-2xl">
+        {/* Name + sub-line read as one unit under the bottle */}
+        <div className="px-3 pt-4 pb-4 lg:px-6 lg:pt-5 text-center">
+          <p className="text-lg font-bold text-black leading-none tracking-tight lg:text-2xl">
             {p.name}
           </p>
-          {/* Time-of-day badge centred on a divider (mirrors the nav Shop tiles) */}
-          <div className="relative my-4 lg:my-5">
-            <div className="border-t border-black/10" />
-            <span
-              className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold leading-none ${TIME_OF_DAY_BADGE[p.timeOfDay]}`}
-            >
-              {p.timeOfDay}
-            </span>
-          </div>
-          <p className="text-sm text-black mb-4">{p.sub}</p>
-          <p className="text-2xl font-bold tabular-nums leading-none text-black lg:text-3xl">
+          <p className="mt-1.5 text-[13px] lg:text-sm text-black/60 leading-snug">
+            {p.sub}
+          </p>
+        </div>
+        {/* Active-nootropic load + ingredient CTA share the tinted footer —
+            the fill runs to the bottom of the tile so the white pill sits in
+            contrast on it. */}
+        <div className="mt-auto bg-[#eef0f5] pt-3 lg:pt-4 text-center">
+          <p className="text-xl font-bold tabular-nums leading-none text-[#1B2757] lg:text-3xl">
             {p.mg}
           </p>
-          <p className="text-[11px] uppercase tracking-wide text-black/45 mt-1.5 mb-5">
+          <p className="text-[10px] lg:text-[11px] uppercase tracking-wide text-[#1B2757]/60 mt-1.5">
             Active nootropics
           </p>
-          <div className="mt-auto">{ingredientButton(id)}</div>
+          <div className="p-3 lg:px-5 lg:pb-5 lg:pt-4">{ingredientButton(id)}</div>
         </div>
       </div>
     );
@@ -159,26 +167,11 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/fu
         and mental endurance.
       </p>
 
-      {/* Mobile: one formula at a time via the AM/PM toggle (keeps the section
-          calm on small screens). Desktop: both formulas as two equal cards with
-          larger assets and no toggle (equal billing, neither enlarged). */}
-      <div className="mx-auto max-w-[560px] lg:max-w-[720px] mb-8">
-        <div className="lg:hidden">
-          <FormulaToggle
-            value={active}
-            flowValue="flow"
-            clearValue="clear"
-            onChange={setActive}
-            variant="time"
-            className="mb-4"
-          />
-          {renderCard(active)}
-        </div>
-
-        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6">
-          {renderCard("flow")}
-          {renderCard("clear")}
-        </div>
+      {/* Both formulas side by side on every breakpoint — two equal cards,
+          neither enlarged over the other. */}
+      <div className="mx-auto max-w-[560px] lg:max-w-[760px] mb-8 grid grid-cols-2 gap-3 lg:gap-6">
+        {renderCard("flow")}
+        {renderCard("clear")}
       </div>
 
       <IngredientBottomSheet

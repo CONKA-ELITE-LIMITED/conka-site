@@ -1,0 +1,112 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import ConkaCTAButton from "./ConkaCTAButton";
+import TrustMicroRow from "./TrustMicroRow";
+
+/* ============================================================================
+ * HomeHeroVideoDesktop — desktop (lg+) looped-video home hero
+ *
+ * UNUSED since Aug 2026: the home page renders HomeHeroStatic (metal-tray
+ * stills). Kept, with its /videos/both assets, as the revert path.
+ *
+ * Landscape companion to HomeHeroVideo. Full-bleed at the V2 asset's
+ * native wide 7:3 (1470x630), so the box never crops the frame and the
+ * upscale past native stays mild even on wide screens. The bottles are
+ * composed right of centre, so the copy + CTA overlay the pale negative
+ * space on the left (V3 staggered title, left-aligned, brand rule).
+ *
+ * Copy is reused verbatim from LandingHero with the staggered
+ * two-tier title. Video is a forward+reverse ping-pong (seamless native
+ * loop), WebM first then MP4. IntersectionObserver play/pause,
+ * reduced-motion respected.
+ *
+ * Rendered only at lg+; below lg the page rendered HomeHeroVideo.
+ * ========================================================================== */
+
+export default function HomeHeroVideoDesktop() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    // Respect reduced-motion: leave the still background poster visible, no autoplay loop.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (el.paused) {
+            el.play().catch(() => {});
+          }
+        } else if (!el.paused) {
+          el.pause();
+        }
+      },
+      { threshold: 0.4 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // See HomeHeroVideo: the poster is painted as a background-image (cover)
+  // rather than the <video poster> attribute, which iOS Safari stretches to the
+  // box during the metadata-load window before the video decodes.
+  return (
+    <div
+      className="relative aspect-[7/3] w-full overflow-hidden bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/videos/both/BothNeuronFloatDesktop-poster.jpg')",
+      }}
+    >
+      <video
+        ref={videoRef}
+        muted
+        playsInline
+        loop
+        preload="metadata"
+        aria-label="CONKA Flow and Clear shots floating through a glass neuron network"
+        className="absolute inset-0 h-full w-full object-cover"
+      >
+        <source src="/videos/both/BothNeuronFloatDesktop.webm" type="video/webm" />
+        <source src="/videos/both/BothNeuronFloatDesktop.mp4" type="video/mp4" />
+      </video>
+
+      {/* Bottom fade — the footage melts into the white section below rather
+          than ending on a hard edge. Kept short. */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[10%] pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+
+      {/* Copy — overlaid in the left negative space, vertically centred.
+          Staggered two-tier title (HomeHeroStatic style): large bold first line,
+          smaller lighter second line displaced right. */}
+      <div className="absolute inset-0 z-10 flex items-center">
+        <div className="flex flex-col items-start gap-5 px-[5vw] text-left text-black">
+          <h1 className="mb-0 text-black" style={{ letterSpacing: "-0.025em" }}>
+            <span className="block whitespace-nowrap text-[4rem] font-bold leading-[0.98] xl:text-[5rem]">
+              A Sharper Mind.
+            </span>
+            <span className="mt-1 block text-[2.75rem] font-medium leading-[1.05] xl:ml-28 xl:text-[3.5rem]">
+              Morning to Evening.
+            </span>
+          </h1>
+          <p className="max-w-[42ch] text-lg leading-snug text-black xl:text-[1.1875rem]">
+            For minds that demand more. A patented nootropic shot, clinically
+            formulated to support focus, memory, and mental endurance every day.
+          </p>
+          <ConkaCTAButton href="/conka-both" meta={null}>
+            Buy CONKA Today
+          </ConkaCTAButton>
+          <TrustMicroRow className="mt-1" />
+        </div>
+      </div>
+    </div>
+  );
+}

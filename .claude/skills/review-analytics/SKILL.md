@@ -16,7 +16,7 @@ This skill reviews **analytics implementation only**. For code quality, use `/re
 ## Quick Reference
 
 ```
-/review-analytics app/funnel/        # Review funnel analytics
+/review-analytics app/build-your-order/   # Review order-flow analytics
 /review-analytics app/page.tsx       # Review a specific page
 /review-analytics CartContext        # Review cart mutation events
 /review-analytics all                # Full site audit

@@ -2,6 +2,22 @@
 
 > **Living data log for the `/go/*` listicle landing pages.** Append a dated snapshot each time we pull Vercel Web Analytics; the JSON block in each snapshot feeds the dashboard artifact directly. This is the data home — the [2026-07 ad-spend sprint doc](../sprints/2026-07-listicle-ad-spend.md) is the narrative context.
 
+> ## ⚠️ 2026-08-24 — routing correction: there was never a funnel epoch
+>
+> **Checked against git while pinning the CTA routing epoch for SCRUM-1242. The funnel framing below is wrong and was never true.**
+>
+> **What the code actually says.** Listicle CTAs have pointed at the **PDPs** continuously since **2026-07-24** (`b224d714`, "attribute listicle CTA clicks through to purchase"), which is when `withSrc(buyHref, …)` replaced the in-page anchor. The `PDP_HREF` map itself landed a day earlier in `76ffe504` (2026-07-23). A pickaxe search over the whole history of `app/components/go/`, `app/go/` and `app/lib/landings/` returns **no commit that ever put a `/funnel` href in a listicle**. So the claim below that "listicle CTAs were re-routed to the funnel (not the classic PDP)" from ~27 Jul describes something that never shipped, and there is no re-route date to annotate a chart with.
+>
+> **Live routing.** CTA → `/conka-flow` · `/conka-clarity` · `/conka-both` (by the buy box's `productHeroId`), with `?src=<slug>-<section>` appended. Hero, bridge and sticky CTAs all use it.
+>
+> **Attribution is path-independent, which is why it kept working.** `?src=` is read on landing and written through to `sessionStorage` (`getListicleSrc`, `app/lib/analytics.ts`), so `getPurchaseOrigin()` still resolves at add-to-cart time even after in-PDP navigation drops the param. `CartContext` (line ~181) writes it as the `_listicle_origin` cart attribute, which rides Shopify's hosted checkout onto the order. None of that depends on which page the CTA landed on.
+>
+> **Two knock-on corrections to the text below:**
+> - "the old `?src=` → `purchase:add_to_cart.source` path … stays ~zero because the funnel skips the cart" is **wrong twice over**. The funnel was never in the path, and `getPurchaseSource()` returns the literal `"listicle"` whenever a `src` token is present. **Cause now confirmed (SCRUM-1244):** `purchase:add_to_cart` was gated behind a stale variant lookup that returned null for every live product, so the event almost never fired at all and `source` never reached Vercel. Fixed on branch `fix/add-to-cart-tracking-gate`; the path should populate from that release onward.
+> - The **~1-in-5 floor is still real data** (6 tagged vs 25 Meta-attributed vs ~38 store-lift in week 1) — but its stated *cause* is wrong. The undercount cannot be "the funnel bypasses the cart". Note the floor is measured on `_listicle_origin` **order tags**, which come from the cart attribute set independently in `CartContext` and were therefore **not** affected by SCRUM-1244. So that bug explains the dead `purchase:add_to_cart.source` path, not this ratio. Remaining candidates for the tag-side gap: cross-device, come-back-later direct visits, the `myshopify.com` checkout-cookie split, and `sessionStorage` loss between landing and purchase. Treat the ratio as observed, the explanation as still open.
+>
+> **For SCRUM-1242:** no epoch annotation is needed for a funnel-to-PDP re-route. The only routing boundary worth marking is **2026-07-24**, before which listicle CTAs scrolled to the in-page buy zone rather than handing off to a PDP. Trends may be read continuously across everything after that date.
+
 ## What we measure and why
 
 Three events, all keyed `{ slug, section }` (the two-property budget — see `app/lib/analytics.ts`):
@@ -18,7 +34,7 @@ Three events, all keyed `{ slug, section }` (the two-property budget — see `ap
 
 **First-party purchase attribution is now live (from ~27 Jul).** Listicle CTAs were re-routed to the **funnel** (not the classic PDP). The funnel carries the cart-level `_listicle_origin` attribute (`<slug>-<section>`, set in `CartContext`) straight through Shopify's hosted checkout, so it lands on the **order** as a note attribute — first-party, per persona *and* section. This supersedes the old `?src=` → `purchase:add_to_cart.source` path, which stays ~zero because the funnel skips the cart (no `add_to_cart` event fires). Pull orders by `_listicle_origin` (query 6 below).
 
-> **⚠️ First-party is a FLOOR, not the truth (learned 2026-07-31).** The `_listicle_origin` count only rides the funnel→checkout path, so it captures roughly **1 in 5** of the orders the listicles actually drive. It misses come-back-and-buy-direct, cross-device, and the checkout-cookie split (`myshopify.com`). **Do not read the tagged-order count as "what the listicles sold."** For *volume*, use **store-level incrementality** (query 7) and **Meta Ads Manager** (query 8); use first-party only for *which section closes*. Week 1 proof: 6 tagged vs 25 Meta-attributed vs ~38 store-lift orders — the truth is the high end. Full working in the *Incrementality & attribution reconciliation* subsection of the 24–31 Jul snapshot below.
+> **⚠️ First-party is a FLOOR, not the truth (learned 2026-07-31).** The `_listicle_origin` count only rides the funnel→checkout path, so it captures roughly **half** of the orders the listicles actually drive (~1 in 5 at the start of the trial; 51% by 21 Aug as more buyers rode the funnel→checkout path). It misses come-back-and-buy-direct, cross-device, and the checkout-cookie split (`myshopify.com`). **Do not read the tagged-order count as "what the listicles sold."** For *volume*, use **store-level incrementality** (query 7) and **Meta Ads Manager** (query 8); use first-party only for *which section closes*. Week 1 proof: 6 tagged vs 25 Meta-attributed vs ~38 store-lift orders — the truth is the high end. Full working in the *Incrementality & attribution reconciliation* subsection of the 24–31 Jul snapshot below.
 
 > **Known gap — `persona:` order tags aren't writing.** The `orders/paid` webhook also calls `tagsAdd` to stamp `listicle` + `persona:<name>` on the order (SCRUM-1180), but the live `SHOPIFY_ADMIN_API_TOKEN` (B2B Invoicing app) lacks `write_orders`, so the tag write silently fails. Orders still carry the `_listicle_origin` note attribute (that comes from the cart, not the webhook) — so attribution works, but you must filter by the note attribute, **not** the tag. Tracked in `docs/TODO.md`.
 
@@ -411,3 +427,111 @@ Normalised to a 5-step funnel (% of Vercel page **entries** still on the page at
 ### Artifact
 
 Dashboard refreshed to 24 Jul – 10 Aug (blended nCPA → £90; spend £8,466 / 94 purchases; per-listicle bars now show Brain-ageing over the £100 line; traffic, CVR, cadence, AOV and reach repulled). Same URL <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>.
+
+---
+
+## Snapshot — 2026-08-10 → 2026-08-21 (week 4; efficiency breaks target)
+
+Pulled **21 Aug AM**. Sources: Meta Ads Manager (screenshot from Rudh, all three campaigns), Shopify Admin API (queries 6 + 7, `created_at:>=2026-07-03`), Vercel Web Analytics (visits + section/CTA events). Cumulative framing 24 Jul – 21 Aug.
+
+**Headline: volume is still incremental, but the money stopped working.** Marginal CPA on spend since 10 Aug is **£141.73** against the £100 target, and first-order ROAS on that spend is **0.88×** (was ~1.5× in week 1). The damage sits in the biggest budget: ADHD is buying purchases at **£169**. Brain-ageing — the *smallest* budget — is the only page under target at **£90**.
+
+> **⚠️ Two corrections in this pull.** (1) A **week-bucketing bug** in `weekly-orders.mjs` counted each boundary day in *both* adjacent weeks, inflating every previously published weekly new-demand figure. Fixed (`< end + "T00:00:00Z"`); corrected weeks now reconcile exactly with the order-level pull (tagged sums to 69). The `weeks` array is now generated rolling from `SINCE` so it no longer needs hand-editing. (2) **Brain-ageing is on £100/day, not the £200 recorded on 8 Aug** — Ads Manager shows £100 and its spend since 10 Aug (~£98/day) confirms it. Total daily is **£500, not £600**.
+
+### Meta — cumulative vs marginal (the number that matters)
+
+Cumulative CPA averages four weeks together and lags a change in efficiency by design. **Marginal** = the spend/purchase delta since the 10 Aug pull.
+
+| Listicle | Daily | Spend | Purchases | Cum. CPA | **Marginal CPA** | Meta CVR | £/visitor |
+|----------|------:|------:|----------:|---------:|-----------------:|---------:|----------:|
+| ADHD | £300 | £6,666.76 | 64 | £104.17 | **£168.50** | 0.66% | £0.69 |
+| Productivity | £100 | £3,557.99 | 32 | £111.19 | **£150.00** | 1.02% | £1.13 |
+| Brain-ageing | £100 | £3,910.50 | 38 | £102.91 | **£90.04** | 1.38% | £1.42 |
+| **All three** | **£500** | **£14,135.25** | **134** | **£105.49** | **£141.73** | 0.86% | £0.91 |
+
+Screenshot carried no visible date range; per-campaign spend deltas since 10 Aug work out at £322 / £95 / £98 a day against stated budgets of £300 / £100 / £100, which fits a cumulative trial-to-date window. Sanity-check on the next pull.
+
+### Why the cost moved (CPA = click price ÷ conversion)
+
+| Page | £/visitor | CVR | CPA | Driver |
+|------|-----------|-----|-----|--------|
+| ADHD | £0.51 → £0.97 (**+91%**) | 0.70% → 0.58% (−18%) | £73 → £169 | **Click price** (auction / fatigue) |
+| Productivity | £1.09 → £1.20 (+9%) | 1.09% → 0.80% (**−27%**) | £100 → £150 | **Conversion** |
+| Brain-ageing | £1.42 → £1.31 (−8%) | 1.31% → 1.45% (+11%) | £109 → £90 | Both improved |
+
+- **ADHD is an auction problem.** 512,903 impressions against 177,163 reach ≈ 2.9 frequency, the highest of the three. Clicks nearly doubled in price; conversion softened but is secondary.
+- **Productivity is a conversion problem.** Click price barely moved; conversion fell 27%.
+- **Brain-ageing is healthy on both axes** and is the only page worth more budget on current numbers.
+
+> **⚠️ Confound — the purchase path was rebuilt mid-trial.** Per `docs/CHANGELOG.md`, **all three PDP heroes went V3 on 11–12 Aug** (plus new plan-picker + subscription box), and **listicle buy zones moved to the V3 PDP hero on 20 Aug**. Neither was recorded as a trial event or run as a conversion test, and both sit inside the window where ADHD (−18%) and Productivity (−27%) lost conversion. Not proven — Brain-ageing's conversion *rose* 11% over the same window on the same path — but rule it out before blaming the auction alone. The 20 Aug change also **resets the baseline**: everything from 21 Aug measures a different page.
+
+### First-party tagged orders — 69 to date (up from 42)
+
+| | Orders | Revenue | AOV | vs 10 Aug |
+|--|-------:|--------:|----:|-----------|
+| **ADHD** | 41 | £2,408.25 | £58.74 | was 23 |
+| **Productivity** | 15 | £1,276.94 | £85.13 | was 13 |
+| **Brain-ageing** | 13 | £769.97 | £59.23 | was 6 |
+| **Total** | **69** | **£4,455.16** | **£64.57** | was 42 / £2,823.83 |
+
+- **Section split (all 69):** sticky ×35 · hero ×29 · bridge ×5 · **product ×0**. Hero + sticky close 93%; the end-of-page product block has never closed an order.
+- **Cadence (all 69):** monthly ×53 (£2,573.29) · quarterly ×13 (£1,678.92) · one-time ×3 (£202.95). Quarterly is 19% of orders and 38% of revenue.
+- **Current window (10–21 Aug), 27 orders / £1,631.33:** ADHD 18 (£976.36, 0.49% CVR, £0.27/visitor) · Brain-ageing 7 (£479.98, **0.85%**, **£0.58**) · Productivity 2 (£174.99, 0.23%, £0.20). Productivity has effectively stalled since its budget cut.
+- **Tag capture ≈ 51%** (69 ÷ 134 Meta), up from ~45%. Still a floor. `persona:`/`listicle` tag write **still broken** (0 of 69) — filter on the `_listicle_origin` note attribute.
+
+### Store-level incrementality (corrected buckets)
+
+| Week | Total | New-demand | Renewals | Tagged | New-demand rev |
+|------|------:|-----------:|---------:|-------:|---------------:|
+| 3–10 Jul | 20 | 6 | 14 | 0 | £532 |
+| 10–17 Jul | 17 | 2 | 15 | 0 | £197 |
+| 17–24 Jul | 20 | 4 | 16 | 0 | £274 |
+| 24–31 Jul (trial) | 58 | 39 | 19 | 5 | £3,391 |
+| 31 Jul–7 Aug | 66 | 50 | 16 | 28 | £3,467 |
+| 7–14 Aug | 46 | 32 | 14 | 18 | £2,518 |
+| 14–21 Aug | 48 | 34 | 14 | 18 | £2,449 |
+
+- Pre-trial baseline ≈ **4 new-demand orders / £334 a week**. Trial total **155 orders / £11,825**; baseline-equivalent ≈ 16 / £1,336 → **incremental ≈ 139 orders / ≈ £10,489**.
+- **Shape:** peak in week 2 (50), then a step down to a **plateau at ~33/week** for two weeks. Not a slide, but a third off peak.
+- Renewals flat at 14–19 throughout, so the lift is genuinely new demand.
+- **Three lenses (24 Jul – 21 Aug):** tagged **69** (floor) · Meta **134** · store lift **~139**. Ordered as expected and tightly clustered.
+
+### Traffic (Vercel, Mon-start weeks; last is ~4 partial days)
+
+| Week of | ADHD | Productivity | Brain-ageing | Total |
+|---------|-----:|-------------:|-------------:|------:|
+| 27 Jul | 2,394 | 961 | 739 | 4,094 |
+| 3 Aug | 2,963 | 783 | 982 | **4,728** |
+| 10 Aug | 2,421 | 516 | 496 | 3,433 |
+| 17 Aug* | 1,278 | 375 | 344 | 1,997* |
+
+Cumulative 24 Jul – 21 Aug: ADHD 9,663 · Productivity 3,143 · Brain-ageing 2,757 · **15,563 total**.
+
+### Scroll + CTA (10–21 Aug)
+
+Reach-to-product: **ADHD 13% · Productivity 17% · Brain-ageing 10%**. First-section retention: 44% / 39% / 33%.
+
+| Zone | ADHD | Productivity | Brain-ageing |
+|------|-----:|-------------:|-------------:|
+| hero | **210** | 33 | 45 |
+| sticky | 180 | **66** | 30 |
+| bridge | 33 | 8 | 11 |
+| product | 9 | 5 | 1 |
+
+ADHD now leads with the hero (210 vs 180 sticky); Productivity still closes on the sticky bar.
+
+### Actions
+
+1. **Move budget out of ADHD into Brain-ageing** — £169 vs £90 marginal CPA. The allocation is upside down.
+2. **Confirm the Brain-ageing budget** — running £100/day against £200 recorded. The best page has been at half budget for two weeks.
+3. **Refresh ADHD creative** — 2.9 frequency, click price +91%.
+4. **Rule out the 11–12 Aug PDP rebuild** — compare funnel entry→purchase either side of 12 Aug before blaming the auction.
+5. **Productivity: feed it or cut it** — worst CPA (£150), best AOV (£85), 2 tagged orders in 11 days.
+
+### Timeline additions
+
+`11–12 Aug` all three PDPs rebuilt to the V3 hero + new plan-picker/subscription box (not recorded as a trial event) · `~10 Aug` Brain-ageing budget appears to drop to £100/day (total £500/day) · `20 Aug` listicle buy zones upgraded to the V3 PDP hero — **resets the baseline** · `21 Aug` this pull.
+
+### Artifact
+
+Dashboard rebuilt around marginal CPA (verdict, KPI row, cost-per-purchase chart vs £100 target, CPA decomposition, confound panel, actions). Same URL <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>.
