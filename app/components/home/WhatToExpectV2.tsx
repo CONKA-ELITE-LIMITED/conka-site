@@ -1,14 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import {
-  ScrollTrigger,
-  useGSAP,
-  withMotion,
-  drawProgress,
-  scrubBrighten,
-} from "@/app/lib/motion";
+import { useInView } from "@/app/hooks/useInView";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
 import {
   expectV2Header,
@@ -25,14 +19,20 @@ import {
  * line reaches it. Desktop (lg+) pairs the timeline with a CSS-sticky product
  * render column; mobile is header + stacked timeline only.
  *
- * Motion: withMotion-gated scrub via drawProgress + scrubBrighten from
- * app/lib/motion.ts. JSX carries the final, fully-lit state, so reduced
- * motion and no-JS users see the complete timeline. No ScrollTrigger pin;
+ * Performance: GSAP is NOT statically imported -- the PDPs are the only
+ * routes this component ships on, and nothing else there uses GSAP. The
+ * motion layer loads via dynamic import only when the section approaches the
+ * viewport (and only when motion is allowed), so it stays out of the routes'
+ * first-load JS. JSX carries the final, fully-lit state, so no-JS, reduced
+ * motion, and the pre-load moment all show the complete timeline; the scrub
+ * is position-synced, so late binding loses nothing. No ScrollTrigger pin;
  * the desktop column uses position: sticky.
  *
- * Content-only: the page owns the section wrapper and background. The PDPs
- * mount one tree at a time (useIsMobile branch), so a single instance runs;
- * useGSAP({ scope }) cleans up on breakpoint remounts.
+ * The PDPs mount one tree at a time (useIsMobile branch); the isMobile
+ * dependency rebinds and refreshes triggers when the tree settles, so
+ * positions are measured against the final layout.
+ *
+ * Content-only: the page owns the section wrapper and background.
  * ========================================================================== */
 
 export default function WhatToExpectV2({
@@ -40,29 +40,50 @@ export default function WhatToExpectV2({
 }: {
   productId?: ExpectV2ProductId;
 }) {
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLDivElement | null>(null);
+  const [inViewRef, isInView] = useInView({ threshold: 0 });
+  const isMobile = useIsMobile();
   const milestones = expectV2Milestones[productId];
   const asset = expectV2Asset[productId];
 
-  // The PDPs first render their mobile tree (useIsMobile starts undefined),
-  // then swap on desktop. Re-run setup when the breakpoint settles and refresh
-  // ScrollTrigger, so trigger positions are measured against the final layout
-  // rather than the pre-swap one.
-  const isMobile = useIsMobile();
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !isInView) return;
+    // Reduced motion never animates -- skip loading GSAP entirely.
+    if (!window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+      return;
+    }
 
-  useGSAP(
-    () => {
-      withMotion(() => {
-        drawProgress("[data-wte-line]", "[data-wte-timeline]");
-        scrubBrighten("[data-wte-block]");
-        ScrollTrigger.refresh();
-      });
-    },
-    { scope: root, dependencies: [isMobile], revertOnUpdate: true },
-  );
+    let cancelled = false;
+    let revert: (() => void) | undefined;
+
+    import("@/app/lib/motion").then(
+      ({ gsap, ScrollTrigger, withMotion, drawProgress, scrubBrighten }) => {
+        if (cancelled) return;
+        const ctx = gsap.context(() => {
+          withMotion(() => {
+            drawProgress("[data-wte-line]", "[data-wte-timeline]");
+            scrubBrighten("[data-wte-block]");
+            ScrollTrigger.refresh();
+          });
+        }, el);
+        revert = () => ctx.revert();
+      },
+    );
+
+    return () => {
+      cancelled = true;
+      revert?.();
+    };
+  }, [isInView, isMobile]);
 
   return (
-    <div ref={root}>
+    <div
+      ref={(node) => {
+        root.current = node;
+        inViewRef(node);
+      }}
+    >
       <div className="lg:grid lg:grid-cols-2 lg:gap-16">
         {/* Sticky product render -- desktop only */}
         <div className="hidden lg:block">
@@ -73,7 +94,7 @@ export default function WhatToExpectV2({
                 alt={asset.alt}
                 fill
                 loading="lazy"
-                sizes="40vw"
+                sizes="(min-width: 1280px) 592px, 45vw"
                 className="object-contain"
               />
             </div>

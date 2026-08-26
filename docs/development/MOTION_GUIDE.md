@@ -55,6 +55,8 @@ Override defaults via the `vars` argument (`y`, `stagger`, `duration`, nested `s
 
 There is also `usePrefersReducedMotion()` (`app/hooks/usePrefersReducedMotion.ts`) for components that need to *render different JSX* under reduced motion (e.g. the journey renders its stacked layout instead of the pinned one).
 
+**Lazy-load rule for conversion routes:** if a component is the only GSAP consumer on its route (the PDPs, landers), do not import `@/app/lib/motion` statically -- that puts gsap + ScrollTrigger in the route's first-load JS. Instead gate a dynamic `import("@/app/lib/motion")` behind `useInView({ threshold: 0 })` plus a reduced-motion check, and scope with `gsap.context(fn, el)` (same cleanup semantics as `useGSAP({ scope })`). JSX must carry final state so the pre-load moment looks complete; scrubbed animations are position-synced, so late binding loses nothing. Reference: `WhatToExpectV2`.
+
 ## Bespoke patterns (copy from the reference, don't abstract yet)
 
 These shipped once; promote them into `motion.ts` only when a second page needs them.
