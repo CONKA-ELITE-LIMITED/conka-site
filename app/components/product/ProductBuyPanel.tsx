@@ -49,6 +49,12 @@ export interface ProductBuyPanelProps {
   /** V2 moves the "What You'll Feel" block into the left-column accordion, so
       the buy box drops it here. */
   hideWhatYouFeel?: boolean;
+  /** Renders just the Ingredients pill under the CTA, without the accordions
+      hideSecondary also suppresses. The mobile V3 hero uses it to keep the full
+      list one tap away now that the written-out list has left the hero
+      (SCRUM-1260). Ignored when hideSecondary is false, since the pill would
+      then duplicate the button the secondary block already renders. */
+  showIngredientsPill?: boolean;
 }
 
 /**
@@ -641,6 +647,7 @@ export default function ProductBuyPanel({
   hideKeyBenefits,
   hideSecondary,
   hideWhatYouFeel,
+  showIngredientsPill,
 }: ProductBuyPanelProps) {
   const productType = getHeroProductType(formulaId);
   const shotsPerDay = productType === "both" ? 2 : 1;
@@ -709,6 +716,14 @@ export default function ProductBuyPanel({
 
         <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />
       </div>
+
+      {hideSecondary && showIngredientsPill && (
+        <IngredientListButton
+          formulas={FORMULA_TABS[productType]}
+          pill
+          fullWidth
+        />
+      )}
 
       {!hideWhatYouFeel && <WhatYouFeel />}
 

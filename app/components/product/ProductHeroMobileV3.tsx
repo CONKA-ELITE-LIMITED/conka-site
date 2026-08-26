@@ -6,13 +6,12 @@ import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
-import { MM_GALLERY_ASSETS, getPdpIngredientList } from "@/app/lib/mmPdpData";
+import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
-import IngredientOutcomeAccordions from "./IngredientOutcomeAccordions";
 
 interface ProductHeroMobileV3Props {
   formulaId: ProductHeroId;
@@ -26,12 +25,18 @@ interface ProductHeroMobileV3Props {
 /**
  * ProductHeroMobileV3 — the mobile counterpart of ProductHeroV3 (Flow, Clear, Both).
  *
- * Single stacked column in the Magic Mind order: identity (viewing → title →
- * spec → rating) → rectangular asset + thumbnails → subline + description +
- * check grid → pricing widget + subscription box → collapsed Ingredients list →
- * ingredient-benefit outcome accordions → who-it's-for + risk-free. Everything
- * lives in the hero, so the page body drops the separate ingredient section on
- * mobile.
+ * Single stacked column, ordered so the buy decision comes first: identity
+ * (viewing → title → spec → rating) → rectangular asset + thumbnails → pricing
+ * widget + subscription box + Ingredients pill → subline + description + check
+ * grid → proof strip.
+ *
+ * The hero deliberately stops at the buy decision (SCRUM-1260). It used to
+ * carry a whole ingredients section below the widget (written-out list, outcome
+ * accordions, who-it's-for, risk-free), which is the desktop pattern: it works
+ * beside a sticky image column and does not translate to one mobile column,
+ * where it just pushed price and CTA off the first screen. Ingredients live in
+ * the page body, one tap away via the buy panel's pill; risk-free lives in its
+ * own section further down.
  */
 export default function ProductHeroMobileV3({
   formulaId,
@@ -43,7 +48,6 @@ export default function ProductHeroMobileV3({
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
 
-  const ingredientLines = getPdpIngredientList(formulaId);
   const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
 
   return (
@@ -71,10 +75,9 @@ export default function ProductHeroMobileV3({
         hideArrows
       />
 
-      {/* Subline + description + check grid, above the widget */}
-      <IngredientBenefitLede formulaId={formulaId} />
-
-      {/* Pricing widget + Add to cart + buy-once + subscription box */}
+      {/* Pricing widget + Add to cart + buy-once + subscription box, directly
+          under the gallery so price and CTA land on the first screen. The pill
+          opens the full ingredient list in a bottom sheet. */}
       <ProductBuyPanel
         formulaId={formulaId}
         selectedCadence={selectedCadence}
@@ -85,47 +88,11 @@ export default function ProductHeroMobileV3({
         hideKeyBenefits
         hideSecondary
         hideWhatYouFeel
+        showIngredientsPill
       />
 
-      {/* Written-out Ingredients — collapsed accordion under the subscription box */}
-      {ingredientLines.length > 0 && (
-        <details className="group">
-          <summary className="flex cursor-pointer list-none items-center justify-between border-b border-black/15 py-2 [&::-webkit-details-marker]:hidden">
-            <span className="text-lg font-bold text-black">Ingredients</span>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="shrink-0 text-black/40 transition-transform group-open:rotate-180"
-              aria-hidden
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </summary>
-          <div className="flex flex-col gap-2 pt-3">
-            {ingredientLines.map((line) => (
-              <p
-                key={line.label ?? "list"}
-                className="text-sm leading-relaxed text-black"
-              >
-                {line.label && (
-                  <strong className="font-bold">{line.label} </strong>
-                )}
-                {line.text}
-              </p>
-            ))}
-          </div>
-        </details>
-      )}
-
-      {/* Ingredient-benefit outcome accordions + who-it's-for + risk-free (the
-          lede is already rendered above the widget, so suppress it here) */}
-      <IngredientOutcomeAccordions formulaId={formulaId} hideLede />
+      {/* Subline + description + check grid, below the widget */}
+      <IngredientBenefitLede formulaId={formulaId} />
 
       <TrustStrip />
     </div>

@@ -5,11 +5,13 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
-  useRef,
   type CSSProperties,
   type ReactNode,
 } from "react";
+import {
+  SectionImpressionsProvider,
+  useSectionRef,
+} from "@/app/components/analytics/sectionImpressions";
 import {
   trackListicleCtaClicked,
   trackListicleInteraction,
@@ -28,6 +30,10 @@ import {
  * whole page: TrackedSection registers its element with the provider rather
  * than creating an observer of its own. The slug lives only on the provider,
  * so no call site can tag an event with the wrong page.
+ *
+ * The observer itself lives in app/components/analytics/sectionImpressions.tsx,
+ * shared with the PDPs (SCRUM-1260). This file keeps the listicle's slug and
+ * its three event senders, so the emitted stream is unchanged.
  *
  * Event shapes and the two-property budget: see app/lib/analytics.ts.
  */
@@ -52,22 +58,12 @@ export const SECTION = {
   product: "product",
 } as const;
 
-/** Registers an element for impression tracking; returns its unregister fn. */
-type RegisterSection = (el: Element, section: string) => () => void;
-
-interface ListicleAnalyticsValue {
-  slug: string;
-  register: RegisterSection;
-}
-
-const SectionCtx = createContext<ListicleAnalyticsValue | null>(null);
+/** Carries the slug the three event senders below tag their events with. */
+const SlugCtx = createContext<string | null>(null);
 
 /**
- * Owns the page's single IntersectionObserver, the once-per-section guard, and
- * the slug every event is tagged with.
- *
- * A scroll listener calling getBoundingClientRect would force layout on every
- * scroll frame; IntersectionObserver does not, which is why it is used here.
+ * Binds the shared impression observer to this page's slug, so every section
+ * that scrolls into view reports as `listicle:section_viewed { slug, section }`.
  */
 export function SectionImpressions({
   slug,
@@ -76,66 +72,16 @@ export function SectionImpressions({
   slug: string;
   children: ReactNode;
 }) {
-  const seen = useRef<Set<string>>(new Set());
-  const labels = useRef<WeakMap<Element, string>>(new WeakMap());
-  const observer = useRef<IntersectionObserver | null>(null);
-  /** Elements registered before the effect created the observer. */
-  const pending = useRef<Set<Element>>(new Set());
-
-  useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const section = labels.current.get(entry.target);
-          if (!section) continue;
-          // One event per section per pageview, so stop watching immediately.
-          obs.unobserve(entry.target);
-          if (seen.current.has(section)) continue;
-          seen.current.add(section);
-          trackListicleSectionViewed({ slug, section });
-        }
-      },
-      {
-        // A percentage threshold can never be met by a section taller than the
-        // viewport, so trigger on any intersection and instead pull the bottom
-        // edge in: the section must clear the lowest 15% to count as seen.
-        threshold: 0,
-        rootMargin: "0px 0px -15% 0px",
-      },
-    );
-
-    observer.current = obs;
-    // Children mount before their parent, so anything that registered while
-    // observer.current was still null is waiting here.
-    pending.current.forEach((el) => obs.observe(el));
-    pending.current.clear();
-
-    return () => {
-      obs.disconnect();
-      observer.current = null;
-    };
-  }, [slug]);
-
-  const register = useCallback<RegisterSection>((el, section) => {
-    labels.current.set(el, section);
-    if (observer.current) observer.current.observe(el);
-    else pending.current.add(el);
-
-    return () => {
-      observer.current?.unobserve(el);
-      pending.current.delete(el);
-    };
-  }, []);
-
-  const value = useMemo<ListicleAnalyticsValue>(
-    () => ({ slug, register }),
-    [slug, register],
+  const onSeen = useCallback(
+    (section: string) => trackListicleSectionViewed({ slug, section }),
+    [slug],
   );
 
-  return <SectionCtx.Provider value={value}>{children}</SectionCtx.Provider>;
+  return (
+    <SectionImpressionsProvider onSeen={onSeen}>
+      <SlugCtx.Provider value={slug}>{children}</SlugCtx.Provider>
+    </SectionImpressionsProvider>
+  );
 }
 
 /**
@@ -145,14 +91,14 @@ export function SectionImpressions({
  * latency are untouched. No-ops outside a <SectionImpressions> provider.
  */
 export function useListicleCta(): (section: string) => void {
-  const ctx = useContext(SectionCtx);
+  const slug = useContext(SlugCtx);
 
   return useCallback(
     (section: string) => {
-      if (!ctx) return;
-      trackListicleCtaClicked({ slug: ctx.slug, section });
+      if (!slug) return;
+      trackListicleCtaClicked({ slug, section });
     },
-    [ctx],
+    [slug],
   );
 }
 
@@ -178,14 +124,14 @@ export function slugifyChoice(label: string): string {
  * <SectionImpressions> provider. Mirrors useListicleCta.
  */
 export function useListicleInteraction(): (section: string) => void {
-  const ctx = useContext(SectionCtx);
+  const slug = useContext(SlugCtx);
 
   return useCallback(
     (section: string) => {
-      if (!ctx) return;
-      trackListicleInteraction({ slug: ctx.slug, section });
+      if (!slug) return;
+      trackListicleInteraction({ slug, section });
     },
-    [ctx],
+    [slug],
   );
 }
 
@@ -197,11 +143,11 @@ export function useListicleInteraction(): (section: string) => void {
  * to its own links.
  */
 export function useListicleSrc(): (section: string) => string | undefined {
-  const ctx = useContext(SectionCtx);
+  const slug = useContext(SlugCtx);
 
   return useCallback(
-    (section: string) => (ctx ? `${ctx.slug}-${section}` : undefined),
-    [ctx],
+    (section: string) => (slug ? `${slug}-${section}` : undefined),
+    [slug],
   );
 }
 
@@ -251,16 +197,8 @@ export function TrackedSection({
   trackClicks?: boolean;
   children: ReactNode;
 }) {
-  const ctx = useContext(SectionCtx);
-  const register = ctx?.register;
   const fireCta = useListicleCta();
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !register) return;
-    return register(el, section);
-  }, [register, section]);
+  const ref = useSectionRef<HTMLDivElement>(section);
 
   useEffect(() => {
     const el = ref.current;
@@ -275,7 +213,7 @@ export function TrackedSection({
 
     el.addEventListener("click", onClick);
     return () => el.removeEventListener("click", onClick);
-  }, [fireCta, section, trackClicks]);
+  }, [fireCta, ref, section, trackClicks]);
 
   return (
     <div ref={ref} className={className} style={style}>
