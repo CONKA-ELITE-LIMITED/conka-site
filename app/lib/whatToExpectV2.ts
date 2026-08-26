@@ -88,7 +88,7 @@ const expectBoth: ExpectV2Milestone[] = [
 
 export const expectV2Header = {
   title: "What you'll feel, and when",
-  subtitle: "From the first shot to a new baseline, this is the timeline.",
+  subtitle: "Enhance focus, energy, and clarity, one sip at a time.",
 };
 
 export const expectV2Milestones: Record<ExpectV2ProductId, ExpectV2Milestone[]> = {
