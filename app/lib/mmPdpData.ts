@@ -6,6 +6,7 @@
 
 import type { ProductHeroId } from "./productTypes";
 import { getSupplementFacts } from "./supplementFacts";
+import { pickFaqItems } from "./faqContent";
 
 const ASSET_BASE = "/formulas/mmPdpAssets";
 
@@ -196,36 +197,43 @@ export function getIngredientBadge(
 /* ---------------------------------------------------------------------------
  * PDP disclosure rows: taste and how-to-take (SCRUM-1262)
  *
- * Product-specific, which is exactly why these are NOT the canonical FAQ
- * entries. `faqContent.ts` is product-agnostic, so its `taste` and
- * `how-to-take` answers describe Flow and Clear together. On /conka-flow a row
- * that talks about Clear is answering a question the visitor did not ask, so
- * the PDP gets its own per-product copy and Both gets the combined version.
+ * Only the SINGLE-formula variants are written here. Both ("03") reuses the
+ * canonical FAQ answers verbatim, so the two-product version of each answer
+ * exists exactly once in the codebase.
  *
- * The canonical entries still exist and are still correct for /faq and the
- * landing surfaces; keep the two in step when either changes.
+ * Why these are not simply the FAQ entries: `/faq` renders all of FAQ_ITEMS and
+ * builds its FAQPage schema from the same array, so adding `taste-flow` and
+ * `taste-clear` ids would put three near-identical taste questions on the hub
+ * and three near-duplicate Q&As into the structured data. The FAQ therefore has
+ * to stay product-agnostic, and a product page cannot use a product-agnostic
+ * answer: on /conka-flow, a Taste row that talks about Clear is answering a
+ * question the visitor did not ask.
+ *
+ * So the split is deliberate, and the duplication it costs is one short string
+ * per single-formula row. When the canonical answer changes, check whether the
+ * Flow and Clear variants below need the same change.
  * ------------------------------------------------------------------------- */
+const faqAnswer = (id: string) => pickFaqItems(id)[0].answer;
+
 export const PDP_DISCLOSURE_COPY: Record<
   ProductHeroId,
   { taste: string; howToTake: string }
 > = {
   "01": {
     taste:
-      "Earthy and slightly sweet, led by turmeric. A 30ml shot of concentrated botanical extract, so it tastes of what is in it.",
+      "Earthy and slightly sweet, led by turmeric. It pours as a yellowish-brown liquid.",
     howToTake:
       "One 30ml shot, straight from the bottle, with or without food. We recommend the morning, for calm focus and jitter-free energy through the day. There is no caffeine in it, so it works whenever you need it.",
   },
   "02": {
     taste:
-      "Bright and citrus, made with real lemon juice and lemon essential oil. A 30ml shot of concentrated botanical extract, so it tastes of what is in it.",
+      "Bright and citrus, made with real lemon juice and lemon essential oil.",
     howToTake:
       "One 30ml shot, straight from the bottle, with or without food. We recommend the afternoon, for clear thinking through the second half of the day. There is no caffeine in it, so it works whenever you need it.",
   },
   "03": {
-    taste:
-      "Flow is earthy and slightly sweet, led by turmeric. Clear is bright and citrus, made with real lemon juice and lemon essential oil. Both are 30ml of concentrated botanical extract, so they taste of what is in them.",
-    howToTake:
-      "Two 30ml shots, straight from the bottle, with or without food. Flow in the morning for calm focus and jitter-free energy. Clear in the afternoon for clear thinking through the second half of the day. Neither contains caffeine, so you can take them whenever you need them.",
+    taste: faqAnswer("taste"),
+    howToTake: faqAnswer("how-to-take"),
   },
 };
 

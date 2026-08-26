@@ -308,7 +308,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "taste",
     question: "What does CONKA taste like?",
     answer:
-      "CONKA Flow is earthy and slightly sweet, led by turmeric. CONKA Clear is bright and citrus, made with real lemon juice and lemon essential oil. Both are 30ml of concentrated botanical extract, so they taste of what is in them.",
+      "CONKA Flow is earthy and slightly sweet, led by turmeric, and pours as a yellowish-brown liquid. CONKA Clear is bright and citrus, made with real lemon juice and lemon essential oil.",
     category: "usage",
   },
   {
