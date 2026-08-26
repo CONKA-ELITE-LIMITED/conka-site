@@ -15,6 +15,7 @@
 
 import Image from "next/image";
 import { type ByoProduct } from "@/app/lib/byoData";
+import { bottleRenders } from "@/app/lib/productImages";
 import LearnMoreAccordion, { type LearnMoreRow } from "./LearnMoreAccordion";
 
 const SunIcon = () => (
@@ -165,22 +166,36 @@ export default function EducationStep({
         A Sharper Mind. Morning to Evening.
       </h2>
 
-      {/* The pair, side by side on every breakpoint (equal billing). The tall
-          renders do the talking; each card carries exactly one line of copy. */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* The pair, equal billing at every breakpoint. Mobile: side by side,
+          the tall renders do the talking. Desktop (SCRUM-1252): the sticky
+          media column already carries the big render, so the cards collapse
+          into stacked compact rows — square thumbnail left, copy right —
+          rather than repeating the bottles at full size in both columns. */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
         {FORMULAS.map((f) => {
           return (
-            <div key={f.product} className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden flex flex-col">
-              <div className="relative aspect-[3/5] w-full bg-[#f1f1f3]">
+            <div key={f.product} className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden flex flex-col lg:flex-row">
+              {/* Mobile: the tall 1:2 Thin crops (two cards on a 390px viewport). */}
+              <div className="relative aspect-[3/5] w-full bg-[#f1f1f3] lg:hidden">
                 <Image
                   src={f.image}
                   alt={`CONKA ${f.name} bottle`}
                   fill
-                  sizes="(max-width: 1024px) 50vw, 280px"
+                  sizes="50vw"
                   className="object-cover object-center"
                 />
               </div>
-              <div className="flex flex-1 flex-col p-3">
+              {/* Desktop: the canonical square render as a compact thumbnail. */}
+              <div className="relative hidden w-28 shrink-0 bg-[#f1f1f3] lg:block">
+                <Image
+                  src={bottleRenders[f.product].src}
+                  alt={`CONKA ${f.name} bottle`}
+                  fill
+                  sizes="112px"
+                  className="object-cover object-center"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-3 lg:justify-center lg:p-4">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <p className="text-[16px] font-semibold text-black leading-tight">{f.name}</p>
                   <span

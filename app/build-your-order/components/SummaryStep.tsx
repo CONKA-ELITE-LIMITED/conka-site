@@ -21,6 +21,7 @@ import {
 import { formatPrice } from "@/app/lib/productData";
 import { cadencePriceSuffix } from "../defaults";
 import { PlanSummaryList } from "./CadenceSelector";
+import { getBoxImage } from "./ByoMedia";
 
 interface SummaryStepProps {
   product: ByoProduct;
@@ -28,20 +29,6 @@ interface SummaryStepProps {
 }
 
 const SOLD = "150,000+";
-
-// The delivery photo that heads the receipt: product AND box, the thing that
-// actually arrives. Quarterly shows the larger shipment (same precedent as the
-// PDP slideshow's quarterly first-slide swap).
-const BOX_IMG: Record<ByoProduct, string> = {
-  flow: "/formulas/box/FlowBox.jpg",
-  clear: "/formulas/box/ClearBox.jpg",
-  both: "/formulas/box/BothBox.jpg",
-};
-const QUARTERLY_BOX_IMG: Record<ByoProduct, string> = {
-  flow: "/formulas/box/FlowQuarterlyBox.jpg",
-  clear: "/formulas/box/ClearQuarterlyBox.jpg",
-  both: "/formulas/box/BothQuarterlyBox.jpg",
-};
 
 // Verbatim from the site's data — 2 athletes (testimonials.data.ts) + 2
 // verified customers (reviews.data.ts). Do NOT paraphrase attributed quotes.
@@ -120,6 +107,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   };
 
   const display = BYO_PRODUCTS[product];
+  const box = getBoxImage(product, cadence);
   const pricing = getOfferPricing(product, cadence);
   const isSub = cadence !== "monthly-otp";
   const freq = cadencePriceSuffix(cadence);
@@ -138,11 +126,13 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
       {/* ===== RECEIPT ===== */}
       <div className="rounded-md ring-1 ring-black/10 bg-white overflow-hidden mb-3">
         {/* The order, shown: the box-and-bottle photo IS the receipt's header
-            (SCRUM-1249 review) — what arrives on the doormat, not a label. */}
-        <div className="relative aspect-[3/2] w-full bg-[#f1f1f3]">
+            (SCRUM-1249 review) — what arrives on the doormat, not a label.
+            Mobile only: on desktop the same photo owns the sticky media
+            column, so repeating it inside the receipt reads as a bug. */}
+        <div className="relative aspect-[3/2] w-full bg-[#f1f1f3] lg:hidden">
           <Image
-            src={(cadence === "quarterly-sub" ? QUARTERLY_BOX_IMG : BOX_IMG)[product]}
-            alt={`${display.label} delivery box`}
+            src={box.src}
+            alt={box.alt}
             fill
             sizes="(max-width: 1024px) 100vw, 560px"
             className="object-cover"

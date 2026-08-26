@@ -17,7 +17,7 @@ import dynamic from "next/dynamic";
 // First-paint content (step 1 + always-visible chrome) stays eager.
 import EducationStep from "./components/EducationStep";
 import StickyFooter from "./components/StickyFooter";
-import ByoMedia from "./components/ByoMedia";
+import ByoMedia, { getBoxImage } from "./components/ByoMedia";
 
 // Downstream steps (2/3) and the overlays are code-split so only step-1 JS
 // ships at first paint. BuildStep/SummaryStep keep SSR (they prefetch on
@@ -33,10 +33,10 @@ const UpsellBottomSheet = dynamic(
   () => import("./components/UpsellBottomSheet"),
   { ssr: false },
 );
-// Mobile-only; a ratio-matched placeholder keeps the band from shifting layout
-// while the chunk loads.
-const ByoMobileGallery = dynamic(() => import("./components/ByoMobileGallery"), {
-  loading: () => <div className="aspect-[7/5] max-h-[300px] w-full bg-[#f1f1f3]" aria-hidden />,
+// Build-step media (mobile band + desktop media column); a ratio-matched
+// placeholder keeps the band from shifting layout while the chunk loads.
+const ByoGallery = dynamic(() => import("./components/ByoGallery"), {
+  loading: () => <div className="aspect-[7/5] max-h-[300px] w-full bg-[#f1f1f3] lg:aspect-auto lg:h-full lg:max-h-none" aria-hidden />,
 });
 import {
   type ByoCadence,
@@ -384,14 +384,25 @@ export default function BuildYourOrderClient() {
           asset lives inside the receipt tile itself. */}
       {step === 2 && (
         <div className="lg:hidden">
-          <ByoMobileGallery product={product} />
+          <ByoGallery product={product} />
         </div>
       )}
 
       <main className="lg:flex lg:min-h-[calc(100vh-59px)]">
-        {/* Left media — desktop */}
+        {/* Left media — desktop. Step-aware (SCRUM-1252): the Build step gets
+            the same swipeable gallery as mobile (filling the column), the
+            Review step shows the delivery box (its receipt drops the duplicate
+            photo on desktop), and Learn keeps the caption-free bottle render. */}
         <div className="hidden lg:block lg:w-[42%] lg:sticky lg:top-[59px] lg:h-[calc(100vh-59px)]">
-          <ByoMedia product={product} showCaption={step !== 1} />
+          {step === 2 ? (
+            <ByoGallery product={product} />
+          ) : (
+            <ByoMedia
+              product={product}
+              showCaption={step !== 1}
+              media={step === 3 ? getBoxImage(product, cadence) : undefined}
+            />
+          )}
         </div>
 
         {/* Right content */}
