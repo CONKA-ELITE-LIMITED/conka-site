@@ -29,8 +29,6 @@ import DotIndicator from "@/app/components/DotIndicator";
  *     single asset of the active formula. Used on /conka-both.
  *   - Single (formulaIds={["01"]} or ["02"]): no toggle, asset block + one
  *     formula's cards. Used on /conka-flow and /conka-clarity.
- *
- * Plan: docs/development/featurePlans/clinical-component-upgrades.md
  * ========================================================================== */
 
 const NAVY = "#1B2757";
