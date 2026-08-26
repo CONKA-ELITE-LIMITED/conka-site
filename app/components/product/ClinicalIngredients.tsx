@@ -1,65 +1,46 @@
 "use client";
 
-import { bottleRenders } from "@/app/lib/productImages";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import {
   getOrderedActiveIngredients,
-  CATEGORY_INFO,
+  type IngredientData,
 } from "@/app/lib/ingredientsData";
 import { FormulaId } from "@/app/lib/productData";
+import { getIngredientBadge } from "@/app/lib/mmPdpData";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
-import DotIndicator from "@/app/components/DotIndicator";
+import IngredientDetailDrawer from "@/app/components/product/IngredientDetailDrawer";
 
 /* ============================================================================
  * ClinicalIngredients
  *
- * Ingredients section for the product pages, in the Simple DTC skin (black
- * type, no mono eyebrows/tags, soft cards): every ingredient is a
- * self-contained image-led card. The collapsed face leads with a full-bleed
- * band of the FMC studio render, then name, class tags, one-line benefit and
- * the headline stat. Expanding (native <details>) reveals the longer
- * description and the study citation.
+ * The PDP ingredient section: a grid of image-led tiles, each carrying a
+ * two-line benefit badge, opening a detail drawer on tap (SCRUM-1262).
+ *
+ * The grid replaced a horizontal snap rail grouped under three outcome
+ * headings. The badge now carries per tile what those headings carried per
+ * group, which reads faster and removes a layer of structure. Flow has six
+ * ingredients and Clear nine, so the grid is 3x2 and 3x3 at three columns.
+ *
+ * Two columns on mobile, not three: at 390px a three-column grid gives roughly
+ * 105px tiles and an outcome like "Sustained energy" will not fit in the badge.
  *
  * Reads everything from the shared ingredientsData.ts (no local copy of
- * ingredient content or ordering).
+ * ingredient content or ordering); badge copy lives in mmPdpData.ts.
  *
  * Modes:
- *   - Dual (default, formulaIds={["01","02"]}): Morning/Afternoon toggle +
- *     single asset of the active formula. Used on /conka-both.
- *   - Single (formulaIds={["01"]} or ["02"]): no toggle, asset block + one
- *     formula's cards. Used on /conka-flow and /conka-clarity.
+ *   - Dual (default, formulaIds={["01","02"]}): Morning/Afternoon toggle over
+ *     one formula's grid at a time. Used on /conka-both.
+ *   - Single (formulaIds={["01"]} or ["02"]): no toggle. Used on /conka-flow
+ *     and /conka-clarity.
  * ========================================================================== */
 
-const NAVY = "#1B2757";
-
-// Active nootropic load per formula in mg. Numbers supplied by the founder
-// (2026-06); verify against the formulation spec before any external claim.
-const FORMULA_GRAMMAGE: Record<FormulaId, number> = {
-  "01": 3700,
-  "02": 3142,
-};
-
-interface FormulaMeta {
-  shortName: string;
-  tagline: string;
-  bottleImage: string;
-  bottleAlt: string;
-}
-
-const FORMULA_META: Record<FormulaId, FormulaMeta> = {
-  "01": {
-    shortName: "Flow",
-    tagline: "Calm focus for your mornings.",
-    bottleImage: bottleRenders.flow.src,
-    bottleAlt: "CONKA Flow bottle",
-  },
-  "02": {
-    shortName: "Clear",
-    tagline: "Afternoon clarity & reset",
-    bottleImage: bottleRenders.clear.src,
-    bottleAlt: "CONKA Clear bottle",
-  },
+/** Badge tint per formula, reusing the tinted pill language already
+ *  established by `rolePillClass` in home/ProductCard.tsx, so the grid speaks
+ *  the same visual dialect as the Morning/Afternoon bands. */
+const BADGE_TINT: Record<FormulaId, string> = {
+  "01": "bg-[#f7edcb] text-[#755b1a]",
+  "02": "bg-[#f7ddd0] text-[#9a4526]",
 };
 
 export default function ClinicalIngredients({
@@ -70,217 +51,124 @@ export default function ClinicalIngredients({
   const [activeFormula, setActiveFormula] = useState<FormulaId>(
     formulaIds[0] ?? "01",
   );
+  const [openIngredient, setOpenIngredient] = useState<IngredientData | null>(
+    null,
+  );
 
   const ingredients = getOrderedActiveIngredients(activeFormula);
-  const meta = FORMULA_META[activeFormula];
   const isDual = formulaIds.length > 1;
-
-  // Dot indicator for the horizontal ingredient rail (same pattern as
-  // CROTestimonials): the active dot tracks scroll, tapping one scrolls to it.
-  const railRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  // gap-3 between tiles = 12px.
-  const cardStep = () => {
-    const el = railRef.current;
-    const tile = el?.querySelector<HTMLElement>("[data-tile]");
-    return tile ? tile.offsetWidth + 12 : (el?.offsetWidth ?? 1) * 0.9;
-  };
-
-  const goToIndex = (i: number) => {
-    railRef.current?.scrollTo({ left: i * cardStep(), behavior: "smooth" });
-  };
-
-  const handleScroll = () => {
-    const el = railRef.current;
-    if (!el) return;
-    // Snap to the last dot at the end of the rail: max scrollLeft never reaches
-    // (n-1) * cardStep, so the trailing tiles would otherwise never activate.
-    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
-    const idx = atEnd
-      ? ingredients.length - 1
-      : Math.round(el.scrollLeft / cardStep());
-    setActiveIndex(Math.max(0, Math.min(ingredients.length - 1, idx)));
-  };
-
-  // Switching formula resets the rail to the first tile.
-  const handleFormulaChange = (f: FormulaId) => {
-    setActiveFormula(f);
-    setActiveIndex(0);
-    railRef.current?.scrollTo({ left: 0 });
-  };
 
   return (
     <div>
-      {/* Header row — trio header left, toggle + asset right on desktop */}
-      <div className="lg:flex lg:items-start lg:justify-between lg:gap-10 mb-8">
-        {/* Simple DTC header — human framing, no mono eyebrow or grammage-led H1 */}
-        <div className="mb-8 lg:mb-0 lg:max-w-md">
-          <h2 className="brand-h1 mb-3 text-black">
-            Clinically-backed ingredients
-          </h2>
-          <p className="brand-body text-black">
-            We source the highest-quality compounds, at proven doses and in
-            bioavailable forms. Each ingredient is supported by independent,
-            peer-reviewed studies.
-          </p>
-        </div>
-
-        {/* Toggle + active formula asset */}
-        <div className="lg:shrink-0">
-          {/* Time-of-day toggle — dual mode only */}
-          {isDual && (
-            <FormulaToggle
-              value={activeFormula}
-              flowValue="01"
-              clearValue="02"
-              onChange={handleFormulaChange}
-              ariaLabel="Choose a time of day"
-              className="mb-5"
-            />
-          )}
-
-          {/* Active formula — single asset + identity block */}
-          <div className="flex items-center gap-4 lg:gap-6">
-            {/* Square labelV2 render in a square box — contain shows it 1:1;
-                the bg matches the asset's studio grey as a loading surface. */}
-            <div className="relative w-[140px] lg:w-[180px] aspect-square shrink-0 overflow-hidden rounded-md border border-black/10 bg-[#f1f1f3]">
-              <Image
-                key={meta.bottleImage}
-                src={meta.bottleImage}
-                alt={meta.bottleAlt}
-                fill
-                sizes="(max-width: 1024px) 280px, 360px"
-                className="object-contain"
-              />
-            </div>
-            <div>
-              <p className="mb-2 text-sm font-semibold leading-none text-black">
-                CONKA {meta.shortName}
-              </p>
-              <p className="mb-1.5 text-2xl lg:text-3xl font-semibold tabular-nums leading-none text-black">
-                {FORMULA_GRAMMAGE[activeFormula].toLocaleString()}
-                <span className="text-base lg:text-lg font-semibold">mg</span>
-              </p>
-              <p className="mb-3 text-xs leading-none text-black/50">
-                Active nootropics
-              </p>
-              <p className="text-sm leading-snug text-black/70">
-                {meta.tagline}
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="mb-8 max-w-2xl">
+        <h2 className="brand-h1 mb-3 text-black">
+          Clinically-backed ingredients
+        </h2>
+        <p className="brand-body text-black">
+          We source the highest-quality compounds, at proven doses and in
+          bioavailable forms. Each ingredient is supported by independent,
+          peer-reviewed studies.
+        </p>
       </div>
 
-      {/* Ingredient cards — Magic Mind pattern, Simple DTC skin. Horizontal
-          snap rail so the tiles read as a scannable row on every breakpoint. */}
-      <div
-        ref={railRef}
-        onScroll={handleScroll}
-        aria-label={`CONKA ${meta.shortName} ingredients`}
-        className="flex gap-3 items-start overflow-x-auto snap-x pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      {/* Time-of-day toggle, dual mode only. It also names the active formula,
+          which is why the grid needs no product render above it. */}
+      {isDual && (
+        <FormulaToggle
+          value={activeFormula}
+          flowValue="01"
+          clearValue="02"
+          onChange={setActiveFormula}
+          ariaLabel="Choose a time of day"
+          className="mb-8"
+        />
+      )}
+
+      <ul
+        aria-label={`CONKA ${activeFormula === "01" ? "Flow" : "Clear"} ingredients`}
+        className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4"
       >
-        {ingredients.map((ing) => (
-          <details
-            key={ing.id}
-            data-tile
-            name="clinical-ingredient"
-            className="group w-[260px] shrink-0 snap-start overflow-hidden rounded-md border border-black/10 bg-white"
-          >
-            {/* Collapsed face — render band, name, tags, one-liner, stat */}
-            <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-              {/* Full-bleed render band — the FMC studio series carries its
-                  own cool ground, so the image is the surface; the bg only
-                  shows while loading. 1:1 asset in a 4:3 box gives a gentle
-                  zoom that counters the renders' negative space. */}
-              <div className="relative aspect-[4/3] w-full bg-[#eef0f5]">
-                {ing.image ? (
-                  <Image
-                    src={ing.image}
-                    alt={ing.name}
-                    fill
-                    loading="lazy"
-                    sizes="260px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-[28px] font-bold text-black/25">
-                    {ing.name
-                      .replace(/[^a-zA-Z]/g, "")
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <div className="flex items-start justify-between gap-3 mb-1">
-                  <h3 className="text-base font-semibold leading-snug text-black">
-                    {ing.name}
-                  </h3>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mt-1 shrink-0 text-black/40 transition-transform group-open:rotate-180"
-                    aria-hidden
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </div>
-                <p className="mb-2 font-mono text-xs text-black">
-                  {CATEGORY_INFO[ing.category].name} | {ing.functionalCategory}
-                </p>
-                <p className="text-sm leading-snug text-black">
-                  {ing.oneLineClaim}
-                </p>
-                {ing.keyStats[0] && (
-                  <p className="mt-2 text-sm leading-snug">
+        {ingredients.map((ing) => {
+          const badge = getIngredientBadge(activeFormula, ing.id);
+
+          return (
+            <li key={ing.id}>
+              <button
+                type="button"
+                onClick={() => setOpenIngredient(ing)}
+                aria-label={`${ing.name}, read more`}
+                className="group w-full text-left"
+              >
+                <div className="relative aspect-square w-full overflow-hidden rounded-md bg-[#eef0f5]">
+                  {ing.image ? (
+                    <Image
+                      src={ing.image}
+                      alt={ing.name}
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 640px) 45vw, 30vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-[28px] font-bold text-black/25">
+                      {ing.name
+                        .replace(/[^a-zA-Z]/g, "")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </div>
+                  )}
+
+                  {/* Two-line badge: layman outcome, then mechanism. */}
+                  {badge.outcome && (
                     <span
-                      className="mr-1.5 font-semibold tabular-nums"
-                      style={{ color: NAVY }}
+                      className={`absolute left-2 top-2 max-w-[calc(100%-1rem)] rounded-md px-2 py-1 text-[10px] font-bold leading-tight sm:px-2.5 sm:text-[11px] ${BADGE_TINT[activeFormula]}`}
                     >
-                      {ing.keyStats[0].value}
+                      {badge.outcome}
+                      {badge.mechanism && (
+                        <span className="block font-medium opacity-70">
+                          {badge.mechanism}
+                        </span>
+                      )}
                     </span>
-                    <span className="text-black/70">
-                      {ing.keyStats[0].label}
-                    </span>
-                  </p>
-                )}
-              </div>
-            </summary>
+                  )}
 
-            {/* Expanded — description + study citation (the stat already
-                sits on the collapsed face, which stays visible when open) */}
-            <div className="px-4 pb-4">
-              <div className="border-t border-black/10 pt-3">
-                <p className="mb-2.5 text-sm leading-relaxed text-black/70">
-                  {ing.description}
+                  {/* Expand affordance, mirroring the reference grids. */}
+                  <span
+                    aria-hidden
+                    className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors group-hover:bg-[color:var(--brand-navy)] group-hover:text-white"
+                  >
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.2}
+                      strokeLinecap="round"
+                    >
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </span>
+                </div>
+
+                <p className="mt-2.5 text-sm font-semibold leading-snug text-black sm:text-base">
+                  {ing.name}
                 </p>
-                {ing.keyStats[0] && (
-                  <p className="text-xs text-black/40">
-                    {ing.keyStats[0].source}
-                  </p>
-                )}
-              </div>
-            </div>
-          </details>
-        ))}
-      </div>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
 
-      {/* Dot indicators — shared with the CRO testimonials rail */}
-      <DotIndicator
-        total={ingredients.length}
-        currentIndex={activeIndex}
-        onDotClick={goToIndex}
-        ariaLabel="Ingredient navigation"
-        getDotAriaLabel={(i) => `Go to ingredient ${i + 1}`}
-        className="mt-6"
+      <IngredientDetailDrawer
+        open={openIngredient !== null}
+        ingredient={openIngredient}
+        badge={
+          openIngredient
+            ? getIngredientBadge(activeFormula, openIngredient.id)
+            : undefined
+        }
+        onClose={() => setOpenIngredient(null)}
       />
     </div>
   );

@@ -118,6 +118,81 @@ export const OUTCOME_BUCKETS: Record<ProductHeroId, OutcomeBucket[]> = {
   ],
 };
 
+/* ---------------------------------------------------------------------------
+ * Ingredient tile badges (SCRUM-1262, Phase 3a)
+ *
+ * Two lines. The first is the layman outcome, the second the mechanism.
+ *
+ * Line 1 is DERIVED from OUTCOME_BUCKETS rather than authored again, so the
+ * grid's badge and the bucket a card belongs to can never disagree. It repeats
+ * across tiles on purpose: it is what makes the grid cluster visually by what
+ * each ingredient does, now that the three bucket headings are gone.
+ *
+ * `ingredientsData.functionalCategory` is deliberately NOT the source. It has
+ * five values across the whole dataset, so four of the nine Clear tiles would
+ * read "Neuroprotection", and it is too technical to lead with.
+ *
+ * Line 2 is unproven copy and expected to iterate. It lives here so a rewrite,
+ * or dropping the second line entirely, is a data change and never a component
+ * change.
+ * ------------------------------------------------------------------------- */
+
+/** Ingredients that serve no single outcome bucket get their line 1 here. */
+const BADGE_OUTCOME_FALLBACK: Record<string, string> = {
+  // The absorption enhancer: it multiplies the others rather than driving an
+  // outcome of its own, so it sits in no bucket.
+  "black-pepper": "Absorption",
+};
+
+/** Ingredient id -> the mechanism line, shown under the outcome. */
+export const INGREDIENT_BADGE_MECHANISM: Record<string, string> = {
+  // Flow
+  "lemon-balm": "Calm",
+  turmeric: "Memory",
+  ashwagandha: "Stress reduction",
+  rhodiola: "Anti-fatigue",
+  bilberry: "Vision support",
+  "black-pepper": "Absorption",
+  // Clear
+  glutathione: "Master antioxidant",
+  "alpha-gpc": "Acetylcholine",
+  nac: "Detox support",
+  ginkgo: "Circulation",
+  alcar: "Mental energy",
+  "vitamin-c": "Antioxidant",
+  ala: "Antioxidant recycling",
+  "vitamin-b12": "Brain ageing",
+  lecithin: "Neuronal membranes",
+};
+
+export interface IngredientBadge {
+  /** Layman outcome, from OUTCOME_BUCKETS. */
+  outcome: string;
+  /** Mechanism, more technical, shown as the second line. */
+  mechanism?: string;
+}
+
+/**
+ * The badge for one ingredient on one product page.
+ *
+ * Falls back gracefully: an ingredient in no bucket uses the fallback map, and
+ * one in neither returns no outcome rather than throwing, so adding an
+ * ingredient to ingredientsData cannot break the grid.
+ */
+export function getIngredientBadge(
+  formulaId: ProductHeroId,
+  ingredientId: string,
+): IngredientBadge {
+  const bucket = OUTCOME_BUCKETS[formulaId].find((b) =>
+    b.ingredientIds.includes(ingredientId),
+  );
+
+  return {
+    outcome: bucket?.title ?? BADGE_OUTCOME_FALLBACK[ingredientId] ?? "",
+    mechanism: INGREDIENT_BADGE_MECHANISM[ingredientId],
+  };
+}
+
 /** Optional subline override where the SEO heading needs trimming for display
  *  (Both drops its ", Morning to Evening" tail). Falls back to seoHeading. */
 export const LEDE_SUBLINE: Partial<Record<ProductHeroId, string>> = {

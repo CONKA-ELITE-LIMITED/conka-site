@@ -20,10 +20,14 @@ interface ProductData {
   bodyCopy: string;
   render: string;
   link: string;
-  // Total active load per serving, in mg. The total is public (shown on the
-  // PDP); the per-ingredient breakdown is patented and deliberately not shown.
-  // Mirrors FORMULA_GRAMMAGE in ClinicalIngredients.tsx (founder-supplied,
-  // 2026-06) — keep the two in sync.
+  // Total active load per serving, in mg. The total is public; the
+  // per-ingredient breakdown is patented and deliberately not shown.
+  //
+  // This is now the ONLY surface publishing the figure: ClinicalIngredients
+  // carried a matching FORMULA_GRAMMAGE until SCRUM-1262 dropped the render
+  // block it sat in, so there is no longer a second copy to keep in sync.
+  // Note the number itself is disputed and blocked on the formulator, see
+  // item 9 in docs/TODO.md before relying on it.
   activeMg: number;
   actives: HeroActive[];
 }
