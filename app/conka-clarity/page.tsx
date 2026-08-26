@@ -97,7 +97,7 @@ export default function ConkaClarityPage() {
   const ugcSection = (
     <PdpSection
       id="ugc"
-      className="brand-section brand-bg-white !px-0"
+      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile"
       ariaLabel="Real people using CONKA"
     >
       <UGCMarquee />
@@ -217,7 +217,7 @@ export default function ConkaClarityPage() {
           {/* ===== HERO ===== */}
           <PdpSection
             id="hero"
-            className="brand-section brand-hero-first brand-bg-white !pt-6"
+            className="brand-section brand-hero-first brand-bg-white !pt-6 brand-tight-bottom-mobile"
             ariaLabel="Product hero"
           >
             <div className="brand-track">
@@ -246,7 +246,6 @@ export default function ConkaClarityPage() {
           <Footer />
 
           <StickyPurchaseFooterMobile
-            formulaId="02"
             selectedCadence={selectedCadence}
             cadencePrice={cadencePrice}
             onAddToCart={() => handleAddToCart("sticky_footer")}

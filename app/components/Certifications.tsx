@@ -32,7 +32,9 @@ export default function Certifications({
       className={`w-full ${className}`}
       style={{ background }}
     >
-      <div className="flex items-center justify-center gap-4 px-5 py-10 sm:gap-10 lg:gap-16 lg:py-14">
+      {/* Tight on mobile: four badges do not need a full section's worth of air
+          around them, and the sections either side bring their own padding. */}
+      <div className="flex items-center justify-center gap-4 px-5 py-6 sm:gap-10 sm:py-10 lg:gap-16 lg:py-14">
         {CERTS.map((cert) => (
           <Image
             key={cert.label}
