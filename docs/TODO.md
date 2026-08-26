@@ -142,6 +142,23 @@ Deleting the two frees nothing else: `CrashChart`, `ConkaCTAButton` and `PRICE_P
 
 ---
 
+### Delete what the ingredient grid orphaned
+
+**Status:** Blocked on Phase 3b, which removes the last consumer
+**Plan:** `docs/development/featurePlans/pdp-structure-rework.md`, Phase 3
+
+Phase 3a replaced the ingredient rail with a grid and dropped partner folding. Phase 3b removes `IngredientOutcomeAccordions` from the desktop hero, which is its last consumer. Once 3b ships, confirm and delete:
+
+- `app/components/product/IngredientOutcomeAccordions.tsx`
+- `INGREDIENT_PARTNERS` in `app/lib/mmPdpData.ts`, unused once folding is dropped
+- `getPdpIngredientList` in `mmPdpData.ts` **only if** 3b's Ingredients accordion row does not end up using it
+
+Do **not** delete `OUTCOME_BUCKETS`: the grid's badge derives its first line from it, so it is more load-bearing now than it was as headings. Do not delete `DotIndicator` either; the grid stopped using it but `CROTestimonials` still does.
+
+**Why deferred:** deleting them in the same commit as the rewrite would have made the diff unreadable. Grouped here so it is one deliberate cleanup.
+
+---
+
 ### Refresh the remaining surfaces onto the new cut-out renders
 
 **Status:** Deferred (not a defect, an asset-generation mismatch)

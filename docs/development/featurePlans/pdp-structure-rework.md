@@ -10,7 +10,7 @@ Branch: `feature/pdp-structure-rework`
 |-------|-------------|--------|
 | 1 | Slim, reorder, and instrument | Merged (PR #447) |
 | 2 | Comparison table | For review (commit `62b94904`) |
-| 3a | Ingredients grid, badges and drawer | Not Started |
+| 3a | Ingredients grid, badges and drawer | Built (commit `86a98705`, ticket pending) |
 | 3b | Accordion stack and desktop hero cleanup | Not Started |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
@@ -214,6 +214,17 @@ Then the desktop hero cleanup: remove `IngredientOutcomeAccordions` **and** the 
 
 - Complexity: Medium
 - Files: `ClinicalIngredients.tsx`, `ProductHeroV3.tsx`, `HeroAccordions.tsx`, `faqContent.ts` (read only), the three PDP pages
+
+### As built (3a)
+
+Two decisions landed differently from the plan above, both during review:
+
+- **Badge tint follows the active formula** rather than one fixed colour, reusing `rolePillClass` from `home/ProductCard.tsx`: `#f7edcb`/`#755b1a` on Flow, `#f7ddd0`/`#9a4526` on Clear. Same tinted-pill language as the Morning/Afternoon bands.
+- **The drawer leads with `oneLineClaim`.** Once the tile carried only name and badge, and the drawer only description, the one-line claim had nowhere left to render and would have left the PDP entirely.
+
+The drawer also focuses its close button on open and restores focus to the tile on close. `IngredientBottomSheet` has the same `aria-modal`-without-focus-management gap and was left alone as pre-existing.
+
+`getIngredientBadge` degrades to an empty outcome rather than throwing, so adding an ingredient to `ingredientsData` without giving it a bucket cannot break the grid.
 
 ### What falls out as dead
 
