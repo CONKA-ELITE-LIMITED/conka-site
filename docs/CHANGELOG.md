@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | Added a CONKA vs coffee vs prescription stimulants comparison table to the three product pages, replacing the absorption section
 - **2026-08-26** | Tightened the certification badge band on mobile and stripped the unused pack-size model out of both sticky purchase bars
 - **2026-08-26** | PDP rework phase 1: mobile hero slimmed to the buy decision, thin sticky purchase bar restored on all three product pages, three repeating sections removed, and section-view tracking added
 - **2026-08-26** | PDP ingredient cards rebuilt image-led: full-bleed FMC render band with the key stat on the card face, and the ingredient bottom sheet retuned to the cool render palette

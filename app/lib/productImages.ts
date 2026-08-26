@@ -22,6 +22,24 @@ export const bottleRenders: Record<"flow" | "clear" | "both", ProductImage & { a
   both: { src: "/formulas/labelV2/BothV4.jpg", alt: "CONKA Flow and Clear bottles" },
 };
 
+/**
+ * Cut-out versions of the same generation, on transparency rather than the
+ * studio backdrop. Use these wherever the bottle sits on a coloured surface,
+ * where `bottleRenders`' photographic background would show as a pale rectangle.
+ * `both` is a single paired shot, not two files to compose.
+ */
+export const bottleRendersCutout: Record<
+  "flow" | "clear" | "both",
+  ProductImage & { alt: string }
+> = {
+  flow: { src: "/formulas/labelV2/FlowTransparent.png", alt: "CONKA Flow bottle" },
+  clear: { src: "/formulas/labelV2/ClearTransparent.png", alt: "CONKA Clear bottle" },
+  both: {
+    src: "/formulas/labelV2/BothTransparent.png",
+    alt: "CONKA Flow and Clear bottles",
+  },
+};
+
 /** Quarterly box images — shown as first slide when quarterly cadence is selected in the funnel. */
 export const quarterlyImages: Record<"flow" | "clear" | "both", ProductImage> = {
   flow: { src: "/formulas/conkaFlow/FlowQuarterly.jpg" },

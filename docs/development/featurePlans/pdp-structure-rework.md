@@ -8,9 +8,9 @@ Branch: `feature/pdp-structure-rework`
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Slim, reorder, and instrument | For review (commit `08a56791`) |
-| 2 | Comparison table | Not Started |
-| 3 | Ingredients merge | Not Started |
+| 1 | Slim, reorder, and instrument | Merged (PR #447) |
+| 2 | Comparison table | For review (commit `62b94904`) |
+| 3 | Ingredients merge | Not Started (scope reduced, see below) |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
 
@@ -142,6 +142,10 @@ Three columns, following the Gray Matter pattern, where the third column is the 
 
 Two of those rows carry the differentiators, so both land inside a comparison rather than as bare assertions.
 
+**As built, one row changed.** "Zero caffeine" became "No caffeine or amphetamines". Prescription stimulants contain no caffeine either, so the original row would have handed the third column a tick and undercut the comparison. There is a comment on the row data so it does not get reverted later.
+
+**Open, for a later decision.** Every row except the first is a tick for CONKA and a cross for both others, which reads as marketing rather than comparison. One row where coffee legitimately also wins ("No prescription needed") would make the whole table more credible. Not built, since it is outside the agreed row list.
+
 Mobile: the table scrolls inside its own `overflow-x: auto` container. The page body must never scroll horizontally.
 
 - Complexity: Medium
@@ -150,6 +154,8 @@ Mobile: the table scrolls inside its own `overflow-x: auto` container. The page 
 ## Phase 3: Ingredients merge
 
 The largest task and the least likely on its own to change an order, which is why it comes third.
+
+**Scope reduced since scoping.** SCRUM-1255 (image-led ingredient cards for the FMC renders) merged in PR #445 before this branch was cut, so `ClinicalIngredients` already has the card face this phase was going to build: a full-bleed 4:3 render band, name, one-line benefit, and the key stat on the collapsed face. There is no collision to resolve and no work to fold. What remains is the merge proper: wrap the existing rail in the `OUTCOME_BUCKETS` grouping (which still lives only in `IngredientOutcomeAccordions`), add the full-list accordion, and remove `IngredientOutcomeAccordions` from the desktop hero. Re-read SCRUM-1262's description before starting it, since it was written assuming three card shapes to reconcile and there are now two.
 
 **What:** one body ingredients section combining the two surfaces. Outcome bucket headings from `OUTCOME_BUCKETS` become the organising principle, since they answer "why is this in here". Under each, a horizontal snap carousel of ingredient cards: render, name and one line benefit on the face, description and PubMed link on expand. A single collapsed "Full ingredients list" at the foot does the supplement facts job, so the written out copy currently in the hero survives.
 
@@ -217,4 +223,6 @@ Sprint 30, epic SCRUM-763 (Website & CRO). Active phases only; Phases 4 and 5 st
 
 SCRUM-1260 blocks both SCRUM-1261 and SCRUM-1262.
 
-SCRUM-1262 relates to **SCRUM-1255** (image led ingredient cards for the FMC renders), which also targets `ClinicalIngredients` and `IngredientBottomSheet`. Whichever lands first, rebase the other onto it rather than editing the same component in parallel.
+SCRUM-1262 relates to **SCRUM-1255** (image led ingredient cards for the FMC renders). That concern is now closed: 1255 merged in PR #445 before Phase 1 branched, so its card design is already the baseline Phase 3 builds on. Nothing to fold or sequence.
+
+Phase 2 was built on `feature/pdp-comparison-table`, branched off main after Phase 1 merged.
