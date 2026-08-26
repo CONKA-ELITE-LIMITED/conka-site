@@ -11,7 +11,7 @@ import { ClinicalIngredients } from "@/app/components/product";
 import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
-import WhatToExpect from "@/app/components/home/WhatToExpect";
+import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
 import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
@@ -188,10 +188,12 @@ export default function ConkaBothPage() {
   const whatToExpectSection = (
     <section
       id="what-to-expect"
-      className="brand-section brand-bg-tint !px-0 !py-0"
+      className="brand-section brand-bg-tint"
       aria-label="What to expect"
     >
-      <WhatToExpect productId="both" />
+      <div className="brand-track">
+        <WhatToExpectV2 productId="both" />
+      </div>
     </section>
   );
 
