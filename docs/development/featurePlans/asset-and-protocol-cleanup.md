@@ -56,6 +56,8 @@ The **presentation** layer is dead. The **commerce** layer is not.
 | 4 | Quarantine the protocol commerce layer (scope revised, see below) | Not started |
 | 5 | Delete the commerce layer entirely | Not planned (see below) |
 
+**Newly unreferenced (2026-08-26):** the six `public/formulas/whatToExpect/*.jpg` crops (Flow/Clear/Both, desktop + mobile) lost their only consumer when WhatToExpect V1 was replaced by the V2 scroll timeline (SCRUM-1253). Safe to delete in the next asset sweep.
+
 ---
 
 ## Phase 1: Delete unreferenced assets
