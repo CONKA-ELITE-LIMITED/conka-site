@@ -67,7 +67,7 @@ export default function WhatToExpectV2({
         {/* Sticky product render -- desktop only */}
         <div className="hidden lg:block">
           <div className="sticky top-24">
-            <div className="relative aspect-[4/5] w-full max-w-[440px]">
+            <div className="relative aspect-[4/5] w-full">
               <Image
                 src={asset.src}
                 alt={asset.alt}
