@@ -243,13 +243,6 @@ export const LEDE_SUBLINE: Partial<Record<ProductHeroId, string>> = {
   "03": "The Complete Daily Brain Shot System",
 };
 
-/** Ingredient id -> partner ingredient folded into its card (not its own accordion). */
-export const INGREDIENT_PARTNERS: Record<ProductHeroId, Record<string, string>> = {
-  "01": { turmeric: "black-pepper" },
-  "02": {},
-  "03": {},
-};
-
 /** Condensed lede description (the images now carry the fuller story). */
 export const LEDE_DESCRIPTION: Record<ProductHeroId, string> = {
   "01": "Powered by 6 clinically-dosed adaptogens in a fast-absorbing liquid shot, with zero caffeine and zero crash.",
