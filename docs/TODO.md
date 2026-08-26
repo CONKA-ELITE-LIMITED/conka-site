@@ -114,6 +114,57 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## PDP Structure Rework Cleanup
+
+### Delete the components the PDP rework orphaned
+
+**Status:** Ready, waiting only on a settle period
+**Plan:** `docs/development/featurePlans/pdp-structure-rework.md` (Phase 1, SCRUM-1260; Phase 2, SCRUM-1261)
+
+Phase 1 took `ProductBenefitTiles`, `AbsorptionBioavailability` and `LandingValueComparison` off the three PDPs, and Phase 2 replaced the last two with `ProductComparisonTable`. The components were deliberately left in the tree at the time. Two of the three now have **zero code consumers** (verified 2026-08-26; the only remaining mentions are docs and one comment):
+
+| File | Status |
+|------|--------|
+| `app/components/product/AbsorptionBioavailability.tsx` | Orphaned. No references outside docs. |
+| `app/components/landing/LandingValueComparison.tsx` | Orphaned. Only mention is a comment in `app/components/landing/CrashChart.tsx:140`. |
+| `app/components/product/ProductBenefitTiles.tsx` | **Keep.** Still rendered by `app/page.tsx` (home). |
+
+Deleting the two frees nothing else: `CrashChart`, `ConkaCTAButton` and `PRICE_PER_SHOT_BOTH` all have several other consumers. Two static images go with them, both now unreferenced anywhere in `app/`:
+
+- `public/formulas/conkaFlow/FlowLiquid.jpg`
+- `public/formulas/conkaClear/ClearLiquid.jpg`
+
+(The `FlowLiquid` / `ClearLiquid` **videos** under `public/videos/` are a different asset and are still live in `BottleVideo`, the quiz template and the ADHD listicle. Do not delete those.)
+
+**What unblocks it:** the Phase 1 and 2 branches being live in prod for a release cycle with no request to reinstate either section. The absorption angle in particular was cut on judgement ("a category claim any competitor also makes"), so it is the one most likely to be asked for back.
+
+**Why deferred:** cleanup only, no user-facing impact, and keeping them costs nothing but tree noise. Grouped here so the deletion is one deliberate commit rather than a silent tidy inside a feature branch.
+
+---
+
+### Refresh the remaining surfaces onto the new cut-out renders
+
+**Status:** Deferred (not a defect, an asset-generation mismatch)
+**Files:** `app/lib/productImages.ts` (`bottleRendersCutout`, added SCRUM-1261)
+
+SCRUM-1261 added `public/formulas/labelV2/{Flow,Clear,Both}Transparent.png` and registered them as `bottleRendersCutout`, for bottles sitting on a coloured surface where `bottleRenders`' photographic backdrop would show as a pale rectangle. Only `ProductComparisonTable` uses them.
+
+The **previous** generation of cut-outs is still referenced by five files and shows the old label:
+
+- `app/components/landing/LandingProductSplit.tsx`
+- `app/components/landing/WhatsInsideProductMini.tsx`
+- `app/components/landing/LabWhatsInsideMini.tsx`
+- `app/components/cro/CROFormulaSplit.tsx`
+- `app/lib/byoData.ts` (BYO thumbnails)
+
+pointing at `public/formulas/conkaFlow/FlowNoBackground.png` and `public/formulas/conkaClear/ClearNoBackground.png` (April 2026).
+
+**What unblocks it:** nothing technical. Each call site swaps its hardcoded path for `bottleRendersCutout[...]`, then the two old PNGs can go. Worth a visual check per surface first, since the new renders have a different crop and aspect, so a straight path swap may need a size tweak. Note there is no `both` variant in the old pair, whereas `bottleRendersCutout.both` is a single paired shot.
+
+**Why deferred:** out of scope on SCRUM-1261, which only needed the bottle in one new component. Doing it properly is a per-surface visual pass, not a find-and-replace.
+
+---
+
 ## Asset Cleanup
 
 ### Delete superseded `*New.jpg` product statics once the labelV2 rollout is confirmed
