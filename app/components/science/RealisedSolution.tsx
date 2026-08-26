@@ -114,7 +114,7 @@ const PRODUCTS: ProductData[] = [
 export default function RealisedSolution() {
   return (
     <div>
-      {/* Header — the framing beat: model becomes product */}
+      {/* Header, the framing beat: model becomes product */}
       <div className="mb-8 lg:mb-10 max-w-2xl">
         <p className="brand-eyebrow mb-3">{"// The solution · SCI-05"}</p>
         <h2
@@ -148,7 +148,7 @@ export default function RealisedSolution() {
               </span>
             </div>
 
-            {/* Product render leads — shorter crop on desktop to keep the card compact */}
+            {/* Product render leads, shorter crop on desktop to keep the card compact */}
             <Link
               href={product.link}
               className="relative block w-full aspect-[4/3] lg:aspect-[16/9] overflow-hidden border-b border-black/8 group bg-white"
@@ -180,7 +180,7 @@ export default function RealisedSolution() {
                 {product.bodyCopy}
               </p>
 
-              {/* Total active load — hero number, per-ingredient doses stay private */}
+              {/* Total active load, hero number, per-ingredient doses stay private */}
               <div className="flex items-baseline gap-3 mb-4 pb-4 border-b border-black/12">
                 <span className="text-3xl font-semibold tabular-nums text-[#1B2757] leading-none">
                   {product.activeMg.toLocaleString()}
@@ -193,7 +193,7 @@ export default function RealisedSolution() {
                 </span>
               </div>
 
-              {/* Hero actives folded in as proof — render + mechanism, no dose */}
+              {/* Hero actives folded in as proof, render + mechanism, no dose */}
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-3">
                 Three of the hero actives
               </p>
@@ -233,7 +233,7 @@ export default function RealisedSolution() {
                 ))}
               </ul>
 
-              {/* Soft CTA — to the PDP, not a buy button */}
+              {/* Soft CTA, to the PDP, not a buy button */}
               <Link
                 href={product.link}
                 className="mt-auto font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-[#1B2757] border border-[#1B2757]/30 hover:border-[#1B2757] px-4 min-h-[44px] inline-flex items-center justify-center transition-colors"

@@ -86,7 +86,7 @@ export default function ConkaBothPage() {
     }
   };
 
-  // Shared sections — ordered as they appear on the page, matching conka-flow
+  // Shared sections, ordered as they appear on the page, matching conka-flow
   // and conka-clarity so all three PDPs share one structure. Backgrounds
   // alternate white/tint starting from the white hero. Each PdpSection's id is
   // both its anchor and its analytics name.
@@ -102,7 +102,7 @@ export default function ConkaBothPage() {
     </PdpSection>
   );
 
-  // Full-bleed proof section (white, neuron clip + grey stat card) — owns
+  // Full-bleed proof section (white, neuron clip + grey stat card), owns
   // its own section + background, so it is not wrapped in a PdpSection.
   const brainFuelSection = <BrainFuelBand />;
 

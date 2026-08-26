@@ -89,7 +89,7 @@ export default function ConkaClarityPage() {
     }
   };
 
-  // Shared sections — defined once, composed into the mobile and desktop trees
+  // Shared sections, defined once, composed into the mobile and desktop trees
   // below (only the hero differs between them). Order, backgrounds and mobile
   // spacing mirror conka-flow and conka-both so all three PDPs share one
   // structure. Each PdpSection's id is both its anchor and its analytics name.

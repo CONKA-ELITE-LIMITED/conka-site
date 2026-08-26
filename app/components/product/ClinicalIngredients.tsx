@@ -99,7 +99,9 @@ export default function ClinicalIngredients({
                 aria-label={`${ing.name}, read more`}
                 className="group w-full text-left"
               >
-                <div className="relative aspect-square w-full overflow-hidden rounded-md bg-[#eef0f5]">
+                {/* 4:3, not square: the badge needs horizontal room more than
+                    the render needs height, and it keeps the grid shorter. */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5]">
                   {ing.image ? (
                     <Image
                       src={ing.image}
