@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | Skio migration docs consolidated from nine files into one source of truth at docs/development/featurePlans/skio-migration.md
 - **2026-08-26** | Skio transition window: /account keeps the Loop subscription list and links out to the Skio portal while both platforms hold live subscriptions, so nobody is stranded during the migration
 - **2026-08-26** | PDP what-to-expect timeline: GSAP now lazy-loads on approach, keeping it out of the PDP first-load JS
 - **2026-08-26** | PDP what-to-expect timeline: CONKA per-product copy and new title replace the placeholder

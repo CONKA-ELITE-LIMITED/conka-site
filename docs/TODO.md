@@ -16,7 +16,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 **What unblocks it:** the Phase 4 cutover (flag flipped on in production, Loop removed). Doing it before cutover would break the live Loop portal that `/account` still serves when the flag is off.
 
-**Why deferred:** left as a harmless fallback for now (Rudh, 18 Aug) so `/account` keeps working for Loop until everything is wired up. See `docs/development/featurePlans/skio-subscription-migration.md` (Phase 3/4) and `skio-migration-status.md`.
+**Why deferred:** left as a harmless fallback for now (Rudh, 18 Aug) so `/account` keeps working for Loop until everything is wired up. See `docs/development/featurePlans/skio-migration.md`.
 
 ---
 
