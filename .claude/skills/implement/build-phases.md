@@ -71,7 +71,6 @@ Build the data foundation before any UI work.
 
 4. **Cart mutations** (if touching cart):
    - All cart operations go through `CartContext` (`addToCart`, `updateQuantity`, `removeItem`)
-   - B2B tier normalization runs automatically after mutations
    - Analytics fire from `CartContext` after successful mutations -- pass `metadata` for funnel tagging
    - Checkout redirects to `cart.checkoutUrl` (Shopify hosted)
 

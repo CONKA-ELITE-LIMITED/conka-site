@@ -2,6 +2,7 @@
 name: commit
 description: Stage specific files by name, append a one-line changelog entry (skipped for chores), and commit with the correct prefix and co-author line. Refuses to run on main. Use when work is ready to go into git history, e.g. "commit this" or "/commit".
 argument-hint: [optional: short description of what you are committing]
+disable-model-invocation: true
 allowed-tools: Bash, Read, Edit
 ---
 

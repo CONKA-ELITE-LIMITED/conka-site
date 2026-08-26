@@ -78,7 +78,7 @@ flowchart TD
 | [LISTICLE_PERFORMANCE.md](LISTICLE_PERFORMANCE.md) | **Living data log for `/go/*` listicles** — dated snapshots, the pull queries, and the data blocks that feed the performance dashboard. Context: the [2026-07 ad-spend sprint](../sprints/2026-07-listicle-ad-spend.md) |
 
 ### Verification
-- Use the **`/review-analytics`** skill to verify all four systems (Vercel, Triple Whale, Meta Pixel, Meta CAPI dedup) fire after any funnel change.
+- Use the analytics module of the **`/review`** skill to verify all four systems (Vercel, Triple Whale, Meta Pixel, Meta CAPI dedup) fire after any funnel change.
 - For a live Meta CAPI spot-check: on `www.conka.io`, watch the `POST /api/meta/events` payload in DevTools (identity present), then confirm coverage/EMQ in Events Manager ~24-48h later (the client CAPI route sends no `test_event_code`, so upper-funnel events do **not** appear in the Test Events tab).
 
 ### History & narrative
