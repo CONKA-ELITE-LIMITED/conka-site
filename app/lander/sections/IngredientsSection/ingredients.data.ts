@@ -43,7 +43,7 @@ export interface Formula {
   items: Ingredient[];
 }
 
-const R = '/lander/ingredients/';
+const R = '/ingredients/renders/';
 
 export const FORMULAS: Record<'flow' | 'clear', Formula> = {
   flow: {
@@ -188,7 +188,7 @@ export const FORMULAS: Record<'flow' | 'clear', Formula> = {
           'Alpha GPC is the most bioavailable form of choline available in supplementation, delivering it straight past the blood-brain barrier. Once there it raises acetylcholine &mdash; the neurotransmitter that recall, learning and reaction speed all run on. Originally studied for memory in clinical settings, it has become a favourite of focused professionals and athletes for the clean, sharp cognition it supports.',
       },
       {
-        img: R + '11.jpg',
+        img: R + 'Glutathione.jpg',
         tag: 'Antioxidant',
         name: 'Glutathione',
         benefit: 'The body&rsquo;s master antioxidant. Raises blood stores in four weeks.',
@@ -210,7 +210,7 @@ export const FORMULAS: Record<'flow' | 'clear', Formula> = {
           'N-acetyl cysteine (NAC) began life as a hospital medicine in the 1960s and is on the WHO list of essential medicines. It supplies cysteine, the rate-limiting building block the body needs to manufacture its own glutathione, so it keeps the brain&rsquo;s antioxidant defences stocked. It also modulates glutamate, the brain&rsquo;s main excitatory neurotransmitter &mdash; calming overstimulation, with cognitive improvements measured at 22% in randomised trials.',
       },
       {
-        img: R + '11.jpg',
+        img: R + 'AcetylLCarnitine.jpg',
         tag: 'Amino Acid',
         name: 'Acetyl-L-Carnitine',
         benefit: 'Fuels neurons with fatty-acid energy. Less mental fatigue.',
