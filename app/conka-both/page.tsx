@@ -137,7 +137,7 @@ export default function ConkaBothPage() {
       ariaLabel="CONKA compared with coffee and prescription stimulants"
     >
       <div className="brand-track">
-        <ProductComparisonTable />
+        <ProductComparisonTable product="both" />
       </div>
     </PdpSection>
   );

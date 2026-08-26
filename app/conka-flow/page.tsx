@@ -146,7 +146,7 @@ export default function ConkaFlowPage() {
       ariaLabel="CONKA compared with coffee and prescription stimulants"
     >
       <div className="brand-track">
-        <ProductComparisonTable />
+        <ProductComparisonTable product="flow" />
       </div>
     </PdpSection>
   );

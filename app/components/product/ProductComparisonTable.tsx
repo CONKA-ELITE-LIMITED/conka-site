@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 
 /* ============================================================================
@@ -14,7 +15,30 @@ import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
  * Content only: the page owns the <section>, background and track.
  * ========================================================================== */
 
-const NAVY = "var(--brand-navy)";
+export type ComparisonProduct = "flow" | "clear" | "both";
+
+/** Cut-out renders, so the bottle sits on the navy column with no photo edge. */
+const PRODUCT_SHOTS: Record<
+  ComparisonProduct,
+  { src: string; alt: string }[]
+> = {
+  flow: [
+    { src: "/formulas/conkaFlow/FlowNoBackground.png", alt: "CONKA Flow bottle" },
+  ],
+  clear: [
+    {
+      src: "/formulas/conkaClear/ClearNoBackground.png",
+      alt: "CONKA Clear bottle",
+    },
+  ],
+  both: [
+    { src: "/formulas/conkaFlow/FlowNoBackground.png", alt: "CONKA Flow bottle" },
+    {
+      src: "/formulas/conkaClear/ClearNoBackground.png",
+      alt: "CONKA Clear bottle",
+    },
+  ],
+};
 
 type Cell = boolean | string | null;
 
@@ -33,15 +57,22 @@ const ROWS: Row[] = [
     coffee: "1 to 3 hrs, jittery",
     rx: "Cannot sleep",
   },
+  {
+    label: "Better focus",
+    conka: "Yes",
+    coffee: "At a cost",
+    rx: "At a cost",
+  },
   { label: "No crash", conka: true, coffee: false, rx: false },
   { label: "No jitters", conka: true, coffee: false, rx: false },
   {
-    // Not "zero caffeine": prescription stimulants contain none either, so that
-    // row would have handed the third column a tick. This is the true claim.
-    label: "No caffeine or amphetamines",
+    // Rx stimulants genuinely contain no caffeine, so this row is a tick for
+    // them too. Marking it a cross would be the one false claim in the table,
+    // and a comparison that lets a rival win a row reads as more honest.
+    label: "No caffeine",
     conka: true,
     coffee: false,
-    rx: false,
+    rx: true,
   },
   { label: "Clinically dosed nootropics", conka: true, coffee: false, rx: false },
   { label: "Adaptogens", conka: true, coffee: false, rx: false },
@@ -56,20 +87,29 @@ const ROWS: Row[] = [
   },
 ];
 
-const COLUMNS = [
-  { key: "conka" as const, heading: "CONKA", isUs: true },
-  { key: "coffee" as const, heading: "Coffee & energy drinks", isUs: false },
-  { key: "rx" as const, heading: "Rx stimulants", isUs: false },
+const RIVALS = [
+  { key: "coffee" as const, heading: "Coffee &\nEnergy Drinks" },
+  { key: "rx" as const, heading: "Rx\nStimulants" },
 ];
 
-function Tick() {
+/** Sized in CSS, not with width/height attributes, so the marks shrink with the
+ *  row on a phone instead of setting the row height. */
+const MARK = "h-[18px] w-[18px] shrink-0 sm:h-[22px] sm:w-[22px]";
+
+/** On navy the disc is white and the check navy: the inverse of the light mark. */
+function Tick({ onNavy }: { onNavy?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden>
-      <rect width="24" height="24" rx="12" fill={NAVY} />
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={MARK}>
+      <rect
+        width="24"
+        height="24"
+        rx="12"
+        fill={onNavy ? "#fff" : "var(--brand-navy)"}
+      />
       <path
         d="M7.5 12.4L10.7 15.6L16.6 9"
-        stroke="#fff"
-        strokeWidth="1.9"
+        stroke={onNavy ? "var(--brand-navy)" : "#fff"}
+        strokeWidth="2.1"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -79,27 +119,26 @@ function Tick() {
 
 function Cross() {
   return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={MARK}>
       <path
         d="M17.3 6.7L6.7 17.3M17.3 17.3L6.7 6.7"
         stroke="currentColor"
-        strokeWidth="1.4"
+        strokeWidth="1.5"
         strokeLinecap="round"
-        className="text-black/35"
       />
     </svg>
   );
 }
 
-/** Renders one cell, and the text a screen reader hears in place of the mark. */
-function CellContent({ value }: { value: Cell }) {
+/** The mark or literal value, plus the text a screen reader hears in its place. */
+function CellContent({ value, onNavy }: { value: Cell; onNavy?: boolean }) {
   if (typeof value === "string") {
-    return <span className="text-[13px] leading-snug sm:text-sm">{value}</span>;
+    return <span className="text-[12px] leading-snug sm:text-sm">{value}</span>;
   }
   if (value === null) {
     return (
       <>
-        <span aria-hidden className="text-black/25">
+        <span aria-hidden className="opacity-40">
           &ndash;
         </span>
         <span className="sr-only">Not applicable</span>
@@ -109,32 +148,32 @@ function CellContent({ value }: { value: Cell }) {
   return (
     <>
       <span className="inline-flex justify-center">
-        {value ? <Tick /> : <Cross />}
+        {value ? <Tick onNavy={onNavy} /> : <Cross />}
       </span>
       <span className="sr-only">{value ? "Yes" : "No"}</span>
     </>
   );
 }
 
-export default function ProductComparisonTable() {
+export default function ProductComparisonTable({
+  product = "flow",
+}: {
+  product?: ComparisonProduct;
+}) {
+  const shots = PRODUCT_SHOTS[product];
+
   return (
     <div>
-      <h2 className="brand-h1 mb-3 text-black">
-        Smarter than a stronger coffee
+      <h2 className="brand-h1 mb-8 text-center text-black lg:mb-10">
+        Smarter Than Your Average Boost
       </h2>
-      <p className="brand-body mb-8 max-w-2xl text-black">
-        How CONKA compares with what most people reach for when they need to
-        think clearly.
-      </p>
 
-      {/* Fits at 390px; the overflow container catches narrower phones rather
-          than letting the page body scroll sideways. */}
-      {/* border-separate, not border-collapse: a collapsed table drops the
-          border-radius on the tinted CONKA column's top and bottom cells. Row
-          rules therefore live on the cells, since a collapsed <tr> border does
-          not paint here either. */}
+      {/* Held narrower than the track and centred, so the columns read as one
+          block rather than drifting apart on a wide screen. The overflow
+          container catches phones below roughly 360px rather than letting the
+          page body scroll sideways. */}
       <div className="-mx-1 overflow-x-auto px-1 pb-1">
-        <table className="w-full min-w-[340px] border-separate border-spacing-0 text-left">
+        <table className="mx-auto w-full min-w-[340px] max-w-3xl border-separate border-spacing-0 text-left">
           <caption className="sr-only">
             CONKA compared with coffee and energy drinks, and with prescription
             stimulants
@@ -142,18 +181,48 @@ export default function ProductComparisonTable() {
 
           <thead>
             <tr>
-              <th scope="col" className="w-[40%]">
+              <th scope="col" className="w-[34%]">
                 <span className="sr-only">Feature</span>
               </th>
-              {COLUMNS.map((col) => (
+
+              {/* CONKA: inverted navy panel carrying the product and the mark */}
+              <th
+                scope="col"
+                className="w-[22%] rounded-t-md bg-[color:var(--brand-navy)] px-1 pb-3 pt-3 text-center align-bottom sm:px-3 sm:pb-4 sm:pt-4"
+              >
+                <span className="flex items-end justify-center gap-1">
+                  {shots.map((shot) => (
+                    <Image
+                      key={shot.src}
+                      src={shot.src}
+                      alt={shot.alt}
+                      width={200}
+                      height={200}
+                      loading="lazy"
+                      sizes="(max-width: 640px) 60px, 88px"
+                      className={`h-auto w-auto object-contain ${
+                        shots.length > 1
+                          ? "max-h-[44px] sm:max-h-[72px]"
+                          : "max-h-[56px] sm:max-h-[88px]"
+                      }`}
+                    />
+                  ))}
+                </span>
+                <Image
+                  src="/conka-logo.webp"
+                  alt="CONKA"
+                  width={440}
+                  height={112}
+                  loading="lazy"
+                  className="mx-auto mt-2.5 h-3 w-auto brightness-0 invert sm:h-4"
+                />
+              </th>
+
+              {RIVALS.map((col) => (
                 <th
                   key={col.key}
                   scope="col"
-                  className={`w-[20%] px-1.5 pb-3 text-center align-bottom text-[11px] font-bold leading-tight sm:px-3 sm:text-sm ${
-                    col.isUs
-                      ? "rounded-t-md bg-[#eef0f5] pt-3 text-[color:var(--brand-navy)]"
-                      : "text-black/50"
-                  }`}
+                  className="w-[22%] whitespace-pre-line px-1 pb-3 text-center align-bottom text-[11px] font-bold leading-tight text-black sm:px-3 sm:pb-4 sm:text-sm"
                 >
                   {col.heading}
                 </th>
@@ -168,18 +237,25 @@ export default function ProductComparisonTable() {
                 <tr key={row.label}>
                   <th
                     scope="row"
-                    className="border-t border-black/10 py-3.5 pr-2 text-[13px] font-semibold leading-snug text-black sm:pr-4 sm:text-base"
+                    className="border-t border-black/15 py-2.5 pr-2 text-[12px] font-semibold leading-snug text-black sm:py-3.5 sm:pr-4 sm:text-base"
                   >
                     {row.label}
                   </th>
-                  {COLUMNS.map((col) => (
+
+                  {/* No row rule inside the navy panel: it reads as one solid
+                      column, the way the reference does. */}
+                  <td
+                    className={`bg-[color:var(--brand-navy)] px-1 py-2.5 text-center align-middle font-semibold text-white sm:px-3 sm:py-3.5 ${
+                      isLast ? "rounded-b-md pb-4 sm:pb-5" : ""
+                    }`}
+                  >
+                    <CellContent value={row.conka} onNavy />
+                  </td>
+
+                  {RIVALS.map((col) => (
                     <td
                       key={col.key}
-                      className={`border-t border-black/10 px-1.5 py-3.5 text-center align-middle text-black sm:px-3 ${
-                        col.isUs
-                          ? `bg-[#eef0f5] font-semibold ${isLast ? "rounded-b-md" : ""}`
-                          : "text-black/60"
-                      }`}
+                      className="border-t border-black/15 px-1 py-2.5 text-center align-middle text-black sm:px-3 sm:py-3.5"
                     >
                       <CellContent value={row[col.key]} />
                     </td>
