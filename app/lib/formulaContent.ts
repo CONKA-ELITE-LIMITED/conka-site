@@ -792,7 +792,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Glutathione", "N-Acetyl Cysteine", "Alpha GPC"],
         ingredientAsset: {
-          image: "/ingredients/renders/11.jpg",
+          image: "/ingredients/renders/Glutathione.jpg",
           name: "Reduced Glutathione",
           dosage: "250mg per serving",
         },
@@ -1038,7 +1038,7 @@ export const formulaContent: Record<FormulaId, FormulaContent> = {
         ],
         keyIngredients: ["Acetyl-L-Carnitine", "Alpha GPC", "Glutathione"],
         ingredientAsset: {
-          image: "/ingredients/renders/11.jpg",
+          image: "/ingredients/renders/AcetylLCarnitine.jpg",
           name: "Acetyl-L-Carnitine",
           dosage: "500mg per serving",
         },

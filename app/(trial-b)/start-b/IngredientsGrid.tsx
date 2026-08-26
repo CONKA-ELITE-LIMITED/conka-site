@@ -57,12 +57,9 @@ const ASSET_FILENAME: Record<"flow" | "clear", Record<string, string>> = {
     lecithin: "Lecithin",
     ala: "AlphaLipoicAcid",
     "vitamin-b12": "VitaminB12",
-    // 11.jpg is a generic white-powder render used as a stand-in for
-    // ingredients whose typical form is a white powder, until bespoke
-    // renders ship.
     "alpha-gpc": "AlphaGPC",
-    glutathione: "11",
-    alcar: "11",
+    glutathione: "Glutathione",
+    alcar: "AcetylLCarnitine",
     nac: "NAcetylCysteine",
   },
 };
