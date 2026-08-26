@@ -10,8 +10,8 @@ Branches: Phase 1 `feature/pdp-structure-rework` (merged #447), Phase 2 `feature
 |-------|-------------|--------|
 | 1 | Slim, reorder, and instrument | Merged (PR #447) |
 | 2 | Comparison table | Merged (PR #448, SCRUM-1261) |
-| 3a | Ingredients grid, badges and drawer | For review (SCRUM-1262) |
-| 3b | Accordion stack and desktop hero cleanup | For review (SCRUM-1263) |
+| 3a | Ingredients grid, badges and drawer | Merged (PR #449, SCRUM-1262) |
+| 3b | Disclosure rows and desktop hero cleanup | Merged (PR #449, SCRUM-1263) |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
 
