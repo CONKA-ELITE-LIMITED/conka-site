@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | PDP ingredient section gains ingredients / who-it-is-for / taste / how-to-take rows, and the desktop hero drops its duplicate ingredient surfaces
 - **2026-08-26** | PDP ingredients become an image-led grid with two-line benefit badges and a detail drawer, replacing the horizontal rail
 - **2026-08-26** | Added a CONKA vs coffee vs prescription stimulants comparison table to the three product pages, replacing the absorption section
 - **2026-08-26** | Tightened the certification badge band on mobile and stripped the unused pack-size model out of both sticky purchase bars

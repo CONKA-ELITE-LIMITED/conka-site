@@ -8,8 +8,10 @@ import {
 } from "@/app/lib/ingredientsData";
 import { FormulaId } from "@/app/lib/productData";
 import { getIngredientBadge } from "@/app/lib/mmPdpData";
+import type { ProductHeroId } from "@/app/lib/productTypes";
 import FormulaToggle from "@/app/components/product/FormulaToggle";
 import IngredientDetailDrawer from "@/app/components/product/IngredientDetailDrawer";
+import IngredientDisclosureRows from "@/app/components/product/IngredientDisclosureRows";
 
 /* ============================================================================
  * ClinicalIngredients
@@ -57,6 +59,10 @@ export default function ClinicalIngredients({
 
   const ingredients = getOrderedActiveIngredients(activeFormula);
   const isDual = formulaIds.length > 1;
+
+  // The disclosure rows describe the whole offering, not the toggled half, so
+  // Both gets "03" and its two-line ingredient list regardless of the toggle.
+  const heroId: ProductHeroId = isDual ? "03" : (formulaIds[0] ?? "01");
 
   return (
     <div>
@@ -161,6 +167,8 @@ export default function ClinicalIngredients({
           );
         })}
       </ul>
+
+      <IngredientDisclosureRows formulaId={heroId} />
 
       <IngredientDetailDrawer
         open={openIngredient !== null}
