@@ -2,16 +2,16 @@
 
 > **Purpose:** Strip the three product pages back to the buy decision plus the arguments only CONKA can make. Phased so each phase ships to production on its own.
 
-Branch: `feature/pdp-structure-rework`
+Branches: Phase 1 `feature/pdp-structure-rework` (merged #447), Phase 2 `feature/pdp-comparison-table` (merged #448), Phase 3 `feature/pdp-ingredients-merge`.
 
 ## Phase status
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Slim, reorder, and instrument | Merged (PR #447) |
-| 2 | Comparison table | For review (commit `62b94904`) |
-| 3a | Ingredients grid, badges and drawer | Built (commit `86a98705`, ticket pending) |
-| 3b | Accordion stack and desktop hero cleanup | Built (commit `536c7295`, ticket pending) |
+| 2 | Comparison table | Merged (PR #448, SCRUM-1261) |
+| 3a | Ingredients grid, badges and drawer | For review (SCRUM-1262) |
+| 3b | Accordion stack and desktop hero cleanup | For review (SCRUM-1263) |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
 
