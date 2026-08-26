@@ -87,7 +87,7 @@ export default function ConkaFlowPage() {
     }
   };
 
-  // Shared sections — defined once, composed into the mobile and desktop trees
+  // Shared sections, defined once, composed into the mobile and desktop trees
   // below (only the hero differs between them). Order, backgrounds and mobile
   // spacing mirror conka-clarity and conka-both so all three PDPs share one
   // structure. Each PdpSection's id is both its anchor and its analytics name.
@@ -96,7 +96,7 @@ export default function ConkaFlowPage() {
   const ugcSection = (
     <PdpSection
       id="ugc"
-      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile"
+      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile brand-tight-bottom-mobile"
       ariaLabel="Real people using CONKA"
     >
       <UGCMarquee />
@@ -106,7 +106,7 @@ export default function ConkaFlowPage() {
   const ingredientsSection = (
     <PdpSection
       id="ingredients"
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-white brand-tight-top-mobile"
       ariaLabel="Formula ingredients"
     >
       <div className="brand-track">

@@ -86,7 +86,7 @@ export default function ConkaBothPage() {
     }
   };
 
-  // Shared sections — ordered as they appear on the page, matching conka-flow
+  // Shared sections, ordered as they appear on the page, matching conka-flow
   // and conka-clarity so all three PDPs share one structure. Backgrounds
   // alternate white/tint starting from the white hero. Each PdpSection's id is
   // both its anchor and its analytics name.
@@ -95,21 +95,21 @@ export default function ConkaBothPage() {
   const ugcSection = (
     <PdpSection
       id="ugc"
-      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile"
+      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile brand-tight-bottom-mobile"
       ariaLabel="Real people using CONKA"
     >
       <UGCMarquee />
     </PdpSection>
   );
 
-  // Full-bleed proof section (white, neuron clip + grey stat card) — owns
+  // Full-bleed proof section (white, neuron clip + grey stat card), owns
   // its own section + background, so it is not wrapped in a PdpSection.
   const brainFuelSection = <BrainFuelBand />;
 
   const ingredientsSection = (
     <PdpSection
       id="ingredients"
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-white brand-tight-top-mobile"
       ariaLabel="What's inside CONKA"
     >
       <div className="brand-track">

@@ -6,6 +6,7 @@
 
 import type { ProductHeroId } from "./productTypes";
 import { getSupplementFacts } from "./supplementFacts";
+import { pickFaqItems } from "./faqContent";
 
 const ASSET_BASE = "/formulas/mmPdpAssets";
 
@@ -116,6 +117,124 @@ export const OUTCOME_BUCKETS: Record<ProductHeroId, OutcomeBucket[]> = {
       ingredientIds: ["turmeric", "glutathione", "bilberry"],
     },
   ],
+};
+
+/* ---------------------------------------------------------------------------
+ * Ingredient tile badges (SCRUM-1262, Phase 3a)
+ *
+ * Two lines. The first is the layman outcome, the second the mechanism.
+ *
+ * Line 1 is DERIVED from OUTCOME_BUCKETS rather than authored again, so the
+ * grid's badge and the bucket a card belongs to can never disagree. It repeats
+ * across tiles on purpose: it is what makes the grid cluster visually by what
+ * each ingredient does, now that the three bucket headings are gone.
+ *
+ * `ingredientsData.functionalCategory` is deliberately NOT the source. It has
+ * five values across the whole dataset, so four of the nine Clear tiles would
+ * read "Neuroprotection", and it is too technical to lead with.
+ *
+ * Line 2 is unproven copy and expected to iterate. It lives here so a rewrite,
+ * or dropping the second line entirely, is a data change and never a component
+ * change.
+ * ------------------------------------------------------------------------- */
+
+/** Ingredients that serve no single outcome bucket get their line 1 here. */
+const BADGE_OUTCOME_FALLBACK: Record<string, string> = {
+  // The absorption enhancer: it multiplies the others rather than driving an
+  // outcome of its own, so it sits in no bucket.
+  "black-pepper": "Absorption",
+};
+
+/** Ingredient id -> the mechanism line, shown under the outcome. */
+export const INGREDIENT_BADGE_MECHANISM: Record<string, string> = {
+  // Flow
+  "lemon-balm": "Calm",
+  turmeric: "Memory",
+  ashwagandha: "Stress reduction",
+  rhodiola: "Anti-fatigue",
+  bilberry: "Vision support",
+  "black-pepper": "Absorption",
+  // Clear
+  glutathione: "Master antioxidant",
+  "alpha-gpc": "Acetylcholine",
+  nac: "Detox support",
+  ginkgo: "Circulation",
+  alcar: "Mental energy",
+  "vitamin-c": "Antioxidant",
+  ala: "Antioxidant recycling",
+  "vitamin-b12": "Brain ageing",
+  lecithin: "Neuronal membranes",
+};
+
+export interface IngredientBadge {
+  /** Layman outcome, from OUTCOME_BUCKETS. */
+  outcome: string;
+  /** Mechanism, more technical, shown as the second line. */
+  mechanism?: string;
+}
+
+/**
+ * The badge for one ingredient on one product page.
+ *
+ * Falls back gracefully: an ingredient in no bucket uses the fallback map, and
+ * one in neither returns no outcome rather than throwing, so adding an
+ * ingredient to ingredientsData cannot break the grid.
+ */
+export function getIngredientBadge(
+  formulaId: ProductHeroId,
+  ingredientId: string,
+): IngredientBadge {
+  const bucket = OUTCOME_BUCKETS[formulaId].find((b) =>
+    b.ingredientIds.includes(ingredientId),
+  );
+
+  return {
+    outcome: bucket?.title ?? BADGE_OUTCOME_FALLBACK[ingredientId] ?? "",
+    mechanism: INGREDIENT_BADGE_MECHANISM[ingredientId],
+  };
+}
+
+/* ---------------------------------------------------------------------------
+ * PDP disclosure rows: taste and how-to-take (SCRUM-1262)
+ *
+ * Only the SINGLE-formula variants are written here. Both ("03") reuses the
+ * canonical FAQ answers verbatim, so the two-product version of each answer
+ * exists exactly once in the codebase.
+ *
+ * Why these are not simply the FAQ entries: `/faq` renders all of FAQ_ITEMS and
+ * builds its FAQPage schema from the same array, so adding `taste-flow` and
+ * `taste-clear` ids would put three near-identical taste questions on the hub
+ * and three near-duplicate Q&As into the structured data. The FAQ therefore has
+ * to stay product-agnostic, and a product page cannot use a product-agnostic
+ * answer: on /conka-flow, a Taste row that talks about Clear is answering a
+ * question the visitor did not ask.
+ *
+ * So the split is deliberate, and the duplication it costs is one short string
+ * per single-formula row. When the canonical answer changes, check whether the
+ * Flow and Clear variants below need the same change.
+ * ------------------------------------------------------------------------- */
+const faqAnswer = (id: string) => pickFaqItems(id)[0].answer;
+
+export const PDP_DISCLOSURE_COPY: Record<
+  ProductHeroId,
+  { taste: string; howToTake: string }
+> = {
+  "01": {
+    taste:
+      "Earthy and slightly sweet, led by turmeric. It pours as a yellowish-brown liquid.",
+    howToTake:
+      "One 30ml shot, straight from the bottle, with or without food. We recommend the morning, for calm focus and jitter-free energy through the day. There is no caffeine in it, so it works whenever you need it.",
+  },
+  "02": {
+    taste:
+      "Bright and citrus, made with real lemon juice and lemon essential oil.",
+    howToTake:
+      "One 30ml shot, straight from the bottle, with or without food. We recommend the afternoon, for clear thinking through the second half of the day. There is no caffeine in it, so it works whenever you need it.",
+  },
+  "03": {
+    taste: faqAnswer("taste"),
+    howToTake: faqAnswer("how-to-take"),
+  },
 };
 
 /** Optional subline override where the SEO heading needs trimming for display

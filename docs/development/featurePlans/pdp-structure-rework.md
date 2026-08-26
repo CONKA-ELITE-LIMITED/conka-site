@@ -2,15 +2,16 @@
 
 > **Purpose:** Strip the three product pages back to the buy decision plus the arguments only CONKA can make. Phased so each phase ships to production on its own.
 
-Branch: `feature/pdp-structure-rework`
+Branches: Phase 1 `feature/pdp-structure-rework` (merged #447), Phase 2 `feature/pdp-comparison-table` (merged #448), Phase 3 `feature/pdp-ingredients-merge`.
 
 ## Phase status
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Slim, reorder, and instrument | Merged (PR #447) |
-| 2 | Comparison table | For review (commit `62b94904`) |
-| 3 | Ingredients merge | Not Started (scope reduced, see below) |
+| 2 | Comparison table | Merged (PR #448, SCRUM-1261) |
+| 3a | Ingredients grid, badges and drawer | For review (SCRUM-1262) |
+| 3b | Accordion stack and desktop hero cleanup | For review (SCRUM-1263) |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
 
@@ -151,20 +152,99 @@ Mobile: the table scrolls inside its own `overflow-x: auto` container. The page 
 - Complexity: Medium
 - Files: new `app/components/product/ProductComparisonTable.tsx`, the three PDP pages
 
-## Phase 3: Ingredients merge
+## Phase 3: Ingredients grid
 
-The largest task and the least likely on its own to change an order, which is why it comes third.
+**Reshaped twice since the original scoping. Read this section, not the ticket history.**
 
-**Scope reduced since scoping.** SCRUM-1255 (image-led ingredient cards for the FMC renders) merged in PR #445 before this branch was cut, so `ClinicalIngredients` already has the card face this phase was going to build: a full-bleed 4:3 render band, name, one-line benefit, and the key stat on the collapsed face. There is no collision to resolve and no work to fold. What remains is the merge proper: wrap the existing rail in the `OUTCOME_BUCKETS` grouping (which still lives only in `IngredientOutcomeAccordions`), add the full-list accordion, and remove `IngredientOutcomeAccordions` from the desktop hero. Re-read SCRUM-1262's description before starting it, since it was written assuming three card shapes to reconcile and there are now two.
+The first reshape was mechanical: SCRUM-1255 (image-led ingredient cards) merged in PR #445 before Phase 1 branched, so `ClinicalIngredients` already had the card face this phase was going to build. Three card shapes to reconcile became two.
 
-**What:** one body ingredients section combining the two surfaces. Outcome bucket headings from `OUTCOME_BUCKETS` become the organising principle, since they answer "why is this in here". Under each, a horizontal snap carousel of ingredient cards: render, name and one line benefit on the face, description and PubMed link on expand. A single collapsed "Full ingredients list" at the foot does the supplement facts job, so the written out copy currently in the hero survives.
+The second reshape came from new references (Reformed, `feelreformed.com`, plus the Gray Matter ingredient grid) and changes the shape of the work: **a grid of ingredient tiles with a benefit badge on each, replacing both the rail and the outcome-bucket headings.** The badge carries per tile what the three headings used to carry per group, which reads faster and removes a layer of structure.
 
-Must preserve `ClinicalIngredients`' dual formula toggle for `/conka-both`.
+Split into two tickets so the visible half ships on its own.
 
-Desktop hero converges here: once the body section carries the outcome grouping, `ProductHeroV3`'s inline `IngredientOutcomeAccordions` comes out and desktop matches mobile.
+### The badge, and why it is two lines
+
+The obvious data source, `ingredientsData.functionalCategory`, has only five values across the dataset and repeats badly: four of the nine Clear tiles would read "Neuroprotection". It is also too technical to lead with.
+
+`OUTCOME_BUCKETS` already holds the layman vocabulary (Mental performance / Sustained energy / Brain health) and already maps every ingredient to one. So the badge is:
+
+- **Line 1, the outcome:** from `OUTCOME_BUCKETS`, layman, deliberately repeats across tiles so the grid visually clusters ingredients by what they do.
+- **Line 2, the mechanism:** short and specific, where technical is appropriate because it is a subheading rather than the headline.
+
+Black Pepper sits in no bucket, being the absorption enhancer rather than an outcome, so it takes a fourth line-1 value: **Absorption**.
+
+This keeps `OUTCOME_BUCKETS` in use rather than orphaning it, and it means dropping line 2 later is a one-line change if it reads noisy. Line 2 copy is unproven and expected to need iteration.
+
+### Counts
+
+`FORMULA_DISPLAY_ORDER` gives Flow exactly 6 ingredients and Clear exactly 9, so the grid is 3x2 and 3x3 at three columns.
+
+---
+
+### Phase 3a: the grid, badges and drawer
+
+**What:** replace the horizontal snap rail in `ClinicalIngredients` with a grid of tiles. Each tile is a square render, the two-line badge over it, and the ingredient name beneath, with a `+` affordance. Tapping a tile opens a **side drawer** showing that one ingredient: large image, name, description, benefits-supported row, and the study link.
+
+- **Columns:** 3 from `sm` up. **2 on mobile**, not 3: at 390px a three-column grid gives roughly 105px tiles, and a badge reading "Sustained energy" will not fit. The Reformed reference gets away with 3-up because it has no badge; the badged Gray Matter version is 2-up.
+- **Drawer:** new component. Inherits the backdrop, z-index and dismissal conventions from `IngredientBottomSheet` rather than inventing them. That component stays: it is a bottom sheet listing *all* ingredients (reached from the hero pill), whereas this shows *one*. Right-hand drawer on desktop, full-height sheet on mobile.
+- **Study link:** free. `ingredientsData` already carries `pmid` per study, and `IngredientOutcomeAccordions` already derives a PubMed URL from it.
+- **Both:** keeps the Morning/Afternoon `FormulaToggle`, switching the grid between the Flow and Clear sets. Confirmed decision: one combined Flow-plus-Clear list was the alternative and was rejected, since AM/PM is the actual product story.
+- **Flatten:** `INGREDIENT_PARTNERS` folding is dropped. Every ingredient gets its own tile. Folding one ingredient into another's card fights the scannability the grid exists for.
+- **Drop the render block.** The formula render, name, tagline and grammage block above the rail comes off, on all three pages. The hero asset already carries the product shot. Note this also removes the "3,700mg active nootropics" figure from the PDP, which `docs/TODO.md` item 9 records as disputed and blocked on Humphrey, so losing it is not a loss.
 
 - Complexity: Large
-- Files: `ClinicalIngredients.tsx` (285 lines), `IngredientOutcomeAccordions.tsx`, `ProductHeroV3.tsx`, `mmPdpData.ts`, the three PDP pages
+- Files: `ClinicalIngredients.tsx`, new drawer component, `mmPdpData.ts` (badge map), the three PDP pages
+
+### Phase 3b: accordion stack and hero cleanup
+
+**What:** a stack of four expandable rows under the grid, in the Reformed pattern (bordered row, label left, circled `+` right):
+
+| Row | Copy source |
+|-----|-------------|
+| Ingredients | the written-out list, `getPdpIngredientList` in `mmPdpData.ts` |
+| Who is it for | `WHO_ITS_FOR` in `HeroAccordions.tsx` |
+| Taste | `faqContent.ts` id `taste` |
+| How to take | `faqContent.ts` ids `how-to-take`, `when-to-take` |
+
+All four have canonical copy already, so there is no copy dependency.
+
+Then the desktop hero cleanup: remove `IngredientOutcomeAccordions` **and** the written-out list from `ProductHeroV3`'s left column, so desktop finally matches mobile and the PDP has one ingredient surface instead of three.
+
+**This closes a Phase 1 regression.** Cutting `IngredientOutcomeAccordions` from the mobile hero also removed the "Who is it for?" block, which `WHO_ITS_FOR` feeds and which has no other consumer. It has been desktop-only since Phase 1 shipped. The accordion row is what brings it back to mobile.
+
+- Complexity: Medium
+- Files: `ClinicalIngredients.tsx`, `ProductHeroV3.tsx`, `HeroAccordions.tsx`, `faqContent.ts` (read only), the three PDP pages
+
+### As built (3a)
+
+Two decisions landed differently from the plan above, both during review:
+
+- **Badge tint follows the active formula** rather than one fixed colour, reusing `rolePillClass` from `home/ProductCard.tsx`: `#f7edcb`/`#755b1a` on Flow, `#f7ddd0`/`#9a4526` on Clear. Same tinted-pill language as the Morning/Afternoon bands.
+- **The drawer leads with `oneLineClaim`.** Once the tile carried only name and badge, and the drawer only description, the one-line claim had nowhere left to render and would have left the PDP entirely.
+
+The drawer also focuses its close button on open and restores focus to the tile on close. `IngredientBottomSheet` has the same `aria-modal`-without-focus-management gap and was left alone as pre-existing.
+
+`getIngredientBadge` degrades to an empty outcome rather than throwing, so adding an ingredient to `ingredientsData` without giving it a bucket cannot break the grid.
+
+### As built (3b)
+
+Two traps surfaced in review, both of which would have shipped as silent content loss:
+
+- **The lede lives inside the outcome accordions.** Removing them wholesale would have taken the subline, description and green-check grid off desktop while mobile kept them, since mobile renders `IngredientBenefitLede` separately. `ProductHeroV3` now renders it directly.
+- **Desktop never passed `showIngredientsPill`.** Only the mobile hero did, so desktop would have been left with no ingredient access in the hero at all. Both heroes now pass it.
+
+"See all ingredients" was also folded into the Ingredients row rather than dropped with the accordions that carried it.
+
+The PDP now has one ingredient surface on both breakpoints (the grid), plus the hero's bottom-sheet pill, down from three on desktop and two on mobile.
+
+### What fell out as dead
+
+Verified orphaned and recorded in `docs/TODO.md` rather than deleted in the same commit:
+
+- `IngredientOutcomeAccordions.tsx`
+- `INGREDIENT_PARTNERS` in `mmPdpData.ts`
+
+**`getPdpIngredientList` is NOT orphaned.** The plan flagged it as possibly dead; the Ingredients disclosure row uses it. `OUTCOME_BUCKETS`, `WHO_ITS_FOR` and `DotIndicator` are all live too. The TODO entry lists all four as do-not-delete, since each looks dead at a glance.
 
 ## Phase 4: App section and glass slide (Future)
 
@@ -183,7 +263,8 @@ Blocked on the bundle being defined: contents, price, whether it is subscription
 
 ## Rabbit holes
 
-- **The ingredients merge.** Three card shapes, one data source, three pages, and `/conka-both` needs a two formula mode. Circuit breaker: if it runs past two days, ship Phases 1 and 2 and reassess.
+- **The ingredients grid (3a).** One data source, three pages, a new drawer, and `/conka-both` needs a two formula mode. Circuit breaker: if 3a runs past a day and a half, ship it without the drawer (tiles expanding inline via `<details>`, as the rail does today) and take the drawer as its own follow-up.
+- **Badge line 2 is unproven copy.** Expect iteration. Built as a data map so the second line can be dropped or rewritten without touching the component.
 - **The observer extraction.** It touches a live, working analytics surface. Keep it mechanical, keep both event senders separate, and verify the listicle event stream is unchanged before merging.
 
 ## No-gos

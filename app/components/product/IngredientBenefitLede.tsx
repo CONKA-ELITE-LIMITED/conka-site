@@ -5,10 +5,13 @@ import { LEDE_DESCRIPTION, LEDE_SUBLINE } from "@/app/lib/mmPdpData";
 /* ============================================================================
  * IngredientBenefitLede (SCRUM-1209)
  *
- * The product subline + condensed description + green-check benefit grid. On
- * desktop V3 it sits above the outcome accordions (inside
- * IngredientOutcomeAccordions); on mobile V3 it sits between the asset and the
- * pricing widget. Flow ("01"), Clear ("02"), and Both ("03").
+ * The product subline + condensed description + green-check benefit grid.
+ *
+ * Rendered directly by both heroes, under the buy panel: ProductHeroV3 on
+ * desktop, ProductHeroMobileV3 on mobile. It used to reach desktop nested
+ * inside IngredientOutcomeAccordions, which SCRUM-1262 removed from the hero.
+ *
+ * Flow ("01"), Clear ("02"), and Both ("03").
  * ========================================================================== */
 
 const GREEN = "#1a7f4f";
