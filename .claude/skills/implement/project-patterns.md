@@ -38,8 +38,7 @@ Project-specific patterns and references for /implement (consult while building 
 - **No custom checkout.** Redirect to `cart.checkoutUrl` (Shopify hosted).
 - **Cart ID in localStorage** as `shopify_cart_id`. Cart data lives in Shopify.
 - **`clearCart()` removes localStorage ref only** -- Shopify cart still exists.
-- **B2B tier normalization** runs after any cart mutation via `getB2BCartTierUpdates`.
-- **Sticky positioning gotcha:** `.premium-pdp` has `overflow-x: hidden` which breaks `position: sticky`. Place sticky sections outside `.premium-pdp`.
+- **Sticky positioning gotcha:** any ancestor with `overflow-x: hidden` breaks `position: sticky`. Never add 100vw bleeds or overflow-x-hidden on home/PDP pages.
 
 ---
 

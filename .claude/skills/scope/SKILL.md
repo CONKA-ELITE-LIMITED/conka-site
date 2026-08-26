@@ -1,7 +1,7 @@
 ---
 name: scope
-description: Scope work like a product-minded architect. Triages scale, researches via subagent, challenges purpose, shapes phases, and writes a plan doc - Jira tickets only when wanted. Supports --continue and --no-jira. Use for new features, improvements, or non-trivial changes that need planning before building.
-argument-hint: [--no-pushback | --no-jira | --continue <plan-name>] description of the work
+description: Scope work like a product-minded architect. Triages scale, researches via subagent, challenges purpose, grills open decisions, shapes phases, and writes a plan doc - Jira tickets only when wanted. Supports --continue, --no-jira, --no-pushback, and --no-grill. Use for new features, improvements, or non-trivial changes that need planning before building. For well-understood work that should go straight through to shipped, use /ship instead.
+argument-hint: [--no-pushback | --no-grill | --no-jira | --continue <plan-name>] description of the work
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, Agent, mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql, mcp__claude_ai_Atlassian__createJiraIssue, mcp__claude_ai_Atlassian__getJiraIssue, mcp__claude_ai_Atlassian__editJiraIssue, mcp__claude_ai_Atlassian__createIssueLink
 ---
 
@@ -82,6 +82,8 @@ Wait for an answer. Their answer sets the ceremony level:
 **Why it matters:** [1 sentence on the business/UX reason]
 **Approach:** [2-4 bullet points — files to touch, key decisions]
 **Mobile consideration:** [1 sentence or "no impact"]
+**Assumptions:** [defaults you'll use unless corrected]
+**Open questions:** [fork-the-build decisions, with a recommended answer — or "none"]
 **Out of scope:** [anything explicitly not included]
 ```
 Present this, wait for confirmation, then create 1 Jira ticket using jira.md (unless plan-doc-only / `--no-jira`).
@@ -108,9 +110,13 @@ Skip if `--no-pushback`. Otherwise Read `.claude/skills/scope/challenge.md`, pre
 
 ### Step 5 — Present the scope
 
+**Grill pass (all scales; skip if `--no-grill`).** Before presenting, list every decision the brief leaves open, then sort: settle it yourself if the codebase or docs answer it (never ask what you can look up); state it as an **assumption** if you have a clearly sensible default; ask it as an **open question** only if it materially forks the build (behaviour, edge cases, data source, copy angle) — max 4, each with a recommended answer so a one-word reply unblocks it. Every silent guess must surface as one or the other.
+
+With `--no-grill`: ask nothing — settle every open decision yourself with the most sensible default, list the non-obvious ones under Assumptions, and present with "Open questions: none". The user has declared the work obvious; if you hit a decision so consequential a default feels reckless, say so in one line rather than asking a set of questions.
+
 **Scale A:** Present the compact output from Step 4 directly. Wait for approval.
 
-**Scale B or C:** Use the template in `shape.md`. **Wait for user approval** before proceeding. Iterate until confirmed.
+**Scale B or C:** Use the template in `shape.md`, with Assumptions and Open questions included. **Wait for user approval** before proceeding. Iterate until confirmed.
 
 ### Step 6 — Create plan doc
 

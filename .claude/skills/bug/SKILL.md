@@ -2,7 +2,7 @@
 name: bug
 description: Investigate, diagnose, and fix bugs with a detective-first mindset. Reproduces the issue, finds root cause (not just symptoms), applies minimal fix, verifies resolution, checks blast radius. Use when something is broken.
 argument-hint: [SCRUM-XXX | description of the bug]
-allowed-tools: Read, Grep, Glob, Bash, Edit, Write, Agent
+allowed-tools: Read, Grep, Glob, Bash, Edit, Write, Agent, mcp__claude_ai_Atlassian__getJiraIssue
 ---
 
 # /bug -- What Is This Bug Trying to Tell You?
@@ -133,7 +133,7 @@ If you cannot determine the root cause: say so, name the most likely candidates,
 | Symptom | Likely Cause | Where to Look |
 |---------|-------------|---------------|
 | Component renders on server then flashes to different content | Hydration mismatch -- server and client render different output | `typeof window` guards, `useEffect` gating, `suppressHydrationWarning` abuse |
-| Back button navigates to wrong page or broken URL | Browser history not managed -- React state with no `pushState` | `FunnelClient.tsx`, any multi-step component without History API |
+| Back button navigates to wrong page or broken URL | Browser history not managed -- React state with no `pushState` | Any multi-step client component without History API (e.g. the BYO flow) |
 | Cart drawer opens empty after add | Shopify cart created but CartContext state not updated | `CartContext.tsx` `addToCart` mutation, `cartId` not persisted to localStorage |
 | Checkout redirect goes to wrong URL | `cart.checkoutUrl` from Shopify is stale or empty | `CartDrawer.tsx`, `app/api/cart/route.ts` |
 | Analytics event not firing | Pixel not loaded yet, or event fires before `window.fbq` is available | `metaPixel.ts` `isPixelAvailable()`, script load order in `layout.tsx` |

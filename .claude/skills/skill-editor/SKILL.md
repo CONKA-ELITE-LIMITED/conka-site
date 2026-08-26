@@ -64,10 +64,11 @@ Given a complaint (e.g. "ran full lint and was slow", "didn't trigger when I sai
 ## The Checklist
 
 **A. Description (the trigger - most important)**
-- States BOTH what it does AND when to use it (trigger conditions)?
+- States BOTH what it does AND when to use it (trigger conditions)? Third person, key trigger words in the first ~200 chars.
 - Includes phrases a user would actually type?
 - Under 1024 chars, no XML angle brackets, name has no "claude"/"anthropic"?
 - Over-trigger risk (too broad) or under-trigger risk (vague / missing keywords)? Add negative triggers if it loads for unrelated work.
+- **Budget:** the injected skill list is silently truncated (roughly 15k chars across ALL skills, project + plugins). Terse descriptions are a shared resource; flag any description that is long without earning it.
 
 **B. Leanness + progressive disclosure**
 - Core instructions are tight; SKILL.md is not bloated (rough ceiling ~200 lines / 5k words).
@@ -76,7 +77,8 @@ Given a complaint (e.g. "ran full lint and was slow", "didn't trigger when I sai
 - A line tells the model not to pre-load sub-docs.
 
 **C. Hygiene**
-- No stale references: pinned model versions, deleted/renamed file paths, dead doc links.
+- No stale references: pinned model versions, deleted/renamed file paths, dead doc links. **Verify, don't eyeball:** extract every repo path the skill mentions and check existence in one pass (`for f in <paths>; do [ -e "$f" ] || echo "MISSING $f"; done`), and Grep for any named function/class/CSS class it cites.
+- No hardcoded business facts that drift (prices, dates, counts, metric values). Stable IDs (Jira cloudId, epic keys) are fine; anything a source file owns must say "read it from <file>" instead.
 - No redundancy (same instruction stated twice) or contradictory steps.
 
 **D. Efficiency (ties to CLAUDE.md Operating efficiency)**
@@ -84,8 +86,13 @@ Given a complaint (e.g. "ran full lint and was slow", "didn't trigger when I sai
 - Prefers scoped commands (`npm run lint:changed`, `npx eslint <file>`) and delegates big reads to a subagent.
 
 **E. Integrity**
-- `allowed-tools` matches what the skill actually uses (not over-broad).
+- `allowed-tools` matches what the skill actually uses (not over-broad, and nothing the body instructs is missing from the list).
 - Has a Step 0 continuity check so it resumes cleanly mid-session.
+- Side-effect skills (commit, deploy, external writes) carry `disable-model-invocation: true` so only the user triggers them. Other useful frontmatter to know when auditing: `user-invocable: false` (background knowledge), `context: fork` + `agent:` (run isolated in a subagent), `argument-hint`.
+
+**F. Boundaries and composition**
+- No overlap with a sibling skill's checks; each "For X use /Y" pointer names a skill that still exists and actually owns X.
+- If /ship (or another skill) drives this skill as a pipeline step, its waits are either skippable by an explicit flag/override or genuinely need a human.
 
 ---
 
@@ -103,6 +110,7 @@ Given a complaint (e.g. "ran full lint and was slow", "didn't trigger when I sai
 | Hygiene | issue | Stale "Sonnet 4.6" ref at line 107 -> make model-agnostic |
 | Efficiency | pass | - |
 | Integrity | pass | - |
+| Boundaries | pass | - |
 
 **Recommended edits:** [numbered, with file:line]
 ```

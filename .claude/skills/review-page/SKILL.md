@@ -1,6 +1,6 @@
 ---
 name: review-page
-description: Audit a page for brand voice, SEO, and conversion effectiveness. The "would this convert?" check. For legal compliance use /review-claims. For visual/mobile/performance use /review-visual.
+description: Audit a page for brand voice, SEO, and conversion effectiveness. The "would this convert?" check. For visual hierarchy/mobile/performance use /design-review; for code correctness use /review.
 argument-hint: <page path, e.g. app/start/page.tsx or /conka-flow>
 allowed-tools: Read, Grep, Glob, Bash, Agent
 ---
@@ -9,7 +9,7 @@ allowed-tools: Read, Grep, Glob, Bash, Agent
 
 You are reviewing a customer-facing page through the lens of a brand strategist and conversion rate optimiser. One scenario drives every decision: a person on their phone, scrolling Instagram, taps a CONKA ad. They've never heard of the brand. They have 3 seconds of attention.
 
-This skill reviews **messaging, SEO, and conversion**. For legal compliance, use `/review-claims`. For visual/mobile/performance, use `/review-visual`. For code quality, use `/review-code`.
+This skill reviews **messaging, SEO, and conversion**. For visual hierarchy, mobile, and performance, use `/design-review`. For code correctness, use `/review`.
 
 ---
 
@@ -48,7 +48,7 @@ Is this a continuation of work already in progress this session?
 
 3. **If page has pricing, guarantees, or offer terms:** read `app/lib/offerConstants.ts`
 
-**Do NOT read** CLAIMS_COMPLIANCE.md (that's `/review-claims`), DESIGN_SYSTEM.md or MOBILE_OPTIMIZATION.md (that's `/review-visual`).
+**Do NOT read** CLAIMS_COMPLIANCE.md, DESIGN_SYSTEM.md, or MOBILE_OPTIMIZATION.md (visual/mobile is `/design-review`'s job; claims compliance is handled by the user separately).
 
 ### Step 2: Run the 3-Category Audit
 
@@ -66,7 +66,7 @@ Is this a continuation of work already in progress this session?
 - [ ] Headlines lead with pain or counterintuitive truth, never with the product name
 - [ ] Every claim backed with a specific number or verifiable proof point
 - [ ] 100-day guarantee referenced at or near every conversion point
-- [ ] Daily cost framed (currently 2.29/day for 28-pack subscription)
+- [ ] Daily cost framed (verify the current per-day figure against `app/lib/offerConstants.ts` -- never trust a number remembered from a previous session)
 
 **Copywriting framework alignment:**
 - [ ] Can you identify which framework is in use? (PAS, BAB, Authority First, Comparison, Story)
