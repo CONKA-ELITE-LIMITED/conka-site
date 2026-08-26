@@ -144,16 +144,22 @@ Deleting the two frees nothing else: `CrashChart`, `ConkaCTAButton` and `PRICE_P
 
 ### Delete what the ingredient grid orphaned
 
-**Status:** Blocked on Phase 3b, which removes the last consumer
+**Status:** Ready. Both 3a and 3b have shipped, so the last consumer is gone
 **Plan:** `docs/development/featurePlans/pdp-structure-rework.md`, Phase 3
 
-Phase 3a replaced the ingredient rail with a grid and dropped partner folding. Phase 3b removes `IngredientOutcomeAccordions` from the desktop hero, which is its last consumer. Once 3b ships, confirm and delete:
+Phase 3a replaced the ingredient rail with a grid and dropped partner folding; 3b removed `IngredientOutcomeAccordions` from the desktop hero. Verified orphaned as of 2026-08-26, no remaining consumers:
 
 - `app/components/product/IngredientOutcomeAccordions.tsx`
-- `INGREDIENT_PARTNERS` in `app/lib/mmPdpData.ts`, unused once folding is dropped
-- `getPdpIngredientList` in `mmPdpData.ts` **only if** 3b's Ingredients accordion row does not end up using it
+- `INGREDIENT_PARTNERS` in `app/lib/mmPdpData.ts`, whose only consumer is that component
 
-Do **not** delete `OUTCOME_BUCKETS`: the grid's badge derives its first line from it, so it is more load-bearing now than it was as headings. Do not delete `DotIndicator` either; the grid stopped using it but `CROTestimonials` still does.
+**Three things NOT to delete while you are in there**, all of which look orphaned at a glance and are not:
+
+| Looks dead | Actually |
+|------------|----------|
+| `getPdpIngredientList` (`mmPdpData.ts`) | Live. The Ingredients disclosure row uses it. |
+| `OUTCOME_BUCKETS` (`mmPdpData.ts`) | Live, and more load-bearing than before. The grid badge derives its first line from it. |
+| `WHO_ITS_FOR` (`HeroAccordions.tsx`) | Live. The Who-is-it-for row uses it. |
+| `DotIndicator` | Live. The grid stopped using it but `CROTestimonials` still does. |
 
 **Why deferred:** deleting them in the same commit as the rewrite would have made the diff unreadable. Grouped here so it is one deliberate cleanup.
 

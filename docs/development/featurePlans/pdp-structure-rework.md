@@ -11,7 +11,7 @@ Branch: `feature/pdp-structure-rework`
 | 1 | Slim, reorder, and instrument | Merged (PR #447) |
 | 2 | Comparison table | For review (commit `62b94904`) |
 | 3a | Ingredients grid, badges and drawer | Built (commit `86a98705`, ticket pending) |
-| 3b | Accordion stack and desktop hero cleanup | Not Started |
+| 3b | Accordion stack and desktop hero cleanup | Built (commit `536c7295`, ticket pending) |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
 
@@ -226,13 +226,25 @@ The drawer also focuses its close button on open and restores focus to the tile 
 
 `getIngredientBadge` degrades to an empty outcome rather than throwing, so adding an ingredient to `ingredientsData` without giving it a bucket cannot break the grid.
 
-### What falls out as dead
+### As built (3b)
 
-Confirm and add to `docs/TODO.md` rather than deleting in the same commit:
+Two traps surfaced in review, both of which would have shipped as silent content loss:
 
-- `IngredientOutcomeAccordions.tsx` once 3b removes its last consumer
-- `INGREDIENT_PARTNERS` in `mmPdpData.ts`, unused once folding is dropped
-- `DotIndicator` usage here, though the component is shared with `CROTestimonials` and stays
+- **The lede lives inside the outcome accordions.** Removing them wholesale would have taken the subline, description and green-check grid off desktop while mobile kept them, since mobile renders `IngredientBenefitLede` separately. `ProductHeroV3` now renders it directly.
+- **Desktop never passed `showIngredientsPill`.** Only the mobile hero did, so desktop would have been left with no ingredient access in the hero at all. Both heroes now pass it.
+
+"See all ingredients" was also folded into the Ingredients row rather than dropped with the accordions that carried it.
+
+The PDP now has one ingredient surface on both breakpoints (the grid), plus the hero's bottom-sheet pill, down from three on desktop and two on mobile.
+
+### What fell out as dead
+
+Verified orphaned and recorded in `docs/TODO.md` rather than deleted in the same commit:
+
+- `IngredientOutcomeAccordions.tsx`
+- `INGREDIENT_PARTNERS` in `mmPdpData.ts`
+
+**`getPdpIngredientList` is NOT orphaned.** The plan flagged it as possibly dead; the Ingredients disclosure row uses it. `OUTCOME_BUCKETS`, `WHO_ITS_FOR` and `DotIndicator` are all live too. The TODO entry lists all four as do-not-delete, since each looks dead at a glance.
 
 ## Phase 4: App section and glass slide (Future)
 
