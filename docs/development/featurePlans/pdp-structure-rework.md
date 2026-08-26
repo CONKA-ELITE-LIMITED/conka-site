@@ -8,7 +8,7 @@ Branch: `feature/pdp-structure-rework`
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Slim, reorder, and instrument | Not Started |
+| 1 | Slim, reorder, and instrument | For review (commit `08a56791`) |
 | 2 | Comparison table | Not Started |
 | 3 | Ingredients merge | Not Started |
 | 4 | App section and glass slide | Future (asset-gated) |
@@ -108,7 +108,7 @@ Add to cart from the footer already tags `location: "sticky_footer"`, so funnel 
 - `AbsorptionBioavailability` argues a category claim rather than a brand one, and competes with the Phase 2 comparison table for the same job.
 - `LandingValueComparison` is a landing page component whose CTA points at `/conka-both`, leaking the visitor off the product they came for. The comparison table replaces it and keeps the visitor on the page.
 
-The components stay in the tree; landing pages still use them.
+The components stay in the tree. Note after building: only `ProductBenefitTiles` is still rendered elsewhere (`app/page.tsx`). `AbsorptionBioavailability` and `LandingValueComparison` are now fully orphaned, since `CrashChart.tsx:140` mentions the latter only in a comment. They are left in place rather than deleted, but they are dead and a later cleanup should remove them.
 
 - Complexity: Small
 - Files: the three PDP pages
