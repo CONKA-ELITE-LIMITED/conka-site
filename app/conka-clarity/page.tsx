@@ -13,7 +13,7 @@ import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
 import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
-import WhatToExpect from "@/app/components/home/WhatToExpect";
+import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
 import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
@@ -139,8 +139,10 @@ export default function ConkaClarityPage() {
   );
 
   const whatToExpectSection = (
-    <section id="what-to-expect" className="brand-section brand-bg-tint !px-0 !py-0" aria-label="What to expect">
-      <WhatToExpect productId="02" />
+    <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
+      <div className="brand-track">
+        <WhatToExpectV2 productId="02" />
+      </div>
     </section>
   );
 
