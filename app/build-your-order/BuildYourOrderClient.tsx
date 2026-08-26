@@ -401,6 +401,7 @@ export default function BuildYourOrderClient() {
               product={product}
               showCaption={step !== 1}
               media={step === 3 ? getBoxImage(product, cadence) : undefined}
+              fit={step === 3 ? "contain" : "cover"}
             />
           )}
         </div>

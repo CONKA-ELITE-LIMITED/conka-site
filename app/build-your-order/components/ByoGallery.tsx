@@ -71,7 +71,11 @@ export default function ByoGallery({ product }: { product: ByoProduct }) {
       <div className="relative lg:min-h-0 lg:flex-1">
         {/* Snap track. Each slide is exactly one viewport wide; the 7:5 ratio
             matches the PDP gallery assets so nothing crops on the choice
-            stages, and the square bottle statics centre-crop gracefully. */}
+            stages, and the square bottle statics centre-crop gracefully.
+            On the desktop column the slides letterbox (lg:object-contain)
+            instead: the assets keep their full frame at column width, with
+            quiet space above and below, rather than crop-filling the tall
+            sticky column. */}
         <div
           ref={trackRef}
           onScroll={onScroll}
@@ -85,7 +89,7 @@ export default function ByoGallery({ product }: { product: ByoProduct }) {
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 100vw, 42vw"
-                className="object-cover"
+                className="object-cover lg:object-contain"
                 loading={i === 0 ? "eager" : "lazy"}
               />
             </div>

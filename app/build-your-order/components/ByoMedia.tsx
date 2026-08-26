@@ -57,12 +57,17 @@ export default function ByoMedia({
   product,
   showCaption = true,
   media: mediaOverride,
+  fit = "cover",
 }: {
   product: ByoProduct;
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
   /** Swap the bottle render for another asset (the Review step's box photo). */
   media?: { src: string; alt: string };
+  /** "contain" keeps the asset's full frame at column width with quiet space
+   *  above and below (the Review step's box photo); "cover" crop-fills, which
+   *  only the Learn step's bottle render tolerates. */
+  fit?: "cover" | "contain";
 }) {
   const media = mediaOverride ?? BYO_STATIC[product];
 
@@ -78,7 +83,7 @@ export default function ByoMedia({
         // Default lazy loading on purpose: this column is display:none on
         // mobile, so lazy means the hidden image is never fetched there, while
         // on desktop it sits in the first viewport and loads immediately.
-        className="object-cover object-center"
+        className={`${fit === "contain" ? "object-contain" : "object-cover"} object-center`}
       />
 
       {/* Slim caption only — no product name (the page heading + selections own
