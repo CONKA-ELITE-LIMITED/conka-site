@@ -48,10 +48,14 @@ Mark animated elements with `data-*` attributes (one per group, e.g. `data-engin
 | `revealUp(targets, trigger, vars?)` | House entrance: rise 28px + fade, stagger 0.12, at `top 75%` | `AppV2Proof`, `AppV2Engine`, `AppV2BeyondTest` |
 | `countUp(el, target, {decimals, suffix})` | Counts `textContent` 0 → target on entry. Server-render the final value as the element's text | `AppV2Proof` research stats |
 | `drawLines(paths, trigger, opts?)` | Draws stroked SVG paths (each needs `pathLength={1}` in JSX) with staggered delay | `AppV2Engine` act 1 connector fan |
+| `drawProgress(el, trigger, {axis, start, end, scrub})` | Scroll-scrubbed progress line: scales an element 0 → 1 along `axis`. JSX carries the final state + `origin-top`/`origin-left` class, so reduced-motion sees it fully drawn | `WhatToExpectV2` timeline rail |
+| `scrubBrighten(targets, {dim, start, end, scrub})` | Each target fades `dim` → 1 as its own position scrolls through the viewport. JSX carries full opacity | `WhatToExpectV2` milestone blocks |
 
 Override defaults via the `vars` argument (`y`, `stagger`, `duration`, nested `scrollTrigger.start`). If you override the same values everywhere, change the default in the helper instead.
 
 There is also `usePrefersReducedMotion()` (`app/hooks/usePrefersReducedMotion.ts`) for components that need to *render different JSX* under reduced motion (e.g. the journey renders its stacked layout instead of the pinned one).
+
+**Lazy-load rule for conversion routes:** if a component is the only GSAP consumer on its route (the PDPs, landers), do not import `@/app/lib/motion` statically -- that puts gsap + ScrollTrigger in the route's first-load JS. Instead gate a dynamic `import("@/app/lib/motion")` behind `useInView({ threshold: 0 })` plus a reduced-motion check, and scope with `gsap.context(fn, el)` (same cleanup semantics as `useGSAP({ scope })`). JSX must carry final state so the pre-load moment looks complete; scrubbed animations are position-synced, so late binding loses nothing. Reference: `WhatToExpectV2`.
 
 ## Bespoke patterns (copy from the reference, don't abstract yet)
 
@@ -61,7 +65,7 @@ These shipped once; promote them into `motion.ts` only when a second page needs 
 |---------|-------------------|-----------|
 | Masked line reveal | H1 lines slide up from behind `overflow-hidden` wrappers (`yPercent: 110`) | `AppV2Hero` |
 | Clip-path image reveal | Image wipes in from an edge via `clipPath: inset(...)`; element carries `style={{ clipPath: "inset(0% 0% 0% 0%)" }}` so `from()` can interpolate | `AppV2Hero` card, `AppV2Origin` photo |
-| Scroll-scrubbed word brighten | Headline words go 0.2 → 1 opacity, scrubbed between `top 80%` and `top 30%` | `AppV2Origin` |
+| Scroll-scrubbed word brighten | Headline words go 0.2 → 1 opacity, scrubbed between `top 80%` and `top 30%` (single-trigger + stagger variant of `scrubBrighten`) | `AppV2Origin` |
 | Score ring draw + count | SVG circle stroke-dash draw synced with a number count-up in one timeline | `AppV2Hero` HUD chip |
 | Pinned scrub journey | `ScrollTrigger.create({ pin: true, end: "+=N%" })`, progress drives an active index via React state (guard with a ref, only setState on change) + a scaleX progress bar set directly on the DOM | `AppV2TestJourney` desktop |
 | Scroll progress rail | Fixed 2px top bar, `scaleX` scrubbed over `end: "max"` | `AppV2ProgressRail` |

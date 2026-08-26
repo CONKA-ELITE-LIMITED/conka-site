@@ -5,6 +5,10 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | PDP what-to-expect timeline: GSAP now lazy-loads on approach, keeping it out of the PDP first-load JS
+- **2026-08-26** | PDP what-to-expect timeline: CONKA per-product copy and new title replace the placeholder
+- **2026-08-26** | PDP what-to-expect timeline: desktop scroll fix, black title, new side-shot renders
+- **2026-08-26** | PDP what-to-expect section rebuilt as a scroll-drawn timeline (V2) on Flow, Clear and Both
 - **2026-08-26** | Build Your Order desktop pass: Build-step gallery fills the left media column, Review shows the delivery box on the left, Learn cards go compact, and the sticky CTA sits under the content rail instead of spanning the viewport
 - **2026-08-25** | Brain-fuel proof section redesigned for the bright neuron clip: white section, full-bleed footage, stats centred on a grey hairline-divided card
 - **2026-08-25** | Brain-fuel proof band (home, both PDP, lander) now plays the Both Neuron float clip instead of the BrainFuel render

@@ -88,6 +88,59 @@ export function countUp(
 }
 
 /**
+ * Scroll-scrubbed progress line: scales an element from 0 to 1 along `axis`
+ * as `trigger` moves through the viewport. The element must carry its final
+ * state in JSX (no inline transform) plus the matching transform-origin
+ * class (`origin-top` for y, `origin-left` for x), so reduced-motion and
+ * no-JS users see the line fully drawn.
+ */
+export function drawProgress(
+  el: gsap.DOMTarget,
+  trigger: gsap.DOMTarget,
+  {
+    axis = "y",
+    start = "top 70%",
+    end = "bottom 55%",
+    scrub = 0.4,
+  }: { axis?: "x" | "y"; start?: string; end?: string; scrub?: boolean | number } = {},
+): gsap.core.Tween {
+  const from = axis === "y" ? { scaleY: 0 } : { scaleX: 0 };
+  const to = axis === "y" ? { scaleY: 1 } : { scaleX: 1 };
+  return gsap.fromTo(el, from, {
+    ...to,
+    ease: "none",
+    scrollTrigger: { trigger, start, end, scrub },
+  });
+}
+
+/**
+ * Scroll-scrubbed brighten: each target fades from `dim` to full opacity as
+ * it moves through the viewport (its own position drives the scrub). JSX
+ * carries full opacity, so reduced-motion and no-JS users see everything lit.
+ */
+export function scrubBrighten(
+  targets: gsap.DOMTarget,
+  {
+    dim = 0.2,
+    start = "top 85%",
+    end = "top 55%",
+    scrub = true,
+  }: { dim?: number; start?: string; end?: string; scrub?: boolean | number } = {},
+): gsap.core.Tween[] {
+  return gsap.utils.toArray<HTMLElement>(targets).map((el) =>
+    gsap.fromTo(
+      el,
+      { opacity: dim },
+      {
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: { trigger: el, start, end, scrub },
+      },
+    ),
+  );
+}
+
+/**
  * Draw stroked SVG paths when `trigger` enters view. Each path must set
  * pathLength={1} in JSX; the dash state is applied here (inside the motion
  * gate) so reduced-motion users see the lines fully drawn.

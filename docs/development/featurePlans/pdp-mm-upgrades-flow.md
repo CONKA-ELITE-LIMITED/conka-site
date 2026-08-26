@@ -44,9 +44,9 @@ Scale B per ticket (roughly a day each). Three tickets, sequenced A then B then 
 
 | Phase | Ticket | Description | Status |
 |-------|--------|-------------|--------|
-| A | Dynamic subscription box | Summary card under the CTA that rewrites from the selected plan | Not Started |
-| B | Pricing widget tightening | Collapse plan cards so only the selected one expands its detail | Not Started |
-| C | Ingredient-led benefits | New outcome-grouped ingredient accordion component | Not Started |
+| A | Dynamic subscription box | Summary card under the CTA that rewrites from the selected plan | Done |
+| B | Pricing widget tightening | Collapse plan cards so only the selected one expands its detail | Done |
+| C | Ingredient-led benefits | New outcome-grouped ingredient accordion component | Done |
 
 Copy tightening (originally a fourth piece) is folded into B (hero/plan copy) and C
 (benefit copy) rather than a standalone ticket, so it ships with the surface it touches.
@@ -201,9 +201,9 @@ Epic SCRUM-763 (Website & CRO), Sprint 29. All three relate to SCRUM-1171 (prede
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1207 | Flow PDP: dynamic "Your subscription" summary box | A | To Do |
-| SCRUM-1208 | Flow PDP: tighten pricing widget (collapse plan cards) | B | To Do |
-| SCRUM-1209 | Flow PDP: ingredient-led benefits section (outcome accordions) | C | To Do |
+| SCRUM-1207 | Flow PDP: dynamic "Your subscription" summary box | A | Done |
+| SCRUM-1208 | Flow PDP: tighten pricing widget (collapse plan cards) | B | Done |
+| SCRUM-1209 | Flow PDP: ingredient-led benefits section (outcome accordions) | C | Done |
 
 Sequencing: SCRUM-1207 blocks SCRUM-1208 (the summary box must own the benefits
 detail before the plan cards drop it). SCRUM-1209 is independent and can run in parallel.
