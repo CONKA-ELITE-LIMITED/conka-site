@@ -206,7 +206,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "how-to-take",
     question: "How do I take CONKA?",
     answer:
-      "Two shots, ten seconds each. Flow in the morning to set up your focus for the day. Clear in the afternoon, right when most people hit the dip. Straight from the bottle. No powders, no mixing, no timing windows.",
+      "One 30ml shot, straight from the bottle, with or without food. Flow in the morning for calm focus and jitter-free energy. Clear in the afternoon for clear thinking through the second half of the day. Neither contains caffeine, so you can take them whenever you need them.",
     category: "usage",
   },
   {
@@ -308,7 +308,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "taste",
     question: "What does CONKA taste like?",
     answer:
-      "CONKA Flow tastes of turmeric, earthy and slightly sweet, and it is a yellowish-brown liquid. CONKA Clear is citrus, made with real lemon juice and lemon essential oil. Neither is trying to taste like a soft drink: this is a 30ml shot with a serious amount of active botanical in it, and it tastes like one. It is over in ten seconds.",
+      "CONKA Flow is earthy and slightly sweet, led by turmeric. CONKA Clear is bright and citrus, made with real lemon juice and lemon essential oil. Both are 30ml of concentrated botanical extract, so they taste of what is in them.",
     category: "usage",
   },
   {

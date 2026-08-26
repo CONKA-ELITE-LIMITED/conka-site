@@ -193,6 +193,42 @@ export function getIngredientBadge(
   };
 }
 
+/* ---------------------------------------------------------------------------
+ * PDP disclosure rows: taste and how-to-take (SCRUM-1262)
+ *
+ * Product-specific, which is exactly why these are NOT the canonical FAQ
+ * entries. `faqContent.ts` is product-agnostic, so its `taste` and
+ * `how-to-take` answers describe Flow and Clear together. On /conka-flow a row
+ * that talks about Clear is answering a question the visitor did not ask, so
+ * the PDP gets its own per-product copy and Both gets the combined version.
+ *
+ * The canonical entries still exist and are still correct for /faq and the
+ * landing surfaces; keep the two in step when either changes.
+ * ------------------------------------------------------------------------- */
+export const PDP_DISCLOSURE_COPY: Record<
+  ProductHeroId,
+  { taste: string; howToTake: string }
+> = {
+  "01": {
+    taste:
+      "Earthy and slightly sweet, led by turmeric. A 30ml shot of concentrated botanical extract, so it tastes of what is in it.",
+    howToTake:
+      "One 30ml shot, straight from the bottle, with or without food. We recommend the morning, for calm focus and jitter-free energy through the day. There is no caffeine in it, so it works whenever you need it.",
+  },
+  "02": {
+    taste:
+      "Bright and citrus, made with real lemon juice and lemon essential oil. A 30ml shot of concentrated botanical extract, so it tastes of what is in it.",
+    howToTake:
+      "One 30ml shot, straight from the bottle, with or without food. We recommend the afternoon, for clear thinking through the second half of the day. There is no caffeine in it, so it works whenever you need it.",
+  },
+  "03": {
+    taste:
+      "Flow is earthy and slightly sweet, led by turmeric. Clear is bright and citrus, made with real lemon juice and lemon essential oil. Both are 30ml of concentrated botanical extract, so they taste of what is in them.",
+    howToTake:
+      "Two 30ml shots, straight from the bottle, with or without food. Flow in the morning for calm focus and jitter-free energy. Clear in the afternoon for clear thinking through the second half of the day. Neither contains caffeine, so you can take them whenever you need them.",
+  },
+};
+
 /** Optional subline override where the SEO heading needs trimming for display
  *  (Both drops its ", Morning to Evening" tail). Falls back to seoHeading. */
 export const LEDE_SUBLINE: Partial<Record<ProductHeroId, string>> = {

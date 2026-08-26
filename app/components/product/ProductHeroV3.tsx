@@ -12,6 +12,7 @@ import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
+import IngredientDisclosureRows from "./IngredientDisclosureRows";
 
 interface ProductHeroV3Props {
   formulaId: ProductHeroId;
@@ -26,7 +27,8 @@ interface ProductHeroV3Props {
  * ProductHeroV3, the two-column PDP hero (Flow, Clear, Both).
  *
  * A large sticky asset on the LEFT; the RIGHT column holds the buy decision:
- * rating, name, badges, buy box, then the product lede.
+ * rating, name, badges, buy box, the product lede, then the four disclosure
+ * rows (ingredients, who it is for, taste, how to take).
  *
  * The hero stops at the buy decision (SCRUM-1262). It used to carry a
  * written-out ingredient list under the gallery and the outcome accordions
@@ -58,9 +60,9 @@ export default function ProductHeroV3({
           gutters grow. Drop a 7:5 landscape asset in and it fills the column. */}
       <div className="grid grid-cols-1 gap-[var(--brand-space-m)] lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
         {/* LEFT: sticky gallery. The written-out Ingredients list that sat
-            beneath it is gone (SCRUM-1262). It is now one of the disclosure
-            rows under the body's ingredient grid, and the buy panel's pill
-            still opens the full list without leaving the hero. */}
+            beneath it is gone (SCRUM-1262). It is now the Ingredients
+            disclosure row in the right column, and the buy panel's pill still
+            opens the full list too. */}
         <div className="order-2 lg:sticky lg:top-24 lg:order-1 lg:self-start">
           <ProductImageSlideshow
             images={images}
@@ -109,6 +111,10 @@ export default function ProductHeroV3({
               ingredients three times. The lede stays because it is the product
               pitch, not an ingredient surface, and mobile renders it too. */}
           <IngredientBenefitLede formulaId={formulaId} />
+
+          {/* The supporting answers, directly under the check grid, the way the
+              reference runs them: still in the buy decision, not a section away. */}
+          <IngredientDisclosureRows formulaId={formulaId} />
         </div>
       </div>
 

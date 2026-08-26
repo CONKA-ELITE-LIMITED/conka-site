@@ -12,6 +12,7 @@ import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
+import IngredientDisclosureRows from "./IngredientDisclosureRows";
 
 interface ProductHeroMobileV3Props {
   formulaId: ProductHeroId;
@@ -93,6 +94,10 @@ export default function ProductHeroMobileV3({
 
       {/* Subline + description + check grid, below the widget */}
       <IngredientBenefitLede formulaId={formulaId} />
+
+      {/* The supporting answers, directly under the check grid, the way the
+          reference runs them: still in the buy decision, not a section away. */}
+      <IngredientDisclosureRows formulaId={formulaId} />
 
       <TrustStrip />
     </div>

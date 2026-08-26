@@ -1,7 +1,10 @@
 "use client";
 
-import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
-import { getPdpIngredientList } from "@/app/lib/mmPdpData";
+import { useState } from "react";
+import {
+  getPdpIngredientList,
+  PDP_DISCLOSURE_COPY,
+} from "@/app/lib/mmPdpData";
 import { WHO_ITS_FOR } from "./HeroAccordions";
 import { getHeroProductType } from "@/app/lib/productHeroHelpers";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -9,29 +12,68 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 /* ============================================================================
  * IngredientDisclosureRows (SCRUM-1262, Phase 3b)
  *
- * The four supporting answers that sit under the ingredient grid: what is in
- * it, who it is for, what it tastes like, and how to take it.
+ * The four supporting answers, rendered by both heroes directly under the
+ * check grid: what is in it, who it is for, what it tastes like, how to take
+ * it. They sit inside the buy decision rather than a section away, which is
+ * how the reference runs them.
  *
- * Every row reads from the canonical source rather than restating copy here,
- * so a change in faqContent.ts or HeroAccordions.tsx reaches the PDP with no
- * second edit. Native <details>, so it costs no client JS to open a row.
+ * No copy is written in this file. Ingredients and Who-is-it-for read the
+ * canonical shared sources (`getPdpIngredientList`, `WHO_ITS_FOR`), so a change
+ * there reaches the PDP with no second edit.
  *
- * "Who is it for" in particular has been desktop-only since SCRUM-1260 cut the
- * outcome accordions from the mobile hero, taking this block with them. This
- * row is what returns it to mobile.
+ * Taste and How-to-take deliberately do NOT use the `faqContent.ts` entries of
+ * the same name. Those are product-agnostic and describe Flow and Clear
+ * together, and on /conka-flow a row that talks about Clear answers a question
+ * the visitor did not ask. Their per-product copy lives in
+ * PDP_DISCLOSURE_COPY, which carries the note about keeping the two in step.
+ *
+ * "Who is it for" has been desktop-only since SCRUM-1260 cut the outcome
+ * accordions from the mobile hero, taking this block with them. This row is
+ * what returns it to mobile.
  * ========================================================================== */
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+/**
+ * One row. Controlled rather than a native <details> so the close animates too:
+ * a <details> drops its content the instant `open` is removed, which snaps.
+ *
+ * The open/close uses a `grid-template-rows: 0fr -> 1fr` transition. That is
+ * the one technique that animates to content height without measuring it in JS.
+ * It does run layout each frame, unlike the drawer's transform, but the content
+ * is a few short paragraphs in a section that is not scroll-linked, so the cost
+ * is negligible. The inner fade is opacity only. Both are skipped entirely
+ * under prefers-reduced-motion.
+ */
+function Row({
+  label,
+  isOpen,
+  onToggle,
+  children,
+}: {
+  label: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  const panelId = `pdp-row-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+
   return (
-    <details name="pdp-ingredient-disclosure" className="group border-t border-black/12">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
+    <div className="border-t border-black/12">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        className="flex w-full cursor-pointer items-center justify-between gap-4 py-4 text-left"
+      >
         <span className="text-base font-semibold text-black sm:text-lg">
           {label}
         </span>
-        {/* Circled +, rotating to a x when the row is open. */}
+        {/* Circled +, rotating to an x when the row is open. */}
         <span
           aria-hidden
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-black/15 text-black transition-transform duration-200 group-open:rotate-45"
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-black/15 text-black transition-transform duration-200 motion-reduce:transition-none ${
+            isOpen ? "rotate-45" : ""
+          }`}
         >
           <svg
             width="15"
@@ -45,12 +87,31 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
             <path d="M12 5v14M5 12h14" />
           </svg>
         </span>
-      </summary>
+      </button>
 
-      <div className="flex flex-col gap-3 pb-5 text-sm leading-relaxed text-black/70 sm:text-base">
-        {children}
+      {/* `inert` while collapsed. The content stays in the DOM so it can
+          animate, and a 0fr grid row plus overflow-hidden only hides it
+          visually: without this a keyboard user would tab into the collapsed
+          Ingredients row and land on the invisible "See all ingredients" link,
+          and a screen reader would read every closed row aloud. */}
+      <div
+        id={panelId}
+        inert={!isOpen}
+        className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div
+            className={`flex flex-col gap-3 pb-5 text-sm leading-relaxed text-black/70 transition-opacity duration-200 motion-reduce:transition-none sm:text-base ${
+              isOpen ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {children}
+          </div>
+        </div>
       </div>
-    </details>
+    </div>
   );
 }
 
@@ -62,15 +123,20 @@ export default function IngredientDisclosureRows({
   const ingredientLines = getPdpIngredientList(formulaId);
   const whoItsFor = WHO_ITS_FOR[getHeroProductType(formulaId)];
 
-  // Both takes the sequencing answer as well, since it runs two formulas.
-  const [taste] = pickFaqItems("taste");
-  const howToTake = pickFaqItems(
-    ...(formulaId === "03" ? ["how-to-take", "when-to-take"] : ["how-to-take"]),
-  );
+  const copy = PDP_DISCLOSURE_COPY[formulaId];
+
+  // One open at a time, like the native `name` grouping this replaced.
+  const [openRow, setOpenRow] = useState<string | null>(null);
+  const toggle = (row: string) =>
+    setOpenRow((current) => (current === row ? null : row));
 
   return (
-    <div className="mt-12 border-b border-black/12">
-      <Row label="Ingredients">
+    <div className="border-b border-black/12">
+      <Row
+        label="Ingredients"
+        isOpen={openRow === "ingredients"}
+        onToggle={() => toggle("ingredients")}
+      >
         {ingredientLines.map((line) => (
           <p key={line.label ?? "list"}>
             {line.label && (
@@ -101,18 +167,30 @@ export default function IngredientDisclosureRows({
         </a>
       </Row>
 
-      <Row label="Who is it for">
+      <Row
+        label="Who is it for"
+        isOpen={openRow === "who"}
+        onToggle={() => toggle("who")}
+      >
         {whoItsFor.map((para) => (
           <p key={para.slice(0, 24)}>{para}</p>
         ))}
       </Row>
 
-      {taste && <Row label="Taste">{stripClaimAnchors(taste.answer)}</Row>}
+      <Row
+        label="Taste"
+        isOpen={openRow === "taste"}
+        onToggle={() => toggle("taste")}
+      >
+        <p>{copy.taste}</p>
+      </Row>
 
-      <Row label="How to take">
-        {howToTake.map((item) => (
-          <p key={item.id}>{stripClaimAnchors(item.answer)}</p>
-        ))}
+      <Row
+        label="How to take"
+        isOpen={openRow === "how"}
+        onToggle={() => toggle("how")}
+      >
+        <p>{copy.howToTake}</p>
       </Row>
     </div>
   );

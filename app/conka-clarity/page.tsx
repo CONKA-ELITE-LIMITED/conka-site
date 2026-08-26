@@ -98,7 +98,7 @@ export default function ConkaClarityPage() {
   const ugcSection = (
     <PdpSection
       id="ugc"
-      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile"
+      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile brand-tight-bottom-mobile"
       ariaLabel="Real people using CONKA"
     >
       <UGCMarquee />
@@ -108,7 +108,7 @@ export default function ConkaClarityPage() {
   const ingredientsSection = (
     <PdpSection
       id="ingredients"
-      className="brand-section brand-bg-white"
+      className="brand-section brand-bg-white brand-tight-top-mobile"
       ariaLabel="Formula ingredients"
     >
       <div className="brand-track">

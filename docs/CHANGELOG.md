@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | PDP disclosure rows move into the hero with an animated expand, and the taste and how-to-take copy is rewritten per product
 - **2026-08-26** | PDP ingredient section gains ingredients / who-it-is-for / taste / how-to-take rows, and the desktop hero drops its duplicate ingredient surfaces
 - **2026-08-26** | PDP ingredients become an image-led grid with two-line benefit badges and a detail drawer, replacing the horizontal rail
 - **2026-08-26** | Added a CONKA vs coffee vs prescription stimulants comparison table to the three product pages, replacing the absorption section
