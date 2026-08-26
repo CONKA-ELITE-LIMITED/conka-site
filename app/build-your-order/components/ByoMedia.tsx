@@ -3,7 +3,8 @@
 /**
  * Build Your Order — product media (static).
  *
- * The clean V3/New floating-bottle statics, swapped by selected product. The
+ * The clean V3/New floating-bottle statics, swapped by selected product; the
+ * Review step overrides them with the delivery-box photo via `media`. The
  * flow deliberately carries NO motion assets (SCRUM-1249 review): statics keep
  * the checkout surface calm and the neuron Float animations stay on the
  * marketing surfaces. A restrained caption keeps the core selling point
@@ -11,10 +12,40 @@
  */
 
 import Image from "next/image";
-import { type ByoProduct } from "@/app/lib/byoData";
+import {
+  type ByoCadence,
+  type ByoProduct,
+  BYO_PRODUCTS,
+} from "@/app/lib/byoData";
 import { bottleRenders } from "@/app/lib/productImages";
 
 export const BYO_STATIC: Record<ByoProduct, { src: string; alt: string }> = bottleRenders;
+
+// The delivery photo used on the Review step: product AND box, the thing that
+// actually arrives. Quarterly shows the larger shipment (same precedent as the
+// PDP slideshow's quarterly first-slide swap). Lives here (eager, tiny) rather
+// than in the code-split SummaryStep so the desktop media column can share it
+// without pulling SummaryStep into the first-paint bundle.
+const BOX_IMG: Record<ByoProduct, string> = {
+  flow: "/formulas/box/FlowBox.jpg",
+  clear: "/formulas/box/ClearBox.jpg",
+  both: "/formulas/box/BothBox.jpg",
+};
+const QUARTERLY_BOX_IMG: Record<ByoProduct, string> = {
+  flow: "/formulas/box/FlowQuarterlyBox.jpg",
+  clear: "/formulas/box/ClearQuarterlyBox.jpg",
+  both: "/formulas/box/BothQuarterlyBox.jpg",
+};
+
+export function getBoxImage(
+  product: ByoProduct,
+  cadence: ByoCadence,
+): { src: string; alt: string } {
+  return {
+    src: (cadence === "quarterly-sub" ? QUARTERLY_BOX_IMG : BOX_IMG)[product],
+    alt: `${BYO_PRODUCTS[product].label} delivery box`,
+  };
+}
 
 const CAPTION: Record<ByoProduct, string> = {
   flow: "Morning. Caffeine-free focus.",
@@ -25,12 +56,20 @@ const CAPTION: Record<ByoProduct, string> = {
 export default function ByoMedia({
   product,
   showCaption = true,
+  media: mediaOverride,
+  fit = "cover",
 }: {
   product: ByoProduct;
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
+  /** Swap the bottle render for another asset (the Review step's box photo). */
+  media?: { src: string; alt: string };
+  /** "contain" keeps the asset's full frame at column width with quiet space
+   *  above and below (the Review step's box photo); "cover" crop-fills, which
+   *  only the Learn step's bottle render tolerates. */
+  fit?: "cover" | "contain";
 }) {
-  const media = BYO_STATIC[product];
+  const media = mediaOverride ?? BYO_STATIC[product];
 
   return (
     // Height comes entirely from the parent (mobile gallery slide / desktop
@@ -44,7 +83,7 @@ export default function ByoMedia({
         // Default lazy loading on purpose: this column is display:none on
         // mobile, so lazy means the hidden image is never fetched there, while
         // on desktop it sits in the first viewport and loads immediately.
-        className="object-cover object-center"
+        className={`${fit === "contain" ? "object-contain" : "object-cover"} object-center`}
       />
 
       {/* Slim caption only — no product name (the page heading + selections own

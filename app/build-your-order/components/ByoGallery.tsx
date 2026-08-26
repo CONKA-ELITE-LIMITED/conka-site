@@ -1,13 +1,15 @@
 "use client";
 
 /**
- * Build Your Order — mobile sticky media gallery (Bob pattern, SCRUM-1249).
+ * Build Your Order — Build-step media gallery (Bob pattern, SCRUM-1249).
  *
- * The Build step's media band, swipeable with scroll-snap plus arrow
- * controls; it scrolls away naturally with the page (not pinned). Statics
- * only, no motion (SCRUM-1249 review): the selected product's PDP hero
- * gallery assets, so the choice stage shows the same frames the product
- * pages sell with. Mobile only — desktop keeps the sticky left column.
+ * Swipeable with scroll-snap plus arrow controls. Statics only, no motion
+ * (SCRUM-1249 review): the selected product's PDP hero gallery assets, so
+ * the choice stage shows the same frames the product pages sell with.
+ *
+ * Two placements, one component (SCRUM-1252): a mobile band above the
+ * content that scrolls away naturally (not pinned), and the desktop sticky
+ * left media column, where it fills the column height.
  *
  * A gradient offer ribbon closes the band. Every figure derives live from
  * byoData (the monthly subscription of the SELECTED product), so the ribbon
@@ -33,7 +35,7 @@ const PRODUCT_TO_HERO_ID: Record<ByoProduct, ProductHeroId> = {
 /** Hero-asset slides per product on the choice stages, capped for weight. */
 const STILL_COUNT = 5;
 
-export default function ByoMobileGallery({ product }: { product: ByoProduct }) {
+export default function ByoGallery({ product }: { product: ByoProduct }) {
   const slides = MM_GALLERY_ASSETS[PRODUCT_TO_HERO_ID[product]].slice(0, STILL_COUNT);
   const slideCount = slides.length;
   const trackRef = useRef<HTMLDivElement>(null);
@@ -65,15 +67,19 @@ export default function ByoMobileGallery({ product }: { product: ByoProduct }) {
   const freeShots = pricing.freeShots ?? 0;
 
   return (
-    <div className="bg-white">
-      <div className="relative">
+    <div className="bg-white lg:flex lg:h-full lg:flex-col">
+      <div className="relative lg:min-h-0 lg:flex-1">
         {/* Snap track. Each slide is exactly one viewport wide; the 7:5 ratio
             matches the PDP gallery assets so nothing crops on the choice
-            stages, and the square bottle statics centre-crop gracefully. */}
+            stages, and the square bottle statics centre-crop gracefully.
+            On the desktop column the slides letterbox (lg:object-contain)
+            instead: the assets keep their full frame at column width, with
+            quiet space above and below, rather than crop-filling the tall
+            sticky column. */}
         <div
           ref={trackRef}
           onScroll={onScroll}
-          className="flex aspect-[7/5] max-h-[300px] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex aspect-[7/5] max-h-[300px] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:aspect-auto lg:h-full lg:max-h-none"
           aria-label="Product gallery"
         >
           {slides.map((src, i) => (
@@ -82,8 +88,8 @@ export default function ByoMobileGallery({ product }: { product: ByoProduct }) {
                 src={src}
                 alt=""
                 fill
-                sizes="100vw"
-                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                className="object-cover lg:object-contain"
                 loading={i === 0 ? "eager" : "lazy"}
               />
             </div>

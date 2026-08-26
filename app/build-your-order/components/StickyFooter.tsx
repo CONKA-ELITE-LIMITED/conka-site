@@ -3,8 +3,11 @@
 /**
  * Build Your Order — persistent sticky footer.
  *
- * One primary action, full width. A back arrow appears only once there is
- * somewhere to go back to.
+ * One primary action, full width of the content rail. On mobile that is the
+ * viewport; on desktop the bar starts where the media column ends (left 42%,
+ * SCRUM-1252) and the pill keeps the content's 560px reading measure, so the
+ * CTA sits under the copy it concludes instead of stretching thin across the
+ * whole screen. A back arrow appears only once there is somewhere to go back to.
  *
  * There is deliberately NO forward arrow: it did exactly what the CTA does, and
  * two controls for one action is noise on the most important surface of the page.
@@ -86,14 +89,14 @@ export default function StickyFooter({
   error = null,
 }: StickyFooterProps) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-white/95 backdrop-blur-sm">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-white/95 backdrop-blur-sm lg:left-[42%]">
       {error && (
         <p className="text-center text-[13px] text-[#b42318] pt-2" role="alert">
           {error}
         </p>
       )}
 
-      <div className="mx-auto w-full max-w-[560px] px-5 py-3 lg:max-w-none lg:px-12">
+      <div className="mx-auto w-full max-w-[560px] px-5 py-3">
         <div className="flex items-center gap-3">
           {canBack && <BackArrow onClick={onBack} />}
 
