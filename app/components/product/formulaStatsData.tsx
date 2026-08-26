@@ -159,9 +159,7 @@ export const CURATED_STATS: Record<
           name: "Ginkgo Biloba",
           imageSrc: "/ingredients/renders/GinkgoBiloba.jpg",
         },
-        // Generic white-powder render: ALCAR's typical commercial form,
-        // until a bespoke render ships.
-        { name: "Acetyl-L-Carnitine", imageSrc: "/ingredients/renders/11.jpg" },
+        { name: "Acetyl-L-Carnitine", imageSrc: "/ingredients/renders/AcetylLCarnitine.jpg" },
       ],
     },
     {
@@ -189,7 +187,7 @@ export const CURATED_STATS: Record<
         </>
       ),
       ingredients: [
-        { name: "Acetyl-L-Carnitine", imageSrc: "/ingredients/renders/11.jpg" },
+        { name: "Acetyl-L-Carnitine", imageSrc: "/ingredients/renders/AcetylLCarnitine.jpg" },
         {
           name: "Vitamin B12",
           imageSrc: "/ingredients/renders/VitaminB12.jpg",
@@ -227,9 +225,7 @@ export const CURATED_STATS: Record<
           imageSrc: "/ingredients/renders/GinkgoBiloba.jpg",
         },
         { name: "Vitamin C", imageSrc: "/ingredients/renders/VitaminC.jpg" },
-        // Generic white-powder render: glutathione's typical commercial
-        // form, until a bespoke render ships.
-        { name: "Glutathione", imageSrc: "/ingredients/renders/11.jpg" },
+        { name: "Glutathione", imageSrc: "/ingredients/renders/Glutathione.jpg" },
       ],
     },
   ],

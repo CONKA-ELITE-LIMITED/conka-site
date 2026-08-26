@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | Replaced all ingredient renders with new FMC-style square assets, including bespoke Glutathione and Acetyl-L-Carnitine renders replacing the shared white-powder placeholder
 - **2026-08-26** | PDP what-to-expect timeline: GSAP now lazy-loads on approach, keeping it out of the PDP first-load JS
 - **2026-08-26** | PDP what-to-expect timeline: CONKA per-product copy and new title replace the placeholder
 - **2026-08-26** | PDP what-to-expect timeline: desktop scroll fix, black title, new side-shot renders

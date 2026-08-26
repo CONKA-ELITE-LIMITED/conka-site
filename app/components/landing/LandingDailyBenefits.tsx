@@ -124,7 +124,7 @@ const PILLARS: Pillar[] = [
     description:
       "A daily routine that invests in your brain for the years ahead.",
     ingredients: [
-      { name: "Glutathione", imageSrc: "/ingredients/renders/11.jpg" },
+      { name: "Glutathione", imageSrc: "/ingredients/renders/Glutathione.jpg" },
       { name: "NAC", imageSrc: "/ingredients/renders/NAcetylCysteine.jpg" },
       { name: "Vitamin C", imageSrc: "/ingredients/renders/VitaminC.jpg" },
     ],

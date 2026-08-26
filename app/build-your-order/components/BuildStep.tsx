@@ -83,10 +83,10 @@ const FLOW_ING = [
 ];
 const CLEAR_ING = [
   { name: "Alpha-GPC", img: "/ingredients/renders/AlphaGPC.jpg" },
-  { name: "Glutathione", img: "/ingredients/renders/11.jpg" },
+  { name: "Glutathione", img: "/ingredients/renders/Glutathione.jpg" },
   { name: "Ginkgo Biloba", img: "/ingredients/renders/GinkgoBiloba.jpg" },
   { name: "N-Acetyl Cysteine", img: "/ingredients/renders/NAcetylCysteine.jpg" },
-  { name: "Acetyl-L-Carnitine", img: "/ingredients/renders/11.jpg" },
+  { name: "Acetyl-L-Carnitine", img: "/ingredients/renders/AcetylLCarnitine.jpg" },
   { name: "Vitamin B12", img: "/ingredients/renders/VitaminB12.jpg" },
   { name: "Vitamin C", img: "/ingredients/renders/VitaminC.jpg" },
   { name: "Lecithin", img: "/ingredients/renders/Lecithin.jpg" },

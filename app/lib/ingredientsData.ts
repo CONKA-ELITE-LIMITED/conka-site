@@ -837,7 +837,7 @@ export const clarityIngredients: IngredientData[] = [
       pubchemCid: 124886,
       activeCompound: "Glutathione",
     },
-    image: "/ingredients/renders/11.jpg",
+    image: "/ingredients/renders/Glutathione.jpg",
   },
   {
     id: "nac",
@@ -1007,7 +1007,7 @@ export const clarityIngredients: IngredientData[] = [
       pubchemCid: 7045767,
       activeCompound: "Acetyl-L-Carnitine",
     },
-    image: "/ingredients/renders/11.jpg",
+    image: "/ingredients/renders/AcetylLCarnitine.jpg",
   },
   {
     id: "ginkgo",
