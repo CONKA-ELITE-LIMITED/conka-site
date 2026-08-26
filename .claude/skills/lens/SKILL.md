@@ -1,11 +1,11 @@
 ---
-name: review-page
+name: lens
 description: Audit a page for brand voice, SEO, and conversion effectiveness. The "would this convert?" check. For visual hierarchy/mobile/performance use /design-review; for code correctness use /review.
 argument-hint: <page path, e.g. app/start/page.tsx or /conka-flow>
 allowed-tools: Read, Grep, Glob, Bash, Agent
 ---
 
-# /review-page -- Would This Page Convert?
+# /lens -- Would This Page Convert?
 
 You are reviewing a customer-facing page through the lens of a brand strategist and conversion rate optimiser. One scenario drives every decision: a person on their phone, scrolling Instagram, taps a CONKA ad. They've never heard of the brand. They have 3 seconds of attention.
 
@@ -16,8 +16,8 @@ This skill reviews **messaging, SEO, and conversion**. For visual hierarchy, mob
 ## Quick Reference
 
 ```
-/review-page app/start/page.tsx    # Audit by file path
-/review-page /conka-flow           # Audit by route
+/lens app/start/page.tsx    # Audit by file path
+/lens /conka-flow           # Audit by route
 ```
 
 ---

@@ -41,7 +41,7 @@ Final pass before presenting the completed work:
 
 **Next steps:**
 - Run `/review` (code + analytics) and `/design-review` (visual/mobile) as needed
-- Run `/review-page` for the conversion/voice audit (if page work)
+- Run `/lens` for the conversion/voice audit (if page work)
 - Verify on Vercel preview (mobile + desktop)
 ```
 

@@ -5,8 +5,14 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
-- **2026-08-26** | Skio migration docs consolidated from nine files into one source of truth at docs/development/featurePlans/skio-migration.md
-- **2026-08-26** | Skio transition window: /account keeps the Loop subscription list and links out to the Skio portal while both platforms hold live subscriptions, so nobody is stranded during the migration
+- **2026-08-26** | PDP disclosure rows move into the hero with an animated expand, and the taste and how-to-take copy is rewritten per product
+- **2026-08-26** | PDP ingredient section gains ingredients / who-it-is-for / taste / how-to-take rows, and the desktop hero drops its duplicate ingredient surfaces
+- **2026-08-26** | PDP ingredients become an image-led grid with two-line benefit badges and a detail drawer, replacing the horizontal rail
+- **2026-08-26** | Added a CONKA vs coffee vs prescription stimulants comparison table to the three product pages, replacing the absorption section
+- **2026-08-26** | Tightened the certification badge band on mobile and stripped the unused pack-size model out of both sticky purchase bars
+- **2026-08-26** | PDP rework phase 1: mobile hero slimmed to the buy decision, thin sticky purchase bar restored on all three product pages, three repeating sections removed, and section-view tracking added
+- **2026-08-26** | PDP ingredient cards rebuilt image-led: full-bleed FMC render band with the key stat on the card face, and the ingredient bottom sheet retuned to the cool render palette
+- **2026-08-26** | Replaced all ingredient renders with new FMC-style square assets, including bespoke Glutathione and Acetyl-L-Carnitine renders replacing the shared white-powder placeholder
 - **2026-08-26** | PDP what-to-expect timeline: GSAP now lazy-loads on approach, keeping it out of the PDP first-load JS
 - **2026-08-26** | PDP what-to-expect timeline: CONKA per-product copy and new title replace the placeholder
 - **2026-08-26** | PDP what-to-expect timeline: desktop scroll fix, black title, new side-shot renders

@@ -1,6 +1,6 @@
 ---
 name: review
-description: PR-style review of a diff or feature that fixes what it finds - correctness, structure, robustness, cleanliness, plus analytics verification when the change touches cart, checkout, or tracking. Fixes all Critical, Major, and Minor findings by default. Use before opening a PR, or when asked to "review", "review the code", "check the diff", or sanity-check an implementation. For visual/UX use /design-review; for voice/SEO/conversion use /review-page.
+description: PR-style review of a diff or feature that fixes what it finds - correctness, structure, robustness, cleanliness, plus analytics verification when the change touches cart, checkout, or tracking. Fixes all Critical, Major, and Minor findings by default. Use before opening a PR, or when asked to "review", "review the code", "check the diff", or sanity-check an implementation. For visual/UX use /design-review; for voice/SEO/conversion use /lens.
 argument-hint: [--no-fix | --light | --deep | --existing] <SCRUM-XXX | file paths | description>
 allowed-tools: Read, Grep, Glob, Bash, Agent, Edit, Write, mcp__claude_ai_Atlassian__getJiraIssue, mcp__claude_ai_Atlassian__addCommentToJiraIssue, mcp__claude_ai_Atlassian__transitionJiraIssue, mcp__claude_ai_Atlassian__getTransitionsForJiraIssue
 ---
@@ -9,7 +9,7 @@ allowed-tools: Read, Grep, Glob, Bash, Agent, Edit, Write, mcp__claude_ai_Atlass
 
 You are a senior engineer reviewing code for a D2C e-commerce site (Next.js, Shopify, Vercel). Your standard: *"Would this survive a thorough PR review at a top-tier company?"* -- calibrated for a startup that needs to ship.
 
-This skill reviews **code and analytics correctness, then fixes the findings**. For visual/design/mobile use `/design-review`. For brand voice, SEO, and conversion use `/review-page`.
+This skill reviews **code and analytics correctness, then fixes the findings**. For visual/design/mobile use `/design-review`. For brand voice, SEO, and conversion use `/lens`.
 
 ---
 

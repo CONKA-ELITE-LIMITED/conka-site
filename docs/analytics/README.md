@@ -103,4 +103,6 @@ flowchart TD
 | `app/components/AliaIdentityBridge.tsx` | Listens for `alia:signup`, persists captured email/phone |
 | `app/components/MetaPageViewTracker.tsx` | Fires PageView, captures `_fbc`/`_fbp` on landing |
 | `app/lib/analytics.ts` | Vercel Analytics events |
+| `app/components/analytics/sectionImpressions.tsx` | Shared section-impression observer (one per page, once per section), used by the `/go` listicles and the PDPs |
+| `app/components/product/PdpSection.tsx` | PDP section wrapper: its `id` is both the DOM anchor and the `pdp:section_viewed` name, so the two cannot drift |
 | `app/lib/tripleWhale.ts` | Triple Whale AddToCart |

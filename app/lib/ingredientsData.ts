@@ -837,7 +837,7 @@ export const clarityIngredients: IngredientData[] = [
       pubchemCid: 124886,
       activeCompound: "Glutathione",
     },
-    image: "/ingredients/renders/11.jpg",
+    image: "/ingredients/renders/Glutathione.jpg",
   },
   {
     id: "nac",
@@ -1007,7 +1007,7 @@ export const clarityIngredients: IngredientData[] = [
       pubchemCid: 7045767,
       activeCompound: "Acetyl-L-Carnitine",
     },
-    image: "/ingredients/renders/11.jpg",
+    image: "/ingredients/renders/AcetylLCarnitine.jpg",
   },
   {
     id: "ginkgo",
@@ -1459,9 +1459,12 @@ export function getIngredientCategories(formulaId: FormulaId): IngredientCategor
 // Product-led display order per formula (founder's call: Glutathione leads
 // Clear, not alphabetical). Also acts as the actives allow-list — anything not
 // listed (e.g. a flavouring) is intentionally excluded.
+// Clear interleaves its four white-powder renders (glutathione, nac, alcar,
+// ala) with the coloured assets so no two white piles sit adjacent in an
+// image-led rail.
 const FORMULA_DISPLAY_ORDER: Record<FormulaId, string[]> = {
   "01": ["lemon-balm", "turmeric", "ashwagandha", "rhodiola", "bilberry", "black-pepper"],
-  "02": ["glutathione", "alpha-gpc", "nac", "alcar", "ginkgo", "lecithin", "vitamin-c", "ala", "vitamin-b12"],
+  "02": ["glutathione", "alpha-gpc", "nac", "ginkgo", "alcar", "vitamin-c", "ala", "vitamin-b12", "lecithin"],
 };
 
 /**

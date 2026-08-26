@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: DTC UI/UX review of a page or component - visual hierarchy, spacing rhythm, mobile-first execution at 390px, design token compliance, and performance. The "does this look and feel like a best-in-class DTC site?" check. Use after building or changing any page or component, or when asked to "design review", "review the UI", check mobile, check spacing/hierarchy, or check performance. For code correctness use /review; for voice/SEO/conversion use /review-page.
+description: DTC UI/UX review of a page or component - visual hierarchy, spacing rhythm, mobile-first execution at 390px, design token compliance, and performance. The "does this look and feel like a best-in-class DTC site?" check. Use after building or changing any page or component, or when asked to "design review", "review the UI", check mobile, check spacing/hierarchy, or check performance. For code correctness use /review; for voice/SEO/conversion use /lens.
 argument-hint: <file paths | route | description>
 allowed-tools: Read, Grep, Glob, Bash
 ---
@@ -11,7 +11,7 @@ You are reviewing the visual and UX execution of a D2C e-commerce site where 74%
 
 This is a **static code review** -- you assess hierarchy, spacing, and layout from the JSX/CSS, not from screenshots. The user looks at the rendered site themselves; your job is to catch what is provable from the code.
 
-This skill reviews **UI/UX, mobile, and performance**. For code correctness use `/review`. For brand voice, SEO, and conversion copy use `/review-page`.
+This skill reviews **UI/UX, mobile, and performance**. For code correctness use `/review`. For brand voice, SEO, and conversion copy use `/lens`.
 
 ---
 

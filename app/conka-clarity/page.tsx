@@ -9,19 +9,22 @@ import {
 } from "@/app/components/product";
 import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
 import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
-import ProductBenefitTiles from "@/app/components/product/ProductBenefitTiles";
+import ProductComparisonTable from "@/app/components/product/ProductComparisonTable";
+import PdpSection, {
+  PdpSectionImpressions,
+} from "@/app/components/product/PdpSection";
 import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
-import AbsorptionBioavailability from "@/app/components/product/AbsorptionBioavailability";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
-import LandingValueComparison from "@/app/components/landing/LandingValueComparison";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import ProductGrid from "@/app/components/home/ProductGrid";
+import StickyPurchaseFooter from "@/app/components/product/StickyPurchaseFooter";
+import StickyPurchaseFooterMobile from "@/app/components/product/StickyPurchaseFooterMobile";
 import useIsMobile from "@/app/hooks/useIsMobile";
 import { useCart } from "@/app/context/CartContext";
 import {
@@ -33,6 +36,7 @@ import {
 import { trackMetaViewContent, toContentId } from "@/app/lib/metaPixel";
 import {
   CadenceType,
+  getCadencePricingByFormula,
   getCadenceVariantByFormula,
 } from "@/app/lib/cadenceData";
 
@@ -48,10 +52,7 @@ export default function ConkaClarityPage() {
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
 
-  // Sticky-footer pricing — restore with the footers after the V2 hero build (SCRUM-1171).
-  // const cadencePricing = getCadencePricingByFormula("02", selectedCadence);
-  // const cadencePrice = cadencePricing.price;
-  // const cadenceFreeShots = cadencePricing.freeShots;
+  const cadencePrice = getCadencePricingByFormula("02", selectedCadence).price;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta).
   // content_name preserved as "CONKA Clarity" to match production tracking
@@ -88,112 +89,133 @@ export default function ConkaClarityPage() {
     }
   };
 
-  // Shared sections — defined once, composed into the mobile and desktop trees
+  // Shared sections, defined once, composed into the mobile and desktop trees
   // below (only the hero differs between them). Order, backgrounds and mobile
-  // spacing mirror conka-both so all three PDPs share one structure.
-  const benefitTilesSection = (
-    <>
-      <section id="benefit-tiles" className="brand-section brand-bg-white" aria-label="Key benefits">
-        <div className="brand-track">
-          <ProductBenefitTiles formula="clear" />
-        </div>
-      </section>
-      {/* Certification badges band directly under the benefit tiles. */}
-      <Certifications />
-    </>
-  );
+  // spacing mirror conka-flow and conka-both so all three PDPs share one
+  // structure. Each PdpSection's id is both its anchor and its analytics name.
+  const certificationsSection = <Certifications />;
 
   const ugcSection = (
-    <section id="ugc" className="brand-section brand-bg-white !px-0" aria-label="Real people using CONKA">
+    <PdpSection
+      id="ugc"
+      className="brand-section brand-bg-white !px-0 brand-tight-top-mobile brand-tight-bottom-mobile"
+      ariaLabel="Real people using CONKA"
+    >
       <UGCMarquee />
-    </section>
+    </PdpSection>
   );
 
-  const benefitsSection = (
-    <section id="benefits" className="brand-section brand-bg-tint" aria-label="Daily benefits">
-      <div className="brand-track">
-        <FormulaBenefitsPillars formulaId="02" />
-      </div>
-    </section>
-  );
-
-  // TODO Phase 3: a FormulaQualityBadges section (Informed Sport, vegan, etc.)
-  // will slot between benefits and ingredients.
   const ingredientsSection = (
-    <section id="ingredients" className="brand-section brand-bg-white" aria-label="Formula ingredients">
+    <PdpSection
+      id="ingredients"
+      className="brand-section brand-bg-white brand-tight-top-mobile"
+      ariaLabel="Formula ingredients"
+    >
       <div className="brand-track">
         <ClinicalIngredients formulaIds={["02"]} />
       </div>
-    </section>
+    </PdpSection>
   );
 
-  const absorptionSection = (
-    <section id="absorption" className="brand-section brand-bg-tint" aria-label="Why liquid absorbs better">
+  const benefitsSection = (
+    <PdpSection
+      id="benefits"
+      className="brand-section brand-bg-tint"
+      ariaLabel="Daily benefits"
+    >
       <div className="brand-track">
-        <AbsorptionBioavailability
-          imageSrc="/formulas/conkaClear/ClearLiquid.jpg"
-          imageAlt="CONKA Clear liquid pouring from an amber bottle"
-        />
+        <FormulaBenefitsPillars formulaId="02" />
       </div>
-    </section>
+    </PdpSection>
   );
 
   const whatToExpectSection = (
-    <section id="what-to-expect" className="brand-section brand-bg-tint" aria-label="What to expect">
+    <PdpSection
+      id="what-to-expect"
+      className="brand-section brand-bg-tint"
+      ariaLabel="What to expect"
+    >
       <div className="brand-track">
         <WhatToExpectV2 productId="02" />
       </div>
-    </section>
-  );
-
-  const testimonialsSection = (
-    <section id="testimonials" className="brand-section brand-bg-white brand-tight-bottom-mobile" aria-label="Customer reviews">
-      <div className="brand-track">
-        <CROTestimonials hideCTA />
-      </div>
-    </section>
+    </PdpSection>
   );
 
   const comparisonSection = (
-    <section id="comparison" className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="CONKA vs coffee comparison">
+    <PdpSection
+      id="comparison"
+      className="brand-section brand-bg-white"
+      ariaLabel="CONKA compared with coffee and prescription stimulants"
+    >
       <div className="brand-track">
-        <LandingValueComparison ctaHref="/conka-both" ctaLabel="Try the full system" />
+        <ProductComparisonTable product="clear" />
       </div>
-    </section>
+    </PdpSection>
   );
 
-  const guaranteeSection = (
-    <section id="guarantee" className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="Risk-free guarantee">
+  const testimonialsSection = (
+    <PdpSection
+      id="testimonials"
+      className="brand-section brand-bg-white brand-tight-bottom-mobile"
+      ariaLabel="Customer reviews"
+    >
       <div className="brand-track">
-        <LabGuarantee />
+        <CROTestimonials hideCTA />
       </div>
-    </section>
+    </PdpSection>
   );
 
   const athleteSection = (
-    <section id="athletes" className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile" aria-label="Athletes who use CONKA">
+    <PdpSection
+      id="athletes"
+      className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
+      ariaLabel="Athletes who use CONKA"
+    >
       <AthleteSportMarquee fullBleed />
       <div className="brand-track">
         <AthleteCredibilityCarousel showMarquee={false} />
       </div>
-    </section>
+    </PdpSection>
+  );
+
+  const guaranteeSection = (
+    <PdpSection
+      id="guarantee"
+      className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile"
+      ariaLabel="Risk-free guarantee"
+    >
+      <div className="brand-track">
+        <LabGuarantee />
+      </div>
+    </PdpSection>
   );
 
   const faqSection = (
-    <section id="faq" className="brand-section brand-bg-white brand-tight-top-mobile" aria-label="FAQ">
+    <PdpSection
+      id="faq"
+      className="brand-section brand-bg-white brand-tight-top-mobile"
+      ariaLabel="FAQ"
+    >
       <div className="brand-track">
         <LabFAQ items={CLEAR_FAQ_ITEMS} image={CLEAR_FAQ_IMAGE} hideCTA />
       </div>
-    </section>
+    </PdpSection>
   );
 
   const exploreSection = (
-    <section id="explore" className="brand-section brand-bg-tint" aria-label="Explore other protocols and formulas">
+    <PdpSection
+      id="explore"
+      className="brand-section brand-bg-tint"
+      ariaLabel="Explore other formulas"
+    >
       <div className="brand-track">
         <ProductGrid exclude={["clear"]} />
       </div>
-    </section>
+    </PdpSection>
   );
+
+  // Clears the fixed sticky footer so it never covers the site footer's last row.
+  const stickySpacer = <div aria-hidden className="h-16 lg:h-14" />;
 
   // Mobile-first: render the mobile layout on SSR and first paint (74% of
   // traffic) and only switch to desktop once useIsMobile confirms >= lg. Treating
@@ -201,13 +223,68 @@ export default function ConkaClarityPage() {
   // swap that shifted the image on phones.
   if (isMobile ?? true) {
     return (
+      <PdpSectionImpressions product="clear">
+        <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+          <Navigation />
+
+          {/* ===== HERO ===== */}
+          <PdpSection
+            id="hero"
+            className="brand-section brand-hero-first brand-bg-white !pt-6 brand-tight-bottom-mobile"
+            ariaLabel="Product hero"
+          >
+            <div className="brand-track">
+              <ProductHeroMobileV3
+                formulaId="02"
+                selectedCadence={selectedCadence}
+                onCadenceChange={setSelectedCadence}
+                onAddToCart={() => handleAddToCart("hero")}
+                onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+              />
+            </div>
+          </PdpSection>
+
+          {certificationsSection}
+          {ugcSection}
+          {ingredientsSection}
+          {benefitsSection}
+          {whatToExpectSection}
+          {comparisonSection}
+          {testimonialsSection}
+          {athleteSection}
+          {guaranteeSection}
+          {faqSection}
+          {exploreSection}
+
+          {stickySpacer}
+          <Footer />
+
+          <StickyPurchaseFooterMobile
+            selectedCadence={selectedCadence}
+            cadencePrice={cadencePrice}
+            onAddToCart={() => handleAddToCart("sticky_footer")}
+          />
+        </div>
+      </PdpSectionImpressions>
+    );
+  }
+
+  // Desktop version
+  return (
+    <PdpSectionImpressions product="clear">
       <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
         <Navigation />
 
         {/* ===== HERO ===== */}
-        <section id="hero" className="brand-section brand-hero-first brand-bg-white !pt-6" aria-label="Product hero">
-          <div className="brand-track">
-            <ProductHeroMobileV3
+        {/* V3 hero runs wider than the 1280 brand-track and with a tighter gutter
+            to sit closer to the Magic Mind reference (SCRUM-1171). */}
+        <PdpSection
+          id="hero"
+          className="brand-section brand-hero-first brand-bg-white !px-[6vw]"
+          ariaLabel="Product hero"
+        >
+          <div className="brand-track !max-w-[1480px]">
+            <ProductHeroV3
               formulaId="02"
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
@@ -215,78 +292,30 @@ export default function ConkaClarityPage() {
               onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
             />
           </div>
-        </section>
+        </PdpSection>
 
-        {benefitTilesSection}
+        {certificationsSection}
         {ugcSection}
-        {benefitsSection}
         {ingredientsSection}
-        {absorptionSection}
+        {benefitsSection}
         {whatToExpectSection}
-        {testimonialsSection}
         {comparisonSection}
-        {guaranteeSection}
+        {testimonialsSection}
         {athleteSection}
+        {guaranteeSection}
         {faqSection}
         {exploreSection}
 
-        {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
-        {/* <StickyPurchaseFooterMobile
+        {stickySpacer}
+        <Footer />
+
+        <StickyPurchaseFooter
           formulaId="02"
           selectedCadence={selectedCadence}
           cadencePrice={cadencePrice}
           onAddToCart={() => handleAddToCart("sticky_footer")}
-        /> */}
-
-        <Footer />
+        />
       </div>
-    );
-  }
-
-  // Desktop version
-  return (
-    <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
-      <Navigation />
-
-      {/* ===== HERO ===== */}
-      {/* V2 hero runs wider than the 1280 brand-track and with a tighter gutter
-          to sit closer to the Magic Mind reference (SCRUM-1171). */}
-      <section id="hero" className="brand-section brand-hero-first brand-bg-white !px-[6vw]" aria-label="Product hero">
-        <div className="brand-track !max-w-[1480px]">
-          <ProductHeroV3
-            formulaId="02"
-            selectedCadence={selectedCadence}
-            onCadenceChange={setSelectedCadence}
-            onAddToCart={() => handleAddToCart("hero")}
-            onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
-          />
-        </div>
-      </section>
-
-      {benefitTilesSection}
-      {ugcSection}
-      {benefitsSection}
-      {/* TODO Phase 3: FormulaQualityBadges section goes here (Informed Sport, vegan, etc.). */}
-      {ingredientsSection}
-      {absorptionSection}
-      {whatToExpectSection}
-      {testimonialsSection}
-      {comparisonSection}
-      {guaranteeSection}
-      {athleteSection}
-      {faqSection}
-      {exploreSection}
-
-      {/* Sticky footer hidden during V2 hero build (SCRUM-1171) — restore after. */}
-      {/* <StickyPurchaseFooter
-        formulaId="02"
-        selectedCadence={selectedCadence}
-        cadencePrice={cadencePrice}
-        cadenceFreeShots={cadenceFreeShots}
-        onAddToCart={() => handleAddToCart("sticky_footer")}
-      /> */}
-
-      <Footer />
-    </div>
+    </PdpSectionImpressions>
   );
 }

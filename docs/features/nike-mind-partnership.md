@@ -81,7 +81,7 @@ certified** (every batch screened for 280+ banned substances). Placebo-controlle
   improved.**
 - App dataset: **7,593 cognitive tests, 712 users, ~30 months** (Nov 2023 – May 2026).
 
-**The products.** Two shots, two jobs, 30ml liquid, ~10 seconds each:
+**The products.** Two shots, two jobs, 30ml liquid each:
 - **Flow** (black cap, morning): adaptogens, caffeine-free, calm focus / relaxed alertness. The daily
   foundation.
 - **Clear** (white cap, afternoon): nootropics (Alpha GPC, Glutathione) + Vitamin C, sharper recall

@@ -137,18 +137,20 @@ export default function IngredientBottomSheet({
                 className="group border-b border-black/[0.07] last:border-b-0"
               >
                 <summary className="flex cursor-pointer list-none items-center gap-3 py-3.5 [&::-webkit-details-marker]:hidden">
-                  <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-[10px] bg-[#f0efea]">
+                  {/* Cool loading surface matches the FMC renders' studio
+                      ground; the slight zoom counters their negative space. */}
+                  <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[10px] bg-[#eef0f5]">
                     {ing.image ? (
                       <Image
                         src={ing.image}
                         alt={ing.name}
                         fill
                         loading="lazy"
-                        sizes="40px"
-                        className="object-cover"
+                        sizes="56px"
+                        className="scale-125 object-cover"
                       />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center text-[11px] font-bold text-black/30">
+                      <span className="flex h-full w-full items-center justify-center text-[13px] font-bold text-black/30">
                         {ing.name
                           .replace(/[^a-zA-Z]/g, "")
                           .slice(0, 2)
@@ -159,12 +161,12 @@ export default function IngredientBottomSheet({
                   <span className="min-w-0 flex-1 text-[15px] font-medium leading-tight text-[#1d1d1d]">
                     {ing.name}
                   </span>
-                  <span className="shrink-0 rounded-full bg-[#e9b200]/[0.14] px-2 py-1 text-[9px] font-medium uppercase tracking-[0.06em] text-[#8a6d00]">
+                  <span className="shrink-0 rounded-full bg-[#eef0f5] px-2 py-1 text-[9px] font-medium uppercase tracking-[0.06em] text-[#1B2757]">
                     {ing.functionalCategory}
                   </span>
                   <ChevronDown className="w-[18px] h-[18px] shrink-0 text-[#bbb] transition-transform group-open:rotate-180" />
                 </summary>
-                <div className="pb-4 pl-[52px]">
+                <div className="pb-4 pl-[68px]">
                   <p className="mb-2.5 text-sm leading-relaxed text-[#5c5c5c]">
                     {ing.description}
                   </p>

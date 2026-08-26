@@ -76,7 +76,11 @@ Persona-only by design: the finer `section` stays in Vercel, keeping the Orders 
 
 ### Implementation
 
-`app/components/go/listicle/listicleAnalytics.tsx`: one shared `IntersectionObserver` for the page, handed to blocks through context. The slug lives only on the provider, so no call site can tag an event with the wrong page. `mm` buy boxes use click delegation so the shared home `ProductGrid` needs no tracking props; the `im8` buy zone fires on add-to-cart instead, because delegating there would count cadence toggles and accordions as CTA clicks.
+`app/components/go/listicle/listicleAnalytics.tsx`: one shared `IntersectionObserver` for the page, handed to blocks through context. The slug lives only on the provider, so no call site can tag an event with the wrong page.
+
+The observer itself now lives in `app/components/analytics/sectionImpressions.tsx`, shared with the PDPs (SCRUM-1260). It takes an `onSeen(section)` callback and knows nothing about event names, so each surface keeps its own event shape. This file is the listicle's thin wrapper over it, and the emitted stream is unchanged: same event names, same two properties, same `threshold: 0` and `rootMargin: "0px 0px -15% 0px"`, same once-per-section unobserve. **Do not change those observer options** without accepting that every historical `section_viewed` count is silently rebased.
+
+The PDP side deliberately did NOT copy the index-derived id scheme described above. It keys on each section's semantic id instead, because the product pages are reordered often enough that positional ids would invalidate the dataset on the first reorder. See `trackPdpSectionViewed` in `app/lib/analytics.ts`. `mm` buy boxes use click delegation so the shared home `ProductGrid` needs no tracking props; the `im8` buy zone fires on add-to-cart instead, because delegating there would count cadence toggles and accordions as CTA clicks.
 
 Plan and rationale: `docs/development/featurePlans/listicle-cta-attribution.md` (SCRUM-1177).
 

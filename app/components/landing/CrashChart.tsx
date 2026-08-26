@@ -137,8 +137,8 @@ export default function CrashChart({
 }: CrashChartProps) {
   const [ref, isInView] = useInView();
   // Unique gradient ids so the chart can render more than once on a page
-  // (e.g. LandingValueComparison's mobile + desktop instances) without the
-  // visible copy's gradient stroke resolving to a hidden copy's defs.
+  // (a component rendering separate mobile and desktop instances, say) without
+  // the visible copy's gradient stroke resolving to a hidden copy's defs.
   const gid = useId();
 
   return (
