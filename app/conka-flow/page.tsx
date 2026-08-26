@@ -9,6 +9,7 @@ import {
 } from "@/app/components/product";
 import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
 import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
+import ProductComparisonTable from "@/app/components/product/ProductComparisonTable";
 import PdpSection, {
   PdpSectionImpressions,
 } from "@/app/components/product/PdpSection";
@@ -138,6 +139,18 @@ export default function ConkaFlowPage() {
     </PdpSection>
   );
 
+  const comparisonSection = (
+    <PdpSection
+      id="comparison"
+      className="brand-section brand-bg-white"
+      ariaLabel="CONKA compared with coffee and prescription stimulants"
+    >
+      <div className="brand-track">
+        <ProductComparisonTable />
+      </div>
+    </PdpSection>
+  );
+
   const testimonialsSection = (
     <PdpSection
       id="testimonials"
@@ -234,6 +247,7 @@ export default function ConkaFlowPage() {
           {ingredientsSection}
           {benefitsSection}
           {whatToExpectSection}
+          {comparisonSection}
           {testimonialsSection}
           {athleteSection}
           {guaranteeSection}
@@ -286,6 +300,7 @@ export default function ConkaFlowPage() {
         {ingredientsSection}
         {benefitsSection}
         {whatToExpectSection}
+        {comparisonSection}
         {testimonialsSection}
         {athleteSection}
         {guaranteeSection}
