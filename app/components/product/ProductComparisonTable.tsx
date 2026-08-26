@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { bottleRendersCutout } from "@/app/lib/productImages";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 
 /* ============================================================================
@@ -17,28 +18,8 @@ import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 
 export type ComparisonProduct = "flow" | "clear" | "both";
 
-/** Cut-out renders, so the bottle sits on the navy column with no photo edge. */
-const PRODUCT_SHOTS: Record<
-  ComparisonProduct,
-  { src: string; alt: string }[]
-> = {
-  flow: [
-    { src: "/formulas/conkaFlow/FlowNoBackground.png", alt: "CONKA Flow bottle" },
-  ],
-  clear: [
-    {
-      src: "/formulas/conkaClear/ClearNoBackground.png",
-      alt: "CONKA Clear bottle",
-    },
-  ],
-  both: [
-    { src: "/formulas/conkaFlow/FlowNoBackground.png", alt: "CONKA Flow bottle" },
-    {
-      src: "/formulas/conkaClear/ClearNoBackground.png",
-      alt: "CONKA Clear bottle",
-    },
-  ],
-};
+/** Light-navy panel behind the CONKA column, with a navy rule around it. */
+const PANEL = "bg-[#eef0f5] border-x border-[color:var(--brand-navy)]";
 
 type Cell = boolean | string | null;
 
@@ -96,19 +77,15 @@ const RIVALS = [
  *  row on a phone instead of setting the row height. */
 const MARK = "h-[18px] w-[18px] shrink-0 sm:h-[22px] sm:w-[22px]";
 
-/** On navy the disc is white and the check navy: the inverse of the light mark. */
-function Tick({ onNavy }: { onNavy?: boolean }) {
+/** Filled navy disc, white check. The panel behind it is a light tint, so the
+ *  mark stays the solid element rather than inverting. */
+function Tick() {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden className={MARK}>
-      <rect
-        width="24"
-        height="24"
-        rx="12"
-        fill={onNavy ? "#fff" : "var(--brand-navy)"}
-      />
+      <rect width="24" height="24" rx="12" fill="var(--brand-navy)" />
       <path
         d="M7.5 12.4L10.7 15.6L16.6 9"
-        stroke={onNavy ? "var(--brand-navy)" : "#fff"}
+        stroke="#fff"
         strokeWidth="2.1"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -131,7 +108,7 @@ function Cross() {
 }
 
 /** The mark or literal value, plus the text a screen reader hears in its place. */
-function CellContent({ value, onNavy }: { value: Cell; onNavy?: boolean }) {
+function CellContent({ value }: { value: Cell }) {
   if (typeof value === "string") {
     return <span className="text-[12px] leading-snug sm:text-sm">{value}</span>;
   }
@@ -148,7 +125,7 @@ function CellContent({ value, onNavy }: { value: Cell; onNavy?: boolean }) {
   return (
     <>
       <span className="inline-flex justify-center">
-        {value ? <Tick onNavy={onNavy} /> : <Cross />}
+        {value ? <Tick /> : <Cross />}
       </span>
       <span className="sr-only">{value ? "Yes" : "No"}</span>
     </>
@@ -160,7 +137,7 @@ export default function ProductComparisonTable({
 }: {
   product?: ComparisonProduct;
 }) {
-  const shots = PRODUCT_SHOTS[product];
+  const shot = bottleRendersCutout[product];
 
   return (
     <div>
@@ -185,36 +162,27 @@ export default function ProductComparisonTable({
                 <span className="sr-only">Feature</span>
               </th>
 
-              {/* CONKA: inverted navy panel carrying the product and the mark */}
+              {/* CONKA: tinted panel, navy-ruled, carrying the product and mark */}
               <th
                 scope="col"
-                className="w-[22%] rounded-t-md bg-[color:var(--brand-navy)] px-1 pb-3 pt-3 text-center align-bottom sm:px-3 sm:pb-4 sm:pt-4"
+                className={`w-[22%] rounded-t-md border-t px-1 pb-3 pt-3 text-center align-bottom sm:px-3 sm:pb-4 sm:pt-4 ${PANEL}`}
               >
-                <span className="flex items-end justify-center gap-1">
-                  {shots.map((shot) => (
-                    <Image
-                      key={shot.src}
-                      src={shot.src}
-                      alt={shot.alt}
-                      width={200}
-                      height={200}
-                      loading="lazy"
-                      sizes="(max-width: 640px) 60px, 88px"
-                      className={`h-auto w-auto object-contain ${
-                        shots.length > 1
-                          ? "max-h-[44px] sm:max-h-[72px]"
-                          : "max-h-[56px] sm:max-h-[88px]"
-                      }`}
-                    />
-                  ))}
-                </span>
+                <Image
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={400}
+                  height={520}
+                  loading="lazy"
+                  sizes="(max-width: 640px) 68px, 104px"
+                  className="mx-auto h-auto w-auto max-h-[62px] object-contain sm:max-h-[96px]"
+                />
                 <Image
                   src="/conka-logo.webp"
                   alt="CONKA"
                   width={440}
                   height={112}
                   loading="lazy"
-                  className="mx-auto mt-2.5 h-3 w-auto brightness-0 invert sm:h-4"
+                  className="mx-auto mt-2.5 h-3 w-auto sm:h-4"
                 />
               </th>
 
@@ -231,38 +199,45 @@ export default function ProductComparisonTable({
           </thead>
 
           <tbody>
-            {ROWS.map((row, i) => {
-              const isLast = i === ROWS.length - 1;
-              return (
-                <tr key={row.label}>
-                  <th
-                    scope="row"
-                    className="border-t border-black/15 py-2.5 pr-2 text-[12px] font-semibold leading-snug text-black sm:py-3.5 sm:pr-4 sm:text-base"
-                  >
-                    {row.label}
-                  </th>
+            {ROWS.map((row) => (
+              <tr key={row.label}>
+                <th
+                  scope="row"
+                  className="border-t border-black/15 py-2.5 pr-2 text-[12px] font-semibold leading-snug text-black sm:py-3.5 sm:pr-4 sm:text-base"
+                >
+                  {row.label}
+                </th>
 
-                  {/* No row rule inside the navy panel: it reads as one solid
-                      column, the way the reference does. */}
+                {/* No row rule inside the panel: it reads as one column, the
+                    way the reference does. */}
+                <td
+                  className={`px-1 py-2.5 text-center align-middle font-semibold text-[color:var(--brand-navy)] sm:px-3 sm:py-3.5 ${PANEL}`}
+                >
+                  <CellContent value={row.conka} />
+                </td>
+
+                {RIVALS.map((col) => (
                   <td
-                    className={`bg-[color:var(--brand-navy)] px-1 py-2.5 text-center align-middle font-semibold text-white sm:px-3 sm:py-3.5 ${
-                      isLast ? "rounded-b-md pb-4 sm:pb-5" : ""
-                    }`}
+                    key={col.key}
+                    className="border-t border-black/15 px-1 py-2.5 text-center align-middle text-black sm:px-3 sm:py-3.5"
                   >
-                    <CellContent value={row.conka} onNavy />
+                    <CellContent value={row[col.key]} />
                   </td>
+                ))}
+              </tr>
+            ))}
 
-                  {RIVALS.map((col) => (
-                    <td
-                      key={col.key}
-                      className="border-t border-black/15 px-1 py-2.5 text-center align-middle text-black sm:px-3 sm:py-3.5"
-                    >
-                      <CellContent value={row[col.key]} />
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
+            {/* Closing rule under the last row, with the panel running on past
+                it so the CONKA column ends deliberately rather than stopping
+                level with the others. A padded last cell cannot do this: every
+                cell in a row stretches to the row's height, so the label and
+                rival columns would grow with it. Decorative, hence aria-hidden. */}
+            <tr aria-hidden>
+              <td className="border-t border-black/15" />
+              <td className={`h-8 rounded-b-md border-b sm:h-12 ${PANEL}`} />
+              <td className="border-t border-black/15" />
+              <td className="border-t border-black/15" />
+            </tr>
           </tbody>
         </table>
       </div>
