@@ -150,7 +150,7 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 ## Permanent policy
 
 - **Slug = the Shopify handle, verbatim. Never re-slug.** One wildcard redirect recovers the archive; re-slugging forfeits a post's ranking. The slug is a technical constraint, not an editorial choice. Retitling is free.
-- **No auto-publish.** Scripts write `Draft`. The `Status` flip is human and is where `/review-claims` runs.
+- **No auto-publish.** Scripts write `Draft`. The `Status` flip is human and is where the claims/compliance pass happens (manual; the `/review-claims` skill was retired Aug 2026).
 - **No `rehype-raw`.** Strip the offending formatting at the Notion source instead. Underline was Wix citation junk with no editorial intent, and parsing raw HTML in every post body to fix it would widen the attack surface for no benefit.
 - **No `?page=N`.** `searchParams` forces dynamic rendering and breaks the static build. Pagination must be `/blog/page/[page]` static routes.
 - **No hub for a zero-post topic**, no renaming `Productivity`, no per-page canonical.

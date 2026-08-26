@@ -35,7 +35,7 @@ Three layers, all keyed so pages and ads can be compared:
 2. **Meta (ad-side signal):** ViewContent on start, Lead on completion, pixel + CAPI deduplicated, production host only. Purchase attribution rides the existing headless attribution stack (`docs/analytics/HEADLESS_ATTRIBUTION_FIX.md`): shop.conka.io checkout domain, fbclid capture to `_fbc`, cart attributes, server Purchase webhook.
 3. **Ad-to-slug convention (agreement, not code):** each ad set points at exactly one slug and carries UTMs, e.g. `/go/sport-quiz?utm_source=meta&utm_medium=paid&utm_campaign={{campaign.name}}&utm_content={{ad.name}}`. Pending code tweak: `landing:started` captures utm_source/medium today; extend to utm_campaign/content for ad-level splits.
 
-**Before scaling spend:** deploy, run `/review-analytics`, verify Lead/ViewContent dedup in Meta Events Manager test tool, click through ad-link to checkout once to confirm UTM/fbclid survival.
+**Before scaling spend:** deploy, run `/review` (its analytics module covers all 4 systems), verify Lead/ViewContent dedup in Meta Events Manager test tool, click through ad-link to checkout once to confirm UTM/fbclid survival.
 
 ## Decision log
 

@@ -40,7 +40,8 @@ Final pass before presenting the completed work:
 **Preview:** Push branch for Vercel preview deployment
 
 **Next steps:**
-- Run `/review-page` for page audit (if page work)
+- Run `/review` (code + analytics) and `/design-review` (visual/mobile) as needed
+- Run `/review-page` for the conversion/voice audit (if page work)
 - Verify on Vercel preview (mobile + desktop)
 ```
 
@@ -48,33 +49,7 @@ Final pass before presenting the completed work:
 
 ## Step 7: Commit Changes
 
-Commit the implementation with a clear, descriptive message. **Do not push** unless the user asks.
-
-1. **Stage the relevant files** -- add specific files by name (not `git add -A` or `git add .`). Never stage `.env` files or credentials.
-
-2. **Write a commit message:**
-   ```
-   feat: Add "What to Expect" timeline to landing page
-
-   - Created LandingTimeline component with 4-step progression
-   - Added to /start page between guarantee and FAQ sections
-   - Mobile-first: vertical timeline, tap-to-expand detail
-   - Desktop: horizontal layout with hover states
-   - Uses brand-base.css tokens (brand-radius-card, brand-h3)
-
-   SCRUM-830
-
-   Co-Authored-By: Claude <noreply@anthropic.com>
-   ```
-
-3. **Commit message conventions:**
-   - Prefix: `feat:` (new feature), `fix:` (bug fix), `refactor:` (restructure), `chore:` (config/deps), `docs:` (documentation)
-   - First line: short summary under 72 characters
-   - Body: bullet points of key changes
-   - Include Jira ticket key if applicable
-   - Always include the Co-Authored-By line
-
-4. **Verify** -- run `git status` after commit to confirm clean state.
+**Read `.claude/skills/commit/SKILL.md` and follow it exactly** -- it owns the branch guard (never commit on main), the one-line changelog entry, staging specific files by name, the prefix table, and the co-author line. Include the Jira ticket key in the commit body if applicable. **Do not push** unless the user asks.
 
 ---
 

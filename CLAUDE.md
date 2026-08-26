@@ -118,7 +118,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 - Cart ID persisted in `localStorage` as `shopify_cart_id`; cart data lives in Shopify
 - No custom checkout — redirect to `cart.checkoutUrl`
-- **B2B tier normalization:** after any cart mutation, `getB2BCartTierUpdates` (`app/lib/b2bCartTier.ts`) may fire `updateMultiple` to keep the cart on a consistent B2B tier
+- **B2B tier pricing:** volume tiers live in `app/lib/b2bPricing.ts` (`getB2BTier(boxes)`, `B2B_TIERS`); there is no automatic cart-mutation tier normalization
 - `clearCart()` removes localStorage reference only; the Shopify cart still exists until it expires
 
 ## Routes

@@ -25,7 +25,7 @@ Produce a research digest under 400 words covering:
 2. Work-type-specific docs (read only if relevant):
    - UI / new sections → docs/branding/DESIGN_SYSTEM.md
    - Copy / messaging → docs/branding/BRAND_VOICE.md
-   - Landing or funnel page → docs/development/WEBSITE_SIMPLIFICATION_PLAN.md
+   - Landing or funnel page → docs/development/featurePlans/landing-conversion/README.md
    - Cart / checkout → docs/features/CART_LOGIC.md
    - Mobile layout → docs/branding/MOBILE_OPTIMIZATION.md
    Skip any that don't match this work.
