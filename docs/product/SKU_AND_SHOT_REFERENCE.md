@@ -97,7 +97,7 @@ PDP / home / B2B. One-time base prices; subscriptions apply a global **20%** dis
 
 ## 3b. Loop → Skio selling-plan mapping (migration, Phase 2 input)
 
-Consolidated old-Loop-GID → new-Skio-GID map for the [Skio migration](../development/featurePlans/skio-subscription-migration.md). This is the **direct input to Phase 2** (re-point purchase surfaces). Every distinct Loop selling plan across §1–§3 appears once. Mirror of `app/lib/skio.ts` `LOOP_TO_SKIO_SELLING_PLAN`.
+Consolidated old-Loop-GID → new-Skio-GID map for the [Skio migration](../development/featurePlans/skio-migration.md). This is the **direct input to Phase 2** (re-point purchase surfaces). Every distinct Loop selling plan across §1–§3 appears once. Mirror of `app/lib/skio.ts` `LOOP_TO_SKIO_SELLING_PLAN`.
 
 **Fill the Skio column once the Skio plans exist (Phase 1 Task 1).** Skio GIDs are `gid://shopify/SellingPlan/<n>`; enter the full GID.
 

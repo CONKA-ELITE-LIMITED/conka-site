@@ -144,6 +144,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/features/LISTICLE_SYSTEM.md` | **Listicle landing system** (`/go/[slug]`) — the two templates (`mm` / `im8`), config shapes, and how to create a listicle |
 | `docs/features/BLOG_SYSTEM.md` | **Blog system** — canonical reference for `/blog`. Notion-as-CMS, the content contract (a missing meta description silently skips a post), the render pipeline, and the deploy rules. **Read before any Notion write or blog change:** the blog is static, so a write is invisible until a redeploy, and Next caches Notion responses for a year, so a body edit needs the build cache cleared |
 | `docs/features/FAQ_SYSTEM.md` | **FAQ system** — one source of truth, per-surface subsets, schema == visible rule, claims anchors, disclosure policy |
+| `docs/development/featurePlans/skio-migration.md` | **Skio: single source of truth** — the whole Loop to Skio subscription migration in one doc (status, selling plans + variants, env vars and flags, embedded customer portal, cutover runbook, decisions). Read before touching subscriptions, `/account`, or selling plans. The retention-pipeline half lives in the separate `conka-lab` repo |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/NIKE_TRIAL_PAGE.md` | **Nike trial page** (`/nike`) — private, noindex onboarding page for the corporate cognition trial. Placeholders to fill before sharing, hard-coded trial dates, warm-dark treatment |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |
