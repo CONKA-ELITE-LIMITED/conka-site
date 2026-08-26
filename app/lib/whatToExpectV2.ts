@@ -20,69 +20,69 @@ export type ExpectV2ProductId = "01" | "02" | "both";
 const expectFlow: ExpectV2Milestone[] = [
   {
     title: "First 15 Mins",
-    body: "Most people feel it within minutes: the mental chatter quiets and focus comes easily, without the jittery edge of caffeine.",
+    body: "Most people experience a calmer, sharper focus within minutes, without the jittery edge of caffeine.",
   },
   {
     title: "Next 4-8 Hours",
-    body: "You settle into calm, locked-in work that holds for hours, as lemon balm and rhodiola keep the state steady. No spike, no wobble.",
+    body: "A heightened flow state as lemon balm and rhodiola settle the noise. Experience calm, focused, long-lasting productive work.",
   },
   {
     title: "No Crash Ever",
-    body: "Nothing in Flow spikes you, so nothing drops you. Steady energy that is built, not borrowed.",
+    body: "Stress-busting adaptogens create a steady, energised state without a crash. Built, not borrowed.",
   },
   {
     title: "Week 1",
-    body: "Pressure starts feeling lighter as ashwagandha builds, dropping cortisol by 28% in trials. Mornings begin smoother.",
+    body: "You'll notice pressure feeling lighter and less fatigue in the afternoons, as ashwagandha drops cortisol by 28% in trials.",
   },
   {
     title: "Week 2+",
-    body: "Your focus compounds into a new baseline: steadier energy, clearer thinking for longer, and afternoon dips that stop showing up.",
+    body: "Your focus compounds as adaptogens regulate cortisol and stress: steadier energy, clearer thinking, a new baseline.",
   },
 ];
 
 const expectClear: ExpectV2Milestone[] = [
   {
     title: "First 15 Mins",
-    body: "Most people feel the fog start to lift on the first shot, as Alpha GPC raises acetylcholine, the brain's signal for sharp recall.",
+    body: "Most people experience the fog starting to lift within minutes of the first shot.",
   },
   {
     title: "Next 4-8 Hours",
-    body: "Thinking stays quick and clear through the day, as ginkgo lifts cerebral circulation: a 16% gain in cognition and attention in trials.",
+    body: "Thinking stays quick and clear as Alpha GPC raises acetylcholine and ginkgo lifts cerebral circulation. A calm, clear-headed state that lasts.",
   },
   {
     title: "No Crash Ever",
-    body: "No stimulants are doing the lifting, so there is nothing to crash from. Just clean, clear-headed function.",
+    body: "No stimulants are doing the lifting, so there is nothing to crash from. Just clean, clear function.",
   },
   {
     title: "Week 1",
-    body: "You'll notice the fog stays gone for longer. Antioxidant capacity builds day on day: glutathione stores rise and mental fatigue drops 35% in trials.",
+    body: "You'll notice more clarity in the mornings and the fog staying gone for longer, as antioxidant capacity builds day on day. Brain fog is a thing of the past.",
   },
   {
     title: "Week 2+",
-    body: "Clarity becomes your norm rather than a boost: sharper recall, calmer processing, a mind you can count on.",
+    body: "Your cognitive stamina improves as glutathione stores rise and mental fatigue drops 35% in trials. Clarity becomes your norm, not a boost.",
   },
 ];
 
 const expectBoth: ExpectV2Milestone[] = [
   {
     title: "First 15 Mins",
-    body: "Most people feel both within minutes: the chatter quiets and thinking sharpens from the first shot.",
+    body: "Most people experience a mental uplift within minutes.",
   },
   {
     title: "Next 4-8 Hours",
-    body: "Calm, locked-in focus from Flow while Clear keeps recall quick. Two formulas working the same day.",
+    body: "A heightened flow state from the synergistic effects of both formulas. Experience a calm, focused, long-lasting productive state of mind.",
   },
   {
     title: "No Crash Ever",
-    body: "Steady by design. Nothing spikes, nothing drops, no afternoon tax.",
+    body: "Plant-based energy and stress-busting adaptogens create a steady, energised state without a crash.",
   },
   {
     title: "Week 1",
-    body: "You'll notice pressure feeling lighter and fatigue stops accumulating, as adaptogens lower the stress response and antioxidant stores build.",
+    body: "You'll notice increases in productivity due to less fatigue in the afternoons and more clarity in the mornings. Brain fog is a thing of the past.",
   },
   {
     title: "Week 2+",
-    body: "The full system compounds into a higher baseline: faster thinking, easier decisions, every day.",
+    body: "Your cognitive stamina improves as nootropics boost acetylcholine and neurogenesis, while adaptogens enhance your mood by regulating cortisol and stress.",
   },
 ];
 
