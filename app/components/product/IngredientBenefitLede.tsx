@@ -8,8 +8,7 @@ import { LEDE_DESCRIPTION, LEDE_SUBLINE } from "@/app/lib/mmPdpData";
  * The product subline + condensed description + green-check benefit grid.
  *
  * Rendered directly by both heroes, under the buy panel: ProductHeroV3 on
- * desktop, ProductHeroMobileV3 on mobile. It used to reach desktop nested
- * inside IngredientOutcomeAccordions, which SCRUM-1262 removed from the hero.
+ * desktop, ProductHeroMobileV3 on mobile.
  *
  * Flow ("01"), Clear ("02"), and Both ("03").
  * ========================================================================== */

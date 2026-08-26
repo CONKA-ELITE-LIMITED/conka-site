@@ -116,9 +116,9 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ## PDP Structure Rework Cleanup
 
-### Delete the components the PDP rework orphaned
+### ~~Delete the components the PDP rework orphaned~~
 
-**Status:** Ready, waiting only on a settle period
+**Status:** DONE 2026-08-26 (SCRUM-1264). Verified by route parity: 100 routes before, 100 after
 **Plan:** `docs/development/featurePlans/pdp-structure-rework.md` (Phase 1, SCRUM-1260; Phase 2, SCRUM-1261)
 
 Phase 1 took `ProductBenefitTiles`, `AbsorptionBioavailability` and `LandingValueComparison` off the three PDPs, and Phase 2 replaced the last two with `ProductComparisonTable`. The components were deliberately left in the tree at the time. Two of the three now have **zero code consumers** (verified 2026-08-26; the only remaining mentions are docs and one comment):
@@ -142,9 +142,9 @@ Deleting the two frees nothing else: `CrashChart`, `ConkaCTAButton` and `PRICE_P
 
 ---
 
-### Delete what the ingredient grid orphaned
+### ~~Delete what the ingredient grid orphaned~~
 
-**Status:** Ready. Both 3a and 3b have shipped, so the last consumer is gone
+**Status:** DONE 2026-08-26 (SCRUM-1264, branch `chore/pdp-orphan-cleanup`). Kept below because the do-not-delete table is still live guidance
 **Plan:** `docs/development/featurePlans/pdp-structure-rework.md`, Phase 3
 
 Phase 3a replaced the ingredient rail with a grid and dropped partner folding; 3b removed `IngredientOutcomeAccordions` from the desktop hero. Verified orphaned as of 2026-08-26, no remaining consumers:
