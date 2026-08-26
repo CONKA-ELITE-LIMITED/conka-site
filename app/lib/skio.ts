@@ -6,7 +6,7 @@
  * their config + plan mapping ready. Importing it has no runtime effect on the
  * live storefront; Loop remains the live subscription platform until Phase 4.
  *
- * See docs/development/featurePlans/skio-subscription-migration.md
+ * See docs/development/featurePlans/skio-migration.md
  */
 
 import { env } from "@/app/lib/env";

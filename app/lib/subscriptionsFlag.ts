@@ -8,7 +8,7 @@
  * default). Flip to "true" + redeploy at the Phase 4 cutover; emergency rollback
  * is Vercel Instant Rollback to the pre-cutover deploy.
  *
- * See docs/development/featurePlans/skio-subscription-migration.md.
+ * See docs/development/featurePlans/skio-migration.md.
  */
 export function subscriptionsUseSkio(): boolean {
   return process.env.NEXT_PUBLIC_SKIO_ENABLED === "true";
@@ -28,7 +28,7 @@ export function subscriptionsUseSkio(): boolean {
  * rather than left to each call site to remember. Turn the flag OFF (redeploy)
  * once migration completes, at which point the plain Skio redirect resumes.
  *
- * See docs/development/featurePlans/skio-phase4-pre-cutover.md (SCRUM-1256).
+ * See docs/development/featurePlans/skio-migration.md (SCRUM-1256).
  */
 export function subscriptionsInTransition(): boolean {
   return subscriptionsUseSkio() && process.env.NEXT_PUBLIC_SKIO_TRANSITION === "true";
