@@ -2,7 +2,14 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { useGSAP, withMotion, drawProgress, scrubBrighten } from "@/app/lib/motion";
+import {
+  ScrollTrigger,
+  useGSAP,
+  withMotion,
+  drawProgress,
+  scrubBrighten,
+} from "@/app/lib/motion";
+import { useIsMobile } from "@/app/hooks/useIsMobile";
 import {
   expectV2Header,
   expectV2Milestones,
@@ -37,14 +44,21 @@ export default function WhatToExpectV2({
   const milestones = expectV2Milestones[productId];
   const asset = expectV2Asset[productId];
 
+  // The PDPs first render their mobile tree (useIsMobile starts undefined),
+  // then swap on desktop. Re-run setup when the breakpoint settles and refresh
+  // ScrollTrigger, so trigger positions are measured against the final layout
+  // rather than the pre-swap one.
+  const isMobile = useIsMobile();
+
   useGSAP(
     () => {
       withMotion(() => {
         drawProgress("[data-wte-line]", "[data-wte-timeline]");
         scrubBrighten("[data-wte-block]");
+        ScrollTrigger.refresh();
       });
     },
-    { scope: root },
+    { scope: root, dependencies: [isMobile], revertOnUpdate: true },
   );
 
   return (
@@ -69,7 +83,7 @@ export default function WhatToExpectV2({
         {/* Header + timeline */}
         <div>
           <h2
-            className="brand-h2 mb-4 text-[#1B2757]"
+            className="brand-h2 mb-4 text-black"
             style={{ letterSpacing: "-0.02em" }}
           >
             {expectV2Header.title}

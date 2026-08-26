@@ -57,15 +57,15 @@ export interface ExpectV2Asset {
 
 export const expectV2Asset: Record<ExpectV2ProductId, ExpectV2Asset> = {
   "01": {
-    src: "/formulas/conkaFlow/FlowNoBackground.png",
-    alt: "CONKA Flow bottle",
+    src: "/formulas/conkaFlow/FlowShotSide.jpg",
+    alt: "CONKA Flow shot, side profile",
   },
   "02": {
-    src: "/formulas/conkaClear/ClearNoBackground.png",
-    alt: "CONKA Clear bottle",
+    src: "/formulas/conkaClear/ClearShotSide.jpg",
+    alt: "CONKA Clear shot, side profile",
   },
   both: {
-    src: "/formulas/both/BothHold.jpg",
-    alt: "CONKA Flow and Clear shots held together",
+    src: "/formulas/both/BothShotSide.jpg",
+    alt: "CONKA Flow and Clear shots, side profile",
   },
 };

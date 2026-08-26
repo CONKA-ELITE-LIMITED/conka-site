@@ -38,7 +38,9 @@ Placeholder copy in Phase 1 is Gray Matters verbatim ("First 15 Mins / Next 4-8 
 | Clear (02) | Morning clarity -> calm focus through the day -> no crash -> week 1 (brain fog lifting) -> week 2+ (consistent mental freshness) | `public/formulas/conkaClear/ClearNoBackground.png` (placeholder), `ClearHold` |
 | Both | AM/PM system arc: Flow primes the day, Clear consolidates -> full-day coverage -> week 1 rhythm -> week 2+ compounding | `public/formulas/both/BothHold.jpg`, `BothShots`, `BothMetalTray` |
 
-Copy owner: Rudh (with the claims pass handled separately per current policy). Asset call may need new portrait crops if the renders sit badly in a tall sticky rail.
+Copy owner: Rudh (with the claims pass handled separately per current policy).
+
+**Asset call RESOLVED (2026-08-26):** desktop sticky column uses the FMC-style side-profile shots, exactly 4:5 at 810x1013: `conkaFlow/FlowShotSide.jpg`, `conkaClear/ClearShotSide.jpg`, `both/BothShotSide.jpg`. Only the copy remains for Phase 2.
 
 ## Rabbit holes
 
