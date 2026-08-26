@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | PDP what-to-expect timeline: CONKA per-product copy and new title replace the placeholder
 - **2026-08-26** | PDP what-to-expect timeline: desktop scroll fix, black title, new side-shot renders
 - **2026-08-26** | PDP what-to-expect section rebuilt as a scroll-drawn timeline (V2) on Flow, Clear and Both
 - **2026-08-26** | Build Your Order desktop pass: Build-step gallery fills the left media column, Review shows the delivery box on the left, Learn cards go compact, and the sticky CTA sits under the content rail instead of spanning the viewport

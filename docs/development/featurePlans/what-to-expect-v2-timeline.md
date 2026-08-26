@@ -19,7 +19,7 @@ Replaces V1 on all three PDPs at once (one shared component; per-product differe
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Build V2 + replace on all 3 PDPs, delete V1 | In review (branch feature/what-to-expect-v2) |
-| 2 | CONKA copy + asset pass per product | Future |
+| 2 | CONKA copy + asset pass per product | Done (2026-08-26, same branch) |
 
 ## Phase 1 tasks
 
@@ -28,9 +28,9 @@ Replaces V1 on all three PDPs at once (one shared component; per-product differe
 3. **[Component] `app/components/home/WhatToExpectV2.tsx`** - client leaf, `withMotion` + `useGSAP({scope})` per instance, mobile-first, desktop sticky column, reduced-motion fallback. Medium. Depends on 1, 2.
 4. **[Pages] Swap into `/conka-flow`, `/conka-clarity`, `/conka-both`** - both mobile and desktop trees on each page; delete `WhatToExpect.tsx` + `whatToExpectLanding.ts`; flag `public/formulas/whatToExpect/*.jpg` in `asset-and-protocol-cleanup.md`. Small. Depends on 3.
 
-## Phase 2: copy + asset decision table (draft directions, not final)
+## Phase 2: copy + asset decision table
 
-Placeholder copy in Phase 1 is Gray Matters verbatim ("First 15 Mins / Next 4-8 Hours / No Crash Ever / Week 1 / Week 2+"). The CONKA pass swaps the data file only - no component changes.
+**RESOLVED (2026-08-26):** CONKA copy shipped in `app/lib/whatToExpectV2.ts`. Kept the GM 5-beat labels; bodies rewritten feeling-first ("Most people feel...", "You'll notice...", mechanism trailing behind "as"), with trial numbers (28% cortisol, 16% cognition, 35% fatigue). Header: "What you'll feel, and when". The table below is the original direction, kept for history.
 
 | Product | Copy direction (5 beats) | Sticky asset candidates |
 |---------|--------------------------|-------------------------|
