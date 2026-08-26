@@ -16,9 +16,10 @@ import DotIndicator from "@/app/components/DotIndicator";
  *
  * Ingredients section for the product pages, in the Simple DTC skin (black
  * type, no mono eyebrows/tags, soft cards): every ingredient is a
- * self-contained card whose collapsed face shows name, class tags, render
- * thumbnail, and a one-line benefit. Expanding (native <details>) reveals the
- * longer description and the key study finding.
+ * self-contained image-led card. The collapsed face leads with a full-bleed
+ * band of the FMC studio render, then name, class tags, one-line benefit and
+ * the headline stat. Expanding (native <details>) reveals the longer
+ * description and the study citation.
  *
  * Reads everything from the shared ingredientsData.ts (no local copy of
  * ingredient content or ordering).
@@ -187,83 +188,86 @@ export default function ClinicalIngredients({
             key={ing.id}
             data-tile
             name="clinical-ingredient"
-            className="group w-[260px] shrink-0 snap-start rounded-md border border-black/10 bg-white"
+            className="group w-[260px] shrink-0 snap-start overflow-hidden rounded-md border border-black/10 bg-white"
           >
-            {/* Collapsed face — name, tags, render, one-liner */}
-            <summary className="p-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-              <div className="flex items-start justify-between gap-3 mb-1">
-                <h3 className="text-base font-semibold leading-snug text-black">
-                  {ing.name}
-                </h3>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mt-1 shrink-0 text-black/40 transition-transform group-open:rotate-180"
-                  aria-hidden
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
+            {/* Collapsed face — render band, name, tags, one-liner, stat */}
+            <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              {/* Full-bleed render band — the FMC studio series carries its
+                  own cool ground, so the image is the surface; the bg only
+                  shows while loading. 1:1 asset in a 4:3 box gives a gentle
+                  zoom that counters the renders' negative space. */}
+              <div className="relative aspect-[4/3] w-full bg-[#eef0f5]">
+                {ing.image ? (
+                  <Image
+                    src={ing.image}
+                    alt={ing.name}
+                    fill
+                    loading="lazy"
+                    sizes="260px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-[28px] font-bold text-black/25">
+                    {ing.name
+                      .replace(/[^a-zA-Z]/g, "")
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </div>
+                )}
               </div>
-              <p className="mb-3 font-mono text-xs text-black">
-                {CATEGORY_INFO[ing.category].name} | {ing.functionalCategory}
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="relative w-16 h-16 shrink-0 border border-black/8 overflow-hidden bg-white">
-                  {ing.image ? (
-                    <Image
-                      src={ing.image}
-                      alt={ing.name}
-                      fill
-                      loading="lazy"
-                      sizes="64px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[20px] font-bold text-black/25">
-                      {ing.name
-                        .replace(/[^a-zA-Z]/g, "")
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </div>
-                  )}
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-3 mb-1">
+                  <h3 className="text-base font-semibold leading-snug text-black">
+                    {ing.name}
+                  </h3>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="mt-1 shrink-0 text-black/40 transition-transform group-open:rotate-180"
+                    aria-hidden
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </div>
+                <p className="mb-2 font-mono text-xs text-black">
+                  {CATEGORY_INFO[ing.category].name} | {ing.functionalCategory}
+                </p>
                 <p className="text-sm leading-snug text-black">
                   {ing.oneLineClaim}
                 </p>
+                {ing.keyStats[0] && (
+                  <p className="mt-2 text-sm leading-snug">
+                    <span
+                      className="mr-1.5 font-semibold tabular-nums"
+                      style={{ color: NAVY }}
+                    >
+                      {ing.keyStats[0].value}
+                    </span>
+                    <span className="text-black/70">
+                      {ing.keyStats[0].label}
+                    </span>
+                  </p>
+                )}
               </div>
             </summary>
 
-            {/* Expanded — description, key finding */}
+            {/* Expanded — description + study citation (the stat already
+                sits on the collapsed face, which stays visible when open) */}
             <div className="px-4 pb-4">
               <div className="border-t border-black/10 pt-3">
-                <p className="mb-4 text-sm leading-relaxed text-black/70">
+                <p className="mb-2.5 text-sm leading-relaxed text-black/70">
                   {ing.description}
                 </p>
-
                 {ing.keyStats[0] && (
-                  <>
-                    <p className="mb-1.5 text-xs font-medium text-black/50">
-                      Key finding
-                    </p>
-                    <p className="mb-1.5 text-sm leading-snug text-black">
-                      <span
-                        className="mr-2 text-xl font-semibold tabular-nums"
-                        style={{ color: NAVY }}
-                      >
-                        {ing.keyStats[0].value}
-                      </span>
-                      {ing.keyStats[0].label}
-                    </p>
-                    <p className="text-xs text-black/40">
-                      {ing.keyStats[0].source}
-                    </p>
-                  </>
+                  <p className="text-xs text-black/40">
+                    {ing.keyStats[0].source}
+                  </p>
                 )}
               </div>
             </div>
