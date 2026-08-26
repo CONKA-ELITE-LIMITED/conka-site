@@ -12,7 +12,6 @@ import {
 } from "@/app/lib/productData";
 import { CadenceType } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
-import { GUARANTEE_LABEL } from "@/app/lib/offerConstants";
 
 const packSizes: PackSize[] = ["4", "8", "12", "28"];
 const packLabels: Record<PackSize, string> = {
@@ -21,39 +20,6 @@ const packLabels: Record<PackSize, string> = {
   "12": "12-pack",
   "28": "28-pack",
 };
-/**
- * Reassurance under the CTA, lifted from the funnel footer. "Cancel anytime"
- * only shows on a subscription, because it is only true of a subscription, and
- * it is the objection worth answering at the moment of commitment.
- */
-function GuaranteeLine({ isSubscription }: { isSubscription: boolean }) {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-black/60">
-      <span className="flex items-center gap-1.5">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
-          <circle cx="12" cy="12" r="10" fill="#10B981" />
-          <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        {GUARANTEE_LABEL}
-      </span>
-
-      {isSubscription && (
-        <span className="flex items-center gap-1.5">
-          <svg
-            width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981"
-            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0"
-          >
-            <path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3L21 8" />
-            <path d="M21 3v5h-5" />
-            <path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3L3 16" />
-            <path d="M3 21v-5h5" />
-          </svg>
-          Cancel anytime
-        </span>
-      )}
-    </div>
-  );
-}
 
 interface StickyPurchaseFooterMobileProps {
   formulaId?: FormulaId;
@@ -82,7 +48,18 @@ export default function StickyPurchaseFooterMobile({
   onAddToCart,
 }: StickyPurchaseFooterMobileProps) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Cadence mode only: hold the bar back until the hero has scrolled away, so
+  // it never overlays the hero's own price and CTA on the first screen.
+  useEffect(() => {
+    const handleScroll = () => setIsPastHero(window.scrollY > 500);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -114,10 +91,11 @@ export default function StickyPurchaseFooterMobile({
 
   const hasSelector = showPackSelector && selectedPack;
 
-  // Cadence mode: no picker on mobile -- cadence selection lives in the hero widget.
-  // Mirrors the funnel footer: one plain CTA carrying its own price, with the
-  // risk reversal underneath. No meta line, no badges: at the moment of
-  // commitment the button should say one thing.
+  // Cadence mode: no picker on mobile -- cadence selection lives in the hero
+  // widget. One row, one plain CTA carrying its own price (SCRUM-1260). The
+  // guarantee line that used to sit underneath is gone: it doubled the footer's
+  // height for proof the guarantee section already carries, and the point of
+  // the footer is to take up as little of a phone screen as possible.
   if (selectedCadence !== undefined && cadencePrice !== undefined) {
     const frequency =
       selectedCadence === "monthly-sub"
@@ -126,11 +104,15 @@ export default function StickyPurchaseFooterMobile({
           ? "/quarter"
           : "";
 
+    // Held back until the hero is behind the shopper, so it never covers the
+    // hero's own buy panel on the first screen.
+    if (!isPastHero) return null;
+
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-black/8">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/8 bg-white/95 backdrop-blur-sm">
         <div
-          className="px-4 py-3"
-          style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+          className="px-4 py-2.5"
+          style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom))" }}
         >
           {/* Same plain CTA as the hero buy panel above, deliberately: the
               icon+meta variant forces its label onto one line, and
@@ -139,14 +121,11 @@ export default function StickyPurchaseFooterMobile({
           <button
             type="button"
             onClick={onAddToCart}
-            className="w-full rounded-full bg-[#1B2757] py-4 text-sm font-bold uppercase tracking-[0.1em] text-white transition-all duration-200 ease-out hover:opacity-95 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-[#1B2757]/25 active:opacity-90 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]"
+            className="w-full rounded-full bg-[#1B2757] py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-white transition-all duration-200 ease-out hover:opacity-95 active:opacity-90 motion-safe:active:scale-[0.98]"
           >
             Add to Cart · {formatPrice(cadencePrice)}
             {frequency}
           </button>
-          <div className="mt-2.5">
-            <GuaranteeLine isSubscription={selectedCadence !== "monthly-otp"} />
-          </div>
         </div>
       </div>
     );

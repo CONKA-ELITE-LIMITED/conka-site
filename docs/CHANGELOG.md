@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-26** | PDP rework phase 1: mobile hero slimmed to the buy decision, thin sticky purchase bar restored on all three product pages, three repeating sections removed, and section-view tracking added
 - **2026-08-26** | PDP ingredient cards rebuilt image-led: full-bleed FMC render band with the key stat on the card face, and the ingredient bottom sheet retuned to the cool render palette
 - **2026-08-26** | Replaced all ingredient renders with new FMC-style square assets, including bespoke Glutathione and Acetyl-L-Carnitine renders replacing the shared white-powder placeholder
 - **2026-08-26** | PDP what-to-expect timeline: GSAP now lazy-loads on approach, keeping it out of the PDP first-load JS

@@ -141,12 +141,8 @@ function IngredientCard({
 
 export default function IngredientOutcomeAccordions({
   formulaId,
-  hideLede = false,
 }: {
   formulaId: ProductHeroId;
-  /** Mobile V3 renders the lede (subline + description + check grid) above the
-      pricing widget, so it suppresses it here to avoid a duplicate. */
-  hideLede?: boolean;
 }) {
   // Both ("03") spans Flow + Clear, so combine both ingredient sets; Flow/Clear
   // query their own. Index by id so buckets can pull them (and a card can pull
@@ -165,7 +161,7 @@ export default function IngredientOutcomeAccordions({
 
   return (
     <div className="flex flex-col gap-10">
-      {!hideLede && <IngredientBenefitLede formulaId={formulaId} />}
+      <IngredientBenefitLede formulaId={formulaId} />
 
       {buckets.map((bucket) => {
         const items = bucket.ingredientIds

@@ -191,6 +191,42 @@ export function trackListicleInteraction(params: ListicleEventBase): void {
   safeTrack("listicle:interaction", params);
 }
 
+// ===== PDP SECTION TRACKING (/conka-flow, /conka-clarity, /conka-both) =====
+
+/**
+ * Which parts of a product page people actually reach (SCRUM-1260).
+ *
+ * Two properties only, respecting the budget: `product` (which PDP) and
+ * `section` (which part of it), so one grouped query returns the matrix:
+ *
+ *   by=["eventData/product","eventData/section"]
+ *   filter=eventName eq 'pdp:section_viewed'
+ *
+ * `section` is the section's SEMANTIC id, the same string already on the
+ * element (`hero`, `ingredients`, `guarantee`), never its position in the page.
+ * The listicle equivalent is index-derived (`reason_3`), which means inserting
+ * or reordering a block shifts every id below it and breaks comparability with
+ * earlier data (docs/features/LISTICLE_SYSTEM.md). The PDPs are reordered
+ * repeatedly by design, so a positional id would invalidate the dataset on the
+ * first reorder. A semantic id survives one: a deleted section simply stops
+ * appearing, and a new one appears under a new id.
+ *
+ * Read alongside `purchase:add_to_cart`, whose `location` says where on the PDP
+ * the shopper bought ("hero" / "sticky_footer"). This is the denominator that
+ * separates a weak section from a rarely-reached one.
+ */
+interface PdpSectionEvent {
+  /** Which PDP: "flow" | "clear" | "both" */
+  product: string;
+  /** The section's semantic id, e.g. "hero", "ingredients", "guarantee" */
+  section: string;
+}
+
+/** Fires once per section per pageview, when that section scrolls into view. */
+export function trackPdpSectionViewed(params: PdpSectionEvent): void {
+  safeTrack("pdp:section_viewed", params);
+}
+
 // ===== CART UPSELL TILE TRACKING (CartDrawer, SCRUM-1201) =====
 
 /**

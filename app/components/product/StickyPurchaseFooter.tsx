@@ -14,7 +14,6 @@ import {
 } from "@/app/lib/productData";
 import { getProductHeroImages } from "@/app/components/navigation/productHeroConfig";
 import { CadenceType, BYO_CADENCES, BOTH_HERO_CONTENT } from "@/app/lib/cadenceData";
-import FreeShotsBadge from "@/app/components/FreeShotsBadge";
 import { getBothHeroImages } from "@/app/lib/heroImageConfig";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 
@@ -35,7 +34,6 @@ interface StickyPurchaseFooterProps {
   // Cadence mode -- replaces purchaseType + pack/tier selector for formula/balance pages
   selectedCadence?: CadenceType;
   cadencePrice?: number;
-  cadenceFreeShots?: number;
   onAddToCart: () => void;
 }
 
@@ -55,7 +53,6 @@ export default function StickyPurchaseFooter({
   onPurchaseTypeChange,
   selectedCadence,
   cadencePrice,
-  cadenceFreeShots,
   onAddToCart,
   productHeroId,
 }: StickyPurchaseFooterProps) {
@@ -135,32 +132,25 @@ export default function StickyPurchaseFooter({
 
   if (!isVisible) return null;
 
-  // Cadence mode: simplified strip for formula + balance pages.
-  // Cadence selection lives in the hero widget; footer just confirms what's being bought.
+  // Cadence mode: one thin row for the PDPs (SCRUM-1260). Cadence selection
+  // lives in the hero widget, so the bar only confirms what is being bought and
+  // carries the CTA. The thumbnail block, its border and the free-shots badge
+  // are gone deliberately: they tripled the bar's height for information the
+  // hero already showed.
   if (selectedCadence !== undefined && cadencePrice !== undefined) {
     const cadenceDisplay = BYO_CADENCES[selectedCadence];
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/12">
-        <div className="max-w-6xl mx-auto lg:ml-auto lg:mr-0 lg:max-w-[90%] xl:max-w-[85%] px-4 md:px-6 lg:pl-0 lg:pr-16 py-3">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 w-fit p-2 md:p-2.5 shrink-0 border border-black/8">
-              {thumbnailSrc && (
-                <div className="relative w-12 h-12 md:w-14 md:h-14 overflow-hidden flex-shrink-0 bg-black/5">
-                  <Image src={thumbnailSrc} alt="" fill className="object-cover" sizes="56px" />
-                </div>
-              )}
-              <div className="min-w-0">
-                <p className="font-mono text-sm font-bold truncate">{productName}</p>
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] opacity-70 truncate">
-                  {cadenceDisplay.label} · {formatPrice(cadencePrice)}
-                </p>
-                <FreeShotsBadge freeShots={cadenceFreeShots} cadence={selectedCadence} compact className="mt-1" />
-              </div>
-            </div>
-            <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto">
-              Add to Cart · {formatPrice(cadencePrice)}
-            </ConkaCTAButton>
-          </div>
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/12 bg-white/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 md:px-6">
+          <p className="min-w-0 truncate text-sm text-black">
+            <span className="font-bold">{productName}</span>
+            <span className="ml-2 text-black/60">
+              {cadenceDisplay.label} · {formatPrice(cadencePrice)}
+            </span>
+          </p>
+          <ConkaCTAButton compact onClick={onAddToCart} className="!w-auto shrink-0">
+            Add to Cart · {formatPrice(cadencePrice)}
+          </ConkaCTAButton>
         </div>
       </div>
     );
