@@ -9,9 +9,12 @@ import AthleteSportMarquee from "./AthleteSportMarquee";
  * AthleteCredibilityCarousel
  *
  * Compact, quote-led athlete proof beat: title → thumbnail roster → feature
- * card (portrait with nav arrows overlaid, name, credential, quote) →
- * Informed Sport as the rational anchor.
- * Simple DTC styling: soft rounded card, solid-black title, rounded nav.
+ * card (the athlete's portrait carrying his name and the nav arrows, with the
+ * quote beside it on desktop and below it on mobile) → Informed Sport as the
+ * rational anchor.
+ * Simple DTC styling: soft rounded card, solid-black title, rounded nav
+ * inverted to white on navy chevrons so it sits over the asset as a control
+ * rather than competing with it as a filled navy disc.
  *
  * Tightened under SCRUM-1267, benchmarked against AG1 and IM8. Both of those
  * run a title straight into a peek carousel with no subline, no counter and
@@ -112,7 +115,7 @@ function NavButton({
       type="button"
       aria-label={direction === "prev" ? "Previous athlete" : "Next athlete"}
       onClick={onClick}
-      className={`w-11 h-11 flex items-center justify-center rounded-full bg-[#1B2757] text-white transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] ${className}`}
+      className={`w-11 h-11 flex items-center justify-center rounded-full bg-white text-[#1B2757] ring-1 ring-black/10 shadow-sm transition-opacity hover:opacity-85 active:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2757] ${className}`}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
         <polyline
@@ -223,12 +226,16 @@ export default function AthleteCredibilityCarousel({
                   : "ring-1 ring-black/10 hover:ring-black/30 opacity-70 hover:opacity-100"
               }`}
             >
+              {/* mix-blend-multiply for the same reason as the feature
+                  portrait: these are white-background cutouts on a tinted
+                  tile, so without it each thumbnail renders a white box
+                  inside a tint square. */}
               <Image
                 src={a.image}
                 alt=""
                 fill
                 loading="lazy"
-                className="object-contain"
+                className="object-contain mix-blend-multiply"
                 sizes="(max-width: 1024px) 56px, 170px"
               />
             </button>
@@ -239,32 +246,53 @@ export default function AthleteCredibilityCarousel({
       {/* Feature card — portrait with overlaid nav, quote as the hero */}
       <div className="bg-white rounded-md ring-1 ring-black/8 overflow-hidden mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch">
-          {/* Portrait, with the nav arrows overlaid on the asset.
-              5:4 rather than square on mobile: the square box pushed the name
-              and quote past the fold on a 390px phone, and the quote is the
-              thing that persuades. Desktop is unchanged, since the two-column
-              split already puts the quote beside the image.
-              object-bottom grounds the cutout on the tile's floor instead of
-              floating it, which is what stops the shorter box reading as a
-              shrunken figure.
+          {/* Portrait: the asset owns the tile, with the athlete's name and the
+              nav arrows laid over it.
+              mix-blend-multiply is the fix for the white edges this showed
+              before. Every *NB.jpg is a white-background cutout, so contained
+              inside a tinted tile it painted a white rectangle with tint bars
+              either side. Multiplying dissolves the white into the tint
+              (white x tint = tint) and the athlete floats on one flat surface.
+              Same treatment AthleteReviewFeature uses on the same assets.
+              object-bottom grounds him on the tile's floor, which both keeps
+              the figure large and, with the mobile tile run taller than the
+              asset needs, clears the top of the tile for his name.
               self-start on mobile stops the grid's items-stretch from
               overriding the aspect ratio (all children are absolutely
               positioned, so a stretched row collapses to 0 height and hides
               the image); lg restores stretch so the column matches the text. */}
           <div
-            className="relative self-start lg:self-stretch aspect-[5/4] lg:aspect-auto lg:min-h-[480px] bg-[#eef1f8] border-b lg:border-b-0 lg:border-r border-black/8 overflow-hidden"
+            className="relative self-start lg:self-stretch aspect-[5/6] lg:aspect-auto lg:min-h-[480px] bg-[#eef1f8] border-b lg:border-b-0 lg:border-r border-black/8 overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
             <Image
               key={active.name}
               src={active.image}
-              alt={`${active.name} — ${active.role}`}
+              alt={`${active.name}, ${active.role}`}
               fill
               loading="eager"
-              className="object-contain object-bottom lg:object-center"
+              className="object-contain object-bottom mix-blend-multiply"
               sizes="(max-width: 1024px) 100vw, 45vw"
             />
+
+            {/* Name and credential over the top of the asset, so the card is
+                the athlete rather than a picture of him with a caption.
+                No scrim behind it: a gradient over a flat pale surface showed
+                as a band. What keeps the text clear of the athlete instead is
+                the tile being taller than the asset needs (5:6 on mobile,
+                where square let the credential land on Dan Norton's head) plus
+                object-bottom holding him at the floor, so the surplus opens as
+                empty tint exactly where the name sits. Check this if a future
+                athlete's cutout is framed higher than these seven. */}
+            <div className="absolute inset-x-0 top-0 px-5 pt-4 lg:px-8 lg:pt-6">
+              <h3 className="text-xl lg:text-2xl font-semibold text-black leading-tight">
+                {active.name}
+              </h3>
+              <p className="mt-0.5 text-[13px] lg:text-sm text-black/65 leading-snug">
+                {active.sport} &middot; {active.role}
+              </p>
+            </div>
 
             <NavButton
               direction="prev"
@@ -278,18 +306,29 @@ export default function AthleteCredibilityCarousel({
             />
           </div>
 
-          {/* Text column — compact: name, sport · role, then the quote large */}
+          {/* Text column: the quote alone now that the name sits on the asset.
+              Smaller than before with oversized decorative marks, the device
+              AthleteReviewFeature uses: text-[3.5em] makes each glyph 3.5x the
+              blockquote size at every breakpoint, leading-[0] stops them
+              opening the line box, and the vertical aligns seat them on the
+              baseline. Muted, so they read as a design element rather than
+              heavy punctuation. */}
           <div className="p-5 lg:p-8 flex flex-col lg:justify-center">
             <div key={activeIndex}>
-              <h3 className="text-2xl lg:text-3xl font-semibold text-black leading-tight mb-1">
-                {active.name}
-              </h3>
-              <p className="text-[13px] text-black/55 leading-snug mb-5">
-                {active.sport} &middot; {active.role}
-              </p>
-
-              <blockquote className="text-xl lg:text-2xl font-medium text-black leading-snug">
-                &ldquo;{active.quote}&rdquo;
+              <blockquote className="text-lg lg:text-2xl font-medium text-black leading-[1.35]">
+                <span
+                  aria-hidden
+                  className="mr-0.5 align-[-0.35em] text-[3.5em] leading-[0] text-black/15"
+                >
+                  &ldquo;
+                </span>
+                {active.quote}
+                <span
+                  aria-hidden
+                  className="ml-1 align-[-0.6em] text-[3.5em] leading-[0] text-black/15"
+                >
+                  &rdquo;
+                </span>
               </blockquote>
             </div>
           </div>

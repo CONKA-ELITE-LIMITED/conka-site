@@ -17,8 +17,8 @@ import Image from "next/image";
  * (h2 on the landing where it opens a section; h3 inside the carousel where it
  * sits under the roster h2). `className` lets the host own outer spacing.
  *
- * `variant` (SCRUM-1267): "compact" drops the paragraph and shrinks the logo,
- * leaving the mark and the one-line claim. It exists because inside the
+ * `variant` (SCRUM-1267): "compact" drops the paragraph for a single line,
+ * keeping the logo at full size. It exists because inside the
  * carousel this block is the closing anchor and the three lines of body copy
  * were costing height the section could not afford; the logo is the signal
  * for anyone who knows the certification, and the bold line carries it for
@@ -44,16 +44,15 @@ export default function InformedSportCertification({
         isCompact ? "p-4" : "p-5"
       } ${className}`}
     >
-      <div
-        className={`relative flex-shrink-0 ${
-          isCompact ? "w-14 h-14" : "w-20 h-20"
-        }`}
-      >
+      {/* Same size in both variants. The mark is the thing anyone who knows
+          the certification actually reads, so shrinking it alongside the copy
+          traded away the signal rather than the padding. */}
+      <div className="relative w-20 h-20 flex-shrink-0">
         <Image
           src="/logos/InformedSportLogo.png"
           alt="Informed Sport certification"
           fill
-          sizes={isCompact ? "56px" : "80px"}
+          sizes="80px"
           loading="lazy"
           className="object-contain"
         />
