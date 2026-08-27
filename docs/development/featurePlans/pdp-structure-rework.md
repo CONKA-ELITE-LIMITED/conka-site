@@ -146,7 +146,17 @@ Two of those rows carry the differentiators, so both land inside a comparison ra
 
 **As built, one row changed.** "Zero caffeine" became "No caffeine or amphetamines". Prescription stimulants contain no caffeine either, so the original row would have handed the third column a tick and undercut the comparison. There is a comment on the row data so it does not get reverted later.
 
-**Open, for a later decision.** Every row except the first is a tick for CONKA and a cross for both others, which reads as marketing rather than comparison. One row where coffee legitimately also wins ("No prescription needed") would make the whole table more credible. Not built, since it is outside the agreed row list.
+**Decided and built 2026-08-27.** Every row except the first was a tick for CONKA and a cross for both others, which read as marketing rather than comparison. A twelfth row was added, deliberately outside the Phase 2 row list:
+
+| On the high street | no | yes | no |
+
+It is the only row CONKA loses outright, and it sits directly under "No caffeine", so the two rows a rival wins land together in the middle of the table instead of an unbroken run of CONKA ticks. There is a comment on the row data explaining the placement, as there is on "No caffeine".
+
+**Why this row and not another.** The open item originally proposed "No prescription needed" (CONKA yes, coffee yes, Rx no). Rejected on review: CONKA is a supplement, so needing no prescription is self-evident and the row reads as filler rather than as a concession. Availability is the axis where losing costs nothing, because anyone reading the table is already on a DTC site and nobody chooses a nootropic shot for being stocked in every corner shop. Two other candidates were weighed and dropped: "prescribed and monitored by a doctor" hands the Rx column a credential CONKA cannot answer, and "kicks in within minutes" concedes speed, which is a genuine reason the stimulant-adjacent buyer reaches for coffee.
+
+Rx is a cross on this row: a pharmacy sits on the high street, but you cannot walk in and buy the product.
+
+The table is fully data-driven off `ROWS`, so nothing else needed changing: the closing decorative `<tr aria-hidden>` and the tinted CONKA panel terminate off the last mapped row regardless of count. It renders on four surfaces (home plus the three PDPs) and there is no column-width change, so the 390px behaviour is unchanged: the table still scrolls inside its own `overflow-x: auto` container and the page body does not.
 
 Mobile: the table scrolls inside its own `overflow-x: auto` container. The page body must never scroll horizontally.
 

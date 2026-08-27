@@ -5,6 +5,9 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Added a comparison-table row CONKA does not win, "On the high street", so the table on home and the three PDPs reads as a comparison rather than a list of ticks
+- **2026-08-27** | Removed the four broken `--tracking-tight` letter-spacing overrides, so those headlines now take the tracking their heading class already sets, and deleted the orphaned `LandingDailyBenefits` component
+- **2026-08-27** | Removed the FAQ section's unreachable lifestyle image column and its two dead statics, now that every caller runs the questions full width
 - **2026-08-27** | Reordered home: the athletes move up to sit right after what-to-expect, the comparison table moves down after the app section, and the UGC faces now sit immediately before the FAQ
 - **2026-08-27** | Rounded the corners of the what-to-expect desktop product render, matching the other image tiles on the page
 - **2026-08-27** | Swapped the what-to-expect desktop render for the new ingredients shot on the home page and /conka-both

@@ -320,10 +320,7 @@ export default function LandingTestimonials({
 
       {/* Header */}
       <div className="mb-8">
-        <h2
-          className="brand-h2 mb-2"
-          style={{ letterSpacing: "var(--tracking-tight)" }}
-        >
+        <h2 className="brand-h2 mb-2">
           Real people. Real results.
         </h2>
 
