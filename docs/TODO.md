@@ -273,6 +273,18 @@ pointing at `public/formulas/conkaFlow/FlowNoBackground.png` and `public/formula
 
 ## Asset Cleanup
 
+### Five statics left unreferenced by the 2026-08-27 orphan sweep
+
+**Status:** Open, and deliberately not deleted with the components.
+**Files:** `public/CONKA_04.jpg`, `public/ingredients/renders/LecithinTransparent.png`, `public/ingredients/renders/RhodiolaRoseaTransparent.png`, `public/ingredients/renders/TurmericTransparent.png`, `public/ingredients/renders/VitaminCTransparent.png`
+
+These were referenced only by components deleted in the sweep, and a repo grep now returns nothing for any of them.
+
+**Why they were not deleted anyway.** A `public/` file is reachable by URL, so a repo grep is not proof it is unused. Anything served from `public/` can be pointed at by a Klaviyo email template, a Notion blog post body, an OG or social card, or an ad creative, none of which live in this repo. A component reference disappearing is evidence, not a conclusion. The same caution applies to every entry in this section.
+
+**What closes it:** confirm with whoever owns the Klaviyo templates and the Notion blog that none of the five are linked, then delete. The four `*Transparent.png` renders are the lower risk of the two groups, since the live surfaces all use the `.jpg` variants of the same ingredients (`BuildStep.tsx`, both `IngredientsGrid.tsx`, both `ingredients.data.ts`) and the transparent cut-outs were only ever used by the deleted benefit components. `CONKA_04.jpg` sits at the `public/` root with a generic name, which is exactly the shape of a file something external links to.
+
+
 ### Delete superseded `*New.jpg` product statics once the labelV2 rollout is confirmed
 
 **Status:** Deferred (waiting for the labelV2 filenames to be live in prod)

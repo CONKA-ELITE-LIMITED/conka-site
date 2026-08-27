@@ -112,6 +112,8 @@ Add to cart from the footer already tags `location: "sticky_footer"`, so funnel 
 
 The components stay in the tree. Note after building: only `ProductBenefitTiles` is still rendered elsewhere (`app/page.tsx`). `AbsorptionBioavailability` and `LandingValueComparison` are now fully orphaned, since `CrashChart.tsx:140` mentions the latter only in a comment. They are left in place rather than deleted, but they are dead and a later cleanup should remove them.
 
+**That cleanup has happened.** `AbsorptionBioavailability` and `LandingValueComparison` were deleted on 2026-08-26 (SCRUM-1264), and `ProductBenefitTiles` on 2026-08-27 once the home why-accordion had replaced its last render site. Nothing in this phase is still pending.
+
 - Complexity: Small
 - Files: the three PDP pages
 

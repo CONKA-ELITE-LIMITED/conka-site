@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Corrected the docs the orphan sweep invalidated, including a design system rule that told people to use a deleted component
 - **2026-08-27** | Deleted 16 components nothing imported, and documented the 21 still-orphaned ones that need a decision first (the video heroes are parked for revert, the portal cluster is mid-Skio-migration)
 - **2026-08-27** | The home app section now offers a way to buy as well as a way to download: it was the page's most differentiating moment and its only exit led away from a sale
 - **2026-08-27** | Added a comparison-table row CONKA does not win, "On the high street", so the table on home and the three PDPs reads as a comparison rather than a list of ticks

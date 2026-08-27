@@ -313,8 +313,8 @@ The roster answers "how many" and the feature card answers "what do they say". T
 - **The research argument appears twice**, at 3 and at 9. Decision 2 above. Known trade.
 - **Eleven sections becomes thirteen.** Mobile scroll depth is the thing to watch, which is what task 4 exists to measure.
 - `WhatToExpectV2` **adds GSAP to the home bundle.** Lighthouse check required before merge, against the benchmarks in `docs/development/PERFORMANCE_OPTIMISATION.md`.
-- `ProductBenefitTiles` becomes **fully orphaned**. Home is currently its only consumer; PDP Phase 1 removed it from the product pages.
-- **No home entry exists in `docs/PAGE_NARRATIVES.md`.** The page has no written arc or health rating. Worth adding as part of this work.
+- `ProductBenefitTiles` becomes **fully orphaned**. Home is currently its only consumer; PDP Phase 1 removed it from the product pages. **Resolved:** deleted 2026-08-27 in the tree-wide orphan sweep, see `docs/TODO.md`.
+- **No home entry exists in `docs/PAGE_NARRATIVES.md`.** The page has no written arc or health rating. Worth adding as part of this work. **Resolved:** the home entry exists and is maintained.
 
 ## References
 
