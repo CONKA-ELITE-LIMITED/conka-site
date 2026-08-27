@@ -99,8 +99,9 @@ trial pages rather than per-page.
 - **Verify modal close behavior before L3** — conditional rendering kills any
   exit animation. Both funnel-c modals had none, so it was safe.
 - **Confirm "orphans" are page-local** — colocated components often have
-  same-named copies under sibling pages (`funnel-b`, `/funnel`); grep the whole
-  repo and exclude the file's own path before deleting.
+  same-named copies under sibling pages (`start-b` and `lander-b` still pair
+  this way; `funnel-b` and `/funnel` did before they were deleted); grep the
+  whole repo and exclude the file's own path before deleting.
 
 ---
 

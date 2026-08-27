@@ -27,7 +27,7 @@ The domain fix (Phases 1 + 2) was the prerequisite. These are the remaining thin
 - [ ] **A6. Source check** — confirm the weekend orders actually came from ad clicks (UTMs / Triple Whale), not organic/direct. If organic, "no attribution" is correct, not a bug.
 
 ### B. Headless code work still pending (Phases 3 + 4 below)
-> Ticketed 2026-06-01 under the `meta-tracking-hardening.md` plan. Build push = SCRUM-1043 (Phase 1 hygiene) + B1 + B2 + B3, one branch off `main`.
+> Ticketed 2026-06-01 under the Meta tracking hardening plan (folded into `docs/analytics/META_PIXEL_AND_CAPI.md`). Build push = SCRUM-1043 (Phase 1 hygiene) + B1 + B2 + B3, one branch off `main`.
 - [ ] **B1. Server-side order webhook → CAPI** (Phase 3a) — robust, iOS-proof Purchase. Replaces what Shopify's channel does server-side. **→ SCRUM-1046**
 - [ ] **B2. Capture + propagate `fbclid`/`_fbc`** (Phase 3b) — feeds B1's matching. **→ SCRUM-1047**
 - [ ] **B3. Gate pixel + CAPI to production host only** — Vercel preview/branch deploys (`*.vercel.app`) currently fire the prod pixel `1138202151698404`, polluting the dataset and dragging down data quality. Only fire Meta pixel/CAPI when host is `www.conka.io` (prod). *(Found 2026-06-01 via Events Manager → Actions → "Confirm domains that belong to you": `conka-shopify-git-cant-change-frequency-conka.vercel.app`, `conka-shopify-irg8tbf1-conka.vercel.app`. Do NOT allowlist these in Meta.)* **→ SCRUM-1048**

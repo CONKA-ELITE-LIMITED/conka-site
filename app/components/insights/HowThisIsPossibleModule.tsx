@@ -27,7 +27,7 @@ const STEPS = [
   {
     counter: "02.",
     title: "Test yourself, in the app.",
-    body: "A five-minute cognitive test built into the CONKA app. FDA-cleared, derived from Cambridge research, the same assessment used in NHS Memory Clinics.",
+    body: "A two-minute cognitive test built into the CONKA app. FDA-cleared, derived from Cambridge research, the same assessment used in NHS Memory Clinics.",
   },
   {
     counter: "03.",
@@ -78,7 +78,7 @@ export default function HowThisIsPossibleModule() {
           }
         }
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
 
     observer.observe(node);
@@ -103,7 +103,11 @@ export default function HowThisIsPossibleModule() {
           other people. We do that too, where it matters. But everything below
           also comes from inside our own product, on our own users.
         </p>
-        <div data-how-rule className="mt-6 mb-10 h-px bg-white/20" aria-hidden="true" />
+        <div
+          data-how-rule
+          className="mt-6 mb-10 h-px bg-white/20"
+          aria-hidden="true"
+        />
       </div>
 
       {/* Three-step flow */}
@@ -160,8 +164,8 @@ export default function HowThisIsPossibleModule() {
         across NHS Memory Clinics (ADePT Study, PMC10533908; HRA
         ISRCTN95636074). Test scores reflect individual cognitive test
         performance and do not constitute health claims about CONKA products.
-        Many factors, including lifestyle changes, practice effects, and
-        natural variation, may contribute to changes in test scores.
+        Many factors, including lifestyle changes, practice effects, and natural
+        variation, may contribute to changes in test scores.
       </p>
     </div>
   );

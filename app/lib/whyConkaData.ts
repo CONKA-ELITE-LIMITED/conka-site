@@ -77,7 +77,7 @@ export const whyConkaReasons: WhyConkaReason[] = [
     id: 4,
     headline: "Measured, not marketed",
     oneLine:
-      "A 5-minute Cambridge-built cognitive test shows you exactly what's changing in your brain.",
+      "A 2-minute Cambridge-built cognitive test shows you exactly what's changing in your brain.",
     asset: "/app/AppConkaRing.png",
     assetAlt: "The CONKA app cognition test showing a score of 92",
     assetFit: "contain",

@@ -115,7 +115,7 @@ All phases are active (the whole portal is in scope). Ship each phase independen
 
 | Ticket | Title | Scope | Status |
 |--------|-------|-------|--------|
-| SCRUM-1188 | [Frontend] Convert /account portal to Simple DTC | Whole portal (all 4 phases) | To Do |
+| SCRUM-1188 | [Frontend] Convert /account portal to Simple DTC | Whole portal (all 4 phases) | In Progress in Jira, but the work shipped - all four phases are Done. The ticket was never closed (checked 2026-08-27) |
 
 Subtask of the programme parent SCRUM-1183.
 

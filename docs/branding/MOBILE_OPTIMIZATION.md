@@ -1,6 +1,9 @@
 # Mobile Optimization Guide
 
-This document captures the lessons learned and preferences established during the homepage mobile optimization. Use this as a reference when optimizing product pages and other sections of the site.
+**The implementation patterns.** The mobile-first mandate and its design rules are
+stated once, in `docs/branding/DESIGN_SYSTEM.md` §7, and the review gate is in
+`docs/branding/QUALITY_STANDARDS.md`. This doc is the how: component
+architecture, layout patterns and the lessons learned building them.
 
 ---
 
@@ -308,30 +311,39 @@ Use **explicit mobile components** when:
 Use **responsive-in-one** (single component + `useIsMobile` and conditional UI) when:
 
 - Same layout with smaller tweaks (e.g. tap vs hover, condensed copy, collapsible blocks).
-- You want one source of truth and minimal duplication (e.g. CycleBreak: same two-column strip, different interaction and copy length on mobile).
+- You want one source of truth and minimal duplication (same layout, different interaction and copy length on mobile).
 
-Protocol PDP examples:
+Worked examples (from the deleted protocol PDP — the components are gone, but
+the calls they illustrate are still how to decide):
 
-| Area | Pattern | Reason |
+| Area | Pattern chosen | Why |
 |------|--------|--------|
-| Protocol calendar | Explicit: `ProtocolCalendarSectionMobile.tsx` | Mobile shows one week + “repeat for month”, inline tier/pricing/CTA; desktop shows 4-week grid + sidebar. |
-| CycleBreak (Flow/Clear reveal) | Responsive-in-one: `CycleBreak.tsx` | Same two-column strip; mobile uses tap-to-reveal, shorter copy, no title in revealed block; desktop uses hover and full copy. |
-| CycleTrap (science steps) | Responsive-in-one: `CycleTrap.tsx` | Same steps; mobile has collapsible “The science” and shorter nav labels. |
+| Protocol calendar | **Explicit** mobile file | Mobile showed one week + “repeat for month” with inline tier/pricing/CTA; desktop showed a 4-week grid + sidebar. Genuinely different layouts. |
+| Flow/Clear reveal strip | **Responsive-in-one** | Same two-column strip; mobile used tap-to-reveal and shorter copy, desktop used hover and full copy. Interaction differed, layout did not. |
+| Science steps | **Responsive-in-one** | Same steps; mobile added a collapsible “The science” and shorter nav labels. |
 
 ---
 
 ## Mobile-Specific Components Created
 
+Current as of Aug 2026 (`find app -name "*Mobile.tsx"`):
+
 | Component                   | Purpose                                                            |
 | --------------------------- | ------------------------------------------------------------------ |
 | `KeyBenefitsMobile.tsx`     | Horizontal scroll benefits, collapsible studies, radar chart focus |
-| `IngredientsMobile.tsx`     | Formula toggle, table-only (no image), taste info                  |
-| `CaseStudiesMobile.tsx`     | Single athlete view with prev/next navigation                      |
-| `ProtocolBuilderMobile.tsx` | 2x2 protocol grid, calendar view, sticky CTA footer                |
-| `TrialPacksMobile.tsx`      | Formula toggle, pack grid, collapsible sticky footer               |
-| `WhatToExpectTimelineMobile.tsx` | Tap-to-expand timeline: time + headline always visible; body + formula gradient when expanded; one card open at a time |
-| `FormulaBenefitsStatsMobile.tsx` | Huel-style layout: photo first, then title + subtitle, 2x3 stat grid, CTA button; wrapper uses `useIsMobile()` |
-| `ProtocolCalendarSectionMobile.tsx` | One-week protocol calendar, tier/purchase toggles, pricing + CTA in one card; “repeat this cycle weekly for the month” |
+| `WhyConkaWorksMobile.tsx`   | Mobile treatment of the why-it-works section                        |
+| `NavigationMobile.tsx`      | Mobile nav drawer                                                   |
+| `BannerMobile.tsx`          | Announcement banner, mobile sizing                                  |
+| `ProductGridMobile.tsx`     | Home product grid, mobile layout                                    |
+| `StickyPurchaseFooterMobile.tsx` | PDP sticky buy footer                                          |
+| `CaseStudiesPageMobile.tsx` | `/case-studies` mobile layout                                       |
+| `IngredientsPageMobile.tsx` | `/ingredients` mobile layout                                        |
+| `CognitiveTestSectionMobile.tsx` | Cognitive test section, mobile layout                          |
+
+The earlier protocol/trial-era mobile components (`IngredientsMobile`,
+`CaseStudiesMobile`, `ProtocolBuilderMobile`, `TrialPacksMobile`,
+`WhatToExpectTimelineMobile`, `FormulaBenefitsStatsMobile`,
+`ProtocolCalendarSectionMobile`) were deleted with the surfaces they served.
 
 ---
 

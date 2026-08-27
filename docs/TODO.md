@@ -73,32 +73,13 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ### 1. Delete `app/protocol/[id]/page.tsx` and the protocol route
 
-**Status:** Deferred
-**Files:**
-- `app/protocol/[id]/page.tsx` -- the old multi-protocol PDP, now superseded by `/conka-both`
-- `app/components/protocol/` -- all protocol-specific UI components (ProtocolHero, ProtocolHeroMobile, ProtocolCalendar, ProtocolCalendarMobile, ProtocolRatioSelector, ProtocolTabs, etc.)
-
-**What unblocks it:**
-- Confirm no remaining direct links to `/protocol/*` anywhere in the codebase (check analytics for residual traffic before deleting)
-- Redirects in `next.config.ts` already handle all incoming traffic (`/protocol/:path*` -> `/conka-both`)
-- Review `app/components/product/` components that accept `protocolId` props -- once the protocol page is gone, those code paths become dead weight
-
-**Why deferred:** The old page still exists as a safety net. Once the new `/conka-both` page has been live for a release cycle with no issues, this cleanup can proceed without risk.
+**Status:** DONE. `app/protocol/` and `app/components/protocol/` are deleted; `/protocol/:path*` permanently redirects to `/conka-both`. The commerce layer that serves existing subscribers stays quarantined in `app/lib/legacy/protocolSubscriptions.ts` — see item 3.
 
 ---
 
 ### 2. Update `CognitiveTestRecommendation.tsx` -- non-Balance protocol links
 
-**Status:** Deferred
-**File:** `app/components/cognitive-test/CognitiveTestRecommendation.tsx`
-**Lines:** The entries for protocol 1, 2, and 4 still link to `/protocol/1`, `/protocol/2`, `/protocol/4`
-
-**What unblocks it:**
-- Decision on what these recommendations should point to now that individual protocols are deprecated
-- Options: all redirect to `/conka-both`, or map Flow/Clear recommendations to `/conka-flow` and `/conka-clarity` based on the recommendation logic
-- The cognitive test itself is currently hidden from navigation (Phase 1 of simplification plan), so this is low urgency
-
-**Why deferred:** The cognitive test is hidden from nav. The `/protocol/*` catch-all redirect in `next.config.ts` means links still resolve. Proper fix requires a product decision on what the test should recommend now.
+**Status:** DONE. `app/components/cognitive-test/CognitiveTestRecommendation.tsx` no longer links to `/protocol/*`; it points at the live product routes.
 
 ---
 
@@ -131,43 +112,10 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ## PDP Structure Rework Cleanup
 
-### ~~Delete the components the PDP rework orphaned~~
+### Do not delete these, they only look orphaned
 
-**Status:** DONE 2026-08-26 (SCRUM-1264). Verified by route parity: 100 routes before, 100 after
-**Plan:** `docs/development/featurePlans/pdp-structure-rework.md` (Phase 1, SCRUM-1260; Phase 2, SCRUM-1261)
-
-Phase 1 took `ProductBenefitTiles`, `AbsorptionBioavailability` and `LandingValueComparison` off the three PDPs, and Phase 2 replaced the last two with `ProductComparisonTable`. The components were deliberately left in the tree at the time. Two of the three now have **zero code consumers** (verified 2026-08-26; the only remaining mentions are docs and one comment):
-
-| File | Status |
-|------|--------|
-| `app/components/product/AbsorptionBioavailability.tsx` | Orphaned. No references outside docs. |
-| `app/components/landing/LandingValueComparison.tsx` | Orphaned. Only mention is a comment in `app/components/landing/CrashChart.tsx:140`. |
-| `app/components/product/ProductBenefitTiles.tsx` | **Keep.** Still rendered by `app/page.tsx` (home). |
-
-Deleting the two frees nothing else: `CrashChart`, `ConkaCTAButton` and `PRICE_PER_SHOT_BOTH` all have several other consumers. Two static images go with them, both now unreferenced anywhere in `app/`:
-
-- `public/formulas/conkaFlow/FlowLiquid.jpg`
-- `public/formulas/conkaClear/ClearLiquid.jpg`
-
-(The `FlowLiquid` / `ClearLiquid` **videos** under `public/videos/` are a different asset and are still live in `BottleVideo`, the quiz template and the ADHD listicle. Do not delete those.)
-
-**What unblocks it:** the Phase 1 and 2 branches being live in prod for a release cycle with no request to reinstate either section. The absorption angle in particular was cut on judgement ("a category claim any competitor also makes"), so it is the one most likely to be asked for back.
-
-**Why deferred:** cleanup only, no user-facing impact, and keeping them costs nothing but tree noise. Grouped here so the deletion is one deliberate commit rather than a silent tidy inside a feature branch.
-
----
-
-### ~~Delete what the ingredient grid orphaned~~
-
-**Status:** DONE 2026-08-26 (SCRUM-1264, branch `chore/pdp-orphan-cleanup`). Kept below because the do-not-delete table is still live guidance
-**Plan:** `docs/development/featurePlans/pdp-structure-rework.md`, Phase 3
-
-Phase 3a replaced the ingredient rail with a grid and dropped partner folding; 3b removed `IngredientOutcomeAccordions` from the desktop hero. Verified orphaned as of 2026-08-26, no remaining consumers:
-
-- `app/components/product/IngredientOutcomeAccordions.tsx`
-- `INGREDIENT_PARTNERS` in `app/lib/mmPdpData.ts`, whose only consumer is that component
-
-**Three things NOT to delete while you are in there**, all of which look orphaned at a glance and are not:
+**Status:** Live reference. The deletions this table guarded are DONE (2026-08-26, SCRUM-1264, branch `chore/pdp-orphan-cleanup`); the table stays because each entry still reads as dead at a glance.
+**Plan:** `docs/development/featurePlans/pdp-structure-rework.md`
 
 | Looks dead | Actually |
 |------------|----------|
@@ -175,8 +123,86 @@ Phase 3a replaced the ingredient rail with a grid and dropped partner folding; 3
 | `OUTCOME_BUCKETS` (`mmPdpData.ts`) | Live, and more load-bearing than before. The grid badge derives its first line from it. |
 | `WHO_ITS_FOR` (`HeroAccordions.tsx`) | Live. The Who-is-it-for row uses it. |
 | `DotIndicator` | Live. The grid stopped using it but `CROTestimonials` still does. |
+| ~~`ProductBenefitTiles.tsx`~~ | **No longer true. Now genuinely orphaned** as of 2026-08-27 (SCRUM-1265): the home why-accordion replaced it and `app/page.tsx` was its last consumer. See the entry below. |
+| `FlowLiquid` / `ClearLiquid` **videos** under `public/videos/` | Live in `BottleVideo`, the quiz template and the ADHD listicle. Only the same-named `.jpg` statics were the orphans, and those are gone. |
+| `BrainFuelBand` (`app/lander/sections/`) | Live on `app/page.tsx`, `/lander` and `/lander-b`. Phase 6 removes only the `/conka-both` reference. |
 
-**Why deferred:** deleting them in the same commit as the rewrite would have made the diff unreadable. Grouped here so it is one deliberate cleanup.
+Phase 1 and 2 removed `AbsorptionBioavailability` and `LandingValueComparison`; both are deleted. The absorption angle was cut on judgement ("a category claim any competitor also makes"), so it is the one most likely to be asked for back: it is in git history at `chore/pdp-orphan-cleanup`.
+
+---
+
+## Home Page Round 2 Cleanup
+
+### Delete `ProductBenefitTiles.tsx`
+
+**Status:** Open. Genuinely orphaned as of 2026-08-27 (SCRUM-1265).
+**Plan:** `docs/development/featurePlans/home-page-round-2.md`
+
+`app/components/product/ProductBenefitTiles.tsx` has no consumers. PDP Phase 1 took it off the three product pages, and the home why-accordion has now replaced it at `app/page.tsx` position 2, which was its last render site.
+
+Left in the tree rather than deleted in the same commit, following the pattern SCRUM-1264 used: prove the replacement holds in production first, then sweep.
+
+Worth knowing before deleting: its three titles were the same three strings as `OUTCOME_BUCKETS` in `mmPdpData.ts` ("Mental performance", "Sustained energy", "Brain health"), which is why it was replaceable. `OUTCOME_BUCKETS` itself is still live and feeds the PDP ingredient grid badges, so do not follow the thread through and delete that too.
+
+**Unblocks:** nothing. This is a tidy-up, safe to do whenever.
+
+### `LabGuarantee` is NOT orphaned
+
+The 100 day guarantee section came off the home page in the same ticket. `app/components/landing/LabGuarantee.tsx` stays live on `/conka-flow`, `/conka-clarity`, `/conka-both` and `/case-studies`. Nothing to clean up, recorded here only because "we removed the guarantee section" reads like a deletion.
+
+---
+
+## Design System Debt
+
+### Define `--tracking-tight`, or delete the four references to it
+
+**Status:** Open. Found 2026-08-27 while building the home why-accordion (SCRUM-1265).
+
+Four components tighten their headline letter-spacing with `style={{ letterSpacing: "var(--tracking-tight)" }}`:
+
+- `app/components/home/AppUSPSection.tsx`
+- `app/components/landing/LandingProductShowcase.tsx`
+- `app/components/landing/LandingDailyBenefits.tsx`
+- `app/components/landing/LandingTestimonials.tsx`
+
+**The token is defined nowhere.** It is in neither `app/brand-base.css` nor `app/globals.css`. A CSS custom property with no definition and no fallback makes the browser drop the whole declaration silently, so all four headlines render at normal tracking while the code reads as though they are tightened.
+
+`app/components/landing/LabResearch.tsx` writes the literal `-0.02em` instead and does get the tightening, which is why some headlines on the site are subtly tighter than others. `HomeWhyAccordion` copied the literal for the same reason.
+
+**Two ways to fix it, and the choice is a visual one:**
+
+1. Define `--tracking-tight: -0.02em` in `brand-base.css`. One line, and it makes all four headlines tighter than they render today. That is a change to four live surfaces, so it wants eyes on a preview, not a drive-by commit.
+2. Replace the four `var(--tracking-tight)` references with the literal `-0.02em`, matching `LabResearch`. Same visual outcome as option 1.
+
+Either way the end state should be one approach, not both. A third option, deleting the property from the four components so they keep rendering exactly as they do now, is the only genuinely no-op fix.
+
+**Unblocks:** nothing. Purely cosmetic, nobody has reported it.
+
+---
+
+### ~~Cognitive test duration said five minutes in two places~~
+
+**Status:** Done 2026-08-27, in the SCRUM-1265 branch.
+
+The app's cognitive test is **two minutes**. That is what `faqContent.ts` says in six answers, plus `CaseStudiesHero`, `PilotProgramme`, `productivity-listicle`, `adhd-listicle` and `brain-age`.
+
+Two files disagreed and have been corrected:
+
+- `app/components/insights/HowThisIsPossibleModule.tsx` said "a five-minute cognitive test" (renders on `/app-insights`)
+- `app/lib/whyConkaData.ts` said "a 5-minute Cambridge-built cognitive test" (renders on `/why-conka`)
+
+Recorded rather than dropped because the number is scattered across a dozen files with no single source. **If it ever changes, it is a repo-wide find and replace, not a one-line edit.** Worth pulling into a shared constant if a third value ever appears.
+
+---
+
+### Orphaned FAQ lifestyle image
+
+**Status:** Open, one-line cleanup
+**File:** `public/lifestyle/clear/ClearDrink.jpg`
+
+Dropping the sticky FAQ image from the three PDPs (Phase 6) left this static with no consumer in `app/`. `FlowDrink.jpg` is still live in `app/lib/landings/general-listicle.ts`, and `LabFAQ`'s `DEFAULT_IMAGE` (`FlowDeskClutter.jpg`) is still served on the home page, so neither of those goes.
+
+**Why deferred:** grouped with the other asset deletions rather than deleted inside a feature branch.
 
 ---
 

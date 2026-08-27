@@ -6,7 +6,7 @@
 
 **Everything remaining is content, not code.** **Phase 10** (FAQ answer surface) has since shipped (SCRUM-1143; system doc `docs/features/FAQ_SYSTEM.md`). **Phase 9** (AEO content shape) is editorial and needs a content owner. **Phase 6** (blog, `blog-informational-content-surface.md`) is the bigger acquisition bet but is gated on a content engine.
 **Owner:** Rudh
-**Source inputs:** `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research); AEO best-practice review (Ahrefs AEO course intro + a structured-data-for-AEO talk, summarised 2026-07-14)
+**Source inputs:** `docs/seo-aeo/CONKA_SEO_Keyword_Map_v4.md` (Humphrey, keyword research); AEO best-practice review (Ahrefs AEO course intro + a structured-data-for-AEO talk, summarised 2026-07-14)
 **Created:** 2026-07-10
 **Updated:** 2026-07-14
 
@@ -489,7 +489,7 @@ Plus one strategic idea worth recording: **pivot some keyword targeting to tools
 
 ## References
 
-- Source keyword research: `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
+- Source keyword research: `docs/seo-aeo/CONKA_SEO_Keyword_Map_v4.md`
 - Page rules incl. mandatory SEO and JSON-LD: `.claude/rules/pages.md`
 - Root metadata: `app/layout.tsx`
 - Existing per-route metadata precedent: `app/science/page.tsx`, `app/go/[slug]/page.tsx`

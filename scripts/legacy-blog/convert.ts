@@ -10,7 +10,7 @@
  * plan doc and get a hand pass instead.
  *
  * The content contract this must satisfy is
- * docs/development/featurePlans/blog-notion-engine-brief.md: real headings,
+ * docs/features/blog-notion-engine-brief.md: real headings,
  * real bullets, real bold, links with an href, and no em dashes.
  */
 import { readFileSync } from "node:fs";

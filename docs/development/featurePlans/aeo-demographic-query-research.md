@@ -343,10 +343,10 @@ Six angles, deduped and clustered within each, ~15 to 20 questions each. Columns
 - Strategy and audience mapping: `docs/seo-aeo/AEO_PLAYBOOK.md`
 - Measurement instrument and the baseline this feeds: `docs/seo-aeo/aeo-scorecard.md`
 - What is live on-site (foundation, Phases 1 to 10): `docs/seo-aeo/README.md`
-- The blog surface this queue feeds (in build): `docs/development/featurePlans/blog-informational-content-surface.md`
-- The engine-facing Notion contract (handoff target): `docs/development/featurePlans/blog-notion-engine-brief.md`
-- Keyword map (volume/KD source to mine from, tiebreaker only): `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
-- SEO/AEO programme master plan: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`
+- The blog surface this queue feeds (in build): `docs/development/featurePlans/archive/blog-informational-content-surface.md`
+- The engine-facing Notion contract (handoff target): `docs/features/blog-notion-engine-brief.md`
+- Keyword map (volume/KD source to mine from, tiebreaker only): `docs/seo-aeo/CONKA_SEO_Keyword_Map_v4.md`
+- SEO/AEO programme master plan: `docs/development/featurePlans/archive/seo-aeo-metadata-foundation.md`
 - Search Console baseline (the free GSC step in Phase 3): `docs/seo-aeo/seo-search-console-baseline.md`
 
 ## Jira

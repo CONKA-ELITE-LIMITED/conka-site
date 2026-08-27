@@ -11,7 +11,7 @@ A high-level timeline of how CONKA's analytics and Meta attribution got to where
 ### Early 2026 (Feb) — Vercel-first analytics, Triple Whale reconnection
 The first analytics build after the headless rebuild leaned heavily on Vercel Analytics with a large per-event property spec, and spent effort reconnecting Triple Whale (drain vs pixel options).
 
-**Why we moved on:** the event taxonomy was over-specified for how the data was actually used. It was simplified to a small, budgeted set (see [FUNNEL_EVENTS.md](FUNNEL_EVENTS.md)), Triple Whale settled as the client `TriplePixel` only, and verification moved to the `/review-analytics` skill.
+**Why we moved on:** the event taxonomy was over-specified for how the data was actually used. It was simplified to a small, budgeted set (see [BYO_EVENTS.md](BYO_EVENTS.md)), Triple Whale settled as the client `TriplePixel` only, and verification moved to the `/review-analytics` skill.
 **Removed 2026-07-20:** `IMPLEMENTATION_GUIDE.md`, `SIMPLIFIED_GUIDE.md`, `TRIPLE_WHALE_INTEGRATION.md`, `VERIFICATION_GUIDE.md` (all Feb-2026, superseded; recoverable from git). This history entry replaces their record.
 
 ### May-June 2026 — The headless attribution fix (the turning point)
@@ -47,6 +47,6 @@ With the transport fixed, the focus shifted to the quality and truthfulness of t
 | Current implementation + fact-box + data-flow diagram | [README.md](README.md) |
 | Meta pixel + CAPI reference | [META_PIXEL_AND_CAPI.md](META_PIXEL_AND_CAPI.md) |
 | Alia email/phone enrichment | [EMAIL_CAPTURE_ENRICHMENT.md](EMAIL_CAPTURE_ENRICHMENT.md) |
-| Vercel funnel taxonomy | [FUNNEL_EVENTS.md](FUNNEL_EVENTS.md) |
+| Vercel funnel taxonomy | [BYO_EVENTS.md](BYO_EVENTS.md) |
 | Dated diagnosis + fix log | [HEADLESS_ATTRIBUTION_FIX.md](HEADLESS_ATTRIBUTION_FIX.md) |
 | Fuller problem narrative | [ATTRIBUTION_STATE_AND_PLAN.md](ATTRIBUTION_STATE_AND_PLAN.md) |

@@ -132,7 +132,7 @@ Keep iterations small and deployable. One change per push so you can attribute i
 ## Step 6: Update documentation
 
 If the iteration changes the page's behaviour, pricing strategy, or UX patterns:
-1. Update the relevant section in `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md`
+1. Update the relevant section in `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md`
 2. Add a decision log entry if a strategic choice was made
 3. Follow `./05-creating-documentation.md` for format
 
@@ -156,6 +156,6 @@ If the iteration changes the page's behaviour, pricing strategy, or UX patterns:
 - Scoping (new features): `./01-scoping-work.md`
 - Implementation: `./02-implementation-workflow.md`
 - Code review: `./06-code-review.md`
-- Active plan: `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md`
+- Current state + roadmap: `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md`
 - Design system: `docs/branding/DESIGN_SYSTEM.md`
 - Competitor references: See plan doc "Reference" section for URLs

@@ -1,13 +1,13 @@
 # Account Portal — Funnel Simplification
 
-Simplify the subscription portal from its protocol-era shape to the funnel product model (Flow / Clear / Both × monthly / quarterly), taking structural cues from Magic Mind's Skio portal. This is the **content / IA / commerce-model** simplification — distinct from and complementary to the cosmetic Clinical→Simple DTC restyle in [`account-portal-simple-dtc.md`](./account-portal-simple-dtc.md) (SCRUM-1188), which deliberately ring-fenced this logic.
+Simplify the subscription portal from its protocol-era shape to the funnel product model (Flow / Clear / Both × monthly / quarterly), taking structural cues from Magic Mind's Skio portal. This is the **content / IA / commerce-model** simplification — distinct from and complementary to the cosmetic Clinical→Simple DTC restyle in [`archive/account-portal-simple-dtc.md`](./archive/account-portal-simple-dtc.md) (SCRUM-1188), which deliberately ring-fenced this logic.
 
 ## Problem (root cause: wrong abstraction)
 
 The portal is hard-coded to the **protocol** concept — tiers (starter/pro/max), formula-mix ratios, protocol IDs, pack sizes (4/8/12/28) — instead of a **generic DTC subscription product** (a product, a cadence, a price, a next-delivery date, a status). Almost every defect below is a symptom of that one wrong abstraction: the portal reasons in "protocols," so for a plain funnel subscription its logic is either broken or irrelevant.
 
 - Subscription cards title as `Conka Flow - Starter - 4` with a `STARTER` tier badge and a protocol subtitle/description — none of which map to a funnel product.
-- A **"Formula mix — 0× Flow + 0× Clarity per week"** card renders literal zeros (funnel subs have no protocol flow/clarity counts). `SubscriptionCard.tsx` ~256-280.
+- A **"Formula mix — 0× Flow + 0× Clarity per week"** card renders literal zeros (funnel subs have no protocol flow/clarity counts). `SubscriptionListCard.tsx`.
 - Shots-per-delivery and per-shot tiles were already removed (Aug 2026) for the same root cause; see [`../../product/SKU_AND_SHOT_REFERENCE.md`](../../product/SKU_AND_SHOT_REFERENCE.md) §5.
 - `EditSubscriptionModal` lets a customer change protocol + tier + pack size (4/8/12/28) — controls that don't exist in the funnel model.
 
@@ -69,7 +69,7 @@ Product image · clean product name (**Flow / Clear / Both**, via `getSubscripti
 ### Subscription detail view
 - **Header:** product name + Monthly/Quarterly + price + status. No cadence edit.
 - **Products:** the line(s) with a **Swap** control (same-cadence products only). "Both" is multi-line (Flow + Clear); swapping to/from it adds/removes a line (reuse the multi-line edit path). Skip = per-order skip.
-- **Upsell (filtered):** reuse `getUpsellOffer` from `funnelData.ts` (Flow→Both add Clear, Clear→Both add Flow, monthly→quarterly). Filter out what they already have (don't offer Both to a Both subscriber).
+- **Upsell (filtered):** reuse `getUpsellOffer` from `byoData.ts` (Flow→Both add Clear, Clear→Both add Flow, monthly→quarterly). Filter out what they already have (don't offer Both to a Both subscriber).
 - **Shipping:** address + edit.
 - **Summary:** subtotal / shipping (free for subs) / total + "You've saved £X vs one-time" (derive from `compareAtPrice` in `FUNNEL_PRICING`).
 - **Billing:** payment method + update (reuse `usePaymentMethods` / `triggerUpdateEmail`).
@@ -97,11 +97,11 @@ Phases 0 and 1 shipped together in SCRUM-1199 (the `DtcSubscriptionView` normali
 ## Affected files (current-state map)
 
 - `app/account/subscriptions/page.tsx` — list page (renders expanded cards today).
-- `app/components/subscriptions/SubscriptionCard.tsx` — the card; artifacts to strip at ~130-157 (title/badge/subtitle/description) and ~256-280 (formula mix).
+- `app/components/subscriptions/SubscriptionListCard.tsx` — the card; artifacts to strip at ~130-157 (title/badge/subtitle/description) and ~256-280 (formula mix).
 - `app/account/subscriptions/utils.ts` — `getSubscriptionType` (funnel-aware, reuse), `getTierDisplayInfo`/`PROTOCOL_INFO` (protocol-shaped, retire from display).
 - `app/components/subscriptions/EditSubscriptionModal.tsx` + `MultiLineEditModal.tsx` — swap UI to remodel in Phase 2.
 - `app/hooks/useSubscriptions.ts` — `changePlan` / `editMultiLine` to re-point at funnel variants.
-- `app/lib/funnelData.ts` — `FUNNEL_VARIANTS`, `getUpsellOffer`, `FUNNEL_PRICING` (source for swap targets, upsell, savings).
+- `app/lib/byoData.ts` — `BYO_VARIANTS`, `getUpsellOffer`, `BYO_PRICING` (source for swap targets, upsell, savings).
 - `app/api/auth/subscriptions/**` — swap/edit routes.
 - `CancellationModal.tsx` — cancel-flow enhancement (Phase 4).
 
@@ -135,9 +135,9 @@ Still deferred (not in this visual pass): upsell accept (Phase 3), swap (Phase 2
 
 ## References
 
-- Cosmetic restyle (complementary): [`account-portal-simple-dtc.md`](./account-portal-simple-dtc.md) (SCRUM-1188)
+- Cosmetic restyle (complementary): [`archive/account-portal-simple-dtc.md`](./archive/account-portal-simple-dtc.md) (SCRUM-1188)
 - SKU / shot model + why the tiles were wrong: [`../../product/SKU_AND_SHOT_REFERENCE.md`](../../product/SKU_AND_SHOT_REFERENCE.md)
-- Funnel product model, swap targets, upsell, savings: `app/lib/funnelData.ts`
+- Funnel product model, swap targets, upsell, savings: `app/lib/byoData.ts`
 - Skio portal structure + settings: https://help.skio.com/docs/customer-portal-v2-walkthrough , https://help.skio.com/docs/customer-portal-v2-settings
 - Skio cancel-flow best practices: https://help.skio.com/docs/cancel-flow-best-practices-guide
 - Skio supplement-churn playbook: https://skio.com/blog/why-70-of-supplement-subscribers-churn-after-order-2

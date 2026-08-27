@@ -9,7 +9,6 @@ import Footer from "./components/footer";
 import HomeHeroStatic from "./components/landing/HomeHeroStatic";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
-import LabGuarantee from "./components/landing/LabGuarantee";
 import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
@@ -17,8 +16,12 @@ import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
 import AthleteReviewFeature from "./components/AthleteReviewFeature";
-import ProductBenefitTiles from "./components/product/ProductBenefitTiles";
 import Certifications from "./components/Certifications";
+// Section-impression tracking (SCRUM-1265). HomeSection is a thin client
+// wrapper around <section>; the sections themselves stay server-rendered.
+import HomeSection, {
+  HomeSectionImpressions,
+} from "./components/home/HomeSection";
 
 const LandingProductShowcase = dynamic(
   () => import("./components/landing/LandingProductShowcase"),
@@ -28,6 +31,16 @@ const LandingProductShowcase = dynamic(
 const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
   loading: () => <div className="h-[900px]" />,
 });
+
+// Client component: always-one-open state plus an animated expand, neither of
+// which a native <details> gives. Code-split like the page's other client
+// sections so its JS stays out of the initial bundle. SSR is left on (no
+// `ssr: false`), so the five rows of copy are still in the server-rendered
+// HTML for crawlers; only the hydration chunk is deferred.
+const HomeWhyAccordion = dynamic(
+  () => import("./components/home/HomeWhyAccordion"),
+  { loading: () => <div className="h-[760px] lg:h-[700px]" /> },
+);
 
 // Section 10 (Case Studies) commented out per request 2026-07-20. Re-enable this
 // import together with the section block below to restore it.
@@ -71,152 +84,170 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
-      {/* Serialises the same conversion subset the LabFAQ section renders below, so
+    // HomeSectionImpressions owns the page's single IntersectionObserver and
+    // fires home:section_viewed once per section per pageview (SCRUM-1265). It
+    // is a client boundary, but the sections below stay server components: they
+    // are passed through as children, not imported into the client bundle.
+    <HomeSectionImpressions>
+      <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+        {/* Serialises the same conversion subset the LabFAQ section renders below, so
           the schema never describes a question the page does not show (SCRUM-1140). */}
-      <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
-      {/* No hero preload links needed: HomeHeroStatic renders an eager
+        <JsonLd schema={buildFaqSchema(CONVERSION_FAQ_ITEMS)} />
+        {/* No hero preload links needed: HomeHeroStatic renders an eager
           fetchpriority=high <img> in the initial HTML, so the preload scanner
           discovers the LCP asset itself (the old video hero painted CSS
           background posters, which needed explicit preloads). */}
-      {/* ===== SECTION 1: HERO ===== */}
-      <Navigation />
-      {/* Desktop drops the section gutters/track so the hero asset can
+        {/* ===== SECTION 1: HERO ===== */}
+        <Navigation />
+        {/* Desktop drops the section gutters/track so the hero asset can
           bleed to the viewport edge (listicle hero pattern); mobile keeps
           the standard section padding */}
-      {/* The fixed desktop nav reserves a 136px spacer but renders ~120px, so
+        {/* The fixed desktop nav reserves a 136px spacer but renders ~120px, so
           a ~16px white sliver shows above the flush hero. Pull the hero up into
           that surplus at xl only (its empty top space absorbs it); the mobile
           and lg-tablet navs are in normal flow and need no adjustment. */}
-      {/* Magic Mind-style metal-tray still hero: portrait render on mobile,
+        {/* Magic Mind-style metal-tray still hero: portrait render on mobile,
           landscape render on desktop, art-directed inside HomeHeroStatic.
           (HomeHeroVideo + HomeHeroVideoDesktop, the looped video hero, are
           kept in the codebase for revert.) */}
-      <section
-        className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
-        aria-label="Homepage hero"
-      >
-        <div className="brand-track lg:max-w-none!">
-          <HomeHeroStatic />
-        </div>
-      </section>
+        <HomeSection
+          id="hero"
+          className="brand-section brand-hero-first brand-bg-white lg:p-0! max-lg:pb-0! xl:-mt-4"
+          ariaLabel="Homepage hero"
+        >
+          <div className="brand-track lg:max-w-none!">
+            <HomeHeroStatic />
+          </div>
+        </HomeSection>
 
-      {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
-      {/* White so it flows straight out of the hero's white copy column; the
-          benefit-tiles section below carries the first tint break. The hero
-          drops its bottom padding on mobile, so the gap above this section
-          comes from this section's own top padding. */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="What CONKA does"
-      >
-        <div className="brand-track">
-          <LandingProductShowcase ctaHref="/conka-both" />
-        </div>
-      </section>
+        {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
+        {/* White so it flows straight out of the hero's white copy column; the
+          why-accordion below carries the first tint break.
+          This briefly ran third, under the why-accordion, on the theory that
+          cold traffic wants the problem framed before the product. Swapped back
+          2026-08-27: the accordion is a tall block of closed rows, and putting
+          it between the hero and the first sight of the product pushed the
+          product too far down. The accordion now reads as the "why" behind a
+          product you have already seen. */}
+        <HomeSection
+          id="showcase"
+          className="brand-section brand-bg-white"
+          ariaLabel="What CONKA does"
+        >
+          <div className="brand-track">
+            <LandingProductShowcase ctaHref="/conka-both" />
+          </div>
+        </HomeSection>
 
-      {/* ===== SECTION 3: KEY BENEFITS (benefit tiles) ===== */}
-      <section
-        id="benefit-tiles"
-        className="brand-section brand-bg-tint"
-        aria-label="Key benefits"
-      >
-        <div className="brand-track">
-          <ProductBenefitTiles />
-        </div>
-      </section>
+        {/* ===== SECTION 3: WHY CONKA EXISTS (numbered accordion) ===== */}
+        {/* Replaced ProductBenefitTiles, whose three titles restated the outcome
+          buckets the PDPs already carry (SCRUM-1265).
+          Tint, so it breaks out of the white showcase above AND so the
+          accordion's white card reads as a raised surface rather than
+          dissolving into the section. */}
+        <HomeSection
+          id="why"
+          className="brand-section brand-bg-tint"
+          ariaLabel="Why CONKA exists"
+        >
+          <div className="brand-track">
+            <HomeWhyAccordion />
+          </div>
+        </HomeSection>
 
-      {/* Certification badges — self-contained white band under the benefits. */}
-      <Certifications />
+        {/* Certification badges — self-contained white band under the accordion. */}
+        <Certifications />
 
-      {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
+        {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
           LandingDailyBenefits; white section with the neuron clip full-bleed
           and the stats on a light-grey proof card. Owns its own full-bleed
           section, so it is not wrapped in brand-section/brand-track). ===== */}
-      <BrainFuelBand />
+        <BrainFuelBand />
 
-      {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}
-      <div id="product-grid" className="scroll-mt-20">
-        <section
-          className="brand-section brand-bg-white"
-          aria-label="Shop CONKA formulas"
+        {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}
+        {/* The id doubles as the hero CTA's #product-grid scroll anchor and as
+            the tracked section name, so scroll-mt lives on the section itself
+            rather than on a wrapper div. */}
+        <HomeSection
+          id="product-grid"
+          className="brand-section brand-bg-white scroll-mt-20"
+          ariaLabel="Shop CONKA formulas"
         >
           <div className="brand-track">
             <ProductGrid />
           </div>
-        </section>
-      </div>
+        </HomeSection>
 
-      {/* ===== SECTION 5.5: FEATURED ATHLETE REVIEW (Jack Willis) ===== */}
-      {/* White so the white-background cutout portrait floats; pt-0 shares the
+        {/* ===== SECTION 5.5: FEATURED ATHLETE REVIEW (Jack Willis) ===== */}
+        {/* White so the white-background cutout portrait floats; pt-0 shares the
           product grid's bottom padding rather than doubling the white gap. */}
-      <section
-        className="brand-section brand-bg-white pt-0!"
-        aria-label="Featured athlete review"
-      >
-        <div className="brand-track">
-          <AthleteReviewFeature />
-        </div>
-      </section>
+        <HomeSection
+          id="athlete-review"
+          className="brand-section brand-bg-white pt-0!"
+          ariaLabel="Featured athlete review"
+        >
+          <div className="brand-track">
+            <AthleteReviewFeature />
+          </div>
+        </HomeSection>
 
-      {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
-      {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
-      <section
-        className="brand-section brand-bg-tint !py-0 !px-0"
-        aria-label="World-class research and university partners"
-      >
-        <LabResearch />
-      </section>
+        {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
+        {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
+        <HomeSection
+          id="research"
+          className="brand-section brand-bg-tint !py-0 !px-0"
+          ariaLabel="World-class research and university partners"
+        >
+          <LabResearch />
+        </HomeSection>
 
-      {/* ===== SECTION 6.5: UGC SOCIAL PROOF ===== */}
-      <section
-        className="brand-section brand-bg-white !px-0"
-        aria-label="Real people using CONKA"
-      >
-        <UGCMarquee />
-      </section>
+        {/* ===== SECTION 6.5: UGC SOCIAL PROOF ===== */}
+        <HomeSection
+          id="ugc"
+          className="brand-section brand-bg-white !px-0"
+          ariaLabel="Real people using CONKA"
+        >
+          <UGCMarquee />
+        </HomeSection>
 
-      {/* ===== SECTION 7: RISK-FREE GUARANTEE ===== */}
-      <section
-        className="brand-section brand-bg-tint !px-0 lg:!px-[var(--brand-gutter-desktop)] brand-tight-top-mobile brand-tight-bottom-mobile"
-        aria-label="Risk-free guarantee"
-      >
-        <div className="brand-track">
-          {/* On the home page the guarantee CTA sends people to the Both PDP
-              (there is no on-page purchase section to scroll to). */}
-          <LabGuarantee ctaHref="/conka-both" />
-        </div>
-      </section>
+        {/* SECTION 7 (RISK-FREE GUARANTEE / LabGuarantee) removed from home
+          2026-08-27, SCRUM-1265. The component is NOT dead: /conka-flow,
+          /conka-clarity, /conka-both and /case-studies all still render it, so
+          there is nothing to clean up here. The 100-day guarantee also stays in
+          this page's metadata below, because it is still a real offer and the
+          claim is still true, it simply no longer has its own home section. */}
 
-      {/* ===== SECTION 8: APP USP — key differentiator, measure it yourself ===== */}
-      {/* Mobile drops its bottom padding so the section sits flush against the
+        {/* ===== SECTION 7: APP USP — key differentiator, measure it yourself ===== */}
+        {/* Mobile drops its bottom padding so the section sits flush against the
           athlete marquee below (the athletes section drops its mobile top
           padding to match). */}
-      <section
-        className="brand-section brand-bg-white max-lg:pb-0!"
-        aria-label="Prove it yourself with the CONKA app"
-      >
-        <div className="brand-track">
-          <AppUSPSection />
-        </div>
-      </section>
+        <HomeSection
+          id="app-usp"
+          className="brand-section brand-bg-white max-lg:pb-0!"
+          ariaLabel="Prove it yourself with the CONKA app"
+        >
+          <div className="brand-track">
+            <AppUSPSection />
+          </div>
+        </HomeSection>
 
-      {/* ===== SECTION 9: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
-      {/* No mobile top padding; the App USP section above sits flush against
+        {/* ===== SECTION 8: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+        {/* No mobile top padding; the App USP section above sits flush against
           this section's marquee. */}
-      <section
-        className="brand-section brand-bg-tint max-lg:pt-0!"
-        aria-label="Athletes who use CONKA"
-      >
-        {/* Sport marquee runs full-bleed at the section level; the carousel
+        <HomeSection
+          id="athletes"
+          className="brand-section brand-bg-tint max-lg:pt-0!"
+          ariaLabel="Athletes who use CONKA"
+        >
+          {/* Sport marquee runs full-bleed at the section level; the carousel
             itself stays inside the track. */}
-        <AthleteSportMarquee fullBleed />
-        <div className="brand-track">
-          <AthleteCredibilityCarousel showMarquee={false} />
-        </div>
-      </section>
+          <AthleteSportMarquee fullBleed />
+          <div className="brand-track">
+            <AthleteCredibilityCarousel showMarquee={false} />
+          </div>
+        </HomeSection>
 
-      {/* SECTION 10: CASE STUDIES (LabCaseStudies) — commented out per request 2026-07-20.
+        {/* SECTION 10: CASE STUDIES (LabCaseStudies) — commented out per request 2026-07-20.
           Restore this block and re-enable the LabCaseStudies dynamic import above.
       <section
         className="brand-section brand-bg-tint"
@@ -228,17 +259,19 @@ export default function Home() {
       </section>
       */}
 
-      {/* ===== SECTION 11: FAQ ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="FAQ"
-      >
-        <div className="brand-track">
-          <LabFAQ ctaHref="/conka-both" />
-        </div>
-      </section>
+        {/* ===== SECTION 9: FAQ ===== */}
+        <HomeSection
+          id="faq"
+          className="brand-section brand-bg-white"
+          ariaLabel="FAQ"
+        >
+          <div className="brand-track">
+            <LabFAQ ctaHref="/conka-both" />
+          </div>
+        </HomeSection>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </HomeSectionImpressions>
   );
 }

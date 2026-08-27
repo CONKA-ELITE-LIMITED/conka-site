@@ -55,7 +55,7 @@ Optional, with defaults: `Hero image` (absent renders a mono-wordmark placeholde
 
 ### Body rules
 
-Authoring guide: `docs/development/featurePlans/blog-notion-engine-brief.md`. The durable rules:
+Authoring guide: `docs/features/blog-notion-engine-brief.md`. The durable rules:
 
 - **Native Notion blocks only.** Never markdown-as-text.
 - **Start at Heading 2.** H2 = sections, H3 = sub-sections. The H1 comes from `Blog name`.
@@ -172,8 +172,8 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 ## References
 
 - `scripts/README.md` — script usage and the deploy rules
-- `docs/development/featurePlans/blog-notion-engine-brief.md` — the authoring guide and content contract
+- `docs/features/blog-notion-engine-brief.md` — the authoring guide and content contract
 - `docs/development/featurePlans/legacy-blog-migration.md` — the Shopify archive recovery, and the corrections behind the operational rules above
-- `docs/development/featurePlans/blog-informational-content-surface.md` — the original surface plan
+- `docs/development/featurePlans/archive/blog-informational-content-surface.md` — the original surface plan
 - `docs/seo-aeo/README.md` — canonical policy, sitemap rules, llms.txt
 - `docs/features/FAQ_SYSTEM.md` — the schema-equals-visible rule this surface follows
