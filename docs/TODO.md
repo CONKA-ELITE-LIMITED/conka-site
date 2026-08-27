@@ -156,6 +156,49 @@ The 100 day guarantee section came off the home page in the same ticket. `app/co
 
 ---
 
+## Design System Debt
+
+### Define `--tracking-tight`, or delete the four references to it
+
+**Status:** Open. Found 2026-08-27 while building the home why-accordion (SCRUM-1265).
+
+Four components tighten their headline letter-spacing with `style={{ letterSpacing: "var(--tracking-tight)" }}`:
+
+- `app/components/home/AppUSPSection.tsx`
+- `app/components/landing/LandingProductShowcase.tsx`
+- `app/components/landing/LandingDailyBenefits.tsx`
+- `app/components/landing/LandingTestimonials.tsx`
+
+**The token is defined nowhere.** It is in neither `app/brand-base.css` nor `app/globals.css`. A CSS custom property with no definition and no fallback makes the browser drop the whole declaration silently, so all four headlines render at normal tracking while the code reads as though they are tightened.
+
+`app/components/landing/LabResearch.tsx` writes the literal `-0.02em` instead and does get the tightening, which is why some headlines on the site are subtly tighter than others. `HomeWhyAccordion` copied the literal for the same reason.
+
+**Two ways to fix it, and the choice is a visual one:**
+
+1. Define `--tracking-tight: -0.02em` in `brand-base.css`. One line, and it makes all four headlines tighter than they render today. That is a change to four live surfaces, so it wants eyes on a preview, not a drive-by commit.
+2. Replace the four `var(--tracking-tight)` references with the literal `-0.02em`, matching `LabResearch`. Same visual outcome as option 1.
+
+Either way the end state should be one approach, not both. A third option, deleting the property from the four components so they keep rendering exactly as they do now, is the only genuinely no-op fix.
+
+**Unblocks:** nothing. Purely cosmetic, nobody has reported it.
+
+---
+
+### ~~Cognitive test duration said five minutes in two places~~
+
+**Status:** Done 2026-08-27, in the SCRUM-1265 branch.
+
+The app's cognitive test is **two minutes**. That is what `faqContent.ts` says in six answers, plus `CaseStudiesHero`, `PilotProgramme`, `productivity-listicle`, `adhd-listicle` and `brain-age`.
+
+Two files disagreed and have been corrected:
+
+- `app/components/insights/HowThisIsPossibleModule.tsx` said "a five-minute cognitive test" (renders on `/app-insights`)
+- `app/lib/whyConkaData.ts` said "a 5-minute Cambridge-built cognitive test" (renders on `/why-conka`)
+
+Recorded rather than dropped because the number is scattered across a dozen files with no single source. **If it ever changes, it is a repo-wide find and replace, not a one-line edit.** Worth pulling into a shared constant if a third value ever appears.
+
+---
+
 ### Orphaned FAQ lifestyle image
 
 **Status:** Open, one-line cleanup
