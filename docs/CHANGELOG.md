@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Swapped the what-to-expect desktop render for the new ingredients shot on the home page and /conka-both
 - **2026-08-27** | Home structure pass: cut the duplicate Jack Willis review, moved the certification badges under the showcase CTA, dropped the FAQ photo, and added CTAs through the middle of the page so there is never more than three sections without a way to buy
 - **2026-08-27** | Added the what-to-expect timeline to the home page, so it answers when you will feel it right after the products and the athlete review
 - **2026-08-27** | Removed the scrolling sport marquee from the athlete section on home, the three PDPs and /start
