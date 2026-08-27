@@ -62,8 +62,15 @@ The observer unobserves on first fire, so the event is genuinely once per sectio
 Read alongside **`purchase:add_to_cart`**, which carries:
 
 - `location`: `hero` | `sticky_footer` | `results_page` | `calendar`
-- `source`: `quiz` | `menu` | `direct` | `cta`
-- plus `origin` and `sessionId`
+- `source`: the **live** vocabulary is `product_page`, `cart_upsell`, `funnel_page`, and the composed listicle forms `<slug>-<section>` (e.g. `adhd-listicle-hero`, `productivity-listicle-sticky`). It is **not** the `quiz | menu | direct | cta` set this doc previously listed, which was aspirational and never shipped
+- plus `sessionId`
+
+> **`source` is composed, not a fixed enum.** `CartContext` sends
+> `metadata.origin || metadata.source || "direct"`, so when a listicle sets an
+> origin the placement rides inside `source`. PDPs do not set an origin today, so
+> every PDP add-to-cart arrives as a flat `product_page` and the hero vs
+> sticky_footer split below is **not currently queryable by `source`**. It is on
+> the event as `location`. See SCRUM-1246 / the conka-lab asks doc.
 
 `sticky_footer` is newly meaningful. The sticky buy bar was commented out before this work and is now live on all three PDPs, held back until the visitor scrolls past the hero. **The hero versus sticky_footer split is the most useful new number here** and answers whether the bar earns its place.
 

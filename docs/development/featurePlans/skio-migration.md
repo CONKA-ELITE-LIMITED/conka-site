@@ -145,7 +145,8 @@ Plans and variants stay constant across stages; only `bundlecomposition` changes
 |------|------|
 | `app/lib/skio.ts` | API config + `LOOP_TO_SKIO_SELLING_PLAN` map |
 | `app/lib/subscriptionsFlag.ts` | The three flag helpers |
-| `app/lib/funnelData.ts` | `SKIO_SUBSCRIPTION_VARIANTS`, `getOfferVariant` |
+| `app/lib/byoData.ts` | `getOfferVariant`, `BYO_VARIANTS`, `BYO_PRICING` — the live purchase path (`funnelData.ts` was renamed here in SCRUM-1247) |
+| _(not built yet)_ | `SKIO_SUBSCRIPTION_VARIANTS` — the flag-gated Skio base variants. **Does not exist in the codebase**; `byoData.ts` has no Skio awareness and nothing imports `app/lib/skio.ts`. It lands in `byoData.ts` when Stage 1 is wired |
 | `app/api/auth/skio-portal/route.ts` | Signs the portal iframe src |
 | `app/account/manage/*` | The portal page + `SkioPortalFrame` |
 | `app/account/page.tsx` | Account entry: Loop list, transition state, or Skio redirect |

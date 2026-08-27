@@ -62,9 +62,9 @@ Added 2026-06-01 (SCRUM-1046/1047) as the core of the headless attribution fix (
 
 ### Skio attribution parity — VERIFIED (2026-08-18, SCRUM-1223)
 
-The Loop → Skio cutover only swaps the **variant + selling plan** inside `getOfferVariant` (`app/lib/funnelData.ts`). Every attribution touch point sits **downstream and is variant-agnostic**, so Skio orders inherit attribution identically to Loop:
+The Loop → Skio cutover only swaps the **variant + selling plan** inside `getOfferVariant` (`app/lib/byoData.ts`). Every attribution touch point sits **downstream and is variant-agnostic**, so Skio orders inherit attribution identically to Loop:
 
-- **Attach path (unchanged for Skio):** `funnelCheckout.ts` and `CartContext.tsx` both call `buildMetaCartAttributes()` on every add → cart-level `_fbp`/`_fbc`/`conka_uid` (+ `_listicle_origin`, `_upsell`); `/api/cart` forwards `cartAttributes` to the Shopify cart → order `note_attributes`. None of this inspects the variant.
+- **Attach path (unchanged for Skio):** `byoCheckout.ts` and `CartContext.tsx` both call `buildMetaCartAttributes()` on every add → cart-level `_fbp`/`_fbc`/`conka_uid` (+ `_listicle_origin`, `_upsell`); `/api/cart` forwards `cartAttributes` to the Shopify cart → order `note_attributes`. None of this inspects the variant.
 - **Webhook (unchanged for Skio):** gates the CAPI Purchase on `checkout_token`. A Skio **first order** has a token (real checkout) → Purchase sent; a Skio **rebill** is contract-created with no token → skipped, matching Loop. Comment in `route.ts` already names Loop/Skio/native rebills.
 - **Live evidence:** production funnel orders from 2026-08-18 carry the full set in `note_attributes` with real values + a `checkout_token` — e.g. `#3878` (£39.99, `_fbp`+`_fbc`+`conka_uid`+`_listicle_origin=adhd-listicle-sticky`), `#3875`, `#3873`, `#3872`. Same `/api/cart` path a Skio order uses.
 - **Test-order caveat:** the Skio test order `#3879` came through the real PDP path (line prop `source: product_page`, Skio variant `FLOW-20`) but in a **cookie-less session** (ad-blocked / no ad click), so its `note_attributes` were empty and its total was £0 (100%-off). That reflects the *test session*, not Skio — a real ad-driven buyer sets the cookies and they flow through the exact path `#3878` proves. **No code change; parity confirmed by shared path + live orders.**

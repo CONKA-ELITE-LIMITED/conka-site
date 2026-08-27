@@ -180,7 +180,7 @@ Model it on the existing CAPI route `app/api/meta/events/route.ts`.
 
 ## Quick reference
 - Frontend pixel/CAPI: `app/lib/metaPixel.ts`, `app/api/meta/events/route.ts`, `app/components/MetaPageViewTracker.tsx`
-- Checkout handoff: `app/components/CartDrawer.tsx` (`cart.checkoutUrl`), `app/lib/funnelCheckout.ts`
+- Checkout handoff: `app/components/CartDrawer.tsx` (`cart.checkoutUrl`), `app/lib/byoCheckout.ts`
 - Cart attributes (for Phase 4): `app/api/cart/route.ts`
 - Pixel ID: `NEXT_PUBLIC_META_PIXEL_ID = 1138202151698404`
 - Ad account: `act=1410444020671113` · Dataset: "CONKA Web Traffic" = `1138202151698404`

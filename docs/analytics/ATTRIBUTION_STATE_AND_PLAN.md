@@ -35,7 +35,7 @@ Three separate problems. They are often confused for each other. Keep them separ
 | PageView | `MetaPageViewTracker.tsx` | pixel + client CAPI | fbp (often missing at fire time), fbc (only if ad-click captured), email (only if logged in), + server-added IP/UA | 6.1 | 26.4K |
 | ViewContent | `conka-flow/page.tsx:57`, clarity, both, `QuizEngine.tsx:141`. **NOT fired on /go listicle** | pixel + client CAPI | same as above | 4.5 ⚠️ | 12.7K |
 | AddToCart | `CartContext.tsx:248` (+ landers) | pixel + client CAPI | same as above | 3.2 ⚠️ | 419 |
-| InitiateCheckout | `CartDrawer.tsx:423`, `funnelCheckout.ts:132` (+ landers) | pixel + client CAPI | same as above | 3.0 ⚠️ | 275 |
+| InitiateCheckout | `CartDrawer.tsx:423`, `byoCheckout.ts` (+ landers) | pixel + client CAPI | same as above | 3.0 ⚠️ | 275 |
 | Purchase | `app/api/webhooks/shopify/orders/route.ts` | **server webhook -> CAPI** (browser <25%) | em, fn, ln, ct, st, zp, country (from order), + fbp/fbc from order note_attributes | 6.6 | 110 |
 
 Meta confirms Purchase is 96% covered on email+name+address; the browser pixel sends <25% of Purchase events (it is a server event). Purchase is used by 29 ad sets.
@@ -197,7 +197,7 @@ Confirm the rebill source (Manage integrations), then stop rebills reaching Meta
 | `app/components/MetaPageViewTracker.tsx` | Fires PageView; runs `captureFbcFromUrl`; host gate. |
 | `app/context/CartContext.tsx` | `addToCart` fires AddToCart + attaches `_fbp`/`_fbc` cart attributes. |
 | `app/context/AuthContext.tsx` | Calls `setMetaUserData(email)` on login/logout. |
-| `app/components/CartDrawer.tsx`, `app/lib/funnelCheckout.ts` | Fire InitiateCheckout at checkout click. |
+| `app/components/CartDrawer.tsx`, `app/lib/byoCheckout.ts` | Fire InitiateCheckout at checkout click. |
 | `app/api/cart/route.ts` | Applies cart attributes (identity transport to the order). |
 | `app/api/webhooks/shopify/orders/route.ts` | Server-side Purchase -> CAPI; excludes rebills via `checkout_token`. |
 | `app/lib/metaCapi.ts` | Server-side hashing used by the Purchase webhook. |

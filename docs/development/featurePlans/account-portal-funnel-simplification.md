@@ -25,7 +25,7 @@ Cadence is **not editable**. Monthly and quarterly are structurally different bi
 - Quarterly sub → swap between Flow / Clear / Both (quarterly variants)
 - No monthly ↔ quarterly, no cadence editing.
 
-This is simpler than Skio's default and honest to the model. It also maps cleanly onto `FUNNEL_VARIANTS` in `app/lib/funnelData.ts` (product × cadence → variant GID + selling plan) — the swap is "re-point the line(s) to the target product's variant at the same cadence," far simpler than the protocol tier maths it replaces.
+This is simpler than Skio's default and honest to the model. It also maps cleanly onto `BYO_VARIANTS` in `app/lib/byoData.ts` (product × cadence → variant GID + selling plan) — the swap is "re-point the line(s) to the target product's variant at the same cadence," far simpler than the protocol tier maths it replaces.
 
 ## The central move: a DTC-subscription view model
 
@@ -71,7 +71,7 @@ Product image · clean product name (**Flow / Clear / Both**, via `getSubscripti
 - **Products:** the line(s) with a **Swap** control (same-cadence products only). "Both" is multi-line (Flow + Clear); swapping to/from it adds/removes a line (reuse the multi-line edit path). Skip = per-order skip.
 - **Upsell (filtered):** reuse `getUpsellOffer` from `byoData.ts` (Flow→Both add Clear, Clear→Both add Flow, monthly→quarterly). Filter out what they already have (don't offer Both to a Both subscriber).
 - **Shipping:** address + edit.
-- **Summary:** subtotal / shipping (free for subs) / total + "You've saved £X vs one-time" (derive from `compareAtPrice` in `FUNNEL_PRICING`).
+- **Summary:** subtotal / shipping (free for subs) / total + "You've saved £X vs one-time" (derive from `compareAtPrice` in `BYO_PRICING`).
 - **Billing:** payment method + update (reuse `usePaymentMethods` / `triggerUpdateEmail`).
 
 ### Action hierarchy
@@ -88,7 +88,7 @@ Enhance the existing `CancellationModal` (already has reason + pause/edit/discou
 |-------|-------------|-----------|------|
 | **0** | ✅ **Done (SCRUM-1199).** Introduce the `DtcSubscriptionView` normalizer and render the card from it: display name from `getSubscriptionType` (Flow/Clear/Both), headline = cadence + price. The tier badge, protocol subtitle/description, and formula-mix card fall out because the model has no such fields. Legacy protocol subs degrade to a generic card. | none | Low |
 | **1** | ✅ **Done (SCRUM-1199).** List → detail IA split for the Subscriptions tab; deep-linkable detail route with Products / Upsell (read-only) / Shipping / Summary / Billing sections, rendered from the view model. | 0 | Medium |
-| **2** | **Swap model:** re-point edit/swap from protocol tiers to funnel product × cadence via `FUNNEL_VARIANTS`; `swapTargets` = same-cadence products; handle Both multi-line add/remove. | 0 | High (commerce logic) |
+| **2** | **Swap model:** re-point edit/swap from protocol tiers to funnel product × cadence via `BYO_VARIANTS`; `swapTargets` = same-cadence products; handle Both multi-line add/remove. | 0 | High (commerce logic) |
 | **3** | In-portal filtered upsell carousel (reuse `getUpsellOffer`). | 1, 2 | Medium |
 | **4** | Reason-driven cancel flow + order-milestone recognition, structured per Skio's cancel-flow recommendations. | 0 | Medium |
 

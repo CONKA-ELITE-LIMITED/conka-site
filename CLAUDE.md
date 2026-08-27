@@ -22,7 +22,7 @@ Speed and token cost matter. On any task that is not large:
 - **Funnel — shipped and consolidated.** The three funnel variants collapsed into `/build-your-order` (SCRUM-1247): 3 cadences × 3 products, straight to Shopify checkout, no cart drawer. `/funnel`, `/funnel-b` and `/funnel-c` are deleted and redirect there.
 - **Quiz — deleted**, not hidden. `/quiz/:path*` permanently redirects to `/build-your-order`. The `/go/[slug]` landing quizzes are a separate, unrelated system.
 - **Shop page — deleted.** `/shop` and `/shop/:path*` permanently redirect to `/conka-both`.
-- **Subscriptions are migrating from Loop to Skio** — decided Aug 2026, plan in `docs/development/featurePlans/skio-subscription-migration.md`.
+- **Subscriptions are migrating from Loop to Skio** — decided Aug 2026, plan in `docs/development/featurePlans/skio-migration.md` (the single source of truth; nine Skio docs were consolidated into it).
 
 ## Git workflow
 

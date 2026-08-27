@@ -32,12 +32,12 @@ export function skioAuthHeader(): { authorization: string } | undefined {
  * Loop selling-plan GID -> Skio selling-plan GID mapping.
  *
  * Reference / reconciliation map. The LIVE storefront wiring is inlined in
- * `app/lib/funnelData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`, flag-gated) — this const is
+ * `app/lib/byoData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`, flag-gated, NOT YET BUILT) — this const is
  * not consumed by the purchase path; it documents the plan-level old->new
  * mapping (and which Loop plans have no Skio equivalent).
  *
  * Keys are the CURRENT live Loop selling-plan GIDs, sourced from:
- *   - Funnel:   app/lib/funnelData.ts (FUNNEL_VARIANTS)
+ *   - BYO:      app/lib/byoData.ts (BYO_VARIANTS)
  *   - PDP:      app/api/auth/subscriptions/[id]/pause/route.ts (PLAN_CONFIGURATIONS)
  *   - Protocol: app/lib/legacy/protocolSubscriptions.ts (PROTOCOL_VARIANTS)
  *
@@ -48,7 +48,7 @@ export function skioAuthHeader(): { authorization: string } | undefined {
  * The full old->new table also lives in docs/product/SKU_AND_SHOT_REFERENCE.md.
  */
 export const LOOP_TO_SKIO_SELLING_PLAN: Record<string, string | null> = {
-  // --- Funnel (FUNNEL_VARIANTS) ---
+  // --- BYO (BYO_VARIANTS) ---
   // Flow & Clear — Monthly  →  Skio "20 Shots - Monthly" (42.86% off, FLOW-20/CLEAR-20)
   "gid://shopify/SellingPlan/712527348086": "gid://shopify/SellingPlan/712928887158",
   // Flow & Clear — Quarterly  →  Skio "60 Shots - Quarterly" (42.11% off, FLOW-60/CLEAR-60)
@@ -70,7 +70,7 @@ export const LOOP_TO_SKIO_SELLING_PLAN: Record<string, string | null> = {
 };
 
 // The Skio subscription variant GIDs (net-new Stage-1 base variants) are the
-// live storefront wiring and live in `app/lib/funnelData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`),
+// live storefront wiring and will live in `app/lib/byoData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`),
 // alongside the plans they attach to. Not duplicated here to avoid drift.
 
 const SELLING_PLAN_GID_PREFIX = "gid://shopify/SellingPlan/";
@@ -85,7 +85,7 @@ function toSellingPlanGid(idOrGid: string): string {
 /**
  * Resolve a Loop selling-plan id to its Skio equivalent.
  *
- * Accepts EITHER the full GID (funnel `FUNNEL_VARIANTS`, legacy `PROTOCOL_VARIANTS`)
+ * Accepts EITHER the full GID (BYO `BYO_VARIANTS`, legacy `PROTOCOL_VARIANTS`)
  * OR the bare numeric id (`PLAN_CONFIGURATIONS` stores plans without the GID prefix),
  * normalising both to the full-GID map key. Returns null when the mapping is not yet
  * populated (pre-cutover) or the id is unknown. Callers in Phase 2 MUST handle null —
