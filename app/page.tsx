@@ -7,6 +7,7 @@ import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import HomeHeroStatic from "./components/landing/HomeHeroStatic";
+import ConkaCTAButton from "./components/landing/ConkaCTAButton";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
@@ -14,9 +15,7 @@ import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // Static server component (native <details> accordion, no client state), so a
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
-import AthleteReviewFeature from "./components/AthleteReviewFeature";
 import ProductComparisonTable from "./components/product/ProductComparisonTable";
-import Certifications from "./components/Certifications";
 // Section-impression tracking (SCRUM-1265). HomeSection is a thin client
 // wrapper around <section>; the sections themselves stay server-rendered.
 import HomeSection, {
@@ -55,6 +54,14 @@ const AthleteCredibilityCarousel = dynamic(
   // under-estimate and shifted the page down as the chunk landed.
   { loading: () => <div className="min-h-[900px]" /> },
 );
+
+// Client leaf that lazily pulls GSAP in on approach, so it is code-split like
+// the page's other client sections. SSR stays on, so the five milestones are in
+// the server-rendered HTML for crawlers and the JSX already carries the final
+// lit state; only the scrub binding is deferred.
+const WhatToExpectV2 = dynamic(() => import("./components/home/WhatToExpectV2"), {
+  loading: () => <div className="min-h-[950px]" />,
+});
 
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
@@ -157,9 +164,6 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* Certification badges — self-contained white band under the accordion. */}
-        <Certifications />
-
         {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
           LandingDailyBenefits; white section with the neuron clip full-bleed
           and the stats on a light-grey proof card. Owns its own full-bleed
@@ -180,16 +184,32 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 5.5: FEATURED ATHLETE REVIEW (Jack Willis) ===== */}
-        {/* White so the white-background cutout portrait floats; pt-0 shares the
-          product grid's bottom padding rather than doubling the white gap. */}
+        {/* The standalone Jack Willis review that sat here is gone. It rendered
+          the same athlete, the same portrait and all but word-for-word the same
+          quote as roster slot 1 of the carousel further down, so the page had
+          one man saying one sentence twice. He is now the carousel's opening
+          athlete instead, which keeps the prominence without the repeat.
+          AthleteReviewFeature itself is still live: ListicleProofTier uses it. */}
+
+        {/* ===== SECTION 5.6: WHAT TO EXPECT ===== */}
+        {/* Answers "when will I feel it", the objection that kills a first
+          subscription order, once the shopper has seen the products and one
+          athlete's word for them. Takes the Both variant, since the page is not
+          product specific. Tint: the product grid and athlete review above are
+          a flush white pair and the comparison table below is white, so this
+          is the colour break between them. */}
         <HomeSection
-          id="athlete-review"
-          className="brand-section brand-bg-white pt-0!"
-          ariaLabel="Featured athlete review"
+          id="what-to-expect"
+          className="brand-section brand-bg-tint"
+          ariaLabel="What to expect"
         >
           <div className="brand-track">
-            <AthleteReviewFeature />
+            <WhatToExpectV2 productId="both" />
+            <div className="mt-10 flex justify-center">
+              <ConkaCTAButton href="/conka-both?src=home_expect" meta={null}>
+                Start your first week
+              </ConkaCTAButton>
+            </div>
           </div>
         </HomeSection>
 
@@ -208,6 +228,11 @@ export default function Home() {
         >
           <div className="brand-track">
             <ProductComparisonTable product="both" />
+            <div className="mt-10 flex justify-center">
+              <ConkaCTAButton href="/conka-both?src=home_comparison" meta={null}>
+                Unlock your boost
+              </ConkaCTAButton>
+            </div>
           </div>
         </HomeSection>
 
@@ -260,6 +285,11 @@ export default function Home() {
         >
           <div className="brand-track">
             <AthleteCredibilityCarousel />
+            <div className="mt-10 flex justify-center">
+              <ConkaCTAButton href="/conka-both?src=home_athletes" meta={null}>
+                Join them
+              </ConkaCTAButton>
+            </div>
           </div>
         </HomeSection>
 
@@ -282,7 +312,7 @@ export default function Home() {
           ariaLabel="FAQ"
         >
           <div className="brand-track">
-            <LabFAQ ctaHref="/conka-both" />
+            <LabFAQ ctaHref="/conka-both" image={null} />
           </div>
         </HomeSection>
 

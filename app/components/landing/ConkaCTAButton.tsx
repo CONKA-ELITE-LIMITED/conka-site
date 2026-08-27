@@ -98,8 +98,13 @@ export default function ConkaCTAButton({
         />
       </span>
 
-      {/* CENTER — title, with optional meta line */}
-      <span className="flex flex-col items-start flex-1 min-w-0">
+      {/* CENTER — title, with optional meta line.
+          items-center, not items-start: this column is flex-1, so on a pill
+          stretched to its container (ProductCard passes w-full max-w-none) the
+          column grows and a start-aligned label pins itself to the O-mark
+          instead of sitting in the button. On a shrink-to-content pill the
+          column is content-width, so this changes nothing there. */}
+      <span className="flex flex-col items-center flex-1 min-w-0">
         <span className="font-mono font-bold text-sm uppercase tracking-[0.12em] whitespace-nowrap">
           {children}
         </span>

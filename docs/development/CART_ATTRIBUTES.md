@@ -32,6 +32,21 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 > placed before those routes were retired still carry these values, so keep
 > reading them in analysis; just do not write them.
 
+### `home_*` origin tokens (SCRUM-1266)
+
+The home page's mid-page CTAs each append their own `?src=` token to the PDP
+link: `home_expect`, `home_comparison`, `home_athletes`. They ride the same
+mechanism the `/go` listicles use (`captureListicleSrc`, persisted to
+sessionStorage, read back at add-to-cart), because `isValidListicleSrc` is a
+format check (`/^[a-z0-9_-]{1,96}$/i`) rather than a whitelist.
+
+Two things follow. First, these values appear in `source` alongside the
+listicle tokens, so **any listicle report that reads `source` should exclude
+the `home_` prefix** rather than assume every token came from `/go`. Second,
+that is the point of them: home had no per-CTA attribution, so there was no way
+to tell which argument (the timeline, the comparison table, the athletes) drove
+a click. Add a `home_<section>` token for any new home CTA.
+
 ---
 
 ## How `source` is determined

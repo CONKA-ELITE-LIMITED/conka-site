@@ -29,6 +29,14 @@ export type Athlete = {
 
 export const ATHLETES: Athlete[] = [
   {
+    name: "Jack Willis",
+    sport: "Rugby Union",
+    role: "England International, Stade Toulousain",
+    quote:
+      "For me it was about trying to find the small margins and trying to maximise my brain as well as my body was so important.",
+    image: "/testimonials/athlete/JackWillisNB.jpg",
+  },
+  {
     name: "Dan Norton",
     sport: "Rugby Sevens",
     role: "Olympic Silver Medallist",
@@ -75,13 +83,5 @@ export const ATHLETES: Athlete[] = [
     quote:
       "My reflexes were on point for my fights. CONKA is a daily thing I take especially in camp before fights.",
     image: "/testimonials/athlete/AdamAzimNB.jpg",
-  },
-  {
-    name: "Jack Willis",
-    sport: "Rugby Union",
-    role: "England International, Stade Toulousain",
-    quote:
-      "For me it was about trying to find the small margins and trying to maximise my brain as well as my body was so important.",
-    image: "/testimonials/athlete/JackWillisNB.jpg",
   },
 ];
