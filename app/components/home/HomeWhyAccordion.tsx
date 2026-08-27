@@ -87,13 +87,39 @@ export default function HomeWhyAccordion() {
         </span>
       </h2>
 
-      {/* Two columns on desktop: the accordion, and a tall asset beside it.
+      {/* Two columns on desktop: a tall asset, then the accordion. Which is
+          the order the Gray Matter source markup implies and the order we
+          arrived at independently after trying it the other way round.
           This replaced a circular crop of the neuron-float poster that floated
           over the card's top-right corner. That asset was busy, the circle cut
           it badly, and it read as a sticker rather than part of the layout. A
           full-height rectangle in its own column is calmer and gives the
           section a product presence it otherwise lacks entirely. */}
-      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch lg:gap-10">
+      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:items-stretch lg:gap-10 xl:grid-cols-[26rem_minmax(0,1fr)]">
+        {/* The asset column. Stretches to the accordion's full height, so it
+            reads as a tall rectangle rather than a floating thumbnail, and
+            re-crops rather than distorting as the rows open and close.
+
+            Widens from 20rem at lg to 26rem at xl, deliberately taking width
+            off the accordion beside it: the rows are short and were sitting in
+            too much empty space. It steps rather than jumping straight to 26rem because
+            at exactly 1024px the track is only ~920px, and a 26rem column there
+            would squeeze the row copy.
+
+            Desktop only, since at 390px the accordion needs the full width. */}
+        <div
+          aria-hidden
+          className="relative hidden overflow-hidden rounded-md ring-1 ring-black/5 lg:block"
+        >
+          <Image
+            src="/formulas/conkaFlow/FlowShotSide.jpg"
+            alt=""
+            fill
+            sizes="(min-width: 1280px) 416px, 320px"
+            className="object-cover"
+            loading="lazy"
+          />
+        </div>
         {/* The card is desktop-only. On mobile the rows sit straight on the
             section tint: at 390px a card border inside a section is a container
             the copy cannot spare the width for. Desktop sets its own text
@@ -191,28 +217,6 @@ export default function HomeWhyAccordion() {
               Try the solution
             </ConkaCTAButton>
           </div>
-        </div>
-
-        {/* The asset column. Stretches to the accordion's full height, so it
-            reads as a tall rectangle rather than a floating thumbnail, and
-            re-crops rather than distorting as the rows open and close.
-
-            BothShotSide, not FlowShotSide: this is a brand-level section, and
-            leading it with a single formula would spotlight Flow over Clear,
-            which is the one thing product-presentation surfaces here must not
-            do. Desktop only, since at 390px the accordion needs the width. */}
-        <div
-          aria-hidden
-          className="relative hidden overflow-hidden rounded-md ring-1 ring-black/5 lg:block"
-        >
-          <Image
-            src="/formulas/both/BothShotSide.jpg"
-            alt=""
-            fill
-            sizes="288px"
-            className="object-cover"
-            loading="lazy"
-          />
         </div>
       </div>
     </div>
