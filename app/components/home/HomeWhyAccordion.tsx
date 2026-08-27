@@ -8,10 +8,11 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 /* ============================================================================
  * HomeWhyAccordion (SCRUM-1265, Simple DTC)
  *
- * The home page's second section: the "why" beat that frames a problem before
- * the page sells anything. Structural reference is the Gray Matter home page,
- * whose equivalent section carries four arguments in one numbered accordion
- * instead of spending four sections on them.
+ * The "why" beat that frames a problem before the page argues anything else.
+ * Structural reference is the Gray Matter home page, whose equivalent section
+ * carries four arguments in one numbered accordion instead of spending four
+ * sections on them. Ours runs five: the fifth is the app, which is the one
+ * argument on the page a competitor cannot copy.
  *
  * Built from the rendered design, NOT that page's source markup. The raw HTML
  * reads as a two-column image-left / accordion-right layout; the real design is
@@ -29,9 +30,10 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
  *
  *  - Desktop: a white card, and each row is its own bordered box inside it.
  *  - Mobile: no card and no row boxes. Rows are separated by a full-width rule
- *    running across both the number gutter and the content. At 390px a card
- *    border inside a section inside a row border is three nested containers
- *    eating horizontal space that the copy needs.
+ *    running across both the number gutter and the content, with noticeably
+ *    more vertical padding. At 390px a card border inside a section inside a
+ *    row border is three nested containers eating horizontal space that the
+ *    copy needs, and the rules plus the padding do the same job for free.
  *
  * Client component, for two reasons a native <details> cannot give:
  *
@@ -53,7 +55,7 @@ function PlusMinus({ isOpen }: { isOpen: boolean }) {
   return (
     <span
       aria-hidden
-      className="relative flex h-5 w-5 shrink-0 items-center justify-center text-black"
+      className="relative flex h-3.5 w-3.5 shrink-0 items-center justify-center text-black"
     >
       <span className="absolute h-[1.5px] w-full rounded-full bg-current" />
       <span
@@ -111,11 +113,11 @@ export default function HomeWhyAccordion() {
           />
         </div>
 
-        {/* The card is white at both breakpoints; only its padding shrinks.
-            What mobile drops is the per-row boxes inside it, not the card
-            itself. Sets its own text colour because it is a surface that
-            differs from the section background. */}
-        <div className="relative rounded-md bg-white p-4 text-black shadow-sm ring-1 ring-black/5 lg:p-10">
+        {/* The card is desktop-only. On mobile the rows sit straight on the
+            section tint: at 390px a card border inside a section is a container
+            the copy cannot spare the width for. Desktop sets its own text
+            colour, being a surface that differs from the section background. */}
+        <div className="relative lg:rounded-md lg:bg-white lg:p-10 lg:text-black lg:shadow-sm lg:ring-1 lg:ring-black/5">
           <ul className="flex flex-col gap-0 lg:gap-4">
             {HOME_WHY_ROWS.map((row, idx) => {
               const isOpen = idx === openIdx;
@@ -126,14 +128,14 @@ export default function HomeWhyAccordion() {
                   key={row.title}
                   // The rule is on the <li>, not the content box, so on mobile
                   // it runs the full width across the number gutter too.
-                  className="grid grid-cols-[2.75rem_1fr] items-start gap-3 border-t border-black/12 pt-3 lg:grid-cols-[4rem_1fr] lg:gap-6 lg:border-t-0 lg:pt-0"
+                  className="grid grid-cols-[3.25rem_1fr] items-start gap-4 border-t border-black/12 pt-5 lg:grid-cols-[4rem_1fr] lg:gap-6 lg:border-t-0 lg:pt-0"
                 >
                   {/* The number, outside the row content in its own gutter,
                       which is the device that makes the section read as an
                       argument in sequence rather than an FAQ. */}
                   <span
                     aria-hidden
-                    className="mt-2 flex h-11 w-11 items-center justify-center rounded-full bg-[#eef0f5] text-lg font-bold text-[var(--brand-navy)] lg:h-16 lg:w-16 lg:text-2xl"
+                    className="mt-1 flex h-13 w-13 items-center justify-center rounded-full bg-[#eef0f5] text-xl font-bold text-[var(--brand-navy)] lg:mt-2 lg:h-16 lg:w-16 lg:text-2xl"
                   >
                     {idx + 1}
                   </span>
@@ -147,7 +149,7 @@ export default function HomeWhyAccordion() {
                       onClick={() => setOpenIdx(idx)}
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="flex w-full cursor-pointer items-center justify-between gap-4 py-4 text-left lg:px-6 lg:py-5"
+                      className="flex w-full cursor-pointer items-center justify-between gap-4 py-3 text-left lg:px-6 lg:py-5"
                     >
                       <span className="text-lg font-bold leading-tight text-black lg:text-xl">
                         {row.title}
@@ -168,7 +170,7 @@ export default function HomeWhyAccordion() {
                     >
                       <div className="overflow-hidden">
                         <div
-                          className={`pb-5 transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-6 ${
+                          className={`pb-7 transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-6 ${
                             isOpen ? "opacity-100" : "opacity-0"
                           }`}
                         >

@@ -1,10 +1,11 @@
 /* ============================================================================
  * homeWhyContent (SCRUM-1265)
  *
- * The four rows of the home page's "why" accordion, the section that frames a
- * problem before the page sells anything. Structured Problem -> Agitate ->
- * Solution -> Proof (the PAS framework in docs/branding/BRAND_VOICE.md, which
- * is the right shape for the cold paid traffic this section exists for).
+ * The rows of the home page's "why" accordion, the section that frames a
+ * problem before the page sells anything. Structured Problem -> Solution ->
+ * Mechanism -> Proof -> Verify: PAS (docs/branding/BRAND_VOICE.md) for the
+ * first three, which is the right shape for the cold paid traffic this section
+ * exists for, then two rows of evidence.
  *
  * Kept as data rather than JSX so the copy can be rewritten without touching
  * the component, and so the `lede` line can be dropped later as a one-line
@@ -47,6 +48,17 @@ export const HOME_WHY_ROWS: HomeWhyRow[] = [
     title: "Peer Reviewed Research",
     lede: "Evidence you can check, not claims you have to take on trust.",
     body: "Over £500,000 invested across 25+ clinical trials, with university partnerships at Durham, Cambridge and Exeter. Every batch is Informed Sport certified against 280+ banned substances.",
+  },
+  {
+    title: "Measure It Yourself",
+    lede: "No need to leave it to chance.",
+    // "FDA-cleared" is established site copy, not a new claim: see
+    // app/case-studies/layout.tsx, InsightHeroDifferentiator and
+    // HowThisIsPossibleModule, the last of which cites FDA 21 CFR 882.1470.
+    // Deliberately states no duration. The existing copy disagrees with itself
+    // on that (AppUSPSection says two minutes, HowThisIsPossibleModule says
+    // five), and this row does not need to pick a side.
+    body: "The CONKA app has an FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
   },
 ];
 
