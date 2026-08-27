@@ -190,7 +190,7 @@ export default function ConkaClarityPage() {
       ariaLabel="FAQ"
     >
       <div className="brand-track">
-        <LabFAQ items={CLEAR_FAQ_ITEMS} image={null} hideCTA />
+        <LabFAQ items={CLEAR_FAQ_ITEMS} hideCTA />
       </div>
     </PdpSection>
   );

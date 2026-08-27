@@ -164,10 +164,10 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
-          LandingDailyBenefits; white section with the neuron clip full-bleed
-          and the stats on a light-grey proof card. Owns its own full-bleed
-          section, so it is not wrapped in brand-section/brand-track). ===== */}
+        {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (white section with
+          the neuron clip full-bleed and the stats on a light-grey proof card.
+          Owns its own full-bleed section, so it is not wrapped in
+          brand-section/brand-track). ===== */}
         <BrainFuelBand />
 
         {/* ===== SECTION 5: PRODUCT GRID (scroll target for hero CTA) ===== */}
@@ -319,7 +319,7 @@ export default function Home() {
           ariaLabel="FAQ"
         >
           <div className="brand-track">
-            <LabFAQ ctaHref="/conka-both" image={null} />
+            <LabFAQ ctaHref="/conka-both" />
           </div>
         </HomeSection>
 

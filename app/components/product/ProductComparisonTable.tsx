@@ -55,6 +55,19 @@ const ROWS: Row[] = [
     coffee: false,
     rx: true,
   },
+  {
+    // The one row coffee takes outright, and it sits next to "No caffeine" on
+    // purpose: the middle of the table then carries two rows a rival wins
+    // rather than an unbroken run of CONKA ticks, which is what stops it
+    // reading as marketing. Chosen because availability is the one axis where
+    // losing costs nothing. Anyone reading this is already on a DTC site.
+    // Rx is a cross: a pharmacy is on the high street, but you cannot walk in
+    // and buy the thing.
+    label: "On the high street",
+    conka: false,
+    coffee: true,
+    rx: false,
+  },
   { label: "Clinically dosed nootropics", conka: true, coffee: false, rx: false },
   { label: "Adaptogens", conka: true, coffee: false, rx: false },
   { label: "Informed Sport certified", conka: true, coffee: false, rx: false },

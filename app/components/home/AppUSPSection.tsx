@@ -31,10 +31,7 @@ const POINTS = [
 export default function AppUSPSection() {
   return (
     <div className="w-full">
-      <h2
-        className="brand-h1 mb-4 text-black"
-        style={{ letterSpacing: "var(--tracking-tight)" }}
-      >
+      <h2 className="brand-h1 mb-4 text-black">
         Most brands claim results. We let you measure yours.
       </h2>
       <p className="text-base lg:text-lg leading-snug text-black mb-10 max-w-[52ch]">

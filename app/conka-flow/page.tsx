@@ -188,7 +188,7 @@ export default function ConkaFlowPage() {
       ariaLabel="FAQ"
     >
       <div className="brand-track">
-        <LabFAQ items={FLOW_FAQ_ITEMS} image={null} hideCTA />
+        <LabFAQ items={FLOW_FAQ_ITEMS} hideCTA />
       </div>
     </PdpSection>
   );

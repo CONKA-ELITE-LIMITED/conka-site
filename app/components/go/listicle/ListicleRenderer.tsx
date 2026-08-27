@@ -833,7 +833,6 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 ...f,
                 answer: stripClaimAnchors(f.answer),
               }))}
-              image={null}
               hideCTA
               showSeeAllLink={false}
             />

@@ -156,10 +156,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/bu
 
   return (
     <div>
-      <h2
-        className="brand-h1 mb-4 text-black"
-        style={{ letterSpacing: "var(--tracking-tight)" }}
-      >
+      <h2 className="brand-h1 mb-4 text-black">
         Two shots. Built around your day.
       </h2>
       <p className="text-base lg:text-lg leading-snug text-black mb-10 max-w-[60ch]">
