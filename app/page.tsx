@@ -16,6 +16,7 @@ import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
 import AthleteReviewFeature from "./components/AthleteReviewFeature";
+import ProductComparisonTable from "./components/product/ProductComparisonTable";
 import Certifications from "./components/Certifications";
 // Section-impression tracking (SCRUM-1265). HomeSection is a thin client
 // wrapper around <section>; the sections themselves stay server-rendered.
@@ -188,6 +189,24 @@ export default function Home() {
         >
           <div className="brand-track">
             <AthleteReviewFeature />
+          </div>
+        </HomeSection>
+
+        {/* ===== SECTION 5.75: COMPARISON TABLE ===== */}
+        {/* Answers the category objection ("why not just coffee?") once the
+          shopper has seen the products and one athlete's word for them, and
+          before the university research makes the credibility case. Same
+          component the three PDPs render; the home copy is deliberately
+          product-neutral, so it takes the Both render rather than favouring
+          Flow or Clear. White continues the run from the product grid; the
+          Research band below flips to tint. */}
+        <HomeSection
+          id="comparison"
+          className="brand-section brand-bg-white"
+          ariaLabel="CONKA compared with coffee and prescription stimulants"
+        >
+          <div className="brand-track">
+            <ProductComparisonTable product="both" />
           </div>
         </HomeSection>
 
