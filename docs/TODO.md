@@ -89,6 +89,10 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 **Remaining follow-up:** `app/api/auth/subscriptions/[id]/pause/route.ts` carries its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID). Unifying it with the legacy module means touching the renewal path for paying subscribers, so it needs an end-to-end test of a real subscription edit. Left deliberately.
 
+**The "does anyone still hold a protocol subscription?" question is ANSWERED (2026-08-27).** It gated deleting the quarantined layer and had been open since June. The Skio migration preview lists **12 protocol subscribers**, 4 active and 8 paused, across Balance, Resilience and Ultimate. So the answer is yes, and `app/lib/legacy/protocolSubscriptions.ts`, `ProtocolId` and `PROTOCOL_VARIANTS` all **stay**.
+
+Do not re-open this as a cleanup. The earliest it can change is after the Skio cutover, and even then only once those 12 contracts have actually ended, since they migrate to Skio at their existing plan and price rather than being cancelled. Source: `docs/development/featurePlans/skio-migration.md` section 5.
+
 ---
 
 ### 4. Simplify `StickyPurchaseFooter` and `StickyPurchaseFooterMobile` -- remove protocol mode

@@ -4,7 +4,7 @@
 
 **Owner:** Rudh
 **Branch:** `feature/skio-integration` (sub-branches merge into it, not main)
-**Last updated:** 2026-08-26
+**Last updated:** 2026-08-27
 
 Cross-repo: the retention pipeline half lives in **conka-lab** (`docs/featurePlans/loop-to-skio-ingest-migration.md`). That is the one deliberate exception, because it is a different repo. See [Retention and conka-lab](#retention-and-conka-lab).
 
@@ -18,20 +18,28 @@ Cross-repo: the retention pipeline half lives in **conka-lab** (`docs/featurePla
 | 2 | Re-point purchase surfaces | Done (18 Aug), behind flag |
 | 3 | Embedded customer portal (`/account/manage`) | Done, auto-login verified end-to-end (19 Aug) |
 | 3b | Dual portal for the transition window | Done (26 Aug, SCRUM-1256) |
-| 4 | Cutover + Loop decommission | Blocked on Skio: needs a booked migration date |
-| 5 | Legacy protocol retirement | Future, ops-gated |
+| 4 | Cutover + Loop decommission | Blocked: preview received 27 Aug, queries sent, date not booked |
+| 5 | Legacy protocol retirement | Future. **Gate now answered: 12 protocol subscribers exist, so the code stays.** |
 
 **The build is finished.** Everything sits behind `NEXT_PUBLIC_SKIO_ENABLED` (default off = Loop live). What remains is scheduling, one runbook, and the docs you are reading.
 
 ## 2. Current focus and next action
 
-**Blocked on Skio.** Josiah (Migration Engineer, `josiah@skio.com`, team account `aidan@skio.com`) has store access as of 26 Aug. He generates the migration preview within 1-2 days of access, so 27-28 Aug. Migration runs on any Mon-Thu after we approve the preview, never a Friday.
+**The preview landed 27 Aug and has been reviewed. We have NOT approved it.** Josiah asked for a reply of "Approved!" to proceed; instead we sent back one reconciliation question, two confirmations and a request for a runbook. Section 5 has the findings, section 11 has the check results.
+
+**Waiting on Josiah:**
+
+1. **The count does not reconcile.** His email says 259 regular subscriptions. `subscriptions-raw.json` holds 251 records and `migration-summary.csv` collapses to the same 251. Approval is held until that 8-subscription gap is explained.
+2. **Confirmation that PAUSED migrates as paused** with its resume date, and that discount `remainingUses` countdowns keep counting rather than becoming permanent.
+3. **A cutover runbook**: what he needs from us and when, the order of operations on the day, when Loop is uninstalled, what is customer-facing, what to verify after, and what rollback looks like plus when it expires.
+4. **Available migration dates.** We asked for his options rather than proposing one.
 
 **Not blocked, ours to do:**
 
-1. **Build the Skio cancel flow** in the Skio dashboard: the cancellation reason tree and a recreation of the RETENTION15 15% save offer. **This has a real deadline.** Phase 4 deletes our own RETENTION15 code, so if Skio's flow is not built by cutover we ship a cancel journey with no deflection at all. Ops job, no code.
-2. **Cutover runbook** (section 12 is the skeleton; finalise once the date is set).
-3. **Preview verification checks** (section 11), gated on the preview landing.
+1. **Verify 251 against Loop's own dashboard.** This is the actual action item in Josiah's email and only we can do it. If Loop says 259, the gap is Skio's export and the question answers itself; if Loop says 251, his email figure is wrong.
+2. **Decide what happens to the 9 dead-membership contracts** (section 5). Commercial call: map them onto a current SKU, which is a price and product change they never agreed to, or let them lapse and email them an offer.
+3. **Build the Skio cancel flow** in the Skio dashboard: the cancellation reason tree and a recreation of the RETENTION15 15% save offer. **This has a real deadline.** Phase 4 deletes our own RETENTION15 code, so if Skio's flow is not built by cutover we ship a cancel journey with no deflection at all. Ops job, no code.
+4. **Cutover runbook** (section 12 is the skeleton; finalise once Josiah's version lands and the date is set).
 
 ## 3. Order of operations (CORRECTED 2026-08-26)
 
@@ -54,7 +62,12 @@ Josiah's reason: any contract created in Loop after Skio pulls the data is left 
 
 | # | Item | Owner | Notes |
 |---|------|-------|-------|
-| 1 | Migration date not booked | Josiah (Skio) | Gates everything. Preview first, then any Mon-Thu. |
+| 1 | Migration date not booked | Josiah (Skio) | Gates everything. Asked 27 Aug for his available dates rather than proposing one. |
+| 1b | **Preview count does not reconcile: 259 in the email vs 251 in the files** | Josiah (Skio) | Asked 27 Aug. Approval is held on this. Cross-check against Loop's dashboard is ours. |
+| 1c | Does PAUSED migrate as paused, with resume date? Do discount `remainingUses` countdowns survive? | Josiah (Skio) | Asked 27 Aug. 51 paused subs, 35 discounted. |
+| 1d | Cutover runbook: our prep, order on the day, Loop uninstall point, customer-facing effects, post-checks, rollback window | Josiah (Skio) | Asked 27 Aug. |
+| 1e | **51 legacy subscribers, not the 5-10 Josiah was told** | Rudh / ops | Section 5. The "no mirror plans needed" decision was taken on the wrong number. |
+| 1f | The 9 dead-membership contracts: map or lapse | Rudh / ops | Commercial call. Section 5. |
 | 2 | Does the final migration re-pull from Loop or use the preview snapshot? | Josiah (Skio) | Decides exactly when we go live. Asked 26 Aug. |
 | 3 | Build the Skio cancel flow (reason tree + RETENTION15 save offer) | Rudh / ops | Pre-cutover deadline. Not blocked on Skio. |
 | 4 | Synergy: 6-SKU handoff sent, plus one live routing test on a normally-paid order | Rudh / ops | Section 10. `#3879` was £0 and auto-fulfilled, so it never pulled. |
@@ -75,6 +88,47 @@ Josiah's reason: any contract created in Loop after Skio pulls the data is left 
 | Sequencing | **Go live 24-48h BEFORE migration**, run both manage-subs links during the window | Section 3. Reverses the original plan. |
 
 **The `createdAt` contradiction (unresolved).** Noah told us twice (19-20 Aug) that migrated contracts are created fresh: create date = migration date, no prior cycle count, no Loop event replay. Josiah says the opposite. Both are on record. **Verify on the preview** rather than picking a side; this is the single highest-value check on that data. Either way there is no new build, because conka-lab's coalesce already handles the bad branch (section 11).
+
+### Migration preview received and reviewed (2026-08-27)
+
+Josiah sent `migration-summary.csv`, `failed-subscription-contracts.csv`, `subscriptions-raw.json` and `prepaid-raw.json`, and asked for a reply of "Approved!". **We did not approve.** What the data actually contains:
+
+| | Josiah's email | The attachments |
+|---|---|---|
+| Regular subscriptions | 259 | **251** records in `subscriptions-raw.json` |
+| Prepaid | 16 | 16, agrees |
+| Failed | 11 | 11, agrees |
+
+`migration-summary.csv` is per subscription **line**, not per subscription, and collapses to the same 251 (one customer holds two lines). So two of Skio's artefacts agree with each other and disagree with the covering email by 8. **Do not approve a number that does not reconcile.** The cross-check that settles it is Loop's own dashboard, which is ours to run.
+
+**Population as shipped in the preview (267 total):**
+
+- 205 ACTIVE + 46 PAUSED regular; 11 ACTIVE + 5 PAUSED prepaid. **51 paused in total.**
+- Currency: 239 GBP, 8 EUR, 4 USD in regular; 15 GBP, 1 USD in prepaid.
+- Every line carries `reChargeId` (the Loop id) and a `paymentMethodId`. No nulls.
+- 35 subscriptions carry a discount, several with a `remainingUses` countdown.
+- 8 subscriptions have `priceWithoutDiscount` of 0, three of which ALSO carry a discount, including a GBP 40 fixed-amount against a 0 base. **This is Loop-side data quality, not a Skio fault**, and most look like deliberate staff and friends comps.
+
+**The `createdAt` contradiction is RESOLVED: Josiah was right, Noah was wrong.** The preview preserves original Loop start dates, spanning 2023 to 2026 with the oldest at 2023-05-03, and `cyclesCompleted` values from 0 to 58. Contracts are not created fresh at migration date. Consequence for conka-lab in section 11.
+
+**Legacy is 51 subscribers, not 5-10.** Josiah's 26 Aug answer, that legacy plans need no Skio mirrors because there are only 5-10 of them and they can be force-migrated onto a current plan whenever they next edit, was given against an estimate that is out by 5x. The real figure is **51, or 19% of the base**:
+
+| Count | Product |
+|-------|---------|
+| 17 | Liquid Monthly Plan |
+| 12 | Protocol: Balance / Resilience / Ultimate |
+| 8 | Liquid CONKA 12 Month Plan |
+| 3 | Liquid 6 Month Plan |
+| 11 | Capsules plans, Black Friday, BRAIN HEALTH, CONKA 1, CONKA System, SUPERCHARGE |
+
+Many sit on grandfathered pricing (GBP 48.30, GBP 49, GBP 33). Under the agreed behaviour, the first time any of those 51 touches their subscription in the portal they are forced onto a current plan at current pricing. At 5-10 people that is an acceptable rounding error; at 51 it is a retention decision nobody has actually taken. **Revisit before cutover.**
+
+**The 11 failures split cleanly:**
+
+- **2 "No valid payment method"** (`sienna.charles55@hotmail.com`, `alexlundberg@hotmail.co.uk`). Already failing in Loop's dunning. Agreed: migrate with no payment method, they land in Skio Payment Recovery.
+- **9 "variant is deleted"**, every one a retired membership product: C68 Monthly Membership (5, including `humphreybodington@conka.uk`), C2 Monthly Membership, Capsules 24 Month Upfront, V23 CONKA OURFC Package. Josiah will map them to variant ids if we send them. **Open commercial call**: mapping moves people onto a product and price they never agreed to; lapsing them and following up with an offer is cleaner.
+
+**12 protocol subscribers exist** (4 ACTIVE, 8 PAUSED) across Balance, Resilience and Ultimate. This answers the Phase 5 gate that has been open since June: `app/lib/legacy/protocolSubscriptions.ts`, `ProtocolId` and `PROTOCOL_VARIANTS` **stay**. See `docs/TODO.md`.
 
 ### From Noah (2026-08-18 to 20)
 
@@ -219,12 +273,16 @@ Six new subscription SKUs need onboarding on Synergy's side. They are not new ph
 
 **Deflection decision.** Cancellation deflection and save-offers move into Skio's portal, matching the no-code direction, and Klaviyo keeps only the post-cancel winback re-pointed onto Skio's cancel event. Skio's in-platform reason tree is why this split is right: the reason gets acted on where it is captured.
 
-### Preview verification checks (run when the preview lands)
+### Preview verification checks (RUN 2026-08-27, 3 of 4 green)
 
-1. Does `createdAt` carry the original Loop start date? (Settles the Noah/Josiah contradiction.)
-2. Is the Loop sub id present on every contract?
-3. Do the ~5-10 legacy subscribers appear at their existing interval and price?
-4. Run conka-lab's Check 13 tenure guard against the preview population. Any long-tenured subscriber landing in `NEW_SUB_*` means the start-date mapping is wrong and must be fixed before cutover.
+| # | Check | Result |
+|---|-------|--------|
+| 1 | Does `createdAt` carry the original Loop start date? | **PASS.** Dates span 2023-2026, oldest 2023-05-03, `cyclesCompleted` 0 to 58. Josiah was right, Noah was wrong. |
+| 2 | Is the Loop sub id present on every contract? | **PASS.** Every line carries `reChargeId`, zero nulls. Note the naming: it sits on `SubscriptionLines`, not the subscription, and is called `reChargeId` rather than anything Loop-shaped. |
+| 3 | Do the legacy subscribers appear at their existing interval and price? | **PASS on mechanics, FAIL on the estimate.** They carry their old prices and intervals correctly, but there are **51 of them, not 5-10**. Section 5. |
+| 4 | conka-lab Check 13 tenure guard against the preview population | **NOT RUN.** Needs the conka-lab repo. Still required before cutover. |
+
+**What check 1 passing means for conka-lab: still no code change, and the coalesce stays.** The tenure half is now confirmed as a backstop rather than the mechanism. The pause-history and renewal-replay halves remain load-bearing, because nothing in the preview suggests Loop audit events are replayed, so `pauseEventDates` still starts empty at migration and `CHRONIC_PAUSER` still empties without the replay. `cyclesCompleted` migrating remains irrelevant to us, as recorded above.
 
 ## 12. Cutover runbook (Phase 4)
 
@@ -255,12 +313,13 @@ Six new subscription SKUs need onboarding on Synergy's side. They are not new ph
 - **The no-code iframe portal**, not a self-built portal on Skio's GraphQL API.
 - **Loop stays primary on `/account` during the transition window**, since the overwhelming majority of customers are still on Loop until migration completes.
 - **A third flag state, not platform detection**, for the dual portal. Detection adds an API call and failure modes to the account page during the riskiest week for no real gain over a three-day window.
-- **Not deleting the legacy protocol commerce layer.** That is Phase 5, ops-gated on confirming no subscriber still holds a protocol contract.
+- **Not deleting the legacy protocol commerce layer.** That was Phase 5, ops-gated on confirming no subscriber still holds a protocol contract. **The 27 Aug preview answers it: 12 people do** (4 active, 8 paused). The code stays until those contracts end.
 
 ## 14. Change log
 
 Newest first.
 
+- **2026-08-27** - **Migration preview received, reviewed, NOT approved.** Josiah sent the four preview files and asked for approval. Held on a count that does not reconcile: his email says 259 regular subscriptions, his own attachments contain 251. Replied asking for that plus confirmation on paused-state and discount `remainingUses` handling, a cutover runbook, and his available dates. Findings in section 5, check results in section 11. Three things the preview settled: `createdAt` does migrate (Josiah right, Noah wrong), legacy is 51 subscribers not 5-10, and 12 protocol subscribers exist so the Phase 5 code stays.
 - **2026-08-26** - **Docs consolidated into this file.** Nine Skio docs folded into one source of truth. Originals in git history.
 - **2026-08-26** - **Dual portal built (SCRUM-1256).** `NEXT_PUBLIC_SKIO_TRANSITION` plus the composed flag helpers; `/account` keeps the Loop list and links out during the window; a Skio subscriber with no Loop contract gets a transition empty state instead of "start a subscription". Branch `feature/skio-dual-portal`, commit `ab637389`.
 - **2026-08-26** - **Sequencing REVERSED and legacy plans resolved.** Josiah confirmed we go live 24-48h BEFORE migration, that `createdAt` and `cyclesCompleted` do migrate (contradicting Noah), that the preview carries Loop sub ids, that `migrationIndex` is reliable, and that legacy plans need no Skio mirrors.
