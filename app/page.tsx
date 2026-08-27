@@ -9,7 +9,6 @@ import Footer from "./components/footer";
 import HomeHeroStatic from "./components/landing/HomeHeroStatic";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
-import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // Static server component (native <details> accordion, no client state), so a
@@ -258,11 +257,8 @@ export default function Home() {
           className="brand-section brand-bg-tint max-lg:pt-0!"
           ariaLabel="Athletes who use CONKA"
         >
-          {/* Sport marquee runs full-bleed at the section level; the carousel
-            itself stays inside the track. */}
-          <AthleteSportMarquee fullBleed />
           <div className="brand-track">
-            <AthleteCredibilityCarousel showMarquee={false} />
+            <AthleteCredibilityCarousel />
           </div>
         </HomeSection>
 

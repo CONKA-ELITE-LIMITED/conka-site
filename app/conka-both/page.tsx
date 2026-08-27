@@ -12,7 +12,6 @@ import PdpSection, {
 import Certifications from "@/app/components/Certifications";
 import { ClinicalIngredients } from "@/app/components/product";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
-import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import BrainFuelBand from "@/app/lander/sections/BrainFuelBand/BrainFuelBand";
@@ -160,9 +159,8 @@ export default function ConkaBothPage() {
       className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
       ariaLabel="Athletes who use CONKA"
     >
-      <AthleteSportMarquee fullBleed />
       <div className="brand-track">
-        <AthleteCredibilityCarousel showMarquee={false} />
+        <AthleteCredibilityCarousel />
       </div>
     </PdpSection>
   );
