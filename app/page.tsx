@@ -56,6 +56,14 @@ const AthleteCredibilityCarousel = dynamic(
   { loading: () => <div className="min-h-[900px]" /> },
 );
 
+// Client leaf that lazily pulls GSAP in on approach, so it is code-split like
+// the page's other client sections. SSR stays on, so the five milestones are in
+// the server-rendered HTML for crawlers and the JSX already carries the final
+// lit state; only the scrub binding is deferred.
+const WhatToExpectV2 = dynamic(() => import("./components/home/WhatToExpectV2"), {
+  loading: () => <div className="min-h-[950px]" />,
+});
+
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
 });
@@ -190,6 +198,23 @@ export default function Home() {
         >
           <div className="brand-track">
             <AthleteReviewFeature />
+          </div>
+        </HomeSection>
+
+        {/* ===== SECTION 5.6: WHAT TO EXPECT ===== */}
+        {/* Answers "when will I feel it", the objection that kills a first
+          subscription order, once the shopper has seen the products and one
+          athlete's word for them. Takes the Both variant, since the page is not
+          product specific. Tint: the product grid and athlete review above are
+          a flush white pair and the comparison table below is white, so this
+          is the colour break between them. */}
+        <HomeSection
+          id="what-to-expect"
+          className="brand-section brand-bg-tint"
+          ariaLabel="What to expect"
+        >
+          <div className="brand-track">
+            <WhatToExpectV2 productId="both" />
           </div>
         </HomeSection>
 

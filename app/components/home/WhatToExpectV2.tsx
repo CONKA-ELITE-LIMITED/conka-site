@@ -19,16 +19,18 @@ import {
  * line reaches it. Desktop (lg+) pairs the timeline with a CSS-sticky product
  * render column; mobile is header + stacked timeline only.
  *
- * Performance: GSAP is NOT statically imported -- the PDPs are the only
- * routes this component ships on, and nothing else there uses GSAP. The
- * motion layer loads via dynamic import only when the section approaches the
- * viewport (and only when motion is allowed), so it stays out of the routes'
- * first-load JS. JSX carries the final, fully-lit state, so no-JS, reduced
+ * Performance: GSAP is NOT statically imported. This ships on home and the
+ * three PDPs, and nothing else on those routes uses GSAP. The motion layer
+ * loads via dynamic import only when the section approaches the viewport (and
+ * only when motion is allowed), so it stays out of the routes' first-load JS.
+ * That is what let it onto home (SCRUM-1266) without putting GSAP on the
+ * highest-traffic page's initial bundle: keep the dynamic import if this is
+ * ever refactored. JSX carries the final, fully-lit state, so no-JS, reduced
  * motion, and the pre-load moment all show the complete timeline; the scrub
  * is position-synced, so late binding loses nothing. No ScrollTrigger pin;
  * the desktop column uses position: sticky.
  *
- * The PDPs mount one tree at a time (useIsMobile branch); the isMobile
+ * Every host mounts one tree at a time (useIsMobile branch); the isMobile
  * dependency rebinds and refreshes triggers when the tree settles, so
  * positions are measured against the final layout.
  *
