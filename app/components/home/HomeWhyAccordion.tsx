@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { HOME_WHY_ROWS, HOME_WHY_HEADLINE } from "@/app/lib/homeWhyContent";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 
 /* ============================================================================
  * HomeWhyAccordion (SCRUM-1265, Simple DTC)
@@ -169,18 +170,18 @@ export default function HomeWhyAccordion() {
                             isOpen ? "opacity-100" : "opacity-0"
                           }`}
                         >
-                          {/* Solid navy with white text rather than a soft tint:
-                              at this size a pale highlight barely registered, and
-                              the lede is the emotional beat of the row. Padded
-                              and rounded, and box-decoration-clone keeps the
-                              shape on every wrapped line rather than boxing the
-                              whole paragraph. */}
-                          <p className="mb-3 max-w-[54ch] text-base font-medium leading-relaxed text-black">
-                            <span className="box-decoration-clone rounded-sm bg-[var(--brand-navy)] px-1.5 py-1 text-white">
+                          {/* Soft light-navy tint, not a solid navy fill. The
+                              solid version was tried 2026-08-27 and cut: it read
+                              as a UI chip rather than a marker pen and fought the
+                              row for attention. box-decoration-clone keeps the
+                              highlight on every wrapped line rather than boxing
+                              the whole paragraph. */}
+                          <p className="mb-3 max-w-[54ch] text-base font-medium leading-snug text-black">
+                            <span className="box-decoration-clone bg-[#eef0f5] px-1.5 py-0.5">
                               {row.lede}
                             </span>
                           </p>
-                          <p className="max-w-[54ch] text-base leading-relaxed text-black/70">
+                          <p className="max-w-[54ch] text-base leading-relaxed text-black">
                             {row.body}
                           </p>
                         </div>
@@ -191,6 +192,18 @@ export default function HomeWhyAccordion() {
               );
             })}
           </ul>
+
+          {/* CTA. Repeats the row grid with an empty first cell rather than a
+              hand-tuned padding value, so it stays aligned with the row titles
+              at both breakpoints if the number gutter ever changes. */}
+          <div className="mt-6 grid grid-cols-[2.75rem_1fr] gap-3 lg:mt-8 lg:grid-cols-[4rem_1fr] lg:gap-6">
+            <span aria-hidden />
+            <div className="lg:px-6">
+              <ConkaCTAButton href="/conka-both" meta={null}>
+                Try the solution
+              </ConkaCTAButton>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ Scoped 27 Aug 2026. Branch `feature/home-page-upgrades-round2`.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | The why accordion at position 2 | Built, For review (SCRUM-1265, commit `7a6afae5`) |
+| 1 | The why accordion (position 3) | Built, For review (SCRUM-1265) |
 | 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | Not Started |
 | 3 | Athlete credibility carousel restyle | Not Started |
 
@@ -26,7 +26,7 @@ Reference: the Gray Matter home page (`trygraymatter.com`), whose second section
 
 ## Approach
 
-A numbered "why" accordion becomes the new second section, replacing `ProductBenefitTiles` and pushing `LandingProductShowcase` to third. The two PDP components drop in unchanged. The athlete carousel is tightened in place.
+A numbered "why" accordion replaces `ProductBenefitTiles` at position 3. The two PDP components drop in unchanged. The athlete carousel is tightened in place.
 
 **Design language:** Simple DTC (see `docs/branding/DESIGN_SYSTEM.md` section 8.5), borrowing three clinical devices for the accordion only.
 
@@ -51,7 +51,8 @@ Scope the build from the screenshot, not the markup.
 | Hairline row borders | Yes | Cheap, and consistent with `border-black/8` elsewhere on home |
 | Highlighted lede line | Yes | Carries the emotional beat before the rational body copy |
 | Soft white card with shadow | Yes | Simple DTC explicitly allows shadows and rings |
-| Centred headline with accent pill | Yes | Home's default is left-aligned, so this is a deliberate exception for one section |
+| Accent word in an outlined pill | Yes | The one piece of headline decoration worth borrowing |
+| Centred headline | **No** | Tried and cut. Home is left-aligned by default and the headline looked wrong centred over a card that is itself only 52rem wide |
 | Grid-paper background | **No** | Reads as a foreign object between our hero and our showcase |
 | Mono body copy | **No** | `.brand-clinical` is reserved for `/science` and the `/app` dark pages |
 | Lime accent | **No** | We have no lime. Number circles use a navy tint |
@@ -63,8 +64,8 @@ Scope the build from the screenshot, not the markup.
 | # | Section | Change |
 |---|---------|--------|
 | 1 | Hero (`HomeHeroStatic`) | unchanged |
-| 2 | **Why accordion (`HomeWhyAccordion`)** | NEW, replaces `ProductBenefitTiles` |
-| 3 | `LandingProductShowcase` | moved down from 2 |
+| 2 | `LandingProductShowcase` | unchanged |
+| 3 | **Why accordion (`HomeWhyAccordion`)** | NEW, replaces `ProductBenefitTiles` |
 | 4 | `Certifications` | unchanged |
 | 5 | `BrainFuelBand` | unchanged |
 | 6 | `ProductGrid` | unchanged |
@@ -84,15 +85,17 @@ Eleven rendered sections becomes thirteen.
 
 Settled during scoping, with the reasoning, so they do not get re-litigated.
 
-### 1. The accordion sits at position 2, and the showcase drops to 3
+### 1. The showcase stays at 2 and the accordion sits at 3
 
-Why-before-what. Cold paid traffic gets the problem framing before the product reveal. The cost is that the product reveal now sits below a tall section, which is what the analytics in Phase 1 exist to measure.
+**Reversed once, in build.** The original decision was why-before-what: accordion at 2, showcase down to 3, on the theory that cold paid traffic wants the problem framed before the product reveal.
 
-The alternative considered and rejected was leaving the showcase at 2 and putting the accordion at 3, which is a smaller diff but keeps the page selling before it explains.
+It shipped that way and was swapped back on 27 Aug 2026 after seeing it rendered. The accordion is a tall block of mostly-closed rows, and sitting it between the hero and the first sight of the product pushed the product too far down the page. At position 3 it reads as the "why" behind a product the visitor has already seen, which is the weaker argument on paper and the better one on the screen.
+
+Recorded rather than quietly rewritten, because the why-before-what case is genuinely arguable and someone will raise it again. The counter-argument is not that it is wrong, it is that this particular section is too tall to carry it.
 
 ### 2. `LabResearch` stays, and row 4 stays "Peer reviewed research"
 
-**This is a known, accepted duplication.** The research argument now appears at position 2 (as an accordion teaser) and again at position 9 (as the full `LabResearch` section). The alternatives were folding `LabResearch` into the accordion and cutting the section, or dropping row 4 to three rows. Both were rejected in favour of teaser-then-depth.
+**This is a known, accepted duplication.** The research argument now appears at position 3 (as an accordion teaser) and again at position 9 (as the full `LabResearch` section). The alternatives were folding `LabResearch` into the accordion and cutting the section, or dropping row 4 to three rows. Both were rejected in favour of teaser-then-depth.
 
 Recorded here so a future reader does not "fix" it as an oversight.
 
@@ -160,7 +163,7 @@ Desktop: centred headline with the pill-outlined accent word, circular image top
 
 ### 3. Reorder and wire
 
-Accordion in at 2, `LandingProductShowcase` to 3, `ProductBenefitTiles` import and render removed, `LabGuarantee` and its wrapping section removed along with its now-unused import (decision 6).
+Accordion in at 3 in place of `ProductBenefitTiles`, whose import and render are removed, `LabGuarantee` and its wrapping section removed along with its now-unused import (decision 6).
 
 - Dependencies: task 2
 - Complexity: Small
@@ -189,7 +192,15 @@ Shipped 27 Aug 2026 on `feature/home-page-upgrades-round2`, commit `7a6afae5`. F
 
 **The `#product-grid` anchor moved onto the section.** It was a wrapper `div` around the section; now one element carries both the hero CTA's scroll anchor and the tracked section id.
 
-Two things to eyeball on the preview, both pixel-level choices made without visual verification: the desktop number outdent (`lg:-ml-10` against the card's 48px padding) and the highlighted lede line.
+**The section was rebuilt after first render.** The initial version read as an underwhelming stack of empty bars. Six causes, all structural rather than decorative: rows were rules inside one card instead of individually bordered boxes; the card spanned the full 1280px track so four short titles sat in empty space; the headline was centred against a full-width card; the numbers were 32px; every row could be closed at once leaving the section blank; and a subline restated what the four titles already said.
+
+The fixes changed the component's nature. It is now a **client component**, because the two behaviours the reference actually depends on cannot be had from a native `<details>`: one row is always open (the button selects rather than toggles, so pressing the open row is a no-op) and the close animates. The expand reuses the `grid-template-rows: 0fr -> 1fr` technique and the `inert` collapse from `IngredientDisclosureRows` rather than inventing a second pattern.
+
+**Desktop and mobile diverge structurally, deliberately.** Desktop has the white card and per-row bordered boxes. Mobile has neither: rows are separated by a rule running the full width across the number gutter, matching the reference. At 390px a card border inside a section inside a row border is three nested containers competing for width the copy needs.
+
+**The lede highlight is a soft `#eef0f5` tint.** A solid navy fill with white text was tried and cut the same day: it read as a UI chip rather than a marker pen and fought the row for attention.
+
+**There is a CTA** ("Try the solution", to `/conka-both`) below the rows, aligned to the row titles by repeating the row grid with an empty first cell rather than a hand-tuned padding value.
 
 ### A consequence worth watching
 
@@ -270,8 +281,8 @@ The roster answers "how many" and the feature card answers "what do they say". T
 
 ## Risks
 
-- **Home will carry two accordions**, at position 2 and position 12 (`AppUSPSection`). Different arguments, same interaction pattern. Accepted, worth watching.
-- **The research argument appears twice**, at 2 and at 9. Decision 2 above. Known trade.
+- **Home will carry two accordions**, at position 3 and position 11 (`AppUSPSection`). Different arguments, same interaction pattern. Accepted, worth watching.
+- **The research argument appears twice**, at 3 and at 9. Decision 2 above. Known trade.
 - **Eleven sections becomes thirteen.** Mobile scroll depth is the thing to watch, which is what task 4 exists to measure.
 - `WhatToExpectV2` **adds GSAP to the home bundle.** Lighthouse check required before merge, against the benchmarks in `docs/development/PERFORMANCE_OPTIMISATION.md`.
 - `ProductBenefitTiles` becomes **fully orphaned**. Home is currently its only consumer; PDP Phase 1 removed it from the product pages.
@@ -295,7 +306,7 @@ Sprint 30, epic SCRUM-763 (Website & CRO).
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1265 | Home Phase 1: numbered "why" accordion as the new second section | 1 | To Do |
+| SCRUM-1265 | Home Phase 1: numbered "why" accordion (ticket title says "second section"; it shipped at 3, see decision 1) | 1 | For review |
 | SCRUM-1266 | Home Phase 2: what-to-expect timeline and comparison table onto the home page | 2 | To Do |
 | SCRUM-1267 | Home Phase 3: tighten the athlete credibility carousel across all surfaces | 3 | To Do |
 

@@ -115,13 +115,30 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 2: WHY CONKA EXISTS (numbered accordion) ===== */}
-        {/* Frames the problem before the page sells anything, so cold paid
-          traffic gets a reason to scroll past the fold (SCRUM-1265). Replaced
-          ProductBenefitTiles, whose three titles restated the outcome buckets
-          the PDPs already carry.
-          Tint, so it takes the first background break out of the hero AND so
-          the accordion's white card reads as a raised surface rather than
+        {/* ===== SECTION 2: WHAT CONKA DOES ===== */}
+        {/* White so it flows straight out of the hero's white copy column; the
+          why-accordion below carries the first tint break.
+          This briefly ran third, under the why-accordion, on the theory that
+          cold traffic wants the problem framed before the product. Swapped back
+          2026-08-27: the accordion is a tall block of closed rows, and putting
+          it between the hero and the first sight of the product pushed the
+          product too far down. The accordion now reads as the "why" behind a
+          product you have already seen. */}
+        <HomeSection
+          id="showcase"
+          className="brand-section brand-bg-white"
+          ariaLabel="What CONKA does"
+        >
+          <div className="brand-track">
+            <LandingProductShowcase ctaHref="/conka-both" />
+          </div>
+        </HomeSection>
+
+        {/* ===== SECTION 3: WHY CONKA EXISTS (numbered accordion) ===== */}
+        {/* Replaced ProductBenefitTiles, whose three titles restated the outcome
+          buckets the PDPs already carry (SCRUM-1265).
+          Tint, so it breaks out of the white showcase above AND so the
+          accordion's white card reads as a raised surface rather than
           dissolving into the section. */}
         <HomeSection
           id="why"
@@ -133,21 +150,7 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 3: WHAT CONKA DOES ===== */}
-        {/* Was section 2, moved down so the why beat lands first. White, to break
-          back out of the tint above and to carry through into the white
-          certifications band below. */}
-        <HomeSection
-          id="showcase"
-          className="brand-section brand-bg-white"
-          ariaLabel="What CONKA does"
-        >
-          <div className="brand-track">
-            <LandingProductShowcase ctaHref="/conka-both" />
-          </div>
-        </HomeSection>
-
-        {/* Certification badges — self-contained white band under the showcase. */}
+        {/* Certification badges — self-contained white band under the accordion. */}
         <Certifications />
 
         {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
