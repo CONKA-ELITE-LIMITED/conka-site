@@ -102,9 +102,9 @@ export default function HomeWhyAccordion() {
 
             Widens from 20rem at lg to 26rem at xl, deliberately taking width
             off the accordion beside it: the rows are short and were sitting in
-            too much empty space. It steps rather than jumping straight to 26rem because
-            at exactly 1024px the track is only ~920px, and a 26rem column there
-            would squeeze the row copy.
+            too much empty space. It steps rather than jumping straight to
+            26rem because at exactly 1024px the track is only ~920px, and a
+            26rem column there would squeeze the row copy.
 
             Desktop only, since at 390px the accordion needs the full width. */}
         <div
@@ -135,14 +135,27 @@ export default function HomeWhyAccordion() {
                   key={row.title}
                   // The rule is on the <li>, not the content box, so on mobile
                   // it runs the full width across the number gutter too.
-                  className="grid grid-cols-[3.25rem_1fr] items-start gap-4 border-t border-black/12 pt-5 lg:grid-cols-[4rem_1fr] lg:gap-6 lg:border-t-0 lg:pt-0"
+                  //
+                  // pb-5 matters more than it looks. With items-start, a
+                  // COLLAPSED row is taller in the number column (52px circle)
+                  // than in the content column (~46px button), so the number
+                  // sets the row height and its bottom edge lands exactly on the
+                  // next row's rule. The bottom padding is what keeps the two
+                  // apart; the mobile rhythm lives here rather than on the panel
+                  // so it applies to open and collapsed rows alike.
+                  className="grid grid-cols-[3.25rem_1fr] items-start gap-4 border-t border-black/12 pt-5 pb-5 lg:grid-cols-[4rem_1fr] lg:gap-6 lg:border-t-0 lg:pt-0 lg:pb-0"
                 >
                   {/* The number, outside the row content in its own gutter,
                       which is the device that makes the section read as an
-                      argument in sequence rather than an FAQ. */}
+                      argument in sequence rather than an FAQ.
+
+                      No top margin on purpose: the circle's height is close
+                      enough to the title row's that aligning their tops also
+                      aligns their centres (desktop, 64px circle against a
+                      ~65px title row). An earlier mt-2 pushed it 8px low. */}
                   <span
                     aria-hidden
-                    className="mt-1 flex h-13 w-13 items-center justify-center rounded-full bg-[#dbe2f0] text-xl font-bold text-[var(--brand-navy)] lg:mt-2 lg:h-16 lg:w-16 lg:text-2xl"
+                    className="flex h-13 w-13 items-center justify-center rounded-full bg-[#dbe2f0] text-xl font-bold text-[var(--brand-navy)] lg:h-16 lg:w-16 lg:text-2xl"
                   >
                     {idx + 1}
                   </span>
@@ -177,7 +190,7 @@ export default function HomeWhyAccordion() {
                     >
                       <div className="overflow-hidden">
                         <div
-                          className={`pb-7 transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-9 ${
+                          className={`transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-9 ${
                             isOpen ? "opacity-100" : "opacity-0"
                           }`}
                         >

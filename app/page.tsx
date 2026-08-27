@@ -15,11 +15,6 @@ import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // Static server component (native <details> accordion, no client state), so a
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
-// Client component (always-one-open state plus an animated expand, neither of
-// which a native <details> gives). Direct import rather than dynamic(): it is
-// section 2, so it is on screen almost immediately and a lazy chunk would only
-// add a request.
-import HomeWhyAccordion from "./components/home/HomeWhyAccordion";
 import AthleteReviewFeature from "./components/AthleteReviewFeature";
 import Certifications from "./components/Certifications";
 // Section-impression tracking (SCRUM-1265). HomeSection is a thin client
@@ -36,6 +31,16 @@ const LandingProductShowcase = dynamic(
 const ProductGrid = dynamic(() => import("./components/home/ProductGrid"), {
   loading: () => <div className="h-[900px]" />,
 });
+
+// Client component: always-one-open state plus an animated expand, neither of
+// which a native <details> gives. Code-split like the page's other client
+// sections so its JS stays out of the initial bundle. SSR is left on (no
+// `ssr: false`), so the five rows of copy are still in the server-rendered
+// HTML for crawlers; only the hydration chunk is deferred.
+const HomeWhyAccordion = dynamic(
+  () => import("./components/home/HomeWhyAccordion"),
+  { loading: () => <div className="h-[760px] lg:h-[700px]" /> },
+);
 
 // Section 10 (Case Studies) commented out per request 2026-07-20. Re-enable this
 // import together with the section block below to restore it.

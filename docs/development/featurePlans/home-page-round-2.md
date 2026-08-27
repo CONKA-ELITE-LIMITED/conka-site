@@ -8,7 +8,7 @@ Scoped 27 Aug 2026. Branch `feature/home-page-upgrades-round2`.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | The why accordion (position 3) | Built, For review (SCRUM-1265) |
+| 1 | The why accordion (position 3) | **Done** (SCRUM-1265) |
 | 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | Not Started |
 | 3 | Athlete credibility carousel restyle | Not Started |
 
@@ -200,7 +200,26 @@ The fixes changed the component's nature. It is now a **client component**, beca
 
 **The lede highlight is a soft `#eef0f5` tint.** A solid navy fill with white text was tried and cut the same day: it read as a UI chip rather than a marker pen and fought the row for attention.
 
-**There is a CTA** ("Try the solution", to `/conka-both`) below the rows, aligned to the row titles by repeating the row grid with an empty first cell rather than a hand-tuned padding value.
+**There is a CTA** ("Try the solution", to `/conka-both`) below the rows, centred against the card. It was first placed inside the row list and aligned to the row titles, which read as off-centre because the number gutter offset it.
+
+**Desktop is two columns: a tall asset, then the accordion.** The asset column widens from 20rem at `lg` to 26rem at `xl`, deliberately taking width off the accordion, whose rows are short and were sitting in too much empty space. It steps rather than jumping straight to 26rem because at exactly 1024px the track is only about 920px.
+
+The asset is `FlowShotSide.jpg`. `BothShotSide.jpg` was used first on the reasoning that a brand-level section should not spotlight one formula, and was overridden by Rudh. Worth knowing if `project_no_single_product_emphasis` comes up: this was a deliberate call, not an oversight.
+
+**The decorative circle is gone.** Three versions were tried: a circular crop overlapping the card's top-right corner (covered the first row's chevron), the same crop pushed behind the card (read as a sticker), and finally the tall asset column. The circle was cutting a busy neuron-and-bottles photo badly at any size.
+
+**The number circles and the lede highlight share `#dbe2f0`.** One step darker than the `#eef0f5` used by the site's tint strips, which was too faint to register against a white card.
+
+**The component is code-split.** It became a client component during the rebuild, so a direct import would have put its JS in the initial bundle for a section that sits below the fold. `dynamic()` with SSR left on: the copy is still server-rendered for crawlers, only hydration defers. `/` still prerenders as static.
+
+### A copy defect fixed on the way past
+
+The app's cognitive test is **two minutes**. Two files said five and were the outliers against six `faqContent.ts` entries, `CaseStudiesHero`, `PilotProgramme` and two listicles:
+
+- `app/components/insights/HowThisIsPossibleModule.tsx`
+- `app/lib/whyConkaData.ts`
+
+Both corrected. Row 5 of the accordion states the figure now that it is unambiguous.
 
 ### A consequence worth watching
 
@@ -306,7 +325,7 @@ Sprint 30, epic SCRUM-763 (Website & CRO).
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1265 | Home Phase 1: numbered "why" accordion (ticket title says "second section"; it shipped at 3, see decision 1) | 1 | For review |
+| SCRUM-1265 | Home Phase 1: numbered "why" accordion (ticket title says "second section"; it shipped at 3, see decision 1) | 1 | Done |
 | SCRUM-1266 | Home Phase 2: what-to-expect timeline and comparison table onto the home page | 2 | To Do |
 | SCRUM-1267 | Home Phase 3: tighten the athlete credibility carousel across all surfaces | 3 | To Do |
 
