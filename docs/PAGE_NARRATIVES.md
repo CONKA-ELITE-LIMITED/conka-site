@@ -11,6 +11,37 @@ This is **current-state**, not build history. For why a page was built a certain
 
 ---
 
+## / (home)
+
+**Audience:** cold, mobile, no brand awareness. 74% of traffic is mobile paid social, so the governing reader is someone who tapped a Meta ad thirty seconds ago and has never heard of CONKA. Secondary: branded search and returning visitors who want the shop.
+**Posture:** the whole funnel on one page. Unlike /science or /app, home does not hand the buy downstream, it closes. Confident-clinical, proof-led, and never more than three sections away from a way to buy. Every claim it makes is evidenced by the section after it rather than asserted twice.
+**Story arc:** here is the shot -> here are the two formulas and what each is for -> here is why it exists at all -> here is the proof it works -> pick yours -> here is what you will actually feel, and when -> here is why not just coffee -> here is who validated it -> here are real people -> and here is the thing nobody else can offer, measure it yourself -> here are the athletes who rely on it -> your questions.
+
+Two sections own their own full-bleed layout and sit outside the `HomeSection` tracking wrapper, so they emit no `home:section_viewed`: `BrainFuelBand` and the `Navigation`/`Footer` chrome. Everything else is tracked under its semantic id.
+
+**CTA coverage is a property of this page, not an accident.** Benchmarked against Gray Matter (a CTA every 2 to 3 sections) and Magic Mind (product cards rendered twice), home previously ran seven consecutive sections with no route to purchase. It now never runs more than three. If a section is added or reordered, re-check that gap.
+
+| # | Section (component) | Job in the story | Health | Notes |
+|---|---------------------|------------------|--------|-------|
+| 1 | Hero (`HomeHeroStatic`) | Name the product and the promise in one screen | OK | Static metal-tray render, art-directed portrait/landscape. LCP element; the looped video hero is kept in the tree for revert |
+| 2 | Product showcase (`LandingProductShowcase`) | Two formulas, what each is for, one price-led CTA | OK | Carries the certification badges under its CTA (compact variant), so reassurance sits at the decision rather than a section away |
+| 3 | Why CONKA exists (`HomeWhyAccordion`) | The argument: challenge, solution, how it works | OK | Its lead, "Tackling modern distraction with", is close to Gray Matter's own section headline, and the four-part structure mirrors theirs. Worth a rewrite if the two are ever compared side by side |
+| 4 | Brain fuel band (`BrainFuelBand`) | Proof in numbers before anything is asked | OK | Desktop is a three-tile bento on one gutter; headline tile is white inside a navy hairline. Full-bleed, own section, untracked |
+| 5 | Shop (`ProductGrid`) | Pick yours | OK | The hero CTA's `#product-grid` scroll anchor. Cards use `ConkaCTAButton` ("Try Flow" / "Try Clear") |
+| 6 | What to expect (`WhatToExpectV2`) | Answer "when will I feel it", the objection that kills a first subscription | OK | Shipped to home 27 Aug (SCRUM-1266). Desktop pairs the scroll-drawn timeline with a sticky ingredients render; mobile has no asset column. GSAP loads only on approach, so it never touches the initial bundle |
+| 7 | Comparison (`ProductComparisonTable`) | Why not just coffee, or a prescription | OK | Keeps its centred heading against home's left-aligned default; reviewed and accepted, not debt. Every row but the first is a CONKA tick, which reads as marketing; adding one row coffee legitimately wins is an open idea from the PDP plan |
+| 8 | Research (`LabResearch`) | Institutional credibility: Cambridge, Durham, Exeter | OK | Full-bleed navy band. Arrives after the page has already asked for trust twice; both references put credibility earlier |
+| 9 | Social proof (`UGCMarquee`) | Volume and faces, real people not actors | OK | Full-bleed marquee |
+| 10 | Measure it yourself (`AppUSPSection`) | The differentiator no competitor has: prove it worked | **Weak** | See below. Buried at 10, and its CTA routes to `/app` rather than to a purchase |
+| 11 | Athletes (`AthleteCredibilityCarousel`) | Who relies on it when focus cannot fail | OK | Seven-athlete roster strip plus a quote-led feature card, Informed Sport as the closing anchor. Shared with the three PDPs and /start, so changes here reach six surfaces |
+| 12 | FAQ (`LabFAQ`) | Clear the last objections, then close | OK | Runs full width (no lifestyle image). Its JSON-LD is serialised from the same subset the section renders, so schema never describes an unshown question |
+
+**Weakest link right now:** section 10, `AppUSPSection`. Measuring your own cognition and proving the product moved the number is the one claim neither Gray Matter, Magic Mind nor AG1 can make, and it sits behind six sections of table stakes, where a mobile reader is least likely to reach it. Its CTA also goes to `/app`, so the page's most differentiating moment is the one that routes away from a sale. Moving it above `what-to-expect` was proposed in the 27 Aug structure pass and not taken; it is the obvious next experiment.
+
+**No data has informed any of these ratings.** `home:section_viewed` shipped 27 Aug (SCRUM-1265), so scroll-depth by section starts accumulating from that date and nothing exists before it. The three mid-page CTAs each carry a `home_<section>` `?src=` token (see `docs/development/CART_ATTRIBUTES.md`), so which argument actually drives a click is answerable from roughly early September. Revisit these Health ratings then and replace judgement with numbers.
+
+---
+
 ## /science
 
 **Audience:** mid-funnel believer-maker. Already interested (arrives from a PDP or nav), but doubtful. Needs the doubt dismantled before buying.
