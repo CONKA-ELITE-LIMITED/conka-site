@@ -65,7 +65,7 @@ query { product(handle: $handle) { ...everything } }
 
 ## Product data architecture
 
-The codebase has **two independent product data systems** — see `docs/PRODUCT_DATA.md` for the full module breakdown.
+The codebase has **two independent product data systems** — see `docs/product/PRODUCT_DATA.md` for the full module breakdown.
 
 | System | Import from | Shopify mapping | Used by |
 |--------|-------------|-----------------|---------|

@@ -1,7 +1,7 @@
 # Shipping & Courier Services
 
 **Status:** Working draft. Lives alongside the Synergy 3PL plan
-(`docs/development/featurePlans/synergy-3pl-integration.md`) during active config;
+(`docs/development/featurePlans/archive/synergy-3pl-integration.md`) during active config;
 to be formalised into a standalone feature doc once the Shopify shipping setup is
 live and verified.
 **Owner:** Rudh (Shopify config) with Humphrey (carrier/ops decisions).

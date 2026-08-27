@@ -5,6 +5,19 @@ Concise reference for what is triggered in Klaviyo, from where, and how.
 ## Integration overview
 
 - **Onsite popups / sign-up forms** are handled by **Alia** (Shopify app), not by Klaviyo's onsite script. Alia's `embed.js` loads via the deferred marketing loader (`app/components/DelayedAnalytics.tsx`) and syncs signups to the master list `WBbMia` through Alia's own native OAuth integration with Klaviyo (configured in the Alia dashboard, no Klaviyo code in this repo). The legacy Klaviyo onsite script in `app/layout.tsx` is commented out (disabled 2026-05-26) and should stay that way.
+
+  **Why it was disabled, so nobody re-enables it.** Every Klaviyo signup form had
+  been set to draft, so `klaviyo.js` loaded on every page and rendered nothing,
+  while still costing **~360ms of main thread** and **re-injecting Google Fonts
+  site-wide**. Re-adding the script reintroduces that regression for zero
+  benefit, since Alia now owns the popup.
+
+  **`WBbMia` must stay on single opt-in** (Klaviyo → Lists & Segments → list
+  Settings → Consent). Alia signups go live immediately on single opt-in, which
+  matches the legacy popup behaviour; switching it to double opt-in silently
+  breaks the capture without any error surfacing. It is the same master "new
+  users" list the footer newsletter signup feeds via
+  `app/api/klaviyo/subscribe/route.ts`.
 - **Backend** uses `KLAVIYO_PRIVATE_KEY` for server-side APIs: subscribe to lists, track events (e.g. cognitive test). `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY` is still used by the cognitive-test track call.
 - **Shopify → Klaviyo**: The Klaviyo app on Shopify sends checkout/order events to Klaviyo. Our headless site does **not** send cart or checkout events to Klaviyo; checkout-related metrics come from Shopify when the customer is on Shopify’s hosted checkout.
 

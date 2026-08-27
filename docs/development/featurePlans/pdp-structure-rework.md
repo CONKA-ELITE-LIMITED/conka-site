@@ -247,6 +247,49 @@ Verified orphaned and recorded in `docs/TODO.md` rather than deleted in the same
 
 **`getPdpIngredientList` is NOT orphaned.** The plan flagged it as possibly dead; the Ingredients disclosure row uses it. `OUTCOME_BUCKETS`, `WHO_ITS_FOR` and `DotIndicator` are all live too. The TODO entry lists all four as do-not-delete, since each looks dead at a glance.
 
+## The Magic Mind teardown (source of the Phase 3 direction)
+
+Absorbed from `pdp-mm-upgrades-flow.md`, which this plan supersedes. Recorded
+because it is the argument behind Phase 3's shape, not just an inspiration
+credit.
+
+**The diagnosis.** Post-SCRUM-1171 the hero was Simple DTC, but the PDP still
+had three problems Magic Mind's PDP did not: per-card fine print repeated on
+every plan (tall and busy), no single summary of what the chosen subscription
+actually delivers, and below-fold education spread across **two overlapping
+components** (`FormulaBenefitsPillars` + `ClinicalIngredients`) in long prose.
+MM's page is faster to read and easier to scan on a phone, which matters because
+74% of visits are mobile and paid traffic is the highest-cost segment landing
+here.
+
+**The single-browsable-ingredient-section argument.** Two competing education
+sections make the reader choose where to look and repeat themselves in prose.
+One browsable section keeps evaluators on the page instead of bouncing off to
+research ingredients elsewhere. The shape: three outcome buckets as headings,
+each a stack of ingredient accordion cards (icon + name + chevron), expanding to
+a render image, a bold one-line claim, a short paragraph, and a "Studies
+support" link.
+
+First-cut buckets, taken from MM's categories:
+
+| Bucket | Ingredients |
+|---|---|
+| Mental performance | Lemon Balm, Ashwagandha |
+| Sustained energy | Rhodiola Rosea |
+| Brain health | Turmeric (Black Pepper folded in as its absorption partner), Bilberry |
+
+**The subscription summary card.** A card directly under the Add-to-Cart button
+and the buy-once link (the MM position) that rewrites itself from the selected
+plan: monthly reads "20 shots delivered monthly, first delivery 28 shots incl. 8
+free, save 43%, cancel anytime"; quarterly reads "60 shots every 3 months, 80
+first delivery incl. 20 free, save 63%". It derives from the same `cadenceData`
+pricing the plan cards use (`getCadencePricingByProductHeroId`: `shotCount`,
+cadence word, `firstOrderShots`, `freeShots`, `getDisplayDiscount`), so it stays
+in sync automatically rather than being restated copy. Rendered once inside
+`ProductBuyPanel` so it serves both the mobile hero and the desktop buy column.
+
+Flow was the proving ground; Clear and Both follow once the patterns hold.
+
 ## Phase 4: App section and glass slide (Future)
 
 Asset gated. Parked until assets are confirmed.
@@ -352,7 +395,7 @@ The FAQ's sticky lifestyle image was flagged as unnecessary. `LabFAQ` already ac
 ## References
 
 - `docs/features/LISTICLE_SYSTEM.md` (section tracking precedent, and the positional id flaw being avoided)
-- `docs/development/featurePlans/listicle-cta-attribution.md` (SCRUM-1177, the original tracking build)
+- `docs/features/LISTICLE_SYSTEM.md` (SCRUM-1177, the original tracking build; folded in)
 - `docs/branding/DESIGN_SYSTEM.md` section 8.5 (Simple DTC)
 - `docs/PAGE_NARRATIVES.md` (page story map)
 - Gray Matter PDP, structural reference: `trygraymatter.com/products/brightmind-1`

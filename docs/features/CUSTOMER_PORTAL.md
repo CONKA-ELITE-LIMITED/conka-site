@@ -48,7 +48,7 @@ sequenceDiagram
 
 **Key files:**
 
-- [`app/context/AuthContext.tsx`](../app/context/AuthContext.tsx) — exposes `customer`, `loading`, `isAuthenticated`, `logout`, `login`, `checkSession`.
+- [`app/context/AuthContext.tsx`](../../app/context/AuthContext.tsx) — exposes `customer`, `loading`, `isAuthenticated`, `logout`, `login`, `checkSession`.
 
 ---
 
@@ -126,7 +126,7 @@ Mock is only active when `NODE_ENV === 'development'` and `DEV_MOCK_AUTH === 'tr
 2. **Loop** Admin API is called for each contract using `shopify-{numericId}` format to get real subscription details: product, variant, price, interval, next billing date, lines, fulfillment flags.
 3. The merged response is returned as a single list. If Loop fails for a contract, the route falls back to Shopify-only data.
 
-**API:** `GET /api/auth/subscriptions` — [`app/api/auth/subscriptions/route.ts`](../app/api/auth/subscriptions/route.ts)
+**API:** `GET /api/auth/subscriptions` — [`app/api/auth/subscriptions/route.ts`](../../app/api/auth/subscriptions/route.ts)
 
 ### Subscription actions
 
@@ -177,8 +177,8 @@ If the customer accepts the alternative, the cancel modal closes and the relevan
 **Error handling:** All Loop API errors are logged server-side with full details. Client responses contain only user-friendly messages — no internal Loop data is exposed.
 
 **Implementation:**
-- [`app/api/auth/subscriptions/[id]/pause/route.ts`](../app/api/auth/subscriptions/[id]/pause/route.ts) — pause, resume, cancel, skip, change-frequency, edit-multi-line, reactivate, place-order, apply-discount
-- [`app/api/auth/subscriptions/[id]/reschedule/route.ts`](../app/api/auth/subscriptions/[id]/reschedule/route.ts) — reschedule delivery date
+- [`app/api/auth/subscriptions/[id]/pause/route.ts`](../../app/api/auth/subscriptions/[id]/pause/route.ts) — pause, resume, cancel, skip, change-frequency, edit-multi-line, reactivate, place-order, apply-discount
+- [`app/api/auth/subscriptions/[id]/reschedule/route.ts`](../../app/api/auth/subscriptions/[id]/reschedule/route.ts) — reschedule delivery date
 
 ---
 
@@ -426,23 +426,23 @@ On clicking Update:
 
 | Area                           | File                                                                                                                      |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| Auth context                   | [`app/context/AuthContext.tsx`](../app/context/AuthContext.tsx)                                                           |
-| Subscriptions hook             | [`app/hooks/useSubscriptions.ts`](../app/hooks/useSubscriptions.ts)                                                       |
-| Payment methods hook           | [`app/hooks/usePaymentMethods.ts`](../app/hooks/usePaymentMethods.ts)                                                     |
-| Account dashboard              | [`app/account/page.tsx`](../app/account/page.tsx)                                                                         |
-| Subscriptions list & actions   | [`app/account/subscriptions/page.tsx`](../app/account/subscriptions/page.tsx)                                             |
-| Edit plan modal (single-line)  | [`app/components/subscriptions/EditSubscriptionModal.tsx`](../app/components/subscriptions/EditSubscriptionModal.tsx)     |
-| Edit plan modal (multi-line)   | [`app/components/subscriptions/MultiLineEditModal.tsx`](../app/components/subscriptions/MultiLineEditModal.tsx)           |
-| Pause duration modal           | [`app/components/subscriptions/PauseModal.tsx`](../app/components/subscriptions/PauseModal.tsx)                           |
-| Resume options modal           | [`app/components/subscriptions/ResumeModal.tsx`](../app/components/subscriptions/ResumeModal.tsx)                         |
-| Reschedule delivery modal      | [`app/components/subscriptions/RescheduleModal.tsx`](../app/components/subscriptions/RescheduleModal.tsx)                 |
-| Reactivate subscription modal  | [`app/components/subscriptions/ReactivateModal.tsx`](../app/components/subscriptions/ReactivateModal.tsx)                 |
-| Place order now modal          | [`app/components/subscriptions/PlaceOrderModal.tsx`](../app/components/subscriptions/PlaceOrderModal.tsx)                 |
-| Order card (with Order Again)  | [`app/components/orders/OrderCard.tsx`](../app/components/orders/OrderCard.tsx)                                           |
-| GET subscriptions (hybrid)     | [`app/api/auth/subscriptions/route.ts`](../app/api/auth/subscriptions/route.ts)                                           |
-| Subscription actions           | [`app/api/auth/subscriptions/[id]/pause/route.ts`](../app/api/auth/subscriptions/[id]/pause/route.ts)                     |
-| Reschedule delivery            | [`app/api/auth/subscriptions/[id]/reschedule/route.ts`](../app/api/auth/subscriptions/[id]/reschedule/route.ts)           |
-| Payment methods — fetch        | [`app/api/auth/subscriptions/payment-methods/route.ts`](../app/api/auth/subscriptions/payment-methods/route.ts)           |
-| Payment methods — update email | [`app/api/auth/subscriptions/payment-methods/[id]/route.ts`](../app/api/auth/subscriptions/payment-methods/[id]/route.ts) |
-| Loop API client                | [`app/lib/loop.ts`](../app/lib/loop.ts)                                                                                   |
-| Subscription types             | [`app/types/subscription.ts`](../app/types/subscription.ts)                                                               |
+| Auth context                   | [`app/context/AuthContext.tsx`](../../app/context/AuthContext.tsx)                                                           |
+| Subscriptions hook             | [`app/hooks/useSubscriptions.ts`](../../app/hooks/useSubscriptions.ts)                                                       |
+| Payment methods hook           | [`app/hooks/usePaymentMethods.ts`](../../app/hooks/usePaymentMethods.ts)                                                     |
+| Account dashboard              | [`app/account/page.tsx`](../../app/account/page.tsx)                                                                         |
+| Subscriptions list & actions   | [`app/account/subscriptions/page.tsx`](../../app/account/subscriptions/page.tsx)                                             |
+| Edit plan modal (single-line)  | [`app/components/subscriptions/EditSubscriptionModal.tsx`](../../app/components/subscriptions/EditSubscriptionModal.tsx)     |
+| Edit plan modal (multi-line)   | [`app/components/subscriptions/MultiLineEditModal.tsx`](../../app/components/subscriptions/MultiLineEditModal.tsx)           |
+| Pause duration modal           | [`app/components/subscriptions/PauseModal.tsx`](../../app/components/subscriptions/PauseModal.tsx)                           |
+| Resume options modal           | [`app/components/subscriptions/ResumeModal.tsx`](../../app/components/subscriptions/ResumeModal.tsx)                         |
+| Reschedule delivery modal      | [`app/components/subscriptions/RescheduleModal.tsx`](../../app/components/subscriptions/RescheduleModal.tsx)                 |
+| Reactivate subscription modal  | [`app/components/subscriptions/ReactivateModal.tsx`](../../app/components/subscriptions/ReactivateModal.tsx)                 |
+| Place order now modal          | [`app/components/subscriptions/PlaceOrderModal.tsx`](../../app/components/subscriptions/PlaceOrderModal.tsx)                 |
+| Order card (with Order Again)  | [`app/components/orders/OrderCard.tsx`](../../app/components/orders/OrderCard.tsx)                                           |
+| GET subscriptions (hybrid)     | [`app/api/auth/subscriptions/route.ts`](../../app/api/auth/subscriptions/route.ts)                                           |
+| Subscription actions           | [`app/api/auth/subscriptions/[id]/pause/route.ts`](../../app/api/auth/subscriptions/[id]/pause/route.ts)                     |
+| Reschedule delivery            | [`app/api/auth/subscriptions/[id]/reschedule/route.ts`](../../app/api/auth/subscriptions/[id]/reschedule/route.ts)           |
+| Payment methods — fetch        | [`app/api/auth/subscriptions/payment-methods/route.ts`](../../app/api/auth/subscriptions/payment-methods/route.ts)           |
+| Payment methods — update email | [`app/api/auth/subscriptions/payment-methods/[id]/route.ts`](../../app/api/auth/subscriptions/payment-methods/[id]/route.ts) |
+| Loop API client                | [`app/lib/loop.ts`](../../app/lib/loop.ts)                                                                                   |
+| Subscription types             | [`app/types/subscription.ts`](../../app/types/subscription.ts)                                                               |

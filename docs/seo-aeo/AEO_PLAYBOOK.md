@@ -226,7 +226,7 @@ The "machine that keeps answering these questions" is designed and half-built. I
 
 **Humphrey's generator → Notion "Blog Hub" database → `/blog` (server-rendered, ISR, `Status`-gated).**
 
-- The content contract, property schema and body rules are specified in `docs/development/featurePlans/blog-informational-content-surface.md` and `docs/development/featurePlans/blog-notion-engine-brief.md`.
+- The content contract, property schema and body rules are specified in `docs/development/featurePlans/archive/blog-informational-content-surface.md` and `docs/features/blog-notion-engine-brief.md`.
 - BLUF openings, heading hierarchy and `Q:`/`A:` FAQ parsing (into visible FAQ + `FAQPage` JSON-LD) are already baked into the contract, so every post is AEO-shaped by construction.
 - The `Status = Published` flip is the human review and claims-compliance gate.
 
@@ -273,8 +273,8 @@ Ordered by value-per-effort. The engineering (blog Phase 1) proceeds unchanged; 
 
 - Original playbook (source, superseded on the on-site diagnosis): `docs/development/featurePlans/CONKA_AEO_Playbook.docx`
 - What is live on-site and why: `docs/seo-aeo/README.md`
-- Blog engine plan (the answering machine): `docs/development/featurePlans/blog-informational-content-surface.md`
-- Engine-facing Notion spec: `docs/development/featurePlans/blog-notion-engine-brief.md`
-- Keyword research (SEO input, to be augmented by question mining): `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
+- Blog engine plan (the answering machine): `docs/development/featurePlans/archive/blog-informational-content-surface.md`
+- Engine-facing Notion spec: `docs/features/blog-notion-engine-brief.md`
+- Keyword research (SEO input, to be augmented by question mining): `docs/seo-aeo/CONKA_SEO_Keyword_Map_v4.md`
 - Search Console baseline: `docs/seo-aeo/seo-search-console-baseline.md`
 - Real-world evidence report (citation magnet): `public/CONKA-Real-World-Evidence-Report.pdf`

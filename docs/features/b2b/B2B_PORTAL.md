@@ -142,10 +142,29 @@ Athlete proof stays supporting context (no club crests, kit, stadium imagery, or
 ### Klaviyo (emails + leads)
 
 - **B2B Leads list:** `Xhqyt8`. Every applicant is added.
+- **Metric `B2B Application Submitted`:** `VSeGwy`. This is the metric to watch; it is the only proof an enquiry actually reached Klaviyo.
+- **Flow ids:** `B2B Applicant Welcome` = `SbRqyH`, `B2B Lead Alert` = `X6Uh4U`. Both live, not draft, not archived.
 - **Flow `B2B Applicant Welcome`** triggers on `B2B Application Submitted` (on the applicant's profile) and emails the order-page link (`{{ event.order_url }}`).
 - **Flow `B2B Lead Alert`** triggers on `B2B Lead Alert` and emails Harry the applicant's details.
 - **The Harry-notification trick:** a Klaviyo flow email always sends to the profile that triggered it. To reach Harry not the applicant, the apply route fires a **second** event (`B2B Lead Alert`) **on Harry's own profile** (`$email = B2B_KLAVIYO.notifyEmail`), carrying the applicant's details as event properties.
 - Both flows must have **Smart Sending OFF** (service emails) and re-entry allowed. Emails land in Gmail's **Updates** tab.
+
+**Monitoring gap, still unbuilt (was Phase 2 of SCRUM-1137).** A honeypot field
+silently binned every autofilled application between 8 Jun and 13 Jul 2026.
+Nothing told us: the metric had flatlined for a month and the only reason it was
+caught is that Harry noticed. Each lost lead is a bulk order worth ~£2,250 ex
+VAT. Two things would close it, neither built:
+
+1. **Alert if `B2B Application Submitted` (`VSeGwy`) sits at zero for N days**
+   while `/professionals` is receiving traffic.
+2. **Reconcile client-side against Klaviyo.** `b2b_application_submitted` fires
+   client-side today via `trackB2BApplicationSubmitted`, but nothing compares it
+   against what actually reached Klaviyo. That reconciliation is exactly the
+   check that would have caught this.
+
+The honeypot itself was **removed**, not renamed or made autofill-proof:
+`/professionals` is an unlisted, `noindex`, off-nav page, so it was not worth the
+false-negative risk.
 
 ## Configuration: env vs constants
 
@@ -197,6 +216,6 @@ Captured here so it lives with the feature, not in a separate plan doc:
 
 - Shipping & couriers (weight bands, carrier costs, pallets): `docs/shipping/SHIPPING_AND_COURIERS.md`
 - Order-size shipping tiers + B2B→Synergy consolidation plan: `docs/development/featurePlans/order-size-shipping-tiers.md`
-- Synergy 3PL: `docs/development/featurePlans/synergy-3pl-integration.md`
+- Synergy 3PL: `docs/development/featurePlans/archive/synergy-3pl-integration.md`
 - Klaviyo patterns: `docs/features/KLAVIYO_FLOWS_AND_INTEGRATION.md`
 - DTC cart: `docs/features/CART_LOGIC.md`

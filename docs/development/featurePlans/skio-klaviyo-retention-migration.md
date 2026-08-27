@@ -167,8 +167,8 @@ The substantive migration work (the Loop -> Skio ingest-adapter rewrite) lives i
 ## References
 
 - Parent plan: [`skio-subscription-migration.md`](./skio-subscription-migration.md) (Phase 4 + retention-analytics follow-up)
-- Canonical Skio reference: [`../../features/skio/migration.md`](../../features/skio/migration.md) ("Answers from Skio" - native Triple Whale + lifecycle webhooks)
-- Attribution/fulfilment parity: [`skio-attribution-fulfilment-parity.md`](./skio-attribution-fulfilment-parity.md)
+- Canonical Skio reference: `docs/features/skio/migration.md` (not yet written) ("Answers from Skio" - native Triple Whale + lifecycle webhooks)
+- Attribution/fulfilment parity: `skio-attribution-fulfilment-parity.md` (not yet written)
 - Skio: help.skio.com/docs/skio-event-and-profile-properties-in-klaviyo ; help.skio.com Klaviyo Integration + "Upgrading to the New Klaviyo Integration"
 
 ## Jira

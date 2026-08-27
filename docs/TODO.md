@@ -58,32 +58,13 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ### 1. Delete `app/protocol/[id]/page.tsx` and the protocol route
 
-**Status:** Deferred
-**Files:**
-- `app/protocol/[id]/page.tsx` -- the old multi-protocol PDP, now superseded by `/conka-both`
-- `app/components/protocol/` -- all protocol-specific UI components (ProtocolHero, ProtocolHeroMobile, ProtocolCalendar, ProtocolCalendarMobile, ProtocolRatioSelector, ProtocolTabs, etc.)
-
-**What unblocks it:**
-- Confirm no remaining direct links to `/protocol/*` anywhere in the codebase (check analytics for residual traffic before deleting)
-- Redirects in `next.config.ts` already handle all incoming traffic (`/protocol/:path*` -> `/conka-both`)
-- Review `app/components/product/` components that accept `protocolId` props -- once the protocol page is gone, those code paths become dead weight
-
-**Why deferred:** The old page still exists as a safety net. Once the new `/conka-both` page has been live for a release cycle with no issues, this cleanup can proceed without risk.
+**Status:** DONE. `app/protocol/` and `app/components/protocol/` are deleted; `/protocol/:path*` permanently redirects to `/conka-both`. The commerce layer that serves existing subscribers stays quarantined in `app/lib/legacy/protocolSubscriptions.ts` — see item 3.
 
 ---
 
 ### 2. Update `CognitiveTestRecommendation.tsx` -- non-Balance protocol links
 
-**Status:** Deferred
-**File:** `app/components/cognitive-test/CognitiveTestRecommendation.tsx`
-**Lines:** The entries for protocol 1, 2, and 4 still link to `/protocol/1`, `/protocol/2`, `/protocol/4`
-
-**What unblocks it:**
-- Decision on what these recommendations should point to now that individual protocols are deprecated
-- Options: all redirect to `/conka-both`, or map Flow/Clear recommendations to `/conka-flow` and `/conka-clarity` based on the recommendation logic
-- The cognitive test itself is currently hidden from navigation (Phase 1 of simplification plan), so this is low urgency
-
-**Why deferred:** The cognitive test is hidden from nav. The `/protocol/*` catch-all redirect in `next.config.ts` means links still resolve. Proper fix requires a product decision on what the test should recommend now.
+**Status:** DONE. `app/components/cognitive-test/CognitiveTestRecommendation.tsx` no longer links to `/protocol/*`; it points at the live product routes.
 
 ---
 
