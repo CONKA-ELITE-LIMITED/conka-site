@@ -191,13 +191,12 @@ export default function Home() {
           athlete instead, which keeps the prominence without the repeat.
           AthleteReviewFeature itself is still live: ListicleProofTier uses it. */}
 
-        {/* ===== SECTION 5.6: WHAT TO EXPECT ===== */}
+        {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
         {/* Answers "when will I feel it", the objection that kills a first
-          subscription order, once the shopper has seen the products and one
-          athlete's word for them. Takes the Both variant, since the page is not
-          product specific. Tint: the product grid and athlete review above are
-          a flush white pair and the comparison table below is white, so this
-          is the colour break between them. */}
+          subscription order, immediately after the shopper has picked a product
+          in the grid above. Takes the Both variant, since the page is not
+          product specific. Tint against the white product grid above and the
+          white athlete section below. */}
         <HomeSection
           id="what-to-expect"
           className="brand-section brand-bg-tint"
@@ -213,7 +212,7 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 5.75: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+        {/* ===== SECTION 7: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
         {/* Moved up from position 11. The athletes answer "who relies on
           this" while the shopper is still deciding, rather than after six
           further sections of argument. White, not the tint it carried before:
@@ -237,7 +236,7 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
+        {/* ===== SECTION 8: RESEARCH — university credibility ===== */}
         {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
         <HomeSection
           id="research"
@@ -254,7 +253,7 @@ export default function Home() {
           this page's metadata below, because it is still a real offer and the
           claim is still true, it simply no longer has its own home section. */}
 
-        {/* ===== SECTION 7: APP USP — key differentiator, measure it yourself ===== */}
+        {/* ===== SECTION 9: APP USP — key differentiator, measure it yourself ===== */}
         <HomeSection
           id="app-usp"
           className="brand-section brand-bg-tint"
@@ -265,7 +264,7 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 8: COMPARISON TABLE ===== */}
+        {/* ===== SECTION 10: COMPARISON TABLE ===== */}
         {/* Moved down from position 7, so the page argues who trusts it and
           why it is credible before it argues against the alternatives.
           Stays on WHITE deliberately: the CONKA column is marked by an
@@ -300,7 +299,7 @@ export default function Home() {
       </section>
       */}
 
-        {/* ===== SECTION 9: UGC SOCIAL PROOF ===== */}
+        {/* ===== SECTION 11: UGC SOCIAL PROOF ===== */}
         {/* Real people, immediately before the questions. Its heading and the
           faces are the last thing the page says before the FAQ closes, which
           is where volume-of-people proof lands hardest; higher up it sat
@@ -313,7 +312,7 @@ export default function Home() {
           <UGCMarquee />
         </HomeSection>
 
-        {/* ===== SECTION 10: FAQ ===== */}
+        {/* ===== SECTION 12: FAQ ===== */}
         <HomeSection
           id="faq"
           className="brand-section brand-bg-white"
