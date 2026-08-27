@@ -5,7 +5,7 @@ Cut the height of the athlete beat and put the review first. Benchmarked against
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Tighten the carousel (height and hierarchy) | **Shipped** 27 Aug, commit `7a627ec9` (SCRUM-1267, For review) |
-| 2 | Consolidate the `/start` CROAthletes fork | Not Started |
+| 2 | Consolidate the `/start` CROAthletes fork | **Shipped** 27 Aug, PR #458 (SCRUM-1273). The sport marquee went with it, on all six surfaces |
 | 3 | Home entry in `PAGE_NARRATIVES.md` | Not Started |
 | 4 | Carousel engagement event | Future |
 
@@ -133,5 +133,5 @@ Fire an event when someone advances the carousel, so we can tell whether the tig
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
 | SCRUM-1267 | Tighten the athlete credibility carousel: cut height, lead with the review | 1 | For review |
-| SCRUM-1273 | [Frontend] Consolidate the /start CROAthletes fork onto the shared carousel | 2 | To Do |
+| SCRUM-1273 | [Frontend] Consolidate the /start CROAthletes fork onto the shared carousel | 2 | For review (merged, PR #458) |
 | SCRUM-1274 | [Docs] Add the home entry to PAGE_NARRATIVES.md | 3 | To Do |

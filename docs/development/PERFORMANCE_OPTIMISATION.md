@@ -75,6 +75,23 @@ Every page's primary hero image must have:
 />
 ```
 
+### `sizes` must follow a component's size variants
+
+If a component gains a smaller variant, its `sizes` has to change with it. A
+fixed `sizes` (or none at all) that was right for the original rendering is
+wrong for the compact one, and nothing warns you.
+
+Without `sizes`, a non-`fill` image builds its srcset from the `width` prop
+alone, so it serves `width` and `2 * width` candidates regardless of the slot
+it lands in. `Certifications` hit this: badges authored at `width={140}` for a
+64 to 128px band, then given a `compact` variant rendering them at 40 to 56px
+under a CTA, kept serving the 140w and 280w candidates into a 40px slot. That
+is 3.5x to 7x more pixels than needed, times four images.
+
+```tsx
+sizes={compact ? "(max-width: 640px) 40px, 56px" : "(max-width: 640px) 64px, 128px"}
+```
+
 ### Image formats
 `next.config.ts` is already configured for AVIF and WebP output. Do not add raw PNG/JPG to `/public` without first checking if a smaller format is available. Logo files must use WebP — the SVG-wrapped PNG issue (593KB nav logo) cost 585KB on every page load.
 

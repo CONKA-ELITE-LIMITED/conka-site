@@ -4,12 +4,21 @@
 
 Scoped 27 Aug 2026. Branch `feature/home-page-upgrades-round2`.
 
+> **Superseded by a structure pass, 27 Aug.** After Phase 2 shipped, home was
+> benchmarked against Gray Matter and Magic Mind and reordered: the duplicate
+> Jack Willis review deleted, certification badges folded under the showcase
+> CTA, the FAQ photo dropped, and three mid-page CTAs added to close a
+> seven-section stretch with no route to purchase. Home is now 11 sections plus
+> the Brain Fuel band, down from 14. The target order in this doc is history;
+> read `app/page.tsx` for the live one, and the PAGE_NARRATIVES home entry
+> (SCRUM-1274) once it exists.
+
 ## Phase status
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | The why accordion (position 3) | **Done** (SCRUM-1265) |
-| 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | **Part done.** ProductComparisonTable shipped 27 Aug (PR #456). WhatToExpectV2 not started |
+| 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | **Done** 27 Aug. ProductComparisonTable PR #456; WhatToExpectV2 commit `198bd6d0` (SCRUM-1266). AC5, the table's centred heading, was rolled into the structure pass instead |
 | 3 | Athlete credibility carousel restyle | **Superseded.** Rescoped against the AG1 and IM8 benchmark and moved to its own plan: `athlete-carousel-refactor.md`. Phase 1 shipped 27 Aug |
 
 ## Problem

@@ -52,6 +52,10 @@ export default function Certifications({
             alt={cert.label}
             width={140}
             height={140}
+            /* The compact row renders these at 40 to 56px. Without `sizes`,
+               next/image builds the srcset from `width` alone and serves the
+               140w and 280w candidates into a 40px slot. */
+            sizes={compact ? "(max-width: 640px) 40px, 56px" : "(max-width: 640px) 64px, 128px"}
             className={
               compact
                 ? "h-auto w-10 sm:w-12 lg:w-14"
