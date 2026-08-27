@@ -111,9 +111,11 @@ export default function HomeWhyAccordion() {
           />
         </div>
 
-        {/* The card is desktop-only. On mobile this is a bare stack on the
-            section tint, so the rows get the full gutter width. */}
-        <div className="relative lg:rounded-md lg:bg-white lg:p-10 lg:text-black lg:shadow-sm lg:ring-1 lg:ring-black/5">
+        {/* The card is white at both breakpoints; only its padding shrinks.
+            What mobile drops is the per-row boxes inside it, not the card
+            itself. Sets its own text colour because it is a surface that
+            differs from the section background. */}
+        <div className="relative rounded-md bg-white p-4 text-black shadow-sm ring-1 ring-black/5 lg:p-10">
           <ul className="flex flex-col gap-0 lg:gap-4">
             {HOME_WHY_ROWS.map((row, idx) => {
               const isOpen = idx === openIdx;
@@ -170,14 +172,18 @@ export default function HomeWhyAccordion() {
                             isOpen ? "opacity-100" : "opacity-0"
                           }`}
                         >
-                          {/* Soft light-navy tint, not a solid navy fill. The
-                              solid version was tried 2026-08-27 and cut: it read
-                              as a UI chip rather than a marker pen and fought the
-                              row for attention. box-decoration-clone keeps the
-                              highlight on every wrapped line rather than boxing
-                              the whole paragraph. */}
+                          {/* A mid light-navy: one step darker than the #eef0f5
+                              used by the number circles and the site's tint
+                              strips, which was too faint to register as a
+                              highlight against a white card.
+                              Solid navy with white text was also tried, and cut:
+                              it read as a UI chip rather than a marker pen and
+                              fought the row for attention. This sits between the
+                              two. box-decoration-clone keeps the highlight on
+                              every wrapped line rather than boxing the whole
+                              paragraph. */}
                           <p className="mb-3 max-w-[54ch] text-base font-medium leading-snug text-black">
-                            <span className="box-decoration-clone bg-[#eef0f5] px-1.5 py-0.5">
+                            <span className="box-decoration-clone bg-[#dbe2f0] px-1.5 py-0.5">
                               {row.lede}
                             </span>
                           </p>
@@ -192,18 +198,15 @@ export default function HomeWhyAccordion() {
               );
             })}
           </ul>
+        </div>
 
-          {/* CTA. Repeats the row grid with an empty first cell rather than a
-              hand-tuned padding value, so it stays aligned with the row titles
-              at both breakpoints if the number gutter ever changes. */}
-          <div className="mt-6 grid grid-cols-[2.75rem_1fr] gap-3 lg:mt-8 lg:grid-cols-[4rem_1fr] lg:gap-6">
-            <span aria-hidden />
-            <div className="lg:px-6">
-              <ConkaCTAButton href="/conka-both" meta={null}>
-                Try the solution
-              </ConkaCTAButton>
-            </div>
-          </div>
+        {/* CTA sits OUTSIDE the card, so "centred" means centred against the
+            card rather than against the row content column. Inside the card it
+            was offset by the number gutter and read as slightly off. */}
+        <div className="mt-8 flex justify-center">
+          <ConkaCTAButton href="/conka-both" meta={null}>
+            Try the solution
+          </ConkaCTAButton>
         </div>
       </div>
     </div>
