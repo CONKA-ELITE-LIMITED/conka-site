@@ -50,11 +50,14 @@ export const HOME_WHY_ROWS: HomeWhyRow[] = [
   },
 ];
 
-/** Headline, split so the accent word can render inside its own outlined pill. */
+/**
+ * Headline, split so the accent word can render inside its own outlined pill.
+ *
+ * There is deliberately no subline. One was tried and cut 2026-08-27: the four
+ * row titles already say what the section covers, so a line explaining that it
+ * covers four things was restating the obvious directly above them.
+ */
 export const HOME_WHY_HEADLINE = {
   lead: "Tackling modern distraction with",
   accent: "Precision",
 } as const;
-
-export const HOME_WHY_SUBLINE =
-  "Four things worth knowing before your first shot.";

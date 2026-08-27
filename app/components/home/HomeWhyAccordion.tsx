@@ -1,9 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import {
-  HOME_WHY_ROWS,
-  HOME_WHY_HEADLINE,
-  HOME_WHY_SUBLINE,
-} from "@/app/lib/homeWhyContent";
+import { HOME_WHY_ROWS, HOME_WHY_HEADLINE } from "@/app/lib/homeWhyContent";
 
 /* ============================================================================
  * HomeWhyAccordion (SCRUM-1265, Simple DTC)
@@ -14,124 +13,172 @@ import {
  * instead of spending four sections on them.
  *
  * Built from the rendered design, NOT that page's source markup. The raw HTML
- * reads as a two-column image-left / accordion-right layout; the CSS puts the
- * headline centred above, the image small and circular in the top right, and
- * the rows inside one soft card. Anyone re-deriving this from the markup will
- * build the wrong thing.
+ * reads as a two-column image-left / accordion-right layout; the real design is
+ * a left-aligned headline, a soft card, and four INDIVIDUALLY BORDERED row
+ * boxes with large numbers in circles sitting outside them. Anyone re-deriving
+ * this from the markup will build the wrong thing.
  *
- * Design language is Simple DTC borrowing three clinical devices (numbered
- * circles outside the rows, hairline row borders, a highlighted lede line).
+ * Design language is Simple DTC borrowing three clinical devices (the outlined
+ * number circles, the hairline row boxes, the highlighted lede line).
  * Deliberately NOT taken from the reference: its grid-paper background and its
  * mono body copy, both of which would read as a foreign block between our hero
  * and our showcase. The accent is navy; the `#1a7f4f` green stays reserved for
  * price savings so it keeps meaning one thing.
  *
- * Static server component. The accordion is native <details> with a shared
- * `name` for single-open behaviour, the same recipe as AppUSPSection, so the
- * section ships no client JS.
+ * Client component, for two reasons that a native <details> cannot give:
+ *
+ *  1. One row is ALWAYS open. Native <details name> lets the visitor close the
+ *     open one and leave the section blank, which is what made the first build
+ *     read as an empty stack of bars. Clicking the open row here is a no-op.
+ *  2. The close animates. A <details> drops its content the instant `open` is
+ *     removed, which snaps.
+ *
+ * The open/close uses the `grid-template-rows: 0fr -> 1fr` transition from
+ * IngredientDisclosureRows, the one technique that animates to content height
+ * without measuring it in JS. It runs layout each frame, but the content is a
+ * two-paragraph block in a section that is not scroll-linked, so the cost is
+ * negligible. Skipped entirely under prefers-reduced-motion.
  * ========================================================================== */
 
+/** Plus that becomes a minus: the vertical bar scales to nothing when open. */
+function PlusMinus({ isOpen }: { isOpen: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className="relative flex h-5 w-5 shrink-0 items-center justify-center text-black"
+    >
+      <span className="absolute h-[1.5px] w-full rounded-full bg-current" />
+      <span
+        className={`absolute h-full w-[1.5px] rounded-full bg-current transition-transform duration-300 ease-out motion-reduce:transition-none ${
+          isOpen ? "scale-y-0" : "scale-y-100"
+        }`}
+      />
+    </span>
+  );
+}
+
 export default function HomeWhyAccordion() {
+  // Index rather than a nullable id: there is no "nothing open" state.
+  const [openIdx, setOpenIdx] = useState(0);
+
   return (
     <div className="w-full">
-      {/* Headline block. Centred from lg up, matching the reference; left on
-          mobile so it lines up with every other section on a phone. */}
-      <div className="relative lg:text-center lg:max-w-[38ch] lg:mx-auto">
+      {/* The content column is capped well inside the 1280px track and stays
+          left-aligned. Full-track width was the other half of why the first
+          build read as underwhelming: four short titles stretched across 1280px
+          are mostly empty space. */}
+      <div className="max-w-[52rem]">
         <h2
           className="brand-h1 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           {HOME_WHY_HEADLINE.lead}{" "}
-          {/* Outlined pill around the accent word. inline-block keeps the
-              padding from clipping when the headline wraps onto a new line. */}
+          {/* inline-block stops the pill's padding clipping when it wraps. */}
           <span className="inline-block rounded-full border border-[var(--brand-navy)] px-4 py-0.5 text-[var(--brand-navy)]">
             {HOME_WHY_HEADLINE.accent}
           </span>
         </h2>
-        <p className="mt-4 text-base lg:text-lg leading-snug text-black/70 lg:mx-auto max-w-[46ch]">
-          {HOME_WHY_SUBLINE}
-        </p>
-      </div>
 
-      {/* Card + decorative circle share a relative parent so the circle can
-          overlap the card's top-right corner the way the reference does. */}
-      <div className="relative mt-10 lg:mt-14">
-        {/* Decorative only, so it carries an empty alt and is hidden from the
-            a11y tree. Desktop only: at 390px it would either crowd the card or
-            shrink to the point of being noise.
-            Deliberately NOT z-raised. The card below is also positioned and
-            comes later in the DOM, so it paints over this: the circle peeks
-            above the card's top-right corner and can never cover the first
-            row's chevron, which a z-10 overlap would have done. */}
-        <div
-          aria-hidden
-          className="hidden lg:block absolute -top-14 right-0 h-36 w-36 overflow-hidden rounded-full ring-1 ring-black/8"
-        >
-          <Image
-            src="/videos/both/BothNeuronFloat-poster.jpg"
-            alt=""
-            fill
-            sizes="144px"
-            className="object-cover"
-            loading="lazy"
-          />
-        </div>
+        {/* Positioning context for the decorative circle. Anchored to the card
+            rather than the section, because the headline's height changes with
+            the viewport and an offset measured from the section top would drift
+            the circle off the corner it is supposed to sit on. */}
+        <div className="relative mt-8 lg:mt-10">
+          {/* Decorative only, so empty alt and hidden from the a11y tree. Sits
+              BEHIND the card (no z-raise; the card is `relative` and later in
+              the DOM, so it paints over), which means it emerges from the
+              top-right corner and can never cover a row. It overhangs the card
+              by 80px into the track's spare width. Desktop only: at 390px it
+              would crowd the card or shrink to noise. */}
+          <div
+            aria-hidden
+            className="absolute -top-16 -right-20 hidden h-44 w-44 overflow-hidden rounded-full ring-1 ring-black/8 lg:block"
+          >
+            <Image
+              src="/videos/both/BothNeuronFloat-poster.jpg"
+              alt=""
+              fill
+              sizes="176px"
+              className="object-cover"
+              loading="lazy"
+            />
+          </div>
 
-        <div className="relative rounded-md bg-white ring-1 ring-black/5 shadow-sm px-5 py-2 lg:px-12 lg:py-6">
-          {HOME_WHY_ROWS.map((row, idx) => (
-            <details
-              key={row.title}
-              name="home-why"
-              open={idx === 0}
-              className="group border-t border-black/8 first:border-t-0"
-            >
-              <summary className="flex items-center gap-4 cursor-pointer list-none py-5 lg:py-6 [&::-webkit-details-marker]:hidden">
-                {/* The number. From lg up it outdents into the card's own 48px
-                    padding (-40px puts the 32px circle roughly centred in that
-                    gutter), so it reads as a marker beside the row rather than
-                    part of it. Inline on mobile, where a dedicated column would
-                    cost ~44px of a 390px viewport and squeeze the titles. */}
-                <span
-                  aria-hidden
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eef0f5] text-sm font-bold text-[var(--brand-navy)] lg:-ml-10"
-                >
-                  {idx + 1}
-                </span>
-                <span className="flex-1 text-lg font-bold text-black leading-tight">
-                  {row.title}
-                </span>
-                <svg
-                  className="w-5 h-5 shrink-0 text-black/40 transition-transform duration-300 group-open:rotate-180"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </summary>
+          <div className="relative rounded-md bg-white ring-1 ring-black/5 shadow-sm p-4 lg:p-10">
+            <ul className="flex flex-col gap-4">
+              {HOME_WHY_ROWS.map((row, idx) => {
+                const isOpen = idx === openIdx;
+                const panelId = `home-why-panel-${idx}`;
 
-              {/* Indented to the title's left edge, so the body hangs off the
-                  title rather than the number: 48px on mobile (32px circle plus
-                  the 16px gap), 8px from lg up where the circle is outdented by
-                  40px and the title therefore starts 8px in. */}
-              <div className="pl-12 pr-9 pb-5 lg:pb-6 lg:pl-2">
-                {/* The highlight is a background on the inline text, so it wraps
-                    line by line like a marker pen rather than boxing the block. */}
-                <p className="-mt-1 mb-2 max-w-[52ch] text-base font-medium leading-snug text-black">
-                  <span className="bg-[#eef0f5] box-decoration-clone px-1.5 py-0.5">
-                    {row.lede}
-                  </span>
-                </p>
-                <p className="max-w-[52ch] text-base leading-snug text-black/70">
-                  {row.body}
-                </p>
-              </div>
-            </details>
-          ))}
+                return (
+                  <li
+                    key={row.title}
+                    className="grid grid-cols-[2.75rem_1fr] items-start gap-3 lg:grid-cols-[4rem_1fr] lg:gap-6"
+                  >
+                    {/* The number, outside the row box in its own gutter, which
+                      is the device that makes the section read as an argument
+                      in sequence rather than an FAQ. */}
+                    <span
+                      aria-hidden
+                      className="mt-2 flex h-11 w-11 items-center justify-center rounded-full bg-[#eef0f5] text-lg font-bold text-[var(--brand-navy)] lg:h-16 lg:w-16 lg:text-2xl"
+                    >
+                      {idx + 1}
+                    </span>
+
+                    {/* Each row is its own bordered box, not a rule between rows. */}
+                    <div className="min-w-0 rounded-md border border-black/12">
+                      <button
+                        type="button"
+                        // Selects rather than toggles: one row is always open, so
+                        // pressing the open row deliberately does nothing.
+                        onClick={() => setOpenIdx(idx)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className="flex w-full cursor-pointer items-center justify-between gap-4 px-4 py-4 text-left lg:px-6 lg:py-5"
+                      >
+                        <span className="text-lg font-bold leading-tight text-black lg:text-xl">
+                          {row.title}
+                        </span>
+                        <PlusMinus isOpen={isOpen} />
+                      </button>
+
+                      {/* `inert` while collapsed. The content stays in the DOM so
+                        it can animate, and a 0fr grid row plus overflow-hidden
+                        only hides it visually: without this a screen reader
+                        would read all four closed rows aloud. */}
+                      <div
+                        id={panelId}
+                        inert={!isOpen}
+                        className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+                          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <div
+                            className={`px-4 pb-5 transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-6 ${
+                              isOpen ? "opacity-100" : "opacity-0"
+                            }`}
+                          >
+                            {/* Background on the inline text, so the highlight
+                              wraps line by line like a marker pen rather than
+                              boxing the whole block. */}
+                            <p className="mb-3 max-w-[54ch] text-base font-medium leading-snug text-black">
+                              <span className="box-decoration-clone bg-[#eef0f5] px-1.5 py-0.5">
+                                {row.lede}
+                              </span>
+                            </p>
+                            <p className="max-w-[54ch] text-base leading-relaxed text-black/70">
+                              {row.body}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

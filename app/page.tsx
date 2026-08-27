@@ -12,9 +12,13 @@ import LabResearch from "./components/landing/LabResearch";
 import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
-// Static server components (native <details> accordions, no client state), so
-// direct imports like the other pure server sections above.
+// Static server component (native <details> accordion, no client state), so a
+// direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
+// Client component (always-one-open state plus an animated expand, neither of
+// which a native <details> gives). Direct import rather than dynamic(): it is
+// section 2, so it is on screen almost immediately and a lazy chunk would only
+// add a request.
 import HomeWhyAccordion from "./components/home/HomeWhyAccordion";
 import AthleteReviewFeature from "./components/AthleteReviewFeature";
 import Certifications from "./components/Certifications";
