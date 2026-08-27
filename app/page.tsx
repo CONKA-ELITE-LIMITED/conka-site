@@ -149,8 +149,9 @@ export default function Home() {
         </HomeSection>
 
         {/* ===== SECTION 3: WHY CONKA EXISTS (numbered accordion) ===== */}
-        {/* Replaced ProductBenefitTiles, whose three titles restated the outcome
-          buckets the PDPs already carry (SCRUM-1265).
+        {/* Replaced a benefit-tile band whose three titles restated the outcome
+          buckets the PDPs already carry (SCRUM-1265; the component itself was
+          deleted in the 2026-08-27 orphan sweep).
           Tint, so it breaks out of the white showcase above AND so the
           accordion's white card reads as a raised surface rather than
           dissolving into the section. */}
