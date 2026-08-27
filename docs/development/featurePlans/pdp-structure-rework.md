@@ -2,7 +2,7 @@
 
 > **Purpose:** Strip the three product pages back to the buy decision plus the arguments only CONKA can make. Phased so each phase ships to production on its own.
 
-Branches: Phase 1 `feature/pdp-structure-rework` (merged #447), Phase 2 `feature/pdp-comparison-table` (merged #448), Phase 3 `feature/pdp-ingredients-merge`.
+Phases 1 to 3 are merged and live (PRs #447, #448, #449), and the orphan cleanup with them (#451, SCRUM-1264). Phases 4, 5 and 6 remain.
 
 ## Phase status
 
@@ -14,6 +14,7 @@ Branches: Phase 1 `feature/pdp-structure-rework` (merged #447), Phase 2 `feature
 | 3b | Disclosure rows and desktop hero cleanup | Merged (PR #449, SCRUM-1263) |
 | 4 | App section and glass slide | Future (asset-gated) |
 | 5 | Start pack, and cut Explore | Future (blocked on bundle definition) |
+| 6 | Athlete proof beat, merge and copy | Open, direction suggested not decided |
 
 ## Problem
 
@@ -36,7 +37,7 @@ Reference for the last point: the Gray Matter PDP (`trygraymatter.com/products/b
 
 ## Approach
 
-Delete what repeats, raise the buy decision, and add only the sections that say something a competitor cannot copy. Ship in five phases, each independently deployable via Vercel preview.
+Delete what repeats, raise the buy decision, and add only the sections that say something a competitor cannot copy. Shipped in phases, each independently deployable via Vercel preview.
 
 **Design language:** Simple DTC (Tailwind radii, navy `#1B2757` primary, green `#1a7f4f` savings accent). See DESIGN_SYSTEM.md section 8.5.
 
@@ -260,6 +261,70 @@ Gallery note: the Flow gallery already contains `ConkaVsOther.jpg` and `RiskFree
 Blocked on the bundle being defined: contents, price, whether it is subscription first, and whether it replaces the current `monthly-sub` default in the buy panel. Those answers decide whether this is a PDP section or a change to the hero buy panel.
 
 `ProductGrid` / Explore is cut **only once the start pack ships**, never before. Explore is currently the only Flow to Both path on the page and Both is the higher AOV, so cutting it early leaves a hole. The start pack does the same cross sell as an offer rather than a directory.
+
+## Phase 6: The athlete proof beat (Not started, open)
+
+Raised by Rudh 26 Aug 2026 after reviewing the shipped pages. **The findings below are verified; the direction is a suggestion, not a decision.** Whoever picks this up should feel free to solve it differently, and the copy in particular is a starting point rather than an answer.
+
+### What is actually there
+
+`/conka-both` renders two sections making the same argument, five sections apart:
+
+| | `BrainFuelBand` (position 4) | `AthleteCredibilityCarousel` (position 9) |
+|---|---|---|
+| Headline | "Trusted where focus can't fail" | "Why High Performers Trust CONKA" |
+| Subline | "By Olympic medallists, world-class athletes & entrepreneurs **on the days that matter most**" | "Olympic medallists, world champions, and international competitors use CONKA **on the days that matter most**" |
+| Carries | 4 stats, a neuron video | 8 athletes, sport marquee, quotes, Informed Sport block |
+
+The sublines share a clause verbatim. Flow and Clear render only the carousel, so this duplication is `/conka-both` only.
+
+**`BrainFuelBand` is also stylistically out of place on a PDP.** It lives in `app/lander/sections/` with its own CSS module, so it sits outside the design system governing every other section on the page.
+
+### What the components hold
+
+`AthleteCredibilityCarousel` already balances breadth against depth, which is worth knowing before redesigning it:
+
+- `AthleteSportMarquee`: 15 sports, the breadth signal
+- a thumbnail roster of **all 8 athletes**, which doubles as the picker (how many, all visible at once)
+- a feature card showing one portrait and quote at a time (depth)
+- an Informed Sport block as the rational anchor
+
+All 8 athletes have a name, sport, credential, quote and portrait. The roster strip is what answers "how many", and the feature card answers "what do they say". Those two jobs are already separated.
+
+The four stats are the thing the carousel does **not** have, and the only real content `BrainFuelBand` adds: 75% improved cognitive function in under 3 weeks, 19.3% better focus in professional athletes, 89% saw an uplift in test score, 4 clinical trials.
+
+### A suggested direction
+
+One merged section on `/conka-both`, so the page makes the argument once:
+
+1. Sport marquee, breadth
+2. Headline and subline
+3. Stats band, the four numbers moved across from `BrainFuelBand`
+4. Roster strip, 8 faces, picker
+5. Feature card, portrait and quote
+6. Informed Sport anchor
+
+The idea is breadth, then hard numbers, then faces, then a human voice, then certification, with each layer answering a different objection and nothing said twice. That ordering is a guess at what reads well and has not been tested.
+
+### Copy
+
+"Trusted where focus can't fail" was flagged as weak. It is abstract, names nobody, and describes the situation rather than the product. "Why High Performers Trust CONKA" is stronger but still generic.
+
+Starting points only, all unproven:
+
+- "Olympic medallists. World champions. Same shot."
+- "The people who cannot afford a bad day"
+- "Informed Sport certified, because their careers depend on it"
+
+The third turns the certification into the reason rather than a badge, which is arguably the strongest available angle, but it is a hypothesis.
+
+### The one firm constraint
+
+**Do not delete `BrainFuelBand`.** It is also rendered by `app/page.tsx`, `app/lander/page.tsx` and `app/(trial-b)/lander-b/page.tsx`. Removing it from `/conka-both` means removing the `brainFuelSection` reference from that page only.
+
+### Also easy, unrelated to the above
+
+The FAQ's sticky lifestyle image was flagged as unnecessary. `LabFAQ` already accepts `image={null}`, which drops the column and runs the questions full width; the `/go` listicles do exactly this. One prop on three pages.
 
 ## Rabbit holes
 
