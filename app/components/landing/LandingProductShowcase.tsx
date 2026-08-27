@@ -6,6 +6,7 @@ import { track } from "@vercel/analytics/react";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import { FormulaId } from "@/app/lib/productData";
 import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
+import Certifications from "@/app/components/Certifications";
 import ConkaCTAButton from "./ConkaCTAButton";
 import IngredientBottomSheet from "@/app/components/product/IngredientBottomSheet";
 import { TIME_OF_DAY_BADGE, type TimeOfDay } from "@/app/lib/timeOfDayBadge";
@@ -182,14 +183,19 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/bu
         ingredients={ingredients}
       />
 
-      {/* CTA — the section's single conversion action. The certification badges
-          that used to sit here now render below the home benefit tiles. */}
+      {/* CTA — the section's single conversion action, with the certification
+          badges directly under it. The badges were a standalone band further
+          down the home page; sitting them here puts the reassurance at the
+          moment of the decision instead of a section away from it, and fills
+          the dead white space that was under this button. Transparent so they
+          take whatever background the host section has. */}
       <div className="flex flex-col items-center">
         {!hideCTA && (
           <ConkaCTAButton href={ctaHref} meta={null}>
             Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
           </ConkaCTAButton>
         )}
+        {!hideCTA && <Certifications background="transparent" compact />}
       </div>
     </div>
   );
