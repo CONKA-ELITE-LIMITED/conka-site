@@ -18,7 +18,7 @@ Scoped 27 Aug 2026. Branch `feature/home-page-upgrades-round2`.
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | The why accordion (position 3) | **Done** (SCRUM-1265) |
-| 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | **Done** 27 Aug. ProductComparisonTable PR #456; WhatToExpectV2 commit `198bd6d0` (SCRUM-1266). **AC5 is outstanding**: the comparison table's heading is still centred while every other home heading is left aligned, and it needs a prop since the PDPs may want to keep centred |
+| 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | **Done** 27 Aug. ProductComparisonTable PR #456; WhatToExpectV2 commit `198bd6d0` (SCRUM-1266). AC5 **closed as accepted, not done**: the comparison table keeps its centred heading on home even though every other home heading is left aligned. Rudh reviewed it on the page and is happy with it, so no `align` prop is needed |
 | 3 | Athlete credibility carousel restyle | **Superseded.** Rescoped against the AG1 and IM8 benchmark and moved to its own plan: `athlete-carousel-refactor.md`. Phase 1 shipped 27 Aug |
 
 ## Problem
