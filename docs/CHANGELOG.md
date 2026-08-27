@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Tightened the athlete credibility carousel on home and the three PDPs: one title instead of title plus subheader, no counter or achievement pills, shorter mobile portrait so the athlete's quote lands with their photo, and a compact Informed Sport anchor
 - **2026-08-27** | Added the CONKA vs coffee vs Rx stimulants comparison table to the home page, between the athlete review and the research band
 - **2026-08-27** | Reworked the Brain Fuel Band desktop layout as an aligned bento (home, /lander, /lander-b, /conka-both), with the headline in its own white navy-bordered tile
 - **2026-08-27** | Docs hygiene phase 5: `/go/[slug]` gains a shared parent doc so the listicle and quiz docs stop competing, PROJECT_OVERVIEW deleted as a MASTER_CONTEXT duplicate, three superseded docs archived, and the mobile-first mandate now stated once
