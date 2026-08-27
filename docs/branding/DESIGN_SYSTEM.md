@@ -159,7 +159,12 @@ The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-ca
 
 ## 7. Mobile (74% of traffic)
 
-Mobile-first is non-negotiable. Full mobile guide: `MOBILE_OPTIMIZATION.md`.
+**This section is the single statement of the mobile mandate.** `QUALITY_STANDARDS.md`
+owns the review gate that enforces it and `MOBILE_OPTIMIZATION.md` owns the
+implementation patterns; neither restates the rules below.
+
+74% of traffic is mobile (50% iOS, 24% Android), and most of it arrives from paid
+social on a phone. Mobile-first is therefore non-negotiable.
 
 - Design at 390px first. Desktop is the adaptation.
 - Radii stay the same on mobile.

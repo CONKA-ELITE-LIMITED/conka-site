@@ -44,11 +44,12 @@ The most important cluster for anything touching products, variants, or money.
 | [`features/MOBILE_SUBSCRIPTION_INTEGRATION.md`](./features/MOBILE_SUBSCRIPTION_INTEGRATION.md) | Mobile subscription-card display. |
 | [`features/b2b/B2B_PORTAL.md`](./features/b2b/B2B_PORTAL.md) | **Canonical B2B reference** — `/professionals`, pricing/VAT, draft orders, Xero, shipping. |
 | [`features/BLOG_SYSTEM.md`](./features/BLOG_SYSTEM.md) | Blog (`/blog`) — Notion-as-CMS, content contract, deploy rules. Read before any Notion write. |
-| [`features/LISTICLE_SYSTEM.md`](./features/LISTICLE_SYSTEM.md) | Listicle landings (`/go/[slug]`) — templates + config. |
-| [`features/LANDING_QUIZ_SYSTEM.md`](./features/LANDING_QUIZ_SYSTEM.md) | Ad landing quiz system (`/go/[slug]`). |
+| [`features/GO_LANDING_PAGES.md`](./features/GO_LANDING_PAGES.md) | **Start here for `/go/[slug]`** — the shared contract: route, registry, noindex rules, shared analytics. Routes to the two format docs. |
+| [`features/LISTICLE_SYSTEM.md`](./features/LISTICLE_SYSTEM.md) | `/go` **listicle** format — `mm` + `im8` templates, config, zone anatomy, reason copy standard. |
+| [`features/LANDING_QUIZ_SYSTEM.md`](./features/LANDING_QUIZ_SYSTEM.md) | `/go` **quiz** format — engine, screen schema, scoring, Convex capture. |
 | [`features/FAQ_SYSTEM.md`](./features/FAQ_SYSTEM.md) | FAQ single-source rule, per-surface subsets, claims anchors. |
 | [`features/NIKE_TRIAL_PAGE.md`](./features/NIKE_TRIAL_PAGE.md) | Private Nike trial onboarding page (`/nike`). |
-| [`features/CASE_STUDIES.md`](./features/CASE_STUDIES.md) · [`features/TESTIMONIALS.md`](./features/TESTIMONIALS.md) · [`features/BANNER_SYSTEM.md`](./features/BANNER_SYSTEM.md) · [`features/WHAT_TO_EXPECT.md`](./features/WHAT_TO_EXPECT.md) · [`features/KLAVIYO_FLOWS_AND_INTEGRATION.md`](./features/KLAVIYO_FLOWS_AND_INTEGRATION.md) · [`features/PROJECT_OVERVIEW.md`](./features/PROJECT_OVERVIEW.md) | Other feature surfaces. |
+| [`features/CASE_STUDIES.md`](./features/CASE_STUDIES.md) · [`features/TESTIMONIALS.md`](./features/TESTIMONIALS.md) · [`features/BANNER_SYSTEM.md`](./features/BANNER_SYSTEM.md) · [`features/WHAT_TO_EXPECT.md`](./features/WHAT_TO_EXPECT.md) · [`features/KLAVIYO_FLOWS_AND_INTEGRATION.md`](./features/KLAVIYO_FLOWS_AND_INTEGRATION.md) | Other feature surfaces. |
 | [`features/blog-notion-engine-brief.md`](./features/blog-notion-engine-brief.md) | Blog authoring contract + Notion property schema. `BLOG_SYSTEM.md` defers to it. |
 
 ---
@@ -86,9 +87,6 @@ The most important cluster for anything touching products, variants, or money.
 | [`development/CART_ATTRIBUTES.md`](./development/CART_ATTRIBUTES.md) | Cart line attributes for attribution/LTV tagging. |
 | [`development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md`](./development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md) | Trial-page performance playbook. |
 | [`development/MEASURING_COMPONENT_HEIGHTS.md`](./development/MEASURING_COMPONENT_HEIGHTS.md) | How to measure rendered component heights (for skeletons / CLS budgets). |
-| [`development/LTV_TAGGING_PLAN.md`](./development/LTV_TAGGING_PLAN.md) | *Historical.* The quiz/protocol-era predecessor to `CART_ATTRIBUTES.md`. Read that instead. |
-| [`development/LANDING_PAGE_CLAIMS_LOG.md`](./development/LANDING_PAGE_CLAIMS_LOG.md) | *Historical.* Landing-page claims log; flags its own mg figures as wrong. `branding/CLAIMS_COMPLIANCE.md` owns the rules, `product/FORMULATION_SPEC.md` the doses. |
-| [`development/changelog-jan-feb-2026.md`](./development/changelog-jan-feb-2026.md) | *Historical.* One-off PR digest for Jan–Feb 2026. The live log is `CHANGELOG.md`. |
 | [`development/featurePlans/`](./development/featurePlans/) | Per-feature scoping/plan docs. Notable: [`asset-and-protocol-cleanup.md`](./development/featurePlans/asset-and-protocol-cleanup.md) (protocol retirement), [`order-size-shipping-tiers.md`](./development/featurePlans/order-size-shipping-tiers.md), [`landing-conversion/README.md`](./development/featurePlans/landing-conversion/README.md). |
 | [`development/featurePlans/archive/`](./development/featurePlans/archive/) | Retired plans and docs kept for the rationale they hold (rejected options, revert paths, teardowns). Never current behaviour — see its README. |
 

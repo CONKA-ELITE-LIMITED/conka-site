@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Docs hygiene phase 5: `/go/[slug]` gains a shared parent doc so the listicle and quiz docs stop competing, PROJECT_OVERVIEW deleted as a MASTER_CONTEXT duplicate, three superseded docs archived, and the mobile-first mandate now stated once
 - **2026-08-27** | Docs hygiene (SCRUM-1268 phases 1-4): corrected 20+ canonical docs that referenced deleted code, archived 10 superseded docs, merged 13 shipped feature plans into their canonical homes, and repaired both doc indexes
 - **2026-08-27** | Home why-accordion finished: separator spacing, number alignment, and the section code-split so its JS stays out of the initial bundle
 - **2026-08-27** | Home page: new numbered why-accordion as section 2, 100 day guarantee section removed, section-view tracking added

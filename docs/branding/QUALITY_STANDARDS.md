@@ -18,12 +18,11 @@ If any answer is no, the section needs more work.
 
 ## Mobile is the default
 
-74% of traffic is mobile (50% iOS, 24% Android). Most arrive from paid social ads on their phone.
+The mandate and its design rules live in `docs/branding/DESIGN_SYSTEM.md` §7.
+What this doc owns is the **gate**:
 
-- Design at 390px first. Desktop is the adaptation, not the other way around.
-- Every component gets mobile review before desktop review.
-- If it doesn't work on mobile, it doesn't ship.
-- If mobile and desktop layouts conflict, mobile wins.
+- Every component gets mobile review **before** desktop review.
+- If it doesn't work at 390px, it doesn't ship.
 
 ---
 

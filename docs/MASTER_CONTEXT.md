@@ -154,7 +154,7 @@ Components return content only. No `<section>`, no `max-w-*`, no `px-*` at root.
 - EFSA-authorised claims for Vitamin C and B12 are permitted
 - "Detox" is not an authorised claim
 - Speed-of-effect claims require careful framing
-- Full audit: `docs/development/LANDING_PAGE_CLAIMS_LOG.md`
+- Claims rules: `docs/branding/CLAIMS_COMPLIANCE.md`. Per-shot doses: `docs/product/FORMULATION_SPEC.md`
 
 **Source:** `docs/branding/BRAND_VOICE.md`
 

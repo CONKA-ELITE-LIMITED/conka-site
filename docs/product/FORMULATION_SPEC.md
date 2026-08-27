@@ -218,7 +218,7 @@ The following code files contain formulation data that should be cross-checked a
 - Only **Vitamin C** and **Vitamin B12** have authorised EFSA claims. These are the only ingredients that can carry health/function claim copy (e.g. "contributes to normal cognitive function" for B12).
 - All other ingredient claims must use observational framing per `docs/branding/CLAIMS_COMPLIANCE.md`.
 - `††` anchor on Vit C and B12 wherever EFSA claims are made in marketing copy.
-- Cross-check this spec against `docs/development/LANDING_PAGE_CLAIMS_LOG.md` before updating the landing page.
+- This spec is the authority on doses. `docs/branding/CLAIMS_COMPLIANCE.md` is the authority on how a dose may be described.
 
 ---
 
@@ -226,5 +226,5 @@ The following code files contain formulation data that should be cross-checked a
 
 - [Product Data organisation](./PRODUCT_DATA.md)
 - [Claims Compliance](../branding/CLAIMS_COMPLIANCE.md)
-- [Landing Page Claims Log](../development/LANDING_PAGE_CLAIMS_LOG.md)
+- [Claims Compliance](../branding/CLAIMS_COMPLIANCE.md)
 - [Brand Voice](../branding/BRAND_VOICE.md)

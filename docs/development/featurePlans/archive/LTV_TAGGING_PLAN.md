@@ -44,7 +44,7 @@ Shopify’s Storefront API supports **line attributes** on cart lines (`CartLine
 
 ## Canonical attributes (source of truth)
 
-**High-level view:** [CART_ATTRIBUTES.md](./CART_ATTRIBUTES.md) defines every attribute we send at add-to-cart/checkout.
+**High-level view:** [CART_ATTRIBUTES.md](../../CART_ATTRIBUTES.md) defines every attribute we send at add-to-cart/checkout.
 
 **v1 (implemented):** `source` and `plan_frequency`. Call sites pass canonical `source` values (`quiz`, `product_page`, `protocol_page`, `product_grid`, `professional_portal`); `plan_frequency` is derived from the selling plan (weekly/biweekly/monthly) when the line is a subscription.
 

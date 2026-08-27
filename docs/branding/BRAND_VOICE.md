@@ -82,7 +82,7 @@ All copy should target a specific awareness stage:
 
 ## Claims compliance
 
-All customer-facing copy must comply with UK/EU food supplement regulations (EFSA 1924/2006). See `docs/development/LANDING_PAGE_CLAIMS_LOG.md` for the full claims audit and anchor symbol reference.
+All customer-facing copy must comply with UK/EU food supplement regulations (EFSA 1924/2006). **`docs/branding/CLAIMS_COMPLIANCE.md` is the authority** on the rules, the traffic-light system and the anchor symbols; `docs/product/FORMULATION_SPEC.md` is the authority on doses. The summary below is orientation only, not the rulebook.
 
 Key rules:
 - No quantified health claims (e.g. "improves focus by 18%") — use observational framing or EFSA-authorised claims

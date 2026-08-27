@@ -2,7 +2,7 @@
 
 Single source of truth for attributes we send at add-to-cart. These are passed as **cart line attributes** to Shopify and appear as **line item properties** on the order.
 
-See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation details.
+This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePlans/archive/`](./featurePlans/archive/LTV_TAGGING_PLAN.md).
 
 ---
 

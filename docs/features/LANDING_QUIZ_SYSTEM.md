@@ -1,19 +1,16 @@
 # Landing Quiz System (/go/[slug])
 
-Persona-aligned ad landing pages with a config-driven quiz engine. Built June 2026 for the conversion push: 3-4 ad personas, each with landing format iterations (quiz live, listicle planned), targeting 1-4% conversion on paid Meta traffic.
+The config-driven quiz engine: screens, scoring, motion and its event family.
 
-These pages are ad destinations only: noindex, no Navigation/Footer (the quiz owns the viewport), never linked from the site. Reference template: `/go/quiz-template`. Programme + plan docs: `docs/development/featurePlans/landing-conversion/` (start at the README).
+> **Shared `/go` rules live in [`GO_LANDING_PAGES.md`](./GO_LANDING_PAGES.md)** — the route, the registry, noindex and no-internal-links, new-iteration-is-a-new-slug, and the shared analytics constraints. This doc covers the quiz format only.
 
-**Not the old quiz.** The legacy `/quiz` (protocol scoring) has been deleted and now 308s to `/build-your-order`. This system shares nothing with it except some analytics naming conventions.
+Quiz-specific on top of those: the quiz **renders no Navigation or Footer**, because it owns the viewport. Reference template: `/go/quiz-template`.
 
 ## Architecture
 
 | Path | Role |
 |------|------|
-| `app/go/[slug]/page.tsx` | Route. Registry lookup, 404 on unknown slug, noindex metadata. `dynamicParams = false` |
-| `app/go/[slug]/error.tsx` | Error boundary (reset button) |
 | `app/lib/landings/types.ts` | Config schema. Discriminated unions: screen `kind`, question `type`, interstitial `variant`, chart `type` |
-| `app/lib/landings/index.ts` | Registry: slug to config map |
 | `app/lib/landings/quiz-template.ts` | Reference config with placeholder copy. Copy this to start a new page |
 | `app/lib/landings/brain-age.ts` | First persona quiz (ageing-brain): dark theme, brain-age scoring, reveal. See "The brain-age quiz" below |
 | `app/components/go/QuizEngine.tsx` | Orchestrator: fixed header (logo, back, counter, progress), screen sequencing, answers map, score tally (buckets or brain-age), all analytics |
@@ -25,15 +22,13 @@ Motion utilities (`go-screen-in`, `go-fade-up`, `go-cascade`, `go-draw`, `go-bar
 
 **Theming:** the quiz canvas reads only `--go-*` tokens (plus `--brand-accent`), defined on `.go-quiz` in `brand-base.css`. `theme: "dark"` on a config adds `.go-dark`, which flips the canvas to `#0a0a0a` and lifts the accent to a lighter neuro blue (`#6478e0`; clinical navy is invisible on black). One variable block is the whole theme: do not add per-screen theming or hardcoded colours back into the components.
 
-## Creating a new landing page
+## Creating a new quiz
+
+Following the shared five steps in `GO_LANDING_PAGES.md`, the quiz-specific parts are:
 
 1. Copy `app/lib/landings/quiz-template.ts` to a new file, e.g. `sport-quiz.ts`.
-2. Set `slug` (becomes the URL: `/go/sport-quiz`), `persona`, `title`.
-3. Write the `screens` array: any number of questions and interstitials, in any order. The engine renders whatever the array describes.
-4. Define `buckets` (result profiles) and point every answer's `scores` at bucket ids.
-5. Register it in `app/lib/landings/index.ts` (one line).
-
-Nothing else changes. An A/B iteration is a second config file with a different slug; compare slugs in Vercel Analytics.
+2. Write the `screens` array: any number of questions and interstitials, in any order. The engine renders whatever the array describes.
+3. Define `buckets` (result profiles) and point every answer's `scores` at bucket ids.
 
 ## Screen schema
 
@@ -147,7 +142,6 @@ word-loss per-answer split (14/41/27/18) and the cost-of-waiting decline figure
 
 ## Gotchas
 
-- `dynamicParams = false`: only registered slugs resolve. New configs need a deploy (config lives in code, by design).
 - The quiz canvas is `var(--go-bg)` from the `.go-quiz` token block in `brand-base.css`; header and engine share it. Dark mode is `theme: "dark"` on the config, nothing else.
 - Progress bar is hidden on the landing screen and full-bleed across the viewport (gamefied: gradient + shimmer via `.go-progress-fill`). Progress is a perceived curve, not linear: the first quarter fills half the bar, and the bar completes at the reveal screen (or the last screen if a flow has none) and stays full after (`perceivedProgress` + `completionIndex` in `QuizEngine.tsx`).
 - Eyebrow/kicker text was deliberately removed from the schema. Do not add it back per-screen; the style is intentionally stripped back.

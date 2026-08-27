@@ -20,7 +20,7 @@ Before anything else, make sure you understand what's being asked.
 
 1. Read the request carefully — identify the **what** (desired outcome) and **why** (user/business goal)
 2. Check for existing documentation:
-   - Read `docs/features/PROJECT_OVERVIEW.md` for relevant system context
+   - Read `docs/MASTER_CONTEXT.md` for relevant system context
    - Search for related feature specs or PRDs if they exist
    - Check if similar functionality already exists in the codebase
 3. List any **ambiguities or open questions** — things that aren't clear from the request
@@ -140,7 +140,7 @@ Wait for user confirmation before starting implementation. If the user says "jus
 ---
 
 ## References
-- Architecture docs: `docs/features/PROJECT_OVERVIEW.md`
+- Architecture docs: `docs/MASTER_CONTEXT.md`
 - Design system: `docs/branding/DESIGN_SYSTEM.md`
 - Implementation workflow: `./02-implementation-workflow.md`
 - UX iteration (for refining existing pages): `./09-ux-iteration.md`

@@ -126,6 +126,42 @@ content was missing and it turned out already present, nothing was duplicated:
   resolves to `docs/app/` rather than the repo's `app/`.
 - CLAUDE.md's index gained 14 rows.
 
+### Phase 5 - De-duplicate (DONE)
+
+Three forking decisions were put to Rudh before building; all three took the
+recommended option.
+
+- **`/go/[slug]`** got the parent-plus-two-formats shape. New
+  `features/GO_LANDING_PAGES.md` (81 lines) owns the route, registry,
+  noindex/never-link rules, new-iteration-is-a-new-slug, and the shared analytics
+  constraints (two-property budget, the shared `sectionImpressions` observer and
+  its do-not-touch options). Both format docs shed that preamble and open by
+  deferring to it. The duplicated `dynamicParams = false` / registry facts now
+  appear exactly once.
+- **`features/PROJECT_OVERVIEW.md` deleted.** All 34 lines were already in
+  `MASTER_CONTEXT.md`. 5 inbound references repointed (4 workflow docs plus the index).
+- **Three historical docs archived:** `LTV_TAGGING_PLAN.md`,
+  `LANDING_PAGE_CLAIMS_LOG.md`, `changelog-jan-feb-2026.md`.
+- **Mobile-first split by job** rather than deleted from two of three places:
+  `DESIGN_SYSTEM.md` §7 is the single statement of the mandate,
+  `QUALITY_STANDARDS.md` keeps only the review gate it uniquely owns
+  ("mobile review before desktop review", "if it doesn't work at 390px it doesn't
+  ship"), `MOBILE_OPTIMIZATION.md` is the pattern library. Each now says which it is.
+
+**The worst pointer in the tree, found here:** `BRAND_VOICE.md:85` named
+`LANDING_PAGE_CLAIMS_LOG.md` as *the* claims reference. That is the doc which
+states in its own header that its mg figures are wrong. Anyone following
+BRAND_VOICE to check a claim landed on known-bad doses. Now points at
+`CLAIMS_COMPLIANCE.md` for rules and `FORMULATION_SPEC.md` for doses.
+
+**One deliberate no-op.** The audit wanted the analytics quartet
+(`README` / `ATTRIBUTION_STATE_AND_PLAN` / `HEADLESS_ATTRIBUTION_FIX` / `HISTORY`)
+consolidated or archived. Left alone: `analytics/README.md` already declares
+precedence ("if a linked doc contradicts this page, this page wins for what is
+live today"), both historical docs carry accurate banners, and the "none indexed"
+half of the complaint was fixed in Phase 4. Four distinct declared jobs is not
+duplication, and consolidating would have been churn for its own sake.
+
 ---
 
 ## Deviations from the audit
@@ -159,10 +195,6 @@ content was missing and it turned out already present, nothing was duplicated:
 
 - **SCRUM-1188** ("[Frontend] Convert /account portal to Simple DTC") is still
   In Progress in Jira although the work shipped. Close it.
-- **Phase 5 (de-duplication) is untouched**, as scoped. The pair worth solving
-  properly is `LISTICLE_SYSTEM.md` vs `LANDING_QUIZ_SYSTEM.md`: both claim
-  authority over `/go/[slug]` and neither wholly has it. Note that Phase 3 made
-  both docs *bigger*, so the overlap is now more visible, not less.
 - **Two Skio docs are referenced but not written:** `docs/features/skio/migration.md`
   and `skio-attribution-fulfilment-parity.md`. Marked "(not yet written)" rather
   than linked, so the link check stays clean.

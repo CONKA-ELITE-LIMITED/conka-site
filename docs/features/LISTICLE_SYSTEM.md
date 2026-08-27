@@ -1,6 +1,8 @@
 # Listicle System
 
-> **Purpose:** How to create and maintain the "N reasons" listicle landing pages served at `/go/[slug]`. These are noindex ad destinations for paid traffic.
+> **Purpose:** How to create and maintain the "N reasons" listicle landing pages served at `/go/[slug]`.
+>
+> **Shared `/go` rules live in [`GO_LANDING_PAGES.md`](./GO_LANDING_PAGES.md)** — the route, the registry, noindex and no-internal-links, new-iteration-is-a-new-slug, and the shared analytics constraints. This doc covers the listicle format only.
 
 ## Overview
 
@@ -17,14 +19,9 @@ The template is a discriminated union: an `mm` config literally cannot set IM8-o
 
 ## How it works
 
-```
-config (app/lib/landings/*.ts)
-  -> registered in index.ts
-  -> route app/go/[slug]/page.tsx: getLandingConfig(slug)
-       -> config.template === "mm" ? SimpleListicleRenderer : ListicleRenderer
-```
+The route resolves `config.template === "mm" ? SimpleListicleRenderer : ListicleRenderer`.
+See `GO_LANDING_PAGES.md` for the registry and static-build mechanics.
 
-- **Static + noindex.** `generateStaticParams` builds every registered slug; `dynamicParams = false` (an unregistered slug 404s). `generateMetadata` sets `robots: { index: false, follow: false }`.
 - **Buy box.** `mm` always renders the home `ProductGrid`, whose cards link out to the PDPs. `im8` renders `ListicleProductHero`, the PDP hero (`ProductHeroV2` / `ProductHeroMobileV2`) wired to its own cadence state and the cart, so it adds to cart in place.
 
 ## Analytics

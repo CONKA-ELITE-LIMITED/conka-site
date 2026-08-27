@@ -8,7 +8,8 @@ Nothing here describes current behaviour. If a doc in here contradicts a
 canonical doc under `docs/`, the canonical doc wins. Read these for *why*, never
 for *what is true now*.
 
-Retired as part of SCRUM-1268 (docs hygiene audit, Aug 2026).
+Retired as part of SCRUM-1268 (docs hygiene audit, Aug 2026): phases 1-4 for the
+first ten, phase 5 (de-duplication) for the last three.
 
 | Doc | What it holds |
 |---|---|
@@ -22,6 +23,9 @@ Retired as part of SCRUM-1268 (docs hygiene audit, Aug 2026).
 | `listicle-format.md` | usecloud.co section-by-section teardown and the conversion principles drawn from it |
 | `GO_LIVE_PRICING_AUDIT.md` | Pre-launch price/variant reconciliation. Built entirely on `app/lib/funnelData.ts`, which no longer exists |
 | `CROSS_SELL.md` | The cross-sell section for protocol/formula PDPs. `app/components/crossSell/` is deleted with zero consumers |
+| `LTV_TAGGING_PLAN.md` | The quiz/protocol-era predecessor to `development/CART_ATTRIBUTES.md`. Holds the original attribute-design reasoning |
+| `LANDING_PAGE_CLAIMS_LOG.md` | Apr 2026 per-claim audit of `/start`. **Its mg figures are wrong** by its own admission; kept for the anchor-symbol table and the claim-by-claim reasoning |
+| `changelog-jan-feb-2026.md` | One-off PR digest for Jan-Feb 2026, superseded by `docs/CHANGELOG.md` |
 
 **Where the live answers are now:** blog → `docs/features/BLOG_SYSTEM.md` · SEO/AEO
 → `docs/seo-aeo/README.md` · shipping and 3PL → `docs/shipping/SHIPPING_AND_COURIERS.md`

@@ -1,6 +1,9 @@
 # Mobile Optimization Guide
 
-This document captures the lessons learned and preferences established during the homepage mobile optimization. Use this as a reference when optimizing product pages and other sections of the site.
+**The implementation patterns.** The mobile-first mandate and its design rules are
+stated once, in `docs/branding/DESIGN_SYSTEM.md` §7, and the review gate is in
+`docs/branding/QUALITY_STANDARDS.md`. This doc is the how: component
+architecture, layout patterns and the lessons learned building them.
 
 ---
 
