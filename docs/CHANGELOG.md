@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Home why-accordion finished: separator spacing, number alignment, and the section code-split so its JS stays out of the initial bundle
+- **2026-08-27** | Home page: new numbered why-accordion as section 2, 100 day guarantee section removed, section-view tracking added
 - **2026-08-26** | PDP disclosure rows move into the hero with an animated expand, and the taste and how-to-take copy is rewritten per product
 - **2026-08-26** | PDP ingredient section gains ingredients / who-it-is-for / taste / how-to-take rows, and the desktop hero drops its duplicate ingredient surfaces
 - **2026-08-26** | PDP ingredients become an image-led grid with two-line benefit badges and a detail drawer, replacing the horizontal rail
