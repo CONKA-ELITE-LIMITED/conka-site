@@ -2,7 +2,7 @@
 
 Single source of truth for attributes we send at add-to-cart. These are passed as **cart line attributes** to Shopify and appear as **line item properties** on the order.
 
-See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation details.
+This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePlans/archive/`](./featurePlans/archive/LTV_TAGGING_PLAN.md).
 
 ---
 
@@ -10,7 +10,7 @@ See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation 
 
 | Key | Values | When set | Notes |
 |-----|--------|----------|--------|
-| **source** | `quiz` \| `product_page` \| `protocol_page` \| `product_grid` | Every add-to-cart | Where the add came from. Set by call site via `metadata.source`. |
+| **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
 | **plan_frequency** | `weekly` \| `biweekly` \| `monthly` | Only when the line has a selling plan (subscription) | Derived from `sellingPlanId` via Loop plan IDs. Omitted for one-time purchases. |
 
 ---
@@ -19,10 +19,18 @@ See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation 
 
 | Value | Meaning |
 |-------|---------|
-| `quiz` | Add from quiz results page (quiz-recommended CTA). |
-| `product_page` | Add from a formula PDP (Conka Flow or Conka Clarity page). |
-| `protocol_page` | Add from a protocol PDP (`/protocol/[id]`). |
-| `product_grid` | Add from the main app product grid (homepage/shop grid). |
+| `product_page` | Add from a PDP (`/conka-flow`, `/conka-clarity`, `/conka-both`). |
+| `product_showcase` | Add from the home page product showcase. |
+| `product_split` / `formula_split` | Add from a split product/formula section. |
+| `whats_inside` | Add from a "what's inside" ingredients section. |
+| `cart_upsell` | Add from an upsell offer inside the cart drawer. |
+| `listicle` | Add from a `/go/[slug]` listicle landing page. |
+| `win_free_month` | Add from the win-a-free-month promo surface. |
+
+> **Removed sources.** `quiz` and `protocol_page` were retired with the `/quiz`
+> and `/protocol/[id]` routes. `product_grid` went with the `/shop` grid. Orders
+> placed before those routes were retired still carry these values, so keep
+> reading them in analysis; just do not write them.
 
 ---
 
@@ -31,19 +39,20 @@ See [LTV_TAGGING_PLAN.md](./LTV_TAGGING_PLAN.md) for context and implementation 
 We do **not** infer the page from the URL at add-to-cart time. We use two pieces together:
 
 1. **Page awareness (call site)**  
-   Each place that calls `addToCart` knows which page it is, so it passes the right fallback:
-   - Quiz results page → always `source: "quiz"`.
-   - Protocol page (`/protocol/[id]`) → `source: getAddToCartSource() === "quiz" ? "quiz" : "protocol_page"`.
-   - Formula pages (Conka Flow, Conka Clarity) → same pattern with fallback `"product_page"`.
-   - Product grid (ProductCard) → always `source: "product_grid"`.
-2. **Quiz awareness (`getAddToCartSource()`)**  
-   Used only on protocol and formula pages to decide: “Is this add-to-cart still in a quiz flow?” It returns:
-   - `"quiz"` if `sessionStorage.quizSessionId` is set (user started the quiz and hasn’t cleared it), or if `document.referrer` contains `"/quiz"`.
-   - `"direct"` otherwise.
+   Each place that calls `addToCart` knows which surface it is, so it passes the
+   right value directly: a PDP passes `"product_page"`, the cart upsell passes
+   `"cart_upsell"`, a listicle passes `"listicle"`, and so on.
+2. **`getAddToCartSource()` (`app/lib/analytics.ts`)**  
+   Still present, but effectively inert. It returns `"quiz"` when
+   `sessionStorage.quizSessionId` is set or `document.referrer` contains
+   `"/quiz"`, else `"direct"`. Since `/quiz` was retired and now 308s to
+   `/build-your-order`, neither condition can be met by a new visitor, so it
+   always returns `"direct"` in practice. Do not build new logic on it.
 
-So: **Page** comes from which component is calling (we hardcode the fallback). **Quiz vs not-quiz** comes from sessionStorage + referrer. We never “detect the page” from the URL inside a shared helper; the call site always provides the page-specific source when it’s not quiz.
+So: the source comes from which component is calling, and the call site always
+provides it. We never “detect the page” from the URL inside a shared helper.
 
-`quizSessionId` is set when the user starts the quiz (`trackQuizStarted` in `app/lib/analytics.ts`, which is called from the quiz page with the session id from `useQuizAnalytics`). It persists in the same tab until they close it or clear storage, so if they go quiz → results → “View protocol” → protocol page and add to cart there, we still tag `source: "quiz"`.
+`quizSessionId` was set when a user started the old `/quiz` and persisted for the tab, so a quiz → results → protocol page → add-to-cart journey still tagged `source: "quiz"`. Both routes are retired, so nothing writes this key any more. Historical orders still carry the tag.
 
 ---
 
@@ -71,6 +80,4 @@ GIDs are in the form `gid://shopify/SellingPlan/711429882230`; we match on the n
 
 May be added later for richer LTV segmentation:
 
-- `recommended_by_quiz` – `true` when add-to-cart is from quiz results with the quiz-recommended protocol.
-- `protocol` – Protocol id (e.g. `1`–`4`) for protocol products.
-- `formula` – `flow` \| `clarity` for formula products.
+- `formula` – `flow` \| `clarity` \| `both` for the product added.

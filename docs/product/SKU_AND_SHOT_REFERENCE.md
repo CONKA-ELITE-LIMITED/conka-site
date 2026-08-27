@@ -120,7 +120,7 @@ So "pack size 12" and "per-delivery 6" are both real and both correct for their 
 
 ## 5. Account-portal shot / per-shot display — history & current state
 
-**Current state (resolved by removal):** the subscription card (`app/components/subscriptions/SubscriptionCard.tsx`) shows only **Billing** and **Total price**. The **Shots per delivery** and **Per shot** tiles were **removed**, because their numbers were wrong (see below) and per-shot adds little value once someone has already subscribed.
+**Current state (resolved by removal):** the subscription card (`app/components/subscriptions/SubscriptionListCard.tsx`) shows only **Billing** and **Total price**. The **Shots per delivery** and **Per shot** tiles were **removed**, because their numbers were wrong (see below) and per-shot adds little value once someone has already subscribed.
 
 **What was wrong (why they were removed):**
 - Shots came from `app/account/subscriptions/utils.ts` `getTierDisplayInfo`: `getCurrentPlan` inferred a tier (`starter`/`pro`/`max`) from product-title keywords or the billing interval (weekly→starter, bi-weekly→pro, **monthly→max**), then a hardcoded table mapped tier→shots (`standardPricing` 4/12/28, `ultimatePricing` 28/56) and per-shot = price ÷ that count.

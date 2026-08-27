@@ -104,7 +104,7 @@ Average of each metric within each group. Bold marks the best group for that met
 - **Reaction speed is the most dramatic spread:** 368ms (Coffee+Conka) vs 430ms (Coffee only) — a 61ms gap on raw averages.
 - **Coffee's only standalone lift is on the subjective speed *rating*** (2.95 vs 2.71) and a small focus nudge — i.e. it *feels* faster more than it *scores* faster.
 
-![All twelve metrics across the 2×2 (raw group means)](assets/coffee-conka/00_overview_panel.png)
+_Figure: all twelve metrics across the 2×2 (raw group means). The source PNG (`assets/coffee-conka/00_overview_panel.png`) was never committed to this repo._
 
 *Note: y-axes in the panel are zoomed to make differences visible, so bar heights overstate the true magnitude. Read the numbers, not the bar ratios.*
 
@@ -167,7 +167,7 @@ These remove "who is in each group" and ask: *when the same person changes their
 | Coffee+Conka − Conka only | 7 | Adding coffee to Conka: little score change, reaction +19ms slower. Too few users. |
 | Coffee+Conka − Neither | 10 | Reaction +7.8ms, focus +0.20, control +0.19; mixed, small. |
 
-![Per-user deltas on headline metrics](assets/coffee-conka/00b_per_user_delta_headline.png)
+_Figure: per-user deltas on headline metrics. The source PNG (`assets/coffee-conka/00b_per_user_delta_headline.png`) was never committed to this repo._
 
 ---
 

@@ -212,5 +212,5 @@ Before finalising, check:
 
 ## References
 - Design system: `docs/branding/DESIGN_SYSTEM.md`
-- Architecture docs: `docs/PROJECT_OVERVIEW.md`
+- Architecture docs: `docs/MASTER_CONTEXT.md`
 - Existing feature docs: `docs/features/`

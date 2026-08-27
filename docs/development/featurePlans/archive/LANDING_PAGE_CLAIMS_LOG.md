@@ -4,7 +4,7 @@
 > **Context:** Marketing/compliance review identified non-compliant health claims on `/start` landing page. Changes required under UK/EU food supplement regulations (EFSA 1924/2006, FIC 1169/2011).
 > **Scope:** Landing page (`/start`) + shared components used on landing page. This log feeds into main site updates later.
 >
-> **⚠️ 2026-04-13 update — ingredient dosages:** Items referencing specific mg values (Lemon Balm 300mg, Ashwagandha 600mg, Glutathione 250mg, etc.) are based on older research-dose figures and are **incorrect** against the formulation spec supplied 2026-04-13. Actual per-shot doses are: Lemon Balm 1,500mg, Ashwagandha 1,500mg, Glutathione 500mg, Vitamin C 2,500mg, Vitamin B12 1.5mg. See [FORMULATION_SPEC.md](../product/FORMULATION_SPEC.md) for the authoritative per-shot values. Decision pending on whether landing page shows mg at all (scientist advises no mg on herbals).
+> **⚠️ 2026-04-13 update — ingredient dosages:** Items referencing specific mg values (Lemon Balm 300mg, Ashwagandha 600mg, Glutathione 250mg, etc.) are based on older research-dose figures and are **incorrect** against the formulation spec supplied 2026-04-13. Actual per-shot doses are: Lemon Balm 1,500mg, Ashwagandha 1,500mg, Glutathione 500mg, Vitamin C 2,500mg, Vitamin B12 1.5mg. See [FORMULATION_SPEC.md](../../../product/FORMULATION_SPEC.md) for the authoritative per-shot values. Decision pending on whether landing page shows mg at all (scientist advises no mg on herbals).
 
 ---
 

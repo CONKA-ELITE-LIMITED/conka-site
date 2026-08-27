@@ -1,6 +1,6 @@
 # Listicle Template Upgrade + Three Persona Rewrites
 
-**Status:** Scoped, not started
+**Status:** Mostly SHIPPED. Check the phase table below before assuming any single item is outstanding.
 **Tracking:** Plan doc only (no Jira)
 **Design system:** Existing `/go` listicle/landing token system (no migration)
 

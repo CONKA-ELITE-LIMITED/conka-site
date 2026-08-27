@@ -324,7 +324,7 @@ Feature branch → push → Vercel preview deployment (auto)
 
 > **Fill this section in over time.**
 
-- `.premium-pdp` has `overflow-x: hidden` which breaks `position: sticky`. Place sticky sections *outside* `.premium-pdp`.
+- Any ancestor with `overflow-x: hidden` silently breaks `position: sticky` inside it. Avoid full-bleed `100vw` wrappers on pages that use sticky sections (home, PDPs).
 - Components return content only — no `<section>`, no `max-w-*`, no `px-*` at root. The page owns section wrappers.
 - Import product data from the barrel `app/lib/productData.ts`, never from sub-modules directly.
 - Middleware runs on the Edge — can't use Node.js APIs.

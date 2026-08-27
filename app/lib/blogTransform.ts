@@ -4,7 +4,7 @@
  * No IO, no Notion client, no `server-only` guard, so this module is unit
  * testable in isolation. All network and filesystem work lives in `blog.ts`.
  *
- * See docs/development/featurePlans/blog-informational-content-surface.md.
+ * See docs/development/featurePlans/archive/blog-informational-content-surface.md.
  */
 
 export type RelatedProduct = "flow" | "clear" | "both";

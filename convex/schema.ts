@@ -69,7 +69,7 @@ export default defineSchema({
   // Append-only event log for the /go landing quiz engine (QuizEngine.tsx).
   // One row per event, mirroring the `landing:*` Vercel events. The write
   // side stays dumb (pure insert); all funnel/conversion shaping happens at
-  // read time in the dashboard. See docs/development/featurePlans/quiz-insights.md.
+  // read time in the dashboard. See docs/features/LANDING_QUIZ_SYSTEM.md.
   quizEvents: defineTable({
     // Identity carried on EVERY event ("fat event" so reads never join)
     sessionId: v.string(),

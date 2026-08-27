@@ -207,7 +207,7 @@ The following code files contain formulation data that should be cross-checked a
 |------|---------|---------------------|
 | `app/lib/formulaContent.ts` | `ingredients[]` arrays with `percentage` for Flow and Clear | Percentages slightly off (e.g. Black Pepper listed as 0.5%, actual is 1.35%; Lemon Balm/Ashwagandha 26.7% vs actual 27.03%). Clear missing lemon juice powder, sodium benzoate. |
 | `app/lib/ingredientsData.ts` | Per-ingredient records with `percentage`, `keyStats` (research doses) | Percentages out of sync with this spec. Research-dose `keyStats` should **not** be changed — those are the published clinical doses, not the formulation doses. |
-| `app/components/landing/LandingWhatsInside.tsx` | Ingredient pills with hardcoded mg values (Lemon Balm 300mg, Ashwagandha 600mg, Glutathione 250mg) | Outdated — should be removed per scientist's no-mg-on-label direction, or replaced with actual per-shot doses (1,500mg / 1,500mg / 500mg respectively). |
+| ~~`app/components/landing/LandingWhatsInside.tsx`~~ | Ingredient pills with hardcoded mg values (Lemon Balm 300mg, Ashwagandha 600mg, Glutathione 250mg) | **Resolved by deletion.** The component no longer exists. Correct per-shot doses were 1,500mg / 1,500mg / 500mg; any replacement surface must use those, not the old label values. |
 
 **Recommendation:** decide whether customer-facing pages show (a) no mg at all (Magic Mind style, scientist's preferred), (b) full mg disclosure, or (c) only the legal vitamins-with-mg for Clear. Then a follow-up PR can sync the code to match.
 
@@ -218,7 +218,7 @@ The following code files contain formulation data that should be cross-checked a
 - Only **Vitamin C** and **Vitamin B12** have authorised EFSA claims. These are the only ingredients that can carry health/function claim copy (e.g. "contributes to normal cognitive function" for B12).
 - All other ingredient claims must use observational framing per `docs/branding/CLAIMS_COMPLIANCE.md`.
 - `††` anchor on Vit C and B12 wherever EFSA claims are made in marketing copy.
-- Cross-check this spec against `docs/development/LANDING_PAGE_CLAIMS_LOG.md` before updating the landing page.
+- This spec is the authority on doses. `docs/branding/CLAIMS_COMPLIANCE.md` is the authority on how a dose may be described.
 
 ---
 
@@ -226,5 +226,5 @@ The following code files contain formulation data that should be cross-checked a
 
 - [Product Data organisation](./PRODUCT_DATA.md)
 - [Claims Compliance](../branding/CLAIMS_COMPLIANCE.md)
-- [Landing Page Claims Log](../development/LANDING_PAGE_CLAIMS_LOG.md)
+- [Claims Compliance](../branding/CLAIMS_COMPLIANCE.md)
 - [Brand Voice](../branding/BRAND_VOICE.md)

@@ -30,14 +30,14 @@ Optional: pass a pre-filtered `athletes` array to override the data source.
 ## How data is chosen
 
 - **`productId`** (preferred):  
-  - `"1"`–`"4"` → `getAthletesForProtocol(protocolId)`  
-  - `"01"` | `"02"` → `getAthletesForFormula(formulaId)`
+  - `"03"` (Both) → `getAthletesForBoth()`  
+  - `"01"` | `"02"` → `getAthletesForFormula(productId)`
 - **`formulaId`** (no productId): `getAthletesForFormula(formulaId)`  
 - **`athletes`**: if provided, used as-is (no filter).
 
 **In `caseStudiesData.ts`:**
 
 - **`getAthletesForFormula("01" | "02")`** — keeps athletes where `productVersion === formulaId` or `"both"`, sorted by average improvement; falls back to default athletes if fewer than 3.
-- **`getAthletesForProtocol("1"–"4")`** — maps protocol to formula preference (e.g. 1→Flow, 2→Clear, 3/4→both), then filters by `productVersion` and `protocolUsed` where relevant, sorted by improvement.
+- **`getAthletesForBoth()`** — the Both (`"03"`) equivalent: draws across both formulas rather than filtering to one, sorted by improvement.
 
 Each athlete has `productVersion` (`"01"` | `"02"` | `"both"`) and optional `protocolUsed`; filters use these to match the current PDP.

@@ -16,7 +16,7 @@
  * Claims compliance:
  * - Only Vitamin C and Vitamin B12 carry authorised EFSA claims.
  * - Anchor `††` on EFSA-backed nutrient references.
- * See docs/development/LANDING_PAGE_CLAIMS_LOG.md.
+ * See docs/branding/CLAIMS_COMPLIANCE.md.
  */
 
 export type SupplementFacts = {

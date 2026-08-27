@@ -9,11 +9,37 @@ This doc describes how Meta tracking is implemented and how to get **Purchase** 
 | Event              | When / Where                                      | Deduplication      |
 |--------------------|---------------------------------------------------|--------------------|
 | **PageView**       | Every page load (client component after pixel)    | `event_id` + CAPI  |
-| **ViewContent**    | Product/protocol pages (conka-flow, conka-clarity, protocol/[id]) | `event_id` + CAPI  |
+| **ViewContent**    | PDPs (`/conka-flow`, `/conka-clarity`, `/conka-both`), `/build-your-order`, and the trial pages (`start-b`, `lander-b`) | `event_id` + CAPI  |
 | **AddToCart**      | After successful add in `CartContext`              | `event_id` + CAPI  |
 | **InitiateCheckout** | At the checkout click, before the Shopify redirect (`CartDrawer` + funnel/lander checkout helpers) | `event_id` + CAPI |
 | **Lead**           | `/go` landing-quiz results screen                  | `event_id` + CAPI  |
 | **Purchase**       | Server-side, `orders/paid` webhook (see below)     | order ID as `event_id` |
+
+### Why InitiateCheckout moved twice
+
+Worth knowing before anyone "fixes" it again. IC originally fired from **three**
+sources into the same pixel: the frontend `CartDrawer`, `funnelCheckout`, and the
+Shopify Facebook channel's `checkout_started`. That triple-fire was diagnosed in
+May 2026 and resolved by handing IC solely to the Shopify channel (SCRUM-1043).
+
+That was then reversed. The checkout lives on a different domain, so the pixel
+cannot fire IC there with our identity attached, and the channel's own event
+carried too little. IC now fires from this frontend again, on our own domain,
+just before the redirect, via `trackWithDedup` under one `event_id`. The
+double-count risk is handled by dedup, not by having a single owner.
+
+**The general rule this illustrates:** a shared `event_id` is the defence against
+double counting, not restricting who may fire. The Purchase uses the same
+approach, with the Shopify order ID as `event_id` so our server event and the
+channel's own Purchase deduplicate rather than double-count.
+
+The Phase 2 gate review (2026-06-01) that justified building our own server
+Purchase found: the config layer was clean (apex `conka.io` verified, correct
+single pixel `1138202151698404`, 7-day-click window, no rogue pixels), but Meta's
+own actions panel showed **low server-side `fbc` coverage through CAPI**, **50%
+of Purchase price data malformed**, and weak pixel-to-CAPI dedup, with Purchase
+ROAS reading "-" across all ad sets. The Shopify channel's Purchase alone was
+insufficient.
 
 **InitiateCheckout** is fired from this frontend at the checkout-click moment, just before redirecting to the Shopify-hosted checkout (`CartDrawer` and the funnel/lander checkout helpers). Headless note: the checkout lives on a different domain, so the pixel cannot fire IC there — we fire it on our own domain first via `trackWithDedup` (fbq + CAPI under one `event_id`), both using beacon/`keepalive` transport so they survive the navigation. (This reverses the temporary 2026-06-01 removal under SCRUM-1043, which had handed IC solely to the Shopify Facebook & Instagram channel.)
 

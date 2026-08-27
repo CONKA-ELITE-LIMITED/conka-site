@@ -1,6 +1,7 @@
 # Docs Hygiene Audit and Cleanup
 
-**Status:** Scoped 2026-08-27. Not started.
+**Status:** DONE (2026-08-27). All five phases complete.
+**Execution log:** `docs/development/featurePlans/docs-hygiene-progress.md`
 **Tracking:** [SCRUM-1268](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1268)
 **Type:** Internal tooling / documentation. Not a website feature.
 
@@ -169,11 +170,18 @@ Note: `docs/README.md` has **zero dead links** and CLAUDE.md has **zero dead pat
 
 | Phase | Description | Status |
 |---|---|---|
-| 1 | Correct the canon | Not Started |
-| 2 | Retire the dead plans | Not Started |
-| 3 | Merge-then-delete the 13 | Not Started |
-| 4 | Repair the indexes | Not Started |
-| 5 | De-duplicate | Future |
+| 1 | Correct the canon | **Done** |
+| 2 | Retire the dead plans | **Done** |
+| 3 | Merge-then-delete the 13 | **Done** |
+| 4 | Repair the indexes | **Done** |
+| 5 | De-duplicate | **Done** |
+
+> **The tables below are the audit as taken on 2026-08-27, kept as the record of
+> what was found.** They describe the state *before* the fix, so do not read them
+> as current. Where execution diverged from the audit (extra stale docs found,
+> two docs archived that the audit had not flagged, corrections already folded in
+> that the audit thought were outstanding), the divergence is recorded in
+> `docs-hygiene-progress.md`.
 
 ### Phase 1: Correct the canon (ACTIVE)
 
@@ -240,9 +248,20 @@ Complexity: Large in aggregate, Small per sitting.
 
 Complexity: Medium.
 
-### Phase 5: De-duplicate (Future)
+### Phase 5: De-duplicate (DONE)
 
-See the duplication table. The `LISTICLE_SYSTEM` / `LANDING_QUIZ_SYSTEM` overlap is the one worth solving properly, because both claim authority over `/go/[slug]` and neither wholly has it.
+Resolved as follows. The `LISTICLE_SYSTEM` / `LANDING_QUIZ_SYSTEM` overlap was the one worth solving properly, and it got the parent-plus-two-formats treatment the table proposed.
+
+| Pair | Resolution |
+|---|---|
+| `MASTER_CONTEXT` vs `features/PROJECT_OVERVIEW` | **PROJECT_OVERVIEW deleted.** All 34 lines were already in MASTER_CONTEXT; 5 inbound references repointed |
+| `CART_ATTRIBUTES` vs `LTV_TAGGING_PLAN` | **LTV_TAGGING_PLAN archived** |
+| The analytics quartet | **No change, deliberately.** `analytics/README.md` already declares precedence ("if a linked doc contradicts this page, this page wins for what is live today"), the two historical docs carry banners, and Phase 4 indexed all four. Four distinct declared jobs, not duplication |
+| `LISTICLE_SYSTEM` vs `LANDING_QUIZ_SYSTEM` | **New thin parent `features/GO_LANDING_PAGES.md`** owns the route, registry, noindex/never-link rules and shared analytics constraints. Both format docs shed that preamble and now open by deferring to it |
+| `QUALITY_STANDARDS` vs `MOBILE_OPTIMIZATION` vs `DESIGN_SYSTEM` | **Split by job.** DESIGN_SYSTEM §7 is the single statement of the mandate, QUALITY_STANDARDS keeps only the review gate, MOBILE_OPTIMIZATION is the pattern library. Each says so at the top |
+| `BRAND_VOICE` vs `CLAIMS_COMPLIANCE` vs `LANDING_PAGE_CLAIMS_LOG` | **LANDING_PAGE_CLAIMS_LOG archived.** BRAND_VOICE had pointed at it as *the* claims reference, which was the worst pointer in the tree: that doc flags its own mg figures as wrong. Now points at CLAIMS_COMPLIANCE for rules and FORMULATION_SPEC for doses |
+| `PRICING_HISTORY` vs `SKU_AND_SHOT_REFERENCE` vs `GO_LIVE_PRICING_AUDIT` | **Already resolved in Phase 1** (GO_LIVE_PRICING_AUDIT archived). The other two do different jobs: SKU is the map, PRICING_HISTORY is a dated append-only log that defers to `BYO_PRICING` in code |
+| `CHANGELOG` vs `changelog-jan-feb-2026` | **changelog-jan-feb-2026 archived** |
 
 ---
 

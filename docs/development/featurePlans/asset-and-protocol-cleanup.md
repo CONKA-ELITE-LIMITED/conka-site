@@ -1,6 +1,6 @@
 # Asset and Protocol Tech Debt Cleanup
 
-**Status:** Not started
+**Status:** Phases 1 to 4 DONE (see the phase table below). The protocol presentation layer is deleted; the commerce layer stays quarantined in `app/lib/legacy/protocolSubscriptions.ts`.
 **Owner:** Rudh
 **Branch:** `chore-asset-and-protocol-cleanup`
 **Tracking:** Plan doc only, no Jira
@@ -207,13 +207,13 @@ These are real legacy support for existing protocol subscribers. Keep them worki
 
 | Symbol | Live consumers |
 |--------|----------------|
-| `ProtocolId` (`productTypes.ts`) | `productMetadata.ts`, `whatToExpectData.ts`, `FormulaCaseStudies.tsx` |
+| `ProtocolId` (`productTypes.ts`) | `productMetadata.ts` (`whatToExpectData.ts` is deleted; `FormulaCaseStudies.tsx` no longer takes a protocol id) |
 | `PROTOCOL_VARIANTS` (`shopifyProductMapping.ts`) | `productMetadata.ts`, `app/api/auth/subscriptions/[id]/pause/route.ts` |
 | Subscriptions UI + API routes | the account portal |
 
 `PROTOCOL_VARIANTS` holds real Shopify variant IDs and is how an existing subscriber's renewal maps to a product. This is the part that must not break.
 
-**Open question to resolve first:** `ProtocolId` leaks into `whatToExpectData.ts` and `FormulaCaseStudies.tsx`, which are live PDP code, not subscription code. Decide whether those two can drop the protocol dependency entirely (preferred, keeps the legacy type out of the PDPs) or whether the quarantine boundary has to accommodate them. This is the messiest part and the one that could expand scope.
+**Open question, RESOLVED by deletion.** `ProtocolId` used to leak into `whatToExpectData.ts` and `FormulaCaseStudies.tsx`, both live PDP code rather than subscription code. It resolved the preferred way: `whatToExpectData.ts` was deleted outright (superseded by `app/lib/whatToExpectV2.ts`) and `FormulaCaseStudies.tsx` now keys on `FormulaId | BothProductId` via `getAthletesForBoth()` / `getAthletesForFormula()`, so the legacy type is out of the PDPs entirely.
 
 **Complexity:** Medium. Zero behaviour change. The test is that the account portal still loads, edits and pauses a protocol subscription.
 

@@ -6,7 +6,7 @@ Friday.** · **Ticket:** SCRUM-1206
 
 > This doc is the shared brief behind the deck: it captures who CONKA is, how we align with Nike
 > Mind, the messaging, and the activation plan. The deck is the pitch; this is the reasoning under
-> it. Prior working docs (`nike-trial-deck-copy.md`, `nike-engagement-mechanic-options.md`) live on
+> it. Prior working docs (nike-trial-deck-copy, nike-engagement-mechanic-options) are not in this repo; they live on
 > the `feature/quarterly-otp-cadence` branch and feed into this.
 
 ---

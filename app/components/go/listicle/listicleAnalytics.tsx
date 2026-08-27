@@ -44,7 +44,7 @@ import {
  * Index-derived, so inserting or reordering a block shifts the ids of
  * everything below it and breaks historical comparability for that page. That
  * is the accepted trade-off for not having to hand-author an id in every
- * listicle config. See docs/development/featurePlans/listicle-cta-attribution.md.
+ * listicle config. See docs/features/LISTICLE_SYSTEM.md.
  */
 export function sectionId(kind: string, index: number): string {
   return `${kind}_${index}`;

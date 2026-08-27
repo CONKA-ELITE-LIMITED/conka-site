@@ -30,7 +30,6 @@ The most important cluster for anything touching products, variants, or money.
 | [`product/LOOX_PRODUCT_IDS_AND_SHOPIFY.md`](./product/LOOX_PRODUCT_IDS_AND_SHOPIFY.md) | Loox → Shopify product-ID mapping for reviews. |
 | [`PRICING_HISTORY.md`](./PRICING_HISTORY.md) | Dated audit log of funnel price changes. Append a block on every price change. |
 | [`development/CART_PRICING_SOURCE_OF_TRUTH.md`](./development/CART_PRICING_SOURCE_OF_TRUTH.md) | Rule: pre-add UI prices from `productPricing.ts`; cart/checkout prices from Shopify only. |
-| [`development/GO_LIVE_PRICING_AUDIT.md`](./development/GO_LIVE_PRICING_AUDIT.md) | Variant/price reconciliation audit. |
 
 **Code source of truth:** `app/lib/byoData.ts` (Build Your Order offer catalogue), `app/lib/shopifyProductMapping.ts` + `app/lib/productData.ts` barrel (main site), `app/lib/legacy/protocolSubscriptions.ts` (retired protocols, live for existing subscribers).
 
@@ -45,11 +44,24 @@ The most important cluster for anything touching products, variants, or money.
 | [`features/MOBILE_SUBSCRIPTION_INTEGRATION.md`](./features/MOBILE_SUBSCRIPTION_INTEGRATION.md) | Mobile subscription-card display. |
 | [`features/b2b/B2B_PORTAL.md`](./features/b2b/B2B_PORTAL.md) | **Canonical B2B reference** — `/professionals`, pricing/VAT, draft orders, Xero, shipping. |
 | [`features/BLOG_SYSTEM.md`](./features/BLOG_SYSTEM.md) | Blog (`/blog`) — Notion-as-CMS, content contract, deploy rules. Read before any Notion write. |
-| [`features/LISTICLE_SYSTEM.md`](./features/LISTICLE_SYSTEM.md) | Listicle landings (`/go/[slug]`) — templates + config. |
-| [`features/LANDING_QUIZ_SYSTEM.md`](./features/LANDING_QUIZ_SYSTEM.md) | Ad landing quiz system (`/go/[slug]`). |
+| [`features/GO_LANDING_PAGES.md`](./features/GO_LANDING_PAGES.md) | **Start here for `/go/[slug]`** — the shared contract: route, registry, noindex rules, shared analytics. Routes to the two format docs. |
+| [`features/LISTICLE_SYSTEM.md`](./features/LISTICLE_SYSTEM.md) | `/go` **listicle** format — `mm` + `im8` templates, config, zone anatomy, reason copy standard. |
+| [`features/LANDING_QUIZ_SYSTEM.md`](./features/LANDING_QUIZ_SYSTEM.md) | `/go` **quiz** format — engine, screen schema, scoring, Convex capture. |
 | [`features/FAQ_SYSTEM.md`](./features/FAQ_SYSTEM.md) | FAQ single-source rule, per-surface subsets, claims anchors. |
 | [`features/NIKE_TRIAL_PAGE.md`](./features/NIKE_TRIAL_PAGE.md) | Private Nike trial onboarding page (`/nike`). |
-| [`features/CASE_STUDIES.md`](./features/CASE_STUDIES.md) · [`features/TESTIMONIALS.md`](./features/TESTIMONIALS.md) · [`features/CROSS_SELL.md`](./features/CROSS_SELL.md) · [`features/BANNER_SYSTEM.md`](./features/BANNER_SYSTEM.md) · [`features/WHAT_TO_EXPECT.md`](./features/WHAT_TO_EXPECT.md) · [`features/KLAVIYO_FLOWS_AND_INTEGRATION.md`](./features/KLAVIYO_FLOWS_AND_INTEGRATION.md) · [`features/PROJECT_OVERVIEW.md`](./features/PROJECT_OVERVIEW.md) | Other feature surfaces. |
+| [`features/CASE_STUDIES.md`](./features/CASE_STUDIES.md) · [`features/TESTIMONIALS.md`](./features/TESTIMONIALS.md) · [`features/BANNER_SYSTEM.md`](./features/BANNER_SYSTEM.md) · [`features/WHAT_TO_EXPECT.md`](./features/WHAT_TO_EXPECT.md) · [`features/KLAVIYO_FLOWS_AND_INTEGRATION.md`](./features/KLAVIYO_FLOWS_AND_INTEGRATION.md) | Other feature surfaces. |
+| [`features/blog-notion-engine-brief.md`](./features/blog-notion-engine-brief.md) | Blog authoring contract + Notion property schema. `BLOG_SYSTEM.md` defers to it. |
+
+---
+
+## Partnerships & decks
+
+| Doc | Topic |
+|-----|-------|
+| [`features/nike-mind-partnership.md`](./features/nike-mind-partnership.md) | CONKA × Nike Mind partnership positioning and vision. |
+| [`features/nike-mind-research.md`](./features/nike-mind-research.md) · [`features/nike-mind-deck-copy.md`](./features/nike-mind-deck-copy.md) · [`features/nike-mind-partnership-deliverables.md`](./features/nike-mind-partnership-deliverables.md) | Supporting research, deck copy, deliverables. |
+| [`features/conka-brand-overview-deck.md`](./features/conka-brand-overview-deck.md) | CONKA brand-overview deck plan. |
+| [`email-signature/README.md`](./email-signature/README.md) | Branded Gmail signature — build, assets, install steps. |
 
 ---
 
@@ -74,7 +86,9 @@ The most important cluster for anything touching products, variants, or money.
 | [`development/MOTION_GUIDE.md`](./development/MOTION_GUIDE.md) | GSAP motion system + reduced-motion rules. |
 | [`development/CART_ATTRIBUTES.md`](./development/CART_ATTRIBUTES.md) | Cart line attributes for attribution/LTV tagging. |
 | [`development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md`](./development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md) | Trial-page performance playbook. |
-| [`development/featurePlans/`](./development/featurePlans/) | Per-feature scoping/plan docs. Notable: [`asset-and-protocol-cleanup.md`](./development/featurePlans/asset-and-protocol-cleanup.md) (protocol retirement), [`order-size-shipping-tiers.md`](./development/featurePlans/order-size-shipping-tiers.md), [`account-portal-simple-dtc.md`](./development/featurePlans/account-portal-simple-dtc.md), [`landing-conversion/README.md`](./development/featurePlans/landing-conversion/README.md). |
+| [`development/MEASURING_COMPONENT_HEIGHTS.md`](./development/MEASURING_COMPONENT_HEIGHTS.md) | How to measure rendered component heights (for skeletons / CLS budgets). |
+| [`development/featurePlans/`](./development/featurePlans/) | Per-feature scoping/plan docs. Notable: [`asset-and-protocol-cleanup.md`](./development/featurePlans/asset-and-protocol-cleanup.md) (protocol retirement), [`order-size-shipping-tiers.md`](./development/featurePlans/order-size-shipping-tiers.md), [`landing-conversion/README.md`](./development/featurePlans/landing-conversion/README.md). |
+| [`development/featurePlans/archive/`](./development/featurePlans/archive/) | Retired plans and docs kept for the rationale they hold (rejected options, revert paths, teardowns). Never current behaviour — see its README. |
 
 ---
 
@@ -87,6 +101,10 @@ The most important cluster for anything touching products, variants, or money.
 | [`analytics/HEADLESS_ATTRIBUTION_FIX.md`](./analytics/HEADLESS_ATTRIBUTION_FIX.md) | Checkout-domain cookie-split root cause + fix. |
 | [`analytics/BYO_EVENTS.md`](./analytics/BYO_EVENTS.md) | Funnel event taxonomy. |
 | [`analytics/LISTICLE_PERFORMANCE.md`](./analytics/LISTICLE_PERFORMANCE.md) | Live listicle ad-spend performance data. |
+| [`analytics/ATTRIBUTION_STATE_AND_PLAN.md`](./analytics/ATTRIBUTION_STATE_AND_PLAN.md) | Meta attribution: the three-problem split (quality / coverage / rebills), evidence log, and what shipped. |
+| [`analytics/PDP_SECTION_TRACKING.md`](./analytics/PDP_SECTION_TRACKING.md) | PDP section-impression tracking (semantic ids, shared observer). |
+| [`analytics/EMAIL_CAPTURE_ENRICHMENT.md`](./analytics/EMAIL_CAPTURE_ENRICHMENT.md) | Email-capture enrichment for match quality. |
+| [`analytics/HISTORY.md`](./analytics/HISTORY.md) | *Historical.* Superseded analytics guides, kept for context. |
 
 ---
 
@@ -97,6 +115,8 @@ The most important cluster for anything touching products, variants, or money.
 | [`seo-aeo/README.md`](./seo-aeo/README.md) | **SEO/AEO foundation** — canonical, metadata, JSON-LD, sitemap, robots, keyword H1s. |
 | [`seo-aeo/AEO_PLAYBOOK.md`](./seo-aeo/AEO_PLAYBOOK.md) | Answer-engine optimisation playbook. |
 | [`seo-aeo/aeo-scorecard.md`](./seo-aeo/aeo-scorecard.md) · [`seo-aeo/seo-search-console-baseline.md`](./seo-aeo/seo-search-console-baseline.md) | Scorecard + baseline. |
+| [`seo-aeo/aeo-free-tool-runbook.md`](./seo-aeo/aeo-free-tool-runbook.md) | Recurring ops runbook for the free-tool AEO play. |
+| [`seo-aeo/CONKA_SEO_Keyword_Map_v4.md`](./seo-aeo/CONKA_SEO_Keyword_Map_v4.md) | Source dataset: 312 keywords with volume/KD. Input, not guidance. |
 
 ---
 
@@ -104,10 +124,14 @@ The most important cluster for anything touching products, variants, or money.
 
 | Doc | Topic |
 |-----|-------|
+| [`ops/README.md`](./ops/README.md) | **Canonical money layer** — COGS, fees, margin, vendors. Route any cost / margin / vendor question here. |
+| [`ops/vendor-costs.md`](./ops/vendor-costs.md) | Per-vendor cost breakdown. |
+| [`ops/subscription-platform.md`](./ops/subscription-platform.md) | Loop vs Skio commercial comparison. |
 | [`shipping/SHIPPING_AND_COURIERS.md`](./shipping/SHIPPING_AND_COURIERS.md) | Shipping rates, couriers, Synergy 3PL mapping. |
 | [`deployment/CONVEX_DEPLOYMENT.md`](./deployment/CONVEX_DEPLOYMENT.md) | Convex backend setup. |
 | [`deployment/VERCEL_GIT_CONNECTION.md`](./deployment/VERCEL_GIT_CONNECTION.md) | Vercel ↔ git connection. |
 | [`sprints/README.md`](./sprints/README.md) | Commercial/growth sprints (time-boxed ad-spend trials, launches). |
+| [`sprints/2026-07-listicle-ad-spend.md`](./sprints/2026-07-listicle-ad-spend.md) | The £300/day listicle ad-spend trial. |
 | [`conkaAppData/`](./conkaAppData/) | CONKA app cognition-trial data + reports. |
 
 ---
@@ -127,6 +151,7 @@ Read the relevant one before starting that kind of task. Full index: [`workflows
 | [`workflows/07-testing-validation.md`](./workflows/07-testing-validation.md) | Testing layers + validation. |
 | [`workflows/08-jira-workflow.md`](./workflows/08-jira-workflow.md) | Ticket creation, transitions, ACs. |
 | [`workflows/09-ux-iteration.md`](./workflows/09-ux-iteration.md) | Refining pages for conversion. |
+| [`workflows/10-figma-decks.md`](./workflows/10-figma-decks.md) | Building/editing CONKA slide decks in Figma. |
 | [`workflows/REVIEWS_WORKFLOW.md`](./workflows/REVIEWS_WORKFLOW.md) | Reviews workflow. |
 
 ---
