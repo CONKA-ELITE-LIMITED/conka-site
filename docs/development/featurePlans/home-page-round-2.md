@@ -9,8 +9,8 @@ Scoped 27 Aug 2026. Branch `feature/home-page-upgrades-round2`.
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | The why accordion (position 3) | **Done** (SCRUM-1265) |
-| 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | Not Started |
-| 3 | Athlete credibility carousel restyle | Not Started |
+| 2 | WhatToExpectV2 and ProductComparisonTable drop-ins | **Part done.** ProductComparisonTable shipped 27 Aug (PR #456). WhatToExpectV2 not started |
+| 3 | Athlete credibility carousel restyle | **Superseded.** Rescoped against the AG1 and IM8 benchmark and moved to its own plan: `athlete-carousel-refactor.md`. Phase 1 shipped 27 Aug |
 
 ## Problem
 
@@ -19,7 +19,7 @@ The home page opens with a hero and then goes straight to a product showcase and
 Separately, three arguments the PDPs now make well are either absent from home or presented in a form that undercuts them:
 
 - **What to expect over time** is absent. `WhatToExpectV2` shipped on all three PDPs and answers "when will I feel it", which is the objection that kills a first subscription order.
-- **CONKA vs the alternatives** is absent. `ProductComparisonTable` shipped in PDP Phase 2 and does the positioning work against coffee and prescription stimulants.
+- **CONKA vs the alternatives** is absent (shipped 27 Aug at position 8, not the 13 planned below: it answers the category objection better straight after the products than as the last beat before the FAQ). `ProductComparisonTable` shipped in PDP Phase 2 and does the positioning work against coffee and prescription stimulants.
 - **Athlete credibility** is present but reads, in Rudh's words, "cheap and large". Partly a styling problem, partly that home makes the athlete argument three times (`BrainFuelBand`, `AthleteReviewFeature`, `AthleteSportMarquee` + `AthleteCredibilityCarousel`), so the third instance has to shout.
 
 Reference: the Gray Matter home page (`trygraymatter.com`), whose second section carries four arguments (challenge, solution, mechanism, research) in one numbered accordion.
@@ -326,11 +326,13 @@ Sprint 30, epic SCRUM-763 (Website & CRO).
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
 | SCRUM-1265 | Home Phase 1: numbered "why" accordion (ticket title says "second section"; it shipped at 3, see decision 1) | 1 | Done |
-| SCRUM-1266 | Home Phase 2: what-to-expect timeline and comparison table onto the home page | 2 | To Do |
-| SCRUM-1267 | Home Phase 3: tighten the athlete credibility carousel across all surfaces | 3 | To Do |
+| SCRUM-1266 | Home Phase 2: what-to-expect timeline and comparison table onto the home page | 2 | To Do (comparison table half shipped) |
+| SCRUM-1267 | Tighten the athlete credibility carousel: cut height, lead with the review | 3 | For review. Rewritten, see `athlete-carousel-refactor.md` |
 
 All three sit in Sprint 30 under epic SCRUM-763 (Website & CRO), and are linked to each other with "Relates to".
 
 SCRUM-1266 depends on SCRUM-1265 only for the section-tracking provider. The two drop-ins themselves are independent, so Phase 2 can ship first if a same-day win is wanted.
 
-SCRUM-1267 relates to **SCRUM-1261** (the PDP comparison table) because both touch the same PDP surfaces. Rebase before starting it: SCRUM-1260 is For review and SCRUM-1262 is Ready to deploy.
+SCRUM-1267 relates to **SCRUM-1261** (the PDP comparison table) because both touch the same PDP surfaces. The rebase gate noted here is now satisfied: SCRUM-1260 and SCRUM-1262 both merged on 26 Aug.
+
+**Phase 3 has moved.** It was rescoped on 27 Aug against the AG1 and IM8 references and now lives in `athlete-carousel-refactor.md` with its own phases and two subtasks (SCRUM-1273 for the /start fork, SCRUM-1274 for the PAGE_NARRATIVES home entry). The brief below is kept for the reasoning it holds, but three of its decisions were reopened: the roster strip stays (confirmed, not assumed), the arrows stay, and the counter goes. Do not implement from it.
