@@ -40,11 +40,6 @@ import {
   getCadenceVariantByFormula,
 } from "@/app/lib/cadenceData";
 
-const FLOW_FAQ_IMAGE = {
-  src: "/lifestyle/flow/FlowDrink.jpg",
-  alt: "Drinking a CONKA Flow shot",
-};
-
 const FLOW_FAQ_ITEMS = getFormulaPdpFaqItems("01");
 
 export default function ConkaFlowPage() {
@@ -195,7 +190,7 @@ export default function ConkaFlowPage() {
       ariaLabel="FAQ"
     >
       <div className="brand-track">
-        <LabFAQ items={FLOW_FAQ_ITEMS} image={FLOW_FAQ_IMAGE} hideCTA />
+        <LabFAQ items={FLOW_FAQ_ITEMS} image={null} hideCTA />
       </div>
     </PdpSection>
   );

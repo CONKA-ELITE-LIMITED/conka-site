@@ -40,11 +40,6 @@ import {
   getCadenceVariantByFormula,
 } from "@/app/lib/cadenceData";
 
-const CLEAR_FAQ_IMAGE = {
-  src: "/lifestyle/clear/ClearDrink.jpg",
-  alt: "Drinking a CONKA Clear shot",
-};
-
 const CLEAR_FAQ_ITEMS = getFormulaPdpFaqItems("02");
 
 export default function ConkaClarityPage() {
@@ -197,7 +192,7 @@ export default function ConkaClarityPage() {
       ariaLabel="FAQ"
     >
       <div className="brand-track">
-        <LabFAQ items={CLEAR_FAQ_ITEMS} image={CLEAR_FAQ_IMAGE} hideCTA />
+        <LabFAQ items={CLEAR_FAQ_ITEMS} image={null} hideCTA />
       </div>
     </PdpSection>
   );
