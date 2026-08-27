@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Removed the scrolling sport marquee from the athlete section on home, the three PDPs and /start
+- **2026-08-27** | /start and /start-b now render the same athlete carousel as home instead of a forked copy, so the two stop drifting apart
 - **2026-08-27** | Athlete carousel refinement: the athlete's cutout now fills its tile with no white edges, his name and sport sit on the asset, the quote is smaller with oversized quote marks, and the carousel arrows are white on navy
 - **2026-08-27** | Tightened the athlete credibility carousel on home and the three PDPs: one title instead of title plus subheader, no counter or achievement pills, shorter mobile portrait so the athlete's quote lands with their photo, and a compact Informed Sport anchor
 - **2026-08-27** | Added the CONKA vs coffee vs Rx stimulants comparison table to the home page, between the athlete review and the research band

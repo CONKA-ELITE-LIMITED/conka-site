@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import InformedSportCertification from "./InformedSportCertification";
-import AthleteSportMarquee from "./AthleteSportMarquee";
+import { ATHLETES } from "@/app/lib/athleteData";
 
 /* ============================================================================
  * AthleteCredibilityCarousel
@@ -24,80 +24,15 @@ import AthleteSportMarquee from "./AthleteSportMarquee";
  * which is what lets the NN/NN counter go. The counter and the mono
  * achievement pill were Clinical devices on a Simple DTC surface.
  *
- * Rendered by the home page and the three PDPs (/conka-flow, /conka-clarity,
- * /conka-both) — changes here propagate to all four.
+ * Rendered by home, the three PDPs (/conka-flow, /conka-clarity, /conka-both)
+ * and /start + /start-b, so changes here propagate to all six. The /start fork
+ * (CROAthletes) that used to shadow this was deleted in SCRUM-1273.
  *
- * The sport-breadth marquee lives in its own component (AthleteSportMarquee).
- * It renders inside this beat by default; home and the PDPs pass
- * showMarquee={false} and render it full-bleed at the section level instead.
+ * The sport-breadth marquee that used to run above this was cut in
+ * SCRUM-1273: it made the same "many different sports" argument as the roster
+ * strip below, in words rather than faces, and a loud animated navy bar
+ * competed with the section title for the eye.
  * ========================================================================== */
-
-export type Athlete = {
-  name: string;
-  sport: string;
-  role: string;
-  quote: string;
-  image: string;
-};
-
-const ATHLETES: Athlete[] = [
-  {
-    name: "Dan Norton",
-    sport: "Rugby Sevens",
-    role: "Olympic Silver Medallist",
-    quote:
-      "I am finding myself being able to speak clearer and in conversations my words just flow better. I have more calmness.",
-    image: "/testimonials/athlete/DanNortonNB.jpg",
-  },
-  {
-    name: "Josh Stanton",
-    sport: "Motorsport",
-    role: "Professional Racing Driver",
-    quote:
-      "When you are sat in a car you need to be in a calm state, but also you need to be aggressive. Really important to have this clarity of thought. The benefits CONKA gives me and knowing I have this edge is fantastic.",
-    image: "/testimonials/athlete/JoshStantonNB.jpg",
-  },
-  {
-    name: "Chris Billam-Smith",
-    sport: "Boxing",
-    role: "WBO Cruiserweight World Champion",
-    quote:
-      "Helps with concentration and mental focus. It was a massive benefit for my last fight which needed a lot of focus against a big puncher.",
-    image: "/testimonials/athlete/ChrisBillamSmithNB.jpg",
-  },
-  {
-    name: "Sienna Charles",
-    sport: "Showjumping",
-    role: "GB Senior Team, European Medallist",
-    quote:
-      "Within a few weeks of taking it I saw huge improvements in energy, my ability to focus and my memory which got me back to competitions.",
-    image: "/testimonials/athlete/SiennaCharlesNB.jpg",
-  },
-  {
-    name: "Fraser Dingwall",
-    sport: "Rugby Union",
-    role: "England International",
-    quote:
-      "I have loved using CONKA in my daily routine, especially tailoring which shot I take dependent on my training load, and being able to track progress using the app. Brain health is extremely important in rugby and I am enjoying feeling more focused and energised.",
-    image: "/testimonials/athlete/FraserDingwallNB.jpg",
-  },
-  {
-    name: "Adam Azim",
-    sport: "Boxing",
-    role: "IBO Super Lightweight World Champion",
-    quote:
-      "My reflexes were on point for my fights. CONKA is a daily thing I take especially in camp before fights.",
-    image: "/testimonials/athlete/AdamAzimNB.jpg",
-  },
-  {
-    name: "Jack Willis",
-    sport: "Rugby Union",
-    role: "England International, Stade Toulousain",
-    quote:
-      "For me it was about trying to find the small margins and trying to maximise my brain as well as my body was so important.",
-    image: "/testimonials/athlete/JackWillisNB.jpg",
-  },
-];
 
 const SWIPE_THRESHOLD = 50;
 
@@ -130,14 +65,7 @@ function NavButton({
   );
 }
 
-export default function AthleteCredibilityCarousel({
-  showMarquee = true,
-}: {
-  // The sport-breadth marquee is rendered inside the carousel by default. Home
-  // and the PDPs pass `showMarquee={false}` and render <AthleteSportMarquee
-  // fullBleed /> at the section level instead so the strip runs edge-to-edge.
-  showMarquee?: boolean;
-} = {}) {
+export default function AthleteCredibilityCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const totalCount = ATHLETES.length;
   const active = ATHLETES[activeIndex];
@@ -187,8 +115,6 @@ export default function AthleteCredibilityCarousel({
 
   return (
     <div>
-      {showMarquee && <AthleteSportMarquee />}
-
       {/* One title, no subline. The subline said "Olympic medallists, world
           champions... on the days that matter most", which repeats the claim
           BrainFuelBand already makes higher up the page in almost the same

@@ -18,7 +18,6 @@ import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
-import AthleteSportMarquee from "@/app/components/AthleteSportMarquee";
 import LabGuarantee from "@/app/components/landing/LabGuarantee";
 import CROTestimonials from "@/app/components/cro/CROTestimonials";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
@@ -164,9 +163,8 @@ export default function ConkaFlowPage() {
       className="brand-section brand-bg-tint brand-tight-top-mobile brand-tight-bottom-mobile"
       ariaLabel="Athletes who use CONKA"
     >
-      <AthleteSportMarquee fullBleed />
       <div className="brand-track">
-        <AthleteCredibilityCarousel showMarquee={false} />
+        <AthleteCredibilityCarousel />
       </div>
     </PdpSection>
   );
