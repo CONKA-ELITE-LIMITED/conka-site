@@ -14,10 +14,11 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
  * sections on them. Ours runs five: the fifth is the app, which is the one
  * argument on the page a competitor cannot copy.
  *
- * Built from the rendered design, NOT that page's source markup. The raw HTML
- * reads as a two-column image-left / accordion-right layout; the real design is
- * a left-aligned headline, a centred card, and numbered rows. Anyone
- * re-deriving this from the markup will build the wrong thing.
+ * Built from the rendered design, NOT that page's source markup: a left-aligned
+ * headline, a card, and numbered rows whose numbers sit outside them. The
+ * reference's own decorative image is a circular crop floating over the card
+ * corner; ours is a tall asset in its own column, which was tried the circular
+ * way first and read as a sticker stuck onto the layout.
  *
  * Design language is Simple DTC borrowing three clinical devices (the number
  * circles, the hairline row rules, the highlighted lede line). Deliberately NOT
@@ -73,9 +74,8 @@ export default function HomeWhyAccordion() {
 
   return (
     <div className="w-full">
-      {/* The headline stays LEFT while the card below is centred. Capped at the
-          card's own width so it keeps wrapping to roughly two lines rather than
-          running the full 1280px track. */}
+      {/* Left-aligned, and capped so it keeps wrapping to roughly two lines
+          rather than running the full 1280px track. */}
       <h2
         className="brand-h1 max-w-[52rem] text-black"
         style={{ letterSpacing: "-0.02em" }}
@@ -87,38 +87,19 @@ export default function HomeWhyAccordion() {
         </span>
       </h2>
 
-      {/* Positioning context for the decorative circle, and the centring
-          wrapper for the card. Anchored to the card rather than the section,
-          because the headline's height changes with the viewport and an offset
-          measured from the section top would drift the circle off the corner it
-          is supposed to sit on. */}
-      <div className="relative mt-8 lg:mx-auto lg:mt-10 lg:max-w-[52rem]">
-        {/* Decorative only, so empty alt and hidden from the a11y tree. Sits
-            BEHIND the card (no z-raise; the card is `relative` and later in the
-            DOM, so it paints over). The 144px overhang against a 224px circle
-            means roughly two thirds of it clears the card edge and only the
-            inner corner is hidden. Desktop only: at 390px it would crowd the
-            rows or shrink to noise. */}
-        <div
-          aria-hidden
-          className="absolute -top-20 -right-36 hidden h-56 w-56 overflow-hidden rounded-full ring-1 ring-black/8 lg:block"
-        >
-          <Image
-            src="/videos/both/BothNeuronFloat-poster.jpg"
-            alt=""
-            fill
-            sizes="224px"
-            className="object-cover"
-            loading="lazy"
-          />
-        </div>
-
+      {/* Two columns on desktop: the accordion, and a tall asset beside it.
+          This replaced a circular crop of the neuron-float poster that floated
+          over the card's top-right corner. That asset was busy, the circle cut
+          it badly, and it read as a sticker rather than part of the layout. A
+          full-height rectangle in its own column is calmer and gives the
+          section a product presence it otherwise lacks entirely. */}
+      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch lg:gap-10">
         {/* The card is desktop-only. On mobile the rows sit straight on the
             section tint: at 390px a card border inside a section is a container
             the copy cannot spare the width for. Desktop sets its own text
             colour, being a surface that differs from the section background. */}
-        <div className="relative lg:rounded-md lg:bg-white lg:p-10 lg:text-black lg:shadow-sm lg:ring-1 lg:ring-black/5">
-          <ul className="flex flex-col gap-0 lg:gap-4">
+        <div className="lg:rounded-md lg:bg-white lg:p-10 lg:text-black lg:shadow-sm lg:ring-1 lg:ring-black/5">
+          <ul className="flex flex-col gap-0 lg:gap-5">
             {HOME_WHY_ROWS.map((row, idx) => {
               const isOpen = idx === openIdx;
               const panelId = `home-why-panel-${idx}`;
@@ -135,7 +116,7 @@ export default function HomeWhyAccordion() {
                       argument in sequence rather than an FAQ. */}
                   <span
                     aria-hidden
-                    className="mt-1 flex h-13 w-13 items-center justify-center rounded-full bg-[#eef0f5] text-xl font-bold text-[var(--brand-navy)] lg:mt-2 lg:h-16 lg:w-16 lg:text-2xl"
+                    className="mt-1 flex h-13 w-13 items-center justify-center rounded-full bg-[#dbe2f0] text-xl font-bold text-[var(--brand-navy)] lg:mt-2 lg:h-16 lg:w-16 lg:text-2xl"
                   >
                     {idx + 1}
                   </span>
@@ -170,7 +151,7 @@ export default function HomeWhyAccordion() {
                     >
                       <div className="overflow-hidden">
                         <div
-                          className={`pb-7 transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-6 ${
+                          className={`pb-7 transition-opacity duration-200 motion-reduce:transition-none lg:px-6 lg:pb-9 ${
                             isOpen ? "opacity-100" : "opacity-0"
                           }`}
                         >
@@ -200,15 +181,38 @@ export default function HomeWhyAccordion() {
               );
             })}
           </ul>
+
+          {/* CTA sits OUTSIDE the card's row list, so "centred" means centred
+              against the card rather than against the row content column.
+              Inside the rows it was offset by the number gutter and read as
+              slightly off. */}
+          <div className="mt-8 flex justify-center lg:mt-10">
+            <ConkaCTAButton href="/conka-both" meta={null}>
+              Try the solution
+            </ConkaCTAButton>
+          </div>
         </div>
 
-        {/* CTA sits OUTSIDE the card, so "centred" means centred against the
-            card rather than against the row content column. Inside the card it
-            was offset by the number gutter and read as slightly off. */}
-        <div className="mt-8 flex justify-center">
-          <ConkaCTAButton href="/conka-both" meta={null}>
-            Try the solution
-          </ConkaCTAButton>
+        {/* The asset column. Stretches to the accordion's full height, so it
+            reads as a tall rectangle rather than a floating thumbnail, and
+            re-crops rather than distorting as the rows open and close.
+
+            BothShotSide, not FlowShotSide: this is a brand-level section, and
+            leading it with a single formula would spotlight Flow over Clear,
+            which is the one thing product-presentation surfaces here must not
+            do. Desktop only, since at 390px the accordion needs the width. */}
+        <div
+          aria-hidden
+          className="relative hidden overflow-hidden rounded-md ring-1 ring-black/5 lg:block"
+        >
+          <Image
+            src="/formulas/both/BothShotSide.jpg"
+            alt=""
+            fill
+            sizes="288px"
+            className="object-cover"
+            loading="lazy"
+          />
         </div>
       </div>
     </div>

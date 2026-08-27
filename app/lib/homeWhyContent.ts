@@ -55,10 +55,10 @@ export const HOME_WHY_ROWS: HomeWhyRow[] = [
     // "FDA-cleared" is established site copy, not a new claim: see
     // app/case-studies/layout.tsx, InsightHeroDifferentiator and
     // HowThisIsPossibleModule, the last of which cites FDA 21 CFR 882.1470.
-    // Deliberately states no duration. The existing copy disagrees with itself
-    // on that (AppUSPSection says two minutes, HowThisIsPossibleModule says
-    // five), and this row does not need to pick a side.
-    body: "The CONKA app has an FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
+    // Two minutes is the canonical duration (faqContent x6, CaseStudiesHero,
+    // PilotProgramme, the listicles). Two files said five and were corrected
+    // 2026-08-27: HowThisIsPossibleModule and whyConkaData.
+    body: "The CONKA app has a two-minute FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
   },
 ];
 
