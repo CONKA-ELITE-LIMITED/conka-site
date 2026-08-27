@@ -310,8 +310,8 @@ The roster answers "how many" and the feature card answers "what do they say". T
 ## References
 
 - `docs/branding/DESIGN_SYSTEM.md` section 8.5 (Simple DTC)
-- `docs/development/featurePlans/simple-dtc-design-language.md` (the native `<details>` accordion recipe and the running learnings log)
-- `docs/development/featurePlans/what-to-expect-v2-timeline.md` (the timeline's build, copy and assets)
+- `docs/branding/DESIGN_SYSTEM.md` (the native `<details>` accordion recipe and the running learnings log)
+- `docs/features/WHAT_TO_EXPECT.md` (the timeline's build, copy and assets)
 - `docs/development/featurePlans/pdp-structure-rework.md` (Phase 2 comparison table, Phase 6 athlete proof beat)
 - `docs/features/LISTICLE_SYSTEM.md` line 42 (why section ids are semantic, not positional)
 - `docs/branding/BRAND_VOICE.md` (accordion copy)

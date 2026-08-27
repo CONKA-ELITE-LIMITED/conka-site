@@ -88,7 +88,7 @@ Swap every subscribe attach point from Loop plan IDs to Skio plan IDs. Order: **
    - What: swap `FUNNEL_VARIANTS` plan IDs; verify `funnelCheckout` builds the correct `cart.checkoutUrl` with the Skio plan attached.
    - Dependencies: Phase 1, discovery sweep.
    - Complexity: Medium.
-   - Files: `app/lib/funnelData.ts`, `app/lib/funnelCheckout.ts`.
+   - Files: `app/lib/byoData.ts`, `app/lib/byoCheckout.ts`.
 4. **[Commerce] Re-point remaining surfaces**
    - What: re-point anything else the sweep surfaced.
    - Complexity: TBD by discovery.
@@ -141,7 +141,7 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 
 ### Possible follow-ups (not committed)
 
-- **Retention analytics via Skio webhooks** - with the iframe we lose visibility into in-portal cancel/pause/skip actions our custom flow used to fire. Skio confirmed it emits subscription-lifecycle webhooks + has a native Triple Whale integration (see [`../../features/skio/migration.md`](../../features/skio/migration.md)); the Klaviyo side is covered by the sub-plan above.
+- **Retention analytics via Skio webhooks** - with the iframe we lose visibility into in-portal cancel/pause/skip actions our custom flow used to fire. Skio confirmed it emits subscription-lifecycle webhooks + has a native Triple Whale integration (see `docs/features/skio/migration.md` (not yet written)); the Klaviyo side is covered by the sub-plan above.
 - **Native retention/deflection** - if Skio's portal cancel-deflection proves weaker than our RETENTION15 flow, consider rebuilding deflection natively on Skio's GraphQL API.
 
 ---
@@ -180,7 +180,7 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 - `app/api/auth/subscriptions/` - portal server routes (hybrid read of Shopify contracts + Loop details; consolidated mutations in `[id]/pause/route.ts`; `[id]/reschedule`; `payment-methods/*`).
 - `app/api/auth/customer/update/route.ts` - mirrors name/address to every active/paused Loop contract via `PUT /subscription/{id}/address`. Loop stores addresses per-contract; Skio should remove this need.
 - `app/account/subscriptions/*` + `app/components/subscriptions/*` - the fully self-built portal UI (Edit/MultiLineEdit/Pause/Resume/Reschedule/Reactivate/PlaceOrder/Cancellation), including the three-step reason -> retention (`RETENTION15`) -> confirm cancel flow. Hooks: `useSubscriptions.ts`, `usePaymentMethods.ts`.
-- Loop selling-plan IDs live in `app/lib/funnelData.ts` (`FUNNEL_VARIANTS`) and `app/lib/legacy/protocolSubscriptions.ts` (`PROTOCOL_VARIANTS`).
+- Loop selling-plan IDs live in `app/lib/byoData.ts` (`BYO_VARIANTS`) and `app/lib/legacy/protocolSubscriptions.ts` (`PROTOCOL_VARIANTS`).
 
 ### Purchase-side selling plans (to be re-pointed in Phase 2)
 
@@ -207,7 +207,7 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 - `docs/features/CUSTOMER_PORTAL.md` - exhaustive current portal + Loop behaviour spec.
 - `docs/workflows/04-shopify-commerce.md` - Loop integration rules, funnel selling plans.
 - `docs/development/featurePlans/account-portal-funnel-simplification.md` - takes cues from Magic Mind's Skio portal; overlaps with this migration.
-- `docs/development/featurePlans/account-portal-simple-dtc.md` - `/account` restyle.
+- `docs/development/featurePlans/archive/account-portal-simple-dtc.md` - `/account` restyle.
 - `docs/development/featurePlans/asset-and-protocol-cleanup.md` - Phase 5 protocol retirement.
 - `docs/product/SKU_AND_SHOT_REFERENCE.md` - canonical selling-plan GIDs.
 

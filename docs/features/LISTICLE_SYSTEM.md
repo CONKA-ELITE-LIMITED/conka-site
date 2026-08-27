@@ -82,7 +82,7 @@ The observer itself now lives in `app/components/analytics/sectionImpressions.ts
 
 The PDP side deliberately did NOT copy the index-derived id scheme described above. It keys on each section's semantic id instead, because the product pages are reordered often enough that positional ids would invalidate the dataset on the first reorder. See `trackPdpSectionViewed` in `app/lib/analytics.ts`. `mm` buy boxes use click delegation so the shared home `ProductGrid` needs no tracking props; the `im8` buy zone fires on add-to-cart instead, because delegating there would count cadence toggles and accordions as CTA clicks.
 
-Plan and rationale: `docs/development/featurePlans/listicle-cta-attribution.md` (SCRUM-1177).
+The attribution design shipped under SCRUM-1177 / SCRUM-1178; its plan doc has been folded into this one.
 
 ## Key files
 
@@ -156,6 +156,40 @@ The hero is text-only (no image, no CTA button); the sticky bar carries the pers
 
 The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
+## `im8` zone anatomy
+
+The eight zones the IM8 template was modelled on, top to bottom. Background
+rhythm is part of the design: the listicle core sits dark, the purchase section
+is a hard switch to light, trust / comparison / reviews run light, the cost
+breakdown is a dark card, the FAQ is a full-bleed brand-colour block.
+
+1. **Hero** — eyebrow tag, all-caps "N REASONS [AUDIENCE] SAY [PRODUCT] [OUTCOME]" headline, short subcopy, a proof/rating line, primary CTA anchoring to the buy section, single lifestyle asset. A row of anchor chips (one per reason) sits below as in-page nav.
+2. **Reasons breakdown** — the core listicle. Each reason: number marker, category tag, all-caps *felt outcome* headline (not a feature), a problem-validate paragraph then a solution paragraph mapping named ingredients to that exact pain, one asset alternating sides. Static review cards weave between reasons roughly mid-list (a row of 3-4 quote cards, no carousel, no JS). The final reason rolls into a dark CTA card bridging into purchase.
+3. **Purchase section** — hard switch to a light band, the `#product` anchor every CTA deep-links to. Left: offer card, certification badges, product imagery, thumbnail gallery. Right: buy box with rating, variant selector, an inline named testimonial, subscribe-vs-one-time radio cards, CTA, reassurance strip, payment icons, then Overview / Ingredients / How to Enjoy / What's Inside / Third-Party Tested. Purchase happens in place via `funnelCheckout()` — no cart drawer, no navigation between conviction and checkout.
+4. **High-performer trust carousel** — horizontally scrolling portrait video-testimonial cards, "Rated Excellent" badge floating top-right.
+5. **Them vs us comparison table** — ingredient rows, our column showing a check, "+X% MORE" and the clinical dose against a generic unnamed competitor. **CONKA constraint:** per-serving doses are fine to show; formula-share percentages are **not** (composition is secret). "+X% more than the leading X" compares to a competitor's dose and is fine.
+6. **Review wall** — huge review-count headline, masonry grid of static review cards, "Show more" revealing more rows client-side.
+7. **Cost breakdown** — a large dark rounded card: stacked savings claim, CTA, product render, annual-savings badge on the left; an itemised "Monthly Breakdown" of what the product replaces on the right, closing on a two-row total. CONKA equivalent is the shot vs buying citicoline, omega-3 etc. separately.
+8. **FAQ + minimal footer** — full-bleed brand-colour, single-column accordion (~7 questions), "Explore all FAQs". FAQ questions are persona-specific per config, never generic. Minimal footer, and **no site nav anywhere on the page**.
+
+## Copy standard for a `reason`
+
+Derived from a teardown of Magic Mind and both IM8 GLP-1 variants (Jul 2026).
+The tight IM8 variant is the model:
+
+> **A listicle reason is a statement-titled, single-idea, ~60-word unit.**
+
+- **Title is a statement, never a question.** "Protect Your Hard-Earned Muscle Mass", not "Do Brain-Training Apps Actually Work?". A question asks the reader to do work and reads like an article; a statement *is* a reason and reads like a list. Where a search question matters for AEO, put it in the `tag` eyebrow and keep the headline a statement.
+- **50 to 80 words, one mechanism.** Open on the reader's specific pain in second person, pivot to the fix in one clause, at most one proof point. Push a second mechanism or extra citation into the ingredient grid, which exists to carry that detail.
+- **Unbroken numbered spine.** Number every reason-type block in one run, including `symptomExplainer` and `segmentToggle`; leave interstitial `statsBand` / `reviewStrip` unnumbered. A spine that reads 1 ... (wall of text) ... 2, 3 is the failure mode.
+- **Hero subhead leads with the problem**, not a product summary: the reader's pain or the gap nobody warned them about, then the product, in one to two lines.
+
+**What not to over-correct.** Real PMIDs/DOIs under claims are a genuine trust
+edge over both references, which cite little or nothing. The interactive blocks
+(ADHD symptom explainer, brain-ageing segment toggle) are more engaging than
+either competitor's static page. Keep both; the gap was word count and titling,
+never the presence of evidence or interaction.
+
 ## Gotchas
 
 - **Unknown `faqId` fails the build.** Deliberate: it stops a page shipping with a broken FAQ. Add the id to `faqContent.ts` first if it does not exist.
@@ -167,4 +201,4 @@ The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `rev
 
 - Config types: `app/lib/landings/listicle-types.ts`
 - Quiz sibling system: `docs/features/LANDING_QUIZ_SYSTEM.md`
-- Blueprint (IM8 zone anatomy): `docs/development/featurePlans/landing-conversion/listicle-blueprint.md`
+- Landing conversion programme: `docs/development/featurePlans/landing-conversion/README.md`

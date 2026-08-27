@@ -1,6 +1,6 @@
 # Listicle Format - Reference Evaluation + Requirements
 
-Status: SUPERSEDED as the layout reference — the build now copies the IM8 structure, see [listicle-blueprint.md](./listicle-blueprint.md). The conversion principles below still apply. Part of the [landing conversion programme](./README.md).
+Status: SUPERSEDED as the layout reference — the build now copies the IM8 structure, see [`docs/features/LISTICLE_SYSTEM.md`](../../../features/LISTICLE_SYSTEM.md). The conversion principles below still apply. Part of the [landing conversion programme](../landing-conversion/README.md).
 
 Reference: https://usecloud.co/pages/glp-1-v20#product (Cloud gummies, a successful paid-traffic listicle). Structure extracted from the live page 2026-06-12.
 

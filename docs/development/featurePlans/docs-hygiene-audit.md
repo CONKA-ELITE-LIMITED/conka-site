@@ -1,6 +1,7 @@
 # Docs Hygiene Audit and Cleanup
 
-**Status:** Scoped 2026-08-27. Not started.
+**Status:** Phases 1 to 4 DONE (2026-08-27). Phase 5 (de-duplication) remains future.
+**Execution log:** `docs/development/featurePlans/docs-hygiene-progress.md`
 **Tracking:** [SCRUM-1268](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1268)
 **Type:** Internal tooling / documentation. Not a website feature.
 
@@ -169,11 +170,18 @@ Note: `docs/README.md` has **zero dead links** and CLAUDE.md has **zero dead pat
 
 | Phase | Description | Status |
 |---|---|---|
-| 1 | Correct the canon | Not Started |
-| 2 | Retire the dead plans | Not Started |
-| 3 | Merge-then-delete the 13 | Not Started |
-| 4 | Repair the indexes | Not Started |
+| 1 | Correct the canon | **Done** |
+| 2 | Retire the dead plans | **Done** |
+| 3 | Merge-then-delete the 13 | **Done** |
+| 4 | Repair the indexes | **Done** |
 | 5 | De-duplicate | Future |
+
+> **The tables below are the audit as taken on 2026-08-27, kept as the record of
+> what was found.** They describe the state *before* the fix, so do not read them
+> as current. Where execution diverged from the audit (extra stale docs found,
+> two docs archived that the audit had not flagged, corrections already folded in
+> that the audit thought were outstanding), the divergence is recorded in
+> `docs-hygiene-progress.md`.
 
 ### Phase 1: Correct the canon (ACTIVE)
 

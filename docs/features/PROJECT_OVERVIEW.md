@@ -10,7 +10,7 @@ High-level structure and key systems for the CONKA marketing and e-commerce fron
 
 ## Rough structure
 
-- **Routes:** Home (`/`), product pages (`/conka-flow`, `/conka-clarity`), protocols (`/protocol/[id]`), quiz (`/quiz`, `/quiz/results`), shop (`/shop`), professionals portal, account, static/content pages. Account portal: see [docs/features/CUSTOMER_PORTAL.md](features/CUSTOMER_PORTAL.md).
+- **Routes:** Home (`/`), product pages (`/conka-flow`, `/conka-clarity`, `/conka-both`), `/build-your-order`, `/go/[slug]` ad landings, professionals portal, account, static/content pages. `/protocol/[id]`, `/quiz`, `/shop` and the three `/funnel*` routes are deleted and permanently redirect. Account portal: see [docs/features/CUSTOMER_PORTAL.md](./CUSTOMER_PORTAL.md).
 - **Layout:** Single root layout with global nav, footer, cart drawer, and analytics scripts (GA, Meta Pixel, Triple Pixel, Klaviyo).
 - **State:** Cart and auth are global (CartContext, AuthContext). Cart is persisted by Shopify cart ID in `localStorage`.
 
@@ -22,7 +22,7 @@ High-level structure and key systems for the CONKA marketing and e-commerce fron
 
 ## Analytics (high level)
 
-- **Vercel Analytics:** Funnel and product intent — quiz events (`quiz:started`, `quiz:completed`, `quiz:results_viewed`, etc.) and `purchase:add_to_cart` with product/source/location. Implemented in `app/lib/analytics.ts`; fired from quiz pages and from `CartContext` on add-to-cart.
+- **Vercel Analytics:** Product intent — `purchase:add_to_cart` with product/source/location. Implemented in `app/lib/analytics.ts`; fired from `CartContext` after a successful add. The old `quiz:*` event family went with the `/quiz` route; the `/go/[slug]` landing quizzes have their own events (see `docs/features/LANDING_QUIZ_SYSTEM.md`).
 - **Triple Whale (Triple Pixel):** E-commerce AddToCart only. Script in layout; `app/lib/tripleWhale.ts` fires from `CartContext` after successful add.
 - **Meta Pixel:** Browser-side tracking in `app/layout.tsx`; extended by `app/lib/metaPixel.ts` for PageView (with deduplication), ViewContent, AddToCart, InitiateCheckout. Conversions API (CAPI) via `app/api/meta/events/route.ts` for server-side events and deduplication.
 - **Google Analytics / Klaviyo:** Scripts in layout; GA for page/config, Klaviyo for sign-up/onsite.
@@ -31,4 +31,4 @@ See `docs/analytics/` for implementation and verification guides.
 
 ## Product Data
 
-Product data (types, pricing, content, colors, helpers) is organized into focused modules with clear dependencies. See [`docs/PRODUCT_DATA.md`](./PRODUCT_DATA.md) for module structure, helper usage, and import patterns.
+Product data (types, pricing, content, colors, helpers) is organized into focused modules with clear dependencies. See [`docs/product/PRODUCT_DATA.md`](../product/PRODUCT_DATA.md) for module structure, helper usage, and import patterns.

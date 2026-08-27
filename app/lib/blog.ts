@@ -6,7 +6,7 @@
  * source of truth for the published filter, so the listing, the sitemap, and
  * generateStaticParams cannot disagree.
  *
- * See docs/development/featurePlans/blog-informational-content-surface.md.
+ * See docs/development/featurePlans/archive/blog-informational-content-surface.md.
  */
 import "server-only";
 import { mkdir, writeFile, access } from "node:fs/promises";

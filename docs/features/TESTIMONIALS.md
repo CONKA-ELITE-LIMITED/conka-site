@@ -30,7 +30,7 @@ Optional props: `maxReviews`, `showRating`, `autoScrollOnly` (strip only, no ext
 
 ## Logic
 
-- **Source:** `testimonialsFromLoox.ts` exports `siteTestimonialsFlow`, `siteTestimonialsClarity`, `siteTestimonialsProtocol`. Each is a pre-curated array of Loox reviews. File is **generated** by `scripts/build-loox-testimonials.mjs` from CSV; do not edit by hand (see `docs/REVIEWS_WORKFLOW.md`).
+- **Source:** `testimonialsFromLoox.ts` exports `siteTestimonialsFlow`, `siteTestimonialsClarity`, `siteTestimonialsProtocol`. Each is a pre-curated array of Loox reviews. File is **generated** by `scripts/build-loox-testimonials.mjs` from CSV; do not edit by hand (see `docs/workflows/REVIEWS_WORKFLOW.md`).
 - **Filter layer:** `testimonialsFilter.ts` exposes `getSiteTestimonialsFlow()`, `getSiteTestimonialsClarity()`, `getSiteTestimonialsProtocol()`. Each maps the Loox shape to the component `Testimonial` type (name, rating, date, headline, body, photo, productType, productLabel). No extra filtering is done there—the split is already in the generated file.
 - **Shuffle:** `shuffleTestimonials(array)` is available for client-side variety (e.g. homepage) if needed.
 - **Display:** `Testimonials` slices by `maxReviews` if set, then renders `TestimonialsAutoScrollStrip` (auto-scroll, pause on hover/expand).

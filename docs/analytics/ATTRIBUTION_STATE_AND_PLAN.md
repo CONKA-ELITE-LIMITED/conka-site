@@ -220,6 +220,45 @@ Confirm the rebill source (Manage integrations), then stop rebills reaching Meta
 - **User-confirmed:** ~12 new subscriptions/month (1-4/week).
 - **Prior work:** `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md` (domain fix, server Purchase webhook, rebill exclusion), `docs/development/featurePlans/attribution-robustness.md` (Phase 1 shipped; Phases 2-4).
 
+## 6b. Problem A: what shipped (2026-07-16)
+
+Phases 1 and 2 of the upper-funnel identity work are **built and deployed**
+(commits `a6940725`, `8887ed74`). Phase 3 (email where it already exists) and
+Phase 4 (ViewContent on the `/go` listicle, which is a Problem B coverage issue,
+not a quality one) are future.
+
+**The design: `external_id` is `conka_uid` everywhere.** Before this, the client
+CAPI route set `external_id` to the hashed email while the Purchase webhook set
+it to the Shopify customer id. Those are different values for the same person, so
+they never matched and `external_id` did nothing across the funnel. Meta requires
+`external_id` to be consistent across events for it to work as a match key, so it
+is now `conka_uid` universally, with `em` still sent separately when we have it.
+Email loses nothing, because it already matches on `em`.
+
+**Phase 2 was not optional.** A random UUID minted for an anonymous visitor
+resolves to nobody in Meta's graph. On its own it earns points for parameter
+presence and links a visitor's own events together, but it is close to cosmetic.
+It becomes a real match key only when the same id reaches the Purchase, letting
+Meta connect the anonymous AddToCart to the identified buyer. Phase 1 without
+Phase 2 would have been a scoreboard tweak.
+
+**Honest ceiling.** With the Klaviyo popup off, cold traffic gives no email
+pre-checkout. Expect upper-funnel EMQ to move from roughly 3 to roughly 4-5, not
+6+. The attribution continuity is the real win, not the score.
+
+Notes worth carrying forward:
+
+- **All five checkout paths inherit `conka_uid` for free.** `buildMetaCartAttributes()` is shared by `CartContext`, both lander checkouts and both funnel checkouts, so none needed touching. The cart route's `attributesSchema` is a generic key/value array with no allowlist, so the new key passes through to the order untouched.
+- **`buildMetaCartAttributes()` reads the id, it does not mint it.** Every event mints via `trackWithDedup`, so by the time a cart exists the cookie is there. This keeps the cart path free of side effects.
+- **`metaCapi.ts` `externalId` accepts `string | string[]`.** Purchase sends `[conka_uid, shopifyCustomerId]` and Meta matches on either, so an order with no `conka_uid` (legacy or pre-deploy cart) still sends the customer id rather than an empty `external_id`.
+- **Two real bugs were caught in review, not by eyeball.** The generated `_fbp` random fell below 10 digits ~9.9% of the time (measured over 200k), which Meta silently discards; and `captureFbcFromUrl` fed a URL parameter unencoded into `document.cookie`, so `?fbclid=x; Domain=...` could smuggle cookie attributes. Both fixed, and cookie values are now encoded on write.
+- **Hash agreement was verified empirically**, because it is the thing that fails silently: the client relay (`app/api/meta/events/route.ts`) and the webhook (`app/lib/metaCapi.ts`) must produce identical digests for a given `conka_uid`. If they ever diverge, the funnel join breaks with no error anywhere.
+
+Cookies are scoped to `.conka.io` so the Shopify-hosted checkout on
+`shop.conka.io` reads the same ids. `ensureFbp()` writes an `_fbp` in Meta's
+`fb.1.<timestamp>.<random>` format when absent; Meta's pixel adopts an existing
+`_fbp` rather than replacing it, so there is no split identity.
+
 ## 7. What NOT to do
 - Do not build a custom Shopify checkout pixel that duplicates the Facebook channel (triple-count risk). See attribution-robustness.md Phase 2.
 - Do not prescribe ad-set structure, budgets, or optimisation-event changes — that is marketing's call.

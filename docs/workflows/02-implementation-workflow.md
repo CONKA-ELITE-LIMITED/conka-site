@@ -17,7 +17,7 @@
 Before writing any code:
 
 1. **Read the relevant existing docs:**
-   - Architecture docs: `docs/PROJECT_OVERVIEW.md`
+   - Architecture docs: `docs/features/PROJECT_OVERVIEW.md`
    - Design system: `docs/branding/DESIGN_SYSTEM.md`
    - Quality standards: `docs/branding/QUALITY_STANDARDS.md`
    - Any feature-specific docs referenced in the scope
@@ -219,5 +219,5 @@ This is a key advantage of the Vercel workflow — use it.
 - Shopify/commerce: `./04-shopify-commerce.md`
 - Code review: `./06-code-review.md`
 - Testing: `./07-testing-validation.md`
-- Architecture docs: `docs/PROJECT_OVERVIEW.md`
+- Architecture docs: `docs/features/PROJECT_OVERVIEW.md`
 - Design system: `docs/branding/DESIGN_SYSTEM.md`

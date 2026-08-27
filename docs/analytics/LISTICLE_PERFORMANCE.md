@@ -79,6 +79,36 @@ Latest published: <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5
 
 ---
 
+## Diagnosis: why Productivity retains worst (Jul 2026)
+
+Productivity keeps only **17%** of tracked entries past the first fold, against
+45% (ADHD) and 35% (brain-ageing). It still pulls the most raw purchases of the
+three (6 in the 24-27 Jul window) but on middling CVR (1.0%): **the volume is
+doing the work, not the page.**
+
+**The cause is a message-match break, not weak proof.** Paid traffic arrives from
+founder-driven Meta creative (two founders, Humphrey talking-head,
+Olympic-training origin) selling an emotive personal story, then lands on a
+clinical mechanism hook ("the 11am fog... it's a fuel problem"). That break
+bounces people before any proof loads.
+
+**Why the first fold is the lever.** On-page CTA clicks concentrate in the hero
+and the persistent sticky bar, so the body reasons' real job is *retention*:
+keeping people scrolling far enough for the sticky bar to catch them. Fixing the
+first fold lifts the retention that feeds the sticky bar, so the same ad spend
+converts harder. The clean first-party signal to watch is first-fold retention
+(17% baseline); Meta-attributed purchases are directional only at this n.
+
+**Constraints on any fix** (established by research, still true):
+
+- **No founder-story block exists** and `quoteBand` was removed. A founder narrative has to be composed from existing pieces: `reason` blocks carrying a founder `image` asset, the `athleteQuote` asset repurposed for a founder quote, and the proof-tier `feature`. A bespoke founder block is net-new component work.
+- **The hero renderer is image-only** (`ListicleRenderer.tsx` branches on `kind === "image"`). A founder *photo* hero is zero-code; a talking-head *video* hero needs a renderer change and a sourced clip that does not exist.
+- **Assets on disk:** `/TwoFounders.jpg`, `/lifestyle/CreationOfConka.jpg`, `/lifestyle/GirlsLaughing.jpg`, `/lifestyle/ConkaAtWorkDesk.jpg`. No Humphrey/Harry talking-head still or solo founder video.
+- **Story material is canonical** in `app/lib/storyData.ts` and should be drawn from there, not rewritten.
+
+The reposition (founder-photo hero plus a founder-origin Reason 1) shipped
+2026-07-27. Read the snapshots below against that date.
+
 ## Snapshot — 2026-07-24 → 2026-07-27 (baseline, ~3.5 days)
 
 First data of the £300/day trial. Section tracking went live 24 Jul, so this is the first window with funnel data. `listicle:interaction` not yet deployed (added end of this window). Absolute counts are small — directional, not conclusive.

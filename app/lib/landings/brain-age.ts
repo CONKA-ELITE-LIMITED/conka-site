@@ -7,7 +7,7 @@ const clearTagline = formulaContent["02"].tagline;
 
 /**
  * Brain-age quiz for the ageing-brain persona (copy: Luke, June 2026).
- * Plan + decisions: docs/development/featurePlans/landing-conversion/brain-age-quiz.md
+ * Plan + decisions: docs/features/LANDING_QUIZ_SYSTEM.md
  *
  * Scoring: Q1 sets the real-age baseline; Q2-Q9 answers add or
  * subtract years (Q6, sharp-vs-past, is weighted heaviest). The gap is

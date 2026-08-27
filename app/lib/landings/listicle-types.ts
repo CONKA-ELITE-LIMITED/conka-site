@@ -15,7 +15,7 @@
  * Shared fields (title, proof tier, FAQ, sticky bar) live in ListicleBase.
  * The route narrows on `template` and hands each renderer its exact type.
  *
- * Blueprint: docs/development/featurePlans/landing-conversion/listicle-blueprint.md
+ * Blueprint: docs/features/LISTICLE_SYSTEM.md
  */
 
 import type { ProductHeroId } from "../productTypes";

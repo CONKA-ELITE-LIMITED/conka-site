@@ -15,8 +15,8 @@ import type { ListicleConfig } from "./listicle-types";
  * first fold. Hero carries the founder proof (TwoFounders photo + Harry/Humphrey
  * juggler origin); reasons re-themed off generic caffeine fights to: 1 performance-
  * without-burnout, 2 socialise-keep-tomorrow, 3 founder cheat-code, 4 have-it-all,
- * 5 sharp-all-day, 6 app-proof, 7 guarantee. Plan: docs/development/featurePlans/
- * productivity-listicle-founder-reposition.md. Shane's exec quote sits on
+ * 5 sharp-all-day, 6 app-proof, 7 guarantee. Diagnosis + rationale:
+ * docs/analytics/LISTICLE_PERFORMANCE.md. Shane's exec quote sits on
  * reason 1 as a quote tile; Nimisha's quote is still deferred.
  */
 export const productivityListicle: ListicleConfig = {

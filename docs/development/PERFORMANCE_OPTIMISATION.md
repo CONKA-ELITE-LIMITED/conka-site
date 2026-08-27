@@ -45,9 +45,9 @@ Lighthouse learnings were previously recorded only in CHANGELOG entries (retrosp
 **JS-driven animation timers.** `setInterval`/`setTimeout` that update React state (e.g. autoplay carousels) trigger re-renders during the entire mobile Lighthouse window (~10s). Each tick is a render + reconcile + paint that blocks main thread, contributing to TBT and indirectly inflating LCP element render delay. Two acceptable patterns:
 
 1. Remove the autoplay entirely (manual nav only) — preferred for performance-critical pages.
-2. If autoplay is essential for engagement, defer the component mount via `<VisibilityGate>` (see Rule 4) so the interval doesn't start until the user scrolls to it.
+2. If autoplay is essential for engagement, `dynamic()`-import the component (see Rule 4) so its chunk and mount cost land after the critical path.
 
-May 2026: stripping the 3.5s autoplay from `CROTestimonials` plus viewport-gating its mount eliminated continuous re-renders during the audit window.
+May 2026: stripping the 3.5s autoplay from `CROTestimonials` eliminated continuous re-renders during the audit window. A viewport gate was also tried here and later removed; see Rule 4 for why gating did not work.
 
 ---
 
@@ -111,21 +111,20 @@ The skeleton `h-[Xpx]` value should approximate the section height to prevent CL
 
 **App Router gotcha — `dynamic()` SSRs by default.** In Next.js App Router, `dynamic()` only defers the *client bundle download*. The component is still server-rendered into the initial HTML. This means hydration still walks the full tree, which dominates LCP on heavy pages. May 2026: /start was shipping 1,217 SSR'd DOM elements with all 7 sections "dynamic-imported" — the dynamic config was only saving on JS download, not on hydration cost.
 
-**For `noindex` paid traffic pages, pass `ssr: false`.** Pages with `robots: { index: false }` (ad landing pages, funnel pages) gain nothing from SSR'd content — Google won't index it. Adding `{ ssr: false, loading: ... }` drops the component from the initial HTML entirely; only the skeleton ships. After this change /start's pre-hydration DOM dropped from 1,217 to ~50 elements.
+**`ssr: false` on `noindex` pages — tried, then reversed.** The original rule here was: pages with `robots: { index: false }` gain nothing from SSR'd content, so pass `{ ssr: false, loading: ... }` to drop them from the initial HTML. That did cut /start's pre-hydration DOM from 1,217 to ~50 elements, but the May 2026 rebuild (SCRUM-1038 to 1041) reversed it. A Phase 0 trace showed hydration was never the bottleneck on /start; **bandwidth starvation was**, and `ssr: false` makes that worse by requiring a chunk to download before anything paints. The current /start uses plain `dynamic()` **without** `ssr: false` for its client islands, accepting more SSR'd HTML in exchange for fewer chunks needed to paint the first frame.
 
-**Important constraint (Next.js 16+):** `dynamic({ ssr: false })` cannot be called from a Server Component — Next.js throws a build error. The page itself must remain a Server Component (it owns the `metadata` export, which client components cannot have). Solution: put the `dynamic({ ssr: false })` calls in a thin `"use client"` wrapper component, then render that wrapper from the page. /start uses `app/start/CROBelowFold.tsx` for this. The wrapper imports each below-fold section dynamically and renders the section markup; the page imports the wrapper as a normal child component.
+Reach for `ssr: false` only when you have a trace showing hydration cost, not DOM count, is what is hurting you.
+
+**Constraint if you do use it (Next.js 16+):** `dynamic({ ssr: false })` cannot be called from a Server Component — Next.js throws a build error. Since the page must stay a Server Component (it owns the `metadata` export), the `ssr: false` calls have to sit in a thin `"use client"` wrapper. /start used `app/start/CROBelowFold.tsx` for exactly this and **deleted it** in the rebuild; its 11-section list is now inlined directly into `app/start/page.tsx`. Do not recreate that wrapper without a trace justifying it.
 
 **For SEO-indexed pages**, `ssr: false` removes content from the initial HTML and harms ranking. Keep SSR enabled and reduce hydration cost a different way: extract heavy interactivity into smaller leaf client components, keep most of the section as server components.
 
-**Viewport-gated mount for the heaviest below-fold components.** Even with `ssr: false`, the dynamic chunk still downloads and the component still mounts on initial client render. For sections with their own continuous effects (autoplay carousels rendering 20+ cards, `IntersectionObserver`-driven animations, large card grids), wrap the dynamic component in `<VisibilityGate minHeight="...">` (`app/components/VisibilityGate.tsx`). The chunk doesn't download or execute until the user scrolls within ~200px of the section. May 2026: applied to `CROTestimonials` on /start.
+**Viewport-gated mount — tried, and it does not work. Do not rebuild it.** A `<VisibilityGate>` component wrapped heavy below-fold sections and deferred their mount until the user scrolled within ~200px. It was removed in May 2026 and `app/components/VisibilityGate.tsx` deleted, for two reasons found in the Phase 0 trace:
 
-```tsx
-import VisibilityGate from "@/app/components/VisibilityGate";
+1. **It does not suppress the chunk.** Next.js 16 lists a dynamic import's chunk in the initial HTML regardless of whether the component has mounted, so the gate never bought back the bandwidth it was supposed to.
+2. **It actively breaks Server Components.** A client gate that returns `null` on first render prevents anything inside it from being server-rendered at all, which negates the point of promoting a section to a Server Component in the first place.
 
-<VisibilityGate minHeight="500px">
-  <CROTestimonials />
-</VisibilityGate>
-```
+If a below-fold section is genuinely expensive, the lever is to make it cheaper (strip autoplay, promote it to a Server Component, cut its DOM), not to hide its mount behind a gate.
 
 **`"use client"` minimisation:** Keep page-level components as server components. Only add `"use client"` at the leaf component that actually needs interactivity (carousel state, accordion state, etc.). A `"use client"` at a page level pulls the entire component tree into the client bundle.
 
@@ -197,12 +196,11 @@ Before committing new components to `/start` or any paid traffic page:
 
 - [ ] No `transition-all` — replaced with specific property (`transition-colors`, `transition-transform`, `transition-opacity`)
 - [ ] No `width` / `height` / `max-height` in transitions
-- [ ] No `setInterval`/`setTimeout` autoplay on below-fold components without a `<VisibilityGate>` wrapper
+- [ ] No `setInterval`/`setTimeout` autoplay on below-fold components (strip it, or `dynamic()`-import the component)
 - [ ] Hero image has `priority` + `fetchPriority="high"` + accurate `sizes`
 - [ ] All below-fold images have `loading="lazy"` + accurate `sizes`
 - [ ] New below-fold sections are `dynamic()`-imported with skeleton fallback
-- [ ] For pages with `robots: { index: false }`: dynamic imports also pass `ssr: false`
-- [ ] Heaviest below-fold section (carousels, animation-heavy components) wrapped in `<VisibilityGate>`
+- [ ] Heaviest below-fold sections (carousels, animation-heavy components) are `dynamic()`-imported — plain, no `ssr: false`, no viewport gate (both were tried and reversed; see Rule 4)
 - [ ] Initial SSR DOM element count under 500 (use DevTools → Elements, count root descendants)
 - [ ] Page-level component is a server component (no `"use client"` at page root)
 - [ ] No new third-party scripts added without a Lighthouse before/after test

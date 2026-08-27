@@ -25,15 +25,20 @@ CONKA is a UK-based D2C brand selling liquid nootropic brain shots (30ml daily d
 - **Landing page copy** -- final headline/offer direction from January Brands.
 - **Skio vs Loop** -- subscription management migration decision pending.
 
-### What's being removed
-- `/protocol/[id]` -- redirected to homepage
-- `/quiz` -- redirected, code kept for potential repurposing
-- `/shop` -- redirected
+### What was removed
+All three routes are gone from `app/` and are now permanent redirects in `next.config.ts`:
+- `/protocol/:path*` -- 308 to `/conka-both`
+- `/quiz/:path*` -- 308 to `/build-your-order`
+- `/shop`, `/shop/:path*` -- 308 to `/conka-both`
+
+The protocol **commerce** layer survives as live legacy support for existing
+subscribers (`ProtocolId`, `PROTOCOL_VARIANTS`, `app/lib/legacy/protocolSubscriptions.ts`).
+Only the presentation layer was deleted.
 
 ### What's next (Phase 5, lower priority)
 Homepage alignment, formula page updates, B2B portal simplification, protocol code cleanup. All wait until the funnel is live and producing data.
 
-**Source:** `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md`
+**Source:** the simplification plan doc has been deleted. Current state lives in `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md`.
 
 ---
 
@@ -70,7 +75,7 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Vercel hosting. Shopify Sto
 Pass `metadata` (location, source, sessionId) to `addToCart` for funnel tagging. Funnel page fires its own events independently.
 
 ### Gotchas
-- `.premium-pdp` has `overflow-x: hidden` which breaks `position: sticky`. Place sticky sections outside it.
+- No full-bleed `100vw` wrappers on the home page or PDPs. They force `overflow-x: hidden` on an ancestor, which silently breaks `position: sticky` inside it.
 - Product data modules have strict dependency order (no circular deps). Import from barrel only.
 - Offer terms (guarantee period, discounts) live in `app/lib/offerConstants.ts` -- never hardcode.
 
@@ -191,5 +196,5 @@ If work serves neither, it needs a strong justification. "Nice to have" is not o
 | Cart / checkout | `docs/features/CART_LOGIC.md` |
 | Analytics | `docs/analytics/` |
 | Shopify / commerce | `docs/workflows/04-shopify-commerce.md` |
-| Landing or funnel page | `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` (full phase detail) |
-| Product data modules | `docs/PRODUCT_DATA.md` |
+| Landing or funnel page | `docs/features/LISTICLE_SYSTEM.md`, `docs/features/LANDING_QUIZ_SYSTEM.md`, `docs/development/featurePlans/build-your-order-consolidation.md` |
+| Product data modules | `docs/product/PRODUCT_DATA.md` |

@@ -1,7 +1,7 @@
 # Blog / Informational Content Surface (SEO Phase 6)
 
 > **This is the original plan, not a description of current behaviour.**
-> For how the blog works today, read [`docs/features/BLOG_SYSTEM.md`](../../features/BLOG_SYSTEM.md), which is canonical and wins any disagreement.
+> For how the blog works today, read [`docs/features/BLOG_SYSTEM.md`](../../../features/BLOG_SYSTEM.md), which is canonical and wins any disagreement.
 > Known drift in this doc (found 2026-07-17): the status line below and the phase table are stale (Phase 3 is substantially built: JSON-LD, sitemap entries, nav and footer links all exist); the hero-image "falls back to the brand OG image" claim is wrong (a post with no hero renders no hero, and the card shows a mono-wordmark tile, as this doc's own later section says); the schema table omits the `Source` column; and the references still call the old blog redirect "leave untouched" despite SCRUM-1157 adding it.
 
 **Status:** Scoped and finalised. Phase 1 built (SCRUM-1151); Phase 2 built (SCRUM-1152); Phase 3 ready to ticket.
@@ -236,9 +236,9 @@ Phase 1 ships on the SEO integration branch pattern (sub-branch, PR back into th
 
 ## References
 
-- Engine-facing spec: `docs/development/featurePlans/blog-notion-engine-brief.md`
+- Engine-facing spec: `docs/features/blog-notion-engine-brief.md`
 - SEO programme master plan: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`
-- Keyword research: `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
+- Keyword research: `docs/seo-aeo/CONKA_SEO_Keyword_Map_v4.md`
 - Search Console baseline: `docs/seo-aeo/seo-search-console-baseline.md`
 - Reused helpers: `app/lib/jsonLd.tsx`, `app/components/ReviewedDate.tsx`
 - Sitemap (needs dynamic blog entries): `app/sitemap.ts`

@@ -50,7 +50,7 @@ function attribution() {
  * Durable Convex capture for the /go quiz engine, mirroring the
  * `trackLanding*` Vercel events. Every write is fire-and-forget with a
  * silent catch: persistence must never block or break the quiz UX (same
- * contract as analytics.ts safeTrack). See featurePlans/quiz-insights.md.
+ * contract as analytics.ts safeTrack). See docs/features/LANDING_QUIZ_SYSTEM.md.
  */
 export function useQuizEvents(base: QuizEventBase) {
   const recordEvent = useMutation(api.quizEvents.record);

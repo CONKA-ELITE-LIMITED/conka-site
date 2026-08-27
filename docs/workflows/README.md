@@ -101,7 +101,7 @@ These docs contain placeholder paths marked as `[PATH_TO_...]` or `[YOUR_...]`.
    ```
 
 2. **Replace with your actual paths and conventions.** Key ones:
-   - `docs/PROJECT_OVERVIEW.md` — existing architecture docs
+   - `docs/features/PROJECT_OVERVIEW.md` — existing architecture docs
    - `docs/branding/DESIGN_SYSTEM.md` — design system
    - `app/lib/shopify.ts` — Shopify client and helpers
    - `app/lib/shopifyQueries.ts` — GraphQL query files

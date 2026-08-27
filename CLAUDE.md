@@ -13,16 +13,16 @@ Speed and token cost matter. On any task that is not large:
 - **Delegate big reads** (multi-file searches, large docs) to a subagent so the main context stays lean.
 - **`/clear` between unrelated tasks** so each reply isn't reprocessing a long history.
 
-## Current strategic direction (March 2026)
+## Current strategic direction (updated Aug 2026)
 
-**Read `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` (current state + prioritised roadmap) and `docs/TODO.md` (deferred work and tech debt tracker) before starting any feature work.** The site is undergoing a major simplification:
+**Read `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` (current state + prioritised roadmap) and `docs/TODO.md` (deferred work and tech debt tracker) before starting any feature work.** The simplification started in March 2026 has now largely landed:
 
-- **Protocols are being removed, but only the presentation layer.** The 4-protocol system is replaced by a simple Flow / Clear / Both offering. The `/protocol/[id]` route and its components are being deleted, but `ProtocolId`, `PROTOCOL_VARIANTS` and the subscriptions UI are **live legacy support for existing subscribers** — do not delete them. See `docs/development/featurePlans/asset-and-protocol-cleanup.md`.
-- **New ad landing page** — standalone page for paid Meta traffic (not linked from main nav).
-- **New funnel page** — minimal friction product selector: 3 cadences × 3 products, straight to Shopify checkout (no cart drawer).
-- **Quiz is hidden** — removed from nav, redirected. May be repurposed later.
-- **Shop page deleted** — redirected.
-- Subscription management may migrate from Loop to Skio (decision pending).
+- **Protocols: presentation layer is deleted, commerce layer is live.** The 4-protocol system was replaced by a simple Flow / Clear / Both offering. `app/protocol/`, `app/components/protocol/` and the `app/lib/protocol*.ts` modules are **gone**. `ProtocolId`, `PROTOCOL_VARIANTS` and `app/lib/legacy/protocolSubscriptions.ts` remain as **live legacy support for existing subscribers** — do not delete them. See `docs/development/featurePlans/asset-and-protocol-cleanup.md`.
+- **Ad landing pages — shipped.** `/go/[slug]` serves paid Meta traffic as listicles and landing quizzes (noindex, not in main nav). See `docs/features/LISTICLE_SYSTEM.md` and `docs/features/LANDING_QUIZ_SYSTEM.md`.
+- **Funnel — shipped and consolidated.** The three funnel variants collapsed into `/build-your-order` (SCRUM-1247): 3 cadences × 3 products, straight to Shopify checkout, no cart drawer. `/funnel`, `/funnel-b` and `/funnel-c` are deleted and redirect there.
+- **Quiz — deleted**, not hidden. `/quiz/:path*` permanently redirects to `/build-your-order`. The `/go/[slug]` landing quizzes are a separate, unrelated system.
+- **Shop page — deleted.** `/shop` and `/shop/:path*` permanently redirect to `/conka-both`.
+- **Subscriptions are migrating from Loop to Skio** — decided Aug 2026, plan in `docs/development/featurePlans/skio-subscription-migration.md`.
 
 ## Git workflow
 
@@ -131,6 +131,10 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | Doc | Topic |
 |-----|-------|
 | `docs/README.md` | **Docs index** — the full, grouped map of the `docs/` tree. Start here to find the canonical doc for a topic |
+| `docs/product/PRODUCT_DATA.md` | **Product-data code map** — the two systems (main-site barrel vs BYO), module dependency graph, where Shopify GIDs live |
+| `docs/product/FORMULATION_SPEC.md` | **Physical formulation** — per-shot doses, ingredients, %NRV, nutrition-label data. The source of truth for any mg figure |
+| `docs/PRICING_HISTORY.md` | Dated audit log of price changes. Append a block on every price change |
+| `docs/development/CART_PRICING_SOURCE_OF_TRUTH.md` | The rule: pre-add UI prices from `productPricing.ts`; cart/checkout prices from Shopify only |
 | `docs/product/SKU_AND_SHOT_REFERENCE.md` | **Canonical SKU + shot-count map** — funnel / main-site / legacy protocol variant GIDs, selling plans, shot counts, prices, and the account shot/per-shot display history (why the tiles were removed) |
 | `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | **Current state + roadmap** — performance, code quality, architecture assessment and prioritised improvements |
 | `docs/TODO.md` | **Deferred work tracker** — tech debt and cleanup tasks, with what unblocks each |
@@ -156,7 +160,17 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/development/MOTION_GUIDE.md` | **GSAP motion system** — shared helpers (`app/lib/motion.ts`), patterns, reduced-motion rules; `/app` is the reference |
 | `docs/seo-aeo/README.md` | **SEO / AEO foundation** — canonical reference for what is live (canonical, metadata, JSON-LD, sitemap, robots, keyword H1s) and why |
 | `docs/analytics/README.md` | **Analytics & attribution index** — current-state fact-box, ad-click-to-Purchase data-flow diagram, and routing to the Meta CAPI / funnel / verification docs |
+| `docs/features/KLAVIYO_FLOWS_AND_INTEGRATION.md` | **Klaviyo** — what this app triggers, what Shopify sends, the Alia popup integration, flow definitions |
+| `docs/development/CART_ATTRIBUTES.md` | Cart line attributes sent at add-to-cart (`source`, `plan_frequency`) and how `source` is decided |
+| `docs/branding/CLAIMS_COMPLIANCE.md` | EFSA claims rules, prohibited claims, mandatory statements |
+| `docs/shipping/SHIPPING_AND_COURIERS.md` | Shipping rates, courier economics, Synergy 3PL rate mapping |
+| `docs/ops/README.md` | **Commercial / money layer** — COGS, fees, margin, vendors. Route any cost or margin question here |
+| `docs/seo-aeo/AEO_PLAYBOOK.md` | Answer-engine optimisation playbook |
+| `docs/workflows/REVIEWS_WORKFLOW.md` | Reviews workflow (Loox → site testimonials) |
+| `docs/CHANGELOG.md` | Human-readable change log. Add an entry per shipped change |
 | `docs/deployment/CONVEX_DEPLOYMENT.md` | Convex setup |
+| `docs/deployment/VERCEL_GIT_CONNECTION.md` | Vercel ↔ git connection and its failure modes |
+| `docs/development/featurePlans/archive/` | Retired plans and docs, kept only for the rationale they hold. Never current behaviour |
 
 ## Workflows
 

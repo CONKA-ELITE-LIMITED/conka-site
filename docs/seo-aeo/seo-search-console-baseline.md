@@ -7,7 +7,7 @@
 **Exported:** 2026-07-13.
 **State of the work at snapshot:** Phase 1 (canonical fix) and Phase 2 (per-page metadata) merged to main; Phase 3 (Product + FAQPage JSON-LD) built but not yet deployed. So this baseline mostly reflects the pre-fix site, since Google recrawls and re-ranks over weeks, not days.
 
-Related: [seo-aeo-metadata-foundation.md](../development/featurePlans/seo-aeo-metadata-foundation.md), [CONKA_SEO_Keyword_Map_v4.md](../development/featurePlans/CONKA_SEO_Keyword_Map_v4.md).
+Related: [seo-aeo-metadata-foundation.md](../development/featurePlans/archive/seo-aeo-metadata-foundation.md), [CONKA_SEO_Keyword_Map_v4.md](CONKA_SEO_Keyword_Map_v4.md).
 
 ---
 

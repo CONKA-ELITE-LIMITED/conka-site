@@ -529,10 +529,10 @@ the route existing.
 ## References
 
 - Triage source data: Storefront API, `contentHtml` (not `content`).
-- Blog surface and pipeline: `docs/development/featurePlans/blog-informational-content-surface.md`
-- Engine contract: `docs/development/featurePlans/blog-notion-engine-brief.md`
+- Blog surface and pipeline: `docs/development/featurePlans/archive/blog-informational-content-surface.md`
+- Engine contract: `docs/features/blog-notion-engine-brief.md`
 - Demand research this reframes: `docs/development/featurePlans/aeo-demographic-query-research.md`
-- Where the 404 was found: `docs/development/featurePlans/aeo-free-tool-runbook.md`
+- Where the 404 was found: `docs/seo-aeo/aeo-free-tool-runbook.md`
 - Code: `app/lib/blog.ts`, `app/lib/notion.ts`, `app/blog/[slug]/page.tsx`, `app/sitemap.ts`, `next.config.ts`
 
 ## Jira

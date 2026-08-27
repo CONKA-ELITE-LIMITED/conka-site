@@ -6,7 +6,7 @@
  * rendering, not just publishing. The importer refuses to write a row whose
  * handle is missing here rather than creating an invisible post.
  *
- * Rules (docs/development/featurePlans/blog-notion-engine-brief.md):
+ * Rules (docs/features/blog-notion-engine-brief.md):
  * 150 to 160 characters, no em dashes, answers the query the post targets.
  * Each is drafted from that post's own body, then reviewed by the owner at the
  * `Status` gate before anything goes live.

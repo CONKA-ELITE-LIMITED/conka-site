@@ -17,8 +17,8 @@ Two axes, every page is one cell:
 
 | Format | Status | Doc |
 |--------|--------|-----|
-| Quiz | LIVE - engine + template shipped, awaiting persona content | [quiz-format.md](./quiz-format.md) |
-| Listicle | BLUEPRINT AGREED - IM8 layout digested, framework build next | [listicle-blueprint.md](./listicle-blueprint.md) |
+| Quiz | LIVE - engine + template shipped, awaiting persona content | [`docs/features/LANDING_QUIZ_SYSTEM.md`](../../../features/LANDING_QUIZ_SYSTEM.md) |
+| Listicle | LIVE - IM8 + MM templates shipped, three personas live | [`docs/features/LISTICLE_SYSTEM.md`](../../../features/LISTICLE_SYSTEM.md) |
 | Third format | UNDECIDED - to pick with the team | - |
 
 All formats live on one route system: `/go/[slug]`, one config file per page, registered in `app/lib/landings/index.ts`. Pages are ad destinations only: noindex, no nav, never linked from the site. An iteration or A/B test = a new slug. No CMS, no A/B infra.
@@ -59,10 +59,10 @@ Three layers, all keyed so pages and ads can be compared:
 
 ## Doc map
 
-- [quiz-format.md](./quiz-format.md) - quiz format plan, phases, what shipped
-- [brain-age-quiz.md](./brain-age-quiz.md) - first persona quiz (ageing-brain, /go/brain-age), scoped 2026-06-12, SCRUM-1084
-- [listicle-blueprint.md](./listicle-blueprint.md) - **the listicle build plan** - IM8 section-by-section layout, config schema, build phases
-- [listicle-format.md](./listicle-format.md) - earlier listicle reference evaluation (usecloud.co); principles still apply, layout superseded by the blueprint
+- [`docs/features/LANDING_QUIZ_SYSTEM.md`](../../../features/LANDING_QUIZ_SYSTEM.md) - the canonical landing-quiz reference (the old `quiz-format.md` build record was retired once the engine shipped)
+- [`docs/features/LANDING_QUIZ_SYSTEM.md`](../../../features/LANDING_QUIZ_SYSTEM.md) - the canonical quiz reference, including the brain-age persona quiz (ageing-brain, /go/brain-age) and its decisions
+- [`docs/features/LISTICLE_SYSTEM.md`](../../../features/LISTICLE_SYSTEM.md) - **the canonical listicle reference** - IM8 zone anatomy, the reason copy standard, config schema and analytics (absorbed the old `listicle-blueprint.md`, `listicle-cta-attribution.md` and `listicle-copy-framing-review.md`)
+- [listicle-format.md](../archive/listicle-format.md) (archived) - earlier listicle reference evaluation (usecloud.co); principles still apply, layout superseded by the blueprint
 - `docs/features/LANDING_QUIZ_SYSTEM.md` - how the shipped system works (schema, recipes, gotchas)
 - `docs/analytics/HEADLESS_ATTRIBUTION_FIX.md` - attribution stack the tracking relies on
-- `docs/development/WEBSITE_SIMPLIFICATION_PLAN.md` - the wider strategy this programme sits inside
+- `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` - current state and the wider roadmap this programme sits inside

@@ -91,4 +91,4 @@ curl -s -D - -o /dev/null https://www.conka.io/professionals | grep -i "^age"
 ## Related
 
 - Convex deployment: `docs/deployment/CONVEX_DEPLOYMENT.md`
-- The B2B fix that was blocked by this: `docs/development/featurePlans/b2b-enquiry-honeypot-silent-drop.md`
+- The B2B fix that was blocked by this: `docs/features/b2b/B2B_PORTAL.md`

@@ -1,6 +1,6 @@
 # SEO / AEO Foundation
 
-Canonical reference for the site's organic-search and AI-answer-engine (AEO) foundation: what is live and why. This is the enduring summary. The full build history, keyword-map corrections, and task breakdowns live in the planning archive: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`.
+Canonical reference for the site's organic-search and AI-answer-engine (AEO) foundation: what is live and why. This is the enduring summary. The full build history, keyword-map corrections, and task breakdowns live in the planning archive: `docs/development/featurePlans/archive/seo-aeo-metadata-foundation.md`.
 
 ## Overview
 
@@ -98,17 +98,32 @@ The only on-site phase still open is the blog, and it is gated on a content engi
 
 | Phase | What | State |
 |-------|------|-------|
-| 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness. | Gated on the content engine |
+| 6 | **Blog.** Informational content surface for research-intent, non-brand keywords. Scoped in `docs/development/featurePlans/archive/blog-informational-content-surface.md` (content model: Notion as a headless CMS). Its content contract already bakes in BLUF, atomic passages and freshness. | Gated on the content engine |
+
+### Phase 9 instrument-validation stats (shipped)
+
+The cognitive-test validation figures were added where they strengthen an
+existing section rather than as a standalone evidence block. Use these exact
+numbers and citations, do not paraphrase them:
+
+- FDA-cleared
+- **93% sensitivity**, **87.5% test-retest reliability**
+- Validated across **14 NHS Trusts**
+- ADePT Study, **PMC10533908**; HRA **ISRCTN95636074**
+
+**Deferred, still open:** a full evidence-report presentation on `/app-insights`
+(the five patterns, figures, a first-class downloadable white-paper flow) was
+deliberately held back from Phase 9 into its own follow-up ticket, to sit closer
+to Phase 6. It has not been picked up.
 
 **Not a site problem, but recorded:** the strongest AEO lever is off-site brand mentions (PR, citations, Reddit and Quora discussion). No code change can deliver it, and no workstream currently owns it. With the on-site foundation now complete, this is the highest-value thing the business could start.
 
 ## References
 
-- Build archive and full history: `docs/development/featurePlans/seo-aeo-metadata-foundation.md`
-- Keyword research (source input): `docs/development/featurePlans/CONKA_SEO_Keyword_Map_v4.md`
+- Build archive and full history: `docs/development/featurePlans/archive/seo-aeo-metadata-foundation.md`
+- Keyword research (source input): `docs/seo-aeo/CONKA_SEO_Keyword_Map_v4.md`
 - Search Console baseline: `docs/seo-aeo/seo-search-console-baseline.md`
 - Pricing audit log: `docs/PRICING_HISTORY.md`
-- Phase 6 plan: `docs/development/featurePlans/blog-informational-content-surface.md`
+- Phase 6 plan: `docs/development/featurePlans/archive/blog-informational-content-surface.md`
 - Phase 10 (FAQ answer surface), shipped: `docs/features/FAQ_SYSTEM.md`
-- Phase 9 (AEO content shape), shipped: `docs/development/featurePlans/aeo-content-shape-phase-9.md`
 - Page rules (mandatory SEO and JSON-LD): `.claude/rules/pages.md`

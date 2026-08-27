@@ -376,6 +376,16 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 **Drops:**
 - **Zero radius.** Simple DTC is rounded on one tight scale — `rounded-full` for pills/buttons/nav/radios, `rounded-md` for cards/containers/controls, `rounded-lg` for standalone small tiles (e.g. the hero SpecBadge). Nothing sharp; zero radius stays clinical-only.
+
+  **Why this scale and not a softer one.** The radius language is borrowed from
+  the PDP purchase panel, deliberately. An earlier draft took the Magic Mind
+  soft-card recipe (`rounded-2xl`) as the model; looking at the reference again
+  showed MM's corners are tighter than that. So the soft cards were pulled
+  **down** to the commerce-control radius rather than the controls being pushed
+  **up**. The purchase panel was already at `rounded-md` and became the anchor,
+  which is why home `rounded-2xl` cards and cart `rounded-xl` tiles came down
+  rather than everything else going up. Nested elements stay equal-or-tighter
+  than their parent, so nothing inner ever looks rounder than its container.
 - **Navy as interactive-only.** Filled navy `#1B2757` is now allowed as a **primary and decorative** fill (badges, gradient cards, icon/star fills), not just on interactive elements.
 - **The no-shadow / no-gradient rule.** Soft shadows and `ring-1` are permitted on lifted cards; soft navy-terminating gradients are permitted on decorative surfaces.
 - **The faded mono eyebrow.** Drop the `font-mono … uppercase tracking-[0.18em+]` low-opacity eyebrow / sub-line. Lead with a plain `brand-h1` + `brand-body` in solid black. Mono is **not** banned outright: it survives on compact micro-labels (time-of-day badges, "verified buyer" tags) as **solid black/near-solid**, small (`text-[9px]`), at `tracking-[0.12em]` — a scalpel, not a blanket.
@@ -392,6 +402,8 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 | Decorative navy | `#1B2757` fill / icon fill / gradient | `CartAppGift` "Free!" chip, hero rating stars, testimonial product-name badge, mobile social-proof gradient card |
 | Savings / positive | green `#1a7f4f` (`--brand-positive`) at `/10` tint bg + solid text | savings %, "+N free" badge, cart Savings row, guarantee tick, PDP free-shots pill |
 | Plan Save% accent (exception) | per-plan gold `#C9A24A` (monthly) / coral `#E07A5F` (quarterly) | PDP `FlatPlanCard` "Save X%" badge ONLY — a deliberate per-cadence accent, NOT the savings green |
+
+> **The gold was an open call, and it was resolved as keep-gold.** When the savings green `#1a7f4f` was unified across every surface, the PDP plan-tile gold was explicitly held back from the sweep rather than blanket-greened, on the judgement that it reads as a deliberate premium per-cadence accent rather than a savings signal. Do not "fix" it to green.
 | Offer gradient (PDP, exception) | `linear-gradient(90deg,#cdeecf,#e9f5c9)` fill + `#14532d` text | Soft green-to-lime offer accent on `ProductHeroV3` (`/conka-flow`): MOST POPULAR badge, selected plan-card border ring, and free-shots footer bar. Distinct from the savings green; also used as the offer-header eyebrow on `ProductGridHeader` |
 | Light-navy tint strip | `#eef0f5` (also `#eef1f8`, `#dbe0f0`→`#eef1f8` gradient) | free-shipping banner, app-gift container, hero SpecBadge, testimonial product badge |
 | Shadows / rings | soft `shadow-[0_2px_12px_rgba(0,0,0,0.08)]`, `ring-1 ring-black/5` | lifted product cards |
@@ -452,7 +464,7 @@ Both `/go` listicle renderers are now Simple DTC: `SimpleListicleRenderer` (`mm`
 
 ### Programme + learnings
 
-Simple DTC is being rolled out iteratively (define → seed tokens → sweep components). The rules above are the definition; the running **learnings log** (soft-card recipe, shared `DotIndicator` / `SegmentedToggle` primitives, the `mix-blend-multiply` cutout trick, native `<details>` accordions, etc.) and the phase plan live in `docs/development/featurePlans/simple-dtc-design-language.md`. Read it before a component conversion.
+Simple DTC is being rolled out iteratively (define → seed tokens → sweep components). The rules above are the definition; the running **learnings log** (soft-card recipe, shared `DotIndicator` / `SegmentedToggle` primitives, the `mix-blend-multiply` cutout trick, native `<details>` accordions, etc.) and the phase plan live in `docs/branding/DESIGN_SYSTEM.md`. Read it before a component conversion.
 
 ---
 
@@ -660,5 +672,5 @@ Before shipping any new section:
 | `QUALITY_STANDARDS.md` | Quality bar, reference sites, mobile mandate |
 | `MOBILE_OPTIMIZATION.md` | Mobile component patterns, split architecture |
 | `app/brand-base.css` | Token implementation (all layers) |
-| `docs/development/featurePlans/simple-dtc-design-language.md` | Simple DTC programme — rules, learnings log, phases |
+| `docs/branding/DESIGN_SYSTEM.md` | Simple DTC programme — rules, learnings log, phases |
 | `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | Current state + prioritised roadmap |
