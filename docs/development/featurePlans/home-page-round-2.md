@@ -236,7 +236,7 @@ Removing the guarantee leaves **two adjacent white sections**, UGC then App USP.
 
 ### Found while building, not fixed
 
-**`--tracking-tight` is undefined.** `AppUSPSection`, `LandingProductShowcase`, `LandingDailyBenefits` and `LandingTestimonials` all set `letterSpacing: "var(--tracking-tight)"`, and the token exists in neither `brand-base.css` nor `globals.css`. Those four headlines silently render at normal tracking. `LabResearch` uses a literal `-0.02em` and works, which is what `HomeWhyAccordion` copied. Out of scope here, worth its own ticket.
+**`--tracking-tight` is undefined.** ~~`AppUSPSection`, `LandingProductShowcase`, `LandingDailyBenefits` and `LandingTestimonials` all set `letterSpacing: "var(--tracking-tight)"`, and the token exists in neither `brand-base.css` nor `globals.css`. Those four headlines silently render at normal tracking.~~ **Fixed 2026-08-27:** the four inline overrides were deleted, so each headline now takes the tracking its own heading class sets, and `LandingDailyBenefits` was deleted as an orphan. See `docs/TODO.md`, Design System Debt. `LabResearch` and `HomeWhyAccordion` still use a literal `-0.02em`, which renders identically to the `.brand-h1` token but is still an inline override.
 
 ## Phase 2: The two drop-ins
 
@@ -313,8 +313,8 @@ The roster answers "how many" and the feature card answers "what do they say". T
 - **The research argument appears twice**, at 3 and at 9. Decision 2 above. Known trade.
 - **Eleven sections becomes thirteen.** Mobile scroll depth is the thing to watch, which is what task 4 exists to measure.
 - `WhatToExpectV2` **adds GSAP to the home bundle.** Lighthouse check required before merge, against the benchmarks in `docs/development/PERFORMANCE_OPTIMISATION.md`.
-- `ProductBenefitTiles` becomes **fully orphaned**. Home is currently its only consumer; PDP Phase 1 removed it from the product pages.
-- **No home entry exists in `docs/PAGE_NARRATIVES.md`.** The page has no written arc or health rating. Worth adding as part of this work.
+- `ProductBenefitTiles` becomes **fully orphaned**. Home is currently its only consumer; PDP Phase 1 removed it from the product pages. **Resolved:** deleted 2026-08-27 in the tree-wide orphan sweep, see `docs/TODO.md`.
+- **No home entry exists in `docs/PAGE_NARRATIVES.md`.** The page has no written arc or health rating. Worth adding as part of this work. **Resolved:** the home entry exists and is maintained.
 
 ## References
 

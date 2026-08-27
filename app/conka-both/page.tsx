@@ -184,7 +184,7 @@ export default function ConkaBothPage() {
       ariaLabel="FAQ"
     >
       <div className="brand-track">
-        <LabFAQ items={BOTH_PDP_FAQ_ITEMS} image={null} hideCTA />
+        <LabFAQ items={BOTH_PDP_FAQ_ITEMS} hideCTA />
       </div>
     </PdpSection>
   );

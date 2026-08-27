@@ -35,7 +35,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 ### `home_*` origin tokens (SCRUM-1266)
 
 The home page's mid-page CTAs each append their own `?src=` token to the PDP
-link: `home_expect`, `home_comparison`, `home_athletes`. They ride the same
+link: `home_expect`, `home_comparison`, `home_athletes`, `home_app`. They ride the same
 mechanism the `/go` listicles use (`captureListicleSrc`, persisted to
 sessionStorage, read back at add-to-cart), because `isValidListicleSrc` is a
 format check (`/^[a-z0-9_-]{1,96}$/i`) rather than a whitelist.

@@ -277,7 +277,9 @@ bg-white border border-black/12 p-5 lg:p-6
 
 **Closing CTA card** — `bg-white border border-black/12 p-5 lg:p-8`; mono label `font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3`; heading `brand-h3 text-black` with `letterSpacing: "-0.02em"`; mono guarantee strip `font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6`; close with `ConkaCTAButton`.
 
-**Figure plates** — use the `FigurePlate` component (`app/components/FigurePlate.tsx`). Lifestyle and portrait imagery only; never on product renders. Number sequentially across the page (`Fig. 01`, `Fig. 02`, ...).
+**Figure plates** — a mono caption over the image, `Fig. 01 · <label>`. Lifestyle and portrait imagery only; never on product renders. Number sequentially across the page (`Fig. 01`, `Fig. 02`, ...).
+
+> This used to say "use the `FigurePlate` component". That component was deleted on 2026-08-27 because nothing imported it: every live surface that shows a figure plate hand-writes the caption instead (`OurStoryHero`, `ScienceHero`, `PilotProgramme`, the `appv2` and `cognitive-test` sets). The pattern is real and in use, the shared component was not. Extracting one and converting those callers is a worthwhile job, but it is unscoped, so the rule above describes what the code actually does.
 
 ### Clinical typography rules
 

@@ -31,10 +31,7 @@ const POINTS = [
 export default function AppUSPSection() {
   return (
     <div className="w-full">
-      <h2
-        className="brand-h1 mb-4 text-black"
-        style={{ letterSpacing: "var(--tracking-tight)" }}
-      >
+      <h2 className="brand-h1 mb-4 text-black">
         Most brands claim results. We let you measure yours.
       </h2>
       <p className="text-base lg:text-lg leading-snug text-black mb-10 max-w-[52ch]">
@@ -90,14 +87,25 @@ export default function AppUSPSection() {
         </div>
       </div>
 
-      <div className="mt-10 lg:mt-12 flex flex-col items-center lg:items-start">
-        <ConkaCTAButton href="/app" meta={null}>
+      {/* Two routes out, deliberately. This section makes the page's most
+          differentiating argument, and its only exit used to be the free app,
+          so the strongest moment on home led away from a sale. The buy takes
+          the primary fill and the app keeps an inverted secondary: the app is
+          still the proof, it is just no longer the only way out. The buy label
+          ties the purchase back to the argument, since there is nothing to
+          measure without the shot. `?src=home_app` follows the other mid-page
+          tokens, see docs/development/CART_ATTRIBUTES.md. */}
+      <div className="mt-10 lg:mt-12 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
+        <ConkaCTAButton href="/conka-both?src=home_app" meta={null}>
+          Put it to the test
+        </ConkaCTAButton>
+        <ConkaCTAButton href="/app" meta={null} inverted>
           Start measuring your brain
         </ConkaCTAButton>
-        {/* Spacer preserves the breathing room the validation line used to
-            occupy below the CTA. */}
-        <div aria-hidden className="mt-4 h-4" />
       </div>
+      {/* Spacer preserves the breathing room the validation line used to
+          occupy below the CTA row. */}
+      <div aria-hidden className="mt-4 h-4" />
     </div>
   );
 }

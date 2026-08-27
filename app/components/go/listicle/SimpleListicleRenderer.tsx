@@ -292,7 +292,6 @@ function SimpleListicleBody({ config }: { config: MmListicleConfig }) {
                 ...f,
                 answer: stripClaimAnchors(f.answer),
               }))}
-              image={null}
               hideCTA
               showSeeAllLink={false}
             />

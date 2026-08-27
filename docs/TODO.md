@@ -123,7 +123,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 | `OUTCOME_BUCKETS` (`mmPdpData.ts`) | Live, and more load-bearing than before. The grid badge derives its first line from it. |
 | `WHO_ITS_FOR` (`HeroAccordions.tsx`) | Live. The Who-is-it-for row uses it. |
 | `DotIndicator` | Live. The grid stopped using it but `CROTestimonials` still does. |
-| ~~`ProductBenefitTiles.tsx`~~ | **No longer true. Now genuinely orphaned** as of 2026-08-27 (SCRUM-1265): the home why-accordion replaced it and `app/page.tsx` was its last consumer. See the entry below. |
+| ~~`ProductBenefitTiles.tsx`~~ | **Deleted 2026-08-27** in the orphan sweep below, along with fifteen other components nothing imported. |
 | `FlowLiquid` / `ClearLiquid` **videos** under `public/videos/` | Live in `BottleVideo`, the quiz template and the ADHD listicle. Only the same-named `.jpg` statics were the orphans, and those are gone. |
 | `BrainFuelBand` (`app/lander/sections/`) | Live on `app/page.tsx`, `/lander` and `/lander-b`. Phase 6 removes only the `/conka-both` reference. |
 
@@ -133,18 +133,75 @@ Phase 1 and 2 removed `AbsorptionBioavailability` and `LandingValueComparison`; 
 
 ## Home Page Round 2 Cleanup
 
-### Delete `ProductBenefitTiles.tsx`
+### ~~Delete `ProductBenefitTiles.tsx`~~ and the wider orphan sweep
 
-**Status:** Open. Genuinely orphaned as of 2026-08-27 (SCRUM-1265).
-**Plan:** `docs/development/featurePlans/home-page-round-2.md`
+**Status:** Done 2026-08-27. Sixteen components deleted, not one.
 
-`app/components/product/ProductBenefitTiles.tsx` has no consumers. PDP Phase 1 took it off the three product pages, and the home why-accordion has now replaced it at `app/page.tsx` position 2, which was its last render site.
+`ProductBenefitTiles.tsx` was the entry that triggered this, but a tree-wide scan
+for components no file imports found far more. Deleted in this sweep:
 
-Left in the tree rather than deleted in the same commit, following the pattern SCRUM-1264 used: prove the replacement holds in production first, then sweep.
+| Area | Files |
+|------|-------|
+| Home Round 2 leftovers | `product/ProductBenefitTiles.tsx`, `home/FoundersSection.tsx` |
+| Dead CRO landing set | `cro/CROHero.tsx`, `cro/CROFinalCTA.tsx`, `cro/CROFormulaSplit.tsx`, `cro/CROGuarantee.tsx` |
+| Orphaned by the above | `landing/LabTrustBadges.tsx` (only `CROFormulaSplit` used it; `Certifications` and `LandingTrustBadges` do this job on live surfaces) |
+| Pre-existing, zero references | `landing/LabWhatsInsideMini.tsx`, `product/BenefitDetail.tsx`, `product/BenefitList.tsx`, `product/StruggleIcons.tsx`, `FigurePlate.tsx`, `FocalImage.tsx`, `HeroBannerCarousel.tsx`, `HeroShared.tsx`, `premium/PremiumCarouselToggle.tsx` |
 
-Worth knowing before deleting: its three titles were the same three strings as `OUTCOME_BUCKETS` in `mmPdpData.ts` ("Mental performance", "Sustained energy", "Brain health"), which is why it was replaceable. `OUTCOME_BUCKETS` itself is still live and feeds the PDP ingredient grid badges, so do not follow the thread through and delete that too.
+`OUTCOME_BUCKETS` in `mmPdpData.ts` was deliberately **not** followed through and
+deleted: `ProductBenefitTiles`' three titles were the same three strings, but
+`OUTCOME_BUCKETS` still feeds the PDP ingredient grid badges.
 
-**Unblocks:** nothing. This is a tidy-up, safe to do whenever.
+**Method, so the next sweep can repeat it.** Name-based grep over-reports, because
+a default import can be renamed at the import site. The check that actually holds
+is a path grep, `grep -rn "['\"].*/<Basename>['\"]" app/`, plus `npx tsc --noEmit`
+after the deletion: if anything still imported the file, the compile fails. Both
+were run, and `npm run build` passed.
+
+---
+
+### The orphan sweep is NOT finished, and the rest needs judgement
+
+**Status:** Open. Twenty-one components still have zero importers after the
+2026-08-27 sweep. They were left deliberately, not missed.
+
+**Read this before deleting any of them.** The sweep cascades: deleting an orphan
+orphans whatever only it imported, so the list regrows each round and has to be
+re-scanned rather than worked through once. More importantly, **"nothing imports
+it" does not mean "safe to delete" in this repo.**
+
+**Parked on purpose, do NOT delete:**
+
+- `landing/HomeHeroVideo.tsx`, `landing/HomeHeroVideoDesktop.tsx`. `PAGE_NARRATIVES.md`
+  states the looped video hero is "kept in the tree for revert" behind the static
+  LCP hero. Unimported is the intended state.
+- `landing/LandingHero.tsx` is the same family and should be checked against that
+  revert path before it goes.
+
+**Needs a decision, not a sweep:**
+
+- `RevolutPayButton.tsx`. Payment-adjacent. Dead, but confirm no reinstatement is
+  planned before removing a payment path from the tree.
+- The account and subscriptions portal cluster: `subscriptions/PastSubscriptionCard.tsx`,
+  `subscriptions/SubscriptionSummaryStats.tsx`, `subscriptions/SubscriptionsHelpCard.tsx`,
+  `subscriptions/SubscriptionsPageHeader.tsx`, `subscriptions/EmptySubscriptionsState.tsx`,
+  `account/NextDeliveryHero.tsx`, `account/HairlineSpecStrip.tsx`, `account/ActiveOrderCard.tsx`.
+  The portal is mid-migration to Skio as a full iframe replacement, so these are
+  probably doubly dead, but that is the migration's call to make. See
+  `docs/development/featurePlans/skio-subscription-migration.md`.
+
+**Straightforwardly dead, just not swept yet:** `WhyConkaWorks.tsx`,
+`CaseStudiesDataDriven.tsx`, `FormulaCaseStudies.tsx`, `product/ProductHeroMobileV2.tsx`,
+`product/ProductHeroV2.tsx`, `landing/WhatsInsideProductMini.tsx`,
+`landing/LandingProductSplit.tsx`, `landing/LandingTestimonials.tsx`,
+`app/AppResearchModal.tsx`.
+
+Note `LandingTestimonials` in that last group: it was one of the four components
+in the `--tracking-tight` fix above, so that fix touched a component nothing
+renders. Harmless, but it is why "it is in the debt list" is not evidence a
+component is live.
+
+**Unblocks:** nothing. Do the "straightforwardly dead" group whenever; the other
+two groups want an owner's answer first.
 
 ### `LabGuarantee` is NOT orphaned
 
@@ -154,29 +211,31 @@ The 100 day guarantee section came off the home page in the same ticket. `app/co
 
 ## Design System Debt
 
-### Define `--tracking-tight`, or delete the four references to it
+### ~~Define `--tracking-tight`, or delete the four references to it~~
 
-**Status:** Open. Found 2026-08-27 while building the home why-accordion (SCRUM-1265).
+**Status:** Done 2026-08-27. Resolved as option 3, the no-op fix: the inline overrides are gone and each heading now takes the tracking its own class already sets.
 
-Four components tighten their headline letter-spacing with `style={{ letterSpacing: "var(--tracking-tight)" }}`:
+Four components tightened their headline letter-spacing with `style={{ letterSpacing: "var(--tracking-tight)" }}` against a token defined in neither `brand-base.css` nor `globals.css`.
 
-- `app/components/home/AppUSPSection.tsx`
-- `app/components/landing/LandingProductShowcase.tsx`
-- `app/components/landing/LandingDailyBenefits.tsx`
-- `app/components/landing/LandingTestimonials.tsx`
+**Correction to the mechanism this entry used to describe.** The browser does not "drop the declaration". An unresolved `var()` makes the declaration *invalid at computed-value time*, which for an inherited property like `letter-spacing` means the element **inherits the parent's value** rather than falling back to what the class set. So the class value was being discarded, not merely overridden by nothing. No ancestor of these four headings sets `letter-spacing`, so the computed value was `normal` either way and the visible outcome matched the old note. The distinction matters if the pattern is ever copied under a parent that does set tracking.
 
-**The token is defined nowhere.** It is in neither `app/brand-base.css` nor `app/globals.css`. A CSS custom property with no definition and no fallback makes the browser drop the whole declaration silently, so all four headlines render at normal tracking while the code reads as though they are tightened.
+**What shipped:**
 
-`app/components/landing/LabResearch.tsx` writes the literal `-0.02em` instead and does get the tightening, which is why some headlines on the site are subtly tighter than others. `HomeWhyAccordion` copied the literal for the same reason.
+- `AppUSPSection` and `LandingProductShowcase` (both `.brand-h1`) now render at `--brand-h1-tracking: -0.02em`.
+- `LandingTestimonials` (`.brand-h2`) now renders at `--brand-h2-tracking: -0.01em`. Note this is why defining `--tracking-tight: -0.02em` globally would have been wrong: it would have pushed an h2 tighter than the h2 token.
+- `LandingDailyBenefits` was the fourth caller and was deleted outright, see below.
 
-**Two ways to fix it, and the choice is a visual one:**
+**Correction, 2026-08-27.** An earlier version of this entry named `LabResearch` and `HomeWhyAccordion` as the two stragglers still writing the literal `-0.02em`, implying a two-file tidy. That was wrong and would send whoever picked it up into a far bigger job than advertised: the literal appears **173 times across 113 files**. The inline `style={{ letterSpacing: "-0.02em" }}` is the de facto house style on this codebase, and `.brand-h1` carrying the value as a token is the exception. Converting the site to the token is a real refactor with a real visual diff, not a tidy, and it is not scoped anywhere. Leave it alone until someone wants that job.
 
-1. Define `--tracking-tight: -0.02em` in `brand-base.css`. One line, and it makes all four headlines tighter than they render today. That is a change to four live surfaces, so it wants eyes on a preview, not a drive-by commit.
-2. Replace the four `var(--tracking-tight)` references with the literal `-0.02em`, matching `LabResearch`. Same visual outcome as option 1.
+---
 
-Either way the end state should be one approach, not both. A third option, deleting the property from the four components so they keep rendering exactly as they do now, is the only genuinely no-op fix.
+### `LandingDailyBenefits` deleted (and three icons with it)
 
-**Unblocks:** nothing. Purely cosmetic, nobody has reported it.
+**Status:** Done 2026-08-27.
+
+`app/components/landing/LandingDailyBenefits.tsx` (327 lines) had no importer. `BrainFuelBand` replaced it at home Section 4 on 2026-06-18 in SCRUM-1101, and the only remaining mention was the comment in `app/page.tsx` explaining the swap. Two months in production is well past the "prove the replacement holds, then sweep" bar this tracker uses, so it was deleted rather than recorded.
+
+`BenefitIconFocus`, `BenefitIconSleep` and `BenefitIconStress` in `app/components/landing/icons.tsx` were its only consumers and went with it. `BottleVideo`, `LabTrustBadges` and `ConkaCTAButton` were also imported by it but have other live consumers and stay.
 
 ---
 
@@ -195,14 +254,14 @@ Recorded rather than dropped because the number is scattered across a dozen file
 
 ---
 
-### Orphaned FAQ lifestyle image
+### ~~Orphaned FAQ lifestyle image~~
 
-**Status:** Open, one-line cleanup
-**File:** `public/lifestyle/clear/ClearDrink.jpg`
+**Status:** Done 2026-08-27.
+**Files:** `public/lifestyle/clear/ClearDrink.jpg`, `public/lifestyle/flow/FlowDeskClutter.jpg` (both deleted)
 
-Dropping the sticky FAQ image from the three PDPs (Phase 6) left this static with no consumer in `app/`. `FlowDrink.jpg` is still live in `app/lib/landings/general-listicle.ts`, and `LabFAQ`'s `DEFAULT_IMAGE` (`FlowDeskClutter.jpg`) is still served on the home page, so neither of those goes.
+Dropping the sticky FAQ image from the three PDPs (Phase 6) left `ClearDrink.jpg` with no consumer in `app/`. The note here used to say `FlowDeskClutter.jpg` survived because it was `LabFAQ`'s `DEFAULT_IMAGE` and still served on the home page. **That stopped being true on 27 Aug**, when the home structure pass dropped the FAQ photo: from that point all six `LabFAQ` call sites passed `image={null}`, so the default was unreachable.
 
-**Why deferred:** grouped with the other asset deletions rather than deleted inside a feature branch.
+`LabFAQ`'s `image` prop, the `LabFAQImage` type, the sticky image column and the `image ? "lg:w-3/5" : "w-full"` width branch have all been removed along with the two statics. `FlowDrink.jpg` stays: it is still live in `app/lib/landings/general-listicle.ts`.
 
 ---
 
@@ -213,13 +272,11 @@ Dropping the sticky FAQ image from the three PDPs (Phase 6) left this static wit
 
 SCRUM-1261 added `public/formulas/labelV2/{Flow,Clear,Both}Transparent.png` and registered them as `bottleRendersCutout`, for bottles sitting on a coloured surface where `bottleRenders`' photographic backdrop would show as a pale rectangle. Only `ProductComparisonTable` uses them.
 
-The **previous** generation of cut-outs is still referenced by five files and shows the old label:
+The **previous** generation of cut-outs is still referenced and shows the old label. The list was five files; the 2026-08-27 orphan sweep deleted two of them (`LabWhatsInsideMini.tsx`, `CROFormulaSplit.tsx`), so three remain:
 
-- `app/components/landing/LandingProductSplit.tsx`
-- `app/components/landing/WhatsInsideProductMini.tsx`
-- `app/components/landing/LabWhatsInsideMini.tsx`
-- `app/components/cro/CROFormulaSplit.tsx`
-- `app/lib/byoData.ts` (BYO thumbnails)
+- `app/components/landing/LandingProductSplit.tsx` (itself orphaned, see the sweep entry)
+- `app/components/landing/WhatsInsideProductMini.tsx` (itself orphaned, see the sweep entry)
+- `app/lib/byoData.ts` (BYO thumbnails) **, the only live one**
 
 pointing at `public/formulas/conkaFlow/FlowNoBackground.png` and `public/formulas/conkaClear/ClearNoBackground.png` (April 2026).
 
@@ -230,6 +287,18 @@ pointing at `public/formulas/conkaFlow/FlowNoBackground.png` and `public/formula
 ---
 
 ## Asset Cleanup
+
+### Five statics left unreferenced by the 2026-08-27 orphan sweep
+
+**Status:** Open, and deliberately not deleted with the components.
+**Files:** `public/CONKA_04.jpg`, `public/ingredients/renders/LecithinTransparent.png`, `public/ingredients/renders/RhodiolaRoseaTransparent.png`, `public/ingredients/renders/TurmericTransparent.png`, `public/ingredients/renders/VitaminCTransparent.png`
+
+These were referenced only by components deleted in the sweep, and a repo grep now returns nothing for any of them.
+
+**Why they were not deleted anyway.** A `public/` file is reachable by URL, so a repo grep is not proof it is unused. Anything served from `public/` can be pointed at by a Klaviyo email template, a Notion blog post body, an OG or social card, or an ad creative, none of which live in this repo. A component reference disappearing is evidence, not a conclusion. The same caution applies to every entry in this section.
+
+**What closes it:** confirm with whoever owns the Klaviyo templates and the Notion blog that none of the five are linked, then delete. The four `*Transparent.png` renders are the lower risk of the two groups, since the live surfaces all use the `.jpg` variants of the same ingredients (`BuildStep.tsx`, both `IngredientsGrid.tsx`, both `ingredients.data.ts`) and the transparent cut-outs were only ever used by the deleted benefit components. `CONKA_04.jpg` sits at the `public/` root with a generic name, which is exactly the shape of a file something external links to.
+
 
 ### Delete superseded `*New.jpg` product statics once the labelV2 rollout is confirmed
 
