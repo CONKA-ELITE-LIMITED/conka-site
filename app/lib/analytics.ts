@@ -4,11 +4,11 @@ import { track } from "@vercel/analytics/react";
 
 /**
  * CONKA Analytics System
- * 
+ *
  * Type-safe, centralized analytics tracking for Vercel Analytics.
  * All events are structured to answer key business questions about
  * the landing funnels and conversion journey.
- * 
+ *
  * Performance: All tracking is async and non-blocking. Errors fail silently.
  */
 
@@ -19,7 +19,7 @@ import { track } from "@vercel/analytics/react";
  */
 function getUTMParams(): { utm_source?: string; utm_medium?: string } {
   if (typeof window === "undefined") return {};
-  
+
   const params = new URLSearchParams(window.location.search);
   return {
     utm_source: params.get("utm_source") || undefined,
@@ -34,10 +34,10 @@ function getUTMParams(): { utm_source?: string; utm_medium?: string } {
 // no-explicit-any is downgraded to warn for cases like this.
 function safeTrack(eventName: string, properties: Record<string, any>): void {
   if (typeof window === "undefined") return;
-  
+
   try {
     track(eventName, properties);
-    
+
     // Log events in development for debugging
     if (process.env.NODE_ENV === "development") {
       console.log("📊 Analytics Event:", eventName, properties);
@@ -225,6 +225,40 @@ interface PdpSectionEvent {
 /** Fires once per section per pageview, when that section scrolls into view. */
 export function trackPdpSectionViewed(params: PdpSectionEvent): void {
   safeTrack("pdp:section_viewed", params);
+}
+
+// ===== HOME SECTION TRACKING (/) =====
+
+/**
+ * Which parts of the home page people actually reach (SCRUM-1265).
+ *
+ * One property, `section`, because unlike the PDP equivalent the home page has
+ * no second dimension to split by: there is exactly one home page.
+ *
+ *   by=["eventData/section"]
+ *   filter=eventName eq 'home:section_viewed'
+ *
+ * `section` is the section's SEMANTIC id, the same string already on the
+ * element ("hero", "why", "showcase"), never its position in the page. The
+ * listicle equivalent is index-derived ("reason_3"), which means inserting or
+ * reordering a block shifts every id below it and breaks comparability with
+ * earlier data (docs/features/LISTICLE_SYSTEM.md). The home page is being
+ * reordered by docs/development/featurePlans/home-page-round-2.md, so a
+ * positional id would invalidate the dataset on the first phase. A semantic id
+ * survives one: a deleted section stops appearing and a new one appears under
+ * a new id.
+ *
+ * This exists to answer the question the reorder raises: the page grows from
+ * eleven sections to thirteen, so scroll depth is the thing to watch.
+ */
+interface HomeSectionEvent {
+  /** The section's semantic id, e.g. "hero", "why", "showcase" */
+  section: string;
+}
+
+/** Fires once per section per pageview, when that section scrolls into view. */
+export function trackHomeSectionViewed(params: HomeSectionEvent): void {
+  safeTrack("home:section_viewed", params);
 }
 
 // ===== CART UPSELL TILE TRACKING (CartDrawer, SCRUM-1201) =====
@@ -511,17 +545,17 @@ export function trackByoAccordionOpened(params: {
  */
 export function getAddToCartSource(): string {
   if (typeof window === "undefined") return "direct";
-  
+
   // Check if from quiz (sessionStorage)
   if (sessionStorage.getItem("quizSessionId")) {
     return "quiz";
   }
-  
+
   // Check referrer
   if (document.referrer && document.referrer.includes("/quiz")) {
     return "quiz";
   }
-  
+
   // Default
   return "direct";
 }
@@ -635,15 +669,15 @@ export function trackPurchaseAddToCart(params: {
   // mapping still reports (SCRUM-1244), carrying its raw GID as productId.
   // Filter it in dashboards; do not assume it never occurs.
   productType: "formula" | "protocol" | "unknown";
-  productId: string;  // "01", "02", "03", "1".."4", or a raw variant GID
-  variantId: string;  // Shopify variant GID
+  productId: string; // "01", "02", "03", "1".."4", or a raw variant GID
+  variantId: string; // Shopify variant GID
   packSize?: "4" | "8" | "12" | "28";
   tier?: "starter" | "pro" | "max";
   purchaseType: "subscription" | "one-time";
-  location: string;  // "hero", "sticky_footer", "results_page", "calendar"
-  source: string;  // "quiz", "menu", "direct", "cta"
+  location: string; // "hero", "sticky_footer", "results_page", "calendar"
+  source: string; // "quiz", "menu", "direct", "cta"
   price?: number;
-  sessionId?: string;  // Quiz session ID
+  sessionId?: string; // Quiz session ID
 }): void {
   safeTrack("purchase:add_to_cart", {
     productType: params.productType,

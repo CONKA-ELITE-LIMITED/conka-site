@@ -127,11 +127,32 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 | `OUTCOME_BUCKETS` (`mmPdpData.ts`) | Live, and more load-bearing than before. The grid badge derives its first line from it. |
 | `WHO_ITS_FOR` (`HeroAccordions.tsx`) | Live. The Who-is-it-for row uses it. |
 | `DotIndicator` | Live. The grid stopped using it but `CROTestimonials` still does. |
-| `ProductBenefitTiles.tsx` | Live. Off the PDPs since Phase 1, still rendered by `app/page.tsx`. |
+| ~~`ProductBenefitTiles.tsx`~~ | **No longer true. Now genuinely orphaned** as of 2026-08-27 (SCRUM-1265): the home why-accordion replaced it and `app/page.tsx` was its last consumer. See the entry below. |
 | `FlowLiquid` / `ClearLiquid` **videos** under `public/videos/` | Live in `BottleVideo`, the quiz template and the ADHD listicle. Only the same-named `.jpg` statics were the orphans, and those are gone. |
 | `BrainFuelBand` (`app/lander/sections/`) | Live on `app/page.tsx`, `/lander` and `/lander-b`. Phase 6 removes only the `/conka-both` reference. |
 
 Phase 1 and 2 removed `AbsorptionBioavailability` and `LandingValueComparison`; both are deleted. The absorption angle was cut on judgement ("a category claim any competitor also makes"), so it is the one most likely to be asked for back: it is in git history at `chore/pdp-orphan-cleanup`.
+
+---
+
+## Home Page Round 2 Cleanup
+
+### Delete `ProductBenefitTiles.tsx`
+
+**Status:** Open. Genuinely orphaned as of 2026-08-27 (SCRUM-1265).
+**Plan:** `docs/development/featurePlans/home-page-round-2.md`
+
+`app/components/product/ProductBenefitTiles.tsx` has no consumers. PDP Phase 1 took it off the three product pages, and the home why-accordion has now replaced it at `app/page.tsx` position 2, which was its last render site.
+
+Left in the tree rather than deleted in the same commit, following the pattern SCRUM-1264 used: prove the replacement holds in production first, then sweep.
+
+Worth knowing before deleting: its three titles were the same three strings as `OUTCOME_BUCKETS` in `mmPdpData.ts` ("Mental performance", "Sustained energy", "Brain health"), which is why it was replaceable. `OUTCOME_BUCKETS` itself is still live and feeds the PDP ingredient grid badges, so do not follow the thread through and delete that too.
+
+**Unblocks:** nothing. This is a tidy-up, safe to do whenever.
+
+### `LabGuarantee` is NOT orphaned
+
+The 100 day guarantee section came off the home page in the same ticket. `app/components/landing/LabGuarantee.tsx` stays live on `/conka-flow`, `/conka-clarity`, `/conka-both` and `/case-studies`. Nothing to clean up, recorded here only because "we removed the guarantee section" reads like a deletion.
 
 ---
 
