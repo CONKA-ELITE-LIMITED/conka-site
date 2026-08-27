@@ -51,7 +51,9 @@ const HomeWhyAccordion = dynamic(
 
 const AthleteCredibilityCarousel = dynamic(
   () => import("./components/AthleteCredibilityCarousel"),
-  { loading: () => <div className="h-[350px]" /> },
+  // Roughly the carousel's mobile height. The old 350px was a large
+  // under-estimate and shifted the page down as the chunk landed.
+  { loading: () => <div className="min-h-[900px]" /> },
 );
 
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
@@ -236,12 +238,9 @@ export default function Home() {
           claim is still true, it simply no longer has its own home section. */}
 
         {/* ===== SECTION 7: APP USP — key differentiator, measure it yourself ===== */}
-        {/* Mobile drops its bottom padding so the section sits flush against the
-          athlete marquee below (the athletes section drops its mobile top
-          padding to match). */}
         <HomeSection
           id="app-usp"
-          className="brand-section brand-bg-white max-lg:pb-0!"
+          className="brand-section brand-bg-white"
           ariaLabel="Prove it yourself with the CONKA app"
         >
           <div className="brand-track">
@@ -250,11 +249,13 @@ export default function Home() {
         </HomeSection>
 
         {/* ===== SECTION 8: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
-        {/* No mobile top padding; the App USP section above sits flush against
-          this section's marquee. */}
+        {/* Standard mobile padding both sides. This section and App USP above
+          used to zero their facing paddings so the full-bleed navy sport
+          marquee butted flush; with the marquee cut (SCRUM-1273) that left the
+          section title jammed against the section above on a phone. */}
         <HomeSection
           id="athletes"
-          className="brand-section brand-bg-tint max-lg:pt-0!"
+          className="brand-section brand-bg-tint"
           ariaLabel="Athletes who use CONKA"
         >
           <div className="brand-track">

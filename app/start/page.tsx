@@ -668,9 +668,13 @@ export default function StartPage() {
         </section>
 
         {/* ===== 6. ATHLETE CREDIBILITY ===== */}
+        {/* paddingTop was zeroed so the full-bleed navy sport marquee butted
+            flush against the section above. The marquee was cut in
+            SCRUM-1273, so the section takes its normal top padding again;
+            without it the carousel's title jammed against the section above. */}
         <section
           className="brand-section brand-bg-white"
-          style={{ paddingTop: 0, paddingBottom: "4rem" }}
+          style={{ paddingBottom: "4rem" }}
           aria-label="Trusted at the highest level"
         >
           <div className="brand-track">
