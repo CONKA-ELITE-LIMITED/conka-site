@@ -7,16 +7,15 @@ import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import HomeHeroStatic from "./components/landing/HomeHeroStatic";
+import ConkaCTAButton from "./components/landing/ConkaCTAButton";
 // Pure server components (no client state) — direct import, no dynamic() needed.
 import LabResearch from "./components/landing/LabResearch";
-import AthleteSportMarquee from "./components/AthleteSportMarquee";
 import UGCMarquee from "./components/testimonials/UGCMarquee";
 import BrainFuelBand from "./lander/sections/BrainFuelBand/BrainFuelBand";
 // Static server component (native <details> accordion, no client state), so a
 // direct import like the other pure server sections above.
 import AppUSPSection from "./components/home/AppUSPSection";
-import AthleteReviewFeature from "./components/AthleteReviewFeature";
-import Certifications from "./components/Certifications";
+import ProductComparisonTable from "./components/product/ProductComparisonTable";
 // Section-impression tracking (SCRUM-1265). HomeSection is a thin client
 // wrapper around <section>; the sections themselves stay server-rendered.
 import HomeSection, {
@@ -51,8 +50,18 @@ const HomeWhyAccordion = dynamic(
 
 const AthleteCredibilityCarousel = dynamic(
   () => import("./components/AthleteCredibilityCarousel"),
-  { loading: () => <div className="h-[350px]" /> },
+  // Roughly the carousel's mobile height. The old 350px was a large
+  // under-estimate and shifted the page down as the chunk landed.
+  { loading: () => <div className="min-h-[900px]" /> },
 );
+
+// Client leaf that lazily pulls GSAP in on approach, so it is code-split like
+// the page's other client sections. SSR stays on, so the five milestones are in
+// the server-rendered HTML for crawlers and the JSX already carries the final
+// lit state; only the scrub binding is deferred.
+const WhatToExpectV2 = dynamic(() => import("./components/home/WhatToExpectV2"), {
+  loading: () => <div className="min-h-[950px]" />,
+});
 
 const LabFAQ = dynamic(() => import("./components/landing/LabFAQ"), {
   loading: () => <div className="h-[350px]" />,
@@ -155,9 +164,6 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* Certification badges — self-contained white band under the accordion. */}
-        <Certifications />
-
         {/* ===== SECTION 4: BRAIN FUEL BAND — proof section (swapped in for
           LandingDailyBenefits; white section with the neuron clip full-bleed
           and the stats on a light-grey proof card. Owns its own full-bleed
@@ -178,20 +184,59 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 5.5: FEATURED ATHLETE REVIEW (Jack Willis) ===== */}
-        {/* White so the white-background cutout portrait floats; pt-0 shares the
-          product grid's bottom padding rather than doubling the white gap. */}
+        {/* The standalone Jack Willis review that sat here is gone. It rendered
+          the same athlete, the same portrait and all but word-for-word the same
+          quote as roster slot 1 of the carousel further down, so the page had
+          one man saying one sentence twice. He is now the carousel's opening
+          athlete instead, which keeps the prominence without the repeat.
+          AthleteReviewFeature itself is still live: ListicleProofTier uses it. */}
+
+        {/* ===== SECTION 6: WHAT TO EXPECT ===== */}
+        {/* Answers "when will I feel it", the objection that kills a first
+          subscription order, immediately after the shopper has picked a product
+          in the grid above. Takes the Both variant, since the page is not
+          product specific. Tint against the white product grid above and the
+          white athlete section below. */}
         <HomeSection
-          id="athlete-review"
-          className="brand-section brand-bg-white pt-0!"
-          ariaLabel="Featured athlete review"
+          id="what-to-expect"
+          className="brand-section brand-bg-tint"
+          ariaLabel="What to expect"
         >
           <div className="brand-track">
-            <AthleteReviewFeature />
+            <WhatToExpectV2 productId="both" />
+            <div className="mt-10 flex justify-center">
+              <ConkaCTAButton href="/conka-both?src=home_expect" meta={null}>
+                Start your first week
+              </ConkaCTAButton>
+            </div>
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 6: RESEARCH — university credibility ===== */}
+        {/* ===== SECTION 7: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+        {/* Moved up from position 11. The athletes answer "who relies on
+          this" while the shopper is still deciding, rather than after six
+          further sections of argument. White, not the tint it carried before:
+          the feature card is bg-white with a ring and the cutouts blend onto
+          their own #eef1f8 tiles, so the section colour does no work for it.
+          Standard mobile padding both sides; the zeroed facing paddings this
+          section and App USP used to carry existed only for the sport marquee
+          that was cut in SCRUM-1273. */}
+        <HomeSection
+          id="athletes"
+          className="brand-section brand-bg-white"
+          ariaLabel="Athletes who use CONKA"
+        >
+          <div className="brand-track">
+            <AthleteCredibilityCarousel />
+            <div className="mt-10 flex justify-center">
+              <ConkaCTAButton href="/conka-both?src=home_athletes" meta={null}>
+                Join them
+              </ConkaCTAButton>
+            </div>
+          </div>
+        </HomeSection>
+
+        {/* ===== SECTION 8: RESEARCH — university credibility ===== */}
         {/* Full-bleed band: section drops its gutter/padding (!py-0 !px-0); LabResearch caps its own width. */}
         <HomeSection
           id="research"
@@ -201,15 +246,6 @@ export default function Home() {
           <LabResearch />
         </HomeSection>
 
-        {/* ===== SECTION 6.5: UGC SOCIAL PROOF ===== */}
-        <HomeSection
-          id="ugc"
-          className="brand-section brand-bg-white !px-0"
-          ariaLabel="Real people using CONKA"
-        >
-          <UGCMarquee />
-        </HomeSection>
-
         {/* SECTION 7 (RISK-FREE GUARANTEE / LabGuarantee) removed from home
           2026-08-27, SCRUM-1265. The component is NOT dead: /conka-flow,
           /conka-clarity, /conka-both and /case-studies all still render it, so
@@ -217,13 +253,10 @@ export default function Home() {
           this page's metadata below, because it is still a real offer and the
           claim is still true, it simply no longer has its own home section. */}
 
-        {/* ===== SECTION 7: APP USP — key differentiator, measure it yourself ===== */}
-        {/* Mobile drops its bottom padding so the section sits flush against the
-          athlete marquee below (the athletes section drops its mobile top
-          padding to match). */}
+        {/* ===== SECTION 9: APP USP — key differentiator, measure it yourself ===== */}
         <HomeSection
           id="app-usp"
-          className="brand-section brand-bg-white max-lg:pb-0!"
+          className="brand-section brand-bg-tint"
           ariaLabel="Prove it yourself with the CONKA app"
         >
           <div className="brand-track">
@@ -231,19 +264,26 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 8: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
-        {/* No mobile top padding; the App USP section above sits flush against
-          this section's marquee. */}
+        {/* ===== SECTION 10: COMPARISON TABLE ===== */}
+        {/* Moved down from position 7, so the page argues who trusts it and
+          why it is credible before it argues against the alternatives.
+          Stays on WHITE deliberately: the CONKA column is marked by an
+          #eef0f5 panel, and this page is .brand-clinical where --brand-tint
+          is #f5f5f5. On tint the panel and the section background are
+          near-identical greys and the column marking disappears. Do not flip
+          this section to tint. */}
         <HomeSection
-          id="athletes"
-          className="brand-section brand-bg-tint max-lg:pt-0!"
-          ariaLabel="Athletes who use CONKA"
+          id="comparison"
+          className="brand-section brand-bg-white"
+          ariaLabel="CONKA compared with coffee and prescription stimulants"
         >
-          {/* Sport marquee runs full-bleed at the section level; the carousel
-            itself stays inside the track. */}
-          <AthleteSportMarquee fullBleed />
           <div className="brand-track">
-            <AthleteCredibilityCarousel showMarquee={false} />
+            <ProductComparisonTable product="both" />
+            <div className="mt-10 flex justify-center">
+              <ConkaCTAButton href="/conka-both?src=home_comparison" meta={null}>
+                Unlock your boost
+              </ConkaCTAButton>
+            </div>
           </div>
         </HomeSection>
 
@@ -259,14 +299,27 @@ export default function Home() {
       </section>
       */}
 
-        {/* ===== SECTION 9: FAQ ===== */}
+        {/* ===== SECTION 11: UGC SOCIAL PROOF ===== */}
+        {/* Real people, immediately before the questions. Its heading and the
+          faces are the last thing the page says before the FAQ closes, which
+          is where volume-of-people proof lands hardest; higher up it sat
+          between two argument sections and read as decoration. */}
+        <HomeSection
+          id="ugc"
+          className="brand-section brand-bg-tint !px-0"
+          ariaLabel="Real people using CONKA"
+        >
+          <UGCMarquee />
+        </HomeSection>
+
+        {/* ===== SECTION 12: FAQ ===== */}
         <HomeSection
           id="faq"
           className="brand-section brand-bg-white"
           ariaLabel="FAQ"
         >
           <div className="brand-track">
-            <LabFAQ ctaHref="/conka-both" />
+            <LabFAQ ctaHref="/conka-both" image={null} />
           </div>
         </HomeSection>
 

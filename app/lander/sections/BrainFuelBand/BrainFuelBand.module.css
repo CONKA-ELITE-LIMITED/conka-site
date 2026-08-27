@@ -1,12 +1,16 @@
 /* CONKA — "brain fuel" proof section: bright neuron footage on a white
    section, with the headline + proof stats on a light-grey card in black,
-   the four stats centred in a hairline-divided 2x2 grid.
+   the four stats centred in a hairline-divided 2x2 grid. Desktop lays the
+   three tiles out as a bento on one shared gutter.
    Was the dark #0e0e0e band built for the old dark BrainFuel render. */
 
 .band {
   background: #ffffff;
 }
 .inner {
+  /* One radius for every tile in the component, so the bento's edges cannot
+     drift apart by someone changing a single literal. */
+  --bento-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -45,7 +49,7 @@
    1px gaps over the darker container read as hairline dividers. */
 .card {
   background: #f1f1f3;
-  border-radius: 8px;
+  border-radius: var(--bento-radius);
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
@@ -101,37 +105,81 @@
 }
 
 @media (min-width: 1024px) {
-  /* Desktop: clip left in a rounded tile, headline + proof card right. */
+  /* Desktop: a bento of three tiles — the clip left, the headline and the
+     proof card stacked right — sharing one gutter, so every edge lines up.
+     The headline tile is white inside a navy hairline; the proof card is
+     solid grey.
+     The clip is the tallest thing in the row and so sets the row height; the
+     right column stretches to match it and the proof card absorbs the slack,
+     which puts its bottom edge exactly on the clip's. Previously the two
+     columns were centred against each other at their natural heights, so no
+     top or bottom edge in the section met another. */
   .inner {
+    --bento-gap: 16px;
+    /* The headline tile and the proof card must carry the same padding for
+       their inner copy to sit on one line down the column. */
+    --bento-pad: 32px 28px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: 'media details';
-    align-items: center;
-    column-gap: 64px;
+    align-items: stretch;
+    column-gap: var(--bento-gap);
     max-width: 1100px;
     margin: 0 auto;
     padding: 96px 45px;
   }
+  /* The clip's native ratio (the asset is 720x960), stated so the tile has a
+     definite height rather than one derived from the video's own content. That
+     buys two things: the percentage height on .video below actually resolves,
+     and the tile reserves its space before the video's metadata arrives, so
+     this below-fold autoplay element cannot shift the page as it loads. */
   .media {
     grid-area: media;
-    border-radius: 8px;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--bento-radius);
     overflow: hidden;
+  }
+  /* Fills the tile rather than letterboxing inside it. At the ratio above the
+     two are the same height, so this only bites if the right column ever
+     outgrows the clip; the bottles sit centred, so what cover would crop then
+     is the pale studio edge. */
+  .video {
+    height: 100%;
+    object-fit: cover;
   }
   .titleMobile {
     display: none;
   }
+  /* The headline becomes the top-right tile. It shares the proof card's radius
+     and padding so the edges line up, but inverts the fill — white inside a
+     navy hairline rather than solid grey — so the headline keeps its weight
+     against the section and the two tiles read as distinct. Same navy rule the
+     comparison table below uses, so the two sections agree. */
   .titleDesktop {
-    display: block;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid var(--brand-navy);
+    border-radius: var(--bento-radius);
+    padding: var(--bento-pad);
   }
   .details {
     grid-area: details;
-    align-self: center;
-    gap: 32px;
+    gap: var(--bento-gap);
     padding: 0;
   }
+  /* Takes whatever height is left once the headline tile is placed, so the
+     card's bottom edge meets the clip's. */
   .card {
-    padding: 32px 28px;
+    flex: 1;
+    padding: var(--bento-pad);
     gap: 28px;
+  }
+  /* Equal rows across that stretched height, so the extra space is shared
+     between the two stat rows instead of pooling under the bottom one. */
+  .metrics {
+    flex: 1;
+    grid-template-rows: 1fr 1fr;
   }
   .metric {
     padding: 24px 16px;

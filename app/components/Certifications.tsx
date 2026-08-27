@@ -22,9 +22,13 @@ const CERTS = [
 export default function Certifications({
   background = "var(--brand-white)",
   className = "",
+  compact = false,
 }: {
   background?: string;
   className?: string;
+  /** Smaller badges and tighter padding, for sitting under a CTA button
+   *  rather than standing as its own band. */
+  compact?: boolean;
 } = {}) {
   return (
     <section
@@ -34,7 +38,13 @@ export default function Certifications({
     >
       {/* Tight on mobile: four badges do not need a full section's worth of air
           around them, and the sections either side bring their own padding. */}
-      <div className="flex items-center justify-center gap-4 px-5 py-6 sm:gap-10 sm:py-10 lg:gap-16 lg:py-14">
+      <div
+        className={
+          compact
+            ? "flex items-center justify-center gap-5 px-5 pt-6 sm:gap-8 lg:gap-10"
+            : "flex items-center justify-center gap-4 px-5 py-6 sm:gap-10 sm:py-10 lg:gap-16 lg:py-14"
+        }
+      >
         {CERTS.map((cert) => (
           <Image
             key={cert.label}
@@ -42,7 +52,15 @@ export default function Certifications({
             alt={cert.label}
             width={140}
             height={140}
-            className="h-auto w-16 sm:w-24 lg:w-32"
+            /* The compact row renders these at 40 to 56px. Without `sizes`,
+               next/image builds the srcset from `width` alone and serves the
+               140w and 280w candidates into a 40px slot. */
+            sizes={compact ? "(max-width: 640px) 40px, 56px" : "(max-width: 640px) 64px, 128px"}
+            className={
+              compact
+                ? "h-auto w-10 sm:w-12 lg:w-14"
+                : "h-auto w-16 sm:w-24 lg:w-32"
+            }
           />
         ))}
       </div>

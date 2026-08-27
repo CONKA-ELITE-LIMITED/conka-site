@@ -5,6 +5,17 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-27** | Reordered home: the athletes move up to sit right after what-to-expect, the comparison table moves down after the app section, and the UGC faces now sit immediately before the FAQ
+- **2026-08-27** | Rounded the corners of the what-to-expect desktop product render, matching the other image tiles on the page
+- **2026-08-27** | Swapped the what-to-expect desktop render for the new ingredients shot on the home page and /conka-both
+- **2026-08-27** | Home structure pass: cut the duplicate Jack Willis review, moved the certification badges under the showcase CTA, dropped the FAQ photo, and added CTAs through the middle of the page so there is never more than three sections without a way to buy
+- **2026-08-27** | Added the what-to-expect timeline to the home page, so it answers when you will feel it right after the products and the athlete review
+- **2026-08-27** | Removed the scrolling sport marquee from the athlete section on home, the three PDPs and /start
+- **2026-08-27** | /start and /start-b now render the same athlete carousel as home instead of a forked copy, so the two stop drifting apart
+- **2026-08-27** | Athlete carousel refinement: the athlete's cutout now fills its tile with no white edges, his name and sport sit on the asset, the quote is smaller with oversized quote marks, and the carousel arrows are white on navy
+- **2026-08-27** | Tightened the athlete credibility carousel on home and the three PDPs: one title instead of title plus subheader, no counter or achievement pills, shorter mobile portrait so the athlete's quote lands with their photo, and a compact Informed Sport anchor
+- **2026-08-27** | Added the CONKA vs coffee vs Rx stimulants comparison table to the home page, between the athlete review and the research band
+- **2026-08-27** | Reworked the Brain Fuel Band desktop layout as an aligned bento (home, /lander, /lander-b, /conka-both), with the headline in its own white navy-bordered tile
 - **2026-08-27** | Docs hygiene phase 5: `/go/[slug]` gains a shared parent doc so the listicle and quiz docs stop competing, PROJECT_OVERVIEW deleted as a MASTER_CONTEXT duplicate, three superseded docs archived, and the mobile-first mandate now stated once
 - **2026-08-27** | Docs hygiene (SCRUM-1268 phases 1-4): corrected 20+ canonical docs that referenced deleted code, archived 10 superseded docs, merged 13 shipped feature plans into their canonical homes, and repaired both doc indexes
 - **2026-08-27** | Home why-accordion finished: separator spacing, number alignment, and the section code-split so its JS stays out of the initial bundle
