@@ -213,24 +213,25 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 5.75: COMPARISON TABLE ===== */}
-        {/* Answers the category objection ("why not just coffee?") once the
-          shopper has seen the products and one athlete's word for them, and
-          before the university research makes the credibility case. Same
-          component the three PDPs render; the home copy is deliberately
-          product-neutral, so it takes the Both render rather than favouring
-          Flow or Clear. White continues the run from the product grid; the
-          Research band below flips to tint. */}
+        {/* ===== SECTION 5.75: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
+        {/* Moved up from position 11. The athletes answer "who relies on
+          this" while the shopper is still deciding, rather than after six
+          further sections of argument. White, not the tint it carried before:
+          the feature card is bg-white with a ring and the cutouts blend onto
+          their own #eef1f8 tiles, so the section colour does no work for it.
+          Standard mobile padding both sides; the zeroed facing paddings this
+          section and App USP used to carry existed only for the sport marquee
+          that was cut in SCRUM-1273. */}
         <HomeSection
-          id="comparison"
+          id="athletes"
           className="brand-section brand-bg-white"
-          ariaLabel="CONKA compared with coffee and prescription stimulants"
+          ariaLabel="Athletes who use CONKA"
         >
           <div className="brand-track">
-            <ProductComparisonTable product="both" />
+            <AthleteCredibilityCarousel />
             <div className="mt-10 flex justify-center">
-              <ConkaCTAButton href="/conka-both?src=home_comparison" meta={null}>
-                Unlock your boost
+              <ConkaCTAButton href="/conka-both?src=home_athletes" meta={null}>
+                Join them
               </ConkaCTAButton>
             </div>
           </div>
@@ -246,15 +247,6 @@ export default function Home() {
           <LabResearch />
         </HomeSection>
 
-        {/* ===== SECTION 6.5: UGC SOCIAL PROOF ===== */}
-        <HomeSection
-          id="ugc"
-          className="brand-section brand-bg-white !px-0"
-          ariaLabel="Real people using CONKA"
-        >
-          <UGCMarquee />
-        </HomeSection>
-
         {/* SECTION 7 (RISK-FREE GUARANTEE / LabGuarantee) removed from home
           2026-08-27, SCRUM-1265. The component is NOT dead: /conka-flow,
           /conka-clarity, /conka-both and /case-studies all still render it, so
@@ -265,7 +257,7 @@ export default function Home() {
         {/* ===== SECTION 7: APP USP — key differentiator, measure it yourself ===== */}
         <HomeSection
           id="app-usp"
-          className="brand-section brand-bg-white"
+          className="brand-section brand-bg-tint"
           ariaLabel="Prove it yourself with the CONKA app"
         >
           <div className="brand-track">
@@ -273,21 +265,24 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ===== SECTION 8: WHY HIGH PERFORMERS TRUST CONKA (athletes) ===== */}
-        {/* Standard mobile padding both sides. This section and App USP above
-          used to zero their facing paddings so the full-bleed navy sport
-          marquee butted flush; with the marquee cut (SCRUM-1273) that left the
-          section title jammed against the section above on a phone. */}
+        {/* ===== SECTION 8: COMPARISON TABLE ===== */}
+        {/* Moved down from position 7, so the page argues who trusts it and
+          why it is credible before it argues against the alternatives.
+          Stays on WHITE deliberately: the CONKA column is marked by an
+          #eef0f5 panel, and this page is .brand-clinical where --brand-tint
+          is #f5f5f5. On tint the panel and the section background are
+          near-identical greys and the column marking disappears. Do not flip
+          this section to tint. */}
         <HomeSection
-          id="athletes"
-          className="brand-section brand-bg-tint"
-          ariaLabel="Athletes who use CONKA"
+          id="comparison"
+          className="brand-section brand-bg-white"
+          ariaLabel="CONKA compared with coffee and prescription stimulants"
         >
           <div className="brand-track">
-            <AthleteCredibilityCarousel />
+            <ProductComparisonTable product="both" />
             <div className="mt-10 flex justify-center">
-              <ConkaCTAButton href="/conka-both?src=home_athletes" meta={null}>
-                Join them
+              <ConkaCTAButton href="/conka-both?src=home_comparison" meta={null}>
+                Unlock your boost
               </ConkaCTAButton>
             </div>
           </div>
@@ -305,7 +300,20 @@ export default function Home() {
       </section>
       */}
 
-        {/* ===== SECTION 9: FAQ ===== */}
+        {/* ===== SECTION 9: UGC SOCIAL PROOF ===== */}
+        {/* Real people, immediately before the questions. Its heading and the
+          faces are the last thing the page says before the FAQ closes, which
+          is where volume-of-people proof lands hardest; higher up it sat
+          between two argument sections and read as decoration. */}
+        <HomeSection
+          id="ugc"
+          className="brand-section brand-bg-tint !px-0"
+          ariaLabel="Real people using CONKA"
+        >
+          <UGCMarquee />
+        </HomeSection>
+
+        {/* ===== SECTION 10: FAQ ===== */}
         <HomeSection
           id="faq"
           className="brand-section brand-bg-white"
