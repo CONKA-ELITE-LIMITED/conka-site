@@ -90,7 +90,13 @@ export default function WhatToExpectV2({
         {/* Sticky product render -- desktop only */}
         <div className="hidden lg:block">
           <div className="sticky top-24">
-            <div className="relative aspect-[4/5] w-full">
+            {/* rounded-md matches the other image tiles on these pages, and
+                overflow-hidden is what actually clips it, since the fill Image
+                is absolutely positioned. All three assets are 810x1013, so they
+                land on this 4:5 frame exactly and the corners clip on every
+                variant. An asset of another ratio would sit object-contain'd
+                with transparent gutters and the radius would stop showing. */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md">
               <Image
                 src={asset.src}
                 alt={asset.alt}
