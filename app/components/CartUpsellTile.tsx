@@ -74,15 +74,17 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
   return (
     <div className="rounded-lg border border-[#1B2757]/15 bg-[#eef0f5] p-3">
       <div className="flex items-center gap-3">
-        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-white">
-          <Image
-            src={offer.thumbnail}
-            alt=""
-            width={56}
-            height={56}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        {offer.thumbnail && (
+          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-white">
+            <Image
+              src={offer.thumbnail}
+              alt=""
+              width={56}
+              height={56}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1B2757]">
             Recommended upgrade
@@ -90,41 +92,40 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
           <p className="text-sm font-bold leading-snug text-black">
             {offer.headline}
           </p>
-          {/* The hook is a filled badge, not a sentence: it has to survive being
-              read at a glance beside a CTA. Reassurance sits under it in muted
-              text, because a second green pill competes with the first. */}
-          <span className="mt-1 inline-flex items-center rounded-full bg-[#1a7f4f] px-2 py-0.5 text-[11px] font-bold text-white">
+          {/* The hook is a badge, not a sentence: it has to survive being read
+              at a glance beside a CTA. White on the tinted card rather than the
+              savings green, which belongs to price strikes and reads as a
+              foreign colour inside the navy cart. */}
+          <span className="mt-1 inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-bold text-[#1B2757]">
             {offer.valueLine}
           </span>
-          {offer.highlight && (
-            <p className="mt-1 text-[11px] text-black/55">{offer.highlight}</p>
-          )}
         </div>
       </div>
 
-      {/* Show the gifts rather than only pricing them. Small enough to read as a
-          detail of the offer, not a second product grid. */}
+      {/* Show the kit rather than only pricing it. Four equal tiles read as a
+          set; three plus a stray caption read as an afterthought. */}
       {offer.giftImages && offer.giftImages.length > 0 && (
-        <ul className="mt-2.5 flex items-center gap-1.5" aria-hidden>
+        <ul className="mt-3 grid grid-cols-4 gap-1.5" aria-hidden>
           {offer.giftImages.map((src) => (
             <li
               key={src}
-              className="h-8 w-8 overflow-hidden rounded-md bg-white"
+              className="aspect-square overflow-hidden rounded-md bg-white"
             >
               <Image
                 src={src}
                 alt=""
-                width={64}
-                height={64}
-                sizes="32px"
+                width={96}
+                height={96}
+                sizes="72px"
                 className="h-full w-full object-cover"
               />
             </li>
           ))}
-          <li className="ml-1 text-[11px] font-medium text-black/60">
-            In your first box
-          </li>
         </ul>
+      )}
+
+      {offer.highlight && (
+        <p className="mt-2 text-[11px] text-black/55">{offer.highlight}</p>
       )}
 
       <button

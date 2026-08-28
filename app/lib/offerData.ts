@@ -229,6 +229,14 @@ const OTP_POSTAGE = 9.99;
  * here; they come from `freeShotsValue` so the shot count and its value stay
  * derived from one place.
  */
+/**
+ * Thumbnail for the bonus-shots tile. The shots are not an `OfferGift`, they
+ * derive from `freeShots` / `freeShotsValue`, so their image has no gift entry
+ * to live on. It sits here rather than in a component because two surfaces show
+ * the tile: the PDP gift stack and the cart upsell.
+ */
+export const STARTER_SHOTS_IMAGE = "/formulas/starterPack/EightFlow.jpg";
+
 const STARTER_PACK_GIFTS: OfferGift[] = [
   {
     id: "hat",

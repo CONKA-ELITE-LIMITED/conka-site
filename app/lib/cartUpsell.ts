@@ -5,6 +5,7 @@ import {
   getOfferVariant,
   detectOfferProduct,
   detectOfferCadence,
+  STARTER_SHOTS_IMAGE,
   type OfferProduct,
   type OfferCadence,
 } from "./offerData";
@@ -44,7 +45,8 @@ export interface CartUpsellTileOffer {
   targetSellingPlanId?: string;
 
   /** Display (the tile is copy-only; all wording is decided here). */
-  thumbnail: string;
+  /** Product shot, only when the product is what changes. Absent on OTP to sub. */
+  thumbnail?: string;
   headline: string;
   /** The hook, rendered as a filled badge. Keep it to one short line. */
   valueLine: string;
@@ -166,9 +168,16 @@ function buildOtpToSubCopy(
     headline: "Make it a subscription",
     valueLine: kitValue ? `${formatPrice(kitValue)} of gifts, free` : shotsLine,
     highlight: kitValue ? "Pause or cancel anytime" : undefined,
-    giftImages: (sub.gifts ?? [])
-      .map((gift) => gift.image)
-      .filter((src): src is string => Boolean(src)),
+    // Bonus shots lead, same order as the PDP stack, so the four tiles are the
+    // whole kit rather than the three physical extras.
+    giftImages: kitValue
+      ? [
+          ...(sub.freeShots ? [STARTER_SHOTS_IMAGE] : []),
+          ...(sub.gifts ?? [])
+            .map((gift) => gift.image)
+            .filter((src): src is string => Boolean(src)),
+        ]
+      : undefined,
     ctaLabel: saving > 0 ? `Subscribe and save ${formatPrice(saving)}` : "Switch to subscription",
   };
 }
@@ -233,9 +242,15 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
     originalQuantity: line.quantity,
     targetVariantId: targetVariant.variantId,
     targetSellingPlanId: targetVariant.sellingPlanId,
-    // The V4 label render, not OFFER_PRODUCTS.thumbnail: that map still points
-    // at the April cut-outs, which show the old label.
-    thumbnail: bottleRenders[upgrade.product].src,
+    // Shown only when the product itself is the upgrade. On OTP to subscription
+    // the product is unchanged, so a bottle shot says nothing the shopper does
+    // not already know and costs the width the gift tiles need.
+    // V4 label render, not OFFER_PRODUCTS.thumbnail: that map still points at
+    // the April cut-outs, which show the old label.
+    thumbnail:
+      upgrade.type === "single_to_both"
+        ? bottleRenders[upgrade.product].src
+        : undefined,
     ...copy,
   };
 }

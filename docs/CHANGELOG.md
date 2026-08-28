@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-29** | Cart upsell rebuilt around the starter kit (value badge, four gift tiles, no product shot on the subscribe upgrade) and the standalone app gift tile removed from the drawer
 - **2026-08-28** | Every subscription cadence now sells the starter kit variant (hat, travel pack and app access in the first box) at the same price as before (SCRUM-1287)
 - **2026-08-28** | The Both PDP gets its own 100 day guarantee slide (both cartons open, Flow and Clear) instead of borrowing Flow's single-box shot
 - **2026-08-28** | Regenerated the PDP gallery statics from Figma at 2400x1715 (100-day guarantee shots, the 7+ years of research slide, both Flow starter packs) and added the missing Clear and Both starter packs, so all three PDPs now lead with their own pack shot and show the starter-kit section on every subscription cadence

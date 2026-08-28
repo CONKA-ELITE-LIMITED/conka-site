@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { NAV_PRODUCTS } from "./navigation/navConfig";
 import { TIME_OF_DAY_BADGE } from "@/app/lib/timeOfDayBadge";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
-import CartAppGift from "./CartAppGift";
 import CartUpsellTile from "./CartUpsellTile";
 import { getCartUpsell, clearUpsellAccepted } from "@/app/lib/cartUpsell";
 import { getOfferByVariantId } from "@/app/lib/offerData";
@@ -447,10 +446,6 @@ export default function CartDrawer() {
                   <CartUpsellTile offer={upsell} />
                 </div>
               )}
-
-              <div className="mt-auto pt-4">
-                <CartAppGift />
-              </div>
             </div>
           )}
         </div>

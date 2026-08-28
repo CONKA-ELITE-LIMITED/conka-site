@@ -64,7 +64,13 @@ One cart-level upgrade tile, not per line. `getCartUpsell(lines)` (`cartUpsell.t
 - **Flow / Clear quarterly → Both quarterly**
 - **Both** (any cadence) is terminal — no offer.
 
-The tile is copy-only; all wording (headline, value line, an optional green highlight badge like “+16 free shots”, CTA) is built into the offer. There is no dismiss: it self-clears once the cart stops qualifying.
+The tile is copy-only; all wording and imagery is decided in `cartUpsell.ts` and the component just renders it. There is no dismiss: it self-clears once the cart stops qualifying.
+
+**The two upgrades look different on purpose (SCRUM-1287).** One-time to subscription leads with the starter kit, because that is what a one-time buyer is walking past: a badge carrying the kit's total value, then the four kit items as thumbnails, then "pause or cancel anytime". It carries **no product shot**, since the product is not what changes and the width is better spent on the gifts. Flow or Clear to Both keeps its product shot, because there the product *is* the upgrade.
+
+Both the badge value and the thumbnails derive from the same fields the PDP gift stack reads (`freeShotsValue`, `gifts`, and `STARTER_SHOTS_IMAGE` for the bonus-shots tile), so the cart and the product page cannot quote different numbers or show a different kit. A cadence with no `gifts` falls back to the old free-shots line.
+
+The badge is white on the tinted card, not the savings green. `--brand-positive` belongs to struck prices; inside the navy cart drawer it reads as a foreign colour.
 
 **Accepting = add-first swap.** `markUpsellAccepted` → `addToCart(target, quantity, sellingPlan, { source: "cart_upsell" })` → confirm the target landed in the returned cart → `removeItem(original)`. Add-first (not remove-first) because `addToCart` / `removeItem` swallow their errors and never reject, so a failed add must leave the original line untouched rather than orphan an empty cart; on that failure the accept flag is cleared. Fires `cart:upsell_shown` / `cart:upsell_accepted` (`{ type, product }`).
 
