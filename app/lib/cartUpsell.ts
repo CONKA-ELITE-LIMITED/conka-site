@@ -5,11 +5,10 @@ import {
   getOfferVariant,
   detectOfferProduct,
   detectOfferCadence,
-  OFFER_PRODUCTS,
   type OfferProduct,
   type OfferCadence,
 } from "./offerData";
-import { formatPrice } from "./productData";
+import { formatPrice, bottleRenders } from "./productData";
 
 // ============================================================================
 // CART UPSELL (SCRUM-1201 / SCRUM-1202)
@@ -47,10 +46,12 @@ export interface CartUpsellTileOffer {
   /** Display (the tile is copy-only; all wording is decided here). */
   thumbnail: string;
   headline: string;
-  /** One value/description line. Rendered green on its own, or black when a `highlight` badge sits below it. */
+  /** The hook, rendered as a filled badge. Keep it to one short line. */
   valueLine: string;
-  /** Optional green badge shown under the value line, e.g. "+16 free shots". */
+  /** Muted reassurance under the badge, e.g. "Pause or cancel anytime". */
   highlight?: string;
+  /** Gift thumbnails shown as a small row, so the offer is seen and not just read. */
+  giftImages?: string[];
   ctaLabel: string;
 }
 
@@ -59,6 +60,7 @@ interface UpsellCopy {
   headline: string;
   valueLine: string;
   highlight?: string;
+  giftImages?: string[];
   ctaLabel: string;
 }
 
@@ -162,12 +164,11 @@ function buildOtpToSubCopy(
 
   return {
     headline: "Make it a subscription",
-    valueLine: kitValue
-      ? `You are missing ${formatPrice(kitValue)} of free gifts`
-      : shotsLine,
-    highlight: kitValue
-      ? "Starter kit included. Pause or cancel anytime"
-      : undefined,
+    valueLine: kitValue ? `${formatPrice(kitValue)} of gifts, free` : shotsLine,
+    highlight: kitValue ? "Pause or cancel anytime" : undefined,
+    giftImages: (sub.gifts ?? [])
+      .map((gift) => gift.image)
+      .filter((src): src is string => Boolean(src)),
     ctaLabel: saving > 0 ? `Subscribe and save ${formatPrice(saving)}` : "Switch to subscription",
   };
 }
@@ -232,7 +233,9 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
     originalQuantity: line.quantity,
     targetVariantId: targetVariant.variantId,
     targetSellingPlanId: targetVariant.sellingPlanId,
-    thumbnail: OFFER_PRODUCTS[upgrade.product].thumbnail,
+    // The V4 label render, not OFFER_PRODUCTS.thumbnail: that map still points
+    // at the April cut-outs, which show the old label.
+    thumbnail: bottleRenders[upgrade.product].src,
     ...copy,
   };
 }
