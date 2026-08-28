@@ -197,11 +197,26 @@ Phase 4 notes on the pack shots:
 
 ## No-gos
 
-- Flow only. Clear and Both are not in scope.
+- Flow only for Phases 1 to 4. Clear and Both are **not** in scope for those, but are now expected to follow (see below).
 - In place on `/conka-flow`. No new page or route.
 - H1 stays "CONKA Flow". The offer layers on; the product is not renamed.
 - Price stays £39.99.
 - No fork of the data layer to scope the offer to the PDP. One shared entry in `OFFER_VARIANTS.flow["monthly-sub"]`; the offer ships wherever that entry is read.
+
+## Phase 5 (expected) - extend the pack to Both and Clear
+
+Raised by Rudh 28 Aug 2026, not yet scoped or ticketed.
+
+**Both is the one that actually forces this.** The Flow PDP upsells to Both, and its Explore section is currently the only Flow to Both path. Once Flow's first order ships as a kit, a customer who takes that upsell trades down: they pay more and lose the hat, the travel pack and the app access. The upsell argues against itself. Clear then follows for symmetry rather than for its own reason, since a Clear buyer landing beside a Flow page that gives more away reads badly.
+
+Cost is mostly outside the code:
+
+- **Shopify: six starter variants, not two.** Flow, Clear and Both, each monthly and quarterly, each with its own `custom.bundlecomposition`. This is the bulk of the work and it lands on SCRUM-1284.
+- **Assets: four more pack shots.** Clear and Both, monthly and quarterly. Same 1200x857 arrangement, and the label-free question applies to all six.
+- **Code: small.** `gifts` and `starterPackImage` on the four new subscription cadences, then the same `StarterPackContents` section dropped into slot 4 of `/conka-clarity` and `/conka-both`. The component and `getPdpGalleryImages` are already product-agnostic; only Flow's gallery currently leads with a pack shot, so Clear and Both would need that slide adding to `MM_GALLERY_ASSETS` if they want the hero treatment too.
+- **Commercial:** the gift RRPs are the same three items regardless of product, so Both's stack sits against a larger box and reads as a smaller proportional giveaway. Worth checking the value stack still lands before shipping it.
+
+Open question: whether Both's kit should hold more than Flow's, given it is the premium tier. Currently unanswered.
 
 ## Risks
 
