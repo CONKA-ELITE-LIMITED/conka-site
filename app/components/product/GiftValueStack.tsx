@@ -26,7 +26,7 @@ import type { CadenceGift, CadencePricing } from "@/app/lib/cadenceData";
 const SHOTS_IMAGE = "/formulas/starterPack/EightFlow.jpg";
 
 /** Tiles a cadence gives away free, bonus shots first. */
-export function getGiftTiles(pricing: CadencePricing): CadenceGift[] {
+function getGiftTiles(pricing: CadencePricing): CadenceGift[] {
   const freeShots = pricing.freeShots ?? 0;
   const freeShotsValue = pricing.freeShotsValue ?? 0;
 
@@ -78,7 +78,11 @@ export default function GiftValueStack({
                 alt=""
                 width={160}
                 height={160}
-                className="aspect-square w-full rounded-md object-cover"
+                className={`aspect-square w-full rounded-md ${
+                  tile.imageFit === "contain"
+                    ? "bg-black/[0.03] object-contain p-2"
+                    : "object-cover"
+                }`}
                 sizes="(min-width: 640px) 120px, 45vw"
               />
             ) : (

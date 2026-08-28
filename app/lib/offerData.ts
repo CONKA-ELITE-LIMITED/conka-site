@@ -79,6 +79,12 @@ export interface OfferGift {
   rrp: number;
   /** Square thumbnail. Omit for rows with no product shot. */
   image?: string;
+  /**
+   * How the thumbnail fills its square tile. Square product photos crop fine on
+   * the default "cover"; tall transparent renders (the app screen) need
+   * "contain" so they are not cut off top and bottom.
+   */
+  imageFit?: "cover" | "contain";
 }
 
 export interface OfferVariantConfig {
@@ -187,6 +193,8 @@ const STARTER_PACK_GIFTS: OfferGift[] = [
     id: "app",
     label: "Full CONKA app access",
     rrp: 9.99,
+    image: "/app/AppConkaRing.png",
+    imageFit: "contain",
   },
 ];
 
