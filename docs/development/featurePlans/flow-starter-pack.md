@@ -223,12 +223,12 @@ The two physical gifts are real Shopify products, both correctly unpublished (ch
 | Item | Product | SKU | State |
 |---|---|---|---|
 | Hat | CONKA Trucker Hat (`8808400159005`) | `25` | Active, 1457 in stock, tracked, 250g, price £0.00, oversells |
-| Travel pack | CONKA Flow Travel Pack, 2 Weeks (`15419180056950`) | `capsules30day` | Active, £28.99 (matches the displayed RRP), 100g, **untracked, qty 0** |
+| Travel pack | CONKA Travel Pack, 2 Weeks (`15419180056950`) | `CONKA-TRAVEL-PACK-28` | Active, £28.99 (matches the displayed RRP), 100g, **untracked, qty 0** |
 
 Decisions, 28 Aug 2026:
 
 - **Hat SKU stays `25` for now.** Humphrey may already have registered it with Synergy under that string, and the pick keys on whatever Synergy holds, not on what reads well. Blocking question for him: which SKU does Synergy have on file for the hat, and has he sent them anything for the travel pack? Until answered, every `bundlecomposition` uses `1x25`.
-- **Travel pack SKU becomes `CONKA-TRAVEL-PACK-28`**, capsule count encoded. A 14-cap pack is a different physical item with different cost, weight and value, so it takes its own SKU (`-14`) rather than silently redefining this one, the same convention as `FLOW-FUNNEL-28` to `-20`. Count, not duration: "2 weeks" is derived from the dose and stops being true when the dose changes.
+- **Travel pack SKU is `CONKA-TRAVEL-PACK-28`** (set 28 Aug 2026), capsule count encoded. A 14-cap pack is a different physical item with different cost, weight and value, so it takes its own SKU (`-14`) rather than silently redefining this one, the same convention as `FLOW-FUNNEL-28` to `-20`. Count, not duration: "2 weeks" is derived from the dose and stops being true when the dose changes.
 - The hat needs no count. One hat is one hat.
 
 Consequences to watch:
@@ -241,7 +241,7 @@ Consequences to watch:
 ### Open questions
 
 - Whether Both's kit should hold more than a single formula's, given it is the premium tier and currently gives away the same three items against a larger box.
-- The travel pack is titled "CONKA **Flow** Travel Pack". If the capsules are formula-specific, a Clear subscriber receives a Flow product in their Clear kit, and the neutral site label "Capsule Travel Pack" hides that. Either the item is formula-neutral, or Clear and Both need their own version and the kit contents genuinely differ per product. Settle before the four new pack shots are made.
+- ~~Whether the travel pack is Flow-specific.~~ **Closed 28 Aug 2026:** renamed to "CONKA Travel Pack (2 Weeks)", so it is formula-neutral and one item serves all three kits.
 
 ## Risks
 
