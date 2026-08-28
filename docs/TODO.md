@@ -5,6 +5,21 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Shopify / Pricing
+
+### Formally move one-time shipping out of the SKU prices and into a real Shopify shipping rate
+
+**Status:** Open, ticketed as [SCRUM-1286](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1286) (backlog, ops-gated)
+**Files:** `app/lib/offerData.ts` (`OTP_POSTAGE`, `getChargedPrice`, the OTP entries), plus Shopify admin and the Synergy rate mapping (outside the repo)
+
+**Current state (decided by Rudh 2026-08-28):** the £9.99 one-time postage stays baked into the Shopify OTP variant prices AND into the displayed prices. The itemised "£180.00 + £9.99 postage" presentation was built for the quarterly one-time link, shipped, and reverted the same day: it wrapped the link onto two lines and read as clutter ("too ugly"). All one-time surfaces now show the single all-in figure (`getChargedPrice`), and every discount anchor is an all-in total so strike, price and badge stay mutually checkable.
+
+**What the formal fix is (SCRUM-1286):** reprice the OTP variants down by £9.99, put the one-time SKUs in a per-product Shopify shipping profile carrying a £9.99 rate, add the new rate NAME to Synergy's carrier mapping BEFORE go-live (Synergy maps on rate name only; the sheet is locked), then update the site constants. Checkout totals stay identical to the penny; shipping just becomes a visible line Shopify can report on, and the 3p rounding quirk on the quarterly SKUs (£189.99 vs £189.96) disappears.
+
+**Why deferred:** needs Shopify admin repricing + shipping-profile work + written Synergy confirmation, all ops actions outside the codebase, and it must be sequenced with the weight-band plan in `docs/development/featurePlans/order-size-shipping-tiers.md`.
+
+---
+
 ## Analytics / Attribution
 
 ### OTP price claims: split presentation needs `getChargedPrice` at every bare-figure site
@@ -19,6 +34,8 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 **Residual:** Meta AddToCart/InitiateCheckout `value` from `byoCheckout` sends the ex-postage price for OTP (pre-existing funnel-c behaviour, not a regression). Consider aligning `value` to the charged price during SCRUM-1248 so Meta's value matches the order total.
 
 **What closes it fully:** either bake postage back into `price` in `OFFER_PRICING` and derive the itemised split the other way round, or add a lint/convention note. Revisit when the Phase 3 copy pass touches pricing surfaces.
+
+**Update 2026-08-28 (SCRUM-1285):** the foot-gun is now smaller in practice: every one-time DISPLAY is all-in via `getChargedPrice` (the itemised link presentation was built and reverted the same day), and `getDisplayDiscount` itself compares charged totals, so a bare `pricing.price` would also produce a visibly wrong badge. The data split (`price` + `postage`) remains, pending the SCRUM-1286 Shopify shipping work above, which closes this properly.
 
 ---
 

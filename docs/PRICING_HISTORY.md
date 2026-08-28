@@ -13,6 +13,20 @@ The code source of truth is `OFFER_PRICING` in `app/lib/offerData.ts`. Git histo
 
 ## Log
 
+### 2026-08-28 (new offer: quarterly one-time; no existing price changed)
+
+SCRUM-1285 made the quarterly one-time purchasable on-site through the selection-aware "Buy it once" link (PDPs + Build Your Order), wired to the Skio-era SKUs. New offers, itemised as product + per-order postage; charged totals match the Shopify variant prices to the penny:
+
+| Product | Cadence | Total | Per-shot | Priced shots |
+|---------|---------|-------|----------|--------------|
+| Flow | Quarterly one-time | £180.00 + £9.99 postage (£189.99 charged, FLOW-60) | £3.00 | 60 |
+| Clear | Quarterly one-time | £180.00 + £9.99 postage (£189.99 charged, CLEAR-60) | £3.00 | 60 |
+| Both | Quarterly one-time | £270.00 + £9.99 postage (£279.99 charged, BOTH-120) | £2.25 | 120 |
+
+All nine existing offers are unchanged in price. "From" per-shot figures unchanged. Same day, the BYO footer CTA was corrected to show the all-in charged price on one-time cadences (the monthly one-time footer had understated £69.98 as £59.99; display only, no charge changed).
+
+Also same day, the anchor scheme was revised to the ascending-ladder form (decided by Rudh from the Magic Mind pattern): every compare-at derives from the monthly-size one-time reference unit (£69.98 single / £129.97 Both) scaled by months, one anchor per size (£209.94 / £389.91), and every comparison is all-in totals. No price changed; the subscription badges moved: Flow/Clear quarterly 42% -> 48%, Both quarterly 59% -> 62%, Both monthly-otp derived 25% -> 23% (unrendered). The one-time link shows the struck all-in anchor beside the all-in charged price with no printed percentage (itemised "£X + postage" display was built and reverted the same day as too cluttered; the formal un-baking of shipping is SCRUM-1286, tracked in docs/TODO.md). The full ladders: Flow/Clear 0/10/43/48, Both 23/28/42/62. Rules: `docs/ops/offerings-and-discounts.md` §2.
+
 ### 2026-08-28 (representation correction + anchor audit; no charged price changed)
 
 Not a price change: every checkout total is identical to the 2026-07-14 baseline. Two things are recorded here (SCRUM-1257, Phase 1 of the pricing anchor coherence work):

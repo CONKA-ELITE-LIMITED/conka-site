@@ -27,6 +27,7 @@ import {
   CadenceType,
   getBalanceCadencePricing,
   getCadenceVariantByProductHeroId,
+  getOtpCadenceFor,
 } from "@/app/lib/cadenceData";
 import {
   captureListicleSrc,
@@ -214,7 +215,7 @@ export default function ConkaBothPage() {
                 selectedCadence={selectedCadence}
                 onCadenceChange={setSelectedCadence}
                 onAddToCart={() => handleAddToCart("hero")}
-                onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+                onOtpAddToCart={() => handleAddToCart("hero", getOtpCadenceFor(selectedCadence))}
               />
             </div>
           </PdpSection>
@@ -263,7 +264,7 @@ export default function ConkaBothPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
-              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+              onOtpAddToCart={() => handleAddToCart("hero", getOtpCadenceFor(selectedCadence))}
             />
           </div>
         </PdpSection>

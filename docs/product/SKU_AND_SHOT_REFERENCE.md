@@ -31,8 +31,13 @@ The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"pri
 | Both | Monthly sub | £74.99 | 40 | +16 (1st order) | 56 | 40 | £1.87 |
 | Both | One-time | £89.99 + £9.99 postage¹ | 40 | — | 40 | — | £2.25 |
 | Both | Quarterly sub | £149.99 | 120 | +20 (every cycle) | 140 | 140 | £1.25 |
+| Flow | Quarterly one-time² | £180.00 + £9.99 postage¹ | 60 | — | 60 | — | £3.00 |
+| Clear | Quarterly one-time² | £180.00 + £9.99 postage¹ | 60 | — | 60 | — | £3.00 |
+| Both | Quarterly one-time² | £270.00 + £9.99 postage¹ | 120 | — | 120 | — | £2.25 |
 
-¹ One-time pricing is itemised in code and UI as product price + £9.99 compulsory per-order postage (`OTP_PRICE` + `OTP_POSTAGE`); the Shopify OTP variant bakes the postage into its price (£69.98 / £69.98 / £99.98) so the checkout total matches. `perShot` is the ex-postage product price over priced shots. Subscriptions always ship free.
+¹ One-time pricing is itemised in the data layer as product price + £9.99 compulsory per-order postage (`OTP_PRICE` + `OTP_POSTAGE`), but **displayed as the single all-in figure** (`getChargedPrice`), matching the Shopify OTP variant, which bakes the postage into its price (£69.98 / £69.98 / £99.98, quarterly £189.99 / £189.99 / £279.99). The itemised UI split was reverted 2026-08-28; it returns when SCRUM-1286 moves shipping out of the SKU prices (see `docs/TODO.md`). `perShot` is the ex-postage product price over priced shots. Subscriptions always ship free.
+
+² Quarterly one-time (`quarterly-otp` cadence, SCRUM-1285): sold through the selection-aware "Buy it once" link on the PDPs and Build Your Order, wired to the Skio-era FLOW-60 / CLEAR-60 / BOTH-120 variants below.
 
 ### Funnel Shopify variant GIDs & selling plans
 
@@ -54,7 +59,7 @@ Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL
 
 ### Skio-era variants (created for the Skio selling-plan migration)
 
-Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the same three products, each attached to a Skio "Subscription" selling-plan group; the **base price is the one-time price** and the plan discounts it to the subscription price. All ACTIVE and available for sale. The 60-shot base prices are the first real purchasable quarterly one-time prices, and become the single-formula quarterly discount anchors in SCRUM-1258; Both anchors reference the Flow + Clear component value instead of BOTH-120 (provisional, see [`../ops/offerings-and-discounts.md`](../ops/offerings-and-discounts.md)).
+Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the same three products, each attached to a Skio "Subscription" selling-plan group; the **base price is the one-time price** and the plan discounts it to the subscription price. All ACTIVE and available for sale. The 60/120-shot base prices are the first real purchasable quarterly one-time prices, sold as the `quarterly-otp` cadence since SCRUM-1285. They are offerings, not discount anchors: every anchor derives from the monthly-size one-time reference unit so the badge ladder ascends with quantity (see [`../ops/offerings-and-discounts.md`](../ops/offerings-and-discounts.md) §2).
 
 | SKU | Title | One-time base price | Variant GID (numeric) | Postage handling |
 |-----|-------|---------------------|-----------------------|------------------|
@@ -65,7 +70,7 @@ Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the s
 | BOTH-40 | 40 Shots | £99.98 | 58457859686774 | baked in (= £89.99 + £9.99) |
 | BOTH-120 | 120 Shots | £279.99 | 58457864077686 | baked in (= 3 x £89.99 + £9.99, rounded to .99) |
 
-These GIDs are not yet referenced in code (`OFFER_VARIANTS` still maps the Loop-era FUNNEL SKUs); the Skio migration cutover re-points them. The `compareAtPrice` values Shopify holds on the FUNNEL variants (59.99 / 179.97 / 89.99 / 269.97) are ex-postage maths, not these purchasable prices.
+The 60/120-shot SKUs are referenced in code since SCRUM-1285: `OFFER_VARIANTS` maps them as the `quarterly-otp` cadence (the selection-aware "Buy it once" link). The 20/40-shot Skio SKUs are not yet referenced; the Skio migration cutover re-points the subscription cadences to them. The `compareAtPrice` values Shopify holds on the FUNNEL variants (59.99 / 179.97 / 89.99 / 269.97) are ex-postage maths, not these purchasable prices.
 
 ---
 

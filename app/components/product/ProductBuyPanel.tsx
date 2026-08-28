@@ -6,7 +6,9 @@ import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getChargedPrice,
   getDisplayDiscount,
+  getOtpCadenceFor,
   OFFER_CADENCES,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -647,8 +649,11 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
-  const otpSavePct = getDisplayDiscount(otpPricing);
+  // Selection-aware one-time (SCRUM-1285): the link offers the one-time twin
+  // of the selected plan card (monthly card -> 20-shot OTP, quarterly card ->
+  // 60/120-shot OTP). The page's onOtpAddToCart derives the same cadence.
+  const otpCadence = getOtpCadenceFor(selectedCadence);
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, otpCadence);
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [
@@ -697,11 +702,10 @@ export default function ProductBuyPanel({
           {ctaLabel}
         </ConkaCTAButton>
 
-        {/* The one-time purchase sits under the main CTA (MM pattern), itemised
-            as product price + per-order postage. Both carries a struck £119.98
-            (one Flow box + one Clear box) so the bundle discount is stated
-            rather than hidden; postage cancels out of that comparison, so the
-            strike sits against the ex-postage price. */}
+        {/* The one-time purchase sits under the main CTA (MM pattern). All-in
+            price (postage baked, per SCRUM-1286's pending Shopify shipping
+            work); the strike is the all-in anchor, so strike, price and badge
+            are mutually checkable on one clean line. */}
         <button
           type="button"
           onClick={onOtpAddToCart}
@@ -715,11 +719,7 @@ export default function ProductBuyPanel({
               </s>{" "}
             </>
           )}
-          <span className="tabular-nums">{formatPrice(otpPricing.price)}</span>
-          {otpPricing.postage ? (
-            <> + {formatPrice(otpPricing.postage)} postage</>
-          ) : null}
-          {otpSavePct > 0 && <> · save {otpSavePct}%</>}
+          <span className="tabular-nums">{formatPrice(getChargedPrice(otpPricing))}</span>
         </button>
 
         <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />
