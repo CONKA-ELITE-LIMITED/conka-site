@@ -2,6 +2,8 @@
 
 The canonical rules for every crossed-out price and savings percentage the site shows, plus the audit of every surface that renders one. Written for SCRUM-1257 (Phase 1 of the pricing anchor coherence work); SCRUM-1258 makes the code obey these rules and SCRUM-1259 fixes the surfaces.
 
+**Status (2026-08-28): all three phases have landed on `feature/pricing-anchor-coherence`.** §1 and §2 describe live behaviour. The "today" expressions in the §3 inventory and the "before" columns in §4 record the pre-fix state the audit found and are kept as the historical register; the defect rows marked for Phase 2/3 are resolved except the noted copy leftovers (§4 item 6) and the orphaned `/start-b` BuyBoxCard (§4 item 7).
+
 **The layer these rules govern is the offer catalogue: `OFFER_PRICING` (type `OfferPricing`) in `app/lib/offerData.ts`.** It serves every surface that sells: the PDPs, the cart drawer, the account portal, JSON-LD and meta descriptions, and the legacy Build Your Order and trial landing flows. It is not a Build Your Order module; that flow is just one legacy consumer.
 
 Charged prices are out of scope here and never change as part of this work. Pre-add UI prices come from `offerData.ts`; cart and checkout prices come from Shopify only (`docs/development/CART_PRICING_SOURCE_OF_TRUTH.md`).
