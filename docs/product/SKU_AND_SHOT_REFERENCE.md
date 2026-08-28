@@ -18,21 +18,26 @@ There are **three product generations** live in Shopify at once:
 
 ## 1. Funnel products (current — actively sold)
 
-The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"priced + free shots"** model: the first subscription order ships a bonus box, then Loop swaps to the smaller recurring SKU from order 2. `perShot` is computed on **priced** shots only. Prices last verified in `offerData.ts` (baseline 2026-07-14, see PRICING_HISTORY.md).
+The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"priced + free shots"** model: the first monthly subscription order ships a bonus box, then Loop swaps to the smaller recurring SKU from order 2 (quarterly ships its bonus every cycle, no swap). `perShot` is computed on **priced** shots only. Prices last verified against `offerData.ts` and Shopify Admin 2026-08-28 (SCRUM-1257; see PRICING_HISTORY.md).
 
-| Product | Cadence | Price | Priced shots | Free (1st order) | 1st-order shots | Recurring shots | Per shot |
+| Product | Cadence | Price | Priced shots | Free bonus | 1st-order shots | Recurring shots | Per shot |
 |---------|---------|-------|-------------|------------------|-----------------|-----------------|----------|
-| Flow | Monthly sub | £39.99 | 20 | +8 | 28 | 20 | £2.00 |
-| Flow | One-time | £69.98¹ | 20 | — | 20 | — | £3.50 |
-| Flow | Quarterly sub | £109.99 | 60 | +20 | 80 | 60 | £1.83 |
-| Clear | Monthly sub | £39.99 | 20 | +8 | 28 | 20 | £2.00 |
-| Clear | One-time | £69.98¹ | 20 | — | 20 | — | £3.50 |
-| Clear | Quarterly sub | £109.99 | 60 | +20 | 80 | 60 | £1.83 |
-| Both | Monthly sub | £74.99 | 40 | +16 | 56 | 40 | £1.87 |
-| Both | One-time | £99.98¹ | 40 | — | 40 | — | £2.50 |
-| Both | Quarterly sub | £149.99 | 120 | +20 | 140 | 120 | £1.25 |
+| Flow | Monthly sub | £39.99 | 20 | +8 (1st order) | 28 | 20 | £2.00 |
+| Flow | One-time | £59.99 + £9.99 postage¹ | 20 | — | 20 | — | £3.00 |
+| Flow | Quarterly sub | £109.99 | 60 | +20 (every cycle) | 80 | 80 | £1.83 |
+| Clear | Monthly sub | £39.99 | 20 | +8 (1st order) | 28 | 20 | £2.00 |
+| Clear | One-time | £59.99 + £9.99 postage¹ | 20 | — | 20 | — | £3.00 |
+| Clear | Quarterly sub | £109.99 | 60 | +20 (every cycle) | 80 | 80 | £1.83 |
+| Both | Monthly sub | £74.99 | 40 | +16 (1st order) | 56 | 40 | £1.87 |
+| Both | One-time | £89.99 + £9.99 postage¹ | 40 | — | 40 | — | £2.25 |
+| Both | Quarterly sub | £149.99 | 120 | +20 (every cycle) | 140 | 140 | £1.25 |
+| Flow | Quarterly one-time² | £180.00 + £9.99 postage¹ | 60 | — | 60 | — | £3.00 |
+| Clear | Quarterly one-time² | £180.00 + £9.99 postage¹ | 60 | — | 60 | — | £3.00 |
+| Both | Quarterly one-time² | £270.00 + £9.99 postage¹ | 120 | — | 120 | — | £2.25 |
 
-¹ One-time price bakes in £9.99 compulsory postage (`OTP_PRICE` + `OTP_POSTAGE`). Subscriptions always ship free.
+¹ One-time pricing is itemised in the data layer as product price + £9.99 compulsory per-order postage (`OTP_PRICE` + `OTP_POSTAGE`), but **displayed as the single all-in figure** (`getChargedPrice`), matching the Shopify OTP variant, which bakes the postage into its price (£69.98 / £69.98 / £99.98, quarterly £189.99 / £189.99 / £279.99). The itemised UI split was reverted 2026-08-28; it returns when SCRUM-1286 moves shipping out of the SKU prices (see `docs/TODO.md`). `perShot` is the ex-postage product price over priced shots. Subscriptions always ship free.
+
+² Quarterly one-time (`quarterly-otp` cadence, SCRUM-1285): sold through the selection-aware "Buy it once" link on the PDPs and Build Your Order, wired to the Skio-era FLOW-60 / CLEAR-60 / BOTH-120 variants below.
 
 ### Funnel Shopify variant GIDs & selling plans
 
@@ -51,6 +56,21 @@ Note the **first-order-swap**: the monthly-sub variant recorded in code is the *
 | Both | Quarterly sub | BOTH-FUNNEL-140 | 58153768943990 | 712527446390 |
 
 Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL28` (Code 128). See [`../shipping/SHIPPING_AND_COURIERS.md`](../shipping/SHIPPING_AND_COURIERS.md).
+
+### Skio-era variants (created for the Skio selling-plan migration)
+
+Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the same three products, each attached to a Skio "Subscription" selling-plan group; the **base price is the one-time price** and the plan discounts it to the subscription price. All ACTIVE and available for sale. The 60/120-shot base prices are the first real purchasable quarterly one-time prices, sold as the `quarterly-otp` cadence since SCRUM-1285. They are offerings, not discount anchors: every anchor derives from the monthly-size one-time reference unit so the badge ladder ascends with quantity (see [`../ops/offerings-and-discounts.md`](../ops/offerings-and-discounts.md) §2).
+
+| SKU | Title | One-time base price | Variant GID (numeric) | Postage handling |
+|-----|-------|---------------------|-----------------------|------------------|
+| FLOW-20 | 20 Shots | £69.98 | 58457787040118 | baked in (= £59.99 + £9.99) |
+| FLOW-60 | 60 Shots | £189.99 | 58457811550582 | baked in (= 3 x £59.99 + £9.99, rounded to .99) |
+| CLEAR-20 | 20 Shots | £69.98 | 58457822069110 | baked in |
+| CLEAR-60 | 60 Shots | £189.99 | 58457854411126 | baked in |
+| BOTH-40 | 40 Shots | £99.98 | 58457859686774 | baked in (= £89.99 + £9.99) |
+| BOTH-120 | 120 Shots | £279.99 | 58457864077686 | baked in (= 3 x £89.99 + £9.99, rounded to .99) |
+
+The 60/120-shot SKUs are referenced in code since SCRUM-1285: `OFFER_VARIANTS` maps them as the `quarterly-otp` cadence (the selection-aware "Buy it once" link). The 20/40-shot Skio SKUs are not yet referenced; the Skio migration cutover re-points the subscription cadences to them. The `compareAtPrice` values Shopify holds on the FUNNEL variants (59.99 / 179.97 / 89.99 / 269.97) are ex-postage maths, not these purchasable prices.
 
 ---
 

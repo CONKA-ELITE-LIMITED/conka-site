@@ -1,9 +1,12 @@
 /**
- * Build Your Order — Data Layer
+ * Offer Catalogue (the selling data layer)
  *
- * Types, pricing, variant mapping, display data, and upsell logic
- * for the Build Your Order flow (/build-your-order) and every surface
- * that sells the offer catalogue (cart, account portal, JSON-LD).
+ * The single source of truth for every surface that sells: prices, variant
+ * mapping, display data, and upsell logic for the PDPs, cart drawer, account
+ * portal, JSON-LD / meta descriptions, and the legacy Build Your Order and
+ * trial landing flows. Pre-add UI prices come from here; cart and checkout
+ * prices come from Shopify only (docs/development/CART_PRICING_SOURCE_OF_TRUTH.md).
+ * Anchor and discount rules live in docs/ops/offerings-and-discounts.md.
  *
  * All 9 product/cadence combos (Flow, Clear, Both x Monthly Sub, OTP, Quarterly)
  * are live in Shopify. Variant IDs and selling plans are mapped below.
@@ -11,6 +14,7 @@
  * Merged from the pre-consolidation app/lib/funnelData.ts and
  * app/(trial-b)/lib/funnelData.ts forks (SCRUM-1247); the live funnel-c
  * presentation won, plus the portal/JSON-LD helpers from the main fork.
+ * Renamed from byoData.ts in SCRUM-1280.
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";
@@ -20,7 +24,23 @@ import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productDa
 // ============================================
 
 export type OfferProduct = "both" | "flow" | "clear";
-export type OfferCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
+export type OfferCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub" | "quarterly-otp";
+
+/** True for the one-time cadences (no subscription, compulsory postage). */
+export function isOtpCadence(cadence: OfferCadence): boolean {
+  return cadence === "monthly-otp" || cadence === "quarterly-otp";
+}
+
+/**
+ * The one-time twin of a cadence: the OTP offering the same shipment size as
+ * the given plan. Drives the selection-aware "Buy it once" link (SCRUM-1285),
+ * so the link always offers the one-time equivalent of the selected plan card.
+ */
+export function getOtpCadenceFor(cadence: OfferCadence): OfferCadence {
+  return cadence === "quarterly-sub" || cadence === "quarterly-otp"
+    ? "quarterly-otp"
+    : "monthly-otp";
+}
 
 export interface OfferPricing {
   /** Total price for this combination */
@@ -31,15 +51,16 @@ export interface OfferPricing {
   perDay: number;
   /** Priced (billed) shots — the amount the price buys, excluding free shots */
   shotCount: number;
-  /** Crossed-out compare-at "was" value (value stack: OTP + bonus-shot value + postage). Absent on one-time entries. */
-  compareAtPrice?: number;
   /**
-   * Published discount % to display (factors in free shots). When set, this is
-   * the source of truth for the "Save X%" figure; otherwise the displayed
-   * discount falls back to the derived saving vs compareAtPrice. See
-   * getDisplayDiscount.
+   * The discount anchor: the ALL-IN price a customer would pay today for the
+   * same priced shots via the reference route (monthly-size one-time orders,
+   * each with per-order postage). Every displayed "Save X%" and crossed-out
+   * price derives from this field via getDisplayDiscount, which compares it
+   * against this entry's all-in charged price; there is no declared-percentage
+   * path. Absent on entries that are themselves the reference (single-formula
+   * monthly one-time). Rules: docs/ops/offerings-and-discounts.md.
    */
-  discountPercent?: number;
+  compareAtPrice?: number;
 
   // ============================================
   // OFFER TRIAL (B) — "20 + 8 free" model fields
@@ -54,7 +75,13 @@ export interface OfferPricing {
   subsequentShots?: number;
   /** Compulsory postage on one-time orders (£). Absent/0 = free postage (subscriptions). */
   postage?: number;
-  /** Value attributed to the free bonus shots (freeShots × OTP per-shot), for the "was" stack. */
+  /**
+   * Value attributed to the free bonus shots: freeShots x the £3.00 one-time
+   * per-shot value, presented with a .99 ending (8 -> 23.99, 16 -> 47.99,
+   * 20 -> 59.99). Display-only, pre-add: it is the struck RRP on the PDP
+   * gift-stack tile (GiftValueStack) and never reaches a cart line. It is a
+   * gift valuation, never part of a discount percentage.
+   */
   freeShotsValue?: number;
 
   // ============================================
@@ -139,27 +166,45 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
 }
 
 /**
- * The discount % to DISPLAY for a pricing entry. Prefers the explicit,
- * published `discountPercent` (which factors in free shots); otherwise falls
- * back to the derived saving vs the compare-at price. Returns 0 when neither
- * applies, so callers can keep using `savePct > 0` to decide whether to show a
- * badge.
+ * The discount % to DISPLAY for a pricing entry: always derived from the
+ * compare-at anchor, never declared. Compares ALL-IN totals: the entry's
+ * charged price (price + baked postage on one-time entries; subscriptions
+ * ship free so charged = price) against the all-in anchor, so the struck
+ * price, the shown price and the badge are always mutually checkable.
+ * Returns 0 when the entry has no anchor (it is itself the reference), so
+ * callers can keep using `savePct > 0` to decide whether to show a badge.
+ * Free bonus shots are a gift and never enter this percentage
+ * (docs/ops/offerings-and-discounts.md).
  */
 export function getDisplayDiscount(pricing: OfferPricing): number {
-  if (pricing.discountPercent != null) return pricing.discountPercent;
   if (pricing.compareAtPrice != null) {
-    return getSavingsPercent(pricing.price, pricing.compareAtPrice);
+    return getSavingsPercent(getChargedPrice(pricing), pricing.compareAtPrice);
   }
   return 0;
 }
 
-// OFFER TRIAL (B) — "20 + 8 free" pricing model.
-// perShot is computed on PRICED shots. compareAtPrice is the REAL one-time (OTP)
-// price for the same shots — a verifiable "was" the buyer can see on the OTP
-// option (monthly anchors against 1 one-time box, quarterly against 3). Free
+// "20 + 8 free" pricing model. perShot is computed on PRICED shots. Free
 // shots / postage / app are shown as separate FREE line items, NOT rolled into
-// an inflated "was". One-time entries carry no compareAtPrice (they ARE the
-// reference) but DO carry compulsory `postage`.
+// an inflated "was". Single-formula one-time entries carry no compareAtPrice
+// (they ARE the reference) but DO carry compulsory `postage`.
+//
+// ANCHORS (SCRUM-1258, ladder revision SCRUM-1285; rules in
+// docs/ops/offerings-and-discounts.md):
+// - Every comparison is ALL-IN TOTALS: compareAtPrice is the all-in cost of
+//   the alternative, and getDisplayDiscount compares it against this entry's
+//   all-in charged price (getChargedPrice). Postage is baked into displayed
+//   one-time prices for now; the itemised split returns when SCRUM-1286
+//   un-bakes shipping in Shopify.
+// - The reference unit is the MONTHLY-SIZE ONE-TIME ORDER, all-in (product +
+//   per-order postage). Anchors scale linearly from it: a quarterly offering
+//   anchors to three such orders, each paying its own postage. This makes the
+//   discount ladder ascend with quantity and commitment (the Magic Mind
+//   pattern, decided by Rudh 28 Aug 2026): larger pack, bigger badge. The
+//   quarterly one-time is itself a discounted offer (postage paid once, not
+//   three times), so it carries its own badge and is never an anchor.
+// - Both anchors reference the VALUE OF FLOW + CLEAR bought separately, not
+//   the £89.99 Both box (PROVISIONAL, 2026-08-28: adjustable data, see the
+//   ops doc's decision note).
 // NOTE: free-shot counts (esp. quarterly) are still under review — single source of truth here.
 const OTP_PRICE: Record<OfferProduct, number> = {
   both: 89.99,
@@ -198,6 +243,28 @@ const STARTER_PACK_GIFTS: OfferGift[] = [
   },
 ];
 
+/**
+ * The reference one-off value for Both: one Flow box plus one Clear box
+ * (£119.98). Deliberately NOT the £89.99 Both one-off box: the Both box is
+ * itself a discount against buying the two singles, and this reference is what
+ * makes the £3.00 per-shot valuation used across the site sourceable
+ * (£119.98 / 40 shots = £3.00).
+ */
+const BOTH_REFERENCE_PRICE = OTP_PRICE.flow + OTP_PRICE.clear;
+
+/**
+ * The reference unit for every anchor: one monthly-size one-time order,
+ * all-in (product price + one order's postage). £69.98 for a single formula
+ * (the real FLOW/CLEAR-FUNNEL-20-OTP charge), £129.97 for Both (the Flow +
+ * Clear reference value + postage). Every compare-at derives from this so
+ * the discount ladder ascends with quantity.
+ */
+const MONTHLY_OTP_ALL_IN: Record<OfferProduct, number> = {
+  flow: OTP_PRICE.flow + OTP_POSTAGE,
+  clear: OTP_PRICE.clear + OTP_POSTAGE,
+  both: BOTH_REFERENCE_PRICE + OTP_POSTAGE,
+};
+
 const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = {
   both: {
     "monthly-sub": {
@@ -205,8 +272,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.87,
       perDay: 3.74,
       shotCount: 40,
-      compareAtPrice: OTP_PRICE.both,
-      discountPercent: 46,
+      // One reference unit: the same shots bought once as Flow + Clear (one order's postage).
+      compareAtPrice: MONTHLY_OTP_ALL_IN.both,
       freeShots: 16,
       firstOrderShots: 56,
       subsequentShots: 40,
@@ -214,7 +281,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
     },
     "monthly-otp": {
       price: OTP_PRICE.both,
-      discountPercent: 29,
+      // One reference unit, all-in: one Flow box + one Clear box + one order's postage.
+      compareAtPrice: MONTHLY_OTP_ALL_IN.both,
       perShot: 2.25,
       perDay: 4.5,
       shotCount: 40,
@@ -225,12 +293,22 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.25,
       perDay: 2.5,
       shotCount: 120,
-      compareAtPrice: OTP_PRICE.both * 3,
-      discountPercent: 69,
+      // Three reference units: three monthly-size Flow + Clear orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.both,
       freeShots: 20,
       firstOrderShots: 140,
       subsequentShots: 140,
       freeShotsValue: 59.99,
+    },
+    "quarterly-otp": {
+      // + postage = the £279.99 BOTH-120 charges. Same £2.25/shot as monthly one-time.
+      price: 270.0,
+      perShot: 2.25,
+      perDay: 4.5,
+      shotCount: 120,
+      // Three reference units, all-in: three monthly-size Flow + Clear orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.both,
+      postage: OTP_POSTAGE,
     },
   },
   flow: {
@@ -239,8 +317,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      compareAtPrice: 59.99,
-      discountPercent: 43,
+      // One reference unit: the same shots bought once (FLOW-FUNNEL-20-OTP charges £69.98).
+      compareAtPrice: MONTHLY_OTP_ALL_IN.flow,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -259,12 +337,22 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: 179.97,
-      discountPercent: 63,
+      // Three reference units: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.flow,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 80,
       freeShotsValue: 59.99,
+    },
+    "quarterly-otp": {
+      // + postage = the £189.99 FLOW-60 charges. Same £3.00/shot as monthly one-time.
+      price: 180.0,
+      perShot: 3.0,
+      perDay: 3.0,
+      shotCount: 60,
+      // Three reference units, all-in: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.flow,
+      postage: OTP_POSTAGE,
     },
   },
   clear: {
@@ -273,8 +361,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      compareAtPrice: 59.99,
-      discountPercent: 43,
+      // One reference unit: the same shots bought once (CLEAR-FUNNEL-20-OTP charges £69.98).
+      compareAtPrice: MONTHLY_OTP_ALL_IN.clear,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -292,12 +380,22 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: 179.97,
-      discountPercent: 63,
+      // Three reference units: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.clear,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 80,
       freeShotsValue: 59.99,
+    },
+    "quarterly-otp": {
+      // + postage = the £189.99 CLEAR-60 charges. Same £3.00/shot as monthly one-time.
+      price: 180.0,
+      perShot: 3.0,
+      perDay: 3.0,
+      shotCount: 60,
+      // Three reference units, all-in: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.clear,
+      postage: OTP_POSTAGE,
     },
   },
 };
@@ -325,6 +423,9 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
       variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457811550582", // FLOW-60 (Skio-era one-time, £189.99 postage baked in)
+    },
   },
   clear: {
     "monthly-sub": {
@@ -338,6 +439,9 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
       variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457854411126", // CLEAR-60 (Skio-era one-time, £189.99 postage baked in)
+    },
   },
   both: {
     "monthly-sub": {
@@ -350,6 +454,9 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
     "quarterly-sub": {
       variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
+    },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457864077686", // BOTH-120 (Skio-era one-time, £279.99 postage baked in)
     },
   },
 };
@@ -464,6 +571,13 @@ export const OFFER_CADENCES: Record<OfferCadence, OfferCadenceDisplay> = {
       "Lowest cost per shot across all plans",
     ],
   },
+  "quarterly-otp": {
+    label: "3-month supply, once",
+    subtitle: "Single order, no subscription",
+    features: [
+      "Subscribe later and save more",
+    ],
+  },
 };
 
 // ============================================
@@ -498,7 +612,7 @@ export function getOfferProductSlideshow(
   cadence: OfferCadence,
 ): { src: string }[] {
   const base = FUNNEL_PRODUCT_SLIDESHOW_BASE[product];
-  if (cadence === "quarterly-sub") {
+  if (cadence === "quarterly-sub" || cadence === "quarterly-otp") {
     return [QUARTERLY_FIRST_SLIDE[product], ...base.slice(1)];
   }
   return base;
@@ -509,14 +623,17 @@ export function getOfferProductSlideshow(
 // ============================================
 
 const VARIANT_TO_PRODUCT = new Map<string, OfferProduct>();
-const QUARTERLY_VARIANT_SET = new Set<string>();
+const QUARTERLY_SUB_VARIANT_SET = new Set<string>();
+const QUARTERLY_OTP_VARIANT_SET = new Set<string>();
 
 for (const [product, cadences] of Object.entries(OFFER_VARIANTS) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
   for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
     if (config.variantId) {
       VARIANT_TO_PRODUCT.set(config.variantId, product);
       if (cadence === "quarterly-sub") {
-        QUARTERLY_VARIANT_SET.add(config.variantId);
+        QUARTERLY_SUB_VARIANT_SET.add(config.variantId);
+      } else if (cadence === "quarterly-otp") {
+        QUARTERLY_OTP_VARIANT_SET.add(config.variantId);
       }
     }
   }
@@ -529,7 +646,8 @@ export function detectOfferProduct(variantId: string): OfferProduct | null {
 
 /** Given a variant GID and whether a sellingPlan is active, return the cadence. */
 export function detectOfferCadence(variantId: string, hasSellingPlan: boolean): OfferCadence {
-  if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
+  if (QUARTERLY_OTP_VARIANT_SET.has(variantId)) return "quarterly-otp";
+  if (QUARTERLY_SUB_VARIANT_SET.has(variantId)) return "quarterly-sub";
   return hasSellingPlan ? "monthly-sub" : "monthly-otp";
 }
 
@@ -574,6 +692,7 @@ export function getCadenceFrequency(
     case "monthly-sub":
       return "monthly";
     case "monthly-otp":
+    case "quarterly-otp":
       return "one-time";
     case "quarterly-sub":
       return "quarterly";
@@ -719,6 +838,34 @@ export function getUpsellOffer(
     };
   }
 
+  // Both + quarterly OTP → Both + quarterly sub (SCRUM-1285: the one new
+  // edge). Anchored on the all-in charged one-time price (postage baked into
+  // the Skio-era SKU), the same way the cart upsell anchors otp_to_sub.
+  if (product === "both" && cadence === "quarterly-otp") {
+    if (!isVariantReady("both", "quarterly-sub")) return null;
+    const currentCharged = getChargedPrice(getOfferPricing("both", "quarterly-otp"));
+    const upgradePrice = getOfferPricing("both", "quarterly-sub").price;
+    const savings = currentCharged - upgradePrice;
+    return {
+      headline: `Subscribe and save ${formatPrice(savings)}`,
+      body: `You're paying ${formatPrice(currentCharged)} for a one-time order. Subscribe at ${formatPrice(upgradePrice)} every 3 months and save ${formatPrice(savings)} each delivery. Cancel or pause anytime.`,
+      acceptLabel: `Subscribe at ${formatPrice(upgradePrice)}/3 months`,
+      declineLabel: "No thanks, one-time is fine",
+      upgradedProduct: "both",
+      upgradedCadence: "quarterly-sub",
+      priceDifference: upgradePrice - currentCharged,
+      compareAtUpgrade: currentCharged,
+      savingsAmount: savings,
+      savingsLabel: `Save ${formatPrice(savings)} every 3 months`,
+      image: bothImage,
+      benefits: [
+        `Save ${formatPrice(savings)} every 3 months`,
+        "Cancel or pause anytime, no lock-in",
+        "Free UK shipping on every delivery",
+      ],
+    };
+  }
+
   // Both + monthly sub → Both + quarterly
   if (product === "both" && cadence === "monthly-sub") {
     if (!isVariantReady("both", "quarterly-sub")) return null;
@@ -798,7 +945,8 @@ export function getOfferCTALabels(
         subLabel: savings > 0 ? `Save ${formatPrice(savings)}` : "",
       };
     }
-    case "monthly-otp": {
+    case "monthly-otp":
+    case "quarterly-otp": {
       const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
       return {
         label: `Buy once · ${formatPrice(pricing.price)}`,

@@ -37,6 +37,7 @@ import {
   CadenceType,
   getCadencePricingByFormula,
   getCadenceVariantByFormula,
+  getOtpCadenceFor,
 } from "@/app/lib/cadenceData";
 
 const CLEAR_FAQ_ITEMS = getFormulaPdpFaqItems("02");
@@ -232,7 +233,7 @@ export default function ConkaClarityPage() {
                 selectedCadence={selectedCadence}
                 onCadenceChange={setSelectedCadence}
                 onAddToCart={() => handleAddToCart("hero")}
-                onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+                onOtpAddToCart={() => handleAddToCart("hero", getOtpCadenceFor(selectedCadence))}
               />
             </div>
           </PdpSection>
@@ -282,7 +283,7 @@ export default function ConkaClarityPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
-              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+              onOtpAddToCart={() => handleAddToCart("hero", getOtpCadenceFor(selectedCadence))}
             />
           </div>
         </PdpSection>

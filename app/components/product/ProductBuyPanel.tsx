@@ -8,6 +8,7 @@ import {
   getCadencePricingByProductHeroId,
   getChargedPrice,
   getDisplayDiscount,
+  getOtpCadenceFor,
   OFFER_CADENCES,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -195,20 +196,10 @@ function FlatPlanCard({
     if (!isSelected) setTipOpen(false);
   }, [isSelected]);
 
-  // Crossed-out "was":
-  //  - Monthly sub anchors to the real one-time (OTP) price for the same shots,
-  //    so it matches the "Buy it once" figure exactly (~43% off for Flow).
-  //  - Quarterly has no one-time equivalent, so derive a regular-price reference
-  //    from the published discount (e.g. 63% off => price / 0.37) so the
-  //    strikethrough and the Save% badge agree.
-  const compareAtDisplay =
-    cadence === "monthly-sub"
-      ? getChargedPrice(
-          getCadencePricingByProductHeroId(formulaId, "monthly-otp"),
-        )
-      : savePct > 0
-        ? pricing.price / (1 - savePct / 100)
-        : undefined;
+  // Crossed-out "was": the compare-at anchor itself, the real cost of the same
+  // priced shots bought one-time, so the strike and the Save% badge always
+  // derive from the same number (docs/ops/offerings-and-discounts.md).
+  const compareAtDisplay = pricing.compareAtPrice;
 
   return (
     <div
@@ -724,7 +715,11 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  // Selection-aware one-time (SCRUM-1285): the link offers the one-time twin
+  // of the selected plan card (monthly card -> 20-shot OTP, quarterly card ->
+  // 60/120-shot OTP). The page's onOtpAddToCart derives the same cadence.
+  const otpCadence = getOtpCadenceFor(selectedCadence);
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, otpCadence);
   // Only the starter-pack cadence carries `gifts`; when it does, the stack owns
   // the free-shots claim so the summary below drops its duplicate line.
   const hasStarterPack = (selectedPricing.gifts?.length ?? 0) > 0;
@@ -776,13 +771,24 @@ export default function ProductBuyPanel({
           {ctaLabel}
         </ConkaCTAButton>
 
-        {/* The one-time purchase sits under the main CTA (MM pattern). */}
+        {/* The one-time purchase sits under the main CTA (MM pattern). All-in
+            price (postage baked, per SCRUM-1286's pending Shopify shipping
+            work); the strike is the all-in anchor, so strike, price and badge
+            are mutually checkable on one clean line. */}
         <button
           type="button"
           onClick={onOtpAddToCart}
           className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          Buy it once for {formatPrice(getChargedPrice(otpPricing))}
+          Buy it once for{" "}
+          {otpPricing.compareAtPrice != null && (
+            <>
+              <s className="tabular-nums text-black/40">
+                {formatPrice(otpPricing.compareAtPrice)}
+              </s>{" "}
+            </>
+          )}
+          <span className="tabular-nums">{formatPrice(getChargedPrice(otpPricing))}</span>
         </button>
 
         <SubscriptionSummary

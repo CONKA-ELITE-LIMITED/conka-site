@@ -17,6 +17,7 @@ import {
   OFFER_PRODUCTS,
   getChargedPrice,
   getOfferPricing,
+  isOtpCadence,
 } from "@/app/lib/offerData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadencePriceSuffix } from "../defaults";
@@ -109,7 +110,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
   const display = OFFER_PRODUCTS[product];
   const box = getBoxImage(product, cadence);
   const pricing = getOfferPricing(product, cadence);
-  const isSub = cadence !== "monthly-otp";
+  const isSub = !isOtpCadence(cadence);
   const freq = cadencePriceSuffix(cadence);
   // The all-in figure: subscriptions ship free, one-time carries postage.
   const totalToday = isSub ? pricing.price : getChargedPrice(pricing);
