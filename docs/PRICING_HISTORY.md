@@ -13,6 +13,18 @@ The code source of truth is `OFFER_PRICING` in `app/lib/offerData.ts`. Git histo
 
 ## Log
 
+### 2026-08-28 (new offer: quarterly one-time; no existing price changed)
+
+SCRUM-1285 made the quarterly one-time purchasable on-site through the selection-aware "Buy it once" link (PDPs + Build Your Order), wired to the Skio-era SKUs. New offers, itemised as product + per-order postage; charged totals match the Shopify variant prices to the penny:
+
+| Product | Cadence | Total | Per-shot | Priced shots |
+|---------|---------|-------|----------|--------------|
+| Flow | Quarterly one-time | £180.00 + £9.99 postage (£189.99 charged, FLOW-60) | £3.00 | 60 |
+| Clear | Quarterly one-time | £180.00 + £9.99 postage (£189.99 charged, CLEAR-60) | £3.00 | 60 |
+| Both | Quarterly one-time | £270.00 + £9.99 postage (£279.99 charged, BOTH-120) | £2.25 | 120 |
+
+Both quarterly one-time anchors to 3 x £119.98 = £359.94 (the Flow + Clear reference value), deriving 25%, the same bundle discount as the monthly one-time. All nine existing offers are unchanged. "From" per-shot figures unchanged. Same day, the BYO footer CTA was corrected to show the all-in charged price on one-time cadences (the monthly one-time footer had understated £69.98 as £59.99; display only, no charge changed).
+
 ### 2026-08-28 (representation correction + anchor audit; no charged price changed)
 
 Not a price change: every checkout total is identical to the 2026-07-14 baseline. Two things are recorded here (SCRUM-1257, Phase 1 of the pricing anchor coherence work):

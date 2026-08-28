@@ -37,6 +37,11 @@ Real purchasable prices verified against Shopify Admin on 2026-08-28 (CONKA Read
 | Both | monthly-sub | £74.99 | £129.97 | Flow + Clear reference value + one order's postage (£119.98 + £9.99) | 42% |
 | Both | monthly-otp | £89.99 + £9.99 | £119.98 | One Flow box + one Clear box (2 x £59.99, postage cancels) | 25% |
 | Both | quarterly-sub | £149.99 | £369.93 | 3 x Flow + Clear reference value + one order's postage | 59% |
+| Flow | quarterly-otp | £180.00 + £9.99 | none | Is the reference price (FLOW-60 charges £189.99 all-in) | 0% |
+| Clear | quarterly-otp | £180.00 + £9.99 | none | Is the reference price (CLEAR-60 charges £189.99 all-in) | 0% |
+| Both | quarterly-otp | £270.00 + £9.99 | £359.94 | 3 x Flow + Clear reference value (postage cancels, one-time vs one-time) | 25% |
+
+The `quarterly-otp` cadence was added in SCRUM-1285 (the selection-aware "Buy it once" link); its Both entry mirrors the monthly bundle logic, so both one-time bundles state the same 25%.
 
 ### Provisional: the Both anchor basis (decision note, 2026-08-28)
 
