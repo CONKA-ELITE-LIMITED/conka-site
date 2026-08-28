@@ -18,6 +18,10 @@ import type { CadenceGift, CadencePricing } from "@/app/lib/cadenceData";
  * 78px per tile, too tight for the struck price to stay legible, and the price
  * is the point of this pattern.
  *
+ * Thumbnails are a fixed 80px rather than filling the cell. Full-bleed squares
+ * rendered at roughly 270px each and cost about 800px of panel for four tiles,
+ * which buried the CTA on mobile.
+ *
  * The bonus-shots tile derives from `freeShots` / `freeShotsValue` rather than
  * being listed in `gifts`, so the shot count stays sourced from the same place
  * the cadence cards read it from.
@@ -69,25 +73,25 @@ export default function GiftValueStack({
         </p>
       </div>
 
-      <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-4">
+      <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-4">
         {tiles.map((tile) => (
-          <li key={tile.id} className="flex flex-col gap-2">
+          <li key={tile.id} className="flex flex-col gap-1.5">
             {tile.image ? (
               <Image
                 src={tile.image}
                 alt=""
                 width={160}
                 height={160}
-                className={`aspect-square w-full rounded-md ${
+                className={`h-20 w-20 rounded-md ${
                   tile.imageFit === "contain"
-                    ? "bg-black/5 object-contain p-2"
+                    ? "bg-black/5 object-contain p-1.5"
                     : "object-cover"
                 }`}
-                sizes="(min-width: 640px) 120px, 45vw"
+                sizes="80px"
               />
             ) : (
               <span
-                className="flex aspect-square w-full items-center justify-center rounded-md"
+                className="flex h-20 w-20 items-center justify-center rounded-md"
                 style={{
                   background:
                     "color-mix(in srgb, var(--brand-positive) 10%, transparent)",
