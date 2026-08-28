@@ -154,6 +154,16 @@ The prices below are the live model (`OFFER_PRICING` in `offerData.ts`). The **f
 
 Shot counts are **priced** shots. Monthly subs ship a bonus box on the first order only (Loop swaps the SKU from order 2); quarterly ships a bonus every cycle. One-time prices bake in £9.99 compulsory postage.
 
+### Starter pack gifts (`gifts`)
+
+`OfferPricing.gifts` is an optional `OfferGift[]` listing the free extras that come with a first order. It drives the `GiftValueStack` struck-RRP rows on the PDP buy panel and is **display only**: these RRPs never reach a cart line or the checkout, per [CART_PRICING_SOURCE_OF_TRUTH.md](../development/CART_PRICING_SOURCE_OF_TRUTH.md).
+
+Set on `flow["monthly-sub"]` only. Presence of `gifts` is what gates the stack, so adding it to another cadence is all that is needed to extend the offer.
+
+The free bonus shots are deliberately **not** in this array; that row derives from `freeShots` / `freeShotsValue` so the shot count has one source. Rows without an `image` fall back to a tick glyph.
+
+What actually ships is the variant's `custom.bundlecomposition` metafield, which Synergy explodes at pick time. That metafield and this array are kept in step by hand: changing one does not change the other.
+
 ### Offer Shopify variants & selling plans
 
 9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `OFFER_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
