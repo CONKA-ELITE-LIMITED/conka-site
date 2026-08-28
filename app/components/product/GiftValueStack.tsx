@@ -73,9 +73,15 @@ export default function GiftValueStack({
         </p>
       </div>
 
+      {/* Tiles are centred rather than left aligned like the rest of the panel:
+          an 80px thumbnail in a half-panel cell leaves most of the cell empty,
+          so a left edge reads as a gap rather than as alignment. */}
       <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-4">
         {tiles.map((tile) => (
-          <li key={tile.id} className="flex flex-col gap-1.5">
+          <li
+            key={tile.id}
+            className="flex flex-col items-center gap-1.5 text-center"
+          >
             {tile.image ? (
               <Image
                 src={tile.image}
@@ -114,7 +120,7 @@ export default function GiftValueStack({
               {tile.label}
             </span>
 
-            <span className="mt-auto flex flex-wrap items-baseline gap-x-1.5 text-sm">
+            <span className="mt-auto flex flex-wrap items-baseline justify-center gap-x-1.5 text-sm">
               <span className="text-black/45 line-through">
                 {formatPrice(tile.rrp)}
               </span>
