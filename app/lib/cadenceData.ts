@@ -8,6 +8,7 @@
 
 import {
   OfferCadence,
+  OfferGift,
   OfferPricing,
   OfferVariantConfig,
   OFFER_CADENCES,
@@ -26,6 +27,7 @@ export { OFFER_CADENCES, getChargedPrice, getDisplayDiscount, getSavingsPercent,
 // Re-export the cadence union so product pages don't import from offerData directly
 export type CadenceType = OfferCadence;
 export type { OfferPricing as CadencePricing, OfferVariantConfig as CadenceVariantConfig };
+export type { OfferGift as CadenceGift };
 
 // Maps FormulaId to the OfferProduct key used in offerData
 const FORMULA_TO_PRODUCT = {

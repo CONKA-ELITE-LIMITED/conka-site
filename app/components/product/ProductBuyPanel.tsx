@@ -15,6 +15,7 @@ import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
+import GiftValueStack from "./GiftValueStack";
 import HeroAccordions from "./HeroAccordions";
 import IngredientBottomSheet from "./IngredientBottomSheet";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
@@ -416,9 +417,13 @@ export function TrustStrip() {
 function SubscriptionSummary({
   formulaId,
   cadence,
+  hideFreeShotsLine = false,
 }: {
   formulaId: ProductHeroId;
   cadence: CadenceType;
+  /** Suppress the free-shots line when GiftValueStack is already making that
+   *  claim above, so the panel never states it twice. */
+  hideFreeShotsLine?: boolean;
 }) {
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
   const savePct = getDisplayDiscount(pricing);
@@ -427,7 +432,7 @@ function SubscriptionSummary({
 
   const lines: { id: string; text: ReactNode }[] = [
     { id: "delivery", text: <>{pricing.shotCount} shots delivered {cadenceWord}</> },
-    ...(freeShots > 0
+    ...(freeShots > 0 && !hideFreeShotsLine
       ? [
           {
             id: "free-shots",
@@ -657,6 +662,9 @@ export default function ProductBuyPanel({
     selectedCadence,
   );
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  // Only the starter-pack cadence carries `gifts`; when it does, the stack owns
+  // the free-shots claim so the summary below drops its duplicate line.
+  const hasStarterPack = (selectedPricing.gifts?.length ?? 0) > 0;
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [
@@ -714,7 +722,16 @@ export default function ProductBuyPanel({
           Buy it once for {formatPrice(getChargedPrice(otpPricing))}
         </button>
 
-        <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />
+        {/* Starter pack: the free extras stack sits between the CTA and the
+            plan summary, so the "more in the box" story lands right after the
+            price. Only cadences carrying `gifts` render it (SCRUM-1283). */}
+        <GiftValueStack pricing={selectedPricing} />
+
+        <SubscriptionSummary
+          formulaId={formulaId}
+          cadence={selectedCadence}
+          hideFreeShotsLine={hasStarterPack}
+        />
       </div>
 
       {hideSecondary && showIngredientsPill && (

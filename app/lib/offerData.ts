@@ -56,6 +56,29 @@ export interface OfferPricing {
   postage?: number;
   /** Value attributed to the free bonus shots (freeShots × OTP per-shot), for the "was" stack. */
   freeShotsValue?: number;
+
+  // ============================================
+  // STARTER PACK (SCRUM-1283)
+  // ============================================
+  /**
+   * Physical and digital extras included free with the first order, rendered as
+   * a struck-RRP value stack (GiftValueStack). Display only: the RRPs never
+   * reach a cart line or the checkout, per CART_PRICING_SOURCE_OF_TRUTH.md.
+   * What actually ships is the variant's `custom.bundlecomposition` metafield,
+   * so this list and that metafield must be kept in step by hand.
+   * The free bonus shots are NOT listed here; they derive from freeShotsValue.
+   */
+  gifts?: OfferGift[];
+}
+
+/** One free row in the starter-pack value stack. */
+export interface OfferGift {
+  id: string;
+  label: string;
+  /** Struck RRP shown against the row (£). */
+  rrp: number;
+  /** Square thumbnail. Omit for rows with no product shot. */
+  image?: string;
 }
 
 export interface OfferVariantConfig {
@@ -141,6 +164,32 @@ const OTP_PRICE: Record<OfferProduct, number> = {
 /** Compulsory postage charged on one-time orders (subscriptions ship free). */
 const OTP_POSTAGE = 9.99;
 
+/**
+ * Flow starter pack: what comes free in the box on a first subscription order
+ * (SCRUM-1283). RRPs match the approved pack artwork. The bonus shots are not
+ * here; they come from `freeShotsValue` so the shot count and its value stay
+ * derived from one place.
+ */
+const STARTER_PACK_GIFTS: OfferGift[] = [
+  {
+    id: "hat",
+    label: "CONKA Hat",
+    rrp: 19.99,
+    image: "/formulas/starterPack/ConkaHat.jpg",
+  },
+  {
+    id: "travel-pack",
+    label: "Capsule Travel Pack",
+    rrp: 28.99,
+    image: "/formulas/starterPack/TravelPack.jpg",
+  },
+  {
+    id: "app",
+    label: "Full CONKA app access",
+    rrp: 9.99,
+  },
+];
+
 const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = {
   both: {
     "monthly-sub": {
@@ -188,6 +237,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 28,
       subsequentShots: 20,
       freeShotsValue: 23.99,
+      gifts: STARTER_PACK_GIFTS,
     },
     "monthly-otp": {
       price: OTP_PRICE.flow,
