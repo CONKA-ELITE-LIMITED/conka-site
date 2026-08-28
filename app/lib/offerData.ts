@@ -156,11 +156,17 @@ export function getDisplayDiscount(pricing: OfferPricing): number {
 // an inflated "was". Single-formula one-time entries carry no compareAtPrice
 // (they ARE the reference) but DO carry compulsory `postage`.
 //
-// ANCHORS (SCRUM-1258; rules in docs/ops/offerings-and-discounts.md):
-// - Monthly subs anchor to the all-in one-time price for the same shots
-//   (product + per-order postage), since subscriptions ship free.
-// - Quarterly single subs anchor to the real Skio-era one-time base prices
-//   (FLOW-60 / CLEAR-60), read from Shopify 2026-08-28.
+// ANCHORS (SCRUM-1258, ladder revision SCRUM-1285; rules in
+// docs/ops/offerings-and-discounts.md):
+// - The reference unit is the MONTHLY-SIZE ONE-TIME ORDER, all-in (product +
+//   per-order postage). Anchors scale linearly from it: a quarterly offering
+//   anchors to three such orders, each paying its own postage. This makes the
+//   discount ladder ascend with quantity and commitment (the Magic Mind
+//   pattern, decided by Rudh 28 Aug 2026): larger pack, bigger badge.
+// - The quarterly one-time is itself a discounted offer (postage paid once,
+//   not three times), so it carries its own badge and is never an anchor.
+//   Its compare-at drops the one postage both routes pay (rule: postage
+//   cancels only where both sides carry it).
 // - Both anchors reference the VALUE OF FLOW + CLEAR bought separately, not
 //   the £89.99 Both box (PROVISIONAL, 2026-08-28: adjustable data, see the
 //   ops doc's decision note).
@@ -184,16 +190,16 @@ const OTP_POSTAGE = 9.99;
 const BOTH_REFERENCE_PRICE = OTP_PRICE.flow + OTP_PRICE.clear;
 
 /**
- * The quarterly one-time anchor per product. Singles use the real purchasable
- * Skio-era one-time base prices (FLOW-60 / CLEAR-60 at £189.99, which is
- * 3 boxes + one order's postage rounded up to a .99 ending; verified in
- * Shopify Admin 2026-08-28). Both derives from the Flow + Clear reference
- * value plus one order's postage, per the Both anchor basis above.
+ * The reference unit for every anchor: one monthly-size one-time order,
+ * all-in (product price + one order's postage). £69.98 for a single formula
+ * (the real FLOW/CLEAR-FUNNEL-20-OTP charge), £129.97 for Both (the Flow +
+ * Clear reference value + postage). Every compare-at derives from this so
+ * the discount ladder ascends with quantity.
  */
-const QUARTERLY_OTP_PRICE: Record<OfferProduct, number> = {
-  flow: 189.99,
-  clear: 189.99,
-  both: 3 * BOTH_REFERENCE_PRICE + OTP_POSTAGE,
+const MONTHLY_OTP_ALL_IN: Record<OfferProduct, number> = {
+  flow: OTP_PRICE.flow + OTP_POSTAGE,
+  clear: OTP_PRICE.clear + OTP_POSTAGE,
+  both: BOTH_REFERENCE_PRICE + OTP_POSTAGE,
 };
 
 const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = {
@@ -203,8 +209,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.87,
       perDay: 3.74,
       shotCount: 40,
-      // All-in cost of the same shots bought once as Flow + Clear (one order's postage).
-      compareAtPrice: BOTH_REFERENCE_PRICE + OTP_POSTAGE,
+      // One reference unit: the same shots bought once as Flow + Clear (one order's postage).
+      compareAtPrice: MONTHLY_OTP_ALL_IN.both,
       freeShots: 16,
       firstOrderShots: 56,
       subsequentShots: 40,
@@ -224,7 +230,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.25,
       perDay: 2.5,
       shotCount: 120,
-      compareAtPrice: QUARTERLY_OTP_PRICE.both,
+      // Three reference units: three monthly-size Flow + Clear orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.both,
       freeShots: 20,
       firstOrderShots: 140,
       subsequentShots: 140,
@@ -236,8 +243,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.25,
       perDay: 4.5,
       shotCount: 120,
-      // 3 x (one Flow box + one Clear box); postage cancels (both routes pay one order's postage).
-      compareAtPrice: 3 * BOTH_REFERENCE_PRICE,
+      // Three reference units minus the one postage both routes pay (it cancels).
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.both - OTP_POSTAGE,
       postage: OTP_POSTAGE,
     },
   },
@@ -247,8 +254,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      // All-in cost of the same shots bought once (FLOW-FUNNEL-20-OTP charges £69.98).
-      compareAtPrice: OTP_PRICE.flow + OTP_POSTAGE,
+      // One reference unit: the same shots bought once (FLOW-FUNNEL-20-OTP charges £69.98).
+      compareAtPrice: MONTHLY_OTP_ALL_IN.flow,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -266,7 +273,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: QUARTERLY_OTP_PRICE.flow,
+      // Three reference units: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.flow,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 80,
@@ -278,6 +286,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 3.0,
       perDay: 3.0,
       shotCount: 60,
+      // Three reference units minus the one postage both routes pay (it cancels).
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.flow - OTP_POSTAGE,
       postage: OTP_POSTAGE,
     },
   },
@@ -287,8 +297,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      // All-in cost of the same shots bought once (CLEAR-FUNNEL-20-OTP charges £69.98).
-      compareAtPrice: OTP_PRICE.clear + OTP_POSTAGE,
+      // One reference unit: the same shots bought once (CLEAR-FUNNEL-20-OTP charges £69.98).
+      compareAtPrice: MONTHLY_OTP_ALL_IN.clear,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -306,7 +316,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: QUARTERLY_OTP_PRICE.clear,
+      // Three reference units: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.clear,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 80,
@@ -318,6 +329,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 3.0,
       perDay: 3.0,
       shotCount: 60,
+      // Three reference units minus the one postage both routes pay (it cancels).
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.clear - OTP_POSTAGE,
       postage: OTP_POSTAGE,
     },
   },

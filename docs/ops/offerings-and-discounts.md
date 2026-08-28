@@ -2,7 +2,7 @@
 
 The canonical rules for every crossed-out price and savings percentage the site shows, plus the audit of every surface that renders one. Written for SCRUM-1257 (Phase 1 of the pricing anchor coherence work); SCRUM-1258 makes the code obey these rules and SCRUM-1259 fixes the surfaces.
 
-**Status (2026-08-28): all three phases have landed on `feature/pricing-anchor-coherence`.** §1 and §2 describe live behaviour. The "today" expressions in the §3 inventory and the "before" columns in §4 record the pre-fix state the audit found and are kept as the historical register; the defect rows marked for Phase 2/3 are resolved except the noted copy leftovers (§4 item 6) and the orphaned `/start-b` BuyBoxCard (§4 item 7).
+**Status (2026-08-28): all three phases are merged to main; the same day, SCRUM-1285 added the `quarterly-otp` cadence and revised the anchor scheme to the ascending-ladder form.** §1 and §2 describe live behaviour. §3 and §4 are the historical register from the Phase 1 audit: the "today" expressions in §3 and the "before/after" columns in §4 describe the pre-fix state and the first (same-day, superseded) anchor scheme; current anchors and percentages live only in §2. The unresolved leftovers from §4 remain the copy understatements (item 6) and the orphaned `/start-b` BuyBoxCard (item 7).
 
 **The layer these rules govern is the offer catalogue: `OFFER_PRICING` (type `OfferPricing`) in `app/lib/offerData.ts`.** It serves every surface that sells: the PDPs, the cart drawer, the account portal, JSON-LD and meta descriptions, and the legacy Build Your Order and trial landing flows. It is not a Build Your Order module; that flow is just one legacy consumer.
 
@@ -21,53 +21,49 @@ Charged prices are out of scope here and never change as part of this work. Pre-
 5. **Both's one-off reference price is £119.98**: one Flow box plus one Clear box (2 x £59.99), not the £89.99 Both one-off box. This is what makes the £3.00 per-shot valuation used across the site sourceable (£119.98 / 40 shots = £3.00) rather than arbitrary.
 6. **Gift RRPs in a value stack are display-only and pre-add.** They never reach a cart line or checkout (`docs/development/CART_PRICING_SOURCE_OF_TRUTH.md`).
 7. **`freeShotsValue` is a live gift-stack anchor, not dead code.** It is the struck RRP on the bonus-shots tile of the PDP gift grid (`GiftValueStack`, landing with `feature/starter-pack` / SCRUM-1283). Derivation: bonus shots x the £3.00 one-time per-shot value, presented with a .99 ending (8 shots = £23.99, 16 = £47.99, 20 = £59.99). Do not delete it.
+8. **The discount ladder ascends.** For the same product, a larger quantity or deeper commitment never shows a smaller badge (the Magic Mind pattern; decided by Rudh 28 Aug 2026). This is achieved structurally, not by declaring numbers: every anchor scales linearly from the monthly-size one-time reference unit (§2), so a quantity-discounted large offering can never be its own anchor and shrink its badge.
 
 ## 2. The canonical anchors (one per product per cadence)
 
-Real purchasable prices verified against Shopify Admin on 2026-08-28 (CONKA Read-Only app). The Skio selling-plan work created dedicated one-time variants whose base prices give quarterly its first real one-time anchor: FLOW-60 / CLEAR-60 at £189.99 and BOTH-120 at £279.99 (all ACTIVE and available for sale).
+**The anchor scheme (revised 2026-08-28, SCRUM-1285 follow-up, decided by Rudh from the Magic Mind pattern):** every anchor derives from one **reference unit** per product, the monthly-size one-time order, all-in (`MONTHLY_OTP_ALL_IN` in `offerData.ts`: £69.98 for a single formula, £129.97 for Both). Anchors scale linearly: a quarterly offering anchors to **three** reference units, each paying its own £9.99 postage. The quarterly one-time is itself a discounted offer (postage paid once instead of three times), so it carries its own badge and is never used as an anchor; its compare-at drops the one postage both routes pay, per rule 4. This is what makes the badge ladder ascend with quantity (rule 8).
 
-| Product | Cadence | Price | Anchor | Anchor source (real price) | Derived % |
-|---------|---------|-------|--------|----------------------------|-----------|
-| Flow | monthly-sub | £39.99 | £69.98 | FLOW-FUNNEL-20-OTP all-in charged price (£59.99 + £9.99 postage) | 43% |
-| Flow | monthly-otp | £59.99 + £9.99 | none | Is the reference price | 0% |
-| Flow | quarterly-sub | £109.99 | £189.99 | FLOW-60 one-time base price (Skio-era variant 58457811550582) | 42% |
-| Clear | monthly-sub | £39.99 | £69.98 | CLEAR-FUNNEL-20-OTP all-in charged price | 43% |
-| Clear | monthly-otp | £59.99 + £9.99 | none | Is the reference price | 0% |
-| Clear | quarterly-sub | £109.99 | £189.99 | CLEAR-60 one-time base price (58457854411126) | 42% |
-| Both | monthly-sub | £74.99 | £129.97 | Flow + Clear reference value + one order's postage (£119.98 + £9.99) | 42% |
-| Both | monthly-otp | £89.99 + £9.99 | £119.98 | One Flow box + one Clear box (2 x £59.99, postage cancels) | 25% |
-| Both | quarterly-sub | £149.99 | £369.93 | 3 x Flow + Clear reference value + one order's postage | 59% |
-| Flow | quarterly-otp | £180.00 + £9.99 | none | Is the reference price (FLOW-60 charges £189.99 all-in) | 0% |
-| Clear | quarterly-otp | £180.00 + £9.99 | none | Is the reference price (CLEAR-60 charges £189.99 all-in) | 0% |
-| Both | quarterly-otp | £270.00 + £9.99 | £359.94 | 3 x Flow + Clear reference value (postage cancels, one-time vs one-time) | 25% |
+| Product | Cadence | Price | Anchor | Anchor derivation | Derived % |
+|---------|---------|-------|--------|-------------------|-----------|
+| Flow | monthly-otp | £59.99 + £9.99 | none | Is the reference unit (FLOW-FUNNEL-20-OTP charges £69.98) | 0% |
+| Flow | quarterly-otp | £180.00 + £9.99 | £199.95 | 3 reference units minus the one shared postage (3 x £69.98 - £9.99) | 10% |
+| Flow | monthly-sub | £39.99 | £69.98 | 1 reference unit, all-in (sub ships free) | 43% |
+| Flow | quarterly-sub | £109.99 | £209.94 | 3 reference units, all-in (3 x £69.98) | 48% |
+| Clear | monthly-otp | £59.99 + £9.99 | none | Is the reference unit | 0% |
+| Clear | quarterly-otp | £180.00 + £9.99 | £199.95 | 3 reference units minus the one shared postage | 10% |
+| Clear | monthly-sub | £39.99 | £69.98 | 1 reference unit, all-in | 43% |
+| Clear | quarterly-sub | £109.99 | £209.94 | 3 reference units, all-in | 48% |
+| Both | monthly-otp | £89.99 + £9.99 | £119.98 | One Flow box + one Clear box (2 x £59.99; postage cancels, same one order) | 25% |
+| Both | quarterly-otp | £270.00 + £9.99 | £379.92 | 3 reference units minus the one shared postage (3 x £129.97 - £9.99) | 29% |
+| Both | monthly-sub | £74.99 | £129.97 | 1 reference unit: Flow + Clear value + one order's postage | 42% |
+| Both | quarterly-sub | £149.99 | £389.91 | 3 reference units, all-in (3 x £129.97) | 62% |
 
-The `quarterly-otp` cadence was added in SCRUM-1285 (the selection-aware "Buy it once" link); its Both entry mirrors the monthly bundle logic, so both one-time bundles state the same 25%.
+**The ladders, per product, ascending with quantity and commitment (the point of the scheme):** Flow/Clear 0% -> 10% -> 43% -> 48%; Both 25% -> 29% -> 42% -> 62%.
 
-### Provisional: the Both anchor basis (decision note, 2026-08-28)
+### Decision notes (both provisional, adjustable as pure data)
 
-Both anchors reference **the value of Flow + Clear bought separately**, not the £89.99 Both one-off box. Direction set by Rudh on 28 Aug ("both is now going to reference the value of flow and clear base price"), explicitly **not concrete**: the anchors are pure data (`BOTH_REFERENCE_PRICE` / `QUARTERLY_OTP_PRICE` in `offerData.ts`), so flipping basis is a two-line change with no component work. What each basis yields:
+**1. Both references the value of Flow + Clear** bought separately, not the £89.99 Both box (Rudh, 28 Aug: "both is now going to reference the value of flow and clear base price"). `BOTH_REFERENCE_PRICE` = £119.98 feeds the Both reference unit. The rejected alternative (anchor to the Both-box one-time prices £99.98 / £279.99) strikes only single-SKU prices but hides the bundle discount and makes Both look barely discounted next to the singles.
 
-| Both entry | Component-value basis (shipped) | Both-box basis (alternative) |
-|------------|--------------------------------|------------------------------|
-| monthly-sub | £129.97 anchor, 42% | £99.98 (BOTH-FUNNEL-40-OTP all-in), 25% |
-| monthly-otp | £119.98 anchor, 25% | none (the box is the reference), 0% |
-| quarterly-sub | £369.93 anchor, 59% | £279.99 (BOTH-120 base price), 46% |
-
-Trade-off in one line: the component-value basis tells the "the bundle is worth £119.98 of product" story everywhere and keeps the £3.00/shot valuation load-bearing, at the cost of larger struck prices (£369.93) that are a derived value rather than a single purchasable SKU price (buying FLOW-60 + CLEAR-60 in one cart actually charges £379.98 because each Skio SKU bakes postage in; we count postage once per order, per rule 4). The Both-box basis strikes only prices a single SKU charges, but hides the bundle discount and makes Both look barely discounted (25%) next to the singles (43%). Adjust after seeing it rendered if the numbers read wrong.
+**2. The quarterly anchor is three monthly-size orders, not the quarterly one-time SKU** (Rudh, 28 Aug, from the Magic Mind screenshot: MM's 60-bottle strike is the 15-bottle price scaled, its badges ascend 50/58/60%, and its large one-time sits below its own struck value). The earlier same-day scheme anchored quarterly subs to the FLOW-60 / CLEAR-60 base prices (£189.99, yielding 42%), which inverted the ladder: the quarterly badge (42%) sat below the monthly badge (43%) because the quarterly one-time is itself discounted. Superseded within the day; the Skio-era one-time prices are now offerings (the `quarterly-otp` cadence, SCRUM-1285), not anchors.
 
 Notes:
 
-- The Both one-off's 25% is the bundle discount stated (rule 5). The Both subscription's 42% then reads consistently next to the singles' 43%: subscribing saves you roughly the same proportion whichever product you pick, and Both is additionally cheaper per shot.
-- The quarterly one-time variants bake per-order postage in, the same way the monthly OTP SKUs do: £189.99 sits 3p above 3 x £59.99 + £9.99 (£189.96, rounded up to a .99 ending).
-- `OFFER_PRICING`'s `compareAtPrice` fields now hold exactly these anchors (SCRUM-1258); no displayed `price` changed.
+- The quarterly one-time SKUs bake per-order postage in, like the monthly OTP SKUs: FLOW-60 charges £189.99 all-in (3p above 3 x £59.99 + £9.99 = £189.96, rounded up to a .99 ending); BOTH-120 charges £279.99.
+- `OFFER_PRICING`'s `compareAtPrice` fields hold exactly these anchors; no displayed `price` has changed at any point in this work.
 
 ### Worked examples
 
-- **Flow monthly subscription**: £39.99, ships free. Same 20 priced shots bought once: £59.99 + £9.99 postage = £69.98 all-in. Save = (69.98 - 39.99) / 69.98 = 42.9% -> **43%**. The +8 free first-order shots are a gift line, not part of the percentage.
-- **Flow quarterly subscription**: £109.99, ships free. Same 60 priced shots bought once: FLOW-60 at £189.99 (a real ACTIVE variant). Save = (189.99 - 109.99) / 189.99 = 42.1% -> **42%**. The +20 free shots per cycle stay out of the maths.
+- **Flow monthly subscription**: £39.99, ships free. One reference unit: £59.99 + £9.99 = £69.98 all-in. Save = (69.98 - 39.99) / 69.98 = 42.9% -> **43%**. The +8 free first-order shots are a gift line, not part of the percentage.
+- **Flow quarterly subscription**: £109.99, ships free. Three reference units: 3 x £69.98 = £209.94 (three separate monthly-size orders, each with postage). Save = (209.94 - 109.99) / 209.94 = 47.6% -> **48%**. The +20 free shots per cycle stay out of the maths.
+- **Flow quarterly one-time**: £180.00 + £9.99 postage (FLOW-60 charges £189.99). Compare-at: three reference units minus the one postage this order also pays: £209.94 - £9.99 = £199.95 against the £180.00 product price. Save = (199.95 - 180.00) / 199.95 = 10.0% -> **10%** (the consolidation saving: one postage instead of three, plus 3p of rounding).
 - **Both one-time**: £89.99 + £9.99 postage. Reference: one Flow box + one Clear box = £119.98 (both routes pay the same one order's postage, so it cancels). Save = (119.98 - 89.99) / 119.98 = 25.0% -> **25%**.
-- **Both monthly subscription**: £74.99, ships free. Same 40 priced shots bought once as Flow + Clear: £119.98 + £9.99 = £129.97 all-in. Save = (129.97 - 74.99) / 129.97 = 42.3% -> **42%**.
-- **Both quarterly subscription**: £149.99, ships free. Same 120 priced shots bought once as Flow + Clear: 3 x £119.98 + £9.99 = £369.93 all-in. Save = (369.93 - 149.99) / 369.93 = 59.5% -> **59%**.
+- **Both monthly subscription**: £74.99, ships free. One reference unit: £119.98 + £9.99 = £129.97 all-in. Save = (129.97 - 74.99) / 129.97 = 42.3% -> **42%**.
+- **Both quarterly one-time**: £270.00 + £9.99 postage (BOTH-120 charges £279.99). Compare-at: 3 x £129.97 - £9.99 = £379.92 against £270.00. Save = 28.9% -> **29%**.
+- **Both quarterly subscription**: £149.99, ships free. Three reference units: 3 x £129.97 = £389.91. Save = (389.91 - 149.99) / 389.91 = 61.5% -> **62%**.
 - **Gift value stack (Flow PDP)**: 8 bonus shots x £3.00 one-time per-shot = £23.99 struck RRP (`freeShotsValue`). Display-only, pre-add (rules 6 and 7).
 
 ## 3. Surface inventory (every price, strike, and percentage)
@@ -133,7 +129,7 @@ Additional defects, ranked PDP-first for SCRUM-1259:
 3. **Quarterly anchor spelled two ways** (`OTP_PRICE.both * 3` vs hardcoded `179.97`): unify to one expression (SCRUM-1258).
 4. **Portal savings use stale fields** (row 11): fixed automatically by the field reconciliation.
 5. **Legacy `/start` and `/start-b` badges show the declared 46** (rows 21, 22): inherit the derived 42% when the override path dies; verify copy still reads sensibly.
-6. **Hardcoded copy percentages** (rows 13, 20, 24): with subscriptions deriving 42 to 43%, "Subscribe later and save 25% or more" and BYO's "Subscribe and save 25%" remain true but now understate; safe to leave, tighten when copy is next touched. The lander "43%" stays right for Flow/Clear; "Save 31%" matches nothing and should go.
+6. **Hardcoded copy percentages** (rows 13, 20, 24): with subscriptions deriving 42 to 62%, "Subscribe later and save 25% or more" and BYO's "Subscribe and save 25%" remain true but understate; safe to leave, tighten when copy is next touched. The lander "43%" stays right for Flow/Clear monthly; "Save 31%" matches nothing and should go.
 7. `/start-b/BuyBoxCard.tsx` is orphaned; flagged for the orphan-sweep process, not this work.
 
 ## 5. Where this doc sits

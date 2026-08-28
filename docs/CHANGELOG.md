@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-28** | Discount badges now ascend with pack size (the Magic Mind pattern): every anchor derives from the monthly-size one-time reference unit scaled by months, so quarterly subs badge 48/62% and the quarterly one-times gain their own 10/29% badges. No price changed.
 - **2026-08-28** | Quarterly one-time is now purchasable: the Buy-it-once link on the PDPs and Build Your Order follows the selected plan card, offering the 60/120-shot one-time (£180 or £270 + £9.99 postage) wired to the Skio-era SKUs, with cart upsell to the matching quarterly subscription.
 - **2026-08-28** | Fixed the crossed-out prices and save badges on the PDP buy panel, BYO plan cards and cart drawer: every strike is now the real compare-at anchor (no more reverse-derived quarterly strikes), the one-time link itemises postage, and Both one-time states its bundle saving against the £119.98 Flow + Clear value.
 - **2026-08-28** | Every savings percentage now derives from a real compare-at anchor: removed the declared discountPercent override, reconciled the compareAtPrice fields (Both provisionally anchors to the Flow + Clear component value), unified the quarterly anchors. Prices unchanged; badges move to 43/42 (singles) and 42/25/59 (Both).

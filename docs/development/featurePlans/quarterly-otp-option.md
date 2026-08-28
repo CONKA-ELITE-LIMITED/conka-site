@@ -6,7 +6,7 @@ Scoped 2026-08-28, immediately after the pricing anchor coherence work (SCRUM-12
 
 The quarterly plans have no one-time equivalent on-site: a bulk buyer who will not subscribe has no path to 60/120 shots, and the £189.99 quarterly anchor the site now strikes is a price you can only actually pay off-site. Adding the option captures sub-averse volume buyers (£189.99 to £279.99 orders vs £69.98 today) and makes the quarterly anchor demonstrably purchasable, which is the trust thesis of the anchor work.
 
-**Cannibalisation risk acknowledged:** quarterly sub is the highest-LTV plan. Mitigation is placement: the one-time offer stays a subordinate text link under the CTA with the sub card showing its 42% saving beside it. Kill-switch is trivial (remove the link, keep the data).
+**Cannibalisation risk acknowledged:** quarterly sub is the highest-LTV plan. Mitigation is placement: the one-time offer stays a subordinate text link under the CTA with the subscription cards showing their far larger savings (43 to 62%) beside it. Kill-switch is trivial (remove the link, keep the data).
 
 ## Approach
 
@@ -15,7 +15,7 @@ A fourth cadence (`quarterly-otp`) in the offer catalogue (`app/lib/offerData.ts
 ### Decided
 
 - **Itemised display:** £180.00 + £9.99 postage (Flow/Clear) and £270.00 + £9.99 (Both). Totals match the Shopify variant prices to the penny (£189.99 / £279.99), and per-shot lands at £3.00 / £2.25, identical to the monthly one-time, keeping the per-shot story coherent. This supersedes the earlier all-in-display idea and resolves the 3p rounding wrinkle (3 x £59.99 + £9.99 = £189.96, not £189.99).
-- **Anchors:** singles quarterly-otp is its own reference (no compareAtPrice). Both quarterly-otp anchors to 3 x BOTH_REFERENCE_PRICE = £359.94 (postage cancels one-time vs one-time), deriving 25%, matching the monthly Both one-off.
+- **Anchors (revised same day, the ascending-ladder scheme):** every compare-at derives from the monthly-size one-time reference unit (`MONTHLY_OTP_ALL_IN`: £69.98 single, £129.97 Both) scaled by months, so the badge ladder ascends with quantity (the Magic Mind pattern, decided by Rudh from the MM screenshot: their 60-bottle strike is the 15-bottle price scaled and their badges ascend 50/58/60%). Quarterly one-times carry their own badge (three postages collapse to one): Flow/Clear anchor £199.95 deriving 10%, Both anchor £379.92 deriving 29%. Quarterly subs anchor to three full reference units: £209.94 deriving 48%, Both £389.91 deriving 62%. Full ladders: Flow/Clear 0/10/43/48, Both 25/29/42/62. Canonical statement: `docs/ops/offerings-and-discounts.md` §2. This superseded the first draft of this plan, which had the quarterly SKU base prices as the quarterly-sub anchors (42%) and inverted the ladder against the monthly 43%.
 - **Cart attribute `plan_frequency` stays `"one-time"`** for quarterly OTP; the SKU distinguishes size.
 - **Upsell:** exactly one new edge, quarterly-otp to quarterly-sub. No cross-size upsells.
 - **Synergy:** cleared 2026-08-28 by Rudh. The new variants are compositions of existing products, so no new 3PL SKU setup is needed.
@@ -32,13 +32,13 @@ A fourth cadence (`quarterly-otp`) in the offer catalogue (`app/lib/offerData.ts
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Data layer: quarterly-otp cadence, pricing, variants, detection, upsell maps | Not Started |
-| 2 | Surfaces: selection-aware one-time link on PDP and BYO, summaries | Not Started |
+| 1 | Data layer: quarterly-otp cadence, pricing, variants, detection, upsell maps | Complete (2026-08-28) |
+| 2 | Surfaces: selection-aware one-time link on PDP and BYO, summaries | Complete (2026-08-28) |
 | 3 | Shipping on top: un-bake £9.99 from OTP SKUs, Shopify shipping profile, Synergy rate mapping | Future, ops-gated |
 
 ### Phase 1: Data layer (`app/lib/offerData.ts`, `app/lib/byoCheckout.ts`)
 
-1. Extend `OfferCadence` with `"quarterly-otp"`; add three `OFFER_PRICING` entries (price 180.00 / 180.00 / 270.00, `postage: OTP_POSTAGE`, shotCount 60/60/120, perShot 3.00/3.00/2.25; `both` gets `compareAtPrice: 3 * BOTH_REFERENCE_PRICE`).
+1. Extend `OfferCadence` with `"quarterly-otp"`; add three `OFFER_PRICING` entries (price 180.00 / 180.00 / 270.00, `postage: OTP_POSTAGE`, shotCount 60/60/120, perShot 3.00/3.00/2.25; compare-at values per the ascending-ladder anchors in the Decided section).
 2. `OFFER_VARIANTS` entries for the three SKUs (no selling plan); extend `detectOfferCadence` so a quarterly variant without a selling plan resolves to `quarterly-otp`.
 3. Typed ripple (the compiler enumerates it): `getCadenceFrequency` (returns "one-time"), `OFFER_CADENCES` display entry, `getUpsellOffer` (quarterly-otp upgrades to quarterly-sub), `cartUpsell.resolveUpgrade` (same edge), `getOfferPriceRange` (high becomes £189.99, accurate), BYO checkout mapping.
 
@@ -79,5 +79,5 @@ Reprice OTP variants down (£69.98 to £59.99, £99.98 to £89.99, £189.99 to �
 
 | Ticket | Title | Phase | Status |
 |--------|-------|-------|--------|
-| SCRUM-1285 | [Website & CRO] Quarterly one-time purchase option on the PDPs and Build Your Order | 1 + 2 | To Do |
+| SCRUM-1285 | [Website & CRO] Quarterly one-time purchase option on the PDPs and Build Your Order | 1 + 2 | For review |
 | SCRUM-1286 | [Shopify & Subscriptions] Shipping on top: un-bake postage from one-time SKUs and charge a real shipping rate | 3 (ops-gated, backlog) | To Do |

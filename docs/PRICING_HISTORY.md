@@ -23,7 +23,9 @@ SCRUM-1285 made the quarterly one-time purchasable on-site through the selection
 | Clear | Quarterly one-time | £180.00 + £9.99 postage (£189.99 charged, CLEAR-60) | £3.00 | 60 |
 | Both | Quarterly one-time | £270.00 + £9.99 postage (£279.99 charged, BOTH-120) | £2.25 | 120 |
 
-Both quarterly one-time anchors to 3 x £119.98 = £359.94 (the Flow + Clear reference value), deriving 25%, the same bundle discount as the monthly one-time. All nine existing offers are unchanged. "From" per-shot figures unchanged. Same day, the BYO footer CTA was corrected to show the all-in charged price on one-time cadences (the monthly one-time footer had understated £69.98 as £59.99; display only, no charge changed).
+All nine existing offers are unchanged in price. "From" per-shot figures unchanged. Same day, the BYO footer CTA was corrected to show the all-in charged price on one-time cadences (the monthly one-time footer had understated £69.98 as £59.99; display only, no charge changed).
+
+Also same day, the anchor scheme was revised to the ascending-ladder form (decided by Rudh from the Magic Mind pattern): every compare-at now derives from the monthly-size one-time reference unit (£69.98 single / £129.97 Both), scaled by the number of months, so a larger pack always shows a bigger badge. No price changed; the displayed percentages moved: Flow/Clear quarterly sub 42% -> 48% (anchor £209.94), Both quarterly sub 59% -> 62% (anchor £389.91), and the quarterly one-times gained their own badges: Flow/Clear 10% (anchor £199.95), Both 29% (anchor £379.92). The full ladders: Flow/Clear 0/10/43/48, Both 25/29/42/62. Rules: `docs/ops/offerings-and-discounts.md` §2.
 
 ### 2026-08-28 (representation correction + anchor audit; no charged price changed)
 
