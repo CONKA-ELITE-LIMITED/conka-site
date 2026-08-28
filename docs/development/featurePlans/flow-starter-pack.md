@@ -237,7 +237,7 @@ The two physical gifts are real Shopify products, both correctly unpublished (ch
 
 Decisions, 28 Aug 2026:
 
-- **Hat SKU stays `25` for now.** Humphrey may already have registered it with Synergy under that string, and the pick keys on whatever Synergy holds, not on what reads well. Blocking question for him: which SKU does Synergy have on file for the hat, and has he sent them anything for the travel pack? Until answered, every `bundlecomposition` uses `1x25`.
+- **Hat SKU is `CONKA-HAT`** (set 28 Aug 2026, superseding the earlier decision to leave it as `25`). Every `bundlecomposition` uses `1xCONKA-HAT`, and Shopify is internally consistent. The open question moved to Synergy rather than away: the pick keys on whatever **they** hold, so confirm with Humphrey which SKUs Synergy has on file for both gifts. If they were registered as `25` or `capsules30day`, the compositions have to change or the pick fails.
 - **Travel pack SKU is `CONKA-TRAVEL-PACK-28`** (set 28 Aug 2026), capsule count encoded. A 14-cap pack is a different physical item with different cost, weight and value, so it takes its own SKU (`-14`) rather than silently redefining this one, the same convention as `FLOW-FUNNEL-28` to `-20`. Count, not duration: "2 weeks" is derived from the dose and stops being true when the dose changes.
 - The hat needs no count. One hat is one hat.
 
@@ -247,6 +247,13 @@ Consequences to watch:
 - The £28.99 RRP is pinned to 28 capsules. Halving the pack moves that figure in `STARTER_PACK_GIFTS`, in every value-stack total, and in all six pack shots, so the artwork should be commissioned at the final spec.
 - The travel pack must be switched to tracked with real stock before it can be a bundle component. Synergy cannot pick what Shopify does not count.
 - The hat is £0.00 and oversells. Both are safe while it stays unpublished, and both must be fixed first if it is ever sold standalone.
+
+### Quarterly kit contents, two commercial calls (independent review, 29 Aug 2026)
+
+Both are inherited from the existing quarterly convention rather than introduced here, but the kit is now advertising around them.
+
+- **The quarterly singles over-ship.** `FLOW-STARTER-80` and `CLEAR-STARTER-80` advertise 80 first-order shots and explode to `3x*-FUNNEL-28`, which is 84, every cycle. The customer gets four free shots a quarter, so no complaint risk, but it is a standing margin cost nobody has decided to accept.
+- **`BOTH-STARTER-140` is 140 shots split 84 Flow to 56 Clear.** An AM and PM user therefore runs out of Clear roughly four weeks before Flow. Worth deciding whether that is intended, because the kit frames the two formulas as a system.
 
 ### Open questions
 
