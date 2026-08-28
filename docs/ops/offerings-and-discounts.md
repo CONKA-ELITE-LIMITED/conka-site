@@ -39,7 +39,7 @@ Real purchasable prices verified against Shopify Admin on 2026-08-28 (CONKA Read
 Notes:
 
 - The Both one-off's 25% and the Both subscription's 25% read as consistent by design: the one-off is 25% off buying the two singles, and subscribing saves a further 25% off the one-off. That coherence is the point of rule 5 (see SCRUM-1259's context).
-- The quarterly one-time variants bake per-order postage in, the same way the monthly OTP SKUs do: £189.99 is 3 x £59.99 + £9.99 to the penny (rounded to a .99 ending), £279.99 is 3 x £89.99 + £9.99 likewise.
+- The quarterly one-time variants bake per-order postage in, the same way the monthly OTP SKUs do: £189.99 sits 3p above 3 x £59.99 + £9.99 (£189.96, rounded up to a .99 ending), and £279.99 likewise above £279.96.
 - `OFFER_PRICING`'s stored `compareAtPrice` fields currently disagree with these anchors on several entries (see §4). SCRUM-1258 reconciles the fields; no displayed price changes.
 
 ### Worked examples
@@ -79,7 +79,7 @@ Every component that renders a price, a crossed-out price, or a savings percenta
 | 20 | legacy | `/build-your-order` metadata: "Subscribe and save 25%" | hardcoded string | **Yes under the new rules** (Both monthly derives to 25%) |
 | 21 | legacy | `/start` S5 buy box | `compareAtPrice ?? otp.price` (£89.99), `savingsPercent = getDisplayDiscount` (46), "Save 46%" badge | **No** (declared 46) |
 | 22 | legacy | `/start-b` S5 | `S5_SAVINGS_PERCENT = getDisplayDiscount(both monthly-sub)` = 46 | **No** (declared 46). Its `BuyBoxCard.tsx` is orphaned (defined, never rendered) |
-| 23 | legacy | `/lander`, `/lander-b` OfferCards strike | `subPricing.compareAtPrice` (£59.99 / £89.99) | **Yes** as prices (real box prices, postage cancels out of neither side consistently), but a different anchor spelling from the PDPs |
+| 23 | legacy | `/lander`, `/lander-b` OfferCards strike | `subPricing.compareAtPrice` (£59.99 / £89.99) | **Yes** as prices (real ex-postage box prices), but a different anchor from the PDPs, which strike the all-in charged £69.98 / £99.98 |
 | 24 | legacy | `/lander`, `/lander-b` hero/nav copy: "43% off", BuyCard aria "Save 31%" | hardcoded strings | 43 matches the Flow/Clear derivation; 31 matches nothing |
 | 25 | legacy | `landingPricing.ts` string constants (feed `CROTestimonials`, `LandingProductShowcase`, `LandingProductSplit`, `CrashChart`, `LabFAQ`, `LandingTestimonials`) | duplicated price strings (£74.99, £1.87, etc.) | **Yes** today (match `OFFER_PRICING`) but hand-maintained duplicates; consolidation is Phase 4 scope |
 | 26 | ads | `/go/[slug]` listicles and quizzes | per-page config, does not read `OFFER_PRICING` discount fields | Out of scope for this work; governed by `docs/features/GO_LANDING_PAGES.md` |
@@ -97,14 +97,14 @@ What `getDisplayDiscount` returns today (declared override) vs what the canonica
 
 | Entry | Price | Stored `compareAtPrice` today | Declared `discountPercent` today | Shown today | Anchor after | Derived after | Change |
 |-------|-------|-------------------------------|----------------------------------|-------------|--------------|---------------|--------|
-| flow/monthly-sub | 39.99 | 59.99 (unread for display; disagrees with the £69.98 strike shown) | 43 | 43% | 69.98 | 43% | none visible; field reconciled |
+| flow/monthly-sub | 39.99 | 59.99 (read only by the portal savings line, row 11; disagrees with the £69.98 strike the PDP shows) | 43 | 43% | 69.98 | 43% | none visible; field reconciled, portal savings line becomes £29.99 |
 | flow/monthly-otp | 59.99 | none | none | 0% | none | 0% | none |
 | flow/quarterly-sub | 109.99 | 179.97 (hardcoded) | 63 | 63% + fabricated £297.27 strike | 189.99 | 42% | **63 -> 42**, strike becomes real |
 | clear/monthly-sub | 39.99 | 59.99 | 43 | 43% | 69.98 | 43% | none visible; field reconciled |
 | clear/monthly-otp | 59.99 | none | none | 0% | none | 0% | none |
 | clear/quarterly-sub | 109.99 | 179.97 (hardcoded) | 63 | 63% + fabricated £297.27 strike | 189.99 | 42% | **63 -> 42**, strike becomes real |
 | both/monthly-sub | 74.99 | 89.99 (`OTP_PRICE.both`) | 46 | 46% | 99.98 | 25% | **46 -> 25** |
-| both/monthly-otp | 89.99 | none | 29 | 29% (renders nowhere found in audit; feeds `getDisplayDiscount` if ever read) | 119.98 | 25% | **29 -> 25**, gains its decided £119.98 strike (SCRUM-1259) |
+| both/monthly-otp | 89.99 | none | 29 | 29% (renders nowhere today; would surface through `getDisplayDiscount` if any surface read it) | 119.98 | 25% | **29 -> 25**, gains its decided £119.98 strike (SCRUM-1259) |
 | both/quarterly-sub | 149.99 | 269.97 (`OTP_PRICE.both * 3`) | 69 | 69% + fabricated £483.84 strike | 279.99 | 46% | **69 -> 46**, strike becomes real |
 
 Additional defects, ranked PDP-first for SCRUM-1259:
