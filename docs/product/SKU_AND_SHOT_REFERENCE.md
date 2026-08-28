@@ -54,7 +54,7 @@ Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL
 
 ### Skio-era variants (created for the Skio selling-plan migration)
 
-Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the same three products, each attached to a Skio "Subscription" selling-plan group; the **base price is the one-time price** and the plan discounts it to the subscription price. All ACTIVE and available for sale. The 60/120-shot base prices are the first real purchasable quarterly one-time prices, and become the quarterly discount anchors in SCRUM-1258 (see [`../ops/offerings-and-discounts.md`](../ops/offerings-and-discounts.md)).
+Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the same three products, each attached to a Skio "Subscription" selling-plan group; the **base price is the one-time price** and the plan discounts it to the subscription price. All ACTIVE and available for sale. The 60-shot base prices are the first real purchasable quarterly one-time prices, and become the single-formula quarterly discount anchors in SCRUM-1258; Both anchors reference the Flow + Clear component value instead of BOTH-120 (provisional, see [`../ops/offerings-and-discounts.md`](../ops/offerings-and-discounts.md)).
 
 | SKU | Title | One-time base price | Variant GID (numeric) | Postage handling |
 |-----|-------|---------------------|-----------------------|------------------|

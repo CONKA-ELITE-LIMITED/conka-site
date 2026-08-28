@@ -34,7 +34,7 @@ Not a price change: every checkout total is identical to the 2026-07-14 baseline
 
 "From" per-shot figures are unchanged: Flow £1.83, Clear £1.83, Both £1.25.
 
-The savings percentages shown on the site are due to change in SCRUM-1258 (percentages derive from real anchors instead of declared numbers; prices stay identical): Flow/Clear monthly stays 43%, Flow/Clear quarterly 63% -> 42%, Both monthly 46% -> 25%, Both one-time 29% -> 25%, Both quarterly 69% -> 46%.
+The savings percentages shown on the site change in SCRUM-1258 (percentages derive from real anchors instead of declared numbers; prices stay identical): Flow/Clear monthly stays 43%, Flow/Clear quarterly 63% -> 42%, Both monthly 46% -> 42%, Both one-time 29% -> 25%, Both quarterly 69% -> 59%. Both anchors reference the value of Flow + Clear bought separately (provisional; decision note in `docs/ops/offerings-and-discounts.md`).
 
 ### 2026-07-14 (baseline)
 

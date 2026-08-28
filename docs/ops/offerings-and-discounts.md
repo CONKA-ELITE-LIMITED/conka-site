@@ -32,23 +32,35 @@ Real purchasable prices verified against Shopify Admin on 2026-08-28 (CONKA Read
 | Clear | monthly-sub | £39.99 | £69.98 | CLEAR-FUNNEL-20-OTP all-in charged price | 43% |
 | Clear | monthly-otp | £59.99 + £9.99 | none | Is the reference price | 0% |
 | Clear | quarterly-sub | £109.99 | £189.99 | CLEAR-60 one-time base price (58457854411126) | 42% |
-| Both | monthly-sub | £74.99 | £99.98 | BOTH-FUNNEL-40-OTP all-in charged price (£89.99 + £9.99 postage) | 25% |
+| Both | monthly-sub | £74.99 | £129.97 | Flow + Clear reference value + one order's postage (£119.98 + £9.99) | 42% |
 | Both | monthly-otp | £89.99 + £9.99 | £119.98 | One Flow box + one Clear box (2 x £59.99, postage cancels) | 25% |
-| Both | quarterly-sub | £149.99 | £279.99 | BOTH-120 one-time base price (58457864077686) | 46% |
+| Both | quarterly-sub | £149.99 | £369.93 | 3 x Flow + Clear reference value + one order's postage | 59% |
+
+### Provisional: the Both anchor basis (decision note, 2026-08-28)
+
+Both anchors reference **the value of Flow + Clear bought separately**, not the £89.99 Both one-off box. Direction set by Rudh on 28 Aug ("both is now going to reference the value of flow and clear base price"), explicitly **not concrete**: the anchors are pure data (`BOTH_REFERENCE_PRICE` / `QUARTERLY_OTP_PRICE` in `offerData.ts`), so flipping basis is a two-line change with no component work. What each basis yields:
+
+| Both entry | Component-value basis (shipped) | Both-box basis (alternative) |
+|------------|--------------------------------|------------------------------|
+| monthly-sub | £129.97 anchor, 42% | £99.98 (BOTH-FUNNEL-40-OTP all-in), 25% |
+| monthly-otp | £119.98 anchor, 25% | none (the box is the reference), 0% |
+| quarterly-sub | £369.93 anchor, 59% | £279.99 (BOTH-120 base price), 46% |
+
+Trade-off in one line: the component-value basis tells the "the bundle is worth £119.98 of product" story everywhere and keeps the £3.00/shot valuation load-bearing, at the cost of larger struck prices (£369.93) that are a derived value rather than a single purchasable SKU price (buying FLOW-60 + CLEAR-60 in one cart actually charges £379.98 because each Skio SKU bakes postage in; we count postage once per order, per rule 4). The Both-box basis strikes only prices a single SKU charges, but hides the bundle discount and makes Both look barely discounted (25%) next to the singles (43%). Adjust after seeing it rendered if the numbers read wrong.
 
 Notes:
 
-- The Both one-off's 25% and the Both subscription's 25% read as consistent by design: the one-off is 25% off buying the two singles, and subscribing saves a further 25% off the one-off. That coherence is the point of rule 5 (see SCRUM-1259's context).
-- The quarterly one-time variants bake per-order postage in, the same way the monthly OTP SKUs do: £189.99 sits 3p above 3 x £59.99 + £9.99 (£189.96, rounded up to a .99 ending), and £279.99 likewise above £279.96.
-- `OFFER_PRICING`'s stored `compareAtPrice` fields currently disagree with these anchors on several entries (see §4). SCRUM-1258 reconciles the fields; no displayed price changes.
+- The Both one-off's 25% is the bundle discount stated (rule 5). The Both subscription's 42% then reads consistently next to the singles' 43%: subscribing saves you roughly the same proportion whichever product you pick, and Both is additionally cheaper per shot.
+- The quarterly one-time variants bake per-order postage in, the same way the monthly OTP SKUs do: £189.99 sits 3p above 3 x £59.99 + £9.99 (£189.96, rounded up to a .99 ending).
+- `OFFER_PRICING`'s `compareAtPrice` fields now hold exactly these anchors (SCRUM-1258); no displayed `price` changed.
 
 ### Worked examples
 
 - **Flow monthly subscription**: £39.99, ships free. Same 20 priced shots bought once: £59.99 + £9.99 postage = £69.98 all-in. Save = (69.98 - 39.99) / 69.98 = 42.9% -> **43%**. The +8 free first-order shots are a gift line, not part of the percentage.
 - **Flow quarterly subscription**: £109.99, ships free. Same 60 priced shots bought once: FLOW-60 at £189.99 (a real ACTIVE variant). Save = (189.99 - 109.99) / 189.99 = 42.1% -> **42%**. The +20 free shots per cycle stay out of the maths.
 - **Both one-time**: £89.99 + £9.99 postage. Reference: one Flow box + one Clear box = £119.98 (both routes pay the same one order's postage, so it cancels). Save = (119.98 - 89.99) / 119.98 = 25.0% -> **25%**.
-- **Both monthly subscription**: £74.99, ships free. Same 40 priced shots bought once: £89.99 + £9.99 = £99.98 all-in. Save = (99.98 - 74.99) / 99.98 = 25.0% -> **25%**.
-- **Both quarterly subscription**: £149.99, ships free. Same 120 priced shots bought once: BOTH-120 at £279.99. Save = (279.99 - 149.99) / 279.99 = 46.4% -> **46%**.
+- **Both monthly subscription**: £74.99, ships free. Same 40 priced shots bought once as Flow + Clear: £119.98 + £9.99 = £129.97 all-in. Save = (129.97 - 74.99) / 129.97 = 42.3% -> **42%**.
+- **Both quarterly subscription**: £149.99, ships free. Same 120 priced shots bought once as Flow + Clear: 3 x £119.98 + £9.99 = £369.93 all-in. Save = (369.93 - 149.99) / 369.93 = 59.5% -> **59%**.
 - **Gift value stack (Flow PDP)**: 8 bonus shots x £3.00 one-time per-shot = £23.99 struck RRP (`freeShotsValue`). Display-only, pre-add (rules 6 and 7).
 
 ## 3. Surface inventory (every price, strike, and percentage)
@@ -103,9 +115,9 @@ What `getDisplayDiscount` returns today (declared override) vs what the canonica
 | clear/monthly-sub | 39.99 | 59.99 | 43 | 43% | 69.98 | 43% | none visible; field reconciled |
 | clear/monthly-otp | 59.99 | none | none | 0% | none | 0% | none |
 | clear/quarterly-sub | 109.99 | 179.97 (hardcoded) | 63 | 63% + fabricated £297.27 strike | 189.99 | 42% | **63 -> 42**, strike becomes real |
-| both/monthly-sub | 74.99 | 89.99 (`OTP_PRICE.both`) | 46 | 46% | 99.98 | 25% | **46 -> 25** |
+| both/monthly-sub | 74.99 | 89.99 (`OTP_PRICE.both`) | 46 | 46% | 129.97 | 42% | **46 -> 42** |
 | both/monthly-otp | 89.99 | none | 29 | 29% (renders nowhere today; would surface through `getDisplayDiscount` if any surface read it) | 119.98 | 25% | **29 -> 25**, gains its decided £119.98 strike (SCRUM-1259) |
-| both/quarterly-sub | 149.99 | 269.97 (`OTP_PRICE.both * 3`) | 69 | 69% + fabricated £483.84 strike | 279.99 | 46% | **69 -> 46**, strike becomes real |
+| both/quarterly-sub | 149.99 | 269.97 (`OTP_PRICE.both * 3`) | 69 | 69% + fabricated £483.84 strike | 369.93 | 59% | **69 -> 59**, strike becomes a derived component value (see the provisional decision note in §2) |
 
 Additional defects, ranked PDP-first for SCRUM-1259:
 
@@ -113,8 +125,8 @@ Additional defects, ranked PDP-first for SCRUM-1259:
 2. **PDP badge vs cart badge disagree** (row 9 vs row 1): once every surface derives from the same `compareAtPrice`, CartDrawer's private formula should collapse into the shared derivation.
 3. **Quarterly anchor spelled two ways** (`OTP_PRICE.both * 3` vs hardcoded `179.97`): unify to one expression (SCRUM-1258).
 4. **Portal savings use stale fields** (row 11): fixed automatically by the field reconciliation.
-5. **Legacy `/start` and `/start-b` badges show the declared 46** (rows 21, 22): inherit the derived 25% when the override path dies; verify copy still reads sensibly.
-6. **Hardcoded copy percentages** (rows 13, 20, 24): re-check each against the derived table after Phase 2; "25% or more" and "Subscribe and save 25%" become exactly right, the lander "43%" stays right for Flow/Clear, "Save 31%" matches nothing and should go.
+5. **Legacy `/start` and `/start-b` badges show the declared 46** (rows 21, 22): inherit the derived 42% when the override path dies; verify copy still reads sensibly.
+6. **Hardcoded copy percentages** (rows 13, 20, 24): with subscriptions deriving 42 to 43%, "Subscribe later and save 25% or more" and BYO's "Subscribe and save 25%" remain true but now understate; safe to leave, tighten when copy is next touched. The lander "43%" stays right for Flow/Clear; "Save 31%" matches nothing and should go.
 7. `/start-b/BuyBoxCard.tsx` is orphaned; flagged for the orphan-sweep process, not this work.
 
 ## 5. Where this doc sits

@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-28** | Every savings percentage now derives from a real compare-at anchor: removed the declared discountPercent override, reconciled the compareAtPrice fields (Both provisionally anchors to the Flow + Clear component value), unified the quarterly anchors. Prices unchanged; badges move to 43/42 (singles) and 42/25/59 (Both).
 - **2026-08-28** | Pricing anchor audit (SCRUM-1257): wrote the canonical discount anchor rules and surface inventory (docs/ops/offerings-and-discounts.md), recorded the Skio-era quarterly one-time base prices from Shopify, corrected the stale one-time prices in SKU_AND_SHOT_REFERENCE.md, and reframed the offerData.ts header as the offer catalogue. Docs only, no price or behaviour change.
 - **2026-08-28** | Renamed the offer data layer from byoData to offerData and deleted the dead 4/8/12 trial-pack pricing chain. No behaviour change: prices, variants, analytics and JSON-LD are byte-identical.
 - **2026-08-27** | Corrected the docs the orphan sweep invalidated, including a design system rule that told people to use a deleted component

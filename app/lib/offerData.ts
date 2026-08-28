@@ -35,15 +35,17 @@ export interface OfferPricing {
   perDay: number;
   /** Priced (billed) shots — the amount the price buys, excluding free shots */
   shotCount: number;
-  /** Crossed-out compare-at "was" value (value stack: OTP + bonus-shot value + postage). Absent on one-time entries. */
-  compareAtPrice?: number;
   /**
-   * Published discount % to display (factors in free shots). When set, this is
-   * the source of truth for the "Save X%" figure; otherwise the displayed
-   * discount falls back to the derived saving vs compareAtPrice. See
-   * getDisplayDiscount.
+   * The discount anchor: the real price a customer would pay today for the same
+   * priced shots bought one-time. All-in (product + per-order postage) when this
+   * cadence ships free; ex-postage when both sides of the comparison carry the
+   * same postage (one-time vs one-time, where it cancels). Every displayed
+   * "Save X%" and crossed-out price derives from this field via
+   * getDisplayDiscount; there is no declared-percentage path. Absent on entries
+   * that are themselves the reference (single-formula one-time).
+   * Rules and worked examples: docs/ops/offerings-and-discounts.md.
    */
-  discountPercent?: number;
+  compareAtPrice?: number;
 
   // ============================================
   // OFFER TRIAL (B) — "20 + 8 free" model fields
@@ -58,7 +60,13 @@ export interface OfferPricing {
   subsequentShots?: number;
   /** Compulsory postage on one-time orders (£). Absent/0 = free postage (subscriptions). */
   postage?: number;
-  /** Value attributed to the free bonus shots (freeShots × OTP per-shot), for the "was" stack. */
+  /**
+   * Value attributed to the free bonus shots: freeShots x the £3.00 one-time
+   * per-shot value, presented with a .99 ending (8 -> 23.99, 16 -> 47.99,
+   * 20 -> 59.99). Display-only, pre-add: it is the struck RRP on the PDP
+   * gift-stack tile (GiftValueStack) and never reaches a cart line. It is a
+   * gift valuation, never part of a discount percentage.
+   */
   freeShotsValue?: number;
 }
 
@@ -114,27 +122,32 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
 }
 
 /**
- * The discount % to DISPLAY for a pricing entry. Prefers the explicit,
- * published `discountPercent` (which factors in free shots); otherwise falls
- * back to the derived saving vs the compare-at price. Returns 0 when neither
- * applies, so callers can keep using `savePct > 0` to decide whether to show a
- * badge.
+ * The discount % to DISPLAY for a pricing entry: always derived from the
+ * compare-at anchor, never declared. Returns 0 when the entry has no anchor
+ * (it is itself the reference), so callers can keep using `savePct > 0` to
+ * decide whether to show a badge. Free bonus shots are a gift and never enter
+ * this percentage (docs/ops/offerings-and-discounts.md).
  */
 export function getDisplayDiscount(pricing: OfferPricing): number {
-  if (pricing.discountPercent != null) return pricing.discountPercent;
   if (pricing.compareAtPrice != null) {
     return getSavingsPercent(pricing.price, pricing.compareAtPrice);
   }
   return 0;
 }
 
-// OFFER TRIAL (B) — "20 + 8 free" pricing model.
-// perShot is computed on PRICED shots. compareAtPrice is the REAL one-time (OTP)
-// price for the same shots — a verifiable "was" the buyer can see on the OTP
-// option (monthly anchors against 1 one-time box, quarterly against 3). Free
+// "20 + 8 free" pricing model. perShot is computed on PRICED shots. Free
 // shots / postage / app are shown as separate FREE line items, NOT rolled into
-// an inflated "was". One-time entries carry no compareAtPrice (they ARE the
-// reference) but DO carry compulsory `postage`.
+// an inflated "was". Single-formula one-time entries carry no compareAtPrice
+// (they ARE the reference) but DO carry compulsory `postage`.
+//
+// ANCHORS (SCRUM-1258; rules in docs/ops/offerings-and-discounts.md):
+// - Monthly subs anchor to the all-in one-time price for the same shots
+//   (product + per-order postage), since subscriptions ship free.
+// - Quarterly single subs anchor to the real Skio-era one-time base prices
+//   (FLOW-60 / CLEAR-60), read from Shopify 2026-08-28.
+// - Both anchors reference the VALUE OF FLOW + CLEAR bought separately, not
+//   the £89.99 Both box (PROVISIONAL, 2026-08-28: adjustable data, see the
+//   ops doc's decision note).
 // NOTE: free-shot counts (esp. quarterly) are still under review — single source of truth here.
 const OTP_PRICE: Record<OfferProduct, number> = {
   both: 89.99,
@@ -145,6 +158,28 @@ const OTP_PRICE: Record<OfferProduct, number> = {
 /** Compulsory postage charged on one-time orders (subscriptions ship free). */
 const OTP_POSTAGE = 9.99;
 
+/**
+ * The reference one-off value for Both: one Flow box plus one Clear box
+ * (£119.98). Deliberately NOT the £89.99 Both one-off box: the Both box is
+ * itself a discount against buying the two singles, and this reference is what
+ * makes the £3.00 per-shot valuation used across the site sourceable
+ * (£119.98 / 40 shots = £3.00).
+ */
+const BOTH_REFERENCE_PRICE = OTP_PRICE.flow + OTP_PRICE.clear;
+
+/**
+ * The quarterly one-time anchor per product. Singles use the real purchasable
+ * Skio-era one-time base prices (FLOW-60 / CLEAR-60 at £189.99, which is
+ * 3 boxes + one order's postage rounded up to a .99 ending; verified in
+ * Shopify Admin 2026-08-28). Both derives from the Flow + Clear reference
+ * value plus one order's postage, per the Both anchor basis above.
+ */
+const QUARTERLY_OTP_PRICE: Record<OfferProduct, number> = {
+  flow: 189.99,
+  clear: 189.99,
+  both: 3 * BOTH_REFERENCE_PRICE + OTP_POSTAGE,
+};
+
 const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = {
   both: {
     "monthly-sub": {
@@ -152,8 +187,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.87,
       perDay: 3.74,
       shotCount: 40,
-      compareAtPrice: OTP_PRICE.both,
-      discountPercent: 46,
+      // All-in cost of the same shots bought once as Flow + Clear (one order's postage).
+      compareAtPrice: BOTH_REFERENCE_PRICE + OTP_POSTAGE,
       freeShots: 16,
       firstOrderShots: 56,
       subsequentShots: 40,
@@ -161,7 +196,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
     },
     "monthly-otp": {
       price: OTP_PRICE.both,
-      discountPercent: 29,
+      // One Flow box + one Clear box; postage cancels (both routes pay one order's postage).
+      compareAtPrice: BOTH_REFERENCE_PRICE,
       perShot: 2.25,
       perDay: 4.5,
       shotCount: 40,
@@ -172,8 +208,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.25,
       perDay: 2.5,
       shotCount: 120,
-      compareAtPrice: OTP_PRICE.both * 3,
-      discountPercent: 69,
+      compareAtPrice: QUARTERLY_OTP_PRICE.both,
       freeShots: 20,
       firstOrderShots: 140,
       subsequentShots: 140,
@@ -186,8 +221,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      compareAtPrice: 59.99,
-      discountPercent: 43,
+      // All-in cost of the same shots bought once (FLOW-FUNNEL-20-OTP charges £69.98).
+      compareAtPrice: OTP_PRICE.flow + OTP_POSTAGE,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -205,8 +240,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: 179.97,
-      discountPercent: 63,
+      compareAtPrice: QUARTERLY_OTP_PRICE.flow,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 80,
@@ -219,8 +253,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.0,
       perDay: 2.0,
       shotCount: 20,
-      compareAtPrice: 59.99,
-      discountPercent: 43,
+      // All-in cost of the same shots bought once (CLEAR-FUNNEL-20-OTP charges £69.98).
+      compareAtPrice: OTP_PRICE.clear + OTP_POSTAGE,
       freeShots: 8,
       firstOrderShots: 28,
       subsequentShots: 20,
@@ -238,8 +272,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 1.83,
       perDay: 1.83,
       shotCount: 60,
-      compareAtPrice: 179.97,
-      discountPercent: 63,
+      compareAtPrice: QUARTERLY_OTP_PRICE.clear,
       freeShots: 20,
       firstOrderShots: 80,
       subsequentShots: 80,
