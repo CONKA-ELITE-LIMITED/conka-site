@@ -35,7 +35,7 @@ The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"pri
 | Clear | Quarterly one-time² | £180.00 + £9.99 postage¹ | 60 | — | 60 | — | £3.00 |
 | Both | Quarterly one-time² | £270.00 + £9.99 postage¹ | 120 | — | 120 | — | £2.25 |
 
-¹ One-time pricing is itemised in code and UI as product price + £9.99 compulsory per-order postage (`OTP_PRICE` + `OTP_POSTAGE`); the Shopify OTP variant bakes the postage into its price (£69.98 / £69.98 / £99.98, quarterly £189.99 / £189.99 / £279.99) so the checkout total matches. `perShot` is the ex-postage product price over priced shots. Subscriptions always ship free.
+¹ One-time pricing is itemised in the data layer as product price + £9.99 compulsory per-order postage (`OTP_PRICE` + `OTP_POSTAGE`), but **displayed as the single all-in figure** (`getChargedPrice`), matching the Shopify OTP variant, which bakes the postage into its price (£69.98 / £69.98 / £99.98, quarterly £189.99 / £189.99 / £279.99). The itemised UI split was reverted 2026-08-28; it returns when SCRUM-1286 moves shipping out of the SKU prices (see `docs/TODO.md`). `perShot` is the ex-postage product price over priced shots. Subscriptions always ship free.
 
 ² Quarterly one-time (`quarterly-otp` cadence, SCRUM-1285): sold through the selection-aware "Buy it once" link on the PDPs and Build Your Order, wired to the Skio-era FLOW-60 / CLEAR-60 / BOTH-120 variants below.
 

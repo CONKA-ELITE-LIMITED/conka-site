@@ -6,6 +6,7 @@ import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
+  getChargedPrice,
   getDisplayDiscount,
   getOtpCadenceFor,
   OFFER_CADENCES,
@@ -653,7 +654,6 @@ export default function ProductBuyPanel({
   // 60/120-shot OTP). The page's onOtpAddToCart derives the same cadence.
   const otpCadence = getOtpCadenceFor(selectedCadence);
   const otpPricing = getCadencePricingByProductHeroId(formulaId, otpCadence);
-  const otpSavePct = getDisplayDiscount(otpPricing);
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [
@@ -702,12 +702,10 @@ export default function ProductBuyPanel({
           {ctaLabel}
         </ConkaCTAButton>
 
-        {/* The one-time purchase sits under the main CTA (MM pattern), itemised
-            as product price + per-order postage. Both carries a struck
-            Flow-plus-Clear reference (£119.98 monthly, £359.94 quarterly) so
-            the bundle discount is stated rather than hidden; postage cancels
-            out of that comparison, so the strike sits against the ex-postage
-            price. */}
+        {/* The one-time purchase sits under the main CTA (MM pattern). All-in
+            price (postage baked, per SCRUM-1286's pending Shopify shipping
+            work); the strike is the all-in anchor, so strike, price and badge
+            are mutually checkable on one clean line. */}
         <button
           type="button"
           onClick={onOtpAddToCart}
@@ -721,11 +719,7 @@ export default function ProductBuyPanel({
               </s>{" "}
             </>
           )}
-          <span className="tabular-nums">{formatPrice(otpPricing.price)}</span>
-          {otpPricing.postage ? (
-            <> + {formatPrice(otpPricing.postage)} postage</>
-          ) : null}
-          {otpSavePct > 0 && <> · save {otpSavePct}%</>}
+          <span className="tabular-nums">{formatPrice(getChargedPrice(otpPricing))}</span>
         </button>
 
         <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />

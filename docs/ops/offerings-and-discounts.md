@@ -15,9 +15,7 @@ Charged prices are out of scope here and never change as part of this work. Pre-
 1. **One anchor per product per cadence, derived from a real purchasable price.** An anchor (the crossed-out "was" price) must be a price a customer could actually pay today for the same priced shots. No anchor may be reverse-engineered from a percentage.
 2. **Every percentage is derived, never declared.** `Save X%` = `round((anchor - price) / anchor * 100)`. A percentage with no compare-at price behind it is a defect. (`getDisplayDiscount` currently allows a declared `discountPercent` to override the derivation; SCRUM-1258 removes that path.)
 3. **Free bonus shots are a gift and never sit inside a discount percentage.** The percentage is price against price on the shots the customer pays for. Free shots appear as a separate gift line ("+8 free shots"), never folded into the maths.
-4. **Postage is £9.99 per order, not per box.** One-time orders carry it (itemised in the UI, baked into the Shopify OTP variant price); subscriptions ship free.
-   - When the two sides of a comparison carry the **same** postage (one-time vs one-time), the anchor excludes postage: it cancels out.
-   - When only one side carries postage (subscription vs one-time), the anchor is the **all-in charged** one-time price (`getChargedPrice`): the postage saving is real.
+4. **Postage is £9.99 per order, not per box.** One-time orders carry it (baked into both the Shopify OTP variant price and the displayed figure, pending SCRUM-1286); subscriptions ship free. **Every discount comparison is all-in totals**: the entry's charged price (`getChargedPrice`) against an all-in anchor. No ex-postage comparisons; postage consolidation is simply part of the saving it produces.
 5. **Both's one-off reference price is £119.98**: one Flow box plus one Clear box (2 x £59.99), not the £89.99 Both one-off box. This is what makes the £3.00 per-shot valuation used across the site sourceable (£119.98 / 40 shots = £3.00) rather than arbitrary.
 6. **Gift RRPs in a value stack are display-only and pre-add.** They never reach a cart line or checkout (`docs/development/CART_PRICING_SOURCE_OF_TRUTH.md`).
 7. **`freeShotsValue` is a live gift-stack anchor, not dead code.** It is the struck RRP on the bonus-shots tile of the PDP gift grid (`GiftValueStack`, landing with `feature/starter-pack` / SCRUM-1283). Derivation: bonus shots x the £3.00 one-time per-shot value, presented with a .99 ending (8 shots = £23.99, 16 = £47.99, 20 = £59.99). Do not delete it.
@@ -25,24 +23,26 @@ Charged prices are out of scope here and never change as part of this work. Pre-
 
 ## 2. The canonical anchors (one per product per cadence)
 
-**The anchor scheme (revised 2026-08-28, SCRUM-1285 follow-up, decided by Rudh from the Magic Mind pattern):** every anchor derives from one **reference unit** per product, the monthly-size one-time order, all-in (`MONTHLY_OTP_ALL_IN` in `offerData.ts`: £69.98 for a single formula, £129.97 for Both). Anchors scale linearly: a quarterly offering anchors to **three** reference units, each paying its own £9.99 postage. The quarterly one-time is itself a discounted offer (postage paid once instead of three times), so it carries its own badge and is never used as an anchor; its compare-at drops the one postage both routes pay, per rule 4. This is what makes the badge ladder ascend with quantity (rule 8).
+**The anchor scheme (revised 2026-08-28, SCRUM-1285 follow-up, decided by Rudh from the Magic Mind pattern):** every anchor derives from one **reference unit** per product, the monthly-size one-time order, all-in (`MONTHLY_OTP_ALL_IN` in `offerData.ts`: £69.98 for a single formula, £129.97 for Both). Anchors scale linearly: a quarterly offering anchors to **three** reference units, each paying its own £9.99 postage, giving one anchor per size (£209.94 / £389.91) shared by the subscription and one-time of that size. The quarterly one-time is itself a discounted offer (postage paid once instead of three times), so it derives a saving and is never used as an anchor. **Everything compares all-in totals**: `getDisplayDiscount` sets the entry's charged price (`getChargedPrice`) against the all-in anchor, so the struck price, the shown price and the badge are always mutually checkable. This is what makes the badge ladder ascend with quantity (rule 8).
 
-| Product | Cadence | Price | Anchor | Anchor derivation | Derived % |
-|---------|---------|-------|--------|-------------------|-----------|
-| Flow | monthly-otp | £59.99 + £9.99 | none | Is the reference unit (FLOW-FUNNEL-20-OTP charges £69.98) | 0% |
-| Flow | quarterly-otp | £180.00 + £9.99 | £199.95 | 3 reference units minus the one shared postage (3 x £69.98 - £9.99) | 10% |
-| Flow | monthly-sub | £39.99 | £69.98 | 1 reference unit, all-in (sub ships free) | 43% |
-| Flow | quarterly-sub | £109.99 | £209.94 | 3 reference units, all-in (3 x £69.98) | 48% |
-| Clear | monthly-otp | £59.99 + £9.99 | none | Is the reference unit | 0% |
-| Clear | quarterly-otp | £180.00 + £9.99 | £199.95 | 3 reference units minus the one shared postage | 10% |
-| Clear | monthly-sub | £39.99 | £69.98 | 1 reference unit, all-in | 43% |
-| Clear | quarterly-sub | £109.99 | £209.94 | 3 reference units, all-in | 48% |
-| Both | monthly-otp | £89.99 + £9.99 | £119.98 | One Flow box + one Clear box (2 x £59.99; postage cancels, same one order) | 25% |
-| Both | quarterly-otp | £270.00 + £9.99 | £379.92 | 3 reference units minus the one shared postage (3 x £129.97 - £9.99) | 29% |
-| Both | monthly-sub | £74.99 | £129.97 | 1 reference unit: Flow + Clear value + one order's postage | 42% |
-| Both | quarterly-sub | £149.99 | £389.91 | 3 reference units, all-in (3 x £129.97) | 62% |
+**Presentation (decided by Rudh 2026-08-28, superseding the same-day itemised version):** displayed one-time prices are the single all-in figure with postage baked in, matching the Shopify charge; the itemised "£X + £9.99 postage" split wrapped the buy-once link onto two lines and was reverted. The one-time link shows the struck anchor and the all-in price only, with no "save %" text (the strike infers it). The itemised presentation returns when SCRUM-1286 formally moves shipping out of the SKU prices (see `docs/TODO.md`).
 
-**The ladders, per product, ascending with quantity and commitment (the point of the scheme):** Flow/Clear 0% -> 10% -> 43% -> 48%; Both 25% -> 29% -> 42% -> 62%.
+| Product | Cadence | Charged price | Anchor | Anchor derivation | Derived % |
+|---------|---------|---------------|--------|-------------------|-----------|
+| Flow | monthly-otp | £69.98 | none | Is the reference unit (FLOW-FUNNEL-20-OTP) | 0% |
+| Flow | quarterly-otp | £189.99 | £209.94 | 3 reference units (3 x £69.98) | 10% |
+| Flow | monthly-sub | £39.99 | £69.98 | 1 reference unit | 43% |
+| Flow | quarterly-sub | £109.99 | £209.94 | 3 reference units | 48% |
+| Clear | monthly-otp | £69.98 | none | Is the reference unit | 0% |
+| Clear | quarterly-otp | £189.99 | £209.94 | 3 reference units | 10% |
+| Clear | monthly-sub | £39.99 | £69.98 | 1 reference unit | 43% |
+| Clear | quarterly-sub | £109.99 | £209.94 | 3 reference units | 48% |
+| Both | monthly-otp | £99.98 | £129.97 | 1 reference unit: Flow + Clear value + one order's postage | 23% |
+| Both | quarterly-otp | £279.99 | £389.91 | 3 reference units (3 x £129.97) | 28% |
+| Both | monthly-sub | £74.99 | £129.97 | 1 reference unit | 42% |
+| Both | quarterly-sub | £149.99 | £389.91 | 3 reference units | 62% |
+
+**The ladders, per product, ascending with quantity and commitment (the point of the scheme):** Flow/Clear 0% -> 10% -> 43% -> 48%; Both 23% -> 28% -> 42% -> 62%. (The one-time percentages render nowhere at present: the buy-once link shows only the strike, and one-time cart lines carry no badge.)
 
 ### Decision notes (both provisional, adjustable as pure data)
 
@@ -59,10 +59,10 @@ Notes:
 
 - **Flow monthly subscription**: £39.99, ships free. One reference unit: £59.99 + £9.99 = £69.98 all-in. Save = (69.98 - 39.99) / 69.98 = 42.9% -> **43%**. The +8 free first-order shots are a gift line, not part of the percentage.
 - **Flow quarterly subscription**: £109.99, ships free. Three reference units: 3 x £69.98 = £209.94 (three separate monthly-size orders, each with postage). Save = (209.94 - 109.99) / 209.94 = 47.6% -> **48%**. The +20 free shots per cycle stay out of the maths.
-- **Flow quarterly one-time**: £180.00 + £9.99 postage (FLOW-60 charges £189.99). Compare-at: three reference units minus the one postage this order also pays: £209.94 - £9.99 = £199.95 against the £180.00 product price. Save = (199.95 - 180.00) / 199.95 = 10.0% -> **10%** (the consolidation saving: one postage instead of three, plus 3p of rounding).
-- **Both one-time**: £89.99 + £9.99 postage. Reference: one Flow box + one Clear box = £119.98 (both routes pay the same one order's postage, so it cancels). Save = (119.98 - 89.99) / 119.98 = 25.0% -> **25%**.
-- **Both monthly subscription**: £74.99, ships free. One reference unit: £119.98 + £9.99 = £129.97 all-in. Save = (129.97 - 74.99) / 129.97 = 42.3% -> **42%**.
-- **Both quarterly one-time**: £270.00 + £9.99 postage (BOTH-120 charges £279.99). Compare-at: 3 x £129.97 - £9.99 = £379.92 against £270.00. Save = 28.9% -> **29%**.
+- **Flow quarterly one-time**: charged £189.99 (FLOW-60, postage baked). Anchor: three reference units, £209.94. Save = (209.94 - 189.99) / 209.94 = 9.5% -> **10%** (the consolidation saving: one postage instead of three, plus 3p of rounding). Rendered as struck £209.94 beside £189.99 on the buy-once link; the percentage itself is not printed.
+- **Both one-time**: charged £99.98 (postage baked). Anchor: one reference unit, £119.98 of product + £9.99 = £129.97. Save = (129.97 - 99.98) / 129.97 = 23.1% -> **23%**. Struck £129.97 beside £99.98 on the link.
+- **Both monthly subscription**: £74.99, ships free. One reference unit: £129.97 all-in. Save = (129.97 - 74.99) / 129.97 = 42.3% -> **42%**.
+- **Both quarterly one-time**: charged £279.99 (BOTH-120). Anchor: three reference units, £389.91. Save = 28.2% -> **28%**. Struck £389.91 beside £279.99 on the link.
 - **Both quarterly subscription**: £149.99, ships free. Three reference units: 3 x £129.97 = £389.91. Save = (389.91 - 149.99) / 389.91 = 61.5% -> **62%**.
 - **Gift value stack (Flow PDP)**: 8 bonus shots x £3.00 one-time per-shot = £23.99 struck RRP (`freeShotsValue`). Display-only, pre-add (rules 6 and 7).
 

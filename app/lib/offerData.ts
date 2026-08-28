@@ -52,14 +52,13 @@ export interface OfferPricing {
   /** Priced (billed) shots — the amount the price buys, excluding free shots */
   shotCount: number;
   /**
-   * The discount anchor: the real price a customer would pay today for the same
-   * priced shots bought one-time. All-in (product + per-order postage) when this
-   * cadence ships free; ex-postage when both sides of the comparison carry the
-   * same postage (one-time vs one-time, where it cancels). Every displayed
-   * "Save X%" and crossed-out price derives from this field via
-   * getDisplayDiscount; there is no declared-percentage path. Absent on entries
-   * that are themselves the reference (single-formula one-time).
-   * Rules and worked examples: docs/ops/offerings-and-discounts.md.
+   * The discount anchor: the ALL-IN price a customer would pay today for the
+   * same priced shots via the reference route (monthly-size one-time orders,
+   * each with per-order postage). Every displayed "Save X%" and crossed-out
+   * price derives from this field via getDisplayDiscount, which compares it
+   * against this entry's all-in charged price; there is no declared-percentage
+   * path. Absent on entries that are themselves the reference (single-formula
+   * monthly one-time). Rules: docs/ops/offerings-and-discounts.md.
    */
   compareAtPrice?: number;
 
@@ -139,14 +138,18 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
 
 /**
  * The discount % to DISPLAY for a pricing entry: always derived from the
- * compare-at anchor, never declared. Returns 0 when the entry has no anchor
- * (it is itself the reference), so callers can keep using `savePct > 0` to
- * decide whether to show a badge. Free bonus shots are a gift and never enter
- * this percentage (docs/ops/offerings-and-discounts.md).
+ * compare-at anchor, never declared. Compares ALL-IN totals: the entry's
+ * charged price (price + baked postage on one-time entries; subscriptions
+ * ship free so charged = price) against the all-in anchor, so the struck
+ * price, the shown price and the badge are always mutually checkable.
+ * Returns 0 when the entry has no anchor (it is itself the reference), so
+ * callers can keep using `savePct > 0` to decide whether to show a badge.
+ * Free bonus shots are a gift and never enter this percentage
+ * (docs/ops/offerings-and-discounts.md).
  */
 export function getDisplayDiscount(pricing: OfferPricing): number {
   if (pricing.compareAtPrice != null) {
-    return getSavingsPercent(pricing.price, pricing.compareAtPrice);
+    return getSavingsPercent(getChargedPrice(pricing), pricing.compareAtPrice);
   }
   return 0;
 }
@@ -158,15 +161,18 @@ export function getDisplayDiscount(pricing: OfferPricing): number {
 //
 // ANCHORS (SCRUM-1258, ladder revision SCRUM-1285; rules in
 // docs/ops/offerings-and-discounts.md):
+// - Every comparison is ALL-IN TOTALS: compareAtPrice is the all-in cost of
+//   the alternative, and getDisplayDiscount compares it against this entry's
+//   all-in charged price (getChargedPrice). Postage is baked into displayed
+//   one-time prices for now; the itemised split returns when SCRUM-1286
+//   un-bakes shipping in Shopify.
 // - The reference unit is the MONTHLY-SIZE ONE-TIME ORDER, all-in (product +
 //   per-order postage). Anchors scale linearly from it: a quarterly offering
 //   anchors to three such orders, each paying its own postage. This makes the
 //   discount ladder ascend with quantity and commitment (the Magic Mind
-//   pattern, decided by Rudh 28 Aug 2026): larger pack, bigger badge.
-// - The quarterly one-time is itself a discounted offer (postage paid once,
-//   not three times), so it carries its own badge and is never an anchor.
-//   Its compare-at drops the one postage both routes pay (rule: postage
-//   cancels only where both sides carry it).
+//   pattern, decided by Rudh 28 Aug 2026): larger pack, bigger badge. The
+//   quarterly one-time is itself a discounted offer (postage paid once, not
+//   three times), so it carries its own badge and is never an anchor.
 // - Both anchors reference the VALUE OF FLOW + CLEAR bought separately, not
 //   the £89.99 Both box (PROVISIONAL, 2026-08-28: adjustable data, see the
 //   ops doc's decision note).
@@ -218,8 +224,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
     },
     "monthly-otp": {
       price: OTP_PRICE.both,
-      // One Flow box + one Clear box; postage cancels (both routes pay one order's postage).
-      compareAtPrice: BOTH_REFERENCE_PRICE,
+      // One reference unit, all-in: one Flow box + one Clear box + one order's postage.
+      compareAtPrice: MONTHLY_OTP_ALL_IN.both,
       perShot: 2.25,
       perDay: 4.5,
       shotCount: 40,
@@ -243,8 +249,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 2.25,
       perDay: 4.5,
       shotCount: 120,
-      // Three reference units minus the one postage both routes pay (it cancels).
-      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.both - OTP_POSTAGE,
+      // Three reference units, all-in: three monthly-size Flow + Clear orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.both,
       postage: OTP_POSTAGE,
     },
   },
@@ -286,8 +292,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 3.0,
       perDay: 3.0,
       shotCount: 60,
-      // Three reference units minus the one postage both routes pay (it cancels).
-      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.flow - OTP_POSTAGE,
+      // Three reference units, all-in: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.flow,
       postage: OTP_POSTAGE,
     },
   },
@@ -329,8 +335,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       perShot: 3.0,
       perDay: 3.0,
       shotCount: 60,
-      // Three reference units minus the one postage both routes pay (it cancels).
-      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.clear - OTP_POSTAGE,
+      // Three reference units, all-in: three monthly-size one-time orders, each with postage.
+      compareAtPrice: 3 * MONTHLY_OTP_ALL_IN.clear,
       postage: OTP_POSTAGE,
     },
   },
