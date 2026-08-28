@@ -5,11 +5,11 @@ import {
   getOfferVariant,
   detectOfferProduct,
   detectOfferCadence,
-  OFFER_PRODUCTS,
+  STARTER_SHOTS_IMAGE,
   type OfferProduct,
   type OfferCadence,
 } from "./offerData";
-import { formatPrice } from "./productData";
+import { formatPrice, bottleRenders } from "./productData";
 
 // ============================================================================
 // CART UPSELL (SCRUM-1201 / SCRUM-1202)
@@ -45,12 +45,19 @@ export interface CartUpsellTileOffer {
   targetSellingPlanId?: string;
 
   /** Display (the tile is copy-only; all wording is decided here). */
-  thumbnail: string;
+  /** Product shot, only when the product is what changes. Absent on OTP to sub. */
+  thumbnail?: string;
   headline: string;
-  /** One value/description line. Rendered green on its own, or black when a `highlight` badge sits below it. */
+  /** The hook, rendered as a filled badge. Keep it to one short line. */
   valueLine: string;
-  /** Optional green badge shown under the value line, e.g. "+16 free shots". */
+  /** Muted reassurance under the badge, e.g. "Pause or cancel anytime". */
   highlight?: string;
+  /**
+   * Gift thumbnails shown as a small row, so the offer is seen and not just
+   * read. `fit` mirrors `OfferGift.imageFit`: the tall transparent app render
+   * has to be contained or the crop eats it, exactly as on the PDP stack.
+   */
+  giftImages?: { src: string; fit: "cover" | "contain" }[];
   ctaLabel: string;
 }
 
@@ -59,6 +66,7 @@ interface UpsellCopy {
   headline: string;
   valueLine: string;
   highlight?: string;
+  giftImages?: { src: string; fit: "cover" | "contain" }[];
   ctaLabel: string;
 }
 
@@ -146,15 +154,45 @@ function buildOtpToSubCopy(
   const sub = getOfferPricing(product, subCadence);
   // Anchor against the all-in charged OTP price (postage baked into the SKU).
   const saving = (getChargedPrice(otp) - sub.price) * quantity;
+  // The starter kit is the strongest thing a one-time buyer is walking past, so
+  // it leads, framed as what they lose rather than what they gain. Value is the
+  // same sum the PDP gift stack shows: bonus shots plus every gift RRP.
+  const kitValue =
+    (sub.freeShotsValue ?? 0) +
+    (sub.gifts ?? []).reduce((sum, gift) => sum + gift.rrp, 0);
+
   // Quarterly's bonus shots ship every cycle; monthly's are first-order only.
-  const valueLine = sub.freeShots
+  const shotsLine = sub.freeShots
     ? subCadence === "quarterly-sub"
       ? `Free shipping and ${sub.freeShots} free shots with every delivery`
       : `Free shipping and ${sub.freeShots} free shots on your first order`
     : "Free shipping, cancel anytime";
+
   return {
     headline: "Make it a subscription",
-    valueLine,
+    // Floored to the nearest ten: the badge is a hook read in one beat, and a
+    // round number is both more memorable and more credible than an exact one,
+    // which invites arithmetic. Floored rather than rounded so the figure is
+    // never larger than what is actually given away. £82.96 -> "£80+".
+    valueLine: kitValue
+      ? `£${Math.floor(kitValue / 10) * 10}+ of gifts free`
+      : shotsLine,
+    highlight: kitValue ? "Pause or cancel anytime" : undefined,
+    // Bonus shots lead, same order as the PDP stack, so the four tiles are the
+    // whole kit rather than the three physical extras.
+    giftImages: kitValue
+      ? [
+          ...(sub.freeShots
+            ? [{ src: STARTER_SHOTS_IMAGE, fit: "cover" as const }]
+            : []),
+          ...(sub.gifts ?? [])
+            .filter((gift) => Boolean(gift.image))
+            .map((gift) => ({
+              src: gift.image as string,
+              fit: gift.imageFit ?? ("cover" as const),
+            })),
+        ]
+      : undefined,
     ctaLabel: saving > 0 ? `Subscribe and save ${formatPrice(saving)}` : "Switch to subscription",
   };
 }
@@ -219,7 +257,15 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
     originalQuantity: line.quantity,
     targetVariantId: targetVariant.variantId,
     targetSellingPlanId: targetVariant.sellingPlanId,
-    thumbnail: OFFER_PRODUCTS[upgrade.product].thumbnail,
+    // Shown only when the product itself is the upgrade. On OTP to subscription
+    // the product is unchanged, so a bottle shot says nothing the shopper does
+    // not already know and costs the width the gift tiles need.
+    // V4 label render, not OFFER_PRODUCTS.thumbnail: that map still points at
+    // the April cut-outs, which show the old label.
+    thumbnail:
+      upgrade.type === "single_to_both"
+        ? bottleRenders[upgrade.product].src
+        : undefined,
     ...copy,
   };
 }

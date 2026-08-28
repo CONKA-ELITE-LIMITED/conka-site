@@ -105,7 +105,7 @@ export default function ConkaClarityPage() {
   const starterPackSection = cadencePricing.starterPackImage ? (
     <PdpSection
       id="starter-pack"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       ariaLabel="What is in the starter pack"
     >
       <div className="brand-track">
@@ -256,9 +256,9 @@ export default function ConkaClarityPage() {
           </PdpSection>
 
           {ugcSection}
-          {starterPackSection}
           {ingredientsSection}
           {benefitsSection}
+          {starterPackSection}
           {whatToExpectSection}
           {comparisonSection}
           {testimonialsSection}
@@ -306,9 +306,9 @@ export default function ConkaClarityPage() {
         </PdpSection>
 
         {ugcSection}
-        {starterPackSection}
         {ingredientsSection}
         {benefitsSection}
+        {starterPackSection}
         {whatToExpectSection}
         {comparisonSection}
         {testimonialsSection}

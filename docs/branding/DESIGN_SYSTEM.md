@@ -362,7 +362,7 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 > **The forward language.** Simple DTC is where new acquisition work is heading. It reads like a modern consumer supplement brand (Magic Mind, Seed): rounded, confident, quietly branded, minimal chrome. It is built from the **Layer 1 base tokens** in `brand-base.css` — it does **not** apply `.brand-clinical`.
 >
-> Reference implementations (shipped, draw the grammar from these): the **cart drawer + `CartAppGift` + `CartUpsellStrip`** (`app/components/CartDrawer.tsx` and siblings), the **nav cart/account states** (`app/components/navigation/NavigationDesktop.tsx` / `NavigationMobile.tsx`), and **`ProductHeroV2` / `ProductHeroMobileV2`** with `HeroBadges` on `/conka-flow`.
+> Reference implementations (shipped, draw the grammar from these): the **cart drawer + `CartUpsellTile`** (`app/components/CartDrawer.tsx` and siblings), the **nav cart/account states** (`app/components/navigation/NavigationDesktop.tsx` / `NavigationMobile.tsx`), and **`ProductHeroV2` / `ProductHeroMobileV2`** with `HeroBadges` on `/conka-flow`.
 
 ### Lineage: premium → clinical → Simple DTC
 
@@ -406,7 +406,7 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 | Cards / containers / controls | `rounded-md` | product cards, cart line tiles, buy panel + `FlatPlanCard`, qty stepper, ingredient / what-to-expect / testimonial tiles, media + asset containers, the CrashChart graph tile |
 | Standalone small tiles / spec badges | `rounded-lg` | hero SpecBadge / SocialProofBadge — kept equal-or-tighter than the parent when nested inside a `rounded-md` card |
 | Primary navy | `#1B2757` (`--brand-navy`) — filled (`bg-[#1B2757] text-white`) | shop pill, active cart button, upsell CTA, "Free!" gift chip |
-| Decorative navy | `#1B2757` fill / icon fill / gradient | `CartAppGift` "Free!" chip, hero rating stars, testimonial product-name badge, mobile social-proof gradient card |
+| Decorative navy | `#1B2757` fill / icon fill / gradient | hero rating stars, testimonial product-name badge, mobile social-proof gradient card |
 | Savings / positive | green `#1a7f4f` (`--brand-positive`) at `/10` tint bg + solid text | savings %, "+N free" badge, cart Savings row, guarantee tick, PDP free-shots pill |
 | Plan Save% accent (exception) | per-plan gold `#C9A24A` (monthly) / coral `#E07A5F` (quarterly) | PDP `FlatPlanCard` "Save X%" badge ONLY — a deliberate per-cadence accent, NOT the savings green |
 

@@ -9,6 +9,7 @@
 import {
   OfferCadence,
   OfferGift,
+  STARTER_SHOTS_IMAGE,
   OfferPricing,
   OfferVariantConfig,
   OFFER_CADENCES,
@@ -24,7 +25,7 @@ import {
 import { FormulaId } from "./productData";
 import type { ProductHeroId } from "./productTypes";
 
-export { OFFER_CADENCES, getChargedPrice, getDisplayDiscount, getSavingsPercent, getOfferProductSlideshow, getOtpCadenceFor, isOtpCadence };
+export { STARTER_SHOTS_IMAGE, OFFER_CADENCES, getChargedPrice, getDisplayDiscount, getSavingsPercent, getOfferProductSlideshow, getOtpCadenceFor, isOtpCadence };
 
 // Re-export the cadence union so product pages don't import from offerData directly
 export type CadenceType = OfferCadence;

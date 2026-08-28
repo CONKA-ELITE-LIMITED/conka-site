@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { formatPrice } from "@/app/lib/productData";
+import { STARTER_SHOTS_IMAGE } from "@/app/lib/cadenceData";
 import type { CadenceGift, CadencePricing } from "@/app/lib/cadenceData";
 
 /**
@@ -27,7 +28,6 @@ import type { CadenceGift, CadencePricing } from "@/app/lib/cadenceData";
  * the cadence cards read it from.
  */
 
-const SHOTS_IMAGE = "/formulas/starterPack/EightFlow.jpg";
 
 /** Tiles a cadence gives away free, bonus shots first. */
 function getGiftTiles(pricing: CadencePricing): CadenceGift[] {
@@ -41,7 +41,7 @@ function getGiftTiles(pricing: CadencePricing): CadenceGift[] {
             id: "free-shots",
             label: `+${freeShots} free shots`,
             rrp: freeShotsValue,
-            image: SHOTS_IMAGE,
+            image: STARTER_SHOTS_IMAGE,
           },
         ]
       : []),
