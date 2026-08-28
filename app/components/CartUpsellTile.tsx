@@ -86,17 +86,23 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1B2757]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/45">
             Recommended upgrade
           </p>
-          <p className="text-sm font-bold leading-snug text-black">
+          {/* The headline carries the block, so the eyebrow steps back to a
+              muted label and the badge sits below at its own weight. */}
+          <p className="mt-0.5 text-base font-bold leading-tight text-black">
             {offer.headline}
           </p>
-          {/* The hook is a badge, not a sentence: it has to survive being read
-              at a glance beside a CTA. White on the tinted card rather than the
-              savings green, which belongs to price strikes and reads as a
-              foreign colour inside the navy cart. */}
-          <span className="mt-1 inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-bold text-[#1B2757]">
+          {/* The offer gradient the PDP uses on its selected plan card, so the
+              same visual language marks the same idea in the cart. */}
+          <span
+            className="mt-2 inline-flex items-center rounded-full border-2 border-transparent px-2.5 py-1 text-xs font-bold text-[#1B2757]"
+            style={{
+              background:
+                "linear-gradient(#ffffff,#ffffff) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+            }}
+          >
             {offer.valueLine}
           </span>
         </div>
@@ -125,7 +131,9 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
       )}
 
       {offer.highlight && (
-        <p className="mt-2 text-[11px] text-black/55">{offer.highlight}</p>
+        <p className="mt-2.5 text-center text-xs font-medium text-black">
+          {offer.highlight}
+        </p>
       )}
 
       <button

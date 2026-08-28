@@ -166,7 +166,9 @@ function buildOtpToSubCopy(
 
   return {
     headline: "Make it a subscription",
-    valueLine: kitValue ? `${formatPrice(kitValue)} of gifts, free` : shotsLine,
+    // Rounded down to a whole pound: the badge is a hook, and "£82+ free" reads
+    // in one beat where "£82.96 of gifts, free" has to be parsed.
+    valueLine: kitValue ? `£${Math.floor(kitValue)}+ of gifts free` : shotsLine,
     highlight: kitValue ? "Pause or cancel anytime" : undefined,
     // Bonus shots lead, same order as the PDP stack, so the four tiles are the
     // whole kit rather than the three physical extras.
