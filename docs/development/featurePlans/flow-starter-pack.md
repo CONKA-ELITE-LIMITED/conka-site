@@ -172,9 +172,9 @@ Note on reachability: the Flow PDP's plan cards are the two subscription cadence
 
 All six starter variants exist in Shopify with correct prices, compare-ats, weights and bundle compositions, and `OFFER_VARIANTS` now points every subscription cadence at them. GIDs are in [`../../product/SKU_AND_SHOT_REFERENCE.md`](../../product/SKU_AND_SHOT_REFERENCE.md) §1.
 
-**Four of six are attached to their Loop selling plan. Two are not:** `CLEAR-STARTER-80` and `BOTH-STARTER-140` do not appear in Loop's variant picker. They are identical in Shopify to the four that worked (same option set, active, available for sale, tracked, shippable, taxable, same inventory policy), so this is a Loop catalogue cache problem, not a data problem. Both were the last two created.
+**All six are attached to their Loop selling plan** (verified against live Shopify 28 Aug 2026: all twelve mapped cadences pass on SKU, product, price, availability, plan attachment and bundle composition).
 
-Until those two are attached, the Clear and Both **quarterly** subscribe paths send a `sellingPlanId` that is not valid for the variant, so they must not reach production. Verify with a live read before merging rather than trusting this note.
+Note for next time: `CLEAR-STARTER-80` and `BOTH-STARTER-140` did not appear in Loop's variant picker for some time after creation, while four variants created minutes earlier did. They were identical in Shopify to the ones that worked, so it was a Loop catalogue cache lag rather than a data problem. Expect it, and re-check rather than re-creating the variant.
 
 Still outstanding for Phase 3: the order-two swap, which turns `FLOW-STARTER-28` into `FLOW-FUNNEL-20`, `CLEAR-STARTER-28` into `CLEAR-FUNNEL-20` and `BOTH-STARTER-56` into `BOTH-FUNNEL-40`. Without it every renewal ships another hat and travel pack. The three quarterly kits need no swap, they ship their bonus every cycle. First renewals land roughly 28 days after launch, so this can follow, but it cannot be forgotten.
 
