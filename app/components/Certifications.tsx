@@ -23,13 +23,39 @@ export default function Certifications({
   background = "var(--brand-white)",
   className = "",
   compact = false,
+  inline = false,
 }: {
   background?: string;
   className?: string;
   /** Smaller badges and tighter padding, for sitting under a CTA button
    *  rather than standing as its own band. */
   compact?: boolean;
+  /** Smaller still, and left aligned rather than centred: for sitting inside
+   *  the hero column under the disclosure rows, where the badges are a footnote
+   *  to the buy decision rather than a band of their own. */
+  inline?: boolean;
 } = {}) {
+  if (inline) {
+    return (
+      <div
+        aria-label="Product certifications"
+        className={`flex items-center gap-4 sm:gap-5 ${className}`}
+      >
+        {CERTS.map((cert) => (
+          <Image
+            key={cert.label}
+            src={cert.src}
+            alt={cert.label}
+            width={140}
+            height={140}
+            sizes="36px"
+            className="h-auto w-9"
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <section
       aria-label="Product certifications"

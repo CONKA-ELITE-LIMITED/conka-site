@@ -10,7 +10,6 @@ import ProductComparisonTable from "@/app/components/product/ProductComparisonTa
 import PdpSection, {
   PdpSectionImpressions,
 } from "@/app/components/product/PdpSection";
-import Certifications from "@/app/components/Certifications";
 import { ClinicalIngredients } from "@/app/components/product";
 import AthleteCredibilityCarousel from "@/app/components/AthleteCredibilityCarousel";
 import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
@@ -92,8 +91,6 @@ export default function ConkaBothPage() {
   // and conka-clarity so all three PDPs share one structure. Backgrounds
   // alternate white/tint starting from the white hero. Each PdpSection's id is
   // both its anchor and its analytics name.
-  const certificationsSection = <Certifications />;
-
   const ugcSection = (
     <PdpSection
       id="ugc"
@@ -240,7 +237,6 @@ export default function ConkaBothPage() {
             </div>
           </PdpSection>
 
-          {certificationsSection}
           {ugcSection}
           {starterPackSection}
           {brainFuelSection}
@@ -290,7 +286,6 @@ export default function ConkaBothPage() {
           </div>
         </PdpSection>
 
-        {certificationsSection}
         {ugcSection}
         {starterPackSection}
         {brainFuelSection}

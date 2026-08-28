@@ -14,7 +14,6 @@ import ProductComparisonTable from "@/app/components/product/ProductComparisonTa
 import PdpSection, {
   PdpSectionImpressions,
 } from "@/app/components/product/PdpSection";
-import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
@@ -88,8 +87,6 @@ export default function ConkaFlowPage() {
   // below (only the hero differs between them). Order, backgrounds and mobile
   // spacing mirror conka-clarity and conka-both so all three PDPs share one
   // structure. Each PdpSection's id is both its anchor and its analytics name.
-  const certificationsSection = <Certifications />;
-
   const ugcSection = (
     <PdpSection
       id="ugc"
@@ -255,7 +252,6 @@ export default function ConkaFlowPage() {
             </div>
           </PdpSection>
 
-          {certificationsSection}
           {ugcSection}
           {starterPackSection}
           {ingredientsSection}
@@ -309,7 +305,6 @@ export default function ConkaFlowPage() {
           </div>
         </PdpSection>
 
-        {certificationsSection}
         {ugcSection}
         {starterPackSection}
         {ingredientsSection}

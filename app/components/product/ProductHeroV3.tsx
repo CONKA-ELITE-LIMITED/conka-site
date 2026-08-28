@@ -13,6 +13,7 @@ import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
 import IngredientDisclosureRows from "./IngredientDisclosureRows";
+import Certifications from "@/app/components/Certifications";
 
 interface ProductHeroV3Props {
   formulaId: ProductHeroId;
@@ -118,6 +119,12 @@ export default function ProductHeroV3({
           {/* The supporting answers, directly under the check grid, the way the
               reference runs them: still in the buy decision, not a section away. */}
           <IngredientDisclosureRows formulaId={formulaId} />
+
+          {/* Certification seals close the column as a footnote to the buy
+              decision. They used to stand as their own full-width band under
+              the hero, where four large circles read as a section in their own
+              right and pushed the real content down. */}
+          <Certifications inline />
         </div>
       </div>
 
