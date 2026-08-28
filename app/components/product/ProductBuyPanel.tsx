@@ -6,7 +6,6 @@ import { getOrderedActiveIngredients } from "@/app/lib/ingredientsData";
 import {
   CadenceType,
   getCadencePricingByProductHeroId,
-  getChargedPrice,
   getDisplayDiscount,
   OFFER_CADENCES,
 } from "@/app/lib/cadenceData";
@@ -187,18 +186,10 @@ function FlatPlanCard({
     if (!isSelected) setTipOpen(false);
   }, [isSelected]);
 
-  // Crossed-out "was":
-  //  - Monthly sub anchors to the real one-time (OTP) price for the same shots,
-  //    so it matches the "Buy it once" figure exactly (~43% off for Flow).
-  //  - Quarterly has no one-time equivalent, so derive a regular-price reference
-  //    from the published discount (e.g. 63% off => price / 0.37) so the
-  //    strikethrough and the Save% badge agree.
-  const compareAtDisplay =
-    cadence === "monthly-sub"
-      ? getChargedPrice(getCadencePricingByProductHeroId(formulaId, "monthly-otp"))
-      : savePct > 0
-        ? pricing.price / (1 - savePct / 100)
-        : undefined;
+  // Crossed-out "was": the compare-at anchor itself, the real cost of the same
+  // priced shots bought one-time, so the strike and the Save% badge always
+  // derive from the same number (docs/ops/offerings-and-discounts.md).
+  const compareAtDisplay = pricing.compareAtPrice;
 
   return (
     <div
@@ -657,6 +648,7 @@ export default function ProductBuyPanel({
     selectedCadence,
   );
   const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  const otpSavePct = getDisplayDiscount(otpPricing);
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [
@@ -705,13 +697,29 @@ export default function ProductBuyPanel({
           {ctaLabel}
         </ConkaCTAButton>
 
-        {/* The one-time purchase sits under the main CTA (MM pattern). */}
+        {/* The one-time purchase sits under the main CTA (MM pattern), itemised
+            as product price + per-order postage. Both carries a struck £119.98
+            (one Flow box + one Clear box) so the bundle discount is stated
+            rather than hidden; postage cancels out of that comparison, so the
+            strike sits against the ex-postage price. */}
         <button
           type="button"
           onClick={onOtpAddToCart}
           className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          Buy it once for {formatPrice(getChargedPrice(otpPricing))}
+          Buy it once for{" "}
+          {otpPricing.compareAtPrice != null && (
+            <>
+              <s className="tabular-nums text-black/40">
+                {formatPrice(otpPricing.compareAtPrice)}
+              </s>{" "}
+            </>
+          )}
+          <span className="tabular-nums">{formatPrice(otpPricing.price)}</span>
+          {otpPricing.postage ? (
+            <> + {formatPrice(otpPricing.postage)} postage</>
+          ) : null}
+          {otpSavePct > 0 && <> · save {otpSavePct}%</>}
         </button>
 
         <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />
