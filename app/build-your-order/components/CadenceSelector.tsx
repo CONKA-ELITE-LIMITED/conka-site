@@ -16,19 +16,19 @@
  */
 
 import {
-  type ByoCadence,
-  type ByoProduct,
+  type OfferCadence,
+  type OfferProduct,
   getChargedPrice,
   getOfferPricing,
   getDisplayDiscount,
-} from "@/app/lib/byoData";
+} from "@/app/lib/offerData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadenceDeliveryPeriod } from "../defaults";
 
 interface CadenceSelectorProps {
-  cadence: ByoCadence;
-  product: ByoProduct;
-  onChange: (cadence: ByoCadence) => void;
+  cadence: OfferCadence;
+  product: OfferProduct;
+  onChange: (cadence: OfferCadence) => void;
 }
 
 const GREEN = "#14532d";
@@ -54,7 +54,7 @@ function PlanCard({
   isSelected,
   onSelect,
 }: {
-  product: ByoProduct;
+  product: OfferProduct;
   planCadence: "monthly-sub" | "quarterly-sub";
   isSelected: boolean;
   onSelect: () => void;
@@ -178,7 +178,7 @@ function PlanCard({
  * the plan changes; every figure derives from the same pricing the cards read.
  * Exported frameless so the Review step's receipt reuses the same list.
  */
-export function PlanSummaryList({ product, cadence }: { product: ByoProduct; cadence: ByoCadence }) {
+export function PlanSummaryList({ product, cadence }: { product: OfferProduct; cadence: OfferCadence }) {
   const pricing = getOfferPricing(product, cadence);
   const isOtp = cadence === "monthly-otp";
   const savePct = getDisplayDiscount(pricing);
@@ -235,7 +235,7 @@ export function PlanSummaryList({ product, cadence }: { product: ByoProduct; cad
 }
 
 /** The framed "Your subscription" box shown under the plan cards. */
-function PlanSummary({ product, cadence }: { product: ByoProduct; cadence: ByoCadence }) {
+function PlanSummary({ product, cadence }: { product: OfferProduct; cadence: OfferCadence }) {
   return (
     <div className="rounded-md ring-1 ring-black/10 bg-white p-4">
       <p className="text-[16px] font-semibold text-black mb-3">

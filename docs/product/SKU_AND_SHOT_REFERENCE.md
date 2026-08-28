@@ -9,8 +9,8 @@ There are **three product generations** live in Shopify at once:
 3. **Legacy protocol products** — the retired Resilience / Precision / Balance / Ultimate protocols. **Not sold**, but existing subscribers still renew against them, so the IDs are live.
 
 > **Code source of truth** (this doc mirrors it; on any change, edit the code first, then this doc):
-> - Funnel: `app/lib/byoData.ts`
-> - Main site: `app/lib/shopifyProductMapping.ts`, `app/lib/productPricing.ts`
+> - Funnel: `app/lib/offerData.ts`
+> - Main site: `app/lib/shopifyProductMapping.ts`
 > - Legacy: `app/lib/legacy/protocolSubscriptions.ts`, `app/lib/subscriptionProduct.ts`
 > - Price-change log: [`../PRICING_HISTORY.md`](../PRICING_HISTORY.md)
 
@@ -18,7 +18,7 @@ There are **three product generations** live in Shopify at once:
 
 ## 1. Funnel products (current — actively sold)
 
-The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"priced + free shots"** model: the first subscription order ships a bonus box, then Loop swaps to the smaller recurring SKU from order 2. `perShot` is computed on **priced** shots only. Prices last verified in `byoData.ts` (baseline 2026-07-14, see PRICING_HISTORY.md).
+The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"priced + free shots"** model: the first subscription order ships a bonus box, then Loop swaps to the smaller recurring SKU from order 2. `perShot` is computed on **priced** shots only. Prices last verified in `offerData.ts` (baseline 2026-07-14, see PRICING_HISTORY.md).
 
 | Product | Cadence | Price | Priced shots | Free (1st order) | 1st-order shots | Recurring shots | Per shot |
 |---------|---------|-------|-------------|------------------|-----------------|-----------------|----------|
@@ -36,7 +36,7 @@ The `/conka-flow`, `/conka-clarity`, funnel, and landing surfaces. Uses a **"pri
 
 ### Funnel Shopify variant GIDs & selling plans
 
-Note the **first-order-swap**: the monthly-sub variant recorded in code is the *bonus* SKU (28/56). After order 1, Loop swaps the contract to the recurring SKU (20/40), **whose GID is not stored in this codebase** — it lives Loop-side. This matters for the account portal (see §5): you cannot resolve a recurring monthly subscriber's shot count by matching its variant GID against `BYO_VARIANTS`.
+Note the **first-order-swap**: the monthly-sub variant recorded in code is the *bonus* SKU (28/56). After order 1, Loop swaps the contract to the recurring SKU (20/40), **whose GID is not stored in this codebase** — it lives Loop-side. This matters for the account portal (see §5): you cannot resolve a recurring monthly subscriber's shot count by matching its variant GID against `OFFER_VARIANTS`.
 
 | Product | Cadence | SKU (label) | Variant GID (numeric) | Selling plan |
 |---------|---------|-------------|-----------------------|--------------|
@@ -69,7 +69,7 @@ PDP / home / B2B. One-time base prices; subscriptions apply a global **20%** dis
 | Clear (02) | 12 | £39.99 | £31.99 | ~£2.67 | 57000418673014 | 711429947766 (bi-weekly) |
 | Clear (02) | 28 | £79.99 | £63.99 | ~£2.29 | 57000418705782 | 711429980534 (monthly) |
 
-`TRIAL_PACK_VARIANTS` (home, one-time only) reuses the 4/8/12 GIDs above. Authoritative prices live in `app/lib/productPricing.ts` (`formulaPricing`); treat the per-shot column here as indicative.
+The 4/8/12 trial packs have no code representation any more. `TRIAL_PACK_VARIANTS`, `getTrialPackVariantId` and `app/lib/productPricing.ts` were deleted in SCRUM-1280 once every consumer had gone; the GIDs above are a Shopify record only. Treat the per-shot column as indicative. If a trial-pack surface is ever rebuilt, add it to `offerData.ts` rather than reviving a second pricing module.
 
 ---
 

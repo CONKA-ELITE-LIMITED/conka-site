@@ -147,7 +147,7 @@ async function main() {
     console.log("");
   }
 
-  // Summary for copy-paste into byoData.ts
+  // Summary for copy-paste into offerData.ts
   console.log("=== COPY-PASTE SUMMARY ===\n");
   for (const { node: product } of products) {
     const title = product.title.toLowerCase();

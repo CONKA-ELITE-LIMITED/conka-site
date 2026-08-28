@@ -1,7 +1,7 @@
 /**
  * Product data barrel.
- * Re-exports from: productTypes, productColors, productPricing,
- * formulaContent, productHelpers.
+ * Re-exports from: productTypes, productColors, formulaContent,
+ * productHelpers, productImages.
  * Consumers keep importing from "@/app/lib/productData".
  *
  * This barrel is the live product surface: formulas (Flow / Clear) and Both.
@@ -15,7 +15,6 @@
 
 export * from "./productTypes";
 export * from "./productColors";
-export * from "./productPricing";
 export * from "./formulaContent";
 export * from "./productHelpers";
 export * from "./productImages";

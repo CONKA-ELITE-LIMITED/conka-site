@@ -2,18 +2,8 @@
  * Product helper functions.
  */
 
-import type { PackSize, PurchaseType } from "./productTypes";
-import { formulaPricing } from "./productPricing";
-
 export function formatPrice(price: number): string {
   return `£${price.toFixed(2)}`;
-}
-
-export function getFormulaPricing(
-  packSize: PackSize,
-  purchaseType: PurchaseType,
-) {
-  return formulaPricing[purchaseType][packSize];
 }
 
 export function getBillingLabel(billing: string): string {

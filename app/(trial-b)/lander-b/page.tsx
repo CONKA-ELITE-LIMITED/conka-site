@@ -37,7 +37,7 @@ const Measure = dynamic(() => import('./sections/Measure/Measure'), {
   loading: () => <div style={{minHeight: 500}} />,
 });
 
-import {getOfferVariant, getOfferPricing, type ByoProduct} from '@/app/lib/byoData';
+import {getOfferVariant, getOfferPricing, type OfferProduct} from '@/app/lib/offerData';
 
 export const metadata: Metadata = {
   title: 'CONKA — Brain Performance in a Shot',
@@ -50,16 +50,16 @@ export const metadata: Metadata = {
 const money = (n: number) => '£' + n.toFixed(2);
 const perShot = (n: number) => '£' + n.toFixed(2) + '/shot';
 
-const CARD_TITLE: Record<ByoProduct, string> = {
+const CARD_TITLE: Record<OfferProduct, string> = {
   flow: 'CONKA Flow',
   clear: 'CONKA Clear',
   both: 'CONKA – Flow & Clear',
 };
 
-// Build one buy card from the canonical offer catalogue (app/lib/byoData.ts) —
+// Build one buy card from the canonical offer catalogue (app/lib/offerData.ts) —
 // the same variants, selling plans and prices the /funnel page sells. The lander
 // only offers monthly subscription + one-time for each product (no quarterly).
-function buildCard(product: ByoProduct) {
+function buildCard(product: OfferProduct) {
   const subVariant = getOfferVariant(product, 'monthly-sub');
   const otpVariant = getOfferVariant(product, 'monthly-otp');
   const subPricing = getOfferPricing(product, 'monthly-sub');

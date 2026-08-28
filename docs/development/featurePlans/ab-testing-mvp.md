@@ -211,8 +211,8 @@ pattern) is an **optional** richer-funnel follow-up, not needed for v1.
 A segmented "**choose Flow / Clear / Both**" selector on `/conka-both`, so a
 visitor picks a single formula inline instead of bouncing to another PDP.
 
-- **Self-contained, no schema/cart changes.** `byoData.ts` holds
-  `BYO_VARIANTS.flow/.clear/.both` (variant GID + selling plan per cadence),
+- **Self-contained, no schema/cart changes.** `offerData.ts` holds
+  `FUNNEL_VARIANTS.flow/.clear/.both` (variant GID + selling plan per cadence),
   and `addToCart` takes an arbitrary `variantId`/`sellingPlanId`. Add a
   `selectedProduct` state next to `selectedCadence` in `app/conka-both/page.tsx`,
   swap `getCadenceVariantByProductHeroId("03", cadence)` for a product+cadence
@@ -286,6 +286,6 @@ The two-property limit is a **Vercel Web Analytics** constraint. **Shopify cart 
 
 ---
 
-**Related:** `docs/features/LISTICLE_SYSTEM.md` · `app/lib/byoData.ts` ·
+**Related:** `docs/features/LISTICLE_SYSTEM.md` · `app/lib/offerData.ts` ·
 `app/lib/metaPixel.ts` (`getOrCreateExternalId`) · `convex/quizEvents.ts` ·
 `docs/analytics/README.md`

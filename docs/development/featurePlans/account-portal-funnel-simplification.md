@@ -69,7 +69,7 @@ Product image · clean product name (**Flow / Clear / Both**, via `getSubscripti
 ### Subscription detail view
 - **Header:** product name + Monthly/Quarterly + price + status. No cadence edit.
 - **Products:** the line(s) with a **Swap** control (same-cadence products only). "Both" is multi-line (Flow + Clear); swapping to/from it adds/removes a line (reuse the multi-line edit path). Skip = per-order skip.
-- **Upsell (filtered):** reuse `getUpsellOffer` from `byoData.ts` (Flow→Both add Clear, Clear→Both add Flow, monthly→quarterly). Filter out what they already have (don't offer Both to a Both subscriber).
+- **Upsell (filtered):** reuse `getUpsellOffer` from `offerData.ts` (Flow→Both add Clear, Clear→Both add Flow, monthly→quarterly). Filter out what they already have (don't offer Both to a Both subscriber).
 - **Shipping:** address + edit.
 - **Summary:** subtotal / shipping (free for subs) / total + "You've saved £X vs one-time" (derive from `compareAtPrice` in `BYO_PRICING`).
 - **Billing:** payment method + update (reuse `usePaymentMethods` / `triggerUpdateEmail`).
@@ -101,7 +101,7 @@ Phases 0 and 1 shipped together in SCRUM-1199 (the `DtcSubscriptionView` normali
 - `app/account/subscriptions/utils.ts` — `getSubscriptionType` (funnel-aware, reuse), `getTierDisplayInfo`/`PROTOCOL_INFO` (protocol-shaped, retire from display).
 - `app/components/subscriptions/EditSubscriptionModal.tsx` + `MultiLineEditModal.tsx` — swap UI to remodel in Phase 2.
 - `app/hooks/useSubscriptions.ts` — `changePlan` / `editMultiLine` to re-point at funnel variants.
-- `app/lib/byoData.ts` — `BYO_VARIANTS`, `getUpsellOffer`, `BYO_PRICING` (source for swap targets, upsell, savings).
+- `app/lib/offerData.ts` — `OFFER_VARIANTS`, `getUpsellOffer`, `OFFER_PRICING` (source for swap targets, upsell, savings).
 - `app/api/auth/subscriptions/**` — swap/edit routes.
 - `CancellationModal.tsx` — cancel-flow enhancement (Phase 4).
 
@@ -137,7 +137,7 @@ Still deferred (not in this visual pass): upsell accept (Phase 3), swap (Phase 2
 
 - Cosmetic restyle (complementary): [`archive/account-portal-simple-dtc.md`](./archive/account-portal-simple-dtc.md) (SCRUM-1188)
 - SKU / shot model + why the tiles were wrong: [`../../product/SKU_AND_SHOT_REFERENCE.md`](../../product/SKU_AND_SHOT_REFERENCE.md)
-- Funnel product model, swap targets, upsell, savings: `app/lib/byoData.ts`
+- Funnel product model, swap targets, upsell, savings: `app/lib/offerData.ts`
 - Skio portal structure + settings: https://help.skio.com/docs/customer-portal-v2-walkthrough , https://help.skio.com/docs/customer-portal-v2-settings
 - Skio cancel-flow best practices: https://help.skio.com/docs/cancel-flow-best-practices-guide
 - Skio supplement-churn playbook: https://skio.com/blog/why-70-of-supplement-subscribers-churn-after-order-2

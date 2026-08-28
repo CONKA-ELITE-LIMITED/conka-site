@@ -1,7 +1,7 @@
 /**
  * Pricing constants for the /start landing page.
  *
- * Source of truth: app/lib/byoData.ts (BYO_PRICING matrix).
+ * Source of truth: app/lib/offerData.ts (OFFER_PRICING matrix).
  * These are string constants so they render directly in JSX without .toFixed().
  * Update here if funnel pricing changes.
  */

@@ -25,7 +25,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 ### OTP price claims: split presentation needs `getChargedPrice` at every bare-figure site
 
 **Status:** Guarded but structural (recurring foot-gun, caught in the SCRUM-1247 review)
-**Files:** `app/lib/byoData.ts` (`getChargedPrice`, `BYO_PRICING`), any surface stating a one-time price
+**Files:** `app/lib/offerData.ts` (`getChargedPrice`, `OFFER_PRICING`), any surface stating a one-time price
 
 **The trap:** the merged data layer uses the itemised funnel-c presentation: one-time entries carry `price` EXCLUDING the compulsory GBP 9.99 postage, with `postage` as a separate field. But the Shopify OTP SKUs have postage baked into the variant price, so checkout charges `price + postage`. Any surface that states a single all-in one-time figure without an itemised postage line understates the charge by GBP 9.99. The SCRUM-1247 merge briefly did exactly this on the PDP "Buy it once" link, its compare-at anchor, the cart drawer savings anchor, the cart subscribe-upsell saving, and the start/start-b buy boxes (start-b's was a pre-existing understatement). All fixed with `getChargedPrice(pricing)`.
 
@@ -33,7 +33,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 **Residual:** Meta AddToCart/InitiateCheckout `value` from `byoCheckout` sends the ex-postage price for OTP (pre-existing funnel-c behaviour, not a regression). Consider aligning `value` to the charged price during SCRUM-1248 so Meta's value matches the order total.
 
-**What closes it fully:** either bake postage back into `price` in `BYO_PRICING` and derive the itemised split the other way round, or add a lint/convention note. Revisit when the Phase 3 copy pass touches pricing surfaces.
+**What closes it fully:** either bake postage back into `price` in `OFFER_PRICING` and derive the itemised split the other way round, or add a lint/convention note. Revisit when the Phase 3 copy pass touches pricing surfaces.
 
 ---
 
@@ -280,7 +280,7 @@ The **previous** generation of cut-outs is still referenced and shows the old la
 
 - `app/components/landing/LandingProductSplit.tsx` (itself orphaned, see the sweep entry)
 - `app/components/landing/WhatsInsideProductMini.tsx` (itself orphaned, see the sweep entry)
-- `app/lib/byoData.ts` (BYO thumbnails) **, the only live one**
+- `app/lib/offerData.ts` (BYO thumbnails) **, the only live one**
 
 pointing at `public/formulas/conkaFlow/FlowNoBackground.png` and `public/formulas/conkaClear/ClearNoBackground.png` (April 2026).
 

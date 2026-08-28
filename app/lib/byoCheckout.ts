@@ -7,20 +7,20 @@
  */
 
 import {
-  type ByoProduct,
-  type ByoCadence,
+  type OfferProduct,
+  type OfferCadence,
   getChargedPrice,
   getOfferVariant,
   getOfferPricing,
   getCadenceFrequency,
-} from "./byoData";
+} from "./offerData";
 import { trackMetaAddToCart, trackMetaInitiateCheckout, toContentId, buildMetaCartAttributes } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
 import { trackCartCheckoutClicked, trackPurchaseAddToCart } from "@/app/lib/analytics";
 
 interface ByoCheckoutParams {
-  product: ByoProduct;
-  cadence: ByoCadence;
+  product: OfferProduct;
+  cadence: OfferCadence;
   upsellAccepted: boolean;
   /**
    * Order attribution tag, written to the cart's `_source` attribute and the
@@ -122,8 +122,8 @@ export async function byoCheckout(
 /** Fire all analytics events. Non-blocking, fails silently. */
 function fireAnalytics(params: {
   variantId: string;
-  product: ByoProduct;
-  cadence: ByoCadence;
+  product: OfferProduct;
+  cadence: OfferCadence;
   price: number;
   source: string;
 }): void {

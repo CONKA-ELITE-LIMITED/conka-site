@@ -87,7 +87,7 @@ const ROUTES: Route[] = [
       "app/components/landing",
       "app/components/testimonials",
       "app/lib/faqContent.ts",
-      "app/lib/byoData.ts",
+      "app/lib/offerData.ts",
     ],
   },
   {
@@ -102,7 +102,7 @@ const ROUTES: Route[] = [
       "app/components/landing",
       "app/components/testimonials",
       "app/lib/formulaContent.ts",
-      "app/lib/byoData.ts",
+      "app/lib/offerData.ts",
     ],
   },
   {
@@ -117,7 +117,7 @@ const ROUTES: Route[] = [
       "app/components/landing",
       "app/components/testimonials",
       "app/lib/formulaContent.ts",
-      "app/lib/byoData.ts",
+      "app/lib/offerData.ts",
     ],
   },
   {

@@ -13,26 +13,26 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
-  type ByoProduct,
-  type ByoCadence,
-  BYO_PRODUCTS,
-} from "@/app/lib/byoData";
+  type OfferProduct,
+  type OfferCadence,
+  OFFER_PRODUCTS,
+} from "@/app/lib/offerData";
 import CadenceSelector from "./CadenceSelector";
 import LearnMoreAccordion from "./LearnMoreAccordion";
 import { BYO_STATIC } from "./ByoMedia";
 
 interface BuildStepProps {
-  product: ByoProduct;
-  cadence: ByoCadence;
-  onProductChange: (p: ByoProduct) => void;
-  onCadenceChange: (c: ByoCadence) => void;
+  product: OfferProduct;
+  cadence: OfferCadence;
+  onProductChange: (p: OfferProduct) => void;
+  onCadenceChange: (c: OfferCadence) => void;
   onAccordionOpen?: (id: string) => void;
 }
 
 // Flow and Clear lead as the two equal single formulas; Both sits last as the
 // recommended full system (and the pre-selected default since SCRUM-1247).
-const PRODUCT_ORDER: ByoProduct[] = ["flow", "clear", "both"];
-const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
+const PRODUCT_ORDER: OfferProduct[] = ["flow", "clear", "both"];
+const TOGGLE: Record<OfferProduct, { name: string; period: string }> = {
   flow: { name: "Flow", period: "Morning" },
   clear: { name: "Clear", period: "Afternoon" },
   both: { name: "Both", period: "All day" },
@@ -45,7 +45,7 @@ const TOGGLE: Record<ByoProduct, { name: string; period: string }> = {
 // outcomes from the ingredient studies and hard product facts, and pretending
 // a spec count ("6 adaptogens") is an outcome was what made the old panel read
 // as spin. Each label now says plainly which kind of number it is.
-const COPY: Record<ByoProduct, { blurb: string; stats: { value: string; label: string }[] }> = {
+const COPY: Record<OfferProduct, { blurb: string; stats: { value: string; label: string }[] }> = {
   flow: {
     blurb: "Sharper focus and calmer energy from the first hour — six clinically-dosed adaptogens, zero caffeine, zero crash.",
     stats: [
@@ -92,15 +92,15 @@ const CLEAR_ING = [
   { name: "Lecithin", img: "/ingredients/renders/Lecithin.jpg" },
   { name: "Alpha Lipoic Acid", img: "/ingredients/renders/AlphaLipoicAcid.jpg" },
 ];
-const INGREDIENTS_IMG: Record<ByoProduct, { name: string; img: string }[]> = {
+const INGREDIENTS_IMG: Record<OfferProduct, { name: string; img: string }[]> = {
   flow: FLOW_ING,
   clear: CLEAR_ING,
   both: [...FLOW_ING, ...CLEAR_ING],
 };
-const ACTIVE_COUNT: Record<ByoProduct, number> = { flow: 6, clear: 10, both: 15 };
+const ACTIVE_COUNT: Record<OfferProduct, number> = { flow: 6, clear: 10, both: 15 };
 
 // "How it works" as a when → what action list (timings referenced across the site).
-const HOW_STEPS: Record<ByoProduct, { when: string; what: string }[]> = {
+const HOW_STEPS: Record<OfferProduct, { when: string; what: string }[]> = {
   flow: [
     { when: "Morning", what: "Take with or without breakfast — no caffeine, no jitters." },
     { when: "~45 min", what: "Calm, focused energy sets in as the adaptogens take hold." },
@@ -184,7 +184,7 @@ export default function BuildStep({
   onCadenceChange,
   onAccordionOpen,
 }: BuildStepProps) {
-  const display = BYO_PRODUCTS[product];
+  const display = OFFER_PRODUCTS[product];
   const copy = COPY[product];
 
   // Ingredients pagination — always 6 per page (Both has 15, so it pages).

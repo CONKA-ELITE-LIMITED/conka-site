@@ -71,31 +71,6 @@ export const FORMULA_VARIANTS: Record<
   },
 };
 
-// ============================================
-// TRIAL PACK VARIANTS (one-time only, home page)
-// These are the smaller trial packs for first-time buyers
-// ============================================
-
-type TrialPackSize = "4" | "8" | "12";
-
-export const TRIAL_PACK_VARIANTS: Record<
-  FormulaId,
-  Record<TrialPackSize, string>
-> = {
-  // CONKA Flow Trial Packs - CONFIGURED
-  "01": {
-    "4": "gid://shopify/ProductVariant/57000187363702", // FLOW_TRIAL_4 - £14.99
-    "8": "gid://shopify/ProductVariant/56999967785334", // FLOW_TRIAL_8 - £28.99
-    "12": "gid://shopify/ProductVariant/56999967752566", // FLOW_TRIAL_12 - £39.99
-  },
-  // CONKA Clear Trial Packs - CONFIGURED
-  "02": {
-    "4": "gid://shopify/ProductVariant/57000418607478", // CLEAR_TRIAL_4 - £14.99
-    "8": "gid://shopify/ProductVariant/57000418640246", // CLEAR_TRIAL_8 - £28.99
-    "12": "gid://shopify/ProductVariant/57000418673014", // CLEAR_TRIAL_12 - £39.99
-  },
-};
-
 // Protocol variants are NOT here. They are retired-product support for existing
 // subscribers and live in ./legacy/protocolSubscriptions.
 
@@ -129,15 +104,4 @@ export function getFormulaVariantId(
   }
 
   return { variantId };
-}
-
-/**
- * Get the Shopify variant ID for a trial pack
- */
-export function getTrialPackVariantId(
-  formulaId: FormulaId,
-  packSize: TrialPackSize,
-): string | null {
-  const variantId = TRIAL_PACK_VARIANTS[formulaId]?.[packSize];
-  return variantId || null;
 }

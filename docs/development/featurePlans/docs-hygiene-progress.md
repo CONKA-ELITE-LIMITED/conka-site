@@ -172,7 +172,7 @@ duplication, and consolidating would have been churn for its own sake.
 | The archive folder holds retired **canonical docs**, not just feature plans | The audit already sent `GO_LIVE_PRICING_AUDIT.md` (a canonical doc) there. The README is worded to cover both |
 | Touched `docs/conkaAppData/coffee-conka-cognition-report.md`, which the no-gos exclude | Only to fix 2 broken image embeds pointing at PNGs never committed to the repo, which AC8 requires. The report's data is untouched. The no-go is about not "freshening" dated data, not about leaving broken links |
 | Edited 7 `.ts`/`.tsx` files | AC10 says docs-only, but AC5 explicitly requires the `.ts` source-comment references to resolve. **Comments only, no logic**, verified by the diff: 10 lines changed across 10 files, every one a doc path in a comment |
-| Fixed stale refs in 4 *active* plan docs the audit's Phase 1 table did not list | `ab-testing-mvp`, `account-portal-funnel-simplification`, `skio-subscription-migration` and `asset-and-protocol-cleanup` all pointed at `app/lib/funnelData.ts` or `SubscriptionCard.tsx` as live. AC1 covers every doc under `docs/`, not only the tabled ones. Repointed to `byoData.ts` / `SubscriptionListCard.tsx` |
+| Fixed stale refs in 4 *active* plan docs the audit's Phase 1 table did not list | `ab-testing-mvp`, `account-portal-funnel-simplification`, `skio-subscription-migration` and `asset-and-protocol-cleanup` all pointed at `app/lib/funnelData.ts` or `SubscriptionCard.tsx` as live. AC1 covers every doc under `docs/`, not only the tabled ones. Repointed to `offerData.ts` / `SubscriptionListCard.tsx` |
 
 ---
 

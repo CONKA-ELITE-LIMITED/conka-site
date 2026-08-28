@@ -381,7 +381,7 @@ export type ByoVariant = "v1";
 
 /**
  * Product/cadence are typed loosely here on purpose: the data layer
- * (`app/lib/byoData`) declares its own unions, and analytics must not
+ * (`app/lib/offerData`) declares its own unions, and analytics must not
  * depend on it.
  */
 interface ByoContext {

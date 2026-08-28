@@ -2,13 +2,13 @@
 
 Human-readable audit log of CONKA funnel pricing: what the prices were, and when they changed.
 
-The code source of truth is `BYO_PRICING` in `app/lib/byoData.ts`. Git history technically records every past price, but it is hard to read at a glance, so this doc is the plain-language trail.
+The code source of truth is `OFFER_PRICING` in `app/lib/offerData.ts`. Git history technically records every past price, but it is hard to read at a glance, so this doc is the plain-language trail.
 
 ## How to use this
 
-- `BYO_PRICING` stays the single source of truth in code. The money-page meta descriptions (via `getByoMinPerShot`) and the Product JSON-LD (via `getByoPriceRange`) both derive their prices from it, so those stay in sync automatically.
+- `OFFER_PRICING` stays the single source of truth in code. The money-page meta descriptions (via `getOfferMinPerShot`) and the Product JSON-LD (via `getOfferPriceRange`) both derive their prices from it, so those stay in sync automatically.
 - Whenever a price changes, **append a new dated block at the top of the log below** (newest first). Do not overwrite or delete a previous block; the point is the trail.
-- Record the "From £X/shot" figure too. That is the per-shot minimum (the cheapest cadence, currently quarterly) shown in search snippets and returned by `getByoMinPerShot`.
+- Record the "From £X/shot" figure too. That is the per-shot minimum (the cheapest cadence, currently quarterly) shown in search snippets and returned by `getOfferMinPerShot`.
 - A block is a snapshot of all nine funnel offers, even if only one price moved, so each entry is a complete picture on its own.
 
 ## Log
@@ -42,6 +42,6 @@ Notes:
 
 ## Related
 
-- Code source of truth: `app/lib/byoData.ts` (`BYO_PRICING`)
-- Derivation helpers: `getByoMinPerShot` (per-shot "From"), `getByoPriceRange` (JSON-LD price range)
-- `/start` uses a separate monthly-sub source, `app/lib/landingPricing.ts`. It is not yet consolidated into `BYO_PRICING`; if that changes, record its prices here too.
+- Code source of truth: `app/lib/offerData.ts` (`OFFER_PRICING`)
+- Derivation helpers: `getOfferMinPerShot` (per-shot "From"), `getOfferPriceRange` (JSON-LD price range)
+- `/start` uses a separate monthly-sub source, `app/lib/landingPricing.ts`. It is not yet consolidated into `OFFER_PRICING`; if that changes, record its prices here too.

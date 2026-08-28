@@ -61,7 +61,7 @@ Build the data foundation before any UI work.
 2. **Product data** (if needed):
    - Import from `app/lib/productData.ts` (barrel export) -- never from sub-modules
    - If new product helpers needed, add to the appropriate sub-module
-   - Respect the dependency chain: `productTypes` -> `productColors`, `productPricing`, etc.
+   - Respect the dependency chain: `productTypes` -> `productColors`, `formulaContent`, `productImages` -> `productHelpers`
 
 3. **API routes** (if needed):
    - Location: `app/api/`

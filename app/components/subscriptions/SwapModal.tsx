@@ -5,18 +5,18 @@ import Image from 'next/image';
 import {
   getOfferPricing,
   getSwapTargets,
-  type ByoProduct,
-  type ByoCadence,
-} from '@/app/lib/byoData';
+  type OfferProduct,
+  type OfferCadence,
+} from '@/app/lib/offerData';
 import { getFormulaImage } from '@/app/lib/productImageConfig';
 
-const PRODUCT_NAME: Record<ByoProduct, string> = {
+const PRODUCT_NAME: Record<OfferProduct, string> = {
   flow: 'Flow',
   clear: 'Clear',
   both: 'Both',
 };
 
-function productImage(product: ByoProduct): string {
+function productImage(product: OfferProduct): string {
   if (product === 'both') return '/formulas/both/BothBox.jpg';
   return getFormulaImage(product === 'flow' ? '01' : '02');
 }
@@ -24,9 +24,9 @@ function productImage(product: ByoProduct): string {
 interface SwapModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSwap: (target: ByoProduct) => Promise<boolean>;
-  currentProduct: ByoProduct;
-  cadence: ByoCadence;
+  onSwap: (target: OfferProduct) => Promise<boolean>;
+  currentProduct: OfferProduct;
+  cadence: OfferCadence;
   currentPrice: number;
   subscriptionName: string;
 }
@@ -40,7 +40,7 @@ export function SwapModal({
   currentPrice,
   subscriptionName,
 }: SwapModalProps) {
-  const [selected, setSelected] = useState<ByoProduct | null>(null);
+  const [selected, setSelected] = useState<OfferProduct | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

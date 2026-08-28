@@ -4,7 +4,7 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import { formatPrice, FormulaId, formulaContent } from "@/app/lib/productData";
 import {
   CadenceType,
-  BYO_CADENCES,
+  OFFER_CADENCES,
   BOTH_HERO_CONTENT,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -48,7 +48,7 @@ export default function StickyPurchaseFooter({
         ? formulaContent[formulaId].name
         : "";
 
-  const cadenceDisplay = BYO_CADENCES[selectedCadence];
+  const cadenceDisplay = OFFER_CADENCES[selectedCadence];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/12 bg-white/95 backdrop-blur-sm">

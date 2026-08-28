@@ -13,41 +13,41 @@
 
 import Image from "next/image";
 import {
-  type ByoCadence,
-  type ByoProduct,
-  BYO_PRODUCTS,
-} from "@/app/lib/byoData";
+  type OfferCadence,
+  type OfferProduct,
+  OFFER_PRODUCTS,
+} from "@/app/lib/offerData";
 import { bottleRenders } from "@/app/lib/productImages";
 
-export const BYO_STATIC: Record<ByoProduct, { src: string; alt: string }> = bottleRenders;
+export const BYO_STATIC: Record<OfferProduct, { src: string; alt: string }> = bottleRenders;
 
 // The delivery photo used on the Review step: product AND box, the thing that
 // actually arrives. Quarterly shows the larger shipment (same precedent as the
 // PDP slideshow's quarterly first-slide swap). Lives here (eager, tiny) rather
 // than in the code-split SummaryStep so the desktop media column can share it
 // without pulling SummaryStep into the first-paint bundle.
-const BOX_IMG: Record<ByoProduct, string> = {
+const BOX_IMG: Record<OfferProduct, string> = {
   flow: "/formulas/box/FlowBox.jpg",
   clear: "/formulas/box/ClearBox.jpg",
   both: "/formulas/box/BothBox.jpg",
 };
-const QUARTERLY_BOX_IMG: Record<ByoProduct, string> = {
+const QUARTERLY_BOX_IMG: Record<OfferProduct, string> = {
   flow: "/formulas/box/FlowQuarterlyBox.jpg",
   clear: "/formulas/box/ClearQuarterlyBox.jpg",
   both: "/formulas/box/BothQuarterlyBox.jpg",
 };
 
 export function getBoxImage(
-  product: ByoProduct,
-  cadence: ByoCadence,
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): { src: string; alt: string } {
   return {
     src: (cadence === "quarterly-sub" ? QUARTERLY_BOX_IMG : BOX_IMG)[product],
-    alt: `${BYO_PRODUCTS[product].label} delivery box`,
+    alt: `${OFFER_PRODUCTS[product].label} delivery box`,
   };
 }
 
-const CAPTION: Record<ByoProduct, string> = {
+const CAPTION: Record<OfferProduct, string> = {
   flow: "Morning. Caffeine-free focus.",
   clear: "Afternoon. Clears the 2pm fog.",
   both: "Morning to evening. The full system.",
@@ -59,7 +59,7 @@ export default function ByoMedia({
   media: mediaOverride,
   fit = "cover",
 }: {
-  product: ByoProduct;
+  product: OfferProduct;
   /** Off on the Learn step, where the page heading owns the hierarchy. */
   showCaption?: boolean;
   /** Swap the bottle render for another asset (the Review step's box photo). */
