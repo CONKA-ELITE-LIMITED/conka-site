@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-28** | Regenerated the PDP gallery statics from Figma at 2400x1715 (100-day guarantee shots, the 7+ years of research slide, both Flow starter packs) and added the missing Clear and Both starter packs, so all three PDPs now lead with their own pack shot and show the starter-kit section on every subscription cadence
 - **2026-08-28** | Flow PDP gains a full-width starter-pack section that swaps its pack shot and prices between the monthly and quarterly cadences (SCRUM-1287)
 - **2026-08-28** | Flow PDP leads with the starter pack bundle shot and shows a struck-RRP value stack of the free extras (hat, travel pack, bonus shots, app access) on subscription cadences.
 - **2026-08-28** | The buy-once link is back to one clean line: single all-in price with the struck anchor, no printed save percentage and no postage itemisation (postage stays baked in; the formal Shopify shipping split is tracked as SCRUM-1286 in docs/TODO.md). All discount maths now compares all-in totals, so strike, price and badge always agree.

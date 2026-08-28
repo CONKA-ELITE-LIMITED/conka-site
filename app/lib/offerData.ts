@@ -287,6 +287,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 40,
       freeShotsValue: 47.99,
       gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/BothStarterPack.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.both,
@@ -309,6 +310,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 140,
       freeShotsValue: 59.99,
       gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/BothQuarterlyStarterPack.jpg",
     },
     "quarterly-otp": {
       // + postage = the £279.99 BOTH-120 charges. Same £2.25/shot as monthly one-time.
@@ -381,6 +383,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 20,
       freeShotsValue: 23.99,
       gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/ClearStarterPack.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.clear,
@@ -401,6 +404,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 80,
       freeShotsValue: 59.99,
       gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/ClearQuarterlyStarterPack.jpg",
     },
     "quarterly-otp": {
       // + postage = the £189.99 CLEAR-60 charges. Same £3.00/shot as monthly one-time.

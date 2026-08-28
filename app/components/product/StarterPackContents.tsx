@@ -3,18 +3,18 @@ import { formatPrice } from "@/app/lib/productData";
 import type { CadencePricing } from "@/app/lib/cadenceData";
 
 /**
- * StarterPackContents — the full-width starter-pack section on the Flow PDP
- * (SCRUM-1287, plan Phase 4).
+ * StarterPackContents — the full-width starter-pack section on the Flow, Clear
+ * and Both PDPs (SCRUM-1287, plan Phase 4).
  *
  * The buy panel already carries GiftValueStack, a compact tile grid. This is the
  * unpack: the arranged pack shot with the contents priced beside it, so a first
  * order reads as a kit rather than a carton. Both surfaces derive from the same
  * CadencePricing fields, so their figures cannot drift apart.
  *
- * Cadence-aware. `starterPackImage` is set on the two Flow subscription cadences
- * only, so it doubles as the visibility switch: the page renders no section at
- * all when the selected cadence has no pack. The monthly and quarterly shots are
- * the same dimensions, so switching cadence swaps the image with no layout shift.
+ * Cadence-aware. `starterPackImage` is set on the subscription cadences only, so
+ * it doubles as the visibility switch: the page renders no section at all when
+ * the selected cadence has no pack. Every pack shot is the same dimensions, so
+ * switching cadence or formula swaps the image with no layout shift.
  *
  * Every price here is display-only and pre-add. The cart and the checkout still
  * price from Shopify alone (CART_PRICING_SOURCE_OF_TRUTH.md).
@@ -35,14 +35,14 @@ type PackRow = {
   paidPrice?: number;
 };
 
-function getPackRows(pricing: CadencePricing): PackRow[] {
+function getPackRows(pricing: CadencePricing, productLabel: string): PackRow[] {
   const freeShots = pricing.freeShots ?? 0;
   const freeShotsValue = pricing.freeShotsValue ?? 0;
 
   return [
     {
-      id: "flow",
-      label: `CONKA Flow, ${pricing.shotCount} shots`,
+      id: "shots",
+      label: `${productLabel}, ${pricing.shotCount} shots`,
       rrp: pricing.compareAtPrice ?? pricing.price,
       paidPrice: pricing.price,
     },
@@ -87,12 +87,15 @@ function Tick() {
 
 export default function StarterPackContents({
   pricing,
+  productLabel,
 }: {
   pricing: CadencePricing;
+  /** What the shots row is called, e.g. "CONKA Flow" or "CONKA Flow + Clear". */
+  productLabel: string;
 }) {
   if (!pricing.starterPackImage) return null;
 
-  const rows = getPackRows(pricing);
+  const rows = getPackRows(pricing, productLabel);
   const totalValue = rows.reduce((sum, row) => sum + row.rrp, 0);
 
   return (
@@ -115,8 +118,8 @@ export default function StarterPackContents({
           alt={`Everything in the starter kit: ${rows
             .map((row) => row.label)
             .join(", ")}`}
-          width={1200}
-          height={857}
+          width={2400}
+          height={1715}
           className="h-auto w-full rounded-lg"
           sizes="(min-width: 1024px) 50vw, 100vw"
         />
