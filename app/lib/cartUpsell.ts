@@ -146,15 +146,28 @@ function buildOtpToSubCopy(
   const sub = getOfferPricing(product, subCadence);
   // Anchor against the all-in charged OTP price (postage baked into the SKU).
   const saving = (getChargedPrice(otp) - sub.price) * quantity;
+  // The starter kit is the strongest thing a one-time buyer is walking past, so
+  // it leads, framed as what they lose rather than what they gain. Value is the
+  // same sum the PDP gift stack shows: bonus shots plus every gift RRP.
+  const kitValue =
+    (sub.freeShotsValue ?? 0) +
+    (sub.gifts ?? []).reduce((sum, gift) => sum + gift.rrp, 0);
+
   // Quarterly's bonus shots ship every cycle; monthly's are first-order only.
-  const valueLine = sub.freeShots
+  const shotsLine = sub.freeShots
     ? subCadence === "quarterly-sub"
       ? `Free shipping and ${sub.freeShots} free shots with every delivery`
       : `Free shipping and ${sub.freeShots} free shots on your first order`
     : "Free shipping, cancel anytime";
+
   return {
     headline: "Make it a subscription",
-    valueLine,
+    valueLine: kitValue
+      ? `You are missing ${formatPrice(kitValue)} of free gifts`
+      : shotsLine,
+    highlight: kitValue
+      ? "Starter kit included. Pause or cancel anytime"
+      : undefined,
     ctaLabel: saving > 0 ? `Subscribe and save ${formatPrice(saving)}` : "Switch to subscription",
   };
 }
