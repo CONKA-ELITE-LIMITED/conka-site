@@ -35,11 +35,14 @@ export default function Certifications({
    *  to the buy decision rather than a band of their own. */
   inline?: boolean;
 } = {}) {
+  // Spread across the column rather than clustered left: four small marks
+  // bunched at one edge read as leftovers, four spaced across the measure read
+  // as a deliberate row.
   if (inline) {
     return (
       <div
         aria-label="Product certifications"
-        className={`flex items-center gap-4 sm:gap-5 ${className}`}
+        className={`flex w-full items-center justify-between gap-3 ${className}`}
       >
         {CERTS.map((cert) => (
           <Image
@@ -48,8 +51,8 @@ export default function Certifications({
             alt={cert.label}
             width={140}
             height={140}
-            sizes="36px"
-            className="h-auto w-9"
+            sizes="(max-width: 640px) 64px, 72px"
+            className="h-auto w-16 sm:w-[72px]"
           />
         ))}
       </div>
