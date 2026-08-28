@@ -5,6 +5,10 @@
  */
 
 import type { ProductHeroId } from "./productTypes";
+import {
+  getCadencePricingByProductHeroId,
+  type CadenceType,
+} from "./cadenceData";
 import { getSupplementFacts } from "./supplementFacts";
 import { pickFaqItems } from "./faqContent";
 
@@ -48,6 +52,29 @@ export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
     `${ASSET_BASE}/RiskFreeTrial.jpg`,
   ],
 };
+
+/**
+ * Gallery slides for a PDP hero, with the lead slide following the selected
+ * plan (SCRUM-1287).
+ *
+ * Flow's first slide is the starter-pack shot, and that artwork carries the
+ * pack's prices and quantities. Left static it showed the monthly pack above a
+ * quarterly price. Cadences that ship a pack expose `starterPackImage`, so the
+ * lead slide is swapped for whichever pack the selected plan actually gets, and
+ * the section further down the page reads the same field.
+ *
+ * Cadences with no pack keep the array as authored.
+ */
+export function getPdpGalleryImages(
+  formulaId: ProductHeroId,
+  cadence: CadenceType,
+): string[] {
+  const slides = MM_GALLERY_ASSETS[formulaId];
+  const packImage =
+    getCadencePricingByProductHeroId(formulaId, cadence).starterPackImage;
+
+  return packImage ? [packImage, ...slides.slice(1)] : slides;
+}
 
 export interface OutcomeBucket {
   id: string;

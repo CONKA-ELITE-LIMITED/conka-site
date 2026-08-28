@@ -97,11 +97,16 @@ export default function StarterPackContents({
 
   return (
     <div>
-      <h2 className="brand-h2">What you get in your first box</h2>
-      {/* Deliberately not "free with your first order": on quarterly the bonus
-          shots repeat every cycle, so a first-order claim understates it. */}
+      {/* Eyebrow rather than a second name for the pack: the kit only exists on
+          the subscription cadences, and saying so is what "welcome kit" was
+          reaching for. */}
+      <p className="text-sm font-semibold uppercase tracking-wide text-black/50">
+        For new subscribers
+      </p>
+      <h2 className="brand-h2 mt-2">Your starter kit includes:</h2>
       <p className="brand-body mt-3 max-w-xl">
-        You pay for the shots. Everything else in the box is free.
+        Everything you need to kickstart focus, energy and cognitive
+        performance. You pay for the shots. The rest is free.
       </p>
 
       <div className="mt-8 grid gap-8 lg:mt-12 lg:grid-cols-2 lg:items-center lg:gap-14">

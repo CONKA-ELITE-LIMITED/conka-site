@@ -6,7 +6,7 @@ import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
-import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
+import { getPdpGalleryImages } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
@@ -49,7 +49,10 @@ export default function ProductHeroMobileV3({
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
 
-  const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
+  // Lead slide follows the selected plan (see getPdpGalleryImages).
+  const images = getPdpGalleryImages(formulaId, selectedCadence).map((src) => ({
+    src,
+  }));
 
   return (
     <div className="flex flex-col gap-6 text-black">
