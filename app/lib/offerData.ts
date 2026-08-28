@@ -19,10 +19,10 @@ import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productDa
 // TYPES
 // ============================================
 
-export type ByoProduct = "both" | "flow" | "clear";
-export type ByoCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
+export type OfferProduct = "both" | "flow" | "clear";
+export type OfferCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
 
-export interface ByoPricing {
+export interface OfferPricing {
   /** Total price for this combination */
   price: number;
   /** Price per shot — computed on PRICED shots (excludes free shots) */
@@ -58,7 +58,7 @@ export interface ByoPricing {
   freeShotsValue?: number;
 }
 
-export interface ByoVariantConfig {
+export interface OfferVariantConfig {
   variantId: string;
   sellingPlanId?: string;
 }
@@ -68,8 +68,8 @@ export interface UpsellOffer {
   body: string;
   acceptLabel: string;
   declineLabel: string;
-  upgradedProduct: ByoProduct;
-  upgradedCadence: ByoCadence;
+  upgradedProduct: OfferProduct;
+  upgradedCadence: OfferCadence;
   /** What the customer actually pays extra */
   priceDifference?: number;
   /** What the added product would cost on its own (crossed-out reference price) */
@@ -116,7 +116,7 @@ export function getSavingsPercent(price: number, compareAtPrice: number): number
  * applies, so callers can keep using `savePct > 0` to decide whether to show a
  * badge.
  */
-export function getDisplayDiscount(pricing: ByoPricing): number {
+export function getDisplayDiscount(pricing: OfferPricing): number {
   if (pricing.discountPercent != null) return pricing.discountPercent;
   if (pricing.compareAtPrice != null) {
     return getSavingsPercent(pricing.price, pricing.compareAtPrice);
@@ -132,7 +132,7 @@ export function getDisplayDiscount(pricing: ByoPricing): number {
 // an inflated "was". One-time entries carry no compareAtPrice (they ARE the
 // reference) but DO carry compulsory `postage`.
 // NOTE: free-shot counts (esp. quarterly) are still under review — single source of truth here.
-const OTP_PRICE: Record<ByoProduct, number> = {
+const OTP_PRICE: Record<OfferProduct, number> = {
   both: 89.99,
   flow: 59.99,
   clear: 59.99,
@@ -141,7 +141,7 @@ const OTP_PRICE: Record<ByoProduct, number> = {
 /** Compulsory postage charged on one-time orders (subscriptions ship free). */
 const OTP_POSTAGE = 9.99;
 
-const BYO_PRICING: Record<ByoProduct, Record<ByoCadence, ByoPricing>> = {
+const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = {
   both: {
     "monthly-sub": {
       price: 74.99,
@@ -254,7 +254,7 @@ const BYO_PRICING: Record<ByoProduct, Record<ByoCadence, ByoPricing>> = {
 //   monthly-otp   → dedicated one-time SKU (postage baked into the Shopify price;
 //                   displayed here as price + postage, same checkout total).
 //   quarterly-sub → 80/140-shot SKU (ships once, no swap).
-const BYO_VARIANTS: Record<ByoProduct, Record<ByoCadence, ByoVariantConfig>> = {
+const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> = {
   flow: {
     "monthly-sub": {
       variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
@@ -300,7 +300,7 @@ const BYO_VARIANTS: Record<ByoProduct, Record<ByoCadence, ByoVariantConfig>> = {
 // DISPLAY DATA
 // ============================================
 
-export interface ByoProductDisplay {
+export interface OfferProductDisplay {
   name: string;
   label: string;
   tagline: string;
@@ -317,7 +317,7 @@ export interface ByoProductDisplay {
   features: string[];
 }
 
-export const BYO_PRODUCTS: Record<ByoProduct, ByoProductDisplay> = {
+export const OFFER_PRODUCTS: Record<OfferProduct, OfferProductDisplay> = {
   both: {
     name: "Both",
     label: "Flow + Clear",
@@ -369,7 +369,7 @@ export const BYO_PRODUCTS: Record<ByoProduct, ByoProductDisplay> = {
   },
 };
 
-export interface ByoCadenceDisplay {
+export interface OfferCadenceDisplay {
   label: string;
   subtitle: string;
   badge?: string;
@@ -379,7 +379,7 @@ export interface ByoCadenceDisplay {
   features: string[];
 }
 
-export const BYO_CADENCES: Record<ByoCadence, ByoCadenceDisplay> = {
+export const OFFER_CADENCES: Record<OfferCadence, OfferCadenceDisplay> = {
   "monthly-sub": {
     label: "1-month supply",
     subtitle: "Delivered monthly, cancel anytime",
@@ -413,7 +413,7 @@ export const BYO_CADENCES: Record<ByoCadence, ByoCadenceDisplay> = {
 // ============================================
 
 /** Product-specific hero images (used in static mode for step 2) */
-export const BYO_HERO_IMAGES: Record<ByoProduct, { src: string; alt: string }> = {
+export const OFFER_HERO_IMAGES: Record<OfferProduct, { src: string; alt: string }> = {
   both: {
     src: "/formulas/both/BothBox.jpg",
     alt: "CONKA Flow and Clear — your AM and PM brain performance system",
@@ -429,15 +429,15 @@ export const BYO_HERO_IMAGES: Record<ByoProduct, { src: string; alt: string }> =
 };
 
 /** Step 2: Slideshow images per product (carousel) — sourced from central config */
-const FUNNEL_PRODUCT_SLIDESHOW_BASE: Record<ByoProduct, { src: string }[]> = formulaImages;
+const FUNNEL_PRODUCT_SLIDESHOW_BASE: Record<OfferProduct, { src: string }[]> = formulaImages;
 
 /** Quarterly swaps the first slide to show the larger shipment */
-const QUARTERLY_FIRST_SLIDE: Record<ByoProduct, { src: string }> = quarterlyImages;
+const QUARTERLY_FIRST_SLIDE: Record<OfferProduct, { src: string }> = quarterlyImages;
 
 /** Get slideshow images for a product, adjusted for cadence */
-export function getByoProductSlideshow(
-  product: ByoProduct,
-  cadence: ByoCadence,
+export function getOfferProductSlideshow(
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): { src: string }[] {
   const base = FUNNEL_PRODUCT_SLIDESHOW_BASE[product];
   if (cadence === "quarterly-sub") {
@@ -450,11 +450,11 @@ export function getByoProductSlideshow(
 // VARIANT REVERSE-LOOKUP (single source of truth for GID detection)
 // ============================================
 
-const VARIANT_TO_PRODUCT = new Map<string, ByoProduct>();
+const VARIANT_TO_PRODUCT = new Map<string, OfferProduct>();
 const QUARTERLY_VARIANT_SET = new Set<string>();
 
-for (const [product, cadences] of Object.entries(BYO_VARIANTS) as Array<[ByoProduct, Record<ByoCadence, ByoVariantConfig>]>) {
-  for (const [cadence, config] of Object.entries(cadences) as Array<[ByoCadence, ByoVariantConfig]>) {
+for (const [product, cadences] of Object.entries(OFFER_VARIANTS) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
+  for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
     if (config.variantId) {
       VARIANT_TO_PRODUCT.set(config.variantId, product);
       if (cadence === "quarterly-sub") {
@@ -465,12 +465,12 @@ for (const [product, cadences] of Object.entries(BYO_VARIANTS) as Array<[ByoProd
 }
 
 /** Given a Shopify variant GID, return the CONKA product or null if not a known variant. */
-export function detectByoProduct(variantId: string): ByoProduct | null {
+export function detectOfferProduct(variantId: string): OfferProduct | null {
   return VARIANT_TO_PRODUCT.get(variantId) ?? null;
 }
 
 /** Given a variant GID and whether a sellingPlan is active, return the cadence. */
-export function detectByoCadence(variantId: string, hasSellingPlan: boolean): ByoCadence {
+export function detectOfferCadence(variantId: string, hasSellingPlan: boolean): OfferCadence {
   if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
   return hasSellingPlan ? "monthly-sub" : "monthly-otp";
 }
@@ -480,37 +480,37 @@ export function detectByoCadence(variantId: string, hasSellingPlan: boolean): By
 // ============================================
 
 export function getOfferPricing(
-  product: ByoProduct,
-  cadence: ByoCadence,
-): ByoPricing {
-  return BYO_PRICING[product][cadence];
+  product: OfferProduct,
+  cadence: OfferCadence,
+): OfferPricing {
+  return OFFER_PRICING[product][cadence];
 }
 
 export function getOfferVariant(
-  product: ByoProduct,
-  cadence: ByoCadence,
-): ByoVariantConfig | null {
-  const config = BYO_VARIANTS[product][cadence];
+  product: OfferProduct,
+  cadence: OfferCadence,
+): OfferVariantConfig | null {
+  const config = OFFER_VARIANTS[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
 
 export function isVariantReady(
-  product: ByoProduct,
-  cadence: ByoCadence,
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): boolean {
-  const config = BYO_VARIANTS[product][cadence];
+  const config = OFFER_VARIANTS[product][cadence];
   return Boolean(config?.variantId);
 }
 
 /** For "Both", get the price of buying Flow + Clear separately at the same cadence */
-export function getBuySeparatelyPrice(cadence: ByoCadence): number {
-  return BYO_PRICING.flow[cadence].price + BYO_PRICING.clear[cadence].price;
+export function getBuySeparatelyPrice(cadence: OfferCadence): number {
+  return OFFER_PRICING.flow[cadence].price + OFFER_PRICING.clear[cadence].price;
 }
 
 /** Get the cadence frequency label for cart attributes */
 export function getCadenceFrequency(
-  cadence: ByoCadence,
+  cadence: OfferCadence,
 ): string {
   switch (cadence) {
     case "monthly-sub":
@@ -540,8 +540,8 @@ export function getCadenceFrequency(
  * Priority: product upgrade first (higher AOV impact), then cadence upgrade.
  */
 export function getUpsellOffer(
-  product: ByoProduct,
-  cadence: ByoCadence,
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): UpsellOffer | null {
   const bothImage = { src: "/formulas/both/BothBox.jpg", alt: "CONKA Flow and Clear — AM and PM brain performance" };
 
@@ -703,13 +703,13 @@ export function getUpsellOffer(
  *
  * All values are derived from the pricing matrix so they stay in sync.
  */
-export function getByoCTALabels(
+export function getOfferCTALabels(
   step: 1 | 2,
-  product: ByoProduct,
-  cadence: ByoCadence,
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): { label: string; subLabel: string } {
   const pricing = getOfferPricing(product, cadence);
-  const display = BYO_PRODUCTS[product];
+  const display = OFFER_PRODUCTS[product];
 
   if (step === 1) {
     const label = `Get for ${formatPrice(pricing.perShot)}/shot`;
@@ -752,13 +752,13 @@ export function getByoCTALabels(
 
 /**
  * The all-in price the variant actually charges at checkout. Shopify bakes
- * compulsory postage into the one-time SKUs, while BYO_PRICING lists the
+ * compulsory postage into the one-time SKUs, while OFFER_PRICING lists the
  * product price and `postage` separately (the itemised funnel-c presentation).
  * Any surface that states a single one-time price WITHOUT an itemised postage
  * line must use this, or it understates what the customer pays by £9.99.
  * Subscription entries have no postage, so this is a no-op for them.
  */
-export function getChargedPrice(pricing: ByoPricing): number {
+export function getChargedPrice(pricing: OfferPricing): number {
   return pricing.price + (pricing.postage ?? 0);
 }
 
@@ -774,11 +774,11 @@ export function getChargedPrice(pricing: ByoPricing): number {
  */
 export function getOfferByVariantId(
   variantId: string,
-): { product: ByoProduct; cadence: ByoCadence; pricing: ByoPricing } | null {
-  for (const product of Object.keys(BYO_VARIANTS) as ByoProduct[]) {
-    for (const cadence of Object.keys(BYO_VARIANTS[product]) as ByoCadence[]) {
-      if (BYO_VARIANTS[product][cadence].variantId === variantId) {
-        return { product, cadence, pricing: BYO_PRICING[product][cadence] };
+): { product: OfferProduct; cadence: OfferCadence; pricing: OfferPricing } | null {
+  for (const product of Object.keys(OFFER_VARIANTS) as OfferProduct[]) {
+    for (const cadence of Object.keys(OFFER_VARIANTS[product]) as OfferCadence[]) {
+      if (OFFER_VARIANTS[product][cadence].variantId === variantId) {
+        return { product, cadence, pricing: OFFER_PRICING[product][cadence] };
       }
     }
   }
@@ -796,49 +796,49 @@ export function getOfferByVariantId(
 // pricingType 'NEW' (UNPROCESSABLE_ENTITY). Passing the target `sellingPlanId`
 // with pricingType 'NEW' correctly moves BOTH the plan and the line price.
 //
-// The plan GIDs already live in BYO_VARIANTS (used at checkout), so there is no
+// The plan GIDs already live in OFFER_VARIANTS (used at checkout), so there is no
 // separate table to hand-maintain — this just extracts the numeric id Loop's
 // swap body expects. Returns null if the cadence has no plan (e.g. one-time),
 // so the route can 503 rather than send a bad swap.
 
 /** Numeric selling-plan id for a same-cadence offer swap, or null if unset. */
-export function getByoSwapSellingPlanId(
-  product: ByoProduct,
-  cadence: ByoCadence,
+export function getOfferSwapSellingPlanId(
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): string | null {
-  const gid = BYO_VARIANTS[product]?.[cadence]?.sellingPlanId;
+  const gid = OFFER_VARIANTS[product]?.[cadence]?.sellingPlanId;
   if (!gid) return null;
   return gid.split("/").pop() ?? null;
 }
 
 /** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */
-export function getByoVariantNumericId(
-  product: ByoProduct,
-  cadence: ByoCadence,
+export function getOfferVariantNumericId(
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): string | null {
-  const cfg = BYO_VARIANTS[product]?.[cadence];
+  const cfg = OFFER_VARIANTS[product]?.[cadence];
   if (!cfg?.variantId) return null;
   return cfg.variantId.split("/").pop() ?? null;
 }
 
 /** The other two products at the same cadence — the valid swap targets. */
-export function getSwapTargets(current: ByoProduct): ByoProduct[] {
-  return (["flow", "clear", "both"] as ByoProduct[]).filter((p) => p !== current);
+export function getSwapTargets(current: OfferProduct): OfferProduct[] {
+  return (["flow", "clear", "both"] as OfferProduct[]).filter((p) => p !== current);
 }
 
 /**
  * Lowest and highest purchasable price across all cadences for a product,
  * plus the number of offers. Feeds the Product JSON-LD AggregateOffer so the
- * structured data stays in sync with BYO_PRICING automatically (SCRUM-1133).
+ * structured data stays in sync with OFFER_PRICING automatically (SCRUM-1133).
  * One-time entries add `postage` back because the Shopify variant price has
  * postage baked in — the structured data must match what the variant charges.
  */
-export function getByoPriceRange(product: ByoProduct): {
+export function getOfferPriceRange(product: OfferProduct): {
   low: number;
   high: number;
   count: number;
 } {
-  const prices = Object.values(BYO_PRICING[product]).map(
+  const prices = Object.values(OFFER_PRICING[product]).map(
     (p) => p.price + (p.postage ?? 0),
   );
   return {
@@ -852,10 +852,10 @@ export function getByoPriceRange(product: ByoProduct): {
  * Lowest per-shot price across all cadences for a product (the cheapest
  * cadence, currently quarterly). Feeds the "From £X/shot" figure in the
  * money-page meta descriptions (SCRUM-1139) so they stay in sync with
- * BYO_PRICING, the same way getByoPriceRange feeds the Product JSON-LD.
+ * OFFER_PRICING, the same way getOfferPriceRange feeds the Product JSON-LD.
  * When a price changes, also append a dated block to docs/PRICING_HISTORY.md.
  */
-export function getByoMinPerShot(product: ByoProduct): number {
-  const perShots = Object.values(BYO_PRICING[product]).map((p) => p.perShot);
+export function getOfferMinPerShot(product: OfferProduct): number {
+  const perShots = Object.values(OFFER_PRICING[product]).map((p) => p.perShot);
   return Math.min(...perShots);
 }

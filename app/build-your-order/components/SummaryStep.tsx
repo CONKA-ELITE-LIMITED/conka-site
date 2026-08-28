@@ -12,20 +12,20 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
-  type ByoProduct,
-  type ByoCadence,
-  BYO_PRODUCTS,
+  type OfferProduct,
+  type OfferCadence,
+  OFFER_PRODUCTS,
   getChargedPrice,
   getOfferPricing,
-} from "@/app/lib/byoData";
+} from "@/app/lib/offerData";
 import { formatPrice } from "@/app/lib/productData";
 import { cadencePriceSuffix } from "../defaults";
 import { PlanSummaryList } from "./CadenceSelector";
 import { getBoxImage } from "./ByoMedia";
 
 interface SummaryStepProps {
-  product: ByoProduct;
-  cadence: ByoCadence;
+  product: OfferProduct;
+  cadence: OfferCadence;
 }
 
 const SOLD = "150,000+";
@@ -106,7 +106,7 @@ export default function SummaryStep({ product, cadence }: SummaryStepProps) {
     setAutoKey((k) => k + 1);
   };
 
-  const display = BYO_PRODUCTS[product];
+  const display = OFFER_PRODUCTS[product];
   const box = getBoxImage(product, cadence);
   const pricing = getOfferPricing(product, cadence);
   const isSub = cadence !== "monthly-otp";

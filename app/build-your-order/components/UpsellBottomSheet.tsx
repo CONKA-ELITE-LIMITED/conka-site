@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
-import { type UpsellOffer } from "@/app/lib/byoData";
+import { type UpsellOffer } from "@/app/lib/offerData";
 import { formatPrice } from "@/app/lib/productData";
 
 interface UpsellBottomSheetProps {

@@ -3,12 +3,12 @@ import {
   getChargedPrice,
   getOfferPricing,
   getOfferVariant,
-  detectByoProduct,
-  detectByoCadence,
-  BYO_PRODUCTS,
-  type ByoProduct,
-  type ByoCadence,
-} from "./byoData";
+  detectOfferProduct,
+  detectOfferCadence,
+  OFFER_PRODUCTS,
+  type OfferProduct,
+  type OfferCadence,
+} from "./offerData";
 import { formatPrice } from "./productData";
 
 // ============================================================================
@@ -31,7 +31,7 @@ export type CartUpsellType = "otp_to_sub" | "single_to_both";
 export interface CartUpsellTileOffer {
   type: CartUpsellType;
   /** The product the shopper currently has (the FROM product) — the analytics dimension. */
-  product: ByoProduct;
+  product: OfferProduct;
   /** Origin token persisted on accept and written to the `_upsell` cart attribute: `<type>:<fromProduct>`. */
   origin: string;
 
@@ -112,9 +112,9 @@ function hasAcceptedUpsell(): boolean {
 
 /** The single deterministic upgrade for a given line state, or null if terminal. */
 function resolveUpgrade(
-  product: ByoProduct,
-  cadence: ByoCadence,
-): { product: ByoProduct; cadence: ByoCadence; type: CartUpsellType } | null {
+  product: OfferProduct,
+  cadence: OfferCadence,
+): { product: OfferProduct; cadence: OfferCadence; type: CartUpsellType } | null {
   // OTP -> monthly subscription, same product (Flow / Clear / Both all qualify).
   if (cadence === "monthly-otp") {
     return { product, cadence: "monthly-sub", type: "otp_to_sub" };
@@ -132,7 +132,7 @@ function resolveUpgrade(
   return null;
 }
 
-function buildOtpToSubCopy(product: ByoProduct, quantity: number): UpsellCopy {
+function buildOtpToSubCopy(product: OfferProduct, quantity: number): UpsellCopy {
   const otp = getOfferPricing(product, "monthly-otp");
   const sub = getOfferPricing(product, "monthly-sub");
   // Anchor against the all-in charged OTP price (postage baked into the SKU).
@@ -148,8 +148,8 @@ function buildOtpToSubCopy(product: ByoProduct, quantity: number): UpsellCopy {
 }
 
 function buildSingleToBothCopy(
-  product: ByoProduct,
-  cadence: ByoCadence,
+  product: OfferProduct,
+  cadence: OfferCadence,
 ): UpsellCopy {
   const current = getOfferPricing(product, cadence);
   const both = getOfferPricing("both", cadence);
@@ -183,10 +183,10 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
   if (lines.length !== 1) return null;
 
   const line = lines[0];
-  const product = detectByoProduct(line.merchandise.id);
+  const product = detectOfferProduct(line.merchandise.id);
   if (!product) return null;
 
-  const cadence = detectByoCadence(line.merchandise.id, Boolean(line.sellingPlanAllocation));
+  const cadence = detectOfferCadence(line.merchandise.id, Boolean(line.sellingPlanAllocation));
 
   const upgrade = resolveUpgrade(product, cadence);
   if (!upgrade) return null;
@@ -207,7 +207,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
     originalQuantity: line.quantity,
     targetVariantId: targetVariant.variantId,
     targetSellingPlanId: targetVariant.sellingPlanId,
-    thumbnail: BYO_PRODUCTS[upgrade.product].thumbnail,
+    thumbnail: OFFER_PRODUCTS[upgrade.product].thumbnail,
     ...copy,
   };
 }

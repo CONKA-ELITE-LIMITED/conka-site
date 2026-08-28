@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import MetaViewContent from "@/app/components/MetaViewContent";
-import { getOfferVariant, getOfferPricing } from "@/app/lib/byoData";
+import { getOfferVariant, getOfferPricing } from "@/app/lib/offerData";
 import {
   BYO_DEFAULT_CADENCE,
   BYO_DEFAULT_PRODUCT,
 } from "./defaults";
-import { BYO_PRODUCTS } from "@/app/lib/byoData";
+import { OFFER_PRODUCTS } from "@/app/lib/offerData";
 import BuildYourOrderClient from "./BuildYourOrderClient";
 
 export const metadata: Metadata = {
@@ -49,7 +49,7 @@ export default function BuildYourOrderPage() {
           getOfferPricing(BYO_DEFAULT_PRODUCT, BYO_DEFAULT_CADENCE)
             .price
         }
-        contentName={BYO_PRODUCTS[BYO_DEFAULT_PRODUCT].label}
+        contentName={OFFER_PRODUCTS[BYO_DEFAULT_PRODUCT].label}
       />
       <BuildYourOrderClient />
       {/* Real-user Core Web Vitals — lets us compare this flow

@@ -5,7 +5,7 @@
  * the bonus on the FIRST order only ("on your first order"); quarterly subs get
  * it every cycle ("included"). One-time orders get nothing.
  *
- * Driven by `pricing.freeShots` from byoData, so each product/cadence shows
+ * Driven by `pricing.freeShots` from offerData, so each product/cadence shows
  * the right number automatically (+8 / +16 single & Both monthly, +20 quarterly).
  */
 

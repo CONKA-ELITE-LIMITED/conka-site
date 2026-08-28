@@ -39,13 +39,13 @@ const ByoGallery = dynamic(() => import("./components/ByoGallery"), {
   loading: () => <div className="aspect-[7/5] max-h-[300px] w-full bg-[#f1f1f3] lg:aspect-auto lg:h-full lg:max-h-none" aria-hidden />,
 });
 import {
-  type ByoCadence,
-  type ByoProduct,
+  type OfferCadence,
+  type OfferProduct,
   type UpsellOffer,
-  BYO_PRODUCTS,
+  OFFER_PRODUCTS,
   getOfferPricing,
   getUpsellOffer,
-} from "@/app/lib/byoData";
+} from "@/app/lib/offerData";
 import { byoCheckout, isByoCheckoutError } from "@/app/lib/byoCheckout";
 import { formatPrice } from "@/app/lib/productData";
 import {
@@ -81,7 +81,7 @@ type Step = 1 | 2 | 3;
  */
 function upsellKind(
   offer: UpsellOffer,
-  from: ByoProduct,
+  from: OfferProduct,
 ): "otp_to_sub" | "single_to_both" | "monthly_to_quarterly" {
   if (offer.upgradedProduct !== from) return "single_to_both";
   return offer.upgradedCadence === "monthly-sub"
@@ -96,8 +96,8 @@ const STEPS: { n: Step; label: string }[] = [
 
 export default function BuildYourOrderClient() {
   const [step, setStep] = useState<Step>(1);
-  const [product, setProduct] = useState<ByoProduct>(BYO_DEFAULT_PRODUCT);
-  const [cadence, setCadence] = useState<ByoCadence>(BYO_DEFAULT_CADENCE);
+  const [product, setProduct] = useState<OfferProduct>(BYO_DEFAULT_PRODUCT);
+  const [cadence, setCadence] = useState<OfferCadence>(BYO_DEFAULT_CADENCE);
 
   /**
    * Steps whose completion event has already fired.
@@ -209,7 +209,7 @@ export default function BuildYourOrderClient() {
   // setState updater: updaters must be pure, and React invokes them twice under
   // StrictMode, which would double-count every switch.
   const handleProductChange = useCallback(
-    (p: ByoProduct) => {
+    (p: OfferProduct) => {
       if (p !== product) {
         trackByoProductChanged({
           variant: BYO_VARIANT,
@@ -224,7 +224,7 @@ export default function BuildYourOrderClient() {
   );
 
   const handleCadenceChange = useCallback(
-    (c: ByoCadence) => {
+    (c: OfferCadence) => {
       if (c !== cadence) {
         trackByoCadenceChanged({
           variant: BYO_VARIANT,
@@ -239,7 +239,7 @@ export default function BuildYourOrderClient() {
   );
 
   const proceedToCheckout = useCallback(
-    async (p: ByoProduct, c: ByoCadence, upsellAccepted: boolean) => {
+    async (p: OfferProduct, c: OfferCadence, upsellAccepted: boolean) => {
       setIsCheckingOut(true);
       setError(null);
       trackByoCheckout({ variant: BYO_VARIANT, product: p, cadence: c });
@@ -298,7 +298,7 @@ export default function BuildYourOrderClient() {
   // Mobile shortens "/3 months" to "/3 mo": with the back arrow beside it, the
   // full suffix pushed the quarterly CTA wider than a 390px viewport.
   const freqShort = cadence === "quarterly-sub" ? "/3 mo" : freq;
-  const ctaPrice = `${BYO_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
+  const ctaPrice = `${OFFER_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
   const ctaPriceShort = `${formatPrice(pricing.price)}${freqShort}`;
   const isSubscription = cadence !== "monthly-otp";
 

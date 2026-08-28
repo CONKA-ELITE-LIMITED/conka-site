@@ -7,7 +7,7 @@
  * Checkout uses the exact variant the card displayed (live.variantId), via our
  * POST /api/cart route, so the price shown always matches the price charged.
  * We deliberately do NOT route through byoCheckout(): that helper ignores a
- * passed variant and re-resolves its own from byoData, which would risk a
+ * passed variant and re-resolves its own from offerData, which would risk a
  * display/charge mismatch on this live-priced page. Instead we reuse the same
  * analytics helpers byoCheckout fires, plus the shared Meta cart attributes
  * (_fbp/_fbc) so the server-side Purchase webhook can attribute the order.

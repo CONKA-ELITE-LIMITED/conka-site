@@ -1,33 +1,33 @@
 /**
  * Cadence data adapter for product pages (SCRUM-916).
  *
- * Wraps byoData.ts so Flow, Clear, and Both product pages share
+ * Wraps offerData.ts so Flow, Clear, and Both product pages share
  * the same Shopify variant IDs and pricing as the funnel without
- * duplicating data. byoData.ts is the single source of truth.
+ * duplicating data. offerData.ts is the single source of truth.
  */
 
 import {
-  ByoCadence,
-  ByoPricing,
-  ByoVariantConfig,
-  BYO_CADENCES,
+  OfferCadence,
+  OfferPricing,
+  OfferVariantConfig,
+  OFFER_CADENCES,
   getDisplayDiscount,
   getSavingsPercent,
-  getByoProductSlideshow,
+  getOfferProductSlideshow,
   getChargedPrice,
   getOfferPricing,
   getOfferVariant,
-} from "./byoData";
+} from "./offerData";
 import { FormulaId } from "./productData";
 import type { ProductHeroId } from "./productTypes";
 
-export { BYO_CADENCES, getChargedPrice, getDisplayDiscount, getSavingsPercent, getByoProductSlideshow };
+export { OFFER_CADENCES, getChargedPrice, getDisplayDiscount, getSavingsPercent, getOfferProductSlideshow };
 
-// Re-export the cadence union so product pages don't import from byoData directly
-export type CadenceType = ByoCadence;
-export type { ByoPricing as CadencePricing, ByoVariantConfig as CadenceVariantConfig };
+// Re-export the cadence union so product pages don't import from offerData directly
+export type CadenceType = OfferCadence;
+export type { OfferPricing as CadencePricing, OfferVariantConfig as CadenceVariantConfig };
 
-// Maps FormulaId to the ByoProduct key used in byoData
+// Maps FormulaId to the OfferProduct key used in offerData
 const FORMULA_TO_PRODUCT = {
   "01": "flow",
   "02": "clear",
@@ -47,14 +47,14 @@ export const BALANCE_ACCENT = "#0369a1";
 export function getCadencePricingByFormula(
   formulaId: FormulaId,
   cadence: CadenceType,
-): ByoPricing {
+): OfferPricing {
   return getOfferPricing(FORMULA_TO_PRODUCT[formulaId], cadence);
 }
 
 export function getCadenceVariantByFormula(
   formulaId: FormulaId,
   cadence: CadenceType,
-): ByoVariantConfig | null {
+): OfferVariantConfig | null {
   return getOfferVariant(FORMULA_TO_PRODUCT[formulaId], cadence);
 }
 
@@ -62,11 +62,11 @@ export function getCadenceVariantByFormula(
 // BALANCE HELPERS (Both / protocol 3 page)
 // ============================================
 
-export function getBalanceCadencePricing(cadence: CadenceType): ByoPricing {
+export function getBalanceCadencePricing(cadence: CadenceType): OfferPricing {
   return getOfferPricing("both", cadence);
 }
 
-export function getBalanceCadenceVariant(cadence: CadenceType): ByoVariantConfig | null {
+export function getBalanceCadenceVariant(cadence: CadenceType): OfferVariantConfig | null {
   return getOfferVariant("both", cadence);
 }
 
@@ -78,7 +78,7 @@ export function getBalanceCadenceVariant(cadence: CadenceType): ByoVariantConfig
 export function getCadencePricingByProductHeroId(
   productHeroId: ProductHeroId,
   cadence: CadenceType,
-): ByoPricing {
+): OfferPricing {
   if (productHeroId === "03") return getBalanceCadencePricing(cadence);
   return getCadencePricingByFormula(productHeroId, cadence);
 }
@@ -87,16 +87,16 @@ export function getCadencePricingByProductHeroId(
 export function getCadenceVariantByProductHeroId(
   productHeroId: ProductHeroId,
   cadence: CadenceType,
-): ByoVariantConfig | null {
+): OfferVariantConfig | null {
   if (productHeroId === "03") return getBalanceCadenceVariant(cadence);
   return getCadenceVariantByFormula(productHeroId, cadence);
 }
 
 // ============================================
 // BOTH HERO CONTENT ("03")
-// Mirrors byoData BYO_PRODUCTS.both, structured here so product
+// Mirrors offerData OFFER_PRODUCTS.both, structured here so product
 // pages have a single import path (cadenceData) rather than reaching
-// into byoData directly.
+// into offerData directly.
 // ============================================
 
 export interface BothHeroContent {

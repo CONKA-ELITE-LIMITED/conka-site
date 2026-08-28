@@ -1,4 +1,4 @@
-import { getDisplayDiscount, getOfferPricing } from "@/app/lib/byoData";
+import { getDisplayDiscount, getOfferPricing } from "@/app/lib/offerData";
 
 export interface ProductGridHeaderProps {
   /** Eyebrow pill above the title. Pass "" to hide it. */

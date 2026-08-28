@@ -18,7 +18,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/app/lib/env';
 import { sizeToTierKey } from '@/app/lib/productSizeUtils';
 import { SUPPORT_EMAIL } from '@/app/lib/supportEmail';
-import { getByoSwapSellingPlanId, getByoVariantNumericId } from '@/app/lib/byoData';
+import { getOfferSwapSellingPlanId, getOfferVariantNumericId } from '@/app/lib/offerData';
 
 const LOOP_API_BASE = 'https://api.loopsubscriptions.com/admin/2023-10';
 
@@ -834,8 +834,8 @@ export async function POST(
           }, { status: 422 });
         }
 
-        const targetVariantId = getByoVariantNumericId(target, cadence);
-        const targetSellingPlanId = getByoSwapSellingPlanId(target, cadence);
+        const targetVariantId = getOfferVariantNumericId(target, cadence);
+        const targetSellingPlanId = getOfferSwapSellingPlanId(target, cadence);
         if (!targetVariantId) {
           return NextResponse.json({
             success: false,
