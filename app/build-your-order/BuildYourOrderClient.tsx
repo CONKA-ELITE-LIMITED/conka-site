@@ -43,8 +43,10 @@ import {
   type OfferProduct,
   type UpsellOffer,
   OFFER_PRODUCTS,
+  getChargedPrice,
   getOfferPricing,
   getUpsellOffer,
+  isOtpCadence,
 } from "@/app/lib/offerData";
 import { byoCheckout, isByoCheckoutError } from "@/app/lib/byoCheckout";
 import { formatPrice } from "@/app/lib/productData";
@@ -298,9 +300,13 @@ export default function BuildYourOrderClient() {
   // Mobile shortens "/3 months" to "/3 mo": with the back arrow beside it, the
   // full suffix pushed the quarterly CTA wider than a 390px viewport.
   const freqShort = cadence === "quarterly-sub" ? "/3 mo" : freq;
-  const ctaPrice = `${OFFER_PRODUCTS[product].label} · ${formatPrice(pricing.price)}${freq}`;
-  const ctaPriceShort = `${formatPrice(pricing.price)}${freqShort}`;
-  const isSubscription = cadence !== "monthly-otp";
+  const isSubscription = !isOtpCadence(cadence);
+  // The CTA states a single figure with no postage line, so one-time cadences
+  // must show the all-in charged price (CART_PRICING_SOURCE_OF_TRUTH rule);
+  // subscriptions ship free, so their price already is the total.
+  const ctaAmount = isSubscription ? pricing.price : getChargedPrice(pricing);
+  const ctaPrice = `${OFFER_PRODUCTS[product].label} · ${formatPrice(ctaAmount)}${freq}`;
+  const ctaPriceShort = `${formatPrice(ctaAmount)}${freqShort}`;
 
   const footer =
     step === 1

@@ -21,9 +21,11 @@ import {
   getChargedPrice,
   getOfferPricing,
   getDisplayDiscount,
+  getOtpCadenceFor,
+  isOtpCadence,
 } from "@/app/lib/offerData";
 import { formatPrice } from "@/app/lib/productData";
-import { cadenceDeliveryPeriod } from "../defaults";
+import { cadenceDeliveryPeriod, cadencePriceSuffix } from "../defaults";
 
 interface CadenceSelectorProps {
   cadence: OfferCadence;
@@ -174,11 +176,14 @@ function PlanCard({
  */
 export function PlanSummaryList({ product, cadence }: { product: OfferProduct; cadence: OfferCadence }) {
   const pricing = getOfferPricing(product, cadence);
-  const isOtp = cadence === "monthly-otp";
+  const isOtp = isOtpCadence(cadence);
   const savePct = getDisplayDiscount(pricing);
   const freeShots = pricing.freeShots ?? 0;
   const period = cadenceDeliveryPeriod(cadence);
-  const subRef = getOfferPricing(product, "monthly-sub");
+  // The subscription cross-sell references the same-size plan (SCRUM-1285).
+  const subCadence: OfferCadence =
+    cadence === "quarterly-otp" ? "quarterly-sub" : "monthly-sub";
+  const subRef = getOfferPricing(product, subCadence);
 
   const lines: React.ReactNode[] = isOtp
     ? [
@@ -191,7 +196,7 @@ export function PlanSummaryList({ product, cadence }: { product: OfferProduct; c
         <>100-day money-back guarantee</>,
         <>
           Subscribe instead for {subRef.freeShots} free shots and free postage,
-          from {formatPrice(subRef.price)}/mo
+          from {formatPrice(subRef.price)}{cadencePriceSuffix(subCadence)}
         </>,
       ]
     : [
@@ -233,7 +238,7 @@ function PlanSummary({ product, cadence }: { product: OfferProduct; cadence: Off
   return (
     <div className="rounded-md ring-1 ring-black/10 bg-white p-4">
       <p className="text-[16px] font-semibold text-black mb-3">
-        {cadence === "monthly-otp" ? "Your one-time order" : "Your subscription"}
+        {isOtpCadence(cadence) ? "Your one-time order" : "Your subscription"}
       </p>
       <PlanSummaryList product={product} cadence={cadence} />
     </div>
@@ -241,9 +246,13 @@ function PlanSummary({ product, cadence }: { product: OfferProduct; cadence: Off
 }
 
 export default function CadenceSelector({ cadence, product, onChange }: CadenceSelectorProps) {
-  const otpPricing = getOfferPricing(product, "monthly-otp");
+  // Selection-aware one-time (SCRUM-1285): the link always offers the one-time
+  // twin of the selected plan card (monthly card -> 20-shot OTP, quarterly
+  // card -> 60/120-shot OTP).
+  const otpCadence = getOtpCadenceFor(cadence);
+  const otpPricing = getOfferPricing(product, otpCadence);
   const otpSavePct = getDisplayDiscount(otpPricing);
-  const isOtp = cadence === "monthly-otp";
+  const isOtp = isOtpCadence(cadence);
 
   return (
     <div className="flex flex-col gap-4">
@@ -264,12 +273,13 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
 
       {/* One-time purchase as a text link, the PDP pattern: itemised as
           product price + per-order postage, deliberately not a third card.
-          Both carries a struck £119.98 (one Flow box + one Clear box) so the
-          bundle discount is stated; postage cancels out of that comparison,
-          so the strike sits against the ex-postage price. */}
+          Both carries a struck Flow-plus-Clear reference (£119.98 monthly,
+          £359.94 quarterly) so the bundle discount is stated; postage cancels
+          out of that comparison, so the strike sits against the ex-postage
+          price. */}
       <button
         type="button"
-        onClick={() => onChange("monthly-otp")}
+        onClick={() => onChange(otpCadence)}
         aria-pressed={isOtp}
         className={`mx-auto block w-fit text-center text-sm underline underline-offset-4 transition-opacity hover:opacity-70 ${
           isOtp ? "font-bold text-black" : "font-medium text-black"

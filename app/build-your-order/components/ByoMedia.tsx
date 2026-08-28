@@ -42,7 +42,7 @@ export function getBoxImage(
   cadence: OfferCadence,
 ): { src: string; alt: string } {
   return {
-    src: (cadence === "quarterly-sub" ? QUARTERLY_BOX_IMG : BOX_IMG)[product],
+    src: (cadence === "quarterly-sub" || cadence === "quarterly-otp" ? QUARTERLY_BOX_IMG : BOX_IMG)[product],
     alt: `${OFFER_PRODUCTS[product].label} delivery box`,
   };
 }

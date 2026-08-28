@@ -7,6 +7,7 @@ import {
   CadenceType,
   getCadencePricingByProductHeroId,
   getDisplayDiscount,
+  getOtpCadenceFor,
   OFFER_CADENCES,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -647,7 +648,11 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  // Selection-aware one-time (SCRUM-1285): the link offers the one-time twin
+  // of the selected plan card (monthly card -> 20-shot OTP, quarterly card ->
+  // 60/120-shot OTP). The page's onOtpAddToCart derives the same cadence.
+  const otpCadence = getOtpCadenceFor(selectedCadence);
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, otpCadence);
   const otpSavePct = getDisplayDiscount(otpPricing);
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
@@ -698,10 +703,11 @@ export default function ProductBuyPanel({
         </ConkaCTAButton>
 
         {/* The one-time purchase sits under the main CTA (MM pattern), itemised
-            as product price + per-order postage. Both carries a struck £119.98
-            (one Flow box + one Clear box) so the bundle discount is stated
-            rather than hidden; postage cancels out of that comparison, so the
-            strike sits against the ex-postage price. */}
+            as product price + per-order postage. Both carries a struck
+            Flow-plus-Clear reference (£119.98 monthly, £359.94 quarterly) so
+            the bundle discount is stated rather than hidden; postage cancels
+            out of that comparison, so the strike sits against the ex-postage
+            price. */}
         <button
           type="button"
           onClick={onOtpAddToCart}

@@ -24,7 +24,23 @@ import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productDa
 // ============================================
 
 export type OfferProduct = "both" | "flow" | "clear";
-export type OfferCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub";
+export type OfferCadence = "monthly-sub" | "monthly-otp" | "quarterly-sub" | "quarterly-otp";
+
+/** True for the one-time cadences (no subscription, compulsory postage). */
+export function isOtpCadence(cadence: OfferCadence): boolean {
+  return cadence === "monthly-otp" || cadence === "quarterly-otp";
+}
+
+/**
+ * The one-time twin of a cadence: the OTP offering the same shipment size as
+ * the given plan. Drives the selection-aware "Buy it once" link (SCRUM-1285),
+ * so the link always offers the one-time equivalent of the selected plan card.
+ */
+export function getOtpCadenceFor(cadence: OfferCadence): OfferCadence {
+  return cadence === "quarterly-sub" || cadence === "quarterly-otp"
+    ? "quarterly-otp"
+    : "monthly-otp";
+}
 
 export interface OfferPricing {
   /** Total price for this combination */
@@ -214,6 +230,16 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 140,
       freeShotsValue: 59.99,
     },
+    "quarterly-otp": {
+      // + postage = the £279.99 BOTH-120 charges. Same £2.25/shot as monthly one-time.
+      price: 270.0,
+      perShot: 2.25,
+      perDay: 4.5,
+      shotCount: 120,
+      // 3 x (one Flow box + one Clear box); postage cancels (both routes pay one order's postage).
+      compareAtPrice: 3 * BOTH_REFERENCE_PRICE,
+      postage: OTP_POSTAGE,
+    },
   },
   flow: {
     "monthly-sub": {
@@ -245,6 +271,14 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 80,
       subsequentShots: 80,
       freeShotsValue: 59.99,
+    },
+    "quarterly-otp": {
+      // + postage = the £189.99 FLOW-60 charges. Same £3.00/shot as monthly one-time.
+      price: 180.0,
+      perShot: 3.0,
+      perDay: 3.0,
+      shotCount: 60,
+      postage: OTP_POSTAGE,
     },
   },
   clear: {
@@ -278,6 +312,14 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 80,
       freeShotsValue: 59.99,
     },
+    "quarterly-otp": {
+      // + postage = the £189.99 CLEAR-60 charges. Same £3.00/shot as monthly one-time.
+      price: 180.0,
+      perShot: 3.0,
+      perDay: 3.0,
+      shotCount: 60,
+      postage: OTP_POSTAGE,
+    },
   },
 };
 
@@ -304,6 +346,9 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
       variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457811550582", // FLOW-60 (Skio-era one-time, £189.99 postage baked in)
+    },
   },
   clear: {
     "monthly-sub": {
@@ -317,6 +362,9 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
       variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457854411126", // CLEAR-60 (Skio-era one-time, £189.99 postage baked in)
+    },
   },
   both: {
     "monthly-sub": {
@@ -329,6 +377,9 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
     "quarterly-sub": {
       variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
+    },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457864077686", // BOTH-120 (Skio-era one-time, £279.99 postage baked in)
     },
   },
 };
@@ -443,6 +494,13 @@ export const OFFER_CADENCES: Record<OfferCadence, OfferCadenceDisplay> = {
       "Lowest cost per shot across all plans",
     ],
   },
+  "quarterly-otp": {
+    label: "3-month supply, once",
+    subtitle: "Single order, no subscription",
+    features: [
+      "Subscribe later and save more",
+    ],
+  },
 };
 
 // ============================================
@@ -477,7 +535,7 @@ export function getOfferProductSlideshow(
   cadence: OfferCadence,
 ): { src: string }[] {
   const base = FUNNEL_PRODUCT_SLIDESHOW_BASE[product];
-  if (cadence === "quarterly-sub") {
+  if (cadence === "quarterly-sub" || cadence === "quarterly-otp") {
     return [QUARTERLY_FIRST_SLIDE[product], ...base.slice(1)];
   }
   return base;
@@ -488,14 +546,17 @@ export function getOfferProductSlideshow(
 // ============================================
 
 const VARIANT_TO_PRODUCT = new Map<string, OfferProduct>();
-const QUARTERLY_VARIANT_SET = new Set<string>();
+const QUARTERLY_SUB_VARIANT_SET = new Set<string>();
+const QUARTERLY_OTP_VARIANT_SET = new Set<string>();
 
 for (const [product, cadences] of Object.entries(OFFER_VARIANTS) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
   for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
     if (config.variantId) {
       VARIANT_TO_PRODUCT.set(config.variantId, product);
       if (cadence === "quarterly-sub") {
-        QUARTERLY_VARIANT_SET.add(config.variantId);
+        QUARTERLY_SUB_VARIANT_SET.add(config.variantId);
+      } else if (cadence === "quarterly-otp") {
+        QUARTERLY_OTP_VARIANT_SET.add(config.variantId);
       }
     }
   }
@@ -508,7 +569,8 @@ export function detectOfferProduct(variantId: string): OfferProduct | null {
 
 /** Given a variant GID and whether a sellingPlan is active, return the cadence. */
 export function detectOfferCadence(variantId: string, hasSellingPlan: boolean): OfferCadence {
-  if (QUARTERLY_VARIANT_SET.has(variantId)) return "quarterly-sub";
+  if (QUARTERLY_OTP_VARIANT_SET.has(variantId)) return "quarterly-otp";
+  if (QUARTERLY_SUB_VARIANT_SET.has(variantId)) return "quarterly-sub";
   return hasSellingPlan ? "monthly-sub" : "monthly-otp";
 }
 
@@ -553,6 +615,7 @@ export function getCadenceFrequency(
     case "monthly-sub":
       return "monthly";
     case "monthly-otp":
+    case "quarterly-otp":
       return "one-time";
     case "quarterly-sub":
       return "quarterly";
@@ -698,6 +761,34 @@ export function getUpsellOffer(
     };
   }
 
+  // Both + quarterly OTP → Both + quarterly sub (SCRUM-1285: the one new
+  // edge). Anchored on the all-in charged one-time price (postage baked into
+  // the Skio-era SKU), the same way the cart upsell anchors otp_to_sub.
+  if (product === "both" && cadence === "quarterly-otp") {
+    if (!isVariantReady("both", "quarterly-sub")) return null;
+    const currentCharged = getChargedPrice(getOfferPricing("both", "quarterly-otp"));
+    const upgradePrice = getOfferPricing("both", "quarterly-sub").price;
+    const savings = currentCharged - upgradePrice;
+    return {
+      headline: `Subscribe and save ${formatPrice(savings)}`,
+      body: `You're paying ${formatPrice(currentCharged)} for a one-time order. Subscribe at ${formatPrice(upgradePrice)} every 3 months and save ${formatPrice(savings)} each delivery. Cancel or pause anytime.`,
+      acceptLabel: `Subscribe at ${formatPrice(upgradePrice)}/3 months`,
+      declineLabel: "No thanks, one-time is fine",
+      upgradedProduct: "both",
+      upgradedCadence: "quarterly-sub",
+      priceDifference: upgradePrice - currentCharged,
+      compareAtUpgrade: currentCharged,
+      savingsAmount: savings,
+      savingsLabel: `Save ${formatPrice(savings)} every 3 months`,
+      image: bothImage,
+      benefits: [
+        `Save ${formatPrice(savings)} every 3 months`,
+        "Cancel or pause anytime, no lock-in",
+        "Free UK shipping on every delivery",
+      ],
+    };
+  }
+
   // Both + monthly sub → Both + quarterly
   if (product === "both" && cadence === "monthly-sub") {
     if (!isVariantReady("both", "quarterly-sub")) return null;
@@ -777,7 +868,8 @@ export function getOfferCTALabels(
         subLabel: savings > 0 ? `Save ${formatPrice(savings)}` : "",
       };
     }
-    case "monthly-otp": {
+    case "monthly-otp":
+    case "quarterly-otp": {
       const savings = pricing.compareAtPrice ? pricing.compareAtPrice - pricing.price : 0;
       return {
         label: `Buy once · ${formatPrice(pricing.price)}`,

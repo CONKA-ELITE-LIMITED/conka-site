@@ -55,5 +55,7 @@ export function cadencePriceSuffix(cadence: OfferCadence): string {
 
 /** Reads after a shot count, e.g. "60 shots every 3 months". */
 export function cadenceDeliveryPeriod(cadence: OfferCadence): string {
-  return cadence === "quarterly-sub" ? "every 3 months" : "a month";
+  return cadence === "quarterly-sub" || cadence === "quarterly-otp"
+    ? "every 3 months"
+    : "a month";
 }

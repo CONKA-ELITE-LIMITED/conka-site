@@ -115,9 +115,12 @@ function resolveUpgrade(
   product: OfferProduct,
   cadence: OfferCadence,
 ): { product: OfferProduct; cadence: OfferCadence; type: CartUpsellType } | null {
-  // OTP -> monthly subscription, same product (Flow / Clear / Both all qualify).
+  // OTP -> the same-size subscription, same product (Flow / Clear / Both all qualify).
   if (cadence === "monthly-otp") {
     return { product, cadence: "monthly-sub", type: "otp_to_sub" };
+  }
+  if (cadence === "quarterly-otp") {
+    return { product, cadence: "quarterly-sub", type: "otp_to_sub" };
   }
   // Single formula subscription -> Both, at the same cadence.
   if (product === "flow" || product === "clear") {
@@ -132,13 +135,22 @@ function resolveUpgrade(
   return null;
 }
 
-function buildOtpToSubCopy(product: OfferProduct, quantity: number): UpsellCopy {
-  const otp = getOfferPricing(product, "monthly-otp");
-  const sub = getOfferPricing(product, "monthly-sub");
+function buildOtpToSubCopy(
+  product: OfferProduct,
+  fromCadence: OfferCadence,
+  quantity: number,
+): UpsellCopy {
+  const subCadence: OfferCadence =
+    fromCadence === "quarterly-otp" ? "quarterly-sub" : "monthly-sub";
+  const otp = getOfferPricing(product, fromCadence);
+  const sub = getOfferPricing(product, subCadence);
   // Anchor against the all-in charged OTP price (postage baked into the SKU).
   const saving = (getChargedPrice(otp) - sub.price) * quantity;
+  // Quarterly's bonus shots ship every cycle; monthly's are first-order only.
   const valueLine = sub.freeShots
-    ? `Free shipping and ${sub.freeShots} free shots on your first order`
+    ? subCadence === "quarterly-sub"
+      ? `Free shipping and ${sub.freeShots} free shots with every delivery`
+      : `Free shipping and ${sub.freeShots} free shots on your first order`
     : "Free shipping, cancel anytime";
   return {
     headline: "Make it a subscription",
@@ -196,7 +208,7 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
 
   const copy =
     upgrade.type === "otp_to_sub"
-      ? buildOtpToSubCopy(product, line.quantity)
+      ? buildOtpToSubCopy(product, cadence, line.quantity)
       : buildSingleToBothCopy(product, cadence);
 
   return {
