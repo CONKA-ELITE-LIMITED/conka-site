@@ -13,6 +13,7 @@ import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
 import IngredientDisclosureRows from "./IngredientDisclosureRows";
+import Certifications from "@/app/components/Certifications";
 
 interface ProductHeroMobileV3Props {
   formulaId: ProductHeroId;
@@ -101,6 +102,9 @@ export default function ProductHeroMobileV3({
       {/* The supporting answers, directly under the check grid, the way the
           reference runs them: still in the buy decision, not a section away. */}
       <IngredientDisclosureRows formulaId={formulaId} />
+
+      {/* See ProductHeroV3: a footnote to the buy decision, not a band. */}
+      <Certifications inline />
 
       <TrustStrip />
     </div>
