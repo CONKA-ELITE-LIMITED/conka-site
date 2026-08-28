@@ -83,6 +83,43 @@ export interface OfferPricing {
    * gift valuation, never part of a discount percentage.
    */
   freeShotsValue?: number;
+
+  // ============================================
+  // STARTER PACK (SCRUM-1283)
+  // ============================================
+  /**
+   * Physical and digital extras included free with the first order, rendered as
+   * a struck-RRP value stack (GiftValueStack). Display only: the RRPs never
+   * reach a cart line or the checkout, per CART_PRICING_SOURCE_OF_TRUTH.md.
+   * What actually ships is the variant's `custom.bundlecomposition` metafield,
+   * so this list and that metafield must be kept in step by hand.
+   * The free bonus shots are NOT listed here; they derive from freeShotsValue.
+   */
+  gifts?: OfferGift[];
+  /**
+   * Arranged pack shot for the full-width PDP starter-pack section
+   * (StarterPackContents, SCRUM-1287). One per cadence, because the monthly and
+   * quarterly packs hold different quantities. Display only, and it doubles as
+   * the section's visibility switch: absent means the cadence ships no starter
+   * pack and the page renders no section at all.
+   */
+  starterPackImage?: string;
+}
+
+/** One free row in the starter-pack value stack. */
+export interface OfferGift {
+  id: string;
+  label: string;
+  /** Struck RRP shown against the row (£). */
+  rrp: number;
+  /** Square thumbnail. Omit for rows with no product shot. */
+  image?: string;
+  /**
+   * How the thumbnail fills its square tile. Square product photos crop fine on
+   * the default "cover"; tall transparent renders (the app screen) need
+   * "contain" so they are not cut off top and bottom.
+   */
+  imageFit?: "cover" | "contain";
 }
 
 export interface OfferVariantConfig {
@@ -187,6 +224,34 @@ const OTP_PRICE: Record<OfferProduct, number> = {
 const OTP_POSTAGE = 9.99;
 
 /**
+ * Flow starter pack: what comes free in the box on a first subscription order
+ * (SCRUM-1283). RRPs match the approved pack artwork. The bonus shots are not
+ * here; they come from `freeShotsValue` so the shot count and its value stay
+ * derived from one place.
+ */
+const STARTER_PACK_GIFTS: OfferGift[] = [
+  {
+    id: "hat",
+    label: "CONKA Hat",
+    rrp: 19.99,
+    image: "/formulas/starterPack/ConkaHat.jpg",
+  },
+  {
+    id: "travel-pack",
+    label: "Capsule Travel Pack",
+    rrp: 28.99,
+    image: "/formulas/starterPack/TravelPack.jpg",
+  },
+  {
+    id: "app",
+    label: "Full CONKA app access",
+    rrp: 9.99,
+    image: "/app/AppConkaRing.png",
+    imageFit: "contain",
+  },
+];
+
+/**
  * The reference one-off value for Both: one Flow box plus one Clear box
  * (£119.98). Deliberately NOT the £89.99 Both one-off box: the Both box is
  * itself a discount against buying the two singles, and this reference is what
@@ -221,6 +286,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 56,
       subsequentShots: 40,
       freeShotsValue: 47.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/BothStarterPack.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.both,
@@ -242,6 +309,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 140,
       subsequentShots: 140,
       freeShotsValue: 59.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/BothQuarterlyStarterPack.jpg",
     },
     "quarterly-otp": {
       // + postage = the £279.99 BOTH-120 charges. Same £2.25/shot as monthly one-time.
@@ -266,6 +335,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 28,
       subsequentShots: 20,
       freeShotsValue: 23.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/FlowStarterPack.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.flow,
@@ -285,6 +356,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 80,
       subsequentShots: 80,
       freeShotsValue: 59.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/FlowQuarterlyStarterPack.jpg",
     },
     "quarterly-otp": {
       // + postage = the £189.99 FLOW-60 charges. Same £3.00/shot as monthly one-time.
@@ -309,6 +382,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 28,
       subsequentShots: 20,
       freeShotsValue: 23.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/ClearStarterPack.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.clear,
@@ -328,6 +403,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 80,
       subsequentShots: 80,
       freeShotsValue: 59.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/ClearQuarterlyStarterPack.jpg",
     },
     "quarterly-otp": {
       // + postage = the £189.99 CLEAR-60 charges. Same £3.00/shot as monthly one-time.
@@ -352,17 +429,26 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
 //   monthly-otp   → dedicated one-time SKU (postage baked into the Shopify price;
 //                   displayed here as price + postage, same checkout total).
 //   quarterly-sub → 80/140-shot SKU (ships once, no swap).
+//
+// STARTER KIT (SCRUM-1287): every subscription cadence now points at a
+// -STARTER- variant, which is the same shot count and the same price as the
+// -FUNNEL- variant it replaced, plus a hat and a travel pack in the box. The
+// contents are the variant's `custom.bundlecomposition` metafield, which
+// Synergy explodes at pick time. Selling plans are untouched: the starter
+// variants were attached to the same four Loop plans, whose pricing policy is
+// a fixed £0.00 adjustment, so the charged price is the variant price either
+// way. The one-time cadences ship no kit and keep their -FUNNEL- variants.
 const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> = {
   flow: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
+      variantId: "gid://shopify/ProductVariant/58560937296246", // FLOW-STARTER-28 (first order → Loop swaps to FLOW-FUNNEL-20)
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "monthly-otp": {
       variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
+      variantId: "gid://shopify/ProductVariant/58560941752694", // FLOW-STARTER-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
     "quarterly-otp": {
@@ -371,14 +457,14 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
   },
   clear: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568517489014", // CLEAR-FUNNEL-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
+      variantId: "gid://shopify/ProductVariant/58560971309430", // CLEAR-STARTER-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "monthly-otp": {
       variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
+      variantId: "gid://shopify/ProductVariant/58560980615542", // CLEAR-STARTER-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
     "quarterly-otp": {
@@ -387,14 +473,14 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
   },
   both: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568809976182", // BOTH-FUNNEL-56 (first order → Loop swaps to BOTH-FUNNEL-40)
+      variantId: "gid://shopify/ProductVariant/58560992805238", // BOTH-STARTER-56 (first order → Loop swaps to BOTH-FUNNEL-40)
       sellingPlanId: "gid://shopify/SellingPlan/712527479158",
     },
     "monthly-otp": {
       variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
+      variantId: "gid://shopify/ProductVariant/58560994771318", // BOTH-STARTER-140
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
     },
     "quarterly-otp": {

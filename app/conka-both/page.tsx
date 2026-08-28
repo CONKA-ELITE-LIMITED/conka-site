@@ -5,6 +5,7 @@ import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
 import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
+import StarterPackContents from "@/app/components/product/StarterPackContents";
 import ProductComparisonTable from "@/app/components/product/ProductComparisonTable";
 import PdpSection, {
   PdpSectionImpressions,
@@ -45,7 +46,8 @@ export default function ConkaBothPage() {
   const [selectedCadence, setSelectedCadence] =
     useState<CadenceType>("monthly-sub");
 
-  const cadencePrice = getBalanceCadencePricing(selectedCadence).price;
+  const cadencePricing = getBalanceCadencePricing(selectedCadence);
+  const cadencePrice = cadencePricing.price;
 
   // Meta ViewContent on page load
   useEffect(() => {
@@ -105,6 +107,24 @@ export default function ConkaBothPage() {
   // Full-bleed proof section (white, neuron clip + grey stat card), owns
   // its own section + background, so it is not wrapped in a PdpSection.
   const brainFuelSection = <BrainFuelBand />;
+
+  // Starter pack: subscription cadences only, and only once the cadence has a
+  // pack shot. The page owns the visibility decision so a cadence without one
+  // renders no wrapper and leaves no gap.
+  const starterPackSection = cadencePricing.starterPackImage ? (
+    <PdpSection
+      id="starter-pack"
+      className="brand-section brand-bg-tint"
+      ariaLabel="What is in the starter pack"
+    >
+      <div className="brand-track">
+        <StarterPackContents
+          pricing={cadencePricing}
+          productLabel="CONKA Flow + Clear"
+        />
+      </div>
+    </PdpSection>
+  ) : null;
 
   const ingredientsSection = (
     <PdpSection
@@ -222,6 +242,7 @@ export default function ConkaBothPage() {
 
           {certificationsSection}
           {ugcSection}
+          {starterPackSection}
           {brainFuelSection}
           {ingredientsSection}
           {whatToExpectSection}
@@ -271,6 +292,7 @@ export default function ConkaBothPage() {
 
         {certificationsSection}
         {ugcSection}
+        {starterPackSection}
         {brainFuelSection}
         {ingredientsSection}
         {whatToExpectSection}

@@ -20,6 +20,37 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+### The Skio branch still sells the pre-starter-kit variants, so the kit vanishes when the flag flips
+
+**Status:** Open, blocked on Josiah's reply. Added 2026-08-28.
+**Files:** `app/lib/offerData.ts` (`OFFER_VARIANTS`) on `feature/skio-integration`, plus Shopify admin and the Skio dashboard.
+**Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/development/featurePlans/skio-migration.md` (on the Skio branch).
+
+`feature/starter-pack` re-pointed all six subscription cadences at the `-STARTER-` variants, wired to **Loop** selling plans. `feature/skio-integration` re-points the same purchase surfaces at **Skio** selling plans, and it predates the starter kit.
+
+**So the two are not compatible yet.** Merge the starter kit to `main`, merge `main` into the Skio branch, and `OFFER_VARIANTS` carries starter variants with Loop plan IDs while the Skio flag points at Skio plans sitting on `FLOW-20`, `CLEAR-20`, `BOTH-40` and their quarterly siblings, none of which carry the gifts. **Flipping `NEXT_PUBLIC_SKIO_ENABLED` therefore removes the starter kit from the offer**, silently and on the payday weekend it was built for.
+
+**The trap that makes this more than a variant swap:** the two platforms price in opposite directions. Loop's plans apply a **fixed £0.00** adjustment, so the variant price is the charged price, which is why the starter variants are priced at £39.99 / £109.99 / £74.99 / £149.99. Skio's plans discount from the **one-time** price. Read from Shopify 2026-08-28:
+
+| Skio group | Group | Plan | Products | Adjustment |
+|---|---|---|---|---|
+| 20-shots---monthly | 100167876982 | 712928887158 | Flow, Clear | 42.86% off £69.98 = £39.99 |
+| 60-shots---quarterly | 100167909750 | 712928919926 | Flow, Clear | 42.11% off £189.99 = £109.99 |
+| 40-shots---monthly | 100167942518 | 712928952694 | Both | 25% off £99.98 = £74.99 |
+| 120-shots---quarterly | 100167975286 | 712928985462 | Both | 46.43% off £279.99 = £149.99 |
+
+Attach the existing £39.99 starter variants to the existing Skio monthly plan and it charges **£22.85**. Do not do that.
+
+**What the fix looks like:** a Skio-priced equivalent of each starter variant, based at the one-time price and carrying the same `custom.bundlecomposition`, attached to the four Skio groups above. Then `OFFER_VARIANTS` on the Skio branch points at those six GIDs and the four Skio plan IDs. The existing Skio variants already carry compositions (`FLOW-20` explodes to `1xFLOW-FUNNEL-28`), so they are the right shape to copy from.
+
+**Also unbuilt anywhere:** the order-two swap, turning `FLOW-STARTER-28` into `FLOW-FUNNEL-20`, `CLEAR-STARTER-28` into `CLEAR-FUNNEL-20` and `BOTH-STARTER-56` into `BOTH-FUNNEL-40`. Without it every renewal ships another hat and travel pack.
+
+The exposure is wider than new signups. The account portal's product swap resolves through `getOfferVariantNumericId`, so an **existing** subscriber changing product today also lands on a starter variant and starts a hat-per-renewal contract. Same fix covers both, but it means the clock is already running on the current subscriber base, not only on orders taken from launch (found in the independent review, 29 Aug 2026). It was deliberately **not** configured in Loop: first renewals are late September and the migration is expected well before that, so a Loop rule would never fire. It has to exist in Skio, and the contracts Skio inherits will still be sitting on starter variants because none will have reached order two. If the migration slips past roughly **20 September**, configure it in Loop after all.
+
+**What unblocks it:** Josiah confirming whether anything is needed on his side at migration for the swap, and the migration date. Asked 2026-08-28.
+
+---
+
 ## Analytics / Attribution
 
 ### OTP price claims: split presentation needs `getChargedPrice` at every bare-figure site

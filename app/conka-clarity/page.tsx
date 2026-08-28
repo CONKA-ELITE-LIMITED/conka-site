@@ -9,6 +9,7 @@ import {
 } from "@/app/components/product";
 import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
 import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
+import StarterPackContents from "@/app/components/product/StarterPackContents";
 import ProductComparisonTable from "@/app/components/product/ProductComparisonTable";
 import PdpSection, {
   PdpSectionImpressions,
@@ -47,7 +48,8 @@ export default function ConkaClarityPage() {
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
 
-  const cadencePrice = getCadencePricingByFormula("02", selectedCadence).price;
+  const cadencePricing = getCadencePricingByFormula("02", selectedCadence);
+  const cadencePrice = cadencePricing.price;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta).
   // content_name preserved as "CONKA Clarity" to match production tracking
@@ -99,6 +101,24 @@ export default function ConkaClarityPage() {
       <UGCMarquee />
     </PdpSection>
   );
+
+  // Starter pack: subscription cadences only, and only once the cadence has a
+  // pack shot. The page owns the visibility decision so a cadence without one
+  // renders no wrapper and leaves no gap.
+  const starterPackSection = cadencePricing.starterPackImage ? (
+    <PdpSection
+      id="starter-pack"
+      className="brand-section brand-bg-tint"
+      ariaLabel="What is in the starter pack"
+    >
+      <div className="brand-track">
+        <StarterPackContents
+          pricing={cadencePricing}
+          productLabel="CONKA Clear"
+        />
+      </div>
+    </PdpSection>
+  ) : null;
 
   const ingredientsSection = (
     <PdpSection
@@ -240,6 +260,7 @@ export default function ConkaClarityPage() {
 
           {certificationsSection}
           {ugcSection}
+          {starterPackSection}
           {ingredientsSection}
           {benefitsSection}
           {whatToExpectSection}
@@ -290,6 +311,7 @@ export default function ConkaClarityPage() {
 
         {certificationsSection}
         {ugcSection}
+        {starterPackSection}
         {ingredientsSection}
         {benefitsSection}
         {whatToExpectSection}

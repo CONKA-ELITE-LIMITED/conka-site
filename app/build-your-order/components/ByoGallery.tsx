@@ -36,7 +36,13 @@ const PRODUCT_TO_HERO_ID: Record<OfferProduct, ProductHeroId> = {
 const STILL_COUNT = 5;
 
 export default function ByoGallery({ product }: { product: OfferProduct }) {
-  const slides = MM_GALLERY_ASSETS[PRODUCT_TO_HERO_ID[product]].slice(0, STILL_COUNT);
+  // The pack shot leads, the way the PDP hero does. The cadence is not chosen
+  // at this stage, so the monthly pack stands in for the offer.
+  const packImage = getOfferPricing(product, "monthly-sub").starterPackImage;
+  const slides = [
+    ...(packImage ? [packImage] : []),
+    ...MM_GALLERY_ASSETS[PRODUCT_TO_HERO_ID[product]],
+  ].slice(0, STILL_COUNT);
   const slideCount = slides.length;
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);

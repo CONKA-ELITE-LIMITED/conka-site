@@ -45,15 +45,32 @@ Note the **first-order-swap**: the monthly-sub variant recorded in code is the *
 
 | Product | Cadence | SKU (label) | Variant GID (numeric) | Selling plan |
 |---------|---------|-------------|-----------------------|--------------|
-| Flow | Monthly sub | FLOW-FUNNEL-28 → swaps to FLOW-FUNNEL-20 | 57568795918710 | 712527348086 |
+| Flow | Monthly sub | FLOW-STARTER-28 → swaps to FLOW-FUNNEL-20 | 58560937296246 | 712527348086 |
 | Flow | One-time | FLOW-FUNNEL-20-OTP | 58153768714614 | — |
-| Flow | Quarterly sub | FLOW-FUNNEL-80 | 58153768747382 | 712527413622 |
-| Clear | Monthly sub | CLEAR-FUNNEL-28 → swaps to CLEAR-FUNNEL-20 | 57568517489014 | 712527348086 |
+| Flow | Quarterly sub | FLOW-STARTER-80 | 58560941752694 | 712527413622 |
+| Clear | Monthly sub | CLEAR-STARTER-28 → swaps to CLEAR-FUNNEL-20 | 58560971309430 | 712527348086 |
 | Clear | One-time | CLEAR-FUNNEL-20-OTP | 58153768812918 | — |
-| Clear | Quarterly sub | CLEAR-FUNNEL-80 | 58153768845686 | 712527413622 |
-| Both | Monthly sub | BOTH-FUNNEL-56 → swaps to BOTH-FUNNEL-40 | 57568809976182 | 712527479158 |
+| Clear | Quarterly sub | CLEAR-STARTER-80 | 58560980615542 | 712527413622 |
+| Both | Monthly sub | BOTH-STARTER-56 → swaps to BOTH-FUNNEL-40 | 58560992805238 | 712527479158 |
 | Both | One-time | BOTH-FUNNEL-40-OTP | 58153768911222 | — |
-| Both | Quarterly sub | BOTH-FUNNEL-140 | 58153768943990 | 712527446390 |
+| Both | Quarterly sub | BOTH-STARTER-140 | 58560994771318 | 712527446390 |
+
+### Starter kit variants (SCRUM-1287, created 2026-08-28)
+
+Every subscription cadence now points at a `-STARTER-` variant. Each is the **same shot count and the same price** as the `-FUNNEL-` variant it replaced, with a hat and a travel pack added to the box. The kit contents are the variant's `custom.bundlecomposition` metafield, which Synergy explodes at pick time. The superseded `-FUNNEL-` subscription variants (57568795918710, 58153768747382, 57568517489014, 58153768845686, 57568809976182, 58153768943990) still exist in Shopify and still hold every live subscription created before the swap. Selling plans did not change: the starter variants were attached to the same four Loop plans, whose pricing policy is a fixed £0.00 adjustment, so the variant price is the charged price either way.
+
+| SKU | Variant GID | Price | Compare at | Weight | `custom.bundlecomposition` |
+|-----|-------------|-------|-----------|--------|---------------------------|
+| FLOW-STARTER-28 | 58560937296246 | £39.99 | £69.98 | 2.5kg | `1xFLOW-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` |
+| FLOW-STARTER-80 | 58560941752694 | £109.99 | £209.94 | 6.65kg | `3xFLOW-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` |
+| CLEAR-STARTER-28 | 58560971309430 | £39.99 | £69.98 | 2.5kg | `1xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` |
+| CLEAR-STARTER-80 | 58560980615542 | £109.99 | £209.94 | 6.65kg | `3xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` |
+| BOTH-STARTER-56 | 58560992805238 | £74.99 | £129.97 | 4.55kg | `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` |
+| BOTH-STARTER-140 | 58560994771318 | £149.99 | £389.91 | 10.85kg | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` |
+
+The two gift components are ordinary Shopify products, both deliberately **unpublished**: `CONKA-HAT` (CONKA Trucker Hat, 250g) and `CONKA-TRAVEL-PACK-28` (CONKA Travel Pack 2 Weeks, £28.99, 100g). Neither carries a `bundlecomposition` of its own; they are the leaf items a kit explodes into. The capsule count is in the travel pack SKU on purpose, so a future 14-cap pack takes its own SKU and stock line rather than silently redefining this one.
+
+Compare-at values were corrected at the same time to reference a **real purchasable price**: £69.98 is what one 20-shot box costs to buy once, and £209.94 is three of them. The older ex-postage figures (£59.99 / £179.97) referenced a price no customer is ever charged.
 
 Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL28` (Code 128). See [`../shipping/SHIPPING_AND_COURIERS.md`](../shipping/SHIPPING_AND_COURIERS.md).
 

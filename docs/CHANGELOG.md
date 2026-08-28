@@ -5,6 +5,11 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-28** | Every subscription cadence now sells the starter kit variant (hat, travel pack and app access in the first box) at the same price as before (SCRUM-1287)
+- **2026-08-28** | The Both PDP gets its own 100 day guarantee slide (both cartons open, Flow and Clear) instead of borrowing Flow's single-box shot
+- **2026-08-28** | Regenerated the PDP gallery statics from Figma at 2400x1715 (100-day guarantee shots, the 7+ years of research slide, both Flow starter packs) and added the missing Clear and Both starter packs, so all three PDPs now lead with their own pack shot and show the starter-kit section on every subscription cadence
+- **2026-08-28** | Flow PDP gains a full-width starter-pack section that swaps its pack shot and prices between the monthly and quarterly cadences (SCRUM-1287)
+- **2026-08-28** | Flow PDP leads with the starter pack bundle shot and shows a struck-RRP value stack of the free extras (hat, travel pack, bonus shots, app access) on subscription cadences.
 - **2026-08-28** | The buy-once link is back to one clean line: single all-in price with the struck anchor, no printed save percentage and no postage itemisation (postage stays baked in; the formal Shopify shipping split is tracked as SCRUM-1286 in docs/TODO.md). All discount maths now compares all-in totals, so strike, price and badge always agree.
 - **2026-08-28** | Discount badges now ascend with pack size (the Magic Mind pattern): every anchor derives from the monthly-size one-time reference unit scaled by months, so quarterly subs badge 48/62% and the quarterly one-times gain their own 10/29% badges. No price changed.
 - **2026-08-28** | Quarterly one-time is now purchasable: the Buy-it-once link on the PDPs and Build Your Order follows the selected plan card, offering the 60/120-shot one-time (£180 or £270 + £9.99 postage) wired to the Skio-era SKUs, with cart upsell to the matching quarterly subscription.

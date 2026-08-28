@@ -154,6 +154,24 @@ The prices below are the live model (`OFFER_PRICING` in `offerData.ts`). The **f
 
 Shot counts are **priced** shots. Monthly subs ship a bonus box on the first order only (Loop swaps the SKU from order 2); quarterly ships a bonus every cycle. One-time prices bake in £9.99 compulsory postage.
 
+### Starter pack gifts (`gifts`)
+
+`OfferPricing.gifts` is an optional `OfferGift[]` listing the free extras that come with a first order. It drives the `GiftValueStack` struck-RRP rows on the PDP buy panel and is **display only**: these RRPs never reach a cart line or the checkout, per [CART_PRICING_SOURCE_OF_TRUTH.md](../development/CART_PRICING_SOURCE_OF_TRUTH.md).
+
+Set on the `monthly-sub` and `quarterly-sub` cadences of all three products (`flow`, `clear`, `both`). Presence of `gifts` is what gates the stack, so adding it to another cadence is all that is needed to extend the offer.
+
+The free bonus shots are deliberately **not** in this array; that row derives from `freeShots` / `freeShotsValue` so the shot count has one source. Rows without an `image` fall back to a tick glyph.
+
+### Starter pack shot (`starterPackImage`)
+
+`OfferPricing.starterPackImage` is the arranged pack photograph for the full-width `StarterPackContents` section on the Flow, Clear and Both PDPs. One per product per cadence, because each pack holds different quantities and the artwork carries burned-in prices. It is also the PDP hero gallery's lead slide: `getPdpGalleryImages` prepends it, so the pack shot is absent on the one-time cadences rather than advertising gifts they do not include.
+
+It doubles as that section's visibility switch: absent means the cadence ships no starter pack, and the PDP renders no section wrapper at all rather than an empty one. Set on the same six subscription cadences as `gifts`. The section's shots row is named by the page's `productLabel` prop, not derived from the pricing object.
+
+The section derives every figure from `price`, `compareAtPrice`, `freeShots`, `freeShotsValue` and `gifts`, the same fields the buy panel reads, so the two surfaces cannot show different numbers.
+
+What actually ships is the variant's `custom.bundlecomposition` metafield, which Synergy explodes at pick time. That metafield and this array are kept in step by hand: changing one does not change the other.
+
 ### Offer Shopify variants & selling plans
 
 9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `OFFER_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
