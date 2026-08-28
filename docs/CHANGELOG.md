@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-28** | Pricing anchor audit (SCRUM-1257): wrote the canonical discount anchor rules and surface inventory (docs/ops/offerings-and-discounts.md), recorded the Skio-era quarterly one-time base prices from Shopify, corrected the stale one-time prices in SKU_AND_SHOT_REFERENCE.md, and reframed the offerData.ts header as the offer catalogue. Docs only, no price or behaviour change.
 - **2026-08-28** | Renamed the offer data layer from byoData to offerData and deleted the dead 4/8/12 trial-pack pricing chain. No behaviour change: prices, variants, analytics and JSON-LD are byte-identical.
 - **2026-08-27** | Corrected the docs the orphan sweep invalidated, including a design system rule that told people to use a deleted component
 - **2026-08-27** | Deleted 16 components nothing imported, and documented the 21 still-orphaned ones that need a decision first (the video heroes are parked for revert, the portal cluster is mid-Skio-migration)

@@ -1,9 +1,12 @@
 /**
- * Build Your Order — Data Layer
+ * Offer Catalogue (the selling data layer)
  *
- * Types, pricing, variant mapping, display data, and upsell logic
- * for the Build Your Order flow (/build-your-order) and every surface
- * that sells the offer catalogue (cart, account portal, JSON-LD).
+ * The single source of truth for every surface that sells: prices, variant
+ * mapping, display data, and upsell logic for the PDPs, cart drawer, account
+ * portal, JSON-LD / meta descriptions, and the legacy Build Your Order and
+ * trial landing flows. Pre-add UI prices come from here; cart and checkout
+ * prices come from Shopify only (docs/development/CART_PRICING_SOURCE_OF_TRUTH.md).
+ * Anchor and discount rules live in docs/ops/offerings-and-discounts.md.
  *
  * All 9 product/cadence combos (Flow, Clear, Both x Monthly Sub, OTP, Quarterly)
  * are live in Shopify. Variant IDs and selling plans are mapped below.
@@ -11,6 +14,7 @@
  * Merged from the pre-consolidation app/lib/funnelData.ts and
  * app/(trial-b)/lib/funnelData.ts forks (SCRUM-1247); the live funnel-c
  * presentation won, plus the portal/JSON-LD helpers from the main fork.
+ * Renamed from byoData.ts in SCRUM-1280.
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";

@@ -11,7 +11,7 @@ The single source of truth for the **commercial layer** of CONKA: what things co
 | `subscription-platform.md` | Loop vs Skio: fees, contract terms, migration state | Live |
 | `unit-economics.md` | Per-SKU COGS + packaging + fulfilment + fees to contribution margin | **Not built** (needs COGS input) |
 | `vendor-costs.md` | Full recurring SaaS / vendor monthly burn | Started — Shopify app subs captured; non-Shopify vendors pending |
-| `offerings-and-discounts.md` | Selling plans + discount codes, each checked against margin | **Not built** |
+| `offerings-and-discounts.md` | Discount anchor rules for the offer catalogue + the audit of every price/strike/percentage surface (SCRUM-1257) | Live |
 
 ## Related sources (do not duplicate, link)
 
