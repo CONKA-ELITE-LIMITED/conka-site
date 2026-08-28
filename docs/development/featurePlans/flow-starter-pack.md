@@ -127,8 +127,10 @@ Until those exports land, the annotated files sit at the target paths and the la
 ```
 Desktop (lg+)                                    Mobile (390)
 
-  What you get in your first box                   What you get in
-  You pay for the shots. The rest is free.         your first box
+  FOR NEW SUBSCRIBERS                              FOR NEW SUBSCRIBERS
+  Your starter kit includes:                       Your starter kit
+  Everything you need to kickstart focus,          includes:
+  energy and cognitive performance.
 
 ┌───────────────────┐  ✓ CONKA Flow, 20 shots    ┌──────────────────┐
 │                   │            £69.98  £39.99  │  [pack shot]     │
@@ -151,7 +153,9 @@ Desktop (lg+)                                    Mobile (390)
                                                   └──────────────────┘
 ```
 
-Copy note: the subhead deliberately avoids "free with your first order". On quarterly the bonus shots repeat every cycle, so a first-order claim understates the offer.
+Copy note: the heading follows the Graymatter reference, which Rudh preferred to the drafted "What you get in your first box" (28 Aug 2026). "Welcome kit" was considered and dropped: the pack is the starter pack everywhere else, from the plan to the `FLOW-STARTER-28` SKU, and a second name for one thing costs more than it buys. The eyebrow carries the "new subscribers" half of that idea instead.
+
+The subhead deliberately avoids "free with your first order". On quarterly the bonus shots repeat every cycle, so a first-order claim understates the offer.
 
 The paid row derives from `price` and `compareAtPrice`, the free rows from `freeShots` / `freeShotsValue` and `gifts`, exactly as `GiftValueStack` does, so the two surfaces cannot drift. Totals: £152.94 against £39.99 monthly, £328.90 against £109.99 quarterly.
 
@@ -160,7 +164,9 @@ No CTA. `StickyPurchaseFooter` and `StickyPurchaseFooterMobile` are present on b
 - Complexity: Medium
 - Files: `app/lib/offerData.ts`, `app/conka-flow/page.tsx`, new `app/components/product/StarterPackContents.tsx`, `public/formulas/starterPack/`
 
-**Follow-up, out of scope here.** The hero gallery's first slide is static, so selecting quarterly leaves hero artwork reading £39.99 above a panel reading £109.99. Pre-existing since Phase 1, and the quarterly composite now makes a cadence-aware first slide possible.
+**Hero lead slide, folded in.** Phase 1 made the starter-pack shot the first gallery slide, and that artwork carries its own prices, so selecting quarterly left hero artwork reading £39.99 above a panel reading £109.99. `getPdpGalleryImages(formulaId, cadence)` in `mmPdpData.ts` now substitutes slide 1 for the cadence's own `starterPackImage`, so the hero and the section read one field. Cadences with no pack keep the array as authored. `ByoGallery` still reads `MM_GALLERY_ASSETS` directly and is unaffected.
+
+Note on reachability: the Flow PDP's plan cards are the two subscription cadences, and the one-time offer is a link rather than a card, so `selectedCadence` on this page is only ever `monthly-sub` or `quarterly-sub`. The no-pack branch is defensive, not a path the PDP takes.
 
 ## Sequencing gate
 
