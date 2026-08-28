@@ -64,17 +64,11 @@ function PlanCard({
   const freeShots = pricing.freeShots ?? 0;
   const cadenceWord = planCadence === "quarterly-sub" ? "every 3 months" : "monthly";
 
-  // Crossed-out anchor, exactly as the PDP buy panel derives it: monthly
-  // anchors to the REAL all-in one-time price for the same shots; quarterly
-  // has no one-time equivalent, so it derives a reference from the published
-  // discount so the strike and the badge agree.
-  const otpCharged = getChargedPrice(getOfferPricing(product, "monthly-otp"));
-  const compareAtDisplay =
-    planCadence === "monthly-sub"
-      ? otpCharged
-      : savePct > 0
-        ? pricing.price / (1 - savePct / 100)
-        : undefined;
+  // Crossed-out anchor, exactly as the PDP buy panel derives it: the
+  // compare-at anchor itself (the real cost of the same priced shots bought
+  // one-time), so the strike and the Save% badge always derive from the same
+  // number (docs/ops/offerings-and-discounts.md).
+  const compareAtDisplay = pricing.compareAtPrice;
 
   return (
     <div
@@ -247,7 +241,8 @@ function PlanSummary({ product, cadence }: { product: OfferProduct; cadence: Off
 }
 
 export default function CadenceSelector({ cadence, product, onChange }: CadenceSelectorProps) {
-  const otpCharged = getChargedPrice(getOfferPricing(product, "monthly-otp"));
+  const otpPricing = getOfferPricing(product, "monthly-otp");
+  const otpSavePct = getDisplayDiscount(otpPricing);
   const isOtp = cadence === "monthly-otp";
 
   return (
@@ -267,8 +262,11 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
         />
       </div>
 
-      {/* One-time purchase as a text link, the PDP pattern: present, honest
-          (the all-in charged price), and deliberately not a third card. */}
+      {/* One-time purchase as a text link, the PDP pattern: itemised as
+          product price + per-order postage, deliberately not a third card.
+          Both carries a struck £119.98 (one Flow box + one Clear box) so the
+          bundle discount is stated; postage cancels out of that comparison,
+          so the strike sits against the ex-postage price. */}
       <button
         type="button"
         onClick={() => onChange("monthly-otp")}
@@ -278,7 +276,18 @@ export default function CadenceSelector({ cadence, product, onChange }: CadenceS
         }`}
       >
         {isOtp ? "Buying once for " : "Buy it once for "}
-        <span className="tabular-nums">{formatPrice(otpCharged)}</span>
+        {otpPricing.compareAtPrice != null && (
+          <>
+            <s className="tabular-nums text-black/40">
+              {formatPrice(otpPricing.compareAtPrice)}
+            </s>{" "}
+          </>
+        )}
+        <span className="tabular-nums">{formatPrice(otpPricing.price)}</span>
+        {otpPricing.postage ? (
+          <> + {formatPrice(otpPricing.postage)} postage</>
+        ) : null}
+        {otpSavePct > 0 && <> · save {otpSavePct}%</>}
       </button>
 
       <PlanSummary product={product} cadence={cadence} />
