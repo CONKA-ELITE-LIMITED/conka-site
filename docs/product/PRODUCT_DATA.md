@@ -15,7 +15,7 @@ The codebase splits product data along one seam: **what a product is** versus **
 | **Product content** | Names, colours, ingredients, benefits copy, clinical data, images | `@/app/lib/productData` | `shopifyProductMapping.ts` |
 | **Offer catalogue** | The 9 sellable product x cadence combos, their prices, variant GIDs and selling plans | `@/app/lib/offerData` | Built into `offerData.ts` |
 
-**`offerData.ts` is not the Build Your Order page's data**, despite the history of its name. It is the commerce layer for every surface that sells: the three PDPs (via the `cadenceData.ts` adapter), both landers, `/build-your-order`, the cart drawer, the account portal and the PDP JSON-LD. It was called `funnelData.ts`, then `byoData.ts`, and was renamed to `offerData.ts` in SCRUM-1280 precisely because the page-shaped names kept implying a scope it never had.
+**`offerData.ts` is not the Build Your Order page's data**, despite the history of its name. It is the commerce layer for every surface that sells: the three PDPs (via the `cadenceData.ts` adapter), both landers, `/build-your-order`, the cart drawer, the account portal and the PDP JSON-LD. It was called `funnelData.ts`, then `offerData.ts`, and was renamed to `offerData.ts` in SCRUM-1280 precisely because the page-shaped names kept implying a scope it never had.
 
 The two systems were originally kept apart to avoid coupling the funnel to the protocol-era product structure. That structure is now gone, so the separation survives on its own merit: content and commerce change for different reasons and at different rates. The only shared dependency is `formatPrice()` from productHelpers.
 

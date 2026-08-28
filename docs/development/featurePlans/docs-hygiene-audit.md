@@ -260,7 +260,7 @@ Resolved as follows. The `LISTICLE_SYSTEM` / `LANDING_QUIZ_SYSTEM` overlap was t
 | `LISTICLE_SYSTEM` vs `LANDING_QUIZ_SYSTEM` | **New thin parent `features/GO_LANDING_PAGES.md`** owns the route, registry, noindex/never-link rules and shared analytics constraints. Both format docs shed that preamble and now open by deferring to it |
 | `QUALITY_STANDARDS` vs `MOBILE_OPTIMIZATION` vs `DESIGN_SYSTEM` | **Split by job.** DESIGN_SYSTEM §7 is the single statement of the mandate, QUALITY_STANDARDS keeps only the review gate, MOBILE_OPTIMIZATION is the pattern library. Each says so at the top |
 | `BRAND_VOICE` vs `CLAIMS_COMPLIANCE` vs `LANDING_PAGE_CLAIMS_LOG` | **LANDING_PAGE_CLAIMS_LOG archived.** BRAND_VOICE had pointed at it as *the* claims reference, which was the worst pointer in the tree: that doc flags its own mg figures as wrong. Now points at CLAIMS_COMPLIANCE for rules and FORMULATION_SPEC for doses |
-| `PRICING_HISTORY` vs `SKU_AND_SHOT_REFERENCE` vs `GO_LIVE_PRICING_AUDIT` | **Already resolved in Phase 1** (GO_LIVE_PRICING_AUDIT archived). The other two do different jobs: SKU is the map, PRICING_HISTORY is a dated append-only log that defers to `BYO_PRICING` in code |
+| `PRICING_HISTORY` vs `SKU_AND_SHOT_REFERENCE` vs `GO_LIVE_PRICING_AUDIT` | **Already resolved in Phase 1** (GO_LIVE_PRICING_AUDIT archived). The other two do different jobs: SKU is the map, PRICING_HISTORY is a dated append-only log that defers to `OFFER_PRICING` in code |
 | `CHANGELOG` vs `changelog-jan-feb-2026` | **changelog-jan-feb-2026 archived** |
 
 ---

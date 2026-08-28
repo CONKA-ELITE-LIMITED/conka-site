@@ -72,7 +72,7 @@ import { FormulaId, formulaContent, formatPrice } from "@/app/lib/productData";
 
 Modules (no circular deps): `productTypes` → `productColors`, `formulaContent`, `productImages` → `productHelpers`
 
-Key helpers: `formatPrice(n)`, `getBillingLabel(billing)`, `getB2BTier(qty)`.
+Key helpers: `formatPrice(n)`, `getBillingLabel(billing)`. B2B tiers are not in this barrel: `getB2BTier(qty)` lives in `app/lib/b2bPricing.ts`.
 
 **Prices you can sell at live in `app/lib/offerData.ts`**, not in the barrel. The PDPs reach it through the `cadenceData.ts` adapter. The old main-site `productPricing.ts` was deleted in SCRUM-1280.
 
