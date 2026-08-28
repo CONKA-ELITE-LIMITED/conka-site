@@ -158,9 +158,17 @@ Shot counts are **priced** shots. Monthly subs ship a bonus box on the first ord
 
 `OfferPricing.gifts` is an optional `OfferGift[]` listing the free extras that come with a first order. It drives the `GiftValueStack` struck-RRP rows on the PDP buy panel and is **display only**: these RRPs never reach a cart line or the checkout, per [CART_PRICING_SOURCE_OF_TRUTH.md](../development/CART_PRICING_SOURCE_OF_TRUTH.md).
 
-Set on `flow["monthly-sub"]` only. Presence of `gifts` is what gates the stack, so adding it to another cadence is all that is needed to extend the offer.
+Set on `flow["monthly-sub"]` and `flow["quarterly-sub"]`. Presence of `gifts` is what gates the stack, so adding it to another cadence is all that is needed to extend the offer.
 
 The free bonus shots are deliberately **not** in this array; that row derives from `freeShots` / `freeShotsValue` so the shot count has one source. Rows without an `image` fall back to a tick glyph.
+
+### Starter pack shot (`starterPackImage`)
+
+`OfferPricing.starterPackImage` is the arranged pack photograph for the full-width `StarterPackContents` section on the Flow PDP. One per cadence, because the monthly and quarterly packs hold different quantities.
+
+It doubles as that section's visibility switch: absent means the cadence ships no starter pack, and `app/conka-flow/page.tsx` renders no section wrapper at all rather than an empty one. Set on the same two Flow subscription cadences as `gifts`.
+
+The section derives every figure from `price`, `compareAtPrice`, `freeShots`, `freeShotsValue` and `gifts`, the same fields the buy panel reads, so the two surfaces cannot show different numbers.
 
 What actually ships is the variant's `custom.bundlecomposition` metafield, which Synergy explodes at pick time. That metafield and this array are kept in step by hand: changing one does not change the other.
 

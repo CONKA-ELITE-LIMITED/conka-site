@@ -1,6 +1,6 @@
 # Flow Starter Pack
 
-**Status:** Phases 1 and 2 built (commit `1a14726c`), Phase 3 not started
+**Status:** Phases 1, 2 and 4 built (commits `1a14726c`, `1b469044`), Phase 3 not started
 **Branch:** `feature/starter-pack`
 **Surface:** `/conka-flow` (Flow PDP only)
 **Design language:** Simple DTC (DESIGN_SYSTEM.md §8.5)
@@ -23,6 +23,20 @@ Taken from the approved pack artwork. These figures are the source of truth for 
 
 Total stated value £152.94 against £39.99 paid, of which £82.96 is the free extras.
 
+Quarterly (added Phase 4, confirmed 28 Aug 2026) carries the same three gifts against a bigger box:
+
+| Row | RRP | Displayed as |
+|-----|-----|--------------|
+| CONKA Flow x3 | £209.94 | £109.99 |
+| +20 free shots | £59.99 | Free |
+| CONKA Hat | £19.99 | Free |
+| Capsule Travel Pack | £28.99 | Free |
+| Full CONKA App Access | £9.99 | Free |
+
+Total stated value £328.90 against £109.99.
+
+The 20 free shots are £59.99 because that is a real SKU price, `FLOW-FUNNEL-20-OTP`, so the 20 shots are valued at exactly one free box. The monthly row derives the same way, 8 x £3.00 one-time rate charm-priced to £23.99. The quarterly artwork first shipped with **£59.97**, which is sourceable to nothing. Corrected to £59.99 in the source asset on 28 Aug 2026, so every figure on the quarterly artwork now agrees with `offerData.ts`.
+
 No data edit was needed to make the page agree with the artwork. `ProductBuyPanel` derives the monthly-sub strikethrough from `getChargedPrice(monthly-otp)`, which is the £59.99 one-time price plus £9.99 compulsory postage = **£69.98**, exactly the artwork figure. It never reads `compareAtPrice` for this cadence, so the unused `compareAtPrice: 59.99` was left alone. The artwork's bonus-shot figure was separately corrected to £23.99 to match `freeShotsValue`.
 
 Pattern is struck RRP per row, as IM8 and Graymatter do it, not AG1's unpriced tick list. Prices live in HTML, never burned into the imagery.
@@ -34,6 +48,7 @@ Pattern is struck RRP per row, as IM8 and Graymatter do it, not AG1's unpriced t
 | 1 | Hero image swap | Built, For review (SCRUM-1282) |
 | 2 | Gift value-stack component + offer data | Built, For review (SCRUM-1283) |
 | 3 | `FLOW-STARTER-28` variant + bundle composition | Not Started (SCRUM-1284) |
+| 4 | Full-width PDP starter-pack section, cadence-aware | Built, For review (SCRUM-1287) |
 
 ### Phase 1 - Hero image
 
@@ -82,9 +97,76 @@ This reuses a mechanism already in production: that slot currently holds `FLOW-F
 - Complexity: Medium (mostly Shopify admin)
 - Files: `app/lib/offerData.ts`, `docs/product/SKU_AND_SHOT_REFERENCE.md` §1 tables
 
+### Phase 4 - Full-width PDP section
+
+The in-panel stack from Phase 2 is compact by design and sits low on the buy panel. Phase 4 adds a dedicated full-width section that shows the pack as a kit, the way Graymatter's "Your Starter Kit Includes" section does it: the bundle as one arranged image with the contents priced beside it, not a text list.
+
+**Placement.** Slot 4 of the shared section order in `app/conka-flow/page.tsx`, between `ugcSection` and `ingredientsSection`, on `brand-bg-tint` (both neighbours are white). Everything from `ingredients` down is the argument for the product; the starter pack is the unpack of what arrives, so it belongs with the offer while the offer is still on screen. Both breakpoints render one shared order, so this is a single insertion.
+
+The Phase 2 in-panel `GiftValueStack` **stays as is**. The section is additive.
+
+**Cadence-aware imagery.** The pack differs between monthly (20 shots + 8 free) and quarterly (60 shots + 20 free), and there is approved artwork for each. Add one optional field to `OfferPricing`:
+
+```ts
+/** Arranged pack shot for the full-width starter-pack section. Display only. */
+starterPackImage?: string;
+```
+
+Set on `flow["monthly-sub"]` and `flow["quarterly-sub"]` only. The section renders whatever the selected cadence points at and renders nothing when the field is absent, so the one-time cadences, Clear and Both are all handled by the same absence rather than by a conditional. `selectedCadence` already lives in `page.tsx` and the section sits in the same tree, so it arrives as a prop with no state lifting. `CadencePricing` is a direct alias of `OfferPricing` (`cadenceData.ts:31`), so the field reaches the component with no adapter change.
+
+Both composites are 1200x857, so the swap causes no layout shift.
+
+**Quarterly gains the gift stack.** `flow["quarterly-sub"]` currently has no `gifts`, so the hat, travel pack and app access are attached to monthly only. Confirmed 28 Aug 2026 that quarterly gets the same pack, so it takes `gifts: STARTER_PACK_GIFTS`. Side effect, intended: the Phase 2 in-panel stack now also appears on the quarterly card.
+
+**Prices stay in HTML.** The approved artwork carries burned-in price labels. Those are for the hero slide (Phase 1) and for paid social. The section renders its rows from `OfferPricing`, which keeps the numbers in one place and legible on a phone: the artwork's labels scale to roughly 4px at 390px, which is why the reference site's own mobile section is unreadable. The section therefore wants the **label-free export** of each composite, same render with the annotation layer hidden, same canvas.
+
+Until those exports land, the annotated files sit at the target paths and the label-free pair overwrites them by filename, no code change.
+
+**Structure.** Content-only component, one file for both breakpoints, per MOBILE_OPTIMIZATION.md. Two columns from `lg:`, stacked below it. A 1200x857 shot at the full 1280 track is 913px tall, which buries the rows, so the shot takes half the width on desktop rather than running full bleed.
+
+```
+Desktop (lg+)                                    Mobile (390)
+
+  What you get in your first box                   What you get in
+  You pay for the shots. The rest is free.         your first box
+
+┌───────────────────┐  ✓ CONKA Flow, 20 shots    ┌──────────────────┐
+│                   │            £69.98  £39.99  │  [pack shot]     │
+│   [pack shot,     │  ✓ +8 free shots           └──────────────────┘
+│    swaps by       │            £23.99   Free
+│    cadence]       │  ✓ CONKA Hat                 ✓ CONKA Flow
+│                   │            £19.99   Free       £69.98  £39.99
+│                   │  ✓ Capsule Travel Pack       ✓ +8 shots
+│                   │            £28.99   Free       £23.99   Free
+└───────────────────┘  ✓ Full CONKA app access     ✓ CONKA Hat
+                                  £9.99   Free       £19.99   Free
+                       ┌────────────────────────┐  ✓ Travel Pack
+                       │ £152.94 of value       │    £28.99   Free
+                       │      Yours for £39.99  │  ✓ App access
+                       └────────────────────────┘    £9.99   Free
+
+                                                  ┌──────────────────┐
+                                                  │ £152.94 of value │
+                                                  │ Yours for £39.99 │
+                                                  └──────────────────┘
+```
+
+Copy note: the subhead deliberately avoids "free with your first order". On quarterly the bonus shots repeat every cycle, so a first-order claim understates the offer.
+
+The paid row derives from `price` and `compareAtPrice`, the free rows from `freeShots` / `freeShotsValue` and `gifts`, exactly as `GiftValueStack` does, so the two surfaces cannot drift. Totals: £152.94 against £39.99 monthly, £328.90 against £109.99 quarterly.
+
+No CTA. `StickyPurchaseFooter` and `StickyPurchaseFooterMobile` are present on both breakpoints.
+
+- Complexity: Medium
+- Files: `app/lib/offerData.ts`, `app/conka-flow/page.tsx`, new `app/components/product/StarterPackContents.tsx`, `public/formulas/starterPack/`
+
+**Follow-up, out of scope here.** The hero gallery's first slide is static, so selecting quarterly leaves hero artwork reading £39.99 above a panel reading £109.99. Pre-existing since Phase 1, and the quarterly composite now makes a cadence-aware first slide possible.
+
 ## Sequencing gate
 
-Phases 1 and 2 make the page advertise gifts that the Shopify variant does not yet ship. They are safe on a Vercel preview and unsafe in production. Merge Phase 3 first, or ship all three in a single PR. No preview-only phase reaches `main` ahead of the variant.
+Phases 1, 2 and 4 make the page advertise gifts that the Shopify variant does not yet ship. They are safe on a Vercel preview and unsafe in production. Merge Phase 3 first, or ship all of them in a single PR. No preview-only phase reaches `main` ahead of the variant.
+
+Phase 4 confirms quarterly gets the same pack, so Phase 3 now needs a **quarterly sibling variant** as well as `FLOW-STARTER-28`, or the quarterly cadence promises a pack the variant does not ship.
 
 ## Assets
 
@@ -96,8 +178,16 @@ All committed, no conversion needed. The source folder was re-exported at web si
 | Hat thumb (750x750) | `public/formulas/starterPack/ConkaHat.jpg` | 20KB |
 | Bonus shots thumb (750x750) | `public/formulas/starterPack/EightFlow.jpg` | 37KB |
 | Travel pack thumb (750x750) | `public/formulas/starterPack/TravelPack.jpg` | 14KB |
+| Quarterly pack shot (1200x857) | `public/formulas/starterPack/FlowQuarterlyStarterPack.jpg` | 66KB |
+| Monthly pack shot (1200x857) | `public/formulas/starterPack/FlowStarterPack.jpg` | 66KB |
 
 The app-access row has no thumbnail and falls back to a tick glyph, which is why `OfferGift.image` is optional.
+
+Phase 4 notes on the pack shots:
+
+- The monthly shot is the same file as the Phase 1 hero slide, copied into `starterPack/` so the section owns its own path and the hero can move independently.
+- Both are the **annotated** exports, with price labels burned in. They are placeholders at these paths: the label-free pair overwrites them by filename when exported, no code change.
+- `TwentyFlow.jpg` in the source folder is a byte-identical copy of `EightFlow.jpg`, not a 20-shot render, so it is not committed. Both free-shot counts point at `EightFlow.jpg` until a distinct render exists.
 
 ## No-gos
 
@@ -130,6 +220,7 @@ Sprint 30.
 | SCRUM-1282 | 1 - Hero image | Task | Website & CRO | To Do |
 | SCRUM-1283 | 2 - Gift value stack | Story | Website & CRO | To Do |
 | SCRUM-1284 | 3 - FLOW-STARTER-28 variant | Task | Shopify & Subscriptions | To Do |
+| SCRUM-1287 | 4 - Full-width PDP section | Story | Website & CRO | To Do |
 
-SCRUM-1284 blocks both SCRUM-1282 and SCRUM-1283, which encodes the sequencing gate above.
+SCRUM-1284 blocks SCRUM-1282, SCRUM-1283 and SCRUM-1287, which encodes the sequencing gate above.
 SCRUM-1283 relates to SCRUM-1259 (crossed-out price logic).
