@@ -15,16 +15,13 @@ import { pickFaqItems } from "./faqContent";
 const ASSET_BASE = "/formulas/mmPdpAssets";
 
 /** Rectangular (7:5) gallery assets in presentation order. The research /
- *  third-party / comparison / athlete / risk-free slides are shared. */
+ *  third-party / comparison / athlete / risk-free slides are shared.
+ *
+ *  The starter-pack shot is deliberately NOT in here: it only exists on the
+ *  cadences that ship a pack, so `getPdpGalleryImages` prepends it from
+ *  `starterPackImage` and the path is spelled once, in offerData. */
 export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
   "01": [
-    // Starter pack bundle shot leads: the whole offer (box, shots, hat, travel
-    // pack, app) is visible before any copy is read. SCRUM-1282. All three
-    // formulas lead this way, each with its own pack artwork.
-    // Lives under starterPack/ rather than ASSET_BASE so the hero, the PDP
-    // starter-pack section and ByoGallery all request one URL and share its
-    // optimised variants. getPdpGalleryImages swaps this slide per cadence.
-    "/formulas/starterPack/FlowStarterPack.jpg",
     `${ASSET_BASE}/FlowMmHero.jpg`,
     `${ASSET_BASE}/FlowSharperMind.jpg`,
     `${ASSET_BASE}/FlowMmIngredients.jpg`,
@@ -35,7 +32,6 @@ export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
     `${ASSET_BASE}/RiskFreeTrial.jpg`,
   ],
   "02": [
-    "/formulas/starterPack/ClearStarterPack.jpg",
     `${ASSET_BASE}/ClearMmHero.jpg`,
     `${ASSET_BASE}/ClearSharperMind.jpg`,
     `${ASSET_BASE}/ClearMmIngredients.jpg`,
@@ -46,7 +42,6 @@ export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
     `${ASSET_BASE}/ClearRiskFree.jpg`,
   ],
   "03": [
-    "/formulas/starterPack/BothStarterPack.jpg",
     `${ASSET_BASE}/BothMmHero.jpg`,
     `${ASSET_BASE}/BothSharperMind.jpg`,
     `${ASSET_BASE}/FlowMmIngredients.jpg`,
@@ -60,17 +55,19 @@ export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
 };
 
 /**
- * Gallery slides for a PDP hero, with the lead slide following the selected
- * plan (SCRUM-1287).
+ * Gallery slides for a PDP hero, led by the starter-pack shot for the selected
+ * plan (SCRUM-1287, SCRUM-1282).
  *
- * Every formula's first slide is its starter-pack shot, and that artwork
- * carries the pack's prices and quantities. Left static it showed the monthly
- * pack above a quarterly price. Cadences that ship a pack expose
- * `starterPackImage`, so the lead slide is swapped for whichever pack the
- * selected plan actually gets, and the section further down the page reads the
- * same field.
+ * The pack artwork carries the pack's prices and quantities, so it has to
+ * follow the plan rather than sit static: cadences that ship a pack expose
+ * `starterPackImage` and lead with whichever pack the selected plan actually
+ * gets, and the section further down the page reads the same field.
  *
- * Cadences with no pack keep the array as authored.
+ * A cadence with no pack (the one-time buys) leads with the product hero
+ * instead. It must not show the pack shot at all: that artwork prices a free
+ * hat, travel pack and bonus shots which a one-time order does not include,
+ * and every other surface (StarterPackContents, GiftValueStack) already hides
+ * on those cadences.
  */
 export function getPdpGalleryImages(
   formulaId: ProductHeroId,
@@ -80,7 +77,7 @@ export function getPdpGalleryImages(
   const packImage =
     getCadencePricingByProductHeroId(formulaId, cadence).starterPackImage;
 
-  return packImage ? [packImage, ...slides.slice(1)] : slides;
+  return packImage ? [packImage, ...slides] : slides;
 }
 
 export interface OutcomeBucket {

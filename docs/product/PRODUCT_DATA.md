@@ -164,7 +164,7 @@ The free bonus shots are deliberately **not** in this array; that row derives fr
 
 ### Starter pack shot (`starterPackImage`)
 
-`OfferPricing.starterPackImage` is the arranged pack photograph for the full-width `StarterPackContents` section on the Flow, Clear and Both PDPs. One per product per cadence, because each pack holds different quantities and the artwork carries burned-in prices. It is also the lead gallery slide in `MM_GALLERY_ASSETS`, swapped per cadence by `getPdpGalleryImages`.
+`OfferPricing.starterPackImage` is the arranged pack photograph for the full-width `StarterPackContents` section on the Flow, Clear and Both PDPs. One per product per cadence, because each pack holds different quantities and the artwork carries burned-in prices. It is also the PDP hero gallery's lead slide: `getPdpGalleryImages` prepends it, so the pack shot is absent on the one-time cadences rather than advertising gifts they do not include.
 
 It doubles as that section's visibility switch: absent means the cadence ships no starter pack, and the PDP renders no section wrapper at all rather than an empty one. Set on the same six subscription cadences as `gifts`. The section's shots row is named by the page's `productLabel` prop, not derived from the pricing object.
 
