@@ -90,9 +90,20 @@ export default function GiftValueStack({
                 height={160}
                 className={`h-20 w-20 rounded-md ${
                   tile.imageFit === "contain"
-                    ? "bg-black/5 object-contain p-1.5"
+                    ? "object-contain p-1.5"
                     : "object-cover"
                 }`}
+                // Light navy behind the transparent renders rather than grey,
+                // so the padded tile sits in the same family as the blue-grey
+                // studio backgrounds baked into the product photos beside it.
+                style={
+                  tile.imageFit === "contain"
+                    ? {
+                        background:
+                          "color-mix(in srgb, var(--brand-navy) 8%, white)",
+                      }
+                    : undefined
+                }
                 sizes="80px"
               />
             ) : (
