@@ -61,10 +61,11 @@ export default function GiftValueStack({
 
   return (
     <div>
+      {/* The offer framing sits here rather than in the <h1>: the kit is a
+          first-order mechanic, so it is not true of a one-time buyer or of
+          order two onwards, but it is exactly true of this stack. */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <p className="text-lg font-medium text-black">
-          Free with your first order
-        </p>
+        <p className="text-lg font-medium text-black">Your starter kit</p>
         <p
           className="text-sm font-bold"
           style={{ color: "var(--brand-positive)" }}
@@ -72,6 +73,9 @@ export default function GiftValueStack({
           {formatPrice(totalFreeValue)} value
         </p>
       </div>
+      <p className="mt-1 text-sm text-black/60">
+        Exclusive to subscriptions, free in your first box.
+      </p>
 
       {/* Tiles are centred rather than left aligned like the rest of the panel:
           an 80px thumbnail in a half-panel cell leaves most of the cell empty,
