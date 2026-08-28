@@ -118,8 +118,8 @@ export default function StarterPackContents({
           alt={`Everything in the starter kit: ${rows
             .map((row) => row.label)
             .join(", ")}`}
-          width={2400}
-          height={1715}
+          width={1280}
+          height={915}
           className="h-auto w-full rounded-lg"
           sizes="(min-width: 1024px) 50vw, 100vw"
         />
