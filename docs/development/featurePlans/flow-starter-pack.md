@@ -216,7 +216,32 @@ Cost is mostly outside the code:
 - **Code: small.** `gifts` and `starterPackImage` on the four new subscription cadences, then the same `StarterPackContents` section dropped into slot 4 of `/conka-clarity` and `/conka-both`. The component and `getPdpGalleryImages` are already product-agnostic; only Flow's gallery currently leads with a pack shot, so Clear and Both would need that slide adding to `MM_GALLERY_ASSETS` if they want the hero treatment too.
 - **Commercial:** the gift RRPs are the same three items regardless of product, so Both's stack sits against a larger box and reads as a smaller proportional giveaway. Worth checking the value stack still lands before shipping it.
 
-Open question: whether Both's kit should hold more than Flow's, given it is the premium tier. Currently unanswered.
+### Gift component SKUs
+
+The two physical gifts are real Shopify products, both correctly unpublished (checked 28 Aug 2026):
+
+| Item | Product | SKU | State |
+|---|---|---|---|
+| Hat | CONKA Trucker Hat (`8808400159005`) | `25` | Active, 1457 in stock, tracked, 250g, price £0.00, oversells |
+| Travel pack | CONKA Flow Travel Pack, 2 Weeks (`15419180056950`) | `capsules30day` | Active, £28.99 (matches the displayed RRP), 100g, **untracked, qty 0** |
+
+Decisions, 28 Aug 2026:
+
+- **Hat SKU stays `25` for now.** Humphrey may already have registered it with Synergy under that string, and the pick keys on whatever Synergy holds, not on what reads well. Blocking question for him: which SKU does Synergy have on file for the hat, and has he sent them anything for the travel pack? Until answered, every `bundlecomposition` uses `1x25`.
+- **Travel pack SKU becomes `CONKA-TRAVEL-PACK-28`**, capsule count encoded. A 14-cap pack is a different physical item with different cost, weight and value, so it takes its own SKU (`-14`) rather than silently redefining this one, the same convention as `FLOW-FUNNEL-28` to `-20`. Count, not duration: "2 weeks" is derived from the dose and stops being true when the dose changes.
+- The hat needs no count. One hat is one hat.
+
+Consequences to watch:
+
+- Changing either SKU means editing all six `bundlecomposition` strings. Settle both before the variants are built.
+- The £28.99 RRP is pinned to 28 capsules. Halving the pack moves that figure in `STARTER_PACK_GIFTS`, in every value-stack total, and in all six pack shots, so the artwork should be commissioned at the final spec.
+- The travel pack must be switched to tracked with real stock before it can be a bundle component. Synergy cannot pick what Shopify does not count.
+- The hat is £0.00 and oversells. Both are safe while it stays unpublished, and both must be fixed first if it is ever sold standalone.
+
+### Open questions
+
+- Whether Both's kit should hold more than a single formula's, given it is the premium tier and currently gives away the same three items against a larger box.
+- The travel pack is titled "CONKA **Flow** Travel Pack". If the capsules are formula-specific, a Clear subscriber receives a Flow product in their Clear kit, and the neutral site label "Capsule Travel Pack" hides that. Either the item is formula-neutral, or Clear and Both need their own version and the kit contents genuinely differ per product. Settle before the four new pack shots are made.
 
 ## Risks
 
