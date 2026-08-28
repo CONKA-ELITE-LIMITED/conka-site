@@ -111,7 +111,7 @@ export default function ConkaBothPage() {
   const starterPackSection = cadencePricing.starterPackImage ? (
     <PdpSection
       id="starter-pack"
-      className="brand-section brand-bg-tint"
+      className="brand-section brand-bg-white"
       ariaLabel="What is in the starter pack"
     >
       <div className="brand-track">
@@ -238,9 +238,9 @@ export default function ConkaBothPage() {
           </PdpSection>
 
           {ugcSection}
-          {starterPackSection}
           {brainFuelSection}
           {ingredientsSection}
+          {starterPackSection}
           {whatToExpectSection}
           {comparisonSection}
           {testimonialsSection}
@@ -287,9 +287,9 @@ export default function ConkaBothPage() {
         </PdpSection>
 
         {ugcSection}
-        {starterPackSection}
         {brainFuelSection}
         {ingredientsSection}
+        {starterPackSection}
         {whatToExpectSection}
         {comparisonSection}
         {testimonialsSection}

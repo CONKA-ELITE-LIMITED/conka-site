@@ -33,6 +33,11 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // The top tab is the starter-kit hook, so it only belongs on the offer that
+  // gives a kit. On Flow to Both the value line is a sentence, and a sentence
+  // set uppercase in a pill is not a badge.
+  const hasKitBadge = Boolean(offer.giftImages?.length);
+
   useEffect(() => {
     trackCartUpsellShown({ type: offer.type, product: offer.product });
   }, [offer.type, offer.product]);
@@ -77,19 +82,21 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
     // plain border-color cannot do) with the hook as a tab straddling the top
     // edge. One visual language for the offer, wherever it appears.
     <div
-      className="relative rounded-lg p-3 pt-4"
+      className={`relative rounded-lg p-3 ${hasKitBadge ? "pt-4" : ""}`}
       style={{
         border: "2px solid transparent",
         background:
           "linear-gradient(#eef0f5,#eef0f5) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
       }}
     >
-      <span
-        className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
-        style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
-      >
-        {offer.valueLine}
-      </span>
+      {hasKitBadge && (
+        <span
+          className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
+          style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+        >
+          {offer.valueLine}
+        </span>
+      )}
 
       <div className="flex items-center gap-3">
         {offer.thumbnail && (
@@ -108,10 +115,17 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
             Recommended upgrade
           </p>
           {/* The headline carries the block, so the eyebrow steps back to a
-              muted label and the badge sits below at its own weight. */}
+              muted label. */}
           <p className="mt-0.5 text-base font-bold leading-tight text-black">
             {offer.headline}
           </p>
+          {/* Without a kit there is no tab, so the value line stays in the body
+              where it has room to be a sentence rather than a badge. */}
+          {!hasKitBadge && (
+            <p className="mt-0.5 text-xs font-semibold text-[#1a7f4f]">
+              {offer.valueLine}
+            </p>
+          )}
         </div>
       </div>
 
@@ -119,18 +133,22 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
           set; three plus a stray caption read as an afterthought. */}
       {offer.giftImages && offer.giftImages.length > 0 && (
         <ul className="mt-3 grid grid-cols-4 gap-1.5" aria-hidden>
-          {offer.giftImages.map((src) => (
+          {offer.giftImages.map((gift) => (
             <li
-              key={src}
+              key={gift.src}
               className="aspect-square overflow-hidden rounded-md bg-white"
             >
               <Image
-                src={src}
+                src={gift.src}
                 alt=""
                 width={96}
                 height={96}
                 sizes="72px"
-                className="h-full w-full object-cover"
+                className={
+                  gift.fit === "contain"
+                    ? "h-full w-full object-contain p-1"
+                    : "h-full w-full object-cover"
+                }
               />
             </li>
           ))}

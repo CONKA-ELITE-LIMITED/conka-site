@@ -52,8 +52,12 @@ export interface CartUpsellTileOffer {
   valueLine: string;
   /** Muted reassurance under the badge, e.g. "Pause or cancel anytime". */
   highlight?: string;
-  /** Gift thumbnails shown as a small row, so the offer is seen and not just read. */
-  giftImages?: string[];
+  /**
+   * Gift thumbnails shown as a small row, so the offer is seen and not just
+   * read. `fit` mirrors `OfferGift.imageFit`: the tall transparent app render
+   * has to be contained or the crop eats it, exactly as on the PDP stack.
+   */
+  giftImages?: { src: string; fit: "cover" | "contain" }[];
   ctaLabel: string;
 }
 
@@ -62,7 +66,7 @@ interface UpsellCopy {
   headline: string;
   valueLine: string;
   highlight?: string;
-  giftImages?: string[];
+  giftImages?: { src: string; fit: "cover" | "contain" }[];
   ctaLabel: string;
 }
 
@@ -178,10 +182,15 @@ function buildOtpToSubCopy(
     // whole kit rather than the three physical extras.
     giftImages: kitValue
       ? [
-          ...(sub.freeShots ? [STARTER_SHOTS_IMAGE] : []),
+          ...(sub.freeShots
+            ? [{ src: STARTER_SHOTS_IMAGE, fit: "cover" as const }]
+            : []),
           ...(sub.gifts ?? [])
-            .map((gift) => gift.image)
-            .filter((src): src is string => Boolean(src)),
+            .filter((gift) => Boolean(gift.image))
+            .map((gift) => ({
+              src: gift.image as string,
+              fit: gift.imageFit ?? ("cover" as const),
+            })),
         ]
       : undefined,
     ctaLabel: saving > 0 ? `Subscribe and save ${formatPrice(saving)}` : "Switch to subscription",

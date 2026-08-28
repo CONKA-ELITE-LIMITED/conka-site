@@ -101,7 +101,7 @@ This reuses a mechanism already in production: that slot currently holds `FLOW-F
 
 The in-panel stack from Phase 2 is compact by design and sits low on the buy panel. Phase 4 adds a dedicated full-width section that shows the pack as a kit, the way Graymatter's "Your Starter Kit Includes" section does it: the bundle as one arranged image with the contents priced beside it, not a text list.
 
-**Placement.** Slot 4 of the shared section order in `app/conka-flow/page.tsx`, between `ugcSection` and `ingredientsSection`, on `brand-bg-tint` (both neighbours are white). Everything from `ingredients` down is the argument for the product; the starter pack is the unpack of what arrives, so it belongs with the offer while the offer is still on screen. Both breakpoints render one shared order, so this is a single insertion.
+**Placement.** Directly before `whatToExpectSection` in the shared section order, on `brand-bg-white` (moved there 29 Aug 2026 from its original slot between `ugcSection` and `ingredientsSection`). The kit sits at the point the page turns from what the product is to what happens after you buy, which is where "what actually arrives" belongs. White rather than tint because both Flow and Clear now have a tinted section either side; on Both it sits below a white ingredients section, so that one boundary is invisible. Both breakpoints render one shared order, so this is a single move.
 
 The Phase 2 in-panel `GiftValueStack` **stays as is**. The section is additive.
 
