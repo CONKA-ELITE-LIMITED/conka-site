@@ -80,7 +80,7 @@ export default function GiftValueStack({
                 height={160}
                 className={`aspect-square w-full rounded-md ${
                   tile.imageFit === "contain"
-                    ? "bg-black/[0.03] object-contain p-2"
+                    ? "bg-black/5 object-contain p-2"
                     : "object-cover"
                 }`}
                 sizes="(min-width: 640px) 120px, 45vw"
@@ -106,11 +106,11 @@ export default function GiftValueStack({
               </span>
             )}
 
-            <span className="text-[13px] font-medium leading-snug text-black">
+            <span className="text-sm font-medium leading-snug text-black">
               {tile.label}
             </span>
 
-            <span className="mt-auto flex flex-wrap items-baseline gap-x-1.5 text-[13px]">
+            <span className="mt-auto flex flex-wrap items-baseline gap-x-1.5 text-sm">
               <span className="text-black/45 line-through">
                 {formatPrice(tile.rrp)}
               </span>
