@@ -429,17 +429,26 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
 //   monthly-otp   → dedicated one-time SKU (postage baked into the Shopify price;
 //                   displayed here as price + postage, same checkout total).
 //   quarterly-sub → 80/140-shot SKU (ships once, no swap).
+//
+// STARTER KIT (SCRUM-1287): every subscription cadence now points at a
+// -STARTER- variant, which is the same shot count and the same price as the
+// -FUNNEL- variant it replaced, plus a hat and a travel pack in the box. The
+// contents are the variant's `custom.bundlecomposition` metafield, which
+// Synergy explodes at pick time. Selling plans are untouched: the starter
+// variants were attached to the same four Loop plans, whose pricing policy is
+// a fixed £0.00 adjustment, so the charged price is the variant price either
+// way. The one-time cadences ship no kit and keep their -FUNNEL- variants.
 const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> = {
   flow: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568795918710", // FLOW-FUNNEL-28 (first order → Loop swaps to FLOW-FUNNEL-20)
+      variantId: "gid://shopify/ProductVariant/58560937296246", // FLOW-STARTER-28 (first order → Loop swaps to FLOW-FUNNEL-20)
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "monthly-otp": {
       variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768747382", // FLOW-FUNNEL-80
+      variantId: "gid://shopify/ProductVariant/58560941752694", // FLOW-STARTER-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
     "quarterly-otp": {
@@ -448,14 +457,14 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
   },
   clear: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568517489014", // CLEAR-FUNNEL-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
+      variantId: "gid://shopify/ProductVariant/58560971309430", // CLEAR-STARTER-28 (first order → Loop swaps to CLEAR-FUNNEL-20)
       sellingPlanId: "gid://shopify/SellingPlan/712527348086",
     },
     "monthly-otp": {
       variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768845686", // CLEAR-FUNNEL-80
+      variantId: "gid://shopify/ProductVariant/58560980615542", // CLEAR-STARTER-80
       sellingPlanId: "gid://shopify/SellingPlan/712527413622",
     },
     "quarterly-otp": {
@@ -464,14 +473,14 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
   },
   both: {
     "monthly-sub": {
-      variantId: "gid://shopify/ProductVariant/57568809976182", // BOTH-FUNNEL-56 (first order → Loop swaps to BOTH-FUNNEL-40)
+      variantId: "gid://shopify/ProductVariant/58560992805238", // BOTH-STARTER-56 (first order → Loop swaps to BOTH-FUNNEL-40)
       sellingPlanId: "gid://shopify/SellingPlan/712527479158",
     },
     "monthly-otp": {
       variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP
     },
     "quarterly-sub": {
-      variantId: "gid://shopify/ProductVariant/58153768943990", // BOTH-FUNNEL-140
+      variantId: "gid://shopify/ProductVariant/58560994771318", // BOTH-STARTER-140
       sellingPlanId: "gid://shopify/SellingPlan/712527446390",
     },
     "quarterly-otp": {
