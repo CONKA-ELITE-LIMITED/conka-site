@@ -20,7 +20,10 @@ export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
   "01": [
     // Starter pack bundle shot leads: the whole offer (box, shots, hat, travel
     // pack, app) is visible before any copy is read. SCRUM-1282.
-    `${ASSET_BASE}/FlowStarterPack.jpg`,
+    // Lives under starterPack/ rather than ASSET_BASE so the hero, the PDP
+    // starter-pack section and ByoGallery all request one URL and share its
+    // optimised variants. getPdpGalleryImages swaps this slide per cadence.
+    "/formulas/starterPack/FlowStarterPack.jpg",
     `${ASSET_BASE}/FlowMmHero.jpg`,
     `${ASSET_BASE}/FlowSharperMind.jpg`,
     `${ASSET_BASE}/FlowMmIngredients.jpg`,

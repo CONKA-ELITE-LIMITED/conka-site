@@ -100,7 +100,7 @@ export default function StarterPackContents({
       {/* Eyebrow rather than a second name for the pack: the kit only exists on
           the subscription cadences, and saying so is what "welcome kit" was
           reaching for. */}
-      <p className="text-sm font-semibold uppercase tracking-wide text-black/50">
+      <p className="text-sm font-semibold uppercase tracking-wide text-black/60">
         For new subscribers
       </p>
       <h2 className="brand-h2 mt-2">Your starter kit includes:</h2>
@@ -112,7 +112,7 @@ export default function StarterPackContents({
       <div className="mt-8 grid gap-8 lg:mt-12 lg:grid-cols-2 lg:items-center lg:gap-14">
         <Image
           src={pricing.starterPackImage}
-          alt={`The CONKA Flow starter pack: ${rows
+          alt={`Everything in the starter kit: ${rows
             .map((row) => row.label)
             .join(", ")}`}
           width={1200}
@@ -136,7 +136,9 @@ export default function StarterPackContents({
                 </span>
 
                 <span className="flex shrink-0 items-baseline gap-2 text-base">
-                  <span className="text-black/45 line-through">
+                  {/* /60 rather than the panel's /45: this sits on tint, where
+                      /45 lands near 3:1 against the background. */}
+                  <span className="text-black/60 line-through">
                     {formatPrice(row.rrp)}
                   </span>
                   {row.paidPrice === undefined ? (

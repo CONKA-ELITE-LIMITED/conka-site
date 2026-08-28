@@ -180,7 +180,7 @@ All committed, no conversion needed. The source folder was re-exported at web si
 
 | Asset | Committed path | Size |
 |-------|----------------|------|
-| Bundle hero (1800x1286) | `public/formulas/mmPdpAssets/FlowStarterPack.jpg` | 120KB |
+| Bundle hero (1200x857) | `public/formulas/starterPack/FlowStarterPack.jpg` | 66KB |
 | Hat thumb (750x750) | `public/formulas/starterPack/ConkaHat.jpg` | 20KB |
 | Bonus shots thumb (750x750) | `public/formulas/starterPack/EightFlow.jpg` | 37KB |
 | Travel pack thumb (750x750) | `public/formulas/starterPack/TravelPack.jpg` | 14KB |
@@ -191,7 +191,7 @@ The app-access row has no thumbnail and falls back to a tick glyph, which is why
 
 Phase 4 notes on the pack shots:
 
-- The monthly shot is the same file as the Phase 1 hero slide, copied into `starterPack/` so the section owns its own path and the hero can move independently.
+- The monthly shot is the same file as the Phase 1 hero slide. Phase 4 review deduplicated the two: `MM_GALLERY_ASSETS["01"][0]` now points at the `starterPack/` copy and the byte-identical `mmPdpAssets/` original is deleted, so the hero, this section and `ByoGallery` request one URL and share its optimised variants.
 - Both are the **annotated** exports, with price labels burned in. They are placeholders at these paths: the label-free pair overwrites them by filename when exported, no code change.
 - `TwentyFlow.jpg` in the source folder is a byte-identical copy of `EightFlow.jpg`, not a 20-shot render, so it is not committed. Both free-shot counts point at `EightFlow.jpg` until a distinct render exists.
 
