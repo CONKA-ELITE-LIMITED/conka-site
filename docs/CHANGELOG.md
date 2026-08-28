@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-08-28** | Flow PDP gains a full-width starter-pack section that swaps its pack shot and prices between the monthly and quarterly cadences (SCRUM-1287)
 - **2026-08-28** | Flow PDP leads with the starter pack bundle shot and shows a struck-RRP value stack of the free extras (hat, travel pack, bonus shots, app access) on subscription cadences.
 - **2026-08-28** | The buy-once link is back to one clean line: single all-in price with the struck anchor, no printed save percentage and no postage itemisation (postage stays baked in; the formal Shopify shipping split is tracked as SCRUM-1286 in docs/TODO.md). All discount maths now compares all-in totals, so strike, price and badge always agree.
 - **2026-08-28** | Discount badges now ascend with pack size (the Magic Mind pattern): every anchor derives from the monthly-size one-time reference unit scaled by months, so quarterly subs badge 48/62% and the quarterly one-times gain their own 10/29% badges. No price changed.

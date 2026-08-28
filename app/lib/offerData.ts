@@ -96,6 +96,14 @@ export interface OfferPricing {
    * The free bonus shots are NOT listed here; they derive from freeShotsValue.
    */
   gifts?: OfferGift[];
+  /**
+   * Arranged pack shot for the full-width PDP starter-pack section
+   * (StarterPackContents, SCRUM-1287). One per cadence, because the monthly and
+   * quarterly packs hold different quantities. Display only, and it doubles as
+   * the section's visibility switch: absent means the cadence ships no starter
+   * pack and the page renders no section at all.
+   */
+  starterPackImage?: string;
 }
 
 /** One free row in the starter-pack value stack. */
@@ -324,6 +332,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 20,
       freeShotsValue: 23.99,
       gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/FlowStarterPack.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.flow,
@@ -343,6 +352,8 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       firstOrderShots: 80,
       subsequentShots: 80,
       freeShotsValue: 59.99,
+      gifts: STARTER_PACK_GIFTS,
+      starterPackImage: "/formulas/starterPack/FlowQuarterlyStarterPack.jpg",
     },
     "quarterly-otp": {
       // + postage = the £189.99 FLOW-60 charges. Same £3.00/shot as monthly one-time.
