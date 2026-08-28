@@ -109,7 +109,10 @@ export default function ConkaFlowPage() {
       ariaLabel="What is in the starter pack"
     >
       <div className="brand-track">
-        <StarterPackContents pricing={cadencePricing} />
+        <StarterPackContents
+          pricing={cadencePricing}
+          productLabel="CONKA Flow"
+        />
       </div>
     </PdpSection>
   ) : null;
