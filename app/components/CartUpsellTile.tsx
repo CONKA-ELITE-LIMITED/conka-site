@@ -72,7 +72,25 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
   };
 
   return (
-    <div className="rounded-lg border border-[#1B2757]/15 bg-[#eef0f5] p-3">
+    // Same treatment as the PDP's selected plan card: the offer gradient as a
+    // 2px ring (padding-box keeps the fill, border-box paints the edge, which a
+    // plain border-color cannot do) with the hook as a tab straddling the top
+    // edge. One visual language for the offer, wherever it appears.
+    <div
+      className="relative rounded-lg p-3 pt-4"
+      style={{
+        border: "2px solid transparent",
+        background:
+          "linear-gradient(#eef0f5,#eef0f5) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+      }}
+    >
+      <span
+        className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
+        style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+      >
+        {offer.valueLine}
+      </span>
+
       <div className="flex items-center gap-3">
         {offer.thumbnail && (
           <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-white">
@@ -94,17 +112,6 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
           <p className="mt-0.5 text-base font-bold leading-tight text-black">
             {offer.headline}
           </p>
-          {/* The offer gradient the PDP uses on its selected plan card, so the
-              same visual language marks the same idea in the cart. */}
-          <span
-            className="mt-2 inline-flex items-center rounded-full border-2 border-transparent px-2.5 py-1 text-xs font-bold text-[#1B2757]"
-            style={{
-              background:
-                "linear-gradient(#ffffff,#ffffff) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
-            }}
-          >
-            {offer.valueLine}
-          </span>
         </div>
       </div>
 
