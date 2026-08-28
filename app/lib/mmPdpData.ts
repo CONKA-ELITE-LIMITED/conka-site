@@ -50,7 +50,7 @@ export const MM_GALLERY_ASSETS: Record<ProductHeroId, string[]> = {
     `${ASSET_BASE}/Clear3rdPartyTesting.jpg`,
     `${ASSET_BASE}/ConkaVsOther.jpg`,
     `${ASSET_BASE}/JackWillisReview.jpg`,
-    `${ASSET_BASE}/RiskFreeTrial.jpg`,
+    `${ASSET_BASE}/BothRiskFree.jpg`,
   ],
 };
 
