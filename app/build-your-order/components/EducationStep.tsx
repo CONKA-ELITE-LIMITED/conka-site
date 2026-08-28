@@ -14,7 +14,7 @@
  */
 
 import Image from "next/image";
-import { type ByoProduct } from "@/app/lib/byoData";
+import { type OfferProduct } from "@/app/lib/offerData";
 import { bottleRenders } from "@/app/lib/productImages";
 import LearnMoreAccordion, { type LearnMoreRow } from "./LearnMoreAccordion";
 
@@ -30,7 +30,7 @@ const MoonIcon = () => (
 );
 
 interface Formula {
-  product: ByoProduct;
+  product: OfferProduct;
   image: string;
   name: string;
   period: string;

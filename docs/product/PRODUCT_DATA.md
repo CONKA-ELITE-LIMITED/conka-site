@@ -8,14 +8,18 @@ Overview of how product data is organized, where Shopify variant IDs live, and h
 
 ## Two Product Systems
 
-The codebase has **two independent product data systems**:
+The codebase splits product data along one seam: **what a product is** versus **what you can buy**.
 
-| System | Purpose | Barrel import | Shopify mapping |
-|--------|---------|---------------|-----------------|
-| **Main site** | PDP pages, cart, B2B portal | `@/app/lib/productData` | `shopifyProductMapping.ts` |
-| **Build Your Order** | `/build-your-order` flow (paid traffic) | `@/app/lib/byoData` | Built into `byoData.ts` |
+| System | Holds | Barrel import | Shopify mapping |
+|--------|-------|---------------|-----------------|
+| **Product content** | Names, colours, ingredients, benefits copy, clinical data, images | `@/app/lib/productData` | `shopifyProductMapping.ts` |
+| **Offer catalogue** | The 9 sellable product x cadence combos, their prices, variant GIDs and selling plans | `@/app/lib/offerData` | Built into `offerData.ts` |
 
-They are intentionally separate. The funnel system was built standalone to avoid coupling to the protocol-era product structure (which is being removed). The only shared dependency is `formatPrice()` from productHelpers.
+**`offerData.ts` is not the Build Your Order page's data**, despite the history of its name. It is the commerce layer for every surface that sells: the three PDPs (via the `cadenceData.ts` adapter), both landers, `/build-your-order`, the cart drawer, the account portal and the PDP JSON-LD. It was called `funnelData.ts`, then `offerData.ts`, and was renamed to `offerData.ts` in SCRUM-1280 precisely because the page-shaped names kept implying a scope it never had.
+
+The two systems were originally kept apart to avoid coupling the funnel to the protocol-era product structure. That structure is now gone, so the separation survives on its own merit: content and commerce change for different reasons and at different rates. The only shared dependency is `formatPrice()` from productHelpers.
+
+**There is exactly one source for a price you can sell at, and it is `offerData.ts`.** The former main-site `productPricing.ts` (4/8/12/28 pack prices) was deleted in SCRUM-1280 after losing every consumer. Do not reintroduce a second pricing module.
 
 ---
 
@@ -27,11 +31,10 @@ They are intentionally separate. The funnel system was built standalone to avoid
 productTypes.ts           → Core types (no dependencies)
     ↓
 productColors.ts          → Colors and gradients
-productPricing.ts         → Formula pricing data, VAT, B2B constants
 formulaContent.ts         → Formula narrative, ingredients, clinical data
 productImages.ts          → Formula image sets (slideshows, quarterly swaps)
     ↓
-productHelpers.ts         → Pricing lookups + formatting (imports productPricing)
+productHelpers.ts         → Formatting helpers (no pricing data)
     ↓
 productData.ts            → BARREL: re-exports everything above
     ↓
@@ -39,7 +42,7 @@ shopifyProductMapping.ts  → Maps internal IDs → Shopify variant GIDs + selli
 productMetadata.ts        → Reverse: Shopify variant GID → internal product info
 ```
 
-**Barrel export:** `productData.ts` re-exports `productTypes`, `productColors`, `productPricing`, `formulaContent`, `productHelpers`, and `productImages`, so consumers use `from "@/app/lib/productData"`. It **deliberately excludes all protocol data** — those types/IDs live in `app/lib/legacy/protocolSubscriptions.ts` (retired-product support; see [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §3).
+**Barrel export:** `productData.ts` re-exports `productTypes`, `productColors`, `formulaContent`, `productHelpers`, and `productImages`, so consumers use `from "@/app/lib/productData"`. It **deliberately excludes all protocol data** — those types/IDs live in `app/lib/legacy/protocolSubscriptions.ts` (retired-product support; see [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §3).
 
 ### Modules
 
@@ -53,11 +56,6 @@ productMetadata.ts        → Reverse: Shopify variant GID → internal product 
 **Dependencies:** `productTypes` (types only)
 **Exports:** `FORMULA_COLORS`, `PRODUCT_GRADIENTS`, `getProductGradient`, `getProductAccent`, `PROTOCOL_COLORS`, `getProtocolGradient`, `getProtocolAccent`, `interpolateHex`
 
-#### `productPricing.ts`
-**Purpose:** Pricing data for the main-site formula packs (4/8/12/28), plus VAT/B2B constants
-**Dependencies:** None
-**Exports:** `formulaPricing` (and pricing constants). Display-only; cart/checkout prices come from Shopify — see [`../development/CART_PRICING_SOURCE_OF_TRUTH.md`](../development/CART_PRICING_SOURCE_OF_TRUTH.md).
-
 #### `formulaContent.ts`
 **Purpose:** Formula content, struggle types, and clinical data
 **Dependencies:** `productTypes` (FormulaId)
@@ -69,9 +67,9 @@ productMetadata.ts        → Reverse: Shopify variant GID → internal product 
 **Exports:** `formulaImages`, `quarterlyImages`
 
 #### `productHelpers.ts`
-**Purpose:** Pure helper functions — formula pricing lookups + formatting
-**Dependencies:** `productTypes` (types), `productPricing` (`formulaPricing`)
-**Exports:** `formatPrice`, `getFormulaPricing`, `getBillingLabel`
+**Purpose:** Pure formatting helpers
+**Dependencies:** None
+**Exports:** `formatPrice`, `getBillingLabel`. `getFormulaPricing` was deleted in SCRUM-1280 with `productPricing.ts`; prices come from `offerData.ts`.
 
 > **Note:** protocol content, protocol pricing helpers, and the protocol calendar have been removed from the main modules. The former `protocolContent.ts` and the `getProtocolPricing`/`generateProtocolCalendarDays` helpers no longer exist. Protocol *display* data that survives lives in `app/lib/subscriptionProduct.ts` (`PROTOCOLS`); protocol *commerce* IDs live in `app/lib/legacy/protocolSubscriptions.ts`.
 
@@ -80,7 +78,7 @@ productMetadata.ts        → Reverse: Shopify variant GID → internal product 
 #### `shopifyProductMapping.ts`
 **Purpose:** Forward mapping — internal product IDs to Shopify variant GIDs and selling plan IDs
 **Dependencies:** `productData` (types)
-**Exports:** `FORMULA_VARIANTS`, `FORMULA_SELLING_PLANS`, `TRIAL_PACK_VARIANTS`, `getPlanFrequency`, `getFormulaVariantId`, `getTrialPackVariantId`
+**Exports:** `FORMULA_VARIANTS`, `FORMULA_SELLING_PLANS`, `getPlanFrequency`, `getFormulaVariantId`. `TRIAL_PACK_VARIANTS` and `getTrialPackVariantId` were deleted in SCRUM-1280 (no consumers); the 4/8/12 GIDs survive only as a Shopify record in SKU_AND_SHOT_REFERENCE.md.
 
 Protocol variants are not here. They are retired-product support for existing subscribers and live in `app/lib/legacy/protocolSubscriptions.ts`.
 
@@ -107,9 +105,9 @@ Protocol variants are not here. They are retired-product support for existing su
 
 ---
 
-## Build Your Order Product Data
+## Offer Catalogue
 
-The Build Your Order system (formerly the funnel) is a **standalone module** for the `/build-your-order` flow. It has its own types, pricing matrix, variant mapping, display data, and checkout logic.
+The offer catalogue is a **standalone module** holding everything needed to sell: types, pricing matrix, variant mapping, display data, and checkout logic. Every selling surface reads it, not just `/build-your-order`. See the note at the top of this doc before assuming otherwise.
 
 ### Why separate?
 
@@ -121,24 +119,24 @@ The Build Your Order system (formerly the funnel) is a **standalone module** for
 ### Module Structure
 
 ```
-byoData.ts       → Types, 3×3 pricing matrix, variant mapping, display data, upsell logic
+offerData.ts       → Types, 3×3 pricing matrix, variant mapping, display data, upsell logic
     ↓
 byoCheckout.ts   → Isolated cart creation, analytics, checkout URL redirect
 ```
 
-### `byoData.ts`
+### `offerData.ts`
 **Purpose:** All funnel product data — pricing, Shopify GIDs, display content, upsell logic
 **Dependencies:** `productData` (only `formatPrice()`)
 **Key exports:**
 
 | Export | What |
 |--------|------|
-| `ByoProduct` | `"both" \| "flow" \| "clear"` |
-| `ByoCadence` | `"monthly-sub" \| "monthly-otp" \| "quarterly-sub"` |
-| `BYO_PRICING` | 3×3 pricing matrix (price, perShot, perDay, shotCount, compareAtPrice) |
-| `BYO_VARIANTS` | 3×3 Shopify variant GID + selling plan ID mapping |
-| `BYO_PRODUCTS` | Display data per product (name, tagline, features, thumbnail, accent) |
-| `BYO_CADENCES` | Display data per cadence (label, subtitle, badge, features) |
+| `OfferProduct` | `"both" \| "flow" \| "clear"` |
+| `OfferCadence` | `"monthly-sub" \| "monthly-otp" \| "quarterly-sub"` |
+| `OFFER_PRICING` | 3×3 pricing matrix (price, perShot, perDay, shotCount, compareAtPrice) |
+| `OFFER_VARIANTS` | 3×3 Shopify variant GID + selling plan ID mapping |
+| `OFFER_PRODUCTS` | Display data per product (name, tagline, features, thumbnail, accent) |
+| `OFFER_CADENCES` | Display data per cadence (label, subtitle, badge, features) |
 | `getOfferPricing()` | Look up pricing for a product × cadence combination |
 | `getOfferVariant()` | Look up Shopify variant config for a product × cadence |
 | `isVariantReady()` | Check if a combination has a real Shopify variant ID |
@@ -146,7 +144,7 @@ byoCheckout.ts   → Isolated cart creation, analytics, checkout URL redirect
 
 ### Offer Pricing (current — "priced + free shots" model)
 
-The prices below are the live model (`BYO_PRICING` in `byoData.ts`). The **full** SKU / shot-count / per-shot table — including free-shot bonuses and the Loop first-order swap — is the source of truth in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1. Don't duplicate it; this is the short version.
+The prices below are the live model (`OFFER_PRICING` in `offerData.ts`). The **full** SKU / shot-count / per-shot table — including free-shot bonuses and the Loop first-order swap — is the source of truth in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1. Don't duplicate it; this is the short version.
 
 | | Monthly Sub | One-time | Quarterly Sub |
 |---|---|---|---|
@@ -158,7 +156,7 @@ Shot counts are **priced** shots. Monthly subs ship a bonus box on the first ord
 
 ### Offer Shopify variants & selling plans
 
-9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `BYO_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
+9 variants (3 products × 3 cadences), all live and tagged `funnel`. Variant GIDs + selling-plan GIDs are in [SKU_AND_SHOT_REFERENCE.md](./SKU_AND_SHOT_REFERENCE.md) §1 (mirrored from `OFFER_VARIANTS`). The monthly-sub variant stored in code is the **first-order bonus** SKU (28/56 shots); Loop swaps the contract to the recurring SKU (20/40) after order 1, and that recurring GID is not stored in the codebase.
 
 **Why separate monthly vs quarterly selling plans?** Loop selling plans apply a fixed discount globally to every product they're attached to. Flow/Clear and Both have different base prices, and monthly vs quarterly use different variants, so each combination needs its own plan.
 
@@ -171,21 +169,20 @@ Shot counts are **priced** shots. Monthly subs ship a bonus box on the first ord
 
 ## Using Helpers
 
-### Main Site Pricing
+### Formatting
 
 ```typescript
-import { getFormulaPricing, formatPrice } from "@/app/lib/productData";
-
-const pricing = getFormulaPricing("28", "subscription");
-// Returns: { price: number, priceExVat: number, billing: string }
+import { formatPrice } from "@/app/lib/productData";
 
 const displayPrice = formatPrice(123.45); // "£123.45"
 ```
 
+The barrel carries no prices. `getFormulaPricing` was removed in SCRUM-1280; every price now comes from the offer catalogue below.
+
 ### Offer Pricing
 
 ```typescript
-import { getOfferPricing, getOfferVariant, isVariantReady } from "@/app/lib/byoData";
+import { getOfferPricing, getOfferVariant, isVariantReady } from "@/app/lib/offerData";
 
 const pricing = getOfferPricing("both", "monthly-sub");
 // Returns: { price: 74.99, perShot: 1.87, perDay: 3.74, shotCount: 40, compareAtPrice: 89.99, freeShots: 16, firstOrderShots: 56, ... }
@@ -200,17 +197,22 @@ const ready = isVariantReady("both", "quarterly-sub"); // true
 
 ## Import Patterns
 
-**Main site — always import from the barrel:**
+**Product content — always import from the barrel:**
 ```typescript
-import { FormulaId, formulaContent, getFormulaPricing, formatPrice } from "@/app/lib/productData";
+import { FormulaId, formulaContent, formatPrice } from "@/app/lib/productData";
 ```
 
-**Build Your Order — import directly from byoData:**
+**Prices, variants and selling plans — import from the offer catalogue:**
 ```typescript
-import { ByoProduct, getOfferPricing, BYO_PRODUCTS } from "@/app/lib/byoData";
+import { OfferProduct, getOfferPricing, OFFER_PRODUCTS } from "@/app/lib/offerData";
 ```
 
-**Never import from sub-modules directly** (e.g. don't import from `productPricing.ts` or `productHelpers.ts`).
+**On the three PDPs, go through the adapter, not the catalogue directly:**
+```typescript
+import { getCadencePricingByFormula, getCadenceVariantByFormula } from "@/app/lib/cadenceData";
+```
+
+**Never import from content sub-modules directly** (e.g. don't import from `productHelpers.ts`; use the barrel).
 
 ---
 
@@ -220,11 +222,10 @@ import { ByoProduct, getOfferPricing, BYO_PRODUCTS } from "@/app/lib/byoData";
 productTypes (foundation — no deps; re-exports ProtocolId/Tier from legacy)
     ↓
     ├→ productColors
-    ├→ productPricing
     ├→ formulaContent
     ├→ productImages
     │
-    └→ productHelpers (imports productPricing)
+    └→ productHelpers (formatting only, no deps)
         │
         └→ productData (BARREL: re-exports all above)
             │
@@ -243,7 +244,7 @@ legacy/protocolSubscriptions (dependency leaf — retired-product IDs, imported 
 2. **Single source of truth:** Each piece of data lives in one module
 3. **Two systems, not one:** Main site and funnel are deliberately separate
 4. **Tree-shaking friendly:** Barrel uses `export *`, unused modules aren't bundled
-5. **Shopify GIDs live in mapping files:** `shopifyProductMapping.ts` for main site, `byoData.ts` for funnel
+5. **Shopify GIDs live in mapping files:** `shopifyProductMapping.ts` for main-site content variants, `offerData.ts` for everything sellable
 
 ## Scripts
 

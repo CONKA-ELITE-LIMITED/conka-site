@@ -88,7 +88,7 @@ Swap every subscribe attach point from Loop plan IDs to Skio plan IDs. Order: **
    - What: swap `FUNNEL_VARIANTS` plan IDs; verify `funnelCheckout` builds the correct `cart.checkoutUrl` with the Skio plan attached.
    - Dependencies: Phase 1, discovery sweep.
    - Complexity: Medium.
-   - Files: `app/lib/byoData.ts`, `app/lib/byoCheckout.ts`.
+   - Files: `app/lib/offerData.ts`, `app/lib/byoCheckout.ts`.
 4. **[Commerce] Re-point remaining surfaces**
    - What: re-point anything else the sweep surfaced.
    - Complexity: TBD by discovery.
@@ -180,7 +180,7 @@ Our Klaviyo retention lab (winback, dunning, pause/reactivation, replenishment, 
 - `app/api/auth/subscriptions/` - portal server routes (hybrid read of Shopify contracts + Loop details; consolidated mutations in `[id]/pause/route.ts`; `[id]/reschedule`; `payment-methods/*`).
 - `app/api/auth/customer/update/route.ts` - mirrors name/address to every active/paused Loop contract via `PUT /subscription/{id}/address`. Loop stores addresses per-contract; Skio should remove this need.
 - `app/account/subscriptions/*` + `app/components/subscriptions/*` - the fully self-built portal UI (Edit/MultiLineEdit/Pause/Resume/Reschedule/Reactivate/PlaceOrder/Cancellation), including the three-step reason -> retention (`RETENTION15`) -> confirm cancel flow. Hooks: `useSubscriptions.ts`, `usePaymentMethods.ts`.
-- Loop selling-plan IDs live in `app/lib/byoData.ts` (`BYO_VARIANTS`) and `app/lib/legacy/protocolSubscriptions.ts` (`PROTOCOL_VARIANTS`).
+- Loop selling-plan IDs live in `app/lib/offerData.ts` (`OFFER_VARIANTS`) and `app/lib/legacy/protocolSubscriptions.ts` (`PROTOCOL_VARIANTS`).
 
 ### Purchase-side selling plans (to be re-pointed in Phase 2)
 

@@ -29,9 +29,9 @@ import {
 import {
   getOfferPricing,
   getOfferByVariantId,
-  type ByoProduct,
-  type ByoCadence,
-} from "@/app/lib/byoData";
+  type OfferProduct,
+  type OfferCadence,
+} from "@/app/lib/offerData";
 
 /** Both is a single combined product; this is its box shot. */
 const BOTH_IMAGE = "/formulas/both/BothBox.jpg";
@@ -67,9 +67,9 @@ export interface DtcSubscriptionView {
   isMultiLine: boolean;
   lines: DtcSubscriptionLine[];
   /** Funnel product key, or null for legacy / unknown. Feeds swap + upsell. */
-  offerProduct: ByoProduct | null;
+  offerProduct: OfferProduct | null;
   /** Funnel cadence key, or null. */
-  offerCadence: ByoCadence | null;
+  offerCadence: OfferCadence | null;
   /** compareAtPrice - price for funnel subs (savings vs one-time), else null. */
   savingsVsOneTime: number | null;
 }
@@ -117,11 +117,11 @@ function primaryVariantGid(subscription: Subscription): string | null {
  * Flow + Clear contract, so we must NOT infer it from line count. Detection order:
  *   1. Known funnel variant GID (first-order / quarterly / OTP SKUs).
  *   2. Title/variant naming: "Both - N Shots", or a title carrying both formulas
- *      (covers the post-order-1 20/40-shot SKUs that aren't in BYO_VARIANTS).
+ *      (covers the post-order-1 20/40-shot SKUs that aren't in OFFER_VARIANTS).
  *   3. Single-formula title match (Flow / Clear).
  * Returns null for legacy protocol / unknown subscriptions.
  */
-function resolveByoProduct(subscription: Subscription): ByoProduct | null {
+function resolveOfferProduct(subscription: Subscription): OfferProduct | null {
   const gid = primaryVariantGid(subscription);
   if (gid) {
     const offer = getOfferByVariantId(gid);
@@ -143,14 +143,14 @@ function resolveByoProduct(subscription: Subscription): ByoProduct | null {
 
 function resolveDisplayName(
   subscription: Subscription,
-): { displayName: string; offerProduct: ByoProduct | null } {
+): { displayName: string; offerProduct: OfferProduct | null } {
   // Legacy protocol subs keep their protocol name and stay off the funnel path.
   const protocolId = getProtocolFromSubscription(subscription);
   if (protocolId && PROTOCOL_NAMES[protocolId]) {
     return { displayName: PROTOCOL_NAMES[protocolId], offerProduct: null };
   }
 
-  const offerProduct = resolveByoProduct(subscription);
+  const offerProduct = resolveOfferProduct(subscription);
   if (offerProduct === "both") return { displayName: "Both", offerProduct: "both" };
   if (offerProduct === "flow") return { displayName: "Flow", offerProduct: "flow" };
   if (offerProduct === "clear") return { displayName: "Clear", offerProduct: "clear" };
@@ -158,7 +158,7 @@ function resolveDisplayName(
   return { displayName: subscription.product?.title || "Subscription", offerProduct: null };
 }
 
-function offerCadenceKey(cadence: SubscriptionCadence): ByoCadence | null {
+function offerCadenceKey(cadence: SubscriptionCadence): OfferCadence | null {
   if (cadence === "monthly") return "monthly-sub";
   if (cadence === "quarterly") return "quarterly-sub";
   return null;

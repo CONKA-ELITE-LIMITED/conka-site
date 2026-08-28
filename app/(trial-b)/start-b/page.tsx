@@ -14,7 +14,7 @@ import AnimatedStat from "./AnimatedStat";
 import CrashChart from "@/app/components/landing/CrashChart";
 import BottleVideo from "@/app/components/landing/BottleVideo";
 import MetaViewContent from "@/app/components/MetaViewContent";
-import { getOfferVariant, getOfferPricing } from "@/app/lib/byoData";
+import { getOfferVariant, getOfferPricing } from "@/app/lib/offerData";
 
 // Code-split below-the-fold island: hydration drops out of initial TBT window.
 const IngredientsGrid = dynamic(() => import("./IngredientsGrid"), {

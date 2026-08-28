@@ -10,10 +10,10 @@ There are **two** places prices come from. They must not be mixed or re-applied.
 
 | Where | Source | Purpose |
 |-------|--------|--------|
-| **Pre-add UI** (product cards, PDP, landing) | `app/lib/productPricing.ts` (and re-exports via `productData.ts`) | Show “Subscribe & Save” / one-time prices **before** the user adds to cart. Display only; not used for cart maths. |
+| **Pre-add UI** (product cards, PDP, landing) | `app/lib/offerData.ts` (via the `cadenceData.ts` adapter on the PDPs) | Show “Subscribe & Save” / one-time prices **before** the user adds to cart. Display only; not used for cart maths. |
 | **Cart & checkout** | **Shopify Cart API** (`cart.lines`, `item.merchandise.price`, `cart.cost.subtotalAmount`) | **Single source of truth** for what the customer actually pays. All cart totals and line prices must come from here. |
 
-- **ProductCard**, PDP hero, sticky footer, etc. use `productPricing.ts` so we can show “£11.99” (subscription) and “£14.99” (one-time) without calling Shopify.
+- **ProductCard**, PDP hero, sticky footer, etc. use `offerData.ts` so we can show the subscription and one-time prices without calling Shopify. The former main-site `productPricing.ts` was deleted in SCRUM-1280: it had lost every consumer, and `offerData.ts` is now the only source a pre-add price can come from.
 - **CartDrawer** and any “cart total” or “line price” must use **only** Shopify’s response. Do not apply discounts or recalculate from app constants.
 
 ---
@@ -55,7 +55,7 @@ The double-discount bug was in the **retail** subscription display logic in `Car
    Do **not** multiply or recalculate these from app constants (e.g. do not do `price * 0.8` for “subscription price”).
 
 2. **App constants are for pre-add UI only**  
-   `productPricing.ts` / `productData` are for:
+   `offerData.ts` (and the `cadenceData.ts` adapter) are for:
    - Product cards, PDP, “Subscribe & Save” toggles, pack selectors.  
    They are **not** for:
    - Cart line display, subtotal, or any “what they pay” after add-to-cart.
@@ -66,7 +66,7 @@ The double-discount bug was in the **retail** subscription display logic in `Car
 
 4. **When adding new cart or pricing UI**  
    - If it shows “what’s in the cart” or “what they’ll pay” → use Cart API only.  
-   - If it shows “what they’ll pay if they add this” (before add) → use `productPricing` (and variant/selling plan from `shopifyProductMapping`).
+   - If it shows “what they’ll pay if they add this” (before add) → use `offerData` (which carries the variant and selling plan too).
 
 5. **B2B**  
    B2B line prices also come from Shopify after normalization. The portal shows ex-VAT from app constants for **pre-add** tier pricing; the cart drawer shows inc-VAT from the cart for line items and uses `b2bCartTier` / VAT helpers only for the **breakdown** message, not for replacing `merchandise.price.amount`.
@@ -78,7 +78,7 @@ The double-discount bug was in the **retail** subscription display logic in `Car
 | Do | Don’t |
 |----|--------|
 | Use Shopify cart API for all line prices and totals in cart/checkout UI. | Apply a second discount (e.g. × 0.8) to `merchandise.price.amount` for display. |
-| Use `productPricing` only for pre-add UI (cards, PDP). | Assume `merchandise.price.amount` is “full price” for subscription lines. |
+| Use `offerData` only for pre-add UI (cards, PDP). | Assume `merchandise.price.amount` is “full price” for subscription lines. |
 | Use compare-at (or derived original) only for strikethrough, not for the “current” price. | Mix B2B tier logic with retail subscription display; they are separate. |
 
 The bug was a **retail cart display** mistake (wrong assumption about Shopify’s subscription price), not caused by B2B. Keeping “cart = Shopify only” and “pre-add = app constants only” prevents this from happening elsewhere.

@@ -29,9 +29,9 @@ The most important cluster for anything touching products, variants, or money.
 | [`product/FORMULATION_SPEC.md`](./product/FORMULATION_SPEC.md) | Physical formulation: per-shot doses, ingredients, %NRV, nutrition-label data for Flow (01) and Clear (02). |
 | [`product/LOOX_PRODUCT_IDS_AND_SHOPIFY.md`](./product/LOOX_PRODUCT_IDS_AND_SHOPIFY.md) | Loox → Shopify product-ID mapping for reviews. |
 | [`PRICING_HISTORY.md`](./PRICING_HISTORY.md) | Dated audit log of funnel price changes. Append a block on every price change. |
-| [`development/CART_PRICING_SOURCE_OF_TRUTH.md`](./development/CART_PRICING_SOURCE_OF_TRUTH.md) | Rule: pre-add UI prices from `productPricing.ts`; cart/checkout prices from Shopify only. |
+| [`development/CART_PRICING_SOURCE_OF_TRUTH.md`](./development/CART_PRICING_SOURCE_OF_TRUTH.md) | Rule: pre-add UI prices from `offerData.ts`; cart/checkout prices from Shopify only. |
 
-**Code source of truth:** `app/lib/byoData.ts` (Build Your Order offer catalogue), `app/lib/shopifyProductMapping.ts` + `app/lib/productData.ts` barrel (main site), `app/lib/legacy/protocolSubscriptions.ts` (retired protocols, live for existing subscribers).
+**Code source of truth:** `app/lib/offerData.ts` (the offer catalogue, read by every selling surface), `app/lib/shopifyProductMapping.ts` + `app/lib/productData.ts` barrel (main site), `app/lib/legacy/protocolSubscriptions.ts` (retired protocols, live for existing subscribers).
 
 ---
 

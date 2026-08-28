@@ -1,4 +1,4 @@
-import type { ByoCadence, ByoProduct } from "@/app/lib/byoData";
+import type { OfferCadence, OfferProduct } from "@/app/lib/offerData";
 
 /**
  * The offer the Build Your Order flow lands on.
@@ -14,8 +14,8 @@ import type { ByoCadence, ByoProduct } from "@/app/lib/byoData";
  * best-converting configuration. Flow and Clear stay presented as equals on
  * the Build step (two-equal-cards rule).
  */
-export const BYO_DEFAULT_PRODUCT: ByoProduct = "both";
-export const BYO_DEFAULT_CADENCE: ByoCadence = "monthly-sub";
+export const BYO_DEFAULT_PRODUCT: OfferProduct = "both";
+export const BYO_DEFAULT_CADENCE: OfferCadence = "monthly-sub";
 
 /**
  * FALLBACK order attribution tag, written to the cart's `_source` attribute
@@ -47,13 +47,13 @@ export const BYO_VARIANT = "v1" as const;
  */
 
 /** Suffix beside a price, e.g. "£109.99/3 months". Empty for one-time. */
-export function cadencePriceSuffix(cadence: ByoCadence): string {
+export function cadencePriceSuffix(cadence: OfferCadence): string {
   if (cadence === "monthly-sub") return "/mo";
   if (cadence === "quarterly-sub") return "/3 months";
   return "";
 }
 
 /** Reads after a shot count, e.g. "60 shots every 3 months". */
-export function cadenceDeliveryPeriod(cadence: ByoCadence): string {
+export function cadenceDeliveryPeriod(cadence: OfferCadence): string {
   return cadence === "quarterly-sub" ? "every 3 months" : "a month";
 }

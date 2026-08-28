@@ -12,21 +12,21 @@
  * left media column, where it fills the column height.
  *
  * A gradient offer ribbon closes the band. Every figure derives live from
- * byoData (the monthly subscription of the SELECTED product), so the ribbon
+ * offerData (the monthly subscription of the SELECTED product), so the ribbon
  * can never drift from the plan cards below it.
  */
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
-  type ByoProduct,
+  type OfferProduct,
   getOfferPricing,
   getDisplayDiscount,
-} from "@/app/lib/byoData";
+} from "@/app/lib/offerData";
 import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 
-const PRODUCT_TO_HERO_ID: Record<ByoProduct, ProductHeroId> = {
+const PRODUCT_TO_HERO_ID: Record<OfferProduct, ProductHeroId> = {
   flow: "01",
   clear: "02",
   both: "03",
@@ -35,7 +35,7 @@ const PRODUCT_TO_HERO_ID: Record<ByoProduct, ProductHeroId> = {
 /** Hero-asset slides per product on the choice stages, capped for weight. */
 const STILL_COUNT = 5;
 
-export default function ByoGallery({ product }: { product: ByoProduct }) {
+export default function ByoGallery({ product }: { product: OfferProduct }) {
   const slides = MM_GALLERY_ASSETS[PRODUCT_TO_HERO_ID[product]].slice(0, STILL_COUNT);
   const slideCount = slides.length;
   const trackRef = useRef<HTMLDivElement>(null);

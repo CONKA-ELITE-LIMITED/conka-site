@@ -67,12 +67,14 @@ npm run dev:all    # Dev + any parallel processes
 Data is split into focused modules; import everything from the barrel:
 
 ```typescript
-import { FormulaId, formulaContent, getFormulaPricing, formatPrice } from "@/app/lib/productData";
+import { FormulaId, formulaContent, formatPrice } from "@/app/lib/productData";
 ```
 
-Modules (no circular deps): `productTypes` → `productColors`, `productPricing`, `formulaContent`, `protocolContent` → `productHelpers`
+Modules (no circular deps): `productTypes` → `productColors`, `formulaContent`, `productImages` → `productHelpers`
 
-Key helpers: `getFormulaPricing(packSize, purchaseType)`, `getProtocolPricing(id, tier, purchaseType)`, `formatPrice(n)`, `getB2BTier(qty)`.
+Key helpers: `formatPrice(n)`, `getBillingLabel(billing)`. B2B tiers are not in this barrel: `getB2BTier(qty)` lives in `app/lib/b2bPricing.ts`.
+
+**Prices you can sell at live in `app/lib/offerData.ts`**, not in the barrel. The PDPs reach it through the `cadenceData.ts` adapter. The old main-site `productPricing.ts` was deleted in SCRUM-1280.
 
 ## Design system
 
@@ -123,7 +125,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 ## Routes
 
-**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/byoData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes + listicles, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
+**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/offerData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes + listicles, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
 **Being removed:** `/protocol/[id]` (redirect) · `/quiz` (redirect) · `/shop` (redirect) · `/funnel`, `/funnel-b`, `/funnel-c` (redirect to `/build-your-order`, SCRUM-1247)
 
 ## Docs index
@@ -134,7 +136,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/product/PRODUCT_DATA.md` | **Product-data code map** — the two systems (main-site barrel vs BYO), module dependency graph, where Shopify GIDs live |
 | `docs/product/FORMULATION_SPEC.md` | **Physical formulation** — per-shot doses, ingredients, %NRV, nutrition-label data. The source of truth for any mg figure |
 | `docs/PRICING_HISTORY.md` | Dated audit log of price changes. Append a block on every price change |
-| `docs/development/CART_PRICING_SOURCE_OF_TRUTH.md` | The rule: pre-add UI prices from `productPricing.ts`; cart/checkout prices from Shopify only |
+| `docs/development/CART_PRICING_SOURCE_OF_TRUTH.md` | The rule: pre-add UI prices from `offerData.ts`; cart/checkout prices from Shopify only |
 | `docs/product/SKU_AND_SHOT_REFERENCE.md` | **Canonical SKU + shot-count map** — funnel / main-site / legacy protocol variant GIDs, selling plans, shot counts, prices, and the account shot/per-shot display history (why the tiles were removed) |
 | `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` | **Current state + roadmap** — performance, code quality, architecture assessment and prioritised improvements |
 | `docs/TODO.md` | **Deferred work tracker** — tech debt and cleanup tasks, with what unblocks each |
