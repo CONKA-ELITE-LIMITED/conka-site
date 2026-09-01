@@ -9,11 +9,11 @@ import {
 } from "@/app/components/product";
 import ProductHeroV3 from "@/app/components/product/ProductHeroV3";
 import ProductHeroMobileV3 from "@/app/components/product/ProductHeroMobileV3";
+import StarterPackContents from "@/app/components/product/StarterPackContents";
 import ProductComparisonTable from "@/app/components/product/ProductComparisonTable";
 import PdpSection, {
   PdpSectionImpressions,
 } from "@/app/components/product/PdpSection";
-import Certifications from "@/app/components/Certifications";
 import LabFAQ from "@/app/components/landing/LabFAQ";
 import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
 import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
@@ -37,6 +37,7 @@ import {
   CadenceType,
   getCadencePricingByFormula,
   getCadenceVariantByFormula,
+  getOtpCadenceFor,
 } from "@/app/lib/cadenceData";
 
 const CLEAR_FAQ_ITEMS = getFormulaPdpFaqItems("02");
@@ -46,7 +47,8 @@ export default function ConkaClarityPage() {
   const [selectedCadence, setSelectedCadence] = useState<CadenceType>("monthly-sub");
   const { addToCart } = useCart();
 
-  const cadencePrice = getCadencePricingByFormula("02", selectedCadence).price;
+  const cadencePricing = getCadencePricingByFormula("02", selectedCadence);
+  const cadencePrice = cadencePricing.price;
 
   // Meta ViewContent (once per page view; stable variant ID for Meta).
   // content_name preserved as "CONKA Clarity" to match production tracking
@@ -87,8 +89,6 @@ export default function ConkaClarityPage() {
   // below (only the hero differs between them). Order, backgrounds and mobile
   // spacing mirror conka-flow and conka-both so all three PDPs share one
   // structure. Each PdpSection's id is both its anchor and its analytics name.
-  const certificationsSection = <Certifications />;
-
   const ugcSection = (
     <PdpSection
       id="ugc"
@@ -98,6 +98,24 @@ export default function ConkaClarityPage() {
       <UGCMarquee />
     </PdpSection>
   );
+
+  // Starter pack: subscription cadences only, and only once the cadence has a
+  // pack shot. The page owns the visibility decision so a cadence without one
+  // renders no wrapper and leaves no gap.
+  const starterPackSection = cadencePricing.starterPackImage ? (
+    <PdpSection
+      id="starter-pack"
+      className="brand-section brand-bg-white"
+      ariaLabel="What is in the starter pack"
+    >
+      <div className="brand-track">
+        <StarterPackContents
+          pricing={cadencePricing}
+          productLabel="CONKA Clear"
+        />
+      </div>
+    </PdpSection>
+  ) : null;
 
   const ingredientsSection = (
     <PdpSection
@@ -232,15 +250,15 @@ export default function ConkaClarityPage() {
                 selectedCadence={selectedCadence}
                 onCadenceChange={setSelectedCadence}
                 onAddToCart={() => handleAddToCart("hero")}
-                onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+                onOtpAddToCart={() => handleAddToCart("hero", getOtpCadenceFor(selectedCadence))}
               />
             </div>
           </PdpSection>
 
-          {certificationsSection}
           {ugcSection}
           {ingredientsSection}
           {benefitsSection}
+          {starterPackSection}
           {whatToExpectSection}
           {comparisonSection}
           {testimonialsSection}
@@ -282,15 +300,15 @@ export default function ConkaClarityPage() {
               selectedCadence={selectedCadence}
               onCadenceChange={setSelectedCadence}
               onAddToCart={() => handleAddToCart("hero")}
-              onOtpAddToCart={() => handleAddToCart("hero", "monthly-otp")}
+              onOtpAddToCart={() => handleAddToCart("hero", getOtpCadenceFor(selectedCadence))}
             />
           </div>
         </PdpSection>
 
-        {certificationsSection}
         {ugcSection}
         {ingredientsSection}
         {benefitsSection}
+        {starterPackSection}
         {whatToExpectSection}
         {comparisonSection}
         {testimonialsSection}

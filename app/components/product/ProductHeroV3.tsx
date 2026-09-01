@@ -6,13 +6,14 @@ import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
-import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
+import { getPdpGalleryImages } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
 import { SpecBadge, SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
 import IngredientDisclosureRows from "./IngredientDisclosureRows";
+import Certifications from "@/app/components/Certifications";
 
 interface ProductHeroV3Props {
   formulaId: ProductHeroId;
@@ -49,8 +50,11 @@ export default function ProductHeroV3({
   const content = getHeroContent(formulaId);
   const productType = getHeroProductType(formulaId);
 
-  // Rectangular (7:5) Magic Mind-style gallery, independent of the selected plan.
-  const images = MM_GALLERY_ASSETS[formulaId].map((src) => ({ src }));
+  // Rectangular (7:5) Magic Mind-style gallery. The lead slide follows the
+  // selected plan so the starter-pack artwork matches the price beside it.
+  const images = getPdpGalleryImages(formulaId, selectedCadence).map((src) => ({
+    src,
+  }));
 
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
@@ -115,6 +119,12 @@ export default function ProductHeroV3({
           {/* The supporting answers, directly under the check grid, the way the
               reference runs them: still in the buy decision, not a section away. */}
           <IngredientDisclosureRows formulaId={formulaId} />
+
+          {/* Certification seals close the column as a footnote to the buy
+              decision. They used to stand as their own full-width band under
+              the hero, where four large circles read as a section in their own
+              right and pushed the real content down. */}
+          <Certifications inline />
         </div>
       </div>
 

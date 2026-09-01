@@ -8,6 +8,7 @@ import {
   getCadencePricingByProductHeroId,
   getChargedPrice,
   getDisplayDiscount,
+  getOtpCadenceFor,
   OFFER_CADENCES,
 } from "@/app/lib/cadenceData";
 import type { ProductHeroId } from "@/app/lib/productTypes";
@@ -15,6 +16,7 @@ import {
   getHeroContent,
   getHeroProductType,
 } from "@/app/lib/productHeroHelpers";
+import GiftValueStack from "./GiftValueStack";
 import HeroAccordions from "./HeroAccordions";
 import IngredientBottomSheet from "./IngredientBottomSheet";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
@@ -109,7 +111,9 @@ export function ProductHeroHeader({
       {/* Eyebrow + product name. On desktop the keyword subline sits inside the
           <h1>; on mobile it drops below the image via ProductHeroLede. */}
       <div>
-        <p className={`mb-1 text-[10px] font-bold uppercase tracking-[0.14em] ${eyebrowColor}`}>
+        <p
+          className={`mb-1 text-[10px] font-bold uppercase tracking-[0.14em] ${eyebrowColor}`}
+        >
           Daily Nootropic Brain Shots
         </p>
         <h1 className="leading-tight">
@@ -120,13 +124,17 @@ export function ProductHeroHeader({
             {content.name}
           </span>
           {showSubline && content.seoHeading && (
-            <span className={`mt-1.5 block text-base font-medium leading-snug md:text-lg ${sublineColor}`}>
+            <span
+              className={`mt-1.5 block text-base font-medium leading-snug md:text-lg ${sublineColor}`}
+            >
               {content.seoHeading}
             </span>
           )}
         </h1>
         {showHeadline && (
-          <p className={`mt-2 text-sm leading-relaxed md:text-base ${headlineColor}`}>
+          <p
+            className={`mt-2 text-sm leading-relaxed md:text-base ${headlineColor}`}
+          >
             {content.headline}
           </p>
         )}
@@ -177,7 +185,8 @@ function FlatPlanCard({
   // Short label ("monthly" / "quarterly") is used only in the aria-label now;
   // the fuller phrasing ("every 3 months") shows in the expanded detail + box.
   const cadenceShort = cadence === "quarterly-sub" ? "quarterly" : "monthly";
-  const cadenceWord = cadence === "quarterly-sub" ? "every 3 months" : "monthly";
+  const cadenceWord =
+    cadence === "quarterly-sub" ? "every 3 months" : "monthly";
   const freeShots = pricing.freeShots ?? 0;
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -187,18 +196,10 @@ function FlatPlanCard({
     if (!isSelected) setTipOpen(false);
   }, [isSelected]);
 
-  // Crossed-out "was":
-  //  - Monthly sub anchors to the real one-time (OTP) price for the same shots,
-  //    so it matches the "Buy it once" figure exactly (~43% off for Flow).
-  //  - Quarterly has no one-time equivalent, so derive a regular-price reference
-  //    from the published discount (e.g. 63% off => price / 0.37) so the
-  //    strikethrough and the Save% badge agree.
-  const compareAtDisplay =
-    cadence === "monthly-sub"
-      ? getChargedPrice(getCadencePricingByProductHeroId(formulaId, "monthly-otp"))
-      : savePct > 0
-        ? pricing.price / (1 - savePct / 100)
-        : undefined;
+  // Crossed-out "was": the compare-at anchor itself, the real cost of the same
+  // priced shots bought one-time, so the strike and the Save% badge always
+  // derive from the same number (docs/ops/offerings-and-discounts.md).
+  const compareAtDisplay = pricing.compareAtPrice;
 
   return (
     <div
@@ -244,11 +245,15 @@ function FlatPlanCard({
           <span className="flex items-center gap-2">
             <span
               className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                isSelected ? "border-[#1B2757] bg-[#1B2757]" : "border-black/30 bg-white"
+                isSelected
+                  ? "border-[#1B2757] bg-[#1B2757]"
+                  : "border-black/30 bg-white"
               }`}
               aria-hidden
             >
-              {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+              {isSelected && (
+                <span className="h-1.5 w-1.5 rounded-full bg-white" />
+              )}
             </span>
             <span className="whitespace-nowrap text-sm font-bold leading-tight text-black">
               {pricing.shotCount} shots
@@ -307,8 +312,10 @@ function FlatPlanCard({
                     className="absolute bottom-full left-0 z-30 mb-2 w-52 rounded-lg bg-black px-3 py-2 text-[11px] font-medium leading-snug text-white shadow-lg"
                   >
                     Your shots arrive{" "}
-                    {cadence === "quarterly-sub" ? "every 3 months" : "every month"}. Pause,
-                    skip, or cancel anytime.
+                    {cadence === "quarterly-sub"
+                      ? "every 3 months"
+                      : "every month"}
+                    . Pause, skip, or cancel anytime.
                   </span>
                 )}
               </span>
@@ -416,18 +423,30 @@ export function TrustStrip() {
 function SubscriptionSummary({
   formulaId,
   cadence,
+  showGifts = false,
 }: {
   formulaId: ProductHeroId;
   cadence: CadenceType;
+  /** Append the starter-pack gift grid under a divider, and drop the plan lines
+   *  it already states (free shots, app access) so nothing is claimed twice. */
+  showGifts?: boolean;
 }) {
   const pricing = getCadencePricingByProductHeroId(formulaId, cadence);
   const savePct = getDisplayDiscount(pricing);
-  const cadenceWord = cadence === "quarterly-sub" ? "every 3 months" : "monthly";
+  const cadenceWord =
+    cadence === "quarterly-sub" ? "every 3 months" : "monthly";
   const freeShots = pricing.freeShots ?? 0;
 
   const lines: { id: string; text: ReactNode }[] = [
-    { id: "delivery", text: <>{pricing.shotCount} shots delivered {cadenceWord}</> },
-    ...(freeShots > 0
+    {
+      id: "delivery",
+      text: (
+        <>
+          {pricing.shotCount} shots delivered {cadenceWord}
+        </>
+      ),
+    },
+    ...(freeShots > 0 && !showGifts
       ? [
           {
             id: "free-shots",
@@ -441,7 +460,13 @@ function SubscriptionSummary({
                     className="flex h-3 w-3 items-center justify-center rounded-full"
                     style={{ background: GREEN }}
                   >
-                    <svg width="7" height="7" viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <svg
+                      width="7"
+                      height="7"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      aria-hidden
+                    >
                       <path
                         d="M3 8.5L6.5 12L13 4.5"
                         stroke="white"
@@ -468,11 +493,17 @@ function SubscriptionSummary({
       text: (
         <>
           100-day money-back guarantee
-          <span className="block">(less than 1.2% of people actually use it)</span>
+          <span className="block">
+            (less than 1.2% of people actually use it)
+          </span>
         </>
       ),
     },
-    { id: "app", text: <>Full app access + personal brain coach</> },
+    ...(showGifts
+      ? // The gift grid states app access with its RRP, so the list keeps only
+        // the part the grid does not cover.
+        [{ id: "coach", text: <>Personal brain coach</> }]
+      : [{ id: "app", text: <>Full app access + personal brain coach</> }]),
     { id: "cancel", text: <>Pause, skip, or cancel anytime</> },
   ];
 
@@ -494,6 +525,14 @@ function SubscriptionSummary({
           </li>
         ))}
       </ul>
+
+      {/* One card, not two: the gifts sit under a divider inside the summary so
+          the panel does not carry two stacked bordered blocks on mobile. */}
+      {showGifts && (
+        <div className="mt-5 border-t border-black/10 pt-5">
+          <GiftValueStack pricing={pricing} />
+        </div>
+      )}
     </div>
   );
 }
@@ -608,7 +647,16 @@ export function IngredientListButton({
           className={`${fullWidth ? "flex w-full justify-center" : "inline-flex self-start"} items-center gap-2 rounded-full border border-black px-6 py-3 text-base font-medium text-black transition-colors hover:bg-black hover:text-white`}
         >
           Ingredients
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+            aria-hidden
+          >
             <path d="M12 5v14M5 12h14" />
           </svg>
         </button>
@@ -619,7 +667,16 @@ export function IngredientListButton({
           className="flex w-full items-center justify-center gap-2 border border-black/10 bg-white py-3.5 text-sm font-semibold text-black/80 transition-colors hover:bg-black/[0.03]"
         >
           See what&apos;s inside {showSwitcher ? "Flow & Clear" : title}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+            aria-hidden
+          >
             <path d="M12 5v14M5 12h14" />
           </svg>
         </button>
@@ -631,7 +688,9 @@ export function IngredientListButton({
         title={title}
         subtitle={`${ingredients.length} active ingredients · tap any to learn more`}
         ingredients={ingredients}
-        switcher={showSwitcher ? { value: active, onChange: setActive } : undefined}
+        switcher={
+          showSwitcher ? { value: active, onChange: setActive } : undefined
+        }
       />
     </>
   );
@@ -656,7 +715,14 @@ export default function ProductBuyPanel({
     formulaId,
     selectedCadence,
   );
-  const otpPricing = getCadencePricingByProductHeroId(formulaId, "monthly-otp");
+  // Selection-aware one-time (SCRUM-1285): the link offers the one-time twin
+  // of the selected plan card (monthly card -> 20-shot OTP, quarterly card ->
+  // 60/120-shot OTP). The page's onOtpAddToCart derives the same cadence.
+  const otpCadence = getOtpCadenceFor(selectedCadence);
+  const otpPricing = getCadencePricingByProductHeroId(formulaId, otpCadence);
+  // Only the starter-pack cadence carries `gifts`; when it does, the stack owns
+  // the free-shots claim so the summary below drops its duplicate line.
+  const hasStarterPack = (selectedPricing.gifts?.length ?? 0) > 0;
   const ctaLabel = `Add to cart for ${formatPrice(selectedPricing.price)}`;
 
   const keyBenefits = [
@@ -705,16 +771,31 @@ export default function ProductBuyPanel({
           {ctaLabel}
         </ConkaCTAButton>
 
-        {/* The one-time purchase sits under the main CTA (MM pattern). */}
+        {/* The one-time purchase sits under the main CTA (MM pattern). All-in
+            price (postage baked, per SCRUM-1286's pending Shopify shipping
+            work); the strike is the all-in anchor, so strike, price and badge
+            are mutually checkable on one clean line. */}
         <button
           type="button"
           onClick={onOtpAddToCart}
           className="mx-auto mt-3 block w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          Buy it once for {formatPrice(getChargedPrice(otpPricing))}
+          Buy it once for{" "}
+          {otpPricing.compareAtPrice != null && (
+            <>
+              <s className="tabular-nums text-black/40">
+                {formatPrice(otpPricing.compareAtPrice)}
+              </s>{" "}
+            </>
+          )}
+          <span className="tabular-nums">{formatPrice(getChargedPrice(otpPricing))}</span>
         </button>
 
-        <SubscriptionSummary formulaId={formulaId} cadence={selectedCadence} />
+        <SubscriptionSummary
+          formulaId={formulaId}
+          cadence={selectedCadence}
+          showGifts={hasStarterPack}
+        />
       </div>
 
       {hideSecondary && showIngredientsPill && (

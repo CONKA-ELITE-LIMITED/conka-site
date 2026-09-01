@@ -5,18 +5,49 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
-## Subscriptions / Skio
+## Shopify / Pricing
 
-### Consolidate `/account` onto the Skio portal once cutover is done
+### Formally move one-time shipping out of the SKU prices and into a real Shopify shipping rate
 
-**Status:** Deferred (do after Skio is fully wired up / at Phase 4 cutover)
-**Files:** `app/account/page.tsx`, `app/account/manage/*`, `app/lib/subscriptionsFlag.ts`
+**Status:** Open, ticketed as [SCRUM-1286](https://conka-team-jr1mzvwm.atlassian.net/browse/SCRUM-1286) (backlog, ops-gated)
+**Files:** `app/lib/offerData.ts` (`OTP_POSTAGE`, `getChargedPrice`, the OTP entries), plus Shopify admin and the Synergy rate mapping (outside the repo)
 
-**What:** With Skio on, `/account/manage` (the embedded Skio portal) is the whole account experience, and the header account icon already points there. But `/account` itself still renders the interim "Manage subscription" button (plus the Loop list when the flag is off). Once Skio is fully live and Loop is decommissioned, `/account` should **redirect to `/account/manage`** (when `NEXT_PUBLIC_SKIO_ENABLED` is on) so there is a single account surface and no redundant hop, catching anyone who lands on `/account` directly or via an old link/email.
+**Current state (decided by Rudh 2026-08-28):** the £9.99 one-time postage stays baked into the Shopify OTP variant prices AND into the displayed prices. The itemised "£180.00 + £9.99 postage" presentation was built for the quarterly one-time link, shipped, and reverted the same day: it wrapped the link onto two lines and read as clutter ("too ugly"). All one-time surfaces now show the single all-in figure (`getChargedPrice`), and every discount anchor is an all-in total so strike, price and badge stay mutually checkable.
 
-**What unblocks it:** the Phase 4 cutover (flag flipped on in production, Loop removed). Doing it before cutover would break the live Loop portal that `/account` still serves when the flag is off.
+**What the formal fix is (SCRUM-1286):** reprice the OTP variants down by £9.99, put the one-time SKUs in a per-product Shopify shipping profile carrying a £9.99 rate, add the new rate NAME to Synergy's carrier mapping BEFORE go-live (Synergy maps on rate name only; the sheet is locked), then update the site constants. Checkout totals stay identical to the penny; shipping just becomes a visible line Shopify can report on, and the 3p rounding quirk on the quarterly SKUs (£189.99 vs £189.96) disappears.
 
-**Why deferred:** left as a harmless fallback for now (Rudh, 18 Aug) so `/account` keeps working for Loop until everything is wired up. See `docs/development/featurePlans/skio-migration.md`.
+**Why deferred:** needs Shopify admin repricing + shipping-profile work + written Synergy confirmation, all ops actions outside the codebase, and it must be sequenced with the weight-band plan in `docs/development/featurePlans/order-size-shipping-tiers.md`.
+
+---
+
+### The Skio branch still sells the pre-starter-kit variants, so the kit vanishes when the flag flips
+
+**Status:** Open, blocked on Josiah's reply. Added 2026-08-28.
+**Files:** `app/lib/offerData.ts` (`OFFER_VARIANTS`) on `feature/skio-integration`, plus Shopify admin and the Skio dashboard.
+**Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/development/featurePlans/skio-migration.md` (on the Skio branch).
+
+`feature/starter-pack` re-pointed all six subscription cadences at the `-STARTER-` variants, wired to **Loop** selling plans. `feature/skio-integration` re-points the same purchase surfaces at **Skio** selling plans, and it predates the starter kit.
+
+**So the two are not compatible yet.** Merge the starter kit to `main`, merge `main` into the Skio branch, and `OFFER_VARIANTS` carries starter variants with Loop plan IDs while the Skio flag points at Skio plans sitting on `FLOW-20`, `CLEAR-20`, `BOTH-40` and their quarterly siblings, none of which carry the gifts. **Flipping `NEXT_PUBLIC_SKIO_ENABLED` therefore removes the starter kit from the offer**, silently and on the payday weekend it was built for.
+
+**The trap that makes this more than a variant swap:** the two platforms price in opposite directions. Loop's plans apply a **fixed £0.00** adjustment, so the variant price is the charged price, which is why the starter variants are priced at £39.99 / £109.99 / £74.99 / £149.99. Skio's plans discount from the **one-time** price. Read from Shopify 2026-08-28:
+
+| Skio group | Group | Plan | Products | Adjustment |
+|---|---|---|---|---|
+| 20-shots---monthly | 100167876982 | 712928887158 | Flow, Clear | 42.86% off £69.98 = £39.99 |
+| 60-shots---quarterly | 100167909750 | 712928919926 | Flow, Clear | 42.11% off £189.99 = £109.99 |
+| 40-shots---monthly | 100167942518 | 712928952694 | Both | 25% off £99.98 = £74.99 |
+| 120-shots---quarterly | 100167975286 | 712928985462 | Both | 46.43% off £279.99 = £149.99 |
+
+Attach the existing £39.99 starter variants to the existing Skio monthly plan and it charges **£22.85**. Do not do that.
+
+**What the fix looks like:** a Skio-priced equivalent of each starter variant, based at the one-time price and carrying the same `custom.bundlecomposition`, attached to the four Skio groups above. Then `OFFER_VARIANTS` on the Skio branch points at those six GIDs and the four Skio plan IDs. The existing Skio variants already carry compositions (`FLOW-20` explodes to `1xFLOW-FUNNEL-28`), so they are the right shape to copy from.
+
+**Also unbuilt anywhere:** the order-two swap, turning `FLOW-STARTER-28` into `FLOW-FUNNEL-20`, `CLEAR-STARTER-28` into `CLEAR-FUNNEL-20` and `BOTH-STARTER-56` into `BOTH-FUNNEL-40`. Without it every renewal ships another hat and travel pack.
+
+The exposure is wider than new signups. The account portal's product swap resolves through `getOfferVariantNumericId`, so an **existing** subscriber changing product today also lands on a starter variant and starts a hat-per-renewal contract. Same fix covers both, but it means the clock is already running on the current subscriber base, not only on orders taken from launch (found in the independent review, 29 Aug 2026). It was deliberately **not** configured in Loop: first renewals are late September and the migration is expected well before that, so a Loop rule would never fire. It has to exist in Skio, and the contracts Skio inherits will still be sitting on starter variants because none will have reached order two. If the migration slips past roughly **20 September**, configure it in Loop after all.
+
+**What unblocks it:** Josiah confirming whether anything is needed on his side at migration for the swap, and the migration date. Asked 2026-08-28.
 
 ---
 
@@ -34,6 +65,8 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 **Residual:** Meta AddToCart/InitiateCheckout `value` from `byoCheckout` sends the ex-postage price for OTP (pre-existing funnel-c behaviour, not a regression). Consider aligning `value` to the charged price during SCRUM-1248 so Meta's value matches the order total.
 
 **What closes it fully:** either bake postage back into `price` in `OFFER_PRICING` and derive the itemised split the other way round, or add a lint/convention note. Revisit when the Phase 3 copy pass touches pricing surfaces.
+
+**Update 2026-08-28 (SCRUM-1285):** the foot-gun is now smaller in practice: every one-time DISPLAY is all-in via `getChargedPrice` (the itemised link presentation was built and reverted the same day), and `getDisplayDiscount` itself compares charged totals, so a bare `pricing.price` would also produce a visibly wrong badge. The data split (`price` + `postage`) remains, pending the SCRUM-1286 Shopify shipping work above, which closes this properly.
 
 ---
 
@@ -88,10 +121,6 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 **Status:** DONE (Phase 4, July 2026). The dead protocol code (`protocolPricing`, `PROTOCOL_COLORS`, `getProtocolVariantId` and the unused variant-audit helpers) is deleted. What genuinely still serves existing subscribers is quarantined in `app/lib/legacy/protocolSubscriptions.ts`, and the `productData` barrel no longer exports anything protocol-related.
 
 **Remaining follow-up:** `app/api/auth/subscriptions/[id]/pause/route.ts` carries its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID). Unifying it with the legacy module means touching the renewal path for paying subscribers, so it needs an end-to-end test of a real subscription edit. Left deliberately.
-
-**The "does anyone still hold a protocol subscription?" question is ANSWERED (2026-08-27).** It gated deleting the quarantined layer and had been open since June. The Skio migration preview lists **12 protocol subscribers**, 4 active and 8 paused, across Balance, Resilience and Ultimate. So the answer is yes, and `app/lib/legacy/protocolSubscriptions.ts`, `ProtocolId` and `PROTOCOL_VARIANTS` all **stay**.
-
-Do not re-open this as a cleanup. The earliest it can change is after the Skio cutover, and even then only once those 12 contracts have actually ended, since they migrate to Skio at their existing plan and price rather than being cancelled. Source: `docs/development/featurePlans/skio-migration.md` section 5.
 
 ---
 

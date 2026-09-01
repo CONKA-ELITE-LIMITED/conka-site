@@ -9,10 +9,9 @@ import { useRouter } from "next/navigation";
 import { NAV_PRODUCTS } from "./navigation/navConfig";
 import { TIME_OF_DAY_BADGE } from "@/app/lib/timeOfDayBadge";
 import ConkaCTAButton from "./landing/ConkaCTAButton";
-import CartAppGift from "./CartAppGift";
 import CartUpsellTile from "./CartUpsellTile";
 import { getCartUpsell, clearUpsellAccepted } from "@/app/lib/cartUpsell";
-import { getChargedPrice, getOfferByVariantId, getOfferPricing } from "@/app/lib/offerData";
+import { getOfferByVariantId } from "@/app/lib/offerData";
 import { trackMetaInitiateCheckout, toContentId } from "@/app/lib/metaPixel";
 import { trackCartCheckoutClicked } from "@/app/lib/analytics";
 
@@ -65,12 +64,13 @@ function getLineDisplayPrice(
 }
 
 /**
- * Subscription savings for one line, anchored on the verifiable one-time (OTP)
- * price for the same product: the crossed-out "was", the reconciled discount %,
- * and the £ saved across the line quantity. Returns null for one-time lines and
- * anything that would not actually show a saving, so the price block falls back
- * to the plain price. Quarterly ships three months at once, so it anchors
- * against three one-time boxes.
+ * Subscription savings for one line: the crossed-out "was", the discount %,
+ * and the £ saved across the line quantity. Anchored on the entry's own
+ * compareAtPrice (the real one-time cost of the same priced shots), the same
+ * anchor every other surface derives from, so the cart badge always matches
+ * the PDP and BYO badges (docs/ops/offerings-and-discounts.md). Returns null
+ * for one-time lines and anything that would not actually show a saving, so
+ * the price block falls back to the plain price.
  */
 function getLineSavings(item: CartLine): {
   compareAt: number;
@@ -82,8 +82,8 @@ function getLineSavings(item: CartLine): {
   if (!offer) return null;
 
   const displayNum = parseFloat(getLineDisplayPrice(item).amount);
-  const otpUnit = getChargedPrice(getOfferPricing(offer.product, "monthly-otp"));
-  const compareAt = offer.cadence === "quarterly-sub" ? otpUnit * 3 : otpUnit;
+  const compareAt = offer.pricing.compareAtPrice;
+  if (compareAt == null) return null;
   const discountPct = Math.round((1 - displayNum / compareAt) * 100);
   // No saving to show (equal/higher price, or a gap that rounds to 0%).
   if (compareAt <= displayNum || discountPct < 1) return null;
@@ -446,10 +446,6 @@ export default function CartDrawer() {
                   <CartUpsellTile offer={upsell} />
                 </div>
               )}
-
-              <div className="mt-auto pt-4">
-                <CartAppGift />
-              </div>
             </div>
           )}
         </div>

@@ -33,6 +33,11 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // The top tab is the starter-kit hook, so it only belongs on the offer that
+  // gives a kit. On Flow to Both the value line is a sentence, and a sentence
+  // set uppercase in a pill is not a badge.
+  const hasKitBadge = Boolean(offer.giftImages?.length);
+
   useEffect(() => {
     trackCartUpsellShown({ type: offer.type, product: offer.product });
   }, [offer.type, offer.product]);
@@ -72,38 +77,89 @@ export default function CartUpsellTile({ offer }: CartUpsellTileProps) {
   };
 
   return (
-    <div className="rounded-lg border border-[#1B2757]/15 bg-[#eef0f5] p-3">
+    // Same treatment as the PDP's selected plan card: the offer gradient as a
+    // 2px ring (padding-box keeps the fill, border-box paints the edge, which a
+    // plain border-color cannot do) with the hook as a tab straddling the top
+    // edge. One visual language for the offer, wherever it appears.
+    <div
+      className={`relative rounded-lg p-3 ${hasKitBadge ? "pt-4" : ""}`}
+      style={{
+        border: "2px solid transparent",
+        background:
+          "linear-gradient(#eef0f5,#eef0f5) padding-box, linear-gradient(90deg,#cdeecf,#e9f5c9) border-box",
+      }}
+    >
+      {hasKitBadge && (
+        <span
+          className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
+          style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
+        >
+          {offer.valueLine}
+        </span>
+      )}
+
       <div className="flex items-center gap-3">
-        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-white">
-          <Image
-            src={offer.thumbnail}
-            alt=""
-            width={56}
-            height={56}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        {offer.thumbnail && (
+          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-white">
+            <Image
+              src={offer.thumbnail}
+              alt=""
+              width={56}
+              height={56}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1B2757]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/45">
             Recommended upgrade
           </p>
-          <p className="text-sm font-bold leading-snug text-black">
+          {/* The headline carries the block, so the eyebrow steps back to a
+              muted label. */}
+          <p className="mt-0.5 text-base font-bold leading-tight text-black">
             {offer.headline}
           </p>
-          <p
-            className={`mt-0.5 text-xs ${
-              offer.highlight ? "text-black/70" : "font-semibold text-[#1a7f4f]"
-            }`}
-          >
-            {offer.valueLine}
-          </p>
-          {offer.highlight && (
-            <span className="mt-1.5 inline-flex items-center rounded-full bg-[#1a7f4f]/10 px-2 py-0.5 text-[11px] font-semibold text-[#1a7f4f]">
-              {offer.highlight}
-            </span>
+          {/* Without a kit there is no tab, so the value line stays in the body
+              where it has room to be a sentence rather than a badge. */}
+          {!hasKitBadge && (
+            <p className="mt-0.5 text-xs font-semibold text-[#1a7f4f]">
+              {offer.valueLine}
+            </p>
           )}
         </div>
       </div>
+
+      {/* Show the kit rather than only pricing it. Four equal tiles read as a
+          set; three plus a stray caption read as an afterthought. */}
+      {offer.giftImages && offer.giftImages.length > 0 && (
+        <ul className="mt-3 grid grid-cols-4 gap-1.5" aria-hidden>
+          {offer.giftImages.map((gift) => (
+            <li
+              key={gift.src}
+              className="aspect-square overflow-hidden rounded-md bg-white"
+            >
+              <Image
+                src={gift.src}
+                alt=""
+                width={96}
+                height={96}
+                sizes="72px"
+                className={
+                  gift.fit === "contain"
+                    ? "h-full w-full object-contain p-1"
+                    : "h-full w-full object-cover"
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {offer.highlight && (
+        <p className="mt-2.5 text-center text-xs font-medium text-black">
+          {offer.highlight}
+        </p>
+      )}
 
       <button
         type="button"

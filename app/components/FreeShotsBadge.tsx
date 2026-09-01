@@ -22,7 +22,7 @@ export default function FreeShotsBadge({
   /** Tight form ("+8 free") for sticky bars and other cramped spots. */
   compact?: boolean;
 }) {
-  if (!freeShots || freeShots <= 0 || cadence === "monthly-otp") return null;
+  if (!freeShots || freeShots <= 0 || cadence === "monthly-otp" || cadence === "quarterly-otp") return null;
   // The bonus is a first-order acquisition incentive on every subscription
   // cadence — monthly (28→20 swap) and quarterly (80→60 / 140→120 swap).
   const suffix = "on your first order";

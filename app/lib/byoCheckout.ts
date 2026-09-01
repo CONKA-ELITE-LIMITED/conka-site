@@ -13,6 +13,7 @@ import {
   getOfferVariant,
   getOfferPricing,
   getCadenceFrequency,
+  isOtpCadence,
 } from "./offerData";
 import { trackMetaAddToCart, trackMetaInitiateCheckout, toContentId, buildMetaCartAttributes } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
@@ -129,7 +130,7 @@ function fireAnalytics(params: {
 }): void {
   const { variantId, product, cadence, price, source } = params;
   const contentId = toContentId(variantId);
-  const purchaseType = cadence === "monthly-otp" ? "one-time" : "subscription";
+  const purchaseType = isOtpCadence(cadence) ? "one-time" : "subscription";
 
   try {
     // Meta Pixel — AddToCart + InitiateCheckout, fired here (on our domain) at

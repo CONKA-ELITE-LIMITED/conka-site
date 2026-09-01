@@ -39,7 +39,8 @@ export function getHeroProductType(formulaId: ProductHeroId): "flow" | "clear" |
 export function getPriceFrequency(cadence: CadenceType): string {
   switch (cadence) {
     case "monthly-sub": return "/mo";
-    case "monthly-otp": return "";
+    case "monthly-otp":
+    case "quarterly-otp": return "";
     case "quarterly-sub": return "/quarter";
   }
 }
@@ -52,6 +53,7 @@ export function getWhatShips(cadence: CadenceType, shotCount: number): string {
     case "monthly-sub":
       return `${boxLabel} (${shotCount} shots) delivered every month`;
     case "monthly-otp":
+    case "quarterly-otp":
       return `${boxLabel} (${shotCount} shots), one-time delivery`;
     case "quarterly-sub":
       return `${boxLabel} (${shotCount} shots total) delivered every 3 months`;
