@@ -22,7 +22,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ### The Skio branch still sells the pre-starter-kit variants, so the kit vanishes when the flag flips
 
-**Status:** Open, blocked on Josiah's reply. Added 2026-08-28.
+**Status:** Largely resolved 2026-09-01 (see foot of entry). Added 2026-08-28.
 **Files:** `app/lib/offerData.ts` (`OFFER_VARIANTS`) on `feature/skio-integration`, plus Shopify admin and the Skio dashboard.
 **Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/development/featurePlans/skio-migration.md` (on the Skio branch).
 
@@ -45,9 +45,9 @@ Attach the existing £39.99 starter variants to the existing Skio monthly plan a
 
 **Also unbuilt anywhere:** the order-two swap, turning `FLOW-STARTER-28` into `FLOW-FUNNEL-20`, `CLEAR-STARTER-28` into `CLEAR-FUNNEL-20` and `BOTH-STARTER-56` into `BOTH-FUNNEL-40`. Without it every renewal ships another hat and travel pack.
 
-The exposure is wider than new signups. The account portal's product swap resolves through `getOfferVariantNumericId`, so an **existing** subscriber changing product today also lands on a starter variant and starts a hat-per-renewal contract. Same fix covers both, but it means the clock is already running on the current subscriber base, not only on orders taken from launch (found in the independent review, 29 Aug 2026). It was deliberately **not** configured in Loop: first renewals are late September and the migration is expected well before that, so a Loop rule would never fire. It has to exist in Skio, and the contracts Skio inherits will still be sitting on starter variants because none will have reached order two. If the migration slips past roughly **20 September**, configure it in Loop after all.
+The exposure is wider than new signups. The account portal's product swap resolves through `getOfferVariantNumericId`, so an **existing** subscriber changing product today also lands on a starter variant and starts a hat-per-renewal contract. **The Skio side of this is now closed (1 Sept):** the portal's swap catalogue is restricted to the six plain non-starter variants, dashboard-side, per product — see `skio-migration.md` section 8. Same fix covers both, but it means the clock is already running on the current subscriber base, not only on orders taken from launch (found in the independent review, 29 Aug 2026). It was deliberately **not** configured in Loop: first renewals are late September and the migration is expected well before that, so a Loop rule would never fire. It has to exist in Skio, and the contracts Skio inherits will still be sitting on starter variants because none will have reached order two. If the migration slips past roughly **20 September**, configure it in Loop after all.
 
-**What unblocks it:** Josiah confirming whether anything is needed on his side at migration for the swap, and the migration date. Asked 2026-08-28.
+**Largely resolved 1 Sept.** Phase 3c built the six Skio starter variants, re-pointed `OFFER_VARIANTS` (PR #469) and shipped six order-1 swap Journeys; the mid-life swap hole is closed by the portal variant restriction above. Migration is booked Wed 3 Sept and Josiah copies the Journey logic into the migration mapper, so migrated Loop starter subs arrive already swapped. **Residual:** confirm the plan pill on the Flow and Both swap targets (section 8).
 
 ---
 

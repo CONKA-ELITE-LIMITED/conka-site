@@ -1,0 +1,11 @@
+old_variant_id,new_variant_id,old_sku,new_sku,reason
+58560937296246,58457787040118,FLOW-STARTER-28,FLOW-20,starter kit swap (monthly)
+58560941752694,58457811550582,FLOW-STARTER-80,FLOW-60,starter kit swap (quarterly)
+58560971309430,58457822069110,CLEAR-STARTER-28,CLEAR-20,starter kit swap (monthly)
+58560980615542,58457854411126,CLEAR-STARTER-80,CLEAR-60,starter kit swap (quarterly)
+58560992805238,58457859686774,BOTH-STARTER-56,BOTH-40,starter kit swap (monthly)
+58560994771318,58457864077686,BOTH-STARTER-140,BOTH-120,starter kit swap (quarterly)
+44143089320221,58457859686774,C68 Monthly Membership (deleted),BOTH-40,failed contract - migrate PAUSED (6 contracts)
+44143172518173,58457859686774,Capsules 24 Month Upfront (deleted),BOTH-40,failed contract - migrate PAUSED (1 contract)
+46492991750429,58457859686774,V23 CONKA OURFC Package (deleted),BOTH-40,failed contract - migrate PAUSED (1 contract)
+46673899684125,58457859686774,C2 Monthly Membership (deleted),BOTH-40,failed contract - migrate PAUSED (1 contract)
