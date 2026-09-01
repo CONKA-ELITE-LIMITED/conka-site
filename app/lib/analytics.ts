@@ -675,7 +675,9 @@ export function trackPurchaseAddToCart(params: {
   tier?: "starter" | "pro" | "max";
   purchaseType: "subscription" | "one-time";
   location: string; // "hero", "sticky_footer", "results_page", "calendar"
-  source: string; // "quiz", "menu", "direct", "cta"
+  // Live values: "product_page", "cart_upsell", "funnel_page", or a composed
+  // listicle origin "<slug>-<section>". CartContext prefers metadata.origin.
+  source: string;
   price?: number;
   sessionId?: string; // Quiz session ID
 }): void {

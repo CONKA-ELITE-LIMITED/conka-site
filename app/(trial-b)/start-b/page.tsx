@@ -1,3 +1,11 @@
+/**
+ * DORMANT TRIAL PAGE. Live but not a current primary ad target.
+ *
+ * Reached only via the /start -> /start-b 307 redirect (next.config.ts); its
+ * CTAs feed the approved funnel-c. Kept for reference / possible reuse, not
+ * deleted. Before investing effort here, confirm it is back in the ad rotation.
+ * Trial status map: docs/development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md
+ */
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";

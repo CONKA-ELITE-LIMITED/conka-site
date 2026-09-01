@@ -1,3 +1,11 @@
+/**
+ * DORMANT TRIAL PAGE. Live but no longer actively used.
+ *
+ * Reached only via the /lander -> /lander-b 307 redirect (next.config.ts). Not
+ * currently driven by traffic (per Rudh). Kept for reference / possible reuse,
+ * not deleted. Trial status map:
+ * docs/development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md
+ */
 import type {Metadata} from 'next';
 import dynamic from 'next/dynamic';
 import {SpeedInsights} from '@vercel/speed-insights/next';

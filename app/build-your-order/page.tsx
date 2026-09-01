@@ -1,3 +1,11 @@
+/**
+ * DORMANT TRIAL PAGE. Live but not a current primary ad target.
+ *
+ * The approved trial funnel, reached from start-b's CTAs (/start -> /start-b ->
+ * /funnel-c). Kept for reference / possible reuse, not deleted. funnel-b (the
+ * unapproved sibling) was deleted 2026-08-18. Trial status map:
+ * docs/development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md
+ */
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import MetaViewContent from "@/app/components/MetaViewContent";

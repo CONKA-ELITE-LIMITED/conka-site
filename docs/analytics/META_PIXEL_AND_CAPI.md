@@ -60,6 +60,16 @@ Added 2026-06-01 (SCRUM-1046/1047) as the core of the headless attribution fix (
   - **History (2026-06-19):** this check originally used `client_details` (browser IP / user-agent), assuming rebills have none. **Loop copies the original order's `client_details` onto every renewal**, so paid rebills leaked through and were sent to Meta as new Purchases — Meta over-counted (~10 events vs 2 real orders/week) and ingested £0.00 rebill values. Switched to `checkout_token` (Loop can't fake it). Full write-up: `HEADLESS_ATTRIBUTION_FIX.md` → "2026-06-19 — Purchase over-counting".
   - **Temporary verification logging** is in place on the skip + send paths; remove it once Vercel logs confirm renewals are skipped and real orders sent.
 
+### Skio attribution parity — VERIFIED (2026-08-18, SCRUM-1223)
+
+The Loop → Skio cutover only swaps the **variant + selling plan** inside `getOfferVariant` (`app/lib/byoData.ts`). Every attribution touch point sits **downstream and is variant-agnostic**, so Skio orders inherit attribution identically to Loop:
+
+- **Attach path (unchanged for Skio):** `byoCheckout.ts` and `CartContext.tsx` both call `buildMetaCartAttributes()` on every add → cart-level `_fbp`/`_fbc`/`conka_uid` (+ `_listicle_origin`, `_upsell`); `/api/cart` forwards `cartAttributes` to the Shopify cart → order `note_attributes`. None of this inspects the variant.
+- **Webhook (unchanged for Skio):** gates the CAPI Purchase on `checkout_token`. A Skio **first order** has a token (real checkout) → Purchase sent; a Skio **rebill** is contract-created with no token → skipped, matching Loop. Comment in `route.ts` already names Loop/Skio/native rebills.
+- **Live evidence:** production funnel orders from 2026-08-18 carry the full set in `note_attributes` with real values + a `checkout_token` — e.g. `#3878` (£39.99, `_fbp`+`_fbc`+`conka_uid`+`_listicle_origin=adhd-listicle-sticky`), `#3875`, `#3873`, `#3872`. Same `/api/cart` path a Skio order uses.
+- **Test-order caveat:** the Skio test order `#3879` came through the real PDP path (line prop `source: product_page`, Skio variant `FLOW-20`) but in a **cookie-less session** (ad-blocked / no ad click), so its `note_attributes` were empty and its total was £0 (100%-off). That reflects the *test session*, not Skio — a real ad-driven buyer sets the cookies and they flow through the exact path `#3878` proves. **No code change; parity confirmed by shared path + live orders.**
+- **Remaining "verify by effect" (non-blocking, needs Meta/Vercel access):** eyeball a `#3878`-class Purchase in Events Manager for good EMQ; on the first real Skio rebill confirm the "Skipping non-checkout order" log (`hasCheckoutToken:false`).
+
 ## Implementation Details
 
 - **Client:** `app/lib/metaPixel.ts` – generates `event_id`, calls `fbq('track', ..., { eventID })`, and sends the same event to `POST /api/meta/events` (CAPI) with `event_id` and `user_data` (`fbp`, `fbc`, `external_id`, plus `email`/`phone` when a customer is logged in **or** has been captured on-site by the Alia popup — see `EMAIL_CAPTURE_ENRICHMENT.md`).

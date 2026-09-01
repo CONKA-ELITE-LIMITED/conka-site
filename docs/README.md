@@ -40,7 +40,8 @@ The most important cluster for anything touching products, variants, or money.
 | Doc | Topic |
 |-----|-------|
 | [`features/CART_LOGIC.md`](./features/CART_LOGIC.md) | Cart actions, persistence, B2B tier normalization. |
-| [`features/CUSTOMER_PORTAL.md`](./features/CUSTOMER_PORTAL.md) | Account portal — subscription edit rules, pack-size ↔ cadence mapping. |
+| [`development/featurePlans/skio-migration.md`](./development/featurePlans/skio-migration.md) | **Skio: single source of truth** — the whole Loop to Skio migration in one doc: status, build reference, customer portal, cutover runbook, decisions. |
+| [`features/CUSTOMER_PORTAL.md`](./features/CUSTOMER_PORTAL.md) | Account portal — the self-built Loop portal Skio replaces (subscription edit rules, pack-size ↔ cadence mapping). |
 | [`features/MOBILE_SUBSCRIPTION_INTEGRATION.md`](./features/MOBILE_SUBSCRIPTION_INTEGRATION.md) | Mobile subscription-card display. |
 | [`features/b2b/B2B_PORTAL.md`](./features/b2b/B2B_PORTAL.md) | **Canonical B2B reference** — `/professionals`, pricing/VAT, draft orders, Xero, shipping. |
 | [`features/BLOG_SYSTEM.md`](./features/BLOG_SYSTEM.md) | Blog (`/blog`) — Notion-as-CMS, content contract, deploy rules. Read before any Notion write. |

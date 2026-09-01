@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
+import { subscriptionsSkioOnly } from "@/app/lib/subscriptionsFlag";
 import { Banner } from "@/app/components/banner";
 import ShopMegaMenu from "./ShopMegaMenu";
 import NavGroupMegaMenu from "./NavGroupMegaMenu";
@@ -174,7 +175,7 @@ export default function NavigationDesktop({
 
           <div className="hidden xl:flex items-center gap-3">
             <a
-              href="/account/login"
+              href={subscriptionsSkioOnly() ? "/account/manage" : "/account/login"}
               className="group flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
               aria-label="Account"
             >

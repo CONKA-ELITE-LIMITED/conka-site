@@ -10,6 +10,10 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useSubscriptions, Subscription } from "@/app/hooks/useSubscriptions";
 import { SubscriptionListCard } from "@/app/components/subscriptions/SubscriptionListCard";
 import { ReactivateModal } from "@/app/components/subscriptions/ReactivateModal";
+import {
+  subscriptionsInTransition,
+  subscriptionsSkioOnly,
+} from "@/app/lib/subscriptionsFlag";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -28,8 +32,20 @@ export default function AccountPage() {
     if (!loading && !isAuthenticated) router.push("/account/login");
   }, [loading, isAuthenticated, router]);
 
+  // Skio cutover: once migration is done the Skio portal is the whole account
+  // experience, so send /account straight to /account/manage (also catches the
+  // post-login landing). During the transition window customers still exist on
+  // both platforms, so we keep the Loop list below and only link out to Skio.
   useEffect(() => {
-    if (isAuthenticated && customer) fetchSubscriptions();
+    if (!loading && isAuthenticated && subscriptionsSkioOnly()) {
+      router.replace("/account/manage");
+    }
+  }, [loading, isAuthenticated, router]);
+
+  useEffect(() => {
+    // Post-migration the Loop list is not rendered here, so skip the fetch.
+    // During the transition window it IS rendered, so the fetch must still run.
+    if (isAuthenticated && customer && !subscriptionsSkioOnly()) fetchSubscriptions();
   }, [isAuthenticated, customer, fetchSubscriptions]);
 
   // Two buckets only: Active (active) and Inactive (paused, cancelled, expired).
@@ -66,6 +82,17 @@ export default function AccountPage() {
 
   if (!isAuthenticated || !customer) return null;
 
+  // Redirecting to the Skio portal (effect above) — show a spinner, never the
+  // interim Loop list, so there is no flash of the old account page. Not during
+  // the transition window, where the Loop list is the intended render.
+  if (subscriptionsSkioOnly()) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-8 h-8 border border-black/15 border-t-black/50 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   const isInitialLoading = subsLoading && subscriptions.length === 0;
 
   return (
@@ -84,6 +111,10 @@ export default function AccountPage() {
             >
               {greeting}
             </h1>
+
+            {/* Transition window: customers exist on both Loop and Skio, so
+                offer the Skio portal alongside the Loop list below. */}
+            {subscriptionsInTransition() && <TransitionNotice />}
 
             {isInitialLoading ? (
               <div className="bg-white rounded-md border border-black/10 h-[128px] flex items-center justify-center">
@@ -113,7 +144,14 @@ export default function AccountPage() {
                   </div>
                 ) : (
                   <div className="mb-8">
-                    <EmptyHeroCard />
+                    {/* During the window a Skio subscriber has no Loop contract,
+                        so the standard "start a subscription" card would tell a
+                        paying customer they have none. Point them at Skio. */}
+                    {subscriptionsInTransition() ? (
+                      <TransitionEmptyCard />
+                    ) : (
+                      <EmptyHeroCard />
+                    )}
                   </div>
                 )}
 
@@ -153,6 +191,60 @@ export default function AccountPage() {
         onReactivate={handleReactivateFromModal}
         subscriptionName={showReactivateModal?.product.title || "Subscription"}
       />
+    </div>
+  );
+}
+
+/**
+ * Shown only during the Loop to Skio transition window. Subscriptions started
+ * after go-live live in the Skio portal, everything else is still in the list
+ * below, so both routes have to be reachable.
+ */
+function TransitionNotice() {
+  return (
+    <div className="rounded-xl bg-[#eef0f5] px-4 py-3.5 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <p className="text-[13px] leading-snug text-black/70">
+        We are moving subscriptions to a new system. If you started one in the
+        last few days, manage it in the new portal.
+      </p>
+      <Link
+        href="/account/manage"
+        className="inline-flex min-h-[44px] items-center whitespace-nowrap text-[13px] font-semibold text-[var(--brand-navy)] hover:underline sm:min-h-0"
+      >
+        Open new portal →
+      </Link>
+    </div>
+  );
+}
+
+/**
+ * Transition-window empty state. Nothing in the Loop list does NOT mean the
+ * customer has no subscription: a recent subscriber's contract is in Skio.
+ * Never tell them to start one, send them to the portal that holds it.
+ */
+function TransitionEmptyCard() {
+  return (
+    <div className="bg-white rounded-md border border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 lg:p-8 flex flex-col items-start gap-4">
+      <p className="text-sm font-medium text-black/50">Nothing to show here</p>
+      <h2
+        className="text-2xl lg:text-3xl font-semibold text-black"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        Subscribed recently? It lives in the new portal.
+      </h2>
+      <p className="text-sm text-black/50">
+        We are moving subscriptions across. Anything started in the last few days
+        is managed there.
+      </p>
+      <ConkaCTAButton href="/account/manage" meta={null}>
+        Open new portal
+      </ConkaCTAButton>
+      <Link
+        href="/build-your-order"
+        className="text-[13px] font-semibold text-[var(--brand-navy)] hover:underline"
+      >
+        Or start a subscription →
+      </Link>
     </div>
   );
 }
