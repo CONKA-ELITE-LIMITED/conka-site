@@ -18,7 +18,7 @@ Cross-repo: the retention pipeline half lives in **conka-lab** (`docs/featurePla
 | 2 | Re-point purchase surfaces | Done (18 Aug), behind flag |
 | 3 | Embedded customer portal (`/account/manage`) | Done, auto-login verified end-to-end (19 Aug) |
 | 3b | Dual portal for the transition window | Done (26 Aug, SCRUM-1256) |
-| 3c | Starter-pack rewire: Skio starter variants + Journeys + `OFFER_VARIANTS` re-point | **In progress (1 Sept)** — see section 2 |
+| 3c | Starter-pack rewire: Skio starter variants + Journeys + purchase wiring (SCRUM-1288) | **In progress (1 Sept)** — variants created + verified; see section 2 |
 | 4 | Cutover + Loop decommission | Blocked: preview received 27 Aug, queries sent, date not booked |
 | 5 | Legacy protocol retirement | Future. **Gate now answered: 12 protocol subscribers exist, so the code stays.** |
 
@@ -30,10 +30,10 @@ Everything sits behind `NEXT_PUBLIC_SKIO_ENABLED` (default off = Loop live). The
 
 **The starter-pack rewire, in order:**
 
-1. **[Shopify] Create the six Skio starter variants** (table in section 6). Full one-time base price, gift-inclusive `bundlecomposition`, attached to the four existing selling-plan groups. The existing `FLOW-20`-style variants are untouched and take a dual role: sold bare they are the OTP at base price; sold with the plan they are the discounted recurring sub — and they are the Journey swap target.
+1. **[Shopify] Create the six Skio starter variants** (table in section 6). **DONE 1 Sept, all six verified via the Admin API** (prices, compositions, weights, plan attachments). The existing `FLOW-20`-style variants are untouched and take a dual role: sold bare they are the OTP at base price; sold with the plan they are the discounted recurring sub — and they are the Journey swap target.
 2. **[Skio dashboard] Journeys.** Re-point Josiah's FLOW demo: trigger = the Skio starter variant, swap target = the matching non-starter variant. **Verify the swap keeps the selling plan** so renewals charge the sub price, not base. Duplicate for all three products and both cadences, activate.
 3. **[Skio dashboard] Cancel flow**: reason tree + a recreation of the RETENTION15 15% save offer. Must exist before go-live, since real customers can hit cancel from day one.
-4. **[Code] Re-point `OFFER_VARIANTS` Skio-side** at the six starter GIDs; merge this branch to main.
+4. **[Code] Skio purchase wiring (SCRUM-1288)**: flag-gated `SKIO_OFFER_VARIANTS` in `offerData.ts` selling the six starter GIDs + four Skio plans; dual-table reverse lookup; Loop swap helpers pinned to the Loop table. Branch `feature/skio-starter-offer-wiring` off this one. Then merge to main. **Correction to the code map below: the purchase path currently has NO Skio branch at all** — the earlier "Phase 2 complete" claim covered the flag scaffold only, so this ticket is the last code gate before go-live.
 5. **[Go live.]** `NEXT_PUBLIC_SKIO_ENABLED=true` + `NEXT_PUBLIC_SKIO_TRANSITION=true` on Vercel prod, redeploy; `KLAVIYO_ENABLED=false` on conka-lab. Note: with no migration date booked the retention-email blackout is open-ended — the strongest lever to get a date out of Skio. Smoke test per section 12.
 6. **[Email Josiah]**, all statements, one batch: live on Skio, Loop static from now, book the migration ASAP; Journeys active — copy the logic into the mapper (Loop `*-STARTER-*` subs land on the non-starter swap targets with the plan attached); re-chase 251-vs-259, paused/`remainingUses`, and the runbook.
 
@@ -232,7 +232,7 @@ Plans and variants stay constant across stages; only `bundlecomposition` changes
 | `app/account/manage/*` | The portal page + `SkioPortalFrame` |
 | `app/account/page.tsx` | Account entry: Loop list, transition state, or Skio redirect |
 
-Every live subscribe surface routes through `getOfferVariant`, which returns Skio variants and plans when the flag is on. Reverse lookups resolve BOTH Loop and Skio tables, so in-flight and migrated lines still render. `monthly-otp` is untouched (one-time is not a subscription).
+Every live subscribe surface routes through `getOfferVariant`. **The flag-gated Skio branch inside it is being built in SCRUM-1288** (it did not exist before 1 Sept; only the flag helpers and portal side were wired): `SKIO_OFFER_VARIANTS` returns the starter variants + Skio plans when the flag is on, reverse lookups resolve BOTH tables so in-flight and migrated lines still render, and the Loop swap helpers stay pinned to the Loop table. One-time cadences untouched.
 
 ### Pulling GIDs from the Skio API
 
@@ -374,6 +374,7 @@ Newest first.
 | SCRUM-1233 | Klaviyo retention-lab Loop-dependency audit | Done |
 | SCRUM-1240 | conka-lab legacy-history freeze + coalesce | Done |
 | SCRUM-1256 | Dual portal for the transition window | For review |
+| SCRUM-1288 | Skio starter-pack purchase wiring: flag-gated SKIO_OFFER_VARIANTS | To Do (Sprint 30) |
 
 Epic SCRUM-768 (Shopify & Subscriptions). Phase 4 is ticketed once the date is booked.
 
