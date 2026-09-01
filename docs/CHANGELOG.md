@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-01** | Skio purchase wiring: subscriptions sell the Skio starter variants and plans when the cutover flag is on (SCRUM-1288)
 - **2026-08-29** | Starter kit section moved to sit just before What to Expect on all three PDPs
 - **2026-08-29** | Cart upsell rebuilt around the starter kit (value badge, four gift tiles, no product shot on the subscribe upgrade) and the standalone app gift tile removed from the drawer
 - **2026-08-28** | Every subscription cadence now sells the starter kit variant (hat, travel pack and app access in the first box) at the same price as before (SCRUM-1287)

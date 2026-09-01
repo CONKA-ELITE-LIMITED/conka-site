@@ -18,6 +18,7 @@
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";
+import { subscriptionsUseSkio } from "@/app/lib/subscriptionsFlag";
 
 // ============================================
 // TYPES
@@ -497,6 +498,71 @@ const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConf
   },
 };
 
+// SKIO STARTER WIRING (SCRUM-1288): the Skio-era table, sold when
+// NEXT_PUBLIC_SKIO_ENABLED is on. Subscription cadences point at the Skio
+// starter variants, which are priced at the FULL one-time price because Skio's
+// selling plans discount by percentage (Loop's apply a fixed £0.00, which is
+// why the Loop starter variants above are priced at the charged amount — the
+// two pricing models are opposites and the variants are not interchangeable).
+// After the first order a Skio Journey swaps the line to the plain FLOW-20-style
+// variant so renewals ship without the gifts. One-time cadences are identical
+// to the Loop table: OTP never touches a subscription platform.
+const SKIO_OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> = {
+  flow: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58586461766006", // FLOW-STARTER-20 (£69.98 base, 42.86% off → £39.99)
+      sellingPlanId: "gid://shopify/SellingPlan/712928887158", // Skio 20 Shots - Monthly
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768714614", // FLOW-FUNNEL-20-OTP
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58586516685174", // FLOW-STARTER-60 (£189.99 base, 42.11% off → £109.99)
+      sellingPlanId: "gid://shopify/SellingPlan/712928919926", // Skio 60 Shots - Quarterly
+    },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457811550582", // FLOW-60
+    },
+  },
+  clear: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58586614858102", // CLEAR-STARTER-20 (£69.98 base, 42.86% off → £39.99)
+      sellingPlanId: "gid://shopify/SellingPlan/712928887158", // Skio 20 Shots - Monthly
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768812918", // CLEAR-FUNNEL-20-OTP
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58586632520054", // CLEAR-STARTER-60 (£189.99 base, 42.11% off → £109.99)
+      sellingPlanId: "gid://shopify/SellingPlan/712928919926", // Skio 60 Shots - Quarterly
+    },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457854411126", // CLEAR-60
+    },
+  },
+  both: {
+    "monthly-sub": {
+      variantId: "gid://shopify/ProductVariant/58586681999734", // BOTH-STARTER-40 (£99.98 base, 25% off → £74.99)
+      sellingPlanId: "gid://shopify/SellingPlan/712928952694", // Skio 40 Shots - Monthly
+    },
+    "monthly-otp": {
+      variantId: "gid://shopify/ProductVariant/58153768911222", // BOTH-FUNNEL-40-OTP
+    },
+    "quarterly-sub": {
+      variantId: "gid://shopify/ProductVariant/58586703233398", // BOTH-STARTER-120 (£279.99 base, 46.43% off → £149.99)
+      sellingPlanId: "gid://shopify/SellingPlan/712928985462", // Skio 120 Shots - Quarterly
+    },
+    "quarterly-otp": {
+      variantId: "gid://shopify/ProductVariant/58457864077686", // BOTH-120
+    },
+  },
+};
+
+/** The table the storefront sells from: Skio when the cutover flag is on, Loop otherwise. */
+function activeOfferVariants(): Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> {
+  return subscriptionsUseSkio() ? SKIO_OFFER_VARIANTS : OFFER_VARIANTS;
+}
+
 // ============================================
 // DISPLAY DATA
 // ============================================
@@ -662,14 +728,18 @@ const VARIANT_TO_PRODUCT = new Map<string, OfferProduct>();
 const QUARTERLY_SUB_VARIANT_SET = new Set<string>();
 const QUARTERLY_OTP_VARIANT_SET = new Set<string>();
 
-for (const [product, cadences] of Object.entries(OFFER_VARIANTS) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
-  for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
-    if (config.variantId) {
-      VARIANT_TO_PRODUCT.set(config.variantId, product);
-      if (cadence === "quarterly-sub") {
-        QUARTERLY_SUB_VARIANT_SET.add(config.variantId);
-      } else if (cadence === "quarterly-otp") {
-        QUARTERLY_OTP_VARIANT_SET.add(config.variantId);
+// Both tables feed the reverse maps regardless of the flag: during the Loop→Skio
+// transition window carts and analytics must recognise lines from either platform.
+for (const table of [OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
+  for (const [product, cadences] of Object.entries(table) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
+    for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
+      if (config.variantId) {
+        VARIANT_TO_PRODUCT.set(config.variantId, product);
+        if (cadence === "quarterly-sub") {
+          QUARTERLY_SUB_VARIANT_SET.add(config.variantId);
+        } else if (cadence === "quarterly-otp") {
+          QUARTERLY_OTP_VARIANT_SET.add(config.variantId);
+        }
       }
     }
   }
@@ -702,7 +772,7 @@ export function getOfferVariant(
   product: OfferProduct,
   cadence: OfferCadence,
 ): OfferVariantConfig | null {
-  const config = OFFER_VARIANTS[product][cadence];
+  const config = activeOfferVariants()[product][cadence];
   if (!config || !config.variantId) return null;
   return config;
 }
@@ -711,7 +781,7 @@ export function isVariantReady(
   product: OfferProduct,
   cadence: OfferCadence,
 ): boolean {
-  const config = OFFER_VARIANTS[product][cadence];
+  const config = activeOfferVariants()[product][cadence];
   return Boolean(config?.variantId);
 }
 
@@ -1017,10 +1087,14 @@ export function getChargedPrice(pricing: OfferPricing): number {
 export function getOfferByVariantId(
   variantId: string,
 ): { product: OfferProduct; cadence: OfferCadence; pricing: OfferPricing } | null {
-  for (const product of Object.keys(OFFER_VARIANTS) as OfferProduct[]) {
-    for (const cadence of Object.keys(OFFER_VARIANTS[product]) as OfferCadence[]) {
-      if (OFFER_VARIANTS[product][cadence].variantId === variantId) {
-        return { product, cadence, pricing: OFFER_PRICING[product][cadence] };
+  // Searches BOTH platform tables regardless of the flag: during the Loop→Skio
+  // transition a cart can hold a line from either platform and both must resolve.
+  for (const table of [OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
+    for (const product of Object.keys(table) as OfferProduct[]) {
+      for (const cadence of Object.keys(table[product]) as OfferCadence[]) {
+        if (table[product][cadence].variantId === variantId) {
+          return { product, cadence, pricing: OFFER_PRICING[product][cadence] };
+        }
       }
     }
   }
@@ -1043,7 +1117,13 @@ export function getOfferByVariantId(
 // swap body expects. Returns null if the cadence has no plan (e.g. one-time),
 // so the route can 503 rather than send a bad swap.
 
-/** Numeric selling-plan id for a same-cadence offer swap, or null if unset. */
+/**
+ * Numeric selling-plan id for a same-cadence offer swap, or null if unset.
+ * Deliberately reads the LOOP table, never the flag: these two helpers feed
+ * Loop's line-swap API, which mutates Loop contracts — a Loop contract must
+ * only ever be swapped onto Loop variants and plans, even after the Skio flag
+ * is on (the transition window has live Loop contracts either way).
+ */
 export function getOfferSwapSellingPlanId(
   product: OfferProduct,
   cadence: OfferCadence,
@@ -1053,7 +1133,7 @@ export function getOfferSwapSellingPlanId(
   return gid.split("/").pop() ?? null;
 }
 
-/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). */
+/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). Loop table only — see above. */
 export function getOfferVariantNumericId(
   product: OfferProduct,
   cadence: OfferCadence,
