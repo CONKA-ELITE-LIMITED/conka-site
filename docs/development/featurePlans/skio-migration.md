@@ -4,7 +4,7 @@
 
 **Owner:** Rudh
 **Branch:** `feature/skio-integration` (sub-branches merge into it, not main)
-**Last updated:** 2026-08-27
+**Last updated:** 2026-09-01
 
 Cross-repo: the retention pipeline half lives in **conka-lab** (`docs/featurePlans/loop-to-skio-ingest-migration.md`). That is the one deliberate exception, because it is a different repo. See [Retention and conka-lab](#retention-and-conka-lab).
 
@@ -18,28 +18,31 @@ Cross-repo: the retention pipeline half lives in **conka-lab** (`docs/featurePla
 | 2 | Re-point purchase surfaces | Done (18 Aug), behind flag |
 | 3 | Embedded customer portal (`/account/manage`) | Done, auto-login verified end-to-end (19 Aug) |
 | 3b | Dual portal for the transition window | Done (26 Aug, SCRUM-1256) |
+| 3c | Starter-pack rewire: Skio starter variants + Journeys + `OFFER_VARIANTS` re-point | **In progress (1 Sept)** — see section 2 |
 | 4 | Cutover + Loop decommission | Blocked: preview received 27 Aug, queries sent, date not booked |
 | 5 | Legacy protocol retirement | Future. **Gate now answered: 12 protocol subscribers exist, so the code stays.** |
 
-**The build is finished.** Everything sits behind `NEXT_PUBLIC_SKIO_ENABLED` (default off = Loop live). What remains is scheduling, one runbook, and the docs you are reading.
+Everything sits behind `NEXT_PUBLIC_SKIO_ENABLED` (default off = Loop live). The original build finished 26 Aug, but the starter pack (launched on Loop 1 Sept as the primary offer) predates none of the Skio variants, so the Skio side is being rebuilt around it before the flag flips (phase 3c).
 
 ## 2. Current focus and next action
 
-**The preview landed 27 Aug and has been reviewed. We have NOT approved it.** Josiah asked for a reply of "Approved!" to proceed; instead we sent back one reconciliation question, two confirmations and a request for a runbook. Section 5 has the findings, section 11 has the check results.
+**Go-live is now decoupled from the migration date.** Josiah confirmed (31 Aug) the final migration re-pulls fresh from Loop, so nothing sold pre-migration is missed. We go live on Skio as soon as the starter-pack rewire below is done, and the open blockers (section 4) resolve in parallel.
 
-**Waiting on Josiah:**
+**The starter-pack rewire, in order:**
 
-1. **The count does not reconcile.** His email says 259 regular subscriptions. `subscriptions-raw.json` holds 251 records and `migration-summary.csv` collapses to the same 251. Approval is held until that 8-subscription gap is explained.
-2. **Confirmation that PAUSED migrates as paused** with its resume date, and that discount `remainingUses` countdowns keep counting rather than becoming permanent.
-3. **A cutover runbook**: what he needs from us and when, the order of operations on the day, when Loop is uninstalled, what is customer-facing, what to verify after, and what rollback looks like plus when it expires.
-4. **Available migration dates.** We asked for his options rather than proposing one.
+1. **[Shopify] Create the six Skio starter variants** (table in section 6). Full one-time base price, gift-inclusive `bundlecomposition`, attached to the four existing selling-plan groups. The existing `FLOW-20`-style variants are untouched and take a dual role: sold bare they are the OTP at base price; sold with the plan they are the discounted recurring sub — and they are the Journey swap target.
+2. **[Skio dashboard] Journeys.** Re-point Josiah's FLOW demo: trigger = the Skio starter variant, swap target = the matching non-starter variant. **Verify the swap keeps the selling plan** so renewals charge the sub price, not base. Duplicate for all three products and both cadences, activate.
+3. **[Skio dashboard] Cancel flow**: reason tree + a recreation of the RETENTION15 15% save offer. Must exist before go-live, since real customers can hit cancel from day one.
+4. **[Code] Re-point `OFFER_VARIANTS` Skio-side** at the six starter GIDs; merge this branch to main.
+5. **[Go live.]** `NEXT_PUBLIC_SKIO_ENABLED=true` + `NEXT_PUBLIC_SKIO_TRANSITION=true` on Vercel prod, redeploy; `KLAVIYO_ENABLED=false` on conka-lab. Note: with no migration date booked the retention-email blackout is open-ended — the strongest lever to get a date out of Skio. Smoke test per section 12.
+6. **[Email Josiah]**, all statements, one batch: live on Skio, Loop static from now, book the migration ASAP; Journeys active — copy the logic into the mapper (Loop `*-STARTER-*` subs land on the non-starter swap targets with the plan attached); re-chase 251-vs-259, paused/`remainingUses`, and the runbook.
 
-**Not blocked, ours to do:**
+**In parallel, ours, not gating go-live:**
 
-1. **Verify 251 against Loop's own dashboard.** This is the actual action item in Josiah's email and only we can do it. If Loop says 259, the gap is Skio's export and the question answers itself; if Loop says 251, his email figure is wrong.
-2. **Decide what happens to the 9 dead-membership contracts** (section 5). Commercial call: map them onto a current SKU, which is a price and product change they never agreed to, or let them lapse and email them an offer.
-3. **Build the Skio cancel flow** in the Skio dashboard: the cancellation reason tree and a recreation of the RETENTION15 15% save offer. **This has a real deadline.** Phase 4 deletes our own RETENTION15 code, so if Skio's flow is not built by cutover we ship a cancel journey with no deflection at all. Ops job, no code.
-4. **Cutover runbook** (section 12 is the skeleton; finalise once Josiah's version lands and the date is set).
+1. **Verify 251 vs 259 against Loop's own dashboard** — approval of the preview is held on this.
+2. **Decide the 9 dead-membership contracts** (section 5): map or lapse.
+3. **conka-lab Check 13** against the preview population (section 11).
+4. The 51-legacy-subscriber retention call (section 5) before cutover.
 
 ## 3. Order of operations (CORRECTED 2026-08-26)
 
@@ -56,7 +59,7 @@ Josiah's reason: any contract created in Loop after Skio pulls the data is left 
 
 **The cost of this sequencing.** Between steps 1 and 5 the site is on Skio while the retention pipeline still reads Loop. conka-lab derives "is this person a subscriber" from the subscription source alone (`hasEverSubscribed = !!subscriptionDate`), with no memory between runs, so new Skio subscribers would be classified as **one-time buyers** and pulled into OTP and convert-to-subscription flows. conka-lab names this the "early-flip -> OTP" failure mode. `KLAVIYO_ENABLED=false` across the whole window is the mitigation. Expect roughly four days with no strategic retention email. The transactional subscription welcome is unaffected, since it comes from the Skio-native Klaviyo integration on the order event, not the retention engine.
 
-**Open with Skio:** does the final migration re-pull fresh from Loop, or use the preview snapshot? If it re-pulls, go-live is 48h before migration day. If it reuses the preview, we must be live before the preview is generated. Asked 26 Aug.
+**RESOLVED (Josiah, 31 Aug): the final migration re-pulls fresh from Loop.** Consequence: go-live does not need to wait for a booked date — anything sold on Loop up to migration day (including the starter pack, live 1 Sept) is picked up. We go live as soon as ready; the 24-48h minimum before migration still applies so in-flight Loop carts clear.
 
 ## 4. Open blockers
 
@@ -68,11 +71,10 @@ Josiah's reason: any contract created in Loop after Skio pulls the data is left 
 | 1d | Cutover runbook: our prep, order on the day, Loop uninstall point, customer-facing effects, post-checks, rollback window | Josiah (Skio) | Asked 27 Aug. |
 | 1e | **51 legacy subscribers, not the 5-10 Josiah was told** | Rudh / ops | Section 5. The "no mirror plans needed" decision was taken on the wrong number. |
 | 1f | The 9 dead-membership contracts: map or lapse | Rudh / ops | Commercial call. Section 5. |
-| 2 | Does the final migration re-pull from Loop or use the preview snapshot? | Josiah (Skio) | Decides exactly when we go live. Asked 26 Aug. |
-| 3 | Build the Skio cancel flow (reason tree + RETENTION15 save offer) | Rudh / ops | Pre-cutover deadline. Not blocked on Skio. |
-| 4 | Synergy: 6-SKU handoff sent, plus one live routing test on a normally-paid order | Rudh / ops | Section 10. `#3879` was £0 and auto-fulfilled, so it never pulled. |
+| 3 | Build the Skio cancel flow (reason tree + RETENTION15 save offer) | Rudh / ops | Now a go-live gate, not just pre-cutover. Not blocked on Skio. |
+| 5 | Starter-pack rewire (section 2): six Skio starter variants + Journeys + code re-point | Rudh | Gates go-live. |
 
-**Resolved:** billing approval (18 Aug), Skio plan GIDs (18 Aug), offer architecture (staged fulfilment + percentage off), funnel Loop plans carry 0% adjustment (13 Aug), first-order swap feasibility, box mapping, portal version (cpv3), address write-back (yes, so the Loop address-mirror can be dropped), legacy plan handling (26 Aug, section 5).
+**Resolved:** billing approval (18 Aug), Skio plan GIDs (18 Aug), offer architecture (staged fulfilment + percentage off), funnel Loop plans carry 0% adjustment (13 Aug), first-order swap feasibility, box mapping, portal version (cpv3), address write-back (yes, so the Loop address-mirror can be dropped), legacy plan handling (26 Aug, section 5), **final migration re-pulls fresh from Loop** (31 Aug, so go-live is date-independent), **Synergy handoff not needed** (bundle-composed SKUs of existing physical boxes need nothing on Synergy's side — proven live by the 1 Sept starter launch; section 10).
 
 ## 5. Vendor answers
 
@@ -130,6 +132,14 @@ Many sit on grandfathered pricing (GBP 48.30, GBP 49, GBP 33). Under the agreed 
 
 **12 protocol subscribers exist** (4 ACTIVE, 8 PAUSED) across Balance, Resilience and Ultimate. This answers the Phase 5 gate that has been open since June: `app/lib/legacy/protocolSubscriptions.ts`, `ProtocolId` and `PROTOCOL_VARIANTS` **stay**. See `docs/TODO.md`.
 
+### From Josiah (2026-08-31, on the starter-pack conflict)
+
+| Question | Answer | Consequence |
+|----------|--------|-------------|
+| Do starter contracts sold on Loop pre-migration get picked up? | **Yes — the final migration pulls fresh data**, not the preview snapshot | Go-live is decoupled from the migration date. Section 3 resolved. |
+| How does the first-order-only starter box work in Skio? | **Skio Journeys**: a variant swap after the checkout order. He built a demo template for the FLOW SKUs — review variants + pricing logic, customize the end notification, duplicate for the other SKUs, activate | Ours to finish. The Journey only fires on Skio checkouts. |
+| What about migrated Loop starter subs (no Skio checkout, so no Journey)? | **He maps them during migration**: once our Journeys are set, he copies the swap logic into the migration mapper so starter SKUs land on the correct variant and price | Tell him when the Journeys are active. Migrated starter subs arrive already swapped. |
+
 ### From Noah (2026-08-18 to 20)
 
 - **Rebill attribution.** Attributes carry to renewal orders only if they live on the Shopify subscription contract, populated from checkout/cart data. Ours (`_fbp`, `_fbc`, `conka_uid`, `_listicle_origin`) are cart-level at checkout, so they should persist. Confirm on the first real renewal.
@@ -164,6 +174,23 @@ Six net-new base variants, nothing existing touched. Each is a Synergy virtual b
 | `BOTH-120` | `58457864077686` | 120 | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28` | 10.5 kg |
 
 **Never delete `FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`.** Every bundle points at them.
+
+### Skio starter variants (to create, 2026-09-01)
+
+The starter pack is now the primary first-order offer, so each cadence needs a Skio starter variant at the **full one-time base price** (the Loop `*-STARTER-*` variants are fixed-priced at the charged amount — attach one to a percentage plan and it under-bills, e.g. £22.85 instead of £39.99). Compositions and weights copied from the live Loop starters. Attach each to the group shown; `custom.batchexpiry` blank.
+
+| New SKU | Variant name | Product | Base £ | Charged £ | Group (plan GID) | bundlecomposition | Weight |
+|---------|--------------|---------|--------|-----------|------------------|-------------------|--------|
+| `FLOW-STARTER-20` | 20 Shots Starter Pack | Flow | 69.98 | 39.99 | 20 Shots - Monthly (`712928887158`) | `1xFLOW-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` | 2.5 kg |
+| `CLEAR-STARTER-20` | 20 Shots Starter Pack | Clear | 69.98 | 39.99 | 20 Shots - Monthly (`712928887158`) | `1xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` | 2.5 kg |
+| `FLOW-STARTER-60` | 60 Shots Starter Pack | Flow | 189.99 | 109.99 | 60 Shots - Quarterly (`712928919926`) | `3xFLOW-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` | 6.65 kg |
+| `CLEAR-STARTER-60` | 60 Shots Starter Pack | Clear | 189.99 | 109.99 | 60 Shots - Quarterly (`712928919926`) | `3xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` | 6.65 kg |
+| `BOTH-STARTER-40` | 40 Shots Starter Pack | Both | 99.98 | 74.99 | 40 Shots - Monthly (`712928952694`) | `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` | 4.55 kg |
+| `BOTH-STARTER-120` | 120 Shots Starter Pack | Both | 279.99 | 149.99 | 120 Shots - Quarterly (`712928985462`) | `3xFLOW-FUNNEL-28+2xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28` | 10.85 kg |
+
+SKUs follow the Skio charged-shots convention (`FLOW-20` charges for 20, ships 28) and stay distinct from the Loop starters (`FLOW-STARTER-28` etc., named by shipped shots).
+
+**The dual role of the existing Skio variants** (`FLOW-20`, `CLEAR-20`, `FLOW-60`, `CLEAR-60`, `BOTH-40`, `BOTH-120`): in Skio's percentage model the variant price IS the one-time price and the plan applies the discount, so one variant serves as both the OTP (sold bare) and the recurring sub (sold with plan). They are the Journey swap targets — renewals ship the plain box, no gifts. The storefront OTP option still sells `FLOW-FUNNEL-20-OTP` etc. for now; consolidating OTP onto the Skio variants is optional cleanup, deliberately deferred.
 
 ### Fulfilment staging
 
@@ -247,15 +274,17 @@ Skio's Customer Portal v3 (cpv3) embedded at **`/account/manage`**, auto-logged-
 
 **Recurring-revenue attribution is acquisition-only today**, matching Loop: rebills send no Meta Purchase. At cutover the cheapest recurring visibility is Skio's native Triple Whale integration (no build). Meta CAPI for rebills would be built off Skio's webhooks and is deferred.
 
-## 10. Synergy fulfilment handoff
+## 10. Synergy fulfilment
 
-Six new subscription SKUs need onboarding on Synergy's side. They are not new physical products: each is a virtual bundle of the existing 28-shot Flow and Clear boxes, defined by `custom.bundlecomposition` in Shopify. A variant without that metafield reaches Synergy as a plain SKU and must be hand-fixed on every order; that was the historic quarterly pain, now resolved for the live quarterly variants too.
+**No Synergy-side onboarding is needed for the Skio SKUs** (corrected 1 Sept). Each is a virtual bundle of existing physical SKUs, defined by `custom.bundlecomposition` in Shopify, and the composition does the exploding — Synergy needs nothing when the components are SKUs they already carry. Proven in production by the 1 Sept starter-pack launch on Loop (`*-STARTER-*` SKUs, same pattern, no handoff). The earlier plan to send a 6-SKU mapping email (draft in git history at `skio-synergy-sku-handoff.md`) is dropped.
 
-**Process for any new or changed subscription variant:** create the variant with SKU `PRODUCT-SHOTS` at base one-time price; set `custom.bundlecomposition` to the physical boxes in single-line `NxSKU+NxSKU` form; leave `custom.batchexpiry` blank; set weight to boxes x 2.1 kg; give Synergy the SKU-to-box mapping; verify on a live order that it exploded into components.
+The real risk is the opposite: a variant **without** the metafield reaches Synergy as a plain SKU and must be hand-fixed on every order — the historic quarterly pain. So the composition metafield is mandatory on every new bundle variant.
+
+**Process for any new or changed subscription variant:** create the variant at base one-time price; set `custom.bundlecomposition` to the physical boxes in single-line `NxSKU+NxSKU` form; leave `custom.batchexpiry` blank; set the weight; verify on the first live order that it exploded into components.
 
 **Cutover rules (Synergy):** the connector pulls only open, paid and unfulfilled orders. Never remove the `IMPORTSYNERGY` tag. Orders cannot be edited after Synergy pulls them.
 
-**Outstanding:** send the 6-SKU mapping to Synergy's help address (the drafted email is in git history at `skio-synergy-sku-handoff.md`), then place one normally-paid Skio test order and confirm it pulls, explodes into 28-boxes, and routes to the Synergy location.
+**Outstanding:** after go-live, spot-check the first normally-paid Skio order pulls, explodes into 28-boxes, and routes to the Synergy location (`#3879` was £0 and auto-fulfilled, so it never pulled).
 
 ## 11. Retention and conka-lab
 
@@ -319,6 +348,8 @@ Six new subscription SKUs need onboarding on Synergy's side. They are not new ph
 
 Newest first.
 
+- **2026-09-01** - **Starter-pack rewire planned (phase 3c) and go-live decoupled from the migration date.** The starter pack launched on Loop as the primary offer; the Skio side predates it, so flipping the flag would have silently dropped the kit (and the Loop starter variants under-bill on percentage plans: £22.85 not £39.99). Plan: six Skio starter variants at one-time base price (section 6 table), existing Skio variants take the dual OTP + swap-target role, Journeys per cadence, then `OFFER_VARIANTS` re-point, then go live. Synergy handoff dropped as unnecessary — bundle compositions of existing SKUs need nothing on their side, proven by the starter launch.
+- **2026-08-31** - **Josiah answered the starter-pack questions.** Final migration re-pulls fresh from Loop (blocker resolved; go-live is date-independent). First-order swap = Skio Journeys, demo template built for FLOW. Migrated Loop starter subs get mapped to the swapped variant + price by the migration mapper once our Journeys are active.
 - **2026-08-27** - **Migration preview received, reviewed, NOT approved.** Josiah sent the four preview files and asked for approval. Held on a count that does not reconcile: his email says 259 regular subscriptions, his own attachments contain 251. Replied asking for that plus confirmation on paused-state and discount `remainingUses` handling, a cutover runbook, and his available dates. Findings in section 5, check results in section 11. Three things the preview settled: `createdAt` does migrate (Josiah right, Noah wrong), legacy is 51 subscribers not 5-10, and 12 protocol subscribers exist so the Phase 5 code stays.
 - **2026-08-26** - **Docs consolidated into this file.** Nine Skio docs folded into one source of truth. Originals in git history.
 - **2026-08-26** - **Dual portal built (SCRUM-1256).** `NEXT_PUBLIC_SKIO_TRANSITION` plus the composed flag helpers; `/account` keeps the Loop list and links out during the window; a Skio subscriber with no Loop contract gets a transition empty state instead of "start a subscription". Branch `feature/skio-dual-portal`, commit `ab637389`.
