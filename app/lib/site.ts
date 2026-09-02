@@ -25,6 +25,13 @@ export const COMPANY = {
   /** Incorporation date, ISO 8601. Becomes schema.org `foundingDate`. */
   foundingDate: "2021-03-01",
   vatId: "GB430507628",
+  /**
+   * The one public contact address. Canonical for every customer-facing
+   * surface: footer, FAQs, legal pages, guarantee copy, account-portal error
+   * messages (via `SUPPORT_EMAIL` in `app/lib/supportEmail.ts`) and the
+   * Organization JSON-LD. Never hard-code another address; B2B enquiries are
+   * the only exception and route to a named owner via `app/lib/b2bData.ts`.
+   */
   email: "info@conka.io",
   founders: ["Harry Glover", "Humphrey Bodington"],
   address: {

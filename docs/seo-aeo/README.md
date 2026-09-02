@@ -33,7 +33,7 @@ A pre-change Google Search Console baseline (`docs/seo-aeo/seo-search-console-ba
 | File | Role |
 |------|------|
 | `app/layout.tsx` | Root metadata: `metadataBase` (`https://www.conka.io`) and the self-referencing canonical. Also renders the sitewide `Organization` and `WebSite` JSON-LD. |
-| `app/lib/site.ts` | `SITE_ORIGIN`, `BRAND_DESCRIPTION`, `COMPANY` (Companies House verified details), and `SOCIAL_PROFILES` / `SAME_AS` / `FOOTER_SOCIALS`. Single source for brand identity; non-secret, so in code rather than env. |
+| `app/lib/site.ts` | `SITE_ORIGIN`, `BRAND_DESCRIPTION`, `COMPANY` (Companies House verified details, incl. `COMPANY.email` = `info@conka.io`, the canonical public contact address for every surface), and `SOCIAL_PROFILES` / `SAME_AS` / `FOOTER_SOCIALS`. Single source for brand identity; non-secret, so in code rather than env. |
 | `app/components/footer/Footer.tsx` | Renders the social row from `FOOTER_SOCIALS`. These outbound links are what corroborate the schema's `sameAs` claim. |
 | `app/manifest.ts` | Web app manifest, using the 512x512 `app/icon.png`. |
 | `app/page.tsx` | Homepage metadata (server component, exported in place) and the homepage `FAQPage` JSON-LD. |
