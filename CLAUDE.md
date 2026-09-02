@@ -60,6 +60,7 @@ npm run dev:all    # Dev + any parallel processes
 | `app/components/CartDrawer.tsx` | Slide-out cart UI; "Checkout" links to `cart.checkoutUrl` |
 | `app/lib/productData.ts` | **Barrel export** — always import product data from here, never from sub-modules |
 | `app/brand-base.css` | Design system tokens and layout classes (the only stylesheet; `premium-base.css` is deleted) |
+| `app/lib/site.ts` | Brand identity constants. `COMPANY.email` is the **canonical public contact address — `info@conka.io`**. Never hard-code a contact address; import `SUPPORT_EMAIL` / `supportMailtoHref()` from `app/lib/supportEmail.ts`. B2B is the only exception (named owner in `app/lib/b2bData.ts`) |
 | `app/layout.tsx` | Root layout — nav, footer, CartDrawer, analytics scripts |
 
 ## Product data

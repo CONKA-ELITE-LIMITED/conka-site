@@ -270,7 +270,7 @@ Each answer scores 0-3 points toward each of the 4 protocols. Results show perce
 - Tier bands: Starter 1-10 boxes | Squad 11-25 boxes | Elite 26+ boxes
 - Ultimate Protocol = 2 boxes per unit for tier calculation
 - All items in cart normalized to same tier (separate B2B variant IDs per tier)
-- VAT message for B2B: "Prices include VAT at 20%. Please email sales@conka.io for an invoice after purchase."
+- VAT message for B2B: "Prices include VAT at 20%. Please email info@conka.io for an invoice after purchase."
 
 **Subscription Retry Logic:** If variant doesn't support selling plan, automatically retries as one-time purchase.
 
@@ -473,7 +473,10 @@ Each answer scores 0-3 points toward each of the 4 protocols. Results show perce
 
 ### Support Email
 
-- `sales@conka.io` (defined in `app/lib/supportEmail.ts`)
+- `info@conka.io` — the single public contact address for the whole site.
+  Defined once in `COMPANY.email` (`app/lib/site.ts`) and re-exported as
+  `SUPPORT_EMAIL` from `app/lib/supportEmail.ts`. B2B enquiries are the only
+  exception: they route to the named account owner in `app/lib/b2bData.ts`.
 
 ---
 
