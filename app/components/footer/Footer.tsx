@@ -32,7 +32,7 @@ const SUPPORT: FooterLink[] = [
   { label: "FAQ", href: "/faq" },
   { label: "Shipping & returns", href: "/shipping" },
   { label: "Your account", href: "/account" },
-  { label: "Manage subscription", href: "/account/subscriptions" },
+  { label: "Manage subscription", href: "/account/manage" },
 ];
 
 const COLUMNS: { title: string; links: FooterLink[] }[] = [

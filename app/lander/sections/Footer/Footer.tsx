@@ -34,7 +34,7 @@ const COLUMNS = [
       { label: 'Contact Us', href: 'mailto:info@conka.io' },
       { label: 'FAQ', href: '#faq' },
       { label: 'Shipping & Returns', href: '/shipping' },
-      { label: 'Manage Subscription', href: '/account/subscriptions' },
+      { label: 'Manage Subscription', href: '/account/manage' },
     ],
   },
 ];

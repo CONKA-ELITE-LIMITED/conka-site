@@ -41,6 +41,20 @@ const nextConfig: NextConfig = {
   // Redirects
   async redirects() {
     return [
+      // Loop is decommissioned and its self-built portal is deleted. Skio's
+      // embedded portal at /account/manage replaces it. Permanent so bookmarks,
+      // Klaviyo templates and historic order emails we do not control still land
+      // somewhere useful. See docs/development/featurePlans/loop-decommission.md.
+      {
+        source: '/account/subscriptions',
+        destination: '/account/manage',
+        permanent: true,
+      },
+      {
+        source: '/account/subscriptions/:path*',
+        destination: '/account/manage',
+        permanent: true,
+      },
       // Trial: route start/lander traffic to the B variants. Temporary (307) on
       // purpose — easy to reverse without browsers hard-caching the redirect.
       {

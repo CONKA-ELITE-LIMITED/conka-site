@@ -18,7 +18,6 @@
  */
 
 import { formatPrice, formulaImages, quarterlyImages } from "@/app/lib/productData";
-import { subscriptionsUseSkio } from "@/app/lib/subscriptionsFlag";
 
 // ============================================
 // TYPES
@@ -447,7 +446,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
 // variants were attached to the same four Loop plans, whose pricing policy is
 // a fixed £0.00 adjustment, so the charged price is the variant price either
 // way. The one-time cadences ship no kit and keep their -FUNNEL- variants.
-const OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> = {
+const LEGACY_OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> = {
   flow: {
     "monthly-sub": {
       variantId: "gid://shopify/ProductVariant/58560937296246", // FLOW-STARTER-28 (first order → Loop swaps to FLOW-FUNNEL-20)
@@ -558,9 +557,11 @@ const SKIO_OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVarian
   },
 };
 
-/** The table the storefront sells from: Skio when the cutover flag is on, Loop otherwise. */
+/** The table the storefront sells from. Skio owns every contract since the Loop
+ *  decommission, so this is no longer a choice. LEGACY_OFFER_VARIANTS survives
+ *  for reverse lookups only, so migrated Loop-era lines still resolve. */
 function activeOfferVariants(): Record<OfferProduct, Record<OfferCadence, OfferVariantConfig>> {
-  return subscriptionsUseSkio() ? SKIO_OFFER_VARIANTS : OFFER_VARIANTS;
+  return SKIO_OFFER_VARIANTS;
 }
 
 // ============================================
@@ -730,7 +731,7 @@ const QUARTERLY_OTP_VARIANT_SET = new Set<string>();
 
 // Both tables feed the reverse maps regardless of the flag: during the Loop→Skio
 // transition window carts and analytics must recognise lines from either platform.
-for (const table of [OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
+for (const table of [LEGACY_OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
   for (const [product, cadences] of Object.entries(table) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
     for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
       if (config.variantId) {
@@ -1089,7 +1090,7 @@ export function getOfferByVariantId(
 ): { product: OfferProduct; cadence: OfferCadence; pricing: OfferPricing } | null {
   // Searches BOTH platform tables regardless of the flag: during the Loop→Skio
   // transition a cart can hold a line from either platform and both must resolve.
-  for (const table of [OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
+  for (const table of [LEGACY_OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
     for (const product of Object.keys(table) as OfferProduct[]) {
       for (const cadence of Object.keys(table[product]) as OfferCadence[]) {
         if (table[product][cadence].variantId === variantId) {
@@ -1101,52 +1102,6 @@ export function getOfferByVariantId(
   return null;
 }
 
-// ============================================
-// SUBSCRIPTION SWAP (account portal, SCRUM-1200)
-// ============================================
-// Loop's line-swap API reassigns the plan via the individual SELLING PLAN id
-// (`sellingPlanId`), NOT the selling-plan group id. Verified empirically against
-// live Loop on 2026-08-04: passing `sellingPlanGroupId` is silently ignored (the
-// swapped line keeps its old plan — e.g. a single Clear left stuck on the
-// "Monthly Dual" plan) and is rejected outright when combined with
-// pricingType 'NEW' (UNPROCESSABLE_ENTITY). Passing the target `sellingPlanId`
-// with pricingType 'NEW' correctly moves BOTH the plan and the line price.
-//
-// The plan GIDs already live in OFFER_VARIANTS (used at checkout), so there is no
-// separate table to hand-maintain — this just extracts the numeric id Loop's
-// swap body expects. Returns null if the cadence has no plan (e.g. one-time),
-// so the route can 503 rather than send a bad swap.
-
-/**
- * Numeric selling-plan id for a same-cadence offer swap, or null if unset.
- * Deliberately reads the LOOP table, never the flag: these two helpers feed
- * Loop's line-swap API, which mutates Loop contracts — a Loop contract must
- * only ever be swapped onto Loop variants and plans, even after the Skio flag
- * is on (the transition window has live Loop contracts either way).
- */
-export function getOfferSwapSellingPlanId(
-  product: OfferProduct,
-  cadence: OfferCadence,
-): string | null {
-  const gid = OFFER_VARIANTS[product]?.[cadence]?.sellingPlanId;
-  if (!gid) return null;
-  return gid.split("/").pop() ?? null;
-}
-
-/** Numeric Shopify variant id (Loop's swap body wants the number, not the GID). Loop table only — see above. */
-export function getOfferVariantNumericId(
-  product: OfferProduct,
-  cadence: OfferCadence,
-): string | null {
-  const cfg = OFFER_VARIANTS[product]?.[cadence];
-  if (!cfg?.variantId) return null;
-  return cfg.variantId.split("/").pop() ?? null;
-}
-
-/** The other two products at the same cadence — the valid swap targets. */
-export function getSwapTargets(current: OfferProduct): OfferProduct[] {
-  return (["flow", "clear", "both"] as OfferProduct[]).filter((p) => p !== current);
-}
 
 /**
  * Lowest and highest purchasable price across all cadences for a product,

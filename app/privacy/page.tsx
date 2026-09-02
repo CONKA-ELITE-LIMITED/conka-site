@@ -292,7 +292,7 @@ export default function PrivacyPage() {
                       <td className="py-3">Page view data</td>
                     </tr>
                     <tr>
-                      <td className="py-3 pr-4">Loop Subscriptions</td>
+                      <td className="py-3 pr-4">Skio</td>
                       <td className="py-3 pr-4">Subscription management</td>
                       <td className="py-3">
                         Subscription and billing data

@@ -60,7 +60,7 @@ export default function ShippingPage() {
                 Subscription orders ship automatically on your chosen schedule,
                 with free delivery. You can pause, skip, change, or cancel
                 anytime from your{" "}
-                <a className="underline" href="/account/subscriptions">
+                <a className="underline" href="/account/manage">
                   account
                 </a>
                 . No contracts.

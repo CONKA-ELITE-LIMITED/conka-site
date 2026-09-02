@@ -33,7 +33,6 @@ const requiredEnvVars = [
 
 // Optional environment variables (warn if missing, don't fail)
 const optionalEnvVars = [
-  "LOOP_API_KEY",
   "SKIO_API_TOKEN",
   "SKIO_STORE_ID_HASH",
   "SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID",
@@ -123,13 +122,9 @@ export const env = {
     return value;
   },
 
-  get loopApiKey(): string | undefined {
-    return process.env.LOOP_API_KEY;
-  },
-
-  // Skio subscription platform (Loop -> Skio migration, Phase 1 scaffold).
-  // Server-only. Optional until cutover; unset in dev degrades cleanly since
-  // nothing is wired into a purchase path yet.
+  // Skio subscription platform. Server-only. Skio owns every subscription
+  // contract since the Loop migration completed on 2026-09-02, so this is live
+  // on the purchase path; unset in dev degrades cleanly.
   get skioApiToken(): string | undefined {
     return process.env.SKIO_API_TOKEN;
   },
