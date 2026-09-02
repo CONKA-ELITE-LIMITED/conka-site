@@ -31,26 +31,6 @@ export const FORMULA_SELLING_PLANS: Record<FormulaPackSize, string> = {
   "28": "gid://shopify/SellingPlan/711429980534", // 28x shots monthly
 };
 
-/** Loop plan ID → frequency for LTV tagging (cart line attributes). */
-const SELLING_PLAN_FREQUENCY: Record<string, "weekly" | "biweekly" | "monthly"> = {
-  "711429882230": "weekly",
-  "711429947766": "biweekly",
-  "711429980534": "monthly",
-};
-
-/**
- * Map selling plan GID (or numeric ID) to plan frequency for cart attributes.
- * Returns undefined for one-time (no selling plan) or unknown plan.
- */
-export function getPlanFrequency(
-  sellingPlanId: string | undefined
-): "weekly" | "biweekly" | "monthly" | undefined {
-  if (!sellingPlanId) return undefined;
-  const match = sellingPlanId.match(/\d+/);
-  const numeric = match ? match[0] : sellingPlanId;
-  return SELLING_PLAN_FREQUENCY[numeric];
-}
-
 export const FORMULA_VARIANTS: Record<
   FormulaId,
   Record<FormulaPackSize, string>
