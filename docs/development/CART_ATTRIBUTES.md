@@ -11,7 +11,6 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 | Key | Values | When set | Notes |
 |-----|--------|----------|--------|
 | **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
-| **plan_frequency** | `weekly` \| `biweekly` \| `monthly` | Intended: whenever the line has a selling plan | **BROKEN, has never landed on a live order.** See the mapping section below. |
 
 ---
 
@@ -71,21 +70,13 @@ provides it. We never “detect the page” from the URL inside a shared helper.
 
 ---
 
-## `plan_frequency` does not work (verified 2026-09-02)
+## `plan_frequency` was removed (SCRUM-1300, 2026-09-02)
 
-`getPlanFrequency()` (`app/lib/shopifyProductMapping.ts`) resolves against `SELLING_PLAN_FREQUENCY`, which still holds only the three **retired** `FORMULA_SELLING_PLANS` ids:
+There used to be a second attribute, `plan_frequency`, derived from the line's selling plan id via a lookup table in `app/lib/shopifyProductMapping.ts`. **It never worked.** The table only ever held the three retired `FORMULA_SELLING_PLANS` ids, so the live Loop plans and all four Skio plans missed it, the lookup returned `undefined`, and the attribute was never sent. Verified across 205 live orders (10 Aug to 2 Sept 2026): zero carried it. It survived two subscription platform migrations undetected.
 
-| sellingPlanId (numeric) | plan_frequency | Status |
-|-------------------------|----------------|--------|
-| 711429882230 | weekly | Retired trial-pack plan |
-| 711429947766 | biweekly | Retired trial-pack plan |
-| 711429980534 | monthly | Retired trial-pack plan |
+It was deleted rather than repaired, because nothing consumed it and cadence is readable from the line's selling plan on the order anyway.
 
-Nothing we sell uses those. The live Loop plans (`712527348086`, `712527479158`) and all four Skio plans (`712928887158`, `712928919926`, `712928952694`, `712928985462`) are absent, so the lookup returns `undefined` and the attribute is never pushed. Confirmed against 205 live orders (10 Aug to 2 Sept): **zero carry `plan_frequency`**.
-
-The Build Your Order path is unaffected. `byoCheckout.ts` derives `_plan_frequency` from the chosen cadence directly rather than from the plan id, so it lands correctly there.
-
-Tracked in `docs/TODO.md`. One-time purchases correctly send no `plan_frequency`.
+**If cadence is ever wanted back as an attribute, derive it from the cadence the call site already knows**, the way `byoCheckout.ts` does for its `_plan_frequency`. That path never broke, precisely because it does not depend on a hardcoded plan-id map. A map keyed on vendor plan ids will break again at the next migration.
 
 ---
 

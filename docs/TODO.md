@@ -70,9 +70,11 @@ The exposure is wider than new signups. The account portal's product swap resolv
 
 ---
 
-### `plan_frequency` cart attribute has never landed (stale selling-plan map)
+### ~~`plan_frequency` cart attribute has never landed (stale selling-plan map)~~
 
-**Status:** Open, found 2026-09-02
+**Status:** DONE 2026-09-02 (SCRUM-1300). Removed rather than repaired, on branch `fix/plan-frequency-cleanup`. `getPlanFrequency` and `SELLING_PLAN_FREQUENCY` are deleted and `buildCartAttributes` now sends `source` only. `byoCheckout.ts` untouched. Kept below for the reasoning.
+
+**Original status:** Open, found 2026-09-02
 **Files:** `app/lib/shopifyProductMapping.ts` (`SELLING_PLAN_FREQUENCY`, `getPlanFrequency`), consumed by `app/context/CartContext.tsx` (`buildCartAttributes`)
 
 **Symptom:** `SELLING_PLAN_FREQUENCY` maps only the three retired `FORMULA_SELLING_PLANS` ids (`711429882230`, `711429947766`, `711429980534`). Nothing we sell uses them. The live Loop plans (`712527348086`, `712527479158`) and all four Skio plans (`712928887158`, `712928919926`, `712928952694`, `712928985462`) are absent, so `getPlanFrequency()` returns `undefined` and the attribute is never pushed. Verified against 205 live orders (10 Aug to 2 Sept): **zero carry `plan_frequency`**. `docs/development/CART_ATTRIBUTES.md` documented it as live and has been corrected.
