@@ -7,7 +7,6 @@ import { trackPurchaseAddToCart, getPurchaseOrigin } from '@/app/lib/analytics';
 import { getAcceptedUpsellOrigin } from '@/app/lib/cartUpsell';
 import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
-import { getPlanFrequency } from '@/app/lib/shopifyProductMapping';
 
 const CART_ID_KEY = 'shopify_cart_id';
 
@@ -24,17 +23,22 @@ interface AddToCartMetadata {
   sessionId?: string; // Quiz session ID
 }
 
-/** Build cart line attributes for LTV tagging (sent to Shopify as line item properties). */
+/**
+ * Build cart line attributes for LTV tagging (sent to Shopify as line item properties).
+ *
+ * `source` only. A `plan_frequency` attribute used to be derived here from the
+ * selling plan id, but its lookup table was never updated past the retired
+ * trial-pack plans, so it silently resolved to undefined on every live order
+ * across two subscription platforms and was removed (SCRUM-1300). Cadence is
+ * readable from the line's selling plan on the order. If it is ever wanted back
+ * as an attribute, derive it from the cadence the call site already knows, the
+ * way `byoCheckout.ts` does, not from a hardcoded plan-id map.
+ */
 function buildCartAttributes(
-  metadata: AddToCartMetadata | undefined,
-  sellingPlanId: string | undefined
+  metadata: AddToCartMetadata | undefined
 ): Array<{ key: string; value: string }> {
-  const attrs: Array<{ key: string; value: string }> = [];
   const source = metadata?.source || "direct";
-  attrs.push({ key: "source", value: source });
-  const frequency = getPlanFrequency(sellingPlanId);
-  if (frequency) attrs.push({ key: "plan_frequency", value: frequency });
-  return attrs;
+  return [{ key: "source", value: source }];
 }
 
 interface CartContextType {
@@ -169,7 +173,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return null;
     }
 
-    const attributes = buildCartAttributes(metadata, sellingPlanId);
+    const attributes = buildCartAttributes(metadata);
     const cartAttributes = buildMetaCartAttributes();
     // Carry the precise listicle origin (<slug>-<section>) as a hidden, cart-level
     // attribute so the orders/paid webhook can tag the order by persona (SCRUM-1180).
