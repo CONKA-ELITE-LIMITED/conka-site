@@ -1,5 +1,18 @@
 # Mobile Subscription Integration
 
+> **SUPERSEDED (2026-09-02). Do not build against this document.**
+>
+> Every API contract below is Loop's, and Loop was decommissioned when the
+> subscription base migrated to Skio. The two-tier Admin/Storefront model, the
+> session-token exchange, the ID formats and every gotcha listed here describe a
+> platform we no longer run. `LOOP_API_KEY` no longer exists in this repo.
+>
+> The shape of the problem is still real, so this is kept for the reasoning
+> rather than deleted. A mobile subscription surface now has two options: embed
+> Skio's customer portal the way the web app does at `/account/manage`, or build
+> against Skio's GraphQL API directly. Start from
+> `docs/development/featurePlans/skio-migration.md` sections 7 and 8.
+
 Reference guide for replicating or extending the customer portal's subscription management in a native or cross-platform mobile app. Covers auth, data flow, the subscription API contract, and mutation patterns.
 
 ---

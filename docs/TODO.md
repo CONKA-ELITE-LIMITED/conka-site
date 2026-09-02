@@ -5,6 +5,23 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Subscriptions (Skio)
+
+### Klaviyo email templates still link to the deleted `/account/subscriptions`
+
+**Status:** Open, low urgency. Covered by a redirect in the meantime.
+**Files:** None in this repo. Klaviyo template editor.
+
+**Symptom:** the Loop-era self-built portal at `/account/subscriptions` was deleted in the Loop decommission (`docs/development/featurePlans/loop-decommission.md`). Klaviyo templates and historic order emails, which this repo does not control, still point there.
+
+**Mitigation already shipped:** `next.config.ts` carries a permanent redirect from `/account/subscriptions` and `/account/subscriptions/:path*` to `/account/manage`, so no customer hits a 404. Decision (Rudh, 2026-09-02): rely on the redirect, fix the templates at leisure.
+
+**What closes it:** sweep the Klaviyo templates for `/account/subscriptions` and repoint them at `/account/manage`, then the redirect becomes belt and braces rather than load-bearing.
+
+**Why deferred:** template editing outside the codebase, and the redirect makes it invisible to customers.
+
+---
+
 ## Shopify / Pricing
 
 ### Formally move one-time shipping out of the SKU prices and into a real Shopify shipping rate
