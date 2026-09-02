@@ -110,7 +110,7 @@ Does this component need interactivity (state, event handlers, browser APIs)?
 3. **File placement:**
    - Pages/routes: `app/`
    - Shared components: `app/components/`
-   - Page-specific components: co-locate with the page (e.g. `app/account/subscriptions/utils.ts`)
+   - Page-specific components: co-locate with the page (e.g. `app/account/orders/utils.ts`)
    - Hooks: `app/hooks/`
    - Utils: `app/lib/`
 4. **Styling:**

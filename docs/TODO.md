@@ -7,6 +7,21 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ## Subscriptions (Skio)
 
+### Unconfirmed: does a Shopify-side address edit reach the Skio contract?
+
+**Status:** Open, needs a factual answer from Skio. Low frequency, high impact per occurrence.
+**Files:** `app/api/auth/customer/update/route.ts`, `app/account/details`
+
+**The question.** Loop stored a shipping address per contract and never re-read Shopify, so `/api/auth/customer/update` mirrored every successful write across to each active or paused Loop contract. That mirror was deleted in the Loop decommission on the recorded basis that "Skio writes address and payment changes back to Shopify automatically" (Noah at Skio, 2026-08-20).
+
+**The gap.** That statement is the Skio to Shopify direction. It does not establish that a customer editing their address on `/account/details` propagates to their Skio contract. If it does not, that customer's next renewal ships to the old address, silently, exactly the failure the Loop mirror existed to prevent.
+
+**What closes it:** ask Skio directly whether a contract re-reads the Shopify customer default address at billing, or holds its own copy captured at creation. If it holds its own copy, either restore an equivalent mirror against Skio's API or remove the address fields from `/account/details` so the Skio portal is the only place an address can be changed.
+
+**Why deferred:** needs a vendor answer, not a code change. Recorded in `docs/features/CUSTOMER_PORTAL.md` so the next reader does not assume it is settled.
+
+---
+
 ### Klaviyo email templates still link to the deleted `/account/subscriptions`
 
 **Status:** Open, low urgency. Covered by a redirect in the meantime.
@@ -163,7 +178,7 @@ Error: tagsAdd failed: Access denied for tagsAdd field.
 
 **Status:** DONE (Phase 4, July 2026). The dead protocol code (`protocolPricing`, `PROTOCOL_COLORS`, `getProtocolVariantId` and the unused variant-audit helpers) is deleted. What genuinely still serves existing subscribers is quarantined in `app/lib/legacy/protocolSubscriptions.ts`, and the `productData` barrel no longer exports anything protocol-related.
 
-**Remaining follow-up:** `app/api/auth/subscriptions/[id]/pause/route.ts` carries its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID). Unifying it with the legacy module means touching the renewal path for paying subscribers, so it needs an end-to-end test of a real subscription edit. Left deliberately.
+**Remaining follow-up: RESOLVED 2026-09-02 by deletion.** `app/api/auth/subscriptions/[id]/pause/route.ts` carried its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID), left alone because unifying it meant touching the renewal path for paying subscribers. The route was deleted in the Loop decommission, so the duplicate is gone and the legacy module is the only copy. Skio manages pausing now.
 
 ---
 

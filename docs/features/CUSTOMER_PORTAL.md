@@ -61,9 +61,11 @@ The Edit Profile modal POSTs to `/api/auth/customer/update` with `firstName`, `l
 - Email is read-only. Shopify manages it through its own account flow, not the `customerUpdate` mutation.
 - `CustomerUpdateInput` supports only `firstName` and `lastName`. Phone is set via `CustomerAddressInput.phoneNumber` on the address mutation.
 - If the customer already has a default address the route uses `customerAddressUpdate`, otherwise `customerAddressCreate`. Both take a `defaultAddress: Boolean`, so there is no separate default-address mutation in this API.
-- `CustomerAddressInput` uses `territoryCode` (ISO country, e.g. `GB`) and `zoneCode`. The route maps frontend country names via `COUNTRY_CODE_MAP`.
+- `CustomerAddressInput` uses `territoryCode` (ISO country, e.g. `GB`) and `zoneCode`. Both are round-tripped from the session query, not derived from the display names the form also posts.
 
-**No subscription address mirroring is needed.** Loop kept a shipping address per contract that never re-read Shopify, so the route used to mirror every write across to Loop. Skio writes address and payment changes back to Shopify itself, so that mirror was deleted with the rest of the Loop integration.
+**The subscription address mirror is gone, and this is worth understanding before touching it.** Loop kept a shipping address per contract that never re-read Shopify, so this route used to push every successful write across to every active or paused Loop contract. Without it, a customer who changed their address kept receiving deliveries to the old one.
+
+That mirror was deleted with the rest of the Loop integration, and the recorded justification (Noah at Skio, 2026-08-20) is that **Skio writes address and payment changes back to Shopify automatically**. Note the direction: that establishes Skio to Shopify, not Shopify to Skio. **It has not been confirmed that a Shopify-side address edit propagates to a Skio contract.** Until it is, treat the Skio portal as the authoritative place to change a delivery address. Tracked in `docs/TODO.md`.
 
 ## Orders
 

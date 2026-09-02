@@ -7,9 +7,9 @@
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Close the broken customer paths | Not Started |
-| 2 | Delete the Loop integration | Not Started |
-| 3 | Correct the docs | Not Started |
+| 1 | Close the broken customer paths | Complete (2026-09-02) |
+| 2 | Delete the Loop integration | Complete (2026-09-02) |
+| 3 | Correct the docs | Complete (2026-09-02) |
 
 Jira: not ticketed. The Atlassian token expired during scoping and the work was tracked here instead.
 
@@ -56,7 +56,9 @@ No new UI. Skio's embedded portal at `/account/manage` already owns the surface,
 5. **Delete the self-built portal UI.**
    `app/account/subscriptions/**` and all of `app/components/subscriptions/` (23 files, including `CancellationModal.tsx` and its RETENTION15 flow), plus `app/components/account/NextDeliveryHero.tsx`, which imports the deleted utils.
 
-6. **Remove the Loop address-mirror** from `app/api/auth/customer/update/route.ts`: `LOOP_ADMIN_BASE`, `pushAddressToLoopSubscription`, `syncLoopSubscriptionAddresses` and the call site. Safe to drop, Skio writes addresses back to Shopify itself.
+6. **Remove the Loop address-mirror** from `app/api/auth/customer/update/route.ts`: `LOOP_ADMIN_BASE`, `pushAddressToLoopSubscription`, `syncLoopSubscriptionAddresses` and the call site.
+
+   The recorded justification is that Skio writes address and payment changes back to Shopify itself. **That is the Skio to Shopify direction, and it does not establish the reverse**, so whether a Shopify-side edit reaches a Skio contract is unconfirmed. Raised in review, tracked in `docs/TODO.md`, and flagged in `CUSTOMER_PORTAL.md` so nobody assumes it is settled.
 
 7. **Collapse the flags.**
    Delete `subscriptionsInTransition` and `subscriptionsSkioOnly` from `app/lib/subscriptionsFlag.ts` and resolve `subscriptionsUseSkio` to always-Skio at its call sites: `NavigationDesktop.tsx`, `NavigationMobile.tsx`, `offerData.ts`, `app/account/page.tsx`. Rename `OFFER_VARIANTS` to `LEGACY_OFFER_VARIANTS` so its surviving role is explicit.
@@ -65,7 +67,7 @@ No new UI. Skio's embedded portal at `/account/manage` already owns the surface,
 
 8. **Rewrite `docs/features/CUSTOMER_PORTAL.md`.** 448 lines, entirely Loop-era, including a Key File Reference pointing at files this work deletes.
 
-9. **Fix stale references** in `docs/features/MOBILE_SUBSCRIPTION_INTEGRATION.md`, `docs/workflows/04-shopify-commerce.md`, `docs/CONKA_BUSINESS_CONTEXT.md` and `CLAUDE.md`.
+9. **Fix stale references** in `docs/features/MOBILE_SUBSCRIPTION_INTEGRATION.md`, `docs/workflows/04-shopify-commerce.md`, `docs/workflows/02-implementation-workflow.md`, `docs/development/featurePlans/account-portal-funnel-simplification.md`, `docs/TODO.md` and `CLAUDE.md`. Also `skio-migration.md` sections 1, 7 and 8, which the parent doc's own readers are pointed at.
 
 ---
 
@@ -73,7 +75,7 @@ No new UI. Skio's embedded portal at `/account/manage` already owns the surface,
 
 **Rolling back to Loop is already impossible**, because the app is uninstalled. `NEXT_PUBLIC_SKIO_ENABLED` is therefore a dead lever and collapsing it costs nothing. Vercel Instant Rollback remains the real rollback path.
 
-**`OFFER_VARIANTS` survives the deletion.** It feeds the both-table reverse maps in `offerData.ts`, which is how migrated Loop-era subscription lines still resolve to a product on orders and in the portal. Only the Loop-mutation-only helpers die with the routes: `getOfferSwapSellingPlanId` and the swap variant-id helper. `getSwapTargets` is platform-neutral and stays. Renaming the table to `LEGACY_OFFER_VARIANTS` prevents the next reader assuming it is a live sales table.
+**`OFFER_VARIANTS` survives the deletion.** It feeds the both-table reverse maps in `offerData.ts`, which is how migrated Loop-era subscription lines still resolve to a product on orders and in the portal. The whole SUBSCRIPTION SWAP section died with the routes it fed: `getOfferSwapSellingPlanId`, `getOfferVariantNumericId` and `getSwapTargets`. The first two were Loop-mutation-only; `getSwapTargets` is platform-neutral but had zero remaining callers once the portal UI went, so it went too. Renaming the table to `LEGACY_OFFER_VARIANTS` prevents the next reader assuming it is a live sales table.
 
 ## Rabbit holes
 
@@ -93,8 +95,15 @@ No new UI. Skio's embedded portal at `/account/manage` already owns the surface,
 - Deleting 16 API routes at once means any external consumer we do not know about fails. Mitigated by the fact that they already fail: Loop is gone.
 - The flag collapse touches the account entry point, which every logged-in customer hits. Worth eyeballing `/account` and `/account/manage` on the Vercel preview before merging.
 
+## Corrections from review
+
+An independent review after the first two commits found three things the plan missed. All fixed in the same PR.
+
+- **`/account/orders` and `/account/details` were left unreachable.** The old `/account` rendered `AccountSubNav`, which carried the only links to them. Redirecting `/account` to the portal removed the only route in, and `SkioPortalFrame` deliberately stripped our account chrome. Those are Shopify surfaces covering one-time purchases and the customer record, which the Skio iframe does not reach. Fixed by rendering `AccountSubNav` on `/account/manage`, which is now the account hub. The plan's claim that "Skio's portal already owns the surface" was too broad: it owns subscriptions, not orders or profile.
+- **Three more orphans.** `app/hooks/useSubscriptionEditor.ts`, `app/lib/subscriptionProduct.ts` and `app/lib/productSizeUtils.ts`, 358 lines, were reachable only from deleted components. Step 4 said "the two hooks"; there was a third.
+- **`skio-migration.md` sections 1, 7 and 8 described deleted code as live**, and it is the doc `CLAUDE.md` and `CUSTOMER_PORTAL.md` both point readers at. Phase 3 listed four docs to correct and omitted the parent.
+
 ## References
 
 - [`skio-migration.md`](skio-migration.md) section 12, the decommission list
-- [`skio-migration-files/post-migration-tasks.md`](skio-migration-files/post-migration-tasks.md), the ops half of the same cutover
 - `docs/features/CUSTOMER_PORTAL.md`, rewritten in Phase 3

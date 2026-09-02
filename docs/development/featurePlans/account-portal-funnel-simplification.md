@@ -1,5 +1,13 @@
 # Account Portal — Funnel Simplification
 
+> **SUPERSEDED (2026-09-02).** This plan shaped the self-built Loop account
+> portal, and every file it names (`app/account/subscriptions/**`,
+> `app/components/subscriptions/**`) was deleted in the Loop decommission. Skio's
+> embedded portal at `/account/manage` replaced the surface. Kept for the
+> reasoning behind the card and cadence decisions, not as current behaviour.
+> See `loop-decommission.md`.
+
+
 Simplify the subscription portal from its protocol-era shape to the funnel product model (Flow / Clear / Both × monthly / quarterly), taking structural cues from Magic Mind's Skio portal. This is the **content / IA / commerce-model** simplification — distinct from and complementary to the cosmetic Clinical→Simple DTC restyle in [`archive/account-portal-simple-dtc.md`](./archive/account-portal-simple-dtc.md) (SCRUM-1188), which deliberately ring-fenced this logic.
 
 ## Problem (root cause: wrong abstraction)
