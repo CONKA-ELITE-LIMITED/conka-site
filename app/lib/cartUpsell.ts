@@ -9,7 +9,7 @@ import {
   type OfferProduct,
   type OfferCadence,
 } from "./offerData";
-import { formatPrice, bottleRenders } from "./productData";
+import { formatPrice, bottleRendersCutout } from "./productData";
 
 // ============================================================================
 // CART UPSELL (SCRUM-1201 / SCRUM-1202)
@@ -45,28 +45,38 @@ export interface CartUpsellTileOffer {
   targetSellingPlanId?: string;
 
   /** Display (the tile is copy-only; all wording is decided here). */
-  /** Product shot, only when the product is what changes. Absent on OTP to sub. */
-  thumbnail?: string;
   headline: string;
-  /** The hook, rendered as a filled badge. Keep it to one short line. */
+  /** The hook, rendered as the badge straddling the tile's top edge. One short line. */
   valueLine: string;
-  /** Muted reassurance under the badge, e.g. "Pause or cancel anytime". */
+  /** Muted reassurance centred above the CTA, e.g. "Pause or cancel anytime". */
   highlight?: string;
+  /** Muted descriptor set beside `productImage`, in the text half of the split row. */
+  subline?: string;
   /**
-   * Gift thumbnails shown as a small row, so the offer is seen and not just
+   * Gift thumbnails shown as a four-up row, so the offer is seen and not just
    * read. `fit` mirrors `OfferGift.imageFit`: the tall transparent app render
    * has to be contained or the crop eats it, exactly as on the PDP stack.
    */
   giftImages?: { src: string; fit: "cover" | "contain" }[];
+  /**
+   * The render of the formula being ADDED, when the product itself is what
+   * changes. Only the new one: shown beside the bottle they already hold, the
+   * two amber shots are near-identical and the row reads as a puzzle rather
+   * than an offer. A cut-out rather than the studio shot, because it sits on
+   * the tile's own tint.
+   */
+  productImage?: { src: string; alt: string };
   ctaLabel: string;
 }
 
-/** The copy fields a builder produces (everything the tile shows except identity/target/thumbnail). */
+/** The copy fields a builder produces (everything the tile shows except identity and target). */
 interface UpsellCopy {
   headline: string;
   valueLine: string;
   highlight?: string;
+  subline?: string;
   giftImages?: { src: string; fit: "cover" | "contain" }[];
+  productImage?: { src: string; alt: string };
   ctaLabel: string;
 }
 
@@ -166,7 +176,7 @@ function buildOtpToSubCopy(
     ? subCadence === "quarterly-sub"
       ? `Free shipping and ${sub.freeShots} free shots with every delivery`
       : `Free shipping and ${sub.freeShots} free shots on your first order`
-    : "Free shipping, cancel anytime";
+    : "Free shipping on every delivery";
 
   return {
     headline: "Make it a subscription",
@@ -174,10 +184,13 @@ function buildOtpToSubCopy(
     // round number is both more memorable and more credible than an exact one,
     // which invites arithmetic. Floored rather than rounded so the figure is
     // never larger than what is actually given away. £82.96 -> "£80+".
+    // The badge is a pill, so whatever lands here has to stay a hook. Without a
+    // kit to price there is nothing to count, so it falls back to the standing
+    // promise and the shots sentence takes the reassurance line instead.
     valueLine: kitValue
       ? `£${Math.floor(kitValue / 10) * 10}+ of gifts free`
-      : shotsLine,
-    highlight: kitValue ? "Pause or cancel anytime" : undefined,
+      : "Free shipping, cancel anytime",
+    highlight: kitValue ? "Pause or cancel anytime" : shotsLine,
     // Bonus shots lead, same order as the PDP stack, so the four tiles are the
     // whole kit rather than the three physical extras.
     giftImages: kitValue
@@ -213,8 +226,16 @@ function buildSingleToBothCopy(
   const addedName = product === "flow" ? "Clear" : "Flow";
   return {
     headline: `Add ${addedName} for the full day`,
-    valueLine: "The complete AM + PM system",
-    highlight: both.freeShots ? `+${both.freeShots} free shots` : undefined,
+    // The bonus shots are the concrete give, so they take the badge — the same
+    // slot the kit value holds on the subscription offer. The AM + PM sentence
+    // is a description, not a hook, so it steps down to the sub-line beside the
+    // render. Without bonus shots there is nothing to put in a pill, so the
+    // sentence takes the badge back and the sub-line drops.
+    valueLine: both.freeShots
+      ? `+${both.freeShots} free shots`
+      : "The complete AM + PM system",
+    subline: both.freeShots ? "The complete AM + PM system" : undefined,
+    productImage: bottleRendersCutout[product === "flow" ? "clear" : "flow"],
     ctaLabel: `Upgrade to Both · +${amount}${periodSuffix}`,
   };
 }
@@ -257,15 +278,6 @@ export function getCartUpsell(lines: CartLine[]): CartUpsellTileOffer | null {
     originalQuantity: line.quantity,
     targetVariantId: targetVariant.variantId,
     targetSellingPlanId: targetVariant.sellingPlanId,
-    // Shown only when the product itself is the upgrade. On OTP to subscription
-    // the product is unchanged, so a bottle shot says nothing the shopper does
-    // not already know and costs the width the gift tiles need.
-    // V4 label render, not OFFER_PRODUCTS.thumbnail: that map still points at
-    // the April cut-outs, which show the old label.
-    thumbnail:
-      upgrade.type === "single_to_both"
-        ? bottleRenders[upgrade.product].src
-        : undefined,
     ...copy,
   };
 }

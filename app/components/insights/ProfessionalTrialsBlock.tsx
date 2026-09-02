@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP, withMotion, revealUp } from "@/app/lib/motion";
 import { resolveReading } from "./insightMotion";
 import { PROFESSIONAL_TRIALS } from "@/app/lib/revolutTrialData";
+import { supportMailtoHref } from "@/app/lib/supportEmail";
 
 export default function ProfessionalTrialsBlock() {
   const root = useRef<HTMLDivElement>(null);
@@ -66,7 +67,7 @@ export default function ProfessionalTrialsBlock() {
           {PROFESSIONAL_TRIALS.note}
         </p>
         <a
-          href="mailto:sales@conka.io?subject=Trial enquiry"
+          href={supportMailtoHref({ subject: "Trial enquiry" })}
           className="inline-flex items-center justify-center w-full lg:w-auto px-6 py-3 border border-white/40 text-white/70 font-mono text-[11px] uppercase tracking-[0.18em] hover:border-white hover:text-white transition-colors min-h-[44px] whitespace-nowrap"
         >
           Enquire about a trial

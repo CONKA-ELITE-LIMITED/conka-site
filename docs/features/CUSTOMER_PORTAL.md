@@ -402,7 +402,7 @@ On clicking Update:
 
 1. Button shows loading state
 2. On success: _"Check your email — we've sent a secure link to update your card."_ (auto-dismisses after 8 seconds, button disabled for 30 seconds to prevent spam)
-3. On failure: _"Something went wrong. Please contact sales@conka.io."_
+3. On failure: _"Something went wrong. Please contact info@conka.io."_
 
 **API routes:**
 
