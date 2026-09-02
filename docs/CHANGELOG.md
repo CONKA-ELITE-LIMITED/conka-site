@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-02** | Fixed the blog build failing a whole deploy on a single dropped Notion connection: transport-level `fetch failed` errors now retry three times with backoff (the Notion SDK never retried them), and error messages name the real cause instead of a bare "fetch failed"
 - **2026-09-02** | Removed the plan_frequency cart attribute and its stale selling-plan map, which had silently resolved to nothing on every order across two subscription platforms (SCRUM-1300)
 - **2026-09-02** | Audited tags and attribution on the first Skio orders: attribution is intact, and documented who writes each order tag, why Skio's thinner set costs us nothing, and the two long-standing gaps it surfaced (`persona:` tags blocked on a missing `write_orders` scope, `plan_frequency` never landing). Re-keyed the listicle renewal test off Loop tags onto `checkout_token`. Docs only
 - **2026-09-02** | Pointed every customer contact link at info@conka.io (the account portal and professionals trial CTA were sending people to a sales@ address), sourced it from one constant, and fixed mailto subjects arriving with a plus sign instead of a space

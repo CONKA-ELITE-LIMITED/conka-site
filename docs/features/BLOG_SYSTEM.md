@@ -30,6 +30,10 @@ grep -c "queried Notion for the" build.log   # 1
 
 Outside a build this is unchanged, so a dev server still picks up a Notion edit on refresh, and two local `npm run build` runs still read Notion twice.
 
+**4. A dropped connection retries instead of failing the deploy.** Guards 2 and 3 handle a build where every request *succeeds*. This is the other half: a request that never reaches Notion at all. `@notionhq/client` retries 429s and 5xxs, but its `canRetry` bails on anything that is not an `APIResponseError`, so a transport failure (dropped socket, DNS blip, connect timeout) got **zero** retries and surfaced as a bare `TypeError: fetch failed`. A build converts ~58 posts, each one many block requests, so one dropped connection anywhere in that fan-out failed the whole deploy with a message that named nothing actionable. `notionBuildFetch` in `app/lib/notion.ts` now retries a rejected `fetch` three times with jittered backoff, and every Notion error message unwraps `err.cause`, so a genuine outage reports `ECONNRESET` or `ENOTFOUND` rather than "fetch failed". Only read requests go through this client (the `scripts/legacy-blog/*` writers build their own), so the retry cannot duplicate a write.
+
+If a build still fails here, the message will say `failed N times without reaching a response` and name the cause: that is a real network or Notion availability problem, not a blip, and a rebuild is the right first move only once Notion is up.
+
 **Build-speed note (future work).** Because each deploy uses a fresh cache key, every deploy re-reads the whole blog from Notion. The row query is now a single request; the remaining cost is the per-post body fetch. At ~58 short posts that is a couple of seconds. If the archive grows large, build time will scale with it: batch the per-post fetches (`Promise.all`, see Known gaps) before reaching for anything more exotic, such as scoping the deploy key so unchanged posts reuse a prior deploy's cache.
 
 ### What already fails loudly (do not re-add these guards)
