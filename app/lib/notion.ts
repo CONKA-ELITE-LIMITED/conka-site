@@ -38,6 +38,39 @@ const DEPLOY_ID =
 const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
 
 /**
+ * How many extra attempts a request gets when it never reaches Notion at all.
+ *
+ * `@notionhq/client` retries 429s and 5xxs, but its `canRetry` bails on
+ * anything that is not an `APIResponseError`, so a transport failure — a
+ * dropped socket, a DNS blip, a connect timeout — gets zero retries and
+ * surfaces as a bare `TypeError: fetch failed`. A build converts ~58 posts,
+ * each one many block requests, so a single dropped connection anywhere in
+ * that fan-out failed the whole deploy. Three extra attempts with backoff
+ * cost nothing on a healthy build and absorb the blip on an unhealthy one.
+ */
+const FETCH_RETRIES = 3;
+const FETCH_RETRY_BASE_MS = 300;
+
+/**
+ * An error message that names the real reason.
+ *
+ * undici throws `TypeError: fetch failed` and hides what actually happened
+ * (`ECONNRESET`, `ENOTFOUND`, `UND_ERR_CONNECT_TIMEOUT`) in `cause`, so
+ * logging `err.message` alone tells you nothing you can act on.
+ */
+function describeError(err: unknown): string {
+  if (!(err instanceof Error)) return String(err);
+  const cause: unknown = err.cause;
+  // A wrapper that already quoted its cause must not quote it twice.
+  if (!(cause instanceof Error) || err.message.includes(cause.message)) {
+    return err.message;
+  }
+  const code =
+    "code" in cause && typeof cause.code === "string" ? ` [${cause.code}]` : "";
+  return `${err.message}: ${cause.message}${code}`;
+}
+
+/**
  * The Notion SDK's `fetch`, made safe to cache across deploys.
  *
  * The SDK calls `fetch`; Next patches it; a statically generated route caches
@@ -56,13 +89,40 @@ const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
  * block-body reads (68 of the 70 cached entries) are covered too. Notion ignores
  * the extra header.
  */
-function notionBuildFetch(
+async function notionBuildFetch(
   url: Parameters<typeof fetch>[0],
   init?: Parameters<typeof fetch>[1],
 ): Promise<Response> {
   const headers = new Headers(init?.headers);
   headers.set("x-conka-deploy", DEPLOY_ID);
-  return fetch(url, { ...init, headers });
+  const request = { ...init, headers };
+
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= FETCH_RETRIES; attempt += 1) {
+    try {
+      return await fetch(url, request);
+    } catch (err) {
+      // An aborted request was cancelled on purpose; retrying would fight it.
+      if (init?.signal?.aborted) throw err;
+      lastError = err;
+      if (attempt === FETCH_RETRIES) break;
+      const backoff = FETCH_RETRY_BASE_MS * 2 ** attempt;
+      console.warn(
+        `[blog] Notion request dropped before it got a response ` +
+          `(attempt ${attempt + 1}/${FETCH_RETRIES + 1}), retrying: ` +
+          describeError(err),
+      );
+      await new Promise((resolve) =>
+        setTimeout(resolve, backoff * (0.5 + Math.random())),
+      );
+    }
+  }
+
+  throw new Error(
+    `[blog] Notion request failed ${FETCH_RETRIES + 1} times without ` +
+      `reaching a response: ${describeError(lastError)}`,
+    { cause: lastError },
+  );
 }
 
 /** The shared Notion client, or null when the blog is not configured. */
@@ -434,9 +494,9 @@ export const pageToMarkdown = cache(async function pageToMarkdown(
     // hero, metadata and CTA but no article text: live, indexable, and green.
     // An empty page reads as deliberate, so it is worse than a 404.
     throw new Error(
-      `[blog] failed to convert page ${pageId} to markdown, refusing to ship an empty post: ${
-        err instanceof Error ? err.message : String(err)
-      }`,
+      `[blog] failed to convert page ${pageId} to markdown, refusing to ship ` +
+        `an empty post: ${describeError(err)}`,
+      { cause: err },
     );
   }
 });
