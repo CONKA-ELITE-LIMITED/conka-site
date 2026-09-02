@@ -1,6 +1,6 @@
-# Cart / checkout attributes (LTV tagging)
+# Cart / checkout attributes and order tags
 
-Single source of truth for attributes we send at add-to-cart. These are passed as **cart line attributes** to Shopify and appear as **line item properties** on the order.
+Single source of truth for **what metadata lands on a CONKA order**: the attributes we send at add-to-cart (passed as **cart line attributes** to Shopify, appearing as **line item properties** on the order), and the **order tags** written by third-party apps.
 
 This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePlans/archive/`](./featurePlans/archive/LTV_TAGGING_PLAN.md).
 
@@ -11,7 +11,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 | Key | Values | When set | Notes |
 |-----|--------|----------|--------|
 | **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
-| **plan_frequency** | `weekly` \| `biweekly` \| `monthly` | Only when the line has a selling plan (subscription) | Derived from `sellingPlanId` via Loop plan IDs. Omitted for one-time purchases. |
+| **plan_frequency** | `weekly` \| `biweekly` \| `monthly` | Intended: whenever the line has a selling plan | **BROKEN, has never landed on a live order.** See the mapping section below. |
 
 ---
 
@@ -71,15 +71,21 @@ provides it. We never “detect the page” from the URL inside a shared helper.
 
 ---
 
-Mapped from Shopify selling plan GID (Loop subscription plans):
+## `plan_frequency` does not work (verified 2026-09-02)
 
-| sellingPlanId (numeric) | plan_frequency |
-|-------------------------|----------------|
-| 711429882230 | weekly |
-| 711429947766 | biweekly |
-| 711429980534 | monthly |
+`getPlanFrequency()` (`app/lib/shopifyProductMapping.ts`) resolves against `SELLING_PLAN_FREQUENCY`, which still holds only the three **retired** `FORMULA_SELLING_PLANS` ids:
 
-GIDs are in the form `gid://shopify/SellingPlan/711429882230`; we match on the numeric part. One-time purchases do not send `plan_frequency`.
+| sellingPlanId (numeric) | plan_frequency | Status |
+|-------------------------|----------------|--------|
+| 711429882230 | weekly | Retired trial-pack plan |
+| 711429947766 | biweekly | Retired trial-pack plan |
+| 711429980534 | monthly | Retired trial-pack plan |
+
+Nothing we sell uses those. The live Loop plans (`712527348086`, `712527479158`) and all four Skio plans (`712928887158`, `712928919926`, `712928952694`, `712928985462`) are absent, so the lookup returns `undefined` and the attribute is never pushed. Confirmed against 205 live orders (10 Aug to 2 Sept): **zero carry `plan_frequency`**.
+
+The Build Your Order path is unaffected. `byoCheckout.ts` derives `_plan_frequency` from the chosen cadence directly rather than from the plan id, so it lands correctly there.
+
+Tracked in `docs/TODO.md`. One-time purchases correctly send no `plan_frequency`.
 
 ---
 
@@ -96,3 +102,49 @@ GIDs are in the form `gid://shopify/SellingPlan/711429882230`; we match on the n
 May be added later for richer LTV segmentation:
 
 - `formula` – `flow` \| `clarity` \| `both` for the product added.
+
+---
+
+## Order tags (who writes them, who reads them)
+
+Order tags are a **separate surface** from the attributes above. Our application code **writes** one set of tags and **never reads** any. Everything else on an order is written by a third-party app.
+
+| Tag | Written by | Read by | Keep? |
+|-----|-----------|---------|-------|
+| `IMPORTSYNERGY` | Synergy's connector, on successful pull | **Synergy.** Removing it causes a failed resend; Synergy will not accept the same order twice | **Load-bearing. Never remove or touch** |
+| `listicle`, `persona:<slug>` | **us**, `app/api/webhooks/shopify/orders/route.ts` on `orders/paid` (SCRUM-1180) | Our own listicle reporting | Yes, but see the scope bug below |
+| `Alia` | the Alia popup app | Alia's own reporting | Ignore |
+| `subscription_order`, `first_subscription_order`, `Subscription Recurring Order`, `Billing cycle #N`, `Deliver every 1 MONTH`, `Pay every 1 MONTH`, `Subscription #<id>`, `<Plan name> - Funnel` | **Loop** | Nothing automated. Humans reading an order in Shopify admin, and (until corrected) one analysis query | Historical only. Loop is decommissioned |
+| `Subscription First Order` | **Skio** | Nothing automated | Fine as-is |
+
+### Skio writes far fewer tags than Loop, and that is not a loss
+
+Loop mirrored its own internal state onto every order because it had nowhere else to put it. Skio keeps that state in Skio and stamps one tag. Verified 2026-09-02 against the first nine Skio-native orders.
+
+Nothing automated depended on the Loop tags:
+
+- **Our code** never reads order tags (`app/lib/shopifyAdmin.ts` only writes).
+- **Klaviyo**: all three segments key on the `userType` profile property. Every live retention flow is "Added to List" triggered, fed by conka-lab, which reads the subscription platform directly rather than order tags. (Checked segment definitions and all flow trigger types; individual flow trigger filters were not opened one by one.)
+- **Synergy** uses only its own tag, which neither platform ever touched.
+
+**So do not ask Skio to replicate Loop's tag set for correctness reasons.** The one arguable case for asking is human convenience: a billing-cycle number or plan name visible on the order in Shopify admin saves opening Skio. Skio can be configured to stamp similarly if that is wanted. Treat it as an ops-comfort decision, not a dependency.
+
+### Never key logic on subscription tags
+
+The renewal-vs-acquisition distinction is the one thing the Loop tags were genuinely used for, in `docs/analytics/LISTICLE_PERFORMANCE.md`. Tags are the wrong signal for it, because they are vendor-specific and change under you at every migration. Two platform-independent signals already exist on every order:
+
+1. **`checkout_token`** is present on a real checkout and absent on a rebill. This is what the Meta CAPI webhook already gates on, and it is the signal a subscription app cannot fake.
+2. **`app`** on the order names the platform on a rebill (`Loop Subscriptions` historically; expected to be Skio from the first Skio renewal on 1 Oct 2026, unverified until then).
+
+### Known bug: our own tag write is denied
+
+`addOrderTags()` authenticates with `SHOPIFY_ADMIN_API_TOKEN`, which is the **B2B Invoicing** app (`read/write_draft_orders` + `customers` only). It has no `write_orders`, so every call fails:
+
+```
+[Shopify webhook] Failed to tag order 13430014214518
+Error: tagsAdd failed: Access denied for tagsAdd field.
+```
+
+**79 orders between 10 Aug and 2 Sept carry `_listicle_origin`; none was ever tagged.** The persona attribution has produced nothing since it shipped. This predates the Skio cutover and is unrelated to it. Tracked in `docs/TODO.md`.
+
+The attribution itself is fine: `_listicle_origin` lands on every order as a note attribute, so the data is recoverable without the tag. The tag was only ever a convenience for filtering in Shopify admin.

@@ -70,6 +70,21 @@ The exposure is wider than new signups. The account portal's product swap resolv
 
 ---
 
+### `plan_frequency` cart attribute has never landed (stale selling-plan map)
+
+**Status:** Open, found 2026-09-02
+**Files:** `app/lib/shopifyProductMapping.ts` (`SELLING_PLAN_FREQUENCY`, `getPlanFrequency`), consumed by `app/context/CartContext.tsx` (`buildCartAttributes`)
+
+**Symptom:** `SELLING_PLAN_FREQUENCY` maps only the three retired `FORMULA_SELLING_PLANS` ids (`711429882230`, `711429947766`, `711429980534`). Nothing we sell uses them. The live Loop plans (`712527348086`, `712527479158`) and all four Skio plans (`712928887158`, `712928919926`, `712928952694`, `712928985462`) are absent, so `getPlanFrequency()` returns `undefined` and the attribute is never pushed. Verified against 205 live orders (10 Aug to 2 Sept): **zero carry `plan_frequency`**. `docs/development/CART_ATTRIBUTES.md` documented it as live and has been corrected.
+
+**Impact:** Low, and not urgent. Cadence is recoverable from the line's selling plan on the order, and the Build Your Order path is unaffected (`byoCheckout.ts` derives `_plan_frequency` from the cadence directly, not from the plan id). The cost is that no LTV cut can key on the attribute.
+
+**The fix is not just adding rows.** The Skio plans are monthly and **quarterly**, but `getPlanFrequency`'s return type is `"weekly" | "biweekly" | "monthly"`, so `quarterly` needs adding to the union first. Better still, delete the id map and derive frequency the way BYO already does, from the cadence the call site already knows, so the next platform migration cannot break it again.
+
+**Why deferred:** needs the type widened and a decision on which of the two mechanisms survives; no data is being lost meanwhile.
+
+---
+
 ### Listicle `persona:` order tags aren't writing (no `write_orders` on live token)
 
 **Status:** Deferred (needs infra change, not a code fix)
@@ -84,6 +99,15 @@ The exposure is wider than new signups. The account portal's product swap resolv
 **What unblocks it:** give the webhook a token with `write_orders`. Options: (a) add `write_orders` to the B2B Invoicing app and re-install (broadens that app's blast radius — least preferred); (b) stand up / point at a dedicated app-token that has `write_orders` and read it from a new env var, keeping the B2B token untouched. attribution-audit is read-only, so it can't do this. Then re-verify a live order gets tagged.
 
 **Why deferred:** Requires a Shopify app scope change + prod env var, which is an ops action outside the codebase. See `docs/analytics/LISTICLE_PERFORMANCE.md` (known-gap note).
+
+**Re-confirmed 2026-09-02, with the scale.** Still failing, unchanged by the Skio cutover. Exact error from Vercel prod logs:
+
+```
+[Shopify webhook] Failed to tag order 13430014214518
+Error: tagsAdd failed: Access denied for tagsAdd field.
+```
+
+**79 orders between 10 Aug and 2 Sept carry `_listicle_origin`; zero carry a `listicle` or `persona:` tag.** The 29 Jul assessment above still holds (attribution is intact via the note attribute), but the number is worth knowing before anyone builds a report on the tag: it would read empty across the entire £300/day ad-spend trial. `docs/analytics/LISTICLE_PERFORMANCE.md` query 6 has been corrected to say so outright rather than "once the tag write is fixed".
 
 ---
 
