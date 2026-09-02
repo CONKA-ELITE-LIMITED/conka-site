@@ -32,8 +32,6 @@ const CUSTOMER_ADDRESSES_QUERY = `
   }
 `;
 
-
-
 // Customer Account API mutation to update customer profile
 // CustomerUpdateInput only supports firstName and lastName
 const CUSTOMER_UPDATE = `

@@ -98,11 +98,14 @@ function useAccountCrumbs(pathname: string): { label: string; href?: string }[] 
   const path = pathname.replace(/\/+$/, "") || "/account";
   const rest = path.startsWith("/account") ? path.slice("/account".length) : "";
   const seg = rest.split("/").filter(Boolean);
-  const crumbs: { label: string; href?: string }[] = [{ label: "Home", href: "/account" }];
+  // "Home" is the Skio portal at /account/manage (/account redirects there), so
+  // it is hrefless when that IS the current page.
+  const atHome = seg.length === 0 || seg[0] === "manage";
+  const crumbs: { label: string; href?: string }[] = [
+    atHome ? { label: "Home" } : { label: "Home", href: "/account/manage" },
+  ];
   if (seg[0] === "orders") crumbs.push({ label: "Orders" });
   else if (seg[0] === "details") crumbs.push({ label: "Account" });
-  else if (seg[0] === "subscriptions")
-    crumbs.push({ label: seg[1] ? "Subscription" : "Subscriptions" });
   return crumbs;
 }
 

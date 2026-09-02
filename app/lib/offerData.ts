@@ -497,8 +497,8 @@ const LEGACY_OFFER_VARIANTS: Record<OfferProduct, Record<OfferCadence, OfferVari
   },
 };
 
-// SKIO STARTER WIRING (SCRUM-1288): the Skio-era table, sold when
-// NEXT_PUBLIC_SKIO_ENABLED is on. Subscription cadences point at the Skio
+// SKIO STARTER WIRING (SCRUM-1288): the live table, and the only one we sell
+// from since the Loop decommission. Subscription cadences point at the Skio
 // starter variants, which are priced at the FULL one-time price because Skio's
 // selling plans discount by percentage (Loop's apply a fixed £0.00, which is
 // why the Loop starter variants above are priced at the charged amount — the
@@ -729,8 +729,8 @@ const VARIANT_TO_PRODUCT = new Map<string, OfferProduct>();
 const QUARTERLY_SUB_VARIANT_SET = new Set<string>();
 const QUARTERLY_OTP_VARIANT_SET = new Set<string>();
 
-// Both tables feed the reverse maps regardless of the flag: during the Loop→Skio
-// transition window carts and analytics must recognise lines from either platform.
+// Both tables feed the reverse maps: a cart, an order or a migrated subscription
+// can still hold a Loop-era line, and carts and analytics must resolve it.
 for (const table of [LEGACY_OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
   for (const [product, cadences] of Object.entries(table) as Array<[OfferProduct, Record<OfferCadence, OfferVariantConfig>]>) {
     for (const [cadence, config] of Object.entries(cadences) as Array<[OfferCadence, OfferVariantConfig]>) {
@@ -1088,8 +1088,8 @@ export function getChargedPrice(pricing: OfferPricing): number {
 export function getOfferByVariantId(
   variantId: string,
 ): { product: OfferProduct; cadence: OfferCadence; pricing: OfferPricing } | null {
-  // Searches BOTH platform tables regardless of the flag: during the Loop→Skio
-  // transition a cart can hold a line from either platform and both must resolve.
+  // Searches BOTH platform tables: a migrated Loop-era line must still resolve
+  // to a product, even though we only ever sell from the Skio table now.
   for (const table of [LEGACY_OFFER_VARIANTS, SKIO_OFFER_VARIANTS]) {
     for (const product of Object.keys(table) as OfferProduct[]) {
       for (const cadence of Object.keys(table[product]) as OfferCadence[]) {
