@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-02** | Audited tags and attribution on the first Skio orders: attribution is intact, and documented who writes each order tag, why Skio's thinner set costs us nothing, and the two long-standing gaps it surfaced (`persona:` tags blocked on a missing `write_orders` scope, `plan_frequency` never landing). Re-keyed the listicle renewal test off Loop tags onto `checkout_token`. Docs only
 - **2026-09-02** | Pointed every customer contact link at info@conka.io (the account portal and professionals trial CTA were sending people to a sales@ address), sourced it from one constant, and fixed mailto subjects arriving with a plus sign instead of a space
 - **2026-09-01** | Cart upsell tiles share one shape: hook badge on top, and the single to Both offer now shows only the formula being added, in a compact left/right row
 - **2026-09-01** | Skio purchase wiring: subscriptions sell the Skio starter variants and plans when the cutover flag is on (SCRUM-1288)
