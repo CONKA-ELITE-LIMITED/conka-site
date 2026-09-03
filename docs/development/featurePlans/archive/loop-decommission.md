@@ -1,5 +1,11 @@
 # Loop decommission
 
+> **ARCHIVED (2026-09-03).** Delivered. All four phases shipped on 2026-09-02 and 2026-09-03.
+>
+> **Canonical docs: `docs/features/SUBSCRIPTIONS.md` and `docs/features/CUSTOMER_PORTAL.md`.**
+> Kept for the reasoning: what was deleted, why the account pages went, and the two review passes
+> that corrected the plan mid-flight.
+
 **Owner:** Rudh
 **Branch:** `feature/loop-decommission`
 **Scoped:** 2026-09-02, the day the Skio migration completed

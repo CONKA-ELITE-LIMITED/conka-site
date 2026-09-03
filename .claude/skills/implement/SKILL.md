@@ -158,7 +158,7 @@ Data layer before UI -- always; the data contract must be stable before componen
 
 - **Step 6 — Cleanup:** remove debug artifacts, run `npm run lint:changed` and `npm run build`, final standards check, present the completion summary.
 - **Step 7 — Commit** the implementation with a clear message (stage files by name, do not push unless asked).
-- **Step 8 — Update Jira** (if a ticket was provided): add an implementation comment, ask before transitioning to In Review, update the feature plan doc.
+- **Step 8 — Update Jira** (if a ticket was provided): add an implementation comment, ask before transitioning to In Review, update the feature plan doc. If this closed the plan's **last active phase**, retire the plan rather than just marking it done: consolidate, banner, move to `featurePlans/archive/`, repoint inbound links, per `docs/workflows/05-creating-documentation.md` Step 7.
 
 ---
 

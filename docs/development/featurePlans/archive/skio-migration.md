@@ -1,5 +1,15 @@
 # Skio Migration - Single Source of Truth
 
+> **ARCHIVED (2026-09-03).** Delivered. The Loop to Skio migration completed on 2026-09-02 and
+> Loop is decommissioned, so every phase here is closed.
+>
+> **Canonical doc: `docs/features/SUBSCRIPTIONS.md`.** Living reference (pricing model, selling
+> plans, bundles and Synergy rules, the portal and its lockdown, env vars, code map, attribution,
+> retention) was consolidated there. What remains below is the record of how the migration was
+> run: status tables, vendor answers, blockers, preview checks, the cutover runbook and the
+> change log. Kept for the reasoning, not for current behaviour, and it still refers to flags and
+> code that no longer exist.
+
 **This is the only Skio doc.** Status, plan, build reference, vendor answers, cutover runbook and decisions all live here. Nine separate Skio docs were consolidated into this file on 2026-08-26; the originals are in git history.
 
 **Owner:** Rudh

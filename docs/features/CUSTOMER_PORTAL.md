@@ -2,7 +2,7 @@
 
 The account area: authentication, profile, orders, and how customers reach their subscriptions.
 
-**Subscriptions are not managed by this codebase.** Skio owns every subscription contract since the Loop migration completed on 2026-09-02, and its embedded portal at `/account/manage` is the whole subscription experience. The self-built Loop portal that used to live here is deleted. For anything subscription-related, the canonical reference is **`docs/development/featurePlans/skio-migration.md` section 8**, which covers the portal, its auth flow, the swap catalogue lockdown and the known gotchas.
+**Subscriptions are not managed by this codebase.** Skio owns every subscription contract since the Loop migration completed on 2026-09-02, and its embedded portal at `/account/manage` is the whole subscription experience. The self-built Loop portal that used to live here is deleted. For anything subscription-related, the canonical reference is **`docs/features/SUBSCRIPTIONS.md`**, which covers the pricing model, selling plans, the portal's swap catalogue lockdown and its known gotchas. This doc covers the account surface around it: routes, auth and the profile question.
 
 ---
 
@@ -100,5 +100,5 @@ components directory.
 
 ## See also
 
-- `docs/development/featurePlans/skio-migration.md` — the portal, its gotchas, the swap catalogue, and the whole migration
-- `docs/development/featurePlans/loop-decommission.md` — what was removed and why
+- `docs/features/SUBSCRIPTIONS.md` — canonical for Skio: the pricing model, selling plans, the portal's swap lockdown and gotchas, env vars and code map
+- `docs/development/featurePlans/archive/loop-decommission.md` — what was removed and why (archived)
