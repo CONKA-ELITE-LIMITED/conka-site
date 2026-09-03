@@ -220,10 +220,10 @@ const handleCheckout = () => {
 Skio owns every subscription contract. Loop was decommissioned on 2026-09-02 and
 its API client, routes and portal UI are deleted from this repo.
 
-**Canonical reference:** `docs/development/featurePlans/skio-migration.md`. Read it
-before touching subscriptions, `/account` or selling plans. Section 6 has the
-selling plans and variants, section 7 the env vars and code map, section 8 the
-customer portal.
+**Canonical reference:** `docs/features/SUBSCRIPTIONS.md`. Read it before touching
+subscriptions, `/account` or selling plans. It covers the percentage-off pricing
+model and its traps, the selling plans, bundles and Synergy rules, the portal, the
+env vars and the code map.
 
 ### What you need to know here
 

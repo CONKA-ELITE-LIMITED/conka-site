@@ -22,7 +22,7 @@ Speed and token cost matter. On any task that is not large:
 - **Funnel — shipped and consolidated.** The three funnel variants collapsed into `/build-your-order` (SCRUM-1247): 3 cadences × 3 products, straight to Shopify checkout, no cart drawer. `/funnel`, `/funnel-b` and `/funnel-c` are deleted and redirect there.
 - **Quiz — deleted**, not hidden. `/quiz/:path*` permanently redirects to `/build-your-order`. The `/go/[slug]` landing quizzes are a separate, unrelated system.
 - **Shop page — deleted.** `/shop` and `/shop/:path*` permanently redirect to `/conka-both`.
-- **Subscriptions are on Skio.** Migration completed 2026-09-02 and Loop is decommissioned: `app/lib/loop.ts`, the Loop API routes and the self-built account portal are all deleted, and `/account` redirects to Skio's embedded portal at `/account/manage`. See `docs/development/featurePlans/skio-migration.md` (the single source of truth) and `loop-decommission.md` for what was removed.
+- **Subscriptions are on Skio.** Migration completed 2026-09-02 and Loop is decommissioned: `app/lib/loop.ts`, the Loop API routes and the self-built account portal are all deleted, and `/account` redirects to Skio's embedded portal at `/account/manage`. See `docs/features/SUBSCRIPTIONS.md` (canonical) and `docs/features/CUSTOMER_PORTAL.md`. The migration and decommission plans are archived under `docs/development/featurePlans/archive/`.
 
 ## Git workflow
 
@@ -152,7 +152,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/features/LANDING_QUIZ_SYSTEM.md` | The `/go` **quiz** format — engine, screen schema, scoring modes, Convex event capture |
 | `docs/features/BLOG_SYSTEM.md` | **Blog system** — canonical reference for `/blog`. Notion-as-CMS, the content contract (a missing meta description silently skips a post), the render pipeline, and the deploy rules. **Read before any Notion write or blog change:** the blog is static, so a write is invisible until a redeploy, and Next caches Notion responses for a year, so a body edit needs the build cache cleared |
 | `docs/features/FAQ_SYSTEM.md` | **FAQ system** — one source of truth, per-surface subsets, schema == visible rule, claims anchors, disclosure policy |
-| `docs/development/featurePlans/skio-migration.md` | **Skio: single source of truth** — the whole Loop to Skio subscription migration in one doc (status, selling plans + variants, env vars and flags, embedded customer portal, cutover runbook, decisions). Read before touching subscriptions, `/account`, or selling plans. The retention-pipeline half lives in the separate `conka-lab` repo |
+| `docs/features/SUBSCRIPTIONS.md` | **Subscriptions (Skio) — canonical.** Read before touching subscriptions, `/account` or selling plans. The percentage-off pricing model and its traps, selling plans, starter variants and Journeys, bundle/Synergy rules, the portal and its swap lockdown, env vars, code map, attribution, retention. The retention pipeline itself lives in the separate `conka-lab` repo |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/NIKE_TRIAL_PAGE.md` | **Nike trial page** (`/nike`) — private, noindex onboarding page for the corporate cognition trial. Placeholders to fill before sharing, hard-coded trial dates, warm-dark treatment |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |

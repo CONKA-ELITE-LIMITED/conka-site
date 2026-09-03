@@ -11,7 +11,7 @@
 > rather than deleted. A mobile subscription surface now has two options: embed
 > Skio's customer portal the way the web app does at `/account/manage`, or build
 > against Skio's GraphQL API directly. Start from
-> `docs/development/featurePlans/skio-migration.md` sections 7 and 8.
+> `docs/features/SUBSCRIPTIONS.md`.
 
 Reference guide for replicating or extending the customer portal's subscription management in a native or cross-platform mobile app. Covers auth, data flow, the subscription API contract, and mutation patterns.
 

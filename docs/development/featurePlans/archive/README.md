@@ -13,6 +13,10 @@ first ten, phase 5 (de-duplication) for the last three.
 
 | Doc | What it holds |
 |---|---|
+| `skio-migration.md` | The Loop to Skio migration: vendor answers from Skio, the preview verification checks, the cutover runbook as actually run, and the decisions log. Canonical: `docs/features/SUBSCRIPTIONS.md` |
+| `skio-migration-files/` | The variant mapping CSV and the retention-pipeline cutover handoff sent to conka-lab |
+| `loop-decommission.md` | What the Loop removal deleted and why, plus the two review passes that corrected the plan mid-flight (the account pages were reinstated, then deleted properly). Canonical: `docs/features/SUBSCRIPTIONS.md`, `docs/features/CUSTOMER_PORTAL.md` |
+| `MOBILE_SUBSCRIPTION_INTEGRATION.md` | The subscription API contract a mobile client would need. Written against Loop, whose routes are deleted. Kept because the shape of the problem is still real |
 | `account-portal-simple-dtc.md` | The read-vs-scan mono rule; what was deliberately kept clinical in the portal |
 | `blog-informational-content-surface.md` | Content-model options table (why not Sanity / Contentful / Convex / MDX); the SSG-over-ISR rationale |
 | `magic-mind-video-hero.md` | The revert path: which components and `/videos/both` assets to restore |

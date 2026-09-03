@@ -82,4 +82,4 @@ Worth fixing after the cutover so the next one does not need two people in a win
 
 ---
 
-**Canonical plan:** `docs/development/featurePlans/skio-migration.md` in the conkaWebsite repo. The conka-lab half is `docs/featurePlans/loop-to-skio-ingest-migration.md`.
+**Canonical plan:** `docs/development/featurePlans/archive/skio-migration.md` in the conkaWebsite repo. The conka-lab half is `docs/featurePlans/loop-to-skio-ingest-migration.md`.

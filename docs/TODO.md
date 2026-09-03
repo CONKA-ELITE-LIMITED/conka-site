@@ -13,7 +13,7 @@ Closed by deletion, not by a vendor answer. The risk was that `/account/details`
 customer edit the Shopify customer record's address and believe they had changed where their
 box ships, when only the Skio contract governs that. `/account/details` and the update route
 are gone, so the Skio portal is now the only place an address can be changed and the question
-no longer has anything to bite on. See `loop-decommission.md` Phase 4.
+no longer has anything to bite on. See `docs/development/featurePlans/archive/loop-decommission.md` Phase 4.
 
 ---
 
@@ -22,7 +22,7 @@ no longer has anything to bite on. See `loop-decommission.md` Phase 4.
 **Status:** Open, low urgency. Covered by a redirect in the meantime.
 **Files:** None in this repo. Klaviyo template editor.
 
-**Symptom:** the Loop-era self-built portal at `/account/subscriptions` was deleted in the Loop decommission (`docs/development/featurePlans/loop-decommission.md`). Klaviyo templates and historic order emails, which this repo does not control, still point there.
+**Symptom:** the Loop-era self-built portal at `/account/subscriptions` was deleted in the Loop decommission (`docs/development/featurePlans/archive/loop-decommission.md`). Klaviyo templates and historic order emails, which this repo does not control, still point there.
 
 **Mitigation already shipped:** `next.config.ts` carries a permanent redirect from `/account/subscriptions` and `/account/subscriptions/:path*` to `/account/manage`, so no customer hits a 404. Decision (Rudh, 2026-09-02): rely on the redirect, fix the templates at leisure.
 
@@ -51,7 +51,7 @@ no longer has anything to bite on. See `loop-decommission.md` Phase 4.
 
 **Status:** Largely resolved 2026-09-01 (see foot of entry). Added 2026-08-28.
 **Files:** `app/lib/offerData.ts` (`OFFER_VARIANTS`) on `feature/skio-integration`, plus Shopify admin and the Skio dashboard.
-**Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/development/featurePlans/skio-migration.md` (on the Skio branch).
+**Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/features/SUBSCRIPTIONS.md`.
 
 `feature/starter-pack` re-pointed all six subscription cadences at the `-STARTER-` variants, wired to **Loop** selling plans. `feature/skio-integration` re-points the same purchase surfaces at **Skio** selling plans, and it predates the starter kit.
 
@@ -273,7 +273,7 @@ it" does not mean "safe to delete" in this repo.**
   `account/NextDeliveryHero.tsx`, `account/HairlineSpecStrip.tsx`, `account/ActiveOrderCard.tsx`.
   The portal is mid-migration to Skio as a full iframe replacement, so these are
   probably doubly dead, but that is the migration's call to make. See
-  `docs/development/featurePlans/skio-subscription-migration.md`.
+  `docs/features/SUBSCRIPTIONS.md`.
 
 **Straightforwardly dead, just not swept yet:** `WhyConkaWorks.tsx`,
 `CaseStudiesDataDriven.tsx`, `FormulaCaseStudies.tsx`, `product/ProductHeroMobileV2.tsx`,

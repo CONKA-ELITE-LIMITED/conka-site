@@ -40,9 +40,8 @@ The most important cluster for anything touching products, variants, or money.
 | Doc | Topic |
 |-----|-------|
 | [`features/CART_LOGIC.md`](./features/CART_LOGIC.md) | Cart actions, persistence, B2B tier normalization. |
-| [`development/featurePlans/skio-migration.md`](./development/featurePlans/skio-migration.md) | **Skio: single source of truth** — the whole Loop to Skio migration in one doc: status, build reference, customer portal, cutover runbook, decisions. |
+| [`features/SUBSCRIPTIONS.md`](./features/SUBSCRIPTIONS.md) | **Subscriptions (Skio) — canonical.** Pricing model and its traps, selling plans, starter variants and Journeys, bundles and Synergy rules, the portal and swap lockdown, env vars, code map, attribution, retention. |
 | [`features/CUSTOMER_PORTAL.md`](./features/CUSTOMER_PORTAL.md) | Account portal — auth, and why the account is now nothing but Shopify OAuth plus Skio's embedded portal. |
-| [`features/MOBILE_SUBSCRIPTION_INTEGRATION.md`](./features/MOBILE_SUBSCRIPTION_INTEGRATION.md) | Mobile subscription-card display. |
 | [`features/b2b/B2B_PORTAL.md`](./features/b2b/B2B_PORTAL.md) | **Canonical B2B reference** — `/professionals`, pricing/VAT, draft orders, Xero, shipping. |
 | [`features/BLOG_SYSTEM.md`](./features/BLOG_SYSTEM.md) | Blog (`/blog`) — Notion-as-CMS, content contract, deploy rules. Read before any Notion write. |
 | [`features/GO_LANDING_PAGES.md`](./features/GO_LANDING_PAGES.md) | **Start here for `/go/[slug]`** — the shared contract: route, registry, noindex rules, shared analytics. Routes to the two format docs. |
