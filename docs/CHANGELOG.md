@@ -5,7 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
-- **2026-09-03** | Deleted our order-history and account-details pages: Skio's portal renders its own Orders and Account views with full order detail, so both duplicated it, and the details page offered an address form that wrote to Shopify while deliveries follow the Skio contract. `/account/orders` and `/account/details` now redirect to `/account/manage`
+- **2026-09-03** | Deleted our order-history and account-details pages: Skio's portal renders its own Orders and Account views with full order detail, so both duplicated it, and the details page offered an address form that wrote to Shopify while deliveries follow the Skio contract. `/account/orders` and `/account/details` now redirect to `/account/manage`. Restored a "Log out of CONKA" link, which went with the deleted sub-nav (Skio's own Logout cannot clear our httpOnly session), and pointed every internal account link at the canonical URL instead of through a redirect
 - **2026-09-02** | Removed the Loop subscription integration: the account portal, API routes and client are deleted, and /account plus /account/subscriptions now redirect to the Skio portal.
 - **2026-09-02** | Fixed the blog build failing a whole deploy on a single dropped Notion connection: transport-level `fetch failed` errors now retry three times with backoff (the Notion SDK never retried them), and error messages name the real cause instead of a bare "fetch failed"
 - **2026-09-02** | Removed the plan_frequency cart attribute and its stale selling-plan map, which had silently resolved to nothing on every order across two subscription platforms (SCRUM-1300)

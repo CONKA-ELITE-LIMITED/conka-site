@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/account');
+      router.push('/account/manage');
     }
   }, [isAuthenticated, router]);
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/dev-mock', { method: 'POST' });
       if (res.ok) {
         await checkSession();
-        router.push('/account');
+        router.push('/account/manage');
       }
     } finally {
       setMockLoading(false);

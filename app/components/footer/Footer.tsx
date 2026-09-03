@@ -31,8 +31,10 @@ const COMPANY_LINKS: FooterLink[] = [
 const SUPPORT: FooterLink[] = [
   { label: "FAQ", href: "/faq" },
   { label: "Shipping & returns", href: "/shipping" },
-  { label: "Your account", href: "/account" },
-  { label: "Manage subscription", href: "/account/manage" },
+  // One entry, not two: the Skio portal is both the account and the place a
+  // subscription is managed, so "Your account" and "Manage subscription" were
+  // two labels resolving to the same page.
+  { label: "Your account", href: "/account/manage" },
 ];
 
 const COLUMNS: { title: string; links: FooterLink[] }[] = [

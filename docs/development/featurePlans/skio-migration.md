@@ -264,7 +264,9 @@ Skio's Customer Portal v3 (cpv3) embedded at **`/account/manage`**, auto-logged-
 
 **Endpoint is `/a/account/shopify-login`**, not `/a/account/login`. The latter is Skio's passwordless email login and renders an "Email does not exist" screen. Host is `cpv3.skio.com` (v3); `storefront-iframe.skio.com` is v2.
 
-**Account routing.** `/account` is a server-side redirect to `/account/manage`, and the nav account icons link straight there. `/account/subscriptions` and its children permanently redirect to the same place, catching bookmarks and Klaviyo templates. The portal page renders `AccountSubNav`, because it is now the account hub and carries the only links to order history and profile editing, which are Shopify surfaces the Skio iframe does not reach.
+**Account routing.** The portal is the account. Skio's cpv3 renders its own Orders / Account / Logout nav inside the frame, and its Orders view carries full order detail, so we run no account pages of our own. `/account/manage` is the canonical URL and every internal link, including the post-login redirect, points straight at it. `/account`, `/account/subscriptions/*`, `/account/orders` and `/account/details` all permanently redirect there, catching bookmarks, Klaviyo templates and historic order emails. Those rules bind our top-level paths only; Skio's equivalents live under its own routing inside the frame and are unaffected.
+
+**One exception to "no chrome": logout.** `SkioPortalFrame` renders a single "Log out of CONKA" link. Skio's own Logout runs on `cpv3.skio.com` and our session cookies are first-party and `httpOnly`, so it can only end the Skio session; we re-mint the magic link on the next load and sign the customer back in. Without our link there is no way to sign out of conka.io. If Skio's logout is ever configured to redirect to `/api/auth/logout`, the row can go.
 
 **CSP.** `next.config.ts` adds `frame-src 'self' https://cpv3.skio.com` scoped to `/account/manage` only.
 

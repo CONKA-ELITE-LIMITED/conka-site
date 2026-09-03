@@ -135,6 +135,25 @@ at billing stopped mattering once the only surface that could disagree was gone.
 **Remaining account surface:** `/account` (redirect), `/account/manage` (the portal),
 `/account/login`, `/account/register`, and the auth routes that serve them.
 
+### Phase 4 review
+
+**Deleting `AccountSubNav` removed the only way to sign out of conka.io.** Its Logout button
+was the sole caller of `AuthContext.logout`. Skio's in-frame Logout cannot substitute: it runs
+on `cpv3.skio.com` while our session cookies are first-party and `httpOnly`, so it ends the
+Skio session only, and because `/account/manage` mints a fresh magic link on every load the
+customer is signed back in on refresh. On a shared device the next visitor would land inside
+the previous customer's portal. `SkioPortalFrame` now renders a single "Log out of CONKA" link
+to `/api/auth/logout`. That is the one piece of chrome the portal justifies, and it can be
+deleted if Skio's own Logout is ever configured to redirect to our logout endpoint.
+
+**URL hygiene.** Internal links pointed at `/account`, which only exists to redirect, so every
+sign-in paid an extra round trip. The post-login redirect, the login and register pages now
+target `/account/manage` directly, and the footer's "Your account" and "Manage subscription"
+entries, which had become two labels for one page, collapsed into one. `/account` and the four
+redirect rules remain for bookmarks, Klaviyo templates and historic order emails. The rule is:
+**`/account/manage` is canonical, every internal link points at a terminal URL, and no internal
+link targets a redirect source.**
+
 ## References
 
 - [`skio-migration.md`](skio-migration.md) section 12, the decommission list

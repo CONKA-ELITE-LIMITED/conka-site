@@ -8,10 +8,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * Skio customer portal, and the account hub since the Loop decommission:
- * `/account` redirects here and the nav account icons link straight to it.
- * Renders Skio's hosted portal in an iframe, auto-logged-in via a server-signed
- * magic link (`/api/auth/skio-portal`).
+ * The account. Skio's hosted portal in an iframe, auto-logged-in via a
+ * server-signed magic link (`/api/auth/skio-portal`), covering subscriptions,
+ * orders, addresses and payment.
+ *
+ * This is the canonical account URL: every internal link and the post-login
+ * redirect point straight here, and `/account`, `/account/subscriptions/*`,
+ * `/account/orders` and `/account/details` all redirect in.
  */
 export default function ManageSubscriptionPage() {
   return <SkioPortalFrame />;
