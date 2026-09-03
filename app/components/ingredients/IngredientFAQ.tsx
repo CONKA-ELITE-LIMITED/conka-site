@@ -8,6 +8,7 @@
 
 import Link from "next/link";
 import { INGREDIENT_FAQ_ITEMS } from "@/app/lib/ingredientFaqContent";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 export default function IngredientFAQ() {
   return (
@@ -57,10 +58,10 @@ export default function IngredientFAQ() {
         </Link>{" "}
         or email{" "}
         <a
-          href="mailto:info@conka.io"
+          href={supportMailtoHref()}
           className="text-black underline decoration-black/20 hover:decoration-black"
         >
-          info@conka.io
+          {SUPPORT_EMAIL}
         </a>
       </p>
 

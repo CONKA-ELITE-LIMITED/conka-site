@@ -8,6 +8,7 @@
  */
 
 import styles from './Footer.module.css';
+import { SUPPORT_EMAIL, supportMailtoHref } from '@/app/lib/supportEmail';
 
 const COLUMNS = [
   {
@@ -31,10 +32,10 @@ const COLUMNS = [
   {
     title: 'Support',
     links: [
-      { label: 'Contact Us', href: 'mailto:info@conka.io' },
+      { label: 'Contact Us', href: supportMailtoHref() },
       { label: 'FAQ', href: '#faq' },
       { label: 'Shipping & Returns', href: '/shipping' },
-      { label: 'Manage Subscription', href: '/account/subscriptions' },
+      { label: 'Manage Subscription', href: '/account/manage' },
     ],
   },
 ];
@@ -74,7 +75,7 @@ export default function Footer() {
           London, SW18 4GQ
         </p>
         <p className={styles.contactLine}>
-          Email us: <a href="mailto:info@conka.io">info@conka.io</a>
+          Email us: <a href={supportMailtoHref()}>{SUPPORT_EMAIL}</a>
         </p>
         <div className={styles.social}>
           <a href="https://instagram.com/conka.io" target="_blank" rel="noopener noreferrer">

@@ -22,7 +22,7 @@ Speed and token cost matter. On any task that is not large:
 - **Funnel — shipped and consolidated.** The three funnel variants collapsed into `/build-your-order` (SCRUM-1247): 3 cadences × 3 products, straight to Shopify checkout, no cart drawer. `/funnel`, `/funnel-b` and `/funnel-c` are deleted and redirect there.
 - **Quiz — deleted**, not hidden. `/quiz/:path*` permanently redirects to `/build-your-order`. The `/go/[slug]` landing quizzes are a separate, unrelated system.
 - **Shop page — deleted.** `/shop` and `/shop/:path*` permanently redirect to `/conka-both`.
-- **Subscriptions are migrating from Loop to Skio** — decided Aug 2026, plan in `docs/development/featurePlans/skio-migration.md` (the single source of truth; nine Skio docs were consolidated into it).
+- **Subscriptions are on Skio.** Migration completed 2026-09-02 and Loop is decommissioned: `app/lib/loop.ts`, the Loop API routes and the self-built account portal are all deleted, and `/account` redirects to Skio's embedded portal at `/account/manage`. See `docs/development/featurePlans/skio-migration.md` (the single source of truth) and `loop-decommission.md` for what was removed.
 
 ## Git workflow
 
@@ -187,7 +187,7 @@ Process docs for how to approach work on this project. Read the relevant workflo
 | `docs/workflows/01-scoping-work.md` | Before starting any non-trivial feature — break down scope, identify affected areas |
 | `docs/workflows/02-implementation-workflow.md` | Step-by-step implementation process after scoping |
 | `docs/workflows/03-nextjs-development.md` | Next.js patterns, rendering strategy, data fetching conventions |
-| `docs/workflows/04-shopify-commerce.md` | Working with Shopify APIs, cart, checkout, subscriptions (Loop) |
+| `docs/workflows/04-shopify-commerce.md` | Working with Shopify APIs, cart, checkout, subscriptions (Skio) |
 | `docs/workflows/05-creating-documentation.md` | When creating or updating project documentation |
 | `docs/workflows/06-code-review.md` | Self-review checklist before opening a PR |
 | `docs/workflows/07-testing-validation.md` | Testing layers and validation checklists |

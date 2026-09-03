@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CONVERSION_FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
 import { PRICE_PER_SHOT_BOTH } from "@/app/lib/landingPricing";
 import ConkaCTAButton from "./ConkaCTAButton";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 interface LabFAQProps {
   /** The rows to render. Defaults to the curated conversion subset. */
@@ -93,10 +94,10 @@ export default function LabFAQ({
             <>Still have a question? Email </>
           )}
           <a
-            href="mailto:info@conka.io"
+            href={supportMailtoHref()}
             className="text-black underline decoration-black/20 hover:decoration-black"
           >
-            info@conka.io
+            {SUPPORT_EMAIL}
           </a>
         </p>
       </div>

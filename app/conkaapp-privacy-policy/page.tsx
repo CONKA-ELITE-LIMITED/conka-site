@@ -3,6 +3,7 @@
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import Image from "next/image";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -66,10 +67,10 @@ export default function PrivacyPolicyPage() {
               and practices, please do not use our Services. If you still have
               any questions or concerns, please contact us at{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               .
             </p>
@@ -178,10 +179,10 @@ export default function PrivacyPolicyPage() {
                 <strong>How do you exercise your rights?</strong> The easiest
                 way to exercise your rights is by visiting{" "}
                 <a
-                  href="mailto:info@conka.io"
+                  href={supportMailtoHref()}
                   className="text-teal-500 underline"
                 >
-                  info@conka.io
+                  {SUPPORT_EMAIL}
                 </a>
                 , or by contacting us. We will consider and act upon any request
                 in accordance with applicable data protection laws.
@@ -905,10 +906,10 @@ export default function PrivacyPolicyPage() {
               collected from children under age 18 or the equivalent age as
               specified by law in your jurisdiction, please contact us at{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               .
             </p>
@@ -1058,10 +1059,10 @@ export default function PrivacyPolicyPage() {
               If you have questions or comments about your privacy rights, you
               may email us at{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               .
             </p>
@@ -1486,17 +1487,17 @@ export default function PrivacyPolicyPage() {
             <p className="text-base leading-relaxed mb-4">
               To exercise these rights, you can contact us by visiting{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               , by emailing us at{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               , or by referring to the contact details at the bottom of this
               document.
@@ -1536,10 +1537,10 @@ export default function PrivacyPolicyPage() {
               action regarding your request, you may appeal our decision by
               emailing us at{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               . We will inform you in writing of any action taken or not taken
               in response to the appeal, including a written explanation of the
@@ -1604,10 +1605,10 @@ export default function PrivacyPolicyPage() {
               If you have questions or comments about this notice, you may email
               us at{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>{" "}
               or contact us by post at:
             </p>
@@ -1638,10 +1639,10 @@ export default function PrivacyPolicyPage() {
               be limited in some circumstances by applicable law. To request to
               review, update, or delete your personal information, please visit:{" "}
               <a
-                href="mailto:info@conka.io"
+                href={supportMailtoHref()}
                 className="text-teal-500 underline"
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>
               .
             </p>

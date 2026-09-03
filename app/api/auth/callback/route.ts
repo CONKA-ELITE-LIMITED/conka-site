@@ -118,7 +118,9 @@ export async function GET(request: NextRequest) {
     const expiresAt = new Date(Date.now() + tokens.expires_in * 1000).toISOString();
 
     // Create response with redirect to account page
-    const response = NextResponse.redirect(new URL('/account', request.url));
+    // Straight to the portal, not /account: that path only exists to redirect
+    // here, so routing through it costs every sign-in an extra round trip.
+    const response = NextResponse.redirect(new URL('/account/manage', request.url));
 
     // Store tokens in HTTP-only cookies
     response.cookies.set('customer_access_token', tokens.access_token, {

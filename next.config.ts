@@ -41,6 +41,34 @@ const nextConfig: NextConfig = {
   // Redirects
   async redirects() {
     return [
+      // Loop is decommissioned and its self-built portal is deleted. Skio's
+      // embedded portal at /account/manage replaces it. Permanent so bookmarks,
+      // Klaviyo templates and historic order emails we do not control still land
+      // somewhere useful. See docs/development/featurePlans/loop-decommission.md.
+      {
+        source: '/account/subscriptions',
+        destination: '/account/manage',
+        permanent: true,
+      },
+      {
+        source: '/account/subscriptions/:path*',
+        destination: '/account/manage',
+        permanent: true,
+      },
+      // Skio's portal renders its own Orders and Account views inside the
+      // iframe, so our duplicates were deleted. These are our old top-level
+      // paths; Skio's equivalents live under its own routing inside the frame
+      // and are unaffected.
+      {
+        source: '/account/orders',
+        destination: '/account/manage',
+        permanent: true,
+      },
+      {
+        source: '/account/details',
+        destination: '/account/manage',
+        permanent: true,
+      },
       // Trial: route start/lander traffic to the B variants. Temporary (307) on
       // purpose — easy to reverse without browsers hard-caching the redirect.
       {
@@ -143,9 +171,13 @@ const nextConfig: NextConfig = {
         destination: '/conka-clarity',
         permanent: true,
       },
+      // Legacy Shopify URL. It used to point at the login page, from the era
+      // when "help" meant "sign in and manage your Loop subscription". Someone
+      // typing /help wants answers, so it goes to the FAQ, which carries the
+      // support address.
       {
         source: '/help',
-        destination: '/account/login',
+        destination: '/faq',
         permanent: true,
       },
       // The legacy Shopify blog archive: 29 specific rules then the wildcard.

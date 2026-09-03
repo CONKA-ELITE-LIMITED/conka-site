@@ -6,6 +6,32 @@
  * See docs/development/featurePlans/b2b-professionals-portal.md
  */
 
+/**
+ * The B2B contact address, and the one sanctioned exception to `SUPPORT_EMAIL`
+ * in `app/lib/supportEmail.ts`: team and club enquiries deliberately reach a
+ * named account owner rather than the shared inbox.
+ *
+ * It lives here once. Do not hard-code it in a component, the same rule the
+ * shared inbox follows. Import `B2B_CONTACT_EMAIL` for display text and
+ * `b2bMailtoHref()` for links.
+ */
+export const B2B_CONTACT_EMAIL = "harryglover@conka.io";
+
+export function b2bMailtoHref(options?: {
+  subject?: string;
+  body?: string;
+}): string {
+  const { subject, body } = options ?? {};
+  // Hand-encoded rather than via URLSearchParams, which renders a space as "+".
+  // RFC 6068 does not treat that as a space in mailto headers, so clients such
+  // as Apple Mail show a literal "CONKA+team+order". Same rule as supportEmail.
+  const params: string[] = [];
+  if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
+  if (body) params.push(`body=${encodeURIComponent(body)}`);
+  const query = params.length ? `?${params.join("&")}` : "";
+  return `mailto:${B2B_CONTACT_EMAIL}${query}`;
+}
+
 /** Sport / sector options. Signals that CONKA is built for sport, not general wellness. */
 export const B2B_SPORTS = [
   "Rugby Union",
@@ -51,7 +77,7 @@ export const B2B_KLAVIYO = {
    */
   alertEventName: "B2B Lead Alert",
   /** Internal recipient of the new-lead alert. Plain config, not a secret. */
-  notifyEmail: "harryglover@conka.io",
+  notifyEmail: B2B_CONTACT_EMAIL,
   /** Klaviyo "B2B Leads" list. One Klaviyo account, so a constant, not env. */
   listId: "Xhqyt8",
 } as const;

@@ -4,6 +4,7 @@ import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import FaqHub from "@/app/components/faq/FaqHub";
 import { FAQ_ITEMS } from "@/app/lib/faqContent";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
 
 export const metadata: Metadata = {
@@ -54,9 +55,9 @@ export default function FaqPage() {
               enough, email{" "}
               <a
                 className="underline underline-offset-4 hover:text-black"
-                href="mailto:info@conka.io"
+                href={supportMailtoHref({ subject: "Question about CONKA" })}
               >
-                info@conka.io
+                {SUPPORT_EMAIL}
               </a>{" "}
               and a human will reply.
             </p>

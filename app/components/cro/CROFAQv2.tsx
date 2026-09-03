@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CONVERSION_FAQ_ITEMS, type FaqEntry } from "@/app/lib/faqContent";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 /* ============================================================================
  * CROFAQv2
@@ -76,10 +77,10 @@ export default function CROFAQv2({
         )}
         {!showSeeAllLink && "Still stuck? "}
         <Link
-          href="mailto:info@conka.io"
+          href={supportMailtoHref()}
           className="font-semibold text-[#1B2757] underline underline-offset-2 hover:opacity-80 transition-opacity"
         >
-          info@conka.io
+          {SUPPORT_EMAIL}
         </Link>
       </p>
     </div>

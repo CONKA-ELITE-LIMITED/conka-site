@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
-import { subscriptionsSkioOnly } from "@/app/lib/subscriptionsFlag";
 import { Banner } from "@/app/components/banner";
 import { NAV_PRODUCTS, NAV_SCIENCE, NAV_APP, NAV_COMPANY } from "./navConfig";
 import type { NavProduct } from "./navConfig";
@@ -85,7 +84,7 @@ export default function NavigationMobile({
 
           <div className="xl:hidden flex-shrink-0 flex items-center justify-end gap-2">
             <a
-              href={subscriptionsSkioOnly() ? "/account/manage" : "/account/login"}
+              href="/account/manage"
               className="group flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757]"
               aria-label="Account"
             >

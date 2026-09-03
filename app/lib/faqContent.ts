@@ -13,6 +13,7 @@ import {
   GUARANTEE_LABEL_FULL,
   GUARANTEE_COPY_TRIAL,
 } from "@/app/lib/offerConstants";
+import { SUPPORT_EMAIL } from "@/app/lib/supportEmail";
 
 /** Groupings, so a surface can select a subset instead of holding its own copy. */
 export type FaqCategory =
@@ -343,33 +344,33 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
 
   // Support: the operational cluster. Hub-only (category is not in any conversion
-  // subset), and each answer routes to info@conka.io for anything specific.
+  // subset), and each answer routes to the support address for anything specific.
   {
     id: "track-order",
     question: "Where is my order? How do I track it?",
     answer:
-      "You get a tracking link by email the moment your order dispatches. Orders placed before 2pm usually ship the same day, and most UK orders arrive within 1 to 2 working days. If your tracking has not arrived, or it looks stuck, email info@conka.io with your order number and we will chase it for you.",
+      `You get a tracking link by email the moment your order dispatches. Orders placed before 2pm usually ship the same day, and most UK orders arrive within 1 to 2 working days. If your tracking has not arrived, or it looks stuck, email ${SUPPORT_EMAIL} with your order number and we will chase it for you.`,
     category: "support",
   },
   {
     id: "change-order",
     question: "Can I change or cancel my order after placing it?",
     answer:
-      "Often yes, if you are quick. We pick and dispatch orders fast, frequently the same day, so email info@conka.io with your order number as soon as possible. If it has not shipped yet we will change or cancel it; if it has already gone, the 100-day guarantee still has you covered.",
+      `Often yes, if you are quick. We pick and dispatch orders fast, frequently the same day, so email ${SUPPORT_EMAIL} with your order number as soon as possible. If it has not shipped yet we will change or cancel it; if it has already gone, the 100-day guarantee still has you covered.`,
     category: "support",
   },
   {
     id: "refund-process",
     question: "How do I get a refund?",
     answer:
-      "Email info@conka.io and we will arrange it. Every order is covered by the 100-day money-back guarantee, so if CONKA has not worked for you, you get a full refund and you do not need to return anything. No forms, no restocking fees.",
+      `Email ${SUPPORT_EMAIL} and we will arrange it. Every order is covered by the 100-day money-back guarantee, so if CONKA has not worked for you, you get a full refund and you do not need to return anything. No forms, no restocking fees.`,
     category: "support",
   },
   {
     id: "international-shipping",
     question: "Do you ship internationally?",
     answer:
-      "Yes. We ship across the UK and to most international destinations. The available delivery options, cost and estimated time for your country show at checkout once you enter your address. If you cannot see your country or need a specific courier, email info@conka.io and we will help.",
+      `Yes. We ship across the UK and to most international destinations. The available delivery options, cost and estimated time for your country show at checkout once you enter your address. If you cannot see your country or need a specific courier, email ${SUPPORT_EMAIL} and we will help.`,
     category: "support",
   },
   {
@@ -383,7 +384,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "order-problem",
     question: "My order arrived damaged or something is missing. What do I do?",
     answer:
-      "Email info@conka.io with your order number and, if you can, a quick photo. We will put it right, either a replacement or a refund, without making you jump through hoops. This is rare, but when it happens we sort it quickly.",
+      `Email ${SUPPORT_EMAIL} with your order number and, if you can, a quick photo. We will put it right, either a replacement or a refund, without making you jump through hoops. This is rare, but when it happens we sort it quickly.`,
     category: "support",
   },
 

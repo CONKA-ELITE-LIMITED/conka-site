@@ -19,10 +19,10 @@ Cross-repo: the retention pipeline half lives in **conka-lab** (`docs/featurePla
 | 3 | Embedded customer portal (`/account/manage`) | Done, auto-login verified end-to-end (19 Aug) |
 | 3b | Dual portal for the transition window | Done (26 Aug, SCRUM-1256) |
 | 3c | Starter-pack rewire: Skio starter variants + Journeys + purchase wiring (SCRUM-1288) | **Done (1 Sept)** — variants, wiring (PR #469), 6 live Journeys, live cancel flow |
-| 4 | Cutover + Loop decommission | **LIVE ON SKIO 1 Sept ~12:45 BST** (flags on, smoke-tested). Migration Wed 2 Sept 15:00 BST (Josiah). Loop decommission after |
+| 4 | Cutover + Loop decommission | **Done.** Live on Skio 1 Sept ~12:45 BST, contracts migrated 2 Sept, Loop uninstalled by Skio the same afternoon, Loop integration deleted from the site (`loop-decommission.md`) |
 | 5 | Legacy protocol retirement | Future. **Gate now answered: 12 protocol subscribers exist, so the code stays.** |
 
-Everything sits behind `NEXT_PUBLIC_SKIO_ENABLED` (default off = Loop live). The original build finished 26 Aug, but the starter pack (launched on Loop 1 Sept as the primary offer) predates none of the Skio variants, so the Skio side is being rebuilt around it before the flag flips (phase 3c).
+**The cutover flags are gone.** The build was gated behind `NEXT_PUBLIC_SKIO_ENABLED` and `NEXT_PUBLIC_SKIO_TRANSITION` throughout; both, and the helpers that composed them, were deleted on 2 Sept once Loop was uninstalled and there was nothing left to choose between. Sections 2, 3 and 12 below are kept as the record of how the cutover was actually run, so they still reference the flags in the present tense. Section 7 is the current state.
 
 ## 2. Current focus and next action
 
@@ -227,32 +227,23 @@ Plans and variants stay constant across stages; only `bundlecomposition` changes
 |-----|-------|---------|
 | `SKIO_API_TOKEN` | server, all envs | Skio GraphQL API. Header `authorization: API {token}`. |
 | `SKIO_STORE_ID_HASH` | server secret | Signs the portal login hash. **Never `NEXT_PUBLIC_`** (would let anyone forge a login for any customer). From `dashboard.skio.com/theme`. |
-| `NEXT_PUBLIC_SKIO_ENABLED` | build-time, per env | `true` attaches Skio plans and points `/account` at the portal. Off/unset = Loop. |
-| `NEXT_PUBLIC_SKIO_TRANSITION` | build-time, per env | The go-live window (section 3). Keeps the Loop list on `/account` with a link out to Skio. Off after migration. |
 | `SKIO_PORTAL_HOSTNAME` | server, optional | Overrides the portal `hostname` param. Defaults to `shop.conka.io`. |
 
-`SKIO_API_TOKEN` and `SKIO_STORE_ID_HASH` are exposed as getters in `app/lib/env.ts` `optionalEnvVars`. The two `NEXT_PUBLIC_` flags deliberately are NOT: `optionalEnvVars` holds server-side names, and the public build-time flags live in `subscriptionsFlag.ts`. Missing means off, which is the correct default.
+`SKIO_API_TOKEN` and `SKIO_STORE_ID_HASH` are exposed as getters in `app/lib/env.ts` `optionalEnvVars`.
 
-**Both flags are build-time**, so turning either on or off is a redeploy, not a toggle. Budget roughly ten minutes inside the cutover window. Emergency rollback is Vercel Instant Rollback to the pre-cutover deploy.
-
-### Flag helpers (`app/lib/subscriptionsFlag.ts`)
-
-- `subscriptionsUseSkio()` - raw `NEXT_PUBLIC_SKIO_ENABLED`.
-- `subscriptionsInTransition()` - Skio on AND the transition flag on. The Skio check is folded in so no call site can misread it.
-- `subscriptionsSkioOnly()` - Skio on AND NOT in transition. **This is the condition every "send them to Skio" branch reads.** Composing it here means a missed call site cannot silently strand a Loop subscriber.
+**The cutover flags are gone.** `NEXT_PUBLIC_SKIO_ENABLED`, `NEXT_PUBLIC_SKIO_TRANSITION` and the `app/lib/subscriptionsFlag.ts` helpers that composed them were deleted in the Loop decommission (2026-09-02). Skio owns every contract, Loop is uninstalled, so there was nothing left for them to choose between. The Vercel variables can be removed at leisure; nothing reads them. See `loop-decommission.md`.
 
 ### Code map
 
 | Path | Role |
 |------|------|
 | `app/lib/skio.ts` | API config + `LOOP_TO_SKIO_SELLING_PLAN` map |
-| `app/lib/subscriptionsFlag.ts` | The three flag helpers |
-| `app/lib/offerData.ts` | `getOfferVariant`, `OFFER_VARIANTS` (Loop), `SKIO_OFFER_VARIANTS` (Skio starters, SCRUM-1288) — the live purchase path. `activeOfferVariants()` picks the table from the flag |
+| `app/lib/offerData.ts` | `getOfferVariant`, `SKIO_OFFER_VARIANTS` (the live purchase path), `LEGACY_OFFER_VARIANTS` (reverse lookup only, so migrated Loop-era lines still resolve) |
 | `app/api/auth/skio-portal/route.ts` | Signs the portal iframe src |
 | `app/account/manage/*` | The portal page + `SkioPortalFrame` |
-| `app/account/page.tsx` | Account entry: Loop list, transition state, or Skio redirect |
+| `app/account/page.tsx` | Account entry: a server-side redirect to `/account/manage` |
 
-Every live subscribe surface routes through `getOfferVariant`. **The flag-gated Skio branch inside it is being built in SCRUM-1288** (it did not exist before 1 Sept; only the flag helpers and portal side were wired): `SKIO_OFFER_VARIANTS` returns the starter variants + Skio plans when the flag is on, reverse lookups resolve BOTH tables so in-flight and migrated lines still render, and the Loop swap helpers stay pinned to the Loop table. One-time cadences untouched.
+Every live subscribe surface routes through `getOfferVariant`, which now always sells from `SKIO_OFFER_VARIANTS` (the starter variants plus the four Skio plans, SCRUM-1288). Reverse lookups still resolve BOTH tables, because a cart or an order can hold a migrated Loop-era line that must still name a product. The Loop swap helpers were deleted with the Loop mutation routes they fed.
 
 ### Pulling GIDs from the Skio API
 
@@ -273,7 +264,9 @@ Skio's Customer Portal v3 (cpv3) embedded at **`/account/manage`**, auto-logged-
 
 **Endpoint is `/a/account/shopify-login`**, not `/a/account/login`. The latter is Skio's passwordless email login and renders an "Email does not exist" screen. Host is `cpv3.skio.com` (v3); `storefront-iframe.skio.com` is v2.
 
-**Account routing.** After migration `/account` redirects to `/account/manage` and the nav account icons link there. During the transition window (section 3) `/account` keeps the Loop list with a link out, and a Skio subscriber with no Loop contract gets a transition-specific empty state pointing at the portal rather than "start a subscription".
+**Account routing.** The portal is the account. Skio's cpv3 renders its own Orders / Account / Logout nav inside the frame, and its Orders view carries full order detail, so we run no account pages of our own. `/account/manage` is the canonical URL and every internal link, including the post-login redirect, points straight at it. `/account`, `/account/subscriptions/*`, `/account/orders` and `/account/details` all permanently redirect there, catching bookmarks, Klaviyo templates and historic order emails. Those rules bind our top-level paths only; Skio's equivalents live under its own routing inside the frame and are unaffected.
+
+**One exception to "no chrome": logout.** `SkioPortalFrame` renders a single "Log out of CONKA" link. Skio's own Logout runs on `cpv3.skio.com` and our session cookies are first-party and `httpOnly`, so it can only end the Skio session; we re-mint the magic link on the next load and sign the customer back in. Without our link there is no way to sign out of conka.io. If Skio's logout is ever configured to redirect to `/api/auth/logout`, the row can go.
 
 **CSP.** `next.config.ts` adds `frame-src 'self' https://cpv3.skio.com` scoped to `/account/manage` only.
 

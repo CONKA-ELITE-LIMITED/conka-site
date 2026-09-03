@@ -7,6 +7,7 @@ import PilotProgramme from "@/app/components/b2b/PilotProgramme";
 import B2BValueCallout from "@/app/components/b2b/B2BValueCallout";
 import TeamFAQ, { TEAM_FAQS } from "@/app/components/b2b/TeamFAQ";
 import { JsonLd, buildFaqSchema } from "@/app/lib/jsonLd";
+import { b2bMailtoHref } from "@/app/lib/b2bData";
 
 export const metadata: Metadata = {
   title: "Team & Club Pricing | CONKA",
@@ -158,7 +159,7 @@ export default function ProfessionalsPage() {
               </h3>
             </div>
             <a
-              href="mailto:harryglover@conka.io?subject=CONKA%20regular%20team%20supply"
+              href={b2bMailtoHref({ subject: "CONKA regular team supply" })}
               className="brand-btn brand-btn-secondary inline-flex items-center justify-center min-h-[52px] text-sm uppercase tracking-[0.15em] whitespace-nowrap"
             >
               Get in touch

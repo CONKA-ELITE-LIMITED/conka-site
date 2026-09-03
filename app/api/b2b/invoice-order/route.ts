@@ -37,6 +37,7 @@ import { B2B_TIERS, getB2BTier, getB2BGrossPerBox } from "@/app/lib/b2bPricing";
 import { B2B_SHIPPING_TITLE, getB2BShippingPrice } from "@/app/lib/b2bShipping";
 import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 import { B2B_VARIANTS } from "@/app/lib/b2bVariants";
+import { B2B_CONTACT_EMAIL } from "@/app/lib/b2bData";
 
 export const runtime = "nodejs";
 
@@ -50,8 +51,7 @@ const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
 // the gross tier rate, so the draft order total is what the club actually pays.
 const B2B_ENTRY_PRICE = getB2BGrossPerBox(B2B_TIERS[0]);
 
-const NOT_AVAILABLE =
-  "Pay by invoice is not available yet. Please use the enquiry form or contact harryglover@conka.io.";
+const NOT_AVAILABLE = `Pay by invoice is not available yet. Please use the enquiry form or contact ${B2B_CONTACT_EMAIL}.`;
 
 const schema = z.object({
   lines: z
