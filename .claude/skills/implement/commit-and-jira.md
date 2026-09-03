@@ -76,7 +76,7 @@ Final pass before presenting the completed work:
    - If yes, find the "In Review" transition via `getTransitionsForJiraIssue` and apply it via `transitionJiraIssue`
    - Only transition if the user confirms -- they may want to review the preview first
 
-3. **Update the feature plan document** (if one exists) -- mark the relevant phase/task as Done or In Review.
+3. **Update the feature plan document** (if one exists) -- mark the relevant phase/task as Done or In Review. If that was the plan's **last active phase** (nothing live remains), retire the plan instead of just marking it: consolidate its living truth into the canonical doc, banner it ARCHIVED, move it to `featurePlans/archive/`, and repoint inbound links, per `docs/workflows/05-creating-documentation.md` Step 7.
 
 ---
 
