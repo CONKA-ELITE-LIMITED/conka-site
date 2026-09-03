@@ -11,12 +11,23 @@ The account area: authentication, profile, orders, and how customers reach their
 | Route | What it is |
 |-------|------------|
 | `/account` | Redirects to `/account/manage`. Nothing renders here. |
-| `/account/manage` | Skio's Customer Portal v3, embedded in an iframe and auto-logged-in via a server-signed magic link. |
+| `/account/manage` | Skio's Customer Portal v3, embedded in an iframe and auto-logged-in via a server-signed magic link. **This is the account.** |
 | `/account/login` | Shopify Customer Account API OAuth. |
-| `/account/orders` | Order history, from the Customer Account API. |
-| `/account/details` | Profile editing. |
+| `/account/register` | Shopify account creation. |
 
 Our own login cannot be removed: it is the SSO that powers the Skio portal's auto-login.
+
+**There are no other account pages, and that is deliberate.** Skio's portal renders its own
+Orders, Account and Logout navigation inside the iframe, and its Orders view shows full order
+detail: line items, shipping, summary and a reorder action. We used to run `/account/orders`
+and `/account/details` alongside it against the Customer Account API. They duplicated Skio's
+own views, and the details page was worse than redundant: its address form wrote to the
+Shopify *customer record* while deliveries are governed by the Skio *contract*, so it looked
+like it changed where a box shipped and did not. Both were deleted on 2026-09-03 and now
+redirect to `/account/manage`.
+
+Do not add account chrome back on top of the iframe. If something is missing from the portal,
+it is a Skio portal setting in their dashboard, not a page for us to build.
 
 ---
 
@@ -54,22 +65,21 @@ Only active when `NODE_ENV === 'development'`. **It cannot drive the Skio portal
 
 ---
 
-## Profile
+## Profile, addresses, payment and orders
 
-The Edit Profile modal POSTs to `/api/auth/customer/update` with `firstName`, `lastName`, `phone` and `address`. The route reads the `customer_access_token` cookie and calls the Customer Account API.
+All four live in the Skio portal. We hold no code for any of them.
 
-- Email is read-only. Shopify manages it through its own account flow, not the `customerUpdate` mutation.
-- `CustomerUpdateInput` supports only `firstName` and `lastName`. Phone is set via `CustomerAddressInput.phoneNumber` on the address mutation.
-- If the customer already has a default address the route uses `customerAddressUpdate`, otherwise `customerAddressCreate`. Both take a `defaultAddress: Boolean`, so there is no separate default-address mutation in this API.
-- `CustomerAddressInput` uses `territoryCode` (ISO country, e.g. `GB`) and `zoneCode`. Both are round-tripped from the session query, not derived from the display names the form also posts.
+This is the part most likely to be re-broken by someone acting on good intentions, so the
+history is worth keeping. Loop stored a shipping address per contract and never re-read
+Shopify, so we ran a mirror: every profile write was pushed across to each active or paused
+Loop contract, because without it a customer who changed their address kept receiving
+deliveries to the old one. Skio removes the need for the mirror, but it does **not** make a
+Shopify-side edit safe: the recorded vendor statement (Noah at Skio, 2026-08-20) is that Skio
+writes changes back *to* Shopify, which is the opposite direction.
 
-**The subscription address mirror is gone, and this is worth understanding before touching it.** Loop kept a shipping address per contract that never re-read Shopify, so this route used to push every successful write across to every active or paused Loop contract. Without it, a customer who changed their address kept receiving deliveries to the old one.
-
-That mirror was deleted with the rest of the Loop integration, and the recorded justification (Noah at Skio, 2026-08-20) is that **Skio writes address and payment changes back to Shopify automatically**. Note the direction: that establishes Skio to Shopify, not Shopify to Skio. **It has not been confirmed that a Shopify-side address edit propagates to a Skio contract.** Until it is, treat the Skio portal as the authoritative place to change a delivery address. Tracked in `docs/TODO.md`.
-
-## Orders
-
-`GET /api/auth/orders` uses the Customer Account API with the session cookie to fetch the order list and count.
+Rather than leave that ambiguity sitting behind a form, the form was deleted. The Skio portal
+is the single place a customer changes an address, a card or a profile, so there is no second
+surface that can disagree with the contract.
 
 ---
 
@@ -83,9 +93,10 @@ That mirror was deleted with the rest of the Loop integration, and the recorded 
 | Skio portal iframe + auth guard | [`app/account/manage/SkioPortalFrame.tsx`](../../app/account/manage/SkioPortalFrame.tsx) |
 | Portal magic-link signer | [`app/api/auth/skio-portal/route.ts`](../../app/api/auth/skio-portal/route.ts) |
 | Skio API config | [`app/lib/skio.ts`](../../app/lib/skio.ts) |
-| Profile update | [`app/api/auth/customer/update/route.ts`](../../app/api/auth/customer/update/route.ts) |
-| Orders | [`app/api/auth/orders/route.ts`](../../app/api/auth/orders/route.ts) |
-| Order card | [`app/components/orders/OrderCard.tsx`](../../app/components/orders/OrderCard.tsx) |
+| Session / customer read | [`app/api/auth/customer/route.ts`](../../app/api/auth/customer/route.ts) |
+
+That is the whole account surface. There is no orders route, no profile route and no account
+components directory.
 
 ## See also
 

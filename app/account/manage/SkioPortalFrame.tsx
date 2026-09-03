@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navigation from "@/app/components/navigation";
-import { AccountSubNav } from "@/app/components/account/AccountSubNav";
 import { useAuth } from "@/app/context/AuthContext";
 
 type LoadState =
@@ -12,15 +11,15 @@ type LoadState =
   | { status: "error"; message: string };
 
 /**
- * Full-bleed Skio portal: the site header and account sub-nav stay, and the Skio
- * iframe IS the main content, filling the remaining viewport (it scrolls
- * internally). Handles loading / signed-out / error states.
+ * Full-bleed Skio portal: the site header stays and the Skio iframe IS the
+ * account, filling the remaining viewport (it scrolls internally). Handles
+ * loading / signed-out / error states.
  *
- * The sub-nav is not decoration. Since the Loop decommission this page is the
- * account hub (/account redirects here), and it carries the only links to order
- * history and profile editing. Those are Shopify surfaces covering one-time
- * purchases and the customer record, which the Skio iframe's own controls do not
- * reach. Removing it strands both pages.
+ * Skio's Customer Portal v3 renders its own Orders / Account / Logout nav inside
+ * the iframe, and its Orders view carries full order detail (line items,
+ * shipping, summary, reorder). It is not a subscription widget bolted into our
+ * account area, it IS the account area. Our own orders and details pages
+ * duplicated it and were deleted, so do not add account chrome back on top.
  */
 export default function SkioPortalFrame() {
   const router = useRouter();
@@ -67,7 +66,6 @@ export default function SkioPortalFrame() {
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-white text-black">
       <Navigation />
-      <AccountSubNav />
       {/* Full-bleed: the iframe fills the area under the header edge-to-edge
           (absolute inset-0 removes any sizing gaps) and scrolls internally. */}
       <main className="relative min-h-0 flex-1">

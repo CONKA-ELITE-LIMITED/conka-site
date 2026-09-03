@@ -10,6 +10,7 @@
 | 1 | Close the broken customer paths | Complete (2026-09-02) |
 | 2 | Delete the Loop integration | Complete (2026-09-02) |
 | 3 | Correct the docs | Complete (2026-09-02) |
+| 4 | Delete the duplicate account pages | Complete (2026-09-03) |
 
 Jira: not ticketed. The Atlassian token expired during scoping and the work was tracked here instead.
 
@@ -99,9 +100,40 @@ No new UI. Skio's embedded portal at `/account/manage` already owns the surface,
 
 An independent review after the first two commits found three things the plan missed. All fixed in the same PR.
 
-- **`/account/orders` and `/account/details` were left unreachable.** The old `/account` rendered `AccountSubNav`, which carried the only links to them. Redirecting `/account` to the portal removed the only route in, and `SkioPortalFrame` deliberately stripped our account chrome. Those are Shopify surfaces covering one-time purchases and the customer record, which the Skio iframe does not reach. Fixed by rendering `AccountSubNav` on `/account/manage`, which is now the account hub. The plan's claim that "Skio's portal already owns the surface" was too broad: it owns subscriptions, not orders or profile.
+- **`/account/orders` and `/account/details` were left unreachable.** The old `/account` rendered `AccountSubNav`, which carried the only links to them. Redirecting `/account` to the portal removed the only route in. Fixed at the time by rendering `AccountSubNav` on `/account/manage`. **Superseded by Phase 4**, which deleted both pages instead: the review and I both assumed the Skio iframe covered subscriptions only, and it does not. The plan's original claim that "Skio's portal already owns the surface" was right after all.
 - **Three more orphans.** `app/hooks/useSubscriptionEditor.ts`, `app/lib/subscriptionProduct.ts` and `app/lib/productSizeUtils.ts`, 358 lines, were reachable only from deleted components. Step 4 said "the two hooks"; there was a third.
 - **`skio-migration.md` sections 1, 7 and 8 described deleted code as live**, and it is the doc `CLAUDE.md` and `CUSTOMER_PORTAL.md` both point readers at. Phase 3 listed four docs to correct and omitted the parent.
+
+## Phase 4: Delete the duplicate account pages
+
+Added 2026-09-03, after Rudh checked Skio's portal against a live merchant (Magic Mind) and
+found the premise of Phases 1 to 3 was too cautious.
+
+**Skio Customer Portal v3 is the account, not a subscription widget.** It renders its own
+Orders / Account / Logout navigation inside the frame, and its Orders view carries full order
+detail: line items, shipping, summary and reorder. Phases 1 to 3 assumed it covered
+subscriptions only and kept our Customer Account API pages beside it. That was wrong, and the
+post-ship review reinforced the error rather than catching it.
+
+Deleted, 1,538 lines:
+
+- `app/account/orders/` (page + utils) and `app/components/orders/` (5 components)
+- `app/account/details/` and `app/components/account/` (`AccountSubNav`, `EditProfileModal`,
+  and `ActiveOrderCard` / `HairlineSpecStrip`, which were already orphaned)
+- `app/api/auth/orders/route.ts` and `app/api/auth/customer/update/route.ts`
+- The `AccountSubNav` render added to `SkioPortalFrame` earlier the same day
+
+`/account/orders` and `/account/details` redirect to `/account/manage`. Skio's own equivalents
+live under its routing inside the frame and are untouched by those rules.
+
+**This also closes the open address question.** `/account/details` wrote to the Shopify
+customer record while deliveries are governed by the Skio contract, so it presented a form
+that looked like it changed a delivery address and may not have. Whether Skio re-reads Shopify
+at billing stopped mattering once the only surface that could disagree was gone. The
+`docs/TODO.md` item is marked closed by deletion rather than by a vendor answer.
+
+**Remaining account surface:** `/account` (redirect), `/account/manage` (the portal),
+`/account/login`, `/account/register`, and the auth routes that serve them.
 
 ## References
 

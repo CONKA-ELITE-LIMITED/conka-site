@@ -7,18 +7,13 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ## Subscriptions (Skio)
 
-### Unconfirmed: does a Shopify-side address edit reach the Skio contract?
+### ~~Unconfirmed: does a Shopify-side address edit reach the Skio contract?~~ Closed 2026-09-03
 
-**Status:** Open, needs a factual answer from Skio. Low frequency, high impact per occurrence.
-**Files:** `app/api/auth/customer/update/route.ts`, `app/account/details`
-
-**The question.** Loop stored a shipping address per contract and never re-read Shopify, so `/api/auth/customer/update` mirrored every successful write across to each active or paused Loop contract. That mirror was deleted in the Loop decommission on the recorded basis that "Skio writes address and payment changes back to Shopify automatically" (Noah at Skio, 2026-08-20).
-
-**The gap.** That statement is the Skio to Shopify direction. It does not establish that a customer editing their address on `/account/details` propagates to their Skio contract. If it does not, that customer's next renewal ships to the old address, silently, exactly the failure the Loop mirror existed to prevent.
-
-**What closes it:** ask Skio directly whether a contract re-reads the Shopify customer default address at billing, or holds its own copy captured at creation. If it holds its own copy, either restore an equivalent mirror against Skio's API or remove the address fields from `/account/details` so the Skio portal is the only place an address can be changed.
-
-**Why deferred:** needs a vendor answer, not a code change. Recorded in `docs/features/CUSTOMER_PORTAL.md` so the next reader does not assume it is settled.
+Closed by deletion, not by a vendor answer. The risk was that `/account/details` let a
+customer edit the Shopify customer record's address and believe they had changed where their
+box ships, when only the Skio contract governs that. `/account/details` and the update route
+are gone, so the Skio portal is now the only place an address can be changed and the question
+no longer has anything to bite on. See `loop-decommission.md` Phase 4.
 
 ---
 

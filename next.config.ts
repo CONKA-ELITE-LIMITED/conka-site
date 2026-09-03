@@ -55,6 +55,20 @@ const nextConfig: NextConfig = {
         destination: '/account/manage',
         permanent: true,
       },
+      // Skio's portal renders its own Orders and Account views inside the
+      // iframe, so our duplicates were deleted. These are our old top-level
+      // paths; Skio's equivalents live under its own routing inside the frame
+      // and are unaffected.
+      {
+        source: '/account/orders',
+        destination: '/account/manage',
+        permanent: true,
+      },
+      {
+        source: '/account/details',
+        destination: '/account/manage',
+        permanent: true,
+      },
       // Trial: route start/lander traffic to the B variants. Temporary (307) on
       // purpose — easy to reverse without browsers hard-caching the redirect.
       {
