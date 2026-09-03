@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 export const metadata: Metadata = {
   title: "Cookie Policy | CONKA",
@@ -242,10 +243,10 @@ export default function CookiesPage() {
                 If you have any questions about our use of cookies, contact us
                 at{" "}
                 <a
-                  href="mailto:info@conka.io"
+                  href={supportMailtoHref()}
                   className="underline hover:opacity-70"
                 >
-                  info@conka.io
+                  {SUPPORT_EMAIL}
                 </a>
                 .
               </p>

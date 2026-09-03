@@ -12,7 +12,7 @@ import {
   getB2BNextTier,
   type B2BProductKey,
 } from "@/app/lib/b2bPricing";
-import { EMAIL_RE } from "@/app/lib/b2bData";
+import { EMAIL_RE, B2B_CONTACT_EMAIL, b2bMailtoHref } from "@/app/lib/b2bData";
 import { B2B_SHIPPING_BANDS, getB2BShippingPrice } from "@/app/lib/b2bShipping";
 import { trackB2BCheckoutStarted, trackB2BInvoiceRequested } from "@/app/lib/analytics";
 
@@ -383,10 +383,10 @@ export default function B2BOrderBuilder() {
           Pay by invoice sends a VAT invoice to your finance team. We ship once it
           is paid. Prefer to talk first?{" "}
           <a
-            href="mailto:harryglover@conka.io?subject=CONKA%20team%20order"
+            href={b2bMailtoHref({ subject: "CONKA team order" })}
             className="underline"
           >
-            Email harryglover@conka.io
+            Email {B2B_CONTACT_EMAIL}
           </a>
         </p>
       </div>
@@ -411,8 +411,8 @@ function InvoiceSentCard({ financeEmail }: { financeEmail: string }) {
       </p>
       <p className="text-base text-black/55 mt-6">
         Questions?{" "}
-        <a href="mailto:harryglover@conka.io" className="underline">
-          harryglover@conka.io
+        <a href={b2bMailtoHref()} className="underline">
+          {B2B_CONTACT_EMAIL}
         </a>
       </p>
     </div>

@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { COMPANY, FOOTER_SOCIALS } from "@/app/lib/site";
+import { supportMailtoHref } from "@/app/lib/supportEmail";
 
 type FooterLink = { label: string; href: string };
 
@@ -25,7 +26,7 @@ const DISCOVER: FooterLink[] = [
 const COMPANY_LINKS: FooterLink[] = [
   { label: "Our story", href: "/our-story" },
   { label: "Why CONKA", href: "/why-conka" },
-  { label: "Contact us", href: "mailto:info@conka.io" },
+  { label: "Contact us", href: supportMailtoHref() },
 ];
 
 const SUPPORT: FooterLink[] = [
