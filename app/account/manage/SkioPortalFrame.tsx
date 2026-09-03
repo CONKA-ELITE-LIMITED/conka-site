@@ -11,10 +11,15 @@ type LoadState =
   | { status: "error"; message: string };
 
 /**
- * Full-bleed Skio portal: the site header stays, and the Skio iframe IS the main
- * content, filling the viewport beneath the header (it scrolls internally). The
- * portal's own header/account controls live inside the iframe, so we strip all
- * of our own account chrome here. Handles loading / signed-out / error states.
+ * Full-bleed Skio portal: the site header stays and the Skio iframe IS the
+ * account, filling the remaining viewport (it scrolls internally). Handles
+ * loading / signed-out / error states.
+ *
+ * Skio's Customer Portal v3 renders its own Orders / Account / Logout nav inside
+ * the iframe, and its Orders view carries full order detail (line items,
+ * shipping, summary, reorder). It is not a subscription widget bolted into our
+ * account area, it IS the account area. Our own orders and details pages
+ * duplicated it and were deleted, so do not add account chrome back on top.
  */
 export default function SkioPortalFrame() {
   const router = useRouter();
@@ -61,6 +66,22 @@ export default function SkioPortalFrame() {
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-white text-black">
       <Navigation />
+      {/* The one control Skio cannot provide. Its portal has its own Logout, but
+          that runs on cpv3.skio.com and our session cookies are first-party and
+          httpOnly, so it can only end the Skio session: on the next load we mint
+          a fresh magic link and sign the customer straight back in. Without this
+          link there is no way to sign out of conka.io at all, which on a shared
+          device leaves the next visitor inside the previous customer's portal.
+          If Skio's own Logout is ever configured to redirect to
+          /api/auth/logout, delete this row. */}
+      <div className="flex justify-end px-4 pt-2 lg:px-[5vw]">
+        <a
+          href="/api/auth/logout"
+          className="rounded-full px-2 py-1 text-[13px] font-semibold text-black/60 transition-colors hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-navy)]"
+        >
+          Log out of CONKA
+        </a>
+      </div>
       {/* Full-bleed: the iframe fills the area under the header edge-to-edge
           (absolute inset-0 removes any sizing gaps) and scrolls internally. */}
       <main className="relative min-h-0 flex-1">

@@ -134,21 +134,20 @@ The 4/8/12 trial packs have no code representation any more. `TRIAL_PACK_VARIANT
 
 ## 3b. Loop → Skio selling-plan mapping (migration, Phase 2 input)
 
-Consolidated old-Loop-GID → new-Skio-GID map for the [Skio migration](../development/featurePlans/skio-migration.md). This is the **direct input to Phase 2** (re-point purchase surfaces). Every distinct Loop selling plan across §1–§3 appears once. Mirror of `app/lib/skio.ts` `LOOP_TO_SKIO_SELLING_PLAN`.
+**The map lives in code, not here.** `LOOP_TO_SKIO_SELLING_PLAN` in `app/lib/skio.ts` is the
+single source: it maps every Loop selling-plan GID that was live at migration to its Skio
+equivalent, and records which Loop plans have no Skio counterpart. A table here would be a
+second copy that drifts, which is what the previous version of this section became: it sat at
+`_TBD_` for weeks after the plans existed and after the migration completed.
 
-**Fill the Skio column once the Skio plans exist (Phase 1 Task 1).** Skio GIDs are `gid://shopify/SellingPlan/<n>`; enter the full GID.
+Live Skio selling plans and what they charge are in `docs/features/SUBSCRIPTIONS.md`.
 
-| Surface | Plan / tier | Loop selling plan (GID numeric) | Skio selling plan (GID numeric) | Notes |
-|---------|-------------|---------------------------------|---------------------------------|-------|
-| Funnel | Flow & Clear — Monthly Sub | 712527348086 | _TBD_ | single-product monthly |
-| Funnel | Flow & Clear — Quarterly | 712527413622 | _TBD_ | single-product quarterly (−80 SKU) |
-| Funnel | Both — Monthly Sub | 712527479158 | _TBD_ | |
-| Funnel | Both — Quarterly | 712527446390 | _TBD_ | |
-| PDP + Protocol | Starter (−20%) | 711429882230 | _TBD_ | group 98722480502; shared PDP + legacy protocol |
-| PDP + Protocol | Pro (−20%) | 711429947766 | _TBD_ | group 98722546038; shared PDP + legacy protocol |
-| PDP + Protocol | Max (−20%) | 711429980534 | _TBD_ | group 98722578806; shared PDP + legacy protocol |
+Two things worth knowing when reading that map:
 
-The PDP (`PLAN_CONFIGURATIONS`) and legacy protocol (`PROTOCOL_VARIANTS`) surfaces reuse the **same three** Loop plans (starter/pro/max), so they collapse to three rows. Confirm Skio replicates the −20% Subscribe & Save discount on the new plans before filling.
+- The PDP (`PLAN_CONFIGURATIONS`) and legacy protocol (`PROTOCOL_VARIANTS`) surfaces reused the
+  **same three** Loop plans (starter / pro / max), so they collapse to three entries rather than six.
+- Migrated contracts still reference their Loop plan, which is why the map survives the Loop
+  decommission and must not be deleted.
 
 ---
 

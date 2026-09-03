@@ -272,7 +272,7 @@ Both are inherited from the existing quarterly convention rather than introduced
 - `docs/product/SKU_AND_SHOT_REFERENCE.md` §1 - first-order versus recurring SKU convention.
 - `docs/branding/DESIGN_SYSTEM.md` §8.5 - Simple DTC, per-surface authority table.
 - `docs/branding/MOBILE_OPTIMIZATION.md` - split component architecture.
-- `docs/development/featurePlans/skio-subscription-migration.md` - where the order-2 swap gets configured.
+- `docs/features/SUBSCRIPTIONS.md` - where the order-2 Journey swap is documented.
 
 ## Jira
 

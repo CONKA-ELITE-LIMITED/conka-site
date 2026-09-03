@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 // No `alternates` here: the root layout sets `canonical: "./"`, so Next
 // self-canonicalises this route against metadataBase. Only routes needing a
@@ -274,10 +275,10 @@ export default function DisclaimerPage() {
                 <li>
                   Email:{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>
                 </li>
                 <li>

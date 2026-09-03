@@ -1,10 +1,11 @@
 /**
- * Skio subscription-platform integration (Loop -> Skio migration).
+ * Skio subscription-platform integration.
  *
- * PHASE 1 SCAFFOLD — not wired into any purchase or portal path yet. This module
- * exists so Phase 2 (re-point purchase surfaces) and Phase 3 (iframe portal) have
- * their config + plan mapping ready. Importing it has no runtime effect on the
- * live storefront; Loop remains the live subscription platform until Phase 4.
+ * Skio owns every subscription contract: the migration completed 2026-09-02 and
+ * Loop is decommissioned. This module is the API config plus the old->new plan
+ * map, kept for reference and reconciliation. The live purchase path does not
+ * import it (it reads `SKIO_OFFER_VARIANTS` in `app/lib/offerData.ts` directly),
+ * so nothing here runs on a page render.
  *
  * See docs/development/featurePlans/skio-migration.md
  */
@@ -31,14 +32,14 @@ export function skioAuthHeader(): { authorization: string } | undefined {
 /**
  * Loop selling-plan GID -> Skio selling-plan GID mapping.
  *
- * Reference / reconciliation map. The LIVE storefront wiring is inlined in
- * `app/lib/byoData.ts` (`SKIO_SUBSCRIPTION_VARIANTS`, flag-gated, NOT YET BUILT) — this const is
- * not consumed by the purchase path; it documents the plan-level old->new
- * mapping (and which Loop plans have no Skio equivalent).
+ * Reference / reconciliation map, not consumed by the purchase path. It records
+ * the plan-level old->new mapping, and which Loop plans have no Skio equivalent,
+ * so a migrated contract's plan can still be traced back.
  *
- * Keys are the CURRENT live Loop selling-plan GIDs, sourced from:
+ * Keys are the Loop selling-plan GIDs that were live at migration, sourced from:
  *   - BYO:      app/lib/byoData.ts (BYO_VARIANTS)
- *   - PDP:      app/api/auth/subscriptions/[id]/pause/route.ts (PLAN_CONFIGURATIONS)
+ *   - PDP:      the former app/api/auth/subscriptions/[id]/pause route
+ *               (PLAN_CONFIGURATIONS), deleted in the Loop decommission
  *   - Protocol: app/lib/legacy/protocolSubscriptions.ts (PROTOCOL_VARIANTS)
  *
  * NOTE: the PDP and legacy-protocol surfaces share the SAME three Loop plans

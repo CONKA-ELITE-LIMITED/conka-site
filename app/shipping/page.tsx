@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 export const metadata: Metadata = {
   title: "Shipping & Returns | CONKA",
@@ -60,7 +61,7 @@ export default function ShippingPage() {
                 Subscription orders ship automatically on your chosen schedule,
                 with free delivery. You can pause, skip, change, or cancel
                 anytime from your{" "}
-                <a className="underline" href="/account/subscriptions">
+                <a className="underline" href="/account/manage">
                   account
                 </a>
                 . No contracts.
@@ -76,8 +77,8 @@ export default function ShippingPage() {
                 We want you to feel the difference, not just take our word for
                 it. Try CONKA for up to {GUARANTEE_DAYS} days. If you are not
                 satisfied, email{" "}
-                <a className="underline" href="mailto:info@conka.io">
-                  info@conka.io
+                <a className="underline" href={supportMailtoHref()}>
+                  {SUPPORT_EMAIL}
                 </a>{" "}
                 for a full refund. No returns needed, no questions asked.
               </p>
@@ -91,8 +92,8 @@ export default function ShippingPage() {
               <p>
                 If anything arrives damaged or your order is not what you
                 expected, contact us at{" "}
-                <a className="underline" href="mailto:info@conka.io">
-                  info@conka.io
+                <a className="underline" href={supportMailtoHref()}>
+                  {SUPPORT_EMAIL}
                 </a>{" "}
                 and we will put it right.
               </p>

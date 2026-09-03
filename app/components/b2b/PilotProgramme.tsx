@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { b2bMailtoHref } from "@/app/lib/b2bData";
 
 /* ============================================================================
  * PilotProgramme
@@ -22,23 +23,20 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const NAVY = "#1B2757";
 
-const PILOT_MAILTO =
-  "mailto:harryglover@conka.io?subject=" +
-  encodeURIComponent("CONKA squad pilot enquiry") +
-  "&body=" +
-  encodeURIComponent(
-    [
-      "Hi Harry,",
-      "",
-      "We would like to explore a CONKA squad pilot. Some quick context:",
-      "",
-      "- Estimated squad size:",
-      "- Preferred time period:",
-      "- Coach's app view of interest (yes / no):",
-      "",
-      "Thanks,",
-    ].join("\n"),
-  );
+const PILOT_MAILTO = b2bMailtoHref({
+  subject: "CONKA squad pilot enquiry",
+  body: [
+    "Hi Harry,",
+    "",
+    "We would like to explore a CONKA squad pilot. Some quick context:",
+    "",
+    "- Estimated squad size:",
+    "- Preferred time period:",
+    "- Coach's app view of interest (yes / no):",
+    "",
+    "Thanks,",
+  ].join("\n"),
+});
 
 const svgProps = {
   width: 26,

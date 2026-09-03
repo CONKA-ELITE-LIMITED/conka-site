@@ -20,14 +20,20 @@ Identify which type of doc you're creating, as each has a different structure:
 
 | Type | Purpose | Location |
 |------|---------|----------|
-| **Feature doc** | Explains what a feature does, how it works, decisions made | `docs/features/` |
-| **Architecture decision** | Records why a technical decision was made | `docs/decisions/` |
-| **API documentation** | Endpoint reference for the backend | `docs/api/` |
-| **Component documentation** | Usage guide for reusable UI components | `docs/components/` |
-| **Setup/onboarding** | How to get the project running | `docs/` or project root |
-| **Workflow/process** | How to do something (like this doc) | `docs/workflows/` |
+| **Feature doc** (canonical) | What a system does, how it works, its decisions. Long-term memory | `docs/features/` |
+| **Feature plan** | A piece of work in flight: phases, open questions, runbook. Working memory, disposable | `docs/development/featurePlans/` |
+| **Architecture decision (feature-scoped)** | Why a technical decision was made about one system | Inside that feature doc's "Decisions and trade-offs" section |
+| **Architecture decision (cross-cutting)** | A decision shaping the whole codebase, belonging to no single feature | `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md` |
+| **API documentation** | Route reference for `app/api/*` | Inside the relevant feature doc. There is no `docs/api/` |
+| **Component documentation** | Usage guide for a reusable component | Inside the relevant feature doc, or `docs/branding/DESIGN_SYSTEM.md` for a pattern. There is no `docs/components/` |
+| **Commercial / money** | COGS, fees, margin, vendors | `docs/ops/` |
+| **Setup / deployment** | Getting something running or deployed | `docs/deployment/` |
+| **Workflow / process** | How to do something (like this doc) | `docs/workflows/` |
+| **Changelog** | One line per shipped change | `docs/CHANGELOG.md` |
+| **Deferred work** | Tech debt and anything knowingly left undone | `docs/TODO.md` |
 
-IF the type doesn't fit the above → ask the user where it should live.
+IF the type doesn't fit the above → ask the user where it should live. Do **not** invent a
+new top-level `docs/` directory; `docs/README.md` is the map and every directory in it exists.
 
 ---
 
@@ -45,6 +51,27 @@ Before writing:
 - Use code examples liberally — show, don't just tell
 - Avoid documenting things that are obvious from reading the code
 - Focus on the **why** and the **gotchas** — the code shows the "what"
+- No em dashes in prose
+
+### One source of truth per fact
+
+Every volatile fact stated twice is a future lie. The rot that actually bites here is restated
+numbers and restated behaviour: prices, variant GIDs, shot counts, route lists, file
+inventories, and "X is the live platform" claims that outlive the platform.
+
+- **Never restate** a price, a count, a GID, or a status in a second doc. Point at the source
+  (`see app/lib/offerData.ts`, `see docs/product/SKU_AND_SHOT_REFERENCE.md`) or use
+  approximate language ("roughly 300 contracts").
+- **File paths are fine.** Grep verifies a path; nothing verifies a count.
+- **Prices have one home:** `app/lib/offerData.ts` for what we sell at, `docs/PRICING_HISTORY.md`
+  for the audit log. No third place.
+- If a fact must appear somewhere, it appears in **one** doc and everything else links to it.
+
+### Describe the present, not the journey
+
+A canonical doc says what is true now. If it needs "we used to do X" at all, that belongs in a
+short note explaining a gotcha that still bites, never as narrative. The migration story lives
+in the feature plan, and the feature plan gets archived (Step 7).
 
 ---
 
@@ -175,6 +202,26 @@ Show different configurations with code snippets.
 - Gotchas, accessibility considerations, platform differences
 ```
 
+### Changelog (`docs/CHANGELOG.md`)
+
+One line per shipped change, newest first, inserted **directly below the
+`<!-- changelog:newest -->` marker** so the file never needs re-sorting.
+
+```markdown
+- **YYYY-MM-DD** | What changed and why it matters, in one scannable line
+```
+
+Write for "future me debugging at 2am, wondering what changed the week the numbers moved".
+An entry is a sentence a person can scan, not a commit message and not a release note.
+
+Good: `Deleted our order-history and account-details pages: Skio's portal renders its own`
+Too granular: `Removed AccountSubNav.tsx and updated three imports`
+Too vague: `Account cleanup`
+
+Skip entirely: internal refactors with no behaviour change, dependency bumps, style tweaks.
+A `docs:` commit does not get a changelog line. When the change is user-visible on the site,
+consider `/notion-flag` as well, so a later dip or spike can be traced to it.
+
 ---
 
 ## Step 4: Write the documentation
@@ -207,10 +254,63 @@ Before finalising, check:
 - [ ] Does the format match other docs in the same directory?
 - [ ] Are there any sections that just restate what the code obviously does? (Remove them)
 - [ ] Is there anything that will become stale quickly? (Flag it or restructure to avoid)
+- [ ] Does it restate a price, count, GID or status that lives somewhere else? (Link instead)
+
+---
+
+## Step 7: Retire the feature plan
+
+Feature plans (`docs/development/featurePlans/`) are **working memory**; canonical docs
+(`docs/features/`) are **long-term memory**. A plan is disposable by design, but only once the
+truth it holds has a permanent home.
+
+This step exists because plans here have repeatedly become the *only* record of a shipped
+system, which makes them undeletable and turns `featurePlans/` into a graveyard nobody trusts.
+`skio-migration.md` was the clearest case: `CLAUDE.md` pointed at a plan document as the
+canonical reference for a live commercial system.
+
+### Plan lifecycle
+
+| State | Meaning | What to do |
+|---|---|---|
+| **Active** | Phases in flight | The plan is the working doc. Keep the status table honest. A wrong status header is the most common rot. Do not consolidate mid-flight. |
+| **Shipped-with-residue** | Everything shipped except a named remnant | Plan stays. The header must name the remnant exactly ("Delivered except Phase 5: legacy protocol retirement"). |
+| **Done or dead** | No live phases: delivered, abandoned, or superseded | **Retire it now** (below). |
+
+### Retirement
+
+1. **Consolidate, by editing rather than creating.** Fold whatever living truth the plan
+   uniquely holds into the *existing* canonical doc for that system. Create a net-new doc in
+   `docs/features/` only if the shipped system has no home at all AND someone debugging it
+   would grep and find nothing. If the CHANGELOG line is a sufficient record, that is enough:
+   write no doc.
+2. **Split living from historical.** Build reference, gotchas and decisions are living and move
+   to canonical. Status tables, vendor email threads, blockers, cutover runbooks and
+   order-of-operations are historical and stay in the plan being archived.
+3. **Banner the plan** at the very top:
+   ```markdown
+   > **ARCHIVED (YYYY-MM-DD).** Delivered / Abandoned / Superseded.
+   > Canonical doc: `docs/features/<x>.md`. Kept for the reasoning, not for current behaviour.
+   ```
+4. **Move it** to `docs/development/featurePlans/archive/`.
+5. **Repoint every inbound link**, especially `CLAUDE.md` and `docs/README.md`. An archived doc
+   must never be what a table sends a reader to. Grep for the filename before finishing.
+
+The same pattern applies to loose working docs in `docs/development/` (one-off audits, context
+dumps, handoffs): once the moment passes, banner and move to the archive beside them.
+
+### Triggers, so this actually happens
+
+- `/ship` Step 8 and `/implement`'s plan-update step both ask: *did this work close the plan's
+  last active phase?* If yes, retire it in the same run.
+- Any session that catches a doc lying either fixes it on the spot (if it is one edit) or logs
+  it in `docs/TODO.md`. There is no scheduled review ritual. Opportunistic correction plus this
+  retirement step is the whole system.
 
 ---
 
 ## References
+- Docs map: `docs/README.md`
 - Design system: `docs/branding/DESIGN_SYSTEM.md`
-- Architecture docs: `docs/MASTER_CONTEXT.md`
+- Architecture and roadmap: `docs/development/CODEBASE_AUDIT_AND_ROADMAP.md`
 - Existing feature docs: `docs/features/`

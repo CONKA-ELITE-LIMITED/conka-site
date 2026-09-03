@@ -215,124 +215,33 @@ const handleCheckout = () => {
 
 ---
 
-## Loop Subscriptions
+## Subscriptions (Skio)
 
-### Overview
-- Loop handles subscription lifecycle: billing, pause/resume, skip, cancel, plan changes
-- **Shopify** = who the customer is + which contracts they have. **Loop** = what each subscription actually is and what happens when they interact with it.
-- Integration approach: Loop Admin API called from Next.js API routes (server-side only)
-- All subscription mutations go through: `app/api/auth/subscriptions/[id]/pause/route.ts`
+Skio owns every subscription contract. Loop was decommissioned on 2026-09-02 and
+its API client, routes and portal UI are deleted from this repo.
 
-### Key files
-| File | Purpose |
-|------|---------|
-| `app/lib/loop.ts` | Loop API client (low-level helpers) |
-| `app/hooks/useSubscriptions.ts` | Frontend hook — all subscription actions |
-| `app/api/auth/subscriptions/[id]/pause/route.ts` | All subscription mutations (pause, resume, cancel, skip, change plan, edit multi-line) |
-| `app/api/auth/subscriptions/route.ts` | GET subscriptions (hybrid Shopify + Loop) |
-| `app/types/subscription.ts` | Shared TypeScript types |
-| `docs/features/CUSTOMER_PORTAL.md` | Full feature documentation |
+**Canonical reference:** `docs/features/SUBSCRIPTIONS.md`. Read it before touching
+subscriptions, `/account` or selling plans. It covers the percentage-off pricing
+model and its traps, the selling plans, bundles and Synergy rules, the portal, the
+env vars and the code map.
 
-### Loop API reference
-- **Docs:** https://developer.loopwork.co/reference/api-reference
-- **Base URL:** `https://api.loopsubscriptions.com/admin/2023-10`
-- **Auth header:** `X-Loop-Token: {LOOP_API_KEY}`
-- **Rate limit:** 5 requests per second
+### What you need to know here
 
-### ID formats — critical gotcha
+- **We do not manage subscriptions in this codebase.** Skio's embedded portal at
+  `/account/manage` is the whole experience. There is no subscription mutation
+  API of ours to call.
+- **Pricing model.** Skio plans are **percentage off** the variant's one-time
+  price, never Set price (Skio ignores Set price under Shopify market prices,
+  which risks international overcharge). So the variant price IS the one-time
+  price and the plan supplies the discount. A variant with no plan attached sells
+  at full price.
+- **Selling plan GIDs** live in `app/lib/offerData.ts` (`SKIO_OFFER_VARIANTS`).
+  `LEGACY_OFFER_VARIANTS` in the same file is reverse-lookup only, so migrated
+  Loop-era lines still resolve to a product. Do not sell from it.
+- **Bundle variants** carry `custom.bundlecomposition`, which Synergy explodes at
+  pick time. A subscription variant without it reaches the 3PL as a plain SKU and
+  has to be hand-fixed on every order.
 
-Loop uses **two different ID formats** depending on the endpoint:
-
-| Format | Example | Used by |
-|--------|---------|---------|
-| `shopify-{numericId}` | `shopify-121614270838` | `GET /subscription/{id}`, line swap, pause, resume, cancel |
-| Loop internal numeric ID | `10547807` | `PUT /frequency`, `POST /skipNext`, `POST /placeOrder` |
-
-**Rule:** If an endpoint returns 404 with `shopify-{id}`, it likely needs the Loop internal ID. To get the internal ID, first `GET /subscription/shopify-{id}` and read `response.data.data.id`.
-
-The `change-frequency` and `skip` actions in the codebase already follow this pattern — they GET the subscription first, extract the internal ID, then call the target endpoint.
-
-### Endpoint reference (endpoints we use)
-
-| Action | Method | Endpoint | ID format | Body |
-|--------|--------|----------|-----------|------|
-| Get subscription | GET | `/subscription/{id}` | `shopify-{id}` | — |
-| Pause | POST | `/subscription/{id}/pause` | `shopify-{id}` | optional `pauseDuration` (`{ intervalCount, intervalType }`) |
-| Resume | POST | `/subscription/{id}/resume` | `shopify-{id}` | — |
-| Cancel | POST | `/subscription/{id}/cancel` | `shopify-{id}` | optional `comment`, `notifyCustomer` |
-| **Skip next order** | POST | `/subscription/{id}/skipNext` | **Loop internal ID** | — |
-| Swap line | PUT | `/subscription/{id}/line/{lineId}/swap` | `shopify-{id}` | `variantShopifyId`, `quantity`, `pricingType`, `sellingPlanGroupId` |
-| Update frequency | PUT | `/subscription/{id}/frequency` | **Loop internal ID** | `billingPolicy`, `deliveryPolicy`, `nextBillingDateEpoch`, `discountType` |
-| **Reschedule delivery** | POST | `/subscription/{id}/reschedule` | **Loop internal ID** | `newBillingDateEpoch`, optional `rescheduleFutureOrders` (default true), `notifyCustomer` (default true) |
-| **Reactivate** | POST | `/subscription/{id}/reactivate` | **Loop internal ID** | — (no body) |
-| **Place order now** | POST | `/subscription/{id}/placeOrder` | **Loop internal ID** | optional `preponeFutureOrder` (default true) |
-| **Apply discount** | POST | `/subscription/{id}/discount` | **Loop internal ID** | `{ code: string }` |
-| Get customer | GET | `/customer/{customerShopifyId}` | Shopify customer ID | — |
-| Update payment method | POST | `/paymentMethod/{id}/update` (storefront API) | Loop payment method ID | — |
-
-### Subscription data flow
-
-```
-Reading:
-  Shopify Customer Account API → subscription contract IDs
-  Loop Admin API (per contract) → full subscription details
-  Merged response → frontend
-
-Mutations:
-  Frontend hook → POST /api/auth/subscriptions/[id]/pause (pause, resume, cancel, skip, change-frequency, edit-multi-line)
-                → POST /api/auth/subscriptions/[id]/reschedule (reschedule delivery date)
-  API route → converts to shopify-{id} → Loop Admin API
-  (some endpoints: GET subscription first → extract Loop internal ID → then call endpoint)
-```
-
-### Working with subscriptions (Storefront API side)
-- Subscription eligibility: Products with `sellingPlanGroups` on their Shopify listing are subscribable
-- Selling plan data: available via Storefront API on the product's `sellingPlanGroups`
-- Display logic:
-  - IF product has selling plans → show subscription option with pricing
-  - Show discount compared to one-time price
-  - Let user toggle between one-time and subscription
-
-### Key subscription fields (Storefront API)
-```graphql
-# In your product query, include:
-sellingPlanGroups(first: 5) {
-  edges {
-    node {
-      name
-      sellingPlans(first: 5) {
-        edges {
-          node {
-            id
-            name
-            options {
-              name
-              value
-            }
-            priceAdjustments {
-              adjustmentValue {
-                ... on SellingPlanPercentagePriceAdjustment {
-                  adjustmentPercentage
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-### Subscription edge cases
-- Product available as both one-time and subscription → user must explicitly choose
-- Subscription-only products → hide the one-time option
-- Subscription price vs one-time price → always show the savings clearly
-- Cart with mixed items (subscription + one-time) → ensure both work through checkout
-- **Legacy products:** Old subscriptions on legacy variants (e.g. "CONKA 1 (28 Shots)") will fail plan changes — must be manually migrated in Loop dashboard
-- **Multi-line contracts:** Frequency changes on multi-line contracts can fail if lines have different selling plan groups — route returns a clear error directing to support
-
----
 
 ## Pricing display
 
@@ -388,20 +297,17 @@ sellingPlanGroups(first: 5) {
 ### Shopify
 - Cart checkout URLs expire — always use `cart.checkoutUrl` from the latest cart fetch
 - Metafield values are always strings — parse JSON metafields carefully
-### Loop
-- **ID format mismatch:** Some Loop endpoints accept `shopify-{id}`, others require Loop's internal numeric ID. If you get a 404, check the ID format first. See the ID formats table above.
-- **Frequency endpoint uses Loop internal ID:** `PUT /subscription/{id}/frequency` returns 404 if you pass `shopify-{id}`. Always GET the subscription first and use `response.data.data.id`.
-- **skipNext uses Loop internal ID:** Same as frequency — must resolve the internal ID first.
-- **Loop does not accept `DAY` for frequency:** Use `WEEK`, `MONTH`, or `YEAR`. Bi-weekly = `WEEK` × 2.
-- **`nextBillingDateEpoch` must be preserved:** When changing plan/frequency, always pass the existing next billing date back — never let it reset.
-- **Redundant frequency updates rejected:** On multi-line contracts, Loop rejects a frequency update if the interval hasn't changed. Check before calling.
-- **Cancel uses `comment`, not `cancellationReason`:** The `cancellationReason` field only appears in Loop responses. To send a reason, use `comment` in the request body.
-- **Pause `pauseDuration` format:** `{ intervalCount: number, intervalType: 'DAY' | 'MONTH' | 'YEAR' | 'CUSTOM' }`. Loop does NOT accept `WEEK` as intervalType. Use `DAY` (with days = weeks × 7) for sub-month durations, `MONTH` for exact month multiples. Max pause is 3 billing cycles.
-- **Reschedule has a dedicated endpoint:** Use `POST /subscription/{loopInternalId}/reschedule` — NOT `PUT /frequency`. The frequency endpoint validates selling plans against Shopify's product catalog, which fails on multi-line subscriptions where a variant's selling plan doesn't match the billing interval. The dedicated reschedule endpoint skips this validation entirely.
-- **Reactivate uses Loop internal ID:** `POST /subscription/{loopInternalId}/reactivate` — no body needed. Must GET subscription first to resolve internal ID. Only works on cancelled subscriptions — not paused (use resume for paused). May fail if the product/variant has been discontinued since cancellation.
-- **placeOrder uses Loop internal ID:** `POST /subscription/{loopInternalId}/placeOrder` — optional `preponeFutureOrder: true` shifts future deliveries forward. May fail if there's already an unfulfilled order.
-- **Apply discount uses Loop internal ID:** `POST /subscription/{loopInternalId}/discount` with `{ code }`. The code must be a valid Shopify discount code configured for subscriptions. Loop validates against Shopify's rules (expiry, usage limits, product eligibility). The cancellation retention flow uses `RETENTION15` (15% off, 3 cycles, once per customer).
-- **Rate limit:** 5 requests per second. The plan change flow makes 2-3 sequential calls — stay aware.
+### Skio
+
+- **Migrated contracts keep their history but not Loop's attribution.** Original
+  start dates and cycle counts carry through; custom fields and Loop's own
+  attribution do not.
+- **Rebills send no Meta Purchase event.** Recurring attribution is acquisition
+  only, matching Loop. Skio's native Triple Whale integration is the cheap way to
+  get recurring visibility.
+- **Skio stamps one order tag** (`Subscription First Order`) where Loop stamped
+  eight. Nothing automated should key on order tags; see
+  `docs/development/CART_ATTRIBUTES.md`.
 
 ---
 

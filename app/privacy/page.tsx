@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | CONKA",
@@ -43,10 +44,10 @@ export default function PrivacyPage() {
                 <li>
                   Data protection contact:{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>
                 </li>
               </ul>
@@ -292,7 +293,7 @@ export default function PrivacyPage() {
                       <td className="py-3">Page view data</td>
                     </tr>
                     <tr>
-                      <td className="py-3 pr-4">Loop Subscriptions</td>
+                      <td className="py-3 pr-4">Skio</td>
                       <td className="py-3 pr-4">Subscription management</td>
                       <td className="py-3">
                         Subscription and billing data
@@ -455,10 +456,10 @@ export default function PrivacyPage() {
               <p className="mt-4">
                 To exercise any of these rights, email{" "}
                 <a
-                  href="mailto:info@conka.io"
+                  href={supportMailtoHref()}
                   className="underline hover:opacity-70"
                 >
-                  info@conka.io
+                  {SUPPORT_EMAIL}
                 </a>
                 . We will respond within 30 days.
               </p>
@@ -582,10 +583,10 @@ export default function PrivacyPage() {
                 <li>
                   Email:{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>
                 </li>
                 <li>

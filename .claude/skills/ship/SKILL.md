@@ -122,7 +122,10 @@ Check whether the change made any living documentation stale, and update only wh
 - `CLAUDE.md` -- routes table, key files, product data notes
 - The relevant `docs/features/*.md` canonical doc for the touched system
 - `docs/branding/DESIGN_SYSTEM.md` only if a new pattern/token was introduced
-- An existing feature plan doc, if this work belongs to one
+- An existing feature plan doc, if this work belongs to one -- update its status table to match reality
+- `docs/TODO.md` -- an entry for anything deliberately left undone in this run
+
+**Retirement check:** did this work close out the plan's last active phase (delivered, abandoned, or superseded, with no live phases left)? If so, retire the plan in the same run per `docs/workflows/05-creating-documentation.md` Step 7: fold its living truth into the existing canonical doc, banner it ARCHIVED with a pointer, move it to `featurePlans/archive/`, and repoint inbound links in `CLAUDE.md` and `docs/README.md`.
 
 Do not write new docs for small changes; a shipped tweak rarely needs more than a line. If nothing is stale, say so and skip. If docs changed: commit them separately (`docs:` prefix, changelog skipped) following the commit skill.
 

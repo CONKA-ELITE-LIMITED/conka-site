@@ -5,6 +5,33 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 ---
 
+## Subscriptions (Skio)
+
+### ~~Unconfirmed: does a Shopify-side address edit reach the Skio contract?~~ Closed 2026-09-03
+
+Closed by deletion, not by a vendor answer. The risk was that `/account/details` let a
+customer edit the Shopify customer record's address and believe they had changed where their
+box ships, when only the Skio contract governs that. `/account/details` and the update route
+are gone, so the Skio portal is now the only place an address can be changed and the question
+no longer has anything to bite on. See `docs/development/featurePlans/archive/loop-decommission.md` Phase 4.
+
+---
+
+### Klaviyo email templates still link to the deleted `/account/subscriptions`
+
+**Status:** Open, low urgency. Covered by a redirect in the meantime.
+**Files:** None in this repo. Klaviyo template editor.
+
+**Symptom:** the Loop-era self-built portal at `/account/subscriptions` was deleted in the Loop decommission (`docs/development/featurePlans/archive/loop-decommission.md`). Klaviyo templates and historic order emails, which this repo does not control, still point there.
+
+**Mitigation already shipped:** `next.config.ts` carries a permanent redirect from `/account/subscriptions` and `/account/subscriptions/:path*` to `/account/manage`, so no customer hits a 404. Decision (Rudh, 2026-09-02): rely on the redirect, fix the templates at leisure.
+
+**What closes it:** sweep the Klaviyo templates for `/account/subscriptions` and repoint them at `/account/manage`, then the redirect becomes belt and braces rather than load-bearing.
+
+**Why deferred:** template editing outside the codebase, and the redirect makes it invisible to customers.
+
+---
+
 ## Shopify / Pricing
 
 ### Formally move one-time shipping out of the SKU prices and into a real Shopify shipping rate
@@ -24,7 +51,7 @@ Each item includes the relevant files, what unblocks it, and why it was deferred
 
 **Status:** Largely resolved 2026-09-01 (see foot of entry). Added 2026-08-28.
 **Files:** `app/lib/offerData.ts` (`OFFER_VARIANTS`) on `feature/skio-integration`, plus Shopify admin and the Skio dashboard.
-**Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/development/featurePlans/skio-migration.md` (on the Skio branch).
+**Reading:** `docs/development/featurePlans/flow-starter-pack.md`, `docs/features/SUBSCRIPTIONS.md`.
 
 `feature/starter-pack` re-pointed all six subscription cadences at the `-STARTER-` variants, wired to **Loop** selling plans. `feature/skio-integration` re-points the same purchase surfaces at **Skio** selling plans, and it predates the starter kit.
 
@@ -146,7 +173,7 @@ Error: tagsAdd failed: Access denied for tagsAdd field.
 
 **Status:** DONE (Phase 4, July 2026). The dead protocol code (`protocolPricing`, `PROTOCOL_COLORS`, `getProtocolVariantId` and the unused variant-audit helpers) is deleted. What genuinely still serves existing subscribers is quarantined in `app/lib/legacy/protocolSubscriptions.ts`, and the `productData` barrel no longer exports anything protocol-related.
 
-**Remaining follow-up:** `app/api/auth/subscriptions/[id]/pause/route.ts` carries its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID). Unifying it with the legacy module means touching the renewal path for paying subscribers, so it needs an end-to-end test of a real subscription edit. Left deliberately.
+**Remaining follow-up: RESOLVED 2026-09-02 by deletion.** `app/api/auth/subscriptions/[id]/pause/route.ts` carried its own duplicate `PROTOCOL_VARIANTS` table (keyed by numeric variant ID, not GID), left alone because unifying it meant touching the renewal path for paying subscribers. The route was deleted in the Loop decommission, so the duplicate is gone and the legacy module is the only copy. Skio manages pausing now.
 
 ---
 
@@ -246,7 +273,7 @@ it" does not mean "safe to delete" in this repo.**
   `account/NextDeliveryHero.tsx`, `account/HairlineSpecStrip.tsx`, `account/ActiveOrderCard.tsx`.
   The portal is mid-migration to Skio as a full iframe replacement, so these are
   probably doubly dead, but that is the migration's call to make. See
-  `docs/development/featurePlans/skio-subscription-migration.md`.
+  `docs/features/SUBSCRIPTIONS.md`.
 
 **Straightforwardly dead, just not swept yet:** `WhyConkaWorks.tsx`,
 `CaseStudiesDataDriven.tsx`, `FormulaCaseStudies.tsx`, `product/ProductHeroMobileV2.tsx`,

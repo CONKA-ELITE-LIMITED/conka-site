@@ -4,7 +4,7 @@
 **Owner:** Rudh.
 **Source data:** Skio's final export, `subscriptions-raw.json` + `prepaid-raw.json`, at `~/Desktop/DownloadsForClaude/Active/`. Deliberately not committed: customer emails and payment-method ids.
 
-Everything in this file is an action outside the codebase. The migration plan itself is `../skio-migration.md`.
+Everything in this file is an action outside the codebase. The migration plan itself is `archive/skio-migration.md`.
 
 ---
 
@@ -92,6 +92,6 @@ That decision was taken when Skio estimated 5-10 people. The real number is 51. 
 ## 6. Still open elsewhere
 
 - **conka-lab Check 13** fails with 9 violations, because the coalesce matcher pairs Loop and Skio contracts by email plus billing frequency and leaves ambiguous ones unmatched by design. The fix is to key on `reChargeId` instead. Kristian is on it. **`KLAVIYO_ENABLED` stays false until Check 13 is green.**
-- **The Loop-removal PR does not exist yet.** Decommission list is in `../skio-migration.md` section 12.
+- ~~**The Loop-removal PR does not exist yet.**~~ **Done, merged 2026-09-03** (PR #477). The Loop integration and the duplicate account pages are deleted; canonical docs are `docs/features/SUBSCRIPTIONS.md` and `docs/features/CUSTOMER_PORTAL.md`.
 - **`NEW Cancellation Flow`** in Klaviyo still triggers off a Loop metric and needs re-pointing at Skio's cancellation event. It is the only Loop-keyed flow in the account.
 - **Skio's native Triple Whale integration** is not yet enabled.

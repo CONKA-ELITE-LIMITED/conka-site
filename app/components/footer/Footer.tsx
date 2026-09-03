@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { COMPANY, FOOTER_SOCIALS } from "@/app/lib/site";
+import { supportMailtoHref } from "@/app/lib/supportEmail";
 
 type FooterLink = { label: string; href: string };
 
@@ -25,14 +26,16 @@ const DISCOVER: FooterLink[] = [
 const COMPANY_LINKS: FooterLink[] = [
   { label: "Our story", href: "/our-story" },
   { label: "Why CONKA", href: "/why-conka" },
-  { label: "Contact us", href: "mailto:info@conka.io" },
+  { label: "Contact us", href: supportMailtoHref() },
 ];
 
 const SUPPORT: FooterLink[] = [
   { label: "FAQ", href: "/faq" },
   { label: "Shipping & returns", href: "/shipping" },
-  { label: "Your account", href: "/account" },
-  { label: "Manage subscription", href: "/account/subscriptions" },
+  // One entry, not two: the Skio portal is both the account and the place a
+  // subscription is managed, so "Your account" and "Manage subscription" were
+  // two labels resolving to the same page.
+  { label: "Your account", href: "/account/manage" },
 ];
 
 const COLUMNS: { title: string; links: FooterLink[] }[] = [

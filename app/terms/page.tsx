@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
+import { SUPPORT_EMAIL, supportMailtoHref } from "@/app/lib/supportEmail";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | CONKA",
@@ -45,10 +46,10 @@ export default function TermsPage() {
                 <li>
                   Contact:{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>
                 </li>
               </ul>
@@ -117,10 +118,10 @@ export default function TermsPage() {
                   modify your subscription at any time through your account
                   portal or by emailing{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>
                   . No questions asked. No cancellation fees.
                 </li>
@@ -158,10 +159,10 @@ export default function TermsPage() {
                 <li>
                   <strong>How to claim:</strong> Email{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>{" "}
                   within {GUARANTEE_DAYS} days of receiving your first order.
                 </li>
@@ -226,10 +227,10 @@ export default function TermsPage() {
                 <li>
                   <strong>How to cancel:</strong> Email{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>{" "}
                   stating your name, order number, and that you wish to cancel.
                 </li>
@@ -265,10 +266,10 @@ export default function TermsPage() {
                 <li>
                   Contact{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>{" "}
                   with your order number, a description of the issue, and photos
                   if applicable.
@@ -374,10 +375,10 @@ export default function TermsPage() {
                 <li>
                   Email:{" "}
                   <a
-                    href="mailto:info@conka.io"
+                    href={supportMailtoHref()}
                     className="underline hover:opacity-70"
                   >
-                    info@conka.io
+                    {SUPPORT_EMAIL}
                   </a>
                 </li>
                 <li>
