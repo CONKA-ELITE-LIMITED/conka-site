@@ -171,9 +171,13 @@ const nextConfig: NextConfig = {
         destination: '/conka-clarity',
         permanent: true,
       },
+      // Legacy Shopify URL. It used to point at the login page, from the era
+      // when "help" meant "sign in and manage your Loop subscription". Someone
+      // typing /help wants answers, so it goes to the FAQ, which carries the
+      // support address.
       {
         source: '/help',
-        destination: '/account/login',
+        destination: '/faq',
         permanent: true,
       },
       // The legacy Shopify blog archive: 29 specific rules then the wildcard.
