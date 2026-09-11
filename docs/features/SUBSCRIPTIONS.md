@@ -268,12 +268,15 @@ lives in the conka-lab repo, at **`docs/features/SUBSCRIPTION_INGEST.md`** there
 to point at `docs/featurePlans/loop-to-skio-ingest-migration.md`, which is now archived and whose
 status header still describes the migration as not yet done.)
 
-**Two open items on that side affect what customers receive**, as of 2026-09-07. Sixteen
+**One open item on that side affects what customers receive**, as of 2026-09-11. Sixteen
 subscribers who were active or paused in Loop have no Skio contract and currently classify as
 one-time buyers rather than subscribers; this is disputed with Skio (ticket `215475794231370`).
-And the **cancelled-winback flow is paused** in Klaviyo after long-cancelled customers were
-mailed, caused by conka-lab replaying archived Loop cancellations into the population. Every
-other flow is running. Detail in conka-lab's `docs/skio-cutover-findings-ledger.md`, F-17 and F-29.
+Detail in conka-lab's `docs/skio-cutover-findings-ledger.md`, F-17.
+
+The **cancelled-winback flow was paused** on 7 Sept after long-cancelled customers were mailed,
+caused by conka-lab replaying archived Loop cancellations into the population. It is **live and
+active again** as of 11 Sept, following SCRUM-1332 which realigned the flow to Skio's real reason
+vocabulary. Every Klaviyo flow is now running.
 
 **Cancellation deflection and save-offers live in Skio's portal**, where the reason is captured.
 Klaviyo keeps only the post-cancel winback.
