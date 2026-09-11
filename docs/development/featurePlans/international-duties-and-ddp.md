@@ -405,8 +405,12 @@ is a second reason not to retire it.
 
 1. ~~Set the **default country of origin** to United Kingdom.~~ **DONE 8 Sept 2026.**
 2. ~~Add **HS code `210690`** to the live variants missing it.~~ **DONE 8 Sept 2026**, see below.
-3. **Delete the 1-box and 2-box weight bands** on the `Europe` and `france` zones. Independent
-   of Synergy, and it stops the loss-making small orders immediately.
+3. ~~**Delete the 1-box and 2-box weight bands** on the `Europe` and `france` zones.~~
+   **DONE 11 Sept 2026.** Both zones now run 5,250-13,650g only. **Practical effect: Europe is
+   quarterly-only.** Every monthly variant sits under 5,250g (`FLOW-STARTER-28` 2,500g,
+   `BOTH-STARTER-56` 4,550g), so a new European customer can only buy quarterly or a 3+ box
+   one-off. That is the intended outcome, since a monthly European renewal loses about £20
+   (§ Margins). Existing subscribers are unaffected: renewals bypass checkout.
 4. Draft the shipping policy copy: 3-box minimum to Europe, duties and taxes included, nothing
    to pay on delivery.
 5. Confirm **COGS per box** against a current cost sheet and finish `docs/ops/unit-economics.md`.
@@ -428,12 +432,22 @@ for Europe. **None of those block the build.**
 
 ### Phase 3 — The switch, once Synergy confirm `European Delivery` is live
 
-7. Rename the `Europe` and `france` zone rates to exactly `European Delivery`. **Prices
-   unchanged.** Synergy routes on name only, so nothing else moves.
-8. **Enable collect duties and import taxes at checkout** for the EU markets. This must go live
-   at the same moment, never before: collect duties while Synergy are still shipping DAP and the
-   customer pays at checkout *and* at the door. Needs HS codes and country of origin (both done)
-   and Shopify Payments. Costs 0.5% promotional, 0.85% standard.
+7. ~~Rename the `Europe` and `france` zone rates to exactly `European Delivery`.~~
+   **DONE 11 Sept 2026**, deliberately ahead of Synergy's build. Prices unchanged: `france`
+   £24/£32, `Europe` £26/£41.
+
+   **Why early.** The two failure modes are not symmetric. Renamed before Synergy are ready, a
+   European order is held as "Invalid Dispatch Method" and ships a day or two late. Left on
+   `Express International`, it ships DAP on Evri and the customer gets the doorstep bill, which
+   is the entire problem being fixed. The hold is a safety net: once the rename is in, nothing
+   can ship under the old terms. Georgina was told the rename is already live so anything held
+   gets released.
+8. **Enable collect duties and import taxes at checkout** for the EU markets. **Still waiting on
+   Synergy**, and unlike the rename it should not go early. If they map `European Delivery` to
+   DAP by mistake, duties-on means the customer pays at checkout *and* at the door. Waiting costs
+   us roughly £35 once, if an order lands in the gap and ships DDP with no duty collected. That is
+   the cheaper mistake. Needs HS codes and country of origin (both done) and Shopify Payments.
+   Costs 0.5% promotional, 0.85% standard.
 9. Set the **8 France** Skio contracts' delivery title to `European Delivery`, `setOverride`
    false (§ Interaction with SCRUM-1311).
 10. Publish the shipping policy copy.
