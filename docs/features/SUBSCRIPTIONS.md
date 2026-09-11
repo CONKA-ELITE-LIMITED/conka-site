@@ -115,16 +115,17 @@ re-deriving this: **Jersey sits in its own `Express International` zone**, so a 
 address labelled "United Kingdom" would be mis-mapped, and a country with no configured zone has
 no rate at all. Neither is present today (audited 2026-09-07).
 
-> ⚠️ **The two-method rule above expires when the international DDP work ships.**
-> `Express International` is being retired and replaced by `European Delivery` (DHL road, EU) and
-> `Express International DHL` (DHL air, rest of world), all on DDP terms. The mapping then becomes
-> three methods: `Express` for UK, `European Delivery` for the EU, `Express International DHL`
-> everywhere else. See `docs/development/featurePlans/international-duties-and-ddp.md`.
+> ⚠️ **The two-method rule above changes when the international DDP work ships (SCRUM-1204).**
+> Europe only: a new `European Delivery` method (DHL Economy Select road, DDP) takes the `Europe`
+> and `france` zones. The rest of the world stays on `Express International` (Evri, DAP) until the
+> USA rate is resolved, so that method is **not** being retired. The mapping becomes `Express` for
+> UK, `European Delivery` for the EU, `Express International` everywhere else. See
+> `docs/development/featurePlans/international-duties-and-ddp.md`.
 
-### Do not re-sync the 12 international contracts yet
+### Hold the 8 France contracts, fix everything else
 
-**Fix the 207 UK contracts now. Hold the 12 international ones.** Active subscription state
-pulled from Skio 8 Sept 2026:
+**Fix the 207 UK contracts and the 4 USA ones now. Hold only the 8 France contracts.** Active
+subscription state pulled from Skio 8 Sept 2026:
 
 | | Loop-migrated (needs this fix) | Skio-native (already correct) |
 |---|---|---|
@@ -135,13 +136,14 @@ Every international subscriber is Loop-migrated; there are no Skio-native intern
 contracts at all.
 
 The UK contracts map to `Express`, which the international work does not touch, so fixing them
-now is final. The 12 international ones would be set to `Express International`, which that work
-**retires**, so correcting them now means correcting them twice. Hold them and do it once
-against the final method names.
+now is final. The **4 USA** contracts map to `Express International`, which now survives the first
+phase of that work, so they are final too.
 
-They are being revisited regardless: four of the eight French contracts are monthly single-box
-subscribers due to be migrated to quarterly, and all 12 carry the stale Loop-era delivery prices
-noted above.
+Only the **8 France** contracts need holding. They move to `European Delivery`, which does not
+exist yet, so setting them to `Express International` now means correcting them twice. They are
+being revisited regardless: the monthly ones are due to move to quarterly, because a monthly
+single-formula European renewal loses about £20 under DDP (DHL road costs £36 flat whether the
+parcel is 1.5kg or 10kg), and all of them carry the stale Loop-era delivery prices noted above.
 
 **A subscription always resolves to `Express` in the UK, even when the customer paid for next-day.**
 Order `#4042` carries two shipping lines, `24 Hour Delivery £6.54` and `Express £0.00`, and the
