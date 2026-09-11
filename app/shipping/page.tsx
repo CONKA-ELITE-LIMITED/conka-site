@@ -24,7 +24,7 @@ export default function ShippingPage() {
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Shipping &amp; Returns
             </h1>
-            <p className="text-sm opacity-70">Last updated 14 June 2026</p>
+            <p className="text-sm opacity-70">Last updated 11 September 2026</p>
           </div>
 
           <div className="space-y-10 text-base leading-relaxed">
@@ -51,6 +51,7 @@ export default function ShippingPage() {
                   International delivery is available. Options, times, and costs
                   are calculated and shown at checkout based on your address.
                 </li>
+                <li>European orders have a three box minimum, which is a quarter&apos;s supply.</li>
               </ul>
             </section>
 
