@@ -241,10 +241,37 @@ rather than wiring it into a hero that had already been through visual review.
 Those trust claims live in the reasons, the sticky bar sub-line and the FAQ.
 
 **The hero asset is portrait in a square frame.** All three personas use
-`aspect: "1/1"` with `objectPosition: "center top"`. The sources are 928x1152,
-so the square shows 81% of the image and crops only the lower fifth, with
-nothing lost off the top. Keep the frame consistent across personas: it is what
-makes the three heroes the same height.
+`aspect: "1/1"`. Keep that frame consistent across personas: it is what makes
+the three heroes the same height. **`objectPosition` is per page, not shared.**
+All three used to say `center top` on the reasoning that a 928x1152 source
+loses only its lower fifth to the square, which was true of one photograph and
+wrong about the others: a subject sitting lower in frame gets cut at the mouth
+with a third of the square spent on empty backdrop. Pick the offset by cropping
+the source to a square yourself and looking at it, then write that percentage.
+
+**Two of the three heroes are real customer photographs** (SCRUM-1339), taken
+from `public/testimonials/ugc/` rather than the generated studio set. They
+replaced shots that were off-persona: closed eyes reading as sedated on a page
+selling the ability to start a task, and a subject reading mid-thirties on a
+page about losing words. Casting, situation and expression are what a persona
+hero is judged on; whether the bottle is in the picture is not the question,
+the two that shipped both have it in hand.
+
+Real UGC brings two constraints:
+
+- **A hero still may also be a named testimonial elsewhere on its own page.**
+  Those photographs are bound to a person's quote, so the fix for a repeat is
+  to change the hero, never to swap the face attached to the testimonial.
+- **A hero still is probably also in the UGC band.** Every listicle sets
+  `ugc: {}` and so renders the whole shared set. `ListicleProofTier` filters
+  the hero's `src` out of the band for this reason, so you do not have to
+  curate `ugc.items` per page and it cannot go stale when a hero changes.
+
+These sources are 810x1013 against the 928x1152 of the generated set, so a
+viewport above roughly 1560px upscales them about 1.2x. Measured through
+`_next/image` at the real mobile LCP request (a 390px slot at DPR2, AVIF), the
+heroes cost 30-62K; dense photographic backgrounds cost noticeably more than a
+flat studio sweep, which is worth checking when swapping one in.
 
 The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
