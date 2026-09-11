@@ -1,14 +1,16 @@
 # International Duties, DDP and the Move to DHL
 
-**Status:** DECIDED and unblocked. Synergy replied 10 Sept 2026: road is available, Royal
-Mail is out, importer of record treated as settled. One decision left for us (hard-coded
-incoterms) before they build. See § Synergy's answers.
-**Created:** 2026-09-07 · **Updated:** 2026-09-10
+**Status:** DECIDED, Europe in build. Synergy confirmed 10 Sept 2026 and were given the
+go-ahead on 11 Sept. Europe moves to DHL road on DDP; the rest of the world is untouched
+until the USA rate is resolved. Tracked as **SCRUM-1204**.
+**Created:** 2026-09-07 · **Updated:** 2026-09-11
 **Owner:** Rudh (Shopify config + Synergy liaison), Humphrey (commercial call, Synergy
 relationship)
 **Trigger:** French customers billed a surprise import charge at the door, Sept 2026.
 Georgina Anderson-Marshall (Synergy) confirmed the orders shipped DAP because terms of sale
 were never mapped at onboarding.
+**Tracked as:** **SCRUM-1204** (rewritten 11 Sept 2026; it previously scoped a DAP DHL
+upgrade sitting alongside Evri).
 **Relates to:** `docs/shipping/SHIPPING_AND_COURIERS.md` (canonical; §4 and §6 are superseded
 by this plan until it is folded back in), `order-size-shipping-tiers.md`,
 `archive/synergy-3pl-integration.md`, **SCRUM-1311** (renewal shipping titles — see
@@ -21,22 +23,35 @@ descriptions of the model.
 
 ## The decision
 
-**All international shipping moves to DHL on DDP terms, with a minimum order size.**
+**Europe moves to DHL road on DDP terms, at unchanged prices, with a 3-box minimum. The rest
+of the world is untouched for now.**
 
 | | |
 |---|---|
-| Europe (incl. France) | DHL **Economy Select** (road), **DDP** |
-| Rest of world (USA, Canada, AU, NZ, ZA, UAE, Caribbean) | DHL **Express** (air), **DDP** |
-| Minimum international order | ~3 boxes, enforced by deleting the 1-box and 2-box weight bands |
-| Evri international | Retired |
+| Europe (incl. France) | DHL **Economy Select** (road), **DDP**, new rate name `European Delivery` |
+| Rest of world (USA, Canada, AU, NZ, ZA, UAE, Caribbean) | **Unchanged.** Stays `Express International` (Evri, DAP) |
+| European prices | **Unchanged.** They already cover the DDP cost (§ Margins) |
+| Minimum European order | **3 boxes**, by deleting the 1-box and 2-box weight bands |
+| Duty and VAT | Collected from the customer at checkout as a separate line, not absorbed |
+| Evri international | **Not retired** |
 | UK (Evri `Express`, DPD `24 Hour Delivery`) | Unchanged |
 
-The customer pays the full landed cost at checkout and nothing on delivery. Small
-international orders stop being possible, which is deliberate: they cannot carry the cost.
+The customer pays the full landed cost at checkout and nothing on delivery.
 
-Road and air are an internal routing detail. A customer only ever sees the option for their
-own destination, so there is nothing to differentiate at checkout. The two need distinct
-**rate names** only because Synergy routes on the name.
+**Why Europe alone.** Europe is profitable at today's prices even absorbing the full DDP
+freight cost. The USA is not: its flat £22 rate has been obsolete since the US de minimis
+ended on 24 Jul 2026, and a US order on DHL DDP would lose £77-120. The USA separately needs
+FDA Prior Notice resolved before it can ship properly at all. Splitting the two lets Europe
+ship now rather than waiting on a problem that has nothing to do with it.
+
+**Why `Express International` survives.** It is still the live method on every non-European
+zone, on the Channel Islands rate, and on 4 USA subscription contracts. Retiring it before
+those move would leave orders carrying a method Synergy cannot match, which is the "Invalid
+Dispatch Method" hold described in § Interaction with SCRUM-1311.
+
+**Why 3 boxes.** DHL road is flat to 10kg, so a European parcel costs £36.04 whether it holds
+one box or four. A 1-box European order loses money outright. Three boxes is the first tier
+that uses the flat rate properly (§ Margins).
 
 ---
 
@@ -295,10 +310,55 @@ order size**, and it is worse than the plan assumed when it was written.
 **Volumetric weight** is the higher of actual and (L×W×H cm ÷ 5000). Box dimensions have not
 been checked, so every band above is optimistic if the cartons are bulky.
 
-**French VAT paid under DDP is not reclaimable.** We are not registered in France and the tax
-is paid in the customer's name as importer. It is a straight cost of sale on a Synergy
-invoice, roughly £20 of dead cost on a small European order. That is the real reason the
-minimum order size matters.
+**French VAT paid under DDP is not reclaimable by us**, since we are not registered in France
+and the tax is paid in the customer's name as importer. That is why it must be **collected
+from the customer at checkout** rather than absorbed. Shopify's *collect duties and import
+taxes at checkout* adds it as its own line; without that it becomes roughly £20-60 of dead
+cost per European order and the economics in § Margins do not hold.
+
+---
+
+## Margins
+
+The numbers that decided Europe-only. Live `offerData.ts` prices, manufacturer COGS of
+£17.96 per 28 shots plus £3.20 3PL per order, fuel at an assumed 20%, DTP at the £16 floor,
+Shopify fees at 2.8% + £0.30. Duty and VAT are collected from the customer at checkout and so
+do not appear as our cost.
+
+**Quarterly bundles, which is what a European customer buys under a 3-box minimum:**
+
+| Lane | Bundle | Price | Shipping charged | COGS | Shopify fee | Shipping cost | Profit | Margin |
+|---|---|---|---|---|---|---|---|---|
+| France | Flow or Clear quarterly (80 shots) | £109.99 | £24 | £54.51 | £4.05 | £62.45 | **£12.98** | 10% |
+| France | Both quarterly (140 shots) | £149.99 | £32 | £93.00 | £5.40 | £63.68 | **£19.91** | 11% |
+| Europe far | Flow or Clear quarterly | £109.99 | £26 | £54.51 | £4.11 | £69.89 | **£7.48** | 6% |
+| Europe far | Both quarterly | £149.99 | £41 | £93.00 | £5.65 | £71.54 | **£20.80** | 11% |
+
+The same bundles in the UK make £49 at 33-45%. So DDP takes a European order from roughly 40%
+down to 6-11%. Thin, positive, and acceptable while volume is a handful of customers. A Flow
+quarterly to Italy clears £7.48, which is close enough to zero that one returned parcel wipes
+out several orders.
+
+**Monthly renewals are the problem, not one-off orders:**
+
+| | Profit per renewal |
+|---|---|
+| Flow or Clear monthly to Europe | **−£20.47** |
+| Both monthly to Europe | £0.73 |
+
+A monthly single-formula European subscription loses about £20 every renewal, because the flat
+road rate costs the same for a 1.5kg parcel as a 10kg one. A checkout minimum does not apply to
+Skio renewals, so this is only fixed by moving those subscribers to quarterly. With 8 France
+contracts that is roughly £160 a month. **This is the single biggest lever in the plan**, and it
+is why Phase 3 is not optional.
+
+**Rest of world, for the record.** At 3 and 6 boxes the absorbed freight gap is £77/£120 for the
+USA and £106/£150 for the UAE, against £25-44 for Europe. Those two lanes cannot carry DDP at
+current prices, which is why they stay on Evri DAP for now.
+
+**Caveats.** The 20% fuel figure is unverified and the first Synergy invoice replaces it. The
+COGS comes from the conka-lab margins dashboard, whose displayed prices are stale, so the
+£17.96 should be confirmed against a current cost sheet before anyone leans on it.
 
 ---
 
@@ -310,12 +370,18 @@ Synergy routes on the **rate name**, so the name is the routing instruction. Tar
 Shipping Method           | Carrier | Service        | Market | Terms of Sale
 Express                   | Evri    | Standard       | UK     | n/a
 24 Hour Delivery          | DPD     | Next Day       | UK     | n/a
-European Delivery         | DHL     | Economy Select | EU     | DDP
-Express International DHL | DHL     | Express (Air)  | ROW    | DDP
+European Delivery         | DHL     | Economy Select | EU     | DDP   <- new
+Express International     | Evri    | International  | ROW    | DAP   <- unchanged
+Express International DHL | DHL     | Express (Air)  | ROW    | DDP   <- built, nothing points at it
 ```
 
-Three changes: **add** `European Delivery`; **change** `Express International DHL` from DAP
-to DDP (name kept, so no rename risk); **retire** `Express International` (Evri).
+**One change in this phase: add `European Delivery`.** `Express International DHL` was also
+flipped to DDP in the same request, but no Shopify zone points at it, so it is dormant until
+the rest-of-world work happens. `Express International` (Evri) stays exactly as it is.
+
+⚠️ **Do not retire the Evri row.** Every non-European zone points at it, so does the Channel
+Islands rate, and so will the 4 USA subscription contracts. Pulling it early leaves live orders
+and renewals with a method Synergy cannot match.
 
 **Terms of sale are hard-coded per method, not read off the order.** Synergy will either
 hard-code an incoterm against each dispatch method or pull one from Shopify on every order,
@@ -328,56 +394,69 @@ Evri failed to produce a label for a France order (`13234918031734`), which went
 stock through returns. Synergy's portal has no view of the agreed method list; this table and
 `SHIPPING_AND_COURIERS.md` §6 are the record.
 
-Channel Islands (£4.99, Evri) is UK-adjacent and out of scope.
+Channel Islands (£4.99, Evri) is UK-adjacent and out of scope. It rides on the Evri row, which
+is a second reason not to retire it.
 
 ---
 
 ## Phases
 
-### Phase 0 — Now, no dependencies
+### Phase 0 — Done, or doable now with no dependencies
 
-1. Fix the declared value: the order total the customer paid, not list price × quantity.
-   Blocked on Synergy telling us which field they read (§ Open questions).
-2. Pull the EU numbers: order count, order sizes, and subscriber count over the last 6-12
-   months. Sizes the minimum order value and the subscriber migration. **The read-only
-   Shopify app has no `read_orders` scope, so this has to come from the admin UI or a new
-   token.**
+1. ~~Set the **default country of origin** to United Kingdom.~~ **DONE 8 Sept 2026.**
+2. ~~Add **HS code `210690`** to the live variants missing it.~~ **DONE 8 Sept 2026**, see below.
+3. **Delete the 1-box and 2-box weight bands** on the `Europe` and `france` zones. Independent
+   of Synergy, and it stops the loss-making small orders immediately.
+4. Draft the shipping policy copy: 3-box minimum to Europe, duties and taxes included, nothing
+   to pay on delivery.
+5. Confirm **COGS per box** against a current cost sheet and finish `docs/ops/unit-economics.md`.
+   Every number in § Margins rests on it.
 
-### Phase 1 — Synergy (asked 8 Sept, replied 10 Sept 2026)
+### Phase 1 — Synergy (asked 8 Sept, replied 10 Sept, go-ahead sent 11 Sept 2026)
 
-Road confirmed, Royal Mail closed, importer of record treated as settled. The only thing
-Synergy need from us before they build the three method changes is confirmation of the
-hard-coded incoterms. The declared-value field and an Evri price follow in parallel.
-**Phase 4 is no longer gated on Synergy.** See § Synergy's answers.
+Road confirmed, Royal Mail closed, importer of record treated as settled, incoterms hard-coded
+per method. Synergy are building `European Delivery`. Still to come back from them: the go-live
+date, which field drives the declared customs value, Royal Mail timing, and an Evri DDP price
+for Europe. **None of those block the build.**
 
-### Phase 2 — Our own admin, runs in parallel
+### Phase 2 — Before the switch
 
-3. ~~Set the **default country of origin** to United Kingdom.~~ **DONE 8 Sept 2026.**
-4. ~~Add **HS code `210690`** to the live variants missing it.~~ **DONE 8 Sept 2026**, see below.
-5. Draft shipping policy copy and a cart-drawer line stating the international minimum and
-   that duties are included.
+6. **Move the France monthly subscribers to quarterly.** Each monthly single-formula renewal
+   loses about £20 under DDP (§ Margins), and renewals bypass a checkout minimum, so this is the
+   only fix. Humphrey owns the conversation. It does not block the switch: deleting the bands
+   will not break renewals, they simply keep losing money until moved.
 
-### Phase 3 — Before anything breaks
+### Phase 3 — The switch, once Synergy confirm `European Delivery` is live
 
-6. **Migrate EU subscribers to quarterly.** A checkout minimum does not apply to Skio
-   renewals, so a monthly single-box EU renewal would fail once the small weight bands are
-   deleted. Must happen before Phase 4. The pitch is genuinely better for them: one parcel a
-   quarter means import charges paid once rather than three times, same monthly cost.
+7. Rename the `Europe` and `france` zone rates to exactly `European Delivery`. **Prices
+   unchanged.** Synergy routes on name only, so nothing else moves.
+8. **Enable collect duties and import taxes at checkout** for the EU markets. This must go live
+   at the same moment, never before: collect duties while Synergy are still shipping DAP and the
+   customer pays at checkout *and* at the door. Needs HS codes and country of origin (both done)
+   and Shopify Payments. Costs 0.5% promotional, 0.85% standard.
+9. Set the **8 France** Skio contracts' delivery title to `European Delivery`, `setOverride`
+   false (§ Interaction with SCRUM-1311).
+10. Publish the shipping policy copy.
 
-### Phase 4 — The switch
+### Phase 4 — After it is live
 
-7. Create `European Delivery`, point the `Europe` and `france` zones at it.
-8. Repoint all other international zones at `Express International DHL`.
-9. Reprice every band off DHL cost + fuel surcharge + DTP fee.
-10. Delete the 1-box and 2-box weight bands on all international zones (the minimum).
-11. **Re-sync the 12 international Skio contracts** onto the new method names. These were
-    deliberately held back from the SCRUM-1311 bulk fix so they are corrected once, against
-    the final names, rather than twice (§ Interaction with SCRUM-1311). Use Skio's per-contract
-    "Re-sync with Shopify", or `changeSubscriptionDeliveryMethod`. **Leave `setOverride` false**:
-    these contracts store Loop-era delivery prices (EUR 26.95, EUR 38.95, USD 28-31) and a
-    re-rate would change what real customers pay. Decide the price question deliberately at
-    step 9, not as a side effect of fixing a title.
-12. Publish the shipping policy line.
+11. **Read the first France invoice.** Is the freight fuel-inclusive, does the £16 DTP appear,
+    was the customer billed anything on delivery. That settles all three open assumptions in
+    § Margins with real data instead of email.
+12. Fix the declared customs value once Synergy name the field.
+13. Fold the rates, the method table and the incoterm model into `SHIPPING_AND_COURIERS.md` and
+    archive this plan.
+
+### Phase 5 — Rest of world, separate work
+
+14. **USA.** Resolve FDA Prior Notice first, then the tariff rate, then the rate build. The flat
+    £22 has been obsolete since 24 Jul 2026 and on DHL DDP would lose £77-120 an order.
+15. **UAE** is the worst lane on the sheet: £20 charged against £126 of cost at 3 boxes.
+    Worth repricing whether or not it ever moves to DHL.
+16. Revisit **IOSS** only if EU volume grows enough to justify the admin.
+17. Revisit **Evri DDP for Europe** if Synergy's answer shows it covers duty and not just VAT
+    under €150. Freight is roughly £12.63 against DHL Road's £46.36 at 6 boxes, which would
+    change European margins materially.
 
 ## Interaction with SCRUM-1311
 
@@ -386,8 +465,7 @@ stores a null delivery-method title, so renewals print `Subscription shipping` a
 them as "Invalid Dispatch Method". Contracts created through Skio checkout carry `Express` and
 are fine. See `docs/features/SUBSCRIPTIONS.md` § Shipping on renewals.
 
-The two overlap on exactly **12 contracts**. Active subscription state, pulled from Skio
-8 Sept 2026:
+Active subscription state, pulled from Skio 8 Sept 2026:
 
 | | Loop-migrated (needs the SCRUM-1311 fix) | Skio-native (already correct) |
 |---|---|---|
@@ -397,24 +475,20 @@ The two overlap on exactly **12 contracts**. Active subscription state, pulled f
 **Every international subscriber is Loop-migrated, and there are no Skio-native international
 contracts at all.**
 
-**The split:** the 207 UK contracts map to `Express`, which this plan does not change. Fix them
-under SCRUM-1311 now and they never need touching again. The 12 international ones would be set
-to `Express International`, which this plan **retires**, so fixing them now means fixing them
-twice.
+**Only the 8 France contracts need holding.** The 207 UK contracts map to `Express`, which this
+plan does not touch. The 4 USA ones map to `Express International`, which now survives this
+phase, so they are final too. Fix all 211 under SCRUM-1311 now and they never need touching
+again.
 
-**So hold the 12 and correct them at Phase 4 step 11.** They are getting touched again
-regardless: four of them are the French monthly subscribers being migrated to quarterly
-(Phase 3), and all 12 carry stale Loop-era delivery prices that no current rate matches.
+The 8 France contracts move to `European Delivery`, which does not exist yet, so setting them to
+`Express International` now means correcting them twice. Hold them and do it once, at Phase 3
+step 9. They are being revisited regardless: the monthly ones are moving to quarterly (Phase 2),
+and all of them carry stale Loop-era delivery prices (EUR 26.95, EUR 38.95) that no current rate
+matches. **Leave `setOverride` false** when correcting the title, or a re-rate changes what real
+customers pay.
 
-**One line in `SUBSCRIPTIONS.md` goes stale when this ships.** It currently states that a
-contract maps to `Express` if the address is UK and `Express International` otherwise, with no
-exceptions. After the switch that is three methods: `Express` (UK), `European Delivery` (EU),
-`Express International DHL` (rest of world). Update it as part of Phase 4.
-
-### Phase 5 — Later
-
-12. **USA.** Resolve FDA compliance first, then the tariff rate, then the rate build.
-13. Revisit IOSS only if EU volume grows enough to justify the admin.
+> This was a hold on 12 contracts until 11 Sept 2026, when the plan narrowed to Europe only and
+> `Express International` stopped being retired. `SUBSCRIPTIONS.md` was updated to match.
 
 ---
 
@@ -445,8 +519,12 @@ the EU extends it to 8 digits at their end and the broker does that. If a shipme
 challenged it will be the chapter 21 vs chapter 22 (beverages) argument, at which point get
 a broker's opinion.
 
-**Do not enable *collect duties at checkout* yet.** If it is switched on while shipments are
-still going DAP, the customer pays duty at checkout *and* is billed again at the door.
+**Enable *collect duties at checkout* at the same moment as the DDP flip, not before.** It is
+now part of the plan (Phase 3 step 8): it is what stops us absorbing destination VAT. But if it
+is switched on while Synergy are still shipping DAP, the customer pays duty at checkout *and* is
+billed again at the door. Being headless does not block it, since checkout is Shopify-hosted.
+Note this is a different product from Shopify **Managed Markets**, which is rejected in
+§ Options considered G.
 
 **No write access from the repo.** `SHOPIFY_ADMIN_API_TOKEN` carries only customer and draft
 order scopes; HS code and country of origin live on `InventoryItem` and need
@@ -472,29 +550,44 @@ perverse.
 
 ## Open questions
 
-**Synergy — asked 8 Sept, replied 10 Sept 2026.** Road confirmed, Royal Mail closed,
-importer of record treated as settled (§ Synergy's answers). Left to run:
+**Synergy — asked 8 Sept, replied 10 Sept, go-ahead sent 11 Sept 2026.** Road confirmed, Royal
+Mail closed, importer of record treated as settled, incoterms hard-coded (§ Synergy's answers).
+Left to run, none of them blocking:
 
-1. **Which field** drives the declared customs value. Third time of asking, and it is
+1. **Go-live date** for `European Delivery`, so the Shopify change can be timed against it.
+2. **Which field** drives the declared customs value. Third time of asking, and it is
    over-declaring live orders.
-2. An **Evri DDP price for Europe**, and whether it covers duty as well as VAT.
-3. For us to confirm to them so they can build: **hard-coded incoterms**, both DHL methods
-   to DDP, no Shopify field, no bespoke project fee.
+3. An **Evri DDP price for Europe**, and whether it covers duty as well as VAT.
+4. When does **Royal Mail international** come back, and is there any low-cost sub-2kg option in
+   the meantime? Needed for US creator seeding, not for customer orders.
+5. Does the **DTP fee pass through at cost**, like the other carrier surcharges?
 
 Worth adding while the thread is open, neither urgent:
 
-4. Why did the Evri label for order `13234918031734` fail, and how often does that happen?
-5. Are Synergy filing **FDA Prior Notice** on US shipments, and do they hold our
-   manufacturer's FDA registration number? (Phase 5.)
+6. Why did the Evri label for order `13234918031734` fail, and how often does that happen?
+7. Are Synergy filing **FDA Prior Notice** on US shipments, and do they hold our manufacturer's
+   FDA registration number? (Phase 5. Note this may surface a problem that halts US shipping,
+   which is a reason to time it deliberately rather than a reason not to ask.)
+
+**Separate thread, not this one:** did `24 Hour Delivery` ever start routing to DPD once the
+carrier accounts went live? Requested from Bethany in June and never confirmed, and all three
+test orders came back on Evri. If it never switched, UK customers have been paying £6.54 for
+next-day and receiving 48-hour Evri.
 
 **CONKA:**
 
-7. Where exactly does the **minimum international order value** sit? ~3 boxes indicated;
-   confirm against the EU order mix once we have it. (Humphrey)
-8. What is the rule for **EU Skio renewals** below the floor? Quarterly-only, migrate, or
-   accept. (Humphrey)
-9. Correct **French VAT rate** for a liquid food supplement, 5.5% or 20%? (accountant)
-10. Are EU export sales being **zero-rated** on our UK VAT return? (accountant)
+8. Confirm **COGS per box** against a current cost sheet. The £17.96 comes from the conka-lab
+   margins dashboard, whose displayed prices are stale. Everything in § Margins rests on it.
+9. Are EU export sales being **zero-rated** on our UK VAT return? (accountant)
+
+**Closed since 8 Sept:**
+
+- *Where does the minimum international order sit?* **3 boxes**, set by the flat road rate, not
+  by judgement (§ Margins).
+- *What is the rule for EU Skio renewals below the floor?* **Migrate to quarterly** (Phase 2).
+  Monthly European renewals lose about £20 each.
+- *Correct French VAT rate, 5.5% or 20%?* **Moot.** Shopify derives the rate at checkout from the
+  HS code and destination, and the customer pays it, so it is no longer a margin question.
 
 ---
 
