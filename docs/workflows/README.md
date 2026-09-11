@@ -59,6 +59,7 @@ When creating or updating Jira tickets, follow: docs/workflows/08-jira-workflow.
 | 08 | [Jira Workflow](./08-jira-workflow.md) | Creating tickets, writing AC, updating status |
 | 09 | [UX Iteration](./09-ux-iteration.md) | Refining existing pages for conversion, layout, or information hierarchy |
 | 10 | [Figma Decks](./10-figma-decks.md) | Building or editing CONKA slide decks in Figma (visual system, file keys, asset porting) |
+| 11 | [Creating Products](./11-creating-products.md) | Adding a product or variant to Shopify (SKUs, weight, HS codes, bundles, what Synergy needs) |
 
 ### Typical workflow chains
 

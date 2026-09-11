@@ -119,6 +119,13 @@ long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Every rate sta
 **Decisions (June 2026):**
 - **All international = Evri.** (DHL `International Priority` upgrade remains a future
   fast-follow, not built.)
+> ⚠️ **SUPERSEDED (2026-09-07) — the DAP decision below is being reversed.** The EU
+> abolished the €150 duty exemption on 1 Jul 2026 and France added a national parcel tax
+> on 1 Mar 2026, so DAP now lands French customers a punitive doorstep bill. The US $800
+> de minimis is also gone, which invalidates the flat £22 US rate. Plan of record:
+> `docs/development/featurePlans/international-duties-and-ddp.md`. Do not re-derive the
+> incoterm model from this section until that plan is folded back in here.
+
 - **Incoterm = DAP / Evri DDU service: the customer pays import duty/VAT on arrival.** So
   costs below are the Evri **duty-unpaid (DDU) / commercial** rates (the customer-pays-duty
   service), which is the true cost under DAP. EU customers get a duty bill on delivery —
@@ -204,11 +211,31 @@ Synergy maps each method name to a carrier + service. Current sheet (3 rows — 
 test orders):
 
 ```
-Shipping Method      | Carrier | Service      | Market | INCOTERMS
-Express              | Evri    | Standard     | UK     | n/a
-24 Hour Delivery     | DPD     | Next Day     | UK     | n/a
-Express International | Evri    | International | ROW    | DAP
+Shipping Method           | Carrier | Service       | Market | INCOTERMS
+Express                   | Evri    | Standard      | UK     | n/a
+24 Hour Delivery          | DPD     | Next Day      | UK     | n/a
+Express International     | Evri    | International | ROW    | DAP
+Express International DHL | DHL     | International | ROW    | DAP
 ```
+
+**`Express International DHL` is live** (DHL **Air** service, set up 5 Aug 2026, confirmed by
+Mihaela Lapadus). It sits alongside the Evri method as the premium international option, not
+as a replacement. It was added after Evri failed to produce a label for a France order
+(`13234918031734`), which went back to stock through returns.
+
+Synergy's portal has no view of the agreed method list; this table is the record. Terms of
+Sale are a per-method menu choice (DAP or DDP) that Synergy can change on request.
+
+⚠️ The `DAP` terms of sale are the direct cause of the Sept 2026 France surprise-charge
+problem. Plan of record: add a new `European Delivery` method (DHL Economy Select road, DDP)
+for the EU, flip **`Express International DHL` to `DDP`** for the rest of the world, and
+**retire the Evri `Express International` row entirely**. Terms of sale stay **hard-coded
+per method** on Synergy's side rather than read off the Shopify order. Synergy confirmed the
+road service and the new method name on 10 Sept 2026. See
+`docs/development/featurePlans/international-duties-and-ddp.md`.
+
+**Royal Mail International is not available** through Synergy: labels have been failing
+since the July 2026 data-format change and Royal Mail have not resolved it.
 
 **Test observation (2026-06-17):** all 3 Synergy test orders shipped back via **Evri
 (EVRICORP tracking)**, including the `24 Hour Delivery` order that is mapped to DPD —

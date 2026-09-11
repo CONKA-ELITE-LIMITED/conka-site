@@ -195,3 +195,4 @@ Process docs for how to approach work on this project. Read the relevant workflo
 | `docs/workflows/08-jira-workflow.md` | Ticket creation, status transitions, writing acceptance criteria |
 | `docs/workflows/09-ux-iteration.md` | Refining existing pages for conversion, layout, information hierarchy |
 | `docs/workflows/10-figma-decks.md` | Building or editing CONKA slide decks in Figma (visual system, deck file keys, asset porting) |
+| `docs/workflows/11-creating-products.md` | Adding a product or variant to Shopify — SKU convention, weight, HS code + country of origin, bundle composition, what Synergy needs, what the codebase needs |
