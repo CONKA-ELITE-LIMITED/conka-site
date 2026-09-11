@@ -867,10 +867,6 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   // The product this page sells. Drives the PDP hand-off (see PDP_HREF) and
   // every price and percentage the page quotes.
   const heroId = config.product.productHeroId ?? "03";
-  // The hero photograph, so the proof tier can drop it from the UGC band. A
-  // non-image hero asset (a chart, a stat panel) has no src to exclude.
-  const heroImageSrc =
-    config.hero.asset.kind === "image" ? config.hero.asset.src : undefined;
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
   const buyHref = PDP_HREF[heroId];
@@ -1093,10 +1089,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           style={{ background: CANVAS, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <ListicleProofTier
-              proof={config.proof}
-              excludeSrc={heroImageSrc}
-            />
+            <ListicleProofTier proof={config.proof} />
           </div>
         </section>
       ) : null}

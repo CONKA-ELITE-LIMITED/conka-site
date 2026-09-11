@@ -242,36 +242,37 @@ Those trust claims live in the reasons, the sticky bar sub-line and the FAQ.
 
 **The hero asset is portrait in a square frame.** All three personas use
 `aspect: "1/1"`. Keep that frame consistent across personas: it is what makes
-the three heroes the same height. **`objectPosition` is per page, not shared.**
-All three used to say `center top` on the reasoning that a 928x1152 source
-loses only its lower fifth to the square, which was true of one photograph and
-wrong about the others: a subject sitting lower in frame gets cut at the mouth
-with a third of the square spent on empty backdrop. Pick the offset by cropping
-the source to a square yourself and looking at it, then write that percentage.
+the three heroes the same height.
 
-**Two of the three heroes are real customer photographs** (SCRUM-1339), taken
-from `public/testimonials/ugc/` rather than the generated studio set. They
-replaced shots that were off-persona: closed eyes reading as sedated on a page
-selling the ability to start a task, and a subject reading mid-thirties on a
-page about losing words. Casting, situation and expression are what a persona
-hero is judged on; whether the bottle is in the picture is not the question,
-the two that shipped both have it in hand.
+**`objectPosition` is per page, not shared.** All three used to say
+`center top`, on the reasoning that a 928x1152 source loses only its lower
+fifth to the square. That held for one photograph and was wrong about the
+others: a subject sitting lower in frame gets cut at the mouth, with a third
+of the square spent on empty backdrop. Crop the source to a square yourself,
+look at it, then write that percentage.
 
-Real UGC brings two constraints:
+**Two of the three heroes are real customer photographs** (SCRUM-1339), from
+`public/testimonials/ugc/` rather than the generated studio set. They replaced
+shots that were off-persona: closed eyes reading as sedated on a page selling
+the ability to start a task, and a subject reading mid-thirties on a page
+about losing words. Casting, situation and expression are what a persona hero
+is judged on. Whether the bottle is in the picture is not the question; both
+that shipped have it in hand.
 
-- **A hero still may also be a named testimonial elsewhere on its own page.**
-  Those photographs are bound to a person's quote, so the fix for a repeat is
-  to change the hero, never to swap the face attached to the testimonial.
-- **A hero still is probably also in the UGC band.** Every listicle sets
-  `ugc: {}` and so renders the whole shared set. `ListicleProofTier` filters
-  the hero's `src` out of the band for this reason, so you do not have to
-  curate `ugc.items` per page and it cannot go stale when a hero changes.
+One thing to know when picking one: a UGC still may already be a **named
+testimonial** elsewhere on that page, where the photograph is bound to a
+person's quote. `ugc/17.jpg` is the brain-ageing hero and is also Rosalind
+further down. That is fine, and if you ever want to break the repeat, change
+the hero rather than the face attached to the testimonial. A hero still also
+appears in the shared UGC band, which is left alone deliberately: it is a
+130px tile in a scrolling wall of customers below the buy box, and a wall of
+real people is meant to be repetitive.
 
 These sources are 810x1013 against the 928x1152 of the generated set, so a
 viewport above roughly 1560px upscales them about 1.2x. Measured through
-`_next/image` at the real mobile LCP request (a 390px slot at DPR2, AVIF), the
-heroes cost 30-62K; dense photographic backgrounds cost noticeably more than a
-flat studio sweep, which is worth checking when swapping one in.
+`_next/image` at the real mobile LCP request (a 390px slot at DPR2, AVIF) the
+heroes cost 30-62K; a dense photographic background costs noticeably more than
+a flat studio sweep, which is worth checking when swapping one in.
 
 The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
