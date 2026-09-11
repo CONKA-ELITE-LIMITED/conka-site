@@ -44,7 +44,7 @@ export function OurStoryCTA() {
         <p className="brand-body text-black/80">{storyCta.body}</p>
       </div>
       <div data-cta-reveal>
-        <ConkaCTAButton meta={null}>{storyCta.ctaLabel}</ConkaCTAButton>
+        <ConkaCTAButton>{storyCta.ctaLabel}</ConkaCTAButton>
       </div>
     </div>
   );

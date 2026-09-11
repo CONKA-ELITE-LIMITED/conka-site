@@ -226,7 +226,7 @@ export default function HomeWhyAccordion() {
               Inside the rows it was offset by the number gutter and read as
               slightly off. */}
           <div className="mt-8 flex justify-center lg:mt-10">
-            <ConkaCTAButton href="/conka-both" meta={null}>
+            <ConkaCTAButton href="/conka-both">
               Try the solution
             </ConkaCTAButton>
           </div>

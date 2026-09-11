@@ -219,7 +219,7 @@ export default function FormulaCaseStudies({
       </div>
 
       <div className="mt-10 flex justify-start">
-        <ConkaCTAButton href="/case-studies" meta="// all measured outcomes">
+        <ConkaCTAButton href="/case-studies">
           View All Case Studies
         </ConkaCTAButton>
       </div>
@@ -300,7 +300,7 @@ export function FormulaCaseStudiesMobile({
       </div>
 
       <div className="mt-10 flex justify-start">
-        <ConkaCTAButton href="/case-studies" meta="// all measured outcomes">
+        <ConkaCTAButton href="/case-studies">
           View All Case Studies
         </ConkaCTAButton>
       </div>

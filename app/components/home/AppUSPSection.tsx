@@ -96,10 +96,10 @@ export default function AppUSPSection() {
           measure without the shot. `?src=home_app` follows the other mid-page
           tokens, see docs/development/CART_ATTRIBUTES.md. */}
       <div className="mt-10 lg:mt-12 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
-        <ConkaCTAButton href="/conka-both?src=home_app" meta={null}>
+        <ConkaCTAButton href="/conka-both?src=home_app">
           Put it to the test
         </ConkaCTAButton>
-        <ConkaCTAButton href="/app" meta={null} inverted>
+        <ConkaCTAButton href="/app" inverted>
           Start measuring your brain
         </ConkaCTAButton>
       </div>

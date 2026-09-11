@@ -104,7 +104,7 @@ export default function LabFAQ({
 
       {!hideCTA && (
         <div className="mt-8 flex justify-center lg:justify-start">
-          <ConkaCTAButton href={ctaHref} meta={null}>Get Both from £{PRICE_PER_SHOT_BOTH}/shot</ConkaCTAButton>
+          <ConkaCTAButton href={ctaHref}>Get Both from £{PRICE_PER_SHOT_BOTH}/shot</ConkaCTAButton>
         </div>
       )}
     </div>

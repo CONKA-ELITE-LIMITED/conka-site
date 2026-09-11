@@ -343,7 +343,7 @@ export default function EvidenceLadder() {
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/50 tabular-nums mb-6">
           100-day money-back guarantee · Free UK shipping · Cancel anytime
         </p>
-        <ConkaCTAButton href="/conka-both" meta="// both systems · flow + clear">
+        <ConkaCTAButton href="/conka-both">
           Shop CONKA
         </ConkaCTAButton>
       </div>

@@ -102,7 +102,7 @@ export default function HomeHeroVideoDesktop() {
             For minds that demand more. A patented nootropic shot, clinically
             formulated to support focus, memory, and mental endurance every day.
           </p>
-          <ConkaCTAButton href="/conka-both" meta={null}>
+          <ConkaCTAButton href="/conka-both">
             Buy CONKA Today
           </ConkaCTAButton>
           <TrustMicroRow className="mt-1" />
