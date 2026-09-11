@@ -218,6 +218,39 @@ print(xs.max()-xs.min()+1, ys.max()-ys.min()+1)
 product differed by an olive cast on one. Composite candidates side by side
 before choosing.
 
+**A canvas is not a resolution.** A "new, higher-quality" 1000x1000 bottle
+turned out to hold the same 310x624 subject as the file already shipping, and
+its pixels were byte-identical to it. Diff the alpha-cropped candidates before
+believing anyone, including yourself:
+
+```python
+crop = im.crop(im.split()[3].point(lambda v: 255 if v > 12 else 0).getbbox())
+print(ImageChops.difference(crop, current).getbbox())   # None means identical
+```
+
+**When a subject cannot be thresholded, reuse an old mask as a template.**
+Clear's cap is unseparable, so its high-resolution cut-out was never re-derived
+— the existing low-resolution alpha was scaled up and applied to the full-size
+render instead. It works whenever the two files are the *same render* at
+different scales, and one shared feature proves that and supplies the mapping in
+one step. Use a feature the threshold *can* find: here the amber glass, 461x764
+in the source against 300x497 in the old cut-out, giving 1.537 on both axes to
+three decimals. Agreement across both axes is the check; if the ratios diverge,
+the files are different renders and the template will not fit.
+
+Scale the alpha by that factor, crop the source to the mapped origin, apply.
+The silhouette edge is inherited and stays as soft as the original, but the
+interior — the label type, which is the only part that has to read at display
+size — comes through native. Verify by compositing against a coloured ground
+and looking for a backdrop halo at the shoulder, which is what a misaligned
+template produces.
+
+**Fit the mask analytically, not by search.** An optimiser over scale and offset
+drifted to the edge of its search range and produced a visibly haloed cut-out,
+because the residual it minimises is dominated by resampling noise across the
+whole subject rather than by edge alignment. Two bounding boxes give the exact
+answer in closed form.
+
 ---
 
 ## Checklist
