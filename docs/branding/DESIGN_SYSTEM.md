@@ -340,7 +340,9 @@ Rules: UPPERCASE stem, hyphen, two-digit padding (`APP-01`, not `app-1`). Global
 
 ### Primary CTA — `ConkaCTAButton`
 
-`app/components/landing/ConkaCTAButton.tsx`. Standard CTA for every clinical surface. Do not hand-roll. Props: `children` (label), `href` (defaults to `BYO_URL`), `meta` (second row).
+`app/components/landing/ConkaCTAButton.tsx`. Standard CTA for every clinical surface. Do not hand-roll. Props: `children` (label), `href` (defaults to `BYO_URL`), `onClick` (renders a `<button>` instead of a link), `compact` (smaller scale for dense bars), `inverted` (white fill, navy border).
+
+Anatomy is one mono uppercase label, centred, plus a `→` in the right gutter. The arrow is absolutely positioned so the label stays dead-centre in the pill; padding is symmetric for the same reason. Nothing else goes in the button.
 
 ### Clinical "Do not" list
 
@@ -453,9 +455,9 @@ Converting a `.brand-clinical` page (§8) to Simple DTC is mostly find-and-repla
 
 Reference implementations to copy from: the cart drawer, home (`app/page.tsx`), and the `/conka-flow` PDP (`ProductHeroV2` + `ProductBuyPanel`).
 
-### `ConkaCTAButton` mono meta line — clinical holdover, to retire
+### `ConkaCTAButton` mono meta line — retired
 
-`ConkaCTAButton`'s `meta` prop renders a mono-uppercase second line — a clinical tell. On Simple DTC surfaces, **pass `meta={null}`** so the button is a clean rounded CTA with no mono sub-line. The component's mono meta styling is a to-be-simplified holdover; it is documented here as deprecated for DTC surfaces (no component change was made in the formalization ticket, SCRUM-1172).
+`ConkaCTAButton` used to carry a `meta` prop rendering a mono-uppercase second line, plus a Conka O-mark to the left of the label. Both were clinical tells, and 20 of the 23 call sites were already suppressing the meta line with `meta={null}`. The O-mark, the `meta` prop and the `META_VARIANTS` block were all deleted in Sept 2026; the button is now label + arrow only. **Do not reintroduce either** — a second line of copy belongs above or below the button, not inside it.
 
 ### Full-bleed split band (the documented §6 exception)
 

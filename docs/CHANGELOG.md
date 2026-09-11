@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-11** | Primary CTA stripped back to label + arrow site-wide: the Conka O-mark and the mono `// ...` meta line are gone from `ConkaCTAButton`, the label now sits dead-centre with the arrow in the right gutter, and the PDP sticky footer's odd `↗` glyph is unified onto the same `→` as every other button
 - **2026-09-11** | Swapped the ADHD and brain-ageing /go listicle heroes to real customer photos, replacing generated studio shots that did not match either persona
 - **2026-09-11** | Re-cut the Clear bottle for the PDP carousel at native resolution, replacing an asset that was being upscaled up to 2.8x
 - **2026-09-11** | All three PDP carousels redrawn: every slide now carries one argument in copy that already exists further down the page, holds a ~90px type floor so it survives the 390px thumbnail, and is authored as HTML in `design/pdp-slides/` rather than baked into a binary. The hero gift pill is removed, since the new lead slide states the same offer itemised
