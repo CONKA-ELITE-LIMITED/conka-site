@@ -262,7 +262,16 @@ replicate Loop's tag set.** Full breakdown in `docs/development/CART_ATTRIBUTES.
 on Render ingests subscription data into Convex, assigns each customer a segment every 6h, and
 drains those into Klaviyo lists. Everything downstream of `sanitized_customers` consumes fields
 by meaning, never by platform name, so Skio was an ingest-adapter change and nothing more. Detail
-lives in the conka-lab repo, at `docs/featurePlans/loop-to-skio-ingest-migration.md` there.
+lives in the conka-lab repo, at **`docs/features/SUBSCRIPTION_INGEST.md`** there. (That link used
+to point at `docs/featurePlans/loop-to-skio-ingest-migration.md`, which is now archived and whose
+status header still describes the migration as not yet done.)
+
+**Two open items on that side affect what customers receive**, as of 2026-09-07. Sixteen
+subscribers who were active or paused in Loop have no Skio contract and currently classify as
+one-time buyers rather than subscribers; this is disputed with Skio (ticket `215475794231370`).
+And the **cancelled-winback flow is paused** in Klaviyo after long-cancelled customers were
+mailed, caused by conka-lab replaying archived Loop cancellations into the population. Every
+other flow is running. Detail in conka-lab's `docs/skio-cutover-findings-ledger.md`, F-17 and F-29.
 
 **Cancellation deflection and save-offers live in Skio's portal**, where the reason is captured.
 Klaviyo keeps only the post-cancel winback.
