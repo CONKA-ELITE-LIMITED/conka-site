@@ -122,26 +122,61 @@ no rate at all. Neither is present today (audited 2026-09-07).
 > UK, `European Delivery` for the EU, `Express International` everywhere else. See
 > `docs/development/featurePlans/international-duties-and-ddp.md`.
 
-### Hold the 8 France contracts, fix everything else
+### Status: 212 UK contracts with Skio's bulk team, 12 international held
 
-**Fix the 207 UK contracts and the 4 USA ones now. Hold only the 8 France contracts.** Active
-subscription state pulled from Skio 8 Sept 2026:
+**Logged with Skio 11 Sept 2026, reference `215475878391279`.** A list of the **212 Loop-migrated
+active UK contract IDs** was sent to their support team to have the shipping option title
+populated in bulk. Awaiting them to run it.
+
+The instruction given was deliberately narrow: set the title to `Express`, leave `setOverride`
+false and do not pass `deliveryPrice`. Every UK contract resolves to the same value, so there is
+nothing for them to interpret per contract.
+
+**All 12 international contracts were excluded on purpose.** Their correct titles differ by
+destination, so a bulk operation that stamps one value rather than re-syncing per contract would
+put `Express` on a French contract and ship it on a UK rate. Twelve contracts are minutes of
+manual work and they need eyeballing anyway, for the reason below.
+
+### The international 12, and why a re-sync will not fix them yet
+
+Live state pulled from Skio 11 Sept 2026:
 
 | | Loop-migrated (needs this fix) | Skio-native (already correct) |
 |---|---|---|
-| UK | **207** | 37 |
-| International | **12** (8 France, 4 USA) | 0 |
+| UK | **212** | 46 |
+| France | **8** | 0 |
+| USA | **4** | 0 |
 
-Every international subscriber is Loop-migrated; there are no Skio-native international
-contracts at all.
+270 active in total. Every international subscriber is Loop-migrated; there are no Skio-native
+international contracts at all.
+
+⚠️ **A re-sync pulls whatever Shopify rate matches, and after the 11 Sept European change some
+of these match nothing.** The European zones now carry a single band, 5,250 to 13,650g:
+
+| France contracts | Shipped weight | Matching rate |
+|---|---|---|
+| 2 × `1x BOTH-FUNNEL-56` | 4,200g | **none, under the floor** |
+| 1 × `2x BOTH-FUNNEL-56` | 8,400g | `European Delivery` |
+| 4 × `BOTH-120` + `BOTH-SUB-120` | 9,000g or 18,000g, see below | **unresolved** |
+| 1 × `BOTH-40` + `BOTH-SUB-40` | 3,000g or 6,000g, see below | **unresolved** |
+
+**The unresolved five carry a paired line**, one `*-SUB-N` and one `*-N` SKU. If those are two
+shipped lines the contract is double the shots and four of them exceed the 13,650g ceiling; if
+the pair is a bundle parent and child representing one shipment, they are comfortably inside the
+band. **This has not been confirmed either way** and should be before anyone re-syncs them,
+because on the first reading four French subscribers currently have no valid international rate
+at all.
+
+The two under the floor are unambiguous and are among the contracts due to move to quarterly,
+which lifts them over 5,250g and makes the re-sync work.
 
 The UK contracts map to `Express`, which the international work does not touch, so fixing them
-now is final. The **4 USA** contracts map to `Express International`, which now survives the first
-phase of that work, so they are final too.
+now is final. The **4 USA** contracts map to `Express International`, which survives the first
+phase of that work, so they are final too and can be done by hand at any point.
 
-Only the **8 France** contracts need holding. They move to `European Delivery`, which does not
-exist yet, so setting them to `Express International` now means correcting them twice. They are
-being revisited regardless: the monthly ones are due to move to quarterly, because a monthly
+The **8 France** contracts move to `European Delivery`. The Shopify rate was renamed on 11 Sept
+so that name now resolves, but the weight problem above has to be settled first. They are being
+revisited regardless: the monthly ones are due to move to quarterly, because a monthly
 single-formula European renewal loses about £20 under DDP (DHL road costs £36 flat whether the
 parcel is 1.5kg or 10kg), and all of them carry the stale Loop-era delivery prices noted above.
 
