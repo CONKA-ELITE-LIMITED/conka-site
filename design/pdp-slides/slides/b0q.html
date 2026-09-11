@@ -1,0 +1,51 @@
+<!doctype html><meta charset="utf-8"><title>B0Q Starter Kit (Both, Quarterly)</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.slide{padding:0;background:linear-gradient(to bottom,#e2e4e8 0%,#e7e8ee 25%,#edeffb 50%,#f8f9fd 75%,#eef0fd 100%)}
+
+.bg{position:absolute;inset:0;z-index:0;background-image:url("../assets/BothStartPackClean.jpg");
+  background-size:auto 1400px;background-repeat:no-repeat;background-position:center top}
+/* fades the shot into the label band without a hard edge */
+.fade{position:absolute;left:0;right:0;bottom:0;height:520px;z-index:1;
+  background:linear-gradient(to bottom, rgba(248,249,253,0) 0%, rgba(248,249,253,.9) 26%,
+    #f5f6fc 42%, #f5f6fc 100%)}
+
+h1{font-family:Favorit;font-weight:500;font-size:112px;line-height:1;letter-spacing:-.03em;
+  padding:104px 0 0 160px;position:relative;z-index:3}
+h1 em{font-style:italic}
+.sub{font-weight:500;font-size:58px;letter-spacing:-.015em;color:#2f3a63;
+  margin:24px 0 0 160px;position:relative;z-index:3}
+
+/* per-gift labels, roughly under where each item sits in the shot */
+.gifts{position:absolute;left:120px;right:120px;bottom:300px;z-index:3;
+  display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
+.g .n{font-family:JBM,monospace;font-weight:500;font-size:40px;letter-spacing:.09em;color:#414d78}
+.g .p{margin-top:14px;font-weight:700;font-size:62px;letter-spacing:-.02em;color:var(--navy)}
+.g .p s{font-weight:500;color:#7b86a8;text-decoration-thickness:4px;margin-right:16px}
+
+.bar{position:absolute;left:0;right:0;bottom:0;height:196px;z-index:3;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;gap:56px;color:#fff;
+  font-family:JBM,monospace;font-weight:500;font-size:52px;letter-spacing:.08em}
+.bar .big{font-family:NHG;font-weight:700;font-size:76px;letter-spacing:-.02em}
+.bar .sep{opacity:.45}
+</style>
+<div class="slide">
+  <div class="bg"></div>
+  <div class="fade"></div>
+
+  <h1>Your <em>starter kit</em>.</h1>
+  <div class="sub">You pay for the shots. The rest is free.</div>
+
+  <div class="gifts">
+    <div class="g"><div class="n">FULL APP ACCESS</div><div class="p"><s>£9.99</s>FREE</div></div>
+    <div class="g"><div class="n">+20 EXTRA SHOTS</div><div class="p"><s>£59.99</s>FREE</div></div>
+    <div class="g"><div class="n">CONKA HAT</div><div class="p"><s>£19.99</s>FREE</div></div>
+    <div class="g"><div class="n">TRAVEL PACK</div><div class="p"><s>£28.99</s>FREE</div></div>
+  </div>
+
+  <div class="bar">
+    <span class="big">£508.87</span><span>OF VALUE</span>
+    <span class="sep">·</span>
+    <span>YOURS FOR</span><span class="big">£149.99</span>
+  </div>
+</div>

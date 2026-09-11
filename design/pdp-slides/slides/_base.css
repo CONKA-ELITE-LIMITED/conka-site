@@ -1,0 +1,18 @@
+@font-face{font-family:NHG;src:url("../../../app/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayRoman.ttf");font-weight:400}
+@font-face{font-family:NHG;src:url("../../../app/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayMediu.ttf");font-weight:500}
+@font-face{font-family:NHG;src:url("../../../app/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayBold.ttf");font-weight:700}
+@font-face{font-family:Favorit;src:url("../../../app/fonts/ABCFavorit/ABCFavorit-Medium.otf");font-weight:500;font-style:normal}
+@font-face{font-family:Favorit;src:url("../../../app/fonts/ABCFavorit/ABCFavorit-MediumItalic.otf");font-weight:500;font-style:italic}
+@font-face{font-family:JBM;src:url("../../../app/fonts/JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Medium.woff2");font-weight:500}
+
+:root{
+  --navy:#1B2757; --tint:#eef0f5; --green:#1a7f4f; --white:#fff;
+  --pad:160px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:2400px;height:1715px;overflow:hidden;background:#fff}
+.slide{width:2400px;height:1715px;position:relative;overflow:hidden;
+  font-family:NHG,sans-serif;color:var(--navy);padding:150px var(--pad)}
+.grain{position:absolute;inset:0;opacity:.45;mix-blend-mode:multiply;pointer-events:none;z-index:2;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='260' height='260' filter='url(%23n)' opacity='.4'/></svg>")}
+.eyebrow{font-family:JBM,monospace;font-weight:500;font-size:44px;letter-spacing:.22em;opacity:.5}

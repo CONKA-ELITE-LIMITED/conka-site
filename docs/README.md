@@ -82,6 +82,7 @@ The most important cluster for anything touching products, variants, or money.
 | Doc | Topic |
 |-----|-------|
 | [`development/PERFORMANCE_OPTIMISATION.md`](./development/PERFORMANCE_OPTIMISATION.md) | Performance rules — animation, images, scripts, fonts, Lighthouse benchmarks. |
+| [`development/IMAGE_ASSET_PIPELINE.md`](./development/IMAGE_ASSET_PIPELINE.md) | Building rendered image assets as HTML: legibility floor, render pipeline, preview canvas, cut-outs |
 | [`development/VIDEO_OPTIMISATION.md`](./development/VIDEO_OPTIMISATION.md) | Video asset recipe (mp4/webm/poster). |
 | [`development/MOTION_GUIDE.md`](./development/MOTION_GUIDE.md) | GSAP motion system + reduced-motion rules. |
 | [`development/CART_ATTRIBUTES.md`](./development/CART_ATTRIBUTES.md) | Cart line attributes for attribution/LTV tagging. |

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { formatPrice } from "@/app/lib/productData";
 import { CadenceType } from "@/app/lib/cadenceData";
+import { HERO_CTA_ANCHOR_ID } from "./pdpAnchors";
 
 /* ============================================================================
  * StickyPurchaseFooterMobile
@@ -16,6 +17,10 @@ import { CadenceType } from "@/app/lib/cadenceData";
  * surface where vertical space is scarcest. The guarantee has its own section.
  * ========================================================================== */
 
+/** Fraction of the viewport the hero CTA must rise past before the bar shows.
+ *  Raise to reveal earlier; at or below 0.5 the bar can never cover it. */
+const REVEAL_ABOVE = 0.5;
+
 interface StickyPurchaseFooterMobileProps {
   selectedCadence: CadenceType;
   cadencePrice: number;
@@ -27,19 +32,36 @@ export default function StickyPurchaseFooterMobile({
   cadencePrice,
   onAddToCart,
 }: StickyPurchaseFooterMobileProps) {
-  const [isPastHero, setIsPastHero] = useState(false);
+  const [isPastHeroCta, setIsPastHeroCta] = useState(false);
 
-  // Held back until the hero has scrolled away, so the bar never covers the
-  // hero's own price and CTA on the first screen.
+  // Watches the CTA, not a scroll offset: the offset this replaced went stale
+  // the moment the hero changed height.
   useEffect(() => {
-    const handleScroll = () => setIsPastHero(window.scrollY > 500);
+    const cta = document.getElementById(HERO_CTA_ANCHOR_ID);
+    if (!cta) {
+      setIsPastHeroCta(true);
+      return;
+    }
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const reveal = () => {
+      const { bottom } = cta.getBoundingClientRect();
+      setIsPastHeroCta(bottom < window.innerHeight * REVEAL_ABOVE);
+    };
+
+    const observer = new IntersectionObserver(reveal, {
+      rootMargin: `-${(1 - REVEAL_ABOVE) * 100}% 0px 0px 0px`,
+    });
+    observer.observe(cta);
+
+    // Rotating changes innerHeight without moving anything.
+    window.addEventListener("resize", reveal, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", reveal);
+    };
   }, []);
 
-  if (!isPastHero) return null;
+  if (!isPastHeroCta) return null;
 
   const frequency =
     selectedCadence === "monthly-sub"

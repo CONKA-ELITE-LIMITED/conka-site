@@ -1,0 +1,56 @@
+<!doctype html><meta charset="utf-8"><title>Tested (shared)</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.slide{padding:0;background:#0d1226;color:#fff}
+
+/* Photo as a right panel rather than full bleed: the source is only 399x501,
+   so full-bleed would mean a 6x upscale. This keeps it near 2.5x. */
+.photo{position:absolute;right:0;top:0;bottom:0;width:1560px;z-index:1;
+  background-image:url("../assets/AthletesRun.png");
+  background-size:cover;background-position:52% 46%;
+  filter:grayscale(1) contrast(1.12) brightness(.82);
+  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 16%);
+          mask-image:linear-gradient(to right, transparent 0, #000 16%)}
+.tint{position:absolute;right:0;top:0;bottom:0;width:1560px;z-index:2;
+  background:linear-gradient(100deg, rgba(13,18,38,.94) 0%, rgba(13,18,38,.26) 22%, rgba(13,18,38,.10) 100%)}
+
+h1{font-family:Favorit;font-weight:500;font-size:118px;line-height:1.02;letter-spacing:-.03em;
+  color:#fff;padding:140px 0 0 160px;position:relative;z-index:4;max-width:1180px}
+h1 em{font-style:italic}
+.sub{font-weight:500;font-size:58px;letter-spacing:-.015em;color:#b9c4e6;
+  margin:26px 0 0 160px;max-width:1080px;position:relative;z-index:4}
+
+.seal{position:absolute;left:160px;top:470px;z-index:4}
+.seal img{height:672px}
+
+.badges{position:absolute;left:160px;right:160px;bottom:250px;z-index:4;display:flex;justify-content:space-between}
+.b{display:flex;flex-direction:column;align-items:center;width:300px;text-align:center}
+.b .circ{width:224px;height:224px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center}
+.b .circ img{height:188px}
+.b .l{margin-top:20px;font-family:JBM,monospace;font-weight:500;font-size:38px;
+  letter-spacing:.08em;line-height:1.35;color:#cdd6f0}
+
+.strip{position:absolute;left:0;right:0;bottom:0;height:160px;z-index:4;
+  background:rgba(255,255,255,.07);border-top:2px solid rgba(255,255,255,.16);
+  display:flex;align-items:center;padding-left:160px;gap:44px;
+  font-family:JBM,monospace;font-weight:500;font-size:46px;letter-spacing:.09em;color:#dfe6f5}
+.strip .sep{opacity:.4}
+</style>
+<div class="slide">
+  <div class="photo"></div><div class="tint"></div>
+
+  <h1>Tested. Then <em>tested</em> again.</h1>
+  <div class="sub">Every batch, by an independent lab.</div>
+
+  <div class="seal"><img src="../../../public/logos/InformedSportLogo.png"></div>
+
+  <div class="badges">
+    <div class="b"><div class="circ"><img src="../../../public/icons/ThirdPartyTestedIcon.avif"></div><div class="l">THIRD PARTY<br>TESTED</div></div>
+    <div class="b"><div class="circ"><img src="../../../public/icons/BpaFreeIcon.avif"></div><div class="l">BPA<br>FREE</div></div>
+    <div class="b"><div class="circ"><img src="../../../public/icons/VeganFriendlyIcon.avif"></div><div class="l">VEGAN<br>FRIENDLY</div></div>
+    <div class="b"><div class="circ"><img src="../../../public/icons/KosherCertifiedIcon.avif"></div><div class="l">KOSHER<br>CERTIFIED</div></div>
+  </div>
+
+  <div class="strip"><span>MADE IN THE UK</span><span class="sep">·</span><span>EVERY BATCH TESTED</span></div>
+</div>

@@ -1,0 +1,82 @@
+<!doctype html><meta charset="utf-8"><title>CONKA · PDP Slide Canvas</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#14161c;color:#e9ecf2;font:14px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;padding:26px 32px 90px}
+header{display:flex;align-items:baseline;gap:20px;margin-bottom:22px;flex-wrap:wrap;position:sticky;top:0;
+  background:#14161c;padding:10px 0 14px;z-index:10;border-bottom:1px solid #262b36}
+h1{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.hint{font-size:12.5px;color:#8b93a4}.hint b{color:#c9d2e4;font-weight:600}
+.controls{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+button{background:#232733;color:#e9ecf2;border:1px solid #333947;border-radius:7px;
+  padding:7px 13px;font-size:12.5px;cursor:pointer;font-weight:500}
+button.on{background:#2f5bd0;border-color:#2f5bd0}
+button:hover{border-color:#5570b8}
+h2.sec{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7d879b;
+  margin:34px 0 16px;padding-top:14px;border-top:1px solid #262b36}
+h2.sec span{color:#4d5769;font-weight:500;letter-spacing:0;text-transform:none;margin-left:10px}
+.row{display:flex;gap:24px;align-items:flex-start;margin-bottom:30px;flex-wrap:wrap}
+.card{background:#1b1f28;border:1px solid #2a2f3b;border-radius:12px;padding:13px}
+.card h3{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:#8b93a4;margin-bottom:10px;display:flex;justify-content:space-between;gap:14px}
+.card h3 span{color:#5a6377;font-weight:500;letter-spacing:0;text-transform:none}
+.vp{position:relative;overflow:hidden;border-radius:7px;background:#fff}
+.vp iframe{border:0;width:2400px;height:1715px;transform-origin:0 0;display:block}
+.big .vp{width:720px;height:515px} .big iframe{transform:scale(.3)}
+.phone .vp{width:390px;height:279px} .phone iframe{transform:scale(.1625)}
+.phone{border-color:#4a3f20} .phone h3{color:#f0b84a}
+.preview{border-color:#3c2f52} .preview h3{color:#b48bff}
+</style>
+<header>
+  <h1>CONKA · PDP Slide Canvas</h1>
+  <div class="hint">Click into this window to auto-refresh · <b>R</b> to reload · right column is a real 390px phone</div>
+  <div class="controls">
+    <button id="auto" class="on">Auto-refresh: on</button>
+    <button onclick="location.reload()">Reload now</button>
+  </div>
+</header>
+<div id="stage"></div>
+<script>
+const SECTIONS = [
+  /* ---- SETTLED. Uncomment a block to review it again. Each row mounts two
+     2400x1715 iframes, so keeping all of these live is what made the page choke.
+  ['Flow', 'live in gallery "01"', 'slides', [
+    ['s0','S0 · Starter Kit'],['s0q','S0Q · Starter Kit, quarterly'],['s1','S1 · Benefit Stack'],
+    ['s2','S2 · What To Expect'],['s3','S3 · Ingredients'],['s4','S4 · Vs Coffee'],
+    ['s7','S7 · Review'],['s8','S8 · Guarantee']]],
+  ['Clear', 'live in gallery "02"', 'slides', [
+    ['c0','C0 · Starter Kit'],['c0q','C0Q · Starter Kit, quarterly'],['c1','C1 · Benefit Stack'],
+    ['c2','C2 · What To Expect'],['c3','C3 · Ingredients'],['c4','C4 · Vs Coffee'],
+    ['c7','C7 · Review'],['c8','C8 · Guarantee']]],
+  ['Both', 'live in gallery "03"', 'slides', [
+    ['b0','B0 · Starter Kit'],['b0q','B0Q · Starter Kit, quarterly'],['b1','B1 · Benefit Stack'],
+    ['b2','B2 · What To Expect'],['b3','B3 · Ingredients'],['b4','B4 · Vs Coffee'],
+    ['b7','B7 · Review'],['b8','B8 · Guarantee']]],
+  ['Shared', 'referenced by all three galleries', 'slides', [
+    ['shared-proof','Proof'],['shared-tested','Tested']]],
+  ---- end settled ---- */
+  ['Alternatives', 'built but not chosen — Both uses the two-row layout', 'previews', [
+    ['p4a-ingredients-wheel','P4a · Ingredients wheel (15)'],
+    ['p4b-ingredients-split','P4b · Ingredients AM/PM split']]],
+];
+const bust = Date.now();
+stage.innerHTML = SECTIONS.map(([name, note, dir, items]) => `
+  <h2 class="sec">${name}<span>${note}</span></h2>
+  ${items.map(([f,label]) => {
+    const pv = dir === 'previews' ? ' preview' : '';
+    const src = `${dir}/${f}.html?t=${bust}`;
+    return `<div class="row">
+      <div class="card big${pv}"><h3>${label}<span>2400×1715</span></h3>
+        <div class="vp"><iframe src="${src}" scrolling="no"></iframe></div></div>
+      <div class="card phone"><h3>On a phone<span>390px</span></h3>
+        <div class="vp"><iframe src="${src}" scrolling="no"></iframe></div></div>
+    </div>`;
+  }).join('')}`).join('');
+
+let auto = true;
+document.getElementById('auto').onclick = e => {
+  auto = !auto; e.target.classList.toggle('on', auto);
+  e.target.textContent = 'Auto-refresh: ' + (auto ? 'on' : 'off');
+};
+window.addEventListener('focus', () => { if (auto) location.reload(); });
+addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') location.reload(); });
+</script>

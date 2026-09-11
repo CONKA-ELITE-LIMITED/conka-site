@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { formatPrice } from "@/app/lib/productData";
-import { STARTER_SHOTS_IMAGE } from "@/app/lib/cadenceData";
-import type { CadenceGift, CadencePricing } from "@/app/lib/cadenceData";
+import { getCadenceGiftSummary } from "@/app/lib/cadenceData";
+import type { CadencePricing } from "@/app/lib/cadenceData";
 
 /**
  * GiftValueStack — the starter-pack gift grid (SCRUM-1283).
@@ -12,65 +12,39 @@ import type { CadenceGift, CadencePricing } from "@/app/lib/cadenceData";
  *
  * Content only, and deliberately without its own box. It renders inside the
  * SubscriptionSummary card so the panel carries one bordered block rather than
- * two stacked ones, which doubled the panel height on mobile. The caller owns
- * the divider above it.
+ * two stacked ones. The caller owns the tinted band around it.
  *
  * Two columns at 390px, four from `sm:` up. Four across on a phone leaves about
  * 78px per tile, too tight for the struck price to stay legible, and the price
  * is the point of this pattern.
  *
- * Thumbnails are a fixed 80px rather than filling the cell. Full-bleed squares
- * rendered at roughly 270px each and cost about 800px of panel for four tiles,
- * which buried the CTA on mobile.
+ * Thumbnails are a fixed 112px rather than filling the cell. Full-bleed squares
+ * rendered at roughly 270px each and buried the CTA on mobile.
  *
- * The bonus-shots tile derives from `freeShots` / `freeShotsValue` rather than
- * being listed in `gifts`, so the shot count stays sourced from the same place
- * the cadence cards read it from.
+ * Tiles and total come from `getCadenceGiftSummary`, not summed here: the
+ * hero's offer badge shows the same figures and the two must not drift.
  */
-
-
-/** Tiles a cadence gives away free, bonus shots first. */
-function getGiftTiles(pricing: CadencePricing): CadenceGift[] {
-  const freeShots = pricing.freeShots ?? 0;
-  const freeShotsValue = pricing.freeShotsValue ?? 0;
-
-  return [
-    ...(freeShots > 0 && freeShotsValue > 0
-      ? [
-          {
-            id: "free-shots",
-            label: `+${freeShots} free shots`,
-            rrp: freeShotsValue,
-            image: STARTER_SHOTS_IMAGE,
-          },
-        ]
-      : []),
-    ...(pricing.gifts ?? []),
-  ];
-}
 
 export default function GiftValueStack({
   pricing,
 }: {
   pricing: CadencePricing;
 }) {
-  const tiles = getGiftTiles(pricing);
+  const { tiles, total: totalFreeValue } = getCadenceGiftSummary(pricing);
   if (tiles.length === 0) return null;
-
-  const totalFreeValue = tiles.reduce((sum, tile) => sum + tile.rrp, 0);
 
   return (
     <div>
       {/* The offer framing sits here rather than in the <h1>: the kit is a
           first-order mechanic, so it is not true of a one-time buyer or of
           order two onwards, but it is exactly true of this stack. */}
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <p className="text-lg font-medium text-black">Your starter kit</p>
         <p
-          className="text-sm font-bold"
-          style={{ color: "var(--brand-positive)" }}
+          className="whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
+          style={{ background: "linear-gradient(90deg, #cdeecf, #e9f5c9)" }}
         >
-          {formatPrice(totalFreeValue)} value
+          {formatPrice(totalFreeValue)} of gifts free
         </p>
       </div>
       <p className="mt-1 text-sm text-black/60">
@@ -92,7 +66,7 @@ export default function GiftValueStack({
                 alt=""
                 width={160}
                 height={160}
-                className={`h-20 w-20 rounded-md ${
+                className={`h-28 w-28 rounded-md ${
                   tile.imageFit === "contain"
                     ? "object-contain p-1.5"
                     : "object-cover"
@@ -108,11 +82,11 @@ export default function GiftValueStack({
                       }
                     : undefined
                 }
-                sizes="80px"
+                sizes="112px"
               />
             ) : (
               <span
-                className="flex h-20 w-20 items-center justify-center rounded-md"
+                className="flex h-28 w-28 items-center justify-center rounded-md"
                 style={{
                   background:
                     "color-mix(in srgb, var(--brand-positive) 10%, transparent)",

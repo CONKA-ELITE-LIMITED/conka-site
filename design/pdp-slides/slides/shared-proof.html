@@ -1,0 +1,51 @@
+<!doctype html><meta charset="utf-8"><title>S5 Proof</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.slide{background:radial-gradient(130% 110% at 18% 0%, #24325f 0%, #1a2550 42%, #111a3c 100%);
+  padding:0;color:#fff}
+
+/* blueprint grid, echoing the existing research asset but far subtler */
+.grid-bg{position:absolute;inset:0;z-index:0;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.055) 1.5px, transparent 1.5px),
+                   linear-gradient(90deg, rgba(255,255,255,.055) 1.5px, transparent 1.5px);
+  background-size:150px 150px}
+
+h1{font-family:Favorit;font-weight:500;font-size:126px;line-height:1;letter-spacing:-.03em;
+  color:#fff;padding:120px 0 0 160px;position:relative;z-index:3}
+h1 em{font-style:italic}
+.sub{font-weight:500;font-size:64px;line-height:1.2;letter-spacing:-.018em;color:#b9c4e6;
+  margin:30px 0 0 160px;max-width:1440px;position:relative;z-index:3}
+
+.hero{position:absolute;left:160px;top:640px;z-index:3}
+.hero .n{font-weight:700;font-size:300px;line-height:.88;letter-spacing:-.035em;color:#8fa3e8}
+.hero .l{font-family:JBM,monospace;font-weight:500;font-size:52px;letter-spacing:.1em;
+  line-height:1.35;color:#fff;margin-top:34px;max-width:1180px}
+
+.phone{position:absolute;right:40px;bottom:172px;height:1360px;z-index:2;
+  filter:drop-shadow(-40px 30px 70px rgba(0,0,0,.5))}
+
+.strip{position:absolute;left:0;right:0;bottom:0;height:168px;z-index:3;
+  background:#0e1633;border-top:2px solid rgba(255,255,255,.16);
+  display:flex;align-items:center;justify-content:center;gap:64px;
+  font-family:JBM,monospace;font-weight:500;font-size:50px;letter-spacing:.09em;color:#cdd6f0}
+.strip b{color:#fff;font-weight:500}
+.dot{color:#6b7aa8}
+</style>
+<div class="slide">
+  <div class="grid-bg"></div>
+  <img class="phone" src="../../../public/app/AppConkaRing.png">
+
+  <h1>Measured, not <em>claimed</em>.</h1>
+  <div class="sub">Seven years of research, and an app that checks it is working.</div>
+
+  <div class="hero">
+    <div class="n">+28.96%</div>
+    <div class="l">AVERAGE COGNITIVE<br>SCORE IMPROVEMENT</div>
+  </div>
+
+  <div class="strip">
+    <span><b>7+</b> YEARS RESEARCH</span><span class="dot">·</span>
+    <span><b>150+</b> PEOPLE TESTED</span><span class="dot">·</span>
+    <span><b>5,000+</b> TESTS TAKEN</span>
+  </div>
+</div>

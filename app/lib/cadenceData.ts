@@ -97,6 +97,43 @@ export function getCadenceVariantByProductHeroId(
   return getCadenceVariantByFormula(productHeroId, cadence);
 }
 
+/** Tiles a cadence gives away free. Bonus shots derive from `freeShots` /
+ *  `freeShotsValue` rather than `gifts`, so the count has one source. */
+function getCadenceGiftTiles(pricing: OfferPricing): OfferGift[] {
+  const freeShots = pricing.freeShots ?? 0;
+  const freeShotsValue = pricing.freeShotsValue ?? 0;
+
+  return [
+    ...(freeShots > 0 && freeShotsValue > 0
+      ? [
+          {
+            id: "free-shots",
+            label: `+${freeShots} free shots`,
+            rrp: freeShotsValue,
+            image: STARTER_SHOTS_IMAGE,
+          },
+        ]
+      : []),
+    ...(pricing.gifts ?? []),
+  ];
+}
+
+/** Tiles, count and total RRP in one call, so the hero badge and the buy-panel
+ *  stack cannot disagree. One-time cadences come back empty. Display only:
+ *  cart and checkout price from Shopify (CART_PRICING_SOURCE_OF_TRUTH.md). */
+export function getCadenceGiftSummary(pricing: OfferPricing): {
+  tiles: OfferGift[];
+  count: number;
+  total: number;
+} {
+  const tiles = getCadenceGiftTiles(pricing);
+  return {
+    tiles,
+    count: tiles.length,
+    total: tiles.reduce((sum, tile) => sum + tile.rrp, 0),
+  };
+}
+
 // ============================================
 // BOTH HERO CONTENT ("03")
 // Mirrors offerData OFFER_PRODUCTS.both, structured here so product

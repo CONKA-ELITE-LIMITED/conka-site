@@ -295,7 +295,9 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 40,
       freeShotsValue: 47.99,
       gifts: STARTER_PACK_GIFTS,
-      starterPackImage: "/formulas/starterPack/BothStarterPack.jpg",
+      // NOTE: the source photograph shows Flow-labelled bottles only; a Both
+      // pack should show a Flow/Clear mix. Inherited from the old artwork.
+      starterPackImage: "/formulas/mmPdpAssetsV2/BothStarterKit.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.both,
@@ -318,7 +320,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 140,
       freeShotsValue: 59.99,
       gifts: STARTER_PACK_GIFTS,
-      starterPackImage: "/formulas/starterPack/BothQuarterlyStarterPack.jpg",
+      starterPackImage: "/formulas/mmPdpAssetsV2/BothStarterKitQuarterly.jpg",
     },
     "quarterly-otp": {
       // + postage = the £279.99 BOTH-120 charges. Same £2.25/shot as monthly one-time.
@@ -344,7 +346,9 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 20,
       freeShotsValue: 23.99,
       gifts: STARTER_PACK_GIFTS,
-      starterPackImage: "/formulas/starterPack/FlowStarterPack.jpg",
+      // Redrawn slide (design/pdp-slides/slides/s0.html). Quarterly still points at
+      // the old artwork: this one carries the monthly figures (£152.94 / £39.99).
+      starterPackImage: "/formulas/mmPdpAssetsV2/FlowStarterKit.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.flow,
@@ -365,7 +369,9 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 80,
       freeShotsValue: 59.99,
       gifts: STARTER_PACK_GIFTS,
-      starterPackImage: "/formulas/starterPack/FlowQuarterlyStarterPack.jpg",
+      // Same plain shot as monthly, relabelled with the quarterly figures
+      // (design/pdp-slides/slides/s0q.html): £328.90 of value for £109.99.
+      starterPackImage: "/formulas/mmPdpAssetsV2/FlowStarterKitQuarterly.jpg",
     },
     "quarterly-otp": {
       // + postage = the £189.99 FLOW-60 charges. Same £3.00/shot as monthly one-time.
@@ -391,7 +397,10 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 20,
       freeShotsValue: 23.99,
       gifts: STARTER_PACK_GIFTS,
-      starterPackImage: "/formulas/starterPack/ClearStarterPack.jpg",
+      // Redrawn (design/pdp-slides/slides/c0.html). NOTE: the source photograph
+      // shows Clear-capped bottles with FLOW labels — a fault inherited from the
+      // artwork this replaces, not introduced here. Re-render the source to fix.
+      starterPackImage: "/formulas/mmPdpAssetsV2/ClearStarterKit.jpg",
     },
     "monthly-otp": {
       price: OTP_PRICE.clear,
@@ -412,7 +421,7 @@ const OFFER_PRICING: Record<OfferProduct, Record<OfferCadence, OfferPricing>> = 
       subsequentShots: 80,
       freeShotsValue: 59.99,
       gifts: STARTER_PACK_GIFTS,
-      starterPackImage: "/formulas/starterPack/ClearQuarterlyStarterPack.jpg",
+      starterPackImage: "/formulas/mmPdpAssetsV2/ClearStarterKitQuarterly.jpg",
     },
     "quarterly-otp": {
       // + postage = the £189.99 CLEAR-60 charges. Same £3.00/shot as monthly one-time.

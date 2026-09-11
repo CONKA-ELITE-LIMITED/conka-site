@@ -1,0 +1,72 @@
+<!doctype html><meta charset="utf-8"><title>S4 Vs Coffee</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.slide{background:radial-gradient(120% 100% at 50% 0%, #fff 0%, #f6f8fb 48%, #eaeef4 100%);padding:0}
+
+h1{font-family:Favorit;font-weight:500;font-size:118px;line-height:1;letter-spacing:-.03em;
+  text-align:center;padding-top:92px;position:relative;z-index:3}
+h1 em{font-style:italic}
+
+.tbl{position:absolute;left:160px;top:310px;width:2080px;z-index:3}
+.row{display:grid;grid-template-columns:900px 393px 393px 393px;align-items:center;height:168px}
+.row+.row{border-top:2px solid rgba(27,39,87,.13)}
+
+.panel{position:absolute;left:900px;top:-26px;width:393px;height:1340px;
+  background:#fff;border:3px solid var(--navy);border-radius:26px;z-index:-1;
+  box-shadow:0 30px 50px rgba(27,39,87,.13)}
+
+.lbl{font-weight:500;font-size:66px;letter-spacing:-.022em;color:var(--navy)}
+.cell{text-align:center;font-weight:500;font-size:52px;letter-spacing:-.015em;color:#414d78}
+.cell.us{color:var(--navy);font-weight:700}
+
+.hd{height:280px}
+.hd .cell{font-family:JBM,monospace;font-weight:500;font-size:40px;letter-spacing:.09em;
+  line-height:1.35;color:#414d78}
+.hd .cell.us{color:var(--navy);display:flex;flex-direction:column;align-items:center;gap:14px}
+.hd .cell.us img{height:132px}
+
+svg{width:58px;height:58px;display:inline-block;vertical-align:middle}
+.tick circle{fill:var(--navy)} .tick path{stroke:#fff;stroke-width:2.4;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.cross path{stroke:#98a1bd;stroke-width:2.6;stroke-linecap:round}
+</style>
+<div class="slide">
+  <h1>Smarter than your <em>average</em> boost.</h1>
+
+  <div class="tbl">
+    <div class="panel"></div>
+
+    <div class="row hd">
+      <div></div>
+      <div class="cell us"><img src="../assets/FlowCutout.png"><span>CONKA</span></div>
+      <div class="cell">COFFEE &amp;<br>ENERGY DRINKS</div>
+      <div class="cell">RX<br>STIMULANTS</div>
+    </div>
+
+    <div class="row"><div class="lbl">Energy duration</div>
+      <div class="cell us">4 to 8 hrs</div><div class="cell">1 to 3 hrs</div><div class="cell">Can't sleep</div></div>
+
+    <div class="row"><div class="lbl">Better focus</div>
+      <div class="cell us">Yes</div><div class="cell">At a cost</div><div class="cell">At a cost</div></div>
+
+    <div class="row"><div class="lbl">No crash</div>
+      <div class="cell us"><svg class="tick" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11"/><path d="M6.6 12.4 10.3 16 17.4 8.6"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div></div>
+
+    <div class="row"><div class="lbl">No jitters</div>
+      <div class="cell us"><svg class="tick" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11"/><path d="M6.6 12.4 10.3 16 17.4 8.6"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div></div>
+
+    <div class="row"><div class="lbl">Clinically dosed</div>
+      <div class="cell us"><svg class="tick" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11"/><path d="M6.6 12.4 10.3 16 17.4 8.6"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div></div>
+
+    <div class="row"><div class="lbl">Informed Sport certified</div>
+      <div class="cell us"><svg class="tick" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11"/><path d="M6.6 12.4 10.3 16 17.4 8.6"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div>
+      <div class="cell"><svg class="cross" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></svg></div></div>
+  </div>
+</div>

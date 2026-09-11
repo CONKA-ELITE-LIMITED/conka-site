@@ -201,7 +201,7 @@ The app-access row has no thumbnail and falls back to a tick glyph, which is why
 
 Phase 4 notes on the pack shots:
 
-- The monthly shot is the same file as the Phase 1 hero slide. Phase 4 review deduplicated the two: `MM_GALLERY_ASSETS["01"][0]` now points at the `starterPack/` copy and the byte-identical `mmPdpAssets/` original is deleted, so the hero, this section and `ByoGallery` request one URL and share its optimised variants.
+- ~~The monthly shot is the same file as the Phase 1 hero slide.~~ **Superseded 2026-09-11:** the gallery was redrawn (`design/pdp-slides/`). `MM_GALLERY_ASSETS` no longer holds a starter-pack entry at all, and `starterPackImage` points into `mmPdpAssetsV2/`.
 - Both are the **annotated** exports, with price labels burned in. They are placeholders at these paths: the label-free pair overwrites them by filename when exported, no code change.
 - `TwentyFlow.jpg` in the source folder is a byte-identical copy of `EightFlow.jpg`, not a 20-shot render, so it is not committed. Both free-shot counts point at `EightFlow.jpg` until a distinct render exists.
 

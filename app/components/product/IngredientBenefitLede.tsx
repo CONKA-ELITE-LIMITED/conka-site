@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { getHeroContent } from "@/app/lib/productHeroHelpers";
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import { LEDE_DESCRIPTION, LEDE_SUBLINE } from "@/app/lib/mmPdpData";
@@ -7,13 +8,22 @@ import { LEDE_DESCRIPTION, LEDE_SUBLINE } from "@/app/lib/mmPdpData";
  *
  * The product subline + condensed description + green-check benefit grid.
  *
- * Rendered directly by both heroes, under the buy panel: ProductHeroV3 on
- * desktop, ProductHeroMobileV3 on mobile.
+ * Rendered directly by both heroes: above the buy panel on mobile
+ * (ProductHeroMobileV3, SCRUM-1335), still below it on desktop
+ * (ProductHeroV3), where the right column has room either way.
  *
  * Flow ("01"), Clear ("02"), and Both ("03").
  * ========================================================================== */
 
 const GREEN = "#1a7f4f";
+
+/** Average glyph advance of the bold face, in em. Wide, so it errs to wrapping. */
+const FIT_RATIO = 0.55;
+
+/** Largest size that fits `text` on one line. Clamped in .pdp-lede-headline. */
+function fitCqi(text: string): string {
+  return `${(100 / (text.length * FIT_RATIO)).toFixed(2)}cqi`;
+}
 
 const CHECK_ITEMS = [
   "Zero caffeine, zero crash",
@@ -66,15 +76,25 @@ export default function IngredientBenefitLede({
   const sublineRest = boldEnd > 0 ? subline.slice(restStart) : "";
 
   return (
-    <div>
+    <div style={{ containerType: "inline-size" }}>
       {subline && (
         <h2
           className="leading-tight text-black"
           style={{ letterSpacing: "-0.01em" }}
         >
-          <span className="block text-[2.25rem] font-bold">{sublineBold}</span>
+          <span
+            className="pdp-lede-headline block font-bold"
+            style={
+              { "--pdp-lede-fit": fitCqi(sublineBold) } as CSSProperties
+            }
+          >
+            {sublineBold}
+          </span>
           {sublineRest && (
-            <span className="block text-[1.5rem] font-medium text-black">
+            <span
+              className="block font-medium text-black"
+              style={{ fontSize: "var(--brand-h3-size, 1.25rem)" }}
+            >
               {sublineRest.trim()}
             </span>
           )}

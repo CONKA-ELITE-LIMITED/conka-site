@@ -14,7 +14,7 @@ import ProductBuyPanel, {
   FeelOutcomesList,
   IngredientListButton,
 } from "./ProductBuyPanel";
-import { SpecBadge, SocialProofBadge } from "./HeroBadges";
+import { SocialProofBadge } from "./HeroBadges";
 
 interface ProductHeroMobileV2Props {
   formulaId: ProductHeroId;
@@ -87,7 +87,6 @@ export default function ProductHeroMobileV2({
       {/* Above the asset: badges, product name, subtitle */}
       <div className="flex w-full min-w-0 flex-col items-center gap-3 pt-4 text-center text-black">
         <SocialProofBadge productType={productType} className="mx-auto" />
-        <SpecBadge productType={productType} className="mx-auto" />
         <div>
           <h1 className="brand-h1 leading-tight" style={{ letterSpacing: "-0.02em" }}>
             {content.name}

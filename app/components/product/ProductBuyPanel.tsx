@@ -20,6 +20,7 @@ import GiftValueStack from "./GiftValueStack";
 import HeroAccordions from "./HeroAccordions";
 import IngredientBottomSheet from "./IngredientBottomSheet";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
+import { HERO_CTA_ANCHOR_ID } from "./pdpAnchors";
 
 /* ============================================================================
  * ProductBuyPanel (+ TrustStrip)
@@ -230,6 +231,17 @@ function FlatPlanCard({
         </span>
       )}
 
+      {/* max-[360px] is a collision guard: MOST POPULAR is centred and the two
+          badges touch at 320px. */}
+      {savePct > 0 && (
+        <span
+          className="absolute right-3 top-0 z-20 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[12px] font-bold uppercase leading-none tracking-wide text-white max-[360px]:px-2 max-[360px]:text-[10px] sm:right-4"
+          style={{ backgroundColor: saveColor }}
+        >
+          {savePct}% off
+        </span>
+      )}
+
       {/* Full-card select target sitting behind the (pointer-events-none) content. */}
       <button
         type="button"
@@ -239,8 +251,6 @@ function FlatPlanCard({
       />
 
       <div className="pointer-events-none relative z-10 px-3 py-3 sm:px-4">
-        {/* Top row: radio + shots/cadence ..... discount pill + strike + price.
-            Kept compact so nothing truncates in the narrow buy column. */}
         <div className="flex items-center justify-between gap-2">
           <span className="flex items-center gap-2">
             <span
@@ -261,14 +271,6 @@ function FlatPlanCard({
           </span>
 
           <span className="flex shrink-0 items-center gap-1.5">
-            {savePct > 0 && (
-              <span
-                className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white"
-                style={{ backgroundColor: saveColor }}
-              >
-                {savePct}% off
-              </span>
-            )}
             <span className="flex items-baseline gap-1 leading-none">
               {compareAtDisplay && (
                 <s className="text-[11px] font-bold text-black/40">
@@ -484,9 +486,6 @@ function SubscriptionSummary({
           },
         ]
       : []),
-    ...(savePct > 0
-      ? [{ id: "savings", text: <>Save {savePct}% vs buying once</> }]
-      : []),
     { id: "shipping", text: <>Free UK shipping</> },
     {
       id: "guarantee",
@@ -508,7 +507,16 @@ function SubscriptionSummary({
   ];
 
   return (
-    <div className="mt-4 rounded-md border border-black/15 bg-white p-5">
+    <div className="mt-4 overflow-hidden rounded-md border border-black/15 bg-white p-5">
+      {/* Not "first order": the discount is on the recurring price. */}
+      {savePct > 0 && (
+        <p
+          className="-mx-5 -mt-5 mb-4 px-5 py-2 text-center text-[12px] font-bold uppercase tracking-wide text-white"
+          style={{ background: "var(--brand-navy, #1B2757)" }}
+        >
+          Save {savePct}% for life
+        </p>
+      )}
       <p className="text-lg font-medium text-black">Your subscription</p>
       <ul className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (
@@ -526,10 +534,9 @@ function SubscriptionSummary({
         ))}
       </ul>
 
-      {/* One card, not two: the gifts sit under a divider inside the summary so
-          the panel does not carry two stacked bordered blocks on mobile. */}
+      {/* Tinted, not divided: the two halves are different offers. */}
       {showGifts && (
-        <div className="mt-5 border-t border-black/10 pt-5">
+        <div className="-mx-5 -mb-5 mt-5 bg-[#eef0f5] px-5 py-5">
           <GiftValueStack pricing={pricing} />
         </div>
       )}
@@ -763,13 +770,17 @@ export default function ProductBuyPanel({
       </div>
 
       <div className="mt-3">
-        <ConkaCTAButton
-          onClick={onAddToCart}
-          meta={null}
-          className="w-full !max-w-none"
-        >
-          {ctaLabel}
-        </ConkaCTAButton>
+        {/* Watched by StickyPurchaseFooterMobile. Must wrap the button and
+            nothing else, or the bar reveals late. */}
+        <div id={HERO_CTA_ANCHOR_ID}>
+          <ConkaCTAButton
+            onClick={onAddToCart}
+            meta={null}
+            className="w-full !max-w-none"
+          >
+            {ctaLabel}
+          </ConkaCTAButton>
+        </div>
 
         {/* The one-time purchase sits under the main CTA (MM pattern). All-in
             price (postage baked, per SCRUM-1286's pending Shopify shipping

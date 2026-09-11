@@ -14,7 +14,7 @@ import ProductBuyPanel, {
   FeelOutcomesList,
   IngredientListButton,
 } from "./ProductBuyPanel";
-import { SpecBadge, SocialProofBadge } from "./HeroBadges";
+import { SocialProofBadge } from "./HeroBadges";
 
 interface ProductHeroV2Props {
   formulaId: ProductHeroId;
@@ -97,8 +97,6 @@ export default function ProductHeroV2({
         {/* LEFT: identity + ingredients */}
         <div className="order-1 flex flex-col gap-4 text-black lg:col-span-4">
           <HeroRating />
-
-          <SpecBadge productType={productType} className="self-start" />
 
           <div>
             <h1

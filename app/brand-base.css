@@ -303,6 +303,24 @@
   line-height: normal;
 }
 
+/* PDP lede headline: shrinks to hold one line. `--pdp-lede-fit` is set per
+   string by IngredientBenefitLede. The @supports guard is load-bearing: `cqi`
+   is invalid without container queries, and an invalid unit kills the whole
+   declaration, dropping the font-size to inherited body size. */
+.pdp-lede-headline {
+  font-size: var(--brand-h2-size);
+}
+
+@supports (container-type: inline-size) {
+  .pdp-lede-headline {
+    font-size: clamp(
+      1.375rem,
+      var(--pdp-lede-fit, var(--brand-h2-size)),
+      var(--brand-h2-size)
+    );
+  }
+}
+
 /* ---- Clinical patterns ---- */
 
 /* Section eyebrow — opens every trio header: "// Short concept · TOPIC-0X" */

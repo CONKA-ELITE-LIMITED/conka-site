@@ -5,6 +5,12 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-11** | Re-cut the Clear bottle for the PDP carousel at native resolution, replacing an asset that was being upscaled up to 2.8x
+- **2026-09-11** | All three PDP carousels redrawn: every slide now carries one argument in copy that already exists further down the page, holds a ~90px type floor so it survives the 390px thumbnail, and is authored as HTML in `design/pdp-slides/` rather than baked into a binary. The hero gift pill is removed, since the new lead slide states the same offer itemised
+- **2026-09-10** | Subscription card on the PDPs leads with a navy savings bar and shows the starter-kit gifts larger
+- **2026-09-10** | PDP starter-kit offer is now a filled badge above the gallery, the plan-card discount moves to the card corner at a readable size, and the benefit headline returns to full size above the picker
+- **2026-09-10** | PDP mobile heroes now make the product case, description and proof ticks, before the plan picker instead of after it
+- **2026-09-10** | PDP heroes lead with the product benefit line and the free starter-kit value instead of the caffeine spec pill, so cold traffic sees both before the price
 - **2026-09-09** | /our-story hero and chapters rebuilt as full-bleed split bands: the image now owns half the viewport edge to edge and full height on desktop, Cadence style.
 - **2026-09-09** | /our-story mobile: chapter and hero images now sit flush with the top of their section, so no band of section background shows above them.
 - **2026-09-09** | Mobile pass on /our-story: hero photo now leads full bleed and flush under the nav, chapter images run edge to edge, stat row centred.

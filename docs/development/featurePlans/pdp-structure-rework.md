@@ -309,7 +309,7 @@ Asset gated. Parked until assets are confirmed.
 - **The app.** Its own section, image led. Needs app screens or a short screen recording. One line on measuring the effect rather than trusting it.
 - **Glass.** Not a section. One gallery slide in the Functional mushroom layout (full bleed photo, small eyebrow, short headline, two short paragraphs), plus the comparison table row from Phase 2. Angle is preservation, not sustainability: light and oxygen degrade active compounds, amber glass shields them, so what is in the bottle on the last day is what was in it on the first. Confirm with Humphrey that our actives are light sensitive enough for the claim to be true rather than merely conventional.
 
-Gallery note: the Flow gallery already contains `ConkaVsOther.jpg` and `RiskFreeTrial.jpg`, which duplicate the Phase 2 table and the 100 day section. Those two slides should come out to make room for the glass slide.
+Gallery note: ~~the Flow gallery already contains `ConkaVsOther.jpg` and `RiskFreeTrial.jpg`~~ **Resolved 2026-09-11:** the gallery was redrawn, and those two slides are now `FlowVsCoffee` and `FlowGuarantee` in `mmPdpAssetsV2/`. The duplication with the Phase 2 table and the 100 day section is deliberate: the slide summarises, the section carries the full version.
 
 ## Phase 5: Start pack, and cut Explore (Future)
 
@@ -411,6 +411,7 @@ The FAQ's sticky lifestyle image was flagged as unnecessary. `LabFAQ` already ac
 - `docs/branding/DESIGN_SYSTEM.md` section 8.5 (Simple DTC)
 - `docs/PAGE_NARRATIVES.md` (page story map)
 - Gray Matter PDP, structural reference: `trygraymatter.com/products/brightmind-1`
+- `docs/development/featurePlans/pdp-above-fold-conversion.md` (later, narrower push at the same hero. Its Phase 1 works around this plan's Phase 1 rather than reversing it: see that doc's "The SCRUM-1260 conflict" section)
 
 ## Jira tickets
 

@@ -1,0 +1,79 @@
+<!doctype html><meta charset="utf-8"><title>B3 Ingredients (Both)</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.slide{background:radial-gradient(120% 100% at 50% 0%, #fff 0%, #f6f8fb 48%, #eaeef4 100%);padding:0}
+h1{font-family:Favorit;font-weight:500;font-size:92px;line-height:1;letter-spacing:-.03em;
+  text-align:center;padding-top:44px;position:relative;z-index:3}
+h1 em{font-style:italic}
+.sub{font-weight:500;font-size:46px;letter-spacing:-.015em;color:#2f3a63;text-align:center;
+  margin-top:12px;position:relative;z-index:3}
+
+.rows{position:absolute;left:130px;right:130px;top:262px;z-index:3}
+.r{display:grid;grid-template-columns:300px 1fr;column-gap:52px;align-items:center}
+.r + .r{margin-top:34px;padding-top:34px;border-top:2px solid rgba(27,39,87,.13)}
+
+.prod{display:flex;flex-direction:column;align-items:center;gap:16px}
+.prod img{height:430px;filter:drop-shadow(-14px 16px 30px rgba(27,39,87,.22))}
+.prod .chip{background:var(--navy);color:#fff;border-radius:999px;padding:11px 26px 13px;
+  font-family:JBM,monospace;font-weight:500;font-size:31px;letter-spacing:.1em;white-space:nowrap}
+
+.grid{display:grid;row-gap:34px;column-gap:16px}
+.g5{row-gap:64px}
+.g6{grid-template-columns:repeat(6,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+.ing{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ing img{width:176px;height:176px;border-radius:50%;object-fit:cover;
+  box-shadow:0 14px 22px rgba(27,39,87,.15)}
+.nm{margin-top:16px;font-weight:500;font-size:42px;letter-spacing:-.02em;color:var(--navy);line-height:1.14}
+/* one badge colour throughout: the AM/PM chips already separate the two formulas */
+.tg{display:inline-block;margin-top:12px;background:#d8e0f0;color:var(--navy);border-radius:999px;
+  padding:9px 19px 11px;font-family:JBM,monospace;font-weight:500;font-size:27px;letter-spacing:.06em;
+  line-height:1.15;max-width:100%}
+</style>
+<div class="slide">
+  <h1>Fifteen <em>clinically dosed</em> ingredients.</h1>
+  <div class="sub">Two shots, built to work together.</div>
+
+  <div class="rows">
+    <div class="r">
+      <div class="prod"><img src="../assets/FlowCutout.png"><span class="chip">FLOW · AM</span></div>
+      <div class="grid g6">
+        <div class="ing"><img src="../../../public/ingredients/renders/LemonBalm.jpg">
+          <div class="nm">Lemon Balm</div><span class="tg">CALM</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/Ashwagandha.jpg">
+          <div class="nm">Ashwagandha</div><span class="tg">STRESS REDUCTION</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/Turmeric.jpg">
+          <div class="nm">Turmeric</div><span class="tg">MEMORY</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/RhodiolaRosea.jpg">
+          <div class="nm">Rhodiola rosea</div><span class="tg">ANTI-FATIGUE</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/Bilberry.jpg">
+          <div class="nm">Bilberry</div><span class="tg">VISION SUPPORT</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/BlackPepper.jpg">
+          <div class="nm">Black Pepper</div><span class="tg">ABSORPTION</span></div>
+      </div>
+    </div>
+    <div class="r">
+      <div class="prod"><img src="../assets/ClearCutoutV2.png"><span class="chip">CLEAR · PM</span></div>
+      <div class="grid g5">
+        <div class="ing"><img src="../../../public/ingredients/renders/Glutathione.jpg">
+          <div class="nm">Glutathione</div><span class="tg">MASTER ANTIOXIDANT</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/AlphaGPC.jpg">
+          <div class="nm">Alpha GPC</div><span class="tg">ACETYLCHOLINE</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/NAcetylCysteine.jpg">
+          <div class="nm">N-Acetyl Cysteine</div><span class="tg">DETOX SUPPORT</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/GinkgoBiloba.jpg">
+          <div class="nm">Ginkgo Biloba</div><span class="tg">CIRCULATION</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/AcetylLCarnitine.jpg">
+          <div class="nm">Acetyl-L-Carnitine</div><span class="tg">MENTAL ENERGY</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/VitaminC.jpg">
+          <div class="nm">Vitamin C</div><span class="tg">ANTIOXIDANT</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/AlphaLipoicAcid.jpg">
+          <div class="nm">Alpha Lipoic Acid</div><span class="tg">ANTIOXIDANT RECYCLING</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/VitaminB12.jpg">
+          <div class="nm">Vitamin B12</div><span class="tg">BRAIN AGEING</span></div>
+        <div class="ing"><img src="../../../public/ingredients/renders/Lecithin.jpg">
+          <div class="nm">Lecithin</div><span class="tg">NEURONAL MEMBRANES</span></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@ import {
 import { getPdpGalleryImages } from "@/app/lib/mmPdpData";
 import ProductImageSlideshow from "./ProductImageSlideshow";
 import ProductBuyPanel, { TrustStrip } from "./ProductBuyPanel";
-import { SpecBadge, SocialProofBadge } from "./HeroBadges";
+import { SocialProofBadge } from "./HeroBadges";
 import HeroRating from "./HeroRating";
 import IngredientBenefitLede from "./IngredientBenefitLede";
 import IngredientDisclosureRows from "./IngredientDisclosureRows";
@@ -79,7 +79,9 @@ export default function ProductHeroV3({
         </div>
 
         {/* RIGHT (35%): identity + buy box + the product lede.
-            Order mirrors Magic Mind: viewing, title, spec, rating. */}
+            Order: viewing, title, rating, gift-value pill. The spec pill is
+            gone (SCRUM-1334); the benefit line lives in the lede below
+            (SCRUM-1336). */}
         <div className="order-1 flex min-w-0 flex-col gap-6 text-black lg:order-2">
           <div className="flex flex-col gap-3">
             <SocialProofBadge productType={productType} className="self-start" />
@@ -90,8 +92,6 @@ export default function ProductHeroV3({
             >
               {content.name}
             </h1>
-
-            <SpecBadge productType={productType} className="self-start" />
 
             <HeroRating />
 

@@ -59,3 +59,7 @@ app/lib/reviews.ly_*.csv
 # Legacy Shopify blog snapshot (SCRUM-1155). Re-pullable at any time with
 # `npx tsx scripts/legacy-blog/fetch.ts`; a 440k-char source dump, not source.
 /scripts/legacy-blog/.data/
+
+# PDP slide source photography lives outside the repo (5.3MB that never serves).
+# design/pdp-slides/assets is a symlink; see design/pdp-slides/README.md.
+design/pdp-slides/assets
