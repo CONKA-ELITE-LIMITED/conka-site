@@ -80,6 +80,81 @@ first live order that it exploded into components.
 **Synergy rules:** the connector pulls only open, paid, unfulfilled orders. Never remove the
 `IMPORTSYNERGY` tag. Orders cannot be edited once Synergy has pulled them.
 
+### Shipping on renewals
+
+The shipping line on a renewal order comes from the **delivery method stored on the Shopify
+subscription contract**, not from a rate picked at billing time. That name is what Synergy routes
+couriers on, and it rejects anything outside its configured list.
+
+**Every contract migrated from Loop stores a null title.** All 296 carry `null` for `title`,
+`presentmentTitle` and `code`; all 33 created through Skio checkout carry `Express`. So renewals
+from the first group print `Subscription shipping` and are held by Synergy as "Invalid Dispatch
+Method", while checkout orders print `Express`. Nothing is re-rated at billing: our cheapest UK
+rate is already `Express` at £0.00, and `Subscription shipping` is not a rate we have ever
+configured. Our profile holds only `Express`, `24 Hour Delivery` and `Express International`.
+
+**This predates Skio.** Order `#3935` was billed by **Loop** on 27 Aug 2026 carrying the identical
+label. Renewals on this store have always behaved this way; it surfaced now because Synergy's
+routing is new, not because the platform changed. Do not raise it with Skio as a migration fault.
+
+**The fix** is Skio's per-contract **"Re-sync with Shopify"** in the Update delivery method dialog.
+It pulls the rate name off our Shopify profile, picks correctly from the address, and leaves the
+price alone (`Delivery price: Synced with Shopify`, override unchecked). The API equivalent is
+`changeSubscriptionDeliveryMethod`.
+
+**Never disturb the price while correcting a title.** Leave `setOverride` false. UK contracts are
+£0 either way, but the 12 international ones store Loop-era delivery prices (EUR 26.95, EUR 38.95,
+USD 28-31) that do not match our current Express International bands, so a re-rate would change
+what real customers pay.
+
+**The mapping is unambiguous, and simpler than it looks.** UK is the only zone carrying two rates
+(`Express` at £0 and `24 Hour Delivery` at £6.54+). All eleven overseas zones carry exactly one,
+`Express International`. So a subscription contract maps to `Express` if the shipping address is
+UK and `Express International` otherwise, with no exceptions. Two traps to check before ever
+re-deriving this: **Jersey sits in its own `Express International` zone**, so a Channel Islands
+address labelled "United Kingdom" would be mis-mapped, and a country with no configured zone has
+no rate at all. Neither is present today (audited 2026-09-07).
+
+> ⚠️ **The two-method rule above expires when the international DDP work ships.**
+> `Express International` is being retired and replaced by `European Delivery` (DHL road, EU) and
+> `Express International DHL` (DHL air, rest of world), all on DDP terms. The mapping then becomes
+> three methods: `Express` for UK, `European Delivery` for the EU, `Express International DHL`
+> everywhere else. See `docs/development/featurePlans/international-duties-and-ddp.md`.
+
+### Do not re-sync the 12 international contracts yet
+
+**Fix the 207 UK contracts now. Hold the 12 international ones.** Active subscription state
+pulled from Skio 8 Sept 2026:
+
+| | Loop-migrated (needs this fix) | Skio-native (already correct) |
+|---|---|---|
+| UK | **207** | 37 |
+| International | **12** (8 France, 4 USA) | 0 |
+
+Every international subscriber is Loop-migrated; there are no Skio-native international
+contracts at all.
+
+The UK contracts map to `Express`, which the international work does not touch, so fixing them
+now is final. The 12 international ones would be set to `Express International`, which that work
+**retires**, so correcting them now means correcting them twice. Hold them and do it once
+against the final method names.
+
+They are being revisited regardless: four of the eight French contracts are monthly single-box
+subscribers due to be migrated to quarterly, and all 12 carry the stale Loop-era delivery prices
+noted above.
+
+**A subscription always resolves to `Express` in the UK, even when the customer paid for next-day.**
+Order `#4042` carries two shipping lines, `24 Hour Delivery £6.54` and `Express £0.00`, and the
+contract took the second. The paid upgrade applies to the first order only; renewals revert to
+standard silently. All 34 Skio-native contracts behave this way. Tracked as a behaviour question in
+`docs/TODO.md`, not a defect.
+
+**Gotcha: our own Shopify apps cannot read subscription contracts.** `read_own_subscription_contracts`
+only covers contracts the calling app created, and Skio owns all of ours. Contract-level checks go
+through Skio's API (`getCurrentSubscriptionDeliveryMethod`), not Shopify's.
+
+Status and the open verification: **SCRUM-1311**.
+
 ### Fulfilment staging
 
 Plans and variants stay constant as box formats change; only `bundlecomposition` moves. The
