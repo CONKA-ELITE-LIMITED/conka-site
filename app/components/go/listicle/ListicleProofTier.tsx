@@ -23,7 +23,9 @@
 import type { ReactNode } from "react";
 import type { ListicleProof } from "@/app/lib/landings/listicle-types";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
-import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
+import UGCMarquee, {
+  DEFAULT_UGC_ITEMS,
+} from "@/app/components/testimonials/UGCMarquee";
 import AthleteReviewFeature from "@/app/components/AthleteReviewFeature";
 
 /**
@@ -53,8 +55,20 @@ export function ListicleLogoBand({ proof }: { proof: ListicleProof }) {
  * Post-buy-box proof: the named feature, then the UGC band last so it lands
  * right before the FAQ. Blocks are collected first so the first one never
  * carries a leading margin whichever subset renders.
+ *
+ * `excludeSrc` is the page's hero image, dropped from the UGC band so a still
+ * used as the hero cannot also scroll past in the band on the same page. It is
+ * filtered here rather than curated per config because the shared default set
+ * is what most pages use: a config-side subset would have to be re-checked
+ * every time a hero changes, and this cannot go stale.
  */
-export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
+export default function ListicleProofTier({
+  proof,
+  excludeSrc,
+}: {
+  proof: ListicleProof;
+  excludeSrc?: string;
+}) {
   const blocks: { key: string; node: ReactNode }[] = [];
 
   if (proof.feature) {
@@ -71,7 +85,9 @@ export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
         <UGCMarquee
           title={proof.ugc.title}
           subtitle={proof.ugc.subtitle}
-          items={proof.ugc.items}
+          items={(proof.ugc.items ?? DEFAULT_UGC_ITEMS).filter(
+            (item) => item.src !== excludeSrc,
+          )}
           // Simple DTC: the standard rounded-md tile radius (UGCMarquee's
           // default), matching the UGC band on home and the PDPs.
         />
