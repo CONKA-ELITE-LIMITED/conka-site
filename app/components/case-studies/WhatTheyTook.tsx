@@ -42,7 +42,7 @@ export default function WhatTheyTook({
           </div>
           <p className="text-sm font-semibold text-black">{product.label}</p>
         </div>
-        <ConkaCTAButton href={product.href} meta={null}>
+        <ConkaCTAButton href={product.href}>
           Get what they took
         </ConkaCTAButton>
       </div>

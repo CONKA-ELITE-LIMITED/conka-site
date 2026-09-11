@@ -91,7 +91,7 @@ export default function LabGuarantee({
 
         {!hideCTA && (
           <div className="flex justify-center lg:justify-start">
-            <ConkaCTAButton href={ctaHref} meta={null}>
+            <ConkaCTAButton href={ctaHref}>
               {ctaLabel ?? "Try it 100% Risk Free"}
             </ConkaCTAButton>
           </div>

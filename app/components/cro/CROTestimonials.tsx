@@ -286,7 +286,7 @@ export default function CROTestimonials({
       {!hideCTA && (
         <>
           <div className="mt-10 flex justify-center lg:justify-start">
-            <ConkaCTAButton href={ctaHref} meta={null}>
+            <ConkaCTAButton href={ctaHref}>
               Get Both from £{PRICE_PER_SHOT_BOTH}/shot
             </ConkaCTAButton>
           </div>

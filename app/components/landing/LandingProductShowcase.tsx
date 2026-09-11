@@ -188,7 +188,7 @@ export default function LandingProductShowcase({ hideCTA = false, ctaHref = "/bu
           take whatever background the host section has. */}
       <div className="flex flex-col items-center">
         {!hideCTA && (
-          <ConkaCTAButton href={ctaHref} meta={null}>
+          <ConkaCTAButton href={ctaHref}>
             Get Both from &pound;{PRICE_PER_SHOT_BOTH}/shot
           </ConkaCTAButton>
         )}

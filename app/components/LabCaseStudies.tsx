@@ -262,7 +262,7 @@ export default function LabCaseStudies({
           Centred on mobile, left-aligned on desktop. */}
       {!hideCTA && (
         <div className="mt-8 flex flex-col items-center lg:items-start">
-          <ConkaCTAButton href={ctaHref ?? "/case-studies"} meta={null}>
+          <ConkaCTAButton href={ctaHref ?? "/case-studies"}>
             {ctaLabel ?? "View All Case Studies"}
           </ConkaCTAButton>
           <GuaranteeRow />

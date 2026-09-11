@@ -222,7 +222,7 @@ export default function CaseStudiesPageDesktop() {
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/50 tabular-nums mb-6">
             100-Day money-back guarantee · Free UK shipping · Cancel anytime
           </p>
-          <ConkaCTAButton href="/conka-both" meta={null}>
+          <ConkaCTAButton href="/conka-both">
             Try CONKA now
           </ConkaCTAButton>
         </div>

@@ -206,7 +206,7 @@ export default function Home() {
           <div className="brand-track">
             <WhatToExpectV2 productId="both" />
             <div className="mt-10 flex justify-center">
-              <ConkaCTAButton href="/conka-both?src=home_expect" meta={null}>
+              <ConkaCTAButton href="/conka-both?src=home_expect">
                 Start your first week
               </ConkaCTAButton>
             </div>
@@ -230,7 +230,7 @@ export default function Home() {
           <div className="brand-track">
             <AthleteCredibilityCarousel />
             <div className="mt-10 flex justify-center">
-              <ConkaCTAButton href="/conka-both?src=home_athletes" meta={null}>
+              <ConkaCTAButton href="/conka-both?src=home_athletes">
                 Join them
               </ConkaCTAButton>
             </div>
@@ -281,7 +281,7 @@ export default function Home() {
           <div className="brand-track">
             <ProductComparisonTable product="both" />
             <div className="mt-10 flex justify-center">
-              <ConkaCTAButton href="/conka-both?src=home_comparison" meta={null}>
+              <ConkaCTAButton href="/conka-both?src=home_comparison">
                 Unlock your boost
               </ConkaCTAButton>
             </div>

@@ -489,8 +489,7 @@ export default function CartDrawer() {
           <div className="px-4 pb-4">
             {cartItems.length === 0 ? (
               <ConkaCTAButton
-                meta={null}
-                className="w-full max-w-none justify-center"
+                className="w-full max-w-none"
                 onClick={() => {
                   closeCart();
                   router.push("/conka-both");
@@ -501,8 +500,7 @@ export default function CartDrawer() {
             ) : (
               <>
                 <ConkaCTAButton
-                  meta={null}
-                  className="w-full max-w-none justify-center"
+                  className="w-full max-w-none"
                   onClick={() => {
                     if (!cart?.checkoutUrl) return;
                     const subtotal =

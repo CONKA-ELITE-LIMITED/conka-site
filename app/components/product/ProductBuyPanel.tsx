@@ -775,7 +775,6 @@ export default function ProductBuyPanel({
         <div id={HERO_CTA_ANCHOR_ID}>
           <ConkaCTAButton
             onClick={onAddToCart}
-            meta={null}
             className="w-full !max-w-none"
           >
             {ctaLabel}

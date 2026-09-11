@@ -1160,8 +1160,8 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               // ConkaCTAButton's inverted contract (CTA_BASE_INVERTED): white
               // fill, navy border and text, flipping to the navy fill on hover.
               // The treatment, not the component: ConkaCTAButton renders a mono
-              // uppercase label and an O-mark, which is clinical grammar and
-              // would read as a foreign object on a Simple DTC bar.
+              // uppercase label, which is clinical grammar and would read as a
+              // foreign object on a Simple DTC bar.
               className="flex min-h-[48px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--brand-navy)] bg-white px-7 text-center text-[var(--brand-navy)] transition-colors duration-200 hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
             >
               <span className="text-[15px] font-bold leading-tight">
