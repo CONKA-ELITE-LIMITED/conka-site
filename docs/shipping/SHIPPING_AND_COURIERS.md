@@ -109,27 +109,43 @@ cheaper but DPD chosen for the more premium next-day service). The flat £6.54 b
 
 ---
 
-## 4. International shipping — weight-banded (in progress, June 2026)
+## 4. International shipping
 
 International is being moved to the **same weight-banded `Weight` rate-type model as UK**,
 because the old flat rates (priced for a 1-box order) bled badly on quarterly orders in
-long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Every rate stays named
-**`Express International`** (Evri, one carrier — Synergy maps on name only).
+long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Rates outside Europe are all
+named **`Express International`** (Evri, one carrier — Synergy maps on name only); Europe and
+france are **`European Delivery`** (DHL road). See the note below.
 
-**Decisions (June 2026):**
-- **All international = Evri.** (DHL `International Priority` upgrade remains a future
-  fast-follow, not built.)
-> ⚠️ **SUPERSEDED (2026-09-07) — the DAP decision below is being reversed.** The EU
-> abolished the €150 duty exemption on 1 Jul 2026 and France added a national parcel tax
-> on 1 Mar 2026, so DAP now lands French customers a punitive doorstep bill. The US $800
-> de minimis is also gone, which invalidates the flat £22 US rate. Plan of record:
-> `docs/development/featurePlans/international-duties-and-ddp.md`. Do not re-derive the
-> incoterm model from this section until that plan is folded back in here.
+> ⚠️ **PARTLY SUPERSEDED (2026-09-11). Europe has moved; the rest of this section is current.**
+>
+> **Europe and france are now `European Delivery` (DHL Economy Select road), with a 3-box
+> minimum.** Both zones run **5,250 to 13,650g only**: the 1-box and 2-box bands were deleted on
+> 11 Sept 2026, so anything under ~2.5 boxes gets no rate and cannot check out. Prices are
+> unchanged (`france` £24/£32, `Europe` £26/£41). **Practical effect: Europe is quarterly-only
+> for new customers**, since every monthly variant weighs under 5,250g.
+>
+> Terms of sale for that method are **DDP**: the customer pays the landed cost at checkout and
+> nothing on delivery. The rate was renamed ahead of Synergy's build deliberately, so that no
+> European order can ship DAP in the gap; anything arriving before they finish is held and
+> released. Still to switch on: **collect duties and import taxes at checkout**, which must wait
+> for Synergy to confirm.
+>
+> **Everything else in this section is still live and correct**, on Evri under DAP. The US $800
+> de minimis is gone, which invalidates the flat £22 US rate, but that is unfixed and tracked as
+> rest-of-world work. Plan of record:
+> `docs/development/featurePlans/international-duties-and-ddp.md` (SCRUM-1204).
 
+**Decisions (June 2026). Still current for every zone except Europe and france:**
+- **All international = Evri.** Europe and france moved to DHL on 11 Sept 2026; everywhere
+  else is still Evri.
+- ~~DHL `International Priority` upgrade remains a future fast-follow.~~ Superseded: the DHL
+  methods are `European Delivery` (road, EU) and `Express International DHL` (air, ROW), not a
+  customer-selectable upgrade sitting alongside Evri.
 - **Incoterm = DAP / Evri DDU service: the customer pays import duty/VAT on arrival.** So
   costs below are the Evri **duty-unpaid (DDU) / commercial** rates (the customer-pays-duty
-  service), which is the true cost under DAP. EU customers get a duty bill on delivery —
-  a deliberate, accepted trade-off.
+  service), which is the true cost under DAP. **No longer true for Europe**, which is DDP on
+  DHL and where the customer pays nothing on delivery. Still true everywhere else.
 - **Priced near worst-country cost per zone**, per box, to never under-recover.
 - **No rate above 6 boxes / 13,650 g** in any international zone — Evri's international
   parcel maxes at 15 kg / 6 boxes, so genuine bulk has no self-checkout rate and routes to
@@ -142,8 +158,8 @@ long-haul zones (a 168 to New Zealand cost ~£200, charged £38). Every rate sta
 
 | Zone (Shopify) | Covers | 1 box | 2 box | 3 box (84) | 4–6 box (168) | Status |
 |---|---|---|---|---|---|---|
-| Europe (single zone) | Germany, Italy, Portugal, Spain, Ireland, Netherlands, Austria, Belgium, Czechia, Denmark, Finland (11) | £20 | £23 | £26 | £41 | **LIVE + verified** (priced at the "Mid" band, see note) |
-| france | France | £20 | £22 | £24 | £32 | **LIVE + verified** |
+| Europe (single zone) | Germany, Italy, Portugal, Spain, Ireland, Netherlands, Austria, Belgium, Czechia, Denmark, Finland (11) | ~~£20~~ none | ~~£23~~ none | £26 | £41 | **`European Delivery`, DHL road, DDP.** 1 and 2 box bands deleted 11 Sept 2026 |
+| france | France | ~~£20~~ none | ~~£22~~ none | £24 | £32 | **`European Delivery`, DHL road, DDP.** Same |
 | Middle East | UAE | £13 | £17 | £20 | £36 | **LIVE + verified** |
 | Canada | Canada | £36 | £52 | £68 | £134 | **LIVE + verified** |
 | Australia | Australia | £25 | £40 | £56 | £116 | **LIVE + verified** |
@@ -211,12 +227,19 @@ Synergy maps each method name to a carrier + service. Current sheet (3 rows — 
 test orders):
 
 ```
-Shipping Method           | Carrier | Service       | Market | INCOTERMS
-Express                   | Evri    | Standard      | UK     | n/a
-24 Hour Delivery          | DPD     | Next Day      | UK     | n/a
-Express International     | Evri    | International | ROW    | DAP
-Express International DHL | DHL     | International | ROW    | DAP
+Shipping Method           | Carrier | Service        | Market | INCOTERMS
+Express                   | Evri    | Standard       | UK     | n/a
+24 Hour Delivery          | DPD     | Next Day       | UK     | n/a
+European Delivery         | DHL     | Economy Select | EU     | DDP
+Express International     | Evri    | International  | ROW    | DAP
+Express International DHL | DHL     | Express (Air)  | ROW    | DDP
 ```
+
+`European Delivery` was requested from Synergy on 11 Sept 2026 and is the only method the
+European zones now point at. `Express International DHL` was flipped to DDP in the same
+request but no Shopify zone points at it, so it is dormant. **Terms of sale are hard-coded
+per method** on Synergy's side, not read off the Shopify order: we carry no incoterm field,
+and the alternative was chargeable project work for nothing.
 
 **`Express International DHL` is live** (DHL **Air** service, set up 5 Aug 2026, confirmed by
 Mihaela Lapadus). It sits alongside the Evri method as the premium international option, not
