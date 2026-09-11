@@ -9,7 +9,7 @@ imports this directory; it is design source that renders *into* `public/`.
 
 ## Source photography is not in the repo
 
-`assets/` is a **gitignored symlink**. The 13 source images are 5.3MB that never
+`assets/` is a **gitignored symlink**. The 15 source images are 6.9MB that never
 serve, and they are derived from the Ai Assets library, so they live at:
 
 ```
@@ -141,18 +141,53 @@ should be regenerated with Clear labels.
 
 ## Clear bottle resolution
 
-`ClearCutout.png` is 310x624 of actual bottle against Flow's 435x874, so Clear
-runs about 29% softer at matched scale. Aspect matches to 0.001, so layouts
-transfer between the two without adjustment. An earlier candidate from
-`FMC-style/ClearTransparent.png` was the same resolution but carried a visible
-olive-green cast; the current file is the correct warm amber.
+`ClearCutoutV2.png` is **476x959** of actual bottle against Flow's 435x874, so
+Clear now runs about 9% sharper than Flow at matched scale. Aspect matches to
+0.001, so layouts transfer between the two without adjustment.
+
+It replaced `ClearCutout.png`, which was 310x624 and was being stretched to
+2.79x on `c2` and 1.52x on `b2`. **Every slide renders from V2.** `ClearCutout.png`
+is still on disk, unreferenced, because V2 is cut using its alpha channel as a
+template — see below — so it is the provenance of the file that replaced it.
+
+### How V2 was cut
+
+The pipeline doc's warning still holds: Clear's silver cap sits at luminance 193
+against a 197 backdrop, so no threshold separates it and the silhouette cannot
+be re-derived. It did not need to be. `ClearCutout.png` and the full-size
+studio render `New Shot Lables/Nomio Style/ClearSingle.png` (2752x1536) are the
+**same render at different scales**, so the old file's alpha channel works as a
+template:
+
+1. Find the amber-glass bounding box in each — 461x764 in the source against
+   300x497 in the cut-out. The ratio is 1.537 on both axes to three decimals,
+   which is the confirmation that they are the same render.
+2. Scale the old alpha by that factor, crop the source to match, apply.
+
+The mask edge is inherited and therefore soft, but every interior pixel — the
+label type, which is the only part that has to read — is native. `ClearSingle`
+is the exact counterpart of `FlowSingle`, which `FlowCutout` came from; it was
+simply never used.
+
+An earlier candidate from `FMC-style/ClearTransparent.png` was 310x624 like the
+original and carried a visible olive-green cast. A 1000x1000 `Clear2.png` was
+also evaluated and rejected: its bottle occupies exactly 310x624 and those
+pixels are byte-identical to `ClearCutout.png`. Canvas size is not resolution —
+**measure the alpha bounding box, not the file**.
 
 ## Both
 
-`BothCutout.png` is composited from `FlowCutout` and `ClearCutout` rather than
-taken from `FMC-style/BothTransparent.png`, whose Clear bottle carries the same
-olive cast rejected for the Clear slides. Compositing also gives 799x874
+`BothCutoutV2.png` is composited from `FlowCutout` and `ClearCutoutV2` rather
+than taken from `FMC-style/BothTransparent.png`, whose Clear bottle carries the
+same olive cast rejected for the Clear slides. Compositing also gives 877x959
 against that file's 548x564.
+
+The geometry is Clear underneath at `x=400`, Flow over it at `x=0`, both at full
+canvas height — the V1 layout (`799x874`, Clear at `x=365`) scaled by 1.097 so
+Clear lands at its native size. Flow is upscaled 1.097x in the process, which
+costs nothing in practice: `b7` draws the composite 1000px tall either way, so
+Flow's effective scale is unchanged at 1.14x while Clear's drops from 1.60x to
+1.04x. `BothCutout.png` is superseded and unreferenced.
 
 `b2` is the one slide with authored copy: `whatToExpectV2.ts` has no `"03"`
 block, so its milestones do not exist in the repo. It is structured around the

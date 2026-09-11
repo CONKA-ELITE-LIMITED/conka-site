@@ -33,14 +33,18 @@ slide_name() {
   esac
 }
 
-# Source photography lives outside the repo (5.3MB that never serves). HERE/assets
+# Source photography lives outside the repo (6.9MB that never serves). HERE/assets
 # is a gitignored symlink to it; without it Chrome renders the slides with silent
-# broken images, so fail here instead.
-if [ ! -e "$HERE/assets/FlowCutout.png" ]; then
-  echo "error: $HERE/assets is missing or empty." >&2
-  echo "       Slide photography is not in the repo. See README.md, 'Source photography'." >&2
-  exit 1
-fi
+# broken images, so fail here instead. Check the cut-outs added since the symlink
+# was first written too — a stale copy of the folder fails the same silent way as
+# a missing one.
+for required in FlowCutout ClearCutoutV2 BothCutoutV2; do
+  if [ ! -e "$HERE/assets/$required.png" ]; then
+    echo "error: $HERE/assets/$required.png is missing." >&2
+    echo "       Slide photography is not in the repo. See README.md, 'Source photography'." >&2
+    exit 1
+  fi
+done
 
 mkdir -p "$OUT"
 if [ $# -gt 0 ]; then SLIDES="$*"; else SLIDES="s0 s0q s1 s2 s3 s4 s7 s8 c0 c0q c1 c2 c3 c4 c7 c8 b0 b0q b1 b2 b3 b4 b7 b8 shared-proof shared-tested"; fi
