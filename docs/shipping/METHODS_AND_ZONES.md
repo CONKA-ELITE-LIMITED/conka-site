@@ -80,6 +80,19 @@ monthly European renewal loses about £20 each time.
 slightly over-charged and expensive ones (Italy, Spain, Portugal, Nordics) slightly
 under-recover. Splitting it into near, mid and far zones is possible if it ever matters.
 
+## USA: `Express International DHL`
+
+DHL Express air, DDP, the same model as Europe.
+
+| Zone | 3 boxes (5,250 to 7,350 g) | 4 to 6 boxes (7,350 to 13,650 g) |
+|---|---|---|
+| `USA` | £59 | £112 |
+
+**No rate below 5,250 g, so the USA is quarterly or 3+ box one-off only.** DHL air costs us
+roughly £99 for 3 boxes and £142 for 6 including the duty fee and fuel, so these prices run at
+about a 10% margin on quarterly bundles. Evri DDP to the US would be materially cheaper if
+Synergy can offer it. US customs and FDA rules: [`DUTIES_AND_DDP.md`](./DUTIES_AND_DDP.md).
+
 ## Rest of world: `Express International`
 
 Evri, DAP: the customer pays import tax and a courier fee at the door.
@@ -100,8 +113,6 @@ Priced near the worst-country Evri cost per zone, so they never under-recover
 self-checkout rate and is quoted case by case.
 
 **Not banded:**
-- **USA:** flat £22. Obsolete since the US de minimis ended, and a DHL DDP US order would lose
-  £77 to £120. Blocked on FDA Prior Notice and the tariff rate ([`DUTIES_AND_DDP.md`](./DUTIES_AND_DDP.md)).
 - **Channel Islands (Jersey):** flat £4.99, its own zone. A Channel Islands address labelled
   "United Kingdom" would pick up the wrong zone.
 
