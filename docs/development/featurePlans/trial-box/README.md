@@ -1,196 +1,138 @@
-# 4-shot trial box: acquisition experiment
+# CONKA trial pack: acquisition experiment
 
-Live state lives on SCRUM-1343 / SCRUM-1344. How the page works: `docs/features/GO_LANDING_PAGES.md` (Offer format).
+Live state lives on SCRUM-1343 (page) and SCRUM-1344 (Klaviyo + conka-lab). Reshaped 14 Sep 2026 from the weekly "4 box" offer to a trial pack that converts to monthly.
 
 ## Problem
 
-Paid Meta traffic into the listicles converts at £105 cumulative / £142 marginal CPA on a £39.99 monthly first order (`docs/analytics/LISTICLE_PERFORMANCE.md`, 21 Aug pull, target £100). The test: does an impulse-level £14.99 weekly offer cut cost per new customer far enough that renewals and monthly upgrades pay it back?
+We want monthly subscribers. Paid Meta traffic into the listicles costs £105 cumulative / £142 marginal per monthly first order (`docs/analytics/LISTICLE_PERFORMANCE.md`, 21 Aug pull, target £100). The test: does a cheap, honestly framed trial pack (4 days of CONKA) that rolls into the chosen product's monthly plan after 7 days lower the cost of a monthly subscriber?
 
 **Who it serves:** cold UK Meta traffic, via a new campaign pointed at a new `/go` page. Acquisition.
 
 **Design language:** Simple DTC (DESIGN_SYSTEM.md §8.5).
 
+## The offer
+
+1. The visitor picks **Flow, Clear or Both** on `/go/trial-pack`. Both is preselected with a "Best value" badge.
+2. They pay a low trial price for **4 days of CONKA**: a Flow 4 box (4 shots), a Clear 4 box (4 shots), or Both (a bundle of one of each, 8 shots).
+3. **7 days after purchase**, Skio moves the contract onto that product's monthly plan. The first monthly order is the starter pack.
+4. A buy-once link sells the regular one-time box of the selected product instead.
+
+| Option | Trial pack | Trial price (placeholder) | Converts to on day 7 | Buy-once link |
+|---|---|---|---|---|
+| Flow | `FLOW-BOX-4`, 4 shots | £12.99 | `FLOW-STARTER-20`, £39.99/mo | `FLOW-FUNNEL-20-OTP`, £69.98 |
+| Clear | `CLEAR-BOX-4`, 4 shots | £12.99 | `CLEAR-STARTER-20`, £39.99/mo | `CLEAR-FUNNEL-20-OTP`, £69.98 |
+| Both | Both bundle (`1xFLOW-BOX-4+1xCLEAR-BOX-4`), 8 shots | £18.99 | `BOTH-STARTER-40`, £74.99/mo | `BOTH-FUNNEL-40-OTP`, £99.98 |
+
+Monthly and one-time figures come from `app/lib/offerData.ts`; trial prices are config values Rudh sets.
+
 ## Decisions log
 
 | # | Decision | Why |
 |---|---|---|
-| 1 | Flow only on the page. Clear product exists so a Clear page is a new slug, not a toggle | One choice = impulse. Config swap, no rebuild |
-| 2 | Weekly subscription only. No one-time option on the page | Cleanest impulse test |
-| 3 | £14.99/week all-in, free UK shipping | Matches how subs ship today (base price includes postage, discount absorbs it) |
-| 4 | Pricing: base (one-time) price **£29.98**, Skio plan **50% off** = £14.99 exactly | Skio rule is percentage off, never set price. 50% divides cleanly and "50% off" reads well |
-| 5 | Weekly until cancelled. No Skio Journey auto-convert | Simplest. Emails do the upgrade work |
-| 6 | Pre-checkout upsell to the monthly Flow starter pack (`FLOW-STARTER-20` + plan `712928887158`) | Our page, so we can track it. No checkout extension. Both choices go straight to checkout |
-| 7 | UK only | No EU rate below 5,250g (`docs/shipping/METHODS_AND_ZONES.md`) |
-| 8 | One trial per customer not enforced in v1 | Volume is small; returning customers filtered at analysis |
-| 9 | Page copy does not show £3.75/shot. Per-shot price appears only in the upsell | Weekly costs more per shot than monthly; use that only as the upgrade story |
-| 10 | Renewal price stated next to the CTA ("Then £14.99 every week until you cancel") | Competitors hide it; that is the chargeback and subscription-trap risk |
-| 11 | Klaviyo trigger: Shopify Placed Order where item SKU = `FLOW-BOX-4` / `CLEAR-BOX-4` | Instant, native, no code. conka-lab properties lag up to a day |
-| 12 | Email upgrade CTA: Skio portal swap (`/account/manage`) | One contract, no double billing |
-| 13 | App email: reuse the existing app-install email, no new app story | Use what we have |
-| 14 | Separate Meta campaign, not a split test. Budget set by marketing | Speed |
-| 15 | Sequencing: product + plan + page first, Klaviyo once the page is signed off | User call |
-| 16 | Upsell is a one-time modal after the first CTA click, always to the monthly starter pack, headed "You save £X" from the value stack (compare-at all-in price + first-box freebie RRP, minus price). Reuses cart-upsell-style imagery | The value stack is the strongest honest saving; showing it once avoids nagging repeat clickers |
-| 17 | Analytics kept minimal; the website only emits events | conka-lab owns wiring and visualisation |
+| 1 | One page, Flow / Clear / Both selector, Both preselected with "Best value" | The goal is any monthly subscriber; Both is the highest-value plan. "Most popular" is a claim we cannot back yet. Flow and Clear stay equal cards |
+| 2 | Trial pack converts to the chosen product's monthly plan (starter pack) 7 days after purchase | Gets people into the system at a low price, then onto the plan we actually want |
+| 3 | Skio conversion setup is owned by Rudh | Vendor configuration, not website code |
+| 4 | Both is a bundle of the Flow and Clear 4 boxes, its own variant | Two separate cart lines would create two contracts converting to Flow + Clear monthly (£79.98), not Both monthly (£74.99) |
+| 5 | Honest conversion copy next to the CTA: price today, what they get, when monthly starts, the monthly price, cancel anytime before | It is a trial into a subscription; hiding that is the chargeback and trust risk |
+| 6 | Buy-once link = regular one-time box of the selected product, straight to checkout | A no-subscription route for people who will not trial into monthly |
+| 7 | Upsell modal dropped for v1, component kept with an "unused" comment | Every trial already converts to monthly; a future "skip the trial, start monthly now" may reuse it |
+| 8 | Standard 100-day guarantee; the 30-day override is reverted | They land on monthly, where the site-wide guarantee applies. Less code |
+| 9 | Hero follows the selection (gallery, disclosure rows, prices); below the fold always renders the Both versions | Keeps the page server-rendered with no layout shift and speaks to the default |
+| 10 | Stay under `/go` (noindex, not linked) while it is an experiment; promote to a root route only if it wins | A root page reusing PDP sections would compete with the PDPs in search |
+| 11 | Tracking: `_source=trial_pack`, `_offer_choice=flow|clear|both`, `_purchase=trial|one_time` line attributes; one new event `offer:option_selected` | Separates trial vs one-time and the product split without extra events |
+| 12 | Pricing is placeholder until Rudh confirms | Commercial call |
+| 13 | Analytics kept minimal; the website only emits, conka-lab wires and visualises | Carried over |
+| 14 | UK only | No EU rate below 5,250g (`docs/shipping/METHODS_AND_ZONES.md`). Carried over |
 
 ## Success metrics
 
-Read at day 14 (two renewals), not 60 days.
+- **Primary:** cost per customer still subscribed after the day-7 conversion charge, vs the £105 listicle baseline.
+- **Supporting:** trial conversion rate (visitors to trial orders), Flow / Clear / Both split, one-time share, % cancelled before day 7.
 
-- **Verdict:** new-customer CPA vs the £105 listicle baseline.
-- **Guardrail:** % of trial customers still active after the 2nd renewal (day 14).
-- **Funnel overview:** visitors, CTA clicks, upsell shown, upsell choice (trial vs monthly), purchases, CVR, AOV, purchase split trial vs monthly upsell.
-
-Sources: Vercel Analytics events (below) for the top of funnel; Shopify orders filtered by the `_offer` line attribute and SKU for purchases and split; Meta Ads Manager for spend and CPA; Skio for active status at day 14.
-
-## Unit economics (per £14.99 weekly box, UK)
-
-Rough, from `docs/ops/` and `docs/shipping/`. COGS figure comes from a stale dashboard; packaging not recorded anywhere.
-
-| Line | £ |
-|---|---|
-| Revenue ex VAT | 12.49 |
-| COGS (4 shots at ~£0.64) | -2.57 |
-| Synergy pick/pack | -3.20 |
-| Evri UK 48hr 0-3kg | -2.25 |
-| Shopify 2.8% + 30p, Skio 0.7% | -0.82 |
-| **Contribution before packaging** | **~3.65** |
+Sources: Vercel Analytics for the top of funnel; Shopify orders by `_offer_choice` / `_purchase`; Meta Ads Manager for spend; Skio for contracts active after day 7.
 
 ## Phases
 
 | Phase | Description | Ticket |
 |---|---|---|
-| 1 | Shopify product fix-up, Skio weekly plan, `/go/flow-trial` offer page with upsell modal, analytics | SCRUM-1343 |
-| 2 | Klaviyo trial flow + conka-lab classification and exclusions (built in a conka-lab session), after page sign-off. Must be live before the first renewals | SCRUM-1344 |
-| 3 | Day-14 read-out and funnel overview | Future |
-| Future | Clear page (new slug); no-upsell or cart-drawer arm (new slug); gift on 3rd box; post-payment upsell; one-trial-per-customer enforcement | Future |
+| 1 | `/go/trial-pack` page: selector, trial checkout, buy-once link, honest conversion copy, Both content below the fold | SCRUM-1343 |
+| 2 | Klaviyo: trial confirmation + "your monthly plan starts in 2 days" reminder before day 7; conka-lab classification by option | SCRUM-1344 |
+| 3 | Read-out once the first cohort has converted | Future |
+| Future | Reuse the upsell modal as "skip the trial, start monthly now"; below-the-fold content that follows the selection; one trial per customer; promote to a root route if it wins | Future |
 
-## Jira tickets
+## Phase 1 tasks
 
-| Ticket | Scope |
-|---|---|
-| SCRUM-1343 | [Website & CRO] 4-shot trial box: £14.99 weekly Flow landing page at /go/flow-trial - Phase 1 |
-| SCRUM-1344 | [Email & Marketing] 4-shot trial box: Klaviyo trial flow and conka-lab classification - Phase 2 |
+Builds on the `/go` offer format already on `feat/trial-box` (offer types and registry, `OfferRenderer`, `OfferHero`, `OfferBuyBox`, `OfferPurchase`, `offerCheckout`).
 
-## Phase 1 build (as built)
+1. **Data (S).** Delete `flow-4-box.ts` and `clear-4-box.ts`. New `app/lib/landings/trial-pack.ts` with `options: { flow, clear, both }`, each: label, trial variant, trial selling plan, trial price, shots, lead gallery image, product it converts to. `defaultOption: "both"`. Monthly and one-time figures derived from `offerData.ts`.
+2. **Revert the 30-day guarantee (S).** Remove `guaranteeDays` from the config and the optional props on `ProductComparisonTable` and `TrustStrip`, and the gallery guarantee filter, so the shared components match `main`.
+3. **Hero selector (M).** A small client island holds the selected option. The gallery (lead image + that product's slides) and ingredient disclosure rows follow it. `OfferBuyBox` becomes three PDP-style plan cards (Both preselected, badge), the CTA "Checkout - £X", the conversion disclosure, and the buy-once link "Or buy a {20/40}-shot box once for £Z".
+4. **Checkout (S).** `offerCheckout` sends the selected trial or one-time variant with the tracking attributes in decision 11.
+5. **Upsell modal (S).** The provider stops rendering it. `OfferUpsellModal.tsx` keeps a header comment marking it unused since the trial-pack pivot and why it is kept; same note on its two analytics helpers.
+6. **Below the fold (S).** Both ingredients (`ClinicalIngredients` default), `WhatToExpectV2 productId="both"`, `ProductComparisonTable product="both"`, `BOTH_PDP_FAQ_ITEMS`. Nav, UGC, footer and sticky bar unchanged.
+7. **Analytics (S).** `offer:option_selected {slug, option}`; existing section, CTA, add-to-cart and Meta events unchanged.
+8. **Docs on done.** `GO_LANDING_PAGES.md`, `CART_ATTRIBUTES.md`, `SKU_AND_SHOT_REFERENCE.md`, `PRICING_HISTORY.md`, `SUBSCRIPTIONS.md`, `FAQ_SYSTEM.md`, `CLAUDE.md` routes line. Deferred until the build is final.
 
-- **Data.** `offer` format: `app/lib/landings/offer-types.ts` (`OfferConfig`), config `app/lib/landings/flow-trial.ts`, registered in `app/lib/landings/index.ts`.
-- **Checkout.** `app/components/go/offer/offerCheckout.ts`, modelled on `app/lander/sections/BuyBoxes/lander-checkout.ts` (fresh cart, exact variant + plan, Meta cart attributes, redirect to `checkoutUrl`). Not `byoCheckout.ts`. Line attributes on both paths: `_source=trial_box`, `_offer=flow_trial_4`, `_offer_choice=trial|monthly`.
-- **Page.** `app/go/[slug]/page.tsx` branches to `OfferRenderer`. Sections and sticky CTA behaviour documented in `GO_LANDING_PAGES.md`.
-- **Upsell.** `OfferUpsellModal.tsx`, see decision 16. Accept or decline marks it seen for the session (`offer_upsell_seen_<slug>`); dismiss does not.
-- **Analytics (as built).** Views and CTA clicks reuse `listicle:section_viewed` / `listicle:cta_clicked` keyed by slug. New Vercel events `offer:upsell_shown {slug, product}` and `offer:upsell_choice {slug, choice}`. At checkout: `purchase:add_to_cart` (`source: "trial_box"`), Meta AddToCart + InitiateCheckout, Triple Whale ATC. Meta ViewContent on mount, www only. conka-lab owns wiring and visualisation of these events.
-- **FAQ.** Canonical `faqIds` plus offer-only `offerFaqs` (weekly billing, cancelling), see `docs/features/FAQ_SYSTEM.md`.
+**Mobile:** title, gallery, trust row + review, plan cards, CTA and disclosure, buy-once link. The selected card and CTA should sit close enough that a change of option visibly updates the button price.
 
-## Reference values
-
-Canonical copy: `docs/product/SKU_AND_SHOT_REFERENCE.md` (4-shot trial box).
-
-| Field | Flow | Clear |
-|---|---|---|
-| Product | `gid://shopify/Product/15879926415734` "CONKA Flow 4 Shot Box" | `gid://shopify/Product/15879921074550` "CONKA Clear 4 Shot Box" |
-| Variant | `gid://shopify/ProductVariant/58714075136374` | `gid://shopify/ProductVariant/58714000163190` |
-| SKU | `FLOW-BOX-4` | `CLEAR-BOX-4` |
-| Base price | £29.98 | £29.98 |
-| Weight | 300g (28-box is 2,100g = 75g per shot incl. packaging, x4) | 300g |
-| HS code / origin | 210690 / GB | 210690 / GB |
-| Selling plan group | "4 Shots - Weekly" `gid://shopify/SellingPlanGroup/100221616502` (merchantCode `4-shots---weekly`, shopper-facing name "Subscription") | same |
-| Selling plan | `gid://shopify/SellingPlan/712985543030` "Weekly Subscription", WEEK x1, 50% off | same |
-
-## Manual ops (tracked on SCRUM-1343 / SCRUM-1344)
+## Manual ops (Rudh, tracked on the tickets)
 
 ### Shopify
-
-- Barcodes on both variants, sent to Synergy
-- Compare-at left empty on the variant (the £29.98 strike-through is rendered from the config). If ever set, it must be a real purchasable price
-- Product Active and on the Headless / Storefront sales channel at launch; no `SYNERGYIGNORE` tag
-- Confirm the UK shipping rate the box lands in at its real weight (Express free 0-13,650g) and that renewals ship free on the contract method
+- Both trial pack bundle variant, composition `1xFLOW-BOX-4+1xCLEAR-BOX-4`, and share its variant GID
+- Trial prices on the three trial variants
+- Products Active on the Headless / Storefront channel at launch; barcodes sent to Synergy
 
 ### Skio
+- Trial selling plan(s) converting 7 days after purchase to `FLOW-STARTER-20` / `CLEAR-STARTER-20` / `BOTH-STARTER-40` monthly, with the starter pack on that first monthly order
+- Retire the "4 Shots - Weekly" plan once nothing uses it
+- Staff test order per option: trial order, day-7 conversion charge, starter pack shipped
 
-- Weekly to monthly portal swap: Skio owns this and has confirmed it works
-- No Journey on these variants
-- Test order on an @conka.io address: page > checkout > order in Shopify with `_offer` attribute > contract in Skio at £14.99 weekly > next charge date +7 days
+### Assets
+- Both trial pack hero image (Flow and Clear exist: `FlowTrialBox.jpg`, `ClearTrialBox.jpg`)
 
-### Synergy
-
-- Send SKU `FLOW-BOX-4` / `CLEAR-BOX-4`, barcode, weight, stock count
-- Confirm Synergy pulls a test order
-
-### Klaviyo (Phase 2, by hand in the UI)
-
-- New flow "Trial Box": trigger Placed Order, filter item SKU is `FLOW-BOX-4` or `CLEAR-BOX-4` (check the exact property name on a real test event)
-- Emails: D0 reuse existing app-install email; D5 switch to monthly (2 days before first renewal); D12 second nudge
-- Flow filter: exit when `conka_billing_frequency` is no longer `weekly`; exclude Dunning
-- Welcome flow: add a trigger filter excluding the trial SKUs so nobody gets both
-- Planned Weekly Promo flow (not built): must exclude trial customers when it is built
-- UTMs `utm_source=klaviyo&utm_medium=email&utm_campaign=trial_box`
+### Klaviyo (Phase 2)
+- Trigger on trial orders only (`_purchase=trial`), not one-time
+- Reminder before day 7 stating the date and monthly price; exclude trial customers from the Welcome flow
 
 ### Meta
-
-- New campaign pointed at `https://www.conka.io/go/flow-trial` (www, so ViewContent fires)
+- New campaign pointed at `https://www.conka.io/go/trial-pack`
 
 ## What conka-lab needs
 
-For the conka-lab session that builds the emails, classification and event wiring.
-
 | Item | Value |
 |---|---|
-| Trial variant GIDs | Flow `gid://shopify/ProductVariant/58714075136374`, Clear `gid://shopify/ProductVariant/58714000163190` |
-| SKUs | `FLOW-BOX-4`, `CLEAR-BOX-4` |
-| Shots per box | 4 |
-| Selling plan | Skio "4 Shots - Weekly", 1 week, 50% off £29.98 = £14.99. Plan `gid://shopify/SellingPlan/712985543030`, group `gid://shopify/SellingPlanGroup/100221616502` |
-| Cart / order markers | Line attributes `_source=trial_box`, `_offer=flow_trial_4`, `_offer_choice=trial` or `monthly` (monthly = took the upsell) |
-| Vercel events | `listicle:section_viewed`, `listicle:cta_clicked` (slug `flow-trial`), `offer:upsell_shown`, `offer:upsell_choice`, `purchase:add_to_cart` with `source: "trial_box"` |
-| Klaviyo trigger | Placed Order, item SKU in (`FLOW-BOX-4`, `CLEAR-BOX-4`) |
-| Upgrade target | `FLOW-STARTER-20` (`gid://shopify/ProductVariant/58586461766006`) on Skio plan `gid://shopify/SellingPlan/712928887158`, £39.99 / 20 shots monthly. Clear: `CLEAR-STARTER-20` (`gid://shopify/ProductVariant/58586614858102`), same plan |
-| Upgrade URL | `https://www.conka.io/account/manage` (Skio portal swap) |
-| App link | `https://www.conka.io/app` (no deep link or install attribution exists). Reuse the existing app-install email |
-
-Changes conka-lab has to make (from reading its docs 14 Sep):
-
-1. **Classification.** `helpers.py` `PRICE_TO_SHOTS` keys on price only; `protocol_normalize.py` only reads sizes written "N-pack", so a "Default Title" / "4 Shot Box" product yields no size. Map on SKU `*-BOX-4` instead.
-2. **Trial flag.** New property e.g. `conka_is_trial_box` (plus `properties.ts`, tests, `KLAVIYO_DYNAMIC_FIELDS.md`).
-3. **Exclusions for trial customers:**
-   - Weekly Promo (planned): would offer biweekly on odd cycles, around day 5, and still links to Loop
-   - `LOW_FREQUENCY` segment after day 30
-   - `computeChurnRisk`: flags every weekly customer under 60 days as high risk
-   - `_to_monthly_equivalent`: counts each trial as ~£65/month projected revenue
-   - `NEW_SUB_DIRECT` list flow (and known F-09: people never move on)
-4. **Upgrade tracking.** `plan_change_events` already logs billing frequency changes, so weekly to monthly on a trial customer is the upgrade metric.
-5. **Consent.** About 40% of new subscribers lack marketing consent and skip list-based flows. The metric-triggered flow above still needs consent to send marketing email.
-6. **Event wiring and visualisation.** Ingest the Vercel events above into the funnel overview.
+| Trial variants | `FLOW-BOX-4` `gid://shopify/ProductVariant/58714075136374`, `CLEAR-BOX-4` `gid://shopify/ProductVariant/58714000163190`, Both bundle (GID when created) |
+| Conversion targets | `FLOW-STARTER-20` `58586461766006`, `CLEAR-STARTER-20` `58586614858102` (plan `712928887158`), `BOTH-STARTER-40` `58586681999734` (plan `712928952694`) |
+| Order markers | `_source=trial_pack`, `_offer_choice=flow|clear|both`, `_purchase=trial|one_time` |
+| Vercel events | `listicle:section_viewed` / `listicle:cta_clicked` (slug `trial-pack`), `offer:option_selected`, `purchase:add_to_cart` |
+| Classification | A trial order is a subscriber in trial until day 7, then an ordinary monthly subscriber. One-time orders are not subscribers |
+| App link | `https://www.conka.io/app` (no deep link exists) |
 
 ## Rabbit holes
 
-- Skio Journey auto-convert weekly to monthly
-- Shopify checkout or post-purchase upsell extensions
-- Building a dashboard before there is data (v1 is a manual pull)
-- New photography or renders (use existing box imagery)
-- Enforcing one trial per customer
+- Rebuilding Skio behaviour in code (it is Skio configuration)
+- Making every below-the-fold section follow the selection
+- Enforcing one trial per customer in v1
+- Final pricing and discount framing before the numbers are set
 
 ## No-gos
 
-- One-time purchase option on the page
-- Product choice on the page
-- Charging postage
-- Hiding the renewal price
+- Hiding when monthly starts or what it costs
+- A separate page per product
+- The weekly subscription model
 - Shipping outside the UK
 
 ## Risks
 
-- **`SYNERGYIGNORE` tag** left on at launch: orders never ship.
-- **Weight left at 0g:** wrong shipping band, and Synergy/courier data is wrong.
-- **Heavy weekly customers pay about £65/month** vs £39.99 monthly. Fine as an upgrade story; watch for complaints.
-- **Returning subscribers buying the trial** muddy CPA. Filter by first order at read-out.
-- **Klaviyo before day 7:** if Phase 2 lands after the first renewals, the first cohort renews without an upgrade email.
+- **Conversion surprise:** a customer who misses the copy is charged on day 7. The disclosure next to the CTA and the pre-conversion reminder email are the mitigation.
+- **Both as two cart lines:** would create two contracts at £79.98 total instead of one Both monthly at £74.99. Decision 4 requires a single bundle variant.
+- **Returning subscribers buying the trial** muddy the read-out. Filter by first order.
+- **Reminder email late:** if Phase 2 lands after the first day-7 conversions, the first cohort converts without a reminder.
 
 ## References
 
-- `docs/features/GO_LANDING_PAGES.md` (Offer format), `app/go/[slug]/page.tsx`, `app/lib/landings/index.ts`
-- `docs/features/SUBSCRIPTIONS.md` (Skio percentage model and traps)
-- `docs/product/SKU_AND_SHOT_REFERENCE.md` (4-shot trial box)
-- `docs/workflows/11-creating-products.md`
-- `app/lander/sections/BuyBoxes/lander-checkout.ts` (checkout model)
-- `app/lib/offerData.ts` (`SKIO_OFFER_VARIANTS`, monthly upgrade target)
-- `docs/development/CART_ATTRIBUTES.md`
-- conka-lab: `docs/KLAVIYO_FLOW_LIBRARY.md`, `docs/KLAVIYO_DYNAMIC_FIELDS.md`, `docs/PROMOTION_ENGINE_RULES.md`, `tools/klaviyo-email-import/`
-- Competitor teardowns (14 Sep, mobile): Cloud, Ovrload, Grüns. Takeaways: per-shot or per-day price on the CTA, "cancel anytime" inside the price tile, stars above the headline, sticky CTA, guarantee line under the button. Grüns runs straight to checkout with a cart drawer as a URL test arm
+- `app/lib/landings/` (offer types, registry), `app/components/go/offer/` (renderer, hero, buy box, purchase flow, checkout, parked upsell modal)
+- `app/lib/offerData.ts` (`SKIO_OFFER_VARIANTS`, `OFFER_PRICING`)
+- `app/conka-both/page.tsx` (Both section components)
+- `docs/features/SUBSCRIPTIONS.md`, `docs/workflows/11-creating-products.md`, `docs/development/CART_ATTRIBUTES.md`
+- conka-lab: `docs/KLAVIYO_FLOW_LIBRARY.md`, `docs/KLAVIYO_DYNAMIC_FIELDS.md`
