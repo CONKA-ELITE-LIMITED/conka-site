@@ -36,7 +36,7 @@ export const flowFourBox: OfferConfig = {
   },
   tile: {
     name: "4 shots",
-    badge: "Easiest way to start",
+    badge: "Best value",
     details: [
       "Delivered weekly",
       "Free UK shipping",
