@@ -27,9 +27,12 @@ import OfferBuyBox from "./OfferBuyBox";
  */
 export default function OfferHero({ config }: { config: OfferConfig }) {
   const { formulaId, review } = config;
-  const images = [config.galleryLead, ...MM_GALLERY_ASSETS[formulaId]].map(
-    (src) => ({ src }),
+  // The PDP's guarantee slide bakes in the site-wide 100 days; this page states
+  // its own `guaranteeDays`, so that slide is left out.
+  const slides = MM_GALLERY_ASSETS[formulaId].filter(
+    (src) => !src.includes("Guarantee"),
   );
+  const images = [config.galleryLead, ...slides].map((src) => ({ src }));
 
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
@@ -84,7 +87,7 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
         </div>
       </div>
 
-      <TrustStrip />
+      <TrustStrip guaranteeDays={config.guaranteeDays} />
     </div>
   );
 }

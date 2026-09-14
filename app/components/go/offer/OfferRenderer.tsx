@@ -36,10 +36,10 @@ import type { OfferUpsellData } from "./OfferUpsellModal";
  */
 
 /**
- * The upsell is always the product's monthly starter pack. "Value" follows the
- * starter-pack stack used on the PDPs: the all-in one-time anchor plus the RRP
- * of everything free in the first box. Throws at build time rather than
- * shipping a modal that cannot check out.
+ * The upsell is always the product's monthly starter pack, shown in the modal
+ * as a comparison with the 4 box plus the first-box gifts. Gifts and their
+ * value come from getCadenceGiftSummary, the same helper as the PDP gift stack.
+ * Throws at build time rather than shipping a modal that cannot check out.
  */
 function buildUpsell(product: OfferProduct): OfferUpsellData {
   const pricing = getOfferPricing(product, "monthly-sub");
@@ -47,27 +47,17 @@ function buildUpsell(product: OfferProduct): OfferUpsellData {
   if (!variant?.sellingPlanId) {
     throw new Error(`Offer page: no monthly subscription variant for "${product}"`);
   }
-  const { tiles, total: giftTotal } = getCadenceGiftSummary(pricing);
-  const valueTotal = (pricing.compareAtPrice ?? pricing.price) + giftTotal;
+  const { tiles, total } = getCadenceGiftSummary(pricing);
 
   return {
     variantId: variant.variantId,
     sellingPlanId: variant.sellingPlanId,
     price: pricing.price,
     perShot: pricing.perShot,
-    firstOrderShots: pricing.firstOrderShots ?? pricing.shotCount,
     subsequentShots: pricing.subsequentShots ?? pricing.shotCount,
-    valueTotal,
-    // Rounded to the penny: float sums like 152.94 - 39.99 carry noise.
-    saving: Math.round((valueTotal - pricing.price) * 100) / 100,
-    packImage: pricing.starterPackImage,
-    tiles: tiles.map(({ id, label, rrp, image, imageFit }) => ({
-      id,
-      label,
-      rrp,
-      image,
-      imageFit,
-    })),
+    gifts: tiles.map(({ id, label, image, imageFit }) => ({ id, label, image, imageFit })),
+    // Rounded to the penny: float sums of RRPs carry noise.
+    giftValue: Math.round(total * 100) / 100,
   };
 }
 
@@ -82,13 +72,13 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
         product={product}
         productName={config.productName}
         offerId={config.offerId}
-        trial={config.trial}
+        box={config.box}
         upsell={upsell}
       >
         {/* Mid-funnel signal for paid traffic, as on the landers and BYO. */}
         <MetaViewContent
-          variantIds={[config.trial.variantId]}
-          value={config.trial.price}
+          variantIds={[config.box.variantId]}
+          value={config.box.price}
           contentName={config.title}
         />
 
@@ -99,7 +89,7 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
               the wider 1480px track). */}
           <TrackedSection section="hero">
             <section
-              aria-label="Trial box offer"
+              aria-label="4 box offer"
               className="brand-section brand-hero-first brand-bg-white !pt-6 brand-tight-bottom-mobile lg:!px-[6vw]"
             >
               <div className="brand-track !max-w-[1480px]">
@@ -145,7 +135,10 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
               className="brand-section brand-bg-white"
             >
               <div className="brand-track">
-                <ProductComparisonTable product={product} />
+                <ProductComparisonTable
+                  product={product}
+                  guaranteeDays={config.guaranteeDays}
+                />
               </div>
             </section>
           </TrackedSection>

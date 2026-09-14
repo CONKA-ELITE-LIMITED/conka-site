@@ -1,16 +1,16 @@
 /**
  * Offer page config schema (/go/[slug], format "offer", SCRUM-1343).
  *
- * A single-offer page for impulse-priced acquisition tests. It reuses the PDP:
- * the hero is built from ProductHeroV3's parts, with a simplified buy box (one
- * weekly trial plan, a buy-once link) in place of the plan selector, followed
- * by the PDP's UGC marquee, comparison table and FAQ. A new offer or copy
- * iteration is a new slug (GO_LANDING_PAGES.md), so a Clear version is a second
- * config, not a toggle.
+ * A single-offer page for impulse-priced acquisition tests, first used for the
+ * weekly Flow 4 box. It reuses the PDP: the hero is built from ProductHeroV3's
+ * parts, with a simplified buy box (one weekly plan, a buy-once link) in place
+ * of the plan selector, followed by PDP sections. A new offer or copy iteration
+ * is a new slug (GO_LANDING_PAGES.md), so a Clear version is a second config,
+ * not a toggle.
  */
 import type { FormulaId } from "@/app/lib/productTypes";
 
-export interface OfferTrial {
+export interface OfferBox {
   /** Shots in the box. Shown in copy and sent as the add-to-cart pack size. */
   shots: number;
   /**
@@ -32,16 +32,21 @@ export interface OfferConfig {
   slug: string;
   /** The hero <h1>, and the browser title suffixed with " | CONKA". */
   title: string;
-  /** Drives the reused PDP parts: gallery, lede, disclosure rows, FAQ, table. */
+  /** Drives the reused PDP parts: gallery, disclosure rows, FAQ, sections. */
   formulaId: FormulaId;
   /** Display name used in the upsell headline, e.g. "Flow". */
   productName: string;
   /** Written as the `_offer` line attribute on every order from this page. */
   offerId: string;
-  trial: OfferTrial;
+  box: OfferBox;
+  /**
+   * Money-back guarantee this page states (comparison table row, trust strip).
+   * Per offer, because the site-wide 100 days does not fit a £14.99 box.
+   */
+  guaranteeDays: number;
   /**
    * Lead gallery slide, placed in front of the PDP gallery where the PDP shows
-   * its starter-pack render (the trial box has no starter pack).
+   * its starter-pack render (the 4 box has no starter pack).
    */
   galleryLead: string;
   /**
@@ -53,7 +58,7 @@ export interface OfferConfig {
   tile: {
     /** Plan card title beside the radio, e.g. "4 shots". */
     name: string;
-    /** Centred pill straddling the card's top edge, e.g. "Trial offer". */
+    /** Centred pill straddling the card's top edge. */
     badge?: string;
     /** The 2x2 detail grid, read left to right, top to bottom (even count). */
     details: string[];

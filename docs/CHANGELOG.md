@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-14** | Offer page renamed to the Flow 4 box (/go/flow-4-box) with a 30-day guarantee, new lead image and a clearer comparison-table upsell to monthly (SCRUM-1343)
 - **2026-09-14** | /go/flow-trial reworked onto the PDP: Cloud-style hero with a PDP-style plan card, checkout CTA and buy-once link, plus UGC, ingredients, what to expect, comparison and FAQ sections (SCRUM-1343)
 - **2026-09-14** | New /go/flow-trial offer page: £14.99 weekly Flow 4-shot trial box with a one-time upsell to the monthly starter pack, straight to Shopify checkout (SCRUM-1343)
 - **2026-09-11** | Primary CTA stripped back to label + arrow site-wide: the Conka O-mark and the mono `// ...` meta line are gone from `ConkaCTAButton`, the label now sits dead-centre with the arrow in the right gutter, and the PDP sticky footer's odd `↗` glyph is unified onto the same `→` as every other button

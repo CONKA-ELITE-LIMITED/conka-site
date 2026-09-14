@@ -5,13 +5,13 @@
  * showed, then redirects to Shopify-hosted checkout. It never touches the site
  * cart drawer. Modelled on app/lander/sections/BuyBoxes/lander-checkout.ts, and
  * like it deliberately avoids byoCheckout(), which re-resolves its own variant
- * from the four BYO cadences and knows nothing about the weekly trial box.
+ * from the four BYO cadences and knows nothing about the weekly 4 box.
  *
- * Line attributes (CART_ATTRIBUTES.md) are what separate a trial order from an
- * upsold monthly order once they reach Shopify and conka-lab:
- * - `_source`       always "trial_box"
- * - `_offer`        the config's offerId, e.g. "flow_trial_4"
- * - `_offer_choice` "trial", "monthly" (took the upsell) or "one_time" (buy-once link)
+ * Line attributes (CART_ATTRIBUTES.md) are what separate a weekly 4 box order
+ * from an upsold monthly or a one-time order once they reach Shopify and conka-lab:
+ * - `_source`       always "four_box"
+ * - `_offer`        the config's offerId, e.g. "flow_box_4"
+ * - `_offer_choice` "weekly", "monthly" (took the upsell) or "one_time" (buy-once link)
  */
 
 import {
@@ -24,10 +24,10 @@ import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWha
 import { trackPurchaseAddToCart } from "@/app/lib/analytics";
 import type { OfferProduct } from "@/app/lib/offerData";
 
-/** "one_time" is the buy-once link: the trial variant with no selling plan. */
-export type OfferChoice = "trial" | "monthly" | "one_time";
+/** "one_time" is the buy-once link: the 4 box variant with no selling plan. */
+export type OfferChoice = "weekly" | "monthly" | "one_time";
 
-export const OFFER_SOURCE = "trial_box";
+export const OFFER_SOURCE = "four_box";
 
 export interface OfferCheckoutArgs {
   product: OfferProduct;

@@ -21,6 +21,7 @@ import HeroAccordions from "./HeroAccordions";
 import IngredientBottomSheet from "./IngredientBottomSheet";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import { HERO_CTA_ANCHOR_ID } from "./pdpAnchors";
+import { GUARANTEE_DAYS } from "@/app/lib/offerConstants";
 
 /* ============================================================================
  * ProductBuyPanel (+ TrustStrip)
@@ -378,7 +379,7 @@ const TRUST_ITEMS = [
   "Every Batch Tested",
   "Free UK Shipping",
   "Cancel Anytime",
-  "100-Day Guarantee",
+  // The guarantee item is appended in TrustStrip so a page can set its length.
 ];
 
 const TrustCheck = () => (
@@ -399,10 +400,16 @@ const TrustCheck = () => (
   </svg>
 );
 
-export function TrustStrip() {
+export function TrustStrip({
+  guaranteeDays = GUARANTEE_DAYS,
+}: {
+  /** Guarantee item length. Defaults to the site-wide GUARANTEE_DAYS (PDPs). */
+  guaranteeDays?: number;
+} = {}) {
+  const items = [...TRUST_ITEMS, `${guaranteeDays}-Day Guarantee`];
   return (
     <div className="flex items-center gap-x-5 gap-y-2 overflow-x-auto border-t border-black/10 py-4 [scrollbar-color:rgba(0,0,0,0.25)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/25 [&::-webkit-scrollbar]:h-1.5 md:flex-wrap md:justify-center md:overflow-x-visible">
-      {TRUST_ITEMS.map((item) => (
+      {items.map((item) => (
         <span
           key={item}
           className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.08em] text-black/55"

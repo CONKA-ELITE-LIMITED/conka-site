@@ -299,7 +299,7 @@ export function trackOfferUpsellShown(params: { slug: string; product: string })
 
 /**
  * The visitor's answer to the upsell. `accepted` and `declined` both go to
- * checkout (monthly vs trial); `dismissed` closes the modal and stays on page.
+ * checkout (monthly vs the weekly 4 box); `dismissed` closes the modal and stays on page.
  */
 export function trackOfferUpsellChoice(params: {
   slug: string;

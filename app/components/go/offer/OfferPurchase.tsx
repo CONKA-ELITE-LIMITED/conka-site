@@ -13,7 +13,7 @@ import {
 import { useListicleCta } from "@/app/components/go/listicle/listicleAnalytics";
 import { trackOfferUpsellChoice, trackOfferUpsellShown } from "@/app/lib/analytics";
 import type { OfferProduct } from "@/app/lib/offerData";
-import type { OfferTrial } from "@/app/lib/landings/offer-types";
+import type { OfferBox } from "@/app/lib/landings/offer-types";
 import { offerCheckout, type OfferChoice } from "./offerCheckout";
 import OfferUpsellModal, { type OfferUpsellData } from "./OfferUpsellModal";
 
@@ -23,7 +23,7 @@ import OfferUpsellModal, { type OfferUpsellData } from "./OfferUpsellModal";
  *
  * CTA click -> upsell modal (once per session) -> Shopify checkout. After the
  * visitor has accepted or declined, later CTA clicks skip the modal and go
- * straight to trial checkout: the offer is one-time, not a nag. Dismissing
+ * straight to weekly 4 box checkout: the offer is one-time, not a nag. Dismissing
  * (backdrop, Escape, close) does not count, so it shows again on the next click.
  *
  * Must sit inside <SectionImpressions>, which gives the CTA reporter its slug.
@@ -74,7 +74,7 @@ export function OfferPurchaseProvider({
   product,
   productName,
   offerId,
-  trial,
+  box,
   upsell,
   children,
 }: {
@@ -82,7 +82,7 @@ export function OfferPurchaseProvider({
   product: OfferProduct;
   productName: string;
   offerId: string;
-  trial: OfferTrial;
+  box: OfferBox;
   upsell: OfferUpsellData;
   children: ReactNode;
 }) {
@@ -117,13 +117,13 @@ export function OfferPurchaseProvider({
       inFlight.current = true;
       setLoading(choice);
       setError(null);
-      // Buy-once is the trial variant with no plan, charged at its base price.
+      // Buy-once is the 4 box variant with no plan, charged at its base price.
       const target =
         choice === "monthly"
           ? upsell
           : choice === "one_time"
-            ? { variantId: trial.variantId, sellingPlanId: undefined, price: trial.compareAtPrice }
-            : trial;
+            ? { variantId: box.variantId, sellingPlanId: undefined, price: box.compareAtPrice }
+            : box;
       try {
         await offerCheckout({
           product,
@@ -142,7 +142,7 @@ export function OfferPurchaseProvider({
         setLoading(null);
       }
     },
-    [offerId, product, trial, upsell],
+    [offerId, product, box, upsell],
   );
 
   const start = useCallback(
@@ -150,7 +150,7 @@ export function OfferPurchaseProvider({
       if (inFlight.current) return;
       sectionRef.current = section;
       if (readSeen(seenKey)) {
-        void checkout("trial");
+        void checkout("weekly");
         return;
       }
       setError(null);
@@ -169,7 +169,7 @@ export function OfferPurchaseProvider({
   const decline = useCallback(() => {
     trackOfferUpsellChoice({ slug, choice: "declined" });
     markSeen(seenKey);
-    void checkout("trial");
+    void checkout("weekly");
   }, [checkout, seenKey, slug]);
 
   const dismiss = useCallback(() => {
@@ -198,8 +198,8 @@ export function OfferPurchaseProvider({
         open={modalOpen}
         data={upsell}
         productName={productName}
-        trialShots={trial.shots}
-        trialPrice={trial.price}
+        boxShots={box.shots}
+        boxPrice={box.price}
         loadingChoice={loading}
         error={error}
         onAccept={accept}
@@ -227,7 +227,7 @@ export function OfferCtaButton({
 }) {
   const { start, loading, modalOpen, tileCtaRef } = usePurchase();
   const fireCta = useListicleCta();
-  const busy = loading === "trial" && !modalOpen;
+  const busy = loading === "weekly" && !modalOpen;
 
   return (
     <button
@@ -329,7 +329,7 @@ export function OfferStickyBar({ label, cta }: { label: string; cta: string }) {
 
   return (
     <aside
-      aria-label="Trial offer"
+      aria-label="4 box offer"
       aria-hidden={!visible}
       className={`brand-bg-white fixed inset-x-0 bottom-0 z-40 border-t border-black/10 px-5 pt-3 text-black transition-transform duration-300 md:px-[5vw] ${
         visible ? "translate-y-0" : "translate-y-full"

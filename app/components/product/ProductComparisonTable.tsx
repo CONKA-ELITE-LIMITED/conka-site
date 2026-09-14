@@ -31,7 +31,10 @@ interface Row {
   rx: Cell;
 }
 
-const ROWS: Row[] = [
+/** Built per render so a page can state its own guarantee (the /go offer
+ *  page's 4 box: 30 days). PDPs use the site-wide GUARANTEE_DAYS default. */
+function buildRows(guaranteeDays: number): Row[] {
+  return [
   {
     label: "Energy duration",
     conka: "4 to 8 hrs, calm",
@@ -74,12 +77,13 @@ const ROWS: Row[] = [
   { label: "Tracks whether it works", conka: true, coffee: false, rx: false },
   { label: "Glass, not plastic", conka: true, coffee: false, rx: null },
   {
-    label: `${GUARANTEE_DAYS}-day money-back guarantee`,
+    label: `${guaranteeDays}-day money-back guarantee`,
     conka: true,
     coffee: false,
     rx: false,
   },
-];
+  ];
+}
 
 const RIVALS = [
   { key: "coffee" as const, heading: "Coffee &\nEnergy Drinks" },
@@ -147,8 +151,11 @@ function CellContent({ value }: { value: Cell }) {
 
 export default function ProductComparisonTable({
   product = "flow",
+  guaranteeDays = GUARANTEE_DAYS,
 }: {
   product?: ComparisonProduct;
+  /** Guarantee row length. Defaults to the site-wide GUARANTEE_DAYS. */
+  guaranteeDays?: number;
 }) {
   const shot = bottleRendersCutout[product];
 
@@ -212,7 +219,7 @@ export default function ProductComparisonTable({
           </thead>
 
           <tbody>
-            {ROWS.map((row) => (
+            {buildRows(guaranteeDays).map((row) => (
               <tr key={row.label}>
                 <th
                   scope="row"

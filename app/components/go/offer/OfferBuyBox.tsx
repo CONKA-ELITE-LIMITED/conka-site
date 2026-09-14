@@ -28,8 +28,8 @@ const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 const DISCOUNT_GOLD = "#C9A24A";
 
 export default function OfferBuyBox({ config }: { config: OfferConfig }) {
-  const { trial, tile } = config;
-  const discount = getSavingsPercent(trial.price, trial.compareAtPrice);
+  const { box, tile } = config;
+  const discount = getSavingsPercent(box.price, box.compareAtPrice);
 
   return (
     <div>
@@ -39,7 +39,7 @@ export default function OfferBuyBox({ config }: { config: OfferConfig }) {
       <OfferCheckoutError />
       <p className="mt-2 text-center text-xs text-black/60">{tile.renewal}</p>
 
-      <OfferOtpLink price={formatPrice(trial.compareAtPrice)} />
+      <OfferOtpLink price={formatPrice(box.compareAtPrice)} />
 
       {/* mt-6 leaves room for the badges that straddle the top edge. */}
       <div
@@ -81,10 +81,10 @@ export default function OfferBuyBox({ config }: { config: OfferConfig }) {
             </span>
             <span className="flex items-baseline gap-1 leading-none">
               <s className="text-[11px] font-bold text-black/40">
-                {formatPrice(trial.compareAtPrice)}
+                {formatPrice(box.compareAtPrice)}
               </s>
               <span className="text-base font-bold tabular-nums">
-                {formatPrice(trial.price)}
+                {formatPrice(box.price)}
               </span>
             </span>
           </div>
