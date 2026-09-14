@@ -36,8 +36,6 @@ Express International DHL | DHL     | Express (Air)  | ROW    | DDP
   the USA subscription contracts use it.
 - **Adding a method** (for example a `Pallet` method for bulk B2B): add the Shopify rate, then ask
   Synergy to map it, then update this table.
-- **Unconfirmed:** whether `24 Hour Delivery` actually ships on DPD. Synergy's test orders all
-  shipped on Evri before the carrier accounts were live, and it was never re-checked.
 - **Royal Mail International is not available** through Synergy.
 
 ## Subscription renewals use the method stored on the contract

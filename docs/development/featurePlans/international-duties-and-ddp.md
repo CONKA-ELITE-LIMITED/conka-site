@@ -454,11 +454,6 @@ Worth adding while the thread is open, neither urgent:
    FDA registration number? (Phase 5. Note this may surface a problem that halts US shipping,
    which is a reason to time it deliberately rather than a reason not to ask.)
 
-**Separate thread, not this one:** did `24 Hour Delivery` ever start routing to DPD once the
-carrier accounts went live? Requested from Bethany in June and never confirmed, and all three
-test orders came back on Evri. If it never switched, UK customers have been paying £6.54 for
-next-day and receiving 48-hour Evri.
-
 **CONKA:**
 
 8. Confirm **COGS per box** against a current cost sheet. The £17.96 comes from the conka-lab
