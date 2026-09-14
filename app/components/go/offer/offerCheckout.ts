@@ -11,7 +11,7 @@
  * upsold monthly order once they reach Shopify and conka-lab:
  * - `_source`       always "trial_box"
  * - `_offer`        the config's offerId, e.g. "flow_trial_4"
- * - `_offer_choice` "trial" or "monthly" (took the upsell)
+ * - `_offer_choice` "trial", "monthly" (took the upsell) or "one_time" (buy-once link)
  */
 
 import {
@@ -24,7 +24,8 @@ import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWha
 import { trackPurchaseAddToCart } from "@/app/lib/analytics";
 import type { OfferProduct } from "@/app/lib/offerData";
 
-export type OfferChoice = "trial" | "monthly";
+/** "one_time" is the buy-once link: the trial variant with no selling plan. */
+export type OfferChoice = "trial" | "monthly" | "one_time";
 
 export const OFFER_SOURCE = "trial_box";
 
@@ -35,7 +36,8 @@ export interface OfferCheckoutArgs {
   /** Section that carried the CTA ("hero", "steps", "sticky"), for analytics. */
   section: string;
   variantId: string;
-  sellingPlanId: string;
+  /** Omitted for "one_time": the variant then checks out at its base price. */
+  sellingPlanId?: string;
   /** Pre-add display price, for analytics only. */
   price: number;
   /** Shots in the first shipment, sent as the add-to-cart pack size. */
@@ -52,7 +54,7 @@ export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
       action: "create",
       variantId: args.variantId,
       quantity: 1,
-      sellingPlanId: args.sellingPlanId,
+      ...(args.sellingPlanId && { sellingPlanId: args.sellingPlanId }),
       attributes: [
         { key: "_source", value: OFFER_SOURCE },
         { key: "_offer", value: args.offerId },
@@ -98,7 +100,7 @@ function fireAnalytics(args: OfferCheckoutArgs): void {
       productId: args.product,
       variantId: args.variantId,
       packSize: args.packSize,
-      purchaseType: "subscription",
+      purchaseType: args.choice === "one_time" ? "one-time" : "subscription",
       location: args.choice === "monthly" ? "offer_upsell" : `offer_${args.section}`,
       source: OFFER_SOURCE,
       price: args.price,

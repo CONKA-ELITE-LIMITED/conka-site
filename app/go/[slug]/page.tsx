@@ -61,7 +61,8 @@ export default async function GoPage({
     );
   }
   if (config.format === "offer") {
-    // Single-offer page: like the quiz, no nav or footer, the offer owns the viewport.
+    // Single-offer page. The renderer owns nav and footer, inside the PDP's
+    // brand-clinical root so its reused PDP parts render as they do there.
     return <OfferRenderer config={config} />;
   }
   return <QuizEngine config={config} />;

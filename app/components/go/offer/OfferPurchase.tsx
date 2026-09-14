@@ -33,6 +33,8 @@ const CHECKOUT_ERROR = "We couldn't open checkout. Please try again.";
 
 interface PurchaseContext {
   start: (section: string) => void;
+  /** The buy-once link: straight to checkout, no upsell modal. */
+  buyOnce: (section: string) => void;
   loading: OfferChoice | null;
   error: string | null;
   modalOpen: boolean;
@@ -112,7 +114,13 @@ export function OfferPurchaseProvider({
       inFlight.current = true;
       setLoading(choice);
       setError(null);
-      const target = choice === "monthly" ? upsell : trial;
+      // Buy-once is the trial variant with no plan, charged at its base price.
+      const target =
+        choice === "monthly"
+          ? upsell
+          : choice === "one_time"
+            ? { variantId: trial.variantId, sellingPlanId: undefined, price: trial.compareAtPrice }
+            : trial;
       try {
         await offerCheckout({
           product,
@@ -167,8 +175,17 @@ export function OfferPurchaseProvider({
     setError(null);
   }, [slug]);
 
+  // No modal: someone choosing not to subscribe is not pitched a bigger one.
+  const buyOnce = useCallback(
+    (section: string) => {
+      sectionRef.current = section;
+      void checkout("one_time");
+    },
+    [checkout],
+  );
+
   return (
-    <PurchaseCtx.Provider value={{ start, loading, error, modalOpen, tileCtaRef }}>
+    <PurchaseCtx.Provider value={{ start, buyOnce, loading, error, modalOpen, tileCtaRef }}>
       {children}
       <OfferUpsellModal
         open={modalOpen}
@@ -216,13 +233,49 @@ export function OfferCtaButton({
         start(section);
       }}
       className={`flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[var(--brand-navy)] font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navy)] focus-visible:ring-offset-2 ${
-        compact ? "shrink-0 px-6 text-[15px]" : "w-full px-6 py-4 text-base"
+        compact ? "shrink-0 px-6 text-[15px]" : "w-full min-h-[58px] px-6 text-lg"
       }`}
     >
       {busy && (
         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
       )}
       {busy ? "Opening checkout" : children}
+      {/* The arrow is the Cloud cue that this button goes to checkout. The
+          compact sticky button stays text only, to fit beside its label. */}
+      {!busy && !compact && (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+/**
+ * "Buy it once" text link under the CTA, the PDP's MM pattern. Reports as the
+ * `otp` CTA section and skips the upsell modal.
+ */
+export function OfferOtpLink({ price }: { price: string }) {
+  const { buyOnce, loading } = usePurchase();
+  const fireCta = useListicleCta();
+
+  return (
+    <button
+      type="button"
+      disabled={loading !== null}
+      onClick={() => {
+        fireCta("otp");
+        buyOnce("otp");
+      }}
+      className="mx-auto mt-1 block min-h-[44px] w-fit text-center text-sm font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-70 disabled:opacity-50"
+    >
+      {loading === "one_time" ? (
+        "Opening checkout"
+      ) : (
+        <>
+          Buy it once for <span className="tabular-nums">{price}</span>
+        </>
+      )}
     </button>
   );
 }

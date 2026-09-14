@@ -1,49 +1,39 @@
-import Image from "next/image";
-import Link from "next/link";
-import TrustMicroRow from "@/app/components/landing/TrustMicroRow";
-import LabFAQ from "@/app/components/landing/LabFAQ";
+import Navigation from "@/app/components/navigation";
+import Footer from "@/app/components/footer";
 import MetaViewContent from "@/app/components/MetaViewContent";
+import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
+import { ClinicalIngredients } from "@/app/components/product";
+import WhatToExpectV2 from "@/app/components/home/WhatToExpectV2";
+import ProductComparisonTable from "@/app/components/product/ProductComparisonTable";
+import LabFAQ from "@/app/components/landing/LabFAQ";
 import {
   SectionImpressions,
   TrackedSection,
 } from "@/app/components/go/listicle/listicleAnalytics";
-import { pickFaqItems, stripClaimAnchors } from "@/app/lib/faqContent";
+import { getFormulaPdpFaqItems } from "@/app/lib/formulaFaq";
+import { getHeroProductType } from "@/app/lib/productHeroHelpers";
 import {
   getOfferPricing,
   getOfferVariant,
-  getSavingsPercent,
   type OfferProduct,
 } from "@/app/lib/offerData";
 import { getCadenceGiftSummary } from "@/app/lib/cadenceData";
-import { formatPrice } from "@/app/lib/productData";
-import { REVIEWS, type ReviewProduct } from "@/app/lander/sections/Reviews/reviews.data";
 import type { OfferConfig } from "@/app/lib/landings/offer-types";
-import {
-  OfferCheckoutError,
-  OfferCtaButton,
-  OfferPurchaseProvider,
-  OfferStickyBar,
-} from "./OfferPurchase";
+import OfferHero from "./OfferHero";
+import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
 import type { OfferUpsellData } from "./OfferUpsellModal";
 
 /**
- * /go offer format (SCRUM-1343): a stripped-back single-offer page for paid
- * traffic. Server-rendered; only the CTAs, sticky bar and upsell modal are
- * client islands (OfferPurchase).
+ * /go offer format (SCRUM-1343): a single-offer page for paid traffic that
+ * reuses the PDP. Nav, OfferHero (ProductHeroV3's parts with OfferBuyBox), then
+ * the PDP's UGC marquee, ingredients, what to expect, comparison table and FAQ,
+ * footer and a sticky CTA.
  *
- * Section order is fixed on purpose: hero + price tile, benefits, proof, how it
- * works, FAQ. Copy lives in the config, so a new iteration is a new slug.
- * Views and CTA clicks report through the listicle stream, keyed by slug.
+ * Wrapped in the same `brand-clinical` root as the PDPs so the reused parts
+ * render exactly as they do there. Server-rendered; only the CTAs, sticky bar
+ * and upsell modal are client islands (OfferPurchase). Views and CTA clicks
+ * report through the listicle stream, keyed by slug.
  */
-
-/** The savings pill gradient shared with CartUpsellTile and GiftValueStack. */
-const SAVINGS_PILL_BG = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
-
-const REVIEW_PRODUCT: Record<OfferProduct, ReviewProduct> = {
-  flow: "CONKA FLOW",
-  clear: "FLOW + CLEAR",
-  both: "FLOW + CLEAR",
-};
 
 /**
  * The upsell is always the product's monthly starter pack. "Value" follows the
@@ -82,260 +72,103 @@ function buildUpsell(product: OfferProduct): OfferUpsellData {
 }
 
 export default function OfferRenderer({ config }: { config: OfferConfig }) {
-  const { trial, hero, tile } = config;
-  const upsell = buildUpsell(config.product);
-  const discount = getSavingsPercent(trial.price, trial.compareAtPrice);
-  const reviews = REVIEWS.filter(
-    (r) => r.product === REVIEW_PRODUCT[config.product],
-  ).slice(0, 2);
-  const faqItems = [
-    ...config.offerFaqs,
-    ...pickFaqItems(...config.faqIds).map((f) => ({
-      id: f.id,
-      question: f.question,
-      answer: stripClaimAnchors(f.answer),
-    })),
-  ];
+  const product = getHeroProductType(config.formulaId);
+  const upsell = buildUpsell(product);
 
   return (
     <SectionImpressions slug={config.slug}>
       <OfferPurchaseProvider
         slug={config.slug}
-        product={config.product}
+        product={product}
         productName={config.productName}
         offerId={config.offerId}
-        trial={trial}
+        trial={config.trial}
         upsell={upsell}
       >
         {/* Mid-funnel signal for paid traffic, as on the landers and BYO. */}
         <MetaViewContent
-          variantIds={[trial.variantId]}
-          value={trial.price}
+          variantIds={[config.trial.variantId]}
+          value={config.trial.price}
           contentName={config.title}
         />
-        <main className="brand-bg-white text-black">
+
+        <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
+          <Navigation />
+
+          {/* Padding mirrors the PDP hero (mobile !pt-6, desktop 6vw gutter and
+              the wider 1480px track). */}
           <TrackedSection section="hero">
             <section
               aria-label="Trial box offer"
-              className="brand-section brand-hero-first brand-bg-white"
+              className="brand-section brand-hero-first brand-bg-white !pt-6 brand-tight-bottom-mobile lg:!px-[6vw]"
+            >
+              <div className="brand-track !max-w-[1480px]">
+                <OfferHero config={config} />
+              </div>
+            </section>
+          </TrackedSection>
+
+          <TrackedSection section="ugc">
+            <section
+              aria-label="Real people using CONKA"
+              className="brand-section brand-bg-white !px-0 brand-tight-top-mobile brand-tight-bottom-mobile"
+            >
+              <UGCMarquee />
+            </section>
+          </TrackedSection>
+
+          {/* What's in it, then what you'll feel and when: the two questions a
+              cold visitor still has after the hero. Same components, order and
+              backgrounds as the PDP. */}
+          <TrackedSection section="ingredients">
+            <section
+              aria-label="Formula ingredients"
+              className="brand-section brand-bg-white brand-tight-top-mobile"
             >
               <div className="brand-track">
-                <Image
-                  src="/conka-logo.webp"
-                  alt="CONKA"
-                  width={440}
-                  height={112}
-                  className="h-7 w-auto"
-                  priority
-                />
-
-                {/* Mobile stacks headline, image, tile so the price and CTA sit
-                    inside the first screen. Desktop puts the image in its own
-                    column beside headline + tile. */}
-                <div className="mt-5 grid gap-5 md:mt-8 md:grid-cols-2 md:gap-x-12 md:gap-y-6">
-                  <div className="md:col-start-1 md:row-start-1">
-                    <TrustMicroRow />
-                    <p className="mt-4 text-sm font-semibold text-black/60">
-                      {hero.eyebrow}
-                    </p>
-                    <h1 className="brand-h1 mb-0 mt-1">{hero.headline}</h1>
-                    <p className="brand-body mt-3 hidden text-black/70 md:block">
-                      {hero.subline}
-                    </p>
-                  </div>
-
-                  <div className="md:col-start-2 md:row-span-2 md:row-start-1 md:self-center">
-                    <Image
-                      src={hero.image.src}
-                      alt={hero.image.alt}
-                      width={hero.image.width}
-                      height={hero.image.height}
-                      className="aspect-[16/9] w-full rounded-lg object-cover md:aspect-[3/2]"
-                      sizes="(min-width: 768px) 45vw, 100vw"
-                      priority
-                    />
-                  </div>
-
-                  <div className="brand-bg-white rounded-lg border border-black/10 p-5 text-black shadow-sm md:col-start-1 md:row-start-2">
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-lg font-bold leading-tight">{tile.name}</p>
-                      {discount > 0 && (
-                        <span
-                          className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#14532d]"
-                          style={{ background: SAVINGS_PILL_BG }}
-                        >
-                          {discount}% off
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
-                      <span className="text-3xl font-bold tabular-nums">
-                        {formatPrice(trial.price)}
-                      </span>
-                      <span className="text-sm text-black/60">/week</span>
-                      <span className="text-base text-black/40 line-through tabular-nums">
-                        {formatPrice(trial.compareAtPrice)}
-                      </span>
-                    </p>
-
-                    <div className="mt-4">
-                      <OfferCtaButton section="hero" isTile>
-                        {tile.cta}
-                      </OfferCtaButton>
-                      <OfferCheckoutError />
-                    </div>
-                    <p className="mt-2 text-sm text-black/60">{tile.renewal}</p>
-
-                    <ul className="mt-4 space-y-2 border-t border-black/10 pt-4 text-sm">
-                      {tile.bullets.map((bullet) => (
-                        <li key={bullet} className="flex items-start gap-2.5">
-                          <Tick />
-                          <span>{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <ClinicalIngredients formulaIds={[config.formulaId]} />
               </div>
             </section>
           </TrackedSection>
 
-          <TrackedSection section="benefits">
-            <section aria-label="Benefits" className="brand-section brand-bg-tint">
+          <TrackedSection section="what_to_expect">
+            <section aria-label="What to expect" className="brand-section brand-bg-tint">
               <div className="brand-track">
-                <h2 className="brand-h2 mb-6">{config.benefits.title}</h2>
-                <ul className="grid gap-3 md:grid-cols-3">
-                  {config.benefits.items.map((item) => (
-                    <li
-                      key={item.title}
-                      className="brand-bg-white rounded-lg p-5 text-black"
-                    >
-                      <p className="text-lg font-bold leading-tight">{item.title}</p>
-                      <p className="mt-1.5 text-sm leading-relaxed text-black/70">
-                        {item.body}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                <WhatToExpectV2 productId={config.formulaId} />
               </div>
             </section>
           </TrackedSection>
 
-          {reviews.length > 0 && (
-            <TrackedSection section="proof">
-              <section aria-label="Customer reviews" className="brand-section brand-bg-white">
-                <div className="brand-track">
-                  <h2 className="brand-h2 mb-6">What customers say</h2>
-                  <ul className="grid gap-3 md:grid-cols-2">
-                    {reviews.map((review) => (
-                      <li
-                        key={review.name}
-                        className="brand-bg-tint rounded-lg p-5 text-black"
-                      >
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src={review.avatar}
-                            alt={review.name}
-                            width={80}
-                            height={80}
-                            className="h-10 w-10 rounded-full object-cover"
-                            sizes="40px"
-                            loading="lazy"
-                          />
-                          <div>
-                            <p className="text-sm font-bold">{review.name}</p>
-                            <p
-                              className="text-sm leading-none text-[var(--brand-navy)]"
-                              aria-label={`${review.rating} out of 5 stars`}
-                            >
-                              <span aria-hidden>★★★★★</span>
-                            </p>
-                          </div>
-                        </div>
-                        <p className="mt-3 font-bold">{review.headline}</p>
-                        <p className="mt-1 text-sm leading-relaxed text-black/70">
-                          {review.body}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-            </TrackedSection>
-          )}
-
-          <TrackedSection section="steps">
-            <section aria-label="How the trial works" className="brand-section brand-bg-tint">
+          <TrackedSection section="comparison">
+            <section
+              aria-label="CONKA compared with coffee and prescription stimulants"
+              className="brand-section brand-bg-white"
+            >
               <div className="brand-track">
-                <h2 className="brand-h2 mb-6">{config.steps.title}</h2>
-                <ol className="grid gap-3 md:grid-cols-3">
-                  {config.steps.items.map((step, i) => (
-                    <li
-                      key={step.title}
-                      className="brand-bg-white flex gap-4 rounded-lg p-5 text-black md:flex-col md:gap-3"
-                    >
-                      <span
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-navy)] text-sm font-bold text-white"
-                        aria-hidden
-                      >
-                        {i + 1}
-                      </span>
-                      <div>
-                        <p className="text-lg font-bold leading-tight">{step.title}</p>
-                        <p className="mt-1 text-sm leading-relaxed text-black/70">
-                          {step.body}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-
-                <div className="mt-8 md:max-w-sm">
-                  <OfferCtaButton section="steps">{tile.cta}</OfferCtaButton>
-                  <p className="mt-2 text-sm text-black/60">{tile.renewal}</p>
-                </div>
+                <ProductComparisonTable product={product} />
               </div>
             </section>
           </TrackedSection>
 
           <TrackedSection section="faq">
-            <section aria-label="Frequently asked questions" className="brand-section brand-bg-white">
+            <section aria-label="FAQ" className="brand-section brand-bg-tint">
               <div className="brand-track">
-                <LabFAQ items={faqItems} hideCTA showSeeAllLink={false} />
+                <LabFAQ
+                  items={getFormulaPdpFaqItems(config.formulaId)}
+                  hideCTA
+                  showSeeAllLink={false}
+                />
               </div>
             </section>
           </TrackedSection>
 
-          {/* Bottom padding clears the fixed sticky bar. Inline because
-              .brand-section's padding is unlayered CSS and beats utilities. */}
-          <footer
-            className="brand-section brand-bg-tint text-sm text-black/60"
-            style={{ paddingBottom: "7rem" }}
-          >
-            <div className="brand-track flex flex-wrap items-center gap-x-5 gap-y-2">
-              <span>© CONKA</span>
-              <Link href="/terms" className="underline decoration-black/20 underline-offset-4 hover:text-black">
-                Terms
-              </Link>
-              <Link href="/privacy" className="underline decoration-black/20 underline-offset-4 hover:text-black">
-                Privacy
-              </Link>
-            </div>
-          </footer>
-        </main>
+          {/* Clears the fixed sticky bar so it never covers the footer's last row. */}
+          <div aria-hidden className="h-20" />
+          <Footer />
+        </div>
 
         <OfferStickyBar label={config.sticky.label} cta={config.sticky.cta} />
       </OfferPurchaseProvider>
     </SectionImpressions>
-  );
-}
-
-function Tick() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="mt-[2px] shrink-0">
-      <circle cx="12" cy="12" r="10" fill="var(--brand-positive)" />
-      <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
