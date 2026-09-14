@@ -38,8 +38,8 @@ At the start of the run, copy this checklist into your response. Update it (re-p
 - [ ] 4. Implemented (lint + build pass)
 - [ ] 5. Reviewed + findings fixed (max 2 fix passes)
 - [ ] 6. Committed (changelog + prefix + co-author)
-- [ ] 7. Jira: implementation comment + moved to In Review
-- [ ] 8. Canonical docs updated + docs commit
+- [ ] 7. /track done: Current state + delivery comment + moved to In Review
+- [ ] 8. /track done: canonical docs + plan retirement + docs commit
 - [ ] 9. Final report
 ```
 
@@ -111,23 +111,20 @@ Read `.claude/skills/review/SKILL.md` and run it on the uncommitted changes in d
 
 Read `.claude/skills/commit/SKILL.md` and follow it exactly: branch guard, one-line changelog entry, stage this run's files by name, prefix table, co-author line.
 
-### Step 7: Jira Wrap-up
+### Steps 7-8: Track
 
-1. Add an implementation comment to the ticket (`contentFormat: markdown`): what was built, files changed, branch name, anything the reviewer should know.
-2. Transition to **In Review** (via `getTransitionsForJiraIssue` then `transitionJiraIssue`). Do not ask -- the gate approved this pipeline.
+Read `~/.claude/skills/track/SKILL.md` and run it in `done` mode, invoked by /ship. That means:
+- Nothing this run did is re-asked.
+- It moves the ticket to **In Review** without asking, because the gate approved this pipeline.
+- If a plan looks archive-worthy it flags it instead of deciding.
 
-### Step 8: Canonical Docs
-
-Check whether the change made any living documentation stale, and update only what is genuinely affected:
+Website canonical docs it should check (update only what is genuinely stale):
 - `CLAUDE.md` -- routes table, key files, product data notes
 - The relevant `docs/features/*.md` canonical doc for the touched system
 - `docs/branding/DESIGN_SYSTEM.md` only if a new pattern/token was introduced
-- An existing feature plan doc, if this work belongs to one -- update its status table to match reality
-- `docs/TODO.md` -- an entry for anything deliberately left undone in this run
+- `docs/TODO.md` -- a one-line entry with the ticket key for anything deliberately left undone
 
-**Retirement check:** did this work close out the plan's last active phase (delivered, abandoned, or superseded, with no live phases left)? If so, retire the plan in the same run per `docs/workflows/05-creating-documentation.md` Step 7: fold its living truth into the existing canonical doc, banner it ARCHIVED with a pointer, move it to `featurePlans/archive/`, and repoint inbound links in `CLAUDE.md` and `docs/README.md`.
-
-Do not write new docs for small changes; a shipped tweak rarely needs more than a line. If nothing is stale, say so and skip. If docs changed: commit them separately (`docs:` prefix, changelog skipped) following the commit skill.
+Do not write new docs for small changes; a shipped tweak rarely needs more than a line. Docs changes are committed separately (`docs:` prefix, changelog skipped).
 
 ### Step 9: Final Report
 

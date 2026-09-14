@@ -33,7 +33,7 @@ To Do → In Progress → In Review → Ready to Deploy → Done
 | **Done** | Deployed and verified | Live in production and confirmed working |
 
 ### Transition rules
-- **Never skip statuses** — move through them in order (exception: Blocked, which can be entered/exited from In Progress)
+- **Never skip statuses** — move through them in order (exceptions: Blocked, which can be entered/exited from In Progress; and ops or non-code work with nothing to review, which can go straight from In Progress to Done)
 - **Always add a comment when moving to Blocked** — state what's blocking and what's needed to unblock
 - **Moving to In Review means the work is COMPLETE** — not "mostly done" or "needs a few tweaks"
 - **Moving back from In Review to In Progress** — means review found issues that need fixing; add a comment noting what needs to change
@@ -184,6 +184,18 @@ Acceptance criteria are the most important part of a ticket. They define "done."
 
 ## Updating tickets during work
 
+### The ticket is the home of live state
+
+Every ticket description starts with a `## Current state` block: status, done, open (each with an owner), next action, branch/PR. It is **rewritten in place**, never appended to, so anyone opening the ticket sees where the work actually is without reading the comment thread. Comments are the history.
+
+Status never lives in the repo. Plan docs list ticket keys, not their status; `docs/TODO.md` entries and canonical docs link the key instead of restating counts, dates or vendor state.
+
+The block is maintained by the shared `/track` skill (`~/.claude/skills/track/SKILL.md`):
+- `/track pause` when stopping for the day, getting blocked, or handing off
+- `/track done` when the work is complete; `/ship` and `/implement` call it at the end, and it also updates canonical docs and retires the feature plan
+
+`/scope` creates the block when it creates the ticket.
+
 ### When starting work (To Do → In Progress)
 1. Transition the ticket to **In Progress**
 2. Read the full description and AC
@@ -279,6 +291,8 @@ Link related tickets when:
 | I want to... | Do this |
 |---------------|---------|
 | Start working on a ticket | Read description → transition to In Progress |
+| Stop for the day / hand off | `/track pause` → Current state rewritten |
+| Wrap up completed work | `/track done` → Current state, transition, docs, plan retirement |
 | Record a blocker | Transition to Blocked → add comment with blocker details |
 | Finish implementation | Self-review (doc 06) → transition to In Review → add summary comment |
 | Create tickets from a scope | Use scoping doc (01) output → create one ticket per task with full description and AC |

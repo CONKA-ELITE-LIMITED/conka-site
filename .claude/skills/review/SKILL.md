@@ -122,7 +122,7 @@ Classify every finding once, in one visible place:
 ### Step 6: Update Jira (if a ticket was provided)
 
 1. Add a review comment (use `contentFormat: markdown`).
-2. If the verdict is LGTM (or LGTM after fixes, applied), ask if the user wants to transition to **In Review**.
+2. If the verdict is LGTM (or LGTM after fixes, applied), suggest running `/track done` (`~/.claude/skills/track/SKILL.md`). It rewrites the ticket's Current state, asks before In Review, and handles docs and plan retirement. Skip this suggestion when /review is running inside /ship, which calls /track itself.
 
 ---
 
