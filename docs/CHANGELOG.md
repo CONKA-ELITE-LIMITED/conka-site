@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-14** | New /go/flow-trial offer page: £14.99 weekly Flow 4-shot trial box with a one-time upsell to the monthly starter pack, straight to Shopify checkout (SCRUM-1343)
 - **2026-09-11** | Primary CTA stripped back to label + arrow site-wide: the Conka O-mark and the mono `// ...` meta line are gone from `ConkaCTAButton`, the label now sits dead-centre with the arrow in the right gutter, and the PDP sticky footer's odd `↗` glyph is unified onto the same `→` as every other button
 - **2026-09-11** | Swapped the ADHD and brain-ageing /go listicle heroes to real customer photos, replacing generated studio shots that did not match either persona
 - **2026-09-11** | Re-cut the Clear bottle for the PDP carousel at native resolution, replacing an asset that was being upscaled up to 2.8x

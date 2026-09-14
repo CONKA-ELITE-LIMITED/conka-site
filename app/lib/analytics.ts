@@ -285,6 +285,29 @@ export function trackCartUpsellAccepted(params: CartUpsellEvent): void {
   safeTrack("cart:upsell_accepted", params);
 }
 
+// ===== OFFER PAGE UPSELL (/go offer format, SCRUM-1343) =====
+//
+// The offer page reuses the listicle stream for views and CTA clicks
+// (`listicle:section_viewed` / `listicle:cta_clicked`, keyed by slug), so only
+// the upsell modal needs its own events. Purchases split by the `_offer_choice`
+// line attribute in Shopify, not here.
+
+/** Fires when the one-time upsell modal opens after a CTA click. */
+export function trackOfferUpsellShown(params: { slug: string; product: string }): void {
+  safeTrack("offer:upsell_shown", params);
+}
+
+/**
+ * The visitor's answer to the upsell. `accepted` and `declined` both go to
+ * checkout (monthly vs trial); `dismissed` closes the modal and stays on page.
+ */
+export function trackOfferUpsellChoice(params: {
+  slug: string;
+  choice: "accepted" | "declined" | "dismissed";
+}): void {
+  safeTrack("offer:upsell_choice", params);
+}
+
 /**
  * The cart path's checkout stage (SCRUM-1243). Fires on a successful Checkout
  * press in the drawer, immediately before the redirect to Shopify-hosted
