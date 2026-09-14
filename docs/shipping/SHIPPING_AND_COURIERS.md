@@ -36,7 +36,8 @@ subscription contract**, not from a rate picked at billing time. A contract with
 title prints `Subscription shipping`, which is not a configured rate, and Synergy holds the
 order as "Invalid Dispatch Method". Contracts created through checkout store the name the
 customer chose; contracts imported from Loop stored null. Loop renewals behaved the same way
-before Skio, so this is an import gap, not a Skio fault. Fix status: SCRUM-1311.
+before Skio, so this is an import gap, not a Skio fault. Fix status: SCRUM-1311 (UK),
+SCRUM-1340 (international).
 
 - **The fix** is Skio's per-contract **"Re-sync with Shopify"** (Update delivery method
   dialog), or `changeSubscriptionDeliveryMethod` on the Skio API. It pulls the rate name
