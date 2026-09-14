@@ -62,7 +62,7 @@ If reshaping:
 
 ## Step 4 — Update plan + create tickets
 
-- Mark completed phases as Done in the plan doc (update the phase status table).
+- Completed phases: their tickets should already be closed via `/track done`. Do not copy status into the plan; just reshape what remains.
 - Add detailed task breakdowns for newly active phases.
 - Create Jira tickets for **newly active phases only** — follow `jira.md`.
 - Update the plan's Jira ticket references section with new keys.

@@ -112,12 +112,12 @@ Write to `docs/development/featurePlans/<feature-name>.md` (kebab-case).
 
 Contents:
 - Full approved scope (problem, approach, phases, tasks)
-- Phase status table:
+- Phase table. With Jira tracking, the last column is the ticket key (status lives on the ticket). Only plan-doc-only work keeps a Status column here:
 
   ```
-  | Phase | Description | Status |
+  | Phase | Description | Ticket |
   |-------|-------------|--------|
-  | 1     | [name]      | Not Started |
+  | 1     | [name]      | SCRUM-XXX |
   | 2     | [name]      | Future |
   ```
 

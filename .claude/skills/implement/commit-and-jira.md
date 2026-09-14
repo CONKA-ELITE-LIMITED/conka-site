@@ -1,4 +1,4 @@
-Cleanup, commit, and Jira wrap-up for /implement (Steps 6-8 of the standard Process, run after the build phases).
+Cleanup, commit, and the hand-off to `/track` for /implement (Steps 6-8 of the standard Process, run after the build phases).
 
 ---
 
@@ -53,30 +53,17 @@ Final pass before presenting the completed work:
 
 ---
 
-## Step 8: Update Jira
+## Step 8: Track
 
-**If a Jira ticket was provided:**
+**Read `~/.claude/skills/track/SKILL.md` and run it in `done` mode** (invoked by /implement). It owns everything after the commit:
 
-1. **Add an implementation comment** to the ticket:
-   ```
-   **Implementation summary:**
-   - [Key thing built/changed 1]
-   - [Key thing built/changed 2]
+- Rewrites the ticket's `## Current state` block
+- Adds one delivery comment (what changed, files, branch for the Vercel preview, reviewer notes)
+- Asks before transitioning to In Review; the user may want to check the preview first
+- Updates canonical docs made stale by this work, per `docs/workflows/05-creating-documentation.md`
+- Retires the feature plan if this closed its last active phase (delete by default)
 
-   **Files changed:** [list key files or areas]
-
-   **Preview:** [branch name] -- Vercel preview will be available once pushed
-
-   **Notes:**
-   - [Decisions, gotchas, or things the reviewer should know]
-   ```
-   Use `contentFormat: markdown` when adding the comment.
-
-2. **Ask the user if they want to transition to In Review.**
-   - If yes, find the "In Review" transition via `getTransitionsForJiraIssue` and apply it via `transitionJiraIssue`
-   - Only transition if the user confirms -- they may want to review the preview first
-
-3. **Update the feature plan document** (if one exists) -- mark the relevant phase/task as Done or In Review. If that was the plan's **last active phase** (nothing live remains), retire the plan instead of just marking it: consolidate its living truth into the canonical doc, banner it ARCHIVED, move it to `featurePlans/archive/`, and repoint inbound links, per `docs/workflows/05-creating-documentation.md` Step 7.
+If there is no ticket and no plan, skip this step.
 
 ---
 
