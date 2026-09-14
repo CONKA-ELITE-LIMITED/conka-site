@@ -54,9 +54,8 @@ const SECTIONS = [
   ['Shared', 'referenced by all three galleries', 'slides', [
     ['shared-proof','Proof'],['shared-tested','Tested']]],
   ---- end settled ---- */
-  ['Alternatives', 'built but not chosen — Both uses the two-row layout', 'previews', [
-    ['p4a-ingredients-wheel','P4a · Ingredients wheel (15)'],
-    ['p4b-ingredients-split','P4b · Ingredients AM/PM split']]],
+  ['Trial box', '/go/flow-trial galleryLead', 'slides', [
+    ['t0','T0 · Flow trial box'],['ct0','CT0 · Clear trial box'],['bt0','BT0 · Both trial box']]],
 ];
 const bust = Date.now();
 stage.innerHTML = SECTIONS.map(([name, note, dir, items]) => `

@@ -1,0 +1,60 @@
+<!doctype html><meta charset="utf-8"><title>CT0 Clear Trial Box</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* Clear counterpart of t0.html: same layout and offer, Clear photo and copy */
+/* flat ground matched to the photo's lit left side */
+.slide{padding:0;background:#efeff1}
+
+/* 2048 square drawn at 1950; the whole box sits on the right half */
+.bg{position:absolute;z-index:0;left:720px;top:0;width:1950px;height:1950px;
+  background:url("../assets/ClearBoxLight.jpg") center/cover no-repeat}
+/* blends the photo's left edge into the ground */
+.scrim{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to right,#efeff1 0%,#efeff1 30%,rgba(239,239,241,.8) 36%,rgba(239,239,241,0) 48%)}
+
+.copy{position:absolute;z-index:3;left:160px;top:170px;width:900px}
+.stars{display:inline-flex;align-items:center;gap:22px;background:#fff;border-radius:999px;
+  padding:20px 40px 22px;box-shadow:0 14px 40px rgba(27,39,87,.08);
+  font-weight:500;font-size:48px;letter-spacing:-.01em;white-space:nowrap}
+.stars .s{color:#f2a900;font-size:52px;letter-spacing:.04em}
+.stars b{font-weight:700}
+h1{margin-top:80px;font-family:Favorit;font-weight:500;font-size:190px;line-height:.95;letter-spacing:-.036em}
+h1 em{font-style:italic}
+.sub{margin-top:100px;font-weight:500;font-size:86px;line-height:1.16;letter-spacing:-.018em;color:#2f3a63}
+/* the two objections a cold buyer has: jitters and being locked in */
+.ticks{position:absolute;z-index:3;left:160px;bottom:140px;display:flex;gap:72px;white-space:nowrap}
+.ticks span{display:inline-flex;align-items:center;gap:20px;font-weight:700;font-size:56px;letter-spacing:-.015em}
+.ticks svg{width:64px;height:64px;flex:0 0 64px}
+
+/* offer seal, stuck on the lid flap, clear of the bottles */
+.seal{position:absolute;z-index:3;left:1020px;top:120px;width:500px;height:500px;border-radius:50%;
+  background:var(--navy);color:#fff;transform:rotate(-10deg);
+  box-shadow:0 30px 70px rgba(27,39,87,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.seal::before{content:"";position:absolute;inset:22px;border-radius:50%;border:4px dashed rgba(255,255,255,.35)}
+.seal .big{font-weight:700;font-size:190px;line-height:.86;letter-spacing:-.05em}
+.seal .off{font-weight:700;font-size:92px;line-height:1;letter-spacing:-.02em}
+.seal .life{margin-top:18px;font-family:JBM,monospace;font-weight:500;font-size:44px;letter-spacing:.14em}
+</style>
+<div class="slide">
+  <div class="bg"></div>
+  <div class="scrim"></div>
+
+  <div class="copy">
+    <div class="stars"><span class="s">★★★★★</span><span><b>4.7</b> · 622+ reviews</span></div>
+    <h1>Beat the<br>afternoon<br><em>slump</em>.</h1>
+    <div class="sub">The afternoon brain shot that keeps you sharp to the finish.</div>
+  </div>
+
+  <div class="ticks">
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Caffeine free</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Cancel anytime</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Made in the UK</span>
+  </div>
+
+  <div class="seal">
+    <div class="big">50%</div>
+    <div class="off">OFF</div>
+    <div class="life">FOR LIFE</div>
+  </div>
+</div>

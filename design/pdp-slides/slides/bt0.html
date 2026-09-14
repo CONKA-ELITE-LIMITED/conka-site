@@ -1,0 +1,88 @@
+<!doctype html><meta charset="utf-8"><title>BT0 Both Trial Pack</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* Both trial pack hero (SCRUM-1343, /go/trial-pack). b1's structure (headline, second
+   line, sub, benefit rows) with trial-pack copy. Both8BoxStagger.jpg is Both8Box
+   re-staged: ground flattened to white, Flow dropped below Clear (see README).
+   No price is burned in: trial prices are still placeholders. */
+/* white, like b1: the composite's ground is flattened to 255, so it has no edge */
+.slide{padding:0;background:#fff}
+
+/* 2182x2436 uncropped composite drawn at 0.72, shadows intact. It runs off the slide
+   and under the copy; its ground is flattened to white, so neither edge shows.
+   Anchored so the Clear lid stays in frame and the Flow box clears the tick row. */
+.bg{position:absolute;z-index:0;left:982px;top:54px;width:1571px;height:1754px;
+  background:url("../assets/Both8BoxStagger.jpg") left top/cover no-repeat}
+
+.copy{position:absolute;z-index:3;left:160px;top:140px;width:1100px}
+.stars{display:inline-flex;align-items:center;gap:22px;background:#fff;border-radius:999px;
+  padding:20px 40px 22px;box-shadow:0 14px 40px rgba(27,39,87,.10);
+  font-weight:500;font-size:48px;letter-spacing:-.01em;white-space:nowrap}
+.stars .s{color:#f2a900;font-size:52px;letter-spacing:.04em}
+.stars b{font-weight:700}
+
+h1{margin-top:84px;font-family:Favorit;font-weight:700;font-size:140px;line-height:1.02;letter-spacing:-.03em;white-space:nowrap}
+h1 .t2{display:block;font-family:NHG;font-weight:500;font-size:96px;letter-spacing:-.025em;
+  margin-top:6px;padding-left:72px}
+.sub{font-weight:500;font-size:70px;line-height:1.2;letter-spacing:-.018em;color:#2f3a63;
+  margin-top:52px;max-width:960px}
+
+ul{list-style:none;margin-top:80px}
+li{display:flex;align-items:center;gap:34px;padding:19px 0;
+  font-weight:500;font-size:68px;letter-spacing:-.022em;color:var(--navy)}
+.ic{flex:0 0 92px;width:92px;height:92px;border-radius:50%;background:#dde4f0;
+  display:flex;align-items:center;justify-content:center}
+.ic svg{width:60px;height:58px;stroke:var(--navy);stroke-width:2.2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.ic svg .fl{fill:var(--navy);stroke:none}
+
+/* offer seal, in the empty corner above the Flow box and left of the Clear lid.
+   "Limited time" with no date: true while the trial pack runs as a test. Re-render
+   without it if the trial becomes a permanent offer. */
+.seal{position:absolute;z-index:3;left:1310px;top:110px;width:440px;height:440px;border-radius:50%;
+  background:var(--navy);color:#fff;transform:rotate(-10deg);
+  box-shadow:0 30px 70px rgba(27,39,87,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.seal::before{content:"";position:absolute;inset:20px;border-radius:50%;border:4px dashed rgba(255,255,255,.35)}
+.seal .big{font-weight:700;font-size:90px;line-height:.92;letter-spacing:-.03em}
+.seal .life{margin-top:20px;font-family:JBM,monospace;font-weight:500;font-size:36px;letter-spacing:.12em;line-height:1.3}
+
+/* one row, bottom left, as on t0 / ct0 */
+.ticks{position:absolute;z-index:3;left:160px;bottom:110px;display:flex;gap:32px;white-space:nowrap}
+.ticks span{display:inline-flex;align-items:center;gap:14px;font-weight:700;font-size:48px;letter-spacing:-.015em}
+.ticks svg{width:54px;height:54px;flex:0 0 54px}
+</style>
+<div class="slide">
+  <div class="bg"></div>
+
+  <div class="copy">
+    <div class="stars"><span class="s">★★★★★</span><span><b>4.7</b> · 622+ reviews</span></div>
+    <h1>Your CONKA trial.<span class="t2">Flow + Clear, 8 shots.</span></h1>
+    <div class="sub">Feel the difference at a fraction of the price.</div>
+
+    <ul>
+      <li><span class="ic"><svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/>
+        <circle class="fl" cx="12" cy="12" r="1.8"/></svg></span>Focus &amp; Clarity</li>
+      <li><span class="ic"><svg viewBox="0 0 24 24">
+        <path d="M13.4 2.2 5.8 13.3h5.2L10.3 21.8 18.2 10.4h-5.3z"/></svg></span>All-Day Energy</li>
+      <li><span class="ic"><svg viewBox="0 0 24 24">
+        <path d="M2.6 8.2c1.9-1.9 3.9-1.9 5.8 0s3.9 1.9 5.8 0 3.9-1.9 5.8 0"/>
+        <path d="M2.6 13c1.9-1.9 3.9-1.9 5.8 0s3.9 1.9 5.8 0 3.9-1.9 5.8 0"/>
+        <path d="M2.6 17.8c1.9-1.9 3.9-1.9 5.8 0s3.9 1.9 5.8 0 3.9-1.9 5.8 0"/></svg></span>No Brain Fog</li>
+      <li><span class="ic"><svg viewBox="0 0 24 24">
+        <path d="M4.5 19.5h15"/><path d="M7.4 19.5v-4.6M12 19.5V9.9M16.6 19.5V4.8"/></svg></span>Stronger Cognition</li>
+    </ul>
+  </div>
+
+  <div class="seal">
+    <div class="big">INTRO<br>OFFER</div>
+    <div class="life">LIMITED<br>TIME</div>
+  </div>
+
+  <div class="ticks">
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Caffeine free</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Cancel anytime</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Made in UK</span>
+  </div>
+</div>

@@ -71,6 +71,40 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b4` | `BothVsCoffee.jpg` | Same table, Both pair |
 | `b7` | `BothReview.jpg` | Jack G. on running both |
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
+| `t0` | `FlowTrialBox.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off for life |
+| `ct0` | `ClearTrialBox.jpg` | Clear trial hero: beat the afternoon slump, 50% off for life |
+| `bt0` | `BothTrialBox.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
+
+`bt0` uses `b1`'s structure (headline, second line, sub, benefit rows) with
+trial-pack copy (SCRUM-1343). It burns in no price, because the trial prices are
+still placeholders. Side by side, `Both8Box.jpg` (2752x1536) could
+not get larger beside that column: the gap between the boxes is only 196px of
+ground (x 1291-1487), so there was nothing to close. It renders from
+`assets/Both8BoxStagger.jpg` instead, built in two steps:
+
+1. **Flatten the ground.** The studio ground runs 220 at the corners to 253 behind
+   the boxes. Each 64px cell's brightest pixel estimates the ground (cells under
+   228 are box and get filled from neighbours), blurred and divided out, then
+   luminance 238-248 ramps to white. Result: `Both8BoxWhite.jpg`, ground 255.
+2. **Stagger.** The left half (x 0-1389, Flow) drops 900px; the right half
+   (x 1389-end, Clear) sits 819px right of it, the offset at which the two
+   silhouettes (luminance < 200) come within ~24px. The halves are multiplied onto
+   white, uncropped: 2182x2436.
+
+Do not crop the composite tight to the boxes. An earlier version did, and it cut
+the floor shadows, leaving a visible line. The slide lets the image run off the
+frame and under the copy instead: its ground is white, so no edge shows.
+
+The slide ground is white (as on `b1`), so the flattened ground has no edge.
+`mix-blend-mode: multiply` onto a tinted ground was tried and did not apply in the
+headless render: the composite showed as a white rectangle.
+
+`t0` is the `galleryLead` in `app/lib/landings/flow-trial.ts`, not part of
+`MM_GALLERY_ASSETS`. It carries no price, so a price change does not invalidate
+it, but it does claim "50% off for life": re-render if the Skio weekly discount
+changes. Slide 2 on that page is `s1`, so the hero deliberately repeats none of
+its benefits. Photo: `assets/Flow4BoxLight.jpg`, converted from `Ai
+Assets/Box/Flow4BoxLight.webp`.
 
 Two slides are product-agnostic and are shared by both galleries, hence the
 `Shared` prefix: proof and testing. The guarantee is not shared — each formula
