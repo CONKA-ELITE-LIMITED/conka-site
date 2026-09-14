@@ -1,6 +1,6 @@
 /**
  * UK freight bands for B2B orders, mirroring the live UK "Express" weight
- * bands in Shopify (canonical table: docs/shipping/SHIPPING_AND_COURIERS.md
+ * bands in Shopify (canonical table: docs/shipping/METHODS_AND_ZONES.md
  * section 3 - 1 box = 2.1 kg, so the combined box count maps 1:1 onto the
  * weight tiers and no weight math is needed).
  *
@@ -12,7 +12,7 @@
  *
  * UK only by design: the invoice path has no address when the draft is
  * created, and no carrier rate exists above 6 boxes internationally, so
- * international B2B freight is quoted case-by-case (SHIPPING_AND_COURIERS.md
+ * international B2B freight is quoted case-by-case (docs/shipping/CARRIERS_AND_COSTS.md
  * section 7).
  */
 

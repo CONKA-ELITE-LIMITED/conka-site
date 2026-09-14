@@ -19,7 +19,7 @@ no longer has anything to bite on. See `docs/development/featurePlans/archive/lo
 
 ### Renewal orders ship as "Subscription shipping" and Synergy holds them
 
-Tracked in **SCRUM-1311**. How it works: `docs/shipping/SHIPPING_AND_COURIERS.md` §1.
+Tracked in **SCRUM-1311**. How it works: `docs/shipping/SYNERGY_ROUTING.md`.
 
 ---
 

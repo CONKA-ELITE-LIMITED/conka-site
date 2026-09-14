@@ -169,7 +169,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/features/KLAVIYO_FLOWS_AND_INTEGRATION.md` | **Klaviyo** — what this app triggers, what Shopify sends, the Alia popup integration, flow definitions |
 | `docs/development/CART_ATTRIBUTES.md` | **What lands on an order** — the `source` cart line attribute sent at add-to-cart and how it is decided, and the order-tag ownership map (who writes each tag, why `IMPORTSYNERGY` is the only load-bearing one, and why no logic should key on subscription tags) |
 | `docs/branding/CLAIMS_COMPLIANCE.md` | EFSA claims rules, prohibited claims, mandatory statements |
-| `docs/shipping/SHIPPING_AND_COURIERS.md` | Shipping rates, courier economics, Synergy 3PL rate mapping |
+| `docs/shipping/README.md` | **Shipping** - live methods table, zones and weight bands, DDP vs DAP and duties, Synergy routing (incl. subscription renewals), carrier and pallet costs |
 | `docs/ops/README.md` | **Commercial / money layer** — COGS, fees, margin, vendors. Route any cost or margin question here |
 | `docs/seo-aeo/AEO_PLAYBOOK.md` | Answer-engine optimisation playbook |
 | `docs/workflows/REVIEWS_WORKFLOW.md` | Reviews workflow (Loox → site testimonials) |

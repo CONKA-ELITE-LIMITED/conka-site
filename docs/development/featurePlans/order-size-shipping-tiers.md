@@ -3,7 +3,7 @@
 **Status:** Phases 1 + 2 DONE (SCRUM-1079, Sprint 27) - Phase 1 live-verified 11 Jun, Phase 2 (B2B invoice shipping line + pallet playbook) built 11 Jun pending deploy; Phase 3 (Synergy consolidation) next
 **Created:** 2026-06-10 · **Updated:** 2026-06-11
 **Owner:** Rudh (Shopify config + light code) with Humphrey (Evri/DPD actual costs)
-**Relates to:** `docs/features/b2b/B2B_PORTAL.md` (canonical B2B reference — Phase 3 Synergy consolidation lives in its Future-work section), `synergy-3pl-integration.md`, `docs/shipping/SHIPPING_AND_COURIERS.md`
+**Relates to:** `docs/features/b2b/B2B_PORTAL.md` (canonical B2B reference — Phase 3 Synergy consolidation lives in its Future-work section), `synergy-3pl-integration.md`, `docs/shipping/README.md`
 
 ---
 
@@ -56,7 +56,7 @@ Then, on aligned timing, **consolidate B2B onto the funnel SKUs** so B2B fulfils
 ## Weight-band tables (UK) - derived from real carrier costs
 
 Costs are known, not estimated - from the Synergy Evri/DPD carriage cards (transcribed in
-`SHIPPING_AND_COURIERS.md` §3): **Evri standard parcel £2.92**, **DPD next-day £6.54**, both
+`docs/shipping/CARRIERS_AND_COSTS.md`): **Evri standard parcel £2.92**, **DPD next-day £6.54**, both
 **per parcel**. A bulk order ships as `ceil(boxes / 3)` master-carton parcels (3 boxes / 6.3kg
 each); a retail order up to 6 boxes (12.6kg) ships as a single wrapped parcel.
 
@@ -65,7 +65,7 @@ Free band deliberately covers **every normal order including the largest quarter
 charge. Charges begin only at genuine bulk (7+ boxes).
 
 **These are the live Shopify values (entered as `Weight` rate-type tiers, in grams).** Canonical
-copy with full cost columns: `docs/shipping/SHIPPING_AND_COURIERS.md` §3.
+copy with full cost columns: `docs/shipping/METHODS_AND_ZONES.md`.
 
 ### `Express` (Evri standard) - £2.92/parcel
 
@@ -111,7 +111,7 @@ the same way (driven by the quarterly-order leak in long-haul zones, not bulk). 
 enquiry). Live + verified: Canada, Australia, New Zealand, South Africa, Caribbean, France, Middle
 East (UAE), and Europe (single zone at the "Mid" band as a pragmatic compromise vs a 3-way split).
 USA (separate USD/DHL build) and Channel Islands/Jersey (no rate-card data) left flat. Full per-zone
-band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPING_AND_COURIERS.md` §4.
+band tables + the DDU decision + the Europe-split option: `docs/shipping/METHODS_AND_ZONES.md`.
 
 ---
 
@@ -120,7 +120,7 @@ band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPIN
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Weight-band the global UK Shopify rates (Standard + next-day) | **DONE - live-verified 11 Jun** (10-cart Storefront API sweep, all boundaries correct, quarterly bundle Free) |
-| 2 | B2B invoice draft-order shipping line + manual pallet playbook | **DONE - built 11 Jun** (route attaches an `Express` line banded by box count; pallet playbook in SHIPPING_AND_COURIERS.md §7; order-page copy updated) |
+| 2 | B2B invoice draft-order shipping line + manual pallet playbook | **DONE - built 11 Jun** (route attaches an `Express` line banded by box count; pallet playbook in `docs/shipping/CARRIERS_AND_COSTS.md`; order-page copy updated) |
 | 3 | Consolidate B2B onto the funnel SKUs so it fulfils from Synergy | Future (committed next track) |
 
 ### Phase 1 - Weight-band the global UK rates (ACTIVE)
@@ -135,7 +135,7 @@ band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPIN
    - What: replace the flat free UK "Express" rate with the Evri weight-band table above (free to 12.6 kg, then £12 / £25 / £50, £75 catch-all above 105 kg). Keep the rate name exactly "Express" (Synergy maps on name only).
    - Dependencies: task 0 (weights must be right first).
    - Complexity: Small (Admin config).
-   - Files: none (Shopify Settings > Shipping). Document final numbers in `docs/shipping/SHIPPING_AND_COURIERS.md`.
+   - Files: none (Shopify Settings > Shipping). Document final numbers in `docs/shipping/METHODS_AND_ZONES.md`.
 
 2. **Shopify config - UK next-day (`24 Hour Delivery` / DPD) weight bands**
    - What: replace the flat £6.54 "24 Hour Delivery" with the DPD weight-band table above (£6.54 to 6 boxes, then £26 / £52, £110 catch-all above 50.4 kg); kills the bulk next-day leak. Keep the rate name exactly "24 Hour Delivery".
@@ -155,7 +155,7 @@ band tables + the DDU decision + the Europe-split option: `docs/shipping/SHIPPIN
    - Files: `app/api/b2b/invoice-order/route.ts`.
 
 2. **Doc - manual pallet playbook for >60-box orders - DONE**
-   - What: playbook written into `SHIPPING_AND_COURIERS.md` §7 - Harry swaps the auto-attached `Express` £75 line for a `Pallet` line priced off the EFM card and resends the invoice; international pallets are customer-arranged via their own freight forwarder (Europa / Kuehne+Nagel), notify the Synergy Client Manager of the collection date.
+   - What: playbook written into `docs/shipping/CARRIERS_AND_COSTS.md` - Harry swaps the auto-attached `Express` £75 line for a `Pallet` line priced off the EFM card and resends the invoice; international pallets are customer-arranged via their own freight forwarder (Europa / Kuehne+Nagel), notify the Synergy Client Manager of the collection date.
 
 3. **UI - collapsed shipping disclosure on the order builder (added during build)**
    - What: the summary now carries a collapsed `<details>` row ("UK shipping" + the live charge for the current box count), expanding to the full band table and the UK-only / pallet / international caveats. Freight depends only on box count, so the shown number is exact, not an estimate - the invoice total can never surprise finance. Band table + method title shared with the route via `app/lib/b2bShipping.ts` (single source, no drift).
@@ -208,6 +208,6 @@ Phase 3 (B2B → Synergy consolidation) is intentionally not ticketed yet; it li
 
 - `docs/features/b2b/B2B_PORTAL.md` - the canonical B2B portal reference (its shipping items are this plan)
 - `synergy-3pl-integration.md` - Synergy economics + the funnel SKU fulfilment that Phase 3 consolidates onto
-- `docs/shipping/SHIPPING_AND_COURIERS.md` - canonical shipping/courier working doc; final band numbers land here
+- `docs/shipping/README.md` - canonical shipping docs; band tables in `METHODS_AND_ZONES.md`
 - `app/api/b2b/invoice-order/route.ts` - draft-order creation (Phase 2.1)
 - `app/lib/b2bVariants.ts` - B2B variant GIDs (Phase 3 re-point)
