@@ -58,7 +58,7 @@ for DHL DDP. Evri once failed to produce a label for a France order.
 
 Chosen over Evri's cheaper 24hr service for a more premium next-day experience.
 
-## DHL (`European Delivery`, dormant `Express International DHL`)
+## DHL (`European Delivery`, `Express International DHL`)
 
 Rate card: `data/dhl-air-and-road-rates-2026.xlsx` (Synergy's DHL account).
 

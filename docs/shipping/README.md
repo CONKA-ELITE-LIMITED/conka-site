@@ -16,8 +16,8 @@ The method **name** is the routing instruction to Synergy, so these names are ex
 | `Express` | UK | Evri, 48hr standard | n/a | Free to 6 boxes, then weight-banded |
 | `24 Hour Delivery` | UK | DPD Next Day | n/a | £6.54 to 6 boxes, then weight-banded |
 | `European Delivery` | `Europe` (11 countries), `france` | DHL Economy Select (road) | **DDP** | 3 to 6 boxes only. France £24 / £32, Europe £26 / £41 |
-| `Express International` | Middle East, Canada, Australia, New Zealand, Africa, Caribbean, USA, Channel Islands | Evri International | **DAP** | Weight-banded per zone to 6 boxes. USA flat £22, Channel Islands flat £4.99 |
-| `Express International DHL` | none | DHL Express (air) | DDP | Not offered. Mapped at Synergy, no Shopify zone points at it |
+| `Express International DHL` | USA | DHL Express (air) | **DDP** | 3 to 6 boxes only. £59 / £112 |
+| `Express International` | Middle East, Canada, Australia, New Zealand, Africa, Caribbean, Channel Islands | Evri International | **DAP** | Weight-banded per zone to 6 boxes. Channel Islands flat £4.99 |
 
 Band tables per zone: [`METHODS_AND_ZONES.md`](./METHODS_AND_ZONES.md).
 
@@ -37,9 +37,10 @@ Band tables per zone: [`METHODS_AND_ZONES.md`](./METHODS_AND_ZONES.md).
    Dispatch Method" until Synergy map the new name.
 2. **A subscription renewal ships on the method stored on its contract**, not on a rate picked at
    billing. See [`SYNERGY_ROUTING.md`](./SYNERGY_ROUTING.md).
-3. **Europe is DDP, everywhere else overseas is DAP.** A DAP customer pays import tax and a
-   courier fee at the door.
-4. **No self-checkout rate above 6 boxes internationally**, and none below 3 boxes to Europe.
+3. **Europe and the USA are DDP, everywhere else overseas is DAP.** A DAP customer pays import
+   tax and a courier fee at the door.
+4. **No self-checkout rate above 6 boxes internationally**, and none below 3 boxes to Europe or
+   the USA.
 5. **Never change a delivery price while fixing a method name** on a subscription contract.
 
 ## Related

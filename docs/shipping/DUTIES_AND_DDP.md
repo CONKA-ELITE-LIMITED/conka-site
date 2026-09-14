@@ -10,7 +10,7 @@ went DDP and the alternatives rejected: `docs/development/featurePlans/internati
 |---|---|---|
 | Who pays duty and VAT | **Customer at checkout**, we settle with the carrier | **Customer on the doorstep** |
 | Doorstep bill | None | Tax plus a courier handling fee (often the larger part) |
-| Used for | `European Delivery` | `Express International` (all non-European zones) |
+| Used for | `European Delivery`, `Express International DHL` (USA) | `Express International` (all other overseas zones) |
 
 Terms of sale are set per method at Synergy ([`SYNERGY_ROUTING.md`](./SYNERGY_ROUTING.md)).
 
@@ -19,8 +19,9 @@ VAT-registered in France or the EU, so VAT paid on the customer's behalf is not 
 is not collected, it is £20 to £60 of dead cost per European order. Shopify's **collect duties and
 import taxes at checkout** adds it as its own line (0.85% fee on Shopify Payments).
 
-**Only enable collect-duties once Synergy ship `European Delivery` as DDP.** On while a parcel still
-ships DAP, the customer pays at checkout and again at the door. Status: SCRUM-1204.
+**Only enable collect-duties for a market once Synergy ship its method as DDP** (`European Delivery`
+for the EU, `Express International DHL` for the USA). On while a parcel still ships DAP, the customer
+pays at checkout and again at the door. Status: SCRUM-1204.
 
 **Importer of record stays the customer.** DHL's DDP bills the shipper rather than moving the
 declarant, and live DDP shipments name the customer as receiver. **We will not register for VAT in
@@ -74,8 +75,9 @@ accountant.
 
 ## USA
 
-**Not solved by DDP.** The $800 de minimis is suspended, so every parcel needs a formal or informal
-entry. Two blockers come before any US rate work:
+**US orders ship DDP on `Express International DHL`**, with duties collected at checkout. The $800 de
+minimis is suspended, so every parcel needs a formal or informal entry. DDP settles who pays, but two
+US rules apply regardless:
 
 - **FDA Prior Notice.** Supplements are regulated as food. A Prior Notice, including the
   manufacturer's FDA registration number, must be filed for every shipment. No notice means refused

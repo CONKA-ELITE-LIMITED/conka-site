@@ -30,7 +30,8 @@ of the world is untouched for now.**
 | | |
 |---|---|
 | Europe (incl. France) | DHL **Economy Select** (road), **DDP**, new rate name `European Delivery` |
-| Rest of world (USA, Canada, AU, NZ, ZA, UAE, Caribbean) | **Unchanged.** Stays `Express International` (Evri, DAP) |
+| USA | **Added 14 Sept 2026.** `Express International DHL` (DHL air, DDP), 3-box minimum, £59 / £112 |
+| Rest of world (Canada, AU, NZ, ZA, UAE, Caribbean) | **Unchanged.** Stays `Express International` (Evri, DAP) |
 | European prices | **Unchanged.** They already cover the DDP cost (§ Margins) |
 | Minimum European order | **3 boxes**, by deleting the 1-box and 2-box weight bands |
 | Duty and VAT | Collected from the customer at checkout as a separate line, not absorbed |
@@ -46,7 +47,7 @@ FDA Prior Notice resolved before it can ship properly at all. Splitting the two 
 ship now rather than waiting on a problem that has nothing to do with it.
 
 **Why `Express International` survives.** It is still the live method on every non-European
-zone, on the Channel Islands rate, and on the USA subscription contracts. Retiring it before
+zone outside Europe and the USA, and on the Channel Islands rate. Retiring it before
 those move would leave orders carrying a method Synergy cannot match, and Synergy holds them
 as "Invalid Dispatch Method".
 
@@ -397,8 +398,9 @@ for Europe. **None of those block the build.**
 
 ### Phase 5 — Rest of world, separate work
 
-14. **USA.** Resolve FDA Prior Notice first, then the tariff rate, then the rate build. The flat
-    £22 has been obsolete since 24 Jul 2026 and on DHL DDP would lose £77-120 an order.
+14. **USA.** Moved to `Express International DHL` (DDP) at £59 / £112 with a 3-box minimum, pulled
+    forward from this phase. Still open: FDA Prior Notice, and whether Evri DDP to the US is a
+    cheaper carrier.
 15. **UAE** is the worst lane on the sheet: £20 charged against £126 of cost at 3 boxes.
     Worth repricing whether or not it ever moves to DHL.
 16. Revisit **IOSS** only if EU volume grows enough to justify the admin.
