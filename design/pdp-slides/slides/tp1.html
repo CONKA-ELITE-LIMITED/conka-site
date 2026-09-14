@@ -35,11 +35,13 @@ h2{margin-top:34px;font-weight:700;font-size:66px;line-height:1.02;letter-spacin
 /* card 2: the gifts, 2x2 */
 .m2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;background:#e6e9f1}
 .m2 div{background:#fff center/cover no-repeat}
-.m2 .app{background:#fff url("../../../public/app/AppConkaRing.png") 50% 18%/62% auto no-repeat}
+/* phone wide enough that the tile's bottom edge cuts it about halfway: top half, no letterbox */
+.m2 .app{background:#f4f5f8 url("../../../public/app/AppConkaRing.png") 50% 28px/58% auto no-repeat}
 /* card 3: the number is the picture */
 .m3{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#eef0f5}
-.m3 .n{font-weight:700;font-size:156px;line-height:.9;letter-spacing:-.05em}
-.m3 .u{margin-top:14px;font-family:JBM,monospace;font-weight:500;font-size:40px;letter-spacing:.12em;color:#414d78}
+.price .per{font-weight:500;font-size:44px;color:#2f3a63;letter-spacing:-.01em}
+.m3 .n{font-weight:700;font-size:150px;color:var(--green);white-space:nowrap;line-height:.9;letter-spacing:-.05em}
+.m3 .u{margin-top:18px;font-family:JBM,monospace;font-weight:500;font-size:34px;letter-spacing:.1em;color:#414d78;white-space:nowrap;text-align:center}
 
 /* arrows sit across the gaps, level with the media */
 .arrow{position:absolute;top:calc(470px + 44px + 60px + 30px + 235px - 48px);width:96px;height:96px;border-radius:50%;
@@ -75,10 +77,10 @@ h2{margin-top:34px;font-weight:700;font-size:66px;line-height:1.02;letter-spacin
 
     <div class="card">
       <div class="pill">EVERY MONTH</div>
-      <div class="media m3"><div class="n">£74.99</div><div class="u">A MONTH, FOR LIFE</div></div>
-      <h2>Your price, locked</h2>
+      <div class="media m3"><div class="n">42% off</div><div class="u">EVERY MONTH, FOR LIFE</div></div>
+      <h2>Locked for life</h2>
       <div class="body">40 shots a month, delivered free. Cancel anytime.</div>
-      <div class="figure"><span class="save">SAVE 42% VS ONE-OFF</span></div>
+      <div class="figure"><span class="price"><s>£129.97</s>£74.99<span class="per">/month</span></span></div>
     </div>
   </div>
 
