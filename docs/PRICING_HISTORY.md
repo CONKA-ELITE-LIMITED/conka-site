@@ -13,6 +13,17 @@ The code source of truth is `OFFER_PRICING` in `app/lib/offerData.ts`. Git histo
 
 ## Log
 
+### 2026-09-14 (new offer: 4-shot weekly trial box; no funnel price changed)
+
+SCRUM-1343 introduced a weekly trial box sold only on `/go/flow-trial`. It sits outside `OFFER_PRICING`: its pre-add price lives in the offer config (`app/lib/landings/flow-trial.ts`). Skio plan is 50% off the base price; free UK delivery.
+
+| Product | Cadence | Base (one-time, not sold) | Charged | Shots |
+|---------|---------|---------------------------|---------|-------|
+| Flow (FLOW-BOX-4) | Weekly sub | £29.98 | £14.99 / week | 4 |
+| Clear (CLEAR-BOX-4) | Weekly sub | £29.98 | £14.99 / week | 4 (not on any page) |
+
+All nine funnel offers and the quarterly one-time offers are unchanged. "From" per-shot figures unchanged (the trial box is not counted by `getOfferMinPerShot`).
+
 ### 2026-08-28 (new offer: quarterly one-time; no existing price changed)
 
 SCRUM-1285 made the quarterly one-time purchasable on-site through the selection-aware "Buy it once" link (PDPs + Build Your Order), wired to the Skio-era SKUs. New offers, itemised as product + per-order postage; charged totals match the Shopify variant prices to the penny:

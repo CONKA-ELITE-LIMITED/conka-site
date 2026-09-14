@@ -42,6 +42,7 @@ Every row's rendered questions and schema come from the **same** list.
 | `/lander`, `/lander-b` | conversion subset | lander `FAQ` | `CONVERSION_FAQ_ITEMS` | none |
 | `/ingredients` | ingredient FAQ | `IngredientFAQ` | `INGREDIENT_FAQ_ITEMS` | `INGREDIENT_FAQ_ITEMS` |
 | `/go/[slug]` listicles | canonical subset | `LabFAQ` (`items`, `image={null}`, `hideCTA`) | canonical ids via `config.faqIds` | none |
+| `/go/[slug]` offer pages | canonical subset + offer-only | `LabFAQ` | `config.faqIds` then `config.offerFaqs` | none |
 | `/professionals` | B2B FAQ | `TeamFAQ` | `TEAM_FAQS` (own) | `TEAM_FAQS` |
 
 Categories that appear **only** on the hub (not in any conversion subset or PDP graft): the deep `safety` cluster, `app`, and `support`. Adding an item to one of those categories surfaces it on `/faq` and nowhere else.
@@ -86,6 +87,7 @@ No per-ingredient mg and no formula-share percentages in client code, rendered o
 - **Do not restate PDP questions in the layout schema.** Always go through `getFormulaPdpFaqItems`, or the schema and the accordion will drift.
 - **Noindex surfaces** (`/go`, `/lander*`) render a subset but carry no schema and no hub link (paid-traffic funnels should not leak off-funnel).
 - **Listicle personas tag canonical ids.** Each `/go` listicle config carries `faqIds: string[]` (a curated canonical subset in display order), resolved in both listicle renderers via `pickFaqItems` with `stripClaimAnchors`, exactly like the PDP graft. Persona/ad-specific questions live in `FAQ_ITEMS` (so they also surface on `/faq` for AEO), not as raw strings in the config. Add a genuinely new persona question to `FAQ_ITEMS` first, then reference its id.
+- **Offer pages are the one raw-string carve-out.** An offer config's `offerFaqs` holds questions true only of that offer (weekly billing, cancelling a trial). They stay out of `FAQ_ITEMS` because they would be wrong on `/faq`, which is safe only because `/go` is noindex with no FAQ schema. General questions still go through `faqIds`.
 
 ## References
 

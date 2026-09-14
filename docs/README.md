@@ -44,7 +44,7 @@ The most important cluster for anything touching products, variants, or money.
 | [`features/CUSTOMER_PORTAL.md`](./features/CUSTOMER_PORTAL.md) | Account portal — auth, and why the account is now nothing but Shopify OAuth plus Skio's embedded portal. |
 | [`features/b2b/B2B_PORTAL.md`](./features/b2b/B2B_PORTAL.md) | **Canonical B2B reference** — `/professionals`, pricing/VAT, draft orders, Xero, shipping. |
 | [`features/BLOG_SYSTEM.md`](./features/BLOG_SYSTEM.md) | Blog (`/blog`) — Notion-as-CMS, content contract, deploy rules. Read before any Notion write. |
-| [`features/GO_LANDING_PAGES.md`](./features/GO_LANDING_PAGES.md) | **Start here for `/go/[slug]`** — the shared contract: route, registry, noindex rules, shared analytics. Routes to the two format docs. |
+| [`features/GO_LANDING_PAGES.md`](./features/GO_LANDING_PAGES.md) | **Start here for `/go/[slug]`** — the shared contract: route, registry, noindex rules, shared analytics, and the `offer` format. Routes to the two format docs. |
 | [`features/LISTICLE_SYSTEM.md`](./features/LISTICLE_SYSTEM.md) | `/go` **listicle** format — `mm` + `im8` templates, config, zone anatomy, reason copy standard. |
 | [`features/LANDING_QUIZ_SYSTEM.md`](./features/LANDING_QUIZ_SYSTEM.md) | `/go` **quiz** format — engine, screen schema, scoring, Convex capture. |
 | [`features/FAQ_SYSTEM.md`](./features/FAQ_SYSTEM.md) | FAQ single-source rule, per-surface subsets, claims anchors. |

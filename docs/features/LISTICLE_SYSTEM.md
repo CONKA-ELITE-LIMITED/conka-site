@@ -26,7 +26,7 @@ See `GO_LANDING_PAGES.md` for the registry and static-build mechanics.
 
 ## Analytics
 
-Three events, wired automatically by both renderers. Nothing to configure per page.
+Three events, wired automatically by both renderers. Nothing to configure per page. `/go` offer pages also emit `section_viewed` and `cta_clicked` keyed by their slug (see `GO_LANDING_PAGES.md`), so filter by slug rather than assuming every event is a listicle.
 
 | Event | Fires | Properties |
 |-------|-------|------------|

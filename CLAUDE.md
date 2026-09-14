@@ -126,7 +126,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 ## Routes
 
-**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/offerData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes + listicles, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
+**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/offerData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes, listicles + offer pages, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
 **Being removed:** `/protocol/[id]` (redirect) · `/quiz` (redirect) · `/shop` (redirect) · `/funnel`, `/funnel-b`, `/funnel-c` (redirect to `/build-your-order`, SCRUM-1247)
 
 ## Docs index
@@ -147,7 +147,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/MASTER_CONTEXT.md` | High-level architecture and business context |
 | `docs/PAGE_NARRATIVES.md` | **Page story map** — current section-by-section arc + health rating per page; spot the weakest section to improve next |
 | `docs/branding/DESIGN_SYSTEM.md` | **Active design system** — typography, colours, radius, layout, migration guide |
-| `docs/features/GO_LANDING_PAGES.md` | **`/go/[slug]` ad landings — start here.** The shared contract: route, registry, noindex + never-link rules, new-iteration-is-a-new-slug, shared analytics. Routes to the two format docs below |
+| `docs/features/GO_LANDING_PAGES.md` | **`/go/[slug]` ad landings — start here.** The shared contract: route, registry, noindex + never-link rules, new-iteration-is-a-new-slug, shared analytics, and the `offer` format. Routes to the two format docs below |
 | `docs/features/LISTICLE_SYSTEM.md` | The `/go` **listicle** format — the two templates (`mm` / `im8`), config shapes, IM8 zone anatomy, the reason copy standard |
 | `docs/features/LANDING_QUIZ_SYSTEM.md` | The `/go` **quiz** format — engine, screen schema, scoring modes, Convex event capture |
 | `docs/features/BLOG_SYSTEM.md` | **Blog system** — canonical reference for `/blog`. Notion-as-CMS, the content contract (a missing meta description silently skips a post), the render pipeline, and the deploy rules. **Read before any Notion write or blog change:** the blog is static, so a write is invisible until a redeploy, and Next caches Notion responses for a year, so a body edit needs the build cache cleared |
