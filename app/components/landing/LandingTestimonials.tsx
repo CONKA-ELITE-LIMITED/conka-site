@@ -424,7 +424,7 @@ export default function LandingTestimonials({
           Centred on mobile, left-aligned on desktop. */}
       {!hideCTA && (
         <div className="mt-10 flex flex-col items-center lg:items-start">
-          <ConkaCTAButton href={ctaHref} meta={null}>
+          <ConkaCTAButton href={ctaHref}>
             Get Both from £{PRICE_PER_SHOT_BOTH}/shot
           </ConkaCTAButton>
           <GuaranteeRow />

@@ -41,14 +41,25 @@ export const brainAgeingListicle: ListicleConfig = {
     cta: "Save {percent}% on a sharper mind",
     asset: {
       kind: "image",
-      src: "/lifestyle/ageing/BottleBalance.webp",
-      alt: "A woman smiling with a CONKA Flow shot balanced on her head",
-      // Portrait source (928x1152) in the 1:1 hero frame all three personas
-      // share. Anchored top so nothing is lost off the top of the shot and
-      // only the lower fifth is cropped: the square frame shows 81% of the
-      // image against the 54% a 3:2 frame would.
+      src: "/testimonials/ugc/17.jpg",
+      alt: "A CONKA customer holding the daily shot in her garden",
+      // A real customer photograph, replacing a generated studio shot of a
+      // woman who read mid-thirties against a persona aimed at people who fear
+      // losing a word mid-sentence. Casting age was the single biggest fault
+      // on this page. It also shared a bottle-balanced-on-a-head device with
+      // the ADHD hero, so two of the three pages ran the same gag.
+      //
+      // This is Rosalind, who appears again further down as a named
+      // testimonial in the women's segment. That repeat is deliberate: the
+      // hero face pays off later with a name and a story. Her testimonial
+      // photograph is bound to her quote and must not be swapped for someone
+      // else's.
+      //
+      // Portrait source (810x1013) in the 1:1 hero frame all three personas
+      // share. 25% down centres her face and keeps the bottle whole; the
+      // shared "center top" left dead space above her head.
       aspect: "1/1",
-      objectPosition: "center top",
+      objectPosition: "center 25%",
     },
   },
   // Reintroduces the list promise at the point the list starts, now that

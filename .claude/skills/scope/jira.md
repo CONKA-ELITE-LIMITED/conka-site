@@ -38,7 +38,7 @@ Most website work falls under **SCRUM-763 (Website & CRO)**.
 - **cloudId:** `3fc0ea53-78a2-4095-bc58-97377fd07202`
 - **projectKey:** `SCRUM`
 - **summary:** Clear, concise title. **Prefix with the epic category** (e.g. `[Website & CRO] Add timeline to landing page`) so it reads correctly on the board.
-- **description:** Use the template from `docs/workflows/08-jira-workflow.md`. Set `contentFormat: markdown`.
+- **description:** Start with the `## Current state` block (format in `~/.claude/skills/track/SKILL.md` Step 3, initially `**Status:** Scoped, not started`), then the template from `docs/workflows/08-jira-workflow.md`. Set `contentFormat: markdown`.
 - **additional_fields:** always attach the epic via `parent`, so the ticket lands in the right epic rather than sitting loose on the board.
 
   ```json
@@ -86,7 +86,8 @@ Add a **Jira tickets** section to the plan doc (from shape.md Step 6) listing:
 - Ticket key
 - Title
 - Phase it belongs to
-- Status (initially: To Do)
+
+No status column. Status lives on the ticket and is kept current by `/track`; a copy in the plan goes stale.
 
 ## 9. Report back
 

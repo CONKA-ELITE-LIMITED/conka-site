@@ -230,7 +230,6 @@ export default function ProductCard({
         <div className="mt-6 w-full">
           <ConkaCTAButton
             href={href}
-            meta={null}
             className="w-full max-w-none"
           >
             Try {product.displayName}

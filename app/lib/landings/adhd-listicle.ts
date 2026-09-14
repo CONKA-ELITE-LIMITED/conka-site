@@ -42,14 +42,21 @@ export const adhdListicle: ListicleConfig = {
     cta: "Save {percent}% on a calmer mind",
     asset: {
       kind: "image",
-      src: "/lifestyle/BottleFloat.webp",
-      alt: "A man with his eyes closed and a CONKA Flow shot floating above his head",
-      // Portrait source (928x1152) in the 1:1 hero frame all three personas
-      // share. Anchored top so nothing is lost off the top of the shot and
-      // only the lower fifth is cropped: the square frame shows 81% of the
-      // image against the 54% a 3:2 frame would.
+      src: "/testimonials/ugc/11.jpg",
+      alt: "A CONKA customer working at a laptop in headphones, with the daily shots on the desk",
+      // A real customer photograph, replacing a generated studio shot of a man
+      // with his eyes closed and a bottle floating over his head. Closed eyes
+      // read as sedated, which is the opposite of what this page promises.
+      // It is also the only situation photograph in the UGC set: every other
+      // still is a selfie or a posed hold, so it is the only one that shows
+      // the moment this persona is being sold, actually starting work.
+      //
+      // Portrait source (810x1013) in the 1:1 hero frame all three personas
+      // share. Offset rather than top-anchored: the square at "center top"
+      // cuts his hands off the keyboard, and 35% down keeps his face, both
+      // hands and both bottles in frame.
       aspect: "1/1",
-      objectPosition: "center top",
+      objectPosition: "center 35%",
     },
   },
   // Reintroduces the list promise at the point the list starts, now that

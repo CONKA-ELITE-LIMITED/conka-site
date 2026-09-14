@@ -81,7 +81,7 @@ export default function HomeHeroStatic() {
 
         {/* Mobile CTA + trust row — overlaid above the asset's bottom edge. */}
         <div className="absolute inset-x-0 bottom-10 z-10 flex flex-col items-center px-5 lg:hidden">
-          <ConkaCTAButton href="/conka-both" meta={null} inverted>
+          <ConkaCTAButton href="/conka-both" inverted>
             Buy CONKA Today
           </ConkaCTAButton>
           <TrustMicroRow className="mt-4" />
@@ -114,7 +114,7 @@ export default function HomeHeroStatic() {
               formulated to support focus, memory, and mental endurance every
               day.
             </p>
-            <ConkaCTAButton href="/conka-both" meta={null}>
+            <ConkaCTAButton href="/conka-both">
               Buy CONKA Today
             </ConkaCTAButton>
             <TrustMicroRow className="mt-1" />

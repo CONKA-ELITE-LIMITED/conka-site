@@ -66,6 +66,9 @@ inventories, and "X is the live platform" claims that outlive the platform.
 - **Prices have one home:** `app/lib/offerData.ts` for what we sell at, `docs/PRICING_HISTORY.md`
   for the audit log. No third place.
 - If a fact must appear somewhere, it appears in **one** doc and everything else links to it.
+- **Work status has no home in `docs/` at all.** Where something tracked stands (awaiting a vendor, N
+  contracts left, next action) lives in the Jira ticket's Current state block
+  (`docs/workflows/08-jira-workflow.md`). Docs explain how the system behaves and link the ticket key.
 
 ### Describe the present, not the journey
 
@@ -273,7 +276,7 @@ canonical reference for a live commercial system.
 
 | State | Meaning | What to do |
 |---|---|---|
-| **Active** | Phases in flight | The plan is the working doc. Keep the status table honest. A wrong status header is the most common rot. Do not consolidate mid-flight. |
+| **Active** | Phases in flight | The plan is the working doc for scope and decisions. Status lives on the Jira tickets it lists, not in the plan. Do not consolidate mid-flight. |
 | **Shipped-with-residue** | Everything shipped except a named remnant | Plan stays. The header must name the remnant exactly ("Delivered except Phase 5: legacy protocol retirement"). |
 | **Done or dead** | No live phases: delivered, abandoned, or superseded | **Retire it now** (below). |
 
@@ -286,23 +289,26 @@ canonical reference for a live commercial system.
    write no doc.
 2. **Split living from historical.** Build reference, gotchas and decisions are living and move
    to canonical. Status tables, vendor email threads, blockers, cutover runbooks and
-   order-of-operations are historical and stay in the plan being archived.
-3. **Banner the plan** at the very top:
+   order-of-operations are historical.
+3. **Delete by default.** `git rm` the plan; git history keeps it. Most plans end here.
+4. **Archive only large work** (multi-phase, a migration, weeks of effort) whose reasoning,
+   structure or rejected alternatives would help someone later but does not belong in a canonical
+   doc. Banner it at the very top, then move it to `docs/development/featurePlans/archive/`:
    ```markdown
-   > **ARCHIVED (YYYY-MM-DD).** Delivered / Abandoned / Superseded.
+   > **ARCHIVED (YYYY-MM-DD).** Delivered / Abandoned / Superseded. Ticket: SCRUM-XXX.
    > Canonical doc: `docs/features/<x>.md`. Kept for the reasoning, not for current behaviour.
    ```
-4. **Move it** to `docs/development/featurePlans/archive/`.
-5. **Repoint every inbound link**, especially `CLAUDE.md` and `docs/README.md`. An archived doc
-   must never be what a table sends a reader to. Grep for the filename before finishing.
+5. **Repoint every inbound link**, especially `CLAUDE.md` and `docs/README.md`. Nothing may point
+   at a deleted file, and an archived doc must never be what a table sends a reader to. Grep for
+   the filename before finishing.
 
 The same pattern applies to loose working docs in `docs/development/` (one-off audits, context
-dumps, handoffs): once the moment passes, banner and move to the archive beside them.
+dumps, handoffs): once the moment passes, delete them, or archive the rare one worth keeping.
 
 ### Triggers, so this actually happens
 
-- `/ship` Step 8 and `/implement`'s plan-update step both ask: *did this work close the plan's
-  last active phase?* If yes, retire it in the same run.
+- `/track done` (`~/.claude/skills/track/SKILL.md`) runs this retirement check. `/ship` and
+  `/implement` call it at the end; run it by hand for work that never goes through them.
 - Any session that catches a doc lying either fixes it on the spot (if it is one edit) or logs
   it in `docs/TODO.md`. There is no scheduled review ritual. Opportunistic correction plus this
   retirement step is the whole system.
