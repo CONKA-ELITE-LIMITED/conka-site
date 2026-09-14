@@ -82,115 +82,10 @@ first live order that it exploded into components.
 
 ### Shipping on renewals
 
-The shipping line on a renewal order comes from the **delivery method stored on the Shopify
-subscription contract**, not from a rate picked at billing time. That name is what Synergy routes
-couriers on, and it rejects anything outside its configured list.
-
-**Every contract migrated from Loop stores a null title.** All 296 carry `null` for `title`,
-`presentmentTitle` and `code`; all 33 created through Skio checkout carry `Express`. So renewals
-from the first group print `Subscription shipping` and are held by Synergy as "Invalid Dispatch
-Method", while checkout orders print `Express`. Nothing is re-rated at billing: our cheapest UK
-rate is already `Express` at £0.00, and `Subscription shipping` is not a rate we have ever
-configured. Our profile holds only `Express`, `24 Hour Delivery` and `Express International`.
-
-**This predates Skio.** Order `#3935` was billed by **Loop** on 27 Aug 2026 carrying the identical
-label. Renewals on this store have always behaved this way; it surfaced now because Synergy's
-routing is new, not because the platform changed. Do not raise it with Skio as a migration fault.
-
-**The fix** is Skio's per-contract **"Re-sync with Shopify"** in the Update delivery method dialog.
-It pulls the rate name off our Shopify profile, picks correctly from the address, and leaves the
-price alone (`Delivery price: Synced with Shopify`, override unchecked). The API equivalent is
-`changeSubscriptionDeliveryMethod`.
-
-**Never disturb the price while correcting a title.** Leave `setOverride` false. UK contracts are
-£0 either way, but the 12 international ones store Loop-era delivery prices (EUR 26.95, EUR 38.95,
-USD 28-31) that do not match our current Express International bands, so a re-rate would change
-what real customers pay.
-
-**The mapping is unambiguous, and simpler than it looks.** UK is the only zone carrying two rates
-(`Express` at £0 and `24 Hour Delivery` at £6.54+). All eleven overseas zones carry exactly one,
-`Express International`. So a subscription contract maps to `Express` if the shipping address is
-UK and `Express International` otherwise, with no exceptions. Two traps to check before ever
-re-deriving this: **Jersey sits in its own `Express International` zone**, so a Channel Islands
-address labelled "United Kingdom" would be mis-mapped, and a country with no configured zone has
-no rate at all. Neither is present today (audited 2026-09-07).
-
-> ⚠️ **The two-method rule above changes when the international DDP work ships (SCRUM-1204).**
-> Europe only: a new `European Delivery` method (DHL Economy Select road, DDP) takes the `Europe`
-> and `france` zones. The rest of the world stays on `Express International` (Evri, DAP) until the
-> USA rate is resolved, so that method is **not** being retired. The mapping becomes `Express` for
-> UK, `European Delivery` for the EU, `Express International` everywhere else. See
-> `docs/development/featurePlans/international-duties-and-ddp.md`.
-
-### Status: 212 UK contracts with Skio's bulk team, 12 international held
-
-**Logged with Skio 11 Sept 2026, reference `215475878391279`.** A list of the **212 Loop-migrated
-active UK contract IDs** was sent to their support team to have the shipping option title
-populated in bulk. Awaiting them to run it.
-
-The instruction given was deliberately narrow: set the title to `Express`, leave `setOverride`
-false and do not pass `deliveryPrice`. Every UK contract resolves to the same value, so there is
-nothing for them to interpret per contract.
-
-**All 12 international contracts were excluded on purpose.** Their correct titles differ by
-destination, so a bulk operation that stamps one value rather than re-syncing per contract would
-put `Express` on a French contract and ship it on a UK rate. Twelve contracts are minutes of
-manual work and they need eyeballing anyway, for the reason below.
-
-### The international 12, and why a re-sync will not fix them yet
-
-Live state pulled from Skio 11 Sept 2026:
-
-| | Loop-migrated (needs this fix) | Skio-native (already correct) |
-|---|---|---|
-| UK | **212** | 46 |
-| France | **8** | 0 |
-| USA | **4** | 0 |
-
-270 active in total. Every international subscriber is Loop-migrated; there are no Skio-native
-international contracts at all.
-
-⚠️ **A re-sync pulls whatever Shopify rate matches, and after the 11 Sept European change some
-of these match nothing.** The European zones now carry a single band, 5,250 to 13,650g:
-
-| France contracts | Shipped weight | Matching rate |
-|---|---|---|
-| 2 × `1x BOTH-FUNNEL-56` | 4,200g | **none, under the floor** |
-| 1 × `2x BOTH-FUNNEL-56` | 8,400g | `European Delivery` |
-| 4 × `BOTH-120` + `BOTH-SUB-120` | 9,000g or 18,000g, see below | **unresolved** |
-| 1 × `BOTH-40` + `BOTH-SUB-40` | 3,000g or 6,000g, see below | **unresolved** |
-
-**The unresolved five carry a paired line**, one `*-SUB-N` and one `*-N` SKU. If those are two
-shipped lines the contract is double the shots and four of them exceed the 13,650g ceiling; if
-the pair is a bundle parent and child representing one shipment, they are comfortably inside the
-band. **This has not been confirmed either way** and should be before anyone re-syncs them,
-because on the first reading four French subscribers currently have no valid international rate
-at all.
-
-The two under the floor are unambiguous and are among the contracts due to move to quarterly,
-which lifts them over 5,250g and makes the re-sync work.
-
-The UK contracts map to `Express`, which the international work does not touch, so fixing them
-now is final. The **4 USA** contracts map to `Express International`, which survives the first
-phase of that work, so they are final too and can be done by hand at any point.
-
-The **8 France** contracts move to `European Delivery`. The Shopify rate was renamed on 11 Sept
-so that name now resolves, but the weight problem above has to be settled first. They are being
-revisited regardless: the monthly ones are due to move to quarterly, because a monthly
-single-formula European renewal loses about £20 under DDP (DHL road costs £36 flat whether the
-parcel is 1.5kg or 10kg), and all of them carry the stale Loop-era delivery prices noted above.
-
-**A subscription always resolves to `Express` in the UK, even when the customer paid for next-day.**
-Order `#4042` carries two shipping lines, `24 Hour Delivery £6.54` and `Express £0.00`, and the
-contract took the second. The paid upgrade applies to the first order only; renewals revert to
-standard silently. All 34 Skio-native contracts behave this way. Tracked as a behaviour question in
-`docs/TODO.md`, not a defect.
-
-**Gotcha: our own Shopify apps cannot read subscription contracts.** `read_own_subscription_contracts`
-only covers contracts the calling app created, and Skio owns all of ours. Contract-level checks go
-through Skio's API (`getCurrentSubscriptionDeliveryMethod`), not Shopify's.
-
-Status and the open verification: **SCRUM-1311**.
+A renewal order's shipping line comes from the delivery method stored on the subscription
+contract, and Synergy routes on that name. Contracts imported from Loop stored no name, so their
+renewals are held until the name is set. How it works, the fix and its traps:
+`docs/shipping/SHIPPING_AND_COURIERS.md` §1. Fix status: SCRUM-1311.
 
 ### Fulfilment staging
 
@@ -299,19 +194,11 @@ replicate Loop's tag set.** Full breakdown in `docs/development/CART_ATTRIBUTES.
 on Render ingests subscription data into Convex, assigns each customer a segment every 6h, and
 drains those into Klaviyo lists. Everything downstream of `sanitized_customers` consumes fields
 by meaning, never by platform name, so Skio was an ingest-adapter change and nothing more. Detail
-lives in the conka-lab repo, at **`docs/features/SUBSCRIPTION_INGEST.md`** there. (That link used
-to point at `docs/featurePlans/loop-to-skio-ingest-migration.md`, which is now archived and whose
-status header still describes the migration as not yet done.)
+lives in the conka-lab repo, at **`docs/features/SUBSCRIPTION_INGEST.md`** there. Open issues
+from the Skio cutover on that side are logged in conka-lab's `docs/skio-cutover-findings-ledger.md`.
 
-**One open item on that side affects what customers receive**, as of 2026-09-11. Sixteen
-subscribers who were active or paused in Loop have no Skio contract and currently classify as
-one-time buyers rather than subscribers; this is disputed with Skio (ticket `215475794231370`).
-Detail in conka-lab's `docs/skio-cutover-findings-ledger.md`, F-17.
-
-The **cancelled-winback flow was paused** on 7 Sept after long-cancelled customers were mailed,
-caused by conka-lab replaying archived Loop cancellations into the population. It is **live and
-active again** as of 11 Sept, following SCRUM-1332 which realigned the flow to Skio's real reason
-vocabulary. Every Klaviyo flow is now running.
+**Winback flows key on Skio's cancellation reason vocabulary** (SCRUM-1332). Replaying archived
+Loop cancellations into the population mails long-cancelled customers, so the ingest must not.
 
 **Cancellation deflection and save-offers live in Skio's portal**, where the reason is captured.
 Klaviyo keeps only the post-cancel winback.

@@ -17,71 +17,18 @@ no longer has anything to bite on. See `docs/development/featurePlans/archive/lo
 
 ---
 
-### Renewal orders ship as "Subscription shipping" and Synergy holds them (SCRUM-1311)
+### Renewal orders ship as "Subscription shipping" and Synergy holds them
 
-**Status:** Open, urgent. Controlled test resolves 8 Sept 2026.
-**Files:** None in this repo. Skio dashboard / Skio API.
-
-**Symptom:** every contract migrated from Loop stores a null delivery method title, so its renewal
-orders print `Subscription shipping` instead of a configured rate name. Synergy routes on that name
-and holds them as "Invalid Dispatch Method". Audited 2026-09-07 against a single consistent pull:
-**294 migrated contracts hold a null title, 288 of them in scope** (273 UK, 15 international;
-excluding 6 cancelled, 2 already corrected by hand, and 34 Skio-native contracts that already carry
-`Express`). ~23 orders already stamped and held.
-
-**Not a Skio migration defect:** Loop produced the identical label on `#3935` (27 Aug 2026), before
-the migration. Synergy's routing is what is new.
-
-**Fix, pending verification:** Skio's per-contract "Re-sync with Shopify" populates the title from
-our Shopify profile and leaves the price alone. Unproven is whether a populated title actually
-reaches the renewal order, because no Skio-native contract has renewed yet (earliest ~1 Oct). Test
-armed: contract `140576719222` re-synced, `140578652534` left null, both billing 8 Sept 07:00 UTC.
-
-**The mapping is unambiguous.** UK is the only zone with two rates (`Express` £0, `24 Hour Delivery`
-£6.54+); every one of the eleven overseas zones has exactly one, `Express International`. So UK maps
-to `Express` and everything else to `Express International`, with no exceptions. Verified: no
-migrated contract stores £6.54, no UK address is a Channel Islands or Isle of Man postcode (Jersey
-sits in its own `Express International` zone and would have been mis-mapped), and every country
-present has a configured zone. All 34 Skio-native UK contracts independently resolve to `Express`
-@ £0, which is the value being written.
-
-**What closes it:** read both orders on 9 Sept. If the treated one prints `Express`, run the backfill
-(Skio Support are doing it in bulk; files list subscription id, contract id and the three fields to
-set), then release the held orders with Synergy manually. **Never change `deliveryPrice` while
-setting a title** — leave it synced with Shopify and `setOverride` false. Six UK contracts sit on a
-retired £5.99 rate and the international ones carry Loop-era prices (EUR 11.95 to 38.95, USD 18 to
-31), so a re-rate would change what real customers pay. Prices snapshotted before the run for an
-after-check.
-
-**Open with Synergy:** `#3935` carries the same unrecognised label and *was* fulfilled on 4 Sept,
-while `#4036` / `#4037` are held. Settle whether the method name is truly the sole cause before
-touching 208 live contracts.
+Tracked in **SCRUM-1311**. How it works: `docs/shipping/SHIPPING_AND_COURIERS.md` §1.
 
 ---
 
-### Paid 24 Hour Delivery applies to the first order only, then renewals drop to Express
+### Paid 24 Hour Delivery covers the first order only
 
-**Status:** Open, low urgency. Behaviour question, not a defect. Found 2026-09-07.
-**Files:** None in this repo. Shopify shipping profile / Skio contract behaviour.
-
-**What happens:** a customer can select `24 Hour Delivery` (£6.54+) at checkout on a subscription.
-The first order ships next-day, but the subscription contract stores `Express` @ £0, so every
-renewal silently reverts to standard. Observed on order `#4042` (Honor Cargill-Martin, 4 Sept,
-`BOTH-STARTER-120`): the order carries two shipping lines, `24 Hour Delivery £6.54` and
-`Express £0.00`, and the contract took the second.
-
-**Why it is arguably correct:** the upgrade reads as a one-off purchase decision on that order, and
-we are not out of pocket, since renewals ship the free service the subscription price already
-covers. Every one of the 34 Skio-native contracts resolves to `Express` @ £0 regardless of what was
-chosen at checkout, so this is consistent rather than a one-off.
-
-**Why it might still want changing:** a customer who paid for next-day could reasonably expect it to
-persist, and will not be told it has not. There is no notification and nothing in the portal
-explains it. Options if we want to change it: carry the chosen method onto the contract and keep
-charging for it; or state plainly at checkout that the upgrade covers the first order only.
-
-**What closes it:** a decision on which of those two we want. No code in this repo either way; it is
-Shopify shipping configuration plus checkout copy.
+**Decision needed, no ticket yet.** A subscription contract stores `Express` even when the customer
+paid for `24 Hour Delivery`, so renewals revert to standard without telling them. We are not out of
+pocket. Options: carry the paid method onto the contract and keep charging for it, or say plainly at
+checkout that the upgrade covers the first order only. Shopify config plus checkout copy, no code.
 
 ---
 
