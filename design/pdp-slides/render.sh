@@ -30,7 +30,7 @@ slide_name() {
     b3) echo BothIngredients ;;   b4) echo BothVsCoffee ;;
     b7) echo BothReview ;;        b8) echo BothGuarantee ;;
     t0) echo FlowTrialBox ;;      ct0) echo ClearTrialBox ;;
-    bt0) echo BothTrialBox ;;
+    bt0) echo BothTrialBox ;;     tp1) echo TrialPackHowItWorks ;;
     *)  echo "$1" ;;
   esac
 }
@@ -49,7 +49,7 @@ for required in FlowCutout ClearCutoutV2 BothCutoutV2; do
 done
 
 mkdir -p "$OUT"
-if [ $# -gt 0 ]; then SLIDES="$*"; else SLIDES="s0 s0q s1 s2 s3 s4 s7 s8 c0 c0q c1 c2 c3 c4 c7 c8 b0 b0q b1 b2 b3 b4 b7 b8 shared-proof shared-tested t0 ct0 bt0"; fi
+if [ $# -gt 0 ]; then SLIDES="$*"; else SLIDES="s0 s0q s1 s2 s3 s4 s7 s8 c0 c0q c1 c2 c3 c4 c7 c8 b0 b0q b1 b2 b3 b4 b7 b8 shared-proof shared-tested t0 ct0 bt0 tp1"; fi
 
 for s in $SLIDES; do
   out="$(slide_name "$s")"

@@ -74,6 +74,11 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `t0` | `FlowTrialBox.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off for life |
 | `ct0` | `ClearTrialBox.jpg` | Clear trial hero: beat the afternoon slump, 50% off for life |
 | `bt0` | `BothTrialBox.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
+| `tp1` | `TrialPackHowItWorks.jpg` | Trial pack explainer: trial today, starter pack day 7, £74.99/month for life |
+
+`tp1` burns in Both monthly figures from `offerData.ts` (£74.99, £236.93 of
+starter-pack value, 42% vs the £129.97 one-off reference). Like `s0`, re-render it
+if any of them change. It carries no trial price: those are still placeholders.
 
 `bt0` uses `b1`'s structure (headline, second line, sub, benefit rows) with
 trial-pack copy (SCRUM-1343). It burns in no price, because the trial prices are
