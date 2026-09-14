@@ -28,6 +28,7 @@ export const trialPack: OfferConfig = {
       price: 18.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       sellingPlanId: null, // Skio trial plan, not yet created
+      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBox.jpg",
       badge: "Best value",
     },
     {
