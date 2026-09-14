@@ -13,8 +13,8 @@ import OfferBuyBox from "./OfferBuyBox";
  * and gallery, with a Cloud-style identity block and OfferBuyBox in place of
  * ProductBuyPanel. The PDP heroes are untouched.
  *
- * Mobile order follows usecloud.co: gallery, title, avatar trust row, one short
- * review, then the buy box. There is no product description or benefit grid:
+ * Mobile order: title, gallery, avatar trust row, one short review, then the
+ * buy box (usecloud.co's pattern, with the product named before the gallery). There is no product description or benefit grid:
  * on an impulse-priced page the proof does that job faster.
  *
  * One responsive tree rather than the PDP's mobile/desktop pair, so it stays a
@@ -37,7 +37,15 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
       <div className="grid grid-cols-1 gap-6 text-black lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
-        <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-4 lg:row-start-1 lg:self-start">
+        {/* Title first on mobile, so the product is named before the gallery. */}
+        <h1
+          className="brand-h1 !mb-0 !leading-none lg:col-start-2 lg:row-start-1 lg:!text-[3.25rem]"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          {config.title}
+        </h1>
+
+        <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-5 lg:row-start-1 lg:self-start">
           <ProductImageSlideshow
             images={images}
             alt={config.title}
@@ -48,13 +56,9 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
           />
         </div>
 
-        <div className="flex flex-col gap-3 lg:col-start-2 lg:row-start-1">
-          <h1
-            className="brand-h1 !mb-0 !leading-none lg:!text-[3.25rem]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            {config.title}
-          </h1>
+        {/* lg:-mt-3 pulls this up under the title on desktop, where the grid's
+            gap-6 would otherwise push the trust row away from its heading. */}
+        <div className="flex flex-col gap-3 lg:col-start-2 lg:row-start-2 lg:-mt-3">
           <TrustMicroRow />
           <figure className="brand-bg-tint rounded-md p-4 text-black">
             <blockquote className="text-[15px] leading-snug">
@@ -74,15 +78,15 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
           </figure>
         </div>
 
-        <div className="lg:col-start-2 lg:row-start-2">
+        <div className="lg:col-start-2 lg:row-start-3">
           <OfferBuyBox config={config} />
         </div>
 
-        <div className="lg:col-start-2 lg:row-start-3">
+        <div className="lg:col-start-2 lg:row-start-4">
           <IngredientDisclosureRows formulaId={formulaId} />
         </div>
 
-        <div className="lg:col-start-2 lg:row-start-4">
+        <div className="lg:col-start-2 lg:row-start-5">
           <Certifications inline />
         </div>
       </div>
