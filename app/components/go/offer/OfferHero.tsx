@@ -30,7 +30,7 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
   // The PDP's guarantee slide bakes in the site-wide 100 days; this page states
   // its own `guaranteeDays`, so that slide is left out.
   const slides = MM_GALLERY_ASSETS[formulaId].filter(
-    (src) => !src.includes("Guarantee"),
+    (src) => !src.endsWith("Guarantee.jpg"),
   );
   const images = [config.galleryLead, ...slides].map((src) => ({ src }));
 

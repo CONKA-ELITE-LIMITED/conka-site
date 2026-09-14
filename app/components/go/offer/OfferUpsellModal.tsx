@@ -167,8 +167,12 @@ export default function OfferUpsellModal({
         </div>
 
         <div className="px-5 pb-5 pt-5 lg:px-6 lg:pb-6">
+          {/* Falls back if an offer's box is ever cheaper per shot than monthly,
+              so the headline never reads as a negative saving. */}
           <h2 id="offer-upsell-title" className="text-[24px] font-bold leading-tight">
-            Save {perShotSaving}% on every shot
+            {perShotSaving > 0
+              ? `Save ${perShotSaving}% on every shot`
+              : `Upgrade to ${productName} monthly`}
           </h2>
           {data.giftValue > 0 && (
             <p className="mt-1 text-sm text-black/70">
