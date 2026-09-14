@@ -13,8 +13,8 @@ were never mapped at onboarding.
 upgrade sitting alongside Evri).
 **Relates to:** `docs/shipping/SHIPPING_AND_COURIERS.md` (canonical; §4 and §6 are superseded
 by this plan until it is folded back in), `order-size-shipping-tiers.md`,
-`archive/synergy-3pl-integration.md`, **SCRUM-1311** (renewal shipping titles — see
-§ Interaction with SCRUM-1311)
+`archive/synergy-3pl-integration.md`, **SCRUM-1340** (shipping methods on the international
+subscription contracts, blocked by this work)
 **Retirement:** when the switch ships, fold the rates, the mapping sheet and the incoterm
 model into `SHIPPING_AND_COURIERS.md` and archive this plan. Do not leave two live
 descriptions of the model.
@@ -45,9 +45,9 @@ FDA Prior Notice resolved before it can ship properly at all. Splitting the two 
 ship now rather than waiting on a problem that has nothing to do with it.
 
 **Why `Express International` survives.** It is still the live method on every non-European
-zone, on the Channel Islands rate, and on 4 USA subscription contracts. Retiring it before
-those move would leave orders carrying a method Synergy cannot match, which is the "Invalid
-Dispatch Method" hold described in § Interaction with SCRUM-1311.
+zone, on the Channel Islands rate, and on the USA subscription contracts. Retiring it before
+those move would leave orders carrying a method Synergy cannot match, and Synergy holds them
+as "Invalid Dispatch Method".
 
 **Why 3 boxes.** DHL road is flat to 10kg, so a European parcel costs £36.04 whether it holds
 one box or four. A 1-box European order loses money outright. Three boxes is the first tier
@@ -448,8 +448,8 @@ for Europe. **None of those block the build.**
    us roughly £35 once, if an order lands in the gap and ships DDP with no duty collected. That is
    the cheaper mistake. Needs HS codes and country of origin (both done) and Shopify Payments.
    Costs 0.5% promotional, 0.85% standard.
-9. Set the **8 France** Skio contracts' delivery title to `European Delivery`, `setOverride`
-   false (§ Interaction with SCRUM-1311).
+9. Set the French subscription contracts' shipping method to `European Delivery`
+   (SCRUM-1340).
 10. Publish the shipping policy copy.
 
 ### Phase 4 — After it is live
@@ -472,37 +472,12 @@ for Europe. **None of those block the build.**
     under €150. Freight is roughly £12.63 against DHL Road's £46.36 at 6 boxes, which would
     change European margins materially.
 
-## Interaction with SCRUM-1311
+## Subscription contracts
 
-SCRUM-1311 fixes a separate, unrelated failure: every subscription contract migrated from Loop
-stores a null delivery-method title, so renewals print `Subscription shipping` and Synergy holds
-them as "Invalid Dispatch Method". Contracts created through Skio checkout carry `Express` and
-are fine. See `docs/features/SUBSCRIPTIONS.md` § Shipping on renewals.
-
-Active subscription state, pulled from Skio 8 Sept 2026:
-
-| | Loop-migrated (needs the SCRUM-1311 fix) | Skio-native (already correct) |
-|---|---|---|
-| UK | **207** | 37 |
-| International | **12** (8 France, 4 USA) | 0 |
-
-**Every international subscriber is Loop-migrated, and there are no Skio-native international
-contracts at all.**
-
-**Only the 8 France contracts need holding.** The 207 UK contracts map to `Express`, which this
-plan does not touch. The 4 USA ones map to `Express International`, which now survives this
-phase, so they are final too. Fix all 211 under SCRUM-1311 now and they never need touching
-again.
-
-The 8 France contracts move to `European Delivery`, which does not exist yet, so setting them to
-`Express International` now means correcting them twice. Hold them and do it once, at Phase 3
-step 9. They are being revisited regardless: the monthly ones are moving to quarterly (Phase 2),
-and all of them carry stale Loop-era delivery prices (EUR 26.95, EUR 38.95) that no current rate
-matches. **Leave `setOverride` false** when correcting the title, or a re-rate changes what real
-customers pay.
-
-> This was a hold on 12 contracts until 11 Sept 2026, when the plan narrowed to Europe only and
-> `Express International` stopped being retired. `SUBSCRIPTIONS.md` was updated to match.
+Subscription renewals ship on the method name stored on each contract
+(`docs/shipping/SHIPPING_AND_COURIERS.md` §1). The French contracts need that name set to
+`European Delivery` as part of the switch, not before, or they get corrected twice. That work
+is SCRUM-1340; UK contracts are SCRUM-1311 and untouched by this plan.
 
 ---
 

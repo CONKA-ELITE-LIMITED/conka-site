@@ -80,6 +80,13 @@ first live order that it exploded into components.
 **Synergy rules:** the connector pulls only open, paid, unfulfilled orders. Never remove the
 `IMPORTSYNERGY` tag. Orders cannot be edited once Synergy has pulled them.
 
+### Shipping on renewals
+
+A renewal order's shipping line comes from the delivery method stored on the subscription
+contract, and Synergy routes on that name. Contracts imported from Loop stored no name, so their
+renewals are held until the name is set. How it works, the fix and its traps:
+`docs/shipping/SHIPPING_AND_COURIERS.md` §1. Fix status: SCRUM-1311.
+
 ### Fulfilment staging
 
 Plans and variants stay constant as box formats change; only `bundlecomposition` moves. The
@@ -187,7 +194,11 @@ replicate Loop's tag set.** Full breakdown in `docs/development/CART_ATTRIBUTES.
 on Render ingests subscription data into Convex, assigns each customer a segment every 6h, and
 drains those into Klaviyo lists. Everything downstream of `sanitized_customers` consumes fields
 by meaning, never by platform name, so Skio was an ingest-adapter change and nothing more. Detail
-lives in the conka-lab repo, at `docs/featurePlans/loop-to-skio-ingest-migration.md` there.
+lives in the conka-lab repo, at **`docs/features/SUBSCRIPTION_INGEST.md`** there. Open issues
+from the Skio cutover on that side are logged in conka-lab's `docs/skio-cutover-findings-ledger.md`.
+
+**Winback flows key on Skio's cancellation reason vocabulary** (SCRUM-1332). Replaying archived
+Loop cancellations into the population mails long-cancelled customers, so the ingest must not.
 
 **Cancellation deflection and save-offers live in Skio's portal**, where the reason is captured.
 Klaviyo keeps only the post-cancel winback.

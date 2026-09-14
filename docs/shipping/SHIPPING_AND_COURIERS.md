@@ -29,6 +29,36 @@ Two rules fall out of this:
    can cost £12 to Europe and £40 to Rest of World — Synergy ignores the price, so one
    name still means one carrier.
 
+### Subscription renewals use the method stored on the contract
+
+A renewal order's shipping line comes from the **delivery method stored on the Shopify
+subscription contract**, not from a rate picked at billing time. A contract with a null
+title prints `Subscription shipping`, which is not a configured rate, and Synergy holds the
+order as "Invalid Dispatch Method". Contracts created through checkout store the name the
+customer chose; contracts imported from Loop stored null. Loop renewals behaved the same way
+before Skio, so this is an import gap, not a Skio fault. Fix status: SCRUM-1311 (UK),
+SCRUM-1340 (international).
+
+- **The fix** is Skio's per-contract **"Re-sync with Shopify"** (Update delivery method
+  dialog), or `changeSubscriptionDeliveryMethod` on the Skio API. It pulls the rate name
+  from our Shopify profile for the contract's address.
+- **Never disturb the price while setting a title.** Leave `setOverride` false and omit
+  `deliveryPrice`. Imported international contracts carry Loop-era delivery prices that do
+  not match current bands, so a re-rate changes what real customers pay.
+- **Mapping:** UK contracts resolve to `Express`; the rest of the world to
+  `Express International`; the EU zones to `European Delivery` once the DDP work ships
+  (`docs/development/featurePlans/international-duties-and-ddp.md`). Check the traps before
+  re-deriving it: Jersey sits in its own international zone, so a Channel Islands address
+  labelled "United Kingdom" mis-maps, and a country with no zone has no rate at all.
+- **A re-sync can match nothing.** It picks the rate whose weight band fits the shipment,
+  so a contract below a zone's minimum (the European zones have one) gets no rate. Check the
+  weight before re-syncing an international contract.
+- **A UK subscription always stores `Express`, even when the customer paid for next-day.**
+  The paid `24 Hour Delivery` upgrade covers the first order only; renewals revert silently.
+- **Our own Shopify apps cannot read subscription contracts.**
+  `read_own_subscription_contracts` only covers contracts the calling app created, and Skio
+  owns ours. Read contract state through Skio's API (`getCurrentSubscriptionDeliveryMethod`).
+
 ---
 
 ## 2. Carrier choice at checkout

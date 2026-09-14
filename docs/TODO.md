@@ -17,6 +17,21 @@ no longer has anything to bite on. See `docs/development/featurePlans/archive/lo
 
 ---
 
+### Renewal orders ship as "Subscription shipping" and Synergy holds them
+
+Tracked in **SCRUM-1311**. How it works: `docs/shipping/SHIPPING_AND_COURIERS.md` §1.
+
+---
+
+### Paid 24 Hour Delivery covers the first order only
+
+**Decision needed, no ticket yet.** A subscription contract stores `Express` even when the customer
+paid for `24 Hour Delivery`, so renewals revert to standard without telling them. We are not out of
+pocket. Options: carry the paid method onto the contract and keep charging for it, or say plainly at
+checkout that the upgrade covers the first order only. Shopify config plus checkout copy, no code.
+
+---
+
 ### Klaviyo email templates still link to the deleted `/account/subscriptions`
 
 **Status:** Open, low urgency. Covered by a redirect in the meantime.
