@@ -2,10 +2,10 @@
  * Offer page config schema (/go/[slug], format "offer", SCRUM-1343).
  *
  * A single-offer page for paid acquisition tests. The first use is the CONKA
- * trial pack: the visitor picks Flow, Clear or Both, pays a low price for a few
- * days of CONKA, and Skio moves them onto that product's monthly plan a set
- * number of days after the order. The page reuses the PDP: the hero is built
- * from ProductHeroV3's parts with a trial-pack selector in place of the plan
+ * trial pack: the visitor picks Flow, Clear or Both, pays a low price for a
+ * trial pack, and Skio moves them onto that product's monthly plan a set number
+ * of days after the order. The page reuses the PDP: the hero is built from
+ * ProductHeroV3's parts with a trial-pack selector in place of the plan
  * selector, then PDP sections below the fold. A new offer or copy iteration is a
  * new slug (GO_LANDING_PAGES.md).
  */
@@ -17,7 +17,7 @@ export type OfferOptionId = "flow" | "clear" | "both";
 /** One selectable trial pack, as authored in the config. */
 export interface OfferOption {
   id: OfferOptionId;
-  /** Card and copy label, e.g. "Flow" or "Flow + Clear". */
+  /** Tile and copy label, e.g. "Flow" or "Flow + Clear". */
   label: string;
   /** The product whose PDP gallery, disclosure rows and monthly plan this option uses. */
   heroId: ProductHeroId;
@@ -35,7 +35,7 @@ export interface OfferOption {
   sellingPlanId: string | null;
   /** Lead gallery slide in front of the product's PDP slides. Optional until the asset exists. */
   galleryLead?: string;
-  /** Pill on the card's top edge. */
+  /** Pill on the tile's top edge. */
   badge?: string;
 }
 
@@ -43,10 +43,22 @@ export interface OfferOption {
 export interface OfferOptionView extends OfferOption {
   product: OfferProduct;
   galleryImages: string[];
+  /**
+   * What the same shots cost at the regular one-time per-shot price (£). The
+   * honest "instead of" figure the trial price is struck against.
+   */
+  referencePrice: number;
   /** The monthly plan this trial converts to. */
   monthly: { price: number; shots: number };
   /** The one-time box behind the buy-once link. */
   oneTime: { variantId: string; price: number; shots: number };
+}
+
+/** A real review, condensed with an ellipsis. Never reword beyond trimming. */
+export interface OfferReview {
+  quote: string;
+  name: string;
+  avatar: string;
 }
 
 export interface OfferConfig {
@@ -54,19 +66,14 @@ export interface OfferConfig {
   slug: string;
   /** The hero <h1>, and the browser title suffixed with " | CONKA". */
   title: string;
-  /** Days of CONKA in each trial pack, for copy. */
-  trialDays: number;
   /**
-   * Days after the order when Skio moves the contract onto monthly. Stated in
-   * the disclosure next to the CTA, so it must match the Skio plan.
+   * Days after the order when Skio moves the contract onto monthly. Stated next
+   * to the CTA, so it must match the Skio plan.
    */
   conversionDays: number;
-  /** In card order. */
+  /** In tile order. */
   options: OfferOption[];
   defaultOption: OfferOptionId;
-  /**
-   * The single short review under the trust row (Cloud pattern). Condense a
-   * real review with an ellipsis; never reword it.
-   */
-  review: { quote: string; name: string; avatar: string };
+  /** Short reviews under the trust row, rotated in place (Cloud pattern). */
+  reviews: OfferReview[];
 }
