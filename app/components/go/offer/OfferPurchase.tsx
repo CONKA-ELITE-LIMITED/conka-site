@@ -37,6 +37,8 @@ interface PurchaseContext {
   buyOnce: (section: string) => void;
   loading: OfferChoice | null;
   error: string | null;
+  /** Where the failed click came from, so exactly one error line announces it. */
+  errorAt: "page" | "sticky";
   modalOpen: boolean;
   tileCtaRef: RefObject<HTMLButtonElement | null>;
 }
@@ -87,6 +89,7 @@ export function OfferPurchaseProvider({
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState<OfferChoice | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorAt, setErrorAt] = useState<"page" | "sticky">("page");
   const sectionRef = useRef("hero");
   const tileCtaRef = useRef<HTMLButtonElement>(null);
   // Synchronous guard: `loading` only disables the buttons after a re-render,
@@ -134,6 +137,7 @@ export function OfferPurchaseProvider({
         });
       } catch {
         inFlight.current = false;
+        setErrorAt(sectionRef.current === "sticky" ? "sticky" : "page");
         setError(CHECKOUT_ERROR);
         setLoading(null);
       }
@@ -178,6 +182,9 @@ export function OfferPurchaseProvider({
   // No modal: someone choosing not to subscribe is not pitched a bigger one.
   const buyOnce = useCallback(
     (section: string) => {
+      // Guard before touching sectionRef, or a tap during an in-flight checkout
+      // would relabel that checkout's analytics location.
+      if (inFlight.current) return;
       sectionRef.current = section;
       void checkout("one_time");
     },
@@ -185,7 +192,7 @@ export function OfferPurchaseProvider({
   );
 
   return (
-    <PurchaseCtx.Provider value={{ start, buyOnce, loading, error, modalOpen, tileCtaRef }}>
+    <PurchaseCtx.Provider value={{ start, buyOnce, loading, error, errorAt, modalOpen, tileCtaRef }}>
       {children}
       <OfferUpsellModal
         open={modalOpen}
@@ -232,8 +239,8 @@ export function OfferCtaButton({
         fireCta(section);
         start(section);
       }}
-      className={`flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[var(--brand-navy)] font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navy)] focus-visible:ring-offset-2 ${
-        compact ? "shrink-0 px-6 text-[15px]" : "w-full min-h-[58px] px-6 text-lg"
+      className={`flex items-center justify-center gap-2 rounded-full bg-[var(--brand-navy)] font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navy)] focus-visible:ring-offset-2 ${
+        compact ? "min-h-[48px] shrink-0 px-6 text-[15px]" : "min-h-[58px] w-full px-6 text-lg"
       }`}
     >
       {busy && (
@@ -280,10 +287,19 @@ export function OfferOtpLink({ price }: { price: string }) {
   );
 }
 
-/** Checkout failure when the modal is closed (a returning visitor's direct checkout). */
-export function OfferCheckoutError() {
-  const { error, modalOpen } = usePurchase();
-  if (!error || modalOpen) return null;
+/**
+ * Checkout failure when the modal is closed (a returning visitor's direct
+ * checkout, or the buy-once link). Rendered under the hero CTA and in the
+ * sticky bar, but only the one matching where the click came from shows, so a
+ * screen reader hears a single alert.
+ */
+export function OfferCheckoutError({
+  placement = "page",
+}: {
+  placement?: "page" | "sticky";
+}) {
+  const { error, errorAt, modalOpen } = usePurchase();
+  if (!error || modalOpen || errorAt !== placement) return null;
   return (
     <p role="alert" className="mt-2 text-sm font-medium text-black">
       {error}
@@ -323,7 +339,7 @@ export function OfferStickyBar({ label, cta }: { label: string; cta: string }) {
       {/* A returning visitor's direct checkout can fail from this bar while the
           tile, and its error line, is scrolled out of view. */}
       <div className="brand-track">
-        <OfferCheckoutError />
+        <OfferCheckoutError placement="sticky" />
       </div>
       <div className="brand-track mt-2 flex items-center justify-between gap-3">
         <span className="min-w-0 text-[15px] font-bold leading-tight">{label}</span>

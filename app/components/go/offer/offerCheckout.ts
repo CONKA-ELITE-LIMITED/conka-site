@@ -33,7 +33,7 @@ export interface OfferCheckoutArgs {
   product: OfferProduct;
   offerId: string;
   choice: OfferChoice;
-  /** Section that carried the CTA ("hero", "steps", "sticky"), for analytics. */
+  /** Section that carried the CTA ("hero", "sticky", "otp"), for analytics. */
   section: string;
   variantId: string;
   /** Omitted for "one_time": the variant then checks out at its base price. */
