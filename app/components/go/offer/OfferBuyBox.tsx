@@ -34,8 +34,16 @@ export default function OfferBuyBox({
 
   return (
     <div>
-      <p className="mb-3 text-lg font-bold text-black">Choose your trial pack:</p>
-      <div className="flex flex-col gap-4 pt-2">
+      <p id="offer-trial-pack-label" className="mb-3 text-lg font-bold text-black">
+        Choose your trial pack:
+      </p>
+      {/* Groups the toggles under the visible heading, so a screen reader hears
+          what the three pressed/unpressed buttons are choosing between. */}
+      <div
+        role="group"
+        aria-labelledby="offer-trial-pack-label"
+        className="flex flex-col gap-4 pt-2"
+      >
         {options.map((option) => (
           <PlanCard
             key={option.id}

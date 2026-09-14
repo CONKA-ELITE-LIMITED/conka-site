@@ -28,8 +28,8 @@ import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
 
 /**
  * /go offer format (SCRUM-1343): the CONKA trial pack page for paid traffic.
- * Nav, OfferHero (ProductHeroV3's parts with the trial-pack selector), then the
- * Both versions of the PDP's UGC marquee, ingredients, what to expect,
+ * Nav, OfferHero (ProductHeroV3's parts with the trial-pack selector), the UGC
+ * marquee, then the Both versions of the PDP's ingredients, what to expect,
  * comparison table and FAQ, footer and a sticky CTA.
  *
  * Below the fold always renders Both: it speaks to the default option and keeps
