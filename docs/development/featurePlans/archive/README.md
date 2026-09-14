@@ -32,7 +32,7 @@ first ten, phase 5 (de-duplication) for the last three.
 | `changelog-jan-feb-2026.md` | One-off PR digest for Jan-Feb 2026, superseded by `docs/CHANGELOG.md` |
 
 **Where the live answers are now:** blog → `docs/features/BLOG_SYSTEM.md` · SEO/AEO
-→ `docs/seo-aeo/README.md` · shipping and 3PL → `docs/shipping/SHIPPING_AND_COURIERS.md`
+→ `docs/seo-aeo/README.md` · shipping and 3PL → `docs/shipping/README.md`
 and `docs/features/b2b/B2B_PORTAL.md` · listicles → `docs/features/LISTICLE_SYSTEM.md`
 · pricing and SKUs → `docs/product/SKU_AND_SHOT_REFERENCE.md` · account portal →
 `docs/features/CUSTOMER_PORTAL.md`.

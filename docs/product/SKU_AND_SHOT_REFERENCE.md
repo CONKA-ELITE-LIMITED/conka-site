@@ -72,7 +72,7 @@ The two gift components are ordinary Shopify products, both deliberately **unpub
 
 Compare-at values were corrected at the same time to reference a **real purchasable price**: £69.98 is what one 20-shot box costs to buy once, and £209.94 is three of them. The older ex-postage figures (£59.99 / £179.97) referenced a price no customer is ever charged.
 
-Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL28` (Code 128). See [`../shipping/SHIPPING_AND_COURIERS.md`](../shipping/SHIPPING_AND_COURIERS.md).
+Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL28` (Code 128). See [`../shipping/SYNERGY_ROUTING.md`](../shipping/SYNERGY_ROUTING.md).
 
 ### Skio-era variants (created for the Skio selling-plan migration)
 

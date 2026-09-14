@@ -77,15 +77,9 @@ first live order that it exploded into components.
 
 **Never delete `FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`.** Every bundle composition points at them.
 
-**Synergy rules:** the connector pulls only open, paid, unfulfilled orders. Never remove the
-`IMPORTSYNERGY` tag. Orders cannot be edited once Synergy has pulled them.
-
-### Shipping on renewals
-
-A renewal order's shipping line comes from the delivery method stored on the subscription
-contract, and Synergy routes on that name. Contracts imported from Loop stored no name, so their
-renewals are held until the name is set. How it works, the fix and its traps:
-`docs/shipping/SHIPPING_AND_COURIERS.md` §1. Fix status: SCRUM-1311.
+**Shipping and Synergy.** A renewal ships on the delivery method stored on the contract, and
+Synergy routes on that name. How that works, the connector rules and the contract re-sync fix:
+`docs/shipping/SYNERGY_ROUTING.md`.
 
 ### Fulfilment staging
 
@@ -206,9 +200,8 @@ Klaviyo keeps only the post-cancel winback.
 ## Legacy protocol contracts
 
 `ProtocolId`, `PROTOCOL_VARIANTS` and `app/lib/legacy/protocolSubscriptions.ts` are **live legacy
-support, not dead code**. Twelve customers still hold protocol contracts (4 active, 8 paused as
-of the 2026-08-27 migration preview). The code stays until those contracts end. Do not propose
-tidying it.
+support, not dead code**. A small number of customers still hold protocol contracts, active or
+paused. The code stays until those contracts end. Do not propose tidying it.
 
 ## Decisions and trade-offs
 
@@ -223,8 +216,13 @@ tidying it.
 - **OTP still sells the old `-OTP` SKUs.** Consolidating one-time purchases onto the Skio
   variants is possible under the percentage model but deliberately deferred.
 
-## Known gaps
+## To explore
 
+Open questions and capabilities we have not used yet. Anything that becomes real work gets a ticket.
+
+- **Skio's native Triple Whale integration** is the intended source of rebill visibility
+  (see Attribution). Confirm it is enabled and reporting.
+- **Consolidating one-time purchases onto the Skio variants** (see Decisions).
 - **Does a Shopify-side address edit reach a Skio contract?** Never confirmed. Made moot by
   deleting the only form that could cause the mismatch, so the portal is the sole place an
   address changes. If an address-editing surface is ever rebuilt, answer this first.

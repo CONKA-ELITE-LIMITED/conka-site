@@ -147,7 +147,7 @@ Also: `account-portal-simple-dtc.md` contradicts itself. Phase table says all fo
 | `features/nike-mind-partnership.md:9` | `nike-trial-deck-copy.md`, `nike-engagement-mechanic-options.md` | Not in repo. Resolve or remove |
 | `conkaAppData/coffee-conka-cognition-report.md` | `assets/coffee-conka/*.png` (x2) | Images not in repo |
 
-**Canonical docs missing from CLAUDE.md's index (14):** `PRICING_HISTORY.md`, `CHANGELOG.md`, `product/PRODUCT_DATA.md`, `product/FORMULATION_SPEC.md`, `development/CART_PRICING_SOURCE_OF_TRUTH.md`, `development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md`, `development/CART_ATTRIBUTES.md`, `branding/CLAIMS_COMPLIANCE.md`, `shipping/SHIPPING_AND_COURIERS.md`, `ops/README.md`, `deployment/VERCEL_GIT_CONNECTION.md`, `features/KLAVIYO_FLOWS_AND_INTEGRATION.md`, `workflows/REVIEWS_WORKFLOW.md`, `seo-aeo/AEO_PLAYBOOK.md`.
+**Canonical docs missing from CLAUDE.md's index (14):** `PRICING_HISTORY.md`, `CHANGELOG.md`, `product/PRODUCT_DATA.md`, `product/FORMULATION_SPEC.md`, `development/CART_PRICING_SOURCE_OF_TRUTH.md`, `development/TRIAL_PAGES_PERFORMANCE_PLAYBOOK.md`, `development/CART_ATTRIBUTES.md`, `branding/CLAIMS_COMPLIANCE.md`, `shipping/README.md`, `ops/README.md`, `deployment/VERCEL_GIT_CONNECTION.md`, `features/KLAVIYO_FLOWS_AND_INTEGRATION.md`, `workflows/REVIEWS_WORKFLOW.md`, `seo-aeo/AEO_PLAYBOOK.md`.
 
 Note: `docs/README.md` has **zero dead links** and CLAUDE.md has **zero dead paths**. The problem is omission, not breakage.
 
@@ -244,7 +244,7 @@ Complexity: Large in aggregate, Small per sitting.
 
 1. **Docs - add the 18 orphans to `docs/README.md`**, `ops/` and `email-signature/` as new folder rows
 2. **Docs - fix the 12 dead cross-references** per the table above
-3. **Docs - add the 14 missing canonical docs to CLAUDE.md's index table.** Judgement call on which genuinely earn a row; `ops/README.md`, `shipping/SHIPPING_AND_COURIERS.md` and `features/KLAVIYO_FLOWS_AND_INTEGRATION.md` clearly do
+3. **Docs - add the 14 missing canonical docs to CLAUDE.md's index table.** Judgement call on which genuinely earn a row; `ops/README.md`, `shipping/README.md` and `features/KLAVIYO_FLOWS_AND_INTEGRATION.md` clearly do
 
 Complexity: Medium.
 

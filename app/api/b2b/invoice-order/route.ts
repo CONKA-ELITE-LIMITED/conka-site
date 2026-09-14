@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
     // Phase 2). Always attached, even at GBP 0: a blank shipping method can
     // never be routed by Synergy, and the name doubles as the carrier
     // instruction. Orders above ~60 boxes may warrant a manual pallet line
-    // instead (playbook: SHIPPING_AND_COURIERS.md section 7).
+    // instead (playbook: docs/shipping/CARRIERS_AND_COSTS.md).
     shippingLine: {
       title: B2B_SHIPPING_TITLE,
       price: getB2BShippingPrice(totalBoxes).toFixed(2),

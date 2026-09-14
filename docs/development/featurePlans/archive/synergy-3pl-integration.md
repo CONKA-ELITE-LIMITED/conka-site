@@ -44,7 +44,7 @@ _Reply confirming all of the above sent to Bethany 17 Jun._
 - Phase 1 Connect — Dev Dashboard app, credentials, base URL, Synergy location; connection confirmed.
 - Phase 2 SKU readiness — weight/HS/country on the 2 physical boxes; **EANs set** (`FLOWFUNNEL28` / `CLEARFUNNEL28` in the Barcode field). SKUs + bundles LIVE in Synergy's system.
 - SKU file **approved by Bethany**.
-- **Shipping config in Shopify** — UK (Express/Evri free + 24 Hour Delivery/DPD £6.54); international zones kept and re-priced to Evri cost (Africa £42, Australia £28, NZ £38, Canada split out £36, USA £22, Europe £14.40, etc.); all intl rates named `Express International`. Detail: `docs/shipping/SHIPPING_AND_COURIERS.md`.
+- **Shipping config in Shopify** — UK (Express/Evri free + 24 Hour Delivery/DPD £6.54); international zones kept and re-priced to Evri cost (Africa £42, Australia £28, NZ £38, Canada split out £36, USA £22, Europe £14.40, etc.); all intl rates named `Express International`. Detail: `docs/shipping/README.md`.
 - **Synergy shipping-methods sheet returned** (Express→Evri, 24 Hour Delivery→DPD, Express International→Evri/DAP).
 - **3 test orders created** (#3522, #3523, #3524) — open + paid + unfulfilled, moved to the Synergy location, IDs sent to Bethany — **and now PULLED by Synergy**.
 - Pallet economics analysed (EFM rates) → parcels cheaper until ~60 boxes; email sent to Bethany sense-checking the logic.
@@ -206,7 +206,7 @@ International Priority | DHL     | Express      | ROW    | DAP
 
 ## Update (2026-06-10, test orders CREATED + shipping config DONE)
 
-- **Shopify shipping config DONE.** UK: Express (Evri, free) + 24 Hour Delivery (DPD, £6.54). International: kept the existing ~10 zones, all rates named `Express International` (Evri), prices tuned to Evri cost — Africa £42, Australia £28, NZ £38, Canada split into its own zone £36 (USA stays £22), Channel Islands rate renamed to `Express International`, Europe/france/Caribbean/Middle East left as-is. Full detail in `docs/shipping/SHIPPING_AND_COURIERS.md`.
+- **Shopify shipping config DONE.** UK: Express (Evri, free) + 24 Hour Delivery (DPD, £6.54). International: kept the existing ~10 zones, all rates named `Express International` (Evri), prices tuned to Evri cost — Africa £42, Australia £28, NZ £38, Canada split into its own zone £36 (USA stays £22), Channel Islands rate renamed to `Express International`, Europe/france/Caribbean/Middle East left as-is. Full detail in `docs/shipping/README.md`.
 - **Synergy shipping sheet sent** (3 live rows + a pre-listed DHL `International Priority` row for later): Express|Evri|Standard|UK|n/a · 24 Hour Delivery|DPD|Next Day|UK|n/a · Express International|Evri|International|ROW|DAP.
 - **3 test orders CREATED 2026-06-10** — all open + paid (via draft order → Mark as paid, £0 actually charged) + unfulfilled, fulfillment location manually moved to **Synergy Warehouse**:
   - **#3522** — FLOW-FUNNEL-28 ×1 — Express
@@ -351,7 +351,7 @@ All three: assigned to the Synergy location, status open + paid + unfulfilled, l
 
 ## References
 
-- **Shipping & courier services (carriers, zones, rates, pallets):** `docs/shipping/SHIPPING_AND_COURIERS.md` — consolidated working doc; to be formalised into a standalone feature doc once the Shopify shipping config is live.
+- **Shipping & courier services (carriers, zones, rates, pallets):** `docs/shipping/README.md` — consolidated working doc; to be formalised into a standalone feature doc once the Shopify shipping config is live.
 - Signed contract: `Fulfil_with_Synergy_x_Conka_Elite_Limited.pdf` (commencement 6 May 2026, go-live 9 June 2026, fee schedule, carrier rate cards, SLA, logistic profile)
 - Synergy "Shopify Integration" PDF (Connector overview, scopes, SKU attributes, order processing, testing, go-live)
 - DHL WPX (Air) rate sheet: zone x weight; 28 box ~2.5kg band, 56 box ~5kg, quarterly ~13kg+

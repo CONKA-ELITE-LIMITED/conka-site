@@ -129,7 +129,7 @@ The most important cluster for anything touching products, variants, or money.
 | [`ops/vendor-costs.md`](./ops/vendor-costs.md) | Per-vendor cost breakdown. |
 | [`ops/subscription-platform.md`](./ops/subscription-platform.md) | Loop vs Skio commercial comparison. |
 | [`ops/offerings-and-discounts.md`](./ops/offerings-and-discounts.md) | Discount anchor rules + the price/strike/percentage surface audit. |
-| [`shipping/SHIPPING_AND_COURIERS.md`](./shipping/SHIPPING_AND_COURIERS.md) | Shipping rates, couriers, Synergy 3PL mapping. |
+| [`shipping/README.md`](./shipping/README.md) | Shipping: live methods, zones, duties and DDP, Synergy routing, carrier costs. |
 | [`deployment/CONVEX_DEPLOYMENT.md`](./deployment/CONVEX_DEPLOYMENT.md) | Convex backend setup. |
 | [`deployment/VERCEL_GIT_CONNECTION.md`](./deployment/VERCEL_GIT_CONNECTION.md) | Vercel ↔ git connection. |
 | [`sprints/README.md`](./sprints/README.md) | Commercial/growth sprints (time-boxed ad-spend trials, launches). |

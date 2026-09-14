@@ -17,7 +17,7 @@ The single source of truth for the **commercial layer** of CONKA: what things co
 
 - `docs/product/SKU_AND_SHOT_REFERENCE.md` — SKUs, selling plans, shot counts, **prices** (canonical)
 - `docs/PRICING_HISTORY.md` — how prices changed over time
-- `docs/shipping/SHIPPING_AND_COURIERS.md` — carriage costs per carrier / band (the fulfilment cost input)
+- `docs/shipping/CARRIERS_AND_COSTS.md` — carriage costs per carrier / band (the fulfilment cost input)
 - `docs/product/FORMULATION_SPEC.md` — formulation (the liquid-cost input)
 
 ## The end goal
@@ -42,4 +42,4 @@ Once that exists, every downstream question becomes answerable: is a discount co
 3. **Packaging cost** — label + retail box + outer carton, per SKU.
 4. **Vendor list + monthly cost** — Shopify plan, Skio/Loop, Klaviyo, Loox, Triple Whale, Vercel, Convex, and anything else recurring.
 
-Fulfilment/carriage costs are already captured in `docs/shipping/SHIPPING_AND_COURIERS.md`.
+Fulfilment/carriage costs are already captured in `docs/shipping/CARRIERS_AND_COSTS.md`.

@@ -106,11 +106,11 @@ All `runtime = "nodejs"`, all validate with zod, all return JSON `{ error }` on 
 
 ## Shipping
 
-B2B is the **same physical SKUs as DTC**, so it inherits the **global weight-banded Shopify rates** (UK `Express` free to 6 boxes, then £12 / £25 / £50 / £75; full tables in `docs/shipping/SHIPPING_AND_COURIERS.md`). 1 box = 2.1 kg, so box count maps 1:1 onto the weight tiers.
+B2B is the **same physical SKUs as DTC**, so it inherits the **global weight-banded Shopify rates** (UK `Express` free to 6 boxes, then £12 / £25 / £50 / £75; full tables in `docs/shipping/METHODS_AND_ZONES.md`). 1 box = 2.1 kg, so box count maps 1:1 onto the weight tiers.
 
 - **Card path:** freight comes from the live Shopify rate table automatically.
 - **Invoice path:** draft orders **never pull the Shopify rate table**, so the route applies a UK freight line explicitly from `b2bShipping.ts` (`getB2BShippingPrice`, same band numbers), titled `Express` (Synergy routes on the method name). Always attached even at £0 — a blank method can't be routed. UK-only by design (no delivery address exists when the draft is created, and there's no international carrier rate above 6 boxes).
-- **Pallet-scale (>~60 boxes):** handled manually — Harry adds a `Pallet` line to the draft before sending (playbook: `SHIPPING_AND_COURIERS.md` §7). A pallet only beats parcels above ~60 boxes.
+- **Pallet-scale (>~60 boxes):** handled manually — Harry adds a `Pallet` line to the draft before sending (playbook: `docs/shipping/CARRIERS_AND_COSTS.md`). A pallet only beats parcels above ~60 boxes.
 
 ## Conversion & credibility
 
@@ -214,7 +214,7 @@ Captured here so it lives with the feature, not in a separate plan doc:
 
 ## Related docs
 
-- Shipping & couriers (weight bands, carrier costs, pallets): `docs/shipping/SHIPPING_AND_COURIERS.md`
+- Shipping & couriers (weight bands, carrier costs, pallets): `docs/shipping/README.md`
 - Order-size shipping tiers + B2B→Synergy consolidation plan: `docs/development/featurePlans/order-size-shipping-tiers.md`
 - Synergy 3PL: `docs/development/featurePlans/archive/synergy-3pl-integration.md`
 - Klaviyo patterns: `docs/features/KLAVIYO_FLOWS_AND_INTEGRATION.md`

@@ -11,13 +11,14 @@ Georgina Anderson-Marshall (Synergy) confirmed the orders shipped DAP because te
 were never mapped at onboarding.
 **Tracked as:** **SCRUM-1204** (rewritten 11 Sept 2026; it previously scoped a DAP DHL
 upgrade sitting alongside Evri).
-**Relates to:** `docs/shipping/SHIPPING_AND_COURIERS.md` (canonical; §4 and §6 are superseded
-by this plan until it is folded back in), `order-size-shipping-tiers.md`,
+**Relates to:** `docs/shipping/` (canonical: live methods, zones, the duties rules and the
+Synergy mapping all live there now; this plan holds the reasoning, costs, margins and phases),
+`order-size-shipping-tiers.md`,
 `archive/synergy-3pl-integration.md`, **SCRUM-1340** (shipping methods on the international
 subscription contracts, blocked by this work)
-**Retirement:** when the switch ships, fold the rates, the mapping sheet and the incoterm
-model into `SHIPPING_AND_COURIERS.md` and archive this plan. Do not leave two live
-descriptions of the model.
+**Retirement:** the rates, mapping sheet and incoterm model are already in `docs/shipping/`.
+When the last phase closes, check nothing new needs folding in, then retire this plan per
+`/track done`. Do not restate a rule here that `docs/shipping/` holds.
 
 ---
 
@@ -172,49 +173,11 @@ Over half is the courier's admin fee. That is why the bills read as disproportio
 
 ---
 
-## The rules, as of September 2026
+## The rules
 
-### EU
-
-| What | Detail | In force |
-|---|---|---|
-| €150 duty exemption | **Abolished.** Every parcel attracts duty | 1 Jul 2026 |
-| Replacement flat duty | **€3 per tariff line** on consignments ≤€150 intrinsic value. Runs to 1 Jul 2028, then normal rates. The collection mechanism is not settled; under DAP the carrier bills the buyer with everything else | 1 Jul 2026 |
-| Item-level declaration | Required on every B2C consignment | 1 Jul 2026 |
-| IOSS | Still covers **VAT** on ≤€150. Does not cover duty | ongoing |
-| EU-wide handling fee | ~€2 proposed, amount and date TBC | Nov 2026, TBC |
-
-Intrinsic value excludes shipping when shown separately. VAT is charged on goods **plus**
-shipping (the shipping the customer paid, not our cost).
-
-**H1 vs H7 is what governs preferential origin.** H7 (the simplified ≤€150 dataset, used by
-IOSS shipments) has no field for preferential origin, so a UK-origin 0% claim under the TCA
-is impossible on it and the €3 flat applies. **H1 is the only declaration through which
-preference can be claimed.** Above €150 the duty side is therefore cleaner: 0% is claimable
-and France's €2 does not apply.
-
-### France, on top
-
-A temporary **€2 per item** national parcel tax (HS6 level), on sub-€150 parcels cleared on
-the simplified **H7** declaration. Live 1 Mar 2026 until an EU-wide fee replaces it, and no
-later than 31 Dec 2026.
-
-### USA — out of scope, tracked separately
-
-The $800 de minimis is **indefinitely suspended**: 24 Jun 2026 non-postal, 24 Jul 2026
-postal. Every parcel now needs a formal or informal entry. The flat £22 rate is obsolete.
-
-Two US-specific issues that are **not** solved by DDP and must be resolved before any US
-rate work:
-
-- **Tariff.** No UK-US zero-rate deal. UK goods have faced a 10% baseline tariff, but the
-  legal basis was struck down by SCOTUS in Feb 2026 and maintained under Section 122 with an
-  expiry around Jul 2026. **The rate in force today is unverified.**
-- **FDA.** Supplements are regulated as food. The manufacturing facility must hold an FDA
-  registration number, and a **Prior Notice must be filed with the FDA for every shipment**,
-  including that number. Express carriers are not exempt. No prior notice means refused
-  entry. This is the likely explanation for "USA orders are temperamental" and is a bigger
-  blocker than the tariff.
+The EU, France and USA customs rules that drove this decision live in
+`docs/shipping/DUTIES_AND_DDP.md`. Verification of each claim and the sources are at the end of
+this plan.
 
 ---
 
@@ -273,8 +236,8 @@ DHL freight only, **before** fuel surcharge, DTP fee and the tax itself. Weight 
 | **Caribbean** | charge now | 57 | 78 | 99 | 188 |
 | | DHL Air | 76.52 | 101.52 | 125.94 | 201.23 |
 
-Source: `Conka Elite Limited - DHL Air and Road Rates 2026 (1).xlsx` (Synergy's DHL account
-card, sent 3 Aug 2026). Current charges from `SHIPPING_AND_COURIERS.md` §4.
+Source: `docs/shipping/data/dhl-air-and-road-rates-2026.xlsx` (Synergy's DHL account card,
+sent 3 Aug 2026). Current charges from `docs/shipping/METHODS_AND_ZONES.md`.
 
 **Every international rate goes up.** UAE is the worst, £13 charged against a £57 cost.
 
@@ -364,38 +327,10 @@ COGS comes from the conka-lab margins dashboard, whose displayed prices are stal
 
 ## Shipping methods
 
-Synergy routes on the **rate name**, so the name is the routing instruction. Target state:
-
-```
-Shipping Method           | Carrier | Service        | Market | Terms of Sale
-Express                   | Evri    | Standard       | UK     | n/a
-24 Hour Delivery          | DPD     | Next Day       | UK     | n/a
-European Delivery         | DHL     | Economy Select | EU     | DDP   <- new
-Express International     | Evri    | International  | ROW    | DAP   <- unchanged
-Express International DHL | DHL     | Express (Air)  | ROW    | DDP   <- built, nothing points at it
-```
-
-**One change in this phase: add `European Delivery`.** `Express International DHL` was also
-flipped to DDP in the same request, but no Shopify zone points at it, so it is dormant until
-the rest-of-world work happens. `Express International` (Evri) stays exactly as it is.
-
-⚠️ **Do not retire the Evri row.** Every non-European zone points at it, so does the Channel
-Islands rate, and so will the 4 USA subscription contracts. Pulling it early leaves live orders
-and renewals with a method Synergy cannot match.
-
-**Terms of sale are hard-coded per method, not read off the order.** Synergy will either
-hard-code an incoterm against each dispatch method or pull one from Shopify on every order,
-never a mix. We take the hard-code: Shopify carries no incoterm field unless duties are
-collected at checkout, which we are not doing, and our map is 1:1 and static. Reasoning in
-§ Synergy's answers 4.
-
-`Express International DHL` has existed since 5 Aug 2026 (DHL Air, DAP, ROW), set up after
-Evri failed to produce a label for a France order (`13234918031734`), which went back to
-stock through returns. Synergy's portal has no view of the agreed method list; this table and
-`SHIPPING_AND_COURIERS.md` §6 are the record.
-
-Channel Islands (£4.99, Evri) is UK-adjacent and out of scope. It rides on the Evri row, which
-is a second reason not to retire it.
+This phase added one method, `European Delivery`, and flipped the dormant
+`Express International DHL` to DDP. The mapping sheet and the rules around it (hard-coded terms
+of sale, do not retire `Express International`) live in `docs/shipping/SYNERGY_ROUTING.md`.
+Reasoning for hard-coding terms per method: § Synergy's answers.
 
 ---
 
@@ -458,8 +393,7 @@ for Europe. **None of those block the build.**
     was the customer billed anything on delivery. That settles all three open assumptions in
     § Margins with real data instead of email.
 12. Fix the declared customs value once Synergy name the field.
-13. Fold the rates, the method table and the incoterm model into `SHIPPING_AND_COURIERS.md` and
-    archive this plan.
+13. Check `docs/shipping/` still matches reality, then retire this plan.
 
 ### Phase 5 — Rest of world, separate work
 
@@ -475,7 +409,7 @@ for Europe. **None of those block the build.**
 ## Subscription contracts
 
 Subscription renewals ship on the method name stored on each contract
-(`docs/shipping/SHIPPING_AND_COURIERS.md` §1). The French contracts need that name set to
+(`docs/shipping/SYNERGY_ROUTING.md`). The French contracts need that name set to
 `European Delivery` as part of the switch, not before, or they get corrected twice. That work
 is SCRUM-1340; UK contracts are SCRUM-1311 and untouched by this plan.
 
@@ -494,46 +428,8 @@ Outstanding: `CONKA-TRAVEL-PACK-28` (neither field). Low priority.
 Whole catalogue reads HS on 38/128 and origin on 44/128. The remainder is dead merch and
 free-gift variants that do not ship internationally.
 
-**What HS codes do and do not fix.** They decide the tariff, and without them destination
-customs classifies the goods themselves and we cannot claim the TCA 0% rate. They also gate
-Shopify's *collect duties and import taxes at checkout* (available to us at a 0.5%
-promotional fee, normally 0.85% on Shopify Payments). They do **not** reduce VAT, and on
-sub-€150 parcels the duty is a flat €3 regardless of classification. Necessary hygiene and a
-prerequisite, not a fix for the doorstep bill.
-
-**One code covers everything** because an HS code classifies what the product *is*, not the
-SKU. Flow and Clear are both liquid food supplements, pack size is irrelevant, and the
-bundles classify the same as their components. `210690` is the 6-digit international part;
-the EU extends it to 8 digits at their end and the broker does that. If a shipment is ever
-challenged it will be the chapter 21 vs chapter 22 (beverages) argument, at which point get
-a broker's opinion.
-
-**Enable *collect duties at checkout* at the same moment as the DDP flip, not before.** It is
-now part of the plan (Phase 3 step 8): it is what stops us absorbing destination VAT. But if it
-is switched on while Synergy are still shipping DAP, the customer pays duty at checkout *and* is
-billed again at the door. Being headless does not block it, since checkout is Shopify-hosted.
-Note this is a different product from Shopify **Managed Markets**, which is rejected in
-§ Options considered G.
-
-**No write access from the repo.** `SHOPIFY_ADMIN_API_TOKEN` carries only customer and draft
-order scopes; HS code and country of origin live on `InventoryItem` and need
-`write_inventory`. This was done manually in the admin bulk editor.
-
-## UK VAT on EU orders — checked, no action
-
-"Include sales tax in product price and shipping rate" is **on**, assuming 20%. There is no
-dynamic tax inclusion for the EU because we are not collecting tax there, so a French
-customer pays the same £39.99 as a UK customer and then French VAT at the border.
-
-This is not necessarily an error. It means we are not passing the export zero-rating on as a
-lower price, which is a pricing choice. The ~£6.67 stays with us as margin and quietly helps
-fund the DDP cost.
-
-**One question for the accountant:** are EU sales being zero-rated on our VAT return? If yes,
-fine. If they are being treated as normal UK sales, we are paying HMRC money we do not owe.
-
-Leave the setting alone. Dropping EU prices 20% while taking on import costs would be
-perverse.
+What HS codes do and do not fix, why one code covers everything, when to enable collect
+duties at checkout, and the UK VAT setting on EU orders: `docs/shipping/DUTIES_AND_DDP.md`.
 
 ---
 
@@ -557,11 +453,6 @@ Worth adding while the thread is open, neither urgent:
 7. Are Synergy filing **FDA Prior Notice** on US shipments, and do they hold our manufacturer's
    FDA registration number? (Phase 5. Note this may surface a problem that halts US shipping,
    which is a reason to time it deliberately rather than a reason not to ask.)
-
-**Separate thread, not this one:** did `24 Hour Delivery` ever start routing to DPD once the
-carrier accounts went live? Requested from Bethany in June and never confirmed, and all three
-test orders came back on Evri. If it never switched, UK customers have been paying £6.54 for
-next-day and receiving 48-hour Evri.
 
 **CONKA:**
 
@@ -636,7 +527,7 @@ Primary:
 - [Evri — international shipping FAQs](https://www.evri.com/evri-international-faqs) (DDP is USA-only)
 - [DHL Express — Duty Tax Paid billing services](https://www.dhl.de/en/geschaeftskunden/express/produkte-und-services/duty-billing-services.html)
 - [DHL Express Service & Rate Guide 2026: United Kingdom](https://mydhl.express.dhl/content/dam/downloads/gb/en/rate-guide/service_and_rate_guide_gb_en.pdf.coredownload.pdf) (the DTP figure, the fuel-index mechanism)
-- `docs/shipping/Conka Elite Limited - DHL Air and Road Rates 2026 (1).xlsx`, `DHL Surcharges` tab
+- `docs/shipping/data/dhl-air-and-road-rates-2026.xlsx`, `DHL Surcharges` tab
 
 Secondary, flagged as such:
 
