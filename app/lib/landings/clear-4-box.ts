@@ -28,13 +28,13 @@ export const clearFourBox: OfferConfig = {
   guaranteeDays: 30,
   // Rendered from design/pdp-slides/slides/ct0.html. "50% off for life" is burned in.
   galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBox.jpg",
-  // Condensed from Aaron H.'s review in app/lib/customerTestimonials.ts: the
-  // afternoon swap is Clear's slot. No review in our data names Clear alone.
+  // Condensed from Ankita K.'s review in app/lib/customerTestimonials.ts (the
+  // one review that names Clear), with "academic" dropped before "tasks".
   review: {
     quote:
-      "I used to rely on coffee to get through it, but that third cup always came with a trade-off... Swapping that for Conka in the afternoon has made a real difference.",
-    name: "Aaron H.",
-    avatar: "/lander/reviews/AaronH.jpg",
+      "I think it's pretty easy to be sceptical of a product that says it can boost your brain in a shot... I do find myself gravitating to Clear more; I am noticing measurable improvements in my tasks.",
+    name: "Ankita K.",
+    avatar: "/lander/reviews/AnkitaK.jpg",
   },
   tile: {
     name: "4 shots",
