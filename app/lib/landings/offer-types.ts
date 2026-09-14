@@ -1,30 +1,52 @@
 /**
  * Offer page config schema (/go/[slug], format "offer", SCRUM-1343).
  *
- * A single-offer page for impulse-priced acquisition tests, first used for the
- * weekly Flow 4 box. It reuses the PDP: the hero is built from ProductHeroV3's
- * parts, with a simplified buy box (one weekly plan, a buy-once link) in place
- * of the plan selector, followed by PDP sections. A new offer or copy iteration
- * is a new slug (GO_LANDING_PAGES.md), so a Clear version is a second config,
- * not a toggle.
+ * A single-offer page for paid acquisition tests. The first use is the CONKA
+ * trial pack: the visitor picks Flow, Clear or Both, pays a low price for a few
+ * days of CONKA, and Skio moves them onto that product's monthly plan a set
+ * number of days after the order. The page reuses the PDP: the hero is built
+ * from ProductHeroV3's parts with a trial-pack selector in place of the plan
+ * selector, then PDP sections below the fold. A new offer or copy iteration is a
+ * new slug (GO_LANDING_PAGES.md).
  */
-import type { FormulaId } from "@/app/lib/productTypes";
+import type { ProductHeroId } from "@/app/lib/productTypes";
+import type { OfferProduct } from "@/app/lib/offerData";
 
-export interface OfferBox {
-  /** Shots in the box. Shown in copy and sent as the add-to-cart pack size. */
+export type OfferOptionId = "flow" | "clear" | "both";
+
+/** One selectable trial pack, as authored in the config. */
+export interface OfferOption {
+  id: OfferOptionId;
+  /** Card and copy label, e.g. "Flow" or "Flow + Clear". */
+  label: string;
+  /** The product whose PDP gallery, disclosure rows and monthly plan this option uses. */
+  heroId: ProductHeroId;
+  /** Shots in the trial pack. */
   shots: number;
-  /**
-   * Weekly subscription price (£). Display only, pre-add: the charge comes from
-   * Shopify (base price minus the Skio plan percentage), never from here.
-   */
+  /** Trial price (£). Display only, pre-add: the charge comes from Shopify. */
   price: number;
-  /**
-   * The variant's base price (£). Struck through against `price`, and what the
-   * buy-once link charges: the variant bought without a selling plan.
-   */
-  compareAtPrice: number;
+  /** The trial pack variant, e.g. FLOW-BOX-4. */
   variantId: string;
-  sellingPlanId: string;
+  /**
+   * The Skio trial plan that moves the contract onto the monthly plan after
+   * `conversionDays`. Null until it exists in Skio; trial checkout refuses to
+   * run without it rather than selling the pack at its base price.
+   */
+  sellingPlanId: string | null;
+  /** Lead gallery slide in front of the product's PDP slides. Optional until the asset exists. */
+  galleryLead?: string;
+  /** Pill on the card's top edge. */
+  badge?: string;
+}
+
+/** An option plus the figures derived server-side from offerData, sent to the client. */
+export interface OfferOptionView extends OfferOption {
+  product: OfferProduct;
+  galleryImages: string[];
+  /** The monthly plan this trial converts to. */
+  monthly: { price: number; shots: number };
+  /** The one-time box behind the buy-once link. */
+  oneTime: { variantId: string; price: number; shots: number };
 }
 
 export interface OfferConfig {
@@ -32,41 +54,19 @@ export interface OfferConfig {
   slug: string;
   /** The hero <h1>, and the browser title suffixed with " | CONKA". */
   title: string;
-  /** Drives the reused PDP parts: gallery, disclosure rows, FAQ, sections. */
-  formulaId: FormulaId;
-  /** Display name used in the upsell headline, e.g. "Flow". */
-  productName: string;
-  /** Written as the `_offer` line attribute on every order from this page. */
-  offerId: string;
-  box: OfferBox;
+  /** Days of CONKA in each trial pack, for copy. */
+  trialDays: number;
   /**
-   * Money-back guarantee this page states (comparison table row, trust strip).
-   * Per offer, because the site-wide 100 days does not fit a £14.99 box.
+   * Days after the order when Skio moves the contract onto monthly. Stated in
+   * the disclosure next to the CTA, so it must match the Skio plan.
    */
-  guaranteeDays: number;
-  /**
-   * Lead gallery slide, placed in front of the PDP gallery where the PDP shows
-   * its starter-pack render (the 4 box has no starter pack).
-   */
-  galleryLead: string;
+  conversionDays: number;
+  /** In card order. */
+  options: OfferOption[];
+  defaultOption: OfferOptionId;
   /**
    * The single short review under the trust row (Cloud pattern). Condense a
    * real review with an ellipsis; never reword it.
    */
   review: { quote: string; name: string; avatar: string };
-  /** The OfferBuyBox CTA, disclosure and plan card (styled as the PDP's plan card). */
-  tile: {
-    /** Plan card title beside the radio, e.g. "4 shots". */
-    name: string;
-    /** Centred pill straddling the card's top edge. */
-    badge?: string;
-    /** The 2x2 detail grid, read left to right, top to bottom (even count). */
-    details: string[];
-    /** Gradient strip along the card's bottom edge. */
-    footer?: string;
-    cta: string;
-    /** The renewal disclosure under the CTA. Never remove it. */
-    renewal: string;
-  };
-  sticky: { label: string; cta: string };
 }

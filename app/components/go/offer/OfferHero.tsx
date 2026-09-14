@@ -1,38 +1,26 @@
 import Image from "next/image";
 import type { OfferConfig } from "@/app/lib/landings/offer-types";
-import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
-import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
 import { TrustStrip } from "@/app/components/product/ProductBuyPanel";
 import TrustMicroRow from "@/app/components/landing/TrustMicroRow";
-import IngredientDisclosureRows from "@/app/components/product/IngredientDisclosureRows";
 import Certifications from "@/app/components/Certifications";
 import OfferBuyBox from "./OfferBuyBox";
+import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
 
 /**
  * OfferHero: the offer page hero (SCRUM-1343). ProductHeroV3's two-column frame
- * and gallery, with a Cloud-style identity block and OfferBuyBox in place of
- * ProductBuyPanel. The PDP heroes are untouched.
+ * with a Cloud-style identity block and OfferBuyBox in place of ProductBuyPanel.
+ * The PDP heroes are untouched.
+ *
+ * The frame is server-rendered; the gallery, buy box and disclosure rows are
+ * client islands that follow the selected trial pack (OfferPurchase).
  *
  * Mobile order: title, gallery, avatar trust row, one short review, then the
- * buy box (usecloud.co's pattern, with the product named before the gallery). There is no product description or benefit grid:
- * on an impulse-priced page the proof does that job faster.
- *
- * One responsive tree rather than the PDP's mobile/desktop pair, so it stays a
- * Server Component with no useIsMobile swap. From `lg` it becomes V3's two
- * columns: a sticky gallery on the left, the identity block and buy box on the
- * right, placed with explicit grid rows.
- *
- * Gallery: `galleryLead` in the slot the PDP gives the starter-pack render,
- * then the PDP's slides.
+ * buy box (usecloud.co's pattern, with the product named before the gallery).
+ * From `lg` it becomes V3's two columns: a sticky gallery on the left, the rest
+ * on the right, placed with explicit grid rows.
  */
 export default function OfferHero({ config }: { config: OfferConfig }) {
-  const { formulaId, review } = config;
-  // The PDP's guarantee slide bakes in the site-wide 100 days; this page states
-  // its own `guaranteeDays`, so that slide is left out.
-  const slides = MM_GALLERY_ASSETS[formulaId].filter(
-    (src) => !src.endsWith("Guarantee.jpg"),
-  );
-  const images = [config.galleryLead, ...slides].map((src) => ({ src }));
+  const { review } = config;
 
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
@@ -46,14 +34,7 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
         </h1>
 
         <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-5 lg:row-start-1 lg:self-start">
-          <ProductImageSlideshow
-            images={images}
-            alt={config.title}
-            noFrame
-            smallThumbnails
-            aspectRatio="landscape"
-            hideArrows
-          />
+          <OfferGallery alt={config.title} />
         </div>
 
         {/* lg:-mt-3 pulls this up under the title on desktop, where the grid's
@@ -79,11 +60,11 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
         </div>
 
         <div className="lg:col-start-2 lg:row-start-3">
-          <OfferBuyBox config={config} />
+          <OfferBuyBox trialDays={config.trialDays} conversionDays={config.conversionDays} />
         </div>
 
         <div className="lg:col-start-2 lg:row-start-4">
-          <IngredientDisclosureRows formulaId={formulaId} />
+          <OfferDisclosureRows />
         </div>
 
         <div className="lg:col-start-2 lg:row-start-5">
@@ -91,7 +72,7 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
         </div>
       </div>
 
-      <TrustStrip guaranteeDays={config.guaranteeDays} />
+      <TrustStrip />
     </div>
   );
 }

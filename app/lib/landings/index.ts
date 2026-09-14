@@ -13,8 +13,7 @@ import { productivityListicle } from "./productivity-listicle";
 import { brainAgeingListicle } from "./brain-ageing-listicle";
 import { generalListicle } from "./general-listicle";
 import type { OfferConfig } from "./offer-types";
-import { flowFourBox } from "./flow-4-box";
-import { clearFourBox } from "./clear-4-box";
+import { trialPack } from "./trial-pack";
 
 /** Any landing page config; narrow on `format` to render */
 export type AnyLandingConfig = LandingConfig | ListicleConfig | OfferConfig;
@@ -30,8 +29,7 @@ const registry: Record<string, AnyLandingConfig> = {
   [brainAgeingListicle.slug]: brainAgeingListicle,
   [generalListicle.slug]: generalListicle,
   // Offer pages (SCRUM-1343): one config per offer, see offer-types.ts.
-  [flowFourBox.slug]: flowFourBox,
-  [clearFourBox.slug]: clearFourBox,
+  [trialPack.slug]: trialPack,
 };
 
 export const landingSlugs = Object.keys(registry);

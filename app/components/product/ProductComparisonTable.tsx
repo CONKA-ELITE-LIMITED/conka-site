@@ -73,7 +73,12 @@ const ROWS: Row[] = [
   { label: "Informed Sport certified", conka: true, coffee: false, rx: false },
   { label: "Tracks whether it works", conka: true, coffee: false, rx: false },
   { label: "Glass, not plastic", conka: true, coffee: false, rx: null },
-  // The guarantee row is appended in the component so a page can set its length.
+  {
+    label: `${GUARANTEE_DAYS}-day money-back guarantee`,
+    conka: true,
+    coffee: false,
+    rx: false,
+  },
 ];
 
 const RIVALS = [
@@ -142,23 +147,10 @@ function CellContent({ value }: { value: Cell }) {
 
 export default function ProductComparisonTable({
   product = "flow",
-  guaranteeDays = GUARANTEE_DAYS,
 }: {
   product?: ComparisonProduct;
-  /** Guarantee row length. Defaults to the site-wide GUARANTEE_DAYS. */
-  guaranteeDays?: number;
 }) {
   const shot = bottleRendersCutout[product];
-  // Last row, so its length can differ per page (the /go 4 box: 30 days).
-  const rows: Row[] = [
-    ...ROWS,
-    {
-      label: `${guaranteeDays}-day money-back guarantee`,
-      conka: true,
-      coffee: false,
-      rx: false,
-    },
-  ];
 
   return (
     <div>
@@ -220,7 +212,7 @@ export default function ProductComparisonTable({
           </thead>
 
           <tbody>
-            {rows.map((row) => (
+            {ROWS.map((row) => (
               <tr key={row.label}>
                 <th
                   scope="row"

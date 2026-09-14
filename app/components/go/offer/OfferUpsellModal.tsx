@@ -3,9 +3,16 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 import { formatPrice } from "@/app/lib/productData";
-import type { OfferChoice } from "./offerCheckout";
+/** The choices this modal knew about; it predates the trial-pack checkout types. */
+type OfferChoice = "weekly" | "monthly" | "one_time";
 
 /**
+ * UNUSED since the trial-pack pivot (SCRUM-1343, 14 Sep 2026): nothing renders
+ * this modal. Every trial pack already converts to monthly, so an "upgrade to
+ * monthly" step no longer fits. Kept because it is finished and may return as a
+ * "skip the trial, start monthly now" upsell; it needs rewiring to the trial
+ * pack's options and to OfferPurchase before reuse.
+ *
  * The one-time upsell shown after the offer page's CTA (SCRUM-1343).
  *
  * Always the product's monthly starter pack. Three beats, top to bottom:

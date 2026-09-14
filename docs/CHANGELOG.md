@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-14** | /go/trial-pack replaces the 4 box pages: a Flow / Clear / Both trial pack that converts to monthly, with a buy-once link, the standard 100-day guarantee and the upsell modal parked (SCRUM-1343)
 - **2026-09-14** | New /go/clear-4-box offer page (Clear 4 box, same weekly offer as Flow) and a Best value badge on both 4 box plan cards (SCRUM-1343)
 - **2026-09-14** | Offer page renamed to the Flow 4 box (/go/flow-4-box) with a 30-day guarantee, new lead image and a clearer comparison-table upsell to monthly (SCRUM-1343)
 - **2026-09-14** | /go/flow-trial reworked onto the PDP: Cloud-style hero with a PDP-style plan card, checkout CTA and buy-once link, plus UGC, ingredients, what to expect, comparison and FAQ sections (SCRUM-1343)

@@ -5,13 +5,13 @@
  * showed, then redirects to Shopify-hosted checkout. It never touches the site
  * cart drawer. Modelled on app/lander/sections/BuyBoxes/lander-checkout.ts, and
  * like it deliberately avoids byoCheckout(), which re-resolves its own variant
- * from the four BYO cadences and knows nothing about the weekly 4 box.
+ * from the four BYO cadences and knows nothing about trial packs.
  *
- * Line attributes (CART_ATTRIBUTES.md) are what separate a weekly 4 box order
- * from an upsold monthly or a one-time order once they reach Shopify and conka-lab:
- * - `_source`       always "four_box"
- * - `_offer`        the config's offerId, e.g. "flow_box_4"
- * - `_offer_choice` "weekly", "monthly" (took the upsell) or "one_time" (buy-once link)
+ * Line attributes (CART_ATTRIBUTES.md) separate the orders once they reach
+ * Shopify and conka-lab:
+ * - `_source`       always "trial_pack"
+ * - `_offer_choice` the selected option: "flow", "clear" or "both"
+ * - `_purchase`     "trial" (trial pack, converts to monthly) or "one_time" (buy-once link)
  */
 
 import {
@@ -23,28 +23,34 @@ import {
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
 import { trackPurchaseAddToCart } from "@/app/lib/analytics";
 import type { OfferProduct } from "@/app/lib/offerData";
+import type { OfferOptionId } from "@/app/lib/landings/offer-types";
 
-/** "one_time" is the buy-once link: the 4 box variant with no selling plan. */
-export type OfferChoice = "weekly" | "monthly" | "one_time";
+export type OfferPurchaseType = "trial" | "one_time";
 
-export const OFFER_SOURCE = "four_box";
+export const OFFER_SOURCE = "trial_pack";
 
 export interface OfferCheckoutArgs {
   product: OfferProduct;
-  offerId: string;
-  choice: OfferChoice;
+  option: OfferOptionId;
+  purchase: OfferPurchaseType;
   /** Section that carried the CTA ("hero", "sticky", "otp"), for analytics. */
   section: string;
   variantId: string;
-  /** Omitted for "one_time": the variant then checks out at its base price. */
+  /** Required for "trial": the Skio plan that converts the pack to monthly. */
   sellingPlanId?: string;
   /** Pre-add display price, for analytics only. */
   price: number;
-  /** Shots in the first shipment, sent as the add-to-cart pack size. */
-  packSize: "4" | "28";
+  /** Shots in the trial pack, sent as the add-to-cart pack size. */
+  packSize?: "4" | "8";
 }
 
 export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
+  // Fail closed: a trial pack bought without its plan would sell at the base
+  // price and never convert, which is the one outcome this page must not ship.
+  if (args.purchase === "trial" && !args.sellingPlanId) {
+    throw new Error(`Trial selling plan not configured for "${args.option}"`);
+  }
+
   const cartAttributes = buildMetaCartAttributes();
 
   const res = await fetch("/api/cart", {
@@ -57,8 +63,8 @@ export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
       ...(args.sellingPlanId && { sellingPlanId: args.sellingPlanId }),
       attributes: [
         { key: "_source", value: OFFER_SOURCE },
-        { key: "_offer", value: args.offerId },
-        { key: "_offer_choice", value: args.choice },
+        { key: "_offer_choice", value: args.option },
+        { key: "_purchase", value: args.purchase },
       ],
       ...(cartAttributes.length > 0 && { cartAttributes }),
     }),
@@ -100,8 +106,8 @@ function fireAnalytics(args: OfferCheckoutArgs): void {
       productId: args.product,
       variantId: args.variantId,
       packSize: args.packSize,
-      purchaseType: args.choice === "one_time" ? "one-time" : "subscription",
-      location: args.choice === "monthly" ? "offer_upsell" : `offer_${args.section}`,
+      purchaseType: args.purchase === "trial" ? "subscription" : "one-time",
+      location: `offer_${args.section}`,
       source: OFFER_SOURCE,
       price: args.price,
     });

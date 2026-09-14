@@ -11,20 +11,22 @@ import {
   type RefObject,
 } from "react";
 import { useListicleCta } from "@/app/components/go/listicle/listicleAnalytics";
-import { trackOfferUpsellChoice, trackOfferUpsellShown } from "@/app/lib/analytics";
-import type { OfferProduct } from "@/app/lib/offerData";
-import type { OfferBox } from "@/app/lib/landings/offer-types";
-import { offerCheckout, type OfferChoice } from "./offerCheckout";
-import OfferUpsellModal, { type OfferUpsellData } from "./OfferUpsellModal";
+import ProductImageSlideshow from "@/app/components/product/ProductImageSlideshow";
+import IngredientDisclosureRows from "@/app/components/product/IngredientDisclosureRows";
+import { trackOfferOptionSelected } from "@/app/lib/analytics";
+import { formatPrice } from "@/app/lib/productData";
+import type { OfferOptionId, OfferOptionView } from "@/app/lib/landings/offer-types";
+import { offerCheckout, type OfferPurchaseType } from "./offerCheckout";
 
 /**
- * The offer page's purchase flow (SCRUM-1343), as small client islands inside
- * an otherwise server-rendered page.
+ * The offer page's selection and purchase flow (SCRUM-1343), as small client
+ * islands inside an otherwise server-rendered page.
  *
- * CTA click -> upsell modal (once per session) -> Shopify checkout. After the
- * visitor has accepted or declined, later CTA clicks skip the modal and go
- * straight to weekly 4 box checkout: the offer is one-time, not a nag. Dismissing
- * (backdrop, Escape, close) does not count, so it shows again on the next click.
+ * The provider owns the selected trial pack. Everything that follows the
+ * selection reads it from here: the gallery, the ingredient disclosure rows,
+ * the plan cards, the CTA and buy-once prices, and the sticky bar. The CTA goes
+ * straight to Shopify checkout with the selected trial pack; the buy-once link
+ * goes to checkout with that product's one-time box.
  *
  * Must sit inside <SectionImpressions>, which gives the CTA reporter its slug.
  */
@@ -32,62 +34,41 @@ import OfferUpsellModal, { type OfferUpsellData } from "./OfferUpsellModal";
 const CHECKOUT_ERROR = "We couldn't open checkout. Please try again.";
 
 interface PurchaseContext {
+  options: OfferOptionView[];
+  selected: OfferOptionView;
+  select: (id: OfferOptionId) => void;
+  /** The main CTA: the selected trial pack. */
   start: (section: string) => void;
-  /** The buy-once link: straight to checkout, no upsell modal. */
+  /** The buy-once link: the selected product's one-time box. */
   buyOnce: (section: string) => void;
-  loading: OfferChoice | null;
+  loading: OfferPurchaseType | null;
   error: string | null;
   /** Where the failed click came from, so exactly one error line announces it. */
   errorAt: "page" | "sticky";
-  modalOpen: boolean;
   tileCtaRef: RefObject<HTMLButtonElement | null>;
 }
 
 const PurchaseCtx = createContext<PurchaseContext | null>(null);
 
-function usePurchase(): PurchaseContext {
+export function useOfferPurchase(): PurchaseContext {
   const ctx = useContext(PurchaseCtx);
-  if (!ctx) throw new Error("Offer CTA rendered outside <OfferPurchaseProvider>");
+  if (!ctx) throw new Error("Offer component rendered outside <OfferPurchaseProvider>");
   return ctx;
-}
-
-// Session storage can throw (private mode, blocked storage). Failing open just
-// means the modal can show again, which is harmless.
-function readSeen(key: string): boolean {
-  try {
-    return sessionStorage.getItem(key) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function markSeen(key: string): void {
-  try {
-    sessionStorage.setItem(key, "1");
-  } catch {
-    // Ignore: see readSeen.
-  }
 }
 
 export function OfferPurchaseProvider({
   slug,
-  product,
-  productName,
-  offerId,
-  box,
-  upsell,
+  options,
+  defaultOption,
   children,
 }: {
   slug: string;
-  product: OfferProduct;
-  productName: string;
-  offerId: string;
-  box: OfferBox;
-  upsell: OfferUpsellData;
+  options: OfferOptionView[];
+  defaultOption: OfferOptionId;
   children: ReactNode;
 }) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState<OfferChoice | null>(null);
+  const [selectedId, setSelectedId] = useState<OfferOptionId>(defaultOption);
+  const [loading, setLoading] = useState<OfferPurchaseType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [errorAt, setErrorAt] = useState<"page" | "sticky">("page");
   const sectionRef = useRef("hero");
@@ -95,7 +76,8 @@ export function OfferPurchaseProvider({
   // Synchronous guard: `loading` only disables the buttons after a re-render,
   // so a fast double tap could otherwise create two carts.
   const inFlight = useRef(false);
-  const seenKey = `offer_upsell_seen_${slug}`;
+
+  const selected = options.find((o) => o.id === selectedId) ?? options[0];
 
   // Back from Shopify checkout restores this page from the bfcache with the
   // button still spinning. Reset so the visitor can act again.
@@ -104,113 +86,69 @@ export function OfferPurchaseProvider({
       if (e.persisted) {
         inFlight.current = false;
         setLoading(null);
-        setModalOpen(false);
       }
     };
     window.addEventListener("pageshow", onShow);
     return () => window.removeEventListener("pageshow", onShow);
   }, []);
 
+  const select = useCallback(
+    (id: OfferOptionId) => {
+      if (id === selectedId || inFlight.current) return;
+      setSelectedId(id);
+      setError(null);
+      trackOfferOptionSelected({ slug, option: id });
+    },
+    [selectedId, slug],
+  );
+
   const checkout = useCallback(
-    async (choice: OfferChoice) => {
+    async (purchase: OfferPurchaseType, section: string) => {
+      // Guard before touching sectionRef, or a tap during an in-flight checkout
+      // would relabel that checkout's analytics location.
       if (inFlight.current) return;
       inFlight.current = true;
-      setLoading(choice);
+      sectionRef.current = section;
+      setLoading(purchase);
       setError(null);
-      // Buy-once is the 4 box variant with no plan, charged at its base price.
-      const target =
-        choice === "monthly"
-          ? upsell
-          : choice === "one_time"
-            ? { variantId: box.variantId, sellingPlanId: undefined, price: box.compareAtPrice }
-            : box;
+      const trial = purchase === "trial";
       try {
         await offerCheckout({
-          product,
-          offerId,
-          choice,
-          section: sectionRef.current,
-          variantId: target.variantId,
-          sellingPlanId: target.sellingPlanId,
-          price: target.price,
-          packSize: choice === "monthly" ? "28" : "4",
+          product: selected.product,
+          option: selected.id,
+          purchase,
+          section,
+          variantId: trial ? selected.variantId : selected.oneTime.variantId,
+          sellingPlanId: trial ? (selected.sellingPlanId ?? undefined) : undefined,
+          price: trial ? selected.price : selected.oneTime.price,
+          packSize: trial ? (selected.shots === 8 ? "8" : "4") : undefined,
         });
-      } catch {
+      } catch (err) {
+        // The visitor sees a generic retry line; the cause goes to the console
+        // for whoever is testing (e.g. a trial option with no Skio plan yet).
+        console.error("Offer checkout failed:", err);
         inFlight.current = false;
         setErrorAt(sectionRef.current === "sticky" ? "sticky" : "page");
         setError(CHECKOUT_ERROR);
         setLoading(null);
       }
     },
-    [offerId, product, box, upsell],
+    [selected],
   );
 
-  const start = useCallback(
-    (section: string) => {
-      if (inFlight.current) return;
-      sectionRef.current = section;
-      if (readSeen(seenKey)) {
-        void checkout("weekly");
-        return;
-      }
-      setError(null);
-      setModalOpen(true);
-      trackOfferUpsellShown({ slug, product });
-    },
-    [checkout, product, seenKey, slug],
-  );
-
-  const accept = useCallback(() => {
-    trackOfferUpsellChoice({ slug, choice: "accepted" });
-    markSeen(seenKey);
-    void checkout("monthly");
-  }, [checkout, seenKey, slug]);
-
-  const decline = useCallback(() => {
-    trackOfferUpsellChoice({ slug, choice: "declined" });
-    markSeen(seenKey);
-    void checkout("weekly");
-  }, [checkout, seenKey, slug]);
-
-  const dismiss = useCallback(() => {
-    if (inFlight.current) return;
-    trackOfferUpsellChoice({ slug, choice: "dismissed" });
-    setModalOpen(false);
-    setError(null);
-  }, [slug]);
-
-  // No modal: someone choosing not to subscribe is not pitched a bigger one.
-  const buyOnce = useCallback(
-    (section: string) => {
-      // Guard before touching sectionRef, or a tap during an in-flight checkout
-      // would relabel that checkout's analytics location.
-      if (inFlight.current) return;
-      sectionRef.current = section;
-      void checkout("one_time");
-    },
-    [checkout],
-  );
+  const start = useCallback((section: string) => void checkout("trial", section), [checkout]);
+  const buyOnce = useCallback((section: string) => void checkout("one_time", section), [checkout]);
 
   return (
-    <PurchaseCtx.Provider value={{ start, buyOnce, loading, error, errorAt, modalOpen, tileCtaRef }}>
+    <PurchaseCtx.Provider
+      value={{ options, selected, select, start, buyOnce, loading, error, errorAt, tileCtaRef }}
+    >
       {children}
-      <OfferUpsellModal
-        open={modalOpen}
-        data={upsell}
-        productName={productName}
-        boxShots={box.shots}
-        boxPrice={box.price}
-        loadingChoice={loading}
-        error={error}
-        onAccept={accept}
-        onDecline={decline}
-        onDismiss={dismiss}
-      />
     </PurchaseCtx.Provider>
   );
 }
 
-/** Navy pill CTA. Reports the click for its section, then opens the flow. */
+/** Navy pill CTA for the selected trial pack. Reports the click, then checks out. */
 export function OfferCtaButton({
   section,
   children,
@@ -220,14 +158,14 @@ export function OfferCtaButton({
 }: {
   section: string;
   children: ReactNode;
-  /** The price-tile CTA the sticky bar watches. Exactly one per page. */
+  /** The hero CTA the sticky bar watches. Exactly one per page. */
   isTile?: boolean;
   compact?: boolean;
   tabIndex?: number;
 }) {
-  const { start, loading, modalOpen, tileCtaRef } = usePurchase();
+  const { start, loading, tileCtaRef } = useOfferPurchase();
   const fireCta = useListicleCta();
-  const busy = loading === "weekly" && !modalOpen;
+  const busy = loading === "trial";
 
   return (
     <button
@@ -259,11 +197,11 @@ export function OfferCtaButton({
 }
 
 /**
- * "Buy it once" text link under the CTA, the PDP's MM pattern. Reports as the
- * `otp` CTA section and skips the upsell modal.
+ * "Buy once" text link under the CTA, the PDP's MM pattern: the selected
+ * product's regular one-time box, no subscription. Reports as the `otp` section.
  */
-export function OfferOtpLink({ price }: { price: string }) {
-  const { buyOnce, loading } = usePurchase();
+export function OfferOtpLink() {
+  const { buyOnce, loading, selected } = useOfferPurchase();
   const fireCta = useListicleCta();
 
   return (
@@ -280,7 +218,8 @@ export function OfferOtpLink({ price }: { price: string }) {
         "Opening checkout"
       ) : (
         <>
-          Buy it once for <span className="tabular-nums">{price}</span>
+          Or buy a {selected.oneTime.shots}-shot box once for{" "}
+          <span className="tabular-nums">{formatPrice(selected.oneTime.price)}</span>
         </>
       )}
     </button>
@@ -288,18 +227,17 @@ export function OfferOtpLink({ price }: { price: string }) {
 }
 
 /**
- * Checkout failure when the modal is closed (a returning visitor's direct
- * checkout, or the buy-once link). Rendered under the hero CTA and in the
- * sticky bar, but only the one matching where the click came from shows, so a
- * screen reader hears a single alert.
+ * Checkout failure line. Rendered under the hero CTA and in the sticky bar, but
+ * only the one matching where the click came from shows, so a screen reader
+ * hears a single alert.
  */
 export function OfferCheckoutError({
   placement = "page",
 }: {
   placement?: "page" | "sticky";
 }) {
-  const { error, errorAt, modalOpen } = usePurchase();
-  if (!error || modalOpen || errorAt !== placement) return null;
+  const { error, errorAt } = useOfferPurchase();
+  if (!error || errorAt !== placement) return null;
   return (
     <p role="alert" className="mt-2 text-sm font-medium text-black">
       {error}
@@ -307,12 +245,34 @@ export function OfferCheckoutError({
   );
 }
 
+/** The hero gallery for the selected option. Remounts on change so it restarts at the lead slide. */
+export function OfferGallery({ alt }: { alt: string }) {
+  const { selected } = useOfferPurchase();
+  return (
+    <ProductImageSlideshow
+      key={selected.id}
+      images={selected.galleryImages.map((src) => ({ src }))}
+      alt={`${alt}, ${selected.label}`}
+      noFrame
+      smallThumbnails
+      aspectRatio="landscape"
+      hideArrows
+    />
+  );
+}
+
+/** The PDP ingredient / who-it's-for / taste rows for the selected option. */
+export function OfferDisclosureRows() {
+  const { selected } = useOfferPurchase();
+  return <IngredientDisclosureRows formulaId={selected.heroId} />;
+}
+
 /**
- * Sticky bottom CTA. Appears only once the price-tile CTA has scrolled up out
- * of view, so it never duplicates a visible button, and hides behind the modal.
+ * Sticky bottom CTA. Appears only once the hero CTA has scrolled up out of
+ * view, so it never duplicates a visible button.
  */
-export function OfferStickyBar({ label, cta }: { label: string; cta: string }) {
-  const { tileCtaRef, modalOpen } = usePurchase();
+export function OfferStickyBar() {
+  const { tileCtaRef, selected } = useOfferPurchase();
   const [pastTile, setPastTile] = useState(false);
 
   useEffect(() => {
@@ -325,26 +285,26 @@ export function OfferStickyBar({ label, cta }: { label: string; cta: string }) {
     return () => observer.disconnect();
   }, [tileCtaRef]);
 
-  const visible = pastTile && !modalOpen;
-
   return (
     <aside
-      aria-label="4 box offer"
-      aria-hidden={!visible}
+      aria-label="Trial pack offer"
+      aria-hidden={!pastTile}
       className={`brand-bg-white fixed inset-x-0 bottom-0 z-40 border-t border-black/10 px-5 pt-3 text-black transition-transform duration-300 md:px-[5vw] ${
-        visible ? "translate-y-0" : "translate-y-full"
+        pastTile ? "translate-y-0" : "translate-y-full"
       }`}
       style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
     >
-      {/* A returning visitor's direct checkout can fail from this bar while the
-          tile, and its error line, is scrolled out of view. */}
+      {/* A checkout can fail from this bar while the hero, and its error line,
+          is scrolled out of view. */}
       <div className="brand-track">
         <OfferCheckoutError placement="sticky" />
       </div>
       <div className="brand-track mt-2 flex items-center justify-between gap-3">
-        <span className="min-w-0 text-[15px] font-bold leading-tight">{label}</span>
-        <OfferCtaButton section="sticky" compact tabIndex={visible ? undefined : -1}>
-          {cta}
+        <span className="min-w-0 text-[15px] font-bold leading-tight">
+          {selected.label} trial pack
+        </span>
+        <OfferCtaButton section="sticky" compact tabIndex={pastTile ? undefined : -1}>
+          Checkout - {formatPrice(selected.price)}
         </OfferCtaButton>
       </div>
     </aside>
