@@ -1,5 +1,4 @@
 import type { OfferConfig } from "@/app/lib/landings/offer-types";
-import { formatPrice } from "@/app/lib/productData";
 import { TrustStrip } from "@/app/components/product/ProductBuyPanel";
 import TrustMicroRow from "@/app/components/landing/TrustMicroRow";
 import Certifications from "@/app/components/Certifications";
@@ -15,7 +14,7 @@ import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
  * The frame is server-rendered; the gallery, reviews, buy box and disclosure
  * rows are client islands (the selection-driven ones read OfferPurchase).
  *
- * Mobile order: offer pill, title and price line, gallery, avatar trust row,
+ * Mobile order: offer pill and title, gallery, avatar trust row,
  * rotating review, then the buy box. From `lg` it becomes V3's two columns: a
  * sticky gallery on the left, the rest on the right, placed with explicit rows.
  */
@@ -23,17 +22,7 @@ import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
 /** The offer gradient shared with the plan tiles, CartUpsellTile and GiftValueStack. */
 const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 
-export default function OfferHero({
-  config,
-  fromPrice,
-  fromReference,
-}: {
-  config: OfferConfig;
-  /** Cheapest trial price across the options (£). */
-  fromPrice: number;
-  /** That option's regular one-time equivalent (£), the "instead of" figure. */
-  fromReference: number;
-}) {
+export default function OfferHero({ config }: { config: OfferConfig }) {
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
       <div className="grid grid-cols-1 gap-6 text-black lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
@@ -51,13 +40,6 @@ export default function OfferHero({
           >
             {config.title}
           </h1>
-          {fromReference > fromPrice && (
-            <p className="text-base text-black/70">
-              As little as{" "}
-              <strong className="font-bold text-black tabular-nums">{formatPrice(fromPrice)}</strong>{" "}
-              instead of <s className="tabular-nums">{formatPrice(fromReference)}</s>
-            </p>
-          )}
         </div>
 
         <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-5 lg:row-start-1 lg:self-start">

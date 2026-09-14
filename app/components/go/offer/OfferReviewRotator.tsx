@@ -34,7 +34,7 @@ export default function OfferReviewRotator({ reviews }: { reviews: OfferReview[]
   if (reviews.length === 0) return null;
 
   return (
-    <div className="brand-bg-tint rounded-md p-4 text-black">
+    <div className="brand-bg-tint rounded-md px-3.5 py-3 text-black">
       <div className="grid">
         {reviews.map((review, i) => {
           const active = i === index;
@@ -46,17 +46,17 @@ export default function OfferReviewRotator({ reviews }: { reviews: OfferReview[]
                 active ? "opacity-100" : "opacity-0"
               }`}
             >
-              <blockquote className="text-[15px] leading-snug">
+              <blockquote className="text-[14px] leading-snug">
                 &ldquo;{review.quote}&rdquo;
               </blockquote>
-              <figcaption className="mt-3 flex items-center gap-2 text-sm font-bold">
+              <figcaption className="mt-2 flex items-center gap-2 text-[13px] font-bold">
                 <Image
                   src={review.avatar}
                   alt=""
-                  width={64}
-                  height={64}
-                  className="h-7 w-7 rounded-full object-cover"
-                  sizes="28px"
+                  width={48}
+                  height={48}
+                  className="h-6 w-6 rounded-full object-cover"
+                  sizes="24px"
                 />
                 {review.name}
               </figcaption>
@@ -64,19 +64,6 @@ export default function OfferReviewRotator({ reviews }: { reviews: OfferReview[]
           );
         })}
       </div>
-
-      {reviews.length > 1 && (
-        <div className="mt-3 flex gap-1.5" aria-hidden>
-          {reviews.map((review, i) => (
-            <span
-              key={review.name}
-              className={`h-1.5 rounded-full transition-[width,background-color] duration-500 ${
-                i === index ? "w-4 bg-[var(--brand-navy)]" : "w-1.5 bg-black/20"
-              }`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

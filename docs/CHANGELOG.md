@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-14** | Trial pack page: title back to CONKA Trial Pack, duplicated What you get panel removed, how-it-works slide added to the Both gallery, shorter review rotator (SCRUM-1343)
 - **2026-09-14** | Trial pack page: tile selector with a navy selected state, limited-time offer framing with honest struck prices, week-long trial copy and a rotating hero review (SCRUM-1343)
 - **2026-09-14** | /go/trial-pack replaces the 4 box pages: a Flow / Clear / Both trial pack that converts to monthly, with a buy-once link, the standard 100-day guarantee and the upsell modal parked (SCRUM-1343)
 - **2026-09-14** | New /go/clear-4-box offer page (Clear 4 box, same weekly offer as Flow) and a Best value badge on both 4 box plan cards (SCRUM-1343)

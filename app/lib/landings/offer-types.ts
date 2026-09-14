@@ -35,6 +35,11 @@ export interface OfferOption {
   sellingPlanId: string | null;
   /** Lead gallery slide in front of the product's PDP slides. Optional until the asset exists. */
   galleryLead?: string;
+  /**
+   * An explainer slide inserted as the 4th gallery image. Per option because
+   * explainers can burn in that product's monthly figures.
+   */
+  explainerSlide?: string;
   /** Pill on the tile's top edge. */
   badge?: string;
 }

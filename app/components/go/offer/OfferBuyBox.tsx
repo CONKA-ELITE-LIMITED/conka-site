@@ -16,15 +16,16 @@ import {
  * sits in the PDP hero (SCRUM-1343).
  *
  * Top to bottom: a row of three square trial-pack tiles (bottle image, then a
- * name / price / shots base that turns navy when selected), a "What you get"
- * panel for the selected pack, the checkout CTA, the conversion disclosure, and
- * the buy-once link. Tiles are more visual and take less height than stacked
- * plan cards; the panel carries what an expanded card would have said.
+ * name / price / shots base that turns navy when selected), the checkout CTA,
+ * the conversion disclosure, and the buy-once link. Tiles are more visual and
+ * take less height than stacked plan cards.
  *
  * Every trial price is struck against its reference price: the same shots at
- * the regular one-time per-shot price. The disclosure states the price today,
- * when the monthly plan starts and what it costs: the page sells a trial into a
- * subscription and must say so next to the button.
+ * the regular one-time per-shot price. The disclosure is the single statement
+ * of the terms (price today, when the monthly plan starts, what it costs,
+ * starter pack, cancel before): the page sells a trial into a subscription and
+ * must say so next to the button. The Both gallery's how-it-works slide shows
+ * the same journey visually.
  */
 
 /** The offer gradient shared with FlatPlanCard, CartUpsellTile and GiftValueStack. */
@@ -55,8 +56,6 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
           />
         ))}
       </div>
-
-      <WhatYouGet option={selected} conversionDays={conversionDays} />
 
       <div className="mt-4">
         <OfferCtaButton section="hero" isTile>
@@ -148,49 +147,5 @@ function PackTile({
         </span>
       </span>
     </button>
-  );
-}
-
-/** What the selected pack includes, in the offer's gradient ring. */
-function WhatYouGet({
-  option,
-  conversionDays,
-}: {
-  option: OfferOptionView;
-  conversionDays: number;
-}) {
-  const priceLine =
-    option.referencePrice > option.price
-      ? `${option.shots} shots to try for ${formatPrice(option.price)}, instead of ${formatPrice(option.referencePrice)}`
-      : `${option.shots} shots to try for ${formatPrice(option.price)}`;
-  const items = [
-    priceLine,
-    `Your monthly plan starts ${conversionDays} days after your order`,
-    `Then ${option.monthly.shots} shots a month for ${formatPrice(option.monthly.price)}`,
-    "Free starter pack with your first monthly box",
-    "Cancel anytime",
-  ];
-
-  return (
-    <div
-      className="mt-4 rounded-md p-4 text-black"
-      style={{
-        border: "2px solid transparent",
-        background: `linear-gradient(#f8f9fd,#f8f9fd) padding-box, ${OFFER_GRADIENT} border-box`,
-      }}
-    >
-      <p className="text-sm font-bold">What you get with {option.label}</p>
-      <ul className="mt-2 space-y-1.5 text-[13px] leading-snug">
-        {items.map((item) => (
-          <li key={item} className="flex items-start gap-2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="mt-[1px] shrink-0">
-              <circle cx="12" cy="12" r="10" fill="var(--brand-positive)" />
-              <path d="M8 12.5L10.5 15L16 9.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

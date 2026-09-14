@@ -56,13 +56,17 @@ function buildOptionView(option: OfferOption): OfferOptionView {
 
   const oneTimePrice = getChargedPrice(oneTimePricing);
 
+  const galleryImages = [
+    ...(option.galleryLead ? [option.galleryLead] : []),
+    ...MM_GALLERY_ASSETS[option.heroId],
+  ];
+  // The explainer goes 4th: after the lead, benefits and what-to-expect slides.
+  if (option.explainerSlide) galleryImages.splice(3, 0, option.explainerSlide);
+
   return {
     ...option,
     product,
-    galleryImages: [
-      ...(option.galleryLead ? [option.galleryLead] : []),
-      ...MM_GALLERY_ASSETS[option.heroId],
-    ],
+    galleryImages,
     // The same shots at the regular one-time per-shot price, rounded to the
     // penny: the honest figure the trial price is struck against.
     referencePrice:
@@ -82,9 +86,6 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
   if (!defaultView) {
     throw new Error(`Offer page: defaultOption "${config.defaultOption}" is not an option`);
   }
-  // The hero's "as little as" line quotes the cheapest pack.
-  const cheapest = options.reduce((min, o) => (o.price < min.price ? o : min));
-
   return (
     <SectionImpressions slug={config.slug}>
       <OfferPurchaseProvider
@@ -110,11 +111,7 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
               className="brand-section brand-hero-first brand-bg-white !pt-6 brand-tight-bottom-mobile lg:!px-[6vw]"
             >
               <div className="brand-track !max-w-[1480px]">
-                <OfferHero
-                  config={config}
-                  fromPrice={cheapest.price}
-                  fromReference={cheapest.referencePrice}
-                />
+                <OfferHero config={config} />
               </div>
             </section>
           </TrackedSection>

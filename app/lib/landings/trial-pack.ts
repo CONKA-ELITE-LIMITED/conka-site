@@ -20,7 +20,7 @@ import type { OfferConfig } from "./offer-types";
 export const trialPack: OfferConfig = {
   format: "offer",
   slug: "trial-pack",
-  title: "Try CONKA for a fraction of the price",
+  title: "CONKA Trial Pack",
   conversionDays: 7,
   defaultOption: "both",
   options: [
@@ -53,6 +53,10 @@ export const trialPack: OfferConfig = {
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       sellingPlanId: null, // Skio trial plan, not yet created
       galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBox.jpg",
+      // Rendered from design/pdp-slides tp1. Burns in the Both monthly figures
+      // (£74.99/month), so it belongs to Both only until Flow and Clear
+      // versions (or a price-free one) exist.
+      explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorks.jpg",
       badge: "Best value",
     },
   ],
@@ -68,7 +72,7 @@ export const trialPack: OfferConfig = {
     },
     {
       quote:
-        "I think it's pretty easy to be sceptical of a product that says it can boost your brain in a shot... I do find myself gravitating to Clear more; I am noticing measurable improvements in my tasks.",
+        "I do find myself gravitating to Clear more; I am noticing measurable improvements in my tasks.",
       name: "Ankita K.",
       avatar: "/lander/reviews/AnkitaK.jpg",
     },
