@@ -21,7 +21,7 @@ import {
  * quiet: the CTA carries the price, the disclosure carries the terms.
  *
  * The disclosure is the single statement of the terms (shots today, when the
- * monthly plan starts, what it costs, cancel before): the page sells a trial
+ * monthly plan starts, what it costs, starter pack, cancel before): the page sells a trial
  * into a subscription and must say so next to the button. The Both gallery's
  * how-it-works slide shows the same journey visually.
  */
@@ -63,7 +63,7 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
       </div>
       <p className="mt-2 text-center text-xs leading-snug text-black/60">
         {selected.shots} shots today. Monthly {formatPrice(selected.monthly.price)} from day{" "}
-        {conversionDays}, cancel anytime before.
+        {conversionDays}, starter pack in your first box. Cancel anytime before.
       </p>
 
       <OfferOtpLink />
