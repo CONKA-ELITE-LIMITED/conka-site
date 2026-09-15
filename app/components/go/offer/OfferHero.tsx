@@ -70,9 +70,11 @@ export default function OfferHero({
         </div>
 
         {/* Social proof straight after the price and buy-once link, where doubt
-            peaks, before the ingredient rows. Pure CSS marquee, no JS. */}
+            peaks, before the ingredient rows. Pure CSS marquee, no JS. Below the
+            mobile fold, so its logos fetch at low priority behind the gallery's
+            LCP image. */}
         <div className="lg:col-start-2 lg:row-start-4">
-          <LogoMarquee />
+          <LogoMarquee lowPriority />
         </div>
 
         <div className="lg:col-start-2 lg:row-start-5">

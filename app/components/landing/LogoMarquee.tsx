@@ -68,9 +68,11 @@ export const PRESS_LOGOS: MarqueeLogo[] = [
 function Group({
   logos,
   hidden = false,
+  lowPriority = false,
 }: {
   logos: MarqueeLogo[];
   hidden?: boolean;
+  lowPriority?: boolean;
 }) {
   return (
     <div
@@ -95,6 +97,7 @@ function Group({
             width={l.w}
             height={l.h}
             loading={hidden ? "lazy" : "eager"}
+            fetchPriority={lowPriority ? "low" : undefined}
             decoding="async"
             style={{ height: l.h }}
             className="w-auto flex-shrink-0"
@@ -117,6 +120,7 @@ export default function LogoMarquee({
   logos = PARTNER_LOGOS,
   durationSeconds = 40,
   largeHeading = false,
+  lowPriority = false,
 }: {
   heading?: string;
   logos?: MarqueeLogo[];
@@ -126,6 +130,10 @@ export default function LogoMarquee({
   /** Render the heading as a large black section title (brand-h2) instead of
    *  the small muted eyebrow. Used for the partner band above the buy box. */
   largeHeading?: boolean;
+  /** Fetch the logos after the page's LCP image. For bands inside a hero that
+   *  sit below the mobile fold (the /go offer page): still eager, so logos do
+   *  not pop in mid-scroll, but they no longer compete with the hero image. */
+  lowPriority?: boolean;
 }) {
   return (
     <div className="text-center">
@@ -144,8 +152,8 @@ export default function LogoMarquee({
           className="flex w-max motion-safe:animate-[marquee_linear_infinite]"
           style={{ animationDuration: `${durationSeconds}s` }}
         >
-          <Group logos={logos} />
-          <Group logos={logos} hidden />
+          <Group logos={logos} lowPriority={lowPriority} />
+          <Group logos={logos} hidden lowPriority={lowPriority} />
         </div>
       </div>
     </div>

@@ -81,7 +81,8 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
   const options = config.options.map(buildOptionView);
   // The cheapest trial price, shared by the banner and the hero headline.
   const fromPrice = Math.min(...options.map((o) => o.price));
-  const offerFaqs = config.offerFaqs?.build(options, config.conversionDays);
+  const offerFaqSection = config.offerFaqs;
+  const offerFaqItems = offerFaqSection?.build(options, config.conversionDays);
   const defaultView = options.find((o) => o.id === config.defaultOption);
   if (!defaultView) {
     throw new Error(`Offer page: defaultOption "${config.defaultOption}" is not an option`);
@@ -167,13 +168,13 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
               then the general Both FAQ. Backgrounds alternate from the white
               comparison section above. The support footer shows once, under
               the general FAQ. */}
-          {offerFaqs && (
+          {offerFaqSection && offerFaqItems && (
             <TrackedSection section="offer_faq">
-              <section aria-label={config.offerFaqs?.title} className="brand-section brand-bg-tint">
+              <section aria-label={offerFaqSection.title} className="brand-section brand-bg-tint">
                 <div className="brand-track">
                   <LabFAQ
-                    title={config.offerFaqs?.title}
-                    items={offerFaqs}
+                    title={offerFaqSection.title}
+                    items={offerFaqItems}
                     hideCTA
                     showSupport={false}
                   />
@@ -185,7 +186,7 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
           <TrackedSection section="faq">
             <section
               aria-label="FAQ"
-              className={`brand-section ${offerFaqs ? "brand-bg-white" : "brand-bg-tint"}`}
+              className={`brand-section ${offerFaqItems ? "brand-bg-white" : "brand-bg-tint"}`}
             >
               <div className="brand-track">
                 <LabFAQ items={BOTH_PDP_FAQ_ITEMS} hideCTA showSeeAllLink={false} />
