@@ -73,62 +73,124 @@ event, see below). What is shared:
 
 ## Offer format
 
-A stripped-back page selling one subscription offer, built for impulse-priced
-acquisition tests. The first config is `flow-trial` (the 4-shot weekly Flow trial
-box; SKUs, plan and price in `docs/product/SKU_AND_SHOT_REFERENCE.md`). Status:
-SCRUM-1343.
+A single-offer page for paid acquisition tests that sells a low-priced trial into a
+subscription. The one config is the **CONKA trial pack**, `/go/trial-pack`
+(`app/lib/landings/trial-pack.ts`). Status: SCRUM-1343 (page), SCRUM-1344 (Klaviyo
+and conka-lab).
 
-**A new offer or copy iteration is a new slug.** A Clear version is a second config,
-not a toggle.
+**The offer.** The visitor picks Flow, Clear or Both and pays a trial price for a
+4-shot pack (Both: 8 shots, one of each). `conversionDays` (7) after the order,
+Skio moves the contract onto that product's monthly plan, and the first monthly
+box is the starter pack. A buy-once link sells the product's regular one-time box
+instead. UK only: there is no EU rate below 5,250g. Variants and plans:
+`docs/product/SKU_AND_SHOT_REFERENCE.md`. Trial prices: `docs/PRICING_HISTORY.md`.
+The Skio side (plans, Journeys): `docs/features/SUBSCRIPTIONS.md`.
+
+**A new offer or copy iteration is a new slug.**
 
 | File | Role |
 |------|------|
-| `app/lib/landings/offer-types.ts` | `OfferConfig` schema |
-| `app/lib/landings/flow-trial.ts` | The model config to copy |
-| `app/components/go/offer/OfferRenderer.tsx` | Server renderer, all sections |
-| `app/components/go/offer/OfferPurchase.tsx` | Client islands: provider, CTA button, sticky bar, error line |
-| `app/components/go/offer/OfferUpsellModal.tsx` | The one-time upsell modal |
-| `app/components/go/offer/offerCheckout.ts` | Fresh cart, exact variant + plan, redirect to `checkoutUrl` |
+| `app/lib/landings/offer-types.ts` | `OfferConfig`, `OfferOption` and the derived `OfferOptionView` |
+| `app/lib/landings/trial-pack.ts` | The trial pack config, the model to copy |
+| `app/lib/landings/trial-pack-faq.ts` | `buildTrialPackFaqs`, the "How the trial works" questions |
+| `app/components/go/offer/OfferRenderer.tsx` | Server renderer: derives option views from `offerData.ts`, lays out every section |
+| `app/components/go/offer/OfferHero.tsx` | Hero frame built from `ProductHeroV3`'s parts |
+| `app/components/go/offer/OfferBuyBox.tsx` | Pack tiles, checkout CTA, conversion disclosure, buy-once link |
+| `app/components/go/offer/OfferPurchase.tsx` | Client islands: selection provider, CTA, buy-once link, gallery, disclosure rows, sticky bar, error line |
+| `app/components/go/offer/OfferCountdownBanner.tsx` / `OfferCountdown.tsx` | Top bar (server) and its ticking timer (client island) |
+| `app/components/go/offer/offerCheckout.ts` | Fresh cart, exact variant + plan, fail-closed plan check, redirect to `checkoutUrl` |
+| `app/components/go/offer/OfferUpsellModal.tsx` | Parked, not rendered. Kept for a possible "skip the trial, start monthly now" |
 
-**Page.** No nav or footer (like the quiz). Sections: hero (logo, trust row,
-headline, image, price tile with struck base price and % off pill, CTA, the
-renewal line "Then £X every week until you cancel", bullets), benefits, reviews
-(`app/lander/sections/Reviews/reviews.data.ts`), how it works + CTA, FAQ, slim
-legal footer. The sticky CTA appears only once the tile CTA has scrolled out of view.
+### Config
 
-**Purchase flow.**
+| Field | Notes |
+|---|---|
+| `options` | `flow`, `clear`, `both`, in tile order. Each: `label`, `heroId` (the product whose gallery, disclosure rows and monthly plan it uses), `shots`, `price`, `referencePrice`, `variantId`, `sellingPlanId`, optional `galleryLead`, `explainerSlide`, `badge` |
+| `price` | Trial price, **display only**. The charge is the variant's Shopify price less the Skio plan's percentage |
+| `referencePrice` | The pack's own one-time Shopify price, struck through on the tile. Must match Shopify |
+| `sellingPlanId` | The Skio trial plan. `null` blocks trial checkout for that option |
+| `galleryLead` | First gallery image, ahead of the product's PDP slides (`MM_GALLERY_ASSETS`) |
+| `explainerSlide` | Inserted as the 2nd gallery image. Per option because it burns in that product's monthly figures |
+| `badge` | Pill on the tile's top edge. Both carries "Best value" |
+| `defaultOption` | `both` |
+| `conversionDays` | Stated next to the CTA and in the FAQ, so it must match Skio |
+| `reviews` | Real reviews, condensed with an ellipsis only, rotated under the trust row |
+| `offerFaqs` | `{ title, build(options, conversionDays) }`, see FAQ below |
 
-1. The first CTA click opens the upsell modal to the product's monthly starter pack.
-   Its figures come from `getOfferPricing(product, "monthly-sub")` and
-   `getCadenceGiftSummary`: value = compare-at all-in price + RRP of first-box
-   freebies, "You save" = value minus price.
-2. Accept or decline sets sessionStorage `offer_upsell_seen_<slug>`, so later CTA
-   clicks skip the modal and go straight to checkout. Dismissing (backdrop, Escape,
-   close) does not count as seen.
-3. Both choices call `offerCheckout.ts`: a fresh cart via `POST /api/cart` with the
-   exact variant + selling plan and Meta cart attributes, then redirect to
-   `cart.checkoutUrl`. Modelled on the lander checkout helper. **Deliberately not
-   `byoCheckout.ts`**, which re-resolves its own variant.
-4. Every line carries `_source=trial_box`, `_offer` and `_offer_choice`
-   (`docs/development/CART_ATTRIBUTES.md`).
+Monthly, one-time and starter-pack figures are never authored in the config.
+`OfferRenderer` derives them per option from `app/lib/offerData.ts` and throws at
+build time if an option has no one-time variant or `defaultOption` is not an option.
 
-**Analytics.** Deliberately minimal: the website only emits, and conka-lab owns
-wiring and visualisation.
+### Page, top to bottom
+
+- **No site nav.** `OfferCountdownBanner`, a navy bar ("This week only / CONKA trial pack from £X") with a countdown to Sunday 23:59 Europe/London that rolls over weekly. The timer boxes are fixed width and render `--` on the server, so hydration causes no layout shift.
+- **Hero.** Offer pill, h1 "Try CONKA from £X" (the cheapest trial price), gallery (lead image, explainer, PDP slides), product name, avatar trust row and rotating review, `OfferBuyBox`, partner `LogoMarquee` with `lowPriority` (its logos fetch behind the gallery's LCP image), ingredient disclosure rows, certifications, trust strip.
+- **`OfferBuyBox`.** Three tiles (bottle cutout, name, struck `referencePrice`, trial price), CTA "Checkout - £X", then the disclosure "{N} shots today. Monthly £Y from day 7, starter pack in your first box. Cancel anytime before.", then "Or buy a {N}-shot box once for £Z".
+- **Below the fold always renders Both:** UGC marquee, `ClinicalIngredients`, `WhatToExpectV2` and `ProductComparisonTable` for Both, the offer FAQ section (tint), `BOTH_PDP_FAQ_ITEMS` (white), footer. The sticky CTA bar appears once the hero CTA scrolls out of view.
+- Standard 100-day guarantee.
+
+### Checkout
+
+`offerCheckout.ts` creates a fresh cart via `POST /api/cart` (never the cart drawer)
+and redirects to `cart.checkoutUrl`. **Deliberately not `byoCheckout.ts`**, which
+re-resolves its own variant from the BYO cadences.
+
+**It fails closed twice**, because a trial pack sold without its plan charges the
+full one-time price and never converts:
+
+1. The option has no `sellingPlanId`.
+2. The cart Shopify returns does not carry exactly that plan on the line, or carries a `warning`. `/api/cart` silently retries without the selling plan when Shopify rejects it and still returns 200, so checking config alone is not enough.
+
+The visitor sees a generic retry line; the cause goes to the console.
+
+Cart attributes: `_fbp`, `_fbc`, `conka_uid` (`buildMetaCartAttributes`). Line
+attributes: `_source=trial_pack`, `_offer_choice`, `_purchase`
+(`docs/development/CART_ATTRIBUTES.md`).
+
+### Analytics
+
+Deliberately minimal: the website only emits, and conka-lab owns wiring and
+visualisation. There is no add-to-cart step in the UI, so every add-to-cart
+signal fires at the checkout click.
 
 | Event | Fires | Properties |
 |-------|-------|------------|
-| `listicle:section_viewed` | Section scrolls into view | `slug`, `section` (`hero`, `benefits`, `proof`, `steps`, `faq`) |
-| `listicle:cta_clicked` | Any CTA click | `slug`, `section` (above plus `sticky`) |
-| `offer:upsell_shown` | Modal opens | `slug`, `product` |
-| `offer:upsell_choice` | Modal closes | `slug`, `choice` (`accepted` \| `declined` \| `dismissed`) |
-| `purchase:add_to_cart` | Checkout click | `source: "trial_box"`, `location: offer_<section>` or `offer_upsell` |
+| `listicle:section_viewed` | Section scrolls into view | `slug` (`trial-pack`), `section` (`hero`, `ugc`, `ingredients`, `what_to_expect`, `comparison`, `offer_faq`, `faq`) |
+| `listicle:cta_clicked` | Any CTA click | `slug`, `section` |
+| `offer:option_selected` | Tile change | `slug`, `option` |
+| `purchase:add_to_cart` | Checkout click | `source: "trial_pack"`, `location: offer_<section>` (`hero`, `sticky`, `otp`) |
+| `cart:checkout_clicked` | Checkout click | `items`, `value` |
 
-Meta ViewContent fires on mount for the trial variant; AddToCart and InitiateCheckout
-fire at checkout click (deduplicated via `trackWithDedup`), plus Triple Whale ATC.
-Split purchases trial vs upsell in Shopify on `_offer_choice`.
+- **Meta:** ViewContent on mount; AddToCart and InitiateCheckout at the checkout click, Pixel and CAPI deduplicated by a shared `event_id`. Triple Whale AddToCart at the same click.
+- **Purchase:** the server Purchase (orders/paid webhook) gates on `checkout_token`, so the trial order counts as a Purchase and the day-7 conversion charge and renewals do not.
+- `offer:upsell_shown` / `offer:upsell_choice` helpers exist in `app/lib/analytics.ts` for the parked modal and never fire.
 
-**FAQ.** Canonical `faqIds` plus offer-only `offerFaqs` in the config (see
-`docs/features/FAQ_SYSTEM.md`).
+### FAQ
+
+`offerFaqs` renders as its own section ahead of the general Both FAQ. Its questions
+are built from the option views, so prices and days follow the config and
+`offerData.ts`. Offer pages do not use `faqIds`. Why they live outside `FAQ_ITEMS`:
+`docs/features/FAQ_SYSTEM.md`.
+
+### What conka-lab needs
+
+| Item | Value |
+|---|---|
+| Trial variants | `FLOW-BOX-4`, `CLEAR-BOX-4`, `BOTH-BOX-8` (GIDs in `SKU_AND_SHOT_REFERENCE.md`) |
+| Conversion targets | `FLOW-STARTER-20`, `CLEAR-STARTER-20`, `BOTH-STARTER-40` on the monthly plans, then the plain `FLOW-20` / `CLEAR-20` / `BOTH-40` (`SUBSCRIPTIONS.md`) |
+| Order markers | `_source=trial_pack`, `_offer_choice=flow\|clear\|both`, `_purchase=trial\|one_time` |
+| Vercel events | `listicle:section_viewed` / `listicle:cta_clicked` (slug `trial-pack`), `offer:option_selected`, `purchase:add_to_cart` |
+| Classification | A trial order is a subscriber in trial until day 7, then an ordinary monthly subscriber. One-time orders are not subscribers |
+| App link | `https://www.conka.io/app` (no deep link exists) |
+
+### Decisions and gotchas
+
+- **Both is one bundle variant, never two cart lines.** Two lines create two contracts converting to Flow + Clear monthly, not one Both monthly.
+- **A page price and its Skio percentage change together.** Change one alone and the page and checkout disagree. Re-render any slide that burns in the price or a percentage (`design/pdp-slides/README.md`, which also holds the new-filename rule for re-rendered slides).
+- **The conversion terms sit next to the CTA.** It is a trial into a subscription; the disclosure is the single statement of the terms.
+- **Below the fold is always Both.** Keeps the page server-rendered with no layout shift and speaks to the default option.
+- **Stays under `/go` while it is an experiment.** A root page reusing PDP sections would compete with the PDPs in search.
+- **Returning subscribers can buy the trial.** Filter read-outs by first order. One trial per customer is not enforced.
 
 ## Gotchas that bite every format
 

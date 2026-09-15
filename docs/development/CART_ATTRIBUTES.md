@@ -10,7 +10,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 
 | Key | Values | When set | Notes |
 |-----|--------|----------|--------|
-| **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `trial_box` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
+| **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `trial_pack` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
 
 ---
 
@@ -24,7 +24,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 | `whats_inside` | Add from a "what's inside" ingredients section. |
 | `cart_upsell` | Add from an upsell offer inside the cart drawer. |
 | `listicle` | Add from a `/go/[slug]` listicle landing page. |
-| `trial_box` | Checkout from a `/go/[slug]` offer page (sent as the `_source` line attribute, see below). |
+| `trial_pack` | Checkout from the `/go/trial-pack` offer page (sent as the `_source` line attribute, see below). Earlier offer-page orders carry `trial_box`. |
 | `win_free_month` | Add from the win-a-free-month promo surface. |
 
 > **Removed sources.** `quiz` and `protocol_page` were retired with the `/quiz`
@@ -49,15 +49,15 @@ a click. Add a `home_<section>` token for any new home CTA.
 
 ### Offer page line attributes
 
-`/go/[slug]` offer pages build their own cart (`app/components/go/offer/offerCheckout.ts`), so they set hidden line attributes directly on both the trial and the upsell path:
+`/go/[slug]` offer pages build their own cart (`app/components/go/offer/offerCheckout.ts`), so they set hidden line attributes directly on both the trial checkout and the buy-once link:
 
 | Key | Values | Meaning |
 |-----|--------|---------|
-| `_source` | `trial_box` | The line came from an offer page |
-| `_offer` | the config's `offerId` (e.g. `flow_trial_4`) | Which offer, stable across slug iterations |
-| `_offer_choice` | `trial` \| `monthly` | `monthly` = the visitor took the upsell to the monthly starter pack |
+| `_source` | `trial_pack` | The line came from the trial pack page |
+| `_offer_choice` | `flow` \| `clear` \| `both` | The selected option |
+| `_purchase` | `trial` \| `one_time` | `trial` = the trial pack that converts to monthly; `one_time` = the buy-once link |
 
-Filter orders on `_offer` for the offer's purchases and on `_offer_choice` for the trial vs upsell split.
+The cart also carries `_fbp`, `_fbc` and `conka_uid` as cart attributes. Filter orders on `_purchase` for the trial vs one-time split and on `_offer_choice` for the product split. Only `_purchase=trial` orders become subscribers. How the page works: `docs/features/GO_LANDING_PAGES.md`.
 
 ---
 

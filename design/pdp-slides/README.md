@@ -71,7 +71,7 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b4` | `BothVsCoffee.jpg` | Same table, Both pair |
 | `b7` | `BothReview.jpg` | Jack G. on running both |
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
-| `t0` | `FlowTrialBoxV3.jpg` | `/go/flow-trial` hero: focus without the crash, 57% off |
+| `t0` | `FlowTrialBoxV3.jpg` | `/go/trial-pack` Flow hero: focus without the crash, 57% off |
 | `ct0` | `ClearTrialBoxV3.jpg` | Clear trial hero: beat the afternoon slump, 57% off |
 | `bt0` | `BothTrialBoxV4.jpg` | `/go/trial-pack` default hero: sharp from morning to evening, lowest price ever, 68% off seal, staggered boxes |
 | `tp1` | `TrialPackHowItWorksV3.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
@@ -86,7 +86,7 @@ and on deployed previews. Locally, `rm -rf .next/dev/cache/images` also clears i
 
 `tp1` burns in Both monthly figures from `offerData.ts` (£74.99, £236.93 of
 starter-pack value, 42% vs the £129.97 one-off reference). Like `s0`, re-render it
-if any of them change. It carries no trial price: those are still placeholders.
+if any of them change. It carries no trial price.
 `ftp1` / `ctp1` are the same layout with the single-formula monthly figures
 (£39.99 / 20 shots, 28-shot first box, £152.94 of value, 43% vs £69.98).
 
@@ -114,11 +114,12 @@ The slide ground is white (as on `b1`), so the flattened ground has no edge.
 `mix-blend-mode: multiply` onto a tinted ground was tried and did not apply in the
 headless render: the composite showed as a white rectangle.
 
-`t0` is the `galleryLead` in `app/lib/landings/flow-trial.ts`, not part of
+`t0` is the Flow option's `galleryLead` in `app/lib/landings/trial-pack.ts`, not part of
 `MM_GALLERY_ASSETS`. It carries no price, so a price change does not invalidate
 it, but its seal claims 57% off (£12.99 trial vs a £29.98 one-time 4-shot box; `bt0`
-claims 68%, £18.99 vs £59.96): re-render if either price changes. Slide 2 on that page is `s1`, so the hero deliberately repeats none of
-its benefits. Photo: `assets/Flow4BoxLight.jpg`, converted from `Ai
+claims 68%, £18.99 vs £59.96): re-render if either price changes. The Flow gallery
+runs `t0`, `ftp1`, then `s1`, so the hero deliberately repeats none of `s1`'s
+benefits. Photo: `assets/Flow4BoxLight.jpg`, converted from `Ai
 Assets/Box/Flow4BoxLight.webp`.
 
 Two slides are product-agnostic and are shared by both galleries, hence the

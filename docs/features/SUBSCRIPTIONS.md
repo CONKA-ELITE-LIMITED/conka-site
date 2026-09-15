@@ -47,9 +47,14 @@ incident on the platform:
 | 60 Shots - Quarterly | Flow, Clear | 3 months | 42.11% | £109.99 | `712928919926` |
 | 40 Shots - Monthly | Both | 1 month | 25.00% | £74.99 | `712928952694` |
 | 120 Shots - Quarterly | Both | 3 months | 46.43% | £149.99 | `712928985462` |
-| 4 Shots - Weekly | Flow, Clear 4-shot trial box | 1 week | 50.00% | £14.99 | `712985543030` |
+| Weekly Subscription (trial) | Flow, Clear 4-shot trial packs | 1 week | 56.67% | £12.99 | `712985543030` |
+| Weekly Subscription (8-shot trial) | Both 8-shot trial pack | 1 week | 68.33% | £18.99 | `712986788214` |
 
 Variant SKUs and GIDs live in `docs/product/SKU_AND_SHOT_REFERENCE.md`, not here.
+
+The two trial plans serve `/go/trial-pack` (`docs/features/GO_LANDING_PAGES.md`), which shows
+the trial price as a display-only config value. **A trial price and its plan percentage change
+together**, or the page and checkout disagree.
 
 ### Starter variants and Journeys
 
@@ -60,6 +65,24 @@ after order 1, so renewals ship the plain box with the plan discount intact.
 
 Do not attach a Loop-era `*-STARTER-*` variant to a Skio plan. Those are fixed-priced at the
 charged amount, so a percentage plan under-bills them (£22.85 instead of £39.99).
+
+**Never make a `*-FUNNEL-*` variant a Journey target.** They have no Skio plan bound, so a
+contract swapped onto one renews at the full one-time price.
+
+### Trial pack Journeys
+
+Trial contracts (the two weekly trial plans above) are converted by two Skio Journeys, dashboard
+configuration owned by Rudh:
+
+1. **After the trial order**, swap the contract to `FLOW-STARTER-20` / `CLEAR-STARTER-20` /
+   `BOTH-STARTER-40` **and** switch it to the monthly selling plan (Flow/Clear `712928887158`,
+   Both `712928952694`).
+2. **On the second subscription order**, swap to the plain `FLOW-20` / `CLEAR-20` / `BOTH-40`
+   variants, which have the monthly plans bound.
+
+**The plan switch is the gotcha.** A Journey that changes only the interval keeps the trial plan,
+so the starter renews at the trial percentage (Flow £30.32 instead of £39.99). Change the selling
+plan, not just the frequency.
 
 ## Bundles and fulfilment
 

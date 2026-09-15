@@ -3,7 +3,7 @@ import { buildTrialPackFaqs } from "./trial-pack-faq";
 
 /**
  * CONKA trial pack (SCRUM-1343).
- * Plan and decisions: docs/development/featurePlans/trial-box/README.md.
+ * How it works: docs/features/GO_LANDING_PAGES.md (offer format).
  *
  * Flow, Clear or Both at a trial price, then Skio moves the contract onto that
  * product's monthly starter plan (FLOW-STARTER-20 / CLEAR-STARTER-20 /
