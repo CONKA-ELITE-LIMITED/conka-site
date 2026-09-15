@@ -56,7 +56,7 @@ export const trialPack: OfferConfig = {
       price: 18.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV2.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV3.jpg",
       // Rendered from design/pdp-slides tp1 (Both monthly figures, £74.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorksV2.jpg",
       badge: "Best value",

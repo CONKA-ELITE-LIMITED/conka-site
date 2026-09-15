@@ -73,7 +73,7 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
 | `t0` | `FlowTrialBoxV2.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off |
 | `ct0` | `ClearTrialBoxV2.jpg` | Clear trial hero: beat the afternoon slump, 50% off |
-| `bt0` | `BothTrialBoxV2.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
+| `bt0` | `BothTrialBoxV3.jpg` | `/go/trial-pack` default hero: sharp from morning to evening, lowest price ever, staggered boxes |
 | `tp1` | `TrialPackHowItWorksV2.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
 | `ftp1` | `FlowTrialHowItWorks.jpg` | Flow trial explainer: 4-shot box today, Flow starter pack day 7, 43% off each month |
 | `ctp1` | `ClearTrialHowItWorks.jpg` | Clear trial explainer: same as `ftp1` for Clear |
@@ -91,8 +91,8 @@ if any of them change. It carries no trial price: those are still placeholders.
 (£39.99 / 20 shots, 28-shot first box, £152.94 of value, 43% vs £69.98).
 
 `bt0` uses `t0` / `ct0`'s structure (stacked headline, sub, tick row, no
-benefit list) with a benefit-led headline and the entry price (SCRUM-1343). The £18.99 is the
-placeholder Both trial price in `trial-pack.ts`: re-render when the real one is set. Side by side, `Both8Box.jpg` (2752x1536) could
+benefit list) with a benefit-led headline and a low-barrier sub, "lowest price ever" (SCRUM-1343).
+No price is burned in: a figure here contradicted the page's own trial price. Side by side, `Both8Box.jpg` (2752x1536) could
 not get larger beside that column: the gap between the boxes is only 196px of
 ground (x 1291-1487), so there was nothing to close. It renders from
 `assets/Both8BoxStagger.jpg` instead, built in two steps:
