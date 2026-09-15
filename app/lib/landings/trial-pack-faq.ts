@@ -12,6 +12,12 @@ import type { OfferOptionId, OfferOptionView } from "./offer-types";
  * config, monthly and one-time from offerData), so a price change updates the
  * answers with it. Throws at build time if an option is missing.
  */
+/** "a, b and c": the starter pack gift labels as one phrase. */
+function listGifts(gifts: string[]): string {
+  if (gifts.length <= 1) return gifts.join("");
+  return `${gifts.slice(0, -1).join(", ")} and ${gifts[gifts.length - 1]}`;
+}
+
 export function buildTrialPackFaqs(
   options: OfferOptionView[],
   conversionDays: number,
@@ -29,7 +35,7 @@ export function buildTrialPackFaqs(
     {
       id: "trial-how-it-works",
       question: "How does the trial work?",
-      answer: `Choose Flow (${formatPrice(flow.price)}), Clear (${formatPrice(clear.price)}) or Both (${formatPrice(both.price)}) and try CONKA at home. ${conversionDays} days after your order, your trial moves onto that product's monthly plan, and your first monthly box is the starter pack. Cancel any time before then and you won't pay for the monthly plan.`,
+      answer: `Choose Flow, Clear or Both and try CONKA at home. ${conversionDays} days after your order, your trial moves onto that product's monthly plan, and your first monthly box is the starter pack. Cancel any time before then and you won't pay for the monthly plan.`,
     },
     {
       id: "trial-pack-contents",
@@ -40,6 +46,11 @@ export function buildTrialPackFaqs(
       id: "trial-after",
       question: `What happens after ${conversionDays} days?`,
       answer: `Your monthly plan starts: ${formatPrice(flow.monthly.price)}/month for Flow, ${formatPrice(clear.monthly.price)}/month for Clear, or ${formatPrice(both.monthly.price)}/month for Both. Your first monthly box is the starter pack, then a new box arrives each month until you cancel.`,
+    },
+    {
+      id: "trial-starter-pack",
+      question: "What's in the starter pack?",
+      answer: `Your first monthly box is the starter pack. Flow or Clear comes with ${flow.starterPack.shots} shots (${flow.starterPack.freeShots} of them free), and Both with ${both.starterPack.shots} (${both.starterPack.freeShots} free). Every starter pack also includes ${listGifts(flow.starterPack.gifts)}. That's ${formatPrice(flow.starterPack.value)} of value for ${formatPrice(flow.monthly.price)}, or ${formatPrice(both.starterPack.value)} for ${formatPrice(both.monthly.price)} with Both.`,
     },
     {
       id: "trial-cancel",

@@ -64,6 +64,7 @@ function buildOptionView(option: OfferOption): OfferOptionView {
   // first question the offer raises.
   if (option.explainerSlide) galleryImages.splice(1, 0, option.explainerSlide);
 
+  const gifts = monthly.gifts ?? [];
   return {
     ...option,
     product,
@@ -73,6 +74,15 @@ function buildOptionView(option: OfferOption): OfferOptionView {
       variantId: oneTimeVariant.variantId,
       price: oneTimePrice,
       shots: oneTimePricing.shotCount,
+    },
+    starterPack: {
+      shots: monthly.firstOrderShots ?? monthly.shotCount,
+      freeShots: monthly.freeShots ?? 0,
+      gifts: gifts.map((gift) => gift.label),
+      value:
+        (monthly.compareAtPrice ?? monthly.price) +
+        (monthly.freeShotsValue ?? 0) +
+        gifts.reduce((total, gift) => total + gift.rrp, 0),
     },
   };
 }

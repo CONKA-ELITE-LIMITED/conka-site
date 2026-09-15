@@ -34,6 +34,7 @@ export const trialPack: OfferConfig = {
       heroId: "01",
       shots: 4,
       price: 12.99,
+      referencePrice: 29.98,
       variantId: "gid://shopify/ProductVariant/58714075136374", // FLOW-BOX-4
       // Skio "Weekly Subscription", 56.67% off, shared with Clear.
       sellingPlanId: "gid://shopify/SellingPlan/712985543030",
@@ -47,6 +48,7 @@ export const trialPack: OfferConfig = {
       heroId: "02",
       shots: 4,
       price: 12.99,
+      referencePrice: 29.98,
       variantId: "gid://shopify/ProductVariant/58714000163190", // CLEAR-BOX-4
       // Skio "Weekly Subscription", 56.67% off, shared with Flow.
       sellingPlanId: "gid://shopify/SellingPlan/712985543030",
@@ -60,6 +62,7 @@ export const trialPack: OfferConfig = {
       heroId: "03",
       shots: 8,
       price: 18.99,
+      referencePrice: 59.96,
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       // Skio 8-shot "Weekly Subscription" (its own group), 68.33% off.
       sellingPlanId: "gid://shopify/SellingPlan/712986788214",

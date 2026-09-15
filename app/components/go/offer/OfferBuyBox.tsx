@@ -15,10 +15,10 @@ import {
  * OfferBuyBox: the offer page's purchase section, sitting where ProductBuyPanel
  * sits in the PDP hero (SCRUM-1343).
  *
- * Top to bottom: a row of three square trial-pack tiles (bottle image, name and
- * price only; the selected tile carries a navy ring), the checkout CTA, the
- * conversion disclosure, and the buy-once link. Tiles are kept deliberately
- * quiet: the CTA carries the price, the disclosure carries the terms.
+ * Top to bottom: a row of three square trial-pack tiles (bottle image, name,
+ * struck one-time price and trial price; the selected tile carries a navy
+ * ring), the checkout CTA, the conversion disclosure, and the buy-once link. The
+ * CTA carries the price, the disclosure carries the terms.
  *
  * The disclosure is the single statement of the terms (shots today, when the
  * monthly plan starts, what it costs, starter pack, cancel before): the page sells a trial
@@ -92,7 +92,7 @@ function PackTile({
     <button
       type="button"
       aria-pressed={isSelected}
-      aria-label={`${option.label} trial pack, ${option.shots} shots, ${formatPrice(option.price)}`}
+      aria-label={`${option.label} trial pack, ${option.shots} shots, ${formatPrice(option.price)}, was ${formatPrice(option.referencePrice)}`}
       onClick={onSelect}
       className={`relative flex flex-col rounded-md bg-white text-black transition-shadow focus:outline-none focus-visible:ring-offset-2 ${
         isSelected
@@ -123,7 +123,12 @@ function PackTile({
 
       <span className="flex flex-col items-center gap-0.5 rounded-b-md border-t border-black/5 px-1 py-2 text-center">
         <span className="text-[13px] font-bold leading-tight">{option.label}</span>
-        <span className="text-[13px] tabular-nums text-black/70">{formatPrice(option.price)}</span>
+        {/* The pack's own one-time price, struck, so the discount the hero seal
+            claims is visible where the choice is made. */}
+        <span className="flex flex-wrap items-baseline justify-center gap-x-1 tabular-nums">
+          <s className="text-[11px] text-black/40">{formatPrice(option.referencePrice)}</s>
+          <span className="text-[13px] text-black/70">{formatPrice(option.price)}</span>
+        </span>
       </span>
     </button>
   );

@@ -26,6 +26,12 @@ export interface OfferOption {
   shots: number;
   /** Trial price (£). Display only, pre-add: the charge comes from Shopify. */
   price: number;
+  /**
+   * The trial pack's own one-time price (£), struck through on the tile. It is
+   * the variant's Shopify price the Skio trial plan discounts, so it must match
+   * Shopify, and `price` must equal it less the plan's percentage.
+   */
+  referencePrice: number;
   /** The trial pack variant, e.g. FLOW-BOX-4. */
   variantId: string;
   /**
@@ -53,6 +59,16 @@ export interface OfferOptionView extends OfferOption {
   monthly: { price: number; shots: number };
   /** The one-time box behind the buy-once link. */
   oneTime: { variantId: string; price: number; shots: number };
+  /**
+   * The first monthly box. `value` is the one-time reference plus the free
+   * shots and gifts at RRP, the same total the starter kit slides show.
+   */
+  starterPack: {
+    shots: number;
+    freeShots: number;
+    gifts: string[];
+    value: number;
+  };
 }
 
 /** A real review, condensed with an ellipsis. Never reword beyond trimming. */
