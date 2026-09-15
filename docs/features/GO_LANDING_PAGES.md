@@ -62,8 +62,8 @@ Nothing else changes. No route file, no component, no per-page styling.
 ## Analytics, the shared part
 
 Each format emits its own event family (`landing:*` for quizzes,
-`listicle:*` for listicles; offer pages reuse `listicle:*` plus two `offer:*`
-events, see below). What is shared:
+`listicle:*` for listicles; offer pages reuse `listicle:*` plus one `offer:*`
+event, see below). What is shared:
 
 - **Every event carries `slug`**, so per-page funnels filter directly in Vercel Analytics. Compare within a format, not across: the two engines measure different things under similar-sounding names.
 - **The two-property budget** documented in `app/lib/analytics.ts` applies to both. Fold extra dimensions into an existing property rather than adding a third.
