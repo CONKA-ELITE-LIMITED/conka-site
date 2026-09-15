@@ -1,4 +1,5 @@
 import type { OfferConfig } from "./offer-types";
+import { buildTrialPackFaqs } from "./trial-pack-faq";
 
 /**
  * CONKA trial pack (SCRUM-1343).
@@ -32,9 +33,9 @@ export const trialPack: OfferConfig = {
       price: 12.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58714075136374", // FLOW-BOX-4
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/FlowTrialBoxV2.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/FlowTrialBoxV3.jpg",
       // Rendered from design/pdp-slides ftp1 (Flow monthly figures, £39.99/month).
-      explainerSlide: "/formulas/mmPdpAssetsV2/FlowTrialHowItWorks.jpg",
+      explainerSlide: "/formulas/mmPdpAssetsV2/FlowTrialHowItWorksV2.jpg",
     },
     {
       id: "clear",
@@ -44,9 +45,9 @@ export const trialPack: OfferConfig = {
       price: 12.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58714000163190", // CLEAR-BOX-4
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBoxV2.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBoxV3.jpg",
       // Rendered from design/pdp-slides ctp1 (Clear monthly figures, £39.99/month).
-      explainerSlide: "/formulas/mmPdpAssetsV2/ClearTrialHowItWorks.jpg",
+      explainerSlide: "/formulas/mmPdpAssetsV2/ClearTrialHowItWorksV2.jpg",
     },
     {
       id: "both",
@@ -56,12 +57,13 @@ export const trialPack: OfferConfig = {
       price: 18.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV3.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV4.jpg",
       // Rendered from design/pdp-slides tp1 (Both monthly figures, £74.99/month).
-      explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorksV2.jpg",
+      explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorksV3.jpg",
       badge: "Best value",
     },
   ],
+  offerFaqs: { title: "How the trial works", build: buildTrialPackFaqs },
   // Condensed from real reviews: Phil B. in app/lander/sections/Reviews/reviews.data.ts;
   // Ankita K. and Aaron H. in app/lib/customerTestimonials.ts ("academic"
   // dropped before "tasks" in Ankita's).

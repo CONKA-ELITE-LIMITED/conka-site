@@ -8,11 +8,12 @@
    a placeholder, so card 1 carries no price. Re-render on any of those changing. */
 .slide{padding:0;background:var(--navy);color:#fff}
 
-.eyebrow{position:absolute;left:160px;top:140px;font-family:JBM,monospace;font-weight:500;
-  font-size:44px;letter-spacing:.2em;opacity:.6}
-h1{position:absolute;left:160px;top:210px;font-family:Favorit;font-weight:500;font-size:132px;
-  line-height:1;letter-spacing:-.034em}
-h1 em{font-style:italic}
+/* the title says what the slide is; the promise sits under it, quieter */
+h1{position:absolute;left:160px;top:120px;font-family:Favorit;font-weight:500;font-size:150px;
+  line-height:1;letter-spacing:-.034em;color:#fff}
+.tagline{position:absolute;left:160px;top:300px;font-weight:500;font-size:66px;line-height:1;
+  letter-spacing:-.018em;color:rgba(255,255,255,.72)}
+.tagline em{font-style:italic}
 
 .steps{position:absolute;left:160px;right:160px;top:470px;bottom:140px;
   display:grid;grid-template-columns:repeat(3,1fr);gap:96px}
@@ -56,8 +57,8 @@ h2{margin-top:34px;font-weight:700;font-size:66px;line-height:1.02;letter-spacin
 .arrow svg{width:48px;height:48px;stroke:var(--navy);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <div class="slide">
-  <div class="eyebrow">HOW THE TRIAL WORKS</div>
-  <h1>Start small. <em>Save</em> for good.</h1>
+  <h1>How the trial works</h1>
+  <div class="tagline">Start small. <em>Save</em> for good.</div>
 
   <div class="steps">
     <div class="card">

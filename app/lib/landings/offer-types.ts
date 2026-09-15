@@ -11,6 +11,7 @@
  */
 import type { ProductHeroId } from "@/app/lib/productTypes";
 import type { OfferProduct } from "@/app/lib/offerData";
+import type { FaqEntry } from "@/app/lib/faqContent";
 
 export type OfferOptionId = "flow" | "clear" | "both";
 
@@ -76,4 +77,14 @@ export interface OfferConfig {
   defaultOption: OfferOptionId;
   /** Short reviews under the trust row, rotated in place (Cloud pattern). */
   reviews: OfferReview[];
+  /**
+   * Questions true only of this offer, rendered as their own section before the
+   * general FAQ. A builder, so prices and days come from the option views and
+   * never go stale. Deliberately outside FAQ_ITEMS: they would be wrong on /faq,
+   * which is safe only because /go is noindex with no FAQ schema.
+   */
+  offerFaqs?: {
+    title: string;
+    build: (options: OfferOptionView[], conversionDays: number) => FaqEntry[];
+  };
 }

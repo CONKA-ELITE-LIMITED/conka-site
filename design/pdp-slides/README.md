@@ -71,12 +71,12 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b4` | `BothVsCoffee.jpg` | Same table, Both pair |
 | `b7` | `BothReview.jpg` | Jack G. on running both |
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
-| `t0` | `FlowTrialBoxV2.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off |
-| `ct0` | `ClearTrialBoxV2.jpg` | Clear trial hero: beat the afternoon slump, 50% off |
-| `bt0` | `BothTrialBoxV3.jpg` | `/go/trial-pack` default hero: sharp from morning to evening, lowest price ever, staggered boxes |
-| `tp1` | `TrialPackHowItWorksV2.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
-| `ftp1` | `FlowTrialHowItWorks.jpg` | Flow trial explainer: 4-shot box today, Flow starter pack day 7, 43% off each month |
-| `ctp1` | `ClearTrialHowItWorks.jpg` | Clear trial explainer: same as `ftp1` for Clear |
+| `t0` | `FlowTrialBoxV3.jpg` | `/go/flow-trial` hero: focus without the crash, 57% off |
+| `ct0` | `ClearTrialBoxV3.jpg` | Clear trial hero: beat the afternoon slump, 57% off |
+| `bt0` | `BothTrialBoxV4.jpg` | `/go/trial-pack` default hero: sharp from morning to evening, lowest price ever, 68% off seal, staggered boxes |
+| `tp1` | `TrialPackHowItWorksV3.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
+| `ftp1` | `FlowTrialHowItWorksV2.jpg` | Flow trial explainer: 4-shot box today, Flow starter pack day 7, 43% off each month |
+| `ctp1` | `ClearTrialHowItWorksV2.jpg` | Clear trial explainer: same as `ftp1` for Clear |
 
 **Re-rendering a slide the site already serves? Give it a new filename** (bump the
 `V2` suffix in `slide_name` above and in the config that references it). Next's
@@ -116,8 +116,8 @@ headless render: the composite showed as a white rectangle.
 
 `t0` is the `galleryLead` in `app/lib/landings/flow-trial.ts`, not part of
 `MM_GALLERY_ASSETS`. It carries no price, so a price change does not invalidate
-it, but it does claim "50% off for life": re-render if the Skio weekly discount
-changes. Slide 2 on that page is `s1`, so the hero deliberately repeats none of
+it, but its seal claims 57% off (£12.99 trial vs a £29.98 one-time 4-shot box; `bt0`
+claims 68%, £18.99 vs £59.96): re-render if either price changes. Slide 2 on that page is `s1`, so the hero deliberately repeats none of
 its benefits. Photo: `assets/Flow4BoxLight.jpg`, converted from `Ai
 Assets/Box/Flow4BoxLight.webp`.
 

@@ -3,6 +3,7 @@ import { formatPrice } from "@/app/lib/productData";
 import { TrustStrip } from "@/app/components/product/ProductBuyPanel";
 import TrustMicroRow from "@/app/components/landing/TrustMicroRow";
 import Certifications from "@/app/components/Certifications";
+import LogoMarquee from "@/app/components/landing/LogoMarquee";
 import OfferBuyBox from "./OfferBuyBox";
 import OfferReviewRotator from "./OfferReviewRotator";
 import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
@@ -15,8 +16,9 @@ import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
  * The frame is server-rendered; the gallery, reviews, buy box and disclosure
  * rows are client islands (the selection-driven ones read OfferPurchase).
  *
- * Mobile order: offer pill and title, gallery, avatar trust row,
- * rotating review, then the buy box. From `lg` it becomes V3's two columns: a
+ * Mobile order: offer pill and headline, gallery, product name, avatar trust
+ * row, rotating review, the buy box, the partner logo marquee, then the
+ * ingredient rows and certifications. From `lg` it becomes V3's two columns: a
  * sticky gallery on the left, the rest on the right, placed with explicit rows.
  */
 
@@ -50,7 +52,7 @@ export default function OfferHero({
           </h1>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-5 lg:row-start-1 lg:self-start">
+        <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-6 lg:row-start-1 lg:self-start">
           <OfferGallery alt="CONKA trial pack" />
         </div>
 
@@ -67,11 +69,17 @@ export default function OfferHero({
           <OfferBuyBox conversionDays={config.conversionDays} />
         </div>
 
+        {/* Social proof straight after the price and buy-once link, where doubt
+            peaks, before the ingredient rows. Pure CSS marquee, no JS. */}
         <div className="lg:col-start-2 lg:row-start-4">
-          <OfferDisclosureRows />
+          <LogoMarquee />
         </div>
 
         <div className="lg:col-start-2 lg:row-start-5">
+          <OfferDisclosureRows />
+        </div>
+
+        <div className="lg:col-start-2 lg:row-start-6">
           <Certifications inline />
         </div>
       </div>

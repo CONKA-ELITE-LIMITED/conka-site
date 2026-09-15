@@ -15,6 +15,10 @@ interface LabFAQProps {
   /** Support footer with the /faq hub link. Noindex paid surfaces (`/go`)
    *  pass false so the funnel does not leak off to the hub. */
   showSeeAllLink?: boolean;
+  /** Section heading. A page with two FAQ blocks (the /go offer page) names the second one. */
+  title?: string;
+  /** The support email footer. Hide it on all but one block when a page renders two. */
+  showSupport?: boolean;
 }
 
 export default function LabFAQ({
@@ -22,13 +26,15 @@ export default function LabFAQ({
   hideCTA = false,
   ctaHref = "/build-your-order",
   showSeeAllLink = true,
+  title = "Frequently asked questions",
+  showSupport = true,
 }: LabFAQProps = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <div>
       <div className="mb-8">
-        <h2 className="brand-h1 mb-0 text-black">Frequently asked questions</h2>
+        <h2 className="brand-h1 mb-0 text-black">{title}</h2>
       </div>
 
       <div>
@@ -78,29 +84,31 @@ export default function LabFAQ({
       </div>
 
       {/* Support footer */}
-      <div className="mt-6">
-        <p className="text-sm text-black/60">
-          {showSeeAllLink ? (
-            <>
-              <Link
-                href="/faq"
-                className="text-black underline decoration-black/20 hover:decoration-black"
-              >
-                See all questions
-              </Link>{" "}
-              or email{" "}
-            </>
-          ) : (
-            <>Still have a question? Email </>
-          )}
-          <a
-            href={supportMailtoHref()}
-            className="text-black underline decoration-black/20 hover:decoration-black"
-          >
-            {SUPPORT_EMAIL}
-          </a>
-        </p>
-      </div>
+      {showSupport && (
+        <div className="mt-6">
+          <p className="text-sm text-black/60">
+            {showSeeAllLink ? (
+              <>
+                <Link
+                  href="/faq"
+                  className="text-black underline decoration-black/20 hover:decoration-black"
+                >
+                  See all questions
+                </Link>{" "}
+                or email{" "}
+              </>
+            ) : (
+              <>Still have a question? Email </>
+            )}
+            <a
+              href={supportMailtoHref()}
+              className="text-black underline decoration-black/20 hover:decoration-black"
+            >
+              {SUPPORT_EMAIL}
+            </a>
+          </p>
+        </div>
+      )}
 
       {!hideCTA && (
         <div className="mt-8 flex justify-center lg:justify-start">
