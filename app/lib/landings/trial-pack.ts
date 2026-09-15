@@ -15,8 +15,11 @@ import { buildTrialPackFaqs } from "./trial-pack-faq";
  * Options render as a row of tiles in this order (Both last, as the
  * combination), with `defaultOption` preselected.
  *
- * Before launch: trial prices are placeholders, and every `sellingPlanId` must
- * be the Skio trial plan (trial checkout refuses to run while it is null).
+ * `price` is display only; the charge is the variant's one-time price less the
+ * Skio trial plan's percentage (29.98 - 56.67% = 12.99, 59.96 - 68.33% = 18.99,
+ * checked against Shopify 15 Sep 2026). Change a price here and that plan's
+ * percentage in Skio together, or the page and checkout disagree. Trial checkout
+ * refuses to run for an option whose `sellingPlanId` is null.
  */
 export const trialPack: OfferConfig = {
   format: "offer",
@@ -30,9 +33,10 @@ export const trialPack: OfferConfig = {
       label: "Flow",
       heroId: "01",
       shots: 4,
-      price: 12.99, // placeholder
+      price: 12.99,
       variantId: "gid://shopify/ProductVariant/58714075136374", // FLOW-BOX-4
-      sellingPlanId: null, // Skio trial plan, not yet created
+      // Skio "Weekly Subscription", 56.67% off, shared with Clear.
+      sellingPlanId: "gid://shopify/SellingPlan/712985543030",
       galleryLead: "/formulas/mmPdpAssetsV2/FlowTrialBoxV3.jpg",
       // Rendered from design/pdp-slides ftp1 (Flow monthly figures, £39.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/FlowTrialHowItWorksV2.jpg",
@@ -42,9 +46,10 @@ export const trialPack: OfferConfig = {
       label: "Clear",
       heroId: "02",
       shots: 4,
-      price: 12.99, // placeholder
+      price: 12.99,
       variantId: "gid://shopify/ProductVariant/58714000163190", // CLEAR-BOX-4
-      sellingPlanId: null, // Skio trial plan, not yet created
+      // Skio "Weekly Subscription", 56.67% off, shared with Flow.
+      sellingPlanId: "gid://shopify/SellingPlan/712985543030",
       galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBoxV3.jpg",
       // Rendered from design/pdp-slides ctp1 (Clear monthly figures, £39.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/ClearTrialHowItWorksV2.jpg",
@@ -54,9 +59,10 @@ export const trialPack: OfferConfig = {
       label: "Flow + Clear",
       heroId: "03",
       shots: 8,
-      price: 18.99, // placeholder
+      price: 18.99,
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
-      sellingPlanId: null, // Skio trial plan, not yet created
+      // Skio 8-shot "Weekly Subscription" (its own group), 68.33% off.
+      sellingPlanId: "gid://shopify/SellingPlan/712986788214",
       galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV4.jpg",
       // Rendered from design/pdp-slides tp1 (Both monthly figures, £74.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorksV3.jpg",
