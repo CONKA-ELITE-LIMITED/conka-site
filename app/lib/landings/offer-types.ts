@@ -36,7 +36,7 @@ export interface OfferOption {
   /** Lead gallery slide in front of the product's PDP slides. Optional until the asset exists. */
   galleryLead?: string;
   /**
-   * An explainer slide inserted as the 4th gallery image. Per option because
+   * An explainer slide inserted as the 2nd gallery image. Per option because
    * explainers can burn in that product's monthly figures.
    */
   explainerSlide?: string;
@@ -48,11 +48,6 @@ export interface OfferOption {
 export interface OfferOptionView extends OfferOption {
   product: OfferProduct;
   galleryImages: string[];
-  /**
-   * What the same shots cost at the regular one-time per-shot price (£). The
-   * honest "instead of" figure the trial price is struck against.
-   */
-  referencePrice: number;
   /** The monthly plan this trial converts to. */
   monthly: { price: number; shots: number };
   /** The one-time box behind the buy-once link. */
@@ -69,7 +64,7 @@ export interface OfferReview {
 export interface OfferConfig {
   format: "offer";
   slug: string;
-  /** The hero <h1>, and the browser title suffixed with " | CONKA". */
+  /** The product name under the hero gallery, and the browser title suffixed with " | CONKA". */
   title: string;
   /**
    * Days after the order when Skio moves the contract onto monthly. Stated next

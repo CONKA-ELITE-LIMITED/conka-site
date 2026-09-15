@@ -15,17 +15,15 @@ import {
  * OfferBuyBox: the offer page's purchase section, sitting where ProductBuyPanel
  * sits in the PDP hero (SCRUM-1343).
  *
- * Top to bottom: a row of three square trial-pack tiles (bottle image, then a
- * name / price / shots base that turns navy when selected), the checkout CTA,
- * the conversion disclosure, and the buy-once link. Tiles are more visual and
- * take less height than stacked plan cards.
+ * Top to bottom: a row of three square trial-pack tiles (bottle image, name and
+ * price only; the selected tile carries a navy ring), the checkout CTA, the
+ * conversion disclosure, and the buy-once link. Tiles are kept deliberately
+ * quiet: the CTA carries the price, the disclosure carries the terms.
  *
- * Every trial price is struck against its reference price: the same shots at
- * the regular one-time per-shot price. The disclosure is the single statement
- * of the terms (price today, when the monthly plan starts, what it costs,
- * starter pack, cancel before): the page sells a trial into a subscription and
- * must say so next to the button. The Both gallery's how-it-works slide shows
- * the same journey visually.
+ * The disclosure is the single statement of the terms (shots today, when the
+ * monthly plan starts, what it costs, cancel before): the page sells a trial
+ * into a subscription and must say so next to the button. The Both gallery's
+ * how-it-works slide shows the same journey visually.
  */
 
 /** The offer gradient shared with FlatPlanCard, CartUpsellTile and GiftValueStack. */
@@ -64,9 +62,8 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
         <OfferCheckoutError />
       </div>
       <p className="mt-2 text-center text-xs leading-snug text-black/60">
-        {formatPrice(selected.price)} today for your {selected.shots}-shot trial pack. Your{" "}
-        {selected.label} monthly plan ({formatPrice(selected.monthly.price)}/month, starter pack in
-        your first box) starts {conversionDays} days after your order. Cancel anytime before.
+        {selected.shots} shots today. Monthly {formatPrice(selected.monthly.price)} from day{" "}
+        {conversionDays}, cancel anytime before.
       </p>
 
       <OfferOtpLink />
@@ -76,9 +73,7 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
 
 /**
  * One square trial-pack tile: the bottle render on white, cropped to the upper
- * part of the bottles, over a base with name, struck reference price, trial
- * price and shots. The selected tile's base fills navy with white text. The
- * image box is 160% of the tile's height and anchored top; going nearer a true
+ * part of the bottles, over a base with name and trial price. The image box is 160% of the tile's height and anchored top; going nearer a true
  * half crop clips the outer bottles on the wider Both render.
  */
 function PackTile({
@@ -91,15 +86,12 @@ function PackTile({
   onSelect: () => void;
 }) {
   const render = bottleRendersCutout[option.product];
-  const discounted = option.referencePrice > option.price;
 
   return (
     <button
       type="button"
       aria-pressed={isSelected}
-      aria-label={`${option.label} trial pack, ${option.shots} shots, ${formatPrice(option.price)}${
-        discounted ? ` instead of ${formatPrice(option.referencePrice)}` : ""
-      }`}
+      aria-label={`${option.label} trial pack, ${option.shots} shots, ${formatPrice(option.price)}`}
       onClick={onSelect}
       className={`relative flex flex-col rounded-md bg-white text-black transition-shadow focus:outline-none focus-visible:ring-offset-2 ${
         isSelected
@@ -128,23 +120,9 @@ function PackTile({
         </span>
       </span>
 
-      <span
-        className={`flex flex-col items-center gap-0.5 rounded-b-md px-1 py-2 text-center transition-colors ${
-          isSelected ? "bg-[var(--brand-navy)] text-white" : "border-t border-black/5"
-        }`}
-      >
+      <span className="flex flex-col items-center gap-0.5 rounded-b-md border-t border-black/5 px-1 py-2 text-center">
         <span className="text-[13px] font-bold leading-tight">{option.label}</span>
-        <span className="flex flex-wrap items-baseline justify-center gap-x-1">
-          {discounted && (
-            <s className={`text-[11px] tabular-nums ${isSelected ? "text-white/60" : "text-black/40"}`}>
-              {formatPrice(option.referencePrice)}
-            </s>
-          )}
-          <span className="text-[13px] font-semibold tabular-nums">{formatPrice(option.price)}</span>
-        </span>
-        <span className={`text-[11px] ${isSelected ? "text-white/75" : "text-black/55"}`}>
-          {option.shots} shots
-        </span>
+        <span className="text-[13px] tabular-nums text-black/70">{formatPrice(option.price)}</span>
       </span>
     </button>
   );

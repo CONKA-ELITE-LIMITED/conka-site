@@ -52,7 +52,7 @@ export const trialPack: OfferConfig = {
       price: 18.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBox.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV2.jpg",
       // Rendered from design/pdp-slides tp1. Burns in the Both monthly figures
       // (£74.99/month), so it belongs to Both only until Flow and Clear
       // versions (or a price-free one) exist.

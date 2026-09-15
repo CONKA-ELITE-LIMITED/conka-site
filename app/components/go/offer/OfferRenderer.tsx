@@ -60,17 +60,14 @@ function buildOptionView(option: OfferOption): OfferOptionView {
     ...(option.galleryLead ? [option.galleryLead] : []),
     ...MM_GALLERY_ASSETS[option.heroId],
   ];
-  // The explainer goes 4th: after the lead, benefits and what-to-expect slides.
-  if (option.explainerSlide) galleryImages.splice(3, 0, option.explainerSlide);
+  // The explainer goes 2nd, straight after the lead: how the trial works is the
+  // first question the offer raises.
+  if (option.explainerSlide) galleryImages.splice(1, 0, option.explainerSlide);
 
   return {
     ...option,
     product,
     galleryImages,
-    // The same shots at the regular one-time per-shot price, rounded to the
-    // penny: the honest figure the trial price is struck against.
-    referencePrice:
-      Math.round((oneTimePrice / oneTimePricing.shotCount) * option.shots * 100) / 100,
     monthly: { price: monthly.price, shots: monthly.shotCount },
     oneTime: {
       variantId: oneTimeVariant.variantId,

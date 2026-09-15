@@ -73,7 +73,7 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
 | `t0` | `FlowTrialBox.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off for life |
 | `ct0` | `ClearTrialBox.jpg` | Clear trial hero: beat the afternoon slump, 50% off for life |
-| `bt0` | `BothTrialBox.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
+| `bt0` | `BothTrialBoxV2.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
 | `tp1` | `TrialPackHowItWorks.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off every month for life |
 
 `tp1` burns in Both monthly figures from `offerData.ts` (£74.99, £236.93 of

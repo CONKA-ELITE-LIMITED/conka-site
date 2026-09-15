@@ -1,4 +1,5 @@
 import type { OfferConfig } from "@/app/lib/landings/offer-types";
+import { formatPrice } from "@/app/lib/productData";
 import { TrustStrip } from "@/app/components/product/ProductBuyPanel";
 import TrustMicroRow from "@/app/components/landing/TrustMicroRow";
 import Certifications from "@/app/components/Certifications";
@@ -23,6 +24,8 @@ import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
 const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 
 export default function OfferHero({ config }: { config: OfferConfig }) {
+  const fromPrice = Math.min(...config.options.map((o) => o.price));
+
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
       <div className="grid grid-cols-1 gap-6 text-black lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
@@ -38,7 +41,7 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
             className="brand-h1 !mb-0 !leading-none lg:!text-[3.25rem]"
             style={{ letterSpacing: "-0.02em" }}
           >
-            {config.title}
+            Try CONKA from {formatPrice(fromPrice)}
           </h1>
         </div>
 
@@ -49,6 +52,8 @@ export default function OfferHero({ config }: { config: OfferConfig }) {
         {/* lg:-mt-3 pulls this up under the heading block on desktop, where the
             grid's gap-6 would otherwise push the trust row away from it. */}
         <div className="flex flex-col gap-3 lg:col-start-2 lg:row-start-2 lg:-mt-3">
+          {/* The product name, under the gallery on mobile; the headline sells the price. */}
+          <p className="text-xl font-bold leading-tight text-black">{config.title}</p>
           <TrustMicroRow />
           <OfferReviewRotator reviews={config.reviews} />
         </div>

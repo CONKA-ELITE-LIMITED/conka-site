@@ -30,7 +30,7 @@ slide_name() {
     b3) echo BothIngredients ;;   b4) echo BothVsCoffee ;;
     b7) echo BothReview ;;        b8) echo BothGuarantee ;;
     t0) echo FlowTrialBox ;;      ct0) echo ClearTrialBox ;;
-    bt0) echo BothTrialBox ;;     tp1) echo TrialPackHowItWorks ;;
+    bt0) echo BothTrialBoxV2 ;;   tp1) echo TrialPackHowItWorks ;;
     *)  echo "$1" ;;
   esac
 }
