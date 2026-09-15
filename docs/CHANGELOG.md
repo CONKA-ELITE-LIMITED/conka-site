@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-15** | Trial pack page live on its Skio trial plans (£12.99 Flow / Clear, £18.99 Both, converting to monthly on day 7): checkout refuses to run unless Shopify applied the trial plan, tiles show the pack's struck one-time price, a "How the trial works" FAQ section, a weekly countdown banner in place of the nav and a partner logo marquee in the hero (SCRUM-1343)
 - **2026-09-14** | Trial pack page: title back to CONKA Trial Pack, duplicated What you get panel removed, how-it-works slide added to the Both gallery, shorter review rotator (SCRUM-1343)
 - **2026-09-14** | Trial pack page: tile selector with a navy selected state, limited-time offer framing with honest struck prices, week-long trial copy and a rotating hero review (SCRUM-1343)
 - **2026-09-14** | /go/trial-pack replaces the 4 box pages: a Flow / Clear / Both trial pack that converts to monthly, with a buy-once link, the standard 100-day guarantee and the upsell modal parked (SCRUM-1343)

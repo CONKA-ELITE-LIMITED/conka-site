@@ -13,6 +13,18 @@ The code source of truth is `OFFER_PRICING` in `app/lib/offerData.ts`. Git histo
 
 ## Log
 
+### 2026-09-15 (trial pack prices; supersedes the weekly £14.99 trial box; no funnel price changed)
+
+SCRUM-1343 replaced the weekly Flow trial box with the trial pack on `/go/trial-pack`: a Flow, Clear or Both pack at a trial price that Skio converts to the product's monthly plan 7 days after the order. Pre-add prices live in the offer config (`app/lib/landings/trial-pack.ts`), outside `OFFER_PRICING`. The charge is the variant's one-time price less the Skio plan percentage; confirmed on live Storefront carts.
+
+| Product | Cadence | Base (one-time, struck on the tile) | Plan % off | Charged | Shots |
+|---------|---------|-------------------------------------|------------|---------|-------|
+| Flow (FLOW-BOX-4) | Trial, then monthly | £29.98 | 56.67% | £12.99 | 4 |
+| Clear (CLEAR-BOX-4) | Trial, then monthly | £29.98 | 56.67% | £12.99 | 4 |
+| Both (BOTH-BOX-8) | Trial, then monthly | £59.96 | 68.33% | £18.99 | 8 |
+
+The Flow/Clear plan (`712985543030`) is the plan the 2026-09-14 block priced at 50% / £14.99; its percentage moved to 56.67%. All nine funnel offers and the quarterly one-time offers are unchanged. "From" per-shot figures unchanged (trial packs are not counted by `getOfferMinPerShot`).
+
 ### 2026-09-14 (new offer: 4-shot weekly trial box; no funnel price changed)
 
 SCRUM-1343 introduced a weekly trial box sold only on `/go/flow-trial`. It sits outside `OFFER_PRICING`: its pre-add price lives in the offer config (`app/lib/landings/flow-trial.ts`). Skio plan is 50% off the base price; free UK delivery.

@@ -89,14 +89,19 @@ Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the s
 
 The 60/120-shot SKUs are referenced in code since SCRUM-1285: `OFFER_VARIANTS` maps them as the `quarterly-otp` cadence (the selection-aware "Buy it once" link). The 20/40-shot Skio SKUs are not yet referenced; the Skio migration cutover re-points the subscription cadences to them. The `compareAtPrice` values Shopify holds on the FUNNEL variants (59.99 / 179.97 / 89.99 / 269.97) are ex-postage maths, not these purchasable prices.
 
-### 4-shot trial box (SCRUM-1343)
+### Trial pack variants (SCRUM-1343)
 
-Weekly subscription trial sold on `/go/flow-trial` (Flow only; the Clear box exists for a future second slug). UK only: there is no EU rate below 5,250g. Skio group "4 Shots - Weekly" (`gid://shopify/SellingPlanGroup/100221616502`, merchantCode `4-shots---weekly`), plan "Weekly Subscription" `712985543030`, WEEK x1 billing and delivery, 50% off the base price, free UK delivery. Pre-add price lives in `app/lib/landings/flow-trial.ts`.
+Sold only on `/go/trial-pack` (`docs/features/GO_LANDING_PAGES.md`), with a Skio trial plan that Journeys convert to monthly (`docs/features/SUBSCRIPTIONS.md`). UK only: there is no EU rate below 5,250g. Both plans bill and deliver WEEK x1 as percentage off the base price. Pre-add prices live in `app/lib/landings/trial-pack.ts`; charged prices in `docs/PRICING_HISTORY.md`.
 
-| SKU | Product GID (numeric) | Variant GID (numeric) | Base (one-time) price | Weekly sub price | Shots | Weight | HS / origin |
-|-----|-----------------------|-----------------------|-----------------------|------------------|-------|--------|-------------|
-| FLOW-BOX-4 | 15879926415734 | 58714075136374 | £29.98 | £14.99 | 4 | 300g | 210690 / GB |
-| CLEAR-BOX-4 | 15879921074550 | 58714000163190 | £29.98 | £14.99 | 4 | 300g | 210690 / GB |
+| SKU | Product GID (numeric) | Variant GID (numeric) | Base (one-time) price | Shots | Weight | Trial plan (group) | `custom.bundlecomposition` |
+|-----|-----------------------|-----------------------|-----------------------|-------|--------|--------------------|---------------------------|
+| FLOW-BOX-4 | 15879926415734 | 58714075136374 | £29.98 | 4 | 300g | `712985543030` (`100221616502`) | none (physical box) |
+| CLEAR-BOX-4 | 15879921074550 | 58714000163190 | £29.98 | 4 | 300g | `712985543030` (`100221616502`) | none (physical box) |
+| BOTH-BOX-8 | n/a | 58717657989494 | £59.96 | 8 | 600g | `712986788214` (`100222828918`) | `1xFLOW-BOX-4+1xCLEAR-BOX-4` |
+
+FLOW-BOX-4 and CLEAR-BOX-4 are HS 210690, origin GB. Flow and Clear share one plan; Both has its own group. The buy-once link on the same page sells the regular one-time `*-FUNNEL-*-OTP` boxes.
+
+Conversion targets (Journey 1): `FLOW-STARTER-20` `58586461766006`, `CLEAR-STARTER-20` `58586614858102`, `BOTH-STARTER-40` `58586681999734`.
 
 ---
 
