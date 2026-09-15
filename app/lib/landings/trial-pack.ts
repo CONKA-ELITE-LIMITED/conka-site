@@ -33,6 +33,8 @@ export const trialPack: OfferConfig = {
       variantId: "gid://shopify/ProductVariant/58714075136374", // FLOW-BOX-4
       sellingPlanId: null, // Skio trial plan, not yet created
       galleryLead: "/formulas/mmPdpAssetsV2/FlowTrialBox.jpg",
+      // Rendered from design/pdp-slides ftp1 (Flow monthly figures, £39.99/month).
+      explainerSlide: "/formulas/mmPdpAssetsV2/FlowTrialHowItWorks.jpg",
     },
     {
       id: "clear",
@@ -43,6 +45,8 @@ export const trialPack: OfferConfig = {
       variantId: "gid://shopify/ProductVariant/58714000163190", // CLEAR-BOX-4
       sellingPlanId: null, // Skio trial plan, not yet created
       galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBox.jpg",
+      // Rendered from design/pdp-slides ctp1 (Clear monthly figures, £39.99/month).
+      explainerSlide: "/formulas/mmPdpAssetsV2/ClearTrialHowItWorks.jpg",
     },
     {
       id: "both",
@@ -53,9 +57,7 @@ export const trialPack: OfferConfig = {
       variantId: "gid://shopify/ProductVariant/58717657989494", // BOTH-BOX-8
       sellingPlanId: null, // Skio trial plan, not yet created
       galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV2.jpg",
-      // Rendered from design/pdp-slides tp1. Burns in the Both monthly figures
-      // (£74.99/month), so it belongs to Both only until Flow and Clear
-      // versions (or a price-free one) exist.
+      // Rendered from design/pdp-slides tp1 (Both monthly figures, £74.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorks.jpg",
       badge: "Best value",
     },

@@ -1,10 +1,11 @@
 <!doctype html><meta charset="utf-8"><title>BT0 Both Trial Pack</title>
 <link rel="stylesheet" href="_base.css">
 <style>
-/* Both trial pack hero (SCRUM-1343, /go/trial-pack). b1's structure (headline, second
-   line, sub, benefit rows) with trial-pack copy. Both8BoxStagger.jpg is Both8Box
+/* Both trial pack hero (SCRUM-1343, /go/trial-pack). t0 / ct0's structure (headline, sub,
+   tick row) with trial-pack copy. Both8BoxStagger.jpg is Both8Box
    re-staged: ground flattened to white, Flow dropped below Clear (see README).
-   No price is burned in: trial prices are still placeholders. */
+   Benefit-led headline (the day Flow + Clear covers) plus the entry price. £18.99 is the
+   PLACEHOLDER Both trial price in app/lib/landings/trial-pack.ts: re-render when it's set. */
 /* white, like b1: the composite's ground is flattened to 255, so it has no edge */
 .slide{padding:0;background:#fff}
 
@@ -14,27 +15,18 @@
 .bg{position:absolute;z-index:0;left:982px;top:54px;width:1571px;height:1754px;
   background:url("../assets/Both8BoxStagger.jpg") left top/cover no-repeat}
 
-.copy{position:absolute;z-index:3;left:160px;top:140px;width:1100px}
+.copy{position:absolute;z-index:3;left:160px;top:170px;width:1000px}
 .stars{display:inline-flex;align-items:center;gap:22px;background:#fff;border-radius:999px;
   padding:20px 40px 22px;box-shadow:0 14px 40px rgba(27,39,87,.10);
   font-weight:500;font-size:48px;letter-spacing:-.01em;white-space:nowrap}
 .stars .s{color:#f2a900;font-size:52px;letter-spacing:.04em}
 .stars b{font-weight:700}
 
-h1{margin-top:84px;font-family:Favorit;font-weight:700;font-size:140px;line-height:1.02;letter-spacing:-.03em;white-space:nowrap}
-h1 .t2{display:block;font-family:NHG;font-weight:500;font-size:96px;letter-spacing:-.025em;
-  margin-top:6px;padding-left:72px}
-.sub{font-weight:500;font-size:70px;line-height:1.2;letter-spacing:-.018em;color:#2f3a63;
-  margin-top:52px;max-width:960px}
+/* t0 / ct0 type: stacked headline, one sub, no benefit list */
+h1{margin-top:80px;font-family:Favorit;font-weight:500;font-size:190px;line-height:.95;letter-spacing:-.036em}
+h1 em{font-style:italic}
+.sub{margin-top:100px;font-weight:500;font-size:86px;line-height:1.16;letter-spacing:-.018em;color:#2f3a63;max-width:900px}
 
-ul{list-style:none;margin-top:80px}
-li{display:flex;align-items:center;gap:34px;padding:19px 0;
-  font-weight:500;font-size:68px;letter-spacing:-.022em;color:var(--navy)}
-.ic{flex:0 0 92px;width:92px;height:92px;border-radius:50%;background:#dde4f0;
-  display:flex;align-items:center;justify-content:center}
-.ic svg{width:60px;height:58px;stroke:var(--navy);stroke-width:2.2;fill:none;
-  stroke-linecap:round;stroke-linejoin:round}
-.ic svg .fl{fill:var(--navy);stroke:none}
 
 /* offer seal, in the empty corner above the Flow box and left of the Clear lid.
    "Limited time" with no date: true while the trial pack runs as a test. Re-render
@@ -57,23 +49,10 @@ li{display:flex;align-items:center;gap:34px;padding:19px 0;
 
   <div class="copy">
     <div class="stars"><span class="s">★★★★★</span><span><b>4.7</b> · 622+ reviews</span></div>
-    <h1>Your CONKA trial.<span class="t2">Flow + Clear, 8 shots.</span></h1>
-    <div class="sub">Feel the difference at a fraction of the price.</div>
+    <h1>Sharp from<br>morning to<br><em>evening</em>.</h1>
+    <div class="sub">Unlock a sharper mind from just £18.99.</div>
 
-    <ul>
-      <li><span class="ic"><svg viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/>
-        <circle class="fl" cx="12" cy="12" r="1.8"/></svg></span>Focus &amp; Clarity</li>
-      <li><span class="ic"><svg viewBox="0 0 24 24">
-        <path d="M13.4 2.2 5.8 13.3h5.2L10.3 21.8 18.2 10.4h-5.3z"/></svg></span>All-Day Energy</li>
-      <li><span class="ic"><svg viewBox="0 0 24 24">
-        <path d="M2.6 8.2c1.9-1.9 3.9-1.9 5.8 0s3.9 1.9 5.8 0 3.9-1.9 5.8 0"/>
-        <path d="M2.6 13c1.9-1.9 3.9-1.9 5.8 0s3.9 1.9 5.8 0 3.9-1.9 5.8 0"/>
-        <path d="M2.6 17.8c1.9-1.9 3.9-1.9 5.8 0s3.9 1.9 5.8 0 3.9-1.9 5.8 0"/></svg></span>No Brain Fog</li>
-      <li><span class="ic"><svg viewBox="0 0 24 24">
-        <path d="M4.5 19.5h15"/><path d="M7.4 19.5v-4.6M12 19.5V9.9M16.6 19.5V4.8"/></svg></span>Stronger Cognition</li>
-    </ul>
-  </div>
+      </div>
 
   <div class="seal">
     <div class="big">INTRO<br>OFFER</div>

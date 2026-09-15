@@ -71,18 +71,22 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b4` | `BothVsCoffee.jpg` | Same table, Both pair |
 | `b7` | `BothReview.jpg` | Jack G. on running both |
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
-| `t0` | `FlowTrialBox.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off for life |
-| `ct0` | `ClearTrialBox.jpg` | Clear trial hero: beat the afternoon slump, 50% off for life |
+| `t0` | `FlowTrialBox.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off |
+| `ct0` | `ClearTrialBox.jpg` | Clear trial hero: beat the afternoon slump, 50% off |
 | `bt0` | `BothTrialBoxV2.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
-| `tp1` | `TrialPackHowItWorks.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off every month for life |
+| `tp1` | `TrialPackHowItWorks.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
+| `ftp1` | `FlowTrialHowItWorks.jpg` | Flow trial explainer: 4-shot box today, Flow starter pack day 7, 43% off each month |
+| `ctp1` | `ClearTrialHowItWorks.jpg` | Clear trial explainer: same as `ftp1` for Clear |
 
 `tp1` burns in Both monthly figures from `offerData.ts` (£74.99, £236.93 of
 starter-pack value, 42% vs the £129.97 one-off reference). Like `s0`, re-render it
 if any of them change. It carries no trial price: those are still placeholders.
+`ftp1` / `ctp1` are the same layout with the single-formula monthly figures
+(£39.99 / 20 shots, 28-shot first box, £152.94 of value, 43% vs £69.98).
 
-`bt0` uses `b1`'s structure (headline, second line, sub, benefit rows) with
-trial-pack copy (SCRUM-1343). It burns in no price, because the trial prices are
-still placeholders. Side by side, `Both8Box.jpg` (2752x1536) could
+`bt0` uses `t0` / `ct0`'s structure (stacked headline, sub, tick row, no
+benefit list) with a benefit-led headline and the entry price (SCRUM-1343). The £18.99 is the
+placeholder Both trial price in `trial-pack.ts`: re-render when the real one is set. Side by side, `Both8Box.jpg` (2752x1536) could
 not get larger beside that column: the gap between the boxes is only 196px of
 ground (x 1291-1487), so there was nothing to close. It renders from
 `assets/Both8BoxStagger.jpg` instead, built in two steps:
