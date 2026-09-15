@@ -21,7 +21,7 @@ import {
   trackMetaInitiateCheckout,
 } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
-import { trackPurchaseAddToCart } from "@/app/lib/analytics";
+import { trackCartCheckoutClicked, trackPurchaseAddToCart } from "@/app/lib/analytics";
 import type { OfferProduct } from "@/app/lib/offerData";
 import type { OfferOptionId } from "@/app/lib/landings/offer-types";
 
@@ -75,6 +75,23 @@ export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
   const url = data?.cart?.checkoutUrl;
   if (!url) throw new Error("No checkout URL returned from /api/cart");
 
+  // Fail closed on the cart Shopify actually built, not just on config. When
+  // Shopify rejects a selling plan, /api/cart silently retries without it and
+  // still returns 200 (with a `warning`), which would sell the trial pack at
+  // its full one-time price and never convert. Refuse unless the line carries
+  // the exact trial plan.
+  if (args.purchase === "trial") {
+    const line = data.cart.lines?.edges?.[0]?.node as
+      | { sellingPlanAllocation?: { sellingPlan?: { id?: string } } | null }
+      | undefined;
+    const appliedPlanId = line?.sellingPlanAllocation?.sellingPlan?.id;
+    if (data.warning || appliedPlanId !== args.sellingPlanId) {
+      throw new Error(
+        `Trial plan not applied for "${args.option}": expected ${args.sellingPlanId}, got ${appliedPlanId ?? "none"}`,
+      );
+    }
+  }
+
   fireAnalytics(args);
 
   window.location.href = url;
@@ -100,6 +117,10 @@ function fireAnalytics(args: OfferCheckoutArgs): void {
       variantId: args.variantId,
       quantity: 1,
     });
+
+    // The dashboard's bottom funnel stage, as in byoCheckout: one line, the
+    // charged value, fired immediately before the redirect (keepalive survives it).
+    trackCartCheckoutClicked({ items: 1, value: args.price });
 
     trackPurchaseAddToCart({
       productType: "formula",
