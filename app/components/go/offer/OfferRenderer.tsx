@@ -1,4 +1,3 @@
-import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import MetaViewContent from "@/app/components/MetaViewContent";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
@@ -23,12 +22,13 @@ import type {
   OfferOption,
   OfferOptionView,
 } from "@/app/lib/landings/offer-types";
+import OfferCountdownBanner from "./OfferCountdownBanner";
 import OfferHero from "./OfferHero";
 import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
 
 /**
  * /go offer format (SCRUM-1343): the CONKA trial pack page for paid traffic.
- * Nav, OfferHero (ProductHeroV3's parts with the trial-pack selector), the UGC
+ * Countdown banner (no site nav), OfferHero (ProductHeroV3's parts with the trial-pack selector), the UGC
  * marquee, then the Both versions of the PDP's ingredients, what to expect,
  * comparison table and FAQ, footer and a sticky CTA.
  *
@@ -98,7 +98,15 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
         />
 
         <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
-          <Navigation />
+          {/* No site nav: a paid-traffic page with nothing to click away to.
+              The countdown banner is the whole top bar (Grüns pattern). */}
+          <div className="bg-[var(--brand-navy)] px-5 text-white md:px-[5vw]">
+            <div className="brand-track">
+              <OfferCountdownBanner
+                fromPrice={Math.min(...options.map((o) => o.price))}
+              />
+            </div>
+          </div>
 
           {/* Padding mirrors the PDP hero (mobile !pt-6, desktop 6vw gutter and
               the wider 1480px track). */}
