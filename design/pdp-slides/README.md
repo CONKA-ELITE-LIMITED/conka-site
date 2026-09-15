@@ -71,12 +71,18 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b4` | `BothVsCoffee.jpg` | Same table, Both pair |
 | `b7` | `BothReview.jpg` | Jack G. on running both |
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
-| `t0` | `FlowTrialBox.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off |
-| `ct0` | `ClearTrialBox.jpg` | Clear trial hero: beat the afternoon slump, 50% off |
+| `t0` | `FlowTrialBoxV2.jpg` | `/go/flow-trial` hero: focus without the crash, 50% off |
+| `ct0` | `ClearTrialBoxV2.jpg` | Clear trial hero: beat the afternoon slump, 50% off |
 | `bt0` | `BothTrialBoxV2.jpg` | `/go/trial-pack` default hero: your CONKA trial, intro offer, staggered boxes |
-| `tp1` | `TrialPackHowItWorks.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
+| `tp1` | `TrialPackHowItWorksV2.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
 | `ftp1` | `FlowTrialHowItWorks.jpg` | Flow trial explainer: 4-shot box today, Flow starter pack day 7, 43% off each month |
 | `ctp1` | `ClearTrialHowItWorks.jpg` | Clear trial explainer: same as `ftp1` for Clear |
+
+**Re-rendering a slide the site already serves? Give it a new filename** (bump the
+`V2` suffix in `slide_name` above and in the config that references it). Next's
+image optimiser caches by URL for a year (`minimumCacheTTL` in `next.config`), so
+a changed file under the same name keeps serving the old optimised copy, locally
+and on deployed previews. Locally, `rm -rf .next/dev/cache/images` also clears it.
 
 `tp1` burns in Both monthly figures from `offerData.ts` (£74.99, £236.93 of
 starter-pack value, 42% vs the £129.97 one-off reference). Like `s0`, re-render it

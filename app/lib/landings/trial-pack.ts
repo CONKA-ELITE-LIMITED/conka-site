@@ -32,7 +32,7 @@ export const trialPack: OfferConfig = {
       price: 12.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58714075136374", // FLOW-BOX-4
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/FlowTrialBox.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/FlowTrialBoxV2.jpg",
       // Rendered from design/pdp-slides ftp1 (Flow monthly figures, £39.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/FlowTrialHowItWorks.jpg",
     },
@@ -44,7 +44,7 @@ export const trialPack: OfferConfig = {
       price: 12.99, // placeholder
       variantId: "gid://shopify/ProductVariant/58714000163190", // CLEAR-BOX-4
       sellingPlanId: null, // Skio trial plan, not yet created
-      galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBox.jpg",
+      galleryLead: "/formulas/mmPdpAssetsV2/ClearTrialBoxV2.jpg",
       // Rendered from design/pdp-slides ctp1 (Clear monthly figures, £39.99/month).
       explainerSlide: "/formulas/mmPdpAssetsV2/ClearTrialHowItWorks.jpg",
     },
@@ -58,7 +58,7 @@ export const trialPack: OfferConfig = {
       sellingPlanId: null, // Skio trial plan, not yet created
       galleryLead: "/formulas/mmPdpAssetsV2/BothTrialBoxV2.jpg",
       // Rendered from design/pdp-slides tp1 (Both monthly figures, £74.99/month).
-      explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorks.jpg",
+      explainerSlide: "/formulas/mmPdpAssetsV2/TrialPackHowItWorksV2.jpg",
       badge: "Best value",
     },
   ],

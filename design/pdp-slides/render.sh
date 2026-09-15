@@ -29,8 +29,8 @@ slide_name() {
     b1) echo BothBenefitStack ;;  b2) echo BothWhatToExpect ;;
     b3) echo BothIngredients ;;   b4) echo BothVsCoffee ;;
     b7) echo BothReview ;;        b8) echo BothGuarantee ;;
-    t0) echo FlowTrialBox ;;      ct0) echo ClearTrialBox ;;
-    bt0) echo BothTrialBoxV2 ;;   tp1) echo TrialPackHowItWorks ;;
+    t0) echo FlowTrialBoxV2 ;;      ct0) echo ClearTrialBoxV2 ;;
+    bt0) echo BothTrialBoxV2 ;;   tp1) echo TrialPackHowItWorksV2 ;;
     ftp1) echo FlowTrialHowItWorks ;; ctp1) echo ClearTrialHowItWorks ;;
     *)  echo "$1" ;;
   esac
