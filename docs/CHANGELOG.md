@@ -5,6 +5,13 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-14** | Trial pack page: title back to CONKA Trial Pack, duplicated What you get panel removed, how-it-works slide added to the Both gallery, shorter review rotator (SCRUM-1343)
+- **2026-09-14** | Trial pack page: tile selector with a navy selected state, limited-time offer framing with honest struck prices, week-long trial copy and a rotating hero review (SCRUM-1343)
+- **2026-09-14** | /go/trial-pack replaces the 4 box pages: a Flow / Clear / Both trial pack that converts to monthly, with a buy-once link, the standard 100-day guarantee and the upsell modal parked (SCRUM-1343)
+- **2026-09-14** | New /go/clear-4-box offer page (Clear 4 box, same weekly offer as Flow) and a Best value badge on both 4 box plan cards (SCRUM-1343)
+- **2026-09-14** | Offer page renamed to the Flow 4 box (/go/flow-4-box) with a 30-day guarantee, new lead image and a clearer comparison-table upsell to monthly (SCRUM-1343)
+- **2026-09-14** | /go/flow-trial reworked onto the PDP: Cloud-style hero with a PDP-style plan card, checkout CTA and buy-once link, plus UGC, ingredients, what to expect, comparison and FAQ sections (SCRUM-1343)
+- **2026-09-14** | New /go/flow-trial offer page: £14.99 weekly Flow 4-shot trial box with a one-time upsell to the monthly starter pack, straight to Shopify checkout (SCRUM-1343)
 - **2026-09-11** | Primary CTA stripped back to label + arrow site-wide: the Conka O-mark and the mono `// ...` meta line are gone from `ConkaCTAButton`, the label now sits dead-centre with the arrow in the right gutter, and the PDP sticky footer's odd `↗` glyph is unified onto the same `→` as every other button
 - **2026-09-11** | Swapped the ADHD and brain-ageing /go listicle heroes to real customer photos, replacing generated studio shots that did not match either persona
 - **2026-09-11** | Re-cut the Clear bottle for the PDP carousel at native resolution, replacing an asset that was being upscaled up to 2.8x

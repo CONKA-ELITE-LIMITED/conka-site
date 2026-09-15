@@ -1,0 +1,99 @@
+<!doctype html><meta charset="utf-8"><title>FTP1 Flow Trial How It Works</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* Flow trial explainer (SCRUM-1343), tp1's layout: trial box today, Flow starter pack
+   on day 7, then the monthly price. Figures are Flow monthly-sub in app/lib/offerData.ts:
+   £39.99 / 20 shots, first box 28 shots, gifts £23.99 + £19.99 + £28.99 + £9.99
+   (£152.94 total with the £69.98 reference, as s0), one-off reference £69.98 (43% off).
+   The trial price is a placeholder, so card 1 carries no price. Re-render on any of those changing. */
+.slide{padding:0;background:var(--navy);color:#fff}
+
+/* the title says what the slide is; the promise sits under it, quieter */
+h1{position:absolute;left:160px;top:120px;font-family:Favorit;font-weight:500;font-size:150px;
+  line-height:1;letter-spacing:-.034em;color:#fff}
+.tagline{position:absolute;left:160px;top:300px;font-weight:500;font-size:66px;line-height:1;
+  letter-spacing:-.018em;color:rgba(255,255,255,.72)}
+.tagline em{font-style:italic}
+
+.steps{position:absolute;left:160px;right:160px;top:470px;bottom:140px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:96px}
+.card{position:relative;background:#fff;color:var(--navy);border-radius:44px;padding:44px 46px;
+  display:flex;flex-direction:column}
+.pill{align-self:flex-start;background:var(--navy);color:#fff;border-radius:999px;padding:14px 30px 16px;
+  font-family:JBM,monospace;font-weight:500;font-size:36px;letter-spacing:.12em}
+.media{margin-top:30px;height:470px;border-radius:28px;background:#f4f5f8;overflow:hidden;position:relative}
+h2{margin-top:34px;font-weight:700;font-size:66px;line-height:1.02;letter-spacing:-.025em}
+.body{margin-top:18px;font-weight:500;font-size:54px;line-height:1.2;letter-spacing:-.012em;color:#2f3a63}
+.figure{margin-top:auto;padding-top:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.tag{font-family:JBM,monospace;font-weight:500;font-size:38px;letter-spacing:.1em;color:#414d78}
+.save{background:var(--green);color:#fff;border-radius:999px;padding:12px 26px 14px;
+  font-family:JBM,monospace;font-weight:500;font-size:34px;letter-spacing:.08em;white-space:nowrap}
+.price{font-weight:700;font-size:64px;letter-spacing:-.03em}
+.price s{font-weight:500;font-size:48px;color:#7b86a8;text-decoration-thickness:4px;margin-right:12px}
+
+/* card 1: the 4-shot box, cropped from the light-ground photo */
+.m1{background:#f2f2f4 url("../assets/Flow4BoxLight.jpg") 50% 62%/150% auto no-repeat}
+/* card 2: what you'd get anyway (the box, left) kept apart from the free extras (right) */
+.m2{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#e6e9f1}
+.m2 .box{position:relative;background:#e9eaef center/cover no-repeat}
+.m2 .free{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px}
+.m2 .free div{background:#fff center/cover no-repeat}
+.m2 .free .app{background:#f4f5f8 url("../../../public/app/AppConkaRing.png") 50% 18px/100% auto no-repeat}
+.chip{position:absolute;z-index:2;left:14px;top:14px;border-radius:999px;padding:8px 18px 10px;color:#fff;
+  font-family:JBM,monospace;font-weight:500;font-size:30px;letter-spacing:.08em;white-space:nowrap}
+.chip.navy{background:var(--navy)}
+.chip.green{background:var(--green)}
+.body .plus{display:block;color:var(--green)}
+/* card 3: the number is the picture */
+.m3{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#eef0f5}
+.price .per{font-weight:500;font-size:44px;color:#2f3a63;letter-spacing:-.01em}
+.m3 .n{font-weight:700;font-size:150px;color:var(--green);white-space:nowrap;line-height:.9;letter-spacing:-.05em}
+.m3 .u{margin-top:18px;font-family:JBM,monospace;font-weight:500;font-size:34px;letter-spacing:.1em;color:#414d78;white-space:nowrap;text-align:center}
+
+/* arrows sit across the gaps, level with the media */
+.arrow{position:absolute;top:calc(470px + 44px + 60px + 30px + 235px - 48px);width:96px;height:96px;border-radius:50%;
+  background:#fff;color:var(--navy);display:flex;align-items:center;justify-content:center;z-index:3;
+  box-shadow:0 0 0 14px var(--navy)}
+.arrow svg{width:48px;height:48px;stroke:var(--navy);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+</style>
+<div class="slide">
+  <h1>How the trial works</h1>
+  <div class="tagline">Start small. <em>Save</em> for good.</div>
+
+  <div class="steps">
+    <div class="card">
+      <div class="pill">TODAY</div>
+      <div class="media m1"></div>
+      <h2>Your trial box</h2>
+      <div class="body">Four days of Flow to feel the difference.</div>
+      <div class="figure"><span class="tag">4 SHOTS · 4 DAYS</span></div>
+    </div>
+
+    <div class="card">
+      <div class="pill">DAY 7</div>
+      <div class="media m2">
+        <div class="box" style="background-image:url('../assets/Flow28Box.jpg');background-position:44% 70%;background-size:auto 125%"><span class="chip navy">20 SHOTS</span></div>
+        <div class="free"><span class="chip green">FREE</span>
+          <div style="background-image:url('../../../public/formulas/starterPack/EightFlow.jpg')"></div>
+          <div style="background-image:url('../../../public/formulas/starterPack/ConkaHat.jpg')"></div>
+          <div style="background-image:url('../../../public/formulas/starterPack/TravelPack.jpg')"></div>
+          <div class="app"></div>
+        </div>
+      </div>
+      <h2>Your starter pack</h2>
+      <div class="body">Your 20-shot Flow box.<span class="plus">+ 8 free shots, hat, travel pack, app.</span></div>
+      <div class="figure"><span class="price"><s>£152.94</s>£39.99</span></div>
+    </div>
+
+    <div class="card">
+      <div class="pill">EVERY MONTH</div>
+      <div class="media m3"><div class="n">43% off</div><div class="u">EACH MONTH</div></div>
+      <h2>Your monthly delivery</h2>
+      <div class="body">20 shots a month, delivered free. Cancel anytime.</div>
+      <div class="figure"><span class="price"><s>£69.98</s>£39.99<span class="per">/month</span></span></div>
+    </div>
+  </div>
+
+  <div class="arrow" style="left:calc(160px + (2080px - 192px) / 3 + 48px - 48px)"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  <div class="arrow" style="left:calc(160px + 2 * (2080px - 192px) / 3 + 96px + 48px - 48px)"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+</div>

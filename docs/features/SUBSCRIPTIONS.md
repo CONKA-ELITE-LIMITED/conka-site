@@ -47,6 +47,7 @@ incident on the platform:
 | 60 Shots - Quarterly | Flow, Clear | 3 months | 42.11% | £109.99 | `712928919926` |
 | 40 Shots - Monthly | Both | 1 month | 25.00% | £74.99 | `712928952694` |
 | 120 Shots - Quarterly | Both | 3 months | 46.43% | £149.99 | `712928985462` |
+| 4 Shots - Weekly | Flow, Clear 4-shot trial box | 1 week | 50.00% | £14.99 | `712985543030` |
 
 Variant SKUs and GIDs live in `docs/product/SKU_AND_SHOT_REFERENCE.md`, not here.
 

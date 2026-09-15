@@ -7,8 +7,9 @@ for the format you are building:
 |---|---|---|
 | `listicle` | [`LISTICLE_SYSTEM.md`](./LISTICLE_SYSTEM.md) | "N reasons" pages, two templates (`mm` editorial, `im8` proof-dense) |
 | `quiz` | [`LANDING_QUIZ_SYSTEM.md`](./LANDING_QUIZ_SYSTEM.md) | Config-driven quiz engine with screens, scoring and a reveal |
+| `offer` | [Offer format](#offer-format) below | Single-offer page for impulse-priced acquisition tests, straight to checkout |
 
-Everything on this page is true of both. Neither format doc repeats it.
+Everything on this page is true of all three. Neither format doc repeats it.
 
 ---
 
@@ -34,7 +35,7 @@ naming conventions.
 config (app/lib/landings/*.ts)
   -> registered in app/lib/landings/index.ts
   -> app/go/[slug]/page.tsx: getLandingConfig(slug)
-       -> config.format === "quiz" ? QuizEngine : <listicle renderer by template>
+       -> "quiz" ? QuizEngine : "offer" ? OfferRenderer : <listicle renderer by template>
 ```
 
 | Path | Role |
@@ -60,8 +61,9 @@ Nothing else changes. No route file, no component, no per-page styling.
 
 ## Analytics, the shared part
 
-Both formats emit their own event family (`landing:*` for quizzes,
-`listicle:*` for listicles) and each doc specifies its own. What is shared:
+Each format emits its own event family (`landing:*` for quizzes,
+`listicle:*` for listicles; offer pages reuse `listicle:*` plus one `offer:*`
+event, see below). What is shared:
 
 - **Every event carries `slug`**, so per-page funnels filter directly in Vercel Analytics. Compare within a format, not across: the two engines measure different things under similar-sounding names.
 - **The two-property budget** documented in `app/lib/analytics.ts` applies to both. Fold extra dimensions into an existing property rather than adding a third.
@@ -69,7 +71,66 @@ Both formats emit their own event family (`landing:*` for quizzes,
 - **Meta:** ViewContent on entry. Meta only fires on `www.conka.io` (see `isProductionHost`), so preview deploys stay out of the dataset.
 - Run `/review` after any change to event wiring, before scaling spend.
 
-## Gotchas that bite both formats
+## Offer format
+
+A stripped-back page selling one subscription offer, built for impulse-priced
+acquisition tests. The first config is `flow-trial` (the 4-shot weekly Flow trial
+box; SKUs, plan and price in `docs/product/SKU_AND_SHOT_REFERENCE.md`). Status:
+SCRUM-1343.
+
+**A new offer or copy iteration is a new slug.** A Clear version is a second config,
+not a toggle.
+
+| File | Role |
+|------|------|
+| `app/lib/landings/offer-types.ts` | `OfferConfig` schema |
+| `app/lib/landings/flow-trial.ts` | The model config to copy |
+| `app/components/go/offer/OfferRenderer.tsx` | Server renderer, all sections |
+| `app/components/go/offer/OfferPurchase.tsx` | Client islands: provider, CTA button, sticky bar, error line |
+| `app/components/go/offer/OfferUpsellModal.tsx` | The one-time upsell modal |
+| `app/components/go/offer/offerCheckout.ts` | Fresh cart, exact variant + plan, redirect to `checkoutUrl` |
+
+**Page.** No nav or footer (like the quiz). Sections: hero (logo, trust row,
+headline, image, price tile with struck base price and % off pill, CTA, the
+renewal line "Then £X every week until you cancel", bullets), benefits, reviews
+(`app/lander/sections/Reviews/reviews.data.ts`), how it works + CTA, FAQ, slim
+legal footer. The sticky CTA appears only once the tile CTA has scrolled out of view.
+
+**Purchase flow.**
+
+1. The first CTA click opens the upsell modal to the product's monthly starter pack.
+   Its figures come from `getOfferPricing(product, "monthly-sub")` and
+   `getCadenceGiftSummary`: value = compare-at all-in price + RRP of first-box
+   freebies, "You save" = value minus price.
+2. Accept or decline sets sessionStorage `offer_upsell_seen_<slug>`, so later CTA
+   clicks skip the modal and go straight to checkout. Dismissing (backdrop, Escape,
+   close) does not count as seen.
+3. Both choices call `offerCheckout.ts`: a fresh cart via `POST /api/cart` with the
+   exact variant + selling plan and Meta cart attributes, then redirect to
+   `cart.checkoutUrl`. Modelled on the lander checkout helper. **Deliberately not
+   `byoCheckout.ts`**, which re-resolves its own variant.
+4. Every line carries `_source=trial_box`, `_offer` and `_offer_choice`
+   (`docs/development/CART_ATTRIBUTES.md`).
+
+**Analytics.** Deliberately minimal: the website only emits, and conka-lab owns
+wiring and visualisation.
+
+| Event | Fires | Properties |
+|-------|-------|------------|
+| `listicle:section_viewed` | Section scrolls into view | `slug`, `section` (`hero`, `benefits`, `proof`, `steps`, `faq`) |
+| `listicle:cta_clicked` | Any CTA click | `slug`, `section` (above plus `sticky`) |
+| `offer:upsell_shown` | Modal opens | `slug`, `product` |
+| `offer:upsell_choice` | Modal closes | `slug`, `choice` (`accepted` \| `declined` \| `dismissed`) |
+| `purchase:add_to_cart` | Checkout click | `source: "trial_box"`, `location: offer_<section>` or `offer_upsell` |
+
+Meta ViewContent fires on mount for the trial variant; AddToCart and InitiateCheckout
+fire at checkout click (deduplicated via `trackWithDedup`), plus Triple Whale ATC.
+Split purchases trial vs upsell in Shopify on `_offer_choice`.
+
+**FAQ.** Canonical `faqIds` plus offer-only `offerFaqs` in the config (see
+`docs/features/FAQ_SYSTEM.md`).
+
+## Gotchas that bite every format
 
 - **A new config needs a deploy.** Marketing cannot ship a page without one.
 - **Unknown ids fail the build**, deliberately, so a page cannot ship with a broken reference. Add the id to its source file first.

@@ -1,0 +1,68 @@
+<!doctype html><meta charset="utf-8"><title>BT0 Both Trial Pack</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* offer seal: trial price vs the 4-shot box one-time price. Flow/Clear £12.99 vs £29.98 = 57%;
+   Both £18.99 vs £59.96 = 68%. Re-render if either price changes. */
+/* Both trial pack hero (SCRUM-1343, /go/trial-pack). t0 / ct0's structure (headline, sub,
+   tick row) with trial-pack copy. Both8BoxStagger.jpg is Both8Box
+   re-staged: ground flattened to white, Flow dropped below Clear (see README).
+   Benefit-led headline (the day Flow + Clear covers) plus a low-barrier sub.
+   No price is burned in: it contradicted the trial price shown elsewhere on the page. */
+/* white, like b1: the composite's ground is flattened to 255, so it has no edge */
+.slide{padding:0;background:#fff}
+
+/* 2182x2436 uncropped composite drawn at 0.72, shadows intact. It runs off the slide
+   and under the copy; its ground is flattened to white, so neither edge shows.
+   Anchored so the Clear lid stays in frame and the Flow box clears the tick row. */
+.bg{position:absolute;z-index:0;left:982px;top:54px;width:1571px;height:1754px;
+  background:url("../assets/Both8BoxStagger.jpg") left top/cover no-repeat}
+
+.copy{position:absolute;z-index:3;left:160px;top:170px;width:1000px}
+.stars{display:inline-flex;align-items:center;gap:22px;background:#fff;border-radius:999px;
+  padding:20px 40px 22px;box-shadow:0 14px 40px rgba(27,39,87,.10);
+  font-weight:500;font-size:48px;letter-spacing:-.01em;white-space:nowrap}
+.stars .s{color:#f2a900;font-size:52px;letter-spacing:.04em}
+.stars b{font-weight:700}
+
+/* t0 / ct0 type: stacked headline, one sub, no benefit list */
+h1{margin-top:80px;font-family:Favorit;font-weight:500;font-size:190px;line-height:.95;letter-spacing:-.036em}
+h1 em{font-style:italic}
+.sub{margin-top:100px;font-weight:500;font-size:86px;line-height:1.16;letter-spacing:-.018em;color:#2f3a63;max-width:900px}
+
+
+/* offer seal, in the empty corner above the Flow box and left of the Clear lid.
+   Same 50% OFF as t0 / ct0, scaled to this 440px seal. */
+.seal{position:absolute;z-index:3;left:1310px;top:110px;width:440px;height:440px;border-radius:50%;
+  background:var(--navy);color:#fff;transform:rotate(-10deg);
+  box-shadow:0 30px 70px rgba(27,39,87,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.seal::before{content:"";position:absolute;inset:20px;border-radius:50%;border:4px dashed rgba(255,255,255,.35)}
+.seal .big{font-weight:700;font-size:176px;line-height:.86;letter-spacing:-.05em}
+.seal .off{font-weight:700;font-size:92px;line-height:1;letter-spacing:-.02em}
+
+/* one row, bottom left, as on t0 / ct0 */
+.ticks{position:absolute;z-index:3;left:160px;bottom:110px;display:flex;gap:32px;white-space:nowrap}
+.ticks span{display:inline-flex;align-items:center;gap:14px;font-weight:700;font-size:48px;letter-spacing:-.015em}
+.ticks svg{width:54px;height:54px;flex:0 0 54px}
+</style>
+<div class="slide">
+  <div class="bg"></div>
+
+  <div class="copy">
+    <div class="stars"><span class="s">★★★★★</span><span><b>4.7</b> · 622+ reviews</span></div>
+    <h1>Sharp from<br>morning to<br><em>evening</em>.</h1>
+    <div class="sub">Try CONKA at our lowest price ever.</div>
+
+      </div>
+
+  <div class="seal">
+    <div class="big">68%</div>
+    <div class="off">OFF</div>
+  </div>
+
+  <div class="ticks">
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Caffeine free</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Cancel anytime</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1B2757"/><path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Made in UK</span>
+  </div>
+</div>

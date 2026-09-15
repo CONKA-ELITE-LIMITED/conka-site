@@ -12,9 +12,11 @@ import { adhdListicle } from "./adhd-listicle";
 import { productivityListicle } from "./productivity-listicle";
 import { brainAgeingListicle } from "./brain-ageing-listicle";
 import { generalListicle } from "./general-listicle";
+import type { OfferConfig } from "./offer-types";
+import { trialPack } from "./trial-pack";
 
 /** Any landing page config; narrow on `format` to render */
-export type AnyLandingConfig = LandingConfig | ListicleConfig;
+export type AnyLandingConfig = LandingConfig | ListicleConfig | OfferConfig;
 
 // To add a listicle, create a config file and register it here. Copy the
 // closest model: general-listicle.ts for the "mm" template, or a persona file
@@ -26,6 +28,8 @@ const registry: Record<string, AnyLandingConfig> = {
   [productivityListicle.slug]: productivityListicle,
   [brainAgeingListicle.slug]: brainAgeingListicle,
   [generalListicle.slug]: generalListicle,
+  // Offer pages (SCRUM-1343): one config per offer, see offer-types.ts.
+  [trialPack.slug]: trialPack,
 };
 
 export const landingSlugs = Object.keys(registry);
@@ -36,3 +40,4 @@ export function getLandingConfig(slug: string): AnyLandingConfig | undefined {
 
 export * from "./types";
 export * from "./listicle-types";
+export * from "./offer-types";

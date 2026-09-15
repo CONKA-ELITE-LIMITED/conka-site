@@ -4,6 +4,7 @@ import { getLandingConfig, landingSlugs } from "@/app/lib/landings";
 import QuizEngine from "@/app/components/go/QuizEngine";
 import ListicleRenderer from "@/app/components/go/listicle/ListicleRenderer";
 import SimpleListicleRenderer from "@/app/components/go/listicle/SimpleListicleRenderer";
+import OfferRenderer from "@/app/components/go/offer/OfferRenderer";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 
@@ -58,6 +59,11 @@ export default async function GoPage({
         <Footer />
       </div>
     );
+  }
+  if (config.format === "offer") {
+    // Single-offer page. The renderer owns nav and footer, inside the PDP's
+    // brand-clinical root so its reused PDP parts render as they do there.
+    return <OfferRenderer config={config} />;
   }
   return <QuizEngine config={config} />;
 }

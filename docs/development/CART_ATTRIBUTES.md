@@ -10,7 +10,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 
 | Key | Values | When set | Notes |
 |-----|--------|----------|--------|
-| **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
+| **source** | `product_page` \| `product_showcase` \| `product_split` \| `formula_split` \| `whats_inside` \| `cart_upsell` \| `listicle` \| `trial_box` \| `win_free_month` | Every add-to-cart | Which surface the add came from. Set by the call site via `metadata.source`; the list grows as surfaces are added, so grep `source:` in `app/` for the current set. |
 
 ---
 
@@ -24,6 +24,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 | `whats_inside` | Add from a "what's inside" ingredients section. |
 | `cart_upsell` | Add from an upsell offer inside the cart drawer. |
 | `listicle` | Add from a `/go/[slug]` listicle landing page. |
+| `trial_box` | Checkout from a `/go/[slug]` offer page (sent as the `_source` line attribute, see below). |
 | `win_free_month` | Add from the win-a-free-month promo surface. |
 
 > **Removed sources.** `quiz` and `protocol_page` were retired with the `/quiz`
@@ -45,6 +46,18 @@ the `home_` prefix** rather than assume every token came from `/go`. Second,
 that is the point of them: home had no per-CTA attribution, so there was no way
 to tell which argument (the timeline, the comparison table, the athletes) drove
 a click. Add a `home_<section>` token for any new home CTA.
+
+### Offer page line attributes
+
+`/go/[slug]` offer pages build their own cart (`app/components/go/offer/offerCheckout.ts`), so they set hidden line attributes directly on both the trial and the upsell path:
+
+| Key | Values | Meaning |
+|-----|--------|---------|
+| `_source` | `trial_box` | The line came from an offer page |
+| `_offer` | the config's `offerId` (e.g. `flow_trial_4`) | Which offer, stable across slug iterations |
+| `_offer_choice` | `trial` \| `monthly` | `monthly` = the visitor took the upsell to the monthly starter pack |
+
+Filter orders on `_offer` for the offer's purchases and on `_offer_choice` for the trial vs upsell split.
 
 ---
 
