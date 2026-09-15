@@ -23,9 +23,14 @@ import { OfferDisclosureRows, OfferGallery } from "./OfferPurchase";
 /** The offer gradient shared with the plan tiles, CartUpsellTile and GiftValueStack. */
 const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 
-export default function OfferHero({ config }: { config: OfferConfig }) {
-  const fromPrice = Math.min(...config.options.map((o) => o.price));
-
+export default function OfferHero({
+  config,
+  fromPrice,
+}: {
+  config: OfferConfig;
+  /** The cheapest trial price, for the headline. */
+  fromPrice: number;
+}) {
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
       <div className="grid grid-cols-1 gap-6 text-black lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">

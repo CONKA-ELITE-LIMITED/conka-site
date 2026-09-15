@@ -73,8 +73,9 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
 
 /**
  * One square trial-pack tile: the bottle render on white, cropped to the upper
- * part of the bottles, over a base with name and trial price. The image box is 160% of the tile's height and anchored top; going nearer a true
- * half crop clips the outer bottles on the wider Both render.
+ * part of the bottles, over a base with name and trial price. The image box is
+ * 160% of the tile's height and anchored top; going nearer a true half crop
+ * clips the outer bottles on the wider Both render.
  */
 function PackTile({
   option,

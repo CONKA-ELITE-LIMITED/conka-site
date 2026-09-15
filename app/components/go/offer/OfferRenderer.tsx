@@ -28,9 +28,9 @@ import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
 
 /**
  * /go offer format (SCRUM-1343): the CONKA trial pack page for paid traffic.
- * Countdown banner (no site nav), OfferHero (ProductHeroV3's parts with the trial-pack selector), the UGC
- * marquee, then the Both versions of the PDP's ingredients, what to expect,
- * comparison table and FAQ, footer and a sticky CTA.
+ * Countdown banner (no site nav), OfferHero (ProductHeroV3's parts with the
+ * trial-pack selector), the UGC marquee, then the Both versions of the PDP's
+ * ingredients, what to expect, comparison table and FAQ, footer and a sticky CTA.
  *
  * Below the fold always renders Both: it speaks to the default option and keeps
  * the page server-rendered with no layout shift when the selection changes.
@@ -79,6 +79,8 @@ function buildOptionView(option: OfferOption): OfferOptionView {
 
 export default function OfferRenderer({ config }: { config: OfferConfig }) {
   const options = config.options.map(buildOptionView);
+  // The cheapest trial price, shared by the banner and the hero headline.
+  const fromPrice = Math.min(...options.map((o) => o.price));
   const defaultView = options.find((o) => o.id === config.defaultOption);
   if (!defaultView) {
     throw new Error(`Offer page: defaultOption "${config.defaultOption}" is not an option`);
@@ -102,9 +104,7 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
               The countdown banner is the whole top bar (Grüns pattern). */}
           <div className="bg-[var(--brand-navy)] px-5 text-white md:px-[5vw]">
             <div className="brand-track">
-              <OfferCountdownBanner
-                fromPrice={Math.min(...options.map((o) => o.price))}
-              />
+              <OfferCountdownBanner fromPrice={fromPrice} />
             </div>
           </div>
 
@@ -116,7 +116,7 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
               className="brand-section brand-hero-first brand-bg-white !pt-6 brand-tight-bottom-mobile lg:!px-[6vw]"
             >
               <div className="brand-track !max-w-[1480px]">
-                <OfferHero config={config} />
+                <OfferHero config={config} fromPrice={fromPrice} />
               </div>
             </section>
           </TrackedSection>
