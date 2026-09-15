@@ -32,10 +32,10 @@ export const bottleRendersCutout: Record<
   "flow" | "clear" | "both",
   ProductImage & { alt: string }
 > = {
-  flow: { src: "/formulas/labelV2/FlowTransparent.png", alt: "CONKA Flow bottle" },
-  clear: { src: "/formulas/labelV2/ClearTransparent.png", alt: "CONKA Clear bottle" },
+  flow: { src: "/formulas/labelV2/FlowTransparentV2.png", alt: "CONKA Flow bottle" },
+  clear: { src: "/formulas/labelV2/ClearTransparentV2.png", alt: "CONKA Clear bottle" },
   both: {
-    src: "/formulas/labelV2/BothTransparent.png",
+    src: "/formulas/labelV2/BothTransparentV2.png",
     alt: "CONKA Flow and Clear bottles",
   },
 };
