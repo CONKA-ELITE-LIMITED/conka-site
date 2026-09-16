@@ -7,6 +7,7 @@ One doc per sprint, named `YYYY-MM-<slug>.md`. Keep the doc alive during the spr
 | Sprint | Window | Status | Doc |
 |--------|--------|--------|-----|
 | Listicle ad-spend trial (£300/day Meta) | 24 Jul → ~7 Aug 2026 | Live | [2026-07-listicle-ad-spend.md](./2026-07-listicle-ad-spend.md) |
+| Trial pack: cheap trial into monthly (`/go/trial-pack`) | From 15 Sep 2026 | Live | [2026-09-trial-pack.md](./2026-09-trial-pack.md) |
 
 ## Related
 

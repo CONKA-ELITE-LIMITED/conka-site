@@ -15,10 +15,12 @@ import {
  * OfferBuyBox: the offer page's purchase section, sitting where ProductBuyPanel
  * sits in the PDP hero (SCRUM-1343).
  *
- * Top to bottom: a row of three square trial-pack tiles (bottle image, name,
- * struck one-time price and trial price; the selected tile carries a navy
- * ring), the checkout CTA, the conversion disclosure, and the buy-once link. The
- * CTA carries the price, the disclosure carries the terms.
+ * Top to bottom: the heading and a line restating the selection with its
+ * saving, a row of three square trial-pack tiles (bottle image, name, struck
+ * one-time price and trial price; the selected tile carries a navy ring), the
+ * "Start trial for £X" CTA, the conversion disclosure, and the buy-once link.
+ * The CTA carries the price, the disclosure carries the terms. The struck price
+ * stays on the tile, not the button: the saving is already stated above.
  *
  * The disclosure is the single statement of the terms (shots today, when the
  * monthly plan starts, what it costs, starter pack, cancel before): the page sells a trial
@@ -31,11 +33,26 @@ const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 
 export default function OfferBuyBox({ conversionDays }: { conversionDays: number }) {
   const { options, selected, select } = useOfferPurchase();
+  const saving = selected.referencePrice - selected.price;
 
   return (
     <div>
-      <p id="offer-trial-pack-label" className="mb-3 text-lg font-bold text-black">
+      <p id="offer-trial-pack-label" className="text-lg font-bold text-black">
         Choose your trial pack:
+      </p>
+      {/* Restates the selection in words with its saving. The two-line min
+          height keeps the tiles from jumping when a shorter summary is picked. */}
+      <p className="mb-2 mt-1 min-h-[2.75em] text-sm leading-snug text-black/70">
+        <span className="font-semibold text-black">{selected.label}:</span>{" "}
+        {selected.summary}
+        {saving > 0 && (
+          <>
+            {" "}
+            <span className="whitespace-nowrap font-semibold tabular-nums text-[var(--brand-positive)]">
+              Save {formatPrice(saving)}
+            </span>
+          </>
+        )}
       </p>
       {/* Groups the toggles under the visible heading, so a screen reader hears
           what the three pressed/unpressed buttons are choosing between. pt-2
@@ -57,7 +74,7 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
 
       <div className="mt-4">
         <OfferCtaButton section="hero" isTile>
-          Checkout - {formatPrice(selected.price)}
+          Start trial for {formatPrice(selected.price)}
         </OfferCtaButton>
         <OfferCheckoutError />
       </div>

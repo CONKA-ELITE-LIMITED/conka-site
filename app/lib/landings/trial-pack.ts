@@ -31,6 +31,7 @@ export const trialPack: OfferConfig = {
     {
       id: "flow",
       label: "Flow",
+      summary: "4 days of sharper focus and calmer energy.",
       heroId: "01",
       shots: 4,
       price: 12.99,
@@ -45,6 +46,7 @@ export const trialPack: OfferConfig = {
     {
       id: "clear",
       label: "Clear",
+      summary: "4 days of sharper recall and faster thinking.",
       heroId: "02",
       shots: 4,
       price: 12.99,
@@ -59,6 +61,7 @@ export const trialPack: OfferConfig = {
     {
       id: "both",
       label: "Flow + Clear",
+      summary: "4 days of Flow each morning and Clear each afternoon.",
       heroId: "03",
       shots: 8,
       price: 18.99,
