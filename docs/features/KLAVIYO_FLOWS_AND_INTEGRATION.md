@@ -25,7 +25,8 @@ Concise reference for what is triggered in Klaviyo, from where, and how.
 
 | Trigger / action | Where | How | Why |
 |------------------|--------|-----|-----|
-| **Cognitive test completed** | `app/lib/klaviyo.ts` → `POST /api/klaviyo/track-test` | Server calls Klaviyo Track API with email, score, accuracy, speed | Funnel/segmentation for quiz completers |
+| **/app test email gate passed** | `app/lib/klaviyo.ts` `subscribeAppTestSignup` → `POST /api/klaviyo/app-test-signup` | Fires on email submit, before the test runs. Upserts the profile with `source: app_test`, then a subscription job records `SUBSCRIBED` email marketing consent (`custom_source: app_test`) and adds the profile to `WBbMia`. The route refuses a request without `consent: true` | Captures test signups even if they drop out mid-test. The gate checkbox ("Email me my results and news from CONKA") is the marketing consent |
+| **Cognitive test completed** | `app/lib/klaviyo.ts` → `POST /api/klaviyo/track-test` | Server calls Klaviyo Track API ("Website Short Test Submitted") with email, score, accuracy, speed, once the results screen loads | Carries the score onto the profile. List membership and consent come from the gate step above, not this event |
 | **Subscribe to list (e.g. Win)** | `app/lib/klaviyo.ts` → `POST /api/klaviyo/subscribe` | Server creates/gets profile, adds to list via Klaviyo APIs | Newsletter / Win page sign-ups |
 
 We do **not** send Added to Cart or Checkout Started from this app. Checkout Started is sent by **Shopify** when the customer lands on the Shopify checkout page.
