@@ -80,7 +80,7 @@ export default function CognitiveTestSectionMobile({
   const handleEmailSubmit = useCallback((submission: EmailSubmission) => {
     // Capture the signup now, not at the end, so a visitor who drops out
     // mid-test is still on the list (SCRUM-1360).
-    subscribeAppTestSignup(submission.email);
+    void subscribeAppTestSignup(submission.email);
     trackAppEmailSubmitted();
     setEmailSubmission(submission);
     setTestState("testing");

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/app/lib/env";
+import { createRateLimiter, getClientIp } from "@/app/lib/rateLimit";
 
 /**
  * Request body schema for an /app test signup. `consent` must be literally
@@ -16,6 +17,11 @@ const MASTER_LIST_ID = "WBbMia";
 const SIGNUP_SOURCE = "app_test";
 const KLAVIYO_REVISION = "2024-10-15";
 
+// This route records marketing consent, so a script posting other people's
+// addresses would put them on the list as subscribed. A per-IP speed-bump
+// keeps that from scaling; a real visitor replaying the test stays well under.
+const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
+
 /**
  * POST /api/klaviyo/app-test-signup
  *
@@ -28,9 +34,17 @@ const KLAVIYO_REVISION = "2024-10-15";
  *    came from in Klaviyo's consent record.
  *
  * The score still arrives separately, at the end, via /api/klaviyo/track-test.
- * Always returns 200 so the test flow is never interrupted.
+ * Returns 200 on every outcome except rate limiting, and the client never
+ * awaits the response, so the test flow is never interrupted.
  */
 export async function POST(request: NextRequest) {
+  if (isRateLimited(getClientIp(request))) {
+    return NextResponse.json(
+      { success: false, reason: "Rate limited" },
+      { status: 429 },
+    );
+  }
+
   try {
     const body = await request.json();
     const validationResult = appTestSignupSchema.safeParse(body);
