@@ -6,11 +6,10 @@ import {
   SUPPORTING_TRIALS,
   IN_PROGRESS_TRIAL,
   RESEARCH_PARTNERS,
-  INGREDIENT_REFERENCES,
-  LITERATURE_REFERENCES,
   type TrialIcon,
   type TrialTag,
 } from "@/app/lib/scienceContent";
+import ScienceDisclosure from "./ScienceDisclosure";
 import {
   StudyIconRandomised,
   StudyIconBlind,
@@ -22,14 +21,15 @@ import {
 /* ============================================================================
  * ScienceProof (SCRUM-1351, Simple DTC)
  *
- * Replaces the clinical EvidenceLadder. Two layers:
+ * Two layers:
  *
  *  - Top layer: the result a visitor can take in at a glance. The one
  *    randomised, double-blind, placebo-controlled trial leads as the featured
  *    card, with a CONKA vs placebo bar; the two measured-but-uncontrolled
  *    trials follow at lower weight, each with an honest note on what its
  *    design can and cannot show.
- *  - Depth layer: method, partners and references behind native <details>.
+ *  - Depth layer: method and partners behind native <details>. Ingredient
+ *    references live with the ingredients, in ScienceCategories.
  *    Closed <details> content is still in the server-rendered HTML, so the
  *    detail stays indexable and quotable without any client JS.
  *
@@ -61,30 +61,6 @@ function DesignTags({ tags }: { tags: readonly TrialTag[] }) {
         );
       })}
     </ul>
-  );
-}
-
-/** Native disclosure with a rotating chevron. 44px minimum tap target. */
-function Disclosure({ summary, children }: { summary: string; children: ReactNode }) {
-  return (
-    <details className="group border-t border-black/10">
-      <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 py-3 text-base font-semibold text-black [&::-webkit-details-marker]:hidden">
-        {summary}
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
-          aria-hidden
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </summary>
-      <div className="pb-5">{children}</div>
-    </details>
   );
 }
 
@@ -193,7 +169,7 @@ export default function ScienceProof() {
         </div>
 
         <div className="mt-6">
-          <Disclosure summary="How the trial was run">
+          <ScienceDisclosure summary="How the trial was run">
             <ul className="space-y-2.5">
               {FEATURED_TRIAL.method.map((line) => (
                 <li key={line} className="flex gap-3 text-base leading-relaxed text-black/80">
@@ -202,7 +178,7 @@ export default function ScienceProof() {
                 </li>
               ))}
             </ul>
-          </Disclosure>
+          </ScienceDisclosure>
         </div>
       </article>
 
@@ -211,7 +187,7 @@ export default function ScienceProof() {
         {SUPPORTING_TRIALS.map((trial) => (
           <article
             key={trial.id}
-            className="flex flex-col rounded-md bg-white p-5 text-black ring-1 ring-black/5 lg:p-6"
+            className="flex flex-col rounded-md bg-white p-5 text-black shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 lg:p-6"
           >
             <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
               <h3 className="text-xl font-bold leading-tight text-black">{trial.name}</h3>
@@ -256,8 +232,8 @@ export default function ScienceProof() {
       </article>
 
       {/* Depth layer */}
-      <div className="rounded-md bg-white px-5 text-black ring-1 ring-black/5 lg:px-8 [&>details:first-child]:border-t-0">
-        <Disclosure summary="Our research partners">
+      <div className="rounded-md bg-white px-5 text-black shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 lg:px-8 [&>details:first-child]:border-t-0">
+        <ScienceDisclosure summary="Our research partners">
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {RESEARCH_PARTNERS.map((partner) => (
               <li key={partner.name} className="rounded-md bg-[#eef0f5] p-4">
@@ -278,39 +254,7 @@ export default function ScienceProof() {
           <p className="mt-4 text-sm text-black/70">
             The CONKA formulation is protected by UK patent GB2620279.
           </p>
-        </Disclosure>
-
-        <Disclosure summary="The published research behind the ingredients">
-          <p className="mb-4 text-base leading-relaxed text-black/80">
-            Every active earns its place from peer-reviewed research. Six of the
-            key studies:
-          </p>
-          <ul className="mb-6 divide-y divide-black/10">
-            {INGREDIENT_REFERENCES.map((ref) => (
-              <li key={ref.pmid} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                <span className="text-base text-black">
-                  <span className="font-semibold">{ref.ingredient}:</span> {ref.finding}
-                </span>
-                <a
-                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}/`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-[44px] shrink-0 items-center text-sm font-semibold text-[var(--brand-navy)] underline-offset-4 hover:underline"
-                >
-                  PubMed {ref.pmid} ↗
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="mb-2 text-sm font-semibold text-black">Further reading</p>
-          <ul className="space-y-1.5">
-            {LITERATURE_REFERENCES.map((ref) => (
-              <li key={`${ref.citation}-${ref.topic}`} className="text-sm text-black/80">
-                {ref.citation}. {ref.topic}.
-              </li>
-            ))}
-          </ul>
-        </Disclosure>
+        </ScienceDisclosure>
       </div>
 
       <p className="mt-6 text-base text-black">

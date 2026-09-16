@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import ScienceHero from "@/app/components/science/ScienceHero";
-import TwoSystemModel from "@/app/components/science/TwoSystemModel";
-import ScienceEducation from "@/app/components/science/ScienceEducation";
-import RealisedSolution from "@/app/components/science/RealisedSolution";
-import ScienceDifferent from "@/app/components/science/ScienceDifferent";
+import ScienceChallenge from "@/app/components/science/ScienceChallenge";
+import ScienceCategories from "@/app/components/science/ScienceCategories";
+import ScienceHowItWorks from "@/app/components/science/ScienceHowItWorks";
 import ScienceProof from "@/app/components/science/ScienceProof";
+import ScienceMeasure from "@/app/components/science/ScienceMeasure";
 import ScienceCTA from "@/app/components/science/ScienceCTA";
-import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
 import Reveal from "@/app/components/landing/Reveal";
 import ReviewedDate from "@/app/components/ReviewedDate";
 
@@ -24,11 +23,11 @@ export const metadata: Metadata = {
   },
 };
 
-/* Simple DTC, not clinical (SCRUM-1351): see DESIGN_SYSTEM.md §8.5 and
-   docs/development/featurePlans/science-page-narrative.md. The hero, proof and
-   CTA are the rebuilt Phase 1 sections; the four sections between the hero and
-   the proof are restyled originals that Phase 2 (SCRUM-1352) replaces.
-   Backgrounds alternate so no two adjacent sections match. */
+/* Simple DTC, not clinical (SCRUM-1351, SCRUM-1352): see DESIGN_SYSTEM.md §8.5
+   and docs/development/featurePlans/science-page-narrative.md. The arc mirrors
+   the home "why" accordion: answer first, the challenge, what nootropics and
+   adaptogens are, how Flow and Clear work, the trials, measure it yourself,
+   then the close. Backgrounds alternate so no two adjacent sections match. */
 export default function SciencePage() {
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
@@ -44,58 +43,46 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 2: WHY MOST BRAIN PRODUCTS FAIL ===== */}
+      {/* ===== SECTION 2: THE CHALLENGE ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="Why most brain products fail"
+        aria-label="The challenge"
       >
         <div className="brand-track">
           <Reveal>
-            <ScienceDifferent />
+            <ScienceChallenge />
           </Reveal>
         </div>
       </section>
 
-      {/* ===== SECTION 3: TWO-SYSTEM MODEL ===== */}
+      {/* ===== SECTION 3: WHAT ARE NOOTROPICS AND ADAPTOGENS ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="The two-system model"
+        aria-label="What are nootropics and adaptogens"
       >
         <div className="brand-track">
           <Reveal>
-            <TwoSystemModel />
+            <ScienceCategories />
           </Reveal>
         </div>
       </section>
 
-      {/* ===== SECTION 4: EDUCATION (adaptogens + nootropics) ===== */}
+      {/* ===== SECTION 4: HOW CONKA WORKS ===== */}
       <section
         className="brand-section brand-bg-tint"
-        aria-label="What are adaptogens and nootropics"
+        aria-label="How CONKA works"
       >
         <div className="brand-track">
           <Reveal>
-            <ScienceEducation />
+            <ScienceHowItWorks />
           </Reveal>
         </div>
       </section>
 
-      {/* ===== SECTION 5: FLOW + CLEAR ===== */}
-      <section
-        className="brand-section brand-bg-white"
-        aria-label="Flow and Clear"
-      >
-        <div className="brand-track">
-          <Reveal>
-            <RealisedSolution />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ===== SECTION 6: THE PROOF ===== */}
+      {/* ===== SECTION 5: THE PROOF ===== */}
       <section
         id="proof"
-        className="brand-section brand-bg-tint scroll-mt-20"
+        className="brand-section brand-bg-white scroll-mt-20"
         aria-label="Clinical trials"
       >
         <div className="brand-track">
@@ -105,19 +92,19 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 7: REAL-WORLD DATA BRIDGE ===== */}
+      {/* ===== SECTION 6: MEASURE IT YOURSELF ===== */}
       <section
-        className="brand-section brand-bg-black"
-        aria-label="Real user cognitive data"
+        className="brand-section brand-bg-tint"
+        aria-label="Measure it yourself"
       >
         <div className="brand-track">
           <Reveal>
-            <AppInsightsCallout />
+            <ScienceMeasure />
           </Reveal>
         </div>
       </section>
 
-      {/* ===== SECTION 8: CTA ===== */}
+      {/* ===== SECTION 7: CTA ===== */}
       <section
         className="brand-section brand-bg-white"
         aria-label="Try CONKA"

@@ -1,10 +1,7 @@
 export { default as ScienceHero } from "./ScienceHero";
-export { default as TwoSystemModel } from "./TwoSystemModel";
-export { default as ScienceAdaptogens } from "./ScienceAdaptogens";
-export { default as ScienceNootropics } from "./ScienceNootropics";
-export { default as ScienceEducation } from "./ScienceEducation";
-export { default as ScienceExplainer } from "./ScienceExplainer";
-export { default as RealisedSolution } from "./RealisedSolution";
-export { default as ScienceDifferent } from "./ScienceDifferent";
+export { default as ScienceChallenge } from "./ScienceChallenge";
+export { default as ScienceCategories } from "./ScienceCategories";
+export { default as ScienceHowItWorks } from "./ScienceHowItWorks";
 export { default as ScienceProof } from "./ScienceProof";
+export { default as ScienceMeasure } from "./ScienceMeasure";
 export { default as ScienceCTA } from "./ScienceCTA";

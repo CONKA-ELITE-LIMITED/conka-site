@@ -273,7 +273,8 @@ export function trackHomeSectionViewed(params: HomeSectionEvent): void {
  *   by=["eventData/location"]
  *   filter=eventName eq 'science:cta_clicked'
  *
- * `location` is the CTA's semantic id ("hero", "final"), never a position.
+ * `location` is the CTA's semantic id ("hero", "final", "flow_card",
+ * "clear_card"), never a position.
  */
 export function trackScienceCtaClicked(params: { location: string }): void {
   safeTrack("science:cta_clicked", params);
