@@ -51,21 +51,22 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 
 ## /science
 
-**Audience:** mid-funnel believer-maker. Already interested (arrives from a PDP or nav), but doubtful. Needs the doubt dismantled before buying.
-**Posture:** convince the sceptic. Confident transparency, teach don't flex. No pricing or Shop Now here; the buy happens downstream on the PDP.
-**Story arc:** Problem -> there is a natural solution, but unrealised -> here is how it works -> here is the solution we actually built (Flow and Clear, after the investment and clinical research) -> and the evidence base keeps growing.
+**Audience:** mid-funnel sceptic. Already interested (arrives mostly from the nav, footer or a PDP, and leans desktop), but doubtful. Needs "does it work, and why?" answered before buying.
+**Posture:** proof first, depth on tap. Simple DTC (SCRUM-1351). The top layer is scannable (stats, study-design icon tags, short copy); method, partners and references sit behind native `<details>` so sceptics can check everything without it slowing anyone else down. Two tracked CTAs to `/conka-both` (hero and close), no pricing. Figures come from `app/lib/scienceContent.ts`, sourced from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
+**Story arc:** Answer first (the placebo-controlled result) -> the problem -> what nootropics and adaptogens are -> Flow and Clear -> the trials -> measure it yourself -> try it. Mirrors the home "why" accordion (`homeWhyContent.ts`). Plan: `docs/development/featurePlans/science-page-narrative.md`.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
-| 1 | Hero (`ScienceHero`) | State the thesis and promise to prove it | OK | Sets up "how we prove it" |
-| 2 | The Problem (`ScienceDifferent`) | Why most brain products fail | OK | The tension the page resolves |
-| 3 | The Unrealised Natural Solution (`TwoSystemModel`) | Two systems exist in nature (adaptogens = resilience, nootropics = acute), but raw and unoptimised that potential stays on the shelf | OK | Intro reframed to "latent solution"; tees up the realisation (SCRUM-1076) |
-| 4 | The Education (`ScienceEducation`) | How the mechanisms actually work; why dose and quality matter | Strong | Layered disclosure |
-| 5 | The Realised Solution (`RealisedSolution`) | Flow and Clear as the payoff: render-led product cards, a proof strip of citable facts, 3 hero actives folded in per product, soft CTA to each PDP plus an "all 16 actives" link to /ingredients | OK | Shipped SCRUM-1076. Replaced the standalone `ScienceIngredients` catalogue so the products lead and the actives are supporting proof |
-| 6 | The Growing Evidence Base (`EvidenceLadder`) | Four rungs of confidence, framed forward: breadth and depth still compounding | OK | Intro reframed to "growing" (SCRUM-1076) |
-| 7 | Real-World Proof (`AppInsightsCallout`) | Real-user cognitive data; bridge to the app | OK | Link-out, should not pull focus |
+| 1 | Hero (`ScienceHero`) | Answer "does it work?" in the first screen: BLUF passage with the Harlequins result, 4-stat grid, Try CONKA CTA, trust icons | Strong | H1 pill echoes the home "why" headline |
+| 2 | The Problem (`ScienceDifferent`) | Why most brain products fail | OK | Restyled original; replaced in SCRUM-1352 |
+| 3 | The Two Systems (`TwoSystemModel`) | Adaptogens build resilience, nootropics sharpen the day | OK | Restyled original; replaced in SCRUM-1352 |
+| 4 | The Education (`ScienceEducation`) | What adaptogens and nootropics are, and how they work | OK | Restyled original; replaced in SCRUM-1352 |
+| 5 | Flow and Clear (`RealisedSolution`) | The two formulas, three hero actives each, soft links to each PDP and /ingredients | Weak | Still shows the disputed per-shot mg totals; replaced in SCRUM-1352 |
+| 6 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, partners and references in the depth layer | Strong | `#proof` anchor target from the hero |
+| 7 | Real-World Proof (`AppInsightsCallout`) | Real-user cognitive data; bridge to the app | OK | Shared with /app; replaced by a science-specific section in SCRUM-1352 |
+| 8 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
 
-**Weakest link right now:** sections 1 and 2 (Hero, Problem) are the next candidates to sharpen now that the spine resolves into the product payoff. The former weak link, the standalone `ScienceIngredients` catalogue, was dissolved into the product-led `RealisedSolution` cards in SCRUM-1076.
+**Weakest link right now:** sections 2 to 5, the restyled originals between the hero and the proof. They still read dense and carry the old clinical copy structure. SCRUM-1352 replaces them.
 
 ---
 

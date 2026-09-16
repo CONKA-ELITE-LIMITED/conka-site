@@ -396,11 +396,11 @@
  * Full spec: docs/branding/DESIGN_SYSTEM.md §8.
  *
  * Pages currently carrying `.brand-clinical` (grep-verified 2026-07):
- *   / · /science · /ingredients · /our-story · /why-conka · /case-studies
+ *   / · /ingredients · /our-story · /why-conka · /case-studies
  *   /conka-flow · /conka-clarity · /conka-both · /faq · /professionals(+/order)
  *   /account(+/login /register /details /orders /subscriptions)
  *   /blog(+/[slug] /page /topic) · /app · /app-insights.
- *   (/start and /funnel are Simple DTC, not clinical.) Home + the PDPs keep the
+ *   (/start, /funnel, /our-story and /science are Simple DTC, not clinical.) Home + the PDPs keep the
  *   scope only for token inheritance (navy accent + #f5f5f5 tint); their visible
  *   radius is Tailwind rounded-* utilities, NOT the zeroed --brand-radius-*
  *   tokens. See DESIGN_SYSTEM.md §8.5.
