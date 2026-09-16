@@ -42,14 +42,14 @@ export const SCIENCE_HERO = {
 } as const;
 
 /**
- * University partner logos, shown in the hero and under the trials: marks
- * trimmed of their transparent padding (public/science/logos), with intrinsic
- * sizes for next/image.
+ * University partner logos, shown in the hero and under the trials (via
+ * ScienceUniversityLogos): marks trimmed of their transparent padding
+ * (public/science/logos).
  */
 export const UNIVERSITY_LOGOS = [
-  { name: "Durham University", src: "/science/logos/UniversityOfDurham.png", width: 160, height: 72 },
-  { name: "University of Cambridge", src: "/science/logos/UniversityOfCambridge.png", width: 155, height: 36 },
-  { name: "University of Exeter", src: "/science/logos/UniversityOfExeter.png", width: 159, height: 58 },
+  { name: "Durham University", src: "/science/logos/UniversityOfDurham.png" },
+  { name: "University of Cambridge", src: "/science/logos/UniversityOfCambridge.png" },
+  { name: "University of Exeter", src: "/science/logos/UniversityOfExeter.png" },
 ] as const;
 
 export type TrialIcon = "randomised" | "blind" | "placebo" | "people" | "duration";

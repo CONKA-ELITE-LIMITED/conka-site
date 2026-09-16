@@ -27,7 +27,7 @@ export default function ScienceHowItWorks() {
         >
           {SCIENCE_HOW_IT_WORKS.heading}
         </h2>
-        <p className="text-base leading-relaxed text-black/80">
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">
           {SCIENCE_HOW_IT_WORKS.body}
         </p>
       </div>

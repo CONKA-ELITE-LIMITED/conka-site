@@ -17,7 +17,7 @@ export default function ScienceChallenge() {
         <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {SCIENCE_CHALLENGE.heading}
         </h2>
-        <p className="text-base leading-relaxed text-black/80">{SCIENCE_CHALLENGE.body}</p>
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">{SCIENCE_CHALLENGE.body}</p>
       </div>
 
       <ul className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">

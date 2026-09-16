@@ -28,7 +28,7 @@ export default function SciencePeople() {
         <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {SCIENCE_PEOPLE_INTRO.heading}
         </h2>
-        <p className="text-base leading-relaxed text-black/80">{SCIENCE_PEOPLE_INTRO.body}</p>
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">{SCIENCE_PEOPLE_INTRO.body}</p>
       </div>
 
       <ul className="scrollbar-hide -mx-5 flex snap-x snap-mandatory scroll-pl-5 gap-4 overflow-x-auto px-5 pb-2 md:-mx-[5vw] md:scroll-pl-[5vw] md:px-[5vw] lg:mx-0 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:px-0 lg:pb-0">

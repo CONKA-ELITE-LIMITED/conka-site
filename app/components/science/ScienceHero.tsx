@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { SCIENCE_HERO, UNIVERSITY_LOGOS } from "@/app/lib/scienceContent";
+import { SCIENCE_HERO } from "@/app/lib/scienceContent";
 import { TrustIconNoCaffeine } from "@/app/components/landing/icons";
 import ScienceCtaButton from "./ScienceCtaButton";
+import ScienceUniversityLogos from "./ScienceUniversityLogos";
 
 /* ============================================================================
  * ScienceHero (SCRUM-1351, Simple DTC)
@@ -48,10 +49,10 @@ export default function ScienceHero() {
       </div>
 
       <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
-        <p className="mb-3 max-w-[56ch] text-lg font-medium leading-snug text-black">
+        <p className="mb-3 max-w-[56ch] text-xl font-medium leading-snug text-black">
           {SCIENCE_HERO.lede}
         </p>
-        <p className="mb-7 max-w-[56ch] text-base leading-relaxed text-black/80">
+        <p className="mb-7 max-w-[56ch] text-lg leading-relaxed text-black/80">
           {SCIENCE_HERO.body}
         </p>
 
@@ -102,22 +103,9 @@ export default function ScienceHero() {
           </li>
         </ul>
 
-        <ul
-          className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-black/10 pt-6"
-          aria-label="University research partners"
-        >
-          {UNIVERSITY_LOGOS.map((logo) => (
-            <li key={logo.name}>
-              <Image
-                src={logo.src}
-                alt={logo.name}
-                width={logo.width}
-                height={logo.height}
-                className="h-9 w-auto"
-              />
-            </li>
-          ))}
-        </ul>
+        <div className="mt-6 border-t border-black/10 pt-6">
+          <ScienceUniversityLogos />
+        </div>
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ export default function ScienceMeasure() {
       </div>
 
       <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
-        <p className="mb-6 max-w-[56ch] text-base leading-relaxed text-black">
+        <p className="mb-6 max-w-[56ch] text-lg leading-relaxed text-black lg:text-xl">
           {SCIENCE_MEASURE.body}
         </p>
 

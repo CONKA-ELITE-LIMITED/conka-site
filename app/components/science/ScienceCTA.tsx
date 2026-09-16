@@ -41,7 +41,7 @@ export default function ScienceCTA() {
         <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {SCIENCE_CTA.heading}
         </h2>
-        <p className="mb-6 max-w-[48ch] text-base leading-relaxed text-black">
+        <p className="mb-6 max-w-[48ch] text-lg leading-relaxed text-black lg:text-xl">
           {SCIENCE_CTA.body}
         </p>
         <ul className="mb-8 space-y-2.5">

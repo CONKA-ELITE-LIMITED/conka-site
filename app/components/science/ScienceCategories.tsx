@@ -32,7 +32,7 @@ export default function ScienceCategories() {
         <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {CATEGORY_INTRO.heading}
         </h2>
-        <p className="text-base leading-relaxed text-black/80">{CATEGORY_INTRO.body}</p>
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">{CATEGORY_INTRO.body}</p>
       </div>
 
       <div className="mb-8 grid grid-cols-1 gap-3 lg:mb-10 lg:grid-cols-2 lg:gap-4">

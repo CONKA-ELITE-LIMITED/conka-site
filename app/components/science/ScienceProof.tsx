@@ -1,15 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   FEATURED_TRIAL,
   SUPPORTING_TRIALS,
   IN_PROGRESS_TRIAL,
-  UNIVERSITY_LOGOS,
   type TrialIcon,
   type TrialTag,
 } from "@/app/lib/scienceContent";
 import ScienceDisclosure from "./ScienceDisclosure";
+import ScienceUniversityLogos from "./ScienceUniversityLogos";
 import {
   StudyIconRandomised,
   StudyIconBlind,
@@ -126,7 +125,7 @@ export default function ScienceProof() {
         <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           Proven against placebo, not just promised
         </h2>
-        <p className="text-base leading-relaxed text-black/80">
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">
           Our lead trial was run the way medicines are tested: randomised,
           double-blind and against a placebo. Here is what each trial found, and
           exactly how it was run.
@@ -231,23 +230,10 @@ export default function ScienceProof() {
         </p>
       </article>
 
-      {/* Research partners: logos only, from the same trimmed marks as the hero row. */}
+      {/* Research partners: the same logo row as the hero. */}
       <div>
         <h3 className="mb-4 text-xl font-bold leading-tight text-black">Our research partners</h3>
-        <ul className="flex flex-wrap items-center gap-x-10 gap-y-5">
-          {UNIVERSITY_LOGOS.map((logo) => (
-            <li key={logo.name}>
-              <Image
-                src={logo.src}
-                alt={logo.name}
-                width={logo.width}
-                height={logo.height}
-                loading="lazy"
-                className="h-10 w-auto lg:h-12"
-              />
-            </li>
-          ))}
-        </ul>
+        <ScienceUniversityLogos />
       </div>
 
       <p className="mt-6 text-base text-black">
