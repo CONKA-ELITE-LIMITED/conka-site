@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | Hid the Leeds United case studies (Bamford, James, Tanaka) from every case-study surface (SCRUM-1354)
 - **2026-09-16** | /science: the university logos sit on one balanced row at every width (hero and trials), and section subheadings and hero copy are larger (SCRUM-1351)
 - **2026-09-16** | /science section titles step up to the H1 size, matching the home why section (SCRUM-1351)
 - **2026-09-16** | /science: challenge cards lead with photos and label pills (notifications, a crash at the desk, supplements), the hero gains a row of Durham, Cambridge and Exeter logos, and scientist cards go back to text institutions (SCRUM-1351, SCRUM-1352, SCRUM-1353)
