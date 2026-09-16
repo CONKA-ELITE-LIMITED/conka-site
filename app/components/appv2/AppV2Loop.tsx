@@ -91,14 +91,32 @@ export default function AppV2Loop() {
                   />
                 </div>
               ) : (
-                <Image
-                  src={step.image.src}
-                  alt={step.image.alt}
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 1024px) 400px, 100vw"
-                  className="object-cover"
-                />
+                <>
+                  {/* The bottle shot is square, so a 2:1 cover crop cuts the
+                      caps. It sits zoomed out and nudged up so both bottles
+                      show whole, over a blurred copy of itself that fills
+                      the side gaps without a visible edge. Same src and sizes,
+                      so both layers share one download. */}
+                  <Image
+                    src={step.image.src}
+                    alt=""
+                    aria-hidden
+                    fill
+                    loading="lazy"
+                    sizes="(min-width: 1024px) 400px, 100vw"
+                    className="scale-110 object-cover blur-xl"
+                  />
+                  <div className="absolute left-1/2 top-[-18%] aspect-square w-[76%] -translate-x-1/2">
+                    <Image
+                      src={step.image.src}
+                      alt={step.image.alt}
+                      fill
+                      loading="lazy"
+                      sizes="(min-width: 1024px) 400px, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                </>
               )}
               <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black">
                 {step.tag}

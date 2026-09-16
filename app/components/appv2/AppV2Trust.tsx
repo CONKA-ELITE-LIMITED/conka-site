@@ -10,7 +10,8 @@ import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
  * and the /app-insights link, which used to be three separate sections.
  *
  * Stats sit in white tiles because the page gives this section the tint
- * background. Content-only; the page owns the section.
+ * background. Mobile order is heading, stats, then copy and button; desktop
+ * puts the stats in their own column spanning both rows (the ScienceHero grid). Content-only; the page owns the section.
  * ========================================================================== */
 
 const STATS: {
@@ -50,37 +51,15 @@ const STATS: {
 
 export default function AppV2Trust() {
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
-      <div>
-        <h2
-          className="brand-h1 mb-4 text-black"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          A score you can trust.
-        </h2>
-        <p className="mb-4 text-lg leading-relaxed text-black/80">
-          The test in the CONKA app comes from Cambridge research and has been
-          validated in NHS clinical trials. It measures how quickly and
-          accurately your brain processes what it sees, so your score reflects
-          you, not how much you have practised.
-        </p>
-        <p className="mb-6 text-base leading-relaxed text-black/70">
-          CONKA co-founder Humphrey Bodington built it after repeated
-          concussions ended his playing career, so anyone could see their brain
-          measured.
-        </p>
-        <p className="mb-5 text-base text-black/70">
-          <span className="font-semibold tabular-nums text-black">
-            {APP_INSIGHTS_TOTALS.tests.toLocaleString("en-GB")} tests
-          </span>{" "}
-          from {APP_INSIGHTS_TOTALS.users} people so far.
-        </p>
-        <ConkaCTAButton href="/app-insights" inverted>
-          See the app data
-        </ConkaCTAButton>
-      </div>
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-0">
+      <h2
+        className="brand-h1 text-black lg:col-start-1 lg:row-start-1 lg:mb-4 lg:self-end"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        A score you can trust.
+      </h2>
 
-      <dl className="grid grid-cols-2 gap-3">
+      <dl className="grid grid-cols-2 gap-3 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
         {STATS.map((stat) => (
           // dt must precede dd in the markup; column-reverse puts the number
           // on top visually.
@@ -107,6 +86,29 @@ export default function AppV2Trust() {
           </div>
         ))}
       </dl>
+
+      <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
+        <p className="mb-4 text-lg leading-relaxed text-black/80">
+          The test in the CONKA app comes from Cambridge research and has been
+          validated in NHS clinical trials. It measures how quickly and
+          accurately your brain processes what it sees, so your score reflects
+          you, not how much you have practised.
+        </p>
+        <p className="mb-6 text-base leading-relaxed text-black/70">
+          CONKA co-founder Humphrey Bodington built it after repeated
+          concussions ended his playing career, so anyone could see their brain
+          measured.
+        </p>
+        <p className="mb-5 text-base text-black/70">
+          <span className="font-semibold tabular-nums text-black">
+            {APP_INSIGHTS_TOTALS.tests.toLocaleString("en-GB")} tests
+          </span>{" "}
+          from {APP_INSIGHTS_TOTALS.users} people so far.
+        </p>
+        <ConkaCTAButton href="/app-insights" inverted>
+          See the app data
+        </ConkaCTAButton>
+      </div>
     </div>
   );
 }
