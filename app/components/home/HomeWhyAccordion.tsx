@@ -112,7 +112,7 @@ export default function HomeWhyAccordion() {
           className="relative hidden overflow-hidden rounded-md ring-1 ring-black/5 lg:block"
         >
           <Image
-            src="/formulas/conkaFlow/FlowShotSide.jpg"
+            src="/formulas/labelV2/BothV5Portrait.webp"
             alt=""
             fill
             sizes="(min-width: 1280px) 416px, 320px"
