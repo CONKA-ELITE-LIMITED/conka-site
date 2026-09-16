@@ -1,29 +1,14 @@
-import type { ReactNode } from "react";
 import Image from "next/image";
-import {
-  SCIENCE_CHALLENGE,
-  type ChallengeCard,
-  type ChallengeIcon,
-} from "@/app/lib/scienceContent";
-import {
-  IconNotification,
-  IconBolt,
-  IconQuestion,
-} from "@/app/components/landing/icons";
+import { SCIENCE_CHALLENGE } from "@/app/lib/scienceContent";
 
 /* ============================================================================
  * ScienceChallenge (SCRUM-1352, Simple DTC)
  *
  * The problem, in the same words as row 1 of the home "why" accordion: three
- * cards, one idea each. Each card takes an optional photo banner (the tmrw
- * studies-card pattern); cards without one fall back to icon-only.
+ * cards, one idea each. Each opens with a 2:1 photo banner carrying a short
+ * label pill (the tmrw studies-card pattern, taller for more breathing room),
+ * then the title and one line of body.
  * ========================================================================== */
-
-const ICONS: Record<ChallengeIcon, (props: { className?: string }) => ReactNode> = {
-  notification: IconNotification,
-  bolt: IconBolt,
-  question: IconQuestion,
-};
 
 export default function ScienceChallenge() {
   return (
@@ -36,37 +21,31 @@ export default function ScienceChallenge() {
       </div>
 
       <ul className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
-        {SCIENCE_CHALLENGE.cards.map((card: ChallengeCard) => {
-          const Icon = ICONS[card.icon];
-          return (
-            <li
-              key={card.title}
-              className="flex flex-col overflow-hidden rounded-md bg-white text-black ring-1 ring-black/5"
-            >
-              {card.image && (
-                <div className="relative aspect-[16/9] w-full bg-[#eef0f5]">
-                  <Image
-                    src={card.image.src}
-                    alt={card.image.alt}
-                    fill
-                    loading="lazy"
-                    sizes="(min-width: 1024px) 400px, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-5 lg:p-6">
-                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--brand-navy)] text-white">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <h3 className="mb-1.5 text-lg font-bold leading-tight text-black">{card.title}</h3>
-                <p className="text-base leading-relaxed text-black/80">{card.body}</p>
-              </div>
-            </li>
-          );
-        })}
+        {SCIENCE_CHALLENGE.cards.map((card) => (
+          <li
+            key={card.title}
+            className="flex flex-col overflow-hidden rounded-md bg-white text-black ring-1 ring-black/5"
+          >
+            <div className="relative aspect-[2/1] w-full bg-black">
+              <Image
+                src={card.image.src}
+                alt={card.image.alt}
+                fill
+                loading="lazy"
+                sizes="(min-width: 1024px) 400px, 100vw"
+                className="object-cover"
+              />
+              <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black">
+                {card.tag}
+              </span>
+            </div>
+            <div className="p-5 lg:p-6">
+              <h3 className="mb-1.5 text-lg font-bold leading-tight text-black">{card.title}</h3>
+              <p className="text-base leading-relaxed text-black/80">{card.body}</p>
+            </div>
+          </li>
+        ))}
       </ul>
-
     </div>
   );
 }

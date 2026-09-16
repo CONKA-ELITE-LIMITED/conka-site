@@ -41,6 +41,16 @@ export const SCIENCE_HERO = {
   ] satisfies ScienceStat[],
 } as const;
 
+/**
+ * University partner logos for the hero row: marks trimmed of their transparent
+ * padding (public/science/logos), with intrinsic sizes for next/image.
+ */
+export const UNIVERSITY_LOGOS = [
+  { name: "Durham University", src: "/science/logos/UniversityOfDurham.png", width: 160, height: 72 },
+  { name: "University of Cambridge", src: "/science/logos/UniversityOfCambridge.png", width: 155, height: 36 },
+  { name: "University of Exeter", src: "/science/logos/UniversityOfExeter.png", width: 159, height: 58 },
+] as const;
+
 export type TrialIcon = "randomised" | "blind" | "placebo" | "people" | "duration";
 
 export interface TrialTag {
@@ -143,18 +153,13 @@ export const RESEARCH_PARTNERS: ResearchPartner[] = [
 // ===== THE CHALLENGE (SCRUM-1352) =====
 // Mirrors row 1 of the home "why" accordion (homeWhyContent.ts).
 
-export type ChallengeIcon = "notification" | "bolt" | "question";
-
 export interface ChallengeCard {
-  icon: ChallengeIcon;
+  /** Short label on the photo, the tmrw studies-card pill. */
+  tag: string;
   title: string;
   body: string;
-  /**
-   * Optional photo banner across the top of the card (tmrw studies-card
-   * pattern). Needs problem imagery (notifications, coffee, a supplement
-   * shelf), not product shots: a CONKA bottle would contradict the card.
-   */
-  image?: { src: string; alt: string };
+  /** 2:1 banner. Problem imagery only: a CONKA bottle would contradict the card. */
+  image: { src: string; alt: string };
 }
 
 export const SCIENCE_CHALLENGE = {
@@ -162,19 +167,22 @@ export const SCIENCE_CHALLENGE = {
   body: "The usual fixes make it worse. Here is what gets in the way of a sharp mind, and why caffeine is not the answer.",
   cards: [
     {
-      icon: "notification",
+      tag: "Attention",
       title: "Fragmented attention",
       body: "Notifications, endless screens and back-to-back demands split your focus dozens of times a day.",
+      image: { src: "/science/challenge/attention.webp", alt: "A phone screen of social media apps showing unread notification badges" },
     },
     {
-      icon: "bolt",
+      tag: "Caffeine",
       title: "The caffeine crash",
       body: "Caffeine buys an hour and charges interest: jitters, an afternoon slump and a worse night's sleep.",
+      image: { src: "/science/challenge/caffeine-crash.webp", alt: "A man at a desk in a dark room with his head in his hands" },
     },
     {
-      icon: "question",
+      tag: "Supplements",
       title: "Claims with nothing under them",
       body: "Most brain products make big promises with no study behind them and no way for you to check.",
+      image: { src: "/science/challenge/supplement-claims.webp", alt: "A few supplement capsules lying in a strip of light on a dark table" },
     },
   ] satisfies ChallengeCard[],
 } as const;
@@ -292,21 +300,11 @@ export const SCIENCE_HOW_IT_WORKS = {
 // greyscale square crops (~200px from the deck, 400px for Sawyer), so the
 // section keeps them near that size.
 
-export type UniversityId = "durham" | "exeter";
-
-/** Trimmed logo marks (transparent padding removed) with intrinsic sizes. */
-export const UNIVERSITY_LOGOS: Record<UniversityId, { name: string; src: string; width: number; height: number }> = {
-  durham: { name: "Durham University", src: "/science/logos/UniversityOfDurham.png", width: 160, height: 72 },
-  exeter: { name: "University of Exeter", src: "/science/logos/UniversityOfExeter.png", width: 159, height: 58 },
-};
-
 export interface SciencePerson {
   name: string;
   role: string;
-  /** University affiliation, rendered as its logo. */
-  university?: UniversityId;
-  /** Non-university affiliation, rendered as text. */
-  organisation?: string;
+  /** University or organisation, shown as text. */
+  institution?: string;
   photo: string;
 }
 
@@ -316,14 +314,14 @@ export const SCIENCE_PEOPLE_INTRO = {
 } as const;
 
 export const SCIENCE_PEOPLE: SciencePerson[] = [
-  { name: "Prof Karen Hind", role: "Chief Research Officer", university: "durham", photo: "/science/people/karen-hind.webp" },
-  { name: "Prof Paul Chazot", role: "Head of Nutritional Research", university: "durham", photo: "/science/people/paul-chazot.webp" },
-  { name: "Prof Sam Vine", role: "Head of High Performance, leads our Exeter human trial", university: "exeter", photo: "/science/people/sam-vine.webp" },
-  { name: "Dr Callum O'Malley", role: "Runs our Exeter human trial", university: "exeter", photo: "/science/people/callum-omally.webp" },
+  { name: "Prof Karen Hind", role: "Chief Research Officer", institution: "Durham University", photo: "/science/people/karen-hind.webp" },
+  { name: "Prof Paul Chazot", role: "Head of Nutritional Research", institution: "Durham University", photo: "/science/people/paul-chazot.webp" },
+  { name: "Prof Sam Vine", role: "Head of High Performance, leads our Exeter human trial", institution: "University of Exeter", photo: "/science/people/sam-vine.webp" },
+  { name: "Dr Callum O'Malley", role: "Runs our Exeter human trial", institution: "University of Exeter", photo: "/science/people/callum-omally.webp" },
   { name: "Dr Shankar Katekhaye", role: "Formulation scientist, developer of our alcohol-free extraction", photo: "/science/people/shankar-katekhaye.webp" },
-  { name: "Dr Daniel Glassbrook", role: "Early formulation and safety research", university: "durham", photo: "/science/people/daniel-glassbrook.webp" },
-  { name: "Dr Barbara Halmai", role: "Research assistant", university: "exeter", photo: "/science/people/barbara-halmai.webp" },
-  { name: "Dr Tom Sawyer", role: "Former CFO of Cognetivity, makers of an AI cognitive assessment for early dementia screening", organisation: "Cognetivity Neurosciences", photo: "/science/people/tom-sawyer.webp" },
+  { name: "Dr Daniel Glassbrook", role: "Early formulation and safety research", institution: "Durham University", photo: "/science/people/daniel-glassbrook.webp" },
+  { name: "Dr Barbara Halmai", role: "Research assistant", institution: "University of Exeter", photo: "/science/people/barbara-halmai.webp" },
+  { name: "Dr Tom Sawyer", role: "Former CFO of Cognetivity, makers of an AI cognitive assessment for early dementia screening", institution: "Cognetivity Neurosciences", photo: "/science/people/tom-sawyer.webp" },
 ];
 
 // ===== MEASURE IT YOURSELF (SCRUM-1352) =====

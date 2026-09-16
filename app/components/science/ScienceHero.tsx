@@ -1,9 +1,6 @@
 import Image from "next/image";
-import { SCIENCE_HERO } from "@/app/lib/scienceContent";
-import {
-  TrustIconNoCaffeine,
-  TrustIconUniversity,
-} from "@/app/components/landing/icons";
+import { SCIENCE_HERO, UNIVERSITY_LOGOS } from "@/app/lib/scienceContent";
+import { TrustIconNoCaffeine } from "@/app/components/landing/icons";
 import ScienceCtaButton from "./ScienceCtaButton";
 
 /* ============================================================================
@@ -21,11 +18,8 @@ import ScienceCtaButton from "./ScienceCtaButton";
  * ========================================================================== */
 
 // Informed Sport uses its real certification mark: a recognised logo carries
-// more weight than a drawn shield. The other two have no mark to show.
-const TRUST_ICONS = [
-  { label: "Zero caffeine", Icon: TrustIconNoCaffeine },
-  { label: "Durham, Cambridge and Exeter research", Icon: TrustIconUniversity },
-];
+// more weight than a drawn shield. The university partners get their own row
+// of logos underneath.
 
 export default function ScienceHero() {
   return (
@@ -102,10 +96,25 @@ export default function ScienceHero() {
             />
             Informed Sport certified
           </li>
-          {TRUST_ICONS.map(({ label, Icon }) => (
-            <li key={label} className="flex items-center gap-2 text-sm text-black">
-              <Icon className="h-[18px] w-[18px] shrink-0 text-[var(--brand-navy)]" />
-              {label}
+          <li className="flex items-center gap-2 text-sm text-black">
+            <TrustIconNoCaffeine className="h-[18px] w-[18px] shrink-0 text-[var(--brand-navy)]" />
+            Zero caffeine
+          </li>
+        </ul>
+
+        <ul
+          className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-black/10 pt-6"
+          aria-label="University research partners"
+        >
+          {UNIVERSITY_LOGOS.map((logo) => (
+            <li key={logo.name}>
+              <Image
+                src={logo.src}
+                alt={logo.name}
+                width={logo.width}
+                height={logo.height}
+                className="h-9 w-auto"
+              />
             </li>
           ))}
         </ul>

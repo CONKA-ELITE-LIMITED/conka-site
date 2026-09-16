@@ -164,51 +164,7 @@ export function StudyIconDuration({ className }: { className?: string }) {
   );
 }
 
-/** Columned building: university research */
-export function TrustIconUniversity({ className }: { className?: string }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
-      <path d="M3 10l9-6 9 6" />
-      <line x1="5" y1="10" x2="5" y2="18" />
-      <line x1="10" y1="10" x2="10" y2="18" />
-      <line x1="14" y1="10" x2="14" y2="18" />
-      <line x1="19" y1="10" x2="19" y2="18" />
-      <line x1="3" y1="21" x2="21" y2="21" />
-    </svg>
-  );
-}
-
 // ===== Science explainer icons (SCRUM-1352) =====
-
-/** Bell: notifications, fragmented attention */
-export function IconNotification({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-}
-
-/** Lightning bolt: stimulant spike and crash */
-export function IconBolt({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-    </svg>
-  );
-}
-
-/** Question mark in a circle: unbacked claims */
-export function IconQuestion({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
-}
 
 /** Brain outline: nootropics */
 export function IconBrain({ className }: { className?: string }) {
