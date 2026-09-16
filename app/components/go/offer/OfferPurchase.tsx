@@ -304,7 +304,7 @@ export function OfferStickyBar() {
           {selected.label} trial pack
         </span>
         <OfferCtaButton section="sticky" compact tabIndex={pastTile ? undefined : -1}>
-          Checkout - {formatPrice(selected.price)}
+          Start trial for {formatPrice(selected.price)}
         </OfferCtaButton>
       </div>
     </aside>

@@ -76,7 +76,7 @@ event, see below). What is shared:
 A single-offer page for paid acquisition tests that sells a low-priced trial into a
 subscription. The one config is the **CONKA trial pack**, `/go/trial-pack`
 (`app/lib/landings/trial-pack.ts`). Status: SCRUM-1343 (page), SCRUM-1344 (Klaviyo
-and conka-lab).
+and conka-lab). The campaign's what, why and success metrics: `docs/sprints/2026-09-trial-pack.md`.
 
 **The offer.** The visitor picks Flow, Clear or Both and pays a trial price for a
 4-shot pack (Both: 8 shots, one of each). `conversionDays` (7) after the order,
@@ -105,8 +105,9 @@ The Skio side (plans, Journeys): `docs/features/SUBSCRIPTIONS.md`.
 
 | Field | Notes |
 |---|---|
-| `options` | `flow`, `clear`, `both`, in tile order. Each: `label`, `heroId` (the product whose gallery, disclosure rows and monthly plan it uses), `shots`, `price`, `referencePrice`, `variantId`, `sellingPlanId`, optional `galleryLead`, `explainerSlide`, `badge` |
+| `options` | `flow`, `clear`, `both`, in tile order. Each: `label`, `summary`, `heroId` (the product whose gallery, disclosure rows and monthly plan it uses), `shots`, `price`, `referencePrice`, `variantId`, `sellingPlanId`, optional `galleryLead`, `explainerSlide`, `badge` |
 | `price` | Trial price, **display only**. The charge is the variant's Shopify price less the Skio plan's percentage |
+| `summary` | One short clause under the selector heading for the selected option, followed by the saving. Keep it within two lines at 390px or the tiles jump |
 | `referencePrice` | The pack's own one-time Shopify price, struck through on the tile. Must match Shopify |
 | `sellingPlanId` | The Skio trial plan. `null` blocks trial checkout for that option |
 | `galleryLead` | First gallery image, ahead of the product's PDP slides (`MM_GALLERY_ASSETS`) |
@@ -125,7 +126,7 @@ build time if an option has no one-time variant or `defaultOption` is not an opt
 
 - **No site nav.** `OfferCountdownBanner`, a navy bar ("This week only / CONKA trial pack from £X") with a countdown to Sunday 23:59 Europe/London that rolls over weekly. The timer boxes are fixed width and render `--` on the server, so hydration causes no layout shift.
 - **Hero.** Offer pill, h1 "Try CONKA from £X" (the cheapest trial price), gallery (lead image, explainer, PDP slides), product name, avatar trust row and rotating review, `OfferBuyBox`, partner `LogoMarquee` with `lowPriority` (its logos fetch behind the gallery's LCP image), ingredient disclosure rows, certifications, trust strip.
-- **`OfferBuyBox`.** Three tiles (bottle cutout, name, struck `referencePrice`, trial price), CTA "Checkout - £X", then the disclosure "{N} shots today. Monthly £Y from day 7, starter pack in your first box. Cancel anytime before.", then "Or buy a {N}-shot box once for £Z".
+- **`OfferBuyBox`.** "Choose your trial pack:", then a line restating the selection ("{label}: {summary} Save £X", the saving being `referencePrice` less `price`, held to a two-line height so the tiles never jump), three tiles (bottle cutout, name, struck `referencePrice`, trial price), CTA "Start trial for £X" (the sticky bar uses the same label), then the disclosure "{N} shots today. Monthly £Y from day 7, starter pack in your first box. Cancel anytime before.", then "Or buy a {N}-shot box once for £Z".
 - **Below the fold always renders Both:** UGC marquee, `ClinicalIngredients`, `WhatToExpectV2` and `ProductComparisonTable` for Both, the offer FAQ section (tint), `BOTH_PDP_FAQ_ITEMS` (white), footer. The sticky CTA bar appears once the hero CTA scrolls out of view.
 - Standard 100-day guarantee.
 

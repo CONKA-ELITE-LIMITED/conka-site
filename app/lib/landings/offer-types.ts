@@ -20,6 +20,12 @@ export interface OfferOption {
   id: OfferOptionId;
   /** Tile and copy label, e.g. "Flow" or "Flow + Clear". */
   label: string;
+  /**
+   * What the pack gives, shown under the selector heading for the selected
+   * option, followed by the saving. Keep it to one short clause so the line
+   * stays within its two-line box and the tiles below never jump.
+   */
+  summary: string;
   /** The product whose PDP gallery, disclosure rows and monthly plan this option uses. */
   heroId: ProductHeroId;
   /** Shots in the trial pack. */
