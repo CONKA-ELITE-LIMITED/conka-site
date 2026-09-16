@@ -139,25 +139,3 @@ export function scrubBrighten(
     ),
   );
 }
-
-/**
- * Draw stroked SVG paths when `trigger` enters view. Each path must set
- * pathLength={1} in JSX; the dash state is applied here (inside the motion
- * gate) so reduced-motion users see the lines fully drawn.
- */
-export function drawLines(
-  paths: SVGPathElement[],
-  trigger: gsap.DOMTarget,
-  { baseDelay = 0.5, step = 0.12, duration = 0.9, start = "top 80%" } = {},
-): gsap.core.Tween[] {
-  return paths.map((path, i) => {
-    gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
-    return gsap.to(path, {
-      strokeDashoffset: 0,
-      duration,
-      delay: baseDelay + i * step,
-      ease: "power2.inOut",
-      scrollTrigger: { trigger, start },
-    });
-  });
-}

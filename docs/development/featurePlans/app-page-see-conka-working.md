@@ -30,7 +30,7 @@ The email-gated practice test already exists, but the email trap catches nothing
 
 **Simple DTC, light.** `/app` leaves App-Dark. No new design language: Simple DTC gets close to Oura/Bevel with softer tints and calmer motion. `DESIGN_SYSTEM.md` §8.5/§10 update to match.
 
-The motion reference in `MOTION_GUIDE.md` moves off `/app` to `/science` if its rebuild uses the shared helpers in `app/lib/motion.ts`, otherwise home. Confirm during Phase 2.
+`/app` is no longer the motion reference: it uses the CSS `Reveal` entrance only. `MOTION_GUIDE.md` now points at `/our-story`, `/app-insights` and the home `WhatToExpectV2` as the live GSAP references.
 
 ## Phases
 
@@ -63,13 +63,13 @@ Appetite: roughly 5 to 6 days total. Phase 1 about a day, Phase 2 three to four 
 
 ## Phase 2: /app redesign
 
-Built one section at a time, with a visual review and commit per section. Needs 4 to 6 clean, current app screenshots (home score, test, results, trend, one feature), supplied at the start of this phase.
+Built section by section. The existing framed screenshots in `public/app/` were good enough, so no new capture was needed.
 
-1. **Hero: "See CONKA working."** Fanned phone screens. Primary CTA download, secondary "Try the test".
+1. **Hero: "See CONKA working."** Fanned phone screens and store buttons. The "Try the test" secondary link was dropped at review. On mobile the fan sits under the headline, with the outer phones cropped at the screen edges.
 2. **The loop: Baseline, CONKA, Retest.** Three pastel cards with a phone each (Day 1 baseline, Day 14 first shift, Day 30 your trend).
 3. **Get your baseline.** The email-gated test, restyled around the Cognetivity iframe. Warm gate copy, drop the Clinical labels ("Step 01 · Email", "Fig. 07").
 4. **Why the score is worth trusting.** Cambridge-origin science, 5,000+ tests, Humphrey's origin as one line.
-5. **Proof: real first 30 days.** Score gains from `app/lib/caseStudiesData.ts`.
+5. **Proof: real people, real scores.** Baseline to retest from `app/lib/caseStudiesData.ts`. Case study testing periods run months, so the copy makes no fixed-timeframe claim.
 6. **More in the app.** Apple Health, patterns, rewards as feature cards.
 7. **Final download CTA** plus a CONKA product link.
 8. **Cleanup.** Remove the pinned scroll journey and progress rail, update metadata, update `DESIGN_SYSTEM.md`, `MOTION_GUIDE.md`, `PAGE_NARRATIVES.md`.

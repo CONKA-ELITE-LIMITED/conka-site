@@ -149,15 +149,16 @@ export default function NavigationDesktop({
               onMenuEnter={onMenuEnter}
               onMenuLeave={onMenuLeave}
             />
-            <NavMenuTrigger
-              label={NAV_APP.title}
-              menu="app"
-              onDark={shopOpen}
-              openMenu={openMenu}
-              setOpenMenu={setOpenMenu}
-              onMenuEnter={onMenuEnter}
-              onMenuLeave={onMenuLeave}
-            />
+            <a
+              href={NAV_APP.href}
+              className={`rounded-full px-4 py-2 text-[15px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
+                shopOpen
+                  ? "text-white hover:bg-white/10"
+                  : "text-black hover:bg-black/[0.05]"
+              }`}
+            >
+              {NAV_APP.label}
+            </a>
             <a
               href={NAV_OUR_STORY.href}
               className={`rounded-full px-4 py-2 text-[15px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1B2757] ${
@@ -231,13 +232,6 @@ export default function NavigationDesktop({
         group={NAV_SCIENCE}
         onClose={() => setOpenMenu(null)}
         onEnter={() => onMenuEnter("science")}
-        onLeave={onMenuLeave}
-      />
-      <NavGroupMegaMenu
-        isOpen={openMenu === "app"}
-        group={NAV_APP}
-        onClose={() => setOpenMenu(null)}
-        onEnter={() => onMenuEnter("app")}
         onLeave={onMenuLeave}
       />
     </div>

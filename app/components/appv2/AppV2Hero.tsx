@@ -1,219 +1,122 @@
-"use client";
-
-import { useRef } from "react";
 import Image from "next/image";
 import { AppInstallButtons } from "@/app/components/AppInstallButtons";
-import { gsap, useGSAP, withMotion } from "@/app/lib/motion";
 
-const RING_RADIUS = 17;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
-const SCORE_TARGET = 92;
+/* ============================================================================
+ * AppV2Hero (SCRUM-1361, Simple DTC)
+ *
+ * "See CONKA working": the app is how you see the product do its job, not a
+ * test you sit for life. Centred copy, so the headline and the download
+ * buttons stay close to the top.
+ *
+ * The phones are the visual, in the Oura "why Oura" pattern: real screenshots
+ * fanned out with the home score screen largest in the middle. Five on
+ * desktop; on mobile three, under the headline.
+ * Static on purpose: the centre phone is the likely LCP element, so no
+ * entrance animation holds it back. Content-only; the page owns the section
+ * wrapper.
+ * ========================================================================== */
 
-/**
- * Interactive thesis hero for /app. Leads with the "we show you" thesis, with a
- * GSAP entrance: masked line reveals on the H1, a clip-path reveal on the
- * device card, and a live score ring that draws and counts up to 92. Content
- * is fully visible without JS (animations use `from` tweens) and all motion
- * is gated behind prefers-reduced-motion. Content-only; the page owns the
- * section wrapper.
- */
+const PHONE_WIDTH = 1455;
+const PHONE_HEIGHT = 2942;
+
+type Phone = {
+  src: string;
+  alt: string;
+  /** Tailwind width + overlap + stacking classes for this slot in the fan. */
+  className: string;
+  /** Outer phones are desktop-only; mobile shows the middle three. */
+  desktopOnly?: boolean;
+  centre?: boolean;
+};
+
+const PHONES: Phone[] = [
+  {
+    src: "/app/AppPatterns.png",
+    alt: "CONKA app patterns screen linking lifestyle to cognitive score",
+    className: "w-[17%] -mr-[4%] z-0",
+    desktopOnly: true,
+  },
+  {
+    src: "/app/AppLongTrends.png",
+    alt: "CONKA app trend chart of cognitive score over time against a baseline",
+    className: "w-[34%] -mr-[10%] md:w-[21%] md:-mr-[4%] z-10",
+  },
+  {
+    src: "/app/AppConkaRing.png",
+    alt: "CONKA app home screen showing a cognitive score of 92",
+    className: "w-[44%] md:w-[26%] z-20",
+    centre: true,
+  },
+  {
+    src: "/app/AppTestBreakdown.png",
+    alt: "CONKA app breakdown of the last test with speed and accuracy",
+    className: "w-[34%] -ml-[10%] md:w-[21%] md:-ml-[4%] z-10",
+  },
+  {
+    src: "/app/AppRewards.png",
+    alt: "CONKA app rewards screen",
+    className: "w-[17%] -ml-[4%] z-0",
+    desktopOnly: true,
+  },
+];
+
 export default function AppV2Hero() {
-  const root = useRef<HTMLDivElement>(null);
-  const scoreRef = useRef<HTMLSpanElement>(null);
-  const ringRef = useRef<SVGCircleElement>(null);
-
-  useGSAP(
-    () => {
-      withMotion(() => {
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-        tl.from("[data-hero-line]", {
-          yPercent: 110,
-          duration: 0.9,
-          stagger: 0.14,
-        })
-          .from(
-            "[data-hero-fade]",
-            { y: 16, autoAlpha: 0, duration: 0.6, stagger: 0.1 },
-            "-=0.5",
-          )
-          .from(
-            "[data-hero-card]",
-            {
-              clipPath: "inset(0% 0% 100% 0%)",
-              duration: 1.1,
-              ease: "power4.inOut",
-            },
-            0.2,
-          )
-          .from(
-            "[data-hero-chip]",
-            { autoAlpha: 0, duration: 0.4, stagger: 0.1 },
-            "-=0.3",
-          );
-
-        // Score ring: draw the arc and count 0 -> 92 in sync
-        gsap.set(ringRef.current, {
-          strokeDasharray: RING_CIRCUMFERENCE,
-          strokeDashoffset: RING_CIRCUMFERENCE,
-        });
-        const score = { value: 0 };
-        tl.to(
-          ringRef.current,
-          {
-            strokeDashoffset: RING_CIRCUMFERENCE * (1 - SCORE_TARGET / 100),
-            duration: 1.6,
-            ease: "power2.inOut",
-          },
-          0.7,
-        ).to(
-          score,
-          {
-            value: SCORE_TARGET,
-            duration: 1.6,
-            ease: "power2.inOut",
-            onUpdate: () => {
-              if (scoreRef.current) {
-                scoreRef.current.textContent = String(Math.round(score.value));
-              }
-            },
-          },
-          0.7,
-        );
-
-        // Gentle parallax as the hero scrolls away
-        gsap.to("[data-hero-card]", {
-          yPercent: 8,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-      });
-    },
-    { scope: root },
-  );
-
   return (
-    <div
-      ref={root}
-      className="flex flex-col lg:flex-row lg:items-center lg:gap-16"
-    >
-      {/* Copy — leads on mobile so the thesis is the first thing read */}
-      <div className="order-1 lg:flex-1">
-        <p
-          data-hero-fade
-          className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 tabular-nums mb-4"
-        >
-          {"// The app · APP-01"}
-        </p>
-        <h1
-          className="brand-h1 text-white mb-5"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          <span className="block overflow-hidden">
-            <span data-hero-line className="block">
-              Everyone tells you how
-            </span>
-          </span>
-          <span className="block overflow-hidden">
-            <span data-hero-line className="block">
-              you should feel.
-            </span>
-          </span>
-          <span className="block overflow-hidden">
-            <span data-hero-line className="block">
-              We show you.
-            </span>
-          </span>
-        </h1>
-        <p
-          data-hero-fade
-          className="text-base md:text-lg text-white leading-relaxed max-w-xl mb-8"
-        >
-          A free app and a clinically validated cognitive test that measure how
-          your brain actually performs, day after day.
-        </p>
+    <div className="flex flex-col items-center text-center">
+      <h1
+        className="brand-h1 text-black mb-4 lg:text-[3.5rem]"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        See CONKA working.
+      </h1>
 
-        <div data-hero-fade className="flex flex-col items-start gap-3">
-          <AppInstallButtons variant="clinical-dark" trackLocation="hero" />
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/65 tabular-nums">
-            Free to use
-          </p>
-        </div>
-      </div>
-
-      {/* Hero asset — light device-card; the phone floats from the top so the
-          live score ring leads. The HUD chip counts the score up live. */}
-      <div className="relative order-2 w-full mt-12 lg:mt-0 lg:flex-1">
-        <div
-          data-hero-card
-          className="relative aspect-square w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto border border-black/12 bg-[#f5f5f5] overflow-hidden"
-          style={{ clipPath: "inset(0% 0% 0% 0%)" }}
-        >
+      {/* Phones sit under the headline on mobile and after the buttons from
+          md: three on mobile so each stays legible, five from md. */}
+      <div
+        className="order-2 mb-8 flex w-full max-w-[1100px] items-center justify-center md:order-4 md:mb-0 md:mt-12"
+        aria-label="Screens from the CONKA app"
+        role="group"
+      >
+        {PHONES.map((phone) => (
           <div
-            data-hero-chip
-            className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10"
+            key={phone.src}
+            className={`relative shrink-0 ${phone.className} ${
+              phone.desktopOnly ? "hidden md:block" : ""
+            }`}
           >
-            Fig. 01 · CONKA App
-          </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-[25%] w-[60%] lg:w-[58%] aspect-[1/2]">
             <Image
-              src="/app/AppConkaRing.png"
-              alt="The CONKA app showing a live cognitive score ring"
-              fill
-              priority
-              sizes="(max-width: 1024px) 60vw, 300px"
-              className="object-contain"
+              src={phone.src}
+              alt={phone.alt}
+              width={PHONE_WIDTH}
+              height={PHONE_HEIGHT}
+              priority={phone.centre}
+              // Outer phones are display:none on mobile; lazy stops them
+              // downloading there.
+              loading={
+                phone.centre ? undefined : phone.desktopOnly ? "lazy" : "eager"
+              }
+              sizes={
+                phone.centre
+                  ? "(min-width: 768px) 290px, 44vw"
+                  : "(min-width: 768px) 230px, 34vw"
+              }
+              className="h-auto w-full drop-shadow-xl"
             />
           </div>
-          <div
-            data-hero-chip
-            className="absolute bottom-3 left-3 z-10 flex items-center gap-2.5 bg-black/70 px-3 py-2"
-          >
-            <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden>
-              <circle
-                cx="20"
-                cy="20"
-                r={RING_RADIUS}
-                fill="none"
-                stroke="rgba(255,255,255,0.15)"
-                strokeWidth="3"
-              />
-              <circle
-                ref={ringRef}
-                cx="20"
-                cy="20"
-                r={RING_RADIUS}
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth="3"
-                transform="rotate(-90 20 20)"
-              />
-            </svg>
-            <div>
-              <span
-                ref={scoreRef}
-                className="block font-mono text-lg font-bold text-white tabular-nums leading-none"
-              >
-                {SCORE_TARGET}
-              </span>
-              <span className="block font-mono text-[8px] uppercase tracking-[0.18em] text-white/65 mt-1">
-                Live score
-              </span>
-            </div>
-          </div>
-          <div
-            data-hero-chip
-            className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white bg-black/55 px-2 py-1 tabular-nums z-10"
-          >
-            iOS · Android
-          </div>
-        </div>
+        ))}
       </div>
+
+      <p className="order-3 mb-7 max-w-[46ch] text-lg leading-relaxed text-black/80 md:order-2 lg:text-xl">
+        The free CONKA app measures how sharp you are. Take a quick baseline,
+        start CONKA, and watch your score move.
+      </p>
+
+      <AppInstallButtons
+        variant="dtc"
+        trackLocation="hero"
+        buttonClassName="min-h-[44px]"
+        className="order-4 justify-center md:order-3"
+      />
     </div>
   );
 }

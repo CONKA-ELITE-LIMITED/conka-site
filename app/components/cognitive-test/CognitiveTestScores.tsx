@@ -6,50 +6,41 @@ export default function CognitiveTestScores({
   result,
   email,
 }: CognitiveTestScoresProps) {
-  const cells: { label: string; value: string; note: string }[] = [
-    { label: "Overall", value: `${result.score}`, note: "Score index" },
-    { label: "Accuracy", value: `${result.accuracy}%`, note: "Correct taps" },
-    { label: "Speed", value: `${result.speed}%`, note: "Reaction time" },
+  const cells: { label: string; value: string }[] = [
+    { label: "Overall", value: `${result.score}` },
+    { label: "Accuracy", value: `${result.accuracy}%` },
+    { label: "Speed", value: `${result.speed}%` },
   ];
 
   return (
-    <div className="bg-white/10 border border-white/12">
-      {/* Top spec bar */}
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
-        <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums">
-          Fig. 08 · Speed of Processing
-        </p>
-        <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/70 tabular-nums">
-          Results
-        </p>
-      </div>
+    <div className="rounded-lg bg-[#eef0f5] p-5 text-black lg:p-7">
+      <h3
+        className="mb-4 text-xl font-semibold leading-tight lg:text-2xl"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        Your baseline
+      </h3>
 
-      {/* Score grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
-        {cells.map((c, i) => (
+      <dl className="grid grid-cols-3 gap-2 lg:gap-3">
+        {cells.map((c) => (
+          // dt must precede dd in the markup; column-reverse puts the number
+          // on top visually.
           <div
             key={c.label}
-            className={`p-5 lg:p-6 ${i < cells.length - 1 ? "border-b lg:border-b-0 lg:border-r border-white/10" : ""}`}
+            className="flex flex-col-reverse items-center rounded-md bg-white px-2 py-4 text-center"
           >
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-              {c.label}
-            </p>
-            <p className="font-mono text-3xl lg:text-4xl font-bold tabular-nums text-white mt-3 leading-none">
+            <dt className="mt-2 text-sm text-black/70">{c.label}</dt>
+            <dd className="text-3xl font-bold leading-none tabular-nums text-[var(--brand-navy)] lg:text-4xl">
               {c.value}
-            </p>
-            <p className="font-mono text-[9px] text-white/50 mt-3 leading-tight tabular-nums">
-              {c.note}
-            </p>
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
 
       {email && (
-        <div className="border-t border-white/10 px-4 py-2.5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 tabular-nums">
-            Detailed breakdown sent to {email}
-          </p>
-        </div>
+        <p className="mt-4 text-sm text-black/65">
+          Your results are on their way to {email}.
+        </p>
       )}
     </div>
   );

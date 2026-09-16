@@ -2,50 +2,42 @@ import type { Metadata } from "next";
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import {
-  AppV2ProgressRail,
   AppV2Hero,
-  AppV2Origin,
-  AppV2TestJourney,
-  AppV2Engine,
-  AppV2Proof,
-  AppV2BeyondTest,
+  AppV2Loop,
+  AppV2Trust,
+  AppV2Results,
+  AppV2Features,
   AppV2Download,
 } from "@/app/components/appv2";
-import { AppInsightsCallout } from "@/app/components/app";
 import { CognitiveTestIsland } from "@/app/components/cognitive-test";
+import Reveal from "@/app/components/landing/Reveal";
 import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
-  title: "The App | CONKA",
+  title: "The CONKA App | CONKA",
   description:
-    "Everyone tells you how you should feel. We show you. A free app and a clinically validated cognitive test that measure how your brain actually performs over time.",
+    "See CONKA working. The free CONKA app measures how sharp you are: take a quick baseline, start CONKA, and watch your score move.",
   openGraph: {
-    title: "The App | CONKA",
+    title: "The CONKA App | CONKA",
     description:
-      "A free app and a clinically validated cognitive test that measure how your brain actually performs over time.",
+      "See CONKA working. Take a quick baseline in the free app, start CONKA, and watch your score move.",
     images: ["/app/AppConkaRing.png"],
   },
 };
 
+/* Light Simple DTC (SCRUM-1361): see DESIGN_SYSTEM.md §8.5 and the /app entry
+   in docs/PAGE_NARRATIVES.md. The page's jobs, in order: app download, email
+   capture through the live test, then CONKA. The arc is baseline, CONKA,
+   retest: invite first (hero, loop, the test itself), then earn trust, then
+   prove it on real people. Backgrounds alternate white and tint. */
 export default function AppPage() {
   return (
-    <div
-      className="brand-clinical min-h-screen text-white flex flex-col"
-      style={{
-        backgroundColor: "#0a0a0a",
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E\")",
-        backgroundSize: "24px 24px",
-      }}
-    >
+    <div className="min-h-screen bg-white text-black flex flex-col">
       <Navigation />
-      <AppV2ProgressRail />
 
-      {/* 1. HERO — the thesis: we show you */}
-      {/* paddingTop: clinical scope zeros brand-hero-first top padding on mobile */}
+      {/* ===== SECTION 1: HERO ===== */}
       <section
-        className="brand-section brand-hero-first"
-        style={{ paddingTop: "5rem" }}
+        className="brand-section brand-hero-first brand-bg-white"
         aria-label="The CONKA app"
       >
         <div className="brand-track">
@@ -53,26 +45,23 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 2. WHY / ORIGIN — you cannot improve what you cannot measure */}
-      <section className="brand-section" aria-label="Why we built it">
-        <div className="brand-track">
-          <AppV2Origin />
-        </div>
-      </section>
-
-      {/* 3. HOW IT WORKS — pinned journey (mechanism + gold standard merged) */}
-      <AppV2TestJourney />
-
-      {/* 4. THE ENGINE — data in, intelligence out, lab-grade depth */}
-      <section className="brand-section" aria-label="The engine behind the app">
-        <div className="brand-track">
-          <AppV2Engine />
-        </div>
-      </section>
-
-      {/* 5. TRY IT — live cognitive test (client island) */}
+      {/* ===== SECTION 2: THE LOOP ===== */}
       <section
-        className="brand-section"
+        className="brand-section brand-bg-tint"
+        aria-label="Baseline, CONKA, retest"
+      >
+        <div className="brand-track">
+          <Reveal>
+            <AppV2Loop />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ===== SECTION 3: GET YOUR BASELINE (live test, client island) =====
+          No Reveal: the island renders nothing until the breakpoint resolves,
+          so wrapping it would animate an empty box. */}
+      <section
+        className="brand-section brand-bg-white"
         aria-labelledby="cognitive-test-heading"
       >
         <div className="brand-track">
@@ -80,32 +69,50 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* 6. PROOF — research counters, product bridge, athlete strip */}
-      <section className="brand-section" aria-label="Research and athlete proof">
+      {/* ===== SECTION 4: A SCORE YOU CAN TRUST ===== */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="Why the score is worth trusting"
+      >
         <div className="brand-track">
-          <AppV2Proof />
+          <Reveal>
+            <AppV2Trust />
+          </Reveal>
         </div>
       </section>
 
-      {/* 7. REAL-WORLD DATA — bridge to /app-insights */}
-      <section className="brand-section" aria-label="App data insights callout">
+      {/* ===== SECTION 5: REAL RESULTS ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Real results from the app"
+      >
         <div className="brand-track">
-          <AppInsightsCallout />
+          <Reveal>
+            <AppV2Results />
+          </Reveal>
         </div>
       </section>
 
-      {/* 8. HABIT — compete and rewards keep you testing */}
-      <section className="brand-section" aria-label="Compete and rewards">
+      {/* ===== SECTION 6: MORE IN THE APP ===== */}
+      <section
+        className="brand-section brand-bg-tint"
+        aria-label="More in the app"
+      >
         <div className="brand-track">
-          <AppV2BeyondTest />
+          <Reveal>
+            <AppV2Features />
+          </Reveal>
         </div>
       </section>
 
-      {/* 9. DOWNLOAD — final CTA */}
-      <section className="brand-section" aria-label="Download the CONKA app">
+      {/* ===== SECTION 7: DOWNLOAD ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Download the CONKA app"
+      >
         <div className="brand-track">
           <AppV2Download />
-          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onDark" divider />
+          <ReviewedDate isoDate="2026-09" label="September 2026" divider />
         </div>
       </section>
 
