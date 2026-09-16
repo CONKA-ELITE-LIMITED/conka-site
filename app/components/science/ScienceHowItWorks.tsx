@@ -36,6 +36,7 @@ export default function ScienceHowItWorks() {
         {SCIENCE_HOW_IT_WORKS.shots.map((shot) => {
           const name = formulaContent[shot.productId].name;
           const TimeIcon = shot.time === "morning" ? SunIcon : SunHorizonIcon;
+          const trackLocation = `${shot.time === "morning" ? "flow" : "clear"}_card`;
           return (
             <article
               key={shot.productId}
@@ -43,25 +44,27 @@ export default function ScienceHowItWorks() {
             >
               {/* Out of the tab order: the labelled link below goes to the
                   same page, so keyboard and screen-reader users get one stop. */}
-              <Link
-                href={shot.href}
-                tabIndex={-1}
-                aria-hidden
-                className="relative block aspect-[4/3] w-full overflow-hidden bg-[#eef0f5] lg:aspect-[16/10]"
-              >
-                <Image
-                  src={getProductImage(shot.productId)}
-                  alt={name}
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 1024px) 600px, 100vw"
-                  className="object-cover"
-                />
-                <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-black">
-                  <TimeIcon className="h-4 w-4 text-[var(--brand-navy)]" />
-                  {shot.timeLabel}
-                </span>
-              </Link>
+              <ScienceTrackClick location={trackLocation}>
+                <Link
+                  href={shot.href}
+                  tabIndex={-1}
+                  aria-hidden
+                  className="relative block aspect-[4/3] w-full overflow-hidden bg-[#eef0f5] lg:aspect-[16/10]"
+                >
+                  <Image
+                    src={getProductImage(shot.productId)}
+                    alt={name}
+                    fill
+                    loading="lazy"
+                    sizes="(min-width: 1024px) 600px, 100vw"
+                    className="object-cover"
+                  />
+                  <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-black">
+                    <TimeIcon className="h-4 w-4 text-[var(--brand-navy)]" />
+                    {shot.timeLabel}
+                  </span>
+                </Link>
+              </ScienceTrackClick>
 
               <div className="flex flex-1 flex-col p-5 lg:p-6">
                 <h3 className="mb-1.5 text-2xl font-bold leading-tight text-black">
@@ -91,7 +94,7 @@ export default function ScienceHowItWorks() {
                 </ul>
 
                 <ScienceTrackClick
-                  location={`${shot.time === "morning" ? "flow" : "clear"}_card`}
+                  location={trackLocation}
                   className="mt-auto self-start"
                 >
                   <Link

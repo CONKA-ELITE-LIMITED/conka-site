@@ -18,7 +18,8 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 export default function ScienceMeasure() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-white ring-1 ring-black/5 lg:order-2">
+      {/* Copy leads on mobile so the argument lands before the screenshot. */}
+      <div className="relative order-2 aspect-[4/3] w-full overflow-hidden rounded-md bg-white ring-1 ring-black/5 lg:aspect-square">
         <Image
           src="/app/AppConkaRing.png"
           alt="CONKA app home screen showing the live cognitive score ring"
@@ -29,7 +30,7 @@ export default function ScienceMeasure() {
         />
       </div>
 
-      <div className="lg:order-1">
+      <div className="order-1">
         <h2 className="brand-h2 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {SCIENCE_MEASURE.heading}
         </h2>
