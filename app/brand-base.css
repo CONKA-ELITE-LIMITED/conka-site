@@ -659,9 +659,13 @@
   from { transform: translateX(0); }
   to { transform: translateX(-100%); }
 }
-.nav-mobile-panel-in { animation: nav-mobile-panel-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-.nav-mobile-panel-out { animation: nav-mobile-panel-out 200ms ease-in both; }
-.nav-mobile-item-in { animation: go-fade-up 400ms ease-out both; }
+/* The in animations fill backwards only: the start state covers the stagger
+   delay, and once finished the element drops its transform, so the open menu
+   holds no leftover layers and lays out exactly as it did before. The out
+   animation fills forwards so the panel stays off screen until it unmounts. */
+.nav-mobile-panel-in { animation: nav-mobile-panel-in 300ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.nav-mobile-panel-out { animation: nav-mobile-panel-out 200ms ease-in forwards; }
+.nav-mobile-item-in { animation: go-fade-up 400ms ease-out backwards; }
 
 /* 1ms rather than none so animationend still fires and the close unmounts
    at once. !important beats the inline stagger delay. */
