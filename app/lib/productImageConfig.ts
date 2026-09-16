@@ -8,9 +8,9 @@ import type { ProductHeroId } from "./productTypes";
 
 // Product navigation images (for cards, menus)
 export const productNavigationImages: Record<ProductHeroId, string> = {
-  "01": "/formulas/conkaFlow/FlowHold.jpg",
-  "02": "/formulas/conkaClear/ClearHold.jpg",
-  "03": "/formulas/both/BothHold.jpg",
+  "01": "/formulas/conkaFlow/FlowHoldV2.webp",
+  "02": "/formulas/conkaClear/ClearHoldV2.webp",
+  "03": "/formulas/both/BothHoldV2.webp",
 };
 
 /**

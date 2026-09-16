@@ -60,7 +60,7 @@ export function getBothHeroImages(cadence: CadenceType): string[] {
       : "/formulas/box/BothBox.jpg";
   return [
     slot1,
-    "/formulas/both/BothHold.jpg",
+    "/formulas/both/BothHoldV2.webp",
     "/lifestyle/flow/FlowBoxOpen.jpg",
     "/lifestyle/clear/ClearBoxOpen.jpg",
     "/formulas/both/BothJeans.jpg",
