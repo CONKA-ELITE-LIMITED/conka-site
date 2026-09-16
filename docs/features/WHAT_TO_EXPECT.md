@@ -83,9 +83,10 @@ Carried over from the V2 build plan (SCRUM-1253, Aug 2026), which is now deleted
   drop mobile to an in-view brighten rather than fighting the scrub.
 - **No ScrollTrigger pin**, deliberately: CSS sticky preserves the
   one-pin-per-page budget.
-- **Sticky asset spec:** FMC-style side-profile shots, exactly 4:5 at 810x1013
-  (`conkaFlow/FlowShotSide.jpg`, `conkaClear/ClearShotSide.jpg`; Both uses
-  `both/BothIngredients.jpg`).
+- **Sticky asset spec:** exactly 4:5. Flow and Clear use FMC-style side-profile
+  shots at 810x1013 (`conkaFlow/FlowShotSide.jpg`, `conkaClear/ClearShotSide.jpg`);
+  Both uses the light studio ingredients render at 1200x1500
+  (`both/BothIngredientsV2.webp`).
 - **Five beats, not three.** V2 is taller than V1 on mobile. That is accepted:
   the scroll interaction is the point of the section.
 - **No analytics.** This is a passive section and fires no events.
