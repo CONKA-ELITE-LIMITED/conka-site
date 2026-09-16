@@ -29,7 +29,7 @@ export interface TestResult {
 export interface EmailSubmission {
   /** User's email address */
   email: string;
-  /** Whether user consented to receive results */
+  /** Whether user consented to their results and CONKA marketing emails */
   consentGiven: boolean;
   /** Timestamp of submission */
   submittedAt: Date;

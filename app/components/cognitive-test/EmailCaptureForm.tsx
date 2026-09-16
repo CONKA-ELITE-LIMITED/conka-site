@@ -42,7 +42,7 @@ export default function EmailCaptureForm({
       }
 
       if (!consent) {
-        setConsentError("You must agree to receive your results");
+        setConsentError("Tick the box to get your results");
         hasError = true;
       }
 
@@ -172,7 +172,7 @@ export default function EmailCaptureForm({
               </div>
             </div>
             <span className="text-sm text-white/75 leading-relaxed">
-              I agree to receive my cognitive test results via email
+              Email me my results and news from CONKA. Unsubscribe anytime.
             </span>
           </label>
           {consentError && (

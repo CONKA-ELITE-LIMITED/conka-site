@@ -280,6 +280,41 @@ export function trackScienceCtaClicked(params: { location: string }): void {
   safeTrack("science:cta_clicked", params);
 }
 
+// ===== APP PAGE TRACKING (/app, SCRUM-1360) =====
+
+/**
+ * The /app test funnel, read in order against /app pageviews:
+ *
+ *   app:test_clicked -> app:email_submitted -> app:results_viewed
+ *
+ * plus app:store_clicked for the page's primary job, app downloads. A replay
+ * ("Play again") re-enters the flow, so these count attempts, not people.
+ */
+export function trackAppTestClicked(): void {
+  safeTrack("app:test_clicked", {});
+}
+
+/** Fires when the email gate is passed and the signup is sent to Klaviyo. */
+export function trackAppEmailSubmitted(): void {
+  safeTrack("app:email_submitted", {});
+}
+
+/** Fires when the score screen renders. */
+export function trackAppResultsViewed(): void {
+  safeTrack("app:results_viewed", {});
+}
+
+/**
+ * An App Store or Google Play click on /app. `location` is the placement's
+ * semantic id ("hero", "download", "test_results"), never a position.
+ */
+export function trackAppStoreClicked(params: {
+  platform: "ios" | "android";
+  location: string;
+}): void {
+  safeTrack("app:store_clicked", params);
+}
+
 // ===== CART UPSELL TILE TRACKING (CartDrawer, SCRUM-1201) =====
 
 /**

@@ -139,7 +139,7 @@ export default function AppV2Hero() {
         </p>
 
         <div data-hero-fade className="flex flex-col items-start gap-3">
-          <AppInstallButtons variant="clinical-dark" />
+          <AppInstallButtons variant="clinical-dark" trackLocation="hero" />
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/65 tabular-nums">
             Free to use
           </p>

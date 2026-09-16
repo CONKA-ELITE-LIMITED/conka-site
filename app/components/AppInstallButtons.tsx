@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAppStoreClicked } from "@/app/lib/analytics";
+
 interface AppInstallButtonsProps {
   className?: string;
   buttonClassName?: string;
@@ -7,6 +9,12 @@ interface AppInstallButtonsProps {
   inverted?: boolean;
   /** 'gradient' (legacy premium) | 'clinical' (navy, square, mono) | 'clinical-dark' (white on black) | 'dtc' (Simple DTC: rounded-full, sans, navy) | 'dtc-dark' (Simple DTC on a dark canvas: rounded-full, sans, white-filled primary + outlined secondary) */
   variant?: "gradient" | "clinical" | "clinical-dark" | "dtc" | "dtc-dark";
+  /**
+   * Semantic placement id (e.g. "hero", "download"). When set, clicks fire
+   * `app:store_clicked` (SCRUM-1360). Left unset on surfaces outside /app so
+   * their clicks do not pollute the /app funnel.
+   */
+  trackLocation?: string;
 }
 
 const APP_STORE_URL = "https://apps.apple.com/gb/app/conka-app/id6450399391";
@@ -42,12 +50,18 @@ export function AppInstallButtons({
   iconSize = 20,
   inverted = false,
   variant = "gradient",
+  trackLocation,
 }: AppInstallButtonsProps) {
+  const onStoreClick = (platform: "ios" | "android") => {
+    if (trackLocation) trackAppStoreClicked({ platform, location: trackLocation });
+  };
+
   if (variant === "clinical-dark") {
     return (
       <div className={`flex flex-row flex-wrap gap-3 items-center ${className}`}>
         <a
           href={APP_STORE_URL}
+          onClick={() => onStoreClick("ios")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from the App Store"
@@ -61,6 +75,7 @@ export function AppInstallButtons({
         </a>
         <a
           href={PLAY_STORE_URL}
+          onClick={() => onStoreClick("android")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from Google Play"
@@ -81,6 +96,7 @@ export function AppInstallButtons({
       <div className={`flex flex-row flex-wrap gap-3 items-center ${className}`}>
         <a
           href={APP_STORE_URL}
+          onClick={() => onStoreClick("ios")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from the App Store"
@@ -94,6 +110,7 @@ export function AppInstallButtons({
         </a>
         <a
           href={PLAY_STORE_URL}
+          onClick={() => onStoreClick("android")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from Google Play"
@@ -114,6 +131,7 @@ export function AppInstallButtons({
       <div className={`flex flex-row flex-wrap gap-3 items-stretch ${className}`}>
         <a
           href={APP_STORE_URL}
+          onClick={() => onStoreClick("ios")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from the App Store"
@@ -124,6 +142,7 @@ export function AppInstallButtons({
         </a>
         <a
           href={PLAY_STORE_URL}
+          onClick={() => onStoreClick("android")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from Google Play"
@@ -141,6 +160,7 @@ export function AppInstallButtons({
       <div className={`flex flex-row flex-wrap gap-3 items-center ${className}`}>
         <a
           href={APP_STORE_URL}
+          onClick={() => onStoreClick("ios")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from the App Store"
@@ -151,6 +171,7 @@ export function AppInstallButtons({
         </a>
         <a
           href={PLAY_STORE_URL}
+          onClick={() => onStoreClick("android")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Download CONKA app from Google Play"
@@ -169,6 +190,7 @@ export function AppInstallButtons({
     <div className={`flex flex-row flex-wrap gap-4 justify-center items-center ${className}`}>
       <a
         href={APP_STORE_URL}
+        onClick={() => onStoreClick("ios")}
         target="_blank"
         rel="noopener noreferrer"
         className={`px-8 py-4 font-semibold text-base flex items-center gap-2 rounded-full transition-all text-white border-0 hover:opacity-90 ${buttonClassName}`}
@@ -182,6 +204,7 @@ export function AppInstallButtons({
       </a>
       <a
         href={PLAY_STORE_URL}
+        onClick={() => onStoreClick("android")}
         target="_blank"
         rel="noopener noreferrer"
         className={`px-8 py-4 font-semibold text-base flex items-center gap-2 rounded-full transition-all text-white border-0 hover:opacity-90 ${buttonClassName}`}
