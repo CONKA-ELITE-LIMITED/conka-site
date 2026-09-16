@@ -42,7 +42,7 @@ The **presentation** layer is dead. The **commerce** layer is not.
 - `app/api/auth/subscriptions/route.ts` and the pause route return protocol IDs and `/protocols/*.jpg` image paths.
 - `app/lib/productTypes.ts` defines `ProductId = FormulaId | ProtocolId`.
 
-**Working assumption (decided 2026-07-14): customers are still on protocol subscriptions.** The commerce layer is therefore treated as permanent legacy support. Deleting it would break those customers' portal and their renewal variant mapping. `public/protocols/` is likewise NOT orphaned: those box images render in the subscriptions and orders UI.
+**Working assumption (decided 2026-07-14): customers are still on protocol subscriptions.** The commerce layer is therefore treated as permanent legacy support. Deleting it would break those customers' portal and their renewal variant mapping. `public/protocols/` was deleted in SCRUM-1347 (2026-09-16): the self-built portal that rendered those images is gone (Skio owns the portal), so nothing read them any more.
 
 ---
 
@@ -56,7 +56,7 @@ The **presentation** layer is dead. The **commerce** layer is not.
 | 4 | Quarantine the protocol commerce layer (scope revised, see below) | Not started |
 | 5 | Delete the commerce layer entirely | Not planned (see below) |
 
-**Newly unreferenced (2026-08-26):** the six `public/formulas/whatToExpect/*.jpg` crops (Flow/Clear/Both, desktop + mobile) lost their only consumer when WhatToExpect V1 was replaced by the V2 scroll timeline (SCRUM-1253). Safe to delete in the next asset sweep.
+**Follow-up sweep (SCRUM-1347, 2026-09-16):** deleted 26 more unreferenced files, including the `public/formulas/whatToExpect/` V1 crops, loose root `CONKA_*` photos, superseded formula statics and `public/protocols/`.
 
 ---
 
@@ -86,7 +86,7 @@ The **presentation** layer is dead. The **commerce** layer is not.
 - `public/logo.png`, `public/conka.webp`, `public/conka.svg`, `public/logos/Klarna.png`, `public/sebdechaves.jpeg` (5). Unreferenced in code, but these are exactly the kind of asset hotlinked from a Klaviyo email template or a Meta ad, which this repo cannot see. Only ~600 KB combined, so not worth the risk.
 - `public/videos/misc/BrainScan.webm` and `BrainScan-poster.jpg` (2). Unreferenced only because of the Phase 2 bug. `BrainScan.mp4` is live, and Phase 2 exists to start serving these two. Deleting them would turn a fixable bug into permanent asset loss.
 
-Also untouched (never unreferenced): `public/protocols/`, which renders in the subscriptions and orders UI.
+Also untouched at the time: `public/protocols/`, later deleted in SCRUM-1347 once the self-built portal was gone.
 
 **Complexity:** Small. No code changes.
 
@@ -223,7 +223,7 @@ These are real legacy support for existing protocol subscribers. Keep them worki
 
 **Not planned.** Working assumption is that customers hold protocol subscriptions, so this layer is permanent legacy support.
 
-Revisit only if protocol subscriptions reach zero, which would require migrating any remaining subscribers onto Flow / Clear / Both variants in Shopify first. That is an ops job, not a code job. If it ever happens, this phase would delete `ProtocolId`, `PROTOCOL_VARIANTS`, the protocol branches of the subscriptions UI, `public/protocols/`, and collapse `ProductId = FormulaId | ProtocolId` down to `FormulaId`.
+Revisit only if protocol subscriptions reach zero, which would require migrating any remaining subscribers onto Flow / Clear / Both variants in Shopify first. That is an ops job, not a code job. If it ever happens, this phase would delete `ProtocolId`, `PROTOCOL_VARIANTS`, the protocol branches of the subscriptions UI, and collapse `ProductId = FormulaId | ProtocolId` down to `FormulaId`.
 
 ---
 
@@ -236,7 +236,7 @@ Revisit only if protocol subscriptions reach zero, which would require migrating
 
 ## No-gos
 
-- Not deleting `public/protocols/`, `PROTOCOL_VARIANTS`, or the subscription editing flow.
+- Not deleting `PROTOCOL_VARIANTS` or the subscription editing flow.
 - Not removing the `/protocol`, `/quiz`, or `/shop` redirects in `next.config.ts`.
 - Not deleting `llms.txt` or the Google Search Console verification file.
 - Not deleting the small brand assets that may be hotlinked externally.

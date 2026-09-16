@@ -53,7 +53,7 @@ App Store / Play Store URLs are the real live CONKA links (baked into `AppInstal
 - **noindex mechanism.** Set via `metadata.robots`. The page is deliberately **left out of `sitemap.ts`** and **not disallowed in `robots.ts`** (disallowing would stop crawlers seeing and honouring the noindex tag). This matches the project policy for noindex landers.
 - **Trial dates are hard-coded.** Kickoff Thursday 6 August; the trial runs Thursday 6 to Wednesday 19 August, a single 14-day stretch (no baseline phase). They live in `TrialCalendar.tsx` (`TRIAL_START` / `TRIAL_END` / `CELLS`), the hero/kickoff copy in `page.tsx`, and `KICKOFF` in `CodeGateOverlay.tsx`. Change all three if the schedule moves.
 - **FAQ copy is a trimmed reuse** of `app/lib/faqContent.ts` (Flow vs Clear, both at once, testing timing, IQ test, caffeine, sleep, medication). It is duplicated as a local `faqs` array (not imported) so it can be tuned for this audience; keep it roughly aligned if the canonical FAQ changes. Rendered as a native exclusive `<details>` accordion (shared `name="nike-faq"`), no client JS.
-- **Assets are all existing** (no new files): `FlowNew.jpg` / `ClearNew.jpg`, `AppConkaRing.png`, `conka-logo.webp`, and `/opengraph-image.png` for the unfurl.
+- **Assets are all existing** (no new files): `FlowLabDark.png` / `ClearLabDark.png`, `AppConkaRing.png`, `conka-logo.webp`, and `/opengraph-image.png` for the unfurl.
 - The daily-rhythm **test** step uses the formula toggle's `SunHorizonIcon` as a placeholder glyph (the two product slots took the bottle images).
 
 ## Editing

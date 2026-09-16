@@ -112,9 +112,8 @@ Extracted from the conkaWebsite codebase. All values are real — prices, IDs, c
 
 ### Product Images
 
-- Flow: `/formulas/ConkaFlowColour.jpg`, `/CONKA_01.jpg`
-- Clarity: `/formulas/ConkaClearColour.jpg`, `/CONKA_06.jpg`
-- Protocols: `/protocols/ResilienceRed.jpg`, `/protocols/PrecisionPurple.jpg`, `/protocols/BalanceGreen.jpg`, `/protocols/UltimatePink.jpg`
+- Bottle renders and PDP galleries: `bottleRenders` / `formulaImages` in `app/lib/productImages.ts`
+- Card and nav thumbnails: `app/lib/productImageConfig.ts`
 - Ingredient assets: `/ingredients/flow/` and `/ingredients/clear/` directories
 
 ### Product Colors & Gradients
