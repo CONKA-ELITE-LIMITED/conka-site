@@ -116,7 +116,6 @@ export default function RealisedSolution() {
     <div>
       {/* Header, the framing beat: model becomes product */}
       <div className="mb-8 lg:mb-10 max-w-2xl">
-        <p className="brand-eyebrow mb-3">{"// The solution · SCI-05"}</p>
         <h2
           className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}
@@ -136,14 +135,14 @@ export default function RealisedSolution() {
         {PRODUCTS.map((product) => (
           <div
             key={product.name}
-            className="flex flex-col bg-white border border-black/12 overflow-hidden"
+            className="flex flex-col bg-white rounded-md border border-black/12 overflow-hidden"
           >
             {/* Category row */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
-              <span className="font-mono text-[11px] font-bold tabular-nums text-black/40 leading-none">
+              <span className="text-xs font-bold tabular-nums text-black/40 leading-none">
                 {product.number}.
               </span>
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-black/60 leading-none">
+              <span className="text-xs font-semibold text-black/60 leading-none">
                 {product.categoryTag}
               </span>
             </div>
@@ -161,8 +160,8 @@ export default function RealisedSolution() {
                 sizes="(max-width: 1024px) 90vw, 600px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute top-0 right-0 bg-[#1B2757] text-white px-3 py-1.5 [clip-path:polygon(0_0,calc(100%-10px)_0,100%_10px,100%_100%,0_100%)]">
-                <span className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] leading-none whitespace-nowrap">
+              <div className="absolute top-3 right-3 rounded-full bg-[#1B2757] text-white px-3 py-1.5">
+                <span className="text-xs font-bold leading-none whitespace-nowrap">
                   {product.systemLabel}
                 </span>
               </div>
@@ -170,7 +169,7 @@ export default function RealisedSolution() {
 
             {/* Content */}
             <div className="flex flex-col flex-1 p-5">
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50 mb-2 leading-none">
+              <p className="text-xs font-semibold text-black/50 mb-2 leading-none">
                 {product.name}
               </p>
               <h3 className="text-xl lg:text-2xl font-semibold text-black leading-tight mb-3">
@@ -186,7 +185,7 @@ export default function RealisedSolution() {
                   {product.activeMg.toLocaleString()}
                   <span className="text-lg font-semibold">mg</span>
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45 tabular-nums leading-tight">
+                <span className="text-xs font-semibold text-black/60 tabular-nums leading-tight">
                   Active ingredients
                   <br />
                   per serving
@@ -194,13 +193,13 @@ export default function RealisedSolution() {
               </div>
 
               {/* Hero actives folded in as proof, render + mechanism, no dose */}
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums mb-3">
+              <p className="text-xs font-semibold text-black/60 tabular-nums mb-3">
                 Three of the hero actives
               </p>
               <ul className="space-y-3 mb-5">
                 {product.actives.map((active) => (
                   <li key={active.name} className="flex gap-3">
-                    <div className="relative w-14 h-14 shrink-0 border border-black/8 overflow-hidden bg-white">
+                    <div className="relative w-14 h-14 shrink-0 rounded-md border border-black/8 overflow-hidden bg-white">
                       <Image
                         src={active.render}
                         alt={`Render of ${active.name}`}
@@ -214,7 +213,7 @@ export default function RealisedSolution() {
                       <span className="text-sm font-semibold text-black leading-tight">
                         {active.name}
                       </span>
-                      <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-black/45 tabular-nums mt-0.5">
+                      <span className="text-xs font-semibold text-black/60 tabular-nums mt-0.5">
                         {active.scientificName}
                       </span>
                       <p className="text-sm text-black/65 leading-snug mt-1.5">
@@ -224,7 +223,7 @@ export default function RealisedSolution() {
                         href={`https://pubmed.ncbi.nlm.nih.gov/${active.pmid}/`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1B2757] hover:underline tabular-nums mt-1 inline-flex items-center self-start min-h-[44px]"
+                        className="text-xs text-[#1B2757] hover:underline tabular-nums mt-1 inline-flex items-center self-start min-h-[44px]"
                       >
                         Peer-reviewed · PMID {active.pmid} ↗
                       </a>
@@ -236,7 +235,7 @@ export default function RealisedSolution() {
               {/* Soft CTA, to the PDP, not a buy button */}
               <Link
                 href={product.link}
-                className="mt-auto font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-[#1B2757] border border-[#1B2757]/30 hover:border-[#1B2757] px-4 min-h-[44px] inline-flex items-center justify-center transition-colors"
+                className="mt-auto text-xs tabular-nums text-[#1B2757] rounded-full border border-[#1B2757]/30 hover:border-[#1B2757] px-4 min-h-[44px] inline-flex items-center justify-center transition-colors"
               >
                 See the full {product.name} formula ↗
               </Link>
@@ -246,7 +245,7 @@ export default function RealisedSolution() {
       </div>
 
       {/* Bridge to the full catalogue */}
-      <div className="mt-8 lg:mt-10 bg-white border border-black/12 p-5 lg:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="mt-8 lg:mt-10 bg-white rounded-md border border-black/12 overflow-hidden p-5 lg:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="text-base font-semibold text-black leading-tight">
             That is six of them. There are 16 in all.
@@ -258,7 +257,7 @@ export default function RealisedSolution() {
         </div>
         <a
           href="/ingredients"
-          className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums text-[#1B2757] border border-[#1B2757]/30 hover:border-[#1B2757] px-4 min-h-[44px] inline-flex items-center justify-center transition-colors whitespace-nowrap"
+          className="text-xs tabular-nums text-[#1B2757] rounded-full border border-[#1B2757]/30 hover:border-[#1B2757] px-4 min-h-[44px] inline-flex items-center justify-center transition-colors whitespace-nowrap"
         >
           All 16 actives ↗
         </a>

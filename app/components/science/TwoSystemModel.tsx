@@ -14,8 +14,8 @@ const SYSTEMS = [
         fill="none"
         stroke="currentColor"
         strokeWidth="1.75"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
@@ -36,8 +36,8 @@ const SYSTEMS = [
         fill="none"
         stroke="currentColor"
         strokeWidth="1.75"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
       </svg>
@@ -49,7 +49,6 @@ export default function TwoSystemModel() {
   return (
     <div>
       <div className="mb-8 lg:mb-10 max-w-2xl">
-        <p className="brand-eyebrow mb-3">{"// The model · SCI-03"}</p>
         <h2
           className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}
@@ -67,13 +66,13 @@ export default function TwoSystemModel() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {SYSTEMS.map((sys, idx) => (
-          <div key={sys.name} className="bg-white border border-black/12">
+          <div key={sys.name} className="bg-white rounded-md border border-black/12 overflow-hidden">
             {/* Header row */}
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
+              <span className="text-xs font-semibold text-black/60 tabular-nums">
                 SYS-{String(idx + 1).padStart(2, "0")} · System {idx + 1} / 2
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+              <span className="text-xs text-[#1B2757] tabular-nums">
                 {sys.footer}
               </span>
             </div>
@@ -81,7 +80,7 @@ export default function TwoSystemModel() {
             {/* Body */}
             <div className="p-5 lg:p-6">
               <div
-                className="w-11 h-11 flex items-center justify-center text-white mb-4"
+                className="w-11 h-11 rounded-full flex items-center justify-center text-white mb-4"
                 style={{ backgroundColor: "#1B2757" }}
               >
                 {sys.icon}

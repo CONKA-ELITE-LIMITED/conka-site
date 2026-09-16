@@ -5,7 +5,6 @@ export default function ScienceEducation() {
   return (
     <div>
       <div className="mb-8 lg:mb-12 max-w-2xl">
-        <p className="brand-eyebrow mb-3">{"// Education · SCI-04"}</p>
         <h2
           className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}

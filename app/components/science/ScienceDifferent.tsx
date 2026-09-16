@@ -13,8 +13,8 @@ const FAILURES = [
         fill="none"
         stroke="currentColor"
         strokeWidth="1.75"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
       </svg>
@@ -34,8 +34,8 @@ const FAILURES = [
         fill="none"
         stroke="currentColor"
         strokeWidth="1.75"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
         <line x1="1" y1="1" x2="23" y2="23" />
@@ -56,8 +56,8 @@ const FAILURES = [
         fill="none"
         stroke="currentColor"
         strokeWidth="1.75"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <circle cx="12" cy="12" r="10" />
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
@@ -71,7 +71,6 @@ export default function ScienceDifferent() {
   return (
     <div>
       <div className="mb-8 lg:mb-10 max-w-2xl">
-        <p className="brand-eyebrow mb-3">{"// The problem · SCI-02"}</p>
         <h2
           className="brand-h2 text-black mb-4"
           style={{ letterSpacing: "-0.02em" }}
@@ -86,13 +85,13 @@ export default function ScienceDifferent() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         {FAILURES.map((card, idx) => (
-          <div key={card.title} className="bg-white border border-black/12">
+          <div key={card.title} className="bg-white rounded-md border border-black/12 overflow-hidden">
             {/* Header row */}
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
+              <span className="text-xs font-semibold text-black/60 tabular-nums">
                 {String(idx + 1).padStart(2, "0")} · Failure
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+              <span className="text-xs text-[#1B2757] tabular-nums">
                 {card.category}
               </span>
             </div>
@@ -100,7 +99,7 @@ export default function ScienceDifferent() {
             {/* Body */}
             <div className="p-5 lg:p-6">
               <div
-                className="w-11 h-11 flex items-center justify-center text-white mb-4"
+                className="w-11 h-11 rounded-full flex items-center justify-center text-white mb-4"
                 style={{ backgroundColor: "#1B2757" }}
               >
                 {card.icon}

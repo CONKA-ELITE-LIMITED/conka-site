@@ -47,13 +47,13 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
 
       {/* Ingredient renders — the visual anchor for the section */}
       <div className="mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-3">
+        <p className="text-xs font-semibold text-black/60 mb-3">
           {data.ingredientsLabel}
         </p>
         <div className="grid grid-cols-3 gap-2 lg:gap-3">
           {data.ingredients.map((ing, idx) => (
             <figure key={ing.name}>
-              <div className="relative aspect-square bg-white border border-black/12 overflow-hidden">
+              <div className="relative aspect-square bg-white rounded-md border border-black/12 overflow-hidden">
                 <Image
                   src={ing.render}
                   alt={`Render of ${ing.name}`}
@@ -62,7 +62,7 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
                   sizes="(max-width: 1024px) 30vw, 220px"
                   className="object-cover"
                 />
-                <span className="absolute top-2 left-2 font-mono text-[8px] uppercase tracking-[0.18em] text-black/40 bg-white/80 px-1.5 py-0.5 tabular-nums">
+                <span className="absolute top-2 left-2 text-xs font-semibold text-black/60 bg-white/80 px-1.5 py-0.5 tabular-nums">
                   {String(idx + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -70,7 +70,7 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
                 <p className="text-sm font-semibold text-black leading-tight">
                   {ing.name}
                 </p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50 tabular-nums mt-0.5 leading-tight">
+                <p className="text-xs text-black/50 tabular-nums mt-0.5 leading-tight">
                   {ing.note}
                 </p>
               </figcaption>
@@ -80,8 +80,8 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
       </div>
 
       {/* Analogy — a differentiated aside, scannable, always visible */}
-      <div className="bg-black/[0.03] border border-black/8 p-4 lg:p-5 mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/40 mb-2">
+      <div className="bg-black/[0.03] rounded-md border border-black/8 p-4 lg:p-5 mb-6">
+        <p className="text-xs font-semibold text-black/60 mb-2">
           In plain terms
         </p>
         <p className="text-sm md:text-base text-black/75 leading-relaxed">
@@ -90,13 +90,13 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
       </div>
 
       {/* Layered disclosure card — mechanism + dose behind a toggle */}
-      <div className="bg-white border border-black/12">
+      <div className="bg-white rounded-md border border-black/12 overflow-hidden">
         {/* Header row */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/8">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/45 tabular-nums">
+          <span className="text-xs font-semibold text-black/60 tabular-nums">
             Mechanism
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+          <span className="text-xs text-[#1B2757] tabular-nums">
             {data.systemTag}
           </span>
         </div>
@@ -110,7 +110,7 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
         >
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4 p-4 lg:p-5 min-h-[44px]">
             <div
-              className="w-11 h-11 flex items-center justify-center text-white flex-shrink-0"
+              className="w-11 h-11 rounded-full flex items-center justify-center text-white flex-shrink-0"
               style={{ backgroundColor: "#1B2757" }}
             >
               {data.icon}
@@ -126,8 +126,8 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               className={`transition-transform flex-shrink-0 text-black/45 ${
                 isExpanded ? "rotate-180" : ""
               }`}
@@ -142,7 +142,7 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
         {isExpanded && (
           <div className="border-t border-black/8 p-4 lg:p-6 space-y-6">
             {/* Mechanism steps — hairline numbered rows */}
-            <div className="border border-black/12">
+            <div className="rounded-md border border-black/12 overflow-hidden">
               {data.mechanism.map((step, idx) => (
                 <div
                   key={step.label}
@@ -153,10 +153,10 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
                   }`}
                 >
                   <div className="flex items-baseline gap-3 mb-1.5">
-                    <span className="font-mono text-[10px] text-black/35 tabular-nums flex-shrink-0">
+                    <span className="text-xs text-black/35 tabular-nums flex-shrink-0">
                       {String(idx + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2757] tabular-nums">
+                    <span className="text-xs text-[#1B2757] tabular-nums">
                       {step.label}
                     </span>
                   </div>
@@ -168,8 +168,8 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
             </div>
 
             {/* Why dose and quality matter */}
-            <div className="bg-[#1B2757]/[0.04] border border-[#1B2757]/15 p-4 lg:p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1B2757] mb-2">
+            <div className="bg-[#1B2757]/[0.04] rounded-md border border-[#1B2757]/15 p-4 lg:p-5">
+              <p className="text-xs text-[#1B2757] mb-2">
                 Why dose and quality matter
               </p>
               <p className="text-sm text-black/75 leading-relaxed">
@@ -185,7 +185,7 @@ export default function ScienceExplainer({ data }: { data: ExplainerData }) {
         {data.tags.map((tag) => (
           <span
             key={tag}
-            className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums px-3 py-1 border border-black/12 bg-white text-black/70"
+            className="text-xs tabular-nums px-3 py-1 rounded-full border border-black/12 bg-white text-black/70"
           >
             {tag}
           </span>

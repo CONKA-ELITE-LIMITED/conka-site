@@ -6,33 +6,38 @@ import TwoSystemModel from "@/app/components/science/TwoSystemModel";
 import ScienceEducation from "@/app/components/science/ScienceEducation";
 import RealisedSolution from "@/app/components/science/RealisedSolution";
 import ScienceDifferent from "@/app/components/science/ScienceDifferent";
-import EvidenceLadder from "@/app/components/science/EvidenceLadder";
+import ScienceProof from "@/app/components/science/ScienceProof";
+import ScienceCTA from "@/app/components/science/ScienceCTA";
 import AppInsightsCallout from "@/app/components/app/AppInsightsCallout";
 import Reveal from "@/app/components/landing/Reveal";
 import ReviewedDate from "@/app/components/ReviewedDate";
 
 export const metadata: Metadata = {
-  title: "The Science | CONKA",
+  title: "Does CONKA Work? The Science and Clinical Trials | CONKA",
   description:
-    "The brain is a performance system under daily load. See the model CONKA is engineered around: clinical-dose adaptogens and nootropics, and the evidence underneath them.",
+    "In a double-blind, placebo-controlled trial, athletes on CONKA improved cognitive performance by 14.86%. See the nootropics, adaptogens and research behind it.",
   openGraph: {
-    title: "The Science | CONKA",
+    title: "Does CONKA Work? The Science and Clinical Trials | CONKA",
     description:
-      "The model CONKA is engineered around: clinical-dose adaptogens and nootropics, and the evidence underneath them.",
+      "In a double-blind, placebo-controlled trial, athletes on CONKA improved cognitive performance by 14.86%. See the research behind it.",
     images: ["/lifestyle/CreationOfConka.jpg"],
   },
 };
 
+/* Simple DTC, not clinical (SCRUM-1351): see DESIGN_SYSTEM.md §8.5 and
+   docs/development/featurePlans/science-page-narrative.md. The hero, proof and
+   CTA are the rebuilt Phase 1 sections; the four sections between the hero and
+   the proof are restyled originals that Phase 2 (SCRUM-1352) replaces.
+   Backgrounds alternate so no two adjacent sections match. */
 export default function SciencePage() {
   return (
-    <div className="brand-clinical min-h-screen bg-white text-black flex flex-col">
+    <div className="min-h-screen bg-white text-black flex flex-col">
       <Navigation />
 
-      {/* ===== SECTION 1: THESIS HERO ===== */}
+      {/* ===== SECTION 1: HERO ===== */}
       <section
         className="brand-section brand-hero-first brand-bg-white"
-        style={{ paddingTop: "5rem" }}
-        aria-label="Science hero"
+        aria-label="The science behind CONKA"
       >
         <div className="brand-track">
           <ScienceHero />
@@ -75,10 +80,10 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 5: THE REALISED SOLUTION (Flow + Clear) ===== */}
+      {/* ===== SECTION 5: FLOW + CLEAR ===== */}
       <section
         className="brand-section brand-bg-white"
-        aria-label="The realised solution: Flow and Clear"
+        aria-label="Flow and Clear"
       >
         <div className="brand-track">
           <Reveal>
@@ -87,14 +92,15 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 6: EVIDENCE & RESEARCH ===== */}
+      {/* ===== SECTION 6: THE PROOF ===== */}
       <section
-        className="brand-section brand-bg-tint"
-        aria-label="Evidence and research"
+        id="proof"
+        className="brand-section brand-bg-tint scroll-mt-20"
+        aria-label="Clinical trials"
       >
         <div className="brand-track">
           <Reveal>
-            <EvidenceLadder />
+            <ScienceProof />
           </Reveal>
         </div>
       </section>
@@ -108,7 +114,17 @@ export default function SciencePage() {
           <Reveal>
             <AppInsightsCallout />
           </Reveal>
-          <ReviewedDate isoDate="2026-07" label="July 2026" tone="onDark" divider />
+        </div>
+      </section>
+
+      {/* ===== SECTION 8: CTA ===== */}
+      <section
+        className="brand-section brand-bg-white"
+        aria-label="Try CONKA"
+      >
+        <div className="brand-track">
+          <ScienceCTA />
+          <ReviewedDate isoDate="2026-09" label="September 2026" divider />
         </div>
       </section>
 
