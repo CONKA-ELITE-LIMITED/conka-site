@@ -645,6 +645,35 @@
   }
 }
 
+/* ---- Mobile navigation menu motion (SCRUM-1346) ----
+   Consumed by app/components/navigation/NavigationMobile.tsx. CSS-only
+   because the nav ships on every page. Transform and opacity only, so no
+   frame runs layout. The panel slides in from the hamburger side, then the
+   content blocks rise in top to bottom (delay set inline per block); close
+   is one quicker slide out, and the component unmounts on its animationend. */
+@keyframes nav-mobile-panel-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes nav-mobile-panel-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+.nav-mobile-panel-in { animation: nav-mobile-panel-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.nav-mobile-panel-out { animation: nav-mobile-panel-out 200ms ease-in both; }
+.nav-mobile-item-in { animation: go-fade-up 300ms ease-out both; }
+
+/* 1ms rather than none so animationend still fires and the close unmounts
+   at once. !important beats the inline stagger delay. */
+@media (prefers-reduced-motion: reduce) {
+  .nav-mobile-panel-in,
+  .nav-mobile-panel-out,
+  .nav-mobile-item-in {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}
+
 /* ================================================================
  * LAYER 2.5 — APP DARK SCOPE
  * ================================================================

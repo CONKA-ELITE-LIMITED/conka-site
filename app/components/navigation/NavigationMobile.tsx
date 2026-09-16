@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState, type AnimationEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
@@ -10,6 +11,20 @@ import type { NavigationMobileProps } from "./types";
 
 // Same IA as desktop, sourced from the shared config (no duplicate links).
 const MENU_GROUPS = [NAV_SCIENCE, NAV_APP, NAV_COMPANY];
+
+// Open motion (SCRUM-1346, classes in brand-base.css): the panel slides in,
+// then each content block rises in, top to bottom, this far apart. The first
+// block waits until the panel is most of the way across.
+const ITEM_DELAY_START_MS = 120;
+const ITEM_STAGGER_MS = 40;
+// Unmounts a closing menu if animationend never arrives (e.g. a tab
+// backgrounded mid-close). A little over the 200ms slide out.
+const CLOSE_FALLBACK_MS = 300;
+
+/** Inline delay for the index-th staggered block (product rows, groups, review). */
+function itemDelay(index: number) {
+  return { animationDelay: `${ITEM_DELAY_START_MS + index * ITEM_STAGGER_MS}ms` };
+}
 
 // Time-of-day tints for the product pills, matched to the desktop Shop
 // mega-menu badges and the home/PDP product cards so the three surfaces agree.
@@ -26,6 +41,25 @@ export default function NavigationMobile({
   bannerConfig,
 }: NavigationMobileProps) {
   const { openCart, itemCount } = useCart();
+
+  // The overlay stays mounted through its slide out and unmounts at the end,
+  // so a closed menu still renders nothing. Adjusted during render rather than
+  // in an effect, so the opening frame already has the overlay in it.
+  const [isRendered, setIsRendered] = useState(mobileMenuOpen);
+  if (mobileMenuOpen && !isRendered) setIsRendered(true);
+  const isClosing = isRendered && !mobileMenuOpen;
+
+  useEffect(() => {
+    if (!isClosing) return;
+    const timer = setTimeout(() => setIsRendered(false), CLOSE_FALLBACK_MS);
+    return () => clearTimeout(timer);
+  }, [isClosing]);
+
+  // The content blocks' own animations bubble up here too; only the panel's
+  // slide out ends the close.
+  const handlePanelAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+    if (isClosing && event.target === event.currentTarget) setIsRendered(false);
+  };
 
   return (
     <>
@@ -124,8 +158,13 @@ export default function NavigationMobile({
       </header>
 
       {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden fixed inset-0 z-40 bg-white flex flex-col">
+      {isRendered && (
+        <div
+          className={`xl:hidden fixed inset-0 z-40 bg-white flex flex-col ${
+            isClosing ? "nav-mobile-panel-out pointer-events-none" : "nav-mobile-panel-in"
+          }`}
+          onAnimationEnd={handlePanelAnimationEnd}
+        >
           <div className="flex-1 overflow-y-auto pb-16">
             {/* Header bar */}
             <div className="flex justify-between items-center px-5 py-4 border-b border-black/12">
@@ -172,14 +211,15 @@ export default function NavigationMobile({
                 Shop by product
               </p>
               <div className="flex flex-col gap-6">
-                {NAV_PRODUCTS.map((product) => {
+                {NAV_PRODUCTS.map((product, index) => {
                   const badge = BADGE_STYLE[product.badge];
                   return (
                     <a
                       key={product.href}
                       href={product.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="group flex items-center gap-4"
+                      className="nav-mobile-item-in group flex items-center gap-4"
+                      style={itemDelay(index)}
                     >
                       <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-md border border-black/10 bg-[#f5f5f5]">
                         <Image
@@ -228,10 +268,11 @@ export default function NavigationMobile({
 
             {/* Categorised groups — compact 2-col grid keeps secondary IA
                 scannable and clearly subordinate to the product rows. */}
-            {MENU_GROUPS.map((group) => (
+            {MENU_GROUPS.map((group, index) => (
               <div
                 key={group.title}
-                className="px-5 mt-8 pt-8 border-t border-black/10"
+                className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
+                style={itemDelay(NAV_PRODUCTS.length + index)}
               >
                 <p className="text-lg font-bold text-black mb-4">
                   {group.title}
@@ -269,7 +310,10 @@ export default function NavigationMobile({
 
             {/* Social proof — featured verified review, replacing the old
                 guarantee microcopy. */}
-            <div className="px-5 mt-8 pt-8 border-t border-black/10">
+            <div
+              className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
+              style={itemDelay(NAV_PRODUCTS.length + MENU_GROUPS.length)}
+            >
               <div
                 className="rounded-md p-6 text-center text-white"
                 style={{
