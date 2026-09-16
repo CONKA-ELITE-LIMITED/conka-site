@@ -52,21 +52,20 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 ## /science
 
 **Audience:** mid-funnel sceptic. Already interested (arrives mostly from the nav, footer or a PDP, and leans desktop), but doubtful. Needs "does it work, and why?" answered before buying.
-**Posture:** proof first, depth on tap. Simple DTC (SCRUM-1351). The top layer is scannable (stats, study-design icon tags, short copy); method, partners and references sit behind native `<details>` so sceptics can check everything without it slowing anyone else down. Two tracked CTAs to `/conka-both` (hero and close), no pricing. Figures come from `app/lib/scienceContent.ts`, sourced from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
+**Posture:** proof first, depth on tap. Simple DTC (SCRUM-1351). The top layer is scannable (stats, study-design icon tags, short copy); method, partners and references sit behind native `<details>` so sceptics can check everything without it slowing anyone else down. Tracked CTAs to `/conka-both` (hero and close) and to each PDP (the Flow and Clear cards), no pricing. Figures come from `app/lib/scienceContent.ts`, sourced from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
 **Story arc:** Answer first (the placebo-controlled result) -> the problem -> what nootropics and adaptogens are -> Flow and Clear -> the trials -> measure it yourself -> try it. Mirrors the home "why" accordion (`homeWhyContent.ts`). Plan: `docs/development/featurePlans/science-page-narrative.md`.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
 | 1 | Hero (`ScienceHero`) | Answer "does it work?" in the first screen: BLUF passage with the Harlequins result, 4-stat grid, Try CONKA CTA, trust icons | Strong | H1 pill echoes the home "why" headline |
-| 2 | The Problem (`ScienceDifferent`) | Why most brain products fail | OK | Restyled original; replaced in SCRUM-1352 |
-| 3 | The Two Systems (`TwoSystemModel`) | Adaptogens build resilience, nootropics sharpen the day | OK | Restyled original; replaced in SCRUM-1352 |
-| 4 | The Education (`ScienceEducation`) | What adaptogens and nootropics are, and how they work | OK | Restyled original; replaced in SCRUM-1352 |
-| 5 | Flow and Clear (`RealisedSolution`) | The two formulas, three hero actives each, soft links to each PDP and /ingredients | Weak | Still shows the disputed per-shot mg totals; replaced in SCRUM-1352 |
-| 6 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, partners and references in the depth layer | Strong | `#proof` anchor target from the hero |
-| 7 | Real-World Proof (`AppInsightsCallout`) | Real-user cognitive data; bridge to the app | OK | Shared with /app; replaced by a science-specific section in SCRUM-1352 |
-| 8 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
+| 2 | The Challenge (`ScienceChallenge`) | Fragmented attention, the caffeine crash, unbacked claims; then our coffee vs CONKA app data with its observational caveat | OK | Home "why" row 1 |
+| 3 | Nootropics and Adaptogens (`ScienceCategories`) | Answer-first definitions of each, why nature makes them; depth layer of every active with one human study, the study's dose and a PubMed link | Strong | Home "why" row 2. Study doses only: our per-shot amounts are patented and never shown |
+| 4 | How CONKA Works (`ScienceHowItWorks`) | Flow (morning) and Clear (afternoon) as equal cards, four named actives each, tracked links to each PDP | OK | Home "why" row 3. No amounts, no per-shot totals |
+| 5 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, research partners in the depth layer | Strong | `#proof` anchor target from the hero |
+| 6 | Measure It Yourself (`ScienceMeasure`) | The two-minute app test, test and user counts from `APP_INSIGHTS_TOTALS`, links to /app and /app-insights | OK | Home "why" row 5 |
+| 7 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
 
-**Weakest link right now:** sections 2 to 5, the restyled originals between the hero and the proof. They still read dense and carry the old clinical copy structure. SCRUM-1352 replaces them.
+**Weakest link right now:** there are no named people behind the research yet, the strongest credibility device on comparable science pages. Scientist photos and roles are being sourced for that section (SCRUM-1353).
 
 ---
 

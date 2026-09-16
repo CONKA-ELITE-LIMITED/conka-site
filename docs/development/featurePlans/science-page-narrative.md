@@ -85,8 +85,8 @@ Build section by section: one section, visual review by the user, then commit.
 ### Phase 2: Education
 
 1. **The challenge** - replaces `ScienceDifferent`. 3 icon cards + coffee vs CONKA stat with caveat line (source `docs/conkaAppData/coffee-conka-cognition-report.md`). Medium.
-2. **What are nootropics and adaptogens?** - replaces `TwoSystemModel` + `ScienceEducation` / `ScienceAdaptogens` / `ScienceNootropics` / `ScienceExplainer`. Answer-first definitions that double as AEO passages; ingredient depth layer with per-serving dose + reference from `app/lib/formulaContent.ts`. Large.
-3. **How CONKA works** - replaces `RealisedSolution`. Per-active doses only, no per-shot mg totals. PDP links. Medium.
+2. **What are nootropics and adaptogens?** - replaces `TwoSystemModel` + `ScienceEducation` / `ScienceAdaptogens` / `ScienceNootropics` / `ScienceExplainer`. Answer-first definitions that double as AEO passages; ingredient depth layer with one human study per active, the study's dose and a PubMed link (from `app/lib/ingredientsData.ts`, never our own amounts). Large.
+3. **How CONKA works** - replaces `RealisedSolution`. Actives named without amounts. PDP links. Medium.
 4. **Measure it yourself** - science-specific DTC section; `AppInsightsCallout` stays untouched for `/app`. Small.
 5. **Cleanup** - delete replaced science components and update `app/components/science/index.ts`. Small.
 
@@ -104,7 +104,7 @@ Build section by section: one section, visual review by the user, then commit.
 | Reuse "£500k+" and "25+ clinical trials" verbatim from `homeWhyContent.ts` | Consistency with home |
 | Exeter shown as "in progress", no results | Still unpublished (confirmed 16 Sep 2026) |
 | Coffee vs CONKA app data in the challenge section, with observational caveat | Our own data, directly on-message against caffeine |
-| No per-shot mg totals | Figures disputed (`docs/TODO.md`); per-active doses are enough |
+| No amounts from our formula at all: no per-shot totals and no per-ingredient mg | Per-ingredient amounts are patented (with the total they are the formula) and the totals are disputed (`docs/TODO.md` item 9). The ingredient depth layer shows each study's dose, labelled as the study's, which the formula disclosure rule allows. This replaced the original per-serving dose wording in SCRUM-1352 |
 | No people section until assets exist, no founders | No placeholders; founder story lives on `/our-story` |
 | Standing rules kept | No formula-share percentages; Durham fly trial never presented as human evidence; BLUF passages and `ReviewedDate` survive (SCRUM-1149); `/ingredients` stays separate |
 
