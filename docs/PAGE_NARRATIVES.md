@@ -76,16 +76,16 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 **Posture:** friendly and light, in the Oura / Bevel spirit (light Simple DTC, real phone screenshots). Invite first, then earn trust, then prove it. The page's jobs, in order: app download, email capture through the live test, then CONKA. It deliberately does not sell "test for life": what matters is the early moments, a baseline, then CONKA, then a retest.
 **Story arc:** see CONKA working -> baseline, CONKA, retest -> get your baseline right here -> a score you can trust -> real people, real scores -> more in the app -> start with your baseline.
 
-Motion is the CSS `Reveal` entrance only; the hero is static so its centre phone (the likely LCP element) is not held back.
+Motion is the CSS `Reveal` entrance plus the features section's auto-advance; the hero is static so its centre phone (the likely LCP element) is not held back.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
 | 1 | Hero (`AppV2Hero`) | "See CONKA working." Store buttons, Oura-style fan of five real app screenshots | OK | Mobile puts the fan under the headline with the outer phones cropped at the screen edges, so the store buttons sit below the fold on a phone |
-| 2 | The loop (`AppV2Loop`) | "Baseline. CONKA. Retest." Day 1 / every day / Day 30 cards | OK | The heart of the page. Mobile snap carousel with a peek |
+| 2 | The loop (`AppV2Loop`) | "Baseline. CONKA. Retest." Day 1 / every day / Day 30 cards, image on top | OK | The heart of the page. Mobile snap carousel with a peek |
 | 3 | Get your baseline (`CognitiveTestIsland`) | Live short test behind the email gate, then scores, a Flow + Clear recommendation and an app prompt | Strong | The email capture (SCRUM-1360). Styled around the Cognetivity iframe, which cannot be styled inside |
 | 4 | Trust (`AppV2Trust`) | "A score you can trust." Sourced research stats, Humphrey's origin as one line, link to /app-insights | OK | Placed after the test so the page invites before it lectures |
-| 5 | Real results (`AppV2Results`) | "Real people. Real scores." Baseline to retest from case study data | OK | Testing periods run months, so no fixed-timeframe claim |
-| 6 | More in the app (`AppV2Features`) | Patterns, Apple Health, compete with friends | OK | Retention beat |
+| 5 | Real results (`AppV2Results`) | "Real people. Real scores." The score gain leads each card, large and green, with baseline to retest under it | OK | Testing periods run months, so no fixed-timeframe claim |
+| 6 | More in the app (`AppV2Features`) | Interactive feature list (Bevel pattern): pick a feature, one phone shows its screen. Patterns, Apple Health, test breakdown, compete, rewards | OK | Retention beat. Auto-advances while in view until the visitor takes over; mobile is a swipeable card row above the phone |
 | 7 | Download (`AppV2Download`) | "Start with your baseline." Free, no subscription, plus a CONKA link | OK | Store clicks report as `download` |
 
 **Weakest link right now:** unproven, the light rebuild shipped September 2026. Watch the `app:*` funnel (SCRUM-1360) for how many visitors reach the test and store buttons now that the mobile hero leads with the phones rather than the buttons.
