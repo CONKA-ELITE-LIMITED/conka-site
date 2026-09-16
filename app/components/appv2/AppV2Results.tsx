@@ -62,7 +62,7 @@ export default function AppV2Results() {
           return (
             <li
               key={athlete.id}
-              className="flex flex-col overflow-hidden rounded-lg bg-white text-black ring-1 ring-black/[0.06]"
+              className="flex flex-col overflow-hidden rounded-md bg-white text-black ring-1 ring-black/5"
             >
               {photo && (
                 <div className="relative aspect-square w-full">

@@ -66,8 +66,6 @@ export interface NavLink {
   /** Tile asset for the desktop mega-menu (optional; text-only links omit it). */
   image?: string;
   imageAlt?: string;
-  /** "contain" gives the asset breathing room (e.g. app screenshots); default "cover" fills the tile. */
-  imageFit?: "cover" | "contain";
   /** One-line tile blurb for the desktop mega-menu. */
   description?: string;
 }

@@ -63,23 +63,15 @@ export default function NavGroupMegaMenu({
               // is required by PERFORMANCE_OPTIMISATION.md rule 1.
               className="group flex w-[260px] flex-col overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black/10 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#1B2757] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B2757]"
             >
-              <div
-                className={`relative aspect-square overflow-hidden ${
-                  // Dark plate for transparent app screenshots; photos fill the
-                  // tile and sit on the same grey as the Shop product shots.
-                  link.imageFit === "contain" ? "bg-[#333333]" : "bg-[#f5f5f5]"
-                }`}
-              >
+              {/* Photos fill the tile and sit on the same grey as the Shop
+                  product shots. */}
+              <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                 {link.image && (
                   <Image
                     src={link.image}
                     alt={link.imageAlt ?? link.label}
                     fill
-                    className={`${
-                      link.imageFit === "contain"
-                        ? "object-contain p-6"
-                        : "object-cover"
-                    } transition-transform duration-300 group-hover:scale-[1.04]`}
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                     sizes="260px"
                   />
                 )}
