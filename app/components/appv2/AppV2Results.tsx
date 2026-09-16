@@ -9,8 +9,8 @@ import {
 /* ============================================================================
  * AppV2Results (SCRUM-1361, Simple DTC)
  *
- * The loop, proven on real people: each card shows a baseline score, the
- * latest score and the gain, the same numbers the app shows. Data comes from
+ * The loop, proven on real people: the gain leads each card, large and green,
+ * with the baseline and latest score under it. Data comes from
  * caseStudiesData so it always matches /case-studies; an id that is removed or
  * hidden there simply drops out here.
  *
@@ -26,8 +26,9 @@ const ATHLETE_IDS = [
   "jack-willis",
 ];
 
-function totalScoreGain(athlete: AthleteData): string | undefined {
-  return athlete.improvements.find((i) => i.metric === "Total Score")?.value;
+function totalScoreGain(athlete: AthleteData): number | undefined {
+  return athlete.improvements.find((i) => i.metric === "Total Score")
+    ?.percentage;
 }
 
 export default function AppV2Results() {
@@ -85,28 +86,28 @@ export default function AppV2Results() {
                 </div>
               )}
               <div className="flex flex-1 flex-col p-3 lg:p-5">
-                <p className="text-base font-semibold leading-tight lg:text-lg">
-                  {athlete.name}
-                </p>
-                <p className="mb-3 mt-0.5 text-xs leading-snug text-black/60 lg:text-sm">
-                  {athlete.organization}
-                </p>
-                <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-black/10 pt-3">
-                  {before !== undefined && after !== undefined && (
-                    <p className="text-sm tabular-nums text-black/70 lg:text-base">
-                      {Math.round(before)}
-                      <span aria-hidden> → </span>
-                      <span className="sr-only"> to </span>
-                      <span className="font-bold text-black">
-                        {Math.round(after)}
-                      </span>
-                    </p>
-                  )}
-                  {gain && (
-                    <span className="rounded-full bg-[var(--brand-positive)]/10 px-2 py-0.5 text-xs font-semibold tabular-nums text-[var(--brand-positive)] lg:text-sm">
-                      {gain}
+                {gain !== undefined && (
+                  <p className="text-3xl font-bold leading-none tabular-nums text-[var(--brand-positive)] lg:text-5xl">
+                    +{gain.toFixed(1)}%
+                  </p>
+                )}
+                {before !== undefined && after !== undefined && (
+                  <p className="mt-1.5 text-sm tabular-nums text-black/70 lg:text-base">
+                    Score {Math.round(before)}
+                    <span aria-hidden> → </span>
+                    <span className="sr-only"> to </span>
+                    <span className="font-semibold text-black">
+                      {Math.round(after)}
                     </span>
-                  )}
+                  </p>
+                )}
+                <div className="mt-3 border-t border-black/10 pt-3">
+                  <p className="text-base font-semibold leading-tight lg:text-lg">
+                    {athlete.name}
+                  </p>
+                  <p className="mt-0.5 text-xs leading-snug text-black/60 lg:text-sm">
+                    {athlete.organization}
+                  </p>
                 </div>
               </div>
             </li>
