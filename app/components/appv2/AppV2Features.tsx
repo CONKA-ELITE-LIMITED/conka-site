@@ -237,12 +237,12 @@ export default function AppV2Features() {
 
       <div>
         <h2
-          className="brand-h2 mb-3 text-black"
+          className="brand-h1 mb-4 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           More in the app.
         </h2>
-        <p className="mb-8 text-lg leading-relaxed text-black/75">
+        <p className="mb-8 text-lg leading-relaxed text-black/80 lg:text-xl">
           Once you have your baseline, the app keeps it interesting.
         </p>
 

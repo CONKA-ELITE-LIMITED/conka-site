@@ -53,7 +53,7 @@ export default function AppV2Trust() {
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
       <div>
         <h2
-          className="brand-h2 mb-4 text-black"
+          className="brand-h1 mb-4 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           A score you can trust.

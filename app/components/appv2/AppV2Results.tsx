@@ -40,12 +40,12 @@ export default function AppV2Results() {
     <div>
       <div className="mb-8 max-w-2xl lg:mb-10">
         <h2
-          className="brand-h2 mb-3 text-black"
+          className="brand-h1 mb-4 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           Real people. Real scores.
         </h2>
-        <p className="text-lg leading-relaxed text-black/75">
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">
           Baseline to retest, from people who took CONKA and tracked it in the
           app.
         </p>

@@ -86,12 +86,12 @@ export default function CognitiveTestSectionMobile({
       <div className="mb-8 max-w-2xl">
         <h2
           id="cognitive-test-heading"
-          className="brand-h2 mb-3 text-black"
+          className="brand-h1 mb-4 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           Get your baseline now.
         </h2>
-        <p className="text-lg leading-relaxed text-black/75">
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">
           Try a short version of the CONKA test right here. It takes about 30
           seconds, and we will email you your results.
         </p>

@@ -14,12 +14,12 @@ export default function AppV2Download() {
   return (
     <div className="flex flex-col items-center text-center">
       <h2
-        className="brand-h2 mb-3 max-w-[22ch] text-black"
+        className="brand-h1 mb-4 max-w-[22ch] text-black"
         style={{ letterSpacing: "-0.02em" }}
       >
         Start with your baseline.
       </h2>
-      <p className="mb-7 text-lg leading-relaxed text-black/75">
+      <p className="mb-7 text-lg leading-relaxed text-black/80 lg:text-xl">
         Free on iOS and Android. No subscription needed.
       </p>
       <AppInstallButtons

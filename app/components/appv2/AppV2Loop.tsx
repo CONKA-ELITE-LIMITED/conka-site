@@ -1,4 +1,4 @@
-import AppPhoneCard, { type AppPhoneCardImage } from "./AppPhoneCard";
+import Image from "next/image";
 
 /* ============================================================================
  * AppV2Loop (SCRUM-1361, Simple DTC)
@@ -7,20 +7,24 @@ import AppPhoneCard, { type AppPhoneCardImage } from "./AppPhoneCard";
  * month, where a visitor sees the product working on their own number, not a
  * lifetime of testing.
  *
- * Three cards: a snap carousel with a peek below `md` (three stacked phone
- * cards run too long on a phone), a row of three from `md`. The -mx-5 / px-5
- * pair cancels the mobile gutter so cards scroll edge to edge, and scroll-pl-5
- * keeps the snap point on the gutter. Content-only; the page owns the section.
+ * Same card anatomy as /science "The challenge" (ScienceChallenge): a flat 2:1
+ * banner with a short label pill, then the title and one line of body. Phone
+ * banners show the top of a small screenshot on the tint; the product step
+ * fills its banner with the bottles. Stacked on mobile, three across from lg.
+ * Content-only; the page owns the section.
  * ========================================================================== */
 
+const PHONE_WIDTH = 1455;
+const PHONE_HEIGHT = 2942;
+
 const STEPS: {
-  eyebrow: string;
+  tag: string;
   title: string;
   body: string;
-  image: AppPhoneCardImage;
+  image: { src: string; alt: string; kind: "phone" | "product" };
 }[] = [
   {
-    eyebrow: "Day 1",
+    tag: "Day 1",
     title: "Take your baseline",
     body: "A short test in the app sets your starting score. It takes about two minutes.",
     image: {
@@ -30,7 +34,7 @@ const STEPS: {
     },
   },
   {
-    eyebrow: "Every day",
+    tag: "Every day",
     title: "Take CONKA",
     body: "Flow in the morning, Clear in the afternoon. Log each shot in the app with a tap.",
     image: {
@@ -40,7 +44,7 @@ const STEPS: {
     },
   },
   {
-    eyebrow: "Day 30",
+    tag: "Day 30",
     title: "Retest and watch it move",
     body: "Test again and see your score against your own baseline. Proof, not a feeling.",
     image: {
@@ -56,26 +60,61 @@ export default function AppV2Loop() {
     <div>
       <div className="mb-8 max-w-2xl lg:mb-10">
         <h2
-          className="brand-h2 mb-3 text-black"
+          className="brand-h1 mb-4 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           Baseline. CONKA. Retest.
         </h2>
-        <p className="text-lg leading-relaxed text-black/75">
+        <p className="text-lg leading-relaxed text-black/80 lg:text-xl">
           Your first month is where you see it. Three steps, all in the free
           app.
         </p>
       </div>
 
-      <div className="-mx-5 flex snap-x snap-mandatory scroll-pl-5 gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden">
+      <ul className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
         {STEPS.map((step) => (
-          <AppPhoneCard
+          <li
             key={step.title}
-            {...step}
-            className="w-[82%] shrink-0 snap-start md:w-auto"
-          />
+            className="flex flex-col overflow-hidden rounded-md bg-white text-black ring-1 ring-black/5"
+          >
+            <div className="relative aspect-[2/1] w-full overflow-hidden bg-[#eef0f5]">
+              {step.image.kind === "phone" ? (
+                <div className="absolute left-1/2 top-5 w-[30%] max-w-[150px] -translate-x-1/2">
+                  <Image
+                    src={step.image.src}
+                    alt={step.image.alt}
+                    width={PHONE_WIDTH}
+                    height={PHONE_HEIGHT}
+                    loading="lazy"
+                    sizes="(min-width: 1024px) 150px, 30vw"
+                    className="h-auto w-full drop-shadow-lg"
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={step.image.src}
+                  alt={step.image.alt}
+                  fill
+                  loading="lazy"
+                  sizes="(min-width: 1024px) 400px, 100vw"
+                  className="object-cover"
+                />
+              )}
+              <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black">
+                {step.tag}
+              </span>
+            </div>
+            <div className="p-5 lg:p-6">
+              <h3 className="mb-1.5 text-lg font-bold leading-tight text-black">
+                {step.title}
+              </h3>
+              <p className="text-base leading-relaxed text-black/80">
+                {step.body}
+              </p>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
