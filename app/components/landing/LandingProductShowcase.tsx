@@ -49,7 +49,7 @@ const PRODUCTS: Record<
     timeOfDay: "Morning",
     sub: "Calm focus for your mornings.",
     mg: "3,700mg",
-    bottleSrc: "/formulas/labelV2/FlowThin.jpg",
+    bottleSrc: "/formulas/labelV2/FlowThinV2.webp",
     bottleAlt: "CONKA Flow bottle",
   },
   clear: {
@@ -57,7 +57,7 @@ const PRODUCTS: Record<
     timeOfDay: "Afternoon",
     sub: "Afternoon clarity & reset.",
     mg: "3,142mg",
-    bottleSrc: "/formulas/labelV2/ClearThin.jpg",
+    bottleSrc: "/formulas/labelV2/ClearThinV2.webp",
     bottleAlt: "CONKA Clear bottle",
   },
 };

@@ -557,7 +557,7 @@ is linking them, delete the archive too. Until then the archive is the rollback.
 **Status:** Deferred (waiting for the labelV2 filenames to be live in prod)
 **Files:** `public/lander/FlowNew.jpg`, `public/lander/ClearNew.jpg` (the `public/formulas/` pair was deleted in SCRUM-1347)
 
-The Aug 2026 cache-busting rename moved every in-code reference to the `*V3.jpg` basenames; the `*New.jpg` files were kept as byte-identical aliases so cached HTML and external links (ads, emails) kept resolving. On 25 Aug 2026 the site moved again, to the `public/formulas/labelV2/` renders referenced via the `bottleRenders` map in `app/lib/productImages.ts` (square renders canonical, now `*V5.webp` since SCRUM-1348; tall `*Thin.jpg` crops only for the two side-by-side pair layouts): the `*V3.jpg` files and `both/BothNew.jpg` were deleted outright, so anything external still pointing at those paths now 404s once deployed.
+The Aug 2026 cache-busting rename moved every in-code reference to the `*V3.jpg` basenames; the `*New.jpg` files were kept as byte-identical aliases so cached HTML and external links (ads, emails) kept resolving. On 25 Aug 2026 the site moved again, to the `public/formulas/labelV2/` renders referenced via the `bottleRenders` map in `app/lib/productImages.ts` (square renders canonical, now `*V5.webp` since SCRUM-1348; tall `*ThinV2.webp` crops only for the two side-by-side pair layouts): the `*V3.jpg` files and `both/BothNew.jpg` were deleted outright, so anything external still pointing at those paths now 404s once deployed.
 
 **What unblocks it:** the labelV2 branch merged and live in prod for a couple of weeks with no external surface still pointing at the old basenames. Then delete the two files.
 

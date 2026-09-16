@@ -12,7 +12,7 @@ export interface ProductImage {
  * When a new asset generation lands, add the file and update the paths here;
  * every surface (nav, landers, listicles, BYO) follows automatically.
  * All three are square (1000×1000 WebP) — the aspect the consuming tiles are
- * designed around. The tall 1:2 *Thin.jpg crops in the same folder are
+ * designed around. The tall 1:2 *ThinV2.webp crops in the same folder are
  * NOT canonical: they exist for the two side-by-side mobile pair layouts
  * (LandingProductShowcase, BYO EducationStep), which reference them directly.
  */

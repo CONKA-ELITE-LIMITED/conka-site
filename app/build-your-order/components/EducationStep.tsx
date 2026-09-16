@@ -46,7 +46,7 @@ interface Formula {
 const FORMULAS: Formula[] = [
   {
     product: "flow",
-    image: "/formulas/labelV2/FlowThin.jpg",
+    image: "/formulas/labelV2/FlowThinV2.webp",
     name: "Flow",
     period: "AM",
     accentColor: "#C4892A",
@@ -55,7 +55,7 @@ const FORMULAS: Formula[] = [
   },
   {
     product: "clear",
-    image: "/formulas/labelV2/ClearThin.jpg",
+    image: "/formulas/labelV2/ClearThinV2.webp",
     name: "Clear",
     period: "PM",
     accentColor: "#0369a1",
