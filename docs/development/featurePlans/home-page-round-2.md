@@ -213,7 +213,7 @@ The fixes changed the component's nature. It is now a **client component**, beca
 
 **Desktop is two columns: a tall asset, then the accordion.** The asset column widens from 20rem at `lg` to 26rem at `xl`, deliberately taking width off the accordion, whose rows are short and were sitting in too much empty space. It steps rather than jumping straight to 26rem because at exactly 1024px the track is only about 920px.
 
-The asset is `FlowShotSide.jpg`. `BothShotSide.jpg` was used first on the reasoning that a brand-level section should not spotlight one formula, and was overridden by Rudh. Worth knowing if `project_no_single_product_emphasis` comes up: this was a deliberate call, not an oversight.
+The asset is `labelV2/BothV5Portrait.webp` (the white studio Flow and Clear pair, SCRUM-1348). `BothShotSide.jpg` was used first, then Rudh swapped it for `FlowShotSide.jpg`, then back to a Both shot once the V5 white studio pair existed.
 
 **The decorative circle is gone.** Three versions were tried: a circular crop overlapping the card's top-right corner (covered the first row's chevron), the same crop pushed behind the card (read as a sticker), and finally the tall asset column. The circle was cutting a busy neuron-and-bottles photo badly at any size.
 

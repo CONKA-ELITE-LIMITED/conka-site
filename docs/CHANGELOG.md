@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | New product photography as resized WebP: hold shots on the product cards, /science and the Both PDP gallery; white studio bottle renders (V5) across nav, BYO and landers; matching tall crops in the side-by-side pair layouts; a light studio ingredients shot in Both What to Expect; and the white studio pair in the home Why section (SCRUM-1348)
 - **2026-09-16** | Mobile navigation menu now slides in from the left with its sections rising in top to bottom, and slides out on close, using CSS transform and opacity only (SCRUM-1346)
 - **2026-09-16** | Trial pack buy box: a line under "Choose your trial pack" restates the selection with its saving, and the CTA reads "Start trial for £X" instead of "Checkout - £X"; campaign doc added at docs/sprints/2026-09-trial-pack.md (SCRUM-1343)
 - **2026-09-15** | Trial pack page live on its Skio trial plans (£12.99 Flow / Clear, £18.99 Both, converting to monthly on day 7): checkout refuses to run unless Shopify applied the trial plan, tiles show the pack's struck one-time price, a "How the trial works" FAQ section, a weekly countdown banner in place of the nav and a partner logo marquee in the hero (SCRUM-1343)

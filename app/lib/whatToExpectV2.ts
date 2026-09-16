@@ -113,8 +113,8 @@ export const expectV2Asset: Record<ExpectV2ProductId, ExpectV2Asset> = {
     alt: "CONKA Clear shot, side profile",
   },
   both: {
-    // 810x1013, so it lands on the column's 4:5 frame exactly, no letterboxing.
-    src: "/formulas/both/BothIngredients.jpg",
+    // 1200x1500 (4:5), so it lands on the column's 4:5 frame exactly, no letterboxing.
+    src: "/formulas/both/BothIngredientsV2.webp",
     alt: "CONKA Flow and Clear shots on a steel plinth, surrounded by lemon balm, citrus, turmeric root, blueberries and sunflower",
   },
 };
