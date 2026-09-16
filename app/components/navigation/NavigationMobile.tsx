@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 import { Banner } from "@/app/components/banner";
 import { NAV_PRODUCTS, NAV_SCIENCE, NAV_APP, NAV_COMPANY } from "./navConfig";
-import type { NavProduct } from "./navConfig";
+import type { NavGroup, NavProduct } from "./navConfig";
 import type { NavigationMobileProps } from "./types";
 
-// Same IA as desktop, sourced from the shared config (no duplicate links).
-// The CONKA App is not a group: it renders as one tile after the products.
-const MENU_GROUPS = [NAV_SCIENCE, NAV_COMPANY];
+// Same IA and order as desktop, sourced from the shared config (no duplicate
+// links): products, Science, CONKA App, then Company. The CONKA App is one
+// tile, not a group of choices.
 
 // Open motion (SCRUM-1346, classes in brand-base.css): the panel slides in,
 // then each content block rises in, top to bottom, this far apart. The first
@@ -25,16 +25,19 @@ const CLOSE_FALLBACK_MS = 300;
 
 /** Inline delay for the index-th staggered block (product rows, groups, review). */
 function itemDelay(index: number) {
-  return { animationDelay: `${ITEM_DELAY_START_MS + index * ITEM_STAGGER_MS}ms` };
+  return {
+    animationDelay: `${ITEM_DELAY_START_MS + index * ITEM_STAGGER_MS}ms`,
+  };
 }
 
 // Time-of-day tints for the product pills, matched to the desktop Shop
 // mega-menu badges and the home/PDP product cards so the three surfaces agree.
-const BADGE_STYLE: Record<NavProduct["badge"], { bg: string; color: string }> = {
-  Morning: { bg: "#f7edcb", color: "#755b1a" },
-  Afternoon: { bg: "#f7ddd0", color: "#9a4526" },
-  "Full day": { bg: "#dce3f5", color: "#2f3f74" },
-};
+const BADGE_STYLE: Record<NavProduct["badge"], { bg: string; color: string }> =
+  {
+    Morning: { bg: "#f7edcb", color: "#755b1a" },
+    Afternoon: { bg: "#f7ddd0", color: "#9a4526" },
+    "Full day": { bg: "#dce3f5", color: "#2f3f74" },
+  };
 
 export default function NavigationMobile({
   mobileMenuOpen,
@@ -62,6 +65,46 @@ export default function NavigationMobile({
   const handlePanelAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
     if (isClosing && event.target === event.currentTarget) setIsRendered(false);
   };
+
+  // Categorised groups: a compact 2-col grid keeps secondary IA scannable and
+  // clearly subordinate to the product rows.
+  const renderGroup = (group: NavGroup, delayIndex: number) => (
+    <div
+      key={group.title}
+      className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
+      style={itemDelay(delayIndex)}
+    >
+      <p className="text-lg font-bold text-black mb-4">{group.title}</p>
+      <div className="grid grid-cols-2 gap-2">
+        {group.links.map((link) => (
+          <a
+            key={`${group.title}-${link.href}`}
+            href={link.href}
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center justify-between gap-2 rounded-md bg-[#f5f5f5] p-3.5 hover:bg-black/[0.05] transition-colors"
+          >
+            <span className="text-sm font-semibold text-black leading-tight">
+              {link.label}
+            </span>
+            <svg
+              aria-hidden
+              className="text-black shrink-0"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+            >
+              <polyline points="9 6 15 12 9 18" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -163,7 +206,9 @@ export default function NavigationMobile({
       {isRendered && (
         <div
           className={`xl:hidden fixed inset-0 z-40 bg-white flex flex-col ${
-            isClosing ? "nav-mobile-panel-out pointer-events-none" : "nav-mobile-panel-in"
+            isClosing
+              ? "nav-mobile-panel-out pointer-events-none"
+              : "nav-mobile-panel-in"
           }`}
           onAnimationEnd={handlePanelAnimationEnd}
         >
@@ -239,7 +284,10 @@ export default function NavigationMobile({
                           </p>
                           <span
                             className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] rounded-full px-2 py-1 leading-none"
-                            style={{ backgroundColor: badge.bg, color: badge.color }}
+                            style={{
+                              backgroundColor: badge.bg,
+                              color: badge.color,
+                            }}
                           >
                             {product.badge}
                           </span>
@@ -268,12 +316,17 @@ export default function NavigationMobile({
               </div>
             </div>
 
+            {renderGroup(NAV_SCIENCE, NAV_PRODUCTS.length)}
+
             {/* The CONKA App: one tile in the product-row style, not a group
                 of choices. */}
             <div
               className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
-              style={itemDelay(NAV_PRODUCTS.length)}
+              style={itemDelay(NAV_PRODUCTS.length + 1)}
             >
+              <p className="text-lg font-bold text-black mb-4">
+                {NAV_APP.label}
+              </p>
               <a
                 href={NAV_APP.href}
                 onClick={() => setMobileMenuOpen(false)}
@@ -290,7 +343,7 @@ export default function NavigationMobile({
                 </div>
                 <div className="min-w-0 flex-1 flex flex-col justify-center gap-1.5">
                   <p className="text-xl font-bold text-black leading-none">
-                    {NAV_APP.label}
+                    {NAV_APP.tileTitle}
                   </p>
                   <p className="text-[13px] text-black/80 leading-snug">
                     {NAV_APP.description}
@@ -313,53 +366,13 @@ export default function NavigationMobile({
               </a>
             </div>
 
-            {/* Categorised groups — compact 2-col grid keeps secondary IA
-                scannable and clearly subordinate to the product rows. */}
-            {MENU_GROUPS.map((group, index) => (
-              <div
-                key={group.title}
-                className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
-                style={itemDelay(NAV_PRODUCTS.length + 1 + index)}
-              >
-                <p className="text-lg font-bold text-black mb-4">
-                  {group.title}
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {group.links.map((link) => (
-                    <a
-                      key={`${group.title}-${link.href}`}
-                      href={link.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between gap-2 rounded-md bg-[#f5f5f5] p-3.5 hover:bg-black/[0.05] transition-colors"
-                    >
-                      <span className="text-sm font-semibold text-black leading-tight">
-                        {link.label}
-                      </span>
-                      <svg
-                        aria-hidden
-                        className="text-black shrink-0"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.75"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                      >
-                        <polyline points="9 6 15 12 9 18" />
-                      </svg>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
+            {renderGroup(NAV_COMPANY, NAV_PRODUCTS.length + 2)}
 
             {/* Social proof — featured verified review, replacing the old
                 guarantee microcopy. */}
             <div
               className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
-              style={itemDelay(NAV_PRODUCTS.length + 1 + MENU_GROUPS.length)}
+              style={itemDelay(NAV_PRODUCTS.length + 3)}
             >
               <div
                 className="rounded-md p-6 text-center text-white"

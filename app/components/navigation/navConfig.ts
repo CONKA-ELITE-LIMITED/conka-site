@@ -113,12 +113,16 @@ export const NAV_SCIENCE: NavGroup = {
  */
 export const NAV_APP: Required<
   Pick<NavLink, "label" | "href" | "image" | "imageAlt" | "description">
-> = {
+> & {
+  /** Headline on the mobile tile; `label` is the desktop link and mobile heading. */
+  tileTitle: string;
+} = {
   label: "CONKA App",
   href: "/app",
   image: "/app/AppConkaRing.png",
   imageAlt: "The CONKA app showing a cognitive score",
-  description: "See CONKA working. Free on iOS and Android.",
+  tileTitle: "See CONKA working",
+  description: "Free on iOS and Android.",
 };
 
 /** Company cluster. Mobile-only group (on desktop, Our Story is a flat link). */
