@@ -28,8 +28,8 @@ import {
  *    card, with a CONKA vs placebo bar; the two measured-but-uncontrolled
  *    trials follow at lower weight, each with an honest note on what its
  *    design can and cannot show.
- *  - Depth layer: method and partners behind native <details>. Ingredient
- *    references live with the ingredients, in ScienceCategories.
+ *  - Depth layer: how the trial was run, behind a native <details>. Research
+ *    partners sit below the trials, always visible.
  *    Closed <details> content is still in the server-rendered HTML, so the
  *    detail stays indexable and quotable without any client JS.
  *
@@ -231,30 +231,29 @@ export default function ScienceProof() {
         </p>
       </article>
 
-      {/* Depth layer */}
-      <div className="rounded-md bg-white px-5 text-black shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 lg:px-8 [&>details:first-child]:border-t-0">
-        <ScienceDisclosure summary="Our research partners">
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {RESEARCH_PARTNERS.map((partner) => (
-              <li key={partner.name} className="rounded-md bg-[#eef0f5] p-4">
-                <div className="relative mb-3 h-9 w-full max-w-[140px]">
-                  <Image
-                    src={partner.logo}
-                    alt={partner.name}
-                    fill
-                    loading="lazy"
-                    sizes="140px"
-                    className="object-contain object-left"
-                  />
-                </div>
-                <p className="text-sm leading-snug text-black">{partner.role}</p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-sm text-black/70">
-            The CONKA formulation is protected by UK patent GB2620279.
-          </p>
-        </ScienceDisclosure>
+      {/* Research partners: visible, not behind a disclosure */}
+      <div>
+        <h3 className="mb-4 text-xl font-bold leading-tight text-black">Our research partners</h3>
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {RESEARCH_PARTNERS.map((partner) => (
+            <li key={partner.name} className="rounded-md bg-[#eef0f5] p-5 text-black">
+              <div className="relative mb-4 h-10 w-full max-w-[160px]">
+                <Image
+                  src={partner.logo}
+                  alt={partner.name}
+                  fill
+                  loading="lazy"
+                  sizes="160px"
+                  className="object-contain object-left"
+                />
+              </div>
+              <p className="text-base leading-snug text-black">{partner.role}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-sm text-black/70">
+          The CONKA formulation is protected by UK patent GB2620279.
+        </p>
       </div>
 
       <p className="mt-6 text-base text-black">

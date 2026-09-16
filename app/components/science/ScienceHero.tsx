@@ -15,8 +15,10 @@ import ScienceCtaButton from "./ScienceCtaButton";
  * visitor can take in at a glance. The H1 pill mirrors the home "why" accordion
  * headline so the two pages read as one voice.
  *
- * Mobile order is copy, stats, CTA, then the image: at 390px the proof has to
- * land in the first screen, and the render is supporting rather than the point.
+ * Mobile order is heading, image, then the proof and CTA, so the product shows
+ * in the first screen. Desktop puts the image in its own column: the grid
+ * places the heading and the copy block in column one, rows one and two, and
+ * the image spans both rows of column two.
  * ========================================================================== */
 
 const TRUST_ITEMS = [
@@ -27,17 +29,31 @@ const TRUST_ITEMS = [
 
 export default function ScienceHero() {
   return (
-    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16">
-      <div>
-        <h1
-          className="brand-h1 mb-5 text-black lg:text-[3.25rem]"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          {SCIENCE_HERO.headingLead}{" "}
-          <span className="inline-block rounded-full border border-[var(--brand-navy)] px-4 py-0.5 text-[var(--brand-navy)]">
-            {SCIENCE_HERO.headingAccent}
-          </span>
-        </h1>
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-x-16 lg:gap-y-0">
+      <h1
+        className="brand-h1 text-black lg:col-start-1 lg:row-start-1 lg:mb-5 lg:self-end lg:text-[3.25rem]"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        {SCIENCE_HERO.headingLead}{" "}
+        <span className="inline-block rounded-full border border-[var(--brand-navy)] px-4 py-0.5 text-[var(--brand-navy)]">
+          {SCIENCE_HERO.headingAccent}
+        </span>
+      </h1>
+
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:aspect-square lg:self-center">
+        <Image
+          src="/formulas/labelV2/BothV5.webp"
+          alt="CONKA Flow and CONKA Clear bottles side by side"
+          fill
+          // Now inside the first mobile screen as well as on desktop, so it
+          // is a likely LCP element on both.
+          priority
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          className="object-cover"
+        />
+      </div>
+
+      <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
         <p className="mb-3 max-w-[56ch] text-lg font-medium leading-snug text-black">
           {SCIENCE_HERO.lede}
         </p>
@@ -63,7 +79,7 @@ export default function ScienceHero() {
           ))}
         </dl>
 
-        <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <div className="mb-6 flex flex-col items-center gap-3 lg:flex-row lg:gap-x-6">
           <ScienceCtaButton href="/conka-both" location="hero">
             Try CONKA
           </ScienceCtaButton>
@@ -83,20 +99,6 @@ export default function ScienceHero() {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5] lg:aspect-square">
-        <Image
-          src="/formulas/labelV2/BothV5.webp"
-          alt="CONKA Flow and CONKA Clear bottles side by side"
-          fill
-          // Eager, not priority: on desktop this is above the fold, but at
-          // 390px it sits below the stats, and a preload there would compete
-          // with the text that is the real mobile LCP.
-          loading="eager"
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          className="object-cover"
-        />
       </div>
     </div>
   );

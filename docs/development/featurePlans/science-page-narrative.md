@@ -103,8 +103,8 @@ Build section by section: one section, visual review by the user, then commit.
 | Lead proof with Harlequins | Only randomised, double-blind, placebo-controlled trial; already the lead stat on PDP and listicles |
 | Reuse "£500k+" and "25+ clinical trials" verbatim from `homeWhyContent.ts` | Consistency with home |
 | Exeter shown as "in progress", no results | Still unpublished (confirmed 16 Sep 2026) |
-| Coffee vs CONKA app data in the challenge section, with observational caveat | Our own data, directly on-message against caffeine |
-| No amounts from our formula at all: no per-shot totals and no per-ingredient mg | Per-ingredient amounts are patented (with the total they are the formula) and the totals are disputed (`docs/TODO.md` item 9). The ingredient depth layer shows each study's dose, labelled as the study's, which the formula disclosure rule allows. This replaced the original per-serving dose wording in SCRUM-1352 |
+| No coffee vs CONKA app data on the page | Built in SCRUM-1352 and cut on review: it did not read as part of the problem |
+| No amounts from our formula at all: no per-shot totals and no per-ingredient mg | Per-ingredient amounts are patented (with the total they are the formula) and the totals are disputed (`docs/TODO.md` item 9). Ingredient-level research is linked to /ingredients rather than repeated here (an inline study-dose list was built and cut on review as a wall of text) |
 | No people section until assets exist, no founders | No placeholders; founder story lives on `/our-story` |
 | Standing rules kept | No formula-share percentages; Durham fly trial never presented as human evidence; BLUF passages and `ReviewedDate` survive (SCRUM-1149); `/ingredients` stays separate |
 

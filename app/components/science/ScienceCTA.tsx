@@ -52,7 +52,7 @@ export default function ScienceCTA() {
             </li>
           ))}
         </ul>
-        <div>
+        <div className="flex justify-center lg:justify-start">
           <ScienceCtaButton href="/conka-both" location="final">
             Try Flow + Clear
           </ScienceCtaButton>

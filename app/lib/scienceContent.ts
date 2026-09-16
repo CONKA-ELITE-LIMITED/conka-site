@@ -153,21 +153,6 @@ export const RESEARCH_PARTNERS: ResearchPartner[] = [
   },
 ];
 
-export interface LiteratureReference {
-  citation: string;
-  topic: string;
-}
-
-/** Further literature, carried word for word from the retired EvidenceLadder. Rendered under the ingredient research list. */
-export const LITERATURE_REFERENCES: LiteratureReference[] = [
-  { citation: "Kennedy et al., 2003", topic: "Lemon balm, mood and cognition" },
-  { citation: "Mix & Crews, 2002", topic: "Ginkgo biloba, cognitive function" },
-  { citation: "Whyte & Williams, 2015", topic: "Bilberry, cognitive performance" },
-  { citation: "Bowtell et al., 2017", topic: "Cerebral blood flow" },
-  { citation: "Dodd et al., 2015", topic: "Cerebral blood flow" },
-  { citation: "Kennedy, 2019", topic: "Phytochemicals for cognition and sport" },
-];
-
 // ===== THE CHALLENGE (SCRUM-1352) =====
 // Mirrors row 1 of the home "why" accordion (homeWhyContent.ts).
 
@@ -195,20 +180,6 @@ export const SCIENCE_CHALLENGE = {
   ] satisfies { icon: ChallengeIcon; title: string; body: string }[],
 } as const;
 
-/**
- * Coffee vs CONKA, from our own app data. Observational, so the caveat always
- * renders with the numbers. Figures and framing from HIGH_LEVEL_STATS.md: lead
- * with total score and % improved, never the millisecond figure.
- */
-export const COFFEE_FINDING = {
-  heading: "What coffee actually does, in our app data",
-  stats: [
-    { value: "≈0", label: "Change in measured cognition from coffee alone" },
-    { value: "+4 pts", label: "Cognitive score when CONKA is added to coffee, with 64% of users improving" },
-  ] satisfies ScienceStat[],
-  caveat: "Observational data from CONKA app users who log caffeine and CONKA alongside their tests. It shows associations, not cause and effect. The coffee finding covers 104 to 222 users; the CONKA plus coffee finding covers 22, so treat it as directional.",
-} as const;
-
 // ===== WHAT ARE NOOTROPICS AND ADAPTOGENS (SCRUM-1352) =====
 // Mirrors row 2 of the home "why" accordion. Each definition is the first
 // sentence of its card so it can be quoted in isolation (AEO).
@@ -222,7 +193,8 @@ export interface CategoryExplainer {
   timing: string;
   definition: string;
   analogy: string;
-  examples: string[];
+  /** Three actives shown as render tiles across the top of the card. */
+  examples: { name: string; image: string }[];
 }
 
 export const CATEGORY_EXPLAINERS: CategoryExplainer[] = [
@@ -233,7 +205,11 @@ export const CATEGORY_EXPLAINERS: CategoryExplainer[] = [
     timing: "Work on the day",
     definition: "Nootropics are compounds that support how well your brain performs: how sharply you focus, how fast you process and how reliably you remember.",
     analogy: "Think of them as better fuel for the thinking itself.",
-    examples: ["Alpha GPC", "Ginkgo biloba", "Lecithin"],
+    examples: [
+      { name: "Alpha GPC", image: "/ingredients/renders/AlphaGPC.jpg" },
+      { name: "Ginkgo biloba", image: "/ingredients/renders/GinkgoBiloba.jpg" },
+      { name: "Lecithin", image: "/ingredients/renders/Lecithin.jpg" },
+    ],
   },
   {
     id: "adaptogens",
@@ -242,51 +218,21 @@ export const CATEGORY_EXPLAINERS: CategoryExplainer[] = [
     timing: "Build over weeks",
     definition: "Adaptogens are natural plant extracts that help your body adapt to stress, easing an overworked stress response back toward balance instead of forcing it the way a stimulant does.",
     analogy: "Think of them as a thermostat for stress: they hold the room at a workable temperature.",
-    examples: ["Ashwagandha", "Rhodiola rosea", "Lemon balm"],
+    examples: [
+      { name: "Ashwagandha", image: "/ingredients/renders/Ashwagandha.jpg" },
+      { name: "Rhodiola rosea", image: "/ingredients/renders/RhodiolaRosea.jpg" },
+      { name: "Lemon balm", image: "/ingredients/renders/LemonBalm.jpg" },
+    ],
   },
 ];
 
 export const CATEGORY_INTRO = {
+  linkLabel: "Explore every ingredient and its research",
   heading: "What are nootropics and adaptogens?",
   body: "Both are natural compounds studied for how they support the brain. They do different jobs, which is why CONKA uses both, alongside antioxidants, amino acids and vitamins that protect brain cells and help the actives absorb.",
   natureHeading: "Why nature makes them",
   nature: "Plants make these compounds to survive stress of their own: cold, drought, UV light and predators. Rhodiola grows in cold, high mountain regions, and ginkgo is one of the oldest tree species on Earth. Those same defence compounds are what researchers study in people.",
 } as const;
-
-export type IngredientGroup = "Adaptogens" | "Nootropics" | "Antioxidants" | "Amino acids" | "Vitamins" | "Absorption";
-
-export interface IngredientResearch {
-  name: string;
-  group: IngredientGroup;
-  shot: "Flow" | "Clear";
-  finding: string;
-  /**
-   * The dose THE STUDY used, never ours. Per-ingredient amounts in a CONKA
-   * shot are patented and must not reach the client (with the total they are
-   * the formula), so this is always labelled as the study's dose.
-   */
-  studyDose: string;
-  pmid: string;
-}
-
-/** Every active, with one human study each. PMIDs and doses from ingredientsData.ts. */
-export const INGREDIENT_RESEARCH: IngredientResearch[] = [
-  { name: "Ashwagandha", group: "Adaptogens", shot: "Flow", finding: "Lower stress scores and cortisol than placebo", studyDose: "300mg twice daily for 60 days", pmid: "23439798" },
-  { name: "Rhodiola rosea", group: "Adaptogens", shot: "Flow", finding: "Less mental fatigue and better concentration", studyDose: "576mg a day for 28 days", pmid: "19016404" },
-  { name: "Lemon balm", group: "Adaptogens", shot: "Flow", finding: "Calmer under stress, without sedation", studyDose: "600mg, single dose", pmid: "16444660" },
-  { name: "Alpha GPC", group: "Nootropics", shot: "Clear", finding: "Improved cognitive scores against placebo", studyDose: "400mg three times daily for 180 days", pmid: "12882463" },
-  { name: "Ginkgo biloba", group: "Nootropics", shot: "Clear", finding: "Faster processing and better working memory", studyDose: "240mg a day, across 29 trials", pmid: "19395013" },
-  { name: "Lecithin", group: "Nootropics", shot: "Clear", finding: "Higher choline intake linked to better memory", studyDose: "Dietary intake across 1,391 adults", pmid: "22071706" },
-  { name: "Turmeric", group: "Antioxidants", shot: "Flow", finding: "Better memory and attention than placebo", studyDose: "90mg curcumin twice daily for 18 months", pmid: "29246725" },
-  { name: "Bilberry", group: "Antioxidants", shot: "Flow", finding: "Fewer errors on executive-function tasks (studied as blueberry, a close relative)", studyDose: "About a cup of berries a day for 6 weeks", pmid: "25660920" },
-  { name: "Glutathione", group: "Antioxidants", shot: "Clear", finding: "Raised the body's own glutathione stores", studyDose: "250 to 1,000mg a day for 6 months", pmid: "25900085" },
-  { name: "Alpha lipoic acid", group: "Antioxidants", shot: "Clear", finding: "Better memory scores and lower oxidative stress", studyDose: "600mg a day for 12 weeks", pmid: "32631710" },
-  { name: "N-acetyl cysteine", group: "Amino acids", shot: "Clear", finding: "Rebuilt glutathione and improved cognitive measures", studyDose: "2g a day for 24 weeks", pmid: "18436195" },
-  { name: "Acetyl-L-carnitine", group: "Amino acids", shot: "Clear", finding: "Better attention and less mental fatigue", studyDose: "2g twice daily for 90 days", pmid: "18937015" },
-  { name: "Vitamin C", group: "Vitamins", shot: "Clear", finding: "Lower anxiety levels", studyDose: "500mg twice daily for 14 days", pmid: "26327060" },
-  { name: "Vitamin B12", group: "Vitamins", shot: "Clear", finding: "Slower brain shrinkage in mild cognitive impairment", studyDose: "B vitamins including 500mcg B12 for 2 years", pmid: "20838622" },
-  { name: "Black pepper", group: "Absorption", shot: "Flow", finding: "Raised curcumin absorption by 2,000%", studyDose: "20mg piperine, single dose", pmid: "9619120" },
-];
 
 // ===== HOW CONKA WORKS (SCRUM-1352) =====
 // Mirrors row 3 of the home "why" accordion. Flow and Clear always at equal
@@ -299,7 +245,7 @@ export interface ShotExplainer {
   job: string;
   href: string;
   linkLabel: string;
-  actives: { name: string; role: string }[];
+  actives: { name: string; role: string; image: string }[];
 }
 
 export const SCIENCE_HOW_IT_WORKS = {
@@ -314,10 +260,10 @@ export const SCIENCE_HOW_IT_WORKS = {
       href: "/conka-flow",
       linkLabel: "See CONKA Flow",
       actives: [
-        { name: "Ashwagandha", role: "Steadies the stress response" },
-        { name: "Rhodiola rosea", role: "Pushes back on mental fatigue" },
-        { name: "Lemon balm", role: "Calm without sedation" },
-        { name: "Turmeric", role: "Protects brain cells" },
+        { name: "Ashwagandha", role: "Steadies the stress response", image: "/ingredients/renders/Ashwagandha.jpg" },
+        { name: "Rhodiola rosea", role: "Pushes back on mental fatigue", image: "/ingredients/renders/RhodiolaRosea.jpg" },
+        { name: "Lemon balm", role: "Calm without sedation", image: "/ingredients/renders/LemonBalm.jpg" },
+        { name: "Turmeric", role: "Protects brain cells", image: "/ingredients/renders/Turmeric.jpg" },
       ],
     },
     {
@@ -328,10 +274,10 @@ export const SCIENCE_HOW_IT_WORKS = {
       href: "/conka-clarity",
       linkLabel: "See CONKA Clear",
       actives: [
-        { name: "Alpha GPC", role: "Supports focus and recall" },
-        { name: "Ginkgo biloba", role: "Supports blood flow to the brain" },
-        { name: "Acetyl-L-carnitine", role: "Fuels tired neurons" },
-        { name: "Vitamin C", role: "Protects against oxidative stress" },
+        { name: "Alpha GPC", role: "Supports focus and recall", image: "/ingredients/renders/AlphaGPC.jpg" },
+        { name: "Ginkgo biloba", role: "Supports blood flow to the brain", image: "/ingredients/renders/GinkgoBiloba.jpg" },
+        { name: "Acetyl-L-carnitine", role: "Fuels tired neurons", image: "/ingredients/renders/AcetylLCarnitine.jpg" },
+        { name: "Vitamin C", role: "Protects against oxidative stress", image: "/ingredients/renders/VitaminC.jpg" },
       ],
     },
   ] satisfies ShotExplainer[],
@@ -340,10 +286,10 @@ export const SCIENCE_HOW_IT_WORKS = {
 // ===== THE PEOPLE BEHIND THE RESEARCH (SCRUM-1353) =====
 // Scientists only: founders belong on /our-story and are never listed here.
 // Framed by role in the research, not as a "scientific board" or ambassadors.
-// Names, photos and titles from the CONKA deck team slide. Titles and
-// institutions are shown only where confirmed (Hind and Chazot at Durham from
-// the published research copy); the rest read "CONKA research team" until
-// their roles are confirmed. Photos are 200px square crops, so render them no
+// Names, photos and titles from the CONKA deck team slide; roles in our
+// research from the team. Institutions checked against university staff
+// profiles (Sept 2026): Vine, O'Malley and Halmai at Exeter, Glassbrook a
+// former Durham postdoc. Katekhaye has no institution on record. Photos are 200px square crops, so render them no
 // larger than ~100 CSS px.
 
 export interface SciencePerson {
@@ -361,20 +307,22 @@ export const SCIENCE_PEOPLE_INTRO = {
 export const SCIENCE_PEOPLE: SciencePerson[] = [
   { name: "Prof Karen Hind", role: "Chief Research Officer", institution: "Durham University", photo: "/science/people/karen-hind.webp" },
   { name: "Prof Paul Chazot", role: "Head of Nutritional Research", institution: "Durham University", photo: "/science/people/paul-chazot.webp" },
-  { name: "Prof Sam Vine", role: "Head of High Performance", photo: "/science/people/sam-vine.webp" },
+  { name: "Prof Sam Vine", role: "Head of High Performance, leads our Exeter human trial", institution: "University of Exeter", photo: "/science/people/sam-vine.webp" },
+  { name: "Dr Callum O'Malley", role: "Runs our Exeter human trial", institution: "University of Exeter", photo: "/science/people/callum-omally.webp" },
   { name: "Dr Shankar Katekhaye", role: "Formulation scientist, developer of our alcohol-free extraction", photo: "/science/people/shankar-katekhaye.webp" },
-  { name: "Dr Daniel Glassbrook", role: "CONKA research team", photo: "/science/people/daniel-glassbrook.webp" },
-  { name: "Dr Callum O'Mally", role: "CONKA research team", photo: "/science/people/callum-omally.webp" },
-  { name: "Dr Barbara Halmai", role: "CONKA research team", photo: "/science/people/barbara-halmai.webp" },
+  { name: "Dr Daniel Glassbrook", role: "Early formulation and safety research", institution: "Durham University", photo: "/science/people/daniel-glassbrook.webp" },
+  { name: "Dr Barbara Halmai", role: "Research assistant", institution: "University of Exeter", photo: "/science/people/barbara-halmai.webp" },
 ];
 
 // ===== MEASURE IT YOURSELF (SCRUM-1352) =====
-// Mirrors row 5 of the home "why" accordion. Test counts come from
+// Row 5 of the home "why" accordion, framed forward (the research keeps
+// going) rather than "don't trust us", which would undercut the trials above
+// it. Test counts come from
 // APP_INSIGHTS_TOTALS at render so they never drift from /app-insights.
 
 export const SCIENCE_MEASURE = {
-  heading: "Don't take our word for it. Measure it.",
-  body: "The CONKA app has a two-minute FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
+  heading: "We don't stop at the trials",
+  body: "The CONKA app puts a two-minute FDA-cleared cognitive test in your pocket, derived from Cambridge research and used in NHS memory clinics. Every test adds to our real-world research on how sleep, stress, caffeine and CONKA affect the brain, and shows you your own score week by week.",
   points: [
     "Free, and takes two minutes",
     "Reads processing speed from natural images, so it cannot be gamed",

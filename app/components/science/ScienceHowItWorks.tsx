@@ -11,7 +11,7 @@ import ScienceTrackClick from "./ScienceTrackClick";
  *
  * Flow and Clear as two equal cards (never one
  * spotlighted), in the words of row 3 of the home "why" accordion. Each card
- * names its key actives and what they do, with no amounts: per-ingredient mg
+ * shows its key actives as render tiles with what each does, with no amounts: per-ingredient mg
  * and the per-shot totals are both off the page (patented formula, and the
  * totals were disputed). The card link fires science:cta_clicked, since a click
  * through to a PDP is the outcome this page is measured on.
@@ -74,20 +74,30 @@ export default function ScienceHowItWorks() {
                   {shot.job}
                 </p>
 
-                <p className="mb-2 text-sm font-semibold text-black">
-                  Key actives
-                </p>
-                <ul className="mb-6 divide-y divide-black/10">
+                <p className="mb-3 text-sm font-semibold text-black">Key actives</p>
+                <ul className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {shot.actives.map((active) => (
                     <li
                       key={active.name}
-                      className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                      className="flex items-center gap-3 rounded-md bg-[#eef0f5] p-2 pr-3"
                     >
-                      <span className="text-base font-semibold text-black">
-                        {active.name}
+                      <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-white">
+                        <Image
+                          src={active.image}
+                          alt=""
+                          fill
+                          loading="lazy"
+                          sizes="48px"
+                          className="object-cover"
+                        />
                       </span>
-                      <span className="text-sm text-black/70 sm:text-right">
-                        {active.role}
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold leading-tight text-black">
+                          {active.name}
+                        </span>
+                        <span className="block text-sm leading-snug text-black/70">
+                          {active.role}
+                        </span>
                       </span>
                     </li>
                   ))}
@@ -110,15 +120,6 @@ export default function ScienceHowItWorks() {
         })}
       </div>
 
-      <p className="mt-6 text-base text-black">
-        Want every ingredient in both shots?{" "}
-        <Link
-          href="/ingredients"
-          className="inline-flex min-h-[44px] items-center font-semibold text-[var(--brand-navy)] underline underline-offset-4"
-        >
-          Explore the ingredients
-        </Link>
-      </p>
     </div>
   );
 }

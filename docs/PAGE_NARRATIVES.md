@@ -57,16 +57,16 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
-| 1 | Hero (`ScienceHero`) | Answer "does it work?" in the first screen: BLUF passage with the Harlequins result, 4-stat grid, Try CONKA CTA, trust icons | Strong | H1 pill echoes the home "why" headline |
-| 2 | The Challenge (`ScienceChallenge`) | Fragmented attention, the caffeine crash, unbacked claims; then our coffee vs CONKA app data with its observational caveat | OK | Home "why" row 1 |
-| 3 | Nootropics and Adaptogens (`ScienceCategories`) | Answer-first definitions of each, why nature makes them; depth layer of every active with one human study, the study's dose and a PubMed link | Strong | Home "why" row 2. Study doses only: our per-shot amounts are patented and never shown |
-| 4 | How CONKA Works (`ScienceHowItWorks`) | Flow (morning) and Clear (afternoon) as equal cards, four named actives each, tracked links to each PDP | OK | Home "why" row 3. No amounts, no per-shot totals |
-| 5 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, research partners in the depth layer | Strong | `#proof` anchor target from the hero |
-| 6 | The Scientists (`SciencePeople`) | Seven named scientists with photos, role and (where confirmed) institution | OK | Scientists only, founders stay on /our-story. Four roles still read "CONKA research team" or lack an institution |
-| 7 | Measure It Yourself (`ScienceMeasure`) | The two-minute app test, test and user counts from `APP_INSIGHTS_TOTALS`, links to /app and /app-insights | OK | Home "why" row 5 |
+| 1 | Hero (`ScienceHero`) | Answer "does it work?" in the first screen: H1, product render, BLUF passage with the Harlequins result, 4-stat grid, centred Try CONKA CTA, trust icons | Strong | H1 pill echoes the home "why" headline. Mobile order is H1, image, copy |
+| 2 | The Challenge (`ScienceChallenge`) | Fragmented attention, the caffeine crash, unbacked claims, as three icon cards | OK | Home "why" row 1. The coffee vs CONKA app data was tried here and cut: it did not read as part of the problem |
+| 3 | Nootropics and Adaptogens (`ScienceCategories`) | Two cards led by a strip of three ingredient renders, then answer-first definitions; why nature makes them; link to /ingredients for the research | Strong | Home "why" row 2. An inline per-ingredient research list was tried and cut as a wall of text; /ingredients owns that depth |
+| 4 | How CONKA Works (`ScienceHowItWorks`) | Flow (morning) and Clear (afternoon) as equal cards, four actives each as render tiles with what they do, tracked links to each PDP | OK | Home "why" row 3. No amounts, no per-shot totals |
+| 5 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, research partners always visible | Strong | `#proof` anchor target from the hero |
+| 6 | The Scientists (`SciencePeople`) | Seven named scientists with photos, their role in our research and institution | OK | Scientists only, founders stay on /our-story. Katekhaye has no institution on record |
+| 7 | We Don't Stop at the Trials (`ScienceMeasure`) | The app test framed as ongoing research every test adds to, phone graphic, test and user counts from `APP_INSIGHTS_TOTALS`, links to /app and /app-insights | OK | Home "why" row 5, framed forward. "Don't take our word for it" was cut because it undercut the trials above |
 | 8 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
 
-**Weakest link right now:** the scientists section is thin on specifics. Only Hind and Chazot carry an institution, and Glassbrook, O'Mally and Halmai show a generic "CONKA research team" role. Filling those in `SCIENCE_PEOPLE` (`app/lib/scienceContent.ts`) is a data-only change.
+**Weakest link right now:** the challenge (section 2) is now three cards with no proof of its own, the lightest section on the page. Worth a visual or a stat if it underperforms.
 
 ---
 

@@ -8,32 +8,38 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 /* ============================================================================
  * ScienceMeasure (SCRUM-1352, Simple DTC)
  *
- * "Measure it yourself", row 5 of the home "why" accordion. Takes the place of
- * AppInsightsCallout on /science only; that component stays as it is on /app.
- * The test and user counts read from APP_INSIGHTS_TOTALS so they always match
- * /app-insights. The app CTA is the inverted secondary style: the buy CTA
- * further down the page keeps the primary fill.
+ * Row 5 of the home "why" accordion, framed forward: the research does not end
+ * at the trials, and every app test adds to it. Takes the place of
+ * AppInsightsCallout on /science only; that component stays on /app.
+ *
+ * Mobile order is heading, phone graphic, then copy and CTAs. Desktop puts the
+ * graphic in its own column spanning both rows. Counts read from
+ * APP_INSIGHTS_TOTALS so they always match /app-insights. The app CTA is the
+ * inverted secondary style; the buy CTA below keeps the primary fill.
  * ========================================================================== */
 
 export default function ScienceMeasure() {
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-      {/* Copy leads on mobile so the argument lands before the screenshot. */}
-      <div className="relative order-2 aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5] lg:aspect-square">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-x-12 lg:gap-y-0">
+      <h2
+        className="brand-h2 text-black lg:col-start-1 lg:row-start-1 lg:mb-4 lg:self-end"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        {SCIENCE_MEASURE.heading}
+      </h2>
+
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:aspect-square lg:self-center">
         <Image
           src="/app/AppConkaRing.png"
           alt="CONKA app home screen showing the live cognitive score ring"
           fill
           loading="lazy"
           sizes="(min-width: 1024px) 560px, 100vw"
-          className="object-contain p-8"
+          className="object-contain p-6"
         />
       </div>
 
-      <div className="order-1">
-        <h2 className="brand-h2 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
-          {SCIENCE_MEASURE.heading}
-        </h2>
+      <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
         <p className="mb-6 max-w-[56ch] text-base leading-relaxed text-black">
           {SCIENCE_MEASURE.body}
         </p>
@@ -54,7 +60,7 @@ export default function ScienceMeasure() {
           across {APP_INSIGHTS_TOTALS.users} people over {APP_INSIGHTS_TOTALS.monthsSpan} months of real app data.
         </p>
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <div className="flex flex-col items-center gap-3 lg:flex-row lg:gap-x-6">
           <ConkaCTAButton href="/app" inverted>
             Get the free app
           </ConkaCTAButton>
