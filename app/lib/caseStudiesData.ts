@@ -228,6 +228,8 @@ export const athletes: AthleteData[] = [
     tier: 1,
     userType: "athlete",
   },
+  /* Hidden (SCRUM-1354, Leeds United player): commented out on request so it no longer
+     renders anywhere that reads this list. Uncomment to restore.
   {
     id: "patrick-bamford",
     name: "Patrick Bamford",
@@ -255,7 +257,7 @@ export const athletes: AthleteData[] = [
     featured: false,
     tier: 1,
     userType: "athlete",
-  },
+  }, */
   {
     id: "pierre-louis-barassi",
     name: "Pierre-Louis Barassi",
@@ -399,6 +401,8 @@ export const athletes: AthleteData[] = [
     tier: 2,
     userType: "athlete",
   },
+  /* Hidden (SCRUM-1354, Leeds United player): commented out on request so it no longer
+     renders anywhere that reads this list. Uncomment to restore.
   {
     id: "daniel-james",
     name: "Daniel James",
@@ -426,7 +430,7 @@ export const athletes: AthleteData[] = [
     featured: false,
     tier: 2,
     userType: "athlete",
-  },
+  }, */
   {
     id: "josh-stanton",
     name: "Josh Stanton",
@@ -813,6 +817,8 @@ export const athletes: AthleteData[] = [
     tier: 2,
     userType: "athlete",
   },
+  /* Hidden (SCRUM-1354, Leeds United player): commented out on request so it no longer
+     renders anywhere that reads this list. Uncomment to restore.
   {
     id: "ao-tanaka",
     name: "Ao Tanaka",
@@ -840,7 +846,7 @@ export const athletes: AthleteData[] = [
     featured: false,
     tier: 2,
     userType: "athlete",
-  },
+  }, */
   {
     id: "fin-baxter",
     name: "Fin Baxter",
