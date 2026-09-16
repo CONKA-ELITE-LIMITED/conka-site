@@ -1,9 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import {
-  getFormulaImage,
-  getProtocolImage,
-} from "@/app/lib/productImageConfig";
+import { getProductImage } from "@/app/lib/productImageConfig";
 import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 
 interface ProductCardProps {
@@ -56,7 +53,7 @@ const getProductData = (
         { value: "+18%", label: "Memory" },
         { value: "+42%", label: "Sleep" },
       ],
-      image: getFormulaImage("01"),
+      image: getProductImage("01"),
       link: "/conka-flow",
     };
   }
@@ -76,7 +73,7 @@ const getProductData = (
         { value: "+57%", label: "Blood flow" },
         { value: "-42%", label: "Anxiety" },
       ],
-      image: getFormulaImage("02"),
+      image: getProductImage("02"),
       link: "/conka-clarity",
     };
   }
@@ -95,7 +92,7 @@ const getProductData = (
       { value: "-56%", label: "Stress" },
       { value: "+42%", label: "Sleep" },
     ],
-    image: getProtocolImage("3"),
+    image: getProductImage("03"),
     link: "/conka-both",
     badge: "Most popular",
   };

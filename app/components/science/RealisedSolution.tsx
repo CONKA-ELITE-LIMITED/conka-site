@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formulaContent } from "@/app/lib/productData";
-import { getFormulaImage } from "@/app/lib/productImageConfig";
+import { getProductImage } from "@/app/lib/productImageConfig";
 
 interface HeroActive {
   name: string;
@@ -41,7 +41,7 @@ const PRODUCTS: ProductData[] = [
     benefitHeadline: "Energy without the crash",
     bodyCopy:
       "Sustained focus for training and work. No caffeine, no crash. The adaptogen side of the model, built to raise the floor you operate from.",
-    render: getFormulaImage("01"),
+    render: getProductImage("01"),
     link: "/conka-flow",
     activeMg: 3700,
     actives: [
@@ -79,7 +79,7 @@ const PRODUCTS: ProductData[] = [
     benefitHeadline: "Mental clarity and complete recovery",
     bodyCopy:
       "Sharpen performance when you need it, support recovery when you're done. The nootropic side of the model, for the demand in front of you.",
-    render: getFormulaImage("02"),
+    render: getProductImage("02"),
     link: "/conka-clarity",
     activeMg: 3142,
     actives: [

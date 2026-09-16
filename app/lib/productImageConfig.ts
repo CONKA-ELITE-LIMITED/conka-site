@@ -1,33 +1,21 @@
 /**
  * Product Image Configuration
  * Images used in navigation menus, shop cards, and other navigation contexts.
- * Hero images are defined separately in productHeroConfig.ts
+ * Hero images are defined separately in heroImageConfig.ts
  */
 
-// Protocol navigation images (for cards, menus)
-export const protocolNavigationImages: Record<string, string> = {
-  "1": "/protocols/ResilienceRed.jpg",
-  "2": "/protocols/PrecisionPurple.jpg",
-  "3": "/formulas/both/BothHold.jpg",
-  "4": "/protocols/UltimatePink.jpg",
-};
+import type { ProductHeroId } from "./productTypes";
 
-// Formula navigation images (for cards, menus)
-export const formulaNavigationImages: Record<string, string> = {
+// Product navigation images (for cards, menus)
+export const productNavigationImages: Record<ProductHeroId, string> = {
   "01": "/formulas/conkaFlow/FlowHold.jpg",
   "02": "/formulas/conkaClear/ClearHold.jpg",
+  "03": "/formulas/both/BothHold.jpg",
 };
 
 /**
- * Get the protocol navigation image
+ * Get the navigation image for Flow, Clear or Both
  */
-export function getProtocolImage(protocolId: string): string {
-  return protocolNavigationImages[protocolId] || "";
-}
-
-/**
- * Get the formula navigation image
- */
-export function getFormulaImage(formulaId: string): string {
-  return formulaNavigationImages[formulaId] || "";
+export function getProductImage(productId: ProductHeroId): string {
+  return productNavigationImages[productId];
 }
