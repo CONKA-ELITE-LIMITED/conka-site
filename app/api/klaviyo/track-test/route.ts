@@ -51,7 +51,6 @@ export async function POST(request: NextRequest) {
       event: "Website Short Test Submitted",
       customer_properties: {
         $email: email,
-        $first_name: email, // Using email as first_name per requirements
       },
       properties: {
         latest_website_score: score,

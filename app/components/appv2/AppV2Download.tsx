@@ -76,7 +76,7 @@ export default function AppV2Download() {
         Start measuring your brain today.
       </h2>
       <div data-download-reveal>
-        <AppInstallButtons variant="clinical-dark" className="justify-center" />
+        <AppInstallButtons variant="clinical-dark" trackLocation="download" className="justify-center" />
       </div>
       <p
         data-download-reveal

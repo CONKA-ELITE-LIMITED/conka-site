@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAppStoreClicked } from "@/app/lib/analytics";
+
 const BULLETS = [
   "Full validated test",
   "Sleep & exercise tracking",
@@ -39,6 +41,9 @@ export default function CognitiveTestAppPromo() {
       <div className="flex flex-col sm:flex-row gap-3">
         <a
           href="https://apps.apple.com/gb/app/conka-app/id6450399391"
+          onClick={() =>
+            trackAppStoreClicked({ platform: "ios", location: "test_results" })
+          }
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-3 bg-white text-black font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-opacity hover:opacity-85 active:opacity-70"
@@ -57,6 +62,9 @@ export default function CognitiveTestAppPromo() {
         </a>
         <a
           href="https://play.google.com/store/apps/details?id=com.conka.conkaApp"
+          onClick={() =>
+            trackAppStoreClicked({ platform: "android", location: "test_results" })
+          }
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50"

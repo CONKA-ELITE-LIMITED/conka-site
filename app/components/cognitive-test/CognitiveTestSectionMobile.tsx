@@ -14,7 +14,15 @@ import CognitiveTestLoader from "./CognitiveTestLoader";
 import CognitiveTestScores from "./CognitiveTestScores";
 import CognitiveTestRecommendation from "./CognitiveTestRecommendation";
 import CognitiveTestAppPromo from "./CognitiveTestAppPromo";
-import { trackCognitiveTest } from "@/app/lib/klaviyo";
+import {
+  trackCognitiveTest,
+  subscribeAppTestSignup,
+} from "@/app/lib/klaviyo";
+import {
+  trackAppTestClicked,
+  trackAppEmailSubmitted,
+  trackAppResultsViewed,
+} from "@/app/lib/analytics";
 
 const BENEFIT_SPECS_MOBILE: { label: string; value: string; note: string }[] = [
   { label: "Validation", value: "Clinical", note: "Cambridge" },
@@ -61,6 +69,7 @@ export default function CognitiveTestSectionMobile({
   }, [emailSubmission]);
 
   const handleStartTest = useCallback(() => {
+    trackAppTestClicked();
     setTestState("email");
   }, []);
 
@@ -69,6 +78,10 @@ export default function CognitiveTestSectionMobile({
   }, []);
 
   const handleEmailSubmit = useCallback((submission: EmailSubmission) => {
+    // Capture the signup now, not at the end, so a visitor who drops out
+    // mid-test is still on the list (SCRUM-1360).
+    subscribeAppTestSignup(submission.email);
+    trackAppEmailSubmitted();
     setEmailSubmission(submission);
     setTestState("testing");
   }, []);
@@ -80,6 +93,8 @@ export default function CognitiveTestSectionMobile({
 
   const handleProcessingComplete = useCallback(() => {
     setTestState("results");
+
+    if (testResult) trackAppResultsViewed();
 
     if (emailSubmission && testResult) {
       trackCognitiveTest(
