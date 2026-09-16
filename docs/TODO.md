@@ -512,16 +512,16 @@ pointing at `public/formulas/conkaFlow/FlowNoBackground.png` and `public/formula
 
 ## Asset Cleanup
 
-### Five statics left unreferenced by the 2026-08-27 orphan sweep
+### Four statics left unreferenced by the 2026-08-27 orphan sweep
 
 **Status:** Open, and deliberately not deleted with the components.
-**Files:** `public/CONKA_04.jpg`, `public/ingredients/renders/LecithinTransparent.png`, `public/ingredients/renders/RhodiolaRoseaTransparent.png`, `public/ingredients/renders/TurmericTransparent.png`, `public/ingredients/renders/VitaminCTransparent.png`
+**Files:** `public/ingredients/renders/LecithinTransparent.png`, `public/ingredients/renders/RhodiolaRoseaTransparent.png`, `public/ingredients/renders/TurmericTransparent.png`, `public/ingredients/renders/VitaminCTransparent.png`
 
 These were referenced only by components deleted in the sweep, and a repo grep now returns nothing for any of them.
 
 **Why they were not deleted anyway.** A `public/` file is reachable by URL, so a repo grep is not proof it is unused. Anything served from `public/` can be pointed at by a Klaviyo email template, a Notion blog post body, an OG or social card, or an ad creative, none of which live in this repo. A component reference disappearing is evidence, not a conclusion. The same caution applies to every entry in this section.
 
-**What closes it:** confirm with whoever owns the Klaviyo templates and the Notion blog that none of the five are linked, then delete. The four `*Transparent.png` renders are the lower risk of the two groups, since the live surfaces all use the `.jpg` variants of the same ingredients (`BuildStep.tsx`, both `IngredientsGrid.tsx`, both `ingredients.data.ts`) and the transparent cut-outs were only ever used by the deleted benefit components. `CONKA_04.jpg` sits at the `public/` root with a generic name, which is exactly the shape of a file something external links to.
+**What closes it:** confirm with whoever owns the Klaviyo templates and the Notion blog that none of the four are linked, then delete. Low risk: the live surfaces all use the `.jpg` variants of the same ingredients (`BuildStep.tsx`, both `IngredientsGrid.tsx`, both `ingredients.data.ts`) and the transparent cut-outs were only ever used by the deleted benefit components. (`CONKA_04.jpg` was deleted in SCRUM-1347.)
 
 
 ### Confirm the v1 PDP carousel assets can stay deleted
@@ -555,11 +555,11 @@ is linking them, delete the archive too. Until then the archive is the rollback.
 ### Delete superseded `*New.jpg` product statics once the labelV2 rollout is confirmed
 
 **Status:** Deferred (waiting for the labelV2 filenames to be live in prod)
-**Files:** `public/formulas/conkaFlow/FlowNew.jpg`, `public/formulas/conkaClear/ClearNew.jpg`, `public/lander/FlowNew.jpg`, `public/lander/ClearNew.jpg`
+**Files:** `public/lander/FlowNew.jpg`, `public/lander/ClearNew.jpg` (the `public/formulas/` pair was deleted in SCRUM-1347)
 
 The Aug 2026 cache-busting rename moved every in-code reference to the `*V3.jpg` basenames; the `*New.jpg` files were kept as byte-identical aliases so cached HTML and external links (ads, emails) kept resolving. On 25 Aug 2026 the site moved again, to the `public/formulas/labelV2/` renders referenced via the `bottleRenders` map in `app/lib/productImages.ts` (square `*V4.jpg` canonical, tall `*Thin.jpg` crops only for the two side-by-side pair layouts): the `*V3.jpg` files and `both/BothNew.jpg` were deleted outright, so anything external still pointing at those paths now 404s once deployed.
 
-**What unblocks it:** the labelV2 branch merged and live in prod for a couple of weeks with no external surface still pointing at the old basenames. Then delete the four files.
+**What unblocks it:** the labelV2 branch merged and live in prod for a couple of weeks with no external surface still pointing at the old basenames. Then delete the two files.
 
 ---
 
