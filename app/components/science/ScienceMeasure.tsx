@@ -9,8 +9,8 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
  * ScienceMeasure (SCRUM-1352, Simple DTC)
  *
  * Row 5 of the home "why" accordion, framed forward: the research does not end
- * at the trials, and every app test adds to it. Takes the place of
- * AppInsightsCallout on /science only.
+ * at the trials, and every app test adds to it, with its own link to
+ * /app-insights.
  *
  * Mobile order is heading, phone graphic, then copy and CTAs. Desktop puts the
  * graphic in its own column spanning both rows. Counts read from
