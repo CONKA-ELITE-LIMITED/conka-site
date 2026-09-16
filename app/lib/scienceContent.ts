@@ -337,6 +337,37 @@ export const SCIENCE_HOW_IT_WORKS = {
   ] satisfies ShotExplainer[],
 } as const;
 
+// ===== THE PEOPLE BEHIND THE RESEARCH (SCRUM-1353) =====
+// Scientists only: founders belong on /our-story and are never listed here.
+// Framed by role in the research, not as a "scientific board" or ambassadors.
+// Names, photos and titles from the CONKA deck team slide. Titles and
+// institutions are shown only where confirmed (Hind and Chazot at Durham from
+// the published research copy); the rest read "CONKA research team" until
+// their roles are confirmed. Photos are 200px square crops, so render them no
+// larger than ~100 CSS px.
+
+export interface SciencePerson {
+  name: string;
+  role: string;
+  institution?: string;
+  photo: string;
+}
+
+export const SCIENCE_PEOPLE_INTRO = {
+  heading: "The scientists behind CONKA",
+  body: "CONKA is formulated and tested with scientists who study the brain, nutrition and human performance for a living.",
+} as const;
+
+export const SCIENCE_PEOPLE: SciencePerson[] = [
+  { name: "Prof Karen Hind", role: "Chief Research Officer", institution: "Durham University", photo: "/science/people/karen-hind.webp" },
+  { name: "Prof Paul Chazot", role: "Head of Nutritional Research", institution: "Durham University", photo: "/science/people/paul-chazot.webp" },
+  { name: "Prof Sam Vine", role: "Head of High Performance", photo: "/science/people/sam-vine.webp" },
+  { name: "Dr Shankar Katekhaye", role: "Formulation scientist, developer of our alcohol-free extraction", photo: "/science/people/shankar-katekhaye.webp" },
+  { name: "Dr Daniel Glassbrook", role: "CONKA research team", photo: "/science/people/daniel-glassbrook.webp" },
+  { name: "Dr Callum O'Mally", role: "CONKA research team", photo: "/science/people/callum-omally.webp" },
+  { name: "Dr Barbara Halmai", role: "CONKA research team", photo: "/science/people/barbara-halmai.webp" },
+];
+
 // ===== MEASURE IT YOURSELF (SCRUM-1352) =====
 // Mirrors row 5 of the home "why" accordion. Test counts come from
 // APP_INSIGHTS_TOTALS at render so they never drift from /app-insights.

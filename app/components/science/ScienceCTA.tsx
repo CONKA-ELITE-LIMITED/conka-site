@@ -25,7 +25,7 @@ export default function ScienceCTA() {
   ];
 
   return (
-    <div className="grid grid-cols-1 overflow-hidden rounded-md bg-[#eef0f5] text-black lg:grid-cols-2">
+    <div className="grid grid-cols-1 overflow-hidden rounded-md bg-white text-black shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-black/5 lg:grid-cols-2">
       <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[26rem]">
         <Image
           src="/formulas/labelV2/BothV5.webp"

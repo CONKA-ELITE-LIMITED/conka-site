@@ -19,7 +19,7 @@ export default function ScienceMeasure() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
       {/* Copy leads on mobile so the argument lands before the screenshot. */}
-      <div className="relative order-2 aspect-[4/3] w-full overflow-hidden rounded-md bg-white ring-1 ring-black/5 lg:aspect-square">
+      <div className="relative order-2 aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5] lg:aspect-square">
         <Image
           src="/app/AppConkaRing.png"
           alt="CONKA app home screen showing the live cognitive score ring"
@@ -47,7 +47,7 @@ export default function ScienceMeasure() {
           ))}
         </ul>
 
-        <p className="mb-7 rounded-md bg-white px-4 py-3 text-base text-black ring-1 ring-black/5">
+        <p className="mb-7 rounded-md bg-[#eef0f5] px-4 py-3 text-base text-black">
           <span className="font-bold tabular-nums text-[var(--brand-navy)]">
             {APP_INSIGHTS_TOTALS.tests.toLocaleString("en-GB")} tests
           </span>{" "}

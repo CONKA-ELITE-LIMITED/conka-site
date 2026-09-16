@@ -62,10 +62,11 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 | 3 | Nootropics and Adaptogens (`ScienceCategories`) | Answer-first definitions of each, why nature makes them; depth layer of every active with one human study, the study's dose and a PubMed link | Strong | Home "why" row 2. Study doses only: our per-shot amounts are patented and never shown |
 | 4 | How CONKA Works (`ScienceHowItWorks`) | Flow (morning) and Clear (afternoon) as equal cards, four named actives each, tracked links to each PDP | OK | Home "why" row 3. No amounts, no per-shot totals |
 | 5 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, research partners in the depth layer | Strong | `#proof` anchor target from the hero |
-| 6 | Measure It Yourself (`ScienceMeasure`) | The two-minute app test, test and user counts from `APP_INSIGHTS_TOTALS`, links to /app and /app-insights | OK | Home "why" row 5 |
-| 7 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
+| 6 | The Scientists (`SciencePeople`) | Seven named scientists with photos, role and (where confirmed) institution | OK | Scientists only, founders stay on /our-story. Four roles still read "CONKA research team" or lack an institution |
+| 7 | Measure It Yourself (`ScienceMeasure`) | The two-minute app test, test and user counts from `APP_INSIGHTS_TOTALS`, links to /app and /app-insights | OK | Home "why" row 5 |
+| 8 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
 
-**Weakest link right now:** there are no named people behind the research yet, the strongest credibility device on comparable science pages. Scientist photos and roles are being sourced for that section (SCRUM-1353).
+**Weakest link right now:** the scientists section is thin on specifics. Only Hind and Chazot carry an institution, and Glassbrook, O'Mally and Halmai show a generic "CONKA research team" role. Filling those in `SCIENCE_PEOPLE` (`app/lib/scienceContent.ts`) is a data-only change.
 
 ---
 

@@ -6,10 +6,12 @@ import ScienceChallenge from "@/app/components/science/ScienceChallenge";
 import ScienceCategories from "@/app/components/science/ScienceCategories";
 import ScienceHowItWorks from "@/app/components/science/ScienceHowItWorks";
 import ScienceProof from "@/app/components/science/ScienceProof";
+import SciencePeople from "@/app/components/science/SciencePeople";
 import ScienceMeasure from "@/app/components/science/ScienceMeasure";
 import ScienceCTA from "@/app/components/science/ScienceCTA";
 import Reveal from "@/app/components/landing/Reveal";
 import ReviewedDate from "@/app/components/ReviewedDate";
+import { SCIENCE_PEOPLE } from "@/app/lib/scienceContent";
 
 export const metadata: Metadata = {
   title: "Does CONKA Work? The Science and Clinical Trials | CONKA",
@@ -26,7 +28,7 @@ export const metadata: Metadata = {
 /* Simple DTC, not clinical (SCRUM-1351, SCRUM-1352): see DESIGN_SYSTEM.md §8.5
    and docs/development/featurePlans/science-page-narrative.md. The arc mirrors
    the home "why" accordion: answer first, the challenge, what nootropics and
-   adaptogens are, how Flow and Clear work, the trials, measure it yourself,
+   adaptogens are, how Flow and Clear work, the trials, the scientists, measure it yourself,
    then the close. Backgrounds alternate so no two adjacent sections match. */
 export default function SciencePage() {
   return (
@@ -92,9 +94,23 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 6: MEASURE IT YOURSELF ===== */}
+      {/* ===== SECTION 6: THE PEOPLE (skipped entirely when the list is empty) ===== */}
+      {SCIENCE_PEOPLE.length > 0 && (
+        <section
+          className="brand-section brand-bg-tint"
+          aria-label="The scientists behind CONKA"
+        >
+          <div className="brand-track">
+            <Reveal>
+              <SciencePeople />
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* ===== SECTION 7: MEASURE IT YOURSELF ===== */}
       <section
-        className="brand-section brand-bg-tint"
+        className="brand-section brand-bg-white"
         aria-label="Measure it yourself"
       >
         <div className="brand-track">
@@ -104,9 +120,9 @@ export default function SciencePage() {
         </div>
       </section>
 
-      {/* ===== SECTION 7: CTA ===== */}
+      {/* ===== SECTION 8: CTA ===== */}
       <section
-        className="brand-section brand-bg-white"
+        className="brand-section brand-bg-tint"
         aria-label="Try CONKA"
       >
         <div className="brand-track">
