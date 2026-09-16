@@ -692,3 +692,39 @@ A build-time assertion (post count against a floor, and consistency between `gen
 **What unblocks it:** the images are already re-hosted locally under `public/blog/<slug>/` at build, so width and height are knowable without a network call. Needs a decision on whether to record dimensions at re-host time and thread them through, or move the mapping to `next/image`.
 
 **Why deferred:** out of scope on SCRUM-1160, which was a text-only repair. **Both that ticket and the plan doc already cite this as "tracked in `docs/TODO.md`" and it was never actually written here** (found 2026-07-17), so this entry exists to make that citation true rather than to propose new work. 100 in-body images across 33 posts; none have usable alt text (correction 3), so an alt pass belongs with it.
+
+---
+
+## Science Page (`/science`)
+
+### Reuse the science proof and explainer modules where the traffic is
+
+**Files:** `app/components/science/ScienceProof.tsx`, `app/components/science/ScienceCategories.tsx`, `app/lib/scienceContent.ts`; PDPs and `/go` listicles
+
+**What unblocks it:** a decision on which PDP or listicle slot to test first. /science gets ~230 visitors a month; the PDPs and listicles get tens of thousands, so the Harlequins proof card and the nootropics/adaptogens cards do more there.
+
+**Why deferred:** out of scope on SCRUM-1351 to 1353, which rebuilt /science only.
+
+### Move the trial stats on the PDPs, listicles and home onto `scienceContent.ts`
+
+**Files:** `app/components/product/ProductBuyPanel.tsx` (`FEEL_OUTCOMES`, `keyBenefits`), `app/lib/landings/*-listicle.ts`, `app/lib/homeWhyContent.ts`
+
+**What unblocks it:** nothing, just time. Each surface hard-codes +14.86%, 80% and the research figures, so a changed figure has to be edited in every file.
+
+**Why deferred:** kept out of the /science rebuild to avoid touching shared acquisition surfaces.
+
+### FAQ and FAQPage JSON-LD for /science
+
+**Files:** `app/science/page.tsx`, `app/lib/faqContent.ts`, `docs/features/FAQ_SYSTEM.md`
+
+**What unblocks it:** a /science FAQ subset (candidates: "Does CONKA work?", "What are nootropics?", "What are adaptogens?", "Is CONKA caffeine free?").
+
+**Why deferred:** listed as a future phase when /science was scoped; the page has no FAQ subset today.
+
+### Confirm two scientist details and source better photos
+
+**Files:** `SCIENCE_PEOPLE` in `app/lib/scienceContent.ts`, `public/science/people/`, `public/science/challenge/`
+
+**What unblocks it:** Rudh. Halmai is shown at the University of Exeter (her current staff profile) though she may have worked with us from Durham; Glassbrook's role ("Early formulation and safety research") is unconfirmed. Photos are ~200px crops from the team deck, which caps the section size; the challenge card photos are stand-ins until owned photography exists.
+
+**Why deferred:** needs the team, not code.

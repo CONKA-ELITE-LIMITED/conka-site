@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   },
 };
 
-/* Simple DTC, not clinical (SCRUM-1351, SCRUM-1352): see DESIGN_SYSTEM.md §8.5
-   and docs/development/featurePlans/science-page-narrative.md. The arc mirrors
+/* Simple DTC, not clinical (SCRUM-1351 to 1353): see DESIGN_SYSTEM.md §8.5 and
+   the /science entry in docs/PAGE_NARRATIVES.md. The arc mirrors
    the home "why" accordion: answer first, the challenge, what nootropics and
    adaptogens are, how Flow and Clear work, the trials, the scientists, measure it yourself,
    then the close. Backgrounds alternate so no two adjacent sections match. */

@@ -3,8 +3,8 @@
  *
  * Copy and figures for the /science page, kept as data so the page can be
  * re-worded without touching components, and so the proof modules can later be
- * reused on the PDPs and listicles (see
- * docs/development/featurePlans/science-page-narrative.md, Future phase).
+ * reused on the PDPs and listicles (see the Science Page section of
+ * docs/TODO.md).
  *
  * Every trial figure here traces to docs/conkaAppData/HIGH_LEVEL_STATS.md and
  * is stated exactly as the source reports it. Do not round, combine or add a

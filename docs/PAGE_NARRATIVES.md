@@ -52,8 +52,8 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 ## /science
 
 **Audience:** mid-funnel sceptic. Already interested (arrives mostly from the nav, footer or a PDP, and leans desktop), but doubtful. Needs "does it work, and why?" answered before buying.
-**Posture:** proof first, depth on tap. Simple DTC (SCRUM-1351). The top layer is scannable (stats, study-design icon tags, short copy); method, partners and references sit behind native `<details>` so sceptics can check everything without it slowing anyone else down. Tracked CTAs to `/conka-both` (hero and close) and to each PDP (the Flow and Clear cards), no pricing. Figures come from `app/lib/scienceContent.ts`, sourced from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
-**Story arc:** Answer first (the placebo-controlled result) -> the problem -> what nootropics and adaptogens are -> Flow and Clear -> the trials -> measure it yourself -> try it. Mirrors the home "why" accordion (`homeWhyContent.ts`). Plan: `docs/development/featurePlans/science-page-narrative.md`.
+**Posture:** proof first, depth on tap. Simple DTC (SCRUM-1351 to 1353). Scannable first: stats, photos, ingredient renders, study-design icon tags and short copy. Only the trial method sits behind a native `<details>`; ingredient-level research is linked to /ingredients rather than repeated. Tracked CTAs to `/conka-both` (hero and close) and to each PDP (the Flow and Clear cards), no pricing. Figures come from `app/lib/scienceContent.ts`, sourced from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
+**Story arc:** Answer first (the placebo-controlled result) -> the problem -> what nootropics and adaptogens are -> Flow and Clear -> the trials -> measure it yourself -> try it. Mirrors the home "why" accordion (`homeWhyContent.ts`). Our own per-ingredient amounts are never shown (patented formula). Deferred follow-ups live in `docs/TODO.md` under Science Page.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
