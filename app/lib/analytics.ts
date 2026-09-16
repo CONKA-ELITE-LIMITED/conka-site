@@ -261,6 +261,25 @@ export function trackHomeSectionViewed(params: HomeSectionEvent): void {
   safeTrack("home:section_viewed", params);
 }
 
+// ===== SCIENCE PAGE TRACKING (/science) =====
+
+/**
+ * Clicks from /science through to a product page (SCRUM-1351).
+ *
+ * /science is a consideration page reached mostly from the nav and footer, so
+ * the question is how often it sends a sceptic on to buy. Read against
+ * /science pageviews:
+ *
+ *   by=["eventData/location"]
+ *   filter=eventName eq 'science:cta_clicked'
+ *
+ * `location` is the CTA's semantic id ("hero", "final", "flow_card",
+ * "clear_card"), never a position.
+ */
+export function trackScienceCtaClicked(params: { location: string }): void {
+  safeTrack("science:cta_clicked", params);
+}
+
 // ===== CART UPSELL TILE TRACKING (CartDrawer, SCRUM-1201) =====
 
 /**

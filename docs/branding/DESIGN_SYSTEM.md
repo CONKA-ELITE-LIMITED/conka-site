@@ -180,7 +180,7 @@ social on a phone. Mobile-first is therefore non-negotiable.
 
 > The evidence-dense grammar. No longer the global default — the forward direction is **Simple DTC** (§8.5). Clinical is retained for science/evidence-dense modules and the `/app` dark pages (§10). Opt-in via `.brand-clinical` on the page root. See the §8.5 per-surface authority table for which language governs which surface.
 >
-> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/science` · `/ingredients` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app` · `/app-insights`. Note `/start` and `/build-your-order` are NOT clinical — they are Simple DTC (see the §8.5 authority table). The `/account` portal (`/account` + `/login` `/register` `/details` `/orders` `/subscriptions`) dropped the scope in SCRUM-1188 and is now Simple DTC. `/our-story` dropped the scope in SCRUM-1326 and is now Simple DTC. Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
+> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/ingredients` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app` · `/app-insights`. Note `/start` and `/build-your-order` are NOT clinical — they are Simple DTC (see the §8.5 authority table). The `/account` portal (`/account` + `/login` `/register` `/details` `/orders` `/subscriptions`) dropped the scope in SCRUM-1188 and is now Simple DTC. `/our-story` dropped the scope in SCRUM-1326 and is now Simple DTC. `/science` dropped it in SCRUM-1351. Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
 >
 > **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
 >
@@ -498,8 +498,8 @@ Simple DTC is added **alongside** Clinical (§8) and App-Dark (§10), not as a g
 
 | Surface group | Language |
 |---------------|----------|
-| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`, `/conka-both`); landing / funnel / `/go`; top-of-funnel `/professionals`; the logged-in customer portal (`/account/*`, `/login`, `/register`); `/our-story` | **Simple DTC** |
-| Science / evidence-dense modules (`/science`) | **Clinical** (§8) — mono + density earn their place on dense data |
+| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`, `/conka-both`); landing / funnel / `/go`; top-of-funnel `/professionals`; the logged-in customer portal (`/account/*`, `/login`, `/register`); `/our-story`; `/science` | **Simple DTC** |
+| Evidence-dense modules on the remaining clinical content pages (`/ingredients`, `/why-conka`, `/case-studies`) | **Clinical** (§8) — mono + density earn their place on dense data. `/science` left this row in SCRUM-1351: its evidence density moved into a `<details>` depth layer instead of the visual treatment |
 | `/app`, `/app-insights` dark pages | **App-Dark** (§10) — clinical grammar on a dark canvas |
 | B2B order/management UIs | Clinical for now (mono data labels aid scanning); convert opportunistically |
 

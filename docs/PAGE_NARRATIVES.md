@@ -51,21 +51,22 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 
 ## /science
 
-**Audience:** mid-funnel believer-maker. Already interested (arrives from a PDP or nav), but doubtful. Needs the doubt dismantled before buying.
-**Posture:** convince the sceptic. Confident transparency, teach don't flex. No pricing or Shop Now here; the buy happens downstream on the PDP.
-**Story arc:** Problem -> there is a natural solution, but unrealised -> here is how it works -> here is the solution we actually built (Flow and Clear, after the investment and clinical research) -> and the evidence base keeps growing.
+**Audience:** mid-funnel sceptic. Already interested (arrives mostly from the nav, footer or a PDP, and leans desktop), but doubtful. Needs "does it work, and why?" answered before buying.
+**Posture:** proof first, depth on tap. Simple DTC (SCRUM-1351 to 1353). Scannable first: stats, photos, ingredient renders, study-design icon tags and short copy. Only the trial method sits behind a native `<details>`; ingredient-level research is linked to /ingredients rather than repeated. Tracked CTAs to `/conka-both` (hero and close) and to each PDP (the Flow and Clear cards), no pricing. Figures come from `app/lib/scienceContent.ts`, sourced from `docs/conkaAppData/HIGH_LEVEL_STATS.md`.
+**Story arc:** Answer first (the placebo-controlled result) -> the problem -> what nootropics and adaptogens are -> Flow and Clear -> the trials -> measure it yourself -> try it. Mirrors the home "why" accordion (`homeWhyContent.ts`). Our own per-ingredient amounts are never shown (patented formula). Deferred follow-ups live in `docs/TODO.md` under Science Page.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
-| 1 | Hero (`ScienceHero`) | State the thesis and promise to prove it | OK | Sets up "how we prove it" |
-| 2 | The Problem (`ScienceDifferent`) | Why most brain products fail | OK | The tension the page resolves |
-| 3 | The Unrealised Natural Solution (`TwoSystemModel`) | Two systems exist in nature (adaptogens = resilience, nootropics = acute), but raw and unoptimised that potential stays on the shelf | OK | Intro reframed to "latent solution"; tees up the realisation (SCRUM-1076) |
-| 4 | The Education (`ScienceEducation`) | How the mechanisms actually work; why dose and quality matter | Strong | Layered disclosure |
-| 5 | The Realised Solution (`RealisedSolution`) | Flow and Clear as the payoff: render-led product cards, a proof strip of citable facts, 3 hero actives folded in per product, soft CTA to each PDP plus an "all 16 actives" link to /ingredients | OK | Shipped SCRUM-1076. Replaced the standalone `ScienceIngredients` catalogue so the products lead and the actives are supporting proof |
-| 6 | The Growing Evidence Base (`EvidenceLadder`) | Four rungs of confidence, framed forward: breadth and depth still compounding | OK | Intro reframed to "growing" (SCRUM-1076) |
-| 7 | Real-World Proof (`AppInsightsCallout`) | Real-user cognitive data; bridge to the app | OK | Link-out, should not pull focus |
+| 1 | Hero (`ScienceHero`) | Answer "does it work?" in the first screen: H1, product render, BLUF passage with the Harlequins result, 4-stat grid, centred Try CONKA CTA, Informed Sport and zero-caffeine trust line, a row of Durham, Cambridge and Exeter logos | Strong | H1 pill echoes the home "why" headline. Mobile order is H1, image, copy |
+| 2 | The Challenge (`ScienceChallenge`) | Fragmented attention, the caffeine crash, unbacked claims, as three cards led by a 2:1 photo with a label pill | OK | Home "why" row 1. The coffee vs CONKA app data was tried here and cut: it did not read as part of the problem |
+| 3 | Nootropics and Adaptogens (`ScienceCategories`) | Two cards led by a strip of three ingredient renders, then answer-first definitions; why nature makes them; link to /ingredients for the research | Strong | Home "why" row 2. An inline per-ingredient research list was tried and cut as a wall of text; /ingredients owns that depth |
+| 4 | How CONKA Works (`ScienceHowItWorks`) | Flow (morning) and Clear (afternoon) as equal cards, four actives each as render tiles with what they do, tracked links to each PDP | OK | Home "why" row 3. No amounts, no per-shot totals |
+| 5 | The Proof (`ScienceProof`) | Harlequins featured (CONKA vs placebo bar), Bristol Bears and Revolut with honest design notes, Exeter in progress, a row of research partner logos | Strong | `#proof` anchor target from the hero |
+| 6 | The Scientists (`SciencePeople`) | Eight named scientists with black-and-white photos, their role and institution; a swipe carousel on mobile, a four-column grid on desktop | OK | Scientists only, founders stay on /our-story. Katekhaye has no institution on record |
+| 7 | We Don't Stop at the Trials (`ScienceMeasure`) | The app test framed as ongoing research every test adds to, phone graphic, test and user counts from `APP_INSIGHTS_TOTALS`, links to /app and /app-insights | OK | Home "why" row 5, framed forward. "Don't take our word for it" was cut because it undercut the trials above |
+| 8 | Close (`ScienceCTA`) | Flow + Clear together, trust lines, Try Flow + Clear CTA, `ReviewedDate` | OK | |
 
-**Weakest link right now:** sections 1 and 2 (Hero, Problem) are the next candidates to sharpen now that the spine resolves into the product payoff. The former weak link, the standalone `ScienceIngredients` catalogue, was dissolved into the product-led `RealisedSolution` cards in SCRUM-1076.
+**Weakest link right now:** the challenge photos are stand-ins sourced for this round; swap for owned photography when it exists. The scientist photos are ~200px deck crops, which caps how large that section can go.
 
 ---
 
