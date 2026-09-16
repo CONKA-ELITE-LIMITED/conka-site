@@ -145,6 +145,18 @@ export const RESEARCH_PARTNERS: ResearchPartner[] = [
 
 export type ChallengeIcon = "notification" | "bolt" | "question";
 
+export interface ChallengeCard {
+  icon: ChallengeIcon;
+  title: string;
+  body: string;
+  /**
+   * Optional photo banner across the top of the card (tmrw studies-card
+   * pattern). Needs problem imagery (notifications, coffee, a supplement
+   * shelf), not product shots: a CONKA bottle would contradict the card.
+   */
+  image?: { src: string; alt: string };
+}
+
 export const SCIENCE_CHALLENGE = {
   heading: "Modern life is quietly dismantling your attention",
   body: "The usual fixes make it worse. Here is what gets in the way of a sharp mind, and why caffeine is not the answer.",
@@ -164,7 +176,7 @@ export const SCIENCE_CHALLENGE = {
       title: "Claims with nothing under them",
       body: "Most brain products make big promises with no study behind them and no way for you to check.",
     },
-  ] satisfies { icon: ChallengeIcon; title: string; body: string }[],
+  ] satisfies ChallengeCard[],
 } as const;
 
 // ===== WHAT ARE NOOTROPICS AND ADAPTOGENS (SCRUM-1352) =====

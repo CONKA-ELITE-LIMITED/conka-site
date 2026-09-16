@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { SCIENCE_HERO } from "@/app/lib/scienceContent";
 import {
-  TrustIconInformedSport,
   TrustIconNoCaffeine,
   TrustIconUniversity,
 } from "@/app/components/landing/icons";
@@ -21,8 +20,9 @@ import ScienceCtaButton from "./ScienceCtaButton";
  * the image spans both rows of column two.
  * ========================================================================== */
 
-const TRUST_ITEMS = [
-  { label: "Informed Sport certified", Icon: TrustIconInformedSport },
+// Informed Sport uses its real certification mark: a recognised logo carries
+// more weight than a drawn shield. The other two have no mark to show.
+const TRUST_ICONS = [
   { label: "Zero caffeine", Icon: TrustIconNoCaffeine },
   { label: "Durham, Cambridge and Exeter research", Icon: TrustIconUniversity },
 ];
@@ -91,8 +91,18 @@ export default function ScienceHero() {
           </a>
         </div>
 
-        <ul className="flex flex-wrap gap-x-5 gap-y-2">
-          {TRUST_ITEMS.map(({ label, Icon }) => (
+        <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <li className="flex items-center gap-2 text-sm text-black">
+            <Image
+              src="/science/logos/InformedSport.png"
+              alt=""
+              width={257}
+              height={316}
+              className="h-7 w-auto shrink-0"
+            />
+            Informed Sport certified
+          </li>
+          {TRUST_ICONS.map(({ label, Icon }) => (
             <li key={label} className="flex items-center gap-2 text-sm text-black">
               <Icon className="h-[18px] w-[18px] shrink-0 text-[var(--brand-navy)]" />
               {label}
