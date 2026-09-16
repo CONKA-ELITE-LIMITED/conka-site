@@ -29,7 +29,7 @@ import {
  *    trials follow at lower weight, each with an honest note on what its
  *    design can and cannot show.
  *  - Depth layer: how the trial was run, behind a native <details>. Research
- *    partners sit below the trials, always visible.
+ *    partner logos sit below the trials, always visible.
  *    Closed <details> content is still in the server-rendered HTML, so the
  *    detail stays indexable and quotable without any client JS.
  *
@@ -231,29 +231,25 @@ export default function ScienceProof() {
         </p>
       </article>
 
-      {/* Research partners: visible, not behind a disclosure */}
+      {/* Research partners: logos only. The logo PNGs carry transparent padding
+          (200x150 canvas), so each sits in a 4:3 box sized to the column rather
+          than a fixed height, which rendered them tiny. */}
       <div>
         <h3 className="mb-4 text-xl font-bold leading-tight text-black">Our research partners</h3>
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <ul className="grid max-w-[40rem] grid-cols-3 items-center gap-4">
           {RESEARCH_PARTNERS.map((partner) => (
-            <li key={partner.name} className="rounded-md bg-[#eef0f5] p-5 text-black">
-              <div className="relative mb-4 h-10 w-full max-w-[160px]">
-                <Image
-                  src={partner.logo}
-                  alt={partner.name}
-                  fill
-                  loading="lazy"
-                  sizes="160px"
-                  className="object-contain object-left"
-                />
-              </div>
-              <p className="text-base leading-snug text-black">{partner.role}</p>
+            <li key={partner.name} className="relative aspect-[4/3] w-full">
+              <Image
+                src={partner.logo}
+                alt={partner.name}
+                fill
+                loading="lazy"
+                sizes="(min-width: 1024px) 200px, 30vw"
+                className="object-contain"
+              />
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-sm text-black/70">
-          The CONKA formulation is protected by UK patent GB2620279.
-        </p>
       </div>
 
       <p className="mt-6 text-base text-black">

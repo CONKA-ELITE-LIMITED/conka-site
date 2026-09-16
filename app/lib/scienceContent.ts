@@ -132,25 +132,12 @@ export const IN_PROGRESS_TRIAL = {
 export interface ResearchPartner {
   name: string;
   logo: string;
-  role: string;
 }
 
 export const RESEARCH_PARTNERS: ResearchPartner[] = [
-  {
-    name: "Durham University",
-    logo: "/logos/UniversityOfDurham.png",
-    role: "Early formulation research (preprint, laboratory model)",
-  },
-  {
-    name: "University of Cambridge",
-    logo: "/logos/UniversityOfCambridge.png",
-    role: "The cognitive test behind the CONKA app",
-  },
-  {
-    name: "University of Exeter",
-    logo: "/logos/UniversityOfExeter.png",
-    role: "Human trial, in write-up",
-  },
+  { name: "Durham University", logo: "/logos/UniversityOfDurham.png" },
+  { name: "University of Cambridge", logo: "/logos/UniversityOfCambridge.png" },
+  { name: "University of Exeter", logo: "/logos/UniversityOfExeter.png" },
 ];
 
 // ===== THE CHALLENGE (SCRUM-1352) =====
