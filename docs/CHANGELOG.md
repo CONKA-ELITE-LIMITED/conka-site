@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | Nav: "CONKA App" is now a single link to /app (desktop) and one tile (mobile) instead of a three-way menu; App Insights and Case Studies are reached from /app buttons and the footer (SCRUM-1361)
 - **2026-09-16** | /app rebuilt as a light Simple DTC page, "See CONKA working": baseline, CONKA, retest loop, restyled live test, trust stats, real results and app features (SCRUM-1361)
 - **2026-09-16** | /app test now adds emails to the Klaviyo list with consent at submit (not after the test), plus test funnel and store click tracking (SCRUM-1360)
 - **2026-09-16** | Hid the Leeds United case studies (Bamford, James, Tanaka) from every case-study surface (SCRUM-1354)

@@ -5,7 +5,7 @@
  * Both NavigationDesktop (dropdowns + Shop mega-menu) and NavigationMobile
  * (overlay groups) consume these constants.
  *
- * IA: Shop (products only) · Science · App · Our Story.
+ * IA: Shop (products only) · Science · CONKA App (flat link) · Our Story.
  * "Why CONKA" is intentionally not in the desktop nav; it lives in the footer
  * and in the mobile Company group. See
  * docs/development/featurePlans/navigation-simplification.md.
@@ -30,7 +30,8 @@ export interface NavProduct {
 export const NAV_PRODUCTS: NavProduct[] = [
   {
     name: "Both (Flow + Clear)",
-    descriptionLong: "The full daily system. Morning focus meets afternoon clarity.",
+    descriptionLong:
+      "The full daily system. Morning focus meets afternoon clarity.",
     tagline: "The Complete Daily Brain Shot System, Morning to Evening",
     badge: "Full day",
     href: "/conka-both",
@@ -39,7 +40,8 @@ export const NAV_PRODUCTS: NavProduct[] = [
   },
   {
     name: "CONKA Flow",
-    descriptionLong: "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
+    descriptionLong:
+      "Morning focus & energy. Rhodiola, Ashwagandha, Lemon Balm.",
     tagline: "The Daily Morning Brain Shot for Sharper, Calmer Focus",
     badge: "Morning",
     href: "/conka-flow",
@@ -48,7 +50,8 @@ export const NAV_PRODUCTS: NavProduct[] = [
   },
   {
     name: "CONKA Clear",
-    descriptionLong: "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",
+    descriptionLong:
+      "Afternoon clarity & recovery. Glutathione, Ginkgo, Alpha GPC.",
     tagline: "The Afternoon Brain Shot That Cuts Through Brain Fog",
     badge: "Afternoon",
     href: "/conka-clarity",
@@ -103,37 +106,19 @@ export const NAV_SCIENCE: NavGroup = {
 };
 
 /**
- * App + proof cluster. Desktop "CONKA App" mega-menu + mobile group heading.
- * `title` drives both surfaces (NavigationDesktop's trigger label and
- * NavigationMobile's group heading), so it is not a desktop-only string.
+ * The CONKA App: a single destination, not a menu. A flat link on desktop and
+ * one product-style tile on mobile. App Insights and Case Studies are reached
+ * from buttons on /app itself and from the footer, so the nav asks for no
+ * extra choice here.
  */
-export const NAV_APP: NavGroup = {
-  title: "CONKA App",
-  links: [
-    {
-      label: "The CONKA App",
-      href: "/app",
-      image: "/app/AppConkaRing.png",
-      imageAlt: "The CONKA app cognitive score ring",
-      imageFit: "contain",
-      description: "Train your brain daily and watch your cognitive score climb.",
-    },
-    {
-      label: "App Insights",
-      href: "/app-insights",
-      image: "/app/AppLongTrends.png",
-      imageAlt: "CONKA app long-term trend charts",
-      imageFit: "contain",
-      description: "Patterns from thousands of cognitive tests, growing with our research.",
-    },
-    {
-      label: "Case Studies",
-      href: "/case-studies",
-      image: "/caseStudies/JoshStanton.jpg",
-      imageAlt: "A CONKA case-study athlete",
-      description: "Real results from athletes and pros.",
-    },
-  ],
+export const NAV_APP: Required<
+  Pick<NavLink, "label" | "href" | "image" | "imageAlt" | "description">
+> = {
+  label: "CONKA App",
+  href: "/app",
+  image: "/app/AppConkaRing.png",
+  imageAlt: "The CONKA app showing a cognitive score",
+  description: "See CONKA working. Free on iOS and Android.",
 };
 
 /** Company cluster. Mobile-only group (on desktop, Our Story is a flat link). */
@@ -146,7 +131,10 @@ export const NAV_COMPANY: NavGroup = {
 };
 
 /** Flat top-level link on desktop. */
-export const NAV_OUR_STORY: NavLink = { label: "Our Story", href: "/our-story" };
+export const NAV_OUR_STORY: NavLink = {
+  label: "Our Story",
+  href: "/our-story",
+};
 
 /**
  * Gradient shared by the desktop header and the Shop mega-menu while Shop is

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import {
   type AthleteData,
   getAthleteById,
@@ -38,25 +38,17 @@ export default function AppV2Results() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-3 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-2xl">
-          <h2
-            className="brand-h2 mb-3 text-black"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            Real people. Real scores.
-          </h2>
-          <p className="text-lg leading-relaxed text-black/75">
-            Baseline to retest, from people who took CONKA and tracked it in the
-            app.
-          </p>
-        </div>
-        <Link
-          href="/case-studies"
-          className="inline-flex min-h-[44px] items-center whitespace-nowrap text-base font-semibold text-[var(--brand-navy)] underline underline-offset-4"
+      <div className="mb-8 max-w-2xl lg:mb-10">
+        <h2
+          className="brand-h2 mb-3 text-black"
+          style={{ letterSpacing: "-0.02em" }}
         >
-          See all case studies
-        </Link>
+          Real people. Real scores.
+        </h2>
+        <p className="text-lg leading-relaxed text-black/75">
+          Baseline to retest, from people who took CONKA and tracked it in the
+          app.
+        </p>
       </div>
 
       <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
@@ -114,6 +106,12 @@ export default function AppV2Results() {
           );
         })}
       </ul>
+
+      <div className="mt-8 flex justify-center lg:mt-10">
+        <ConkaCTAButton href="/case-studies" inverted>
+          See all case studies
+        </ConkaCTAButton>
+      </div>
     </div>
   );
 }

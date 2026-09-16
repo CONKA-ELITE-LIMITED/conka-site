@@ -40,14 +40,14 @@ export default function AppPhoneCard({
     >
       <div className="relative h-[240px] overflow-hidden bg-[#eef0f5] lg:h-[300px]">
         {image.kind === "phone" ? (
-          <div className="absolute left-1/2 top-6 w-[58%] max-w-[240px] -translate-x-1/2">
+          <div className="absolute left-1/2 top-6 w-[42%] max-w-[180px] -translate-x-1/2 lg:top-8">
             <Image
               src={image.src}
               alt={image.alt}
               width={PHONE_WIDTH}
               height={PHONE_HEIGHT}
               loading="lazy"
-              sizes="(min-width: 1024px) 240px, 50vw"
+              sizes="(min-width: 1024px) 180px, 36vw"
               className="h-auto w-full drop-shadow-xl"
             />
           </div>

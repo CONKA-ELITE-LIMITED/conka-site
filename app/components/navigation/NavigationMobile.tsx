@@ -10,7 +10,8 @@ import type { NavProduct } from "./navConfig";
 import type { NavigationMobileProps } from "./types";
 
 // Same IA as desktop, sourced from the shared config (no duplicate links).
-const MENU_GROUPS = [NAV_SCIENCE, NAV_APP, NAV_COMPANY];
+// The CONKA App is not a group: it renders as one tile after the products.
+const MENU_GROUPS = [NAV_SCIENCE, NAV_COMPANY];
 
 // Open motion (SCRUM-1346, classes in brand-base.css): the panel slides in,
 // then each content block rises in, top to bottom, this far apart. The first
@@ -267,13 +268,58 @@ export default function NavigationMobile({
               </div>
             </div>
 
+            {/* The CONKA App: one tile in the product-row style, not a group
+                of choices. */}
+            <div
+              className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
+              style={itemDelay(NAV_PRODUCTS.length)}
+            >
+              <a
+                href={NAV_APP.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="group flex items-center gap-4"
+              >
+                <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-md border border-black/10 bg-[#f5f5f5]">
+                  <Image
+                    src={NAV_APP.image}
+                    alt={NAV_APP.imageAlt}
+                    fill
+                    className="object-contain p-2"
+                    sizes="96px"
+                  />
+                </div>
+                <div className="min-w-0 flex-1 flex flex-col justify-center gap-1.5">
+                  <p className="text-xl font-bold text-black leading-none">
+                    {NAV_APP.label}
+                  </p>
+                  <p className="text-[13px] text-black/80 leading-snug">
+                    {NAV_APP.description}
+                  </p>
+                </div>
+                <svg
+                  aria-hidden
+                  className="text-black shrink-0 self-center transition-transform group-hover:translate-x-0.5"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                >
+                  <polyline points="9 6 15 12 9 18" />
+                </svg>
+              </a>
+            </div>
+
             {/* Categorised groups — compact 2-col grid keeps secondary IA
                 scannable and clearly subordinate to the product rows. */}
             {MENU_GROUPS.map((group, index) => (
               <div
                 key={group.title}
                 className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
-                style={itemDelay(NAV_PRODUCTS.length + index)}
+                style={itemDelay(NAV_PRODUCTS.length + 1 + index)}
               >
                 <p className="text-lg font-bold text-black mb-4">
                   {group.title}
@@ -313,7 +359,7 @@ export default function NavigationMobile({
                 guarantee microcopy. */}
             <div
               className="nav-mobile-item-in px-5 mt-8 pt-8 border-t border-black/10"
-              style={itemDelay(NAV_PRODUCTS.length + MENU_GROUPS.length)}
+              style={itemDelay(NAV_PRODUCTS.length + 1 + MENU_GROUPS.length)}
             >
               <div
                 className="rounded-md p-6 text-center text-white"

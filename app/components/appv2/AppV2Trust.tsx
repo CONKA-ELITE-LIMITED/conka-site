@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 
 /* ============================================================================
@@ -69,13 +69,15 @@ export default function AppV2Trust() {
           concussions ended his playing career, so anyone could see their brain
           measured.
         </p>
-        <Link
-          href="/app-insights"
-          className="inline-flex min-h-[44px] items-center text-base font-semibold text-[var(--brand-navy)] underline underline-offset-4"
-        >
-          {APP_INSIGHTS_TOTALS.tests.toLocaleString("en-GB")} tests from{" "}
-          {APP_INSIGHTS_TOTALS.users} people: see what the data shows
-        </Link>
+        <p className="mb-5 text-base text-black/70">
+          <span className="font-semibold tabular-nums text-black">
+            {APP_INSIGHTS_TOTALS.tests.toLocaleString("en-GB")} tests
+          </span>{" "}
+          from {APP_INSIGHTS_TOTALS.users} people so far.
+        </p>
+        <ConkaCTAButton href="/app-insights" inverted>
+          See the app data
+        </ConkaCTAButton>
       </div>
 
       <dl className="grid grid-cols-2 gap-3">

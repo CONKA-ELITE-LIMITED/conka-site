@@ -9,7 +9,7 @@ export interface NavigationProps {
 }
 
 /** Which desktop mega-menu is open (one at a time), or null. */
-export type NavMenu = "shop" | "science" | "app" | null;
+export type NavMenu = "shop" | "science" | null;
 
 /**
  * Props for NavigationDesktop component
