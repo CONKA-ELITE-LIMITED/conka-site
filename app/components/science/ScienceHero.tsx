@@ -90,7 +90,10 @@ export default function ScienceHero() {
           src="/formulas/labelV2/BothV5.webp"
           alt="CONKA Flow and CONKA Clear bottles side by side"
           fill
-          priority
+          // Eager, not priority: on desktop this is above the fold, but at
+          // 390px it sits below the stats, and a preload there would compete
+          // with the text that is the real mobile LCP.
+          loading="eager"
           sizes="(min-width: 1024px) 45vw, 100vw"
           className="object-cover"
         />

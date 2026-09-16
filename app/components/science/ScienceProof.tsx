@@ -227,7 +227,7 @@ export default function ScienceProof() {
             <ul className="mb-4 space-y-1">
               {trial.supporting.map((stat) => (
                 <li key={stat.label} className="text-sm text-black">
-                  <span className="font-bold tabular-nums">{stat.value}</span> {stat.label.toLowerCase()}
+                  <span className="font-bold tabular-nums">{stat.value}</span> {stat.label}
                 </li>
               ))}
             </ul>
@@ -295,7 +295,7 @@ export default function ScienceProof() {
                   href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}/`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-[44px] shrink-0 items-center text-sm font-semibold text-[var(--brand-navy)] underline-offset-4 hover:underline sm:min-h-0"
+                  className="inline-flex min-h-[44px] shrink-0 items-center text-sm font-semibold text-[var(--brand-navy)] underline-offset-4 hover:underline"
                 >
                   PubMed {ref.pmid} ↗
                 </a>

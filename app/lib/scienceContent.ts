@@ -35,7 +35,7 @@ export const SCIENCE_HERO = {
   body: "CONKA is two daily shots of clinically dosed nootropics and adaptogens, with zero caffeine. This page shows how they work and the trials behind them.",
   stats: [
     { value: "+14.86%", label: "Cognitive performance vs placebo" },
-    { value: "80%", label: "Of tracked athletes improved" },
+    { value: "80%", label: "Of fully tracked athletes improved" },
     { value: "25+", label: "Clinical trials" },
     { value: "£500k+", label: "Invested in research" },
   ] satisfies ScienceStat[],
@@ -54,6 +54,7 @@ export interface TrialCard {
   context: string;
   tags: TrialTag[];
   headline: ScienceStat;
+  /** Rendered inline after the value ("+7.9% cognition..."), so labels start lower case. */
   supporting: ScienceStat[];
   /** One honest line on what the design can and cannot show. */
   note: string;
@@ -96,8 +97,8 @@ export const SUPPORTING_TRIALS: TrialCard[] = [
     ],
     headline: { value: "+19.3%", label: "Focus" },
     supporting: [
-      { value: "+7.9%", label: "Cognition across all tests" },
-      { value: "+3.9%", label: "Processing speed" },
+      { value: "+7.9%", label: "cognition across all tests" },
+      { value: "+3.9%", label: "processing speed" },
     ],
     note: "No placebo group: each player was measured against their own starting scores. Statistically significant across the tests (p < 0.05).",
   },
@@ -110,7 +111,7 @@ export const SUPPORTING_TRIALS: TrialCard[] = [
       { label: "18 days", icon: "duration" },
     ],
     headline: { value: "75%", label: "Improved their cognitive scores" },
-    supporting: [{ value: "20 to 25%", label: "Faster reaction times by the end" }],
+    supporting: [{ value: "20 to 25%", label: "faster reaction times by the end" }],
     note: "A small real-world trial with no placebo group. It is an early signal that the effect carries from elite sport into an ordinary working day.",
   },
 ];
