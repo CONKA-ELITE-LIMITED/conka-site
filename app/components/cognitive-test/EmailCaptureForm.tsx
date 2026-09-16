@@ -62,23 +62,23 @@ export default function EmailCaptureForm({
   const isFormValid = email.trim() !== "" && validateEmail(email) && consent;
 
   return (
-    <div className="flex flex-col h-full text-white">
-      {/* Back link */}
+    <div className="flex h-full flex-col text-black">
       <button
         onClick={onBack}
-        className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 hover:text-white transition-colors mb-6 self-start tabular-nums"
+        className="mb-4 inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-semibold text-black/60 transition-colors hover:text-black"
         type="button"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
+          width="16"
+          height="16"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
-          strokeLinecap="square"
-          strokeLinejoin="miter"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
         >
           <line x1="19" y1="12" x2="5" y2="12" />
           <polyline points="12 19 5 12 12 5" />
@@ -86,29 +86,23 @@ export default function EmailCaptureForm({
         Back
       </button>
 
-      {/* Header */}
       <div className="mb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
-          Step 01 · Email · Before You Begin
-        </p>
         <h3
-          className="brand-h3 text-white mb-2"
+          className="mb-2 text-2xl font-semibold leading-tight"
           style={{ letterSpacing: "-0.02em" }}
         >
-          We&apos;ll send you the full breakdown.
+          Where should we send your results?
         </h3>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/50 tabular-nums">
-          Detailed results · Personal benchmarks · In-app follow-up
+        <p className="text-base leading-relaxed text-black/70">
+          Your score, what it means, and how to track it in the app.
         </p>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-5 flex-1 flex flex-col">
-        {/* Email Input */}
+      <form onSubmit={handleSubmit} className="flex flex-1 flex-col space-y-5">
         <div>
           <label
             htmlFor="email-capture"
-            className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 block mb-2 tabular-nums"
+            className="mb-2 block text-sm font-semibold"
           >
             Email address
           </label>
@@ -121,23 +115,22 @@ export default function EmailCaptureForm({
               setEmail(e.target.value);
               if (emailError) setEmailError("");
             }}
-            className={`w-full border bg-white/[0.08] p-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition-colors ${
-              emailError ? "border-red-400" : "border-white/20 focus:border-white/50"
+            className={`w-full rounded-md border bg-white p-3 text-base text-black placeholder-black/35 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--brand-navy)]/20 ${
+              emailError
+                ? "border-red-500"
+                : "border-black/15 focus:border-[var(--brand-navy)]"
             }`}
             placeholder="you@example.com"
             autoComplete="email"
           />
           {emailError && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-400 mt-2 tabular-nums">
-              {emailError}
-            </p>
+            <p className="mt-2 text-sm text-red-600">{emailError}</p>
           )}
         </div>
 
-        {/* Consent Checkbox */}
         <div>
-          <label className="flex items-start gap-3 cursor-pointer">
-            <div className="flex-shrink-0 mt-0.5">
+          <label className="flex cursor-pointer items-start gap-3">
+            <div className="mt-0.5 flex-shrink-0">
               <input
                 type="checkbox"
                 checked={consent}
@@ -145,14 +138,16 @@ export default function EmailCaptureForm({
                   setConsent(e.target.checked);
                   if (consentError) setConsentError("");
                 }}
-                className="sr-only"
+                className="peer sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors ${
-                  consentError
-                    ? "border-red-400"
-                    : "border-white/30"
-                } ${consent ? "bg-white border-white" : "bg-transparent"}`}
+                className={`flex h-5 w-5 items-center justify-center rounded border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--brand-navy)] peer-focus-visible:ring-offset-2 ${
+                  consentError ? "border-red-500" : "border-black/30"
+                } ${
+                  consent
+                    ? "border-[var(--brand-navy)] bg-[var(--brand-navy)]"
+                    : "bg-white"
+                }`}
               >
                 {consent && (
                   <svg
@@ -161,40 +156,38 @@ export default function EmailCaptureForm({
                     height="14"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="black"
+                    stroke="white"
                     strokeWidth="3"
-                    strokeLinecap="square"
-                    strokeLinejoin="miter"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
                   >
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
               </div>
             </div>
-            <span className="text-sm text-white/75 leading-relaxed">
+            <span className="text-sm leading-relaxed text-black/75">
               Email me my results and news from CONKA. Unsubscribe anytime.
             </span>
           </label>
           {consentError && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-400 mt-2 ml-8 tabular-nums">
-              {consentError}
-            </p>
+            <p className="ml-8 mt-2 text-sm text-red-600">{consentError}</p>
           )}
         </div>
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={!isFormValid}
-          className={`inline-flex items-center justify-center gap-3 w-full bg-white text-black font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-6 py-4 lab-clip-tr transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 ${
-            !isFormValid ? "opacity-40 cursor-not-allowed" : "hover:opacity-85 active:opacity-70"
+          className={`inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[var(--brand-navy)] px-6 py-3.5 text-base font-semibold text-white transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navy)] focus-visible:ring-offset-2 ${
+            !isFormValid
+              ? "cursor-not-allowed opacity-40"
+              : "hover:opacity-90 active:opacity-80"
           }`}
         >
-          <span>Continue to game</span>
-          <span aria-hidden>↗</span>
+          Start the test
         </button>
       </form>
     </div>

@@ -1,0 +1,118 @@
+import Image from "next/image";
+import Link from "next/link";
+import {
+  type AthleteData,
+  getAthleteById,
+  getCaseStudyPhotoPath,
+} from "@/app/lib/caseStudiesData";
+
+/* ============================================================================
+ * AppV2Results (SCRUM-1361, Simple DTC)
+ *
+ * The loop, proven on real people: each card shows a baseline score, the
+ * latest score and the gain, the same numbers the app shows. Data comes from
+ * caseStudiesData so it always matches /case-studies; an id that is removed or
+ * hidden there simply drops out here.
+ *
+ * Testing periods run months, not a fixed 30 days, so the copy says "baseline
+ * to retest" rather than promising a timeframe. Two across on mobile, four on
+ * desktop. Content-only; the page owns the section.
+ * ========================================================================== */
+
+const ATHLETE_IDS = [
+  "jade-shekells",
+  "finn-russell",
+  "nimisha-kurup",
+  "jack-willis",
+];
+
+function totalScoreGain(athlete: AthleteData): string | undefined {
+  return athlete.improvements.find((i) => i.metric === "Total Score")?.value;
+}
+
+export default function AppV2Results() {
+  const athletes = ATHLETE_IDS.map(getAthleteById).filter(
+    (a): a is AthleteData => a !== undefined,
+  );
+
+  return (
+    <div>
+      <div className="mb-8 flex flex-col gap-3 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-2xl">
+          <h2
+            className="brand-h2 mb-3 text-black"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            Real people. Real scores.
+          </h2>
+          <p className="text-lg leading-relaxed text-black/75">
+            Baseline to retest, from people who took CONKA and tracked it in the
+            app.
+          </p>
+        </div>
+        <Link
+          href="/case-studies"
+          className="inline-flex min-h-[44px] items-center whitespace-nowrap text-base font-semibold text-[var(--brand-navy)] underline underline-offset-4"
+        >
+          See all case studies
+        </Link>
+      </div>
+
+      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
+        {athletes.map((athlete) => {
+          const photo = getCaseStudyPhotoPath(athlete.id) || athlete.photo;
+          const focal = athlete.focalPoint ?? { x: 50, y: 50 };
+          const gain = totalScoreGain(athlete);
+          const before = athlete.baseline.totalScore;
+          const after = athlete.results.totalScore;
+
+          return (
+            <li
+              key={athlete.id}
+              className="flex flex-col overflow-hidden rounded-lg bg-white text-black ring-1 ring-black/[0.06]"
+            >
+              {photo && (
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src={photo}
+                    alt={athlete.name}
+                    fill
+                    loading="lazy"
+                    sizes="(min-width: 1024px) 300px, 50vw"
+                    className="object-cover"
+                    style={{ objectPosition: `${focal.x}% ${focal.y}%` }}
+                  />
+                </div>
+              )}
+              <div className="flex flex-1 flex-col p-3 lg:p-5">
+                <p className="text-base font-semibold leading-tight lg:text-lg">
+                  {athlete.name}
+                </p>
+                <p className="mb-3 mt-0.5 text-xs leading-snug text-black/60 lg:text-sm">
+                  {athlete.organization}
+                </p>
+                <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-black/10 pt-3">
+                  {before !== undefined && after !== undefined && (
+                    <p className="text-sm tabular-nums text-black/70 lg:text-base">
+                      {Math.round(before)}
+                      <span aria-hidden> → </span>
+                      <span className="sr-only"> to </span>
+                      <span className="font-bold text-black">
+                        {Math.round(after)}
+                      </span>
+                    </p>
+                  )}
+                  {gain && (
+                    <span className="rounded-full bg-[var(--brand-positive)]/10 px-2 py-0.5 text-xs font-semibold tabular-nums text-[var(--brand-positive)] lg:text-sm">
+                      {gain}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}

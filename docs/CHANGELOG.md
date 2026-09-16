@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | /app rebuilt as a light Simple DTC page, "See CONKA working": baseline, CONKA, retest loop, restyled live test, trust stats, real results and app features (SCRUM-1361)
 - **2026-09-16** | /app test now adds emails to the Klaviyo list with consent at submit (not after the test), plus test funnel and store click tracking (SCRUM-1360)
 - **2026-09-16** | Hid the Leeds United case studies (Bamford, James, Tanaka) from every case-study surface (SCRUM-1354)
 - **2026-09-16** | /science: the university logos sit on one balanced row at every width (hero and trials), and section subheadings and hero copy are larger (SCRUM-1351)

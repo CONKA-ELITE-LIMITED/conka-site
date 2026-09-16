@@ -10,7 +10,7 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
  *
  * Row 5 of the home "why" accordion, framed forward: the research does not end
  * at the trials, and every app test adds to it. Takes the place of
- * AppInsightsCallout on /science only; that component stays on /app.
+ * AppInsightsCallout on /science only.
  *
  * Mobile order is heading, phone graphic, then copy and CTAs. Desktop puts the
  * graphic in its own column spanning both rows. Counts read from

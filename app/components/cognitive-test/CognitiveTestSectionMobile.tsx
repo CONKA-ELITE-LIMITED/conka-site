@@ -14,44 +14,12 @@ import CognitiveTestLoader from "./CognitiveTestLoader";
 import CognitiveTestScores from "./CognitiveTestScores";
 import CognitiveTestRecommendation from "./CognitiveTestRecommendation";
 import CognitiveTestAppPromo from "./CognitiveTestAppPromo";
-import {
-  trackCognitiveTest,
-  subscribeAppTestSignup,
-} from "@/app/lib/klaviyo";
+import { trackCognitiveTest, subscribeAppTestSignup } from "@/app/lib/klaviyo";
 import {
   trackAppTestClicked,
   trackAppEmailSubmitted,
   trackAppResultsViewed,
 } from "@/app/lib/analytics";
-
-const BENEFIT_SPECS_MOBILE: { label: string; value: string; note: string }[] = [
-  { label: "Validation", value: "Clinical", note: "Cambridge" },
-  { label: "Results", value: "~ 30s", note: "Instant" },
-  { label: "Profile", value: "Personal", note: "Benchmarked" },
-];
-
-function BenefitsSpecStripMobile() {
-  return (
-    <div className="grid grid-cols-3 gap-0 border border-white/12 bg-white/10 mt-6">
-      {BENEFIT_SPECS_MOBILE.map((b, i) => (
-        <div
-          key={b.label}
-          className={`p-3 ${i < BENEFIT_SPECS_MOBILE.length - 1 ? "border-r border-white/10" : ""}`}
-        >
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-            {b.label}
-          </p>
-          <p className="font-mono text-base font-bold tabular-nums text-white mt-2 leading-none">
-            {b.value}
-          </p>
-          <p className="font-mono text-[8px] text-white/50 mt-2 leading-tight tabular-nums">
-            {b.note}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function CognitiveTestSectionMobile({
   className = "",
@@ -115,83 +83,48 @@ export default function CognitiveTestSectionMobile({
 
   return (
     <div className={className}>
-      {/* Header */}
-      <div className="mb-6">
+      <div className="mb-8 max-w-2xl">
         <h2
           id="cognitive-test-heading"
-          className="brand-h2 max-w-[24ch]"
-          style={{ letterSpacing: "-0.02em", color: "#ffffff" }}
+          className="brand-h2 mb-3 text-black"
+          style={{ letterSpacing: "-0.02em" }}
         >
-          Measure your cognitive performance.
+          Get your baseline now.
         </h2>
+        <p className="text-lg leading-relaxed text-black/75">
+          Try a short version of the CONKA test right here. It takes about 30
+          seconds, and we will email you your results.
+        </p>
       </div>
 
-      {/* Content Area */}
       <div className="flex flex-col">
         {testState === "idle" && (
           <div className="w-full">
             <CognitiveTestIdleCard onStart={handleStartTest} />
-            <BenefitsSpecStripMobile />
           </div>
         )}
 
         {testState === "email" && (
-          <div className="w-full">
-            <div className="bg-white/10 border border-white/12 p-5">
-              <EmailCaptureForm
-                onSubmit={handleEmailSubmit}
-                onBack={handleBackToIdle}
-              />
-            </div>
-            <BenefitsSpecStripMobile />
+          <div className="w-full rounded-lg bg-[#eef0f5] p-5 text-black lg:p-10">
+            <EmailCaptureForm
+              onSubmit={handleEmailSubmit}
+              onBack={handleBackToIdle}
+            />
           </div>
         )}
 
         {testState === "testing" && (
           <div className="w-full">
-            <div className="flex items-center justify-between border border-white/12 border-b-0 bg-white/10 px-3 py-2">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums">
-                Fig. 07 · SDK
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white tabular-nums flex items-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 bg-white animate-pulse" />
-                Live
-              </p>
-            </div>
-
-            <div className="min-h-[500px] overflow-hidden border border-white/12 bg-[#111111]">
+            <div className="min-h-[500px] overflow-hidden rounded-lg bg-[#111111] ring-1 ring-black/10">
               <CognicaSDK
                 onComplete={handleTestComplete}
                 subjectId={subjectId}
               />
             </div>
-
-            <div className="grid grid-cols-3 gap-0 border border-white/12 border-t-0 bg-white/10">
-              <div className="p-3 border-r border-white/10">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-                  Animals
-                </p>
-                <p className="font-mono text-xs font-bold tabular-nums text-white mt-2 leading-none">
-                  Tap right
-                </p>
-              </div>
-              <div className="p-3 border-r border-white/10">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-                  Else
-                </p>
-                <p className="font-mono text-xs font-bold tabular-nums text-white mt-2 leading-none">
-                  Tap left
-                </p>
-              </div>
-              <div className="p-3">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-                  Scored
-                </p>
-                <p className="font-mono text-xs font-bold tabular-nums text-white mt-2 leading-none">
-                  Speed + Acc.
-                </p>
-              </div>
-            </div>
+            <p className="mt-3 text-sm text-black/70">
+              Tap right when you see an animal, and left for anything else.
+              Scored on speed and accuracy.
+            </p>
           </div>
         )}
 
@@ -202,22 +135,19 @@ export default function CognitiveTestSectionMobile({
         )}
 
         {testState === "results" && testResult && (
-          <div className="w-full space-y-4">
+          <div className="w-full space-y-4 lg:space-y-5">
             <CognitiveTestScores
               result={testResult}
               email={emailSubmission?.email}
             />
             <CognitiveTestRecommendation result={testResult} />
             <CognitiveTestAppPromo />
-            <div className="flex justify-start">
-              <button
-                onClick={handleRetakeTest}
-                className="inline-flex items-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-              >
-                <span>Play again</span>
-                <span aria-hidden>↻</span>
-              </button>
-            </div>
+            <button
+              onClick={handleRetakeTest}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-[var(--brand-navy)] px-6 text-base font-semibold text-[var(--brand-navy)] transition-colors hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navy)] focus-visible:ring-offset-2"
+            >
+              Play again
+            </button>
           </div>
         )}
       </div>

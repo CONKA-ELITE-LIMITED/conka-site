@@ -110,6 +110,7 @@ export default function AppV2Hero() {
       <AppInstallButtons
         variant="dtc"
         trackLocation="hero"
+        buttonClassName="min-h-[44px]"
         className="order-4 justify-center md:order-3"
       />
     </div>

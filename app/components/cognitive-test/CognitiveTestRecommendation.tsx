@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 import type { CognitiveTestRecommendationProps } from "./types";
 
 /**
@@ -21,7 +23,7 @@ function getRecommendation(accuracy: number, speed: number) {
 
   if (lowAccuracy && lowSpeed) {
     return {
-      eyebrow: "Recommendation · Flow + Clear",
+      eyebrow: "Recommended: Flow + Clear",
       headline: "Both scores have room to move.",
       description:
         "Accuracy comes down to focus and sustained attention, which is what CONKA Flow is built for. Speed comes down to recall and faster thinking, which is what CONKA Clear is built for. Together they cover both halves of the test you just took.",
@@ -30,7 +32,7 @@ function getRecommendation(accuracy: number, speed: number) {
 
   if (lowAccuracy) {
     return {
-      eyebrow: "Recommendation · Flow first",
+      eyebrow: "Recommended: Flow first",
       headline: "Accuracy is where you have the most room.",
       description:
         "Accuracy comes down to focus and sustained attention. That is what CONKA Flow is built for. CONKA Clear covers the other half, recall and faster thinking, so taking both keeps you covered as your scores move.",
@@ -39,7 +41,7 @@ function getRecommendation(accuracy: number, speed: number) {
 
   if (lowSpeed) {
     return {
-      eyebrow: "Recommendation · Clear first",
+      eyebrow: "Recommended: Clear first",
       headline: "Speed is where you have the most room.",
       description:
         "Speed comes down to recall and faster thinking. That is what CONKA Clear is built for. CONKA Flow covers the other half, focus and sustained attention, so taking both keeps you covered as your scores move.",
@@ -47,7 +49,7 @@ function getRecommendation(accuracy: number, speed: number) {
   }
 
   return {
-    eyebrow: "Recommendation · Flow + Clear",
+    eyebrow: "Recommended: Flow + Clear",
     headline: "Strong baseline.",
     description:
       "Both scores are strong. CONKA Flow holds focus and attention, CONKA Clear holds recall and speed. Taking both is how you keep a baseline like this one.",
@@ -60,34 +62,27 @@ export default function CognitiveTestRecommendation({
   const recommendation = getRecommendation(result.accuracy, result.speed);
 
   return (
-    <div className="bg-white/10 border border-white/12 border-l-[3px] border-l-white/40 p-5 lg:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 tabular-nums">
-        {recommendation.eyebrow} · Based on your performance
+    <div className="rounded-lg bg-white p-5 text-black ring-1 ring-black/[0.08] lg:p-7">
+      <p className="mb-2 text-sm font-semibold text-[var(--brand-navy)]">
+        {recommendation.eyebrow}
       </p>
       <h4
-        className="brand-h4 mb-3 max-w-[24ch]"
-        style={{ letterSpacing: "-0.02em", color: "#ffffff" }}
+        className="mb-2 max-w-[28ch] text-xl font-semibold leading-tight"
+        style={{ letterSpacing: "-0.02em" }}
       >
         {recommendation.headline}
       </h4>
-      <p className="text-sm text-white/55 leading-relaxed mb-5 max-w-xl">
+      <p className="mb-6 max-w-xl text-base leading-relaxed text-black/70">
         {recommendation.description}
       </p>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <a
-          href={CTA.href}
-          className="inline-flex items-center justify-center gap-3 bg-white text-black font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-opacity hover:opacity-85 active:opacity-70"
-        >
-          <span>{CTA.text}</span>
-          <span aria-hidden>↗</span>
-        </a>
-        <a
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
+        <ConkaCTAButton href={CTA.href}>{CTA.text}</ConkaCTAButton>
+        <Link
           href="/build-your-order"
-          className="inline-flex items-center justify-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-5 py-3.5 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50"
+          className="inline-flex min-h-[44px] items-center text-base font-semibold text-[var(--brand-navy)] underline underline-offset-4"
         >
-          <span>Get started</span>
-          <span aria-hidden>→</span>
-        </a>
+          Build your order
+        </Link>
       </div>
     </div>
   );

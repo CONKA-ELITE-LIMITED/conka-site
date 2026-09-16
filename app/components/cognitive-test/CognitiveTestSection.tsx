@@ -14,42 +14,19 @@ import CognitiveTestLoader from "./CognitiveTestLoader";
 import CognitiveTestScores from "./CognitiveTestScores";
 import CognitiveTestRecommendation from "./CognitiveTestRecommendation";
 import CognitiveTestAppPromo from "./CognitiveTestAppPromo";
-import {
-  trackCognitiveTest,
-  subscribeAppTestSignup,
-} from "@/app/lib/klaviyo";
+import { trackCognitiveTest, subscribeAppTestSignup } from "@/app/lib/klaviyo";
 import {
   trackAppTestClicked,
   trackAppEmailSubmitted,
   trackAppResultsViewed,
 } from "@/app/lib/analytics";
 
-const BENEFIT_SPECS: { label: string; value: string; note: string }[] = [
-  { label: "Validation", value: "Clinical", note: "Cambridge-derived" },
-  { label: "Results", value: "~ 30s", note: "Instant score" },
-  { label: "Profile", value: "Personal", note: "Benchmarked" },
-];
-
-function BenefitsSpecStrip() {
+/** A keyboard key, for the desktop test instructions. */
+function Key({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-3 gap-0 border border-white/12 bg-white/[0.03] mt-8">
-      {BENEFIT_SPECS.map((b, i) => (
-        <div
-          key={b.label}
-          className={`p-4 ${i < BENEFIT_SPECS.length - 1 ? "border-r border-white/10" : ""}`}
-        >
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-            {b.label}
-          </p>
-          <p className="font-mono text-xl font-bold tabular-nums text-white mt-2 leading-none">
-            {b.value}
-          </p>
-          <p className="font-mono text-[9px] text-white/50 mt-2 leading-tight tabular-nums">
-            {b.note}
-          </p>
-        </div>
-      ))}
-    </div>
+    <kbd className="rounded border border-black/20 bg-white px-1.5 py-0.5 font-mono text-xs text-black">
+      {children}
+    </kbd>
   );
 }
 
@@ -115,56 +92,39 @@ export default function CognitiveTestSection({
 
   return (
     <div className={className}>
-      {/* Header */}
-      <div className="mb-10">
+      <div className="mb-8 max-w-2xl">
         <h2
           id="cognitive-test-heading"
-          className="brand-h2 max-w-[24ch]"
-          style={{ letterSpacing: "-0.02em", color: "#ffffff" }}
+          className="brand-h2 mb-3 text-black"
+          style={{ letterSpacing: "-0.02em" }}
         >
-          Measure your cognitive performance.
+          Get your baseline now.
         </h2>
+        <p className="text-lg leading-relaxed text-black/75">
+          Try a short version of the CONKA test right here. It takes about 30
+          seconds, and we will email you your results.
+        </p>
       </div>
 
-      {/* Content Area - Changes based on state */}
       <div className="flex flex-col items-start">
-        {/* IDLE STATE */}
         {testState === "idle" && (
           <div className="w-full max-w-2xl">
             <CognitiveTestIdleCard onStart={handleStartTest} />
-            <BenefitsSpecStrip />
           </div>
         )}
 
-        {/* EMAIL STATE */}
         {testState === "email" && (
-          <div className="w-full max-w-2xl">
-            <div className="bg-white/10 border border-white/12 p-6 lg:p-10">
-              <EmailCaptureForm
-                onSubmit={handleEmailSubmit}
-                onBack={handleBackToIdle}
-              />
-            </div>
-            <BenefitsSpecStrip />
+          <div className="w-full max-w-2xl rounded-lg bg-[#eef0f5] p-5 text-black lg:p-10">
+            <EmailCaptureForm
+              onSubmit={handleEmailSubmit}
+              onBack={handleBackToIdle}
+            />
           </div>
         )}
 
-        {/* TESTING STATE */}
         {testState === "testing" && (
           <div className="w-full">
-            {/* Top spec bar */}
-            <div className="flex items-center justify-between border border-white/12 border-b-0 bg-white/10 px-4 py-2.5">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 tabular-nums">
-                Fig. 07 · Cognetivity SDK
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white tabular-nums flex items-center gap-2">
-                <span className="inline-block w-1.5 h-1.5 bg-white animate-pulse" />
-                Live session · In progress
-              </p>
-            </div>
-
-            {/* SDK frame */}
-            <div className="relative h-[650px] overflow-hidden border border-white/12 bg-[#111111]">
+            <div className="relative h-[650px] overflow-hidden rounded-lg bg-[#111111] ring-1 ring-black/10">
               <div
                 className="absolute top-0 left-0"
                 style={{
@@ -180,62 +140,33 @@ export default function CognitiveTestSection({
                 />
               </div>
             </div>
-
-            {/* Bottom spec strip */}
-            <div className="grid grid-cols-3 gap-0 border border-white/12 border-t-0 bg-white/10">
-              <div className="p-4 border-r border-white/10">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-                  Animals
-                </p>
-                <p className="font-mono text-sm font-bold tabular-nums text-white mt-2 leading-none">
-                  Press J
-                </p>
-              </div>
-              <div className="p-4 border-r border-white/10">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-                  Anything else
-                </p>
-                <p className="font-mono text-sm font-bold tabular-nums text-white mt-2 leading-none">
-                  Press F
-                </p>
-              </div>
-              <div className="p-4">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40 leading-none">
-                  Scored on
-                </p>
-                <p className="font-mono text-sm font-bold tabular-nums text-white mt-2 leading-none">
-                  Speed + Accuracy
-                </p>
-              </div>
-            </div>
+            <p className="mt-3 text-sm text-black/70">
+              Press <Key>J</Key> when you see an animal and <Key>F</Key> for
+              anything else. Scored on speed and accuracy.
+            </p>
           </div>
         )}
 
-        {/* PROCESSING STATE */}
         {testState === "processing" && (
           <div className="w-full max-w-2xl">
             <CognitiveTestLoader onComplete={handleProcessingComplete} />
           </div>
         )}
 
-        {/* RESULTS STATE */}
         {testState === "results" && testResult && (
-          <div className="w-full max-w-2xl space-y-6">
+          <div className="w-full max-w-2xl space-y-4 lg:space-y-5">
             <CognitiveTestScores
               result={testResult}
               email={emailSubmission?.email}
             />
             <CognitiveTestRecommendation result={testResult} />
             <CognitiveTestAppPromo />
-            <div className="flex justify-start">
-              <button
-                onClick={handleRetakeTest}
-                className="inline-flex items-center gap-3 bg-transparent border border-white/30 text-white font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums px-6 py-4 lab-clip-tr transition-colors hover:bg-white/10 hover:border-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2"
-              >
-                <span>Play again</span>
-                <span aria-hidden>↻</span>
-              </button>
-            </div>
+            <button
+              onClick={handleRetakeTest}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-[var(--brand-navy)] px-6 text-base font-semibold text-[var(--brand-navy)] transition-colors hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navy)] focus-visible:ring-offset-2"
+            >
+              Play again
+            </button>
           </div>
         )}
       </div>
