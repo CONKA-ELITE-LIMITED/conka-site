@@ -80,8 +80,8 @@ Motion is the CSS `Reveal` entrance plus the features section's auto-advance; th
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
-| 1 | Hero (`AppV2Hero`) | "See CONKA working." Store buttons, Oura-style fan of five real app screenshots | OK | Mobile puts the fan under the headline with the outer phones cropped at the screen edges, so the store buttons sit below the fold on a phone |
-| 2 | The loop (`AppV2Loop`) | "Baseline. CONKA. Retest." Day 1 / every day / Day 30 cards, image on top | OK | The heart of the page. Mobile snap carousel with a peek |
+| 1 | Hero (`AppV2Hero`) | "See CONKA working." Store buttons, Oura-style fan of five real app screenshots (three on mobile) | OK | Mobile puts the fan under the headline, so the store buttons sit just below the fold on a phone |
+| 2 | The loop (`AppV2Loop`) | "Baseline. CONKA. Retest." Day 1 / every day / Day 30 cards | OK | The heart of the page. Same flat card anatomy as /science "The challenge": 2:1 banner with a label pill, stacked on mobile |
 | 3 | Get your baseline (`CognitiveTestIsland`) | Live short test behind the email gate, then scores, a Flow + Clear recommendation and an app prompt | Strong | The email capture (SCRUM-1360). Styled around the Cognetivity iframe, which cannot be styled inside |
 | 4 | Trust (`AppV2Trust`) | "A score you can trust." Sourced research stats, Humphrey's origin as one line, "See the app data" button to /app-insights | OK | Placed after the test so the page invites before it lectures |
 | 5 | Real results (`AppV2Results`) | "Real people. Real scores." The score gain leads each card, large and green, with baseline to retest under it; "See all case studies" button | OK | Testing periods run months, so no fixed-timeframe claim |
