@@ -22,7 +22,7 @@ export default function ScienceHowItWorks() {
     <div>
       <div className="mb-8 max-w-2xl lg:mb-10">
         <h2
-          className="brand-h2 mb-4 text-black"
+          className="brand-h1 mb-4 text-black"
           style={{ letterSpacing: "-0.02em" }}
         >
           {SCIENCE_HOW_IT_WORKS.heading}

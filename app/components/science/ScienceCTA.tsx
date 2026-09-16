@@ -38,7 +38,7 @@ export default function ScienceCTA() {
       </div>
 
       <div className="flex flex-col justify-center p-6 lg:p-12">
-        <h2 className="brand-h2 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
+        <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {SCIENCE_CTA.heading}
         </h2>
         <p className="mb-6 max-w-[48ch] text-base leading-relaxed text-black">

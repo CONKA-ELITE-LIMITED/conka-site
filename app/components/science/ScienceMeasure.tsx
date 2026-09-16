@@ -22,7 +22,7 @@ export default function ScienceMeasure() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-x-12 lg:gap-y-0">
       <h2
-        className="brand-h2 text-black lg:col-start-1 lg:row-start-1 lg:mb-4 lg:self-end"
+        className="brand-h1 text-black lg:col-start-1 lg:row-start-1 lg:mb-4 lg:self-end"
         style={{ letterSpacing: "-0.02em" }}
       >
         {SCIENCE_MEASURE.heading}

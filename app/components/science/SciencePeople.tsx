@@ -25,7 +25,7 @@ export default function SciencePeople() {
   return (
     <div>
       <div className="mb-8 max-w-2xl lg:mb-10">
-        <h2 className="brand-h2 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
+        <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           {SCIENCE_PEOPLE_INTRO.heading}
         </h2>
         <p className="text-base leading-relaxed text-black/80">{SCIENCE_PEOPLE_INTRO.body}</p>

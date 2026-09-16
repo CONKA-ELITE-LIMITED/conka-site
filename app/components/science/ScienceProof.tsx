@@ -5,7 +5,7 @@ import {
   FEATURED_TRIAL,
   SUPPORTING_TRIALS,
   IN_PROGRESS_TRIAL,
-  RESEARCH_PARTNERS,
+  UNIVERSITY_LOGOS,
   type TrialIcon,
   type TrialTag,
 } from "@/app/lib/scienceContent";
@@ -123,7 +123,7 @@ export default function ScienceProof() {
   return (
     <div>
       <div className="mb-8 max-w-2xl lg:mb-10">
-        <h2 className="brand-h2 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
+        <h2 className="brand-h1 mb-4 text-black" style={{ letterSpacing: "-0.02em" }}>
           Proven against placebo, not just promised
         </h2>
         <p className="text-base leading-relaxed text-black/80">
@@ -231,21 +231,19 @@ export default function ScienceProof() {
         </p>
       </article>
 
-      {/* Research partners: logos only. The logo PNGs carry transparent padding
-          (200x150 canvas), so each sits in a 4:3 box sized to the column rather
-          than a fixed height, which rendered them tiny. */}
+      {/* Research partners: logos only, from the same trimmed marks as the hero row. */}
       <div>
         <h3 className="mb-4 text-xl font-bold leading-tight text-black">Our research partners</h3>
-        <ul className="grid max-w-[40rem] grid-cols-3 items-center gap-4">
-          {RESEARCH_PARTNERS.map((partner) => (
-            <li key={partner.name} className="relative aspect-[4/3] w-full">
+        <ul className="flex flex-wrap items-center gap-x-10 gap-y-5">
+          {UNIVERSITY_LOGOS.map((logo) => (
+            <li key={logo.name}>
               <Image
-                src={partner.logo}
-                alt={partner.name}
-                fill
+                src={logo.src}
+                alt={logo.name}
+                width={logo.width}
+                height={logo.height}
                 loading="lazy"
-                sizes="(min-width: 1024px) 200px, 30vw"
-                className="object-contain"
+                className="h-10 w-auto lg:h-12"
               />
             </li>
           ))}

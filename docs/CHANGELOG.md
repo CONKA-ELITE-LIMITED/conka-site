@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | /science section titles step up to the H1 size, matching the home why section (SCRUM-1351)
 - **2026-09-16** | /science: challenge cards lead with photos and label pills (notifications, a crash at the desk, supplements), the hero gains a row of Durham, Cambridge and Exeter logos, and scientist cards go back to text institutions (SCRUM-1351, SCRUM-1352, SCRUM-1353)
 - **2026-09-16** | /science hero trust row uses the real Informed Sport logo, and the challenge cards can now carry a photo banner, pending problem imagery (SCRUM-1352)
 - **2026-09-16** | /science polish: hero stats centred in their tiles, the nootropic and adaptogen timing badges move under the title, scientist cards show university logos, and Dr Tom Sawyer (former CFO, Cognetivity) joins the scientists (SCRUM-1351, SCRUM-1352, SCRUM-1353)

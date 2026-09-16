@@ -42,8 +42,9 @@ export const SCIENCE_HERO = {
 } as const;
 
 /**
- * University partner logos for the hero row: marks trimmed of their transparent
- * padding (public/science/logos), with intrinsic sizes for next/image.
+ * University partner logos, shown in the hero and under the trials: marks
+ * trimmed of their transparent padding (public/science/logos), with intrinsic
+ * sizes for next/image.
  */
 export const UNIVERSITY_LOGOS = [
   { name: "Durham University", src: "/science/logos/UniversityOfDurham.png", width: 160, height: 72 },
@@ -138,17 +139,6 @@ export const IN_PROGRESS_TRIAL = {
   ] satisfies TrialTag[],
   body: "Measuring attention, processing speed and short-term memory three times a week through the CONKA app. The trial is in write-up, and we will share the results once they are peer-reviewed and published.",
 } as const;
-
-export interface ResearchPartner {
-  name: string;
-  logo: string;
-}
-
-export const RESEARCH_PARTNERS: ResearchPartner[] = [
-  { name: "Durham University", logo: "/logos/UniversityOfDurham.png" },
-  { name: "University of Cambridge", logo: "/logos/UniversityOfCambridge.png" },
-  { name: "University of Exeter", logo: "/logos/UniversityOfExeter.png" },
-];
 
 // ===== THE CHALLENGE (SCRUM-1352) =====
 // Mirrors row 1 of the home "why" accordion (homeWhyContent.ts).
