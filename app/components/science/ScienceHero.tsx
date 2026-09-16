@@ -67,7 +67,7 @@ export default function ScienceHero() {
             // number on top visually.
             <div
               key={stat.label}
-              className="flex flex-col-reverse justify-end rounded-md bg-[#eef0f5] px-4 py-4"
+              className="flex flex-col-reverse justify-center rounded-md bg-[#eef0f5] px-3 py-4 text-center"
             >
               <dt className="mt-2 text-sm leading-snug text-black">
                 {stat.label}

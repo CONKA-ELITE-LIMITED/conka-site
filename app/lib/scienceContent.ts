@@ -277,12 +277,24 @@ export const SCIENCE_HOW_IT_WORKS = {
 // research from the team. Institutions checked against university staff
 // profiles (Sept 2026): Vine, O'Malley and Halmai at Exeter, Glassbrook a
 // former Durham postdoc. Katekhaye has no institution on record. Photos are
-// ~200px greyscale square crops, so the section keeps them near that size.
+// greyscale square crops (~200px from the deck, 400px for Sawyer), so the
+// section keeps them near that size.
+
+export type UniversityId = "durham" | "exeter";
+
+/** Trimmed logo marks (transparent padding removed) with intrinsic sizes. */
+export const UNIVERSITY_LOGOS: Record<UniversityId, { name: string; src: string; width: number; height: number }> = {
+  durham: { name: "Durham University", src: "/science/logos/UniversityOfDurham.png", width: 160, height: 72 },
+  exeter: { name: "University of Exeter", src: "/science/logos/UniversityOfExeter.png", width: 159, height: 58 },
+};
 
 export interface SciencePerson {
   name: string;
   role: string;
-  institution?: string;
+  /** University affiliation, rendered as its logo. */
+  university?: UniversityId;
+  /** Non-university affiliation, rendered as text. */
+  organisation?: string;
   photo: string;
 }
 
@@ -292,13 +304,14 @@ export const SCIENCE_PEOPLE_INTRO = {
 } as const;
 
 export const SCIENCE_PEOPLE: SciencePerson[] = [
-  { name: "Prof Karen Hind", role: "Chief Research Officer", institution: "Durham University", photo: "/science/people/karen-hind.webp" },
-  { name: "Prof Paul Chazot", role: "Head of Nutritional Research", institution: "Durham University", photo: "/science/people/paul-chazot.webp" },
-  { name: "Prof Sam Vine", role: "Head of High Performance, leads our Exeter human trial", institution: "University of Exeter", photo: "/science/people/sam-vine.webp" },
-  { name: "Dr Callum O'Malley", role: "Runs our Exeter human trial", institution: "University of Exeter", photo: "/science/people/callum-omally.webp" },
+  { name: "Prof Karen Hind", role: "Chief Research Officer", university: "durham", photo: "/science/people/karen-hind.webp" },
+  { name: "Prof Paul Chazot", role: "Head of Nutritional Research", university: "durham", photo: "/science/people/paul-chazot.webp" },
+  { name: "Prof Sam Vine", role: "Head of High Performance, leads our Exeter human trial", university: "exeter", photo: "/science/people/sam-vine.webp" },
+  { name: "Dr Callum O'Malley", role: "Runs our Exeter human trial", university: "exeter", photo: "/science/people/callum-omally.webp" },
   { name: "Dr Shankar Katekhaye", role: "Formulation scientist, developer of our alcohol-free extraction", photo: "/science/people/shankar-katekhaye.webp" },
-  { name: "Dr Daniel Glassbrook", role: "Early formulation and safety research", institution: "Durham University", photo: "/science/people/daniel-glassbrook.webp" },
-  { name: "Dr Barbara Halmai", role: "Research assistant", institution: "University of Exeter", photo: "/science/people/barbara-halmai.webp" },
+  { name: "Dr Daniel Glassbrook", role: "Early formulation and safety research", university: "durham", photo: "/science/people/daniel-glassbrook.webp" },
+  { name: "Dr Barbara Halmai", role: "Research assistant", university: "exeter", photo: "/science/people/barbara-halmai.webp" },
+  { name: "Dr Tom Sawyer", role: "Former CFO of Cognetivity, makers of an AI cognitive assessment for early dementia screening", organisation: "Cognetivity Neurosciences", photo: "/science/people/tom-sawyer.webp" },
 ];
 
 // ===== MEASURE IT YOURSELF (SCRUM-1352) =====

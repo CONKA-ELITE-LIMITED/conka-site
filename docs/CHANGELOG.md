@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | /science polish: hero stats centred in their tiles, the nootropic and adaptogen timing badges move under the title, scientist cards show university logos, and Dr Tom Sawyer (former CFO, Cognetivity) joins the scientists (SCRUM-1351, SCRUM-1352, SCRUM-1353)
 - **2026-09-16** | /science research partners reduced to a row of Durham, Cambridge and Exeter logos, without the role copy or patent line (SCRUM-1351)
 - **2026-09-16** | /science scientists section: black-and-white photos throughout, and a Nomio-style swipe carousel on mobile with one row on desktop (SCRUM-1353)
 - **2026-09-16** | /science review round: hero and app graphics move up on mobile with centred CTAs, the coffee app stat and the inline ingredient research list are cut (linking to /ingredients instead), nootropic and adaptogen cards and the Flow and Clear actives become ingredient render tiles, research partners are always visible, scientist roles and Exeter and Durham affiliations are filled in, and the app section is reframed as ongoing research (SCRUM-1352, SCRUM-1353)

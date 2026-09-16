@@ -54,7 +54,7 @@ export default function ScienceCategories() {
                       sizes="(min-width: 1024px) 200px, 33vw"
                       className="object-cover"
                     />
-                    <span className="absolute bottom-2 left-2 right-2 w-fit rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold leading-tight text-black sm:text-xs">
+                    <span className="absolute bottom-2 left-2 whitespace-nowrap rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold leading-tight text-black sm:text-xs">
                       {example.name}
                     </span>
                   </li>
@@ -62,19 +62,17 @@ export default function ScienceCategories() {
               </ul>
 
               <div className="flex flex-1 flex-col p-5 lg:p-8">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--brand-navy)] text-white">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <h3 className="text-2xl font-bold leading-tight text-black">
-                      {category.name}
-                    </h3>
-                  </div>
-                  <span className="rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-[var(--brand-navy)]">
-                    {category.timing}
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--brand-navy)] text-white">
+                    <Icon className="h-5 w-5" />
                   </span>
+                  <h3 className="text-2xl font-bold leading-tight text-black">
+                    {category.name}
+                  </h3>
                 </div>
+                <span className="mb-4 w-fit whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-[var(--brand-navy)]">
+                  {category.timing}
+                </span>
                 <p className="mb-3 text-base font-medium leading-relaxed text-black">
                   {category.definition}
                 </p>
