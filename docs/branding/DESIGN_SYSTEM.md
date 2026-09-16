@@ -4,7 +4,7 @@
 > Token implementation: `app/brand-base.css` — the single stylesheet (Layers 1, 2, 2.5, 3).
 > The former `app/premium-base.css` ("Soft-Tech Luxury") has been **deleted**; its still-referenced tokens were folded into `brand-base.css` Layer 3 as `@deprecated`.
 >
-> **Direction:** the forward language is **Simple DTC** (§8.5). **Clinical** (§8) is retained for evidence-dense and `/app` dark surfaces. See the per-surface authority table in §8.5.
+> **Direction:** the forward language is **Simple DTC** (§8.5). **Clinical** (§8) is retained for evidence-dense content and the `/app-insights` dark page. See the per-surface authority table in §8.5.
 
 ---
 
@@ -108,7 +108,7 @@
 | `--brand-radius-container` | `24px` | Image containers, nested surfaces |
 | `--brand-radius-card` | `32px` | Cards, major surfaces, bento cells |
 
-The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-canvas pages (`/app`, `/app-insights`) inherit zero radius because they apply `.brand-clinical` themselves; there is no separate "App Dark" radius rule.
+The Clinical scope (`.brand-clinical`) overrides all three to `0px`. The dark-canvas page (`/app-insights`) inherits zero radius because it applies `.brand-clinical` itself; there is no separate "App Dark" radius rule.
 
 **Simple DTC (§8.5) does not use these tokens.** Its rounded grammar is set with Tailwind utilities (`rounded-md` cards, `rounded-lg` standalone tiles, `rounded-full` pills), so the clinical zeroing never reaches it even on pages that keep `.brand-clinical` for token inheritance (home, the PDPs).
 
@@ -178,11 +178,11 @@ social on a phone. Mobile-first is therefore non-negotiable.
 
 ## 8. Clinical Aesthetic
 
-> The evidence-dense grammar. No longer the global default — the forward direction is **Simple DTC** (§8.5). Clinical is retained for science/evidence-dense modules and the `/app` dark pages (§10). Opt-in via `.brand-clinical` on the page root. See the §8.5 per-surface authority table for which language governs which surface.
+> The evidence-dense grammar. No longer the global default — the forward direction is **Simple DTC** (§8.5). Clinical is retained for science/evidence-dense modules and the `/app-insights` dark page (§10). Opt-in via `.brand-clinical` on the page root. See the §8.5 per-surface authority table for which language governs which surface.
 >
-> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/ingredients` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app` · `/app-insights`. Note `/start` and `/build-your-order` are NOT clinical — they are Simple DTC (see the §8.5 authority table). The `/account` portal (`/account` + `/login` `/register` `/details` `/orders` `/subscriptions`) dropped the scope in SCRUM-1188 and is now Simple DTC. `/our-story` dropped the scope in SCRUM-1326 and is now Simple DTC. `/science` dropped it in SCRUM-1351. Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
+> Pages currently carrying `.brand-clinical` (grep-verified 2026-07): `/` · `/ingredients` · `/why-conka` · `/case-studies` · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/faq` · `/professionals` (+ `/order`) · `/blog` (+ `[slug]`, `/page`, `/topic`) · `/app-insights`. Note `/start` and `/build-your-order` are NOT clinical — they are Simple DTC (see the §8.5 authority table). The `/account` portal (`/account` + `/login` `/register` `/details` `/orders` `/subscriptions`) dropped the scope in SCRUM-1188 and is now Simple DTC. `/our-story` dropped the scope in SCRUM-1326 and is now Simple DTC. `/science` dropped it in SCRUM-1351. `/app` dropped it in SCRUM-1361. Home and the PDPs keep the scope only for token inheritance (navy accent + `#f5f5f5` tint) while their visible grammar is Simple DTC; radius on those surfaces is set with Tailwind utilities, not the zeroed `--brand-radius-*` tokens.
 >
-> **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app` and `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
+> **The clinical grammar (zero radii, hairline borders, mono labels, eyebrow + heading + sub-line, no shadows, no gradients, navy as interactive-only) applies in both light and dark themes.** This section documents the canonical light-theme palette (black-on-white). Section 10 documents the dark-theme palette (white-opacity on `#0a0a0a`) used by `/app-insights`. Both inherit the same structural grammar; only the colour layer flips.
 >
 > **Restraint first.** Clinical detailing is a tool, not a default. The structural grammar (zero radius, hairline borders, left-alignment, mono for data) applies everywhere. The dense micro-typography (topic codes, counters, spec strips, PMID tags, formula tags) is reserved for surfaces where data density genuinely earns it. Most sections need only an eyebrow, a heading, and clean body copy. When in doubt, leave it out.
 
@@ -498,9 +498,9 @@ Simple DTC is added **alongside** Clinical (§8) and App-Dark (§10), not as a g
 
 | Surface group | Language |
 |---------------|----------|
-| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`, `/conka-both`); landing / funnel / `/go`; top-of-funnel `/professionals`; the logged-in customer portal (`/account/*`, `/login`, `/register`); `/our-story`; `/science` | **Simple DTC** |
+| Cart / nav; home; PDP acquisition (`/conka-flow`, `/conka-clarity`, `/conka-both`); landing / funnel / `/go`; top-of-funnel `/professionals`; the logged-in customer portal (`/account/*`, `/login`, `/register`); `/our-story`; `/science`; `/app` | **Simple DTC** |
 | Evidence-dense modules on the remaining clinical content pages (`/ingredients`, `/why-conka`, `/case-studies`) | **Clinical** (§8) — mono + density earn their place on dense data. `/science` left this row in SCRUM-1351: its evidence density moved into a `<details>` depth layer instead of the visual treatment |
-| `/app`, `/app-insights` dark pages | **App-Dark** (§10) — clinical grammar on a dark canvas |
+| `/app-insights` dark page | **App-Dark** (§10) — clinical grammar on a dark canvas. `/app` left this row in SCRUM-1361 |
 | B2B order/management UIs | Clinical for now (mono data labels aid scanning); convert opportunistically |
 
 Both `/go` listicle renderers are now Simple DTC: `SimpleListicleRenderer` (`mm`) and, as of SCRUM-1189, `ListicleRenderer` (`im8`). The im8 conversion moved its chrome and its ~15 shared `components/landing/*` graphics to the DTC grammar (white canvas, black/navy headings, tokenised navy/tint, DTC radius); graphics shared with other live landers (`CrashChart`, `LaurelBadge`) took an opt-in `variant="dtc"` so their default path (`/lander`, `/start`, home, PDPs) is unchanged.
@@ -570,11 +570,11 @@ Same 4-tier system as section 3: Primary 100% / Secondary 80% / Tertiary 60% / M
 
 ## 10. App Dark Aesthetic
 
-> The dark-canvas pages: `/app` and `/app-insights`. Both apply the clinical grammar from section 8 (zero radii, hairline borders, mono labels, no shadows, no gradients) over a near-black background with a sparse SVG dot grid. Components used only on these pages can apply these styles directly without further design-system justification.
+> The dark-canvas page: `/app-insights`. `/app` used this aesthetic until SCRUM-1361 and is now light Simple DTC. It applies the clinical grammar from section 8 (zero radii, hairline borders, mono labels, no shadows, no gradients) over a near-black background with a sparse SVG dot grid. Components used only on these pages can apply these styles directly without further design-system justification.
 
 ### Scope
 
-Both pages apply `.brand-clinical` for zero radii and navy CTAs, then layer dark surfaces using white-opacity Tailwind utilities applied directly in components. There is no `.brand-app-dark` scope class; the dark theme is `brand-clinical` + a dark background.
+The page applies `.brand-clinical` for zero radii and navy CTAs, then layer dark surfaces using white-opacity Tailwind utilities applied directly in components. There is no `.brand-app-dark` scope class; the dark theme is `brand-clinical` + a dark background.
 
 The page-shell pattern, verbatim from `app/page.tsx` and `app-insights/page.tsx`:
 
@@ -638,7 +638,7 @@ Surfaces, borders, and text on the dark canvas span a continuous ramp rather tha
 
 ### SVG dot grid
 
-`/app` and `/app-insights` both use the same dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see snippet above). Do not introduce a second variant.
+`/app-insights` uses this dot pattern: **2×2px white squares at 24px pitch, `rgba(255,255,255,0.18)` fill**, applied via inline `backgroundImage` on the page-shell `<div>` (see snippet above). Do not introduce a second variant.
 
 ### Variants (brief)
 

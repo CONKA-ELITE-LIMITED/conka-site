@@ -72,25 +72,23 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 
 ## /app
 
-**Audience:** top-to-mid-funnel sceptic, plus the existing customer. The app is free, so the page is not selling a supplement, it is selling belief in measurement. It proves CONKA can be trusted by showing you can measure the thing every other brand only claims.
-**Posture:** show, don't tell. Earn credibility through a real, can't-be-gamed test and real user and athlete data. The CTA is "download / take the test," not "buy." This is a trust-and-proof engine that feeds the funnel and retains buyers.
-**Story arc:** we don't tell you how you feel, we show you -> you cannot improve what you cannot measure -> here is the gold-standard test that can't be gamed -> and around it an engine: everything in (Apple Health, Screen Time), patterns out (what is true for you), down to the millisecond -> try it yourself right now -> here is the clinical and athlete proof, and CONKA moves the number -> the app keeps you testing -> download it free.
+**Audience:** top-to-mid-funnel visitors weighing CONKA, plus the existing customer. The app is free, so the page is not selling a supplement: it sells the app as the way to see CONKA working.
+**Posture:** friendly and light, in the Oura / Bevel spirit (light Simple DTC, real phone screenshots). Invite first, then earn trust, then prove it. The page's jobs, in order: app download, email capture through the live test, then CONKA. It deliberately does not sell "test for life": what matters is the early moments, a baseline, then CONKA, then a retest.
+**Story arc:** see CONKA working -> baseline, CONKA, retest -> get your baseline right here -> a score you can trust -> real people, real scores -> more in the app -> start with your baseline.
 
-The page is GSAP-driven (scroll-scrubbed pinned journey, count-up stats, masked reveals); all motion falls back to static layouts under prefers-reduced-motion and on mobile the journey stacks.
+Motion is the CSS `Reveal` entrance only; the hero is static so its centre phone (the likely LCP element) is not held back.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
-| 1 | Hero (`AppV2Hero`) | State the thesis: "Everyone tells you how you should feel. We show you." Live score ring draws and counts to 92 | OK | The count-up makes the thesis kinetic; same copy as before |
-| 2 | Why / Origin (`AppV2Origin`) | "You cannot improve what you cannot measure." Headline brightens word-by-word on scroll; Humphrey's scan story | OK | Founder credibility; lab reference generalised to "a Neuro Lab" |
-| 3 | How it works (`AppV2TestJourney`) | "The Gold Standard of Cognitive Testing." Pinned 2-beat trust journey (can't be gamed -> 30-day improvement), scroll scrubs the phone screens | OK | Trimmed to two beats; the tracking story moved to the engine section |
-| 4 | The engine (`AppV2Engine`) | "Everything in. Patterns out. Down to the millisecond." Three acts: Apple Health + Screen Time inputs wire into the score, the patterns engine shows what is true for you, per-test forensics and long-term trends | OK | The intelligence/personalisation beat: lab-grade insight without a lab. Connector-line draw on desktop; act 3 uses capability cards (precision, anonymous benchmarks, long-term trends), not personal stats |
-| 5 | Try it (`CognitiveTestIsland`) | "Measure your cognitive performance." Live in-page test, instant benchmarked result | Strong | The most on-thesis moment on the page: it shows instead of telling |
-| 6 | Proof (`AppV2Proof`) | Count-up research stats, explicit product bridge ("The app shows you the number. CONKA moves it.") with equal Flow/Clear links, athlete strip | OK | Closes the loop the science page opens; athletes stand on their own now |
-| 7 | Real-world data (`AppInsightsCallout`) | "Curious what 700+ users actually show?" Bridge to /app-insights | OK | Link-out, should not pull focus |
-| 8 | Habit (`AppV2BeyondTest`) | Compete + Rewards: "A test you'll actually keep taking." | OK | Retention beat placed after proof so it doesn't delay it |
-| 9 | Download (`AppV2Download`) | "Start measuring your brain today." Free, no subscription | OK | Clean conversion layer with decorative scroll-drawn ring |
+| 1 | Hero (`AppV2Hero`) | "See CONKA working." Store buttons, Oura-style fan of five real app screenshots | OK | Mobile puts the fan under the headline with the outer phones cropped at the screen edges, so the store buttons sit below the fold on a phone |
+| 2 | The loop (`AppV2Loop`) | "Baseline. CONKA. Retest." Day 1 / every day / Day 30 cards | OK | The heart of the page. Mobile snap carousel with a peek |
+| 3 | Get your baseline (`CognitiveTestIsland`) | Live short test behind the email gate, then scores, a Flow + Clear recommendation and an app prompt | Strong | The email capture (SCRUM-1360). Styled around the Cognetivity iframe, which cannot be styled inside |
+| 4 | Trust (`AppV2Trust`) | "A score you can trust." Sourced research stats, Humphrey's origin as one line, link to /app-insights | OK | Placed after the test so the page invites before it lectures |
+| 5 | Real results (`AppV2Results`) | "Real people. Real scores." Baseline to retest from case study data | OK | Testing periods run months, so no fixed-timeframe claim |
+| 6 | More in the app (`AppV2Features`) | Patterns, Apple Health, compete with friends | OK | Retention beat |
+| 7 | Download (`AppV2Download`) | "Start with your baseline." Free, no subscription, plus a CONKA link | OK | Store clicks report as `download` |
 
-**Weakest link right now:** unproven, the rebuild shipped June 2026. Watch the pinned journey (section 3) on real devices: pinned scroll sections are the most device-sensitive pattern on the page, and on mobile it falls back to a plain stacked list that has had less design attention than the desktop scrub.
+**Weakest link right now:** unproven, the light rebuild shipped September 2026. Watch the `app:*` funnel (SCRUM-1360) for how many visitors reach the test and store buttons now that the mobile hero leads with the phones rather than the buttons.
 
 ---
 

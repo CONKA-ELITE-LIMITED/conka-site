@@ -1,6 +1,6 @@
 # Motion Guide — GSAP on the CONKA site
 
-How we animate. The shared layer lives in `app/lib/motion.ts`; this doc is the contract for using it. The goal is a consistent, premium motion feel across pages without re-inventing patterns per page. Everything documented here is deployed on `/app`; treat that page as the living reference.
+How we animate. The shared layer lives in `app/lib/motion.ts`; this doc is the contract for using it. The goal is a consistent, premium motion feel across pages without re-inventing patterns per page. `/app` was the original reference page; since its light rebuild (SCRUM-1361) it uses only the CSS `Reveal` entrance. The live GSAP references are now `/our-story`, `/app-insights` and the home `WhatToExpectV2`.
 
 **Scope discipline:** this guide grows only when a pattern actually ships. Do not add speculative helpers.
 
@@ -44,10 +44,9 @@ Mark animated elements with `data-*` attributes (one per group, e.g. `data-engin
 
 | Helper | What it does | Reference usage |
 |--------|--------------|-----------------|
-| `withMotion(setup)` | Runs setup only when motion is allowed (`MOTION_OK` matchMedia) | Every appv2 component |
-| `revealUp(targets, trigger, vars?)` | House entrance: rise 28px + fade, stagger 0.12, at `top 75%` | `AppV2Proof`, `AppV2Engine`, `AppV2BeyondTest` |
-| `countUp(el, target, {decimals, suffix})` | Counts `textContent` 0 → target on entry. Server-render the final value as the element's text | `AppV2Proof` research stats |
-| `drawLines(paths, trigger, opts?)` | Draws stroked SVG paths (each needs `pathLength={1}` in JSX) with staggered delay | `AppV2Engine` act 1 connector fan |
+| `withMotion(setup)` | Runs setup only when motion is allowed (`MOTION_OK` matchMedia) | Every GSAP consumer |
+| `revealUp(targets, trigger, vars?)` | House entrance: rise 28px + fade, stagger 0.12, at `top 75%` | `OurStoryHero`, `StorySection`, `DataReportSection` |
+| `countUp(el, target, {decimals, suffix})` | Counts `textContent` 0 → target on entry. Server-render the final value as the element's text | `/lander` `Measure` |
 | `drawProgress(el, trigger, {axis, start, end, scrub})` | Scroll-scrubbed progress line: scales an element 0 → 1 along `axis`. JSX carries the final state + `origin-top`/`origin-left` class, so reduced-motion sees it fully drawn | `WhatToExpectV2` timeline rail |
 | `scrubBrighten(targets, {dim, start, end, scrub})` | Each target fades `dim` → 1 as its own position scrolls through the viewport. JSX carries full opacity | `WhatToExpectV2` milestone blocks |
 
@@ -59,7 +58,7 @@ There is also `usePrefersReducedMotion()` (`app/hooks/usePrefersReducedMotion.ts
 
 ## Bespoke patterns (copy from the reference, don't abstract yet)
 
-These shipped once; promote them into `motion.ts` only when a second page needs them.
+These shipped once, on the old dark `/app`, and were removed with its light rebuild (SCRUM-1361). Recover the reference implementation from git history (the `app/components/appv2/` files before commit `ca46a700`); promote a pattern into `motion.ts` only when a page needs it again.
 
 | Pattern | What it looks like | Reference |
 |---------|-------------------|-----------|
