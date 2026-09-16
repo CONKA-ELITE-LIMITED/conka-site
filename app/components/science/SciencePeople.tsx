@@ -5,12 +5,17 @@ import { SCIENCE_PEOPLE, SCIENCE_PEOPLE_INTRO } from "@/app/lib/scienceContent";
  * SciencePeople (SCRUM-1353, Simple DTC)
  *
  * Named scientists with faces: the strongest credibility device on comparable
- * science pages. Photo, name, role and (where confirmed) institution.
+ * science pages. Modelled on Nomio's team row: a square black-and-white photo,
+ * the name in bold, then role and institution as plain text, no card chrome.
  *
- * The photos are ~200px crops from the team deck, so they render as fixed
- * 96px thumbnails beside the text rather than full-width card images, which
- * keeps them sharp at 2x. Several are lab shots rather than headshots, so the
- * thumbnails are rounded squares, not circles that would crop the faces.
+ * Below lg it is a native horizontal scroll-snap carousel. The track bleeds to
+ * the screen edge by cancelling the section gutter (1.25rem, then 5vw from md),
+ * and scroll-pl matches it so the first card snaps to the text line rather
+ * than the screen edge. From lg all seven sit in one row.
+ *
+ * The photos are ~200px greyscale crops from the team deck, so cards are
+ * capped at 12rem wide on mobile and ~170px on desktop to keep them near 1:1
+ * device pixels. Higher-resolution originals would allow a bigger layout.
  *
  * Returns nothing for an empty list; the page also skips the section wrapper.
  * ========================================================================== */
@@ -27,29 +32,24 @@ export default function SciencePeople() {
         <p className="text-base leading-relaxed text-black/80">{SCIENCE_PEOPLE_INTRO.body}</p>
       </div>
 
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+      <ul className="scrollbar-hide -mx-5 flex snap-x snap-mandatory scroll-pl-5 gap-4 overflow-x-auto px-5 pb-2 md:-mx-[5vw] md:scroll-pl-[5vw] md:px-[5vw] lg:mx-0 lg:grid lg:snap-none lg:grid-cols-7 lg:overflow-visible lg:px-0 lg:pb-0">
         {SCIENCE_PEOPLE.map((person) => (
-          <li
-            key={person.name}
-            className="flex items-center gap-4 rounded-md bg-white p-4 text-black ring-1 ring-black/5"
-          >
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-md bg-[#eef0f5]">
+          <li key={person.name} className="w-48 shrink-0 snap-start lg:w-auto">
+            <div className="relative aspect-square w-full overflow-hidden rounded-md bg-[#eef0f5]">
               <Image
                 src={person.photo}
                 alt={`Portrait of ${person.name}`}
                 fill
                 loading="lazy"
-                sizes="96px"
+                sizes="(min-width: 1024px) 170px, 192px"
                 className="object-cover"
               />
             </div>
-            <div className="min-w-0">
-              <h3 className="text-lg font-bold leading-tight text-black">{person.name}</h3>
-              <p className="mt-1 text-base leading-snug text-black">{person.role}</p>
-              {person.institution && (
-                <p className="mt-0.5 text-sm text-black/60">{person.institution}</p>
-              )}
-            </div>
+            <h3 className="mt-3 text-base font-bold leading-tight text-black">{person.name}</h3>
+            <p className="mt-1 text-sm leading-snug text-black">{person.role}</p>
+            {person.institution && (
+              <p className="mt-1 text-sm leading-snug text-black/60">{person.institution}</p>
+            )}
           </li>
         ))}
       </ul>

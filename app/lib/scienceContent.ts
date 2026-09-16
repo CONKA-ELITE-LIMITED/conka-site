@@ -289,8 +289,8 @@ export const SCIENCE_HOW_IT_WORKS = {
 // Names, photos and titles from the CONKA deck team slide; roles in our
 // research from the team. Institutions checked against university staff
 // profiles (Sept 2026): Vine, O'Malley and Halmai at Exeter, Glassbrook a
-// former Durham postdoc. Katekhaye has no institution on record. Photos are 200px square crops, so render them no
-// larger than ~100 CSS px.
+// former Durham postdoc. Katekhaye has no institution on record. Photos are
+// ~200px greyscale square crops, so the section keeps them near that size.
 
 export interface SciencePerson {
   name: string;

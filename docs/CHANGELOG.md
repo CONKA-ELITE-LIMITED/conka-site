@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-16** | /science scientists section: black-and-white photos throughout, and a Nomio-style swipe carousel on mobile with one row on desktop (SCRUM-1353)
 - **2026-09-16** | /science review round: hero and app graphics move up on mobile with centred CTAs, the coffee app stat and the inline ingredient research list are cut (linking to /ingredients instead), nootropic and adaptogen cards and the Flow and Clear actives become ingredient render tiles, research partners are always visible, scientist roles and Exeter and Durham affiliations are filled in, and the app section is reframed as ongoing research (SCRUM-1352, SCRUM-1353)
 - **2026-09-16** | /science gains a "The scientists behind CONKA" section: seven named scientists with photos and roles (Hind, Chazot, Vine, Katekhaye, Glassbrook, O'Mally, Halmai), between the trials and the app section (SCRUM-1353)
 - **2026-09-16** | /science middle rebuilt in Simple DTC: a challenge section with our coffee vs CONKA app data, a plain-English "what are nootropics and adaptogens" explainer with every active's study and dose behind an accordion, equal Flow and Clear cards with tracked PDP links, and a measure-it-yourself app section. The disputed per-shot mg totals are gone (SCRUM-1352)
