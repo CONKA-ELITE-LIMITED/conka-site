@@ -14,9 +14,10 @@ const MENU_GROUPS = [NAV_SCIENCE, NAV_APP, NAV_COMPANY];
 
 // Open motion (SCRUM-1346, classes in brand-base.css): the panel slides in,
 // then each content block rises in, top to bottom, this far apart. The first
-// block waits until the panel is most of the way across.
-const ITEM_DELAY_START_MS = 120;
-const ITEM_STAGGER_MS = 40;
+// block waits until the panel has all but landed, so the slide and the reveal
+// read as two beats; the last block settles about a second after the tap.
+const ITEM_DELAY_START_MS = 260;
+const ITEM_STAGGER_MS = 60;
 // Unmounts a closing menu if animationend never arrives (e.g. a tab
 // backgrounded mid-close). A little over the 200ms slide out.
 const CLOSE_FALLBACK_MS = 300;
