@@ -229,10 +229,10 @@ offer are Evri International and DPD Lite, both DAP (the recipient pays duty).
 
 ### Jira: finish closing SCRUM-1364
 
-The Atlassian connection timed out mid-update on 2026-09-17. SCRUM-1364's description and delivery
-comment landed; the **transition to Done did not**. When the connection works: move SCRUM-1364 to
-Done, and once `docs/min-order-checkout-validation` is merged, drop the "push and merge" line from
-its Current state block. Then delete this entry.
+SCRUM-1364 is Done in Jira, with its delivery comment. The Atlassian connection timed out while
+editing its Current state block (2026-09-17), so it may still list "push and merge branch
+`docs/min-order-checkout-validation`" as open. That branch is merged (PR #506). If the line is
+still there, remove it and set Branch / PR to "merged in PR #506". Then delete this entry.
 
 ### Smaller items
 
