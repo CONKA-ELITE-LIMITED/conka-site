@@ -82,7 +82,7 @@ stock line rather than silently redefining an existing one.
 `210690` covers every CONKA consumable. An HS code classifies what the product *is*, not the
 SKU, so formula, pack size and bundling are all irrelevant to it. **Merch is different**
 (chapter 61/62 for clothing) and must not inherit the food code or a UK origin it does not
-have. See [`../development/featurePlans/international-duties-and-ddp.md`](../development/featurePlans/international-duties-and-ddp.md).
+have. See [`../shipping/DUTIES_AND_DDP.md`](../shipping/DUTIES_AND_DDP.md#hs-codes-and-origin).
 
 ### Inventory
 

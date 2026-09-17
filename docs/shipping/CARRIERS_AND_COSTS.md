@@ -69,7 +69,7 @@ Rate card: `data/dhl-air-and-road-rates-2026.xlsx` (Synergy's DHL account).
   effectively £16 per international parcel at our order values; and a **fuel surcharge** set monthly
   (jet fuel index for air, diesel for road) that applies to freight and to the DTP fee. Whether the
   card's freight figures already include fuel is unverified.
-- Per-lane freight and the margin maths: `docs/development/featurePlans/international-duties-and-ddp.md`.
+- Per-lane freight and the margin maths: `docs/development/featurePlans/archive/international-duties-and-ddp.md`.
 
 ## Bulk orders and pallets
 

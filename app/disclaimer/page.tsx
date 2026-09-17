@@ -219,8 +219,9 @@ export default function DisclaimerPage() {
               </p>
               <p className="mt-3">
                 Orders shipped to the United States are sold on a
-                delivered-at-place basis. Import duties, taxes and customs
-                charges are the responsibility of the recipient. See our{" "}
+                delivered-duty-paid basis. Import duties are calculated and
+                charged at checkout, so there is nothing further to pay on
+                delivery. See our{" "}
                 <Link href="/shipping" className="underline hover:opacity-70">
                   shipping information
                 </Link>{" "}

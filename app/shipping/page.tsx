@@ -52,6 +52,15 @@ export default function ShippingPage() {
                   are calculated and shown at checkout based on your address.
                 </li>
                 <li>European orders have a three box minimum, which is a quarter&apos;s supply.</li>
+                <li>
+                  Orders to Europe and the United States include import duties
+                  and taxes, charged at checkout, so there is nothing to pay on
+                  delivery.
+                </li>
+                <li>
+                  Orders to other countries may be charged import duties, taxes
+                  and a courier fee on delivery.
+                </li>
               </ul>
             </section>
 
