@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Cart, CartLine } from '@/app/lib/shopify';
 import { trackAddToCart } from '@/app/lib/tripleWhale';
-import { trackPurchaseAddToCart, getPurchaseOrigin } from '@/app/lib/analytics';
+import { trackPurchaseAddToCart, getPurchaseOrigin, getTrialPackSeen } from '@/app/lib/analytics';
 import { getAcceptedUpsellOrigin } from '@/app/lib/cartUpsell';
 import { trackMetaAddToCart, toContentId, buildMetaCartAttributes } from '@/app/lib/metaPixel';
 import { extractProductMetadata } from '@/app/lib/productMetadata';
@@ -194,6 +194,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const upsellOrigin = getAcceptedUpsellOrigin();
     if (upsellOrigin) {
       cartAttributes.push({ key: "_upsell", value: upsellOrigin });
+    }
+    // Same pattern again for trial pack exposure: set when this tab loaded the
+    // /go trial pack page, so a PDP order from a trial-pack visitor is filterable.
+    // Trial pack checkouts build their own cart and never pass through here.
+    const trialPackSeen = getTrialPackSeen();
+    if (trialPackSeen) {
+      cartAttributes.push({ key: "_trial_pack_seen", value: trialPackSeen });
     }
 
     let updatedCart: Cart | null = null;

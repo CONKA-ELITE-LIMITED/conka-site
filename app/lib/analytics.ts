@@ -744,6 +744,41 @@ export function getPurchaseOrigin(): string | undefined {
 }
 
 /**
+ * Session-scoped key recording that this tab loaded a /go offer page (the trial
+ * pack), so a later PDP purchase can be told apart from one with no trial-pack
+ * exposure. Same lifetime as LISTICLE_SRC_KEY: this tab only.
+ */
+const TRIAL_PACK_SEEN_KEY = "trial_pack_seen";
+
+/**
+ * Mark this tab as having seen the trial pack page, storing its slug. The page
+ * has no outbound PDP CTAs to carry `?src=`, so it marks the visitor on landing;
+ * the footer's PDP links keep the journey in the same tab.
+ */
+export function markTrialPackSeen(slug: string): void {
+  if (typeof window === "undefined" || !isValidListicleSrc(slug)) return;
+  try {
+    window.sessionStorage.setItem(TRIAL_PACK_SEEN_KEY, slug);
+  } catch {
+    // sessionStorage unavailable (private mode); attribution simply degrades.
+  }
+}
+
+/**
+ * The trial pack slug this tab loaded, if any. Undefined when the visitor never
+ * saw the page in this tab.
+ */
+export function getTrialPackSeen(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const stored = window.sessionStorage.getItem(TRIAL_PACK_SEEN_KEY);
+    return stored && isValidListicleSrc(stored) ? stored : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Get quiz session ID if available
  */
 export function getQuizSessionId(): string | undefined {
