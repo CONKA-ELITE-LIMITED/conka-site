@@ -227,6 +227,13 @@ Not yet confirmed whether Synergy file it. Rules: `docs/shipping/DUTIES_AND_DDP.
 Royal Mail International is unavailable through Synergy with no return date. Sub-2kg options they
 offer are Evri International and DPD Lite, both DAP (the recipient pays duty).
 
+### Jira: finish closing SCRUM-1364
+
+The Atlassian connection timed out mid-update on 2026-09-17. SCRUM-1364's description and delivery
+comment landed; the **transition to Done did not**. When the connection works: move SCRUM-1364 to
+Done, and once `docs/min-order-checkout-validation` is merged, drop the "push and merge" line from
+its Current state block. Then delete this entry.
+
 ### Smaller items
 
 - Confirm COGS per box against a current cost sheet; the DDP margins rest on a stale figure.
