@@ -51,7 +51,10 @@ export default function ShippingPage() {
                   International delivery is available. Options, times, and costs
                   are calculated and shown at checkout based on your address.
                 </li>
-                <li>European orders have a three box minimum, which is a quarter&apos;s supply.</li>
+                <li>
+                  Orders to Europe and the United States have a three box
+                  minimum, which is a quarter&apos;s supply.
+                </li>
                 <li>
                   Import duties and taxes on orders to Europe and the United
                   States are charged at checkout.

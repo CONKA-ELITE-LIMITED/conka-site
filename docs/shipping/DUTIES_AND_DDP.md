@@ -82,8 +82,34 @@ Germany). The USA shows Duties only. Nothing is charged on delivery.
    Shopify gives it Store default as parent, remove the country from International by hand.
 4. **Taxes and duties** on that market: duties on, both displays Show as line item, sales tax left
    alone. Save.
-5. **Test checkout, stopping before payment:** an address in the country shows the DDP method, a
-   Duties line and (for VAT countries) a Taxes line. A DAP country (Canada) still shows no Duties.
+5. **Minimum order:** add the country to the BoomGate rule ([below](#minimum-order-3-boxes)).
+6. **Test checkout, stopping before payment:** an address in the country shows the DDP method, a
+   Duties line and (for VAT countries) a Taxes line, and a 1-box cart is blocked. A DAP country
+   (Canada) still shows no Duties and no block.
+
+### Minimum order (3 boxes)
+
+**Weight bands do not enforce a minimum.** With no band below 5,250 g, a lighter cart should get no
+rate, but Shopify still offers the lowest band (seen on France, Germany and USA checkouts). Why is
+unexplained; Shopify's docs say it should not happen.
+
+**The minimum is a checkout validation rule in the BoomGate app** (Apps, BoomGate, Checkout
+Validations). It blocks checkout, including Shop Pay and other express checkouts, with a message:
+
+| Condition | Value |
+|---|---|
+| Checkout ISO country | One of: every DDP country (the `france`, `Europe` and USA zones) |
+| Cart total weight | Less than 5,250 g (product weight, so 3 boxes at 6,300 g passes) |
+| Run validation on cart | Off (the country is only known at checkout) |
+| Message | "Orders to your country need at least 3 boxes. Please choose a quarterly plan to continue." One field per checkout language (EN, FR, ES); a blank language may show no text |
+
+- **It keys on checkout country, not the typed shipping address.** BoomGate cannot combine address
+  country with cart weight in one rule. Checkout country follows the address in practice, because
+  our headless cart sets no country and checkout switches market when the address changes.
+- **It blocks everything light to those countries**, including the trial pack and monthly plans.
+  Subscription renewals are not checked (Shopify does not run validation on them).
+- **It runs on BoomGate's free plan (one rule).** Uninstalling the app removes the minimum.
+- DAP countries have no minimum: their Evri bands start at 1 box and cover cost.
 
 ### Gotchas
 
@@ -94,8 +120,6 @@ Germany). The USA shows Duties only. Nothing is charged on delivery.
   Skio creates renewal orders outside it. On every DDP renewal the duty and VAT are our cost. The
   checkout's "Recurring subtotal" is the product price only.
 - **The duties preview in admin uses dummy figures.** Prove a change with a real test checkout.
-- **Weight bands do not enforce the 3-box minimum.** A lighter cart checks out at the lowest band:
-  SCRUM-1364.
 
 ## EU rules
 
