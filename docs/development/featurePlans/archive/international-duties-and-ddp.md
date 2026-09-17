@@ -1,3 +1,9 @@
+> **ARCHIVED (2026-09-17).** Delivered. Ticket: SCRUM-1204. DDP and duty collection at checkout
+> are live for France, the `Europe` zone and the USA. Canonical doc: `docs/shipping/DUTIES_AND_DDP.md`.
+> Kept for the reasoning, costs, margins and rejected options, not for current behaviour. Its
+> unfinished items now live in SCRUM-1204 (open follow-ups), SCRUM-1340, SCRUM-1364 and
+> `docs/TODO.md` (International shipping).
+
 # International Duties, DDP and the Move to DHL
 
 **Status:** DECIDED, Europe in build. Synergy confirmed 10 Sept 2026 and were given the

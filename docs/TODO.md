@@ -199,6 +199,42 @@ The exposure is wider than new signups. The account portal's product swap resolv
 
 ---
 
+## International shipping
+
+Left over from the DDP switch (SCRUM-1204). How it works now: `docs/shipping/`. Costs and margins
+behind each item: `docs/development/featurePlans/archive/international-duties-and-ddp.md`.
+
+### Rest of world stays DAP on Evri
+
+Canada, Australia, New Zealand, South Africa, the UAE and the Caribbean still ship
+`Express International` with duty paid at the door. Moving any of them to DDP means the "Adding a
+country to DDP" steps in `docs/shipping/DUTIES_AND_DDP.md`, and at current prices most lanes cannot
+carry DHL's cost. **UAE is the worst lane** and worth repricing whether or not it moves.
+
+### Evri DDP as a cheaper carrier than DHL
+
+Synergy confirmed (Sept 2026) that their Evri DDP card rate is freight only, with duty and VAT
+passed through at cost on the weekly invoice. That makes it a real DDP option, far cheaper than DHL
+road for Europe and possibly for the USA. Needs a Synergy price per lane and a new mapped method.
+
+### USA: FDA Prior Notice
+
+Supplements need a Prior Notice per shipment, including the manufacturer's FDA registration number.
+Not yet confirmed whether Synergy file it. Rules: `docs/shipping/DUTIES_AND_DDP.md` (USA).
+
+### Low-cost US sample shipping
+
+Royal Mail International is unavailable through Synergy with no return date. Sub-2kg options they
+offer are Evri International and DPD Lite, both DAP (the recipient pays duty).
+
+### Smaller items
+
+- Confirm COGS per box against a current cost sheet; the DDP margins rest on a stale figure.
+- `CONKA-TRAVEL-PACK-28` has no HS code or country of origin.
+- Revisit IOSS only if EU volume grows enough to justify the admin.
+
+---
+
 ## Analytics / Attribution
 
 ### OTP price claims: split presentation needs `getChargedPrice` at every bare-figure site
