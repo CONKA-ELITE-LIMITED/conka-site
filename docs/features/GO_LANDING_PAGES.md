@@ -99,6 +99,7 @@ The Skio side (plans, Journeys): `docs/features/SUBSCRIPTIONS.md`.
 | `app/components/go/offer/OfferPurchase.tsx` | Client islands: selection provider, CTA, buy-once link, gallery, disclosure rows, sticky bar, error line |
 | `app/components/go/offer/OfferCountdownBanner.tsx` / `OfferCountdown.tsx` | Top bar (server) and its ticking timer (client island) |
 | `app/components/go/offer/offerCheckout.ts` | Fresh cart, exact variant + plan, fail-closed plan check, redirect to `checkoutUrl` |
+| `app/components/go/offer/TrialPackSeen.tsx` | Marks the tab on landing so a later site-cart order carries `_trial_pack_seen` (`docs/development/CART_ATTRIBUTES.md`) |
 | `app/components/go/offer/OfferUpsellModal.tsx` | Parked, not rendered. Kept for a possible "skip the trial, start monthly now" |
 
 ### Config

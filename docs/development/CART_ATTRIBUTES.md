@@ -59,6 +59,12 @@ a click. Add a `home_<section>` token for any new home CTA.
 
 The cart also carries `_fbp`, `_fbc` and `conka_uid` as cart attributes. Filter orders on `_purchase` for the trial vs one-time split and on `_offer_choice` for the product split. Only `_purchase=trial` orders become subscribers. How the page works: `docs/features/GO_LANDING_PAGES.md`.
 
+### `_trial_pack_seen`: trial pack visitors who bought on a PDP
+
+Loading the trial pack page writes its slug to `sessionStorage`, and `CartContext` re-attaches it on every site-cart add as the hidden cart attribute `_trial_pack_seen` (value: the slug, e.g. `trial-pack`), the same way `_listicle_origin` rides through. The page has no outbound PDP CTAs, so there is no `?src=` to carry; the footer's PDP links keep the journey in one tab.
+
+An order with `_trial_pack_seen` and no `_source: trial_pack` line = saw the trial pack, bought a regular product instead. Trial pack checkouts build their own cart and never carry it. Same limit as the listicle token: this tab only, so a visitor who returns later in a new tab is not captured. No order tag is written (see the tag bug below).
+
 ---
 
 ## How `source` is determined

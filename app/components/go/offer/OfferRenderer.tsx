@@ -25,6 +25,7 @@ import type {
 import OfferCountdownBanner from "./OfferCountdownBanner";
 import OfferHero from "./OfferHero";
 import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
+import TrialPackSeen from "./TrialPackSeen";
 
 /**
  * /go offer format (SCRUM-1343): the CONKA trial pack page for paid traffic.
@@ -37,7 +38,8 @@ import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
  *
  * Wrapped in the same `brand-clinical` root as the PDPs so the reused parts
  * render exactly as they do there. Views and CTA clicks report through the
- * listicle stream, keyed by slug.
+ * listicle stream, keyed by slug. TrialPackSeen marks the tab so a later PDP
+ * order is attributable to the page.
  */
 
 /**
@@ -110,6 +112,7 @@ export default function OfferRenderer({ config }: { config: OfferConfig }) {
           value={defaultView.price}
           contentName={config.title}
         />
+        <TrialPackSeen slug={config.slug} />
 
         <div className="brand-clinical min-h-screen bg-[var(--brand-white)] text-[var(--brand-black)]">
           {/* No site nav: a paid-traffic page with nothing to click away to.
