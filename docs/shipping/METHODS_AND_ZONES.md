@@ -72,7 +72,8 @@ DHL road, DDP: the customer pays duty and VAT at checkout and nothing on deliver
 
 **The intent is a 3-box minimum, so there is no band below 5,250 g.** DHL road costs the same for
 one box as for four, so a single box loses money, and every monthly variant sits under that line.
-**It is not enforced:** a lighter cart still checks out, priced at the lowest band (SCRUM-1364).
+The bands alone do not block a lighter cart (it still gets the lowest band), so the minimum is
+enforced by a checkout validation rule: [`DUTIES_AND_DDP.md`](./DUTIES_AND_DDP.md#minimum-order-3-boxes).
 Renewals bypass checkout either way, and a monthly European renewal loses about £20 each time.
 
 `Europe` is one zone priced at a middle band. Cheap countries (Ireland, Netherlands, Germany) are
@@ -87,8 +88,8 @@ DHL Express air, DDP, the same model as Europe.
 |---|---|---|
 | `USA` | £59 | £112 |
 
-**No band below 5,250 g, meant as a 3-box minimum, but not enforced** (the same fallback as
-Europe, SCRUM-1364). DHL air costs us
+**3-box minimum**, enforced the same way as Europe (the checkout validation rule, not the bands).
+DHL air costs us
 roughly £99 for 3 boxes and £142 for 6 including the duty fee and fuel, so these prices run at
 about a 10% margin on quarterly bundles. Evri DDP to the US would be materially cheaper if
 Synergy can offer it. US customs and FDA rules: [`DUTIES_AND_DDP.md`](./DUTIES_AND_DDP.md).

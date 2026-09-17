@@ -4,9 +4,8 @@ How CONKA orders get from Synergy's warehouse to the customer: the Shopify shipp
 customer can pick, how Synergy turns a method name into a carrier, what happens at customs, and
 what it all costs us.
 
-**Status of any open shipping work lives in Jira, not here.** Current tickets: SCRUM-1340
-(shipping methods on international subscription contracts), SCRUM-1364 (the 3-box minimum is not
-enforced).
+**Status of any open shipping work lives in Jira, not here.** Current ticket: SCRUM-1340
+(shipping methods on international subscription contracts).
 
 ## Live shipping methods
 
@@ -42,8 +41,9 @@ Band tables per zone: [`METHODS_AND_ZONES.md`](./METHODS_AND_ZONES.md).
    at checkout; a DAP customer pays import tax and a courier fee at the door. Duty collection is
    set per Shopify market, so markets must match the DDP methods
    ([`DUTIES_AND_DDP.md`](./DUTIES_AND_DDP.md#shopify-setup)).
-4. **No self-checkout rate above 6 boxes internationally.** Europe and the USA have no band below
-   3 boxes, but that does not block a lighter cart (SCRUM-1364).
+4. **No self-checkout rate above 6 boxes internationally, and a 3-box minimum to Europe and the
+   USA.** The minimum is a BoomGate checkout validation rule, not the weight bands
+   ([`DUTIES_AND_DDP.md`](./DUTIES_AND_DDP.md#minimum-order-3-boxes)).
 5. **Never change a delivery price while fixing a method name** on a subscription contract.
 
 ## Related
