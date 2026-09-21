@@ -150,15 +150,12 @@ The renewal-vs-acquisition distinction is the one thing the Loop tags were genui
 1. **`checkout_token`** is present on a real checkout and absent on a rebill. This is what the Meta CAPI webhook already gates on, and it is the signal a subscription app cannot fake.
 2. **`app`** on the order names the platform on a rebill (`Loop Subscriptions` historically; expected to be Skio from the first Skio renewal on 1 Oct 2026, unverified until then).
 
-### Known bug: our own tag write is denied
+### Order tags: removed, not broken (2026-09-21)
 
-`addOrderTags()` authenticates with `SHOPIFY_ADMIN_API_TOKEN`, which is the **B2B Invoicing** app (`read/write_draft_orders` + `customers` only). It has no `write_orders`, so every call fails:
+We used to stamp `listicle` + `persona:<name>` tags on listicle orders from the `orders/paid` webhook (SCRUM-1180). **That code is gone.**
 
-```
-[Shopify webhook] Failed to tag order 13430014214518
-Error: tagsAdd failed: Access denied for tagsAdd field.
-```
+It never worked. `addOrderTags()` authenticated with `SHOPIFY_ADMIN_API_TOKEN`, which is the **B2B Invoicing** app (`read/write_draft_orders` + `customers` only). With no `write_orders` scope every call died with `Access denied for tagsAdd field`, so **79 orders between 10 Aug and 2 Sept carried `_listicle_origin` and not one was ever tagged.**
 
-**79 orders between 10 Aug and 2 Sept carry `_listicle_origin`; none was ever tagged.** The persona attribution has produced nothing since it shipped. This predates the Skio cutover and is unrelated to it. Tracked in `docs/TODO.md`.
+Rather than grant a live token `write_orders` to power a filter nobody used, the path was deleted (Rudh, 2026-09-21): `listicleOrderTags()` and the tagging block in the webhook, plus the now-unused `addOrderTags()` in `app/lib/shopifyAdmin.ts`. Recoverable from git history if tag-based filtering is ever genuinely wanted; it would still need a token with `write_orders`, ideally a dedicated app rather than broadening B2B Invoicing's scope.
 
-The attribution itself is fine: `_listicle_origin` lands on every order as a note attribute, so the data is recoverable without the tag. The tag was only ever a convenience for filtering in Shopify admin.
+**Nothing was lost.** The tag was a convenience for filtering Orders in Shopify admin; it was never the attribution. `_listicle_origin` is set by the CART, not the webhook, so it lands on every order regardless: visible in admin under "Additional details", and the field conka-lab's pipeline actually reads (`sanitize.py` filters note attributes and explicitly never tags). Do not build a tag-based report; filter on note attributes.

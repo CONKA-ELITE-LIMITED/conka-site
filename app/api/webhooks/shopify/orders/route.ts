@@ -25,8 +25,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { sendPurchaseToCapi } from "@/app/lib/metaCapi";
-import { addOrderTags } from "@/app/lib/shopifyAdmin";
-import { getLandingConfig } from "@/app/lib/landings";
 
 export const runtime = "nodejs";
 
@@ -120,36 +118,6 @@ function noteAttr(order: ShopifyOrder, name: string): string | undefined {
   return order.note_attributes?.find((a) => a.name === name)?.value || undefined;
 }
 
-/**
- * Derive order tags from a listicle origin token (`<slug>-<section>`, e.g.
- * `brain-ageing-listicle-hero`), carried on the order as the hidden
- * `_listicle_origin` note attribute (see SCRUM-1180).
- *
- * Section ids never contain a hyphen (fixed zones are single words; body ids use
- * `_`, like `reason_3`), so the slug is everything before the LAST hyphen and the
- * persona drops any `-listicle` suffix. Persona-only by design: the finer section
- * stays in Vercel. Returns [] for anything missing or unparseable.
- *
- * LISTICLES ONLY (SCRUM-1381). `_listicle_origin` stopped being listicle-only
- * when the trial pack offer page began stamping it to get its orders onto the
- * dashboard. Without this gate a `trial-pack-hero` origin parses cleanly and
- * tags the order `listicle` + `persona:trial-pack`, which is simply false and
- * would inflate any tag-based listicle reporting. The registry already knows
- * which format each slug is, so the truth is read from there rather than
- * guessed from the name: the general listicle's slug (`why-conka-10rw-v1`)
- * carries no `-listicle` suffix, so a suffix test would drop a real one.
- */
-function listicleOrderTags(origin: string | undefined): string[] {
-  if (!origin) return [];
-  const lastDash = origin.lastIndexOf("-");
-  if (lastDash <= 0) return [];
-  const slug = origin.slice(0, lastDash);
-  if (getLandingConfig(slug)?.format !== "listicle") return [];
-  const persona = slug.replace(/-listicle$/, "");
-  if (!persona) return [];
-  return ["listicle", `persona:${persona}`];
-}
-
 export async function POST(request: NextRequest) {
   const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
   if (!secret) {
@@ -196,23 +164,6 @@ export async function POST(request: NextRequest) {
     if (!order.id || isNaN(value)) {
       // Malformed/incomplete order — acknowledge to avoid retries, send nothing.
       return NextResponse.json({ ok: true, skipped: "invalid_order" }, { status: 200 });
-    }
-
-    // Attribute the order to its originating listicle persona (SCRUM-1180). Its
-    // own try/catch so a tagging failure never blocks the Purchase send, and a
-    // CAPI failure below never skips tagging. tagsAdd is idempotent, so a Shopify
-    // retry re-adding the same tags is a no-op.
-    try {
-      const tags = listicleOrderTags(noteAttr(order, "_listicle_origin"));
-      if (tags.length > 0) {
-        await addOrderTags(order.id, tags);
-        console.log("[Shopify webhook] Tagged order with listicle attribution", {
-          orderId: order.id,
-          tags,
-        });
-      }
-    } catch (tagErr) {
-      console.error("[Shopify webhook] Failed to tag order", order.id, tagErr);
     }
 
     const addr = order.shipping_address ?? order.billing_address ?? null;

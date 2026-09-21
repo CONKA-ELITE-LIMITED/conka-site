@@ -278,29 +278,19 @@ still there, remove it and set Branch / PR to "merged in PR #506". Then delete t
 
 ---
 
-### Listicle `persona:` order tags aren't writing (no `write_orders` on live token)
+### ~~Listicle `persona:` order tags aren't writing~~ — CLOSED, won't fix (2026-09-21)
 
-**Status:** Deferred (needs infra change, not a code fix)
-**Files:** `app/api/webhooks/shopify/orders/route.ts` (`listicleOrderTags` → `addOrderTags`), `app/lib/shopifyAdmin.ts` (`addOrderTags`)
+**Status:** Closed. The tag path is deleted; nothing to unblock.
 
-**Symptom:** On `orders/paid`, the webhook calls `tagsAdd` to stamp `listicle` + `persona:<name>` on listicle-driven orders (SCRUM-1180). It silently fails: the live `SHOPIFY_ADMIN_API_TOKEN` is the **B2B Invoicing** app's token, which has only draft-order/customer scopes — no `write_orders`. The webhook catches the error and continues, so orders never get the tag. Confirmed 29 Jul: of the 3 first-party listicle orders (#3701/#3707/#3711), all carry the `_listicle_origin` note attribute but none carry a `persona:` tag.
+**Decision (Rudh, 2026-09-21):** drop it. The tag was only ever convenience for filtering Orders in Shopify admin, it has never once worked, and nothing consumes it. Paying for a `write_orders` scope on a live token to power a filter nobody uses is the wrong trade.
 
-**Impact:** Low — attribution still works via the `_listicle_origin` note attribute (set by the cart, not the webhook). But you can't filter Orders by `persona:adhd` in Shopify admin, and any downstream report keyed on the tag reads empty.
+**What was removed:** `listicleOrderTags()` and the tagging block in `app/api/webhooks/shopify/orders/route.ts`, plus the now-unused `addOrderTags()` in `app/lib/shopifyAdmin.ts`. `adminGraphql` and `isAdminApiConfigured` stay (B2B invoicing uses them).
 
-**Assessment (Rudh, 29 Jul):** arguably not a real issue — the `_listicle_origin` note attribute already carries persona + section first-party, so the tag is just redundant convenience. Only worth doing (b) if we actually want tag-based filtering / segments in Shopify admin or Flow; otherwise leave it, or close as won't-fix.
+**Why this costs nothing.** Attribution never depended on the tag. `_listicle_origin` is set by the CART, not the webhook, and lands on every order as a note attribute — visible in Shopify admin under "Additional details", and the field conka-lab's pipeline actually reads (`sanitize.py` filters note attributes and explicitly never tags). The 79 orders between 10 Aug and 2 Sept that "were never tagged" all carry their origin correctly.
 
-**What unblocks it:** give the webhook a token with `write_orders`. Options: (a) add `write_orders` to the B2B Invoicing app and re-install (broadens that app's blast radius — least preferred); (b) stand up / point at a dedicated app-token that has `write_orders` and read it from a new env var, keeping the B2B token untouched. attribution-audit is read-only, so it can't do this. Then re-verify a live order gets tagged.
+**If tag-based filtering is ever genuinely wanted**, this is recoverable from git history, and it still needs the same infra change: a token with `write_orders`, ideally a dedicated app rather than broadening B2B Invoicing's scope.
 
-**Why deferred:** Requires a Shopify app scope change + prod env var, which is an ops action outside the codebase. See `docs/analytics/LISTICLE_PERFORMANCE.md` (known-gap note).
-
-**Re-confirmed 2026-09-02, with the scale.** Still failing, unchanged by the Skio cutover. Exact error from Vercel prod logs:
-
-```
-[Shopify webhook] Failed to tag order 13430014214518
-Error: tagsAdd failed: Access denied for tagsAdd field.
-```
-
-**79 orders between 10 Aug and 2 Sept carry `_listicle_origin`; zero carry a `listicle` or `persona:` tag.** The 29 Jul assessment above still holds (attribution is intact via the note attribute), but the number is worth knowing before anyone builds a report on the tag: it would read empty across the entire £300/day ad-spend trial. `docs/analytics/LISTICLE_PERFORMANCE.md` query 6 has been corrected to say so outright rather than "once the tag write is fixed".
+**Superseded history:** failed continuously since SCRUM-1180 shipped with `Access denied for tagsAdd field`, re-confirmed 29 Jul and 2026-09-02. The 29 Jul assessment already read "arguably not a real issue... close as won't-fix"; this closes it.
 
 ---
 
