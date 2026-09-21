@@ -59,6 +59,10 @@ a click. Add a `home_<section>` token for any new home CTA.
 
 The cart also carries `_fbp`, `_fbc` and `conka_uid` as cart attributes. Filter orders on `_purchase` for the trial vs one-time split and on `_offer_choice` for the product split. Only `_purchase=trial` orders become subscribers. How the page works: `docs/features/GO_LANDING_PAGES.md`.
 
+**Those three keys are LINE attributes, and conka-lab does not read line attributes at all** — its Shopify ingest selects `customAttributes` only at the order level (SCRUM-1382 is the ticket to add them). So the offer checkout also sets `_listicle_origin` as a **cart** attribute, value `<slug>-<section>` (e.g. `trial-pack-hero`), which is the order-level key the pipeline already parses. That is what puts trial pack orders on the dashboard's Landing Pages view today (SCRUM-1381).
+
+Consequence for anyone querying: **`_listicle_origin` no longer implies a listicle.** `trial-pack` now appears in that field alongside the listicle slugs (conka-lab's `KNOWN_LISTICLE_SLUGS` lists it). Split listicle from direct-sell traffic on the slug itself, not on the presence of the key.
+
 ### `_trial_pack_seen`: trial pack visitors who bought on a PDP
 
 Loading the trial pack page writes its slug to `sessionStorage`, and `CartContext` re-attaches it on every site-cart add as the hidden cart attribute `_trial_pack_seen` (value: the slug, e.g. `trial-pack`), the same way `_listicle_origin` rides through. The page has no outbound PDP CTAs, so there is no `?src=` to carry; the footer's PDP links keep the journey in one tab.
@@ -146,15 +150,12 @@ The renewal-vs-acquisition distinction is the one thing the Loop tags were genui
 1. **`checkout_token`** is present on a real checkout and absent on a rebill. This is what the Meta CAPI webhook already gates on, and it is the signal a subscription app cannot fake.
 2. **`app`** on the order names the platform on a rebill (`Loop Subscriptions` historically; expected to be Skio from the first Skio renewal on 1 Oct 2026, unverified until then).
 
-### Known bug: our own tag write is denied
+### Order tags: removed, not broken (2026-09-21)
 
-`addOrderTags()` authenticates with `SHOPIFY_ADMIN_API_TOKEN`, which is the **B2B Invoicing** app (`read/write_draft_orders` + `customers` only). It has no `write_orders`, so every call fails:
+We used to stamp `listicle` + `persona:<name>` tags on listicle orders from the `orders/paid` webhook (SCRUM-1180). **That code is gone.**
 
-```
-[Shopify webhook] Failed to tag order 13430014214518
-Error: tagsAdd failed: Access denied for tagsAdd field.
-```
+It never worked. `addOrderTags()` authenticated with `SHOPIFY_ADMIN_API_TOKEN`, which is the **B2B Invoicing** app (`read/write_draft_orders` + `customers` only). With no `write_orders` scope every call died with `Access denied for tagsAdd field`, so **79 orders between 10 Aug and 2 Sept carried `_listicle_origin` and not one was ever tagged.**
 
-**79 orders between 10 Aug and 2 Sept carry `_listicle_origin`; none was ever tagged.** The persona attribution has produced nothing since it shipped. This predates the Skio cutover and is unrelated to it. Tracked in `docs/TODO.md`.
+Rather than grant a live token `write_orders` to power a filter nobody used, the path was deleted (Rudh, 2026-09-21): `listicleOrderTags()` and the tagging block in the webhook, plus the now-unused `addOrderTags()` in `app/lib/shopifyAdmin.ts`. Recoverable from git history if tag-based filtering is ever genuinely wanted; it would still need a token with `write_orders`, ideally a dedicated app rather than broadening B2B Invoicing's scope.
 
-The attribution itself is fine: `_listicle_origin` lands on every order as a note attribute, so the data is recoverable without the tag. The tag was only ever a convenience for filtering in Shopify admin.
+**Nothing was lost.** The tag was a convenience for filtering Orders in Shopify admin; it was never the attribution. `_listicle_origin` is set by the CART, not the webhook, so it lands on every order regardless: visible in admin under "Additional details", and the field conka-lab's pipeline actually reads (`sanitize.py` filters note attributes and explicitly never tags). Do not build a tag-based report; filter on note attributes.

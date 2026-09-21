@@ -117,6 +117,7 @@ export function OfferPurchaseProvider({
           product: selected.product,
           option: selected.id,
           purchase,
+          slug,
           section,
           variantId: trial ? selected.variantId : selected.oneTime.variantId,
           sellingPlanId: trial ? (selected.sellingPlanId ?? undefined) : undefined,
@@ -133,7 +134,7 @@ export function OfferPurchaseProvider({
         setLoading(null);
       }
     },
-    [selected],
+    [selected, slug],
   );
 
   const start = useCallback((section: string) => void checkout("trial", section), [checkout]);
