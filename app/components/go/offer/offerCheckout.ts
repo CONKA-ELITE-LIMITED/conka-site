@@ -12,6 +12,12 @@
  * - `_source`       always "trial_pack"
  * - `_offer_choice` the selected option: "flow", "clear" or "both"
  * - `_purchase`     "trial" (trial pack, converts to monthly) or "one_time" (buy-once link)
+ *
+ * Those three are LINE attributes, and conka-lab's Shopify ingest does not read
+ * line attributes at all (SCRUM-1382). So the CART also carries
+ * `_listicle_origin`, the order-level key the pipeline already parses, which is
+ * what lets the Landing Pages view count this page's orders without waiting on
+ * that ingest change (SCRUM-1381).
  */
 
 import {
@@ -33,6 +39,11 @@ export interface OfferCheckoutArgs {
   product: OfferProduct;
   option: OfferOptionId;
   purchase: OfferPurchaseType;
+  /** This offer page's landing slug, e.g. "trial-pack". Half of the
+   *  `_listicle_origin` token; passed in rather than hardcoded because the
+   *  offer format is a template and a second offer page must not report as
+   *  the first one. */
+  slug: string;
   /** Section that carried the CTA ("hero", "sticky", "otp"), for analytics. */
   section: string;
   variantId: string;
@@ -51,7 +62,13 @@ export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
     throw new Error(`Trial selling plan not configured for "${args.option}"`);
   }
 
-  const cartAttributes = buildMetaCartAttributes();
+  // `<slug>-<section>`, the same shape the listicles' useListicleSrc builds, so
+  // conka-lab's known-slug split reads it without a special case. Ordered after
+  // the Meta identity attributes purely for readability; Shopify does not care.
+  const cartAttributes = [
+    ...buildMetaCartAttributes(),
+    { key: "_listicle_origin", value: `${args.slug}-${args.section}` },
+  ];
 
   const res = await fetch("/api/cart", {
     method: "POST",
@@ -66,7 +83,8 @@ export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
         { key: "_offer_choice", value: args.option },
         { key: "_purchase", value: args.purchase },
       ],
-      ...(cartAttributes.length > 0 && { cartAttributes }),
+      // Always non-empty now that the origin rides here, so no length guard.
+      cartAttributes,
     }),
   });
   if (!res.ok) throw new Error(`Cart create failed: ${res.status}`);

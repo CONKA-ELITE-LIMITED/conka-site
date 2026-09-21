@@ -59,6 +59,10 @@ a click. Add a `home_<section>` token for any new home CTA.
 
 The cart also carries `_fbp`, `_fbc` and `conka_uid` as cart attributes. Filter orders on `_purchase` for the trial vs one-time split and on `_offer_choice` for the product split. Only `_purchase=trial` orders become subscribers. How the page works: `docs/features/GO_LANDING_PAGES.md`.
 
+**Those three keys are LINE attributes, and conka-lab does not read line attributes at all** — its Shopify ingest selects `customAttributes` only at the order level (SCRUM-1382 is the ticket to add them). So the offer checkout also sets `_listicle_origin` as a **cart** attribute, value `<slug>-<section>` (e.g. `trial-pack-hero`), which is the order-level key the pipeline already parses. That is what puts trial pack orders on the dashboard's Landing Pages view today (SCRUM-1381).
+
+Consequence for anyone querying: **`_listicle_origin` no longer implies a listicle.** `trial-pack` now appears in that field alongside the listicle slugs (conka-lab's `KNOWN_LISTICLE_SLUGS` lists it). Split listicle from direct-sell traffic on the slug itself, not on the presence of the key.
+
 ### `_trial_pack_seen`: trial pack visitors who bought on a PDP
 
 Loading the trial pack page writes its slug to `sessionStorage`, and `CartContext` re-attaches it on every site-cart add as the hidden cart attribute `_trial_pack_seen` (value: the slug, e.g. `trial-pack`), the same way `_listicle_origin` rides through. The page has no outbound PDP CTAs, so there is no `?src=` to carry; the footer's PDP links keep the journey in one tab.
