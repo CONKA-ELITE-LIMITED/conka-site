@@ -61,15 +61,17 @@ Two guards worth knowing about: the token is sanitised on read (anything not mat
 
 The mm buy boxes pass the token to the shared home `ProductGrid` through an optional `linkSrc` prop. Unset, links are untouched, so the home page is unaffected.
 
-### Tagging the order with the persona (SCRUM-1180)
+### Carrying the persona onto the Shopify order (SCRUM-1180)
 
-The `source` above lands the origin in Vercel, but the Shopify order needs it too, so paid orders are filterable by persona in the Orders list. The origin rides through to the order and becomes order tags:
+The `source` above lands the origin in Vercel, but the Shopify order needs it too, so a paid order can be traced back to the page that sold it. The origin rides through to the order as a hidden attribute:
 
 1. **Persist.** `captureListicleSrc()` writes `?src=` to `sessionStorage` on PDP landing (the three PDP pages call it on mount), so the origin survives a within-PDP navigation that drops the param. `getListicleSrc()` reads the live URL first, then falls back to the stored value.
 2. **Carry.** `CartContext` writes the origin as a hidden, cart-level `_listicle_origin` attribute on every add-to-cart (sourced from `getPurchaseOrigin()`, exactly like `_fbp` / `_fbc`, so a later origin-less add cannot wipe it). The `_` prefix keeps it off the customer's checkout.
-3. **Tag.** The `orders/paid` webhook reads `_listicle_origin` from the order's note attributes and adds `listicle` plus `persona:<slug>` tags via the Admin API (`addOrderTags`), in its own try/catch so it never blocks the Purchase send.
+3. **Read.** The attribute lands on the order as a note attribute, visible in Shopify admin under "Additional details" and readable through the Admin API. conka-lab's pipeline reads exactly this field; `/go/trial-pack` rides the same key (SCRUM-1381), so a slug in `_listicle_origin` is no longer necessarily a listicle.
 
-Persona-only by design: the finer `section` stays in Vercel, keeping the Orders filter low-cardinality. An organic purchase (no `?src=` ever) carries no attribute and no tags.
+An organic purchase (no `?src=` ever) carries no attribute.
+
+> **There is no order tag.** The webhook used to derive `listicle` + `persona:<slug>` Shopify tags from this attribute, but the write was never permitted and the path was deleted on 2026-09-21. Filter on the `_listicle_origin` attribute, never on tags. See `docs/development/CART_ATTRIBUTES.md`.
 
 ### Implementation
 
