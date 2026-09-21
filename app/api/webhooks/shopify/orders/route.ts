@@ -26,6 +26,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { sendPurchaseToCapi } from "@/app/lib/metaCapi";
 import { addOrderTags } from "@/app/lib/shopifyAdmin";
+import { getLandingConfig } from "@/app/lib/landings";
 
 export const runtime = "nodejs";
 
@@ -128,12 +129,23 @@ function noteAttr(order: ShopifyOrder, name: string): string | undefined {
  * `_`, like `reason_3`), so the slug is everything before the LAST hyphen and the
  * persona drops any `-listicle` suffix. Persona-only by design: the finer section
  * stays in Vercel. Returns [] for anything missing or unparseable.
+ *
+ * LISTICLES ONLY (SCRUM-1381). `_listicle_origin` stopped being listicle-only
+ * when the trial pack offer page began stamping it to get its orders onto the
+ * dashboard. Without this gate a `trial-pack-hero` origin parses cleanly and
+ * tags the order `listicle` + `persona:trial-pack`, which is simply false and
+ * would inflate any tag-based listicle reporting. The registry already knows
+ * which format each slug is, so the truth is read from there rather than
+ * guessed from the name: the general listicle's slug (`why-conka-10rw-v1`)
+ * carries no `-listicle` suffix, so a suffix test would drop a real one.
  */
 function listicleOrderTags(origin: string | undefined): string[] {
   if (!origin) return [];
   const lastDash = origin.lastIndexOf("-");
   if (lastDash <= 0) return [];
-  const persona = origin.slice(0, lastDash).replace(/-listicle$/, "");
+  const slug = origin.slice(0, lastDash);
+  if (getLandingConfig(slug)?.format !== "listicle") return [];
+  const persona = slug.replace(/-listicle$/, "");
   if (!persona) return [];
   return ["listicle", `persona:${persona}`];
 }
