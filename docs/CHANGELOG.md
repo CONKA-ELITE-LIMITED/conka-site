@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-25** | Blog posts go live on their own: an hourly check (6am to midnight) redeploys the site when a post is published, edited or unpublished in Notion, so nobody has to redeploy by hand (SCRUM-1460)
 - **2026-09-17** | Orders from visitors who saw the trial pack page but bought a regular product through the site cart now carry a hidden `_trial_pack_seen` attribute, so trial pack ads' full-price PDP sales are countable
 - **2026-09-17** | Checkout now blocks orders under 3 boxes to Europe and the USA (BoomGate checkout validation rule), since the weight bands alone did not; /shipping states the minimum for both (SCRUM-1364)
 - **2026-09-17** | International DDP live: checkout now charges import duty and VAT as separate lines for France, the other European shipping countries and the USA (new `Europe` and `United States` Shopify markets), and /shipping and /disclaimer say so (SCRUM-1204)

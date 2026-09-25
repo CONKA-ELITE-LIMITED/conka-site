@@ -10,5 +10,11 @@
     "app/api/auth/subscriptions/[id]/cancel/route.ts": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/blog-publish",
+      "schedule": "0 5-23 * * *"
+    }
+  ]
 }

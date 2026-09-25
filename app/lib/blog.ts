@@ -9,6 +9,7 @@
  * See docs/development/featurePlans/archive/blog-informational-content-surface.md.
  */
 import "server-only";
+import { createHash } from "node:crypto";
 import { mkdir, writeFile, access } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -143,12 +144,53 @@ async function rehostBodyImages(md: string, slug: string): Promise<string> {
   return out;
 }
 
+/**
+ * The three fields a row needs to render at all. The single definition of
+ * "renderable", shared by `toSummary` and `publishedFingerprint`, so what the
+ * build renders and what the auto-publish cron counts as live cannot drift.
+ */
+function readRequiredFields(props: Record<string, unknown>) {
+  return {
+    title: readTitle(props, "Blog name"),
+    slug: readRichText(props, "Slug"),
+    description: readRichText(props, "Meta description"),
+  };
+}
+
+/**
+ * A hash of what the published blog contains: every renderable row's slug and
+ * last-edit time (SCRUM-1460).
+ *
+ * The build serves this from `/api/blog/fingerprint`, and the auto-publish cron
+ * recomputes it from a live Notion read. A difference means a post was
+ * published, unpublished or edited since the live deploy was built, so the cron
+ * redeploys. Draft edits never change it, because only Published rows are read.
+ *
+ * Pure over the rows: no image re-hosting and no build guards, both of which
+ * are unsafe outside a build. Rows that fail validation are excluded exactly as
+ * the renderer skips them; counting them here would make the two sides disagree
+ * forever and redeploy every hour.
+ */
+export function publishedFingerprint(rows: NotionRow[]): string {
+  const entries = rows
+    .map((row) => {
+      const { title, slug, description } = readRequiredFields(row.properties);
+      return title && slug && description ? `${slug}@${row.lastEditedTime}` : null;
+    })
+    .filter((entry): entry is string => entry !== null)
+    .sort();
+  return createHash("sha256").update(entries.join("\n")).digest("hex");
+}
+
+/** The fingerprint of the published blog as Notion holds it right now. */
+export async function getPublishedFingerprint(): Promise<string> {
+  return publishedFingerprint(await queryBlogRows(true));
+}
+
 /** Map a Notion row to listing-level metadata, or null if it fails validation. */
 async function toSummary(row: NotionRow): Promise<BlogPostSummary | null> {
   const props = row.properties;
-  const title = readTitle(props, "Blog name");
-  const slug = readRichText(props, "Slug");
-  const description = readRichText(props, "Meta description");
+  const { title, slug, description } = readRequiredFields(props);
 
   if (!title || !slug || !description) {
     console.warn(
