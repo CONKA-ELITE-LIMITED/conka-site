@@ -72,7 +72,7 @@ Write the body with the Notion API's native block types. If the post looks prope
 
 ### How to set images through the Notion API
 
-Any public image URL works, including Cloudinary. The site copies every image onto conka.io at build, so the URL only needs to work at the time of publishing.
+Use Cloudinary URLs (as now) or upload the file into Notion. The site copies images from both onto conka.io at build, so they keep working even if the original is later removed. Do not use other image hosts for body images.
 
 **Hero image** (page property, set with `pages.create` or `pages.update`):
 
