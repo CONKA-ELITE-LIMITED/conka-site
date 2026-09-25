@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import type {
   TestState,
   TestResult,
@@ -8,13 +8,13 @@ import type {
   CognitiveTestSectionProps,
 } from "./types";
 import EmailCaptureForm from "./EmailCaptureForm";
-import CognicaSDK from "./CognicaSDK";
+import CognitiveTestRunner from "./CognitiveTestRunner";
 import CognitiveTestIdleCard from "./CognitiveTestIdleCard";
 import CognitiveTestLoader from "./CognitiveTestLoader";
 import CognitiveTestScores from "./CognitiveTestScores";
 import CognitiveTestRecommendation from "./CognitiveTestRecommendation";
 import CognitiveTestAppPromo from "./CognitiveTestAppPromo";
-import { trackCognitiveTest, subscribeAppTestSignup } from "@/app/lib/klaviyo";
+import { submitWebTestResult, subscribeAppTestSignup } from "@/app/lib/klaviyo";
 import {
   trackAppTestClicked,
   trackAppEmailSubmitted,
@@ -29,12 +29,6 @@ export default function CognitiveTestSectionMobile({
     useState<EmailSubmission | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
-  const subjectId = useMemo(() => {
-    if (emailSubmission) {
-      return `website_${emailSubmission.submittedAt.getTime()}`;
-    }
-    return `website_${Date.now()}`;
-  }, [emailSubmission]);
 
   const handleStartTest = useCallback(() => {
     trackAppTestClicked();
@@ -65,14 +59,12 @@ export default function CognitiveTestSectionMobile({
     if (testResult) trackAppResultsViewed();
 
     if (emailSubmission && testResult) {
-      trackCognitiveTest(
+      // The server reads the scores from its own record of this test.
+      void submitWebTestResult(
         emailSubmission.email,
-        testResult.score,
-        testResult.accuracy,
-        testResult.speed,
-      ).catch((err) => {
-        console.error("Failed to track to Klaviyo:", err);
-      });
+        testResult.testInstanceId,
+        window.location.pathname,
+      );
     }
   }, [emailSubmission, testResult]);
 
@@ -115,12 +107,10 @@ export default function CognitiveTestSectionMobile({
 
         {testState === "testing" && (
           <div className="w-full">
-            <div className="min-h-[500px] overflow-hidden rounded-lg bg-[#111111] ring-1 ring-black/10">
-              <CognicaSDK
-                onComplete={handleTestComplete}
-                subjectId={subjectId}
-              />
-            </div>
+            <CognitiveTestRunner
+              onComplete={handleTestComplete}
+              className="h-[70svh] min-h-[500px] max-h-[640px]"
+            />
             <p className="mt-3 text-sm text-black/70">
               Tap right when you see an animal, and left for anything else.
               Scored on speed and accuracy.

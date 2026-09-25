@@ -151,9 +151,8 @@ export default function RootLayout({
             script was loading klaviyo.js + Brand Library on every page and
             rendering nothing (pure perf overhead: ~17.7 KiB legacy-JS
             polyfills, 16 KiB unused CSS, ~360ms main-thread time on /start).
-            Server-side subscribe paths (/api/klaviyo/subscribe,
-            /api/klaviyo/track-test) are unaffected and keep powering
-            the Footer email signup.
+            Server-side subscribe paths (/api/klaviyo/subscribe) are
+            unaffected and keep powering the Footer email signup.
             To restore: publish a form in the Klaviyo dashboard, then
             uncomment the Script tag below. */}
         {/*

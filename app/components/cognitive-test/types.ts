@@ -1,7 +1,7 @@
 /**
  * Cognitive Test Types
  *
- * TypeScript interfaces for the WebSDK cognitive test integration.
+ * TypeScript interfaces for the website cognitive test on /app.
  */
 
 /**
@@ -10,7 +10,7 @@
 export type TestState = "idle" | "email" | "testing" | "processing" | "results";
 
 /**
- * Test results received from the WebSDK via postMessage
+ * Test results from the engine (server scores from test_stats, rounded for display)
  */
 export interface TestResult {
   /** Overall cognitive score (0-100) */
@@ -19,8 +19,8 @@ export interface TestResult {
   accuracy: number;
   /** Speed percentage (0-100) */
   speed: number;
-  /** Optional test instance identifier from the SDK */
-  testInstanceId?: string;
+  /** The server's test instance; links the result to Klaviyo */
+  testInstanceId: number;
 }
 
 /**
@@ -51,16 +51,6 @@ export interface EmailCaptureFormProps {
   onSubmit: (submission: EmailSubmission) => void;
   /** Callback to go back to idle state */
   onBack: () => void;
-}
-
-/**
- * Props for the CognicaSDK iframe wrapper component
- */
-export interface CognicaSDKProps {
-  /** Callback when test is completed with results */
-  onComplete: (result: TestResult) => void;
-  /** Optional subject ID for tracking (e.g., "website_1234567890") */
-  subjectId?: string;
 }
 
 /**

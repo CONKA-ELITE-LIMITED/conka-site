@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import type {
   TestState,
   TestResult,
@@ -8,27 +8,18 @@ import type {
   CognitiveTestSectionProps,
 } from "./types";
 import EmailCaptureForm from "./EmailCaptureForm";
-import CognicaSDK from "./CognicaSDK";
+import CognitiveTestRunner from "./CognitiveTestRunner";
 import CognitiveTestIdleCard from "./CognitiveTestIdleCard";
 import CognitiveTestLoader from "./CognitiveTestLoader";
 import CognitiveTestScores from "./CognitiveTestScores";
 import CognitiveTestRecommendation from "./CognitiveTestRecommendation";
 import CognitiveTestAppPromo from "./CognitiveTestAppPromo";
-import { trackCognitiveTest, subscribeAppTestSignup } from "@/app/lib/klaviyo";
+import { submitWebTestResult, subscribeAppTestSignup } from "@/app/lib/klaviyo";
 import {
   trackAppTestClicked,
   trackAppEmailSubmitted,
   trackAppResultsViewed,
 } from "@/app/lib/analytics";
-
-/** A keyboard key, for the desktop test instructions. */
-function Key({ children }: { children: React.ReactNode }) {
-  return (
-    <kbd className="rounded border border-black/20 bg-white px-1.5 py-0.5 font-mono text-xs text-black">
-      {children}
-    </kbd>
-  );
-}
 
 export default function CognitiveTestSection({
   className = "",
@@ -38,12 +29,6 @@ export default function CognitiveTestSection({
     useState<EmailSubmission | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
-  const subjectId = useMemo(() => {
-    if (emailSubmission) {
-      return `website_${emailSubmission.submittedAt.getTime()}`;
-    }
-    return `website_${Date.now()}`;
-  }, [emailSubmission]);
 
   const handleStartTest = useCallback(() => {
     trackAppTestClicked();
@@ -74,14 +59,12 @@ export default function CognitiveTestSection({
     if (testResult) trackAppResultsViewed();
 
     if (emailSubmission && testResult) {
-      trackCognitiveTest(
+      // The server reads the scores from its own record of this test.
+      void submitWebTestResult(
         emailSubmission.email,
-        testResult.score,
-        testResult.accuracy,
-        testResult.speed,
-      ).catch((err) => {
-        console.error("Failed to track to Klaviyo:", err);
-      });
+        testResult.testInstanceId,
+        window.location.pathname,
+      );
     }
   }, [emailSubmission, testResult]);
 
@@ -123,26 +106,12 @@ export default function CognitiveTestSection({
         )}
 
         {testState === "testing" && (
-          <div className="w-full">
-            <div className="relative h-[650px] overflow-hidden rounded-lg bg-[#111111] ring-1 ring-black/10">
-              <div
-                className="absolute top-0 left-0"
-                style={{
-                  width: "90.91%",
-                  height: "90.91%",
-                  transform: "scale(1.1)",
-                  transformOrigin: "top left",
-                }}
-              >
-                <CognicaSDK
-                  onComplete={handleTestComplete}
-                  subjectId={subjectId}
-                />
-              </div>
-            </div>
+          <div className="w-full max-w-2xl">
+            <CognitiveTestRunner onComplete={handleTestComplete} className="h-[560px]" />
             <p className="mt-3 text-sm text-black/70">
-              Press <Key>J</Key> when you see an animal and <Key>F</Key> for
-              anything else. Scored on speed and accuracy.
+              Click the right side when you see an animal, and the left side for
+              anything else. Easiest on your phone. Scored on speed and
+              accuracy.
             </p>
           </div>
         )}

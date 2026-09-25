@@ -17,7 +17,8 @@ interface TestContainerProps {
  * The split surface: left half (non-animal), right half (animal), content on
  * top. Ported from the app's TestContainer: taps land on pointerdown (the app's
  * onPressIn), are debounced at 50ms, and a counted tap flashes its half white
- * for 75ms. On desktop the left and right arrow keys answer too.
+ * for 75ms. On desktop a mouse click on either half answers the same way;
+ * there is no keyboard input.
  */
 export default function TestContainer({ onTap, children }: TestContainerProps) {
   const leftFlash = useRef<HTMLDivElement>(null);
@@ -38,22 +39,8 @@ export default function TestContainer({ onTap, children }: TestContainerProps) {
     flash?.animate([{ opacity: 0.4 }, { opacity: 0 }], { duration: TAP_FLASH_MS, easing: "linear" });
   }, []);
 
-  // Arrow keys are only captured while the test is live, so the page still scrolls otherwise.
+  // While the test runs, the halves block page scroll and zoom (see .live).
   const live = Boolean(onTap);
-  useEffect(() => {
-    if (!live) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.repeat) return;
-      const target = event.target as HTMLElement | null;
-      if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
-      if (event.key === "ArrowLeft") press("left");
-      else if (event.key === "ArrowRight") press("right");
-      else return;
-      event.preventDefault();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [live, press]);
 
   return (
     <>

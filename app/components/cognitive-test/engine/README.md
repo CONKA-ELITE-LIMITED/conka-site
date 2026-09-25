@@ -32,7 +32,7 @@ The engine fills its parent (min height 480px); the parent sets the size.
 ## How it runs
 
 1. **Preparing.** Builds a balanced sequence (25% per difficulty, half animal), opens a test instance with `userId` `web:<uuid>` (one per test, never an email), and preloads and decodes only this test's images and the 8 masks. Instructions show meanwhile; Start enables when both finish.
-2. **Test.** Per image, as the app does: image 110ms, blank 20ms, 7-frame mask 230ms, blank 750ms, "Be Quick" 2000ms, progress 40ms, gap 750ms. Taps unlock when the image hides; the first tap ends the step. Left half = non-animal, right half = animal; arrow keys on desktop.
+2. **Test.** Per image, as the app does: image 110ms, blank 20ms, 7-frame mask 230ms, blank 750ms, "Be Quick" 2000ms, progress 40ms, gap 750ms. Taps unlock when the image hides; the first tap ends the step. Left half = non-animal, right half = animal; a mouse click answers on desktop (no keyboard input).
 3. **Submitting.** `/steps` (reaction time in seconds, side as 0/1/2) then `/complete`. A retry replays both; `/steps` is idempotent server-side.
 
 ## Timing
