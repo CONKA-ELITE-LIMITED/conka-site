@@ -43,4 +43,4 @@ The app's step has a fixation timer that its own image-on-load pre-empts, so it 
 
 ## Demo
 
-`/conka-app-demo` (noindex). Staging by default, `?env=prod` for production, `?full=1` for 48 images. The result JSON prints under the test, so a phone run needs no devtools.
+`/conka-app-demo`. The system around the engine (where it runs on the site, the backend contract, Klaviyo, decisions, the demo page) is documented in [`docs/features/COGNITIVE_TEST.md`](../../../../docs/features/COGNITIVE_TEST.md).
