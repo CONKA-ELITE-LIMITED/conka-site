@@ -75,22 +75,27 @@ export default function CognitiveTestEngine({
     setStage("preparing");
     testInstanceId.current = null;
 
-    Promise.all([
-      openTest(apiBaseUrl, newWebUserId()),
-      preloadImages([...ids.map((id) => imageUrl(assetBaseUrl, id)), ...MASK_IDS.map((id) => maskUrl(assetBaseUrl, id))]),
-    ])
-      .then(([id, images]) => {
-        if (cancelled) return;
-        testInstanceId.current = id;
-        decoded.current = images;
-        setStage("ready");
-      })
-      .catch((err) => {
-        if (!cancelled) fail(err, "prepare");
-      });
+    // Deferred a tick so a mount that is immediately undone (React StrictMode
+    // in dev) never opens a test instance on the server.
+    const start = window.setTimeout(() => {
+      Promise.all([
+        openTest(apiBaseUrl, newWebUserId()),
+        preloadImages([...ids.map((id) => imageUrl(assetBaseUrl, id)), ...MASK_IDS.map((id) => maskUrl(assetBaseUrl, id))]),
+      ])
+        .then(([id, images]) => {
+          if (cancelled) return;
+          testInstanceId.current = id;
+          decoded.current = images;
+          setStage("ready");
+        })
+        .catch((err) => {
+          if (!cancelled) fail(err, "prepare");
+        });
+    }, 0);
 
     return () => {
       cancelled = true;
+      clearTimeout(start);
     };
   }, [apiBaseUrl, assetBaseUrl, imageCount, attempt, fail]);
 
@@ -103,9 +108,10 @@ export default function CognitiveTestEngine({
       const stats = await completeTest(apiBaseUrl, id);
       setStage("done");
       callbacks.current.onComplete({
-        score: Number(stats.score1 || stats.score2 || 0),
-        accuracy: Number(stats.accuracy || 0),
-        speed: Number(stats.speed || 0),
+        // score1 only: it is what the server sends to Klaviyo, so the page and the email agree.
+        score: Number(stats.score1 ?? 0),
+        accuracy: Number(stats.accuracy ?? 0),
+        speed: Number(stats.speed ?? 0),
         testInstanceId: id,
       });
     } catch (err) {

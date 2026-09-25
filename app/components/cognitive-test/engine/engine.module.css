@@ -33,6 +33,11 @@
   cursor: pointer;
 }
 
+/* While the test runs, fast taps must never scroll or zoom the page. */
+.live .half {
+  touch-action: none;
+}
+
 .halfLeft {
   background: var(--cte-left);
 }

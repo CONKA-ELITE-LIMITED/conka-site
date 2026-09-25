@@ -55,7 +55,7 @@ export default function TestContainer({ onTap, children }: TestContainerProps) {
 
   return (
     <>
-      <div className={styles.halves}>
+      <div className={`${styles.halves} ${live ? styles.live : ""}`}>
         <div
           className={`${styles.half} ${styles.halfLeft}`}
           onPointerDown={(event) => {

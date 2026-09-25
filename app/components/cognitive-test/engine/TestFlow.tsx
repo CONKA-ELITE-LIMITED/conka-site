@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import TestContainer from "./TestContainer";
 import TestStep, { type TestStepHandle } from "./TestStep";
 import { imageUrl, maskSequence, maskUrl } from "./images";
@@ -35,20 +35,21 @@ export default function TestFlow({ imageIds, assetBaseUrl, settings, onFinished 
     return () => clearTimeout(timer);
   }, []);
 
-  const maskUrls = useMemo(
-    () => maskSequence().map((id) => maskUrl(assetBaseUrl, id)),
-    // A new mask order for every step.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [assetBaseUrl, step],
-  );
+  // A new mask order for every step.
+  const drawMasks = useCallback(() => maskSequence().map((id) => maskUrl(assetBaseUrl, id)), [assetBaseUrl]);
+  const [maskUrls, setMaskUrls] = useState(drawMasks);
 
   const handleStepComplete = useCallback(
     (interaction: Interaction) => {
       interactions.current.push(interaction);
-      if (step < imageIds.length - 1) setStep(step + 1);
-      else onFinishedRef.current(interactions.current);
+      if (step < imageIds.length - 1) {
+        setStep(step + 1);
+        setMaskUrls(drawMasks());
+      } else {
+        onFinishedRef.current(interactions.current);
+      }
     },
-    [step, imageIds.length],
+    [step, imageIds.length, drawMasks],
   );
 
   const handleTap = useCallback(
