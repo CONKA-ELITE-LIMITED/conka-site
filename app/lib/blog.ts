@@ -2,9 +2,11 @@
  * Blog domain layer: turns Notion "Blog Hub" rows into typed posts with a
  * render-ready body, and re-hosts Notion's expiring images locally at build.
  *
- * Server-only, read at build time (static generation). This is the single
- * source of truth for the published filter, so the listing, the sitemap, and
- * generateStaticParams cannot disagree.
+ * Server-only. Pages read it at build time (static generation); the one runtime
+ * caller is the auto-publish cron, via `getPublishedFingerprint`, which touches
+ * no images and no build guards. This is the single source of truth for the
+ * published filter, so the listing, the sitemap, generateStaticParams and the
+ * cron cannot disagree.
  *
  * See docs/development/featurePlans/archive/blog-informational-content-surface.md.
  */

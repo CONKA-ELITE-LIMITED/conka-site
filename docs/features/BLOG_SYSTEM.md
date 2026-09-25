@@ -4,7 +4,7 @@ How `/blog` works: Notion is the CMS, the site is fully static, and posts are pr
 
 ## Overview
 
-Posts live in a Notion database ("Blog Hub"). `app/lib/blog.ts` reads it at **build time only**, converts each page to markdown via `notion-to-md`, and Next prerenders every post as static HTML. There is no runtime Notion call, no client-side fetching, and no second CMS.
+Posts live in a Notion database ("Blog Hub"). `app/lib/blog.ts` reads it at **build time**, converts each page to markdown via `notion-to-md`, and Next prerenders every post as static HTML. Pages never read Notion at runtime; the only runtime read is the hourly auto-publish check, which renders nothing. There is no client-side fetching and no second CMS.
 
 Publishing is one human action: flip `Status` to `Published` in Notion. An hourly cron (6am to midnight UK) notices and redeploys the site, so the post is live by the next run plus build time. Nothing reaches the site until that build runs. See Auto-publish below.
 

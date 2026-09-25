@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getPublishedFingerprint } from "@/app/lib/blog";
 import { SITE_ORIGIN } from "@/app/lib/site";
@@ -24,8 +25,15 @@ export const dynamic = "force-dynamic";
 const VERCEL_PROJECT_ID = "prj_ngcTTAV2aYQsza3lhOV0TrcMTVzJ";
 const VERCEL_TEAM_ID = "team_RYAm8UuAbSGDfZz1cn0M4tgr";
 
-const FAILURE_BACKOFF_MS = 3 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+const FAILURE_BACKOFF_MS = 3 * HOUR_MS;
 const IN_FLIGHT_STATES = new Set(["QUEUED", "INITIALIZING", "BUILDING"]);
+/**
+ * Vercel times a build out well inside an hour, so a deploy still "in flight"
+ * after that is wedged (blocked or orphaned). Waiting on it would stop the blog
+ * publishing for good, so past this age it no longer counts.
+ */
+const IN_FLIGHT_MAX_AGE_MS = HOUR_MS;
 
 interface VercelDeployment {
   state?: string;
@@ -39,10 +47,22 @@ function respond(decision: string, status = 200) {
   return NextResponse.json({ decision }, { status });
 }
 
-/** The newest production deployment, or null if Vercel could not be asked. */
+/** Constant-time check of Vercel Cron's `Authorization: Bearer <CRON_SECRET>`. */
+function isAuthorised(request: Request): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  const given = Buffer.from(request.headers.get("authorization") ?? "");
+  const expected = Buffer.from(`Bearer ${secret}`);
+  return given.length === expected.length && timingSafeEqual(given, expected);
+}
+
+/**
+ * The newest production deployment. `ok: false` means Vercel could not be
+ * asked; `deployment: null` means the project has none.
+ */
 async function latestProductionDeployment(
   token: string,
-): Promise<VercelDeployment | null | "none"> {
+): Promise<{ ok: false } | { ok: true; deployment: VercelDeployment | null }> {
   const url =
     `https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}` +
     `&teamId=${VERCEL_TEAM_ID}&target=production&limit=1`;
@@ -51,17 +71,16 @@ async function latestProductionDeployment(
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
-    if (!res.ok) return null;
+    if (!res.ok) return { ok: false };
     const body = (await res.json()) as { deployments?: VercelDeployment[] };
-    return body.deployments?.[0] ?? "none";
+    return { ok: true, deployment: body.deployments?.[0] ?? null };
   } catch {
-    return null;
+    return { ok: false };
   }
 }
 
 export async function GET(request: Request) {
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || request.headers.get("authorization") !== `Bearer ${cronSecret}`) {
+  if (!isAuthorised(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -105,15 +124,16 @@ export async function GET(request: Request) {
   // Fail closed: without knowing the build state we cannot rule out piling a
   // build onto a running one, or retrying a failing one every hour.
   const latest = await latestProductionDeployment(vercelToken);
-  if (latest === null) {
+  if (!latest.ok) {
     return respond("skipped: could not read deployment state from Vercel", 502);
   }
-  if (latest !== "none") {
-    const state = latest.state ?? latest.readyState ?? "";
-    if (IN_FLIGHT_STATES.has(state)) {
+  if (latest.deployment) {
+    const state = latest.deployment.state ?? latest.deployment.readyState ?? "";
+    const age = Date.now() - latest.deployment.created;
+    if (IN_FLIGHT_STATES.has(state) && age < IN_FLIGHT_MAX_AGE_MS) {
       return respond(`skipped: production build already ${state.toLowerCase()}`);
     }
-    if (state === "ERROR" && Date.now() - latest.created < FAILURE_BACKOFF_MS) {
+    if (state === "ERROR" && age < FAILURE_BACKOFF_MS) {
       return respond("skipped: last production build failed under 3 hours ago");
     }
   }

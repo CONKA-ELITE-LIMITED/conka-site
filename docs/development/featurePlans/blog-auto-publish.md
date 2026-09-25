@@ -37,10 +37,10 @@ Scoped 2026-09-25. Canonical blog reference: `docs/features/BLOG_SYSTEM.md`.
 ### Phase 1: Auto-publish (about half a day)
 
 1. **Shared fingerprint function.** `publishedFingerprint(rows)` in `app/lib/blog.ts` (or `blogTransform.ts`): hash of sorted `(slug, last_edited_time)` for rows that pass the **same validation** the renderer uses (Published, has title, slug, meta description). Pure: no image rehosting, no build guards. One function used by both sides is the loop guard.
-2. **Build-time fingerprint.** A static route, `app/blog/fingerprint.json/route.ts` (`dynamic = "force-static"`), computes the fingerprint from `queryBlogRows()` at build and serves `{ fingerprint, builtAt }`. The live file therefore describes exactly what the live deploy rendered. Keep it out of the sitemap; `noindex` via `X-Robots-Tag`.
+2. **Build-time fingerprint.** A static route, `app/api/blog/fingerprint/route.ts` (served at `/api/blog/fingerprint`) (`dynamic = "force-static"`), computes the fingerprint from `queryBlogRows()` at build and serves `{ fingerprint, builtAt }`. The live file therefore describes exactly what the live deploy rendered. Not in the sitemap; `X-Robots-Tag: noindex`.
 3. **Cron route.** `app/api/cron/blog-publish/route.ts`:
    - Rejects requests without `Authorization: Bearer ${CRON_SECRET}`.
-   - Reads Notion rows (the runtime path of `queryBlogRows`, no snapshot/lock), computes the fingerprint, fetches the live `/blog/fingerprint.json`.
+   - Reads Notion rows (the runtime path of `queryBlogRows`, no snapshot/lock), computes the fingerprint, fetches the live `/api/blog/fingerprint`.
    - Equal: return 200, no-op.
    - Different: check the Vercel API for the latest production deployment. Skip if one is `QUEUED`/`BUILDING`. Back off (skip) if the latest production deployment is `ERROR` and under 3 hours old. Otherwise POST the deploy hook.
    - Logs the decision in one line (`blog-publish: no change | triggered | skipped: building | skipped: recent failure`).
