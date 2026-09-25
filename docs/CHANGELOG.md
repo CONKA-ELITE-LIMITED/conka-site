@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-25** | Native web cognition test engine (React port of the app's test, scored by our own server) with an internal demo at /conka-app-demo; not yet swapped into the live site test (SCRUM-1456)
 - **2026-09-25** | Blog: engine images are copied to conka.io instead of loading from an outside Cloudinary account, a post with no hero uses its first body image as the hero and share image, placeholder alt text like "Image 1" is dropped, and the engine brief is rewritten as a strict contract (SCRUM-1461)
 - **2026-09-25** | Blog posts go live on their own: an hourly check (6am to midnight) redeploys the site when a post is published, edited or unpublished in Notion, so nobody has to redeploy by hand (SCRUM-1460)
 - **2026-09-17** | Orders from visitors who saw the trial pack page but bought a regular product through the site cart now carry a hidden `_trial_pack_seen` attribute, so trial pack ads' full-price PDP sales are countable
