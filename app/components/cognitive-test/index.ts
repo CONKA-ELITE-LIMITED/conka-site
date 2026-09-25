@@ -1,7 +1,7 @@
 /**
  * Cognitive Test Components
  *
- * Components for the WebSDK cognitive test integration on the science page.
+ * The website cognitive test on /app. The test itself is the portable engine in ./engine.
  */
 
 // Types
@@ -11,7 +11,6 @@ export type {
   EmailSubmission,
   CognitiveTestSectionProps,
   EmailCaptureFormProps,
-  CognicaSDKProps,
   CognitiveTestIdleCardProps,
   CognitiveTestLoaderProps,
   CognitiveTestScoresProps,
@@ -32,4 +31,3 @@ export { default as CognitiveTestAppPromo } from "./CognitiveTestAppPromo";
 
 // Utility components
 export { default as EmailCaptureForm } from "./EmailCaptureForm";
-export { default as CognicaSDK } from "./CognicaSDK";

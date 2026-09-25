@@ -4,44 +4,42 @@
  * Client-side utility functions for tracking events to Klaviyo.
  */
 
+import { CONKA_APP_API_ORIGIN } from "./conkaAppApi";
+
 /**
- * Tracks a cognitive test completion event to Klaviyo.
- * This is a fire-and-forget operation that never throws errors.
+ * Sends a finished website test to Klaviyo through the CONKA app server, which
+ * reads the scores from its own test_stats rather than trusting the browser,
+ * and fires "Website Short Test Submitted" (SCRUM-1455). Idempotent per email
+ * and test, so a repeat call never double-sends. Fire-and-forget: never throws.
  *
  * @param email - User's email address
- * @param score - Overall cognitive score (0-100)
- * @param accuracy - Accuracy percentage (0-100)
- * @param speed - Speed percentage (0-100)
+ * @param testInstanceId - The completed test, from the engine's onComplete
+ * @param sourcePage - Page path the test ran on, e.g. "/app"
  */
-export async function trackCognitiveTest(
+export async function submitWebTestResult(
   email: string,
-  score: number,
-  accuracy: number,
-  speed: number,
+  testInstanceId: number,
+  sourcePage: string,
 ): Promise<void> {
   try {
-    const response = await fetch("/api/klaviyo/track-test", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${CONKA_APP_API_ORIGIN}/api/klaviyo/web-test-complete`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, testInstanceId, sourcePage }),
+        // Survives the visitor navigating away straight after the test.
+        keepalive: true,
       },
-      body: JSON.stringify({
-        email,
-        score,
-        accuracy,
-        speed,
-      }),
-    });
+    );
 
     if (!response.ok) {
-      // Log error but don't throw - graceful failure
       console.error(
-        `Klaviyo tracking failed: ${response.status} ${response.statusText}`,
+        `Klaviyo web test submit failed: ${response.status} ${response.statusText}`,
       );
     }
   } catch (error) {
-    // Silently fail - never interrupt user experience
-    console.error("Failed to track cognitive test to Klaviyo:", error);
+    console.error("Failed to send web test result to Klaviyo:", error);
   }
 }
 

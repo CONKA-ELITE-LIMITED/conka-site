@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { CognitiveTestEngine, type EngineResult } from "@/app/components/cognitive-test/engine";
+import { CONKA_APP_API_ORIGIN } from "@/app/lib/conkaAppApi";
 
 /**
  * Test harness for the engine. ?env=prod scores against production, anything
@@ -11,7 +12,7 @@ import { CognitiveTestEngine, type EngineResult } from "@/app/components/cogniti
  */
 const API_BASE_URLS = {
   staging: "https://conka-staging-api-qk3ezdiy3a-nw.a.run.app",
-  prod: "https://conka.app",
+  prod: CONKA_APP_API_ORIGIN,
 } as const;
 
 export default function DemoClient() {

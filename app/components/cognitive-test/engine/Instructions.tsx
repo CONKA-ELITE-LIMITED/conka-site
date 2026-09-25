@@ -28,8 +28,8 @@ export default function Instructions({ imageCount, ready, onStart }: Instruction
           {ready ? "Start" : "Loading"}
         </button>
         <p className={styles.panelMeta}>
-          {imageCount} images, {imageCount <= 20 ? "under a minute" : "about 2 minutes"}. On a keyboard, use the
-          arrow keys.
+          {imageCount} images, {imageCount <= 20 ? "under a minute" : "about 2 minutes"}. Best on a phone; on a
+          computer, click the left or right side.
         </p>
       </div>
     </TestContainer>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import type {
   TestState,
   TestResult,
@@ -8,13 +8,13 @@ import type {
   CognitiveTestSectionProps,
 } from "./types";
 import EmailCaptureForm from "./EmailCaptureForm";
-import CognicaSDK from "./CognicaSDK";
+import CognitiveTestRunner from "./CognitiveTestRunner";
 import CognitiveTestIdleCard from "./CognitiveTestIdleCard";
 import CognitiveTestLoader from "./CognitiveTestLoader";
 import CognitiveTestScores from "./CognitiveTestScores";
 import CognitiveTestRecommendation from "./CognitiveTestRecommendation";
 import CognitiveTestAppPromo from "./CognitiveTestAppPromo";
-import { trackCognitiveTest, subscribeAppTestSignup } from "@/app/lib/klaviyo";
+import { submitWebTestResult, subscribeAppTestSignup } from "@/app/lib/klaviyo";
 import {
   trackAppTestClicked,
   trackAppEmailSubmitted,
@@ -28,13 +28,6 @@ export default function CognitiveTestSectionMobile({
   const [emailSubmission, setEmailSubmission] =
     useState<EmailSubmission | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
-
-  const subjectId = useMemo(() => {
-    if (emailSubmission) {
-      return `website_${emailSubmission.submittedAt.getTime()}`;
-    }
-    return `website_${Date.now()}`;
-  }, [emailSubmission]);
 
   const handleStartTest = useCallback(() => {
     trackAppTestClicked();
@@ -54,27 +47,28 @@ export default function CognitiveTestSectionMobile({
     setTestState("testing");
   }, []);
 
-  const handleTestComplete = useCallback((result: TestResult) => {
-    setTestResult(result);
-    setTestState("processing");
-  }, []);
+  const handleTestComplete = useCallback(
+    (result: TestResult) => {
+      setTestResult(result);
+      setTestState("processing");
+      // Sent now, not after the loader: the server already holds the scores,
+      // and a visitor who leaves during the animation still gets the email.
+      if (emailSubmission) {
+        void submitWebTestResult(
+          emailSubmission.email,
+          result.testInstanceId,
+          window.location.pathname,
+        );
+      }
+    },
+    [emailSubmission],
+  );
 
   const handleProcessingComplete = useCallback(() => {
     setTestState("results");
 
     if (testResult) trackAppResultsViewed();
-
-    if (emailSubmission && testResult) {
-      trackCognitiveTest(
-        emailSubmission.email,
-        testResult.score,
-        testResult.accuracy,
-        testResult.speed,
-      ).catch((err) => {
-        console.error("Failed to track to Klaviyo:", err);
-      });
-    }
-  }, [emailSubmission, testResult]);
+  }, [testResult]);
 
   const handleRetakeTest = useCallback(() => {
     setTestResult(null);
@@ -115,12 +109,10 @@ export default function CognitiveTestSectionMobile({
 
         {testState === "testing" && (
           <div className="w-full">
-            <div className="min-h-[500px] overflow-hidden rounded-lg bg-[#111111] ring-1 ring-black/10">
-              <CognicaSDK
-                onComplete={handleTestComplete}
-                subjectId={subjectId}
-              />
-            </div>
+            <CognitiveTestRunner
+              onComplete={handleTestComplete}
+              className="h-[70svh] min-h-[500px] max-h-[640px]"
+            />
             <p className="mt-3 text-sm text-black/70">
               Tap right when you see an animal, and left for anything else.
               Scored on speed and accuracy.

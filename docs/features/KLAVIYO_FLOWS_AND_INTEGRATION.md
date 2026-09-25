@@ -18,7 +18,7 @@ Concise reference for what is triggered in Klaviyo, from where, and how.
   breaks the capture without any error surfacing. It is the same master "new
   users" list the footer newsletter signup feeds via
   `app/api/klaviyo/subscribe/route.ts`.
-- **Backend** uses `KLAVIYO_PRIVATE_KEY` for server-side APIs: subscribe to lists, track events (e.g. cognitive test). `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY` is still used by the cognitive-test track call.
+- **Backend** uses `KLAVIYO_PRIVATE_KEY` for server-side APIs: subscribe to lists, track events. The cognitive test result is sent by the CONKA app server, not this site (see `COGNITIVE_TEST.md`).
 - **Shopify → Klaviyo**: The Klaviyo app on Shopify sends checkout/order events to Klaviyo. Our headless site does **not** send cart or checkout events to Klaviyo; checkout-related metrics come from Shopify when the customer is on Shopify’s hosted checkout.
 
 ## What we trigger from this app (into Klaviyo)
@@ -26,7 +26,7 @@ Concise reference for what is triggered in Klaviyo, from where, and how.
 | Trigger / action | Where | How | Why |
 |------------------|--------|-----|-----|
 | **/app test email gate passed** | `app/lib/klaviyo.ts` `subscribeAppTestSignup` → `POST /api/klaviyo/app-test-signup` | Fires on email submit, before the test runs. Upserts the profile with `source: app_test`, then a subscription job records `SUBSCRIBED` email marketing consent (`custom_source: app_test`) and adds the profile to `WBbMia`. The route refuses a request without `consent: true` | Captures test signups even if they drop out mid-test. The gate checkbox ("Email me my results and news from CONKA") is the marketing consent |
-| **Cognitive test completed** | `app/lib/klaviyo.ts` → `POST /api/klaviyo/track-test` | Server calls Klaviyo Track API ("Website Short Test Submitted") with email, score, accuracy, speed, once the results screen loads | Carries the score onto the profile. List membership and consent come from the gate step above, not this event. Moves to the server-scored `/klaviyo/web-test-complete` with the native test, with renamed accuracy and speed properties: see `COGNITIVE_TEST.md` |
+| **Cognitive test completed** | `app/lib/klaviyo.ts` `submitWebTestResult` → `POST https://conka.app/api/klaviyo/web-test-complete` | The CONKA app server reads the scores from its own `test_stats` and sends "Website Short Test Submitted" (`latest_website_score`, `latest_website_accuracy`, `latest_website_speed`, `latest_website_test_date`, `source`, `source_page`), as soon as the test completes. Idempotent per email and test | Carries the score onto the profile. List membership and consent come from the gate step above, not this event. Flow `Udp9BE` (template `XNeUCC`) prints the score lines; see `COGNITIVE_TEST.md` |
 | **Subscribe to list (e.g. Win)** | `app/lib/klaviyo.ts` → `POST /api/klaviyo/subscribe` | Server creates/gets profile, adds to list via Klaviyo APIs | Newsletter / Win page sign-ups |
 
 We do **not** send Added to Cart or Checkout Started from this app. Checkout Started is sent by **Shopify** when the customer lands on the Shopify checkout page.

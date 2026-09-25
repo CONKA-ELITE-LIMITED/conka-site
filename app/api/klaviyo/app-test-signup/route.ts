@@ -33,7 +33,8 @@ const isRateLimited = createRateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
  *    the profile to the master list. `custom_source` labels where the consent
  *    came from in Klaviyo's consent record.
  *
- * The score still arrives separately, at the end, via /api/klaviyo/track-test.
+ * The score arrives separately, at the end: the CONKA app server sends it from
+ * its own test_stats (`submitWebTestResult` in app/lib/klaviyo.ts).
  * Returns 200 on every outcome except rate limiting, and the client never
  * awaits the response, so the test flow is never interrupted.
  */
