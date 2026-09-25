@@ -97,6 +97,45 @@ export function normaliseRelatedProducts(names: string[]): RelatedProduct[] {
     );
 }
 
+// --- Images -----------------------------------------------------------------
+
+/**
+ * Alt text worth reading aloud, or "" to mark the image decorative.
+ *
+ * notion-to-md falls back to the file name when an image block has no caption,
+ * so imported posts arrive with alt text like
+ * "ea1736_841af758b0434bc4ae79ca5f87e2e550_mv2.avif", and to the literal
+ * "image" when there is no name either. None of the 100 legacy in-body images
+ * carry usable alt (the source is either empty or the literal string "ree"),
+ * and the engine labels its images "Image 1", "Image 2". All of those are worse
+ * than nothing for a screen reader.
+ */
+export function usableAlt(alt: string | undefined): string {
+  const value = (alt ?? "").trim();
+  if (!value || /^(ree|image(\s*\d+)?)$/i.test(value)) return "";
+  return /\.(png|jpe?g|avif|webp|gif)$/i.test(value) ? "" : value;
+}
+
+/**
+ * Lift the first locally re-hosted body image out of the body so it can serve
+ * as the hero (SCRUM-1461).
+ *
+ * For posts with no `Hero image`: the engine often puts its only image in the
+ * body, and without this the article has no hero and shares fall back to the
+ * sitewide OG image. Only `/blog/...` paths qualify, because the hero is a
+ * `next/image` and an un-rehosted remote URL would fail its host allowlist. The
+ * image is removed from the body so it does not render twice.
+ */
+export function promoteFirstBodyImage(
+  md: string,
+): { src: string; alt: string; body: string } | null {
+  const match = md.match(/!\[([^\]]*)\]\((\/blog\/[^)\s]+)\)/);
+  if (!match) return null;
+  const [full, alt, src] = match;
+  const body = md.replace(full, "").replace(/\n{3,}/g, "\n\n");
+  return { src, alt, body };
+}
+
 // --- Body markdown post-processing ------------------------------------------
 
 /**

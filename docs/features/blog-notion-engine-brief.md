@@ -1,112 +1,108 @@
-# Brief: what the blog engine needs to write into Notion
+# Blog engine contract: what to write into Notion
 
-> **This is the authoring guide, aimed at whoever writes into Notion.** It stays the contract for how a post should be authored.
-> For how the site consumes that content (what silently skips a row, the render pipeline, the deploy rules), read [`docs/features/BLOG_SYSTEM.md`](BLOG_SYSTEM.md), which is canonical on behaviour.
-> One known drift (found 2026-07-17): this brief requires the FAQ heading to be H2 and the `Q:` line to be bold, but `extractFaq` accepts H2 or H3 and bold or plain. Author to the strict rule here; do not rely on the parser's leniency.
+> **The contract for anything that writes posts into the Blog Hub**, chiefly Humphrey's blog engine. Hand this file to the engine's Claude as-is.
+> How the site consumes the content (render pipeline, auto-publish, what silently skips a row) is canonical in [`BLOG_SYSTEM.md`](BLOG_SYSTEM.md).
+> Updated 2026-09-25 (SCRUM-1461) after auditing the first 7 engine posts. The site's FAQ parser is more lenient than this contract; write to the contract, not to the parser.
 
-**For:** Humphrey (to pass to the engine / his Claude)
-**About:** The "Blog Hub" Notion database (under CONKA Marketing Calendar > Content) that the site's new `/blog` reads from.
-**Updated:** 2026-07-15. Upgraded from "clean markdown text" to **native Notion blocks** after inspecting the live API output.
+**Where:** the "Blog Hub" Notion database (CONKA Marketing Calendar > Content). Every row is one post on conka.io/blog.
 
-We are wiring the CONKA site to publish blog posts directly from this Notion database: the site reads each row and renders it as a live page. Two things need to change in what the engine writes: (1) fill some structured data into database **columns**, and (2) write the article body as **native Notion blocks**, not markdown text.
+**How publishing works now:** when a human sets `Status = Published`, the site picks it up automatically and the post is live within about an hour (6am to midnight UK time). There is no review step after that flip. So everything below has to be right **before** a post reaches `Ready for review`.
 
 ---
 
-## 1. The core change: native Notion blocks, not markdown text
+## 1. The status rule (most important)
 
-Right now the engine writes each post as markdown pasted into Notion **paragraph** blocks: literal `- **bold**`, `#` headings, `[text](url)` links. Notion stores that as raw text, so on the page (and inside Notion itself) it shows literal asterisks and dashes instead of formatting, and it cannot be cleanly reviewed or edited in Notion.
+The engine writes `Status = Draft` or `Status = Ready for review`. **Never `Published`.** Publishing is a human decision, and it now means live on the site within the hour.
 
-The engine should instead create **native Notion blocks** via the Notion API:
-
-| Content | Write it as | Not as |
-|---------|-------------|--------|
-| Section heading | a `heading_2` / `heading_3` block | a paragraph starting with `##` |
-| Bold / italic | rich-text **annotations** (`bold: true`) | literal `**asterisks**` |
-| Bullet point | a `bulleted_list_item` block | a paragraph starting with `- ` |
-| Numbered list | a `numbered_list_item` block | a paragraph starting with `1. ` |
-| Link | rich-text with an `href` (one clean link) | `[text](url)`, and never nested `[..](..[..](..))` |
-| Image | an `image` block | markdown image syntax |
-
-Before / after for one bullet:
-- **Now (wrong):** a paragraph block with text `- **Alpha GPC** — crosses the blood-brain barrier...`
-- **Want:** a `bulleted_list_item` block whose text is `Alpha GPC` in real bold, then `, crosses the blood-brain barrier...` (no leading `- `, no `**`, comma not em dash)
-
-The simplest check: if the post looks properly formatted inside Notion (real headings, real bullets, real bold, no visible markdown symbols), it will render correctly on the site.
+Never set `Date published` either. The CONKA side owns it.
 
 ---
 
-## 2. Fill in these database columns on every post
+## 2. Columns to fill on every post
 
-We have added new columns to the Blog Hub database. Populate them per post:
+| Column | Rule | Example |
+|---|---|---|
+| `Blog name` | The headline and page H1. 50 to 60 characters, includes the target keyword. **No years** ("in 2025" dates the post the day the year turns). | `Brain Fog Supplement: What Actually Works and Why` |
+| `Slug` | Lowercase, hyphenated, no domain, no `/blog/`. **Unique**, and never changed once published. | `brain-fog-supplement-what-actually-works` |
+| `Meta description` | 150 to 160 characters of finished copy. **Nothing else in the field**: no character counts, notes or placeholders. No em dashes. | `Struggling with afternoon brain fog? Here is which supplements are clinically proven to work, and the mechanism behind each.` |
+| `Hero image` | **Required.** Upload the image file to this property (or set an external image URL). Landscape, ideally 1200x630. It becomes the article hero, the blog card and the social share image. | (file) |
+| `Hero image alt` | **Required.** One plain sentence describing the hero image. | `A CONKA shot on a desk beside a laptop` |
+| `Topic` | One or more of: ADHD, Brain Ageing, Brain Fog, Concussion, Focus, Military, Neuroscience, Nootropics, Productivity, Recovery, Sport. Pick what the post is actually about; do not default everything to Productivity. | `Focus`, `Nootropics` |
+| `Related products` | One or more of `flow`, `clear`, `both`. Drives the product call-to-action. | `both` |
+| `Source` | Always `engine`. | `engine` |
+| `Angle` | Internal note. Never shown on the site. | `Environment and performance` |
 
-| Column | What to put in it | Example |
-|--------|-------------------|---------|
-| `Blog name` (title) | The headline. Becomes the page H1 and the base of the SEO title. 50 to 60 characters, include the target keyword. | `Brain Fog Supplement: What Actually Works and Why` |
-| `Slug` | URL segment only. Lowercase, hyphenated, no spaces, no domain, no `/blog/` prefix. Must be unique. | `brain-fog-supplement-what-actually-works` |
-| `Meta description` | The meta description. 150 to 160 characters. No em dashes. | `Struggling with afternoon brain fog? Here is which supplements are clinically proven to work, and the mechanism behind each.` |
-| `Related products` | Which CONKA product the post features. One or more of `flow`, `clear`, `both`. Drives the automatic product call-to-action. | `clear` |
-| `Hero image` | The lead image if the post has one (ideally 1200x630). Optional. | (uploaded file) |
-| `Hero image alt` | Plain-language description of the hero image. Required only if a hero image is set. | `Person focusing at a desk in the afternoon` |
-| `Topic` | Keep using the existing options (ADHD / Brain Ageing / Productivity). | `Productivity` |
-| `Angle` | Keep as an internal editorial note. Not shown on the site. | `Menopause brain fog` |
+**A post missing `Blog name`, `Slug` or `Meta description` never appears on the site, silently.** No error, no page.
 
-**Do not set `Status` or `Date published`.** Those are managed by the CONKA side. Leave `Status` blank or `Draft`. A post only goes live when a human reviews it and sets `Status = Published`. The engine must never set `Published` itself.
-
-**One post = one row.** Please avoid duplicate rows for the same post (there are a couple in there now that we will clean up).
-
----
-
-## 3. Remove the SEO callout from the body
-
-Each post body currently opens with a blue callout containing `Title tag` / `Meta description` / `URL slug` / `Primary keyword`. That data now lives in the columns above, so please **remove the callout from the body**.
+**One post, one row.** Before creating a post, search the Blog Hub for an existing post on the same angle or keyword. Two posts on the same subject compete with each other in search. If one exists, improve it instead.
 
 ---
 
-## 4. Body rules
+## 3. The body: native Notion blocks only
 
-- **Start at Heading 2.** Do not repeat the title in the body. Currently posts include both a plain title line and a `#` heading at the top; remove both. The site renders the H1 from the `Blog name` column.
-- **Answer-first opening.** The first paragraph directly answers the target query in plain language. (The current posts already do this well, keep it.)
-- **Heading 2 for main sections, Heading 3 for sub-sections.** Clear hierarchy is what AI answer engines rely on.
-- **No em dashes anywhere.** Use commas, colons, or shorter sentences.
-- **Length:** roughly 800 to 1500 words for a cornerstone post.
+Write the body with the Notion API's native block types. If the post looks properly formatted inside Notion (real headings, real bullets, real bold, no visible markdown symbols), it renders correctly on the site.
+
+| Content | Write it as | Never as |
+|---|---|---|
+| Section heading | `heading_2`, sub-section `heading_3` | a paragraph starting with `##` |
+| Bold / italic | rich-text annotations | literal `**asterisks**` |
+| Bullet / numbered list | `bulleted_list_item` / `numbered_list_item` | a paragraph starting with `- ` or `1. ` |
+| Link | rich text with an `href` that is a plain URL, e.g. `https://conka.io/ingredients` | `[text](url)` typed as text, or a URL containing markdown |
+| Image | an `image` block (uploaded file, or external URL) with a **caption** | markdown image text such as `![Image 1](https://...)` in a paragraph |
+
+**Image captions become the image's alt text** on the site, so write a real description ("Two CONKA shots next to a morning coffee"), never `Image 1`.
+
+Other body rules:
+
+- **Start at Heading 2.** Never repeat the title in the body; the H1 comes from `Blog name`.
+- **Answer-first opening.** The first paragraph answers the target query directly.
+- **No SEO callout** (Title tag / Meta description / URL slug / Primary keyword) in the body. That data lives in the columns.
+- **No em dashes anywhere.** Use commas, colons or shorter sentences.
+- **Length:** roughly 800 to 1500 words.
 
 ---
 
-## 5. FAQ section (optional, keep the format consistent)
+## 4. FAQ format (exact)
 
-If a post has an FAQ, it lets the site publish structured FAQ data that answer engines read. Use this exact, repeatable format:
+Optional, but if present it must be exactly this, or the site shows it as broken text and search engines get no FAQ data:
 
-- A Heading 2 titled exactly `Frequently Asked Questions`.
-- Under it, each question as a **paragraph with the question in bold, beginning `Q:`**, immediately followed by an answer paragraph **beginning `A:`**.
+- A **Heading 2** titled exactly `Frequently Asked Questions`.
+- Each question as a paragraph whose text starts `Q:`, in **bold**.
+- The answer as the next paragraph, starting `A:`.
 
-Example (as it should look in Notion, with real bold on the Q line):
+As it should look in Notion (the Q line in real bold):
 
 > ## Frequently Asked Questions
 >
 > **Q: What is the best supplement for brain fog?**
-> A: The best brain fog supplements target specific mechanisms: Alpha GPC and Citicoline raise acetylcholine, Phosphatidylserine maintains neuronal membranes, and Ginkgo Biloba increases cerebral blood flow.
+> A: The best brain fog supplements target specific mechanisms: Alpha GPC raises acetylcholine and Ginkgo Biloba increases cerebral blood flow.
 
-If a post has no FAQ, omit the section.
+**Never** the `question:` / `answer:` form below. It renders as raw text on the page and produces no FAQ data:
+
+```
+- question: "What is the best supplement for brain fog?"
+answer: "The best brain fog supplements..."
+```
 
 ---
 
-## 6. One content note
+## 5. Content note
 
-For a comparison-style term the CONKA product pages already target (for example "best nootropics uk"), differentiate the blog post's angle and title rather than mirroring the product page word for word. Informational topics (brain fog, menopause brain fog, what are nootropics, ingredient explainers) are the blog's lane. This avoids the blog and the product page competing for the same phrase.
+For a term the CONKA product pages already target (for example "best nootropics uk"), take a different angle and title rather than mirroring the product page. Informational topics (brain fog, what are nootropics, ingredient explainers, focus habits) are the blog's lane.
 
 ---
 
-## Per-post checklist for the engine
+## Per-post checklist
 
-- [ ] `Blog name` set (keyword-bearing headline)
-- [ ] `Slug` set (unique, lowercase-hyphenated, no domain)
-- [ ] `Meta description` set (150 to 160 chars, no em dashes)
-- [ ] `Related products` set (flow / clear / both)
-- [ ] `Hero image` + `Hero image alt` set if a hero exists
-- [ ] `Topic` and `Angle` set
-- [ ] `Status` left blank or `Draft` (never `Published`)
-- [ ] SEO callout removed from the body
-- [ ] Body written as **native Notion blocks** (real headings, bullets, bold, links, images), no markdown symbols visible in Notion
-- [ ] Body starts at Heading 2, no repeated title
+- [ ] `Status` is `Draft` or `Ready for review`, never `Published`; `Date published` untouched
+- [ ] `Blog name` set, keyword-bearing, no year
+- [ ] `Slug` set, unique, lowercase-hyphenated
+- [ ] `Meta description` 150 to 160 chars of finished copy, nothing else in the field
+- [ ] `Hero image` uploaded and `Hero image alt` written
+- [ ] `Topic` chosen from the full list, `Related products` set, `Source = engine`
+- [ ] No existing post on the same angle
+- [ ] Body in native blocks, starting at Heading 2, no repeated title, no SEO callout
+- [ ] Images are `image` blocks with descriptive captions
+- [ ] Links are plain `https://` URLs
+- [ ] FAQ (if any) in the bold `Q:` / `A:` form
 - [ ] No em dashes
-- [ ] FAQ (if any) in the bold-`Q:` / `A:` format above

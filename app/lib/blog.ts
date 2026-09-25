@@ -28,12 +28,14 @@ import {
   cleanBody,
   extractFaq,
   normaliseRelatedProducts,
+  promoteFirstBodyImage,
   readDate,
   readFirstFileUrl,
   readingTime,
   readMultiSelect,
   readRichText,
   readTitle,
+  usableAlt,
   type BlogPost,
   type BlogPostSummary,
 } from "./blogTransform";
@@ -126,10 +128,11 @@ async function rehostImage(
 /**
  * Hosts we mirror locally at build. Notion's own URLs expire after ~1 hour;
  * the Shopify and Wix hosts carry images on legacy posts imported from the old
- * Shopify blog, which we own no part of and must not hot-link to forever.
+ * Shopify blog, and Cloudinary carries the blog engine's images from an
+ * account we do not own. None of them may be hot-linked forever.
  */
 const REHOSTABLE_IMAGE_HOSTS =
-  /amazonaws\.com|notion\.so|notion-static|cdn\.shopify\.com|static\.wixstatic\.com/i;
+  /amazonaws\.com|notion\.so|notion-static|cdn\.shopify\.com|static\.wixstatic\.com|res\.cloudinary\.com/i;
 
 /** Download every in-body remote image and rewrite the markdown to local paths. */
 async function rehostBodyImages(md: string, slug: string): Promise<string> {
@@ -347,10 +350,20 @@ export async function getPostBySlug(
 
   const raw = await pageToMarkdown(row.id);
   const cleaned = cleanBody(raw, summary.title);
-  const bodyMarkdown = await rehostBodyImages(cleaned, summary.slug);
+  const rehosted = await rehostBodyImages(cleaned, summary.slug);
+
+  // No Hero image set: promote the first body image so the article and its OG
+  // share still get one. Listing cards keep the placeholder, since they never
+  // fetch a body.
+  const promoted = summary.heroImage ? null : promoteFirstBodyImage(rehosted);
+  const bodyMarkdown = promoted?.body ?? rehosted;
 
   return {
     ...summary,
+    ...(promoted && {
+      heroImage: promoted.src,
+      heroImageAlt: usableAlt(promoted.alt) || summary.title,
+    }),
     readingTime: readingTime(bodyMarkdown),
     bodyMarkdown,
     faq: extractFaq(bodyMarkdown),

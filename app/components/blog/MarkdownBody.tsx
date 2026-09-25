@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { usableAlt } from "@/app/lib/blogTransform";
 
 function nodeText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -33,20 +34,6 @@ const linkClass =
  * them scrolling the whole body sideways.
  */
 const bodyClass = "brand-body !max-w-none leading-[1.7] text-black/80 break-words";
-
-/**
- * notion-to-md falls back to the file name when an image block has no caption,
- * so imported posts arrive with alt text like
- * "ea1736_841af758b0434bc4ae79ca5f87e2e550_mv2.avif". That is worse than nothing
- * for a screen reader. None of the 100 legacy in-body images carry usable alt
- * (the source is either empty or the literal string "ree"), so a filename-shaped
- * alt is treated as decorative rather than read aloud.
- */
-function usableAlt(alt: string | undefined): string {
-  const value = (alt ?? "").trim();
-  if (!value || value.toLowerCase() === "ree") return "";
-  return /\.(png|jpe?g|avif|webp|gif)$/i.test(value) ? "" : value;
-}
 
 export default function MarkdownBody({ markdown }: { markdown: string }) {
   return (
