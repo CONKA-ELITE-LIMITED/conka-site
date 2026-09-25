@@ -2,13 +2,16 @@
  * Blog domain layer: turns Notion "Blog Hub" rows into typed posts with a
  * render-ready body, and re-hosts Notion's expiring images locally at build.
  *
- * Server-only, read at build time (static generation). This is the single
- * source of truth for the published filter, so the listing, the sitemap, and
- * generateStaticParams cannot disagree.
+ * Server-only. Pages read it at build time (static generation); the one runtime
+ * caller is the auto-publish cron, via `getPublishedFingerprint`, which touches
+ * no images and no build guards. This is the single source of truth for the
+ * published filter, so the listing, the sitemap, generateStaticParams and the
+ * cron cannot disagree.
  *
  * See docs/development/featurePlans/archive/blog-informational-content-surface.md.
  */
 import "server-only";
+import { createHash } from "node:crypto";
 import { mkdir, writeFile, access } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -25,12 +28,14 @@ import {
   cleanBody,
   extractFaq,
   normaliseRelatedProducts,
+  promoteFirstBodyImage,
   readDate,
   readFirstFileUrl,
   readingTime,
   readMultiSelect,
   readRichText,
   readTitle,
+  usableAlt,
   type BlogPost,
   type BlogPostSummary,
 } from "./blogTransform";
@@ -123,10 +128,11 @@ async function rehostImage(
 /**
  * Hosts we mirror locally at build. Notion's own URLs expire after ~1 hour;
  * the Shopify and Wix hosts carry images on legacy posts imported from the old
- * Shopify blog, which we own no part of and must not hot-link to forever.
+ * Shopify blog, and Cloudinary carries the blog engine's images from an
+ * account we do not own. None of them may be hot-linked forever.
  */
 const REHOSTABLE_IMAGE_HOSTS =
-  /amazonaws\.com|notion\.so|notion-static|cdn\.shopify\.com|static\.wixstatic\.com/i;
+  /amazonaws\.com|notion\.so|notion-static|cdn\.shopify\.com|static\.wixstatic\.com|res\.cloudinary\.com/i;
 
 /** Download every in-body remote image and rewrite the markdown to local paths. */
 async function rehostBodyImages(md: string, slug: string): Promise<string> {
@@ -143,12 +149,53 @@ async function rehostBodyImages(md: string, slug: string): Promise<string> {
   return out;
 }
 
+/**
+ * The three fields a row needs to render at all. The single definition of
+ * "renderable", shared by `toSummary` and `publishedFingerprint`, so what the
+ * build renders and what the auto-publish cron counts as live cannot drift.
+ */
+function readRequiredFields(props: Record<string, unknown>) {
+  return {
+    title: readTitle(props, "Blog name"),
+    slug: readRichText(props, "Slug"),
+    description: readRichText(props, "Meta description"),
+  };
+}
+
+/**
+ * A hash of what the published blog contains: every renderable row's slug and
+ * last-edit time (SCRUM-1460).
+ *
+ * The build serves this from `/api/blog/fingerprint`, and the auto-publish cron
+ * recomputes it from a live Notion read. A difference means a post was
+ * published, unpublished or edited since the live deploy was built, so the cron
+ * redeploys. Draft edits never change it, because only Published rows are read.
+ *
+ * Pure over the rows: no image re-hosting and no build guards, both of which
+ * are unsafe outside a build. Rows that fail validation are excluded exactly as
+ * the renderer skips them; counting them here would make the two sides disagree
+ * forever and redeploy every hour.
+ */
+export function publishedFingerprint(rows: NotionRow[]): string {
+  const entries = rows
+    .map((row) => {
+      const { title, slug, description } = readRequiredFields(row.properties);
+      return title && slug && description ? `${slug}@${row.lastEditedTime}` : null;
+    })
+    .filter((entry): entry is string => entry !== null)
+    .sort();
+  return createHash("sha256").update(entries.join("\n")).digest("hex");
+}
+
+/** The fingerprint of the published blog as Notion holds it right now. */
+export async function getPublishedFingerprint(): Promise<string> {
+  return publishedFingerprint(await queryBlogRows(true));
+}
+
 /** Map a Notion row to listing-level metadata, or null if it fails validation. */
 async function toSummary(row: NotionRow): Promise<BlogPostSummary | null> {
   const props = row.properties;
-  const title = readTitle(props, "Blog name");
-  const slug = readRichText(props, "Slug");
-  const description = readRichText(props, "Meta description");
+  const { title, slug, description } = readRequiredFields(props);
 
   if (!title || !slug || !description) {
     console.warn(
@@ -303,10 +350,20 @@ export async function getPostBySlug(
 
   const raw = await pageToMarkdown(row.id);
   const cleaned = cleanBody(raw, summary.title);
-  const bodyMarkdown = await rehostBodyImages(cleaned, summary.slug);
+  const rehosted = await rehostBodyImages(cleaned, summary.slug);
+
+  // No Hero image set: promote the first body image so the article and its OG
+  // share still get one. Listing cards keep the placeholder, since they never
+  // fetch a body.
+  const promoted = summary.heroImage ? null : promoteFirstBodyImage(rehosted);
+  const bodyMarkdown = promoted?.body ?? rehosted;
 
   return {
     ...summary,
+    ...(promoted && {
+      heroImage: promoted.src,
+      heroImageAlt: usableAlt(promoted.alt) || summary.title,
+    }),
     readingTime: readingTime(bodyMarkdown),
     bodyMarkdown,
     faq: extractFaq(bodyMarkdown),

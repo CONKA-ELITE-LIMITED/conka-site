@@ -41,6 +41,13 @@ const nextConfig: NextConfig = {
   // Redirects
   async redirects() {
     return [
+      // Near-duplicate engine post, trashed in Notion (SCRUM-1461). Live for a
+      // week, so its URL points at the post it duplicated rather than a 404.
+      {
+        source: '/blog/every-technological-revolution-cost-us-human-skill',
+        destination: '/blog/every-technological-revolution-made-life-easier-cost-us-human-skill',
+        permanent: true,
+      },
       // Loop is decommissioned and its self-built portal is deleted. Skio's
       // embedded portal at /account/manage replaces it. Permanent so bookmarks,
       // Klaviyo templates and historic order emails we do not control still land
