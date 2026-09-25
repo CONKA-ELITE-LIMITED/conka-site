@@ -44,7 +44,7 @@ Scoped 2026-09-25. Canonical blog reference: `docs/features/BLOG_SYSTEM.md`.
    - Equal: return 200, no-op.
    - Different: check the Vercel API for the latest production deployment. Skip if one is `QUEUED`/`BUILDING`. Back off (skip) if the latest production deployment is `ERROR` and under 3 hours old. Otherwise POST the deploy hook.
    - Logs the decision in one line (`blog-publish: no change | triggered | skipped: building | skipped: recent failure`).
-4. **Wiring.** `vercel.json` `crons`: `{ "path": "/api/cron/blog-publish", "schedule": "0 5-23 * * *" }` (UTC: 06:00 to 00:00 BST, 05:00 to 23:00 GMT). Hourly needs Vercel Pro; Hobby allows one run a day. Confirm the plan before building. Create the Vercel deploy hook on `main`. Env vars (all secrets, production only): `BLOG_DEPLOY_HOOK_URL`, `CRON_SECRET`, `VERCEL_API_TOKEN` (read deployments only).
+4. **Wiring.** `vercel.json` `crons`: `{ "path": "/api/cron/blog-publish", "schedule": "0 5-23 * * *" }` (UTC: 06:00 to 00:00 BST, 05:00 to 23:00 GMT). Create the Vercel deploy hook on `main`. Env vars (all secrets, production only): `BLOG_DEPLOY_HOOK_URL`, `CRON_SECRET`, `VERCEL_API_TOKEN` (read deployments only).
 5. **Failed-deploy alert.** Vercel notification for failed production deployments to the owner. Nobody watches these builds any more.
 6. **Docs.** `BLOG_SYSTEM.md`: publishing is now automatic within the hour (6am to midnight); how to read the cron log; how to force one (trigger the hook). Remove the "then redeploy" instructions there and in `scripts/README.md`.
 
