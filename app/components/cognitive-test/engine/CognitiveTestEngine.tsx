@@ -158,7 +158,7 @@ export default function CognitiveTestEngine({
   return (
     <div className={styles.root} style={vars}>
       {(stage === "preparing" || stage === "ready") && (
-        <Instructions imageCount={imageCount} ready={stage === "ready"} onStart={() => setStage("test")} />
+        <Instructions ready={stage === "ready"} onStart={() => setStage("test")} />
       )}
 
       {stage === "test" && (

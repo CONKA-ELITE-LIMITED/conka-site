@@ -2,13 +2,12 @@ import TestContainer from "./TestContainer";
 import styles from "./engine.module.css";
 
 interface InstructionsProps {
-  imageCount: number;
   ready: boolean;
   onStart: () => void;
 }
 
 /** The two answers on their own halves, one line of how-to, and Start. */
-export default function Instructions({ imageCount, ready, onStart }: InstructionsProps) {
+export default function Instructions({ ready, onStart }: InstructionsProps) {
   return (
     <TestContainer>
       <div className={`${styles.sideLabel} ${styles.sideLabelLeft}`}>
@@ -27,10 +26,6 @@ export default function Instructions({ imageCount, ready, onStart }: Instruction
         <button type="button" className={styles.button} disabled={!ready} onClick={onStart}>
           {ready ? "Start" : "Loading"}
         </button>
-        <p className={styles.panelMeta}>
-          {imageCount} images, {imageCount <= 20 ? "under a minute" : "about 2 minutes"}. Best on a phone; on a
-          computer, click the left or right side.
-        </p>
       </div>
     </TestContainer>
   );

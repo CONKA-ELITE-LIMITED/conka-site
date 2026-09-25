@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-25** | /app cognition test now matches the real app: grey left half, black right half, brand font; the image-count line under Start is gone (SCRUM-1457)
 - **2026-09-25** | /app cognition test now runs on our own engine instead of the Cognetivity iframe: styled to the site, scored by our server, and the Klaviyo result email is fed server-verified scores (SCRUM-1457)
 - **2026-09-25** | Native web cognition test engine (React port of the app's test, scored by our own server) with an internal demo at /conka-app-demo; not yet swapped into the live site test (SCRUM-1456)
 - **2026-09-25** | Blog: engine images are copied to conka.io instead of loading from an outside Cloudinary account, a post with no hero uses its first body image as the hero and share image, placeholder alt text like "Image 1" is dropped, and the engine brief is rewritten as a strict contract (SCRUM-1461)

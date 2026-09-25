@@ -18,7 +18,7 @@ The test is our own engine, a React port of the mobile app's test, scored by the
 
 1. **Idle.** `CognitiveTestIdleCard` invites the visitor in.
 2. **Email gate.** `EmailCaptureForm`. On submit, `subscribeAppTestSignup` adds the email to the Klaviyo master list with consent, tagged `source: app_test` (SCRUM-1360). This runs before the test so a visitor who drops out is still captured.
-3. **Testing.** `CognitiveTestRunner` renders the engine in the site theme (navy and deep grey halves, white text, brand font) and calls `onComplete(TestResult)` with the server's `score`, `accuracy` and `speed` rounded for display, plus the `testInstanceId`. At that moment `submitWebTestResult` asks the server to send the result to Klaviyo (a `keepalive` request, so it survives the visitor leaving during the loader).
+3. **Testing.** `CognitiveTestRunner` renders the engine in the real app's look (the engine's default grey left half, black right half and white pill; only the font is overridden, to the brand font) and calls `onComplete(TestResult)` with the server's `score`, `accuracy` and `speed` rounded for display, plus the `testInstanceId`. At that moment `submitWebTestResult` asks the server to send the result to Klaviyo (a `keepalive` request, so it survives the visitor leaving during the loader).
 4. **Processing.** `CognitiveTestLoader` plays a short animation.
 5. **Results.** `CognitiveTestScores`, `CognitiveTestRecommendation`, `CognitiveTestAppPromo` (Klaviyo details below).
 
@@ -46,7 +46,7 @@ Every answer is held in the browser until the end; the server sees nothing betwe
 | `app/components/cognitive-test/engine/testService.ts` | Client for `/springboot/open`, `/steps`, `/complete` and the wire format |
 | `app/components/cognitive-test/engine/images.ts` | Image set, balanced sequence builder, preloader |
 | `public/cognica/` | Test images (`test/<id>.jpg`) and masks (`masks/<id>.png`), copied from the app |
-| `app/components/cognitive-test/CognitiveTestRunner.tsx` | The engine in the site theme; maps the engine's result to `TestResult` |
+| `app/components/cognitive-test/CognitiveTestRunner.tsx` | The engine in the app's default theme with the brand font; maps the engine's result to `TestResult` |
 | `app/lib/conkaAppApi.ts` | `CONKA_APP_API_ORIGIN`, the one place the app server's origin is set |
 | `app/conka-app-demo/` | Internal noindex harness for the engine |
 | `app/components/cognitive-test/CognitiveTestSection.tsx` / `...Mobile.tsx` | The `/app` test section and its state machine |

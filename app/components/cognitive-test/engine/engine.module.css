@@ -157,12 +157,6 @@
   color: var(--cte-text);
 }
 
-.panelMeta {
-  margin: 0.75rem 0 0;
-  font-size: 0.8125rem;
-  color: var(--cte-muted);
-}
-
 .button {
   display: inline-flex;
   align-items: center;

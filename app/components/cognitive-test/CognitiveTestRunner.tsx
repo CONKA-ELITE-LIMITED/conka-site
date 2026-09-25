@@ -10,20 +10,11 @@ import { CONKA_APP_API_ORIGIN } from "@/app/lib/conkaAppApi";
 import type { TestResult } from "./types";
 
 /**
- * The engine in the site's Simple DTC look: a navy left half, a deep grey right
- * half, white text and a white pill for Start. Plain brand tokens only, which
- * the engine's custom properties resolve against the page (no color-mix, so
- * older Safari renders it too).
+ * The engine in the real app's look: its default grey left half, black right
+ * half and white pill for Start. Only the font is the site's.
  */
 const SITE_THEME: EngineTheme = {
-  leftBackground: "var(--brand-navy)",
-  rightBackground: "var(--brand-deep-grey)",
-  text: "var(--brand-white)",
-  mutedText: "var(--brand-neutral)",
-  accent: "var(--brand-white)",
-  accentText: "var(--brand-navy)",
   fontFamily: "var(--font-brand-primary)",
-  radius: "9999px",
 };
 
 interface CognitiveTestRunnerProps {
