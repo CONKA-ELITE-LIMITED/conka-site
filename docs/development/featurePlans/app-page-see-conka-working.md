@@ -97,7 +97,7 @@ At the very end, once Phases 1 and 3 events have data.
 
 ## Rabbit holes
 
-- **The test iframe.** It is Cognetivity's; we style around it, never inside it.
+- **The test.** Superseded: the Cognetivity iframe was replaced by our own themeable engine (SCRUM-1457, `docs/features/COGNITIVE_TEST.md`).
 - **Phone mockups.** Real screenshots in one simple phone frame. No 3D device renders.
 - **Consent.** Reuse the SCRUM-1342 pattern. Do not create a second consent path alongside the Alia popup.
 
@@ -112,7 +112,7 @@ At the very end, once Phases 1 and 3 events have data.
 ## Risks
 
 - **Screenshots gate Phase 2.** Quality of the redesign rides on them.
-- **SDK host.** The test iframe loads from `conkasdkdev.cognetivity.com`. Confirm with Cognetivity that it is the production host before driving more traffic to the test.
+- ~~SDK host~~ **Closed (SCRUM-1457).** The test no longer loads from Cognetivity: it runs our own engine, scored by conka.app. See `docs/features/COGNITIVE_TEST.md`.
 
 ## References
 
