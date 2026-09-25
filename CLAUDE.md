@@ -126,7 +126,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 
 ## Routes
 
-**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/offerData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes, listicles + offer pages, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
+**Active:** `/` home · `/conka-flow` · `/conka-clarity` · `/conka-both` · `/build-your-order` (Build Your Order flow, noindex; data layer `app/lib/offerData.ts` + `byoCheckout.ts`) · `/professionals` · `/account` · `/go/[slug]` (ad landing quizzes, listicles + offer pages, noindex) · `/start`/`/lander` (redirect to `-b` trial variants) · `/conka-app-demo` (internal cognition test engine harness, noindex) · static content pages (`/science`, `/our-story`, `/why-conka`, `/ingredients`, `/app`, `/case-studies`)
 **Being removed:** `/protocol/[id]` (redirect) · `/quiz` (redirect) · `/shop` (redirect) · `/funnel`, `/funnel-b`, `/funnel-c` (redirect to `/build-your-order`, SCRUM-1247)
 
 ## Docs index
@@ -155,6 +155,7 @@ All analytics fire from `CartContext` after successful cart mutations. Pass `met
 | `docs/features/SUBSCRIPTIONS.md` | **Subscriptions (Skio) — canonical.** Read before touching subscriptions, `/account` or selling plans. The percentage-off pricing model and its traps, selling plans, starter variants and Journeys, bundle/Synergy rules, the portal and its swap lockdown, env vars, code map, attribution, retention. The retention pipeline itself lives in the separate `conka-lab` repo |
 | `docs/features/CART_LOGIC.md` | Cart actions, persistence, B2B normalization |
 | `docs/features/NIKE_TRIAL_PAGE.md` | **Nike trial page** (`/nike`) — private, noindex onboarding page for the corporate cognition trial. Placeholders to fill before sharing, hard-coded trial dates, warm-dark treatment |
+| `docs/features/COGNITIVE_TEST.md` | **Website cognition test** — the `/app` test, the native engine in `app/components/cognitive-test/engine/` (scored by our Flask `/springboot/*`, no Cognetivity), backend contract, Klaviyo event paths and the property-name gotcha, `/conka-app-demo` harness |
 | `docs/features/CUSTOMER_PORTAL.md` | Account portal |
 | `docs/features/b2b/B2B_PORTAL.md` | B2B professional portal |
 | `docs/branding/QUALITY_STANDARDS.md` | **Quality bar** — what premium looks like, reference sites, mobile-first mandate, consumability principle |

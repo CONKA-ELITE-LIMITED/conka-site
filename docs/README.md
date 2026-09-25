@@ -49,6 +49,7 @@ The most important cluster for anything touching products, variants, or money.
 | [`features/LANDING_QUIZ_SYSTEM.md`](./features/LANDING_QUIZ_SYSTEM.md) | `/go` **quiz** format — engine, screen schema, scoring, Convex capture. |
 | [`features/FAQ_SYSTEM.md`](./features/FAQ_SYSTEM.md) | FAQ single-source rule, per-surface subsets, claims anchors. |
 | [`features/NIKE_TRIAL_PAGE.md`](./features/NIKE_TRIAL_PAGE.md) | Private Nike trial onboarding page (`/nike`). |
+| [`features/COGNITIVE_TEST.md`](./features/COGNITIVE_TEST.md) | **Website cognition test** — the `/app` test flow, the native engine on our Flask scoring, backend contract, Klaviyo event paths, `/conka-app-demo`. |
 | [`features/CASE_STUDIES.md`](./features/CASE_STUDIES.md) · [`features/TESTIMONIALS.md`](./features/TESTIMONIALS.md) · [`features/BANNER_SYSTEM.md`](./features/BANNER_SYSTEM.md) · [`features/WHAT_TO_EXPECT.md`](./features/WHAT_TO_EXPECT.md) · [`features/KLAVIYO_FLOWS_AND_INTEGRATION.md`](./features/KLAVIYO_FLOWS_AND_INTEGRATION.md) | Other feature surfaces. |
 | [`features/blog-notion-engine-brief.md`](./features/blog-notion-engine-brief.md) | Blog authoring contract + Notion property schema. `BLOG_SYSTEM.md` defers to it. |
 
