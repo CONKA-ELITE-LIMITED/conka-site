@@ -84,7 +84,7 @@ One event, `Website Short Test Submitted`, feeds the website test flow. The brow
 | `latest_website_accuracy`, `latest_website_speed` | rounded half up |
 | `latest_website_test_date`, `source`, `source_page` | test date, `"website"`, the page path (`/app`) |
 
-**Gotcha:** until SCRUM-1457 the event came from this site with `accuracy` and `speed` (no prefix). The one flow on this event, `Udp9BE` "Email Website Cognition Test Scores - New", uses template `XNeUCC`, which printed `{{ event.accuracy }}` and `{{ event.speed }}`. Those must read `{{ event.latest_website_accuracy }}` and `{{ event.latest_website_speed }}` or the email shows blanks. Any new template or segment on this event should use the prefixed names.
+**Gotcha:** before SCRUM-1457 the event came from this site with unprefixed `accuracy` and `speed`; those no longer arrive. The one flow on this event, `Udp9BE` "Email Website Cognition Test Scores - New" (template `XNeUCC`), prints `{{ event.latest_website_score }}`, `{{ event.latest_website_accuracy }}` and `{{ event.latest_website_speed }}`. Any new template or segment on this event must use the prefixed names.
 
 The master-list signup at the email gate (`/api/klaviyo/app-test-signup`) is separate. See `KLAVIYO_FLOWS_AND_INTEGRATION.md` for the list and flow definitions.
 
