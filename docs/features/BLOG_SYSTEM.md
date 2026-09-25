@@ -6,7 +6,7 @@ How `/blog` works: Notion is the CMS, the site is fully static, and posts are pr
 
 Posts live in a Notion database ("Blog Hub"). `app/lib/blog.ts` reads it at **build time only**, converts each page to markdown via `notion-to-md`, and Next prerenders every post as static HTML. There is no runtime Notion call, no client-side fetching, and no second CMS.
 
-Publishing is a two-step human action: flip `Status` to `Published` in Notion, **then redeploy**. Nothing reaches the site until a build runs.
+Publishing is one human action: flip `Status` to `Published` in Notion. An hourly cron (6am to midnight UK) notices and redeploys the site, so the post is live by the next run plus build time. Nothing reaches the site until that build runs. See Auto-publish below.
 
 The surface: `/blog` (index, page 1), `/blog/page/[page]` (pages 2+), `/blog/topic/[topic]` (10 hubs) and `/blog/[slug]` (post), plus `app/blog/error.tsx`.
 
@@ -14,7 +14,7 @@ The surface: `/blog` (index, page 1), `/blog/page/[page]` (pages 2+), `/blog/top
 
 The blog is static and Notion is read at build only, which once made two failure modes silent: a wrong blog could ship on a green build with no error output. Both are now handled automatically at build. The former manual rules (pause between write and deploy; clear the build cache on every edit) are gone; you do not need them.
 
-**Publishing is still write-then-redeploy.** Flip `Status` to `Published` in Notion, then redeploy. Nothing reaches the site until a build runs.
+**Publishing is still write-then-build.** The build is just no longer started by hand (see Auto-publish).
 
 **1. Stale bodies cannot survive a redeploy (was defect 2).** The Notion SDK calls `fetch`, Next patches it, and a response would otherwise land in `.next/cache/fetch-cache` with `revalidate: 31536000` (one year); Vercel restores that cache between deploys, so an edit could stay invisible for up to a year. `notion.ts` folds the deploy id (`VERCEL_DEPLOYMENT_ID`) into every Notion request via an `x-conka-deploy` header, so each deploy computes a different fetch-cache key and cannot hit the previous deploy's entries. A body edit reaches production on an ordinary redeploy, **build cache left enabled**. (`no-store` would also work but forces dynamic rendering, which the static blog cannot use; a short `revalidate` would turn the blog into runtime ISR. The deploy-keyed cache keeps it build-only and static.)
 
@@ -43,6 +43,20 @@ If a build still fails here, the message will say `failed N times without reachi
 So the residual risk that guard 2 covers is **not** error-swallowing. It is that separate, individually successful queries across one build could disagree (Notion is eventually consistent right after a write). Nothing throws, because nothing failed. Guard 3 removes the opportunity by construction; guard 2 stays as the check that it worked, and now costs nothing.
 
 **If guard 2 or the `[slug]` route does fail,** read the message rather than assuming a race. It reports what was observed: the row counts, and whether the slug was absent from the set or present but failing validation. "Present but failed validation" is a content defect (a post missing its title, slug or Meta description) and a rebuild will not fix it.
+
+## Auto-publish (SCRUM-1460)
+
+Nobody redeploys for the blog. `app/api/cron/blog-publish/route.ts` runs hourly from 6am to midnight UK time (`vercel.json`, `0 5-23 * * *` UTC, so an hour earlier in winter) and redeploys only when the published blog has changed.
+
+- **What "changed" means.** `publishedFingerprint` (`app/lib/blog.ts`) hashes the slug and `last_edited_time` of every renderable Published row. Each build serves its own fingerprint, prerendered from the build's one Notion read, at `/api/blog/fingerprint`. The cron recomputes it from a live read and compares. A publish, an unpublish, or any edit to a live post changes it. Draft edits never do, because only Published rows are read.
+- **Why one shared function matters.** Rows missing a title, slug or Meta description are left out of the fingerprint exactly as the renderer skips them. If the two ever disagreed, the fingerprints would never match and the site would redeploy every hour. Change validation in `readRequiredFields` only.
+- **Bursts and failures.** Any number of flips within the hour means one build. The cron skips while a production build is queued or building, and for 3 hours after a failed one. A failed build never replaces the live deploy.
+- **Reading it.** Each run logs one line in Vercel runtime logs: `[blog-publish] no change | triggered: ... | skipped: ... | error: ...`.
+- **Forcing a build now.** Redeploy in Vercel as before, or POST the deploy hook.
+- **Bulk publishing needs no special handling.** Flip as many rows as you like; they go out together.
+- **Minute granularity.** Notion's `last_edited_time` is per minute, so an edit made in the same minute a build read Notion can wait for the next edit. Rare; redeploy by hand if it matters.
+
+**Setup (production env, all secret):** `BLOG_DEPLOY_HOOK_URL` (Vercel deploy hook on `main`), `CRON_SECRET` (Vercel sends it as a bearer token; the route returns 401 without it), `VERCEL_API_TOKEN` (reads deployment state). The route refuses to trigger if either of the last two is missing. Project and team ids are constants in the route. A leaked hook only costs build minutes: delete it, create a new one, update the env var.
 
 ## The content contract
 
