@@ -28,6 +28,8 @@ export async function submitWebTestResult(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, testInstanceId, sourcePage }),
+        // Survives the visitor navigating away straight after the test.
+        keepalive: true,
       },
     );
 

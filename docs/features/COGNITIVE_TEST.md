@@ -18,9 +18,9 @@ The test is our own engine, a React port of the mobile app's test, scored by the
 
 1. **Idle.** `CognitiveTestIdleCard` invites the visitor in.
 2. **Email gate.** `EmailCaptureForm`. On submit, `subscribeAppTestSignup` adds the email to the Klaviyo master list with consent, tagged `source: app_test` (SCRUM-1360). This runs before the test so a visitor who drops out is still captured.
-3. **Testing.** `CognitiveTestRunner` renders the engine in the site theme (navy and deep grey halves, white text, brand font) and calls `onComplete(TestResult)` with the server's `score`, `accuracy` and `speed` rounded for display, plus the `testInstanceId`.
+3. **Testing.** `CognitiveTestRunner` renders the engine in the site theme (navy and deep grey halves, white text, brand font) and calls `onComplete(TestResult)` with the server's `score`, `accuracy` and `speed` rounded for display, plus the `testInstanceId`. At that moment `submitWebTestResult` asks the server to send the result to Klaviyo (a `keepalive` request, so it survives the visitor leaving during the loader).
 4. **Processing.** `CognitiveTestLoader` plays a short animation.
-5. **Results.** `CognitiveTestScores`, `CognitiveTestRecommendation`, `CognitiveTestAppPromo`, and `submitWebTestResult` asks the server to send the result to Klaviyo (see Klaviyo below).
+5. **Results.** `CognitiveTestScores`, `CognitiveTestRecommendation`, `CognitiveTestAppPromo` (Klaviyo details below).
 
 `TestResult` is the contract between the test and the page; results, recommendation and promo only ever see it. Mobile and desktop share one runner and differ only in the test box's size and the hint under it (tap vs click).
 

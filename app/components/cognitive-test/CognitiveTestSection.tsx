@@ -29,7 +29,6 @@ export default function CognitiveTestSection({
     useState<EmailSubmission | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
-
   const handleStartTest = useCallback(() => {
     trackAppTestClicked();
     setTestState("email");
@@ -48,25 +47,28 @@ export default function CognitiveTestSection({
     setTestState("testing");
   }, []);
 
-  const handleTestComplete = useCallback((result: TestResult) => {
-    setTestResult(result);
-    setTestState("processing");
-  }, []);
+  const handleTestComplete = useCallback(
+    (result: TestResult) => {
+      setTestResult(result);
+      setTestState("processing");
+      // Sent now, not after the loader: the server already holds the scores,
+      // and a visitor who leaves during the animation still gets the email.
+      if (emailSubmission) {
+        void submitWebTestResult(
+          emailSubmission.email,
+          result.testInstanceId,
+          window.location.pathname,
+        );
+      }
+    },
+    [emailSubmission],
+  );
 
   const handleProcessingComplete = useCallback(() => {
     setTestState("results");
 
     if (testResult) trackAppResultsViewed();
-
-    if (emailSubmission && testResult) {
-      // The server reads the scores from its own record of this test.
-      void submitWebTestResult(
-        emailSubmission.email,
-        testResult.testInstanceId,
-        window.location.pathname,
-      );
-    }
-  }, [emailSubmission, testResult]);
+  }, [testResult]);
 
   const handleRetakeTest = useCallback(() => {
     setTestResult(null);
