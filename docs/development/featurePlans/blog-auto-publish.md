@@ -16,12 +16,12 @@ Scoped 2026-09-25. Canonical blog reference: `docs/features/BLOG_SYSTEM.md`.
 ## Decisions
 
 - **Automate the redeploy, do not move to ISR.** The site stays fully static. ISR would need runtime image hosting (Vercel cannot write `public/` at runtime, so Blob), runtime-safe build guards, a tagged fetch cache (the deploy-keyed header makes every revalidation stale), `notFound` instead of throw for unpublished posts, and sitemap/hub revalidation. That is days of work and new failure modes to save a few minutes. The archived surface plan rejected ISR for the same reasons.
-- **Poll, do not push.** A Vercel cron checks Notion every 10 minutes and redeploys only when the published set changed. Chosen over a Notion "on Published, send webhook" automation because it needs no human management:
+- **Poll, do not push.** A Vercel cron checks Notion hourly from 6am to midnight UK time and redeploys only when the published set changed. Chosen over a Notion "on Published, send webhook" automation because it needs no human management:
   - bulk flips collapse into one build (a webhook fires one build per row),
   - body edits to live posts and unpublishes are caught automatically (no "Push changes" button),
   - draft edits cause no rebuilds,
   - no webhook to miss.
-  Cost: up to ~10 minutes plus build time from flip to live.
+  Cost: up to an hour plus build time from flip to live (overnight flips go live at the 6am run). Each check is one Notion query of about a second; builds only happen when something changed.
 - **Safety of repeated builds.** A failed build never replaces the live deployment; the deploy hook builds `main` HEAD, which is already live because every merge auto-deploys (15 production deploys 16 to 22 Sep); builds queue rather than collide.
 - **The Status flip stays the only human gate.** With auto-deploy, `Published` means live within minutes, so the engine must never set it.
 - **Keep rejecting the YAML FAQ form.** Fixed at the source by the engine, not by widening the parser (`BLOG_SYSTEM.md` policy).
@@ -42,11 +42,11 @@ Scoped 2026-09-25. Canonical blog reference: `docs/features/BLOG_SYSTEM.md`.
    - Rejects requests without `Authorization: Bearer ${CRON_SECRET}`.
    - Reads Notion rows (the runtime path of `queryBlogRows`, no snapshot/lock), computes the fingerprint, fetches the live `/blog/fingerprint.json`.
    - Equal: return 200, no-op.
-   - Different: check the Vercel API for the latest production deployment. Skip if one is `QUEUED`/`BUILDING`. Back off (skip) if the latest production deployment is `ERROR` and under 60 minutes old. Otherwise POST the deploy hook.
+   - Different: check the Vercel API for the latest production deployment. Skip if one is `QUEUED`/`BUILDING`. Back off (skip) if the latest production deployment is `ERROR` and under 3 hours old. Otherwise POST the deploy hook.
    - Logs the decision in one line (`blog-publish: no change | triggered | skipped: building | skipped: recent failure`).
-4. **Wiring.** `vercel.json` `crons`: `{ "path": "/api/cron/blog-publish", "schedule": "*/10 * * * *" }`. Create the Vercel deploy hook on `main`. Env vars (all secrets, production only): `BLOG_DEPLOY_HOOK_URL`, `CRON_SECRET`, `VERCEL_API_TOKEN` (read deployments only).
+4. **Wiring.** `vercel.json` `crons`: `{ "path": "/api/cron/blog-publish", "schedule": "0 5-23 * * *" }` (UTC: 06:00 to 00:00 BST, 05:00 to 23:00 GMT). Hourly needs Vercel Pro; Hobby allows one run a day. Confirm the plan before building. Create the Vercel deploy hook on `main`. Env vars (all secrets, production only): `BLOG_DEPLOY_HOOK_URL`, `CRON_SECRET`, `VERCEL_API_TOKEN` (read deployments only).
 5. **Failed-deploy alert.** Vercel notification for failed production deployments to the owner. Nobody watches these builds any more.
-6. **Docs.** `BLOG_SYSTEM.md`: publishing is now automatic within ~10 minutes; how to read the cron log; how to force one (trigger the hook). Remove the "then redeploy" instructions there and in `scripts/README.md`.
+6. **Docs.** `BLOG_SYSTEM.md`: publishing is now automatic within the hour (6am to midnight); how to read the cron log; how to force one (trigger the hook). Remove the "then redeploy" instructions there and in `scripts/README.md`.
 
 ### Phase 2: Engine contract + safety nets (about half a day, plus engine time)
 
@@ -66,7 +66,7 @@ Scoped 2026-09-25. Canonical blog reference: `docs/features/BLOG_SYSTEM.md`.
 
 ## Rabbit holes
 
-- **Fingerprint drift = rebuild loop.** If the cron and the build ever disagree about what is live, the site rebuilds every 10 minutes. One shared function, and the Vercel-state back-off, are the two defences. Test by running the cron route against a deploy it just produced: it must no-op.
+- **Fingerprint drift = rebuild loop.** If the cron and the build ever disagree about what is live, the site rebuilds every hour. One shared function, and the Vercel-state back-off, are the two defences. Test by running the cron route against a deploy it just produced: it must no-op.
 - **Build guards at runtime.** `assertConsistentSlugs` / `assertPostFloor` run whenever `NODE_ENV=production` and hold module state. The cron must not call `getAllPosts`; it uses rows plus the pure fingerprint only.
 - **Notion `last_edited_time` is minute-granular.** An edit within the same minute as the build read could be missed until the next edit. Acceptable; note it in the doc.
 
@@ -77,7 +77,7 @@ ISR or runtime rendering from Notion. Notion webhook automations. A publish rate
 ## Risks
 
 - A burst of flips during an in-flight build causes at most one follow-up build (the cron skips while building).
-- A persistent build failure (e.g. a post-floor breach) retries at most hourly, and the alert fires on the first failure; the live site is unaffected throughout.
+- A persistent build failure (e.g. a post-floor breach) retries at most every 3 hours, and the alert fires on the first failure; the live site is unaffected throughout.
 - A leaked deploy hook only costs build minutes. Delete and recreate it in Vercel, update the env var.
 
 ## Jira tickets
