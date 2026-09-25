@@ -56,6 +56,8 @@ Nobody redeploys for the blog. `app/api/cron/blog-publish/route.ts` runs hourly 
 - **Bulk publishing needs no special handling.** Flip as many rows as you like; they go out together.
 - **Minute granularity.** Notion's `last_edited_time` is per minute, so an edit made in the same minute a build read Notion can wait for the next edit. Rare; redeploy by hand if it matters.
 
+**Why not ISR.** Runtime rendering would need runtime image hosting (Vercel cannot write `public/` at runtime, so Blob), runtime-safe build guards, a tagged fetch cache (the deploy-keyed header makes every revalidation stale) and `notFound` instead of throw for unpublished posts. That is days of work and new failure modes to save under an hour. Revisit only if publish latency ever matters.
+
 **Setup (production env, all secret):** `BLOG_DEPLOY_HOOK_URL` (Vercel deploy hook on `main`), `CRON_SECRET` (Vercel sends it as a bearer token; the route returns 401 without it), `VERCEL_API_TOKEN` (reads deployment state). The route refuses to trigger if either of the last two is missing. Project and team ids are constants in the route. A leaked hook only costs build minutes: delete it, create a new one, update the env var.
 
 ## The content contract
@@ -69,11 +71,11 @@ A row must have **all** of these or it is silently skipped with a `console.warn`
 | `Meta description` | **The silent-skip trap.** A finished, `Published` post with no meta description never appears in the listing, the sitemap, or `generateStaticParams`. It gates *rendering*, not just SEO. |
 | `Status = Published` | Drafts render in local dev preview only. |
 
-Optional, with defaults: `Hero image` (absent renders a mono-wordmark placeholder tile on the card and **no hero at all** on the article; metadata omits `images` so the sitewide OG is inherited), `Hero image alt` (falls back to the title), `Date published` (absent sorts by `dateModified`), `Related products` (falls back to `both`).
+Optional, with defaults: `Hero image` (the engine contract requires it; if absent, the article promotes its first re-hosted body image to hero and OG image and removes it from the body, SCRUM-1461; with no body image either, there is no hero and the sitewide OG is inherited; listing cards never fall back and show the mono-wordmark placeholder), `Hero image alt` (falls back to the title), `Date published` (absent sorts by `dateModified`), `Related products` (falls back to `both`).
 
 ### Body rules
 
-Authoring guide: `docs/features/blog-notion-engine-brief.md`. The durable rules:
+Engine contract (hand it to the engine as-is): `docs/features/blog-notion-engine-brief.md`. The durable rules:
 
 - **Native Notion blocks only.** Never markdown-as-text.
 - **Start at Heading 2.** H2 = sections, H3 = sub-sections. The H1 comes from `Blog name`.
@@ -134,7 +136,7 @@ Notion → `notion-to-md` → markdown → `react-markdown`.
 
 **`MarkdownBody` runs without `rehype-raw`,** so any raw HTML in a post body is escaped and printed as visible text. This is deliberate (see No-gos). It maps H2/H3 with slugified anchor ids for AEO, paragraphs, lists, bold, rules, images, GFM tables in a mobile scroll wrapper, and links (conka.io via `next/link`, external with `target=_blank rel=noopener`).
 
-**Images are re-hosted at build**, never hot-linked: Notion URLs expire after about an hour, and the Shopify/Wix hosts are not ours. Matched hosts (amazonaws, notion.so, notion-static, cdn.shopify.com, static.wixstatic.com) are downloaded to `public/blog/<slug>/hero.<ext>` and `public/blog/<slug>/img-N.<ext>`, probing existing extensions first so re-runs are idempotent. A failure degrades to the placeholder and never fails the build. Body images use a plain `<img loading="lazy">`, not `next/image`, because markdown carries no intrinsic dimensions (see Known gaps).
+**Images are re-hosted at build**, never hot-linked: Notion URLs expire after about an hour, and the Shopify, Wix and Cloudinary (the engine's image host) accounts are not ours. Matched hosts (amazonaws, notion.so, notion-static, cdn.shopify.com, static.wixstatic.com, res.cloudinary.com) are downloaded to `public/blog/<slug>/hero.<ext>` and `public/blog/<slug>/img-N.<ext>`, probing existing extensions first so re-runs are idempotent. A failure degrades to the placeholder and never fails the build. Alt text goes through `usableAlt` (`blogTransform.ts`), which drops filenames, "ree", "image" and "Image N" as decorative. Body images use a plain `<img loading="lazy">`, not `next/image`, because markdown carries no intrinsic dimensions (see Known gaps).
 
 **Related posts** (`getRelatedPosts`) score by shared `Topic` count, newest breaking ties, topping up with newest so a thin topic degrades to "newest" rather than rendering one card. A post never relates to itself.
 
