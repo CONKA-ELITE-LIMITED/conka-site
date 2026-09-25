@@ -44,6 +44,8 @@ export default function TestContainer({ onTap, children }: TestContainerProps) {
     if (!live) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.repeat) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
       if (event.key === "ArrowLeft") press("left");
       else if (event.key === "ArrowRight") press("right");
       else return;

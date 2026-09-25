@@ -96,8 +96,8 @@ export async function preloadImages(urls: string[]): Promise<HTMLImageElement[]>
       img.src = url;
       try {
         await img.decode();
-      } catch {
-        throw new Error(`Could not load test image ${url}`);
+      } catch (err) {
+        throw new Error(`Could not load test image ${url}`, { cause: err });
       }
       return img;
     }),

@@ -43,4 +43,4 @@ The app's step has a fixation timer that its own image-on-load pre-empts, so it 
 
 ## Demo
 
-`/cognitive-test-demo` (noindex). Staging by default, `?env=prod` for production, `?full=1` for 48 images. The result JSON prints under the test, so a phone run needs no devtools.
+`/conka-app-demo` (noindex). Staging by default, `?env=prod` for production, `?full=1` for 48 images. The result JSON prints under the test, so a phone run needs no devtools.

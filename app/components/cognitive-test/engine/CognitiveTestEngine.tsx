@@ -57,12 +57,22 @@ export default function CognitiveTestEngine({
   // Holds the decoded images for the life of the test so the browser keeps them.
   const decoded = useRef<HTMLImageElement[]>([]);
   const callbacks = useRef({ onComplete, onError });
+  // A request that settles after unmount must not call back into a page that has moved on.
+  const mounted = useRef(true);
 
   useEffect(() => {
     callbacks.current = { onComplete, onError };
   }, [onComplete, onError]);
 
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
   const fail = useCallback((err: unknown, at: "prepare" | "submit") => {
+    if (!mounted.current) return;
     setFailedAt(at);
     setStage("error");
     callbacks.current.onError?.(toError(err));
@@ -106,6 +116,7 @@ export default function CognitiveTestEngine({
     try {
       await submitSteps(apiBaseUrl, id, interactions.current);
       const stats = await completeTest(apiBaseUrl, id);
+      if (!mounted.current) return;
       setStage("done");
       callbacks.current.onComplete({
         // score1 only: it is what the server sends to Klaviyo, so the page and the email agree.
@@ -159,10 +170,16 @@ export default function CognitiveTestEngine({
         />
       )}
 
-      {(stage === "submitting" || stage === "done") && (
+      {stage === "submitting" && (
         <div className={styles.status} role="status">
           <div className={styles.spinner} aria-hidden="true" />
           <p className={styles.statusTitle}>Calculating your score</p>
+        </div>
+      )}
+
+      {stage === "done" && (
+        <div className={styles.status} role="status">
+          <p className={styles.statusTitle}>Test complete</p>
         </div>
       )}
 
@@ -171,7 +188,7 @@ export default function CognitiveTestEngine({
           <p className={styles.statusTitle}>Something went wrong</p>
           <p className={styles.statusText}>
             {failedAt === "submit"
-              ? "Your answers are saved on this page. Check your connection and try again."
+              ? "Your answers are still here. Check your connection and try again."
               : "The test could not load. Check your connection and try again."}
           </p>
           <button type="button" className={styles.button} onClick={retry}>
