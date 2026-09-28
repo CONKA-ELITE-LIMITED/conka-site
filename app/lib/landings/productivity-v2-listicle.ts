@@ -69,40 +69,10 @@ export const productivityV2Listicle: ListicleConfig = {
       // Payoff becomes the focus bars' caption strip (athlete trial figure).
       asset: { kind: "focusBars" },
     },
-    {
-      kind: "reason",
-      n: 2,
-      tag: "Motivation",
-      headline: "You're Not Lazy. Your Brain Is Underfuelled.",
-      body: "Some days the hardest part of any task is the first minute. That isn't a character flaw. After a heavy week or a short night, your brain has less to give, and starting takes everything you've got.",
-      payoff:
-        "Flow first, before you open your emails, and the first minute stops feeling like a fight.",
-      // Placeholder wording tightened from the team's paraphrase: needs
-      // Dr Morehen's sign-off before scaling spend.
-      pullQuote: {
-        quote:
-          "Our athletes make more mistakes in the second half. That's a fuel gap: their body and brain are missing the fuel to stay sharp.",
-        name: "Dr James Morehen",
-        credentials: ["Performance Nutritionist, Bristol Bears"],
-      },
-      ingredients: ["lemon-balm", "rhodiola"],
-      // Round 2: athletes and professionals, alternating, each with their own
-      // score change. Figures from caseStudiesData (CognICA total score).
-      // Leeds players are hidden site-wide on request (SCRUM-1354), so no Bamford.
-      asset: {
-        kind: "athleteScores",
-        athletes: [
-          { name: "Jade Shekells", role: "GB Women's Rugby 7s", image: "/caseStudies/JadeShekells.jpg", from: 60.33, to: 82.48, change: "+36.7%" },
-          { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
-          { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
-          { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
-          { name: "Pierre-Louis Barassi", role: "Stade Toulousain", image: "/caseStudies/PierreLouisBarassi.jpg", from: 67, to: 85.25, change: "+27.2%" },
-          { name: "Jack Willis", role: "Stade Toulousain", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
-        ],
-      },
-    },
+    // Closes reason 1 (compact strip): customers backing the calm claim.
     {
       kind: "reviewStrip",
+      compact: true,
       eyebrow: "What Customers Say",
       ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
       reviews: [
@@ -131,6 +101,42 @@ export const productivityV2Listicle: ListicleConfig = {
           detail: "Verified · Flow + Clear",
         },
       ],
+    },
+    {
+      kind: "reason",
+      n: 2,
+      tag: "Motivation",
+      headline: "You're Not Lazy. Your Brain Is Underfuelled.",
+      body: "Some days the hardest part of any task is the first minute. That isn't a character flaw. After a heavy week or a short night, your brain has less to give, and starting takes everything you've got.",
+      payoff:
+        "Flow first, before you open your emails, and the first minute stops feeling like a fight.",
+      // Placeholder wording tightened from the team's paraphrase: needs
+      // Dr Morehen's sign-off before scaling spend.
+      pullQuote: {
+        quote:
+          "Our athletes make more mistakes in the second half. That's a fuel gap: their body and brain are missing the fuel to stay sharp.",
+        name: "Dr James Morehen",
+        credentials: [
+          "England Rugby Performance Nutritionist",
+          "Also works with boxers Chris Billam-Smith and Adam Azim",
+        ],
+        image: "/testimonials/expert/JamesMorehen.webp",
+      },
+      ingredients: ["lemon-balm", "rhodiola"],
+      // Round 2: athletes and professionals, alternating, each with their own
+      // score change. Figures from caseStudiesData (CognICA total score).
+      // Leeds players are hidden site-wide on request (SCRUM-1354), so no Bamford.
+      asset: {
+        kind: "athleteScores",
+        athletes: [
+          { name: "Jade Shekells", role: "GB Women's Rugby 7s", image: "/caseStudies/JadeShekells.jpg", from: 60.33, to: 82.48, change: "+36.7%" },
+          { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
+          { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
+          { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
+          { name: "Pierre-Louis Barassi", role: "Stade Toulousain", image: "/caseStudies/PierreLouisBarassi.jpg", from: 67, to: 85.25, change: "+27.2%" },
+          { name: "Jack Willis", role: "Stade Toulousain", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
+        ],
+      },
     },
     {
       kind: "reason",

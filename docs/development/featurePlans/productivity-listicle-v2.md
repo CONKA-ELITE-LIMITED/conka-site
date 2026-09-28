@@ -93,7 +93,7 @@ Supersedes the six-reason page above once built. Copy stays on the `conka-messag
 |---|---|---|
 | Hero | New image; CTAs (hero, bridge, sticky) move to brand green `#1a7f4f` with new copy ("Get ahead, risk-free for 100 days" direction); Trustpilot logo; no "nootropics" anywhere | Pinterest image, Trustpilot logo |
 | 01 Composure | Copy stays. Bar graph with athlete photos under the bars (main-site athlete pattern, e.g. Bamford) | Athlete photos exist in `public/caseStudies/` |
-| 02 Motivation | You're not lazy, your brain isn't built for the pace of change. "To-do list melting away" visual (Magic Mind style). Expert voice: Dr James Morehen (Bristol Bears nutritionist), "fuel gap" quote. Keep ingredient tiles | Morehen headshot + signed-off quote wording |
+| 02 Motivation | You're not lazy, your brain isn't built for the pace of change. "To-do list melting away" visual (Magic Mind style). Expert voice: Dr James Morehen (England Rugby performance nutritionist), "fuel gap" quote with headshot. Keep ingredient tiles | Signed-off quote wording |
 | 03 Memory | Your memory isn't getting worse, you take in more information than any generation before. Brain adapts 7x faster before 25. Shane quote with Skyscanner logo; "Official Brain Performance Partner of Bristol Bears" lockup | Skyscanner logo, Bristol Bears lockup, source for "7x" |
 | 04 Caffeine Index | Absorbs Convenience and Value: coffee vs CONKA tile reframed around caffeine, plus the rebuilt routine image | Routine image re-render |
 | 05 Guarantee | Try CONKA for 100 days; if you don't like it, your money back | |

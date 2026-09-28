@@ -612,6 +612,51 @@ function reviewInitials(name: string) {
     .toUpperCase();
 }
 
+/** Compact card: avatar, name and stars in one header row, then the quote. */
+function CompactReviewCard({ review }: { review: ListicleReview }) {
+  return (
+    <div className="flex h-full flex-col rounded-md border border-black/10 bg-white p-3.5 text-[#111]">
+      <div className="mb-2 flex items-center gap-2.5">
+        {review.image ? (
+          <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
+            <Image
+              src={review.image}
+              alt={review.name}
+              fill
+              sizes="40px"
+              className="object-cover object-[center_25%]"
+            />
+          </span>
+        ) : (
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white"
+            style={{ background: NAVY }}
+          >
+            {reviewInitials(review.name)}
+          </span>
+        )}
+        <div className="min-w-0">
+          <div className="text-[13px] font-semibold leading-tight">
+            {review.name}
+          </div>
+          <div
+            className="text-[11px] leading-tight tracking-widest"
+            style={{ color: "#F59E0B" }}
+          >
+            ★★★★★
+          </div>
+        </div>
+      </div>
+      {review.headline ? (
+        <p className="mb-0.5 line-clamp-1 text-sm font-semibold">
+          {review.headline}
+        </p>
+      ) : null}
+      <p className="line-clamp-3 text-[13px] leading-snug">{review.quote}</p>
+    </div>
+  );
+}
+
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
     <div className="flex h-full flex-col rounded-md border border-black/10 bg-white p-4 text-[#111]">
@@ -672,11 +717,48 @@ function ReviewStrip({
   reviews,
   eyebrow = "What Customers Say",
   ratingSummary = "Rated 4.7 / 5 · 622+ reviews",
+  compact = false,
 }: {
   reviews: ListicleReview[];
   eyebrow?: string;
   ratingSummary?: string;
+  compact?: boolean;
 }) {
+  if (compact) {
+    // Same content, less height: the eyebrow and the rating footer collapse
+    // into one header line, and the cards lose the 72px avatar row.
+    return (
+      <div
+        className="mb-4 rounded-md px-4 py-4 md:px-8 md:py-6"
+        style={{ background: TINT }}
+      >
+        <div className="mb-3 flex flex-wrap items-baseline justify-center gap-x-2 text-[13px] font-semibold text-black/70">
+          <span aria-hidden style={{ color: "#F59E0B" }}>
+            ★★★★★
+          </span>
+          <span className="tabular-nums">{ratingSummary}</span>
+        </div>
+        <div
+          role="group"
+          aria-label={`${eyebrow} (swipe to see more)`}
+          tabIndex={0}
+          className="flex snap-x snap-mandatory gap-3 overflow-x-auto md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {reviews.map((r, i) => (
+            <div key={i} className="w-[85%] shrink-0 snap-start">
+              <CompactReviewCard review={r} />
+            </div>
+          ))}
+        </div>
+        <div className="hidden gap-4 md:grid md:grid-cols-3">
+          {reviews.map((r, i) => (
+            <CompactReviewCard key={i} review={r} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="my-10 rounded-md px-4 py-6 md:px-10 md:py-8"
@@ -840,15 +922,28 @@ function BodyBlock({
                 &rdquo;
               </span>
             </blockquote>
-            <figcaption className="mt-6">
-              <p className="text-xl font-bold leading-tight text-black lg:text-2xl">
-                {block.pullQuote.name}
-              </p>
-              {block.pullQuote.credentials?.map((c) => (
-                <p key={c} className="mt-1 text-sm text-black lg:text-base">
-                  {c}
+            <figcaption className="mt-6 flex items-center gap-4">
+              {block.pullQuote.image ? (
+                <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full lg:h-[72px] lg:w-[72px]">
+                  <Image
+                    src={block.pullQuote.image}
+                    alt={block.pullQuote.name}
+                    fill
+                    sizes="72px"
+                    className="object-cover"
+                  />
+                </span>
+              ) : null}
+              <div>
+                <p className="text-xl font-bold leading-tight text-black lg:text-2xl">
+                  {block.pullQuote.name}
                 </p>
-              ))}
+                {block.pullQuote.credentials?.map((c) => (
+                  <p key={c} className="mt-1 text-sm text-black lg:text-base">
+                    {c}
+                  </p>
+                ))}
+              </div>
             </figcaption>
           </figure>
         ) : null}
@@ -1030,6 +1125,7 @@ function BodyBlock({
         reviews={block.reviews}
         eyebrow={block.eyebrow}
         ratingSummary={block.ratingSummary}
+        compact={block.compact}
       />
     );
   }

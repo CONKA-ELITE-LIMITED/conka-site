@@ -230,7 +230,13 @@ export type ListicleBodyBlock =
       pressMarquee?: boolean;
       /** Full-width pull quote under the reason (the proof feature's quote
        *  styling, no portrait), e.g. an expert voice backing the reason. */
-      pullQuote?: { quote: string; name: string; credentials?: string[] };
+      pullQuote?: {
+        quote: string;
+        name: string;
+        credentials?: string[];
+        /** Small circular headshot beside the name (public path) */
+        image?: string;
+      };
     }
   | {
       kind: "statsBand";
@@ -272,6 +278,9 @@ export type ListicleBodyBlock =
       /** Rating line under the strip (default "Rated 4.7 / 5 · 622+ reviews") */
       ratingSummary?: string;
       reviews: ListicleReview[];
+      /** Shorter strip: rating in one header line, small inline avatars,
+       *  three-line quotes, no footer. */
+      compact?: boolean;
     }
   /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
   | {
