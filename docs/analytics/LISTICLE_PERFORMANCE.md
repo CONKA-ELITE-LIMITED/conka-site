@@ -613,35 +613,42 @@ its end date on the hero.
 
 ---
 
-## Snapshot: 2026-07-24 to 2026-09-28 (programme review, SCRUM-1469)
+## Snapshot: 2026-07-24 to 2026-09-27 (programme review, SCRUM-1469)
 
-Pulled **28 Sep AM**. Scope: the three persona listicles plus `/go/trial-pack` (live 15 Sep). Sources: Meta Ads Manager (cumulative screenshot, 28 Sep, assumed launch to date at 7-day click / 1-day view), Shopify Admin API (`scratchpad/listicle-review-orders.mjs`, all orders since 3 Jul), Vercel Web Analytics, Notion Flags. Artifact: <https://claude.ai/artifact/LGiJnQ6kzb9c3CS5gGSGec>.
+Pulled **28 Sep**. Scope: the three persona listicles plus `/go/trial-pack` (live 15 Sep). Sources: Meta Ads Manager (campaign level, **weekly breakdown**, 24 Jul to 27 Sep, attribution setting assumed 7-day click / 1-day view), Shopify Admin API (`scratchpad/listicle-review-orders.mjs`, all orders since 3 Jul), Vercel Web Analytics, Notion Flags. Artifact: <https://claude.ai/artifact/LGiJnQ6kzb9c3CS5gGSGec>.
 
-**Headline:** £31.3k of Meta spend bought 301 first orders at £104, on the £100 target. The post-21 Aug budget move worked: Productivity recovered to £84 and Brain-ageing held £105 at the biggest budget. ADHD is still £136 since 22 Aug. The trial pack is the cheapest to acquire (£81) but only 22% of its Meta checkouts complete.
+**Headline:** £34.0k of Meta spend bought 334 purchases at £102. Since 24 Aug: Productivity £81, Brain-ageing £97, ADHD £112. Trial pack £79 per purchase, 22% of its Meta checkouts complete.
+
+> A cumulative Ads Manager screenshot taken the same morning showed fewer purchases (ADHD 103 / £11,958). Its date range was not visible and it disagrees with the weekly rows, which reconcile with every earlier dated pull. The weekly figures are the ones to use.
 
 ### Whole window per page
 
 | Page | Visitors | Meta purch. | Meta CVR | CPA | Spend | Tagged orders | Tagged rev. | AOV |
 |------|---------:|------------:|---------:|----:|------:|--------------:|------------:|----:|
-| ADHD | 14,090 | 103 | 0.73% | £116.10 | £11,958 | 80 | £4,808 | £60.10 |
-| Productivity | 7,785 | 83 | 1.07% | £94.49 | £7,843 | 52 | £3,447 | £66.28 |
-| Brain-ageing | 5,767 | 94 | 1.63% | £104.29 | £9,803 | 49 | £3,466 | £70.73 |
-| **Listicles** | **27,642** | **280** | **1.01%** | **£105.73** | **£29,604** | **181** | **£11,720** | **£64.75** |
-| Trial pack | 1,447 | 21 | 1.45% | £81.31 | £1,708 | 15 | £291 | £19.41 |
+| ADHD | 14,074 | 116 | 0.82% | £110.91 | £12,866 | 80 | £4,808 | £60.10 |
+| Productivity | 7,764 | 93 | 1.20% | £93.89 | £8,732 | 52 | £3,447 | £66.28 |
+| Brain-ageing | 5,724 | 104 | 1.82% | £102.87 | £10,699 | 49 | £3,466 | £70.73 |
+| **Listicles** | **27,562** | **313** | **1.14%** | **£103.18** | **£32,297** | **181** | **£11,720** | **£64.75** |
+| Trial pack | 1,406 | 21 | 1.49% | £79.09 | £1,661 | 15 | £291 | £19.41 |
 
-Tag capture is now 65% of Meta's listicle purchases (181 / 280).
+Tag capture is 58% of Meta's listicle purchases (181 / 313).
 
-### Meta cost per purchase by period (differences between dated pulls)
+### Meta by week (purchases · cost per purchase)
 
-| Period | ADHD | Productivity | Brain-ageing | Blended |
-|--------|-----:|-------------:|-------------:|--------:|
-| 24 to 30 Jul | £73 | £82 | £122 | £88 |
-| 31 Jul to 3 Aug | £71 | £97 | £77 | £80 |
-| 4 to 10 Aug | £73 | £124 | £132 | £98 |
-| 11 to 21 Aug | £169 | £150 | £90 | £142 |
-| **22 Aug to 28 Sep** | **£136** | **£84** | **£105** | **£106** |
+| Week of | ADHD | Productivity | Brain-ageing | Trial pack |
+|---------|-----:|-------------:|-------------:|-----------:|
+| 24 Jul (3 days) | 4 · £71 | 5 · £57 | 4 · £71 | |
+| 27 Jul | 15 · £72 | 11 · £99 | 11 · £98 | |
+| 3 Aug | 24 · £70 | 8 · £137 | 11 · £127 | |
+| 10 Aug | 12 · £202 | 5 · £140 | 8 · £95 | |
+| 17 Aug | 11 · £166 | 4 · £173 | 6 · £162 | |
+| 24 Aug | 13 · £110 | 11 · £64 | 18 · £78 | |
+| 31 Aug | 13 · £92 | 9 · £94 | 13 · £105 | |
+| 7 Sep | 11 · £97 | 10 · £109 | 19 · £75 | |
+| 14 Sep | 8 · £130 | 11 · £94 | 8 · £159 | 9 · £53 |
+| 21 Sep | 5 · £169 | 19 · £63 | 6 · £122 | 12 · £99 |
 
-Implied daily spend since 22 Aug: Brain-ageing £155, ADHD £139, Productivity £113. So the 21 Aug action (move budget from ADHD to Brain-ageing) did happen.
+Weekly spend per campaign is in the artifact source (`const MW`). Daily budgets on 28 Sep: Productivity £200, ADHD £100, Brain-ageing £100, trial pack £200.
 
 ### Trial pack
 
@@ -667,7 +674,7 @@ New-demand orders per week (Mon start): 29 Jun 1 · 6 Jul 2 · 13 Jul 3 · 20 Ju
 
 ### Timeline additions
 
-`22 Aug` budget shifted toward Brain-ageing (inferred from spend) · `25 to 29 Aug` Build Your Order replaces the funnels, PDP rebuild, starter kit on PDPs, cart upsell rebuilt · `1 to 2 Sep` Skio live · `15 Sep` trial pack live on its own campaign · `16 Sep` trial CTA relabelled · `22 Sep` trial pack orders start carrying `_listicle_origin`.
+`24 Aug` ADHD weekly spend cut (£1,826 to £1,432) · `~7 Sep` Productivity spend up (budget £200/day by 28 Sep) · `25 to 29 Aug` Build Your Order replaces the funnels, PDP rebuild, starter kit on PDPs, cart upsell rebuilt · `1 to 2 Sep` Skio live · `15 Sep` trial pack live on its own campaign · `16 Sep` trial CTA relabelled · `22 Sep` trial pack orders start carrying `_listicle_origin`.
 
 ### Artifact data block
 
@@ -679,6 +686,6 @@ New-demand orders per week (Mon start): 29 Jun 1 · 6 Jul 2 · 13 Jul 3 · 20 Ju
   "ctaVisitors": { "adhd": [44,190,285,278,218,111,130,117,100,59], "prod": [13,78,171,66,60,57,84,79,122,84], "brain": [25,55,73,52,76,85,66,65,55,44], "tp": [null,null,null,null,null,null,null,null,38,64] },
   "firstSection": { "adhd": [313,1009,1298,1056,755,289,447,378,290,205], "prod": [91,284,390,192,212,157,209,262,227,186], "brain": [78,188,334,172,206,245,232,190,126,120] },
   "taggedOrders": { "adhd": [null,9,14,12,9,10,7,9,4,6], "prod": [null,10,3,1,2,7,7,10,6,6], "brain": [null,3,3,4,4,13,7,9,4,2], "tp": [null,null,null,null,null,null,null,null,7,8] },
-  "metaCumulative": { "adhd": [103,116.10], "prod": [83,94.49], "brain": [94,104.29], "tp": [21,81.31] }
+  "metaWeekly": "see the Meta by week table; [purchases, spend] per week is in the artifact source (const MW)"
 }
 ```
