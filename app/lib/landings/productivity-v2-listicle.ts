@@ -90,7 +90,6 @@ export const productivityV2Listicle: ListicleConfig = {
       payoff:
         "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
       citation: "PMID: 23439798",
-      ingredients: ["ashwagandha"],
       asset: { kind: "focusBars" },
     },
     {

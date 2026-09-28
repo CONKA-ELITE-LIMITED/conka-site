@@ -1212,28 +1212,32 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               ) : null}
             </Fragment>
           ))}
-          {config.bridge ? (
-            // Tracked so the bridge CTA has a denominator: unlike the hero and
-            // sticky bar it is a mid-page block that can be scrolled past.
-            <TrackedSection
-              section={SECTION.bridge}
-              className="mt-10 rounded-md px-8 py-14 text-center"
-              style={{ background: NAVY, color: "#fff" }}
-            >
-              <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
-                {config.bridge.headline}
-              </h3>
-              <Link
-                href={withSrc(buyHref, SECTION.bridge)}
-                onClick={() => fireCta(SECTION.bridge)}
-                className="inline-block rounded-full bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
-              >
-                {resolveOfferTokens(config.bridge.cta, heroId)}
-              </Link>
-            </TrackedSection>
-          ) : null}
         </div>
       </section>
+
+      {/* Bridge: a thin full-bleed navy band between the reasons and the buy
+          box, headline and CTA on one line from md up. Tracked so the bridge
+          CTA has a denominator: it can be scrolled past. */}
+      {config.bridge ? (
+        <TrackedSection
+          section={SECTION.bridge}
+          className="px-5 py-7 md:px-[5vw] md:py-8"
+          style={{ background: NAVY, color: "#fff" }}
+        >
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 text-center md:flex-row md:justify-between md:text-left">
+            <h3 className="text-balance text-[20px] font-semibold leading-snug md:text-[24px]">
+              {config.bridge.headline}
+            </h3>
+            <Link
+              href={withSrc(buyHref, SECTION.bridge)}
+              onClick={() => fireCta(SECTION.bridge)}
+              className="inline-block shrink-0 rounded-full bg-white px-7 py-3 text-[15px] font-bold text-[#111]"
+            >
+              {resolveOfferTokens(config.bridge.cta, heroId)}
+            </Link>
+          </div>
+        </TrackedSection>
+      ) : null}
 
       {/* Zone 3b: product / buy box — hard flip to light */}
       <section
