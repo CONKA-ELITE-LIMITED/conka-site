@@ -4,8 +4,8 @@ import type { TrialSlide } from "@/app/lib/landings/listicle-types";
 /* ============================================================================
  * TrialCarousel
  *
- * "Why are we so confident?": one card per club trial, sat after the
- * guarantee so the proof answers the risk-reversal. Each card shares the
+ * The cards of a `trialCarousel` block: one per trial. The renderer owns
+ * the heading, copy and the "your turn" bar around them. Each card shares the
  * listicle chart-tile grammar (FocusBars, CrashChart): tinted banner, the
  * figure large, a labelled column chart, a tinted takeaway strip.
  *
@@ -125,27 +125,10 @@ function TrialCard({ slide }: { slide: TrialSlide }) {
   );
 }
 
-export default function TrialCarousel({
-  headline,
-  intro,
-  slides,
-}: {
-  headline: string;
-  intro?: string;
-  slides: TrialSlide[];
-}) {
+export default function TrialCarousel({ slides }: { slides: TrialSlide[] }) {
   return (
-    <div className="border-t border-black/10 pb-4 pt-12">
-      <h3 className="text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
-        {headline}
-      </h3>
-      {intro ? (
-        <p className="mt-4 max-w-[36rem] text-[15px] leading-relaxed text-black/80 md:text-base">
-          {intro}
-        </p>
-      ) : null}
-
-      <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <>
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {slides.map((s) => (
           <div key={s.logoAlt} className="w-[85%] shrink-0 snap-start">
             <TrialCard slide={s} />
@@ -153,7 +136,7 @@ export default function TrialCarousel({
         ))}
       </div>
       <div
-        className={`mt-8 hidden gap-5 md:grid ${
+        className={`hidden gap-5 md:grid ${
           slides.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"
         }`}
       >
@@ -161,6 +144,6 @@ export default function TrialCarousel({
           <TrialCard key={s.logoAlt} slide={s} />
         ))}
       </div>
-    </div>
+    </>
   );
 }

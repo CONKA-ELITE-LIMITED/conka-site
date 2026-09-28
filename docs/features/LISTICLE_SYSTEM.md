@@ -311,11 +311,14 @@ Citations sit under the copy on desktop and close the section (under the
 visual) on mobile.
 
 `athleteQuote` takes an optional `logo` / `logoAlt` (a white chip, top left,
-e.g. Skyscanner on Shane Corstorphine). The `trialCarousel` body block
-(`TrialCarousel.tsx`) is a "Why are we so confident?" run of trial cards: club
-logo, study design, headline figure, a labelled column chart drawn from
-`axis.min`, and a takeaway strip. Swipe on mobile, two- or three-up from md,
-CSS only.
+e.g. Skyscanner on Shane Corstorphine). The `trialCarousel` body block is a
+full-width proof section: heading (numbered like a reason when `n` + `tag` are
+set) and intro, then one card per trial (`TrialCarousel.tsx`: club logo, study
+design, headline figure, a labelled column chart drawn from `axis.min`, a
+takeaway strip), then a slim "your turn" bar with the bold `payoff` and, with
+`appStores`, the app download buttons. Swipe on mobile, two- or three-up from
+md, CSS only. productivity-v2 uses it as reason 6, replacing a separate
+"prove it" reason and its app tile.
 
 `athleteScores` is a reason visual: swipeable 4:5 athlete portraits with the
 score change as the hero number (`AthleteScoreCarousel.tsx`; figures copied

@@ -248,12 +248,22 @@ export type ListicleBodyBlock =
       stats: { value: string; label: string }[];
       footnote?: string;
     }
-  /** "Why are we so confident?": swipeable trial result cards (TrialCarousel) */
+  /** Proof section: trial result cards (TrialCarousel), then a "your turn"
+   *  bar with the guarantee and the app download buttons. Set `n` + `tag` to
+   *  number it as a reason, e.g. the listicle's closing proof reason. */
   | {
       kind: "trialCarousel";
+      n?: number;
+      tag?: string;
       headline: string;
       intro?: string;
       slides: TrialSlide[];
+      /** Bold closing line in the "your turn" bar, e.g. the guarantee */
+      payoff?: string;
+      /** App Store + Google Play buttons in the "your turn" bar */
+      appStores?: boolean;
+      /** "As Published On:" press marquee under the section */
+      pressMarquee?: boolean;
     }
   | {
       kind: "reviewStrip";

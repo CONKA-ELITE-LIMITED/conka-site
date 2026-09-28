@@ -74,7 +74,7 @@ function useScoreAnimation() {
 
 /** App Store + Google Play download buttons, sized to sit on one row inside a
  *  ~300px listicle tile (tight padding and type, no wrap). */
-function MeasureStoreButtons() {
+export function MeasureStoreButtons() {
   const btn =
     "inline-flex min-w-0 items-center gap-2 rounded-xl border border-white/28 bg-black px-3 py-2";
   const name = "text-[13px] font-medium tracking-[-0.01em]";

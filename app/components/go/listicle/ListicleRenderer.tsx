@@ -22,7 +22,10 @@ import AthleteScoreCarousel from "./AthleteScoreCarousel";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
 import FocusBars from "@/app/components/landing/FocusBars";
-import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
+import {
+  MeasureStoreButtons,
+  MeasureTile,
+} from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
@@ -971,12 +974,53 @@ function BodyBlock({
   }
 
   if (block.kind === "trialCarousel") {
+    // The proof reason: others' results, then the reader's own test. Numbered
+    // like a reason when `n` is set, but full width so the trial cards get the
+    // row, and the guarantee plus app buttons close it in one slim bar instead
+    // of a second 4:5 tile.
     return (
-      <TrialCarousel
-        headline={block.headline}
-        intro={block.intro}
-        slides={block.slides}
-      />
+      <div
+        className={`${block.tag ? "" : "border-t border-black/10"} py-14`}
+      >
+        {block.n ? (
+          <ReasonHeading n={block.n} tag={block.tag} className="mb-4">
+            {block.headline}
+          </ReasonHeading>
+        ) : (
+          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
+            {block.headline}
+          </h3>
+        )}
+        {block.intro ? (
+          <p className="mb-6 max-w-[40rem] text-[15px] leading-relaxed text-black/80 md:mb-8 md:text-base">
+            {block.intro}
+          </p>
+        ) : null}
+        <TrialCarousel slides={block.slides} />
+        {block.payoff || block.appStores ? (
+          <div className="mt-6 flex flex-col gap-4 rounded-lg bg-[#eef1f8] px-5 py-5 text-black md:flex-row md:items-center md:justify-between md:gap-8 md:px-6">
+            {block.payoff ? (
+              <p className="max-w-[36rem] text-[15px] font-semibold leading-snug md:text-base">
+                {block.payoff}
+              </p>
+            ) : null}
+            {block.appStores ? (
+              <div className="shrink-0">
+                <MeasureStoreButtons />
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+        {block.pressMarquee ? (
+          <div className="mt-12">
+            <LogoMarquee
+              heading="As Published On:"
+              logos={PRESS_LOGOS}
+              durationSeconds={60}
+            />
+          </div>
+        ) : null}
+      </div>
     );
   }
 

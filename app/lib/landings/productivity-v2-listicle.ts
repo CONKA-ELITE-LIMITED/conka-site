@@ -49,18 +49,6 @@ export const productivityV2Listicle: ListicleConfig = {
   proof: {
     logoBand: true,
     ugc: {},
-    feature: {
-      name: "Jack Willis",
-      credentials: [
-        "2025 Top 14 Player of the Season",
-        "4× Top 14 Champion, Champions Cup winner",
-      ],
-      quote:
-        "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",
-      image: "/testimonials/athlete/JackWillisNB.jpg",
-      imageAlt:
-        "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
-    },
   },
   // Grüns pattern: each reason is a category of reason to buy (tag eyebrow),
   // a concrete outcome headline, and a bold closing fact (payoff). Copy follows
@@ -195,13 +183,20 @@ export const productivityV2Listicle: ListicleConfig = {
       // Cost is the first row; the payoff becomes the tile's bottom strip.
       asset: { kind: "coffeeCompare" },
     },
-    // Round 2: the proof first, then reason 6 hands it to the reader. Figures exactly as
+    // Reason 6: "why are we so confident" and "prove it to yourself" in one.
+    // Others' results first, then the reader's own test and the guarantee. Figures exactly as
     // docs/conkaAppData/HIGH_LEVEL_STATS.md and the two trial PDFs state them.
     {
       kind: "trialCarousel",
-      headline: "Why are we so confident?",
+      n: 6,
+      tag: "Proof",
+      headline: "Tested by the Pros. Now Prove It to Yourself.",
       intro:
-        "Because we've measured it, with professional rugby players whose job is thinking clearly under pressure.",
+        "Why are we so confident? Pro rugby clubs and a team at Revolut measured their scores on CONKA. Your turn: take the free two-minute test in the CONKA app before you start, then again a few weeks in.",
+      payoff:
+        "If your score and your days haven't moved within 100 days, you get every penny back.",
+      appStores: true,
+      pressMarquee: true,
       slides: [
         {
           logo: "/logos/Harlequins.svg",
@@ -263,17 +258,6 @@ export const productivityV2Listicle: ListicleConfig = {
           source: "Revolut trial report, March 2026",
         },
       ],
-    },
-    {
-      kind: "reason",
-      n: 6,
-      tag: "Proof",
-      headline: "Prove It to Yourself",
-      body: "Take the free two-minute CognICA test in the CONKA app before you start, then again a few weeks in.",
-      payoff:
-        "If your score and your days haven't moved within 100 days, you get every penny back.",
-      pressMarquee: true,
-      asset: { kind: "measureTile" },
     },
   ],
   bridge: {
