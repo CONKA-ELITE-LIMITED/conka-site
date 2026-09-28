@@ -221,16 +221,25 @@ function MeasureSteps() {
   );
 }
 
-/** App Store + Google Play download buttons. */
-function MeasureStoreButtons() {
+/** App Store + Google Play download buttons. `compact` keeps both on one row
+ *  inside a ~300px listicle tile (tighter padding and type, no wrap). */
+function MeasureStoreButtons({ compact = false }: { compact?: boolean } = {}) {
+  const btn = compact
+    ? "inline-flex min-w-0 items-center gap-2 rounded-xl border border-white/28 bg-black px-3 py-2"
+    : "inline-flex items-center gap-2.5 rounded-xl border border-white/28 bg-black px-4 py-2.5";
+  const name = compact
+    ? "text-[13px] font-medium tracking-[-0.01em]"
+    : "text-[14.5px] font-medium tracking-[-0.01em]";
   return (
-    <div className="flex flex-wrap justify-center gap-3">
+    <div
+      className={`flex justify-center ${compact ? "flex-nowrap gap-2" : "flex-wrap gap-3"}`}
+    >
       <a
         href={APP_STORE_URL}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Download on the App Store"
-        className="inline-flex items-center gap-2.5 rounded-xl border border-white/28 bg-black px-4 py-2.5"
+        className={btn}
       >
         <svg
           viewBox="0 0 24 24"
@@ -243,9 +252,7 @@ function MeasureStoreButtons() {
           <small className="text-[8.3px] uppercase tracking-[0.04em] opacity-85">
             Download on the
           </small>
-          <b className="text-[14.5px] font-medium tracking-[-0.01em]">
-            App Store
-          </b>
+          <b className={name}>App Store</b>
         </span>
       </a>
       <a
@@ -253,7 +260,7 @@ function MeasureStoreButtons() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Get it on Google Play"
-        className="inline-flex items-center gap-2.5 rounded-xl border border-white/28 bg-black px-4 py-2.5"
+        className={btn}
       >
         <svg
           viewBox="0 0 24 24"
@@ -269,9 +276,7 @@ function MeasureStoreButtons() {
           <small className="text-[8.3px] uppercase tracking-[0.04em] opacity-85">
             Get it on
           </small>
-          <b className="text-[14.5px] font-medium tracking-[-0.01em]">
-            Google Play
-          </b>
+          <b className={name}>Google Play</b>
         </span>
       </a>
     </div>
@@ -317,18 +322,22 @@ export function MeasureTile() {
       </div>
 
       <div className="flex flex-1 flex-col px-5 pb-5 pt-5">
-        <p
-          className="font-bold leading-none tabular-nums"
-          style={{ fontSize: "clamp(3.25rem, 15vw, 4.5rem)" }}
-        >
-          {score}
-        </p>
-        <p
-          className="mt-1.5 text-[15px] font-semibold"
-          style={{ color: "var(--brand-positive, #1a7f4f)" }}
-        >
-          &uarr; up from {FROM} over 30 days
-        </p>
+        <div className="flex items-end gap-3">
+          <p
+            className="font-bold leading-none tabular-nums"
+            style={{ fontSize: "clamp(3rem, 14vw, 4.25rem)" }}
+          >
+            {score}
+          </p>
+          <p
+            className="pb-1 text-[15px] font-semibold leading-tight"
+            style={{ color: "var(--brand-positive, #1a7f4f)" }}
+          >
+            &uarr; Trending up over
+            <br />
+            the past 30 days
+          </p>
+        </div>
 
         <div className="mt-4 flex flex-1 items-center">
           <svg
@@ -470,7 +479,7 @@ export function MeasureTile() {
 
         {/* Free app: the test is the proof, so the download stays in reach. */}
         <div className="mt-4">
-          <MeasureStoreButtons />
+          <MeasureStoreButtons compact />
         </div>
       </div>
     </div>

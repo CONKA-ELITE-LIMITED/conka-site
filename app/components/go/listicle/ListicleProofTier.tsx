@@ -36,17 +36,29 @@ import ProductComparisonTable, {
  */
 export function ListicleLogoBand({
   proof,
-  quietHeading = false,
+  banner = false,
 }: {
   proof: ListicleProof;
-  /** Small grey heading instead of the display one, for the in-hero band where
-   *  a second large title would compete with the H1. */
-  quietHeading?: boolean;
+  /** Top-of-page treatment: the heading becomes a full-width navy bar with
+   *  white text, logos running beneath it, so it reads as a banner rather than
+   *  a second title competing with the H1. */
+  banner?: boolean;
 }) {
   if (!proof.logoBand && !proof.pressBand) return null;
   return (
     <div>
-      {proof.logoBand ? <LogoMarquee largeHeading={!quietHeading} /> : null}
+      {proof.logoBand && banner ? (
+        <>
+          <p className="bg-[var(--brand-navy)] px-4 py-2.5 text-center text-[13px] font-semibold tracking-[0.02em] text-white">
+            Fueling High Performers at:
+          </p>
+          <div className="pt-5">
+            <LogoMarquee heading="" />
+          </div>
+        </>
+      ) : proof.logoBand ? (
+        <LogoMarquee largeHeading />
+      ) : null}
       {proof.pressBand ? (
         <div className={proof.logoBand ? "mt-12" : ""}>
           <LogoMarquee

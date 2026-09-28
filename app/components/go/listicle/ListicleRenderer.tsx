@@ -1057,9 +1057,9 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
             section={SECTION.proofWall}
             // overflow-hidden: the marquee track is w-max and would otherwise
             // widen the page on mobile.
-            className="min-w-0 overflow-hidden pt-6 md:pt-8"
+            className="min-w-0 overflow-hidden"
           >
-            <ListicleLogoBand proof={config.proof} quietHeading />
+            <ListicleLogoBand proof={config.proof} banner />
           </TrackedSection>
         ) : null}
         <div className="grid grid-cols-1 items-center md:grid-cols-[52fr_48fr]">
