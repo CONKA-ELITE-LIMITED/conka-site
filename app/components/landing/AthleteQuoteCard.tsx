@@ -14,6 +14,9 @@ interface AthleteQuoteCardProps {
   role: string;
   image: string;
   quote: string;
+  /** Organisation logo (public path) in a white chip, top left */
+  logo?: string;
+  logoAlt?: string;
 }
 
 export default function AthleteQuoteCard({
@@ -21,6 +24,8 @@ export default function AthleteQuoteCard({
   role,
   image,
   quote,
+  logo,
+  logoAlt,
 }: AthleteQuoteCardProps) {
   return (
     <div
@@ -34,6 +39,19 @@ export default function AthleteQuoteCard({
         className="object-cover object-top"
         sizes="(max-width: 768px) 100vw, 50vw"
       />
+
+      {logo ? (
+        <div className="absolute left-3 top-3 rounded-md bg-white px-3 py-2 shadow-sm">
+          <Image
+            src={logo}
+            alt={logoAlt ?? ""}
+            width={180}
+            height={31}
+            unoptimized={logo.endsWith(".svg")}
+            className="h-[18px] w-auto md:h-5"
+          />
+        </div>
+      ) : null}
 
       <div
         className="absolute inset-x-0 bottom-0 px-4 pb-4 pt-16"

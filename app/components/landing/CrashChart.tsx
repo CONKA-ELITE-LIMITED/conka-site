@@ -35,12 +35,6 @@ interface CrashChartProps {
   shotsPerDay?: string;
   /** Square the container to match the clinical PDP/start styling */
   sharp?: boolean;
-  /**
-   * "tile" (im8 listicle): a tinted title banner across the top, the chart
-   * filling the rest of the frame, and no cost panel (the listicle makes the
-   * price argument in its own reason). Default path (start) is unchanged.
-   */
-  variant?: "default" | "tile";
 }
 
 export function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
@@ -285,45 +279,17 @@ export default function CrashChart({
   coffeePerDay = `£${COFFEE_PRICE_PER_DAY}/day`,
   shotsPerDay = `£${PRICE_PER_DAY_BOTH}/day`,
   sharp = false,
-  variant = "default",
 }: CrashChartProps) {
   const [ref, isInView] = useInView();
   // Unique gradient ids so the chart can render more than once on a page
   // (a component rendering separate mobile and desktop instances, say) without
   // the visible copy's gradient stroke resolving to a hidden copy's defs.
   const gid = useId();
-  const tile = variant === "tile";
-
-  if (tile) {
-    return (
-      <div ref={ref} className="flex flex-1 flex-col text-black">
-        <div className="rounded-t-lg bg-[#eef1f8] px-5 py-4">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.08em]">
-            Focus through the day
-          </p>
-          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
-            <span className="flex items-center gap-2 text-sm font-semibold">
-              <span className="h-[5px] w-6 flex-shrink-0 rounded-[3px] bg-[#1B2757]" />
-              CONKA
-            </span>
-            <span className="flex items-center gap-2 text-sm font-semibold">
-              <span className="h-[5px] w-6 flex-shrink-0 rounded-[3px] bg-[#d9483b]" />
-              Coffee
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-1 items-center px-3 py-4">
-          <CrashSvg gid={gid} isInView={isInView} />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
       ref={ref}
-      // The standalone card (start pages). The listicle uses the "tile"
-      // variant above, whose frame supplies border and radius instead.
+      // The standalone card (start pages).
       className={`overflow-hidden border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)] ${
         sharp ? "" : "rounded-md"
       }`}

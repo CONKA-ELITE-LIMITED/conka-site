@@ -663,6 +663,15 @@ So the basis for the published number is not recoverable from the spec.
 
 ## Claude Skills Audit
 
+### Align the `conka-messaging` skill with BRAND_VOICE.md and the claims docs
+
+**Status:** Deferred
+**Files:** `.claude/skills/conka-messaging/SKILL.md`, `docs/branding/BRAND_VOICE.md`, `docs/branding/CLAIMS_COMPLIANCE.md`, `CLAUDE.md` docs index
+
+**What to fix:** the marketing team's `conka-messaging` skill (Flow first. Clear before it counts.; experience not biology; no named conditions) was dropped in as-is on 28 Sep 2026 for SCRUM-1470. It overlaps and in places conflicts with BRAND_VOICE.md (proof assets, mechanism copy, ingredient-led lines). Decide which wins, merge or cross-link, and add it to the CLAUDE.md docs index.
+
+**Why deferred:** kept out of the productivity-v2 feedback pass to avoid distraction.
+
 ### 8. Review and tighten `.claude/skills/` to reduce token waste
 
 **Status:** Deferred

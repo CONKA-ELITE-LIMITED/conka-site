@@ -89,14 +89,6 @@ export type ListicleAsset =
       aspect?: string;
       fit?: "cover" | "contain";
     }
-  /** "Skip the 2pm crash" curve + cost table (CrashChart). Figures default
-   *  from landingPricing; override per page. */
-  | {
-      kind: "crashChart";
-      saving?: string;
-      coffeePerDay?: string;
-      shotsPerDay?: string;
-    }
   /** Research-backed proof card: universities + key credentials */
   | { kind: "researchBacked" }
   /** Cognitive-score measure card: count-up graph + routine steps + app stores */
@@ -107,6 +99,21 @@ export type ListicleAsset =
   | { kind: "scoreByGroup" }
   /** Day-energy curve: Without slumps in the afternoon, With CONKA holds steady */
   | { kind: "dayEnergyCurve" }
+  /** Swipeable athlete cards: portrait, big score change, before and after
+   *  (AthleteScoreCarousel). Figures from caseStudiesData. */
+  | {
+      kind: "athleteScores";
+      athletes: {
+        name: string;
+        role: string;
+        image: string;
+        /** CognICA total score before and after */
+        from: number;
+        to: number;
+        /** Display change, e.g. "+29.0%" */
+        change: string;
+      }[];
+    }
   /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
   | { kind: "focusBars" }
   /** Condensed CONKA vs coffee table with cost per day (CoffeeCompareTile) */
@@ -118,6 +125,9 @@ export type ListicleAsset =
       role: string;
       image: string;
       quote: string;
+      /** Organisation logo chip, e.g. the athlete's club or employer */
+      logo?: string;
+      logoAlt?: string;
     }
   /** Tile grid of named actives + one-line effects (our deficiency-panel answer) */
   | {
@@ -144,6 +154,27 @@ export type ListicleAsset =
 
 /** A plain photo asset (the only asset a "mm" reason uses). */
 export type ListicleImageAsset = Extract<ListicleAsset, { kind: "image" }>;
+
+/** One trial result card in a `trialCarousel` block. */
+export interface TrialSlide {
+  /** Club or organisation logo (public path) */
+  logo: string;
+  logoAlt: string;
+  /** Study design, e.g. "Randomised, double-blind, placebo-controlled" */
+  design: string;
+  /** Who and how long, e.g. "29 professional rugby players · 6 weeks" */
+  meta: string;
+  /** The headline figure, e.g. "+14.86%" */
+  figure: string;
+  figureLabel: string;
+  chartTitle: string;
+  /** Columns drawn from `axis.min`. `conka` bars are navy, the rest grey. */
+  bars: { label: string; value: number; display: string; conka?: boolean }[];
+  axis: { min: number; max: number; ticks: number[] };
+  /** Takeaway in the tinted bottom strip */
+  caption: string;
+  source?: string;
+}
 
 export interface ListicleReview {
   /** Bold one-liner above the quote */
@@ -189,6 +220,15 @@ export type ListicleBodyBlock =
       /** Render the "As Published On:" press/journal marquee full-width under
        *  the reason, e.g. on an evidence reason to show where the science ran. */
       pressMarquee?: boolean;
+      /** Full-width pull quote under the reason (the proof feature's quote
+       *  styling, no portrait), e.g. an expert voice backing the reason. */
+      pullQuote?: {
+        quote: string;
+        name: string;
+        credentials?: string[];
+        /** Small circular headshot beside the name (public path) */
+        image?: string;
+      };
     }
   | {
       kind: "statsBand";
@@ -206,6 +246,23 @@ export type ListicleBodyBlock =
       stats: { value: string; label: string }[];
       footnote?: string;
     }
+  /** Proof section: trial result cards (TrialCarousel), then a "your turn"
+   *  bar with the guarantee and the app download buttons. Set `n` + `tag` to
+   *  number it as a reason, e.g. the listicle's closing proof reason. */
+  | {
+      kind: "trialCarousel";
+      n?: number;
+      tag?: string;
+      headline: string;
+      intro?: string;
+      slides: TrialSlide[];
+      /** Bold closing line in the "your turn" bar, e.g. the guarantee */
+      payoff?: string;
+      /** App Store + Google Play buttons in the "your turn" bar */
+      appStores?: boolean;
+      /** "As Published On:" press marquee under the section */
+      pressMarquee?: boolean;
+    }
   | {
       kind: "reviewStrip";
       /** Mono eyebrow above the strip (default "What Customers Say") */
@@ -213,6 +270,9 @@ export type ListicleBodyBlock =
       /** Rating line under the strip (default "Rated 4.7 / 5 · 622+ reviews") */
       ratingSummary?: string;
       reviews: ListicleReview[];
+      /** Shorter strip: rating in one header line, small inline avatars,
+       *  three-line quotes, no footer. */
+      compact?: boolean;
     }
   /** Full-width interactive symptom explainer (bespoke, ADHD listicle) */
   | {

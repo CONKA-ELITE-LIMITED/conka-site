@@ -13,14 +13,18 @@ import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
-import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
+import TrialCarousel from "./TrialCarousel";
+import AthleteScoreCarousel from "./AthleteScoreCarousel";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
 import FocusBars from "@/app/components/landing/FocusBars";
-import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
+import {
+  MeasureStoreButtons,
+  MeasureTile,
+} from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
@@ -393,7 +397,6 @@ const CHART_FRAME =
 /** Chart tiles that take the reason's bold payoff as their bottom strip, so the
  *  figure's takeaway sits with the figure instead of in the paragraph. */
 const CAPTIONED_CHARTS = new Set<ListicleAsset["kind"]>([
-  "crashChart",
   "focusBars",
   "coffeeCompare",
   "measureTile",
@@ -419,20 +422,6 @@ function AssetBlock({
   caption?: string;
   heroId: ProductHeroId;
 }) {
-  if (asset.kind === "crashChart") {
-    return (
-      <div className={CHART_FRAME}>
-        <CrashChart
-          saving={asset.saving}
-          coffeePerDay={asset.coffeePerDay}
-          shotsPerDay={asset.shotsPerDay}
-          variant="tile"
-        />
-        <ChartCaption text={caption} />
-      </div>
-    );
-  }
-
   if (asset.kind === "coffeeCompare") {
     return (
       <div className={CHART_FRAME}>
@@ -492,6 +481,10 @@ function AssetBlock({
     );
   }
 
+  if (asset.kind === "athleteScores") {
+    return <AthleteScoreCarousel athletes={asset.athletes} />;
+  }
+
   if (asset.kind === "athleteQuote") {
     // The card is already 4:5; the frame adds the shared border.
     return (
@@ -501,6 +494,8 @@ function AssetBlock({
           role={asset.role}
           image={asset.image}
           quote={asset.quote}
+          logo={asset.logo}
+          logoAlt={asset.logoAlt}
         />
       </div>
     );
@@ -601,6 +596,65 @@ function reviewInitials(name: string) {
     .toUpperCase();
 }
 
+/** Full-width "As Published On:" press band closing a reason. Slower than the
+ *  partner band (60s vs 40s) so the two never read as one track. */
+function PressBand() {
+  return (
+    <div className="mt-12">
+      <LogoMarquee
+        heading="As Published On:"
+        logos={PRESS_LOGOS}
+        durationSeconds={60}
+      />
+    </div>
+  );
+}
+
+/** Compact card: avatar, name and stars in one header row, then the quote. */
+function CompactReviewCard({ review }: { review: ListicleReview }) {
+  return (
+    <div className="flex h-full flex-col rounded-md border border-black/10 bg-white p-3.5 text-[#111]">
+      <div className="mb-2 flex items-center gap-2.5">
+        {review.image ? (
+          <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
+            <Image
+              src={review.image}
+              alt={review.name}
+              fill
+              sizes="40px"
+              className="object-cover object-[center_25%]"
+            />
+          </span>
+        ) : (
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white"
+            style={{ background: NAVY }}
+          >
+            {reviewInitials(review.name)}
+          </span>
+        )}
+        <div className="min-w-0">
+          <div className="text-[13px] font-semibold leading-tight">
+            {review.name}
+          </div>
+          <div
+            className="text-[11px] leading-tight tracking-widest"
+            style={{ color: "#F59E0B" }}
+          >
+            ★★★★★
+          </div>
+        </div>
+      </div>
+      {review.headline ? (
+        <p className="mb-0.5 line-clamp-1 text-sm font-semibold">
+          {review.headline}
+        </p>
+      ) : null}
+      <p className="line-clamp-3 text-[13px] leading-snug">{review.quote}</p>
+    </div>
+  );
+}
+
 function ReviewCard({ review }: { review: ListicleReview }) {
   return (
     <div className="flex h-full flex-col rounded-md border border-black/10 bg-white p-4 text-[#111]">
@@ -661,11 +715,48 @@ function ReviewStrip({
   reviews,
   eyebrow = "What Customers Say",
   ratingSummary = "Rated 4.7 / 5 · 622+ reviews",
+  compact = false,
 }: {
   reviews: ListicleReview[];
   eyebrow?: string;
   ratingSummary?: string;
+  compact?: boolean;
 }) {
+  if (compact) {
+    // Same content, less height: the eyebrow and the rating footer collapse
+    // into one header line, and the cards lose the 72px avatar row.
+    return (
+      <div
+        className="mb-4 rounded-md px-4 py-4 md:px-8 md:py-6"
+        style={{ background: TINT }}
+      >
+        <div className="mb-3 flex flex-wrap items-baseline justify-center gap-x-2 text-[13px] font-semibold text-black/70">
+          <span aria-hidden style={{ color: "#F59E0B" }}>
+            ★★★★★
+          </span>
+          <span className="tabular-nums">{ratingSummary}</span>
+        </div>
+        <div
+          role="group"
+          aria-label={`${eyebrow} (swipe to see more)`}
+          tabIndex={0}
+          className="flex snap-x snap-mandatory gap-3 overflow-x-auto md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {reviews.map((r, i) => (
+            <div key={i} className="w-[85%] shrink-0 snap-start">
+              <CompactReviewCard review={r} />
+            </div>
+          ))}
+        </div>
+        <div className="hidden gap-4 md:grid md:grid-cols-3">
+          {reviews.map((r, i) => (
+            <CompactReviewCard key={i} review={r} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="my-10 rounded-md px-4 py-6 md:px-10 md:py-8"
@@ -811,18 +902,55 @@ function BodyBlock({
             {citation ? <div className="mt-3 md:hidden">{citation}</div> : null}
           </div>
         </article>
+        {block.pullQuote ? (
+          <figure className="mt-12 md:mx-auto md:mt-16 md:max-w-[48rem]">
+            {/* Same oversized-mark treatment as AthleteReviewFeature. */}
+            <blockquote className="text-2xl font-bold leading-[1.18] tracking-tight text-black lg:text-3xl">
+              <span
+                aria-hidden
+                className="mr-0.5 align-[-0.35em] text-[4em] leading-[0] text-black/15"
+              >
+                &ldquo;
+              </span>
+              {block.pullQuote.quote}
+              <span
+                aria-hidden
+                className="ml-1 align-[-0.6em] text-[4em] leading-[0] text-black/15"
+              >
+                &rdquo;
+              </span>
+            </blockquote>
+            <figcaption className="mt-6 flex items-center gap-4">
+              {block.pullQuote.image ? (
+                <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full lg:h-[72px] lg:w-[72px]">
+                  <Image
+                    src={block.pullQuote.image}
+                    alt={block.pullQuote.name}
+                    fill
+                    sizes="72px"
+                    className="object-cover"
+                  />
+                </span>
+              ) : null}
+              <div>
+                <p className="text-xl font-bold leading-tight text-black lg:text-2xl">
+                  {block.pullQuote.name}
+                </p>
+                {block.pullQuote.credentials?.map((c) => (
+                  <p key={c} className="mt-1 text-sm text-black lg:text-base">
+                    {c}
+                  </p>
+                ))}
+              </div>
+            </figcaption>
+          </figure>
+        ) : null}
         {/* Full-width press band, OUTSIDE the grid: the marquee's w-max track
             would otherwise blow out the auto grid column on mobile and stretch
             the asset (e.g. the app graph) to the track width. Slower than the
             partner band (60s vs 40s) so the two never read as one track. */}
         {block.pressMarquee ? (
-          <div className="mt-12">
-            <LogoMarquee
-              heading="As Published On:"
-              logos={PRESS_LOGOS}
-              durationSeconds={60}
-            />
-          </div>
+          <PressBand />
         ) : null}
       </div>
     );
@@ -932,12 +1060,58 @@ function BodyBlock({
     );
   }
 
+  if (block.kind === "trialCarousel") {
+    // The proof reason: others' results, then the reader's own test. Numbered
+    // like a reason when `n` is set, but full width so the trial cards get the
+    // row, and the guarantee plus app buttons close it in one slim bar instead
+    // of a second 4:5 tile.
+    return (
+      <div
+        className={`${block.tag ? "" : "border-t border-black/10"} py-14`}
+      >
+        {block.n ? (
+          <ReasonHeading n={block.n} tag={block.tag} className="mb-4">
+            {block.headline}
+          </ReasonHeading>
+        ) : (
+          <h3 className="mb-4 text-balance text-[32px] font-semibold leading-[1.1] text-black md:text-[44px] md:leading-[1.05]">
+            {block.headline}
+          </h3>
+        )}
+        {block.intro ? (
+          <p className="mb-6 max-w-[40rem] text-[15px] leading-relaxed text-black/80 md:mb-8 md:text-base">
+            {block.intro}
+          </p>
+        ) : null}
+        <TrialCarousel slides={block.slides} />
+        {block.payoff || block.appStores ? (
+          <div className="mt-6 flex flex-col gap-4 rounded-lg bg-[#eef1f8] px-5 py-5 text-black md:flex-row md:items-center md:justify-between md:gap-8 md:px-6">
+            {block.payoff ? (
+              <p className="max-w-[36rem] text-[15px] font-semibold leading-snug md:text-base">
+                {block.payoff}
+              </p>
+            ) : null}
+            {block.appStores ? (
+              <div className="shrink-0">
+                <MeasureStoreButtons />
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+        {block.pressMarquee ? (
+          <PressBand />
+        ) : null}
+      </div>
+    );
+  }
+
   if (block.kind === "reviewStrip") {
     return (
       <ReviewStrip
         reviews={block.reviews}
         eyebrow={block.eyebrow}
         ratingSummary={block.ratingSummary}
+        compact={block.compact}
       />
     );
   }

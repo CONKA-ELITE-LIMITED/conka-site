@@ -1,210 +1,76 @@
 import type { ListicleConfig } from "./listicle-types";
 
 /**
- * Persona listicle: productivity / "smart people".
+ * /go/productivity-listicle: the live Meta campaign slug (SCRUM-1470).
  *
- * Restructured 2026-07-23 (conversion pass) into a true numbered "X reasons"
- * listicle: a counted hero and 7 tight reasons, one idea each, statement
- * headlines, pain-first openings. The verbose mechanism detail and the
- * search-question framing move to the parallel /blog work (SCRUM-1175). One
- * stats band and one review strip sit between reasons so the page reads as a
- * scannable list. Template stays "im8". Claims pass is owned by the user.
+ * A frozen copy of productivity-v2-listicle.ts as of 28 Sep 2026, kept as its
+ * own config on purpose: the ads point here, so this page must not move when
+ * v2 is iterated on. Work on /go/productivity-v2; when an iteration wins,
+ * copy it back here in one deliberate change (and flag it on the Notion
+ * timeline). The original v1 copy lives in git history.
  *
- * Repositioned 2026-07-27 (SCRUM-1187) to a founder-led "high performers"
- * have-it-all angle to message-match the founder-driven ads and fix the weak
- * first fold. Hero carries the founder proof (TwoFounders photo + Harry/Humphrey
- * juggler origin); reasons re-themed off generic caffeine fights to: 1 performance-
- * without-burnout, 2 socialise-keep-tomorrow, 3 founder cheat-code, 4 have-it-all,
- * 5 sharp-all-day, 6 app-proof, 7 guarantee. Diagnosis + rationale:
- * docs/analytics/LISTICLE_PERFORMANCE.md. Shane's exec quote sits on
- * reason 1 as a quote tile; Nimisha's quote is still deferred.
+ * Duplication with v2 is intended, not debt: sharing one config would push
+ * every experiment straight to paid traffic.
  */
 export const productivityListicle: ListicleConfig = {
   slug: "productivity-listicle",
   persona: "productivity",
   format: "listicle",
   template: "im8",
-  title: "7 Reasons High Performers Run on CONKA",
+  title: "6 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   hero: {
-    laurel: {
-      eyebrow: "World's Largest",
-      body: "Consumer brain-research project. 1,000+ brains tested through our app.",
-    },
-    // Soft educational preframe (SCRUM-1320). The "7 Reasons..." list promise
-    // moves off the H1; it comes back as the reasons section header in
-    // SCRUM-1321. `title` deliberately keeps it so the tab and the Meta
-    // content_name stay comparable with earlier data. The founder origin from
-    // SCRUM-1187 is not lost: it still carries reason 3 (the cheat-code reason).
+    proofWallFirst: true,
+    // No laurel: the logo band a scroll later does the credibility job, and the
+    // hero reads as H1, subcopy, CTA, one proof line.
+    // v1 headline as a stand-in until the new hero line is settled.
     headline: "Discover the natural way to stay sharp all day.",
     subcopy:
-      "Coffee buys you an hour and takes back two. CONKA works from within, supporting the pathways behind focus and recovery, so you can have the career and still have something left for the evening.",
+      "Whether it's too much on, a mind that won't settle or a brain that isn't as quick as it was, CONKA keeps you sharp from the first task to the last. Flow first. Clear before it counts.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
     },
-    // One offer surface, outcome first. The old green "+1 week free" pill sat
-    // directly above this and read as a second, competing offer.
-    cta: "Save {percent}% on a sharper day",
+    cta: "Save {percent}% and try it risk-free",
+    // Purpose-shot hero (round 2): overloaded desk worker, hands offering CONKA shots from every side.
     asset: {
       kind: "image",
-      src: "/lifestyle/flow/TrackAthlete.webp",
-      alt: "A runner on a track holding a CONKA Flow shot",
-      // Portrait source (928x1152) in the 1:1 hero frame all three personas
-      // share. Anchored top so nothing is lost off the top of the shot and
-      // only the lower fifth is cropped: the square frame shows 81% of the
-      // image against the 54% a 3:2 frame would.
-      aspect: "1/1",
-      objectPosition: "center top",
+      src: "/listicle/ProductivityHeroV4.webp",
+      alt: "A woman on the phone with arms full of folders and coffees, as hands offer her CONKA shots from every side",
+      aspect: "4/5",
+      objectPosition: "center",
     },
   },
-  // Reintroduces the list promise at the point the list starts, now that
-  // the hero H1 is a soft outcome line (SCRUM-1320/1321). Matches `title`.
   reasonsHeader: {
-    eyebrow: "Brain health at the cellular level",
-    headline: "7 Reasons High Performers Run on CONKA",
+    eyebrow: "Get ahead. Stay ahead.",
+    headline: "6 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   },
-  // Post-reasons proof tier. Four moments, each doing a different job.
   proof: {
     logoBand: true,
-    // No pressBand here: the "As Published On" marquee lives on the app-proof
-    // reason (reason 6) for this page, so a second copy in the tier would be
-    // redundant.
-    // Shared UGC set: the band needs volume to read as volume, and we
-    // have no persona-tagged stills yet. Pass `items` once we do.
     ugc: {},
-    // Jack Willis kept deliberately (confirmed with Rudh 2026-07-27): a high
-    // achiever who reached the greatness this persona is chasing.
-    feature: {
-      name: "Jack Willis",
-      credentials: [
-        "2025 Top 14 Player of the Season",
-        "4\u00d7 Top 14 Champion, Champions Cup winner",
-      ],
-      quote:
-        "For me it was about trying to find the small margins, and maximising my brain as well as my body was so important.",
-      image: "/testimonials/athlete/JackWillisNB.jpg",
-      imageAlt:
-        "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
-    },
   },
+  // Grüns pattern: each reason is a category of reason to buy (tag eyebrow),
+  // a concrete outcome headline, and a bold closing fact (payoff). Copy follows
+  // the conka-messaging skill: experience not biology, no named conditions, and
+  // Flow / Clear in their moments. Reasons 2 and 3 reframe the reader's worry
+  // ("not lazy", "not losing it") as the shared problem: a brain at its limit.
+  // Visuals are stand-ins from the existing pages until purpose-made assets exist.
   body: [
     {
       kind: "reason",
       n: 1,
-      headline: "High Performance, Without the Burnout",
-      body: "You don't call it burnout. You call it a busy quarter, then another. The ones most at risk are the people still hitting every target, running on willpower and caffeine until something gives. CONKA's adaptogens are shown to lower the cortisol load that turns drive into depletion, so you can perform hard without paying for it later.",
-      // Exec quote tile: Shane's workload-without-burnout testimonial. Confirm the
-      // exact title + that the quote is his before shipping (claims pass).
-      asset: {
-        kind: "athleteQuote",
-        name: "Shane Corstorphine",
-        role: "Former CFO, Skyscanner",
-        image: "/caseStudies/ShaneCorstorphine.jpg",
-        quote:
-          "I can now tolerate the same workload as I did in my 30s. I travel from Scotland to London frequently for intense bouts of work. I used to lose my memory in these periods, but now I don't.",
-      },
+      tag: "Composure",
+      headline: "Stay Calm in the Chaos of Life",
+      body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. CONKA helps you keep your composure when the day piles on, so you stay in control instead of playing catch-up.",
+      payoff:
+        "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
+      citation: "PMID: 23439798",
+      // Payoff becomes the focus bars' caption strip (athlete trial figure).
+      asset: { kind: "focusBars" },
     },
+    // Closes reason 1 (compact strip): customers backing the calm claim.
     {
-      kind: "reason",
-      n: 2,
-      headline: "Enjoy the Night. Keep Tomorrow.",
-      body: "The dinners and the late nights are part of the life you are working for, and they should not cost you the morning after. CONKA will not undo a big night, but the stack below helps your brain clear the load and start the next day closer to sharp.",
-      asset: {
-        kind: "ingredientGrid",
-        eyebrow: "The morning-after stack",
-        items: [
-          {
-            icon: "🏔",
-            name: "Rhodiola Rosea",
-            benefit:
-              "Shown in night-shift physicians to cut fatigue and sharpen mental performance.",
-            citation: "PMID: 11081987",
-          },
-          {
-            icon: "🛡",
-            name: "Glutathione",
-            benefit:
-              "Clinically shown to speed clearance of acetaldehyde, the toxin behind hangovers.",
-            citation: "PMC11479010",
-          },
-          {
-            icon: "🌿",
-            name: "Ashwagandha",
-            benefit: "Helps lower cortisol and the daily stress load.",
-            citation: "PMID: 32800311",
-          },
-          {
-            icon: "♻️",
-            name: "Alpha Lipoic Acid",
-            benefit: "Clears the oxidative stress of short sleep.",
-          },
-        ],
-        footer: "All in two 30ml shots, morning and night.",
-      },
-    },
-    {
-      kind: "statsBand",
-      eyebrow: "Clinically proven, not just claimed",
-      stats: [
-        { value: "18.1%", label: "Faster processing than caffeine" },
-        { value: "80%", label: "Improved cognitive scores in week one" },
-        { value: "+14.86%", label: "Sharper thinking vs placebo" },
-        { value: "75%", label: "Improved in under three weeks" },
-      ],
-      footnote:
-        "*From CONKA cognitive trials, including a 6-week randomised double-blind placebo-controlled trial with 29 professional rugby players.",
-    },
-    {
-      kind: "reason",
-      n: 3,
-      headline: "The Cheat Code Two Founders Built for Themselves",
-      body: "This started as a private edge, not a product. Harry needed to think clearly under Olympic pressure with Team GB; Humphrey was running a full-time team whilst training for ultramarathons and Ironmans. Nothing on the market worked, so they spent years and £500,000 of their own money building it, collapsing 14 daily capsules into a single shot tested at Cambridge. What was their cheat code is now yours.",
-      chips: ["Backed by 25+ cognitive trials"],
-      asset: {
-        kind: "image",
-        src: "/lifestyle/CreationOfConka.jpg",
-        alt: "CONKA founders developing the formula",
-        fit: "cover",
-        aspect: "1500/1000",
-      },
-    },
-    {
-      kind: "reason",
-      n: 4,
-      headline: "Have the Career Without Losing the Life",
-      body: "Chasing the next deadline while the dinners, the friends, the people at home quietly slip down the list. You were told that's the cost of ambition. It isn't. CONKA gives you steady, all-day capacity, so you can go hard at work and still show up for the life that makes it worth it, present in both and drained by neither.",
-      chips: ["28% less burnout in a clinical trial", "28% lower cortisol, the stress hormone"],
-      citation: "PMID: 19016404 · PMID: 23439798",
-      asset: {
-        kind: "image",
-        src: "/lifestyle/GirlsLaughing.jpg",
-        alt: "Friends laughing together over a meal",
-        fit: "cover",
-        aspect: "1/1",
-      },
-    },
-    {
-      kind: "reason",
-      n: 5,
-      headline: "Sharp From Your Morning Workout to Your Late-Night Deadline",
-      body: "The clarity you have at 9am is usually gone by 3pm, and a fourth coffee only rents it back with a crash to follow. CONKA is completely caffeine-free, and its ingredients deliver 18.1% faster mental processing than caffeine, so your sharpness holds from the morning workout to the last deadline of the day.",
-      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
-      // Day-energy curve: afternoon holds steady with CONKA
-      asset: { kind: "dayEnergyCurve" },
-    },
-    {
-      kind: "reason",
-      n: 6,
-      headline: "You Measure Everything Else. Measure This Too.",
-      body: "You run your work on numbers, so run this on numbers too. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. It takes under two minutes, so when your score moves, it's real, not a feeling.",
-      // App cognitive-score count-up card. Press outlets render below via pressMarquee.
-      asset: { kind: "measureTile" },
-      pressMarquee: true,
-    },
-    {
-      // Hand-cropped excerpts (productivity / endurance theme). Named exec
-      // quotes (Shane, Nimisha) are the deferred final pass, pending real copy.
       kind: "reviewStrip",
+      compact: true,
       eyebrow: "What Customers Say",
       ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
       reviews: [
@@ -229,29 +95,178 @@ export const productivityListicle: ListicleConfig = {
           quote:
             "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
           name: "Anthony Stodart",
-          image: "/testimonials/ugc/15.jpg",
+          image: "/testimonials/dtc/AnthonyS.jpg",
           detail: "Verified · Flow + Clear",
         },
       ],
     },
     {
       kind: "reason",
-      n: 7,
-      headline: "100 Days to Feel It, or Your Money Back",
-      body: "Try CONKA for a full 100 days. If your clarity and output haven't changed, you get every penny back. Informed Sport certified, made in the UK, built on a decade of brain research.",
-      // University research proof (matches the ADHD guarantee asset)
-      asset: { kind: "researchBacked" },
+      n: 2,
+      tag: "Motivation",
+      headline: "You're Not Lazy. Your Brain Is Underfuelled.",
+      body: "Some days the hardest part of any task is the first minute. That isn't a character flaw. After a heavy week or a short night, your brain has less to give, and starting takes everything you've got.",
+      payoff:
+        "Flow first, before you open your emails, and the first minute stops feeling like a fight.",
+      // Placeholder wording tightened from the team's paraphrase: needs
+      // Dr Morehen's sign-off before scaling spend.
+      pullQuote: {
+        quote:
+          "Our athletes make more mistakes in the second half. That's a fuel gap: their body and brain are missing the fuel to stay sharp.",
+        name: "Dr James Morehen",
+        credentials: [
+          "England Rugby Performance Nutritionist",
+          "Also works with boxers Chris Billam-Smith and Adam Azim",
+        ],
+        image: "/testimonials/expert/JamesMorehen.webp",
+      },
+      ingredients: ["lemon-balm", "rhodiola"],
+      // Round 2: athletes and professionals, alternating, each with their own
+      // score change. Figures from caseStudiesData (CognICA total score).
+      // Leeds players are hidden site-wide on request (SCRUM-1354), so no Bamford.
+      asset: {
+        kind: "athleteScores",
+        athletes: [
+          { name: "Jade Shekells", role: "GB Women's Rugby 7s", image: "/caseStudies/JadeShekells.jpg", from: 60.33, to: 82.48, change: "+36.7%" },
+          { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
+          { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
+          { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
+          { name: "Pierre-Louis Barassi", role: "Stade Toulousain", image: "/caseStudies/PierreLouisBarassi.jpg", from: 67, to: 85.25, change: "+27.2%" },
+          { name: "Jack Willis", role: "Stade Toulousain", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
+        ],
+      },
+    },
+    {
+      kind: "reason",
+      n: 3,
+      tag: "Memory",
+      headline: "You're Not Losing It. Your Brain Is Just Overloaded.",
+      body: "The word you want arrives a beat late. A name you know goes blank. It's easy to fear the worst, but most days your head is simply carrying too much at once. And the pace does shift: Archana Singh-Manoux's ten-year study of over 7,000 people found the slip in processing speed already measurable by 45.",
+      payoff:
+        "Clear before it counts, so the name is there when you need it.",
+      citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
+      ingredients: ["turmeric", "bilberry"],
+      asset: {
+        kind: "athleteQuote",
+        name: "Shane Corstorphine",
+        role: "Former CFO, Skyscanner",
+        image: "/caseStudies/ShaneCorstorphine.jpg",
+        logo: "/logos/Skyscanner.png",
+        logoAlt: "Skyscanner",
+        quote:
+          "I can now tolerate the same workload as I did in my 30s. I travel from Scotland to London frequently for intense bouts of work. I used to lose my memory in these periods, but now I don't.",
+      },
+    },
+    {
+      kind: "reason",
+      n: 4,
+      tag: "Convenience",
+      headline: "Fits Around Your Day, Whatever Time It Starts",
+      body: "Flow first, before you open your laptop or your emails. Clear in the five minutes before it counts. No powders to mix or capsules to count, and zero caffeine, so it fits whatever time your day starts.",
+      // Rendered at the frame's 4:5 from design/listicle-assets/routine.html,
+      // round 2: rewritten to the conka-messaging system lines.
+      asset: {
+        kind: "image",
+        src: "/listicle/RoutineTwoShotsV3.jpg",
+        alt: "Flow first, Clear before it counts: Flow before you open your laptop, Clear 5 minutes before the big meeting. Zero caffeine, no powders, no capsules",
+        fit: "cover",
+      },
+    },
+    {
+      kind: "reason",
+      n: 5,
+      tag: "Value",
+      headline: "Costs Less Than Your Daily Coffee",
+      body: "We love coffee too, but it has its limits. Too much caffeine takes a toll on your body and your sleep. CONKA gives you the focus today and looks after your brain for the long run, with zero caffeine.",
+      payoff:
+        "On a quarterly subscription, CONKA works out at £{perDay} a day.",
+      // Cost is the first row; the payoff becomes the tile's bottom strip.
+      asset: { kind: "coffeeCompare" },
+    },
+    // Reason 6: "why are we so confident" and "prove it to yourself" in one.
+    // Others' results first, then the reader's own test and the guarantee. Figures exactly as
+    // docs/conkaAppData/HIGH_LEVEL_STATS.md and the two trial PDFs state them.
+    {
+      kind: "trialCarousel",
+      n: 6,
+      tag: "Proof",
+      headline: "Tested by the Pros. Now Prove It to Yourself.",
+      intro:
+        "Why are we so confident? The people who can't afford an off day already measure it: professional athletes, executives and whole teams, tracking their scores on CONKA. Your turn: take the free two-minute test in the CONKA app before you start, then again a few weeks in.",
+      payoff:
+        "If your score and your days haven't moved within 100 days, you get every penny back.",
+      appStores: true,
+      pressMarquee: true,
+      slides: [
+        {
+          logo: "/logos/Harlequins.webp",
+          logoAlt: "Harlequins",
+          design: "Randomised, double-blind, placebo-controlled",
+          meta: "29 professional rugby players · 6 weeks",
+          figure: "+14.86%",
+          figureLabel: "Cognitive performance on CONKA",
+          chartTitle: "Change in cognitive score",
+          bars: [
+            { label: "Placebo", value: -0.69, display: "−0.69%" },
+            { label: "CONKA", value: 14.86, display: "+14.86%", conka: true },
+          ],
+          axis: { min: 0, max: 16, ticks: [0, 8, 16] },
+          caption:
+            "80% of fully tracked players on CONKA improved, while taking 60% more contact.",
+          source: "Harlequins F.C. trial report",
+        },
+        {
+          logo: "/logos/BristolBears.svg",
+          logoAlt: "Bristol Bears",
+          design: "Each player against their own baseline",
+          meta: "15 professional rugby players · 13 weeks",
+          figure: "77.9 → 88.7",
+          figureLabel: "Average cognitive score, baseline to peak",
+          chartTitle: "Average score every three weeks",
+          bars: [
+            { label: "Start", value: 77.9, display: "77.9" },
+            { label: "Wk 3", value: 83.9, display: "83.9", conka: true },
+            { label: "Wk 6", value: 86.5, display: "86.5", conka: true },
+            { label: "Wk 9", value: 88.7, display: "88.7", conka: true },
+          ],
+          axis: { min: 70, max: 90, ticks: [70, 80, 90] },
+          caption: "Scores climbed for nine straight weeks on CONKA.",
+          source: "Bristol Bears trial report",
+        },
+        // The desk-job bridge. The group score average is flat (high scorers
+        // stopped testing in week 2), so this card leads on the share who
+        // improved and charts reaction time. RT bars average the five
+        // participants the report gives start and end times for (Ben, Fred,
+        // Doris, William, Michael): 416ms to 317ms, inside its "20-25% faster".
+        {
+          logo: "/logos/Revolut.png",
+          logoAlt: "Revolut",
+          design: "Workplace trial",
+          meta: "9 Revolut employees · 18 days",
+          figure: "75%",
+          figureLabel: "Improved their cognitive score",
+          // Reaction time inverted to speed (1000 / ms) so taller reads as
+          // faster: 416ms = 2.4 per second, 317ms = 3.2 per second.
+          chartTitle: "Reaction speed (responses per second)",
+          bars: [
+            { label: "Start", value: 2.4, display: "2.4" },
+            { label: "End", value: 3.15, display: "3.2", conka: true },
+          ],
+          axis: { min: 0, max: 4, ticks: [0, 2, 4] },
+          caption:
+            "Everyone got faster, with average response times down from 416ms to 317ms.",
+          source: "Revolut trial report, March 2026",
+        },
+      ],
     },
   ],
   bridge: {
-    headline: "Have the career and the life. Refuse the trade-off.",
-    cta: "Try Conka Risk-Free for 100 Days →",
+    headline: "Make it part of your routine. 100 days, risk-free.",
+    cta: "Try CONKA Risk-Free →",
   },
   product: {
     productHeroId: "01",
   },
-  // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
-  // caffeine, vs-energy-drink, reduce-coffee, timing, timeline, coffee, guarantee.
   faqIds: [
     "caffeine",
     "vs-energy-drink",
@@ -261,5 +276,6 @@ export const productivityListicle: ListicleConfig = {
     "with-coffee",
     "guarantee",
   ],
-  stickyBar: { cta: "Get started" },
+  // Same line as the hero CTA, so the page makes one ask.
+  stickyBar: { cta: "Save {percent}% and try it risk-free", layout: "button" },
 };

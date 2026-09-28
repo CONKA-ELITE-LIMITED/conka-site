@@ -30,19 +30,20 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 |---|---|---|
 | - | Navy "Fueling High Performers at:" bar + logo marquee | Partner logos |
 | Hero | "Discover the natural way to stay sharp all day." (v1 line, stand-in) + subcopy naming load, focus, age; CTA "Save {percent}% and try it risk-free"; avatar proof row | v1 hero image |
-| - | Reasons header: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine" (also `title`) | Text |
-| 1 | Focus · All-Day Energy and Focus, Without the Crash | Crash chart tile |
-| 2 | Stress · Stay Calm When Everything Lands at Once | Focus bars tile |
-| 3 | Motivation · Start the Tasks You Keep Putting Off (ADHD as one example) | Flow video + Lemon Balm, Rhodiola tiles |
+| - | Reasons header: eyebrow "Get ahead. Stay ahead.", "6 Reasons 5,000+ People Have Made CONKA Part of Their Routine" (also `title`) | Text |
+| 1 | Composure · Stay Calm in the Chaos of Life | Focus bars tile |
+| 2 | Motivation · You're Not Lazy. Your Brain Is Underfuelled. | Athlete + professional score cards, Lemon Balm, Rhodiola tiles, Morehen quote |
 | - | Review strip | Three customer reviews |
-| 4 | Memory · Stop Forgetting Names and Losing Your Words (from 30) | Shane quote + Turmeric, Bilberry tiles |
-| 5 | Convenience · Fits Around Your Day, Whatever Time It Starts | `public/listicle/RoutineTwoShotsV1.jpg` |
-| 6 | Value · Costs Less Than Your Daily Coffee | CONKA vs coffee tile |
-| 7 | Proof · See It Work, or Get Your Money Back | App score tile + store buttons, press marquee |
+| 3 | Memory · You're Not Losing It. Your Brain Is Just Overloaded. | Shane quote + Turmeric, Bilberry tiles |
+| 4 | Convenience · Fits Around Your Day, Whatever Time It Starts | `public/listicle/RoutineTwoShotsV3.jpg` |
+| 5 | Value · Costs Less Than Your Daily Coffee | CONKA vs coffee tile |
+| 6 | Proof · See It Work, or Get Your Money Back | App score tile + store buttons, press marquee |
 | - | Bridge band: "Make it part of your routine. 100 days, risk-free." | Navy band |
 | - | Buy box, Jack Willis, comparison table, UGC, FAQ; "button" sticky bar | Shared |
 
 ## Still open
+
+- **More bullish logos and social proof:** team wants it, deliberately deferred to a later pass.
 
 - **Hero headline:** the v1 line is a stand-in; the new hero line is not settled.
 - **Founder story:** now only a proof line in reason 5.
@@ -60,13 +61,14 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 
 ## Decisions
 
-- **New slug** `/go/productivity-v2` (GO_LANDING_PAGES.md: a new iteration is a new slug). v1 stays live, and Meta splits budget between the two.
+- **New slug** `/go/productivity-v2` (GO_LANDING_PAGES.md: a new iteration is a new slug).
+- **v1 slug now serves v2 (28 Sep):** `/go/productivity-listicle` holds a frozen copy of the v2 config under its own slug, because the live Meta campaign points there and repointing ads would reset learning. v2 stays the working copy; a winning iteration is copied back to v1 deliberately. The old v1 copy lives in git history.
 - **Design language:** unchanged im8 Simple DTC. No component work.
-- **Seven reasons**, following the agreed outline.
+- **Six reasons** (team feedback, 28 Sep): the Focus / crash-chart reason was cut, Stress leads, and Motivation and Memory reframe the reader's worry ("not lazy", "not losing it") as the shared problem.
+- **Copy follows the `conka-messaging` skill** (`.claude/skills/conka-messaging/`): experience not biology (no cortisol or dopamine), no named conditions, Flow first / Clear before it counts.
 
 ## No-gos
 
-- No edits to `/go/productivity-listicle` (v1).
 - No new components or imagery in this ticket.
 - No literal prices or discounts in the config (`{percent}` token only).
 
@@ -82,3 +84,23 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 |---|---|---|
 | SCRUM-1470 | Productivity listicle v2: core "your brain has a limit" messaging | 1 (active) |
 | Future | ADHD and brain-ageing listicles rebuilt on the v2 template | 2 |
+
+## Round 2: formal team feedback (28 Sep 2026)
+
+Supersedes the six-reason page above once built. Copy stays on the `conka-messaging` skill; conditions are implied, never named. Build section by section.
+
+| Zone | Change | Needs |
+|---|---|---|
+| Hero | New image; CTAs (hero, bridge, sticky) move to brand green `#1a7f4f` with new copy ("Get ahead, risk-free for 100 days" direction); Trustpilot logo; no "nootropics" anywhere | Pinterest image, Trustpilot logo |
+| 01 Composure | Copy stays. Bar graph with athlete photos under the bars (main-site athlete pattern, e.g. Bamford) | Athlete photos exist in `public/caseStudies/` |
+| 02 Motivation | You're not lazy, your brain isn't built for the pace of change. "To-do list melting away" visual (Magic Mind style). Expert voice: Dr James Morehen (England Rugby performance nutritionist), "fuel gap" quote with headshot. Keep ingredient tiles | Signed-off quote wording |
+| 03 Memory | Your memory isn't getting worse, you take in more information than any generation before. Brain adapts 7x faster before 25. Shane quote with Skyscanner logo; "Official Brain Performance Partner of Bristol Bears" lockup | Skyscanner logo, Bristol Bears lockup, source for "7x" |
+| 04 Caffeine Index | Absorbs Convenience and Value: coffee vs CONKA tile reframed around caffeine, plus the rebuilt routine image | Routine image re-render |
+| 05 Guarantee | Try CONKA for 100 days; if you don't like it, your money back | |
+| Confidence | "Why are we so confident?" then a carousel of 7 / 30 / 90-day CognICA score change, CONKA users vs non-users | CognICA data (Rudh sourcing) |
+
+**Routine image values** (`design/listicle-assets/routine.html`): "Flow first. Clear before it counts." / FLOW · Shot before screen · Start the day composed and in control / CLEAR · The 5 minutes before the important meeting · Sharp on demand, when it counts / Zero caffeine · No powders · No capsules. Drops "afternoon", "the fog lifts" and "no crash".
+
+**Round 2 follow-ups (28 Sep):** "Why are we so confident?" and "Prove It to Yourself" merged into reason 6 (trial cards, then the guarantee and app buttons in one bar; the app score tile is gone). Jack Willis proof feature removed, since athletes now lead reason 1.
+
+**Bristol Bears lockup (pending):** the club wordmark is at https://www.bristolbearsrugby.com/wp-content/uploads/2023/03/Footer-Logo.svg (removed from `public/logos/` until the lockup is built).

@@ -282,7 +282,7 @@ viewport above roughly 1560px upscales them about 1.2x. Measured through
 heroes cost 30-62K; a dense photographic background costs noticeably more than
 a flat studio sweep, which is worth checking when swapping one in.
 
-The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
+The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `trialCarousel`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `athleteScores`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
 ## Reason tiles and optional fields (SCRUM-1470)
 
@@ -293,8 +293,7 @@ chart tiles fill it as a flex column and the frame grows rather than clips.
 
 **Chart tiles** share one grammar: a tinted `#eef1f8` banner with the title,
 the figure or chart, and a tinted bottom strip. Palette: navy is CONKA, grey
-the alternative, brand green only on the key figure; the crash chart keeps its
-red drop. Tiles: `crashChart` (`variant="tile"`, no cost panel), `focusBars`
+the alternative, brand green only on the key figure. Tiles: `focusBars`
 (0 to 120 axis), `measureTile` (score chart plus store buttons) and
 `coffeeCompare` (condensed CONKA vs coffee table, cost row from `offerData` and
 `landingPricing`).
@@ -309,6 +308,22 @@ Optional reason fields:
 
 Citations sit under the copy on desktop and close the section (under the
 visual) on mobile.
+
+`athleteQuote` takes an optional `logo` / `logoAlt` (a white chip, top left,
+e.g. Skyscanner on Shane Corstorphine). The `trialCarousel` body block is a
+full-width proof section: heading (numbered like a reason when `n` + `tag` are
+set) and intro, then one card per trial (`TrialCarousel.tsx`: club logo, study
+design, headline figure, a labelled column chart drawn from `axis.min`, a
+takeaway strip), then a slim "your turn" bar with the bold `payoff` and, with
+`appStores`, the app download buttons. Swipe on mobile, two- or three-up from
+md, CSS only. productivity-v2 uses it as reason 6, replacing a separate
+"prove it" reason and its app tile.
+
+`athleteScores` is a reason visual: swipeable 4:5 athlete portraits with the
+score change as the hero number (`AthleteScoreCarousel.tsx`; figures copied
+from `caseStudiesData`, Leeds players excluded per SCRUM-1354). A reason's
+optional `pullQuote` renders a full-width quote under it in the proof
+feature's oversized-mark style, for an expert voice with no portrait.
 
 Page-level options: `hero.proofWallFirst` puts the partner logos at the top of
 the page under a navy "Fueling High Performers at:" bar (and skips the band
