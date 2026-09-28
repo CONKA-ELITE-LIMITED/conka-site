@@ -17,6 +17,8 @@ import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
+import TrialCarousel from "./TrialCarousel";
+import AthleteScoreCarousel from "./AthleteScoreCarousel";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
 import FocusBars from "@/app/components/landing/FocusBars";
@@ -492,6 +494,10 @@ function AssetBlock({
     );
   }
 
+  if (asset.kind === "athleteScores") {
+    return <AthleteScoreCarousel athletes={asset.athletes} />;
+  }
+
   if (asset.kind === "athleteQuote") {
     // The card is already 4:5; the frame adds the shared border.
     return (
@@ -501,6 +507,8 @@ function AssetBlock({
           role={asset.role}
           image={asset.image}
           quote={asset.quote}
+          logo={asset.logo}
+          logoAlt={asset.logoAlt}
         />
       </div>
     );
@@ -811,6 +819,36 @@ function BodyBlock({
             {citation ? <div className="mt-3 md:hidden">{citation}</div> : null}
           </div>
         </article>
+        {block.pullQuote ? (
+          <figure className="mt-12 md:mx-auto md:mt-16 md:max-w-[48rem]">
+            {/* Same oversized-mark treatment as AthleteReviewFeature. */}
+            <blockquote className="text-2xl font-bold leading-[1.18] tracking-tight text-black lg:text-3xl">
+              <span
+                aria-hidden
+                className="mr-0.5 align-[-0.35em] text-[4em] leading-[0] text-black/15"
+              >
+                &ldquo;
+              </span>
+              {block.pullQuote.quote}
+              <span
+                aria-hidden
+                className="ml-1 align-[-0.6em] text-[4em] leading-[0] text-black/15"
+              >
+                &rdquo;
+              </span>
+            </blockquote>
+            <figcaption className="mt-6">
+              <p className="text-xl font-bold leading-tight text-black lg:text-2xl">
+                {block.pullQuote.name}
+              </p>
+              {block.pullQuote.credentials?.map((c) => (
+                <p key={c} className="mt-1 text-sm text-black lg:text-base">
+                  {c}
+                </p>
+              ))}
+            </figcaption>
+          </figure>
+        ) : null}
         {/* Full-width press band, OUTSIDE the grid: the marquee's w-max track
             would otherwise blow out the auto grid column on mobile and stretch
             the asset (e.g. the app graph) to the track width. Slower than the
@@ -929,6 +967,16 @@ function BodyBlock({
           </p>
         ) : null}
       </div>
+    );
+  }
+
+  if (block.kind === "trialCarousel") {
+    return (
+      <TrialCarousel
+        headline={block.headline}
+        intro={block.intro}
+        slides={block.slides}
+      />
     );
   }
 

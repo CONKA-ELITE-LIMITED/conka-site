@@ -107,6 +107,21 @@ export type ListicleAsset =
   | { kind: "scoreByGroup" }
   /** Day-energy curve: Without slumps in the afternoon, With CONKA holds steady */
   | { kind: "dayEnergyCurve" }
+  /** Swipeable athlete cards: portrait, big score change, before and after
+   *  (AthleteScoreCarousel). Figures from caseStudiesData. */
+  | {
+      kind: "athleteScores";
+      athletes: {
+        name: string;
+        role: string;
+        image: string;
+        /** CognICA total score before and after */
+        from: number;
+        to: number;
+        /** Display change, e.g. "+29.0%" */
+        change: string;
+      }[];
+    }
   /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
   | { kind: "focusBars" }
   /** Condensed CONKA vs coffee table with cost per day (CoffeeCompareTile) */
@@ -118,6 +133,9 @@ export type ListicleAsset =
       role: string;
       image: string;
       quote: string;
+      /** Organisation logo chip, e.g. the athlete's club or employer */
+      logo?: string;
+      logoAlt?: string;
     }
   /** Tile grid of named actives + one-line effects (our deficiency-panel answer) */
   | {
@@ -144,6 +162,27 @@ export type ListicleAsset =
 
 /** A plain photo asset (the only asset a "mm" reason uses). */
 export type ListicleImageAsset = Extract<ListicleAsset, { kind: "image" }>;
+
+/** One trial result card in a `trialCarousel` block. */
+export interface TrialSlide {
+  /** Club or organisation logo (public path) */
+  logo: string;
+  logoAlt: string;
+  /** Study design, e.g. "Randomised, double-blind, placebo-controlled" */
+  design: string;
+  /** Who and how long, e.g. "29 professional rugby players · 6 weeks" */
+  meta: string;
+  /** The headline figure, e.g. "+14.86%" */
+  figure: string;
+  figureLabel: string;
+  chartTitle: string;
+  /** Columns drawn from `axis.min`. `conka` bars are navy, the rest grey. */
+  bars: { label: string; value: number; display: string; conka?: boolean }[];
+  axis: { min: number; max: number; ticks: number[] };
+  /** Takeaway in the tinted bottom strip */
+  caption: string;
+  source?: string;
+}
 
 export interface ListicleReview {
   /** Bold one-liner above the quote */
@@ -189,6 +228,9 @@ export type ListicleBodyBlock =
       /** Render the "As Published On:" press/journal marquee full-width under
        *  the reason, e.g. on an evidence reason to show where the science ran. */
       pressMarquee?: boolean;
+      /** Full-width pull quote under the reason (the proof feature's quote
+       *  styling, no portrait), e.g. an expert voice backing the reason. */
+      pullQuote?: { quote: string; name: string; credentials?: string[] };
     }
   | {
       kind: "statsBand";
@@ -205,6 +247,13 @@ export type ListicleBodyBlock =
        */
       stats: { value: string; label: string }[];
       footnote?: string;
+    }
+  /** "Why are we so confident?": swipeable trial result cards (TrialCarousel) */
+  | {
+      kind: "trialCarousel";
+      headline: string;
+      intro?: string;
+      slides: TrialSlide[];
     }
   | {
       kind: "reviewStrip";

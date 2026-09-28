@@ -310,6 +310,19 @@ Optional reason fields:
 Citations sit under the copy on desktop and close the section (under the
 visual) on mobile.
 
+`athleteQuote` takes an optional `logo` / `logoAlt` (a white chip, top left,
+e.g. Skyscanner on Shane Corstorphine). The `trialCarousel` body block
+(`TrialCarousel.tsx`) is a "Why are we so confident?" run of trial cards: club
+logo, study design, headline figure, a labelled column chart drawn from
+`axis.min`, and a takeaway strip. Swipe on mobile, two- or three-up from md,
+CSS only.
+
+`athleteScores` is a reason visual: swipeable 4:5 athlete portraits with the
+score change as the hero number (`AthleteScoreCarousel.tsx`; figures copied
+from `caseStudiesData`, Leeds players excluded per SCRUM-1354). A reason's
+optional `pullQuote` renders a full-width quote under it in the proof
+feature's oversized-mark style, for an expert voice with no portrait.
+
 Page-level options: `hero.proofWallFirst` puts the partner logos at the top of
 the page under a navy "Fueling High Performers at:" bar (and skips the band
 after the hero); `proof.comparison` adds the full comparison table between the
