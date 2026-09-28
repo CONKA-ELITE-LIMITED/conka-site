@@ -19,9 +19,7 @@ import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
-import FocusBars from "@/app/components/landing/FocusBars";
-import StatCompareBars from "@/app/components/landing/StatCompareBars";
-import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
+import FocusBars from "@/app/components/landing/FocusBars";import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
@@ -216,36 +214,20 @@ function StarRow({ fontSize }: { fontSize: string }) {
   );
 }
 
-/** The home hero's avatar + star micro-row, compacted to the IM8 scale.
+/** One-line rating row under the hero CTA: stars, the bare figure ("Excellent
+ *  4.7" -> "4.7") and the sub-line. Same row the sticky bar carries, so the
+ *  page states its proof one way. The avatar stack was cut as hero noise.
  *  Content only: the caller owns the surrounding spacing. */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
   return (
-    <div className="flex items-center justify-start gap-2.5">
-      <div className="flex items-center">
-        {Array.from({ length: 5 }, (_, i) => (
-          <div
-            key={i}
-            className="relative h-[26px] w-[26px] overflow-hidden rounded-full border border-black/10"
-            style={{ marginLeft: i === 0 ? 0 : "-8px", zIndex: 5 - i }}
-          >
-            <Image
-              src={`/avatars/${i + 1}.jpg`}
-              alt="CONKA customer"
-              fill
-              className="object-cover"
-              sizes="26px"
-            />
-          </div>
-        ))}
-      </div>
-      <div className="flex flex-col leading-tight">
-        <div className="flex items-center gap-1.5">
-          <StarRow fontSize="15px" />
-          <span className="text-[13px] font-bold tabular-nums">{label}</span>
-        </div>
-        <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
-      </div>
-    </div>
+    <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[12.5px] leading-tight text-black/70 md:justify-start">
+      <StarRow fontSize="14px" />
+      <span className="font-bold tabular-nums text-black">
+        {label.replace(/^[^\d]*/, "")}
+      </span>
+      <span aria-hidden>·</span>
+      <span>{sub}</span>
+    </p>
   );
 }
 
@@ -349,12 +331,8 @@ function ReasonVideo({
   const video = videoTrio(asset.src);
 
   return (
-    <div
-      className={`relative overflow-hidden rounded-md border border-black/10 w-full ${
-        contain ? "bg-black" : ""
-      }`}
-      style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
-    >
+    // The shared 4:5 listicle frame; "contain" clips sit on black inside it.
+    <div className={`${MEDIA_FRAME} ${contain ? "bg-black" : ""}`}>
       <video
         // Browsers do not re-read <source> children after the initial load, so
         // a changed src needs a remount rather than a re-render. Same guard
@@ -379,24 +357,45 @@ function ReasonVideo({
   );
 }
 
+/*
+ * One frame for every reason visual: same 4:5 shape, radius, border and white
+ * surface, so seven different assets read as one designed system instead of
+ * seven shapes. Media fills the frame; charts sit centred in it, and the frame
+ * grows if a chart is taller (no overflow clip, so nothing is cut off).
+ */
+const MEDIA_FRAME =
+  "relative aspect-[4/5] w-full overflow-hidden rounded-lg border border-black/10 bg-white";
+const CHART_FRAME =
+  "flex aspect-[4/5] w-full flex-col justify-center rounded-lg border border-black/10 bg-white p-5 md:p-6";
+
 function AssetBlock({ asset }: { asset: ListicleAsset }) {
   if (asset.kind === "crashChart") {
     return (
-      <CrashChart
-        saving={asset.saving}
-        coffeePerDay={asset.coffeePerDay}
-        shotsPerDay={asset.shotsPerDay}
-        variant="dtc"
-      />
+      <div className={CHART_FRAME}>
+        <CrashChart
+          saving={asset.saving}
+          coffeePerDay={asset.coffeePerDay}
+          shotsPerDay={asset.shotsPerDay}
+          variant="dtc"
+        />
+      </div>
     );
   }
 
   if (asset.kind === "researchBacked") {
-    return <ResearchBackedGraphic />;
+    return (
+      <div className={MEDIA_FRAME}>
+        <ResearchBackedGraphic />
+      </div>
+    );
   }
 
   if (asset.kind === "measureTile") {
-    return <MeasureTile />;
+    return (
+      <div className={MEDIA_FRAME}>
+        <MeasureTile />
+      </div>
+    );
   }
 
   if (asset.kind === "cognitionBars") {
@@ -408,32 +407,32 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   }
 
   if (asset.kind === "dayEnergyCurve") {
-    return <DayEnergyCurve />;
+    return (
+      <div className={CHART_FRAME}>
+        <DayEnergyCurve />
+      </div>
+    );
   }
 
   if (asset.kind === "focusBars") {
-    return <FocusBars />;
-  }
-
-  if (asset.kind === "statCompare") {
     return (
-      <StatCompareBars
-        value={asset.value}
-        caption={asset.caption}
-        change={asset.change}
-        source={asset.source}
-      />
+      <div className={CHART_FRAME}>
+        <FocusBars />
+      </div>
     );
   }
 
   if (asset.kind === "athleteQuote") {
+    // The card is already 4:5; the frame adds the shared border.
     return (
-      <AthleteQuoteCard
-        name={asset.name}
-        role={asset.role}
-        image={asset.image}
-        quote={asset.quote}
-      />
+      <div className={MEDIA_FRAME}>
+        <AthleteQuoteCard
+          name={asset.name}
+          role={asset.role}
+          image={asset.image}
+          quote={asset.quote}
+        />
+      </div>
     );
   }
 
@@ -496,11 +495,10 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   }
 
   if (asset.kind === "image") {
+    // The shared frame, not the asset's own aspect: photos crop to 4:5 and
+    // "contain" renders sit centred on the white surface.
     return (
-      <div
-        className="relative w-full overflow-hidden rounded-md"
-        style={{ aspectRatio: aspect }}
-      >
+      <div className={MEDIA_FRAME}>
         <Image
           src={asset.src}
           alt={asset.alt}

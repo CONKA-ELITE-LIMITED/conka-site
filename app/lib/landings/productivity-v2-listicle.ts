@@ -22,10 +22,8 @@ export const productivityV2Listicle: ListicleConfig = {
   title: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   hero: {
     proofWallAboveAsset: true,
-    laurel: {
-      eyebrow: "World's Largest",
-      body: "Consumer brain-research project. 1,000+ brains tested through our app.",
-    },
+    // No laurel: the logo band a scroll later does the credibility job, and the
+    // hero reads as H1, subcopy, CTA, one proof line.
     // v1 headline as a stand-in until the new hero line is settled.
     headline: "Discover the natural way to stay sharp all day.",
     subcopy:
@@ -76,33 +74,23 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Focus",
       headline: "All-Day Energy and Focus, Without the Crash",
       body: "Sharp at your first meeting and still sharp at your last. CONKA's natural nootropics support the pathways behind focus and mental energy, so there's no spike to come down from and nothing wearing off by lunch.",
-      // The 19.3% is from the athlete trial (FocusBars footnote), not app data.
+      // Payoff matches the crash chart: steady focus against coffee's crash.
       payoff:
-        "In a trial of professional athletes, focus scores rose 19.3% on CONKA.",
-      asset: {
-        kind: "statCompare",
-        value: "+19.3%",
-        caption: "higher focus scores",
-        change: 0.193,
-        source: "Trial of professional athletes, focus vs baseline",
-      },
+        "Its ingredients delivered 18.1% faster mental processing than caffeine, with no crash.",
+      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
+      asset: { kind: "crashChart" },
     },
     {
       kind: "reason",
       n: 2,
       tag: "Stress",
       headline: "Stay Calm When Everything Lands at Once",
-      body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. Stress hormones crowd out clear thinking right when you need it most.",
+      body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. Ashwagandha, one of CONKA's adaptogens, has been shown to lower cortisol, the stress hormone, by 28%.",
+      // Payoff matches the focus bars (athlete trial figure).
       payoff:
-        "Ashwagandha, one of CONKA's adaptogens, was shown to lower cortisol, the stress hormone, by 28%.",
+        "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
       citation: "PMID: 23439798",
-      asset: {
-        kind: "statCompare",
-        value: "-28%",
-        caption: "cortisol, the stress hormone",
-        change: -0.28,
-        source: "Ashwagandha trial, adults under chronic stress",
-      },
+      asset: { kind: "focusBars" },
     },
     {
       kind: "reason",

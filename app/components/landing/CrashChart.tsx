@@ -21,10 +21,12 @@ import {
  * Figures default DRY from app/lib/landingPricing; override per page via config.
  * ========================================================================== */
 
+// One palette across the listicle visuals: navy is CONKA, grey is the
+// alternative, and the brand green is kept for the saving figure only.
 const NAVY = "#1B2757";
-const COFFEE = "#1d1d1d";
-const CRASH = "#d9483b";
-const SAVINGS = "#3FA95B";
+const COFFEE = "#8a8a8a";
+const CRASH = "#8a8a8a";
+const SAVINGS = "var(--brand-positive, #1a7f4f)";
 
 interface CrashChartProps {
   /** Headline saving vs a monthly coffee habit, e.g. "£53". */
@@ -144,9 +146,9 @@ export default function CrashChart({
   return (
     <div
       ref={ref}
-      className={`overflow-hidden border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)] ${
-        sharp ? "" : "rounded-md"
-      }`}
+      // No card chrome of its own: the listicle frame supplies the border and
+      // radius, so every reason visual shares one surface.
+      className={`overflow-hidden text-[#1d1d1d] ${sharp ? "" : "rounded-md"}`}
     >
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}
@@ -177,8 +179,8 @@ export default function CrashChart({
               <stop offset="100%" stopColor={NAVY} stopOpacity="0" />
             </linearGradient>
             <linearGradient id={`${gid}-coffeeFill`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#D9483B" stopOpacity="0.16" />
-              <stop offset="100%" stopColor="#D9483B" stopOpacity="0" />
+              <stop offset="0%" stopColor={COFFEE} stopOpacity="0.14" />
+              <stop offset="100%" stopColor={COFFEE} stopOpacity="0" />
             </linearGradient>
           </defs>
 
@@ -240,7 +242,7 @@ export default function CrashChart({
               x="191"
               y="36"
               textAnchor="middle"
-              className="fill-[#d9483b] text-[11.5px] font-semibold"
+              className="fill-[#5f5f5f] text-[11.5px] font-semibold"
             >
               ↓ 2pm crash
             </text>

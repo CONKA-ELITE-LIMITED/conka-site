@@ -12,7 +12,9 @@ import { BottleIcon } from "./CrashChart";
  * green = with-CONKA = higher reading stays consistent across the page.
  * ========================================================================== */
 
-const GREEN = "#2FA84F";
+// Listicle palette: navy is CONKA, grey the baseline, green only on the delta.
+const NAVY = "#1B2757";
+const GREEN = "var(--brand-positive, #1a7f4f)";
 const MAX_BAR_PX = 150;
 // Honest proportions: On CONKA is +19.3% over the Off baseline.
 const OFF_FRAC = 0.62;
@@ -27,10 +29,8 @@ export default function FocusBars() {
   const [ref, isInView] = useInView();
 
   return (
-    <div
-      ref={ref}
-      className="rounded-lg border border-black/10 bg-white p-6 md:p-7"
-    >
+    // No card chrome: the listicle frame supplies border, radius and padding.
+    <div ref={ref}>
       <p className="mb-1 text-[12px] font-semibold text-black/50">
         Measured focus
       </p>
@@ -42,7 +42,10 @@ export default function FocusBars() {
         {BARS.map((b) => (
           <div key={b.label} className="flex flex-1 flex-col items-center">
             {b.conka ? (
-              <span className="mb-1.5 rounded-full bg-[#2FA84F] px-2 py-0.5 text-[12px] font-extrabold text-white">
+              <span
+                className="mb-1.5 rounded-full px-2 py-0.5 text-[12px] font-extrabold text-white"
+                style={{ background: GREEN }}
+              >
                 +19.3%
               </span>
             ) : (
@@ -52,9 +55,7 @@ export default function FocusBars() {
               className="w-full rounded-t-lg motion-safe:[transition:height_1s_cubic-bezier(0.4,0,0.2,1)]"
               style={{
                 height: isInView ? `${Math.round(b.frac * MAX_BAR_PX)}px` : 0,
-                background: b.conka
-                  ? `linear-gradient(180deg, ${GREEN}, #279247)`
-                  : "rgba(0,0,0,0.14)",
+                background: b.conka ? NAVY : "rgba(0,0,0,0.14)",
               }}
             />
           </div>
@@ -71,8 +72,8 @@ export default function FocusBars() {
           >
             {b.conka ? (
               <span className="flex items-center gap-1">
-                <BottleIcon stroke={GREEN} />
-                <BottleIcon stroke={GREEN} />
+                <BottleIcon stroke={NAVY} />
+                <BottleIcon stroke={NAVY} />
               </span>
             ) : (
               <span className="h-5" aria-hidden />

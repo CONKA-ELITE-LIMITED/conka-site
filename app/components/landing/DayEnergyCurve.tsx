@@ -13,7 +13,9 @@ import { DrawPath } from "./CrashChart";
  * so it reads as its own fatigue story rather than a repeat of the crash chart.
  * ========================================================================== */
 
-const GREEN = "#2FA84F";
+// Listicle palette: navy is CONKA, grey the alternative. (Named GREEN for
+// history; it is the CONKA line colour.)
+const GREEN = "#1B2757";
 const GREY = "#b4b4b4";
 
 export default function DayEnergyCurve() {
@@ -22,7 +24,8 @@ export default function DayEnergyCurve() {
   return (
     <div
       ref={ref}
-      className="overflow-hidden rounded-lg border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
+      // No card chrome: the listicle frame supplies border and radius.
+      className="overflow-hidden text-[#1d1d1d]"
     >
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}
@@ -126,7 +129,7 @@ export default function DayEnergyCurve() {
             x="314"
             y="54"
             textAnchor="end"
-            className="fill-[#2FA84F] text-[11.5px] font-extrabold uppercase tracking-[0.04em] motion-safe:[transition:opacity_0.4s_ease_1.4s]"
+            className="fill-[#1B2757] text-[11.5px] font-extrabold uppercase tracking-[0.04em] motion-safe:[transition:opacity_0.4s_ease_1.4s]"
             style={{ opacity: isInView ? 1 : 0 }}
           >
             steady

@@ -107,15 +107,6 @@ export type ListicleAsset =
   | { kind: "dayEnergyCurve" }
   /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
   | { kind: "focusBars" }
-  /** Big number + Without/With bars + source line (StatCompareBars).
-   *  `change` sizes the With bar honestly, e.g. 0.193 or -0.28. */
-  | {
-      kind: "statCompare";
-      value: string;
-      caption: string;
-      change: number;
-      source: string;
-    }
   /** Athlete portrait with their quote overlaid + status (proof for a reason) */
   | {
       kind: "athleteQuote";

@@ -248,16 +248,17 @@ function MeasureStoreButtons() {
   );
 }
 
-/** Compact measure card for a listicle reason slot: graph + steps + stores. */
+/**
+ * Compact measure card for a listicle reason slot: graph + steps. Fills the
+ * listicle frame. No store buttons: on an ad landing every exit that is not the
+ * buy CTA leaks the click, so the app download is not offered here.
+ */
 export function MeasureTile() {
   return (
-    <div className="rounded-lg bg-[#101a33] p-5 text-white md:p-6">
+    <div className="flex h-full flex-col justify-center bg-[#101a33] p-5 text-white md:p-6">
       <MeasureScoreCard />
       <div className="mt-7">
         <MeasureSteps />
-      </div>
-      <div className="mt-7">
-        <MeasureStoreButtons />
       </div>
     </div>
   );
