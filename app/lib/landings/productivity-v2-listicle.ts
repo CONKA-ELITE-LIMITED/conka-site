@@ -143,7 +143,7 @@ export const productivityV2Listicle: ListicleConfig = {
       kind: "reason",
       n: 4,
       tag: "Memory",
-      headline: "Stop Losing Words Mid-Sentence",
+      headline: "Stop Forgetting Names and Losing Your Words",
       body: "Past 30, the word you want arrives a beat late and a name you know goes blank. Processing speed and memory peak around 30, then slip so gradually it's easy to miss, and a ten-year study of over 7,000 people found the decline measurable by 45.",
       payoff:
         "CONKA's Turmeric and Bilberry are antioxidants that help protect the brain cells behind recall.",

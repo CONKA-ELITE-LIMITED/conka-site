@@ -35,7 +35,7 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 | 2 | Stress · Stay Calm When Everything Lands at Once | Focus bars tile |
 | 3 | Motivation · Start the Tasks You Keep Putting Off (ADHD as one example) | Flow video + Lemon Balm, Rhodiola tiles |
 | - | Review strip | Three customer reviews |
-| 4 | Memory · Stop Losing Words Mid-Sentence (from 30) | Shane quote + Turmeric, Bilberry tiles |
+| 4 | Memory · Stop Forgetting Names and Losing Your Words (from 30) | Shane quote + Turmeric, Bilberry tiles |
 | 5 | Convenience · Fits Around Your Day, Whatever Time It Starts | `public/listicle/RoutineTwoShotsV1.jpg` |
 | 6 | Value · Costs Less Than Your Daily Coffee | CONKA vs coffee tile |
 | 7 | Proof · See It Work, or Get Your Money Back | App score tile + store buttons, press marquee |
