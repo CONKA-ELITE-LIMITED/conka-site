@@ -75,7 +75,14 @@ The Meta Purchase event fires on the checkout order only (trial or one-time), ne
 
 ## Read-out
 
-Not yet. Due once the first cohort has passed its day-7 charge.
+**First two weeks (15 to 27 Sep).** Full numbers in the [listicle programme review](../analytics/LISTICLE_PERFORMANCE.md) snapshot and [`data/listicle-review-2026-09-27.json`](../analytics/data/listicle-review-2026-09-27.json).
+
+- Meta: 21 purchases, £1,661 spend, £79 per purchase (£53 the first week, £99 the second).
+- 1,406 visitors; add to cart 98, checkouts 95, purchases 21, so 22% of checkouts complete.
+- 15 trials traced on Shopify, all the Both box. Flow and Clear were picked by 95 visitors and sold none.
+- 4 of the 6 trials from 17 to 18 Sep billed £74.99 at day 7+.
+
+The day-7 conversion read-out (cost per subscriber still paying) is still due once more of the cohort has passed its charge.
 
 ## Future, if it wins
 

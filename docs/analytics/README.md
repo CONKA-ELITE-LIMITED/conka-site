@@ -77,6 +77,7 @@ flowchart TD
 | [PDP_SECTION_TRACKING.md](PDP_SECTION_TRACKING.md) | **`pdp:section_viewed`** — which parts of a product page people actually reach. Every section id per page, what counts as seen, and the caveats. Written to be usable from the dashboard repo without reading website code |
 | [BYO_EVENTS.md](BYO_EVENTS.md) | Build Your Order event taxonomy (still `funnel:*` until SCRUM-1248), variant/config properties, the 2-property budget |
 | [LISTICLE_PERFORMANCE.md](LISTICLE_PERFORMANCE.md) | **Living data log for `/go/*` listicles** — dated snapshots, the pull queries, and the data blocks that feed the performance dashboard. Context: the [2026-07 ad-spend sprint](../sprints/2026-07-listicle-ad-spend.md) |
+| [data/](data/) | Stored datasets and page sources behind published reviews, e.g. `listicle-review-2026-09-27.json` (listicles + trial pack, 24 Jul to 27 Sep) |
 
 ### Verification
 - Use the analytics module of the **`/review`** skill to verify all four systems (Vercel, Triple Whale, Meta Pixel, Meta CAPI dedup) fire after any funnel change.

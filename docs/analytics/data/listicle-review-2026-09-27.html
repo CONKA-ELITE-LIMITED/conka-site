@@ -1,0 +1,595 @@
+<title>Listicle Programme Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --panel:#f4f5f7; --panel-2:#e7e9ee;
+  --ink:#111418; --ink-2:#353b46; --ink-3:#5a6170;
+  --line:#d6d9e0;
+  --inv:#111418; --on-inv:#ffffff;
+  --good:#16794a; --crit:#b3261e; --warn:#8a5a00;
+  --c1:#3A55C4; --c2:#A35A17; --c3:#00809C; --c4:#C23B6E; --on-series:#ffffff;
+  --radius:18px; --radius-sm:12px;
+  --sans:"Hanken Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f1115; --panel:#1a1d23; --panel-2:#272b34;
+    --ink:#ffffff; --ink-2:#e4e7ec; --ink-3:#bcc2cc;
+    --line:#343944;
+    --inv:#ffffff; --on-inv:#0f1115;
+    --good:#6fdca6; --crit:#ff8f86; --warn:#f3c66a;
+    --c1:#6B82D8; --c2:#C4853F; --c3:#2E9FB5; --c4:#CF5580; --on-series:#0f1115;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1115; --panel:#1a1d23; --panel-2:#272b34;
+  --ink:#ffffff; --ink-2:#e4e7ec; --ink-3:#bcc2cc;
+  --line:#343944;
+  --inv:#ffffff; --on-inv:#0f1115;
+  --good:#6fdca6; --crit:#ff8f86; --warn:#f3c66a;
+  --c1:#6B82D8; --c2:#C4853F; --c3:#2E9FB5; --c4:#CF5580; --on-series:#0f1115;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;text-wrap:balance;color:var(--ink)}
+p{margin:0}
+.page{box-sizing:content-box;max-width:1176px;margin:0 auto;padding-inline:16px;padding-block:2rem 4rem;display:flex;flex-direction:column;gap:2.6rem}
+.page>*{min-width:0}
+section{display:flex;flex-direction:column;gap:1rem;min-width:0}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.035em;line-height:1.02}
+h2{font-size:clamp(1.35rem,2.4vw,1.8rem);font-weight:800;letter-spacing:-.025em}
+h3{font-size:1.05rem;font-weight:700}
+.meta{font-size:.95rem;font-weight:600;color:var(--ink-2)}
+.summary{font-size:clamp(1.05rem,1.8vw,1.3rem);font-weight:500;color:var(--ink);max-width:68ch;line-height:1.45}
+.note{font-size:.9rem;color:var(--ink-2);line-height:1.5}
+.card{background:var(--panel);border-radius:var(--radius);padding:1.15rem 1.2rem}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+.kpi{display:flex;flex-direction:column;gap:.25rem;padding:1rem 1.05rem;background:var(--panel);border-radius:var(--radius-sm)}
+.k-lab{font-size:.92rem;font-weight:700;color:var(--ink-2)}
+.k-val{font-size:clamp(1.9rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.k-sub{font-size:.88rem;color:var(--ink-2)}
+.src{font-size:.78rem;font-weight:700;color:var(--ink-3)}
+
+/* scorecards */
+.scores{display:grid;grid-template-columns:minmax(0,1fr);gap:.9rem}
+.sc{display:flex;flex-direction:column;gap:.85rem;border-top:6px solid var(--pc)}
+.sc-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.sc-name{font-weight:800;font-size:1.3rem;letter-spacing:-.02em;white-space:nowrap}
+.tag{font-size:.8rem;font-weight:700;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:.1rem .55rem}
+.sc-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:.8rem}
+.sc-big{display:flex;flex-direction:column;gap:.1rem}
+.sc-big .v{font-size:clamp(2.6rem,4.2vw,3.3rem);font-weight:800;letter-spacing:-.04em;line-height:.95}
+.sc-big .l{font-size:.88rem;color:var(--ink-2);font-weight:600}
+.status{font-size:.95rem;font-weight:700}
+.status.good{color:var(--good)} .status.warn{color:var(--warn)} .status.crit{color:var(--crit)}
+.spark{width:100%;height:auto;display:block}
+.spark text{font-size:13px;fill:var(--ink-2);font-family:var(--sans);font-weight:700}
+.sc-m{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;padding-block:.75rem;border-block:1px solid var(--line)}
+.sc-m div{display:flex;flex-direction:column}
+.m-lab{font-size:.85rem;color:var(--ink-2);font-weight:600}
+.m-val{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
+.sc-notes{display:flex;flex-direction:column;gap:.55rem;font-size:.95rem;line-height:1.4}
+.sc-notes div{display:grid;grid-template-columns:1.3rem 1fr;gap:.3rem}
+.sc-notes .ok::before{content:"▲";color:var(--good);font-size:.75rem;padding-top:.2rem}
+.sc-notes .no::before{content:"▼";color:var(--crit);font-size:.75rem;padding-top:.2rem}
+.sc.offer{outline:2px dashed var(--line);outline-offset:-2px}
+
+/* side by side */
+.h2h{display:grid;grid-template-columns:minmax(0,1fr);gap:.9rem}
+.hc{display:flex;flex-direction:column;gap:.85rem}
+.hb{display:flex;flex-direction:column;gap:.8rem}
+.hb-row{display:grid;grid-template-columns:7rem 1fr;gap:.7rem;align-items:center}
+.hb-lab{font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.hb-lab i{width:12px;height:12px;border-radius:3px;flex:none}
+.hb-bars{position:relative;display:flex;flex-direction:column;gap:4px}
+.hb-line{display:flex;align-items:center;gap:.45rem}
+.hb-bar{height:22px;border-radius:0 6px 6px 0;flex:none}
+.hb-bar.ghost{background:var(--panel-2)!important;outline:1px solid var(--line);outline-offset:-1px}
+.hb-val{font-size:.9rem;font-weight:800;white-space:nowrap}
+.hb-val.dim{font-weight:600;color:var(--ink-2)}
+.hb-target{position:absolute;top:-6px;bottom:-6px;border-left:2px dashed var(--ink-2)}
+.hb-target span{position:absolute;top:-1.35rem;left:-1.2rem;font-size:.78rem;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.hb-key{display:flex;gap:1rem;flex-wrap:wrap;font-size:.86rem;color:var(--ink-2);font-weight:600}
+.hb-key span{display:inline-flex;align-items:center;gap:.35rem}
+.hb-key i{width:14px;height:10px;border-radius:2px}
+.vb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;align-items:end;flex:1;min-height:220px}
+.vb-col{display:flex;flex-direction:column;align-items:center;gap:.4rem;height:100%}
+.vb-val{font-size:1.05rem;font-weight:800}
+.vb-track{flex:1;width:100%;max-width:64px;display:flex;align-items:flex-end;border-bottom:2px solid var(--line);min-height:150px}
+.vb-bar{width:100%;border-radius:6px 6px 0 0}
+.vb-lab{font-size:.88rem;font-weight:700;text-align:center;line-height:1.2}
+.share{display:flex;flex-direction:column;gap:.8rem}
+.share-row{display:grid;grid-template-columns:5.6rem 1fr;gap:.7rem;align-items:center}
+.share-row span.l{font-size:.92rem;font-weight:700}
+
+/* trend */
+.tabs{display:flex;gap:.45rem;flex-wrap:wrap}
+.tab{font-family:var(--sans);font-size:.95rem;font-weight:700;padding:.5rem 1rem;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;min-height:44px}
+.tab[aria-selected="true"]{background:var(--inv);border-color:var(--inv);color:var(--on-inv)}
+.tab:hover{border-color:var(--ink-3)}
+:focus-visible{outline:3px solid var(--c1);outline-offset:2px}
+.chartwrap{position:relative}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+svg text{font-family:var(--sans);font-size:12.5px;font-weight:600;fill:var(--ink-2)}
+.tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;font-size:.88rem;min-width:170px;z-index:5;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.tip b{display:block;margin-bottom:.25rem}
+.tip div{display:flex;justify-content:space-between;gap:.9rem;font-weight:700}
+.tip span.k{display:inline-flex;align-items:center;gap:.35rem;font-weight:500;color:var(--ink-2)}
+.tip span.k i{width:9px;height:9px;border-radius:2px}
+.trend-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+.tl{display:flex;flex-direction:column;gap:.5rem;margin:0;padding:0;list-style:none}
+.tl li{display:grid;grid-template-columns:1.8rem 3.9rem 1fr;gap:.5rem;font-size:.92rem;line-height:1.4;align-items:baseline}
+.tl .id{width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:800;border:2px solid var(--ink-2);color:var(--ink)}
+.tl .id.spend{border-style:dashed}
+.tl .d{font-size:.86rem;font-weight:700;color:var(--ink-2)}
+.tl-key{display:flex;gap:1rem;flex-wrap:wrap;font-size:.84rem;color:var(--ink-2);font-weight:600}
+
+/* details */
+details{background:var(--panel);border-radius:var(--radius);overflow:hidden}
+summary{cursor:pointer;padding:1rem 1.25rem;font-weight:800;font-size:1.1rem;display:flex;align-items:center;gap:.7rem;list-style:none;min-height:56px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";width:1.6rem;height:1.6rem;border-radius:50%;border:2px solid var(--ink-2);color:var(--ink);display:grid;place-items:center;font-size:1rem;flex:none}
+details[open] summary::before{content:"−"}
+.dbody{padding:0 1.25rem 1.4rem;display:flex;flex-direction:column;gap:1.5rem}
+.dbody .card,.dbody .kpi{background:var(--bg)}
+.stack{display:flex;flex-direction:column;gap:.6rem}
+
+/* tables */
+.tw{overflow-x:auto;border-radius:var(--radius-sm);background:var(--bg)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:560px}
+th,td{padding:.6rem .75rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:.85rem;font-weight:700;color:var(--ink-2);background:var(--panel-2)}
+tbody tr:last-child td{border-bottom:none}
+tr.total td{font-weight:800;background:var(--panel-2)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:.45rem}
+td.bad{color:var(--crit);font-weight:800}
+td.ok{color:var(--good);font-weight:800}
+
+/* bars */
+.fnl{display:flex;flex-direction:column;gap:.4rem}
+.fstep{display:grid;grid-template-columns:6.8rem 1fr 3.2rem;align-items:center;gap:.55rem}
+.f-lab{font-size:.88rem;color:var(--ink-2);font-weight:600}
+.ftrack{height:16px;background:var(--panel-2);border-radius:5px;overflow:hidden}
+.ftrack i{display:block;height:100%;border-radius:5px}
+.f-val{font-size:.92rem;font-weight:800;text-align:right}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr);gap:.9rem}
+.split{display:flex;height:32px;border-radius:8px;overflow:hidden;gap:2px}
+.split span{display:flex;align-items:center;justify-content:center;font-size:.86rem;font-weight:800;color:var(--on-series)}
+.splitleg{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;margin-top:.7rem}
+.splitleg div{display:inline-flex;gap:.45rem;align-items:center;font-size:.92rem;font-weight:600}
+.splitleg i{width:12px;height:12px;border-radius:3px}
+.splitleg .o{font-weight:800}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+code{font-family:var(--mono);font-size:.85em;background:var(--panel-2);padding:.08em .35em;border-radius:5px}
+.method{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.4rem;font-size:.92rem;color:var(--ink-2)}
+
+@media (min-width:640px){
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .scores,.grid2,.h2h{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:1080px){
+  .page{padding-inline:32px;gap:3rem;padding-block:2.8rem 4rem}
+  .kpis.top{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .scores{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .h2h{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid2.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid2.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .trend-grid{grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<main class="page">
+
+<header style="display:flex;flex-direction:column;gap:.9rem">
+  <p class="meta">CONKA /go landing pages · 24 Jul to 27 Sep 2026 · pulled 28 Sep</p>
+  <h1>Listicle Programme Review</h1>
+  <p class="summary">Three persona listicles for nine weeks and the trial pack for two, all on paid Meta traffic.</p>
+</header>
+
+<div class="kpis top">
+  <div class="kpi"><span class="k-lab">Meta spend</span><span class="k-val">£34.0k</span><span class="src">Meta</span></div>
+  <div class="kpi"><span class="k-lab">Purchases</span><span class="k-val">334</span><span class="k-sub">313 listicle · 21 trial pack</span><span class="src">Meta</span></div>
+  <div class="kpi"><span class="k-lab">Cost per purchase</span><span class="k-val">£102</span><span class="k-sub">Target £100</span><span class="src">Meta</span></div>
+  <div class="kpi"><span class="k-lab">Visitors</span><span class="k-val">29.0k</span><span class="k-sub">96% mobile</span><span class="src">Vercel</span></div>
+  <div class="kpi"><span class="k-lab">Conversion rate</span><span class="k-val">1.15%</span><span class="k-sub">Purchases ÷ visitors</span><span class="src">Meta ÷ Vercel</span></div>
+  <div class="kpi"><span class="k-lab">Tagged revenue</span><span class="k-val">£12.0k</span><span class="k-sub">196 orders, first order only</span><span class="src">Shopify</span></div>
+</div>
+
+<section aria-labelledby="h-pages">
+  <h2 id="h-pages">By page</h2>
+  <div class="scores" id="scores"></div>
+</section>
+
+<section aria-labelledby="h-h2h">
+  <h2 id="h-h2h">Side by side</h2>
+  <div class="h2h">
+    <div class="card hc"><h3>Cost per purchase</h3><div class="hb" id="hb-cpa"></div>
+      <div class="hb-key"><span><i style="background:var(--panel-2);outline:1px solid var(--line)"></i>24 Jul to 27 Sep</span><span><i style="background:var(--ink-2)"></i>24 Aug to 27 Sep</span></div></div>
+    <div class="card hc"><h3>Conversion rate</h3><div class="vb" id="hb-cvr"></div></div>
+    <div class="card hc"><h3>Share of total</h3><div class="share" id="shares"></div>
+      <div class="hb-key" id="share-key"></div></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-trend">
+  <h2 id="h-trend">Trend</h2>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="trend-grid">
+    <div class="chartwrap card" style="padding:.9rem .6rem .6rem">
+      <svg class="chart" id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title"><title id="chart-title">Trend chart</title></svg>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+    <div class="stack">
+      <ol class="tl" id="tl"></ol>
+      <div class="tl-key"><span>Solid circle: site change</span><span>Dashed circle: spend change</span></div>
+    </div>
+  </div>
+</section>
+
+<details>
+  <summary>Per-page numbers</summary>
+  <div class="dbody">
+    <div class="tw"><table>
+      <thead><tr><th>Page</th><th>Visitors</th><th>Meta purch.</th><th>Meta CVR</th><th>CPA</th><th>Spend</th><th>Spend / visitor</th><th>Tagged orders</th><th>Tagged CVR</th><th>Tagged rev.</th><th>AOV</th></tr></thead>
+      <tbody id="t-whole"></tbody>
+    </table></div>
+    <div class="tw"><table>
+      <thead><tr><th>Week (Meta)</th><th>ADHD</th><th>Productivity</th><th>Brain-ageing</th><th>Trial pack</th></tr></thead>
+      <tbody id="t-periods"></tbody>
+    </table></div>
+    <div class="stack">
+      <h3>Subscription type, tagged listicle orders</h3>
+      <div class="card"><div class="split" id="cad"></div><div class="splitleg" id="cadLeg"></div></div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Scroll depth and CTA clicks</summary>
+  <div class="dbody">
+    <div class="grid2">
+      <div class="card hc"><h3>Scroll depth</h3><p class="note" style="margin-top:-.5rem">% of visitors who reached each section</p><div class="hb" id="scroll-bars"></div></div>
+      <div class="card hc"><h3>CTA click rate</h3><p class="note" style="margin-top:-.5rem">% of visitors who clicked any CTA</p><div class="hb" id="cta-bars"></div>
+        <h3 style="margin-top:.6rem">CTA that started each tagged order</h3><div class="split" id="close"></div><div class="splitleg" id="closeLeg"></div></div>
+    </div>
+    <div class="stack">
+      <h3>Add to cart → checkout → purchase (Meta)</h3>
+      <div class="grid2 four" id="meta-fnl"></div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Trial pack</summary>
+  <div class="dbody">
+    <div class="kpis">
+      <div class="kpi"><span class="k-lab">Visitors</span><span class="k-val">1,447</span><span class="src">Vercel</span></div>
+      <div class="kpi"><span class="k-lab">Purchases</span><span class="k-val">21</span><span class="k-sub">£81.31 each · £1,708 spend</span><span class="src">Meta</span></div>
+      <div class="kpi"><span class="k-lab">Trials sold</span><span class="k-val">15</span><span class="k-sub">All Both · £291</span><span class="src">Shopify</span></div>
+      <div class="kpi"><span class="k-lab">Add to cart</span><span class="k-val">6.8%</span><span class="k-sub">of visitors</span><span class="src">Meta</span></div>
+      <div class="kpi"><span class="k-lab">Checkouts completed</span><span class="k-val">22%</span><span class="k-sub">21 of 95</span><span class="src">Meta</span></div>
+      <div class="kpi"><span class="k-lab">Billed £74.99 at day 7+</span><span class="k-val">4 of 6</span><span class="k-sub">Trials from 17 to 18 Sep</span><span class="src">Shopify</span></div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Option</th><th>Visitors who picked it</th><th>Trials sold</th></tr></thead>
+      <tbody>
+        <tr><td>Both (preselected)</td><td>29 switched back</td><td>15</td></tr>
+        <tr><td>Clear</td><td>48</td><td class="bad">0</td></tr>
+        <tr><td>Flow</td><td>47</td><td class="bad">0</td></tr>
+      </tbody>
+    </table></div>
+    <div class="stack">
+      <h3>Scroll depth, % of visitors</h3>
+      <div class="card" id="tp-fnl"></div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Sources and method</summary>
+  <div class="dbody">
+    <ul class="method">
+      <li><b>Meta:</b> Ads Manager, campaign level, weekly breakdown, 24 Jul to 27 Sep (7-day click, 1-day view assumed). Add-to-cart and checkout counts come from an earlier cumulative view.</li>
+      <li><b>Tagged:</b> Shopify orders carrying the page's <code>_listicle_origin</code> or the trial pack line attribute. A floor: 58% of Meta's listicle purchases.</li>
+      <li><b>Vercel:</b> unique visitors per page. Weeks start Monday; the week of 20 Jul includes four pre-trial days.</li>
+      <li><b>Revenue</b> is first-order value only. Renewals are excluded by the app that created the order (Loop or Skio).</li>
+    </ul>
+  </div>
+</details>
+
+</main>
+
+<script>
+const P = {
+  adhd:{name:"ADHD", c:"var(--c1)"},
+  prod:{name:"Productivity", c:"var(--c2)"},
+  brain:{name:"Brain-ageing", c:"var(--c3)"},
+  tp:{name:"Trial pack", c:"var(--c4)"},
+};
+const esc = s => String(s).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const $ = id => document.getElementById(id);
+const gbp = n => "£" + Math.round(n).toLocaleString("en-GB");
+const pct = (a,b,d=1) => (a/b*100).toFixed(d) + "%";
+const fmtD = d => new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+
+const W = {
+  adhd:{vis:14074, mp:116, cpa:110.91, tag:80, rev:4807.88, recent:111.59,
+    ok:"Most visitors (14.1k) and purchases (116).",
+    no:"Highest cost: £112 since 24 Aug, £169 last week."},
+  prod:{vis:7764, mp:93, cpa:93.89, tag:52, rev:3446.73, recent:81.16,
+    ok:"Lowest listicle cost: £81 since 24 Aug, £63 last week.",
+    no:"72% leave before the first reason."},
+  brain:{vis:5724, mp:104, cpa:102.87, tag:49, rev:3465.82, recent:97.00,
+    ok:"Highest CVR (1.82%) and order value (£71).",
+    no:"Most volatile cost: £75 to £162 a week."},
+  tp:{vis:1406, mp:21, cpa:79.09, tag:15, rev:291.16,
+    ok:"Lowest cost (£79). 7% of visitors add to cart.",
+    no:"22% of checkouts complete. Flow and Clear: 0 sales."},
+};
+const MW = { // Meta, per Mon-start week: [purchases, spend]
+  "2026-07-20":{prod:[5,282.69],brain:[4,282.81],adhd:[4,285.34]},
+  "2026-07-27":{prod:[11,1086.99],brain:[11,1074.92],adhd:[15,1084.12]},
+  "2026-08-03":{prod:[8,1099.10],brain:[11,1399.40],adhd:[24,1668.94]},
+  "2026-08-10":{prod:[5,700.69],brain:[8,762.56],adhd:[12,2421.93]},
+  "2026-08-17":{prod:[4,693.17],brain:[6,971.35],adhd:[11,1826.06]},
+  "2026-08-24":{prod:[11,705.43],brain:[18,1408.00],adhd:[13,1432.18]},
+  "2026-08-31":{prod:[9,844.79],brain:[13,1369.01],adhd:[13,1194.24]},
+  "2026-09-07":{prod:[10,1088.72],brain:[19,1425.21],adhd:[11,1068.35]},
+  "2026-09-14":{prod:[11,1029.92],brain:[8,1275.93],adhd:[8,1037.49],tp:[9,478.57]},
+  "2026-09-21":{prod:[19,1200.48],brain:[6,729.66],adhd:[5,847.22],tp:[12,1182.24]},
+};
+const wkKeys = Object.keys(MW);
+const cpaW = {}; ["adhd","prod","brain","tp"].forEach(k=>cpaW[k]=wkKeys.map(w=>MW[w][k]?MW[w][k][1]/MW[w][k][0]:null));
+
+/* ---------- scorecards ---------- */
+function status(k){
+  const d = W[k];
+  if (k === "tp") return `<span class="status good">Launched 15 Sep</span>`;
+  const cls = d.recent > 110 ? "crit" : d.recent > 100 ? "warn" : "good";
+  const word = {crit:"over target", warn:"just over target", good:"under target"}[cls];
+  return `<span class="status ${cls}">£${Math.round(d.recent)} since 24 Aug, ${word}</span>`;
+}
+function spark(k){
+  const Wd=260,Hd=74,pad=4;
+  if (k==="tp"){
+    const v=[98,95,21], lab=["Cart","Checkout","Paid"], bw=(Wd-pad*2)/3;
+    return `<svg class="spark" viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="98 add to cart, 95 checkouts, 21 paid">`+v.map((n,i)=>{const h=(n/98)*(Hd-34);return `<rect x="${pad+i*bw+6}" y="${Hd-20-h}" width="${bw-12}" height="${h}" rx="3" fill="${P.tp.c}" fill-opacity="${i===2?1:.5}"/><text x="${pad+i*bw+bw/2}" y="${Hd-2}" text-anchor="middle">${lab[i]} ${n}</text>`;}).join("")+`</svg>`;
+  }
+  const vals=cpaW[k], max=210, y=v=>pad+(1-v/max)*(Hd-20), x=i=>pad+i*(Wd-pad*2)/(vals.length-1);
+  const d=vals.map((v,i)=>`${i?"L":"M"}${x(i)},${y(v)}`).join(" ");
+  return `<svg class="spark" viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="${P[k].name} weekly cost per purchase: ${vals.map(v=>"£"+Math.round(v)).join(", ")}">
+    <line x1="${pad}" x2="${Wd-pad}" y1="${y(100)}" y2="${y(100)}" stroke="var(--ink-2)" stroke-dasharray="3 3"/>
+    <text x="${Wd-pad}" y="${y(100)-3}" text-anchor="end" style="font-weight:600">£100</text>
+    <path d="${d}" fill="none" stroke="${P[k].c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${x(vals.length-1)}" cy="${y(vals[vals.length-1])}" r="3.5" fill="${P[k].c}"/>
+    <text x="${pad}" y="${Hd-1}">Jul</text><text x="${Wd-pad}" y="${Hd-1}" text-anchor="end">Sep</text></svg>`;
+}
+$("scores").innerHTML = ["adhd","prod","brain","tp"].map(k => {
+  const d = W[k], p = P[k];
+  return `<div class="card sc${k==="tp"?" offer":""}" style="--pc:${p.c}">
+    <div class="sc-top"><span class="sc-name">${p.name}</span>${k==="tp"?'<span class="tag">Offer page</span>':""}</div>
+    <div class="sc-big"><span class="v">£${Math.round(d.cpa)}</span><span class="l">per purchase</span></div>
+    ${status(k)}
+    ${spark(k)}
+    <div class="sc-m">
+      <div><span class="m-lab">Visitors</span><span class="m-val">${(d.vis/1000).toFixed(1)}k</span></div>
+      <div><span class="m-lab">Purchases</span><span class="m-val">${d.mp}</span></div>
+      <div><span class="m-lab">CVR</span><span class="m-val">${pct(d.mp,d.vis,2)}</span></div>
+    </div>
+    <div class="sc-notes"><div class="ok"><span><span class="sr">Strength: </span>${esc(d.ok)}</span></div><div class="no"><span><span class="sr">Weakness: </span>${esc(d.no)}</span></div></div>
+  </div>`;
+}).join("");
+
+/* ---------- side by side ---------- */
+{
+  const order=["adhd","prod","brain","tp"];
+  const maxC=150, w=v=>Math.min(v/maxC*100,100);
+  $("hb-cpa").innerHTML = order.map((k,idx)=>{
+    const whole=W[k].cpa, r=W[k].recent;
+    return `<div class="hb-row"><span class="hb-lab"><i style="background:${P[k].c}"></i>${P[k].name}</span><div class="hb-bars">
+      <div class="hb-line"><div class="hb-bar ghost" style="width:calc(${w(whole)}% - 3.4rem)"></div><span class="hb-val dim">£${Math.round(whole)}</span></div>
+      ${r?`<div class="hb-line"><div class="hb-bar" style="width:calc(${w(r)}% - 3.4rem);background:${P[k].c}"></div><span class="hb-val">£${Math.round(r)}</span></div>`:""}
+      </div></div>`;
+  }).join("");
+  const maxV=2;
+  $("hb-cvr").innerHTML = order.map(k=>{
+    const m=W[k].mp/W[k].vis*100;
+    return `<div class="vb-col"><span class="vb-val">${m.toFixed(2)}%</span><div class="vb-track"><div class="vb-bar" style="height:${m/maxV*100}%;background:${P[k].c}"></div></div><span class="vb-lab">${P[k].name}</span></div>`;
+  }).join("");
+  const spend={}, tot={s:0,v:0,p:0};
+  order.forEach(k=>{spend[k]=W[k].mp*W[k].cpa; tot.s+=spend[k]; tot.v+=W[k].vis; tot.p+=W[k].mp;});
+  const row=(lab,get,t)=>`<div class="share-row"><span class="l">${lab}</span><div class="split" role="img" aria-label="${lab}: ${order.map(k=>P[k].name+" "+Math.round(get(k)/t*100)+"%").join(", ")}">`+order.map(k=>{const v=get(k)/t*100;return `<span style="width:${v}%;background:${P[k].c}">${v>=11?Math.round(v)+"%":""}</span>`;}).join("")+`</div></div>`;
+  $("shares").innerHTML = row("Spend",k=>spend[k],tot.s)+row("Visitors",k=>W[k].vis,tot.v)+row("Purchases",k=>W[k].mp,tot.p);
+  $("share-key").innerHTML = order.map(k=>`<span><i style="background:${P[k].c}"></i>${P[k].name}</span>`).join("");
+}
+
+/* ---------- tables ---------- */
+{
+  let rows = ["adhd","prod","brain","tp"].map(k => {
+    const d = W[k], spend = d.mp*d.cpa;
+    return `<tr><td><span class="dot" style="background:${P[k].c}"></span>${P[k].name}</td>
+      <td>${d.vis.toLocaleString()}</td><td>${d.mp}</td><td>${pct(d.mp,d.vis,2)}</td>
+      <td class="${d.cpa>100?"bad":"ok"}">£${d.cpa.toFixed(2)}</td><td>${gbp(spend)}</td><td>£${(spend/d.vis).toFixed(2)}</td>
+      <td>${d.tag}</td><td>${pct(d.tag,d.vis,2)}</td><td>${gbp(d.rev)}</td><td>£${(d.rev/d.tag).toFixed(2)}</td></tr>`;
+  }).join("");
+  rows += `<tr class="total"><td>Listicles</td><td>27,562</td><td>313</td><td>1.14%</td><td>£103.18</td><td>£32,297</td><td>£1.17</td><td>181</td><td>0.66%</td><td>£11,720</td><td>£64.75</td></tr>`;
+  $("t-whole").innerHTML = rows;
+  $("t-periods").innerHTML = wkKeys.map((w,i) =>
+    `<tr><td>${i===0?"24 Jul":fmtD(w)}</td>${["adhd","prod","brain","tp"].map(k=>{const r=MW[w][k]; if(!r) return "<td>–</td>"; const c=r[1]/r[0]; return `<td class="${c>100?"bad":""}">${r[0]} · £${Math.round(c)}</td>`;}).join("")}</tr>`).join("");
+}
+function split(bar, leg, rows){
+  const tot = rows.reduce((a,r)=>a+r.n,0);
+  $(bar).setAttribute("role","img");
+  $(bar).setAttribute("aria-label", rows.map(r=>`${r.lab} ${r.n}`).join(", "));
+  $(bar).innerHTML = rows.filter(r=>r.n>0).map(r => { const w=r.n/tot*100;
+    return `<span style="width:${w}%;background:${r.c}">${w>=10?Math.round(w)+"%":""}</span>`;}).join("");
+  $(leg).innerHTML = rows.map(r => `<div><i style="background:${r.c}"></i><span>${esc(r.lab)}</span><span class="o">${esc(r.o)}</span></div>`).join("");
+}
+split("cad","cadLeg",[
+  {lab:"Monthly", n:137, c:"var(--c1)", o:"137 · £6,626"},
+  {lab:"Quarterly", n:24, c:"var(--c3)", o:"24 · £3,296"},
+  {lab:"One-time", n:20, c:"var(--c2)", o:"20 · £1,798"},
+]);
+split("close","closeLeg",[
+  {lab:"Sticky bar", n:102, c:"var(--c1)", o:"102"},
+  {lab:"Hero", n:70, c:"var(--c3)", o:"70"},
+  {lab:"Bridge", n:9, c:"var(--c2)", o:"9"},
+  {lab:"Product block", n:0, c:"var(--ink-3)", o:"0"},
+]);
+const fnlHTML = (steps, c, title) => `<div class="card fnl"><h3 style="margin-bottom:.35rem">${title}</h3>` +
+  steps.map(([l,v])=>{const w=v/steps[0][1]*100;return `<div class="fstep"><span class="f-lab">${esc(l)}</span><div class="ftrack"><i style="width:${w}%;background:${c}"></i></div><span class="f-val">${Math.round(w)}%</span></div>`;}).join("") + `</div>`;
+const fn = {
+  adhd:[["Entry",14090],["1st reason",6046],["Stats band",4502],["Reviews",2641],["Product",1893]],
+  prod:[["Entry",7785],["1st reason",2214],["Stats band",1480],["Reviews",916],["Product",888]],
+  brain:[["Entry",5767],["1st reason",1910],["Stats band",1087],["Reviews",714],["Product",604]],
+};
+{
+  const steps=[["1st reason",1],["Stats band",2],["Reviews",3],["Product",4]];
+  const bar=(k,v,max)=>`<div class="hb-line"><div class="hb-bar" style="width:calc(${v/max*100}% - 3.4rem);background:${P[k].c}"></div><span class="hb-val">${Math.round(v)}%</span></div>`;
+  $("scroll-bars").innerHTML = steps.map(([lab,i])=>`<div class="hb-row"><span class="hb-lab">${lab}</span><div class="hb-bars">${["adhd","prod","brain"].map(k=>bar(k,fn[k][i][1]/fn[k][0][1]*100,50)).join("")}</div></div>`).join("")
+    + `<div class="hb-key">${["adhd","prod","brain"].map(k=>`<span><i style="background:${P[k].c}"></i>${P[k].name}</span>`).join("")}</div>`;
+  const cr={adhd:1559/14090*100, prod:838/7785*100, brain:625/5767*100, tp:112/1447*100};
+  $("cta-bars").innerHTML = ["adhd","prod","brain","tp"].map(k=>`<div class="hb-row"><span class="hb-lab"><i style="background:${P[k].c}"></i>${P[k].name}</span><div class="hb-bars"><div class="hb-line"><div class="hb-bar" style="width:calc(${cr[k]/14*100}% - 3.4rem);background:${P[k].c}"></div><span class="hb-val">${cr[k].toFixed(1)}%</span></div></div></div>`).join("");
+}
+$("tp-fnl").outerHTML = fnlHTML([["Entry",1447],["Hero",1403],["Reviews",419],["Ingredients",260],["What to expect",229],["Comparison",199],["FAQ",158]],P.tp.c,"Trial pack");
+const mf = {adhd:[372,239,103], prod:[222,164,83], brain:[221,173,94], tp:[98,95,21]};
+$("meta-fnl").innerHTML = ["adhd","prod","brain","tp"].map(k=>{
+  const [a,c,p]=mf[k]; const s=[["Add to cart",a],["Checkout",c],["Purchase",p]];
+  return `<div class="card fnl"><h3 style="margin-bottom:.35rem">${P[k].name} · ${pct(p,c,0)} complete</h3>` + s.map(([l,v])=>`<div class="fstep"><span class="f-lab">${l}</span><div class="ftrack"><i style="width:${v/a*100}%;background:${P[k].c}"></i></div><span class="f-val">${v}</span></div>`).join("") + `</div>`;
+}).join("");
+
+/* ---------- trend chart + timeline ---------- */
+const weeks = ["2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24","2026-08-31","2026-09-07","2026-09-14","2026-09-21"];
+const vis = {adhd:[1219,2394,2963,2421,1746,743,963,874,770,535], prod:[1312,961,783,516,534,387,632,1873,846,710], brain:[525,739,982,496,618,705,585,576,460,352], tp:[null,null,null,null,null,null,null,null,418,987]};
+const ctaW = {adhd:[44,190,285,278,218,111,130,117,100,59], prod:[13,78,171,66,60,57,84,79,122,84], brain:[25,55,73,52,76,85,66,65,55,44], tp:[null,null,null,null,null,null,null,null,38,64]};
+const ordW = {adhd:[null,9,14,12,9,10,7,9,4,6], prod:[null,10,3,1,2,7,7,10,6,6], brain:[null,3,3,4,4,13,7,9,4,2], tp:[null,null,null,null,null,null,null,null,7,8]};
+const first = {adhd:[313,1009,1298,1056,755,289,447,378,290,205], prod:[91,284,390,192,212,157,209,262,227,186], brain:[78,188,334,172,206,245,232,190,126,120]};
+const rate = (num,den) => { const o={}; for (const k in num) o[k]=num[k].map((v,i)=> v==null||!den[k][i] ? null : v/den[k][i]*100); return o; };
+
+const markers = [
+  {d:"2026-07-24", t:"Trial live, £300/day", spend:true},
+  {d:"2026-07-27", t:"Productivity rebuilt (founder angle)"},
+  {d:"2026-07-30", t:"Spend doubled to £600/day", spend:true},
+  {d:"2026-07-31", t:"All listicles lead with Flow"},
+  {d:"2026-08-03", t:"\"First week free\" pill on heroes"},
+  {d:"2026-08-08", t:"Budget: ADHD £300, Brain £200, Prod £100", spend:true},
+  {d:"2026-08-12", t:"PDPs rebuilt to V3 hero"},
+  {d:"2026-08-20", t:"Listicle buy zones moved to V3 hero"},
+  {d:"2026-08-24", t:"ADHD weekly spend cut: £1,826 to £1,432", spend:true},
+  {d:"2026-08-28", t:"PDP rebuild, starter kit, cart upsell"},
+  {d:"2026-09-01", t:"Subscriptions move to Skio"},
+  {d:"2026-09-07", t:"Productivity spend up (now £200/day)", spend:true},
+  {d:"2026-09-08", t:"Listicle rebuild: hero, proof wall, sticky bar"},
+  {d:"2026-09-10", t:"Hero photos, 48% offer claim"},
+  {d:"2026-09-15", t:"Trial pack live", spend:true},
+  {d:"2026-09-22", t:"Trial pack orders start carrying origin tag"},
+];
+markers.forEach((m,i)=>m.id=i+1);
+$("tl").innerHTML = markers.map(mk=>`<li><span class="id${mk.spend?" spend":""}">${mk.id}</span><span class="d">${fmtD(mk.d)}</span><span>${esc(mk.t)}</span></li>`).join("");
+
+const metrics = {
+  cpa:{tab:"Cost per purchase / week", keys:["adhd","prod","brain","tp"], data:cpaW, target:100, max:250, ticks:5, fmt:v=>"£"+Math.round(v)},
+  vis:{tab:"Visitors / week", keys:["adhd","prod","brain","tp"], data:vis, fmt:v=>Math.round(v).toLocaleString(), max:3000},
+};
+const T0 = Date.parse("2026-07-20"), T1 = Date.parse("2026-09-29");
+const svg = $("chart"), tip = $("tip");
+let W_ = 700; let H_ = 320; const L = 50, TP = 12, B = 62;
+let R = 110;
+const x = t => L + (t - T0)/(T1 - T0)*(W_ - L - R);
+let current = "cpa";
+
+function draw(key){
+  current = key;
+  W_ = Math.max(320, Math.round(svg.getBoundingClientRect().width || 700));
+  R = W_ < 520 ? 84 : 110;
+  H_ = W_ > 700 ? 420 : 340;
+  svg.setAttribute("viewBox", `0 0 ${W_} ${H_}`);
+  const m = metrics[key];
+  let series = {};
+  if (m.step) m.keys.forEach(k => series[k] = periods.map(p=>({t0:Date.parse(p.s), t1:Date.parse(p.e)+864e5, v:p[k]})));
+  else m.keys.forEach(k => series[k] = weeks.map((w,i)=>({t:Date.parse(w)+3.5*864e5, v:m.data[k][i]})).filter(p=>p.v!=null));
+  const max = m.max;
+  const y = v => TP + (1 - v/max)*(H_ - TP - B);
+  let g = `<title>${m.tab} by page, 24 Jul to 28 Sep</title>`;
+  const nt=m.ticks||4; for (let i=0;i<=nt;i++){ const v=max/nt*i, yy=y(v);
+    g += `<line x1="${L}" x2="${W_-R+8}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>`;
+    g += `<text x="${L-8}" y="${yy+4}" text-anchor="end">${m.fmt(v)}</text>`;
+  }
+  ["2026-07-27","2026-08-10","2026-08-24","2026-09-07","2026-09-21"].forEach(d=>{
+    g+=`<text x="${x(Date.parse(d))}" y="${H_-B+18}" text-anchor="middle">${fmtD(d)}</text>`;
+  });
+  markers.forEach((mk,i)=>{ const xx=x(Date.parse(mk.d));
+    g+=`<line x1="${xx}" x2="${xx}" y1="${TP}" y2="${H_-B}" stroke="var(--ink-3)" stroke-opacity=".18" stroke-width="1"/>`;
+    const yy=H_-B+34+(i%2)*15;
+    g+=`<text x="${xx}" y="${yy}" text-anchor="middle" style="fill:var(--ink);font-weight:800;font-size:11.5px">${mk.id}</text>`;
+  });
+  if (m.target){ const yy=y(m.target); g+=`<line x1="${L}" x2="${W_-R+8}" y1="${yy}" y2="${yy}" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="6 4"/><text x="${L+4}" y="${yy-5}" style="font-weight:700">£100 target</text>`; }
+  const ends=[];
+  m.keys.forEach(k=>{
+    const s = series[k], c = P[k].c;
+    if (m.step){
+      const d = s.map((p,i)=>`${i?"L":"M"}${x(p.t0)},${y(p.v)} L${x(p.t1)},${y(p.v)}`).join(" ");
+      g += `<path d="${d}" fill="none" stroke="${c}" stroke-width="3" stroke-linejoin="round"/>`;
+      const last=s[s.length-1]; ends.push({k, x:x(last.t1), y:y(last.v), v:last.v});
+    } else {
+      const d = s.map((p,i)=>`${i?"L":"M"}${x(p.t)},${y(p.v)}`).join(" ");
+      g += `<path d="${d}" fill="none" stroke="${c}" stroke-width="2.75" stroke-linejoin="round" stroke-linecap="round"/>`;
+      const lp=s[s.length-1]; g+=`<circle cx="${x(lp.t)}" cy="${y(lp.v)}" r="4" fill="${c}" stroke="var(--panel)" stroke-width="1.5"/>`;
+      const last=s[s.length-1]; ends.push({k, x:x(last.t), y:y(last.v), v:last.v});
+    }
+  });
+  // direct end labels, pushed apart to avoid overlap
+  ends.sort((a,b)=>a.y-b.y);
+  for (let i=1;i<ends.length;i++) if (ends[i].y-ends[i-1].y<34) ends[i].y=ends[i-1].y+34;
+  const endX = W_-R+14;
+  ends.forEach(e=>{
+    g+=`<text x="${endX}" y="${e.y-2}" style="fill:var(--ink);font-weight:800;font-size:13px">${m.fmt(e.v)}</text>`;
+    g+=`<text x="${endX}" y="${e.y+12}" style="fill:var(--ink-2);font-size:11.5px">${W_<520?P[e.k].name.split("-")[0]:P[e.k].name}</text>`;
+    g+=`<rect x="${endX-9}" y="${e.y-9}" width="5" height="18" rx="2" fill="${P[e.k].c}"/>`;
+  });
+  g += `<rect id="hit" x="${L}" y="${TP}" width="${W_-L-R}" height="${H_-TP-B}" fill="transparent"/>`;
+  g += `<line id="cross" x1="0" x2="0" y1="${TP}" y2="${H_-B}" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/>`;
+  svg.innerHTML = g;
+  const hit = svg.querySelector("#hit"), cross = svg.querySelector("#cross");
+  function hide(){ tip.hidden = true; cross.setAttribute("visibility","hidden"); }
+  hit.addEventListener("pointermove", ev=>{
+    const r = svg.getBoundingClientRect(); const sx = (ev.clientX - r.left) / r.width * W_;
+    const t = T0 + (sx - L)/(W_ - L - R)*(T1 - T0);
+    let rows, lab, cx = sx;
+    if (m.step){
+      const p = periods.find(p=> t>=Date.parse(p.s) && t< Date.parse(p.e)+864e5); if(!p){hide();return;}
+      lab = p.lab; rows = m.keys.map(k=>[k,m.fmt(p[k])]);
+    } else {
+      let bi=0, bd=Infinity; weeks.forEach((w,i)=>{const d=Math.abs(Date.parse(w)+3.5*864e5-t); if(d<bd){bd=d;bi=i;}});
+      cx = x(Date.parse(weeks[bi])+3.5*864e5); lab = "Week of " + fmtD(weeks[bi]);
+      rows = m.keys.map(k=>[k, m.data[k][bi]==null?"–":m.fmt(m.data[k][bi])]);
+    }
+    cross.setAttribute("x1",cx); cross.setAttribute("x2",cx); cross.setAttribute("visibility","visible");
+    tip.innerHTML = `<b>${esc(lab)}</b>` + rows.map(([k,v])=>`<div><span class="k"><i style="background:${P[k].c}"></i>${P[k].name}</span><span>${v}</span></div>`).join("");
+    tip.hidden = false;
+    const wrap = svg.parentElement.getBoundingClientRect();
+    tip.style.left = Math.min(Math.max(ev.clientX - wrap.left + 12, 4), wrap.width - tip.offsetWidth - 4) + "px";
+    tip.style.top = "8px";
+  });
+  hit.addEventListener("pointerleave", hide);
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.k===key)));
+}
+$("tabs").innerHTML = Object.entries(metrics).map(([k,m])=>`<button class="tab" role="tab" data-k="${k}" aria-selected="false">${m.tab}</button>`).join("");
+$("tabs").addEventListener("click", e=>{ const b=e.target.closest(".tab"); if(b) draw(b.dataset.k); });
+$("tabs").addEventListener("keydown", e=>{
+  if (!["ArrowRight","ArrowLeft"].includes(e.key)) return;
+  const ks=Object.keys(metrics); const i=ks.indexOf(current)+(e.key==="ArrowRight"?1:-1);
+  const k=ks[(i+ks.length)%ks.length]; draw(k); document.querySelector(`.tab[data-k="${k}"]`).focus();
+});
+draw("cpa");
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(()=>draw(current),150); });
+</script>
