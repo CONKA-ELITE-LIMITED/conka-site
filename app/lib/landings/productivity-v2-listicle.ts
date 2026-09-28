@@ -110,6 +110,37 @@ export const productivityV2Listicle: ListicleConfig = {
       },
     },
     {
+      kind: "reviewStrip",
+      eyebrow: "What Customers Say",
+      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
+      reviews: [
+        {
+          headline: "Consistent energy, no trade-off",
+          quote:
+            "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
+          name: "Aaron H.",
+          image: "/lander/reviews/AaronH.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+        {
+          headline: "Capacity left for the evenings",
+          quote:
+            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
+          name: "Sam J.",
+          image: "/testimonials/dtc/SamJ.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+        {
+          headline: "Measure it to manage it",
+          quote:
+            "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
+          name: "Anthony Stodart",
+          image: "/testimonials/ugc/15.jpg",
+          detail: "Verified · Flow + Clear",
+        },
+      ],
+    },
+    {
       kind: "reason",
       n: 4,
       tag: "Memory",
@@ -143,37 +174,6 @@ export const productivityV2Listicle: ListicleConfig = {
         alt: "Two shots, zero caffeine: Flow in the morning for calm, sharp focus, Clear in the afternoon so the fog lifts",
         fit: "cover",
       },
-    },
-    {
-      kind: "reviewStrip",
-      eyebrow: "What Customers Say",
-      ratingSummary: "Rated 4.7 / 5 · 622+ reviews",
-      reviews: [
-        {
-          headline: "Consistent energy, no trade-off",
-          quote:
-            "My energy feels more consistent, and I can stay sharp later in the day without the downside.",
-          name: "Aaron H.",
-          image: "/lander/reviews/AaronH.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Capacity left for the evenings",
-          quote:
-            "I take something after work, lock back in for the hustle, and still sleep well. Sharper on client work during the day.",
-          name: "Sam J.",
-          image: "/testimonials/dtc/SamJ.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-        {
-          headline: "Measure it to manage it",
-          quote:
-            "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
-          name: "Anthony Stodart",
-          image: "/testimonials/ugc/15.jpg",
-          detail: "Verified · Flow + Clear",
-        },
-      ],
     },
     {
       kind: "reason",

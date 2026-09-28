@@ -425,6 +425,7 @@ function AssetBlock({
             "quarterly-sub",
           ).perDay.toFixed(2)}
           coffeePerDay={COFFEE_PRICE_PER_DAY}
+          product={COMPARISON_PRODUCT[heroId]}
         />
         <ChartCaption text={caption} />
       </div>

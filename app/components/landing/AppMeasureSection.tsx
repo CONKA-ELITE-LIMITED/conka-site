@@ -282,14 +282,28 @@ function MeasureStoreButtons() {
  * Listicle chart tile for the "measure it" reason, in the same grammar as the
  * page's other tiles: tinted banner, the figure large, the chart filling the
  * rest, black copy. Navy is CONKA, green only on the trend. The reason's payoff
- * becomes the frame's bottom strip. No store buttons: on an ad landing every
- * exit that is not the buy CTA leaks the click.
+ * becomes the frame's bottom strip.
+ *
+ * The chart carries a score axis (70/80/90), weekly day marks and three plotted
+ * points so it reads as measured data rather than a decorative swoosh. Scores
+ * map to y as 180 - (score - 65) * 16/3: 72 -> 143, 89 -> 52.
  *
  * Fills its parent: the listicle frame is a flex column, this is `flex-1`.
  */
+const SCORE_Y = (score: number) => 180 - ((score - 65) * 16) / 3;
+const SCORE_TICKS = [70, 80, 90];
+const DAY_TICKS: [string, number][] = [
+  ["Day 1", 20],
+  ["Day 7", 84],
+  ["Day 14", 152],
+  ["Day 21", 224],
+  ["Day 30", 300],
+];
+
 export function MeasureTile() {
   const { ref, isInView, score, lineRef, len, gid } = useScoreAnimation();
   const NAVY = "#1B2757";
+  const line = "M20,143 C70,134 100,122 152,108 C200,95 240,72 300,52";
 
   return (
     <div ref={ref} className="flex flex-1 flex-col text-black">
@@ -313,16 +327,16 @@ export function MeasureTile() {
           className="mt-1.5 text-[15px] font-semibold"
           style={{ color: "var(--brand-positive, #1a7f4f)" }}
         >
-          &uarr; trending up over 30 days
+          &uarr; up from {FROM} over 30 days
         </p>
 
-        <div className="mt-4 flex flex-1 items-end">
+        <div className="mt-4 flex flex-1 items-center">
           <svg
             className="block h-auto w-full"
-            viewBox="0 0 320 150"
+            viewBox="-26 0 346 215"
             xmlns="http://www.w3.org/2000/svg"
             role="img"
-            aria-label="Cognitive score rising over 30 days"
+            aria-label={`Cognitive score rising from ${FROM} to ${TO} over 30 days`}
           >
             <defs>
               <linearGradient id={`${gid}-lfill`} x1="0" y1="0" x2="0" y2="1">
@@ -330,31 +344,68 @@ export function MeasureTile() {
                 <stop offset="100%" stopColor={NAVY} stopOpacity="0" />
               </linearGradient>
             </defs>
+
+            {/* score axis */}
+            {SCORE_TICKS.map((t) => (
+              <g key={t}>
+                <line
+                  x1="12"
+                  y1={SCORE_Y(t)}
+                  x2="300"
+                  y2={SCORE_Y(t)}
+                  stroke="#ececec"
+                  strokeWidth="1"
+                />
+                <text
+                  x="4"
+                  y={SCORE_Y(t) + 4}
+                  textAnchor="end"
+                  className="fill-black/55 text-[11px] font-medium tabular-nums"
+                >
+                  {t}
+                </text>
+              </g>
+            ))}
             <line
-              x1="20"
-              y1="118"
+              x1="12"
+              y1="180"
               x2="300"
-              y2="118"
-              stroke="#e6e6e6"
+              y2="180"
+              stroke="#d6d6d6"
               strokeWidth="1"
             />
-            <line
-              x1="20"
-              y1="74"
-              x2="300"
-              y2="74"
-              stroke="#efefef"
-              strokeWidth="1"
-            />
+
+            {/* day marks */}
+            {DAY_TICKS.map(([label, x]) => (
+              <g key={label}>
+                <line
+                  x1={x}
+                  y1="180"
+                  x2={x}
+                  y2="185"
+                  stroke="#c4c4c4"
+                  strokeWidth="1"
+                />
+                <text
+                  x={x}
+                  y="200"
+                  textAnchor={x === 20 ? "start" : x === 300 ? "end" : "middle"}
+                  className="fill-black/55 text-[10.5px] font-medium"
+                >
+                  {label}
+                </text>
+              </g>
+            ))}
+
             <path
-              d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40 L300,118 L20,118 Z"
+              d={`${line} L300,180 L20,180 Z`}
               fill={`url(#${gid}-lfill)`}
               className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
               style={{ opacity: isInView ? 1 : 0 }}
             />
             <path
               ref={lineRef}
-              d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40"
+              d={line}
               fill="none"
               stroke={NAVY}
               strokeWidth="4"
@@ -370,29 +421,56 @@ export function MeasureTile() {
                   : undefined
               }
             />
-            <circle cx="20" cy="106" r="4.5" fill="#b4b4b4" />
-            <circle
-              cx="300"
-              cy="40"
-              r="5.5"
-              fill={NAVY}
-              stroke="#fff"
-              strokeWidth="2"
+
+            {/* plotted points: start, mid, end */}
+            <circle cx="20" cy="143" r="4.5" fill="#b4b4b4" />
+            <text
+              x="28"
+              y="160"
+              className="fill-black/60 text-[11px] font-semibold tabular-nums"
+            >
+              {FROM}
+            </text>
+            <g
+              className="motion-safe:[transition:opacity_0.4s_ease_1.2s]"
+              style={{ opacity: isInView ? 1 : 0 }}
+            >
+              <circle
+                cx="152"
+                cy="108"
+                r="4.5"
+                fill={NAVY}
+                stroke="#fff"
+                strokeWidth="2"
+              />
+            </g>
+            <g
               className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
               style={{ opacity: isInView ? 1 : 0 }}
-            />
-            <g className="fill-black/50 text-[10.5px] font-medium uppercase tracking-[0.04em]">
-              <text x="20" y="138" textAnchor="start">
-                Day 1
-              </text>
-              <text x="160" y="138" textAnchor="middle">
-                Day 14
-              </text>
-              <text x="300" y="138" textAnchor="end">
-                Day 30
+            >
+              <circle
+                cx="300"
+                cy="52"
+                r="5.5"
+                fill={NAVY}
+                stroke="#fff"
+                strokeWidth="2"
+              />
+              <text
+                x="300"
+                y="38"
+                textAnchor="end"
+                className="fill-[#1B2757] text-[12px] font-bold tabular-nums"
+              >
+                {TO}
               </text>
             </g>
           </svg>
+        </div>
+
+        {/* Free app: the test is the proof, so the download stays in reach. */}
+        <div className="mt-4">
+          <MeasureStoreButtons />
         </div>
       </div>
     </div>

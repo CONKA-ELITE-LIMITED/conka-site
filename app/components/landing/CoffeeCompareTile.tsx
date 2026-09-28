@@ -1,4 +1,11 @@
-import { Tick, Cross } from "@/app/components/product/ProductComparisonTable";
+import Image from "next/image";
+import {
+  Tick,
+  Cross,
+  type ComparisonProduct,
+} from "@/app/components/product/ProductComparisonTable";
+import { CoffeeIcon } from "@/app/components/landing/CrashChart";
+import { bottleRendersCutout } from "@/app/lib/productImages";
 
 /* ============================================================================
  * CoffeeCompareTile
@@ -21,10 +28,14 @@ const PANEL = "bg-[#eef0f5] text-[color:var(--brand-navy)]";
 export default function CoffeeCompareTile({
   conkaPerDay,
   coffeePerDay,
+  product = "flow",
 }: {
   conkaPerDay: string;
   coffeePerDay: string;
+  /** Which bottle heads the CONKA column; match the priced product */
+  product?: ComparisonProduct;
 }) {
+  const shot = bottleRendersCutout[product];
   const rows: { label: string; conka: Cell; coffee: Cell }[] = [
     {
       label: "Cost per day",
@@ -57,16 +68,30 @@ export default function CoffeeCompareTile({
               <th scope="col" className="w-[46%]">
                 <span className="sr-only">Feature</span>
               </th>
+              {/* Product in the CONKA column, as on the full table and the PDP
+                  slides; a cup on the coffee side so both headers are visual. */}
               <th
                 scope="col"
-                className={`w-[27%] rounded-t-md px-1 pb-2 pt-3 text-center text-[13px] font-bold ${PANEL}`}
+                className={`w-[27%] rounded-t-md px-1 pb-2 pt-3 text-center align-bottom text-[13px] font-bold ${PANEL}`}
               >
+                <Image
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={400}
+                  height={520}
+                  loading="lazy"
+                  sizes="64px"
+                  className="mx-auto mb-1.5 h-auto max-h-[64px] w-auto object-contain"
+                />
                 CONKA
               </th>
               <th
                 scope="col"
-                className="w-[27%] px-1 pb-2 pt-3 text-center text-[13px] font-bold"
+                className="w-[27%] px-1 pb-2 pt-3 text-center align-bottom text-[13px] font-bold"
               >
+                <span className="mx-auto mb-1.5 flex h-[64px] items-end justify-center [&>svg]:h-11 [&>svg]:w-11">
+                  <CoffeeIcon />
+                </span>
                 Coffee
               </th>
             </tr>
