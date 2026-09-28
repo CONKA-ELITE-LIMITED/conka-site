@@ -28,6 +28,8 @@ import SegmentToggle from "@/app/components/landing/SegmentToggle";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
 import ReasonIngredients from "./ReasonIngredients";
+import CoffeeCompareTile from "@/app/components/landing/CoffeeCompareTile";
+import { COFFEE_PRICE_PER_DAY } from "@/app/lib/landingPricing";
 import {
   getDisplayDiscount,
   getOfferPricing,
@@ -371,7 +373,34 @@ const MEDIA_FRAME =
 const CHART_FRAME =
   "flex aspect-[4/5] w-full flex-col rounded-lg border border-black/10 bg-white";
 
-function AssetBlock({ asset }: { asset: ListicleAsset }) {
+/** Chart tiles that take the reason's bold payoff as their bottom strip, so the
+ *  figure's takeaway sits with the figure instead of in the paragraph. */
+const CAPTIONED_CHARTS = new Set<ListicleAsset["kind"]>([
+  "crashChart",
+  "focusBars",
+  "coffeeCompare",
+]);
+
+/** The tile's bottom strip: the tinted mirror of the chart banner. */
+function ChartCaption({ text }: { text?: string }) {
+  if (!text) return null;
+  return (
+    <p className="rounded-b-lg border-t border-black/10 bg-[#eef1f8] px-5 py-4 text-[15px] font-semibold leading-snug text-black">
+      {text}
+    </p>
+  );
+}
+
+function AssetBlock({
+  asset,
+  caption,
+  heroId,
+}: {
+  asset: ListicleAsset;
+  /** Resolved payoff for a captioned chart tile */
+  caption?: string;
+  heroId: ProductHeroId;
+}) {
   if (asset.kind === "crashChart") {
     return (
       <div className={CHART_FRAME}>
@@ -381,6 +410,22 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
           shotsPerDay={asset.shotsPerDay}
           variant="tile"
         />
+        <ChartCaption text={caption} />
+      </div>
+    );
+  }
+
+  if (asset.kind === "coffeeCompare") {
+    return (
+      <div className={CHART_FRAME}>
+        <CoffeeCompareTile
+          conkaPerDay={getOfferPricing(
+            OFFER_PRODUCT[heroId],
+            "quarterly-sub",
+          ).perDay.toFixed(2)}
+          coffeePerDay={COFFEE_PRICE_PER_DAY}
+        />
+        <ChartCaption text={caption} />
       </div>
     );
   }
@@ -421,7 +466,8 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   if (asset.kind === "focusBars") {
     return (
       <div className={CHART_FRAME}>
-        <FocusBars />
+        <FocusBars showSource={!caption} />
+        <ChartCaption text={caption} />
       </div>
     );
   }
@@ -662,6 +708,16 @@ function BodyBlock({
 
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
+    const payoff = block.payoff
+      ? resolveOfferTokens(block.payoff, heroId)
+      : undefined;
+    // A chart tile carries the payoff in its bottom strip; elsewhere it closes
+    // the paragraph in bold.
+    const payoffInTile =
+      Boolean(payoff) && CAPTIONED_CHARTS.has(block.asset.kind);
+    const citation = block.citation ? (
+      <CitationLine citation={block.citation} href={block.citationHref} />
+    ) : null;
     return (
       // A tagged reason opens on its own rule under the eyebrow, so it skips
       // the separator above it: two lines a section apart read as clutter.
@@ -673,24 +729,26 @@ function BodyBlock({
             <ReasonHeading n={block.n} tag={block.tag} className="mb-4">
               {block.headline}
             </ReasonHeading>
-            {block.payoff ? (
+            {payoff ? (
               <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black/80 md:text-base">
-                {resolveOfferTokens(block.body, heroId)}{" "}
-                <strong className="font-semibold text-black">
-                  {resolveOfferTokens(block.payoff, heroId)}
-                </strong>
+                {resolveOfferTokens(block.body, heroId)}
+                {payoffInTile ? null : (
+                  <>
+                    {" "}
+                    <strong className="font-semibold text-black">
+                      {payoff}
+                    </strong>
+                  </>
+                )}
               </p>
             ) : (
               <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
                 {block.body}
               </p>
             )}
-            {block.citation ? (
-              <CitationLine
-                citation={block.citation}
-                href={block.citationHref}
-                className="-mt-3 mb-5"
-              />
+            {/* Desktop: the reference sits under the copy it supports. */}
+            {citation ? (
+              <div className="-mt-3 mb-5 hidden md:block">{citation}</div>
             ) : null}
             {block.ingredients?.length ? (
               <ReasonIngredients ids={block.ingredients} />
@@ -723,7 +781,14 @@ function BodyBlock({
             ) : null}
           </div>
           <div className={mediaFirst ? "md:order-1" : ""}>
-            <AssetBlock asset={block.asset} />
+            <AssetBlock
+              asset={block.asset}
+              caption={payoffInTile ? payoff : undefined}
+              heroId={heroId}
+            />
+            {/* Mobile: the reference closes the whole section instead of
+                interrupting the copy. */}
+            {citation ? <div className="mt-3 md:hidden">{citation}</div> : null}
           </div>
         </article>
         {/* Full-width press band, OUTSIDE the grid: the marquee's w-max track
@@ -990,7 +1055,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               />
             ) : (
               <div className="h-full p-5 md:p-10">
-                <AssetBlock asset={config.hero.asset} />
+                <AssetBlock asset={config.hero.asset} heroId={heroId} />
               </div>
             )}
           </div>

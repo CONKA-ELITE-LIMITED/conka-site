@@ -25,7 +25,12 @@ const BARS = [
   { label: "On CONKA", frac: ON_FRAC, conka: true },
 ];
 
-export default function FocusBars() {
+export default function FocusBars({
+  showSource = true,
+}: {
+  /** Off when the reason's own caption under the tile already names the trial */
+  showSource?: boolean;
+} = {}) {
   const [ref, isInView] = useInView();
 
   return (
@@ -46,9 +51,7 @@ export default function FocusBars() {
         >
           +19.3%
         </p>
-        <p className="mt-1.5 text-[15px] font-semibold">
-          focus vs baseline
-        </p>
+        <p className="mt-1.5 text-[15px] font-semibold">focus vs baseline</p>
 
         <div className="mt-6 flex min-h-[140px] flex-1 items-end gap-6">
           {BARS.map((b) => (
@@ -75,9 +78,11 @@ export default function FocusBars() {
           ))}
         </div>
 
-        <p className="mt-4 border-t border-black/10 pt-3 text-[12px] leading-snug">
-          From a trial of professional athletes.
-        </p>
+        {showSource ? (
+          <p className="mt-4 border-t border-black/10 pt-3 text-[12px] leading-snug">
+            From a trial of professional athletes.
+          </p>
+        ) : null}
       </div>
     </div>
   );

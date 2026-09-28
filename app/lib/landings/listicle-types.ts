@@ -107,6 +107,8 @@ export type ListicleAsset =
   | { kind: "dayEnergyCurve" }
   /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
   | { kind: "focusBars" }
+  /** Condensed CONKA vs coffee table with cost per day (CoffeeCompareTile) */
+  | { kind: "coffeeCompare" }
   /** Athlete portrait with their quote overlaid + status (proof for a reason) */
   | {
       kind: "athleteQuote";

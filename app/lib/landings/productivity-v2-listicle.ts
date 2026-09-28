@@ -183,13 +183,8 @@ export const productivityV2Listicle: ListicleConfig = {
       body: "A coffee-shop flat white wears off by lunch, and you're buying another by 3pm.",
       payoff:
         "On a quarterly subscription, CONKA works out at £{perDay} a day.",
-      asset: {
-        kind: "image",
-        src: "/lifestyle/GirlsLaughing.jpg",
-        alt: "Friends laughing together over a meal",
-        fit: "cover",
-        aspect: "1/1",
-      },
+      // Cost is the first row; the payoff becomes the tile's bottom strip.
+      asset: { kind: "coffeeCompare" },
     },
     {
       kind: "reason",
