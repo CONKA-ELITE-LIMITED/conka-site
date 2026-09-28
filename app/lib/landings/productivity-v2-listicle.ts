@@ -61,7 +61,7 @@ export const productivityV2Listicle: ListicleConfig = {
       kind: "reason",
       n: 1,
       tag: "Composure",
-      headline: "Stay Calm When Everything Lands at Once",
+      headline: "Stay Calm in the Chaos of Life",
       body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. CONKA helps you keep your composure when the day piles on, so you stay in control instead of playing catch-up.",
       payoff:
         "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
@@ -192,7 +192,7 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Proof",
       headline: "Tested by the Pros. Now Prove It to Yourself.",
       intro:
-        "Why are we so confident? Pro rugby clubs and a team at Revolut measured their scores on CONKA. Your turn: take the free two-minute test in the CONKA app before you start, then again a few weeks in.",
+        "Why are we so confident? The people who can't afford an off day already measure it: professional athletes, executives and whole teams, tracking their scores on CONKA. Your turn: take the free two-minute test in the CONKA app before you start, then again a few weeks in.",
       payoff:
         "If your score and your days haven't moved within 100 days, you get every penny back.",
       appStores: true,
