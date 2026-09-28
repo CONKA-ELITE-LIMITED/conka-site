@@ -19,13 +19,15 @@ import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
-import FocusBars from "@/app/components/landing/FocusBars";import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
+import FocusBars from "@/app/components/landing/FocusBars";
+import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import CitationLine from "@/app/components/landing/CitationLine";
 import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
 import SegmentToggle from "@/app/components/landing/SegmentToggle";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
+import ReasonIngredients from "./ReasonIngredients";
 import {
   getDisplayDiscount,
   getOfferPricing,
@@ -360,13 +362,14 @@ function ReasonVideo({
 /*
  * One frame for every reason visual: same 4:5 shape, radius, border and white
  * surface, so seven different assets read as one designed system instead of
- * seven shapes. Media fills the frame; charts sit centred in it, and the frame
- * grows if a chart is taller (no overflow clip, so nothing is cut off).
+ * seven shapes. Media fills the frame. Chart tiles (banner on top, chart
+ * below) are `flex-1` children that fill it; the frame grows rather than clips
+ * if a chart is taller (no overflow clip, so nothing is cut off).
  */
 const MEDIA_FRAME =
   "relative aspect-[4/5] w-full overflow-hidden rounded-lg border border-black/10 bg-white";
 const CHART_FRAME =
-  "flex aspect-[4/5] w-full flex-col justify-center rounded-lg border border-black/10 bg-white p-5 md:p-6";
+  "flex aspect-[4/5] w-full flex-col rounded-lg border border-black/10 bg-white";
 
 function AssetBlock({ asset }: { asset: ListicleAsset }) {
   if (asset.kind === "crashChart") {
@@ -376,7 +379,7 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
           saving={asset.saving}
           coffeePerDay={asset.coffeePerDay}
           shotsPerDay={asset.shotsPerDay}
-          variant="dtc"
+          variant="tile"
         />
       </div>
     );
@@ -408,7 +411,8 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   if (asset.kind === "dayEnergyCurve") {
     return (
-      <div className={CHART_FRAME}>
+      // Not yet a banner tile, so it keeps its own padding, centred.
+      <div className={`${CHART_FRAME} justify-center`}>
         <DayEnergyCurve />
       </div>
     );
@@ -687,6 +691,9 @@ function BodyBlock({
                 href={block.citationHref}
                 className="-mt-3 mb-5"
               />
+            ) : null}
+            {block.ingredients?.length ? (
+              <ReasonIngredients ids={block.ingredients} />
             ) : null}
             {block.chips?.length ? (
               <div className="flex flex-wrap gap-2">

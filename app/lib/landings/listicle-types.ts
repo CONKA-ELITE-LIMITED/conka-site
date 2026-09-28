@@ -172,6 +172,9 @@ export type ListicleBodyBlock =
        *  drops to regular weight so this line carries the emphasis. Supports
        *  the same offer tokens as `body`. */
       payoff?: string;
+      /** Ingredient ids (ingredientsData) this reason credits, shown as the
+       *  PDP's tiles under the body. Flow ids; unknown ids are skipped. */
+      ingredients?: string[];
       /** Optional source line under the body, e.g. "DOI: 10.1186/1550-2783-12-S1-P41" */
       citation?: string;
       /** Optional link target for the citation line */

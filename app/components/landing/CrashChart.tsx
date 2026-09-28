@@ -21,11 +21,11 @@ import {
  * Figures default DRY from app/lib/landingPricing; override per page via config.
  * ========================================================================== */
 
-// One palette across the listicle visuals: navy is CONKA, grey is the
-// alternative, and the brand green is kept for the saving figure only.
+// Navy is CONKA. The coffee line is black, and its crash stays red: the red
+// drop is the story of this chart, and grey made it forgettable.
 const NAVY = "#1B2757";
-const COFFEE = "#8a8a8a";
-const CRASH = "#8a8a8a";
+const COFFEE = "#1d1d1d";
+const CRASH = "#d9483b";
 const SAVINGS = "var(--brand-positive, #1a7f4f)";
 
 interface CrashChartProps {
@@ -36,10 +36,11 @@ interface CrashChartProps {
   /** Square the container to match the clinical PDP/start styling */
   sharp?: boolean;
   /**
-   * Simple DTC opt-in (im8 listicle). Swaps the warm-bone cost panel for the
-   * light-navy DTC tint strip. Default path (start, PDPs) is untouched.
+   * "tile" (im8 listicle): a tinted title banner across the top, the chart
+   * filling the rest of the frame, and no cost panel (the listicle makes the
+   * price argument in its own reason). Default path (start) is unchanged.
    */
-  variant?: "default" | "dtc";
+  variant?: "default" | "tile";
 }
 
 export function CoffeeIcon({ stroke = "#1d1d1d" }: { stroke?: string }) {
@@ -130,6 +131,155 @@ export function DrawPath({
   );
 }
 
+/** The day curve itself: coffee rises then crashes red at 2pm, CONKA holds. */
+function CrashSvg({ gid, isInView }: { gid: string; isInView: boolean }) {
+  return (
+    <svg
+      className="block h-auto w-full"
+      viewBox="0 0 340 250"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Focus through the day: coffee crashes at 2pm, CONKA stays steady all day"
+    >
+      <defs>
+        <linearGradient id={`${gid}-conkaFill`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={NAVY} stopOpacity="0.14" />
+          <stop offset="100%" stopColor={NAVY} stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id={`${gid}-coffeeFill`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={CRASH} stopOpacity="0.16" />
+          <stop offset="100%" stopColor={CRASH} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+
+      {/* gridlines */}
+      <line x1="30" y1="70" x2="320" y2="70" stroke="#efefef" strokeWidth="1" />
+      <line
+        x1="30"
+        y1="135"
+        x2="320"
+        y2="135"
+        stroke="#efefef"
+        strokeWidth="1"
+      />
+      <line
+        x1="30"
+        y1="200"
+        x2="320"
+        y2="200"
+        stroke="#e6e6e6"
+        strokeWidth="1"
+      />
+
+      {/* CONKA area + line */}
+      <path
+        d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60 L320,200 L30,200 Z"
+        fill={`url(#${gid}-conkaFill)`}
+        className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
+        style={{ opacity: isInView ? 1 : 0 }}
+      />
+      <DrawPath
+        d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60"
+        stroke={NAVY}
+        isInView={isInView}
+      />
+
+      {/* Coffee area (full) */}
+      <path
+        d="M30,175 C52,92 62,62 78,60 C110,58 140,64 165,68 C178,70 184,71 191,72 C200,82 205,122 215,152 C224,176 236,188 252,189 C278,191 300,190 320,190 L320,200 L30,200 Z"
+        fill={`url(#${gid}-coffeeFill)`}
+        className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
+        style={{ opacity: isInView ? 1 : 0 }}
+      />
+      {/* Coffee rise/plateau (black) to 2pm */}
+      <DrawPath
+        d="M30,175 C52,92 62,62 78,60 C110,58 140,64 165,68 C178,70 184,71 191,72"
+        stroke={COFFEE}
+        isInView={isInView}
+      />
+      {/* Coffee crash (red) after 2pm, drawn after the rise */}
+      <DrawPath
+        d="M191,72 C200,82 205,122 215,152 C224,176 236,188 252,189 C278,191 300,190 320,190"
+        stroke={CRASH}
+        isInView={isInView}
+        transitionClass="motion-safe:[transition:stroke-dashoffset_1.2s_cubic-bezier(0.55,0,0.3,1)_1s]"
+      />
+
+      {/* 2pm crash marker */}
+      <g
+        className="motion-safe:[transition:opacity_0.5s_ease_1s]"
+        style={{ opacity: isInView ? 1 : 0 }}
+      >
+        <line
+          x1="191"
+          y1="44"
+          x2="191"
+          y2="196"
+          stroke={CRASH}
+          strokeWidth="1.3"
+          strokeDasharray="4 4"
+          opacity="0.5"
+        />
+        <text
+          x="191"
+          y="36"
+          textAnchor="middle"
+          className="fill-[#d9483b] text-[11.5px] font-semibold"
+        >
+          ↓ 2pm crash
+        </text>
+      </g>
+
+      {/* end-state dots */}
+      <circle
+        cx="191"
+        cy="72"
+        r="5.5"
+        fill={CRASH}
+        stroke="#fff"
+        strokeWidth="2"
+        className="motion-safe:[transition:opacity_0.4s_ease_1.1s]"
+        style={{ opacity: isInView ? 1 : 0 }}
+      />
+      <circle
+        cx="320"
+        cy="60"
+        r="5.5"
+        fill={NAVY}
+        stroke="#fff"
+        strokeWidth="2"
+        className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
+        style={{ opacity: isInView ? 1 : 0 }}
+      />
+      <text
+        x="314"
+        y="50"
+        textAnchor="end"
+        className="fill-[#1B2757] text-[11.5px] font-semibold motion-safe:[transition:opacity_0.4s_ease_1.5s]"
+        style={{ opacity: isInView ? 1 : 0 }}
+      >
+        steady
+      </text>
+
+      {/* axis */}
+      <g className="fill-[#9a9a9a] text-[11.5px] font-medium">
+        <text x="30" y="222" textAnchor="start">
+          9am
+        </text>
+        <text x="126" y="222" textAnchor="middle">
+          12pm
+        </text>
+        <text x="191" y="222" textAnchor="middle">
+          2pm
+        </text>
+        <text x="320" y="222" textAnchor="end">
+          6pm
+        </text>
+      </g>
+    </svg>
+  );
+}
+
 export default function CrashChart({
   saving = `£${MONTHLY_SAVINGS_VS_COFFEE}`,
   coffeePerDay = `£${COFFEE_PRICE_PER_DAY}/day`,
@@ -142,6 +292,32 @@ export default function CrashChart({
   // (a component rendering separate mobile and desktop instances, say) without
   // the visible copy's gradient stroke resolving to a hidden copy's defs.
   const gid = useId();
+  const tile = variant === "tile";
+
+  if (tile) {
+    return (
+      <div ref={ref} className="flex flex-1 flex-col text-black">
+        <div className="rounded-t-lg bg-[#eef1f8] px-5 py-4">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.08em]">
+            Focus through the day
+          </p>
+          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+            <span className="flex items-center gap-2 text-sm font-semibold">
+              <span className="h-[5px] w-6 flex-shrink-0 rounded-[3px] bg-[#1B2757]" />
+              CONKA
+            </span>
+            <span className="flex items-center gap-2 text-sm font-semibold">
+              <span className="h-[5px] w-6 flex-shrink-0 rounded-[3px] bg-[#d9483b]" />
+              Coffee
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-1 items-center px-3 py-4">
+          <CrashSvg gid={gid} isInView={isInView} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -166,146 +342,19 @@ export default function CrashChart({
           Focus levels through the day
         </p>
 
-        <svg
-          className="block h-auto w-full"
-          viewBox="0 0 340 250"
-          xmlns="http://www.w3.org/2000/svg"
-          role="img"
-          aria-label="Focus through the day: coffee crashes at 2pm, CONKA stays steady all day"
-        >
-          <defs>
-            <linearGradient id={`${gid}-conkaFill`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={NAVY} stopOpacity="0.14" />
-              <stop offset="100%" stopColor={NAVY} stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id={`${gid}-coffeeFill`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={COFFEE} stopOpacity="0.14" />
-              <stop offset="100%" stopColor={COFFEE} stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* gridlines */}
-          <line x1="30" y1="70" x2="320" y2="70" stroke="#efefef" strokeWidth="1" />
-          <line x1="30" y1="135" x2="320" y2="135" stroke="#efefef" strokeWidth="1" />
-          <line x1="30" y1="200" x2="320" y2="200" stroke="#e6e6e6" strokeWidth="1" />
-
-          {/* CONKA area + line */}
-          <path
-            d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60 L320,200 L30,200 Z"
-            fill={`url(#${gid}-conkaFill)`}
-            className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
-            style={{ opacity: isInView ? 1 : 0 }}
-          />
-          <DrawPath
-            d="M30,140 C58,95 75,75 95,72 C150,66 220,64 280,62 C300,61 312,61 320,60"
-            stroke={NAVY}
-            isInView={isInView}
-          />
-
-          {/* Coffee area (full) */}
-          <path
-            d="M30,175 C52,92 62,62 78,60 C110,58 140,64 165,68 C178,70 184,71 191,72 C200,82 205,122 215,152 C224,176 236,188 252,189 C278,191 300,190 320,190 L320,200 L30,200 Z"
-            fill={`url(#${gid}-coffeeFill)`}
-            className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
-            style={{ opacity: isInView ? 1 : 0 }}
-          />
-          {/* Coffee rise/plateau (black) to 2pm */}
-          <DrawPath
-            d="M30,175 C52,92 62,62 78,60 C110,58 140,64 165,68 C178,70 184,71 191,72"
-            stroke={COFFEE}
-            isInView={isInView}
-          />
-          {/* Coffee crash (red) after 2pm, drawn after the rise */}
-          <DrawPath
-            d="M191,72 C200,82 205,122 215,152 C224,176 236,188 252,189 C278,191 300,190 320,190"
-            stroke={CRASH}
-            isInView={isInView}
-            transitionClass="motion-safe:[transition:stroke-dashoffset_1.2s_cubic-bezier(0.55,0,0.3,1)_1s]"
-          />
-
-          {/* 2pm crash marker */}
-          <g
-            className="motion-safe:[transition:opacity_0.5s_ease_1s]"
-            style={{ opacity: isInView ? 1 : 0 }}
-          >
-            <line
-              x1="191"
-              y1="44"
-              x2="191"
-              y2="196"
-              stroke={CRASH}
-              strokeWidth="1.3"
-              strokeDasharray="4 4"
-              opacity="0.5"
-            />
-            <text
-              x="191"
-              y="36"
-              textAnchor="middle"
-              className="fill-[#5f5f5f] text-[11.5px] font-semibold"
-            >
-              ↓ 2pm crash
-            </text>
-          </g>
-
-          {/* end-state dots */}
-          <circle
-            cx="191"
-            cy="72"
-            r="5.5"
-            fill={CRASH}
-            stroke="#fff"
-            strokeWidth="2"
-            className="motion-safe:[transition:opacity_0.4s_ease_1.1s]"
-            style={{ opacity: isInView ? 1 : 0 }}
-          />
-          <circle
-            cx="320"
-            cy="60"
-            r="5.5"
-            fill={NAVY}
-            stroke="#fff"
-            strokeWidth="2"
-            className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
-            style={{ opacity: isInView ? 1 : 0 }}
-          />
-          <text
-            x="314"
-            y="50"
-            textAnchor="end"
-            className="fill-[#1B2757] text-[11.5px] font-semibold motion-safe:[transition:opacity_0.4s_ease_1.5s]"
-            style={{ opacity: isInView ? 1 : 0 }}
-          >
-            steady
-          </text>
-
-          {/* axis */}
-          <g className="fill-[#9a9a9a] text-[11.5px] font-medium">
-            <text x="30" y="222" textAnchor="start">
-              9am
-            </text>
-            <text x="126" y="222" textAnchor="middle">
-              12pm
-            </text>
-            <text x="191" y="222" textAnchor="middle">
-              2pm
-            </text>
-            <text x="320" y="222" textAnchor="end">
-              6pm
-            </text>
-          </g>
-        </svg>
+        <CrashSvg gid={gid} isInView={isInView} />
       </div>
 
       {/* Cost comparison */}
       <div
-        className={`border-t border-black/[0.09] px-[22px] pb-[22px] pt-5 ${
-          variant === "dtc" ? "bg-[var(--brand-tint)]" : "bg-[#faf9f6]"
-        }`}
+        className={`border-t border-black/[0.09] px-[22px] pb-[22px] pt-5 ${"bg-[#faf9f6]"}`}
       >
         <p className="mb-3.5 text-lg font-medium leading-6 text-black">
-          Costs <b className="font-semibold" style={{ color: SAVINGS }}>{saving}</b> less
-          than your monthly coffee bill
+          Costs{" "}
+          <b className="font-semibold" style={{ color: SAVINGS }}>
+            {saving}
+          </b>{" "}
+          less than your monthly coffee bill
         </p>
         <div className="flex items-center justify-between py-3">
           <span className="flex items-center gap-2.5 text-sm font-medium text-black/60">
@@ -321,9 +370,7 @@ export default function CrashChart({
             <BottleIcon stroke={NAVY} />
             Both shots
           </span>
-          <span className="text-lg font-semibold">
-            {shotsPerDay}
-          </span>
+          <span className="text-lg font-semibold">{shotsPerDay}</span>
         </div>
       </div>
     </div>

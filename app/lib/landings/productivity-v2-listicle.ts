@@ -90,6 +90,7 @@ export const productivityV2Listicle: ListicleConfig = {
       payoff:
         "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
       citation: "PMID: 23439798",
+      ingredients: ["ashwagandha"],
       asset: { kind: "focusBars" },
     },
     {
@@ -100,6 +101,7 @@ export const productivityV2Listicle: ListicleConfig = {
       body: "With ADHD, the hardest part of any task is the first minute. ADHD brains run lower on dopamine, the chemical that turns intention into action, and plenty of people without ADHD know that stuck feeling on a heavy day.",
       payoff:
         "Lemon Balm and Rhodiola support calm, steady drive, so starting stops feeling like a fight.",
+      ingredients: ["lemon-balm", "rhodiola"],
       asset: {
         kind: "video",
         src: "/videos/flow/FlowFloat.mp4",
@@ -116,6 +118,7 @@ export const productivityV2Listicle: ListicleConfig = {
       payoff:
         "CONKA's Turmeric and Bilberry are antioxidants that help protect the brain cells behind recall.",
       citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
+      ingredients: ["turmeric", "bilberry"],
       asset: {
         kind: "athleteQuote",
         name: "Shane Corstorphine",
@@ -133,14 +136,12 @@ export const productivityV2Listicle: ListicleConfig = {
       body: "One shot in the morning, one in the afternoon. No powders to mix or capsules to count, and zero caffeine, so you can take it as early or as late as your routine needs.",
       payoff:
         "Our founders turned a 14-capsule daily stack into these two shots, tested at Cambridge.",
-      // PDP "What to expect" render as a stand-in: morning Flow, afternoon
-      // Clear, week 1 / week 2+. Uncropped, it carries its own copy.
+      // Rendered at the frame's 4:5 from design/listicle-assets/routine.html.
       asset: {
         kind: "image",
-        src: "/formulas/mmPdpAssetsV2/BothWhatToExpect.jpg",
-        alt: "What to expect: Flow in the morning for calm focus, Clear in the afternoon so the fog lifts, compounding over two weeks",
-        fit: "contain",
-        aspect: "2000/1429",
+        src: "/listicle/RoutineTwoShotsV1.jpg",
+        alt: "Two shots, zero caffeine: Flow in the morning for calm, sharp focus, Clear in the afternoon so the fog lifts",
+        fit: "cover",
       },
     },
     {
