@@ -19,7 +19,7 @@ export const productivityV2Listicle: ListicleConfig = {
   persona: "productivity",
   format: "listicle",
   template: "im8",
-  title: "7 Reasons to Raise Your Brain's Limit",
+  title: "7 Moments Your Brain Hits Its Limit",
   hero: {
     laurel: {
       eyebrow: "World's Largest",
@@ -32,7 +32,7 @@ export const productivityV2Listicle: ListicleConfig = {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
     },
-    cta: "Save {percent}% and raise your limit",
+    cta: "Save {percent}% and try it risk-free",
     // Same hero image as v1: this ticket changes copy only.
     asset: {
       kind: "image",
@@ -44,7 +44,7 @@ export const productivityV2Listicle: ListicleConfig = {
   },
   reasonsHeader: {
     eyebrow: "Brain health at the cellular level",
-    headline: "7 Reasons to Raise Your Brain's Limit",
+    headline: "7 Moments Your Brain Hits Its Limit",
   },
   proof: {
     logoBand: true,
@@ -62,28 +62,31 @@ export const productivityV2Listicle: ListicleConfig = {
         "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
     },
   },
+  // Each reason is a door, not a benefit (Nuropod pattern): a moment the reader
+  // hits their limit, so any reader finds their own row and skims the rest. The
+  // guarantee is not a moment, so it closes the page in the bridge instead.
   body: [
     {
       kind: "reason",
       n: 1,
-      headline: "Your Brain Runs Out Before Your Day Does",
-      body: "Emails, meetings, decisions, the list at home. Each one draws on the same limited supply of focus, and by mid-afternoon it's spent. That isn't a willpower problem, it's biology. CONKA supports the pathways behind focus and mental energy from within, so there's more in the tank when the day asks for it.",
+      headline: "When Your To-Do List Outlasts Your Focus",
+      body: "It's 3pm, the list is half done, and your brain has quietly clocked off. Focus runs on a limited supply, and every email, meeting and decision draws on it. CONKA supports the pathways behind focus and mental energy from within, so the second half of your day gets the same brain as the first.",
       asset: { kind: "focusBars" },
     },
     {
       kind: "reason",
       n: 2,
-      headline: "More Capacity, Without the Crash",
-      body: "Coffee doesn't raise your limit, it borrows against it, and the 3pm crash comes to collect. CONKA is completely caffeine-free, and its ingredients delivered 18.1% faster mental processing than caffeine, so your capacity holds from the first task of the day to the last.",
+      headline: "When You'd Normally Reach for Another Coffee",
+      body: "Coffee doesn't raise your limit, it borrows against it, and the crash comes to collect. CONKA is completely caffeine-free, and its ingredients delivered 18.1% faster mental processing than caffeine. No spike, no 3pm cliff, and nothing keeping you up at night.",
       citation: "DOI: 10.1186/1550-2783-12-S1-P41",
       asset: { kind: "dayEnergyCurve" },
     },
     {
-      // ADHD bridge: headline names the shared problem, body names the condition.
+      // ADHD bridge: headline names the shared moment, body names the condition.
       kind: "reason",
       n: 3,
-      headline: "Why Starting Is the Hardest Part",
-      body: "ADHD brains run lower on dopamine, the chemical that turns \"I should\" into \"I am\". So starting a task feels like a fight. Plenty of people without ADHD know that fight on a heavy day. CONKA supports the pathways behind focus and drive, so getting started stops costing so much.",
+      headline: "When Starting Is the Hardest Part",
+      body: "If you have ADHD, you know the gap between \"I should\" and \"I am\". ADHD brains run lower on dopamine, the chemical that bridges it, so starting a task feels like a fight. Plenty of people without ADHD feel that fight on a heavy day. CONKA supports the pathways behind focus and drive, so getting started stops costing so much.",
       asset: {
         kind: "video",
         src: "/videos/flow/FlowFloat.mp4",
@@ -95,8 +98,8 @@ export const productivityV2Listicle: ListicleConfig = {
       // Ageing bridge. Shane's quote is the proof: same workload as his 30s.
       kind: "reason",
       n: 4,
-      headline: "The Same Workload Gets Heavier Every Year",
-      body: "Your brain doesn't fall off a cliff, it slowly loses speed. A ten-year study of over 7,000 people found decline already measurable from around 45. The job doesn't get lighter, so the same load costs more every year. CONKA supports the recall and processing pathways that start to slip, so today's workload feels like it used to.",
+      headline: "When the Same Workload Feels Heavier Than It Used To",
+      body: "Past 40, you may have noticed it: the job hasn't changed, but it costs more. A ten-year study of over 7,000 people found cognitive decline already measurable from around 45. It's gradual, which is why it's easy to miss. CONKA supports the recall and processing pathways that start to slip, so your workload feels like it used to.",
       citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
       asset: {
         kind: "athleteQuote",
@@ -110,10 +113,10 @@ export const productivityV2Listicle: ListicleConfig = {
     {
       kind: "reason",
       n: 5,
-      headline: "Measure Your Limit, Then Watch It Move",
-      body: "You track your steps, your sleep and your spend, but your brain runs on guesswork. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge used clinically to help diagnose dementia. It takes under two minutes, so when your score moves, you know your limit has moved, not just your mood.",
-      asset: { kind: "measureTile" },
-      pressMarquee: true,
+      headline: "When a Bad Night Follows You Into the Morning",
+      body: "Short sleep doesn't just make you tired, it shrinks what your brain can handle the next day. A late deadline, a newborn, a night lost to your phone. Rhodiola, one of CONKA's adaptogens, cut fatigue and sharpened mental performance in night-shift doctors, so a rough night costs you less of the day after.",
+      citation: "PMID: 11081987",
+      asset: { kind: "researchBacked" },
     },
     {
       kind: "reviewStrip",
@@ -149,8 +152,8 @@ export const productivityV2Listicle: ListicleConfig = {
     {
       kind: "reason",
       n: 6,
-      headline: "Get It All Done and Still Have a Life",
-      body: "Most days the work gets the best of you and everyone else gets what's left. The dinners, the friends, the people at home slip down the list. More capacity changes the maths. With steady, all-day support and no crash, you finish the day with something left over, so the evening gets you at your best too.",
+      headline: "When You Get Home With Nothing Left",
+      body: "The work gets the best of you and the people at home get what's left. That isn't a priorities problem, it's a capacity one. With steady, all-day support and no crash, you finish work with something left over, so the evening gets you at your best too.",
       asset: {
         kind: "image",
         src: "/lifestyle/GirlsLaughing.jpg",
@@ -162,14 +165,15 @@ export const productivityV2Listicle: ListicleConfig = {
     {
       kind: "reason",
       n: 7,
-      headline: "100 Days to Feel It, or Your Money Back",
-      body: "Try CONKA for a full 100 days. If your clarity and output haven't changed, you get every penny back. Informed Sport certified, made in the UK, built on a decade of brain research.",
-      asset: { kind: "researchBacked" },
+      headline: "When You Want Proof, Not a Feeling",
+      body: "Every supplement says it works. We'd rather you check. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge. Take it before you start and again a few weeks in. Two minutes, and you'll see in a number whether your limit has moved.",
+      asset: { kind: "measureTile" },
+      pressMarquee: true,
     },
   ],
   bridge: {
-    headline: "Your brain has a limit. Raise it today.",
-    cta: "Try Conka Risk-Free for 100 Days →",
+    headline: "Try it for 100 days. If your limit hasn't moved, you get every penny back.",
+    cta: "Try CONKA Risk-Free →",
   },
   product: {
     productHeroId: "01",
@@ -183,5 +187,5 @@ export const productivityV2Listicle: ListicleConfig = {
     "with-coffee",
     "guarantee",
   ],
-  stickyBar: { cta: "Get started" },
+  stickyBar: { cta: "Try it risk-free" },
 };

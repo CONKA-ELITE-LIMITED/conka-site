@@ -24,67 +24,39 @@ Three reasons people hit the limit:
 
 ## Page, top to bottom
 
-| # | Zone | Copy job | Visual (existing asset) |
-|---|---|---|---|
-| Hero | H1, subcopy, CTA, rating | State the limit, name all three causes, promise the gain | v1 hero image, unchanged |
-| - | Proof wall | Institutional proof | Partner logo band (fixed zone) |
-| - | Reasons header | List promise | Text only |
-| 1 | Your Brain Runs Out Before Your Day Does | Thesis | `focusBars` (focus off vs on CONKA) |
-| 2 | More Capacity, Without the Crash | Coffee borrows against the limit | `dayEnergyCurve` (from v1 reason 5) |
-| 3 | Why Starting Is the Hardest Part | ADHD bridge | Flow neuron video `/videos/flow/FlowFloat.mp4` (from ADHD reason 2) |
-| 4 | The Same Workload Gets Heavier Every Year | Ageing bridge | `athleteQuote`, Shane Corstorphine (from v1 reason 1) |
-| 5 | Measure Your Limit, Then Watch It Move | A score, not a feeling | `measureTile` + press marquee (from v1 reason 6) |
-| - | Review strip | Social proof mid-list | v1's three reviews (Aaron H., Sam J., Anthony Stodart) |
-| 6 | Get It All Done and Still Have a Life | Spare capacity for the evening | `/lifestyle/GirlsLaughing.jpg` (from v1 reason 4) |
-| 7 | 100 Days to Feel It, or Your Money Back | Risk reversal | `researchBacked` (from v1 reason 7) |
-| - | Bridge, product, proof tier, FAQ, sticky bar | Unchanged from v1 | Unchanged from v1 |
+**Reasons are doors, not benefits** (Nuropod pattern): each one is a moment the reader hits their limit, so any reader finds their own row and skims the rest. Final copy lives in `app/lib/landings/productivity-v2-listicle.ts`.
 
-## Copy
+| # | Zone | Visual (existing asset) |
+|---|---|---|
+| Hero | H1 "Your brain has a limit. Raise it." + subcopy naming load, focus, age. CTA "Save {percent}% and try it risk-free" | v1 hero image, unchanged |
+| - | Proof wall | Partner logo band |
+| - | Reasons header: "7 Moments Your Brain Hits Its Limit" (also `title`) | Text |
+| 1 | When Your To-Do List Outlasts Your Focus | `focusBars` |
+| 2 | When You'd Normally Reach for Another Coffee | `dayEnergyCurve` |
+| 3 | When Starting Is the Hardest Part (ADHD bridge) | Flow neuron video |
+| 4 | When the Same Workload Feels Heavier Than It Used To (ageing bridge) | Shane Corstorphine quote tile |
+| 5 | When a Bad Night Follows You Into the Morning | `researchBacked` |
+| - | Review strip | v1's three reviews |
+| 6 | When You Get Home With Nothing Left | Friends-laughing photo |
+| 7 | When You Want Proof, Not a Feeling | `measureTile` + press marquee |
+| - | Bridge: the 100-day guarantee as the close, CTA "Try CONKA Risk-Free" | Dark CTA card |
+| - | Product, proof tier, FAQ | Unchanged from v1. Sticky CTA "Try it risk-free" |
 
-### Hero
+**CTAs are offer plus risk reversal everywhere**, since that fits every door.
 
-- **H1:** Your brain has a limit. Raise it.
-- **Subcopy:** Too much on, a mind that won't settle, or a brain that isn't as quick as it was. Coffee borrows against tomorrow. CONKA works from within to give your brain more capacity, so you get done what needs doing.
-- **CTA:** Save {percent}% and raise your limit
-- **Alternate H1s:** "Stop running your day on empty." / "More capacity for everything on your plate."
+**Bridge rule** for reasons 3 and 4: the headline names the shared moment, the body names the condition.
 
-### Reasons header
+## Next copy lever: a day-to-day anchor
 
-- **Eyebrow:** unchanged from v1
-- **Headline:** 7 Reasons to Raise Your Brain's Limit (also the page `title`)
-
-### Reasons
-
-1. **Your Brain Runs Out Before Your Day Does**
-   Emails, meetings, decisions, the list at home. Each one draws on the same limited supply of focus, and by mid-afternoon it's spent. That isn't a willpower problem, it's biology. CONKA supports the pathways behind focus and mental energy from within, so there's more in the tank when the day asks for it.
-
-2. **More Capacity, Without the Crash**
-   Coffee doesn't raise your limit, it borrows against it, and the 3pm crash collects. CONKA is completely caffeine-free, and its ingredients delivered 18.1% faster mental processing than caffeine, so your capacity holds from the first task to the last. Citation carried from v1: DOI 10.1186/1550-2783-12-S1-P41.
-
-3. **Why Starting Is the Hardest Part**
-   ADHD brains run lower on dopamine, the chemical that turns "I should" into "I am". So starting a task feels like a fight. Plenty of people without ADHD know that fight on a heavy day. CONKA supports the pathways behind focus and drive, so getting started stops costing so much.
-
-4. **The Same Workload Gets Heavier Every Year**
-   Your brain doesn't fall off a cliff, it slowly loses speed, with decline measurable from around 45. The job doesn't get lighter, so the same load costs more each year. CONKA supports the recall and processing pathways that start to slip. Citation: Singh-Manoux et al., BMJ 2012 (Whitehall II). Proof: Shane's "same workload as I did in my 30s" quote tile.
-
-5. **Measure Your Limit, Then Watch It Move**
-   The v1 app reason, reframed around the limit: a score, not a feeling.
-
-6. **Get It All Done and Still Have a Life**
-   The v1 career-and-life reason, reframed as spare capacity left over for the evening.
-
-7. **100 Days to Feel It, or Your Money Back**
-   Unchanged from v1.
-
-Reasons 5 and 6 get final copy in the build. All reasons are 50 to 80 words, statement titles, one idea (LISTICLE_SYSTEM.md copy standard).
+Brain performance is subjective, so the benefit needs grounding in one tangible, everyday thing (Magic Mind's is the to-do list melting). Candidates to decide: the afternoon (get your afternoon back), the end of the list, having something left for the evening. Once chosen, it threads through the hero, CTAs and door bodies. Also considered from teardowns: a Grüns-style switch framing against coffee, and a MASA-style one-line "quick answer" under the reasons header (needs a small type addition).
 
 ## Template for the ADHD and brain-ageing variants
 
 | Part | Shared | Per persona |
 |---|---|---|
-| Thesis, reasons 2, 5, 7 | ✓ | |
+| Thesis, doors 1, 2, 5, 6, 7, guarantee bridge, CTAs | ✓ | |
 | Hero H1 + subcopy | | ADHD leads on focus, brain-ageing on age |
-| Reasons 3 and 4 | | The persona's own bridge gets more detail and moves to reason 1; the other bridge stays |
+| Doors 3 and 4 | | The persona's own door gets more detail and moves to door 1; the other door stays |
 | Testimonials, proof feature | | Per persona |
 
 ## Decisions
