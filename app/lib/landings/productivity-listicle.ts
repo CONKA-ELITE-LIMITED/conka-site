@@ -95,7 +95,7 @@ export const productivityListicle: ListicleConfig = {
           quote:
             "What can't be measured can't be managed. I have more energy, and if you're pessimistic, just do a before and after test.",
           name: "Anthony Stodart",
-          image: "/testimonials/ugc/15.jpg",
+          image: "/testimonials/dtc/AnthonyS.jpg",
           detail: "Verified · Flow + Clear",
         },
       ],
