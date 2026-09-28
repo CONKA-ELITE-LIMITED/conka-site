@@ -617,6 +617,8 @@ its end date on the hero.
 
 Pulled **28 Sep**. Scope: the three persona listicles plus `/go/trial-pack` (live 15 Sep). Sources: Meta Ads Manager (campaign level, **weekly breakdown**, 24 Jul to 27 Sep, attribution setting assumed 7-day click / 1-day view), Shopify Admin API (`scratchpad/listicle-review-orders.mjs`, all orders since 3 Jul), Vercel Web Analytics, Notion Flags. Artifact: <https://claude.ai/artifact/LGiJnQ6kzb9c3CS5gGSGec>.
 
+**Stored data:** every figure behind this snapshot (Meta weekly spend, purchases, impressions and reach; Vercel weekly visitors, section and CTA events; Shopify tagged orders) is in [`data/listicle-review-2026-09-27.json`](data/listicle-review-2026-09-27.json), and the review page's source is [`data/listicle-review-2026-09-27.html`](data/listicle-review-2026-09-27.html). Republish that file to rebuild or extend the page.
+
 **Headline:** £34.0k of Meta spend bought 334 purchases at £102. Since 24 Aug: Productivity £81, Brain-ageing £97, ADHD £112. Trial pack £79 per purchase, 22% of its Meta checkouts complete.
 
 > A cumulative Ads Manager screenshot taken the same morning showed fewer purchases (ADHD 103 / £11,958). Its date range was not visible and it disagrees with the weekly rows, which reconcile with every earlier dated pull. The weekly figures are the ones to use.

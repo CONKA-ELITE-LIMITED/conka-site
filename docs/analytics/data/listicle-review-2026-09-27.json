@@ -1,0 +1,579 @@
+{
+ "window": "2026-07-24 to 2026-09-27",
+ "pulled": "2026-09-28",
+ "ticket": "SCRUM-1469",
+ "artifact": "https://claude.ai/artifact/LGiJnQ6kzb9c3CS5gGSGec",
+ "sources": {
+  "meta": "Ads Manager, campaign level, weekly breakdown (Mon-start weeks), attribution assumed 7-day click / 1-day view",
+  "vercel": "Web Analytics, unique visitors per page and listicle:* events",
+  "shopify": "Admin API via scratchpad/listicle-review-orders.mjs; tagged = _listicle_origin or _source=trial_pack line attribute; renewals excluded by creating app (Loop/Skio)"
+ },
+ "pages": {
+  "adhd": "/go/adhd-listicle",
+  "prod": "/go/productivity-listicle",
+  "brain": "/go/brain-ageing-listicle",
+  "tp": "/go/trial-pack"
+ },
+ "metaWeekly": {
+  "fields": [
+   "purchases",
+   "spend_gbp",
+   "impressions",
+   "reach"
+  ],
+  "weeks": {
+   "2026-07-20": {
+    "prod": [
+     5,
+     282.69,
+     27230,
+     15903
+    ],
+    "brain": [
+     4,
+     282.81,
+     15368,
+     7360
+    ],
+    "adhd": [
+     4,
+     285.34,
+     23581,
+     14576
+    ]
+   },
+   "2026-07-27": {
+    "prod": [
+     11,
+     1086.99,
+     68085,
+     22484
+    ],
+    "brain": [
+     11,
+     1074.92,
+     73826,
+     19010
+    ],
+    "adhd": [
+     15,
+     1084.12,
+     106254,
+     61547
+    ]
+   },
+   "2026-08-03": {
+    "prod": [
+     8,
+     1099.1,
+     47525,
+     20266
+    ],
+    "brain": [
+     11,
+     1399.4,
+     81871,
+     21327
+    ],
+    "adhd": [
+     24,
+     1668.94,
+     133221,
+     76669
+    ]
+   },
+   "2026-08-10": {
+    "prod": [
+     5,
+     700.69,
+     38139,
+     10903
+    ],
+    "brain": [
+     8,
+     762.56,
+     40841,
+     11232
+    ],
+    "adhd": [
+     12,
+     2421.93,
+     165405,
+     90258
+    ]
+   },
+   "2026-08-17": {
+    "prod": [
+     4,
+     693.17,
+     39280,
+     10933
+    ],
+    "brain": [
+     6,
+     971.35,
+     49983,
+     13923
+    ],
+    "adhd": [
+     11,
+     1826.06,
+     118629,
+     67291
+    ]
+   },
+   "2026-08-24": {
+    "prod": [
+     11,
+     705.43,
+     29807,
+     8378
+    ],
+    "brain": [
+     18,
+     1408,
+     65602,
+     13178
+    ],
+    "adhd": [
+     13,
+     1432.18,
+     59726,
+     19618
+    ]
+   },
+   "2026-08-31": {
+    "prod": [
+     9,
+     844.79,
+     35645,
+     8810
+    ],
+    "brain": [
+     13,
+     1369.01,
+     50912,
+     11032
+    ],
+    "adhd": [
+     13,
+     1194.24,
+     68452,
+     41294
+    ]
+   },
+   "2026-09-07": {
+    "prod": [
+     10,
+     1088.72,
+     51379,
+     21889
+    ],
+    "brain": [
+     19,
+     1425.21,
+     59052,
+     11563
+    ],
+    "adhd": [
+     11,
+     1068.35,
+     58827,
+     32308
+    ]
+   },
+   "2026-09-14": {
+    "prod": [
+     11,
+     1029.92,
+     43230,
+     17377
+    ],
+    "brain": [
+     8,
+     1275.93,
+     58369,
+     9829
+    ],
+    "adhd": [
+     8,
+     1037.49,
+     51323,
+     25698
+    ],
+    "tp": [
+     9,
+     478.57,
+     18299,
+     9039
+    ]
+   },
+   "2026-09-21": {
+    "prod": [
+     19,
+     1200.48,
+     46167,
+     16658
+    ],
+    "brain": [
+     6,
+     729.66,
+     37139,
+     6887
+    ],
+    "adhd": [
+     5,
+     847.22,
+     40625,
+     22877
+    ],
+    "tp": [
+     12,
+     1182.24,
+     54491,
+     25800
+    ]
+   }
+  }
+ },
+ "metaFunnelCumulative": {
+  "note": "Earlier cumulative Ads Manager view; date range not confirmed",
+  "fields": [
+   "add_to_cart",
+   "checkouts_initiated",
+   "purchases"
+  ],
+  "adhd": [
+   372,
+   239,
+   103
+  ],
+  "prod": [
+   222,
+   164,
+   83
+  ],
+  "brain": [
+   221,
+   173,
+   94
+  ],
+  "tp": [
+   98,
+   95,
+   21
+  ]
+ },
+ "vercelWeekly": {
+  "weeks": [
+   "2026-07-20",
+   "2026-07-27",
+   "2026-08-03",
+   "2026-08-10",
+   "2026-08-17",
+   "2026-08-24",
+   "2026-08-31",
+   "2026-09-07",
+   "2026-09-14",
+   "2026-09-21"
+  ],
+  "visitors": {
+   "adhd": [
+    1219,
+    2394,
+    2963,
+    2421,
+    1746,
+    743,
+    963,
+    874,
+    770,
+    535
+   ],
+   "prod": [
+    1312,
+    961,
+    783,
+    516,
+    534,
+    387,
+    632,
+    1873,
+    846,
+    710
+   ],
+   "brain": [
+    525,
+    739,
+    982,
+    496,
+    618,
+    705,
+    585,
+    576,
+    460,
+    352
+   ],
+   "tp": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    418,
+    987
+   ]
+  },
+  "ctaVisitors": {
+   "adhd": [
+    44,
+    190,
+    285,
+    278,
+    218,
+    111,
+    130,
+    117,
+    100,
+    59
+   ],
+   "prod": [
+    13,
+    78,
+    171,
+    66,
+    60,
+    57,
+    84,
+    79,
+    122,
+    84
+   ],
+   "brain": [
+    25,
+    55,
+    73,
+    52,
+    76,
+    85,
+    66,
+    65,
+    55,
+    44
+   ],
+   "tp": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    38,
+    64
+   ]
+  },
+  "firstReasonVisitors": {
+   "adhd": [
+    313,
+    1009,
+    1298,
+    1056,
+    755,
+    289,
+    447,
+    378,
+    290,
+    205
+   ],
+   "prod": [
+    91,
+    284,
+    390,
+    192,
+    212,
+    157,
+    209,
+    262,
+    227,
+    186
+   ],
+   "brain": [
+    78,
+    188,
+    334,
+    172,
+    206,
+    245,
+    232,
+    190,
+    126,
+    120
+   ]
+  }
+ },
+ "vercelWindowTotals": {
+  "visitors": {
+   "adhd": 14074,
+   "prod": 7764,
+   "brain": 5724,
+   "tp": 1406
+  },
+  "sectionViewed": {
+   "adhd": {
+    "symptomExplainer_0": 6046,
+    "statsBand_1": 4502,
+    "reviewStrip_6": 2641,
+    "product": 1893
+   },
+   "prod": {
+    "reason_0": 2214,
+    "statsBand_2": 1480,
+    "reviewStrip_7": 916,
+    "product": 888
+   },
+   "brain": {
+    "reason_0": 1910,
+    "statsBand_2": 1087,
+    "reviewStrip_6": 714,
+    "product": 604
+   },
+   "tp": {
+    "hero": 1403,
+    "ugc": 419,
+    "ingredients": 260,
+    "what_to_expect": 229,
+    "comparison": 199,
+    "offer_faq": 172,
+    "faq": 158
+   }
+  },
+  "ctaClickedVisitors": {
+   "adhd": {
+    "hero": 715,
+    "sticky": 669,
+    "bridge": 130,
+    "product": 45
+   },
+   "prod": {
+    "hero": 263,
+    "sticky": 499,
+    "bridge": 46,
+    "product": 30
+   },
+   "brain": {
+    "hero": 276,
+    "sticky": 285,
+    "bridge": 45,
+    "product": 19
+   },
+   "tp": {
+    "hero": 61,
+    "sticky": 35,
+    "otp": 16
+   }
+  },
+  "interactions": {
+   "adhd_symptom_picker": 590,
+   "brain_segment_toggle": 30
+  },
+  "trialPackOptionSelected": {
+   "clear": 48,
+   "flow": 47,
+   "both": 29
+  }
+ },
+ "shopifyTagged": {
+  "orders": {
+   "adhd": 80,
+   "prod": 52,
+   "brain": 49,
+   "tp": 15
+  },
+  "revenue": {
+   "adhd": 4807.88,
+   "prod": 3446.73,
+   "brain": 3465.82,
+   "tp": 291.16
+  },
+  "closingCta": {
+   "sticky": 102,
+   "hero": 70,
+   "bridge": 9,
+   "product": 0
+  },
+  "cadence": {
+   "monthly": [
+    137,
+    6626.38
+   ],
+   "quarterly": [
+    24,
+    3295.84
+   ],
+   "onetime": [
+    20,
+    1798.21
+   ]
+  },
+  "weekly": {
+   "adhd": [
+    null,
+    9,
+    14,
+    12,
+    9,
+    10,
+    7,
+    9,
+    4,
+    6
+   ],
+   "prod": [
+    null,
+    10,
+    3,
+    1,
+    2,
+    7,
+    7,
+    10,
+    6,
+    6
+   ],
+   "brain": [
+    null,
+    3,
+    3,
+    4,
+    4,
+    13,
+    7,
+    9,
+    4,
+    2
+   ],
+   "tp": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    7,
+    8
+   ]
+  },
+  "trialPack": {
+   "trials": 15,
+   "allBoth": true,
+   "billedDay7": "4 of 6 trials from 17-18 Sep billed £74.99 by 27 Sep"
+  }
+ }
+}
