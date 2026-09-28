@@ -218,20 +218,37 @@ function StarRow({ fontSize }: { fontSize: string }) {
   );
 }
 
-/** One-line rating row under the hero CTA: stars, the bare figure ("Excellent
- *  4.7" -> "4.7") and the sub-line. Same row the sticky bar carries, so the
- *  page states its proof one way. The avatar stack was cut as hero noise.
+/** The home hero's avatar + star micro-row, compacted to the IM8 scale.
+ *  Centred under the full-width mobile CTA, left-aligned beside it on desktop.
  *  Content only: the caller owns the surrounding spacing. */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
   return (
-    <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[12.5px] leading-tight text-black/70 md:justify-start">
-      <StarRow fontSize="14px" />
-      <span className="font-bold tabular-nums text-black">
-        {label.replace(/^[^\d]*/, "")}
-      </span>
-      <span aria-hidden>·</span>
-      <span>{sub}</span>
-    </p>
+    <div className="flex items-center justify-center gap-2.5 md:justify-start">
+      <div className="flex items-center">
+        {Array.from({ length: 5 }, (_, i) => (
+          <div
+            key={i}
+            className="relative h-[26px] w-[26px] overflow-hidden rounded-full border border-black/10"
+            style={{ marginLeft: i === 0 ? 0 : "-8px", zIndex: 5 - i }}
+          >
+            <Image
+              src={`/avatars/${i + 1}.jpg`}
+              alt="CONKA customer"
+              fill
+              className="object-cover"
+              sizes="26px"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col leading-tight">
+        <div className="flex items-center gap-1.5">
+          <StarRow fontSize="15px" />
+          <span className="text-[13px] font-bold tabular-nums">{label}</span>
+        </div>
+        <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
+      </div>
+    </div>
   );
 }
 
@@ -999,9 +1016,10 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
     return () => observer.disconnect();
   }, [deferSticky]);
   const stickyHidden = deferSticky && heroInView;
-  // Mobile: logos between hero copy and asset (the section below hides there).
-  const logosAboveAsset = Boolean(
-    config.hero.proofWallAboveAsset &&
+  // Logos open the page, above the headline (the section after the hero is
+  // then skipped, so the band renders once).
+  const logosFirst = Boolean(
+    config.hero.proofWallFirst &&
     config.proof &&
     (config.proof.logoBand || config.proof.pressBand),
   );
@@ -1034,9 +1052,19 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         aria-label="Hero"
         style={{ background: `${HERO_WASH}, ${CANVAS}`, color: "#111" }}
       >
+        {logosFirst && config.proof ? (
+          <TrackedSection
+            section={SECTION.proofWall}
+            // overflow-hidden: the marquee track is w-max and would otherwise
+            // widen the page on mobile.
+            className="min-w-0 overflow-hidden pt-6 md:pt-8"
+          >
+            <ListicleLogoBand proof={config.proof} quietHeading />
+          </TrackedSection>
+        ) : null}
         <div className="grid grid-cols-1 items-center md:grid-cols-[52fr_48fr]">
           <div
-            className={`relative w-full md:order-1 ${logosAboveAsset ? "order-3" : "order-2"}`}
+            className="relative order-2 w-full md:order-1"
             style={{
               aspectRatio:
                 config.hero.asset.kind === "image"
@@ -1110,26 +1138,18 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               />
             ) : null}
           </div>
-          {logosAboveAsset && config.proof ? (
-            <TrackedSection
-              section={SECTION.proofWall}
-              // min-w-0 + overflow-hidden: the marquee track is w-max, and a
-              // grid item's default min-width would stretch the page to it.
-              className="order-2 min-w-0 overflow-hidden pb-8 md:hidden"
-            >
-              <ListicleLogoBand proof={config.proof} quietHeading />
-            </TrackedSection>
-          ) : null}
         </div>
       </section>
 
       {/* Zone 1b: proof wall — the partner logo band, straight after the hero.
           Tracked as its own fixed zone so it has a denominator; it is not a
           `body` entry, so no reason-block id shifts. */}
-      {config.proof && (config.proof.logoBand || config.proof.pressBand) ? (
+      {!logosFirst &&
+      config.proof &&
+      (config.proof.logoBand || config.proof.pressBand) ? (
         <section
           aria-label="Trusted by"
-          className={`px-5 py-12 md:block md:px-[5vw] md:py-14 ${logosAboveAsset ? "hidden" : ""}`}
+          className="px-5 py-12 md:px-[5vw] md:py-14"
           style={{ background: CANVAS, color: "#111" }}
         >
           <TrackedSection

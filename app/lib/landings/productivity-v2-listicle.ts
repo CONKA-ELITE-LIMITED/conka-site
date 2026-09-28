@@ -21,7 +21,7 @@ export const productivityV2Listicle: ListicleConfig = {
   template: "im8",
   title: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   hero: {
-    proofWallAboveAsset: true,
+    proofWallFirst: true,
     // No laurel: the logo band a scroll later does the credibility job, and the
     // hero reads as H1, subcopy, CTA, one proof line.
     // v1 headline as a stand-in until the new hero line is settled.

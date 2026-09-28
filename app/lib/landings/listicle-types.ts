@@ -344,9 +344,9 @@ export interface Im8ListicleConfig extends ListicleBase {
   hero: {
     /** Laurel-flanked credibility chip above the headline */
     laurel?: { eyebrow: string; body: string };
-    /** Mobile only: render the partner logo band between the hero copy and
-     *  the hero asset instead of after the whole hero. Desktop is unchanged. */
-    proofWallAboveAsset?: boolean;
+    /** Render the partner logo band at the very top of the page, above the
+     *  headline (quiet heading), instead of after the hero. */
+    proofWallFirst?: boolean;
     headline: string;
     subcopy: string;
     /** Avatar + star micro-row (the home hero's TrustMicroRow pattern) */
