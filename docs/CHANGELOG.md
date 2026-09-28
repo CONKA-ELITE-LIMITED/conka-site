@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-28** | New ad landing /go/productivity-v2: the productivity listicle rewritten around "your brain has a limit, raise it", with reasons that bring ADHD and 40+ readers in; v1 stays live for a Meta split (SCRUM-1470)
 - **2026-09-25** | /app cognition test now matches the real app: grey left half, black right half, brand font; the image-count line under Start is gone (SCRUM-1457)
 - **2026-09-25** | /app cognition test now runs on our own engine instead of the Cognetivity iframe: styled to the site, scored by our server, and the Klaviyo result email is fed server-verified scores (SCRUM-1457)
 - **2026-09-25** | Native web cognition test engine (React port of the app's test, scored by our own server) with an internal demo at /conka-app-demo; not yet swapped into the live site test (SCRUM-1456)
