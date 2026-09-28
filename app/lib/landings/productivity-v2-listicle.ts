@@ -4,15 +4,14 @@ import type { ListicleConfig } from "./listicle-types";
  * Persona listicle v2: productivity as the core "your brain has a limit"
  * message (SCRUM-1470). Plan: docs/development/featurePlans/productivity-listicle-v2.md.
  *
- * v1 (productivity-listicle.ts) sold an identity ("high performers"); v2 sells a
- * situation anyone recognises: the day asks more of your brain than it has to
- * give. The hero subcopy names all three causes (load, focus, age) so ADHD and
- * 40+ readers from the same ads see themselves, and reasons 2 and 3 bridge each
- * worry back to the shared problem. Copy describes the experience and never
- * names a condition, so a skimming productivity reader never feels excluded.
+ * v1 sold an identity ("high performers"); v2 sells a situation anyone
+ * recognises: the day asks more of your brain than it has to give. Copy follows
+ * the conka-messaging skill (.claude/skills/conka-messaging): experience not
+ * biology, no named conditions, Flow first / Clear before it counts.
  *
- * Copy and order only: every asset is reused from the existing persona pages.
- * This page is the template the ADHD and brain-ageing listicles will copy.
+ * Six reasons: composure, motivation ("not lazy"), memory ("not losing it"),
+ * routine, value, then a proof reason that runs the club and workplace trials
+ * into the reader's own test and the guarantee.
  */
 export const productivityV2Listicle: ListicleConfig = {
   slug: "productivity-v2",
@@ -201,7 +200,7 @@ export const productivityV2Listicle: ListicleConfig = {
       pressMarquee: true,
       slides: [
         {
-          logo: "/logos/Harlequins.svg",
+          logo: "/logos/Harlequins.webp",
           logoAlt: "Harlequins",
           design: "Randomised, double-blind, placebo-controlled",
           meta: "29 professional rugby players · 6 weeks",

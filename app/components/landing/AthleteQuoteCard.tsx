@@ -47,7 +47,7 @@ export default function AthleteQuoteCard({
             alt={logoAlt ?? ""}
             width={180}
             height={31}
-            unoptimized
+            unoptimized={logo.endsWith(".svg")}
             className="h-[18px] w-auto md:h-5"
           />
         </div>

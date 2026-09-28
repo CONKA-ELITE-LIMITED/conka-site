@@ -102,3 +102,5 @@ Supersedes the six-reason page above once built. Copy stays on the `conka-messag
 **Routine image values** (`design/listicle-assets/routine.html`): "Flow first. Clear before it counts." / FLOW · Shot before screen · Start the day composed and in control / CLEAR · The 5 minutes before the important meeting · Sharp on demand, when it counts / Zero caffeine · No powders · No capsules. Drops "afternoon", "the fog lifts" and "no crash".
 
 **Round 2 follow-ups (28 Sep):** "Why are we so confident?" and "Prove It to Yourself" merged into reason 6 (trial cards, then the guarantee and app buttons in one bar; the app score tile is gone). Jack Willis proof feature removed, since athletes now lead reason 1.
+
+**Bristol Bears lockup (pending):** the club wordmark is at https://www.bristolbearsrugby.com/wp-content/uploads/2023/03/Footer-Logo.svg (removed from `public/logos/` until the lockup is built).

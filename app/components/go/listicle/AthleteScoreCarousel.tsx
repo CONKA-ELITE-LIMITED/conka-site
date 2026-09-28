@@ -61,8 +61,9 @@ export default function AthleteScoreCarousel({
   return (
     <div
       className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      role="region"
-      aria-label="Athlete cognitive score results"
+      role="group"
+      aria-label="Athlete cognitive score results (swipe to see more)"
+      tabIndex={0}
     >
       {athletes.map((a) => (
         <div key={a.name} className="w-[85%] shrink-0 snap-start">

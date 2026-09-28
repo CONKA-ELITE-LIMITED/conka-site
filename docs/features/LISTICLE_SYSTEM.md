@@ -282,7 +282,7 @@ viewport above roughly 1560px upscales them about 1.2x. Measured through
 heroes cost 30-62K; a dense photographic background costs noticeably more than
 a flat studio sweep, which is worth checking when swapping one in.
 
-The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
+The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `trialCarousel`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `athleteScores`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
 ## Reason tiles and optional fields (SCRUM-1470)
 
@@ -293,8 +293,7 @@ chart tiles fill it as a flex column and the frame grows rather than clips.
 
 **Chart tiles** share one grammar: a tinted `#eef1f8` banner with the title,
 the figure or chart, and a tinted bottom strip. Palette: navy is CONKA, grey
-the alternative, brand green only on the key figure; the crash chart keeps its
-red drop. Tiles: `crashChart` (`variant="tile"`, no cost panel), `focusBars`
+the alternative, brand green only on the key figure. Tiles: `focusBars`
 (0 to 120 axis), `measureTile` (score chart plus store buttons) and
 `coffeeCompare` (condensed CONKA vs coffee table, cost row from `offerData` and
 `landingPricing`).

@@ -13,7 +13,6 @@ import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
-import CrashChart from "@/app/components/landing/CrashChart";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
@@ -398,7 +397,6 @@ const CHART_FRAME =
 /** Chart tiles that take the reason's bold payoff as their bottom strip, so the
  *  figure's takeaway sits with the figure instead of in the paragraph. */
 const CAPTIONED_CHARTS = new Set<ListicleAsset["kind"]>([
-  "crashChart",
   "focusBars",
   "coffeeCompare",
   "measureTile",
@@ -424,20 +422,6 @@ function AssetBlock({
   caption?: string;
   heroId: ProductHeroId;
 }) {
-  if (asset.kind === "crashChart") {
-    return (
-      <div className={CHART_FRAME}>
-        <CrashChart
-          saving={asset.saving}
-          coffeePerDay={asset.coffeePerDay}
-          shotsPerDay={asset.shotsPerDay}
-          variant="tile"
-        />
-        <ChartCaption text={caption} />
-      </div>
-    );
-  }
-
   if (asset.kind === "coffeeCompare") {
     return (
       <div className={CHART_FRAME}>
@@ -610,6 +594,20 @@ function reviewInitials(name: string) {
     .slice(0, 2)
     .join("")
     .toUpperCase();
+}
+
+/** Full-width "As Published On:" press band closing a reason. Slower than the
+ *  partner band (60s vs 40s) so the two never read as one track. */
+function PressBand() {
+  return (
+    <div className="mt-12">
+      <LogoMarquee
+        heading="As Published On:"
+        logos={PRESS_LOGOS}
+        durationSeconds={60}
+      />
+    </div>
+  );
 }
 
 /** Compact card: avatar, name and stars in one header row, then the quote. */
@@ -952,13 +950,7 @@ function BodyBlock({
             the asset (e.g. the app graph) to the track width. Slower than the
             partner band (60s vs 40s) so the two never read as one track. */}
         {block.pressMarquee ? (
-          <div className="mt-12">
-            <LogoMarquee
-              heading="As Published On:"
-              logos={PRESS_LOGOS}
-              durationSeconds={60}
-            />
-          </div>
+          <PressBand />
         ) : null}
       </div>
     );
@@ -1107,13 +1099,7 @@ function BodyBlock({
           </div>
         ) : null}
         {block.pressMarquee ? (
-          <div className="mt-12">
-            <LogoMarquee
-              heading="As Published On:"
-              logos={PRESS_LOGOS}
-              durationSeconds={60}
-            />
-          </div>
+          <PressBand />
         ) : null}
       </div>
     );

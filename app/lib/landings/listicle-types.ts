@@ -89,14 +89,6 @@ export type ListicleAsset =
       aspect?: string;
       fit?: "cover" | "contain";
     }
-  /** "Skip the 2pm crash" curve + cost table (CrashChart). Figures default
-   *  from landingPricing; override per page. */
-  | {
-      kind: "crashChart";
-      saving?: string;
-      coffeePerDay?: string;
-      shotsPerDay?: string;
-    }
   /** Research-backed proof card: universities + key credentials */
   | { kind: "researchBacked" }
   /** Cognitive-score measure card: count-up graph + routine steps + app stores */

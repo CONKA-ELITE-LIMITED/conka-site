@@ -34,7 +34,7 @@ function TrialCard({ slide }: { slide: TrialSlide }) {
           alt={slide.logoAlt}
           width={72}
           height={36}
-          unoptimized
+          unoptimized={slide.logo.endsWith(".svg")}
           // Fixed 2:1 box, left-aligned: crests sit at the left, a wordmark
           // (Revolut) fills the width, and the text column starts in one place.
           className="h-9 w-[72px] shrink-0 object-contain object-left"
@@ -128,7 +128,12 @@ function TrialCard({ slide }: { slide: TrialSlide }) {
 export default function TrialCarousel({ slides }: { slides: TrialSlide[] }) {
   return (
     <>
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        role="group"
+        aria-label="Trial results (swipe to see more)"
+        tabIndex={0}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {slides.map((s) => (
           <div key={s.logoAlt} className="w-[85%] shrink-0 snap-start">
             <TrialCard slide={s} />
