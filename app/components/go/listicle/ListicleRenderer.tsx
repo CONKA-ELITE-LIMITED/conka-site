@@ -379,6 +379,7 @@ const CAPTIONED_CHARTS = new Set<ListicleAsset["kind"]>([
   "crashChart",
   "focusBars",
   "coffeeCompare",
+  "measureTile",
 ]);
 
 /** The tile's bottom strip: the tinted mirror of the chart banner. */
@@ -440,8 +441,9 @@ function AssetBlock({
 
   if (asset.kind === "measureTile") {
     return (
-      <div className={MEDIA_FRAME}>
+      <div className={CHART_FRAME}>
         <MeasureTile />
+        <ChartCaption text={caption} />
       </div>
     );
   }

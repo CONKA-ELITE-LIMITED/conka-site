@@ -40,8 +40,9 @@ function prefersReducedMotion() {
   );
 }
 
-/** Dark cognitive-score card: line draws + score counts up on first view. */
-function MeasureScoreCard() {
+/** Shared by both score charts: in-view trigger, the 72 -> 89 count-up, and
+ *  the measured line length for the draw-on animation. */
+function useScoreAnimation() {
   const [ref, isInView] = useInView();
   const [score, setScore] = useState(FROM);
   const lineRef = useRef<SVGPathElement>(null);
@@ -81,6 +82,13 @@ function MeasureScoreCard() {
     return () => cancelAnimationFrame(raf);
   }, [isInView]);
 
+  return { ref, isInView, score, lineRef, len, gid };
+}
+
+/** Dark cognitive-score card: line draws + score counts up on first view. */
+function MeasureScoreCard() {
+  const { ref, isInView, score, lineRef, len, gid } = useScoreAnimation();
+
   return (
     <div
       ref={ref}
@@ -114,8 +122,22 @@ function MeasureScoreCard() {
             <stop offset="100%" stopColor="#6BD37B" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <line x1="20" y1="118" x2="300" y2="118" stroke="rgba(255,255,255,.10)" strokeWidth="1" />
-        <line x1="20" y1="74" x2="300" y2="74" stroke="rgba(255,255,255,.07)" strokeWidth="1" />
+        <line
+          x1="20"
+          y1="118"
+          x2="300"
+          y2="118"
+          stroke="rgba(255,255,255,.10)"
+          strokeWidth="1"
+        />
+        <line
+          x1="20"
+          y1="74"
+          x2="300"
+          y2="74"
+          stroke="rgba(255,255,255,.07)"
+          strokeWidth="1"
+        />
         <path
           d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40 L300,118 L20,118 Z"
           fill={`url(#${gid}-fill)`}
@@ -210,7 +232,11 @@ function MeasureStoreButtons() {
         aria-label="Download on the App Store"
         className="inline-flex items-center gap-2.5 rounded-xl border border-white/28 bg-black px-4 py-2.5"
       >
-        <svg viewBox="0 0 24 24" className="h-[21px] w-[21px] flex-shrink-0 fill-white" aria-hidden>
+        <svg
+          viewBox="0 0 24 24"
+          className="h-[21px] w-[21px] flex-shrink-0 fill-white"
+          aria-hidden
+        >
           <path d="M17.05 12.04c-.03-3.16 2.58-4.67 2.7-4.75-1.47-2.15-3.76-2.45-4.57-2.48-1.94-.2-3.79 1.14-4.78 1.14-.98 0-2.5-1.12-4.12-1.09-2.12.03-4.08 1.23-5.17 3.13-2.2 3.83-.56 9.5 1.58 12.61 1.05 1.52 2.3 3.23 3.93 3.17 1.58-.06 2.18-1.02 4.09-1.02 1.91 0 2.45 1.02 4.12.99 1.7-.03 2.78-1.55 3.82-3.08 1.2-1.76 1.7-3.47 1.72-3.56-.04-.02-3.3-1.27-3.34-5.06z M14.0 3.97c.87-1.05 1.46-2.5 1.3-3.95-1.25.05-2.77.83-3.67 1.88-.8.93-1.5 2.42-1.32 3.84 1.39.11 2.81-.71 3.69-1.77z" />
         </svg>
         <span className="flex flex-col text-left leading-[1.12] text-white">
@@ -229,7 +255,11 @@ function MeasureStoreButtons() {
         aria-label="Get it on Google Play"
         className="inline-flex items-center gap-2.5 rounded-xl border border-white/28 bg-black px-4 py-2.5"
       >
-        <svg viewBox="0 0 24 24" className="h-[21px] w-[21px] flex-shrink-0 fill-white" aria-hidden>
+        <svg
+          viewBox="0 0 24 24"
+          className="h-[21px] w-[21px] flex-shrink-0 fill-white"
+          aria-hidden
+        >
           <path d="M4.2 2.6c-.3.16-.5.48-.5.92v16.96c0 .44.2.76.5.92l9.06-9.4L4.2 2.6z" />
           <path d="M17.2 8.9 6.1 2.5l8.34 8.66L17.2 8.9z" opacity=".85" />
           <path d="M17.2 15.1l-2.76-3.94L6.1 21.5 17.2 15.1z" opacity=".7" />
@@ -249,16 +279,121 @@ function MeasureStoreButtons() {
 }
 
 /**
- * Compact measure card for a listicle reason slot: graph + steps. Fills the
- * listicle frame. No store buttons: on an ad landing every exit that is not the
- * buy CTA leaks the click, so the app download is not offered here.
+ * Listicle chart tile for the "measure it" reason, in the same grammar as the
+ * page's other tiles: tinted banner, the figure large, the chart filling the
+ * rest, black copy. Navy is CONKA, green only on the trend. The reason's payoff
+ * becomes the frame's bottom strip. No store buttons: on an ad landing every
+ * exit that is not the buy CTA leaks the click.
+ *
+ * Fills its parent: the listicle frame is a flex column, this is `flex-1`.
  */
 export function MeasureTile() {
+  const { ref, isInView, score, lineRef, len, gid } = useScoreAnimation();
+  const NAVY = "#1B2757";
+
   return (
-    <div className="flex h-full flex-col justify-center bg-[#101a33] p-5 text-white md:p-6">
-      <MeasureScoreCard />
-      <div className="mt-7">
-        <MeasureSteps />
+    <div ref={ref} className="flex flex-1 flex-col text-black">
+      <div className="rounded-t-lg bg-[#eef1f8] px-5 py-4">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.08em]">
+          Measured in the CONKA app
+        </p>
+        <p className="mt-1 text-lg font-bold leading-snug">
+          Your cognitive score
+        </p>
+      </div>
+
+      <div className="flex flex-1 flex-col px-5 pb-5 pt-5">
+        <p
+          className="font-bold leading-none tabular-nums"
+          style={{ fontSize: "clamp(3.25rem, 15vw, 4.5rem)" }}
+        >
+          {score}
+        </p>
+        <p
+          className="mt-1.5 text-[15px] font-semibold"
+          style={{ color: "var(--brand-positive, #1a7f4f)" }}
+        >
+          &uarr; trending up over 30 days
+        </p>
+
+        <div className="mt-4 flex flex-1 items-end">
+          <svg
+            className="block h-auto w-full"
+            viewBox="0 0 320 150"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="Cognitive score rising over 30 days"
+          >
+            <defs>
+              <linearGradient id={`${gid}-lfill`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={NAVY} stopOpacity="0.14" />
+                <stop offset="100%" stopColor={NAVY} stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <line
+              x1="20"
+              y1="118"
+              x2="300"
+              y2="118"
+              stroke="#e6e6e6"
+              strokeWidth="1"
+            />
+            <line
+              x1="20"
+              y1="74"
+              x2="300"
+              y2="74"
+              stroke="#efefef"
+              strokeWidth="1"
+            />
+            <path
+              d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40 L300,118 L20,118 Z"
+              fill={`url(#${gid}-lfill)`}
+              className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
+              style={{ opacity: isInView ? 1 : 0 }}
+            />
+            <path
+              ref={lineRef}
+              d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40"
+              fill="none"
+              stroke={NAVY}
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="motion-safe:[transition:stroke-dashoffset_1.6s_cubic-bezier(0.4,0,0.2,1)]"
+              style={
+                len
+                  ? {
+                      strokeDasharray: len,
+                      strokeDashoffset: isInView ? 0 : len,
+                    }
+                  : undefined
+              }
+            />
+            <circle cx="20" cy="106" r="4.5" fill="#b4b4b4" />
+            <circle
+              cx="300"
+              cy="40"
+              r="5.5"
+              fill={NAVY}
+              stroke="#fff"
+              strokeWidth="2"
+              className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
+              style={{ opacity: isInView ? 1 : 0 }}
+            />
+            <g className="fill-black/50 text-[10.5px] font-medium uppercase tracking-[0.04em]">
+              <text x="20" y="138" textAnchor="start">
+                Day 1
+              </text>
+              <text x="160" y="138" textAnchor="middle">
+                Day 14
+              </text>
+              <text x="300" y="138" textAnchor="end">
+                Day 30
+              </text>
+            </g>
+          </svg>
+        </div>
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ export default function ReasonIngredients({
   return (
     <div className="mb-5 max-w-[36rem]">
       <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-black">
-        What&rsquo;s doing the work
+        What to expect
       </p>
       <ul className="grid grid-cols-2 gap-3">
         {ingredients.map((ing) => (
