@@ -66,20 +66,8 @@ export const productivityV2Listicle: ListicleConfig = {
       payoff:
         "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
       citation: "PMID: 23439798",
-      // Round 2: athletes and professionals, alternating, each with their own
-      // score change. Figures from caseStudiesData (CognICA total score).
-      // Leeds players are hidden site-wide on request (SCRUM-1354), so no Bamford.
-      asset: {
-        kind: "athleteScores",
-        athletes: [
-          { name: "Jade Shekells", role: "GB Women's Rugby 7s", image: "/caseStudies/JadeShekells.jpg", from: 60.33, to: 82.48, change: "+36.7%" },
-          { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
-          { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
-          { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
-          { name: "Pierre-Louis Barassi", role: "Stade Toulousain", image: "/caseStudies/PierreLouisBarassi.jpg", from: 67, to: 85.25, change: "+27.2%" },
-          { name: "Jack Willis", role: "Stade Toulousain", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
-        ],
-      },
+      // Payoff becomes the focus bars' caption strip (athlete trial figure).
+      asset: { kind: "focusBars" },
     },
     {
       kind: "reason",
@@ -98,11 +86,19 @@ export const productivityV2Listicle: ListicleConfig = {
         credentials: ["Performance Nutritionist, Bristol Bears"],
       },
       ingredients: ["lemon-balm", "rhodiola"],
+      // Round 2: athletes and professionals, alternating, each with their own
+      // score change. Figures from caseStudiesData (CognICA total score).
+      // Leeds players are hidden site-wide on request (SCRUM-1354), so no Bamford.
       asset: {
-        kind: "video",
-        src: "/videos/flow/FlowFloat.mp4",
-        alt: "A CONKA Flow bottle floating over a neural network",
-        aspect: "3/4",
+        kind: "athleteScores",
+        athletes: [
+          { name: "Jade Shekells", role: "GB Women's Rugby 7s", image: "/caseStudies/JadeShekells.jpg", from: 60.33, to: 82.48, change: "+36.7%" },
+          { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
+          { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
+          { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
+          { name: "Pierre-Louis Barassi", role: "Stade Toulousain", image: "/caseStudies/PierreLouisBarassi.jpg", from: 67, to: 85.25, change: "+27.2%" },
+          { name: "Jack Willis", role: "Stade Toulousain", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
+        ],
       },
     },
     {

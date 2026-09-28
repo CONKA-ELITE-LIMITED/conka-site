@@ -32,7 +32,7 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 | Hero | "Discover the natural way to stay sharp all day." (v1 line, stand-in) + subcopy naming load, focus, age; CTA "Save {percent}% and try it risk-free"; avatar proof row | v1 hero image |
 | - | Reasons header: eyebrow "Get ahead. Stay ahead.", "6 Reasons 5,000+ People Have Made CONKA Part of Their Routine" (also `title`) | Text |
 | 1 | Composure · Stay Calm in the Chaos of Life | Focus bars tile |
-| 2 | Motivation · You're Not Lazy. Your Brain Is Underfuelled. | Flow video + Lemon Balm, Rhodiola tiles |
+| 2 | Motivation · You're Not Lazy. Your Brain Is Underfuelled. | Athlete + professional score cards, Lemon Balm, Rhodiola tiles, Morehen quote |
 | - | Review strip | Three customer reviews |
 | 3 | Memory · You're Not Losing It. Your Brain Is Just Overloaded. | Shane quote + Turmeric, Bilberry tiles |
 | 4 | Convenience · Fits Around Your Day, Whatever Time It Starts | `public/listicle/RoutineTwoShotsV3.jpg` |
