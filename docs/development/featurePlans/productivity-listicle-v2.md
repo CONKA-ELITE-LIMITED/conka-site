@@ -61,14 +61,14 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 
 ## Decisions
 
-- **New slug** `/go/productivity-v2` (GO_LANDING_PAGES.md: a new iteration is a new slug). v1 stays live, and Meta splits budget between the two.
+- **New slug** `/go/productivity-v2` (GO_LANDING_PAGES.md: a new iteration is a new slug).
+- **v1 slug now serves v2 (28 Sep):** `/go/productivity-listicle` spreads the v2 config under its own slug, because the live Meta campaign points there and repointing ads would reset learning. The v1 copy lives in git history.
 - **Design language:** unchanged im8 Simple DTC. No component work.
 - **Six reasons** (team feedback, 28 Sep): the Focus / crash-chart reason was cut, Stress leads, and Motivation and Memory reframe the reader's worry ("not lazy", "not losing it") as the shared problem.
 - **Copy follows the `conka-messaging` skill** (`.claude/skills/conka-messaging/`): experience not biology (no cortisol or dopamine), no named conditions, Flow first / Clear before it counts.
 
 ## No-gos
 
-- No edits to `/go/productivity-listicle` (v1).
 - No new components or imagery in this ticket.
 - No literal prices or discounts in the config (`{percent}` token only).
 
