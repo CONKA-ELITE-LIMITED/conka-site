@@ -5,12 +5,12 @@ import QuizEngine from "@/app/components/go/QuizEngine";
 import ListicleRenderer from "@/app/components/go/listicle/ListicleRenderer";
 import SimpleListicleRenderer from "@/app/components/go/listicle/SimpleListicleRenderer";
 import OfferRenderer from "@/app/components/go/offer/OfferRenderer";
-import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 
 /**
  * Ad landing pages. Each slug maps to a config in app/lib/landings/.
- * Deliberately no Navigation/Footer: the experience owns the viewport.
+ * No site navigation: an ad landing has one exit, its CTA, so the header menu
+ * would only leak clicks. Listicles keep the footer for the legal links.
  * Not indexed and not linked from the site; these are ad destinations.
  */
 
@@ -52,9 +52,7 @@ export default async function GoPage({
         <ListicleRenderer config={config} />
       );
     return (
-      // Bone behind the nav spacer so no white sliver shows above the hero
       <div style={{ background: "var(--color-bone, #F9F9F9)" }}>
-        <Navigation />
         {content}
         <Footer />
       </div>

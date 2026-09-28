@@ -25,7 +25,8 @@ export const productivityV2Listicle: ListicleConfig = {
       eyebrow: "World's Largest",
       body: "Consumer brain-research project. 1,000+ brains tested through our app.",
     },
-    headline: "Your brain has a limit. Raise it.",
+    // v1 headline as a stand-in until the new hero line is settled.
+    headline: "Discover the natural way to stay sharp all day.",
     subcopy:
       "One caffeine-free shot each morning. Whether it's too much on, a mind that won't settle or a brain that isn't as quick as it was, CONKA's natural nootropics and adaptogens keep you sharp from the first task to the last.",
     socialProof: {

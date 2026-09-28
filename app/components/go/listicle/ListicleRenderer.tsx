@@ -643,7 +643,11 @@ function BodyBlock({
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
     return (
-      <div className={`${index === 0 ? "" : "border-t border-black/10"} py-14`}>
+      // A tagged reason opens on its own rule under the eyebrow, so it skips
+      // the separator above it: two lines a section apart read as clutter.
+      <div
+        className={`${index === 0 || block.tag ? "" : "border-t border-black/10"} py-14`}
+      >
         <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
           <div className={mediaFirst ? "md:order-2" : ""}>
             <ReasonHeading n={block.n} tag={block.tag} className="mb-4">
