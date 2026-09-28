@@ -25,17 +25,28 @@ import type { ListicleProof } from "@/app/lib/landings/listicle-types";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import AthleteReviewFeature from "@/app/components/AthleteReviewFeature";
+import ProductComparisonTable, {
+  type ComparisonProduct,
+} from "@/app/components/product/ProductComparisonTable";
 
 /**
  * Partner + press logo band, rendered under the hero. Partner logos get the
  * large black section title; the press band (when set) sits under them at the
  * muted eyebrow size, slower, so the two never read as one track.
  */
-export function ListicleLogoBand({ proof }: { proof: ListicleProof }) {
+export function ListicleLogoBand({
+  proof,
+  quietHeading = false,
+}: {
+  proof: ListicleProof;
+  /** Small grey heading instead of the display one, for the in-hero band where
+   *  a second large title would compete with the H1. */
+  quietHeading?: boolean;
+}) {
   if (!proof.logoBand && !proof.pressBand) return null;
   return (
     <div>
-      {proof.logoBand ? <LogoMarquee largeHeading /> : null}
+      {proof.logoBand ? <LogoMarquee largeHeading={!quietHeading} /> : null}
       {proof.pressBand ? (
         <div className={proof.logoBand ? "mt-12" : ""}>
           <LogoMarquee
@@ -54,13 +65,27 @@ export function ListicleLogoBand({ proof }: { proof: ListicleProof }) {
  * right before the FAQ. Blocks are collected first so the first one never
  * carries a leading margin whichever subset renders.
  */
-export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
+export default function ListicleProofTier({
+  proof,
+  product = "flow",
+}: {
+  proof: ListicleProof;
+  /** Which bottle the comparison table shows */
+  product?: ComparisonProduct;
+}) {
   const blocks: { key: string; node: ReactNode }[] = [];
 
   if (proof.feature) {
     blocks.push({
       key: "feature",
       node: <AthleteReviewFeature athlete={proof.feature} />,
+    });
+  }
+
+  if (proof.comparison) {
+    blocks.push({
+      key: "comparison",
+      node: <ProductComparisonTable product={product} />,
     });
   }
 

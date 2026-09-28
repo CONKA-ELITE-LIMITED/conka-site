@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -20,6 +20,7 @@ import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
 import IngredientGrid from "@/app/components/landing/IngredientGrid";
 import DayEnergyCurve from "@/app/components/landing/DayEnergyCurve";
 import FocusBars from "@/app/components/landing/FocusBars";
+import StatCompareBars from "@/app/components/landing/StatCompareBars";
 import { MeasureTile } from "@/app/components/landing/AppMeasureSection";
 import ResearchBackedGraphic from "@/app/components/landing/ResearchBackedGraphic";
 import CitationLine from "@/app/components/landing/CitationLine";
@@ -163,6 +164,12 @@ function resolveOfferTokens(text: string, heroId: ProductHeroId): string {
   }
   return withoutClause.charAt(0).toUpperCase() + withoutClause.slice(1);
 }
+
+const COMPARISON_PRODUCT: Record<ProductHeroId, "flow" | "clear" | "both"> = {
+  "01": "flow",
+  "02": "clear",
+  "03": "both",
+};
 
 const PDP_HREF: Record<ProductHeroId, string> = {
   "01": "/conka-flow",
@@ -406,6 +413,17 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
 
   if (asset.kind === "focusBars") {
     return <FocusBars />;
+  }
+
+  if (asset.kind === "statCompare") {
+    return (
+      <StatCompareBars
+        value={asset.value}
+        caption={asset.caption}
+        change={asset.change}
+        source={asset.source}
+      />
+    );
   }
 
   if (asset.kind === "athleteQuote") {
@@ -893,11 +911,26 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   // The product this page sells. Drives the PDP hand-off (see PDP_HREF) and
   // every price and percentage the page quotes.
   const heroId = config.product.productHeroId ?? "03";
+  // The "button" sticky bar waits until the hero has scrolled away: the hero
+  // already carries the same CTA, so two identical buttons on one screen is
+  // noise. The "offer" bar keeps its always-on behaviour.
+  const heroRef = useRef<HTMLElement>(null);
+  const [heroInView, setHeroInView] = useState(true);
+  const deferSticky = config.stickyBar?.layout === "button";
+  useEffect(() => {
+    if (!deferSticky || !heroRef.current) return;
+    const observer = new IntersectionObserver(([entry]) =>
+      setHeroInView(entry.isIntersecting),
+    );
+    observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, [deferSticky]);
+  const stickyHidden = deferSticky && heroInView;
   // Mobile: logos between hero copy and asset (the section below hides there).
   const logosAboveAsset = Boolean(
     config.hero.proofWallAboveAsset &&
-      config.proof &&
-      (config.proof.logoBand || config.proof.pressBand),
+    config.proof &&
+    (config.proof.logoBand || config.proof.pressBand),
   );
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
@@ -924,10 +957,11 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           width; on mobile the copy comes FIRST (reversing SCRUM-1166) so the
           outcome headline is the first thing a cold visitor reads. */}
       <section
+        ref={heroRef}
         aria-label="Hero"
         style={{ background: `${HERO_WASH}, ${CANVAS}`, color: "#111" }}
       >
-        <div className="grid items-center md:grid-cols-[52fr_48fr]">
+        <div className="grid grid-cols-1 items-center md:grid-cols-[52fr_48fr]">
           <div
             className={`relative w-full md:order-1 ${logosAboveAsset ? "order-3" : "order-2"}`}
             style={{
@@ -1006,9 +1040,11 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           {logosAboveAsset && config.proof ? (
             <TrackedSection
               section={SECTION.proofWall}
-              className="order-2 px-5 pb-8 md:hidden"
+              // min-w-0 + overflow-hidden: the marquee track is w-max, and a
+              // grid item's default min-width would stretch the page to it.
+              className="order-2 min-w-0 overflow-hidden pb-8 md:hidden"
             >
-              <ListicleLogoBand proof={config.proof} />
+              <ListicleLogoBand proof={config.proof} quietHeading />
             </TrackedSection>
           ) : null}
         </div>
@@ -1056,10 +1092,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               <h2
                 className="mx-auto max-w-[24ch] text-balance font-semibold text-black"
                 style={{
-                  fontSize:
-                    config.reasonsHeader.size === "compact"
-                      ? "clamp(1.5rem, 5vw, 2rem)"
-                      : "clamp(2.125rem, 6.5vw, 3rem)",
+                  fontSize: "clamp(2.125rem, 6.5vw, 3rem)",
                   lineHeight: 1.08,
                   letterSpacing: "-0.02em",
                 }}
@@ -1132,7 +1165,10 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           style={{ background: CANVAS, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <ListicleProofTier proof={config.proof} />
+            <ListicleProofTier
+              proof={config.proof}
+              product={COMPARISON_PRODUCT[heroId]}
+            />
           </div>
         </section>
       ) : null}
@@ -1165,11 +1201,39 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
       {config.stickyBar ? (
         <aside
           aria-label="Offer bar"
-          className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 px-5 py-4 md:px-[5vw]"
+          aria-hidden={stickyHidden || undefined}
+          className={`fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 px-5 py-4 transition-transform duration-300 md:px-[5vw] ${stickyHidden ? "pointer-events-none translate-y-full" : "translate-y-0"}`}
           style={{ background: STICKY_TINT, color: "#111" }}
         >
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-            {/* Money only: this is the highest-closing surface on the page and
+          {config.stickyBar.layout === "button" ? (
+            // Grüns pattern: one filled button that states the offer, proof
+            // underneath. No price line: on a premium product the ask is the
+            // offer and the guarantee, not the per-shot figure.
+            <div className="mx-auto flex max-w-xl flex-col items-center gap-2">
+              <Link
+                href={withSrc(buyHref, SECTION.sticky)}
+                onClick={() => fireCta(SECTION.sticky)}
+                className="flex min-h-[52px] w-full items-center justify-center rounded-full px-6 text-center text-[16px] font-bold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
+                style={{ background: NAVY }}
+              >
+                {resolveOfferTokens(config.stickyBar.cta, heroId)}
+              </Link>
+              {config.hero.socialProof ? (
+                // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
+                // plus the sub-line, never wrapping.
+                <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[11.5px] leading-tight text-black/70">
+                  <StarRow fontSize="12px" />
+                  <span className="font-bold text-black">
+                    {config.hero.socialProof.label.replace(/^[^\d]*/, "")}
+                  </span>
+                  <span aria-hidden>·</span>
+                  <span>{config.hero.socialProof.sub}</span>
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+              {/* Money only: this is the highest-closing surface on the page and
                 it carried no price at all before SCRUM-1322. The reference bar
                 is bold headline over a quieter second line, so the price leads
                 and the gift value supports it rather than shouting alongside.
@@ -1179,39 +1243,40 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 second accent competing with the CTA. Navy ties the line to the
                 button instead, and the "free" does the work the colour was
                 doing. */}
-            <div className="flex min-w-0 flex-col gap-1">
-              <span className="text-[15px] font-bold leading-tight md:text-base">
-                As low as £{offer.perShot} a shot
-              </span>
-              {offer.giftValue ? (
-                <span className="text-[12px] font-medium leading-tight text-[var(--brand-navy)]">
-                  +£{offer.giftValue} of gifts free
-                  {/* The qualifier is the first thing to go when space is
+              <div className="flex min-w-0 flex-col gap-1">
+                <span className="text-[15px] font-bold leading-tight md:text-base">
+                  As low as £{offer.perShot} a shot
+                </span>
+                {offer.giftValue ? (
+                  <span className="text-[12px] font-medium leading-tight text-[var(--brand-navy)]">
+                    +£{offer.giftValue} of gifts free
+                    {/* The qualifier is the first thing to go when space is
                       short: at 390px the full sentence was ellipsing, which
                       turned the number into "+£110 of free gifts with a sub…"
                       and lost the point of the line. */}
-                  <span className="hidden sm:inline">
-                    {" "}
-                    with a subscription
+                    <span className="hidden sm:inline">
+                      {" "}
+                      with a subscription
+                    </span>
                   </span>
+                ) : null}
+              </div>
+              <Link
+                href={withSrc(buyHref, SECTION.sticky)}
+                onClick={() => fireCta(SECTION.sticky)}
+                // ConkaCTAButton's inverted contract (CTA_BASE_INVERTED): white
+                // fill, navy border and text, flipping to the navy fill on hover.
+                // The treatment, not the component: ConkaCTAButton renders a mono
+                // uppercase label, which is clinical grammar and would read as a
+                // foreign object on a Simple DTC bar.
+                className="flex min-h-[48px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--brand-navy)] bg-white px-7 text-center text-[var(--brand-navy)] transition-colors duration-200 hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
+              >
+                <span className="text-[15px] font-bold leading-tight">
+                  {resolveOfferTokens(config.stickyBar.cta, heroId)}
                 </span>
-              ) : null}
+              </Link>
             </div>
-            <Link
-              href={withSrc(buyHref, SECTION.sticky)}
-              onClick={() => fireCta(SECTION.sticky)}
-              // ConkaCTAButton's inverted contract (CTA_BASE_INVERTED): white
-              // fill, navy border and text, flipping to the navy fill on hover.
-              // The treatment, not the component: ConkaCTAButton renders a mono
-              // uppercase label, which is clinical grammar and would read as a
-              // foreign object on a Simple DTC bar.
-              className="flex min-h-[48px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--brand-navy)] bg-white px-7 text-center text-[var(--brand-navy)] transition-colors duration-200 hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
-            >
-              <span className="text-[15px] font-bold leading-tight">
-                {resolveOfferTokens(config.stickyBar.cta, heroId)}
-              </span>
-            </Link>
-          </div>
+          )}
         </aside>
       ) : null}
     </main>

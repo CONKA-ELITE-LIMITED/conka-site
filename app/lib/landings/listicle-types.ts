@@ -57,6 +57,8 @@ export interface ListicleProof {
   ugc?: { title?: string; subtitle?: string; items?: UGCItem[] };
   /** One named person, quote-led */
   feature?: ListicleProofFeature;
+  /** CONKA vs coffee vs Rx stimulants table, between the feature and the UGC band */
+  comparison?: boolean;
 }
 
 export type ListicleAsset =
@@ -105,6 +107,15 @@ export type ListicleAsset =
   | { kind: "dayEnergyCurve" }
   /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
   | { kind: "focusBars" }
+  /** Big number + Without/With bars + source line (StatCompareBars).
+   *  `change` sizes the With bar honestly, e.g. 0.193 or -0.28. */
+  | {
+      kind: "statCompare";
+      value: string;
+      caption: string;
+      change: number;
+      source: string;
+    }
   /** Athlete portrait with their quote overlaid + status (proof for a reason) */
   | {
       kind: "athleteQuote";
@@ -322,7 +333,13 @@ interface ListicleBase {
    * second, drifting copy of either. The old `label` and `sub` are gone rather
    * than left populated and unread.
    */
-  stickyBar?: { cta: string };
+  stickyBar?: {
+    cta: string;
+    /** "offer" (default): price line + outlined button. "button": one
+     *  full-width filled button with the rating row under it (Grüns pattern),
+     *  no price. The rating comes from the im8 `hero.socialProof`. */
+    layout?: "offer" | "button";
+  };
 }
 
 /** IM8 template: dense layout, product-image hero, section-block library. */
@@ -361,13 +378,7 @@ export interface Im8ListicleConfig extends ListicleBase {
    * indexed over `body`, so adding a block here would rebase every id below it
    * and void the scroll-funnel history. Tracked as `reasonsHeader`.
    */
-  reasonsHeader?: {
-    eyebrow: string;
-    headline: string;
-    /** "compact" drops the title to a quieter size so it does not compete
-     *  with the hero H1. Default is the display size. */
-    size?: "display" | "compact";
-  };
+  reasonsHeader?: { eyebrow: string; headline: string };
   /** Reasons with bands / strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */

@@ -47,10 +47,10 @@ export const productivityV2Listicle: ListicleConfig = {
   reasonsHeader: {
     eyebrow: "Brain health at the cellular level",
     headline: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
-    size: "compact",
   },
   proof: {
     logoBand: true,
+    comparison: true,
     ugc: {},
     feature: {
       name: "Jack Willis",
@@ -76,8 +76,16 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Focus",
       headline: "All-Day Energy and Focus, Without the Crash",
       body: "Sharp at your first meeting and still sharp at your last. CONKA's natural nootropics support the pathways behind focus and mental energy, so there's no spike to come down from and nothing wearing off by lunch.",
-      payoff: "App users scored 19.3% higher on focus tests while taking CONKA.",
-      asset: { kind: "focusBars" },
+      // The 19.3% is from the athlete trial (FocusBars footnote), not app data.
+      payoff:
+        "In a trial of professional athletes, focus scores rose 19.3% on CONKA.",
+      asset: {
+        kind: "statCompare",
+        value: "+19.3%",
+        caption: "higher focus scores",
+        change: 0.193,
+        source: "Trial of professional athletes, focus vs baseline",
+      },
     },
     {
       kind: "reason",
@@ -85,9 +93,16 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Stress",
       headline: "Stay Calm When Everything Lands at Once",
       body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. Stress hormones crowd out clear thinking right when you need it most.",
-      payoff: "Ashwagandha, one of CONKA's adaptogens, was shown to lower cortisol, the stress hormone, by 28%.",
+      payoff:
+        "Ashwagandha, one of CONKA's adaptogens, was shown to lower cortisol, the stress hormone, by 28%.",
       citation: "PMID: 23439798",
-      asset: { kind: "dayEnergyCurve" },
+      asset: {
+        kind: "statCompare",
+        value: "-28%",
+        caption: "cortisol, the stress hormone",
+        change: -0.28,
+        source: "Ashwagandha trial, adults under chronic stress",
+      },
     },
     {
       kind: "reason",
@@ -95,7 +110,8 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Motivation",
       headline: "Start the Tasks You Keep Putting Off",
       body: "With ADHD, the hardest part of any task is the first minute. ADHD brains run lower on dopamine, the chemical that turns intention into action, and plenty of people without ADHD know that stuck feeling on a heavy day.",
-      payoff: "Lemon Balm and Rhodiola support calm, steady drive, so starting stops feeling like a fight.",
+      payoff:
+        "Lemon Balm and Rhodiola support calm, steady drive, so starting stops feeling like a fight.",
       asset: {
         kind: "video",
         src: "/videos/flow/FlowFloat.mp4",
@@ -109,7 +125,8 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Memory",
       headline: "Stop Losing Words Mid-Sentence",
       body: "Past 40, the word you want arrives a beat late and a name you know goes blank. A ten-year study of over 7,000 people found decline measurable from around 45, gradual enough to miss.",
-      payoff: "CONKA's Turmeric and Bilberry are antioxidants that help protect the brain cells behind recall.",
+      payoff:
+        "CONKA's Turmeric and Bilberry are antioxidants that help protect the brain cells behind recall.",
       citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
       asset: {
         kind: "athleteQuote",
@@ -126,13 +143,16 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Convenience",
       headline: "Fits Around Your Day, Whatever Time It Starts",
       body: "One shot in the morning, one in the afternoon. No powders to mix or capsules to count, and zero caffeine, so you can take it as early or as late as your routine needs.",
-      payoff: "Our founders turned a 14-capsule daily stack into these two shots, tested at Cambridge.",
+      payoff:
+        "Our founders turned a 14-capsule daily stack into these two shots, tested at Cambridge.",
+      // PDP "What to expect" render as a stand-in: morning Flow, afternoon
+      // Clear, week 1 / week 2+. Uncropped, it carries its own copy.
       asset: {
         kind: "image",
-        src: "/lifestyle/CreationOfConka.jpg",
-        alt: "CONKA founders developing the formula",
-        fit: "cover",
-        aspect: "1500/1000",
+        src: "/formulas/mmPdpAssetsV2/BothWhatToExpect.jpg",
+        alt: "What to expect: Flow in the morning for calm focus, Clear in the afternoon so the fog lifts, compounding over two weeks",
+        fit: "contain",
+        aspect: "2000/1429",
       },
     },
     {
@@ -172,7 +192,8 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Value",
       headline: "Costs Less Than Your Daily Coffee",
       body: "A coffee-shop flat white wears off by lunch, and you're buying another by 3pm.",
-      payoff: "On a quarterly subscription, CONKA works out at £{perDay} a day.",
+      payoff:
+        "On a quarterly subscription, CONKA works out at £{perDay} a day.",
       asset: {
         kind: "image",
         src: "/lifestyle/GirlsLaughing.jpg",
@@ -187,7 +208,8 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Proof",
       headline: "See It Work, or Get Your Money Back",
       body: "Take the free two-minute CognICA test in the CONKA app, an FDA-cleared test from Cambridge, before you start and again a few weeks in.",
-      payoff: "If your score and your days haven't moved within 100 days, you get every penny back.",
+      payoff:
+        "If your score and your days haven't moved within 100 days, you get every penny back.",
       pressMarquee: true,
       asset: { kind: "measureTile" },
     },
@@ -209,5 +231,5 @@ export const productivityV2Listicle: ListicleConfig = {
     "guarantee",
   ],
   // Same line as the hero CTA, so the page makes one ask.
-  stickyBar: { cta: "Save {percent}% and try it risk-free" },
+  stickyBar: { cta: "Save {percent}% and try it risk-free", layout: "button" },
 };
