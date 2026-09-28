@@ -85,7 +85,10 @@ dataset=events mode=aggregate by=["eventData/source"]
 
 The artifact is `listicle-dashboard.html` (built in the scratchpad). Its `<script>` holds two arrays — `funnels` and `cta` — that are a direct transcription of a snapshot's JSON block below. To refresh: pull the queries above, append a new snapshot here, paste its `funnels`/`cta` values into the artifact script, update the window/caveat copy, and re-publish the same file to keep the URL.
 
-Latest published: <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>
+Latest published: <https://claude.ai/artifact/LGiJnQ6kzb9c3CS5gGSGec> (programme review, 24 Jul to 28 Sep, SCRUM-1469).
+The earlier weekly scoreboard (to 21 Aug) stays at <https://claude.ai/code/artifact/b69a0128-2f0f-4078-a91f-b58d5f8196c4>.
+
+**Order pull script:** `scratchpad/listicle-review-orders.mjs [since] [out.json]` dumps every order with `app`, `sourceName`, `_listicle_origin`, `_trial_pack_seen` and line attributes. It supersedes the renewal test in `weekly-orders.mjs`: a renewal is an order whose `app` is the subscription platform (`Loop Subscriptions` or `Skio Subscriptions (YC S20)`); new demand is `Headless` or `CONKA_App_Shop`. `Trybe UGC` (gifting) and `Draft Orders` (B2B) are neither.
 
 ---
 
@@ -607,3 +610,75 @@ pull.
 free-week ad creative. The 8 Sept rebuild removed that pill; the equivalent claim survives only
 as the free-shots chip on the sticky bar. Any read of the free-week test should treat 8 Sept as
 its end date on the hero.
+
+---
+
+## Snapshot: 2026-07-24 to 2026-09-28 (programme review, SCRUM-1469)
+
+Pulled **28 Sep AM**. Scope: the three persona listicles plus `/go/trial-pack` (live 15 Sep). Sources: Meta Ads Manager (cumulative screenshot, 28 Sep, assumed launch to date at 7-day click / 1-day view), Shopify Admin API (`scratchpad/listicle-review-orders.mjs`, all orders since 3 Jul), Vercel Web Analytics, Notion Flags. Artifact: <https://claude.ai/artifact/LGiJnQ6kzb9c3CS5gGSGec>.
+
+**Headline:** £31.3k of Meta spend bought 301 first orders at £104, on the £100 target. The post-21 Aug budget move worked: Productivity recovered to £84 and Brain-ageing held £105 at the biggest budget. ADHD is still £136 since 22 Aug. The trial pack is the cheapest to acquire (£81) but only 22% of its Meta checkouts complete.
+
+### Whole window per page
+
+| Page | Visitors | Meta purch. | Meta CVR | CPA | Spend | Tagged orders | Tagged rev. | AOV |
+|------|---------:|------------:|---------:|----:|------:|--------------:|------------:|----:|
+| ADHD | 14,090 | 103 | 0.73% | £116.10 | £11,958 | 80 | £4,808 | £60.10 |
+| Productivity | 7,785 | 83 | 1.07% | £94.49 | £7,843 | 52 | £3,447 | £66.28 |
+| Brain-ageing | 5,767 | 94 | 1.63% | £104.29 | £9,803 | 49 | £3,466 | £70.73 |
+| **Listicles** | **27,642** | **280** | **1.01%** | **£105.73** | **£29,604** | **181** | **£11,720** | **£64.75** |
+| Trial pack | 1,447 | 21 | 1.45% | £81.31 | £1,708 | 15 | £291 | £19.41 |
+
+Tag capture is now 65% of Meta's listicle purchases (181 / 280).
+
+### Meta cost per purchase by period (differences between dated pulls)
+
+| Period | ADHD | Productivity | Brain-ageing | Blended |
+|--------|-----:|-------------:|-------------:|--------:|
+| 24 to 30 Jul | £73 | £82 | £122 | £88 |
+| 31 Jul to 3 Aug | £71 | £97 | £77 | £80 |
+| 4 to 10 Aug | £73 | £124 | £132 | £98 |
+| 11 to 21 Aug | £169 | £150 | £90 | £142 |
+| **22 Aug to 28 Sep** | **£136** | **£84** | **£105** | **£106** |
+
+Implied daily spend since 22 Aug: Brain-ageing £155, ADHD £139, Productivity £113. So the 21 Aug action (move budget from ADHD to Brain-ageing) did happen.
+
+### Trial pack
+
+- 15 trials sold (all `BOTH-BOX-8`, £17.10 to £18.99), counted by the `_source=trial_pack` line attribute. `_listicle_origin` only reached trial orders from 22 Sep (8 of 15 carry it).
+- Flow and Clear were picked by 95 visitors (`offer:option_selected`) and sold zero trials.
+- Meta: ATC 98, checkout 95, purchase 21 (22% checkout completion vs 43% to 54% on the listicles).
+- 4 of the 6 trials from 17 to 18 Sep have billed £74.99 (Skio `BOTH-STARTER-40`) at day 7+. Early read only.
+
+### Engagement (whole window, % of visitors)
+
+| | ADHD | Productivity | Brain-ageing |
+|--|--:|--:|--:|
+| Reach first reason | 43% | 28% | 33% |
+| Reach product block | 13% | 11% | 10% |
+| CTA click rate | 11.1% | 10.8% | 10.8% |
+| Meta checkout completion | 43% | 51% | 54% |
+
+Closing zone (181 tagged listicle orders): sticky 102, hero 70, bridge 9, product block 0. Cadence: monthly 137 (£6,626), quarterly 24 (£3,296), one-time 20 (£1,798). Interactions: ADHD symptom picker 590 visitors; Brain-ageing segment toggle 30.
+
+### Store-level lift (renewals excluded by app, Skio-safe)
+
+New-demand orders per week (Mon start): 29 Jun 1 · 6 Jul 2 · 13 Jul 3 · 20 Jul 17 · 27 Jul 44 · 3 Aug 44 · 10 Aug 27 · 17 Aug 25 · 24 Aug 45 · 31 Aug 44 · 7 Sep 49 · 14 Sep 36 · 21 Sep 41. 370 new-demand orders (£27.3k) since 24 Jul against about 19 at baseline. Lenses: tagged 196 ≤ Meta 312 ≤ store lift ~350.
+
+### Timeline additions
+
+`22 Aug` budget shifted toward Brain-ageing (inferred from spend) · `25 to 29 Aug` Build Your Order replaces the funnels, PDP rebuild, starter kit on PDPs, cart upsell rebuilt · `1 to 2 Sep` Skio live · `15 Sep` trial pack live on its own campaign · `16 Sep` trial CTA relabelled · `22 Sep` trial pack orders start carrying `_listicle_origin`.
+
+### Artifact data block
+
+```json
+{
+  "window": "2026-07-24 → 2026-09-28",
+  "weeks": ["2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24","2026-08-31","2026-09-07","2026-09-14","2026-09-21"],
+  "visitors": { "adhd": [1219,2394,2963,2421,1746,743,963,874,770,535], "prod": [1312,961,783,516,534,387,632,1873,846,710], "brain": [525,739,982,496,618,705,585,576,460,352], "tp": [null,null,null,null,null,null,null,null,418,987] },
+  "ctaVisitors": { "adhd": [44,190,285,278,218,111,130,117,100,59], "prod": [13,78,171,66,60,57,84,79,122,84], "brain": [25,55,73,52,76,85,66,65,55,44], "tp": [null,null,null,null,null,null,null,null,38,64] },
+  "firstSection": { "adhd": [313,1009,1298,1056,755,289,447,378,290,205], "prod": [91,284,390,192,212,157,209,262,227,186], "brain": [78,188,334,172,206,245,232,190,126,120] },
+  "taggedOrders": { "adhd": [null,9,14,12,9,10,7,9,4,6], "prod": [null,10,3,1,2,7,7,10,6,6], "brain": [null,3,3,4,4,13,7,9,4,2], "tp": [null,null,null,null,null,null,null,null,7,8] },
+  "metaCumulative": { "adhd": [103,116.10], "prod": [83,94.49], "brain": [94,104.29], "tp": [21,81.31] }
+}
+```
