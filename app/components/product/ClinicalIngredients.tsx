@@ -43,6 +43,89 @@ const BADGE_TINT: Record<FormulaId, string> = {
   "02": "bg-[#f7ddd0] text-[#9a4526]",
 };
 
+/**
+ * One image-led ingredient tile with its two-line benefit badge. Shared with
+ * the listicle reasons, which show the ingredients a reason names.
+ */
+export function IngredientTile({
+  ingredient: ing,
+  formula,
+  onOpen,
+}: {
+  ingredient: IngredientData;
+  formula: FormulaId;
+  onOpen: () => void;
+}) {
+  const badge = getIngredientBadge(formula, ing.id);
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`${ing.name}, read more`}
+      className="group w-full text-left"
+    >
+      {/* 4:3, not square: the badge needs horizontal room more than the
+          render needs height, and it keeps the grid shorter. */}
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5]">
+        {ing.image ? (
+          <Image
+            src={ing.image}
+            alt={ing.name}
+            fill
+            loading="lazy"
+            sizes="(max-width: 640px) 45vw, 30vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-[28px] font-bold text-black/25">
+            {ing.name
+              .replace(/[^a-zA-Z]/g, "")
+              .slice(0, 2)
+              .toUpperCase()}
+          </div>
+        )}
+
+        {/* Two-line badge: layman outcome, then mechanism. */}
+        {badge.outcome && (
+          <span
+            className={`absolute left-2 top-2 max-w-[calc(100%-1rem)] rounded-md px-2 py-1 text-[10px] font-bold leading-tight sm:px-2.5 sm:text-[11px] ${BADGE_TINT[formula]}`}
+          >
+            {badge.outcome}
+            {badge.mechanism && (
+              <span className="block font-medium opacity-70">
+                {badge.mechanism}
+              </span>
+            )}
+          </span>
+        )}
+
+        {/* Expand affordance, mirroring the reference grids. */}
+        <span
+          aria-hidden
+          className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors group-hover:bg-[color:var(--brand-navy)] group-hover:text-white"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </span>
+      </div>
+
+      <p className="mt-2.5 text-sm font-semibold leading-snug text-black sm:text-base">
+        {ing.name}
+      </p>
+    </button>
+  );
+}
+
 export default function ClinicalIngredients({
   formulaIds = ["01", "02"],
 }: {
@@ -88,78 +171,15 @@ export default function ClinicalIngredients({
         aria-label={`CONKA ${activeFormula === "01" ? "Flow" : "Clear"} ingredients`}
         className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4"
       >
-        {ingredients.map((ing) => {
-          const badge = getIngredientBadge(activeFormula, ing.id);
-
-          return (
-            <li key={ing.id}>
-              <button
-                type="button"
-                onClick={() => setOpenIngredient(ing)}
-                aria-label={`${ing.name}, read more`}
-                className="group w-full text-left"
-              >
-                {/* 4:3, not square: the badge needs horizontal room more than
-                    the render needs height, and it keeps the grid shorter. */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-[#eef0f5]">
-                  {ing.image ? (
-                    <Image
-                      src={ing.image}
-                      alt={ing.name}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 640px) 45vw, 30vw"
-                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-[28px] font-bold text-black/25">
-                      {ing.name
-                        .replace(/[^a-zA-Z]/g, "")
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </div>
-                  )}
-
-                  {/* Two-line badge: layman outcome, then mechanism. */}
-                  {badge.outcome && (
-                    <span
-                      className={`absolute left-2 top-2 max-w-[calc(100%-1rem)] rounded-md px-2 py-1 text-[10px] font-bold leading-tight sm:px-2.5 sm:text-[11px] ${BADGE_TINT[activeFormula]}`}
-                    >
-                      {badge.outcome}
-                      {badge.mechanism && (
-                        <span className="block font-medium opacity-70">
-                          {badge.mechanism}
-                        </span>
-                      )}
-                    </span>
-                  )}
-
-                  {/* Expand affordance, mirroring the reference grids. */}
-                  <span
-                    aria-hidden
-                    className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors group-hover:bg-[color:var(--brand-navy)] group-hover:text-white"
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2.2}
-                      strokeLinecap="round"
-                    >
-                      <path d="M12 5v14M5 12h14" />
-                    </svg>
-                  </span>
-                </div>
-
-                <p className="mt-2.5 text-sm font-semibold leading-snug text-black sm:text-base">
-                  {ing.name}
-                </p>
-              </button>
-            </li>
-          );
-        })}
+        {ingredients.map((ing) => (
+          <li key={ing.id}>
+            <IngredientTile
+              ingredient={ing}
+              formula={activeFormula}
+              onOpen={() => setOpenIngredient(ing)}
+            />
+          </li>
+        ))}
       </ul>
 
       <IngredientDetailDrawer

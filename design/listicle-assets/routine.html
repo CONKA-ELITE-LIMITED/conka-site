@@ -1,0 +1,53 @@
+<!doctype html><meta charset="utf-8"><title>Listicle: two-shot routine (4:5)</title>
+<style>
+@font-face{font-family:NHG;src:url("../../app/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayMediu.ttf");font-weight:500}
+@font-face{font-family:NHG;src:url("../../app/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayBold.ttf");font-weight:700}
+@font-face{font-family:Favorit;src:url("../../app/fonts/ABCFavorit/ABCFavorit-Medium.otf");font-weight:500;font-style:normal}
+@font-face{font-family:Favorit;src:url("../../app/fonts/ABCFavorit/ABCFavorit-MediumItalic.otf");font-weight:500;font-style:italic}
+@font-face{font-family:JBM;src:url("../../app/fonts/JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Medium.woff2");font-weight:500}
+
+/* 1600x2000 = 4:5, the listicle reason frame. On a 390px phone the frame is
+   ~335px wide, a 4.8x downscale, so nothing below ~70px here (15px on screen). */
+:root{--navy:#1B2757;--tint:#dfe5f2}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:2000px;overflow:hidden;background:#fff}
+.slide{width:1600px;height:2000px;position:relative;overflow:hidden;color:var(--navy);
+  font-family:NHG,sans-serif;
+  background:radial-gradient(120% 90% at 50% 0%,#fff 0%,#f6f8fb 50%,#e9eef5 100%)}
+
+h1{font-family:Favorit;font-weight:500;font-size:150px;line-height:1;letter-spacing:-.03em;
+  text-align:center;padding-top:120px}
+h1 em{font-style:italic}
+.sub{font-weight:500;font-size:72px;letter-spacing:-.015em;text-align:center;margin-top:34px;
+  color:#2f3a63}
+
+.pair{position:absolute;left:50%;top:560px;transform:translateX(-50%);
+  display:flex;align-items:flex-end;gap:40px}
+.pair img{height:780px;filter:drop-shadow(-20px 22px 40px rgba(27,39,87,.18))}
+
+.times{position:absolute;left:90px;right:90px;top:1420px;display:flex;gap:40px}
+.time{flex:1;background:#fff;border-radius:36px;padding:44px 48px;
+  box-shadow:0 0 0 3px rgba(27,39,87,.08)}
+.chip{display:inline-block;font-family:JBM,monospace;font-weight:500;font-size:56px;
+  letter-spacing:.1em;background:var(--tint);border-radius:18px;padding:12px 26px}
+.what{font-weight:500;font-size:74px;line-height:1.1;letter-spacing:-.02em;margin-top:30px}
+
+.foot{position:absolute;left:0;right:0;bottom:78px;text-align:center;font-weight:700;
+  font-size:70px;letter-spacing:-.015em}
+</style>
+<div class="slide">
+  <h1>Two shots.<br><em>Zero caffeine.</em></h1>
+  <div class="sub">Take them whenever your day starts.</div>
+
+  <div class="pair">
+    <img src="../pdp-slides/assets/FlowCutout.png" alt="">
+    <img src="../pdp-slides/assets/ClearCutoutV2.png" alt="">
+  </div>
+
+  <div class="times">
+    <div class="time"><span class="chip">MORNING</span><div class="what">Flow: calm, sharp focus</div></div>
+    <div class="time"><span class="chip">AFTERNOON</span><div class="what">Clear: the fog lifts</div></div>
+  </div>
+
+  <div class="foot">No powders. No capsules. No crash.</div>
+</div>

@@ -13,7 +13,8 @@ import { DrawPath } from "./CrashChart";
  * so it reads as its own fatigue story rather than a repeat of the crash chart.
  * ========================================================================== */
 
-const GREEN = "#2FA84F";
+// Listicle palette: navy is CONKA, grey the alternative.
+const CONKA_LINE = "#1B2757";
 const GREY = "#b4b4b4";
 
 export default function DayEnergyCurve() {
@@ -22,7 +23,8 @@ export default function DayEnergyCurve() {
   return (
     <div
       ref={ref}
-      className="overflow-hidden rounded-lg border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)]"
+      // No card chrome: the listicle frame supplies border and radius.
+      className="overflow-hidden text-[#1d1d1d]"
     >
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}
@@ -30,7 +32,7 @@ export default function DayEnergyCurve() {
           <span className="flex items-center gap-2 text-[13px] font-medium text-[#3a3a3a]">
             <span
               className="h-[5px] w-6 flex-shrink-0 rounded-[3px]"
-              style={{ background: GREEN }}
+              style={{ background: CONKA_LINE }}
             />
             With CONKA
           </span>
@@ -55,15 +57,36 @@ export default function DayEnergyCurve() {
         >
           <defs>
             <linearGradient id="de-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={GREEN} stopOpacity="0.18" />
-              <stop offset="100%" stopColor={GREEN} stopOpacity="0" />
+              <stop offset="0%" stopColor={CONKA_LINE} stopOpacity="0.18" />
+              <stop offset="100%" stopColor={CONKA_LINE} stopOpacity="0" />
             </linearGradient>
           </defs>
 
           {/* gridlines */}
-          <line x1="30" y1="70" x2="320" y2="70" stroke="#efefef" strokeWidth="1" />
-          <line x1="30" y1="135" x2="320" y2="135" stroke="#efefef" strokeWidth="1" />
-          <line x1="30" y1="200" x2="320" y2="200" stroke="#e6e6e6" strokeWidth="1" />
+          <line
+            x1="30"
+            y1="70"
+            x2="320"
+            y2="70"
+            stroke="#efefef"
+            strokeWidth="1"
+          />
+          <line
+            x1="30"
+            y1="135"
+            x2="320"
+            y2="135"
+            stroke="#efefef"
+            strokeWidth="1"
+          />
+          <line
+            x1="30"
+            y1="200"
+            x2="320"
+            y2="200"
+            stroke="#e6e6e6"
+            strokeWidth="1"
+          />
 
           {/* With CONKA area + line (steady high) */}
           <path
@@ -74,7 +97,7 @@ export default function DayEnergyCurve() {
           />
           <DrawPath
             d="M30,118 C58,84 82,72 110,70 C175,66 245,65 320,64"
-            stroke={GREEN}
+            stroke={CONKA_LINE}
             isInView={isInView}
           />
 
@@ -116,7 +139,7 @@ export default function DayEnergyCurve() {
             cx="320"
             cy="64"
             r="5.5"
-            fill={GREEN}
+            fill={CONKA_LINE}
             stroke="#fff"
             strokeWidth="2"
             className="motion-safe:[transition:opacity_0.4s_ease_1.4s]"
@@ -126,7 +149,7 @@ export default function DayEnergyCurve() {
             x="314"
             y="54"
             textAnchor="end"
-            className="fill-[#2FA84F] text-[11.5px] font-extrabold uppercase tracking-[0.04em] motion-safe:[transition:opacity_0.4s_ease_1.4s]"
+            className="fill-[#1B2757] text-[11.5px] font-extrabold uppercase tracking-[0.04em] motion-safe:[transition:opacity_0.4s_ease_1.4s]"
             style={{ opacity: isInView ? 1 : 0 }}
           >
             steady

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type {
   ListicleAsset,
@@ -27,6 +27,9 @@ import SymptomExplainer from "@/app/components/landing/SymptomExplainer";
 import SegmentToggle from "@/app/components/landing/SegmentToggle";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import ListicleProofTier, { ListicleLogoBand } from "./ListicleProofTier";
+import ReasonIngredients from "./ReasonIngredients";
+import CoffeeCompareTile from "@/app/components/landing/CoffeeCompareTile";
+import { COFFEE_PRICE_PER_DAY } from "@/app/lib/landingPricing";
 import {
   getDisplayDiscount,
   getOfferPricing,
@@ -152,9 +155,10 @@ function stickyOffer(heroId: ProductHeroId) {
  * the number, so keep that opening if the degraded path matters.
  */
 function resolveOfferTokens(text: string, heroId: ProductHeroId): string {
-  const percent = getDisplayDiscount(
-    getOfferPricing(OFFER_PRODUCT[heroId], "quarterly-sub"),
-  );
+  const pricing = getOfferPricing(OFFER_PRODUCT[heroId], "quarterly-sub");
+  // `{perDay}` is the bare price per day (e.g. "1.25"); the copy owns the "£".
+  text = text.replaceAll("{perDay}", pricing.perDay.toFixed(2));
+  const percent = getDisplayDiscount(pricing);
   if (percent > 0) return text.replaceAll("{percent}", String(percent));
   const withoutClause = text.replace(/^\s*save\s+\{percent\}%\s*/i, "").trim();
   if (!withoutClause || withoutClause.includes("{percent}")) {
@@ -162,6 +166,12 @@ function resolveOfferTokens(text: string, heroId: ProductHeroId): string {
   }
   return withoutClause.charAt(0).toUpperCase() + withoutClause.slice(1);
 }
+
+const COMPARISON_PRODUCT: Record<ProductHeroId, "flow" | "clear" | "both"> = {
+  "01": "flow",
+  "02": "clear",
+  "03": "both",
+};
 
 const PDP_HREF: Record<ProductHeroId, string> = {
   "01": "/conka-flow",
@@ -178,9 +188,9 @@ const STICKY_TINT = "#eef1f8";
 
 /**
  * The 4.7 star row: a grey five-star run with an amber copy clipped over it at
- * 94% width. Only the hero micro-row uses it now, since the sticky bar dropped
- * its rating line, but it stays extracted: it is twenty lines of clipped-overlay
- * trickery that reads far better named than inlined.
+ * 94% width. Used by the hero micro-row and the "button" sticky bar's proof
+ * line; extracted because it is twenty lines of clipped-overlay trickery that
+ * reads far better named than inlined.
  *
  * It is 4.7 specifically, not rating-agnostic: the figure is baked into both
  * the 94% fill and the aria-label. Callers read the number itself out of
@@ -209,10 +219,11 @@ function StarRow({ fontSize }: { fontSize: string }) {
 }
 
 /** The home hero's avatar + star micro-row, compacted to the IM8 scale.
+ *  Centred under the full-width mobile CTA, left-aligned beside it on desktop.
  *  Content only: the caller owns the surrounding spacing. */
 function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
   return (
-    <div className="flex items-center justify-start gap-2.5">
+    <div className="flex items-center justify-center gap-2.5 md:justify-start">
       <div className="flex items-center">
         {Array.from({ length: 5 }, (_, i) => (
           <div
@@ -269,16 +280,26 @@ function splitStatValue(value: string): [string, string] {
 
 function ReasonHeading({
   n,
+  tag,
   className,
   children,
 }: {
   n?: number;
+  /** Category eyebrow (Grüns pattern): tag left, counter right, rule under. */
+  tag?: string;
   className: string;
   children: string;
 }) {
   return (
     <div className={className}>
-      {n ? (
+      {tag ? (
+        <div className="mb-4 flex items-baseline justify-between border-b border-black/15 pb-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-black/50">
+          <span>{tag}</span>
+          {n ? (
+            <span className="tabular-nums">{String(n).padStart(2, "0")}</span>
+          ) : null}
+        </div>
+      ) : n ? (
         <p className="mb-2 text-[13px] font-semibold tabular-nums text-black/40">
           {String(n).padStart(2, "0")}
         </p>
@@ -331,12 +352,8 @@ function ReasonVideo({
   const video = videoTrio(asset.src);
 
   return (
-    <div
-      className={`relative overflow-hidden rounded-md border border-black/10 w-full ${
-        contain ? "bg-black" : ""
-      }`}
-      style={{ aspectRatio: contain ? "4/3" : (asset.aspect ?? "4/3") }}
-    >
+    // The shared 4:5 listicle frame; "contain" clips sit on black inside it.
+    <div className={`${MEDIA_FRAME} ${contain ? "bg-black" : ""}`}>
       <video
         // Browsers do not re-read <source> children after the initial load, so
         // a changed src needs a remount rather than a re-render. Same guard
@@ -361,24 +378,92 @@ function ReasonVideo({
   );
 }
 
-function AssetBlock({ asset }: { asset: ListicleAsset }) {
+/*
+ * One frame for every reason visual: same 4:5 shape, radius, border and white
+ * surface, so seven different assets read as one designed system instead of
+ * seven shapes. Media fills the frame. Chart tiles (banner on top, chart
+ * below) are `flex-1` children that fill it; the frame grows rather than clips
+ * if a chart is taller (no overflow clip, so nothing is cut off).
+ */
+const MEDIA_FRAME =
+  "relative aspect-[4/5] w-full overflow-hidden rounded-lg border border-black/10 bg-white";
+const CHART_FRAME =
+  "flex aspect-[4/5] w-full flex-col rounded-lg border border-black/10 bg-white";
+
+/** Chart tiles that take the reason's bold payoff as their bottom strip, so the
+ *  figure's takeaway sits with the figure instead of in the paragraph. */
+const CAPTIONED_CHARTS = new Set<ListicleAsset["kind"]>([
+  "crashChart",
+  "focusBars",
+  "coffeeCompare",
+  "measureTile",
+]);
+
+/** The tile's bottom strip: the tinted mirror of the chart banner. */
+function ChartCaption({ text }: { text?: string }) {
+  if (!text) return null;
+  return (
+    <p className="rounded-b-lg border-t border-black/10 bg-[#eef1f8] px-5 py-4 text-[15px] font-semibold leading-snug text-black">
+      {text}
+    </p>
+  );
+}
+
+function AssetBlock({
+  asset,
+  caption,
+  heroId,
+}: {
+  asset: ListicleAsset;
+  /** Resolved payoff for a captioned chart tile */
+  caption?: string;
+  heroId: ProductHeroId;
+}) {
   if (asset.kind === "crashChart") {
     return (
-      <CrashChart
-        saving={asset.saving}
-        coffeePerDay={asset.coffeePerDay}
-        shotsPerDay={asset.shotsPerDay}
-        variant="dtc"
-      />
+      <div className={CHART_FRAME}>
+        <CrashChart
+          saving={asset.saving}
+          coffeePerDay={asset.coffeePerDay}
+          shotsPerDay={asset.shotsPerDay}
+          variant="tile"
+        />
+        <ChartCaption text={caption} />
+      </div>
+    );
+  }
+
+  if (asset.kind === "coffeeCompare") {
+    return (
+      <div className={CHART_FRAME}>
+        <CoffeeCompareTile
+          conkaPerDay={getOfferPricing(
+            OFFER_PRODUCT[heroId],
+            "quarterly-sub",
+          ).perDay.toFixed(2)}
+          coffeePerDay={COFFEE_PRICE_PER_DAY}
+          product={COMPARISON_PRODUCT[heroId]}
+        />
+        <ChartCaption text={caption} />
+      </div>
     );
   }
 
   if (asset.kind === "researchBacked") {
-    return <ResearchBackedGraphic />;
+    return (
+      <div className={MEDIA_FRAME}>
+        <ResearchBackedGraphic />
+      </div>
+    );
   }
 
   if (asset.kind === "measureTile") {
-    return <MeasureTile />;
+    return (
+      <div className={CHART_FRAME}>
+        <MeasureTile />
+        <ChartCaption text={caption} />
+      </div>
+    );
   }
 
   if (asset.kind === "cognitionBars") {
@@ -390,21 +475,34 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   }
 
   if (asset.kind === "dayEnergyCurve") {
-    return <DayEnergyCurve />;
+    return (
+      // Not yet a banner tile, so it keeps its own padding, centred.
+      <div className={`${CHART_FRAME} justify-center`}>
+        <DayEnergyCurve />
+      </div>
+    );
   }
 
   if (asset.kind === "focusBars") {
-    return <FocusBars />;
+    return (
+      <div className={CHART_FRAME}>
+        <FocusBars showSource={!caption} />
+        <ChartCaption text={caption} />
+      </div>
+    );
   }
 
   if (asset.kind === "athleteQuote") {
+    // The card is already 4:5; the frame adds the shared border.
     return (
-      <AthleteQuoteCard
-        name={asset.name}
-        role={asset.role}
-        image={asset.image}
-        quote={asset.quote}
-      />
+      <div className={MEDIA_FRAME}>
+        <AthleteQuoteCard
+          name={asset.name}
+          role={asset.role}
+          image={asset.image}
+          quote={asset.quote}
+        />
+      </div>
     );
   }
 
@@ -467,11 +565,10 @@ function AssetBlock({ asset }: { asset: ListicleAsset }) {
   }
 
   if (asset.kind === "image") {
+    // The shared frame, not the asset's own aspect: photos crop to 4:5 and
+    // "contain" renders sit centred on the white surface.
     return (
-      <div
-        className="relative w-full overflow-hidden rounded-md"
-        style={{ aspectRatio: aspect }}
-      >
+      <div className={MEDIA_FRAME}>
         <Image
           src={asset.src}
           alt={asset.alt}
@@ -619,9 +716,11 @@ function ReviewStrip({
 function BodyBlock({
   block,
   index,
+  heroId,
 }: {
   block: ListicleBodyBlock;
   index: number;
+  heroId: ProductHeroId;
 }) {
   // Active-intent reporter for the interactive blocks below (symptom picker,
   // segment toggle). Unconditional per the rules of hooks; a no-op for the rest.
@@ -629,22 +728,50 @@ function BodyBlock({
 
   if (block.kind === "reason") {
     const mediaFirst = index % 2 === 1;
+    const payoff = block.payoff
+      ? resolveOfferTokens(block.payoff, heroId)
+      : undefined;
+    // A chart tile carries the payoff in its bottom strip; elsewhere it closes
+    // the paragraph in bold.
+    const payoffInTile =
+      Boolean(payoff) && CAPTIONED_CHARTS.has(block.asset.kind);
+    const citation = block.citation ? (
+      <CitationLine citation={block.citation} href={block.citationHref} />
+    ) : null;
     return (
-      <div className={`${index === 0 ? "" : "border-t border-black/10"} py-14`}>
+      // A tagged reason opens on its own rule under the eyebrow, so it skips
+      // the separator above it: two lines a section apart read as clutter.
+      <div
+        className={`${index === 0 || block.tag ? "" : "border-t border-black/10"} py-14`}
+      >
         <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
           <div className={mediaFirst ? "md:order-2" : ""}>
-            <ReasonHeading n={block.n} className="mb-4">
+            <ReasonHeading n={block.n} tag={block.tag} className="mb-4">
               {block.headline}
             </ReasonHeading>
-            <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
-              {block.body}
-            </p>
-            {block.citation ? (
-              <CitationLine
-                citation={block.citation}
-                href={block.citationHref}
-                className="-mt-3 mb-5"
-              />
+            {payoff ? (
+              <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black/80 md:text-base">
+                {resolveOfferTokens(block.body, heroId)}
+                {payoffInTile ? null : (
+                  <>
+                    {" "}
+                    <strong className="font-semibold text-black">
+                      {payoff}
+                    </strong>
+                  </>
+                )}
+              </p>
+            ) : (
+              <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
+                {resolveOfferTokens(block.body, heroId)}
+              </p>
+            )}
+            {/* Desktop: the reference sits under the copy it supports. */}
+            {citation ? (
+              <div className="-mt-3 mb-5 hidden md:block">{citation}</div>
+            ) : null}
+            {block.ingredients?.length ? (
+              <ReasonIngredients ids={block.ingredients} />
             ) : null}
             {block.chips?.length ? (
               <div className="flex flex-wrap gap-2">
@@ -674,7 +801,14 @@ function BodyBlock({
             ) : null}
           </div>
           <div className={mediaFirst ? "md:order-1" : ""}>
-            <AssetBlock asset={block.asset} />
+            <AssetBlock
+              asset={block.asset}
+              caption={payoffInTile ? payoff : undefined}
+              heroId={heroId}
+            />
+            {/* Mobile: the reference closes the whole section instead of
+                interrupting the copy. */}
+            {citation ? <div className="mt-3 md:hidden">{citation}</div> : null}
           </div>
         </article>
         {/* Full-width press band, OUTSIDE the grid: the marquee's w-max track
@@ -867,6 +1001,28 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   // The product this page sells. Drives the PDP hand-off (see PDP_HREF) and
   // every price and percentage the page quotes.
   const heroId = config.product.productHeroId ?? "03";
+  // The "button" sticky bar waits until the hero has scrolled away: the hero
+  // already carries the same CTA, so two identical buttons on one screen is
+  // noise. The "offer" bar keeps its always-on behaviour.
+  const heroRef = useRef<HTMLElement>(null);
+  const [heroInView, setHeroInView] = useState(true);
+  const deferSticky = config.stickyBar?.layout === "button";
+  useEffect(() => {
+    if (!deferSticky || !heroRef.current) return;
+    const observer = new IntersectionObserver(([entry]) =>
+      setHeroInView(entry.isIntersecting),
+    );
+    observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, [deferSticky]);
+  const stickyHidden = deferSticky && heroInView;
+  // Logos open the page, above the headline (the section after the hero is
+  // then skipped, so the band renders once).
+  const logosFirst = Boolean(
+    config.hero.proofWallFirst &&
+    config.proof &&
+    (config.proof.logoBand || config.proof.pressBand),
+  );
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
   const buyHref = PDP_HREF[heroId];
@@ -892,10 +1048,21 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           width; on mobile the copy comes FIRST (reversing SCRUM-1166) so the
           outcome headline is the first thing a cold visitor reads. */}
       <section
+        ref={heroRef}
         aria-label="Hero"
         style={{ background: `${HERO_WASH}, ${CANVAS}`, color: "#111" }}
       >
-        <div className="grid items-center md:grid-cols-[52fr_48fr]">
+        {logosFirst && config.proof ? (
+          <TrackedSection
+            section={SECTION.proofWall}
+            // overflow-hidden: the marquee track is w-max and would otherwise
+            // widen the page on mobile.
+            className="min-w-0 overflow-hidden"
+          >
+            <ListicleLogoBand proof={config.proof} banner />
+          </TrackedSection>
+        ) : null}
+        <div className="grid grid-cols-1 items-center md:grid-cols-[52fr_48fr]">
           <div
             className="relative order-2 w-full md:order-1"
             style={{
@@ -919,7 +1086,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               />
             ) : (
               <div className="h-full p-5 md:p-10">
-                <AssetBlock asset={config.hero.asset} />
+                <AssetBlock asset={config.hero.asset} heroId={heroId} />
               </div>
             )}
           </div>
@@ -977,7 +1144,9 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
       {/* Zone 1b: proof wall — the partner logo band, straight after the hero.
           Tracked as its own fixed zone so it has a denominator; it is not a
           `body` entry, so no reason-block id shifts. */}
-      {config.proof && (config.proof.logoBand || config.proof.pressBand) ? (
+      {!logosFirst &&
+      config.proof &&
+      (config.proof.logoBand || config.proof.pressBand) ? (
         <section
           aria-label="Trusted by"
           className="px-5 py-12 md:px-[5vw] md:py-14"
@@ -1028,7 +1197,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           {config.body.map((block, i) => (
             <Fragment key={i}>
               <TrackedSection section={sectionId(block.kind, i)}>
-                <BodyBlock block={block} index={i} />
+                <BodyBlock block={block} index={i} heroId={heroId} />
               </TrackedSection>
               {/* World's-largest laurel badge, relocated out of the hero to sit
                   under point 1 so the hero title + CTA sit higher. */}
@@ -1043,28 +1212,32 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               ) : null}
             </Fragment>
           ))}
-          {config.bridge ? (
-            // Tracked so the bridge CTA has a denominator: unlike the hero and
-            // sticky bar it is a mid-page block that can be scrolled past.
-            <TrackedSection
-              section={SECTION.bridge}
-              className="mt-10 rounded-md px-8 py-14 text-center"
-              style={{ background: NAVY, color: "#fff" }}
-            >
-              <h3 className="mb-6 text-balance text-[28px] font-semibold md:text-[36px]">
-                {config.bridge.headline}
-              </h3>
-              <Link
-                href={withSrc(buyHref, SECTION.bridge)}
-                onClick={() => fireCta(SECTION.bridge)}
-                className="inline-block rounded-full bg-white px-8 py-4 text-[15px] font-bold text-[#111]"
-              >
-                {resolveOfferTokens(config.bridge.cta, heroId)}
-              </Link>
-            </TrackedSection>
-          ) : null}
         </div>
       </section>
+
+      {/* Bridge: a thin full-bleed navy band between the reasons and the buy
+          box, headline and CTA on one line from md up. Tracked so the bridge
+          CTA has a denominator: it can be scrolled past. */}
+      {config.bridge ? (
+        <TrackedSection
+          section={SECTION.bridge}
+          className="px-5 py-7 md:px-[5vw] md:py-8"
+          style={{ background: NAVY, color: "#fff" }}
+        >
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 text-center md:flex-row md:justify-between md:text-left">
+            <h3 className="text-balance text-[20px] font-semibold leading-snug md:text-[24px]">
+              {config.bridge.headline}
+            </h3>
+            <Link
+              href={withSrc(buyHref, SECTION.bridge)}
+              onClick={() => fireCta(SECTION.bridge)}
+              className="inline-block shrink-0 rounded-full bg-white px-7 py-3 text-[15px] font-bold text-[#111]"
+            >
+              {resolveOfferTokens(config.bridge.cta, heroId)}
+            </Link>
+          </div>
+        </TrackedSection>
+      ) : null}
 
       {/* Zone 3b: product / buy box — hard flip to light */}
       <section
@@ -1089,7 +1262,10 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           style={{ background: CANVAS, color: "#111" }}
         >
           <div className="mx-auto max-w-7xl">
-            <ListicleProofTier proof={config.proof} />
+            <ListicleProofTier
+              proof={config.proof}
+              product={COMPARISON_PRODUCT[heroId]}
+            />
           </div>
         </section>
       ) : null}
@@ -1122,11 +1298,41 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
       {config.stickyBar ? (
         <aside
           aria-label="Offer bar"
-          className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 px-5 py-4 md:px-[5vw]"
+          // inert, not just aria-hidden: keeps the off-screen CTA out of the
+          // tab order too.
+          inert={stickyHidden || undefined}
+          className={`fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 px-5 py-4 transition-transform duration-300 md:px-[5vw] ${stickyHidden ? "pointer-events-none translate-y-full" : "translate-y-0"}`}
           style={{ background: STICKY_TINT, color: "#111" }}
         >
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-            {/* Money only: this is the highest-closing surface on the page and
+          {config.stickyBar.layout === "button" ? (
+            // Grüns pattern: one filled button that states the offer, proof
+            // underneath. No price line: on a premium product the ask is the
+            // offer and the guarantee, not the per-shot figure.
+            <div className="mx-auto flex max-w-xl flex-col items-center gap-2">
+              <Link
+                href={withSrc(buyHref, SECTION.sticky)}
+                onClick={() => fireCta(SECTION.sticky)}
+                className="flex min-h-[52px] w-full items-center justify-center rounded-full px-6 text-center text-[16px] font-bold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
+                style={{ background: NAVY }}
+              >
+                {resolveOfferTokens(config.stickyBar.cta, heroId)}
+              </Link>
+              {config.hero.socialProof ? (
+                // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
+                // plus the sub-line, never wrapping.
+                <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[11.5px] leading-tight text-black/70">
+                  <StarRow fontSize="12px" />
+                  <span className="font-bold text-black">
+                    {config.hero.socialProof.label.replace(/^[^\d]*/, "")}
+                  </span>
+                  <span aria-hidden>·</span>
+                  <span>{config.hero.socialProof.sub}</span>
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+              {/* Money only: this is the highest-closing surface on the page and
                 it carried no price at all before SCRUM-1322. The reference bar
                 is bold headline over a quieter second line, so the price leads
                 and the gift value supports it rather than shouting alongside.
@@ -1136,39 +1342,40 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 second accent competing with the CTA. Navy ties the line to the
                 button instead, and the "free" does the work the colour was
                 doing. */}
-            <div className="flex min-w-0 flex-col gap-1">
-              <span className="text-[15px] font-bold leading-tight md:text-base">
-                As low as £{offer.perShot} a shot
-              </span>
-              {offer.giftValue ? (
-                <span className="text-[12px] font-medium leading-tight text-[var(--brand-navy)]">
-                  +£{offer.giftValue} of gifts free
-                  {/* The qualifier is the first thing to go when space is
+              <div className="flex min-w-0 flex-col gap-1">
+                <span className="text-[15px] font-bold leading-tight md:text-base">
+                  As low as £{offer.perShot} a shot
+                </span>
+                {offer.giftValue ? (
+                  <span className="text-[12px] font-medium leading-tight text-[var(--brand-navy)]">
+                    +£{offer.giftValue} of gifts free
+                    {/* The qualifier is the first thing to go when space is
                       short: at 390px the full sentence was ellipsing, which
                       turned the number into "+£110 of free gifts with a sub…"
                       and lost the point of the line. */}
-                  <span className="hidden sm:inline">
-                    {" "}
-                    with a subscription
+                    <span className="hidden sm:inline">
+                      {" "}
+                      with a subscription
+                    </span>
                   </span>
+                ) : null}
+              </div>
+              <Link
+                href={withSrc(buyHref, SECTION.sticky)}
+                onClick={() => fireCta(SECTION.sticky)}
+                // ConkaCTAButton's inverted contract (CTA_BASE_INVERTED): white
+                // fill, navy border and text, flipping to the navy fill on hover.
+                // The treatment, not the component: ConkaCTAButton renders a mono
+                // uppercase label, which is clinical grammar and would read as a
+                // foreign object on a Simple DTC bar.
+                className="flex min-h-[48px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--brand-navy)] bg-white px-7 text-center text-[var(--brand-navy)] transition-colors duration-200 hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
+              >
+                <span className="text-[15px] font-bold leading-tight">
+                  {resolveOfferTokens(config.stickyBar.cta, heroId)}
                 </span>
-              ) : null}
+              </Link>
             </div>
-            <Link
-              href={withSrc(buyHref, SECTION.sticky)}
-              onClick={() => fireCta(SECTION.sticky)}
-              // ConkaCTAButton's inverted contract (CTA_BASE_INVERTED): white
-              // fill, navy border and text, flipping to the navy fill on hover.
-              // The treatment, not the component: ConkaCTAButton renders a mono
-              // uppercase label, which is clinical grammar and would read as a
-              // foreign object on a Simple DTC bar.
-              className="flex min-h-[48px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--brand-navy)] bg-white px-7 text-center text-[var(--brand-navy)] transition-colors duration-200 hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
-            >
-              <span className="text-[15px] font-bold leading-tight">
-                {resolveOfferTokens(config.stickyBar.cta, heroId)}
-              </span>
-            </Link>
-          </div>
+          )}
         </aside>
       ) : null}
     </main>

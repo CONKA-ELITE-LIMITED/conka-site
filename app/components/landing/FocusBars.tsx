@@ -1,90 +1,118 @@
 "use client";
 
 import { useInView } from "@/app/hooks/useInView";
-import { BottleIcon } from "./CrashChart";
 
 /* ============================================================================
  * FocusBars
  *
- * Simple two-bar comparison: focus off CONKA vs on CONKA. The On-CONKA bar is
- * the verified +19.3% taller (honest proportions, no tightened baseline) with
- * the delta called out in green. Matches ScoreByGroup's bar language so the
- * green = with-CONKA = higher reading stays consistent across the page.
+ * Listicle chart tile: a tinted title banner across the top, then the figure
+ * large, then a proper bar chart filling the rest of the frame. Focus off
+ * CONKA vs on CONKA, indexed so the baseline is 100 and CONKA is 119.3 (the
+ * verified +19.3%). A labelled 0 to 120 axis, gridlines and a value on each
+ * bar make it read as measured data rather than two decorative blocks; bars
+ * start at zero, so the proportions are honest.
+ *
+ * Navy is CONKA, grey the baseline, green only on the headline figure. Copy is
+ * black throughout. Fills its parent (`flex-1` in the listicle frame).
  * ========================================================================== */
 
-const GREEN = "#2FA84F";
-const MAX_BAR_PX = 150;
-// Honest proportions: On CONKA is +19.3% over the Off baseline.
-const OFF_FRAC = 0.62;
-const ON_FRAC = OFF_FRAC * 1.193;
+const NAVY = "#1B2757";
+const GREEN = "var(--brand-positive, #1a7f4f)";
+const AXIS_MAX = 120;
+const TICKS = [0, 40, 80, 120];
 
 const BARS = [
-  { label: "Off CONKA", frac: OFF_FRAC, conka: false },
-  { label: "On CONKA", frac: ON_FRAC, conka: true },
+  { label: "Off CONKA", value: 100, conka: false },
+  { label: "On CONKA", value: 119.3, conka: true },
 ];
 
-export default function FocusBars() {
+export default function FocusBars({
+  showSource = true,
+}: {
+  /** Off when the reason's own caption under the tile already names the trial */
+  showSource?: boolean;
+} = {}) {
   const [ref, isInView] = useInView();
 
   return (
-    <div
-      ref={ref}
-      className="rounded-lg border border-black/10 bg-white p-6 md:p-7"
-    >
-      <p className="mb-1 text-[12px] font-semibold text-black/50">
-        Measured focus
-      </p>
-      <h3 className="mb-6 text-lg font-bold text-[#1d1d1d]">
-        Sharper focus on CONKA
-      </h3>
+    <div ref={ref} className="flex flex-1 flex-col text-black">
+      <div className="rounded-t-lg bg-[#eef1f8] px-5 py-4">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.08em]">
+          Measured focus
+        </p>
+        <p className="mt-1 text-lg font-bold leading-snug">
+          Sharper focus on CONKA
+        </p>
+      </div>
 
-      <div className="mx-auto flex max-w-[320px] items-end justify-center gap-8">
-        {BARS.map((b) => (
-          <div key={b.label} className="flex flex-1 flex-col items-center">
-            {b.conka ? (
-              <span className="mb-1.5 rounded-full bg-[#2FA84F] px-2 py-0.5 text-[12px] font-extrabold text-white">
-                +19.3%
+      <div className="flex flex-1 flex-col px-5 pb-5 pt-5">
+        <p
+          className="font-bold leading-none tabular-nums"
+          style={{ color: GREEN, fontSize: "clamp(3rem, 14vw, 4.25rem)" }}
+        >
+          +19.3%
+        </p>
+
+        {/* Plot: y-axis labels on the left, gridlines behind, bars from 0. */}
+        <div className="mt-6 flex min-h-[170px] flex-1 gap-2">
+          <div className="relative w-7 shrink-0">
+            {TICKS.map((t) => (
+              <span
+                key={t}
+                className="absolute right-0 translate-y-1/2 text-[11px] font-medium tabular-nums text-black/55"
+                style={{ bottom: `${(t / AXIS_MAX) * 100}%` }}
+              >
+                {t}
               </span>
-            ) : (
-              <span className="mb-1.5 h-[22px]" aria-hidden />
-            )}
-            <div
-              className="w-full rounded-t-lg motion-safe:[transition:height_1s_cubic-bezier(0.4,0,0.2,1)]"
-              style={{
-                height: isInView ? `${Math.round(b.frac * MAX_BAR_PX)}px` : 0,
-                background: b.conka
-                  ? `linear-gradient(180deg, ${GREEN}, #279247)`
-                  : "rgba(0,0,0,0.14)",
-              }}
-            />
+            ))}
           </div>
-        ))}
-      </div>
-
-      <div className="mx-auto mt-2.5 flex max-w-[320px] justify-center gap-8">
-        {BARS.map((b) => (
-          <span
-            key={b.label}
-            className={`flex flex-1 flex-col items-center gap-1.5 text-center text-[12px] ${
-              b.conka ? "font-semibold text-[#1d1d1d]" : "text-black/45"
-            }`}
-          >
-            {b.conka ? (
-              <span className="flex items-center gap-1">
-                <BottleIcon stroke={GREEN} />
-                <BottleIcon stroke={GREEN} />
+          <div className="relative flex-1 border-b border-l border-black/25">
+            {TICKS.slice(1).map((t) => (
+              <span
+                key={t}
+                aria-hidden
+                className="absolute inset-x-0 border-t border-dashed border-black/10"
+                style={{ bottom: `${(t / AXIS_MAX) * 100}%` }}
+              />
+            ))}
+            <div className="absolute inset-0 flex items-end justify-around px-3">
+              {BARS.map((b) => (
+                <div
+                  key={b.label}
+                  className="relative flex h-full w-[36%] items-end"
+                >
+                  <div
+                    className="relative w-full rounded-t-md motion-safe:[transition:height_1s_cubic-bezier(0.4,0,0.2,1)]"
+                    style={{
+                      height: isInView ? `${(b.value / AXIS_MAX) * 100}%` : 0,
+                      background: b.conka ? NAVY : "rgba(0,0,0,0.16)",
+                    }}
+                  ></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="mt-2 flex gap-2">
+          <span className="w-7 shrink-0" aria-hidden />
+          <div className="flex flex-1 justify-around px-3">
+            {BARS.map((b) => (
+              <span
+                key={b.label}
+                className={`w-[36%] text-center text-[13px] ${
+                  b.conka ? "font-bold" : "font-medium"
+                }`}
+              >
+                {b.label}
               </span>
-            ) : (
-              <span className="h-5" aria-hidden />
-            )}
-            {b.label}
-          </span>
-        ))}
+            ))}
+          </div>
+        </div>
+        <p className="mt-3 text-[11.5px] font-medium text-black/60">
+          Focus score, baseline indexed to 100
+          {showSource ? ". From a trial of professional athletes." : ""}
+        </p>
       </div>
-
-      <p className="mt-6 text-[12px] leading-snug text-black/50">
-        *+19.3% sharper focus vs baseline, from a trial of professional athletes.
-      </p>
     </div>
   );
 }

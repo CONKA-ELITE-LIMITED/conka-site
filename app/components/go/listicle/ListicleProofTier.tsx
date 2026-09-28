@@ -25,17 +25,42 @@ import type { ListicleProof } from "@/app/lib/landings/listicle-types";
 import LogoMarquee, { PRESS_LOGOS } from "@/app/components/landing/LogoMarquee";
 import UGCMarquee from "@/app/components/testimonials/UGCMarquee";
 import AthleteReviewFeature from "@/app/components/AthleteReviewFeature";
+import ProductComparisonTable, {
+  type ComparisonProduct,
+} from "@/app/components/product/ProductComparisonTable";
 
 /**
- * Partner + press logo band, rendered under the hero. Partner logos get the
- * large black section title; the press band (when set) sits under them at the
- * muted eyebrow size, slower, so the two never read as one track.
+ * Partner + press logo band. Under the hero, partner logos get the large black
+ * section title; with `banner` (top of page) the heading is a navy bar instead.
+ * The press band (when set) sits under them at the muted eyebrow size, slower,
+ * so the two never read as one track.
  */
-export function ListicleLogoBand({ proof }: { proof: ListicleProof }) {
+export function ListicleLogoBand({
+  proof,
+  banner = false,
+}: {
+  proof: ListicleProof;
+  /** Top-of-page treatment: the heading becomes a full-width navy bar with
+   *  white text, logos running beneath it, so it reads as a banner rather than
+   *  a second title competing with the H1. */
+  banner?: boolean;
+}) {
   if (!proof.logoBand && !proof.pressBand) return null;
   return (
     <div>
-      {proof.logoBand ? <LogoMarquee largeHeading /> : null}
+      {proof.logoBand && banner ? (
+        <>
+          <p className="bg-[var(--brand-navy)] px-4 py-2.5 text-center text-[13px] font-semibold tracking-[0.02em] text-white">
+            Fueling High Performers at:
+          </p>
+          <div className="pt-5">
+            {/* Above the hero now, so the logos yield to the hero image. */}
+            <LogoMarquee heading="" lowPriority />
+          </div>
+        </>
+      ) : proof.logoBand ? (
+        <LogoMarquee largeHeading />
+      ) : null}
       {proof.pressBand ? (
         <div className={proof.logoBand ? "mt-12" : ""}>
           <LogoMarquee
@@ -54,13 +79,27 @@ export function ListicleLogoBand({ proof }: { proof: ListicleProof }) {
  * right before the FAQ. Blocks are collected first so the first one never
  * carries a leading margin whichever subset renders.
  */
-export default function ListicleProofTier({ proof }: { proof: ListicleProof }) {
+export default function ListicleProofTier({
+  proof,
+  product = "flow",
+}: {
+  proof: ListicleProof;
+  /** Which bottle the comparison table shows */
+  product?: ComparisonProduct;
+}) {
   const blocks: { key: string; node: ReactNode }[] = [];
 
   if (proof.feature) {
     blocks.push({
       key: "feature",
       node: <AthleteReviewFeature athlete={proof.feature} />,
+    });
+  }
+
+  if (proof.comparison) {
+    blocks.push({
+      key: "comparison",
+      node: <ProductComparisonTable product={product} />,
     });
   }
 

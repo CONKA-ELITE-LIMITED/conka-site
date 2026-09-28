@@ -10,6 +10,7 @@ import { quizTemplate } from "./quiz-template";
 import { brainAgeQuiz } from "./brain-age";
 import { adhdListicle } from "./adhd-listicle";
 import { productivityListicle } from "./productivity-listicle";
+import { productivityV2Listicle } from "./productivity-v2-listicle";
 import { brainAgeingListicle } from "./brain-ageing-listicle";
 import { generalListicle } from "./general-listicle";
 import type { OfferConfig } from "./offer-types";
@@ -26,6 +27,7 @@ const registry: Record<string, AnyLandingConfig> = {
   [brainAgeQuiz.slug]: brainAgeQuiz,
   [adhdListicle.slug]: adhdListicle,
   [productivityListicle.slug]: productivityListicle,
+  [productivityV2Listicle.slug]: productivityV2Listicle,
   [brainAgeingListicle.slug]: brainAgeingListicle,
   [generalListicle.slug]: generalListicle,
   // Offer pages (SCRUM-1343): one config per offer, see offer-types.ts.

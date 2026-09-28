@@ -92,7 +92,7 @@ const MARK = "h-[18px] w-[18px] shrink-0 sm:h-[22px] sm:w-[22px]";
 
 /** Filled navy disc, white check. The panel behind it is a light tint, so the
  *  mark stays the solid element rather than inverting. */
-function Tick() {
+export function Tick() {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden className={MARK}>
       <rect width="24" height="24" rx="12" fill="var(--brand-navy)" />
@@ -107,7 +107,7 @@ function Tick() {
   );
 }
 
-function Cross() {
+export function Cross() {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden className={MARK}>
       <path

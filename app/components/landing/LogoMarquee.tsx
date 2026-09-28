@@ -137,16 +137,19 @@ export default function LogoMarquee({
 }) {
   return (
     <div className="text-center">
-      <p
-        className={
-          largeHeading
-            ? "brand-h2 mb-8 text-black"
-            : "mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]"
-        }
-        style={largeHeading ? { letterSpacing: "-0.02em" } : undefined}
-      >
-        {heading}
-      </p>
+      {/* An empty heading means the caller renders its own (e.g. a banner). */}
+      {heading ? (
+        <p
+          className={
+            largeHeading
+              ? "brand-h2 mb-8 text-black"
+              : "mb-7 text-[16.5px] font-medium tracking-[-0.01em] text-[#7c7d7c]"
+          }
+          style={largeHeading ? { letterSpacing: "-0.02em" } : undefined}
+        >
+          {heading}
+        </p>
+      ) : null}
       <div className="overflow-hidden">
         <div
           className="flex w-max motion-safe:animate-[marquee_linear_infinite]"

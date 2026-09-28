@@ -57,6 +57,8 @@ export interface ListicleProof {
   ugc?: { title?: string; subtitle?: string; items?: UGCItem[] };
   /** One named person, quote-led */
   feature?: ListicleProofFeature;
+  /** CONKA vs coffee vs Rx stimulants table, between the feature and the UGC band */
+  comparison?: boolean;
 }
 
 export type ListicleAsset =
@@ -64,6 +66,7 @@ export type ListicleAsset =
       kind: "image";
       src: string;
       alt: string;
+      /** Hero only. Inside an im8 reason the shared 4:5 frame sets the shape. */
       aspect?: string;
       /** "contain" (default) for renders/PNGs, "cover" for photos */
       fit?: "cover" | "contain";
@@ -82,6 +85,7 @@ export type ListicleAsset =
        * rather than leaving an unlabelled media element for a screen reader.
        */
       alt?: string;
+      /** Ignored in im8 reasons: the shared 4:5 frame sets the shape. */
       aspect?: string;
       fit?: "cover" | "contain";
     }
@@ -105,6 +109,8 @@ export type ListicleAsset =
   | { kind: "dayEnergyCurve" }
   /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
   | { kind: "focusBars" }
+  /** Condensed CONKA vs coffee table with cost per day (CoffeeCompareTile) */
+  | { kind: "coffeeCompare" }
   /** Athlete portrait with their quote overlaid + status (proof for a reason) */
   | {
       kind: "athleteQuote";
@@ -158,9 +164,21 @@ export type ListicleBodyBlock =
   | {
       kind: "reason";
       n: number;
+      /** Category eyebrow above the headline, e.g. "Focus" or "Value"
+       *  (Grüns pattern). Renders with the counter on the right and a rule
+       *  under both. Omit for the plain counter-only heading. */
+      tag?: string;
       headline: string;
-      /** Problem-validate paragraph, then solution; one string for now */
+      /** Problem-validate paragraph, then solution; one string for now.
+       *  Supports the `{perDay}` offer token (see Offer tokens in LISTICLE_SYSTEM.md). */
       body: string;
+      /** Bold closing fact after the body (Grüns pattern). When set, the body
+       *  drops to regular weight so this line carries the emphasis. Supports
+       *  the same offer tokens as `body`. */
+      payoff?: string;
+      /** Ingredient ids (ingredientsData) this reason credits, shown as the
+       *  PDP's tiles under the body. Flow ids; unknown ids are skipped. */
+      ingredients?: string[];
       /** Optional source line under the body, e.g. "DOI: 10.1186/1550-2783-12-S1-P41" */
       citation?: string;
       /** Optional link target for the citation line */
@@ -313,7 +331,13 @@ interface ListicleBase {
    * second, drifting copy of either. The old `label` and `sub` are gone rather
    * than left populated and unread.
    */
-  stickyBar?: { cta: string };
+  stickyBar?: {
+    cta: string;
+    /** "offer" (default): price line + outlined button. "button": one
+     *  full-width filled button with the rating row under it (Grüns pattern),
+     *  no price. The rating comes from the im8 `hero.socialProof`. */
+    layout?: "offer" | "button";
+  };
 }
 
 /** IM8 template: dense layout, product-image hero, section-block library. */
@@ -322,6 +346,9 @@ export interface Im8ListicleConfig extends ListicleBase {
   hero: {
     /** Laurel-flanked credibility chip above the headline */
     laurel?: { eyebrow: string; body: string };
+    /** Render the partner logo band at the very top of the page, above the
+     *  headline (quiet heading), instead of after the hero. */
+    proofWallFirst?: boolean;
     headline: string;
     subcopy: string;
     /** Avatar + star micro-row (the home hero's TrustMicroRow pattern) */

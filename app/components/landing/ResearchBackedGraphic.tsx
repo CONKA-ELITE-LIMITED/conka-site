@@ -30,7 +30,8 @@ function BadgeChip({ src, alt }: { src: string; alt: string }) {
 
 export default function ResearchBackedGraphic() {
   return (
-    <div className="relative overflow-hidden rounded-lg p-6 md:p-8">
+    // Fills the listicle frame (which owns radius and border), content centred.
+    <div className="relative flex h-full flex-col justify-center overflow-hidden p-6 md:p-8">
       {/* Background research photo + navy scrim */}
       <Image
         src="/lander/research-bg.jpg"
