@@ -46,19 +46,12 @@ export default function FocusBars({
       </div>
 
       <div className="flex flex-1 flex-col px-5 pb-5 pt-5">
-        <div className="flex items-end gap-3">
-          <p
-            className="font-bold leading-none tabular-nums"
-            style={{ color: GREEN, fontSize: "clamp(3rem, 14vw, 4.25rem)" }}
-          >
-            +19.3%
-          </p>
-          <p className="pb-1 text-[15px] font-semibold leading-tight">
-            focus vs
-            <br />
-            baseline
-          </p>
-        </div>
+        <p
+          className="font-bold leading-none tabular-nums"
+          style={{ color: GREEN, fontSize: "clamp(3rem, 14vw, 4.25rem)" }}
+        >
+          +19.3%
+        </p>
 
         {/* Plot: y-axis labels on the left, gridlines behind, bars from 0. */}
         <div className="mt-6 flex min-h-[170px] flex-1 gap-2">
@@ -94,15 +87,7 @@ export default function FocusBars({
                       height: isInView ? `${(b.value / AXIS_MAX) * 100}%` : 0,
                       background: b.conka ? NAVY : "rgba(0,0,0,0.16)",
                     }}
-                  >
-                    <span
-                      className={`absolute inset-x-0 -top-6 text-center text-[13px] font-bold tabular-nums ${
-                        b.conka ? "text-[#1B2757]" : "text-black/70"
-                      }`}
-                    >
-                      {b.value}
-                    </span>
-                  </div>
+                  ></div>
                 </div>
               ))}
             </div>

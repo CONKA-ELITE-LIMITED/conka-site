@@ -98,7 +98,7 @@ export const productivityV2Listicle: ListicleConfig = {
       n: 3,
       tag: "Motivation",
       headline: "Start the Tasks You Keep Putting Off",
-      body: "With ADHD, the hardest part of any task is the first minute. ADHD brains run lower on dopamine, the chemical that turns intention into action, and plenty of people without ADHD know that stuck feeling on a heavy day.",
+      body: "Some days the hardest part of any task is the first minute. Dopamine is the chemical that turns intention into action, and when it runs low, after a heavy week, a bad night, or in an ADHD brain that makes less of it, starting takes everything you've got.",
       payoff:
         "Lemon Balm and Rhodiola support calm, steady drive, so starting stops feeling like a fight.",
       ingredients: ["lemon-balm", "rhodiola"],
@@ -145,7 +145,7 @@ export const productivityV2Listicle: ListicleConfig = {
       n: 4,
       tag: "Memory",
       headline: "Stop Losing Words Mid-Sentence",
-      body: "Past 40, the word you want arrives a beat late and a name you know goes blank. A ten-year study of over 7,000 people found decline measurable from around 45, gradual enough to miss.",
+      body: "Past 30, the word you want arrives a beat late and a name you know goes blank. Processing speed and memory peak around 30, then slip so gradually it's easy to miss, and a ten-year study of over 7,000 people found the decline measurable by 45.",
       payoff:
         "CONKA's Turmeric and Bilberry are antioxidants that help protect the brain cells behind recall.",
       citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
